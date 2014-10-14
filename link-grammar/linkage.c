@@ -777,28 +777,6 @@ double linkage_disjunct_cost(const Linkage linkage)
 	return linkage->info->disjunct_cost;
 }
 
-int linkage_is_fat(const Linkage linkage)
-{
-#ifdef USE_FAT_LINKAGES
-	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return linkage->info->fat;
-#else
-	return false;
-#endif /* USE_FAT_LINKAGES */
-}
-
-int linkage_and_cost(const Linkage linkage)
-{
-#ifdef USE_FAT_LINKAGES
-	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return linkage->info->and_cost;
-#else
-	return 0;
-#endif /* USE_FAT_LINKAGES */
-}
-
 int linkage_link_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
@@ -817,11 +795,7 @@ int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
-#ifdef USE_FAT_LINKAGES
-	pp_info = &linkage->sublinkage[linkage->current].pp_info[index];
-#else
 	pp_info = &linkage->sublinkage.pp_info[index];
-#endif /* USE_FAT_LINKAGES */
 	return pp_info->num_domains;
 }
 
@@ -829,61 +803,17 @@ const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
-#ifdef USE_FAT_LINKAGES
-	pp_info = &linkage->sublinkage[linkage->current].pp_info[index];
-#else
 	pp_info = &linkage->sublinkage.pp_info[index];
-#endif /* USE_FAT_LINKAGES */
 	return pp_info->domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
 {
-#ifdef USE_FAT_LINKAGES
-	return linkage->sublinkage[linkage->current].violation;
-#else
 	return linkage->sublinkage.violation;
-#endif /* USE_FAT_LINKAGES */
-}
-
-int linkage_is_canonical(const Linkage linkage)
-{
-#ifdef USE_FAT_LINKAGES
-	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return true;
-	return linkage->info->canonical;
-#else
-	return true;
-#endif /* USE_FAT_LINKAGES */
-}
-
-int linkage_is_improper(const Linkage linkage)
-{
-#ifdef USE_FAT_LINKAGES
-	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return false;
-	return linkage->info->improper_fat_linkage;
-#else
-	return false;
-#endif /* USE_FAT_LINKAGES */
-}
-
-int linkage_has_inconsistent_domains(const Linkage linkage)
-{
-#ifdef USE_FAT_LINKAGES
-	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return false;
-	return linkage->info->inconsistent_domains;
-#else
-	return false;
-#endif /* USE_FAT_LINKAGES */
 }
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 {
-#ifdef USE_FAT_LINKAGES
-	int N_sublinkages = linkage_get_num_sublinkages(linkage);
-#endif /* USE_FAT_LINKAGES */
 	Parse_Options opts = linkage->opts;
 	Sentence sent = linkage->sent;
 	Sublinkage * subl;
@@ -891,86 +821,66 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 	size_t j, k;
 	D_type_list * d;
 
-#ifdef USE_FAT_LINKAGES
-	int i;
-	for (i = 0; i < N_sublinkages; ++i)
-#endif /* USE_FAT_LINKAGES */
+	subl = &linkage->sublinkage;
+	if (subl->pp_info != NULL)
 	{
-#ifdef USE_FAT_LINKAGES
-		subl = &linkage->sublinkage[i];
-#else
-		subl = &linkage->sublinkage;
-#endif /* USE_FAT_LINKAGES */
-		if (subl->pp_info != NULL)
+		for (j = 0; j < subl->num_links; ++j)
 		{
-			for (j = 0; j < subl->num_links; ++j)
-			{
-				exfree_pp_info(&subl->pp_info[j]);
-			}
-			post_process_free_data(&subl->pp_data);
-			exfree(subl->pp_info, sizeof(PP_info) * subl->num_links);
+			exfree_pp_info(&subl->pp_info[j]);
 		}
-		subl->pp_info = (PP_info *) exalloc(sizeof(PP_info) * subl->num_links);
+		post_process_free_data(&subl->pp_data);
+		exfree(subl->pp_info, sizeof(PP_info) * subl->num_links);
+	}
+	subl->pp_info = (PP_info *) exalloc(sizeof(PP_info) * subl->num_links);
+	for (j = 0; j < subl->num_links; ++j)
+	{
+		subl->pp_info[j].num_domains = 0;
+		subl->pp_info[j].domain_name = NULL;
+	}
+	if (subl->violation != NULL)
+	{
+		exfree((void *)subl->violation, sizeof(char) * (strlen(subl->violation)+1));
+		subl->violation = NULL;
+	}
+
+	/* This can return NULL, for example if there is no
+	   post-processor */
+	pp = do_post_process(postprocessor, opts, sent, subl, false);
+	if (pp == NULL)
+	{
 		for (j = 0; j < subl->num_links; ++j)
 		{
 			subl->pp_info[j].num_domains = 0;
 			subl->pp_info[j].domain_name = NULL;
 		}
-		if (subl->violation != NULL)
+	}
+	else
+	{
+		for (j = 0; j < subl->num_links; ++j)
 		{
-			exfree((void *)subl->violation, sizeof(char) * (strlen(subl->violation)+1));
-			subl->violation = NULL;
-		}
-
-#ifdef USE_FAT_LINKAGES
-		if (linkage->info->improper_fat_linkage)
-		{
-			pp = NULL;
-		}
-		else
-#endif /* USE_FAT_LINKAGES */
-		{
-			pp = do_post_process(postprocessor, opts, sent, subl, false);
-			/* This can return NULL, for example if there is no
-			   post-processor */
-		}
-
-		if (pp == NULL)
-		{
-			for (j = 0; j < subl->num_links; ++j)
+			k = 0;
+			for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
+			subl->pp_info[j].num_domains = k;
+			if (k > 0)
 			{
-				subl->pp_info[j].num_domains = 0;
-				subl->pp_info[j].domain_name = NULL;
+				subl->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
+			}
+			k = 0;
+			for (d = pp->d_type_array[j]; d != NULL; d = d->next)
+			{
+				char buff[5];
+				sprintf(buff, "%c", d->type);
+				subl->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
+
+				k++;
 			}
 		}
-		else
+		subl->pp_data = postprocessor->pp_data;
+		if (pp->violation != NULL)
 		{
-			for (j = 0; j < subl->num_links; ++j)
-			{
-				k = 0;
-				for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
-				subl->pp_info[j].num_domains = k;
-				if (k > 0)
-				{
-					subl->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
-				}
-				k = 0;
-				for (d = pp->d_type_array[j]; d != NULL; d = d->next)
-				{
-					char buff[5];
-					sprintf(buff, "%c", d->type);
-					subl->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
-
-					k++;
-				}
-			}
-			subl->pp_data = postprocessor->pp_data;
-			if (pp->violation != NULL)
-			{
-				char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
-				strcpy(s, pp->violation);
-				subl->violation = s;
-			}
+			char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
+			strcpy(s, pp->violation);
+			subl->violation = s;
 		}
 	}
 	post_process_close_sentence(postprocessor);

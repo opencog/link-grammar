@@ -553,6 +553,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	for (in=0; in < N_linkages_alloced; in++)
 	{
 		lifo = &sent->link_info[in];
+		int index = lifo->index;
 		if (lifo->discarded) continue;
 		if (lifo->N_violations)
 		{
@@ -562,12 +563,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			continue;
 		}
 		extract_links(lifo->index, sent->parse_info);
-		{
-			int index = lifo->index;
-			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->index = index;
-		}
-		else
+		*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
+		lifo->index = index;
+
+		if (0 != lifo->N_violations)
 		{
 			N_valid_linkages--;
 		}
@@ -732,12 +731,6 @@ int sentence_null_count(Sentence sent)
 {
 	if (!sent) return 0;
 	return sent->null_count;
-}
-
-int sentence_num_thin_linkages(Sentence sent)
-{
-	if (!sent) return 0;
-	return sent->num_valid_linkages;
 }
 
 int sentence_num_linkages_found(Sentence sent)

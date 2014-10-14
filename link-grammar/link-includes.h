@@ -397,10 +397,6 @@ link_public_api(void)
 MS_DEPRECATED link_public_api(int)
      linkage_compute_union(Linkage linkage) GNUC_DEPRECATED;
 
-/* When fat links go away, all linkages are thin */
-MS_DEPRECATED link_public_api(int)
-     linkage_is_fat(const Linkage linkage) GNUC_DEPRECATED;
-
 /* When fat links go away, the number of sublinkages will always be one */
 MS_DEPRECATED link_public_api(int)
      linkage_get_num_sublinkages(const Linkage linkage) GNUC_DEPRECATED;
@@ -413,25 +409,6 @@ MS_DEPRECATED link_public_api(bool)
 MS_DEPRECATED link_public_api(int)
      linkage_get_current_sublinkage(const Linkage linkage) GNUC_DEPRECATED;
 
-/* When fat links go away, all linkages are proper. */
-MS_DEPRECATED link_public_api(int)
-     linkage_is_improper(const Linkage linkage) GNUC_DEPRECATED;
-
-/* All linkages are canonical when there are no fat links. */
-MS_DEPRECATED link_public_api(int)
-     linkage_is_canonical(const Linkage linkage) GNUC_DEPRECATED;
-
-/* Not possible without fat links */
-MS_DEPRECATED link_public_api(int)
-     linkage_has_inconsistent_domains(const Linkage linkage) GNUC_DEPRECATED;
-
-/* and cost is always zero without fat links */
-MS_DEPRECATED link_public_api(int)
-     linkage_and_cost(const Linkage linkage) GNUC_DEPRECATED;
-
-/* All linkages are thin, when none are fat */
-MS_DEPRECATED link_public_api(int)
-     sentence_num_thin_linkages(Sentence sent) GNUC_DEPRECATED;
 
 /**********************************************************************
  *
