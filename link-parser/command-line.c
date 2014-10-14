@@ -36,10 +36,6 @@ static struct
 	int panic_mode;
 	int allow_null;
 	int use_cluster_disjuncts;
-#ifdef USE_FAT_LINKAGES
-	int use_fat_links;
-	int display_union;
-#endif /* USE_FAT_LINKAGES */
 	int use_sat_solver;
 	int use_viterbi;
 	int echo_on;
@@ -98,10 +94,6 @@ static Switch default_switches[] =
    {"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
    {"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
-#ifdef USE_FAT_LINKAGES
-   {"union",      Bool, "Display of 'union' linkage",      &local.display_union},
-   {"use-fat",    Bool, "Use fat links when parsing",      &local.use_fat_links},
-#endif /* USE_FAT_LINKAGES */
 #ifdef USE_SAT_SOLVER
    {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
@@ -436,9 +428,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.cost_model = parse_options_get_cost_model_type(opts);
 	local.max_cost = parse_options_get_disjunct_cost(opts);
 	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
-#ifdef USE_FAT_LINKAGES
-	local.use_fat_links = parse_options_get_use_fat_links(opts);
-#endif /* USE_FAT_LINKAGES */
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.use_viterbi = parse_options_get_use_viterbi(opts);
 
@@ -447,9 +436,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.batch_mode = copts->batch_mode;
 	local.panic_mode = copts->panic_mode;
 	local.allow_null = copts->allow_null;
-#ifdef USE_FAT_LINKAGES
-	local.display_union = copts->display_union;
-#endif /* USE_FAT_LINKAGES */
 	local.display_on = copts->display_on;
 	local.display_walls = copts->display_walls;
 	local.display_postscript = copts->display_postscript;
@@ -478,9 +464,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_cost_model_type(opts, local.cost_model);
 	parse_options_set_disjunct_cost(opts, local.max_cost);
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
-#ifdef USE_FAT_LINKAGES
-	parse_options_set_use_fat_links(opts, local.use_fat_links);
-#endif /* USE_FAT_LINKAGES */
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
@@ -492,9 +475,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->batch_mode = local.batch_mode;
 	copts->panic_mode = local.panic_mode;
 	copts->allow_null = local.allow_null;
-#ifdef USE_FAT_LINKAGES
-	copts->display_union = local.display_union;
-#endif /* USE_FAT_LINKAGES */
 	copts->display_on = local.display_on;
 	copts->display_walls = local.display_walls;
 	copts->display_postscript = local.display_postscript;
@@ -523,9 +503,6 @@ Command_Options* command_options_create(void)
 	co->panic_opts = parse_options_create();
 
 	co->screen_width = 79;
-#ifdef USE_FAT_LINKAGES
-	co->display_union = false;
-#endif /* USE_FAT_LINKAGES */
 	co->allow_null = true;
 	co->echo_on = false;
 	co->panic_mode = false;

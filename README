@@ -730,15 +730,14 @@ Fat Links:
    Enabling this will generate a lot of warning messages during
    compilation.
 
-   The only reason that fat link code is still available is that the
-   Russian dictionaries still depend on them to support conjunctions.
+   As of version 5.2.0 (XXX 2014/2015) the "fat link" code has been
+   removed.
 
    Older versions of the link-grammar parser used "fat links" to
    support conjunctions (and, or, but, ...). However, this leads
    to a number of complications, including poor performance due to
    a combinatorial explosion of linkage possibilities, as well as
-   an excessively complex parse algorithm.  As a result, the function
-   is now deprecated, and will be removed in some future version.
+   an excessively complex parse algorithm.
 
 
 SAT solver:

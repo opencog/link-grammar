@@ -245,70 +245,45 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 {
 	char * string;
 	ConstituentDisplayStyle mode;
-#ifdef USE_FAT_LINKAGES
-	Parse_Options opts = copts->popts;
-	int j, first_sublinkage;
-	int nlink;
-#endif /* USE_FAT_LINKAGES */
 
 	if (!linkage) return;  /* Can happen in timeout mode */
 
-#ifdef USE_FAT_LINKAGES
-	if (parse_options_get_use_fat_links(opts) &&
-	    copts->display_union)
+	if (copts->display_bad)
 	{
-		linkage_compute_union(linkage);
-		first_sublinkage = linkage_get_num_sublinkages(linkage)-1;
+		string = linkage_print_pp_msgs(linkage);
+		fprintf(stdout, "%s\n", string);
+		linkage_free_pp_msgs(string);
 	}
-	else
+	if (copts->display_on)
 	{
-		first_sublinkage = 0;
+		string = linkage_print_diagram(linkage, copts->display_walls, copts->screen_width);
+		fprintf(stdout, "%s", string);
+		linkage_free_diagram(string);
 	}
-
-	nlink = linkage_get_num_sublinkages(linkage);
-	for (j=first_sublinkage; j<nlink; ++j)
+	if (copts->display_links)
 	{
-		linkage_set_current_sublinkage(linkage, j);
-#endif /* USE_FAT_LINKAGES */
-		if (copts->display_bad)
-		{
-			string = linkage_print_pp_msgs(linkage);
-			fprintf(stdout, "%s\n", string);
-			linkage_free_pp_msgs(string);
-		}
-		if (copts->display_on)
-		{
-			string = linkage_print_diagram(linkage, copts->display_walls, copts->screen_width);
-			fprintf(stdout, "%s", string);
-			linkage_free_diagram(string);
-		}
-		if (copts->display_links)
-		{
-			string = linkage_print_links_and_domains(linkage);
-			fprintf(stdout, "%s", string);
-			linkage_free_links_and_domains(string);
-		}
-		if (copts->display_senses)
-		{
-			string = linkage_print_senses(linkage);
-			fprintf(stdout, "%s", string);
-			linkage_free_senses(string);
-		}
-		if (copts->display_disjuncts)
-		{
-			string = linkage_print_disjuncts(linkage);
-			fprintf(stdout, "%s", string);
-			linkage_free_disjuncts(string);
-		}
-		if (copts->display_postscript)
-		{
-			string = linkage_print_postscript(linkage, copts->display_walls, false);
-			fprintf(stdout, "%s\n", string);
-			linkage_free_postscript(string);
-		}
-#ifdef USE_FAT_LINKAGES
+		string = linkage_print_links_and_domains(linkage);
+		fprintf(stdout, "%s", string);
+		linkage_free_links_and_domains(string);
 	}
-#endif /* USE_FAT_LINKAGES */
+	if (copts->display_senses)
+	{
+		string = linkage_print_senses(linkage);
+		fprintf(stdout, "%s", string);
+		linkage_free_senses(string);
+	}
+	if (copts->display_disjuncts)
+	{
+		string = linkage_print_disjuncts(linkage);
+		fprintf(stdout, "%s", string);
+		linkage_free_disjuncts(string);
+	}
+	if (copts->display_postscript)
+	{
+		string = linkage_print_postscript(linkage, copts->display_walls, false);
+		fprintf(stdout, "%s\n", string);
+		linkage_free_postscript(string);
+	}
 	if ((mode = copts->display_constituents))
 	{
 		string = linkage_print_constituent_tree(linkage, mode);
@@ -405,43 +380,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 				fprintf(stdout, "	Linkage %d, ", num_displayed+1);
 			}
 
-#ifdef USE_FAT_LINKAGES
-			if (!linkage_is_canonical(linkage))
-			{
-				fprintf(stdout, "non-canonical, ");
-			}
-			if (linkage_is_improper(linkage))
-			{
-				fprintf(stdout, "improper fat linkage, ");
-			}
-			if (linkage_has_inconsistent_domains(linkage))
-			{
-				fprintf(stdout, "inconsistent domains, ");
-			}
-#endif /* USE_FAT_LINKAGES */
-
 			corpus_cost = linkage_corpus_cost(linkage);
-#ifdef USE_FAT_LINKAGES
-			if (corpus_cost < 0.0f)
-			{
-				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f FAT=%d AND=%d LEN=%d)\n",
-				       linkage_unused_word_cost(linkage),
-				       linkage_disjunct_cost(linkage),
-				       linkage_is_fat(linkage),
-				       linkage_and_cost(linkage),
-				       linkage_link_cost(linkage));
-			}
-			else
-			{
-				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%5.2f FAT=%d AND=%d LEN=%d)\n",
-				       corpus_cost,
-				       linkage_unused_word_cost(linkage),
-				       linkage_disjunct_cost(linkage),
-				       linkage_is_fat(linkage),
-				       linkage_and_cost(linkage),
-				       linkage_link_cost(linkage));
-			}
-#else
 			if (corpus_cost < 0.0f)
 			{
 				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f LEN=%d)\n",
@@ -457,7 +396,6 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 				       linkage_disjunct_cost(linkage),
 				       linkage_link_cost(linkage));
 			}
-#endif /* USE_FAT_LINKAGES */
 		}
 
 		process_linkage(linkage, copts);
@@ -588,9 +526,6 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, 100);
 	parse_options_set_max_parse_time(opts, 60);
-#ifdef USE_FAT_LINKAGES
-	parse_options_set_use_fat_links(opts, 0);
-#endif /* USE_FAT_LINKAGES */
 	parse_options_set_islands_ok(opts, 1);
 	parse_options_set_short_length(opts, 6);
 	parse_options_set_all_short_connectors(opts, 1);

@@ -20,10 +20,6 @@ typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;
 
-#ifdef USE_FAT_LINKAGES
-	bool display_union;     /* print squashed version of linkage with conjunction? */
-#endif /* USE_FAT_LINKAGES */
-
 	size_t screen_width;    /* width of screen for displaying linkages */
 	bool batch_mode;        /* if true, process sentences non-interactively */
 	bool allow_null;        /* true if we allow null links in parsing */

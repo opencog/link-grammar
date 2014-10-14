@@ -5,11 +5,6 @@
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-# In link-grammar version 5, fat links will be gone!
-if WITH_FAT_LINKS
-DEFS += -DUSE_FAT_LINKAGES
-endif
-
 # $(top_builddir) to pick up autogened link-grammar/link-features.h 
 INCLUDES = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
