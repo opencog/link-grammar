@@ -14,8 +14,7 @@
 #include "structures.h" /* for s64 */
 
 s64  table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
-/* XXX FIXME do_match does not need a context if its not FAT_LINK ... */
-bool  do_match(count_context_t *, Connector *a, Connector *b, int wa, int wb);
+bool do_match(Connector *a, Connector *b, int wa, int wb);
 s64  do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
 void delete_unmarked_disjuncts(Sentence sent);
 

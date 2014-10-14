@@ -98,7 +98,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
  * Returns TRUE if s and t match according to the connector matching
  * rules.
  */
-bool do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
+bool do_match(Connector *a, Connector *b, int aw, int bw)
 {
 	int dist = bw - aw;
 	assert(aw < bw, "do_match() did not receive params in the natural order.");
@@ -305,9 +305,9 @@ static s64 do_count(fast_matcher_t *mchxt,
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 				Lmatch = (le != NULL) && (d->left != NULL) && 
-				         do_match(ctxt, le, d->left, lw, w);
+				         do_match(le, d->left, lw, w);
 				Rmatch = (d->right != NULL) && (re != NULL) && 
-				         do_match(ctxt, d->right, re, w, rw);
+				         do_match(d->right, re, w, rw);
 
 				if (Lmatch)
 				{
