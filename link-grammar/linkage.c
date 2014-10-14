@@ -130,7 +130,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	size_t remap[sent->length];
 	Parse_Options opts = linkage->opts;
 	bool display_morphology = opts->display_morphology;
-	bool display_word_subscripts = true;
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -174,7 +173,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				exfree(a_list, strlen(a_list)+1);
 			}
 		}
-		else if (display_word_subscripts) 
+		else 
 		{
 			/* print the subscript, as in "dog.n" as opposed to "dog" */
 			t = pi->chosen_disjuncts[i]->string;
@@ -238,17 +237,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 					free(s);
 				}
 			}
-		}
-		else
-		{
-			/* XXX This is wrong, since it fails to indicate what
-			 * was actually used for the parse, which might not actually
-			 * be alternative 0.  We should do like the above, and then
-			 * manually strip the subscript.
-			 * Except that this code is never ever reached, because
-			 * display_word_subscripts is always true...
-			 */
-			t = sent->word[i].alternatives[0];
 		}
 		chosen_words[i] = t;
 	}
