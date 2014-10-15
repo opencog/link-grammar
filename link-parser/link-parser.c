@@ -559,15 +559,14 @@ static void check_winsize(Command_Options* copts)
 	/* unsupported for now */
 #else
 	struct winsize ws;
-	int fd = open("/dev/tty", O_RDWR);
+	int fd = fileno(stdout);
 
 	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
 	{
-		perror("ioctl(/dev/tty, TIOCGWINSZ)");
-		close(fd);
+		if (isatty(fd))
+			perror("stdout: ioctl TIOCGWINSZ");
 		return;
 	}
-	close(fd);
 
 	/* printf("rows %i\n", ws.ws_row); */
 	/* printf("cols %i\n", ws.ws_col); */
@@ -696,9 +695,6 @@ int main(int argc, char * argv[])
 	}
 
 	check_winsize(copts);
-#ifdef _WIN32
-	parse_options_set_screen_width(opts, 79);
-#endif
 
 #if !defined(_MSC_VER) && !defined(__MINGW32__)
 	prt_error("Info: Using locale %s.", locale);
@@ -757,8 +753,9 @@ int main(int argc, char * argv[])
 		if (!copts->batch_mode) batch_in_progress = false;
 		if ('\0' != test[0])
 		{
-			/* In batch mode warn only once */
-			if (!batch_in_progress)
+			/* In batch mode warn only once.
+			 * In auto-next-linkage mode don't warn at all. */
+			if (!batch_in_progress && (NULL == strstr(test, ",auto-next-linkage,")))
 			{
 				fflush(stdout);
 				/* Remind the developer this is a test mode. */
