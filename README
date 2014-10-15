@@ -1308,14 +1308,20 @@ TODO -- Working Notes:
    UTF-8 cleanup:
       -- Replace the mbrtowc code with proper language support; it seems
          that the correct solution is to use ICU http://site.icu-project.org/
+         ICU pros: runs on windows
+         ICU cons: big, complex
       -- Another alternative is libunistring (which seems to be LGPL!?)
          http://www.gnu.org/software/libunistring/
+         pros: smaller, simpler than ICU
+         cons: might have problems with MS Windows.
+      
 
   Version 6.0 TODO list:
     Version 6.0 will change Sentence, Linkage etc. to not be pointers.
 
   Misc TODO:
     -- get rid of sublinkages.
+    -- finish sqlite3 work
 
 
 A performance diary:
