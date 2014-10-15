@@ -1324,7 +1324,7 @@ TODO -- Working Notes:
          http://www.gnu.org/software/libunistring/
          pros: smaller, simpler than ICU
          cons: might have problems with MS Windows.
-      
+
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
          e.g. the max number of characters in a word, or max words

@@ -42,16 +42,18 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
+#else
+#include <windows.h>
+#include <wchar.h>
 #endif
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif
 
-#include <link-grammar/link-includes.h>
+#include "../link-grammar/link-includes.h"
 #include "command-line.h"
 #include "lg_readline.h"
-#include "../link-grammar/expand.h"
 #include "../link-grammar/utilities.h"     /* For MSVC portability */
 #include "../viterbi/viterbi.h"
 #include "../link-grammar/error.h"
@@ -554,9 +556,30 @@ static void print_usage(char *str)
  */
 static void check_winsize(Command_Options* copts)
 {
-/* Neither windows nor MSYS have the ioctl support needed for this. */
 #ifdef _WIN32
-	/* unsupported for now */
+	/* untested code .. does this actually work ??? */
+	HANDLE console;
+	CONSOLE_SCREEN_BUFFER_INFO info;
+
+	int fd = fileno(stdout);
+	if (!isatty(fd)) return;
+
+	/* Create a handle to the console screen. */
+	console = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+		0, NULL);
+	if (console == INVALID_HANDLE_VALUE) goto fail;
+
+	/* Calculate the size of the console window. */
+	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
+	CloseHandle(console);
+
+	copts->screen_width = info.srWindow.Right - info.srWindow.Left;
+	return;
+
+fail:
+	copts->screen_width = 79;
+	return;
 #else
 	struct winsize ws;
 	int fd = fileno(stdout);
