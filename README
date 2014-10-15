@@ -1306,14 +1306,21 @@ TODO -- Working Notes:
       moves capitalization out of ad-hoc C code and into the dictionary,
       where it can be handled like any other language feature.
 
-   Fractional sentence parsing:
+   Incremental sentence parsing:
+      There are multiple reasons to support incremental parsing:
+      -- Real-time dialog
+      -- Parsing of multiple streams, e.g. from play/movie scripts
+      -- segmentation of exceptionally long sentences.
+      This could be implemented by saving dangling right-going
+      connectors into a parse context, and then, when another sentence
+      fragment arrives, use that context in place of the left-wall.
 
    UTF-8 cleanup:
-      -- Replace the mbrtowc code with proper language support; it seems
-         that the correct solution is to use ICU http://site.icu-project.org/
+      Replace the mbrtowc code with proper language support; it seems
+      that the correct solution is to use ICU http://site.icu-project.org/
          ICU pros: runs on windows
          ICU cons: big, complex
-      -- Another alternative is libunistring (which seems to be LGPL!?)
+      Another alternative is libunistring (which seems to be LGPL!?)
          http://www.gnu.org/software/libunistring/
          pros: smaller, simpler than ICU
          cons: might have problems with MS Windows.
