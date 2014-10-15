@@ -1281,29 +1281,32 @@ TODO -- Working Notes:
       arranging choices for words...
       1) create struct alternative for struct word
       2) fix sane_morpheme to use that.
+      Status: A basic design for this has been sketched on the public
+      mailing list.  AmirP is working on it.
 
    Morphology printing:
-      -- Instead of hard-coding LL, declare which links are morpho links
-         in the dict.
+      Instead of hard-coding LL, declare which links are morpho links
+      in the dict.
 
    Word-order flexibility:
-      -- For Lithuanian, the following are desperately needed:
+      For Lithuanian, the following are desperately needed:
          -- connectors with * direction, i.e. either left or right.
          -- symmetric (commuting) version of &.
-         -- DONE, the new symbols are ^ for commuting-& and $ to mean either + or -.
+         -- DONE! The new symbols are ^ for commuting-& and $ to mean
+            either + or -.
             This still needs to be documented.
 
-   Assorted minor cleanup:
-      -- Should provide a query that returns compile-time consts,
-         e.g. the max number of characters in a word, or max words
-         in a sentence
-      -- Should remove compile-time constants, e.g. max words, max
-         length etc.
-      -- Split out parse-options, so that the command-line client
-         options are not in the parse-options struct.
+   Capitalization-mark tokens:
+      The proximal issue is to add a cost, so that Bill gets a lower
+      cost than bill.n when parsing "Bill went on a walk".  The best
+      solution would be to add a 'capitalization-mark token' during
+      tokenization; this token preceeds capitalized words. The
+      dictionary then explicitly links to this token, with rules similar
+      to the a/an phonetic distinction.  The point here is that this
+      moves capitalization out of ad-hoc C code and into the dictionary,
+      where it can be handled like any other language feature.
 
-      -- Add capitalization cost to X_node, so that Bill gets lower
-         cost than bill.n when parsing "Bill went on a walk".
+   Fractional sentence parsing:
 
    UTF-8 cleanup:
       -- Replace the mbrtowc code with proper language support; it seems
@@ -1315,13 +1318,20 @@ TODO -- Working Notes:
          pros: smaller, simpler than ICU
          cons: might have problems with MS Windows.
       
-
-  Version 6.0 TODO list:
-    Version 6.0 will change Sentence, Linkage etc. to not be pointers.
+   Assorted minor cleanup:
+      -- Should provide a query that returns compile-time consts,
+         e.g. the max number of characters in a word, or max words
+         in a sentence
+      -- Should remove compile-time constants, e.g. max words, max
+         length etc.
 
   Misc TODO:
     -- get rid of sublinkages.
     -- finish sqlite3 work
+
+  Version 6.0 TODO list:
+    Version 6.0 will change Sentence to Sentence*, Linkage to Linkage*
+    in the API.  Perhaps this is a bad idea...
 
 
 A performance diary:
