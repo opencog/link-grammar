@@ -441,6 +441,12 @@ USING the parser in your own applications:
    is documented on the web site.
 
 
+USING CMake:
+------------
+   The FindLinkGrammar.cmake file can be used to test for and set up
+   compilation in CMake-based build environments.
+
+
 USING pkg-config:
 -----------------
    To make compiling and linking easier, the current release uses
