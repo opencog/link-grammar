@@ -13,7 +13,7 @@
 #ifndef _LG_READ_DICT_H_
 #define  _LG_READ_DICT_H_
 
-#include <link-grammar/dict-structures.h>
+#include "dict-structures.h"
 
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);

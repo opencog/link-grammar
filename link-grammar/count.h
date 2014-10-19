@@ -10,7 +10,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/api-structures.h>
+#include "api-structures.h"
 #include "structures.h" /* for s64 */
 
 s64  table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);

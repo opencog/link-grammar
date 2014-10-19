@@ -12,4 +12,3 @@
 /* Defined in link-includes.h */
 /* int lg_expand_disjunct_list(Sentence sent); */
 
-#include <link-grammar/link-includes.h>
