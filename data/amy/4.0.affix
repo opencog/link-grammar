@@ -13,7 +13,7 @@
 % Mark the first morpheme by appending STEMSUBSCR.
 .=: STEMSUBSCR+;
 
-% Mark the rest of morphemes by prepending INFIXMARK;
+% Mark the rest of morphemes by prepending INFIXMARK
 =: INFIXMARK+;
 
 % Program and dictionary sanity check: Allow only these combinations.
@@ -40,7 +40,7 @@
 2 10: REGALTS+;
 
 % When all word parts match these regexes,
-% the word is issued as an alternatives.
+% the word is issued as an alternative.
 % Multiple regexes per class are permitted.
 %
 % If needed, add the same regex in more than one definition.
