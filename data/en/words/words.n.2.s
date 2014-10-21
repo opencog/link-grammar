@@ -9539,6 +9539,7 @@ slats.n
 slaughterers.n
 slaughterhouses.n
 slaves.n
+slavers.n
 slayers.n
 sledgehammers.n
 sleds.n
