@@ -14,8 +14,8 @@
 #ifndef _LG_DICT_API_H_
 #define  _LG_DICT_API_H_
 
-#include <link-grammar/dict-structures.h>
-#include <link-grammar/link-includes.h>
+#include "dict-structures.h"
+#include "link-includes.h"
 
 LINK_BEGIN_DECLS
 

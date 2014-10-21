@@ -15,7 +15,7 @@
 
 #include <stdbool.h> /* Needed for bool typedef */
 #include <stdio.h>   /* Needed for FILE* below */
-#include <link-grammar/link-features.h>
+#include "link-features.h"
 
 LINK_BEGIN_DECLS
 
