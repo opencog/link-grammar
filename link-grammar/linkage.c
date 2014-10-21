@@ -16,6 +16,7 @@
 
 #include "analyze-linkage.h"
 #include "api-structures.h"
+#include "dict-common.h"
 #include "disjuncts.h"
 #include "extract-links.h"
 #include "idiom.h"
@@ -53,60 +54,12 @@
  */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
-#define SUFFIX_WORD ("=")      /* suffixes start with this */
-#define SUFFIX_WORD_L 1        /* length of above */
+#define INFIX_MARK_L 1         /* INFIX_MARK is 1 character */
 
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
-#define STEM_MARK "="        /* stems end with this. */
-
 #define HIDE_MORPHO   (!display_morphology)
-
-/* FIXME for is_*:
- * - Use INFIX_MARK and STEMSUBSCR, to match the corresponding affix classes.
- * - There are versions of these functions in api.c - unify them.
- */
-
-/**
- * Return TRUE if the word is a suffix.
- *
- * Suffixes have the form =asdf.asdf or possibly just =asdf without
- * the dot (subscript mark). The "null" suffixes have the form
- * =.asdf (always with the ubscript mark, as there are several).
- * Ordinary equals signs appearing in regular text are either = or =[!].
- */
-static bool is_suffix(const char* w)
-{
-	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return false;
-	if (1 == strlen(w)) return false;
-	if (0 == strcmp("=[!]", w)) return false;
-#if SUBSCRIPT_MARK == '.'
-	/* Hmmm ... equals signs look like suffixes, but they are not ... */
-	if (0 == strcmp("=.v", w)) return false;
-	if (0 == strcmp("=.eq", w)) return false;
-#endif
-	return true;
-}
-
-/* Return TRUE if the word seems to be in stem form.
- * Stems have the distinctive 'shape', that the end with the = sign
- * and are preceded by the subscript mark.
- * Examples (. represented the subscript mark): word.= word.=[!]
- */
-static bool is_stem(const char* w)
-{
-	size_t l = strlen(w);
-	const char *subscrmark;
-
-	if (l < 3) return false;
-
-	subscrmark = strchr(w, SUBSCRIPT_MARK);
-	if (NULL == subscrmark) return false;
-	if (0 != strncmp(subscrmark, STEM_MARK, sizeof(STEM_MARK)-1)) return false;
-
-	return true;
-}
 
 /**
  * This takes the current chosen_disjuncts array and uses it to
@@ -129,6 +82,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	size_t remap[sent->length];
 	Parse_Options opts = linkage->opts;
 	bool display_morphology = opts->display_morphology;
+	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
+	const char infix_mark = INFIX_MARK;
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -194,7 +149,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				/* Concatenate the stem and the suffix together into one word */
 				if (t && HIDE_MORPHO)
 				{
-					if (is_suffix(t) && pi->chosen_disjuncts[i-1] &&
+					if (is_suffix(infix_mark, t) && pi->chosen_disjuncts[i-1] &&
 					    is_stem(pi->chosen_disjuncts[i-1]->string))
 					{
 						const char * stem = pi->chosen_disjuncts[i-1]->string;
@@ -208,7 +163,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 						if (u)
 						{
 							*u = '\0';
-							strcat(join, t + SUFFIX_WORD_L);
+							strcat(join, t + INFIX_MARK_L);
 							t = string_set_add(join, sent->string_set);
 						}
 						free(join);
@@ -219,7 +174,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 					    pi->chosen_disjuncts[i+1])
 					{
 						const char * next = pi->chosen_disjuncts[i+1]->string;
-						if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
+						if (is_suffix(infix_mark, next))
 						{
 							t = NULL;
 						}

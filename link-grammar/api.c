@@ -786,14 +786,8 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 /* A kind of morphism post-processing */
 
 static inline bool
-	is_AFFIXTYPE_STEM(char infix_mark, const char *a, size_t len)
-	{ return (SUBSCRIPT_MARK == a[len]) && (infix_mark == a[len+1]); }
-static inline bool
 	is_AFFIXTYPE_PREFIX(char infix_mark, const char *a, size_t len)
 	{ return infix_mark == a[len-1]; }
-static inline bool
-	is_AFFIXTYPE_SUFFIX(char infix_mark, const char *a)
-	{ return (infix_mark == a[0] && '\0' != a[1]); }
 static inline bool
 	is_AFFIXTYPE_EMPTY(char infix_mark, const char *a, size_t len)
 	{ return (0 == strcmp(a, EMPTY_WORD_MARK)); }
@@ -914,12 +908,12 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 			empty_word = true;
 		}
 		else
-		if (is_AFFIXTYPE_SUFFIX(infix_mark, djw))
+		if (is_suffix(infix_mark, djw))
 		{
 			*affix_types_p = AFFIXTYPE_SUFFIX;
 		}
 		else
-		if (is_AFFIXTYPE_STEM(infix_mark, djw, len))
+		if (is_stem(djw))
 		{
 			*affix_types_p = AFFIXTYPE_STEM;
 		}

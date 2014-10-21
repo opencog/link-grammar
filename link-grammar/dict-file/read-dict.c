@@ -977,8 +977,6 @@ static Exp * make_connector(Dictionary dict)
 /* ======================================================================== */
 /* Empty-word handling. */
 
-/* stems, by definition, always end with ".=" */
-#define STEM_MARK '='
 #define EMPTY_CONNECTOR "ZZZ"
 
 /**
@@ -1019,13 +1017,13 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 
 	if (! dict->empty_word_defined) return;
 
-	if (infix_mark == dn->string[0]) return;
-
+	if (is_stem(dn->string)) return;
 	len = strlen(dn->string);
-	if (STEM_MARK == dn->string[len-1]) return;
-	if (infix_mark == dn->string[len-1]) return;
+	if ((len > 1) && (infix_mark == dn->string[0])) return;
+	if ((len > 1) && (infix_mark == dn->string[len-1])) return;
 	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
 	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
+	//lgdebug(+0, "Processing '%s'\n", dn->string);
 
 	/* If we are here, then this appears to be not a stem, not a
 	 * suffix, and not an idiom word.

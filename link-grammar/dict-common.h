@@ -21,12 +21,15 @@
  * They are not part of the public API. */
 
 bool find_word_in_dict(Dictionary dict, const char *);
-Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err);
+Afdict_class * afdict_find(Dictionary, const char *, bool);
 
 Exp * Exp_create(Dictionary);
 void add_empty_word(Dictionary, Dict_node *);
 
 void patch_subscript(char *);
+
+bool is_suffix(const char, const char *);
+bool is_stem(const char *);
 
 /* Connector names for the affix class lists in the affix file */
 

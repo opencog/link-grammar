@@ -44,6 +44,11 @@
 #define EMPTY_WORD_DOT   "EMPTY-WORD.zzz"  /* Has SUBSCRIPT_DOT in it! */
 #define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
 
+/* Stems, by definition, end with ".=x" (when x is usually an empty string, i.e.
+ * ".="). The STEMSUBSCR definition in the affix file may include endings with
+ * other x valuses, when x serves as a word subscript, e.g. ".=a".  */
+#define STEM_MARK '='
+
 /* Suffixes start with it.
  * This is needed to distinguish suffixes that were stripped off from
  * ordinary words that just happen to be the same as the suffix.

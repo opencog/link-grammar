@@ -28,6 +28,45 @@
 #include "dict-file/word-file.h"
 
 /* ======================================================================== */
+/* Affix type finding */
+
+/**
+ * Return TRUE if the word is a suffix.
+ *
+ * Suffixes have the form =asdf.asdf or possibly just =asdf without
+ * the dot (subscript mark). The "null" suffixes have the form
+ * =.asdf (always with the ubscript mark, as there are several).
+ * Ordinary equals signs appearing in regular text are either = or =[!].
+ */
+bool is_suffix(const char infix_mark, const char* w)
+{
+	if (infix_mark != w[0]) return false;
+	if (1 >= strlen(w)) return false;
+	if (0 == strncmp("[!", w+1, 2)) return false;
+#if SUBSCRIPT_MARK == '.'
+	/* Hmmm ... equals signs look like suffixes, but they are not ... */
+	if (0 == strcmp("=.v", w)) return false;
+	if (0 == strcmp("=.eq", w)) return false;
+#endif
+	return true;
+}
+
+/**
+ * Return TRUE if the word seems to be in stem form.
+ * Stems are signified by including = sign which is preceded by the subscript
+ * mark.  Examples (. represented the subscript mark): word.= word.=[!]
+ */
+bool is_stem(const char* w)
+{
+	const char *subscrmark = strchr(w, SUBSCRIPT_MARK);
+
+	if (NULL == subscrmark) return false;
+	if (subscrmark == w) return false;
+	if (STEM_MARK != subscrmark[1]) return false;
+	return true;
+}
+
+/* ======================================================================== */
 /* Replace the right-most dot with SUBSCRIPT_MARK */
 void patch_subscript(char * s)
 {
