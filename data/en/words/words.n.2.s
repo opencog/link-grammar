@@ -4718,6 +4718,7 @@ gyms.n
 gynaecologists.n
 gynecologists.n
 gyps.n
+gypsies.n
 gyrations.n
 gyroscopes.n
 gyros.n
