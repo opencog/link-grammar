@@ -36,11 +36,11 @@ pkgpyexec_LTLIBRARIES = _clinkgrammar.la
 _clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h 
-_clinkgrammar_la_CPPFLAGS =     \
-   $(SWIG_PYTHON_CPPFLAGS)      \
-   $(PYTHON_CPPFLAGS)           \
-   -I$(top_srcdir)              \
-   -I$(top_builddir)            \
+_clinkgrammar_la_CPPFLAGS =       \
+   $(SWIG_PYTHON_CPPFLAGS)        \
+   $(PYTHON_CPPFLAGS)             \
+   -I$(top_srcdir)                \
+   -I$(top_builddir)/link-grammar \
    $(ANSI_CFLAGS)
 
 _clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module

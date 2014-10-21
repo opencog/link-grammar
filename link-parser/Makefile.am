@@ -6,7 +6,7 @@
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h 
-INCLUDES = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+INCLUDES = -I$(top_srcdir) -I$(top_builddir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 # -----------------------------------------------------------
 # Directives to build the link-parser command-line application
