@@ -5,7 +5,7 @@
 #include <map>
 #include <set>
 
-#include <link-grammar/link-includes.h>
+#include "link-includes.h"
 
 extern "C" {
 #include "count.h"

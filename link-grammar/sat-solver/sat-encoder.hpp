@@ -1,6 +1,4 @@
-extern "C" {
-#include <link-grammar/link-includes.h>
-}
+#include "link-includes.h"
 
 extern "C" int sat_encode(Sentence sent, Parse_Options  opts);
 extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts);
