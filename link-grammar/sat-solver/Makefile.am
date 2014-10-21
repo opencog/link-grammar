@@ -4,7 +4,7 @@ SATSOLVER_VERSION_INFO=2:0:2
 
 libsat_solver_la_LDFLAGS = -version-info $(SATSOLVER_VERSION_INFO)
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/minisat
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/minisat -I$(top_builddir)/link-grammar 
 
 libsat_solver_includedir = $(includedir)/link-grammar $(includedir)/link-grammar/minisat
 
