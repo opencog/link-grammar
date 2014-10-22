@@ -385,7 +385,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
                            ps_ctxt_t *pctx)
 {
 	bool display_short = true;
-	unsigned int i, j, k, cl, cr, row, top_row, top_row_p1;
+	unsigned int i, j, k, cl, cr, inc, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
 	bool print_word_0 = false, print_word_N = false;
@@ -513,10 +513,13 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			s = ppla[j]->link_name;
 
 			k = strlen(s);
-			if ((cl+cr-k)/2 + 1 <= cl) {
+			inc = cl + cr + 2;
+			if (inc < k) inc = 0;
+			else inc = (inc-k)/2;
+			if (inc <= cl) {
 				t = picture[row] + cl + 1;
 			} else {
-				t = picture[row] + (cl + cr + 2 - k)/2;
+				t = picture[row] + inc;
 			}
 
 			/* Add direction indicator */
@@ -554,8 +557,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	if (print_word_0) k = 0; else k = 1;
 	for (; k<N_words_to_print; k++) {
 		s = linkage->word[k];
-		i=0;
-		while(*s != '\0') {
+		i = 0;
+		while (*s != '\0') {
 			*t++ = *s++;
 			i++;
 		}
