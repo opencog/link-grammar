@@ -54,6 +54,7 @@
 /* In particular, be careful to avoid including strings.h */
 
 /* MS Visual C uses non-standard string function names */
+#define alloca _alloca
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #define strcasecmp _stricmp
