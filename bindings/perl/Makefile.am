@@ -15,7 +15,7 @@ dist_pkgperl_SCRIPTS = \
 
 if HAVE_SWIG
 $(BUILT_SOURCES): $(SWIG_SOURCES)
-	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -I$(top_builddir) -o $@ $<
 endif
 
 # These are packaged in the tarball; make clean should not remove them.
@@ -31,10 +31,10 @@ pkgperl_LTLIBRARIES = clinkgrammar.la
 clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 
 clinkgrammar_la_CPPFLAGS = \
-   $(SWIG_PERL_CPPFLAGS)           \
-   $(PERL_CFLAGS)                  \
-   -I$(top_srcdir)                 \
-   -I$(top_builddir)/link-grammar  \
+   $(SWIG_PERL_CPPFLAGS)   \
+   $(PERL_CFLAGS)          \
+   -I$(top_srcdir)         \
+   -I$(top_builddir)       \
    $(ANSI_CFLAGS)
 
 clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PERL_LDFLAGS) -module

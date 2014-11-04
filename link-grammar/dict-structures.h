@@ -12,10 +12,10 @@
 /*************************************************************************/
 
 #ifndef _LG_DICT_STRUCTURES_H_
-#define  _LG_DICT_STRUCTURES_H_
+#define _LG_DICT_STRUCTURES_H_
 
-#include "link-features.h"
-#include "link-includes.h"
+#include <link-grammar/link-features.h>
+#include <link-grammar/link-includes.h>
 
 LINK_BEGIN_DECLS
 
