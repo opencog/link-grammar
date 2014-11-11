@@ -7318,8 +7318,12 @@ n't n’t: N- or EB-;
   <marker-common-entity> or
   <ordinary-const-adj>;
 
+% Add a miniscule cost, so that the noun form is prefered...
+% An older formulation of this used Ah- as the link, but I don't see
+% why.  Generic adjective should be OK. Given a cost of 0.04, so
+% as to give a slight prefernce for the noun-form, if possible.
 HYPHENATED-WORDS.a:
-  ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
+  [<ordinary-adj>]0.04;
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:
@@ -8897,7 +8901,9 @@ UNKNOWN-WORD.n:
 UNKNOWN-WORD.v:
   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & {@MV+};
 
-UNKNOWN-WORD.a: <ordinary-adj>;
+% Add a miniscule cost, so that the noun-form is prefered, when
+% availble.
+UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 
 % The WV+ after the Xx+ allows the root verb after the punct to attach
 % to the wall.  e.g. "A woman lives next door, who is a nurse."
