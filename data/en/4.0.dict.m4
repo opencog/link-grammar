@@ -3191,7 +3191,7 @@ and.v-fill:
     or [[@MV+ & O*n+]]
   ) & {@MV+};
 
-drive.v:
+catch.v drive.v:
   VERB_PLI(<vc-run>);
 
 % special case: run-present-tense + run-beaten-driven
@@ -3200,9 +3200,10 @@ run.v: VERB_PLI(<vc-run>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
 
-runs.v beats.v drives.v: VERB_S_T(<vc-run>);
+runs.v beats.v catches.v drives.v:
+  VERB_S_T(<vc-run>);
 
-ran.v-d drove.v-d:
+ran.v-d caught.v-d drove.v-d:
   VERB_SPPP_T(<vc-run>);
 
 % XXX is all this stuff really necessary?
@@ -3219,12 +3220,12 @@ beaten.v driven.v:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-running.v beating.v driving.v:
+running.v beating.v catching.v driving.v:
   (<verb-pg> & <vc-run>) or
   <verb-and-pg-> or <verb-and-pg+>;
 
 % [A+]0.5: "I like eating bass": eating is not the adjective, here.
-running.g beating.g driving.g:
+running.g beating.g catching.g driving.g:
   (<vc-run> & <verb-ge>) or
   <verb-ge-d> or
   ({@E-} & [A+]0.5);
