@@ -2952,7 +2952,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 /en/words/words.v.1.2: VERB_S_I(<vc-intrans>);
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
-/en/words/words.v.1.3: VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
+/en/words/words.v.1.3:
+  VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
 
 % Va+: "It was rusted closed"
 rusted.v-d:
@@ -3017,10 +3018,17 @@ came.v-d: VERB_SPPP_I(<vc-come>);
 
 % Put a very small cost on A+ to allow verb conjunctions to come first.
 /en/words/words.v.2.3:
-  VERB_SPPP_T(`<vc-tr,intr>') or
-  <verb-pv> or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(`<vc-tr,intr>')
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
+
+% Pa+: "The vase landed, unbroken"
+landed.v-d crashed.v-d crash-landed.v-d:
+  VERB_SPPP_T(`<vc-tr,intr> or ({Xc+} & Pa+)')
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
 
 /en/words/words.v.2.4:
   <verb-pg> & <vc-tr,intr>;
