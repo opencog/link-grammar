@@ -3131,7 +3131,7 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
-drove.v-d flew.v-d froze.v-d hid.v-d
+flew.v-d froze.v-d hid.v-d
 rang.v-d rode.v-d sprang.v-d stalked.v-d woke.v-d
  test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
 countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d
@@ -3197,14 +3197,17 @@ and.v-fill:
     or [[@MV+ & O*n+]]
   ) & {@MV+};
 
+drive:
+  VERB_PLI(<vc-run>);
+
 run.v: VERB_PLI(<vc-run>) or
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
 
-runs.v beats.v: VERB_S_T(<vc-run>);
+runs.v beats.v drives.v: VERB_S_T(<vc-run>);
 
-ran.v-d:
+ran.v-d drove.v-d:
   VERB_SPPP_T(<vc-run>);
 
 % XXX is all this stuff really necessary?
@@ -3221,12 +3224,12 @@ beaten:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-running.v beating.v:
+running.v beating.v driving.v:
   (<verb-pg> & <vc-run>) or
   <verb-and-pg-> or <verb-and-pg+>;
 
 % [A+]0.5: "I like eating bass": eating is not the adjective, here.
-running.g beating.g:
+running.g beating.g driving.g:
   (<vc-run> & <verb-ge>) or
   <verb-ge-d> or
   ({@E-} & [A+]0.5);
