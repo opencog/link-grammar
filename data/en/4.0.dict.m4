@@ -5051,10 +5051,10 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 color.v colour.v paint.v: VERB_PLI(<vc-color>);
 colors.v colours.v paints.v: VERB_S_T(<vc-color>);
 colored.v-d coloured.v-d painted.v-d:
-  VERB_SPPP_T(<vc-color>) or
-  (<verb-pv-b> & {O+ or K+} & {@MV+}) or
-  ({K+} & <verb-phrase-opener>) or
-  <verb-adj>;
+  VERB_SPPP_T(<vc-color>)
+  or (<verb-pv-b> & {O+ or K+ or Va+} & {@MV+})
+  or ({K+} & <verb-phrase-opener>)
+  or <verb-adj>;
 
 coloring.v colouring.v painting.v:
   (<verb-pg> & <vc-color>) or

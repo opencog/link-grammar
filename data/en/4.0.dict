@@ -6486,10 +6486,10 @@ colored.v-d coloured.v-d painted.v-d:
   ((<verb-sp,pp> & (<vc-color>)) or
   (<verb-and-sp-i-> & ([<vc-color>]0.2 or ())) or
   ((<vc-color>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or
-  (<verb-pv-b> & {O+ or K+} & {@MV+}) or
-  ({K+} & <verb-phrase-opener>) or
-  <verb-adj>;
+  <verb-and-sp-t>
+  or (<verb-pv-b> & {O+ or K+ or Va+} & {@MV+})
+  or ({K+} & <verb-phrase-opener>)
+  or <verb-adj>;
 
 coloring.v colouring.v painting.v:
   (<verb-pg> & <vc-color>) or
