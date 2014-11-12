@@ -4239,7 +4239,7 @@ envisaged.v-d:
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
   ({@E-} & ((Pvf- & <verb-wall>) or [[Mv-]]) & {@MV+} & {THi+}) or
-  [[{@E-} & A+]] or
+  <verb-adj> or
   [[<verb-phrase-opener>]];
 
 predicting.g realizing.g discovering.g determining.g

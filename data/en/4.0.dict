@@ -5100,7 +5100,7 @@ said.v-d:
   ((<vc-predict>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or
   ({@E-} & ((Pvf- & <verb-wall>) or [[Mv-]]) & {@MV+} & {THi+}) or
-  [[{@E-} & A+]] or
+  <verb-adj> or
   [[<verb-phrase-opener>]];
 
 predicting.g realizing.g discovering.g determining.g
