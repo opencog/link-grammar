@@ -2205,6 +2205,7 @@ per "/.per": Us+ & Mp-;
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
 <verb-pv>:   {@E-} & ((Pv- & {<verb-wall>}) or Mv-) & {@MV+};
+<verb-pvk>:   {@E-} & ((Pv- & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
@@ -3213,9 +3214,9 @@ runs.v beats.v catches.v drives.v strikes.v:
   VERB_S_T(<vc-run>);
 
 % <verb-pv>: "He was struck by the bus"
-% (<verb-pv> & K+): "He was caught up in his work"
+% <verb-pvk> with K+: "He was caught up in his work"
 ran.v-d caught.v-d drove.v-d struck.v-d:
-  VERB_SPPP_T(<vc-run>) or (<verb-pv> & {K+});
+  VERB_SPPP_T(<vc-run>) or <verb-pvk>;
 
 % XXX is all this stuff really necessary?
 beat.v-d:
