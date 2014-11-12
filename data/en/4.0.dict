@@ -3191,7 +3191,7 @@ rising.v falling.v:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
+split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   
   ((<verb-sp,pp> & (<vc-fill>)) or
   (<verb-and-sp-i-> & ([<vc-fill>]0.2 or ())) or
@@ -3219,7 +3219,7 @@ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   ((<vc-fill>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>;
 
-beaten.v bitten.v blown.v broken.v driven.v drunk.v
+bitten.v blown.v broken.v driven.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
 sprung.v stricken.v swum.v woken.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v
@@ -3290,7 +3290,7 @@ run.v:
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
 
-runs.v: 
+runs.v beats.v: 
   ((<verb-s> & (<vc-run>)) or
   (<verb-and-sp-i-> & (([<vc-run>]) or ())) or
   ((<vc-run>) & <verb-and-sp-i+>) or
@@ -3303,9 +3303,36 @@ ran.v-d:
   ((<vc-run>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>;
 
-running.v:
+% XXX is all this stuff really necessary?
+beat.v-d:
+  
+  ((<verb-sp,pp> & (<vc-run>)) or
+  (<verb-and-sp-i-> & ([<vc-run>]0.2 or ())) or
+  ((<vc-run>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-run>) or
+  (<verb-pv> & {K+}) or
+  ({@E-} & A+) or
+  ({K+} & <verb-phrase-opener>);
+
+beaten:
+  
+  ((<verb-pp> & (<vc-run>)) or
+  (<verb-and-had-> & (([<vc-run>]) or ())) or
+  ((<vc-run>) & <verb-and-had+>)) or
+  (<verb-pv> & {K+}) or
+  ({@E-} & A+) or
+  ({K+} & <verb-phrase-opener>);
+
+running.v beating.v:
   (<verb-pg> & <vc-run>) or
   <verb-and-pg-> or <verb-and-pg+>;
+
+% [A+]0.5: "I like eating bass": eating is not the adjective, here.
+running.g beating.g:
+  (<vc-run> & <verb-ge>) or
+  <verb-ge-d> or
+  ({@E-} & [A+]0.5);
 
 % ------------------------------------------------------------
 % common transitive verbs
