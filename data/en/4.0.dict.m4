@@ -682,11 +682,11 @@ good-night.n-u goodnight.n-u welcome.n-u well.n-u:
 % Want to cost this so that it doesn't interfere with given name "Tom".
 tom.n-u: [<marker-common-entity> or <mass-noun>];
 
-% Nouns that are also adjectives (e.g. red.n) and so we don't want to
-% allow these to take AN+ links.  We need these as nouns, so as to
-% parse 'she prefers red'. However, assign a cost, so that 'her shoes
-% are red' gets red.a perfered over red.n.
-% [[Ds-]] to allow: "The house was painted a fading yellow"
+% Nouns that are also adjectives (e.g. red.a) and so we don't want to
+% allow these to take AN+ links (we want to have red.a get used instead). 
+% But we do need these as nouns, so as to parse 'she prefers red'.
+% However, assign a cost, so that 'her shoes are red' gets red.a (with
+% the Pa link) perfered over red.n (with the O link).
 %
 % Doesn't seem to need a noun-and-x to make this work ...
 % In other respects, these are kind-of-like mass nouns...
@@ -698,7 +698,7 @@ tawny.n ultramarine.n umber.n yellow.n:
     (GN+ & (DD- or [()]))
     or Up-
     or Wa-
-    or (({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
+    or ({Dmu-} & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
     or (YS+ & {Dmu-})
     ));
 
@@ -7425,20 +7425,34 @@ n't n’t: N- or EB-;
 HYPHENATED-WORDS.a:
   [<ordinary-adj>]0.04;
 
-% Try again:
+% Color names. Just like ordinary adjectives, except that the
+% color names themselves can be modified by other nouns, gerunds,
+% verbs and adjectives.
+% This is done with the {(AN- or A-) & {Ds-}}
+% I'm unclear about all the other adjective gobbledy-gook
+%
 % "She prefers fire-engine red"
-% "Her shoes are fire-engine red"
-% "The house was painted fire-engine red"
-% "The house was painted burnt umber"
-% "The house was painted yellow lime"
-% "The house was painted a fading yellow"
+% A-: "The house was painted burnt umber"
+%     "The house was painted yellow lime"
+% A- & Ds-: "The house was painted a fading yellow"
+% AN-: "The house was painted fire-engine red"
+%      "Her shoes are fire-engine red"
 <color-adj>:
-  (<ordinary-adj> or A+);
+  {EA- or EF+} & {(AN- or A-) & {Ds-}} &
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
+    or ({@MV+} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or <adj-op>);
 
+% pinkish brownish not in this list as they can't take the modifiers.
 auburn.a black.a blue.a blueberry.a 
-brown.a green.a gray.a grayish.a ochre.a pink.a pinkish.a 
-purple.a purplish.a rasberry.a raspberry.a red.a reddish.a
-tawny.a ultramarine.a umber.a yellow.a yellowish.a:
+brown.a green.a gray.a grey.a lime.a
+ochre.a orange.a pink.a purple.a
+rasberry.a raspberry.a red.a
+tawny.a ultramarine.a umber.a yellow.a:
   <color-adj>;
 
 

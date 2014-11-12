@@ -483,14 +483,6 @@ You, at least, should know.
 we should at least feed the goats in the petting area
 This is the man who, in some ways, I would like to hire
 
-% Color names can be nouns as well as adjectives:
-She prefers red.
-Blue is the new black.
-
-% bright.e in an adverbial role:
-some areas appear bright red.
-some areas look bright red.
-
 % Verbs acting as adjectival modifiers (A+ link):
 % Everything in v.2.3, v.4.3, v.6.3 and v.8.3, and special cases:
 This has become a very politicized deal.
@@ -1212,7 +1204,21 @@ The house is painted all white
 The house was painted pale yellow
 The house was painted a fading yellow
 The house was painted a faded yellow
+The house was painted burnt umber
+The house was painted yellow lime
 The house is painted a sublime shade of yellow
+Blue is the new black.
+Her shoes were marine grey
+Her shoes were a marine grey
+It looked to be bluish in color
+
+% Color names can be nouns as well as adjectives:
+She prefers red.
+She prefers fire-engine red
+
+% bright.e in an adverbial role:
+some areas appear bright red.
+some areas look bright red.
 
 % Pa links with adjectives
 William is described as smooth, yet reserved
