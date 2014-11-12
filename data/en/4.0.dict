@@ -3203,9 +3203,9 @@ split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
   ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
-drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d
-rang.v-d rode.v-d sprang.v-d
-stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
+drove.v-d flew.v-d froze.v-d hid.v-d
+rang.v-d rode.v-d sprang.v-d stalked.v-d woke.v-d
+ test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
 countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d
 partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d
 backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d
@@ -3242,17 +3242,6 @@ stridden.v slain_dead:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-run.v: 
-  ((<verb-pl,i> & (<vc-fill>)) or
-  (<verb-and-pl-> & ((<vc-fill>) or ())) or
-  ((<vc-fill>) & <verb-and-pl+>)) or
-  
-  ((<verb-pp> & (<vc-fill>)) or
-  (<verb-and-had-> & (([<vc-fill>]) or ())) or
-  ((<vc-fill>) & <verb-and-had+>)) or
-  (<verb-pv> & {K+}) or
-  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
-
 /en/words/words.v.6.4:
   (<verb-pg> & <vc-fill>) or
   <verb-and-pg-> or <verb-and-pg+>;
@@ -3269,10 +3258,54 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   (<verb-and-pl-> & ((<vc-fill>) or ())) or
   ((<vc-fill>) & <verb-and-pl+>));
 
+% ------------------------------------------------------------
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
 % XXX TODO review this ...
 and.v-fill:
   ((VJlg- & VJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
+
+% ------------------------------------------------------------
+% Just like vc-fill above, but includes predicative adjectives:
+% Pa+ link: "The truck ran uncontrolled"
+% Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
+%     "Make it nice and soft"
+%
+<vc-run>:
+  ((K+ & {[[@MV+]]} & O*n+)
+    or Pa+
+    or ({O+ or <b-minus>} & {K+})
+    or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
+    or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
+    or [[@MV+ & O*n+]]
+  ) & {@MV+};
+
+run.v: 
+  ((<verb-pl,i> & (<vc-run>)) or
+  (<verb-and-pl-> & ((<vc-run>) or ())) or
+  ((<vc-run>) & <verb-and-pl+>)) or
+  
+  ((<verb-pp> & (<vc-run>)) or
+  (<verb-and-had-> & (([<vc-run>]) or ())) or
+  ((<vc-run>) & <verb-and-had+>)) or
+  (<verb-pv> & {K+}) or
+  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
+
+runs.v: 
+  ((<verb-s> & (<vc-run>)) or
+  (<verb-and-sp-i-> & (([<vc-run>]) or ())) or
+  ((<vc-run>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
+
+ran.v-d:
+  
+  ((<verb-sp,pp> & (<vc-run>)) or
+  (<verb-and-sp-i-> & ([<vc-run>]0.2 or ())) or
+  ((<vc-run>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t>;
+
+running.v:
+  (<verb-pg> & <vc-run>) or
+  <verb-and-pg-> or <verb-and-pg+>;
 
 % ------------------------------------------------------------
 % common transitive verbs
@@ -4096,7 +4129,7 @@ reigns.v rules.w:
   ((<verb-s> & (<vc-reign>)) or
   (<verb-and-s-> & ([(<vc-reign>)] or ())) or
   ((<vc-reign>) & <verb-and-s+>));
-reigned.v ruled.w: 
+reigned.v-d ruled.w-d: 
   ((<verb-sp,pp> & (<vc-reign>)) or
   (<verb-and-sp-i-> & (([<vc-reign>]) or ())) or
   ((<vc-reign>) & <verb-and-sp-i+>));

@@ -3131,9 +3131,9 @@ split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
   ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
-drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d
-rang.v-d rode.v-d sprang.v-d
-stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
+drove.v-d flew.v-d froze.v-d hid.v-d
+rang.v-d rode.v-d sprang.v-d stalked.v-d woke.v-d
+ test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
 countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d
 partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d
 backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d
@@ -3163,11 +3163,6 @@ stridden.v slain_dead:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-run.v: VERB_PLI(<vc-fill>) or
-  VERB_PP(<vc-fill>) or
-  (<verb-pv> & {K+}) or
-  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
-
 /en/words/words.v.6.4:
   (<verb-pg> & <vc-fill>) or
   <verb-and-pg-> or <verb-and-pg+>;
@@ -3181,10 +3176,40 @@ run.v: VERB_PLI(<vc-fill>) or
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   VERB_PLI(<vc-fill>);
 
+% ------------------------------------------------------------
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
 % XXX TODO review this ...
 and.v-fill:
   ((VJlg- & VJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
+
+% ------------------------------------------------------------
+% Just like vc-fill above, but includes predicative adjectives:
+% Pa+ link: "The truck ran uncontrolled"
+% Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
+%     "Make it nice and soft"
+%
+<vc-run>:
+  ((K+ & {[[@MV+]]} & O*n+)
+    or Pa+
+    or ({O+ or <b-minus>} & {K+})
+    or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
+    or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
+    or [[@MV+ & O*n+]]
+  ) & {@MV+};
+
+run.v: VERB_PLI(<vc-run>) or
+  VERB_PP(<vc-run>) or
+  (<verb-pv> & {K+}) or
+  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
+
+runs.v: VERB_S_T(<vc-run>);
+
+ran.v-d:
+  VERB_SPPP_T(<vc-run>);
+
+running.v:
+  (<verb-pg> & <vc-run>) or
+  <verb-and-pg-> or <verb-and-pg+>;
 
 % ------------------------------------------------------------
 % common transitive verbs
@@ -3653,7 +3678,7 @@ acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 % See also rule.v far below
 reign.v rule.w: VERB_PLI(<vc-reign>);
 reigns.v rules.w: VERB_S_I(<vc-reign>);
-reigned.v ruled.w: VERB_SPPP_I(<vc-reign>);
+reigned.v-d ruled.w-d: VERB_SPPP_I(<vc-reign>);
 reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
