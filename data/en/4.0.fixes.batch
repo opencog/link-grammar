@@ -1152,6 +1152,8 @@ We shall go undefeated!
 We will go undefeated!
 The vase landed unbroken
 The vase landed, unbroken
+They continued undaunted
+They continued, undaunted
 
 
 % Many common adjectives should take the B+ connector.
@@ -1235,6 +1237,25 @@ It was painted green
 
 % ... or both -- drunk wants Pa link, both wants Opt link
 Was the man drunk or crazy or both?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% More predicative-style constructions
+
+He emerged, spirit unbroken
+He was set free, spirit unbroken.
+He laughed, at last set free
+He cried, heart heavy
+He winced, pain shooting up his arm
+He reddened, angered by their words
+He reddened, embarrassed by their words
+He shuffled, sad in his heart
+He shuffled, aching limbs hanging heavy
+He sneezed, eyes red and itchy
+He nodded, eyelids drooping with sleep
+He coughed, clearing his throat
+He stumbled unseeing through the darkness
+He stumbled, eyes blinded by the sudden light
+He stumbled, blinded by the sudden light
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% particles %%%%%%%%%%%%%%%%%%%%%%%%%%
