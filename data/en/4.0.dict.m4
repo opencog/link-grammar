@@ -690,8 +690,9 @@ tom.n-u: [<marker-common-entity> or <mass-noun>];
 %
 % Doesn't seem to need a noun-and-x to make this work ...
 % In other respects, these are kind-of-like mass nouns...
-auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n
-tawny.n ultramarine.n yellow.n:
+auburn.n black.n blue.n brown.n green.n gray.n ochre.n 
+pink.n purple.n red.n
+tawny.n ultramarine.n umber.n yellow.n:
   <marker-common-entity>
   or (<noun-modifiers> & (
     (GN+ & (DD- or [()]))
@@ -5056,9 +5057,11 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 
 % Minimal ditransitive extenstion of words.v.6
 % ditransitive: "Please paint it lime green"
+% (O+ & Pa+): "Please paint it green"
 <vc-color>:
   <vc-fill>
-  or <vc-ditrans>;
+  or <vc-ditrans>
+  or (O+ & Pa+);
 
 % Pa+: "The house was painted yellow"
 color.v colour.v paint.v: VERB_PLI(<vc-color>);
@@ -7421,6 +7424,23 @@ n't n’t: N- or EB-;
 % as to give a slight prefernce for the noun-form, if possible.
 HYPHENATED-WORDS.a:
   [<ordinary-adj>]0.04;
+
+% Try again:
+% "She prefers fire-engine red"
+% "Her shoes are fire-engine red"
+% "The house was painted fire-engine red"
+% "The house was painted burnt umber"
+% "The house was painted yellow lime"
+% "The house was painted a fading yellow"
+<color-adj>:
+  (<ordinary-adj> or A+);
+
+auburn.a black.a blue.a blueberry.a 
+brown.a green.a gray.a grayish.a ochre.a pink.a pinkish.a 
+purple.a purplish.a rasberry.a raspberry.a red.a reddish.a
+tawny.a ultramarine.a umber.a yellow.a yellowish.a:
+  <color-adj>;
+
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:
