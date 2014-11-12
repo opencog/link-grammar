@@ -1078,6 +1078,9 @@ John imagines himself singing from a mountaintop
 I imagined myself dozing on a sunny beach
 John imagined Mary as innocent as a lamb.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% Predicative adjectives %%%%%%%%%%%%%%%%%%%
+%
 % sit, stand must take Pa+ link ... 
 The house now sits vacant
 The house now stands vacant
@@ -1127,6 +1130,14 @@ The cold froze the mud solid.
 % Like the above, but can only be used with "dead"
 He was slain dead by the arrows.
 
+The champ remains undefeated
+The bomb remained unexploded
+His spirit seems undefeated
+The team went undefeated
+The team still goes undefeated
+We shall go undefeated!
+We will go undefeated!
+
 % Many common adjectives should take the B+ connector.
 Mary is too angry to talk to
 Mary is too abrasive to talk to
@@ -1173,6 +1184,25 @@ The house was painted a fading yellow
 The house was painted a faded yellow
 The house is painted a sublime shade of yellow
 
+% Pv links...
+He is flighty and given to fanciful thoughts.
+He is thoughtful and not given to many words.
+He is thoughtful, and not given to many words.
+
+% Pa links with adjectives
+William is described as smooth, yet reserved
+William is described as smooth, yet thoughtful and reserved
+William is described as smooth and yet thoughtful
+
+William is described as smooth and obliging, yet reserved and resolved
+
+William Petre is described as smooth and obliging in manner, yet reserved and resolved, and not given to many words.
+
+% ... or both -- drunk wants Pa link, both wants Opt link
+Was the man drunk or crazy or both?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% particles %%%%%%%%%%%%%%%%%%%%%%%%%%
 % act out, act up
 He is going to act out until he gets what he wants.
 Call me if it acts up.
@@ -2947,8 +2977,8 @@ It's a good thing he did it.
 It's a good thing that he did it.
 
 
-% elided "to be" (phantom to be)
-% Handled by Pa**j, O*n
+% elided "to be" (phantom to be) 
+% Handled by Pa**j, O*n  (predicative adjective, object)
 She will think it an act of kindness.
 She will think it to be an act of kindness.
 She will think it true.
@@ -3517,20 +3547,6 @@ The river is helf a mile wide here and 300 feet deep
 The river is wide here, and deep, too.
 
 Most of the 16th and 17th century leases included husbandry clauses.
-
-% Pv links...
-He is flighty and given to fanciful thoughts.
-He is thoughtful and not given to many words.
-He is thoughtful, and not given to many words.
-
-% Pa links with adjectives
-William is described as smooth, yet reserved
-William is described as smooth, yet thoughtful and reserved
-William is described as smooth and yet thoughtful
-
-William is described as smooth and obliging, yet reserved and resolved
-
-William Petre is described as smooth and obliging in manner, yet reserved and resolved, and not given to many words.
 
 % comma as a conjunction
 It tastes bitter, not sweet.
@@ -4240,9 +4256,6 @@ Could we add some tom-tom to that track?
 
 % Other capitalization issues:
 We are from the planet Gorpon.
-
-% ... or both -- drunk wants Pa link, both wants Opt link
-Was the man drunk or crazy or both?
 
 % Broken comparatives:
 He is nothing less than inspired!
