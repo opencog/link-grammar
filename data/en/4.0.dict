@@ -3157,16 +3157,10 @@ rising.v falling.v:
 % ({@E-} & B- & O+ & K+):
 %   "What are the chances she will DRIVE him up to the farm?"
 %
-% Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
-% "Make it nice and soft"
-% XXX However, very few of these verbs actually take the Pa**j link ...
-% and so should be reclassed.
-% e.g.  *they're building a skyscraper tall
+% No Pa links here: *they're building a skyscraper tall
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+)
     or ({O+ or <b-minus>} & {K+})
-    or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
-    or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
     or [[@MV+ & O*n+]]
   ) & {@MV+};
 
@@ -7207,7 +7201,7 @@ appreciated.v-d spent.v-d:
 appreciating.g spending.g: (<vc-appreciate> & <verb-ge>) or <verb-ge-d>;
 appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
-% Pa**j is used for predicative adjectives
+% Pa**j is used for predicative adjectives: "make it nice and soft"
 % ditransitive
 <vc-make>:
   ((O+ or <b-minus> or OX+) & {
