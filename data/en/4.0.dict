@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.4 (formatted as V5v1v4+)
-<dictionary-version-number>: V5v1v4+;
+% Dictionary version number is 5.2.0 (formatted as V5v2v0+)
+<dictionary-version-number>: V5v2v0+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -3304,12 +3304,14 @@ runs.v beats.v catches.v drives.v strikes.v:
   ((<vc-run>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
 
+% <verb-pv>: "He was struck by the bus"
+% (<verb-pv> & K+): "He was caught up in his work"
 ran.v-d caught.v-d drove.v-d struck.v-d:
   
   ((<verb-sp,pp> & (<vc-run>)) or
   (<verb-and-sp-i-> & ([<vc-run>]0.2 or ())) or
   ((<vc-run>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  <verb-and-sp-t> or (<verb-pv> & {K+});
 
 % XXX is all this stuff really necessary?
 beat.v-d:
@@ -3385,7 +3387,7 @@ running.g beating.g catching.g driving.g striking.g:
   ((<vc-trans>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or
   <verb-pv> or
-  (({@E-} or {@EA-} or {@AN-}) & A+) or
+  (({@E-} or {@EA-} or {@AN-}) & [A+]0.5) or
   <verb-phrase-opener>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
@@ -3397,7 +3399,7 @@ running.g beating.g catching.g driving.g striking.g:
   ((<vc-trans>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
   or <verb-phrase-opener>;
 
 /en/words/words.v.4.4
@@ -3425,7 +3427,7 @@ overrun.v-d upset.v-d undercut.v-d:
   <verb-and-sp-t> or
   (<verb-ico> & <vc-trans>) or
   <verb-pv> or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   <verb-phrase-opener>;
 
 forsaken.v overridden.v overtaken.v rewritten.v undone.v
@@ -3435,7 +3437,7 @@ beset.v mistaken.v underwritten.v:
   (<verb-and-had-> & (([<vc-trans>]) or ())) or
   ((<vc-trans>) & <verb-and-had+>)) or
   <verb-pv> or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   <verb-phrase-opener>;
 
 % -----------------------------------------------------------------

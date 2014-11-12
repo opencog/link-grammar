@@ -223,7 +223,7 @@ we are going to arrive exactly on time
 we are going to arrive about on time
 we are going to arrive just about on time
 
-% words.v.4.1
+% words.v.4.1 -- some predicative-adjective stuff in here
 It reduced chances that profits could equal their earlier performance
 It reduced chances that profits could affect the outcome
 It reduced the chances that profits could affect the outcome
@@ -1197,11 +1197,6 @@ The house was painted a fading yellow
 The house was painted a faded yellow
 The house is painted a sublime shade of yellow
 
-% Pv links...
-He is flighty and given to fanciful thoughts.
-He is thoughtful and not given to many words.
-He is thoughtful, and not given to many words.
-
 % Pa links with adjectives
 William is described as smooth, yet reserved
 William is described as smooth, yet thoughtful and reserved
@@ -1210,6 +1205,16 @@ William is described as smooth and yet thoughtful
 William is described as smooth and obliging, yet reserved and resolved
 
 William Petre is described as smooth and obliging in manner, yet reserved and resolved, and not given to many words.
+
+% Pv links...
+He is flighty and given to fanciful thoughts.
+He is thoughtful and not given to many words.
+He is thoughtful, and not given to many words.
+
+% More Pv links
+He was caught up in his work
+He was struck by the bus
+He was struck by these words
 
 % ... or both -- drunk wants Pa link, both wants Opt link
 Was the man drunk or crazy or both?

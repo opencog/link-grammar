@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.4 (formatted as V5v1v4+)
-<dictionary-version-number>: V5v1v4+;
+% Dictionary version number is 5.2.0 (formatted as V5v2v0+)
+<dictionary-version-number>: V5v2v0+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -3209,8 +3209,10 @@ run.v: VERB_PLI(<vc-run>) or
 runs.v beats.v catches.v drives.v strikes.v:
   VERB_S_T(<vc-run>);
 
+% <verb-pv>: "He was struck by the bus"
+% (<verb-pv> & K+): "He was caught up in his work"
 ran.v-d caught.v-d drove.v-d struck.v-d:
-  VERB_SPPP_T(<vc-run>);
+  VERB_SPPP_T(<vc-run>) or (<verb-pv> & {K+});
 
 % XXX is all this stuff really necessary?
 beat.v-d:
@@ -3261,7 +3263,7 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>) or
   <verb-pv> or
-  (({@E-} or {@EA-} or {@AN-}) & A+) or
+  (({@E-} or {@EA-} or {@AN-}) & [A+]0.5) or
   <verb-phrase-opener>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
@@ -3269,7 +3271,7 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words-medical.v.4.3:
   VERB_SPPP_T(<vc-trans>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
   or <verb-phrase-opener>;
 
 /en/words/words.v.4.4
@@ -3289,14 +3291,14 @@ overrun.v-d upset.v-d undercut.v-d:
   VERB_SPPP_T(<vc-trans>) or
   (<verb-ico> & <vc-trans>) or
   <verb-pv> or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   <verb-phrase-opener>;
 
 forsaken.v overridden.v overtaken.v rewritten.v undone.v
 beset.v mistaken.v underwritten.v:
   VERB_PP(<vc-trans>) or
   <verb-pv> or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   <verb-phrase-opener>;
 
 % -----------------------------------------------------------------
