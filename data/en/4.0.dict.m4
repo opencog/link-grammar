@@ -2955,10 +2955,10 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 /en/words/words.v.1.3:
   VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
 
-% Va+: "It was rusted closed"
+% <verb-pv>: "It was rusted closed"
 rusted.v-d:
   VERB_SPPP_I(<vc-intrans>)
-  or (<verb-pv> & {Va+});
+  or <verb-pv>;
 
 fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 
@@ -3230,9 +3230,10 @@ runs.v beats.v catches.v drives.v strikes.v:
 
 % <verb-pv>: "He was struck by the bus"
 % <verb-pvk> with K+: "He was caught up in his work"
+% Pa+: "He was struck dumb"
 ran.v-d caught.v-d drove.v-d struck.v-d:
   VERB_SPPP_T(<vc-run>)
-  or (<verb-pvk> & {Va+});
+  or (<verb-pvk> & {Pa+});
 
 % XXX is all this stuff really necessary?
 beat.v-d:
@@ -3243,9 +3244,10 @@ beat.v-d:
   or ({K+} & <verb-phrase-opener>);
 
 % [A+]0.5: avoid bad "He was driven home"
+% Pa+: "He was driven green with envy"
 beaten.v driven.v stricken.v:
   VERB_PP(<vc-run>)
-  or (<verb-pvk> & {Va+})
+  or (<verb-pvk> & {Pa+})
   or <verb-adj>
   or ({K+} & <verb-phrase-opener>);
 
@@ -5055,14 +5057,15 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 % Minimal ditransitive extenstion of words.v.6
 % ditransitive: "Please paint it lime green"
 <vc-color>:
-  <vc-fill> or
-  <vc-ditrans>;
+  <vc-fill>
+  or <vc-ditrans>;
 
+% Pa+: "The house was painted yellow"
 color.v colour.v paint.v: VERB_PLI(<vc-color>);
 colors.v colours.v paints.v: VERB_S_T(<vc-color>);
 colored.v-d coloured.v-d painted.v-d:
   VERB_SPPP_T(<vc-color>)
-  or (<verb-pv-b> & {O+ or K+ or Va+} & {@MV+})
+  or (<verb-pv-b> & {O+ or K+ or Pa+} & {@MV+})
   or ({K+} & <verb-phrase-opener>)
   or <verb-adj>;
 
@@ -7390,7 +7393,7 @@ n't n’t: N- or EB-;
 <ordinary-adj>:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Pa- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {<tot-verb>})
+    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -7589,7 +7592,7 @@ rare.a embarrassing.a:
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -7671,7 +7674,7 @@ wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {<toi-verb> & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
