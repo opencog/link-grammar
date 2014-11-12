@@ -3983,9 +3983,11 @@ loving.g disliking.g hating.g: (<vc-love> & <verb-ge>) or <verb-ge-d>;
 loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
 
 % "It begins here"
+% Pa+: "They continued, undaunted"
 <vc-begin>:
-  {<vc-trans>} or
-  ({@MV+} & ({<to-verb>} or Pg+));
+  {<vc-trans>}
+  or ({@MV+} & ({<to-verb>} or Pg+ or ({Xc+} & Pa+)));
+
 begin.v continue.v cease.v: VERB_PLI(<vc-begin>);
 begins.v continues.v ceases.v: VERB_S_T(<vc-begin>);
 ceased.v-d:
