@@ -3219,7 +3219,7 @@ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   ((<vc-fill>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>;
 
-bitten.v blown.v broken.v driven.v drunk.v
+bitten.v blown.v broken.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
 sprung.v stricken.v swum.v woken.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v
@@ -3279,12 +3279,13 @@ and.v-fill:
     or [[@MV+ & O*n+]]
   ) & {@MV+};
 
-drive:
+drive.v:
   
   ((<verb-pl,i> & (<vc-run>)) or
   (<verb-and-pl-> & ((<vc-run>) or ())) or
   ((<vc-run>) & <verb-and-pl+>));
 
+% special case: run-present-tense + run-beaten-driven
 run.v: 
   ((<verb-pl,i> & (<vc-run>)) or
   (<verb-and-pl-> & ((<vc-run>) or ())) or
@@ -3321,7 +3322,7 @@ beat.v-d:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-beaten:
+beaten.v driven.v:
   
   ((<verb-pp> & (<vc-run>)) or
   (<verb-and-had-> & (([<vc-run>]) or ())) or

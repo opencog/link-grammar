@@ -3143,7 +3143,7 @@ bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   VERB_SPPP_T(<vc-fill>);
 
-bitten.v blown.v broken.v driven.v drunk.v
+bitten.v blown.v broken.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
 sprung.v stricken.v swum.v woken.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v
@@ -3197,9 +3197,10 @@ and.v-fill:
     or [[@MV+ & O*n+]]
   ) & {@MV+};
 
-drive:
+drive.v:
   VERB_PLI(<vc-run>);
 
+% special case: run-present-tense + run-beaten-driven
 run.v: VERB_PLI(<vc-run>) or
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
@@ -3218,7 +3219,7 @@ beat.v-d:
   ({@E-} & A+) or
   ({K+} & <verb-phrase-opener>);
 
-beaten:
+beaten.v driven.v:
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or
