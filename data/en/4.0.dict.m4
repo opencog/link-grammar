@@ -3095,12 +3095,13 @@ rising.v falling.v:
 %    but
 %   "*The man whom I play tennis is here"  ... arghh
 %
-% ({@E-} & B- & O+ & Pa**j+):
-%   "What are the chances she will really DRIVE him crazy?"
 % ({@E-} & B- & O+ & K+):
 %   "What are the chances she will DRIVE him up to the farm?"
 %
 % No Pa links here: *they're building a skyscraper tall
+%
+% [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
+%
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+)
     or ({O+ or <b-minus>} & {K+})
@@ -3121,7 +3122,7 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   VERB_SPPP_T(<vc-fill>) or
   (<verb-ico> & <vc-fill>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
@@ -3139,7 +3140,7 @@ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
 
 bitten.v blown.v broken.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
-sprung.v stricken.v swum.v woken.v
+sprung.v swum.v woken.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v
 test-driven.v outdone.v shrunken.v countersunk.v
 bespoken.v underlain.v partaken.v redone.v overdone.v
@@ -3154,7 +3155,7 @@ foreknown.v overthrown.v strewn.v awoken.v bidden.v
 stridden.v slain_dead:
   VERB_PP(<vc-fill>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.6.4:
@@ -3182,6 +3183,11 @@ and.v-fill:
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
 %     "Make it nice and soft"
 %
+% ({@E-} & B- & O+ & Pa**j+):
+%   "What are the chances she will really DRIVE him crazy?"
+% ({@E-} & B- & O+ & K+):
+%   "What are the chances she will DRIVE him up to the farm?"
+%
 <vc-run>:
   ((K+ & {[[@MV+]]} & O*n+)
     or Pa+
@@ -3198,7 +3204,7 @@ catch.v drive.v strike.v:
 run.v: VERB_PLI(<vc-run>) or
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
+  ({@E-} & [A+]0.5) or ({K+} & <verb-phrase-opener>);
 
 runs.v beats.v catches.v drives.v strikes.v:
   VERB_S_T(<vc-run>);
@@ -3211,13 +3217,14 @@ beat.v-d:
   VERB_SPPP_T(<vc-run>) or
   (<verb-ico> & <vc-run>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   ({K+} & <verb-phrase-opener>);
 
-beaten.v driven.v:
+% [A+]0.5: avoid bad "He was driven home"
+beaten.v driven.v stricken.v:
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.5) or
   ({K+} & <verb-phrase-opener>);
 
 running.v beating.v catching.v driving.v striking.v:
