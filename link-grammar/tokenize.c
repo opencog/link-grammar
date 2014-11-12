@@ -184,6 +184,7 @@ static bool is_number(const char * s)
 }
 #endif
 
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 /**
  * Returns true if the word contains digits.
  */
@@ -203,6 +204,7 @@ static bool contains_digits(const char * s)
 	}
 	return false;
 }
+#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 /**
  * Accumulate different word-stemming possibilities.
@@ -349,6 +351,7 @@ void add_alternative(Sentence sent,
 	sent->t_count = t_count;
 }
 
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 /**
  * Return true if an alternative has been issued for the current word.
  * t_count==0 if and only if no alternative has been issued yet.
@@ -356,6 +359,7 @@ void add_alternative(Sentence sent,
 static bool word_has_alternative(Sentence sent) {
 	return (sent->t_count > 0);
 }
+#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 /**
  * Terminate issuing alternatives to the current input word.
@@ -1518,7 +1522,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		issued = guess_misspelled_word(sent, word, quote_found, opts);
 		lgdebug(SWLEV, "Spell suggest=%d\n", issued);
 	}
-#endif /* HAVE_HUNSPELL */
+#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 	if (false == issued)
 	{
