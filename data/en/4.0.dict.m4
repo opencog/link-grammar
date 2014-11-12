@@ -2208,6 +2208,9 @@ per "/.per": Us+ & Mp-;
 <verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
+% Cost: "He was driven home" should NOT use driven.v as adjective!
+<verb-adj>:  {@E-} & [A+]0.5;
+
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 % [Wi-] has a cost for only one stupid reason: because "frank.v" interferes
 % with the given name "Frank.b".  Ouch. XXX FIXME. Give frank.v special treatment.
@@ -3010,7 +3013,7 @@ came.v-d: VERB_SPPP_I(<vc-come>);
 /en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr>') or
   <verb-pv> or
-  ({@E-} & [A+]0.05) or
+  <verb-adj> or
   <verb-phrase-opener>;
 
 /en/words/words.v.2.4:
@@ -3018,7 +3021,7 @@ came.v-d: VERB_SPPP_I(<vc-come>);
 
 % [A+]0.5: avoid gerunds as adjectives...
 /en/words/words.v.2.5:
-  (<vc-tr,intr> & <verb-ge>) or ({@E-} & [A+]0.5) or <verb-ge-d>;
+  (<vc-tr,intr> & <verb-ge>) or <verb-adj> or <verb-ge-d>;
 
 shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d
 spoilt.v-d unbent.v-d overfed.v-d:
@@ -3122,7 +3125,7 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   VERB_SPPP_T(<vc-fill>) or
   (<verb-ico> & <vc-fill>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & [A+]0.5) or
+  <verb-adj> or
   ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
@@ -3155,7 +3158,7 @@ foreknown.v overthrown.v strewn.v awoken.v bidden.v
 stridden.v slain_dead:
   VERB_PP(<vc-fill>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & [A+]0.5) or
+  <verb-adj> or
   ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.6.4:
@@ -3166,7 +3169,7 @@ stridden.v slain_dead:
 /en/words/words.v.6.5:
   (<vc-fill> & <verb-ge>) or
   <verb-ge-d> or
-  ({@E-} & [A+]0.5);
+  <verb-adj>;
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   VERB_PLI(<vc-fill>);
@@ -3204,7 +3207,7 @@ catch.v drive.v strike.v:
 run.v: VERB_PLI(<vc-run>) or
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & [A+]0.5) or ({K+} & <verb-phrase-opener>);
+  <verb-adj> or ({K+} & <verb-phrase-opener>);
 
 runs.v beats.v catches.v drives.v strikes.v:
   VERB_S_T(<vc-run>);
@@ -3219,14 +3222,14 @@ beat.v-d:
   VERB_SPPP_T(<vc-run>) or
   (<verb-ico> & <vc-run>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & [A+]0.5) or
+  <verb-adj> or
   ({K+} & <verb-phrase-opener>);
 
 % [A+]0.5: avoid bad "He was driven home"
 beaten.v driven.v stricken.v:
   VERB_PP(<vc-run>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & [A+]0.5) or
+  <verb-adj> or
   ({K+} & <verb-phrase-opener>);
 
 running.v beating.v catching.v driving.v striking.v:
@@ -3237,7 +3240,7 @@ running.v beating.v catching.v driving.v striking.v:
 running.g beating.g catching.g driving.g striking.g:
   (<vc-run> & <verb-ge>) or
   <verb-ge-d> or
-  ({@E-} & [A+]0.5);
+  <verb-adj>;
 
 % ------------------------------------------------------------
 % common transitive verbs
@@ -3291,14 +3294,14 @@ overrun.v-d upset.v-d undercut.v-d:
   VERB_SPPP_T(<vc-trans>) or
   (<verb-ico> & <vc-trans>) or
   <verb-pv> or
-  ({@E-} & [A+]0.5) or
+  <verb-adj> or
   <verb-phrase-opener>;
 
 forsaken.v overridden.v overtaken.v rewritten.v undone.v
 beset.v mistaken.v underwritten.v:
   VERB_PP(<vc-trans>) or
   <verb-pv> or
-  ({@E-} & [A+]0.5) or
+  <verb-adj> or
   <verb-phrase-opener>;
 
 % -----------------------------------------------------------------
@@ -5042,10 +5045,12 @@ colored.v-d coloured.v-d painted.v-d:
   VERB_SPPP_T(<vc-color>) or
   (<verb-pv-b> & {O+ or K+} & {@MV+}) or
   ({K+} & <verb-phrase-opener>) or
-  ({@E-} & A+);
+  <verb-adj>;
+
 coloring.v colouring.v painting.v:
   (<verb-pg> & <vc-color>) or
   <verb-and-pg-> or <verb-and-pg+>;
+
 coloring.g colouring.g painting.g:
   (<vc-color> & <verb-ge>) or <verb-ge-d>;
 
@@ -5081,7 +5086,7 @@ written.v drawn.v:
   VERB_PP(<vc-write>) or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
-  ({@E-} & A+);
+  <verb-adj>;
 
 writing.v reading.v charging.v drawing.v:
   <verb-pg> & <vc-write>;
