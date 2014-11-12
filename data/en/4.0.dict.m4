@@ -3216,7 +3216,8 @@ runs.v beats.v catches.v drives.v strikes.v:
 % <verb-pv>: "He was struck by the bus"
 % <verb-pvk> with K+: "He was caught up in his work"
 ran.v-d caught.v-d drove.v-d struck.v-d:
-  VERB_SPPP_T(<vc-run>) or <verb-pvk>;
+  VERB_SPPP_T(<vc-run>)
+  or (<verb-pvk> & {Va+});
 
 % XXX is all this stuff really necessary?
 beat.v-d:
@@ -7370,7 +7371,7 @@ n't n’t: N- or EB-;
 <ordinary-adj>:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
+    or ((Pa- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -7640,16 +7641,18 @@ sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
 tactful.a conventional.a advisable.a prudent.a sensible.a tactless.a polite.a
 impolite.a arrogant.a conceited.a obnoxious.a valuable.a reasonable.a
 unreasonable.a traditional.a unnecessary.a tempting.a usual.a
-inadvisable.a lovely.a a_mistake ethical.a unethical.a immoral.a childish.a awkward.a
-appropriate.a costly.a customary.a desirable.a dumb.a effective.a fashionable.a
+inadvisable.a lovely.a a_mistake ethical.a unethical.a immoral.a
+childish.a awkward.a appropriate.a costly.a customary.a desirable.a
+dumb.a effective.a fashionable.a
 foolish.a healthy.a hip.a okay.a OK.a ok.a
 painful.a selfish.a sufficient.a advantageous.a boring.a
-inappropriate.a insufficient.a irrational.a irresponsible.a mandatory.a meaningless.a
-preferable.a senseless.a trivial.a wrongheaded.a premature.a risky.a dishonest.a
+inappropriate.a insufficient.a irrational.a irresponsible.a
+mandatory.a meaningless.a preferable.a senseless.a trivial.a
+wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {<toi-verb> & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or

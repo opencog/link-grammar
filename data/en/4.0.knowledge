@@ -286,7 +286,7 @@ CONTAINS_ONE_RULES:
  THc   ,  TH                                , "Bad comparative60"    ,
  TOc   ,  TO**   TOf*   TOi*                , "Bad comparative61"    ,
  TOtc  ,  TOt  ,                              "Bad comparative62"    ,
- Ma**  ,   TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya             
+ Ma**  ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya             
 					    , "Bad use of adjective63"    ,
  Mam   ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya              
 					    , "Bad use of adjective64"    ,
