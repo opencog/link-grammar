@@ -4067,6 +4067,7 @@ sounded.v-d:
   <verb-and-sp-t>;
 sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 
+% K: "He is acting up"
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
 act.v: 
   ((<verb-pl,i> & (<vc-act>)) or
@@ -4082,6 +4083,24 @@ acted.v-d:
   (<verb-and-sp-i-> & (([<vc-act>]) or ())) or
   ((<vc-act>) & <verb-and-sp-i+>)) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
+
+% Pa: The team reigns undefeated
+<vc-reign>: {@MV+} & {LI+ or Pa+};
+
+% See also rule.v far below
+reign.v rule.w: 
+  ((<verb-pl,i> & (<vc-reign>)) or
+  (<verb-and-pl-> & ((<vc-reign>) or ())) or
+  ((<vc-reign>) & <verb-and-pl+>));
+reigns.v rules.w: 
+  ((<verb-s> & (<vc-reign>)) or
+  (<verb-and-s-> & ([(<vc-reign>)] or ())) or
+  ((<vc-reign>) & <verb-and-s+>));
+reigned.v ruled.w: 
+  ((<verb-sp,pp> & (<vc-reign>)) or
+  (<verb-and-sp-i-> & (([<vc-reign>]) or ())) or
+  ((<vc-reign>) & <verb-and-sp-i+>));
+reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
 <vc-look>: {({@MV+} & (LI+ or Pa+))
@@ -4904,7 +4923,8 @@ believing.g answering.g worrying.g protesting.g:
 (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
 
-% <vc-trans> with particle
+
+% resembles <vc-trans> with particle
 <vc-rule>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+)) or
   ((({O+ or <b-minus>} & {K+}) or

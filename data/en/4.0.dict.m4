@@ -3639,12 +3639,22 @@ sounds.v: VERB_S_T(<vc-sound>);
 sounded.v-d: VERB_SPPP_T(<vc-sound>);
 sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 
+% K: "He is acting up"
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
 act.v: VERB_PLI(<vc-act>);
 acts.v: VERB_S_I(<vc-act>);
 % "be acted upon quikly"
 acted.v-d: VERB_SPPP_I(<vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
+
+% Pa: The team reigns undefeated
+<vc-reign>: {@MV+} & {LI+ or Pa+};
+
+% See also rule.v far below
+reign.v rule.w: VERB_PLI(<vc-reign>);
+reigns.v rules.w: VERB_S_I(<vc-reign>);
+reigned.v ruled.w: VERB_SPPP_I(<vc-reign>);
+reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
 <vc-look>: {({@MV+} & (LI+ or Pa+))
@@ -4107,7 +4117,8 @@ believing.g answering.g worrying.g protesting.g:
 (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
 
-% <vc-trans> with particle
+
+% resembles <vc-trans> with particle
 <vc-rule>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+)) or
   ((({O+ or <b-minus>} & {K+}) or
