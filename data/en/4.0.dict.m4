@@ -2954,6 +2954,11 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
 /en/words/words.v.1.3: VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
 
+% Va+: "It was rusted closed"
+rusted.v-d:
+  VERB_SPPP_I(<vc-intrans>)
+  or (<verb-pv> & {Va+});
+
 fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 
 % accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v
@@ -5818,8 +5823,10 @@ ends_up: <verb-s-s> & <vc-end-up>;
 ended_up: <verb-s-sp,pp> & <vc-end-up>;
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
-/en/words/words.v.1.p: <verb-pv> or <verb-phrase-opener>; % two-word passives
+% two-word passives
 % done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
+/en/words/words.v.1.p:
+  <verb-pv> or <verb-phrase-opener>;
 
 <vc-paraph>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>)
@@ -8313,7 +8320,7 @@ dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
   (EE- & (AJrc- or AJlc+)) or Wa-;
 
 wild.e rampant.e shut.e tight.e
-open.e loud.e hot.e cold.e free.e:
+open.e closed.e loud.e hot.e cold.e free.e:
   {EE- or EF+} & (({Xd- & Xc+} & MVa-) or <advcl-verb>);
 
 hard.e wrong.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or <advcl-verb>);
