@@ -3195,11 +3195,11 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   ((<verb-sp,pp> & (<vc-fill>)) or
   (<verb-and-sp-i-> & ([<vc-fill>]0.2 or ())) or
   ((<vc-fill>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or
-  (<verb-ico> & <vc-fill>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  <verb-and-sp-t>
+  or (<verb-ico> & <vc-fill>)
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
 flew.v-d froze.v-d hid.v-d
@@ -3236,10 +3236,10 @@ stridden.v slain_dead:
   
   ((<verb-pp> & (<vc-fill>)) or
   (<verb-and-had-> & (([<vc-fill>]) or ())) or
-  ((<vc-fill>) & <verb-and-had+>)) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  ((<vc-fill>) & <verb-and-had+>))
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.6.4:
   (<verb-pg> & <vc-fill>) or
@@ -3290,16 +3290,18 @@ catch.v drive.v strike.v:
   ((<vc-run>) & <verb-and-pl+>));
 
 % special case: run-present-tense + run-beaten-driven
-run.v: 
+run.v:
+  
   ((<verb-pl,i> & (<vc-run>)) or
   (<verb-and-pl-> & ((<vc-run>) or ())) or
-  ((<vc-run>) & <verb-and-pl+>)) or
-  
+  ((<vc-run>) & <verb-and-pl+>))
+  or 
   ((<verb-pp> & (<vc-run>)) or
   (<verb-and-had-> & (([<vc-run>]) or ())) or
-  ((<vc-run>) & <verb-and-had+>)) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or ({K+} & <verb-phrase-opener>);
+  ((<vc-run>) & <verb-and-had+>))
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 runs.v beats.v catches.v drives.v strikes.v:
   
@@ -3324,21 +3326,21 @@ beat.v-d:
   ((<verb-sp,pp> & (<vc-run>)) or
   (<verb-and-sp-i-> & ([<vc-run>]0.2 or ())) or
   ((<vc-run>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or
-  (<verb-ico> & <vc-run>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  <verb-and-sp-t>
+  or (<verb-ico> & <vc-run>)
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 % [A+]0.5: avoid bad "He was driven home"
 beaten.v driven.v stricken.v:
   
   ((<verb-pp> & (<vc-run>)) or
   (<verb-and-had-> & (([<vc-run>]) or ())) or
-  ((<vc-run>) & <verb-and-had+>)) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  ((<vc-run>) & <verb-and-had+>))
+  or (<verb-pvk> & {Va+})
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 running.v beating.v catching.v driving.v striking.v:
   (<verb-pg> & <vc-run>) or
@@ -9500,7 +9502,7 @@ rare.a embarrassing.a:
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
+    or ((Paf- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]

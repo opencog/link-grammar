@@ -3123,11 +3123,11 @@ rising.v falling.v:
   ({K+} & <verb-phrase-opener>);
 
 split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
-  VERB_SPPP_T(<vc-fill>) or
-  (<verb-ico> & <vc-fill>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  VERB_SPPP_T(<vc-fill>)
+  or (<verb-ico> & <vc-fill>)
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
 flew.v-d froze.v-d hid.v-d
@@ -3157,10 +3157,10 @@ shriven.v backslidden.v retaken.v trodden.v chidden.v
 begotten.v sown.v sewn.v sawn.v hewn.v cloven.v
 foreknown.v overthrown.v strewn.v awoken.v bidden.v
 stridden.v slain_dead:
-  VERB_PP(<vc-fill>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  VERB_PP(<vc-fill>)
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.6.4:
   (<verb-pg> & <vc-fill>) or
@@ -3205,10 +3205,12 @@ catch.v drive.v strike.v:
   VERB_PLI(<vc-run>);
 
 % special case: run-present-tense + run-beaten-driven
-run.v: VERB_PLI(<vc-run>) or
-  VERB_PP(<vc-run>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or ({K+} & <verb-phrase-opener>);
+run.v:
+  VERB_PLI(<vc-run>)
+  or VERB_PP(<vc-run>)
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 runs.v beats.v catches.v drives.v strikes.v:
   VERB_S_T(<vc-run>);
@@ -3221,18 +3223,18 @@ ran.v-d caught.v-d drove.v-d struck.v-d:
 
 % XXX is all this stuff really necessary?
 beat.v-d:
-  VERB_SPPP_T(<vc-run>) or
-  (<verb-ico> & <vc-run>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  VERB_SPPP_T(<vc-run>)
+  or (<verb-ico> & <vc-run>)
+  or <verb-pvk>
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 % [A+]0.5: avoid bad "He was driven home"
 beaten.v driven.v stricken.v:
-  VERB_PP(<vc-run>) or
-  (<verb-pv> & {K+}) or
-  <verb-adj> or
-  ({K+} & <verb-phrase-opener>);
+  VERB_PP(<vc-run>)
+  or (<verb-pvk> & {Va+})
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 running.v beating.v catching.v driving.v striking.v:
   (<verb-pg> & <vc-run>) or
@@ -7570,7 +7572,7 @@ rare.a embarrassing.a:
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
+    or ((Paf- or AF+ or Ma- or MJra- or Va-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
