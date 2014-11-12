@@ -4348,8 +4348,12 @@ becoming.v: <verb-pg> & <vc-become>;
 
 % XXX Why is there a cost on Pv+ ???
 % <vc-trans> plus TI
-<vc-remain>: ({@MV+} & (AF- or Pa+)) or ({O+ or <b-minus> or TI+ or
-[[@MV+ & (O*n+ or TI+)]] or [Pv+]} & {@MV+});
+<vc-remain>:
+  ({@MV+} & (AF- or Pa+))
+  or ({O+ or <b-minus>
+    or TI+
+    or [[@MV+ & (O*n+ or TI+)]]
+    or [Pv+]} & {@MV+});
 remain.v: VERB_PLI(<vc-remain>);
 remains.v: VERB_S_T(<vc-remain>);
 remained.v-d: VERB_SPPP_T(<vc-remain>);
