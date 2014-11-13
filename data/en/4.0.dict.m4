@@ -6885,14 +6885,14 @@ when:
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
 % QI- & (): "I do not know why"
-% <directive-opener> or Wi-: "Why, of course it will!"
-% N-: "why not?"  "Why the hell not?"
+% COa+: "Why, of course it will!"
+% N+: "why not?"  "Why the hell not?"
 why:
   {EL+} & (
-    ({EW-} & Wq- & Q+)
+    ({EW-} & Ww- & (Q+ or N+ or {()}))
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
-    or ((Wi- or <directive-opener>) & {N+})
+    or COa+
     or ({EW-} & (QJ- or QJ+))
     );
 
@@ -9048,7 +9048,7 @@ UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 % XXX that is, change <WALL> to just WV+
 LEFT-WALL:
   (Wa+ & {RW+ or Xp+})
-  or ((Wi+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
+  or ((Wi+ or Ww+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
     & <WALL> & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+});
 
