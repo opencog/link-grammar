@@ -8825,13 +8825,13 @@ when:
 % <directive-opener> or Wi-: "Why, of course it will!"
 % N-: "why not?"  "Why the hell not?"
 why:
-  ({EL+} & (
-    ({EW-} & (Wi- or Wq-) & Q+)
+  {EL+} & (
+    ({EW-} & Wq- & Q+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
     or ({EW-} & (QJ- or QJ+))
-    ));
+    );
 
 % QI- & (): "I do not know where"
 % R+ & Bsw+: "Where does it go to?"
