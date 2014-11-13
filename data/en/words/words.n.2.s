@@ -3977,6 +3977,7 @@ finger-posts.n
 fingerprints.n
 fingers.n
 fingertips.n
+finks.n
 finishes.n
 Finns.n
 fins.n

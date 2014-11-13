@@ -1249,8 +1249,15 @@ its my.p your their our thy:
 
 % [<CLAUSE> & Pg+]: "you leaving already?"
 % Wa-: "You!"
-you: (Wa- & {A+}) or J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+
-  or [<CLAUSE> & Pg+];
+% Ds+: "you asshole!"
+you:
+  Wa-  or J- or Ox- 
+  or (Sp+ & <CLAUSE>)
+  or SIp-
+  or SJlp+
+  or [<CLAUSE> & Pg+]
+  or [Ds+];
+
 thou: Sp+ & <CLAUSE>;
 
 % Y'gotta, Y'gonna
@@ -10993,8 +11000,7 @@ UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+
 LEFT-WALL:
-  (Wa+ & {RW+ or Xp+})
-  or ((Wi+ or Ww+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
+  ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
     & <WALL> & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+});
 
