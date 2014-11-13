@@ -7813,10 +7813,10 @@ seems.q appears.q: [[{@E-} & SFs- & <vc-it-paraph>]];
 seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
-say.q: {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
-says.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
-said.q-d: {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
-saying.q: {@E-} & Pg- & <vc-paraph>;
+say.q hiss.q: {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
+says.q hisses.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
+said.q-d hissed.q-d: {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+saying.q hissing.q: {@E-} & Pg- & <vc-paraph>;
 
 avow.q:
  [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
@@ -10739,11 +10739,12 @@ EMOTICON :
 "!" "?" ‽ ؟ ？！: ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
 
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
-% a semicolon.
+% a semicolon. -- looks a lot like LEFT-WALL  We do need Wa for comma's
 <semicol>:
   {@Xca-} & Xx- 
-  & (Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+)
-  & <WALL> & {Xx+};
+    & (((Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+) & <WALL>)
+      or (Wa+ or Wi+ or Ww+ or Qd+))
+    & {Xx+};
 
 ";" ；: <semicol>;
 
