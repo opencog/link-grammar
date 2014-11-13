@@ -309,7 +309,7 @@ INITIALS <entity-singular>:
         ))
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
-  or ({A- or G-} & Wa-)
+  or ({@A- or G-} & {D-} & Wa-)
   or <directive-opener>;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
@@ -336,7 +336,7 @@ PL-CAPITALIZED-WORDS:
         ))
       or AN+
       or G+))
-  or ({A- or G-} & Wa-)
+  or ({@A- or G-} & {D-} & Wa-)
   or <directive-opener>;
 
 % capitalized words ending in s
@@ -407,7 +407,7 @@ PL-CAPITALIZED-WORDS:
     or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
-    or Us- or Wa-);
+    or Us- or ({D*u-} & Wa-));
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
@@ -430,7 +430,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or (YP+ & {Dmc-})
     or (GN+ & (DD- or [()]))
     or Up-
-    or Wa-);
+    or ({Dmc-} & Wa-));
 
 %for YEAR-DATE year numbers
 <date-id>:
@@ -525,7 +525,7 @@ HYPHENATED-WORDS.n:
       ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>))
       or <noun-and-x>))
      or U-
-     or Wa-))
+     or ({D-} & Wa-)))
   or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 
 % NOUNS --------------------------------------------------------
@@ -557,7 +557,7 @@ HYPHENATED-WORDS.n:
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or Wa-);
+    or ({Ds-} & Wa-));
 
 % Preliminary experimental split for supporting a/an phonetic change
 % for common nouns starting with vowels or consonant's.
@@ -567,7 +567,7 @@ HYPHENATED-WORDS.n:
     (SJrs-
     or (GN+ & (DD- or [()]))
     or Us-
-    or Wa-))
+    or ({Ds-} & Wa-)))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
@@ -620,7 +620,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
     ([[AN+]]
     or (GN+ & (DD- or [()]))
     or Up-
-    or Wa-
+    or ({Dmc-} & Wa-)
     or ({NM+ or ({Jd-} & Dmc-)} &
       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
     or (YS+ & {Dmc-})
@@ -638,7 +638,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
     (AN+
     or (GN+ & (DD- or [()]))
     or Up-
-    or Wa-
+    or ({Dmu-} & Wa-)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
@@ -650,7 +650,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   <noun-modifiers> &
     ((GN+ & (DD- or [()]))
     or Up-
-    or Wa-
+    or ({Dm-} & Wa-)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
@@ -697,7 +697,7 @@ tawny.n ultramarine.n umber.n yellow.n:
   or (<noun-modifiers> & (
     (GN+ & (DD- or [()]))
     or Up-
-    or Wa-
+    or ({Dmu-} & Wa-)
     or ({Dmu-} & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
     or (YS+ & {Dmu-})
     ));
@@ -805,7 +805,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or Wa-);
+    or ({Ds-} & Wa-));
 
 % determiner constructions, with a dangling of: "a number of", "a lot of"
 % "I have a number of cookies"
@@ -1257,7 +1257,8 @@ its my.p your their our thy:
   or ({AL-} & {@L+} & (D+ or DD+));
 
 % [<CLAUSE> & Pg+]: "you leaving already?"
-you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+
+% Wa-: "You!"
+you: (Wa- & {A+}) or J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+
   or [<CLAUSE> & Pg+];
 thou: Sp+ & <CLAUSE>;
 
