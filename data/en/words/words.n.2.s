@@ -8561,6 +8561,7 @@ regards.n
 regattas.n
 regencies.n
 regents.n
+regexes.n
 regicides.n
 regimens.n
 regiments.n
