@@ -601,6 +601,7 @@ automatics.n
 automatons.n
 automats.n
 automobiles.n
+automorphisms.n
 autopsies.n
 autos.n
 autostradas.n
@@ -3601,6 +3602,7 @@ epiglottises.n
 epigrams.n
 epileptics.n
 epilogues.n
+epimorphisms.n
 epiphytes.n
 episcopalians.n
 episodes.n
@@ -5030,6 +5032,7 @@ homeworlds.n
 homicides.n
 homilies.n
 homologs.n
+homomorphisms.n
 homonyms.n
 homophones.n
 homosexuals.n
@@ -5522,6 +5525,8 @@ islanders.n
 islands.n
 isles.n
 isolationists.n
+isometries.n
+isomorphisms.n
 isotopes.n
 Israelis.n
 issuers.n
@@ -6671,6 +6676,7 @@ Moroccans.n
 morons.n
 morphemes.n
 morphes.n
+morphisms.n
 morphs.n
 morrows.n
 morsels.n
@@ -7345,6 +7351,7 @@ parricides.n
 parrots.n
 parsers.n
 parses.n
+parsings.n
 pars.n
 parsnips.n
 parsonages.n
@@ -10118,6 +10125,7 @@ subcontracts.n
 subdivisions.n
 subeditors.n
 subfamilies
+subgraphs.n
 subgroups.n
 subheadings.n
 subjects.n
@@ -10228,6 +10236,7 @@ surfeits.n
 surgeons.n
 surgeries.n
 surges.n
+surjections.n
 surnames.n
 surpluses.n
 surprises.n
@@ -10638,6 +10647,8 @@ toffees.n
 togas.n
 toggles.n
 toilets.n
+tokenizations.n
+tokenizers.n
 tokens.n
 tolerances.n
 tollbooths.n

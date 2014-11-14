@@ -4026,6 +4026,7 @@ homicide.s
 homily.s
 homolog.n
 homo.n
+homomorphism.n
 homonym.n
 homophone.n
 homosexual.n
@@ -5311,6 +5312,7 @@ moron.n
 morpheme.n
 morphe.n
 morph.n
+morphism.n
 morrow.n
 morsel.n
 morsing.s
@@ -5771,6 +5773,7 @@ parrot.n
 par.s
 parse.n
 parser.n
+parsing.n
 parsnip.s
 parsonage.n
 parson.n
@@ -8525,6 +8528,7 @@ subdivision.s
 subdomain.n
 subeditor.n
 subfamily.n
+subgraph.n
 subgroup.n
 subheading.n
 subject.n
@@ -8630,6 +8634,7 @@ surface.n
 surfboard.n
 surfboat.s
 surfeit.n
+surjection.n
 surge.n
 surgeon.n
 surgery.s
@@ -9040,6 +9045,8 @@ toga.n
 toggle.n
 toilet.n
 token.n
+tokenization.n
+tokenizer.n
 tolerance.s
 tollbooth.n
 tollgate.n
