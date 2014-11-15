@@ -6646,6 +6646,7 @@ monograms.n
 monographs.n
 monoliths.n
 monologues.n
+monomorphisms.n
 monopolies.n
 monorails.n
 monosyllables.n
@@ -10142,6 +10143,7 @@ subscribers.n
 subscriptions.n
 subscripts.n
 subsections.n
+subsequences.n
 subsets.n
 subsidiaries.n
 subsidies.n
