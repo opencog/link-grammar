@@ -16,6 +16,12 @@ dist_pkgperl_SCRIPTS = \
 if HAVE_SWIG
 $(BUILT_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -I$(top_builddir) -o $@ $<
+else
+$(BUILT_SOURCES):
+	touch $(BUILT_SOURCES)
+
+$(dist_pkgperl_SCRIPTS):
+	touch $(dist_pkgperl_SCRIPTS)
 endif
 
 # These are packaged in the tarball; make clean should not remove them.
