@@ -1,10 +1,10 @@
 
-VERSION=0.0.2
-SATSOLVER_VERSION_INFO=2:0:2
+VERSION=0.0.3
+SATSOLVER_VERSION_INFO=3:0:3
 
 libsat_solver_la_LDFLAGS = -version-info $(SATSOLVER_VERSION_INFO)
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/minisat -I$(top_builddir)
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/minisat -I$(top_builddir)
 
 libsat_solver_includedir = $(includedir)/link-grammar $(includedir)/link-grammar/minisat
 
