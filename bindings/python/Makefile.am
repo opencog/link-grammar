@@ -5,7 +5,8 @@
 #
 
 SWIG_SOURCES = ../swig/link_grammar.i
-BUILT_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
+# BUILT_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
+BUILT_SOURCES = ../../bindings/python/lg_python_wrap.cc
 
 pkgpython_PYTHON =                                 \
    linkgrammar.py                                  \

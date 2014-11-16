@@ -5,7 +5,8 @@
 #
 
 SWIG_SOURCES = ../swig/link_grammar.i
-BUILT_SOURCES = $(top_builddir)/bindings/perl/lg_perl_wrap.cc
+# BUILT_SOURCES = $(top_builddir)/bindings/perl/lg_perl_wrap.cc
+BUILT_SOURCES = ../../bindings/perl/lg_perl_wrap.cc
 
 # PERL_EXT_LIB become /usr/local/share/perl/5.14.2 or something like that...
 pkgperldir = @PERL_EXT_LIB@
