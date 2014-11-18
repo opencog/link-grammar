@@ -133,7 +133,7 @@ static int exp_contains(Exp * super, Exp * sub)
 {
 	E_list * el;
 
-#ifdef DEBUG
+#if 0 /* DEBUG */
 	printf("SUP: ");
 	if (super) print_expression(super);
 	printf("\n");
@@ -464,7 +464,7 @@ static bool dn_word_contains(Dictionary dict,
 
 	m_exp = m_dn->exp;
 
-#ifdef DEBUG
+#if 0 /* DEBUG */
 	printf("\nWORD: ");
 	print_expression(w_dn->exp);
 	printf("\nMACR: ");

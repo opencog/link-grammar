@@ -180,11 +180,13 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
 #endif
 
-/* Optimizations that only gcc undersatands */
+/* Optimizations etc. that only gcc undersatands */
 #if __GNUC__ > 2
 #define GNUC_MALLOC __attribute__ ((malloc))
+#define GNUC_UNUSED __attribute__ ((unused))
 #else
 #define GNUC_MALLOC
+#define GNUC_UNUSED
 #endif
 
 /**
