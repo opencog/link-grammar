@@ -285,7 +285,6 @@ static Clause * build_clause(Exp *e)
 	return c;
 }
 
-/* #define DEBUG */
 #ifdef DEBUG
 /* Misc printing functions, useful for debugging */
 
@@ -299,7 +298,7 @@ static void print_Tconnector_list(Tconnector * e)
 	}
 }
 
-static void print_clause_list(Clause * c)
+GNUC_UNUSED static void print_clause_list(Clause * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("  Clause: ");
@@ -318,7 +317,7 @@ static void print_connector_list(Connector * e)
 	}
 }
 
-static void print_disjunct_list(Disjunct * c)
+GNUC_UNUSED static void print_disjunct_list(Disjunct * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("%10s: ", c->string);

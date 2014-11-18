@@ -22,3 +22,7 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *);
 Disjunct * build_disjuncts_for_X_node(X_node * x, double cost_cutoff);
 
 unsigned int count_disjunct_for_dict_node(Dict_node *dn);
+
+#ifdef DEBUG
+void prt_exp(Exp *, int);
+#endif
