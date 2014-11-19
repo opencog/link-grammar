@@ -344,14 +344,15 @@ static bool afdict_init(Dictionary dict)
 		int rc;
 
 		Regex_node * sm_re = (Regex_node *) malloc(sizeof(Regex_node));
-		char rebuf[MAX_WORD + 16] = "^((";
+		dyn_str *rebuf = dyn_str_new();
 
 		/* The regex is converted to: ^((original-regex)b)+$ */
-		strcat(rebuf, ac->string[0]);
-		strcat(rebuf, ")b)+$");
+		dyn_strcat(rebuf, ac->string[0]);
+		dyn_strcat(rebuf, ")b)+$");
+		sm_re->pattern = strdup(rebuf->str);
+		dyn_str_delete(rebuf);
 
 		afdict->regex_root = sm_re;
-		sm_re->pattern = strdup(rebuf);
 		sm_re->name = strdup(afdict_classname[AFDICT_SANEMORPHISM]);
 		sm_re->re = NULL;
 		sm_re->next = NULL;
