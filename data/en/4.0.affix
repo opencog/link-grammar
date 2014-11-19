@@ -10,14 +10,15 @@
 % 。is an end-of-sentence marker used in Japanese texts.
 
 % Punctuation appearing on the right-side of words.
-% Note: the ellipsis ....y must appear *before* th dot ".", else the
+% Note: the ellipsis ....y must appear *before* the dot ".", else the
 % splitting won't work right.
-")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ''.y '.y ' `
+")" "}" "]" ">" "".y" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" “ ''.y '.y `.y
 "%" "," ....y "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y "”" ━.y –.y ー.y ‐.y 、.y
-～ ¢ ₵ ™ ℠ : RPUNC+; 
+～ ¢ ₵ ™ ℠ 
+  : RPUNC+; 
 
 % Punctuation appearing on the left-side of words.
-"(" "{" "[" "<" « 〈 （ 〔 《 【 ［ 『 「 、.x ` `` „ “ ‘ ''.x '.x ….x ....x
+"(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［ 『 「 、.x `.x `` „ ‘ ''.x '.x ….x ....x
 ¿ ¡ "$" US$ USD C$ 
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#"
@@ -50,4 +51,3 @@ Y' y': PRE+;
 % units.6 contains just a single, sole slash in it. This allows units
 % such as mL/s to be split at the slash.
 /en/words/units.6: UNITS+;
-
