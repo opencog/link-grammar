@@ -516,11 +516,6 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	sent->num_linkages_alloced = N_linkages_alloced;
 	/* Later we subtract the number of invalid linkages */
 	sent->num_valid_linkages = N_linkages_alloced;
-
-	/* Allow use of both old and new pp order, for tests.
-	 * FIXME In release code this assignment can be removed if sane_morphism()
-	 * is modified to loop over num_linkages_alloced. */
-	sent->num_linkages_post_processed = N_linkages_alloced;
 }
 
 static void post_process_linkages(Sentence sent, Parse_Options opts)
@@ -1079,7 +1074,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	size_t N_invalid_morphism = 0;
 	size_t lk;
 
-	for (lk = 0; lk < sent->num_linkages_post_processed; lk++)
+	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		/* Don't bother with linkages that already failed post-processing... */
 		Linkage_info * const lifo = &sent->link_info[lk];
@@ -1093,7 +1088,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
 					 "invalid morphology construction\n",
-		          N_invalid_morphism, sent->num_valid_linkages);
+		          N_invalid_morphism, sent->num_linkages_alloced);
 	}
 }
 
