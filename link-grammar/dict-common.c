@@ -11,9 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifdef USE_ANYSPLIT
-#include "anysplit.h"
-#endif
 #include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
@@ -26,6 +23,10 @@
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
+
+#ifdef USE_ANYSPLIT
+#include "anysplit.h"
+#endif
 
 /* ======================================================================== */
 /* Affix type finding */
