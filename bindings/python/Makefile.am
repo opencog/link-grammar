@@ -41,7 +41,7 @@ _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
    $(PYTHON_CPPFLAGS)             \
    -I$(top_srcdir)                \
-   -I$(top_builddir)/link-grammar \
+   -I$(top_builddir)              \
    $(ANSI_CFLAGS)
 
 _clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module
