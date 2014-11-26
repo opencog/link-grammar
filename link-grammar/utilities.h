@@ -41,6 +41,22 @@
 
 #include "error.h"
 
+#ifdef HAVE_ALLOCA_H
+# include <alloca.h>
+#elif defined __GNUC__
+# define alloca __builtin_alloca
+#elif defined _AIX
+# define alloca __alloca
+#elif defined _MSC_VER
+# include <malloc.h>
+# define alloca _alloca
+#else
+# include <stddef.h>
+# ifdef  __cplusplus
+extern "C"
+# endif
+void *alloca (size_t);
+#endif
 
 #ifdef _WIN32
 #include <windows.h>
@@ -54,7 +70,6 @@
 /* In particular, be careful to avoid including strings.h */
 
 /* MS Visual C uses non-standard string function names */
-#define alloca _alloca
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #define strcasecmp _stricmp
@@ -68,7 +83,7 @@
 
 #endif /* _MSC_VER */
 
-/* Appearently, MinGW is also missing a variety of standard fuctions.
+/* Apparently, MinGW is also missing a variety of standard functions.
  * Not surprising, since MinGW is intended for compiling Windows
  * programs on Windows.
  * MINGW is also known as MSYS */
@@ -289,7 +304,7 @@ static inline const char * skip_utf8_upper(const char * s)
 }
 
 /**
- * Return true if the intial upper-case letters of the
+ * Return true if the initial upper-case letters of the
  * two input strings match. Comparison stops when
  * both srings descend to lowercase.
  */
