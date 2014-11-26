@@ -59,6 +59,12 @@ AC_C_CONST
 
 AC_CHECK_FUNCS(towupper)
 
+AC_FUNC_ALLOCA
+
+# For the Wordgraph display code
+AC_FUNC_FORK
+AC_CHECK_FUNCS(prctl)
+
 dnl ====================================================================
 
 AC_MSG_CHECKING([for native Win32])
