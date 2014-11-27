@@ -9816,6 +9816,7 @@ splices.n
 splinters.n
 splints.n
 splits.n
+splitters.n
 splotches.n
 spoils.n
 spoilsports.n
