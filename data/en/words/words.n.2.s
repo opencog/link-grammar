@@ -6305,6 +6305,7 @@ mastodons.n
 masts.n
 matadors.n
 matchboxes.n
+matchers.n
 matches.n
 matchmakers.n
 materialists.n
@@ -11380,6 +11381,7 @@ waves.n
 waxworks.n
 wayfarers.n
 waymarks.n
+way-points.n
 waypoints.n
 waysides.n
 weaklings.n
