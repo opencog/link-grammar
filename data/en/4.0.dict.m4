@@ -881,7 +881,8 @@ remark.n assertion.n proclamation.n reassurance.n saying.n
 accusation.n possibility.n idea.n problem.n claim.n result.n
 statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n 
-prerequisite.n prereq.n pre-requisite.n corequisite.n co-requisite.n coreq.n
+prerequisite.n prereq.n pre-req.n pre-requisite.n
+corequisite.n co-requisite.n coreq.n co-req.n
 indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
 finding.n amount.n answer.n crux.n shame.n thing.n bet.n guess.n:
@@ -944,7 +945,8 @@ expectations.n implications.n perceptions.n proclamations.n
 reassurances.n fears.n sayings.n senses.n messages.n disclosures.n
 accusations.n views.n concerns.n understandings.n acknowledgments.n
 acknowledgements.n possibilities.n premonitions.n prerequisites.n
-prereqs.n pre-requisites.n corequisites.n co-requisites.n coreqs.n
+prereqs.n pre-reqs.n pre-requisites.n
+corequisites.n co-requisites.n coreqs.n co-reqs.n
 provisos.n truisms.n fallacies.n assurances.n speculations.n
 propositions.n prospects.n presuppositions.n inklings.n suppositions.n
 findings.n amounts.n rules.n dangers.n warnings.n indications.n
