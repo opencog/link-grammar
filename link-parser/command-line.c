@@ -506,6 +506,7 @@ Command_Options* command_options_create(void)
 	 * later, wen writing to a tty. */
 	co->screen_width = 16381;
 	co->allow_null = true;
+	co->batch_mode = false;
 	co->echo_on = false;
 	co->panic_mode = false;
 	co->display_on = true;
