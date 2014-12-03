@@ -2433,8 +2433,9 @@ per "/.per": Us+ & Mp-;
 
 
 
-% XXX TODO need to provide macro-ized versions for <verb-s-sp>
-% and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
+
+% XXX TODO need to provide macro-ized versions for 
+% <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
 % examples that actually need this.
 
 % AUXILIARY VERBS
@@ -5460,7 +5461,11 @@ becomes.v:
   (<verb-and-sp-i-> & ([<vc-become>]0.2 or ())) or
   ((<vc-become>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-became.v-d: <verb-s-sp> & <vc-become>;
+became.v-d: 
+  ((<verb-s-sp> & (<vc-become>)) or
+  (<verb-and-sp-i-> & ([<vc-become>]0.2 or ())) or
+  ((<vc-become>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
@@ -5652,7 +5657,11 @@ takes.v:
   (<verb-and-sp-i-> & ([<vc-take>]0.2 or ())) or
   ((<vc-take>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-took.v-d: <verb-s-sp> & <vc-take>;
+took.v-d: 
+  ((<verb-s-sp> & (<vc-take>)) or
+  (<verb-and-sp-i-> & ([<vc-take>]0.2 or ())) or
+  ((<vc-take>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 taken.v:
   (<verb-s-pp> & <vc-take>)
   or (<verb-pv-b> & {K+} & {@MV+})
@@ -7799,7 +7808,11 @@ keeps_on gives_up goes_around:
   ((<vc-keep-on>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
 kept_on: <verb-s-sp,pp> & <vc-keep-on>;
-gave_up went_around: <verb-s-sp> & <vc-keep-on>;
+gave_up went_around: 
+  ((<verb-s-sp> & (<vc-keep-on>)) or
+  (<verb-and-sp-i-> & ([<vc-keep-on>]0.2 or ())) or
+  ((<vc-keep-on>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 

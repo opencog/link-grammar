@@ -2457,9 +2457,10 @@ define(`VERB_Y_SPPP',`'VERB_x_I(``<verb-y-sp,pp>'',$1))
 define(`VERB_Y_PLI',`'VERB_x_I(``<verb-y-pl,i>'',$1))
 
 define(`VERB_SS',`'VERB_x_T(<verb-s-s>,$1))
+define(`VERB_SP',`'VERB_x_T(<verb-s-sp>,$1))
 
-% XXX TODO need to provide macro-ized versions for <verb-s-sp>
-% and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
+% XXX TODO need to provide macro-ized versions for 
+% <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
 % examples that actually need this.
 
 % AUXILIARY VERBS
@@ -4426,7 +4427,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: VERB_SS(<vc-become>);
-became.v-d: <verb-s-sp> & <vc-become>;
+became.v-d: VERB_SP(<vc-become>);
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
@@ -4527,7 +4528,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 take.v: VERB_S_PLI(<vc-take>);
 % conjoin: "He takes cookies and eats them."
 takes.v: VERB_SS(<vc-take>);
-took.v-d: <verb-s-sp> & <vc-take>;
+took.v-d: VERB_SP(<vc-take>);
 taken.v:
   (<verb-s-pp> & <vc-take>)
   or (<verb-pv-b> & {K+} & {@MV+})
@@ -5824,7 +5825,7 @@ finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 keep_on give_up go_around: VERB_S_PLI(<vc-keep-on>);
 keeps_on gives_up goes_around: VERB_SS(<vc-keep-on>);
 kept_on: <verb-s-sp,pp> & <vc-keep-on>;
-gave_up went_around: <verb-s-sp> & <vc-keep-on>;
+gave_up went_around: VERB_SP(<vc-keep-on>);
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 
