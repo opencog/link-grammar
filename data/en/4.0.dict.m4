@@ -2458,10 +2458,7 @@ define(`VERB_Y_PLI',`'VERB_x_I(``<verb-y-pl,i>'',$1))
 
 define(`VERB_S_S',`'VERB_x_T(<verb-s-s>,$1))
 define(`VERB_S_SP',`'VERB_x_T(<verb-s-sp>,$1))
-
-% XXX TODO need to provide macro-ized versions for 
-% <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
-% examples that actually need this.
+define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 
 % AUXILIARY VERBS
 
@@ -4563,7 +4560,7 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
     (<b-minus> & {O+})) & {@MV+} & {<toi-verb>}) or
   ([[@MV+ & O*n+]]);
 
-cost.v-d: VERB_S_PLI(<vc-cost>) or (<verb-s-sp,pp> & <vc-cost>);
+cost.v-d: VERB_S_PLI(<vc-cost>) or VERB_S_SPPP(<vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
   (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or
   ({K+ or Pa+ or Pg+} & <verb-phrase-opener>);
@@ -5625,7 +5622,7 @@ betting.v: <verb-pg> & <vc-bet>;
 
 bother.v: VERB_S_PLI(<vc-bother>);
 bothers.v: VERB_S_S(<vc-bother>);
-bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-phrase-opener>;
+bothered.v-d: VERB_S_SPPP(<vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
 bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
 
@@ -5642,7 +5639,7 @@ disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
 depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v
 annoyed.v-d:
-  (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-phrase-opener>;
+  VERB_S_SPPP(<vc-surprise>) or <verb-pv> or <verb-phrase-opener>;
 surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
 exciting.v depressing.v disgusting.v distressing.v dismaying.v
 embarrassing.v annoying.v:
@@ -5807,7 +5804,7 @@ taking_it making_out pointing_out giving_notice serving_notice:
 <vc-turn-out>: {[@MV+]} & THi+;
 turn_out: VERB_S_PLI(<vc-turn-out>);
 turns_out: VERB_S_S(<vc-turn-out>);
-turned_out: <verb-s-sp,pp> & <vc-turn-out>;
+turned_out: VERB_S_SPPP(<vc-turn-out>);
 turning_out: <verb-s-pg> & <vc-turn-out>;
 
 % (QI+ & {MV+}): "I did not figure out why until recently"
@@ -5824,7 +5821,7 @@ finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 <vc-keep-on>: {Pg+ or @MV+};
 keep_on give_up go_around: VERB_S_PLI(<vc-keep-on>);
 keeps_on gives_up goes_around: VERB_S_S(<vc-keep-on>);
-kept_on: <verb-s-sp,pp> & <vc-keep-on>;
+kept_on: VERB_S_SPPP(<vc-keep-on>);
 gave_up went_around: VERB_S_SP(<vc-keep-on>);
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
@@ -5832,7 +5829,7 @@ keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & {@MV+});
 end_up: VERB_S_PLI(<vc-end-up>);
 ends_up: VERB_S_S(<vc-end-up>);
-ended_up: <verb-s-sp,pp> & <vc-end-up>;
+ended_up: VERB_S_SPPP(<vc-end-up>);
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % two-word passives
