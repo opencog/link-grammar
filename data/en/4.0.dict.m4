@@ -2432,11 +2432,7 @@ define(`VERB_SP_I',`'
   (<verb-and-sp-i-> & (([$1]) or ())) or
   (($1) & <verb-and-sp-i+>)))
 
-define(`VERB_SP_T',`'
-  ((<verb-sp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+define(`VERB_SP_T',`'VERB_x_T(<verb-sp>, $1))
 
 % as above but for past participles
 define(`VERB_PP',`'
