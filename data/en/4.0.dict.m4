@@ -2424,11 +2424,7 @@ define(`VERB_SPPP_I',`'
   (($1) & <verb-and-sp-i+>)))
 
 % past tense macro, transitive variation
-define(`VERB_SPPP_T',`'
-  ((<verb-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & ([$1]0.2 or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+define(`VERB_SPPP_T',`'VERB_x_T(``<verb-sp,pp>'', $1))
 
 % Same as above, but without the PP link
 define(`VERB_SP_I',`'
