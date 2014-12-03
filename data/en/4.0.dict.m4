@@ -2377,13 +2377,15 @@ per "/.per": Us+ & Mp-;
   <verb-and-sp-t-> or
   <verb-and-sp-t+>;
 
-% Verb macros making use of above connectors.
+% Verb macros for automatically conjoining verbs.
+%
 % Many of these use a cost on $1 to encourage any MV links to attach to
 % the "and.j-v" instead of to the individual verb.  Unfortunately, this
 % can often be too broad: so, we *want* transitive objects to attach
 % to the local verb.  The appropriate fix seems to be to remove the cost
 % here, and add a tiny cost to those MV's that are being incorrectly attached.
-% XXX TODO: do the above, as tehy show up...
+% Or maybe lower the cost here?  We already have a 0.2 case, below...
+% XXX TODO: do the above, as they show up...
 %
 % plural-or-infinitive macro; 
 % "Scientists sometimes may repeat experiments or use groups."
