@@ -2377,13 +2377,15 @@ per "/.per": Us+ & Mp-;
   <verb-and-sp-t-> or
   <verb-and-sp-t+>;
 
-% Verb macros making use of above connectors.
+% Verb macros for automatically conjoining verbs.
+%
 % Many of these use a cost on $1 to encourage any MV links to attach to
 % the "and.j-v" instead of to the individual verb.  Unfortunately, this
 % can often be too broad: so, we *want* transitive objects to attach
 % to the local verb.  The appropriate fix seems to be to remove the cost
 % here, and add a tiny cost to those MV's that are being incorrectly attached.
-% XXX TODO: do the above, as tehy show up...
+% Or maybe lower the cost here?  We already have a 0.2 case, below...
+% XXX TODO: do the above, as they show up...
 %
 % plural-or-infinitive macro; 
 % "Scientists sometimes may repeat experiments or use groups."
@@ -2393,93 +2395,72 @@ define(`VERB_PLI',`'
   (<verb-and-pl-> & (($1) or ())) or
   (($1) & <verb-and-pl+>)))
 
-% singular present tense macro; same comments as above...
-define(`VERB_S_I',`'
-  ((<verb-s> & ($1)) or
-  (<verb-and-s-> & ([($1)] or ())) or
-  (($1) & <verb-and-s+>)))
+% Generic singular intransitive form
+define(`VERB_x_S',`'
+  (($1 & ($2)) or
+  (<verb-and-s-> & ([$2] or ())) or
+  (($2) & <verb-and-s+>)))
 
-% present tense, but allows transitive connectinos to 'and'
-define(`VERB_S_T',`'
-  ((<verb-s> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>) or
+% singular present tense macro; same comments as above...
+define(`VERB_S_I',`'VERB_x_S(<verb-s>,$1))
+
+% Generic intransitive form
+define(`VERB_x_I',`'
+  (($1 & ($2)) or
+  (<verb-and-sp-i-> & ([$2] or ())) or
+  (($2) & <verb-and-sp-i+>)))
+
+% Generic transitive form
+% ([$2]0.2 or ()): we want the modifiers to act on the conjunction, usually:
+% for example: "We neither ate nor drank for three days"
+define(`VERB_x_T',`'
+  (($1 & ($2)) or
+  (<verb-and-sp-i-> & ([$2]0.2 or ())) or
+  (($2) & <verb-and-sp-i+>) or
   <verb-and-sp-t>))
 
+% present tense, but allows transitive connectinos to 'and'
+define(`VERB_S_T',`'VERB_x_T(<verb-s>, $1))
+
 % past tense macro, intransitive variation
-define(`VERB_SPPP_I',`'
-  ((<verb-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
+define(`VERB_SPPP_I',`'VERB_x_I(``<verb-sp,pp>'',$1))
 
 % past tense macro, transitive variation
-% ([$1]0.2 or ()): we want the modifiers to act on the conjunction, usually:
-% for example: "We neither ate nor drank for three days"
-define(`VERB_SPPP_T',`'
-  ((<verb-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & ([$1]0.2 or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+define(`VERB_SPPP_T',`'VERB_x_T(``<verb-sp,pp>'', $1))
 
 % Same as above, but without the PP link
-define(`VERB_SP_I',`'
-  ((<verb-sp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
+define(`VERB_SP_I',`'VERB_x_I(<verb-sp>,$1))
 
-define(`VERB_SP_T',`'
-  ((<verb-sp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+define(`VERB_SP_T',`'VERB_x_T(<verb-sp>, $1))
 
 % as above but for past participles
 define(`VERB_PP',`'
   ((<verb-pp> & ($1)) or
-  (<verb-and-had-> & (([$1]) or ())) or
+  (<verb-and-had-> & ([$1] or ())) or
   (($1) & <verb-and-had+>)))
 
 % the filler-it  variation of the above rules.
-define(`VERB_S_PLI',`'
-  ((<verb-s-pl,i> & ($1)) or
-  (<verb-and-sp-i-> & ([($1)] or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+define(`VERB_S_PLI',`'VERB_x_T(``<verb-s-pl,i>'', $1))
 
 % This may allow overly broad 'and' constructions.
-define(`VERB_X_S',`'
-  ((<verb-x-s> & ($1))
-  or (<verb-and-s-> & ([($1)] or ()))
-  or (($1) & <verb-and-s+>)))
+define(`VERB_X_S',`'VERB_x_S(<verb-x-s>,$1))
 
 % This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
-define(`VERB_X_PLI',`'
-  ((<verb-x-pl,i> & ($1))
-  or (<verb-and-sp-i-> & ([($1)] or ()))
-  or (($1) & <verb-and-sp-i+>)))
+define(`VERB_X_PLI',`'VERB_x_I(``<verb-x-pl,i>'',$1))
 
 % This may allow overly broad 'and' constructions.
-define(`VERB_Y_S',`'
-  ((<verb-y-s> & ($1))
-  or (<verb-and-s-> & ([($1)] or ()))
-  or (($1) & <verb-and-s+>)))
+define(`VERB_Y_S',`'VERB_x_S(<verb-y-s>,$1))
 
-define(`VERB_Y_SPPP',`'
-  ((<verb-y-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
+define(`VERB_Y_SPPP',`'VERB_x_I(``<verb-y-sp,pp>'',$1))
 
 % This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
-define(`VERB_Y_PLI',`'
-  ((<verb-y-pl,i> & ($1))
-  or (<verb-and-sp-i-> & ([($1)] or ()))
-  or (($1) & <verb-and-sp-i+>)))
+define(`VERB_Y_PLI',`'VERB_x_I(``<verb-y-pl,i>'',$1))
 
-% XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
-% and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
-% examples that actually need this.
+define(`VERB_S_S',`'VERB_x_T(<verb-s-s>,$1))
+define(`VERB_S_SP',`'VERB_x_T(<verb-s-sp>,$1))
+define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 
 % AUXILIARY VERBS
 
@@ -3645,7 +3626,7 @@ thinking.v: <verb-pg> & <vc-think>;
   ({@MV+} & {THi+ or QIi+})
   or <b-minus>;
 matter.v: VERB_S_PLI(<vc-matter>);
-matters.v: <verb-s-s> & <vc-matter>;
+matters.v: VERB_S_S(<vc-matter>);
 mattered.v-d: VERB_SPPP_I(<vc-matter>);
 mattering.v: (<vc-matter> & <verb-pg,ge>) or <verb-ge-d>;
 
@@ -4444,8 +4425,8 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 <vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [Pv+])
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
-becomes.v: <verb-s-s> & <vc-become>;
-became.v-d: <verb-s-sp> & <vc-become>;
+becomes.v: VERB_S_S(<vc-become>);
+became.v-d: VERB_S_SP(<vc-become>);
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
@@ -4544,8 +4525,9 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
   (OXii+ & Vtg+ & {@MV+} & TH+) or
   @MV+;
 take.v: VERB_S_PLI(<vc-take>);
-takes.v: <verb-s-s> & <vc-take>;
-took.v-d: <verb-s-sp> & <vc-take>;
+% conjoin: "He takes cookies and eats them."
+takes.v: VERB_S_S(<vc-take>);
+took.v-d: VERB_S_SP(<vc-take>);
 taken.v:
   (<verb-s-pp> & <vc-take>)
   or (<verb-pv-b> & {K+} & {@MV+})
@@ -4580,11 +4562,11 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
     (<b-minus> & {O+})) & {@MV+} & {<toi-verb>}) or
   ([[@MV+ & O*n+]]);
 
-cost.v-d: VERB_S_PLI(<vc-cost>) or (<verb-s-sp,pp> & <vc-cost>);
+cost.v-d: VERB_S_PLI(<vc-cost>) or VERB_S_SPPP(<vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
   (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or
   ({K+ or Pa+ or Pg+} & <verb-phrase-opener>);
-costs.v: <verb-s-s> & <vc-cost>;
+costs.v: VERB_S_S(<vc-cost>);
 costing.v: <verb-s-pg> & <vc-cost>;
 costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 
@@ -5641,8 +5623,8 @@ betting.v: <verb-pg> & <vc-bet>;
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 bother.v: VERB_S_PLI(<vc-bother>);
-bothers.v: <verb-s-s> & <vc-bother>;
-bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-phrase-opener>;
+bothers.v: VERB_S_S(<vc-bother>);
+bothered.v-d: VERB_S_SPPP(<vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
 bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
 
@@ -5655,11 +5637,11 @@ disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v:
   VERB_S_PLI(<vc-surprise>);
 surprises.v alarms.v amazes.v amuses.v astonishes.v astounds.v excites.v depresses.v
 disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
-  <verb-s-s> & <vc-surprise>;
+  VERB_S_S(<vc-surprise>);
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
 depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v
 annoyed.v-d:
-  (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-phrase-opener>;
+  VERB_S_SPPP(<vc-surprise>) or <verb-pv> or <verb-phrase-opener>;
 surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
 exciting.v depressing.v disgusting.v distressing.v dismaying.v
 embarrassing.v annoying.v:
@@ -5823,8 +5805,8 @@ taking_it making_out pointing_out giving_notice serving_notice:
 
 <vc-turn-out>: {[@MV+]} & THi+;
 turn_out: VERB_S_PLI(<vc-turn-out>);
-turns_out: <verb-s-s> & <vc-turn-out>;
-turned_out: <verb-s-sp,pp> & <vc-turn-out>;
+turns_out: VERB_S_S(<vc-turn-out>);
+turned_out: VERB_S_SPPP(<vc-turn-out>);
 turning_out: <verb-s-pg> & <vc-turn-out>;
 
 % (QI+ & {MV+}): "I did not figure out why until recently"
@@ -5840,17 +5822,16 @@ finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 
 <vc-keep-on>: {Pg+ or @MV+};
 keep_on give_up go_around: VERB_S_PLI(<vc-keep-on>);
-keeps_on gives_up goes_around: <verb-s-s> & <vc-keep-on>;
-kept_on: <verb-s-sp,pp> & <vc-keep-on>;
-gave_up went_around: <verb-s-sp> & <vc-keep-on>;
+keeps_on gives_up goes_around: VERB_S_S(<vc-keep-on>);
+kept_on: VERB_S_SPPP(<vc-keep-on>);
+gave_up went_around: VERB_S_SP(<vc-keep-on>);
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 
-% XXX TODO need to provide and-able links for these.
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & {@MV+});
 end_up: VERB_S_PLI(<vc-end-up>);
-ends_up: <verb-s-s> & <vc-end-up>;
-ended_up: <verb-s-sp,pp> & <vc-end-up>;
+ends_up: VERB_S_S(<vc-end-up>);
+ended_up: VERB_S_SPPP(<vc-end-up>);
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % two-word passives
