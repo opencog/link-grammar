@@ -2384,13 +2384,15 @@ per "/.per": Us+ & Mp-;
 % singular present tense macro; same comments as above...
 
 
+% Generic intransitive form
+
+
 % Generic transitive form
 % ([$2]0.2 or ()): we want the modifiers to act on the conjunction, usually:
 % for example: "We neither ate nor drank for three days"
 
 
 % present tense, but allows transitive connectinos to 'and'
-
 
 
 % past tense macro, intransitive variation

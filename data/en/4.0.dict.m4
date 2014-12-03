@@ -2399,6 +2399,12 @@ define(`VERB_S_I',`'
   (<verb-and-s-> & ([($1)] or ())) or
   (($1) & <verb-and-s+>)))
 
+% Generic intransitive form
+define(`VERB_x_I',`'
+  (($1 & ($2)) or
+  (<verb-and-sp-i-> & (([$2]) or ())) or
+  (($2) & <verb-and-sp-i+>)))
+
 % Generic transitive form
 % ([$2]0.2 or ()): we want the modifiers to act on the conjunction, usually:
 % for example: "We neither ate nor drank for three days"
@@ -2409,19 +2415,10 @@ define(`VERB_x_T',`'
   <verb-and-sp-t>))
 
 % present tense, but allows transitive connectinos to 'and'
-dnl define(`VERB_S_T',`'
-dnl  ((<verb-s> & ($1)) or
-dnl  (<verb-and-sp-i-> & (([$1]) or ())) or
-dnl  (($1) & <verb-and-sp-i+>) or
-dnl  <verb-and-sp-t>))
-
 define(`VERB_S_T',`'VERB_x_T(<verb-s>, $1))
 
 % past tense macro, intransitive variation
-define(`VERB_SPPP_I',`'
-  ((<verb-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
+define(`VERB_SPPP_I',`'VERB_x_I(``<verb-sp,pp>'',$1))
 
 % past tense macro, transitive variation
 define(`VERB_SPPP_T',`'VERB_x_T(``<verb-sp,pp>'', $1))
