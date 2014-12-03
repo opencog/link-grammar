@@ -2396,7 +2396,7 @@ define(`VERB_PLI',`'
 % Generic singular intransitive form
 define(`VERB_x_S',`'
   (($1 & ($2)) or
-  (<verb-and-s-> & (([$2]) or ())) or
+  (<verb-and-s-> & ([$2] or ())) or
   (($2) & <verb-and-s+>)))
 
 % singular present tense macro; same comments as above...
@@ -2405,7 +2405,7 @@ define(`VERB_S_I',`'VERB_x_S(<verb-s>,$1))
 % Generic intransitive form
 define(`VERB_x_I',`'
   (($1 & ($2)) or
-  (<verb-and-sp-i-> & (([$2]) or ())) or
+  (<verb-and-sp-i-> & ([$2] or ())) or
   (($2) & <verb-and-sp-i+>)))
 
 % Generic transitive form
@@ -2413,7 +2413,7 @@ define(`VERB_x_I',`'
 % for example: "We neither ate nor drank for three days"
 define(`VERB_x_T',`'
   (($1 & ($2)) or
-  (<verb-and-sp-i-> & (([$2]0.2) or ())) or
+  (<verb-and-sp-i-> & ([$2]0.2 or ())) or
   (($2) & <verb-and-sp-i+>) or
   <verb-and-sp-t>))
 
@@ -2434,7 +2434,7 @@ define(`VERB_SP_T',`'VERB_x_T(<verb-sp>, $1))
 % as above but for past participles
 define(`VERB_PP',`'
   ((<verb-pp> & ($1)) or
-  (<verb-and-had-> & (([$1]) or ())) or
+  (<verb-and-had-> & ([$1] or ())) or
   (($1) & <verb-and-had+>)))
 
 % the filler-it  variation of the above rules.
