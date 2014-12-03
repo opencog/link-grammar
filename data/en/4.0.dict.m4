@@ -2399,12 +2399,21 @@ define(`VERB_S_I',`'
   (<verb-and-s-> & ([($1)] or ())) or
   (($1) & <verb-and-s+>)))
 
-% present tense, but allows transitive connectinos to 'and'
-define(`VERB_S_T',`'
-  ((<verb-s> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>) or
+% Generic
+define(`VERB_x_T',`'
+  (($1 & ($2)) or
+  (<verb-and-sp-i-> & (([$2]) or ())) or
+  (($2) & <verb-and-sp-i+>) or
   <verb-and-sp-t>))
+
+% present tense, but allows transitive connectinos to 'and'
+dnl define(`VERB_S_T',`'
+dnl  ((<verb-s> & ($1)) or
+dnl  (<verb-and-sp-i-> & (([$1]) or ())) or
+dnl  (($1) & <verb-and-sp-i+>) or
+dnl  <verb-and-sp-t>))
+
+define(`VERB_S_T',`'VERB_x_T(<verb-s>, $1))
 
 % past tense macro, intransitive variation
 define(`VERB_SPPP_I',`'
