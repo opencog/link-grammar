@@ -2441,11 +2441,7 @@ define(`VERB_PP',`'
   (($1) & <verb-and-had+>)))
 
 % the filler-it  variation of the above rules.
-define(`VERB_S_PLI',`'
-  ((<verb-s-pl,i> & ($1)) or
-  (<verb-and-sp-i-> & ([($1)] or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+define(`VERB_S_PLI',`'VERB_x_T(``<verb-s-pl,i>'', $1))
 
 % This may allow overly broad 'and' constructions.
 define(`VERB_X_S',`'

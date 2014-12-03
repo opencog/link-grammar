@@ -4030,9 +4030,9 @@ thinking.v: <verb-pg> & <vc-think>;
   or <b-minus>;
 matter.v: 
   ((<verb-s-pl,i> & (<vc-matter>)) or
-  (<verb-and-sp-i-> & ([(<vc-matter>)] or ())) or
-  ((<vc-matter>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-matter>]0.2) or ())) or
+  ((<vc-matter>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 matters.v: <verb-s-s> & <vc-matter>;
 mattered.v-d: 
   ((<verb-sp,pp> & (<vc-matter>)) or
@@ -5441,9 +5441,9 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: 
   ((<verb-s-pl,i> & (<vc-become>)) or
-  (<verb-and-sp-i-> & ([(<vc-become>)] or ())) or
-  ((<vc-become>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or (<verb-s-pp> & <vc-become>) or <verb-pv>;
+  (<verb-and-sp-i-> & (([<vc-become>]0.2) or ())) or
+  ((<vc-become>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: <verb-s-s> & <vc-become>;
 became.v-d: <verb-s-sp> & <vc-become>;
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
@@ -5628,9 +5628,9 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
   @MV+;
 take.v: 
   ((<verb-s-pl,i> & (<vc-take>)) or
-  (<verb-and-sp-i-> & ([(<vc-take>)] or ())) or
-  ((<vc-take>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-take>]0.2) or ())) or
+  ((<vc-take>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 takes.v: <verb-s-s> & <vc-take>;
 took.v-d: <verb-s-sp> & <vc-take>;
 taken.v:
@@ -5677,9 +5677,9 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 
 cost.v-d: 
   ((<verb-s-pl,i> & (<vc-cost>)) or
-  (<verb-and-sp-i-> & ([(<vc-cost>)] or ())) or
-  ((<vc-cost>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or (<verb-s-sp,pp> & <vc-cost>);
+  (<verb-and-sp-i-> & (([<vc-cost>]0.2) or ())) or
+  ((<vc-cost>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>) or (<verb-s-sp,pp> & <vc-cost>);
 costed.v-d: 
   ((<verb-sp,pp> & (<vc-cost>)) or
   (<verb-and-sp-i-> & (([<vc-cost>]0.2) or ())) or
@@ -7420,9 +7420,9 @@ betting.v: <verb-pg> & <vc-bet>;
 
 bother.v: 
   ((<verb-s-pl,i> & (<vc-bother>)) or
-  (<verb-and-sp-i-> & ([(<vc-bother>)] or ())) or
-  ((<vc-bother>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-bother>]0.2) or ())) or
+  ((<vc-bother>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 bothers.v: <verb-s-s> & <vc-bother>;
 bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
@@ -7436,9 +7436,9 @@ surprise.v alarm.v amaze.v amuse.v astonish.v astound.v excite.v depress.v
 disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v:
   
   ((<verb-s-pl,i> & (<vc-surprise>)) or
-  (<verb-and-sp-i-> & ([(<vc-surprise>)] or ())) or
-  ((<vc-surprise>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-surprise>]0.2) or ())) or
+  ((<vc-surprise>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 surprises.v alarms.v amazes.v amuses.v astonishes.v astounds.v excites.v depresses.v
 disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
   <verb-s-s> & <vc-surprise>;
@@ -7724,9 +7724,9 @@ taking_it making_out pointing_out giving_notice serving_notice:
 <vc-turn-out>: {[@MV+]} & THi+;
 turn_out: 
   ((<verb-s-pl,i> & (<vc-turn-out>)) or
-  (<verb-and-sp-i-> & ([(<vc-turn-out>)] or ())) or
-  ((<vc-turn-out>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-turn-out>]0.2) or ())) or
+  ((<vc-turn-out>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 turns_out: <verb-s-s> & <vc-turn-out>;
 turned_out: <verb-s-sp,pp> & <vc-turn-out>;
 turning_out: <verb-s-pg> & <vc-turn-out>;
@@ -7754,9 +7754,9 @@ finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 <vc-keep-on>: {Pg+ or @MV+};
 keep_on give_up go_around: 
   ((<verb-s-pl,i> & (<vc-keep-on>)) or
-  (<verb-and-sp-i-> & ([(<vc-keep-on>)] or ())) or
-  ((<vc-keep-on>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-keep-on>]0.2) or ())) or
+  ((<vc-keep-on>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 keeps_on gives_up goes_around: <verb-s-s> & <vc-keep-on>;
 kept_on: <verb-s-sp,pp> & <vc-keep-on>;
 gave_up went_around: <verb-s-sp> & <vc-keep-on>;
@@ -7767,9 +7767,9 @@ keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & {@MV+});
 end_up: 
   ((<verb-s-pl,i> & (<vc-end-up>)) or
-  (<verb-and-sp-i-> & ([(<vc-end-up>)] or ())) or
-  ((<vc-end-up>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  (<verb-and-sp-i-> & (([<vc-end-up>]0.2) or ())) or
+  ((<vc-end-up>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 ends_up: <verb-s-s> & <vc-end-up>;
 ended_up: <verb-s-sp,pp> & <vc-end-up>;
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
