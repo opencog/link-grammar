@@ -2548,9 +2548,9 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 
 have.v:
   
-  ((<verb-x-pl,i> & (<vc-have>))
-  or (<verb-and-sp-i-> & ([(<vc-have>)] or ()))
-  or ((<vc-have>) & <verb-and-sp-i+>))
+  ((<verb-x-pl,i> & (<vc-have>)) or
+  (<verb-and-sp-i-> & (([<vc-have>]) or ())) or
+  ((<vc-have>) & <verb-and-sp-i+>))
   or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
 
 %I've they've you've we've: PP+ & <CLAUSE>;
@@ -3827,9 +3827,9 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 <vc-appear>:
   {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [Pv+]};
 appear.v: 
-  ((<verb-y-pl,i> & (<vc-appear>))
-  or (<verb-and-sp-i-> & ([(<vc-appear>)] or ()))
-  or ((<vc-appear>) & <verb-and-sp-i+>));
+  ((<verb-y-pl,i> & (<vc-appear>)) or
+  (<verb-and-sp-i-> & (([<vc-appear>]) or ())) or
+  ((<vc-appear>) & <verb-and-sp-i+>));
 appears.v: 
   ((<verb-y-s> & (<vc-appear>))
   or (<verb-and-s-> & ([(<vc-appear>)] or ()))
@@ -3844,9 +3844,9 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 <vc-seem>:
   {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [Pv+]);
 seem.v: 
-  ((<verb-y-pl,i> & (<vc-seem>))
-  or (<verb-and-sp-i-> & ([(<vc-seem>)] or ()))
-  or ((<vc-seem>) & <verb-and-sp-i+>));
+  ((<verb-y-pl,i> & (<vc-seem>)) or
+  (<verb-and-sp-i-> & (([<vc-seem>]) or ())) or
+  ((<vc-seem>) & <verb-and-sp-i+>));
 seems.v: 
   ((<verb-y-s> & (<vc-seem>))
   or (<verb-and-s-> & ([(<vc-seem>)] or ()))
@@ -7463,9 +7463,9 @@ embarrassing.g annoying.g:
   ({@MV+} & (<tof-verb> or TH+ or <embed-verb> or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: 
-  ((<verb-y-pl,i> & (<vc-prove>))
-  or (<verb-and-sp-i-> & ([(<vc-prove>)] or ()))
-  or ((<vc-prove>) & <verb-and-sp-i+>));
+  ((<verb-y-pl,i> & (<vc-prove>)) or
+  (<verb-and-sp-i-> & (([<vc-prove>]) or ())) or
+  ((<vc-prove>) & <verb-and-sp-i+>));
 proves.v: 
   ((<verb-y-s> & (<vc-prove>))
   or (<verb-and-s-> & ([(<vc-prove>)] or ()))

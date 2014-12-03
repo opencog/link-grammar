@@ -2424,10 +2424,7 @@ define(`VERB_SPPP_I',`'VERB_x_I(``<verb-sp,pp>'',$1))
 define(`VERB_SPPP_T',`'VERB_x_T(``<verb-sp,pp>'', $1))
 
 % Same as above, but without the PP link
-define(`VERB_SP_I',`'
-  ((<verb-sp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
+define(`VERB_SP_I',`'VERB_x_I(<verb-sp>,$1))
 
 define(`VERB_SP_T',`'VERB_x_T(<verb-sp>, $1))
 
@@ -2448,10 +2445,7 @@ define(`VERB_X_S',`'
 
 % This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
-define(`VERB_X_PLI',`'
-  ((<verb-x-pl,i> & ($1))
-  or (<verb-and-sp-i-> & ([($1)] or ()))
-  or (($1) & <verb-and-sp-i+>)))
+define(`VERB_X_PLI',`'VERB_x_I(``<verb-x-pl,i>'',$1))
 
 % This may allow overly broad 'and' constructions.
 define(`VERB_Y_S',`'
@@ -2459,17 +2453,11 @@ define(`VERB_Y_S',`'
   or (<verb-and-s-> & ([($1)] or ()))
   or (($1) & <verb-and-s+>)))
 
-define(`VERB_Y_SPPP',`'
-  ((<verb-y-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
+define(`VERB_Y_SPPP',`'VERB_x_I(``<verb-y-sp,pp>'',$1))
 
 % This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
-define(`VERB_Y_PLI',`'
-  ((<verb-y-pl,i> & ($1))
-  or (<verb-and-sp-i-> & ([($1)] or ()))
-  or (($1) & <verb-and-sp-i+>)))
+define(`VERB_Y_PLI',`'VERB_x_I(``<verb-y-pl,i>'',$1))
 
 % XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
 % and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
