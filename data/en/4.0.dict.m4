@@ -2456,8 +2456,8 @@ define(`VERB_Y_SPPP',`'VERB_x_I(``<verb-y-sp,pp>'',$1))
 % I haven't completely verified this one, it may be buggy..
 define(`VERB_Y_PLI',`'VERB_x_I(``<verb-y-pl,i>'',$1))
 
-define(`VERB_SS',`'VERB_x_T(<verb-s-s>,$1))
-define(`VERB_SP',`'VERB_x_T(<verb-s-sp>,$1))
+define(`VERB_S_S',`'VERB_x_T(<verb-s-s>,$1))
+define(`VERB_S_SP',`'VERB_x_T(<verb-s-sp>,$1))
 
 % XXX TODO need to provide macro-ized versions for 
 % <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
@@ -3627,7 +3627,7 @@ thinking.v: <verb-pg> & <vc-think>;
   ({@MV+} & {THi+ or QIi+})
   or <b-minus>;
 matter.v: VERB_S_PLI(<vc-matter>);
-matters.v: VERB_SS(<vc-matter>);
+matters.v: VERB_S_S(<vc-matter>);
 mattered.v-d: VERB_SPPP_I(<vc-matter>);
 mattering.v: (<vc-matter> & <verb-pg,ge>) or <verb-ge-d>;
 
@@ -4426,8 +4426,8 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 <vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [Pv+])
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
-becomes.v: VERB_SS(<vc-become>);
-became.v-d: VERB_SP(<vc-become>);
+becomes.v: VERB_S_S(<vc-become>);
+became.v-d: VERB_S_SP(<vc-become>);
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
@@ -4527,8 +4527,8 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
   @MV+;
 take.v: VERB_S_PLI(<vc-take>);
 % conjoin: "He takes cookies and eats them."
-takes.v: VERB_SS(<vc-take>);
-took.v-d: VERB_SP(<vc-take>);
+takes.v: VERB_S_S(<vc-take>);
+took.v-d: VERB_S_SP(<vc-take>);
 taken.v:
   (<verb-s-pp> & <vc-take>)
   or (<verb-pv-b> & {K+} & {@MV+})
@@ -4567,7 +4567,7 @@ cost.v-d: VERB_S_PLI(<vc-cost>) or (<verb-s-sp,pp> & <vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
   (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or
   ({K+ or Pa+ or Pg+} & <verb-phrase-opener>);
-costs.v: VERB_SS(<vc-cost>);
+costs.v: VERB_S_S(<vc-cost>);
 costing.v: <verb-s-pg> & <vc-cost>;
 costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 
@@ -5624,7 +5624,7 @@ betting.v: <verb-pg> & <vc-bet>;
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 bother.v: VERB_S_PLI(<vc-bother>);
-bothers.v: VERB_SS(<vc-bother>);
+bothers.v: VERB_S_S(<vc-bother>);
 bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
 bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
@@ -5638,7 +5638,7 @@ disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v:
   VERB_S_PLI(<vc-surprise>);
 surprises.v alarms.v amazes.v amuses.v astonishes.v astounds.v excites.v depresses.v
 disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
-  VERB_SS(<vc-surprise>);
+  VERB_S_S(<vc-surprise>);
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
 depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v
 annoyed.v-d:
@@ -5806,7 +5806,7 @@ taking_it making_out pointing_out giving_notice serving_notice:
 
 <vc-turn-out>: {[@MV+]} & THi+;
 turn_out: VERB_S_PLI(<vc-turn-out>);
-turns_out: VERB_SS(<vc-turn-out>);
+turns_out: VERB_S_S(<vc-turn-out>);
 turned_out: <verb-s-sp,pp> & <vc-turn-out>;
 turning_out: <verb-s-pg> & <vc-turn-out>;
 
@@ -5823,15 +5823,15 @@ finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 
 <vc-keep-on>: {Pg+ or @MV+};
 keep_on give_up go_around: VERB_S_PLI(<vc-keep-on>);
-keeps_on gives_up goes_around: VERB_SS(<vc-keep-on>);
+keeps_on gives_up goes_around: VERB_S_S(<vc-keep-on>);
 kept_on: <verb-s-sp,pp> & <vc-keep-on>;
-gave_up went_around: VERB_SP(<vc-keep-on>);
+gave_up went_around: VERB_S_SP(<vc-keep-on>);
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & {@MV+});
 end_up: VERB_S_PLI(<vc-end-up>);
-ends_up: VERB_SS(<vc-end-up>);
+ends_up: VERB_S_S(<vc-end-up>);
 ended_up: <verb-s-sp,pp> & <vc-end-up>;
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
