@@ -2393,11 +2393,14 @@ define(`VERB_PLI',`'
   (<verb-and-pl-> & (($1) or ())) or
   (($1) & <verb-and-pl+>)))
 
+% Generic singular intransitive form
+define(`VERB_x_S',`'
+  (($1 & ($2)) or
+  (<verb-and-s-> & (([$2]) or ())) or
+  (($2) & <verb-and-s+>)))
+
 % singular present tense macro; same comments as above...
-define(`VERB_S_I',`'
-  ((<verb-s> & ($1)) or
-  (<verb-and-s-> & ([($1)] or ())) or
-  (($1) & <verb-and-s+>)))
+define(`VERB_S_I',`'VERB_x_S(<verb-s>,$1))
 
 % Generic intransitive form
 define(`VERB_x_I',`'
@@ -2438,20 +2441,14 @@ define(`VERB_PP',`'
 define(`VERB_S_PLI',`'VERB_x_T(``<verb-s-pl,i>'', $1))
 
 % This may allow overly broad 'and' constructions.
-define(`VERB_X_S',`'
-  ((<verb-x-s> & ($1))
-  or (<verb-and-s-> & ([($1)] or ()))
-  or (($1) & <verb-and-s+>)))
+define(`VERB_X_S',`'VERB_x_S(<verb-x-s>,$1))
 
 % This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
 define(`VERB_X_PLI',`'VERB_x_I(``<verb-x-pl,i>'',$1))
 
 % This may allow overly broad 'and' constructions.
-define(`VERB_Y_S',`'
-  ((<verb-y-s> & ($1))
-  or (<verb-and-s-> & ([($1)] or ()))
-  or (($1) & <verb-and-s+>)))
+define(`VERB_Y_S',`'VERB_x_S(<verb-y-s>,$1))
 
 define(`VERB_Y_SPPP',`'VERB_x_I(``<verb-y-sp,pp>'',$1))
 
