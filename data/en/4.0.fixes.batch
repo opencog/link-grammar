@@ -40,7 +40,7 @@ Who did you give the slavers?
 % Confusing given names
 Finn pushed at the door.
 
-% Missing verbs
+% Missing or miscategorized verbs
 Don't overexcite him!
 Don't overextend yourself!
 This code deadlocks.
@@ -61,6 +61,8 @@ I tokenized the sentence.
 I like to tokenize.
 It is a tokenizing parser.
 That is a very unenhancing blush.
+I will vacuum it up
+I will vacuum it right up
 
 
 % Parses, but not correctly!
