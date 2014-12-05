@@ -247,6 +247,10 @@ or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 
 ",": Xc-;
 
+% No actual definition yet - defined here because they appear as possible
+% prefixes in 4.0.affix.
+לכש= ככ= כש= מב= מל= מש=: ();
+
 % With the following line in the dictionary, the parser will simply
 % skip over (null-link) unknown words. If you remove it, the parser
 % will output an error for any unknown words.
