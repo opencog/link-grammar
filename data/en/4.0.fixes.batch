@@ -40,7 +40,7 @@ Who did you give the slavers?
 % Confusing given names
 Finn pushed at the door.
 
-% Missing verbs
+% Missing or miscategorized verbs
 Don't overexcite him!
 Don't overextend yourself!
 This code deadlocks.
@@ -61,7 +61,26 @@ I tokenized the sentence.
 I like to tokenize.
 It is a tokenizing parser.
 That is a very unenhancing blush.
-
+I will vacuum it up
+I will vacuum it right up
+I will deep-fry it up for you.
+I will frame it up for you.
+I squished it down to a splat.
+I slurped it up.
+The secretary whited it out.
+She was whiting it out when the call came.
+Yes, he tailgates often.
+Yes, they topple frequently.
+It will unfreeze by itself.
+They deice the planes regularly.
+They deice regularly.
+They oversell whenever they feel like it.
+They pillory whoever they want to.
+He will anguish over the loss
+He will bakroll the company.
+Let me nuke that sandwich for you
+He is going to lowball the offer
+I don't mean to disrespect you
 
 % Parses, but not correctly!
 % Any expression with an exclamatory "right" mis-parses.
@@ -1162,6 +1181,20 @@ The vase landed unbroken
 The vase landed, unbroken
 They continued undaunted
 They continued, undaunted
+
+% A few more ...
+He came unarmed
+He came unprotected
+He came unprepared
+He came unhinged
+He became unhinged
+he went unarmed
+he left unarmed
+he left unnoticed
+he walked in unnoticed
+he walked in unchallenged
+he really walked in unnoticed
+he really walked in utterly unnoticed
 
 % More Pa links
 He was struck hard by the baseball

@@ -2997,7 +2997,9 @@ lain.v: VERB_PP(<vc-bulge>);
 % --------------------------------------------------------------
 
 % irregular -- coming is in words.v.5.4 ...
-<vc-come>:  {(K+ & {Pa+}) or [[Pg+]] or <b-minus>} & {@MV+};
+<vc-come>:
+  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus>} & {@MV+})
+  or ({@MV+} & Pa+);
 come.v: VERB_PLI(<vc-come>) or
   VERB_PP(<vc-come>) or
   ({@E-} & Ix- & O*t+);
@@ -3116,7 +3118,7 @@ rising.v falling.v:
 % [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
 %
 <vc-fill>:
-  ((K+ & {[[@MV+]]} & O*n+)
+  ((K+ & {[[@MV+]]} & (O*n+ or Pa+ or Pv+))
     or ({O+ or <b-minus>} & {K+})
     or [[@MV+ & O*n+]]
   ) & {@MV+};
@@ -4420,10 +4422,10 @@ turned.v-d:
 turning.v: <verb-pg> & <vc-turn>;
 turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
-% XXX Why is there a cost on Pv+ ???
 % <vc-trans> plus TI
-<vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [Pv+])
-& {@MV+}) or ({@MV+} & (AF- or Pa+));
+<vc-become>:
+  ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or Pv+) & {@MV+})
+   or ({@MV+} & (AF- or Pa+));
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: VERB_S_S(<vc-become>);
 became.v-d: VERB_S_SP(<vc-become>);
@@ -4614,9 +4616,11 @@ gotten.v:
 getting.v: <verb-pg> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
+% Pa+: "He left unarmed"
 <vc-leave>:
-  ((O+ or <b-minus>) & (({K+} & {@MV+}) or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+}))) or
-  ({(K+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])} & {@MV+});
+  ((O+ or <b-minus>) & (({K+} & {@MV+}) or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+})))
+  or ({@MV+} & (Pa+ or Pv+))
+  or ({(K+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])} & {@MV+});
 
 leave.v: VERB_PLI(<vc-leave>);
 leaves.v: VERB_S_T(<vc-leave>);
