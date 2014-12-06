@@ -15,10 +15,10 @@
 #endif
 
 #include <link-grammar/api-structures.h>
-#include "corpus/corpus.h"
-#include "error.h"
+#include "link-grammar/corpus/corpus.h"
+#include "link-grammar/error.h"
 #include "jni-client.h"
-#include "utilities.h"
+#include "link-grammar/utilities.h"
 
 /* Make the compiler shut up about the deprecated functions */
 #pragma GCC diagnostic push

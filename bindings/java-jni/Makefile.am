@@ -6,8 +6,7 @@
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h 
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/link-grammar \
-	-I$(top_builddir)/link-grammar \
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) \
 	$(ANSI_CFLAGS) $(LINK_CFLAGS) 
 
 lib_LTLIBRARIES = liblink-grammar-java.la
