@@ -4,12 +4,12 @@ Version 5.2.0 (XXX 2014)
  * Remove deprecated constituent tree code.
  * Windows: add terminal screen resizing support.
  * Windows: a build fix.
- * reign, rule, run: can take predicative adjective.
+ * reign, rule, run, leave, come: can take predicative adjective.
  * Rework costs for many verb-derived adjectives.
  * Handle (predicative) adjectival modifiers for assorted perfect verbs.
  * Fixes for various color names.
  * Fixes for various affirmative answers.
- * Add 100 missing verbs
+ * Add 100 missing verbs.
 
 Version 5.1.3 (7 October 2014)
  * More fixes for build breaks on Apple OSX.
