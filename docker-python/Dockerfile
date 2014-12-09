@@ -17,23 +17,7 @@ RUN apt-get update
 RUN apt-get -y autoremove
 RUN apt-get -y install apt-utils
 
-# The parse server needs jni.h -- this is furnished by jdk
-# which in turn has a HUGE dependency list :-(
-RUN apt-get install -y openjdk-7-jdk
-RUN apt-get install -y ant
-
-# Need wget to download link-grammar source
-RUN apt-get install wget
-
-# Need the locales for utf8
-RUN apt-get install locales
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-RUN echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen
-RUN echo "he_IL.UTF-8 UTF-8" >> /etc/locale.gen
-RUN echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
-RUN echo "lt_LT.UTF-8 UTF-8" >> /etc/locale.gen
-RUN echo "tr_TR.UTF-8 UTF-8" >> /etc/locale.gen
-RUN locale-gen 
+RUN apt-get install -y swig2.0
 
 # Now, download and build.
 ADD setup-latest.sh /
