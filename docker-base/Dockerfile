@@ -30,4 +30,10 @@ RUN echo "lt_LT.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "fa_IR.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "ar_AE.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "tr_TR.UTF-8 UTF-8" >> /etc/locale.gen
-RUN locale-gen
+
+# WTF. In debian wheezy, it is enough to just say locale-gen without
+# any arguments. But in trusty, we eneed to be explicit.  I'm confused.
+# RUN locale-gen
+# Note also: under trusty, fa_IR.UTF-8 causes locale-gen to fail, 
+# must use the naked  fa_IR
+RUN locale-gen en_US.UTF-8 ru_RU.UTF-8 he_IL.UTF-8 de_DE.UTF-8 lt_LT.UTF-8 fa_IR ar_AE.UTF-8 tr_TR.UTF-8
