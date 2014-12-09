@@ -584,6 +584,11 @@ fail:
 	struct winsize ws;
 	int fd = fileno(stdout);
 
+	/* If ther is no controlling terminal, the fileno will fail. This
+	 * seems to happen while building docker images, I don't know why.
+	 */
+	if (fd < 0) return;
+
 	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
 	{
 		if (isatty(fd))

@@ -31,4 +31,13 @@ EXTRA_DIST =            \
 	MAINTAINERS          \
 	NEWS                 \
 	README               \
-	TODO
+	TODO                 \
+	docker-build.sh      \
+	docker-base/Dockerfile          \
+	docker-base/download-latest.sh  \
+	docker-parser/Dockerfile        \
+	docker-parser/build-parser.sh   \
+	docker-python/Dockerfile        \
+	docker-python/build-python.sh   \
+	docker-server/Dockerfile        \
+	docker-server/build-server.sh
