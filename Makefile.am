@@ -44,7 +44,7 @@ EXTRA_DIST =            \
 	msvc9/README                    \
 	msvc12/LinkGrammarExe.vcproj           \
 	msvc12/LinkGrammarExe.vcxproj          \
-	msvc12/LinkGrammarExe.vcxproj.filers   \
+	msvc12/LinkGrammarExe.vcxproj.filters  \
 	msvc12/LinkGrammarJava.vcproj          \
 	msvc12/LinkGrammarJava.vcxproj         \
 	msvc12/LinkGrammarJava.vcxproj.filters \
