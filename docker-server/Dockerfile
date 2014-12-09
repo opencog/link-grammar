@@ -1,17 +1,14 @@
 #
-# Experimental dockerfile for link-grammar.
+# Dockerfile for the link-grammar parse server.
 #
-# The problem is that the Debian/Ubuntu/Mint link-grammar.debs
-# are old & stale. So instead, we compile from scratch.
+# The parse server is currently written so that it requires the Java
+# bindings to run. So this has to pull down thw whole fatso JDK.
 #
-# We'll need two different use-cases:
-# 1) the command-line client
-# 2) the parse server
-#
-# Anyway...
+# XXX TODO -- actually start and run the parse server ... 
+# ... and make sure it works.
 #
 FROM linkgrammar/lgbase:latest
-MAINTAINER linasvepstas@gmail.com
+MAINTAINER Linas Vepstas linasvepstas@gmail.com
 
 # The parse server needs jni.h -- this is furnished by jdk
 # which in turn has a HUGE dependency list :-(

@@ -3,7 +3,7 @@
 # No compilation is performed.
 #
 FROM ubuntu:14.04
-MAINTAINER linasvepstas@gmail.com
+MAINTAINER Linas Vepstas linasvepstas@gmail.com
 
 RUN apt-get update
 RUN apt-get -y install apt-utils

@@ -4,7 +4,7 @@
 # and so perform general experimentation.
 #
 FROM linkgrammar/lgbase:latest
-MAINTAINER linasvepstas@gmail.com
+MAINTAINER Linas Vepstas linasvepstas@gmail.com
 
 # Build the libraries and command-line parser only
 # Assumes that the sources have already been unpacked.

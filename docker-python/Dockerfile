@@ -1,17 +1,10 @@
 #
-# Experimental dockerfile for link-grammar.
+# Experimental dockerfile for link-grammar python bindings.
 #
-# The problem is that the Debian/Ubuntu/Mint link-grammar.debs
-# are old & stale. So instead, we compile from scratch.
-#
-# We'll need two different use-cases:
-# 1) the command-line client
-# 2) the parse server
-#
-# Anyway...
+# XXX TODO: actually run the python unit tests!
 #
 FROM linkgrammar/lgbase:latest
-MAINTAINER linasvepstas@gmail.com
+MAINTAINER Linas Vepstas linasvepstas@gmail.com
 
 RUN apt-get install -y swig2.0
 RUN apt-get install -y python
