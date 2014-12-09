@@ -2,13 +2,12 @@
 # Dockerfile for the basic link-grammar source download.
 # No compilation is performed.
 #
-FROM gcc:latest
+FROM ubuntu:14.04
 MAINTAINER linasvepstas@gmail.com
 
 RUN apt-get update
-RUN apt-get -y software-properties-common
-RUN apt-get -y autoremove
 RUN apt-get -y install apt-utils
+RUN apt-get -y install gcc g++ make
 
 # Need wget to download link-grammar source
 RUN apt-get install wget
@@ -31,4 +30,4 @@ RUN echo "lt_LT.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "fa_IR.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "ar_AE.UTF-8 UTF-8" >> /etc/locale.gen
 RUN echo "tr_TR.UTF-8 UTF-8" >> /etc/locale.gen
-RUN locale-gen 
+RUN locale-gen
