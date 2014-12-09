@@ -10,7 +10,6 @@ SUBDIRS =               \
    data                 \
    man                  \
    link-grammar.xcode   \
-   msvc6                \
    msvc9                \
    msvc12
 
