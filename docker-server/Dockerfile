@@ -19,10 +19,12 @@ MAINTAINER linasvepstas@gmail.com
 RUN apt-get install -y openjdk-7-jdk
 RUN apt-get install -y ant
 
-# Now, build.
-ADD build-server.sh /
-RUN chmod +x build-server.sh
-RUN /build-server.sh
+# Perform the standard build.
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+RUN (cd link-grammar-5*; mkdir build; cd build; ../configure; make -j12; make install; ldconfig)
+
+# The link-parser server runs on port 9000 by default
+EXPOSE 9000
 
 RUN adduser --disabled-password --gecos "Link Parser User" link-parser
 
@@ -31,8 +33,12 @@ WORKDIR /home/link-parser
 RUN echo "export LANG=en_US.UTF-8" >> .bash_aliases
 CMD bash
 
+# The English-language server, for now ...
 RUN export LANG=en_US.UTF-8
 
 RUN echo "this is a test" | link-parser
 # 
+RUN cp /link-grammar-5*/bindings/java/link-grammar-server.sh .
+
+# ./link-grammar-server.sh
 

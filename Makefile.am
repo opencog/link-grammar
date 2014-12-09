@@ -30,13 +30,9 @@ EXTRA_DIST =            \
 	README               \
 	docker-build.sh      \
 	docker-base/Dockerfile          \
-	docker-base/download-latest.sh  \
 	docker-parser/Dockerfile        \
-	docker-parser/build-parser.sh   \
 	docker-python/Dockerfile        \
-	docker-python/build-python.sh   \
 	docker-server/Dockerfile        \
-	docker-server/build-server.sh   \
 	msvc9/LinkGrammarExe.vcproj     \
 	msvc9/LinkGrammarJava.vcproj    \
 	msvc9/LinkGrammar.sln           \
