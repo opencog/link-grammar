@@ -11,6 +11,10 @@
 FROM gcc:latest
 MAINTAINER linasvepstas@gmail.com
 
+RUN apt-get update
+RUN apt-get -y install apt-utils
+RUN apt-get install wget
+
 ADD setup-latest.sh /
 RUN chmod +x setup-latest.sh
 RUN /setup-latest.sh
