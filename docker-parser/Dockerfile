@@ -6,10 +6,10 @@
 FROM linkgrammar/lgbase:latest
 MAINTAINER linasvepstas@gmail.com
 
-# Build the sources.
-ADD build-parser.sh /
-RUN chmod +x build-parser.sh
-RUN /build-parser.sh
+# Build the libraries and command-line parser only
+# Assumes that the sources have already been unpacked.
+RUN (cd link-grammar-5*; mkdir build; cd build; ../configure --disable-java-bindings;
+make -j12; make install; ldconfig)
 
 RUN adduser --disabled-password --gecos "Link Parser User" link-parser
 

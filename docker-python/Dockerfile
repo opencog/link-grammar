@@ -17,10 +17,8 @@ RUN apt-get install -y swig2.0
 RUN apt-get install -y python
 RUN apt-get install -y python-dev
 
-# Now, download and build.
-ADD build-python.sh /
-RUN chmod +x build-python.sh
-RUN /build-python.sh
+# Perform the standard build.
+RUN (cd link-grammar-5*; mkdir build; cd build; ../configure --disable-java-bindings --enable-python-bindings; make -j12; make install; ldconfig)
 
 RUN adduser --disabled-password --gecos "Link Parser User" link-parser
 

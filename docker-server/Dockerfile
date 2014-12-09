@@ -19,10 +19,9 @@ MAINTAINER linasvepstas@gmail.com
 RUN apt-get install -y openjdk-7-jdk
 RUN apt-get install -y ant
 
-# Now, build.
-ADD build-server.sh /
-RUN chmod +x build-server.sh
-RUN /build-server.sh
+# Perform the standard build.
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+RUN (cd link-grammar-5*; mkdir build; cd build; ../configure; make -j12; make install; ldconfig)
 
 RUN adduser --disabled-password --gecos "Link Parser User" link-parser
 
