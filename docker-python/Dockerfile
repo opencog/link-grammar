@@ -10,19 +10,17 @@
 #
 # Anyway...
 #
-FROM gcc:latest
+FROM linkgrammar/lgbase:latest
 MAINTAINER linasvepstas@gmail.com
 
-RUN apt-get update
-RUN apt-get -y autoremove
-RUN apt-get -y install apt-utils
-
 RUN apt-get install -y swig2.0
+RUN apt-get install -y python
+RUN apt-get install -y python-dev
 
 # Now, download and build.
-ADD setup-latest.sh /
-RUN chmod +x setup-latest.sh
-RUN /setup-latest.sh
+ADD build-python.sh /
+RUN chmod +x build-python.sh
+RUN /build-python.sh
 
 RUN adduser --disabled-password --gecos "Link Parser User" link-parser
 
