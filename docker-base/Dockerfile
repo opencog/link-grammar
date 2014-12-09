@@ -10,7 +10,7 @@ RUN apt-get -y install apt-utils
 RUN apt-get -y install gcc g++ make
 
 # Need wget to download link-grammar source
-RUN apt-get install wget
+RUN apt-get -y install wget
 
 # Download the current released version of link-grammar.
 # RUN http://www.abisource.com/downloads/link-grammar/current/link-grammar-5*.tar.gz
