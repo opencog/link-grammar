@@ -32,5 +32,4 @@ CMD bash
 RUN export LANG=en_US.UTF-8
 
 RUN echo "this is a test" | link-parser
-# 
 
