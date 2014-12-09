@@ -701,9 +701,6 @@ bindings/perl/Makefile
 bindings/python/Makefile
 bindings/python/__init__.py
 morphology/Makefile
-morphology/ar/Makefile
-morphology/fa/Makefile
-morphology/fa/scripts/Makefile
 link-parser/Makefile
 data/Makefile
 data/amy/Makefile
@@ -724,12 +721,6 @@ data/demo-sql/Makefile
 man/Makefile
 autopackage/default.apspec
 link-grammar.xcode/Makefile
-msvc6/Makefile
-msvc6/link_grammar_dll/Makefile
-msvc6/link_grammar_exe/Makefile
-msvc6/link_grammar_java_dll/Makefile
-msvc9/Makefile
-msvc12/Makefile
 viterbi/Makefile
 ])
 AC_OUTPUT

@@ -9,10 +9,7 @@ SUBDIRS =               \
    morphology           \
    data                 \
    man                  \
-   link-grammar.xcode   \
-   msvc6                \
-   msvc9                \
-   msvc12
+   link-grammar.xcode
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = link-grammar.pc
@@ -31,7 +28,6 @@ EXTRA_DIST =            \
 	MAINTAINERS          \
 	NEWS                 \
 	README               \
-	TODO                 \
 	docker-build.sh      \
 	docker-base/Dockerfile          \
 	docker-base/download-latest.sh  \
@@ -40,4 +36,22 @@ EXTRA_DIST =            \
 	docker-python/Dockerfile        \
 	docker-python/build-python.sh   \
 	docker-server/Dockerfile        \
-	docker-server/build-server.sh
+	docker-server/build-server.sh   \
+	msvc9/LinkGrammarExe.vcproj     \
+	msvc9/LinkGrammarJava.vcproj    \
+	msvc9/LinkGrammar.sln           \
+	msvc9/LinkGrammar.vcproj        \
+	msvc9/README                    \
+	msvc12/LinkGrammarExe.vcproj           \
+	msvc12/LinkGrammarExe.vcxproj          \
+	msvc12/LinkGrammarExe.vcxproj.filters  \
+	msvc12/LinkGrammarJava.vcproj          \
+	msvc12/LinkGrammarJava.vcxproj         \
+	msvc12/LinkGrammarJava.vcxproj.filters \
+	msvc12/LinkGrammar.sln                 \
+	msvc12/LinkGrammar.vcproj              \
+	msvc12/LinkGrammar.vcxproj             \
+	msvc12/LinkGrammar.vcxproj.filters     \
+	msvc12/LinkGrammar.vcxproj.user        \
+	msvc12/README                          \
+	TODO
