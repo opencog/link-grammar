@@ -37,9 +37,11 @@ RUN adduser --disabled-password --gecos "Link Parser User" link-parser
 
 USER link-parser
 WORKDIR /home/link-parser
+RUN echo "export LANG=en_US.UTF-8" >> .bash_aliases
 CMD bash
+
 RUN export LANG=en_US.UTF-8
 
-# RUN echo "this is a test" | link-parser
+RUN echo "this is a test" | link-parser
 # 
 
