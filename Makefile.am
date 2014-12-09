@@ -30,7 +30,6 @@ EXTRA_DIST =            \
 	README               \
 	docker-build.sh      \
 	docker-base/Dockerfile          \
-	docker-base/download-latest.sh  \
 	docker-parser/Dockerfile        \
 	docker-parser/build-parser.sh   \
 	docker-python/Dockerfile        \
