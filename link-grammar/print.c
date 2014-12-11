@@ -275,9 +275,8 @@ build_linkage_postscript_string(const Linkage linkage,
 	int N_wall_connectors;
 	bool print_word_0 = false, print_word_N = false;
 	bool suppressor_used;
-	Sublinkage *sublinkage = &(linkage->subly);
-	int N_links = sublinkage->num_links;
-	Link **ppla = sublinkage->link;
+	int N_links = linkage->num_links;
+	Link **ppla = linkage->link;
 	String  * string;
 	char * ps_string;
 	Dictionary dict = linkage->sent->dict;
@@ -393,9 +392,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool suppressor_used;
 	int center[linkage->num_words+1];
 	unsigned int line_len, link_length;
-	Sublinkage *sublinkage = &(linkage->subly);
-	unsigned int N_links = sublinkage->num_links;
-	Link **ppla = sublinkage->link;
+	unsigned int N_links = linkage->num_links;
+	Link **ppla = linkage->link;
 	String * string;
 	char * gr_string;
 	Dictionary dict = linkage->sent->dict;

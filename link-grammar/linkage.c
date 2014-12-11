@@ -225,9 +225,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	 * is being suppressed, then all links connecting morphemes will
 	 * be discarded as well.
 	 */
-	for (i=0, j=0; i<linkage->subly.num_links; i++)
+	for (i=0, j=0; i<linkage->num_links; i++)
 	{
-		Link * lnk = linkage->subly.link[i];
+		Link * lnk = linkage->link[i];
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
@@ -241,11 +241,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		{
 			lnk->lw = remap[lnk->lw];
 			lnk->rw = remap[lnk->rw];
-			linkage->subly.link[j] = lnk;
+			linkage->link[j] = lnk;
 			j++;
 		}
 	}
-	linkage->subly.num_links = j;
+	linkage->num_links = j;
 }
 
 
@@ -295,28 +295,29 @@ static void exfree_pp_info(PP_info *ppi)
 void linkage_delete(Linkage linkage)
 {
 	size_t j;
-	Sublinkage *s;
 
 	/* Can happen on panic timeout or user error */
 	if (NULL == linkage) return;
 
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
-	s = &(linkage->subly);
-	for (j = 0; j < s->num_links; ++j) {
-		exfree_link(s->link[j]);
+	for (j = 0; j < linkage->num_links; ++j)
+	{
+		exfree_link(linkage->link[j]);
 	}
-	exfree(s->link, sizeof(Link*) * s->num_links);
-	if (s->pp_info != NULL) {
-		for (j = 0; j < s->num_links; ++j) {
-			exfree_pp_info(&s->pp_info[j]);
+	exfree(linkage->link, sizeof(Link*) * linkage->num_links);
+	if (linkage->pp_info != NULL)
+	{
+		for (j = 0; j < linkage->num_links; ++j) {
+			exfree_pp_info(&linkage->pp_info[j]);
 		}
-		exfree(s->pp_info, sizeof(PP_info) * s->num_links);
-		s->pp_info = NULL;
-		post_process_free_data(&s->pp_data);
+		exfree(linkage->pp_info, sizeof(PP_info) * linkage->num_links);
+		linkage->pp_info = NULL;
+		post_process_free_data(&linkage->pp_data);
 	}
-	if (s->violation != NULL) {
-		exfree((void *) s->violation, sizeof(char) * (strlen(s->violation)+1));
+	if (linkage->pp_violation != NULL)
+	{
+		exfree((void *) linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation) + 1));
 	}
 	exfree(linkage, sizeof(struct Linkage_s));
 }
@@ -330,51 +331,31 @@ size_t linkage_get_num_words(const Linkage linkage)
 size_t linkage_get_num_links(const Linkage linkage)
 {
 	if (!linkage) return 0;
-	return linkage->subly.num_links;
+	return linkage->num_links;
 }
 
 static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 {
 	if (!linkage) return false;
-	if	(index >= linkage->subly.num_links)
-	{
-		return false;
-	}
+	if	(index >= linkage->num_links) return false;
 	return true;
 }
 
 int linkage_get_link_length(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
-	bool word_has_link[linkage->num_words+1];
-	size_t i, length;
 
 	if (!verify_link_index(linkage, index)) return -1;
 
-	for (i=0; i<linkage->num_words+1; ++i) {
-		word_has_link[i] = false;
-	}
-
-	for (i=0; i<linkage->subly.num_links; ++i)
-	{
-		link = linkage->subly.link[i];
-		word_has_link[link->lw] = true;
-		word_has_link[link->rw] = true;
-	}
-	link = linkage->subly.link[index];
-
-	length = link->rw - link->lw;
-	for (i= link->lw+1; i < link->rw; ++i) {
-		if (!word_has_link[i]) length--;
-	}
-	return length;
+	link = linkage->link[index];
+	return link->rw - link->lw;
 }
 
 WordIdx linkage_get_link_lword(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	link = linkage->subly.link[index];
+	link = linkage->link[index];
 	return link->lw;
 }
 
@@ -382,7 +363,7 @@ WordIdx linkage_get_link_rword(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	link = linkage->subly.link[index];
+	link = linkage->link[index];
 	return link->rw;
 }
 
@@ -390,7 +371,7 @@ const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->subly.link[index];
+	link = linkage->link[index];
 	return link->link_name;
 }
 
@@ -398,7 +379,7 @@ const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->subly.link[index];
+	link = linkage->link[index];
 	return link->lc->string;
 }
 
@@ -406,7 +387,7 @@ const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->subly.link[index];
+	link = linkage->link[index];
 	return link->rc->string;
 }
 
@@ -506,7 +487,7 @@ int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
-	pp_info = &linkage->subly.pp_info[index];
+	pp_info = &linkage->pp_info[index];
 	return pp_info->num_domains;
 }
 
@@ -514,84 +495,82 @@ const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
-	pp_info = &linkage->subly.pp_info[index];
+	pp_info = &linkage->pp_info[index];
 	return pp_info->domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
 {
-	return linkage->subly.violation;
+	return linkage->pp_violation;
 }
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 {
 	Parse_Options opts = linkage->opts;
 	Sentence sent = linkage->sent;
-	Sublinkage * subl;
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
 
-	subl = &linkage->subly;
-	if (subl->pp_info != NULL)
+	if (linkage->pp_info != NULL)
 	{
-		for (j = 0; j < subl->num_links; ++j)
+		for (j = 0; j < linkage->num_links; ++j)
 		{
-			exfree_pp_info(&subl->pp_info[j]);
+			exfree_pp_info(&linkage->pp_info[j]);
 		}
-		post_process_free_data(&subl->pp_data);
-		exfree(subl->pp_info, sizeof(PP_info) * subl->num_links);
+		post_process_free_data(&linkage->pp_data);
+		exfree(linkage->pp_info, sizeof(PP_info) * linkage->num_links);
 	}
-	subl->pp_info = (PP_info *) exalloc(sizeof(PP_info) * subl->num_links);
-	for (j = 0; j < subl->num_links; ++j)
+	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
+	for (j = 0; j < linkage->num_links; ++j)
 	{
-		subl->pp_info[j].num_domains = 0;
-		subl->pp_info[j].domain_name = NULL;
+		linkage->pp_info[j].num_domains = 0;
+		linkage->pp_info[j].domain_name = NULL;
 	}
-	if (subl->violation != NULL)
+	if (linkage->pp_violation != NULL)
 	{
-		exfree((void *)subl->violation, sizeof(char) * (strlen(subl->violation)+1));
-		subl->violation = NULL;
+		exfree((void *)linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation)+1));
+		linkage->pp_violation = NULL;
 	}
 
 	/* This can return NULL, for example if there is no
 	   post-processor */
-	pp = do_post_process(postprocessor, opts, sent, subl, false);
+	pp = do_post_process(postprocessor, opts, sent, linkage, false);
 	if (pp == NULL)
 	{
-		for (j = 0; j < subl->num_links; ++j)
+		for (j = 0; j < linkage->num_links; ++j)
 		{
-			subl->pp_info[j].num_domains = 0;
-			subl->pp_info[j].domain_name = NULL;
+			linkage->pp_info[j].num_domains = 0;
+			linkage->pp_info[j].domain_name = NULL;
 		}
 	}
 	else
 	{
-		for (j = 0; j < subl->num_links; ++j)
+		for (j = 0; j < linkage->num_links; ++j)
 		{
 			k = 0;
 			for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
-			subl->pp_info[j].num_domains = k;
+			linkage->pp_info[j].num_domains = k;
 			if (k > 0)
 			{
-				subl->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
+				linkage->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
 			}
 			k = 0;
 			for (d = pp->d_type_array[j]; d != NULL; d = d->next)
 			{
 				char buff[5];
 				sprintf(buff, "%c", d->type);
-				subl->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
+				linkage->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
 
 				k++;
 			}
 		}
-		subl->pp_data = postprocessor->pp_data;
+		linkage->pp_data = postprocessor->pp_data;
 		if (pp->violation != NULL)
 		{
 			char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
 			strcpy(s, pp->violation);
-			subl->violation = s;
+			linkage->pp_violation = s;
 		}
 	}
 	post_process_close_sentence(postprocessor);

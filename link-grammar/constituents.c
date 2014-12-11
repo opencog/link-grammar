@@ -660,9 +660,9 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	const char * name = "";
 	Domain domain;
 
-	for (d = 0, c = numcon_total; d < linkage->subly.pp_data.N_domains; d++, c++)
+	for (d = 0, c = numcon_total; d < linkage->pp_data.N_domains; d++, c++)
 	{
-		domain = linkage->subly.pp_data.domain_array[d];
+		domain = linkage->pp_data.domain_array[d];
 		// rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);
 
