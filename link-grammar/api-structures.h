@@ -331,18 +331,17 @@ struct Postprocessor_s
 
 struct Linkage_s
 {
+	Sentence        sent;
 	size_t          num_words;    /* number of (tokenized) words */
 	const char *  * word;         /* array of word spellings */
 	Linkage_info*   info;         /* index and cost information */
 
 	size_t          num_links;    /* Number of links in array */
 	Link **         link;         /* Array of links */
+
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
 	PP_data         pp_data;
-
-	Sentence        sent;
-	Parse_Options   opts;
 };
 
 

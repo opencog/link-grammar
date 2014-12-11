@@ -327,7 +327,7 @@ link_public_api(PostProcessor *)
 link_public_api(void)
      post_process_close(PostProcessor *);
 link_public_api(void)
-     linkage_post_process(Linkage, PostProcessor *);
+     linkage_post_process(Linkage, PostProcessor *, Parse_Options);
 
 /**********************************************************************
  *

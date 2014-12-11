@@ -224,7 +224,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	return li;
 }
 
-void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
+void extract_thin_linkage(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	size_t i;
 	Parse_info pi = sent->parse_info;

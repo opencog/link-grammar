@@ -16,7 +16,6 @@
 #include "api-structures.h"
 #include "error.h"
 #include "externs.h"
-#include "constituents.h"
 #include "post-process.h"
 #include "print-util.h"
 #include "string-set.h"
@@ -49,6 +48,17 @@ typedef struct
 	WType wordtype[MAX_SENTENCE];
 	constituent_t constituent[MAXCONSTITUENTS];
 } con_context_t;
+
+
+typedef struct CNode_s CNode;
+
+/* Invariant: Leaf if child==NULL */
+struct CNode_s {
+  char  * label;
+  CNode * child;
+  CNode * next;
+  int   start, end;
+};
 
 /* ================================================================ */
 
@@ -1047,15 +1057,12 @@ exprint_constituent_structure(con_context_t *ctxt,
 
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
-	Postprocessor * pp;
 	int numcon_total, numcon_subl;
 	char * q;
 
 	ctxt->phrase_ss = string_set_create();
-	pp = linkage->sent->dict->constituent_pp;
 	numcon_total = 0;
 
-	linkage_post_process(linkage, pp);
 	generate_misc_word_info(ctxt, linkage);
 
 	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);

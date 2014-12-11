@@ -16,4 +16,4 @@
 const char * intersect_strings(Sentence, const char *, const char *);
 
 Linkage_info  analyze_thin_linkage(Sentence, Parse_Options, int pass);
-void          extract_thin_linkage(Sentence, Parse_Options, Linkage);
+void          extract_thin_linkage(Sentence, Linkage, Parse_Options);

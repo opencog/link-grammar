@@ -1240,8 +1240,7 @@ Linkage SATEncoder::create_linkage()
   linkage->num_words = _sent->length;
   linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
   linkage->sent = _sent;
-  linkage->opts = _opts;
-  //  linkage->info = sent->link_info[k]; done later...
+  // linkage->info = sent->link_info[k]; done later...
 
   if (_sent->parse_info) {
     Parse_info pi = _sent->parse_info;
@@ -1258,9 +1257,9 @@ Linkage SATEncoder::create_linkage()
   pi->N_words = _sent->length;
   _sent->parse_info = pi;
 
-  extract_thin_linkage(_sent, _opts, linkage);
+  extract_thin_linkage(_sent, linkage, _opts);
 
-  compute_chosen_words(_sent, linkage);
+  compute_chosen_words(_sent, linkage, _opts);
 
   return linkage;
 }

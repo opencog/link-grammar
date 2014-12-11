@@ -73,14 +73,13 @@
  *    chosen_disjunct[].string in that the idiom symbols have been removed.
  *
  */
-void compute_chosen_words(Sentence sent, Linkage linkage)
+void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	size_t i, j, l;
 	char * s, *u;
 	Parse_info pi = sent->parse_info;
 	const char * chosen_words[sent->length];
 	size_t remap[sent->length];
-	Parse_Options opts = linkage->opts;
 	bool display_morphology = opts->display_morphology;
 	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
 	const char infix_mark = INFIX_MARK;
@@ -270,15 +269,18 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
-	linkage->opts = opts;
 	linkage->info = &sent->link_info[k];
-	extract_thin_linkage(sent, opts, linkage);
 
-	compute_chosen_words(sent, linkage);
+	extract_thin_linkage(sent, linkage, opts);
+	compute_chosen_words(sent, linkage, opts);
 
 	if (sent->dict->postprocessor != NULL)
 	{
-		linkage_post_process(linkage, sent->dict->postprocessor);
+		linkage_post_process(linkage, sent->dict->postprocessor, opts);
+	}
+	if (sent->dict->constituent_pp != NULL)
+	{
+		linkage_post_process(linkage, sent->dict->constituent_pp, opts);
 	}
 
 	return linkage;
@@ -488,9 +490,8 @@ const char * linkage_get_violation_name(const Linkage linkage)
 	return linkage->pp_violation;
 }
 
-void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
+void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
-	Parse_Options opts = linkage->opts;
 	Sentence sent = linkage->sent;
 	PP_node * pp;
 	size_t j, k;
