@@ -22,14 +22,12 @@
 
 static Linkage x_create_sublinkage(Parse_info pi)
 {
-	size_t i;
-
-	Linkage s = (Linkage) xalloc (sizeof(Linkage));
+	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
 	memset(&s->pp_data, 0, sizeof(PP_data));
 
 	s->num_links = pi->N_links;
 	s->link = (Link **) xalloc(s->num_links * sizeof(Link *));
-	for (i=0; i<s->num_links; i++) s->link[i] = NULL;
+	memset(s->link, 0, s->num_links * sizeof(Link *));
 
 	s->pp_info = NULL;
 	s->pp_violation = NULL;
@@ -174,11 +172,9 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	size_t i;
 	Linkage_info li;
 	PP_node * pp;
-	Linkage sublinkage;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 	Parse_info pi = sent->parse_info;
-
-	sublinkage = x_create_sublinkage(pi);
+	Linkage sublinkage = x_create_sublinkage(pi);
 
 	compute_link_names(sent);
 	for (i=0; i<pi->N_links; i++)
