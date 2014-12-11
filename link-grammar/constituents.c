@@ -375,42 +375,12 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
  *
  ********************************************************/
 
-/**
- * Here we're looking for the next andlist element to add on
- * to a conjectural andlist, stored in the array templist.
- * We go through the constituents, starting at "start".
-XXX I beleive  this will always return 0 or 1... now that there are no more fat links
-...
- */
-static int find_next_element(con_context_t *ctxt,
-                             Linkage linkage,
-                             int start,
-                             int numcon_total,
-                             int num_elements,
-                             int num_lists)
-{
-	int a, addedone=0;
-
-	assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
-
-	if (addedone == 0 && num_elements > 1)
-	{
-		for (a = 0; a < num_elements; a++) {
-			ctxt->andlist[num_lists].e[a] = ctxt->templist[a];
-			ctxt->andlist[num_lists].num = num_elements;
-		}
-		num_lists++;
-	}
-	return num_lists;
-}
-
 /* When fat-links are finally removed, almost all of the code
  * for merge_constituents will evaporate away.
  */
 static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
-	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;
-	int num_lists, num_elements;
+	int c1, c2=0;
 
 	/* First go through and give each constituent a canonical number
 	   (the index number of the lowest-numbered constituent
@@ -448,169 +418,13 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	 * be present in the same sublinkage as any of the others.
 XXX with no fat links, there should be no and-lists ...
 	 */
-	num_lists = 0;
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
 		if (ctxt->constituent[c1].valid == false) continue;
-		num_elements = 1;
 		ctxt->templist[0] = c1;
-		num_lists = find_next_element(ctxt, linkage, c1, numcon_total,
-			                           num_elements, num_lists);
-
-		/* If we're overflowing, then punt */
-		if (MAX_ANDS <= num_lists)
-			break;
 	}
 
-	// if (verbosity >= 2)
-	if (1< num_lists)
-	{
-		printf("And-lists:\n");
-		for (n=0; n<num_lists; n++)
-		{
-			printf("  %d: ", n);
-			for (a=0; a < ctxt->andlist[n].num; a++)
-			{
-				printf("%d ", ctxt->andlist[n].e[a]);
-			}
-			printf("\n");
-		}
-	}
-
-	/* Now we prune out any andlists that are subsumed by other
-	 * andlists--e.g. if andlist X contains constituents A and B,
-	 * and Y contains A B and C, we throw out X
-	 */
-	for (n = 0; n < num_lists; n++)
-	{
-		ctxt->andlist[n].valid = true;
-		for (n2 = 0; n2 < num_lists; n2++)
-		{
-			if (n2 == n) continue;
-			if (ctxt->andlist[n2].num < ctxt->andlist[n].num)
-				continue;
-
-			listmatch = 1;
-			for (a = 0; a < ctxt->andlist[n].num; a++)
-			{
-				match = 0;
-				for (a2 = 0; a2 < ctxt->andlist[n2].num; a2++)
-				{
-					if (ctxt->andlist[n2].e[a2] == ctxt->andlist[n].e[a])
-						match = 1;
-				}
-				if (match == 0) listmatch = 0;
-				/* At least one element was not matched by n2 */
-			}
-			if (listmatch == 1) ctxt->andlist[n].valid = false;
-		}
-	}
-
-	/* If an element of an andlist contains an element of another
-	 * andlist, it must contain the entire andlist.
-	 */
-	for (n = 0; n < num_lists; n++)
-	{
-		if (ctxt->andlist[n].valid == false)
-			continue;
-		for (a = 0; (a < ctxt->andlist[n].num) && (ctxt->andlist[n].valid); a++)
-		{
-			for (n2 = 0; (n2 < num_lists) && (ctxt->andlist[n].valid); n2++)
-			{
-				if ((n2 == n) || (ctxt->andlist[n2].valid == false))
-					continue;
-				for (a2 = 0; (a2 < ctxt->andlist[n2].num) && (ctxt->andlist[n].valid); a2++)
-				{
-					c1 = ctxt->andlist[n].e[a];
-					c2 = ctxt->andlist[n2].e[a2];
-					if (c1 == c2)
-						continue;
-					if (!((ctxt->constituent[c2].left <= ctxt->constituent[c1].left) &&
-						  (ctxt->constituent[c2].right >= ctxt->constituent[c1].right)))
-						continue;
-					if (verbosity >= 2)
-						printf("Found that c%d in list %d is bigger " \
-							   "than c%d in list %d\n", c2, n2, c1, n);
-					ok = 1;
-
-					/* An element of n2 contains an element of n.
-					 * Now, we check to see if that element of n2
-					 * contains ALL the elements of n.
-					 * If not, n is invalid.
-					 */
-					for (a3 = 0; a3 < ctxt->andlist[n].num; a3++)
-					{
-						c3 = ctxt->andlist[n].e[a3];
-						if ((ctxt->constituent[c2].left>ctxt->constituent[c3].left) ||
-							(ctxt->constituent[c2].right<ctxt->constituent[c3].right))
-							ok = 0;
-					}
-					if (ok != 0)
-						continue;
-					ctxt->andlist[n].valid = false;
-					if (verbosity >= 2)
-					{
-						printf("Eliminating andlist, " \
-							   "n=%d, a=%d, n2=%d, a2=%d: ",
-							   n, a, n2, a2);
-						for (a3 = 0; a3 < ctxt->andlist[n].num; a3++)
-						{
-							printf("%d ", ctxt->andlist[n].e[a3]);
-						}
-						printf("\n");
-					}
-				}
-			}
-		}
-	}
-
-	if (verbosity >= 2)
-	{
-		printf("And-lists after pruning:\n");
-		for (n=0; n<num_lists; n++) {
-			if (false == ctxt->andlist[n].valid)
-				continue;
-			printf("  %d: ", n);
-			for (a=0; a<ctxt->andlist[n].num; a++) {
-				printf("%d ", ctxt->andlist[n].e[a]);
-			}
-			printf("\n");
-		}
-	}
-
-	c1 = numcon_total;
-	for (n = 0; n < num_lists; n++)
-	{
-		size_t leftend, rightend;
-		if (false == ctxt->andlist[n].valid) continue;
-		leftend = SIZE_MAX;
-		rightend = 0;
-		for (a = 0; a < ctxt->andlist[n].num; a++)
-		{
-			c2 = ctxt->andlist[n].e[a];
-			if (ctxt->constituent[c2].left < leftend)
-			{
-				leftend = ctxt->constituent[c2].left;
-			}
-			if (ctxt->constituent[c2].right > rightend)
-			{
-				rightend = ctxt->constituent[c2].right;
-			}
-		}
-
-		ctxt->constituent[c1].left = leftend;
-		ctxt->constituent[c1].right = rightend;
-		ctxt->constituent[c1].type = ctxt->constituent[c2].type;
-		ctxt->constituent[c1].domain_type = 'x';
-		ctxt->constituent[c1].valid = true;
-		ctxt->constituent[c1].start_link = ctxt->constituent[c2].start_link;  /* bogus */
-
-		if (verbosity >= 2)
-			printf("Adding constituent:\n");
-		print_constituent(ctxt, linkage, c1);
-		c1++;
-	}
-	return c1;
+	return numcon_total;
 }
 
 /**
