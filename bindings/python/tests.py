@@ -270,7 +270,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shoop[?].v', '.', 'RIGHT-WALL'])
 
     # Stress-test first-word-capitalized in various different ways.
-    # Roughly, the test matrix is this: 
+    # Roughly, the test matrix is this:
     # -- word is/isn't in dict as lower-case word
     # -- word is/isn't in dict as upper-case word
     # -- word is/isn't matched with CAPITALIZED_WORDS regex
@@ -280,7 +280,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
     # Let's is NOT split into two! Its in the dict as one word, lower-case only.
     def test_f_captilization(self):
         self.assertEqual(self.p.parse_sent('Let\'s eat.')[0].words,
-             ['LEFT-WALL', 'let\'s', 'eat', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'let\'s', 'eat.v', '.', 'RIGHT-WALL'])
 
         # He's is split into two words, he is in dict, lower-case only.
         self.assertEqual(self.p.parse_sent('He\'s going.')[0].words,
@@ -301,7 +301,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
         # Red is in dict, lower-case, as noun, too.
-        # There's no way to really know, syntactically, that Red 
+        # There's no way to really know, syntactically, that Red
         # should be taken as a proper noun (given name).
         #self.assertEqual(self.p.parse_sent('Red\'s going?')[0].words,
         #     ['LEFT-WALL', 'Red[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
@@ -365,7 +365,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
     def test_h_getting_links(self):
         sent = 'Scientists sometimes may repeat experiments or use groups.'
         linkage = self.p.parse_sent(sent)[0]
-        self.assertEqual(linkage.diagram, 
+        self.assertEqual(linkage.diagram,
 "\n    +---------------------------------------Xp--------------------------------------+"
 "\n    +---------------------------->WV---------------------------->+                  |"
 "\n    |           +-----------------------Sp-----------------------+                  |"
@@ -376,7 +376,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
 "\n\n")
         sent = 'I enjoy eating bass.'
         linkage = self.p.parse_sent(sent)[0]
-        self.assertEqual(linkage.diagram, 
+        self.assertEqual(linkage.diagram,
 "\n    +-----------------Xp----------------+"
 "\n    +---->WV---->+                      |"
 "\n    +--Wd--+-Sp*i+---Pg---+---Ou---+    |"
@@ -387,7 +387,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
 
         sent = 'We are from the planet Gorpon'
         linkage = self.p.parse_sent(sent)[0]
-        self.assertEqual(linkage.diagram, 
+        self.assertEqual(linkage.diagram,
 "\n    +--->WV--->+     +---------Js--------+"
 "\n    +--Wd--+Spx+--Pp-+   +--DD--+---GN---+"
 "\n    |      |   |     |   |      |        |"
@@ -518,7 +518,7 @@ class ZRULangTestCase(unittest.TestCase):
     def test_d_morphology(self):
         self.p = Parser(lang = 'ru', display_morphology = True)
         self.assertEqual(self.p.parse_sent('вверху плыли редкие облачка.')[0].words,
-            ['LEFT-WALL', 
+            ['LEFT-WALL',
              'вверху.e',
              'плы.=', '=ли.vnndpp',
              'ре.=', '=дкие.api',
