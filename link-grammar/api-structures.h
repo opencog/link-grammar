@@ -329,31 +329,26 @@ struct Postprocessor_s
  *
  **********************************************************/
 
-/* XXX FIXME When fat FAT links are removed, there will only ever be
- * just one sublinkage, and so this struct can be merged into 
- * Linkage_s below, and removed from the API. Well, sort-of. The
- * analyze_thin_linkage() routine still wants to malloc a temp
- * Sublinkage struct, for post-processing.  So we should wait until
- * post-processing is removed....
- */
-struct Sublinkage_s
-{
-	size_t    num_links;          /* Number of links in array */
-	Link **   link;               /* Array of links */
-	PP_info * pp_info;            /* PP info for each link */
-	const char * violation;       /* Name of violation, if any */
-	PP_data   pp_data;
-};
-
 struct Linkage_s
 {
-	size_t          num_words;  /* number of (tokenized) words */
-	const char *  * word;       /* array of word spellings */
-	Linkage_info*   info;       /* index and cost information */
-	Sublinkage      sublinkage; /* Just one */
-
+	/* TODO XXX FIXME: the member sent, below, is used almost nowhere
+	 * of importance; maybe it should be removed or redone.  It is currently
+	 * used only in constituents.c for error printing, in linkage.c
+	 * for disjunct-string printing.
+	 * These uses could be fixed ... so perhaps its not really 
+	 * needed here.
+	 */
 	Sentence        sent;
-	Parse_Options   opts;
+	size_t          num_words;    /* number of (tokenized) words */
+	const char *  * word;         /* array of word spellings */
+	Linkage_info*   info;         /* index and cost information */
+
+	size_t          num_links;    /* Number of links in array */
+	Link **         link;         /* Array of links */
+
+	PP_info *       pp_info;      /* PP info for each link */
+	const char *    pp_violation; /* Name of violation, if any */
+	PP_data         pp_data;
 };
 
 

@@ -20,47 +20,29 @@
 #include "structures.h"
 #include "word-utils.h"
 
-void zero_sublinkage(Sublinkage *s)
+static Linkage x_create_sublinkage(Parse_info pi)
 {
-	size_t i;
-	s->pp_info = NULL;
-	s->violation = NULL;
-	for (i=0; i<s->num_links; i++) s->link[i] = NULL;
-
+	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
 	memset(&s->pp_data, 0, sizeof(PP_data));
-}
-
-static Sublinkage * x_create_sublinkage(Parse_info pi)
-{
-	Sublinkage *s = (Sublinkage *) xalloc (sizeof(Sublinkage));
-	s->link = (Link **) xalloc(MAX_LINKS*sizeof(Link *));
-	s->num_links = MAX_LINKS;
-
-	zero_sublinkage(s);
 
 	s->num_links = pi->N_links;
-	assert(pi->N_links < MAX_LINKS, "Too many links");
+	s->link = (Link **) xalloc(s->num_links * sizeof(Link *));
+	memset(s->link, 0, s->num_links * sizeof(Link *));
+
+	s->pp_info = NULL;
+	s->pp_violation = NULL;
+
 	return s;
 }
 
-static void ex_init_sublinkage(Parse_info pi, Sublinkage *s)
+static void free_sublinkage(Linkage s)
 {
-	s->link = (Link **) exalloc(pi->N_links*sizeof(Link *));
-	s->num_links = pi->N_links;
-
-	zero_sublinkage(s);
-
-	assert(pi->N_links < MAX_LINKS, "Too many links");
-}
-
-static void free_sublinkage(Sublinkage *s)
-{
-	int i;
-	for (i = 0; i < MAX_LINKS; i++) {
+	size_t i;
+	for (i = 0; i < s->num_links; i++) {
 		if (s->link[i] != NULL) exfree_link(s->link[i]);
 	}
-	xfree(s->link, MAX_LINKS*sizeof(Link *));
-	xfree(s, sizeof(Sublinkage));
+	xfree(s->link, s->num_links * sizeof(Link *));
+	xfree(s, sizeof(struct Linkage_s));
 }
 
 static void copy_full_link(Link **dest, Link *src)
@@ -183,19 +165,16 @@ static void compute_link_names(Sentence sent)
 
 /**
  * This uses link_array.  It post-processes
- * this linkage, and prints the appropriate thing.  There are no fat
- * links in it.
+ * this linkage, and prints the appropriate thing.
  */
 Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze_pass)
 {
 	size_t i;
 	Linkage_info li;
 	PP_node * pp;
-	Sublinkage *sublinkage;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 	Parse_info pi = sent->parse_info;
-
-	sublinkage = x_create_sublinkage(pi);
+	Linkage sublinkage = x_create_sublinkage(pi);
 
 	compute_link_names(sent);
 	for (i=0; i<pi->N_links; i++)
@@ -213,7 +192,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 
 	/* The code below can be used to generate the "islands" array.
 	 * For this to work, however, you have to call "build_digraph"
-	 * first (as in analyze_fat_linkage), and then "free_digraph".
+	 * first, and then "free_digraph".
 	 */
 	pp = do_post_process(postprocessor, opts, sent, sublinkage, true);
 
@@ -245,16 +224,21 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	return li;
 }
 
-void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
+void extract_thin_linkage(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	size_t i;
 	Parse_info pi = sent->parse_info;
 
-	ex_init_sublinkage(pi, &linkage->sublinkage);
+	linkage->num_links = pi->N_links;
+	linkage->link = (Link **) exalloc(linkage->num_links * sizeof(Link *));
+
+	linkage->pp_info = NULL;
+	linkage->pp_violation = NULL;
+	memset(&linkage->pp_data, 0, sizeof(PP_data));
 
 	compute_link_names(sent);
-	for (i=0; i<pi->N_links; ++i)
+	for (i=0; i<linkage->num_links; ++i)
 	{
-		linkage->sublinkage.link[i] = excopy_link(&(pi->link_array[i]));
+		linkage->link[i] = excopy_link(&(pi->link_array[i]));
 	}
 }

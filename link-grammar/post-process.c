@@ -91,7 +91,7 @@ static size_t find_domain_name(Postprocessor *pp, const char *link)
 
 /** Returns true if domain d1 is contained in domain d2 */
 static int contained_in(const Domain * d1, const Domain * d2,
-                        const Sublinkage *sublinkage)
+                        const Linkage sublinkage)
 {
 	bool mark[sublinkage->num_links];
 	List_o_links * lol;
@@ -194,7 +194,7 @@ void post_process_free_data(PP_data * ppd)
 }
 
 #ifdef THIS_FUNCTION_IS_NOT_CURRENTLY_USED
-static void connectivity_dfs(Postprocessor *pp, Sublinkage *sublinkage,
+static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
                              int w, pp_linkset *ls)
 {
 	List_o_links *lol;
@@ -289,8 +289,8 @@ static void clear_pp_node(Postprocessor *pp)
 /************************ rule application *******************************/
 
 static bool apply_rules(Postprocessor *pp,
-                        bool (applyfn) (Postprocessor *, Sublinkage *, pp_rule *),
-                        Sublinkage *sublinkage,
+                        bool (applyfn) (Postprocessor *, Linkage, pp_rule *),
+                        Linkage sublinkage,
                         pp_rule *rule_array,
                         const char **msg)
 {
@@ -308,8 +308,8 @@ static bool apply_rules(Postprocessor *pp,
 
 static bool
 apply_relevant_rules(Postprocessor *pp,
-                     bool (applyfn)(Postprocessor *, Sublinkage*, pp_rule *),
-                     Sublinkage *sublinkage,
+                     bool (applyfn)(Postprocessor *, Linkage, pp_rule *),
+                     Linkage sublinkage,
                      pp_rule *rule_array,
                      int *relevant_rules,
                      const char **msg)
@@ -337,7 +337,7 @@ apply_relevant_rules(Postprocessor *pp,
  * string matching)
  */
 static bool
-apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
+apply_contains_one(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	DTreeLeaf * dtl;
 	size_t d, count;
@@ -374,7 +374,7 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
  * from the link_array contained in the rule. Uses exact string matching.
  */
 static bool
-apply_contains_none(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
+apply_contains_none(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	size_t d;
 	for (d=0; d<pp->pp_data.N_domains; d++)
@@ -405,7 +405,7 @@ apply_contains_none(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
  * (2) it does, and it also contains one or more from the rule's link set
  */
 static bool
-apply_contains_one_globally(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
+apply_contains_one_globally(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	size_t i, j, count;
 	for (i = 0; i < sublinkage->num_links; i++)
@@ -436,7 +436,7 @@ apply_contains_one_globally(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *
  * link are still connected.
  */
 static void reachable_without_dfs(Postprocessor *pp,
-                    Sublinkage *sublinkage, size_t a, size_t b, size_t w)
+                    Linkage sublinkage, size_t a, size_t b, size_t w)
 {
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
@@ -461,7 +461,7 @@ static void reachable_without_dfs(Postprocessor *pp,
  * these links.
  */
 static bool
-apply_must_form_a_cycle(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
+apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
 	size_t w;
@@ -496,7 +496,7 @@ apply_must_form_a_cycle(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule
  * of the root word of the domain.
  */
 static bool
-apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
+apply_bounded(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	size_t d, lw;
 	char d_type;
@@ -517,10 +517,9 @@ apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 /**
  * fill in the pp->pp_data.word_links array with a list of words
  * neighboring each word (actually a list of links).	The dir fields
- * are not set, since this (after fat-link-extraction) is an
- * undirected graph.
+ * are not set, since this is an undirected graph.
  */
-static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
+static void build_graph(Postprocessor *pp, Linkage sublinkage)
 {
 	size_t i, link;
 	List_o_links * lol;
@@ -576,7 +575,7 @@ static void add_link_to_domain(Postprocessor *pp, int link)
 	lol->link = link;
 }
 
-static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
+static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
@@ -600,7 +599,7 @@ static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 	}
 }
 
-static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
+static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                    size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
@@ -624,7 +623,7 @@ static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 	}
 }
 
-static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
+static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                     size_t w, size_t root, size_t right, size_t start_link)
 {
 	List_o_links * lol;
@@ -649,7 +648,7 @@ static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 	}
 }
 
-static void left_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
+static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                     size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
@@ -675,7 +674,7 @@ static int domain_compare(const Domain * d1, const Domain * d2)
 	return (d1->size - d2->size); /* for sorting the domains by size */
 }
 
-static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
+static void build_domains(Postprocessor *pp, Linkage sublinkage)
 {
 	size_t link, i, d;
 	const char *s;
@@ -749,7 +748,7 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 	}
 }
 
-static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
+static void build_domain_forest(Postprocessor *pp, Linkage sublinkage)
 {
 	size_t d, d1, link;
 	DTreeLeaf * dtl;
@@ -798,7 +797,7 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 }
 
 static int
-internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
+internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 {
 	size_t i;
 	/* quick test: try applying just the relevant global rules */
@@ -959,7 +958,7 @@ void post_process_close_sentence(Postprocessor *pp)
  * simply maintain a set of "seen" link names for rule pruning later on
  */
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
-									 Sentence sent, Sublinkage *sublinkage)
+									 Sentence sent, Linkage sublinkage)
 {
 	const char *p;
 	size_t i;
@@ -1040,7 +1039,7 @@ static void report_pp_stats(Postprocessor *pp)
  * is to be ignored
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-                         Sentence sent, Sublinkage *sublinkage, bool cleanup)
+                         Sentence sent, Linkage sublinkage, bool cleanup)
 {
 	const char *msg;
 

@@ -185,15 +185,8 @@ static void insert_connector(connector_table *ct, Connector * c)
   been implemented below.  There are three problems with it:
 
   (1) It is almost never the case that any disjuncts are eliminated.
-      (The code below has works correctly with fat links, but because
-      all of the fat connectors on a fat disjunct have the same matching
-      string, the only time a disjuct will die is if it is the same
-      as another one.  This is captured by the simplistic version below.
 
-  (2) connector_matches_alam may not be exactly correct.  I don't
-      think it does the fat link matches properly.   (See the comment
-      in and.c for more information about matching fat links.)  This is
-      irrelevant because of (1).
+  (2) connector_matches_alam may not be exactly correct.
 
   (3) The linkage that is eliminated by this, might just be the one that
       passes post-processing, as the following example shows.
@@ -264,8 +257,7 @@ static bool connector_matches_alam(Connector * a, Connector * b)
 {
 	char * s, * t, *u;
 	if (((!a->multi) && b->multi) ||
-		(a->label != b->label) ||
-		(a->priority != b->priority))  return false;
+		(a->label != b->label))  return false;
 	s = a->string;
 	t = b->string;
 
@@ -277,13 +269,8 @@ static bool connector_matches_alam(Connector * a, Connector * b)
 			t++;
 		} else return false;
 	}
-	if (a->priority == DOWN_priority) {
-		u = s;
-		s = t;
-		t = u;
-	}
 	while ((*s != '\0') && (*t != '\0')) {
-		if ((*s == *t) || (*s == '*') || (*t == '^')) {
+		if ((*s == *t) || (*s == '*')) {
 			s++;
 			t++;
 		} else return false;

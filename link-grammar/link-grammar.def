@@ -41,8 +41,6 @@ parse_options_set_max_parse_time
 parse_options_get_max_parse_time
 parse_options_set_cost_model_type
 parse_options_get_cost_model_type
-parse_options_set_use_fat_links
-parse_options_get_use_fat_links
 parse_options_set_use_sat_parser
 parse_options_get_use_sat_parser
 parse_options_set_use_viterbi
@@ -73,8 +71,6 @@ sentence_num_violations
 sentence_disjunct_cost
 sentence_link_cost
 linkage_create
-linkage_get_current_sublinkage
-linkage_set_current_sublinkage
 linkage_delete
 linkage_get_sentence
 linkage_get_num_words

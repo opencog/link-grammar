@@ -90,7 +90,6 @@ static void left_append_string(String * string, const char * s, const char * t)
 static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 {
 	Sentence sent = linkage_get_sentence(linkage);
-	Dictionary dict = sent->dict;
 	WordIdx l, r;
 	const char *label, *llabel, *rlabel;
 
@@ -100,12 +99,11 @@ static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 	llabel = linkage_get_link_llabel(linkage, link);
 	rlabel = linkage_get_link_rlabel(linkage, link);
 
-	if ((l == 0) && dict->left_wall_defined)
+	if (l == 0)
 	{
 		left_append_string(s, LEFT_WALL_DISPLAY, "               ");
 	}
-	else if ((l == (linkage_get_num_words(linkage)-1)) &&
-	         dict->right_wall_defined)
+	else if (l == (linkage_get_num_words(linkage) - 1))
 	{
 		left_append_string(s, RIGHT_WALL_DISPLAY, "               ");
 	}
@@ -275,52 +273,42 @@ build_linkage_postscript_string(const Linkage linkage,
 	int N_wall_connectors;
 	bool print_word_0 = false, print_word_N = false;
 	bool suppressor_used;
-	Sublinkage *sublinkage = &(linkage->sublinkage);
-	int N_links = sublinkage->num_links;
-	Link **ppla = sublinkage->link;
+	int N_links = linkage->num_links;
+	Link **ppla = linkage->link;
 	String  * string;
 	char * ps_string;
-	Dictionary dict = linkage->sent->dict;
 	int N_words_to_print;
 
 	string = string_new();
 
 	N_wall_connectors = 0;
-	if (dict->left_wall_defined) {
-		suppressor_used = false;
-		if (!display_walls)
-			for (j=0; j<N_links; j++) {
-				if (ppla[j]->lw == 0) {
-					if (ppla[j]->rw == linkage->num_words-1) continue;
-					N_wall_connectors ++;
-					if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0) {
-						suppressor_used = true;
-					}
-				}
-			}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || display_walls);
-	} else {
-		print_word_0 = true;
-	}
-
-	N_wall_connectors = 0;
-	if (dict->right_wall_defined) {
-		suppressor_used = false;
+	suppressor_used = false;
+	if (!display_walls) {
 		for (j=0; j<N_links; j++) {
-			if (ppla[j]->rw == linkage->num_words-1) {
+			if (ppla[j]->lw == 0) {
+				if (ppla[j]->rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
+				if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0) {
 					suppressor_used = true;
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || display_walls);
 	}
-	else {
-		print_word_N = true;
+	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors > 1) || display_walls);
+
+	N_wall_connectors = 0;
+	suppressor_used = false;
+	for (j=0; j<N_links; j++) {
+		if (ppla[j]->rw == linkage->num_words-1) {
+			N_wall_connectors ++;
+			if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
+				suppressor_used = true;
+			}
+		}
 	}
+	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors > 1) || display_walls);
 
 	if (print_word_0) d=0; else d=1;
 
@@ -393,12 +381,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool suppressor_used;
 	int center[linkage->num_words+1];
 	unsigned int line_len, link_length;
-	Sublinkage *sublinkage = &(linkage->sublinkage);
-	unsigned int N_links = sublinkage->num_links;
-	Link **ppla = sublinkage->link;
+	unsigned int N_links = linkage->num_links;
+	Link **ppla = linkage->link;
 	String * string;
 	char * gr_string;
-	Dictionary dict = linkage->sent->dict;
 	unsigned int N_words_to_print;
 
 	char picture[MAX_HEIGHT][MAX_LINE];
@@ -409,55 +395,41 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 	/* Do we want to print the left wall? */
 	N_wall_connectors = 0;
-	if (dict->left_wall_defined)
+	suppressor_used = false;
+	if (!display_walls)
 	{
-		suppressor_used = false;
-		if (!display_walls)
-		{
-			for (j=0; j<N_links; j++)
-			{
-				if (0 == ppla[j]->lw)
-				{
-					if (ppla[j]->rw == linkage->num_words-1) continue;
-					N_wall_connectors ++;
-					if (0 == strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS))
-					{
-						suppressor_used = true;
-					}
-				}
-			}
-		}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || display_walls);
-	}
-	else
-	{
-		print_word_0 = true;
-	}
-
-	/* Do we want to print the right wall? */
-	N_wall_connectors = 0;
-	if (dict->right_wall_defined)
-	{
-		suppressor_used = false;
 		for (j=0; j<N_links; j++)
 		{
-			if (ppla[j]->rw == linkage->num_words-1)
+			if (0 == ppla[j]->lw)
 			{
+				if (ppla[j]->rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (0 == strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS))
+				if (0 == strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS))
 				{
 					suppressor_used = true;
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || display_walls);
 	}
-	else
+	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors > 1) || display_walls);
+
+	/* Do we want to print the right wall? */
+	N_wall_connectors = 0;
+	suppressor_used = false;
+	for (j=0; j<N_links; j++)
 	{
-		print_word_N = true;
+		if (ppla[j]->rw == linkage->num_words-1)
+		{
+			N_wall_connectors ++;
+			if (0 == strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS))
+			{
+				suppressor_used = true;
+			}
+		}
 	}
+	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors > 1) || display_walls);
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;

@@ -1,3 +1,3 @@
 
-void compute_chosen_words(Sentence sent, Linkage linkage);
+void compute_chosen_words(Sentence, Linkage, Parse_Options);
 
