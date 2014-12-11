@@ -58,7 +58,6 @@ typedef struct
 	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
 	bool word_used[MAX_SENTENCE];
-	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
 } con_context_t;
@@ -375,9 +374,6 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
  *
  ********************************************************/
 
-/* When fat-links are finally removed, almost all of the code
- * for merge_constituents will evaporate away.
- */
 static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
 	int c1, c2=0;
@@ -401,8 +397,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 	/* Now go through and find duplicates; if a pair is found,
-	 * mark one as invalid. (It doesn't matter if they're in the
-	 * same sublinkage or not)
+	 * mark one as invalid.
 	 */
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
@@ -411,17 +406,6 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 			if (ctxt->constituent[c2].canon == ctxt->constituent[c1].canon)
 				ctxt->constituent[c2].valid = false;
 		}
-	}
-
-	/* Now we generate the and-lists. An and-list is a set of mutually
-	 * exclusive constituents. Each constituent in the list may not
-	 * be present in the same sublinkage as any of the others.
-XXX with no fat links, there should be no and-lists ...
-	 */
-	for (c1 = 0; c1 < numcon_total; c1++)
-	{
-		if (ctxt->constituent[c1].valid == false) continue;
-		ctxt->templist[0] = c1;
 	}
 
 	return numcon_total;
@@ -640,7 +624,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 				(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
 				(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
 			{
-				if (verbosity >= 2)
+				if (1)
 				{
 					err_ctxt ec;
 					ec.sent = linkage->sent;
