@@ -196,8 +196,7 @@ struct PP_node_struct
 
 /* Davy added these */
 /**
- * This is for building the graphs of links in post-processing and
- * fat link extraction.
+ * This is for building the graphs of links in post-processing.
  */
 struct Linkage_info_struct
 {
