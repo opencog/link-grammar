@@ -331,6 +331,13 @@ struct Postprocessor_s
 
 struct Linkage_s
 {
+	/* TODO XXX FIXME: the member sent, below, is used almost nowhere
+	 * of importance; maybe it should be removed or redone.  It is currently
+	 * used only in constituents.c for error printing, in linkage.c
+	 * for disjunct-string printing.
+	 * These uses could be fixed ... so perhaps its not really 
+	 * needed here.
+	 */
 	Sentence        sent;
 	size_t          num_words;    /* number of (tokenized) words */
 	const char *  * word;         /* array of word spellings */
