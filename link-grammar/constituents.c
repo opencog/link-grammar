@@ -379,6 +379,8 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
  * Here we're looking for the next andlist element to add on
  * to a conjectural andlist, stored in the array templist.
  * We go through the constituents, starting at "start".
+XXX I beleive  this will always return 0 or 1... now that there are no more fat links
+...
  */
 static int find_next_element(con_context_t *ctxt,
                              Linkage linkage,
@@ -410,32 +412,13 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;
 	int num_lists, num_elements;
 
-	for (c1=0; c1<numcon_total; c1++)
-	{
-		ctxt->constituent[c1].valid = true;
-
-		/* Find and invalidate any constituents with negative length */
-		if (ctxt->constituent[c1].right < ctxt->constituent[c1].left)
-		{
-			if (verbosity >= 2)
-			{
-				err_ctxt ec;
-				ec.sent = linkage->sent;
-				err_msg(&ec, Warn, 
-					"Warning: Constituent %d has negative length. Deleting it.\n", c1);
-			}
-			ctxt->constituent[c1].valid = false;
-		}
-		ctxt->constituent[c1].canon = c1;
-	}
-
 	/* First go through and give each constituent a canonical number
 	   (the index number of the lowest-numbered constituent
 	   identical to it) */
-
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
-		if (ctxt->constituent[c1].canon != c1) continue;
+		ctxt->constituent[c1].valid = true;
+		ctxt->constituent[c1].canon = c1;
 		for (c2 = c1 + 1; c2 < numcon_total; c2++)
 		{
 			if ((ctxt->constituent[c1].left == ctxt->constituent[c2].left) &&
@@ -453,7 +436,6 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	 */
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
-		if (false == ctxt->constituent[c1].valid) continue;
 		for (c2 = c1 + 1; c2 < numcon_total; c2++)
 		{
 			if (ctxt->constituent[c2].canon == ctxt->constituent[c1].canon)
@@ -464,6 +446,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	/* Now we generate the and-lists. An and-list is a set of mutually
 	 * exclusive constituents. Each constituent in the list may not
 	 * be present in the same sublinkage as any of the others.
+XXX with no fat links, there should be no and-lists ...
 	 */
 	num_lists = 0;
 	for (c1 = 0; c1 < numcon_total; c1++)
@@ -479,7 +462,8 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 			break;
 	}
 
-	if (verbosity >= 2)
+	// if (verbosity >= 2)
+	if (1< num_lists)
 	{
 		printf("And-lists:\n");
 		for (n=0; n<num_lists; n++)
