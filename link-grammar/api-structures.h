@@ -350,7 +350,7 @@ struct Linkage_s
 	size_t          num_words;  /* number of (tokenized) words */
 	const char *  * word;       /* array of word spellings */
 	Linkage_info*   info;       /* index and cost information */
-	Sublinkage      sublinkage; /* Just one */
+	Sublinkage      subly;      /* Just one */
 
 	Sentence        sent;
 	Parse_Options   opts;

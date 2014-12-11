@@ -250,11 +250,11 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	size_t i;
 	Parse_info pi = sent->parse_info;
 
-	ex_init_sublinkage(pi, &linkage->sublinkage);
+	ex_init_sublinkage(pi, &linkage->subly);
 
 	compute_link_names(sent);
 	for (i=0; i<pi->N_links; ++i)
 	{
-		linkage->sublinkage.link[i] = excopy_link(&(pi->link_array[i]));
+		linkage->subly.link[i] = excopy_link(&(pi->link_array[i]));
 	}
 }

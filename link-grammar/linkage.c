@@ -225,9 +225,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	 * is being suppressed, then all links connecting morphemes will
 	 * be discarded as well.
 	 */
-	for (i=0, j=0; i<linkage->sublinkage.num_links; i++)
+	for (i=0, j=0; i<linkage->subly.num_links; i++)
 	{
-		Link * lnk = linkage->sublinkage.link[i];
+		Link * lnk = linkage->subly.link[i];
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
@@ -241,11 +241,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		{
 			lnk->lw = remap[lnk->lw];
 			lnk->rw = remap[lnk->rw];
-			linkage->sublinkage.link[j] = lnk;
+			linkage->subly.link[j] = lnk;
 			j++;
 		}
 	}
-	linkage->sublinkage.num_links = j;
+	linkage->subly.num_links = j;
 }
 
 
@@ -302,7 +302,7 @@ void linkage_delete(Linkage linkage)
 
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
-	s = &(linkage->sublinkage);
+	s = &(linkage->subly);
 	for (j = 0; j < s->num_links; ++j) {
 		exfree_link(s->link[j]);
 	}
@@ -330,13 +330,13 @@ size_t linkage_get_num_words(const Linkage linkage)
 size_t linkage_get_num_links(const Linkage linkage)
 {
 	if (!linkage) return 0;
-	return linkage->sublinkage.num_links;
+	return linkage->subly.num_links;
 }
 
 static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 {
 	if (!linkage) return false;
-	if	(index >= linkage->sublinkage.num_links)
+	if	(index >= linkage->subly.num_links)
 	{
 		return false;
 	}
@@ -355,13 +355,13 @@ int linkage_get_link_length(const Linkage linkage, LinkIdx index)
 		word_has_link[i] = false;
 	}
 
-	for (i=0; i<linkage->sublinkage.num_links; ++i)
+	for (i=0; i<linkage->subly.num_links; ++i)
 	{
-		link = linkage->sublinkage.link[i];
+		link = linkage->subly.link[i];
 		word_has_link[link->lw] = true;
 		word_has_link[link->rw] = true;
 	}
-	link = linkage->sublinkage.link[index];
+	link = linkage->subly.link[index];
 
 	length = link->rw - link->lw;
 	for (i= link->lw+1; i < link->rw; ++i) {
@@ -374,7 +374,7 @@ WordIdx linkage_get_link_lword(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	link = linkage->sublinkage.link[index];
+	link = linkage->subly.link[index];
 	return link->lw;
 }
 
@@ -382,7 +382,7 @@ WordIdx linkage_get_link_rword(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	link = linkage->sublinkage.link[index];
+	link = linkage->subly.link[index];
 	return link->rw;
 }
 
@@ -390,7 +390,7 @@ const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->sublinkage.link[index];
+	link = linkage->subly.link[index];
 	return link->link_name;
 }
 
@@ -398,7 +398,7 @@ const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->sublinkage.link[index];
+	link = linkage->subly.link[index];
 	return link->lc->string;
 }
 
@@ -406,7 +406,7 @@ const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->sublinkage.link[index];
+	link = linkage->subly.link[index];
 	return link->rc->string;
 }
 
@@ -506,7 +506,7 @@ int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
-	pp_info = &linkage->sublinkage.pp_info[index];
+	pp_info = &linkage->subly.pp_info[index];
 	return pp_info->num_domains;
 }
 
@@ -514,13 +514,13 @@ const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
-	pp_info = &linkage->sublinkage.pp_info[index];
+	pp_info = &linkage->subly.pp_info[index];
 	return pp_info->domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
 {
-	return linkage->sublinkage.violation;
+	return linkage->subly.violation;
 }
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
@@ -532,7 +532,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 	size_t j, k;
 	D_type_list * d;
 
-	subl = &linkage->sublinkage;
+	subl = &linkage->subly;
 	if (subl->pp_info != NULL)
 	{
 		for (j = 0; j < subl->num_links; ++j)
