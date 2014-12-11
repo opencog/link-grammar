@@ -57,7 +57,6 @@ typedef struct
 {
 	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
-	bool word_used[MAX_SENTENCE];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
 } con_context_t;
@@ -71,21 +70,14 @@ static inline bool uppercompare(const char * s, const char * t)
 
 /**
  * If a constituent c has a comma at either end, we exclude the
- * comma. (We continue to shift the boundary until we get to
- * something inside the current sublinkage)
+ * comma.
  */
 static void adjust_for_left_comma(con_context_t * ctxt, Linkage linkage, int c)
 {
 	int w;
 	w = ctxt->constituent[c].left;
 	if (strcmp(linkage->word[w], ",") == 0)
-	{
 		w++;
-		while (1) {
-			if (ctxt->word_used[w]) break;
-			w++;
-		}
-	}
 	ctxt->constituent[c].left = w;
 }
 
@@ -97,11 +89,6 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 	    (strcmp(linkage->word[w], "RIGHT-WALL") == 0))
 	{
 		w--;
-		while (1)
-		{
-			if (ctxt->word_used[w]) break;
-			w--;
-		}
 	}
 	ctxt->constituent[c].right = w;
 }
@@ -243,15 +230,11 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					   without going outside the current sublinkage.
 					   (Or substituting right and left as necessary.) */
 
-					if ((x==CASE_OPENER) || (x==CASE_PPOPEN) || (x==CASE_PART_OPEN)) {
+					if ((x==CASE_OPENER) || (x==CASE_PPOPEN) || (x==CASE_PART_OPEN))
+					{
 								/* This is the case where c is to the
 								   RIGHT of c1 */
-						w = ctxt->constituent[c1].right+1;
-						while(1) {
-							if (ctxt->word_used[w])
-								break;
-							w++;
-						}
+						w = ctxt->constituent[c1].right + 1;
 						if (w > ctxt->constituent[c2].right)
 						{
 							done = true;
@@ -260,13 +243,9 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 						ctxt->constituent[c].left = w;
 						ctxt->constituent[c].right = ctxt->constituent[c2].right;
 					}
-					else {
-						w = ctxt->constituent[c1].left-1;
-						while(1) {
-							if (ctxt->word_used[w])
-								break;
-							w--;
-						}
+					else
+					{
+						w = ctxt->constituent[c1].left - 1;
 						if (w < ctxt->constituent[c2].left) {
 							done = true;
 							continue;
@@ -348,11 +327,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 					if ((ctxt->constituent[c2].domain_type == 'v') ||
 						(ctxt->constituent[c2].domain_type == 'a'))
 					{
-						w = ctxt->constituent[c].left-1;
-						while (true) {
-							if (ctxt->word_used[w]) break;
-							w--;
-						}
+						w = ctxt->constituent[c].left - 1;
 						ctxt->constituent[c2].right = w;
 
 						if (verbosity >= 2)
@@ -478,7 +453,7 @@ static int new_style_conjunctions(con_context_t *ctxt, Linkage linkage, int numc
 
 static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
-	int c, c2;
+	int c;
 	bool global_leftend_found, global_rightend_found;
 	int newcon_total = 0;
 	size_t lastword;
@@ -614,34 +589,6 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	}
 
 	return numcon_total;
-}
-
-/**
- * This function generates a table, word_used[i][w], showing
- * whether each word w is used in each sublinkage i; if so,
- * the value for that cell of the table is 1.
- */
-static void count_words_used(con_context_t *ctxt, Linkage linkage)
-{
-	size_t w, link;
-
-	for (w = 0; w < linkage->num_words; w++) ctxt->word_used[w] = false;
-
-	for (link = 0; link < linkage_get_num_links(linkage); link++)
-	{
-		ctxt->word_used[linkage_get_link_lword(linkage, link)] = true;
-		ctxt->word_used[linkage_get_link_rword(linkage, link)] = true;
-	}
-	if (verbosity >= 2)
-	{
-		printf("Word used: ");
-		for (w = 0; w < linkage->num_words; w++)
-		{
-			if (ctxt->word_used[w]) printf("1 ");
-			else printf("0 ");
-		}
-		printf("\n");
-	}
 }
 
 static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
@@ -1125,8 +1072,6 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	ctxt->phrase_ss = string_set_create();
 	pp = linkage->sent->dict->constituent_pp;
 	numcon_total = 0;
-
-	count_words_used(ctxt, linkage);
 
 	linkage_post_process(linkage, pp);
 	generate_misc_word_info(ctxt, linkage);
