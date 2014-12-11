@@ -39,26 +39,15 @@ typedef struct
 	char domain_type;
 } constituent_t;
 
-/* XXX it seems like the old code worked fine with MAX_ELTS=10 */
-#define MAX_ELTS 100
-typedef struct
-{
-	int num;
-	int e[MAX_ELTS];
-	bool valid;
-} andlist_t;
-
 /*
  * Context used to store assorted intermediate data
  * when the constituent string is being generated.
  */
-#define MAX_ANDS 1024
 typedef struct
 {
 	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
 	constituent_t constituent[MAXCONSTITUENTS];
-	andlist_t andlist[MAX_ANDS];
 } con_context_t;
 
 /* ================================================================ */
@@ -226,10 +215,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 
 					/* if the new constituent (c) is to the left
 					   of c1, its right edge should be adjacent to the
-					   left edge of c1 - or as close as possible
-					   without going outside the current sublinkage.
-					   (Or substituting right and left as necessary.) */
-
+					   left edge of c1 - or as close as possible. */
 					if ((x==CASE_OPENER) || (x==CASE_PPOPEN) || (x==CASE_PART_OPEN))
 					{
 								/* This is the case where c is to the
