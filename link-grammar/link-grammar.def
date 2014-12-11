@@ -71,8 +71,6 @@ sentence_num_violations
 sentence_disjunct_cost
 sentence_link_cost
 linkage_create
-linkage_get_current_sublinkage
-linkage_set_current_sublinkage
 linkage_delete
 linkage_get_sentence
 linkage_get_num_words
