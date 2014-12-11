@@ -344,51 +344,39 @@ static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 int linkage_get_link_length(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
-
 	if (!verify_link_index(linkage, index)) return -1;
-
 	link = linkage->link[index];
 	return link->rw - link->lw;
 }
 
 WordIdx linkage_get_link_lword(const Linkage linkage, LinkIdx index)
 {
-	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	link = linkage->link[index];
-	return link->lw;
+	return linkage->link[index]->lw;
 }
 
 WordIdx linkage_get_link_rword(const Linkage linkage, LinkIdx index)
 {
-	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	link = linkage->link[index];
-	return link->rw;
+	return linkage->link[index]->rw;
 }
 
 const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 {
-	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->link[index];
-	return link->link_name;
+	return linkage->link[index]->link_name;
 }
 
 const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
-	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->link[index];
-	return link->lc->string;
+	return linkage->link[index]->lc->string;
 }
 
 const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
-	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
-	link = linkage->link[index];
-	return link->rc->string;
+	return linkage->link[index]->rc->string;
 }
 
 const char ** linkage_get_words(const Linkage linkage)
@@ -485,18 +473,14 @@ double linkage_corpus_cost(const Linkage linkage)
 
 int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
-	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
-	pp_info = &linkage->pp_info[index];
-	return pp_info->num_domains;
+	return linkage->pp_info[index].num_domains;
 }
 
 const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
 {
-	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
-	pp_info = &linkage->pp_info[index];
-	return pp_info->domain_name;
+	return linkage->pp_info[index].domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
