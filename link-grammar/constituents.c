@@ -588,6 +588,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			global_leftend_found = true;
 		}
 	}
+
 	for (c = 0; c < numcon_total; c++)
 	{
 		if ((ctxt->constituent[c].right >= lastword) &&
@@ -597,6 +598,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			global_rightend_found = true;
 		}
 	}
+
 	if ((global_leftend_found == false) || (global_rightend_found == false))
 	{
 		c = numcon_total;
@@ -611,30 +613,6 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		print_constituent(ctxt, linkage, c);
 	}
 
-	/* Check once more to see if constituents are nested (checking 
-	 * BETWEEN sublinkages this time). This code probably goes away
-	 * when fat-links get removed. */
-	for (c = 0; c < numcon_total; c++)
-	{
-		if (false == ctxt->constituent[c].valid) continue;
-		for (c2 = 0; c2 < numcon_total; c2++)
-		{
-			if (false == ctxt->constituent[c2].valid) continue;
-			if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
-				(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
-				(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
-			{
-				if (1)
-				{
-					err_ctxt ec;
-					ec.sent = linkage->sent;
-					err_msg(&ec, Warn, "Warning: the constituents aren't nested! "
-					          "Adjusting them. (%d, %d)\n", c, c2);
-				}
-				ctxt->constituent[c].left = ctxt->constituent[c2].left;
-			}
-		}
-	}
 	return numcon_total;
 }
 
