@@ -97,9 +97,8 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 }
 
 /******************************************************
- *        These functions do the bulk of the actual
- * constituent-generating; they're called once for each
- *                      sublinkage
+ * These functions do the bulk of the actual
+ * constituent-generating; they're called once.
  *********************************************************/
 
 typedef enum
@@ -330,8 +329,8 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 
 /******************************************************
  * These functions are called once, after constituents
- * for each sublinkage have been generated, to merge them
- * together and fix up some other things.
+ * have been generated, to merge them together and fix up
+ * some other things.
  *
  ********************************************************/
 
@@ -378,7 +377,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
  * Pg*b, I, PP, or Pv, wordtype[w]=PTYPE. If it's a question-word
  * used in an indirect question, wordtype[w]=QTYPE. If it's a
  * question-word determiner,  wordtype[w]=QDTYPE. Else wordtype[w]=NONE.
- * (This function is called once for each sublinkage.)
+ * (This function is called once.)
  */
 static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 {
@@ -658,15 +657,12 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	int c, w, c2, numcon_subl = 0;
 	List_o_links * dlink;
 	int rootleft;
-	Sublinkage * subl;
 	const char * name = "";
 	Domain domain;
 
-	subl = &linkage->sublinkage;
-
-	for (d = 0, c = numcon_total; d < subl->pp_data.N_domains; d++, c++)
+	for (d = 0, c = numcon_total; d < linkage->sublinkage.pp_data.N_domains; d++, c++)
 	{
-		domain = subl->pp_data.domain_array[d];
+		domain = linkage->sublinkage.pp_data.domain_array[d];
 		// rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);
 
