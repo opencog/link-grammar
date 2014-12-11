@@ -452,8 +452,6 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	bool global_leftend_found, global_rightend_found;
 	int newcon_total = 0;
 	size_t lastword;
-	Sentence sent;
-	sent = linkage_get_sentence(linkage);
 
 	for (c = 0; c < numcon_total; c++)
 	{
@@ -528,19 +526,28 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	numcon_total += newcon_total;
 
 	/* If there's a global S constituent that includes everything
-	   except a final period or question mark, extend it by one word */
-	/* XXX FIXME: the below is wrong, anyway, its not testing for 
-	 * exclamations, question marks, other utf8 sentence-terminators.
-	 * The correct fix is almost surely to look for an RW link to
-	 * the right wall ...
+	   except a final terminating punctuation (period or question mark),
+	   extend it by one word. We know its the terminating punctuation,
+	   because it links to the right wall with an RW link.  If its
+	   not, then that final link is not there...
 	 */
 	for (c = 0; c < numcon_total; c++)
 	{
-		if ((ctxt->constituent[c].right == linkage->num_words -3) &&
+		if ((ctxt->constituent[c].right == linkage->num_words - 3) &&
 			(ctxt->constituent[c].left == 1) &&
-			(strcmp(ctxt->constituent[c].type, "S") == 0) &&
-			(strcmp(sent->word[linkage->num_words -2].alternatives[0], ".") == 0))
-			ctxt->constituent[c].right++;
+			(strcmp(ctxt->constituent[c].type, "S") == 0))
+		{
+			size_t ln;
+			for (ln = 0; ln < linkage->num_links; ln++)
+			{
+				if ((linkage->link[ln]->lw == linkage->num_words - 2) && 
+				    (linkage->link[ln]->rw == linkage->num_words - 1))
+				{
+					ctxt->constituent[c].right++;
+					break;
+				}
+			}
+		}
 	}
 
 	/* If there's no S boundary at the very left end of the sentence,
@@ -1308,7 +1315,7 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 	char * p;
 
 	if (!linkage) return NULL;
-	if ((mode == NO_DISPLAY) || (linkage->sent->dict->constituent_pp == NULL))
+	if (mode == NO_DISPLAY)
 	{
 		return NULL;
 	}
