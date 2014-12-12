@@ -58,9 +58,9 @@ typedef struct
 {
 	int N_rows; /* N_rows -- the number of rows */
 	/* tells the height of the links above the sentence */
-	int link_heights[MAX_LINKS];
+	int * link_heights;
 	/* the word beginning each row of the display */
-	int row_starts[MAX_SENTENCE];
+	int * row_starts;
 } ps_ctxt_t;
 
 /**
@@ -89,7 +89,6 @@ static void left_append_string(String * string, const char * s, const char * t)
 
 static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 {
-	Sentence sent = linkage_get_sentence(linkage);
 	WordIdx l, r;
 	const char *label, *llabel, *rlabel;
 
@@ -647,6 +646,9 @@ char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t s
 {
 	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
+
+	ctx.link_heights = (int *) alloca(linkage->num_links * sizeof(int));
+	ctx.row_starts = (int *) alloca(linkage->num_words * sizeof(int));
 	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
 }
 
@@ -676,12 +678,14 @@ static const char * header(bool print_ps_header);
 
 char * linkage_print_postscript(const Linkage linkage, bool display_walls, bool print_ps_header)
 {
-	char * ps, * qs;
+	char * ps, * qs, * ascii;
 	int size;
 
 	/* call the ascii printer to initialize the row size stuff. */
 	ps_ctxt_t ctx;
-	char * ascii = linkage_print_diagram_ctxt(linkage, display_walls, 8000, &ctx);
+	ctx.link_heights = (int *) alloca(linkage->num_links * sizeof(int));
+	ctx.row_starts = (int *) alloca(linkage->num_words * sizeof(int));
+	ascii = linkage_print_diagram_ctxt(linkage, display_walls, 8000, &ctx);
 	linkage_free_diagram(ascii);
 
 	ps = build_linkage_postscript_string(linkage, display_walls, &ctx);
