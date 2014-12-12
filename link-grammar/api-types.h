@@ -27,7 +27,6 @@
  * unsigned char).
  */
 #define MAX_SENTENCE 250       /* Maximum number of words in a sentence */
-#define MAX_LINKS (2*MAX_SENTENCE-3) /* maximum number of links allowed */
 
 /* Widely used private typedefs */
 typedef struct Connector_struct Connector;
