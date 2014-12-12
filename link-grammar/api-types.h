@@ -21,12 +21,12 @@
 
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
 
-/* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is 
- * used to indicate that nothing can connect to this connector, and this 
- * should fit in one byte (if the word field of a connector is an 
- * unsigned char).
+/* MAX_SENTENCE cannot be more than 65534, because word MAX_SENTENCE+1 is
+ * used to indicate that nothing can connect to this connector, and this
+ * should fit in two bytes (because the word field of a connector is an
+ * unsigned short).
  */
-#define MAX_SENTENCE 250       /* Maximum number of words in a sentence */
+#define MAX_SENTENCE 65534      /* Maximum number of words in a sentence */
 
 /* Widely used private typedefs */
 typedef struct Connector_struct Connector;

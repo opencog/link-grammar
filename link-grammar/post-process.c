@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2014 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -129,14 +130,14 @@ static bool check_domain_nesting(Postprocessor *pp, int num_links)
 		for (d2=d1+1; d2 < pp->pp_data.domain_array + pp->pp_data.N_domains; d2++) {
 			memset(mark, 0, num_links*(sizeof mark[0]));
 			for (lol=d2->lol; lol != NULL; lol = lol->next) {
-		mark[lol->link] = 1;
+				mark[lol->link] = 1;
 			}
 			for (lol=d1->lol; lol != NULL; lol = lol->next) {
-		mark[lol->link] += 2;
+				mark[lol->link] += 2;
 			}
 			counts[0] = counts[1] = counts[2] = counts[3] = 0;
 			for (i=0; i<num_links; i++)
-		counts[(int)mark[i]]++;/* (int) cast avoids compiler warning DS 7/97 */
+				counts[(int)mark[i]]++;/* (int) cast avoids compiler warning DS 7/97 */
 			if ((counts[1] > 0) && (counts[2] > 0) && (counts[3] > 0))
 		return false;
 		}

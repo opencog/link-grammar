@@ -63,7 +63,7 @@
 #define UNKNOWN_WORD     ("UNKNOWN-WORD")
 
 #define MAX_PATH_NAME 200     /* file names (including paths)
-									      should not be longer than this */
+                                 should not be longer than this */
 
 /*      Some size definitions.  Reduce these for small machines */
 /* MAX_WORD is large, because unicode entries can use a lot of space */
@@ -72,8 +72,8 @@
 
 /* conditional compiling flags */
 #define INFIX_NOTATION
-		  /* If defined, then we're using infix notation for the dictionary */
-		  /* otherwise we're using prefix notation */
+    /* If defined, then we're using infix notation for the dictionary */
+    /* otherwise we're using prefix notation */
 
 #define UNLIMITED_LEN 255
 #define SHORT_LEN 6
@@ -88,19 +88,22 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 #define PARSE_NUM_OVERFLOW (((s64)1)<<24)
 #endif
 
+/* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
+ * Lets try to keep it that way.
+ */
 struct Connector_struct
 {
 	int hash;
-	unsigned char word;
-					  /* The nearest word to my left (or right) that
-						  this could connect to.  Computed by power pruning */
+	unsigned short word;
+	             /* The nearest word to my left (or right) that
+	                this could connect to.  Computed by power pruning */
 	unsigned char length_limit;
-					 /* If this is a length limited connector, this
-						 gives the limit of the length of the link
-						 that can be used on this connector.  Since
-						 this is strictly a funcion of the connector
-						 name, efficiency is the only reason to store
-						 this.  If no limit, the value is set to 255. */
+	             /* If this is a length limited connector, this
+	                gives the limit of the length of the link
+	                that can be used on this connector.  Since
+	                this is strictly a funcion of the connector
+	                name, efficiency is the only reason to store
+	                this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
 	Connector * next;
 	const char * string;  /* The connector name, e.g. AB+ */
@@ -171,10 +174,10 @@ struct Regex_node_s
 	char *name;      /* The identifying name of the regex */
 	char *pattern;   /* The regular expression pattern */
 	void *re;        /* The compiled regex. void * to avoid
-							* having re library details invading the
-							* rest of the LG system; regex-morph.c
-							* takes care of all matching.
-							*/
+	                  * having re library details invading the
+	                  * rest of the LG system; regex-morph.c
+	                  * takes care of all matching.
+	                  */
 	Regex_node *next;
 };
 
@@ -294,7 +297,7 @@ typedef struct StartingLinkAndDomain_s
 typedef struct pp_rule_s
 {
 	/* Holds a single post-processing rule. Since rules come in many
-		flavors, not all fields of the following are always relevant  */
+	   flavors, not all fields of the following are always relevant  */
 	const char *selector; /* name of link to which rule applies      */
 	pp_linkset *link_set; /* handle to set of links relevant to rule */
 	int   link_set_size;  /* size of this set                        */
@@ -311,8 +314,8 @@ struct pp_knowledge_s
 	const char *path; /* Name of file we loaded from */
 
 	/* handles to sets of links specified in knowledge file. These constitute
-		auxiliary data, necessary to implement the rules, below. See comments
-		in post-process.c for a description of these. */
+	   auxiliary data, necessary to implement the rules, below. See comments
+	   in post-process.c for a description of these. */
 	pp_linkset *domain_starter_links;
 	pp_linkset *urfl_domain_starter_links;
 	pp_linkset *urfl_only_domain_starter_links;
