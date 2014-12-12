@@ -45,7 +45,7 @@ typedef struct
 typedef struct
 {
 	String_set * phrase_ss;
-	WType wordtype[MAX_SENTENCE];
+	WType * wordtype;
 	constituent_t constituent[MAXCONSTITUENTS];
 } con_context_t;
 
@@ -395,7 +395,7 @@ static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 	const char * label1, * label2;
 
 	for (w1 = 0; w1 < linkage->num_words; w1++)
-		ctxt->wordtype[w1]=NONE;
+		ctxt->wordtype[w1] = NONE;
 
 	for (l1 = 0; l1 < linkage_get_num_links(linkage); l1++) {	
 		w1=linkage_get_link_rword(linkage, l1);
@@ -1121,9 +1121,16 @@ static char * print_flat_constituents(Linkage linkage)
 	 * This was discovered only after much work. Bummer.
 	 */
 	char * p;
-	con_context_t *ctxt = (con_context_t *) xalloc (sizeof(con_context_t));
+	size_t wts = linkage->num_words * sizeof(WType);
+
+	con_context_t *ctxt = (con_context_t *) xalloc(sizeof(con_context_t));
 	memset(ctxt, 0, sizeof(con_context_t));
+	ctxt->wordtype = (WType *) xalloc(wts);
+	memset(ctxt->wordtype, 0, wts);
+
 	p = do_print_flat_constituents(ctxt, linkage);
+
+	xfree(ctxt->wordtype, wts);
 	xfree(ctxt, sizeof(con_context_t));
 	return p;
 }
