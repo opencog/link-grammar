@@ -20,7 +20,6 @@
 #include "print-util.h"
 #include "string-set.h"
 
-#define MAXCONSTITUENTS 8192
 #define OPEN_BRACKET '['
 #define CLOSE_BRACKET ']'
 
@@ -46,7 +45,8 @@ typedef struct
 {
 	String_set * phrase_ss;
 	WType * wordtype;
-	constituent_t constituent[MAXCONSTITUENTS];
+	constituent_t * constituent;
+	int conlen;
 } con_context_t;
 
 
@@ -265,13 +265,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 						print_constituent(ctxt, linkage, c);
 					}
 					c++;
-					if (MAXCONSTITUENTS <= c)
-					{
-						err_ctxt ec;
-						ec.sent = linkage->sent;
-						err_msg(&ec, Error, "Error: Too many constituents (a).\n");
-						c--;
-					}
+					assert (c < ctxt->conlen, "Too many constituents");
 					done = true;
 				}
 			}
@@ -450,7 +444,6 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 {
 	int c;
 	bool global_leftend_found, global_rightend_found;
-	int newcon_total = 0;
 	size_t lastword;
 
 	for (c = 0; c < numcon_total; c++)
@@ -522,8 +515,6 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			ctxt->constituent[c].left--;
 		}
 	}
-
-	numcon_total += newcon_total;
 
 	/* If there's a global S constituent that includes everything
 	   except a final terminating punctuation (period or question mark),
@@ -941,14 +932,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (adjustment_made == false) break;
 	}
 
-	if (MAXCONSTITUENTS <= numcon_total + numcon_subl)
-	{
-		err_ctxt ec;
-		ec.sent = linkage->sent;
-		err_msg(&ec, Error, "Error: Too many constituents (a2).\n");
-		numcon_total = MAXCONSTITUENTS - numcon_subl;
-	}
-
+	assert (numcon_total + numcon_subl < ctxt->conlen, "Too many constituents");
 	return numcon_subl;
 }
 
@@ -958,14 +942,15 @@ exprint_constituent_structure(con_context_t *ctxt,
 {
 	size_t w;
 	int c;
-	bool leftdone[MAXCONSTITUENTS];
-	bool rightdone[MAXCONSTITUENTS];
+	bool *leftdone = alloca(numcon_total * sizeof(bool));
+	bool *rightdone = alloca(numcon_total * sizeof(bool));
 	int best, bestright, bestleft;
 	Sentence sent;
-	char s[MAX_WORD], *p;
+	char *p;
+	char s[MAX_WORD];
 	String * cs = string_new();
 
-	assert (numcon_total < MAXCONSTITUENTS, "Too many constituents (b)");
+	assert (numcon_total < ctxt->conlen, "Too many constituents (b)");
 	sent = linkage_get_sentence(linkage);
 
 	for (c = 0; c < numcon_total; c++)
@@ -1075,37 +1060,13 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
 	numcon_total += numcon_subl;
-	if (MAXCONSTITUENTS <= numcon_total)
-	{
-		err_ctxt ec;
-		ec.sent = linkage->sent;
-		err_msg(&ec, Error, "Error: Too many constituents (c).\n");
-		numcon_total = MAXCONSTITUENTS-1;
-	}
+	assert (numcon_total < ctxt->conlen, "Too many constituents (c)");
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
-	if (MAXCONSTITUENTS <= numcon_total)
-	{
-		err_ctxt ec;
-		ec.sent = linkage->sent;
-		err_msg(&ec, Error, "Error: Too many constituents (d).\n");
-		numcon_total = MAXCONSTITUENTS-1;
-	}
+	assert (numcon_total < ctxt->conlen, "Too many constituents (d)");
 	numcon_total = new_style_conjunctions(ctxt, linkage, numcon_total);
-	if (MAXCONSTITUENTS <= numcon_total)
-	{
-		err_ctxt ec;
-		ec.sent = linkage->sent;
-		err_msg(&ec, Error, "Error: Too many constituents (n).\n");
-		numcon_total = MAXCONSTITUENTS-1;
-	}
+	assert (numcon_total < ctxt->conlen, "Too many constituents (e)");
 	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
-	if (MAXCONSTITUENTS <= numcon_total)
-	{
-		err_ctxt ec;
-		ec.sent = linkage->sent;
-		err_msg(&ec, Error, "Error: Too many constituents (e).\n");
-		numcon_total = MAXCONSTITUENTS-1;
-	}
+	assert (numcon_total < ctxt->conlen, "Too many constituents (f)");
 	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;
@@ -1122,14 +1083,19 @@ static char * print_flat_constituents(Linkage linkage)
 	 */
 	char * p;
 	size_t wts = linkage->num_words * sizeof(WType);
+	size_t cns = (linkage->num_links + linkage->num_words) * sizeof(constituent_t);
 
 	con_context_t *ctxt = (con_context_t *) xalloc(sizeof(con_context_t));
 	memset(ctxt, 0, sizeof(con_context_t));
 	ctxt->wordtype = (WType *) xalloc(wts);
 	memset(ctxt->wordtype, 0, wts);
+	ctxt->conlen = linkage->num_links + linkage->num_words;
+	ctxt->constituent = (constituent_t *) xalloc(cns);
+	memset(ctxt->constituent, 0, cns);
 
 	p = do_print_flat_constituents(ctxt, linkage);
 
+	xfree(ctxt->constituent, cns);
 	xfree(ctxt->wordtype, wts);
 	xfree(ctxt, sizeof(con_context_t));
 	return p;
