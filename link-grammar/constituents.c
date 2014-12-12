@@ -670,16 +670,16 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
                                           int numcon_total)
 {
 	size_t d, l, w2;
-	size_t leftmost, rightmost, leftlimit;
 	int c, w, c2, numcon_subl = 0;
-	List_o_links * dlink;
-	int rootleft;
-	const char * name = "";
-	Domain domain;
 
 	for (d = 0, c = numcon_total; d < linkage->pp_data.N_domains; d++, c++)
 	{
-		domain = linkage->pp_data.domain_array[d];
+		size_t leftmost, rightmost, leftlimit;
+		int rootleft;
+		List_o_links * dlink;
+
+		Domain domain = linkage->pp_data.domain_array[d];
+
 		// rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);
 
@@ -786,6 +786,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 			(post_process_match("Mr", ctxt->constituent[c].start_link) == 1) ||
 			(post_process_match("MX#d", ctxt->constituent[c].start_link) == 1))
 		{
+			const char * name = "";
 			w = leftmost;
 			if (strcmp(linkage->word[w], ",") == 0) w++;
 			if (ctxt->wordtype[w] == NONE)
