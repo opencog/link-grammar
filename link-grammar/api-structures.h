@@ -315,11 +315,12 @@ struct Postprocessor_s
 	int *relevant_contains_one_rules;        /* -1-terminated list of indices  */
 	int *relevant_contains_none_rules;
 
-	/* the following maintain state during a call to post_process() */
-	String_set *sentence_link_name_set;        /* link names seen for sentence */
-	bool visited[MAX_SENTENCE];                 /* for the depth-first search */
+	/* The following maintain state during a call to post_process() */
+	String_set *sentence_link_name_set;    /* link names seen for sentence */
+	bool *visited;                         /* for the depth-first search */
 	PP_node *pp_node;
 	PP_data pp_data;
+	size_t vlength;
 };
 
 
