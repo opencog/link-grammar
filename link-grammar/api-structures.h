@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2014 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -293,9 +294,11 @@ struct DTreeLeaf_s
 struct PP_data_s
 {
 	size_t N_domains;
-	List_o_links * word_links[MAX_SENTENCE];
+	List_o_links ** word_links;
+	size_t wowlen;
 	List_o_links * links_to_ignore;
-	Domain domain_array[MAX_LINKS]; /* the domains, sorted by size */
+	Domain * domain_array;          /* the domains, sorted by size */
+	size_t domlen;                  /* size of domain_array */
 	size_t length;                  /* length of current sentence */
 };
 
@@ -315,9 +318,10 @@ struct Postprocessor_s
 	int *relevant_contains_one_rules;        /* -1-terminated list of indices  */
 	int *relevant_contains_none_rules;
 
-	/* the following maintain state during a call to post_process() */
-	String_set *sentence_link_name_set;        /* link names seen for sentence */
-	bool visited[MAX_SENTENCE];                 /* for the depth-first search */
+	/* The following maintain state during a call to post_process() */
+	String_set *sentence_link_name_set;    /* link names seen for sentence */
+	bool *visited;                         /* for the depth-first search */
+	size_t vlength;                        /* length of visited array */
 	PP_node *pp_node;
 	PP_data pp_data;
 };

@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2014 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -129,14 +130,14 @@ static bool check_domain_nesting(Postprocessor *pp, int num_links)
 		for (d2=d1+1; d2 < pp->pp_data.domain_array + pp->pp_data.N_domains; d2++) {
 			memset(mark, 0, num_links*(sizeof mark[0]));
 			for (lol=d2->lol; lol != NULL; lol = lol->next) {
-		mark[lol->link] = 1;
+				mark[lol->link] = 1;
 			}
 			for (lol=d1->lol; lol != NULL; lol = lol->next) {
-		mark[lol->link] += 2;
+				mark[lol->link] += 2;
 			}
 			counts[0] = counts[1] = counts[2] = counts[3] = 0;
 			for (i=0; i<num_links; i++)
-		counts[(int)mark[i]]++;/* (int) cast avoids compiler warning DS 7/97 */
+				counts[(int)mark[i]]++;/* (int) cast avoids compiler warning DS 7/97 */
 			if ((counts[1] > 0) && (counts[2] > 0) && (counts[3] > 0))
 		return false;
 		}
@@ -198,6 +199,7 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
                              int w, pp_linkset *ls)
 {
 	List_o_links *lol;
+	assert(w < pp->pp_data.length, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -441,9 +443,11 @@ static void reachable_without_dfs(Postprocessor *pp,
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
 	List_o_links *lol;
+	assert(w < pp->pp_data.length, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
+		assert(lol->word < pp->pp_data.length, "Bad word index");
 		if (!pp->visited[lol->word] &&
 		    !(w == a && lol->word == b) &&
 		    !(w == b && lol->word == a))
@@ -471,6 +475,7 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		{
 			if (w > lol->word) continue;	/* only consider each edge once */
 			if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->link_name)) continue;
+
 			memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
 			if (!pp->visited[lol->word]) return false;
@@ -482,8 +487,11 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		w = sublinkage->link[lol->link]->lw;
 		/* (w, lol->word) are the left and right ends of the edge we're considering */
 		if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->link_name)) continue;
+
 		memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
+
+		assert(lol->word < pp->pp_data.length, "Bad word index");
 		if (!pp->visited[lol->word]) return false;
 	}
 
@@ -524,6 +532,16 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	size_t i, link;
 	List_o_links * lol;
 
+	/* Get more size, if needed */
+	if (pp->pp_data.wowlen <= pp->pp_data.length)
+	{
+		pp->pp_data.word_links = (List_o_links **) xrealloc(
+			pp->pp_data.word_links,
+			pp->pp_data.wowlen * sizeof(List_o_links *),
+			2 * pp->pp_data.wowlen * sizeof(List_o_links *));
+		pp->pp_data.wowlen *= 2;
+	}
+
 	for (i = 0; i < pp->pp_data.length; i++)
 		pp->pp_data.word_links[i] = NULL;
 
@@ -554,11 +572,28 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	}
 }
 
-static void setup_domain_array(Postprocessor *pp,
-                               int n, const char *string, int start_link)
+static void setup_domain_array(Postprocessor *pp, size_t n,
+                               const char *string, int start_link)
 {
 	/* set pp->visited[i] to false */
+	/* Grab more memory if needed */
+	if (pp->vlength <= pp->pp_data.length)
+	{
+		pp->visited = (bool *) xrealloc(pp->visited,
+		      pp->vlength * sizeof(bool), 2 * pp->vlength * sizeof(bool));
+		pp->vlength *= 2;
+	}
 	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
+
+	/* Grab more memory if needed */
+	if (pp->pp_data.domlen <= n)
+	{
+		pp->pp_data.domain_array = (Domain *) xrealloc(pp->pp_data.domain_array,
+		    pp->pp_data.domlen * sizeof(Domain),
+		    2 * pp->pp_data.domlen * sizeof(Domain));
+		pp->pp_data.domlen *= 2;
+	}
+
 	pp->pp_data.domain_array[n].string = string;
 	pp->pp_data.domain_array[n].lol    = NULL;
 	pp->pp_data.domain_array[n].size   = 0;
@@ -579,6 +614,7 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
+	assert(w < pp->pp_data.length, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -603,6 +639,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                    size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
+	assert(w < pp->pp_data.length, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -613,6 +650,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
+		assert(lol->word < pp->pp_data.length, "Bad word index");
 		if ((!pp->visited[lol->word]) && !(w == root && lol->word < w) &&
 		     !(lol->word < root && lol->word < w &&
 		          pp_linkset_match(pp->knowledge->restricted_links,
@@ -627,6 +665,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                     size_t w, size_t root, size_t right, size_t start_link)
 {
 	List_o_links * lol;
+	assert(w < pp->pp_data.length, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -637,6 +676,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
+		assert(lol->word < pp->pp_data.length, "Bad word index");
 		if (!pp->visited[lol->word] && !(w == root && lol->word >= right) &&
 		    !(w == root && lol->word < root) &&
 		       !(lol->word < root && lol->word < w &&
@@ -652,6 +692,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                     size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
+	assert(w < pp->pp_data.length, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -662,6 +703,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
+		assert(lol->word < pp->pp_data.length, "Bad word index");
 		if (!pp->visited[lol->word] && (lol->word != right))
 		{
 			depth_first_search(pp, sublinkage, lol->word, right, start_link);
@@ -917,6 +959,17 @@ Postprocessor * post_process_open(const char *path)
 	pp->pp_data.links_to_ignore = NULL;
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
+
+	/* 60 is just starting size, these are expanded if needed */
+	pp->vlength = 60;
+	pp->visited = (bool*) xalloc(pp->vlength * sizeof(bool));
+
+	pp->pp_data.domlen = 60;
+	pp->pp_data.domain_array = (Domain*) xalloc(pp->pp_data.domlen * sizeof(Domain));
+
+	pp->pp_data.wowlen = 60;
+	pp->pp_data.word_links = (List_o_links **) xalloc(pp->pp_data.wowlen * sizeof(List_o_links*));
+
 	return pp;
 }
 
@@ -935,6 +988,10 @@ void post_process_close(Postprocessor *pp)
 	      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp_knowledge_close(pp->knowledge);
 	free_pp_node(pp);
+
+	xfree(pp->visited, pp->vlength * sizeof(bool));
+	xfree(pp->pp_data.domain_array, pp->pp_data.domlen * sizeof(Domain));
+	xfree(pp->pp_data.word_links, pp->pp_data.wowlen * sizeof(List_o_links*));
 	xfree(pp, sizeof(Postprocessor));
 }
 
