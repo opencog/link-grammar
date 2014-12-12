@@ -268,11 +268,15 @@ static void free_pp_node(Postprocessor *pp)
 /** set up a fresh pp_node for later use */
 static void alloc_pp_node(Postprocessor *pp)
 {
+	size_t i;
 	PP_node *ppn = (PP_node *) xalloc(sizeof(PP_node));
 
 	/* highly unlikely that the number of links will ever exceed this */
 	ppn->dtsz = 2 * pp->pp_data.length;
 	ppn->d_type_array = (D_type_list **) xalloc (ppn->dtsz * sizeof(D_type_list*));
+	for (i=0; i<ppn->dtsz; i++)
+		ppn->d_type_array[i] = NULL;
+
 	pp->pp_node = ppn;
 }
 
@@ -284,7 +288,10 @@ static void clear_pp_node(Postprocessor *pp)
 
 	ppn->violation = NULL;
 	for (i=0; i<ppn->dtsz; i++)
+	{
+		free_d_type(ppn->d_type_array[i]);
 		ppn->d_type_array[i] = NULL;
+	}
 }
 
 
@@ -1089,11 +1096,10 @@ static void report_pp_stats(Postprocessor *pp)
 }
 
 /**
- * Takes a sublinkage and returns:
+ * Takes a linkage and returns:
  *  . for each link, the domain structure of that link
  *  . a list of the violation strings
- * NB: sublinkage->link[i]->l=-1 means that this connector
- * is to be ignored
+ * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
                          Sentence sent, Linkage sublinkage, bool cleanup)

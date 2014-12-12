@@ -243,6 +243,7 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	}
 
 	/* Store the wide char version at the AFCLASS entry. */ 
+	/* XXX FIXME: this memory is never released when dict is closed */
 	ac->string = xrealloc((void *)ac->string, ac->mem_elems,
 	             sizeof(*wqs) * (w+1));
 	ac->mem_elems =  sizeof(*wqs) * (w+1);
@@ -496,6 +497,7 @@ dictionary_six_str(const char * lang,
 			dict->afdict_class[i].string = NULL;
 		}
 	}
+	dict->affix_table = NULL;
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
@@ -508,8 +510,6 @@ dictionary_six_str(const char * lang,
 	}
 	dict->pin = NULL;
 	dict->input = NULL;
-
-	dict->affix_table = NULL;
 
 	if (NULL == affix_name)
 	{
@@ -548,16 +548,6 @@ dictionary_six_str(const char * lang,
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
 
-#ifdef USE_FAT_LINKAGES
-	dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD);
-	if (dict_node != NULL) {
-		dict->andable_connector_set = connector_set_create(dict_node->exp);
-	} else {
-		dict->andable_connector_set = NULL;
-	}
-	free_lookup(dict_node);
-#endif /* USE_FAT_LINKAGES */
-
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
 	if (dict_node != NULL) {
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
@@ -570,6 +560,7 @@ dictionary_six_str(const char * lang,
 
 failure:
 	string_set_delete(dict->string_set);
+	if (dict->affix_table) xfree(dict->affix_table, sizeof(struct Dictionary_s));
 	xfree(dict, sizeof(struct Dictionary_s));
 	return NULL;
 }
