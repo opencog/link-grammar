@@ -53,7 +53,8 @@ typedef struct
 typedef struct CNode_s CNode;
 
 /* Invariant: Leaf if child==NULL */
-struct CNode_s {
+struct CNode_s
+{
   char  * label;
   CNode * child;
   CNode * next;
@@ -1075,30 +1076,18 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 static char * print_flat_constituents(Linkage linkage)
 {
-	/* In principle, the ctxt could be allocated on stack, instead of
-	 * with malloc(). However, The java6 jvm (and MS Windows jvm's)
-	 * gives JNI clients only a small amount of stack space. Alloc'ing
-	 * this (rather large) structure  on stack will blow up the JVM.
-	 * This was discovered only after much work. Bummer.
-	 */
-	char * p;
 	size_t wts = linkage->num_words * sizeof(WType);
 	size_t cns = (linkage->num_links + linkage->num_words) * sizeof(constituent_t);
 
-	con_context_t *ctxt = (con_context_t *) xalloc(sizeof(con_context_t));
+	con_context_t *ctxt = (con_context_t *) alloca(sizeof(con_context_t));
 	memset(ctxt, 0, sizeof(con_context_t));
-	ctxt->wordtype = (WType *) xalloc(wts);
+	ctxt->wordtype = (WType *) alloca(wts);
 	memset(ctxt->wordtype, 0, wts);
 	ctxt->conlen = linkage->num_links + linkage->num_words;
-	ctxt->constituent = (constituent_t *) xalloc(cns);
+	ctxt->constituent = (constituent_t *) alloca(cns);
 	memset(ctxt->constituent, 0, cns);
 
-	p = do_print_flat_constituents(ctxt, linkage);
-
-	xfree(ctxt->constituent, cns);
-	xfree(ctxt->wordtype, wts);
-	xfree(ctxt, sizeof(con_context_t));
-	return p;
+	return do_print_flat_constituents(ctxt, linkage);
 }
 
 static CType token_type (char *token)
