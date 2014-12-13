@@ -270,7 +270,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	int link, i,j;
 	int d;
 	int N_wall_connectors;
-	bool print_word_0 = false, print_word_N = false;
+	bool print_word_0, print_word_N;
 	bool suppressor_used;
 	int N_links = linkage->num_links;
 	Link **ppla = linkage->link;
@@ -294,7 +294,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		}
 	}
 	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors > 1) || display_walls);
+					|| (N_wall_connectors != 1) || display_walls);
 
 	N_wall_connectors = 0;
 	suppressor_used = false;
@@ -307,7 +307,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		}
 	}
 	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors > 1) || display_walls);
+					|| (N_wall_connectors != 1) || display_walls);
 
 	if (print_word_0) d=0; else d=1;
 
@@ -375,7 +375,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int i, j, k, cl, cr, inc, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
-	bool print_word_0 = false, print_word_N = false;
+	bool print_word_0 , print_word_N;
 	int N_wall_connectors;
 	bool suppressor_used;
 	int center[linkage->num_words+1];
@@ -411,7 +411,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 	}
 	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors > 1) || display_walls);
+					|| (N_wall_connectors != 1) || display_walls);
 
 	/* Do we want to print the right wall? */
 	N_wall_connectors = 0;
@@ -428,7 +428,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 	}
 	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors > 1) || display_walls);
+					|| (N_wall_connectors != 1) || display_walls);
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
