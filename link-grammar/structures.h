@@ -252,15 +252,6 @@ struct X_table_connector_struct
 	X_table_connector *next;
 };
 
-/* from string-set.c */
-struct String_set_s
-{
-	size_t size;       /* the current size of the table */
-	size_t count;      /* number of things currently in the table */
-	char ** table;     /* the table itself */
-};
-
-
 /* from pp_linkset.c */
 typedef struct pp_linkset_node_s
 {

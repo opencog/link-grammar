@@ -10,9 +10,8 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api-types.h"
 #include "string-set.h"
-#include "structures.h"
+#include "utilities.h"
 
 /**
  * Suppose you have a program that generates strings and keeps pointers to them.
