@@ -322,9 +322,9 @@ static void free_dictionary(Dictionary dict)
 static void affix_list_delete(Dictionary dict)
 {
 	Afdict_class * atc;
-	for (atc = dict->afdict_class; 0 != atc->length; atc++)
+	for (atc = dict->afdict_class; 0 != atc->mem_elems; atc++)
 	{
-		xfree((void *)atc->string, atc->mem_elems);
+		free(atc->string);
 	}
 	free(dict->afdict_class);
 }

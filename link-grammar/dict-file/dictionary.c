@@ -57,7 +57,7 @@ static inline char * deinflect(const char * str)
  * has a pointer to an array of strings which are the punctuation/affix
  * names. */
 
-const char const * afdict_classname[] = { AFDICT_CLASSNAMES };
+const char *afdict_classname[] = { AFDICT_CLASSNAMES };
 #define NUMELEMS(a) (sizeof(a) / sizeof(a[0]))
 
 /**
@@ -243,10 +243,8 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	}
 
 	/* Store the wide char version at the AFCLASS entry. */ 
-	/* XXX FIXME: this memory is never released when dict is closed */
-	ac->string = xrealloc((void *)ac->string, ac->mem_elems,
-	             sizeof(*wqs) * (w+1));
-	ac->mem_elems =  sizeof(*wqs) * (w+1);
+	ac->mem_elems =  sizeof(*wqs) * (w+1); /* bytes here, but we don't care */
+	ac->string = malloc(ac->mem_elems);
 	wqs = (wchar_t *)ac->string;
 	pqs = qs->str;
 	(void)mbsrtowcs(wqs, &pqs, w, &mbs);
@@ -267,9 +265,10 @@ static int cmplen(const void *a, const void *b)
 
 /**
  * Initialize several classes.
- * In case of a future dynamic change of the affix table, this
- * function needs to be invoked again after the affix table structure
- * is re-constructed (changes may be needed).
+ * In case of a future dynamic change of the affix table, this function needs to
+ * be invoked again after the affix table is re-constructed (changes may be
+ * needed - especially to first free memory and initialize the affix dict
+ * structure.).
  */
 static bool afdict_init(Dictionary dict)
 {
