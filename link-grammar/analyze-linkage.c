@@ -20,12 +20,12 @@
 #include "structures.h"
 #include "word-utils.h"
 
-static Linkage x_create_sublinkage(Parse_info pi)
+static Linkage x_create_sublinkage(unsigned int N_links)
 {
 	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
 	memset(&s->pp_data, 0, sizeof(PP_data));
 
-	s->num_links = pi->N_links;
+	s->num_links = N_links;
 	s->link = (Link **) xalloc(s->num_links * sizeof(Link *));
 	memset(s->link, 0, s->num_links * sizeof(Link *));
 
@@ -174,7 +174,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	PP_node * pp;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 	Parse_info pi = sent->parse_info;
-	Linkage sublinkage = x_create_sublinkage(pi);
+	Linkage sublinkage = x_create_sublinkage(pi->N_links);
 
 	compute_link_names(sent);
 	for (i=0; i<pi->N_links; i++)

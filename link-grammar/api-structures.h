@@ -211,7 +211,7 @@ struct Parse_info_struct
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size;
-	X_table_connector ** x_table;
+	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	int            N_words;
 	Disjunct **    chosen_disjuncts;
