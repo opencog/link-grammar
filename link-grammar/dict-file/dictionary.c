@@ -347,6 +347,7 @@ static bool afdict_init(Dictionary dict)
 		dyn_str *rebuf = dyn_str_new();
 
 		/* The regex is converted to: ^((original-regex)b)+$ */
+		dyn_strcat(rebuf, "^((");
 		dyn_strcat(rebuf, ac->string[0]);
 		dyn_strcat(rebuf, ")b)+$");
 		sm_re->pattern = strdup(rebuf->str);

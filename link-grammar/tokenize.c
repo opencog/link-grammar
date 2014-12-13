@@ -485,24 +485,26 @@ static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
 	else
 	{
 		size_t si;
-		size_t wlen = MIN(strlen(word), MAX_WORD);
-		char w[MAX_WORD*2];
-		const char * nwp = w;
-
-		strncpy(w, word, wlen);
-		w[wlen] = '\0';
+		size_t wlen = strlen(word);
+		size_t slen = 0;
+		char *w;
 
 		for (si = 0; si < stemsubscr_count; si++)
 		{
-			size_t slen = MIN(strlen(stemsubscr[si]), MAX_WORD-1);
+			slen = MAX(slen, strlen(stemsubscr[si]));
+		}
+		w = alloca(wlen + slen + 1);
+		strcpy(w, word);
 
-			strncpy(&w[wlen], stemsubscr[si], slen);
-			w[wlen+slen] = '\0';
+		for (si = 0; si < stemsubscr_count; si++)
+		{
+			strcpy(&w[wlen], stemsubscr[si]);
 
 			/* We should not match regexes to stems. */
 			if (boolean_dictionary_lookup(dict, w))
 			{
-				add_alternative(sent, (prefix ? 1 : 0),&prefix, 1,&nwp, 1,&suffix);
+				add_alternative(sent, (prefix ? 1 : 0),&prefix,
+				                1,(const char **)&w, 1,&suffix);
 				word_is_in_dict = true;
 			}
 		}
@@ -528,9 +530,9 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 	int p_strippable, s_strippable;
 	const char **prefix, **suffix;
 	const char *no_suffix = NULL;
-	char newword[MAX_WORD+1];
 	bool word_can_split = false;
 	Dictionary dict = sent->dict;
+	char *newword = alloca(wend-w+1);
 
 	/* Set up affix tables. */
 	if (NULL == dict->affix_table) return false;
@@ -631,6 +633,12 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
  * Add all the alternatives.
  * The assumptions used prevent a large number of false splits.
  * They may be relaxed later.
+ * 
+ * XXX Because the grammatical rules of which prefixes are valid for the
+ * remaining word are not checked, non-existing words may get split. In such a
+ * case there is no opportunity for a regex or spell check of this unknown word.
+ * FIXME Before issuing an alternative, validate that the combination is
+ * supported by the dict.
  *
  * Note: This function currently does more than absolutely needed for LG,
  * in order to simplify the initial Hebrew dictionary.
@@ -643,7 +651,6 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
  * - subwords in a prefix are unique ('ככ' is considered here as one "subword")
  * - input words with length <= 2 don't have a prefix
  * - each character uses 2 bytes
- * - less than 16 prefix types - 13 are actually defined (bool array limit)
  * - the input word contains only Hebrew characters
  * - the letter "ו" (vav) can only be the first prefix subword
  * - if the last prefix subword is not "ו" and the word (length>2) starts
@@ -667,7 +674,7 @@ static bool mprefix_split(Sentence sent, const char *word)
 	int split_prefix_i = 0;      /* split prefix index */
 	const char *split_prefix[HEB_PRENUM_MAX]; /* the whole prefix */
 	/* pseen is a simple prefix combination filter */
-	bool pseen[HEB_MPREFIX_MAX]; /* prefix "subword" seen */
+	bool *pseen;                 /* prefix "subword" seen (not allowed again) */
 	Dictionary dict = sent->dict;
 	int wordlen;
 	int wlen;
@@ -678,14 +685,14 @@ static bool mprefix_split(Sentence sent, const char *word)
 	mprefix_list = AFCLASS(dict->affix_table, AFDICT_MPRE);
 	mp_strippable = mprefix_list->length;
 	if (0 == mp_strippable) return false;
-	assert(mp_strippable <= HEB_MPREFIX_MAX, /* sanity check */
-		"mp_strippable>" STRINGIFY(HEB_MPREFIX_MAX));
 	/* The mprefix list is revered-sorted according to prefix length.
 	 * The code here depends on that. */
 	mprefix = mprefix_list->string;
 
-	/* zero-out pseen[], assuming zeroed-out bytes are interpreted as false */
-	memset(pseen, 0, sizeof(pseen));
+	pseen = alloca(mp_strippable * sizeof(*pseen));
+	/* Assuming zeroed-out bytes are interpreted as false. */
+	memset(pseen, 0, mp_strippable * sizeof(*pseen));
+
 	word_is_in_dict = false;
 	w = word;
 	wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
