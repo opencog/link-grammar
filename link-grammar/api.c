@@ -543,17 +543,6 @@ static void free_sublinkage(Linkage s)
 {
 	size_t i;
 
-	for (i = 0; i < s->lasz; i++)
-	{
-		Link* l = &s->link_array[i];
-		if (l->link_name != NULL)
-		{
-			free((void*)l->link_name);
-			exfree_connectors(l->rc);
-			exfree_connectors(l->lc);
-		}
-	}
-
 	xfree(s->link_array, s->lasz * sizeof(Link));
 
 	exfree(s->chosen_disjuncts, s->num_words * sizeof(Disjunct *));

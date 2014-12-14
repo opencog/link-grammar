@@ -63,6 +63,7 @@
 
 static void exfree_link(Link * l)
 {
+#if 0
 	if (NULL == l->link_name) return;
 	exfree_connectors(l->rc);
 	exfree_connectors(l->lc);
@@ -70,6 +71,7 @@ static void exfree_link(Link * l)
 	l->link_name = NULL;
 	l->lw = SIZE_MAX;
 	l->rw = SIZE_MAX;
+#endif
 }
 
 /**
@@ -275,6 +277,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	/* Using exalloc since this is external to the parser itself. */
 	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
+	memset(linkage, 0, sizeof(struct Linkage_s));
 
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
@@ -323,11 +326,11 @@ void linkage_delete(Linkage linkage)
 
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
-	for (j = 0; j < linkage->num_links; ++j)
+	for (j = 0; j < linkage->lasz; ++j)
 	{
 		exfree_link(&linkage->link_array[j]);
 	}
-	exfree(linkage->link_array, sizeof(Link) * linkage->num_links);
+	exfree(linkage->link_array, sizeof(Link) * linkage->lasz);
 
 	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 
@@ -340,7 +343,6 @@ void linkage_delete(Linkage linkage)
 		linkage->pp_info = NULL;
 		post_process_free_data(&linkage->pp_data);
 	}
-
 
 	if (linkage->pp_violation != NULL)
 	{
