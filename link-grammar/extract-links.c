@@ -625,6 +625,7 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
 void extract_links(Linkage lkg, Parse_info pi, int index)
 {
 	initialize_links(lkg);
+	pi->N_links = 0;
 	if (index < 0) {
 		pi->rand_state = index;
 		list_random_links(lkg, pi, pi->parse_set);
