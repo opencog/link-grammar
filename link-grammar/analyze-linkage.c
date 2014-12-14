@@ -51,6 +51,7 @@ static void free_sublinkage(Linkage s)
 	xfree(s, sizeof(struct Linkage_s));
 }
 
+/* XXX this should go away */
 static void copy_full_link(Link *dst, Link *src)
 {
 	/* XXX FIXME use stringset here ??? */
@@ -84,12 +85,13 @@ static size_t compute_link_cost(Linkage lkg)
 	return lcost;
 }
 
-static int unused_word_cost(Parse_info pi)
+static int unused_word_cost(Linkage lkg)
 {
-	int lcost, i;
+	int lcost;
+	size_t i;
 	lcost =  0;
-	for (i = 0; i < pi->N_words; i++)
-		lcost += (pi->chosen_disjuncts[i] == NULL);
+	for (i = 0; i < lkg->num_words; i++)
+		lcost += (lkg->chosen_disjuncts[i] == NULL);
 	return lcost;
 }
 
@@ -97,15 +99,15 @@ static int unused_word_cost(Parse_info pi)
  * Computes the cost of the current parse of the current sentence
  * due to the cost of the chosen disjuncts.
  */
-static double compute_disjunct_cost(Parse_info pi)
+static double compute_disjunct_cost(Linkage lkg)
 {
-	int i;
+	size_t i;
 	double lcost;
 	lcost =  0.0;
-	for (i = 0; i < pi->N_words; i++)
+	for (i = 0; i < lkg->num_words; i++)
 	{
-		if (pi->chosen_disjuncts[i] != NULL)
-			lcost += pi->chosen_disjuncts[i]->cost;
+		if (lkg->chosen_disjuncts[i] != NULL)
+			lcost += lkg->chosen_disjuncts[i]->cost;
 	}
 	return lcost;
 }
@@ -204,14 +206,14 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 
 	memset(&li, 0, sizeof(li));
 	li.N_violations = 0;
-	li.unused_word_cost = unused_word_cost(pi);
+	li.unused_word_cost = unused_word_cost(sublinkage);
 	if (opts->use_sat_solver)
 	{
 		li.disjunct_cost = 0.0;
 	}
 	else
 	{
-		li.disjunct_cost = compute_disjunct_cost(pi);
+		li.disjunct_cost = compute_disjunct_cost(sublinkage);
 	}
 	li.link_cost = compute_link_cost(sublinkage);
 	li.corpus_cost = -1.0;

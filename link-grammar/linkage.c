@@ -88,7 +88,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	size_t i, j, l;
 	char * s, *u;
-	Parse_info pi = sent->parse_info;
 	const char * chosen_words[sent->length];
 	size_t remap[sent->length];
 	bool display_morphology = opts->display_morphology;
@@ -100,7 +99,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		const char *t;
 		/* If chosen_disjuncts is NULL, then this is an 'island' word
 		 * that has not been linked to. */
-		if (pi->chosen_disjuncts[i] == NULL)
+		if (linkage->chosen_disjuncts[i] == NULL)
 		{
 			/* The unsplit_word is the original word; if its been split
 			 * into stem+suffix, and either one hasn't been chosen, then
@@ -140,7 +139,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		else 
 		{
 			/* print the subscript, as in "dog.n" as opposed to "dog" */
-			t = pi->chosen_disjuncts[i]->string;
+			t = linkage->chosen_disjuncts[i]->string;
 			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
 				s = strdup(t);
@@ -159,10 +158,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				/* Concatenate the stem and the suffix together into one word */
 				if (t && HIDE_MORPHO)
 				{
-					if (is_suffix(infix_mark, t) && pi->chosen_disjuncts[i-1] &&
-					    is_stem(pi->chosen_disjuncts[i-1]->string))
+					if (is_suffix(infix_mark, t) && linkage->chosen_disjuncts[i-1] &&
+					    is_stem(linkage->chosen_disjuncts[i-1]->string))
 					{
-						const char * stem = pi->chosen_disjuncts[i-1]->string;
+						const char * stem = linkage->chosen_disjuncts[i-1]->string;
 						size_t len = strlen(stem) + strlen(t);
 						char * join = (char *)malloc(len+1);
 						strcpy(join, stem);
@@ -181,9 +180,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 					/* Suppress printing of the stem, if the next word is the suffix */
 					if (is_stem(t) && (i+1 < sent->length) &&
-					    pi->chosen_disjuncts[i+1])
+					    linkage->chosen_disjuncts[i+1])
 					{
-						const char * next = pi->chosen_disjuncts[i+1]->string;
+						const char * next = linkage->chosen_disjuncts[i+1]->string;
 						if (is_suffix(infix_mark, next))
 						{
 							t = NULL;
@@ -271,7 +270,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	/* bounds check: link_info array is this size */
 	if (sent->num_linkages_alloced <= k) return NULL;
-	extract_links(sent->link_info[k].index, sent->parse_info);
 
 	/* Using exalloc since this is external to the parser itself. */
 	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
@@ -280,6 +278,11 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
 	linkage->info = &sent->link_info[k];
+
+	linkage->chosen_disjuncts = (Disjunct **) exalloc(linkage->num_words * sizeof(Disjunct *));
+	memset(linkage->chosen_disjuncts, 0, linkage->num_words * sizeof(Disjunct *));
+
+	extract_links(linkage, sent->parse_info, sent->link_info[k].index);
 
 	extract_thin_linkage(sent, linkage, opts);
 	compute_chosen_words(sent, linkage, opts);
@@ -318,6 +321,9 @@ void linkage_delete(Linkage linkage)
 		exfree_link(&linkage->link_array[j]);
 	}
 	exfree(linkage->link_array, sizeof(Link) * linkage->num_links);
+
+	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
+
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j) {
@@ -327,6 +333,8 @@ void linkage_delete(Linkage linkage)
 		linkage->pp_info = NULL;
 		post_process_free_data(&linkage->pp_data);
 	}
+
+
 	if (linkage->pp_violation != NULL)
 	{
 		exfree((void *) linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation) + 1));
@@ -415,7 +423,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
 
 	/* dj will be null if the word wasn't used in the parse. */
-	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	dj = linkage->chosen_disjuncts[w];
 	if (NULL == dj) return "";
 
 	return linkage->info->disjunct_list_str[w];
@@ -427,7 +435,7 @@ double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return 0.0; /* bounds-check */
 
-	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	dj = linkage->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (dj) return dj->cost;
@@ -440,7 +448,7 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx w)
 
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return 99.999; /* bounds-check */
-	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	dj = linkage->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (NULL == dj) return 99.999;

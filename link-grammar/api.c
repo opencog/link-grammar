@@ -538,7 +538,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			lifo = &sent->link_info[in];
 			if (lifo->discarded || lifo->N_violations) continue;
-			extract_links(lifo->index, sent->parse_info);
+			extract_links(sent->curr_linkage, sent->parse_info, lifo->index);
 			analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
@@ -558,7 +558,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		extract_links(lifo->index, sent->parse_info);
+		extract_links(sent->curr_linkage, sent->parse_info, lifo->index);
 		*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
 		lifo->index = index;
 
@@ -638,6 +638,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->link_info = NULL;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
+	sent->curr_linkage = NULL;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
 
@@ -710,6 +711,7 @@ void sentence_delete(Sentence sent)
 	free_sentence_words(sent);
 	string_set_delete(sent->string_set);
 	if (sent->parse_info) free_parse_info(sent->parse_info);
+	if (sent->curr_linkage) linkage_delete(sent->curr_linkage)
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
 
@@ -843,7 +845,7 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
  
 	Linkage_info * const lifo = &sent->link_info[lk];
 
-	extract_links(lifo->index, pi);
+	extract_links(sent->curr_linkage, pi, lifo->index);
 	*affix_types_p = '\0';
 	for (i=0; i<sent->length; i++)
 	{
@@ -852,7 +854,7 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 		size_t len;                /* disjunct length w/o subscript */
 		const char * mark;         /* char position of SUBSCRIPT_MARK */
 		bool empty_word = false;   /* is this an empty word? */
-		Disjunct * cdj = pi->chosen_disjuncts[i];
+		Disjunct * cdj = sent->curr_linkage->chosen_disjuncts[i];
 
 		lgdebug(+4, "Linkage %zu, word %zu/%zu\n", lk+1, i, sent->length);
 

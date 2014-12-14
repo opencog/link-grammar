@@ -233,7 +233,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		int pad = 21;
 		double cost;
 		char infword[MAX_WORD];
-		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
+		Disjunct *disj = linkage->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
 		/* Cleanup the subscript mark before printing. */

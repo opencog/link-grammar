@@ -214,7 +214,6 @@ struct Parse_info_struct
 	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	int            N_words;
-	Disjunct **    chosen_disjuncts;
 	size_t         N_links;
 	size_t         lasz;
 	Link           *link_array;
@@ -222,6 +221,7 @@ struct Parse_info_struct
 	/* thread-safe random number state */
 	unsigned int rand_state;
 };
+
 
 struct Sentence_s
 {
@@ -245,6 +245,7 @@ struct Sentence_s
 	size_t num_valid_linkages;  /* number with no pp violations */
 	size_t null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
+	Linkage        curr_linkage; /* temp hack !? XXX FIXME */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
@@ -326,7 +327,6 @@ struct Postprocessor_s
 	PP_data pp_data;
 };
 
-
 /*********************************************************
  *
  * Linkages
@@ -350,11 +350,12 @@ struct Linkage_s
 	size_t          num_links;    /* Number of links in array */
 	Link *          link_array;   /* Array of links */
 
+	Disjunct **     chosen_disjuncts;
+
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
 	PP_data         pp_data;
 };
-
 
 
 #endif
