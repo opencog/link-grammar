@@ -16,6 +16,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #include "count.h"
 #include "dict-api.h"
@@ -266,31 +267,13 @@ Connector * excopy_connectors(Connector * c)
 /* ======================================================== */
 /* Link utilities ... */
 
-Link * excopy_link(Link * l)
-{
-	char * s;
-	Link * newl;
-
-	if (l == NULL) return NULL;
-
-	newl = (Link *) exalloc(sizeof(Link));
-	s = (char *) exalloc(sizeof(char)*(strlen(l->link_name)+1));
-	strcpy(s, l->link_name);
-	newl->link_name = s;
-	newl->lw = l->lw;
-	newl->rw = l->rw;
-	newl->lc = excopy_connectors(l->lc);
-	newl->rc = excopy_connectors(l->rc);
-
-	return newl;
-}
-
 void exfree_link(Link * l)
 {
 	exfree_connectors(l->rc);
 	exfree_connectors(l->lc);
-	exfree((void *)l->link_name, sizeof(char)*(strlen(l->link_name)+1));
-	exfree(l, sizeof(Link));
+	free((void *)l->link_name);
+	l->lw = SIZE_MAX;
+	l->rw = SIZE_MAX;
 }
 
 /* ======================================================== */

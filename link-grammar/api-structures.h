@@ -348,7 +348,7 @@ struct Linkage_s
 	Linkage_info*   info;         /* index and cost information */
 
 	size_t          num_links;    /* Number of links in array */
-	Link **         link;         /* Array of links */
+	Link *          link_array;   /* Array of links */
 
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */

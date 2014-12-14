@@ -533,8 +533,8 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			size_t ln;
 			for (ln = 0; ln < linkage->num_links; ln++)
 			{
-				if ((linkage->link[ln]->lw == linkage->num_words - 2) && 
-				    (linkage->link[ln]->rw == linkage->num_words - 1))
+				if ((linkage->link_array[ln].lw == linkage->num_words - 2) && 
+				    (linkage->link_array[ln].rw == linkage->num_words - 1))
 				{
 					ctxt->constituent[c].right++;
 					break;

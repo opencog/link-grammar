@@ -355,7 +355,7 @@ apply_contains_one(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		for (dtl = pp->pp_data.domain_array[d].child;
 		     dtl != NULL &&
 		        !post_process_match(rule->selector,
-		           sublinkage->link[dtl->link]->link_name);
+		           sublinkage->link_array[dtl->link].link_name);
 		     dtl = dtl->next) {}
 		if (dtl != NULL)
 		{
@@ -363,7 +363,7 @@ apply_contains_one(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 			count=0;
 			for (dtl = pp->pp_data.domain_array[d].child; dtl != NULL; dtl = dtl->next)
 			{
-				if (string_in_list(sublinkage->link[dtl->link]->link_name,
+				if (string_in_list(sublinkage->link_array[dtl->link].link_name,
 									 rule->link_array))
 				{
 					count=1;
@@ -392,14 +392,14 @@ apply_contains_none(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		for (dtl = pp->pp_data.domain_array[d].child;
 		     dtl != NULL &&
 		         !post_process_match(rule->selector,
-		                  sublinkage->link[dtl->link]->link_name);
+		                  sublinkage->link_array[dtl->link].link_name);
 		     dtl = dtl->next) {}
 		if (dtl != NULL)
 		{
 			/* selector link of rule appears in this domain */
 			for (dtl = pp->pp_data.domain_array[d].child; dtl != NULL; dtl = dtl->next)
 			{
-				if (string_in_list(sublinkage->link[dtl->link]->link_name,
+				if (string_in_list(sublinkage->link_array[dtl->link].link_name,
 				                   rule->link_array))
 					return false;
 			}
@@ -419,8 +419,8 @@ apply_contains_one_globally(Postprocessor *pp, Linkage sublinkage, pp_rule *rule
 	size_t i, j, count;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		assert(sublinkage->link[i]->lw != SIZE_MAX);
-		if (post_process_match(rule->selector,sublinkage->link[i]->link_name)) break;
+		assert(sublinkage->link_array[i].lw != SIZE_MAX);
+		if (post_process_match(rule->selector, sublinkage->link_array[i].link_name)) break;
 	}
 	if (i == sublinkage->num_links) return true;
 
@@ -428,8 +428,8 @@ apply_contains_one_globally(Postprocessor *pp, Linkage sublinkage, pp_rule *rule
 	count = 0;
 	for (j = 0; j < sublinkage->num_links && count == 0; j++)
 	{
-		assert(sublinkage->link[j]->lw != SIZE_MAX);
-		if (string_in_list(sublinkage->link[j]->link_name, rule->link_array))
+		assert(sublinkage->link_array[j].lw != SIZE_MAX);
+		if (string_in_list(sublinkage->link_array[j].link_name, rule->link_array))
 		{
 			count = 1;
 			break;
@@ -481,7 +481,7 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 		{
 			if (w > lol->word) continue;	/* only consider each edge once */
-			if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->link_name)) continue;
+			if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
 			memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
@@ -491,9 +491,9 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 
 	for (lol = pp->pp_data.links_to_ignore; lol != NULL; lol = lol->next)
 	{
-		w = sublinkage->link[lol->link]->lw;
+		w = sublinkage->link_array[lol->link].lw;
 		/* (w, lol->word) are the left and right ends of the edge we're considering */
-		if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->link_name)) continue;
+		if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
 		memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
@@ -520,10 +520,10 @@ apply_bounded(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 	for (d = 0; d < pp->pp_data.N_domains; d++)
 	{
 		if (pp->pp_data.domain_array[d].type != d_type) continue;
-		lw = sublinkage->link[pp->pp_data.domain_array[d].start_link]->lw;
+		lw = sublinkage->link_array[pp->pp_data.domain_array[d].start_link].lw;
 		for (lol = pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
-			if (sublinkage->link[lol->link]->lw < lw) return false;
+			if (sublinkage->link_array[lol->link].lw < lw) return false;
 		}
 	}
 	return true;
@@ -554,28 +554,29 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 
 	for (link = 0; link < sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link[link]->lw != SIZE_MAX);
-		if (pp_linkset_match(pp->knowledge->ignore_these_links, sublinkage->link[link]->link_name))
+		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		if (pp_linkset_match(pp->knowledge->ignore_these_links,
+		                     sublinkage->link_array[link].link_name))
 		{
 			lol = (List_o_links *) xalloc(sizeof(List_o_links));
 			lol->next = pp->pp_data.links_to_ignore;
 			pp->pp_data.links_to_ignore = lol;
 			lol->link = link;
-			lol->word = sublinkage->link[link]->rw;
+			lol->word = sublinkage->link_array[link].rw;
 			continue;
 		}
 
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = pp->pp_data.word_links[sublinkage->link[link]->lw];
-		pp->pp_data.word_links[sublinkage->link[link]->lw] = lol;
+		lol->next = pp->pp_data.word_links[sublinkage->link_array[link].lw];
+		pp->pp_data.word_links[sublinkage->link_array[link].lw] = lol;
 		lol->link = link;
-		lol->word = sublinkage->link[link]->rw;
+		lol->word = sublinkage->link_array[link].rw;
 
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = pp->pp_data.word_links[sublinkage->link[link]->rw];
-		pp->pp_data.word_links[sublinkage->link[link]->rw] = lol;
+		lol->next = pp->pp_data.word_links[sublinkage->link_array[link].rw];
+		pp->pp_data.word_links[sublinkage->link_array[link].rw] = lol;
 		lol->link = link;
-		lol->word = sublinkage->link[link]->lw;
+		lol->word = sublinkage->link_array[link].lw;
 	}
 }
 
@@ -635,7 +636,7 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		if (!pp->visited[lol->word] && (lol->word != root) &&
 		       !(lol->word < root && lol->word < w &&
 		       pp_linkset_match(pp->knowledge->restricted_links,
-		                sublinkage->link[lol->link]->link_name)))
+		                sublinkage->link_array[lol->link].link_name)))
 		{
 			depth_first_search(pp, sublinkage, lol->word, root, start_link);
 		}
@@ -661,7 +662,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		if ((!pp->visited[lol->word]) && !(w == root && lol->word < w) &&
 		     !(lol->word < root && lol->word < w &&
 		          pp_linkset_match(pp->knowledge->restricted_links,
-		                sublinkage->link[lol->link]->link_name)))
+		                sublinkage->link_array[lol->link].link_name)))
 		{
 			bad_depth_first_search(pp, sublinkage, lol->word, root, start_link);
 		}
@@ -688,7 +689,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		    !(w == root && lol->word < root) &&
 		       !(lol->word < root && lol->word < w &&
 		          pp_linkset_match(pp->knowledge->restricted_links,
-		                   sublinkage->link[lol->link]->link_name)))
+		                   sublinkage->link_array[lol->link].link_name)))
 		{
 			d_depth_first_search(pp,sublinkage,lol->word,root,right,start_link);
 		}
@@ -731,8 +732,8 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 
 	for (link = 0; link<sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link[link]->lw != SIZE_MAX);
-		s = sublinkage->link[link]->link_name;
+		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		s = sublinkage->link_array[link].link_name;
 
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
 		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
@@ -740,31 +741,31 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
 				add_link_to_domain(pp, link);
-			depth_first_search(pp,sublinkage,sublinkage->link[link]->rw,
-							 sublinkage->link[link]->lw, link);
+			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
+							 sublinkage->link_array[link].lw, link);
 
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
 		}
 		else
-		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links,s))
+		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, s))
 		{
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp, link);
-			bad_depth_first_search(pp,sublinkage,sublinkage->link[link]->rw,
-			                       sublinkage->link[link]->lw, link);
+			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
+			                       sublinkage->link_array[link].lw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 		else
-		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links,s))
+		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links, s))
 		{
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			/* do not add the starter link to its urfl_only domain */
-			d_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
-			                     sublinkage->link[link]->lw,
-			                     sublinkage->link[link]->rw, link);
+			d_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
+			                     sublinkage->link_array[link].lw,
+			                     sublinkage->link_array[link].rw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
@@ -773,8 +774,8 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		{
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			/* do not add the starter link to a left domain */
-			left_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
-			                        sublinkage->link[link]->rw, link);
+			left_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
+			                        sublinkage->link_array[link].rw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
@@ -829,7 +830,7 @@ static void build_domain_forest(Postprocessor *pp, Linkage sublinkage)
 	}
 	for (link=0; link < sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link[link]->lw != SIZE_MAX);
+		assert (sublinkage->link_array[link].lw != SIZE_MAX);
 		for (d=0; d<pp->pp_data.N_domains; d++)
 		{
 			if (link_in_domain(link, &pp->pp_data.domain_array[d]))
@@ -1030,9 +1031,9 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	if (sent->length < opts->twopass_length) return;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		/* if (sublinkage->link[i]->lw == SIZE_MAX) continue; */
-		assert(sublinkage->link[i]->lw != SIZE_MAX);
-		p = string_set_add(sublinkage->link[i]->link_name, pp->sentence_link_name_set);
+		/* if (sublinkage->link_array[i].lw == SIZE_MAX) continue; */
+		assert(sublinkage->link_array[i].lw != SIZE_MAX);
+		p = string_set_add(sublinkage->link_array[i].link_name, pp->sentence_link_name_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}
 }

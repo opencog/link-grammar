@@ -26,8 +26,8 @@ static Linkage x_create_sublinkage(unsigned int N_links)
 	memset(&s->pp_data, 0, sizeof(PP_data));
 
 	s->num_links = N_links;
-	s->link = (Link **) xalloc(s->num_links * sizeof(Link *));
-	memset(s->link, 0, s->num_links * sizeof(Link *));
+	s->link_array = (Link *) xalloc(N_links * sizeof(Link));
+	memset(s->link_array, 0, N_links * sizeof(Link));
 
 	s->pp_info = NULL;
 	s->pp_violation = NULL;
@@ -39,16 +39,26 @@ static void free_sublinkage(Linkage s)
 {
 	size_t i;
 	for (i = 0; i < s->num_links; i++) {
-		if (s->link[i] != NULL) exfree_link(s->link[i]);
+		Link* l = &s->link_array[i];
+		if (l->link_name != NULL)
+		{
+			free((void*)l->link_name);
+			exfree_connectors(l->rc);
+			exfree_connectors(l->lc);
+		}
 	}
-	xfree(s->link, s->num_links * sizeof(Link *));
+	xfree(s->link_array, s->num_links * sizeof(Link));
 	xfree(s, sizeof(struct Linkage_s));
 }
 
-static void copy_full_link(Link **dest, Link *src)
+static void copy_full_link(Link *dst, Link *src)
 {
-	if (*dest != NULL) exfree_link(*dest);
-	*dest = excopy_link(src);
+	/* XXX FIXME use stringset here ??? */
+	dst->link_name = strdup(src->link_name);
+	dst->lw = src->lw;
+	dst->rw = src->rw;
+	dst->lc = excopy_connectors(src->lc);
+	dst->rc = excopy_connectors(src->rc);
 }
 
 /**
@@ -63,13 +73,13 @@ static inline int cost_for_length(int length)
  * Computes the cost of the current parse of the current sentence,
  * due to the length of the links.
  */
-static size_t link_cost(Parse_info pi)
+static size_t compute_link_cost(Linkage lkg)
 {
 	size_t lcost, i;
 	lcost =  0;
-	for (i = 0; i < pi->N_links; i++)
+	for (i = 0; i < lkg->num_links; i++)
 	{
-		lcost += cost_for_length(pi->link_array[i].rw - pi->link_array[i].lw);
+		lcost += cost_for_length(lkg->link_array[i].rw - lkg->link_array[i].lw);
 	}
 	return lcost;
 }
@@ -177,9 +187,9 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	Linkage sublinkage = x_create_sublinkage(pi->N_links);
 
 	compute_link_names(sent);
-	for (i=0; i<pi->N_links; i++)
+	for (i=0; i<sublinkage->num_links; i++)
 	{
-	  copy_full_link(&(sublinkage->link[i]), &(pi->link_array[i]));
+	  copy_full_link(&(sublinkage->link_array[i]), &(pi->link_array[i]));
 	}
 
 	if (analyze_pass == PP_FIRST_PASS)
@@ -203,7 +213,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	{
 		li.disjunct_cost = disjunct_cost(pi);
 	}
-	li.link_cost = link_cost(pi);
+	li.link_cost = compute_link_cost(sublinkage);
 	li.corpus_cost = -1.0;
 
 	if (pp == NULL)
@@ -226,7 +236,7 @@ void extract_thin_linkage(Sentence sent, Linkage linkage, Parse_Options opts)
 	Parse_info pi = sent->parse_info;
 
 	linkage->num_links = pi->N_links;
-	linkage->link = (Link **) exalloc(linkage->num_links * sizeof(Link *));
+	linkage->link_array = (Link *) exalloc(linkage->num_links * sizeof(Link));
 
 	linkage->pp_info = NULL;
 	linkage->pp_violation = NULL;
@@ -235,6 +245,6 @@ void extract_thin_linkage(Sentence sent, Linkage linkage, Parse_Options opts)
 	compute_link_names(sent);
 	for (i=0; i<linkage->num_links; ++i)
 	{
-		linkage->link[i] = excopy_link(&(pi->link_array[i]));
+		copy_full_link(&(linkage->link_array[i]), &(pi->link_array[i]));
 	}
 }

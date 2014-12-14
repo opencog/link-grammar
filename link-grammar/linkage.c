@@ -226,7 +226,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 */
 	for (i=0, j=0; i<linkage->num_links; i++)
 	{
-		Link * lnk = linkage->link[i];
+		Link * lnk = &(linkage->link_array[i]);
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
@@ -238,9 +238,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 		else
 		{
-			lnk->lw = remap[lnk->lw];
-			lnk->rw = remap[lnk->rw];
-			linkage->link[j] = lnk;
+			linkage->link_array[j].lw = remap[lnk->lw];
+			linkage->link_array[j].rw = remap[lnk->rw];
 			j++;
 		}
 	}
@@ -305,9 +304,9 @@ void linkage_delete(Linkage linkage)
 
 	for (j = 0; j < linkage->num_links; ++j)
 	{
-		exfree_link(linkage->link[j]);
+		exfree_link(&linkage->link_array[j]);
 	}
-	exfree(linkage->link, sizeof(Link*) * linkage->num_links);
+	exfree(linkage->link_array, sizeof(Link) * linkage->num_links);
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j) {
@@ -347,38 +346,38 @@ int linkage_get_link_length(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
-	link = linkage->link[index];
+	link = &(linkage->link_array[index]);
 	return link->rw - link->lw;
 }
 
 WordIdx linkage_get_link_lword(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	return linkage->link[index]->lw;
+	return linkage->link_array[index].lw;
 }
 
 WordIdx linkage_get_link_rword(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	return linkage->link[index]->rw;
+	return linkage->link_array[index].rw;
 }
 
 const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link[index]->link_name;
+	return linkage->link_array[index].link_name;
 }
 
 const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link[index]->lc->string;
+	return linkage->link_array[index].lc->string;
 }
 
 const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link[index]->rc->string;
+	return linkage->link_array[index].rc->string;
 }
 
 const char ** linkage_get_words(const Linkage linkage)
