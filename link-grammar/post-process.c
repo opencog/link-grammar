@@ -42,6 +42,7 @@
 bool post_process_match(const char *s, const char *t)
 {
 	char c;
+	if (NULL == t) return false;
 	if (islower((int)*t)) t++; /* Skip head-dependent indicator */
 	while (isupper((int)*s) || isupper((int)*t))
 	{
@@ -555,6 +556,7 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	for (link = 0; link < sublinkage->num_links; link++)
 	{
 		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		if (NULL == sublinkage->link_array[link].link_name) continue;
 		if (pp_linkset_match(pp->knowledge->ignore_these_links,
 		                     sublinkage->link_array[link].link_name))
 		{
@@ -733,6 +735,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 	for (link = 0; link<sublinkage->num_links; link++)
 	{
 		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		if (NULL == sublinkage->link_array[link].link_name) continue;
 		s = sublinkage->link_array[link].link_name;
 
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;

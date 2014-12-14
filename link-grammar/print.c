@@ -447,6 +447,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		for (j=0; j<N_links; j++)
 		{
 			assert (ppla[j].lw != SIZE_MAX);
+			if (NULL == ppla[j].link_name) continue;
 			if (((unsigned int) (ppla[j].rw - ppla[j].lw)) != link_length)
 			  continue;
 			if (!print_word_0 && (ppla[j].lw == 0)) continue;
@@ -481,8 +482,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			for (k=cl+1; k<cr; k++) {
 				picture[row][k] = '-';
 			}
-			s = ppla[j].link_name;
 
+			s = ppla[j].link_name;
 			k = strlen(s);
 			inc = cl + cr + 2;
 			if (inc < k) inc = 0;
