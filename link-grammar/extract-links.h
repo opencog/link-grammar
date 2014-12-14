@@ -16,4 +16,4 @@
 Parse_info parse_info_new(int nwords);
 void free_parse_info(Parse_info);
 bool build_parse_set(Sentence, fast_matcher_t*, count_context_t*, unsigned int null_count, Parse_Options);
-void extract_links(Linkage, Parse_info, int index);
+void extract_links(Linkage, Parse_info);

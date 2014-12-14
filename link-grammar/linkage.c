@@ -268,12 +268,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
 
-	linkage->chosen_disjuncts = (Disjunct **) exalloc(linkage->num_words * sizeof(Disjunct *));
-	memset(linkage->chosen_disjuncts, 0, linkage->num_words * sizeof(Disjunct *));
-
-	// XXX do we really need to do this again ??
-	extract_links(linkage, sent->parse_info, linkage->lifo.index);
-
 	// XXX we did analyze before, do we need to repeat ??
 	extract_thin_linkage(sent, linkage);
 	compute_chosen_words(sent, linkage, opts);

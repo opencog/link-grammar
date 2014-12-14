@@ -575,7 +575,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 		if (lifo->discarded || lifo->N_violations) continue;
 
 		partial_init_linkage(lkg, pi->N_words);
-		extract_links(lkg, pi, lifo->index);
+		extract_links(lkg, pi);
 	}
 }
 

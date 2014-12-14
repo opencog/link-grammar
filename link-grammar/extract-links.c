@@ -569,8 +569,9 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
  * sentence.  For this to work, you must have already called parse, and
  * already built the whole_set.
  */
-void extract_links(Linkage lkg, Parse_info pi, int index)
+void extract_links(Linkage lkg, Parse_info pi)
 {
+	int index = lkg->lifo.index;
 	initialize_links(lkg);
 	if (index < 0) {
 		pi->rand_state = index;
