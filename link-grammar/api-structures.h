@@ -245,7 +245,6 @@ struct Sentence_s
 	size_t num_valid_linkages;  /* number with no pp violations */
 	size_t null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
-	Linkage        curr_linkage; /* temp hack !? XXX FIXME */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
@@ -333,6 +332,26 @@ struct Postprocessor_s
  *
  **********************************************************/
 
+/**
+ * This is for building the graphs of links in post-processing.
+ */
+struct Linkage_info_struct
+{
+	bool discarded;
+	int index;
+	short N_violations;
+	short unused_word_cost;
+	short link_cost;
+	double disjunct_cost;
+	double corpus_cost;
+	size_t nwords;
+	const char *pp_violation_msg;
+	char **disjunct_list_str;
+#ifdef USE_CORPUS
+	Sense **sense_list;
+#endif
+};
+
 struct Linkage_s
 {
 	/* TODO XXX FIXME: the member sent, below, is used almost nowhere
@@ -345,13 +364,13 @@ struct Linkage_s
 	Sentence        sent;
 	size_t          num_words;    /* number of (tokenized) words */
 	const char *  * word;         /* array of word spellings */
-	Linkage_info*   info;         /* index and cost information */
 
 	size_t          num_links;    /* Number of links in array */
 	Link *          link_array;   /* Array of links */
 
 	Disjunct **     chosen_disjuncts;
 
+	Linkage_info    lifo;         /* index and cost information */
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
 	PP_data         pp_data;

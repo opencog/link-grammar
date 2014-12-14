@@ -1298,9 +1298,9 @@ Linkage SATEncoder::get_next_linkage()
     Linkage_info* lifo = &_sent->link_info[index];
 
     // Why is linkage_post_process() never called here?
-    *lifo = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
-    lifo->index = index;
-    linkage->info = lifo;
+    analyze_thin_linkage(_sent, linkage, _opts, PP_SECOND_PASS);
+    linkage->lifo.index = index;
+    *lifo = linkage->lifo;
 
     if (0 == lifo->N_violations) {
       _sent->num_valid_linkages++;

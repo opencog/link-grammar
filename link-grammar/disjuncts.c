@@ -73,7 +73,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t nwords = lkg->num_words;
-	Linkage_info *lifo = lkg->info;
+	Linkage_info *lifo = &(lkg->lifo);
 
 	if (lifo->disjunct_list_str) return;
 	lifo->nwords = nwords;

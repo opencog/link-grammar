@@ -20,37 +20,6 @@
 #include "structures.h"
 #include "word-utils.h"
 
-static Linkage x_create_sublinkage(unsigned int N_links)
-{
-	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
-	memset(&s->pp_data, 0, sizeof(PP_data));
-
-	s->num_links = N_links;
-	s->link_array = (Link *) xalloc(N_links * sizeof(Link));
-	memset(s->link_array, 0, N_links * sizeof(Link));
-
-	s->pp_info = NULL;
-	s->pp_violation = NULL;
-
-	return s;
-}
-
-static void free_sublinkage(Linkage s)
-{
-	size_t i;
-	for (i = 0; i < s->num_links; i++) {
-		Link* l = &s->link_array[i];
-		if (l->link_name != NULL)
-		{
-			free((void*)l->link_name);
-			exfree_connectors(l->rc);
-			exfree_connectors(l->lc);
-		}
-	}
-	xfree(s->link_array, s->num_links * sizeof(Link));
-	xfree(s, sizeof(struct Linkage_s));
-}
-
 /* XXX this should go away */
 static void copy_full_link(Link *dst, Link *src)
 {
@@ -179,57 +148,49 @@ static void compute_link_names(Sentence sent)
  * This uses link_array.  It post-processes
  * this linkage, and prints the appropriate thing.
  */
-Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze_pass)
+void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
 {
 	size_t i;
-	Linkage_info li;
 	PP_node * pp;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 	Parse_info pi = sent->parse_info;
-	Linkage sublinkage = x_create_sublinkage(pi->N_links);
 
 	compute_link_names(sent);
-	for (i=0; i<sublinkage->num_links; i++)
+	for (i=0; i<lkg->num_links; i++)
 	{
-	  copy_full_link(&(sublinkage->link_array[i]), &(pi->link_array[i]));
+	  copy_full_link(&(lkg->link_array[i]), &(pi->link_array[i]));
 	}
 
 	if (analyze_pass == PP_FIRST_PASS)
 	{
-		post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
-		free_sublinkage(sublinkage);
-		memset(&li, 0, sizeof(li));
-		return li;
+		post_process_scan_linkage(postprocessor, opts, sent, lkg);
+		return;
 	}
 
-	pp = do_post_process(postprocessor, opts, sent, sublinkage, true);
+	pp = do_post_process(postprocessor, opts, sent, lkg, true);
 
-	memset(&li, 0, sizeof(li));
-	li.N_violations = 0;
-	li.unused_word_cost = unused_word_cost(sublinkage);
+	lkg->lifo.N_violations = 0;
+	lkg->lifo.unused_word_cost = unused_word_cost(lkg);
 	if (opts->use_sat_solver)
 	{
-		li.disjunct_cost = 0.0;
+		lkg->lifo.disjunct_cost = 0.0;
 	}
 	else
 	{
-		li.disjunct_cost = compute_disjunct_cost(sublinkage);
+		lkg->lifo.disjunct_cost = compute_disjunct_cost(lkg);
 	}
-	li.link_cost = compute_link_cost(sublinkage);
-	li.corpus_cost = -1.0;
+	lkg->lifo.link_cost = compute_link_cost(lkg);
+	lkg->lifo.corpus_cost = -1.0;
 
 	if (pp == NULL)
 	{
-		if (postprocessor != NULL) li.N_violations = 1;
+		if (postprocessor != NULL) lkg->lifo.N_violations = 1;
 	}
 	else if (pp->violation != NULL)
 	{
-		li.N_violations++;
-		li.pp_violation_msg = pp->violation;
+		lkg->lifo.N_violations++;
+		lkg->lifo.pp_violation_msg = pp->violation;
 	}
-
-	free_sublinkage(sublinkage);
-	return li;
 }
 
 void extract_thin_linkage(Sentence sent, Linkage linkage, Parse_Options opts)

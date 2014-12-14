@@ -706,8 +706,8 @@ void linkage_free_postscript(char * s)
 
 char * linkage_print_pp_msgs(Linkage linkage)
 {
-	if (linkage && linkage->info && linkage->info->pp_violation_msg)
-		return strdup(linkage->info->pp_violation_msg);
+	if (linkage && linkage->lifo.pp_violation_msg)
+		return strdup(linkage->lifo.pp_violation_msg);
 	return strdup("");
 }
 

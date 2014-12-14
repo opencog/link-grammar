@@ -279,7 +279,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
-	linkage->info = &sent->link_info[k];
+	linkage->lifo = sent->link_info[k];
 
 	linkage->chosen_disjuncts = (Disjunct **) exalloc(linkage->num_words * sizeof(Disjunct *));
 	memset(linkage->chosen_disjuncts, 0, linkage->num_words * sizeof(Disjunct *));
@@ -416,7 +416,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	Disjunct *dj;
 
 	if (NULL == linkage) return "";
-	if (NULL == linkage->info->disjunct_list_str)
+	if (NULL == linkage->lifo.disjunct_list_str)
 	{
 		lg_compute_disjunct_strings(linkage);
 	}
@@ -428,7 +428,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	dj = linkage->chosen_disjuncts[w];
 	if (NULL == dj) return "";
 
-	return linkage->info->disjunct_list_str[w];
+	return linkage->lifo.disjunct_list_str[w];
 }
 
 double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
@@ -468,29 +468,29 @@ const char * linkage_get_word(const Linkage linkage, WordIdx w)
 int linkage_unused_word_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return linkage->info->unused_word_cost;
+	if (!linkage) return 0;
+	return linkage->lifo.unused_word_cost;
 }
 
 double linkage_disjunct_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0.0;
-	return linkage->info->disjunct_cost;
+	if (!linkage) return 0.0;
+	return linkage->lifo.disjunct_cost;
 }
 
 int linkage_link_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return linkage->info->link_cost;
+	if (!linkage) return 0;
+	return linkage->lifo.link_cost;
 }
 
 double linkage_corpus_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0.0;
-	return linkage->info->corpus_cost;
+	if (!linkage) return 0.0;
+	return linkage->lifo.corpus_cost;
 }
 
 int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
