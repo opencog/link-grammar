@@ -37,8 +37,6 @@ Connector * connector_new(void);
 Connector * init_connector(Connector *c);
 void free_connectors(Connector *);
 void exfree_connectors(Connector *);
-Connector * copy_connectors(Connector *);
-Connector * excopy_connectors(Connector * c);
 
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);

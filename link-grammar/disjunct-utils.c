@@ -36,23 +36,6 @@ void free_disjuncts(Disjunct *c)
 }
 
 /**
- * This builds a new copy of the disjunct pointed to by d (except for the
- * next field which is set to NULL).  Strings, as usual,
- * are not copied.
- */
-Disjunct * copy_disjunct(Disjunct * d)
-{
-	Disjunct * d1;
-	if (d == NULL) return NULL;
-	d1 = (Disjunct *) xalloc(sizeof(Disjunct));
-	*d1 = *d;
-	d1->next = NULL;
-	d1->left = copy_connectors(d->left);
-	d1->right = copy_connectors(d->right);
-	return d1;
-}
-
-/**
  * Destructively catenates the two disjunct lists d1 followed by d2.
  * Doesn't change the contents of the disjuncts.
  * Traverses the first list, but not the second.

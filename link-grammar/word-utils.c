@@ -233,37 +233,6 @@ Connector * init_connector(Connector *c)
 	return c;
 }
 
-/**
- * This builds a new copy of the connector list pointed to by c.
- * Strings, as usual, are not copied.
- */
-Connector * copy_connectors(Connector * c)
-{
-	Connector *c1;
-	if (c == NULL) return NULL;
-	c1 = connector_new();
-	*c1 = *c;
-	c1->next = copy_connectors(c->next);
-	return c1;
-}
-
-Connector * excopy_connectors(Connector * c)
-{
-	char * s;
-	Connector *c1;
-
-	if (c == NULL) return NULL;
-
-	c1 = connector_new();
-	*c1 = *c;
-	s = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
-	strcpy(s, c->string);
-	c1->string = s;
-	c1->next = excopy_connectors(c->next);
-
-	return c1;
-}
-
 /* ======================================================== */
 /* Connector-set utilities ... */
 /**
