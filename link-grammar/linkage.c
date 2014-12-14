@@ -491,9 +491,8 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 		linkage->pp_violation = NULL;
 	}
 
-	/* This can return NULL, for example if there is no
-	   post-processor */
-	pp = do_post_process(postprocessor, opts, linkage->sent, linkage, false);
+	/* This can return NULL, if there is no post-processor */
+	pp = do_post_process(postprocessor, opts, linkage->sent, linkage);
 	if (pp == NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)

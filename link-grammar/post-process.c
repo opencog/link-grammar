@@ -1106,7 +1106,7 @@ static void report_pp_stats(Postprocessor *pp)
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-                         Sentence sent, Linkage sublinkage, bool cleanup)
+                         Sentence sent, Linkage sublinkage)
 {
 	const char *msg;
 
@@ -1151,12 +1151,8 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 	}
 
 	report_pp_stats(pp);
-
 	build_type_array(pp);
-	if (cleanup)
-	{
-		post_process_free_data(&pp->pp_data);
-	}
+
 	return pp->pp_node;
 }
 

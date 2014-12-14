@@ -146,7 +146,8 @@ void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int an
 		return;
 	}
 
-	pp = do_post_process(postprocessor, opts, sent, lkg, true);
+	pp = do_post_process(postprocessor, opts, sent, lkg);
+	post_process_free_data(&postprocessor->pp_data);
 
 	lkg->lifo.N_violations = 0;
 	lkg->lifo.unused_word_cost = unused_word_cost(lkg);
