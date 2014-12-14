@@ -49,8 +49,11 @@
  * For sorting the linkages in postprocessing
  */
 
-static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
+static int VDAL_compare_parse(Linkage l1, Linkage l2)
 {
+	Linkage_info * p1 = &l1->lifo;
+	Linkage_info * p2 = &l2->lifo;
+
 	/* Move the discarded entries to the end of the list */
 	if (p1->discarded || p2->discarded) return (p1->discarded - p2->discarded);
 
@@ -68,8 +71,11 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 }
 
 #ifdef USE_CORPUS
-static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
+static int CORP_compare_parse(Linkage l1, Linkage l2)
 {
+	Linkage_info * p1 = &l1->lifo;
+	Linkage_info * p2 = &l2->lifo;
+
 	double diff = p1->corpus_cost - p2->corpus_cost;
 
 	/* Move the discarded entries to the end of the list */
@@ -396,42 +402,59 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
-static Linkage_info * linkage_info_new(int num_to_alloc)
+static Linkage linkage_array_new(int num_to_alloc)
 {
-	Linkage_info *link_info;
-	link_info = (Linkage_info *) xalloc(num_to_alloc * sizeof(Linkage_info));
-	memset(link_info, 0, num_to_alloc * sizeof(Linkage_info));
-	return link_info;
+	Linkage lkgs = (Linkage) exalloc(num_to_alloc * sizeof(struct Linkage_s));
+	memset(lkgs, 0, num_to_alloc * sizeof(struct Linkage_s));
+	return lkgs;
 }
 
-static void linkage_info_delete(Linkage_info *link_info, int sz)
+// XXX multiple defintions of this
+static void exfree_pp_info(PP_info *ppi)
 {
-	int i,j;
+	if (ppi->num_domains > 0)
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
+}
 
-	for (i=0; i<sz; i++)
+static void free_linkages(Sentence sent)
+{
+	size_t in;
+	Linkage lkgs = sent->lnkages;
+	if (!lkgs) return;
+
+	for (in=0; in<sent->num_linkages_alloced; in++)
 	{
-		Linkage_info *lifo = &link_info[i];
-		int nwords = lifo->nwords;
-		for (j=0; j<nwords; j++)
-		{
-			if (lifo->disjunct_list_str[j])
-				free(lifo->disjunct_list_str[j]);
-		}
-		free(lifo->disjunct_list_str);
-#ifdef USE_CORPUS
-		lg_sense_delete(lifo);
-#endif
-	}
-	xfree(link_info, sz * sizeof(Linkage_info));
-}
+		size_t j;
+		Linkage linkage = &lkgs[in];
+		exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
+		exfree(linkage->link_array, sizeof(Link) * linkage->lasz);
+		exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 
-static void free_post_processing(Sentence sent)
-{
-	if (sent->link_info != NULL) {
-		/* postprocessing must have been done */
-		linkage_info_delete(sent->link_info, sent->num_linkages_alloced);
-		sent->link_info = NULL;
+		// XXX why isn't this in a string set ??
+		for (j=0; j<linkage->lifo.nwords; j++)
+		{
+			if (linkage->lifo.disjunct_list_str[j])
+				free(linkage->lifo.disjunct_list_str[j]);
+		}
+		free(linkage->lifo.disjunct_list_str);
+#ifdef USE_CORPUS
+		lg_sense_delete(&linkage->lifo);
+#endif
+
+		if (linkage->pp_info != NULL)
+		{
+			size_t j;
+			for (j = 0; j < linkage->num_links; ++j)
+				exfree_pp_info(&linkage->pp_info[j]);
+			exfree(linkage->pp_info, sizeof(PP_info) * linkage->num_links);
+			linkage->pp_info = NULL;
+			post_process_free_data(&linkage->pp_data);
+		}
 	}
+
+	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
 }
 
 static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
@@ -440,12 +463,8 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 {
 	size_t in;
 	size_t N_linkages_found, N_linkages_alloced;
-	bool overflowed;
-	Linkage_info *link_info;
 
-	free_post_processing(sent);
-
-	overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
 	if (overflowed && (1 < opts->verbosity))
@@ -463,7 +482,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		sent->num_linkages_alloced = 0;
 		sent->num_linkages_post_processed = 0;
 		sent->num_valid_linkages = 0;
-		sent->link_info = NULL;
+		sent->lnkages = NULL;
 		return;
 	}
 
@@ -484,18 +503,28 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		N_linkages_alloced = N_linkages_found;
 	}
 
-	link_info = linkage_info_new(N_linkages_alloced);
+	/* Now actually malloc the array in which we will process linkages. */
+	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
 	/* Generate an array of linkage indices to examine */
 	if (overflowed)
 	{
+		/* The negative index means that a random subset of links
+		 * will be picked later on, in extract_links(). */
 		for (in=0; in < N_linkages_alloced; in++)
 		{
-			link_info[in].index = -(in+1);
+			sent->lnkages[in].lifo.index = -(in+1);
 		}
+	}
+	else if (N_linkages_found == N_linkages_alloced)
+	{
+		for (in=0; in<N_linkages_alloced; in++)
+			sent->lnkages[in].lifo.index = in;
 	}
 	else
 	{
+		/* There are more linkages found than we can handle */
+		/* Pick a (quasi-)uniformly distributed random subset. */
 		if (opts->repeatable_rand)
 			sent->rand_state = N_linkages_found + sent->length;
 
@@ -507,46 +536,30 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 			frac /= (double) N_linkages_alloced;
 			block_bottom = (int) (((double) in) * frac);
 			block_top = (int) (((double) (in+1)) * frac);
-			link_info[in].index = block_bottom +
+			sent->lnkages[in].lifo.index = block_bottom +
 				(rand_r(&sent->rand_state) % (block_top-block_bottom));
 		}
 	}
 
-	sent->link_info = link_info;
 	sent->num_linkages_alloced = N_linkages_alloced;
-	/* Later we subtract the number of invalid linkages */
+	/* Later, we subtract the number of invalid linkages */
 	sent->num_valid_linkages = N_linkages_alloced;
 }
 
-static Linkage x_create_sublinkage(unsigned int N_words)
+/* Partial, but not full initialization of the linakge struct ... */
+static void partial_init_linkage(Linkage lkg, unsigned int N_words)
 {
-	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
-	memset(&(s->lifo), 0, sizeof(Linkage_info));
+	lkg->num_links = 0;
+	lkg->lasz = 2 * N_words;
+	lkg->link_array = (Link *) exalloc(lkg->lasz * sizeof(Link));
+	memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 
-	s->num_links = 0;
-	s->lasz = 2 * N_words;
-	s->link_array = (Link *) xalloc(s->lasz * sizeof(Link));
-	memset(s->link_array, 0, s->lasz * sizeof(Link));
+	lkg->num_words = N_words;
+	lkg->chosen_disjuncts = (Disjunct **) exalloc(N_words * sizeof(Disjunct *));
+	memset(lkg->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
 
-	s->num_words = N_words;
-	s->chosen_disjuncts = (Disjunct **) xalloc(N_words * sizeof(Disjunct *));
-	memset(s->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
-
-	memset(&s->pp_data, 0, sizeof(PP_data));
-	s->pp_info = NULL;
-	s->pp_violation = NULL;
-
-	return s;
-}
-
-static void free_sublinkage(Linkage s)
-{
-	size_t i;
-
-	xfree(s->link_array, s->lasz * sizeof(Link));
-
-	exfree(s->chosen_disjuncts, s->num_words * sizeof(Disjunct *));
-	xfree(s, sizeof(struct Linkage_s));
+	lkg->pp_info = NULL;
+	lkg->pp_violation = NULL;
 }
 
 static void post_process_linkages(Sentence sent, Parse_Options opts)
@@ -556,6 +569,15 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	Parse_info pi = sent->parse_info;
+
+	for (in=0; in < N_linkages_alloced; in++)
+	{
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info *lifo = &lkg->lifo;
+		if (lifo->discarded || lifo->N_violations) continue;
+
+		partial_init_linkage(lkg, pi->N_words);
+	}
 
 	/* (optional) first pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
@@ -567,16 +589,13 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		for (in=0; in < N_linkages_alloced; in++)
 		{
-			Linkage_info *lifo;
-			Linkage lkg;
-			lifo = &sent->link_info[in];
+			Linkage lkg = &sent->lnkages[in];
+			Linkage_info *lifo = &lkg->lifo;
 			if (lifo->discarded || lifo->N_violations) continue;
 
-			/* XXX why are we allocing and freeing? lets just keep tthese! */
-			lkg = x_create_sublinkage(pi->N_words);
 			extract_links(lkg, sent->parse_info, lifo->index);
 			analyze_thin_linkage(sent, lkg, opts, PP_FIRST_PASS);
-			free_sublinkage(lkg);
+
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
 	}
@@ -584,9 +603,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	/* second pass: actually perform post-processing */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
-		Linkage lkg;
-		Linkage_info *lifo = &sent->link_info[in];
-		int index = lifo->index;
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info *lifo = &lkg->lifo;
+
 		if (lifo->discarded) continue;
 		if (lifo->N_violations)
 		{
@@ -595,11 +614,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		lkg = x_create_sublinkage(pi->N_words);
 		extract_links(lkg, sent->parse_info, lifo->index);
 		analyze_thin_linkage(sent, lkg, opts, PP_SECOND_PASS);
-		*lifo = lkg->lifo;
-		lifo->index = index;
 
 		if (0 != lifo->N_violations)
 		{
@@ -607,7 +623,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
-		free_sublinkage(lkg);
+
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 	}
 
@@ -628,8 +644,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
 {
-	qsort((void *)sent->link_info, sent->num_linkages_alloced,
-	      sizeof(Linkage_info),
+	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
+	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
 #if 0
@@ -675,7 +691,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->num_linkages_alloced = 0;
 	sent->num_linkages_post_processed = 0;
 	sent->num_valid_linkages = 0;
-	sent->link_info = NULL;
+	sent->lnkages = NULL;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
@@ -749,8 +765,7 @@ void sentence_delete(Sentence sent)
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
 	string_set_delete(sent->string_set);
-	if (sent->parse_info) free_parse_info(sent->parse_info);
-	free_post_processing(sent);
+	free_linkages(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
 
 	global_rand_state = sent->rand_state;
@@ -792,9 +807,9 @@ int sentence_num_violations(Sentence sent, LinkageIdx i)
 	if (!sent) return 0;
 
 	/* The sat solver (currently) fails to fill in link_info */
-	if (!sent->link_info) return 0;
+	if (!sent->lnkages) return 0;
 	if (sent->num_linkages_alloced <= i) return 0; /* bounds check */
-	return sent->link_info[i].N_violations;
+	return sent->lnkages[i].lifo.N_violations;
 }
 
 double sentence_disjunct_cost(Sentence sent, LinkageIdx i)
@@ -802,9 +817,9 @@ double sentence_disjunct_cost(Sentence sent, LinkageIdx i)
 	if (!sent) return 0.0;
 
 	/* The sat solver (currently) fails to fill in link_info */
-	if (!sent->link_info) return 0.0;
+	if (!sent->lnkages) return 0.0;
 	if (sent->num_linkages_alloced <= i) return 0.0; /* bounds check */
-	return sent->link_info[i].disjunct_cost;
+	return sent->lnkages[i].lifo.disjunct_cost;
 }
 
 int sentence_link_cost(Sentence sent, LinkageIdx i)
@@ -812,9 +827,9 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 	if (!sent) return 0;
 
 	/* The sat solver (currently) fails to fill in link_info */
-	if (!sent->link_info) return 0;
+	if (!sent->lnkages) return 0;
 	if (sent->num_linkages_alloced <= i) return 0; /* bounds check */
-	return sent->link_info[i].link_cost;
+	return sent->lnkages[i].lifo.link_cost;
 }
 
 /* ============================================================== */
@@ -861,7 +876,6 @@ static inline bool
 bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 {
 	size_t i;
-	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
 	const char infix_mark = INFIX_MARK;
 	int * matched_alts = NULL;       /* number of morphemes that have matched
@@ -881,11 +895,8 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 	/* If all the words are null - behave as if everything matched. */
 	bool match_found = true;        /* djw matched a morpheme */
  
-	Linkage_info * const lifo = &sent->link_info[lk];
+	Linkage lkg = &sent->lnkages[lk];
 
-/* XXX we should not be building this over and over */
-	Linkage lkg = x_create_sublinkage(pi->N_words);
-	extract_links(lkg, pi, lifo->index);
 	*affix_types_p = '\0';
 	for (i=0; i<sent->length; i++)
 	{
@@ -1074,7 +1085,6 @@ try_again:
 		}
 	}
 	*affix_types_p = '\0';
-	free_sublinkage(lkg);
 
 	/* Check morpheme type combination.
 	 * If null_count > 0, the morpheme type combination may be invalid
@@ -1102,6 +1112,7 @@ try_again:
 	}
 	else
 	{
+		Linkage_info * const lifo = &lkg->lifo;
 		/* Oh no ... invalid morpheme combination! */
 		sent->num_valid_linkages --;
 		lifo->N_violations++;
@@ -1120,8 +1131,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		/* Don't bother with linkages that already failed post-processing... */
-		Linkage_info * const lifo = &sent->link_info[lk];
-		if (0 != lifo->N_violations) continue;
+		if (0 != sent->lnkages[lk].lifo.N_violations) continue;
 
       if (!sane_linkage_morphism(sent, lk, opts))
           N_invalid_morphism ++;

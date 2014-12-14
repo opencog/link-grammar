@@ -1286,15 +1286,13 @@ Linkage SATEncoder::get_next_linkage()
     // Expand the lifo array.
     int index = _sent->num_linkages_alloced;
     _sent->num_linkages_alloced++;
-    size_t nbytes = _sent->num_linkages_alloced * sizeof(Linkage_info);
-    _sent->link_info = (Linkage_info*) xrealloc(_sent->link_info,
-                       nbytes - sizeof(Linkage_info), nbytes);
-    Linkage_info* lifo = &_sent->link_info[index];
+    size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
+    _sent->lnkages = (Linkage) xrealloc(_sent->lnkages,
+                       nbytes - sizeof(struct Linkage_s), nbytes);
+    Linkage_info* lifo = &(_sent->lnkages[index].lifo);
 
     // Why is linkage_post_process() never called here?
     analyze_thin_linkage(_sent, linkage, _opts, PP_SECOND_PASS);
-    linkage->lifo.index = index;
-    *lifo = linkage->lifo;
 
     if (0 == lifo->N_violations) {
       _sent->num_valid_linkages++;

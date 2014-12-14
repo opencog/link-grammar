@@ -42,7 +42,7 @@
 struct Cost_Model_s
 {
 	Cost_Model_type type;
-	int (*compare_fn)(Linkage_info *, Linkage_info *);
+	int (*compare_fn)(Linkage, Linkage);
 };
 
 struct Resources_s
@@ -242,7 +242,7 @@ struct Sentence_s
 	size_t num_valid_linkages;  /* number with no pp violations */
 	size_t null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
-	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
+	Linkage        lnkages;     /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
 	bool   * post_quote;        /* Array, one entry per word, true if quote */

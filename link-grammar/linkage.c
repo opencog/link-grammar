@@ -256,33 +256,29 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 		return sat_create_linkage(k, sent, opts);
 	}
 
-	if (k >= sent->num_linkages_post_processed) return NULL;
+	if (sent->num_linkages_post_processed <= k) return NULL;
 
 	/* bounds check: link_info array is this size */
 	if (sent->num_linkages_alloced <= k) return NULL;
 
-	/* Using exalloc since this is external to the parser itself. */
-	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
-	memset(linkage, 0, sizeof(struct Linkage_s));
+	/* Perform remaining initialization we haven't done yet...*/
+	linkage = &sent->lnkages[k];
 
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
-	linkage->lifo = sent->link_info[k];
 
 	linkage->chosen_disjuncts = (Disjunct **) exalloc(linkage->num_words * sizeof(Disjunct *));
 	memset(linkage->chosen_disjuncts, 0, linkage->num_words * sizeof(Disjunct *));
 
-	linkage->num_links = 0;
-	linkage->lasz = 2 * linkage->num_words;
-	linkage->link_array = (Link *) xalloc(linkage->lasz * sizeof(Link));
-	memset(linkage->link_array, 0, linkage->lasz * sizeof(Link));
+	// XXX do we really need to do this again ??
+	extract_links(linkage, sent->parse_info, linkage->lifo.index);
 
-	extract_links(linkage, sent->parse_info, sent->link_info[k].index);
-
+	// XXX we did analyze before, do we need to repeat ??
 	extract_thin_linkage(sent, linkage);
 	compute_chosen_words(sent, linkage, opts);
 
+	// XXX Didn't we post-process already ??
 	if (sent->dict->postprocessor != NULL)
 	{
 		linkage_post_process(linkage, sent->dict->postprocessor, opts);
@@ -295,6 +291,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	return linkage;
 }
 
+// XXX multiple defintions of this
 static void exfree_pp_info(PP_info *ppi)
 {
 	if (ppi->num_domains > 0)
@@ -305,32 +302,7 @@ static void exfree_pp_info(PP_info *ppi)
 
 void linkage_delete(Linkage linkage)
 {
-	size_t j;
-
-	/* Can happen on panic timeout or user error */
-	if (NULL == linkage) return;
-
-	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
-
-	exfree(linkage->link_array, sizeof(Link) * linkage->lasz);
-
-	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
-
-	if (linkage->pp_info != NULL)
-	{
-		for (j = 0; j < linkage->num_links; ++j) {
-			exfree_pp_info(&linkage->pp_info[j]);
-		}
-		exfree(linkage->pp_info, sizeof(PP_info) * linkage->num_links);
-		linkage->pp_info = NULL;
-		post_process_free_data(&linkage->pp_data);
-	}
-
-	if (linkage->pp_violation != NULL)
-	{
-		exfree((void *) linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation) + 1));
-	}
-	exfree(linkage, sizeof(struct Linkage_s));
+	/* Currently a no-op */
 }
 
 size_t linkage_get_num_words(const Linkage linkage)
