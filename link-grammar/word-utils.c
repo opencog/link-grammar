@@ -204,16 +204,6 @@ void free_connectors(Connector *e)
 	}
 }
 
-void exfree_connectors(Connector *e)
-{
-	Connector * n;
-	for(;e != NULL; e = n) {
-		n = e->next;
-		exfree((void *) e->string, sizeof(char)*(strlen(e->string)+1));
-		xfree(e, sizeof(Connector)); /* even in this case, connector came from xalloc */
-	}
-}
-
 Connector * connector_new(void)
 {
 	Connector *c = (Connector *) xalloc(sizeof(Connector));

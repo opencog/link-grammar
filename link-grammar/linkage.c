@@ -61,19 +61,6 @@
 
 #define HIDE_MORPHO   (!display_morphology)
 
-static void exfree_link(Link * l)
-{
-#if 0
-	if (NULL == l->link_name) return;
-	exfree_connectors(l->rc);
-	exfree_connectors(l->lc);
-	free((void *)l->link_name);
-	l->link_name = NULL;
-	l->lw = SIZE_MAX;
-	l->rw = SIZE_MAX;
-#endif
-}
-
 /**
  * This takes the current chosen_disjuncts array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.
@@ -248,7 +235,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			sane = sane || (HIDE_MORPHO &&
 			     0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
 			assert(sane, "Something wrong with linkage processing");
-			exfree_link(lnk);
 		}
 		else
 		{
@@ -326,10 +312,6 @@ void linkage_delete(Linkage linkage)
 
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
-	for (j = 0; j < linkage->lasz; ++j)
-	{
-		exfree_link(&linkage->link_array[j]);
-	}
 	exfree(linkage->link_array, sizeof(Link) * linkage->lasz);
 
 	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
