@@ -638,7 +638,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->link_info = NULL;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
-	sent->curr_linkage = NULL;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
 
@@ -711,7 +710,6 @@ void sentence_delete(Sentence sent)
 	free_sentence_words(sent);
 	string_set_delete(sent->string_set);
 	if (sent->parse_info) free_parse_info(sent->parse_info);
-	if (sent->curr_linkage) linkage_delete(sent->curr_linkage)
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
 

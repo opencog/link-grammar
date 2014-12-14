@@ -1113,6 +1113,8 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 	if (pp == NULL) return NULL;
 
 	pp->pp_data.links_to_ignore = NULL;
+
+	/* XXX FIXME in the future, different linkages might be different lenghts */
 	pp->pp_data.length = sent->length;
 
 	/* In the name of responsible memory management, we retain a copy of the

@@ -94,6 +94,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
 	const char infix_mark = INFIX_MARK;
 
+	/* XXX TODO -- this should be not sent->length but
+ * linkage->num_workds ...and likewise elsewhere in this function */
 	for (i=0; i<sent->length; i++)
 	{
 		const char *t;
@@ -416,7 +418,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	if (NULL == linkage) return "";
 	if (NULL == linkage->info->disjunct_list_str)
 	{
-		lg_compute_disjunct_strings(linkage->sent, linkage->info);
+		lg_compute_disjunct_strings(linkage);
 	}
 
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
@@ -510,7 +512,6 @@ const char * linkage_get_violation_name(const Linkage linkage)
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
-	Sentence sent = linkage->sent;
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
@@ -538,7 +539,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 
 	/* This can return NULL, for example if there is no
 	   post-processor */
-	pp = do_post_process(postprocessor, opts, sent, linkage, false);
+	pp = do_post_process(postprocessor, opts, linkage->sent, linkage, false);
 	if (pp == NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
@@ -563,7 +564,8 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			{
 				char buff[5];
 				sprintf(buff, "%c", d->type);
-				linkage->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
+				linkage->pp_info[j].domain_name[k] = 
+				      string_set_add (buff, linkage->sent->string_set);
 
 				k++;
 			}

@@ -69,10 +69,11 @@ static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
  * word, is used as a key to index the statistics information in the
  * database. 
  */
-void lg_compute_disjunct_strings(Linkage lkg, Linkage_info *lifo)
+void lg_compute_disjunct_strings(Linkage lkg)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t nwords = lkg->num_words;
+	Linkage_info *lifo = lkg->info;
 
 	if (lifo->disjunct_list_str) return;
 	lifo->nwords = nwords;
