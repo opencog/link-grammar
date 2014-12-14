@@ -518,20 +518,21 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	sent->num_valid_linkages = N_linkages_alloced;
 }
 
-static Linkage x_create_sublinkage(unsigned int N_words, unsigned int N_links)
+static Linkage x_create_sublinkage(unsigned int N_words)
 {
 	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
 	memset(&(s->lifo), 0, sizeof(Linkage_info));
-	memset(&s->pp_data, 0, sizeof(PP_data));
+
+	s->num_links = 0;
+	s->lasz = 2 * N_words;
+	s->link_array = (Link *) xalloc(s->lasz * sizeof(Link));
+	memset(s->link_array, 0, s->lasz * sizeof(Link));
 
 	s->num_words = N_words;
 	s->chosen_disjuncts = (Disjunct **) xalloc(N_words * sizeof(Disjunct *));
 	memset(s->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
 
-	s->num_links = N_links;
-	s->link_array = (Link *) xalloc(N_links * sizeof(Link));
-	memset(s->link_array, 0, N_links * sizeof(Link));
-
+	memset(&s->pp_data, 0, sizeof(PP_data));
 	s->pp_info = NULL;
 	s->pp_violation = NULL;
 
@@ -541,7 +542,9 @@ static Linkage x_create_sublinkage(unsigned int N_words, unsigned int N_links)
 static void free_sublinkage(Linkage s)
 {
 	size_t i;
-	for (i = 0; i < s->num_links; i++) {
+
+	for (i = 0; i < s->lasz; i++)
+	{
 		Link* l = &s->link_array[i];
 		if (l->link_name != NULL)
 		{
@@ -550,7 +553,8 @@ static void free_sublinkage(Linkage s)
 			exfree_connectors(l->lc);
 		}
 	}
-	xfree(s->link_array, s->num_links * sizeof(Link));
+
+	xfree(s->link_array, s->lasz * sizeof(Link));
 
 	exfree(s->chosen_disjuncts, s->num_words * sizeof(Disjunct *));
 	xfree(s, sizeof(struct Linkage_s));
@@ -580,7 +584,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			if (lifo->discarded || lifo->N_violations) continue;
 
 			/* XXX why are we allocing and freeing? lets just keep tthese! */
-			lkg = x_create_sublinkage(pi->N_words, pi->N_links);
+			lkg = x_create_sublinkage(pi->N_words);
 			extract_links(lkg, sent->parse_info, lifo->index);
 			analyze_thin_linkage(sent, lkg, opts, PP_FIRST_PASS);
 			free_sublinkage(lkg);
@@ -602,7 +606,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		lkg = x_create_sublinkage(pi->N_words, pi->N_links);
+		lkg = x_create_sublinkage(pi->N_words);
 		extract_links(lkg, sent->parse_info, lifo->index);
 		analyze_thin_linkage(sent, lkg, opts, PP_SECOND_PASS);
 		*lifo = lkg->lifo;
@@ -890,7 +894,8 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
  
 	Linkage_info * const lifo = &sent->link_info[lk];
 
-	Linkage lkg = x_create_sublinkage(pi->N_words, pi->N_links);
+/* XXX we should not be building this over and over */
+	Linkage lkg = x_create_sublinkage(pi->N_words);
 	extract_links(lkg, pi, lifo->index);
 	*affix_types_p = '\0';
 	for (i=0; i<sent->length; i++)

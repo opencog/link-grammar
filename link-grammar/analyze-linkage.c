@@ -20,17 +20,6 @@
 #include "structures.h"
 #include "word-utils.h"
 
-/* XXX this should go away */
-static void copy_full_link(Link *dst, Link *src)
-{
-	/* XXX FIXME use stringset here ??? */
-	dst->link_name = strdup(src->link_name);
-	dst->lw = src->lw;
-	dst->rw = src->rw;
-	dst->lc = excopy_connectors(src->lc);
-	dst->rc = excopy_connectors(src->rc);
-}
-
 /**
  * This function defines the cost of a link as a function of its length.
  */
@@ -131,16 +120,14 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-static void compute_link_names(Sentence sent)
+void extract_thin_linkage(Sentence sent, Linkage lkg)
 {
 	size_t i;
-	Parse_info pi = sent->parse_info;
-
-	for (i = 0; i < pi->N_links; i++)
+	for (i = 0; i < lkg->num_links; i++)
 	{
-		pi->link_array[i].link_name = intersect_strings(sent,
-			connector_get_string(pi->link_array[i].lc),
-			connector_get_string(pi->link_array[i].rc));
+		lkg->link_array[i].link_name = intersect_strings(sent,
+			connector_get_string(lkg->link_array[i].lc),
+			connector_get_string(lkg->link_array[i].rc));
 	}
 }
 
@@ -150,17 +137,10 @@ static void compute_link_names(Sentence sent)
  */
 void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
 {
-	size_t i;
 	PP_node * pp;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
-	Parse_info pi = sent->parse_info;
 
-	compute_link_names(sent);
-	for (i=0; i<lkg->num_links; i++)
-	{
-	  copy_full_link(&(lkg->link_array[i]), &(pi->link_array[i]));
-	}
-
+	extract_thin_linkage(sent, lkg);
 	if (analyze_pass == PP_FIRST_PASS)
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, lkg);
@@ -190,24 +170,5 @@ void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int an
 	{
 		lkg->lifo.N_violations++;
 		lkg->lifo.pp_violation_msg = pp->violation;
-	}
-}
-
-void extract_thin_linkage(Sentence sent, Linkage linkage, Parse_Options opts)
-{
-	size_t i;
-	Parse_info pi = sent->parse_info;
-
-	linkage->num_links = pi->N_links;
-	linkage->link_array = (Link *) exalloc(linkage->num_links * sizeof(Link));
-
-	linkage->pp_info = NULL;
-	linkage->pp_violation = NULL;
-	memset(&linkage->pp_data, 0, sizeof(PP_data));
-
-	compute_link_names(sent);
-	for (i=0; i<linkage->num_links; ++i)
-	{
-		copy_full_link(&(linkage->link_array[i]), &(pi->link_array[i]));
 	}
 }

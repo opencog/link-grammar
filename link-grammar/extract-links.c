@@ -115,9 +115,6 @@ Parse_info parse_info_new(int nwords)
 	memset(pi, 0, sizeof(struct Parse_info_struct));
 	pi->N_words = nwords;
 
-	/* very unlikely that more than this many links will be needed...*/
-	pi->lasz = 2 * nwords;
-	pi->link_array = (Link*) xalloc(pi->lasz * sizeof(Link));
 	pi->parse_set = NULL;
 
 	/* Alloc the x_table */
@@ -147,8 +144,6 @@ void free_parse_info(Parse_info pi)
 {
 	unsigned int i;
 	X_table_connector *t, *x;
-
-	xfree(pi->link_array, pi->lasz * sizeof(Link));
 
 	for (i=0; i<pi->x_table_size; i++)
 	{
@@ -500,28 +495,28 @@ static void initialize_links(Linkage lkg)
 	memset(lkg->chosen_disjuncts, 0, lkg->num_words * sizeof(Disjunct *));
 }
 
-static void issue_link(Linkage lkg, Parse_info pi, Disjunct * ld, Disjunct * rd, Link link)
+static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link link)
 {
-	if (pi->lasz <= pi->N_links)
+	if (lkg->lasz <= lkg->num_links)
 	{
-		size_t oldsz = pi->lasz;
-		pi->lasz = 2 * pi->lasz + 10;
-		pi->link_array = xrealloc(pi->link_array, oldsz * sizeof(Link), pi->lasz * sizeof(Link));
+		size_t oldsz = lkg->lasz;
+		lkg->lasz = 2 * lkg->lasz + 10;
+		lkg->link_array = xrealloc(lkg->link_array, oldsz * sizeof(Link), lkg->lasz * sizeof(Link));
 	}
-	pi->link_array[pi->N_links] = link;
-	pi->N_links++;
+	lkg->link_array[lkg->num_links] = link;
+	lkg->num_links++;
 
 	lkg->chosen_disjuncts[link.lw] = ld;
 	lkg->chosen_disjuncts[link.rw] = rd;
 }
 
-static void issue_links_for_choice(Linkage lkg, Parse_info pi, Parse_choice *pc)
+static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 {
 	if (pc->link[0].lc != NULL) { /* there is a link to generate */
-		issue_link(lkg, pi, pc->ld, pc->md, pc->link[0]);
+		issue_link(lkg, pc->ld, pc->md, pc->link[0]);
 	}
 	if (pc->link[1].lc != NULL) {
-		issue_link(lkg, pi, pc->md, pc->rd, pc->link[1]);
+		issue_link(lkg, pc->md, pc->rd, pc->link[1]);
 	}
 }
 
@@ -575,7 +570,7 @@ static void advance_parse_set(Parse_info pi)
 }
 #endif
 
-static void list_links(Linkage lkg, Parse_info pi, Parse_set * set, int index)
+static void list_links(Linkage lkg, Parse_set * set, int index)
 {
 	 Parse_choice *pc;
 	 s64 n;
@@ -587,9 +582,9 @@ static void list_links(Linkage lkg, Parse_info pi, Parse_set * set, int index)
 		  index -= n;
 	 }
 	 assert(pc != NULL, "walked off the end in list_links");
-	 issue_links_for_choice(lkg, pi, pc);
-	 list_links(lkg, pi, pc->set[0], index % pc->set[0]->count);
-	 list_links(lkg, pi, pc->set[1], index / pc->set[0]->count);
+	 issue_links_for_choice(lkg, pc);
+	 list_links(lkg, pc->set[0], index % pc->set[0]->count);
+	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
 static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
@@ -612,7 +607,7 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
 	}
 
 	assert(pc != NULL, "Couldn't get a random parse choice");
-	issue_links_for_choice(lkg, pi, pc);
+	issue_links_for_choice(lkg, pc);
 	list_random_links(lkg, pi, pc->set[0]);
 	list_random_links(lkg, pi, pc->set[1]);
 }
@@ -625,12 +620,11 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
 void extract_links(Linkage lkg, Parse_info pi, int index)
 {
 	initialize_links(lkg);
-	pi->N_links = 0;
 	if (index < 0) {
 		pi->rand_state = index;
 		list_random_links(lkg, pi, pi->parse_set);
 	}
 	else {
-		list_links(lkg, pi, pi->parse_set, index);
+		list_links(lkg, pi->parse_set, index);
 	}
 }

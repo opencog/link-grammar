@@ -262,7 +262,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
-	size_t N_links;
 
 	if (opts->use_sat_solver)
 	{
@@ -285,14 +284,14 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->chosen_disjuncts = (Disjunct **) exalloc(linkage->num_words * sizeof(Disjunct *));
 	memset(linkage->chosen_disjuncts, 0, linkage->num_words * sizeof(Disjunct *));
 
-	N_links = sent->parse_info->N_links;
-	linkage->num_links = N_links;
-	linkage->link_array = (Link *) xalloc(N_links * sizeof(Link));
-	memset(linkage->link_array, 0, N_links * sizeof(Link));
+	linkage->num_links = 0;
+	linkage->lasz = 2 * linkage->num_words;
+	linkage->link_array = (Link *) xalloc(linkage->lasz * sizeof(Link));
+	memset(linkage->link_array, 0, linkage->lasz * sizeof(Link));
 
 	extract_links(linkage, sent->parse_info, sent->link_info[k].index);
 
-	extract_thin_linkage(sent, linkage, opts);
+	extract_thin_linkage(sent, linkage);
 	compute_chosen_words(sent, linkage, opts);
 
 	if (sent->dict->postprocessor != NULL)

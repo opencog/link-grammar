@@ -214,9 +214,6 @@ struct Parse_info_struct
 	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	int            N_words;
-	size_t         N_links;
-	size_t         lasz;
-	Link           *link_array;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -367,6 +364,7 @@ struct Linkage_s
 
 	size_t          num_links;    /* Number of links in array */
 	Link *          link_array;   /* Array of links */
+	size_t          lasz;
 
 	Disjunct **     chosen_disjuncts;
 
