@@ -1251,8 +1251,7 @@ Linkage SATEncoder::create_linkage()
   pi->N_words = _sent->length;
   _sent->parse_info = pi;
 
-  extract_thin_linkage(_sent, linkage);
-
+  compute_link_names(_sent, linkage);
   compute_chosen_words(_sent, linkage, _opts);
 
   return linkage;

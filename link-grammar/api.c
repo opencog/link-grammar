@@ -562,6 +562,7 @@ static void partial_init_linkage(Linkage lkg, unsigned int N_words)
 	lkg->pp_violation = NULL;
 }
 
+/** The extract_links() call sets the chosen_disjuncts array */
 static void compute_chosen_disjuncts(Sentence sent)
 {
 	size_t in;

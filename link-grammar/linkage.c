@@ -268,8 +268,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
 
-	// XXX we did analyze before, do we need to repeat ??
-	extract_thin_linkage(sent, linkage);
+	compute_link_names(sent, linkage);
 	compute_chosen_words(sent, linkage, opts);
 
 	// XXX Didn't we post-process already ??

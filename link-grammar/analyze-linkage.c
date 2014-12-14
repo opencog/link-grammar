@@ -120,7 +120,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-void extract_thin_linkage(Sentence sent, Linkage lkg)
+void compute_link_names(Sentence sent, Linkage lkg)
 {
 	size_t i;
 	for (i = 0; i < lkg->num_links; i++)
