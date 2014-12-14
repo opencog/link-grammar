@@ -291,6 +291,20 @@ AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_anysplit} = xyes)
 
 # ====================================================================
 
+AC_ARG_ENABLE( wordgraph_display,
+  [  --enable-wordgraph-display       enable graphical display of the Wordgraph],
+  [],
+  [enable_wordgraph_display=no]
+)
+if test "x$enable_wordgraph_display" = "xyes"
+then
+	CPPFLAGS="${CPPFLAGS} -DUSE_WORDGRAPH_DISPLAY=1"
+fi
+
+AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_wordgraph_display} = xyes)
+
+dnl ====================================================================
+
 AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 
 # If sqlite3 and pkg-config are not found on MacOS, then 
