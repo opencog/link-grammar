@@ -265,20 +265,6 @@ Connector * excopy_connectors(Connector * c)
 }
 
 /* ======================================================== */
-/* Link utilities ... */
-
-void exfree_link(Link * l)
-{
-	if (NULL == l->link_name) return;
-	exfree_connectors(l->rc);
-	exfree_connectors(l->lc);
-	free((void *)l->link_name);
-	l->link_name = NULL;
-	l->lw = SIZE_MAX;
-	l->rw = SIZE_MAX;
-}
-
-/* ======================================================== */
 /* Connector-set utilities ... */
 /**
  * This hash function only looks at the leading upper case letters of

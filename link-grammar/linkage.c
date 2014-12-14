@@ -61,6 +61,17 @@
 
 #define HIDE_MORPHO   (!display_morphology)
 
+static void exfree_link(Link * l)
+{
+	if (NULL == l->link_name) return;
+	exfree_connectors(l->rc);
+	exfree_connectors(l->lc);
+	free((void *)l->link_name);
+	l->link_name = NULL;
+	l->lw = SIZE_MAX;
+	l->rw = SIZE_MAX;
+}
+
 /**
  * This takes the current chosen_disjuncts array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.

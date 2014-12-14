@@ -40,9 +40,6 @@ void exfree_connectors(Connector *);
 Connector * copy_connectors(Connector *);
 Connector * excopy_connectors(Connector * c);
 
-/* Link utilities ... */
-void        exfree_link(Link *);
-
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
