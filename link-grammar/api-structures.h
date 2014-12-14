@@ -211,17 +211,14 @@ struct Parse_info_struct
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size;
-	X_table_connector ** x_table;
+	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	int            N_words;
-	Disjunct **    chosen_disjuncts;
-	size_t         N_links;
-	size_t         lasz;
-	Link           *link_array;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
 };
+
 
 struct Sentence_s
 {
@@ -326,12 +323,31 @@ struct Postprocessor_s
 	PP_data pp_data;
 };
 
-
 /*********************************************************
  *
  * Linkages
  *
  **********************************************************/
+
+/**
+ * This is for building the graphs of links in post-processing.
+ */
+struct Linkage_info_struct
+{
+	bool discarded;
+	int index;
+	short N_violations;
+	short unused_word_cost;
+	short link_cost;
+	double disjunct_cost;
+	double corpus_cost;
+	size_t nwords;
+	const char *pp_violation_msg;
+	char **disjunct_list_str;
+#ifdef USE_CORPUS
+	Sense **sense_list;
+#endif
+};
 
 struct Linkage_s
 {
@@ -345,16 +361,18 @@ struct Linkage_s
 	Sentence        sent;
 	size_t          num_words;    /* number of (tokenized) words */
 	const char *  * word;         /* array of word spellings */
-	Linkage_info*   info;         /* index and cost information */
 
 	size_t          num_links;    /* Number of links in array */
-	Link **         link;         /* Array of links */
+	Link *          link_array;   /* Array of links */
+	size_t          lasz;
 
+	Disjunct **     chosen_disjuncts;
+
+	Linkage_info    lifo;         /* index and cost information */
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
 	PP_data         pp_data;
 };
-
 
 
 #endif

@@ -77,19 +77,20 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	size_t i, j, l;
 	char * s, *u;
-	Parse_info pi = sent->parse_info;
 	const char * chosen_words[sent->length];
 	size_t remap[sent->length];
 	bool display_morphology = opts->display_morphology;
 	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
 	const char infix_mark = INFIX_MARK;
 
+	/* XXX TODO -- this should be not sent->length but
+ * linkage->num_workds ...and likewise elsewhere in this function */
 	for (i=0; i<sent->length; i++)
 	{
 		const char *t;
 		/* If chosen_disjuncts is NULL, then this is an 'island' word
 		 * that has not been linked to. */
-		if (pi->chosen_disjuncts[i] == NULL)
+		if (linkage->chosen_disjuncts[i] == NULL)
 		{
 			/* The unsplit_word is the original word; if its been split
 			 * into stem+suffix, and either one hasn't been chosen, then
@@ -129,7 +130,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		else 
 		{
 			/* print the subscript, as in "dog.n" as opposed to "dog" */
-			t = pi->chosen_disjuncts[i]->string;
+			t = linkage->chosen_disjuncts[i]->string;
 			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
 				s = strdup(t);
@@ -148,10 +149,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				/* Concatenate the stem and the suffix together into one word */
 				if (t && HIDE_MORPHO)
 				{
-					if (is_suffix(infix_mark, t) && pi->chosen_disjuncts[i-1] &&
-					    is_stem(pi->chosen_disjuncts[i-1]->string))
+					if (is_suffix(infix_mark, t) && linkage->chosen_disjuncts[i-1] &&
+					    is_stem(linkage->chosen_disjuncts[i-1]->string))
 					{
-						const char * stem = pi->chosen_disjuncts[i-1]->string;
+						const char * stem = linkage->chosen_disjuncts[i-1]->string;
 						size_t len = strlen(stem) + strlen(t);
 						char * join = (char *)malloc(len+1);
 						strcpy(join, stem);
@@ -170,9 +171,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 					/* Suppress printing of the stem, if the next word is the suffix */
 					if (is_stem(t) && (i+1 < sent->length) &&
-					    pi->chosen_disjuncts[i+1])
+					    linkage->chosen_disjuncts[i+1])
 					{
-						const char * next = pi->chosen_disjuncts[i+1]->string;
+						const char * next = linkage->chosen_disjuncts[i+1]->string;
 						if (is_suffix(infix_mark, next))
 						{
 							t = NULL;
@@ -226,7 +227,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 */
 	for (i=0, j=0; i<linkage->num_links; i++)
 	{
-		Link * lnk = linkage->link[i];
+		Link * lnk = &(linkage->link_array[i]);
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
@@ -234,13 +235,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			sane = sane || (HIDE_MORPHO &&
 			     0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
 			assert(sane, "Something wrong with linkage processing");
-			exfree_link(lnk);
 		}
 		else
 		{
-			lnk->lw = remap[lnk->lw];
-			lnk->rw = remap[lnk->rw];
-			linkage->link[j] = lnk;
+			linkage->link_array[j].lw = remap[lnk->lw];
+			linkage->link_array[j].rw = remap[lnk->rw];
 			j++;
 		}
 	}
@@ -261,17 +260,27 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	/* bounds check: link_info array is this size */
 	if (sent->num_linkages_alloced <= k) return NULL;
-	extract_links(sent->link_info[k].index, sent->parse_info);
 
 	/* Using exalloc since this is external to the parser itself. */
 	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
+	memset(linkage, 0, sizeof(struct Linkage_s));
 
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
-	linkage->info = &sent->link_info[k];
+	linkage->lifo = sent->link_info[k];
 
-	extract_thin_linkage(sent, linkage, opts);
+	linkage->chosen_disjuncts = (Disjunct **) exalloc(linkage->num_words * sizeof(Disjunct *));
+	memset(linkage->chosen_disjuncts, 0, linkage->num_words * sizeof(Disjunct *));
+
+	linkage->num_links = 0;
+	linkage->lasz = 2 * linkage->num_words;
+	linkage->link_array = (Link *) xalloc(linkage->lasz * sizeof(Link));
+	memset(linkage->link_array, 0, linkage->lasz * sizeof(Link));
+
+	extract_links(linkage, sent->parse_info, sent->link_info[k].index);
+
+	extract_thin_linkage(sent, linkage);
 	compute_chosen_words(sent, linkage, opts);
 
 	if (sent->dict->postprocessor != NULL)
@@ -303,11 +312,10 @@ void linkage_delete(Linkage linkage)
 
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
-	for (j = 0; j < linkage->num_links; ++j)
-	{
-		exfree_link(linkage->link[j]);
-	}
-	exfree(linkage->link, sizeof(Link*) * linkage->num_links);
+	exfree(linkage->link_array, sizeof(Link) * linkage->lasz);
+
+	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
+
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j) {
@@ -317,6 +325,7 @@ void linkage_delete(Linkage linkage)
 		linkage->pp_info = NULL;
 		post_process_free_data(&linkage->pp_data);
 	}
+
 	if (linkage->pp_violation != NULL)
 	{
 		exfree((void *) linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation) + 1));
@@ -347,38 +356,38 @@ int linkage_get_link_length(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
-	link = linkage->link[index];
+	link = &(linkage->link_array[index]);
 	return link->rw - link->lw;
 }
 
 WordIdx linkage_get_link_lword(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	return linkage->link[index]->lw;
+	return linkage->link_array[index].lw;
 }
 
 WordIdx linkage_get_link_rword(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
-	return linkage->link[index]->rw;
+	return linkage->link_array[index].rw;
 }
 
 const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link[index]->link_name;
+	return linkage->link_array[index].link_name;
 }
 
 const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link[index]->lc->string;
+	return linkage->link_array[index].lc->string;
 }
 
 const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link[index]->rc->string;
+	return linkage->link_array[index].rc->string;
 }
 
 const char ** linkage_get_words(const Linkage linkage)
@@ -396,19 +405,19 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	Disjunct *dj;
 
 	if (NULL == linkage) return "";
-	if (NULL == linkage->info->disjunct_list_str)
+	if (NULL == linkage->lifo.disjunct_list_str)
 	{
-		lg_compute_disjunct_strings(linkage->sent, linkage->info);
+		lg_compute_disjunct_strings(linkage);
 	}
 
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
 
 	/* dj will be null if the word wasn't used in the parse. */
-	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	dj = linkage->chosen_disjuncts[w];
 	if (NULL == dj) return "";
 
-	return linkage->info->disjunct_list_str[w];
+	return linkage->lifo.disjunct_list_str[w];
 }
 
 double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
@@ -417,7 +426,7 @@ double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return 0.0; /* bounds-check */
 
-	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	dj = linkage->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (dj) return dj->cost;
@@ -430,7 +439,7 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx w)
 
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return 99.999; /* bounds-check */
-	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	dj = linkage->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (NULL == dj) return 99.999;
@@ -448,29 +457,29 @@ const char * linkage_get_word(const Linkage linkage, WordIdx w)
 int linkage_unused_word_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return linkage->info->unused_word_cost;
+	if (!linkage) return 0;
+	return linkage->lifo.unused_word_cost;
 }
 
 double linkage_disjunct_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0.0;
-	return linkage->info->disjunct_cost;
+	if (!linkage) return 0.0;
+	return linkage->lifo.disjunct_cost;
 }
 
 int linkage_link_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return linkage->info->link_cost;
+	if (!linkage) return 0;
+	return linkage->lifo.link_cost;
 }
 
 double linkage_corpus_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0.0;
-	return linkage->info->corpus_cost;
+	if (!linkage) return 0.0;
+	return linkage->lifo.corpus_cost;
 }
 
 int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
@@ -492,7 +501,6 @@ const char * linkage_get_violation_name(const Linkage linkage)
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
-	Sentence sent = linkage->sent;
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
@@ -520,7 +528,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 
 	/* This can return NULL, for example if there is no
 	   post-processor */
-	pp = do_post_process(postprocessor, opts, sent, linkage, false);
+	pp = do_post_process(postprocessor, opts, linkage->sent, linkage, false);
 	if (pp == NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
@@ -545,7 +553,8 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			{
 				char buff[5];
 				sprintf(buff, "%c", d->type);
-				linkage->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
+				linkage->pp_info[j].domain_name[k] = 
+				      string_set_add (buff, linkage->sent->string_set);
 
 				k++;
 			}

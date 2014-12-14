@@ -233,7 +233,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		int pad = 21;
 		double cost;
 		char infword[MAX_WORD];
-		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
+		Disjunct *disj = linkage->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
 		/* Cleanup the subscript mark before printing. */
@@ -273,7 +273,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	bool print_word_0, print_word_N;
 	bool suppressor_used;
 	int N_links = linkage->num_links;
-	Link **ppla = linkage->link;
+	Link *ppla = linkage->link_array;
 	String  * string;
 	char * ps_string;
 	int N_words_to_print;
@@ -284,10 +284,10 @@ build_linkage_postscript_string(const Linkage linkage,
 	suppressor_used = false;
 	if (!display_walls) {
 		for (j=0; j<N_links; j++) {
-			if (ppla[j]->lw == 0) {
-				if (ppla[j]->rw == linkage->num_words-1) continue;
+			if (ppla[j].lw == 0) {
+				if (ppla[j].rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0) {
+				if (strcmp(ppla[j].lc->string, LEFT_WALL_SUPPRESS)==0) {
 					suppressor_used = true;
 				}
 			}
@@ -299,9 +299,9 @@ build_linkage_postscript_string(const Linkage linkage,
 	N_wall_connectors = 0;
 	suppressor_used = false;
 	for (j=0; j<N_links; j++) {
-		if (ppla[j]->rw == linkage->num_words-1) {
+		if (ppla[j].rw == linkage->num_words-1) {
 			N_wall_connectors ++;
-			if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
+			if (strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)==0){
 				suppressor_used = true;
 			}
 		}
@@ -327,16 +327,16 @@ build_linkage_postscript_string(const Linkage linkage,
 	append_string(string,"[");
 	j = 0;
 	for (link=0; link<N_links; link++) {
-		if (!print_word_0 && (ppla[link]->lw == 0)) continue;
-		if (!print_word_N && (ppla[link]->rw == linkage->num_words-1)) continue;
+		if (!print_word_0 && (ppla[link].lw == 0)) continue;
+		if (!print_word_N && (ppla[link].rw == linkage->num_words-1)) continue;
 		// if (ppla[link]->lw == SIZE_MAX) continue;
-		assert (ppla[link]->lw != SIZE_MAX);
+		assert (ppla[link].lw != SIZE_MAX);
 		if ((j%7 == 0) && (j>0)) append_string(string,"\n");
 		j++;
 		append_string(string,"[%zu %zu %d",
-				ppla[link]->lw - d, ppla[link]->rw - d,
+				ppla[link].lw - d, ppla[link].rw - d,
 				pctx->link_heights[link]);
-		append_string(string," (%s)]", ppla[link]->link_name);
+		append_string(string," (%s)]", ppla[link].link_name);
 	}
 	append_string(string,"]");
 	append_string(string,"\n");
@@ -381,7 +381,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	int center[linkage->num_words+1];
 	unsigned int line_len, link_length;
 	unsigned int N_links = linkage->num_links;
-	Link **ppla = linkage->link;
+	Link *ppla = linkage->link_array;
 	String * string;
 	char * gr_string;
 	unsigned int N_words_to_print;
@@ -399,11 +399,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	{
 		for (j=0; j<N_links; j++)
 		{
-			if (0 == ppla[j]->lw)
+			if (0 == ppla[j].lw)
 			{
-				if (ppla[j]->rw == linkage->num_words-1) continue;
+				if (ppla[j].rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (0 == strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS))
+				if (0 == strcmp(ppla[j].lc->string, LEFT_WALL_SUPPRESS))
 				{
 					suppressor_used = true;
 				}
@@ -418,10 +418,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	suppressor_used = false;
 	for (j=0; j<N_links; j++)
 	{
-		if (ppla[j]->rw == linkage->num_words-1)
+		if (ppla[j].rw == linkage->num_words-1)
 		{
 			N_wall_connectors ++;
-			if (0 == strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS))
+			if (0 == strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
 			{
 				suppressor_used = true;
 			}
@@ -446,16 +446,17 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	{
 		for (j=0; j<N_links; j++)
 		{
-			assert (ppla[j]->lw != SIZE_MAX);
-			if (((unsigned int) (ppla[j]->rw - ppla[j]->lw)) != link_length)
+			assert (ppla[j].lw != SIZE_MAX);
+			if (NULL == ppla[j].link_name) continue;
+			if (((unsigned int) (ppla[j].rw - ppla[j].lw)) != link_length)
 			  continue;
-			if (!print_word_0 && (ppla[j]->lw == 0)) continue;
+			if (!print_word_0 && (ppla[j].lw == 0)) continue;
 			/* Gets rid of the irrelevant link to the left wall */
-			if (!print_word_N && (ppla[j]->rw == linkage->num_words-1)) continue;
+			if (!print_word_N && (ppla[j].rw == linkage->num_words-1)) continue;
 
 			/* Put it into the lowest position */
-			cl = center[ppla[j]->lw];
-			cr = center[ppla[j]->rw];
+			cl = center[ppla[j].lw];
+			cr = center[ppla[j].rw];
 			for (row=0; row < MAX_HEIGHT; row++)
 			{
 				for (k=cl+1; k<cr; k++)
@@ -481,8 +482,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			for (k=cl+1; k<cr; k++) {
 				picture[row][k] = '-';
 			}
-			s = ppla[j]->link_name;
 
+			s = ppla[j].link_name;
 			k = strlen(s);
 			inc = cl + cr + 2;
 			if (inc < k) inc = 0;
@@ -495,17 +496,17 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
-			if (DEPT_CHR == ppla[j]->lc->string[0] &&
+			if (DEPT_CHR == ppla[j].lc->string[0] &&
 			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
-			if (HEAD_CHR == ppla[j]->lc->string[0]) { *(t-1) = '>'; }
+			if (HEAD_CHR == ppla[j].lc->string[0]) { *(t-1) = '>'; }
 
 			/* Copy connector name; stop short if no room */
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
-			if (DEPT_CHR == ppla[j]->rc->string[0]) { picture[row][cr-1] = '>'; }
-			if (HEAD_CHR == ppla[j]->rc->string[0]) { *t = '<'; }
+			if (DEPT_CHR == ppla[j].rc->string[0]) { picture[row][cr-1] = '>'; }
+			if (HEAD_CHR == ppla[j].rc->string[0]) { *t = '<'; }
 
 			/* The direction indicators maye have clobbered these. */
 			picture[row][cl] = '+';
@@ -705,8 +706,8 @@ void linkage_free_postscript(char * s)
 
 char * linkage_print_pp_msgs(Linkage linkage)
 {
-	if (linkage && linkage->info && linkage->info->pp_violation_msg)
-		return strdup(linkage->info->pp_violation_msg);
+	if (linkage && linkage->lifo.pp_violation_msg)
+		return strdup(linkage->lifo.pp_violation_msg);
 	return strdup("");
 }
 

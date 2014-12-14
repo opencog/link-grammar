@@ -198,26 +198,6 @@ struct PP_node_struct
 };
 
 /* Davy added these */
-/**
- * This is for building the graphs of links in post-processing.
- */
-struct Linkage_info_struct
-{
-	bool discarded;
-	int index;
-	short N_violations;
-	short unused_word_cost;
-	short link_cost;
-	double disjunct_cost;
-	double corpus_cost;
-	size_t nwords;
-	const char *pp_violation_msg;
-	char **disjunct_list_str;
-#ifdef USE_CORPUS
-	Sense **sense_list;
-#endif
-};
-
 struct List_o_links_struct
 {
 	size_t link;     /* the link number */
@@ -251,15 +231,6 @@ struct X_table_connector_struct
 	Connector         *le, *re;
 	X_table_connector *next;
 };
-
-/* from string-set.c */
-struct String_set_s
-{
-	size_t size;       /* the current size of the table */
-	size_t count;      /* number of things currently in the table */
-	char ** table;     /* the table itself */
-};
-
 
 /* from pp_linkset.c */
 typedef struct pp_linkset_node_s

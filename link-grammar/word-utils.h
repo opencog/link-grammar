@@ -36,14 +36,6 @@ void free_X_nodes(X_node *);
 Connector * connector_new(void);
 Connector * init_connector(Connector *c);
 void free_connectors(Connector *);
-void exfree_connectors(Connector *);
-Connector * copy_connectors(Connector *);
-Connector * excopy_connectors(Connector * c);
-
-/* Link utilities ... */
-Link *      excopy_link(Link *);
-void        exfree_link(Link *);
-
 
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);

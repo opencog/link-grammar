@@ -518,13 +518,44 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	sent->num_valid_linkages = N_linkages_alloced;
 }
 
+static Linkage x_create_sublinkage(unsigned int N_words)
+{
+	Linkage s = (Linkage) xalloc (sizeof(struct Linkage_s));
+	memset(&(s->lifo), 0, sizeof(Linkage_info));
+
+	s->num_links = 0;
+	s->lasz = 2 * N_words;
+	s->link_array = (Link *) xalloc(s->lasz * sizeof(Link));
+	memset(s->link_array, 0, s->lasz * sizeof(Link));
+
+	s->num_words = N_words;
+	s->chosen_disjuncts = (Disjunct **) xalloc(N_words * sizeof(Disjunct *));
+	memset(s->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
+
+	memset(&s->pp_data, 0, sizeof(PP_data));
+	s->pp_info = NULL;
+	s->pp_violation = NULL;
+
+	return s;
+}
+
+static void free_sublinkage(Linkage s)
+{
+	size_t i;
+
+	xfree(s->link_array, s->lasz * sizeof(Link));
+
+	exfree(s->chosen_disjuncts, s->num_words * sizeof(Disjunct *));
+	xfree(s, sizeof(struct Linkage_s));
+}
+
 static void post_process_linkages(Sentence sent, Parse_Options opts)
 {
-	Linkage_info *lifo;
 	size_t in;
 	size_t N_linkages_post_processed = 0;
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
+	Parse_info pi = sent->parse_info;
 
 	/* (optional) first pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
@@ -536,10 +567,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		for (in=0; in < N_linkages_alloced; in++)
 		{
+			Linkage_info *lifo;
+			Linkage lkg;
 			lifo = &sent->link_info[in];
 			if (lifo->discarded || lifo->N_violations) continue;
-			extract_links(lifo->index, sent->parse_info);
-			analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
+
+			/* XXX why are we allocing and freeing? lets just keep tthese! */
+			lkg = x_create_sublinkage(pi->N_words);
+			extract_links(lkg, sent->parse_info, lifo->index);
+			analyze_thin_linkage(sent, lkg, opts, PP_FIRST_PASS);
+			free_sublinkage(lkg);
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
 	}
@@ -547,9 +584,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	/* second pass: actually perform post-processing */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
-		int index;
-		lifo = &sent->link_info[in];
-		index = lifo->index;
+		Linkage lkg;
+		Linkage_info *lifo = &sent->link_info[in];
+		int index = lifo->index;
 		if (lifo->discarded) continue;
 		if (lifo->N_violations)
 		{
@@ -558,8 +595,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		extract_links(lifo->index, sent->parse_info);
-		*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
+		lkg = x_create_sublinkage(pi->N_words);
+		extract_links(lkg, sent->parse_info, lifo->index);
+		analyze_thin_linkage(sent, lkg, opts, PP_SECOND_PASS);
+		*lifo = lkg->lifo;
 		lifo->index = index;
 
 		if (0 != lifo->N_violations)
@@ -568,6 +607,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
+		free_sublinkage(lkg);
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 	}
 
@@ -843,7 +883,9 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
  
 	Linkage_info * const lifo = &sent->link_info[lk];
 
-	extract_links(lifo->index, pi);
+/* XXX we should not be building this over and over */
+	Linkage lkg = x_create_sublinkage(pi->N_words);
+	extract_links(lkg, pi, lifo->index);
 	*affix_types_p = '\0';
 	for (i=0; i<sent->length; i++)
 	{
@@ -852,7 +894,7 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 		size_t len;                /* disjunct length w/o subscript */
 		const char * mark;         /* char position of SUBSCRIPT_MARK */
 		bool empty_word = false;   /* is this an empty word? */
-		Disjunct * cdj = pi->chosen_disjuncts[i];
+		Disjunct * cdj = lkg->chosen_disjuncts[i];
 
 		lgdebug(+4, "Linkage %zu, word %zu/%zu\n", lk+1, i, sent->length);
 
@@ -1032,6 +1074,7 @@ try_again:
 		}
 	}
 	*affix_types_p = '\0';
+	free_sublinkage(lkg);
 
 	/* Check morpheme type combination.
 	 * If null_count > 0, the morpheme type combination may be invalid

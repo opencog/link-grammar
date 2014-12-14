@@ -18,7 +18,6 @@
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
 unsigned int count_disjuncts(Disjunct *);
-Disjunct * copy_disjunct(Disjunct * );
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
 char * print_one_disjunct(Disjunct *);

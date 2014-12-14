@@ -460,15 +460,13 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 {
 	per_thread_data *ptd = get_ptd(env, cls);
 	Linkage lkg = ptd->linkage;
-	Linkage_info *lifo;
 	Sense *sns;
 	const char * w = NULL;
 	jstring js;
 
 	if (!lkg) return NULL;
-	lifo = lkg->info;
 	lg_corpus_linkage_senses(lkg);
-	sns = lg_get_word_sense(lifo, i);
+	sns = lg_get_word_sense(&lkg->lifo, i);
 	while ((0 < j) && sns)
 	{
 		sns = lg_sense_next(sns);
@@ -489,13 +487,11 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env,
 {
 	per_thread_data *ptd = get_ptd(env, cls);
 	Linkage lkg = ptd->linkage;
-	Linkage_info *lifo = lkg->info;
 	Sense *sns;
 	double score = 0.0;
 
 	if (!lkg) return 0.0;
-	lifo = lkg->info;
-	sns = lg_get_word_sense(lifo, i);
+	sns = lg_get_word_sense(&lkg->lifo, i);
 	while ((0 < j) && sns)
 	{
 		sns = lg_sense_next(sns);

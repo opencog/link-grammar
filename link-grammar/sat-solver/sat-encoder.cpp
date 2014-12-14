@@ -1243,21 +1243,15 @@ Linkage SATEncoder::create_linkage()
   // linkage->info = sent->link_info[k]; done later...
 
   if (_sent->parse_info) {
-    Parse_info pi = _sent->parse_info;
-    // ??? there's no link-array entry for the right wall..?
-    for (size_t i=0; i < _sent->length-1; i++) {
-      free_connectors(pi->link_array[i].lc);
-      free_connectors(pi->link_array[i].rc);
-    }
     free_parse_info(_sent->parse_info);
     _sent->parse_info = NULL;
   }
   Parse_info pi = parse_info_new(_sent->length);
-  sat_extract_links(pi);
+  sat_extract_links(linkage);
   pi->N_words = _sent->length;
   _sent->parse_info = pi;
 
-  extract_thin_linkage(_sent, linkage, _opts);
+  extract_thin_linkage(_sent, linkage);
 
   compute_chosen_words(_sent, linkage, _opts);
 
@@ -1298,9 +1292,9 @@ Linkage SATEncoder::get_next_linkage()
     Linkage_info* lifo = &_sent->link_info[index];
 
     // Why is linkage_post_process() never called here?
-    *lifo = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
-    lifo->index = index;
-    linkage->info = lifo;
+    analyze_thin_linkage(_sent, linkage, _opts, PP_SECOND_PASS);
+    linkage->lifo.index = index;
+    *lifo = linkage->lifo;
 
     if (0 == lifo->N_violations) {
       _sent->num_valid_linkages++;
@@ -1492,7 +1486,7 @@ void SATEncoder::generate_linked_min_max_planarity()
   }
 }
 
-bool SATEncoderConjunctionFreeSentences::sat_extract_links(Parse_info pi)
+bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
   int current_link = 0;
   const std::vector<int>& link_variables = _variables->link_variables();
@@ -1505,10 +1499,9 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Parse_info pi)
     if (_solver->model[_variables->linked(var->left_word, var->right_word)] != l_True)
       continue;
 
-    Link& clink = pi->link_array[current_link];
+    Link& clink = lkg->link_array[current_link];
     clink.lw = var->left_word;
     clink.rw = var->right_word;
-    //    pi->link_array[j].name = var->label;
 
     Connector* connector;
 
@@ -1524,15 +1517,15 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Parse_info pi)
     // This is needed so that compute_chosen_word works correctly.
 #ifdef NO_DISJUNCT_INFO_AVAILABLE_WTF
 // XXX I think LinkVar needs to be extended to hold the disjunct
-    pi->chosen_disjuncts[clink.lw] = ld;
-    pi->chosen_disjuncts[clink.rw] = rd;
+    lkg->chosen_disjuncts[clink.lw] = ld;
+    lkg->chosen_disjuncts[clink.rw] = rd;
 #endif
 
     current_link++;
   }
 
-  pi->N_links = current_link;
-  DEBUG_print("Total: ." <<  pi->N_links << "." << endl);
+  lkg->num_links = current_link;
+  DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
 }
 
@@ -1580,14 +1573,7 @@ extern "C" void sat_sentence_delete(Sentence sent)
   // Don't do this parse-info-free stuff, if there's no encoder.
   // That's because it will screw up the regular parser.
   if (sent->parse_info) {
-    Parse_info pi = sent->parse_info;
-    // ??? there's no link-array entry for the right wall..?
-    for (size_t i=0; i < sent->length-1; i++) {
-      free_connectors(pi->link_array[i].lc);
-      free_connectors(pi->link_array[i].rc);
-    }
     free_parse_info(sent->parse_info);
     sent->parse_info = NULL;
   }
-
 }

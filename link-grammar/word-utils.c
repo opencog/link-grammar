@@ -16,6 +16,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #include "count.h"
 #include "dict-api.h"
@@ -203,16 +204,6 @@ void free_connectors(Connector *e)
 	}
 }
 
-void exfree_connectors(Connector *e)
-{
-	Connector * n;
-	for(;e != NULL; e = n) {
-		n = e->next;
-		exfree((void *) e->string, sizeof(char)*(strlen(e->string)+1));
-		xfree(e, sizeof(Connector)); /* even in this case, connector came from xalloc */
-	}
-}
-
 Connector * connector_new(void)
 {
 	Connector *c = (Connector *) xalloc(sizeof(Connector));
@@ -230,67 +221,6 @@ Connector * init_connector(Connector *c)
 	c->hash = -1;
 	c->length_limit = UNLIMITED_LEN;
 	return c;
-}
-
-/**
- * This builds a new copy of the connector list pointed to by c.
- * Strings, as usual, are not copied.
- */
-Connector * copy_connectors(Connector * c)
-{
-	Connector *c1;
-	if (c == NULL) return NULL;
-	c1 = connector_new();
-	*c1 = *c;
-	c1->next = copy_connectors(c->next);
-	return c1;
-}
-
-Connector * excopy_connectors(Connector * c)
-{
-	char * s;
-	Connector *c1;
-
-	if (c == NULL) return NULL;
-
-	c1 = connector_new();
-	*c1 = *c;
-	s = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
-	strcpy(s, c->string);
-	c1->string = s;
-	c1->next = excopy_connectors(c->next);
-
-	return c1;
-}
-
-/* ======================================================== */
-/* Link utilities ... */
-
-Link * excopy_link(Link * l)
-{
-	char * s;
-	Link * newl;
-
-	if (l == NULL) return NULL;
-
-	newl = (Link *) exalloc(sizeof(Link));
-	s = (char *) exalloc(sizeof(char)*(strlen(l->link_name)+1));
-	strcpy(s, l->link_name);
-	newl->link_name = s;
-	newl->lw = l->lw;
-	newl->rw = l->rw;
-	newl->lc = excopy_connectors(l->lc);
-	newl->rc = excopy_connectors(l->rc);
-
-	return newl;
-}
-
-void exfree_link(Link * l)
-{
-	exfree_connectors(l->rc);
-	exfree_connectors(l->lc);
-	exfree((void *)l->link_name, sizeof(char)*(strlen(l->link_name)+1));
-	exfree(l, sizeof(Link));
 }
 
 /* ======================================================== */
