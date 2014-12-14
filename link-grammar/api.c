@@ -562,11 +562,9 @@ static void partial_init_linkage(Linkage lkg, unsigned int N_words)
 	lkg->pp_violation = NULL;
 }
 
-static void post_process_linkages(Sentence sent, Parse_Options opts)
+static void compute_chosen_disjuncts(Sentence sent)
 {
 	size_t in;
-	size_t N_linkages_post_processed = 0;
-	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	Parse_info pi = sent->parse_info;
 
@@ -577,7 +575,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		if (lifo->discarded || lifo->N_violations) continue;
 
 		partial_init_linkage(lkg, pi->N_words);
+		extract_links(lkg, pi, lifo->index);
 	}
+}
+
+static void post_process_linkages(Sentence sent, Parse_Options opts)
+{
+	size_t in;
+	size_t N_linkages_post_processed = 0;
+	size_t N_valid_linkages = sent->num_valid_linkages;
+	size_t N_linkages_alloced = sent->num_linkages_alloced;
 
 	/* (optional) first pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
@@ -593,7 +600,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			Linkage_info *lifo = &lkg->lifo;
 			if (lifo->discarded || lifo->N_violations) continue;
 
-			extract_links(lkg, sent->parse_info, lifo->index);
 			analyze_thin_linkage(sent, lkg, opts, PP_FIRST_PASS);
 
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
@@ -614,7 +620,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		extract_links(lkg, sent->parse_info, lifo->index);
 		analyze_thin_linkage(sent, lkg, opts, PP_SECOND_PASS);
 
 		if (0 != lifo->N_violations)
@@ -1145,6 +1150,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	}
 }
 
+/** Misnamed, this has nothing to do with chart parsing */
 static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
@@ -1187,6 +1193,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		print_time(opts, "Counted parses");
 
 		select_linkages(sent, mchxt, ctxt, opts);
+		compute_chosen_disjuncts(sent);
 		sane_morphism(sent, opts);
 		post_process_linkages(sent, opts);
 		sort_linkages(sent, opts);

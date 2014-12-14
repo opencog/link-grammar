@@ -140,7 +140,6 @@ void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int an
 	PP_node * pp;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 
-	extract_thin_linkage(sent, lkg);
 	if (analyze_pass == PP_FIRST_PASS)
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, lkg);
