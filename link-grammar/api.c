@@ -39,6 +39,7 @@
 #include "structures.h"
 #include "tokenize.h"
 #include "utilities.h"
+#include "wordgraph.h"
 #include "word-utils.h"
 
 /***************************************************************
@@ -449,6 +450,10 @@ static void free_linkages(Sentence sent)
 	sent->num_linkages_post_processed = 0;
 	sent->num_valid_linkages = 0;
 	sent->lnkages = NULL;
+
+	/* XXX FIXME */
+	free(link_info->wg_path);
+	free(link_info->wg_path_display);
 }
 
 static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
@@ -741,7 +746,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* memset above already zeros these for us */
 	sent->length = 0;
 	sent->word = NULL;
-	sent->post_quote = NULL;
 	sent->num_linkages_found = 0;
 	sent->num_linkages_alloced = 0;
 	sent->num_linkages_post_processed = 0;
@@ -768,12 +772,18 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
+	sent->word_queue = NULL;
+	sent->word_queue_last = NULL;
+	sent->last_word = NULL;
+	sent->gword_node_num = 0;
+
 	return sent;
 }
 
 int sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
+	bool fw_failed = false;
 
 	/* Cleanup stuff previously allocated. This is because some free
 	 * routines depend on sent-length, which might change in different
@@ -785,6 +795,12 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		return -1;
 	}
 
+	/* Flatten the word graph created by separate_sentence() to a 2D-word-array
+	 * which is compatible to the current parsers.
+	 * This may fail if the EMPTY_WORD_DOT or UNKNOWN_WORD words are needed but
+	 * are not defined in the dictionary, or an internal error happens. */
+	fw_failed = !flatten_wordgraph(sent, opts);
+
 	/* If unknown_word is not defined, then no special processing
 	 * will be done for e.g. capitalized words. */
 	if (!(dict->unknown_word_defined && dict->use_unknown_word))
@@ -794,10 +810,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		}
 	}
 
-	/* Look up each word in the dictionary, collect up all
-	 * plausible disjunct expressions for each word.
-	 */
-	build_sentence_expressions(sent, opts);
+	if (fw_failed) return -3;
 
 	return 0;
 }
@@ -805,6 +818,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 static void free_sentence_words(Sentence sent)
 {
 	size_t i;
+
 	for (i = 0; i < sent->length; i++)
 	{
 		free_X_nodes(sent->word[i].x);
@@ -813,7 +827,36 @@ static void free_sentence_words(Sentence sent)
 	}
 	free((void *) sent->word);
 	sent->word = NULL;
-	free(sent->post_quote);
+}
+
+static void wordgraph_delete(Sentence sent)
+{
+	Gword *w = sent->wordgraph;
+
+	while(NULL != w)
+	{
+		Gword *w_tofree = w;
+
+		free(w->prev);
+		free(w->next);
+		free(w->hier_position);
+		free(w->null_subwords);
+		w = w->chain_next;
+		free(w_tofree);
+	}
+	sent->wordgraph = sent->last_word = NULL;
+}
+
+static void word_queue_delete(Sentence sent)
+{
+	struct word_queue *wq = sent->word_queue;
+	while (NULL != wq)
+	{
+		struct word_queue *wq_tofree = wq;
+		wq = wq->next;
+		free(wq_tofree);
+	};
+	sent->word_queue = NULL;
 }
 
 void sentence_delete(Sentence sent)
@@ -821,6 +864,8 @@ void sentence_delete(Sentence sent)
 	if (!sent) return;
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
+	wordgraph_delete(sent);
+	word_queue_delete(sent);
 	string_set_delete(sent->string_set);
 	free_parse_info(sent->parse_info);
 	free_linkages(sent);
@@ -891,293 +936,383 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 	return sent->lnkages[i].lifo.link_cost;
 }
 
+/**
+ * Construct word paths (one or more) through the Wordgraph.
+ *
+ * Add 'add_word" to the potential path.
+ * Add "p" to the path queue, which defines the start of the next potential
+ * paths to be checked.
+ *
+ * Eatch path is up to the current word (not including). It doesn't actually
+ * construct a full path if there are null words - they break it. The final path
+ * is constructed when the Wordgraph termination word is encountered.
+ *
+ * Note: The final path doesn't match the linkage word indexing if the linkage
+ * contains empty words, at least until empty words are eliminated from the
+ * linkage (in compute_chosen_words()). Further proceesing of the path is done
+ * there in case morphology splits are to be hidden or there are morphemes with
+ * null linkage.
+ */
+static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
+                                  Gword *current_word, /* add to the path */
+                                  Gword *p)      /* add to the path queue */
+{
+	size_t n = wordgraph_pathpos_len(*nwp);
+
+	assert(NULL != p, "Tried to add a NULL word to the qord queue");
+
+	/* Check if the path queue alredey contains the word to be added to it. */
+	if (NULL != *nwp)
+	{
+		const Wordgraph_pathpos *wpt;
+
+		for (wpt = *nwp; NULL != wpt->word; wpt++)
+		{
+			if (p == wpt->word)
+			{
+				/* If we are here, there are 2 or more paths leading to this word
+				 * (p) that end with the same number of consecutive null words that
+				 * consist an entire alternative. These null words represent
+				 * different ways to split the subword upward in the hierarchy, but
+				 * since they don't have linkage we don't care which of these
+				 * paths is used. */
+				return; /* The word is already in the queue */
+			}
+		}
+	}
+
+	/* Not already in the path queue - add it. */
+	*nwp = wordgraph_pathpos_resize(*nwp, n);
+	(*nwp)[n].word = p;
+
+	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
+	{
+			/* Previous word is the Worgraph dummy word. Initialize the path. */
+			(*nwp)[n].path = NULL;
+	}
+	else
+	{
+		/* We branch to another path. Duplicate it from the current path and add
+		 * the current word to it. */
+		size_t path_arr_size = (wordlist_len(path)+1)*sizeof(*path);
+
+		(*nwp)[n].path = malloc(path_arr_size);
+		memcpy((*nwp)[n].path, path, path_arr_size);
+	}
+   /* FIXME (cast) but anyway wordlist_append() doesn't modify Gword. */
+	wordlist_append((Gword ***)&(*nwp)[n].path, current_word);
+}
+
+/**
+ * Free the Wordgraph paths and the Wordgraph_pathpos array.
+ * In case of a match, the final path is still needed so this function is
+ * then invoked with free_final_path=false.
+ */
+static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
+{
+	Wordgraph_pathpos *twp;
+
+	if (NULL == wp) return;
+	for (twp = wp; NULL != twp->word; twp++)
+	{
+		if (free_final_path || (MT_INFRASTRUCTURE != twp->word->morpheme_type))
+			free(twp->path);
+	}
+	free(wp);
+}
+
 /* ============================================================== */
 /* A kind of morphism post-processing */
 
-static inline bool
-	is_AFFIXTYPE_PREFIX(char infix_mark, const char *a, size_t len)
-	{ return infix_mark == a[len-1]; }
-static inline bool
-	is_AFFIXTYPE_EMPTY(char infix_mark, const char *a, size_t len)
-	{ return (0 == strcmp(a, EMPTY_WORD_MARK)); }
+/* These letters create a string that should be matched by a SANEMORPHISM regex,
+ * given in the affix file. The empty word doesn't have a letter. E.g. for the
+ * Russian dictionary: "w|ts". It is converted here to: "^((w|ts)b)+$".
+ * It matches "wbtsbwbtsbwb" but not "wbtsbwsbtsb".
+ * FIXME? In this version of the function, 'b' is not yet supported,
+ * so "w|ts" is converted to "^(w|ts)+$" for now. */
+
+#define AFFIXTYPE_PREFIX	'p'	/* prefix */
+#define AFFIXTYPE_STEM		't'	/* stem */
+#define AFFIXTYPE_SUFFIX	's'	/* suffix */
+#define AFFIXTYPE_MIDDLE	'm'	/* middle morpheme */
+#define AFFIXTYPE_WORD		'w'	/* regular word */
+#ifdef WORD_BOUNDARIES
+#define AFFIXTYPE_END		'b'	/* end of input word */
+#endif
 
 /**
  * This routine solves the problem of mis-linked alternatives,
  * i.e a morpheme in one alternative that is linked to a morpheme in
  * another alternative. This can happen due to the way in which word
- * alternatives are implemeted.
+ * alternatives are implemented.
  *
- * It does so by checking that all the chosen disjuncts for each input word
- * come from the same alternative in the word.
+ * It does so by checking that all the chosen disjuncts in a linkage (including
+ * null words) match, in the same order, a path in the Wordgraph.
  *
- * It also validates that there is one alternative in which all the tokens
- * are chosen. XXX This may disallow island morphemes, and may need to be
- * relaxed.
+ * An important side effect of this check is that if the linkage is good,
+ * its Wordgraph path is found.
  *
  * Optionally (if SANEMORPHISM regex is defined in the affix file), it
  * also validates that the morpheme-type sequence is permitted for the
  * language. This is a sanity check of the program and the dictionary.
  *
- * TODO (if needed): support a midle morpheme type.
+ * Return true if the linkage is good, else return false.
  */
-
-/* These letters create a string that should be matched by a SANEMORPHISM regex,
- * given in the affix file. The empty word doesn't have a letter. E.g. for the
- * Russian dictionary: "w|ts". It is converted here to: "^((w|ts)b)+$".
- * It matches "wbtsbwbtsbwb" but not "wbtsbwsbtsb". */
-#define AFFIXTYPE_PREFIX	'p'	/* prefix */
-#define AFFIXTYPE_STEM		't'	/* stem */
-#define AFFIXTYPE_SUFFIX	's'	/* suffix */
-#define AFFIXTYPE_WORD		'w'	/* regular word */
-#define AFFIXTYPE_END		'b'	/* end of input word */
-
-/** return true if its good, else return false */
 bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
+	Wordgraph_pathpos *wp_new = NULL;
+	Wordgraph_pathpos *wp_old = NULL;
+	Wordgraph_pathpos *wpp;
+	Gword **next; /* next Wordgraph words of the current word */
+
 	size_t i;
-	Dictionary afdict = sent->dict->affix_table;
-	const char infix_mark = INFIX_MARK(afdict);
-	int * matched_alts = NULL;       /* number of morphemes that have matched
-												 * the chosen disjuncts for the
-												 * unsplit_word, so far (index: ai) */
-	size_t matched_alts_num = 0;     /* matched_alts number of elements */
-	char * const affix_types =
-	   alloca(sent->length*2 + 1);   /* affix types sequence */
 
-#define MATCHED_ALTS_MIN_INC 16     /* don't allocate matched_alts often */
+	Linkage_info * const lifo = &sent->link_info[lk];
+	bool match_found = true; /* if all the words are null - it's still a match */
+	Gword **lwg_path;
 
-	size_t numalt = 1;               /* number of alternatives */
-	size_t ai;                       /* index of checked alternative */
-	int unsplit_i = 0;               /* unsplit word index */
-	const char * unsplit = NULL;     /* unsplit word */
-	char * affix_types_p = affix_types;
-	/* If all the words are null - behave as if everything matched. */
-	bool match_found = true;        /* djw matched a morpheme */
+	Dictionary afdict = sent->dict->affix_table;       /* for SANEMORPHISM */
+	char *const affix_types = alloca(sent->length*2 + 1);   /* affix types */
 
-	*affix_types_p = '\0';
-	for (i=0; i<sent->length; i++)
+	affix_types[0] = '\0';
+
+	/* Populate the path word queue, initializing the path to NULL. */
+	for (next = sent->wordgraph->next; *next; next++)
 	{
-		const char * djw;          /* disjunct word - the chosen word */
-		size_t djwlen;             /* disjunct total length */
-		size_t len;                /* disjunct length w/o subscript */
-		const char * mark;         /* char position of SUBSCRIPT_MARK */
-		bool empty_word = false;   /* is this an empty word? */
-		Disjunct * cdj = lkg->chosen_disjuncts[i];
+		wordgraph_path_append(&wp_new, /*path*/NULL, /*add_word*/NULL, *next);
+	}
+	assert(NULL != wp_new, "Path word queue is empty");
 
-		lgdebug(+4, "Linkage %p, word %zu/%zu\n", lkg, i, sent->length);
+	if (4 <= opts->verbosity)
+		print_linkage_words(sent, lkg, pi->chosen_disjuncts);
 
-		/* Ignore island words */
-		if (NULL == cdj)
+	for (i = 0; i < sent->length; i++)
+	{
+		Disjunct *cdj;            /* chosen disjunct */
+
+		lgdebug(4, "%zu Word %zu: ", lk+1, i);
+
+		if (NULL == wp_new)
 		{
-			lgdebug(4, "%p ignored island word\n", lkg);
-			unsplit = NULL; /* mark it as island */
-			continue;
-		}
-
-		if (NULL != sent->word[i].unsplit_word)
-		{
-			/* This is an input word - remember its parameters */
-			unsplit_i = i;
-			unsplit = sent->word[i].unsplit_word;
-			numalt = altlen(sent->word[i].alternatives);
-			if (numalt > matched_alts_num)
-			{
-				matched_alts_num = numalt + MATCHED_ALTS_MIN_INC;
-				matched_alts =
-					realloc(matched_alts, sizeof(*matched_alts)*matched_alts_num);
-			}
-
-			lgdebug(4, "%p unsplit word %s, alts:", lkg, unsplit);
-			for (ai = 0; ai < numalt; ai++)
-			{
-				matched_alts[ai] = 0;
-				lgdebug(4, " %zu:%s", ai, sent->word[i].alternatives[ai]);
-			}
-			lgdebug(4, "\n");
-		}
-		if (NULL == unsplit)
-		{
-			lgdebug(4, "%p ignore morphemes of an island word\n", lkg);
-			continue;
-		}
-
-		djw = cdj->string;
-		djwlen = strlen(djw);
-		mark = strchr(djw, SUBSCRIPT_MARK);
-		len = NULL != mark ? (size_t)(mark - djw) : djwlen;
-
-		/* Find morpheme type */
-		if (is_AFFIXTYPE_EMPTY(infix_mark, djw, djwlen))
-		{
-			/* Ignore the empty word */;
-			empty_word = true;
-		}
-		else
-		if (is_suffix(infix_mark, djw))
-		{
-			*affix_types_p = AFFIXTYPE_SUFFIX;
-		}
-		else
-		if (is_stem(djw))
-		{
-			*affix_types_p = AFFIXTYPE_STEM;
-		}
-		else
-		if (is_AFFIXTYPE_PREFIX(infix_mark, djw, len))
-		{
-			*affix_types_p = AFFIXTYPE_PREFIX;
-		}
-		else
-		{
-			*affix_types_p = AFFIXTYPE_WORD;
-		}
-
-		lgdebug(4, "%p djw=%s affixtype=%c\n",
-		        lkg, djw, empty_word ? 'E' : *affix_types_p);
-
-		if (! empty_word) affix_types_p++;
-
-		lgdebug(4, "%p djw %s matched alt#:", lkg, djw);
-		match_found = false;
-
-		/* Compare the chosen word djw to the alternatives */
-		for (ai = 0; ai < numalt; ai++)
-		{
-			const char * s, * t;
-			const char *a = sent->word[i].alternatives[ai];
-			char downcased[MAX_WORD+1] = "";
-
-			if (-1 == matched_alts[ai])
-				continue; /* already didn't match */
-
-			s = a;
-try_again:
-			t = djw;
-			//lgdebug(4, "\n%d COMPARING alt%d s %s djw %s: ", lk+1, (int)ai, s, t);
-			/* Rules of match:
-			 * A morpheme with a subscript needs an exact match to djw.
-			 * A morpheme w/o a subscript needs an exact match to djw
-			 * disregarding its subscript.
-			 * XXX To check: words that contain a dot as part of them. */
-			while ((*s != '\0' && *s != '[') && (*s == *t)) {s++; t++;}
-			/* Possibilities:
-			 *** Match (the last two are for words ending with [...]):
-			 * s==\0 && t==\0
-			 * s==\0 && t==SUBSCRIPT_MARK
-			 * s==\0 && t==[
-			 * s==[ && t==[
-			 *** Continue to check:
-			 * s==.	&& t==SUBSCRIPT_MARK
-			 */
-			if (*s == SUBSCRIPT_DOT && *t == SUBSCRIPT_MARK)
-			{
-				s++; t++;
-				while ((*s != '\0') && (*s == *t)) {s++; t++;}
-			}
-			if (((*s == '\0') &&
-			   ((*t == '\0') || (*t == SUBSCRIPT_MARK) || (*t == '[')))
-			   ||
-			   ((*s == '[') && (*t == '[')))
-			{
-				//lgdebug(4, "EQUAL\n");
-				lgdebug(4, " %zu", ai);
-				match_found = true;
-				/* Count matched morphemes in this alternative */
-				matched_alts[ai]++;
-			}
-			else {
-				//lgdebug(4,"NOTEQ\n");
-				/* If we are here, it didn't match. Is that because of
-				 * capitalization? Lets check. */
-				if ((sent->word[i].firstupper) &&
-					('\0' == downcased[0]) && ('\0' != a[0]))
-				{
-					downcase_utf8_str(downcased, a, MAX_WORD);
-					lgdebug(4, "\n");
-					lgdebug(4, "%p downcasing %s>%s\n", lkg, a, downcased);
-					s = downcased;
-					goto try_again;
-				}
-				/* No match, disregard this alternative from now on */
-				matched_alts[ai] = -1;
-			}
-		}
-		if (! match_found)
-		{
-			lgdebug(4, " none\n");
+			lgdebug(+4, "- No more words in the wordgraph\n");
+			match_found = false;
 			break;
 		}
-		lgdebug(4, "\n");
 
-		/* If this is the last morpheme of the alternatives,
-		 * then make sure all of them exist in the linkage */
-		if ((i+1 == sent->length) || (NULL != sent->word[i+1].unsplit_word))
+		if (wp_old != wp_new)
 		{
-			int num_morphemes = i - unsplit_i + 1;
+			wordgraph_path_free(wp_old, true);
+			wp_old = wp_new;
+		}
+		wp_new = NULL;
+		//wordgraph_pathpos_print(wp_old);
 
-			lgdebug(4, "%p end of input word, num_morphemes %d\n",
-					lkg, num_morphemes);
-			*affix_types_p++ = AFFIXTYPE_END;
-
-			/* Make sure that there exists an alternative in
-			 * which all the morphemes have been matched.
-			 * ??? This disallows island morphemes -
-			 * should we allow them? */
+		cdj = lkg->chosen_disjuncts[i];
+		/* Handle null words */
+		if (NULL == cdj)
+		{
+			lgdebug(4, "- Null word\n");
+			/* A null word matches any word in the Wordgraph -
+			 * so, unconditionally proceed in all paths in parallel. */
 			match_found = false;
-			for (ai = 0; ai < numalt; ai++)
+			for (wpp = wp_old; NULL != wpp->word; wpp++)
 			{
-				if (matched_alts[ai] == num_morphemes)
+				if (NULL == wpp->word->next)
+					continue; /* This path encountered the Wordgraph end */
+
+				/* The null words cannot be marked here because wpp->path consists
+				 * of pointers to the Wordgraph words, and these words are common to
+				 * all the linkages, with potentially different null words in each
+				 * of them. However, the position of the null words can be inferred
+				 * from the null words in the word array of the Linkage structure.
+				 */
+				for (next = wpp->word->next; NULL != *next; next++)
 				{
 					match_found = true;
+					wordgraph_path_append(&wp_new, wpp->path, wpp->word, *next);
+				}
+			}
+			continue;
+		}
+
+		if (!match_found)
+		{
+			const char *e = "Internal error: Too many words in the linkage\n";
+			lgdebug(4, "- %s", e);
+			prt_error("Error: %s.", e);
+			break;
+		}
+
+		if (MT_EMPTY == cdj->word[0]->morpheme_type)
+		{
+			lgdebug(4, "- Empty word\n");
+			wp_new = wp_old;
+			continue; /* totally disregard it */
+		}
+
+		if (4 <= opts->verbosity) print_with_subscript_dot(cdj->string);
+
+		match_found = false;
+		/* Proceed in all the paths in which the word is found. */
+		for (wpp = wp_old; NULL != wpp->word; wpp++)
+		{
+			const Gword **wlp; /* disjunct word list */
+
+			for (wlp = cdj->word; *wlp; wlp++)
+			{
+				if (*wlp == wpp->word)
+				{
+					match_found = true;
+					for (next = wpp->word->next; NULL != *next; next++)
+					{
+						wordgraph_path_append(&wp_new, wpp->path, wpp->word, *next);
+					}
 					break;
 				}
 			}
-
-			if (! match_found)
-			{
-				lgdebug(4, "%p morphemes are missing in this linkage\n", lkg);
-				break;
-			}
-			lgdebug(4, "%p Perfect match\n", lkg);
 		}
-	}
-	*affix_types_p = '\0';
 
-	/* Check morpheme type combination.
-	 * If null_count > 0, the morpheme type combination may be invalid
-	 * due to morpheme islands, so skip this check. */
-	if (match_found && (0 == sent->null_count) && ('\0' != affix_types[0]) &&
-		(NULL != afdict) && (NULL != afdict->regex_root) &&
-		(NULL == match_regex(afdict->regex_root, affix_types)))
-	{
-		/* Morpheme type combination not valid */
-		match_found = false;
-		/* XXX we should have a better way to notify */
-		if (0 < verbosity)
-			printf("Warning: Invalid morpheme type combination %s, "
-			       "run with !bad and !verbosity=4 to debug\n", affix_types);
+		if (!match_found)
+		{
+			/* FIXME? A message can be add here if there are too many words in the
+			 * linkage (can happen only if there is an internal error). */
+			lgdebug(4, "- No Wordgraph match\n");
+			break;
+		}
+		lgdebug(4, "\n");
 	}
-	else
-		lgdebug(4, "%p morpheme type combination '%s'\n", lkg, affix_types);
-
-	if (matched_alts) free(matched_alts);
 
 	if (match_found)
 	{
-		lgdebug(4, "%p SUCCEEDED\n", lkg);
+		match_found = false;
+		/* Validate that there are no missing words in the linkage. It is so if
+		 * the dummy termination word is found in the new pathpos queue. */
+		if (NULL != wp_new)
+		{
+			for (wpp = wp_new; NULL != wpp->word; wpp++)
+			{
+				if (MT_INFRASTRUCTURE == wpp->word->morpheme_type) {
+					match_found = true;
+					/* Exit the loop with with wpp of the termination word. */
+					break;
+				}
+			}
+		}
+		if (!match_found)
+		    lgdebug(4, "%zu Missing word(s) at the end of the linkage.\n", lk+1);
+	}
+
+#define DEBUG_morpheme_type 0
+	/* Check the morpheme type combination.
+	 * If null_count > 0, the morpheme type combination may be invalid
+	 * due to null subwords, so skip this check. */
+	if (match_found && (0 == sent->null_count) &&
+		(NULL != afdict) && (NULL != afdict->regex_root))
+	{
+		const Gword **w;
+		char *affix_types_p = affix_types;
+
+		/* Construct the affix_types string. */
+#if DEBUG_morpheme_type
+		print_lwg_path(wpp->path);
+#endif
+		i = 0;
+		for (w = wpp->path; *w; w++)
+		{
+			i++;
+			if (MT_EMPTY == (*w)->morpheme_type) continue; /* really a null word */
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+			switch ((*w)->morpheme_type)
+			{
+#pragma GCC diagnostic pop
+				default:
+					/* What to do with the rest? */
+				case MT_WORD:
+					*affix_types_p = AFFIXTYPE_WORD;
+					break;
+				case MT_PREFIX:
+					*affix_types_p = AFFIXTYPE_PREFIX;
+					break;
+				case MT_STEM:
+					*affix_types_p = AFFIXTYPE_STEM;
+					break;
+				case MT_MIDDLE:
+					*affix_types_p = AFFIXTYPE_MIDDLE;
+					break;
+				case MT_SUFFIX:
+					*affix_types_p = AFFIXTYPE_SUFFIX;
+					break;
+			}
+
+#if DEBUG_morpheme_type
+			lgdebug(4, "Word %zu: %s affixtype=%c\n",
+			     i, (*w)->subword,  *affix_types_p);
+#endif
+
+			affix_types_p++;
+		}
+		*affix_types_p = '\0';
+
+#ifdef WORD_BOUNDARIES /* not yet implemented */
+		{
+			const Gword *uw;
+
+			/* If w is an "end subword", return its unsplit word, else NULL. */
+			uw = word_boundary(w); /* word_boundary() unimplemented */
+
+			if (NULL != uw)
+			{
+				*affix_types_p++ = AFFIXTYPE_END;
+				lgdebug(4, "%zu End of Gword %s\n", uw->subword);
+			}
+		}
+#endif
+
+		/* Check if affix_types is valid according to SANEMORPHISM. */
+		if (('\0' != affix_types[0]) &&
+		    (NULL == match_regex(afdict->regex_root, affix_types)))
+		{
+			/* Morpheme type combination is invalid */
+			match_found = false;
+			/* Notify to stdout, so it will be shown along with the result.
+			 * XXX We should have a better way to notify. */
+			if (0 < opts->verbosity)
+				printf("Warning: Invalid morpheme type combination '%s', "
+						 "run with !bad and !verbosity=4 to debug\n", affix_types);
+		}
+	}
+
+	if (match_found) lwg_path = (Gword **)wpp->path; /* OK to modify */
+	wordgraph_path_free(wp_new, !match_found);
+
+	if (match_found)
+	{
+	//	Gword **wp1, **wp2;
+
+		if ('\0' != affix_types[0])
+		{
+			lgdebug(4, "%zu Morpheme type combination '%s'\n", lk+1, affix_types);
+		}
+		lgdebug(+4, "%zu SUCCEEDED\n", lk+1);
+		lifo->wg_path = lwg_path;
 		return true;
 	}
-	else
-	{
-		Linkage_info * const lifo = &lkg->lifo;
-		/* Oh no ... invalid morpheme combination! */
-		sent->num_valid_linkages --;
-		lifo->N_violations++;
-		lifo->pp_violation_msg = "Invalid morphism construction.";
-		if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
-		lgdebug(4, "%p FAILED\n", lkg);
-		return false;
-	}
+
+	Linkage_info * const lifo = &lkg->lifo;
+	/* Oh no ... invalid morpheme combination! */
+	sent->num_valid_linkages --;
+	lifo->N_violations++;
+	lifo->pp_violation_msg = "Invalid morphism construction.";
+	lifo->wg_path = NULL;
+#if 0 /* They cannot be displayed now since they lack a Wordgraph path. */
+	if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
+#else
+	lifo->discarded = true;
+#endif
+	lgdebug(4, "%zu FAILED\n", lk+1);
+	return false;
 }
 
 static void sane_morphism(Sentence sent, Parse_Options opts)
@@ -1233,7 +1368,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->null_count = nl;
 		total = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 
-		if (verbosity > 1)
+		if (opts->verbosity > 1)
 		{
 			prt_error("Info: Total count with %zu null links:   %lld\n",
 				sent->null_count, total);
@@ -1252,7 +1387,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
-		/* If we are here, then no valid linakges were found.
+		/* If we are here, then no valid linkages were found.
 		 * If there was a parse overflow, give up now. */
 		if (PARSE_NUM_OVERFLOW < total) break;
 
