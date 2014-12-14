@@ -673,7 +673,6 @@ static bool mprefix_split(Sentence sent, const char *word)
 	bool word_is_in_dict;
 	int split_prefix_i = 0;      /* split prefix index */
 	const char *split_prefix[HEB_PRENUM_MAX]; /* the whole prefix */
-	/* pseen is a simple prefix combination filter */
 	bool *pseen;                 /* prefix "subword" seen (not allowed again) */
 	Dictionary dict = sent->dict;
 	int wordlen;
@@ -1157,6 +1156,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	int downcase_size = sz+MB_LEN_MAX+1; /* pessimistic max. size of dc buffer */
 	char *downcase = alloca(downcase_size);               /* downcasing buffer */
 	char *str = alloca(downcase_size+sizeof("[!]"));        /* tmp word buffer */
+	char *seen_word = alloca(downcase_size);    /* loop-prevention word buffer */
 
 	downcase[0] = '\0';
 
@@ -1221,6 +1221,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * units, then we try punctuation, and then units. This allows commas to be
 	 * removed (e.g.  7grams,). */
 
+	seen_word[0] = '\0';
 	do
 	{
 		int temp_n_r_stripped;
@@ -1271,6 +1272,10 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		sz = wend-w;
 		strncpy(word, w, sz);
 		word[sz] = '\0';
+
+		/* Avoid an infinite loop due to a repeating unknown remaining word */
+		if (0 == strcmp(word, seen_word)) break;
+		strcpy(seen_word, word);
 
 	/* Any remaining dict word stops the right-punctuation stripping. */
 	} while (NULL == units_wend && stripped &&
