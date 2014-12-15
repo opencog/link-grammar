@@ -132,8 +132,8 @@ void compute_link_names(Sentence sent, Linkage lkg)
 }
 
 /**
- * This uses link_array.  It post-processes
- * this linkage, and prints the appropriate thing.
+ * This does a minimal post-processing step, using the 'standard'
+ * post-processor.  It also computes some of the linkage costs.
  */
 void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
 {

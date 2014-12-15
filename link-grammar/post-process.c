@@ -1028,14 +1028,14 @@ void post_process_close_sentence(Postprocessor *pp)
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 									 Sentence sent, Linkage sublinkage)
 {
-	const char *p;
 	size_t i;
 	if (pp == NULL) return;
 	if (sent->length < opts->twopass_length) return;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		/* if (sublinkage->link_array[i].lw == SIZE_MAX) continue; */
+		const char *p;
 		assert(sublinkage->link_array[i].lw != SIZE_MAX);
+
 		p = string_set_add(sublinkage->link_array[i].link_name, pp->sentence_link_name_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}

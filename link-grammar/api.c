@@ -25,6 +25,7 @@
 #include "externs.h"
 #include "extract-links.h"
 #include "fast-match.h"
+#include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
 #include "print.h"
@@ -409,15 +410,6 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
-// XXX multiple defintions of this
-static void exfree_pp_info(PP_info *ppi)
-{
-	if (ppi->num_domains > 0)
-		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
-	ppi->domain_name = NULL;
-	ppi->num_domains = 0;
-}
-
 static void free_linkages(Sentence sent)
 {
 	size_t in;
@@ -443,15 +435,8 @@ static void free_linkages(Sentence sent)
 		lg_sense_delete(&linkage->lifo);
 #endif
 
-		if (linkage->pp_info != NULL)
-		{
-			size_t j;
-			for (j = 0; j < linkage->num_links; ++j)
-				exfree_pp_info(&linkage->pp_info[j]);
-			exfree(linkage->pp_info, sizeof(PP_info) * linkage->num_links);
-			linkage->pp_info = NULL;
-			post_process_free_data(&linkage->pp_data);
-		}
+		linkage_free_pp_info(linkage);
+		post_process_free_data(&linkage->pp_data);
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));

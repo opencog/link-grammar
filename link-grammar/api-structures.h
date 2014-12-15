@@ -334,11 +334,12 @@ struct Postprocessor_s
  */
 struct Linkage_info_struct
 {
+	int index;            /* Index into the parse_set */
 	bool discarded;
-	int index;
 	short N_violations;
 	short unused_word_cost;
 	short link_cost;
+
 	double disjunct_cost;
 	double corpus_cost;
 	size_t nwords;

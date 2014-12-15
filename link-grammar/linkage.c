@@ -284,15 +284,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	return linkage;
 }
 
-// XXX multiple defintions of this
-static void exfree_pp_info(PP_info *ppi)
-{
-	if (ppi->num_domains > 0)
-		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
-	ppi->domain_name = NULL;
-	ppi->num_domains = 0;
-}
-
 void linkage_delete(Linkage linkage)
 {
 	/* Currently a no-op */
@@ -464,6 +455,25 @@ const char * linkage_get_violation_name(const Linkage linkage)
 	return linkage->pp_violation;
 }
 
+static void exfree_domain_names(PP_info *ppi)
+{
+	if (ppi->num_domains > 0)
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
+}
+
+void linkage_free_pp_info(Linkage lkg)
+{
+	size_t j;
+	if (!lkg || !lkg->pp_info) return;
+
+	for (j = 0; j < lkg->num_links; ++j)
+		exfree_domain_names(&lkg->pp_info[j]);
+	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
+	lkg->pp_info = NULL;
+}
+
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
 	PP_node * pp;
@@ -473,18 +483,20 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
-		{
-			exfree_pp_info(&linkage->pp_info[j]);
-		}
+			exfree_domain_names(&linkage->pp_info[j]);
 		post_process_free_data(&linkage->pp_data);
-		exfree(linkage->pp_info, sizeof(PP_info) * linkage->num_links);
 	}
-	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
+	else
+	{
+		linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
+	}
+
 	for (j = 0; j < linkage->num_links; ++j)
 	{
 		linkage->pp_info[j].num_domains = 0;
 		linkage->pp_info[j].domain_name = NULL;
 	}
+
 	if (linkage->pp_violation != NULL)
 	{
 		exfree((void *)linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation)+1));
