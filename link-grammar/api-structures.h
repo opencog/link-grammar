@@ -250,9 +250,6 @@ struct Sentence_s
 	int    t_start;             /* start word of the current token sequence */
 	int    t_count;             /* word count in the current token sequence */
 
-	/* Post-processor private/internal state */
-	bool  q_pruned_rules;       /* don't prune rules more than once in p.p. */
-
 	/* thread-safe random number state */
 	unsigned int rand_state;
 
@@ -315,6 +312,7 @@ struct Postprocessor_s
 	pp_linkset *set_of_links_in_an_active_rule;/*used in *some* linkage of sent*/
 	int *relevant_contains_one_rules;        /* -1-terminated list of indices  */
 	int *relevant_contains_none_rules;
+	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
 
 	/* The following maintain state during a call to post_process() */
 	String_set *sentence_link_name_set;    /* link names seen for sentence */

@@ -691,7 +691,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
 
-	sent->q_pruned_rules = false;
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
@@ -721,8 +720,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	{
 		return -1;
 	}
-
-	sent->q_pruned_rules = false; /* for post processing */
 
 	/* If unknown_word is not defined, then no special processing
 	 * will be done for e.g. capitalized words. */

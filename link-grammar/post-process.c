@@ -982,6 +982,8 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
 
+	pp->q_pruned_rules = false;
+
 	/* 60 is just starting size, these are expanded if needed */
 	pp->vlength = 60;
 	pp->visited = (bool*) xalloc(pp->vlength * sizeof(bool));
@@ -1017,6 +1019,7 @@ void post_process_free(Postprocessor *pp)
 	xfree(pp, sizeof(Postprocessor));
 }
 
+/* XXX TODO do we really need to clear this much stuff for every linkage ?? */
 void post_process_close_sentence(Postprocessor *pp)
 {
 	if (pp == NULL) return;
@@ -1135,11 +1138,11 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
-	if (sent->q_pruned_rules == false && sent->length >= opts->twopass_length)
+	if (pp->q_pruned_rules == false && sent->length >= opts->twopass_length)
 	{
 		prune_irrelevant_rules(pp);
 	}
-	sent->q_pruned_rules = true;
+	pp->q_pruned_rules = true;
 
 	switch (internal_process(pp, sublinkage, &msg))
 	{
