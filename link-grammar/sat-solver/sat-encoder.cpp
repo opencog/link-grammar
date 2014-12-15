@@ -36,7 +36,7 @@ extern "C" {
 #ifdef _DEBUG
 #define DEBUG_print(x) (cout << x << endl)
 #else
-#define DEBUG_print(x) 
+#define DEBUG_print(x)
 #endif
 
 /*-------------------------------------------------------------------------*
@@ -1279,17 +1279,17 @@ Linkage SATEncoder::get_next_linkage()
   if (connected) {
     // num_connected_linkages++;
 
-    // Expand the lifo array.
+    // Expand the linkage array.
     int index = _sent->num_linkages_alloced;
     _sent->num_linkages_alloced++;
     size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
     _sent->lnkages = (Linkage) xrealloc(_sent->lnkages,
                        nbytes - sizeof(struct Linkage_s), nbytes);
-    Linkage_info* lifo = &(_sent->lnkages[index].lifo);
 
     // Why is linkage_post_process() never called here?
-    analyze_thin_linkage(_sent, linkage, _opts, PP_SECOND_PASS);
+    analyze_thin_linkage(_sent->postprocessor, linkage, _opts);
 
+    Linkage_info* lifo = &(_sent->lnkages[index].lifo);
     if (0 == lifo->N_violations) {
       _sent->num_valid_linkages++;
       sane_linkage_morphism(_sent, index, _opts);

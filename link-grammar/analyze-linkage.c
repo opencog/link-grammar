@@ -120,7 +120,7 @@ static const char * intersect_strings(String_set *sset, const char * s, const ch
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-static void compute_link_names(String_set *sset, Linkage lkg)
+void compute_link_names(String_set *sset, Linkage lkg)
 {
 	size_t i;
 	for (i = 0; i < lkg->num_links; i++)
@@ -135,17 +135,9 @@ static void compute_link_names(String_set *sset, Linkage lkg)
  * This does a minimal post-processing step, using the 'standard'
  * post-processor.  It also computes some of the linkage costs.
  */
-void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
+void analyze_thin_linkage(Postprocessor * postprocessor, Linkage lkg, Parse_Options opts)
 {
 	PP_node * pp;
-	Postprocessor * postprocessor = sent->postprocessor;
-
-	compute_link_names(sent->string_set, lkg);
-	if (analyze_pass == PP_FIRST_PASS)
-	{
-		post_process_scan_linkage(postprocessor, opts, lkg);
-		return;
-	}
 
 	pp = do_post_process(postprocessor, opts, lkg);
 	post_process_free_data(&postprocessor->pp_data);
