@@ -64,26 +64,25 @@ typedef struct
 } ps_ctxt_t;
 
 /**
- * prints s then prints the last |t|-|s| characters of t.
+ * Prints s then prints the last |t|-|s| characters of t.
  * if s is longer than t, it truncates s.
- * multi-byte enabled.
+ * Handles utf8 strings correctly.
  */
 static void left_append_string(String * string, const char * s, const char * t)
 {
 	size_t i;
-	size_t slen = strlen(s);
-	size_t tlen = strlen(t);
+	size_t slen = utf8_strlen(s);
+	size_t tlen = utf8_strlen(t);
 
-	for (i = 0; i < tlen; )
+	for (i = 0; i < tlen; i++)
 	{
 		if (i < slen)
-		{
-			i += append_utf8_char(string, &s[i]);
-		}
+			append_utf8_char(string, s);
 		else
-		{
-			i += append_utf8_char(string, &t[i]);
-		}
+			append_utf8_char(string, t);
+
+		s += utf8_next(s);
+		t += utf8_next(t);
 	}
 }
 
