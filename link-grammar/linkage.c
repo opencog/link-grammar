@@ -205,10 +205,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
 	}
 
-	/* At this time, we expect both the sent length and the linkage
-	 * length to be identical.  In the future, this may change ...
-	 */
-	assert (sent->length == linkage->num_words, "Unexpected linkage length");
+	/* We alloc a little more than needed, but so what... */
+	linkage->word = (const char **) exalloc(sent->length*sizeof(char *));
 
 	/* Copy over the chosen words, dropping the empty words. */
 	for (i=0, j=0; i<sent->length; ++i)
@@ -269,9 +267,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	/* Perform remaining initialization we haven't done yet...*/
 	linkage = &sent->lnkages[k];
-
-	linkage->num_words = sent->length;
-	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 
 	compute_chosen_words(sent, linkage, opts);
 
