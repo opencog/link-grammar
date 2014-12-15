@@ -18,6 +18,7 @@
 #include "api-structures.h"
 #include "dict-common.h"
 #include "disjuncts.h"
+#include "externs.h"
 #include "extract-links.h"
 #include "idiom.h"
 #include "link-includes.h"
@@ -28,7 +29,89 @@
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
 #include "structures.h"
+#include "wordgraph.h"
 #include "word-utils.h"
+
+#define INFIX_MARK_L 1 /* INFIX_MARK is 1 character */
+#define STEM_MARK_L  1 /* stem mark is 1 character */
+
+/**
+ * Append an unmarked (i.e. without INFIXMARK) morpheme to join_buff.
+ * join_buff is a zeroed-out buffer which has enough room for morpheme to be
+ * added +1.
+ */
+static void add_morpheme_unmarked(char *join_buff, const char *wm,
+                                  Morpheme_type mt)
+{
+	const char *sm =  strrchr(wm, SUBSCRIPT_MARK);
+
+	if (NULL == sm) sm = (char *)wm + strlen(wm);
+
+	if (MT_PREFIX == mt)
+		strncat(join_buff, wm, sm-wm-INFIX_MARK_L);
+	else if (MT_SUFFIX == mt)
+		strncat(join_buff, INFIX_MARK_L+wm, sm-wm-INFIX_MARK_L);
+	else if (MT_MIDDLE == mt)
+		strncat(join_buff, INFIX_MARK_L+wm, sm-wm-2*INFIX_MARK_L);
+	else
+		strncat(join_buff, wm, sm-wm);
+}
+
+static const char *join_null_word(Sentence sent, Gword **wgp, size_t count)
+{
+	size_t i;
+	char *join_buff;
+	const char *s;
+	size_t join_len = 0;
+
+	for (i = 0; i < count; i++)
+		join_len += strlen(wgp[i]->subword);
+
+	join_buff = alloca(join_len+1);
+	memset(join_buff, '\0', join_len+1);
+
+	for (i = 0; i < count; i++)
+		add_morpheme_unmarked(join_buff, wgp[i]->subword, wgp[i]->morpheme_type);
+
+	s = string_set_add(join_buff, sent->string_set);
+
+	return s;
+}
+
+/**
+ * Add a null word node that represents two or more null morphemes.
+ * Used for "unifying" null morphemes that are part of a single subword,
+ * when only some of its morphemes (2 or more) don't have a linkage.
+ * The words "start" to "end" (including) are unified by the new node.
+ * XXX Experimental.
+ */
+static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
+{
+	Gword *new_word;
+	Gword **w;
+	char *usubword;
+	size_t join_len = 0;
+
+	for (w = start; w <= end; w++) join_len += strlen((*w)->subword);
+	usubword = calloc(join_len+1, 1); /* zeroed out */
+
+	for (w = start; w <= end; w++)
+		add_morpheme_unmarked(usubword, (*w)->subword, (*w)->morpheme_type);
+
+	new_word = gword_new(sent, usubword);
+	free(usubword);
+	new_word->status |= WS_PL;
+	new_word->label = "NJ";
+	new_word->null_subwords = NULL;
+	
+	/* Link the null_subwords links of the added unifying node to the null
+	 * subwords it unified. */
+	for (w = start; w <= end; w++)
+		wordlist_append(&new_word->null_subwords, (Gword *)(*w));
+	/* Removing const qualifier, but wordlist_append doesn't change w->... .  */
+
+	return new_word;
+}
 
 /**
  * The functions defined in this file are primarily a part of the user API
@@ -38,161 +121,415 @@
 /*
  * The "empty word" is a concept used in order to make the current parser able
  * to parse "alternatives" within a sentence. The "empty word" can link to any
- * word, hence it is issued when a word is optional.  Currently, for coding
- * convenience, the "empty * word" is also automatically inserted into a
- * sentence, so as to balance the total count of words in alternatives.
+ * word, hence it is issued when a word is optional, a thing that happens when
+ * there are alternatives with different number of tokens in each of them.
  *
  * However, the empty words are not needed after the linkage step, and so,
  * below, we remove them from the linkage, as well as the links that
  * connect to them.
  *
- * The empty word device is employed by every non-English dictionary. (viz.
- * Russian, German, Lithuanian, ...). Recently it has been added to the English
- * dictionary, and is issued in cases of contraction splitting, spell guesses,
- * and unit-strip alternatives. For more information, see EMPTY_WORD.zzz in the
- * dict file.
+ * The empty word device must be defined in the dictionary of every language for
+ * which alternatives can be generated. This may happen in case of morpheme and
+ * contraction splitting, spell ->regex_namees, and unit-strip.
+ * For more information, see EMPTY_WORD.zzz in the dict file.
  */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
-#define INFIX_MARK_L 1         /* INFIX_MARK is 1 character */
+#define SUBSCRIPT_SEP SUBSCRIPT_DOT /* multiple-subscript separator */
 
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
 #define HIDE_MORPHO   (!display_morphology)
+/* TODO? !display_->regex_name_marks is not implemented. */
+#define DISPLAY_GUESS_MARKS true // (opts->display_->regex_name_marks)
 
 /**
- * This takes the current chosen_disjuncts array and uses it to
+ * This takes the Wordgraph path array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.
  *
- * chosen_words[]
- *    An array of pointers to strings.  These are the words to be displayed
- *    when printing the solution, the links, etc.  Computed as a function of
- *    chosen_disjuncts[] by compute_chosen_words().  This differs from
- *    sentence[].string because it contains the suffixes.  It differs from
- *    chosen_disjunct[].string in that the idiom symbols have been removed.
+ * chosen_words
+ *    A pointer to an array of pointers to strings.  These are the words to be
+ *    displayed when printing the solution, the links, etc.  Computed as a
+ *    function of chosen_disjuncts[] by compute_chosen_words().  This differs
+ *    from sentence[].alternatives because it contains the subscripts.  It
+ *    differs from chosen_disjunct[].string in that the idiom symbols have been
+ *    removed.  Furthermorw, several chosen_disjuncts[].string elements may be
+ *    combined into one chosen_words[] element if opts->display_morphology==0 or
+ *    that they where linkage null-words that are morphemes of the same original
+ *    word (i.e. subwords of an unsplit_word which are marked as morphemes).
  *
+ * wordgraph_path
+ *    A pointer to a NULL-terminated array of pointers to Wordgraph words.
+ *    It corresponds 1-1 to the chosen_disjuncts array in parse_info.
+ *    A new one is constructed below to correspond 1-1 to chosen_words.
+ *    
+ *    FIXME Sometimes the word strings are taken from chosen_disjuncts,
+ *    and sometimes from wordgraph subwords. Use only one of them for that.
  */
+#define D_CCW 5
 void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
-	size_t i, j, l;
-	char * s, *u;
-	const char ** chosen_words = alloca(sent->length*sizeof(char*));
-	size_t *remap = alloca(sent->length*sizeof(size_t));
+	size_t i;   /* index of chosen_words */
+	size_t wgi; /* index of wordgraph_path */
+
+	size_t j;
+	Disjunct **cdjp = linkage->chosen_disjuncts;
+	const char **chosen_words = alloca(sent->length * sizeof(*chosen_words));
+	size_t *remap = alloca(sent->length * sizeof(*remap));
 	bool display_morphology = opts->display_morphology;
-	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 
-	/* XXX TODO -- this should be not sent->length but
-	 * linkage->num_words ...and likewise, we should not be looking at
-	 * sent->word[i].unsplit_word but the correct path-word for the linkage */
-	for (i=0; i<sent->length; i++)
+	Gword **lwg_path = linkage->info->wg_path;
+	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
+#if 0 /* FIXME? Not implemented. */
+	size_t len_n_lwg_path = 0;
+	/* For opts->display_morphology==0: Mapping of the chosen_words indexing to
+	 * original parse indexing, so the word-array pointers in the Wordgraph words
+	 * can be used to access the corresponding disjuncts, when available in
+	 * sent->parse_info. */
+	size_t *wg_path_index = alloca(sent->length * sizeof(*lwg_path_display));
+#endif
+
+	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
+	size_t nbsize = 0;              /* number of word in a null block */
+	Gword *unsplit_word = NULL;
+
+	if (D_CCW <= opts->verbosity)
 	{
-		const char *t;
-		/* If chosen_disjuncts is NULL, then this is an 'island' word
-		 * that has not been linked to. */
-		if (linkage->chosen_disjuncts[i] == NULL)
-		{
-			/* The unsplit_word is the original word; if its been split
-			 * into stem+suffix, and either one hasn't been chosen, then
-			 * neither should be printed.  Do, however, put brackets around
-			 * the original word, and print that.
-			 */
-			t = sent->word[i].unsplit_word;
-			if (t)
-			{
-				l = strlen(t) + 2;
-				s = (char *) xalloc(l+1);
-				snprintf(s, l+1, "[%s]", t);
-				t = string_set_add(s, sent->string_set);
-				xfree(s, l+1);
-			}
-			else
-			{
-				/* Alternative token island.
-				 * Show the internal word number and its list of alternatives. */
-				String * s = string_new();
-				const char ** a;
-				char * a_list;
+		print_linkage_words(sent, 0 , cdjp);
+		print_lwg_path(lwg_path);
+	}
+	
+	wgi = 0;
+	for (i = 0; i < sent->length; i++)
+	{
+		Disjunct *cdj = cdjp[i];
+		Gword *w;           /* current word */
+		const Gword *nw;    /* next word (NULL if none) */
+		Gword **wgp;        /* wordgraph_path traversing pointer */
 
-				append_string(s, "[%zu", i);
-				for (a = sent->word[i].alternatives; *a; a++) {
-					/* Don't show an empty word - it is not an island. */
-					if (0 == strcmp(*a, EMPTY_WORD_MARK)) continue;
-					append_string(s, " %s", *a);
+		const char *t;      /* current word string */
+		bool nb_end;        /* current word is at end of a nullblock */
+		bool join_alt = false; /* morpheme-join this alternative */
+		char *s;
+		size_t l;
+		size_t m;
+
+		if ((NULL != cdj) && MT_EMPTY==cdj->word[0]->morpheme_type) {
+			lgdebug(D_CCW, "Skip empty word at %zu\n", i);
+			chosen_words[i] = NULL;
+			continue;
+		}
+
+		lgdebug(D_CCW, "Loop start, cdj[%zu] %s, path[%zu] %s\n",
+				  i, cdj?cdj->string:"NULL",
+				  wgi, lwg_path[wgi]?lwg_path[wgi]->subword:"NULL");
+
+		w = lwg_path[wgi];
+		nw = lwg_path[wgi+1];
+		wgp = &lwg_path[wgi];
+		unsplit_word = w->unsplit_word;
+
+		if (NULL == cdj) /* a null word (the chosen disjunct was NULL) */
+		{
+			nbsize++;
+			if (NULL == nullblock_start) /* it starts a new null block */
+				nullblock_start = wgp;
+
+			nb_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
+				(MT_INFRASTRUCTURE == w->unsplit_word->morpheme_type);
+
+			/* XXX consider the possibility of empty words at the end of a null
+			 * block. */
+			/* Continue if next subword in this alternative is a null word */
+			if (!nb_end && (NULL == cdjp[i+1]))
+			{
+				lgdebug(D_CCW, "Skipping cdjp[%zu]=NULL#%zu, path[%zu] %s\n",
+				         i, nbsize, wgi, lwg_path[wgi]->subword);
+				chosen_words[i] = NULL;
+				wgi++;
+				continue;
+			}
+
+			if (NULL != nullblock_start)
+			{
+				/* If we are here, this null word is an end of a null block */
+				lgdebug(+D_CCW, "Handling %zu null words at %zu: ", nbsize, i);
+
+				if (1 == nbsize)
+				{
+					/* Case 1: A single null subword. */
+					lgdebug(D_CCW, "A single null subword.\n");
+					t = join_null_word(sent, wgp, nbsize);
+
+					wordlist_append(&n_lwg_path, w);
+#if 0 /* Not implemented */
+					lwg_path_display[len_n_lwg_path++] = wgi;
+#endif
 				}
-				append_string(s, "]");
-				a_list = string_copy(s);
-				t = string_set_add(a_list, sent->string_set);
-				string_delete(s);
-				exfree(a_list, strlen(a_list)+1);
+				else
+				{
+					lgdebug(D_CCW, "Combining null subwords");
+					/* Use alternative_id to check for start of alternative. */
+					if (((*nullblock_start)->alternative_id == *nullblock_start)
+								&& nb_end)
+					{
+						/* Case 2: A null unsplit_word (all-nulls alternative).*/
+						lgdebug(D_CCW, " (null alternative)\n");
+						t = unsplit_word->subword;
+
+						wordlist_append(&n_lwg_path, unsplit_word);
+#if 0 /* Not implemented */
+						for (j = 0; j < nbsize; j++)
+							lwg_path_display[len_n_lwg_path++] = wgi-j+1;
+#endif
+					}
+					else
+					{
+						/* Case 3: Join together >=2 null morphemes. */
+						Gword *wgnull;
+
+						lgdebug(D_CCW, " (null partial word)\n");
+#if OLDCODE
+						t = join_null_word(sent, wgp-nbsize+1, nbsize);
+						for (j = 0; j < nbsize; j++)
+							wordlist_append(&n_lwg_path, wgp[j-nbsize+1]);
+#else
+						wgnull = wordgraph_null_join(sent, wgp-nbsize+1, wgp);
+						wordlist_append(&n_lwg_path, wgnull);
+						t = wgnull->subword;
+#endif
+					}
+				}
+										
+				nullblock_start = NULL;
+				nbsize = 0;
+
+				/* Put brackets around the null word. */
+				l = strlen(t) + 2;
+				s = (char *) malloc(l+1);
+				sprintf(s, "[%s]", t);
+				t = string_set_add(s, sent->string_set);
+				free(s);
+				lgdebug(D_CCW, " %s\n", t);
 			}
 		}
 		else
 		{
-			/* print the subscript, as in "dog.n" as opposed to "dog" */
-			t = linkage->chosen_disjuncts[i]->string;
-			/* get rid of those ugly ".Ixx" */
-			if (is_idiom_word(t)) {
-				s = strdup(t);
-				u = strrchr(s, SUBSCRIPT_MARK);
-				*u = '\0';
-				t = string_set_add(s, sent->string_set);
-				free(s);
-			} else {
+			/* This word has a linkage. */
 
-				/* Suppress the empty word. */
-				if (0 == strcmp(t, EMPTY_WORD_MARK))
-				{
-					t = NULL;
-				}
+			/* TODO: Suppress "virtual-morpehemes", currently the dictcap ones. */
+			char *sm;
 
-				/* Concatenate the stem and the suffix together into one word */
-				if (t && HIDE_MORPHO)
-				{
-					if (is_suffix(infix_mark, t) && linkage->chosen_disjuncts[i-1] &&
-					    is_stem(linkage->chosen_disjuncts[i-1]->string))
-					{
-						const char * stem = linkage->chosen_disjuncts[i-1]->string;
-						size_t len = strlen(stem) + strlen(t);
-						char * join = (char *)malloc(len+1);
-						strcpy(join, stem);
-						u = strrchr(join, SUBSCRIPT_MARK);
+			t = cdj->string;
+			/* Print the subscript, as in "dog.n" as opposed to "dog". */
 
-						/* u can be null, if the sentence happens to have
-						 * an equals sign in it, for other reasons. */
-						if (u)
-						{
-							*u = '\0';
-							strcat(join, t + INFIX_MARK_L);
-							t = string_set_add(join, sent->string_set);
-						}
-						free(join);
-					}
-
-					/* Suppress printing of the stem, if the next word is the suffix */
-					if (is_stem(t) && (i+1 < sent->length) &&
-					    linkage->chosen_disjuncts[i+1])
-					{
-						const char * next = linkage->chosen_disjuncts[i+1]->string;
-						if (is_suffix(infix_mark, next))
-						{
-							t = NULL;
-						}
-					}
-				}
-
-				/* Convert the badly-printing ^C into a period */
-				if (t)
+			if (0)
+			{
+				/* TOOO */
+			}
+			else
+			{
+				/* Get rid of those ugly ".Ixx" */
+				if (is_idiom_word(t))
 				{
 					s = strdup(t);
-					u = strrchr(s, SUBSCRIPT_MARK);
-					if (u) *u = SUBSCRIPT_DOT;
+					sm = strrchr(s, SUBSCRIPT_MARK);
+					*sm = '\0';
 					t = string_set_add(s, sent->string_set);
 					free(s);
 				}
+				else if (HIDE_MORPHO)
+				{
+					/* Concatenate the word morphemes together into one word.
+					 * Concatenate their subscripts into one subscript.
+					 * Use suffix separator SUBSCRIPT_SEP.
+					 * XXX Check whether we can encounter an idiom word here. */
+					Gword **wgaltp;
+					size_t join_len = 0;
+					size_t mcnt = 0;
+
+					/* If the the alternative contains morpheme subwords, mark it
+					 * for joining... */
+					for (wgaltp = wgp, j = i; NULL != *wgaltp; wgaltp++, j++)
+					{
+
+						if ((*wgaltp)->unsplit_word != unsplit_word) break;
+						if (MT_INFRASTRUCTURE ==
+						    (*wgaltp)->unsplit_word->morpheme_type) break;
+
+						mcnt++;
+
+						if (NULL == cdjp[j])
+						{
+							/* ... but not if it contains a null word */
+							join_alt = false;
+							break;
+						}
+						join_len += strlen(cdjp[j]->string);
+						if ((*wgaltp)->morpheme_type & IS_REG_MORPHEME)
+							join_alt = true;
+					}
+
+					if (join_alt)
+					{
+						/* Join it in two steps: 1. Base words. 2. Subscripts.
+						 * FIXME? Can be done in one step (more efficient but maybe
+						 * less clear).
+						 * Put SUBSCRIPT_SEP between the subscripts.
+						 * XXX No 1-1 correspondence between the hidden base words
+						 * and the subscripts after the join, in case there are a base
+						 * words with and without subscripts. */
+
+						const char subscript_sep_str[] = { SUBSCRIPT_SEP, '\0'};
+						const char subscript_mark_str[] = { SUBSCRIPT_MARK, '\0'};
+						char *join = calloc(join_len + 1, 1); /* zeroed out */
+
+						join[0] = '\0';
+
+						/* 1. Join base words. (Could just use the unsplit_word.) */
+						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)
+						{
+							add_morpheme_unmarked(join, cdjp[i+m]->string,
+								(*wgaltp)->morpheme_type);
+						}
+
+						strcat(join, subscript_mark_str); /* tentative */
+
+						/* 2. Join subscripts. */
+						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)
+						{
+							/* Cannot NULLify the word - we may have links to it. */
+							if (m != mcnt-1) chosen_words[i+m] = "";
+
+							sm =  strrchr(cdjp[i+m]->string, SUBSCRIPT_MARK);
+
+							if (NULL != sm)
+							{
+								/* Supposing stem subscript is .=x (x optional) */
+								if (MT_STEM == (*wgaltp)->morpheme_type)
+								{
+									sm += 1 + STEM_MARK_L; /* sm+strlen(".=") */
+									if ('\0' == *sm) sm = NULL;
+									/* FIXME: By NULLifying the stem subword here, we
+									 * suppose thats a stem has only LL-type link, which
+									 * will get removed here later. In case it has non-LL
+									 * links, then drawing the links diagram would
+									 * segfault. We could use " " but it will draw an
+									 * extra blank in the diregram. */
+									chosen_words[i+m] = NULL;
+#if 0
+									if ((cnt-1) == m)
+									{
+										/* Support a prefix-stem combination. In that case
+										 * we have just nullified the combined word, so we
+										 * need to move it to the position of the prefix.
+										 * FIXME: May still not be good enough. */
+										move_combined_word = i+m-1;
+										
+										/* And the later chosen_word assinment should be:
+										 * chosen_words[-1 == move_combined_word ?
+										 *    move_combined_word : i] = t;
+										 */
+									}
+									else
+									{
+										move_combined_word = -1;
+									}
+#endif
+								}
+							}
+							if (NULL != sm)
+							{
+								strcat(join, sm+1);
+								strcat(join, subscript_sep_str);
+							}
+						}
+
+						/* Remove an extra mark, if any */
+						join_len = strlen(join);
+						if ((SUBSCRIPT_SEP == join[join_len-1]) ||
+						    (SUBSCRIPT_MARK == join[join_len-1]))
+							join[join_len-1] = '\0';
+
+						wordlist_append(&n_lwg_path, unsplit_word);
+						t = string_set_add(join, sent->string_set);
+						free(join);
+
+						i += mcnt-1;
+						wgi += mcnt-1;
+					}
+				}
+			}
+
+			if (!join_alt) wordlist_append(&n_lwg_path, *wgp);
+
+			/*
+			 * Add ->regex_name marks in [] if needed, at the end of the base word.
+			 * Convert the badly-printing ^C into a period.
+			 */
+			if (t)
+			{
+				const char *sm = strrchr(t, SUBSCRIPT_MARK);
+
+				if ((!(w->status & WS_GUESS) && (w->status & WS_INDICT))
+				    || !DISPLAY_GUESS_MARKS)
+				{
+					s = strdup(t);
+				}
+				else
+				{
+					size_t baselen = NULL == sm ? strlen(t) : (size_t)(sm-t);
+					const char *regex_name = w->regex_name;
+					char guess_mark;
+
+					switch (w->status & WS_GUESS)
+					{
+						case WS_SPELL:
+							guess_mark = GM_SPELL;
+							break;
+						case WS_RUNON:
+							guess_mark = GM_RUNON;
+							break;
+						case WS_REGEX:
+							guess_mark = GM_REGEX;
+							break;
+						case 0:
+							guess_mark = GM_UNKNOWN;
+							break;
+						default:
+							assert(0, "Missing 'case: %2x'", w->status & WS_GUESS);
+
+					}
+
+					/* In the case of display_morphology==0, the guess indication of
+					 * the last subword is used as the guess indication of the whole
+					 * word.
+					 * FIXME? The guess indications of other subwords are ignored in
+					 * this mode. This implies that if a first or middle subword has
+					 * a guess indication but the last subword doesn't have, no guess
+					 * indication would be shown at all. */
+
+					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
+					s = malloc(strlen(t)+1+strlen(regex_name)+sizeof("[]"));
+					strncpy(s, t, baselen);
+					s[baselen] = '[';
+					s[baselen+1] = guess_mark;
+					strcpy(s+baselen+2, regex_name);
+					strcat(s, "]");
+					if (NULL != sm) strcat(s, sm);
+					t = s;
+					sm = strrchr(t, SUBSCRIPT_MARK);
+				}
+
+				if (sm) s[sm-t] = SUBSCRIPT_DOT;
+				t = string_set_add(s, sent->string_set);
+				free(s);
 			}
 		}
+
 		chosen_words[i] = t;
+		wgi++;
 	}
 
 	if (sent->dict->left_wall_defined)
@@ -219,6 +556,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	}
 	linkage->num_words = j;
 
+#if 0
 	/* Now, discard links to the empty word.  If morphology printing
 	 * is being suppressed, then all links connecting morphemes will
 	 * be discarded as well.
@@ -247,6 +585,45 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 	}
 	linkage->num_links = j;
+}
+#else
+	/* A try to be more general (FIXME: It is not enough).
+	 * Discard Empty word and LL links unconditinally.
+	 * The NULL||'\0'||' ' is to allow easy feature experimetions.
+	 * FIXME: Define an affix class MORPHOLOGY_LINKS. */
+	for (i=0, j=0; i<linkage->num_links; i++)
+	{
+		Link * lnk = linkage->link[i];
+		const char *lcw = chosen_words[lnk->lw];
+		const char *rcw = chosen_words[lnk->rw];
+
+		if (((NULL == lcw) || ('\0' == *lcw) || (' ' == *lcw) ||
+		    (NULL == rcw) || ('\0' == *rcw) || (' ' == *rcw)) &&
+		    ((0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS)) ||
+		     (HIDE_MORPHO &&
+		      (0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)))))
+		{
+			exfree_link(lnk);
+		}
+		else
+		{
+			lnk->lw = remap[lnk->lw];
+			lnk->rw = remap[lnk->rw];
+			linkage->link[j] = lnk;
+			j++;
+		}
+	}	
+#endif
+
+	linkage->num_links = j;
+	sent->link_info->wg_path_display = n_lwg_path;
+
+	if (D_CCW <= opts->verbosity)
+	{
+		print_linkage_words(sent, 0 , cdjp);
+		print_lwg_path(lwg_path);
+		print_lwg_path(n_lwg_path);
+	}
 }
 
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
@@ -540,4 +917,3 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 		}
 	}
 }
-
