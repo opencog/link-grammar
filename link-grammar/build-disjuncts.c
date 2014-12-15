@@ -20,6 +20,7 @@
 #include "dict-common.h"
 #include "disjunct-utils.h"
 #include "externs.h"
+#include "string-set.h"
 #include "word-utils.h"
 #include "utilities.h" /* For Win32 compatibility features */
 
@@ -302,6 +303,7 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 			ndis->string = string;
 			ndis->cost = cl->cost;
 			ndis->next = dis;
+			ndis->word = NULL;
 			dis = ndis;
 		}
 	}
@@ -396,20 +398,24 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 }
 
 /**
- * build_word_expressions() -- build list of expressions for a word
+ * build_word_expressions() -- build list of expressions for a word.
  *
- * Looks up the word s in the dictionary.  Returns NULL if it's not there.
- * If there, it builds the list of expressions for the word, and returns
- * a pointer to it.
+ * Looks up a word in the dictionary, fetching from it matching words and their
+ * expressions.  Returns NULL if it's not there.  If there, it builds the list
+ * of expressions for the word, and returns a pointer to it.  The subword of
+ * word w is used for this lookup, unless it is explicitely given as parameter
+ * s. The subword of word w (but not s) is always used as the base word for each
+ * expression, when its subscript is the one from the dictionary word of the
+ * expression.
  */
-X_node * build_word_expressions(Dictionary dict, const char * s)
+X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
 	Exp_list eli;
 	eli.exp_list = NULL;
 
-	dn_head = dictionary_lookup_list(dict, s);
+	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
 	x = NULL;
 	dn = dn_head;
 	while (dn != NULL)
@@ -417,8 +423,22 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(add_empty_word(dict, &eli, dn));
-		x->string = dn->string;
+		x->exp = copy_Exp(dn->exp);
+		if (NULL == s)
+		{
+			x->string = dn->string;
+		}
+		else
+		{
+			dyn_str *xs = dyn_str_new();
+			const char *sm = strrchr(dn->string, SUBSCRIPT_MARK);
+
+			dyn_strcat(xs, w->subword);
+			if (NULL != sm) dyn_strcat(xs, sm);
+			x->string = string_set_add(xs->str, sent->string_set);
+			dyn_str_delete(xs);
+		}
+		x->word = w;
 		dn = dn->right;
 	}
 	free_lookup_list (dict, dn_head);
@@ -441,6 +461,7 @@ void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
 			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff);
+			word_record_in_disjunct(x, dx);
 			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;
