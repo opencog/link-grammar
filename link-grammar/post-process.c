@@ -854,7 +854,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 {
 	size_t i;
 	/* quick test: try applying just the relevant global rules */
-	if (!apply_relevant_rules(pp,apply_contains_one_globally,
+	if (!apply_relevant_rules(pp, apply_contains_one_globally,
 	                          sublinkage,
 	                          pp->knowledge->contains_one_rules,
 	                          pp->relevant_contains_one_rules, msg))
@@ -1019,7 +1019,6 @@ void post_process_free(Postprocessor *pp)
 	xfree(pp, sizeof(Postprocessor));
 }
 
-/* XXX TODO do we really need to clear this much stuff for every linkage ?? */
 void post_process_close_sentence(Postprocessor *pp)
 {
 	if (pp == NULL) return;
@@ -1128,8 +1127,7 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 
 	pp->pp_data.links_to_ignore = NULL;
 
-	/* XXX FIXME in the future, different linkages might be different lenghts */
-	pp->pp_data.length = sent->length;
+	pp->pp_data.length = sublinkage->num_words;
 
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
