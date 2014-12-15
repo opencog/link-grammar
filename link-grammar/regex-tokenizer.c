@@ -242,7 +242,7 @@ static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_
  * of numchar, to the dictionary or affix class word that is defined in the
  * capture group whose info is pointed to by cgnump.
  *
- * FIXME: Return int istead of bool, see the comment at E1 below.
+ * FIXME: Return int instead of bool, see the comment at E1 below.
  */
 static bool is_word(const char *word_start, int numchar, cgnum *cgnump)
 {
