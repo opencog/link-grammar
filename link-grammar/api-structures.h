@@ -219,7 +219,7 @@ struct Sentence_s
 	} *word_queue;
 	struct word_queue *word_queue_last;
 	size_t gword_node_num;         /* Debug - for differentiating between
-												 wordgraph nodes with identical subwords. */
+	                                * wordgraph nodes with identical subwords. */
 
 	/* Parse results */
 	int    num_linkages_found;  /* Total number before postprocessing.  This

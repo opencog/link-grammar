@@ -229,7 +229,7 @@ size_t wordgraph_pathpos_len(Wordgraph_pathpos *wp)
 
 /* FIXME (efficiency): Initially allocate more than 2 elements */
 Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
-																	size_t len)
+                                            size_t len)
 {
 	wp = realloc(wp, (len+2) * sizeof(*wp));
 	wp[len+1].word = NULL;
@@ -256,10 +256,10 @@ bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool same_word,
 			if (diff_alternative)
 			{
 				assert(same_word||wpt->same_word||!in_same_alternative(p,wpt->word),
-						 "wordgraph_pathpos_append(): "
-						 "Word%zu '%s' is from same alternative of word%zu '%s'",
-						 p->node_num, p->subword,
-						 wpt->word->node_num, wpt->word->subword);
+				       "wordgraph_pathpos_append(): "
+				       "Word%zu '%s' is from same alternative of word%zu '%s'",
+				       p->node_num, p->subword,
+				       wpt->word->node_num, wpt->word->subword);
 			}
 		}
 	}
@@ -462,50 +462,50 @@ static void word_label(Sentence sent, Gword *w, const char *op,
  * Disallow unsplit_word alternatives with the same subword string path.
  * (I.e. we are talking about preventing Wordgraph paths consisting of the same
  * word strings in the same order, not consisting of same graph nodes.)
- * 
+ *
  * The first subword of the candidate alternative is checked against the first
  * subword of all the existing alternatives of the unsplit_word (this allows the
  * first alternative unconditionally).
- * 
+ *
  * Parameters:
  * - unsplit_word: the unsplit_word that shouldn't have redundant paths.
  * - altword0: the first word of the candidate alternative.
  * Return true if the alternative is redundant, false if it is fine.
- * 
+ *
  * Assumptions and heuristics:
- * 
+ *
  * - This function is invoked only for subwords that we try to split in every
  *   possible combination, i.e. LR-split. It is not invoked for morpheme
  *   splits, because then an identical first subword mat be valid due to
  *   a different way of performing the splits.
- * 
+ *
  * - If the first subword of the checked candidate alternative is the same as an
  *   already existing alternative, it means the candidate alternative is
  *   redundant. This is because we are going to generate all the subword
  *   combinations for the other subwords, a thing that would generate an
  *   identical Wordgraph sub-path otherwise. So the alternative is disallowed.
- * 
+ *
  * - The previous step may allow an unknown first subword to not split further
  *   to a known word plus punctuation, a thing that will leave an unwanted
  *   unknown word in the Wordgraph. To prevent this we also check if an existing
  *   first subword is a prefix of the first (unknown) subword of the candidate
  *   alternative. If it is, it means that a future split would be prevented by
  *   the previous step.
- * 
+ *
  * Examples (the words and alternatives are shown in () for clarity):
- * 
+ *
  * 1. An input word ('50s,) splits to (' 50s,). An additional split of this
  * input word to ('50s ,) would be prevented if '50s was not a known word, as
  * (') is a prefix of ('50s). The split of ('50s) to (' 50s) is prevented by
  * this function because its first subword matches the first subword of an
  * existing alternative (' 50s,).
- * 
+ *
  * 2. The input word ("who") gets split to (" who"). Its split to ("who ") is
  * then prevented, as (") is a prefix of ("who) which is unknown.
- * 
+ *
  * XXX I don't have a mathematical proof of correctness, it just happens to work
  * on the example sentences. [ap]
- * 
+ *
  * FIXME XXX What if a non-first subword is unknown and cannot split further?
  * For example, for ('50s,) we get an alternative (' 50s ,) in which (50s)
  * cannot split further because another alternative also starts with (50), but
@@ -547,7 +547,7 @@ static bool word_start_another_alternative(Dictionary dict,
  * elements from suffix.  Mark the prefixes and sufixes with INFIX_MARK (the
  * stems are assumed to be already marked with one of the STEMSUBSCR
  * possibilities.  Set the Morpeheme_type of the subwords.
- * 
+ *
  * Return a pointer to the first word of the added alternative.
  *
  * TODO Support also middle morphemes if needed.
@@ -557,10 +557,10 @@ static
 #endif
 #define D_IWA 3
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
-                            const char *label,
-                            int prefnum, const char **prefix,
-                            int stemnum, const char ** stem,
-                            int suffnum, const char **suffix)
+                              const char *label,
+                              int prefnum, const char **prefix,
+                              int stemnum, const char ** stem,
+                              int suffnum, const char **suffix)
 {
 	int ai = 0;                    /* affix index */
 	const char **affix;            /* affix list pointer */
@@ -570,7 +570,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	enum affixtype at;
 	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK */
 	char infix_mark = INFIX_MARK(sent->dict->affix_table);
-   Gword *subword;                 /* subword of the current token */
+	Gword *subword;                 /* subword of the current token */
 	Gword *psubword = NULL;         /* subword of the previous token */
 	const size_t token_tot = prefnum + stemnum + suffnum; /* number of tokens */
 	size_t token_ord = 0;           /* ordinal number of the current token */
@@ -702,14 +702,14 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					 * Wordgraph pointers. Just warn (if verbosity>0) and return.
 					 * The return value is not likely to be used in such a case,
 					 * since this is an issuing of a single word.
-					 * 
+					 *
 					 * Note: In case a new tokenization logic permits adding a
 					 * word more than once, just remove this warning. */
 					if (0 < verbosity)
 					{
 						prt_error("Warning: Internal error: "
-								  "word \"%s\" got issued more than once\n",
-								  unsplit_word->subword);
+						          "word \"%s\" got issued more than once\n",
+						          unsplit_word->subword);
 					}
 					return NULL;
 				}
@@ -802,9 +802,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 								}
 							}
 							assert(NULL != *n, "Adding subword '%s': "
-								"No corresponding next link for a prev link: "
-								"prevword='%s' word='%s'\n",
-								subword->subword, (*p)->subword, unsplit_word->subword);
+							       "No corresponding next link for a prev link: "
+							       "prevword='%s' word='%s'\n",
+							       subword->subword, (*p)->subword, unsplit_word->subword);
 						}
 					}
 				}
@@ -921,8 +921,8 @@ static void remqueue_gword(const Sentence sent)
 	assert(NULL!=wq, "Trying to remove a word from an empty word queue");
 
 	lgdebug(+D_RWW, "Word '%s'%s%s\n", w->subword,
-           w->issued_unsplit ? " issued_unsplit" : "",
-			  w->status & WS_HASALT ? " WS_HASALT" : "");
+	        w->issued_unsplit ? " issued_unsplit" : "",
+	        w->status & WS_HASALT ? " WS_HASALT" : "");
 
 	/* If the word should have an alternative which includes itself, add it as an
 	 * additional alternative (unless it has already been added, as indicated by
@@ -1075,7 +1075,7 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 					{
 						if (alts)
 							issue_word_alternative(sent, unsplit_word, "SS", 0,NULL,
-														  altlen(alts),alts, 0,NULL);
+							                       altlen(alts),alts, 0,NULL);
 						can_split = true;
 						free(alts);
 						alts = NULL;
@@ -1148,7 +1148,7 @@ static bool add_alternative_with_subscr(Sentence sent,
                                         Gword * unsplit_word,
                                         const char * prefix,
                                         const char * word,
-													 const char * suffix)
+                                        const char * suffix)
 {
 	Dictionary dict = sent->dict;
 	Dictionary afdict = dict->affix_table; /* Known to be non-NULL. */
@@ -1161,8 +1161,8 @@ static bool add_alternative_with_subscr(Sentence sent,
 	if (0 == stemsubscr_count)
 	{
 		issue_word_alternative(sent, unsplit_word, "AWS",
-                             (prefix ? 1 : 0),&prefix, 1,&word,
-                             (suffix ? 1 : 0),&suffix);
+		                       (prefix ? 1 : 0),&prefix, 1,&word,
+		                       (suffix ? 1 : 0),&suffix);
 	}
 	else
 	{
@@ -1186,7 +1186,7 @@ static bool add_alternative_with_subscr(Sentence sent,
 			if (boolean_dictionary_lookup(dict, w))
 			{
 				issue_word_alternative(sent, unsplit_word, "AWS",
-               (prefix ? 1 : 0),&prefix, 1,(const char **)&w, 1,&suffix);
+				   (prefix ? 1 : 0),&prefix, 1,(const char **)&w, 1,&suffix);
 			}
 		}
 	}
@@ -1201,7 +1201,7 @@ static bool add_alternative_with_subscr(Sentence sent,
  * Return value:
  * If issue_alternatives=true: true only if the word can morpheme-split.
  * If issue_alternatives=false: true only if the word can split.
- * 
+ *
  * FIXME: If a word can split it doesn't follow it is a "real" dictionary word,
  * as there can still be no links between some of its parts.
  *
@@ -1261,7 +1261,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
 				 * However, if this is a check whether the word is a known one
 				 * (argument issue_alternatives=false), we shouldn't allow words
 				 * which are not in the dict file.
-				 * 
+				 *
 				 * Note: Not like a previous version, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
 				if ((is_contraction_suffix(*suffix) && issue_alternatives &&
@@ -1353,7 +1353,7 @@ static void tokenization_done(Dictionary dict, Gword *altp)
  * Add all the alternatives.
  * The assumptions used prevent a large number of false splits.
  * They may be relaxed later.
- * 
+ *
  * XXX Because the grammatical rules of which prefixes are valid for the
  * remaining word are not checked, non-existing words may get split. In such a
  * case there is no opportunity for a regex or spell check of this unknown word.
@@ -1590,7 +1590,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			{
 				unsplit_word->tokenizing_step = TS_RUNON;
 				issue_word_alternative(sent, unsplit_word, "RO",
-											0,NULL, altlen(runon_word),runon_word, 0,NULL);
+				   0,NULL, altlen(runon_word),runon_word, 0,NULL);
 				runon_word_corrections++;
 			}
 			free(runon_word);
@@ -1604,7 +1604,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 				wp = alternates[j];
 				unsplit_word->tokenizing_step = TS_SPELL;
 				issue_word_alternative(sent, unsplit_word, "SP",
-                                   0,NULL, 1,&wp, 0,NULL);
+				                       0,NULL, 1,&wp, 0,NULL);
 				num_guesses++;
 			}
 			//else printf("Spell guess '%s' ignored\n", alternates[j]);
@@ -1732,13 +1732,13 @@ static const char *strip_left(Sentence sent, const char * w,
  */
 extern const char *const afdict_classname[]; /* For debug message only */
 static bool strip_right(Sentence sent,
-		                  const char *w,
+                        const char *w,
                         const char **wend,
                         const char *r_stripped[],
                         size_t *n_r_stripped,
                         afdict_classnum classnum,
                         bool rootdigit,
-							  	int p)
+                        int p)
 {
 	Dictionary dict = sent->dict;
 	Dictionary afdict = dict->affix_table;
@@ -1827,7 +1827,7 @@ p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nr
  */
 static void issue_n_r_stripped(Sentence sent,
                                Gword *unsplit_word,
-										 const char *w,
+                               const char *w,
                                const char *wend,
                                const char *r_stripped[],
                                size_t n_r_stripped,
@@ -1862,7 +1862,7 @@ static void issue_dictcap(Sentence sent, const char *capind,
 	bool word_is_in_dict = boolean_dictionary_lookup(sent->dict, word);
 	const char *regex_name = NULL;
 
-	if (!word_is_in_dict) 
+	if (!word_is_in_dict)
 	{
 		regex_name = match_regex(sent->dict->regex_root, word);
 		if ((NULL != regex_name) &&
@@ -1881,7 +1881,7 @@ static void issue_dictcap(Sentence sent, const char *capind,
 		lgdebug(+D_SW, "Adding %s word=%s RE=%s\n", capind, word,
 		        NULL == regex_name ? "" : regex_name);
 		altp = issue_word_alternative(sent, unsplit_word, capind,
-													 0,NULL, 2,dictcap, 0,NULL);
+		                              0,NULL, 2,dictcap, 0,NULL);
 
 		altp->morpheme_type = MT_FEATURE;
 		altp->tokenizing_step = TS_DONE; /* no further tokeniation */
@@ -1919,7 +1919,7 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
  * This is used to, e.g, split Russian words into stem+suffix, issuing a
  * separate subword for each.  In addition, there are many English
  * constructions that need splitting:
- * 
+ *
  * 86mm  -> 86 + mm (millimeters, measurement)
  * $10   ->  $ + 10 (dollar sign plus a number)
  * Surprise!  -> surprise + !  (pry the punctuation off the end of the word)
@@ -1935,18 +1935,18 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
  * subwords are now put in a central word queue, from which they are pulled out
  * one by one. If a word is marked by TS_DONE, it will be removed from
  * the word queue without further processing.
- * 
+ *
  * The function gets each word in the queue, separates it to subwords and create
  * alternatives from each such separation, until all the separating
  * possibilities are exhausted.
- * 
+ *
  * FIXME: The old code, although working, is convoluted and contains redundant
  * parts. It needs much cleanup efforts, also to make it more flexible and
  * efficient, and at the same time prevent extra splitting (i.e. prevent issuing
  * alternatives which create graph paths with the same sequence of subwords as
  * existing parallel graph paths).
  * A test case: By the '50s, he was very prosperous.
- * 
+ *
  * XXX This function is being rewritten (work in progress).
  */
 static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts)
@@ -1955,9 +1955,9 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	bool word_is_known = false;
 	bool word_can_split = false;
 	bool word_can_lrsplit = false;   /* This is needed to prevent spelling on
-												 * compound subwords, like "Word." while
-												 * still allowing capitalization handling
-												 * and regex match. */
+	                                  * compound subwords, like "Word." while
+	                                  * still allowing capitalization handling
+	                                  * and regex match. */
 	bool lc_word_is_in_dict = false;
 	bool stripped;
 	const char *wp;
@@ -1985,14 +1985,14 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	lgdebug(+D_SW, "Processing word: '%s'\n", word);
 
 	/* FIXME: implement by "if" or "switch". */
-   if (unsplit_word->status & (WS_SPELL|WS_RUNON))
+	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
 	{
 		/* The word is a result of spelling.
 		 * So it it is in the dict, and doesn't need right/left stripping. */
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
 	}
-   else
+	else
 	{
 		if (boolean_dictionary_lookup(dict, word))
 		{
@@ -2016,7 +2016,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				r_stripped[n_r_stripped++] = wp;
 
 			issue_word_alternative(sent, unsplit_word, "rL",
-										  0,NULL, n_r_stripped,r_stripped, 0,NULL);
+			                       0,NULL, n_r_stripped,r_stripped, 0,NULL);
 
 			/* Its possible that the token consisted entirely of
 			 * left-punctuation, in which case, wp is an empty string. */
@@ -2056,7 +2056,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			temp_n_r_stripped = n_r_stripped;
 			temp_wend = wend;
 			stripped = strip_right(sent, word, &wend, r_stripped, &n_r_stripped,
-									 AFDICT_RPUNC, /*rootdigit*/false, 2);
+			                       AFDICT_RPUNC, /*rootdigit*/false, 2);
 			if (stripped)
 			{
 				/* "wend" points to the end of the remaining word. */
@@ -2080,13 +2080,13 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * number before it when only a single component is stripped off. */
 			temp_wend = wend;
 			stripped = strip_right(sent, word, &wend, r_stripped, &n_r_stripped,
-										 AFDICT_UNITS, /*rootdigit*/true, 3);
+			                       AFDICT_UNITS, /*rootdigit*/true, 3);
 			if (!stripped)
 			{
 				units_wend = NULL;
 				/* Try to strip off punctuation, typically a comma or period. */
 				stripped = strip_right(sent, word, &wend, r_stripped, &n_r_stripped,
-										 AFDICT_RPUNC, /*rootdigit*/false, 4);
+				                       AFDICT_RPUNC, /*rootdigit*/false, 4);
 			}
 
 			/* w points to the remaining word,
@@ -2133,7 +2133,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			temp_word[sz] = '\0';
 
 			issue_n_r_stripped(sent, unsplit_word, word, units_wend,
-									 r_stripped, units_n_r_stripped, "rR2");
+			                   r_stripped, units_n_r_stripped, "rR2");
 			word_can_lrsplit = true;
 		}
 
@@ -2141,7 +2141,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		if (n_r_stripped > 0)
 		{
 			issue_n_r_stripped(sent, unsplit_word, word, wend,
-									 r_stripped, n_r_stripped, "rR3");
+			                   r_stripped, n_r_stripped, "rR3");
 			word_can_lrsplit = true;
 		}
 	}
@@ -2189,7 +2189,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	{
 		/** Hard-coded English-centric capitalization handling.
 		 * FIXME: Capitalization handling should be done using the dict.
-		 * 
+		 *
 		 * If the word is capitalized and, issue as alternatives:
 		 * - Issue its lowercase version if it is in a capitalizable position and
 		 *   also it is in the dict.
@@ -2202,15 +2202,15 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 *   -- Its lowercase version is in the dict file (not regex) and it is an
 		 *   entity (checked capitalized) or a common entity (checked as
 		 *   lowercase).
-		 * 
+		 *
 		 *   Comments from a previous release:
-		 * 
+		 *
 		 *   * Common entity (checked as lowercase):
 		 *   This allows common nouns and adjectives to be used for entity names:
 		 *   e.g. "Great Southern Union declares bankruptcy", allowing Great to be
 		 *   capitalized, while preventing an upper-case "She" being used as a
 		 *   proper name in "She declared bankruptcy".
-		 * 
+		 *
 		 *   * Entity (checked capitalized):
 		 *   We need to *add* Sue.f (female name Sue) even though sue.v (the verb
 		 *   "to sue") is in the dict. So test for capitalized entity names.
@@ -2226,7 +2226,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			if ('\0' == downcase[0])
 				downcase_utf8_str(downcase, word, downcase_size);
- 			lc_word_is_in_dict = boolean_dictionary_lookup(dict, downcase);
+			lc_word_is_in_dict = boolean_dictionary_lookup(dict, downcase);
 
 			if (word_is_capitalizable)
 			{
@@ -2238,7 +2238,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					wp = downcase;
 					lgdebug(+D_SW, "Adding lc=%s, is_capitalizable=1\n", wp);
 					lc = issue_word_alternative(sent, unsplit_word, "LC",
-												  0,NULL, 1,&wp, 0,NULL);
+					                            0,NULL, 1,&wp, 0,NULL);
 					lc->status |= WS_FIRSTUPPER;
 				}
 				else /* for a comment */
@@ -2269,7 +2269,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				{
 					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word, regex_name);
 					issue_word_alternative(sent, unsplit_word, "REuc",
-												  0,NULL, 1,&word, 0,NULL);
+					                       0,NULL, 1,&word, 0,NULL);
 					unsplit_word->status |= WS_REGEX;
 					unsplit_word->regex_name = regex_name;
 					word_is_known = true;
@@ -2519,26 +2519,26 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 
 	wordgraph_terminator(sent);
 
-   while ((word = wordgraph_getqueue_word(sent)))
-   {
-      if (TS_DONE == word->tokenizing_step)
-      {
-         remqueue_gword(sent);
-         continue;
-      }
+	while ((word = wordgraph_getqueue_word(sent)))
+	{
+		if (TS_DONE == word->tokenizing_step)
+		{
+			remqueue_gword(sent);
+			continue;
+		}
 
-      /* Perform prefix, suffix splitting, if needed */
+		/* Perform prefix, suffix splitting, if needed */
 #ifdef DEBUG
-      if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0])
-         synthetic_split(sent, word);
+		if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0])
+			synthetic_split(sent, word);
 #else
-      if (0)
+		if (0)
 #endif
-      else
-         separate_word(sent, word, opts);
+		else
+			separate_word(sent, word, opts);
 
 		word->tokenizing_step = TS_DONE;
-   }
+	}
 
 
 	/* test=wg (for the default) or test=wg,wg=1,wg=a,... */
@@ -2815,9 +2815,9 @@ printf("DEBUG: in_same_alternative=%d\n",
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
 			       "'%s'->next[0]==NULL", wg_word->subword);
-         assert((NULL != wg_word->next[0]->prev)
+			assert((NULL != wg_word->next[0]->prev)
 					 || (NULL != wg_word->next[0]->next),
-                "Bad wordgraph: '%s'->next[0]->prev==NULL", wg_word->subword);
+			       "Bad wordgraph: '%s'->next[0]->prev==NULL", wg_word->subword);
 			assert(NULL != wg_word->next[0]->prev[0], "Bad wordgraph: "
 			       "'%s'->next[0]->prev[0]==NULL", wg_word->subword);
 

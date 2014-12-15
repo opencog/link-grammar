@@ -952,7 +952,7 @@ bool file_exists(const char * dict_name)
 	fstat(fd, &buf);
 	if (0 < buf.st_size) retval = true;
 
-  	fclose(fp);
+	fclose(fp);
 	return retval;
 }
 
@@ -998,7 +998,7 @@ char *get_file_contents(const char * dict_name)
 			 break;
 	}
 
-  	fclose(fp);
+	fclose(fp);
 
 	if (left < 0)
 	{

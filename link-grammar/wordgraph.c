@@ -128,21 +128,21 @@ GNUC_UNUSED const char *gword_flags(Sentence sent, const Gword *w)
 	size_t len;
 
 	if (w->status & WS_UNKNOWN)
-				dyn_strcat(s, "UNK|");
+		dyn_strcat(s, "UNK|");
 	if (w->status & WS_INDICT)
-				dyn_strcat(s, "IN|");
+		dyn_strcat(s, "IN|");
 	if (w->status & WS_REGEX)
-				dyn_strcat(s, "RE|");
+		dyn_strcat(s, "RE|");
 	if (w->status & WS_SPELL)
-				dyn_strcat(s, "SP|");
+		dyn_strcat(s, "SP|");
 	if (w->status & WS_RUNON)
-				dyn_strcat(s, "RU|");
+		dyn_strcat(s, "RU|");
 	if (w->status & WS_HASALT)
-				dyn_strcat(s, "HA|");
+		dyn_strcat(s, "HA|");
 	if (w->status & WS_UNSPLIT)
-				dyn_strcat(s, "UNS|");
+		dyn_strcat(s, "UNS|");
 	if (w->status & WS_PL)
-				dyn_strcat(s, "PL|");
+		dyn_strcat(s, "PL|");
 
 	len = strlen(s->str);
 	if (len > 0) s->str[len-1] = '\0';
@@ -207,7 +207,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 	append_string(wgd, "# Mode: %s\n", modestr);
 	append_string(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
 	append_string(wgd, "\"%p\" [shape=box,style=filled,color=\".7 .3 1.0\"];\n",
-                 sent->wordgraph);
+	              sent->wordgraph);
 
 	for (w = sent->wordgraph; w; w = w->chain_next)
 	{
@@ -261,7 +261,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 
 			}
 			append_string(wgd, "%s [label=\"%s%s\"];\n",
-							  nn, wlabel(sent, w), dl);
+			              nn, wlabel(sent, w), dl);
 			append_string(wgd, "%s [xlabel=\"%zu\"];\n", nn, w->node_num);
 			/* For debugging this function: display also hex node names. */
 			//append_string(wgd, "%s" [xlabel=\"%zu %p\"];\n", nn,w->node_num, nn);
@@ -363,7 +363,7 @@ static void wordgraph_show_cancel(void)
 	size_t i;
 
 	for (i = 0; i < sizeof(pid)/sizeof(pid_t); i++)
-	  if (0 != pid[i]) kill(pid[i], SIGTERM);
+		if (0 != pid[i]) kill(pid[i], SIGTERM);
 }
 #endif
 
@@ -431,15 +431,15 @@ void (wordgraph_show)(Sentence sent, size_t mode, const char *modestr)
 	{
 		if (fprintf(psf, "%s", wgds) < 0)
 			prt_error("wordgraph_show: print to %s failed: %s\n",
-			          psf_name, strerror(errno));
+		             psf_name, strerror(errno));
 		if (fclose(psf) == EOF)
 			prt_error("wordgraph_show: close %s failed: %s\n",
-						 psf_name, strerror(errno));
+			           psf_name, strerror(errno));
 	}
 
 	/* If the system doesn't have fork(), popen() is used to launch "dot".
 	 * This is an inferior implementation than the one below that uses fork(),
-	 * because pclose() is blocked until the user closes the "dot" window. */ 
+	 * because pclose() is blocked until the user closes the "dot" window. */
 #if !defined HAVE_FORK || defined POPEN_DOT
 	{
 		const char *cmd = POPEN_DOT_CMD;
@@ -449,17 +449,17 @@ void (wordgraph_show)(Sentence sent, size_t mode, const char *modestr)
 		{
 			/* Hopefully errno is getting set in case of an error. */
 			prt_error("wordgraph_show: popen of '%s' failed: %s\n",
-						 cmd, strerror(errno));
+			           cmd, strerror(errno));
 		}
 		else
 	free(wgds);
 		{
 			if (fprintf(cmdf, "%s", wgds) < 0)
 				prt_error("wordgraph_show: print to display command failed: %s\n",
-							 strerror(errno));
+				          strerror(errno));
 			if (pclose(cmdf) == -1)
 				prt_error("wordgraph_show: pclose of display command failed: %s\n",
-							 strerror(errno));
+			             strerror(errno));
 		}
 
 		free(wgds);
@@ -485,7 +485,7 @@ void (wordgraph_show)(Sentence sent, size_t mode, const char *modestr)
 				/* FIXME? Respawn in case of a viewer crash (can be found by the
 				 * wait status, which is not retrieved for now). */
 				prt_error("Error: waitpid(%d): %s (will not respawn viewer)\n",
-							 pid[mode], strerror(errno));
+				          pid[mode], strerror(errno));
 				return;
 			}
 		}
@@ -520,7 +520,7 @@ void (wordgraph_show)(Sentence sent, size_t mode, const char *modestr)
 			default:
 #ifndef HAVE_PRCTL
 				if (0 != atexit(wordgraph_show_cancel))
-					prt_error("Warning: atexit(wordgraph_show_cancel) failed.\n");
+					 prt_error("Warning: atexit(wordgraph_show_cancel) failed.\n");
 #endif
 				break;
 		}

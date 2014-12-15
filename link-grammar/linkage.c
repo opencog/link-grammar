@@ -391,7 +391,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)
 						{
 							add_morpheme_unmarked(join, cdjp[i+m]->string,
-								(*wgaltp)->morpheme_type);
+							                      (*wgaltp)->morpheme_type);
 						}
 
 						strcat(join, subscript_mark_str); /* tentative */
@@ -449,7 +449,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						/* Remove an extra mark, if any */
 						join_len = strlen(join);
 						if ((SUBSCRIPT_SEP == join[join_len-1]) ||
-						    (SUBSCRIPT_MARK == join[join_len-1]))
+							 (SUBSCRIPT_MARK == join[join_len-1]))
 							join[join_len-1] = '\0';
 
 						wordlist_append(&n_lwg_path, unsplit_word);
@@ -598,10 +598,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		const char *rcw = chosen_words[lnk->rw];
 
 		if (((NULL == lcw) || ('\0' == *lcw) || (' ' == *lcw) ||
-		    (NULL == rcw) || ('\0' == *rcw) || (' ' == *rcw)) &&
-		    ((0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS)) ||
-		     (HIDE_MORPHO &&
-		      (0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)))))
+			 (NULL == rcw) || ('\0' == *rcw) || (' ' == *rcw)) &&
+			 ((0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS)) ||
+			  (HIDE_MORPHO &&
+			   (0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)))))
 		{
 			exfree_link(lnk);
 		}

@@ -244,31 +244,31 @@ struct Gword_struct
 	/* For debug and inspiration. */
 	const char *label;   /* Debug label - code locations of tokenization */
 	size_t node_num;     /* For differentiating words with identical subwords,
-									and for indicating the order in which word splits
-									have been done. Shown in the Wordgraph display and in
-									debug messages. Not used otherwise. Could have been
-									used for hier_position instead of pointers in order
-									to optimize its generation and comparison. */
+	                      * and for indicating the order in which word splits
+                         * have been done. Shown in the Wordgraph display and in
+                         * debug messages. Not used otherwise. Could have been
+                         * used for hier_position instead of pointers in order
+                         * to optimize its generation and comparison. */
 
 	/* Tokenizer state */
 	Tokenizing_step tokenizing_step;
 	bool issued_unsplit; /* The word has been issued as an alternative to itself.
-									It will become an actual alternative to itself only
-									if it's not the sole alternative, in which case it
-									will be marked with WS_UNSPLIT. */
+	                      * It will become an actual alternative to itself only
+	                      * if it's not the sole alternative, in which case it
+	                      * will be marked with WS_UNSPLIT. */
 	size_t split_counter; /* Incremented on splits. A word cannot split more than
 	                         MAX_SPLITS times and a warning is issued then. */
 
 	unsigned int status;         /* See WS_* */
 	Morpheme_type morpheme_type; /* See MT_* */
 	Gword *alternative_id;       /* Alternative start - a unique identifier of
-											the alternative to which the word belongs. */
+	                              * the alternative to which the word belongs. */
 	const char *regex_name;      /* Subword mathes this regex.
 											* FIXME? Extend for multiple regexes. */
 
 	/* Only used by wordgraph_flatten() */
 	const Gword **hier_position; /* Unsplit_word/alternative_id pointer list, up
-                                    to the original sentence word. */
+                                 * to the original sentence word. */
 	size_t hier_depth;           /* Number of pointer pairs in hier_position */
 
 	/* Assigned by wordgraph_flatten().

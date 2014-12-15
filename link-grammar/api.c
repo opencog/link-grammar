@@ -693,7 +693,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		err_ctxt ec;
 		ec.sent = sent;
 		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
-				N_valid_linkages, N_linkages_post_processed);
+		        N_valid_linkages, N_linkages_post_processed);
 	}
 
 	sent->num_linkages_post_processed = N_linkages_post_processed;
@@ -718,8 +718,8 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 		}
 		assert(sent->num_linkages_post_processed==N_linkages_post_processed,
-				 "Bad num_linkages_post_processed (%zu!=%zu)",
-				 sent->num_linkages_post_processed, N_linkages_post_processed);
+		       "Bad num_linkages_post_processed (%zu!=%zu)",
+		       sent->num_linkages_post_processed, N_linkages_post_processed);
 	}
 #endif
 
@@ -1280,7 +1280,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			 * XXX We should have a better way to notify. */
 			if (0 < opts->verbosity)
 				printf("Warning: Invalid morpheme type combination '%s', "
-						 "run with !bad and !verbosity=4 to debug\n", affix_types);
+				       "run with !bad and !verbosity=4 to debug\n", affix_types);
 		}
 	}
 
@@ -1333,7 +1333,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	if (opts->verbosity > 1)
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
-					 "invalid morphology construction\n",
+		          "invalid morphology construction\n",
 		          N_invalid_morphism, sent->num_linkages_alloced);
 	}
 }
@@ -1371,7 +1371,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		if (opts->verbosity > 1)
 		{
 			prt_error("Info: Total count with %zu null links:   %lld\n",
-				sent->null_count, total);
+			          sent->null_count, total);
 		}
 
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
