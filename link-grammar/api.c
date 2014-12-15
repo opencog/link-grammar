@@ -692,6 +692,8 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->rand_state = global_rand_state;
 
 	sent->q_pruned_rules = false;
+	sent->postprocessor = post_process_new(dict->base_knowledge);
+	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 #ifdef USE_SAT_SOLVER
 	sent->hook = NULL;
@@ -761,7 +763,8 @@ void sentence_delete(Sentence sent)
 	string_set_delete(sent->string_set);
 	free_parse_info(sent->parse_info);
 	free_linkages(sent);
-	post_process_close_sentence(sent->dict->postprocessor);
+	post_process_free(sent->postprocessor);
+	post_process_free(sent->constituent_pp);
 
 	global_rand_state = sent->rand_state;
 	xfree((char *) sent, sizeof(struct Sentence_s));

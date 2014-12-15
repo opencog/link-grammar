@@ -944,17 +944,28 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 /***************** definitions of exported functions ***********************/
 
+PostProcessor * post_process_open(const char *path)
+{
+	pp_knowledge *kno = pp_knowledge_open(path);
+	return post_process_new(kno);
+}
+
+void post_process_close(PostProcessor *pp)
+{
+	pp_knowledge_close(pp->knowledge);
+	post_process_free(pp);
+}
+
 /**
  * read rules from path and initialize the appropriate fields in
  * a postprocessor structure, a pointer to which is returned.
  */
-Postprocessor * post_process_open(const char *path)
+Postprocessor * post_process_new(pp_knowledge * kno)
 {
 	Postprocessor *pp;
-	if (path == NULL) return NULL;
 
 	pp = (Postprocessor *) xalloc (sizeof(Postprocessor));
-	pp->knowledge	= pp_knowledge_open(path);
+	pp->knowledge = kno;
 	pp->sentence_link_name_set = string_set_create();
 	pp->set_of_links_of_sentence = pp_linkset_open(1024);
 	pp->set_of_links_in_an_active_rule = pp_linkset_open(1024);
@@ -984,10 +995,11 @@ Postprocessor * post_process_open(const char *path)
 	return pp;
 }
 
-void post_process_close(Postprocessor *pp)
+void post_process_free(Postprocessor *pp)
 {
 	/* frees up memory associated with pp, previously allocated by open */
 	if (pp == NULL) return;
+	pp->knowledge = NULL;
 	string_set_delete(pp->sentence_link_name_set);
 	pp_linkset_close(pp->set_of_links_of_sentence);
 	pp_linkset_close(pp->set_of_links_in_an_active_rule);
@@ -997,7 +1009,6 @@ void post_process_close(Postprocessor *pp)
 	xfree(pp->relevant_contains_none_rules,
 	      (1 + pp->knowledge->n_contains_none_rules)
 	      *(sizeof pp->relevant_contains_none_rules[0]));
-	pp_knowledge_close(pp->knowledge);
 	free_pp_node(pp);
 
 	xfree(pp->visited, pp->vlength * sizeof(bool));

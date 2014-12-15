@@ -271,14 +271,8 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	compute_chosen_words(sent, linkage, opts);
 
 	// XXX Didn't we post-process already ??
-	if (sent->dict->postprocessor != NULL)
-	{
-		linkage_post_process(linkage, sent->dict->postprocessor, opts);
-	}
-	if (sent->dict->constituent_pp != NULL)
-	{
-		linkage_post_process(linkage, sent->dict->constituent_pp, opts);
-	}
+	linkage_post_process(linkage, sent->postprocessor, opts);
+	linkage_post_process(linkage, sent->constituent_pp, opts);
 
 	return linkage;
 }
@@ -479,6 +473,9 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
+
+	if (NULL == linkage) return;
+	if (NULL == postprocessor) return;
 
 	if (linkage->pp_info != NULL)
 	{

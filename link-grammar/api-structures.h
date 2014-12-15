@@ -144,11 +144,10 @@ struct Dictionary_s
 	bool (*lookup)(Dictionary, const char*);
 	void (*close)(Dictionary);
 
-
-	Postprocessor * postprocessor;
-	Postprocessor * constituent_pp;
+	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
+	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
-	String_set *    string_set;  /* Set of link names constructed during parsing */
+	String_set *    string_set;   /* Set of link names in the dictionary */
 	int             num_entries;
 	Word_file *     word_file_header;
 
@@ -222,16 +221,16 @@ struct Parse_info_struct
 
 struct Sentence_s
 {
-	Dictionary  dict;           /* words are defined from this dictionary */
+	Dictionary  dict;           /* Words are defined from this dictionary */
 	const char *orig_sentence;  /* Copy of original sentence */
-	size_t length;              /* number of words */
-	Word  *word;                /* array of words after tokenization */
-	String_set *   string_set;  /* used for word names, not connectors */
+	size_t length;              /* Number of words */
+	Word  *word;                /* Array of words after tokenization */
+	String_set *   string_set;  /* Used for word names, not connectors */
 
 	/* Parse results */
-	int    num_linkages_found;  /* total number before postprocessing.  This
+	int    num_linkages_found;  /* Total number before postprocessing.  This
 	                               is returned by the count() function */
-	size_t num_linkages_alloced;/* total number of linkages allocated.
+	size_t num_linkages_alloced;/* Total number of linkages allocated.
 	                               the number post-processed might be fewer
 	                               because some are non-canonical */
 	size_t num_linkages_post_processed;
@@ -239,10 +238,12 @@ struct Sentence_s
 	                               put into the array that was alloced.
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
-	size_t num_valid_linkages;  /* number with no pp violations */
-	size_t null_count;          /* number of null links in linkages */
-	Parse_info     parse_info;  /* set of parses for the sentence */
-	Linkage        lnkages;     /* array of valid and invalid linkages (sorted) */
+	size_t num_valid_linkages;  /* Number with no pp violations */
+	size_t null_count;          /* Number of null links in linkages */
+	Parse_info     parse_info;  /* Set of parses for the sentence */
+	Linkage        lnkages;     /* Sorted array of valid & invalid linkages */
+	Postprocessor * postprocessor;
+	Postprocessor * constituent_pp;
 
 	/* Tokenizer internal/private state */
 	bool   * post_quote;        /* Array, one entry per word, true if quote */
@@ -307,7 +308,7 @@ struct PP_info_s
 
 struct Postprocessor_s
 {
-	pp_knowledge *knowledge;             /* internal rep'n of the actual rules */
+	pp_knowledge  * knowledge;           /* Internal rep'n of the actual rules */
 	int n_global_rules_firing;           /* this & the next are diagnostic     */
 	int n_local_rules_firing;
 	pp_linkset *set_of_links_of_sentence;     /* seen in *any* linkage of sent */

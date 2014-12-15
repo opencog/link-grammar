@@ -320,6 +320,7 @@ link_public_api(const char *)
  *
  ***********************************************************************/
 
+/** Do not use in new code! */
 typedef struct Postprocessor_s PostProcessor;
 
 link_public_api(PostProcessor *)

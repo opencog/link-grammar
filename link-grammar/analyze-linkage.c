@@ -138,7 +138,7 @@ static void compute_link_names(Sentence sent, Linkage lkg)
 void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
 {
 	PP_node * pp;
-	Postprocessor * postprocessor = sent->dict->postprocessor;
+	Postprocessor * postprocessor = sent->postprocessor;
 
 	compute_link_names(sent, lkg);
 	if (analyze_pass == PP_FIRST_PASS)

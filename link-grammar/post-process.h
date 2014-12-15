@@ -31,6 +31,9 @@
 #define PP_FIRST_PASS  1
 #define PP_SECOND_PASS 2
 
+Postprocessor * post_process_new(pp_knowledge *);
+void post_process_free(Postprocessor *);
+
 void     post_process_free_data(PP_data * ppd);
 void     post_process_close_sentence(Postprocessor *);
 void     post_process_scan_linkage(Postprocessor * pp, Parse_Options opts,
