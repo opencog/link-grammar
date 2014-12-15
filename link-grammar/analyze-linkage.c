@@ -70,7 +70,7 @@ static const char * intersect_strings(String_set *sset, const char * s, const ch
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-void compute_link_names(String_set *sset, Linkage lkg)
+void compute_link_names(Linkage lkg, String_set *sset)
 {
 	size_t i;
 	for (i = 0; i < lkg->num_links; i++)

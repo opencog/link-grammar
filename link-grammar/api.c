@@ -589,7 +589,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			Linkage_info *lifo = &lkg->lifo;
 			if (lifo->discarded || lifo->N_violations) continue;
 
-			compute_link_names(sent->string_set, lkg);
+			compute_link_names(lkg, sent->string_set);
 			post_process_scan_linkage(sent->postprocessor, opts, lkg);
 
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
@@ -610,7 +610,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		compute_link_names(sent->string_set, lkg);
+		compute_link_names(lkg, sent->string_set);
 		analyze_thin_linkage(sent->postprocessor, lkg, opts);
 		linkage_score(lkg, opts);
 
