@@ -35,7 +35,7 @@
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
 
 /* Word subscripts come after the subscript mark (ASCII ETX)
- * In the dictionary, a dot is used; but that dot interfers with dots
+ * In the dictionary, a dot is used; but that dot interferes with dots
  * in the input stream, and so we convert dictionary dots into the
  * subscript mark, which we don't expect to see in user input.
  */
@@ -126,10 +126,11 @@ static inline const char * connector_get_string(Connector *c)
 struct Disjunct_struct
 {
 	Disjunct *next;
-	const char * string;             /* subscripted dictionary word */
+	const char * string;       /* subscripted dictionary word */
 	Connector *left, *right;
 	double cost;
-	bool marked;                     /* unmarked disjuncts get deleted */
+	bool marked;               /* unmarked disjuncts get deleted */
+	const Gword **word;        /* NULL terminated list of originating words */
 };
 
 typedef struct Match_node_struct Match_node;
@@ -142,9 +143,10 @@ struct Match_node_struct
 typedef struct X_node_struct X_node;
 struct X_node_struct
 {
-	const char * string;            /* the word itself */
+	const char * string;       /* the word itself */
 	Exp * exp;
 	X_node *next;
+	const Gword *word;         /* originating Wordgraph word */
 };
 
 /**
@@ -156,18 +158,144 @@ struct X_node_struct
  *
  * Disjunct* d:
  *   Contains a pointer to a list of disjuncts for this word.
- *   Computed by: parepare_to_parse(), but modified by pruning and power
+ *   Computed by: prepare_to_parse(), but modified by pruning and power
  *   pruning.
  */
 struct Word_struct
 {
 	const char *unsplit_word;
-	const char **alternatives;
+
 	X_node * x;          /* Sentence starts out with these, */
 	Disjunct * d;        /* eventually these get generated. */
-	bool firstupper;     /* TRUE if capitalized, and is first word of sentence */
+
+	const char **alternatives;
 };
 
+typedef enum
+{
+	MT_INVALID,            /* Initial value, to be changed to the correct type */
+	MT_WORD,               /* Regular word */
+	MT_FEATURE,            /* Pseudo morpheme, like capitalization marks */
+	MT_INFRASTRUCTURE,     /* Start and end Wordgraph pseudo-words */
+	MT_WALL,               /* The LEFT-WALL and RIGHT-WALL pseudo-words */
+	MT_EMPTY,              /* Empty word */
+	MT_UNKNOWN,            /* Unknown word (FIXME? Unused) */
+	/* Experimental (yet unused) */
+	MT_TEMPLATE,
+	MT_ROOT,
+	/* Experimental - for display purposes (yet unused) */
+	MT_CONTR,              /* Contracted word */
+	MT_PUNC,                /* Punctuation */
+	/* We are not going to have >63 types up to here. */
+	MT_STEM    = 1<<6,     /* Stem */
+	MT_PREFIX  = 1<<7,     /* Prefix */
+	MT_MIDDLE  = 1<<8,     /* Middle morpheme (yet unused) */
+	MT_SUFFIX  = 1<<9      /* Suffix */
+} Morpheme_type;
+#define IS_REG_MORPHEME (MT_STEM|MT_PREFIX|MT_MIDDLE|MT_SUFFIX)
+
+/* Word status */
+/* - Tokenization */
+#define WS_UNKNOWN    1<<0 /* Unknown word (FIXME? Unused) */
+#define WS_REGEX      1<<1 /* Matches a regex */
+#define WS_SPELL      1<<2 /* Result of a spell guess */
+#define WS_RUNON      1<<3 /* Separated from words run-on */
+#define WS_HASALT     1<<4 /* Has alternatives (one or more)*/
+#define WS_UNSPLIT    1<<5 /* It's an alternative to itself as an unslit word */
+#define WS_INDICT     1<<6 /* boolean_dictionary_lookup() is true */
+#define WS_FIRSTUPPER 1<<7 /* Subword is the lc version of its unsplit_word */
+/* - Post linkage stage. XXX Experimental. */
+#define WS_PL       1<<7   /* Post-Linkage word, not blonging to tokenization */
+
+#define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
+
+/* XXX Mainly TS_DONE is actually used. */
+typedef enum
+{
+	TS_INITIAL,
+	TS_LR_STRIP,
+	TS_AFFIX_SPLIT,          /* XXX Unused */
+	TS_REGEX,                /* XXX Unused */
+	TS_RUNON,
+	TS_SPELL,
+	TS_DONE
+} Tokenizing_step;
+
+/* For the "guess" field of Gword_struct. */
+typedef enum
+{
+	GM_REGEX = '!',
+	GM_SPELL = '~',
+	GM_RUNON = '&',
+	GM_UNKNOWN = '?'
+} Guess_mark;
+
+#define MAX_SPLITS 10   /* See split_counter below */
+
+struct Gword_struct
+{
+	const char *subword;
+
+	Gword *unsplit_word; /* Upward-going co-tree */
+	Gword **next;        /* Right-going tree */
+	Gword **prev;        /* Left-going tree */
+	Gword *chain_next;   /* Next word in the chain of all words */
+
+	/* For debug and inspiration. */
+	const char *label;   /* Debug label - code locations of tokenization */
+	size_t node_num;     /* For differentiating words with identical subwords,
+									and for indicating the order in which word splits
+									have been done. Shown in the Wordgraph display and in
+									debug messages. Not used otherwise. Could have been
+									used for hier_position instead of pointers in order
+									to optimize its generation and comparison. */
+
+	/* Tokenizer state */
+	Tokenizing_step tokenizing_step;
+	bool issued_unsplit; /* The word has been issued as an alternative to itself.
+									It will become an actual alternative to itself only
+									if it's not the sole alternative, in which case it
+									will be marked with WS_UNSPLIT. */
+	size_t split_counter; /* Incremented on splits. A word cannot split more than
+	                         MAX_SPLITS times and a warning is issued then. */
+
+	unsigned int status;         /* See WS_* */
+	Morpheme_type morpheme_type; /* See MT_* */
+	Gword *alternative_id;       /* Alternative start - a unique identifier of
+											the alternative to which the word belongs. */
+	const char *regex_name;      /* Subword mathes this regex.
+											* FIXME? Extend for multiple regexes. */
+
+	/* Only used by wordgraph_flatten() */
+	const Gword **hier_position; /* Unsplit_word/alternative_id pointer list, up
+                                    to the original sentence word. */
+	size_t hier_depth;           /* Number of pointer pairs in hier_position */
+
+	/* Assigned by wordgraph_flatten().
+	 * TODO? Can be used by sane_morphism(), to reconstruct the list of candidate
+	 * words at a null-word position. A user API can also be defined It can also
+	 * be used to find the for finding the selected disjunct for a Gword.*/
+	Word *word_array_pos;
+
+	/* XXX Experimental. Only used after the linkage (by compute_chosen_words())
+	 * to for an element in the linkage display wordgraph path that represents
+	 * a block of null words that are morpehems of the same word. */
+	Gword **null_subwords;       /* Null subwords represented by this word */
+};
+
+/* Wordgraph path word-positions,
+ * used in wordgraph_flatten() and sane_linkage_morpihsm().
+ * FIXME Separate to two different structures. */
+struct Wordgraph_pathpos_s
+{
+	Gword *word;      /* Position in the Wordgraph */
+	/* Only for wordgraph_flatten(). */
+	bool same_word;   /* Still the same word - issue an empty word */
+	bool next_ok;     /* OK to proceed to the next Wordgraph word */
+	bool used;        /* Debug - the word has been issued */
+	/* Only for sane_morphism(). */
+	const Gword **path; /* Linkage candidate wordgraph path */
+};
 
 /* The regexs are stored as a linked list of the following nodes. */
 struct Regex_node_s
@@ -181,7 +309,6 @@ struct Regex_node_s
 	                  */
 	Regex_node *next;
 };
-
 
 /* The following three structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
