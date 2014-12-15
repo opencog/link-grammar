@@ -288,13 +288,13 @@ struct DTreeLeaf_s
 
 struct PP_data_s
 {
-	size_t N_domains;
 	List_o_links ** word_links;
 	size_t wowlen;
+	size_t N_domains;
+	Domain * domain_array;          /* The domains, sorted by size */
+	size_t domlen;                  /* Allocated size of domain_array */
+	size_t length;                  /* Length of current linkage */
 	List_o_links * links_to_ignore;
-	Domain * domain_array;          /* the domains, sorted by size */
-	size_t domlen;                  /* size of domain_array */
-	size_t length;                  /* length of current sentence */
 };
 
 struct PP_info_s

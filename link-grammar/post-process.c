@@ -985,7 +985,6 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	pp->relevant_contains_one_rules[0]	= -1;
 	pp->relevant_contains_none_rules[0] = -1;
 	pp->pp_node = NULL;
-	pp->pp_data.links_to_ignore = NULL;
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
 
@@ -995,6 +994,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	pp->vlength = 60;
 	pp->visited = (bool*) xalloc(pp->vlength * sizeof(bool));
 
+	pp->pp_data.links_to_ignore = NULL;
 	pp->pp_data.domlen = 60;
 	pp->pp_data.domain_array = (Domain*) xalloc(pp->pp_data.domlen * sizeof(Domain));
 	memset(pp->pp_data.domain_array, 0, pp->pp_data.domlen * sizeof(Domain));
@@ -1022,8 +1022,9 @@ void post_process_free(Postprocessor *pp)
 	      *(sizeof pp->relevant_contains_none_rules[0]));
 	free_pp_node(pp);
 
-	post_process_free_data(&pp->pp_data);
 	xfree(pp->visited, pp->vlength * sizeof(bool));
+
+	post_process_free_data(&pp->pp_data);
 	xfree(pp->pp_data.domain_array, pp->pp_data.domlen * sizeof(Domain));
 	xfree(pp->pp_data.word_links, pp->pp_data.wowlen * sizeof(List_o_links*));
 	xfree(pp, sizeof(Postprocessor));
@@ -1134,6 +1135,7 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 
 	if (pp == NULL) return NULL;
 
+	// XXX wtf .. why is this not leaking memory ?
 	pp->pp_data.links_to_ignore = NULL;
 
 	pp->pp_data.length = sublinkage->num_words;
