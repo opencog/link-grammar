@@ -238,6 +238,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 		else
 		{
+			linkage->link_array[j] = *lnk;
 			linkage->link_array[j].lw = remap[lnk->lw];
 			linkage->link_array[j].rw = remap[lnk->rw];
 			j++;
