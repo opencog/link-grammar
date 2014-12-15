@@ -120,7 +120,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-void extract_thin_linkage(Sentence sent, Linkage lkg)
+static void compute_link_names(Sentence sent, Linkage lkg)
 {
 	size_t i;
 	for (i = 0; i < lkg->num_links; i++)
@@ -132,22 +132,23 @@ void extract_thin_linkage(Sentence sent, Linkage lkg)
 }
 
 /**
- * This uses link_array.  It post-processes
- * this linkage, and prints the appropriate thing.
+ * This does a minimal post-processing step, using the 'standard'
+ * post-processor.  It also computes some of the linkage costs.
  */
 void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
 {
 	PP_node * pp;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 
-	extract_thin_linkage(sent, lkg);
+	compute_link_names(sent, lkg);
 	if (analyze_pass == PP_FIRST_PASS)
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, lkg);
 		return;
 	}
 
-	pp = do_post_process(postprocessor, opts, sent, lkg, true);
+	pp = do_post_process(postprocessor, opts, sent, lkg);
+	post_process_free_data(&postprocessor->pp_data);
 
 	lkg->lifo.N_violations = 0;
 	lkg->lifo.unused_word_cost = unused_word_cost(lkg);

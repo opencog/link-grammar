@@ -117,7 +117,7 @@ xalloc
 xrealloc
 xfree
 analyze_thin_linkage
-extract_thin_linkage
+compute_link_names
 sane_linkage_morphism
 post_process_match
 match_in_connector_set

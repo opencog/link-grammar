@@ -1028,14 +1028,14 @@ void post_process_close_sentence(Postprocessor *pp)
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 									 Sentence sent, Linkage sublinkage)
 {
-	const char *p;
 	size_t i;
 	if (pp == NULL) return;
 	if (sent->length < opts->twopass_length) return;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		/* if (sublinkage->link_array[i].lw == SIZE_MAX) continue; */
+		const char *p;
 		assert(sublinkage->link_array[i].lw != SIZE_MAX);
+
 		p = string_set_add(sublinkage->link_array[i].link_name, pp->sentence_link_name_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}
@@ -1106,7 +1106,7 @@ static void report_pp_stats(Postprocessor *pp)
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-                         Sentence sent, Linkage sublinkage, bool cleanup)
+                         Sentence sent, Linkage sublinkage)
 {
 	const char *msg;
 
@@ -1151,12 +1151,8 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 	}
 
 	report_pp_stats(pp);
-
 	build_type_array(pp);
-	if (cleanup)
-	{
-		post_process_free_data(&pp->pp_data);
-	}
+
 	return pp->pp_node;
 }
 
