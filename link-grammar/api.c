@@ -588,7 +588,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			Linkage_info *lifo = &lkg->lifo;
 			if (lifo->discarded || lifo->N_violations) continue;
 
-			analyze_thin_linkage(sent, lkg, opts, PP_FIRST_PASS);
+			compute_link_names(sent->string_set, lkg);
+			post_process_scan_linkage(sent->postprocessor, opts, lkg);
 
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
@@ -608,7 +609,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		analyze_thin_linkage(sent, lkg, opts, PP_SECOND_PASS);
+		compute_link_names(sent->string_set, lkg);
+		analyze_thin_linkage(sent->postprocessor, lkg, opts);
 
 		if (0 != lifo->N_violations)
 		{
@@ -888,7 +890,7 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 	char * affix_types_p = affix_types;
 	/* If all the words are null - behave as if everything matched. */
 	bool match_found = true;        /* djw matched a morpheme */
- 
+
 	Linkage lkg = &sent->lnkages[lk];
 
 	*affix_types_p = '\0';

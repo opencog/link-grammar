@@ -28,9 +28,6 @@
 #include "api-types.h"
 #include "structures.h"
 
-#define PP_FIRST_PASS  1
-#define PP_SECOND_PASS 2
-
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
