@@ -49,6 +49,7 @@
 #ifdef _MSC_VER
 #define DICTIONARY_DIR "."
 #endif
+
 #define DEFAULTPATH DICTIONARY_DIR
 
 /* This file contains certain general utilities. */
@@ -1144,7 +1145,7 @@ char * get_default_locale(void)
 
 static const char ** resize_alts(const char **arr, size_t len)
 {
-	arr = (const char **)realloc(arr, (len+2) * sizeof(const char *));
+	arr = realloc(arr, (len+2) * sizeof(char *));
 	arr[len+1] = NULL;
 	return arr;
 }
@@ -1159,10 +1160,10 @@ size_t altlen(const char **arr)
 
 void altappend(Sentence sent, const char ***altp, const char *w)
 {
-	int n = altlen(*altp);
+	size_t n = altlen(*altp);
 
 	*altp = resize_alts(*altp, n);
 	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
-/* ========================== END OF FILE =================== */
+/* ============================================================= */
