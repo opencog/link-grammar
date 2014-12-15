@@ -1008,7 +1008,6 @@ void post_process_free(Postprocessor *pp)
 {
 	/* frees up memory associated with pp, previously allocated by open */
 	if (pp == NULL) return;
-	pp->knowledge = NULL;
 	string_set_delete(pp->string_set);
 	pp_linkset_close(pp->set_of_links_of_sentence);
 	pp_linkset_close(pp->set_of_links_in_an_active_rule);
@@ -1018,6 +1017,7 @@ void post_process_free(Postprocessor *pp)
 	xfree(pp->relevant_contains_none_rules,
 	      (1 + pp->knowledge->n_contains_none_rules)
 	      *(sizeof pp->relevant_contains_none_rules[0]));
+	pp->knowledge = NULL;
 	free_pp_node(pp);
 
 	xfree(pp->visited, pp->vlength * sizeof(bool));
