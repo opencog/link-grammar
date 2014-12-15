@@ -372,6 +372,10 @@ struct Linkage_s
 	Sense **        sense_list;   /* Word senses, infered from disjuncts */
 #endif
 
+   Gword **wg_path;              /* Linkage Wordgraph path */
+   Gword **wg_path_display;      /* ... for !morfology=0. Exprimental. */
+   //size_t *wg_path_index;      /* Displayed-word indices in wg_path (FIXME?)*/
+
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */
 	PP_data         hpsg_pp_data; /* Used in constituent code */

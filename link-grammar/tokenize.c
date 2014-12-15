@@ -371,7 +371,7 @@ bool in_same_alternative(Gword *w1, Gword *w2)
 #if 0 /* DEBUG */
 	print_hier_position(w1); print_hier_position(w2);
 #endif
-	
+
 #if 0 /* BUG */
 	/* The following is wrong!  Comparison to the hier_position of the
 	 * termination word is actually needed when there are alternatives of
@@ -568,7 +568,6 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	const int numlist[] = { prefnum, stemnum, suffnum };
 	enum affixtype { PREFIX, STEM, SUFFIX, END };
 	enum affixtype at;
-	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK */
 	char infix_mark = INFIX_MARK(sent->dict->affix_table);
 	Gword *subword;                 /* subword of the current token */
 	Gword *psubword = NULL;         /* subword of the previous token */
@@ -1151,7 +1150,6 @@ static bool add_alternative_with_subscr(Sentence sent,
                                         const char * suffix)
 {
 	Dictionary dict = sent->dict;
-	Dictionary afdict = dict->affix_table; /* Known to be non-NULL. */
 	Afdict_class * stemsubscr_list =
 	   AFCLASS(dict->affix_table, AFDICT_STEMSUBSCR);
 	const char ** stemsubscr = stemsubscr_list->string;
@@ -2648,7 +2646,7 @@ static bool add_x_node(Sentence sent, Gword *w, Parse_Options opts)
 		return false;
 	}
 #endif
-	
+
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);

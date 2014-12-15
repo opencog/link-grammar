@@ -805,7 +805,7 @@ static const char * header(bool print_ps_header)
 		"/show-string-centered-dict 5 dict def\n"
 		"\n"
 		"/show-string-centered {\n"
-		"  show-st	ring-centered-dict begin\n"
+		"  show-string-centered-dict begin\n"
 		"  /string exch def\n"
 		"  /ycenter exch def\n"
 		"  /xcenter exch def\n"
@@ -844,7 +844,7 @@ static const char * header(bool print_ps_header)
 		"   /Times-Roman findfont wordfontsize scalefont setfont\n"
 		"   /x 0 def\n"
 		"   /y 0 def\n"
-		"\n"	
+		"\n"
 		"   /left-ends [x dup words {stringwidth pop add gap add dup}\n"
 		"	                     forall pop pop] def\n"
 		"   /right-ends [x words {stringwidth pop add dup gap add} forall pop] def\n"
@@ -885,7 +885,7 @@ static const char * header(bool print_ps_header)
 		"	  radiusx\n"
 		"          arcto\n"
 		"          4 {pop} repeat\n"
-		"	  center	s rightword get\n"
+		"	  centers rightword get\n"
 		"          y top-of-words add ey ed level mul add add\n"
 		"	  centers rightword get\n"
 		"	  y top-of-words add\n"
@@ -931,7 +931,7 @@ static const char * header(bool print_ps_header)
 		"   /right-ends [0 words {stringwidth pop add dup gap add} forall pop] def\n"
 		"\n"
 		"   /lwindows [ break-words {left-ends exch get gap 2 div sub } forall ] def\n"
-		"   /rwindow	s [1 1 n-rows 1 sub {/i exch def\n"
+		"   /rwindows [1 1 n-rows 1 sub {/i exch def\n"
 		"		      lwindows i get } for\n"
 		"	              right-ends n 1 sub get gap 2 div add\n"
 		"	      ] def\n"
@@ -967,7 +967,7 @@ static const char * header(bool print_ps_header)
 		"        /centering 0 def\n"
 		"               % set centering to 0 to prevent centering of each row \n"
 		"\n"
-		"	centering	 -100 moveto  % -100 because some letters go below zero\n"
+		"	centering -100 moveto  % -100 because some letters go below zero\n"
 		"        centering max-height n-rows mul lineto\n"
 		"        rwindows i get lwindows i get sub centering add\n"
 		"                       max-height n-rows mul lineto\n"
@@ -1006,7 +1006,7 @@ static const char * header(bool print_ps_header)
 		"    /max 0 def\n"
 		"    0 1 links length 1 sub {\n"
 		"	/i exch def\n"
-		"	/t links 	i get 2 get def\n"
+		"	/t links i get 2 get def\n"
 		"	t max gt {/max t def} if\n"
 		"      } for\n"
 		"\n"
@@ -1042,12 +1042,12 @@ static const char * header(bool print_ps_header)
 		"	closepath\n"
 		"        clip\n"
 		"	lwindows i get neg n-rows i sub 1 sub max-height mul translate\n"
-		"        cent	erpage centering 0 translate\n"
+		"        centerpage centering 0 translate\n"
 		"        words links diagram-sentence-circle\n"
 		"	grestore\n"
 		"     } for\n"
 		"     end\n"
-		"} def \n"	
+		"} def \n"
 		"\n"
 		"/ldiagram\n"
 		"{diagramdict begin\n"
@@ -1214,7 +1214,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		 * E.g.: For Hebrew word "הכלב", we get these "alternatives":
 		 *   ה=  כלב  לב  ב=
 		 *   ה=  כ=  ל=
-		 *   ה=  כ= 
+		 *   ה=  כ=
 		 * Clearly, this is not informative any more. Instead, it's better to just
 		 * print one line with a list of tokens (without repetitions):
 		 * ה= כלב לב ב= כ=  ל=

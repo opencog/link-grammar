@@ -1014,7 +1014,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 #if 0 /* firstupper check removed in 0c8107a */
 			/* Now, if the first character of the word was
 			   originally uppercase, we put it back that way */
-			if (sent->parse_info->chosen_disjuncts[w]->word[0]->status & WS_FIRSTUPPER)
+			if (linkage->chosen_disjuncts[w]->word[0]->status & WS_FIRSTUPPER)
 				upcase_utf8_str(s, s, MAX_WORD);
 #endif
 			append_string(cs, "%s ", s);

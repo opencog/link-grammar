@@ -442,6 +442,9 @@ static void free_linkages(Sentence sent)
 #endif
 
 		linkage_free_pp_info(linkage);
+
+		free(linkage->wg_path);
+		free(linkage->wg_path_display);
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
@@ -1066,8 +1069,8 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Gword **next; /* next Wordgraph words of the current word */
 
 	size_t i;
+	Linkage_info * const lifo = &lkg->lifo;
 
-	Linkage_info * const lifo = &sent->link_info[lk];
 	bool match_found = true; /* if all the words are null - it's still a match */
 	Gword **lwg_path;
 
@@ -1084,7 +1087,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	assert(NULL != wp_new, "Path word queue is empty");
 
 	if (4 <= opts->verbosity)
-		print_linkage_words(sent, lkg, pi->chosen_disjuncts);
+		print_linkage_words(sent, lkg, lkg->chosen_disjuncts);
 
 	for (i = 0; i < sent->length; i++)
 	{
@@ -1296,16 +1299,15 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			lgdebug(4, "%zu Morpheme type combination '%s'\n", lk+1, affix_types);
 		}
 		lgdebug(+4, "%zu SUCCEEDED\n", lk+1);
-		lifo->wg_path = lwg_path;
+		lkg->wg_path = lwg_path;
 		return true;
 	}
 
-	Linkage_info * const lifo = &lkg->lifo;
 	/* Oh no ... invalid morpheme combination! */
 	sent->num_valid_linkages --;
 	lifo->N_violations++;
 	lifo->pp_violation_msg = "Invalid morphism construction.";
-	lifo->wg_path = NULL;
+	lkg->wg_path = NULL;
 #if 0 /* They cannot be displayed now since they lack a Wordgraph path. */
 	if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
 #else

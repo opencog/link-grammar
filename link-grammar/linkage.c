@@ -163,7 +163,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  *    A pointer to a NULL-terminated array of pointers to Wordgraph words.
  *    It corresponds 1-1 to the chosen_disjuncts array in parse_info.
  *    A new one is constructed below to correspond 1-1 to chosen_words.
- *    
+ *
  *    FIXME Sometimes the word strings are taken from chosen_disjuncts,
  *    and sometimes from wordgraph subwords. Use only one of them for that.
  */
@@ -179,7 +179,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	size_t *remap = alloca(sent->length * sizeof(*remap));
 	bool display_morphology = opts->display_morphology;
 
-	Gword **lwg_path = linkage->info->wg_path;
+	Gword **lwg_path = linkage->wg_path;
 	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
 #if 0 /* FIXME? Not implemented. */
 	size_t len_n_lwg_path = 0;
@@ -239,7 +239,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			nb_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
 				(MT_INFRASTRUCTURE == w->unsplit_word->morpheme_type);
 
-			/* XXX consider the possibility of empty words at the end of a null
+			/* XXX Consider the possibility of empty words at the end of a null
 			 * block. */
 			/* Continue if next subword in this alternative is a null word */
 			if (!nb_end && (NULL == cdjp[i+1]))
@@ -585,38 +585,43 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 	}
 	linkage->num_links = j;
-}
 #else
 	/* A try to be more general (FIXME: It is not enough).
-	 * Discard Empty word and LL links unconditinally.
+	 * Discard Empty words, and also LL links unconditinally.
 	 * The NULL||'\0'||' ' is to allow easy feature experimetions.
 	 * FIXME: Define an affix class MORPHOLOGY_LINKS. */
 	for (i=0, j=0; i<linkage->num_links; i++)
 	{
-		Link * lnk = linkage->link[i];
-		const char *lcw = chosen_words[lnk->lw];
-		const char *rcw = chosen_words[lnk->rw];
+		Link * old_lnk = &(linkage->link_array[i]);
+		const char *lcw = chosen_words[old_lnk->lw];
+		const char *rcw = chosen_words[old_lnk->rw];
 
 		if (((NULL == lcw) || ('\0' == *lcw) || (' ' == *lcw) ||
 			 (NULL == rcw) || ('\0' == *rcw) || (' ' == *rcw)) &&
-			 ((0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS)) ||
+			 ((0 == strcmp(old_lnk->link_name, EMPTY_WORD_SUPPRESS)) ||
 			  (HIDE_MORPHO &&
-			   (0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)))))
+			   (0 == strncmp(old_lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)))))
 		{
-			exfree_link(lnk);
+			;
 		}
 		else
 		{
-			lnk->lw = remap[lnk->lw];
-			lnk->rw = remap[lnk->rw];
-			linkage->link[j] = lnk;
+			Link * new_lnk = &(linkage->link_array[j]);
+
+			/* Copy the entire link contents, thunking the word numbers.
+			 * Note that j is alwasy <= i so this is always safe. */
+			new_lnk->lw = remap[old_lnk->lw];
+			new_lnk->rw = remap[old_lnk->rw];
+			new_lnk->lc = old_lnk->lc;
+			new_lnk->rc = old_lnk->rc;
+			new_lnk->link_name = old_lnk->link_name;
 			j++;
 		}
 	}	
 #endif
 
 	linkage->num_links = j;
-	sent->link_info->wg_path_display = n_lwg_path;
+	linkage->wg_path_display = n_lwg_path;
 
 	if (D_CCW <= opts->verbosity)
 	{
