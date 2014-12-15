@@ -11,9 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifdef USE_ANYSPLIT
-#include "anysplit.h"
-#endif
 #include "api-structures.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -30,6 +27,9 @@
 #include "word-utils.h"
 #include "dict-sql/read-sql.h"  /* Temporary hack */
 
+#ifdef USE_ANYSPLIT
+#include "anysplit.h"
+#endif
 
 /***************************************************************
 *
@@ -58,7 +58,7 @@ static inline char * deinflect(const char * str)
  * has a pointer to an array of strings which are the punctuation/affix
  * names. */
 
-const char *afdict_classname[] = { AFDICT_CLASSNAMES };
+const char * afdict_classname[] = { AFDICT_CLASSNAMES };
 #define NUMELEMS(a) (sizeof(a) / sizeof(a[0]))
 
 /**
@@ -348,13 +348,23 @@ static bool afdict_init(Dictionary dict)
 	{
 		int rc;
 
-		Regex_node * sm_re = (Regex_node *) malloc(sizeof(Regex_node));
+		Regex_node *sm_re = malloc(sizeof(*sm_re));
 		dyn_str *rebuf = dyn_str_new();
 
-		/* The regex is converted to: ^((original-regex)b)+$ */
+		/* The regex used to be converted to: ^((original-regex)b)+$
+		 * In the initial wordgraph version word boundaries are not supported,
+		 * so instead it is converted to: ^(original-regex)+$ */
+#ifdef WORD_BOUNDARIES
 		dyn_strcat(rebuf, "^((");
+#else
+		dyn_strcat(rebuf, "^(");
+#endif
 		dyn_strcat(rebuf, ac->string[0]);
+#ifdef WORD_BOUNDARIES
 		dyn_strcat(rebuf, ")b)+$");
+#else
+		dyn_strcat(rebuf, ")+$");
+#endif
 		sm_re->pattern = strdup(rebuf->str);
 		dyn_str_delete(rebuf);
 
