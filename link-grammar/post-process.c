@@ -1024,8 +1024,6 @@ void post_process_close_sentence(Postprocessor *pp)
 	if (pp == NULL) return;
 	pp_linkset_clear(pp->set_of_links_of_sentence);
 	pp_linkset_clear(pp->set_of_links_in_an_active_rule);
-	string_set_delete(pp->sentence_link_name_set);
-	pp->sentence_link_name_set = string_set_create();
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
 	pp->relevant_contains_one_rules[0]	= -1;
@@ -1049,7 +1047,8 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 		const char *p;
 		assert(sublinkage->link_array[i].lw != SIZE_MAX);
 
-		p = string_set_add(sublinkage->link_array[i].link_name, pp->sentence_link_name_set);
+		p = string_set_add(sublinkage->link_array[i].link_name,
+		                   pp->sentence_link_name_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}
 }
