@@ -128,7 +128,6 @@ void linkage_delete(Linkage linkage);
 char * linkage_print_diagram(Linkage linkage, bool display_walls, size_t screen_width);
 char * linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header);
 
-Sentence linkage_get_sentence(Linkage linkage);
 int linkage_get_num_words(Linkage linkage);
 int linkage_get_num_links(Linkage linkage);
 int linkage_get_link_lword(Linkage linkage, int index);

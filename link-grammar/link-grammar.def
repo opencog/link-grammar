@@ -72,7 +72,6 @@ sentence_disjunct_cost
 sentence_link_cost
 linkage_create
 linkage_delete
-linkage_get_sentence
 linkage_get_num_words
 linkage_get_num_links
 linkage_get_link_lword

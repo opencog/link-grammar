@@ -345,12 +345,6 @@ const char ** linkage_get_words(const Linkage linkage)
 	return linkage->word;
 }
 
-Sentence linkage_get_sentence(const Linkage linkage)
-{
-	/* return linkage->sent; */
-	return NULL;
-}
-
 const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;

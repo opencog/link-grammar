@@ -242,8 +242,6 @@ link_public_api(Linkage)
      linkage_create(LinkageIdx linkage_num, Sentence sent, Parse_Options opts);
 link_public_api(void)
      linkage_delete(Linkage linkage);
-link_public_api(Sentence)
-     linkage_get_sentence(const Linkage linkage);
 link_public_api(size_t)
      linkage_get_num_words(const Linkage linkage);
 link_public_api(size_t)
