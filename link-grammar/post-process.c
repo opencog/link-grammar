@@ -219,7 +219,7 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 	if (ppn->dtsz <= idx)
 	{
 		size_t oldsz = ppn->dtsz;
-		ppn->dtsz = 2 * ppn->dtsz + 10;
+		ppn->dtsz += idx + 2;
 		ppn->d_type_array = xrealloc(ppn->d_type_array,
 			oldsz * sizeof(D_type_list*), ppn->dtsz * sizeof(D_type_list*));
 	}
@@ -540,23 +540,19 @@ apply_bounded(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
  */
 static void build_graph(Postprocessor *pp, Linkage sublinkage)
 {
-	size_t i, link;
+	size_t link;
 	List_o_links * lol;
 
 	/* Get more size, if needed */
 	if (pp->pp_data.wowlen <= pp->pp_data.length)
 	{
+		size_t oldsz = pp->pp_data.wowlen * sizeof(List_o_links *);
+		size_t incsz = pp->pp_data.length * sizeof(List_o_links *);
 		pp->pp_data.word_links = (List_o_links **) xrealloc(
-			pp->pp_data.word_links,
-			pp->pp_data.wowlen * sizeof(List_o_links *),
-			2 * pp->pp_data.wowlen * sizeof(List_o_links *));
-		memset(&pp->pp_data.word_links[pp->pp_data.wowlen],
-		       0, pp->pp_data.wowlen * sizeof(List_o_links *));
-		pp->pp_data.wowlen *= 2;
+			pp->pp_data.word_links, oldsz, oldsz + incsz);
+		pp->pp_data.wowlen += pp->pp_data.length;
 	}
-
-	for (i = 0; i < pp->pp_data.length; i++)
-		pp->pp_data.word_links[i] = NULL;
+	memset(pp->pp_data.word_links, 0, pp->pp_data.wowlen * sizeof(List_o_links *));
 
 	for (link = 0; link < sublinkage->num_links; link++)
 	{
@@ -594,21 +590,23 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 	/* Grab more memory if needed */
 	if (pp->vlength <= pp->pp_data.length)
 	{
+		size_t oldsz = pp->vlength * sizeof(bool);
+		size_t incsz = pp->pp_data.length * sizeof(bool);
 		pp->visited = (bool *) xrealloc(pp->visited,
-		      pp->vlength * sizeof(bool), 2 * pp->vlength * sizeof(bool));
-		pp->vlength *= 2;
+			oldsz, oldsz + incsz);
+		pp->vlength += pp->pp_data.length;
 	}
 	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 
 	/* Grab more memory if needed */
 	if (pp->pp_data.domlen <= n)
 	{
+		size_t oldsz = pp->pp_data.domlen * sizeof(Domain);
+		size_t incsz = n * sizeof(Domain);
 		pp->pp_data.domain_array = (Domain *) xrealloc(pp->pp_data.domain_array,
-		    pp->pp_data.domlen * sizeof(Domain),
-		    2 * pp->pp_data.domlen * sizeof(Domain));
-		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0,
-		       pp->pp_data.domlen * sizeof(Domain));
-		pp->pp_data.domlen *= 2;
+			oldsz, oldsz + incsz);
+		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0, incsz);
+		pp->pp_data.domlen += n;
 	}
 
 	pp->pp_data.domain_array[n].string = string;
