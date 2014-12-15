@@ -36,12 +36,10 @@ void post_process_free(Postprocessor *);
 
 void     post_process_free_data(PP_data * ppd);
 void     post_process_close_sentence(Postprocessor *);
-void     post_process_scan_linkage(Postprocessor * pp, Parse_Options opts,
-                                   Sentence sent, Linkage sublinkage);
-PP_node *do_post_process(Postprocessor * pp, Parse_Options opts, 
-                         Sentence sent, Linkage);
-bool     post_process_match(const char *s, const char *t);  /* utility function */
+void     post_process_scan_linkage(Postprocessor *, Parse_Options, Linkage);
+PP_node *do_post_process(Postprocessor *, Parse_Options, Linkage);
+bool     post_process_match(const char *, const char *);  /* utility function */
 
-bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts);
+bool sane_linkage_morphism(Sentence, size_t lk, Parse_Options);
 
 #endif

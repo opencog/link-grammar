@@ -224,8 +224,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	char * djs, *mark;
 	int w;
 	String * s = string_new();
-	Sentence sent = linkage->sent;
-	int nwords = sent->length;
+	int nwords = linkage->num_words;
 
 	/* Loop over each word in the sentence */
 	for (w = 0; w < nwords; w++)

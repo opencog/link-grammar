@@ -973,7 +973,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 
 	pp = (Postprocessor *) xalloc (sizeof(Postprocessor));
 	pp->knowledge = kno;
-	pp->sentence_link_name_set = string_set_create();
+	pp->string_set = string_set_create();
 	pp->set_of_links_of_sentence = pp_linkset_open(1024);
 	pp->set_of_links_in_an_active_rule = pp_linkset_open(1024);
 	pp->relevant_contains_one_rules =
@@ -1011,7 +1011,7 @@ void post_process_free(Postprocessor *pp)
 	/* frees up memory associated with pp, previously allocated by open */
 	if (pp == NULL) return;
 	pp->knowledge = NULL;
-	string_set_delete(pp->sentence_link_name_set);
+	string_set_delete(pp->string_set);
 	pp_linkset_close(pp->set_of_links_of_sentence);
 	pp_linkset_close(pp->set_of_links_in_an_active_rule);
 	xfree(pp->relevant_contains_one_rules,
@@ -1046,18 +1046,18 @@ void post_process_close_sentence(Postprocessor *pp)
  * simply maintain a set of "seen" link names for rule pruning later on
  */
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
-									 Sentence sent, Linkage sublinkage)
+                               Linkage sublinkage)
 {
 	size_t i;
 	if (pp == NULL) return;
-	if (sent->length < opts->twopass_length) return;
+	if (sublinkage->num_words < opts->twopass_length) return;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
 		const char *p;
 		assert(sublinkage->link_array[i].lw != SIZE_MAX);
 
 		p = string_set_add(sublinkage->link_array[i].link_name,
-		                   pp->sentence_link_name_set);
+		                   pp->string_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}
 }
@@ -1127,7 +1127,7 @@ static void report_pp_stats(Postprocessor *pp)
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-                         Sentence sent, Linkage sublinkage)
+                         Linkage sublinkage)
 {
 	const char *msg;
 
@@ -1144,7 +1144,7 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
-	if (pp->q_pruned_rules == false && sent->length >= opts->twopass_length)
+	if (pp->q_pruned_rules == false && sublinkage->num_words >= opts->twopass_length)
 	{
 		prune_irrelevant_rules(pp);
 	}

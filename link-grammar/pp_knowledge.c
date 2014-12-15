@@ -342,6 +342,7 @@ pp_knowledge *pp_knowledge_open(const char *path)
 
 void pp_knowledge_close(pp_knowledge *k)
 {
+  if (!k) return;
   /* clear the memory taken up by k */
   xfree((void*)k->starting_link_lookup_table,
         ((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain)));

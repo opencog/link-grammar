@@ -266,7 +266,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
-	linkage->sent = sent;
 
 	compute_chosen_words(sent, linkage, opts);
 
@@ -348,7 +347,8 @@ const char ** linkage_get_words(const Linkage linkage)
 
 Sentence linkage_get_sentence(const Linkage linkage)
 {
-	return linkage->sent;
+	/* return linkage->sent; */
+	return NULL;
 }
 
 const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
@@ -500,7 +500,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	linkage->pp_violation = NULL;
 
 	/* This can return NULL, if there is no post-processor */
-	pp = do_post_process(postprocessor, opts, linkage->sent, linkage);
+	pp = do_post_process(postprocessor, opts, linkage);
 	if (pp == NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
@@ -527,7 +527,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 				char buff[5];
 				sprintf(buff, "%c", d->type);
 				linkage->pp_info[j].domain_name[k] = 
-				      string_set_add (buff, linkage->sent->string_set);
+				      string_set_add (buff, postprocessor->string_set);
 
 				k++;
 			}

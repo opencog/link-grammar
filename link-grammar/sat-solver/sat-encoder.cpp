@@ -1239,8 +1239,6 @@ Linkage SATEncoder::create_linkage()
 
   linkage->num_words = _sent->length;
   linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
-  linkage->sent = _sent;
-  // linkage->info = sent->link_info[k]; done later...
 
   if (_sent->parse_info) {
     free_parse_info(_sent->parse_info);

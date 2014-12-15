@@ -225,7 +225,7 @@ struct Sentence_s
 	const char *orig_sentence;  /* Copy of original sentence */
 	size_t length;              /* Number of words */
 	Word  *word;                /* Array of words after tokenization */
-	String_set *   string_set;  /* Used for word names, not connectors */
+	String_set *   string_set;  /* Used for assorted strings */
 
 	/* Parse results */
 	int    num_linkages_found;  /* Total number before postprocessing.  This
@@ -315,9 +315,9 @@ struct Postprocessor_s
 	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
 
 	/* The following maintain state during a call to post_process() */
-	String_set *sentence_link_name_set;    /* link names seen for sentence */
-	bool *visited;                         /* for the depth-first search */
-	size_t vlength;                        /* length of visited array */
+	String_set *string_set;      /* Link names seen for sentence */
+	bool *visited;               /* For the depth-first search */
+	size_t vlength;              /* Length of visited array */
 	PP_node *pp_node;
 	PP_data pp_data;
 };
@@ -351,27 +351,19 @@ struct Linkage_info_struct
 
 struct Linkage_s
 {
-	/* TODO XXX FIXME: the member sent, below, is used almost nowhere
-	 * of importance; maybe it should be removed or redone.  It is currently
-	 * used only in constituents.c for error printing, in linkage.c
-	 * for disjunct-string printing.
-	 * These uses could be fixed ... so perhaps its not really 
-	 * needed here.
-	 */
-	Sentence        sent;
-	size_t          num_words;    /* number of (tokenized) words */
-	const char *  * word;         /* array of word spellings */
+	size_t          num_words;    /* Number of (tokenized) words */
+	const char *  * word;         /* Array of word spellings */
 
 	size_t          num_links;    /* Number of links in array */
 	Link *          link_array;   /* Array of links */
-	size_t          lasz;
+	size_t          lasz;         /* Alloc'ed length of link_array */
 
-	Disjunct **     chosen_disjuncts;
+	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 
-	Linkage_info    lifo;         /* index and cost information */
+	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
-	PP_data         hpsg_pp_data; /* Used in contituent code */
+	PP_data         hpsg_pp_data; /* Used in constituent code */
 };
 
 
