@@ -664,13 +664,13 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	size_t d, l, w2;
 	int c, w, c2, numcon_subl = 0;
 
-	for (d = 0, c = numcon_total; d < linkage->pp_data.N_domains; d++, c++)
+	for (d = 0, c = numcon_total; d < linkage->hpsg_pp_data.N_domains; d++, c++)
 	{
 		size_t leftmost, rightmost, leftlimit;
 		int rootleft;
 		List_o_links * dlink;
 
-		Domain domain = linkage->pp_data.domain_array[d];
+		Domain domain = linkage->hpsg_pp_data.domain_array[d];
 
 		// rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);

@@ -436,7 +436,7 @@ static void free_linkages(Sentence sent)
 #endif
 
 		linkage_free_pp_info(linkage);
-		post_process_free_data(&linkage->pp_data);
+		post_process_free_data(&linkage->hpsg_pp_data);
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));

@@ -272,7 +272,9 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	// XXX Didn't we post-process already ??
 	linkage_post_process(linkage, sent->postprocessor, opts);
+
 	linkage_post_process(linkage, sent->constituent_pp, opts);
+	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
 
 	return linkage;
 }
@@ -481,12 +483,13 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	{
 		for (j = 0; j < linkage->num_links; ++j)
 			exfree_domain_names(&linkage->pp_info[j]);
-		post_process_free_data(&linkage->pp_data);
 	}
 	else
 	{
 		linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	}
+
+	post_process_free_data(&postprocessor->pp_data);
 
 	for (j = 0; j < linkage->num_links; ++j)
 	{
@@ -529,7 +532,6 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 				k++;
 			}
 		}
-		linkage->pp_data = postprocessor->pp_data;
 	}
 	post_process_close_sentence(postprocessor);
 }

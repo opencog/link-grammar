@@ -179,12 +179,13 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 void post_process_free_data(PP_data * ppd)
 {
 	size_t w, d;
-	for (w = 0; w < ppd->length; w++)
+	for (w = 0; w < ppd->wowlen; w++)
 	{
 		free_List_o_links(ppd->word_links[w]);
 		ppd->word_links[w] = NULL;
 	}
-	for (d = 0; d < ppd->N_domains; d++)
+
+	for (d = 0; d < ppd->domlen; d++)
 	{
 		free_List_o_links(ppd->domain_array[d].lol);
 		ppd->domain_array[d].lol = NULL;
@@ -193,6 +194,8 @@ void post_process_free_data(PP_data * ppd)
 	}
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
+	ppd->length = 0;
+	ppd->N_domains = 0;
 }
 
 #ifdef THIS_FUNCTION_IS_NOT_CURRENTLY_USED
@@ -547,6 +550,8 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 			pp->pp_data.word_links,
 			pp->pp_data.wowlen * sizeof(List_o_links *),
 			2 * pp->pp_data.wowlen * sizeof(List_o_links *));
+		memset(&pp->pp_data.word_links[pp->pp_data.wowlen],
+		       0, pp->pp_data.wowlen * sizeof(List_o_links *));
 		pp->pp_data.wowlen *= 2;
 	}
 
@@ -601,6 +606,8 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 		pp->pp_data.domain_array = (Domain *) xrealloc(pp->pp_data.domain_array,
 		    pp->pp_data.domlen * sizeof(Domain),
 		    2 * pp->pp_data.domlen * sizeof(Domain));
+		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0,
+		       pp->pp_data.domlen * sizeof(Domain));
 		pp->pp_data.domlen *= 2;
 	}
 
@@ -859,7 +866,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	                          pp->knowledge->contains_one_rules,
 	                          pp->relevant_contains_one_rules, msg))
 	{
-		for (i = 0; i < pp->pp_data.length; i++)
+		for (i = 0; i < pp->pp_data.wowlen; i++)
 			pp->pp_data.word_links[i] = NULL;
 		pp->pp_data.N_domains = 0;
 		return -1;
@@ -990,9 +997,11 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 
 	pp->pp_data.domlen = 60;
 	pp->pp_data.domain_array = (Domain*) xalloc(pp->pp_data.domlen * sizeof(Domain));
+	memset(pp->pp_data.domain_array, 0, pp->pp_data.domlen * sizeof(Domain));
 
 	pp->pp_data.wowlen = 60;
 	pp->pp_data.word_links = (List_o_links **) xalloc(pp->pp_data.wowlen * sizeof(List_o_links*));
+	memset(pp->pp_data.word_links, 0, pp->pp_data.wowlen * sizeof(List_o_links *));
 
 	return pp;
 }

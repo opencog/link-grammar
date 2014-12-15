@@ -371,7 +371,7 @@ struct Linkage_s
 	Linkage_info    lifo;         /* index and cost information */
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
-	PP_data         pp_data;
+	PP_data         hpsg_pp_data; /* Used in contituent code */
 };
 
 
