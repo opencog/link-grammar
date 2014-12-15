@@ -494,11 +494,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 		linkage->pp_info[j].domain_name = NULL;
 	}
 
-	if (linkage->pp_violation != NULL)
-	{
-		exfree((void *)linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation)+1));
-		linkage->pp_violation = NULL;
-	}
+	linkage->pp_violation = NULL;
 
 	/* This can return NULL, if there is no post-processor */
 	pp = do_post_process(postprocessor, opts, linkage->sent, linkage);
@@ -509,6 +505,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			linkage->pp_info[j].num_domains = 0;
 			linkage->pp_info[j].domain_name = NULL;
 		}
+		linkage->pp_violation = NULL;
 	}
 	else
 	{
@@ -533,12 +530,6 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			}
 		}
 		linkage->pp_data = postprocessor->pp_data;
-		if (pp->violation != NULL)
-		{
-			char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
-			strcpy(s, pp->violation);
-			linkage->pp_violation = s;
-		}
 	}
 	post_process_close_sentence(postprocessor);
 }
