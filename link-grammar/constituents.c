@@ -943,13 +943,11 @@ exprint_constituent_structure(con_context_t *ctxt,
 	bool *leftdone = alloca(numcon_total * sizeof(bool));
 	bool *rightdone = alloca(numcon_total * sizeof(bool));
 	int best, bestright, bestleft;
-	Sentence sent;
 	char *p;
 	char s[MAX_WORD];
 	String * cs = string_new();
 
 	assert (numcon_total < ctxt->conlen, "Too many constituents (b)");
-	sent = linkage_get_sentence(linkage);
 
 	for (c = 0; c < numcon_total; c++)
 	{
@@ -1013,10 +1011,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 				p = strchr(p, CLOSE_BRACKET);
 			}
 
-			/* Now, if the first character of the word was
-			   originally uppercase, we put it back that way */
-			if (sent->word[w].firstupper)
-				upcase_utf8_str(s, s, MAX_WORD);
 			append_string(cs, "%s ", s);
 		}
 
