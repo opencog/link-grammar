@@ -250,7 +250,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	linkage->num_links = j;
 }
 
-
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
@@ -270,13 +269,9 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	compute_chosen_words(sent, linkage, opts);
 
-	/* XXX Didn't we post-process already ?? FIXME, yes we did, in
-	 * analyze_thin_linkage.  The difference is that, there, we did not
-	 * fill out the pp_info structures, which is done below. We should 
-	 * consolidate these ...
-	 */
-	linkage_post_process(linkage, sent->postprocessor, opts);
-
+	/* We've already done core post-processing earlier.
+	 * Run the post-processing needed for consituent (hpsg) 
+	 * printing. */
 	linkage_post_process(linkage, sent->constituent_pp, opts);
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
 
