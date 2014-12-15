@@ -29,6 +29,7 @@ extern "C" {
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
+#include "score.h"
 #include "utilities.h"
 }
 

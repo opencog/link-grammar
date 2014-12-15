@@ -21,56 +21,6 @@
 #include "word-utils.h"
 
 /**
- * This function defines the cost of a link as a function of its length.
- */
-static inline int cost_for_length(int length)
-{
-	return length-1;
-}
-
-/**
- * Computes the cost of the current parse of the current sentence,
- * due to the length of the links.
- */
-static size_t compute_link_cost(Linkage lkg)
-{
-	size_t lcost, i;
-	lcost =  0;
-	for (i = 0; i < lkg->num_links; i++)
-	{
-		lcost += cost_for_length(lkg->link_array[i].rw - lkg->link_array[i].lw);
-	}
-	return lcost;
-}
-
-static int unused_word_cost(Linkage lkg)
-{
-	int lcost;
-	size_t i;
-	lcost =  0;
-	for (i = 0; i < lkg->num_words; i++)
-		lcost += (lkg->chosen_disjuncts[i] == NULL);
-	return lcost;
-}
-
-/**
- * Computes the cost of the current parse of the current sentence
- * due to the cost of the chosen disjuncts.
- */
-static double compute_disjunct_cost(Linkage lkg)
-{
-	size_t i;
-	double lcost;
-	lcost =  0.0;
-	for (i = 0; i < lkg->num_words; i++)
-	{
-		if (lkg->chosen_disjuncts[i] != NULL)
-			lcost += lkg->chosen_disjuncts[i]->cost;
-	}
-	return lcost;
-}
-
-/**
  * This returns a string that is the the GCD of the two given strings.
  * If the GCD is equal to one of them, a pointer to it is returned.
  * Otherwise a new string for the GCD is xalloced and put on the
@@ -154,20 +104,3 @@ void analyze_thin_linkage(Postprocessor * postprocessor, Linkage lkg, Parse_Opti
 	}
 }
 
-/** Assign parse score (cost) to linkage, used for parse ranking. */
-void linkage_score(Linkage lkg, Parse_Options opts)
-{
-	lkg->lifo.unused_word_cost = unused_word_cost(lkg);
-	if (opts->use_sat_solver)
-	{
-		lkg->lifo.disjunct_cost = 0.0;
-	}
-	else
-	{
-		lkg->lifo.disjunct_cost = compute_disjunct_cost(lkg);
-	}
-	lkg->lifo.link_cost = compute_link_cost(lkg);
-	lkg->lifo.corpus_cost = -1.0;
-
-	lg_corpus_score(lkg);
-}

@@ -104,6 +104,7 @@ liblink_grammar_la_SOURCES =        \
 	regex-morph.c                    \
 	regex-tokenizer.c                \
 	resources.c                      \
+	score.c                          \
 	spellcheck-aspell.c              \
 	spellcheck-hun.c                 \
 	string-set.c                     \
@@ -145,6 +146,7 @@ liblink_grammar_la_SOURCES =        \
 	regex-morph.h                    \
 	regex-tokenizer.h                \
 	resources.h                      \
+	score.h                          \
 	spellcheck.h                     \
 	string-set.h                     \
 	structures.h                     \

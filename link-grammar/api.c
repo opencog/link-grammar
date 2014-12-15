@@ -32,6 +32,7 @@
 #include "prune.h"
 #include "regex-morph.h"
 #include "resources.h"
+#include "score.h"
 #include "sat-solver/sat-encoder.h"
 #include "spellcheck.h"
 #include "string-set.h"
