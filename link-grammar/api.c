@@ -650,7 +650,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 		size_t N_linkages_post_processed = 0;
 		for (in=0; in < sent->num_linkages_alloced; in++)
 		{
-			Linkage_info *lifo = &sent->link_info[in];
+			Linkage_info *lifo = &sent->lnkages[in].lifo;
 			if (lifo->discarded) break;
 			N_linkages_post_processed++;
 		}

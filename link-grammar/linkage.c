@@ -84,7 +84,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	const char infix_mark = INFIX_MARK;
 
 	/* XXX TODO -- this should be not sent->length but
- * linkage->num_workds ...and likewise elsewhere in this function */
+	 * linkage->num_words ...and likewise, we should not be looking at
+	 * sent->word[i].unsplit_word but the correct path-word for the linkage */
 	for (i=0; i<sent->length; i++)
 	{
 		const char *t;
@@ -238,8 +239,13 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 		else
 		{
+			/* Copy the entire link contents, thunking the word numbers.
+			 * Note that j is alwasy <= i so this is always safe. */
 			linkage->link_array[j].lw = remap[lnk->lw];
 			linkage->link_array[j].rw = remap[lnk->rw];
+			linkage->link_array[j].lc = linkage->link_array[i].lc;
+			linkage->link_array[j].rc = linkage->link_array[i].rc;
+			linkage->link_array[j].link_name = linkage->link_array[i].link_name;
 			j++;
 		}
 	}
