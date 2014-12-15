@@ -478,6 +478,8 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
 
+	/* Step one: because we might be called multiple times, first we
+	 * cleanup and free any data left over from a previous call. */
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
@@ -496,18 +498,17 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 		linkage->pp_info[j].domain_name = NULL;
 	}
 
+	linkage->lifo.N_violations = 0;
 	linkage->pp_violation = NULL;
 
-	/* This can return NULL, if there is no post-processor */
+	/* Step two: actually do the post-processing */
 	pp = do_post_process(postprocessor, opts, linkage);
-	if (pp == NULL)
+
+	/* Step three: copy the post-processing results over into the linkage */
+	if (pp->violation != NULL)
 	{
-		for (j = 0; j < linkage->num_links; ++j)
-		{
-			linkage->pp_info[j].num_domains = 0;
-			linkage->pp_info[j].domain_name = NULL;
-		}
-		linkage->pp_violation = NULL;
+		linkage->lifo.N_violations = 1;
+		linkage->lifo.pp_violation_msg = pp->violation;
 	}
 	else
 	{

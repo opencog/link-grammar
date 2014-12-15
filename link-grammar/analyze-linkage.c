@@ -80,27 +80,3 @@ void compute_link_names(Linkage lkg, String_set *sset)
 			connector_get_string(lkg->link_array[i].rc));
 	}
 }
-
-/**
- * This does a minimal post-processing step, using the 'standard'
- * post-processor.
- */
-void analyze_thin_linkage(Postprocessor * postprocessor, Linkage lkg, Parse_Options opts)
-{
-	PP_node * ppn;
-
-	ppn = do_post_process(postprocessor, opts, lkg);
-	post_process_free_data(&postprocessor->pp_data);
-
-	lkg->lifo.N_violations = 0;
-	if (ppn == NULL)
-	{
-		if (postprocessor != NULL) lkg->lifo.N_violations = 1;
-	}
-	else if (ppn->violation != NULL)
-	{
-		lkg->lifo.N_violations++;
-		lkg->lifo.pp_violation_msg = ppn->violation;
-	}
-}
-

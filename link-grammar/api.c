@@ -611,7 +611,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			continue;
 		}
 		compute_link_names(lkg, sent->string_set);
-		analyze_thin_linkage(sent->postprocessor, lkg, opts);
+		linkage_post_process(lkg, sent->postprocessor, opts);
 		linkage_score(lkg, opts);
 
 		if (0 != lifo->N_violations)

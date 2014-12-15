@@ -14,5 +14,4 @@
 #include "link-includes.h"
 
 void compute_link_names(Linkage, String_set *);
-void analyze_thin_linkage(Postprocessor *, Linkage, Parse_Options);
 
