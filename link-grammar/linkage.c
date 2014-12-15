@@ -268,7 +268,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->sent = sent;
 
-	compute_link_names(sent, linkage);
 	compute_chosen_words(sent, linkage, opts);
 
 	// XXX Didn't we post-process already ??
@@ -474,6 +473,7 @@ void linkage_free_pp_info(Linkage lkg)
 	lkg->pp_info = NULL;
 }
 
+/** Part of the API */
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
 	PP_node * pp;

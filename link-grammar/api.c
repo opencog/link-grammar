@@ -565,6 +565,9 @@ static void compute_chosen_disjuncts(Sentence sent)
 	}
 }
 
+/** This does a rather minimal amount of post-processing.
+ * A lot more seems to be done by linkage_post_process!?!?
+ */
 static void post_process_linkages(Sentence sent, Parse_Options opts)
 {
 	size_t in;

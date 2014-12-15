@@ -120,7 +120,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-void compute_link_names(Sentence sent, Linkage lkg)
+static void compute_link_names(Sentence sent, Linkage lkg)
 {
 	size_t i;
 	for (i = 0; i < lkg->num_links; i++)
@@ -140,6 +140,7 @@ void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int an
 	PP_node * pp;
 	Postprocessor * postprocessor = sent->dict->postprocessor;
 
+	compute_link_names(sent, lkg);
 	if (analyze_pass == PP_FIRST_PASS)
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, lkg);
