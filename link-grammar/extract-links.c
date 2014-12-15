@@ -146,6 +146,7 @@ void free_parse_info(Parse_info pi)
 {
 	unsigned int i;
 	X_table_connector *t, *x;
+	if (!pi) return;
 
 	for (i=0; i<pi->x_table_size; i++)
 	{

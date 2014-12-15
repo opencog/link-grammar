@@ -759,6 +759,7 @@ void sentence_delete(Sentence sent)
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
 	string_set_delete(sent->string_set);
+	free_parse_info(sent->parse_info);
 	free_linkages(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
 
@@ -1157,8 +1158,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before
-	 * building another.  */
-	if (sent->parse_info) free_parse_info(sent->parse_info);
+	 * building another.  Huh ?? How could that happen? */
+	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);
 
 	for (nl = opts->min_null_count; nl <= opts->max_null_count ; ++nl)
