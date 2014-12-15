@@ -189,22 +189,6 @@ struct Link_s
  * N_words:
  *   The number of words in the current sentence.  Computed by
  *   separate_sentence().
- *
- * N_links:
- *   The number of links in the current linkage.  Computed by
- *   extract_linkage().
- *
- * chosen_disjuncts[]
- *   This is an array pointers to disjuncts, one for each word, that is
- *   computed by extract_links().  It represents the chosen disjuncts
- *   for the current linkage.  It is used to compute the cost of the
- *   linkage, and also by compute_chosen_words() to compute the
- *   chosen_words[].
- *
- * link_array[]
- *   This is an array of links.  These links define the current linkage.
- *    It is computed by extract_links().  It is used by analyze_linkage()
- *    to compute pp_linkage[].
  */
 struct Parse_info_struct
 {
@@ -349,6 +333,22 @@ struct Linkage_info_struct
 #endif
 };
 
+/**
+ * num_links:
+ *   The number of links in the current linkage.  Computed by
+ *   extract_linkage().
+ *
+ * chosen_disjuncts[]
+ *   This is an array pointers to disjuncts, one for each word, that is
+ *   computed by extract_links().  It represents the chosen disjuncts
+ *   for the current linkage.  It is used to compute the cost of the
+ *   linkage, and also by compute_chosen_words() to compute the
+ *   chosen_words[].
+ *
+ * link_array[]
+ *   This is an array of links.  These links define the current linkage.
+ *   It is computed by extract_links().  It is used by analyze_linkage().
+ */
 struct Linkage_s
 {
 	size_t          num_words;    /* Number of (tokenized) words */

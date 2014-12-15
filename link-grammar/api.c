@@ -611,12 +611,12 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 		compute_link_names(sent->string_set, lkg);
 		analyze_thin_linkage(sent->postprocessor, lkg, opts);
+		linkage_score(lkg, opts);
 
 		if (0 != lifo->N_violations)
 		{
 			N_valid_linkages--;
 		}
-		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
 
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;

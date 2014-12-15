@@ -270,7 +270,11 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	compute_chosen_words(sent, linkage, opts);
 
-	// XXX Didn't we post-process already ??
+	/* XXX Didn't we post-process already ?? FIXME, yes we did, in
+	 * analyze_thin_linkage.  The difference is that, there, we did not
+	 * fill out the pp_info structures, which is done below. We should 
+	 * consolidate these ...
+	 */
 	linkage_post_process(linkage, sent->postprocessor, opts);
 
 	linkage_post_process(linkage, sent->constituent_pp, opts);

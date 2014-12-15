@@ -133,16 +133,30 @@ void compute_link_names(String_set *sset, Linkage lkg)
 
 /**
  * This does a minimal post-processing step, using the 'standard'
- * post-processor.  It also computes some of the linkage costs.
+ * post-processor.
  */
 void analyze_thin_linkage(Postprocessor * postprocessor, Linkage lkg, Parse_Options opts)
 {
-	PP_node * pp;
+	PP_node * ppn;
 
-	pp = do_post_process(postprocessor, opts, lkg);
+	ppn = do_post_process(postprocessor, opts, lkg);
 	post_process_free_data(&postprocessor->pp_data);
 
 	lkg->lifo.N_violations = 0;
+	if (ppn == NULL)
+	{
+		if (postprocessor != NULL) lkg->lifo.N_violations = 1;
+	}
+	else if (ppn->violation != NULL)
+	{
+		lkg->lifo.N_violations++;
+		lkg->lifo.pp_violation_msg = ppn->violation;
+	}
+}
+
+/** Assign parse score (cost) to linkage, used for parse ranking. */
+void linkage_score(Linkage lkg, Parse_Options opts)
+{
 	lkg->lifo.unused_word_cost = unused_word_cost(lkg);
 	if (opts->use_sat_solver)
 	{
@@ -155,13 +169,5 @@ void analyze_thin_linkage(Postprocessor * postprocessor, Linkage lkg, Parse_Opti
 	lkg->lifo.link_cost = compute_link_cost(lkg);
 	lkg->lifo.corpus_cost = -1.0;
 
-	if (pp == NULL)
-	{
-		if (postprocessor != NULL) lkg->lifo.N_violations = 1;
-	}
-	else if (pp->violation != NULL)
-	{
-		lkg->lifo.N_violations++;
-		lkg->lifo.pp_violation_msg = pp->violation;
-	}
+	lg_corpus_score(lkg);
 }

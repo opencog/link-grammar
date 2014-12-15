@@ -246,18 +246,19 @@ static double get_disjunct_score(Corpus *corp,
  * probability p(d|w) of observing disjunct 'd', given word 'w'.
  * Lower scores are better -- they indicate more likely parses.
  */
-void lg_corpus_score(Sentence sent, Linkage_info *lifo)
+void lg_corpus_score(Linage lkg)
 {
 	const char *infword, *djstr;
 	double tot_score = 0.0f;
 	Corpus *corp = sent->dict->corpus;
-	int nwords = sent->length;
+	int nwords = lkg->num_words;
+	Linkage_info *lifo = &lkg->lifo;
 	int w;
 
 	/* No-op if the database is not open */
 	if (NULL == corp->dbconn) return;
 
-	lg_compute_disjunct_strings(sent, lifo);
+	lg_compute_disjunct_strings(lkg, lifo);
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
@@ -266,7 +267,7 @@ void lg_corpus_score(Sentence sent, Linkage_info *lifo)
 	 * word 0. */
 	for (w=1; w<nwords; w++)
 	{
-		Disjunct *disj = sent->parse_info->chosen_disjuncts[w];
+		Disjunct *disj = lkg->chosen_disjuncts[w];
 
 		/* disj is NULL if word did not participate in parse */
 		if (NULL == disj)

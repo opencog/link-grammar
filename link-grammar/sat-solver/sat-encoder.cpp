@@ -1283,8 +1283,8 @@ Linkage SATEncoder::get_next_linkage()
     _sent->lnkages = (Linkage) xrealloc(_sent->lnkages,
                        nbytes - sizeof(struct Linkage_s), nbytes);
 
-    // Why is linkage_post_process() never called here?
     analyze_thin_linkage(_sent->postprocessor, linkage, _opts);
+    linkage_score(linkage, _opts);
 
     Linkage_info* lifo = &(_sent->lnkages[index].lifo);
     if (0 == lifo->N_violations) {

@@ -15,3 +15,5 @@
 
 void compute_link_names(String_set *, Linkage);
 void analyze_thin_linkage(Postprocessor *, Linkage, Parse_Options);
+void linkage_score(Linkage, Parse_Options);
+
