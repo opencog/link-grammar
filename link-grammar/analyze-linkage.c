@@ -12,13 +12,10 @@
 /*************************************************************************/
 
 
-#include <stdarg.h>
+#include <string.h>
 #include "analyze-linkage.h"
-#include "api-structures.h"
-#include "post-process.h"
 #include "string-set.h"
 #include "structures.h"
-#include "word-utils.h"
 
 /**
  * This returns a string that is the the GCD of the two given strings.
