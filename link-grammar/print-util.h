@@ -25,6 +25,7 @@ typedef struct String_s String;
 
 String * string_new(void);
 void string_delete(String *);
+const char * string_value(String *);
 char * string_copy(String *);
 void append_string(String * string, const char *fmt, ...) GNUC_PRINTF(2,3);
 size_t append_utf8_char(String * string, const char * mbs);

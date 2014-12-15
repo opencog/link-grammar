@@ -45,6 +45,11 @@ void string_delete(String *s)
 	exfree(s, sizeof(String));
 }
 
+const char * string_value(String *s)
+{
+	return s->p;
+}
+
 char * string_copy(String *s)
 {
 	char * p = (char *) exalloc(s->eos + 1);
