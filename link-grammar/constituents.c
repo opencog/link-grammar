@@ -664,13 +664,13 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	size_t d, l, w2;
 	int c, w, c2, numcon_subl = 0;
 
-	for (d = 0, c = numcon_total; d < linkage->pp_data.N_domains; d++, c++)
+	for (d = 0, c = numcon_total; d < linkage->hpsg_pp_data.N_domains; d++, c++)
 	{
 		size_t leftmost, rightmost, leftlimit;
 		int rootleft;
 		List_o_links * dlink;
 
-		Domain domain = linkage->pp_data.domain_array[d];
+		Domain domain = linkage->hpsg_pp_data.domain_array[d];
 
 		// rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);
@@ -943,13 +943,11 @@ exprint_constituent_structure(con_context_t *ctxt,
 	bool *leftdone = alloca(numcon_total * sizeof(bool));
 	bool *rightdone = alloca(numcon_total * sizeof(bool));
 	int best, bestright, bestleft;
-	Sentence sent;
 	char *p;
 	char s[MAX_WORD];
 	String * cs = string_new();
 
 	assert (numcon_total < ctxt->conlen, "Too many constituents (b)");
-	sent = linkage_get_sentence(linkage);
 
 	for (c = 0; c < numcon_total; c++)
 	{
@@ -1013,10 +1011,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 				p = strchr(p, CLOSE_BRACKET);
 			}
 
-			/* Now, if the first character of the word was
-			   originally uppercase, we put it back that way */
-			if (sent->word[w].firstupper)
-				upcase_utf8_str(s, s, MAX_WORD);
 			append_string(cs, "%s ", s);
 		}
 

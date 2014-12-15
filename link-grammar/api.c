@@ -436,7 +436,6 @@ static void free_linkages(Sentence sent)
 #endif
 
 		linkage_free_pp_info(linkage);
-		post_process_free_data(&linkage->pp_data);
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
@@ -691,7 +690,8 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
 
-	sent->q_pruned_rules = false;
+	sent->postprocessor = post_process_new(dict->base_knowledge);
+	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 #ifdef USE_SAT_SOLVER
 	sent->hook = NULL;
@@ -719,8 +719,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	{
 		return -1;
 	}
-
-	sent->q_pruned_rules = false; /* for post processing */
 
 	/* If unknown_word is not defined, then no special processing
 	 * will be done for e.g. capitalized words. */
@@ -761,7 +759,8 @@ void sentence_delete(Sentence sent)
 	string_set_delete(sent->string_set);
 	free_parse_info(sent->parse_info);
 	free_linkages(sent);
-	post_process_close_sentence(sent->dict->postprocessor);
+	post_process_free(sent->postprocessor);
+	post_process_free(sent->constituent_pp);
 
 	global_rand_state = sent->rand_state;
 	xfree((char *) sent, sizeof(struct Sentence_s));

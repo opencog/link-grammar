@@ -19,6 +19,7 @@
 #include "dict-common.h"
 #include "externs.h"
 #include "idiom.h"
+#include "pp_knowledge.h"
 #include "read-dict.h"
 #include "read-regex.h"
 #include "regex-morph.h"
@@ -242,7 +243,7 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 		return false;
 	}
 
-	/* Store the wide char version at the AFCLASS entry. */ 
+	/* Store the wide char version at the AFCLASS entry. */
 	ac->mem_elems =  sizeof(*wqs) * (w+1); /* bytes here, but we don't care */
 	ac->string = malloc(ac->mem_elems);
 	wqs = (wchar_t *)ac->string;
@@ -295,7 +296,7 @@ static bool afdict_init(Dictionary dict)
 
 	/* Create the affix lists */
 	ac = AFCLASS(afdict, AFDICT_INFIXMARK);
-	if ((1 < ac->length) || ((1 == ac->length) && (1 != strlen(ac->string[0])))) 
+	if ((1 < ac->length) || ((1 == ac->length) && (1 != strlen(ac->string[0]))))
 	{
 		prt_error("Error: afdict_init: Invalid value for class %s in file %s"
 					 " (should have been one ASCII punctuation - ignored)\n",
@@ -542,8 +543,8 @@ dictionary_six_str(const char * lang,
 
 	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
 
-	dict->postprocessor   = post_process_open(pp_name);
-	dict->constituent_pp  = post_process_open(cons_name);
+	dict->base_knowledge  = pp_knowledge_open(pp_name);
+	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;

@@ -144,11 +144,10 @@ struct Dictionary_s
 	bool (*lookup)(Dictionary, const char*);
 	void (*close)(Dictionary);
 
-
-	Postprocessor * postprocessor;
-	Postprocessor * constituent_pp;
+	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
+	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
-	String_set *    string_set;  /* Set of link names constructed during parsing */
+	String_set *    string_set;   /* Set of link names in the dictionary */
 	int             num_entries;
 	Word_file *     word_file_header;
 
@@ -222,16 +221,16 @@ struct Parse_info_struct
 
 struct Sentence_s
 {
-	Dictionary  dict;           /* words are defined from this dictionary */
+	Dictionary  dict;           /* Words are defined from this dictionary */
 	const char *orig_sentence;  /* Copy of original sentence */
-	size_t length;              /* number of words */
-	Word  *word;                /* array of words after tokenization */
-	String_set *   string_set;  /* used for word names, not connectors */
+	size_t length;              /* Number of words */
+	Word  *word;                /* Array of words after tokenization */
+	String_set *   string_set;  /* Used for assorted strings */
 
 	/* Parse results */
-	int    num_linkages_found;  /* total number before postprocessing.  This
+	int    num_linkages_found;  /* Total number before postprocessing.  This
 	                               is returned by the count() function */
-	size_t num_linkages_alloced;/* total number of linkages allocated.
+	size_t num_linkages_alloced;/* Total number of linkages allocated.
 	                               the number post-processed might be fewer
 	                               because some are non-canonical */
 	size_t num_linkages_post_processed;
@@ -239,18 +238,17 @@ struct Sentence_s
 	                               put into the array that was alloced.
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
-	size_t num_valid_linkages;  /* number with no pp violations */
-	size_t null_count;          /* number of null links in linkages */
-	Parse_info     parse_info;  /* set of parses for the sentence */
-	Linkage        lnkages;     /* array of valid and invalid linkages (sorted) */
+	size_t num_valid_linkages;  /* Number with no pp violations */
+	size_t null_count;          /* Number of null links in linkages */
+	Parse_info     parse_info;  /* Set of parses for the sentence */
+	Linkage        lnkages;     /* Sorted array of valid & invalid linkages */
+	Postprocessor * postprocessor;
+	Postprocessor * constituent_pp;
 
 	/* Tokenizer internal/private state */
 	bool   * post_quote;        /* Array, one entry per word, true if quote */
 	int    t_start;             /* start word of the current token sequence */
 	int    t_count;             /* word count in the current token sequence */
-
-	/* Post-processor private/internal state */
-	bool  q_pruned_rules;       /* don't prune rules more than once in p.p. */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -290,13 +288,13 @@ struct DTreeLeaf_s
 
 struct PP_data_s
 {
-	size_t N_domains;
 	List_o_links ** word_links;
 	size_t wowlen;
+	size_t N_domains;
+	Domain * domain_array;          /* The domains, sorted by size */
+	size_t domlen;                  /* Allocated size of domain_array */
+	size_t length;                  /* Length of current linkage */
 	List_o_links * links_to_ignore;
-	Domain * domain_array;          /* the domains, sorted by size */
-	size_t domlen;                  /* size of domain_array */
-	size_t length;                  /* length of current sentence */
 };
 
 struct PP_info_s
@@ -307,18 +305,19 @@ struct PP_info_s
 
 struct Postprocessor_s
 {
-	pp_knowledge *knowledge;             /* internal rep'n of the actual rules */
+	pp_knowledge  * knowledge;           /* Internal rep'n of the actual rules */
 	int n_global_rules_firing;           /* this & the next are diagnostic     */
 	int n_local_rules_firing;
 	pp_linkset *set_of_links_of_sentence;     /* seen in *any* linkage of sent */
 	pp_linkset *set_of_links_in_an_active_rule;/*used in *some* linkage of sent*/
 	int *relevant_contains_one_rules;        /* -1-terminated list of indices  */
 	int *relevant_contains_none_rules;
+	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
 
 	/* The following maintain state during a call to post_process() */
-	String_set *sentence_link_name_set;    /* link names seen for sentence */
-	bool *visited;                         /* for the depth-first search */
-	size_t vlength;                        /* length of visited array */
+	String_set *string_set;      /* Link names seen for sentence */
+	bool *visited;               /* For the depth-first search */
+	size_t vlength;              /* Length of visited array */
 	PP_node *pp_node;
 	PP_data pp_data;
 };
@@ -352,27 +351,19 @@ struct Linkage_info_struct
 
 struct Linkage_s
 {
-	/* TODO XXX FIXME: the member sent, below, is used almost nowhere
-	 * of importance; maybe it should be removed or redone.  It is currently
-	 * used only in constituents.c for error printing, in linkage.c
-	 * for disjunct-string printing.
-	 * These uses could be fixed ... so perhaps its not really 
-	 * needed here.
-	 */
-	Sentence        sent;
-	size_t          num_words;    /* number of (tokenized) words */
-	const char *  * word;         /* array of word spellings */
+	size_t          num_words;    /* Number of (tokenized) words */
+	const char *  * word;         /* Array of word spellings */
 
 	size_t          num_links;    /* Number of links in array */
 	Link *          link_array;   /* Array of links */
-	size_t          lasz;
+	size_t          lasz;         /* Alloc'ed length of link_array */
 
-	Disjunct **     chosen_disjuncts;
+	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 
-	Linkage_info    lifo;         /* index and cost information */
+	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info for each link */
 	const char *    pp_violation; /* Name of violation, if any */
-	PP_data         pp_data;
+	PP_data         hpsg_pp_data; /* Used in constituent code */
 };
 
 

@@ -179,12 +179,13 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 void post_process_free_data(PP_data * ppd)
 {
 	size_t w, d;
-	for (w = 0; w < ppd->length; w++)
+	for (w = 0; w < ppd->wowlen; w++)
 	{
 		free_List_o_links(ppd->word_links[w]);
 		ppd->word_links[w] = NULL;
 	}
-	for (d = 0; d < ppd->N_domains; d++)
+
+	for (d = 0; d < ppd->domlen; d++)
 	{
 		free_List_o_links(ppd->domain_array[d].lol);
 		ppd->domain_array[d].lol = NULL;
@@ -193,6 +194,8 @@ void post_process_free_data(PP_data * ppd)
 	}
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
+	ppd->length = 0;
+	ppd->N_domains = 0;
 }
 
 #ifdef THIS_FUNCTION_IS_NOT_CURRENTLY_USED
@@ -547,6 +550,8 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 			pp->pp_data.word_links,
 			pp->pp_data.wowlen * sizeof(List_o_links *),
 			2 * pp->pp_data.wowlen * sizeof(List_o_links *));
+		memset(&pp->pp_data.word_links[pp->pp_data.wowlen],
+		       0, pp->pp_data.wowlen * sizeof(List_o_links *));
 		pp->pp_data.wowlen *= 2;
 	}
 
@@ -601,6 +606,8 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 		pp->pp_data.domain_array = (Domain *) xrealloc(pp->pp_data.domain_array,
 		    pp->pp_data.domlen * sizeof(Domain),
 		    2 * pp->pp_data.domlen * sizeof(Domain));
+		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0,
+		       pp->pp_data.domlen * sizeof(Domain));
 		pp->pp_data.domlen *= 2;
 	}
 
@@ -854,12 +861,12 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 {
 	size_t i;
 	/* quick test: try applying just the relevant global rules */
-	if (!apply_relevant_rules(pp,apply_contains_one_globally,
+	if (!apply_relevant_rules(pp, apply_contains_one_globally,
 	                          sublinkage,
 	                          pp->knowledge->contains_one_rules,
 	                          pp->relevant_contains_one_rules, msg))
 	{
-		for (i = 0; i < pp->pp_data.length; i++)
+		for (i = 0; i < pp->pp_data.wowlen; i++)
 			pp->pp_data.word_links[i] = NULL;
 		pp->pp_data.N_domains = 0;
 		return -1;
@@ -944,18 +951,29 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 /***************** definitions of exported functions ***********************/
 
+PostProcessor * post_process_open(const char *path)
+{
+	pp_knowledge *kno = pp_knowledge_open(path);
+	return post_process_new(kno);
+}
+
+void post_process_close(PostProcessor *pp)
+{
+	pp_knowledge_close(pp->knowledge);
+	post_process_free(pp);
+}
+
 /**
  * read rules from path and initialize the appropriate fields in
  * a postprocessor structure, a pointer to which is returned.
  */
-Postprocessor * post_process_open(const char *path)
+Postprocessor * post_process_new(pp_knowledge * kno)
 {
 	Postprocessor *pp;
-	if (path == NULL) return NULL;
 
 	pp = (Postprocessor *) xalloc (sizeof(Postprocessor));
-	pp->knowledge	= pp_knowledge_open(path);
-	pp->sentence_link_name_set = string_set_create();
+	pp->knowledge = kno;
+	pp->string_set = string_set_create();
 	pp->set_of_links_of_sentence = pp_linkset_open(1024);
 	pp->set_of_links_in_an_active_rule = pp_linkset_open(1024);
 	pp->relevant_contains_one_rules =
@@ -967,28 +985,33 @@ Postprocessor * post_process_open(const char *path)
 	pp->relevant_contains_one_rules[0]	= -1;
 	pp->relevant_contains_none_rules[0] = -1;
 	pp->pp_node = NULL;
-	pp->pp_data.links_to_ignore = NULL;
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
+
+	pp->q_pruned_rules = false;
 
 	/* 60 is just starting size, these are expanded if needed */
 	pp->vlength = 60;
 	pp->visited = (bool*) xalloc(pp->vlength * sizeof(bool));
 
+	pp->pp_data.links_to_ignore = NULL;
 	pp->pp_data.domlen = 60;
 	pp->pp_data.domain_array = (Domain*) xalloc(pp->pp_data.domlen * sizeof(Domain));
+	memset(pp->pp_data.domain_array, 0, pp->pp_data.domlen * sizeof(Domain));
 
 	pp->pp_data.wowlen = 60;
 	pp->pp_data.word_links = (List_o_links **) xalloc(pp->pp_data.wowlen * sizeof(List_o_links*));
+	memset(pp->pp_data.word_links, 0, pp->pp_data.wowlen * sizeof(List_o_links *));
 
 	return pp;
 }
 
-void post_process_close(Postprocessor *pp)
+void post_process_free(Postprocessor *pp)
 {
 	/* frees up memory associated with pp, previously allocated by open */
 	if (pp == NULL) return;
-	string_set_delete(pp->sentence_link_name_set);
+	pp->knowledge = NULL;
+	string_set_delete(pp->string_set);
 	pp_linkset_close(pp->set_of_links_of_sentence);
 	pp_linkset_close(pp->set_of_links_in_an_active_rule);
 	xfree(pp->relevant_contains_one_rules,
@@ -997,10 +1020,11 @@ void post_process_close(Postprocessor *pp)
 	xfree(pp->relevant_contains_none_rules,
 	      (1 + pp->knowledge->n_contains_none_rules)
 	      *(sizeof pp->relevant_contains_none_rules[0]));
-	pp_knowledge_close(pp->knowledge);
 	free_pp_node(pp);
 
 	xfree(pp->visited, pp->vlength * sizeof(bool));
+
+	post_process_free_data(&pp->pp_data);
 	xfree(pp->pp_data.domain_array, pp->pp_data.domlen * sizeof(Domain));
 	xfree(pp->pp_data.word_links, pp->pp_data.wowlen * sizeof(List_o_links*));
 	xfree(pp, sizeof(Postprocessor));
@@ -1011,8 +1035,6 @@ void post_process_close_sentence(Postprocessor *pp)
 	if (pp == NULL) return;
 	pp_linkset_clear(pp->set_of_links_of_sentence);
 	pp_linkset_clear(pp->set_of_links_in_an_active_rule);
-	string_set_delete(pp->sentence_link_name_set);
-	pp->sentence_link_name_set = string_set_create();
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
 	pp->relevant_contains_one_rules[0]	= -1;
@@ -1026,17 +1048,18 @@ void post_process_close_sentence(Postprocessor *pp)
  * simply maintain a set of "seen" link names for rule pruning later on
  */
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
-									 Sentence sent, Linkage sublinkage)
+                               Linkage sublinkage)
 {
 	size_t i;
 	if (pp == NULL) return;
-	if (sent->length < opts->twopass_length) return;
+	if (sublinkage->num_words < opts->twopass_length) return;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
 		const char *p;
 		assert(sublinkage->link_array[i].lw != SIZE_MAX);
 
-		p = string_set_add(sublinkage->link_array[i].link_name, pp->sentence_link_name_set);
+		p = string_set_add(sublinkage->link_array[i].link_name,
+		                   pp->string_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}
 }
@@ -1106,16 +1129,16 @@ static void report_pp_stats(Postprocessor *pp)
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-                         Sentence sent, Linkage sublinkage)
+                         Linkage sublinkage)
 {
 	const char *msg;
 
 	if (pp == NULL) return NULL;
 
+	// XXX wtf .. why is this not leaking memory ?
 	pp->pp_data.links_to_ignore = NULL;
 
-	/* XXX FIXME in the future, different linkages might be different lenghts */
-	pp->pp_data.length = sent->length;
+	pp->pp_data.length = sublinkage->num_words;
 
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
@@ -1124,11 +1147,11 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
-	if (sent->q_pruned_rules == false && sent->length >= opts->twopass_length)
+	if (pp->q_pruned_rules == false && sublinkage->num_words >= opts->twopass_length)
 	{
 		prune_irrelevant_rules(pp);
 	}
-	sent->q_pruned_rules = true;
+	pp->q_pruned_rules = true;
 
 	switch (internal_process(pp, sublinkage, &msg))
 	{

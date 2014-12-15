@@ -1173,11 +1173,11 @@ void SATEncoder::pp_prune()
 {
   const std::vector<int>& link_variables = _variables->link_variables();
 
-  if (_sent->dict->postprocessor == NULL)
+  if (_sent->dict->base_knowledge == NULL)
     return;
 
   pp_knowledge * knowledge;
-  knowledge = _sent->dict->postprocessor->knowledge;
+  knowledge = _sent->dict->base_knowledge;
 
   for (size_t i=0; i<knowledge->n_contains_one_rules; i++)
   {
@@ -1239,8 +1239,6 @@ Linkage SATEncoder::create_linkage()
 
   linkage->num_words = _sent->length;
   linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
-  linkage->sent = _sent;
-  // linkage->info = sent->link_info[k]; done later...
 
   if (_sent->parse_info) {
     free_parse_info(_sent->parse_info);

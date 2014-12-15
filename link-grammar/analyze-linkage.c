@@ -76,7 +76,7 @@ static double compute_disjunct_cost(Linkage lkg)
  * Otherwise a new string for the GCD is xalloced and put on the
  * "free later" list.
  */
-const char * intersect_strings(Sentence sent, const char * s, const char * t)
+static const char * intersect_strings(String_set *sset, const char * s, const char * t)
 {
 	int i, j, d;
 	const char *w, *s0;
@@ -110,7 +110,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 		return s0;
 	} else {
 		strcpy(u, s);   /* get the remainder of s */
-		return string_set_add(u0, sent->string_set);
+		return string_set_add(u0, sset);
 	}
 }
 
@@ -120,12 +120,12 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
  * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
-static void compute_link_names(Sentence sent, Linkage lkg)
+static void compute_link_names(String_set *sset, Linkage lkg)
 {
 	size_t i;
 	for (i = 0; i < lkg->num_links; i++)
 	{
-		lkg->link_array[i].link_name = intersect_strings(sent,
+		lkg->link_array[i].link_name = intersect_strings(sset,
 			connector_get_string(lkg->link_array[i].lc),
 			connector_get_string(lkg->link_array[i].rc));
 	}
@@ -138,16 +138,16 @@ static void compute_link_names(Sentence sent, Linkage lkg)
 void analyze_thin_linkage(Sentence sent, Linkage lkg, Parse_Options opts, int analyze_pass)
 {
 	PP_node * pp;
-	Postprocessor * postprocessor = sent->dict->postprocessor;
+	Postprocessor * postprocessor = sent->postprocessor;
 
-	compute_link_names(sent, lkg);
+	compute_link_names(sent->string_set, lkg);
 	if (analyze_pass == PP_FIRST_PASS)
 	{
-		post_process_scan_linkage(postprocessor, opts, sent, lkg);
+		post_process_scan_linkage(postprocessor, opts, lkg);
 		return;
 	}
 
-	pp = do_post_process(postprocessor, opts, sent, lkg);
+	pp = do_post_process(postprocessor, opts, lkg);
 	post_process_free_data(&postprocessor->pp_data);
 
 	lkg->lifo.N_violations = 0;

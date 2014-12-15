@@ -515,9 +515,6 @@
        (when (and ,name (not (zerop ,name)))
 	 (linkage_delete ,name)))))
 
-(ff:def-foreign-call linkage_get_sentence ((linkage :foreign-address))
-  :returning :foreign-address)
-
 (ff:def-foreign-call linkage_get_num_words
     ((linkage :foreign-address))
   :returning :int)

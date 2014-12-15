@@ -14,6 +14,7 @@
 #include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
+#include "pp_knowledge.h"
 #include "regex-morph.h"
 #include "spellcheck.h"
 #include "string-set.h"
@@ -351,8 +352,8 @@ void dictionary_delete(Dictionary dict)
 
 	if (dict->close) dict->close(dict);
 
-	post_process_close(dict->postprocessor);
-	post_process_close(dict->constituent_pp);
+	pp_knowledge_close(dict->base_knowledge);
+	pp_knowledge_close(dict->hpsg_knowledge);
 	string_set_delete(dict->string_set);
 	free_regexs(dict->regex_root);
 #ifdef USE_ANYSPLIT

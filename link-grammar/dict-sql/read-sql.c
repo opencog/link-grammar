@@ -4,7 +4,7 @@
  * Look up words in an SQL DB.
  * Keeping it simple for just right now, and using SQLite.
  *
- * The goal of using an SQL-backed dictionary is to enable some 
+ * The goal of using an SQL-backed dictionary is to enable some
  * other process (machine-learning algo) to dynamically update
  * the dictionary.
  *
@@ -105,7 +105,7 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 /* ========================================================= */
 /* Dictionary word lookup proceedures. */
 
-typedef struct 
+typedef struct
 {
 	Dictionary dict;
 	Dict_node* dn;
@@ -329,8 +329,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
-	dict->postprocessor	 = NULL;
-	dict->constituent_pp  = NULL;
+	dict->base_knowledge = NULL;
+	dict->hpsg_knowledge = NULL;
 
 	dbname = join_path (lang, "dict.db");
 	dict->name = string_set_add(dbname, dict->string_set);

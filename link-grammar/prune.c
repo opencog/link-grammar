@@ -1516,9 +1516,9 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	bool change, deleteme;
 	multiset_table *cmt;
 
-	if (sent->dict->postprocessor == NULL) return 0;
+	if (sent->postprocessor == NULL) return 0;
 
-	knowledge = sent->dict->postprocessor->knowledge;
+	knowledge = sent->postprocessor->knowledge;
 
 	cmt = cms_table_new();
 

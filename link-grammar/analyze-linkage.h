@@ -13,6 +13,4 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-const char * intersect_strings(Sentence, const char *, const char *);
-
 void  analyze_thin_linkage(Sentence, Linkage, Parse_Options, int pass);

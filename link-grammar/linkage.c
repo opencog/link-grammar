@@ -266,19 +266,14 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
-	linkage->sent = sent;
 
 	compute_chosen_words(sent, linkage, opts);
 
 	// XXX Didn't we post-process already ??
-	if (sent->dict->postprocessor != NULL)
-	{
-		linkage_post_process(linkage, sent->dict->postprocessor, opts);
-	}
-	if (sent->dict->constituent_pp != NULL)
-	{
-		linkage_post_process(linkage, sent->dict->constituent_pp, opts);
-	}
+	linkage_post_process(linkage, sent->postprocessor, opts);
+
+	linkage_post_process(linkage, sent->constituent_pp, opts);
+	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
 
 	return linkage;
 }
@@ -348,11 +343,6 @@ const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 const char ** linkage_get_words(const Linkage linkage)
 {
 	return linkage->word;
-}
-
-Sentence linkage_get_sentence(const Linkage linkage)
-{
-	return linkage->sent;
 }
 
 const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
@@ -480,16 +470,20 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	size_t j, k;
 	D_type_list * d;
 
+	if (NULL == linkage) return;
+	if (NULL == postprocessor) return;
+
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
 			exfree_domain_names(&linkage->pp_info[j]);
-		post_process_free_data(&linkage->pp_data);
 	}
 	else
 	{
 		linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	}
+
+	post_process_free_data(&postprocessor->pp_data);
 
 	for (j = 0; j < linkage->num_links; ++j)
 	{
@@ -497,14 +491,10 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 		linkage->pp_info[j].domain_name = NULL;
 	}
 
-	if (linkage->pp_violation != NULL)
-	{
-		exfree((void *)linkage->pp_violation, sizeof(char) * (strlen(linkage->pp_violation)+1));
-		linkage->pp_violation = NULL;
-	}
+	linkage->pp_violation = NULL;
 
 	/* This can return NULL, if there is no post-processor */
-	pp = do_post_process(postprocessor, opts, linkage->sent, linkage);
+	pp = do_post_process(postprocessor, opts, linkage);
 	if (pp == NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
@@ -512,6 +502,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			linkage->pp_info[j].num_domains = 0;
 			linkage->pp_info[j].domain_name = NULL;
 		}
+		linkage->pp_violation = NULL;
 	}
 	else
 	{
@@ -530,17 +521,10 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 				char buff[5];
 				sprintf(buff, "%c", d->type);
 				linkage->pp_info[j].domain_name[k] = 
-				      string_set_add (buff, linkage->sent->string_set);
+				      string_set_add (buff, postprocessor->string_set);
 
 				k++;
 			}
-		}
-		linkage->pp_data = postprocessor->pp_data;
-		if (pp->violation != NULL)
-		{
-			char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
-			strcpy(s, pp->violation);
-			linkage->pp_violation = s;
 		}
 	}
 	post_process_close_sentence(postprocessor);
