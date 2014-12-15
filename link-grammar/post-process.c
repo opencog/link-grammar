@@ -1022,6 +1022,7 @@ void post_process_free(Postprocessor *pp)
 	      *(sizeof pp->relevant_contains_none_rules[0]));
 	free_pp_node(pp);
 
+	post_process_free_data(&pp->pp_data);
 	xfree(pp->visited, pp->vlength * sizeof(bool));
 	xfree(pp->pp_data.domain_array, pp->pp_data.domlen * sizeof(Domain));
 	xfree(pp->pp_data.word_links, pp->pp_data.wowlen * sizeof(List_o_links*));
