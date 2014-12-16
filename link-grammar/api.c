@@ -565,8 +565,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 	}
 }
 
-/** This does a rather minimal amount of post-processing.
- * A lot more seems to be done by linkage_post_process!?!?
+/** This does basic post-processing for all linkages.
  */
 static void post_process_linkages(Sentence sent, Parse_Options opts)
 {
@@ -575,7 +574,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 
-	/* (optional) first pass: just visit the linkages */
+	/* (optional) First pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time you do the
 	 * real work in the 2nd pass you've pruned the relevant rule set
@@ -596,13 +595,17 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 	}
 
-	/* second pass: actually perform post-processing */
+	/* Second pass: actually perform post-processing */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
+		PP_node *ppn;
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
 		if (lifo->discarded) continue;
+
+		/* N_violations could be non-zero if the linkage failed the
+		 * morphology check */
 		if (lifo->N_violations)
 		{
 			/* Arrange for displaying "Invalid morphism construction" sentences
@@ -611,15 +614,21 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			continue;
 		}
 		compute_link_names(lkg, sent->string_set);
-		linkage_post_process(lkg, sent->postprocessor, opts);
-		linkage_score(lkg, opts);
+		ppn = do_post_process(sent->postprocessor, opts, lkg);
+	   post_process_free_data(&sent->postprocessor->pp_data);
 
-		if (0 != lifo->N_violations)
+		if (NULL != ppn->violation)
 		{
 			N_valid_linkages--;
+			lifo->N_violations++;
+
+			/* Set the message, only if not set (e.g. by sane_morphism) */
+			if (NULL == lifo->pp_violation_msg)
+				lifo->pp_violation_msg = ppn->violation;
 		}
 		N_linkages_post_processed++;
 
+		linkage_score(lkg, opts);
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 	}
 

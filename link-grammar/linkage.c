@@ -128,7 +128,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				exfree(a_list, strlen(a_list)+1);
 			}
 		}
-		else 
+		else
 		{
 			/* print the subscript, as in "dog.n" as opposed to "dog" */
 			t = linkage->chosen_disjuncts[i]->string;
@@ -270,7 +270,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	compute_chosen_words(sent, linkage, opts);
 
 	/* We've already done core post-processing earlier.
-	 * Run the post-processing needed for consituent (hpsg) 
+	 * Run the post-processing needed for consituent (hpsg)
 	 * printing. */
 	linkage_post_process(linkage, sent->constituent_pp, opts);
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
@@ -463,7 +463,16 @@ void linkage_free_pp_info(Linkage lkg)
 	lkg->pp_info = NULL;
 }
 
-/** Part of the API */
+/**
+ * Part of the API. Although maybe it shouldn't be.
+ * This is just a wrapper around do_post_process, and all that it does
+ * is to set up some domain data in the linkage->pp_data pointer.
+ * There is only one user for this data: the consituent processing code.
+ *
+ * That is, this is written as if it was a general-purpose API, but
+ * really its not; it seems to be very specific to the hpsg-style
+ * constituent phrase display.
+ */
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
 	PP_node * pp;
@@ -521,7 +530,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			{
 				char buff[5];
 				sprintf(buff, "%c", d->type);
-				linkage->pp_info[j].domain_name[k] = 
+				linkage->pp_info[j].domain_name[k] =
 				      string_set_add (buff, postprocessor->string_set);
 
 				k++;
