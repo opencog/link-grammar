@@ -882,8 +882,8 @@ static inline bool
 bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 {
 	size_t i;
-	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
-	const char infix_mark = INFIX_MARK;
+	Dictionary afdict = sent->dict->affix_table;
+	const char infix_mark = INFIX_MARK(afdict);
 	int * matched_alts = NULL;       /* number of morphemes that have matched
 												 * the chosen disjuncts for the
 												 * unsplit_word, so far (index: ai) */

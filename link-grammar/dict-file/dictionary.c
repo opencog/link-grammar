@@ -190,17 +190,17 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		strncpy(w_last, w, w_len);
 		w_last[w_len] = '\0';
 
-		if ((INFIX_MARK == w_last[0]) &&
+		if ((infix_mark == w_last[0]) &&
 			 (0 != strcmp(w_last, EMPTY_WORD_MARK)))
 		{
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], w_last+1);
 		}
 		else
-		if (INFIX_MARK == w_last[w_len-1])
+		if (infix_mark == w_last[w_len-1])
 		{
 			w_last[w_len-1] = '\0';
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_PRE], w_last);
-			w_last[w_len-1] = INFIX_MARK;
+			w_last[w_len-1] = infix_mark;
 		}
 	}
 

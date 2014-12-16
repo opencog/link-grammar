@@ -55,7 +55,7 @@
  * Kind-of a weird hack, but I'm not sure what else to do...
  * Similarly, prefixes end with it.
  */
-#define INFIX_MARK \
+#define INFIX_MARK(afdict) \
  ((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
 
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")

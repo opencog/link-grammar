@@ -1012,8 +1012,7 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	Exp *zn, *an;
 	E_list *elist, *flist;
 	/* We assume the affix file has been read by now, so INFIX_MARK is set */
-	Dictionary afdict = dict->affix_table; /* for INFIX_MARK only */
-	char infix_mark = INFIX_MARK;
+	char infix_mark = INFIX_MARK(dict->affix_table);
 
 	if (! dict->empty_word_defined) return;
 

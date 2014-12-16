@@ -238,8 +238,7 @@ void add_alternative(Sentence sent,
 	int numlist[] = { prefnum, stemnum, suffnum };
 	enum affixtype { PREFIX, STEM, SUFFIX, END };
 	enum affixtype at;
-	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
-	char infix_mark = INFIX_MARK;
+	char infix_mark = INFIX_MARK(sent->dict->affix_table);
 	char buff[MAX_WORD+2];
 
 	lgdebug(+3, "Word%s:",
@@ -465,12 +464,12 @@ static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
                                         const char * word, const char * suffix)
 {
 	Dictionary dict = sent->dict;
-	Dictionary afdict = dict->affix_table; /* Known to be non-NULL. */
 	Afdict_class * stemsubscr_list =
-	   AFCLASS(afdict, AFDICT_STEMSUBSCR);
+	   AFCLASS(dict->affix_table, AFDICT_STEMSUBSCR);
 	const char ** stemsubscr = stemsubscr_list->string;
 	size_t stemsubscr_count = stemsubscr_list->length;
 	bool word_is_in_dict = false;
+	char infix_mark = INFIX_MARK(dict->affix_table);
 
 	if (0 == stemsubscr_count)
 	{
@@ -480,7 +479,7 @@ static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
 		/* If this is not a morpheme split (INFIX_MARK==NUL), the word is not
 		 * considered to be in the dict. This is important since then it can
 		 * match a regex. For example: 1960's, which may get split to: 1960 's */
-		if ('\0' != INFIX_MARK) word_is_in_dict = true;
+		if ('\0' != infix_mark) word_is_in_dict = true;
 	}
 	else
 	{

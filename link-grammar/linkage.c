@@ -80,8 +80,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	const char * chosen_words[sent->length];
 	size_t remap[sent->length];
 	bool display_morphology = opts->display_morphology;
-	const Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
-	const char infix_mark = INFIX_MARK;
+	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 
 	/* XXX TODO -- this should be not sent->length but
 	 * linkage->num_words ...and likewise, we should not be looking at
