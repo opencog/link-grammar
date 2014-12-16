@@ -361,7 +361,7 @@ struct Linkage_s
 	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
-	PP_info *       pp_info;      /* PP info for each link */
+	PP_info *       pp_info;      /* PP info, one for each link */
 	const char *    pp_violation; /* Name of violation, if any */
 	PP_data         hpsg_pp_data; /* Used in constituent code */
 };

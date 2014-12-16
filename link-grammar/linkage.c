@@ -466,12 +466,16 @@ void linkage_free_pp_info(Linkage lkg)
 /**
  * Part of the API. Although maybe it shouldn't be.
  * This is just a wrapper around do_post_process, and all that it does
- * is to set up some domain data in the linkage->pp_data pointer.
- * There is only one user for this data: the consituent processing code.
+ * is to set up some domain data in the linkage->pp_info pointer.
+ * There do not seem to be any users for this data !?  Should this
+ * be removed?
  *
- * That is, this is written as if it was a general-purpose API, but
- * really its not; it seems to be very specific to the hpsg-style
- * constituent phrase display.
+ * The domain data is printed, using linkage_get_link_domain_names(),
+ * etc. but these are for the hpsg knowledge, and not for the base
+ * knowledge, mostly because in linkage_create, this function is called,
+ * and the first thing it does is to clobber the base pp_info.  So WTF;
+ * I just don't see a lot of utlity or value-add here ... this could be
+ * reduced to a plain do_post_process
  */
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
 {
@@ -482,8 +486,8 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
 
-	/* Step one: because we might be called multiple times, first we
-	 * cleanup and free any data left over from a previous call. */
+	/* Step one: because we might be called multiple times, first we clean
+	 * up and free the domain name data left over from a previous call. */
 	if (linkage->pp_info != NULL)
 	{
 		for (j = 0; j < linkage->num_links; ++j)
@@ -502,17 +506,16 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 		linkage->pp_info[j].domain_name = NULL;
 	}
 
-	linkage->lifo.N_violations = 0;
-	linkage->pp_violation = NULL;
-
 	/* Step two: actually do the post-processing */
 	pp = do_post_process(postprocessor, opts, linkage);
 
 	/* Step three: copy the post-processing results over into the linkage */
 	if (pp->violation != NULL)
 	{
-		linkage->lifo.N_violations = 1;
-		linkage->lifo.pp_violation_msg = pp->violation;
+		linkage->lifo.N_violations ++;
+		/* Keep only the earliest violation message */
+		if (NULL == linkage->lifo.pp_violation_msg)
+			linkage->lifo.pp_violation_msg = pp->violation;
 	}
 	else
 	{
