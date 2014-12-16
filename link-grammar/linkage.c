@@ -540,6 +540,5 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			}
 		}
 	}
-	post_process_close_sentence(postprocessor);
 }
 

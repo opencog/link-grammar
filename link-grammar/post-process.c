@@ -41,7 +41,6 @@
 
 bool post_process_match(const char *s, const char *t)
 {
-	char c;
 	if (NULL == t) return false;
 	if (islower((int)*t)) t++; /* Skip head-dependent indicator */
 	while (isupper((int)*s) || isupper((int)*t))
@@ -54,6 +53,7 @@ bool post_process_match(const char *s, const char *t)
 	{
 		if (*s != '#')
 		{
+			char c;
 			if (*t == '\0') c = '*'; else c = *t;
 			if (*s != c) return false;
 		}
@@ -1026,18 +1026,6 @@ void post_process_free(Postprocessor *pp)
 	xfree(pp->pp_data.domain_array, pp->pp_data.domlen * sizeof(Domain));
 	xfree(pp->pp_data.word_links, pp->pp_data.wowlen * sizeof(List_o_links*));
 	xfree(pp, sizeof(Postprocessor));
-}
-
-void post_process_close_sentence(Postprocessor *pp)
-{
-	if (pp == NULL) return;
-	pp_linkset_clear(pp->set_of_links_of_sentence);
-	pp_linkset_clear(pp->set_of_links_in_an_active_rule);
-	pp->n_local_rules_firing	= 0;
-	pp->n_global_rules_firing = 0;
-	pp->relevant_contains_one_rules[0]	= -1;
-	pp->relevant_contains_none_rules[0] = -1;
-	free_pp_node(pp);
 }
 
 /**

@@ -12,14 +12,14 @@
 /*************************************************************************/
 /********************************************************************** 
   Calling paradigm:
-   . call post_process_open() with the name of a knowledge file. This
+   . call post_process_new() with the handle of a knowledge set. This
      returns a handle, used for all subsequent calls to post-process.
    . Do for each sentence:
-       - Do for each generated linkage of sentence:
+       - Do for each generated linkage of a sentence:
              + call post_process_scan_linkage()
-       - Do for each generated linkage of sentence:
-             + call post_process()
-       - Call post_process_close_sentence() 
+       - Do for each generated linkage of a sentence:
+             + call do_post_process()
+       - Call post_process_free() 
 ***********************************************************************/
 
 #ifndef _POSTPROCESS_H_
@@ -32,7 +32,6 @@ Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
 void     post_process_free_data(PP_data * ppd);
-void     post_process_close_sentence(Postprocessor *);
 void     post_process_scan_linkage(Postprocessor *, Parse_Options, Linkage);
 PP_node *do_post_process(Postprocessor *, Parse_Options, Linkage);
 bool     post_process_match(const char *, const char *);  /* utility function */
