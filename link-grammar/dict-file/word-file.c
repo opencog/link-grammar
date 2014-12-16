@@ -60,7 +60,6 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
  */
 Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 {
-	Dict_node * dn_new;
 	Word_file * wf;
 	FILE * fp;
 	const char * s;
@@ -83,7 +82,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	dict->word_file_header = wf;
 
 	while ((s = get_a_word(dict, fp)) != NULL) {
-		dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
+		Dict_node * dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
 		dn_new->left = dn;
 		dn = dn_new;
 		dn->string = s;

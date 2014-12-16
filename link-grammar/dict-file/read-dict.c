@@ -912,7 +912,7 @@ static Exp * make_connector(Dictionary dict)
 	int i;
 
 	i = strlen(dict->token) - 1;  /* this must be +, - or * if a connector */
-	if ((dict->token[i] != '+') && 
+	if ((dict->token[i] != '+') &&
 	    (dict->token[i] != '-') &&
 	    (dict->token[i] != ANY_DIR))
 	{
@@ -1556,12 +1556,10 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	{
 		char *u;
 		Dict_node *dnx;
-		err_ctxt ec;
-		ec.sent = NULL;
-		
+
 		u = strchr(dn->string, SUBSCRIPT_MARK);
 		if (u) *u = SUBSCRIPT_DOT;
-		err_msg(&ec, Warn, "Warning: The word \"%s\" "
+		prt_error("Warning: The word \"%s\" "
 		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
@@ -1593,7 +1591,7 @@ static bool read_entry(Dictionary dict)
 	Exp *n;
 	int i;
 
-	Dict_node *dn_new, *dnx, *dn = NULL;
+	Dict_node *dnx, *dn = NULL;
 
 	while (!is_equal(dict, ':'))
 	{
@@ -1611,9 +1609,7 @@ static bool read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				err_ctxt ec;
-				ec.sent = NULL;
-				err_msg(&ec, Error, "Error opening word file %s", dict->token);
+				prt_error("Error opening word file %s", dict->token);
 				return false;
 			}
 		}
@@ -1680,14 +1676,14 @@ static bool read_entry(Dictionary dict)
 		}
 		else
 		{
-			dn_new = dict_node_new();
+			Dict_node * dn_new = dict_node_new();
 			dn_new->left = dn;
 			dn_new->right = NULL;
 			dn_new->exp = NULL;
 			dn = dn_new;
 			dn->file = NULL;
 
-			/* Note: The follwoing patches a dot in regexes appearing in
+			/* Note: The following patches a dot in regexes appearing in
 			 * the affix file... It is corrected later. */
 			patch_subscript(dict->token);
 			dn->string = string_set_add(dict->token, dict->string_set);
