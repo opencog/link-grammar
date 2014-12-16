@@ -44,15 +44,15 @@ typedef enum {
 	AFDICT_BULLETS,
 	AFDICT_INFIXMARK,
 	AFDICT_STEMSUBSCR,
-	AFDICT_SANEMORPHISM
+	AFDICT_SANEMORPHISM,
 #ifdef USE_ANYSPLIT
-	,
 	AFDICT_REGPRE,
 	AFDICT_REGMID,
 	AFDICT_REGSUF,
-	AFDICT_REGALTS ,
-	AFDICT_REGPARTS
+	AFDICT_REGALTS,
+	AFDICT_REGPARTS,
 #endif
+	AFDICT_NUM_ENTRIES
 } afdict_classnum;
 
 #define AFDICT_CLASSNAMES1 \
@@ -67,21 +67,20 @@ typedef enum {
 	"BULLETS", \
 	"INFIXMARK",   /* Prepended to suffixes, appended to pefixes */ \
 	"STEMSUBSCR",  /* Subscripts for stems */ \
-	"SANEMORPHISM" /* Regex for sane_morphism() */
+	"SANEMORPHISM", /* Regex for sane_morphism() */
 
 #ifdef USE_ANYSPLIT
 #define AFDICT_CLASSNAMES2 \
-	, \
 	"REGPRE",      /* Regex for prefix */ \
 	"REGMID",      /* Regex for middle parts */ \
 	"REGSUF",      /* Regex for suffix */ \
 	"REGALTS",     /* Min&max number of alternatives to issue for a word */\
-	"REGPARTS"     /* Max number of word partitions */
+	"REGPARTS",    /* Max number of word partitions */
 #else
 #define AFDICT_CLASSNAMES2
 #endif
 
-#define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2
+#define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2 "last classname"
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
 #endif /* _LG_DICT_COMMON_H_ */

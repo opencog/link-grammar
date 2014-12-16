@@ -319,13 +319,13 @@ static void free_dictionary(Dictionary dict)
 	free_Exp_list(dict->exp_list);
 }
 
-
 static void affix_list_delete(Dictionary dict)
 {
+	int i;
 	Afdict_class * atc;
-	for (atc = dict->afdict_class; 0 != atc->mem_elems; atc++)
+	for (i=0, atc = dict->afdict_class; i < AFDICT_NUM_ENTRIES; i++, atc++)
 	{
-		free(atc->string);
+		if (atc->string) free(atc->string);
 	}
 	free(dict->afdict_class);
 }
