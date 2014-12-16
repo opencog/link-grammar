@@ -106,7 +106,8 @@ static void affix_list_add(Dictionary afdict, Afdict_class * ac,
 
 static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 {
-	for (; NULL != dn; dn = dn->left)
+	Dict_node * dnx = NULL;	
+	for (; NULL != dn; dn = dnx)
 	{
 		char *string;
 		const char *con = word_only_connector(dn);
@@ -142,6 +143,9 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 		affix_list_add(afdict, afdict_find(afdict, con,
 		               /*notify_err*/true), string);
 		free(string);
+
+		dnx = dn->left;
+		xfree((char *)dn, sizeof(Dict_node));
 	}
 }
 
