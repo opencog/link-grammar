@@ -1006,7 +1006,7 @@ static Exp * make_connector(Dictionary dict)
  * although API users will see this link.
  */
 
-void add_empty_word(const Dictionary dict, Exp_list * eli, Dict_node * dn)
+Exp* add_empty_word(Dictionary const dict, Exp_list * eli, Dict_node * dn)
 {
 	size_t len;
 	Exp *zn, *an;
@@ -1014,14 +1014,14 @@ void add_empty_word(const Dictionary dict, Exp_list * eli, Dict_node * dn)
 	/* We assume the affix file has been read by now, so INFIX_MARK is set */
 	char infix_mark = INFIX_MARK(dict->affix_table);
 
-	if (! dict->empty_word_defined) return;
+	if (! dict->empty_word_defined) return dn->exp;
 
-	if (is_stem(dn->string)) return;
+	if (is_stem(dn->string)) return dn->exp;
 	len = strlen(dn->string);
-	if ((len > 1) && (infix_mark == dn->string[0])) return;
-	if ((len > 1) && (infix_mark == dn->string[len-1])) return;
-	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
-	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
+	if ((len > 1) && (infix_mark == dn->string[0])) return dn->exp;
+	if ((len > 1) && (infix_mark == dn->string[len-1])) return dn->exp;
+	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return dn->exp;
+	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return dn->exp;
 	//lgdebug(+0, "Processing '%s'\n", dn->string);
 
 	/* If we are here, then this appears to be not a stem, not a
@@ -1042,7 +1042,7 @@ void add_empty_word(const Dictionary dict, Exp_list * eli, Dict_node * dn)
 	flist->next = NULL;
 	flist->e = dn->exp;
 
-	/* elist is {ZZZ+} */
+	/* elist is {ZZZ+} , (plain-word-exp) */
 	elist = (E_list *) xalloc(sizeof(E_list));
 	elist->next = flist;
 	elist->e = zn;
@@ -1053,8 +1053,8 @@ void add_empty_word(const Dictionary dict, Exp_list * eli, Dict_node * dn)
 	an->cost = 0.0;
 	an->u.l = elist;
 
-	/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
-	dn->exp = an;
+	/* Return {ZZZ+} & (plain-word-exp) */
+	return an;
 }
 
 /* ======================================================================== */
