@@ -511,7 +511,7 @@ static inline int dict_order_strict(const char *s, Dict_node * dn)
  * mark by "\0", and take the difference.
  */
 
-static inline int dict_order_bare(const char *s, Dict_node * dn)
+static inline int dict_order_bare(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
@@ -540,7 +540,7 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
  * his behavior matches that of the function dict_order_bare().
  */
-static inline int dict_order_wild(const char * s, Dict_node * dn)
+static inline int dict_order_wild(const char * s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 
@@ -639,7 +639,7 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 }
 
 /* ======================================================================== */
-static bool subscr_match(const char *s, Dict_node * dn)
+static bool subscr_match(const char *s, const Dict_node * dn)
 {
 	const char * s_sub = strrchr(s, SUBSCRIPT_MARK);
 	const char * t_sub;
@@ -660,10 +660,10 @@ static bool subscr_match(const char *s, Dict_node * dn)
  */
 static Dict_node *
 rdictionary_lookup(Dict_node *llist,
-                   Dict_node * dn,
+                   const Dict_node * dn,
                    const char * s,
                    bool match_idiom,
-                   int (*dict_order)(const char *, Dict_node *))
+                   int (*dict_order)(const char *, const Dict_node *))
 {
 	/* see comment in dictionary_lookup below */
 	int m;
@@ -763,7 +763,7 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
  *
  * The returned list must be freed with free_lookup().
  */
-Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
+Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node *llist;
 	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);

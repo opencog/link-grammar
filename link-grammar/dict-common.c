@@ -412,7 +412,7 @@ void print_expression(Exp * n)
 /**
  * print the expression, in infix-style
  */
-static void print_expression_parens(Exp * n, int need_parens)
+static void print_expression_parens(const Exp * n, int need_parens)
 {
 	E_list * el;
 	int i, icost;
@@ -495,7 +495,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 	if ((icost == 0) && need_parens) printf(")");
 }
 
-void print_expression(Exp * n)
+void print_expression(const Exp * n)
 {
 	print_expression_parens(n, false);
 	printf("\n");
