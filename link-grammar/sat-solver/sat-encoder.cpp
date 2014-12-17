@@ -1237,16 +1237,8 @@ Linkage SATEncoder::create_linkage()
   /* Using exalloc since this is external to the parser itself. */
   Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
   memset(linkage, 0, sizeof(struct Linkage_s));
+  partial_init_linkage(linkage, _sent->length);
 
-  if (_sent->parse_info) {
-    free_parse_info(_sent->parse_info);
-    _sent->parse_info = NULL;
-  }
-#if 0
-  Parse_info pi = parse_info_new(_sent->length);
-  pi->N_words = _sent->length;
-  _sent->parse_info = pi;
-#endif
   sat_extract_links(linkage);
 
   return linkage;
@@ -1491,6 +1483,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     if (_solver->model[_variables->linked(var->left_word, var->right_word)] != l_True)
       continue;
 
+    check_link_size(lkg);
     Link& clink = lkg->link_array[current_link];
     clink.lw = var->left_word;
     clink.rw = var->right_word;
@@ -1561,11 +1554,4 @@ extern "C" void sat_sentence_delete(Sentence sent)
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return;
   delete encoder;
-
-  // Don't do this parse-info-free stuff, if there's no encoder.
-  // That's because it will screw up the regular parser.
-  if (sent->parse_info) {
-    free_parse_info(sent->parse_info);
-    sent->parse_info = NULL;
-  }
 }

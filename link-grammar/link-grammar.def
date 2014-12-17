@@ -132,10 +132,10 @@ catenate_disjuncts
 count_disjuncts
 print_one_disjunct
 build_disjuncts_for_X_node
-parse_info_new
-free_parse_info
 connector_new
 free_connectors
 left_print_string
 compute_chosen_words
 regex_tokenizer_test
+check_link_size
+partial_init_linkage

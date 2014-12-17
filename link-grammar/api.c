@@ -532,7 +532,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 }
 
 /* Partial, but not full initialization of the linakge struct ... */
-static void partial_init_linkage(Linkage lkg, unsigned int N_words)
+void partial_init_linkage(Linkage lkg, unsigned int N_words)
 {
 	lkg->num_links = 0;
 	lkg->lasz = 2 * N_words;
@@ -545,6 +545,17 @@ static void partial_init_linkage(Linkage lkg, unsigned int N_words)
 
 	lkg->pp_info = NULL;
 	lkg->pp_violation = NULL;
+}
+
+void check_link_size(Linkage lkg)
+{
+	if (lkg->lasz <= lkg->num_links)
+	{
+		size_t oldsz = lkg->lasz;
+		lkg->lasz = 2 * lkg->lasz + 10;
+		lkg->link_array = xrealloc(lkg->link_array,
+		             oldsz * sizeof(Link), lkg->lasz * sizeof(Link));
+	}
 }
 
 /** The extract_links() call sets the chosen_disjuncts array */

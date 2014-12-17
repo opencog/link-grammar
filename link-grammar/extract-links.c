@@ -14,8 +14,9 @@
 #include <limits.h>  /* For UINT_MAX */
 
 #include "count.h"
-#include "fast-match.h"
 #include "extract-links.h"
+#include "fast-match.h"
+#include "linkage.h"
 #include "word-utils.h"
 
 /**
@@ -492,20 +493,9 @@ bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	return verify_set(sent->parse_info);
 }
 
-static void initialize_links(Linkage lkg)
-{
-	lkg->num_links = 0;
-	memset(lkg->chosen_disjuncts, 0, lkg->num_words * sizeof(Disjunct *));
-}
-
 static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link * link)
 {
-	if (lkg->lasz <= lkg->num_links)
-	{
-		size_t oldsz = lkg->lasz;
-		lkg->lasz = 2 * lkg->lasz + 10;
-		lkg->link_array = xrealloc(lkg->link_array, oldsz * sizeof(Link), lkg->lasz * sizeof(Link));
-	}
+	check_link_size(lkg);
 	lkg->link_array[lkg->num_links] = *link;
 	lkg->num_links++;
 
@@ -573,7 +563,6 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
 void extract_links(Linkage lkg, Parse_info pi)
 {
 	int index = lkg->lifo.index;
-	initialize_links(lkg);
 	if (index < 0) {
 		pi->rand_state = index;
 		list_random_links(lkg, pi, pi->parse_set);

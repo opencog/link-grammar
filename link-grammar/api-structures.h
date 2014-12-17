@@ -222,10 +222,12 @@ struct Sentence_s
 	                               because some may be non-canonical. */
 	size_t num_valid_linkages;  /* Number with no pp violations */
 	size_t null_count;          /* Number of null links in linkages */
-	Parse_info     parse_info;  /* Set of parses for the sentence */
 	Linkage        lnkages;     /* Sorted array of valid & invalid linkages */
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
+
+	/* parse_info not used by SAT solver */
+	Parse_info     parse_info;  /* Set of parses for the sentence */
 
 	/* Tokenizer internal/private state */
 	bool   * post_quote;        /* Array, one entry per word, true if quote */
