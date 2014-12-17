@@ -449,7 +449,7 @@ dictionary_six_str(const char * lang,
 	dict->root = NULL;
 	dict->regex_root = NULL;
 	dict->word_file_header = NULL;
-	dict->exp_list = NULL;
+	dict->exp_list.exp_list = NULL;
 	dict->affix_table = NULL;
 	dict->recursive_error = false;
 	dict->version = NULL;

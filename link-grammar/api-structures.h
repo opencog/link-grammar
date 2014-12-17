@@ -108,6 +108,12 @@ struct Afdict_class_struct
 	char const ** string;
 };
 
+/* Used for memory management */
+struct Exp_list_s
+{
+	Exp * exp_list;
+};
+
 struct Dictionary_s
 {
 	Dict_node *     root;
@@ -154,7 +160,7 @@ struct Dictionary_s
 	/* exp_list links together all the Exp structs that are allocated
 	 * in reading this dictionary.  Needed for freeing the dictionary
 	 */
-	Exp *           exp_list;
+	Exp_list        exp_list;
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.

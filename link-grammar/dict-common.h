@@ -23,8 +23,8 @@
 bool find_word_in_dict(Dictionary dict, const char *);
 Afdict_class * afdict_find(Dictionary, const char *, bool);
 
-Exp * Exp_create(Dictionary);
-void add_empty_word(Dictionary, Dict_node *);
+Exp * Exp_create(Exp_list *);
+void add_empty_word(Dictionary, Exp_list *, Dict_node *);
 
 void patch_subscript(char *);
 

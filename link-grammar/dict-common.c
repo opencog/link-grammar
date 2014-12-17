@@ -289,10 +289,10 @@ static inline void free_dict_node(Dict_node *dn)
 	xfree((char *)dn, sizeof(Dict_node));
 }
 
-
-static void free_Exp_list(Exp * e)
+static void free_Exp_list(Exp_list * eli)
 {
 	Exp * e1;
+	Exp * e = eli->exp_list;
 	for (; e != NULL; e = e1)
 	{
 		e1 = e->next;
@@ -316,7 +316,7 @@ static void free_dictionary(Dictionary dict)
 {
 	free_dict_node_recursive(dict->root);
 	free_Word_file(dict->word_file_header);
-	free_Exp_list(dict->exp_list);
+	free_Exp_list(&dict->exp_list);
 }
 
 static void affix_list_delete(Dictionary dict)

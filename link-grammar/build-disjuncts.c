@@ -412,7 +412,7 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 	dn = dn_head;
 	while (dn != NULL)
 	{
-		add_empty_word(dict, dn);
+		add_empty_word(dict, &dict->exp_list, dn);
 
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;

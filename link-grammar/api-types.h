@@ -33,6 +33,7 @@ typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
 typedef struct Domain_s Domain;
 typedef struct DTreeLeaf_s DTreeLeaf;
+typedef struct Exp_list_s Exp_list;
 typedef struct Image_node_struct Image_node;
 typedef struct Linkage_info_struct Linkage_info;
 typedef struct Parse_info_struct *Parse_info;
