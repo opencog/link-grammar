@@ -1511,6 +1511,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 // XXX I think LinkVar needs to be extended to hold the disjunct
     lkg->chosen_disjuncts[clink.lw] = ld;
     lkg->chosen_disjuncts[clink.rw] = rd;
+#else
+fprintf(stderr, "Error: SAT solver needs to implement disjunct choice\n");
 #endif
 
     current_link++;
