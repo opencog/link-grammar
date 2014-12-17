@@ -255,17 +255,17 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	if (opts->use_sat_solver)
 	{
-		return sat_create_linkage(k, sent, opts);
+		linkage = sat_create_linkage(k, sent, opts);
+	}
+	else
+	{
+		if (sent->num_linkages_post_processed <= k) return NULL;
+		/* if (sent->num_linkages_alloced <= k) return NULL; */
+
+		linkage = &sent->lnkages[k];
 	}
 
-	if (sent->num_linkages_post_processed <= k) return NULL;
-
-	/* bounds check: link_info array is this size */
-	if (sent->num_linkages_alloced <= k) return NULL;
-
 	/* Perform remaining initialization we haven't done yet...*/
-	linkage = &sent->lnkages[k];
-
 	compute_chosen_words(sent, linkage, opts);
 
 	/* We've already done core post-processing earlier.

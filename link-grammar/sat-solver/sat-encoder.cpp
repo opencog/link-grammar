@@ -1242,12 +1242,12 @@ Linkage SATEncoder::create_linkage()
     free_parse_info(_sent->parse_info);
     _sent->parse_info = NULL;
   }
+#if 0
   Parse_info pi = parse_info_new(_sent->length);
-  sat_extract_links(linkage);
   pi->N_words = _sent->length;
   _sent->parse_info = pi;
-
-  compute_chosen_words(_sent, linkage, _opts);
+#endif
+  sat_extract_links(linkage);
 
   return linkage;
 }
