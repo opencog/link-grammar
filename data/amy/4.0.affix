@@ -34,7 +34,7 @@
 
 % Number of alternatives to issue for a word. Two values: minimum and maximum.
 % If the word has more possibilities to split than the minimum, but less
-% then the maximum, then issue them without sampling. Else use pseudo-random
+% than the maximum, then issue them without sampling. Else use pseudo-random
 % sampling until the minimum number is reached or all possibilities exhausted.
 % 10 20: REGALTS+;
 2 10: REGALTS+;
@@ -43,18 +43,21 @@
 % the word is issued as an alternative.
 % Multiple regexes per class are permitted.
 %
+% The word parts currently contain at least one character
+% (null morphems are not supported).
+%
 % If needed, add the same regex in more than one definition.
 
-% Regex to match the prefix
+% Regex to match the prefix (including the whole word)
 ".*" : REGPRE+;
 
 % Regex to match the middle parts (not including the prefix or the suffix)
 ".*": REGMID+;
 %".{2,}": REGMID+;
 
-% Regex to match the suffix (cannot be the prefix)
+% Regex to match the suffix (not including the whole word)
 ".*": REGSUF+;
-%"[aeiouy]" "[rst]": REGSUF+;
+%"[aeiouy]$" "[rst][^=]$": REGSUF+;
 
 % End of Anysplit parameters
 

@@ -158,7 +158,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						strcpy(join, stem);
 						u = strrchr(join, SUBSCRIPT_MARK);
 
-						/* u can be null, if the the sentence happens to have
+						/* u can be null, if the sentence happens to have
 						 * an equals sign in it, for other reasons. */
 						if (u)
 						{
@@ -237,7 +237,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		else
 		{
 			/* Copy the entire link contents, thunking the word numbers.
-			 * Note that j is alwasy <= i so this is always safe. */
+			 * Note that j is always <= i so this is always safe. */
 			linkage->link_array[j].lw = remap[lnk->lw];
 			linkage->link_array[j].rw = remap[lnk->rw];
 			linkage->link_array[j].lc = linkage->link_array[i].lc;
@@ -269,7 +269,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	compute_chosen_words(sent, linkage, opts);
 
 	/* We've already done core post-processing earlier.
-	 * Run the post-processing needed for consituent (hpsg)
+	 * Run the post-processing needed for constituent (hpsg)
 	 * printing. */
 	linkage_post_process(linkage, sent->constituent_pp, opts);
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
