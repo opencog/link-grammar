@@ -406,22 +406,23 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
+	Exp_list eli;
+	eli.exp_list = NULL;
 
 	dn_head = dictionary_lookup_list(dict, s);
 	x = NULL;
 	dn = dn_head;
 	while (dn != NULL)
 	{
-		add_empty_word(dict, dn);
-
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(dn->exp);
+		x->exp = copy_Exp(add_empty_word(dict, &eli, dn));
 		x->string = dn->string;
 		dn = dn->right;
 	}
 	free_lookup_list (dict, dn_head);
+	free_Exp_list(&eli);
 	return x;
 }
 

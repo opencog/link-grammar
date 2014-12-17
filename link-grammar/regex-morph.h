@@ -12,5 +12,5 @@
 #include "api-structures.h"
 
 int compile_regexs(Regex_node *, Dictionary);
-const char *match_regex(Regex_node *, const char *);
+const char *match_regex(const Regex_node *, const char *);
 void free_regexs(Regex_node *);

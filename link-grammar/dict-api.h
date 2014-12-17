@@ -27,19 +27,19 @@ LINK_BEGIN_DECLS
 
 Dictionary dictionary_create_from_utf8(const char * input);
 
-bool boolean_dictionary_lookup(Dictionary dict, const char *);
+bool boolean_dictionary_lookup(const Dictionary, const char *);
 
-Dict_node * abridged_lookup_list(Dictionary dict, const char *);
-Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
+Dict_node * abridged_lookup_list(const Dictionary, const char *);
+Dict_node * dictionary_lookup_list(const Dictionary, const char *);
 
-bool find_word_in_dict(Dictionary dict, const char *);
+bool find_word_in_dict(const Dictionary, const char *);
 
-void free_lookup_list(Dictionary, Dict_node *);
+void free_lookup_list(const Dictionary, Dict_node *);
 
 /* XXX the below probably does not belong ...  ?? */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
-void print_expression(Exp *);
+void print_expression(const Exp *);
 
 LINK_END_DECLS
 

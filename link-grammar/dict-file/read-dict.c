@@ -511,7 +511,7 @@ static inline int dict_order_strict(const char *s, Dict_node * dn)
  * mark by "\0", and take the difference.
  */
 
-static inline int dict_order_bare(const char *s, Dict_node * dn)
+static inline int dict_order_bare(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
@@ -540,7 +540,7 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
  * his behavior matches that of the function dict_order_bare().
  */
-static inline int dict_order_wild(const char * s, Dict_node * dn)
+static inline int dict_order_wild(const char * s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 
@@ -639,7 +639,7 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 }
 
 /* ======================================================================== */
-static bool subscr_match(const char *s, Dict_node * dn)
+static bool subscr_match(const char *s, const Dict_node * dn)
 {
 	const char * s_sub = strrchr(s, SUBSCRIPT_MARK);
 	const char * t_sub;
@@ -660,10 +660,10 @@ static bool subscr_match(const char *s, Dict_node * dn)
  */
 static Dict_node *
 rdictionary_lookup(Dict_node *llist,
-                   Dict_node * dn,
+                   const Dict_node * dn,
                    const char * s,
                    bool match_idiom,
-                   int (*dict_order)(const char *, Dict_node *))
+                   int (*dict_order)(const char *, const Dict_node *))
 {
 	/* see comment in dictionary_lookup below */
 	int m;
@@ -763,7 +763,7 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
  *
  * The returned list must be freed with free_lookup().
  */
-Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
+Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node *llist;
 	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
@@ -775,12 +775,12 @@ Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 /**
  * Allocate a new Exp node and link it into the exp_list for freeing later.
  */
-Exp * Exp_create(Dictionary dict)
+Exp * Exp_create(Exp_list *eli)
 {
 	Exp * e;
 	e = (Exp *) xalloc(sizeof(Exp));
-	e->next = dict->exp_list;
-	dict->exp_list = e;
+	e->next = eli->exp_list;
+	eli->exp_list = e;
 	return e;
 }
 
@@ -793,10 +793,10 @@ static inline void exp_free(Exp * e)
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-static Exp * make_zeroary_node(Dictionary dict)
+static Exp * make_zeroary_node(Exp_list * eli)
 {
 	Exp * n;
-	n = Exp_create(dict);
+	n = Exp_create(eli);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->u.l = NULL;
@@ -807,10 +807,10 @@ static Exp * make_zeroary_node(Dictionary dict)
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-static Exp * make_unary_node(Dictionary dict, Exp * e)
+static Exp * make_unary_node(Exp_list * eli, Exp * e)
 {
 	Exp * n;
-	n = Exp_create(dict);
+	n = Exp_create(eli);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->u.l = (E_list *) xalloc(sizeof(E_list));
@@ -823,12 +823,12 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
  * Create an AND_type expression. The expressions nl, nr will be
  * AND-ed together.
  */
-static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
 {
 	E_list *ell, *elr;
 	Exp* n;
 
-	n = Exp_create(dict);
+	n = Exp_create(eli);
 	n->type = AND_type;
 	n->cost = 0.0;
 
@@ -845,12 +845,12 @@ static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
  * Create an OR_type expression. The expressions nl, nr will be
  * OR-ed together.
  */
-static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_or_node(Exp_list *eli, Exp* nl, Exp* nr)
 {
 	E_list *ell, *elr;
 	Exp* n;
 
-	n = Exp_create(dict);
+	n = Exp_create(eli);
 	n->type = OR_type;
 	n->cost = 0.0;
 
@@ -868,9 +868,9 @@ static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
  * and the other as zeroary node.  This has the effect of creating
  * what used to be called an optional node.
  */
-static Exp * make_optional_node(Dictionary dict, Exp * e)
+static Exp * make_optional_node(Exp_list *eli, Exp * e)
 {
-	return make_or_node(dict, make_zeroary_node(dict), e);
+	return make_or_node(eli, make_zeroary_node(eli), e);
 }
 
 /**
@@ -881,7 +881,7 @@ static Exp * make_optional_node(Dictionary dict, Exp * e)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	Exp* n = Exp_create(dict);
+	Exp* n = Exp_create(&dict->exp_list);
 	n->dir = dict->token[i];
 	dict->token[i] = '\0';				   /* get rid of the + or - */
 	if (dict->token[0] == '@')
@@ -932,7 +932,7 @@ static Exp * make_connector(Dictionary dict)
 			                 "Or perhaps a word is used before it is defined.\n");
 			return NULL;
 		}
-		n = make_unary_node(dict, dn->exp);
+		n = make_unary_node(&dict->exp_list, dn->exp);
 		free_lookup(dn_head);
 	}
 	else
@@ -957,7 +957,7 @@ static Exp * make_connector(Dictionary dict)
 			dict->token[i] = '-';
 			min = make_dir_connector(dict, i);
 
-			n = make_or_node(dict, plu, min);
+			n = make_or_node(&dict->exp_list, plu, min);
 		}
 		else
 		{
@@ -1006,7 +1006,7 @@ static Exp * make_connector(Dictionary dict)
  * although API users will see this link.
  */
 
-void add_empty_word(Dictionary dict, Dict_node * dn)
+Exp* add_empty_word(Dictionary const dict, Exp_list * eli, Dict_node * dn)
 {
 	size_t len;
 	Exp *zn, *an;
@@ -1014,14 +1014,14 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	/* We assume the affix file has been read by now, so INFIX_MARK is set */
 	char infix_mark = INFIX_MARK(dict->affix_table);
 
-	if (! dict->empty_word_defined) return;
+	if (! dict->empty_word_defined) return dn->exp;
 
-	if (is_stem(dn->string)) return;
+	if (is_stem(dn->string)) return dn->exp;
 	len = strlen(dn->string);
-	if ((len > 1) && (infix_mark == dn->string[0])) return;
-	if ((len > 1) && (infix_mark == dn->string[len-1])) return;
-	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
-	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
+	if ((len > 1) && (infix_mark == dn->string[0])) return dn->exp;
+	if ((len > 1) && (infix_mark == dn->string[len-1])) return dn->exp;
+	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return dn->exp;
+	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return dn->exp;
 	//lgdebug(+0, "Processing '%s'\n", dn->string);
 
 	/* If we are here, then this appears to be not a stem, not a
@@ -1029,32 +1029,32 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	 * Create {ZZZ+} & (plain-word-exp). */
 
 	/* zn points at {ZZZ+} */
-	zn = Exp_create(dict);
+	zn = Exp_create(eli);
 	zn->dir = '+';
 	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
 	zn->multi = false;
 	zn->type = CONNECTOR_type;
 	zn->cost = 0.0;
-	zn = make_optional_node(dict, zn);
+	zn = make_optional_node(eli, zn);
 
 	/* flist is plain-word-exp */
 	flist = (E_list *) xalloc(sizeof(E_list));
 	flist->next = NULL;
 	flist->e = dn->exp;
 
-	/* elist is {ZZZ+} */
+	/* elist is {ZZZ+} , (plain-word-exp) */
 	elist = (E_list *) xalloc(sizeof(E_list));
 	elist->next = flist;
 	elist->e = zn;
 
 	/* an will be {ZZZ+} & (plain-word-exp) */
-	an = Exp_create(dict);
+	an = Exp_create(eli);
 	an->type = AND_type;
 	an->cost = 0.0;
 	an->u.l = elist;
 
-	/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
-	dn->exp = an;
+	/* Return {ZZZ+} & (plain-word-exp) */
+	return an;
 }
 
 /* ======================================================================== */
@@ -1242,7 +1242,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nl = make_optional_node(dict, nl);
+		nl = make_optional_node(&dict->exp_list, nl);
 	}
 	else if (is_equal(dict, '['))
 	{
@@ -1288,7 +1288,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 	else if (is_equal(dict, ')') || is_equal(dict, ']'))
 	{
 		/* allows "()" or "[]" */
-		nl = make_zeroary_node(dict);
+		nl = make_zeroary_node(&dict->exp_list);
 	}
 	else
 	{
@@ -1311,7 +1311,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (nr == NULL) {
 			return NULL;
 		}
-		return make_and_node(dict, nl, nr);
+		return make_and_node(&dict->exp_list, nl, nr);
 	}
 	/* Commuting OR */
 	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
@@ -1328,7 +1328,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (nr == NULL) {
 			return NULL;
 		}
-		return make_or_node(dict, nl, nr);
+		return make_or_node(&dict->exp_list, nl, nr);
 	}
 	/* Commuting AND */
 	else if (is_equal(dict, SYM_AND) || (strcmp(dict->token, "sym") == 0))
@@ -1349,10 +1349,10 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		/* Expand A ^ B into the expr ((A & B) or (B & A)).
 		 * Must be wrapped in unary node so that it can be
 		 * mixed with ordinary ands at the same level. */
-		na = make_and_node(dict, nl, nr);
-		nb = make_and_node(dict, nr, nl);
-		or = make_or_node(dict, na, nb);
-		return make_unary_node(dict, or);
+		na = make_and_node(&dict->exp_list, nl, nr);
+		nb = make_and_node(&dict->exp_list, nr, nl);
+		or = make_or_node(&dict->exp_list, na, nb);
+		return make_unary_node(&dict->exp_list, or);
 	}
 
 	return nl;

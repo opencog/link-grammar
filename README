@@ -928,6 +928,14 @@ TODO -- Working Notes:
     However, this idea needs to be double-checked against, e.g. Hudson's
     word grammar.  I'm confused on this issue ...
 
+  Stretchy links:
+    Currently, some links can act at "unlimited" length, while others
+    can only be finite-length.  e.g. determiners should be near the
+    noun that they apply to.  A better solution might be to employ
+    a 'strechiness' cost to some connectors: the longer they are, the
+    higher the cost. (This eliminates the "unliminted_connector_set"
+    in the dictionary).
+
   Repulsive parses: Sometimes, the existance of one parse should suggest
     that another parse must surely be wrong: if one parse is possible,
     then the other parses must surely be unlikely. For example: the

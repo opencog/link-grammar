@@ -143,17 +143,17 @@ const char * dictionary_get_lang(Dictionary dict)
  *
  * The returned list must be freed with free_lookup_list().
  */
-Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
+Dict_node * dictionary_lookup_list(const Dictionary dict, const char *s)
 {
 	return dict->lookup_list(dict, s);
 }
 
-void free_lookup_list(Dictionary dict, Dict_node *llist)
+void free_lookup_list(const Dictionary dict, Dict_node *llist)
 {
 	dict->free_lookup(dict, llist);
 }
 
-bool boolean_dictionary_lookup(Dictionary dict, const char *s)
+bool boolean_dictionary_lookup(const Dictionary dict, const char *s)
 {
 	return dict->lookup(dict, s);
 }
@@ -162,7 +162,7 @@ bool boolean_dictionary_lookup(Dictionary dict, const char *s)
  * Return true if word is in dictionary, or if word is matched by
  * regex.
  */
-bool find_word_in_dict(Dictionary dict, const char * word)
+bool find_word_in_dict(const Dictionary dict, const char * word)
 {
 	const char * regex_name;
 	if (boolean_dictionary_lookup (dict, word)) return true;
@@ -289,10 +289,10 @@ static inline void free_dict_node(Dict_node *dn)
 	xfree((char *)dn, sizeof(Dict_node));
 }
 
-
-static void free_Exp_list(Exp * e)
+void free_Exp_list(Exp_list * eli)
 {
 	Exp * e1;
+	Exp * e = eli->exp_list;
 	for (; e != NULL; e = e1)
 	{
 		e1 = e->next;
@@ -316,7 +316,7 @@ static void free_dictionary(Dictionary dict)
 {
 	free_dict_node_recursive(dict->root);
 	free_Word_file(dict->word_file_header);
-	free_Exp_list(dict->exp_list);
+	free_Exp_list(&dict->exp_list);
 }
 
 static void affix_list_delete(Dictionary dict)
@@ -412,7 +412,7 @@ void print_expression(Exp * n)
 /**
  * print the expression, in infix-style
  */
-static void print_expression_parens(Exp * n, int need_parens)
+static void print_expression_parens(const Exp * n, int need_parens)
 {
 	E_list * el;
 	int i, icost;
@@ -495,7 +495,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 	if ((icost == 0) && need_parens) printf(")");
 }
 
-void print_expression(Exp * n)
+void print_expression(const Exp * n)
 {
 	print_expression_parens(n, false);
 	printf("\n");

@@ -28,7 +28,7 @@
 /**
  * Notify an error message according to the error code.
  */
-static void prt_regerror(const char *msg, Regex_node *re, int rc)
+static void prt_regerror(const char *msg, const Regex_node *re, int rc)
 {
 	const size_t errbuf_size = regerror(rc, re->re, NULL, 0);
 	char * const errbuf = malloc(errbuf_size);
@@ -86,7 +86,7 @@ int compile_regexs(Regex_node *re, Dictionary dict)
  * On match, returns the name of the first matching regex.
  * If no match is found, returns NULL.
  */
-const char *match_regex(Regex_node *re, const char *s)
+const char *match_regex(const Regex_node *re, const char *s)
 {
 	int rc;
 
