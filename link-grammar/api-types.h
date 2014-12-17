@@ -34,7 +34,6 @@ typedef struct Cost_Model_s Cost_Model;
 typedef struct Domain_s Domain;
 typedef struct DTreeLeaf_s DTreeLeaf;
 typedef struct Image_node_struct Image_node;
-typedef struct Label_node_s Label_node;
 typedef struct Linkage_info_struct Linkage_info;
 typedef struct Parse_info_struct *Parse_info;
 typedef struct Postprocessor_s Postprocessor;

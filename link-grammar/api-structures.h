@@ -115,6 +115,7 @@ struct Dictionary_s
 	const char *    name;
 	const char *    lang;
 	const char *    version;
+	int             num_entries;
 
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
@@ -148,7 +149,6 @@ struct Dictionary_s
 	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
 	String_set *    string_set;   /* Set of link names in the dictionary */
-	int             num_entries;
 	Word_file *     word_file_header;
 
 	/* exp_list links together all the Exp structs that are allocated
@@ -161,20 +161,12 @@ struct Dictionary_s
 	 */
 	const char    * input;
 	const char    * pin;
-	char            token[MAX_TOKEN_LENGTH];
 	bool            recursive_error;
 	bool            is_special;
 	char            already_got_it;
 	int             line_number;
+	char            token[MAX_TOKEN_LENGTH];
 };
-
-struct Label_node_s
-{
-	int          label;
-	Label_node * next;
-};
-
-#define HT_SIZE (1<<10)
 
 struct Link_s
 {
