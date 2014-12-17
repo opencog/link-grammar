@@ -890,7 +890,7 @@ static inline bool
 #define AFFIXTYPE_END		'b'	/* end of input word */
 
 /** return true if its good, else return false */
-bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
+bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	size_t i;
 	Dictionary afdict = sent->dict->affix_table;
@@ -912,8 +912,6 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 	/* If all the words are null - behave as if everything matched. */
 	bool match_found = true;        /* djw matched a morpheme */
 
-	Linkage lkg = &sent->lnkages[lk];
-
 	*affix_types_p = '\0';
 	for (i=0; i<sent->length; i++)
 	{
@@ -924,12 +922,12 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 		bool empty_word = false;   /* is this an empty word? */
 		Disjunct * cdj = lkg->chosen_disjuncts[i];
 
-		lgdebug(+4, "Linkage %zu, word %zu/%zu\n", lk+1, i, sent->length);
+		lgdebug(+4, "Linkage %p, word %zu/%zu\n", lkg, i, sent->length);
 
 		/* Ignore island words */
 		if (NULL == cdj)
 		{
-			lgdebug(4, "%zu ignored island word\n", lk+1);
+			lgdebug(4, "%p ignored island word\n", lkg);
 			unsplit = NULL; /* mark it as island */
 			continue;
 		}
@@ -947,7 +945,7 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 					realloc(matched_alts, sizeof(*matched_alts)*matched_alts_num);
 			}
 
-			lgdebug(4, "%zu unsplit word %s, alts:", lk+1, unsplit);
+			lgdebug(4, "%p unsplit word %s, alts:", lkg, unsplit);
 			for (ai = 0; ai < numalt; ai++)
 			{
 				matched_alts[ai] = 0;
@@ -957,7 +955,7 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 		}
 		if (NULL == unsplit)
 		{
-			lgdebug(4, "%zu ignore morphemes of an island word\n", lk+1);
+			lgdebug(4, "%p ignore morphemes of an island word\n", lkg);
 			continue;
 		}
 
@@ -992,12 +990,12 @@ bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 			*affix_types_p = AFFIXTYPE_WORD;
 		}
 
-		lgdebug(4, "%zu djw=%s affixtype=%c\n",
-		        lk+1, djw, empty_word ? 'E' : *affix_types_p);
+		lgdebug(4, "%p djw=%s affixtype=%c\n",
+		        lkg, djw, empty_word ? 'E' : *affix_types_p);
 
 		if (! empty_word) affix_types_p++;
 
-		lgdebug(4, "%zu djw %s matched alt#:", lk+1, djw);
+		lgdebug(4, "%p djw %s matched alt#:", lkg, djw);
 		match_found = false;
 
 		/* Compare the chosen word djw to the alternatives */
@@ -1054,7 +1052,7 @@ try_again:
 				{
 					downcase_utf8_str(downcased, a, MAX_WORD);
 					lgdebug(4, "\n");
-					lgdebug(4, "%zu downcasing %s>%s\n", lk+1, a, downcased);
+					lgdebug(4, "%p downcasing %s>%s\n", lkg, a, downcased);
 					s = downcased;
 					goto try_again;
 				}
@@ -1075,8 +1073,8 @@ try_again:
 		{
 			int num_morphemes = i - unsplit_i + 1;
 
-			lgdebug(4, "%zu end of input word, num_morphemes %d\n",
-					lk+1, num_morphemes);
+			lgdebug(4, "%p end of input word, num_morphemes %d\n",
+					lkg, num_morphemes);
 			*affix_types_p++ = AFFIXTYPE_END;
 
 			/* Make sure that there exists an alternative in
@@ -1095,10 +1093,10 @@ try_again:
 
 			if (! match_found)
 			{
-				lgdebug(4, "%zu morphemes are missing in this linkage\n", lk+1);
+				lgdebug(4, "%p morphemes are missing in this linkage\n", lkg);
 				break;
 			}
-			lgdebug(4, "%zu Perfect match\n", lk+1);
+			lgdebug(4, "%p Perfect match\n", lkg);
 		}
 	}
 	*affix_types_p = '\0';
@@ -1118,13 +1116,13 @@ try_again:
 			       "run with !bad and !verbosity=4 to debug\n", affix_types);
 	}
 	else
-		lgdebug(4, "%zu morpheme type combination '%s'\n", lk+1, affix_types);
+		lgdebug(4, "%p morpheme type combination '%s'\n", lkg, affix_types);
 
 	if (matched_alts) free(matched_alts);
 
 	if (match_found)
 	{
-		lgdebug(4, "%zu SUCCEEDED\n", lk+1);
+		lgdebug(4, "%p SUCCEEDED\n", lkg);
 		return true;
 	}
 	else
@@ -1135,7 +1133,7 @@ try_again:
 		lifo->N_violations++;
 		lifo->pp_violation_msg = "Invalid morphism construction.";
 		if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
-		lgdebug(4, "%zu FAILED\n", lk+1);
+		lgdebug(4, "%p FAILED\n", lkg);
 		return false;
 	}
 }
@@ -1147,10 +1145,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
+		Linkage lkg = &sent->lnkages[lk];
 		/* Don't bother with linkages that already failed post-processing... */
-		if (0 != sent->lnkages[lk].lifo.N_violations) continue;
+		if (0 != lkg->lifo.N_violations) continue;
 
-      if (!sane_linkage_morphism(sent, lk, opts))
+      if (!sane_linkage_morphism(sent, lkg, opts))
           N_invalid_morphism ++;
 	}
 

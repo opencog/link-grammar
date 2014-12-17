@@ -36,6 +36,6 @@ void     post_process_scan_linkage(Postprocessor *, Parse_Options, Linkage);
 PP_node *do_post_process(Postprocessor *, Parse_Options, Linkage);
 bool     post_process_match(const char *, const char *);  /* utility function */
 
-bool sane_linkage_morphism(Sentence, size_t lk, Parse_Options);
+bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
 
 #endif

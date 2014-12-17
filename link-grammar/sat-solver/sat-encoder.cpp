@@ -1276,17 +1276,22 @@ Linkage SATEncoder::get_next_linkage()
     _sent->lnkages = (Linkage) xrealloc(_sent->lnkages,
                        nbytes - sizeof(struct Linkage_s), nbytes);
 
-    linkage_post_process(linkage, _sent->postprocessor, _opts);
-    linkage_score(linkage, _opts);
+    Linkage lkg = &_sent->lnkages[index];
+    *lkg = *linkage;  /* copy en-mass */
+    exfree(linkage, sizeof(struct Linkage_s));
+    linkage = NULL;
 
-    Linkage_info* lifo = &(_sent->lnkages[index].lifo);
-    if (0 == lifo->N_violations) {
+    // perform the post-processing
+    sane_linkage_morphism(_sent, lkg, _opts);
+    linkage_post_process(lkg, _sent->postprocessor, _opts);
+    linkage_score(lkg, _opts);
+
+    if (0 == lkg->lifo.N_violations) {
       _sent->num_valid_linkages++;
-      sane_linkage_morphism(_sent, index, _opts);
     }
 
     // sane_morphism will increment N_violations if its insane...
-    if (0 == lifo->N_violations) {
+    if (0 == lkg->lifo.N_violations) {
       cout << "Linkage PP OK" << endl;
     } else {
       cout << "Linkage PP NOT OK" << endl;
