@@ -1029,7 +1029,7 @@ static bool strip_right(Sentence sent,
 	Dictionary dict = sent->dict;
 	Dictionary afdict = dict->affix_table;
 	const char * temp_wend = *wend;
-	char *word = alloca(temp_wend-w);
+	char *word = alloca(temp_wend-w+1);
 	size_t sz;
 	size_t i;
 	size_t nrs = 0;

@@ -60,19 +60,21 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>Debug\</OutDir>
-    <IntDir>Debug\</IntDir>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>Release\</OutDir>
-    <IntDir>Release\</IntDir>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,15 +161,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\link-grammar\jni-client.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\link-grammar\jni-client.c" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="LinkGrammar.vcxproj">
       <Project>{0a6c539a-3140-48bd-865c-05f45637b93b}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\bindings\java-jni\jni-client.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\bindings\java-jni\jni-client.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

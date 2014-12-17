@@ -114,12 +114,54 @@
     <ClInclude Include="..\link-grammar\word-utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\link-grammar\anysplit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\disjuncts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\disjunct-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\expand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\linkage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\regex-morph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\regex-tokenizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\score.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\spellcheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-file\read-dict.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-file\read-regex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-file\word-file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\link-grammar\analyze-linkage.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\link-grammar\and.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\api.c">
@@ -132,9 +174,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\count.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\link-grammar\dictionary.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\disjunct-utils.c">
@@ -156,9 +195,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\idiom.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\link-grammar\massage.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\post-process.c">
@@ -188,12 +224,6 @@
     <ClCompile Include="..\link-grammar\prune.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\link-grammar\read-dict.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\link-grammar\read-regex.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\link-grammar\regex-morph.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -215,11 +245,41 @@
     <ClCompile Include="..\link-grammar\utilities.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\link-grammar\word-file.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\link-grammar\word-utils.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\anysplit.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\linkage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\malloc-dbg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\regex-tokenizer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\score.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-file\dictionary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-file\read-dict.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-file\read-regex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-file\word-file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\link-grammar\link-features.h.in" />
   </ItemGroup>
 </Project>
