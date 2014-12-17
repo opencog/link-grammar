@@ -25,6 +25,7 @@ Afdict_class * afdict_find(Dictionary, const char *, bool);
 
 Exp * Exp_create(Exp_list *);
 Exp * add_empty_word(Dictionary const, Exp_list *, Dict_node *);
+void free_Exp_list(Exp_list *);
 
 void patch_subscript(char *);
 

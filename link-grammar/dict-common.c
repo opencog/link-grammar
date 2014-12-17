@@ -289,7 +289,7 @@ static inline void free_dict_node(Dict_node *dn)
 	xfree((char *)dn, sizeof(Dict_node));
 }
 
-static void free_Exp_list(Exp_list * eli)
+void free_Exp_list(Exp_list * eli)
 {
 	Exp * e1;
 	Exp * e = eli->exp_list;

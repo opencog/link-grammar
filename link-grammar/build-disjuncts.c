@@ -407,6 +407,7 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
 	Exp_list eli;
+	eli.exp_list = NULL;
 
 	dn_head = dictionary_lookup_list(dict, s);
 	x = NULL;
@@ -421,6 +422,7 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 		dn = dn->right;
 	}
 	free_lookup_list (dict, dn_head);
+	free_Exp_list(&eli);
 	return x;
 }
 
