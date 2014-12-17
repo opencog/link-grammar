@@ -64,37 +64,6 @@ static void free_clause_list(Clause *c)
 	}
 }
 
-#ifdef UNUSED_FUNCTION
-/**
- * This builds a new copy of the connector list pointed to by c.
- * Strings, as usual, are not copied.
- */
-static Tconnector * copy_Tconnectors(Tconnector * c)
-{
-	Tconnector *c1;
-	if (c == NULL) return NULL;
-	c1 = (Tconnector *) xalloc(sizeof(Tconnector));
-	*c1 = *c;
-	c1->next = copy_Tconnectors(c->next);
-	return c1;
-}
-
-/**
- * This builds a new copy of the clause pointed to by d (except for the
- * next field which is set to NULL).  Strings, as usual, are not copied.
- */
-static Clause * copy_clause(Clause * d)
-{
-	Clause * d1;
-	if (d == NULL) return NULL;
-	d1 = (Clause *) xalloc(sizeof(Clause));
-	*d1 = *d;
-	d1->next = NULL;
-	d1->c = copy_Tconnectors(d->c);
-	return d1;
-}
-#endif /* UNUSED_FUNCTION */
-
 /**
  * reverse the order of the list e.  destructive
  */
@@ -163,46 +132,6 @@ static Tconnector * build_terminal(Exp * e)
 	c->next = NULL;
 	return c;
 }
-
-#ifdef UNUSED_FUNCTION
-static xxxdouble-int maxcost_of_expression(Exp *e)
-{
-	E_list * e_list;
-	int m, m1;
-
-	m = 0;
-
-	if ((e->type == AND_type) || (e->type == OR_type)) {
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next) {
-			m1 = maxcost_of_expression(e_list->e);
-			m = MAX(m, m1);
-		}
-	}
-	return (m + e->cost);
-}
-
-/**
- * This returns the maximum maxcost of any disjunct in the sentence
- * Assumes the sentence expressions have been constructed
- */
-static xxx-double-int maxcost_of_sentence(Sentence sent)
-{
-	X_node * x;
-	int w, m, m1;
-	m = 0;
-
-	for (w = 0; w < sent->length; w++)
-	{
-		for (x = sent->word[w].x; x != NULL; x = x->next)
-		{
-			m1 = maxcost_of_expression(x->exp),
-			m = MAX(m, m1);
-		}
-	}
-	return m;
-}
-#endif /* UNUSED_FUNCTION */
-
 
 /**
  * Build the clause for the expression e.  Does not change e
@@ -418,26 +347,6 @@ void prt_exp(Exp *e, int i)
 }
 #endif
 
-#ifdef OBSOLETE_MEMORY_PIGGY
-/**
- * Build a list of disjuncts.
- *
- * The only place where this is used is for counting the number
- * of disjuncts, called by dict_display_word_info().  Unfortunately,
- * this is a huge memory pig, esp for the Russian dictionary.
- */
-Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
-{
-	Disjunct *dj;
-	X_node x;
-	x.exp = dn->exp;
-	x.string = dn->string;
-	dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
-	/* print_disjunct_list(dj); */
-	return dj;
-}
-#else /* OBSOLETE_MEMORY_PIGGY */
-
 /**
  * Count the number of clauses (disjuncts) for the expression e.
  * Should return the number of disjuncts that would be returned
@@ -445,7 +354,7 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
  * of clauses built by build_clause().
  *
  * Only one minor cheat here: we are ignoring the cost_cutoff, so
- * this potentially over-counts if the cost_cutoff is se low.
+ * this potentially over-counts if the cost_cutoff is set low.
  */
 static unsigned int count_clause(Exp *e)
 {
@@ -485,7 +394,6 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
 	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
-#endif /* OBSOLETE_MEMORY_PIGGY */
 
 /**
  * build_word_expressions() -- build list of expressions for a word
