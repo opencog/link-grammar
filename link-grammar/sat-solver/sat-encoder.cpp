@@ -1263,6 +1263,7 @@ Linkage SATEncoder::get_next_linkage()
 {
   if (l_False == _solver->solve()) return NULL;
   Linkage linkage = create_linkage();
+  Linkage lkg = NULL;
 
   std::vector<int> components;
   bool connected = connectivity_components(components);
@@ -1276,7 +1277,7 @@ Linkage SATEncoder::get_next_linkage()
     _sent->lnkages = (Linkage) xrealloc(_sent->lnkages,
                        nbytes - sizeof(struct Linkage_s), nbytes);
 
-    Linkage lkg = &_sent->lnkages[index];
+    lkg = &_sent->lnkages[index];
     *lkg = *linkage;  /* copy en-mass */
     exfree(linkage, sizeof(struct Linkage_s));
     linkage = NULL;
@@ -1301,10 +1302,11 @@ Linkage SATEncoder::get_next_linkage()
   } else {
     cout << "Linkage DISCONNECTED" << endl;
     generate_disconnectivity_prohibiting(components);
+    exfree(linkage, sizeof(struct Linkage_s));
   }
 
   _solver->printStats();
-  return linkage;
+  return lkg;
 }
 
 /*******************************************************************************

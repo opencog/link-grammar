@@ -256,6 +256,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	if (opts->use_sat_solver)
 	{
 		linkage = sat_create_linkage(k, sent, opts);
+		if (!linkage) return NULL;
 	}
 	else
 	{
