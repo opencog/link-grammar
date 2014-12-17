@@ -30,7 +30,6 @@
 #include <externs.h>
 #include <time.h>
 
-#include "anysplit.h"
 #include "dict-common.h"
 #include "error.h"
 #include "regex-morph.h"
@@ -38,7 +37,9 @@
 #include "tokenize.h"
 #include "utilities.h"
 
-extern const char const * afdict_classname[];
+#include "anysplit.h"
+
+extern const char * const afdict_classname[];
 
 typedef int p_start;     /* partition start in a word */
 typedef p_start *p_list; /* list of partitions in a word */
@@ -71,7 +72,7 @@ static const char *gw;
 /* print the current partitions */
 static void printsplit(int *ps, int n)
 {
-	static int sn = 0;	/* split number */
+	static int sn = 0; /* split number */
 	int pos = 0;
 	int p;
 	int l = strlen(gw);
@@ -102,18 +103,18 @@ static void cache_partitions(p_list pl, int *ps, int p)
 {
 	memcpy(pl, ps, sizeof(p_start) * p);
 }
-	
-	/* p = 5 */
+
+	/* p = 5      */
 	/*   0  1 2 3 */
 	/*   |  | | | */
-	/* 123456789	 */
-	/* l = 9 */
-	/* */
-	/* n = 4 */
-	/* ps[0] = 2 */
-	/* ps[1] = 5 */
-	/* ps[2] = 7 */
-	/* ps[3] = 9 */
+	/* 123456789  */
+	/* l = 9      */
+	/*            */
+	/* n = 4      */
+	/* ps[0] = 2  */
+	/* ps[1] = 5  */
+	/* ps[2] = 7  */
+	/* ps[3] = 9  */
 
 /**
  * scl: If NULL, return the index of the last split. Else cache the splits into scl.
@@ -123,7 +124,7 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 
 	int n;
 	int maxindex;
-	p_list ps = alloca(sizeof(p_start)*nparts);	/* partition start */
+	p_list ps = alloca(sizeof(p_start)*nparts); /* partition start */
 
 	if (0 == word_length) return 0;
 
@@ -138,12 +139,13 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 
 	/* Generate all possible partitions up to nparts partitions */
 	for (n = 1; n < nparts; n++)
-	{	/* increase the number of partitions */
+	{
+		/* increase the number of partitions */
 		int m = 0;
 		int t;
 
 		ps[0] = 1;
-		ps[n] = word_length;	/* set last partition end (dummy partition start) */
+		ps[n] = word_length; /* set last partition end (dummy partition start) */
 
 		//printf("New number of partitions: n=%d\n", n);
 		do
@@ -175,9 +177,10 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 			{
 				//printf("Backtrack m %d->%d\n", m, m-1);
 				m--;
-			} while (m >= 0 && ps[m] + 1 == ps[m+1]);	/* no more place to move for partition m */
+				/* continue as long as there is a place to move for partition m */
+			} while (m >= 0 && ps[m] + 1 == ps[m+1]);
 			if (m >= 0) ps[m]++;
-		} while (m >= 0);	/* we have still positions to move */
+		} while (m >= 0); /* we have still positions to move */
 		//printf("End (n=%d)\n", n);
 	}
 
@@ -205,7 +208,7 @@ void free_anysplit(Dictionary afdict)
 }
 
 /*
- * Returns:	Number of splits.
+ * Returns: Number of splits.
  */
 static int split(int word_length, int nparts, split_cache *scl)
 {
@@ -256,24 +259,24 @@ static bool morpheme_match(Sentence sent, const char *word, int l, p_list pl)
 	int pos = 0;
 	int p;
 	Regex_node *re;
-	char *word_part = alloca(l+1);
+	char *prefix_string = alloca(l+1);
 
 	lgdebug(+2, "word=%s: ", word);
 	for (p = 0; p < as->nparts; p++)
 	{
-		strncpy(word_part, &word[pos], pl[p]-pos);
-		word_part[pl[p]-pos] = '\0';
+		strncpy(prefix_string, &word[pos], pl[p]-pos);
+		prefix_string[pl[p]-pos] = '\0';
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
-		 * REGMID only to the middle parts, and REGSUF only to the suffix part -
+		 * REGMID only to the middle suffixes, and REGSUF only to the suffix part -
 		 * which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
 		else if (pl[p] == l) re = as->regsuf;
 		else re = as->regmid;
-		lgdebug(2, "re=%s part%d=%s: ", re->name, p, word_part);
+		lgdebug(2, "re=%s part%d=%s: ", re->name, p, prefix_string);
 
 		/* A NULL regex always matches */
-		if ((NULL != re) && (NULL == match_regex(re ,word_part)))
+		if ((NULL != re) && (NULL == match_regex(re ,prefix_string)))
 		{
 			lgdebug(2, "No match\n");
 			return false;
@@ -322,7 +325,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 /* Affix classes:
  * REGPARTS  Max number of word partitions. Value 0 disables anysplit.
  * REGPRE    Regex for prefix
- * REGMID    Regex for middle parts
+ * REGMID    Regex for middle suffixes
  * REGSUF    Regex for suffix
  * REGALTS   Number of alternatives to issue for a word.
  *           Two values: minimum and maximum.
@@ -368,9 +371,9 @@ bool anysplit_init(Dictionary afdict)
 	as->regmid = regbuild(regmid->string, regmid->length, AFDICT_REGMID);
 	as->regsuf = regbuild(regsuf->string, regsuf->length, AFDICT_REGSUF);
 
-   if (compile_regexs(as->regpre, NULL) != 0) return false;
-   if (compile_regexs(as->regmid, NULL) != 0) return false;
-   if (compile_regexs(as->regsuf, NULL) != 0) return false;
+	if (compile_regexs(as->regpre, NULL) != 0) return false;
+	if (compile_regexs(as->regmid, NULL) != 0) return false;
+	if (compile_regexs(as->regsuf, NULL) != 0) return false;
 
 	as->nparts = atoi(regparts->string[0]);
 	if (as->nparts < 0)
@@ -404,25 +407,37 @@ bool anysplit_init(Dictionary afdict)
 	return true;
 }
 
+/**
+ * Split randomly.
+ * Return true on success.
+ * Return false when:
+ * - disabled (i.e. when doing regular language processing).
+ * - an error occurs (the behavior then is undefined).
+ *   Such an error has not been observed yet.
+ */
 bool anysplit(Sentence sent, const char *word)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as;
-	const Afdict_class * stemsubscr = AFCLASS(afdict, AFDICT_STEMSUBSCR);
+	Afdict_class * stemsubscr;
+	size_t stemsubscr_len;
 
-	int l = strlen(word);
+	size_t l = strlen(word);
 	p_list pl;
-	int pos, p;
+	size_t pos;
+	int p;
 	int sample_point;
 	size_t nsplits;
 	size_t rndtried = 0;
 	size_t rndissued = 0;
 	size_t i;
 	unsigned int seed = 0;
-	char * const word_part = alloca(l+2+1); /* word + ".=" + NUL */
+	char *prefix_string = alloca(l+2+1); /* word + ".=" + NUL */
+	char *suffix_string = alloca(l+1);   /* word + NUL */
 	bool use_sampling = true;
+	const char infix_mark = INFIX_MARK(afdict);
 
-	
+
 	if (NULL == afdict) return false;
 	as = afdict->anysplit;
 
@@ -433,6 +448,18 @@ bool anysplit(Sentence sent, const char *word)
 		prt_error("Warning: anysplit(): word length 0\n");
 		return false;
 	}
+
+	stemsubscr = AFCLASS(afdict, AFDICT_STEMSUBSCR);
+	stemsubscr_len = (NULL == stemsubscr->string[0]) ? 0 :
+		strlen(stemsubscr->string[0]);
+
+	/* Don't split morphemes again. If INFIXMARK and/or SUBSCRMARK are
+	 * not defined in the affix file, then morphemes may get split again unless
+	 * restricted by REGPRE/REGMID/REGSUF. */
+	if (word[0] == infix_mark) return true;
+	if ((l > stemsubscr_len) &&
+	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
+		return true;
 
 	// seed = time(NULL)+(unsigned int)(long)&seed;
 
@@ -494,52 +521,50 @@ bool anysplit(Sentence sent, const char *word)
 			lgdebug(2, "\n");
 		}
 	}
-	
-	lgdebug(2, "Results: word '%s' (length=%d): %zu/%zu:\n", word, l, rndissued, nsplits);
+
+	lgdebug(2, "Results: word '%s' (length=%zu): %zu/%zu:\n", word, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
 	{
-		const char **parts = NULL;
-		int numparts = 0;
-		
+		const char **suffixes = NULL;
+		int num_suffixes = 0;
+
 		if (!as->scl[l].p_selected[i]) continue;
 
 		pl = &as->scl[l].sp[i*as->nparts];
 		pos = 0;
 		for (p = 0; p < as->nparts; p++)
 		{
-			if (pl[0] == l)  /* This is the whole word */
+			if (pl[0] == (int)l)  /* This is the whole word */
 			{
-				strncpy(word_part, &word[pos], pl[p]-pos);
-				word_part[pl[p]-pos] = '\0';
+				strncpy(prefix_string, &word[pos], pl[p]-pos);
+				prefix_string[pl[p]-pos] = '\0';
 			}
 			else
 			if (0 == pos)   /* The first but not the only morpheme */
 			{
-				strncpy(word_part, &word[pos], pl[p]-pos);
-				word_part[pl[p]-pos] = '\0';
+				strncpy(prefix_string, &word[pos], pl[p]-pos);
+				prefix_string[pl[p]-pos] = '\0';
 
 				if (0 != stemsubscr->length)
-					strcat(word_part, stemsubscr->string[0]);
+				    strcat(prefix_string, stemsubscr->string[0]);
 			}
 			else           /* 2nd and on morphemes */
 			{
-				/* A hack - instead of using the suffix argument of
-				 * add_alternative(). */
-				word_part[0] = INFIX_MARK; /* INFIX_MARK=='\0' when no INFIX_MARK */
-				word_part[1] = '\0';
-				strncat(word_part, &word[pos], pl[p]-pos);
+				strncpy(suffix_string, &word[pos], pl[p]-pos);
+				suffix_string[pl[p]-pos] = '\0';
+				altappend(sent, &suffixes, suffix_string);
+				num_suffixes++;
 			}
-
-			altappend(sent, &parts, word_part);
-			numparts++;
 
 			pos = pl[p];
 			if (pos == l) break;
 		}
 
-		add_alternative(sent, 0,NULL, numparts,parts, 0,NULL);
-		free(parts);
+		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
+		add_alternative(sent,
+		   0,NULL, 1,(const char **)&prefix_string, num_suffixes,suffixes);
+		free(suffixes);
 	}
 
 	return true;
