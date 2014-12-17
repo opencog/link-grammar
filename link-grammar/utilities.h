@@ -109,7 +109,7 @@ char * strndup (const char *str, size_t size);
  * cygwin just doesn't work very well. So we use our own custom version,
  * instead.
  */
-size_t lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
+link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
 #ifdef mbrtowc
 #undef mbrtowc
 #endif

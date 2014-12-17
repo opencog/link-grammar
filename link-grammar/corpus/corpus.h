@@ -13,6 +13,7 @@
 
 #include "../api-types.h"
 #include "../link-includes.h"
+#include "../utilities.h"
 
 #ifdef USE_CORPUS
 

@@ -77,8 +77,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	size_t i, j, l;
 	char * s, *u;
-	const char * chosen_words[sent->length];
-	size_t remap[sent->length];
+	const char ** chosen_words = alloca(sent->length*sizeof(char*));
+	size_t *remap = alloca(sent->length*sizeof(size_t));
 	bool display_morphology = opts->display_morphology;
 	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 

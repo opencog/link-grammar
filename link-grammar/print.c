@@ -376,11 +376,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool print_word_0 , print_word_N;
 	int N_wall_connectors;
 	bool suppressor_used;
-	int center[linkage->num_words+1];
+	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	unsigned int line_len, link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
-	String * string;
+	String * string;  
 	char * gr_string;
 	unsigned int N_words_to_print;
 

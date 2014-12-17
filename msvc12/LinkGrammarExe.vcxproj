@@ -18,6 +18,15 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\link-parser\command-line.c" />
+    <ClCompile Include="..\link-parser\lg_readline.c" />
+    <ClCompile Include="..\link-parser\link-parser.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\link-parser\command-line.h" />
+    <ClInclude Include="..\link-parser\lg_readline.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{532EFF4D-758A-4705-91EE-9A4AC72C017B}</ProjectGuid>
     <RootNamespace>LinkGrammarExe</RootNamespace>
@@ -27,24 +36,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -66,150 +71,100 @@
     <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(GNUREGEX)\include;../.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)link-grammar.exe</OutputFile>
-      <AdditionalLibraryDirectories>$(GNUREGEX)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>$(SolutionDir)$(Configuration)\link-grammar-x86.lib;$(GNUREGEX)\lib\regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>G:\DEV\Java\SourceControlled\RelEx\link-grammar\trunk\link-grammar;G:\DEV\Java\SourceControlled\RelEx\link-grammar\trunk\tre\include;../.;G:\DEV\Java\SourceControlled\RelEx\link-grammar\trunk\tre\lib\;G:\DEV\Java\SourceControlled\RelEx\link-grammar\trunk\tre\include\tre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
-      <DebugInformationFormat>None</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>tre.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)link-grammar.exe</OutputFile>
-      <AdditionalLibraryDirectories>G:\DEV\Java\SourceControlled\RelEx\link-grammar\trunk\tre\vcbuild\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(GNUREGEX)\lib\regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(GNUREGEX)\include;../.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(GNUREGEX)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>$(SolutionDir)$(Configuration)\link-grammar-x86.lib;$(GNUREGEX)\lib\regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(GNUREGEX)\include;../.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(GNUREGEX)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalDependencies>$(GNUREGEX)\lib\regex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\link-grammar\analyze-linkage.c" />
-    <ClCompile Include="..\link-grammar\and.c" />
-    <ClCompile Include="..\link-grammar\api.c" />
-    <ClCompile Include="..\link-grammar\build-disjuncts.c" />
-    <ClCompile Include="..\link-grammar\constituents.c" />
-    <ClCompile Include="..\link-grammar\count.c" />
-    <ClCompile Include="..\link-grammar\dictionary.c" />
-    <ClCompile Include="..\link-grammar\disjunct-utils.c" />
-    <ClCompile Include="..\link-grammar\disjuncts.c" />
-    <ClCompile Include="..\link-grammar\error.c" />
-    <ClCompile Include="..\link-grammar\expand.c" />
-    <ClCompile Include="..\link-grammar\extract-links.c" />
-    <ClCompile Include="..\link-grammar\fast-match.c" />
-    <ClCompile Include="..\link-grammar\idiom.c" />
-    <ClCompile Include="..\link-grammar\massage.c" />
-    <ClCompile Include="..\link-grammar\post-process.c" />
-    <ClCompile Include="..\link-grammar\pp_knowledge.c" />
-    <ClCompile Include="..\link-grammar\pp_lexer.c" />
-    <ClCompile Include="..\link-grammar\pp_linkset.c" />
-    <ClCompile Include="..\link-grammar\prefix.c" />
-    <ClCompile Include="..\link-grammar\preparation.c" />
-    <ClCompile Include="..\link-grammar\print-util.c" />
-    <ClCompile Include="..\link-grammar\print.c" />
-    <ClCompile Include="..\link-grammar\prune.c" />
-    <ClCompile Include="..\link-grammar\read-dict.c" />
-    <ClCompile Include="..\link-grammar\read-regex.c" />
-    <ClCompile Include="..\link-grammar\regex-morph.c" />
-    <ClCompile Include="..\link-grammar\resources.c" />
-    <ClCompile Include="..\link-grammar\spellcheck-aspell.c" />
-    <ClCompile Include="..\link-grammar\spellcheck-hun.c" />
-    <ClCompile Include="..\link-grammar\string-set.c" />
-    <ClCompile Include="..\link-grammar\tokenize.c" />
-    <ClCompile Include="..\link-grammar\utilities.c" />
-    <ClCompile Include="..\link-grammar\word-file.c" />
-    <ClCompile Include="..\link-grammar\word-utils.c" />
-    <ClCompile Include="..\link-parser\command-line.c" />
-    <ClCompile Include="..\link-parser\lg_readline.c" />
-    <ClCompile Include="..\link-parser\link-parser.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
