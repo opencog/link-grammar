@@ -85,21 +85,17 @@ Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 
 #define AFFIX_COUNT_MEM_INCREMENT 64
 
-static void affix_list_resize(Afdict_class * ac)
-{
-	size_t old_mem_elems = ac->mem_elems;
-
-	ac->mem_elems += AFFIX_COUNT_MEM_INCREMENT;
-	ac->string = xrealloc((void *)ac->string, old_mem_elems,
-	      ac->mem_elems * sizeof(*ac->string));
-}
-
 static void affix_list_add(Dictionary afdict, Afdict_class * ac,
 		const char * affix)
 {
 	if (NULL == ac)  return; /* ignore unknown class name */
-	if (ac->length == ac->mem_elems)
-		affix_list_resize(ac);
+	if (ac->mem_elems <= ac->length)
+	{
+		size_t new_sz;
+		ac->mem_elems += AFFIX_COUNT_MEM_INCREMENT;
+		new_sz = ac->mem_elems * sizeof(const char *);
+		ac->string = (char const **) realloc((void *)ac->string, new_sz);
+	}
 	ac->string[ac->length] = string_set_add(affix, afdict->string_set);
 	ac->length++;
 }
@@ -280,9 +276,10 @@ static bool afdict_init(Dictionary dict)
 	Afdict_class * ac;
 	Dictionary afdict = dict->affix_table;
 
-	/* FIXME: read_entry() builds word lists in reverse order (can we just create
-	 * the list top-down without breaking anything?). Unless it is fixed to
-	 * preserve the order, reverse here the word list for each affix class. */
+	/* FIXME: read_entry() builds word lists in reverse order (can we
+	 * just create the list top-down without breaking anything?). Unless
+	 * it is fixed to preserve the order, reverse here the word list for
+	 * each affix class. */
 	for (ac = afdict->afdict_class;
 		  ac < &afdict->afdict_class[NUMELEMS(afdict_classname)]; ac++)
 	{
@@ -305,7 +302,7 @@ static bool afdict_init(Dictionary dict)
 		prt_error("Error: afdict_init: Invalid value for class %s in file %s"
 					 " (should have been one ASCII punctuation - ignored)\n",
 					  afdict_classname[AFDICT_INFIXMARK], afdict->name);
-		xfree((void *)ac->string, ac->mem_elems);
+		free((void *)ac->string);
 		ac->length = 0;
 		ac->mem_elems = 0;
 		ac->string = NULL;

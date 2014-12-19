@@ -157,7 +157,7 @@ static void free_List_o_links(List_o_links *lol)
 	while (lol != NULL)
 	{
 		xlol = lol->next;
-		xfree(lol, sizeof(List_o_links));
+		free(lol);
 		lol = xlol;
 	}
 }
@@ -168,7 +168,7 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 	while (dtl != NULL)
 	{
 		xdtl = dtl->next;
-		xfree(dtl, sizeof(DTreeLeaf));
+		free(dtl);
 		dtl = xdtl;
 	}
 }
@@ -218,10 +218,9 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 {
 	if (ppn->dtsz <= idx)
 	{
-		size_t oldsz = ppn->dtsz;
-		ppn->dtsz += idx + 2;
-		ppn->d_type_array = xrealloc(ppn->d_type_array,
-			oldsz * sizeof(D_type_list*), ppn->dtsz * sizeof(D_type_list*));
+		ppn->dtsz += idx + 5;
+		ppn->d_type_array = realloc(ppn->d_type_array,
+			ppn->dtsz * sizeof(D_type_list*));
 	}
 }
 
@@ -235,7 +234,7 @@ static void build_type_array(Postprocessor *pp)
 		for (lol = pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
 			chk_d_type(pp->pp_node, lol->link);
-			dtl = (D_type_list *) xalloc(sizeof(D_type_list));
+			dtl = (D_type_list *) malloc(sizeof(D_type_list));
 			dtl->next = pp->pp_node->d_type_array[lol->link];
 			dtl->type = pp->pp_data.domain_array[d].type;
 			pp->pp_node->d_type_array[lol->link] = dtl;
@@ -249,7 +248,7 @@ static void free_d_type(D_type_list * dtl)
 	for (; dtl != NULL; dtl = dtlx)
 	{
 		dtlx = dtl->next;
-		xfree((void*) dtl, sizeof(D_type_list));
+		free((void*) dtl);
 	}
 }
 
@@ -265,21 +264,21 @@ static void free_pp_node(Postprocessor *pp)
 	{
 		free_d_type(ppn->d_type_array[i]);
 	}
-	xfree(ppn->d_type_array, ppn->dtsz * sizeof(D_type_list *));
-	xfree((void*) ppn, sizeof(PP_node));
+	free(ppn->d_type_array);
+	free((void*) ppn);
 }
 
 /** set up a fresh pp_node for later use */
 static void alloc_pp_node(Postprocessor *pp)
 {
-	size_t i;
-	PP_node *ppn = (PP_node *) xalloc(sizeof(PP_node));
+	size_t dz;
+	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
 	/* highly unlikely that the number of links will ever exceed this */
 	ppn->dtsz = 2 * pp->pp_data.length;
-	ppn->d_type_array = (D_type_list **) xalloc (ppn->dtsz * sizeof(D_type_list*));
-	for (i=0; i<ppn->dtsz; i++)
-		ppn->d_type_array[i] = NULL;
+	dz = ppn->dtsz * sizeof(D_type_list*);
+	ppn->d_type_array = (D_type_list **) malloc (dz);
+	memset(ppn->d_type_array, 0, dz);
 
 	pp->pp_node = ppn;
 }
@@ -546,11 +545,11 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	/* Get more size, if needed */
 	if (pp->pp_data.wowlen <= pp->pp_data.length)
 	{
-		size_t oldsz = pp->pp_data.wowlen * sizeof(List_o_links *);
-		size_t incsz = pp->pp_data.length * sizeof(List_o_links *);
-		pp->pp_data.word_links = (List_o_links **) xrealloc(
-			pp->pp_data.word_links, oldsz, oldsz + incsz);
+		size_t newsz;
 		pp->pp_data.wowlen += pp->pp_data.length;
+		newsz = pp->pp_data.wowlen * sizeof(List_o_links *);
+		pp->pp_data.word_links = (List_o_links **) realloc(
+			pp->pp_data.word_links, newsz);
 	}
 	memset(pp->pp_data.word_links, 0, pp->pp_data.wowlen * sizeof(List_o_links *));
 
@@ -561,7 +560,7 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 		if (pp_linkset_match(pp->knowledge->ignore_these_links,
 		                     sublinkage->link_array[link].link_name))
 		{
-			lol = (List_o_links *) xalloc(sizeof(List_o_links));
+			lol = (List_o_links *) malloc(sizeof(List_o_links));
 			lol->next = pp->pp_data.links_to_ignore;
 			pp->pp_data.links_to_ignore = lol;
 			lol->link = link;
@@ -569,13 +568,13 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 			continue;
 		}
 
-		lol = (List_o_links *) xalloc(sizeof(List_o_links));
+		lol = (List_o_links *) malloc(sizeof(List_o_links));
 		lol->next = pp->pp_data.word_links[sublinkage->link_array[link].lw];
 		pp->pp_data.word_links[sublinkage->link_array[link].lw] = lol;
 		lol->link = link;
 		lol->word = sublinkage->link_array[link].rw;
 
-		lol = (List_o_links *) xalloc(sizeof(List_o_links));
+		lol = (List_o_links *) malloc(sizeof(List_o_links));
 		lol->next = pp->pp_data.word_links[sublinkage->link_array[link].rw];
 		pp->pp_data.word_links[sublinkage->link_array[link].rw] = lol;
 		lol->link = link;
@@ -590,23 +589,24 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 	/* Grab more memory if needed */
 	if (pp->vlength <= pp->pp_data.length)
 	{
-		size_t oldsz = pp->vlength * sizeof(bool);
-		size_t incsz = pp->pp_data.length * sizeof(bool);
-		pp->visited = (bool *) xrealloc(pp->visited,
-			oldsz, oldsz + incsz);
+		size_t newsz;
 		pp->vlength += pp->pp_data.length;
+		newsz = pp->vlength * sizeof(bool);
+		pp->visited = (bool *) realloc(pp->visited, newsz);
 	}
 	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 
 	/* Grab more memory if needed */
 	if (pp->pp_data.domlen <= n)
 	{
-		size_t oldsz = pp->pp_data.domlen * sizeof(Domain);
-		size_t incsz = n * sizeof(Domain);
-		pp->pp_data.domain_array = (Domain *) xrealloc(pp->pp_data.domain_array,
-			oldsz, oldsz + incsz);
+		size_t newsz, incsz;
+#define DOMINC 16
+		pp->pp_data.domlen += DOMINC;
+		newsz = pp->pp_data.domlen * sizeof(Domain);
+		incsz = DOMINC * sizeof(Domain);
+		pp->pp_data.domain_array = (Domain *) realloc(pp->pp_data.domain_array,
+			newsz);
 		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0, incsz);
-		pp->pp_data.domlen += n;
 	}
 
 	pp->pp_data.domain_array[n].string = string;
@@ -618,7 +618,7 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 static void add_link_to_domain(Postprocessor *pp, int link)
 {
 	List_o_links *lol;
-	lol = (List_o_links *) xalloc(sizeof(List_o_links));
+	lol = (List_o_links *) malloc(sizeof(List_o_links));
 	lol->next = pp->pp_data.domain_array[pp->pp_data.N_domains].lol;
 	pp->pp_data.domain_array[pp->pp_data.N_domains].lol = lol;
 	pp->pp_data.domain_array[pp->pp_data.N_domains].size++;
@@ -843,7 +843,7 @@ static void build_domain_forest(Postprocessor *pp, Linkage sublinkage)
 		{
 			if (link_in_domain(link, &pp->pp_data.domain_array[d]))
 			{
-				dtl = (DTreeLeaf *) xalloc(sizeof(DTreeLeaf));
+				dtl = (DTreeLeaf *) malloc(sizeof(DTreeLeaf));
 				dtl->link = link;
 				dtl->parent = &pp->pp_data.domain_array[d];
 				dtl->next = pp->pp_data.domain_array[d].child;
@@ -969,16 +969,16 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 {
 	Postprocessor *pp;
 
-	pp = (Postprocessor *) xalloc (sizeof(Postprocessor));
+	pp = (Postprocessor *) malloc (sizeof(Postprocessor));
 	pp->knowledge = kno;
 	pp->string_set = string_set_create();
 	pp->set_of_links_of_sentence = pp_linkset_open(1024);
 	pp->set_of_links_in_an_active_rule = pp_linkset_open(1024);
 	pp->relevant_contains_one_rules =
-	      (int *) xalloc ((pp->knowledge->n_contains_one_rules + 1)
+	      (int *) malloc ((pp->knowledge->n_contains_one_rules + 1)
 	                      *(sizeof pp->relevant_contains_one_rules[0]));
 	pp->relevant_contains_none_rules =
-	      (int *) xalloc ((pp->knowledge->n_contains_none_rules + 1)
+	      (int *) malloc ((pp->knowledge->n_contains_none_rules + 1)
 	                      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0]	= -1;
 	pp->relevant_contains_none_rules[0] = -1;
@@ -990,15 +990,15 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 
 	/* 60 is just starting size, these are expanded if needed */
 	pp->vlength = 60;
-	pp->visited = (bool*) xalloc(pp->vlength * sizeof(bool));
+	pp->visited = (bool*) malloc(pp->vlength * sizeof(bool));
 
 	pp->pp_data.links_to_ignore = NULL;
 	pp->pp_data.domlen = 60;
-	pp->pp_data.domain_array = (Domain*) xalloc(pp->pp_data.domlen * sizeof(Domain));
+	pp->pp_data.domain_array = (Domain*) malloc(pp->pp_data.domlen * sizeof(Domain));
 	memset(pp->pp_data.domain_array, 0, pp->pp_data.domlen * sizeof(Domain));
 
 	pp->pp_data.wowlen = 60;
-	pp->pp_data.word_links = (List_o_links **) xalloc(pp->pp_data.wowlen * sizeof(List_o_links*));
+	pp->pp_data.word_links = (List_o_links **) malloc(pp->pp_data.wowlen * sizeof(List_o_links*));
 	memset(pp->pp_data.word_links, 0, pp->pp_data.wowlen * sizeof(List_o_links *));
 
 	return pp;
@@ -1011,21 +1011,17 @@ void post_process_free(Postprocessor *pp)
 	string_set_delete(pp->string_set);
 	pp_linkset_close(pp->set_of_links_of_sentence);
 	pp_linkset_close(pp->set_of_links_in_an_active_rule);
-	xfree(pp->relevant_contains_one_rules,
-	      (1 + pp->knowledge->n_contains_one_rules)
-	      *(sizeof pp->relevant_contains_one_rules[0]));
-	xfree(pp->relevant_contains_none_rules,
-	      (1 + pp->knowledge->n_contains_none_rules)
-	      *(sizeof pp->relevant_contains_none_rules[0]));
+	free(pp->relevant_contains_one_rules);
+	free(pp->relevant_contains_none_rules);
 	pp->knowledge = NULL;
 	free_pp_node(pp);
 
-	xfree(pp->visited, pp->vlength * sizeof(bool));
+	free(pp->visited);
 
 	post_process_free_data(&pp->pp_data);
-	xfree(pp->pp_data.domain_array, pp->pp_data.domlen * sizeof(Domain));
-	xfree(pp->pp_data.word_links, pp->pp_data.wowlen * sizeof(List_o_links*));
-	xfree(pp, sizeof(Postprocessor));
+	free(pp->pp_data.domain_array);
+	free(pp->pp_data.word_links);
+	free(pp);
 }
 
 /**

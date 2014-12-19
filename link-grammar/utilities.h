@@ -360,8 +360,6 @@ void init_memusage(void);
 void * xalloc(size_t) GNUC_MALLOC;
 void * exalloc(size_t) GNUC_MALLOC;
 
-void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
-
 /* Tracking the space usage can help with debugging */
 #if defined(_WIN32) || __APPLE__
   /* **MUST** define for win32, Mac OSX, because xfree is listed in

@@ -114,7 +114,6 @@ lg_mbrtowc
 prt_error
 exalloc
 xalloc
-xrealloc
 xfree
 analyze_thin_linkage
 compute_link_names
