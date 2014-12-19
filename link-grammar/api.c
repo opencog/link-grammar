@@ -540,7 +540,8 @@ void partial_init_linkage(Linkage lkg, unsigned int N_words)
 	memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 
 	lkg->num_words = N_words;
-	lkg->chosen_disjuncts = (Disjunct **) exalloc(N_words * sizeof(Disjunct *));
+	lkg->cdsz =  N_words;
+	lkg->chosen_disjuncts = (Disjunct **) exalloc(lkg->cdsz * sizeof(Disjunct *));
 	memset(lkg->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
 
 	lkg->pp_info = NULL;

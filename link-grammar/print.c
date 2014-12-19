@@ -1257,6 +1257,9 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 						}
 					}
 
+					if (0 == strcmp(wt, EMPTY_WORD_MARK))
+						wt = EMPTY_WORD_DISPLAY;
+
 					/* Restore SUBSCRIPT_DOT for printing */
 					st = strrchr(wt, SUBSCRIPT_MARK);
 					if (st)
@@ -1267,17 +1270,21 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					}
 					if (debugprint) lgdebug(0, " %s", wt);
 
-					/* For now each word component is called "Token".
-					 * TODO: Its type can be decoded and a more precise
-					 * term (stem, prefix, etc.) can be used.
-					 * Display the features of the token */
-					if (NULL == tokenpos && (NULL != display))
+					/* Don't try to give info on the empty word. */
+					if (0 != strcmp(wt, EMPTY_WORD_DISPLAY))
 					{
-						printf("Token \"%s\" ", wt);
-						display(sent->dict, wt);
-						printf("\n");
+						/* For now each word component is called "Token".
+						 * TODO: Its type can be decoded and a more precise
+						 * term (stem, prefix, etc.) can be used.
+						 * Display the features of the token */
+						if (NULL == tokenpos && (NULL != display))
+						{
+							printf("Token \"%s\" ", wt);
+							display(sent->dict, wt);
+							printf("\n");
+						}
+						else if (word_split) printf("  %s", wt);
 					}
-					else if (word_split) printf("  %s", wt);
 				}
 			}
 			if (!alt_exists)
@@ -1289,4 +1296,44 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 	}
 	if (debugprint) lgdebug(0, "\n");
 	else if (word_split) printf("\n");
+}
+
+/**
+ * Print a word, converting SUBSCRIPT_MARK to SUBSCRIPT_DOT.
+ */
+void print_with_subscript_dot(const char *s)
+{
+	const char *mark = strchr(s, SUBSCRIPT_MARK);
+	size_t len = NULL != mark ? (size_t)(mark - s) : strlen(s);
+
+	printf("%.*s%s%s ", (int)len,
+			  s, NULL != mark ? "." : "", NULL != mark ? mark+1 : "");
+}
+
+/**
+ *  Print the chosen_disjuncts words.
+ *  This is used for debug, e.g. for traking them in the Wordgraph display.
+ */
+void print_chosen_disjuncts_words(const Linkage lkg)
+{
+	size_t i;
+
+	lgdebug(+0, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	for (i = 0; i < lkg->num_words; i++)
+	{
+		Disjunct *cdj = lkg->chosen_disjuncts[i];
+		const char *djw; /* disjunct word - the chosen word */
+
+		if (NULL == cdj)
+			djw = "[]"; /* null word */
+		else if (0 == strcmp(cdj->string, EMPTY_WORD_MARK))
+			djw = EMPTY_WORD_DISPLAY;
+		else if ('\0' == cdj->string[0])
+			djw = "\\0"; /* null string - something is wrong */
+		else
+			djw = cdj->string;
+
+		print_with_subscript_dot(djw);
+	}
+	lgdebug(0, "\n");
 }

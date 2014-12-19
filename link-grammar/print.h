@@ -20,4 +20,5 @@ void   print_expression_sizes(Sentence sent);
 struct tokenpos;
 void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
        void (*display)(Dictionary, const char *), struct tokenpos *);
-
+void print_with_subscript_dot(const char *);
+void print_chosen_disjuncts_words(const Linkage);
