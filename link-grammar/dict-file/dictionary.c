@@ -218,7 +218,7 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	wchar_t * wqs;
 	mbstate_t mbs;
 	size_t i;
-	int w;
+	size_t w;
 	dyn_str * qs;
 	const char *pqs;
 
@@ -236,7 +236,7 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	pqs = qs->str;
 	memset(&mbs, 0, sizeof(mbs));
 	w = mbsrtowcs(NULL, &pqs, 0, &mbs);
-	if (0 > w)
+	if (0 > (int) w) /* mbsrtowcs returns ((size_t) -1) on error */
 	{
 		prt_error("Error: Affix dictionary: %s: "
 		          "Invalid utf8 character\n", afdict_classname[classno]);
@@ -244,8 +244,11 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	}
 
 	/* Store the wide char version at the AFCLASS entry. */
-	ac->mem_elems =  sizeof(*wqs) * (w+1); /* bytes here, but we don't care */
-	ac->string = malloc(ac->mem_elems);
+	if (ac->mem_elems <= w)
+	{
+		ac->mem_elems = w + 1;
+		ac->string = realloc(ac->string, sizeof(*wqs) * ac->mem_elems);
+	}
 	wqs = (wchar_t *)ac->string;
 	pqs = qs->str;
 	(void)mbsrtowcs(wqs, &pqs, w, &mbs);
