@@ -359,6 +359,7 @@ struct Linkage_s
 	size_t          lasz;         /* Alloc'ed length of link_array */
 
 	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
+	size_t          cdsz;         /* Alloc'ed length of chosen_disjuncts */
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */
