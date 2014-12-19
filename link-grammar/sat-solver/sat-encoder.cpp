@@ -441,7 +441,7 @@ Exp* SATEncoder::join_alternatives(int w)
   Exp* exp;
   E_list* or_list = NULL;;
   for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {
-    E_list* new_node = (E_list*)xalloc(sizeof(E_list));
+    E_list* new_node = (E_list*) xalloc(sizeof(E_list));
     new_node->e = x->exp;
     new_node->next = NULL;
     if (or_list == NULL) {
@@ -1274,8 +1274,7 @@ Linkage SATEncoder::get_next_linkage()
     int index = _sent->num_linkages_alloced;
     _sent->num_linkages_alloced++;
     size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-    _sent->lnkages = (Linkage) xrealloc(_sent->lnkages,
-                       nbytes - sizeof(struct Linkage_s), nbytes);
+    _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
 
     lkg = &_sent->lnkages[index];
     *lkg = *linkage;  /* copy en-mass */

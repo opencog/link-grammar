@@ -489,28 +489,6 @@ void * xalloc(size_t size)
 	return p;
 }
 
-void * xrealloc(void *p, size_t oldsize, size_t newsize)
-{
-#ifdef TRACK_SPACE_USAGE
-	space_t *s = getspace();
-	s->space_in_use -= oldsize;
-	s->num_xfrees ++;
-#endif /* TRACK_SPACE_USAGE */
-	p = realloc(p, newsize);
-	if ((p == NULL) && (newsize != 0))
-	{
-		prt_error("Fatal Error: Ran out of space on realloc.");
-		abort();
-		exit(1);
-	}
-#ifdef TRACK_SPACE_USAGE
-	s->space_in_use += newsize;
-	s->num_xallocs ++;
-	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
-#endif /* TRACK_SPACE_USAGE */
-	return p;
-}
-
 #ifdef TRACK_SPACE_USAGE
 void xfree(void * p, size_t size)
 {

@@ -422,8 +422,8 @@ static void free_linkages(Sentence sent)
 		size_t j;
 		Linkage linkage = &lkgs[in];
 		exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
-		exfree(linkage->link_array, sizeof(Link) * linkage->lasz);
 		exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
+		free(linkage->link_array);
 
 		// XXX why isn't this in a string set ??
 		for (j=0; j<linkage->lifo.nwords; j++)
@@ -536,7 +536,7 @@ void partial_init_linkage(Linkage lkg, unsigned int N_words)
 {
 	lkg->num_links = 0;
 	lkg->lasz = 2 * N_words;
-	lkg->link_array = (Link *) exalloc(lkg->lasz * sizeof(Link));
+	lkg->link_array = (Link *) malloc(lkg->lasz * sizeof(Link));
 	memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 
 	lkg->num_words = N_words;
@@ -551,10 +551,8 @@ void check_link_size(Linkage lkg)
 {
 	if (lkg->lasz <= lkg->num_links)
 	{
-		size_t oldsz = lkg->lasz;
 		lkg->lasz = 2 * lkg->lasz + 10;
-		lkg->link_array = xrealloc(lkg->link_array,
-		             oldsz * sizeof(Link), lkg->lasz * sizeof(Link));
+		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
 	}
 }
 
