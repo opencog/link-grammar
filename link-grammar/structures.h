@@ -43,6 +43,7 @@
 #define SUBSCRIPT_DOT '.'
 #define EMPTY_WORD_DOT   "EMPTY-WORD.zzz"  /* Has SUBSCRIPT_DOT in it! */
 #define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
+#define EMPTY_WORD_DISPLAY "∅"   /* Empty word representation for debug */
 
 /* Stems, by definition, end with ".=x" (when x is usually an empty string, i.e.
  * ".="). The STEMSUBSCR definition in the affix file may include endings with
