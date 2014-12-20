@@ -402,19 +402,20 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn)
  *
  * Looks up a word in the dictionary, fetching from it matching words and their
  * expressions.  Returns NULL if it's not there.  If there, it builds the list
- * of expressions for the word, and returns a pointer to it.  The subword of
- * word w is used for this lookup, unless it is explicitely given as parameter
- * s. The subword of word w (but not s) is always used as the base word for each
- * expression, when its subscript is the one from the dictionary word of the
- * expression.
+ * of expressions for the word, and returns a pointer to it.
+ * The subword of Gword w is used for this lookup, unless the subword is
+ * explicitely given as parameter s. The subword of Gword w is always used as
+ * the base word for each expression, and its subscript is the one from the
+ * dictionary word of the expression.
  */
 X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
 	Exp_list eli;
-	eli.exp_list = NULL;
+	const Dictionary dict = sent->dict;
 
+	eli.exp_list = NULL;
 	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
 	x = NULL;
 	dn = dn_head;
@@ -423,7 +424,7 @@ X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(dn->exp);
+		x->exp = copy_Exp(add_empty_word(dict, &eli, dn));
 		if (NULL == s)
 		{
 			x->string = dn->string;
