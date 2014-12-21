@@ -1208,16 +1208,23 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		}
 		/* "String", because it can be a word, morpheme, or (TODO) idiom */
 		if (word_split && (NULL == display)) printf("String splits to:\n");
-		/* FIXME: In the current (Wordgraph) version, the alternatives may look
+		/* We used to print the alternatives of the word here, one per line.
+		 * In the current (Wordgraph) version, the alternatives may look
 		 * like nonsense combination of tokens - not as the strict split
 		 * possibilities of words as in previous versions.
-		 * E.g.: For Hebrew word "הכלב", we get these "alternatives":
+		 * E.g.: For Hebrew word "הכלב", we now get these "alternatives":
 		 *   ה=  כלב  לב  ב=
 		 *   ה=  כ=  ל=
 		 *   ה=  כ=
-		 * Clearly, this is not informative any more. Instead, it's better to just
-		 * print one line with a list of tokens (without repetitions):
-		 * ה= כלב לב ב= כ=  ל=
+		 * For "'50s," (∅ means empty word):
+		 *   ' s s ,
+		 *   '50 50 , ∅
+		 *   '50s ∅
+		 * Clearly, this is not informative any more. Instead, one line with a
+		 * list of tokens (without repetitions) is printed
+		 * ה= כלב לב ב= כ= ל=
+		 * 
+		 * FIXME Print the alternatives from the wordgraph.
 		 */
 	}
 
@@ -1228,7 +1235,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		size_t w_start = wi;   /* input word index */
 		size_t max_nalt = 0;
 
-#if 0 /* In the Wordgraph version firstupper and post_quote are not used. */
+#if 0 /* In the Wordgraph version firstupper and post_quote don't exist. */
 		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
 		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
 #endif
@@ -1277,7 +1284,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					tokenpos->ai = ai;
 					return;
 				}
-				if (NULL != display)
+
 				{
 					struct tokenpos firstpos = { wt };
 
@@ -1305,38 +1312,32 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 
 				if (debugprint) lgdebug(0, " %s", '\0' == wt[0] ? "[missing]" : wt);
 
-				/* Don't print or try to give info on the empty word. */
-				if (0 != strcmp(wt, EMPTY_WORD_DISPLAY))
+				/* Don't try to give info on the empty word. */
+				if (('\0' != wt[0]) && (0 != strcmp(wt, EMPTY_WORD_DISPLAY)))
 				{
 					/* For now each word component is called "Token".
 					 * TODO: Its type can be decoded and a more precise
 					 * term (stem, prefix, etc.) can be used.
 					 * Display the features of the token */
-					if (('\0' != wt[0]) && (NULL == tokenpos) && (NULL != display))
+					if ((NULL == tokenpos) && (NULL != display))
 					{
-						/* For now each word component is called "Token".
-						 * TODO: Its type can be decoded and a more precise
-						 * term (stem, prefix, etc.) can be used.
-						 * Display the features of the token */
-						if (NULL == tokenpos && (NULL != display))
-						{
-							printf("Token \"%s\" ", wt);
-							display(sent->dict, wt);
-							printf("\n");
-						}
-						else if (word_split) printf("  %s", wt);
+						printf("Token \"%s\" ", wt);
+						display(sent->dict, wt);
+						printf("\n");
 					}
+					else if (word_split) printf(" %s", wt);
 				}
 				free(wprint); /* wprint is NULL if not allocated */
 			}
 
-			if (word_split && (NULL == display)) printf("\n");
+			/* Commented out - no alternatives for now - print as one line. */
+			//if (word_split && (NULL == display)) printf("\n");
 		}
 		wi--;
 		if (debugprint) lgdebug(0, "\n");
 	}
 	if (debugprint) lgdebug(0, "\n");
-	else if (word_split) printf("\n");
+	else if (word_split) printf("\n\n");
 }
 
 /**
