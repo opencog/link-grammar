@@ -1284,7 +1284,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					tokenpos->ai = ai;
 					return;
 				}
-
+				if (!debugprint)
 				{
 					struct tokenpos firstpos = { wt };
 
@@ -1292,7 +1292,8 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					if ((firstpos.wi != wi) || (firstpos.ai != ai))
 					{
 						/* We encountered this token earlier */
-						lgdebug(5, "Skipping repeated %s\n", wt);
+						if (NULL != display)
+							lgdebug(5, "Skipping repeated %s\n", wt);
 						continue;
 					}
 				}
