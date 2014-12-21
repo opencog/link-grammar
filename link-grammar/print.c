@@ -1386,16 +1386,17 @@ void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
 #undef D_WPP
 
 /**
- *  Print the linkge words, for traking them in the Wordgraph display.
+ *  Print the chosen_disjuncts words.
+ *  This is used for debug, e.g. for tracking them in the Wordgraph display.
  */
-void print_linkage_words(Sentence sent, size_t lk, Disjunct **cds)
+void print_chosen_disjuncts_words(const Linkage lkg)
 {
 	size_t i;
 
-	lgdebug(+0, "Linkage %zu (%zu words): ", lk+1, sent->length);
-	for (i = 0; i < sent->length; i++)
+	lgdebug(+0, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	for (i = 0; i < lkg->num_words; i++)
 	{
-		Disjunct *cdj = cds[i]; /* chosen disjunct */
+		Disjunct *cdj = lkg->chosen_disjuncts[i];
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
