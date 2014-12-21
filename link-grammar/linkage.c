@@ -130,7 +130,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  *
  * The empty word device must be defined in the dictionary of every language for
  * which alternatives can be generated. This may happen in case of morpheme and
- * contraction splitting, spell ->regex_namees, and unit-strip.
+ * contraction splitting, spell ->regex_names, and unit-strip.
  * For more information, see EMPTY_WORD.zzz in the dict file.
  */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
@@ -154,7 +154,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  *    function of chosen_disjuncts[] by compute_chosen_words().  This differs
  *    from sentence[].alternatives because it contains the subscripts.  It
  *    differs from chosen_disjunct[].string in that the idiom symbols have been
- *    removed.  Furthermorw, several chosen_disjuncts[].string elements may be
+ *    removed.  Furthermore, several chosen_disjuncts[].string elements may be
  *    combined into one chosen_words[] element if opts->display_morphology==0 or
  *    that they where linkage null-words that are morphemes of the same original
  *    word (i.e. subwords of an unsplit_word which are marked as morphemes).
@@ -427,7 +427,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 										 * FIXME: May still not be good enough. */
 										move_combined_word = i+m-1;
 										
-										/* And the later chosen_word assinment should be:
+										/* And the later chosen_word assignment should be:
 										 * chosen_words[-1 == move_combined_word ?
 										 *    move_combined_word : i] = t;
 										 */
@@ -609,7 +609,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			Link * new_lnk = &(linkage->link_array[j]);
 
 			/* Copy the entire link contents, thunking the word numbers.
-			 * Note that j is alwasy <= i so this is always safe. */
+			 * Note that j is always <= i so this is always safe. */
 			new_lnk->lw = remap[old_lnk->lw];
 			new_lnk->rw = remap[old_lnk->rw];
 			new_lnk->lc = old_lnk->lc;
@@ -853,7 +853,7 @@ void linkage_free_pp_info(Linkage lkg)
  * etc. but these are for the hpsg knowledge, and not for the base
  * knowledge, mostly because in linkage_create, this function is called,
  * and the first thing it does is to clobber the base pp_info.  So WTF;
- * I just don't see a lot of utlity or value-add here ... this could be
+ * I just don't see a lot of utility or value-add here ... this could be
  * reduced to a plain do_post_process
  */
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
