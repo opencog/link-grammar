@@ -1755,6 +1755,14 @@ static const char *strip_left(Sentence sent, const char * w,
  * adjusts n_r_stripped back to 0 if the root was null), else false.
  *
  * p is a mark of the invocation position, for debugging.
+ * 
+ * FIXME: Units may get strip without a root number.
+ * In the current batch examples this doesn't cause errors or extraneous
+ * parsings. But it unnecessarily adds to the total number of sentence words.
+ * For example "sin" is gets split to "s in" and "As" to "A s" (unless an
+ * example can be provided in which it is beneficial).
+ * The fix should be to reconsider the root number, or remove the code that
+ * checks it.
  */
 extern const char *const afdict_classname[]; /* For debug message only */
 static bool strip_right(Sentence sent,
@@ -2010,22 +2018,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "Processing word: '%s'\n", word);
 
-	/* FIXME: Unify. Currently separated for clarity and change flexibility. */
 	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
 	{
 		/* The word is a result of spelling.
 		 * So it it is in the dict, and doesn't need right/left stripping. */
-		unsplit_word->status |= WS_INDICT;
-		word_is_known = true;
-	}
-	else if ((MT_CONTR == unsplit_word->morpheme_type)
-	         && is_contraction_word(word))
-	{
-		/* The word is the contracted part of a contraction. It should not be
-		 * right-stripped. Else (y') gets split to (y ') and 'll gets split as
-		 * units (' l l). We know it is a word because it has been classified as
-		 * MT_CONTR.
-		 * XXX Check if needed: we skip also left-strip here. */
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
 	}
@@ -2038,6 +2034,24 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			                       0,NULL, 1,&word, 0,NULL);
 			unsplit_word->status |= WS_INDICT;
 			word_is_known = true;
+		}
+
+		if ((MT_CONTR == unsplit_word->morpheme_type))
+		{
+			/* The word is the contracted part of a contraction. It was most
+			 * probably been marked as dict word by the check above (unless there
+			 * is a definition error and it is only PRE or SUF without being in the
+			 * dict).
+			 * It should also not pass any more handling, so return.
+			 * Especially it should not pass right-strip. Else y' gets split to
+			 * y ' and 'll gets split as units to ' l l */
+			if (word_is_known)
+			{
+				/* This is not a really debug message, so it is in verbosity 1.
+				 * XXX Maybe prt_error()? */
+				lgdebug(+1, "Contracted word part %s is not in the dict\n", word);
+			}
+			return;
 		}
 
 		/*
