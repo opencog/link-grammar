@@ -239,7 +239,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		/* Cleanup the subscript mark before printing. */
 		strncpy(infword, disj->string, MAX_WORD);
 		mark = strchr(infword, SUBSCRIPT_MARK);
-		if (mark) *mark = '.';
+		if (mark) *mark = SUBSCRIPT_DOT;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strlen(infword);
