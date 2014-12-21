@@ -508,7 +508,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			if (DEPT_CHR == ppla[j].rc->string[0]) { picture[row][cr-1] = '>'; }
 			if (HEAD_CHR == ppla[j].rc->string[0]) { *t = '<'; }
 
-			/* The direction indicators maye have clobbered these. */
+			/* The direction indicators may have clobbered these. */
 			picture[row][cl] = '+';
 			picture[row][cr] = '+';
 
@@ -800,7 +800,7 @@ static const char * header(bool print_ps_header)
 		"  % this number of points from the left margin is the center of page\n"
 		"\n"
 		"/rightpage 6.5 72 mul def\n"
-		"  % number of points from the left margin is the the right margin\n"
+		"  % number of points from the left margin is the right margin\n"
 		"\n"
 		"/show-string-centered-dict 5 dict def\n"
 		"\n"
@@ -1123,7 +1123,7 @@ static const char * header(bool print_ps_header)
  * Print elements of the 2D-word-array produced for the parsers.
  *
  * - print_sentence_word_alternatives(sent, false, NULL, tokenpos)
- * If ia pointer to struct "tokenpos" is given, return through it the index of
+ * If a pointer to struct "tokenpos" is given, return through it the index of
  * the first occurrence in the sentence of the given token. This is used to
  * prevent duplicate information display for repeated morphemes (if there are
  * multiples splits, each of several morphemes, otherwise some of them may
@@ -1138,10 +1138,10 @@ static const char * header(bool print_ps_header)
  * - print_sentence_word_alternatives(sent, false, display_func, NULL)
  * Iterate over the sentence words and their alternatives.  Handle each
  * alternative using the display_func function if it is supplied, or else (if it
- * is NULL) just print them. It is used to dispay disjunct information when
+ * is NULL) just print them. It is used to display disjunct information when
  * command !!word is used.
- * FIXME In the curent version (using Wordgraph) the "alternatives" in the
- * word-array doesn't neccessarily consist of real word alternatives.
+ * FIXME In the current version (using Wordgraph) the "alternatives" in the
+ * word-array doesn't necessarily consist of real word alternatives.
  *
  */
 
