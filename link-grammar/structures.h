@@ -175,17 +175,17 @@ typedef enum
 {
 	MT_INVALID,            /* Initial value, to be changed to the correct type */
 	MT_WORD,               /* Regular word */
-	MT_FEATURE,            /* Pseudo morpheme, like capitalization marks */
+	MT_FEATURE,            /* Pseudo morpheme, currently capitalization marks */
 	MT_INFRASTRUCTURE,     /* Start and end Wordgraph pseudo-words */
 	MT_WALL,               /* The LEFT-WALL and RIGHT-WALL pseudo-words */
 	MT_EMPTY,              /* Empty word */
 	MT_UNKNOWN,            /* Unknown word (FIXME? Unused) */
-	/* Experimental (yet unused) */
+	/* Experimental for Semitic languages (yet unused) */
 	MT_TEMPLATE,
 	MT_ROOT,
-	/* Experimental - for display purposes (yet unused) */
-	MT_CONTR,              /* Contracted word */
-	MT_PUNC,                /* Punctuation */
+	/* Experimental - for display purposes */
+	MT_CONTR,              /* Contracted word first or second part */
+	MT_PUNC,               /* Punctuation (yet unused) */
 	/* We are not going to have >63 types up to here. */
 	MT_STEM    = 1<<6,     /* Stem */
 	MT_PREFIX  = 1<<7,     /* Prefix */
