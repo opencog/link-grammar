@@ -2367,7 +2367,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			unsplit_word->regex_name = regex_name;
 		   word_is_known = true; /* make sure we skip spell guess */
 		}
-
 	}
 
 	word_is_known |= word_can_split;
@@ -2396,7 +2395,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "END: Word '%s' in_dict=%d is_known=%d status=%s\n",
 	        unsplit_word->subword, !!(unsplit_word->status & WS_INDICT),
-	        word_is_known, gword_flags(sent, unsplit_word));
+	        word_is_known, gword_status(sent, unsplit_word));
 #if 0
 	if (!word_is_known &&
 	    !(unsplit_word->status & (WS_INDICT|WS_REGEX)))
