@@ -226,6 +226,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		wgp = &lwg_path[wgi];
 		unsplit_word = w->unsplit_word;
 
+		/* FIXME If the original word was capitalized in a capitalizable
+		 * position, the displayed null word may be its downcase version. */
+
 		if (NULL == cdj) /* a null word (the chosen disjunct was NULL) */
 		{
 			nbsize++;
@@ -284,15 +287,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						Gword *wgnull;
 
 						lgdebug(D_CCW, " (null partial word)\n");
-#if OLDCODE
-						t = join_null_word(sent, wgp-nbsize+1, nbsize);
-						for (j = 0; j < nbsize; j++)
-							wordlist_append(&n_lwg_path, wgp[j-nbsize+1]);
-#else
 						wgnull = wordgraph_null_join(sent, wgp-nbsize+1, wgp);
 						wordlist_append(&n_lwg_path, wgnull);
 						t = wgnull->subword;
-#endif
 					}
 				}
 										
@@ -628,7 +625,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	if (D_CCW <= opts->verbosity)
 	{
-		print_linkage_words(sent, 0 , cdjp);
 		print_lwg_path(lwg_path);
 		print_lwg_path(n_lwg_path);
 	}
