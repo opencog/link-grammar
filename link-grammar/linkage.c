@@ -180,8 +180,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	size_t j;
 	Disjunct **cdjp = linkage->chosen_disjuncts;
-	const char **chosen_words = alloca(sent->length * sizeof(*chosen_words));
-	size_t *remap = alloca(sent->length * sizeof(*remap));
+	const char **chosen_words = alloca(linkage->num_words * sizeof(*chosen_words));
+	size_t *remap = alloca(linkage->num_words * sizeof(*remap));
 	bool display_morphology = opts->display_morphology;
 
 	Gword **lwg_path = linkage->wg_path;
@@ -192,7 +192,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 * original parse indexing, so the word-array pointers in the Wordgraph words
 	 * can be used to access the corresponding disjuncts, when available in
 	 * sent->parse_info. */
-	size_t *wg_path_index = alloca(sent->length * sizeof(*lwg_path_display));
+	size_t *wg_path_index = alloca(linkage->num_words * sizeof(*lwg_path_display));
 #endif
 
 	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
@@ -200,13 +200,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	Gword *unsplit_word = NULL;
 
 	if (D_CCW <= opts->verbosity)
-	{
-		print_linkage_words(sent, 0 , cdjp);
 		print_lwg_path(lwg_path);
-	}
 	
 	wgi = 0;
-	for (i = 0; i < sent->length; i++)
+	for (i = 0; i < linkage->num_words; i++)
 	{
 		Disjunct *cdj = cdjp[i];
 		Gword *w;           /* current word */
@@ -552,14 +549,14 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	}
 	if (sent->dict->right_wall_defined)
 	{
-		chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
+		chosen_words[linkage->num_words-1] = RIGHT_WALL_DISPLAY;
 	}
 
 	/* We alloc a little more than needed, but so what... */
-	linkage->word = (const char **) exalloc(sent->length*sizeof(char *));
+	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 
-	/* Copy over the chosen words, dropping the empty words. */
-	for (i=0, j=0; i<sent->length; ++i)
+	/* Copy over the chosen words, dropping the discarded words. */
+	for (i=0, j=0; i<linkage->num_words; ++i)
 	{
 		if (chosen_words[i])
 		{
