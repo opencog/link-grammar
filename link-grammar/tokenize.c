@@ -450,8 +450,10 @@ static void word_label(Sentence sent, Gword *w, const char *op,
 	else
 		new_label[0] = '\0';
 
-	if (NULL == op) strcat(new_label, "(");
-	else strcat(new_label, op);
+	if (NULL == op)
+		strcat(new_label, "(");
+	else if ('\0' != new_label[0])
+		strcat(new_label, op);
 	strcat(new_label, label);
 	if (NULL == op) strcat(new_label, ")");
 	w->label = string_set_add(new_label, sent->string_set);
