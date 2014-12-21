@@ -578,6 +578,67 @@ void check_link_size(Linkage lkg)
 	}
 }
 
+/**
+ * Remove the empty words from a linkage.
+ * XXX Should we remove here also the dict-cap tokens? In any case, for now they
+ * are left for debug.
+ */
+static void remove_empty_words(Linkage lkg)
+{
+	size_t i, j;
+	Disjunct **cdj = lkg->chosen_disjuncts;
+	int *remap = alloca(lkg->num_words * sizeof(*remap));
+
+	if (4 <= verbosity)
+	{
+		lgdebug(0, "Info: chosen_disjuncts before removing empty words:\n");
+		print_chosen_disjuncts_words(lkg);
+	}
+
+	for (i = 0, j = 0; i < lkg->num_words; i++)
+	{
+		if ((NULL != cdj[i]) && (MT_EMPTY == cdj[i]->word[0]->morpheme_type))
+		{
+			remap[i] = -1;
+		}
+		else
+		{
+			cdj[j] = cdj[i];
+			remap[i] = j;
+			j++;
+		}
+	}
+	lkg->num_words = j;
+	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+
+	if (4 <= verbosity)
+	{
+		lgdebug(0, "Info: chosen_disjuncts after removing empty words:\n");
+		print_chosen_disjuncts_words(lkg);
+	}
+
+	for (i = 0, j = 0; i < lkg->num_links; i++)
+	{
+		const Link *old_lnk = &(lkg->link_array[i]);
+
+		if ((-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
+		{
+			Link *new_lnk = &(lkg->link_array[j]);
+
+			/* Copy the entire link contents, thunking the word numbers.
+			 * Note that j is always <= i so this is always safe. */
+			new_lnk->lw = remap[old_lnk->lw];
+			new_lnk->rw = remap[old_lnk->rw];
+			new_lnk->lc = old_lnk->lc;
+			new_lnk->rc = old_lnk->rc;
+			new_lnk->link_name = old_lnk->link_name;
+			j++;
+		}
+	}	
+	lkg->num_links = j;
+	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+}
+
 /** The extract_links() call sets the chosen_disjuncts array */
 static void compute_chosen_disjuncts(Sentence sent)
 {
@@ -593,6 +654,10 @@ static void compute_chosen_disjuncts(Sentence sent)
 
 		partial_init_linkage(lkg, pi->N_words);
 		extract_links(lkg, pi);
+		/* Because the empty words are used only in the parsing stage, they are
+		 * removed here along with their links so from now on we will not need to
+		 * consider them. */
+		remove_empty_words(lkg);
 	}
 }
 
@@ -946,13 +1011,13 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
  * Add "p" to the path queue, which defines the start of the next potential
  * paths to be checked.
  *
- * Eatch path is up to the current word (not including). It doesn't actually
+ * Each path is up to the current word (not including). It doesn't actually
  * construct a full path if there are null words - they break it. The final path
  * is constructed when the Wordgraph termination word is encountered.
  *
  * Note: The final path doesn't match the linkage word indexing if the linkage
  * contains empty words, at least until empty words are eliminated from the
- * linkage (in compute_chosen_words()). Further proceesing of the path is done
+ * linkage (in compute_chosen_words()). Further processing of the path is done
  * there in case morphology splits are to be hidden or there are morphemes with
  * null linkage.
  */
@@ -962,9 +1027,9 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 {
 	size_t n = wordgraph_pathpos_len(*nwp);
 
-	assert(NULL != p, "Tried to add a NULL word to the qord queue");
+	assert(NULL != p, "Tried to add a NULL word to the word queue");
 
-	/* Check if the path queue alredey contains the word to be added to it. */
+	/* Check if the path queue already contains the word to be added to it. */
 	if (NULL != *nwp)
 	{
 		const Wordgraph_pathpos *wpt;
@@ -990,7 +1055,7 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 
 	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
 	{
-			/* Previous word is the Worgraph dummy word. Initialize the path. */
+			/* Previous word is the Wordgraph dummy word. Initialize the path. */
 			(*nwp)[n].path = NULL;
 	}
 	else
@@ -1086,14 +1151,11 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	}
 	assert(NULL != wp_new, "Path word queue is empty");
 
-	if (4 <= opts->verbosity)
-		print_linkage_words(sent, lkg, lkg->chosen_disjuncts);
-
-	for (i = 0; i < sent->length; i++)
+	for (i = 0; i < lkg->num_words; i++)
 	{
 		Disjunct *cdj;            /* chosen disjunct */
 
-		lgdebug(4, "%zu Word %zu: ", lk+1, i);
+		lgdebug(4, "%p Word %zu: ", lkg, i);
 
 		if (NULL == wp_new)
 		{
@@ -1146,12 +1208,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			break;
 		}
 
-		if (MT_EMPTY == cdj->word[0]->morpheme_type)
-		{
-			lgdebug(4, "- Empty word\n");
-			wp_new = wp_old;
-			continue; /* totally disregard it */
-		}
+		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
 		if (4 <= opts->verbosity) print_with_subscript_dot(cdj->string);
 
@@ -1202,7 +1259,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			}
 		}
 		if (!match_found)
-		    lgdebug(4, "%zu Missing word(s) at the end of the linkage.\n", lk+1);
+		    lgdebug(4, "%p Missing word(s) at the end of the linkage.\n", lkg);
 	}
 
 #define DEBUG_morpheme_type 0
@@ -1292,13 +1349,11 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 	if (match_found)
 	{
-	//	Gword **wp1, **wp2;
-
 		if ('\0' != affix_types[0])
 		{
-			lgdebug(4, "%zu Morpheme type combination '%s'\n", lk+1, affix_types);
+			lgdebug(4, "%p Morpheme type combination '%s'\n", lkg, affix_types);
 		}
-		lgdebug(+4, "%zu SUCCEEDED\n", lk+1);
+		lgdebug(+4, "%p SUCCEEDED\n", lkg);
 		lkg->wg_path = lwg_path;
 		return true;
 	}
@@ -1313,7 +1368,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 #else
 	lifo->discarded = true;
 #endif
-	lgdebug(4, "%zu FAILED\n", lk+1);
+	lgdebug(4, "%p FAILED\n", lkg);
 	return false;
 }
 
