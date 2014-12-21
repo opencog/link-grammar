@@ -38,14 +38,14 @@ word at once.
 
 The tokenizing code is still based very much on the old code and further
 work is needed to clean it up (or to replace it, e.g. by a
-regex-tokenizer). It still doesn't uses its full power of the word-graph,
-and they are constructs that needs to be tokenized but they are not (they
+regex-tokenizer). It still doesn't use the full power of the word-graph,
+and they are constructs that need to be tokenized but they are not (they
 are also not in the sentence test batches). E.g. -- between words without
 whitespace.
 
-There is still no API to inspect the word-graph. In particular, it is not
-possible to find out the sentence words after punctuation tokenization, as
-in previous releases.
+There is still no API to get information from the word-graph. In particular,
+it is not possible to find out the sentence words with punctuation
+tokenization, as in previous releases.
 
 Since the parser cannot currently use the word-graph directly, there is a
 need to convert it to the 2D-word-array that it uses. This is implemented
@@ -53,18 +53,18 @@ by the function wordgraph_flatten(), which uses a complex algorithm: It
 scans all the word-graph paths in parallel, trying to advance to the next
 words and to issue them into the 2D-word-array.
 
-It advances to the next word of a given word in two passes, one word per
-pass each pass:
-1. Next words which are in the same alternative of the given word.
-2. Next words which are in a different alternative (of the common ancestor
-   word) of words that has already been advanced to in the previous pass and
-   this pass.
+It advances to the next word of a given word in rounds, using two passes, one
+word per path on each round:
+Pass 1. Next words which are in the same alternative of the given word.
+Pass 2. Next words which are in a different alternative (of the common
+ancestor word) of words that has already been advanced to in the previous
+pass and this pass.
 
 The words that got advanced to are issued into the 2D-word-array.  It is
 possible that the second pass above cannot get advance in particular
 word-graph path, because the next word is in the same alternative of one of
 the next words in other paths. In that case an empty word is issued. This
-constrain arises because all the next words in each word-graph advance
+constraint arises because all the next words in each word-graph advance
 round, are issued into the same 2D-word-array "slot", which cannot hold
 words from the same alternative.
 
@@ -73,29 +73,30 @@ morphemes from different word-tokenization alternatives can be mixed in a
 linkage. Such linkages are of course useless and need to be detected and
 discarded. This is done by the sane_linkage_morphism() function. In the
 previous versions it validated that the chosen words (the words in the
-linkage) that belong to a sentence word, all belong to a single
-tokenization alternative of that word. It now works in another way - it
-validates that the chosen words create a path in the word-graph. In case of
-"null-words" - words with no linkage - the first path which is encountered
-is used. It means the words in the word-graph corresponding to null-words
-can be only one of the potential possibilities.
+linkage) that are subwords (e.g. morphemes) of a sentence word, all belong
+to a single tokenization alternative of that word.
+It now works in another way - it validates that the chosen words create a
+path in the word-graph. In case of "null-words" - words with no linkage -
+the first path which is encountered is used. It means that a word in the
+word-graph corresponding to a null-word, may be only one of the potential
+possibilities.
 
 Another feature that has been implemented, mainly for debug, is a graphical
-representation of the word graph. The graphs are also useful for
-inspiration as fun. The graphs can be displayed in several ways, controlled
-by a bit-flag parameter of wordgraph_display(). The command !test=wg
-enables the display of two graphs, both with no "prev" links for clarity,
-and one of them even with no "unsplit word" links for further clarity if
-needed. Other graphical representation modes can be enabled by
-!test=wg,wg=x,... (i.e. one or more components of wg=n), when x is hex flag
-combination of the desired mode. For example, WGR_SUB displays
-unsplit_words as subgraphs. The flags are defined in wordgraph.h.
-The graphical display still needs improvements in order to be able to
-display complex word-graph situations in a simple manner.
-The graphical display code is not compiled by default because it involves
-invocation of an external program (dot) and also files are created in /tmp,
-both things may not be desired by some users. Use --enable-wordgraph-display
-to enable this feature.
+representation of the word graph. The graphical display can also be useful
+for inspiration and fun. The graphs can be displayed in several ways,
+controlled by a bit-flag parameter of wordgraph_display(). The command
+!test=wg enables the display of two graphs, both with no "prev" links for
+clarity, and one of them even with no "unsplit word" links for further
+clarity if needed. Other graphical representation modes can be enabled by
+!test=wg,wg=x,... (i.e. one or more components of wg=n), when x is a hex
+flag combination of the desired mode. For example, WGR_SUB displays
+unsplit_words as subgraphs. The flags are defined in wordgraph.h. The
+graphical display still needs improvements in order to be able to display
+complex word-graph situations in a simple manner.  The graphical display
+code is not compiled by default because it involves invocation of an
+external program (dot) and in addition, files are created in /tmp, both
+things may not be desired by some users. Use --enable-wordgraph-display to
+enable this feature.
 
 
 
