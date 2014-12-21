@@ -53,10 +53,10 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		 * hold real alternatives any more (see example in the comments of
 		 * print_sentence_word_alternatives()).
 		 * 
-		 * We could print the first path in the Wordgraph, analogus to what we did
-		 * here, but (same problem as printing alternative[0] only) it may not
-		 * contain all the words, including those that failed (because they are in
-		 * another path). */
+		 * We could print the first path in the Wordgraph, analogous to what we
+		 * did here, but (same problem as printing alternatives[0] only) it may
+		 * not contain all the words, including those that failed (because they
+		 * are in another path). */
 
 		fprintf(stderr, "\tFailing sentence was:\n\t");
 		for (i=0; i<ec->sent->length; i++)
@@ -65,7 +65,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		}
 #else
 		/* The solution is just to print all the sentence tokenized subwords in
-		 * their order in the sentence, without duplicatons. */
+		 * their order in the sentence, without duplications. */
 
 		fprintf(stderr,
 		        "\tFailing sentence contains the following words/morphemes:\n\t");
