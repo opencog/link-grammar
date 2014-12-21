@@ -47,7 +47,7 @@
 
 /* Stems, by definition, end with ".=x" (when x is usually an empty string, i.e.
  * ".="). The STEMSUBSCR definition in the affix file may include endings with
- * other x valuses, when x serves as a word subscript, e.g. ".=a".  */
+ * other x values, when x serves as a word subscript, e.g. ".=a".  */
 #define STEM_MARK '='
 
 /* Suffixes start with it.
@@ -67,7 +67,7 @@
                                  should not be longer than this */
 
 /*      Some size definitions.  Reduce these for small machines */
-/* MAX_WORD is large, because unicode entries can use a lot of space */
+/* MAX_WORD is large, because Unicode entries can use a lot of space */
 #define MAX_WORD 180          /* maximum number of bytes in a word */
 #define MAX_LINE 2500         /* maximum number of chars in a sentence */
 
@@ -102,7 +102,7 @@ struct Connector_struct
 	             /* If this is a length limited connector, this
 	                gives the limit of the length of the link
 	                that can be used on this connector.  Since
-	                this is strictly a funcion of the connector
+	                this is strictly a function of the connector
 	                name, efficiency is the only reason to store
 	                this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
@@ -196,16 +196,16 @@ typedef enum
 
 /* Word status */
 /* - Tokenization */
-#define WS_UNKNOWN    1<<0 /* Unknown word (FIXME? Unused) */
-#define WS_REGEX      1<<1 /* Matches a regex */
-#define WS_SPELL      1<<2 /* Result of a spell guess */
-#define WS_RUNON      1<<3 /* Separated from words run-on */
-#define WS_HASALT     1<<4 /* Has alternatives (one or more)*/
-#define WS_UNSPLIT    1<<5 /* It's an alternative to itself as an unslit word */
-#define WS_INDICT     1<<6 /* boolean_dictionary_lookup() is true */
+#define WS_UNKNOWN   1<<0 /* Unknown word (FIXME? Unused) */
+#define WS_REGEX     1<<1 /* Matches a regex */
+#define WS_SPELL     1<<2 /* Result of a spell guess */
+#define WS_RUNON     1<<3 /* Separated from words run-on */
+#define WS_HASALT    1<<4 /* Has alternatives (one or more)*/
+#define WS_UNSPLIT   1<<5 /* It's an alternative to itself as an unsplit word */
+#define WS_INDICT    1<<6 /* boolean_dictionary_lookup() is true */
 #define WS_FIRSTUPPER 1<<7 /* Subword is the lc version of its unsplit_word */
 /* - Post linkage stage. XXX Experimental. */
-#define WS_PL       1<<7   /* Post-Linkage word, not blonging to tokenization */
+#define WS_PL        1<<7 /* Post-Linkage word, not belonging to tokenization */
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 
@@ -263,7 +263,7 @@ struct Gword_struct
 	Morpheme_type morpheme_type; /* See MT_* */
 	Gword *alternative_id;       /* Alternative start - a unique identifier of
 	                              * the alternative to which the word belongs. */
-	const char *regex_name;      /* Subword mathes this regex.
+	const char *regex_name;      /* Subword matches this regex.
 											* FIXME? Extend for multiple regexes. */
 
 	/* Only used by wordgraph_flatten() */
@@ -271,20 +271,14 @@ struct Gword_struct
                                  * to the original sentence word. */
 	size_t hier_depth;           /* Number of pointer pairs in hier_position */
 
-	/* Assigned by wordgraph_flatten().
-	 * TODO? Can be used by sane_morphism(), to reconstruct the list of candidate
-	 * words at a null-word position. A user API can also be defined It can also
-	 * be used to find the for finding the selected disjunct for a Gword.*/
-	Word *word_array_pos;
-
 	/* XXX Experimental. Only used after the linkage (by compute_chosen_words())
-	 * to for an element in the linkage display wordgraph path that represents
-	 * a block of null words that are morpehems of the same word. */
+	 * for an element in the linkage display wordgraph path that represents
+	 * a block of null words that are morphemes of the same word. */
 	Gword **null_subwords;       /* Null subwords represented by this word */
 };
 
 /* Wordgraph path word-positions,
- * used in wordgraph_flatten() and sane_linkage_morpihsm().
+ * used in wordgraph_flatten() and sane_linkage_morphism().
  * FIXME Separate to two different structures. */
 struct Wordgraph_pathpos_s
 {
@@ -297,7 +291,7 @@ struct Wordgraph_pathpos_s
 	const Gword **path; /* Linkage candidate wordgraph path */
 };
 
-/* The regexs are stored as a linked list of the following nodes. */
+/* The regexes are stored as a linked list of the following nodes. */
 struct Regex_node_s
 {
 	char *name;      /* The identifying name of the regex */

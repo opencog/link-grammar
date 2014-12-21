@@ -2686,12 +2686,6 @@ static bool add_x_node(Sentence sent, Gword *w, Parse_Options opts)
 		return false;
 	}
 
-	/* Mark this Gword as being used at this word-array word.
-	 * After the linkage, this mark can be used to find the selected disjunct of
-	 * a word which has a linkage, or the candidate subwords for a word without
-	 * a linkage ("null word") */
-	w->word_array_pos = &sent->word[wordpos];
-
 #ifdef DEBUG
 	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
 #else
