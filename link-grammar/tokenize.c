@@ -2169,9 +2169,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
 
-			issue_n_r_stripped(sent, unsplit_word, word, units_wend,
-			                   r_stripped, units_n_r_stripped, "rR2");
-			word_can_lrsplit = true;
+			if (find_word_in_dict(dict, temp_word))
+			{
+				issue_n_r_stripped(sent, unsplit_word, word, units_wend,
+										 r_stripped, units_n_r_stripped, "rR2");
+				word_can_lrsplit = true;
+			}
 		}
 
 		/* If something got stripped, add the result as an alternative. */
