@@ -217,12 +217,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		size_t l;
 		size_t m;
 
-		if ((NULL != cdj) && MT_EMPTY==cdj->word[0]->morpheme_type) {
-			lgdebug(D_CCW, "Skip empty word at %zu\n", i);
-			chosen_words[i] = NULL;
-			continue;
-		}
-
 		lgdebug(D_CCW, "Loop start, cdj[%zu] %s, path[%zu] %s\n",
 				  i, cdj?cdj->string:"NULL",
 				  wgi, lwg_path[wgi]?lwg_path[wgi]->subword:"NULL");
@@ -241,8 +235,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			nb_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
 				(MT_INFRASTRUCTURE == w->unsplit_word->morpheme_type);
 
-			/* XXX Consider the possibility of empty words at the end of a null
-			 * block. */
 			/* Continue if next subword in this alternative is a null word */
 			if (!nb_end && (NULL == cdjp[i+1]))
 			{
@@ -598,8 +590,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	linkage->num_links = j;
 #else
 	/* A try to be more general (FIXME: It is not enough).
-	 * Discard Empty words, and also LL links unconditinally.
-	 * The NULL||'\0'||' ' is to allow easy feature experimetions.
+	 * Discard the LL links unconditionally.
+	 * The NULL||'\0'||' ' is to allow easy feature experiments.
 	 * FIXME: Define an affix class MORPHOLOGY_LINKS. */
 	for (i=0, j=0; i<linkage->num_links; i++)
 	{
