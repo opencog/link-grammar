@@ -535,7 +535,7 @@ static bool word_start_another_alternative(Dictionary dict,
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
 			 !find_word_in_dict(dict, altword0))))
 		{
-			lgdebug(+0, "Preventing alt starts with %s due to existing %s\n",
+			lgdebug(+2, "Preventing alt starts with %s due to existing %s\n",
 			        altword0, (*n)->subword);
 			return true;
 		}
