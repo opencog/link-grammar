@@ -2572,6 +2572,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			synthetic_split(sent, word);
 #else
 		if (0)
+			;
 #endif
 		else
 			separate_word(sent, word, opts);
