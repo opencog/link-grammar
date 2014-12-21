@@ -972,8 +972,8 @@ static void remqueue_gword(const Sentence sent)
 	/* If the word should have an alternative which includes itself, add it as an
 	 * additional alternative (unless it has already been added, as indicated by
 	 * WS_UNSPLIT ).
-	 * See the comments in issue_word_alternative() where
-	 * remqueue_gword) is mentioned. */
+	 * See the comments in issue_word_alternative() where remqueue_gword is
+	 * mentioned. */
 	if (w->issued_unsplit && (w->status & WS_HASALT) && !(w->status & WS_UNSPLIT))
 	{
 		issue_word_alternative(sent, w, "RQ" ,0,NULL, 1,&w->subword, 0,NULL);
@@ -1065,7 +1065,7 @@ static Gword *wordgraph_getqueue_word(Sentence sent)
  * whole unsplit word as the other one.
  * Example sentence: K Ax(BC((mD2+e+F)+(G+h)|(v+w)) C(3|J)) L (()|X+Y)
  * If no split is needed, word syntax errors are silently ignored.
- * Empty subwords are not allowed, e.g.: A(|B) C(+) D(E|)
+ * Null-string subwords are not allowed, e.g.: A(|B) C(+) D(E|)
  */
 static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 {
@@ -2043,7 +2043,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		/*
 		 * This is essentially the old LR stripping code, from the pre-Wordgraph
 		 * version. It still seems to work fine.  Word should be done here in
-		 * order to simplify it and make it more general.
+		 * order to simplify it.
 		 */
 
 		wp = strip_left(sent, word, r_stripped, &n_r_stripped);
