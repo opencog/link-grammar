@@ -542,6 +542,44 @@ static bool word_start_another_alternative(Dictionary dict,
 }
 
 /**
+ * Find if a suffix is of a contraction.
+ * XXX This is appropriate for English and maybe for some other languages, and
+ * may need a generalization.
+ * FIXME? Try to work-around the current need of this functions.
+ */
+static char contraction_chars[] = "\'`";
+
+#if 0
+static bool is_contraction_suffix(const char *s)
+{
+	const char *p;
+
+	for (p = contraction_chars; '\0' != *p; p++)
+		if (s[0] == *p) return true;
+
+	return false;
+}
+
+static bool is_contraction_prefix(const char *s)
+{
+	const char *p;
+	size_t len = strlen(s);
+
+	for (p = contraction_chars; '\0' != *p; p++)
+		if (s[len] == *p) return true;
+
+	return false;
+}
+#endif
+
+static bool is_contraction_word(const char *s)
+{
+	if ('\0' == s[0]) return false; /* just in case */
+	if (NULL != strpbrk(s+1, contraction_chars)) return true;
+	return false;
+}
+
+/**
  * Issue candidate subwords for unsplit_word (an "alternative").
  * Issue prefnum elements from prefix, stemnum elements from stem, and suffnum
  * elements from suffix.  Mark the prefixes and sufixes with INFIX_MARK (the
@@ -634,7 +672,10 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					strncpy(buff, *affix, sz);
 					buff[sz] = infix_mark;
 					buff[sz+1] = '\0';
-					morpheme_type = MT_PREFIX;
+					if (is_contraction_word(unsplit_word->subword))
+						morpheme_type = MT_CONTR;
+					else
+						morpheme_type = MT_PREFIX;
 					break;
 				case STEM:   /* already word, word.=, word.=x */
 					/* Stems are already marked with a stem subscript, if needed.
@@ -648,7 +689,10 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					    '\0' == infix_mark)
 					{
 						strcpy(buff, *affix);
-						morpheme_type = MT_WORD;
+						if (is_contraction_word(unsplit_word->subword))
+							morpheme_type = MT_CONTR;
+						else
+							morpheme_type = MT_WORD;
 						break;
 					}
 					buff[0] = infix_mark;
@@ -1120,24 +1164,6 @@ error:
 #endif
 
 /**
- * Find if a suffix is of a contraction.
- * XXX This is appropriate for English and maybe for some other languages, and
- * may need a generalization.
- */
-static bool is_contraction_suffix(const char *s)
-{
-	if (('\'' == s[0]) || '`' == s[0]) return true;
-	return false;
-}
-
-static bool is_contraction_word(const char *s)
-{
-	if ('\0' == s[0]) return false; /* just in case */
-	if (NULL != strpbrk(s+1, "\'`")) return true;
-	return false;
-}
-
-/**
  * Add the given prefix, word and suffix as an alternative.
  * IF STEMSUBSCR is define in the affix file, use its values as possible
  * subscripts for the word.
@@ -1194,7 +1220,7 @@ static bool add_alternative_with_subscr(Sentence sent,
 
 /**
  * Split word into prefix, stem and suffix.
- * In can also split contracted words (like he's).
+ * It can also split contracted words (like he's).
  * Alternatives are generated if issue_alternatives=true.
  * Return value:
  * If issue_alternatives=true: true only if the word can morpheme-split.
@@ -1262,7 +1288,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
 				 *
 				 * Note: Not like a previous version, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
-				if ((is_contraction_suffix(*suffix) && issue_alternatives &&
+				if ((is_contraction_word(w) && issue_alternatives &&
 				    find_word_in_dict(dict, newword)) ||
 				    boolean_dictionary_lookup(dict, newword))
 				{
@@ -1982,11 +2008,22 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "Processing word: '%s'\n", word);
 
-	/* FIXME: implement by "if" or "switch". */
+	/* FIXME: Unify. Currently separated for clarity and change flexibility. */
 	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
 	{
 		/* The word is a result of spelling.
 		 * So it it is in the dict, and doesn't need right/left stripping. */
+		unsplit_word->status |= WS_INDICT;
+		word_is_known = true;
+	}
+	else if ((MT_CONTR == unsplit_word->morpheme_type)
+	         && is_contraction_word(word))
+	{
+		/* The word is the contracted part of a contraction. It should not be
+		 * right-stripped. Else (y') gets split to (y ') and 'll gets split as
+		 * units (' l l). We know it is a word because it has been classified as
+		 * MT_CONTR.
+		 * XXX Check if needed: we skip also left-strip here. */
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
 	}
@@ -2298,18 +2335,18 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	}
 
 	/* Handle regex match. This is done for words which are not in the dict
-	 * and cannot morpheme split (LR-split words, like 1960's are OK - words
-	 * that contain punctuation are not going to match).
-	 * The !WS_REGEX check skips capital words that got
-	 * LR-split, such as "As" (gets split to A s). Their capitalization handling
-	if (!lc_word_is_in_dict && (!word_can_split || word_can_lrsplit) && !word_is_known)
-	 * has already been handled before we arrived here, and if a capital-word
-	 * regex has not been issued there, we should prevent issuing it
-	 * here. */
+	 * and cannot morpheme split.
+	 *
+	 * Contracted words, like 1960's should be tried - words that contain
+	 * punctuation are not going to match).
+	 *
+	 * However, capital LR-split words which their lc version is in the dict,
+	 * such as "As" (gets split to A s) shouldn't be tried here, as their
+	 * capitalization handling has already been handled before we arrived here,
+	 * and if a capital-word regex has not been issued there, we should prevent
+	 * issuing it here. */
 	if (!(word_is_known ||  lc_word_is_in_dict ||
 	      (word_can_split && !is_contraction_word(word))))
-
-
 	{
 		const char *regex_name = match_regex(dict->regex_root, word);
 
