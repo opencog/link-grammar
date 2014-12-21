@@ -38,7 +38,12 @@
 /**
  * Append an unmarked (i.e. without INFIXMARK) morpheme to join_buff.
  * join_buff is a zeroed-out buffer which has enough room for morpheme to be
- * added +1.
+ * added + terminating NUL.
+ * In case INFIXMARK is not defined in the affix file, it is '\0'. However,
+ * in that case are no MT_PREFIX, MT_SUFFIX and MT_MIDDLE morpheme types.
+ *
+ * FIXME Combining contracted words is not handled yet, because combining
+ * morphemes which have non-LL links to other words is not yet implemented.
  */
 static void add_morpheme_unmarked(char *join_buff, const char *wm,
                                   Morpheme_type mt)
@@ -318,8 +323,13 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		{
 			/* This word has a linkage. */
 
-			/* TODO: Suppress "virtual-morpehemes", currently the dictcap ones. */
+			/* FIXME If the original word was capitalized in a capitalizable
+			 * position, the displayed word may be its downcase version. */
+
+			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
+
+			assert(MT_EMPTY!=cdj->word[0]->morpheme_type); /* already discarded */
 
 			t = cdj->string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
@@ -344,12 +354,16 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					/* Concatenate the word morphemes together into one word.
 					 * Concatenate their subscripts into one subscript.
 					 * Use suffix separator SUBSCRIPT_SEP.
-					 * XXX Check whether we can encounter an idiom word here. */
+					 * XXX Check whether we can encounter an idiom word here.
+					 * FIXME Combining contracted words is not handled yet, because
+					 * combining morphemes which have non-LL links to other words is
+					 * not yet implemented.
+					 * FIXME Move to a separate function. */
 					Gword **wgaltp;
 					size_t join_len = 0;
 					size_t mcnt = 0;
 
-					/* If the the alternative contains morpheme subwords, mark it
+					/* If the alternative contains morpheme subwords, mark it
 					 * for joining... */
 					for (wgaltp = wgp, j = i; NULL != *wgaltp; wgaltp++, j++)
 					{
@@ -415,8 +429,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 									 * suppose thats a stem has only LL-type link, which
 									 * will get removed here later. In case it has non-LL
 									 * links, then drawing the links diagram would
-									 * segfault. We could use " " but it will draw an
-									 * extra blank in the diregram. */
+									 * segfault. We could use " " but it draws an
+									 * extra blank in the diagram. */
 									chosen_words[i+m] = NULL;
 #if 0
 									if ((cnt-1) == m)
