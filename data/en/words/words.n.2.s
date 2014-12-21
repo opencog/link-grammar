@@ -652,7 +652,9 @@ backrooms.n
 backscratchers.n
 backseats.n
 backsides.n
+backslashes.n
 backs.n
+backspaces.n
 backstrokes.n
 backups.n
 backwaters.n
