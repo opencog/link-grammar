@@ -473,9 +473,12 @@ void SATEncoder::free_alternatives(Exp* exp)
 }
 
 
-void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi, const char* Ci,
-                                                      char dir, double cost, size_t wj)
+void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi, 
+                                                      Exp* e, size_t wj)
 {
+  const char* Ci = e->u.string;
+  char dir = e->dir;
+  double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
 
   char str[MAX_VARIABLE_NAME];
@@ -1355,7 +1358,7 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
     // connector (wi, pi) and the word wj
     _w_.push_back(wj);
 
-    generate_link_cw_ordinary_definition(wi, pi, Ci, dir, cost, wj);
+    generate_link_cw_ordinary_definition(wi, pi, e, wj);
   }
 
   vec<Lit> _link_cw_;

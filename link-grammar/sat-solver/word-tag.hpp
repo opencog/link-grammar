@@ -62,9 +62,10 @@ struct PositionConnector
 };
 
 
-// TODO: Hash connectors for faster matching
+// XXX TODO: Hash connectors for faster matching
 
-class WordTag {
+class WordTag
+{
 private:
   std::vector<PositionConnector> _left_connectors;
   std::vector<PositionConnector> _right_connectors;

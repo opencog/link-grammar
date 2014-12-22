@@ -59,8 +59,8 @@ protected:
                                                    char* var) = 0;
 
   // Definition of link_cw((wi, pi), wj) variables when wj is an ordinary word
-  void generate_link_cw_ordinary_definition(size_t wi, int pi, const char* Ci, char dir,
-                                            double cost, size_t wj);
+  void generate_link_cw_ordinary_definition(size_t wi, int pi,
+                                            Exp* e, size_t wj);
 
   // Generates order constraints for the elements of a conjunction.
   void generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, int& dfs_position);
