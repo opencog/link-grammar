@@ -496,12 +496,16 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
       continue;
 
     if (dir == '+') {
-      rhs.push(Lit(_variables->link_cost(wi, pi, Ci,
-                                         (*i)->word, (*i)->position, (*i)->connector->string,
+      rhs.push(Lit(_variables->link_cost(wi, pi, Ci, e,
+                                         (*i)->word, (*i)->position,
+                                         (*i)->connector->string,
+                                         (*i)->exp,
                                          cost + (*i)->cost)));
     } else if (dir == '-'){
-      rhs.push(Lit(_variables->link((*i)->word, (*i)->position, (*i)->connector->string,
-                                    wi, pi, Ci)));
+      rhs.push(Lit(_variables->link((*i)->word, (*i)->position,
+                                    (*i)->connector->string,
+                                    (*i)->exp,
+                                    wi, pi, Ci, e)));
     }
   }
 
@@ -1095,8 +1099,9 @@ void SATEncoder::power_prune()
 
         add_additional_power_pruning_conditions(clause, wl, (*lci)->word);
 
-        clause.push(~Lit(_variables->link(wl, rci->position, rci->connector->string,
-                                          (*lci)->word, (*lci)->position, (*lci)->connector->string)));
+        clause.push(~Lit(_variables->link(
+               wl, rci->position, rci->connector->string, rci->exp,
+               (*lci)->word, (*lci)->position, (*lci)->connector->string, (*lci)->exp)));
         add_clause(clause);
       }
     }

@@ -189,7 +189,9 @@ public:
    */
 
   // If guiding params are unknown, they are set do default
-  int link(int wi, int pi, const char* ci, int wj, int pj, const char* cj) {
+  int link(int wi, int pi, const char* ci, Exp* ei,
+           int wj, int pj, const char* cj, Exp* ej)
+  {
     assert(wi < wj, "Variables: link should be ordered");
     int var;
     if (!get_link_variable(wi, pi, wj, pj, var)) {
@@ -197,7 +199,7 @@ public:
       var_defs_stream << "link_" << wi << "_" << pi << "_" << ci << "_"
                       << wj << "_" << pj << "_" << cj << "\t" << var << endl;
 #endif
-      add_link_variable(wi, pi, ci, wj, pj, cj, var);
+      add_link_variable(wi, pi, ci, ei, wj, pj, cj, ej, var);
       _guiding->setLinkParameters(var, wi, ci, wj, cj, _link_variables[var]->label);
     }
     assert(var != -1, "Var == -1");
@@ -206,11 +208,12 @@ public:
 
   // If the cost is specified, guiding params are calculated
   // using the cost. Any guiding params that are set earlier are overridden
-  int link_cost(int wi, int pi, const char* ci, int wj, int pj, const char* cj,
+  int link_cost(int wi, int pi, const char* ci, Exp* ei,
+                int wj, int pj, const char* cj, Exp* ej,
                 double cost)
   {
     assert(wi < wj, "Variables: link should be ordered");
-    int var = link(wi, pi, ci, wj, pj, cj);
+    int var = link(wi, pi, ci, ei,  wj, pj, cj, ej);
     _guiding->setLinkParameters(var, wi, ci, wj, cj, link_variable(var)->label, cost);
     assert(var != -1, "Var == -1");
     return var;
@@ -440,7 +443,8 @@ private:
   std::vector<LinkVar*> _link_variables;
 
   // Set this additional info
-  void add_link_variable(int i, int pi, const char* ci, int j, int pj, const char* cj, size_t var)
+  void add_link_variable(int i, int pi, const char* ci, Exp* ei,
+                         int j, int pj, const char* cj, Exp* ej, size_t var)
   {
     char name[MAX_VARIABLE_NAME];
     char* s = name;
