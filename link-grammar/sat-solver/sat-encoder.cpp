@@ -1506,10 +1506,10 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     // Indicate the disjuncts, too.
     // This is needed so that compute_chosen_word works correctly.
+// #define NO_DISJUNCT_INFO_AVAILABLE_WTF
 #ifdef NO_DISJUNCT_INFO_AVAILABLE_WTF
-// XXX I think LinkVar needs to be extended to hold the disjunct
-    lkg->chosen_disjuncts[clink.lw] = ld;
-    lkg->chosen_disjuncts[clink.rw] = rd;
+    lkg->chosen_disjuncts[clink.lw] = var->left_disjunct;
+    lkg->chosen_disjuncts[clink.rw] = var->right_disjunct;
 #else
 fprintf(stderr, "Error: SAT solver needs to implement disjunct choice\n");
 #endif

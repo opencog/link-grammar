@@ -326,13 +326,18 @@ public:
   }
 
   // Additional info about the link(wi, pi, wj, pj) variable
-  struct LinkVar {
+  struct LinkVar
+  {
     LinkVar(const std::string& _name, char* _label,
-            int _lw, int _lp, int _rw, int _rp, const char* _lc, const char* _rc)
+            int _lw, int _lp, int _rw, int _rp,
+            const char* _lc, const char* _rc,
+            Disjunct* _ld, Disjunct* _rd)
       : name(_name), label(_label),
-        left_word(_lw), right_word(_rw), left_position(_lp), right_position(_rp),
-        left_connector(_lc), right_connector(_rc) {
-    }
+        left_word(_lw), right_word(_rw),
+        left_position(_lp), right_position(_rp),
+        left_connector(_lc), right_connector(_rc),
+        left_disjunct(_ld), right_disjunct(_rd)
+    {}
 
     std::string name;
     char* label;
@@ -342,6 +347,8 @@ public:
     int right_position;
     const char* left_connector;
     const char* right_connector;
+    Disjunct* left_disjunct;
+    Disjunct* right_disjunct;
   };
 
   // Returns additional info about the given link variable
@@ -452,10 +459,15 @@ private:
     s = fast_sprintf(s, cj);
     char* label = construct_link_label(ci, cj);
 
+    Disjunct *di = NULL;
+    Disjunct *dj = NULL;
+printf("duude aieee %s %s\n", name, label);
+    // di = build_disjunct_for_exp(exp, ...);
+
     if (var >= _link_variables.size()) {
       _link_variables.resize(var + 1, 0);
     }
-    _link_variables[var] = new LinkVar(name, label, i, pi, j, pj, ci, cj);
+    _link_variables[var] = new LinkVar(name, label, i, pi, j, pj, ci, cj, di, dj);
     _link_variables_indices.push_back(var);
   }
 
