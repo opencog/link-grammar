@@ -10,7 +10,6 @@
 #include "matrix-ut.hpp"
 #include "fast-sprintf.hpp"
 
-
 #define  MAX_VARIABLE_NAME 256
 
 
@@ -334,12 +333,12 @@ public:
     LinkVar(const std::string& _name, char* _label,
             int _lw, int _lp, int _rw, int _rp,
             const char* _lc, const char* _rc,
-            Disjunct* _ld, Disjunct* _rd)
+            Exp* _le, Exp* _re)
       : name(_name), label(_label),
         left_word(_lw), right_word(_rw),
         left_position(_lp), right_position(_rp),
         left_connector(_lc), right_connector(_rc),
-        left_disjunct(_ld), right_disjunct(_rd)
+        left_exp(_le), right_exp(_re)
     {}
 
     std::string name;
@@ -350,8 +349,8 @@ public:
     int right_position;
     const char* left_connector;
     const char* right_connector;
-    Disjunct* left_disjunct;
-    Disjunct* right_disjunct;
+    Exp* left_exp;
+    Exp* right_exp;
   };
 
   // Returns additional info about the given link variable
@@ -463,23 +462,16 @@ private:
     s = fast_sprintf(s, cj);
     char* label = construct_link_label(ci, cj);
 
-    Disjunct *di = NULL;
-    Disjunct *dj = NULL;
-printf("duude aieee %s %s\n", name, label);
-    // di = build_disjunct_for_exp(exp, ...);
-
     if (var >= _link_variables.size()) {
       _link_variables.resize(var + 1, 0);
     }
-    _link_variables[var] = new LinkVar(name, label, i, pi, j, pj, ci, cj, di, dj);
+    _link_variables[var] = new LinkVar(name, label, i, pi, j, pj, ci, cj, ei, ej);
     _link_variables_indices.push_back(var);
   }
-
 
   /*
    * Information about linked(i, j) variables
    */
-
 
   // What is the number of the linked(i, j) variable?
   MatrixUpperTriangle<int> _linked_variable_map;

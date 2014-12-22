@@ -24,6 +24,7 @@ using std::endl;
 
 extern "C" {
 #include "analyze-linkage.h"
+#include "build-disjuncts.h"
 #include "dict-file/read-dict.h"
 #include "extract-links.h"
 #include "linkage.h"
@@ -1509,6 +1510,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     Connector* connector;
 
+    // XXX Should not alloc a new one, but use the connector from
+    // the PositionConnector class ...
     connector = connector_new();
     connector->string = var->left_connector;
     clink.lc = connector;
@@ -1519,10 +1522,25 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     // Indicate the disjuncts, too.
     // This is needed so that compute_chosen_word works correctly.
-// #define NO_DISJUNCT_INFO_AVAILABLE_WTF
+#define NO_DISJUNCT_INFO_AVAILABLE_WTF
 #ifdef NO_DISJUNCT_INFO_AVAILABLE_WTF
-    lkg->chosen_disjuncts[clink.lw] = var->left_disjunct;
-    lkg->chosen_disjuncts[clink.rw] = var->right_disjunct;
+prt_exp(var->left_exp, 0);
+     Disjunct *d;
+
+     // XXX FIXME -- the chosen disjunct has probably already been
+     // set for this word .. don't set it again.  Oh, and it should
+     // be consistent, too ... 
+     d = build_disjuncts_for_exp(var->left_exp, 
+                                 _sent->word[var->left_word].unsplit_word,
+                                 UNLIMITED_LEN);
+     _sent->word[var->left_word].d = d;
+     lkg->chosen_disjuncts[clink.lw] = d;
+
+     d = build_disjuncts_for_exp(var->right_exp, 
+                                 _sent->word[var->right_word].unsplit_word,
+                                  UNLIMITED_LEN);
+     _sent->word[var->right_word].d = d;
+     lkg->chosen_disjuncts[clink.rw] = d;
 #else
 fprintf(stderr, "Error: SAT solver needs to implement disjunct choice\n");
 #endif
