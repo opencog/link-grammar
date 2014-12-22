@@ -130,7 +130,7 @@ eliminate_duplicate_disjuncts
 catenate_disjuncts
 count_disjuncts
 print_one_disjunct
-build_disjuncts_for_X_node
+build_disjuncts_for_exp
 connector_new
 free_connectors
 left_print_string

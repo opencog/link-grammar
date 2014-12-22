@@ -277,10 +277,7 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 
 		/* Building expressions */
 		e = make_exp(djs, cost);
-		X_node x;
-		x.exp = e;
-		x.string = wrd;
-		dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+		dj = build_disjuncts_for_exp(e, wrd, MAX_CONNECTOR_COST);
 		djl = catenate_disjuncts(dj, djl);
 		free_exp(e);
 	}

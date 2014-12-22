@@ -308,14 +308,14 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 	return dis;
 }
 
-Disjunct * build_disjuncts_for_X_node(X_node * x, double cost_cutoff)
+Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word, double cost_cutoff)
 {
 	Clause *c ;
 	Disjunct * dis;
-	/* print_expression(x->exp);  printf("\n"); */
-	c = build_clause(x->exp);
+	/* print_expression(exp);  printf("\n"); */
+	c = build_clause(exp);
 	/* print_clause_list(c); */
-	dis = build_disjunct(c, x->string, cost_cutoff);
+	dis = build_disjunct(c, word, cost_cutoff);
 	/* print_disjunct_list(dis); */
 	free_clause_list(c);
 	return dis;
@@ -440,7 +440,7 @@ void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
 		d = NULL;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_disjuncts_for_X_node(x, cost_cutoff);
+			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff);
 			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;
