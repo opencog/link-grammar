@@ -18,9 +18,11 @@ extern "C" {
 
 struct PositionConnector
 {
-  PositionConnector(Connector* c, char d, int w, int p, double cst, double pcst,
-                    bool lr, bool ll, const std::vector<int>& er, const std::vector<int>& el)
-    : connector(c), dir(d), word(w), position(p), cost(cst), parent_cost(pcst),
+  PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
+                    double cst, double pcst, bool lr, bool ll,
+                    const std::vector<int>& er, const std::vector<int>& el)
+    : exp(e), connector(c), dir(d), word(w), position(p),
+      cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el)
   {
@@ -37,6 +39,9 @@ struct PositionConnector
     cout << endl;
     */
   }
+
+  // Original expression that this connector came from
+  Exp* exp;
 
   // Connector itself
   Connector* connector;

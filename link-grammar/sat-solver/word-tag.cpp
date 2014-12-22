@@ -23,17 +23,19 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     case '+':
       _position.push_back(_right_connectors.size());
       _dir.push_back('+');
-      _right_connectors.push_back(PositionConnector(connector, '+', _word, dfs_position, exp->cost, cost,
-                                                    leading_right, false,
-                                                    eps_right, eps_left));
+      _right_connectors.push_back(
+           PositionConnector(exp, connector, '+', _word, dfs_position,
+                             exp->cost, cost, leading_right, false,
+                             eps_right, eps_left));
       leading_right = false;
       break;
     case '-':
       _position.push_back(_left_connectors.size());
       _dir.push_back('-');
-      _left_connectors.push_back(PositionConnector(connector, '-', _word, dfs_position, exp->cost, cost,
-                                                   false, leading_left,
-                                                   eps_right, eps_left));
+      _left_connectors.push_back(
+           PositionConnector(exp, connector, '-', _word, dfs_position,
+                             exp->cost, cost, false, leading_left,
+                             eps_right, eps_left));
       leading_left = false;
       break;
     default:
