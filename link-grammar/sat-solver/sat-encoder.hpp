@@ -54,8 +54,9 @@ protected:
   virtual void determine_satisfaction(int w, char* name) = 0;
 
   // Generates satisfaction condition for the connector (wi, pi)
-  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                   char dir, bool multi, double cost, char* var) = 0;
+  virtual void generate_satisfaction_for_connector(int wi, int pi, 
+                                                   Exp* e,
+                                                   char* var) = 0;
 
   // Definition of link_cw((wi, pi), wj) variables when wj is an ordinary word
   void generate_link_cw_ordinary_definition(size_t wi, int pi, const char* Ci, char dir,
@@ -299,8 +300,9 @@ public:
 
   virtual void handle_null_expression(int w);
   virtual void determine_satisfaction(int w, char* name);
-  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                   char dir, bool multi, double cost, char* var);
+  virtual void generate_satisfaction_for_connector(int wi, int pi,
+                                                   Exp* e,
+                                                   char* var);
 
 
   virtual void generate_linked_definitions();

@@ -332,7 +332,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
   if (e->type == CONNECTOR_type) {
     dfs_position++;
 
-    generate_satisfaction_for_connector(w, dfs_position, e->u.string, e->dir, e->multi, e->cost, var);
+    generate_satisfaction_for_connector(w, dfs_position, e, var);
 
     if (total_cost > _cost_cutoff) {
       Lit lhs = Lit(_variables->string_cost(var, e->cost));
@@ -1327,13 +1327,18 @@ void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* nam
   generate_literal(Lit(_variables->string(name)));
 }
 
-void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                                             char dir, bool multi, double cost, char* var)
+void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
+    int wi, int pi, Exp *e, char* var)
 {
+  const char* Ci = e->u.string;
+  char dir = e->dir;
+  bool multi = e->multi;
+  double cost = e->cost;
+
   Lit lhs = Lit(_variables->string_cost(var, cost));
 
 #ifdef _DEBUG
-  cout << "*** Connector: ." << wi << ". ." << pi << ". " <<  Ci << dir << endl;
+  cout << "*** Connector: ." << wi << ". ." << pi << ". " << Ci << dir << endl;
 #endif
 
   // words that can potentially match (wi, pi)
