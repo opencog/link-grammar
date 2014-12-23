@@ -475,7 +475,7 @@ void SATEncoder::free_alternatives(Exp* exp)
 }
 
 
-void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi, 
+void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
                                                       Exp* e, size_t wj)
 {
   const char* Ci = e->u.string;
@@ -1526,34 +1526,34 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     // Indicate the disjuncts, too.
     // This is needed so that compute_chosen_word works correctly.
-#define NO_DISJUNCT_INFO_AVAILABLE_WTF
-#ifdef NO_DISJUNCT_INFO_AVAILABLE_WTF
-// FIXME -- none of this actually works, mostly because the parent_exp is
-// probably wrong in the WordTag::insert_connectors().  This is all pretty
-// hairy, because the sat solver is no using or tracking disjuncts during
-// its parse. But its the disjuncts that hold the real linkage info, so...
-// we try to reconstruct what the disjunct might have been, after the parse,
-// and, so far, we are failing, I think ...
-prt_exp(var->left_exp, 0);
-     Disjunct *d;
 
-     // XXX FIXME -- the chosen disjunct has probably already been
-     // set for this word .. don't set it again.  Oh, and it should
-     // be consistent, too ... 
-     d = build_disjuncts_for_exp(var->left_exp, 
-                                 _sent->word[var->left_word].unsplit_word,
+// FIXME -- this is deeply and fundamentally broken. First, we should not
+// use unsplit_word below, but instead, get the string from the X_node.
+// However, the X_node was discarded previously, up above.  Next, we are
+// trying to reconstruct the actual disjunct that was used, but we aren't
+// really doing that correctly, because we never recorded the DNF that
+// was used.  Maybe .. maybe we could hack around this by looking at the
+// actual connectors that were used for each word, and combine those to
+// get the disjunct ... so its a mess.
+// Its not ever clear to me why chosen_words needs disjuncts .. really
+// all we need here are the X_node strings, and nothing else, and so ...
+// all teh exp flow through this code could be removed. Arghhh.
+    Disjunct *d;
+
+    // XXX FIXME -- the chosen disjunct has probably already been
+    // set for this word .. don't set it again.  Oh, and it should
+    // be consistent, too ...
+    d = build_disjuncts_for_exp(var->left_exp,
+                                _sent->word[var->left_word].unsplit_word,
+                                UNLIMITED_LEN);
+    _sent->word[var->left_word].d = d;
+    lkg->chosen_disjuncts[clink.lw] = d;
+
+    d = build_disjuncts_for_exp(var->right_exp,
+                                _sent->word[var->right_word].unsplit_word,
                                  UNLIMITED_LEN);
-     _sent->word[var->left_word].d = d;
-     lkg->chosen_disjuncts[clink.lw] = d;
-
-     d = build_disjuncts_for_exp(var->right_exp, 
-                                 _sent->word[var->right_word].unsplit_word,
-                                  UNLIMITED_LEN);
-     _sent->word[var->right_word].d = d;
-     lkg->chosen_disjuncts[clink.rw] = d;
-#else
-fprintf(stderr, "Error: SAT solver needs to implement disjunct choice\n");
-#endif
+    _sent->word[var->right_word].d = d;
+    lkg->chosen_disjuncts[clink.rw] = d;
 
     current_link++;
   }
