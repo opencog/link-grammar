@@ -145,7 +145,8 @@ public:
                          bool& leading_right, bool& leading_left,
                          std::vector<int>& eps_right,
                          std::vector<int>& eps_left,
-                         char* var, bool root, double parent_cost);
+                         char* var, bool root, double parent_cost,
+                         Exp* parent);
 
   // Caches information about the found matches to the _matches vector, and also
   // updates the _matches vector of all connectors in the given tag.

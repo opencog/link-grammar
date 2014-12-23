@@ -253,7 +253,8 @@ void SATEncoder::build_word_tags()
     bool leading_left = true;
     std::vector<int> eps_right, eps_left;
 
-    _word_tags[w].insert_connectors(exp, dfs_position, leading_right, leading_left, eps_right, eps_left, name, true, 0);
+    _word_tags[w].insert_connectors(exp, dfs_position, leading_right,
+         leading_left, eps_right, eps_left, name, true, 0, NULL);
 
     if (join)
       free_alternatives(exp);
@@ -1492,6 +1493,7 @@ void SATEncoder::generate_linked_min_max_planarity()
 
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
+
   int current_link = 0;
   const std::vector<int>& link_variables = _variables->link_variables();
   std::vector<int>::const_iterator i;
@@ -1514,16 +1516,24 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     // the PositionConnector class ...
     connector = connector_new();
     connector->string = var->left_connector;
+    connector->word = var->left_word; // XXX is this needed ?
     clink.lc = connector;
 
     connector = connector_new();
     connector->string = var->right_connector;
+    connector->word = var->right_word; // XXX is this needed ?
     clink.rc = connector;
 
     // Indicate the disjuncts, too.
     // This is needed so that compute_chosen_word works correctly.
 #define NO_DISJUNCT_INFO_AVAILABLE_WTF
 #ifdef NO_DISJUNCT_INFO_AVAILABLE_WTF
+// FIXME -- none of this actually works, mostly because the parent_exp is
+// probably wrong in the WordTag::insert_connectors().  This is all pretty
+// hairy, because the sat solver is no using or tracking disjuncts during
+// its parse. But its the disjuncts that hold the real linkage info, so...
+// we try to reconstruct what the disjunct might have been, after the parse,
+// and, so far, we are failing, I think ...
 prt_exp(var->left_exp, 0);
      Disjunct *d;
 
@@ -1549,6 +1559,8 @@ fprintf(stderr, "Error: SAT solver needs to implement disjunct choice\n");
   }
 
   lkg->num_links = current_link;
+  compute_link_names(lkg, _sent->string_set);
+
   DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
 }
