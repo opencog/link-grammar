@@ -305,40 +305,44 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 
 		sprintf(nn, "\"%p\"", w);
 
-		/* Subword node - its name is the token and (label) */
+		/* Subword node format:
+		 *                     +------------------+
+		 *                     +                  +
+		 *                     +    w->subword    +
+		 *                     +    (w->flags)    +
+		 *                     + w->morpheme_type +
+		 *                     +                  +
+		 *                     +------------------+
+		 *          w->node_num  } <- external node label
+		 *           w->label    }
+		 *
+		 * The flags and morpheme type are printed symbolically.
+		 * The node_num field is the ordinal number of word creation.
+		 * The label shows the code positions that created the subword.
+		 * The external node label may appear at other positions near the node.
+		 *
+		 * FIXME: Use HTML labels.
+		 */
+
+		append_string(wgd, "%s [label=\"%s\\n(%s)\\n%s\"];\n", nn,
+			wlabel(sent, w), gword_status(sent, w), gword_morpheme(sent, w));
+
+		if (mode & WGR_NODBGLABEL)
 		{
-			char dl[128] = "";
-
-			/* FIXME: HTML labels */
-			const size_t l = snprintf(dl, sizeof(dl), "\\n(%s)\\n%s",
-                          gword_status(sent, w), gword_morpheme(sent, w));
-
-			/* "Cannot happen" */
-			if (l >= sizeof(dl))
-			{
-				char ellipsis[] = "...";
-
-				prt_error("Warning: Debug label truncated for word '%s'\n",
-                      w->unsplit_word->subword);
-				strcpy(dl+sizeof(dl)-sizeof(ellipsis)-1, ellipsis);
-			}
-
-			append_string(wgd, "%s [label=\"%s%s\"];\n",
-			              nn, wlabel(sent, w), dl);
-
-			if (mode & WGR_NODBGLABEL)
-			{
-				append_string(wgd, "%s [xlabel=\"%zu\\n%s\"];\n",
-			                 nn, w->node_num, w->label);
-			}
-			else
-			{
-				append_string(wgd, "%s [xlabel=\"%zu\"];\n", nn, w->node_num);
-			}
-
-			/* For debugging this function: display also hex node names. */
-			//append_string(wgd, "%s" [xlabel=\"%zu %p\"];\n", nn,w->node_num, nn);
+			append_string(wgd, "%s [xlabel=\"%zu",
+							  nn, w->node_num);
 		}
+		else
+		{
+			append_string(wgd, "%s [xlabel=\"%zu\\n%s",
+							  nn, w->node_num, w->label);
+		}
+
+		/* For debugging this function: display also hex node names. */
+		if (mode & WGR_DOTDEBUG)
+			append_string(wgd, "\\n%p", nn);
+
+		append_string(wgd, "\"];\n");
 
 		if (NULL != w->next)
 		{
