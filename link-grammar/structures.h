@@ -45,6 +45,10 @@
 #define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
 #define EMPTY_WORD_DISPLAY "∅"   /* Empty word representation for debug */
 
+/* Dictionary capitalization handling */
+#define CAP1st "1stCAP" /* Next word is capitalized */
+#define CAPnon "nonCAP" /* Next word the lc version of a capitalized word */
+
 /* Stems, by definition, end with ".=x" (when x is usually an empty string, i.e.
  * ".="). The STEMSUBSCR definition in the affix file may include endings with
  * other x values, when x serves as a word subscript, e.g. ".=a".  */
@@ -205,7 +209,7 @@ typedef enum
 #define WS_INDICT    1<<6 /* boolean_dictionary_lookup() is true */
 #define WS_FIRSTUPPER 1<<7 /* Subword is the lc version of its unsplit_word */
 /* - Post linkage stage. XXX Experimental. */
-#define WS_PL        1<<7 /* Post-Linkage word, not belonging to tokenization */
+#define WS_PL        1<<14 /* Post-Linkage word, not belonging to tokenization */
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 
@@ -213,12 +217,12 @@ typedef enum
 typedef enum
 {
 	TS_INITIAL,
-	TS_LR_STRIP,
+	TS_LR_STRIP,             /* XXX Now unused */
 	TS_AFFIX_SPLIT,          /* XXX Unused */
 	TS_REGEX,                /* XXX Unused */
-	TS_RUNON,
-	TS_SPELL,
-	TS_DONE
+	TS_RUNON,                /* Run-on word */
+	TS_SPELL,                /* Corrected word */
+	TS_DONE                  /* Tokenization done */
 } Tokenizing_step;
 
 /* For the "guess" field of Gword_struct. */
