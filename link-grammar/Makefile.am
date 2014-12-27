@@ -116,7 +116,6 @@ liblink_grammar_la_SOURCES =        \
 	api-types.h                      \
 	analyze-linkage.h                \
 	build-disjuncts.h                \
-	constituents.h                   \
 	count.h                          \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
