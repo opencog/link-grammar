@@ -2228,10 +2228,8 @@ per "/.per": Us+ & Mp-;
 <verb-adj>:  {@E-} & [A+]0.5;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
-% [Wi-] has a cost for only one stupid reason: because "frank.v" interferes
-% with the given name "Frank.b".  Ouch. XXX FIXME. Give frank.v special treatment.
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & [Wi-] & {NM+}));
+<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
@@ -3320,6 +3318,18 @@ beset.v mistaken.v underwritten.v:
   <verb-pv> or
   <verb-adj> or
   <verb-phrase-opener>;
+
+% Unlikely transitive verb. Here, we single out 'frankk', as that is a
+% rare verb, and it causes conflicts witht the given name 'Frank.b'.
+% For example: "Frank felt vindicated". 
+<vc-trans-unlikely>:
+  ([[O+]]
+   or <b-minus>
+   or [[@MV+ & O*n+]]
+   or ({@E-} & <b-minus> & O+)
+  ) & {@MV+};
+
+frank.v : VERB_PLI(<vc-trans-unlikely>);
 
 % -----------------------------------------------------------------
 % The simplest transitive, ditransitive constructions
