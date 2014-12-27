@@ -6,7 +6,7 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) \
-    $(CXX_FLAGS) $(LINK_CFLAGS)
+    $(CXX_FLAGS)
 
 # -----------------------------------------------------------
 # Directives to build the threading unit test.

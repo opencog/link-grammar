@@ -32,17 +32,21 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 	const char *sents[] = {
 		"Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.",
 		"Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a social disease.",
+		"It was covered with bites.",
+		"I have no idea what that is.",
+		"His shout had been involuntary, something anybody might have done.",
 		"He obtained the lease of the manor of Great Burstead Grange (near East Horndon) from the Abbey of Stratford Langthorne, and purchased the manor of Bayhouse in West Thurrock.",
 		"We ate popcorn and watched movies on TV for three days.",
 		"Sweat stood on his brow, fury was bright in his one good eye.",
-		"One of the things you do when you stop your bicycle is apply the brake."
+		"One of the things you do when you stop your bicycle is apply the brake.",
+		"The line extends 10 miles offshore."
 // "под броню боевого робота устремились потоки энергии.",
 // "через четверть часа здесь будет полно полицейских."
 	};
 
 	int nsents = sizeof(sents) / sizeof(const char *);
 
-	for (int j=0; j<niter; j++)
+	for (int j=0; j<niter; j += nsents)
 	{
 		for (int i=0; i < nsents; ++i)
 		{
@@ -63,9 +67,9 @@ int main(int argc, char* argv[])
 	}
 
 	int n_threads = 10;
-	int niter = 100;
+	int niter = 300;
 
-	printf("Creating %d threads, each running %d iterations\n",
+	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
 	std::vector<std::thread> thread_pool;
 	for (int i=0; i < n_threads; i++) {
@@ -74,6 +78,7 @@ int main(int argc, char* argv[])
 
 	// Wait for all threads to complete
 	for (std::thread& t : thread_pool) t.join();
+	printf("Done with multi-threaded parsing\n");
 
 	dictionary_delete(dict);
 	parse_options_delete(opts);
