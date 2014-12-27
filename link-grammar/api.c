@@ -1062,13 +1062,13 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	{
 		/* We branch to another path. Duplicate it from the current path and add
 		 * the current word to it. */
-		size_t path_arr_size = (wordlist_len(path)+1)*sizeof(*path);
+		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
 
 		(*nwp)[n].path = malloc(path_arr_size);
 		memcpy((*nwp)[n].path, path, path_arr_size);
 	}
-   /* FIXME (cast) but anyway wordlist_append() doesn't modify Gword. */
-	wordlist_append((Gword ***)&(*nwp)[n].path, current_word);
+   /* FIXME (cast) but anyway gwordlist_append() doesn't modify Gword. */
+	gwordlist_append((Gword ***)&(*nwp)[n].path, current_word);
 }
 
 /**

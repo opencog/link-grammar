@@ -80,14 +80,14 @@ Gword *empty_word(void)
 	return &e;
 }
 
-Gword **wordlist_resize(Gword **arr, size_t len)
+static Gword **gwordlist_resize(Gword **arr, size_t len)
 {
 	arr = realloc(arr, (len+2) * sizeof(Gword *));
 	arr[len+1] = NULL;
 	return arr;
 }
 
-size_t wordlist_len(const Gword **arr)
+size_t gwordlist_len(const Gword **arr)
 {
 	size_t len = 0;
 	if (arr)
@@ -95,11 +95,11 @@ size_t wordlist_len(const Gword **arr)
 	return len;
 }
 
-void wordlist_append(Gword ***arrp, Gword *p)
+void gwordlist_append(Gword ***arrp, Gword *p)
 {
-	size_t n = wordlist_len((const Gword **)*arrp);
+	size_t n = gwordlist_len((const Gword **)*arrp);
 
-	*arrp = wordlist_resize(*arrp, n);
+	*arrp = gwordlist_resize(*arrp, n);
 	(*arrp)[n] = p;
 }
 
@@ -110,7 +110,7 @@ void wordlist_append(Gword ***arrp, Gword *p)
 static void wordlist_replace(Gword ***arrp, size_t start, size_t count,
                              const Gword *wnew)
 {
-	size_t n = wordlist_len((const Gword **)(*arrp+start+count));
+	size_t n = gwordlist_len((const Gword **)(*arrp+start+count));
 
 	memmove(*arrp+start+1, *arrp+start+count, (n+1) * sizeof(Gword *));
 	(*arrp)[start] = (Gword *)wnew;

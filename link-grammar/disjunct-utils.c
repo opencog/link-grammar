@@ -154,10 +154,10 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 }
 
 /* FIXME? Can the same word get appended again? If so - prevent it. */
-static void disjuct_wordlist_append(Disjunct * dx, const Gword **word)
+static void disjuct_gwordlist_append(Disjunct * dx, const Gword **word)
 {
-	size_t to_word_arr_len = wordlist_len(dx->word);
-	size_t from_word_arr_len = wordlist_len(word);
+	size_t to_word_arr_len = gwordlist_len(dx->word);
+	size_t from_word_arr_len = gwordlist_len(word);
 
 	dx->word = realloc(dx->word,
 	   sizeof(*(dx->word)) * (to_word_arr_len + from_word_arr_len + 1));
@@ -197,7 +197,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
-			disjuct_wordlist_append(dx, d->word);
+			disjuct_gwordlist_append(dx, d->word);
 			free_disjuncts(d);
 			count++;
 		}

@@ -15,9 +15,8 @@ void wordgraph_show(Sentence, size_t, const char *);
 #endif /* USE_WORDGRAPH_DISPLAY */
 
 Gword *gword_new(Sentence, const char *);
-Gword **wordlist_resize(Gword **, size_t);
-size_t wordlist_len(const Gword **);
+Gword *empty_word(void);
+size_t gwordlist_len(const Gword **);
+void gwordlist_append(Gword ***, Gword *);
 const char *gword_status(Sentence, const Gword *);
 const char *gword_morpheme(Sentence sent, const Gword *w);
-void wordlist_append(Gword ***, Gword *);
-Gword *empty_word(void);

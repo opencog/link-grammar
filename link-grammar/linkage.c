@@ -112,8 +112,8 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	/* Link the null_subwords links of the added unifying node to the null
 	 * subwords it unified. */
 	for (w = start; w <= end; w++)
-		wordlist_append(&new_word->null_subwords, (Gword *)(*w));
-	/* Removing const qualifier, but wordlist_append doesn't change w->... .  */
+		gwordlist_append(&new_word->null_subwords, (Gword *)(*w));
+	/* Removing const qualifier, but gwordlist_append doesn't change w->... .  */
 
 	return new_word;
 }
@@ -259,7 +259,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					lgdebug(D_CCW, "A single null subword.\n");
 					t = join_null_word(sent, wgp, nbsize);
 
-					wordlist_append(&n_lwg_path, w);
+					gwordlist_append(&n_lwg_path, w);
 #if 0 /* Not implemented */
 					lwg_path_display[len_n_lwg_path++] = wgi;
 #endif
@@ -275,7 +275,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						lgdebug(D_CCW, " (null alternative)\n");
 						t = unsplit_word->subword;
 
-						wordlist_append(&n_lwg_path, unsplit_word);
+						gwordlist_append(&n_lwg_path, unsplit_word);
 #if 0 /* Not implemented */
 						for (j = 0; j < nbsize; j++)
 							lwg_path_display[len_n_lwg_path++] = wgi-j+1;
@@ -288,7 +288,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 						lgdebug(D_CCW, " (null partial word)\n");
 						wgnull = wordgraph_null_join(sent, wgp-nbsize+1, wgp);
-						wordlist_append(&n_lwg_path, wgnull);
+						gwordlist_append(&n_lwg_path, wgnull);
 						t = wgnull->subword;
 					}
 				}
@@ -452,7 +452,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							 (SUBSCRIPT_MARK == join[join_len-1]))
 							join[join_len-1] = '\0';
 
-						wordlist_append(&n_lwg_path, unsplit_word);
+						gwordlist_append(&n_lwg_path, unsplit_word);
 						t = string_set_add(join, sent->string_set);
 						free(join);
 
@@ -462,7 +462,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				}
 			}
 
-			if (!join_alt) wordlist_append(&n_lwg_path, *wgp);
+			if (!join_alt) gwordlist_append(&n_lwg_path, *wgp);
 
 			/*
 			 * Add ->regex_name marks in [] if needed, at the end of the base word.

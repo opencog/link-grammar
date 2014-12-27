@@ -285,7 +285,7 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 
 	fprintf(stderr, "[Word %zu:%s hier_position(hier_depth=%zu): ",
 	        word->node_num, word->subword, word->hier_depth);
-	assert(2*word->hier_depth==wordlist_len(word->hier_position), "word '%s'",
+	assert(2*word->hier_depth==gwordlist_len(word->hier_position), "word '%s'",
 	       word->subword);
 
 	for (p = word->hier_position; NULL != *p; p += 2)
@@ -770,10 +770,10 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 
 				/* Scan its "prev" words and add it as their "next" word */
 				for (q = unsplit_word->prev; *q; q++)
-					wordlist_append(&(*q)->next, unsplit_word);
+					gwordlist_append(&(*q)->next, unsplit_word);
 				/* Scan its "next" words and add it as their "prev" word */
 				for (q = unsplit_word->next; *q; q++)
-					wordlist_append(&(*q)->prev, unsplit_word);
+					gwordlist_append(&(*q)->prev, unsplit_word);
 				word_label(sent, unsplit_word, "+", label);
 				word_label(sent, unsplit_word, NULL, "R");
 				unsplit_word->status |= WS_UNSPLIT;
@@ -828,11 +828,11 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 						Gword **n;
 
 						/* Create the "prev" link for subword */
-						wordlist_append(&subword->prev, *p);
+						gwordlist_append(&subword->prev, *p);
 
 						if (unsplit_word->status & WS_HASALT)
 						{
-							wordlist_append(&(*p)->next, subword);
+							gwordlist_append(&(*p)->next, subword);
 						}
 						else
 						{
@@ -874,11 +874,11 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 						Gword **p;
 
 						/* Create the "next" link for subword */
-						wordlist_append(&subword->next, *n);
+						gwordlist_append(&subword->next, *n);
 
 						if (unsplit_word->status & WS_HASALT)
 						{
-							wordlist_append(&(*n)->prev, subword);
+							gwordlist_append(&(*n)->prev, subword);
 						}
 						else
 						{
@@ -904,8 +904,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 
 				if (1 < token_ord)            /* not the first subword */
 				{
-					wordlist_append(&psubword->next, subword);
-					wordlist_append(&subword->prev, psubword);
+					gwordlist_append(&psubword->next, subword);
+					gwordlist_append(&subword->prev, psubword);
 				}
 
 				subword->alternative_id = alternative_id;
@@ -2482,8 +2482,8 @@ static Gword *issue_sentence_word(const Sentence sent, const char *const s)
 	new_word->unsplit_word = sent->wordgraph;
 	new_word->label = "S"; /* a sentence word */
 
-	wordlist_append(&last_word->next, new_word);
-	wordlist_append(&new_word->prev, last_word);
+	gwordlist_append(&last_word->next, new_word);
+	gwordlist_append(&new_word->prev, last_word);
 
 	gwordqueue_add(sent, new_word);
 
