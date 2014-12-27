@@ -1,6 +1,5 @@
 # 
-# Automake file for building both liblink-grammar.so and 
-# the command line application link-parser.
+# Automake file for building the command line application `link-parser`.
 #
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
