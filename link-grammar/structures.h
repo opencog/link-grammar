@@ -65,7 +65,7 @@
 
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 
-#define UNKNOWN_WORD     ("UNKNOWN-WORD")
+#define UNKNOWN_WORD "UNKNOWN-WORD"
 
 #define MAX_PATH_NAME 200     /* file names (including paths)
                                  should not be longer than this */
