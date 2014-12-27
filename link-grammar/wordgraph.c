@@ -117,6 +117,204 @@ static void wordlist_replace(Gword ***arrp, size_t start, size_t count,
 }
 #endif
 
+size_t wordgraph_pathpos_len(Wordgraph_pathpos *wp)
+{
+	size_t len = 0;
+	if (wp)
+		while (wp[len].word != NULL) len++;
+	return len;
+}
+
+/* FIXME (efficiency): Initially allocate more than 2 elements */
+Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
+                                            size_t len)
+{
+	wp = realloc(wp, (len+2) * sizeof(*wp));
+	wp[len+1].word = NULL;
+	return wp;
+}
+
+bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool same_word,
+                           bool diff_alternative)
+{
+	size_t n = wordgraph_pathpos_len(*wp);
+	Wordgraph_pathpos *wpt;
+
+	assert(NULL != p);
+
+	if (NULL != *wp)
+	{
+		for (wpt = *wp; NULL != wpt->word; wpt++)
+		{
+			if (p == wpt->word)
+				return false; /* already in the pathpos queue - nothing to do */
+
+			/* Validate that there are no words in the pathpos queue from the same
+			 * alternative */
+			if (diff_alternative)
+			{
+				assert(same_word||wpt->same_word||!in_same_alternative(p,wpt->word),
+				       "wordgraph_pathpos_append(): "
+				       "Word%zu '%s' is from same alternative of word%zu '%s'",
+				       p->node_num, p->subword,
+				       wpt->word->node_num, wpt->word->subword);
+			}
+		}
+	}
+
+	*wp = wordgraph_pathpos_resize(*wp, n);
+	(*wp)[n].word = p;
+	(*wp)[n].same_word = same_word;
+	(*wp)[n].used = false;
+	(*wp)[n].next_ok = false;
+
+	return true;
+}
+
+#ifdef DEBUG
+GNUC_UNUSED static const char *debug_show_subword(const Gword *w)
+{
+	return w->unsplit_word ? w->subword : "S";
+}
+
+GNUC_UNUSED void print_hier_position(const Gword *word)
+{
+	const Gword **p;
+
+	fprintf(stderr, "[Word %zu:%s hier_position(hier_depth=%zu): ",
+	        word->node_num, word->subword, word->hier_depth);
+	assert(2*word->hier_depth==gwordlist_len(word->hier_position), "word '%s'",
+	       word->subword);
+
+	for (p = word->hier_position; NULL != *p; p += 2)
+	{
+		fprintf(stderr, "(%zu:%s/%zu:%s)",
+		        p[0]->node_num, debug_show_subword(p[0]),
+		        p[1]->node_num, debug_show_subword(p[1]));
+	}
+	fprintf(stderr, "]\n");
+}
+#endif
+
+/**
+ * Given a word, find its alternative ID.
+ *
+ * An alternative is identified by a pointer to its first word, which is
+ * getting set at the time the alternative is created at
+ * issue_word_alternative(). (It could be any unique identifier - for coding
+ * convenience it is a pointer.)
+ *
+ * Return the alternative_id of this alternative.
+ */
+static Gword *find_alternative(Gword *word)
+{
+	assert(NULL != word, "find_alternative(NULL)");
+	assert(NULL != word->alternative_id, "find_alternative(%s): NULL id",
+	       word->subword);
+
+#if 0
+	lgdebug(+0, "find_alternative(%s): '%s'\n",
+	        word->subword, debug_show_subword(word->alternative_id));
+#endif
+
+	return word->alternative_id;
+}
+
+const Gword **wordgraph_hier_position(Gword *word)
+{
+	const Gword **hier_position; /* NULL terminated */
+	size_t i = 0;
+	Gword *w;
+	bool is_leaf = true; /* the word is in the bottom of the hierarchy */
+
+	if (NULL != word->hier_position) return word->hier_position; /* from cache */
+
+	for (w = find_real_unsplit_word(word, true); NULL != w; w = w->unsplit_word)
+		i++;
+	if (0 == i) i = 1; /* Handle the dummy start/end words, just in case. */
+	/* Sentence words (i==1) have zero (i-1) elements. Each deeper unsplit word
+	 * has an additional element. Each element takes 2 word pointers (first one
+	 * the unsplit word, second one indicating the alternative in which it is
+	 * found). The last +1 is for a terminating NULL.
+	 */
+	word->hier_depth = i - 1;
+	i = (2 * word->hier_depth)+1;
+	hier_position = malloc(i * sizeof(*hier_position));
+
+	/* Stuff the hierarchical position in a reverse order. */
+	hier_position[--i] = NULL;
+	w = word;
+	while (0 != i)
+	{
+		hier_position[--i] = find_alternative(w);
+		w = find_real_unsplit_word(w, is_leaf);
+		hier_position[--i] = w;
+		is_leaf = false;
+	}
+
+	word->hier_position = hier_position; /* cache it */
+	return hier_position;
+}
+
+/**
+ * Find if 2 words are in the same direct alternative of their common ancestor.
+ * Return true if they are, false otherwise.
+ */
+bool in_same_alternative(Gword *w1, Gword *w2)
+{
+	const Gword **hp1 = wordgraph_hier_position(w1);
+	const Gword **hp2 = wordgraph_hier_position(w2);
+	size_t i;
+
+#if 0 /* DEBUG */
+	print_hier_position(w1); print_hier_position(w2);
+#endif
+
+#if 0 /* BUG */
+	/* The following is wrong!  Comparison to the hier_position of the
+	 * termination word is actually needed when there are alternatives of
+	 * different lengthes at the end of a sentence.  This check then prevented
+	 * the generation of null words on the shorter alternative. */
+	if ((NULL == w1->next) || (NULL == w2->next)) return false;/* termination */
+#endif
+
+	for (i = 0; (NULL != hp1[i]) && (NULL != hp2[i]); i++)
+	{
+		if (hp1[i] != hp2[i]) break;
+	}
+	if (0 == i%2) return true;
+
+	return false;
+}
+
+/**
+ * Get the real unsplit word of the given word.
+ * While the Wordgraph is getting constructed, when a subword has itself as one
+ * of its own alternatives, it appears in the wordgraph only ones, still
+ * pointing to its original unsplit_word. It appears once in order not to
+ * complicate the graph, and the unsplit_word is not changed in order not loss
+ * information (all of these are implementation decisions). However, for the
+ * hierarchy position of the word (when it is a word to be issued, i.e. a leaf
+ * node) the real unsplit word is needed, which is the word itself. It is fine
+ * since such a word cannot get split further.
+ */
+Gword *find_real_unsplit_word(Gword *word, bool is_leaf)
+{
+	/* For the terminating word, return something unique. */
+	if (NULL == word->unsplit_word)
+		return word;
+
+	/* For a sentence word (and the termination word) return the word itself. */
+	if ((NULL == word->unsplit_word->unsplit_word) &&
+	    (NULL == word->unsplit_word))
+		return word;
+
+	if (is_leaf && (word->status & WS_UNSPLIT))
+		return word;
+
+	return word->unsplit_word;
+}
+
 /* FIXME The following debug functions can be generated by a script running from
  * "configure" and taking the values from structures.h, instead of hard coding
  * the strings.  */

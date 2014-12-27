@@ -20,13 +20,3 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                      int stemnum, const char **stem,
                      int suffnum, const char **suffix);
 #endif
-
-/* Wordgraph utilities */
-/* FIXME? Move to a separate file. */
-size_t wordgraph_pathpos_len(Wordgraph_pathpos *);
-Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *, size_t);
-bool wordgraph_pathpos_append(Wordgraph_pathpos **, Gword *, bool, bool);
-const Gword **wordgraph_hier_position(Gword *);
-void print_hier_position(const Gword *);
-bool in_same_alternative(Gword *, Gword *);
-Gword *find_real_unsplit_word(Gword *, bool);
