@@ -87,9 +87,9 @@ UNPACKING and signature verification:
    gpg: Good signature from "Linas Vepstas (Hexagon Architecture Patches) <linas@codeaurora.org>"
    gpg:                 aka "Linas Vepstas (LKML) <linasvepstas@gmail.com>"
 
-   Alternately, the md5 checksums can be verified. These do not provide
+   Alternately, the md5 check-sums can be verified. These do not provide
    cryptographic security, but they can detect simple corruption. To
-   verify the checksums, issue "md5sum -c MD5SUM" at the command line.
+   verify the check-sums, issue "md5sum -c MD5SUM" at the command line.
 
 
 CREATING the system:
@@ -114,7 +114,7 @@ CREATING the system:
    --------
    If libedit-dev is installed, then the arrow keys can be used to edit
    the input to the link-parser tool; the up and down arrow keys will
-   recall previious entries.  You want this; it makes testing and
+   recall previous entries.  You want this; it makes testing and
    editing much easier.  Note, however, most versions of editline are
    not UTF8-capable, and so won't work, for example, with the Russian
    dictionaries.  A UTF8-enabled version of libedit can be found here:
@@ -127,7 +127,7 @@ CREATING the system:
 
    when building it, otherwise you won't actually get the UTF8 support!
    Attention: the above configure is for libedit, not for link-grammar!
-   (In addtition, you will need to uninstall the system default editline
+   (In addition, you will need to uninstall the system default editline
    in order to get the above. You may also need to set the environment
    variable PKG_CONFIG_PATH to include /usr/local/lib/pkgconfig)
 
@@ -154,14 +154,14 @@ CREATING the system:
 
    Python Bindings
    ---------------------
-   The pythoon bindings are NOT built by default. To enable this, run
+   The python bindings are NOT built by default. To enable this, run
    configure as follows:
 
       ./configure --enable-python-bindings
 
    The use of the Python bindings is *OPTIONAL*; you do not need these if
    you do not plan to use link-grammar with python.  If you do enable the
-   python bindings, besure to install the python-devel package.
+   python bindings, be sure to install the python-devel package.
 
    The linkgrammar.py module provides a high-level interface in Python.
    The example.py script provides a demo. and tests.py runs unit tests.
@@ -213,7 +213,7 @@ BUILDING on MacOS:
 
 BUILDING on Windows
 -------------------
-   There are three different ways in which link-grammr can be compiled
+   There are three different ways in which link-grammar can be compiled
    on Windows.  One way is to use Cygwin, which provides a Linux
    compatibility layer for Windows.  Unfortunately, the Cygwin system
    is not compatible with Java for Windows.  Another way is use the
@@ -313,7 +313,7 @@ BUILDING on Windows (MSVC)
    with MSVC6!
 
    Please note that the regex package, which includes libraries and
-   header files, must be seperately downloaded and installed, as
+   header files, must be separately downloaded and installed, as
    described above.  The MSVC project files *MUST* be modified to
    indicate the correct location of the regex libraries.
 
@@ -384,7 +384,7 @@ RUNNING the program:
       link-parser ../path/to-my/modified/data/en
 
    When accessing dictionaries in non-standard locations, the standard
-   filenames are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
+   file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
 
    The Russian dictionaries are in data/ru. Thus, the Russian parser
    can be started as:
@@ -499,8 +499,8 @@ Using JAVA
    the parser.  The simplest way is to use the org.linkgrammar.LinkGrammar
    class; this provides a very simple Java API to the parser.
 
-   The second possiblity is to use the LGService class.  This implements
-   a tcpi/ip network server, providing parse results as JSON messages.
+   The second possibility is to use the LGService class.  This implements
+   a tcp/ip network server, providing parse results as JSON messages.
    Any JSON-capable client can connect to this server and obtain parsed
    text.
 
@@ -518,7 +518,7 @@ Using the Network Server
 
       java -classpath linkgrammar.jar org.linkgrammar.LGService 9000
 
-   The above starts the server on port 9000. It the port is ommitted,
+   The above starts the server on port 9000. It the port is omitted,
    help text is printed.  This server can be contacted directly via
    tcpip; for example:
 
@@ -680,7 +680,7 @@ BioLG merger:
    -- XML I/O. The BioLG code can output parsed text in a certain
       idiosyncratic XML format.
    -- "term support". Link-grammar does support "entity placeholders",
-      which provides an equivalant function.
+      which provides an equivalent function.
    -- The link type CH. This was a large, intrusive, incompatible change
       to the dictionary, and it is not strictly required -- there is a
       better, alternative way of handling adj-noun-adj-noun chains commonly
@@ -720,7 +720,7 @@ Medical Terms Merger
    /extra.17: -- skip, too big
 
    To make use of the "skipped" files, download the original extension,
-   gut the contents of "extra.dict" except for the parts refering to the
+   gut the contents of "extra.dict" except for the parts referring to the
    skipped files above, and then append to 4.0.dict (as per original
    instructions).
 
@@ -784,7 +784,7 @@ Directional Links
    Directional links are needed for some languages, such as Lithuanian,
    Turkish and other free word-order languages. The goal is to have
    a link clearly indicate which word is the head word, and which is
-   the dependent. This is acheived by prefixing connectors with
+   the dependent. This is achieved by prefixing connectors with
    a single *lower case* letter: h,d, indicating 'head' and 'dependent'.
    The linkage rules are such that h matches either nothing or d, and
    d matches h or nothing. New feature in version 5.1.0.
@@ -794,7 +794,7 @@ Phonetics
 ---------
    A/An phonetic determiners before consonants/vowels are handled by a
    new PH link type, linking the determiner to the word immediately
-   folowing it.  Status: mostly done, more testing needed. The rules
+   following it.  Status: mostly done, more testing needed. The rules
    could be simplified.  Many special-case nouns are unfinished.
 
 
@@ -833,7 +833,7 @@ ADDRESSES
 Mathematical Theory:
 --------------------
    The mathematical theory of link-grammar is deeper and more
-   interesting than the origianl, foundational papers on it let on.
+   interesting than the original, foundational papers on it let on.
    This section provides a random list of remarks about this.
 
    -- Although link-grammar links are un-oriented, a defacto direction
@@ -865,7 +865,7 @@ Mathematical Theory:
 
       See, for example, the work by Bob Coeke on category theory and
       grammar; there, it becomes abundantly clear that the category
-      theoretic appraoch is equivalent to link-grammar, even though
+      theoretic approach is equivalent to link-grammar, even though
       this is not stated anywhere.
 
 
@@ -882,7 +882,7 @@ TODO -- Working Notes:
     words. This needs to be fixed. See tokenize.c circa line 586 for
     details.  Also line 1131.
 
-    Maybe captialization could be handled in the same way that a/an
+    Maybe capitalization could be handled in the same way that a/an
     could be handled!  After all, its essentially a nearest-neighbor
     phenomenon!
 
@@ -897,7 +897,7 @@ TODO -- Working Notes:
     * I told him (that) it was gone.
     * (It) looks good.
 
-    One poossible solution to the unvoiced-word problem might be to
+    One possible solution to the unvoiced-word problem might be to
     allow the LG rules to insert alternatives during the early culling
     stages.  This avoids the need to pre-insert all possible
     alternatives during tokenization...
@@ -920,7 +920,7 @@ TODO -- Working Notes:
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
     than before." Current parser makes "happy" the head word, and "more"
-    a modifier w/EA link.  I beleive the correct solution would be to
+    a modifier w/EA link.  I believe the correct solution would be to
     make "more" the head (link it as a comparative), and make "happy"
     the dependent.  This would harmonize rules for comparatives... and
     would eliminate/simplify rules for less,more.
@@ -932,11 +932,11 @@ TODO -- Working Notes:
     Currently, some links can act at "unlimited" length, while others
     can only be finite-length.  e.g. determiners should be near the
     noun that they apply to.  A better solution might be to employ
-    a 'strechiness' cost to some connectors: the longer they are, the
-    higher the cost. (This eliminates the "unliminted_connector_set"
+    a 'stretchiness' cost to some connectors: the longer they are, the
+    higher the cost. (This eliminates the "unlimited_connector_set"
     in the dictionary).
 
-  Repulsive parses: Sometimes, the existance of one parse should suggest
+  Repulsive parses: Sometimes, the existence of one parse should suggest
     that another parse must surely be wrong: if one parse is possible,
     then the other parses must surely be unlikely. For example: the
     conjunction and.j-g allows the "The Great Southern and Western
@@ -944,10 +944,10 @@ TODO -- Working Notes:
     it also provides a pattern match for "John and Mike" as a single
     entity, which is almost certainly wrong. But "John and Mike" has
     an alternative parse, as a conventional-and -- a list of two people,
-    and so the existance of this alternaive (and correct) parse suggests
+    and so the existence of this alternative (and correct) parse suggests
     that perhaps the entity-and is really very much the wrong parse.
     That is, the mere possibility of certain parses should strongly
-    disfavour other possible parses. (Exception: Ben & Jerry's ice
+    disfavor other possible parses. (Exception: Ben & Jerry's ice
     cream; however, in this case, we could recognize Ben & Jerry as the
     name of a proper brand; but this is outside of the "normal"
     dictionary (?) (but maybe should be in the dictionary!))
@@ -957,8 +957,8 @@ TODO -- Working Notes:
     be eliminated.
 
 
-  Wordnet hinting:
-    Use wordnet to reduce the number for parses for sentences containing
+  WordNet hinting:
+    Use WordNet to reduce the number for parses for sentences containing
     compound verb phrases, such as "give up", "give off", etc.
 
   incremental parsing: to avoid a combinatorial explosion of parses,
@@ -983,7 +983,7 @@ TODO -- Working Notes:
      The horse raced past the barn fell.
      The old man the boat.
      The cotton clothing is made of grows in Mississippi.
-     The current parser parses these perfectly; a viterbi parsr could
+     The current parser parses these perfectly; a viterbi parser could
      trip on these.
 
    Other benefits of a Viterbi decoder:
@@ -994,7 +994,7 @@ TODO -- Working Notes:
      pronouns, etc.)
    * Would allow richer state to be passed up to higher layers:
      specifically, alternate parses for fractions of a sentence,
-     alternate refernce resolutions.
+     alternate reference resolutions.
    * Would allow plug-in architecture, so that plugins, employing
      some alternate, higher-level logic, could disambiguate (e.g.
      by making use of semantic content).
@@ -1002,7 +1002,7 @@ TODO -- Working Notes:
    * Fixes the word-count problem during spell-guessing. So, for
      example, if the mis-spelled word "dont" shows up in the input, it
      could be issued as one word ("done") or two ("do n't") and the
-     current suffix-stripping/word-issueing algo cannot deal with this
+     current suffix-stripping/word-issuing algo cannot deal with this
      correctly. By contrast, this should not be an issue for the
      Viterbi algo, as it could explore both states at once.
 
@@ -1020,7 +1020,7 @@ TODO -- Working Notes:
       requires a determiner. By contrast, "thieves rob water" parses
       just fine.) A fix for this would be to replace mandatory
       determiner links by (D- or {[[()]] & headline-flag}) which allows
-      the D link to be ommitted if the headline-flag bit is set.
+      the D link to be omitted if the headline-flag bit is set.
       Here, "headline-flag" could be a new link-type, but one that is
       not subject to planarity constraints.
 
@@ -1028,7 +1028,7 @@ TODO -- Working Notes:
       high-cost null link, and no headline-flag, then all sorts of
       ungrammatical sentences parse, with strange parses; while some
       grammatical sentences, which should parse, but currently don't,
-      become parseable, but with crazy results.
+      become parsable, but with crazy results.
 
       More examples, from And Rosta:
       "when boy meets girl"
@@ -1037,7 +1037,7 @@ TODO -- Working Notes:
 
       A natural approach would be to replace fixed costs by formulas.
       This would allow the dialect/sociolect to be dynamically
-      changable.  That is, rather than having a binary headline-flag,
+      changeable.  That is, rather than having a binary headline-flag,
       there would be a formula for the cost, which could be changed
       outside of the paring loop.  Such formulas could be used to
       enable/disable parsing specific to different dialects/sociolects,
@@ -1254,7 +1254,7 @@ TODO -- Working Notes:
     most commonly discussed in the context of MTT or Meaning-Text Theory
     of Igor Mel'cuk et al (search for "MTT Lexical Function" for more
     info). Mel'cuk treats set phrases as lexemes, and, for parsing, this
-    is not directly relevent. However, insofar as phrasemes have a high
+    is not directly relevant. However, insofar as phrasemes have a high
     mutual information content, they can dominate the syntactic
     structure of a sentence.
 
@@ -1322,7 +1322,7 @@ TODO -- Working Notes:
       The proximal issue is to add a cost, so that Bill gets a lower
       cost than bill.n when parsing "Bill went on a walk".  The best
       solution would be to add a 'capitalization-mark token' during
-      tokenization; this token preceeds capitalized words. The
+      tokenization; this token precedes capitalized words. The
       dictionary then explicitly links to this token, with rules similar
       to the a/an phonetic distinction.  The point here is that this
       moves capitalization out of ad-hoc C code and into the dictionary,
@@ -1366,10 +1366,10 @@ TODO -- Working Notes:
 A performance diary:
 --------------------
 Time to parse some long sentences:
-The original esults below were for version ...
+The original results below were for version ...
 The June 2014 results are for version 5.1.0
 
-25 words + 2 punct, 0.2 seconds  (0.7 seconds june 2014) (0.2 secs SAT, June 2014)
+25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014) (0.2 secs SAT, June 2014)
 Hot runners usually make the mold more expensive to manufacture and run, but allow savings by reducing plastic waste and by reducing the cycle time.
 
 38 words + 4 punct: 2.4 seconds (2.6 secs, June 2014) (0.32 secs, SAT, June 2014)
