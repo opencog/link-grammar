@@ -7,6 +7,26 @@
 #include <stdio.h>
 #include "link-grammar/link-includes.h"
 
+static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *str)
+{
+	Sentence sent = sentence_create(str, dict);
+	sentence_split(sent, opts);
+	int num_linkages = sentence_parse(sent, opts);
+	if (0 < num_linkages)
+	{
+		if (10 < num_linkages) num_linkages = 10;
+
+		for (int li = 0; li<num_linkages; li++)
+		{
+			Linkage linkage = linkage_create(li, sent, opts);
+			char * diagram = linkage_print_diagram(linkage, true, 80);
+			linkage_free_diagram(diagram);
+			linkage_delete(linkage);
+		}
+	}
+	sentence_delete(sent);
+}
+
 static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int niter)
 {
 	const char *sents[] = {
@@ -21,18 +41,13 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 	};
 
 	int nsents = sizeof(sents) / sizeof(const char *);
-	for (int i=0; i < nsents; ++i)
+
+	for (int j=0; j<niter; j++)
 	{
-		Sentence sent = sentence_create(sents[i], dict);
-		sentence_split(sent, opts);
-		int num_linkages = sentence_parse(sent, opts);
-		if (num_linkages > 0) {
-			Linkage linkage = linkage_create(0, sent, opts);
-			char * diagram = linkage_print_diagram(linkage, true, 800);
-			linkage_free_diagram(diagram);
-			linkage_delete(linkage);
+		for (int i=0; i < nsents; ++i)
+		{
+			parse_one_sent(dict, opts, sents[i]);
 		}
-		sentence_delete(sent);
 	}
 }
 
@@ -49,6 +64,9 @@ int main(int argc, char* argv[])
 
 	int n_threads = 10;
 	int niter = 100;
+
+	printf("Creating %d threads, each running %d iterations\n",
+		 n_threads, niter);
 	std::vector<std::thread> thread_pool;
 	for (int i=0; i < n_threads; i++) {
 		thread_pool.push_back(std::thread(parse_sents, dict, opts, i, niter));
