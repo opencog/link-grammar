@@ -600,15 +600,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				if (!subword_eq_unsplit_word)
 					gwordqueue_add(sent, subword);
 
-				/* The spelling properties are inherited. */
+				/* The spelling properties are inherited over morpheme split */
 				if (unsplit_word->status & (WS_SPELL|WS_RUNON))
 				    subword->status |= unsplit_word->status & (WS_SPELL|WS_RUNON);
-
-				/* Mark subwords that are a result of spelling. */
-				if (unsplit_word->tokenizing_step == TS_SPELL)
-					subword->status |= WS_SPELL;
-				if (unsplit_word->tokenizing_step == TS_RUNON)
-					subword->status |= WS_RUNON;
 
 				if (1 == token_ord) /* first subword of this alternative */
 				{
@@ -885,7 +879,6 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 	if (SYNTHETIC_SENTENCE_MARK != sent->orig_sentence[0]) return false;
 
 	assert(0 != len, "synthetic_split(): empty-string word");
-	//unsplit_word->tokenizing_step = TS_DONE; /* prevent further tokenization */
 	if (')' != w[len-1]) return false; /* no split needed (syntax not checked) */
 
 	do
@@ -1151,20 +1144,50 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
 static void tokenization_done(Dictionary dict, Gword *altp)
 {
 
-		Gword *alternative_id = altp->alternative_id;
+	Gword *alternative_id = altp->alternative_id;
 
-		for (; altp->alternative_id == alternative_id; altp = altp->next[0])
-		{
-			if (NULL == altp) break; /* can be a dummy word */
+	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
+	{
+		if (NULL == altp) break; /* just in case this is a dummy word */
 
-			/* We are bypassing separate_word(), so mark it here if needed. */
-			if (boolean_dictionary_lookup(dict, altp->subword))
-			    altp->status |= WS_INDICT;
+		/* We are bypassing separate_word(), so mark it here if needed. */
+		if (boolean_dictionary_lookup(dict, altp->subword))
+			 altp->status |= WS_INDICT;
 
-			altp->tokenizing_step = TS_DONE;
-			if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
-		}
+		altp->tokenizing_step = TS_DONE;
+
+		/* XXX Why this was needed?! */
+		if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
+	}
 }
+
+/**
+ * Set the status of all the words in a given alternative.
+ */
+static void set_alt_word_status(Dictionary dict, Gword *altp,
+                                unsigned int status)
+{
+	Gword *alternative_id = altp->alternative_id;
+
+	for (; (NULL != altp) && (altp->alternative_id == alternative_id);
+		  altp = altp->next[0])
+	{
+		if (NULL == altp) break; /* just in case this is a dummy word */
+
+		/* WS_INDICT is to be used if we are bypassing separate_word(). */
+		if ((altp->status & WS_INDICT) &&
+			 !boolean_dictionary_lookup(dict, altp->subword))
+		{
+			 status &= ~WS_INDICT;
+		}
+
+		altp->status |= status;
+
+		/* Is this needed? */
+		if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
+	}
+}
+
 
 #define HEB_PRENUM_MAX 5   /* no more than 5 prefix "subwords" */
 #define HEB_MPREFIX_MAX 16 /* >mp_strippable (13) */
@@ -1393,6 +1416,8 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 	/* Word split for run-on and guessed words. */
 	for (j=0; j<n; j++)
 	{
+		Gword *altp;
+
 		/* The word might be a run-on of two or more words. */
 		sp = strchr(alternates[j], ' ');
 		if (sp)
@@ -1416,9 +1441,9 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			altappend(sent, &runon_word, wp);
 			if (!unknown)
 			{
-				unsplit_word->tokenizing_step = TS_RUNON;
-				issue_word_alternative(sent, unsplit_word, "RO",
-				   0,NULL, altlen(runon_word),runon_word, 0,NULL);
+				altp = issue_word_alternative(sent, unsplit_word, "RO",
+				          0,NULL, altlen(runon_word),runon_word, 0,NULL);
+				set_alt_word_status(sent->dict, altp, WS_RUNON);
 				runon_word_corrections++;
 			}
 			free(runon_word);
@@ -1430,9 +1455,9 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			if (is_known_word(sent, alternates[j]))
 			{
 				wp = alternates[j];
-				unsplit_word->tokenizing_step = TS_SPELL;
-				issue_word_alternative(sent, unsplit_word, "SP",
-				                       0,NULL, 1,&wp, 0,NULL);
+				altp = issue_word_alternative(sent, unsplit_word, "SP",
+				                              0,NULL, 1,&wp, 0,NULL);
+				set_alt_word_status(sent->dict, altp, WS_SPELL);
 				num_guesses++;
 			}
 			//else printf("Spell guess '%s' ignored\n", alternates[j]);
