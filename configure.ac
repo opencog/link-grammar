@@ -702,6 +702,7 @@ bindings/python/Makefile
 bindings/python/__init__.py
 morphology/Makefile
 link-parser/Makefile
+tests/Makefile
 data/Makefile
 data/amy/Makefile
 data/any/Makefile
