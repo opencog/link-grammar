@@ -188,7 +188,7 @@ typedef enum
 	MT_TEMPLATE,
 	MT_ROOT,
 	/* Experimental - for display purposes */
-	MT_CONTR,              /* Contracted word first or second part */
+	MT_CONTR,              /* Contracted part of a contraction (e.g. y', 's) */
 	MT_PUNC,               /* Punctuation (yet unused) */
 	/* We are not going to have >63 types up to here. */
 	MT_STEM    = 1<<6,     /* Stem */
@@ -209,7 +209,7 @@ typedef enum
 #define WS_INDICT    1<<6 /* boolean_dictionary_lookup() is true */
 #define WS_FIRSTUPPER 1<<7 /* Subword is the lc version of its unsplit_word */
 /* - Post linkage stage. XXX Experimental. */
-#define WS_PL        1<<14 /* Post-Linkage word, not belonging to tokenization */
+#define WS_PL        1<<14 /* Post-Linkage, not belonging to tokenization */
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 
