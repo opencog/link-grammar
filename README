@@ -65,7 +65,7 @@ CONTENTS of this directory:
    ChangeLog                A compendium of recent changes.
    configure                The GNU configuration script
    autogen.sh               Developer's configure maintenance tool
-   msvc6, msvc9, msvc12     Microsoft Visual-C project files
+   msvc9, msvc12            Microsoft Visual-C project files
 
 
 UNPACKING and signature verification:
@@ -429,10 +429,10 @@ TESTING the program:
    number of errors one can expect to observe in each of these files
    are as follows:
 
-   en/4.0.batch:         53 errors
-   en/4.0.fixes.batch:   449 errors
+   en/4.0.batch:         61 errors
+   en/4.0.fixes.batch:   401 errors
    lt/4.0.batch:         17 errors
-   ru/4.0.batch:         47 errors
+   ru/4.0.batch:         31 errors
 
    The bindings/python directory contains a unit test for the python
    bindings. It also performs several basic checks that stress the
@@ -741,7 +741,7 @@ Fat Links:
    Enabling this will generate a lot of warning messages during
    compilation.
 
-   As of version 5.2.0 (XXX 2014/2015) the "fat link" code has been
+   As of version 5.2.0 (December 2014) the "fat link" code has been
    removed. The fat-link code consisted of about 5 KLOC or about 1/6th
    of the total code. About 23 KLOC of the core parser code remains.
    Users of the Russian dicts must use versions prior to this to get
@@ -794,8 +794,8 @@ Phonetics
 ---------
    A/An phonetic determiners before consonants/vowels are handled by a
    new PH link type, linking the determiner to the word immediately
-   folowing it.  Status: mostly done, more testing needded. The rules
-   could be simplified.  Many spcial-case nouns are unfinished.
+   folowing it.  Status: mostly done, more testing needed. The rules
+   could be simplified.  Many special-case nouns are unfinished.
 
 
 ADDRESSES
