@@ -1,4 +1,17 @@
+/***************************************************************************/
+/* Copyright (c) 2014 Linas Vepstas                                        */
+/* All rights reserved                                                     */
+/*                                                                         */
+/* Use of the link grammar parsing system is subject to the terms of the   */
+/* license set forth in the LICENSE file included with this software.      */
+/* This license allows free redistribution and use in source and binary    */
+/* forms, with or without modification, subject to certain conditions.     */
+/*                                                                         */
+/***************************************************************************/
 
+// This implements a very simple-minded multi-threaded unit test.
+// All it does is to make sure the system doesn't crash e.g. due to
+// memory allocation conflicts.
 
 #include <thread>
 #include <vector>
@@ -7,9 +20,9 @@
 #include <stdio.h>
 #include "link-grammar/link-includes.h"
 
-static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *str)
+static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent_str)
 {
-	Sentence sent = sentence_create(str, dict);
+	Sentence sent = sentence_create(sent_str, dict);
 	sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
 	if (0 < num_linkages)
@@ -19,8 +32,14 @@ static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *str)
 		for (int li = 0; li<num_linkages; li++)
 		{
 			Linkage linkage = linkage_create(li, sent, opts);
-			char * diagram = linkage_print_diagram(linkage, true, 80);
-			linkage_free_diagram(diagram);
+			char * str = linkage_print_diagram(linkage, true, 80);
+			linkage_free_diagram(str);
+			str = linkage_print_links_and_domains(linkage);
+			linkage_free_links_and_domains(str);
+			str = linkage_print_disjuncts(linkage);
+			linkage_free_disjuncts(str);
+			str = linkage_print_constituent_tree(linkage, SINGLE_LINE);
+			linkage_free_constituent_tree_str(str);
 			linkage_delete(linkage);
 		}
 	}
