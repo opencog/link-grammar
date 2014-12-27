@@ -468,15 +468,19 @@ dnl skipped and all flags rechecked.  So there's no need to do anything
 dnl else.  If for any reason you need to force a recheck, just change
 dnl MAYBE_WARN in an ignorable way (like adding whitespace)
 
+dnl MAYBE_WARN works for C++ and C, while MAYBE_WARN_C is for C only.
 MAYBE_WARN="-Wall -Wextra \
 -Wsign-compare -Werror-implicit-function-declaration \
--Wpointer-arith -Wwrite-strings -Wstrict-prototypes \
--Wmissing-prototypes -Wmissing-declarations -Wnested-externs \
+-Wpointer-arith -Wwrite-strings -Wmissing-declarations \
 -Wpacked -Wswitch-enum -Wmissing-format-attribute \
 -Wstrict-aliasing=2 -Winit-self -Wunsafe-loop-optimizations \
--Wdeclaration-after-statement -Wold-style-definition \
 -Wno-missing-field-initializers -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long -Winline"
+
+MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
+-Wnested-externs -Wdeclaration-after-statement -Wold-style-definition"
+
+MAYBE_WARN="$MAYBE_WARN $MAYBE_WARN_C"
 
 # invalidate cached value if MAYBE_WARN has changed
 if test "x$link_cv_warn_maybe" != "x$MAYBE_WARN"; then
