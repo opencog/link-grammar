@@ -1,4 +1,217 @@
-Version 4.8.5 of the Link Grammar Parser is now available. 
+
+
+=================================================================
+=================================================================
+=================================================================
+
+Link Grammar version 5.1.2 is now available. Download from:
+
+http://www.abisource.com/downloads/link-grammar/5.1.2/link-grammar-5.1.2.tar.gz
+
+The most serious fix in this release is a build-break fix for Apple OSX Mavericks.
+
+Other fixes, from the ChangeLog:
+
+ * Fix greeting: "How do you do?"
+ * Fix indirect object in 'what' questions: 'To what do you owe your success?'
+ * Fix assorted questions with verb "to be".
+ * Compile fixes for Apple OSX version "Mavericks"
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+=================================================================
+=================================================================
+=================================================================
+
+[ANNOUNCE] link-grammar version 5.1.0
+
+Version 5.1.0 of link-grammar is now available for download at
+http://www.abiword.org/downloads/link-grammar/5.1.0/link-grammar-5.1.0.tar.gz
+
+This version includes a number of important changes. One of these is
+that the connectors can now be given a direction (head and tail
+indicators), so that link-grammar dependencies can now be true,
+hierarchical dependency arrows.  This is of marginal importance for
+English, where dependency directions are implicit, but is vital for
+free-word-order languages, where bi-directional links are not enough.
+
+Another important change is that costs can now be arbitrary floating
+point numbers. This is particularly useful for providing fine-grained
+parse ranking.  The LG cost system assigns a "cost" to every connector,
+and the sum-total of costs for a sentence determines the parse ranking.
+Since costs are additive, they behave as entropies (log P -- the
+logarithm of a probability: probabilities are multiplicative, logarithms
+are additive).
+
+Under the covers, there's been some major work on the tokenization
+(splitting sentences into words) and morphology (splitting words into
+morphemes) code.  This work is ongoing, and should eventually result in
+much better support for non-English languages.
+
+Other notable changes include an updated Russian dictionary, and an
+assortment of changes to the English dictionary.  An intriguing step
+towards phonology: LG can now distinguish between the use of the
+determiners "a" and "an" preceding nouns that start with consonants
+or vowels.  Whether fancier phonology support is possible is a curious
+question.
+
+The full changelog is below:
+
+ * Updated Russian dictionaries from Sergei Protasov.
+ * Added morphology-based unknown-word handling for Russian, from Sergei.
+ * Fix up fat-linkage code, which was recently broken...
+ * API cleanup: many command-line options never belonged in the API.
+ * New emoticon support was clobbering certain dictionary words.
+ * Fix: "Go to spot X", "It happens at time T."
+ * Add a dozen missing verbs.
+ * Minor work on greetings.
+ * Add mechanism for denoting fractional costs in the file-backed dict.
+ * Fix: broken handling of gerunds (due to bad verb-wall connectors)
+ * Major redesign of morpheme splitting mechanism (from AmirP)
+ * Minor extensions to support numeric formulas, e.g. 1 + 1 = 2.
+ * Remove fat linkage support from the SAT solver.
+ * Enable build of SAT solver by default.
+ * Fix multiple bugs with unit stripping.
+ * Add bounds-checking to the C API.
+ * Fix the old disjunct-printing implementation.
+ * Add support for easy-to-use link direction indicator.
+ * Add random morphology generator tool.
+ * Partial support for phonetic use of "a" vs. "an" for English.
+ * Rework how coordination between conjunctions works: "either... or ...", etc.
+ * Major redesign of tokenization mechanism (from AmirP)
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+Download:
+http://www.abiword.org/downloads/link-grammar/5.1.0/link-grammar-5.1.0.tar.gz
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+=================================================================
+=================================================================
+=================================================================
+
+Version 5.0.0 of the Link Grammar Parser is now available.
+
+(Yes, its April 1st.  No, this is not a joke.  Maybe I'll think of
+something snarky next year.)
+
+We are proud to announce a major new release of the Link Grammar Parser!
+It contains many important changes and new additions.  One of the most
+significant changes is that the license has been changed from the BSD
+license to the LGPL.  This was done to enable considerably more
+flexibility in accepting contributions to the project: it seems that
+few are particularly interested in contributing to a BSD-licensed project.
+This change has enabled folding in some new work:
+
+ o Arabic and Persion dictionaries!  These were previously maintained
+   as separate add-ons.  Including them as part of the distribution
+   should make it easier for interested users.
+
+ o A new 'bindings' directory, containing code for Java, Python, Common
+   Lisp, OCaML and AutoIt programming languages.  The Python bindings
+   are an updated version of the older pylinkgrammar-0.2.13 bindings.
+   A SWIG interface file should make it easy to create other language
+   bindigns as well.
+
+ o Improved morphology support. This will be invisible to most users,
+   but it lays the groundwork for add Hebrew support to the parser.
+
+ o Expanded Lithuanian support. This remains a simplistic prototype, but
+   it now performs a more sophisticated morphological analysis.
+
+ o Experimental Turkish and Hebrew dictionaries.
+
+ o A demo of the JSON parser server: it shows how to run the server,
+   which will accept accept raw sentences on a socket, and returns the
+   parsed forms.
+
+ o Some slightly incompatible changes to the API: it was time for some
+   housekeeping.
+
+ o Misc minor updates to the English Language dictionaries.
+
+ o Preliminary work for SQL-backed dynamic dictionaries. This should
+   enable certain types of automated language learning.
+
+The full changelog is shown below.
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+Download:
+http://www.abiword.org/downloads/link-grammar/4.7.9/link-grammar-4.7.9.tar.gz
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+
+CHANGELOG:
+
+Version 5.0.0 (1 April 2014)
+ * License upgrade to LGPLv2.1
+ * Arabic dictionaries, from Jon Dehdari
+ * Persian dictionaries, from Jon Dehdari
+ * Support for Hebrew tokenization, from Amir P.
+ * Fix wild-card matching for user-supplied word lookup.
+ * Prototype Turkish dictionary from Can Bruce.
+ * Re-arrange programming language bindings directory.
+ * Adopt the orphaned/unsupported pylinkgrammar Python bindings.
+ * Deprecate the obsolete CNode interface.
+ * Provide low-level perl bindings.
+ * Adopt the orphaned/unsupported OCaML bindings.
+ * Support affirmative replies: "Who did it?" "John's evil twin."
+ * Expanded Lithuanian dictionary.
+ * Minor disjunct printing fixes.
+ * Fix: "Mary is too XXX to talk to."
+ * Prototype Hebrew dictionary from Amir P.
+ * Change !suffixes flag to !morphology.
+ * Introduce a bi-directional connector, for free-word-order languages.
+ * Introduce a symmetric-AND operator, for free-word-order languages.
+ * Add demo shell script for running the JSON parse server.
+ * Bugfix: Java server failing when input sentence has commas in it!
+ * New !test and !debug commands for selective debugging support.
+ * Print post-processing rejection message, when !bad is enabled.
+ * Remove some deprecated functions for C API.
+ * Remove all deprecated functions from Java API.
+ * Initial support for an SQL-backed dynamic dictionary.
+
+
+=================================================================
+=================================================================
+=================================================================
+
+Version 4.8.5 of the Link Grammar Parser is now available.
 
 This is the third release in about a week; each prompted by a
 build-break in the previous version.  Sorry!  There's been assorted
@@ -66,7 +279,10 @@ Version 4.8.1 (21 November 2013)
 
 
 =================================================================
-Version 4.8.0 of the Link Grammar Parser is now available. 
+=================================================================
+=================================================================
+
+Version 4.8.0 of the Link Grammar Parser is now available.
 
 This is the start of a new version series, containing an important
 change to the English language dictionary. Three new link types are
@@ -88,7 +304,7 @@ for details.
 With this release, we expect that all (non-auxiliary) verbs in a
 sentence will be linked either to the wall, or to a controlling parent.
 We also expect there to be some additional fixes and tightening-up
-to occur in future releases, especially in regards to comparative 
+to occur in future releases, especially in regards to comparative
 sentences.
 
 This release also includes a variety of fixes to the Java API/server.
@@ -132,3 +348,109 @@ Version 4.8.0 (24 October 2013)
  * Fix: issue 59: crash/corruption when dictionary opened twice.
  * Fix: assorted exclamations!
 
+=================================================================
+=================================================================
+=================================================================
+
+Version 4.7.12 of the Link Grammar Parser is now available.
+
+The biggest change in this version is a sharply updated Russian
+dictionary, which fixes a large number of bugs generated during
+during the initial release.  Thanks to Sergey Protasov who did
+almost all this work!
+
+The other notable change is that the fat-link code is no longer
+build by default.  It will be permanently removed in some future
+version, "real soon now".
+
+A miscellany of other minor changes are listed below.
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+Download:
+http://www.abiword.org/downloads/link-grammar/4.7.12/link-grammar-4.7.12.tar.gz
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+
+CHANGELOG:
+Version 4.7.12 (25 May 2013)
+ * Large fixes to the Russian dictionaries.
+ * Windows: Explicitly fail if cygwin version is too old.
+ * Tweak the lt dict to work again with the modern parser.
+ * Make the fat linkages code be compile-time configurable.
+ * Disable fat linkages by default; mark as deprecated.
+ * Fix SAT-solver build; recent changes had broken it.
+ * Export read-dict.h as a public API.
+ * Ongoing development of the Viterbi prototype.
+ * Windows: some UTF8/widechar refactoring.
+ * Java bindings: add method to set the language.
+ * CMake: add version checking to the CMakefile
+ * Fix: failed handling of capitalized first word for Russian.
+ * Fix: stemming failures in many cases (for Russian dictionaries)
+ * Add flag to suppress stem-suffix printing.
+ * Windows: Fixes to MSVC6 build files.
+ * Fix: hash-table bug affecting Russian dictionaries
+
+=================================================================
+=================================================================
+=================================================================
+
+Version 4.7.0 of the Link Grammar Parser is now available.  This version
+introduces a major restructuring of the manner in which conjunctions are
+handled.  Conjunctions are no longer indicated with "fat links"; instead,
+a helf dozen new link types (non-fat, of the ordinary kind) are introduced.
+This allows for a more careful and precise treatment of conjunctions; it
+significantly reduces the number of exceptional cases handled in the C code,
+and results in faster parser: from 1.3x to 2.7x faster, depending on the
+text.
+
+WHAT IS LINK GRAMMER?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax. Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+CHANGELOG:
+Version 4.7.0 (12 September 2010):
+ * Fix: hunspell configuration on Fedora (bugtracker issue 47)
+ * Fix: 'turn' with adjective: "She turned him green" from wingedtachikoma
+ * Fix: comma-conjoined modifiers: "It tastes bitter, not sweet."
+ * Fix: conjoined question words: "When and where is the party?"
+ * Fix: recognize short, capitalized words (Los, La, etc.).
+ * Treat colon as synonym for is: "The answer: yes."
+ * Fix: begin with prepositions: "It all began in Chicago."
+ * Fix: "What does it come to?" and related.
+ * Fix: null infinitive: "I'd like to, I want to."
+ * Fix: "Because I said so."
+ * Fix: "sure" as preverbal adverb: "It sure is."
+ * Fix: Gerunds with determiners: "a running of the bulls"
+ * SJ link for conjoined nouns/noun phrases.
+ * Sort linkages according to whether fat linkage was used.
+ * Add flag to enable use of fat linkage during parsing.
+   (Fat links now disabled by default).
+ * Add male/female gender tags to misc nouns.
+ * Fix: misc optionally transitive verbs: mix, paint, boot
+ * Fix: word order: "look about fearfully", "look fearfully about", around
+ * Fix: recognize simple fractions
+ * Fix: "is" with uncountable nouns: "there is blood on your hands"
+ * Fix: Roman numeral suffixes e.g. "Henry VIII"
+ * Fix: regression in dates followed by punctuation. "In the 1950s, ..."
+ * Fix: verbs drank, drunk are optionally transitive.
+ * Fix: regression: "all the X", X can be plural or mass.
+ * Fix: verbs paint, color may be ditranstive: "paint the car bright green"
+
+=================================================================
+=================================================================
+=================================================================
