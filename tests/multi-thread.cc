@@ -1,19 +1,20 @@
 
 
 #include <thread>
+#include <vector>
 
 #include <locale.h>
 #include <stdio.h>
 #include "link-grammar/link-includes.h"
 
-void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int niter)
+static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int niter)
 {
 	const char *sents[] = {
 		"Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.",
 		"Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a social disease.",
 		"He obtained the lease of the manor of Great Burstead Grange (near East Horndon) from the Abbey of Stratford Langthorne, and purchased the manor of Bayhouse in West Thurrock.",
 		"We ate popcorn and watched movies on TV for three days.",
-		"Sweat stood on his brow, fury was bright in his one good eye.".
+		"Sweat stood on his brow, fury was bright in his one good eye.",
 		"One of the things you do when you stop your bicycle is apply the brake."
 // "под броню боевого робота устремились потоки энергии.",
 // "через четверть часа здесь будет полно полицейских."
