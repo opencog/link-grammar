@@ -181,7 +181,7 @@ protected:
   // pruned if their cost exceeds this value. Cost cutoff is performed
   // during satisfaction condition generating.
   // XXX FIXME, this should be taken from parse options.
-  static const double _cost_cutoff = 2.7;
+  static constexpr double _cost_cutoff = 2.7;
 
   /**
    *   Creating clauses and passing them to the MiniSAT solver

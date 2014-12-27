@@ -81,7 +81,7 @@ AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
 dnl ====================================================================
 CFLAGS="${CFLAGS} -O3" 
-CXXFLAGS="${CXXFLAGS} -O2 -Wall"
+CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++11"
 
 # The std=c99 flag provides the proper float-pt math decls working, 
 # e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
@@ -233,7 +233,6 @@ AC_ARG_ENABLE( viterbi,
 
 if test "x$enable_viterbi" = "xyes"; then
 	CPPFLAGS="${CPPFLAGS} -DUSE_VITERBI"
-	CXXFLAGS="${CXXFLAGS} -std=c++0x"
 
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
@@ -468,15 +467,19 @@ dnl skipped and all flags rechecked.  So there's no need to do anything
 dnl else.  If for any reason you need to force a recheck, just change
 dnl MAYBE_WARN in an ignorable way (like adding whitespace)
 
-MAYBE_WARN="-Wall -Wextra \
+dnl MAYBE_WARN works for C++ and C, while MAYBE_WARN_C is for C only.
+MAYBE_WARN_CXX="-Wall -Wextra \
 -Wsign-compare -Werror-implicit-function-declaration \
--Wpointer-arith -Wwrite-strings -Wstrict-prototypes \
--Wmissing-prototypes -Wmissing-declarations -Wnested-externs \
+-Wpointer-arith -Wwrite-strings -Wmissing-declarations \
 -Wpacked -Wswitch-enum -Wmissing-format-attribute \
 -Wstrict-aliasing=2 -Winit-self -Wunsafe-loop-optimizations \
--Wdeclaration-after-statement -Wold-style-definition \
 -Wno-missing-field-initializers -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long -Winline"
+
+MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
+-Wnested-externs -Wdeclaration-after-statement -Wold-style-definition"
+
+MAYBE_WARN="$MAYBE_WARN_CXX $MAYBE_WARN_C"
 
 # invalidate cached value if MAYBE_WARN has changed
 if test "x$link_cv_warn_maybe" != "x$MAYBE_WARN"; then
@@ -702,6 +705,7 @@ bindings/python/Makefile
 bindings/python/__init__.py
 morphology/Makefile
 link-parser/Makefile
+tests/Makefile
 data/Makefile
 data/amy/Makefile
 data/any/Makefile
