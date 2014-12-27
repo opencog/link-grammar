@@ -1,4 +1,60 @@
 
+[ANNOUNCE] Link Grammar version 5.2.0 is now available. Download from:
+
+http://www.abisource.com/downloads/link-grammar/5.2.0/link-grammar-5.2.0.tar.gz
+
+This is a major release of the parser, with many important changes in
+it.  The internals of the parser have been re-organized, resulting in
+a speedup of 2x to 4x for typical English texts.  Multiple multi-
+threading bugs were fixed, and there is now a simple multi-threading
+unit test.  A memory leak was fixed, and a memory over-consumption
+bug was fixed.  These changes were enabled by the final removal of the
+"fat link" code from the parser.
+
+Parser internals work continues apace: it is expected that a version
+5.3.0 will follow shortly, featuring a completely re-designed tokenizer.
+This redesign should enable simpler and better morphology support.
+
+The ChangeLog notes other fixes as well:
+
+Version 5.2.0 (27 December 2014)
+ * y'all, ain't, gonna, y'gotta: Beverly Hillbillies basilect.
+ * Permanent removal of the fat-link code.
+ * Remove deprecated constituent tree code.
+ * Windows: add terminal screen resizing support.
+ * Windows: a build fix.
+ * reign, rule, run, leave, come: can take predicative adjective.
+ * Rework costs for many verb-derived adjectives.
+ * Handle (predicative) adjectival modifiers for assorted perfect verbs.
+ * Fixes for various color names.
+ * Fixes for various affirmative answers.
+ * Add 100 missing verbs.
+ * Add preliminary lxc-docker (docker.io) support.
+ * Remove MSVC6 support.
+ * Fix memleak introduced in version 5.1.0
+ * Speedup of 1.7x to 4x (depending on text) from linkage processing redesign.
+ * Fix multi-threading safety bug.
+ * Fix link-and-domain printing alignment (to handle utf8 char widths).
+ * Windows: fixes for MSVC12 support.
+ * Fix memory consumption bug (EMPTY_WORD) introduced in version 4.7.10.
+ * Get rid of xrealloc, which clashes with libbfd symbol xrealloc.
+ * Add multi-threaded parsing unit test.
+
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on Link Grammar, an original theory of syntax
+and morphology.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (HPSG style phrase tree)
+representation of a sentence (showing noun phrases, verb phrases, etc.).
+The RelEx extension provides Stanford-style Dependency Grammar output.
+
 
 =================================================================
 =================================================================
