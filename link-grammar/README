@@ -13,8 +13,8 @@ The dict-sql directory contains code to read dictionaries from an SQL DB.
    (unfinished, under development!)
 
 
-Version 5.3.0 - Introduction of a word-graph tokenizer
-------------------------------------------------------
+Version 5.3.0 - Introduction of a word-graph for tokenizing
+-----------------------------------------------------------
 
 In this version the tokenizer code has been heavily modified once again.
 Instead of tokenizing all the words in one pass directly into the
@@ -22,9 +22,9 @@ word-array of the parser, it now tokenizes them using a graph which its
 nodes are "subwords".  Initially the original sentence words are tokenized
 to subwords only by whitespace. After that step, each subword is handled in
 its turn, and get split to further subwords if needed. A special care is
-needed if one of the alternatives of a subword is the subword itself
+taken if one of the alternatives of a subword is the subword itself
 (alone, which is usual, or with a dict-cap token - a thing that is not
-explained here and has a partial and unchecked implementation try).
+explained here).
 
 The new way of tokenizing is much more flexible that the old one, and it
 serves as an infrastructure on which new tokenizing and display features
@@ -36,7 +36,7 @@ contraction. In addition, the multi-level of tokenization, inherent to the
 word-graph, allows multiple run-on and spell-correction fixes on the same
 word at once.
 
-The tokenizing code is still based very much on the old code and further
+The tokenizing code is still based much on the old code and further
 work is needed to clean it up (or to replace it, e.g. by a
 regex-tokenizer). It still doesn't use the full power of the word-graph,
 and they are constructs that need to be tokenized but they are not (they
@@ -44,7 +44,7 @@ are also not in the sentence test batches). E.g. -- between words without
 whitespace.
 
 There is still no API to get information from the word-graph. In particular,
-it is not possible to find out the sentence words with punctuation
+it is not possible to find out the sentence words after punctuation
 tokenization, as in previous releases.
 
 Since the parser cannot currently use the word-graph directly, there is a
@@ -54,7 +54,7 @@ scans all the word-graph paths in parallel, trying to advance to the next
 words and to issue them into the 2D-word-array.
 
 It advances to the next word of a given word in rounds, using two passes, one
-word per path on each round:
+word per word-graph path on each round:
 Pass 1. Next words which are in the same alternative of the given word.
 Pass 2. Next words which are in a different alternative (of the common
 ancestor word) of words that has already been advanced to in the previous
@@ -97,6 +97,20 @@ code is not compiled by default because it involves invocation of an
 external program (dot) and in addition, files are created in /tmp, both
 things may not be desired by some users. Use --enable-wordgraph-display to
 enable this feature.
+
+Quotes now are not discarded, but are considered to be regular dict tokens.
+In this version they have no significant linkage and always attach to the word
+before them (or to the LEFT-WALL). In order to compare detailed batch runs with
+previous versions of the library, a !test=removeZZZ can be used to remove the
+quote display.
+
+A new experimental handling of capital words using the dictionary has been
+introduced. It inserts the token 1stCAP before the uc version, and nonCAP before
+the lc one, as discussed in:
+https://groups.google.com/forum/?hl=en#!topic/link-grammar/hmK5gjXYWbk
+It is enabled by !test=dictcap . The special "dictcap" tokens are not yet
+discarded, so in order to compare results to previous library versions, the
+following can be used: !test=dictcap,removeZZZ .
 
 
 
