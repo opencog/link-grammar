@@ -17,6 +17,7 @@ Version 5.2.0 (27 December 2014)
  * Fix multi-threading safety bug.
  * Fix link-and-domain printing alignment (to handle utf8 char widths).
  * Windows: fixes for MSVC12 support.
+ * Fix memory consumption bug (EMPTY_WORD) introduced in version 4.7.10.
  * Get rid of xrealloc, which clashes with libbfd symbol xrealloc.
  * Add multi-threaded parsing unit test.
 
