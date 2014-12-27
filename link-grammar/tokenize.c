@@ -1859,7 +1859,7 @@ p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nr
  * Issue an alternative that starts with w and continue with r_stripped[].
  * If wend is NULL, w is Null-terminated.
  */
-static void issue_n_r_stripped(Sentence sent,
+static void issue_r_stripped(Sentence sent,
                                Gword *unsplit_word,
                                const char *w,
                                const char *wend,
@@ -2176,13 +2176,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			return; /* XXX */
 		}
 
-		/* If the Input word contains units and also got stripped off
-		 * punctuation, restore it here so it will be used as an alternative
-		 * without the punctuation. This happens if it is a part number, like
-		 * 1234-567A. */
-
 		/* Check whether the <number><units> "word" is in the dict (including
-		 * regex). In such a case we need to generate an alternative. */
+		 * regex). In such a case we need to generate an alternative. This happens
+		 * if it is a part number, like "1234-567A".
+		 */
 
 		if (units_n_r_stripped && units_wend) /* units found */
 		{
@@ -2192,18 +2189,31 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			if (find_word_in_dict(dict, temp_word))
 			{
-				issue_n_r_stripped(sent, unsplit_word, word, units_wend,
+				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, units_n_r_stripped, "rR2");
 				word_can_lrsplit = true;
 			}
 		}
 
-		/* If something got stripped, add the result as an alternative. */
+
+		/* Add the strip result as an alternative if one of these conditions is
+		 * true:
+		 * - If the root word (temp_word) is known.
+		 * - If the unsplit_word is unknown. This happens with an unknown word
+		 *   that has punctuation after it). */
 		if (n_r_stripped > 0)
 		{
-			issue_n_r_stripped(sent, unsplit_word, word, wend,
-			                   r_stripped, n_r_stripped, "rR3");
-			word_can_lrsplit = true;
+			sz = wend-word;
+			strncpy(temp_word, word, sz);
+			temp_word[sz] = '\0';
+			
+			if (!find_word_in_dict(dict, unsplit_word->subword) ||
+			    find_word_in_dict(dict, temp_word))
+			{
+				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
+										 r_stripped, n_r_stripped, "rR3");
+				word_can_lrsplit = true;
+			}
 		}
 	}
 
