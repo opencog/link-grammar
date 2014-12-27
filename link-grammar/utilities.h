@@ -169,7 +169,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #define assert(ex, ...) {                                                   \
 	if (!(ex)) {                                                             \
-		prt_error("\nAssertion ("#ex") failed at "FILELINE": " __VA_ARGS__);  \
+		prt_error("\nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
 		fprintf(stderr, "\n");                                                \
 		*((volatile int*) 0x0) = 42;  /* leave stack trace in debugger */     \
 	}                                                                        \
@@ -177,7 +177,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #else
 #define assert(ex, ...) {                                                   \
 	if (!(ex)) {                                                             \
-		prt_error("\nAssertion ("#ex") failed at "FILELINE": " __VA_ARGS__);  \
+		prt_error("\nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
 		fprintf(stderr, "\n");                                                \
 		__builtin_trap();  /* leave stack trace in debugger */                \
 	}                                                                        \
