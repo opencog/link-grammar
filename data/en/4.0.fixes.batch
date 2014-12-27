@@ -4330,6 +4330,9 @@ Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a so
 Senator Johnson introduced a bill on the 12th of July.
 Senator Johnson introduced a bill of July.
 
+% Should be OK now; given name 'Frank' collides with frank.a, frank.v
+Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.
+
 % "one to two" should modify hours.
 It starts one to two hours later.
 It starts one or two hours later.

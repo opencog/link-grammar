@@ -3499,7 +3499,7 @@ beset.v mistaken.v underwritten.v:
 % rare verb, and it causes conflicts witht the given name 'Frank.b'.
 % For example: "Frank felt vindicated". 
 <vc-trans-unlikely>:
-  ([[O+]]
+  ([O+]1.5
    or <b-minus>
    or [[@MV+ & O*n+]]
    or ({@E-} & <b-minus> & O+)
@@ -9468,6 +9468,12 @@ n't n’t: N- or EB-;
 /en/words/words.adj.1-const :
   <marker-common-entity> or
   <ordinary-const-adj>;
+
+% Make the given name Frank be prefered to 'frank.a'
+% e.g. "Frank felt vindicated when his long time rival Bill revealed that
+% he was the winner of the competition."
+frank.a:
+	[<marker-common-entity> or <ordinary-const-adj>]0.2;
 
 % Add a miniscule cost, so that the noun form is prefered...
 % An older formulation of this used Ah- as the link, but I don't see
