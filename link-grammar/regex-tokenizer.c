@@ -692,6 +692,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 			if (cglevel > 1)
 			{
 				printf("Error at position %ld: Tokenizer aregex cannot have capture group level > 1\n", p-inpat);
+				free(callout_data.cgnum);
 				return 199;
 			}
 			cgnum++;
