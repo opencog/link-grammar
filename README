@@ -500,7 +500,7 @@ Using JAVA
    class; this provides a very simple Java API to the parser.
 
    The second possibility is to use the LGService class.  This implements
-   a tcp/ip network server, providing parse results as JSON messages.
+   a TCP/IP network server, providing parse results as JSON messages.
    Any JSON-capable client can connect to this server and obtain parsed
    text.
 
@@ -520,7 +520,7 @@ Using the Network Server
 
    The above starts the server on port 9000. It the port is omitted,
    help text is printed.  This server can be contacted directly via
-   tcpip; for example:
+   TCP/IP; for example:
 
      telnet localhost 9000
 
@@ -1355,7 +1355,6 @@ TODO -- Working Notes:
          length etc.
 
   Misc TODO:
-    -- get rid of sublinkages.
     -- finish sqlite3 work
 
   Version 6.0 TODO list:
