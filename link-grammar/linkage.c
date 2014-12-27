@@ -541,6 +541,19 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		chosen_words[linkage->num_words-1] = RIGHT_WALL_DISPLAY;
 	}
 
+	/* Conditional test removal of quotation marks and the "capdict" tokens,
+	 * to facilitate using diff on sentence batch runs. */
+	if (test_enabled("removeZZZ"))
+	{
+		for (i=0, j=0; i<linkage->num_links; i++)
+		{
+			Link *lnk = &(linkage->link_array[i]);
+
+			if (0 == strcmp("ZZZ", lnk->link_name))
+				chosen_words[lnk->rw] = NULL;
+		}
+	}
+
 	/* We alloc a little more than needed, but so what... */
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 
@@ -592,7 +605,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 * FIXME: Define an affix class MORPHOLOGY_LINKS. */
 	for (i=0, j=0; i<linkage->num_links; i++)
 	{
-		Link * old_lnk = &(linkage->link_array[i]);
+		Link *old_lnk = &(linkage->link_array[i]);
 		const char *lcw = chosen_words[old_lnk->lw];
 		const char *rcw = chosen_words[old_lnk->rw];
 
