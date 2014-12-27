@@ -324,7 +324,7 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word, double cost_cutof
 }
 
 #if DEBUG
-/* There is a much better print_expression elsewhere 
+/* There is a much better print_expression elsewhere
  * This one is for low-level debug. */
 void prt_exp(Exp *e, int i)
 {

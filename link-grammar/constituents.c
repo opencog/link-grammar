@@ -435,7 +435,7 @@ static int new_style_conjunctions(con_context_t *ctxt, Linkage linkage, int numc
 	for (c = 0; c < numcon_total; c++)
 	{
 		constituent_t *ct = &ctxt->constituent[c];
-		lgdebug(3, "ola %d valid=%d %s start=%s lr=%zu %zu\n", c, 
+		lgdebug(3, "ola %d valid=%d %s start=%s lr=%zu %zu\n", c,
 			ct->valid, ct->type, ct->start_link, ct->left, ct->right);
 	}
 #endif
@@ -533,7 +533,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			size_t ln;
 			for (ln = 0; ln < linkage->num_links; ln++)
 			{
-				if ((linkage->link_array[ln].lw == linkage->num_words - 2) && 
+				if ((linkage->link_array[ln].lw == linkage->num_words - 2) &&
 				    (linkage->link_array[ln].rw == linkage->num_words - 1))
 				{
 					ctxt->constituent[c].right++;
@@ -551,7 +551,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	global_rightend_found = false;
 	for (c = 0; c < numcon_total; c++)
 	{
-		if ((ctxt->constituent[c].left == 1) && 
+		if ((ctxt->constituent[c].left == 1) &&
 		   (strcmp(ctxt->constituent[c].type, "S") == 0) &&
 			ctxt->constituent[c].valid)
 		{
@@ -918,7 +918,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 						if (verbosity >= 2)
 						{
 							err_ctxt ec;
-							err_msg(&ec, Warn, 
+							err_msg(&ec, Warn,
 							      "Warning: the constituents aren't nested! "
 							      "Adjusting them. (%d, %d)\n", c, c2);
 					  }
@@ -934,7 +934,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	return numcon_subl;
 }
 
-static char * 
+static char *
 exprint_constituent_structure(con_context_t *ctxt,
                               Linkage linkage, int numcon_total)
 {

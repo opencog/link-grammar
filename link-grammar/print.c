@@ -382,7 +382,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int line_len, link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
-	String * string;  
+	String * string;
 	char * gr_string;
 	unsigned int N_words_to_print;
 
@@ -1223,7 +1223,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		 * Clearly, this is not informative any more. Instead, one line with a
 		 * list of tokens (without repetitions) is printed
 		 * ה= כלב לב ב= כ= ל=
-		 * 
+		 *
 		 * FIXME Print the alternatives from the wordgraph.
 		 */
 	}

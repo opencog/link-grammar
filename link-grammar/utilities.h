@@ -5,7 +5,7 @@
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
-/* license set forth in the LICENSE file included with this software.    */ 
+/* license set forth in the LICENSE file included with this software.    */
 /* This license allows free redistribution and use in source and binary  */
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
@@ -27,13 +27,13 @@
 #include <string.h>
 
 #ifndef __CYGWIN__
-/* I was told that cygwin does not have these files. */ 
+/* I was told that cygwin does not have these files. */
 #include <wchar.h>
 #include <wctype.h>
 #endif
 
 #if defined(__CYGWIN__) && defined(__MINGW32__)
-/* Some users have CygWin and MinGW installed! 
+/* Some users have CygWin and MinGW installed!
  * In this case, use the MinGW versions of UTF-8 support. */
 #include <wchar.h>
 #include <wctype.h>
@@ -122,7 +122,7 @@ void lg_mbrtowc(void);
 /*
  * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
  * chars ... However, MS Visual C does, as does MinGW.  Since
- * some users have both cygwin and MinGW installed, crap out the 
+ * some users have both cygwin and MinGW installed, crap out the
  * UTF8 code only when MinGW is missing (and the CYGWIN version
  * is very old) XXX This code is dangerous and should be removed.
  */
@@ -202,7 +202,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #endif
 
 /**
- * Return the length, in codepoints/glyphs, of the utf8-encoded 
+ * Return the length, in codepoints/glyphs, of the utf8-encoded
  * string.  This is needed when printing strings in a formatted way.
  */
 static inline size_t utf8_strlen(const char *s)
@@ -225,7 +225,7 @@ static inline size_t utf8_next(const char *s)
 	size_t n = 0;
 	while (0 != *s)
 	{
-		if ((0x80 <= ((unsigned char) *s)) && 
+		if ((0x80 <= ((unsigned char) *s)) &&
         (((unsigned char) *s) < 0xc0)) { s++; n++; }
 		else return n+1;
 	}

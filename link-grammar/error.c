@@ -52,7 +52,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		 * morphemes in various ways, because the "alternatives" array doesn't
 		 * hold real alternatives any more (see example in the comments of
 		 * print_sentence_word_alternatives()).
-		 * 
+		 *
 		 * We could print the first path in the Wordgraph, analogous to what we
 		 * did here, but (same problem as printing alternatives[0] only) it may
 		 * not contain all the words, including those that failed (because they

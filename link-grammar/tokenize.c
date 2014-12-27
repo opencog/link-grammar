@@ -1557,7 +1557,7 @@ static const char *strip_left(Sentence sent, const char * w,
  * adjusts n_r_stripped back to 0 if the root was null), else false.
  *
  * p is a mark of the invocation position, for debugging.
- * 
+ *
  * FIXME: Units may get strip without a root number.
  * In the current batch examples this doesn't cause errors or extraneous
  * parsings. But it unnecessarily adds to the total number of sentence words.
@@ -2073,7 +2073,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (is_utf8_upper(word)) {
 		if (!test_enabled("dictcap")) {
 			/** Hard-coded English-centric capitalization handling.
-			 *  
+			 *
 			 * FIXME: Capitalization handling should be done using the dict.
 			 *
 			 * If the word is capitalized and, issue as alternatives:
