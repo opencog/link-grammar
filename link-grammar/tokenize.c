@@ -1889,41 +1889,38 @@ static void issue_n_r_stripped(Sentence sent,
 	free(rtokens);
 }
 
-/*  XXX Totally unchecked! */
-static void issue_dictcap(Sentence sent, const char *capind,
+static void issue_dictcap(Sentence sent, bool is_cap,
                           Gword *unsplit_word, const char *word)
 {
-	bool word_is_in_dict = boolean_dictionary_lookup(sent->dict, word);
-	const char *regex_name = NULL;
+	const char *dictcap[2];
+	Gword *altp;
 
-	if (!word_is_in_dict)
+	dictcap[0] = is_cap ? CAP1st : CAPnon;
+	dictcap[1] = word;
+	lgdebug(+D_SW, "Adding %s word=%s RE=%s\n", dictcap[0], word,
+			  NULL == unsplit_word->regex_name ? "" : unsplit_word->regex_name);
+	altp = issue_word_alternative(sent, unsplit_word, dictcap[0],
+											0,NULL, 2,dictcap, 0,NULL);
+
+	/* Set the dictcap[0] word fields */
+	altp->status |= WS_INDICT;       /* already checked to be in the dict */
+	altp->morpheme_type = MT_FEATURE;
+	altp->tokenizing_step = TS_DONE; /* no further tokeniation */
+
+	/* Set the alternative word fields. */
+	if(is_cap && (NULL != unsplit_word->regex_name))
 	{
-		regex_name = match_regex(sent->dict->regex_root, word);
-		if ((NULL != regex_name) &&
-			 boolean_dictionary_lookup(sent->dict, regex_name))
-		{
-			word_is_in_dict = true;
-		}
+		/* This is the uc word. */
+		altp->next[0]->status |= WS_REGEX;
+		altp->next[0]->regex_name = unsplit_word->regex_name;
+		/* issue_word_alternative() will mark it as TS_DONE because it appears in
+		 * an alternative of itself. */
 	}
-	if (word_is_in_dict)
+	else
 	{
-		const char *dictcap[2];
-		Gword *altp;
-
-		dictcap[0] = capind;
-		dictcap[1] = word;
-		lgdebug(+D_SW, "Adding %s word=%s RE=%s\n", capind, word,
-		        NULL == regex_name ? "" : regex_name);
-		altp = issue_word_alternative(sent, unsplit_word, capind,
-		                              0,NULL, 2,dictcap, 0,NULL);
-
-		altp->morpheme_type = MT_FEATURE;
-		altp->tokenizing_step = TS_DONE; /* no further tokeniation */
-		if(NULL != regex_name)
-		{
-			altp->next[0]->status |= WS_REGEX;
-			altp->next[0]->regex_name = regex_name;
-		}
+		/* This is the lc version. The original word can be restored later, if
+		 * needed, through the unsplit word. */
+		altp->status |= WS_FIRSTUPPER;
 	}
 }
 
@@ -1941,6 +1938,15 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
 	r = string_set_add(string_value(s), sent->string_set);
 	string_delete(s);
 	return r;
+}
+
+/**
+ * Check if the word is capitalized according to the regex definitions.
+ * XXX Not nice - try to avoid the need of using it.
+ */
+static bool is_re_capitalized(const char *word, const char *regex_name)
+{
+	return ((NULL != regex_name) && (NULL != strstr(regex_name, "CAPITALIZED")));
 }
 
 /**
@@ -1996,6 +2002,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	bool stripped;
 	const char *wp;
 	const char *temp_wend;
+	const char *regex_name = NULL;
 
 	size_t n_r_stripped = 0;
 	const char *r_stripped[MAX_STRIP];   /* these were stripped from the right */
@@ -2042,10 +2049,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * probably been marked as dict word by the check above (unless there
 			 * is a definition error and it is only PRE or SUF without being in the
 			 * dict).
-			 * It should also not pass any more handling, so return.
+			 * It should also not pass any more handling, so return here.
 			 * Especially it should not pass right-strip. Else y' gets split to
 			 * y ' and 'll gets split as units to ' l l */
-			if (word_is_known)
+			if (!word_is_known)
 			{
 				/* This is not a really debug message, so it is in verbosity 1.
 				 * XXX Maybe prt_error()? */
@@ -2083,8 +2090,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			word_can_lrsplit = true;
 		}
 
-		lgdebug(+D_SW, "1: Continue with word '%s' can_split=%d\n",
-		        word, word_can_split);
+		lgdebug(+D_SW, "1: Continue with word %s, can_split=%d status=%s\n",
+		        word, word_can_split, gword_status(sent, unsplit_word));
 
 		/* Strip off punctuation and units, etc. on the right-hand side.  Try
 		 * rpunc, then units, then rpunc, then units again, in a loop. We do this
@@ -2200,8 +2207,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		}
 	}
 
-	lgdebug(+D_SW, "2: Continue with word '%s' can_lrsplit=%d\n",
-	        word, word_can_lrsplit);
+	lgdebug(+D_SW, "2: Continue with word %s, can_lrsplit=%d status=%s\n",
+	        word, word_can_lrsplit, gword_status(sent, unsplit_word));
 
 #ifdef USE_ANYSPLIT
 	anysplit(sent, unsplit_word);
@@ -2215,13 +2222,13 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		{
 			/* FIXME: Unify with suffix_split(). */
 			word_can_split |= mprefix_split(sent, unsplit_word);
-			lgdebug(+D_SW, "Tried mprefix_split word='%s', can_split=%d\n",
+			lgdebug(+D_SW, "Tried mprefix_split word=%s, can_split=%d\n",
 					  word, word_can_split);
 			if (word_can_split)  return;
 		} else
 		{
 			word_can_split = suffix_split(sent, unsplit_word, word, true);
-			lgdebug(+D_SW, "Tried to split word='%s', can_split=%d\n",
+			lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
 					  word, word_can_split);
 
 			/* XXX Capitalization handling is missing here! */
@@ -2230,52 +2237,65 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				downcase_utf8_str(downcase, word, downcase_size);
 				word_can_split |=
 					suffix_split(sent, unsplit_word, downcase, true);
-				lgdebug(+D_SW, "Tried to split lc='%s', now can_split=%d\n",
+				lgdebug(+D_SW, "Tried to split lc=%s, now can_split=%d\n",
 						  downcase, word_can_split);
 			}
 		}
 	}
 
-	lgdebug(+D_SW, "After split step, word='%s' now can_split=%d is_known=%d\n",
-	        word, word_can_split, word_is_known);
-
-	if (!test_enabled("dictcap"))
+	if (!word_is_known)
 	{
-		/** Hard-coded English-centric capitalization handling.
-		 * FIXME: Capitalization handling should be done using the dict.
-		 *
-		 * If the word is capitalized and, issue as alternatives:
-		 * - Issue its lowercase version if it is in a capitalizable position and
-		 *   also it is in the dict.
-		 * - Issue it (capitalized) too as a word to regex (so the
-		 *   capitalized-words regex disjuncts will be used), in these conditions
-		 *   (cumulative):
-		 *   -- It could not be split (else capitalization has been handled XXX).
-		 *   -- It is not in the dict (it has already been issued in that case).
-		 *   -- It is not in a capitalizable position in the sentence.
-		 *   -- Its lowercase version is in the dict file (not regex) and it is an
-		 *   entity (checked capitalized) or a common entity (checked as
-		 *   lowercase).
-		 *
-		 *   Comments from a previous release:
-		 *
-		 *   * Common entity (checked as lowercase):
-		 *   This allows common nouns and adjectives to be used for entity names:
-		 *   e.g. "Great Southern Union declares bankruptcy", allowing Great to be
-		 *   capitalized, while preventing an upper-case "She" being used as a
-		 *   proper name in "She declared bankruptcy".
-		 *
-		 *   * Entity (checked capitalized):
-		 *   We need to *add* Sue.f (female name Sue) even though sue.v (the verb
-		 *   "to sue") is in the dict. So test for capitalized entity names.
-		 *   ([ap] Since capitalized words which are in the dict file are now
-		 *   issued anyway as uppercase, and the capitalized-words regexes are not
-		 *   marked in the dict as entities, this may have effect only for
-		 *   capitalized words that match non-capitalized-words regexes that are
-		 *   marked as entities, if any.)
-		 */
-		if (is_utf8_upper(word))
+		regex_name = match_regex(dict->regex_root, word);
+		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
 		{
+			unsplit_word->status |= WS_REGEX;
+			unsplit_word->regex_name = regex_name;
+			/* Don't set word_is_known=true yet. */
+		}
+	}
+
+	lgdebug(+D_SW, "After split step, word=%s can_split=%d is_known=%d RE=%s\n",
+	        word, word_can_split, word_is_known,
+	        NULL == regex_name ? "" : regex_name);
+
+	if (is_utf8_upper(word)) {
+		if (!test_enabled("dictcap")) {
+			/** Hard-coded English-centric capitalization handling.
+			 *  
+			 * FIXME: Capitalization handling should be done using the dict.
+			 *
+			 * If the word is capitalized and, issue as alternatives:
+			 * - Issue its lowercase version if it is in a capitalizable position
+			 *   and also it is in the dict.
+			 * - Issue it (capitalized) too as a word to regex (so the
+			 *   capitalized-words regex disjuncts will be used), in these
+			 *   conditions (cumulative): -- It could not be split (else
+			 *   capitalization has been handled XXX).  -- It is not in the dict
+			 *   (it has already been issued in that case).  -- It is not in a
+			 *   capitalizable position in the sentence.  -- Its lowercase version
+			 *   is in the dict file (not regex) and it is an entity (checked
+			 *   capitalized) or a common entity (checked as lowercase).
+			 *
+			 *   Comments from a previous release:
+			 *
+			 * * Common entity (checked as lowercase): This allows common nouns
+			 *   and adjectives to be used for entity names: e.g. "Great Southern
+			 *   Union declares bankruptcy", allowing Great to be capitalized,
+			 *   while preventing an upper-case "She" being used as a proper name
+			 *   in "She declared bankruptcy".
+			 *
+			 * * Entity (checked capitalized): We need to *add* Sue.f (female
+			 *   name Sue) even though sue.v (the verb "to sue") is in the dict. So
+			 *   test for capitalized entity names.  FIXME: [ap] Since capitalized
+			 *   words which are in the dict file are now issued anyway as
+			 *   uppercase, and the capitalized-words regexes are not marked in the
+			 *   dict as entities, this may have effect only for capitalized words
+			 *   that match non-capitalized-words regexes that are marked as
+			 *   entities. I don't know about such, and if there are indeed no such
+			 *   regexes, it looks like the is_entity() check is redundant.  A test
+			 *   "is_entity" added below to check if there is any sentence in the
+			 *   batches that contradicts that.
+			 */
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
 			if ('\0' == downcase[0])
@@ -2293,6 +2313,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					lgdebug(+D_SW, "Adding lc=%s, is_capitalizable=1\n", wp);
 					lc = issue_word_alternative(sent, unsplit_word, "LC",
 					                            0,NULL, 1,&wp, 0,NULL);
+					/* This is the lc version. The original word can be restored
+					 * later, if needed, through the unsplit word. */
 					lc->status |= WS_FIRSTUPPER;
 				}
 				else /* for a comment */
@@ -2316,10 +2338,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					(is_entity(dict, word) || is_common_entity(dict, downcase)))))
 			{
 				/* Issue it (capitalized) too */
-				const char *regex_name = match_regex(dict->regex_root, word);
 
-				if ((NULL != regex_name) &&
-					 boolean_dictionary_lookup(dict, regex_name))
+		/* This is the lc version. The original word can be restored later, if
+		 * needed, through the unsplit word. */
+				if ((NULL != regex_name))
 				{
 					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word, regex_name);
 					issue_word_alternative(sent, unsplit_word, "REuc",
@@ -2327,29 +2349,46 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					unsplit_word->status |= WS_REGEX;
 					unsplit_word->regex_name = regex_name;
 					word_is_known = true;
+
+					if (test_enabled("is_entity") && is_entity(dict, word))
+						prt_error("is_entity(%s): %s\n", word, sent->orig_sentence);
 				}
 			}
 			word_is_known |= lc_word_is_in_dict;
 		}
-	}
-	else
-	{
-		/*
-		 *  Experimental dictionary handling for capitalized words.
-		 *  XXX Totally unchecked!
-		 */
-		if (!boolean_dictionary_lookup(dict, "1stCAP") ||
-		    !boolean_dictionary_lookup(dict, "nonCAP"))
+		else
 		{
-			/* FIXME Move this check. Make it once per sentence. */
-			prt_error("Error: Missing 1stCAP/nonCAP in the dict\n");
-		}
-		else if (is_utf8_upper(word))
-		{
-			issue_dictcap(sent, "1stCAP", unsplit_word, word);
+			/*
+			 * Experimental dictionary handling for capitalized words.
+			 */
+
+			if (!boolean_dictionary_lookup(dict, CAP1st) ||
+				 !boolean_dictionary_lookup(dict, CAPnon))
+			{
+				/* FIXME Move this check. Make it once. */
+				prt_error("Error: Missing " CAP1st "/" CAPnon "in the dict\n");
+				return;
+			}
+
+			/* - If the (uc) word is in the dict, it has already been issued.
+			 * - If the word is not a capitalized word according to the regex file,
+			 *   it also should not be issued, even if is_utf8_upper(word),
+			 *   e.g Y'gonna or Let's. */
+			if (!(unsplit_word->status & WS_INDICT) &&
+			    is_re_capitalized(word, regex_name))
+			{
+				issue_dictcap(sent, /*is_cap*/true, unsplit_word, word);
+			}
+
 			downcase_utf8_str(downcase, word, downcase_size);
-			issue_dictcap(sent, "nonCAP", unsplit_word, downcase);
-			word_is_known = true; /* XXX ??? FIXME */
+			/* Issue the lc version if it is known.
+			 * FIXME? Issuing only known lc words prevents using the unknown-word
+			 * device for words in capitalizable position (when the word is a uc
+			 * version of an unknown word). */
+			if (find_word_in_dict(sent->dict, downcase))
+				issue_dictcap(sent, /*is_cap*/false, unsplit_word, downcase);
+
+			word_is_known = true; /* We could just return */
 		}
 	}
 
@@ -2367,18 +2406,13 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!(word_is_known ||  lc_word_is_in_dict ||
 	      (word_can_split && !is_contraction_word(word))))
 	{
-		const char *regex_name = match_regex(dict->regex_root, word);
-
-		if ((NULL != regex_name) &&
-			 boolean_dictionary_lookup(dict, regex_name))
+		if ((NULL != regex_name))
 		{
 			lgdebug(+D_SW, "Adding word '%s' for regex, match=%s\n",
 			        word, regex_name);
 			issue_word_alternative(sent, unsplit_word, "RE",
 			                       0,NULL, 1,&word, 0,NULL);
 
-			unsplit_word->status |= WS_REGEX;
-			unsplit_word->regex_name = regex_name;
 		   word_is_known = true; /* make sure we skip spell guess */
 		}
 	}
@@ -2676,7 +2710,7 @@ static bool add_x_node(Sentence sent, Gword *w, Parse_Options opts)
 	{
 		lgdebug(+D_AXN, "UNKNOWN_WORD %s\n", s);
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
-		assert(we, "%s must be defined in the dictionary!", UNKNOWN_WORD);
+		assert(we, UNKNOWN_WORD "must be defined in the dictionary!");
 		w->morpheme_type = MT_UNKNOWN;
 	}
 	else
