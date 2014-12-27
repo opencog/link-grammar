@@ -47,13 +47,14 @@ The link-grammar homepage:
 http://www.abiword.org/projects/link-grammar/
 
 WHAT IS LINK GRAMMAR?
-The Link Grammar Parser is a syntactic parser of English (and other
-languages as well), based on Link Grammar, an original theory of syntax
-and morphology.  Given a sentence, the system assigns to it a syntactic
-structure, which consists of a set of labelled links connecting pairs of
-words. The parser also produces a "constituent" (HPSG style phrase tree)
-representation of a sentence (showing noun phrases, verb phrases, etc.).
-The RelEx extension provides Stanford-style Dependency Grammar output.
+The Link Grammar Parser is a syntactic parser of English, Russianm
+Arabic and Persian (and other languages as well), based on Link Grammar,
+an original theory of syntax and morphology.  Given a sentence, the
+system assigns to it a syntactic structure, which consists of a set of
+labelled links connecting pairs of words. The parser also produces a
+"constituent" (HPSG style phrase tree) representation of a sentence
+(showing noun phrases, verb phrases, etc.).  The RelEx extension
+provides Stanford-style Dependency Grammar output.
 
 
 =================================================================
