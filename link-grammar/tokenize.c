@@ -1662,7 +1662,7 @@ static void mark_replace_x_node_words(Sentence sent,  X_node * head,
 				buff = alloca(mi_len+max_len+MAX_WORD);
 				buff_len = mi_len+max_len+MAX_WORD;
 		}
-		sprintf(buff, "%s[%c%s]%s", word, mark, word_type, sm);
+		snprintf(buff, buff_len, "%s[%c%s]%s", word, mark, word_type, sm);
 		e->string = string_set_add(buff, sent->string_set);
 	}
 }
@@ -1712,18 +1712,20 @@ static void mark_x_node_words(Sentence sent, X_node * head, char const * mark)
 	X_node * d;
 	size_t max_len = 0;
 	char * str;
+	size_t strsz;
 
 	for (d = head; d != NULL; d = d->next)
 		max_len = MAX(max_len, strlen(d->string));
 
-	str = alloca(max_len + strlen(mark) + 1);   /* 1 for NUL */
+	strsz = max_len + strlen(mark) + 1;
+	str = alloca(strsz);   /* 1 for NUL */
 
 	for (d = head; d != NULL; d = d->next)
 	{
 		char const * sm = strrchr(d->string, SUBSCRIPT_MARK);
 
 		if (NULL == sm) sm = d->string + strlen(d->string);
-		sprintf(str, "%.*s%s%s", (int)(sm-d->string), d->string, mark, sm);
+		snprintf(str, strsz, "%.*s%s%s", (int)(sm-d->string), d->string, mark, sm);
 		d->string = string_set_add(str, sent->string_set);
 	}
 }

@@ -102,7 +102,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			{
 				l = strlen(t) + 2;
 				s = (char *) xalloc(l+1);
-				sprintf(s, "[%s]", t);
+				snprintf(s, l+1, "[%s]", t);
 				t = string_set_add(s, sent->string_set);
 				xfree(s, l+1);
 			}
@@ -532,7 +532,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 			for (d = pp->d_type_array[j]; d != NULL; d = d->next)
 			{
 				char buff[5];
-				sprintf(buff, "%c", d->type);
+				snprintf(buff, 5, "%c", d->type);
 				linkage->pp_info[j].domain_name[k] =
 				      string_set_add (buff, postprocessor->string_set);
 
