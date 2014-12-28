@@ -29,16 +29,16 @@ EXTRA_DIST =            \
 	MAINTAINERS          \
 	NEWS                 \
 	README               \
-	docker-build.sh      \
-	docker-base/Dockerfile          \
-	docker-parser/Dockerfile        \
-	docker-python/Dockerfile        \
-	docker-server/Dockerfile        \
-	msvc9/LinkGrammarExe.vcproj     \
-	msvc9/LinkGrammarJava.vcproj    \
-	msvc9/LinkGrammar.sln           \
-	msvc9/LinkGrammar.vcproj        \
-	msvc9/README                    \
+	docker/docker-build.sh                 \
+	docker/docker-base/Dockerfile          \
+	docker/docker-parser/Dockerfile        \
+	docker/docker-python/Dockerfile        \
+	docker/docker-server/Dockerfile        \
+	msvc9/LinkGrammarExe.vcproj            \
+	msvc9/LinkGrammarJava.vcproj           \
+	msvc9/LinkGrammar.sln                  \
+	msvc9/LinkGrammar.vcproj               \
+	msvc9/README                           \
 	msvc12/LinkGrammarExe.vcproj           \
 	msvc12/LinkGrammarExe.vcxproj          \
 	msvc12/LinkGrammarExe.vcxproj.filters  \
