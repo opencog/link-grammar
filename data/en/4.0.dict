@@ -2459,7 +2459,11 @@ per "/.per": Us+ & Mp-;
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
 <vc-do>:
-  ((<b-minus> or (O+ & <verb-wall>) or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
+  ((<b-minus>
+    or (O+ & <verb-wall>)
+    or [[@MV+ & O*n+]]
+    or Vd+
+    or ({N+} & (CX- or [[()]]))) & {@MV+})
   or ({N+} & I*d+);
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
@@ -2478,15 +2482,19 @@ do.v:
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d- & {<verb-wall>});
 
+% Ss- & <verb-wall> & @MV+: "he does as he pleases."
 does.v:
   
   ((<verb-x-s> & (<vc-do>)) or
   (<verb-and-s-> & ([<vc-do>] or ())) or
   ((<vc-do>) & <verb-and-s+>))
+  or ({@E-} & Ss- & <verb-wall> & @MV+)
   or ((SIs+ or SFIs+) & ((<verb-rq> & I*d+) or CQ-));
 
+% Ss- & <verb-wall> & @MV+: "he did as he pleased."
 did.v-d:
   (<verb-x-sp> & <vc-do>)
+  or ({@E-} & Ss- & <verb-wall> & @MV+)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
   or ((SI+ or SFI+) & ((<verb-rq> & I*d+) or CQ-));
 %
