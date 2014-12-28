@@ -326,7 +326,6 @@ struct Linkage_info_struct
 	double disjunct_cost;
 	double corpus_cost;
 	const char *pp_violation_msg;
-	char **disjunct_list_str;
 #ifdef USE_CORPUS
 	Sense **sense_list;
 #endif
@@ -359,6 +358,7 @@ struct Linkage_s
 
 	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 	size_t          cdsz;         /* Alloc'ed length of chosen_disjuncts */
+	char **         disjunct_list_str; /* Stringified version of above */
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */

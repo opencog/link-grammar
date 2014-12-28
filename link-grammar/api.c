@@ -427,14 +427,14 @@ static void free_linkages(Sentence sent)
 
 		/* Q: Why isn't this in a string set ?? A: Because there is no
 		 * string-set handy when we  compute this */
-		if (linkage->lifo.disjunct_list_str)
+		if (linkage->disjunct_list_str)
 		{
 			for (j=0; j<linkage->num_words; j++)
 			{
-				if (linkage->lifo.disjunct_list_str[j])
-					free(linkage->lifo.disjunct_list_str[j]);
+				if (linkage->disjunct_list_str[j])
+					free(linkage->disjunct_list_str[j]);
 			}
-			free(linkage->lifo.disjunct_list_str);
+			free(linkage->disjunct_list_str);
 		}
 #ifdef USE_CORPUS
 		lg_sense_delete(linkage);

@@ -73,18 +73,17 @@ void lg_compute_disjunct_strings(Linkage lkg)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t nwords = lkg->num_words;
-	Linkage_info *lifo = &(lkg->lifo);
 
-	if (lifo->disjunct_list_str) return;
-	lifo->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
-	memset(lifo->disjunct_list_str, 0, nwords * sizeof(char *));
+	if (lkg->disjunct_list_str) return;
+	lkg->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
+	memset(lkg->disjunct_list_str, 0, nwords * sizeof(char *));
 
 	for (WordIdx w=0; w< nwords; w++)
 	{
 		Disjunct* dj = lkg->chosen_disjuncts[w];
 		disjunct_str(dj, djstr, sizeof(djstr));
 
-		lifo->disjunct_list_str[w] = strdup(djstr);
+		lkg->disjunct_list_str[w] = strdup(djstr);
 	}
 }
 

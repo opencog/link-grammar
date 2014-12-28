@@ -349,25 +349,24 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	Disjunct *dj;
 
 	if (NULL == linkage) return "";
-	if (NULL == linkage->lifo.disjunct_list_str)
+	if (NULL == linkage->disjunct_list_str)
 	{
 		lg_compute_disjunct_strings(linkage);
 	}
 
-	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
 
 	/* dj will be null if the word wasn't used in the parse. */
 	dj = linkage->chosen_disjuncts[w];
 	if (NULL == dj) return "";
 
-	return linkage->lifo.disjunct_list_str[w];
+	return linkage->disjunct_list_str[w];
 }
 
 double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;
-	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
+
 	if (linkage->num_words <= w) return 0.0; /* bounds-check */
 
 	dj = linkage->chosen_disjuncts[w];
@@ -381,7 +380,6 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;
 
-	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
 	if (linkage->num_words <= w) return 99.999; /* bounds-check */
 	dj = linkage->chosen_disjuncts[w];
 
