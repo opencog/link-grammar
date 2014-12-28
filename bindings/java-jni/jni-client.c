@@ -466,7 +466,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 
 	if (!lkg) return NULL;
 	lg_corpus_linkage_senses(lkg);
-	sns = lg_get_word_sense(&lkg->lifo, i);
+	sns = lg_get_word_sense(lkg, i);
 	while ((0 < j) && sns)
 	{
 		sns = lg_sense_next(sns);
@@ -491,7 +491,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env,
 	double score = 0.0;
 
 	if (!lkg) return 0.0;
-	sns = lg_get_word_sense(&lkg->lifo, i);
+	sns = lg_get_word_sense(lkg, i);
 	while ((0 < j) && sns)
 	{
 		sns = lg_sense_next(sns);
