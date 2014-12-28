@@ -1013,7 +1013,7 @@ TODO -- Working Notes:
    per Morten Christiansen, Cornell professor of psychology.
 
 
-   Registers, sociolects, dialects:
+   Registers, sociolects, dialects (cost vectors):
       Consider the sentence "Thieves rob bank" -- a typical newspaper
       headline. LG currently fails to parse this, because the determiner
       is missing ("bank" is a count noun, not a mass noun, and thus
@@ -1039,9 +1039,15 @@ TODO -- Working Notes:
       This would allow the dialect/sociolect to be dynamically
       changeable.  That is, rather than having a binary headline-flag,
       there would be a formula for the cost, which could be changed
-      outside of the paring loop.  Such formulas could be used to
+      outside of the parsing loop.  Such formulas could be used to
       enable/disable parsing specific to different dialects/sociolects,
       simply by altering the network of link costs.
+
+      Perhaps a simpler alternative would be to have labelled costs (a
+      cost vector), so that different dialects assign different costs to
+      various links.  A dialect would be specified during the parse,
+      thus causing the costs for that dialect to be employed during
+      parse ranking.
 
    Hand-refining verb patterns:
       A good reference for refining verb usage patterns is:
