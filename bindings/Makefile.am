@@ -17,12 +17,14 @@ SUBDIRS += ocaml
 if HAVE_PERL
 SUBDIRS += perl
 endif
+
 if HAVE_PYTHON
 SUBDIRS += python
 endif
 
 
 EXTRA_DIST =                              \
+   README                                 \
    autoit/_LGTest.au3                     \
    autoit/_LinkGrammar.au3                \
    autoit/README                          \
