@@ -425,15 +425,19 @@ static void free_linkages(Sentence sent)
 		exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 		free(linkage->link_array);
 
-		// XXX why isn't this in a string set ??
-		for (j=0; j<linkage->num_words; j++)
+		/* Q: Why isn't this in a string set ?? A: Because there is no
+		 * string-set handy when we  compute this */
+		if (linkage->lifo.disjunct_list_str)
 		{
-			if (linkage->lifo.disjunct_list_str[j])
-				free(linkage->lifo.disjunct_list_str[j]);
+			for (j=0; j<linkage->num_words; j++)
+			{
+				if (linkage->lifo.disjunct_list_str[j])
+					free(linkage->lifo.disjunct_list_str[j]);
+			}
+			free(linkage->lifo.disjunct_list_str);
 		}
-		free(linkage->lifo.disjunct_list_str);
 #ifdef USE_CORPUS
-		lg_sense_delete(&linkage->lifo);
+		lg_sense_delete(linkage);
 #endif
 
 		linkage_free_pp_info(linkage);
