@@ -583,14 +583,15 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	size_t N_linkages_post_processed = 0;
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
+	bool twopass = sent->length >= opts->twopass_length;
 
 	/* (optional) First pass: just visit the linkages */
-	/* The purpose of these two passes is to make the post-processing
-	 * more efficient.  Because (hopefully) by the time you do the
-	 * real work in the 2nd pass you've pruned the relevant rule set
+	/* The purpose of the first pass is to make the post-processing
+	 * more efficient.  Because (hopefully) by the time the real work
+	 * is done in the 2nd pass, the relevant rule set has been pruned
 	 * in the first pass.
 	 */
-	if (sent->length >= opts->twopass_length)
+	if (twopass)
 	{
 		for (in=0; in < N_linkages_alloced; in++)
 		{
@@ -599,7 +600,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			if (lifo->discarded || lifo->N_violations) continue;
 
 			compute_link_names(lkg, sent->string_set);
-			post_process_scan_linkage(sent->postprocessor, opts, lkg);
+			post_process_scan_linkage(sent->postprocessor, lkg);
 
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
@@ -614,6 +615,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 		if (lifo->discarded) continue;
 
+		/* We need link names, even if morfo check fails */
+		if (!twopass) compute_link_names(lkg, sent->string_set);
+
 		/* N_violations could be non-zero if the linkage failed the
 		 * morphology check */
 		if (lifo->N_violations)
@@ -623,8 +627,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		compute_link_names(lkg, sent->string_set);
-		ppn = do_post_process(sent->postprocessor, opts, lkg);
+		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 	   post_process_free_data(&sent->postprocessor->pp_data);
 
 		if (NULL != ppn->violation)

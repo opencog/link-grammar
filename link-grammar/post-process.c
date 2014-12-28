@@ -1027,22 +1027,18 @@ void post_process_free(Postprocessor *pp)
 /**
  * During a first pass (prior to actual post-processing of the linkages
  * of a sentence), call this once for every generated linkage. Here we
- * simply maintain a set of "seen" link names for rule pruning later on
+ * simply maintain a set of "seen" link names for rule pruning, later on.
  */
-void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
-                               Linkage sublinkage)
+void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
 {
 	size_t i;
 	if (pp == NULL) return;
-	if (sublinkage->num_words < opts->twopass_length) return;
-	for (i = 0; i < sublinkage->num_links; i++)
+	for (i = 0; i < linkage->num_links; i++)
 	{
-		const char *p;
-		assert(sublinkage->link_array[i].lw != SIZE_MAX);
+		assert(linkage->link_array[i].lw != SIZE_MAX);
 
-		p = string_set_add(sublinkage->link_array[i].link_name,
-		                   pp->string_set);
-		pp_linkset_add(pp->set_of_links_of_sentence, p);
+		pp_linkset_add(pp->set_of_links_of_sentence,
+			linkage->link_array[i].link_name);
 	}
 }
 
@@ -1110,8 +1106,7 @@ static void report_pp_stats(Postprocessor *pp)
  *  . a list of the violation strings
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
-PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-                         Linkage sublinkage)
+PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 {
 	const char *msg;
 
@@ -1127,9 +1122,10 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 	 * it out after every call, without relying on the user to do so. */
 	clear_pp_node(pp);
 
-	/* The first time we see a sentence, prune the rules which we won't be
-	 * needing during postprocessing the linkages of this sentence */
-	if (pp->q_pruned_rules == false && sublinkage->num_words >= opts->twopass_length)
+	/* For long sentences, we can save some time by pruning the rules
+	 * which can't possibly be used during postprocessing the linkages
+	 * of this sentence. For short sentences, this is pointless. */
+	if (is_long && pp->q_pruned_rules == false)
 	{
 		prune_irrelevant_rules(pp);
 	}

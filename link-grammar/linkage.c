@@ -229,6 +229,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
+assert(lnk->link_name, "Link name must not be null!");
 			bool sane = (0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS));
 			sane = sane || (HIDE_MORPHO &&
 			     0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
@@ -260,9 +261,8 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	}
 	else
 	{
+		/* Cannot create a Linkage for a discarded linkage. */
 		if (sent->num_linkages_post_processed <= k) return NULL;
-		/* if (sent->num_linkages_alloced <= k) return NULL; */
-
 		linkage = &sent->lnkages[k];
 	}
 
@@ -482,6 +482,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
+	bool is_long;
 
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
@@ -507,7 +508,8 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	}
 
 	/* Step two: actually do the post-processing */
-	pp = do_post_process(postprocessor, opts, linkage);
+	is_long = (linkage->num_words >= opts->twopass_length);
+	pp = do_post_process(postprocessor, linkage, is_long);
 
 	/* Step three: copy the post-processing results over into the linkage */
 	if (pp->violation != NULL)

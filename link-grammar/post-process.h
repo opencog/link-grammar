@@ -32,8 +32,8 @@ Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
 void     post_process_free_data(PP_data * ppd);
-void     post_process_scan_linkage(Postprocessor *, Parse_Options, Linkage);
-PP_node *do_post_process(Postprocessor *, Parse_Options, Linkage);
+void     post_process_scan_linkage(Postprocessor *, Linkage);
+PP_node *do_post_process(Postprocessor *, Linkage, bool);
 bool     post_process_match(const char *, const char *);  /* utility function */
 
 bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);

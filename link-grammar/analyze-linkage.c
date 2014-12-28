@@ -49,9 +49,9 @@ static const char * intersect_strings(String_set *sset, const char * s, const ch
 		if ((*s == *t) || (*t == '*')) {
 			*u = *s;
 		} else {
+			assert(*s == '*', "Invalid intersection!");
 			d++;
-			if (*s == '*') *u = *t;
-			else *u = '^';
+			*u = *t;
 		}
 		s++; t++; u++;
 	}
