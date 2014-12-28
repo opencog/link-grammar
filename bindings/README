@@ -2,5 +2,13 @@
 
 Out-of-tree bindings:
 
-javascript: see https://github.com/dijs/link-grammar/
+* Javascript: See https://github.com/dijs/link-grammar/
+  DANGER WILL ROBINSON: The javascript version is almost as old as
+  the TV show reference!
 
+* Ruby: See https://github.com/ged/linkparser/
+
+* Perl: See http://search.cpan.org/~dbrian/Lingua-LinkParser/
+
+  Note: these out-of-tree perl bindings are better, cleaner, etc. than
+  the in-tree bindings here! Use those, not these!
