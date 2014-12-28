@@ -12,3 +12,5 @@ Out-of-tree bindings:
 
   Note: these out-of-tree perl bindings are better, cleaner, etc. than
   the in-tree bindings here! Use those, not these!
+
+* Lisp: See also https://github.com/wvxvw/cl-link-grammar
