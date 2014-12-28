@@ -6796,7 +6796,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {EW-} & (Ww- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+    & {EW-} & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Ww-)
   or (Wd- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
