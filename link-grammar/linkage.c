@@ -438,7 +438,7 @@ const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index
 
 const char * linkage_get_violation_name(const Linkage linkage)
 {
-	return linkage->pp_violation;
+	return linkage->lifo.pp_violation_msg;
 }
 
 static void exfree_domain_names(PP_info *ppi)

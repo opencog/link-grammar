@@ -313,7 +313,7 @@ struct Postprocessor_s
  **********************************************************/
 
 /**
- * This is for building the graphs of links in post-processing.
+ * This summarizes the linkage status.
  */
 struct Linkage_info_struct
 {
@@ -346,7 +346,7 @@ struct Linkage_info_struct
  */
 struct Linkage_s
 {
-	size_t          num_words;    /* Number of (tokenized) words */
+	WordIdx         num_words;    /* Number of (tokenized) words */
 	const char *  * word;         /* Array of word spellings */
 
 	size_t          num_links;    /* Number of links in array */
@@ -362,7 +362,6 @@ struct Linkage_s
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */
-	const char *    pp_violation; /* Name of violation, if any */
 	PP_data         hpsg_pp_data; /* Used in constituent code */
 };
 

@@ -548,8 +548,12 @@ void partial_init_linkage(Linkage lkg, unsigned int N_words)
 	lkg->chosen_disjuncts = (Disjunct **) exalloc(lkg->cdsz * sizeof(Disjunct *));
 	memset(lkg->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
 
+	lkg->disjunct_list_str = NULL;
+#ifdef USE_CORPUS
+	lkg->sense_list = NULL;
+#endif
+
 	lkg->pp_info = NULL;
-	lkg->pp_violation = NULL;
 }
 
 void check_link_size(Linkage lkg)
