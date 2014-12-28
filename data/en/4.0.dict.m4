@@ -6784,8 +6784,8 @@ who:
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % Sp+: "what are the answers?"
-% Wd-: Dr. Who: "What!"
-% {EL+} & Wd-: "What else?" "What the fuck?"
+% Ww-: Dr. Who: "What!"
+% {EL+} & Ww-: "What else?" "What the fuck?"
 % Xc+ & Ic+: "What, were you expecting Santa?"
 % Wd- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
@@ -6796,12 +6796,12 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {EW-} & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
-  or ({EL+} & Wd-)
+    & {EW-} & (Ww- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+  or ({EL+} & Ww-)
+  or (Wd- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
-  or (Wd- & O+)
   or Jw-
   or [QI-]
   or (Xc+ & Ic+);
@@ -6865,7 +6865,7 @@ whenever wherever however.c:
 
 whyever:
   ({EL+} & (
-     (Wq- & Q+)
+     (Ww- & Q+)
      or (QI- & (<subcl-verb> or <ton-verb>))
      or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-))))
   or [[{@CO-} & Wc- & Wi+]];
@@ -6897,7 +6897,7 @@ when:
   or (Mv- & <subcl-verb>)
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
-  or ({EW-} & Wq- & (Q+ or PF+))
+  or ({EW-} & Ww- & (Q+ or PF+ or ()))
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
@@ -6941,7 +6941,7 @@ whether_or_not:
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
-  or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
+  or ({EW-} & Ww- & (({EL+} & Q+) or AF+ or ()))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
