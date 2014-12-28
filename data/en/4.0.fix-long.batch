@@ -14,8 +14,9 @@
 % The below either caused crashes, or take too long to parse.
 
 % --------------------------------------------------------------------
-
 % Crashes of various sorts.
+
+fprintf (stderr, \"%s:%s:%d: %s: \", program_name, file, line, mode);
 Населенные пункты Калининградской области и их прежние названия = Ortsnamenverzeichnis Gebiet Kaliningrad (nordliches Ostpreussen) / Сост.
 His convalescence was relatively brief and he was able to return and fight at The Wilderness, Spotsylvania and Cold Harbor.
 Hot runners usually make the mold more expensive to manufacture and run, but allow savings by reducing plastic waste and by reducing the cycle time.
