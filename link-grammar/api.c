@@ -597,12 +597,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			Linkage lkg = &sent->lnkages[in];
 			Linkage_info *lifo = &lkg->lifo;
-			if (lifo->discarded || lifo->N_violations) continue;
+			if (lifo->discarded) continue;
 
+			/* We still need link names, even if there has been a morfo
+			 * violation. */
 			compute_link_names(lkg, sent->string_set);
+			if (lifo->N_violations) continue;
+
 			post_process_scan_linkage(sent->postprocessor, lkg);
 
-			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
+			if ((49 == in%50) && resources_exhausted(opts->resources)) break;
 		}
 	}
 
