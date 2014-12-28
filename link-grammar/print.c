@@ -691,7 +691,7 @@ char * linkage_print_postscript(const Linkage linkage, bool display_walls, bool 
 	size = strlen(header(print_ps_header)) + strlen(ps) + strlen(trailer(print_ps_header)) + 1;
 
 	qs = (char *) exalloc(sizeof(char)*size);
-	sprintf(qs, "%s%s%s", header(print_ps_header), ps, trailer(print_ps_header));
+	snprintf(qs, size, "%s%s%s", header(print_ps_header), ps, trailer(print_ps_header));
 	exfree(ps, strlen(ps)+1);
 
 	return qs;

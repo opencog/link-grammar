@@ -211,20 +211,22 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
  * Be sure to free the string upon return.
  */
 
-static char * prt_con(Connector *c, char * p, char dir)
+static char * prt_con(Connector *c, char * p, char dir, size_t * bufsz)
 {
 	size_t n;
 
 	if (NULL == c) return p;
-	p = prt_con (c->next, p, dir);
+	p = prt_con (c->next, p, dir, bufsz);
 
 	if (c->multi)
 	{
-		n = sprintf(p, "@%s%c ", c->string, dir);
+		n = snprintf(p, *bufsz, "@%s%c ", c->string, dir);
+		*bufsz -= n;
 	}
 	else
 	{
-		n = sprintf(p, "%s%c ", c->string, dir);
+		n = snprintf(p, *bufsz, "%s%c ", c->string, dir);
+		*bufsz -= n;
 	}
 	return p+n;
 }
@@ -233,9 +235,11 @@ char * print_one_disjunct(Disjunct *dj)
 {
 	char buff[MAX_LINE];
 	char * p = buff;
+	size_t bufsz = MAX_LINE;
 
-	p = prt_con(dj->left, p, '-');
-	p = prt_con(dj->right, p, '+');
+	p = prt_con(dj->left, p, '-', &bufsz);
+	p = prt_con(dj->right, p, '+', &bufsz);
+	buff[MAX_LINE-1] = 0;
 	
 	return strdup(buff);
 }
