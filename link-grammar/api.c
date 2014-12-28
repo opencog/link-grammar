@@ -649,6 +649,25 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 	}
 
+	/* If the timer expired, then we never finished post-processing.
+	 * Mark the remaining sentences as bad, as otherwise strange
+	 * results get reported.  At any rate, need to compute the link
+	 * names, as otherwise linkage_create() will crash and burn
+	 * trying to touch them. */
+	for (; in < N_linkages_alloced; in++)
+	{
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info *lifo = &lkg->lifo;
+		if (lifo->discarded) continue;
+		if (!twopass) compute_link_names(lkg, sent->string_set);
+		N_valid_linkages--;
+		lifo->N_violations++;
+
+		/* Set the message, only if not set (e.g. by sane_morphism) */
+		if (NULL == lifo->pp_violation_msg)
+			lifo->pp_violation_msg = "Timeout during postprocessing";
+	}
+
 	print_time(opts, "Postprocessed all linkages");
 
 	if (opts->verbosity > 1)
@@ -659,7 +678,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 				N_valid_linkages, N_linkages_post_processed);
 	}
 
-	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
 }
