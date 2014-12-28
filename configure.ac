@@ -717,6 +717,7 @@ data/en/words/Makefile
 data/fa/Makefile
 data/fa/words/Makefile
 data/he/Makefile
+data/id/Makefile
 data/lt/Makefile
 data/ru/Makefile
 data/ru/words/Makefile
