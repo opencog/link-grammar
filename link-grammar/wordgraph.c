@@ -682,7 +682,7 @@ static void wordgraph_show_cancel(void)
  * the window size, if changed by the user, will not be preserved.).
  * However, this code doesn't do that yet.
  */
-void (wordgraph_show)(Sentence sent, size_t mode, const char *modestr)
+void (wordgraph_show)(Sentence sent, unsigned int mode, const char *modestr)
 {
 	String *const wgd = wordgraph2dot(sent, mode, modestr);
 	char psf_template[] = "/tmp/wg%0.*x.gv"; /* XXX not reentrant */
@@ -690,7 +690,7 @@ void (wordgraph_show)(Sentence sent, size_t mode, const char *modestr)
 	FILE *psf;
 	char *wgds;
 
-	assert(mode > 0);
+	if (0 == mode) mode = WGR_REG; /* default mode */
 
 	wgds = string_copy(wgd);
 	string_delete(wgd);
