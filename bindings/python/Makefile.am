@@ -55,7 +55,7 @@ TESTS_ENVIRONMENT = PYTHONPATH=.libs LINK_GRAMMAR_DATA=../../data
 EXTRA_DIST =         \
    AUTHORS           \
    LICENSE           \
-   README            \
+   README.md         \
    __init__.py.in    \
    linkgrammar.py    \
    example.py        \
