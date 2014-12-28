@@ -189,7 +189,7 @@ char * linkage_print_senses(Linkage linkage)
 
 	lg_corpus_linkage_senses(linkage);
 
-	nwords = lifo->nwords;
+	nwords = linkage->num_words;
 	for (w=0; w<nwords; w++)
 	{
 		sns = lg_get_word_sense(lifo, w);

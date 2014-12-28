@@ -76,7 +76,6 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	Linkage_info *lifo = &(lkg->lifo);
 
 	if (lifo->disjunct_list_str) return;
-	lifo->nwords = nwords;
 	lifo->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
 	memset(lifo->disjunct_list_str, 0, nwords * sizeof(char *));
 

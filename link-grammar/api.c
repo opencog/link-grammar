@@ -426,7 +426,7 @@ static void free_linkages(Sentence sent)
 		free(linkage->link_array);
 
 		// XXX why isn't this in a string set ??
-		for (j=0; j<linkage->lifo.nwords; j++)
+		for (j=0; j<linkage->num_words; j++)
 		{
 			if (linkage->lifo.disjunct_list_str[j])
 				free(linkage->lifo.disjunct_list_str[j]);

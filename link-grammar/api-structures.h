@@ -325,7 +325,6 @@ struct Linkage_info_struct
 
 	double disjunct_cost;
 	double corpus_cost;
-	size_t nwords;
 	const char *pp_violation_msg;
 	char **disjunct_list_str;
 #ifdef USE_CORPUS
