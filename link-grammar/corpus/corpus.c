@@ -252,13 +252,12 @@ void lg_corpus_score(Linage lkg)
 	double tot_score = 0.0f;
 	Corpus *corp = sent->dict->corpus;
 	int nwords = lkg->num_words;
-	Linkage_info *lifo = &lkg->lifo;
 	int w;
 
 	/* No-op if the database is not open */
 	if (NULL == corp->dbconn) return;
 
-	lg_compute_disjunct_strings(lkg, lifo);
+	lg_compute_disjunct_strings(lkg);
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
@@ -276,14 +275,14 @@ void lg_corpus_score(Linage lkg)
 			continue;
 		}
 		infword = disj->string;
-		djstr = lifo->disjunct_list_str[w];
+		djstr = lkg->disjunct_list_str[w];
 		tot_score += get_disjunct_score(corp, infword, djstr);
 	}
 
 	/* Decrement nwords, so as to ignore the LEFT-WALL */
 	--nwords;
 	tot_score /= nwords;
-	lifo->corpus_cost = tot_score;
+	lkg->lifo.corpus_cost = tot_score;
 }
 
 double lg_corpus_disjunct_score(Linkage linkage, int w)
@@ -291,7 +290,6 @@ double lg_corpus_disjunct_score(Linkage linkage, int w)
 	double score;
 	const char *infword, *djstr;
 	Sentence sent = linkage->sent;
-	Linkage_info *lifo = linkage->info;
 	Corpus *corp = sent->dict->corpus;
 	Disjunct *disj;
 
@@ -299,13 +297,13 @@ double lg_corpus_disjunct_score(Linkage linkage, int w)
 	if (NULL == corp->dbconn) return LOW_SCORE;
 
 	/* disj is NULL if word did not participate in parse */
-	disj = sent->parse_info->chosen_disjuncts[w];
+	disj = linkage->chosen_disjuncts[w];
 	if (NULL == disj) return LOW_SCORE;
 
-	lg_compute_disjunct_strings(sent, lifo);
+	lg_compute_disjunct_strings(linkage);
 
 	infword = disj->string;
-	djstr = lifo->disjunct_list_str[w];
+	djstr = linkage->disjunct_list_str[w];
 	score = get_disjunct_score(corp, infword, djstr);
 
 	return score;
@@ -389,24 +387,22 @@ static Sense * lg_corpus_senses(Corpus *corp,
  * only an informational look-up.
  */
 
-void lg_corpus_linkage_senses(Linkage linkage)
+void lg_corpus_linkage_senses(Linkage lkg)
 {
 	const char * infword;
-	Sentence sent = linkage->sent;
+	Sentence sent = lkg->sent;
 	Dictionary dict = sent->dict; 
 	Corpus *corp = dict->corpus;
-	int nwords = linkage->num_words;
-	Linkage_info *lifo = &linkage->info;
+	int nwords = lkg->num_words;
 	int w;
 
-	if (lifo->sense_list) return;
+	if (lkg->sense_list) return;
 
 	/* Set up the disjunct strings first */
-	lg_compute_disjunct_strings(linkage);
+	lg_compute_disjunct_strings(lkg);
 
-	lifo->nwords = nwords;
-	lifo->sense_list = (Sense **) malloc(nwords * sizeof (Sense *));
-	memset(lifo->sense_list, 0, nwords * sizeof (Sense *));
+	lkg->sense_list = (Sense **) malloc(nwords * sizeof (Sense *));
+	memset(lkg->sense_list, 0, nwords * sizeof (Sense *));
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
@@ -415,7 +411,7 @@ void lg_corpus_linkage_senses(Linkage linkage)
 	 * word 0. */
 	for (w=1; w<nwords; w++)
 	{
-		Disjunct *disj = linkage->chosen_disjuncts[w];
+		Disjunct *disj = lkg->chosen_disjuncts[w];
 
 		/* disj is NULL if word did not participate in parse */
 		if (NULL == disj)
@@ -424,8 +420,8 @@ void lg_corpus_linkage_senses(Linkage linkage)
 		}
 		infword = disj->string;
 
-		lifo->sense_list[w] = lg_corpus_senses(corp, infword, 
-		                        lifo->disjunct_list_str[w], w);
+		lkg->sense_list[w] = lg_corpus_senses(corp, infword, 
+		                       lkg->disjunct_list_str[w], w);
 	}
 }
 
@@ -434,10 +430,9 @@ void lg_corpus_linkage_senses(Linkage linkage)
 
 Sense * lg_get_word_sense(Linkage lkg, WordIdx word)
 {
-	Linkage_info *lifo = &lkg->lifo;
-	if (!lifo->sense_list) return NULL;
+	if (!lkg->sense_list) return NULL;
 	if (lkg->num_words <= word) return NULL;
-	return lifo->sense_list[word];
+	return lkg->sense_list[word];
 }
 
 Sense * lg_sense_next(Sense *sns)
@@ -474,13 +469,12 @@ void lg_sense_delete(Linkage lkg)
 {
 	size_t nwords = lkg->num_words;
 	size_t w;
-	Linkage_info * lifo = &lkg->lifo;
 
-	if (NULL == lifo->sense_list) return;
+	if (NULL == lkg->sense_list) return;
 
 	for (w=0; w<nwords; w++)
 	{
-		Sense *sns = lifo->sense_list[w];
+		Sense *sns = lkg->sense_list[w];
 		while (sns)
 		{
 			Sense * nxt = sns->next;
@@ -489,8 +483,8 @@ void lg_sense_delete(Linkage lkg)
 			sns = nxt;
 		}
 	}
-	free (lifo->sense_list);
-	lifo->sense_list = NULL;
+	free (lkg->sense_list);
+	lkg->sense_list = NULL;
 }
 
 /* ======================= END OF FILE ===================== */

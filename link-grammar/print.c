@@ -185,14 +185,15 @@ char * linkage_print_senses(Linkage linkage)
 #ifdef USE_CORPUS
 	Linkage_info *lifo = linkage->info;
 	Sense *sns;
-	size_t w, nwords;
+	size_t nwords;
+	WordIdx w;
 
 	lg_corpus_linkage_senses(linkage);
 
 	nwords = linkage->num_words;
 	for (w=0; w<nwords; w++)
 	{
-		sns = lg_get_word_sense(lifo, w);
+		sns = lg_get_word_sense(linkage, w);
 		while (sns)
 		{
 			int idx = lg_sense_get_index(sns);
