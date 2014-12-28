@@ -229,7 +229,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
-assert(lnk->link_name, "Link name must not be null!");
 			bool sane = (0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS));
 			sane = sane || (HIDE_MORPHO &&
 			     0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
