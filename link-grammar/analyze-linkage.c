@@ -20,8 +20,7 @@
 /**
  * This returns a string that is the the GCD of the two given strings.
  * If the GCD is equal to one of them, a pointer to it is returned.
- * Otherwise a new string for the GCD is xalloced and put on the
- * "free later" list.
+ * Otherwise a new string for the GCD is put in the string set.
  */
 static const char * intersect_strings(String_set *sset, const char * s, const char * t)
 {
@@ -30,8 +29,11 @@ static const char * intersect_strings(String_set *sset, const char * s, const ch
 	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
 	char *u;
 
-	if (islower((int) *s)) s++;  /* skip the head-dependent indicator */
-	if (islower((int) *t)) t++;  /* skip the head-dependent indicator */
+	/* The head indicator is lower-case h, the dependent indicator is
+	 * lower-case d. If they are present, skip them. The intersection
+	 * cannot include them. */
+	if (islower((int) *s)) s++;
+	if (islower((int) *t)) t++;
 
 	if (strcmp(s,t) == 0) return s;  /* would work without this */
 	i = strlen(s);
