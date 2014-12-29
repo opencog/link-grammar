@@ -501,7 +501,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 			if (!show_node) continue;
 		}
 
-		sprintf(nn, "\"%p\"", w);
+		snprintf(nn, sizeof(nn), "\"%p\"", w);
 
 		/* Subword node format:
 		 *                     +------------------+
@@ -580,7 +580,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 		append_string(wgd, "{rank=same; ");
 		for (w = sent->wordgraph->chain_next; w; w = w->chain_next)
 		{
-			sprintf(nn, "\"%p\"", w);
+			snprintf(nn, sizeof(nn), "\"%p\"", w);
 			if ((w->unsplit_word == sent->wordgraph) &&
 			    (!(mode & WGR_NOUNSPLIT) || strstr(string_value(wgd), nn)))
 			{
@@ -686,7 +686,7 @@ void (wordgraph_show)(Sentence sent, unsigned int mode, const char *modestr)
 {
 	String *const wgd = wordgraph2dot(sent, mode, modestr);
 	char psf_template[] = "/tmp/wg%0.*x.gv"; /* XXX not reentrant */
-	char psf_name[sizeof psf_template + WGR_MAXDIGITS];
+	char psf_name[sizeof psf_template + WGR_MAXDIGITS]; /* more than needed */
 	FILE *psf;
 	char *wgds;
 
@@ -695,7 +695,7 @@ void (wordgraph_show)(Sentence sent, unsigned int mode, const char *modestr)
 	wgds = string_copy(wgd);
 	string_delete(wgd);
 
-	sprintf(psf_name, psf_template, WGR_MAXDIGITS, mode);
+	snprintf(psf_name, sizeof(psf_name), psf_template, WGR_MAXDIGITS, mode);
 	psf = fopen(psf_name, "w");
 	if (NULL == psf)
 	{
