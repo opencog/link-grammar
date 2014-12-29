@@ -170,15 +170,13 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  *    A new one is constructed below to correspond 1-1 to chosen_words.
  *
  *    FIXME Sometimes the word strings are taken from chosen_disjuncts,
- *    and sometimes from wordgraph subwords. Use only one of them for that.
+ *    and sometimes from wordgraph subwords.
  */
 #define D_CCW 5
 void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
-	size_t i;   /* index of chosen_words */
-	size_t wgi; /* index of wordgraph_path */
-
-	size_t j;
+	WordIdx i;   /* index of chosen_words */
+	WordIdx j;
 	Disjunct **cdjp = linkage->chosen_disjuncts;
 	const char **chosen_words = alloca(linkage->num_words * sizeof(*chosen_words));
 	size_t *remap = alloca(linkage->num_words * sizeof(*remap));
@@ -186,13 +184,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	Gword **lwg_path = linkage->wg_path;
 	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
+
 #if 0 /* FIXME? Not implemented. */
 	size_t len_n_lwg_path = 0;
 	/* For opts->display_morphology==0: Mapping of the chosen_words indexing to
-	 * original parse indexing, so the word-array pointers in the Wordgraph words
-	 * can be used to access the corresponding disjuncts, when available in
-	 * sent->parse_info. */
-	size_t *wg_path_index = alloca(linkage->num_words * sizeof(*lwg_path_display));
+	 * original parse indexing. */
+	size_t *wg_path_display = alloca(linkage->num_words * sizeof(*lwg_path_display));
 #endif
 
 	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
@@ -202,7 +199,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	if (D_CCW <= opts->verbosity)
 		print_lwg_path(lwg_path);
 	
-	wgi = 0;
 	for (i = 0; i < linkage->num_words; i++)
 	{
 		Disjunct *cdj = cdjp[i];
@@ -217,13 +213,13 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		size_t l;
 		size_t m;
 
-		lgdebug(D_CCW, "Loop start, cdj[%zu] %s, path[%zu] %s\n",
-				  i, cdj?cdj->string:"NULL",
-				  wgi, lwg_path[wgi]?lwg_path[wgi]->subword:"NULL");
+		lgdebug(D_CCW, "Loop start, word%zu: cdj %s, path %s\n",
+				  i, cdj ? cdj->string : "NULL",
+				  lwg_path[i] ? lwg_path[i]->subword : "NULL");
 
-		w = lwg_path[wgi];
-		nw = lwg_path[wgi+1];
-		wgp = &lwg_path[wgi];
+		w = lwg_path[i];
+		nw = lwg_path[i+1];
+		wgp = &lwg_path[i];
 		unsplit_word = w->unsplit_word;
 
 		/* FIXME If the original word was capitalized in a capitalizable
@@ -238,13 +234,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			nb_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
 				(MT_INFRASTRUCTURE == w->unsplit_word->morpheme_type);
 
-			/* Continue if next subword in this alternative is a null word */
+			/* Accumulate null words in this alternative */
 			if (!nb_end && (NULL == cdjp[i+1]))
 			{
-				lgdebug(D_CCW, "Skipping cdjp[%zu]=NULL#%zu, path[%zu] %s\n",
-				         i, nbsize, wgi, lwg_path[wgi]->subword);
+				lgdebug(D_CCW, "Skipping word%zu cdjp=NULL#%zu, path %s\n",
+				         i, nbsize, lwg_path[i]->subword);
 				chosen_words[i] = NULL;
-				wgi++;
 				continue;
 			}
 
@@ -261,7 +256,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 					gwordlist_append(&n_lwg_path, w);
 #if 0 /* Not implemented */
-					lwg_path_display[len_n_lwg_path++] = wgi;
+					lwg_path_display[len_n_lwg_path++] = i;
 #endif
 				}
 				else
@@ -278,7 +273,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						gwordlist_append(&n_lwg_path, unsplit_word);
 #if 0 /* Not implemented */
 						for (j = 0; j < nbsize; j++)
-							lwg_path_display[len_n_lwg_path++] = wgi-j+1;
+							lwg_path_display[len_n_lwg_path++] = i-j+1;
 #endif
 					}
 					else
@@ -457,7 +452,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						free(join);
 
 						i += mcnt-1;
-						wgi += mcnt-1;
 					}
 				}
 			}
@@ -529,7 +523,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 
 		chosen_words[i] = t;
-		wgi++;
 	}
 
 	if (sent->dict->left_wall_defined)
