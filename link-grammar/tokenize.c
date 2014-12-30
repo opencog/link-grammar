@@ -1878,10 +1878,13 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * dict).
 			 * It should also not pass any more handling, so return here.
 			 * Especially it should not pass right-strip. Else y' gets split to
-			 * y ' and 'll gets split as units to ' l l */
+			 * y ' and 'll gets split as units to ' l l
+			 * FIXME This prevents separating double contraction (that still may
+			 * not be done even otherwise).
+			 * http://en.wiktionary.org/wiki/Category:English_double_contractions*/
 			if (!word_is_known)
 			{
-				/* This is not a really debug message, so it is in verbosity 1.
+				/* This is not a really a debug message, so it is in verbosity 1.
 				 * XXX Maybe prt_error()? */
 				lgdebug(+1, "Contracted word part %s is not in the dict\n", word);
 			}
@@ -2433,6 +2436,8 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			if (0 > nb) goto failure;
 		}
 
+		/* Morpheme type of initial bad-sentence word may be wrong.
+		 * E.g: He 's here. (Space before ' - 's classified as MT_WORD). */
 		add_gword(sent, word_start, word_end, MT_WORD);
 		word_start = word_end;
 		if ('\0' == *word_start) break;
