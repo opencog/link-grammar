@@ -2071,7 +2071,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
 					  word, word_can_split);
 
-			/* XXX Capitalization handling is missing here! */
+			/* XXX WS_FIRSTUPPER marking is missing here! */
 			if ((is_capitalizable(dict, unsplit_word)) && is_utf8_upper(word))
 			{
 				downcase_utf8_str(downcase, word, downcase_size);
