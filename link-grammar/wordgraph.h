@@ -6,7 +6,8 @@
 #define WGR_NOUNSPLIT   0x08  /* No unsplit_word links */
 #define WGR_NODBGLABEL  0x10  /* No debug label addition */
 #define WGR_DOTDEBUG    0x20  /* Add hex node numbers, for dot commands debug */
-#define WGR_MAX         0x20  /* Maximum value of WGR_*, for pid[] length */
+#define WGR_LEGEND      0x40  /* Add a legend */
+#define WGR_MAX         0x40  /* Maximum value of WGR_*, for pid[] length */
 #define WGR_MAXDIGITS   2     /* Number of hex digits in WGR_MAX */
 
 void wordgraph_show(Sentence, unsigned int, const char *);

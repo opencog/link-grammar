@@ -418,6 +418,43 @@ GNUC_UNUSED const char *gword_morpheme(Sentence sent, const Gword *w)
 #if USE_WORDGRAPH_DISPLAY
 /* === Wordgraph graphical representation === */
 
+static void wordgraph_legend(String *wgd)
+{
+	size_t i;
+	static char const *wst[] = {
+		"RE", "Matched a regex",
+		"SP", "Result of spell guess",
+		"RU", "Separated run-on word",
+		"HA", "Has an alternative",
+		"UNS", "Also unsplit_word",
+		"IN", "In the dict file",
+		"FI", "First char is uppercase"
+	};
+	append_string(wgd,
+		"subgraph cluster_legend {\n"
+		"label=Legend;\n"
+		"legend [label=\"subword\\n(status-flags)\\nmorpheme-type\"];\n"
+		"legend [xlabel=\"ordinal-number\\ndebug-label\"];\n"
+		"legend_width [width=4.5 height=0 shape=none label=<\n"
+		"<table border='0' cellborder='1' cellspacing='0'>\n"
+		"<tr><td colspan='2'>status-flags</td></tr>\n"
+	);
+	for (i = 0; i < sizeof(wst)/sizeof(wst[0]); i += 2)
+	{
+		append_string(wgd,
+		  "<tr><td align='left'>%s</td><td align='left'>%s</td></tr>\n",
+		  wst[i], wst[i+1]);
+	}
+
+	append_string(wgd,
+		"</table>>];"
+		"}\n"
+		"subgraph cluster_legend_top_space {\n"
+			"style=invis legend_dummy [style=invis height=0 shape=box]\n"
+		"};\n"
+	);
+}
+
 /**
  * Graph node name: Add "Sentence:" for the main node; Convert SUBSCRIPT_MARK.
  * Also escape " and \ with a \.
@@ -470,6 +507,9 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 
 	append_string(wgd, "# Mode: %s\n", modestr);
 	append_string(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
+
+	wordgraph_legend(wgd);
+
 	append_string(wgd, "\"%p\" [shape=box,style=filled,color=\".7 .3 1.0\"];\n",
 	              sent->wordgraph);
 

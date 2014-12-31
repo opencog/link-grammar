@@ -2476,7 +2476,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	{
 		if (NULL == strstr(test, "wg="))
 		{
-			wordgraph_show(sent, WGR_REG|WGR_NOUNSPLIT|WGR_NOPREV);
+			wordgraph_show(sent, WGR_REG|WGR_NOUNSPLIT|WGR_NOPREV|WGR_LEGEND);
 			wordgraph_show(sent, WGR_REG|WGR_NOPREV);
 		}
 		else
