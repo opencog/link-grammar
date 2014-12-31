@@ -1,3 +1,6 @@
+Version 5.2.2 (XXX?
+ * Fix for failed OSX build
+
 Version 5.2.1 (28 December 2015)
  * Prototype Indonesian dictionary from Hendy Irawan.
  * Fix crash on long sentences.
