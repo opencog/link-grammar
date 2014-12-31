@@ -508,7 +508,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 	append_string(wgd, "# Mode: %s\n", modestr);
 	append_string(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
 
-	wordgraph_legend(wgd);
+	if (mode & WGR_LEGEND) wordgraph_legend(wgd);
 
 	append_string(wgd, "\"%p\" [shape=box,style=filled,color=\".7 .3 1.0\"];\n",
 	              sent->wordgraph);
