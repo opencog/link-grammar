@@ -88,6 +88,10 @@ I hope you don't mind my horning in.
 He really ragged on me to do it.
 He was ragging on me all day long.
 
+She volunteered as a nurse.
+She volunteers as a nurse.
+
+
 % Parses, but not correctly!
 % Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.

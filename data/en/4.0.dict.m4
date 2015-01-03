@@ -3837,7 +3837,8 @@ sought.v-d: VERB_SPPP_T(<vc-seek>) or <verb-pv> or <verb-phrase-opener>;
 seeking.g: (<vc-seek> & <verb-ge>) or <verb-ge-d>;
 seeking.v: <verb-pg> & <vc-seek>;
 
-<vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>);
+% Naked @MV+: "She volunteered as a nurse."
+<vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>) or @MV+;
 decline.v fail.v hasten.v volunteer.v aim.v: VERB_PLI(<vc-decline>);
 declines.v fails.v hastens.v volunteers.v aims.v: VERB_S_T(<vc-decline>);
 

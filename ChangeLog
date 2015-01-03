@@ -3,6 +3,7 @@ Version 5.2.2 (3 January 2015)
  * MSVC12 project file fixes.
  * Check for UTF8 support in libedit ("undefined reference to el_wgets")
  * Enable the 'make check' target for the multi-threading unit test.
+ * Misc verb fixes.
 
 Version 5.2.1 (28 December 2014)
  * Prototype Indonesian dictionary from Hendy Irawan.
