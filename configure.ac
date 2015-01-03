@@ -394,13 +394,13 @@ AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
 AC_DEFUN([GLIB_LC_MESSAGES],
   [AC_CHECK_HEADERS([locale.h])
     if test $ac_cv_header_locale_h = yes; then
-    AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
-      [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[return LC_MESSAGES]])],[am_cv_val_LC_MESSAGES=yes],[am_cv_val_LC_MESSAGES=no])])
-    if test $am_cv_val_LC_MESSAGES = yes; then
-      AC_DEFINE(HAVE_LC_MESSAGES, 1,
-        [Define if your <locale.h> file defines LC_MESSAGES.])
-    fi
-  fi])
+      AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
+        [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[return LC_MESSAGES]])],[am_cv_val_LC_MESSAGES=yes],[am_cv_val_LC_MESSAGES=no])])
+      if test $am_cv_val_LC_MESSAGES = yes; then
+        AC_DEFINE(HAVE_LC_MESSAGES, 1,
+          [Define if your <locale.h> file defines LC_MESSAGES.])
+      fi
+    fi])
 
 GLIB_LC_MESSAGES
 
@@ -423,6 +423,22 @@ if test "x$enable_editline" = "xyes"; then
 else
 	AM_CONDITIONAL(HAVE_EDITLINE, false)
 	edlin=no
+fi
+
+# Now test for widechar support
+wedlin=no
+if test "x${edlin}" = "xyes"; then
+   AC_LINK_IFELSE(
+     [AC_LANG_PROGRAM(
+        [[#include <histedit.h>]],
+        [[history_winit();]]) ],
+        [wedlin=yes],[wedlin=no])
+fi
+
+if test "x${wedlin}" = "xyes"; then
+	AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, true)
+else
+	AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
 fi
 
 # ====================================================================
