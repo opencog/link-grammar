@@ -703,7 +703,7 @@ rdictionary_lookup(Dict_node *llist,
  *
  * The returned list must be freed with free_lookup().
  */
-Dict_node * lookup_list(Dictionary dict, const char *s)
+Dict_node * lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node * llist =
 		rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);

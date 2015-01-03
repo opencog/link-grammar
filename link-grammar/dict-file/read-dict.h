@@ -21,7 +21,7 @@ void print_dictionary_words(Dictionary dict);
 Dictionary dictionary_create_from_file(const char * lang);
 bool read_dictionary(Dictionary dict);
 
-Dict_node * lookup_list(Dictionary dict, const char *s);
+Dict_node * lookup_list(const Dictionary dict, const char *s);
 bool boolean_lookup(Dictionary dict, const char *s);
 void free_lookup(Dict_node *llist);
 void insert_list(Dictionary dict, Dict_node * p, int l);
