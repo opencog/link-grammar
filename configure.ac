@@ -17,7 +17,7 @@ dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
 dnl
 VERSION=$LINK_MAJOR_VERSION.$LINK_MINOR_VERSION.$LINK_MICRO_VERSION
-dnl Version info for libraries = CURRENT:REVISION:AGE
+# Version info for libraries = CURRENT:REVISION:AGE
 VERSION_INFO=$MAJOR_VERSION_PLUS_MINOR_VERSION:$LINK_MICRO_VERSION:$LINK_MINOR_VERSION
 
 AC_SUBST(VERSION_INFO)
@@ -65,7 +65,7 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
-dnl ====================================================================
+# ====================================================================
 
 AC_MSG_CHECKING([for native Win32])
 case "$host" in
@@ -79,7 +79,7 @@ esac
 AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
-dnl ====================================================================
+# ====================================================================
 CFLAGS="${CFLAGS} -O3" 
 CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++11"
 
@@ -110,10 +110,10 @@ else
 	CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
 fi
 
-dnl ====================================================================
-
-# Even modern 64-bit Apple machines buld 32-bit binaries by default.
+# ====================================================================
+# Even modern 64-bit Apple machines build 32-bit binaries by default.
 # So force a 64-bit build if a 64-bit CPU is found.
+
 AC_MSG_CHECKING([for 64-bit Apple OSX])
 case "$host" in
   x86_64-*-darwin*)
@@ -126,11 +126,13 @@ case "$host" in
 esac
 AC_MSG_RESULT([$apple_osx])
 
-dnl ====================================================================
+# ====================================================================
+# Autopackage binreloc.
 
 AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
-dnl ====================================================================
+# ====================================================================
+# Debugging
 
 AC_ARG_ENABLE( debug,
   [  --enable-debug          compile with debugging flags set],
@@ -148,7 +150,7 @@ else
 	AC_DEFINE(DEBUG_MEMORY,0)
 fi
 
-dnl ====================================================================
+# ====================================================================
 
 AC_ARG_ENABLE( mudflap,
   [  --enable-mudflap        compile with mudflap checking],
@@ -161,7 +163,7 @@ then
 	LDFLAGS="${LDFLAGS} -fmudflap -lmudflap"
 fi
 
-dnl ====================================================================
+# ====================================================================
 
 AC_ARG_ENABLE( profile,
   [  --enable-profile        compile with profiling set],
@@ -174,7 +176,8 @@ then
 	LDFLAGS="${LDFLAGS} -pg"
 fi
 
-dnl ====================================================================
+# ====================================================================
+# pthreads disabled by default; pthreads not really needed.
 
 AC_ARG_ENABLE( pthreads,
   [  --enable-pthreads       compile with pthread support],
@@ -189,7 +192,8 @@ fi
 
 AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
 
-dnl ====================================================================
+# ====================================================================
+# Java now enabled by default
 
 AC_ARG_ENABLE( java-bindings,
   [  --disable-java-bindings disable build of java bindings (default is enabled)],
@@ -202,7 +206,8 @@ AC_ARG_ENABLE( python-bindings,
   [enable_python_bindings=no]
 )
 
-dnl ====================================================================
+# ====================================================================
+# SAT solver now enabled by default
 
 AC_ARG_ENABLE( sat-solver,
   [  --disable-sat-solver     disable use of the Boolean SAT parser (default is enabled)],
@@ -223,7 +228,8 @@ fi
 
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
 
-dnl ====================================================================
+# ====================================================================
+# Viterbi disabled by default
 
 AC_ARG_ENABLE( viterbi,
   [  --enable-viterbi        enable use of the Viterbi parser],
@@ -253,7 +259,8 @@ fi
 
 AM_CONDITIONAL(WITH_VITERBI, test x${enable_viterbi} = xyes)
 
-dnl ====================================================================
+# ====================================================================
+# Corpus stats disabled by default
 
 AC_ARG_ENABLE( corpus-stats,
   [  --enable-corpus-stats   use corpus statistics],
@@ -267,7 +274,7 @@ fi
 
 AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
 
-dnl ====================================================================
+# ====================================================================
 
 AC_ARG_ENABLE( anysplit,
   [  --enable-anysplit       enable use of the "any" language word splitter],
@@ -281,7 +288,7 @@ fi
 
 AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_anysplit} = xyes)
 
-dnl ====================================================================
+# ====================================================================
 
 AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 
@@ -301,19 +308,19 @@ AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 AC_SUBST(SQLITE3_LIBS)
 AC_SUBST(SQLITE3_CFLAGS)
 
-dnl Set Default Spell Checker settings
 
-dnl ====================================================================
+# ====================================================================
+# Set Default Spell Checker settings
 
 do_aspell=yes
-dnl ASpell Support is handled here
+# ASpell Support is handled here
 AC_ARG_ENABLE([aspell], [AS_HELP_STRING([--disable-aspell],
 	[Build without ASpell support (default is enabled)])],
 	[do_aspell="${enableval}"])
 
 AM_CONDITIONAL(WITH_ASPELL, test x${do_aspell} = xyes)
 
-dnl Hunspell Support is handled here
+# Hunspell Support is handled here
 do_hunspell=yes
 AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
 	[Build without HunSpell support (default is enabled)])],
@@ -325,7 +332,7 @@ AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
 	[Use DIR to find HunSpell files (default=/usr/share/myspell/dicts])],
 	[], with_hunspell_dictdir=)
 
-dnl ====================================================================
+# ====================================================================
 
 ASpellFound=no
 if test "$do_aspell" = yes ; then
@@ -379,7 +386,7 @@ fi
 
 AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
 
-dnl ====================================================================
+# ====================================================================
 
 # It's not enough that locale.h is present; link-grammar really
 # wants to have LC_MESSAGES as well, so test for it explicitly.
@@ -397,8 +404,9 @@ AC_DEFUN([GLIB_LC_MESSAGES],
 
 GLIB_LC_MESSAGES
 
-dnl ====================================================================
+# ====================================================================
 
+# Enable editline by default
 AC_ARG_ENABLE( editline,
   [  --disable-editline      disable use of editline],
        [],
@@ -417,7 +425,7 @@ else
 	edlin=no
 fi
 
-dnl ====================================================================
+# ====================================================================
 
 # Tokenizing by RegEx
 AC_ARG_ENABLE( regex_tokenizer,
@@ -431,7 +439,7 @@ then
 	AX_PATH_LIB_PCRE
 fi
 
-dnl ====================================================================
+# ====================================================================
 
 AC_CHECK_HEADER([regex.h],,[AC_MSG_ERROR([No regex.h header found])])
 
@@ -625,7 +633,7 @@ else
    AM_CONDITIONAL(HAVE_ANT, false)
 fi
 
-dnl ===================================================================
+# ===================================================================
 # swig is needed for compiling the perl and python bindings
 # ... well, actualy, no, its not. 'make dist' is currently set up to
 # package all of the files generated by swig, so the user does not need
@@ -640,7 +648,7 @@ if test "x$SwigFound" = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
-dnl ===================================================================
+# ===================================================================
 # Look for the perl bits and pieces...
 # AX_PERL_EXT isn't working for me ... 
 # AX_PATH_EXT
@@ -666,7 +674,7 @@ AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
 AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
 CPPFLAGS=$save_cpp_flags
 
-dnl ===================================================================
+# ===================================================================
 # Find python things.  
 #
 # Since AX_PYTHON_DEVEL will hard-fail if python-devel is not installed,
@@ -681,7 +689,7 @@ else
 	AM_CONDITIONAL(HAVE_PYTHON, false)
 fi
 
-dnl ===================================================================
+# ===================================================================
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
@@ -730,16 +738,17 @@ viterbi/Makefile
 ])
 AC_OUTPUT
 
-dnl ====================================================================
+# ====================================================================
 echo "
 $PACKAGE-$VERSION
 
 	prefix:                         ${prefix}
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
-	autopackage:                    ${br_cv_binreloc}
+	autopackage relocatable binary: ${br_cv_binreloc}
 	Posix threads:                  ${enable_pthreads}
 	Editline command-line history:  ${edlin}
+	UTF8 editline support:          ${wedlin}
 	Java libraries:                 ${JNIfound}
 	Java interfaces:                ${ANTfound}
 	Swig interfaces generator:      ${SWIGfound}

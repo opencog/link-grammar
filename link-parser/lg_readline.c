@@ -29,10 +29,7 @@
 #include <string.h>
 #include <histedit.h>
 
-/* The wide-char variant of editline has EL_PROMPT_ESC defined;
- * the non-wide-char version does not.
- */
-#ifdef EL_PROMPT_ESC
+#ifdef HAVE_WIDECHAR_EDITLINE
 
 #include <stdlib.h>
 
@@ -122,7 +119,7 @@ char *lg_readline(const char *mb_prompt)
 	return mb_line;
 }
 
-#else /* EL_PROMPT_ESC */
+#else /* HAVE_WIDECHAR_EDITLINE */
 
 #include <editline/readline.h>
 
@@ -138,5 +135,5 @@ char *lg_readline(const char *prompt)
 
 	return pline;
 }
-#endif /* EL_PROMPT_ESC*/
+#endif /* HAVE_WIDECHAR_EDITLINE */
 #endif /* HAVE_EDITLINE */
