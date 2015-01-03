@@ -412,33 +412,28 @@ AC_ARG_ENABLE( editline,
        [],
        [enable_editline=yes])
 
+edlin=no
+wedlin=no
 if test "x$enable_editline" = "xyes"; then
 	PKG_CHECK_MODULES([LIBEDIT], [libedit], [edlin=yes], [edlin=no])
 	if test  "x${edlin}" = "xyes"; then
 		AM_CONDITIONAL(HAVE_EDITLINE, true)
 		AC_DEFINE(HAVE_EDITLINE, 1, [Define for compilation])
+
+      # Now test for widechar support
+	   AC_CHECK_LIB(edit, history_winit, [wedlin=yes], [wedlin=no])
+
+      if test "x${wedlin}" = "xyes"; then
+	      AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, true)
+      else
+	      AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
+      fi
+
 	else
 		AM_CONDITIONAL(HAVE_EDITLINE, false)
 	fi
 else
 	AM_CONDITIONAL(HAVE_EDITLINE, false)
-	edlin=no
-fi
-
-# Now test for widechar support
-wedlin=no
-if test "x${edlin}" = "xyes"; then
-   AC_LINK_IFELSE(
-     [AC_LANG_PROGRAM(
-        [[#include <histedit.h>]],
-        [[history_winit();]]) ],
-        [wedlin=yes],[wedlin=no])
-fi
-
-if test "x${wedlin}" = "xyes"; then
-	AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, true)
-else
-	AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
 fi
 
 # ====================================================================
@@ -756,7 +751,7 @@ AC_OUTPUT
 
 # ====================================================================
 echo "
-$PACKAGE-$VERSION
+$PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
