@@ -18,6 +18,7 @@ link-grammar.pc
 link-grammar.spec
 libtool
 link-grammar-*.jar
+.lg_history
 Makefile.in
 Makefile
 missing

@@ -9,7 +9,8 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(CXX_FLAGS) \
     $(WARN_CXXFLAGS)
 
 # -----------------------------------------------------------
-# Directives to build the threading unit test.
+# TESTS declares the tests to actually run;
+# check_PROGRAMS are the binaries to build.
 TESTS = dict-reopen multi-thread
 check_PROGRAMS = dict-reopen multi-thread
 
