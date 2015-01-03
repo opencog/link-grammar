@@ -18,22 +18,13 @@
     <ClInclude Include="..\link-grammar\analyze-linkage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\api-structures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\api-types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\api.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\build-disjuncts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\constituents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\count.h">
@@ -58,9 +49,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\link-includes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\massage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\post-process.h">
@@ -90,9 +78,6 @@
     <ClInclude Include="..\link-grammar\prune.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\read-dict.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -106,9 +91,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\utilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\word-file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\word-utils.h">
@@ -255,9 +237,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\linkage.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\link-grammar\malloc-dbg.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\link-grammar\regex-tokenizer.c">

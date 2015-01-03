@@ -148,13 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\link-grammar\analyze-linkage.h" />
-    <ClInclude Include="..\link-grammar\and.h" />
     <ClInclude Include="..\link-grammar\anysplit.h" />
     <ClInclude Include="..\link-grammar\api-structures.h" />
     <ClInclude Include="..\link-grammar\api-types.h" />
-    <ClInclude Include="..\link-grammar\api.h" />
     <ClInclude Include="..\link-grammar\build-disjuncts.h" />
-    <ClInclude Include="..\link-grammar\constituents.h" />
     <ClInclude Include="..\link-grammar\count.h" />
     <ClInclude Include="..\link-grammar\dict-api.h" />
     <ClInclude Include="..\link-grammar\dict-common.h" />
@@ -173,7 +170,6 @@
     <ClInclude Include="..\link-grammar\link-features.h" />
     <ClInclude Include="..\link-grammar\link-includes.h" />
     <ClInclude Include="..\link-grammar\linkage.h" />
-    <ClInclude Include="..\link-grammar\massage.h" />
     <ClInclude Include="..\link-grammar\post-process.h" />
     <ClInclude Include="..\link-grammar\pp_knowledge.h" />
     <ClInclude Include="..\link-grammar\pp_lexer.h" />
@@ -183,7 +179,6 @@
     <ClInclude Include="..\link-grammar\print-util.h" />
     <ClInclude Include="..\link-grammar\print.h" />
     <ClInclude Include="..\link-grammar\prune.h" />
-    <ClInclude Include="..\link-grammar\read-dict.h" />
     <ClInclude Include="..\link-grammar\regex-morph.h" />
     <ClInclude Include="..\link-grammar\regex-tokenizer.h" />
     <ClInclude Include="..\link-grammar\resources.h" />
@@ -193,7 +188,6 @@
     <ClInclude Include="..\link-grammar\structures.h" />
     <ClInclude Include="..\link-grammar\tokenize.h" />
     <ClInclude Include="..\link-grammar\utilities.h" />
-    <ClInclude Include="..\link-grammar\word-file.h" />
     <ClInclude Include="..\link-grammar\word-utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +210,6 @@
     <ClCompile Include="..\link-grammar\fast-match.c" />
     <ClCompile Include="..\link-grammar\idiom.c" />
     <ClCompile Include="..\link-grammar\linkage.c" />
-    <ClCompile Include="..\link-grammar\malloc-dbg.c" />
     <ClCompile Include="..\link-grammar\post-process.c" />
     <ClCompile Include="..\link-grammar\pp_knowledge.c" />
     <ClCompile Include="..\link-grammar\pp_lexer.c" />

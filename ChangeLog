@@ -1,5 +1,6 @@
 Version 5.2.2 (XXX January 2015)
  * Fix OSX build break.
+ * MSVC12 project file fixes.
 
 Version 5.2.1 (28 December 2014)
  * Prototype Indonesian dictionary from Hendy Irawan.
