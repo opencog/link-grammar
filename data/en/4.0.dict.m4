@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.2.1 (formatted as V5v2v1+)
-<dictionary-version-number>: V5v2v1+;
+% Dictionary version number is 5.2.2 (formatted as V5v2v2+)
+<dictionary-version-number>: V5v2v2+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -3184,9 +3184,10 @@ stridden.v slain_dead:
   <verb-and-pg-> or <verb-and-pg+>;
 
 % [A+]0.5: "I like eating bass": eating is not the adjective, here.
+% <verb-ge-d> & {K+}: "I hope you don't mind my horning in"
 /en/words/words.v.6.5:
   (<vc-fill> & <verb-ge>) or
-  <verb-ge-d> or
+  (<verb-ge-d> & {K+}) or
   <verb-adj>;
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
