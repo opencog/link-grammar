@@ -340,12 +340,6 @@ Gword *find_real_unsplit_word(Gword *word, bool is_leaf)
 	if (NULL == word->unsplit_word)
 		return word;
 
-	/* For a sentence word (and the termination word) return the word itself. */
-	if ((NULL == word->unsplit_word->unsplit_word) &&
-	    (NULL == word->unsplit_word))
-		assert(0/*find_real_unsplit_word*/);
-		//return word;
-
 	if (is_leaf && (word->status & WS_UNSPLIT))
 		return word;
 
