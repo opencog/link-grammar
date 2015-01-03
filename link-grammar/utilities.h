@@ -63,8 +63,9 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 #ifdef _MSC_VER
-/* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
-#define inline
+/* The Microsoft Visual C compiler doesn't support the "inline" keyword.
+ * But it does support _inline as a synonym... */
+#define inline _inline
 
 /* MS Visual C does not have any function normally found in strings.h */
 /* In particular, be careful to avoid including strings.h */
@@ -119,7 +120,7 @@ link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *)
 #if __APPLE__
 /* Junk, to keep the Mac OSX linker happy, because this is listed in
  * the link-grammar.def symbol export file.  */
-void lg_mbrtowc();
+void lg_mbrtowc(void);
 #endif
 
 /*
