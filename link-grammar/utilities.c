@@ -231,8 +231,8 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 #if __APPLE__
 /* Junk, to keep the Mac OSX linker happy, because this is listed in
  * the link-grammar.def symbol export file.  */
-void lg_mbrtowc();
-void lg_mbrtowc() {}
+void lg_mbrtowc(void);
+void lg_mbrtowc(void) {}
 #endif
 
 static int wctomb_check(char *s, wchar_t wc)
