@@ -546,14 +546,17 @@ if test "x$enable_java_bindings" = "xyes"; then
       AC_TRY_CPP(
          [#include <jni.h>], 
          [AC_MSG_RESULT([yes, will build java libs])
+            JAVA_CPPFLAGS=${JNI_GUESS}
             JNIfound=yes], 
          [AC_MSG_WARN([cannot find jni.h in anywhere.]) 
-            CPPFLAGS=${SAVE_CPPFLAGS}
             JNIfound=no])
+      CPPFLAGS=${SAVE_CPPFLAGS}
    fi
 
 	# This allows jni-client.c to be built
 	AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
+
+	AC_SUBST(JAVA_CPPFLAGS)
 
 	# For now, we assume that if the ant tool is there, then the javac and
 	# jar compiler/packager are installed as well. These are needed to build
