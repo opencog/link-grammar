@@ -1751,9 +1751,7 @@ static void mark_x_node_words(Sentence sent, X_node * head, char const * mark)
 void build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	size_t i;
-	X_node * e;
 	Dictionary dict = sent->dict;
-	char temp_word[MAX_WORD+1];
 
 	/* The following loop treats all words the same
 	 * (nothing special for 1st word) */
@@ -1767,6 +1765,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 		{
 			const char * s = sent->word[i].alternatives[ialt];
 			const char * origword = s;
+			X_node * e;
 			X_node * we = NULL;
 			const char * regex_name;
 			const char * spell_mark;
@@ -1872,6 +1871,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 				 * here, it seems to me.
 				 *
 				 */
+				char temp_word[MAX_WORD+1];
 				const char * lc;
 
 				downcase_utf8_str(temp_word, s, MAX_WORD);
@@ -1920,9 +1920,15 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			sent->word[i].x = catenate_X_nodes(sent->word[i].x, we);
 			if (3 < verbosity)
 			{
-				printf("Tokenize word#=%zu '%s' alt#=%zu '%s' string='%s' expr=",
+				X_node *x;
+				printf("Tokenize word#=%zu '%s' alt#=%zu '%s' string='%s' ",
 				       i, sent->word[i].unsplit_word, ialt, s, we->string);
-				print_expression(sent->word[i].x->exp);
+				x = sent->word[i].x;
+				while (x) {
+					printf("xstring='%s' expr=", x->string);
+					print_expression(x->exp);
+					x = x->next;
+				}
 			}
 		}
 	}
