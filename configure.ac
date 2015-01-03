@@ -459,84 +459,6 @@ AC_CHECK_FUNCS(regexec,,[AC_CHECK_LIB(regex,regexec,
                [AC_MSG_ERROR([No regex library found])])])
 AC_SUBST(REGEX_LIBS)
 
-# ====================================================================
-# check compiler flags
-
-AC_DEFUN([LINK_CC_TRY_FLAG], [
-  AC_MSG_CHECKING([whether $CC supports $1])
-
-  link_save_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $1"
-
-  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[ ]])], [link_cc_flag=yes], [link_cc_flag=no])
-  CFLAGS="$link_save_CFLAGS"
-
-  if test "x$link_cc_flag" = "xyes"; then
-    ifelse([$2], , :, [$2])
-  else
-    ifelse([$3], , :, [$3])
-  fi
-  AC_MSG_RESULT([$link_cc_flag])
-])
-
-dnl Use lots of warning flags with with gcc and compatible compilers
-
-dnl Note: if you change the following variable, the cache is automatically
-dnl skipped and all flags rechecked.  So there's no need to do anything
-dnl else.  If for any reason you need to force a recheck, just change
-dnl MAYBE_WARN in an ignorable way (like adding whitespace)
-
-dnl MAYBE_WARN works for C++ and C, while MAYBE_WARN_C is for C only.
-MAYBE_WARN_CXX="-Wall -Wextra \
--Wsign-compare -Werror-implicit-function-declaration \
--Wpointer-arith -Wwrite-strings -Wmissing-declarations \
--Wpacked -Wswitch-enum -Wmissing-format-attribute \
--Wstrict-aliasing=2 -Winit-self \
--Wno-missing-field-initializers -Wno-unused-parameter \
--Wno-attributes -Wno-long-long -Winline"
-
-MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
--Wnested-externs -Wdeclaration-after-statement -Wold-style-definition"
-
-MAYBE_WARN="$MAYBE_WARN_CXX $MAYBE_WARN_C"
-
-# invalidate cached value if MAYBE_WARN has changed
-if test "x$link_cv_warn_maybe" != "x$MAYBE_WARN"; then
-	unset link_cv_warn_cflags
-fi
-AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
-	echo
-	WARN_CFLAGS=""
-
-	# Some warning options are not supported by all versions of
-	# gcc (or clang), so test all desired options against the
-	# current compiler. With only one issue: clang fails to return
-	# an error when it doesn't know the option. So this test fails.
-	#
-	# Note that there are some order dependencies
-	# here. Specifically, an option that disables a warning will
-	# have no net effect if a later option then enables that
-	# warnings, (perhaps implicitly). So we put some grouped
-	# options (-Wall and -Wextra) up front and the -Wno options
-	# last.
-
-	for W in $MAYBE_WARN; do
-		LINK_CC_TRY_FLAG([$W], [WARN_CFLAGS="$WARN_CFLAGS $W"])
-	done
-
-	link_cv_warn_cflags=$WARN_CFLAGS
-	link_cv_warn_maybe=$MAYBE_WARN
-
-	AC_MSG_CHECKING([which warning flags were supported])])
-
-WARN_CFLAGS="$link_cv_warn_cflags"
-LINK_CFLAGS="$LINK_CFLAGS $WARN_CFLAGS"
-
-LINK_CC_TRY_FLAG([-fno-strict-aliasing],
-		  [LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
-
-AC_SUBST(LINK_CFLAGS)
-
 # =====================================================================
 # Try to guess location of the jni.h file.
 #
@@ -700,10 +622,94 @@ else
 	AM_CONDITIONAL(HAVE_PYTHON, false)
 fi
 
+# ====================================================================
+# check compiler flags
+
+AC_DEFUN([LINK_CC_TRY_FLAG], [
+  AC_MSG_CHECKING([whether $CC supports $1])
+
+  link_save_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS $1"
+
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[ ]])], [link_cc_flag=yes], [link_cc_flag=no])
+  CFLAGS="$link_save_CFLAGS"
+
+  if test "x$link_cc_flag" = "xyes"; then
+    ifelse([$2], , :, [$2])
+  else
+    ifelse([$3], , :, [$3])
+  fi
+  AC_MSG_RESULT([$link_cc_flag])
+])
+
+dnl Use lots of warning flags with with gcc and compatible compilers
+
+dnl Note: if you change the following variable, the cache is automatically
+dnl skipped and all flags rechecked.  So there's no need to do anything
+dnl else.  If for any reason you need to force a recheck, just change
+dnl MAYBE_WARN in an ignorable way (like adding whitespace)
+
+dnl MAYBE_WARN works for C++ and C, while MAYBE_WARN_C is for C only.
+MAYBE_WARN_CXX="-Wall -Wextra \
+-Wsign-compare -Werror-implicit-function-declaration \
+-Wpointer-arith -Wwrite-strings -Wmissing-declarations \
+-Wpacked -Wswitch-enum -Wmissing-format-attribute \
+-Wstrict-aliasing=2 -Winit-self \
+-Wno-missing-field-initializers -Wno-unused-parameter \
+-Wno-attributes -Wno-long-long -Winline"
+
+MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
+-Wnested-externs -Wdeclaration-after-statement -Wold-style-definition"
+
+MAYBE_WARN="$MAYBE_WARN_CXX $MAYBE_WARN_C"
+
+# Invalidate cached value if MAYBE_WARN has changed
+if test "x$link_cv_warn_maybe" != "x$MAYBE_WARN"; then
+	unset link_cv_warn_cflags
+fi
+AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
+	echo
+	WARN_CFLAGS=""
+
+	# Some warning options are not supported by all versions of
+	# gcc (or clang), so test all desired options against the
+	# current compiler. With only one issue: clang fails to return
+	# an error when it doesn't know the option. So this test fails.
+	#
+	# Note that there are some order dependencies
+	# here. Specifically, an option that disables a warning will
+	# have no net effect if a later option then enables that
+	# warnings, (perhaps implicitly). So we put some grouped
+	# options (-Wall and -Wextra) up front and the -Wno options
+	# last.
+
+	for W in $MAYBE_WARN_C; do
+		LINK_CC_TRY_FLAG([$W], [WARN_CFLAGS="$WARN_CFLAGS $W"])
+	done
+
+	for W in $MAYBE_WARN_CXX; do
+		LINK_CC_TRY_FLAG([$W], [WARN_CXXFLAGS="$WARN_CXXFLAGS $W"])
+	done
+
+	link_cv_warn_cflags=$WARN_CFLAGS
+	link_cv_warn_cxxflags=$WARN_CXXFLAGS
+	# link_cv_warn_maybe=$MAYBE_WARN
+
+	AC_MSG_CHECKING([which warning flags were supported])])
+
+WARN_CFLAGS="$link_cv_warn_cflags"
+WARN_CXXFLAGS="$link_cv_warn_cxxflags"
+
+LINK_CC_TRY_FLAG([-fno-strict-aliasing],
+		  [LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
+
+AC_SUBST(LINK_CFLAGS)
+
 # ===================================================================
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
+AC_SUBST(CXXFLAGS)
 
 AC_CONFIG_FILES([
 Makefile
