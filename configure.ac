@@ -696,11 +696,10 @@ AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
 
 	link_cv_warn_cflags=$WARN_CFLAGS
 	link_cv_warn_cxxflags=$WARN_CXXFLAGS
-	# link_cv_warn_maybe=$MAYBE_WARN
 
 	AC_MSG_CHECKING([which warning flags were supported])])
 
-WARN_CFLAGS="$link_cv_warn_cflags"
+WARN_CFLAGS="$link_cv_warn_cflags $link_cv_warn_cxxflags"
 WARN_CXXFLAGS="$link_cv_warn_cxxflags"
 
 AC_SUBST(WARN_CFLAGS)
