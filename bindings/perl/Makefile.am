@@ -41,8 +41,7 @@ clinkgrammar_la_CPPFLAGS = \
    $(SWIG_PERL_CPPFLAGS)   \
    $(PERL_CFLAGS)          \
    -I$(top_srcdir)         \
-   -I$(top_builddir)       \
-   $(ANSI_CFLAGS)
+   -I$(top_builddir)
 
 clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PERL_LDFLAGS) -module
 clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la

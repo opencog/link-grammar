@@ -5,7 +5,7 @@
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-AM_CPPFLAGS = -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(SQLITE3_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir)/link-grammar $(WARN_CFLAGS) $(SQLITE3_CFLAGS)
 
 if WITH_CORPUS
 lib_LTLIBRARIES = liblink-corpus.la
@@ -14,6 +14,7 @@ endif
 # Undefined symbols are allowed, as otherwise there is a circular
 # dependenincy on liblink-grammar.
 # liblink_corpus_la_LDFLAGS = -no-undefined
+liblink_corpus_la_LDFLAGS = $(LINK_CFLAGS)
 
 liblink_corpus_la_LIBADD = ${SQLITE3_LIBS}
 

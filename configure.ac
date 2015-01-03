@@ -703,6 +703,9 @@ AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
 WARN_CFLAGS="$link_cv_warn_cflags"
 WARN_CXXFLAGS="$link_cv_warn_cxxflags"
 
+AC_SUBST(WARN_CFLAGS)
+AC_SUBST(WARN_CXXFLAGS)
+
 LINK_CC_TRY_FLAG([-fno-strict-aliasing],
 		  [LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
 

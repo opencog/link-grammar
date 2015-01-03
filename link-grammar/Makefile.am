@@ -27,11 +27,15 @@ endif
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
+	$(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
-liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
+liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
+	-export-dynamic -no-undefined \
+	-export-symbols $(srcdir)/link-grammar.def \
+	$(LINK_CFLAGS)
 
 if OS_WIN32
 liblink_grammar_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
