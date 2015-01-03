@@ -6456,7 +6456,7 @@ uptown downtown.r offshore.r underground.r out_of_town:
 
 /en/words/words-medical.prep.1: <common-prep>;
 
-forward.r backward forwards.r backwards sideways ashore abreast aft
+backward forwards.r backwards sideways ashore abreast aft
 half-way.r halfway.r
 two-fold downhill southward underfoot westward eastward
 northward overnight.r on_hold on_track in_situ in_toto off_balance
@@ -6467,6 +6467,8 @@ out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
 in_phase neck_and_neck under_contract:
   <common-prep>;
 
+% K-: "put forward the argument..."
+forward.r: <common-prep> or K- or MVa-;
 
 % 5' 3' are DNA ends
 upstream downstream 5' 3':
