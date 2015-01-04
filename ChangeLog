@@ -1,5 +1,6 @@
 Version 5.2.3 (4 January 2015)
  * Fix broken check for editline UTF8 support.
+ * Work around broken perl binding definition for clang.
 
 Version 5.2.2 (3 January 2015)
  * Fix OSX build break.
