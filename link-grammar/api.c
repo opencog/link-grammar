@@ -1345,6 +1345,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	}
 
 	if (match_found) lwg_path = (Gword **)wpp->path; /* OK to modify */
+	wordgraph_path_free(wp_old, true);
 	wordgraph_path_free(wp_new, !match_found);
 
 	if (match_found)
