@@ -8013,6 +8013,8 @@ presents.n
 preservatives.n
 preservers.n
 preserves.n
+presets.n
+pre-sets.n
 presidencies.n
 presidents.n
 Presidents.n
