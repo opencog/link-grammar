@@ -1015,16 +1015,23 @@ static bool possible_connection(prune_context *pc,
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
-	  /* two deep connectors can't work */
+
+	/* Two deep connectors can't work */
 	if ((lc->word > rword) || (rc->word < lword)) return false;
-	  /* word range constraints */
 
 	assert(lword < rword, "Bad word order in possible connection.");
 
+	/* Word range constraints */
 	if (lword == rword-1) {
 		if (!((lc->next == NULL) && (rc->next == NULL))) return false;
 	}
 	else
+	/* If the words are NOT next to each other, then there must be
+	 * at least one intervening connector (i.e. cannot have both
+	 * lc->next amnd rc->next being null).  But we only enforce this
+	 * when we think its still possible to have a complete parse,
+	 * i.e. before well allow null-linked words.
+	 */
 	if ((!pc->null_links) &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
@@ -1169,7 +1176,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 	prune_context *pc;
 	Disjunct *d, *free_later, *dx, *nd;
 	Connector *c;
-	size_t w, N_deleted, total_deleted;
+	size_t N_deleted, total_deleted;
 
 	pc = (prune_context *) xalloc (sizeof(prune_context));
 	pc->power_cost = 0;
@@ -1188,6 +1195,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 
 	while (1)
 	{
+		size_t w;
+
 		/* left-to-right pass */
 		for (w = 0; w < sent->length; w++) {
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
@@ -1215,7 +1224,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 			}
 			sent->word[w].d = nd;
 		}
-		if (verbosity > 2) {
+		if (verbosity > 2)
+		{
 			printf("l->r pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
 		}
 
@@ -1250,8 +1260,10 @@ int power_prune(Sentence sent, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 
-		if (verbosity > 2) {
-			printf("r->l pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
+		if (verbosity > 2)
+		{
+			printf("r->l pass changed %d and deleted %zu\n",
+				pc->N_changed, N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;
@@ -1262,10 +1274,11 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pt = NULL;
 	pc->pt = NULL;
 
-	if (verbosity > 2) printf("%d power prune cost:\n", pc->power_cost);
+	if (verbosity > 2) printf("power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned");
-	if (verbosity > 2) {
+	if (verbosity > 2)
+	{
 		printf("\nAfter power_pruning:\n");
 		print_disjunct_counts(sent);
 	}
