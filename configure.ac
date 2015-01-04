@@ -426,6 +426,7 @@ if test "x$enable_editline" = "xyes"; then
 
 		if test "x${wedlin}" = "xyes"; then
 			AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, true)
+			AC_DEFINE(HAVE_WIDECHAR_EDITLINE, 1, [Define for compilation])
 		else
 			AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
 		fi
