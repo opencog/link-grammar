@@ -54,7 +54,8 @@ CONTENTS of this directory:
    data/ar/*                An Arabic dictionary
    data/fa/*                A Persian (Farsi) dictionary
    data/de/*                A small prototype German dictionary
-   data/lt/*                A prototype Lithuanian dictionary
+   data/lt/*                A small prototype Lithuanian dictionary
+   data/id/*                A small prototype Indonesian dictionary
    data/he/*                An experimental Hebrew dictionary
    data/tr/*                An experimental Turkish dictionary
 

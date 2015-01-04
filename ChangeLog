@@ -1,3 +1,5 @@
+Version 5.x (XXX)
+
 Version 5.2.2 (3 January 2015)
  * Fix OSX build break.
  * MSVC12 project file fixes.
