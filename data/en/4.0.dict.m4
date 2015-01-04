@@ -9093,7 +9093,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 %    from "puts" to "object".
 %
 UNLIMITED-CONNECTORS:
-      S+ & & O+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+
+      S+ & O+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+
       & RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
