@@ -31,15 +31,8 @@
 
 #ifdef HAVE_WIDECHAR_EDITLINE
 
+#include <stdbool.h>
 #include <stdlib.h>
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#ifndef TRUE
-#define TRUE 1
-#endif
 
 static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
@@ -50,7 +43,7 @@ static wchar_t * prompt(EditLine *el)
 
 char *lg_readline(const char *mb_prompt)
 {
-	static int is_init = FALSE;
+	static bool is_init = false;
 	static HistoryW *hist = NULL;
 	static HistEventW ev;
 	static EditLine *el = NULL;
@@ -65,7 +58,7 @@ char *lg_readline(const char *mb_prompt)
 	{
 		size_t sz;
 #define HFILE ".lg_history"
-		is_init = TRUE;
+		is_init = true;
 
 		sz = mbstowcs(NULL, mb_prompt, 0) + 4;
 		wc_prompt = malloc (sz*sizeof(wchar_t));
@@ -96,7 +89,7 @@ char *lg_readline(const char *mb_prompt)
 		wc_prompt = NULL;
 		hist = NULL;
 		el = NULL;
-		is_init = FALSE;
+		is_init = false;
 		return NULL;
 	}
 
