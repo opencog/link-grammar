@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.2.2],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.2.3],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=2
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=2
+LINK_MICRO_VERSION=3
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -81,7 +81,8 @@ AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
 # ====================================================================
 CFLAGS="${CFLAGS} -O3" 
-CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++11"
+# CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++11"
+CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++03"
 
 # The std=c99 flag provides the proper float-pt math decls working, 
 # e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
@@ -244,7 +245,7 @@ if test "x$enable_viterbi" = "xyes"; then
 	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
 	AC_CHECK_HEADER([stdio.h],,
-	    [AC_MSG_ERROR([C++ compiler not found; it is needed for the Viterbi parser])])
+		[AC_MSG_ERROR([C++ compiler not found; it is needed for the Viterbi parser])])
 	AC_LANG([C])
 
 	# The vieterbi decoder is designed to leak memory like crazy.
@@ -420,20 +421,22 @@ if test "x$enable_editline" = "xyes"; then
 		AM_CONDITIONAL(HAVE_EDITLINE, true)
 		AC_DEFINE(HAVE_EDITLINE, 1, [Define for compilation])
 
-      # Now test for widechar support
-	   AC_CHECK_LIB(edit, history_winit, [wedlin=yes], [wedlin=no])
+		# Now test for widechar support
+		AC_CHECK_LIB(edit, history_winit, [wedlin=yes], [wedlin=no])
 
-      if test "x${wedlin}" = "xyes"; then
-	      AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, true)
-      else
-	      AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
-      fi
+		if test "x${wedlin}" = "xyes"; then
+			AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, true)
+		else
+			AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
+		fi
 
 	else
 		AM_CONDITIONAL(HAVE_EDITLINE, false)
+		AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
 	fi
 else
 	AM_CONDITIONAL(HAVE_EDITLINE, false)
+	AM_CONDITIONAL(HAVE_WIDECHAR_EDITLINE, false)
 fi
 
 # ====================================================================
@@ -706,7 +709,7 @@ AC_SUBST(WARN_CFLAGS)
 AC_SUBST(WARN_CXXFLAGS)
 
 LINK_CC_TRY_FLAG([-fno-strict-aliasing],
-		  [LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
+		[LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
 
 AC_SUBST(LINK_CFLAGS)
 
