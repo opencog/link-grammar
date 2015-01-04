@@ -9083,10 +9083,18 @@ LEFT-WALL:
 % Without this cost, the right wall gets used incorrectly with MX links.
 RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
-UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
-                         % to the length limit.  Always use "+" for these.
-      S+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+ & RW+ & Xp+ & Xx+ & CP+
-      & SFsx+ & WV+ & CV+;
+% These are the link-types that are not subject to the length limit.
+% Always use "+" for these.  Some of these are obvious. Some deserve
+% an explanation.  So:
+%
+% O+ is unlimited because some sentences put in long intervening
+%    phrases. For example: "He puts forward, as one argument among
+%    many others, the object of this sentence" requires a long O link
+%    from "puts" to "object".
+%
+UNLIMITED-CONNECTORS:
+      S+ & & O+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+
+      & RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
