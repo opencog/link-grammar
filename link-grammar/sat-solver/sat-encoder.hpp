@@ -15,8 +15,10 @@ public:
 
   // Construct the encoder based on given sentence
   SATEncoder(Sentence sent, Parse_Options  opts)
-    : _variables(new Variables(sent)), _solver(new Solver()), _sent(sent), _opts(opts)
+    : _variables(new Variables(sent)), _solver(new Solver()),
+      _sent(sent), _opts(opts)
   {
+    _cost_cutoff = parse_options_get_disjunct_cost(opts);
     // Preprocess word tags of the sentence
     build_word_tags();
   }
@@ -171,17 +173,10 @@ protected:
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr)
   {}
 
-
-
-  /**
-   *   Cost cutoff
-   */
-
-  // Cost cutoff treshold value. Nodes of the expression tree are
+  // Cost cutoff threshold value. Nodes of the expression tree are
   // pruned if their cost exceeds this value. Cost cutoff is performed
   // during satisfaction condition generating.
-  // XXX FIXME, this should be taken from parse options.
-  static constexpr double _cost_cutoff = 2.7;
+  double _cost_cutoff;
 
   /**
    *   Creating clauses and passing them to the MiniSAT solver
