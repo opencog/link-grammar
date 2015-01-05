@@ -2580,7 +2580,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	if (NULL == we)
 	{
 		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word '%s': Internal error: NULL X-node\n", w->subword);
+		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
 		return false;
 	}
 #endif
@@ -2588,14 +2588,17 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-
 	if (3 < opts->verbosity)
 	{
-		/* Print the first X_node details for the word. */
-		printf("Tokenize word/alt=%zu/%zu '%s' re=%s string='%s' expr=",
+		/* Print the X_node details for the word. */
+		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
 				 wordpos, altlen(sent->word[wordpos].alternatives), s,
-				 w->regex_name ? w->regex_name : "", we->string);
-		print_expression(sent->word[wordpos].x->exp);
+				 w->regex_name ? w->regex_name : "");
+		while (we) {
+			printf(" xstring='%s' expr=", we->string);
+			print_expression(we->exp);
+			we = we->next;
+		}
 	}
 
 	return true;
