@@ -2517,9 +2517,20 @@ static Word *word_new(Sentence sent)
 }
 
 /**
- * Add an x-node for a subword, at the current word-array word.
- * For now, also add an element to the alternatives array, so the rest of
- * program will work fine.
+ * Build the expression lists for a given word at the current word-array word.
+ * 
+ * The resulted word-array is later used as an input to the parser.
+ * 
+ * Algorithm:
+ * Apply the following step to all words w:
+ * If w is in the dictionary, use it.
+ * Else if w is identified by regex matching, use the
+ * appropriately matched disjunct collection.
+ * Otherwise w is unknown - use the disjunct collection of UNKNOWN_WORD.
+ * 
+ * FIXME For now, also add an element to the alternatives array, so the rest of
+ * program will work fine (print_sentence_word_alternatives(),
+ * sentence_in_dictionary(), verr_msg()).
  */
 #define D_AXN 5
 static bool determine_word_expressions(Sentence sent, Gword *w,
