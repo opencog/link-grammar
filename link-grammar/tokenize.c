@@ -2522,7 +2522,8 @@ static Word *word_new(Sentence sent)
  * program will work fine.
  */
 #define D_AXN 5
-static bool add_x_node(Sentence sent, Gword *w, Parse_Options opts)
+static bool determine_word_expressions(Sentence sent, Gword *w,
+                                       Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	const size_t wordpos = sent->length - 1;
@@ -2708,7 +2709,7 @@ printf("DEBUG: in_same_alternative=%d\n",
 					if (!sent->dict->empty_word_defined)
 						prt_error("Error: %s must be defined!\n", EMPTY_WORD_DOT);
 
-					if (!add_x_node(sent, empty_word(), opts))
+					if (!determine_word_expressions(sent, empty_word(), opts))
 						error_encountered = true;
 					empty_word_encountered = true;
 				}
@@ -2717,7 +2718,7 @@ printf("DEBUG: in_same_alternative=%d\n",
 			{
 				/* This is a new wordgraph word.
 				 */
-				if (!add_x_node(sent, wg_word, opts))
+				if (!determine_word_expressions(sent, wg_word, opts))
 						error_encountered = true;
 				wpp_old->used = true;
 			}
