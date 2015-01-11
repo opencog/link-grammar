@@ -1,3 +1,6 @@
+Version 5.2.4: (XXX 2015)
+ * Fix usage of 'less'.
+
 Version 5.2.3 (4 January 2015)
  * Fix broken check for editline UTF8 support.
  * Work around broken perl binding definition for clang.
