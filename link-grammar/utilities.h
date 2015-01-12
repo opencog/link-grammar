@@ -30,7 +30,6 @@
 /* I was told that cygwin does not have these files. */ 
 #include <wchar.h>
 #include <wctype.h>
-#include <limits.h>
 #endif
 
 #if defined(__CYGWIN__) && defined(__MINGW32__)
@@ -38,7 +37,6 @@
  * In this case, use the MinGW versions of UTF-8 support. */
 #include <wchar.h>
 #include <wctype.h>
-#include <limits.h>
 #endif
 
 #include "error.h"
@@ -63,7 +61,6 @@ void *alloca (size_t);
 #ifdef _WIN32
 #include <windows.h>
 #include <mbctype.h>
-#include <limits.h>
 
 #ifdef _MSC_VER
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword.
