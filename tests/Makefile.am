@@ -2,7 +2,8 @@
 # Automake file for building unit tests.
 #
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
+# The tests really require c++11 to build...
+CXXFLAGS += -std=c++11
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(CXX_FLAGS) \
