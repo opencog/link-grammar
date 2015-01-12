@@ -2972,13 +2972,6 @@ fundheld.v-d strove.v-d:
 
 arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
-% XXX wtf ???
-gells.v:
-  
-  ((<verb-s> & (<vc-intrans>)) or
-  (<verb-and-s-> & ([<vc-intrans>] or ())) or
-  ((<vc-intrans>) & <verb-and-s+>));
-
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"
 

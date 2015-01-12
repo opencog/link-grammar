@@ -2970,10 +2970,6 @@ fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 
 arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
-% XXX wtf ???
-gells.v:
-  VERB_S_I(<vc-intrans>);
-
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"
 
