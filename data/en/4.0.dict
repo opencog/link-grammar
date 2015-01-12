@@ -2698,11 +2698,12 @@ is.v:
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>})
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
-'s.v ’s.v: [[(<verb-x-s,u> &
-(({@EBm+} & ((((O*t+ & <verb-wall>) or [K+] or BI+ or OF+ or
-(Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+}) or
-(Pp+ & {THi+ or @MV+}) or THb+ or <to-verb> or (Pa+ & <verb-wall>))) or ({Pp+} & Pg+) or Pv+ or PP+)) or
-(SIs+ & PF-)]];
+% Almost same as above, but no S-O inversion, and no equation.
+% Also, a cost, so that possesive 's is preferred.
+'s.v ’s.v:
+  [(<verb-x-s,u> & <vc-be>)
+  or (<verb-and-s-> & <vc-be-and>)
+  or (<vc-be-and> & <verb-and-s+>)];
 
 % are.v:
 %  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or

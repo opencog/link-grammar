@@ -1,3 +1,6 @@
+Version 5.x.x: (XXX 2015)
+ * Fix contracted "is" verb.
+
 Version 5.2.4: (12 January 2015)
  * Fix usage of 'less'.
  * Fix MS Windows random number portability API.
