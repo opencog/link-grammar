@@ -1,6 +1,7 @@
 Version 5.2.4: (XXX 2015)
  * Fix usage of 'less'.
  * Fix MS Windows random number portability API.
+ * Fix for bug #53: mis-handled dot.
 
 Version 5.2.3 (4 January 2015)
  * Fix broken check for editline UTF8 support.
