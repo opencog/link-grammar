@@ -14,10 +14,3 @@
 extern int verbosity;          /* the verbosity level for error messages */
 extern char * debug;           /* comma-separated function list to debug */
 extern char * test;            /* comma-separated function list to debug */
-
-/* size of random table for computing the
-   hash functions.  must be a power of 2 */
-#define RTSIZE 256
-
-extern unsigned int randtable[RTSIZE];   /* random table for hashing */
-
