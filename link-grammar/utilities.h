@@ -82,6 +82,9 @@ void *alloca (size_t);
 #define floorf(x) floor(x)
 #define ceilf(x) ceil(x)
 
+/* MS changed the name of rand_r to rand_s */
+#define rand_r(seedp) rand_s(seedp)
+
 #endif /* _MSC_VER */
 
 /* Apparently, MinGW is also missing a variety of standard functions.
@@ -98,13 +101,6 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
-
-/* Windows doesn't have a thread-safe rand (!)
- * XXX FIXME -- this breaks thread safety on windows!
- * That means YOU, windows thread-using programmer!
- * Suck it up!
- */
-#define rand_r(seedp) rand()
 
 /* Users report that the default mbrtowc that comes with windows and/or
  * cygwin just doesn't work very well. So we use our own custom version,
