@@ -28,7 +28,7 @@ int main()
 
 	for (int i=0; i<20; i++)
 	{
-		printf("Opening the dictionary for the %d'th time\n", i);
+		printf("Opening the dictionary for the %d'th time\n", i+1);
 		Dictionary dict = dictionary_create_lang("ru");
 		if (!dict) {
 			printf ("Fatal error: Unable to open the dictionary\n");
