@@ -24,8 +24,7 @@ int main()
         return 1;
     }
     int qq = 0;
-    // while (++qq < 100)
-    while (true)
+    while (++qq < 100)
     for (i=0; i<1; ++i) {
         sent = sentence_create(input_string[i], dict);
         sentence_split(sent, opts);

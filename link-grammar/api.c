@@ -444,6 +444,8 @@ static void free_linkages(Sentence sent)
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
+	sent->num_linkages_alloced = 0;
+	sent->lnkages = NULL;
 }
 
 static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
@@ -1239,13 +1241,16 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		compute_chosen_disjuncts(sent);
 		sane_morphism(sent, opts);
 		post_process_linkages(sent, opts);
-		sort_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
 		/* If we are here, then no valid linakges were found.
 		 * If there was a parse overflow, give up now. */
 		if (PARSE_NUM_OVERFLOW < total) break;
+
+		/* If we are here, we are going round again. Free stuff. */
+		free_linkages(sent);
 	}
+	sort_linkages(sent, opts);
 
 	free_count_context(ctxt);
 	free_fast_matcher(mchxt);
