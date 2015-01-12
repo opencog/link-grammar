@@ -1040,6 +1040,8 @@ static bool strip_right(Sentence sent,
 	size_t rword_num;
 	const char * const * rword;
 
+	if (*n_r_stripped >= MAX_STRIP) return false;
+
 	assert(temp_wend>w, "strip_right: unexpected empty word");
 	if (NULL == afdict) return false;
 
@@ -1067,7 +1069,8 @@ static bool strip_right(Sentence sent,
 				break;
 			}
 		}
-	} while (i < rword_num && temp_wend > w && rootdigit);
+	} while (i < rword_num && temp_wend > w && rootdigit &&
+	         (*n_r_stripped+nrs < MAX_STRIP));
 	assert(w <= temp_wend, "A word should never start after its end...");
 
 	sz = temp_wend-w;
