@@ -20,7 +20,10 @@ int main()
 {
 	const char * input_string[] = {
 		"под броню боевого робота устремились потоки энергии.",
-		"через четверть часа здесь будет полно полицейских." };
+		"через четверть часа здесь будет полно полицейских.",
+		"He is the kind of person who would do that.",
+		"The mystery of the Nixon tapes was never solved."
+	};
 
 	setlocale(LC_ALL, "en_US.UTF-8");
 
@@ -29,14 +32,21 @@ int main()
 	for (int i=0; i<20; i++)
 	{
 		printf("Opening the dictionary for the %d'th time\n", i+1);
-		Dictionary dict = dictionary_create_lang("ru");
+		Dictionary dict;
+		if (i%2 == 0)
+			dict = dictionary_create_lang("ru");
+		else
+			dict = dictionary_create_lang("en");
+
 		if (!dict) {
 			printf ("Fatal error: Unable to open the dictionary\n");
 			return 1;
 		}
 
-		for (int j=0; j<2; j++) {
-			Sentence sent = sentence_create(input_string[j], dict);
+		for (int j=0; j<2; j++)
+		{
+			int isnt = 2 * (i%2) + j;
+			Sentence sent = sentence_create(input_string[isnt], dict);
 			sentence_split(sent, opts);
 			int num_linkages = sentence_parse(sent, opts);
 			if (num_linkages > 0) {
