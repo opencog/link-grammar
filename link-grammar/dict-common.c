@@ -73,6 +73,7 @@ bool is_stem(const char* w)
 void patch_subscript(char * s)
 {
 	char *ds, *de;
+	int dp;
 	ds = strrchr(s, SUBSCRIPT_DOT);
 	if (!ds) return;
 
@@ -80,7 +81,12 @@ void patch_subscript(char * s)
 	 * considered a subscript */
 	de = ds + 1;
 	if (*de == '\0') return;
-	if (isdigit((int)*de)) return;
+	dp = (int) *de;
+
+	/* If its followed by a UTF8 char, its NOT a subscript */
+	if (127 < dp || dp < 0) return;
+	/* assert ((0 < dp) && (dp <= 127), "Bad dictionary entry!"); */
+	if (isdigit(dp)) return;
 	*ds = SUBSCRIPT_MARK;
 }
 
