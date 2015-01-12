@@ -2972,22 +2972,12 @@ fundheld.v-d strove.v-d:
 
 arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
-O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
- 
-  ((<verb-sp,pp> & (<vc-intrans>)) or
-  (<verb-and-sp-i-> & ([<vc-intrans>] or ())) or
-  ((<vc-intrans>) & <verb-and-sp-i+>));
-
-% XXX aren't these optional transitive ?
-gells.v O.K.'s.v OK's.v O.K.’s OK’s:
+% XXX wtf ???
+gells.v:
   
   ((<verb-s> & (<vc-intrans>)) or
   (<verb-and-s-> & ([<vc-intrans>] or ())) or
   ((<vc-intrans>) & <verb-and-s+>));
-
-O.K.'ing.v OK'ing.v
-O.K.’ing.v OK’ing.v:
- (<vc-intrans> & <verb-pg,ge>) or <verb-adj> or <verb-ge-d>;
 
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"

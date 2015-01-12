@@ -2970,16 +2970,9 @@ fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 
 arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
-O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
- VERB_SPPP_I(<vc-intrans>);
-
-% XXX aren't these optional transitive ?
-gells.v O.K.'s.v OK's.v O.K.’s OK’s:
+% XXX wtf ???
+gells.v:
   VERB_S_I(<vc-intrans>);
-
-O.K.'ing.v OK'ing.v
-O.K.’ing.v OK’ing.v:
- (<vc-intrans> & <verb-pg,ge>) or <verb-adj> or <verb-ge-d>;
 
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"
