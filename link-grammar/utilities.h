@@ -225,7 +225,14 @@ static inline size_t utf8_next(const char *s)
 {
 	mbstate_t mbs;
 	memset(&mbs, 0, sizeof(mbs));
-	return mbrlen(s, MB_CUR_MAX, &mbs);
+	size_t len = mbrlen(s, MB_CUR_MAX, &mbs);
+    if (len == (size_t)(-1) || len == (size_t)(-2)) {
+        /* Too long or mailformed sequence, 
+         * skip one character. */
+        return 1;
+    }
+
+    return len;
 }
 
 static inline int is_utf8_upper(const char *s)
