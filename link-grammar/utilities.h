@@ -30,6 +30,7 @@
 /* I was told that cygwin does not have these files. */ 
 #include <wchar.h>
 #include <wctype.h>
+#include <limits.h>
 #endif
 
 #if defined(__CYGWIN__) && defined(__MINGW32__)
@@ -37,6 +38,7 @@
  * In this case, use the MinGW versions of UTF-8 support. */
 #include <wchar.h>
 #include <wctype.h>
+#include <limits.h>
 #endif
 
 #include "error.h"
@@ -61,6 +63,7 @@ void *alloca (size_t);
 #ifdef _WIN32
 #include <windows.h>
 #include <mbctype.h>
+#include <limits.h>
 
 #ifdef _MSC_VER
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword.
@@ -132,6 +135,7 @@ void lg_mbrtowc(void);
 #define mbstate_t char
 #define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
 #define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
+#define mbrlen(s,n,m)     (1)
 #define iswupper  isupper
 #define iswalpha  isalpha
 #define iswdigit  isdigit
@@ -222,14 +226,9 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
-	size_t n = 0;
-	while (0 != *s)
-	{
-		if ((0x80 <= ((unsigned char) *s)) && 
-        (((unsigned char) *s) < 0xc0)) { s++; n++; }
-		else return n+1;
-	}
-	return n;
+	mbstate_t mbs;
+	memset(&mbs, 0, sizeof(mbs));
+	return mbrlen(s, MB_CUR_MAX, &mbs);
 }
 
 static inline int is_utf8_upper(const char *s)
