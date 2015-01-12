@@ -1348,6 +1348,20 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		n_r_stripped = 0;            /* Forget the stripping. */
 	}
 
+	/* If n_r_stripped exceed max, the "word" is most likely a long
+	 * sequence of periods.  Just accept it as an unknown "word",
+	 * and move on.
+	 * FIXME: Word separation may still be needed, e.g. for a table of
+	 * contents:
+	 * 10............................
+	 */
+	if (n_r_stripped >= MAX_STRIP)
+	{
+		n_r_stripped = 0;
+		word_is_in_dict = true;
+		units_alternative = false; /* just in case */
+	}
+
 	/* If the Input word contains units and also got stripped off
 	 * punctuation, restore it here so it will be used as an alternative
 	 * without the punctuation. This happens if it is a part number, like
@@ -1425,16 +1439,6 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	        word, word_can_split);
 
 	issued = false;
-
-	/* If n_r_stripped exceed max, the "word" is most likely a long
-	 * sequence of periods.  Just accept it as an unknown "word",
-	 * and move on. FIXME: Check it earlier.
-	 */
-	if (n_r_stripped >= MAX_STRIP)
-	{
-		n_r_stripped = 0;
-		word_is_in_dict = true;
-	}
 
 	/* If the word is capitalized, add as alternatives:
 	 * - Add it only in case a regex match of it is needed, to prevent adding an
