@@ -389,6 +389,7 @@ void * object_open(const char *filename,
 
 bool file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
+const char *cache_data_path(const char *, bool);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1
