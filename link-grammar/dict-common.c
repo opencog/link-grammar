@@ -367,7 +367,6 @@ void dictionary_delete(Dictionary dict)
 #endif
 	free_dictionary(dict);
 	xfree(dict, sizeof(struct Dictionary_s));
-	cache_data_path(NULL, /*set*/true);
 }
 
 /* ======================================================================== */
