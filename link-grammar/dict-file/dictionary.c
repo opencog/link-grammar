@@ -613,7 +613,6 @@ Dictionary dictionary_create_from_file(const char * lang)
 		affix_name = join_path(lang, "4.0.affix");
 		regex_name = join_path(lang, "4.0.regex");
 
-		cache_data_path(NULL, /*set*/true);
 		dictionary = dictionary_six(lang, dict_name, pp_name, cons_name,
 		                            affix_name, regex_name);
 

@@ -878,45 +878,17 @@ void * object_open(const char *filename,
 	return NULL;
 }
 
-/**
- * Cache the path of the data directory.
- * It is used during dictionary open.
- * Free path_found and set it to NULL if path==null and set==true.
- * Cache path_found=path if set==true and return NULL (unless already set).
- * Return path_found if set==false;
- *
- * XXX Not reentrant.
- */
-const char *cache_data_path(const char *path, bool set)
-{
-	static char *path_found;
-
-	if (set)
-	{
-		if (NULL == path)
-		{
-			free(path_found);
-			path_found = NULL;
-		}
-		else if (NULL == path_found)
-		{
-			path_found = strdup(path);
-			return NULL;
-		}
-	}
-
-	return path_found;
-}
+/* XXX static global variable used during dictionary open */
+static char *path_found = NULL;
 
 static void * dict_file_open(const char * fullname, void * user_data)
 {
 	const char * how = (const char *) user_data;
 	FILE * fh =  fopen(fullname, how);
-	lgdebug(+0, "fopen(%s)=%p\n", fullname, fh);
-	if (fh)
+	if (fh && NULL == path_found)
 	{
-		if (NULL == cache_data_path(fullname, /*set*/true))
-			prt_error("Info: Dictionary found at %s", fullname);
+		path_found = strdup (fullname);
+		prt_error("Info: Dictionary found at %s", fullname);
 	}
 	return (void *) fh;
 }
@@ -925,7 +897,6 @@ FILE *dictopen(const char *filename, const char *how)
 {
 	FILE * fh = NULL;
 	void * ud = (void *) how;
-	const char *path_found;
 
 	/* If not the first time through, look for the other dictionaries
 	 * in the *same* directory in which the first one was found.
@@ -933,7 +904,6 @@ FILE *dictopen(const char *filename, const char *how)
 	 * The global "path_found" records where the first dict was found.
 	 * The goal here is to avoid insanity due to user's fractured installs.
 	 */
-	path_found = cache_data_path(NULL, /*set*/false);
 	if (path_found)
 	{
 		size_t sz = strlen (path_found) + strlen(filename) + 1;
@@ -946,7 +916,6 @@ FILE *dictopen(const char *filename, const char *how)
 	else
 	{
 		fh = (FILE *) object_open(filename, dict_file_open, ud);
-		path_found = cache_data_path(NULL, /*set*/false);
 		if (path_found)
 		{
 			char * root = strstr(path_found, filename);
