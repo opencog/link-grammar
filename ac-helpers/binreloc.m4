@@ -1,5 +1,5 @@
-# Check for binary relocation support
-# Hongli Lai
+# Check for binary relocation support.
+# Written by Hongli Lai
 # http://autopackage.org/
 
 AC_DEFUN([AM_BINRELOC],

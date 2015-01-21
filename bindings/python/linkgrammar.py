@@ -1,5 +1,5 @@
 #
-# High-level Python bindings build on top of the low-level
+# High-level Python bindings built on top of the low-level
 # C API (clinkgrammar)
 
 import locale
