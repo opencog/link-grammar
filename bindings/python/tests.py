@@ -7,7 +7,7 @@ from itertools import chain
 import unittest
 
 from linkgrammar import Parser, Linkage, ParseOptions, Link
-import _clinkgrammar as clg
+import linkgrammar._clinkgrammar as clg
 
 import os
 

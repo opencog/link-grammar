@@ -1,11 +1,10 @@
 #
 # High-level Python bindings built on top of the low-level
-# C API (clinkgrammar)
+# C API (clinkgrammar).
 
 import locale
 
 import _clinkgrammar as clg
-
 
 __all__ = ['Parser', 'ParseOptions', 'Dictionary', 'Link', 'Linkage']
 
