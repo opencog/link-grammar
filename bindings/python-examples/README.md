@@ -10,6 +10,12 @@ Testing
 The test collection `tests.py` should run 47 tests, which should all
 pass. 
 
+**NOTE**: Neither the `tests.py` nor `example.py` will run until
+**after** `make install` is performed. If you do not wish to install,
+then you will have to manually set the PYTHONPATH environment variable
+to you build directory `.libs` subdirectory, so that `_clinkgrammar.la`
+can be found.
+
 
 How to use
 ==========
