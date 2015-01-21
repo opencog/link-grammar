@@ -733,7 +733,9 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	memset(sent, 0, sizeof(struct Sentence_s));
-	sent->dict = dict;
+
+#if 0
+	/* memset above already zeros these for us */
 	sent->length = 0;
 	sent->word = NULL;
 	sent->post_quote = NULL;
@@ -744,11 +746,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->lnkages = NULL;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
-	sent->string_set = string_set_create();
-	sent->rand_state = global_rand_state;
-
-	sent->postprocessor = post_process_new(dict->base_knowledge);
-	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 #ifdef USE_SAT_SOLVER
 	sent->hook = NULL;
@@ -756,6 +753,14 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent->t_start = 0;
 	sent->t_count = 0;
+#endif
+
+	sent->dict = dict;
+	sent->string_set = string_set_create();
+	sent->rand_state = global_rand_state;
+
+	sent->postprocessor = post_process_new(dict->base_knowledge);
+	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
