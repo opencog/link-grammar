@@ -13,6 +13,7 @@ BUILT_SOURCES = ../../bindings/python/lg_python_wrap.cc
 # Thus, typically, it will install into
 # /usr/local/lib/python2.7/dist-packages/linkgrammar (without the dash)
 pkgpythondir=$(pythondir)/linkgrammar
+pkgpyexecdir=$(pythondir)/linkgrammar
 
 pkgpython_PYTHON =                                 \
    linkgrammar.py                                  \
