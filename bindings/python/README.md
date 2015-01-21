@@ -1,4 +1,4 @@
-# Python bindings
+# Python bindings for Link Grammar
 
 Description
 ===========
@@ -7,11 +7,14 @@ This directory contains a Python interface to the Link Grammar C library.
 
 Testing
 =======
-The test collection `tests.py` should run 52 tests, which should all pass.
+The test collection `tests.py` should run 52 tests, which should all
+pass. The tests access private parts of the python bindings, and thus
+require that link-grammar be explicitly added to the python path. For
+most users, this will be:
 
-You may need to add link-grammar to your python path:
+   `export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/dist-packages/linkgrammar`
 
-   `export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/dist-packages/link-grammar`
+The python path does not need to be set for normal usage.
 
 
 How to use
@@ -32,4 +35,4 @@ Parsing simple sentences::
         |        |     |  |     |         |     |
     LEFT-WALL this.p is.v a simple.a sentence.n . 
 
-
+Additional examples can be found in `examples.py`.

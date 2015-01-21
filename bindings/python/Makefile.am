@@ -8,6 +8,12 @@ SWIG_SOURCES = ../swig/link_grammar.i
 # BUILT_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
 BUILT_SOURCES = ../../bindings/python/lg_python_wrap.cc
 
+# Over-ride the install location, so as to remove the dash in the
+# directory "link-grammar".  Turns out python cannot tolerate dashes.
+# Thus, typically, it will install into
+# /usr/local/lib/python2.7/dist-packages/linkgrammar (without the dash)
+pkgpythondir=$(pythondir)/linkgrammar
+
 pkgpython_PYTHON =                                 \
    linkgrammar.py                                  \
    $(top_builddir)/bindings/python/__init__.py     \
@@ -36,7 +42,7 @@ pkgpyexec_LTLIBRARIES = _clinkgrammar.la
 
 _clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 
-# $(top_builddir) to pick up autogened link-grammar/link-features.h 
+# $(top_builddir) to pick up autogened link-grammar/link-features.h
 _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
    $(PYTHON_CPPFLAGS)             \
