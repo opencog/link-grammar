@@ -54,18 +54,9 @@ _clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -modul
 _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 
-# Run tests.py if the user says 'make check'
-TESTS = tests.py
-TESTS_ENVIRONMENT = PYTHONPATH=.libs LINK_GRAMMAR_DATA=../../data
-
 EXTRA_DIST =         \
    AUTHORS           \
    LICENSE           \
    README.md         \
    __init__.py.in    \
-   linkgrammar.py    \
-   example.py        \
-   parses-en.txt     \
-   parses-lt.txt     \
-   tests.py
-
+   linkgrammar.py

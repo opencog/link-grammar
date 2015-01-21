@@ -19,7 +19,7 @@ SUBDIRS += perl
 endif
 
 if HAVE_PYTHON
-SUBDIRS += python
+SUBDIRS += python python-examples
 endif
 
 

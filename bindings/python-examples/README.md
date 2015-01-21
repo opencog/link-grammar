@@ -7,14 +7,8 @@ This directory contains a Python interface to the Link Grammar C library.
 
 Testing
 =======
-The test collection `tests.py` should run 52 tests, which should all
-pass. The tests access private parts of the python bindings, and thus
-require that link-grammar be explicitly added to the python path. For
-most users, this will be:
-
-   `export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python2.7/dist-packages/linkgrammar`
-
-The python path does not need to be set for normal usage.
+The test collection `tests.py` should run 47 tests, which should all
+pass. 
 
 
 How to use
