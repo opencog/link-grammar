@@ -3,29 +3,38 @@
 #
 # Link Grammar example usage 
 #
-from linkgrammar import Parser, Linkage, ParseOptions, Link
+import locale
+
+from linkgrammar import Sentence, ParseOptions, Dictionary
+# from linkgrammar import _clinkgrammar as clg
+
+
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 po = ParseOptions()
 
+def desc(linkage):
+    print linkage.diagram()
+    print 'Postscript:'
+    print linkage.postscript()
+    print '---'
+
+
 # English is the default language
-p = Parser()
-linkages = p.parse_sent("This is a test.")
+linkages = Sentence("This is a test.", Dictionary(), po).parse()
 print "English: found ", len(linkages), "linkages"
-for linkage in linkages :
-    print linkage.diagram
+for linkage in linkages:
+    desc(linkage)
 
 # Russian
-p = Parser(lang = 'ru')
-linkages = p.parse_sent("это большой тест.")
+linkages = Sentence("это большой тест.", Dictionary('ru'), po).parse()
 print "Russian: found ", len(linkages), "linkages"
-for linkage in linkages :
-    print linkage.diagram
+for linkage in linkages:
+    desc(linkage)
 
 # Turkish
-p = Parser(lang = 'tr')
-linkages = p.parse_sent("çok şişman adam geldi")
+linkages = Sentence("çok şişman adam geldi", Dictionary('tr'), po).parse()
 print "Turkish: found ", len(linkages), "linkages"
-for linkage in linkages :
-    print linkage.diagram
-
+for linkage in linkages:
+    desc(linkage)
 

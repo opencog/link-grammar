@@ -1,4 +1,4 @@
-# Python bindings for Link Grammar
+# Python bindings
 
 Description
 ===========
