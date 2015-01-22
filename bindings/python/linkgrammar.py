@@ -69,7 +69,7 @@ class ParseOptions(object):
         """
         return clg.parse_options_get_linkage_limit(self._obj)
 
-    @verbosity.setter
+    @linkage_limit.setter
     def linkage_limit(self, value):
         if not isinstance(value, int):
             raise TypeError("Linkage Limit must be set to an integer")
@@ -86,7 +86,7 @@ class ParseOptions(object):
         """
         return clg.parse_options_get_disjunct_cost(self._obj)
 
-    @verbosity.setter
+    @disjunct_cost.setter
     def disjunct_cost(self, value):
         if not isinstance(value, float):
             raise TypeError("Distjunct cost must be set to a float")
@@ -101,7 +101,7 @@ class ParseOptions(object):
         """
         return clg.parse_options_get_min_null_count(self._obj)
 
-    @verbosity.setter
+    @min_null_count.setter
     def min_null_count(self, value):
         if not isinstance(value, int):
             raise TypeError("min_null_count must be set to an integer")
@@ -256,7 +256,7 @@ class Link(object):
         return u"Link: %s" % unicode(self)
 
     def __len__(self):
-        return clg.linkage_get_link_length(self._obj, self.index)
+        return clg.linkage_get_link_length(self.linkage._obj, self.index)
 
     def num_domains(self, link_ind):
         return clg.linkage_get_link_num_domains(self.linkage._obj, self.index)
