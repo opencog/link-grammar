@@ -258,7 +258,7 @@ class Link(object):
     def __len__(self):
         return clg.linkage_get_link_length(self.linkage._obj, self.index)
 
-    def num_domains(self, link_ind):
+    def num_domains(self):
         return clg.linkage_get_link_num_domains(self.linkage._obj, self.index)
 
 
