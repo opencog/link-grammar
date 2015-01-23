@@ -1,3 +1,6 @@
+Version 5.3.0: (XXX 2015)
+ * Major redesign of the python bindings.
+
 Version 5.2.5: (XXX 2015)
  * Fix contracted "is" verb.
  * Fix crash in batch mode (issue #63).
