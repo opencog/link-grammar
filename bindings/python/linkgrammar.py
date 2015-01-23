@@ -38,7 +38,7 @@ class ParseOptions(object):
         self.disjunct_cost = disjunct_cost
 
     def __del__(self):
-        if hasattr(self, '_obj') and clg:
+        if hasattr(self, '_obj'):
             clg.parse_options_delete(self._obj)
             del self._obj
 
