@@ -38,7 +38,7 @@ class ParseOptions(object):
         self.disjunct_cost = disjunct_cost
 
     def __del__(self):
-        if hasattr(self, '_obj'):
+        if hasattr(self, '_obj') and clg:
             clg.parse_options_delete(self._obj)
             del self._obj
 
@@ -228,7 +228,7 @@ class Dictionary(object):
         self._obj = clg.dictionary_create_lang(lang)
 
     def __del__(self):
-        if hasattr(self, '_obj'):
+        if hasattr(self, '_obj') and clg:
             clg.dictionary_delete(self._obj)
             del self._obj
 
@@ -270,7 +270,7 @@ class Linkage(object):
         self._obj = clg.linkage_create(idx, sentence._obj, parse_options)
 
     def __del__(self):
-        if hasattr(self, '_obj'):
+        if hasattr(self, '_obj') and clg:
             clg.linkage_delete(self._obj)
             del self._obj
 
@@ -289,6 +289,9 @@ class Linkage(object):
 
     def word(self, i):
         return clg.linkage_get_word(self._obj, i)
+
+    def unused_word_cost(self):
+        return clg.linkage_unused_word_cost(self._obj)
 
     def link_cost(self):
         return clg.linkage_link_cost(self._obj)
@@ -312,6 +315,12 @@ class Linkage(object):
     def postscript(self, display_walls=1, print_ps_header=0):
         return clg.linkage_print_postscript(self._obj, display_walls, print_ps_header)
 
+    def senses(self):
+        return clg.linkage_print_senses(self._obj)
+
+    def constituent_tree(self, mode=1):
+        return clg.linkage_print_constituent_tree(self._obj, mode)
+
 
 class Sentence(object):
     text = None
@@ -326,7 +335,7 @@ class Sentence(object):
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
     def __del__(self):
-        if hasattr(self, '_obj'):
+        if hasattr(self, '_obj') and clg:
             clg.sentence_delete(self._obj)
             del self._obj
 
