@@ -443,6 +443,7 @@ static void free_linkages(Sentence sent)
 
 		linkage_free_pp_info(linkage);
 
+		/* XXX FIXME */
 		free(linkage->wg_path);
 		free(linkage->wg_path_display);
 	}
@@ -453,10 +454,6 @@ static void free_linkages(Sentence sent)
 	sent->num_linkages_post_processed = 0;
 	sent->num_valid_linkages = 0;
 	sent->lnkages = NULL;
-
-	/* XXX FIXME */
-	free(link_info->wg_path);
-	free(link_info->wg_path_display);
 }
 
 static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
