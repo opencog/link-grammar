@@ -426,7 +426,7 @@ static void free_linkages(Sentence sent)
 		free(linkage->link_array);
 
 		/* Q: Why isn't this in a string set ?? A: Because there is no
-		 * string-set handy when we  compute this */
+		 * string-set handy when we compute this. */
 		if (linkage->disjunct_list_str)
 		{
 			for (j=0; j<linkage->num_words; j++)
@@ -445,6 +445,9 @@ static void free_linkages(Sentence sent)
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
 	sent->num_linkages_alloced = 0;
+	sent->num_linkages_found = 0;
+	sent->num_linkages_post_processed = 0;
+	sent->num_valid_linkages = 0;
 	sent->lnkages = NULL;
 }
 
@@ -733,7 +736,9 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	memset(sent, 0, sizeof(struct Sentence_s));
-	sent->dict = dict;
+
+#if 0
+	/* memset above already zeros these for us */
 	sent->length = 0;
 	sent->word = NULL;
 	sent->post_quote = NULL;
@@ -744,11 +749,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->lnkages = NULL;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
-	sent->string_set = string_set_create();
-	sent->rand_state = global_rand_state;
-
-	sent->postprocessor = post_process_new(dict->base_knowledge);
-	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 #ifdef USE_SAT_SOLVER
 	sent->hook = NULL;
@@ -756,6 +756,14 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent->t_start = 0;
 	sent->t_count = 0;
+#endif
+
+	sent->dict = dict;
+	sent->string_set = string_set_create();
+	sent->rand_state = global_rand_state;
+
+	sent->postprocessor = post_process_new(dict->base_knowledge);
+	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
@@ -1217,7 +1225,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);
 
-	for (nl = opts->min_null_count; nl <= opts->max_null_count ; ++nl)
+	nl = opts->min_null_count;
+	while (true)
 	{
 		s64 total;
 		if (resources_exhausted(opts->resources)) break;
@@ -1231,8 +1240,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		}
 
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
-		total = (total>INT_MAX) ? INT_MAX : total;
-		total = (total<0) ? INT_MAX : total;
+		total = (total > INT_MAX) ? INT_MAX : total;
+		total = (total < 0) ? INT_MAX : total;
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
@@ -1247,8 +1256,12 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		 * If there was a parse overflow, give up now. */
 		if (PARSE_NUM_OVERFLOW < total) break;
 
+		/* loop termination */
+		if (nl == opts->max_null_count) break;
+
 		/* If we are here, we are going round again. Free stuff. */
 		free_linkages(sent);
+		nl++;
 	}
 	sort_linkages(sent, opts);
 

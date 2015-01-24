@@ -1,5 +1,10 @@
-Version 5.x.x: (XXX 2015)
+Version 5.3.0: (XXX 2015)
+ * Major redesign of the python bindings.
+
+Version 5.2.5: (XXX 2015)
  * Fix contracted "is" verb.
+ * Fix crash in batch mode (issue #63).
+ * Fix Python bindings so that setting PYTHONPATH is not required.
 
 Version 5.2.4: (12 January 2015)
  * Fix usage of 'less'.
