@@ -1403,7 +1403,7 @@ static Dict_node * dsw_tree_to_vine (Dict_node *root)
 			vine_tail = rest;
 			rest = rest->right;
 		}
-	 	/* eliminate the left subtree */
+		/* eliminate the left subtree */
 		else
 		{
 			rest = rotate_right(rest);
@@ -1623,9 +1623,11 @@ static bool read_entry(Dictionary dict)
 			const char * save_pin;
 			char save_already_got_it;
 			int save_line_number;
+			size_t skip_slash;
 
 			if (!link_advance(dict)) goto syntax_error;
 
+			skip_slash          = ('/' == dict->token[0]) ? 1 : 0;
 			dict_name           = strdup(dict->token);
 			save_name           = dict->name;
 			save_is_special     = dict->is_special;
@@ -1635,7 +1637,7 @@ static bool read_entry(Dictionary dict)
 			save_line_number    = dict->line_number;
 
 			/* OK, token contains the filename to read ... */
-			instr = get_file_contents(dict_name);
+			instr = get_file_contents(dict_name + skip_slash);
 			if (NULL == instr)
 			{
 				prt_error("Error: Could not open subdictionary %s", dict_name);

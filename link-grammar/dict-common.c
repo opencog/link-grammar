@@ -113,6 +113,8 @@ Dictionary dictionary_create_lang(const char * lang)
 {
 	Dictionary dictionary = NULL;
 
+	object_open(NULL, NULL, NULL); /* Invalidate the directory path cache */
+
 	/* If an sql database exists, try to read that. */
 	if (check_db(lang))
 	{
@@ -367,6 +369,7 @@ void dictionary_delete(Dictionary dict)
 #endif
 	free_dictionary(dict);
 	xfree(dict, sizeof(struct Dictionary_s));
+	object_open(NULL, NULL, NULL); /* Free the directory path cache */
 }
 
 /* ======================================================================== */
