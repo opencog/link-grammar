@@ -265,7 +265,7 @@ bool check_db(const char *lang)
 	return retval;
 }
 
-static void* db_open(const char * fullname, void * user_data)
+static void* db_open(const char * fullname, const void * user_data)
 {
 	int fd;
 	struct stat buf;
