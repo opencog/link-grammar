@@ -2,6 +2,7 @@ Version 5.2.5: (XXX 2015)
  * Fix contracted "is" verb.
  * Fix crash in batch mode (issue #63).
  * Fix Python bindings so that setting PYTHONPATH is not required.
+ * Fix "... as I expected him to be."
 
 Version 5.2.4: (12 January 2015)
  * Fix usage of 'less'.

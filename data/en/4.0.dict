@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.2.4 (formatted as V5v2v4+)
-<dictionary-version-number>: V5v2v4+;
+% Dictionary version number is 5.2.5 (formatted as V5v2v5+)
+<dictionary-version-number>: V5v2v5+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -2637,16 +2637,21 @@ hadn't.v-d hadn’t.v-d:
 % must leave the field" cannot take a wall.
 
 <vc-be-no-obj>:
-  ({@EBm+} & ((([{CV-} & B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
-      (Osi+ & R+ & Bs+ & <verb-wall>) or
-      (Opi+ & R+ & Bp+ & <verb-wall>) or
-      ([[()]] & <verb-wall>)) & {@MV+}) or
-    (<verb-wall> & Pp+ & {THi+ or @MV+}) or
-    THb+ or
-    <to-verb> or
-    (Pa+ & {<verb-wall>}))) or
-  ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or I*v+)) or
-  (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
+  ({@EBm+} & ((
+      ([{CV-} & B**t-]
+      or [K+]
+      or (<verb-wall> & BI+)
+      or OF+
+      or PF-
+      or (Osi+ & R+ & Bs+ & <verb-wall>)
+      or (Opi+ & R+ & Bp+ & <verb-wall>)
+      or ([[()]] & <verb-wall>)) & {@MV+})
+    or (<verb-wall> & Pp+ & {THi+ or @MV+})
+    or THb+
+    or <to-verb>
+    or (Pa+ & {<verb-wall>})))
+  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or I*v+))
+  or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
 % constructions, so that WV links to the "and.j-v" instead of "be".
@@ -2764,8 +2769,10 @@ am.v:
 % ({@E-} & I- & B- & O+):
 %   "What are the chances that Einstein could really be a genius?"
 % Icx-: the x prevents link to does.v: "*It does be correct"
+% Ix- & <verb-wall>: "He is as smart as I expected him to be."
 be.v:
-  ({@E-} & (Ix- or ({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & (({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  or ({@E-} & Ix- & <verb-wall>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
