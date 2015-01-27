@@ -233,7 +233,7 @@ class Dictionary(object):
             del self._obj
 
     def get_max_cost(self):
-        return dictionary_get_max_cost(self._obj)
+        return clg.dictionary_get_max_cost(self._obj)
 
 
 class Link(object):
@@ -341,9 +341,6 @@ class Sentence(object):
 
     def split(self):
         return clg.sentence_split(self._obj)
-
-    def __len__(self):
-        return clg.sentence_length(self._obj)
 
     def parse(self):
         n = clg.sentence_parse(self._obj, self.parse_options._obj)
