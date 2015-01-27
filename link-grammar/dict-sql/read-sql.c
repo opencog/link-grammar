@@ -265,7 +265,7 @@ bool check_db(const char *lang)
 	return retval;
 }
 
-static void* db_open(const char * fullname, void * user_data)
+static void* db_open(const char * fullname, const void * user_data)
 {
 	int fd;
 	struct stat buf;
@@ -323,9 +323,12 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
-	dict->lang = lang;
 	t = strrchr (lang, '/');
-	if (t) dict->lang = string_set_add(t+1, dict->string_set);
+	t = (NULL == t) ? lang : t+1;
+	dict->lang = string_set_add(t, dict->string_set);
+#ifdef _DEBUG
+	prt_error("Info: Language: %s\n", dict->lang);
+#endif
 
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
