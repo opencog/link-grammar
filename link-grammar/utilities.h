@@ -132,6 +132,7 @@ void lg_mbrtowc(void);
 #define mbstate_t char
 #define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
 #define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
+#define mbrlen(s,n,m)     (1)
 #define iswupper  isupper
 #define iswalpha  isalpha
 #define iswdigit  isdigit
@@ -222,14 +223,16 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
-	size_t n = 0;
-	while (0 != *s)
-	{
-		if ((0x80 <= ((unsigned char) *s)) && 
-        (((unsigned char) *s) < 0xc0)) { s++; n++; }
-		else return n+1;
+	mbstate_t mbs;
+	memset(&mbs, 0, sizeof(mbs));
+	size_t len = mbrlen(s, MB_CUR_MAX, &mbs);
+	if (len == (size_t)(-1) || len == (size_t)(-2)) {
+		/* Too long or mailformed sequence,
+		 * skip one character. */
+		return 1;
 	}
-	return n;
+
+	return len;
 }
 
 static inline int is_utf8_upper(const char *s)
