@@ -413,7 +413,7 @@ class ZENLangTestCase(unittest.TestCase):
 
     # Reads linkages from a test-file.
     def test_getting_links(self):
-        parses = open("parses-en.txt")
+        parses = open(os.getenv("srcdir") + "/" + "parses-en.txt")
         diagram = None
         sent = None
         for line in parses :
@@ -474,7 +474,7 @@ class ZLTLangTestCase(unittest.TestCase):
 
     # Reads linkages from a test-file.
     def test_getting_links(self):
-        parses = open("parses-lt.txt")
+        parses = open(os.getenv("srcdir") + "/" + "parses-lt.txt")
         diagram = None
         sent = None
         for line in parses :
