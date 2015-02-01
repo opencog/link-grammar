@@ -934,7 +934,7 @@ bool file_exists(const char * dict_name)
 	fstat(fd, &buf);
 	if (0 < buf.st_size) retval = true;
 
-  	fclose(fp);
+	fclose(fp);
 	return retval;
 }
 
@@ -980,7 +980,7 @@ char *get_file_contents(const char * dict_name)
 			 break;
 	}
 
-  	fclose(fp);
+	fclose(fp);
 
 	if (left < 0)
 	{
@@ -1127,7 +1127,7 @@ char * get_default_locale(void)
 
 static const char ** resize_alts(const char **arr, size_t len)
 {
-	arr = (const char **)realloc(arr, (len+2) * sizeof(const char *));
+	arr = realloc(arr, (len+2) * sizeof(char *));
 	arr[len+1] = NULL;
 	return arr;
 }
@@ -1142,10 +1142,10 @@ size_t altlen(const char **arr)
 
 void altappend(Sentence sent, const char ***altp, const char *w)
 {
-	int n = altlen(*altp);
+	size_t n = altlen(*altp);
 
 	*altp = resize_alts(*altp, n);
 	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
-/* ========================== END OF FILE =================== */
+/* ============================================================= */

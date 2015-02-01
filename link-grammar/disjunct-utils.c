@@ -16,6 +16,7 @@
 #include "externs.h"
 #include "structures.h"
 #include "utilities.h"
+#include "wordgraph.h"
 #include "word-utils.h"
 
 /* Disjunct utilities ... */
@@ -31,6 +32,7 @@ void free_disjuncts(Disjunct *c)
 		c1 = c->next;
 		free_connectors(c->left);
 		free_connectors(c->right);
+		free(c->word);
 		xfree((char *)c, sizeof(Disjunct));
 	}
 }
@@ -151,6 +153,18 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 	xfree(dt, sizeof(disjunct_dup_table));
 }
 
+/* FIXME? Can the same word get appended again? If so - prevent it. */
+static void disjuct_gwordlist_append(Disjunct * dx, const Gword **word)
+{
+	size_t to_word_arr_len = gwordlist_len(dx->word);
+	size_t from_word_arr_len = gwordlist_len(word);
+
+	dx->word = realloc(dx->word,
+	   sizeof(*(dx->word)) * (to_word_arr_len + from_word_arr_len + 1));
+	memcpy(&dx->word[to_word_arr_len], word,
+	       sizeof(*dx->word) * (from_word_arr_len + 1));
+}
+
 /**
  * Takes the list of disjuncts pointed to by d, eliminates all
  * duplicates, and returns a pointer to a new list.
@@ -183,6 +197,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
+			disjuct_gwordlist_append(dx, d->word);
 			free_disjuncts(d);
 			count++;
 		}
@@ -242,6 +257,51 @@ char * print_one_disjunct(Disjunct *dj)
 	buff[MAX_LINE-1] = 0;
 	
 	return strdup(buff);
+}
+
+/* ============================================================= */
+
+/**
+ * Record the wordgraph word to which the X-node belongs, in each of its
+ * disjuncts.
+ */
+void word_record_in_disjunct(X_node * x, Disjunct * d)
+{
+	for (;d != NULL; d=d->next) {
+		d->word = malloc(sizeof(*d->word)*2);
+		d->word[0] = x->word;
+		d->word[1] = NULL;
+	}
+}
+
+/* Debug printout of a disjunct word list */
+void disjunct_word_print(Disjunct * d)
+{
+	const Gword *const *wl = d->word;
+	const char *c;
+
+	printf("Disjunct word: ");
+	for (c = d->string; '\0' != *c; c++)
+		printf("%c", *c == SUBSCRIPT_MARK ? '.' : *c);
+	printf("; Wordgraph: ");
+
+	if (NULL == wl)
+	{
+		printf("BUG: NULL list!\n");
+		return;
+	}
+	if (NULL == *wl)
+	{
+		printf("BUG: None\n");
+		return;
+	}
+
+	for (; *wl; wl++)
+	{
+		printf("word '%s' unsplit '%s'%s", NULL == *(wl+1) ? "" : ",",
+		       (*wl)->subword, (*wl)->unsplit_word->subword);
+	}
+	printf("\n");
 }
 
 /* ========================= END OF FILE ============================== */

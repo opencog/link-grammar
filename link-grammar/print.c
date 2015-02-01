@@ -13,14 +13,15 @@
 
 
 #include <stdint.h>
+#include <malloc.h>
 
-#include "print.h"
 #include "externs.h"
 #include "api-structures.h"
 #include "corpus/corpus.h"
 #include "print-util.h"
 #include "string-set.h"
-#include "structures.h" /* needed for EMPTY_WORD */
+#include "structures.h"
+#include "print.h"      /* needs structure.h */
 #include "utilities.h"
 #include "word-utils.h"
 
@@ -208,7 +209,7 @@ char * linkage_print_senses(Linkage linkage)
 	}
 
 #else
-	append_string(s, "Corpus statstics is not enabled in this version\n");
+	append_string(s, "Corpus statistics is not enabled in this version\n");
 #endif
 	sense_string = string_copy(s);
 	string_delete(s);
@@ -238,7 +239,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		/* Cleanup the subscript mark before printing. */
 		strncpy(infword, disj->string, MAX_WORD);
 		mark = strchr(infword, SUBSCRIPT_MARK);
-		if (mark) *mark = '.';
+		if (mark) *mark = SUBSCRIPT_DOT;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strlen(infword);
@@ -381,7 +382,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int line_len, link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
-	String * string;  
+	String * string;
 	char * gr_string;
 	unsigned int N_words_to_print;
 
@@ -507,7 +508,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			if (DEPT_CHR == ppla[j].rc->string[0]) { picture[row][cr-1] = '>'; }
 			if (HEAD_CHR == ppla[j].rc->string[0]) { *t = '<'; }
 
-			/* The direction indicators maye have clobbered these. */
+			/* The direction indicators may have clobbered these. */
 			picture[row][cl] = '+';
 			picture[row][cr] = '+';
 
@@ -799,7 +800,7 @@ static const char * header(bool print_ps_header)
 		"  % this number of points from the left margin is the center of page\n"
 		"\n"
 		"/rightpage 6.5 72 mul def\n"
-		"  % number of points from the left margin is the the right margin\n"
+		"  % number of points from the left margin is the right margin\n"
 		"\n"
 		"/show-string-centered-dict 5 dict def\n"
 		"\n"
@@ -1119,37 +1120,44 @@ static const char * header(bool print_ps_header)
 }
 
 /**
- *   print_sentence_word_alternatives(sent, FALSE, display_func, NULL)
- * Iterate over the sentence words and their alternatives.
- * Handle each alternative using the display() function if it is supplied,
- * or else (if it is NULL) just print them.
+ * Print elements of the 2D-word-array produced for the parsers.
  *
- *   print_sentence_word_alternatives(sent, FALSE, NULL, tokenpos)
- * Return trough the tokenpos structure the index of the first occurrence
- * in the sentence of the given token. This is used to prevent duplicate
- * inforamtion display for repeated morphemes (if there are multiples
- * splits, each of several morphemes, then many of them may repeat).
+ * - print_sentence_word_alternatives(sent, false, NULL, tokenpos)
+ * If a pointer to struct "tokenpos" is given, return through it the index of
+ * the first occurrence in the sentence of the given token. This is used to
+ * prevent duplicate information display for repeated morphemes (if there are
+ * multiples splits, each of several morphemes, otherwise some of them may
+ * repeat).
  *
- *   print_sentence_word_alternatives(sent, TRUE, NULL, NULL)
- * If debugprint is TRUE, this is a debug printout of the sentence.
- * (The debug printouts are with level 0 because this function is
- * invoked for debug on certain positive level.)
+ * - print_sentence_word_alternatives(sent, true, NULL, NULL)
+ * If debugprint is "true", this is a debug printout of the sentence.  (The
+ * debug printouts are with level 0 because this function is invoked for debug
+ * on certain positive level.)
+ *
+ *
+ * - print_sentence_word_alternatives(sent, false, display_func, NULL)
+ * Iterate over the sentence words and their alternatives.  Handle each
+ * alternative using the display_func function if it is supplied, or else (if it
+ * is NULL) just print them. It is used to display disjunct information when
+ * command !!word is used.
+ * FIXME In the current version (using Wordgraph) the "alternatives" in the
+ * word-array doesn't necessarily consist of real word alternatives.
  *
  */
 
 struct tokenpos /* First position of the given token - to prevent duplicates */
 {
 	const char * token;
-	int wi;
-	int ai;
+	size_t wi;
+	size_t ai;
 };
 
 void print_sentence_word_alternatives(Sentence sent, bool debugprint,
      void (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
 {
-	int wi;   /* Internal sentence word index */
-	int ai;   /* Index of a word alternative */
-	int sentlen = sent->length;        /* Shortened if there is a right-wall */
+	size_t wi;   /* Internal sentence word index */
+	size_t ai;   /* Index of a word alternative */
+	size_t sentlen = sent->length;     /* Shortened if there is a right-wall */
 	int first_sentence_word = 0;       /* Used for skipping a left-wall */
 	bool word_split = false;           /* !!word got split */
 
@@ -1167,10 +1175,9 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 	else
 	{
 		/* For analyzing words we need to ignore the left/right walls */
-		if ((sentlen >= 0) &&
-		 (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD)))
+		if (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD))
 			first_sentence_word = 1;
-		if ((sentlen >= 0) && (NULL != sent->word[sentlen-1].unsplit_word) &&
+		if ((NULL != sent->word[sentlen-1].unsplit_word) &&
 		 (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
 			sentlen--;
 
@@ -1190,7 +1197,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 
 				/* There should always be at least one alternative */
 				assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-				 ('\0' != w.alternatives[0][0]), "Missing alt for word %d\n", wi);
+				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
 
 				if (NULL != w.alternatives[1])
 				{
@@ -1201,102 +1208,137 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		}
 		/* "String", because it can be a word, morpheme, or (TODO) idiom */
 		if (word_split && (NULL == display)) printf("String splits to:\n");
+		/* We used to print the alternatives of the word here, one per line.
+		 * In the current (Wordgraph) version, the alternatives may look
+		 * like nonsense combination of tokens - not as the strict split
+		 * possibilities of words as in previous versions.
+		 * E.g.: For Hebrew word "הכלב", we now get these "alternatives":
+		 *   ה=  כלב  לב  ב=
+		 *   ה=  כ=  ל=
+		 *   ה=  כ=
+		 * For "'50s," (∅ means empty word):
+		 *   ' s s ,
+		 *   '50 50 , ∅
+		 *   '50s ∅
+		 * Clearly, this is not informative any more. Instead, one line with a
+		 * list of tokens (without repetitions) is printed
+		 * ה= כלב לב ב= כ= ל=
+		 *
+		 * FIXME Print the alternatives from the wordgraph.
+		 */
 	}
 
 	/* Iterate over sentence input words */
 	for (wi=first_sentence_word; wi<sentlen; wi++)
 	{
 		Word w = sent->word[wi];
-		int w_start = wi;   /* input word index */
+		size_t w_start = wi;   /* input word index */
+		size_t max_nalt = 0;
 
+#if 0 /* In the Wordgraph version firstupper and post_quote don't exist. */
 		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
 		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
-		 w.unsplit_word);
+#endif
+		if (debugprint) lgdebug(0, "  word%zu: %s\n   ", wi, w.unsplit_word);
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-		 ('\0' != w.alternatives[0][0]), "Missing alt for word %d\n", wi);
+		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+
+		//printf("DEBUG: word%zu '%s' nalts %zu\n",
+		//	 wi, sent->word[wi].unsplit_word, altlen(sent->word[wi].alternatives));
+
+		for (wi = w_start; (wi == w_start) ||
+			((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
+		{
+			size_t nalt = altlen(sent->word[wi].alternatives);
+
+			max_nalt = MAX(max_nalt, nalt);
+		}
 
 		/* Iterate over alternatives */
-		for (ai=0; ;  ai++)
+		for (ai=0; ai < max_nalt;  ai++)
 		{
-			bool alt_exists = w.alternatives[ai] != NULL;
-
-			if (alt_exists && debugprint)
-				lgdebug(0, "   alt%d:", ai);
+			if (debugprint)
+				lgdebug(0, "   alt%zu:", ai);
 			for (wi = w_start; (wi == w_start) ||
 			 ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
 			{
-				/* Check extra balancing */
-				assert((NULL != w.alternatives[ai]) ||
-				 (NULL == sent->word[wi].alternatives[ai]),
-				 "Extra alt %d for word %d\n", wi, ai);
+				size_t nalts = altlen(sent->word[wi].alternatives);
+				const char *wt;
+				const char *st = NULL;
+				char *wprint = NULL;
 
-				if (alt_exists)
+				/* In the Wordgraph version alternative slots are not balanced
+				 * with empty words. To see these places for debug, later
+				 * here "[missing]" is printed if wt is "". */
+				if (ai >= nalts)
+					wt = ""; /* missing */
+				else
+					wt = sent->word[wi].alternatives[ai];
+
+				/* Don't display information again for the same word */
+				if ((NULL != tokenpos) && (0 == strcmp(tokenpos->token, wt)))
 				{
-					const char *wt = sent->word[wi].alternatives[ai];
-					const char *st = NULL;
-					char w[MAX_WORD*2];
+					tokenpos->wi = wi;
+					tokenpos->ai = ai;
+					return;
+				}
+				if (!debugprint)
+				{
+					struct tokenpos firstpos = { wt };
 
-					/* Don't display information again for the same word */
-					if (NULL != tokenpos && (0 == strcmp(tokenpos->token, wt)))
+					print_sentence_word_alternatives(sent, false, NULL, &firstpos);
+					if ((firstpos.wi != wi) || (firstpos.ai != ai))
 					{
-						tokenpos->wi = wi;
-						tokenpos->ai = ai;
-						return;
-					}
-					if ((NULL != display))
-					{
-						struct tokenpos firstpos = { wt };
-
-						print_sentence_word_alternatives(sent, false, NULL, &firstpos);
-						if ((firstpos.wi != wi) || (firstpos.ai != ai))
-						{
-							/* We encountered this token earlier */
-							lgdebug(5, "Skiping repeated %s\n", wt);
-							continue;
-						}
-					}
-
-					if (0 == strcmp(wt, EMPTY_WORD_MARK))
-						wt = EMPTY_WORD_DISPLAY;
-
-					/* Restore SUBSCRIPT_DOT for printing */
-					st = strrchr(wt, SUBSCRIPT_MARK);
-					if (st)
-					{
-						strcpy(w, wt);
-						w[st-wt] = SUBSCRIPT_DOT;
-						wt = w;
-					}
-					if (debugprint) lgdebug(0, " %s", wt);
-
-					/* Don't try to give info on the empty word. */
-					if (0 != strcmp(wt, EMPTY_WORD_DISPLAY))
-					{
-						/* For now each word component is called "Token".
-						 * TODO: Its type can be decoded and a more precise
-						 * term (stem, prefix, etc.) can be used.
-						 * Display the features of the token */
-						if (NULL == tokenpos && (NULL != display))
-						{
-							printf("Token \"%s\" ", wt);
-							display(sent->dict, wt);
-							printf("\n");
-						}
-						else if (word_split) printf("  %s", wt);
+						/* We encountered this token earlier */
+						if (NULL != display)
+							lgdebug(5, "Skipping repeated %s\n", wt);
+						continue;
 					}
 				}
+
+				if (0 == strcmp(wt, EMPTY_WORD_MARK))
+					wt = EMPTY_WORD_DISPLAY;
+
+				/* Restore SUBSCRIPT_DOT for printing */
+				st = strrchr(wt, SUBSCRIPT_MARK);
+				if (st)
+				{
+					wprint = malloc(strlen(wt)+1);
+					strcpy(wprint, wt);
+					wprint[st-wt] = SUBSCRIPT_DOT;
+					wt = wprint;
+				}
+
+				if (debugprint) lgdebug(0, " %s", '\0' == wt[0] ? "[missing]" : wt);
+
+				/* Don't try to give info on the empty word. */
+				if (('\0' != wt[0]) && (0 != strcmp(wt, EMPTY_WORD_DISPLAY)))
+				{
+					/* For now each word component is called "Token".
+					 * TODO: Its type can be decoded and a more precise
+					 * term (stem, prefix, etc.) can be used.
+					 * Display the features of the token */
+					if ((NULL == tokenpos) && (NULL != display))
+					{
+						printf("Token \"%s\" ", wt);
+						display(sent->dict, wt);
+						printf("\n");
+					}
+					else if (word_split) printf(" %s", wt);
+				}
+				free(wprint); /* wprint is NULL if not allocated */
 			}
-			if (!alt_exists)
-				break;
-			if (word_split && NULL == display) printf("\n");
+
+			/* Commented out - no alternatives for now - print as one line. */
+			//if (word_split && (NULL == display)) printf("\n");
 		}
 		wi--;
 		if (debugprint) lgdebug(0, "\n");
 	}
 	if (debugprint) lgdebug(0, "\n");
-	else if (word_split) printf("\n");
+	else if (word_split) printf("\n\n");
 }
 
 /**
@@ -1312,8 +1354,41 @@ void print_with_subscript_dot(const char *s)
 }
 
 /**
+ *  Print linkage wordgraph path.
+ */
+void print_lwg_path(Gword **w)
+{
+	lgdebug(+0, " ");
+	for (; *w; w++)
+	{
+		print_with_subscript_dot((*w)->subword);
+	}
+	lgdebug(0, "\n");
+}
+
+#define D_WPP 5
+void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
+{
+	size_t i = 0;
+
+	if (NULL == wp)
+	{
+		lgdebug(+D_WPP, "Empty\n");
+		return;
+	}
+	lgdebug(+D_WPP, "\n");
+	for (; NULL != wp->word; wp++)
+	{
+		lgdebug(D_WPP, "%zu: word '%s', same=%d used=%d level=%zu\n",
+		        i++, wp->word->subword, wp->same_word, wp->used,
+		        wp->word->hier_depth);
+	}
+}
+#undef D_WPP
+
+/**
  *  Print the chosen_disjuncts words.
- *  This is used for debug, e.g. for traking them in the Wordgraph display.
+ *  This is used for debug, e.g. for tracking them in the Wordgraph display.
  */
 void print_chosen_disjuncts_words(const Linkage lkg)
 {
@@ -1327,7 +1402,7 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 
 		if (NULL == cdj)
 			djw = "[]"; /* null word */
-		else if (0 == strcmp(cdj->string, EMPTY_WORD_MARK))
+		else if (MT_EMPTY == cdj->word[0]->morpheme_type)
 			djw = EMPTY_WORD_DISPLAY;
 		else if ('\0' == cdj->string[0])
 			djw = "\\0"; /* null string - something is wrong */

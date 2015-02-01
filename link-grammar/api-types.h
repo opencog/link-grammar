@@ -55,6 +55,7 @@ typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
 typedef struct Afdict_class_struct Afdict_class;
 typedef struct Word_struct Word;
+typedef struct Gword_struct Gword;
 typedef struct X_table_connector_struct X_table_connector;
 
 
@@ -66,6 +67,8 @@ typedef struct PP_node_struct PP_node;
 typedef struct corpus_s Corpus;
 typedef struct sense_s Sense;
 typedef struct cluster_s Cluster;
+
+typedef struct Wordgraph_pathpos_s Wordgraph_pathpos;
 
 #endif
 

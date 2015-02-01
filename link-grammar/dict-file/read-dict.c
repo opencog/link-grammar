@@ -13,6 +13,7 @@
 
 #include <limits.h>
 #include <string.h>
+
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -66,7 +67,6 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	free(ver);
 	return dict->version;
 }
-
 
 /*
   The dictionary format:
@@ -979,31 +979,36 @@ static Exp * make_connector(Dictionary dict)
 
 #define EMPTY_CONNECTOR "ZZZ"
 
-/**
- * Insert empty-word connectors.
+/** Insert empty-word connectors.
  *
- * Empty words are used to work around a fundamental parser design flaw.
- * The flaw is that the parser assumes that there exist a fixed number of
- * words in a sentence, independent of tokenization.  Unfortunately, this
- * is not true when correcting spelling errors, or when the dictionary
- * contains entries for plain words and also as stems.  For example,
- * in the Russian dictionary, это.msi appears as a single word, but can
- * also be split into эт.= =о.mnsi. The problem arises because это.msi
- * is a single word, while эт.= =о.mnsi counts as two words, and there
- * is no pretty way to handle both during parsing.  Thus a work-around
- * is introduced: add the empty word =.zzz: ZZZ+; to the dictionary.
- * This becomes a pseudo-suffix that can attach to any plain word.  It
- * can attach to any plain word only because the routine below,
- * add_empty_word(), adds the corresponding connector ZZZ- to the plain
- * word.  This is done "on the fly", because we don't want to pollute the
- * dictionary with this stuff. Besides, the Russian dictionary has
- * more then 23K words that qualify for this treatment (It has 22.5K
- * words that appear both as plain words, and as stems, and can thus
- * attach to null suffixes. For non-null suffix splits, there are
- * clearly many more.)
+ * The "empty word" is a concept used in order to make the current parser able
+ * to parse "alternatives" within a sentence. The "empty word" can link to any
+ * word as a pseudo-suffix and hence it is issued when a word is optional, a
+ * thing that happens when there are word alternatives with a different number
+ * of tokens in each of them.
  *
- * Note that the printing of ZZZ connectors is suppressed in print.c,
- * although API users will see this link.
+ * Such alternatives can be created when splitting words into morphemes, such
+ * as stem and suffix, in multiple ways, when correcting spell errors, when
+ * splitting contractions, or when splitting punctuation off words or into
+ * smaller parts.
+ *
+ * For example, in the Russian dictionary, это.msi appears as a single word,
+ * but can also be split into эт.= =о.mnsi. The problem arises because это.msi
+ * is a single word, while эт.= =о.mnsi counts as two words, and there is no
+ * pretty way to handle both during parsing. Thus a work-around is introduced:
+ * add the empty word =.zzz: ZZZ+; to the dictionary.  This becomes a
+ * pseudo-suffix that can attach to any plain word.  It can attach to any
+ * plain word only because the routine below, add_empty_word(), adds the
+ * corresponding connector ZZZ- to the plain word.  This is done "on the fly",
+ * because we don't want to pollute the dictionary with this stuff.  Besides,
+ * the Russian dictionary has more then 23K words that qualify for this
+ * treatment (It has 22.5K words that appear both as plain words, and as
+ * stems, and can thus attach to null suffixes. For non-null suffix splits,
+ * there are clearly many more.)
+ *
+ * The empty words are removed from the linkages after the parsing step.
+ * FIXME However, the ZZZ connectors are still found in the chosen disjuncts
+ * and can be visible in the API.
  */
 
 Exp* add_empty_word(Dictionary const dict, Exp_list * eli, Dict_node * dn)
@@ -1787,6 +1792,14 @@ bool read_dictionary(Dictionary dict)
  * Wild-card search is supported; the command-line user can type in !!word* or
  * !!word*.sub and get a list of all words that match up to the wild-card.
  * In this case no split is done.
+ *
+ * FIXME: Errors are printed twice, since display_word_split() is invoked twice
+ * per word. One way to fix it is to change display_word_split() to return false
+ * on failure. However, this is a big fix, because the failure is several
+ * functions deep, all not returning a value or returning a value for another
+ * purpose. An easy fix, which has advantages for other things, is to add (and
+ * use here) a "char *last_error" field in the Sentence structure, serving like
+ * an "errno" of library calls.
  */
 
 static void display_word_split(Dictionary dict,
@@ -1799,11 +1812,11 @@ static void display_word_split(Dictionary dict,
 
 	parse_options_set_spell_guess(&display_word_opts, false);
 	sent = sentence_create(word, dict);
-	sentence_split(sent, &display_word_opts);
+	if (0 > sentence_split(sent, &display_word_opts)) return;
 
 	/* List the splits */
 	print_sentence_word_alternatives(sent, false, NULL, NULL);
-	/* List the disjuncts information */
+	/* List the disjuncts information. */
 	print_sentence_word_alternatives(sent, false, display, NULL);
 
 	sentence_delete(sent);

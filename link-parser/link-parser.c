@@ -946,7 +946,7 @@ int main(int argc, char * argv[])
 				"%d error%s.\n", batch_errors, (batch_errors==1) ? "" : "s");
 	}
 
-	/* Free stuff, so that mem-leak detectors don't commplain. */
+	/* Free stuff, so that mem-leak detectors don't complain. */
 	command_options_delete(copts);
 	dictionary_delete(dict);
 	fget_input_string(NULL, NULL, NULL);

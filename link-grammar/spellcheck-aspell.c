@@ -22,8 +22,13 @@
 #include "utilities.h"  /* For Win32 compatibility */
 
 #define ASPELL_LANG_KEY  "lang"
+/* FIXME: Move to a definition file (affix file?). */
 static const char *spellcheck_lang_mapping[] = {
-	"en" /* link-grammar language */, "en_US" /* Aspell language key */
+/* link-grammar language , Aspell language key */
+	"en", "en_US",
+	"ru", "ru_RU",
+	"he", "he_IL",
+	"de", "de_DE"
 };
 
 struct linkgrammar_aspell {

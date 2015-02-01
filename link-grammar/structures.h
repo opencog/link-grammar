@@ -35,7 +35,7 @@
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
 
 /* Word subscripts come after the subscript mark (ASCII ETX)
- * In the dictionary, a dot is used; but that dot interfers with dots
+ * In the dictionary, a dot is used; but that dot interferes with dots
  * in the input stream, and so we convert dictionary dots into the
  * subscript mark, which we don't expect to see in user input.
  */
@@ -45,9 +45,13 @@
 #define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
 #define EMPTY_WORD_DISPLAY "∅"   /* Empty word representation for debug */
 
+/* Dictionary capitalization handling */
+#define CAP1st "1stCAP" /* Next word is capitalized */
+#define CAPnon "nonCAP" /* Next word the lc version of a capitalized word */
+
 /* Stems, by definition, end with ".=x" (when x is usually an empty string, i.e.
  * ".="). The STEMSUBSCR definition in the affix file may include endings with
- * other x valuses, when x serves as a word subscript, e.g. ".=a".  */
+ * other x values, when x serves as a word subscript, e.g. ".=a".  */
 #define STEM_MARK '='
 
 /* Suffixes start with it.
@@ -61,13 +65,13 @@
 
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 
-#define UNKNOWN_WORD     ("UNKNOWN-WORD")
+#define UNKNOWN_WORD "UNKNOWN-WORD"
 
 #define MAX_PATH_NAME 200     /* file names (including paths)
                                  should not be longer than this */
 
 /*      Some size definitions.  Reduce these for small machines */
-/* MAX_WORD is large, because unicode entries can use a lot of space */
+/* MAX_WORD is large, because Unicode entries can use a lot of space */
 #define MAX_WORD 180          /* maximum number of bytes in a word */
 #define MAX_LINE 2500         /* maximum number of chars in a sentence */
 
@@ -102,7 +106,7 @@ struct Connector_struct
 	             /* If this is a length limited connector, this
 	                gives the limit of the length of the link
 	                that can be used on this connector.  Since
-	                this is strictly a funcion of the connector
+	                this is strictly a function of the connector
 	                name, efficiency is the only reason to store
 	                this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
@@ -126,10 +130,11 @@ static inline const char * connector_get_string(Connector *c)
 struct Disjunct_struct
 {
 	Disjunct *next;
-	const char * string;             /* subscripted dictionary word */
+	const char * string;       /* subscripted dictionary word */
 	Connector *left, *right;
 	double cost;
-	bool marked;                     /* unmarked disjuncts get deleted */
+	bool marked;               /* unmarked disjuncts get deleted */
+	const Gword **word;        /* NULL terminated list of originating words */
 };
 
 typedef struct Match_node_struct Match_node;
@@ -142,9 +147,10 @@ struct Match_node_struct
 typedef struct X_node_struct X_node;
 struct X_node_struct
 {
-	const char * string;            /* the word itself */
+	const char * string;       /* the word itself */
 	Exp * exp;
 	X_node *next;
+	const Gword *word;         /* originating Wordgraph word */
 };
 
 /**
@@ -156,32 +162,160 @@ struct X_node_struct
  *
  * Disjunct* d:
  *   Contains a pointer to a list of disjuncts for this word.
- *   Computed by: parepare_to_parse(), but modified by pruning and power
+ *   Computed by: prepare_to_parse(), but modified by pruning and power
  *   pruning.
  */
 struct Word_struct
 {
 	const char *unsplit_word;
-	const char **alternatives;
+
 	X_node * x;          /* Sentence starts out with these, */
 	Disjunct * d;        /* eventually these get generated. */
-	bool firstupper;     /* TRUE if capitalized, and is first word of sentence */
+
+	const char **alternatives;
 };
 
+typedef enum
+{
+	MT_INVALID,            /* Initial value, to be changed to the correct type */
+	MT_WORD,               /* Regular word */
+	MT_FEATURE,            /* Pseudo morpheme, currently capitalization marks */
+	MT_INFRASTRUCTURE,     /* Start and end Wordgraph pseudo-words */
+	MT_WALL,               /* The LEFT-WALL and RIGHT-WALL pseudo-words */
+	MT_EMPTY,              /* Empty word */
+	MT_UNKNOWN,            /* Unknown word (FIXME? Unused) */
+	/* Experimental for Semitic languages (yet unused) */
+	MT_TEMPLATE,
+	MT_ROOT,
+	/* Experimental - for display purposes.
+	 * MT_CONTR is now used in the tokenization step, see the comments there. */
+	MT_CONTR,              /* Contracted part of a contraction (e.g. y', 's) */
+	MT_PUNC,               /* Punctuation (yet unused) */
+	/* We are not going to have >63 types up to here. */
+	MT_STEM    = 1<<6,     /* Stem */
+	MT_PREFIX  = 1<<7,     /* Prefix */
+	MT_MIDDLE  = 1<<8,     /* Middle morpheme (yet unused) */
+	MT_SUFFIX  = 1<<9      /* Suffix */
+} Morpheme_type;
+#define IS_REG_MORPHEME (MT_STEM|MT_PREFIX|MT_MIDDLE|MT_SUFFIX)
 
-/* The regexs are stored as a linked list of the following nodes. */
+/* Word status */
+/* - Tokenization */
+#define WS_UNKNOWN   1<<0 /* Unknown word (FIXME? Unused) */
+#define WS_REGEX     1<<1 /* Matches a regex */
+#define WS_SPELL     1<<2 /* Result of a spell guess */
+#define WS_RUNON     1<<3 /* Separated from words run-on */
+#define WS_HASALT    1<<4 /* Has alternatives (one or more)*/
+#define WS_UNSPLIT   1<<5 /* It's an alternative to itself as an unsplit word */
+#define WS_INDICT    1<<6 /* boolean_dictionary_lookup() is true */
+#define WS_FIRSTUPPER 1<<7 /* Subword is the lc version of its unsplit_word.
+                              The idea of marking subwords this way, in order to
+                              enable restoring their original capitalization,
+                              may be wrong in general, since in some languages
+                              the process is not always reversible. Instead,
+                              the original word may be saved. */
+/* - Post linkage stage. XXX Experimental. */
+#define WS_PL        1<<14 /* Post-Linkage, not belonging to tokenization */
+
+#define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
+
+/* XXX Only TS_DONE is now actually used.
+ * FIXME: Change TS_DONE to WS_TDONE, or
+ * change Tokenizing_step to "bool tokenizing_step". */
+
+typedef enum
+{
+	TS_INITIAL,
+	TS_LR_STRIP,
+	TS_AFFIX_SPLIT,
+	TS_REGEX,
+	TS_RUNON,
+	TS_SPELL,
+	TS_DONE                  /* Tokenization done */
+} Tokenizing_step;
+
+/* For the "guess" field of Gword_struct. */
+typedef enum
+{
+	GM_REGEX = '!',
+	GM_SPELL = '~',
+	GM_RUNON = '&',
+	GM_UNKNOWN = '?'
+} Guess_mark;
+
+#define MAX_SPLITS 10   /* See split_counter below */
+
+struct Gword_struct
+{
+	const char *subword;
+
+	Gword *unsplit_word; /* Upward-going co-tree */
+	Gword **next;        /* Right-going tree */
+	Gword **prev;        /* Left-going tree */
+	Gword *chain_next;   /* Next word in the chain of all words */
+
+	/* For debug and inspiration. */
+	const char *label;   /* Debug label - code locations of tokenization */
+	size_t node_num;     /* For differentiating words with identical subwords,
+	                        and for indicating the order in which word splits
+                           have been done. Shown in the Wordgraph display and in
+                           debug messages. Not used otherwise. Could have been
+                           used for hier_position instead of pointers in order
+                           to optimize its generation and comparison. */
+
+	/* Tokenizer state */
+	Tokenizing_step tokenizing_step;
+	bool issued_unsplit; /* The word has been issued as an alternative to itself.
+	                        It will become an actual alternative to itself only
+	                        if it's not the sole alternative, in which case it
+	                        will be marked with WS_UNSPLIT. */
+	size_t split_counter; /* Incremented on splits. A word cannot split more than
+	                         MAX_SPLITS times and a warning is issued then. */
+
+	unsigned int status;         /* See WS_* */
+	Morpheme_type morpheme_type; /* See MT_* */
+	Gword *alternative_id;       /* Alternative start - a unique identifier of
+	                                the alternative to which the word belongs. */
+	const char *regex_name;      /* Subword matches this regex.
+                                   FIXME? Extend for multiple regexes. */
+
+	/* Only used by wordgraph_flatten() */
+	const Gword **hier_position; /* Unsplit_word/alternative_id pointer list, up
+                                   to the original sentence word. */
+	size_t hier_depth;           /* Number of pointer pairs in hier_position */
+
+	/* XXX Experimental. Only used after the linkage (by compute_chosen_words())
+	 * for an element in the linkage display wordgraph path that represents
+	 * a block of null words that are morphemes of the same word. */
+	Gword **null_subwords;       /* Null subwords represented by this word */
+};
+
+/* Wordgraph path word-positions,
+ * used in wordgraph_flatten() and sane_linkage_morphism().
+ * FIXME Separate to two different structures. */
+struct Wordgraph_pathpos_s
+{
+	Gword *word;      /* Position in the Wordgraph */
+	/* Only for wordgraph_flatten(). */
+	bool same_word;   /* Still the same word - issue an empty word */
+	bool next_ok;     /* OK to proceed to the next Wordgraph word */
+	bool used;        /* Debug - the word has been issued */
+	/* Only for sane_morphism(). */
+	const Gword **path; /* Linkage candidate wordgraph path */
+};
+
+/* The regexes are stored as a linked list of the following nodes. */
 struct Regex_node_s
 {
 	char *name;      /* The identifying name of the regex */
 	char *pattern;   /* The regular expression pattern */
 	void *re;        /* The compiled regex. void * to avoid
-	                  * having re library details invading the
-	                  * rest of the LG system; regex-morph.c
-	                  * takes care of all matching.
+	                    having re library details invading the
+	                    rest of the LG system; regex-morph.c
+	                    takes care of all matching.
 	                  */
 	Regex_node *next;
 };
-
 
 /* The following three structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;

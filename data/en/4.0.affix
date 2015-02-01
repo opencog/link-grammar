@@ -31,7 +31,7 @@
 
 % Prefixes
 % Y'gotta Y'gonna
-Y' y': PRE+;
+y': PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!

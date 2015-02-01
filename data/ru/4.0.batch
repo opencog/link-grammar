@@ -4,6 +4,7 @@
 !echo
 !limit=1000
 !morphology=1
+!spell=0
 
 % test
 это тест

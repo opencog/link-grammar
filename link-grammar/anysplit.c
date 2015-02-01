@@ -57,7 +57,7 @@ typedef struct split_cache /* split cached by word length */
 #endif
 typedef struct anysplit_params
 {
-	int nparts;                /* maximum number of parts to split to */
+	int nparts;                /* maximum number of suffixes to split to */
 	size_t altsmin;            /* minimum number of alternatives to generate */
 	size_t altsmax;            /* maximum number of alternatives to generate */
 	Regex_node *regpre, *regmid, *regsuf; /* issue matching combinations  */
@@ -415,8 +415,9 @@ bool anysplit_init(Dictionary afdict)
  * - an error occurs (the behavior then is undefined).
  *   Such an error has not been observed yet.
  */
-bool anysplit(Sentence sent, const char *word)
+bool anysplit(Sentence sent, Gword *unsplit_word)
 {
+	const char * word = unsplit_word->subword;
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as;
 	Afdict_class * stemsubscr;
@@ -562,8 +563,8 @@ bool anysplit(Sentence sent, const char *word)
 		}
 
 		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
-		add_alternative(sent,
-		   0,NULL, 1,(const char **)&prefix_string, num_suffixes,suffixes);
+		issue_word_alternative(sent, unsplit_word, "AS",
+		   0,NULL,  1,(const char **)&prefix_string, num_suffixes,suffixes);
 		free(suffixes);
 	}
 
