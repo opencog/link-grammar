@@ -386,7 +386,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 
 /** 
  * Returns the number of ways the sentence can be parsed with the
- * specified null count. Assumes that the faster matcher and the count
+ * specified null count. Assumes that the fast-matcher and the count
  * context have already been initialized, and are freed later. The
  * "null_count" argument is the number of words that are allowed to
  * have no links to them.
@@ -404,7 +404,7 @@ static s64 do_count(fast_matcher_t *mchxt,
  * So, basically, its good to know how many parses to expect, before
  * starting to allocate parse structures.
  *
- * The count returned here is mean to be completely accurate; it is
+ * The count returned here is meant to be completely accurate; it is
  * not an approximation!
  */
 s64 do_parse(Sentence sent,
