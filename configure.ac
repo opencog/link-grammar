@@ -111,6 +111,11 @@ else
 	CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
 fi
 
+# _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
+# is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
+# specified (no effect). So just add it.
+CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
+
 # ====================================================================
 # Even modern 64-bit Apple machines build 32-bit binaries by default.
 # So force a 64-bit build if a 64-bit CPU is found.
