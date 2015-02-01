@@ -287,7 +287,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 			left_print_string(stdout, user_command[i].str, "                                                    ");
 			printf("\n");
 		}
-		printf(" !!<string>      Print all the dictionary word that matchs <string>.\n");
+		printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
 		printf("                 A wildcard * may be used to find multiple matches.\n");
 		printf("\n");
 		printf(" !<var>          Toggle the specified boolean variable.\n");

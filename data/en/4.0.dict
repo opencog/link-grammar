@@ -48,15 +48,29 @@
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
-% The empty word is a place holder in positions when "no word" is a
-% possibility to consider.  It is currently used in spell suggestions
-% which have a variable number of words, and in apostrophe splits when
-% the unsplit word also exists in the dictionary (like let's). In addition
-% it is used when issuing alternatives to unit stripping. It is % also
-% currently used for "balancing" of the word count in alternatives.
+% The empty word is a used in the 2D array used by the parser,
+% in "word slots" in which "no word" is a possibility to consider. 
+% When the Wordgraph is converted ("falttened") to this 2D array,
+% empty words are issued whenever needed.
+% FIXME: A better comment maybe.
 % See also EMPTY-WORD.x for the highly-unusual situation that EMPTY-WORD
 % appears in the input text.
 EMPTY-WORD.zzz: ZZZ-;
+
+% Quotation marks.
+% Unimplemented here yet - behave as empty words.
+% TODO: Add ' and ` also as quotation marks.
+% For a list see:
+% http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
+« 《 【 『  „: ZZZ-; 
+» 》 】 』 ` “: ZZZ-; 
+% For now, using ".x and ".y in the above definitions multiplies the number
+% of linkages by 2^(number of "). So it is separated below.
+""": ZZZ-;
+
+% Capitalization handling (null effect for now- behave as empty words).
+1stCAP.zzz: ZZZ-;
+nonCAP.zzz: ZZZ-;
 
 % Null links. These are used to drop the requirement for certain words
 % to appear during parsing. Basically, if a parse fails at a given cost,
@@ -256,7 +270,7 @@ EMPTY-WORD.zzz: ZZZ-;
 <fitcl-verb>: Ci+ & CV+;
 <porcl-verb>: Cr+ & CV+;
 <thncl-verb>: Cc+ & CV+;
-% We don't handle Ct,Cta in the above, because the AF and B link plays
+% We dont handle Ct,Cta in the above, because the AF and B link plays
 % the role of CV, connecting to the head-verb.
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
@@ -11140,11 +11154,13 @@ UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
-% XXX that is, change <WALL> to just WV+
+% XXX that is, change <WALL> to just WV+.
+% XXX {ZZZ+} got temporarily added for using quotes and virtual CAPs morphemes
+% as empty words. Remove when they are integrated into the dict.
 LEFT-WALL:
-  ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
+  {ZZZ+} & (((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
-    & <WALL> & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+});
+    & <WALL> & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+}));
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.

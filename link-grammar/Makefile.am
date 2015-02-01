@@ -114,6 +114,7 @@ liblink_grammar_la_SOURCES =        \
 	string-set.c                     \
 	tokenize.c                       \
 	utilities.c                      \
+	wordgraph.c                      \
 	word-utils.c                     \
 	anysplit.h                       \
 	api-structures.h                 \
@@ -155,6 +156,7 @@ liblink_grammar_la_SOURCES =        \
 	structures.h                     \
 	tokenize.h                       \
 	utilities.h                      \
+	wordgraph.h
 	word-utils.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar

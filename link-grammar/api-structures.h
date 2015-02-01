@@ -62,12 +62,12 @@ struct Parse_Options_s
 {
 	/* General options */
 	int verbosity;         /* Level of detail to give about the computation 0 */
-	char * debug;          /* comma-sparated function names to debug "" */
-	char * test;           /* comma-sparated features to test "" */
+	char * debug;          /* comma-separated function names to debug "" */
+	char * test;           /* comma-separated features to test "" */
 	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Options governing the tokenizer (sentence-splitter) */
-	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */ 
+	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */
 
 	/* Choice of the parser to use */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
@@ -153,7 +153,7 @@ struct Dictionary_s
 
 	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
 	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
-	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
+	Connector_set * unlimited_connector_set; /* NULL=everything is unlimited */
 	String_set *    string_set;   /* Set of link names in the dictionary */
 	Word_file *     word_file_header;
 
@@ -208,6 +208,18 @@ struct Sentence_s
 	size_t length;              /* Number of words */
 	Word  *word;                /* Array of words after tokenization */
 	String_set *   string_set;  /* Used for assorted strings */
+
+	/* Wordgraph stuff. FIXME: typedef for structs. */
+	Gword *wordgraph;            /* Tokenization wordgraph */
+	Gword *last_word;            /* FIXME Last issued word */
+	struct word_queue           /* element in queue of words to tokenize */
+	{
+		Gword *word;
+		struct word_queue *next;
+	} *word_queue;
+	struct word_queue *word_queue_last;
+	size_t gword_node_num;         /* Debug - for differentiating between
+	                                * wordgraph nodes with identical subwords. */
 
 	/* Parse results */
 	int    num_linkages_found;  /* Total number before postprocessing.  This
@@ -360,11 +372,14 @@ struct Linkage_s
 	Sense **        sense_list;   /* Word senses, infered from disjuncts */
 #endif
 
+   Gword **wg_path;              /* Linkage Wordgraph path */
+   Gword **wg_path_display;      /* ... for !morfology=0. Exprimental. */
+   //size_t *wg_path_index;      /* Displayed-word indices in wg_path (FIXME?)*/
+
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */
 	PP_data         hpsg_pp_data; /* Used in constituent code */
 };
-
 
 #endif
 

@@ -10,10 +10,11 @@
 /*                                                                       */
 /*************************************************************************/
 bool separate_sentence(Sentence, Parse_Options);
-void build_sentence_expressions(Sentence, Parse_Options);
 bool sentence_in_dictionary(Sentence);
+bool flatten_wordgraph(Sentence, Parse_Options);
 #ifdef USE_ANYSPLIT
-void add_alternative(Sentence sent,
+Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
+                     const char *label,
                      int prefnum, const char **prefix,
                      int stemnum, const char **stem,
                      int suffnum, const char **suffix);

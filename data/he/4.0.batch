@@ -2,6 +2,7 @@
 !verbosity=1
 !echo
 !limit=1000
+!spell=0
 
 זה הכלב
 זה הוא הכלב

@@ -1074,7 +1074,7 @@ static void report_pp_stats(Postprocessor *pp)
 	size_t rule_cnt = 0;
 	size_t unused_cnt = 0;
 	pp_knowledge * kno;
-	if (verbosity < 3) return;
+	if (verbosity < 6) return;
 
 	printf("PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
 	kno = pp->knowledge;
