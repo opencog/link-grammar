@@ -1,5 +1,6 @@
 Version 5.3.0: (XXX 2015)
  * Major redesign of the python bindings.
+ * Major redesign of sentence tokenization (the "wordgraph" design)
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
