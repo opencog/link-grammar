@@ -38,18 +38,17 @@
 
 #ifdef _WIN32
 #  include <windows.h>
-#  define DIR_SEPARATOR '\\'
-#  define PATH_SEPARATOR ';'
+ #define DIR_SEPARATOR "\\"
 #else
-#  define DIR_SEPARATOR '/'
-#  define PATH_SEPARATOR ':'
+ #define DIR_SEPARATOR "/"
 #endif
 
-#define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR == (ch))
-#ifdef _MSC_VER
-#define DICTIONARY_DIR "."
+#define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR[0] == (ch))
+#ifndef DICTIONARY_DIR
+ #define DEFAULTPATH NULL
+#else
+ #define DEFAULTPATH DICTIONARY_DIR
 #endif
-#define DEFAULTPATH DICTIONARY_DIR
 
 /* This file contains certain general utilities. */
 int    verbosity;
@@ -186,7 +185,7 @@ strndup (const char *str, size_t size)
 #if defined(_MSC_VER) || defined(__MINGW32__)
 
 /** Returns length of UTF8 character.
- * Current algo is based on the first character ony.
+ * Current algo is based on the first character only.
  * If pointer is not pointing at first char, no not a valid value, returns 0.
  * Returns 0 for NULL as well.
  */
@@ -580,9 +579,9 @@ char * join_path(const char * prefix, const char * suffix)
 	 * only if the prefix isn't already terminated by a path sep.
 	 */
 	prel = strlen(path);
-	if (0 < prel && path[prel-1] != DIR_SEPARATOR)
+	if (0 < prel && path[prel-1] != DIR_SEPARATOR[0])
 	{
-		path[prel] = DIR_SEPARATOR;
+		path[prel] = DIR_SEPARATOR[0];
 		path[prel+1] = '\0';
 	}
 	strcat(path, suffix);
@@ -590,16 +589,16 @@ char * join_path(const char * prefix, const char * suffix)
 	return path;
 }
 
-#ifdef _WIN32
 /* borrowed from glib */
 /* Used only for Windows builds */
+#ifdef _WIN32
 static char*
 path_get_dirname (const char *file_name)
 {
 	register char *base;
 	register int len;
 
-	base = strrchr (file_name, DIR_SEPARATOR);
+	base = strrchr (file_name, DIR_SEPARATOR[0]);
 #ifdef _WIN32
 	{
 		char *q = strrchr (file_name, '/');
@@ -657,7 +656,7 @@ path_get_dirname (const char *file_name)
 			len = (int) strlen (file_name) + 1;
 			base = (char *)malloc(len + 1);
 			strcpy (base, file_name);
-			base[len-1] = DIR_SEPARATOR;
+			base[len-1] = DIR_SEPARATOR[0];
 			base[len] = 0;
 			return base;
 		}
@@ -768,11 +767,12 @@ char * dictionary_get_data_dir(void)
    }
 #endif
 
+
 	return data_dir;
 }
 
 /**
- * object_open() -- dictopen() - open a dictionary
+ * Locate a data file and open it.
  *
  * This function is used to open a dictionary file or a word file,
  * or any associated data file (like a post process knowledge file).
@@ -781,33 +781,44 @@ char * dictionary_get_data_dir(void)
  * it's assumed to be an absolute file name and it tries to open
  * that exact file.
  *
- * If the filename does not begin with a "/", then it uses the
- * dictpath mechanism to find the right file to open.  This looks
- * for the file in a sequence of directories until it finds it.  The
- * sequence of directories is specified in a dictpath string, in
- * which each directory is followed by a ":".
+ * Otherwise, it looks for the file in a sequence of directories, as
+ * specified in the dictpath array, until it finds it.
+ *
+ * If it s still not found, it may be that the user specified a relative
+ * path, so it tries to open the exact file.
+ *
+ * Associated data files are looked in the *same* directory in which the
+ * first one was found (typically "en/4.0.dict").  The private static
+ * "path_found" serves as a directory path cache which records where the
+ * first file was found.  The goal here is to avoid insanity due to
+ * user's fractured installs.
+ * If the filename argument is NULL, the function just invalidates this
+ * directory path cache.
  */
 void * object_open(const char *filename,
-                   void * (*opencb)(const char *, void *),
-                   void * user_data)
+                   void * (*opencb)(const char *, const void *),
+                   const void * user_data)
 {
-	char completename[MAX_PATH_NAME+1];
-	char fulldictpath[MAX_PATH_NAME+1];
-	static char prevpath[MAX_PATH_NAME+1] = "";
-	static int first_time_ever = 1;
-	char *pos, *oldpos;
-	void *fp;
+	static char *path_found; /* directory path cache */
+	char *completename = NULL;
+	void *fp = NULL;
+	char *data_dir = NULL;
+	const char **path = NULL;
 
-	/* Record the first path ever used, so that we can recycle it */
-	if (first_time_ever)
+	if (NULL == filename)
 	{
-		strncpy (prevpath, filename, MAX_PATH_NAME);
-		prevpath[MAX_PATH_NAME] = 0;
-		pos = strrchr(prevpath, DIR_SEPARATOR);
-		if (pos) *pos = 0;
-		pos = strrchr(prevpath, DIR_SEPARATOR);
-		if (pos) *(pos+1) = 0;
-		first_time_ever = 0;
+		/* Invalidate the directory path cache */
+		free(path_found);
+		path_found = NULL;
+		return NULL;
+	}
+
+	if (NULL == path_found)
+	{
+		data_dir = dictionary_get_data_dir();
+#ifdef _DEBUG
+		prt_error("Info: data_dir=%s", (data_dir?data_dir:"NULL"));
+#endif
 	}
 
 	/* Look for absolute filename.
@@ -821,108 +832,80 @@ void * object_open(const char *filename,
 		|| ((filename[1] == ':')
 			 && ((filename[2] == '\\') || (filename[2] == '/')))
 #endif
-	)
+	   )
 	{
-		/* fopen returns NULL if the file does not exist. */
+		/* opencb() returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
-		if (fp) return fp;
-	}
-
-	{
-		char * data_dir = dictionary_get_data_dir();
 #ifdef _DEBUG
-		prt_error("Info: data_dir=%s", (data_dir?data_dir:"NULL"));
+		prt_error("Info: 1: object_open() trying %s=%d", filename, NULL!=fp);
 #endif
-		if (data_dir) {
-			snprintf(fulldictpath, MAX_PATH_NAME,
-			         "%s%c%s%c", data_dir, PATH_SEPARATOR,
-			                    DEFAULTPATH, PATH_SEPARATOR);
-			free(data_dir);
-		}
-		else {
-			/* Always make sure that it ends with a path
-			 * separator char for the below while() loop.
-			 * For unix, this should look like:
-			 * /usr/share/link-grammar:.:data:..:../data:
-			 * For windows:
-			 * C:\SOMEWHERE;.;data;..;..\data;
-			 */
-			snprintf(fulldictpath, MAX_PATH_NAME,
-			         "%s%c%s%c%s%c%s%c%s%c%s%c%s%c",
-				 prevpath, PATH_SEPARATOR,
-				 DEFAULTPATH, PATH_SEPARATOR,
-				 ".", PATH_SEPARATOR,
-				 "data", PATH_SEPARATOR,
-				 "..", PATH_SEPARATOR,
-				 "..", DIR_SEPARATOR, "data", PATH_SEPARATOR);
-		}
 	}
-
-	/* Now fulldictpath is our dictpath, where each entry is
-	 * followed by a ":" including the last one */
-
-	oldpos = fulldictpath;
-	while ((pos = strchr(oldpos, PATH_SEPARATOR)) != NULL)
+	else
 	{
-		strncpy(completename, oldpos, (pos-oldpos));
-		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
-		strcpy(completename+(pos-oldpos)+1, filename);
+		/* A path list in which to search for dictionaries.
+		 * path_found, data_dir or DEFAULTPATH may be NULL. */
+		const char *dictpath[] =
+		{
+			path_found,
+			".",
+			"." DIR_SEPARATOR "data",
+			"..",
+			".." DIR_SEPARATOR "data",
+			data_dir,
+			DEFAULTPATH,
+		};
+		size_t i = sizeof(dictpath)/sizeof(dictpath[0]);
+
+		for (path = dictpath; i-- > 0; path++)
+		{
+			if (NULL == *path) continue;
+
+			free(completename);
+			completename = join_path(*path, filename);
+			fp = opencb(completename, user_data);
 #ifdef _DEBUG
-		prt_error("Info: object_open() trying %s", completename);
+			prt_error("Info: 2: object_open() trying %s=%d", completename, NULL!=fp);
 #endif
-		if ((fp = opencb(completename, user_data)) != NULL) {
-			return fp;
+			if ((NULL != fp) || (NULL != path_found)) break;
 		}
-		oldpos = pos+1;
 	}
-	return NULL;
+
+	if (NULL == fp)
+	{
+		fp = opencb(filename, user_data);
+#ifdef _DEBUG
+		prt_error("Info: 3: object_open() trying %s=%d", filename, NULL!=fp);
+#endif
+	}
+	else if (NULL == path_found)
+	{
+		size_t i;
+
+		path_found = strdup((NULL != completename) ? completename : filename);
+		prt_error("Info: Dictionary found at %s", path_found);
+		for (i = 0; i < 2; i++)
+		{
+			char *root = strrchr(path_found, DIR_SEPARATOR[0]);
+			if (NULL != root) *root = '\0';
+		}
+#ifdef _DEBUG
+		prt_error("Info: object_open() path_found=%s", path_found);
+#endif
+	}
+
+	free(data_dir);
+	free(completename);
+	return fp;
 }
 
-/* XXX static global variable used during dictionary open */
-static char *path_found = NULL;
-
-static void * dict_file_open(const char * fullname, void * user_data)
+static void *dict_file_open(const char *fullname, const void *how)
 {
-	const char * how = (const char *) user_data;
-	FILE * fh =  fopen(fullname, how);
-	if (fh && NULL == path_found)
-	{
-		path_found = strdup (fullname);
-		prt_error("Info: Dictionary found at %s", fullname);
-	}
-	return (void *) fh;
+	return fopen(fullname, how);
 }
 
 FILE *dictopen(const char *filename, const char *how)
 {
-	FILE * fh = NULL;
-	void * ud = (void *) how;
-
-	/* If not the first time through, look for the other dictionaries
-	 * in the *same* directory in which the first one was found.
-	 * (The first one is typically "en/4.0.dict")
-	 * The global "path_found" records where the first dict was found.
-	 * The goal here is to avoid insanity due to user's fractured installs.
-	 */
-	if (path_found)
-	{
-		size_t sz = strlen (path_found) + strlen(filename) + 1;
-		char * fullname = (char *) malloc (sz);
-		strcpy(fullname, path_found);
-		strcat(fullname, filename);
-		fh = (FILE *) object_open(fullname, dict_file_open, ud);
-		free(fullname);
-	}
-	else
-	{
-		fh = (FILE *) object_open(filename, dict_file_open, ud);
-		if (path_found)
-		{
-			char * root = strstr(path_found, filename);
-			*root = 0;
-		}
-	}
-	return fh;
+	return object_open(filename, dict_file_open, how);
 }
 
 /* ======================================================== */
