@@ -2716,10 +2716,31 @@ is.v:
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>})
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
-% Almost same as above, but no S-O inversion, and no equation.
+% Similar to above, but no S-O inversion, and no equation.
 % Also, a cost, so that possesive 's is preferred.
+% Also, this can be a contraction for "has": "he has" -> "he's"
+% <verb-x-s,u> & PP+: "He's gone to Boston"  (viz "He has gone to Boston")
+% But also, some contractions are prohibited:
+% *That's just the kind of person he's -- so: Ss- & PF- not allowed
+% SIs+ & PF-: "Where's the ball?"
 's.v ’s.v:
-  [(<verb-x-s,u> & <vc-be>)
+  [(<verb-x-s,u> &
+    (({@EBm+} & (((
+        (O*t+ & <verb-wall>)
+        or [K+]
+        or BI+
+        or OF+
+        or (Osi+ & R+ & Bs+)
+        or (Opi+ & R+ & Bp+))
+      & {@MV+})
+      or (Pp+ & {THi+ or @MV+})
+      or THb+
+      or <to-verb>
+      or (Pa+ & <verb-wall>)))
+    or ({Pp+} & Pg+)
+    or Pv+
+    or PP+))
+  or (SIs+ & PF-)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)];
 
@@ -2783,9 +2804,11 @@ am.v:
 %   "What are the chances that Einstein could really be a genius?"
 % Icx-: the x prevents link to does.v: "*It does be correct"
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
+% Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
   ({@E-} & (({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
+  or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
