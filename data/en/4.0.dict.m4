@@ -2783,9 +2783,11 @@ am.v:
 %   "What are the chances that Einstein could really be a genius?"
 % Icx-: the x prevents link to does.v: "*It does be correct"
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
+% Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
   ({@E-} & (({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
+  or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
