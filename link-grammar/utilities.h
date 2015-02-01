@@ -223,12 +223,12 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
+	size_t len;
 	mbstate_t mbs;
 	memset(&mbs, 0, sizeof(mbs));
-	size_t len = mbrlen(s, MB_CUR_MAX, &mbs);
+	len = mbrlen(s, MB_CUR_MAX, &mbs);
 	if (len == (size_t)(-1) || len == (size_t)(-2)) {
-		/* Too long or mailformed sequence,
-		 * skip one character. */
+		/* Too long or malformed sequence, step one byte. */
 		return 1;
 	}
 

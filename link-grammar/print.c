@@ -648,7 +648,7 @@ char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t s
 	if (!linkage) return NULL;
 
 	ctx.link_heights = (int *) alloca(linkage->num_links * sizeof(int));
-	ctx.row_starts = (int *) alloca(linkage->num_words * sizeof(int));
+	ctx.row_starts = (int *) alloca((linkage->num_words + 1) * sizeof(int));
 	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
 }
 
@@ -684,7 +684,7 @@ char * linkage_print_postscript(const Linkage linkage, bool display_walls, bool 
 	/* call the ascii printer to initialize the row size stuff. */
 	ps_ctxt_t ctx;
 	ctx.link_heights = (int *) alloca(linkage->num_links * sizeof(int));
-	ctx.row_starts = (int *) alloca(linkage->num_words * sizeof(int));
+	ctx.row_starts = (int *) alloca((linkage->num_words + 1) * sizeof(int));
 	ascii = linkage_print_diagram_ctxt(linkage, display_walls, 8000, &ctx);
 	linkage_free_diagram(ascii);
 
