@@ -15,12 +15,14 @@
 
 struct PPLexTable_s
 {
-    String_set *string_set;
-    const char *labels[PP_LEXER_MAX_LABELS];             /* array of labels  */
-    pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/
-    pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];    /* efficiency */
-    pp_label_node *current_node_of_active_label;/* state: curr node of label */
-    int idx_of_active_label;                    /* read state: current label */
+	String_set *string_set;
+	const char *labels[PP_LEXER_MAX_LABELS];             /* array of labels  */
+	pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/
+	pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];    /* efficiency */
+	pp_label_node *current_node_of_active_label;/* state: curr node of label */
+	int idx_of_active_label;                    /* read state: current label */
+	const char **tokens;
+	int extents;
 };
 
 PPLexTable *pp_lexer_open(FILE *f);

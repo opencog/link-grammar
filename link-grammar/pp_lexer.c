@@ -5,7 +5,7 @@
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
-/* license set forth in the LICENSE file included with this software.    */ 
+/* license set forth in the LICENSE file included with this software.    */
 /* This license allows free redistribution and use in source and binary  */
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
@@ -378,10 +378,10 @@ goto find_rule; \
 char *yytext;
 #define INITIAL 0
 /**************************************************************************
-    Lex specification for post-process knowledge file 
+    Lex specification for post-process knowledge file
     6/96 ALB
     Updated 8/97 to allow multiple instances
-    Compile with either  
+    Compile with either
       1) flex pp_lexer.fl (on systems which support %option prefix) OR
       2) flex pp_lexer.fl
          mv lex.yy.c pp_lexer.tmp.c
@@ -389,7 +389,7 @@ char *yytext;
          rm -f pp_lexer.tmp.c
              (on systems which do not)
 
- In the case of (1), uncomment the three %option lines below. 
+ In the case of (1), uncomment the three %option lines below.
 **************************************************************************/
 
 #undef yywrap
@@ -595,12 +595,12 @@ yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
     /* #line 58 "pp_lexer.fl" --DS */
-; 
+;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 	    /* #line 59 "pp_lexer.fl" --DS */
-; 
+;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -1141,8 +1141,8 @@ PPLexTable *pp_lexer_open(FILE *f)
   lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
   setup(lt);
   clt = lt;    /* set lt to be the current table, which yylex will fill in */
-  yylex();  
-  clt = NULL; 
+  yylex();
+  clt = NULL;
   lt->idx_of_active_label=-1;
 
   yy_delete_buffer(yy_current_buffer);
@@ -1166,13 +1166,14 @@ void pp_lexer_close(PPLexTable *lt)
         }
     }
   string_set_delete(lt->string_set);
+  if (lt->tokens) free(lt->tokens);
   xfree(lt, sizeof(PPLexTable));
   yy_delete_buffer(yy_current_buffer);
   yy_current_buffer = NULL;
   yy_c_buf_p = NULL;
 }
 
-int pp_lexer_set_label(PPLexTable *lt, const char *label) 
+int pp_lexer_set_label(PPLexTable *lt, const char *label)
 {
   /* set lexer state to first node of this label */
   lt->idx_of_active_label = get_index_of_label(lt, label);
@@ -1181,12 +1182,12 @@ int pp_lexer_set_label(PPLexTable *lt, const char *label)
   return 1;
 }
 
-int pp_lexer_count_tokens_of_label(PPLexTable *lt) 
+int pp_lexer_count_tokens_of_label(PPLexTable *lt)
 {
   /* counts all tokens, even the commas */
   int n;
   pp_label_node *p;
-  if (lt->idx_of_active_label==-1) 
+  if (lt->idx_of_active_label==-1)
   {
 	 prt_error("Fatal Error: pp_lexer: current label is invalid");
     exit(1);
@@ -1196,7 +1197,7 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
 }
 
 
-const char *pp_lexer_get_next_token_of_label(PPLexTable *lt) 
+const char *pp_lexer_get_next_token_of_label(PPLexTable *lt)
 {
   /* retrieves next token of set label, or NULL if list exhausted */
   static const char *p;
@@ -1206,7 +1207,7 @@ const char *pp_lexer_get_next_token_of_label(PPLexTable *lt)
   return p;
 }
 
-int pp_lexer_count_commas_of_label(PPLexTable *lt) 
+int pp_lexer_count_commas_of_label(PPLexTable *lt)
 {
   int n;
   pp_label_node *p;
@@ -1221,31 +1222,28 @@ int pp_lexer_count_commas_of_label(PPLexTable *lt)
 }
 
 const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, size_t *n_tokens)
-{ 
+{
   /* all tokens until next comma, null-terminated */
   int n;
   pp_label_node *p;
-  static const char **tokens = NULL;  
-  static int extents=0;
 
-  p=lt->current_node_of_active_label;	   
+  p = lt->current_node_of_active_label;
   for (n=0; p!=NULL && strcmp(p->str,","); n++, p=p->next) {}
-  if (n>extents) {
-     extents = n;
-     free (tokens);
-     tokens = (const char **) malloc (extents * sizeof(const char*));
-  }   
+  if (n > lt->extents) {
+     lt->extents = n;
+     lt->tokens = (const char **) realloc (lt->tokens, n * sizeof(const char*));
+  }
 
-  p = lt->current_node_of_active_label;	   
+  p = lt->current_node_of_active_label;
   for (n=0; p!=NULL && strcmp(p->str,","); n++, p=p->next)
-       tokens[n] = string_set_add(p->str, lt->string_set);
-  
+       lt->tokens[n] = string_set_add(p->str, lt->string_set);
+
   /* advance "current node of label" state */
   lt->current_node_of_active_label = p;
   if (p!=NULL) lt->current_node_of_active_label = p->next;
-  
+
   *n_tokens = n;
-  return tokens;
+  return lt->tokens;
 }
 
 
@@ -1257,19 +1255,21 @@ int yywrap(void)
 
 /********************** non-exported functions ************************/
 
-static void setup(PPLexTable *lt) 
+static void setup(PPLexTable *lt)
 {
   int i;
   for (i=0; i<PP_LEXER_MAX_LABELS; i++)
     {
       lt->nodes_of_label[i]     = NULL;
       lt->last_node_of_label[i] = NULL;
-      lt->labels[i]=NULL;
+      lt->labels[i] = NULL;
     }
   lt->string_set = string_set_create();
+  lt->tokens = NULL;
+  lt->extents = 0;
 }
 
-static void set_label(PPLexTable *lt, const char *label) 
+static void set_label(PPLexTable *lt, const char *label)
 {
   int i;
   char *c;
@@ -1287,14 +1287,14 @@ static void set_label(PPLexTable *lt, const char *label)
 
   /* have we seen this label already? If so, abort */
   for (i=0;lt->labels[i]!=NULL && strcmp(lt->labels[i],label_sans_colon);i++) {}
-  if (lt->labels[i]!=NULL) 
+  if (lt->labels[i]!=NULL)
   {
     prt_error("Fatal Error: pp_lexer: label %s multiply defined!", label_sans_colon);
     exit(1);
   }
 
   /* new label. Store it */
-  if (i == PP_LEXER_MAX_LABELS-1) 
+  if (i == PP_LEXER_MAX_LABELS-1)
   {
     prt_error("Fatal Error: pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
     exit(1);
@@ -1306,7 +1306,7 @@ static void set_label(PPLexTable *lt, const char *label)
 }
 
 
-static void add_string_to_label(PPLexTable *lt, const char *str) 
+static void add_string_to_label(PPLexTable *lt, const char *str)
 {
   /* add the single string str to the set of strings associated with label */
   pp_label_node *new_node;
@@ -1324,12 +1324,12 @@ static void add_string_to_label(PPLexTable *lt, const char *str)
   new_node = (pp_label_node *) xalloc (sizeof(pp_label_node));
   new_node->str = string_set_add(str, lt->string_set);
   new_node->next = NULL;
-  
+
   /* stick newly-created node at the *end* of the appropriate linked list */
   if (lt->last_node_of_label[lt->idx_of_active_label]==NULL)
     {
       /* first entry on linked list */
-      lt->nodes_of_label[lt->idx_of_active_label]     = new_node;      
+      lt->nodes_of_label[lt->idx_of_active_label]     = new_node;
       lt->last_node_of_label[lt->idx_of_active_label] = new_node;
     }
   else
@@ -1340,9 +1340,9 @@ static void add_string_to_label(PPLexTable *lt, const char *str)
     }
 }
 
-static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set) 
+static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
 {
-  /* add the set of strings, defined earlier by label_of_set, to the set of 
+  /* add the set of strings, defined earlier by label_of_set, to the set of
      strings associated with the current label */
   pp_label_node *p;
   int idx_of_label_of_set;
@@ -1364,11 +1364,11 @@ static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
 static int get_index_of_label(PPLexTable *lt, const char *label)
 {
   int i;
-  for (i=0; lt->labels[i]!=NULL; i++) 
+  for (i=0; lt->labels[i]!=NULL; i++)
     if (!strcmp(lt->labels[i], label)) return i;
   return -1;
 }
-    
+
 static void check_string(const char *str)
 {
   if (strlen(str)>1 && strchr(str, ',')!=NULL)

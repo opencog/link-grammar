@@ -28,6 +28,7 @@ int main()
 	setlocale(LC_ALL, "en_US.UTF-8");
 
 	Parse_Options opts = parse_options_create();
+	parse_options_set_spell_guess(opts, false);
 
 	for (int i=0; i<20; i++)
 	{
