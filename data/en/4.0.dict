@@ -2703,13 +2703,30 @@ is.v:
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>})
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
-% Almost same as above, but no S-O inversion, and no equation.
+% Similar to above, but no S-O inversion, and no equation.
 % Also, a cost, so that possesive 's is preferred.
 % Also, this can be a contraction for "has": "he has" -> "he's"
-% <verb-x-s,u> & PP+: "He's gone to Boston"
+% <verb-x-s,u> & PP+: "He's gone to Boston"  (viz "He has gone to Boston")
+% But also, some contractions are prohibited:
+% *That's just the kind of person he's -- so: Ss- & PF- not allowed
 's.v ’s.v:
-  [(<verb-x-s,u> & <vc-be>)
-  or (<verb-x-s,u> & PP+)
+  [(<verb-x-s,u> &
+    (({@EBm+} & (((
+        (O*t+ & <verb-wall>)
+        or [K+]
+        or BI+
+        or OF+
+        or (Osi+ & R+ & Bs+)
+        or (Opi+ & R+ & Bp+))
+      & {@MV+})
+      or (Pp+ & {THi+ or @MV+})
+      or THb+
+      or <to-verb>
+      or (Pa+ & <verb-wall>)))
+    or ({Pp+} & Pg+)
+    or Pv+
+    or PP+))
+  or (SIs+ & PF-)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)];
 
