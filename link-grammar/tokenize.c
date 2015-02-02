@@ -1893,7 +1893,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 		/*
 		 * This is essentially the old LR stripping code, from the pre-Wordgraph
-		 * version. It still seems to work fine.  Word should be done here in
+		 * version. It still seems to work fine.  Work should be done here in
 		 * order to simplify it.
 		 */
 
@@ -2396,7 +2396,6 @@ static void wordgraph_terminator(Sentence const sent)
  * The string s has just been read in from standard input.
  * This function breaks it up into words and stores these words in
  * the sent->word[] array.  Returns true if all is well, false otherwise.
- * Quote marks are treated just like blanks.
  */
 bool separate_sentence(Sentence sent, Parse_Options opts)
 {
@@ -2450,8 +2449,8 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			if (0 > nb) goto failure;
 		}
 
-		/* Morpheme type of initial bad-sentence word may be wrong.
-		 * E.g: He 's here. (Space before ' - 's classified as MT_WORD). */
+		/* FIXME: Morpheme type of initial bad-sentence word may be wrong.
+		 * E.g: He 's here. (Space before ' so 's is classified as MT_WORD). */
 		add_gword(sent, word_start, word_end, MT_WORD);
 		word_start = word_end;
 		if ('\0' == *word_start) break;
