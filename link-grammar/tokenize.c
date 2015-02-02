@@ -1900,6 +1900,18 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		wp = strip_left(sent, word, r_stripped, &n_r_stripped);
 		if (wp != word)
 		{
+			/* If n_r_stripped exceed max, the "word" is most likely includes a long
+			 * sequence of periods.  Just accept it as an unknown "word",
+			 * and move on.
+			 * FIXME: Word separation may still be needed, e.g. for a table of
+			 * contents:
+			 * ............................something
+			 */
+			if (n_r_stripped >= MAX_STRIP-1) {
+				lgdebug(+D_SW, "Left-strip of >= %d tokens\n", MAX_STRIP-1);
+				return; /* XXX */
+			}
+
 			if ('\0' != *wp)
 				r_stripped[n_r_stripped++] = wp;
 
@@ -1996,13 +2008,15 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				  print_rev_word_array(sent, r_stripped, n_r_stripped),
 				  word, wend, units_wend, temp_word);
 
-		/* If n_r_stripped exceed max, the "word" is most likely a long
+		/* If n_r_stripped exceed max, the "word" is most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
 		 * and move on.
+		 * FIXME: Word separation may still be needed, e.g. for a table of
+		 * contents:
+		 * 10............................
 		 */
-		if (n_r_stripped >= MAX_STRIP) {
-			lgdebug(+D_SW, "Word %s: LR strip of >= %d tokens\n",
-					  unsplit_word->subword, MAX_STRIP);
+		if (n_r_stripped >= MAX_STRIP-1) {
+			lgdebug(+D_SW, "Right-strip of >= %d tokens\n", MAX_STRIP-1);
 			return; /* XXX */
 		}
 
