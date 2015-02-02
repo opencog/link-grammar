@@ -527,7 +527,6 @@ static const char *wlabel(Sentence sent, const Gword *w)
 
 /**
  *  Generate the wordgraph in dot(1) format, for debug.
- *  TODO: Add a legend in the graph.
  */
 static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 {

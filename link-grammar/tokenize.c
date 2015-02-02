@@ -2382,7 +2382,6 @@ static void wordgraph_terminator(Sentence const sent)
  * The string s has just been read in from standard input.
  * This function breaks it up into words and stores these words in
  * the sent->word[] array.  Returns true if all is well, false otherwise.
- * Quote marks are treated just like blanks.
  */
 bool separate_sentence(Sentence sent, Parse_Options opts)
 {
