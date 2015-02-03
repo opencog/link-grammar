@@ -3181,7 +3181,7 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   or ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
-flew.v-d froze.v-d hid.v-d
+flew.v-d froze.v-d hid.v-d stole.v-d
 rang.v-d rode.v-d sprang.v-d stalked.v-d woke.v-d
  test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
 countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d
@@ -3195,7 +3195,7 @@ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
 
 bitten.v blown.v broken.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
-sprung.v swum.v woken.v
+sprung.v swum.v woken.v stolen.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v
 test-driven.v outdone.v shrunken.v countersunk.v
 bespoken.v underlain.v partaken.v redone.v overdone.v
@@ -3459,11 +3459,11 @@ buttering.g:
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
 /en/words/words.v.8.2: VERB_S_T(<vc-kick>);
 
-stole.v-d threw.v-d tore.v-d wore.v-d
+threw.v-d tore.v-d wore.v-d
 overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
 foreswore.v-d forwent.v-d: VERB_SPPP_T(<vc-kick>);
 
-stolen.v shaken.v thrown.v torn.v worn.v
+shaken.v thrown.v torn.v worn.v
 forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
  foresworn.v overeaten.v:
   VERB_PP(<vc-kick>) or
