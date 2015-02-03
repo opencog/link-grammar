@@ -344,7 +344,10 @@ link_public_api(void)
      left_print_string(FILE* fp, const char *, const char *);
 link_public_api(bool)
      lg_expand_disjunct_list(Sentence sent);
-
+link_public_api(int)
+     printf_compat(const char *, ...);
+link_public_api(int)
+     fprintf_compat(FILE *, const char *, ...);
 
 /**********************************************************************
  *

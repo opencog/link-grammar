@@ -33,6 +33,15 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 {
+#ifdef _MSC_VER
+	char * tmp = alloca(strlen(fmt)+1);
+	char * tok = tmp;
+
+	strcpy(tmp, fmt);
+	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
+	fmt = tmp;
+#endif
+
 	/* As we are printing to stderr, make sure that stdout has been
 	 * written out first. */
 	fflush(stdout);
@@ -112,6 +121,14 @@ void prt_error(const char *fmt, ...)
 	severity sev;
 	err_ctxt ec;
 	va_list args;
+#ifdef _MSC_VER
+	char * tmp = alloca(strlen(fmt)+1);
+	char * tok = tmp;
+
+	strcpy(tmp, fmt);
+	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
+	fmt = tmp;
+#endif
 
 	sev = Error;
 	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
