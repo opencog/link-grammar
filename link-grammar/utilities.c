@@ -18,6 +18,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdarg.h>
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -1128,6 +1129,55 @@ char * get_default_locale(void)
 
 	return locale;
 }
+
+/* ============================================================= */
+/* MSVC: Utilities for converting %zu to %Iu */
+
+#ifdef _MSC_VER
+int printf_compat(const char *format, ...)
+{
+	char * tmp = alloca(strlen(format)+1);
+	char * tok = tmp;
+	va_list args;
+
+	strcpy(tmp, format);
+	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
+	va_start(args, format);
+	return vprintf(tmp, args); /* fine on MSVC to return before va_end() */
+	va_end(args);
+}
+
+int fprintf_compat(FILE *file, const char *format, ...)
+{
+	char * tmp = alloca(strlen(format)+1);
+	char * tok = tmp;
+	va_list args;
+
+	strcpy(tmp, format);
+	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
+	va_start(args, format);
+	return vfprintf(file, tmp, args); /* fine on MSVC to return before va_end() */
+	va_end(args);
+}
+
+int sprintf_compat(char *str, const char *format, ...)
+{
+	char * tmp = alloca(strlen(format)+1);
+	char * tok = tmp;
+	va_list args;
+
+	strcpy(tmp, format);
+	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
+	va_start(args, format);
+	return vsprintf(str, tmp, args); /* fine on MSVC to return before va_end() */
+	va_end(args);
+}
+#else
+/* Defined in linkgrammar.def, so also here */
+int printf_compat(const char *format, ...) {return -1;}
+int fprintf_compat(FILE *file, const char *format, ...) {return -1;}
+int sprintf_compat(char *str, const char *format, ...) {return -1;}
+#endif /* _MSC_VER */
 
 /* ============================================================= */
 /* Alternatives utilities */
