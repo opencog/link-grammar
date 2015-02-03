@@ -708,7 +708,8 @@ char * dictionary_get_data_dir(void)
 #ifdef ENABLE_BINRELOC
 	data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
-	/* Dynamically locate library and return containing directory */
+	/* Dynamically locate library and return containing directory.
+	 * FIXME: A rewrite is needed. */
 	hInstance = GetModuleHandle("link-grammar.dll");
 	if (hInstance != NULL)
 	{
@@ -734,27 +735,33 @@ char * dictionary_get_data_dir(void)
 			if (GetModuleFileName(hInstance, prog_path16, MAX_PATH))
 			{
 				char * data_dir16 = NULL;
-				// convert 2-byte to 1-byte encoding of prog_path
-				char prog_path[MAX_PATH/2];
-				int i, k;
-				for (i = 0; i < MAX_PATH; i++)
-				{
-					k = i + i;
-					if (prog_path16[k] == 0 )
-					{
-						prog_path[i] = 0;
-						break; // found the string ending null char
-					}
-					// XXX this cannot possibly be correct for UTF-16 filepaths!! ?? FIXME
-					prog_path[i] = prog_path16[k];
-				}
-#ifdef _DEBUG
-				prt_error("Info: GetModuleFileName=%s", (prog_path ? prog_path : "NULL"));
-#endif
+
 				if (sizeof(TCHAR) == 1)
+				{
 				    data_dir16 = path_get_dirname(prog_path16);
+				}
 				else
+				{
+					// convert 2-byte to 1-byte encoding of prog_path
+					char prog_path[MAX_PATH/2];
+
+					int i, k;
+					for (i = 0; i < MAX_PATH; i++)
+					{
+						k = i + i;
+						if (prog_path16[k] == 0 )
+						{
+							prog_path[i] = 0;
+							break; // found the string ending null char
+						}
+						// XXX this cannot possibly be correct for UTF-16 filepaths!! ?? FIXME
+						prog_path[i] = prog_path16[k];
+					}
+#ifdef _DEBUG
+					prt_error("Info: GetModuleFileName=%s", (prog_path ? prog_path : "NULL"));
+#endif
 				    data_dir16 = path_get_dirname(prog_path);
+				}
 				if (data_dir16 != NULL)
 				{
 					printf("   found dir for current prog %s\n", data_dir16);
