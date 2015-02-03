@@ -35,9 +35,12 @@
 
 #include <errno.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* Used for terminal resizing */
 #ifndef _WIN32
+#include <langinfo.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
@@ -54,13 +57,16 @@
 #include "../link-grammar/link-includes.h"
 #include "command-line.h"
 #include "lg_readline.h"
-#include "../link-grammar/utilities.h"     /* For MSVC portability */
 #include "../viterbi/viterbi.h"
 #include "../link-grammar/error.h"
 
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
+
+#if !defined(MIN)
+#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
+#endif
 
 static int batch_errors = 0;
 static bool input_pending = false;

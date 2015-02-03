@@ -1172,11 +1172,6 @@ int sprintf_compat(char *str, const char *format, ...)
 	return vsprintf(str, tmp, args); /* fine on MSVC to return before va_end() */
 	va_end(args);
 }
-#else
-/* Defined in linkgrammar.def, so also here */
-int printf_compat(const char *format, ...) {return -1;}
-int fprintf_compat(FILE *file, const char *format, ...) {return -1;}
-int sprintf_compat(char *str, const char *format, ...) {return -1;}
 #endif /* _MSC_VER */
 
 /* ============================================================= */

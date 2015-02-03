@@ -11,15 +11,13 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 #include <wctype.h>
 
 #include "command-line.h"
 #include <link-grammar/link-includes.h>
-#include "../link-grammar/utilities.h"  /* For MSWindows portability */
-#ifdef USE_REGEX_TOKENIZER
-#include "../link-grammar/regex-tokenizer.h" /* For testing */
-#endif
 
 static struct
 {
@@ -365,7 +363,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 		if (as[j].param_type == Float)
 		{
 			double val = -1.0;
-			val = (double) atof(y);
+			val = atof(y);
 			if (val < 0.0)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);

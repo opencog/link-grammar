@@ -137,6 +137,3 @@ compute_chosen_words
 regex_tokenizer_test
 check_link_size
 partial_init_linkage
-printf_compat
-fprintf_compat
-sprintf_compat

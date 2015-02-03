@@ -58,11 +58,6 @@ extern "C"
 void *alloca (size_t);
 #endif
 
-/* Utilities for converting %zu to %Iu, defined in utilities.c */
-int printf_compat(const char *, ...);
-int fprintf_compat(FILE *, const char *, ...);
-int sprintf_compat(char *, const char *, ...);
-
 #ifdef _WIN32
 #include <windows.h>
 #include <mbctype.h>
@@ -82,6 +77,15 @@ int sprintf_compat(char *, const char *, ...);
 #define strdup _strdup
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
+/* Microsoft does not support %zu -- it wants %Iu */
+int printf_compat(const char *, ...);
+int fprintf_compat(FILE *, const char *, ...);
+int sprintf_compat(char *, const char *, ...);
+
+#define fprintf fprintf_compat
+#define printf printf_compat
+#define sprintf sprintf_compat
+
 /* MS Visual C does not support some C99 standard floating-point functions */
 #define fmaxf(a,b) ((a) > (b) ? (a) : (b))
 #define floorf(x) floor(x)
@@ -90,10 +94,6 @@ int sprintf_compat(char *, const char *, ...);
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)
 
-#define fprintf fprintf_compat
-#define printf printf_compat
-#define sprintf sprintf_compat
-
 #endif /* _MSC_VER */
 
 /* Apparently, MinGW is also missing a variety of standard functions.
@@ -101,9 +101,6 @@ int sprintf_compat(char *, const char *, ...);
  * programs on Windows.
  * MINGW is also known as MSYS */
 #if defined(_MSC_VER) || defined(__MINGW32__)
-
-/* No langinfo in Windows or MinGW */
-#define nl_langinfo(X) ""
 
 /* strtok_r() is missing in Windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
