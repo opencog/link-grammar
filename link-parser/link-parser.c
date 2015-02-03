@@ -57,8 +57,9 @@
 #include "../link-grammar/link-includes.h"
 #include "command-line.h"
 #include "lg_readline.h"
+#ifdef USE_VITERBI
 #include "../viterbi/viterbi.h"
-#include "../link-grammar/error.h"
+#endif
 
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
