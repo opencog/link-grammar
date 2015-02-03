@@ -1231,8 +1231,8 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (!match_found)
 		{
-			/* FIXME? A message can be add here if there are too many words in the
-			 * linkage (can happen only if there is an internal error). */
+			/* FIXME? A message can be added here if there are too many words
+			 * in the linkage (can happen only if there is an internal error). */
 			lgdebug(4, "- No Wordgraph match\n");
 			break;
 		}

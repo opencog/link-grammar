@@ -1893,13 +1893,25 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 		/*
 		 * This is essentially the old LR stripping code, from the pre-Wordgraph
-		 * version. It still seems to work fine.  Word should be done here in
+		 * version. It still seems to work fine.  Work should be done here in
 		 * order to simplify it.
 		 */
 
 		wp = strip_left(sent, word, r_stripped, &n_r_stripped);
 		if (wp != word)
 		{
+			/* If n_r_stripped exceed max, the "word" is most likely includes a long
+			 * sequence of periods.  Just accept it as an unknown "word",
+			 * and move on.
+			 * FIXME: Word separation may still be needed, e.g. for a table of
+			 * contents:
+			 * ............................something
+			 */
+			if (n_r_stripped >= MAX_STRIP-1) {
+				lgdebug(+D_SW, "Left-strip of >= %d tokens\n", MAX_STRIP-1);
+				return; /* XXX */
+			}
+
 			if ('\0' != *wp)
 				r_stripped[n_r_stripped++] = wp;
 
@@ -1996,13 +2008,15 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				  print_rev_word_array(sent, r_stripped, n_r_stripped),
 				  word, wend, units_wend, temp_word);
 
-		/* If n_r_stripped exceed max, the "word" is most likely a long
+		/* If n_r_stripped exceed max, the "word" is most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
 		 * and move on.
+		 * FIXME: Word separation may still be needed, e.g. for a table of
+		 * contents:
+		 * 10............................
 		 */
-		if (n_r_stripped >= MAX_STRIP) {
-			lgdebug(+D_SW, "Word %s: LR strip of >= %d tokens\n",
-					  unsplit_word->subword, MAX_STRIP);
+		if (n_r_stripped >= MAX_STRIP-1) {
+			lgdebug(+D_SW, "Right-strip of >= %d tokens\n", MAX_STRIP-1);
 			return; /* XXX */
 		}
 
@@ -2382,7 +2396,6 @@ static void wordgraph_terminator(Sentence const sent)
  * The string s has just been read in from standard input.
  * This function breaks it up into words and stores these words in
  * the sent->word[] array.  Returns true if all is well, false otherwise.
- * Quote marks are treated just like blanks.
  */
 bool separate_sentence(Sentence sent, Parse_Options opts)
 {
@@ -2436,8 +2449,8 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			if (0 > nb) goto failure;
 		}
 
-		/* Morpheme type of initial bad-sentence word may be wrong.
-		 * E.g: He 's here. (Space before ' - 's classified as MT_WORD). */
+		/* FIXME: Morpheme type of initial bad-sentence word may be wrong.
+		 * E.g: He 's here. (Space before ' so 's is classified as MT_WORD). */
 		add_gword(sent, word_start, word_end, MT_WORD);
 		word_start = word_end;
 		if ('\0' == *word_start) break;

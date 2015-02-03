@@ -58,6 +58,11 @@ extern "C"
 void *alloca (size_t);
 #endif
 
+/* Utilities for converting %zu to %Iu, defined in utilities.c */
+int printf_compat(const char *, ...);
+int fprintf_compat(FILE *, const char *, ...);
+int sprintf_compat(char *, const char *, ...);
+
 #ifdef _WIN32
 #include <windows.h>
 #include <mbctype.h>
@@ -84,6 +89,10 @@ void *alloca (size_t);
 
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)
+
+#define fprintf fprintf_compat
+#define printf printf_compat
+#define sprintf sprintf_compat
 
 #endif /* _MSC_VER */
 

@@ -1141,7 +1141,7 @@ static const char * header(bool print_ps_header)
  * is NULL) just print them. It is used to display disjunct information when
  * command !!word is used.
  * FIXME In the current version (using Wordgraph) the "alternatives" in the
- * word-array doesn't necessarily consist of real word alternatives.
+ * word-array don't necessarily consist of real word alternatives.
  *
  */
 
