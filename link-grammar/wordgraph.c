@@ -9,14 +9,18 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef USE_WORDGRAPH_DISPLAY
 #include <stdio.h>
 #include <errno.h>
+#ifdef HAVE_FORK
 #include <unistd.h>    /* fork() and execl() */
+#include <sys/wait.h>  /* waitpid() */
+#endif
 #ifdef HAVE_PRCTL
 #include <sys/prctl.h> /* prctl() */
 #endif
-#include <sys/wait.h>  /* waitpid() */
 #include <signal.h>    /* SIG* */
+#endif /* USE_WORDGRAPH_DISPLAY */
 
 #include "error.h"
 #include "externs.h"
@@ -696,6 +700,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 	return wgd;
 }
 
+#ifdef HAVE_FORK
 static pid_t pid[WGR_MAX*2]; /* XXX not reentrant */
 
 #ifndef HAVE_PRCTL
@@ -709,7 +714,8 @@ static void wordgraph_show_cancel(void)
 	for (i = 0; i < sizeof(pid)/sizeof(pid_t); i++)
 		if (0 != pid[i]) kill(pid[i], SIGTERM);
 }
-#endif
+#endif /* HAVE_FORK */
+#endif /* HAVE_PRCTL */
 
 /* FIXME: use the graphviz library instead of invoking dot, as hinted in:
  * http://www.graphviz.org/content/how-use-graphviz-library-c-project */
@@ -729,6 +735,10 @@ static void wordgraph_show_cancel(void)
 #endif
 #ifndef POPEN_DOT_CMD
 #define POPEN_DOT_CMD "dot -Tx11"
+#endif
+#ifdef _MSC_VER
+#define popen _popen
+#define pclose _pclose
 #endif
 
 /**
@@ -797,7 +807,6 @@ void (wordgraph_show)(Sentence sent, unsigned int mode, const char *modestr)
 			           cmd, strerror(errno));
 		}
 		else
-	free(wgds);
 		{
 			if (fprintf(cmdf, "%s", wgds) < 0)
 				prt_error("wordgraph_show: print to display command failed: %s\n",
