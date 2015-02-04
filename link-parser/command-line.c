@@ -19,6 +19,11 @@
 #include "command-line.h"
 #include <link-grammar/link-includes.h>
 
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+#endif
+
 static struct
 {
 	int verbosity;
@@ -169,12 +174,12 @@ static bool is_numerical_rhs(char *s)
 	return true;
 }
 
-static inline int ival(Switch s)
+static int ival(Switch s)
 {
 	return *((int *) s.ptr);
 }
 
-static inline void setival(Switch s, int val)
+static void setival(Switch s, int val)
 {
 	*((int *) s.ptr) = val;
 }

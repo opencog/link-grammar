@@ -2510,8 +2510,12 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	return false; /* Something is wrong */
 
 failure:
+#if defined(_MSC_VER) || defined(__MINGW32__)
+	prt_error("Unable to process UTF8 input string.\n");
+#else
 	prt_error("Unable to process UTF8 input string in current locale %s\n",
 		nl_langinfo(CODESET));
+#endif
 	return false;
 }
 
