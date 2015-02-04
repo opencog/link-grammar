@@ -74,7 +74,9 @@ void *alloca (size_t);
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #define strcasecmp _stricmp
+#ifndef strdup
 #define strdup _strdup
+#endif
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
 /* Microsoft does not support %zu -- it wants %Iu */
