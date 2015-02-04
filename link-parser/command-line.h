@@ -36,12 +36,10 @@ typedef struct {
 	bool display_senses;    /* if true, sense candidates are printed out */
 } Command_Options;
 
-link_public_api(int)
-	issue_special_command(const char * line, Command_Options *opts, Dictionary dict);
-
 LINK_END_DECLS
 
+int issue_special_command(const char*, Command_Options*, Dictionary);
 Command_Options* command_options_create(void);
-void command_options_delete(Command_Options* co);
+void command_options_delete(Command_Options*);
 
 
