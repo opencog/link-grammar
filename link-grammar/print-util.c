@@ -65,6 +65,14 @@ void append_string(String * string, const char *fmt, ...)
 	char * p;
 	size_t new_size;
 	va_list args;
+#ifdef _MSC_VER
+	char * tmp = alloca(strlen(fmt)+1);
+	char * tok = tmp;
+
+	strcpy(tmp, fmt);
+	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
+	fmt = tmp;
+#endif
 
 	va_start(args, fmt);
 	templen = vsnprintf(temp_string, TMPLEN, fmt, args);
