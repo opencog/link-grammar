@@ -1,19 +1,15 @@
 #ifdef USE_WORDGRAPH_DISPLAY
 /* Wordgraph display representation modes. */
-#define WGR_REG         0x01  /* Ordered sentence words + unsplit_word link */
-#define WGR_SUB         0x02  /* Unsplit words as subgraphs */
-#define WGR_NOPREV      0x04  /* No prev links */
-#define WGR_NOUNSPLIT   0x08  /* No unsplit_word links */
-#define WGR_NODBGLABEL  0x10  /* No debug label addition */
-#define WGR_DOTDEBUG    0x20  /* Add hex node numbers, for dot commands debug */
-#define WGR_LEGEND      0x40  /* Add a legend */
-#define WGR_MAX         0x40  /* Maximum value of WGR_*, for pid[] length */
-#define WGR_MAXDIGITS   2     /* Number of hex digits in WGR_MAX */
+#define lo(l) (l-'a')
+#define WGR_SUB        1<<lo('s') /* Unsplit words as subgraphs */
+#define WGR_PREV       1<<lo('p') /* Prev links */
+#define WGR_UNSPLIT    1<<lo('u') /* Unsplit_word links */
+#define WGR_DBGLABEL   1<<lo('d') /* Debug label addition */
+#define WGR_DOTDEBUG   1<<lo('h') /* Hex node numbers, for dot commands debug */
+#define WGR_LEGEND     1<<lo('l') /* Add a legend */
+#define WGR_X11        1<<lo('x') /* Display using X11 even on Windows */
 
-void wordgraph_show(Sentence, unsigned int, const char *);
-#define wordgraph_show(sent, mode) wordgraph_show(sent, mode, #mode)
-#else
-#define wordgraph_show(sent, mode)
+void wordgraph_show(Sentence, const char *);
 #endif /* USE_WORDGRAPH_DISPLAY */
 
 Gword *gword_new(Sentence, const char *);
