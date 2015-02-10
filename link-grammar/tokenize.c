@@ -2484,22 +2484,9 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	}
 
 
-	/* test=wg (for the default) or test=wg,wg=1,wg=a,... */
+	/* test=wg (for the default) or test=wg=flags (for flags see wordgraph.h) */
 	if (test_enabled("wg"))
-	{
-		if (NULL == strstr(test, "wg="))
-		{
-			wordgraph_show(sent, WGR_REG|WGR_NOUNSPLIT|WGR_NOPREV|WGR_LEGEND);
-			wordgraph_show(sent, WGR_REG|WGR_NOPREV);
-		}
-		else
-		{
-			const char *wg_param = test;
-
-			while (NULL != (wg_param = strstr(wg_param+4, "wg=")))
-				wordgraph_show(sent, strtol(wg_param+3, NULL, 16));
-		}
-	}
+		wordgraph_show(sent, test_enabled("wg"));
 
 	/* Return true if at least one sentence word has been issued */
 	for (word = sent->wordgraph; NULL != word->next; word = word->next[0])
