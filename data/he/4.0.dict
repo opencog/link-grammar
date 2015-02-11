@@ -36,7 +36,7 @@ EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or RB+} &
+ ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & RB+)} &
  (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#dogs cats women men
