@@ -32,11 +32,11 @@ EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 
 %#office og cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# {@A+} & Ds- & {@M+ or (R+ & Bs+)} & 
+%# ({@A+} or Ds-) & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- {@A+} & {Ds-} & {@M+ or (R+ & Bs+)} &
+ ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or RB+} &
  (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#dogs cats women men
@@ -91,7 +91,7 @@ EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
-ה=: D+;
+ה=: D+ or (RB- & P+);
 %#a: Ds+;
 
 %#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
