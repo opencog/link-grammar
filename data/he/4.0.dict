@@ -91,6 +91,7 @@ EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
+% Need both R and B to nouns, hence invented here RB
 ה=: D+ or (RB- & P+);
 %#a: Ds+;
 
