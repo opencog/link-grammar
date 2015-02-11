@@ -30,9 +30,6 @@
 % It is needed for connecting the balancing words.
 EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 
-% alternatives terminating dummy word (test)
-alternative-terminator.zzz: ();
-
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
 %# {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
