@@ -29,7 +29,7 @@
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
-%#office og cat woman man park yard bone neighbor store street bird hammer nose
+%#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
 %# ({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
@@ -115,11 +115,11 @@ EMPTY-WORD.zzz: ZZZ-;
 
 %#is was: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
 %# & (((O+ or B-) & {@MV+}) or P+ or AF-));
-הינו היה: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
+הנו היה: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#are were am: ((Sp- or (RS- & Bp-) or ({Q-} &
 %#SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
-הינם היו היני: ((Sp- or (RS- & Bp-) or ({Q-} &
+הנם היו הנני: ((Sp- or (RS- & Bp-) or ({Q-} &
 SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#be: I- & (((O+ or B-) & {@MV+}) or P+ or AF-);
 %#been: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
@@ -129,7 +129,7 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#SI+) or S- or (RS- & B-)) & I+;
 
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
-רצים באים הולכתם: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
 %#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
 רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
 %#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
@@ -190,7 +190,7 @@ E+ or MV-;
 % definite article included in it. Trying to do so leads to extremely
 % complex expression (the same for ל= elsewhere here).
 מ= ב= נגד מאחור בין מלמטה מעל
-בלי מתחת בשביל בתוך עבור מעבר דרך ע״י xחוץ למעלה למטה לאורך כ= על לתוך בערך:
+בלי מתחת בשביל בתוך עבור מעבר דרך ע״י חוץ למעלה למטה לאורך כ= על לתוך בערך:
 J+ & (Mp- or MV- or Pp-);
 
 %#of: J+ & Mp-;
@@ -230,9 +230,9 @@ or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 איך:  (QI- & (C+ or EA+)) or Q+ or EA+;
 
 %#fast slow short long black white big small beautiful ugly tired angry:
-%#  {EA-} & (A+ or ((Pa- or AF+) & {@MV+}));
-מהר לאט קצר ארוך שחור לבן גדול קטן יפה מכוער עיף כועס:
-   {EA-} & (A+ or ((Pa- or AF+) & {@MV+}));
+%#  {EA-} & (A- or ((Pa- or AF+) & {@MV+}));
+מהיר אטי קצר ארוך שחור לבן גדול קטן יפה מכוער עייף כועס:
+   {EA-} & (A- or ((Pa- or AF+) & {@MV+}));
 
 %#glad afraid scared.a fortunate unfortunate lucky unlucky certain sure:
 %#{EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
