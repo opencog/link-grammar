@@ -27,8 +27,7 @@
 <dictionary-version-number>: V5v0v0+;
 
 % The empty word.
-% It is needed for connecting the balancing words.
-EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
+EMPTY-WORD.zzz: ZZZ-;
 
 %#office og cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
