@@ -63,8 +63,6 @@ EMPTY-WORD.zzz: ZZZ-;
 {@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
-%#CAPITALIZED-WORDS: J- or O- or (S+ & (({@CO-} & {C-}) or R-)) or SI-;
-
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %#me him them us: J- or O-;
 אותי אותו אותה אותם אותנו: J- or O-;
