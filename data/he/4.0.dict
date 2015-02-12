@@ -97,6 +97,7 @@ EMPTY-WORD.zzz: ZZZ-;
 %#do: (SIp+ & I+) or ({@E-} & (Sp- or 
 %#(RS- & Bp-) or I-) &
 %#(((B- or O+) & {@MV+}) or I+));
+ הכלב  מכאן  לשם 
 %#does: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
 %#(((B- or O+) & {@MV+}) or I+));
 %#done: {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
@@ -195,7 +196,7 @@ J+ & (Mp- or MV- or Pp-);
 של: J+ & Mp-;
 
 %#here there: MV- or Mp- or Pp-;
-כאן שם: {J-} & (MV- or Mp- or Pp-);
+כאן שם: J- or (MV- or Mp- or Pp-);
 
 %#that: (C+ & TH-) 
 %#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
