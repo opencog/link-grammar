@@ -3,7 +3,7 @@
  % Experimental prototype Hebrew dictionary                                  %
  %                                                                           %
  % Based on en/tiny.dict,                                                    %
- %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %       Copyright (C) 1991-1998  D Sleator and D Temperley          %
  %       Copyright (C) 2014  Amir Plivatsky                                  %
  %                                                                           %
  %  See file "LICENSE" for information about commercial use of this system   %
@@ -23,7 +23,7 @@
 % A few connector and other changes have been done for Hebrew.
 % [ap]
 
-% Dictionary version number is 5.0.0 (formatted as V5v0v0+)
+% D version number is 5.0.0 (formatted as V5v0v0+)
 <dictionary-version-number>: V5v0v0+;
 
 % The empty word.
@@ -32,36 +32,36 @@ EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 
 %#office og cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# ({@A+} or Ds-) & {@M+ or (R+ & Bs+)} & 
+%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & RB+)} &
+ ({@A+} or {D-}) & {@M+ or (R+ & Bs+) or (D- & RB+)} &
  (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
-%#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 %#water anger money politics trouble:
-%#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
-%#{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#CAPITALIZED-WORDS: J- or O- or (S+ & (({@CO-} & {C-}) or R-)) or SI-;
@@ -82,18 +82,18 @@ EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
  & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
-%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-%#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D+;
+זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D+;
+%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or D+;
+אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or D+;
+%#those: (D+) or (({P+} or {{C+} & Bp+}) &
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
-הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+הללו: (D+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
 % Need both R and B to nouns, hence invented here RB
 ה=: D+ or (RB- & P+);
-%#a: Ds+;
+%#a: D+;
 
 %#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
 %#(RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
@@ -201,10 +201,10 @@ J+ & (Mp- or MV- or Pp-);
 כאן שם: MV- or Mp- or Pp-;
 
 %#that: (C+ & TH-) 
-%#or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+%#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 %#{{@CO-} & {C-}}) or J- or O-;
 ש=: (C+ & TH-) 
-or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 {{@CO-} & {C-}}) or J- or O-;
 
 %#to: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
