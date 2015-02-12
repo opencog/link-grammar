@@ -3,7 +3,7 @@
  % Experimental prototype Hebrew dictionary                                  %
  %                                                                           %
  % Based on en/tiny.dict,                                                    %
- %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %       Copyright (C) 1991-1998  D Sleator and D Temperley          %
  %       Copyright (C) 2014  Amir Plivatsky                                  %
  %                                                                           %
  %  See file "LICENSE" for information about commercial use of this system   %
@@ -23,51 +23,45 @@
 % A few connector and other changes have been done for Hebrew.
 % [ap]
 
-% Dictionary version number is 5.0.0 (formatted as V5v0v0+)
+% D version number is 5.0.0 (formatted as V5v0v0+)
 <dictionary-version-number>: V5v0v0+;
 
 % The empty word.
-% It is needed for connecting the balancing words.
-EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
-
-% alternatives terminating dummy word (test)
-alternative-terminator.zzz: ();
+EMPTY-WORD.zzz: ZZZ-;
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
+%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- {@A-} & {Ds-} & {@M+ or (R+ & Bs+)} & 
- (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+ ({@A+} or {D-}) & {@M+ or (R+ & Bs+) or (D- & RB+)} &
+ (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
-%#{@A-} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
-מסיבות חברים ביתים סרטים אחים אחויות ארוחות סטודנטים מבחנים:
-{@A-} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
+{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 %#water anger money politics trouble:
-%#{@A-} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-{@A-} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
-%#{@A-} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-{@A-} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
-
-%#CAPITALIZED-WORDS: J- or O- or (S+ & (({@CO-} & {C-}) or R-)) or SI-;
 
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %#me him them us: J- or O-;
@@ -81,21 +75,22 @@ alternative-terminator.zzz: ();
 אתם אתן הם הן אנחנו: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 %#it: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %# lines 2-3 are from "is" [ap]
-היא הוא: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-
- or (({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
- & (((O+ or B-) & {@MV+}) or P+ or AF-));
+היא הוא: {J- or O- or ({Ss+} & (({@CO-} & {C-}) or R-)) or SIs-}
+ & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
+ & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
-%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-%#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D+;
+זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D+;
+%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or D+;
+אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or D+;
+%#those: (D+) or (({P+} or {{C+} & Bp+}) &
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
-הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+הללו: (D+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
-ה=: D+;
-%#a: Ds+;
+% Need both R and B to nouns, hence invented here RB
+ה=: D+ or (RB- & P+);
+%#a: D+;
 
 %#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
 %#(RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
@@ -118,11 +113,11 @@ alternative-terminator.zzz: ();
 
 %#is was: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
 %# & (((O+ or B-) & {@MV+}) or P+ or AF-));
-הינו היה: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
+הנו היה: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#are were am: ((Sp- or (RS- & Bp-) or ({Q-} &
 %#SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
-הינם היו היני: ((Sp- or (RS- & Bp-) or ({Q-} &
+הנם היו הנני: ((Sp- or (RS- & Bp-) or ({Q-} &
 SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#be: I- & (((O+ or B-) & {@MV+}) or P+ or AF-);
 %#been: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
@@ -132,7 +127,7 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#SI+) or S- or (RS- & B-)) & I+;
 
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
-רצים באים הולכתם: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
 %#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
 רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
 %#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
@@ -189,21 +184,24 @@ E+ or MV-;
 %#without under for in across through
 %#by out up down along like.p on over into about:
 %#J+ & (Mp- or MV- or Pp-);
+% This doesn't consider the difference between "ב=" with or without a
+% definite article included in it. Trying to do so leads to extremely
+% complex expression (the same for ל= elsewhere here).
 מ= ב= נגד מאחור בין מלמטה מעל
-בלי מתחת בשביל בתוך עבור מעבר דרך ע״י xחוץ למעלה למטה לאורך כ= על לתוך בערך:
+בלי מתחת בשביל בתוך עבור מעבר דרך ע״י חוץ למעלה למטה לאורך כ= על לתוך בערך:
 J+ & (Mp- or MV- or Pp-);
 
 %#of: J+ & Mp-;
 של: J+ & Mp-;
 
 %#here there: MV- or Mp- or Pp-;
-כאן שם: MV- or Mp- or Pp-;
+כאן שם: {J-} & (MV- or Mp- or Pp-);
 
 %#that: (C+ & TH-) 
-%#or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+%#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 %#{{@CO-} & {C-}}) or J- or O-;
 ש=: (C+ & TH-) 
-or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 {{@CO-} & {C-}}) or J- or O-;
 
 %#to: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
@@ -223,21 +221,21 @@ or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 אם: C+ & (({Xc+} & CO+) or MV-);
 
 %#when: (QI- & C+) or Q+ or (C+ & (({Xc+} & CO+) or MV-));
-מתי: (QI- & C+) or Q+ or (C+ & (({Xc+} & CO+) or MV-));
+כאשר כש=: (QI- & C+) or Q+ or (C+ & (({Xc+} & CO+) or MV-));
 %#where:(QI- & C+) or Q+;
 איפה:(QI- & C+) or Q+;
 %#how:  (QI- & (C+ or EA+)) or Q+ or EA+;
 איך:  (QI- & (C+ or EA+)) or Q+ or EA+;
 
 %#fast slow short long black white big small beautiful ugly tired angry:
-%#  {EA-} & (A+ or ((Pa- or AF+) & {@MV+}));
-מהר לאט קצר ארוך שחור לבן גדול קטן יפה מכוער עיף כועס:
-   {EA-} & (A+ or ((Pa- or AF+) & {@MV+}));
+%#  {EA-} & (A- or ((Pa- or AF+) & {@MV+}));
+מהיר אטי קצר ארוך שחור לבן גדול קטן יפה מכוער עייף כועס:
+   {EA-} & (A- or ((Pa- or AF+) & {@MV+}));
 
 %#glad afraid scared.a fortunate unfortunate lucky unlucky certain sure:
-%#{EA-} & (A+ or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
+%#{EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
 שמח מפחד מפוחד בר_מזל ביש_מזל בטוח:
- {EA-} & (A+ or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
+ {EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
 
 %#very: EA+;
 מאד: EA+;
@@ -249,7 +247,10 @@ or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 
 % No actual definition yet - defined here because they appear as possible
 % prefixes in 4.0.affix.
-לכש= ככ= כש= מב= מל= מש=: ();
+לכש= ככ= מב= מל= מש=: ();
+
+% prefix stripping tests
+שכבה כבה בה: ();
 
 % With the following line in the dictionary, the parser will simply
 % skip over (null-link) unknown words. If you remove it, the parser
