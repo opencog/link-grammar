@@ -187,6 +187,9 @@ E+ or MV-;
 %#without under for in across through
 %#by out up down along like.p on over into about:
 %#J+ & (Mp- or MV- or Pp-);
+% This doesn't consider the difference between "ב=" with or without a
+% definite article included in it. Trying to do so leads to extremely
+% complex expression (the same for ל= elsewhere here).
 מ= ב= נגד מאחור בין מלמטה מעל
 בלי מתחת בשביל בתוך עבור מעבר דרך ע״י xחוץ למעלה למטה לאורך כ= על לתוך בערך:
 J+ & (Mp- or MV- or Pp-);
