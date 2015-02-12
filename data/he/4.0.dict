@@ -195,7 +195,7 @@ J+ & (Mp- or MV- or Pp-);
 של: J+ & Mp-;
 
 %#here there: MV- or Mp- or Pp-;
-כאן שם: MV- or Mp- or Pp-;
+כאן שם: {J-} & (MV- or Mp- or Pp-);
 
 %#that: (C+ & TH-) 
 %#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
