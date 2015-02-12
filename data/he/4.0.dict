@@ -23,8 +23,8 @@
 % A few connector and other changes have been done for Hebrew.
 % [ap]
 
-% Dictionary version number is 5.0.0 (formatted as V5v0v0+)
-<dictionary-version-number>: V5v0v0+;
+% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
+<dictionary-version-number>: V5v3v0+;
 
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
