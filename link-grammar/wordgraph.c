@@ -531,7 +531,7 @@ static const char *wlabel(Sentence sent, const Gword *w)
 /**
  *  Generate the wordgraph in dot(1) format, for debug.
  */
-static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
+static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modestr)
 {
 	const Gword *w;
 	Gword	**wp;
@@ -540,9 +540,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 
 	append_string(wgd, "# Mode: %s\n", modestr);
 	append_string(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
-
 	if (mode & WGR_LEGEND) wordgraph_legend(wgd);
-
 	append_string(wgd, "\"%p\" [shape=box,style=filled,color=\".7 .3 1.0\"];\n",
 	              sent->wordgraph);
 
@@ -550,7 +548,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 	{
 		bool show_node;
 
-		if ((mode & WGR_NOUNSPLIT) && (MT_INFRASTRUCTURE != w->morpheme_type))
+		if (!(mode & WGR_UNSPLIT) && (MT_INFRASTRUCTURE != w->morpheme_type))
 		{
 			Gword *wu;
 
@@ -598,7 +596,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 		append_string(wgd, "%s [label=\"%s\\n(%s)\\n%s\"];\n", nn,
 			wlabel(sent, w), gword_status(sent, w), gword_morpheme(sent, w));
 
-		if (mode & WGR_NODBGLABEL)
+		if (!(mode & WGR_DBGLABEL))
 		{
 			append_string(wgd, "%s [xlabel=\"%zu",
 							  nn, w->node_num);
@@ -611,7 +609,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 
 		/* For debugging this function: display also hex node names. */
 		if (mode & WGR_DOTDEBUG)
-			append_string(wgd, "\\n%p", nn);
+			append_string(wgd, "\\n%p-%s", w, wlabel(sent, w));
 
 		append_string(wgd, "\"];\n");
 
@@ -623,7 +621,7 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 				              nn, *wp);
 			}
 		}
-		if (!(mode & WGR_NOPREV))
+		if (mode & WGR_PREV)
 		{
 			if (NULL != w->prev)
 			{
@@ -634,42 +632,14 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 				}
 			}
 		}
-		if (!(mode & WGR_NOUNSPLIT))
+		if (mode & WGR_UNSPLIT)
 		{
-			if ((mode & WGR_REG) && (NULL != w->unsplit_word))
+			if (!(mode & WGR_SUB) && (NULL != w->unsplit_word))
 			{
 				append_string(wgd, "%s->\"%p\" [label=unsplit];\n",
 				              nn, w->unsplit_word);
 			}
 		}
-	}
-
-	if (mode & WGR_REG)
-	{
-#ifdef WGR_SHOW_TERMINATOR_AT_LHS /* not defined - not useful */
-		const Gword *terminating_node = NULL;
-#endif
-
-		append_string(wgd, "{rank=same; ");
-		for (w = sent->wordgraph->chain_next; w; w = w->chain_next)
-		{
-			snprintf(nn, sizeof(nn), "\"%p\"", w);
-			if ((w->unsplit_word == sent->wordgraph) &&
-			    (!(mode & WGR_NOUNSPLIT) || strstr(string_value(wgd), nn)))
-			{
-				append_string(wgd, "%s; ", nn);
-			}
-
-#ifdef WGR_SHOW_TERMINATOR_AT_LHS
-			if (NULL == w->next) terminating_node = w;
-#endif
-		}
-		append_string(wgd, "}\n");
-
-#ifdef WGR_SHOW_TERMINATOR_AT_LHS
-		if (terminating_node)
-			append_string(wgd, "{rank=sink; \"%p\"}\n", terminating_node);
-#endif
 	}
 
 	if (mode & WGR_SUB)
@@ -689,10 +659,39 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 
 					old_unsplit = w->unsplit_word;
 				}
-				append_string(wgd, "\"%p\"; ", w);
+				snprintf(nn, sizeof(nn), "\"%p\"", w);
+				if (strstr(string_value(wgd), nn))
+					append_string(wgd, "\"%p\"; ", w);
 			}
 		}
 		append_string(wgd, "}\n");
+	}
+	else
+	{
+#ifdef WGR_SHOW_TERMINATOR_AT_LHS /* not defined - not useful */
+		const Gword *terminating_node = NULL;
+#endif
+
+		append_string(wgd, "{rank=same; ");
+		for (w = sent->wordgraph->chain_next; w; w = w->chain_next)
+		{
+			snprintf(nn, sizeof(nn), "\"%p\"", w);
+			if ((w->unsplit_word == sent->wordgraph) &&
+			    ((mode & WGR_UNSPLIT) || strstr(string_value(wgd), nn)))
+			{
+				append_string(wgd, "%s; ", nn);
+			}
+
+#ifdef WGR_SHOW_TERMINATOR_AT_LHS
+			if (NULL == w->next) terminating_node = w;
+#endif
+		}
+		append_string(wgd, "}\n");
+
+#ifdef WGR_SHOW_TERMINATOR_AT_LHS
+		if (terminating_node)
+			append_string(wgd, "{rank=sink; \"%p\"}\n", terminating_node);
+#endif
 	}
 
 	append_string(wgd, "\n}\n");
@@ -700,186 +699,234 @@ static String *wordgraph2dot(Sentence sent, int mode, const char *modestr)
 	return wgd;
 }
 
-#ifdef HAVE_FORK
-static pid_t pid[WGR_MAX*2]; /* XXX not reentrant */
+#if defined(HAVE_FORK) && !defined(POPEN_DOT)
+static pid_t pid; /* XXX not reentrant */
 
 #ifndef HAVE_PRCTL
 /**
- * Cancel the wordgraph viewers, to be used if there is no prctl().
+ * Cancel the wordgraph viewers, to be used if there is fork() but no prctl().
  */
 static void wordgraph_show_cancel(void)
 {
-	size_t i;
-
-	for (i = 0; i < sizeof(pid)/sizeof(pid_t); i++)
-		if (0 != pid[i]) kill(pid[i], SIGTERM);
+		kill(pid, SIGTERM);
 }
 #endif /* HAVE_FORK */
 #endif /* HAVE_PRCTL */
 
-/* FIXME: use the graphviz library instead of invoking dot, as hinted in:
- * http://www.graphviz.org/content/how-use-graphviz-library-c-project */
-
-/*
- * The files that are generated by wordgraph_show() can be viewed using
- * "dot -Txlib /tmp/wgXX.gv" (XX is the hexcode of the mode parameter).
- * XXX Generating fixed filenames is not reentrant. On the other hand,
- * this is currently only for debugging.
- * FIXME If needed, even this can be fixed.
- */
-#ifndef DOT_PATH
-#define DOT_PATH "/usr/bin/dot"
+#ifndef DOT_COMMNAD
+#define DOT_COMMAND "dot"
 #endif
+
 #ifndef DOT_DRIVER
 #define DOT_DRIVER "-Txlib"
 #endif
-#ifndef POPEN_DOT_CMD
-#define POPEN_DOT_CMD "dot -Tx11"
+
+/* In case files are used, their names are fixed. So more than one thread
+ * (or program) cannot use the word-graph display at the same time. This
+ * can be corrected, even though there is no much point to do that
+ * (displaying the word-graph is for debug). */
+#define DOT_FILENAME "lg-wg.vg"
+
+#define POPEN_DOT_CMD DOT_COMMAND" "DOT_DRIVER
+#ifndef POPEN_DOT_CMD_WINDOWS
+#  if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+#    ifndef IMAGE_VIEWER
+#      define IMAGE_VIEWER "rundll32 PhotoViewer,ImageView_Fullscreen"
+#    endif
+#    define WGJPG "%TEMP%\\lg-wg.jpg"
+#    define POPEN_DOT_CMD_WINDOWS \
+				DOT_COMMAND" -Tjpg>"WGJPG"&"IMAGE_VIEWER" "WGJPG"&del "WGJPG
+#  else
+#    define POPEN_DOT_CMD_WINDOWS POPEN_DOT_CMD
+#  endif
 #endif
+
+#if !defined HAVE_FORK || defined POPEN_DOT
 #ifdef _MSC_VER
 #define popen _popen
 #define pclose _pclose
 #endif
-
 /**
- * Save the wordgraph in a file and also display it.
- * This is for debug. It is not reentrant due to the static pid[] and the
- * created files. Files in the format /tmp/wgXX.gv are created, when XX is
- * the mode in hex.  A "dot -Txlib" program is automatically launched on
- * them. The xlib driver knows to refresh the graph on file change, and
- * thus additional sentences are shown in the same windows.  There can be
- * several viewer active at once.  The viewers exit automatically on
- * program end (see the comments in the code).
- *
- * Invocation: wordgraph_show(sent, WGR_x1|WGR_x2|...) - see the macro
- * below.
- *
- * FIXME: Should be renamed, wordgraph-specific functionality moved to the
- * caller, and made more general.  FIXME? "dot" 2.34.0 often gets a SEGV
- * due to memory corruptions in it (a known problem). This can be
- * worked-around by trying it again several times until it succeeds (but
- * the window size, if changed by the user, will not be preserved.).
- * However, this code doesn't do that yet.
+ * popen a command with the given input.
+ * If the system doesn't have fork(), popen() is used to launch "dot".
+ * This is an inferior implementation than the one below that uses
+ * fork(), in which the window remains open and is updated automatically
+ * when new sentences are entered. With popen(), the program blocks at
+ * pclose() and the user needs to close the window after each sentence.
  */
-void (wordgraph_show)(Sentence sent, unsigned int mode, const char *modestr)
+static void x_popen(const char *cmd, const char *wgds)
 {
-	String *const wgd = wordgraph2dot(sent, mode, modestr);
-	char psf_template[] = "/tmp/wg%0.*x.gv"; /* XXX not reentrant */
-	char psf_name[sizeof psf_template + WGR_MAXDIGITS]; /* more than needed */
-	FILE *psf;
-	char *wgds;
+	FILE *const cmdf = popen(cmd, "w");
 
-	if (0 == mode) mode = WGR_REG; /* default mode */
-
-	wgds = string_copy(wgd);
-	string_delete(wgd);
-
-	snprintf(psf_name, sizeof(psf_name), psf_template, WGR_MAXDIGITS, mode);
-	psf = fopen(psf_name, "w");
-	if (NULL == psf)
+	if (NULL == cmdf)
 	{
-		/* Hopefully errno is getting set in case of an error. */
-		prt_error("wordgraph_show: open %s failed: %s\n",
-		          psf_name, strerror(errno));
+		prt_error("Error: popen of '%s' failed: %s", cmd, strerror(errno));
 	}
 	else
 	{
-		if (fprintf(psf, "%s", wgds) < 0)
-			prt_error("wordgraph_show: print to %s failed: %s\n",
-		             psf_name, strerror(errno));
-		if (fclose(psf) == EOF)
-			prt_error("wordgraph_show: close %s failed: %s\n",
-			           psf_name, strerror(errno));
+		if (fprintf(cmdf, "%s", wgds) == -1)
+			prt_error("Error: print to display command: %s", strerror(errno));
+		if (pclose(cmdf) == -1)
+			prt_error("Error: pclose of display command: %s", strerror(errno));
+	}
+}
+#else
+static void x_forkexec(const char *const argv[], pid_t *pid)
+{
+	/* Fork/exec a graph viewer, and leave it in the background until we exit.
+	 * On exit, send SIGHUP. If prctl() is not available and the program
+	 * crashes, then it is left to the user to exit the viewer. */
+	if (0 < *pid)
+	{
+		pid_t rpid = waitpid(*pid, NULL, WNOHANG);
+
+		if (0 == rpid) return; /* viewer still active */
+		if (-1 == rpid)
+		{
+			prt_error("Error: waitpid(%d): %s", *pid, strerror(errno));
+			*pid = 0;
+			return;
+		}
 	}
 
-	/* If the system doesn't have fork(), popen() is used to launch "dot".
-	 * This is an inferior implementation than the one below that uses fork(),
-	 * because pclose() is blocked until the user closes the "dot" window. */
-#if !defined HAVE_FORK || defined POPEN_DOT
+	*pid = fork();
+	switch (*pid)
 	{
-		const char *cmd = POPEN_DOT_CMD;
-		FILE *const cmdf = popen(cmd, "w");
+		case -1:
+			prt_error("Error: fork(): %s\n", strerror(errno));
+			break;
+		case 0:
+#ifdef HAVE_PRCTL
+			if (-1 == prctl(PR_SET_PDEATHSIG, SIGHUP))
+					prt_error("Error: prctl: %s\n", strerror(errno));
+#endif
+			/* Not closing fd 0/1/2, to allow interaction with the program */
+			execvp(argv[0], (char **)argv);
+			prt_error("Error: execlp of %s: %s", argv[0], strerror(errno));
+			_exit(1);
+		default:
+#ifndef HAVE_PRCTL
+			if (0 != atexit(wordgraph_show_cancel))
+				 prt_error("Warning: atexit(wordgraph_show_cancel) failed.\n");
+#endif
+			break;
+	}
+}
+#endif /* !defined HAVE_FORK || defined POPEN_DOT */
 
-		if (NULL == cmdf)
+#if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+#define TMPDIR (getenv("TEMP") ? getenv("TEMP") : ".")
+#else
+#define TMPDIR (getenv("TMPDIR") ? getenv("TMPDIR") : "/tmp")
+#endif
+
+#define concatfn(fn, fn1, fn2) \
+	(fn=alloca(strlen(fn1)+strlen(fn2)+2),\
+	 strcpy(fn, fn1), strcat(fn, "/"), strcat(fn, fn2))
+
+static void wordgraph_unlink_xtmpfile(void)
+{
+	char *fn;
+
+	if (!test_enabled("gvfile"))
+	{
+		concatfn(fn, TMPDIR, DOT_FILENAME);
+		if (unlink(fn) == -1)
+			prt_error("Warning: Cannot unlink %s: %s\n", fn, strerror(errno));
+	}
+}
+
+/**
+ * Display the word-graph it in the indicated mode.
+ * This is for debug. It is not reentrant due to the static pid and the
+ * possibly created fixed filenames.
+ * When Using X11, a "dot -Txlib" program is launched on the graph
+ * description file.  The xlib driver refreshes the graph when the file is
+ * changed, displaying additional sentences in the same window.  The viewer
+ * program exits on program end (see the comments in the code).  When
+ * compiled with MSVC or MINGW, the system PhotoViewer is used by default,
+ * unless !wg=x is used (for using X11 when available).
+ *
+ * The "dot" and the "PhotoViewer" programs must be in the PATH.
+ *
+ * FIXME? "dot" may get a SEGV due to memory corruptions in it (a known
+ * problem - exists even in 2.38). This can be worked-around by trying it
+ * again until it succeeds (but the window size, if changed by the user,
+ * will not be preserved).
+ *
+ * modestr: a graph display mode as defined in wordgraph.h (default "ldu").
+ */
+void wordgraph_show(Sentence sent, const char *modestr)
+{
+	String *wgd;
+	char *gvf_name;
+	bool generate_gvfile = test_enabled("gvfile"); /* keep it for debug */
+	char *wgds;
+	bool gvfile = false;
+	unsigned int mode = 0;
+	const char *mp;
+
+	/* No check is done for correct flags - at most "mode" will be nonsense. */
+	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++) mode |= 1<<(*mp-'a');
+	if ((0 == mode) || (WGR_X11 == mode))
+		mode |= WGR_LEGEND|WGR_DBGLABEL|WGR_UNSPLIT;
+
+	wgd = wordgraph2dot(sent, mode, modestr);
+	wgds = string_copy(wgd);
+	string_delete(wgd);
+
+#if defined(HAVE_FORK) && !defined(POPEN_DOT)
+	gvfile = true;
+#endif
+
+	if (gvfile || generate_gvfile)
+	{
+		FILE *gvf;
+		bool gvf_error = false;
+
+		concatfn(gvf_name, TMPDIR, DOT_FILENAME);
+		gvf = fopen(gvf_name, "w");
+		if (NULL == gvf)
 		{
-			/* Hopefully errno is getting set in case of an error. */
-			prt_error("wordgraph_show: popen of '%s' failed: %s\n",
-			           cmd, strerror(errno));
+			prt_error("Error: wordgraph_show: open %s failed: %s",
+						 gvf_name, strerror(errno));
 		}
 		else
 		{
-			if (fprintf(cmdf, "%s", wgds) < 0)
-				prt_error("wordgraph_show: print to display command failed: %s\n",
-				          strerror(errno));
-			if (pclose(cmdf) == -1)
-				prt_error("wordgraph_show: pclose of display command failed: %s\n",
-			             strerror(errno));
-		}
-
-		free(wgds);
-	}
-#else
-	free(wgds);
-	{
-		/* Fork/exec a graph viewer, and leave it in the background until we exit.
-		 * On exit, send SIGHUP. If prctl() is not available and the program
-		 * crashes, then it is left to the user to exit the viewer. */
-		char cmdpath[] = DOT_PATH;
-
-		assert(mode <= sizeof(pid)/sizeof(pid_t));
-		mode--;
-
-		if (0 < pid[mode])
-		{
-			pid_t rpid = waitpid(pid[mode], NULL, WNOHANG);
-
-			if (0 == rpid) return; /* viewer still active */
-			if (-1 == rpid)
+			if (fprintf(gvf, "%s", wgds) == -1)
 			{
-				/* FIXME? Respawn in case of a viewer crash (can be found by the
-				 * wait status, which is not retrieved for now). */
-				prt_error("Error: waitpid(%d): %s (will not respawn viewer)\n",
-				          pid[mode], strerror(errno));
-				return;
+				gvf_error = true;
+				prt_error("Error: wordgraph_show: print to %s failed: %s",
+							 gvf_name, strerror(errno));
+			}
+			if (fclose(gvf) == EOF)
+			{
+				gvf_error = true;
+				prt_error("Error: wordgraph_show: close %s failed: %s",
+							  gvf_name, strerror(errno));
 			}
 		}
-
-		pid[mode] = fork();
-
-		switch (pid[mode])
+		if (gvf_error && gvfile) /* we need it - cannot continue */
 		{
-			case -1:
-				prt_error("Error: wordgraph_show: fork() failed: %s\n",
-				          strerror(errno));
-				break;
-			case 0:
-#ifdef HAVE_PRCTL
-				if (-1 == prctl(PR_SET_PDEATHSIG, SIGHUP))
-				{
-						prt_error("Error: prctl(PR_SET_PDEATHSIG, SIGHUP): %s\n",
-						          strerror(errno));
-				}
-#endif
-				close(0);
-				/* Not closing stdout/stderr, to allow stdout/stderr messages from
-				 * the "dot" program. Regretfully what we sometimes get is a crash
-				 * message due to memory corruption in "dot" (version 2.34.0, known
-				 * problem). */
-				execl(cmdpath, "dot", DOT_DRIVER, psf_name, NULL);
-				prt_error("Error: debug execl of %s failed: %s\n",
-				          cmdpath, strerror(errno));
-				/* prt_error() writes to stderr, which doesn't need flush, and also
-				 * flushes it anyway, so _exit() can be safely used here. */
-				_exit(1);
-			default:
-#ifndef HAVE_PRCTL
-				if (0 != atexit(wordgraph_show_cancel))
-					 prt_error("Warning: atexit(wordgraph_show_cancel) failed.\n");
-#endif
-				break;
+			free(wgds);
+			return;
 		}
+		atexit(wordgraph_unlink_xtmpfile);
+	}
+
+#if !defined HAVE_FORK || defined POPEN_DOT
+	x_popen((mode & WGR_X11)? POPEN_DOT_CMD: POPEN_DOT_CMD_WINDOWS, wgds);
+#else
+	{
+		const char *const args[] = { DOT_COMMAND, DOT_DRIVER, gvf_name, NULL };
+		x_forkexec(args, &pid);
 	}
 #endif
-	/* Note: there may be a previous return. */
+	free(wgds);
+}
+#else
+void wordgraph_show(Sentence sent, const char *modestr)
+{
+		prt_error("Error: Not configured with --enable-wordgraph-display");
 }
 #endif /* USE_WORDGRAPH_DISPLAY */

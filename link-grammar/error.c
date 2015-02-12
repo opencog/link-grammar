@@ -134,29 +134,26 @@ void prt_error(const char *fmt, ...)
 	va_end(args);
 }
 
-#define MAX_FUNCTION_NAME_SIZE 128
 /**
  * Check whether the given feature is enabled. It is considered
  * enabled if it is found in the comma-separated list of features.
  * This list, if not empty, has a leading and a trailing comma.
+ * Return NULL if not enabled, else non-NULL. If the feature appears
+ * as "feature=val", return pointer to val.
  */
-bool feature_enabled(const char * list, const char * feature)
+const char *feature_enabled(const char * list, const char * feature)
 {
-	char buff[MAX_FUNCTION_NAME_SIZE] = ",";
-	size_t len;
+	size_t len = strlen(feature);
+	char *buff = alloca(len + 2 + 1); /* leading comma + comma/eq + NUL */
 
-	strncpy(buff+1, feature, sizeof(buff)-2);
-	len = strlen(feature);
-	if (len < sizeof(buff)-2)
-	{
-		buff[len+1] = ',';
-		buff[len+2] = '\0';
-	}
-	else
-	{
-		buff[sizeof(buff)-1] = '\0';
-	}
-	return NULL != strstr(list, buff);
+	buff[0] = ',';
+	strcpy(buff+1, feature);
+	strcat(buff, ",");
+
+	if (NULL != strstr(list, buff)) return ",";
+	buff[len+1] = '='; /* check for "feature=..." */
+	if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
+	return NULL;
 }
 
 

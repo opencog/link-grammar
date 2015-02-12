@@ -39,7 +39,7 @@ word at once.
 The tokenizing code is still based much on the old code and further
 work is needed to clean it up (or to replace it, e.g. by a
 regex-tokenizer). It still doesn't use the full power of the word-graph,
-and they are constructs that need to be tokenized but they are not (they
+and there are constructs that need to be tokenized but they are not (they
 are also not in the sentence test batches). E.g. -- between words without
 whitespace.
 
@@ -81,22 +81,32 @@ the first path which is encountered is used. It means that a word in the
 word-graph corresponding to a null-word, may be only one of the potential
 possibilities.
 
-Another feature that has been implemented, mainly for debug, is a graphical
-representation of the word graph. The graphical display can also be useful
-for inspiration and fun. The graphs can be displayed in several ways,
-controlled by a bit-flag parameter of wordgraph_display(). The command
-!test=wg enables the display of two graphs, both with no "prev" links for
-clarity, and one of them even with no "unsplit word" links for further
-clarity if needed. Other graphical representation modes can be enabled by
-!test=wg,wg=x,... (i.e. one or more components of wg=n), when x is a hex
-flag combination of the desired mode. For example, WGR_SUB displays
-unsplit_words as subgraphs. The flags are defined in wordgraph.h. The
-graphical display still needs improvements in order to be able to display
-complex word-graph situations in a simple manner.  The graphical display
-code is not compiled by default because it involves invocation of an
-external program (dot) and in addition, files are created in /tmp, both
-things may not be desired by some users. Use --enable-wordgraph-display to
-enable this feature.
+Another feature that has been implemented, mainly for debug (but it can
+also be useful for inspiration and fun), is displaying a graphical
+representation of the word graph. The graphs can be displayed in several
+ways, controlled by one-letter flags. The command !test=wg enables the
+display of a graphs which includes no "prev" links for clarity, but
+includes "unsplit word" links.  Other graphical representation modes can be
+enabled by !test=wg=FLAGS, when FLAGS are lowercase letters as defined in
+wordgraph.h.  For example, !test=wg=s displays unsplit_words as subgraphs,
+and the p flag adds "prev" links.
+The graphical display still needs improvements in order to be able to
+display complex word-graph situations in a simple manner.  The graphical
+display code is not compiled by default because it involves invocation of
+an external program (dot) and in addition, files are created, both things
+may not be desired by some users. Use --enable-wordgraph-display to enable
+this feature.
+
+On Windows this feature is enabled when compiled with USE_WORDGRAPH_DISPLAY.
+By default, it invokes PhotoViewer.dll for displaying the graph.
+It can display the graph using X11 if available when the x flag is set
+(i.e. !test=wg=x), for example when running under Cygwin/X. In any case it
+uses the "dot" command of Graphviz. Graphviz can be installed as part of
+Cygwin, or separately (http://www.graphviz.org/Download_windows.php).
+Both PhotoViewer.dll (if used) and "dot" must be in the command path.
+BTW, when running under Cygwin, don't exist LinkGrammarExe by using ^C or
+^Z - the shell may get stuck because the program somehow continues to run
+in the background. Instead, exit using !exit .
 
 Quotes now are not discarded, but are considered to be regular dict tokens.
 In this version they have no significant linkage and always attach to the word
