@@ -1246,6 +1246,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 	int split_prefix_i = 0;      /* split prefix index */
 	const char *split_prefix[HEB_PRENUM_MAX]; /* the whole prefix */
 	bool *pseen;                 /* prefix "subword" seen (not allowed again) */
+	int pfound;                  /* index of longer prefix found at a prefix level */
 	Dictionary dict = sent->dict;
 	int wordlen;
 	int wlen;
@@ -1270,6 +1271,8 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 	wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
 	do
 	{
+		pfound = -1;
+
 		for (i=0; i<mp_strippable; i++)
 		{
 			/* subwords in a prefix are unique */
@@ -1288,13 +1291,14 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 			sz = wlen - plen;
 			if (strncmp(w, mprefix[i], plen) == 0)
 			{
+				if (-1 == pfound) pfound = i;
 				newword = w + plen;
 				/* check for non-vav before vav */
 				if (!HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(newword, "ו")))
 				{
 					/* non-vav before a single-vav - not in a prefix */
 					if (!HEB_CHAREQ(newword+HEB_UTF8_BYTES, "ו"))
-						break;
+						continue;
 
 					/* non-vav before 2-vav */
 					if (newword[HEB_UTF8_BYTES+1])
@@ -1302,14 +1306,14 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 					/* TBD: check word also without stripping. */
 				}
 				pseen[i] = true;
-				split_prefix[split_prefix_i++] = mprefix[i];
-				if (0 == sz) /* empty word */
+				split_prefix[split_prefix_i] = mprefix[i];
+				if (0 == sz) /* stand-alone prefix */
 				{
 					word_is_in_dict = true;
 					/* add the prefix alone */
 					lgdebug(+3, "Whole-word prefix: %s\n", word);
 					altp = issue_word_alternative(sent, unsplit_word, "MPW",
-					                    split_prefix_i,split_prefix, 0,NULL, 0,NULL);
+					          split_prefix_i+1,split_prefix, 0,NULL, 0,NULL);
 					tokenization_done(dict, altp);
 					/* if the prefix is a valid word,
 					 * it has been added in separate_word() as a word */
@@ -1321,16 +1325,25 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 					lgdebug(+3, "Splitting off a prefix: %.*s-%s\n",
 					        wordlen-sz, word, newword);
 					altp = issue_word_alternative(sent, unsplit_word, "MPS",
-					                split_prefix_i,split_prefix, 1,&newword, 0,NULL);
+					          split_prefix_i+1,split_prefix, 1,&newword, 0,NULL);
 					tokenization_done(dict, altp);
 				}
-				w = newword;
-				break;
 			}
 		}
+		if ((-1 != pfound) && (i != pfound))
+		{
+			/* a previous prefix is the longer one - use it */
+			split_prefix[split_prefix_i] = mprefix[pfound];
+			plen = strlen(mprefix[pfound]);
+			w += plen;
+		}
+		else
+		{
+			w = newword;
+		}
+		split_prefix_i++;
 	/* "wlen + sz < wordlen" is true if a vav has been stripped */
-	} while ((sz > 0) && (i < mp_strippable) && (newword != w + plen) &&
-	 (split_prefix_i < HEB_PRENUM_MAX));
+	} while ((sz > 0) && (-1 != pfound) && (split_prefix_i < HEB_PRENUM_MAX));
 
 	return word_is_in_dict;
 }
