@@ -46,21 +46,21 @@ EMPTY-WORD.zzz: ZZZ-;
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bp+)} & 
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 %#water anger money politics trouble:
 %#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
 %#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
