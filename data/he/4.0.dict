@@ -10,18 +10,21 @@
  %                                                                           %
  %***************************************************************************%
 
-% *Nonsense* Hebrew dictionary, for initial checks. [ap]
+% Demo Hebrew dictionary, for initial checks. [ap]
 %
-% It is essentially the English tiny.dict, in which I translated some words
+% Its origin is the English tiny.dict, in which I translated some words
 % and added a few more, for the purpose of checking:
-% - tokenizing, including prefix split
+% - tokenizing, including multi-prefix split
 % - the resolver behavior with multi-prefix linkages
 % - result printing
+% The old English definitions are commented out.
 %
-% Please be aware that the grammar here is still mainly the English one,
+% Much of the grammar here is still mainly the English one,
 % so it is incorrect for Hebrew.
-% A few connector and other changes have been done for Hebrew.
-% [ap]
+% By now several changes have been done to handle Hebrew correctly.
+% Subject/verb/adjective, f/m, and single/plural etc. agreements are not
+% done yet.  Most of the Hebrew grammatical constructs are not supported
+% here.
 
 % Dictionary version number is 5.3.0 (formatted as V5v3v0+)
 <dictionary-version-number>: V5v3v0+;
@@ -71,7 +74,7 @@ EMPTY-WORD.zzz: ZZZ-;
 %#his: D+;
 שלה שלו שלי שלך שלהם שלנו: D+;
 
-%#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
+%#you theyבישת_מזל we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 אתם אתן הם הן אנחנו: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 %#it: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %# lines 2-3 are from "is" [ap]
@@ -181,7 +184,7 @@ or QI+ or @MV+});
 לבסוף כבר עכשיו בעצבות בהרחבה:
 E+ or MV-;
 
-%#from with at against behind between below above
+%#from with בישת_מזלat against behind between below above
 %#without under for in across through
 %#by out up down along like.p on over into about:
 %#J+ & (Mp- or MV- or Pp-);
