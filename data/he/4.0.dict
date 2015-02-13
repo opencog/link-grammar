@@ -100,7 +100,6 @@ EMPTY-WORD.zzz: ZZZ-;
 %#do: (SIp+ & I+) or ({@E-} & (Sp- or
 %#(RS- & Bp-) or I-) &
 %#(((B- or O+) & {@MV+}) or I+));
- הכלב  מכאן  לשם
 %#does: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
 %#(((B- or O+) & {@MV+}) or I+));
 %#done: {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
@@ -219,6 +218,8 @@ or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 איזה: (R- & (C+ or RS+)) or S+ or B-;
 
 %#because unless though although: (C+ & (({Xc+} & CO+) or MV-));
+מפני בגלל מפאת
+אילולי למרות_ש= למרות: (C+ & (({Xc+} & CO+) or MV-));
 %#after before since until: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
 אחרי לפני מאז עד: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
 %#if: C+ & (({Xc+} & CO+) or MV-);
