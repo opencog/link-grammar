@@ -10,18 +10,21 @@
  %                                                                           %
  %***************************************************************************%
 
-% *Nonsense* Hebrew dictionary, for initial checks. [ap]
+% Demo Hebrew dictionary, for initial checks. [ap]
 %
-% It is essentially the English tiny.dict, in which I translated some words
+% Its origin is the English tiny.dict, in which I translated some words
 % and added a few more, for the purpose of checking:
-% - tokenizing, including prefix split
+% - tokenizing, including multi-prefix split
 % - the resolver behavior with multi-prefix linkages
 % - result printing
+% The old English definitions are commented out.
 %
-% Please be aware that the grammar here is still mainly the English one,
+% Much of the grammar here is still mainly the English one,
 % so it is incorrect for Hebrew.
-% A few connector and other changes have been done for Hebrew.
-% [ap]
+% By now several changes have been done to handle Hebrew correctly.
+% Subject/verb/adjective, gender, and single/plural etc. agreements are not
+% done yet.  Most of the Hebrew grammatical constructs are not supported
+% here.
 
 % Dictionary version number is 5.3.0 (formatted as V5v3v0+)
 <dictionary-version-number>: V5v3v0+;
@@ -31,7 +34,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
+%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} &
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
@@ -42,25 +45,25 @@ EMPTY-WORD.zzz: ZZZ-;
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
-%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-({@A+} or D-) & {@M+ or (R+ & Bp+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bp+)} &
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 %#water anger money politics trouble:
-%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} &
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
-%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} &
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
@@ -69,8 +72,9 @@ EMPTY-WORD.zzz: ZZZ-;
 %#her: D+ or J- or O-;
 %#its my your their our: D+;
 %#his: D+;
-שלה שלו שלי שלך שלהם שלנו: D+;
+שלה שלו שלי שלך שלהם שלנו: Mp-;
 
+% May need a J- variant in order to invalidate "של הוא", etc.
 %#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 אתם אתן הם הן אנחנו: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 %#it: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
@@ -92,12 +96,11 @@ EMPTY-WORD.zzz: ZZZ-;
 ה=: D+ or (RB- & P+);
 %#a: D+;
 
-%#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
+%#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or
 %#(RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
-%#do: (SIp+ & I+) or ({@E-} & (Sp- or 
+%#do: (SIp+ & I+) or ({@E-} & (Sp- or
 %#(RS- & Bp-) or I-) &
 %#(((B- or O+) & {@MV+}) or I+));
- הכלב  מכאן  לשם 
 %#does: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
 %#(((B- or O+) & {@MV+}) or I+));
 %#done: {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
@@ -124,7 +127,7 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#been: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
 %#being: {@E-} & (M- or Pg-) & (((O+ or B-) & {@MV+}) or P+ or AF-);
 
-%#will can.v may must could should would might: (({Q-} & 
+%#will can.v may must could should would might: (({Q-} &
 %#SI+) or S- or (RS- & B-)) & I+;
 
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
@@ -165,9 +168,9 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#{TH+ or C+ or QI+ or @MV+});
 מספרים: {@E-} & (Sp- or (RS- & Bp-) or I-) & ((O+ or B-) &
 {TH+ or C+ or QI+ or @MV+});
-%#tells: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+%#tells: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+
 %#or QI+ or @MV+});
-מספר: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+מספר: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+
 or QI+ or @MV+});
 %#told: {@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (O+ or B-))) &
 %#{TH+ or C+ or QI+ or @MV+};
@@ -188,8 +191,8 @@ E+ or MV-;
 % This doesn't consider the difference between "ב=" with or without a
 % definite article included in it. Trying to do so leads to extremely
 % complex expression (the same for ל= elsewhere here).
-מ= ב= נגד מאחור בין מלמטה מעל
-בלי מתחת בשביל בתוך עבור מעבר דרך ע״י חוץ למעלה למטה לאורך כ= על לתוך בערך:
+מ= עם ב= מול מאחור בין מלמטה מעל
+בלי מתחת בשביל בתוך עבור מעבר דרך ליד חוץ למעלה למטה לאורך כ= על לתוך בערך:
 J+ & (Mp- or MV- or Pp-);
 
 %#of: J+ & Mp-;
@@ -198,10 +201,10 @@ J+ & (Mp- or MV- or Pp-);
 %#here there: MV- or Mp- or Pp-;
 כאן שם: J- or (MV- or Mp- or Pp-);
 
-%#that: (C+ & TH-) 
+%#that: (C+ & TH-)
 %#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 %#{{@CO-} & {C-}}) or J- or O-;
-ש=: (C+ & TH-) 
+ש=: (C+ & TH-)
 or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 {{@CO-} & {C-}}) or J- or O-;
 
@@ -216,6 +219,8 @@ or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 איזה: (R- & (C+ or RS+)) or S+ or B-;
 
 %#because unless though although: (C+ & (({Xc+} & CO+) or MV-));
+מפני בגלל מפאת
+אילולי למרות_ש= למרות: (C+ & (({Xc+} & CO+) or MV-));
 %#after before since until: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
 אחרי לפני מאז עד: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
 %#if: C+ & (({Xc+} & CO+) or MV-);
@@ -235,7 +240,7 @@ or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 
 %#glad afraid scared.a fortunate unfortunate lucky unlucky certain sure:
 %#{EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
-שמח מפחד מפוחד בר_מזל ביש_מזל בטוח:
+שמח שמחה מפחד מפחדת מפוחד מפוחדת בר_מזל בת_מזל ביש_מזל בטוח בטוחה:
  {EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
 
 %#very: EA+;
