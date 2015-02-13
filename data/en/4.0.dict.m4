@@ -7498,8 +7498,9 @@ HYPHENATED-WORDS.a:
 % A- & Ds-: "The house was painted a fading yellow"
 % AN-: "The house was painted fire-engine red"
 %      "Her shoes are fire-engine red"
+% [A-]0.2: "a big green apple" want "big" to modify "apple", not "green"
 <color-adj>:
-  {EA- or EF+} & {(AN- or A-) & {Ds-}} &
+  {EA- or EF+} & {(AN- or [A-]0.2) & {Ds-}} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
