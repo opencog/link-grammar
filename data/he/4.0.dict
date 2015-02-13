@@ -235,7 +235,7 @@ or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 
 %#glad afraid scared.a fortunate unfortunate lucky unlucky certain sure:
 %#{EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
-שמח מפחד מפוחד בר_מזל ביש_מזל בטוח:
+שמח שמחה מפחד מפחדת מפוחד מפוחדת בר_מזל בת_מזל ביש_מזל בטוח בטוחה:
  {EA-} & (A- or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
 
 %#very: EA+;
