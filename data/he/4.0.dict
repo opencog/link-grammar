@@ -22,7 +22,7 @@
 % Much of the grammar here is still mainly the English one,
 % so it is incorrect for Hebrew.
 % By now several changes have been done to handle Hebrew correctly.
-% Subject/verb/adjective, f/m, and single/plural etc. agreements are not
+% Subject/verb/adjective, gender, and single/plural etc. agreements are not
 % done yet.  Most of the Hebrew grammatical constructs are not supported
 % here.
 
@@ -34,7 +34,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
+%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} &
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
@@ -45,25 +45,25 @@ EMPTY-WORD.zzz: ZZZ-;
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
-%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-({@A+} or D-) & {@M+ or (R+ & Bp+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bp+)} &
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 %#water anger money politics trouble:
-%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} &
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
-%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} &
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-({@A+} or D-) & {@M+ or (R+ & Bs+)} & 
+({@A+} or D-) & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
@@ -74,7 +74,7 @@ EMPTY-WORD.zzz: ZZZ-;
 %#his: D+;
 שלה שלו שלי שלך שלהם שלנו: D+;
 
-%#you theyבישת_מזל we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
+%#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 אתם אתן הם הן אנחנו: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 %#it: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %# lines 2-3 are from "is" [ap]
@@ -95,12 +95,12 @@ EMPTY-WORD.zzz: ZZZ-;
 ה=: D+ or (RB- & P+);
 %#a: D+;
 
-%#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
+%#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or
 %#(RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
-%#do: (SIp+ & I+) or ({@E-} & (Sp- or 
+%#do: (SIp+ & I+) or ({@E-} & (Sp- or
 %#(RS- & Bp-) or I-) &
 %#(((B- or O+) & {@MV+}) or I+));
- הכלב  מכאן  לשם 
+ הכלב  מכאן  לשם
 %#does: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
 %#(((B- or O+) & {@MV+}) or I+));
 %#done: {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
@@ -127,7 +127,7 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#been: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
 %#being: {@E-} & (M- or Pg-) & (((O+ or B-) & {@MV+}) or P+ or AF-);
 
-%#will can.v may must could should would might: (({Q-} & 
+%#will can.v may must could should would might: (({Q-} &
 %#SI+) or S- or (RS- & B-)) & I+;
 
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
@@ -168,9 +168,9 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#{TH+ or C+ or QI+ or @MV+});
 מספרים: {@E-} & (Sp- or (RS- & Bp-) or I-) & ((O+ or B-) &
 {TH+ or C+ or QI+ or @MV+});
-%#tells: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+%#tells: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+
 %#or QI+ or @MV+});
-מספר: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+מספר: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+
 or QI+ or @MV+});
 %#told: {@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (O+ or B-))) &
 %#{TH+ or C+ or QI+ or @MV+};
@@ -184,7 +184,7 @@ or QI+ or @MV+});
 לבסוף כבר עכשיו בעצבות בהרחבה:
 E+ or MV-;
 
-%#from with בישת_מזלat against behind between below above
+%#from with at against behind between below above
 %#without under for in across through
 %#by out up down along like.p on over into about:
 %#J+ & (Mp- or MV- or Pp-);
@@ -201,10 +201,10 @@ J+ & (Mp- or MV- or Pp-);
 %#here there: MV- or Mp- or Pp-;
 כאן שם: J- or (MV- or Mp- or Pp-);
 
-%#that: (C+ & TH-) 
+%#that: (C+ & TH-)
 %#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 %#{{@CO-} & {C-}}) or J- or O-;
-ש=: (C+ & TH-) 
+ש=: (C+ & TH-)
 or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 {{@CO-} & {C-}}) or J- or O-;
 
