@@ -72,8 +72,9 @@ EMPTY-WORD.zzz: ZZZ-;
 %#her: D+ or J- or O-;
 %#its my your their our: D+;
 %#his: D+;
-שלה שלו שלי שלך שלהם שלנו: D+;
+שלה שלו שלי שלך שלהם שלנו: Mp-;
 
+% May need a J- variant in order to invalidate "של הוא", etc.
 %#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 אתם אתן הם הן אנחנו: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 %#it: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
