@@ -31,13 +31,17 @@
 static char * reversed_conlist_str(Connector* c, char dir, char* buf, size_t sz)
 {
 	char* p;
-	size_t len;
+	size_t len = 0;
 
 	if (NULL == c) return buf;
 	p = reversed_conlist_str(c->next, dir, buf, sz);
 
 	sz -= (p-buf);
-	len = lg_strlcpy(p, c->string, sz);
+
+	if (c->multi)
+		p[len++] = '@';
+
+	len += lg_strlcpy(p+len, c->string, sz-len);
 	if (3 < sz-len)
 	{
 		p[len++] = dir;
