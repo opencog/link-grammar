@@ -43,7 +43,7 @@ EMPTY-WORD.zzz: ZZZ-;
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- ({@A+} or {D-}) & {@M+ or (R+ & Bs+) or (D- & RB+)} &
+ ({@A+} or {D-}) & {@M+ or (R+ & Bs+) or (D- & Rb+)} &
  (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#dogs cats women men
@@ -96,8 +96,8 @@ EMPTY-WORD.zzz: ZZZ-;
 הללו: (D+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
-% Need both R and B to nouns, hence invented here RB
-ה=: D+ or (RB- & P+);
+% Need both R and B to nouns, hence invented here Rb
+ה=: D+ or (Rb- & P+);
 %#a: D+;
 
 %#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or
