@@ -34,36 +34,36 @@ EMPTY-WORD.zzz: ZZZ-;
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# ({@A+} or D-) & {@M+ or (R+ & Bs+)} &
+%# ({@A+} or Ds-) & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- ({@A+} or {D-}) & {@M+ or (R+ & Bs+) or (D- & Rb+)} &
+ ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
  (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
-%#{@A+} & {D-} & {@M+ or (R+ & Bp+)} &
+%#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-({@A+} or D-) & {@M+ or (R+ & Bp+)} &
+{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 %#water anger money politics trouble:
-%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} &
+%#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-({@A+} or D-) & {@M+ or (R+ & Bs+)} &
+{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
-%#{@A+} & {D-} & {@M+ or (R+ & Bs+)} &
+%#{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} & 
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-({@A+} or D-) & {@M+ or (R+ & Bs+)} &
+{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} & 
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
@@ -82,18 +82,18 @@ EMPTY-WORD.zzz: ZZZ-;
  & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
-%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D+;
-זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D+;
-%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or D+;
-אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or D+;
-%#those: (D+) or (({P+} or {{C+} & Bp+}) &
+%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
+זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
+%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
+אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
+%#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
-הללו: (D+) or (({P+} or {{C+} & Bp+}) &
+הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
 % Need both R and B to nouns, hence invented here Rb
 ה=: D+ or (Rb- & P+);
-%#a: D+;
+%#a: Ds+;
 
 %#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or
 %#(RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
@@ -200,11 +200,11 @@ J+ & (Mp- or MV- or Pp-);
 %#here there: MV- or Mp- or Pp-;
 כאן שם: J- or (MV- or Mp- or Pp-);
 
-%#that: (C+ & TH-)
-%#or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+%#that: (C+ & TH-) 
+%#or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 %#{{@CO-} & {C-}}) or J- or O-;
-ש=: (C+ & TH-)
-or D+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+ש=: (C+ & TH-) 
+or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 {{@CO-} & {C-}}) or J- or O-;
 
 %#to: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
