@@ -37,6 +37,10 @@ changecom(`%')dnl
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
+% The costly-null is introduced here for now, so expressions can be copied from
+% the English dict as they are.
+<costly-null>: [[[[()]]]];
+
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
 %# ({@A+} or Ds-) & {@M+ or (R+ & Bs+)} & 
