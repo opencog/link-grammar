@@ -169,16 +169,16 @@ COMMON_NOUN(p,c,m,3);
 
 % May need a J- variant in order to invalidate "של הוא", etc.
 %#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
-אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
+אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-;
 %# lines 2-3 are from "is" [ap]
-היא הוא: {J- or O- or ({Ss+} & (({@CO-} & {C-}) or R-)) or SIs-}
+היא הוא: {J- or O- or ({Ss+} & (({@CO-} & Wd- & {C-}) or R-)) or SIs-}
  & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
 %#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
+זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
 %#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
+אלו: (J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-) or Dmc+;
 %#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
