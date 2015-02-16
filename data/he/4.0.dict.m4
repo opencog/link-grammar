@@ -73,45 +73,10 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 <post-nominal-u>:
   ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
-% noun-main-s -- singular
-%<noun-main-s>:
-%  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
-%  or <post-nominal-s>
-%  or <costly-null>;
-
-% noun-main-p -- plural
-%<noun-main-p>:
-%  (Sp+ & <CLAUSE>) or SIp- or Jp-
-%  or Op-
-%  or <post-nominal-p>
-%  or <costly-null>;
-
-% noun-main-u -- u == uncountable
-%<noun-main-u>:
-%  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-%  or <post-nominal-s>
-%  or <costly-null>;
-
 define(`NOUN_MAIN',`'
   (S$1$2$3$4+ & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
   or <costly-null>)
-
-%define(`NOUN_MAIN-S',`'
-%  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
-%  or <post-nominal-s>
-%  or <costly-null>)
-%
-%define(`NOUN_MAIN-P',`'
-%  (Sp+ & <CLAUSE>) or SIp- or Jp-
-%  or Op-
-%  or <post-nominal-p>
-%  or <costly-null>)
-%
-%define(`NOUN_MAIN-U',`'
-%  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-%  or <post-nominal-s>
-%  or <costly-null>)
 
 <noun-main-s,c,m,3>: NOUN_MAIN(s,c,m,3);
 <noun-main-s,u,m,3>: NOUN_MAIN(s,u,m,3);
@@ -154,7 +119,7 @@ define(`NOUN_MAIN',`'
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# ({@A+} or Ds-) & {@M+ or (R+ & Bs+)} & 
+%# {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
