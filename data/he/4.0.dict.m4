@@ -64,6 +64,9 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
 % Post-nominal qualifiers, complete with commas, etc.
+<post-nominal-x>:
+  ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+
 <post-nominal-s>:
   ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
