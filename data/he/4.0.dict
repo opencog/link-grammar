@@ -71,82 +71,50 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 <post-nominal-u>:
   ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
-% noun-main-s -- singular
-%<noun-main-s>:
-%  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
-%  or <post-nominal-s>
-%  or <costly-null>;
 
-% noun-main-p -- plural
-%<noun-main-p>:
-%  (Sp+ & <CLAUSE>) or SIp- or Jp-
-%  or Op-
-%  or <post-nominal-p>
-%  or <costly-null>;
-
-% noun-main-u -- u == uncountable
-%<noun-main-u>:
-%  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-%  or <post-nominal-s>
-%  or <costly-null>;
-
-
-
-%define(`NOUN_MAIN-S',`'
-%  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
-%  or <post-nominal-s>
-%  or <costly-null>)
-%
-%define(`NOUN_MAIN-P',`'
-%  (Sp+ & <CLAUSE>) or SIp- or Jp-
-%  or Op-
-%  or <post-nominal-p>
-%  or <costly-null>)
-%
-%define(`NOUN_MAIN-U',`'
-%  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-%  or <post-nominal-s>
-%  or <costly-null>)
 
 <noun-main-s,c,m,3>: 
-  (Sscm3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-s,u,m,3>: 
-  (Ssum3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Ssum3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-s,c,f,3>: 
-  (Sscf3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-s,u,f,3>: 
-  (Ssuf3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Ssuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-p,c,m,3>: 
-  (Spcm3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-p,u,m,3>: 
-  (Spum3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spum3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-p,c,f,3>: 
-  (Spcf3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 <noun-main-p,u,f,3>: 
-  (Spuf3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>;
+  or <costly-null>);
 
-<noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
-<noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
-<noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
+<noun-sub-x>: {@M+} & {(R+ & B+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MX+};
+<noun-sub-s>: {@M+} & {(R+ & Bs+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXs+};
+<noun-sub-p>: {@M+} & {(R+ & Bp+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXp+};
 
-% For now.
-<noun-modifiers>: ();
+<noun-modifiers>: 
+  (@A+ & {[[@AN-]]})
+  or [@AN-]0.1
+  or ([[@AN-].1 & @A+] & {[[@AN-]]})
+  or ();
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;

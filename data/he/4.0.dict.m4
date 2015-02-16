@@ -77,9 +77,9 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
   ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 define(`NOUN_MAIN',`'
-  (S$1$2$3$4+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((S$1$2$3$4+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null>)
+  or <costly-null>))
 
 <noun-main-s,c,m,3>: NOUN_MAIN(s,c,m,3);
 <noun-main-s,u,m,3>: NOUN_MAIN(s,u,m,3);
@@ -90,12 +90,15 @@ define(`NOUN_MAIN',`'
 <noun-main-p,c,f,3>: NOUN_MAIN(p,c,f,3);
 <noun-main-p,u,f,3>: NOUN_MAIN(p,u,f,3);
 
-<noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
-<noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
-<noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
+<noun-sub-x>: {@M+} & {(R+ & B+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MX+};
+<noun-sub-s>: {@M+} & {(R+ & Bs+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXs+};
+<noun-sub-p>: {@M+} & {(R+ & Bp+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXp+};
 
-% For now.
-<noun-modifiers>: ();
+<noun-modifiers>: 
+  (@A+ & {[[@AN-]]})
+  or [@AN-]0.1
+  or ([[@AN-].1 & @A+] & {[[@AN-]]})
+  or ();
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
