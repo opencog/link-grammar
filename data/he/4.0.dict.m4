@@ -37,9 +37,120 @@ changecom(`%')dnl
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
+% For now.
+LEFT-WALL: {Wa+} or {Wd+} or ();
+
 % The costly-null is introduced here for now, so expressions can be copied from
-% the English dict as they are.
+% the English dictionary as they are.
 <costly-null>: [[[[()]]]];
+
+% NOUNS
+% Initially copied from the English dictionary, most probably along with unneeded
+% and inappropriate links for Hebrew (to be changed later).
+
+% Hebrew S links:
+% S1234
+% 1: s, p - for singular, plural
+% 2: c, u - for count, uncountable
+% 3: m, f - gender: male, female
+% 4: 1, 2, 3 - for 1st, 2nd, 3rd person
+
+% The RJ links connect to "and"; the l,r prevent cross-linking
+<clause-conjoin>: RJrc- or RJlc+;
+
+% {@COd-} : "That is the man who, in Joe's opinion, we should hire"
+<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
+<S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))};
+<CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
+
+% Post-nominal qualifiers, complete with commas, etc.
+<post-nominal-s>:
+  ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+
+<post-nominal-p>:
+  ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+
+<post-nominal-u>:
+  ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+
+% noun-main-s -- singular
+%<noun-main-s>:
+%  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
+%  or <post-nominal-s>
+%  or <costly-null>;
+
+% noun-main-p -- plural
+%<noun-main-p>:
+%  (Sp+ & <CLAUSE>) or SIp- or Jp-
+%  or Op-
+%  or <post-nominal-p>
+%  or <costly-null>;
+
+% noun-main-u -- u == uncountable
+%<noun-main-u>:
+%  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
+%  or <post-nominal-s>
+%  or <costly-null>;
+
+define(`NOUN_MAIN',`'
+  (S$1$2$3$4+ & <CLAUSE>) or SIs- or Js- or Os-
+  or <post-nominal-s>
+  or <costly-null>)
+
+%define(`NOUN_MAIN-S',`'
+%  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
+%  or <post-nominal-s>
+%  or <costly-null>)
+%
+%define(`NOUN_MAIN-P',`'
+%  (Sp+ & <CLAUSE>) or SIp- or Jp-
+%  or Op-
+%  or <post-nominal-p>
+%  or <costly-null>)
+%
+%define(`NOUN_MAIN-U',`'
+%  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
+%  or <post-nominal-s>
+%  or <costly-null>)
+
+<noun-main-s,c,m,3>: NOUN_MAIN(s,c,m,3);
+<noun-main-s,u,m,3>: NOUN_MAIN(s,u,m,3);
+<noun-main-s,c,f,3>: NOUN_MAIN(s,c,f,3);
+<noun-main-s,u,f,3>: NOUN_MAIN(s,u,f,3);
+<noun-main-p,c,m,3>: NOUN_MAIN(p,c,m,3);
+<noun-main-p,u,m,3>: NOUN_MAIN(p,u,m,3);
+<noun-main-p,c,f,3>: NOUN_MAIN(p,c,f,3);
+<noun-main-p,u,f,3>: NOUN_MAIN(p,u,f,3);
+
+<noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
+<noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
+<noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
+
+% For now.
+<noun-modifiers>: ();
+
+<rel-clause-x>: {Rw+} & B*m+;
+<rel-clause-s>: {Rw+} & Bsm+;
+<rel-clause-p>: {Rw+} & Bpm+;
+
+<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
+<noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-);
+<noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
+<noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
+
+<common-noun-s,c,m,3>:
+  <noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+      & ((<noun-sub-s> & (NOUN_MAIN(s,c,m,3) or <rel-clause-s>))
+        or <noun-and-s>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or ({Ds-} & Wa-));
+
+שולחן: <common-noun-s,c,m,3>;
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
@@ -142,6 +253,7 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
 %#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
 רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+זז: {@E-} & (Sscm3- or (RS- & Bscm3-)) & {@MV+};
 %#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
 %#go: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
 %#gone: {@E-} & PP- & {@MV+};
