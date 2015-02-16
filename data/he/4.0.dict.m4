@@ -109,19 +109,19 @@ define(`NOUN_MAIN',`'
 <noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
 <noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
 
-<common-noun-s,c,m,3>:
-  <noun-modifiers> &
+define(`COMMON_NOUN',`'
+  (<noun-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
-      & ((<noun-sub-s> & (NOUN_MAIN(s,c,m,3) or <rel-clause-s>))
-        or <noun-and-s>))
+      & ((<noun-sub-$1> & (NOUN_MAIN($1,$2,$3,$4) or <rel-clause-$1>))
+        or <noun-and-$1>))
     or SJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & Wa-));
+    or ({Ds-} & Wa-))))
 
-שולחן: <common-noun-s,c,m,3>;
+שולחן: COMMON_NOUN(s,c,m,3);
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
@@ -129,8 +129,9 @@ define(`NOUN_MAIN',`'
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
- (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
+%% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
+%% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
+COMMON_NOUN(s,c,m,3);
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
@@ -140,8 +141,9 @@ define(`NOUN_MAIN',`'
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
- (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
+%%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
+COMMON_NOUN(p,c,m,3);
 
 %#water anger money politics trouble:
 %#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 

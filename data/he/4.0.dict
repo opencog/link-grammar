@@ -125,31 +125,45 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 <noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
 <noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
 
-<common-noun-s,c,m,3>:
-  <noun-modifiers> &
+
+
+שולחן: 
+  (<noun-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
       & ((<noun-sub-s> & (
-  (Sscm3+ & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
-  or <costly-null> or <rel-clause-s>))
+  or <costly-null>) or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & Wa-));
-
-שולחן: <common-noun-s,c,m,3>;
+    or ({Ds-} & Wa-)));
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# ({@A+} or Ds-) & {@M+ or (R+ & Bs+)} & 
+%# {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
 מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
- ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
- (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
+%% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
+%% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
+
+  (<noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+      & ((<noun-sub-s> & (
+  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  or <post-nominal-s>
+  or <costly-null>) or <rel-clause-s>))
+        or <noun-and-s>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or ({Ds-} & Wa-)));
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
@@ -159,8 +173,22 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
- (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
+%%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
+
+  (<noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+      & ((<noun-sub-p> & (
+  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  or <post-nominal-s>
+  or <costly-null>) or <rel-clause-p>))
+        or <noun-and-p>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or ({Ds-} & Wa-)));
 
 %#water anger money politics trouble:
 %#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
