@@ -171,7 +171,9 @@ COMMON_NOUN(p,c,m,3);
 %#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
 אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-;
 %# lines 2-3 are from "is" [ap]
-היא הוא: {J- or O- or ({Ss+} & (({@CO-} & Wd- & {C-}) or R-)) or SIs-}
+היא הוא:
+ %{J- or O- or ({Ss+} & (({@CO-} & {Wd-} & {C-}) or R-)) or SIs-}
+ {{[[R+ & Bs+]]} & (({Ss+} & <CLAUSE>) or SIs- or SJls+)}
  & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
