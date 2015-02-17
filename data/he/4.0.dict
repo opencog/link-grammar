@@ -128,26 +128,12 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 
 
 
-שולחן: (<noun-modifiers> &
-    (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
-      & ((<noun-sub-s> & (
-  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
-  or <post-nominal-s>
-  or <costly-null>) or <rel-clause-s>))
-        or <noun-and-s>))
-    or SJrs-
-    or (YS+ & Ds-)
-    or (GN+ & (DD- or [()]))
-    or Us-
-    or ({Ds-} & Wa-)));
-
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
 %# {@A-} & Ds- & {@M+ or (R+ & Bs+)} &
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
-מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד שולחן:
+מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד שולחן שולחן:
 %% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
 %% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 (<noun-modifiers> &
@@ -171,7 +157,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
-מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
+מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים שולחנות:
 %%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
 (<noun-modifiers> &

@@ -122,8 +122,6 @@ define(`COMMON_NOUN',
     or Us-
     or ({Ds-} & Wa-))))
 
-שולחן: COMMON_NOUN(s,c,m,3);
-
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
 %# {@A-} & Ds- & {@M+ or (R+ & Bs+)} &
@@ -141,7 +139,7 @@ COMMON_NOUN(s,c,m,3);
 %#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
-מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
+מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים שולחנות:
 %%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
 COMMON_NOUN(p,c,m,3);
