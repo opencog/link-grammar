@@ -95,7 +95,7 @@ define(`NOUN_MAIN',`'
 <noun-sub-p>: {@M+} & {((R+ & Bp+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXp+};
 
 % Ds- here disallows *הכלב שחור רץ
-<noun-modifiers>: 
+<noun-modifiers>:
   ((@A+ or Ds-) & {[[@AN-]]})
   or [@AN-]0.1
   or ([[@AN-].1 & @A+] & {[[@AN-]]})
@@ -110,7 +110,7 @@ define(`NOUN_MAIN',`'
 <noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
 <noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
 
-define(`COMMON_NOUN',`'
+define(`COMMON_NOUN',
   (<noun-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
@@ -126,10 +126,10 @@ define(`COMMON_NOUN',`'
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
-%# {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
+%# {@A-} & Ds- & {@M+ or (R+ & Bs+)} &
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
-מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
+מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד שולחן:
 %% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
 %% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 COMMON_NOUN(s,c,m,3);
@@ -138,26 +138,26 @@ COMMON_NOUN(s,c,m,3);
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
-%#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
 מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים:
-%%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
 COMMON_NOUN(p,c,m,3);
 
 %#water anger money politics trouble:
-%#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} &
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 מים כעס כסף פוליטיקה:
-{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#law winter action war success:
-%#{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+%#{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} &
 %#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 חוק חורף פעולה מלחמה הצלחה:
-{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+{@A+} & {D*u-} & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
@@ -298,10 +298,10 @@ J+ & (Mp- or MV- or Pp-);
 %#here there: MV- or Mp- or Pp-;
 כאן שם: J- or (MV- or Mp- or Pp-);
 
-%#that: (C+ & TH-) 
+%#that: (C+ & TH-)
 %#or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 %#{{@CO-} & {C-}}) or J- or O-;
-ש=: (C+ & TH-) 
+ש=: (C+ & TH-)
 or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 {{@CO-} & {C-}}) or J- or O-;
 
