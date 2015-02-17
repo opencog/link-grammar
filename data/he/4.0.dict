@@ -132,8 +132,8 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %#party friend house movie brother sister diner student exam:
 %# {@A-} & Ds- & {@M+ or (R+ & Bs+)} &
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
-כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
-מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד שולחן שולחן:
+כלב חתול איש פארק שכן רחוב פטיש אף
+חבר בית סרט אח סטודנט מבחן ניסוי לב ורד שולחן:
 %% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
 %% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 (<noun-modifiers> &
@@ -150,14 +150,30 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
     or Us-
     or ({Ds-} & Wa-)));
 
+כלבה חתולה אישה חצר עצם שכנה חנות ציפור
+מסיבה חברה אחות ארוחה סטודנטית:
+(<noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
+      & ((<noun-sub-s> & (
+  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  or <post-nominal-s>
+  or <costly-null>) or <rel-clause-s>))
+        or <noun-and-s>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or ({Ds-} & Wa-)));
+
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
 %#parties friends houses movies brothers sisters diners students exams
 %#wars winters actions laws successes:
 %#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
-כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
-מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים שולחנות:
+כלבים חתולים גברים פארקים שכנים רחובות פטישים אפים
+חברים בתים סרטים אחים סטודנטים מבחנים שולחנות:
 %%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
 (<noun-modifiers> &
@@ -165,6 +181,22 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
     or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-p> & (
   (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  or <post-nominal-s>
+  or <costly-null>) or <rel-clause-p>))
+        or <noun-and-p>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or ({Ds-} & Wa-)));
+
+כלבות חתולות נשים חצרות עצמות שכנות חנויות ציפורים
+מסיבות חברות אחיות ארוחות סטודנטיות:
+(<noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
+      & ((<noun-sub-p> & (
+  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
   or <costly-null>) or <rel-clause-p>))
         or <noun-and-p>))
@@ -254,11 +286,36 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#will can.v may must could should would might: (({Q-} &
 %#SI+) or S- or (RS- & B-)) & I+;
 
+%VERBS
+
+<MX-PHRASE>: Xd- & (Xc+ or <costly-null>) & (MX*p- or MVg-);
+<OPENER>: {Xd-} & Xc+ & COp+;
+
+% These are the verb-form expressions for ordinary verbs.
+
+% <verb-wall>: these connect to the head verb:
+% WV connects the wall to the head-verb,
+% CV connects the dominating clause to the head verb of the dependent clause.
+% IV connects infinitives to the head-verb
+%<verb-wall>: dWV- or dCV- or dIV- or [[()]];
+<verb-wall>: (); % Not implemented for now for Hebrew
+
+% VERB() arguments:
+% 1: s, p - for singular, plural
+% 2: m, f - gender: male, female
+% 3: 1, 2, 3 - for 1st, 2nd, 3rd person
+
+
+
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
-רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+%%רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+רצים באים הולכים זזים: ({@E-} & (((Sp*m3- & <verb-wall>) or (RS- & Bp*m3-)) & {@MV+}));
+רצות באות הולכות זזות: ({@E-} & (((Sp*f3- & <verb-wall>) or (RS- & Bp*f3-)) & {@MV+}));
 %#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-זז: {@E-} & (Sscm3- or (RS- & Bscm3-)) & {@MV+};
+%%רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+רץ בא הולך זז: ({@E-} & (((Ss*m3- & <verb-wall>) or (RS- & Bs*m3-)) & {@MV+}));
+רצה באה הולכת זזה: ({@E-} & (((Ss*f3- & <verb-wall>) or (RS- & Bs*f3-)) & {@MV+}));
+%%זז: {@E-} & (Ss*m3- or (RS- & Bs*m3-)) & {@MV+};
 %#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
 %#go: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
 %#gone: {@E-} & PP- & {@MV+};
@@ -301,6 +358,8 @@ or QI+ or @MV+});
 %#{TH+ or C+ or QI+ or @MV+};
 %#telling: {@E-} & (Pg- or M-) & ((O+ or B-) & {TH+ or C+ or QI+ or
 %#@MV+});
+
+% END OF VERBS
 
 %#recently sometimes soon gradually specifically generally initially
 %#ultimately already now sadly broadly:

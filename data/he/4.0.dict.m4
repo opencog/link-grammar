@@ -126,11 +126,15 @@ define(`COMMON_NOUN',
 %#party friend house movie brother sister diner student exam:
 %# {@A-} & Ds- & {@M+ or (R+ & Bs+)} &
 %# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
-כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
-מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד שולחן:
+כלב חתול איש פארק שכן רחוב פטיש אף
+חבר בית סרט אח סטודנט מבחן ניסוי לב ורד שולחן:
 %% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
 %% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
 COMMON_NOUN(s,c,m,3);
+
+כלבה חתולה אישה חצר עצם שכנה חנות ציפור
+מסיבה חברה אחות ארוחה סטודנטית:
+COMMON_NOUN(s,c,f,3);
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
@@ -138,11 +142,15 @@ COMMON_NOUN(s,c,m,3);
 %#wars winters actions laws successes:
 %#{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
-כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
-מסיבות חברים בתים סרטים אחים אחיות ארוחות סטודנטים מבחנים שולחנות:
+כלבים חתולים גברים פארקים שכנים רחובות פטישים אפים
+חברים בתים סרטים אחים סטודנטים מבחנים שולחנות:
 %%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
 COMMON_NOUN(p,c,m,3);
+
+כלבות חתולות נשים חצרות עצמות שכנות חנויות ציפורים
+מסיבות חברות אחיות ארוחות סטודנטיות:
+COMMON_NOUN(p,c,f,3);
 
 %#water anger money politics trouble:
 %#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} &
@@ -224,11 +232,37 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 %#will can.v may must could should would might: (({Q-} &
 %#SI+) or S- or (RS- & B-)) & I+;
 
+%VERBS
+
+<MX-PHRASE>: Xd- & (Xc+ or <costly-null>) & (MX*p- or MVg-);
+<OPENER>: {Xd-} & Xc+ & COp+;
+
+% These are the verb-form expressions for ordinary verbs.
+
+% <verb-wall>: these connect to the head verb:
+% WV connects the wall to the head-verb,
+% CV connects the dominating clause to the head verb of the dependent clause.
+% IV connects infinitives to the head-verb
+%<verb-wall>: dWV- or dCV- or dIV- or [[()]];
+<verb-wall>: (); % Not implemented for now for Hebrew
+
+% VERB() arguments:
+% 1: s, p - for singular, plural
+% 2: m, f - gender: male, female
+% 3: 1, 2, 3 - for 1st, 2nd, 3rd person
+
+define(`VERB',
+       ({@E-} & (((S$1*$2$3- & <verb-wall>) or (RS- & B$1*$2$3-)) & {@MV+})))
+
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
-רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+%%רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+רצים באים הולכים זזים: VERB(p,m,3);
+רצות באות הולכות זזות: VERB(p,f,3);
 %#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-זז: {@E-} & (Sscm3- or (RS- & Bscm3-)) & {@MV+};
+%%רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+רץ בא הולך זז: VERB(s,m,3);
+רצה באה הולכת זזה: VERB(s,f,3);
+%%זז: {@E-} & (Ss*m3- or (RS- & Bs*m3-)) & {@MV+};
 %#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
 %#go: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
 %#gone: {@E-} & PP- & {@MV+};
@@ -271,6 +305,8 @@ or QI+ or @MV+});
 %#{TH+ or C+ or QI+ or @MV+};
 %#telling: {@E-} & (Pg- or M-) & ((O+ or B-) & {TH+ or C+ or QI+ or
 %#@MV+});
+
+% END OF VERBS
 
 %#recently sometimes soon gradually specifically generally initially
 %#ultimately already now sadly broadly:
