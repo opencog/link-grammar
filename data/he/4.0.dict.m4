@@ -90,12 +90,13 @@ define(`NOUN_MAIN',`'
 <noun-main-p,c,f,3>: NOUN_MAIN(p,c,f,3);
 <noun-main-p,u,f,3>: NOUN_MAIN(p,u,f,3);
 
-<noun-sub-x>: {@M+} & {(R+ & B+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MX+};
-<noun-sub-s>: {@M+} & {(R+ & Bs+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXs+};
-<noun-sub-p>: {@M+} & {(R+ & Bp+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXp+};
+<noun-sub-x>: {@M+} & {((R+ & B+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MX+};
+<noun-sub-s>: {@M+} & {((R+ & Bs+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXs+};
+<noun-sub-p>: {@M+} & {((R+ & Bp+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXp+};
 
+% Ds- here disallows *הכלב שחור רץ
 <noun-modifiers>: 
-  (@A+ & {[[@AN-]]})
+  ((@A+ or Ds-) & {[[@AN-]]})
   or [@AN-]0.1
   or ([[@AN-].1 & @A+] & {[[@AN-]]})
   or ();
@@ -112,7 +113,7 @@ define(`NOUN_MAIN',`'
 define(`COMMON_NOUN',`'
   (<noun-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-$1> & (NOUN_MAIN($1,$2,$3,$4) or <rel-clause-$1>))
         or <noun-and-$1>))
     or SJrs-
@@ -186,7 +187,8 @@ COMMON_NOUN(p,c,m,3);
 הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
-% Need both R and B to nouns, hence invented here Rb
+% Need both R and B to nouns (to allow the second ה=: הכלב השחור רץ)
+% hence invented here Rb
 ה=: D+ or (Rb- & P+);
 %#a: Ds+;
 

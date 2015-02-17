@@ -106,12 +106,13 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
   or <post-nominal-s>
   or <costly-null>);
 
-<noun-sub-x>: {@M+} & {(R+ & B+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MX+};
-<noun-sub-s>: {@M+} & {(R+ & Bs+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXs+};
-<noun-sub-p>: {@M+} & {(R+ & Bp+ & {[[@M+]]}) or (Ds- & Rb+)} & {@MXp+};
+<noun-sub-x>: {@M+} & {((R+ & B+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MX+};
+<noun-sub-s>: {@M+} & {((R+ & Bs+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXs+};
+<noun-sub-p>: {@M+} & {((R+ & Bp+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXp+};
 
+% Ds- here disallows *הכלב שחור רץ
 <noun-modifiers>: 
-  (@A+ & {[[@AN-]]})
+  ((@A+ or Ds-) & {[[@AN-]]})
   or [@AN-]0.1
   or ([[@AN-].1 & @A+] & {[[@AN-]]})
   or ();
@@ -130,7 +131,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 שולחן: 
   (<noun-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-s> & (
   (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
@@ -153,7 +154,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 
   (<noun-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-s> & (
   (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
@@ -178,7 +179,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 
   (<noun-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5} & {Ds-}   ))
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-p> & (
   (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
@@ -218,7 +219,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %# lines 2-3 are from "is" [ap]
 היא הוא:
  %{J- or O- or ({Ss+} & (({@CO-} & {Wd-} & {C-}) or R-)) or SIs-}
- {{[[R+ & Bs+]]} & ((Ss+ & C-) or SIs- or SJls+)}
+ {{[[R+ & Bs+]]} & (({Ss+} & <CLAUSE>) or SIs- or SJls+)}
  & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
@@ -231,7 +232,8 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
-% Need both R and B to nouns, hence invented here Rb
+% Need both R and B to nouns (to allow the second ה=: הכלב השחור רץ)
+% hence invented here Rb
 ה=: D+ or (Rb- & P+);
 %#a: Ds+;
 
