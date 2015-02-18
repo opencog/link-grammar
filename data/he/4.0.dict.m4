@@ -1,3 +1,8 @@
+dnl
+dnl Macro version of the 4.0.dict file.
+dnl
+dnl The comment delimiter for link-grammar data files is %
+changecom(`%')dnl
  %***************************************************************************%
  %                                                                           %
  % Experimental prototype Hebrew dictionary                                  %
@@ -85,47 +90,31 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 <post-nominal-u>:
   ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
+define(`NOUN_MAIN',`'
+  (((S$1$2$3$4+ or P+) & <CLAUSE>) or SIs- or Js- or O$1*$3-
+  or <post-nominal-s>
+  or <costly-null>))
 
-
-<noun-main-s,c,m,3>: 
-  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*m-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-s,u,m,3>: 
-  (((Ssum3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*m-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-s,c,f,3>: 
-  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*f-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-s,u,f,3>: 
-  (((Ssuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*f-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-p,c,m,3>: 
-  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*m-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-p,u,m,3>: 
-  (((Spum3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*m-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-p,c,f,3>: 
-  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*f-
-  or <post-nominal-s>
-  or <costly-null>);
-<noun-main-p,u,f,3>: 
-  (((Spuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*f-
-  or <post-nominal-s>
-  or <costly-null>);
+<noun-main-s,c,m,3>: NOUN_MAIN(s,c,m,3);
+<noun-main-s,u,m,3>: NOUN_MAIN(s,u,m,3);
+<noun-main-s,c,f,3>: NOUN_MAIN(s,c,f,3);
+<noun-main-s,u,f,3>: NOUN_MAIN(s,u,f,3);
+<noun-main-p,c,m,3>: NOUN_MAIN(p,c,m,3);
+<noun-main-p,u,m,3>: NOUN_MAIN(p,u,m,3);
+<noun-main-p,c,f,3>: NOUN_MAIN(p,c,f,3);
+<noun-main-p,u,f,3>: NOUN_MAIN(p,u,f,3);
 
 % NOUN_MAIN_H() arguments:
 % 1: s, p - for singular, plural
 % 2: m, f - gender: male, female
 
 % Dmu -> D*u ??? for now
-
+define(`NOUN_MAIN_H',
+  ((Jd- & D*u- & O$1-)
+  or (Jd- & D*u- & {Wd-} & S$1*$2*b+)
+  or ((S$1*$2*b+ or O$1*$2+) & <CLAUSE>) or SI$1*$2*b- or [[J$1*$2-]] or [O$1*$2-]
+  or <post-nominal-x>
+  or <costly-null>))
 
 <noun-sub-x>: {@M+} & {((R+ & B+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MX+};
 <noun-sub-s>: {@M+} & {((R+ & Bs+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXs+};
@@ -147,7 +136,17 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 <noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
 <noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
 
-
+define(`COMMON_NOUN',
+  (<noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
+      & ((<noun-sub-$1> & (NOUN_MAIN($1,$2,$3,$4) or <rel-clause-$1>))
+        or <noun-and-$1>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or ({Ds-} & Wa-))))
 
 %#dog cat woman man park yard bone neighbor store street bird hammer nose
 %#party friend house movie brother sister diner student exam:
@@ -157,35 +156,11 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 חבר בית סרט אח סטודנט מבחן ניסוי לב ורד שולחן:
 %% ({@A+} or {Ds-}) & {@M+ or (R+ & Bs+) or (Ds- & Rb+)} &
 %% (J- or Os- or ((Ss+ or P+) & (({@CO-} & {C-}) or R-)) or SIs-);
-(<noun-modifiers> &
-    (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
-      & ((<noun-sub-s> & (
-  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*m-
-  or <post-nominal-s>
-  or <costly-null>) or <rel-clause-s>))
-        or <noun-and-s>))
-    or SJrs-
-    or (YS+ & Ds-)
-    or (GN+ & (DD- or [()]))
-    or Us-
-    or ({Ds-} & Wa-)));
+COMMON_NOUN(s,c,m,3);
 
 כלבה חתולה אישה חצר עצם שכנה חנות ציפור
 מסיבה חברה אחות ארוחה סטודנטית:
-(<noun-modifiers> &
-    (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
-      & ((<noun-sub-s> & (
-  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*f-
-  or <post-nominal-s>
-  or <costly-null>) or <rel-clause-s>))
-        or <noun-and-s>))
-    or SJrs-
-    or (YS+ & Ds-)
-    or (GN+ & (DD- or [()]))
-    or Us-
-    or ({Ds-} & Wa-)));
+COMMON_NOUN(s,c,f,3);
 
 %#dogs cats women men
 %#parks yards bones neighbors stores streets birds hammers noses
@@ -197,35 +172,11 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 חברים בתים סרטים אחים סטודנטים מבחנים שולחנות:
 %%{@A+} & {Dmc-} & {@M+ or (R+ & Bp+)} &
 %% (J- or Op- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-);
-(<noun-modifiers> &
-    (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
-      & ((<noun-sub-p> & (
-  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*m-
-  or <post-nominal-s>
-  or <costly-null>) or <rel-clause-p>))
-        or <noun-and-p>))
-    or SJrs-
-    or (YS+ & Ds-)
-    or (GN+ & (DD- or [()]))
-    or Us-
-    or ({Ds-} & Wa-)));
+COMMON_NOUN(p,c,m,3);
 
 כלבות חתולות נשים חצרות עצמות שכנות חנויות ציפורים
 מסיבות חברות אחיות ארוחות סטודנטיות:
-(<noun-modifiers> &
-    (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
-      & ((<noun-sub-p> & (
-  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*f-
-  or <post-nominal-s>
-  or <costly-null>) or <rel-clause-p>))
-        or <noun-and-p>))
-    or SJrs-
-    or (YS+ & Ds-)
-    or (GN+ & (DD- or [()]))
-    or Us-
-    or ({Ds-} & Wa-)));
+COMMON_NOUN(p,c,f,3);
 
 %#water anger money politics trouble:
 %#{@A+} & {Dmu-} & {@M+ or (R+ & Bs+)} &
@@ -246,7 +197,13 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 % 1: s, p - for singular, plural
 % 2: m, f - gender: male, female
 % 3: 1, 2, 3 - for 1st, 2nd, 3rd person
-
+define(`PERSONAL_PRONOUN_S',
+ ({{[[R+ & B$1*$2$3+]]} &
+  (J- or O$1*$2$3- or ({S$1*$2$3+} & <CLAUSE>) or SI$1*$2$3- or SJl$1*$2$3+)}
+% Need to update
+ & {(({S$1*$2$3-} or (RS- & B$1*$2$3-) or ({Q-} & SI$1*$2$3+))
+ & (((O$1*$2$3+ or B-) & {@MV+}) or P+ or AF-))})
+)
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %#me him them us: J- or O-;
 אותי אותו אותה אותם אותנו: J- or O-;
@@ -265,84 +222,26 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %%% & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
 %%%  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
-אני: ({{[[R+ & Bs**1+]]} &
-  (J- or Os**1- or ({Ss**1+} & <CLAUSE>) or SIs**1- or SJls**1+)}
-% Need to update
- & {(({Ss**1-} or (RS- & Bs**1-) or ({Q-} & SIs**1+))
- & (((Os**1+ or B-) & {@MV+}) or P+ or AF-))})
-;
-אתה: ({{[[R+ & Bs*m2+]]} &
-  (J- or Os*m2- or ({Ss*m2+} & <CLAUSE>) or SIs*m2- or SJls*m2+)}
-% Need to update
- & {(({Ss*m2-} or (RS- & Bs*m2-) or ({Q-} & SIs*m2+))
- & (((Os*m2+ or B-) & {@MV+}) or P+ or AF-))})
-;
-את: ({{[[R+ & Bs*f2+]]} &
-  (J- or Os*f2- or ({Ss*f2+} & <CLAUSE>) or SIs*f2- or SJls*f2+)}
-% Need to update
- & {(({Ss*f2-} or (RS- & Bs*f2-) or ({Q-} & SIs*f2+))
- & (((Os*f2+ or B-) & {@MV+}) or P+ or AF-))})
-;
-הוא: ({{[[R+ & Bs*m3+]]} &
-  (J- or Os*m3- or ({Ss*m3+} & <CLAUSE>) or SIs*m3- or SJls*m3+)}
-% Need to update
- & {(({Ss*m3-} or (RS- & Bs*m3-) or ({Q-} & SIs*m3+))
- & (((Os*m3+ or B-) & {@MV+}) or P+ or AF-))})
-;
-היא: ({{[[R+ & Bs*f3+]]} &
-  (J- or Os*f3- or ({Ss*f3+} & <CLAUSE>) or SIs*f3- or SJls*f3+)}
-% Need to update
- & {(({Ss*f3-} or (RS- & Bs*f3-) or ({Q-} & SIs*f3+))
- & (((Os*f3+ or B-) & {@MV+}) or P+ or AF-))})
-;
-אנחנו אנו: ({{[[R+ & Bp**3+]]} &
-  (J- or Op**3- or ({Sp**3+} & <CLAUSE>) or SIp**3- or SJlp**3+)}
-% Need to update
- & {(({Sp**3-} or (RS- & Bp**3-) or ({Q-} & SIp**3+))
- & (((Op**3+ or B-) & {@MV+}) or P+ or AF-))})
-;
-אתם: ({{[[R+ & Bp*m2+]]} &
-  (J- or Op*m2- or ({Sp*m2+} & <CLAUSE>) or SIp*m2- or SJlp*m2+)}
-% Need to update
- & {(({Sp*m2-} or (RS- & Bp*m2-) or ({Q-} & SIp*m2+))
- & (((Op*m2+ or B-) & {@MV+}) or P+ or AF-))})
-;
-אתן: ({{[[R+ & Bp*f2+]]} &
-  (J- or Op*f2- or ({Sp*f2+} & <CLAUSE>) or SIp*f2- or SJlp*f2+)}
-% Need to update
- & {(({Sp*f2-} or (RS- & Bp*f2-) or ({Q-} & SIp*f2+))
- & (((Op*f2+ or B-) & {@MV+}) or P+ or AF-))})
-;
-הם: ({{[[R+ & Bp*m3+]]} &
-  (J- or Op*m3- or ({Sp*m3+} & <CLAUSE>) or SIp*m3- or SJlp*m3+)}
-% Need to update
- & {(({Sp*m3-} or (RS- & Bp*m3-) or ({Q-} & SIp*m3+))
- & (((Op*m3+ or B-) & {@MV+}) or P+ or AF-))})
-;
-הן: ({{[[R+ & Bp*f3+]]} &
-  (J- or Op*f3- or ({Sp*f3+} & <CLAUSE>) or SIp*f3- or SJlp*f3+)}
-% Need to update
- & {(({Sp*f3-} or (RS- & Bp*f3-) or ({Q-} & SIp*f3+))
- & (((Op*f3+ or B-) & {@MV+}) or P+ or AF-))})
-;
+אני: PERSONAL_PRONOUN_S(s,*,1);
+אתה: PERSONAL_PRONOUN_S(s,m,2);
+את: PERSONAL_PRONOUN_S(s,f,2);
+הוא: PERSONAL_PRONOUN_S(s,m,3);
+היא: PERSONAL_PRONOUN_S(s,f,3);
+אנחנו אנו: PERSONAL_PRONOUN_S(p,*,3);
+אתם: PERSONAL_PRONOUN_S(p,m,2);
+אתן: PERSONAL_PRONOUN_S(p,f,2);
+הם: PERSONAL_PRONOUN_S(p,m,3);
+הן: PERSONAL_PRONOUN_S(p,f,3);
 
 %#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
 %%זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
 זה:
-  ((Jd- & D*u- & Os-)
-  or (Jd- & D*u- & {Wd-} & Ss*m*b+)
-  or ((Ss*m*b+ or Os*m+) & <CLAUSE>) or SIs*m*b- or [[Js*m-]] or [Os*m-]
-  or <post-nominal-x>
-  or <costly-null>)
+  NOUN_MAIN_H(s,m)
   or EA-
   or <noun-and-s>;
 
 זו:
-  ((Jd- & D*u- & Os-)
-  or (Jd- & D*u- & {Wd-} & Ss*f*b+)
-  or ((Ss*f*b+ or Os*f+) & <CLAUSE>) or SIs*f*b- or [[Js*f-]] or [Os*f-]
-  or <post-nominal-x>
-  or <costly-null>)
+  NOUN_MAIN_H(s,f)
   or EA-
   or <noun-and-s>;
 
@@ -351,11 +250,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %%אלו: (J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-) or Dmc+;
 אלו אלה:
-  ((Jd- & D*u- & Op-)
-  or (Jd- & D*u- & {Wd-} & Sp***b+)
-  or ((Sp***b+ or Op**+) & <CLAUSE>) or SIp***b- or [[Jp**-]] or [Op**-]
-  or <post-nominal-x>
-  or <costly-null>)
+  NOUN_MAIN_H(p,*)
   or EA-
   or <noun-and-p>;
 
@@ -424,16 +319,17 @@ SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
 % 2: m, f - gender: male, female
 % 3: 1, 2, 3 - for 1st, 2nd, 3rd person
 
-
+define(`VERB',
+       ({@E-} & (((S$1*$2$3- & <verb-wall>) or (RS- & B$1*$2$3-)) & {@MV+})))
 
 %#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
 %%רצים באים הולכים: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
-רצים באים הולכים זזים: ({@E-} & (((Sp*m3- & <verb-wall>) or (RS- & Bp*m3-)) & {@MV+}));
-רצות באות הולכות זזות: ({@E-} & (((Sp*f3- & <verb-wall>) or (RS- & Bp*f3-)) & {@MV+}));
+רצים באים הולכים זזים: VERB(p,m,3);
+רצות באות הולכות זזות: VERB(p,f,3);
 %#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
 %%רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-רץ בא הולך זז: ({@E-} & (((Ss*m3- & <verb-wall>) or (RS- & Bs*m3-)) & {@MV+}));
-רצה באה הולכת זזה: ({@E-} & (((Ss*f3- & <verb-wall>) or (RS- & Bs*f3-)) & {@MV+}));
+רץ בא הולך זז: VERB(s,m,3);
+רצה באה הולכת זזה: VERB(s,f,3);
 %%זז: {@E-} & (Ss*m3- or (RS- & Bs*m3-)) & {@MV+};
 %#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
 %#go: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
