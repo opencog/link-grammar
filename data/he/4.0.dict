@@ -23,14 +23,22 @@
 % - tokenizing, including multi-prefix split
 % - the resolver behavior with multi-prefix linkages
 % - result printing
-% The old English definitions are commented out.
+% The old English definitions are commented out by %#.
 %
-% Much of the grammar here is still mainly the English one,
+% Some of the definitions have been replaced by the corresponding ones from
+% the full English dictionary (en/4.0.dict.m4). They were partially
+% converted to handle Hebrew.
+%
+% Much of the grammar here is still the English one,
 % so it is incorrect for Hebrew.
-% By now several changes have been done to handle Hebrew correctly.
-% Subject/verb/adjective, gender, and single/plural etc. agreements are not
-% done yet.  Most of the Hebrew grammatical constructs are not supported
+%
+% By now several changes have been done to handle Hebrew more correctly.
+% Subject/verb/adjective, gender, and single/plural etc. agreements are only
+% partially done.  Most of the Hebrew grammatical constructs are not supported
 % here.
+%
+% Among numerous other things, changes to handle count/uncountable changes
+% have not been done yet. The created infrastructure for that may still need changes.
 
 % Dictionary version number is 5.3.0 (formatted as V5v3v0+)
 <dictionary-version-number>: V5v3v0+;
