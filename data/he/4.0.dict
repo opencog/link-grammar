@@ -5,6 +5,12 @@
  %                                                                           %
  % Based on en/tiny.dict,                                                    %
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %
+ % and on en/4.0.dict.m4,
+ %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
+ %       Copyright (c) 2008-2014  Linas Vepstas                              %
+ %       Copyright (c) 2013  Lian Ruiting                                    %
  %                                                                           %
  %  See file "LICENSE" for information about commercial use of this system   %
  %                                                                           %
