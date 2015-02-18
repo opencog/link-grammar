@@ -74,37 +74,44 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 
 
 <noun-main-s,c,m,3>: 
-  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*m-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-s,u,m,3>: 
-  (((Ssum3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Ssum3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*m-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-s,c,f,3>: 
-  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*f-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-s,u,f,3>: 
-  (((Ssuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Ssuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*f-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-p,c,m,3>: 
-  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*m-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-p,u,m,3>: 
-  (((Spum3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spum3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*m-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-p,c,f,3>: 
-  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*f-
   or <post-nominal-s>
   or <costly-null>);
 <noun-main-p,u,f,3>: 
-  (((Spuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spuf3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*f-
   or <post-nominal-s>
   or <costly-null>);
+
+% NOUN_MAIN_H() arguments:
+% 1: s, p - for singular, plural
+% 2: m, f - gender: male, female
+
+% Dmu -> D*u ??? for now
+
 
 <noun-sub-x>: {@M+} & {((R+ & B+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MX+};
 <noun-sub-s>: {@M+} & {((R+ & Bs+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXs+};
@@ -140,7 +147,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-s> & (
-  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*m-
   or <post-nominal-s>
   or <costly-null>) or <rel-clause-s>))
         or <noun-and-s>))
@@ -156,7 +163,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-s> & (
-  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Sscf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os*f-
   or <post-nominal-s>
   or <costly-null>) or <rel-clause-s>))
         or <noun-and-s>))
@@ -180,7 +187,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-p> & (
-  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spcm3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*m-
   or <post-nominal-s>
   or <costly-null>) or <rel-clause-p>))
         or <noun-and-p>))
@@ -196,7 +203,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5}    )) % & Ds- moved to noun-modifiers
       & ((<noun-sub-p> & (
-  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((Spcf3+ or P+) & <CLAUSE>) or SIs- or Js- or Op*f-
   or <post-nominal-s>
   or <costly-null>) or <rel-clause-p>))
         or <noun-and-p>))
@@ -239,13 +246,41 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
 %#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
+%%זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
+זה:
+  ((Jd- & D*u- & Os-)
+  or (Jd- & D*u- & {Wd-} & Ssm**b+)
+  or ((Ss*m*b+ or Os*m+) & <CLAUSE>) or SIs*m*b- or [[Js*m-]] or [Os*m-]
+  or <post-nominal-x>
+  or <costly-null>)
+  or EA-
+  or <noun-and-s>;
+
+זו:
+  ((Jd- & D*u- & Os-)
+  or (Jd- & D*u- & {Wd-} & Ssf**b+)
+  or ((Ss*f*b+ or Os*f+) & <CLAUSE>) or SIs*f*b- or [[Js*f-]] or [Os*f-]
+  or <post-nominal-x>
+  or <costly-null>)
+  or EA-
+  or <noun-and-s>;
+
 %#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-אלו: (J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-) or Dmc+;
 %#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
-הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
-(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
+%%אלו: (J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-) or Dmc+;
+אלו אלה:
+  ((Jd- & D*u- & Op-)
+  or (Jd- & D*u- & {Wd-} & Sp***b+)
+  or ((Sp***b+ or Op**+) & <CLAUSE>) or SIp***b- or [[Jp**-]] or [Op**-]
+  or <post-nominal-x>
+  or <costly-null>)
+  or EA-
+  or <noun-and-p>;
+
+% Demonstrative determiner only - needs a total fix
+%%הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+%%(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
 % Need both R and B to nouns (to allow the second ה=: הכלב השחור רץ)
 % hence invented here Rb

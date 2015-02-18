@@ -77,7 +77,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
   ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 define(`NOUN_MAIN',`'
-  (((S$1$2$3$4+ or P+) & <CLAUSE>) or SIs- or Js- or Os-
+  (((S$1$2$3$4+ or P+) & <CLAUSE>) or SIs- or Js- or O$1*$3-
   or <post-nominal-s>
   or <costly-null>))
 
@@ -89,6 +89,18 @@ define(`NOUN_MAIN',`'
 <noun-main-p,u,m,3>: NOUN_MAIN(p,u,m,3);
 <noun-main-p,c,f,3>: NOUN_MAIN(p,c,f,3);
 <noun-main-p,u,f,3>: NOUN_MAIN(p,u,f,3);
+
+% NOUN_MAIN_H() arguments:
+% 1: s, p - for singular, plural
+% 2: m, f - gender: male, female
+
+% Dmu -> D*u ??? for now
+define(`NOUN_MAIN_H',
+  ((Jd- & D*u- & O$1-)
+  or (Jd- & D*u- & {Wd-} & S$1$2**b+)
+  or ((S$1*$2*b+ or O$1*$2+) & <CLAUSE>) or SI$1*$2*b- or [[J$1*$2-]] or [O$1*$2-]
+  or <post-nominal-x>
+  or <costly-null>))
 
 <noun-sub-x>: {@M+} & {((R+ & B+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MX+};
 <noun-sub-s>: {@M+} & {((R+ & Bs+) or (Ds- & Rb+)) & {[[@M+]]}} & {@MXs+};
@@ -185,13 +197,29 @@ COMMON_NOUN(p,c,f,3);
  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
 
 %#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
+%%זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
+זה:
+  NOUN_MAIN_H(s,m)
+  or EA-
+  or <noun-and-s>;
+
+זו:
+  NOUN_MAIN_H(s,f)
+  or EA-
+  or <noun-and-s>;
+
 %#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-אלו: (J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-) or Dmc+;
 %#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 %#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
-הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
-(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
+%%אלו: (J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-) or Dmc+;
+אלו אלה:
+  NOUN_MAIN_H(p,*)
+  or EA-
+  or <noun-and-p>;
+
+% Demonstrative determiner only - needs a total fix
+%%הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+%%(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
 %#the: D+;
 % Need both R and B to nouns (to allow the second ה=: הכלב השחור רץ)
 % hence invented here Rb
