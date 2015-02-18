@@ -227,6 +227,12 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 {@A+} & {D*u-} & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
+%PRONOUNS
+
+% 1: s, p - for singular, plural
+% 2: m, f - gender: male, female
+% 3: 1, 2, 3 - for 1st, 2nd, 3rd person
+
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %#me him them us: J- or O-;
 אותי אותו אותה אותם אותנו: J- or O-;
@@ -235,21 +241,82 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 %#his: D+;
 שלה שלו שלי שלך שלהם שלנו: Mp-;
 
+
 % May need a J- variant in order to invalidate "של הוא", etc.
 %#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
-אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-;
-%# lines 2-3 are from "is" - need to update them from the English dict.
-היא הוא:
- %{J- or O- or ({Ss+} & (({@CO-} & {Wd-} & {C-}) or R-)) or SIs-}
- {{[[R+ & Bs+]]} & (({Ss+} & <CLAUSE>) or SIs- or SJls+)}
- & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
- & (((O+ or B-) & {@MV+}) or P+ or AF-))};
+%% אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-;
+%% היא הוא: {J- or O- or ({Ss+} & (({@CO-} & {Wd-} & {C-}) or R-)) or SIs-}
+%%% היא הוא:  {{[[R+ & Bs+]]} & (({Ss+} & <CLAUSE>) or SIs- or SJls+)}
+% From "is" - need to update them from the English dict.
+%%% & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
+%%%  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
+
+אני: ({{[[R+ & Bs**1+]]} &
+  (J- or Os**1- or ({Ss**1+} & <CLAUSE>) or SIs**1- or SJls**1+)}
+% Need to update
+ & {(({Ss**1-} or (RS- & Bs**1-) or ({Q-} & SIs**1+))
+ & (((Os**1+ or B-) & {@MV+}) or P+ or AF-))})
+;
+אתה: ({{[[R+ & Bs*m2+]]} &
+  (J- or Os*m2- or ({Ss*m2+} & <CLAUSE>) or SIs*m2- or SJls*m2+)}
+% Need to update
+ & {(({Ss*m2-} or (RS- & Bs*m2-) or ({Q-} & SIs*m2+))
+ & (((Os*m2+ or B-) & {@MV+}) or P+ or AF-))})
+;
+את: ({{[[R+ & Bs*f2+]]} &
+  (J- or Os*f2- or ({Ss*f2+} & <CLAUSE>) or SIs*f2- or SJls*f2+)}
+% Need to update
+ & {(({Ss*f2-} or (RS- & Bs*f2-) or ({Q-} & SIs*f2+))
+ & (((Os*f2+ or B-) & {@MV+}) or P+ or AF-))})
+;
+הוא: ({{[[R+ & Bs*m3+]]} &
+  (J- or Os*m3- or ({Ss*m3+} & <CLAUSE>) or SIs*m3- or SJls*m3+)}
+% Need to update
+ & {(({Ss*m3-} or (RS- & Bs*m3-) or ({Q-} & SIs*m3+))
+ & (((Os*m3+ or B-) & {@MV+}) or P+ or AF-))})
+;
+היא: ({{[[R+ & Bs*f3+]]} &
+  (J- or Os*f3- or ({Ss*f3+} & <CLAUSE>) or SIs*f3- or SJls*f3+)}
+% Need to update
+ & {(({Ss*f3-} or (RS- & Bs*f3-) or ({Q-} & SIs*f3+))
+ & (((Os*f3+ or B-) & {@MV+}) or P+ or AF-))})
+;
+אנחנו אנו: ({{[[R+ & Bp**3+]]} &
+  (J- or Op**3- or ({Sp**3+} & <CLAUSE>) or SIp**3- or SJlp**3+)}
+% Need to update
+ & {(({Sp**3-} or (RS- & Bp**3-) or ({Q-} & SIp**3+))
+ & (((Op**3+ or B-) & {@MV+}) or P+ or AF-))})
+;
+אתם: ({{[[R+ & Bp*m2+]]} &
+  (J- or Op*m2- or ({Sp*m2+} & <CLAUSE>) or SIp*m2- or SJlp*m2+)}
+% Need to update
+ & {(({Sp*m2-} or (RS- & Bp*m2-) or ({Q-} & SIp*m2+))
+ & (((Op*m2+ or B-) & {@MV+}) or P+ or AF-))})
+;
+אתן: ({{[[R+ & Bp*f2+]]} &
+  (J- or Op*f2- or ({Sp*f2+} & <CLAUSE>) or SIp*f2- or SJlp*f2+)}
+% Need to update
+ & {(({Sp*f2-} or (RS- & Bp*f2-) or ({Q-} & SIp*f2+))
+ & (((Op*f2+ or B-) & {@MV+}) or P+ or AF-))})
+;
+הם: ({{[[R+ & Bp*m3+]]} &
+  (J- or Op*m3- or ({Sp*m3+} & <CLAUSE>) or SIp*m3- or SJlp*m3+)}
+% Need to update
+ & {(({Sp*m3-} or (RS- & Bp*m3-) or ({Q-} & SIp*m3+))
+ & (((Op*m3+ or B-) & {@MV+}) or P+ or AF-))})
+;
+הן: ({{[[R+ & Bp*f3+]]} &
+  (J- or Op*f3- or ({Sp*f3+} & <CLAUSE>) or SIp*f3- or SJlp*f3+)}
+% Need to update
+ & {(({Sp*f3-} or (RS- & Bp*f3-) or ({Q-} & SIp*f3+))
+ & (((Op*f3+ or B-) & {@MV+}) or P+ or AF-))})
+;
 
 %#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
 %%זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
 זה:
   ((Jd- & D*u- & Os-)
-  or (Jd- & D*u- & {Wd-} & Ssm**b+)
+  or (Jd- & D*u- & {Wd-} & Ss*m*b+)
   or ((Ss*m*b+ or Os*m+) & <CLAUSE>) or SIs*m*b- or [[Js*m-]] or [Os*m-]
   or <post-nominal-x>
   or <costly-null>)
@@ -258,7 +325,7 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 
 זו:
   ((Jd- & D*u- & Os-)
-  or (Jd- & D*u- & {Wd-} & Ssf**b+)
+  or (Jd- & D*u- & {Wd-} & Ss*f*b+)
   or ((Ss*f*b+ or Os*f+) & <CLAUSE>) or SIs*f*b- or [[Js*f-]] or [Os*f-]
   or <post-nominal-x>
   or <costly-null>)
@@ -281,6 +348,9 @@ LEFT-WALL: {Wa+} or {Wd+} or ();
 % Demonstrative determiner only - needs a total fix
 %%הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 %%(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
+
+%---
+
 %#the: D+;
 % Need both R and B to nouns (to allow the second ה=: הכלב השחור רץ)
 % hence invented here Rb

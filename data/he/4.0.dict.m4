@@ -97,7 +97,7 @@ define(`NOUN_MAIN',`'
 % Dmu -> D*u ??? for now
 define(`NOUN_MAIN_H',
   ((Jd- & D*u- & O$1-)
-  or (Jd- & D*u- & {Wd-} & S$1$2**b+)
+  or (Jd- & D*u- & {Wd-} & S$1*$2*b+)
   or ((S$1*$2*b+ or O$1*$2+) & <CLAUSE>) or SI$1*$2*b- or [[J$1*$2-]] or [O$1*$2-]
   or <post-nominal-x>
   or <costly-null>))
@@ -178,6 +178,18 @@ COMMON_NOUN(p,c,f,3);
 {@A+} & {D*u-} & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
+%PRONOUNS
+
+% 1: s, p - for singular, plural
+% 2: m, f - gender: male, female
+% 3: 1, 2, 3 - for 1st, 2nd, 3rd person
+define(`PERSONAL_PRONOUN_S',
+ ({{[[R+ & B$1*$2$3+]]} &
+  (J- or O$1*$2$3- or ({S$1*$2$3+} & <CLAUSE>) or SI$1*$2$3- or SJl$1*$2$3+)}
+% Need to update
+ & {(({S$1*$2$3-} or (RS- & B$1*$2$3-) or ({Q-} & SI$1*$2$3+))
+ & (((O$1*$2$3+ or B-) & {@MV+}) or P+ or AF-))})
+)
 %#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 %#me him them us: J- or O-;
 אותי אותו אותה אותם אותנו: J- or O-;
@@ -186,15 +198,26 @@ COMMON_NOUN(p,c,f,3);
 %#his: D+;
 שלה שלו שלי שלך שלהם שלנו: Mp-;
 
+
 % May need a J- variant in order to invalidate "של הוא", etc.
 %#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
-אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-;
-%# lines 2-3 are from "is" - need to update them from the English dict.
-היא הוא:
- %{J- or O- or ({Ss+} & (({@CO-} & {Wd-} & {C-}) or R-)) or SIs-}
- {{[[R+ & Bs+]]} & (({Ss+} & <CLAUSE>) or SIs- or SJls+)}
- & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
- & (((O+ or B-) & {@MV+}) or P+ or AF-))};
+%% אתם אתן הם הן אנחנו אני: J- or O- or (Sp+ & (({@CO-} & Wd- & {C-}) or R-)) or SIp-;
+%% היא הוא: {J- or O- or ({Ss+} & (({@CO-} & {Wd-} & {C-}) or R-)) or SIs-}
+%%% היא הוא:  {{[[R+ & Bs+]]} & (({Ss+} & <CLAUSE>) or SIs- or SJls+)}
+% From "is" - need to update them from the English dict.
+%%% & {(({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
+%%%  & (((O+ or B-) & {@MV+}) or P+ or AF-))};
+
+אני: PERSONAL_PRONOUN_S(s,*,1);
+אתה: PERSONAL_PRONOUN_S(s,m,2);
+את: PERSONAL_PRONOUN_S(s,f,2);
+הוא: PERSONAL_PRONOUN_S(s,m,3);
+היא: PERSONAL_PRONOUN_S(s,f,3);
+אנחנו אנו: PERSONAL_PRONOUN_S(p,*,3);
+אתם: PERSONAL_PRONOUN_S(p,m,2);
+אתן: PERSONAL_PRONOUN_S(p,f,2);
+הם: PERSONAL_PRONOUN_S(p,m,3);
+הן: PERSONAL_PRONOUN_S(p,f,3);
 
 %#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
 %%זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & Wd- & {C-}) or R-)) or SIs-) or D*u+;
@@ -220,6 +243,9 @@ COMMON_NOUN(p,c,f,3);
 % Demonstrative determiner only - needs a total fix
 %%הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 %%(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
+
+%---
+
 %#the: D+;
 % Need both R and B to nouns (to allow the second ה=: הכלב השחור רץ)
 % hence invented here Rb
