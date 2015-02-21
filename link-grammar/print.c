@@ -435,6 +435,13 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 	set_centers(linkage, center, print_word_0, N_words_to_print);
 	line_len = center[N_words_to_print-1]+1;
+	if (line_len + strlen(linkage->word[N_words_to_print-1])/2 + 1 >= MAX_LINE)
+	{
+		append_string(string, "The diagram is too long.\n");
+		gr_string = string_copy(string);
+		string_delete(string);
+		return gr_string;
+	}
 
 	for (k=0; k<MAX_HEIGHT; k++) {
 		for (j=0; j<line_len; j++) picture[k][j] = ' ';
