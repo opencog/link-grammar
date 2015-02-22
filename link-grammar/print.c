@@ -33,24 +33,56 @@
 #define HEAD_CHR ('h') /* Single char marking head-word. */
 #define DEPT_CHR ('d') /* Single char marking dependent word */
 
+/**
+ * Find the position of the center of each word.
+ * Also find the offset of each word, relative to the previous one,
+ * needed to fully fit the names of the links between them.
+ * FIXME Long link names between more distant words may still not
+ * fit the space between these words.
+ */
 static void
-set_centers(const Linkage linkage, int center[],
+set_centers(const Linkage linkage, int center[], int word_offset[],
             bool print_word_0, int N_words_to_print)
 {
-	int i, len, tot;
+	int i, tot;
+	size_t n;
+	int start_word = print_word_0 ? 0 : 1;
+	int *link_len = alloca(linkage->num_words * sizeof(*link_len));
+
+	memset(link_len, 0, linkage->num_words * sizeof(*link_len));
+
+	for (n = 0; n < linkage->num_links; n++)
+	{
+		Link *l = &linkage->link_array[n];
+
+		if ((l->lw + 1 == l->rw) && (NULL != l->link_name))
+		{
+			link_len[l->rw] = strlen(l->link_name) +
+				(DEPT_CHR == l->rc->string[0]) +
+				(HEAD_CHR == l->rc->string[0]) +
+				(DEPT_CHR == l->lc->string[0]) +
+				(HEAD_CHR == l->lc->string[0]);
+		}
+	}
 
 	tot = 0;
-	if (print_word_0) i=0; else i=1;
-	for (; i < N_words_to_print; i++)
+	for (i = start_word; i < N_words_to_print; i++)
 	{
+		int len, center_t;
+
 		/* Centers obtained by counting the characters,
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
 		 * len = mbsrtowcs(NULL, &linkage->word[i], 0, &mbss);
 		 */
 		len = utf8_strlen(linkage->word[i]);
-		center[i] = tot + (len/2);
-		tot += len+1;
+		center_t = tot + (len/2);
+		if (i > start_word+1)
+			center[i] = MAX(center_t, center[i-1] + link_len[i] + 1);
+		else
+			center[i] = center_t;
+		word_offset[i] = center[i] - center_t;
+		tot += len+1 + word_offset[i];
 	}
 }
 
@@ -379,6 +411,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	int N_wall_connectors;
 	bool suppressor_used;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
+	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
 	unsigned int line_len, link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
@@ -433,7 +466,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
 
-	set_centers(linkage, center, print_word_0, N_words_to_print);
+	set_centers(linkage, center, word_offset, print_word_0, N_words_to_print);
 	line_len = center[N_words_to_print-1]+1;
 	if (line_len + strlen(linkage->word[N_words_to_print-1])/2 + 1 >= MAX_LINE)
 	{
@@ -535,6 +568,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	t = xpicture[0];
 	if (print_word_0) k = 0; else k = 1;
 	for (; k<N_words_to_print; k++) {
+		for (i = 0; i < (size_t)word_offset[k]; i++) *t++ = ' ';
 		s = linkage->word[k];
 		i = 0;
 		while (*s != '\0') {
@@ -595,10 +629,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		 * up to the max screen width. */
 		unsigned int uwidth = 0;
 		do {
-			uwidth += utf8_strlen(linkage->word[i]) + 1;
+			uwidth += word_offset[i] + utf8_strlen(linkage->word[i]) + 1;
 			i++;
 		} while ((i < N_words_to_print) &&
-			  (uwidth + utf8_strlen(linkage->word[i]) + 1 < x_screen_width));
+			(uwidth + word_offset[i] + utf8_strlen(linkage->word[i]) + 1 <
+			                                                      x_screen_width));
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
