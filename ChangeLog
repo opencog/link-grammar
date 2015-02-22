@@ -3,7 +3,8 @@ Version 5.3.0: (XXX 2015)
  * Major redesign of sentence tokenization (the "wordgraph" design)
  * Verb 'steal' is optionally transitive.
  * Fixes for misc MSVC warnings.
- * Minor Hebrew dictionary updates.
+ * Hebrew dictionary expansion.
+ * Enhanced diagram printing, giving more space for link names.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
