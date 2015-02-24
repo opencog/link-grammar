@@ -39,8 +39,11 @@
  * needed to fully fit the names of the links between them.
  * FIXME Long link names between more distant words may still not
  * fit the space between these words.
+ * 
+ * Return the number of characters needed for the all the words,
+ * including the space needed for the link names as described above.
  */
-static void
+static size_t
 set_centers(const Linkage linkage, int center[], int word_offset[],
             bool print_word_0, int N_words_to_print)
 {
@@ -48,6 +51,7 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	size_t n;
 	int start_word = print_word_0 ? 0 : 1;
 	int *link_len = alloca(linkage->num_words * sizeof(*link_len));
+	size_t max_line_len = 0; /* Needed picture array line length */
 
 	memset(link_len, 0, linkage->num_words * sizeof(*link_len));
 
@@ -83,7 +87,10 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 			center[i] = center_t;
 		word_offset[i] = center[i] - center_t;
 		tot += len+1 + word_offset[i];
+		max_line_len += word_offset[i] + strlen(linkage->word[i]) + 1;
 	}
+
+	return max_line_len;
 }
 
 /* The following are all for generating postscript */
@@ -466,15 +473,16 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
 
-	set_centers(linkage, center, word_offset, print_word_0, N_words_to_print);
-	line_len = center[N_words_to_print-1]+1;
-	if (line_len + strlen(linkage->word[N_words_to_print-1])/2 + 1 >= MAX_LINE)
+	if (set_centers(linkage, center, word_offset, print_word_0, N_words_to_print)
+	    + 1 > MAX_LINE)
 	{
 		append_string(string, "The diagram is too long.\n");
 		gr_string = string_copy(string);
 		string_delete(string);
 		return gr_string;
 	}
+
+	line_len = center[N_words_to_print-1]+1;
 
 	for (k=0; k<MAX_HEIGHT; k++) {
 		for (j=0; j<line_len; j++) picture[k][j] = ' ';
