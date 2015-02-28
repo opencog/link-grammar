@@ -2652,6 +2652,7 @@ hadn't.v-d hadn’t.v-d:
 % Except that this breaks lots of stuff ... Arghhh.
 %
 % (<verb-wall> & BI+): "The question is who we should invite?"
+% (<verb-wall> & OF+): "The are of a single mind."
 % [{CV-} & B**t-]: "How fast a program does he think it is?"
 % CV- optional to parse: "How efficient a program is it?"
 % O*i+ & R+ & Bs+ & <verb-wall>: "I believe it was John"
@@ -2668,7 +2669,7 @@ hadn't.v-d hadn’t.v-d:
       ([{CV-} & B**t-]
       or [K+]
       or (<verb-wall> & BI+)
-      or OF+
+      or (<verb-wall> & OF+)
       or PF-
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
