@@ -81,7 +81,7 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 		 */
 		len = utf8_strlen(linkage->word[i]);
 		center_t = tot + (len/2);
-		if (i > start_word+1)
+		if (i > start_word)
 			center[i] = MAX(center_t, center[i-1] + link_len[i] + 1);
 		else
 			center[i] = center_t;
