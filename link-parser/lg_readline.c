@@ -22,6 +22,9 @@
  * the unicode angle-brackets. 
  */
 
+#include <stdbool.h>
+#include <stdlib.h>
+
 #include "lg_readline.h"
 
 #ifdef HAVE_EDITLINE
@@ -31,17 +34,13 @@
 
 #ifdef HAVE_WIDECHAR_EDITLINE
 
-#include <stdbool.h>
-#include <stdlib.h>
-
 static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
 {
 	return wc_prompt;
 }
 
-
-char *lg_readline(const char *mb_prompt)
+char *lg_readline(const char *mb_prompt, bool nohistory)
 {
 	static bool is_init = false;
 	static HistoryW *hist = NULL;
@@ -93,7 +92,7 @@ char *lg_readline(const char *mb_prompt)
 		return NULL;
 	}
 
-	if (1 < numc)
+	if (1 < numc && !nohistory)
 	{
 		history_w(hist, &ev, H_ENTER, wc_line);
 		history_w(hist, &ev, H_SAVE, HFILE);
@@ -116,12 +115,12 @@ char *lg_readline(const char *mb_prompt)
 
 #include <editline/readline.h>
 
-char *lg_readline(const char *prompt)
+char *lg_readline(const char *prompt, bool nohistory)
 {
 	char * pline = readline(prompt);
 
 	/* Save non-blank lines */
-   if (pline && *pline)
+   if (pline && *pline && !nohistory)
    {
       if (*pline) add_history(pline);
    }

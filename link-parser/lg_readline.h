@@ -10,5 +10,5 @@
 /***************************************************************************/
 
 #ifdef HAVE_EDITLINE
-char *lg_readline(const char *mb_prompt);
+char *lg_readline(const char *, bool);
 #endif /* HAVE_EDITLINE */
