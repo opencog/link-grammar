@@ -22,6 +22,9 @@
  * the unicode angle-brackets. 
  */
 
+#include <stdbool.h>
+#include <stdlib.h>
+
 #include "lg_readline.h"
 
 #ifdef HAVE_EDITLINE
@@ -31,17 +34,13 @@
 
 #ifdef HAVE_WIDECHAR_EDITLINE
 
-#include <stdbool.h>
-#include <stdlib.h>
-
 static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
 {
 	return wc_prompt;
 }
 
-
-char *lg_readline(const char *mb_prompt)
+char *lg_readline(const char *mb_prompt, bool nohistory)
 {
 	static bool is_init = false;
 	static HistoryW *hist = NULL;
@@ -65,17 +64,17 @@ char *lg_readline(const char *mb_prompt)
 		mbstowcs(wc_prompt, mb_prompt, sz);
 
 		hist = history_winit();    /* Init built-in history */
-		history_w(hist, &ev, H_SETSIZE, 20);  /* Remember 20 events */
-		history_w(hist, &ev, H_LOAD, HFILE);
 		el = el_init("link-parser", stdin, stdout, stderr);
+		history_w(hist, &ev, H_SETSIZE, 20);   /* Remember 20 events */
+		el_wset(el, EL_HIST, history_w, hist);
+		el_source(el, NULL);       /* Source the user's defaults file. */
+		history_w(hist, &ev, H_LOAD, HFILE);
 
 		/* By default, it comes up in vi mode, with the editor not in
 		 * insert mode; and even when in insert mode, it drops back to
 		 * command mode at the drop of a hat. Totally confusing/lame. */
 		el_wset(el, EL_EDITOR, L"emacs");
-		el_wset(el, EL_HIST, history_w, hist);
 		el_wset(el, EL_PROMPT_ESC, prompt, '\1'); /* Set the prompt function */
-		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
 	wc_line = el_wgets(el, &numc);
@@ -93,7 +92,7 @@ char *lg_readline(const char *mb_prompt)
 		return NULL;
 	}
 
-	if (1 < numc)
+	if (1 < numc && !nohistory)
 	{
 		history_w(hist, &ev, H_ENTER, wc_line);
 		history_w(hist, &ev, H_SAVE, HFILE);
@@ -116,12 +115,12 @@ char *lg_readline(const char *mb_prompt)
 
 #include <editline/readline.h>
 
-char *lg_readline(const char *prompt)
+char *lg_readline(const char *prompt, bool nohistory)
 {
 	char * pline = readline(prompt);
 
 	/* Save non-blank lines */
-   if (pline && *pline)
+   if (pline && *pline && !nohistory)
    {
       if (*pline) add_history(pline);
    }
