@@ -881,9 +881,26 @@ percent.u:
 % ({NM+} & {Ss+} & Wd-): "Hypothesis 2: The door on the left hides the prize."
 % "Problem: How do you convince your customer that you are on the right path?"
 %
+<Dsv>: Ds**v- or Ds**x-;
+<Dsc>: Ds**c- or Ds**x-;
+
 argument.n impression.n allegation.n announcement.n assertion.n
 accusation.n idea.n assumption.n implication.n
-indication.n inkling.n amount.n answer.n
+indication.n inkling.n amount.n answer.n:
+  <noun-modifiers> & (
+    AN+
+    or (<Dsv> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+      (<noun-main2-s> or
+      (Ss*t+ & <CLAUSE>) or
+      SIs*t- or
+      <rel-clause-s>))
+    or ({<Dsv>} & <noun-and-s>)
+    or SJrs-
+    or (YS+ & <Dsv>)
+    or ({NM+} & {Ss+} & Wd-)
+    or (GN+ & (DD- or [()]))
+    or Us-);
+
 report.n sign.n conclusion.n complaint.n position.n restriction.n
 notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
 problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
@@ -893,14 +910,14 @@ proposition.n prospect.n presupposition.n supposition.n finding.n
 crux.n shame.n thing.n bet.n guess.n:
   <noun-modifiers> & (
     AN+
-    or (Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+    or (<Dsc> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
       <rel-clause-s>))
-    or ({Ds-} & <noun-and-s>)
+    or ({<Dsc>} & <noun-and-s>)
     or SJrs-
-    or (YS+ & Ds-)
+    or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
     or Us-);
