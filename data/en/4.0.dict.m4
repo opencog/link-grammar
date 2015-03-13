@@ -890,17 +890,16 @@ percent.u:
 % ({NM+} & {Ss+} & Wd-): "Hypothesis 2: The door on the left hides the prize."
 % "Problem: How do you convince your customer that you are on the right path?"
 %
-argument.n report.n sign.n impression.n conclusion.n complaint.n
-allegation.n announcement.n position.n restriction.n notion.n
-remark.n assertion.n proclamation.n reassurance.n saying.n
-accusation.n possibility.n idea.n problem.n claim.n result.n
-statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
-message.n premonition.n 
-prerequisite.n prereq.n pre-req.n pre-requisite.n
-corequisite.n co-requisite.n coreq.n co-req.n
-indication.n truism.n fallacy.n
-proposition.n prospect.n presupposition.n inkling.n supposition.n
-finding.n amount.n answer.n crux.n shame.n thing.n bet.n guess.n:
+argument.n impression.n allegation.n announcement.n assertion.n
+accusation.n idea.n assumption.n implication.n
+indication.n inkling.n amount.n answer.n
+report.n sign.n conclusion.n complaint.n position.n restriction.n
+notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
+problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
+message.n premonition.n prerequisite.n prereq.n pre-req.n pre-requisite.n
+corequisite.n co-requisite.n coreq.n co-req.n truism.n fallacy.n
+proposition.n prospect.n presupposition.n supposition.n finding.n
+crux.n shame.n thing.n bet.n guess.n:
   <noun-modifiers> & (
     AN+
     or (Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
