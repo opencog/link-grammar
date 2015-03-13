@@ -1064,9 +1064,13 @@ Exp* add_empty_word(Dictionary const dict, Exp_list * eli, Dict_node * dn)
 
 /* ======================================================================== */
 
-/** Return true if the string is a (floating point) number */
+/**
+ * Return true if the string is a (floating point) number.
+ * Float points can be preceeded by a single plus or minus sign.
+ */
 static bool is_number(const char * str)
 {
+	if ('+' == str[0] || '-' == str[0]) str++;
 	if (strspn(str, "0123456789.") == strlen(str))
 		return true;
 
