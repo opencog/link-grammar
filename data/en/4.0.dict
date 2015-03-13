@@ -906,7 +906,7 @@ indication.n inkling.n amount.n answer.n:
     or (GN+ & (DD- or [()]))
     or Us-);
 
-% consonant-only form.
+% consonant-only form of the above.
 report.n sign.n conclusion.n complaint.n position.n restriction.n
 notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
 problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
@@ -928,14 +928,28 @@ crux.n shame.n thing.n bet.n guess.n:
     or (GN+ & (DD- or [()]))
     or Us-);
 
-proof.n doubt.n suspicion.n hope.n knowledge.n relief.n
-disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
-concern.n philosophy.n risk.n threat.n understanding.n conviction.n theory.n
-assurance.n speculation.n awareness.n news.n opinion.n belief.n
-contention.n thought.n myth.n discovery.n rumor.n probability.n fact.n
-explanation.n feeling.n comment.n expectation.n perception.n sense.n
-realization.n view.n insistence.n consensus.n notification.n rule.n
-danger.n warning.n suggestion.n:
+% Vowel form of the below
+acknowledgment.n acknowledgement.n understanding.n assurance.n
+awareness.n opinion.n explanation.n expectation.n insistence.n:
+  (<noun-modifiers> &
+    (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+      (<noun-main2-m> or
+      (Ss*t+ & <CLAUSE>) or
+      SIs*t- or
+      <rel-clause-s>)) or
+    ({D*u-} & <noun-and-u>) or
+    Us- or
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])))) or
+  AN+;
+
+% Consonant for of the above.
+proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
+fear.n principle.n concern.n philosophy.n risk.n threat.n conviction.n
+theory.n speculation.n news.n belief.n contention.n thought.n myth.n
+discovery.n rumor.n probability.n fact.n feeling.n comment.n
+perception.n sense.n realization.n view.n consensus.n notification.n
+rule.n danger.n warning.n suggestion.n:
   (<noun-modifiers> &
     (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
