@@ -539,6 +539,7 @@ HYPHENATED-WORDS.n:
 % position 1 can be s, m for singular, mass
 % position 2 can be c for count, u for uncountable
 % position 3 can be k,m,y for comparatives, w for questions.
+% position 4 can be c for consonant, v for vowel, x for long-distance.
 
 % words.n.1-vowel words.n.1-const: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n
@@ -1511,9 +1512,9 @@ any:
 % The plain [()]0.1 allows stupid users to write "a apple" "an banana"
 % without utterly, miserably failing.  The cost is very low, right now,
 % because not everything has been sorted into vowels & consonants.
-% XXX FIXME Someday, remove the [()]0.1 entirely to force agreement.
-<PHc> : PHc+ or [()]0.1;
-<PHv> : PHv+ or [()]0.1;
+% XXX FIXME Someday, remove the [()]0.2 entirely to force agreement.
+<PHc> : PHc+ or [()]0.2;
+<PHv> : PHv+ or [()]0.2;
 % 
 % XXX why doesn't this clash with a.eq ??
 a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
