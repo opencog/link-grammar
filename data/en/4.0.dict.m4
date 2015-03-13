@@ -893,6 +893,7 @@ percent.u:
 <Dsv>: Ds**v- or Ds**x-;
 <Dsc>: Ds**c- or Ds**x-;
 
+% Vowel-only form
 argument.n impression.n allegation.n announcement.n assertion.n
 accusation.n idea.n assumption.n implication.n
 indication.n inkling.n amount.n answer.n:
@@ -910,6 +911,7 @@ indication.n inkling.n amount.n answer.n:
     or (GN+ & (DD- or [()]))
     or Us-);
 
+% consonant-only form.
 report.n sign.n conclusion.n complaint.n position.n restriction.n
 notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
 problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
@@ -1534,13 +1536,24 @@ any:
 
 % PHc+ : must link to consonant immediately to the right
 % PHv+ : must link to vowel immediately to the right
-% The plain [()]0.1 allows stupid users to write "a apple" "an banana"
+% The plain [()]0.2 allows stupid users to write "a apple" "an banana"
 % without utterly, miserably failing.  The cost is very low, right now,
 % because not everything has been sorted into vowels & consonants.
+%
+% A lot of work is needed to make this really work correctly.  In
+% particular, the wat <noun-modifiers> works needs to be redesigned.
+% That is, if a noun uses (A- & Ds-) then it should be (A- & Ds**x-)
+% but if the A- is not there, but the Ds is, then it must have either
+% Ds**c or Ds**v. it will take a lot of work to restructure to do this.
+% What a pain...  The quasi-alternative is to say: if PH is allowed,
+% then it is preferred i.e. PH- has a negative cost.
+%
 % XXX FIXME Someday, remove the [()]0.2 entirely to force agreement.
 <PHc> : PHc+ or [()]0.2;
 <PHv> : PHv+ or [()]0.2;
-% 
+<wantPHc>: [PHc-]-0.1 or ();
+<wantPHv>: [PHv-]-0.1 or ();
+%
 % XXX why doesn't this clash with a.eq ??
 a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
@@ -2416,7 +2429,7 @@ per "/.per": Us+ & Mp-;
 % Or maybe lower the cost here?  We already have a 0.2 case, below...
 % XXX TODO: do the above, as they show up...
 %
-% plural-or-infinitive macro; 
+% plural-or-infinitive macro;
 % "Scientists sometimes may repeat experiments or use groups."
 %   Want "groups" to connect to "use", not "and".
 define(`VERB_PLI',`'
@@ -2946,7 +2959,7 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
   (<verb-x-s> & <vc-be>)
   or (EQ*r- & {S-} & <verb-wall> & EQ*r+)
   or (EQ*r-
-     & {Xd-} 
+     & {Xd-}
      & ([O+] or ({EQ*r-} & EQ*r+ & {Xc+}))
      & (MX- or MVa-));
 
@@ -3382,7 +3395,7 @@ beset.v mistaken.v underwritten.v:
 
 % Unlikely transitive verb. Here, we single out 'frankk', as that is a
 % rare verb, and it causes conflicts witht the given name 'Frank.b'.
-% For example: "Frank felt vindicated". 
+% For example: "Frank felt vindicated".
 <vc-trans-unlikely>:
   ([O+]1.5
    or <b-minus>
