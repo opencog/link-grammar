@@ -58,7 +58,7 @@ changecom(`%')
  % remain, below.
 
 % The empty word is a used in the 2D array used by the parser,
-% in "word slots" in which "no word" is a possibility to consider. 
+% in "word slots" in which "no word" is a possibility to consider.
 % When the Wordgraph is converted ("falttened") to this 2D array,
 % empty words are issued whenever needed.
 % FIXME: A better comment maybe.
@@ -71,8 +71,8 @@ EMPTY-WORD.zzz: ZZZ-;
 % TODO: Add ' and ` also as quotation marks.
 % For a list see:
 % http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-« 《 【 『 ` „: ZZZ-; 
-» 》 】 』 ` “: ZZZ-; 
+« 《 【 『 ` „: ZZZ-;
+» 》 】 』 ` “: ZZZ-;
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 """: ZZZ-;
@@ -219,13 +219,13 @@ nonCAP.zzz: ZZZ-;
 % and we want to use the adjective version A- link in such cases.
 % [@AN- & @A-] has cost so that G links are prefered.
 % {[@AN-].1} & {@A- & {[[@AN-]]}};
-<noun-modifiers>: 
+<noun-modifiers>:
   (@A- & {[[@AN-]]})
   or [@AN-]0.1
   or ([[@AN-].1 & @A-] & {[[@AN-]]})
   or ();
 
-<nn-modifiers>: 
+<nn-modifiers>:
   (@A- & {[[@AN-]]})
   or [@AN-]0.1
   or ([[@AN-].1 & @A-] & {[[@AN-]]});
@@ -473,7 +473,7 @@ Art..x art..x RR..x RR.x rr..x :
 % Explicitly include the period at the end of the abbreviation.
 Adj..x Adm..x Adv..x Asst..x Atty..x Bart..x Bldg..x Brig..x Bros..x Capt..x Cie..x
 Cmdr..x Col..x Comdr..x Con..x Corp..x Cpl..x DR..x Dr..x Drs..x Ens..x Ft..x
-Gen..x Gov..x Hon..x Hr..x Hosp..x HMS..x Insp..x Lieut..x Lt..x MM..x MR..x MRS..x 
+Gen..x Gov..x Hon..x Hr..x Hosp..x HMS..x Insp..x Lieut..x Lt..x MM..x MR..x MRS..x
 MS..x Maj..x Messrs..x Mlle..x Mme..x Mr..x Mrs..x Ms..x Msgr..x Mt..x Op..x
 Ord..x Pfc..x Ph..x Prof..x Pvt..x Rep..x Reps..x Res..x Rev..x Rt..x
 Sen..x Sens..x Sfc..x Sgt..x Sr..x St..x Supt..x Surg..x:
@@ -482,7 +482,7 @@ Sen..x Sens..x Sfc..x Sgt..x Sr..x St..x Supt..x Surg..x:
 % Period is missing in the abbreviation! Accept, but with a cost.
 Adj.x Adm.x Adv.x Asst.x Atty.x Bart.x Bldg.x Brig.x Bros.x Capt.x Cie.x
 Cmdr.x Col.x Comdr.x Con.x Corp.x Cpl.x DR.x Dr.x Drs.x Ens.x Ft.x
-Gen.x Gov.x Hon.x Hr.x Hosp.x HMS.x Insp.x Lieut.x Lt.x MM.x MR.x MRS.x 
+Gen.x Gov.x Hon.x Hr.x Hosp.x HMS.x Insp.x Lieut.x Lt.x MM.x MR.x MRS.x
 MS.x Maj.x Messrs.x Mlle.x Mme.x Mr.x Mrs.x Ms.x Msgr.x Mt.x Op.x
 Ord.x Pfc.x Ph.x Prof.x Pvt.x Rep.x Reps.x Res.x Rev.x Rt.x
 Sen.x Sens.x Sfc.x Sgt.x Sr.x St.x Supt.x Surg.x:
@@ -490,7 +490,7 @@ Sen.x Sens.x Sfc.x Sgt.x Sr.x St.x Supt.x Surg.x:
 
 % Street addresses, company abbreviations
 St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y
-Gr.y Gr..y Ln.y Ln..y Rd.y Rd..y Rt.y Rt..y 
+Gr.y Gr..y Ln.y Ln..y Rd.y Rd..y Rt.y Rt..y
 Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y
@@ -560,7 +560,7 @@ HYPHENATED-WORDS.n:
 % XXX TODO fixme: there are many gerund-like nouns in here (e.g. "reading")
 % which screw things up when linking to "be" (e.g. "I have to be reading now")
 % by appearing as objects (O-) connector when really the verb form (Pg-)
-% is what should be happening. So rip these words out... (similar remarks for 
+% is what should be happening. So rip these words out... (similar remarks for
 % words.n.3)
 <common-noun>:
   <noun-modifiers> &
@@ -698,14 +698,14 @@ good-night.n-u goodnight.n-u welcome.n-u well.n-u:
 tom.n-u: [<marker-common-entity> or <mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.a) and so we don't want to
-% allow these to take AN+ links (we want to have red.a get used instead). 
+% allow these to take AN+ links (we want to have red.a get used instead).
 % But we do need these as nouns, so as to parse 'she prefers red'.
 % However, assign a cost, so that 'her shoes are red' gets red.a (with
 % the Pa link) perfered over red.n (with the O link).
 %
 % Doesn't seem to need a noun-and-x to make this work ...
 % In other respects, these are kind-of-like mass nouns...
-auburn.n black.n blue.n brown.n green.n gray.n ochre.n 
+auburn.n black.n blue.n brown.n green.n gray.n ochre.n
 pink.n purple.n red.n
 tawny.n ultramarine.n umber.n yellow.n:
   <marker-common-entity>
@@ -759,9 +759,9 @@ modus_vivendi head_of_state tour_de_force:
     (GN+ & (DD- or [()])))) or
   AN+;
 
-kung_fu joie_de_vivre op_art noblesse_oblige force_majeure 
+kung_fu joie_de_vivre op_art noblesse_oblige force_majeure
 lese_majesty lese_majeste lèse_majesty lèse_majesté lèse-majesté leze_majesty
-a_must time_of_day time_of_year top_dollar year_end 
+a_must time_of_day time_of_year top_dollar year_end
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
 carte_blanche:
   (<noun-modifiers> &
@@ -1299,7 +1299,7 @@ its my.p your their our thy:
 % Wa-: "You!"
 % Ds+: "you asshole!"
 you:
-  Wa-  or J- or Ox- 
+  Wa-  or J- or Ox-
   or (Sp+ & <CLAUSE>)
   or SIp-
   or SJlp+
@@ -1312,7 +1312,7 @@ thou: Sp+ & <CLAUSE>;
 Y' y' y'all: Sp+ & <CLAUSE>;
 
 % basilect you
-% Pg+: "yo leavin' already?" verb "are" is missing.  
+% Pg+: "yo leavin' already?" verb "are" is missing.
 yo: J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
   or (<CLAUSE> & Pg+);
 
@@ -4490,7 +4490,7 @@ over_with: <verb-pv-b>;
 
 % <vc-trans> with particle
 % and also Pa**j for "The witch turned him green"
-<vc-turn>: 
+<vc-turn>:
   ((O+
     or (K+ & {[[@MV+]]} & O*n+)
     or ({O+ or <b-minus>} & {K+})
@@ -4568,7 +4568,7 @@ disposing.g conceiving.g: (<vc-dispose> & <verb-ge>) or <verb-ge-d>;
 disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
 
 % <vc-trans> plus particle
-<vc-speak>: 
+<vc-speak>:
   ((K+ & {[[@MV+]]} & O*n+)
     or ({O+ or <b-minus>} & {K+})
     or [[@MV+ & O*n+]]
@@ -4679,7 +4679,7 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
   ((O+ or <b-minus>) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+))))
   or ((<vc-ditrans>
     or (K+ & {[[@MV+]]} & O*n+)
-    or K+ 
+    or K+
     or (<b-minus> & O+)
     ) & {@MV+})
   or ({@MV+} & (Pa+ or AF- or Pp+ or <to-verb>));
@@ -5400,7 +5400,7 @@ using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 elect.v appoint.v: VERB_PLI(<vc-elect>);
 elects.v appoints.v: VERB_S_T(<vc-elect>);
 elected.v-d appointed.v-d:
-  VERB_SPPP_T(<vc-elect>) 
+  VERB_SPPP_T(<vc-elect>)
   or (<verb-pv-b> & (({O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]]} & {@MV+}) or ({@MV+} & <to-verb>)))
   or (({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} or ({@MV+} & <to-verb>)) & <verb-phrase-opener>)
   or <verb-adj>;
@@ -5473,7 +5473,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % (QI+ & {MV+}): "I did not tell why until recently"
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
-% 
+%
 <vc-tell>:
   (((O+ & {O*n+ or K+}) or <b-minus>)
      & {@MV+} & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
@@ -5934,7 +5934,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
     [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-paraph-inv>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) 
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>)
       & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
     or [(Xc+ or Xe+) & <embed-verb>]);
 
@@ -5950,7 +5950,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.10.2:
   [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
 
-% XXX Why is there a cost on Pvf- ??? 
+% XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
   {@E-} & (
     ((S- or PP-) & <vc-paraph>)
@@ -6149,7 +6149,7 @@ about:
   or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
-% XXX is this really needed ?? Seems to duplicate other stuff .. 
+% XXX is this really needed ?? Seems to duplicate other stuff ..
 just_about nearly_about almost_about right_about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EW+;
@@ -7180,7 +7180,7 @@ and.j-g: [G- & G+]0.05;
 and.j-a but.j-a yet.j-a and_yet:
   ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-) & {<tot-verb>};
 
-% XJo-: either ... or ... 
+% XJo-: either ... or ...
 or.j-a:
   ({Xd-} & AJla- & {XJo-} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
@@ -7325,7 +7325,7 @@ or.j-n:
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
-% XJn-" "neither this nor that"  
+% XJn-" "neither this nor that"
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
 %     a cost only because its a kind of a strange construction ...
 % SJl- & SJr+ & SJl+: cascading nor's: "Neither snow nor rain nor heat..."
@@ -7541,7 +7541,7 @@ HYPHENATED-WORDS.a:
     or <adj-op>);
 
 % pinkish brownish not in this list as they can't take the modifiers.
-auburn.a black.a blue.a blueberry.a 
+auburn.a black.a blue.a blueberry.a
 brown.a green.a gray.a grey.a lime.a
 ochre.a orange.a pink.a purple.a
 rasberry.a raspberry.a red.a
@@ -8705,7 +8705,7 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course 
+hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course
 oh_no oh_my oh_dear dear.ij Lordy
 yikes ouch my.ij my_oh_my my_my my_my_my tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
@@ -8723,11 +8723,11 @@ sonuvabitch aw aww awww oh_great oh_wow:
   or <directive-opener>
   or Wa-;
 
-% A single plain hello all by itself.  Costly, because these days, 
+% A single plain hello all by itself.  Costly, because these days,
 % its not normally a sentence opener.
 % Vv-:  "I said, hello!"
 % Ds- & Jv-: "He greeted me with a loud hello"
-% Perhaps these should also appear as nouns? hello.n does ... 
+% Perhaps these should also appear as nouns? hello.n does ...
 hello.ij hello_there hallo halloo hollo hullo hillo hi
 ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
   [<directive-opener>]
@@ -8792,7 +8792,7 @@ in_brief in_short in_sum in_essence:
 ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+);
 furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+) or EB-;
 mainly primarily:
-  E+ 
+  E+
   or ({Xc+ & {Xd-}} & CO+)
   or EB-
   or (MVl- & (MVa+ or MVp+ or MVs+));
@@ -8883,7 +8883,7 @@ EMOTICON :
   or Xi-;
 
 % Cost on Xc- because Xc is intended for commas, not periods.
-% Without this cost, lists, such as "Paris, London and Berlin." 
+% Without this cost, lists, such as "Paris, London and Berlin."
 % get linked incorrectly with the MX link.
 ".": ((Xp- or ({@Xca-} & [[Xc-]])) & RW+) or Xi-;
 
@@ -8892,7 +8892,7 @@ EMOTICON :
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
 % a semicolon. -- looks a lot like LEFT-WALL  We do need Wa for comma's
 <semicol>:
-  {@Xca-} & Xx- 
+  {@Xca-} & Xx-
     & (((Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+) & <WALL>)
       or (Wa+ or Wi+ or Ww+ or Qd+))
     & {Xx+};
