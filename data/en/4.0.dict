@@ -931,17 +931,17 @@ crux.n shame.n thing.n bet.n guess.n:
 % Vowel form of the below
 acknowledgment.n acknowledgement.n understanding.n assurance.n
 awareness.n opinion.n explanation.n expectation.n insistence.n:
-  (<noun-modifiers> &
-    (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
-      (<noun-main2-m> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
-      <rel-clause-s>)) or
-    ({D*u-} & <noun-and-u>) or
-    Us- or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])))) or
-  AN+;
+  (<noun-modifiers> & (
+    ({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
+      <noun-main2-m>
+      or (Ss*t+ & <CLAUSE>)
+      or SIs*t-
+      or <rel-clause-s>))
+    or ({D*u-} & <noun-and-u>)
+    or Us-
+    or (YS+ & {D*u-})
+    or (GN+ & (DD- or [()]))))
+  or AN+;
 
 % Consonant for of the above.
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
@@ -950,17 +950,17 @@ theory.n speculation.n news.n belief.n contention.n thought.n myth.n
 discovery.n rumor.n probability.n fact.n feeling.n comment.n
 perception.n sense.n realization.n view.n consensus.n notification.n
 rule.n danger.n warning.n suggestion.n:
-  (<noun-modifiers> &
-    (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
-      (<noun-main2-m> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
-      <rel-clause-s>)) or
-    ({D*u-} & <noun-and-u>) or
-    Us- or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])))) or
-  AN+;
+  (<noun-modifiers> & (
+    ({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
+      <noun-main2-m>
+      or (Ss*t+ & <CLAUSE>)
+      or SIs*t-
+      or <rel-clause-s>))
+    or ({D*u-} & <noun-and-u>)
+    or Us-
+    or (YS+ & {D*u-})
+    or (GN+ & (DD- or [()]))))
+  or AN+;
 
 evidence.n reasoning.n likelihood:
   (<noun-modifiers> &
