@@ -671,14 +671,18 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
     or (YS+ & {Dmu-})
     );
 
+% If PH is possible, then it is preferred. See PH below for explanation.
+<wantPHc>: [PHc-]-0.1 or ();
+<wantPHv>: [PHv-]-0.1 or ();
+
 <mass-vowel-noun>:
   <mass-phonetic>
-  or (AN+ & {PHv-})
+  or (AN+ & <wantPHv>)
   or (<nn-modifiers> & AN+);
 
 <mass-const-noun>:
   <mass-phonetic>
-  or (AN+ & {PHc-})
+  or (AN+ & <wantPHc>)
   or (<nn-modifiers> & AN+);
 
 % nouns that are mass only
@@ -1551,8 +1555,6 @@ any:
 % XXX FIXME Someday, remove the [()]0.2 entirely to force agreement.
 <PHc> : PHc+ or [()]0.2;
 <PHv> : PHv+ or [()]0.2;
-<wantPHc>: [PHc-]-0.1 or ();
-<wantPHv>: [PHv-]-0.1 or ();
 %
 % XXX why doesn't this clash with a.eq ??
 a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
@@ -7491,10 +7493,10 @@ n't n’t: N- or EB-;
 
 % PH-: connect, phonetically, to a/an if it is there.
 <ordinary-vowel-adj>:
-  <ordinary-adj> & {PHv-};
+  <ordinary-adj> & <wantPHv>;
 
 <ordinary-const-adj>:
-  <ordinary-adj> & {PHc-};
+  <ordinary-adj> & <wantPHc>;
 
 /en/words/words.adj.1-vowel :
   <marker-common-entity> or
@@ -7559,7 +7561,7 @@ tawny.a ultramarine.a umber.a yellow.a:
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]]);
 
-done.c gone.c through.c: <adj-stuff> & {PHc-};
+done.c gone.c through.c: <adj-stuff> & <wantPHc>;
 
 responsible.a accountable.a:
   {EA- or EF+} &
@@ -7572,19 +7574,19 @@ responsible.a accountable.a:
     <adj-op>);
 
 long.a:
-  (<ordinary-adj> & {PHc-})
+  (<ordinary-adj> & <wantPHc>)
   or ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+))
   or (H- & (BT+ or Yt+));
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
 wide.a tall.a deep.a distant.a:
-  (<ordinary-adj> & {PHc-})
+  (<ordinary-adj> & <wantPHc>)
   or (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+})
   or (Ya- & {@MV+} & MJla+);
 
 old.a:
-  (<ordinary-adj> & {PHv-})
+  (<ordinary-adj> & <wantPHv>)
   or (Ytm- & (Pa- or Ma- or <adj-op> or MJra- or MJla+));
 
 % ??? adj-op already has MX*a- in it, why do we need a bare MX- here ?
@@ -7611,7 +7613,7 @@ easy.a hard.a simple.a difficult.a fun.a expensive.a:
 % Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
   {EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+ & {PHc-})
+    ({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <to-verb>) & {LE+}} & MJla+)
     or AA+
@@ -7622,7 +7624,7 @@ ready.a:
 
 silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+ & {PHc-})
+    (({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
@@ -7633,7 +7635,7 @@ silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
 % Identical to above, but starts with vowel
 unpleasant.a illegal.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+ & {PHv-})
+    (({[[@Ec-]]} & {Xc+} & A+ & <wantPHv>)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
@@ -7653,21 +7655,21 @@ unpleasant.a illegal.a:
 
 good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
 tough.a:
-  <adj-good> & {PHc-};
+  <adj-good> & <wantPHc>;
 
 unusual.a useful.a impossible.a annoying.a unfair.a :
-  <adj-good> & {PHv-};
+  <adj-good> & <wantPHv>;
 
 a_bitch :
   <adj-good>;
 
-great.a: <marker-common-entity> or (<adj-good> & {PHc-});
+great.a: <marker-common-entity> or (<adj-good> & <wantPHc>);
 
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
   <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+ & {PHv-})
+    (({[[@Ec-]]} & {Xc+} & A+ & <wantPHv>)
     or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
     or AA+
@@ -7679,7 +7681,7 @@ important.a essential.a imperative.a:
 crucial.a necessary.a vital.a:
   <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+ & {PHc-})
+    (({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
     or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
     or AA+
