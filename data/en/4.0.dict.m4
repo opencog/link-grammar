@@ -2757,9 +2757,11 @@ hadn't.v-d hadn’t.v-d:
 <vc-be-obj-u>:
   {@EBm+} & Out+ & {@MV+};
 
-<vc-be>:    <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
-<vc-be-sp>: <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
-<vc-be-and>:<vc-be-no-obj-no-wall> or <vc-be-obj>;
+<vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
+<vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
+<vc-be-no-wall>: <vc-be-no-obj-no-wall> or <vc-be-obj>;
+<vc-be-and>:     <vc-be-no-wall>;
+
 
 % Colon can be used as a synonym for "is"
 % "The answer to your question: yes"
@@ -2772,11 +2774,12 @@ hadn't.v-d hadn’t.v-d:
 % and has to be removed via post-processing.
 % EQ: "Everyone knows that 2 + 2 is 4"
 % <verb-rq> & (SIs+ or SFIs+):  "Is it in place?")
+% It does not use a wall, because Qd connects to the wall already.
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>})
+  or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be-no-wall>})
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
 % Similar to above, but no S-O inversion, and no equation.
