@@ -37,16 +37,6 @@ static Parse_set * dummy_set(void)
 	return &ds;
 }
 
-/** Returns an empty set of parses */
-static inline Parse_set * empty_set(void)
-{
-	Parse_set *s;
-	s = (Parse_set *) xalloc(sizeof(Parse_set));
-	s->first = s->current = NULL;
-	s->count = 0;
-	return s;
-}
-
 static void free_set(Parse_set *s)
 {
 	Parse_choice *p, *xp;
@@ -55,7 +45,6 @@ static void free_set(Parse_set *s)
 		xp = p->next;
 		xfree((void *)p, sizeof(*p));
 	}
-	xfree((void *)s, sizeof(*s));
 }
 
 static Parse_choice *
@@ -151,10 +140,10 @@ void free_parse_info(Parse_info pi)
 
 	for (i=0; i<pi->x_table_size; i++)
 	{
-		for(t = pi->x_table[i]; t!= NULL; t=x)
+		for (t = pi->x_table[i]; t!= NULL; t=x)
 		{
 			x = t->next;
-			free_set(t->set);
+			free_set(&t->set);
 			xfree((void *) t, sizeof(X_table_connector));
 		}
 	}
@@ -196,7 +185,9 @@ static X_table_connector * x_table_store(int lw, int rw,
 	unsigned int h;
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
-	n->set = empty_set();
+	n->set.first = NULL;
+	n->set.current = NULL;
+	n->set.count = 0;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
 	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
 	t = pi->x_table[h];
@@ -263,22 +254,22 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	xt = x_table_pointer(lw, rw, le, re, null_count, pi);
 
-	if (xt != NULL) return xt->set;  /* we've already computed it */
+	if (xt != NULL) return &xt->set;  /* we've already computed it */
 
 	/* Start it out with the empty set of options. */
 	/* This entry must be updated before we return. */
 	xt = x_table_store(lw, rw, le, re, null_count, pi);
 
-	xt->set->count = count->total;  /* the count we already computed */
+	xt->set.count = count->total;  /* the count we already computed */
 	/* this count is non-zero */
 
-	if (rw == 1 + lw) return xt->set;
+	if (rw == 1 + lw) return &xt->set;
 
 	if ((le == NULL) && (re == NULL))
 	{
-		if (!islands_ok && (lw != -1)) return xt->set;
+		if (!islands_ok && (lw != -1)) return &xt->set;
 
-		if (null_count == 0) return xt->set;
+		if (null_count == 0) return &xt->set;
 
 		w = lw + 1;
 		for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
@@ -291,7 +282,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 				                       rs[0], w, rw, NULL, NULL,
 				                       NULL, NULL, NULL);
-				put_choice_in_set(xt->set, a_choice);
+				put_choice_in_set(&xt->set, a_choice);
 			}
 		}
 		rs[0] = mk_parse_set(sent, mchxt, ctxt, NULL, NULL, w, rw, NULL, NULL,
@@ -301,9 +292,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 			                       rs[0], w, rw, NULL, NULL,
 			                       NULL, NULL, NULL);
-			put_choice_in_set(xt->set, a_choice);
+			put_choice_in_set(&xt->set, a_choice);
 		}
-		return xt->set;
+		return &xt->set;
 	}
 
 	if (le == NULL)
@@ -332,7 +323,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	for (w = start_word; w < end_word; w++)
 	{
 		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next)
+		for (; m != NULL; m = m->next)
 		{
 			d = m->d;
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
@@ -373,7 +364,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 						a_choice = make_choice(ls[i], lw, w, le, d->left,
 						                       rs[j], w, rw, d->right, re,
 						                       ld, d, rd);
-						put_choice_in_set(xt->set, a_choice);
+						put_choice_in_set(&xt->set, a_choice);
 					}
 				}
 
@@ -392,7 +383,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 							         rset, w, rw, NULL /* d->right */,
 							         re,  /* the NULL indicates no link*/
 							         ld, d, rd);
-							put_choice_in_set(xt->set, a_choice);
+							put_choice_in_set(&xt->set, a_choice);
 						}
 					}
 				}
@@ -413,7 +404,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 							          d->left,  /* NULL indicates no link */
 							          rs[i], w, rw, d->right, re,
 							          ld, d, rd);
-							put_choice_in_set(xt->set, a_choice);
+							put_choice_in_set(&xt->set, a_choice);
 						}
 					}
 				}
@@ -421,15 +412,16 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		}
 		put_match_list(mchxt, m1);
 	}
-	xt->set->current = xt->set->first;
-	return xt->set;
+	// WTF, how is this not a leak!?
+	xt->set.current = xt->set.first;
+	return &xt->set;
 }
 
 /**
- * return TRUE if and only if overflow in the number of parses occurred.
- * Use a 64-bit int for counting.
+ * Return TRUE if and only if an overflow in the number of parses
+ * occurred. Use a 64-bit int for counting.
  */
-static bool verify_set_node(Parse_set *set)
+static bool set_node_overflowed(Parse_set *set)
 {
 	Parse_choice *pc;
 	s64 n = 0;
@@ -443,17 +435,17 @@ static bool verify_set_node(Parse_set *set)
 	return false;
 }
 
-static bool verify_set(Parse_info pi)
+static bool set_overflowed(Parse_info pi)
 {
 	unsigned int i;
 
-	assert(pi->x_table != NULL, "called verify_set when x_table==NULL");
+	assert(pi->x_table != NULL, "called set_verflowed with x_table==NULL");
 	for (i=0; i<pi->x_table_size; i++)
 	{
 		X_table_connector *t;
-		for(t = pi->x_table[i]; t != NULL; t = t->next)
+		for (t = pi->x_table[i]; t != NULL; t = t->next)
 		{
-			if (verify_set_node(t->set)) return true;
+			if (set_node_overflowed(&t->set)) return true;
 		}
 	}
 	return false;
@@ -491,7 +483,7 @@ bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	sent->parse_info->parse_set = whole_set;
 
-	return verify_set(sent->parse_info);
+	return set_overflowed(sent->parse_info);
 }
 
 static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link * link)

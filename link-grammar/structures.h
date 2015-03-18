@@ -354,7 +354,7 @@ struct X_table_connector_struct
 {
 	short             lw, rw;
 	unsigned short    null_count; /* number of island words */
-	Parse_set         *set;
+	Parse_set         set;
 	Connector         *le, *re;
 	X_table_connector *next;
 };
