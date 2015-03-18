@@ -28,6 +28,7 @@ struct Count_bin_s
 {
 	s64 total;
 	s64 bin[NUM_BINS];
+	s64 overrun;
 };
 
 typedef struct Count_bin_s Count_bin;
