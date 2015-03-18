@@ -197,7 +197,6 @@ static Count_bin do_count(fast_matcher_t *mchxt,
                           int null_count)
 {
 	Count_bin zero = hist_zero();
-	Count_bin one = hist_one();
 	Count_bin total;
 	int start_word, end_word, w;
 	Table_connector *t;
@@ -218,7 +217,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		/* You can't have a linkage here with null_count > 0 */
 		if ((le == NULL) && (re == NULL) && (null_count == 0))
 		{
-			t->count = one;
+			t->count = hist_one();
 		}
 		else
 		{
@@ -240,7 +239,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			{
 				/* If null_block=4 then the null_count of
 				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
-				t->count = one;
+				t->count = hist_one();
 			}
 			else
 			{
@@ -257,20 +256,19 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		}
 		else
 		{
-			Count_bin vtotal = zero;
+			t->count = zero;
 			Disjunct * d;
 			int w = lw + 1;
 			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)
 				{
-					hist_accumv(&vtotal,
+					hist_accumv(&t->count,
 						do_count(mchxt, ctxt, w, rw, d->right, NULL, null_count-1));
 				}
 			}
-			hist_accumv(&vtotal,
+			hist_accumv(&t->count,
 				do_count(mchxt, ctxt, w, rw, NULL, NULL, null_count-1));
-			t->count = vtotal;
 		}
 		return t->count;
 	}
