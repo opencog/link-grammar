@@ -13,6 +13,24 @@
 
 /* A histogram distribution of the parse counts. */
 
+Count_bin hist_zero(void)
+{
+	static Count_bin zero = {0};
+	return zero;
+}
+
+Count_bin hist_one(void)
+{
+	static Count_bin one = {1};
+	return one;
+}
+
+Count_bin hist_bad(void)
+{
+	static Count_bin bad = {-1};
+	return bad;
+}
+
 void hist_accum(Count_bin* sum, Count_bin* a)
 {
 	sum->total += a->total;

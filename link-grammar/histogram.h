@@ -32,6 +32,10 @@ struct Count_bin_s
 
 typedef struct Count_bin_s Count_bin;
 
+Count_bin hist_zero(void);
+Count_bin hist_one(void);
+Count_bin hist_bad(void);
+
 void hist_accum(Count_bin* sum, Count_bin*);
 void hist_accumv(Count_bin* sum, const Count_bin);
 void hist_sum(Count_bin* sum, Count_bin*, Count_bin*);

@@ -165,10 +165,9 @@ Count_bin table_lookup(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int cost)
 {
-	static Count_bin bad = {-1};
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
-	if (t == NULL) return bad; else return t->count;
+	if (t == NULL) return hist_bad(); else return t->count;
 }
 
 /**
@@ -197,8 +196,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
                           Connector *le, Connector *re,
                           int null_count)
 {
-	static Count_bin zero = {0};
-	static Count_bin one = {1};
+	Count_bin zero = hist_zero();
+	Count_bin one = hist_one();
 	Count_bin total;
 	int start_word, end_word, w;
 	Table_connector *t;
@@ -372,8 +371,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 				}
 
-				/* If pseudototal is false, that implies that we know
-				 * that the true total is 0. So we don't bother counting
+				/* If pseudototal is zero, that implies that we know
+				 * that the true total is zero. So we don't bother counting
 				 * at all, in tha case. */
 				if (pseudototal)
 				{
