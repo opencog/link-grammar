@@ -30,7 +30,11 @@ struct Count_bin_s
 
 typedef struct Count_bin_s Count_bin;
 
+void hist_accum(Count_bin* sum, Count_bin*);
+void hist_accumv(Count_bin* sum, const Count_bin);
 void hist_sum(Count_bin* sum, Count_bin*, Count_bin*);
 void hist_prod(Count_bin* prod, Count_bin*, Count_bin*);
+void hist_muladd(Count_bin* prod, Count_bin*, Count_bin*);
+void hist_muladdv(Count_bin* prod, Count_bin*, const Count_bin);
 
 #endif /* _HISTOGRAM_H_ */

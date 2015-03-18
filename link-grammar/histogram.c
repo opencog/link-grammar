@@ -13,6 +13,16 @@
 
 /* A histogram distribution of the parse counts. */
 
+void hist_accum(Count_bin* sum, Count_bin* a)
+{
+	sum->total += a->total;
+}
+
+void hist_accumv(Count_bin* sum, const Count_bin a)
+{
+	sum->total += a.total;
+}
+
 void hist_sum(Count_bin* sum, Count_bin* a, Count_bin* b)
 {
 	sum->total = a->total + b->total;
@@ -21,4 +31,14 @@ void hist_sum(Count_bin* sum, Count_bin* a, Count_bin* b)
 void hist_prod(Count_bin* prod, Count_bin* a, Count_bin* b)
 {
 	prod->total = a->total * b->total;
+}
+
+void hist_muladd(Count_bin* acc, Count_bin* a, Count_bin* b)
+{
+	acc->total += a->total * b->total;
+}
+
+void hist_muladdv(Count_bin* acc, Count_bin* a, const Count_bin b)
+{
+	acc->total += a->total * b.total;
 }
