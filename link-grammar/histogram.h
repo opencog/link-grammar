@@ -40,7 +40,7 @@ void hist_accum(Count_bin* sum, double, const Count_bin*);
 void hist_accumv(Count_bin* sum, double, const Count_bin);
 void hist_sum(Count_bin* sum, const Count_bin*, const Count_bin*);
 void hist_prod(Count_bin* prod, const Count_bin*, const Count_bin*);
-void hist_muladd(Count_bin* prod, const Count_bin*, const Count_bin*);
-void hist_muladdv(Count_bin* prod, const Count_bin*, const Count_bin);
+void hist_muladd(Count_bin* prod, const Count_bin*, double, const Count_bin*);
+void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
 
 #endif /* _HISTOGRAM_H_ */

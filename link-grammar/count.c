@@ -403,18 +403,18 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					}
 
 					/* Total number where links are used on both sides */
-					hist_muladd(&total, &leftcount, &rightcount);
+					hist_muladd(&total, &leftcount, 0.0, &rightcount);
 
 					if (leftcount.total > 0)
 					{
 						/* Evaluate using the left match, but not the right */
-						hist_muladdv(&total, &leftcount,
+						hist_muladdv(&total, &leftcount, d->cost,
 							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 					if ((le == NULL) && (rightcount.total > 0))
 					{
 						/* Evaluate using the right match, but not the left */
-						hist_muladdv(&total, &rightcount,
+						hist_muladdv(&total, &rightcount, d->cost,
 							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 
