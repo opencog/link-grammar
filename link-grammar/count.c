@@ -29,7 +29,7 @@ struct Table_connector_s
 {
 	Table_connector  *next;
 	Connector        *le, *re;
-	s64              count;
+	Count_bin        count;
 	short            lw, rw;
 	unsigned short   cost; /* Cost, here and below, is actually the
 	                        * null-count being considered. */
@@ -118,7 +118,7 @@ static Table_connector * table_store(count_context_t *ctxt,
 	unsigned int h;
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
-	n->count = count;
+	n->count.total = count;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
 	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
@@ -166,7 +166,7 @@ s64 table_lookup(count_context_t * ctxt,
 {
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
-	if (t == NULL) return -1; else return t->count;
+	if (t == NULL) return -1; else return t->count.total;
 }
 
 /**
@@ -194,7 +194,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
-	if (t) return t->count;
+	if (t) return t->count.total;
 
 	/* Create the table entry with a tentative null count of 0. 
 	 * This count must be updated before we return. */
@@ -206,13 +206,13 @@ static s64 do_count(fast_matcher_t *mchxt,
 		/* You can't have a linkage here with null_count > 0 */
 		if ((le == NULL) && (re == NULL) && (null_count == 0))
 		{
-			t->count = 1;
+			t->count.total = 1;
 		}
 		else
 		{
-			t->count = 0;
+			t->count.total = 0;
 		}
-		return t->count;
+		return t->count.total;
 	}
 
 	if ((le == NULL) && (re == NULL))
@@ -228,20 +228,20 @@ static s64 do_count(fast_matcher_t *mchxt,
 			{
 				/* If null_block=4 then the null_count of
 				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
-				t->count = 1;
+				t->count.total = 1;
 			}
 			else
 			{
-				t->count = 0;
+				t->count.total = 0;
 			}
-			return t->count;
+			return t->count.total;
 		}
 		if (null_count == 0)
 		{
 			/* There is no solution without nulls in this case. There is
 			 * a slight efficiency hack to separate this null_count==0
 			 * case out, but not necessary for correctness */
-			t->count = 0;
+			t->count.total = 0;
 		}
 		else
 		{
@@ -256,9 +256,9 @@ static s64 do_count(fast_matcher_t *mchxt,
 				}
 			}
 			total += do_count(mchxt, ctxt, w, rw, NULL, NULL, null_count-1);
-			t->count = total;
+			t->count.total = total;
 		}
-		return t->count;
+		return t->count.total;
 	}
 
 	if (le == NULL)
@@ -370,7 +370,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 					if (INT_MAX < total)
 					{
 						total = INT_MAX;
-						t->count = total;
+						t->count.total = total;
 						put_match_list(mchxt, m1);
 						return total;
 					}
@@ -379,7 +379,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 		}
 		put_match_list(mchxt, m1);
 	}
-	t->count = total;
+	t->count.total = total;
 	return total;
 }
 
