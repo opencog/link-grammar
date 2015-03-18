@@ -13,7 +13,7 @@
 #include "api-structures.h"
 #include "histogram.h" /* for s64 */
 
-s64  table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
+Count_bin table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
 bool do_match(Connector *a, Connector *b, int wa, int wb);
 Count_bin do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
 void delete_unmarked_disjuncts(Sentence sent);

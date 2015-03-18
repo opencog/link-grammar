@@ -161,24 +161,26 @@ find_table_pointer(count_context_t *ctxt,
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
-s64 table_lookup(count_context_t * ctxt, 
-                 int lw, int rw, Connector *le, Connector *re, unsigned int cost)
+Count_bin table_lookup(count_context_t * ctxt,
+                       int lw, int rw, Connector *le, Connector *re,
+                       unsigned int cost)
 {
+	static Count_bin bad = {-1};
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
-	if (t == NULL) return -1; else return t->count.total;
+	if (t == NULL) return bad; else return t->count;
 }
 
 /**
- * Returns 0 if and only if this entry is in the hash table 
+ * Returns 0 if and only if this entry is in the hash table
  * with a count value of 0.
  */
 static s64 pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int cost)
 {
-	s64 count = table_lookup(ctxt, lw, rw, le, re, cost);
-	if (count == 0) return 0; else return 1;
+	Count_bin count = table_lookup(ctxt, lw, rw, le, re, cost);
+	if (count.total == 0) return 0; else return 1;
 }
 
 static s64 do_count(fast_matcher_t *mchxt, 

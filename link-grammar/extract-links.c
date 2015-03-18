@@ -245,7 +245,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	Match_node * m, *m1;
 	X_table_connector *xt;
-	s64 count;
+	Count_bin count;
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
 
@@ -258,7 +258,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	  been put into the table.
 	 */
 
-	if ((count == 0) || (count == -1)) return NULL;
+	if ((count.total == 0) || (count.total == -1)) return NULL;
 
 	xt = x_table_pointer(lw, rw, le, re, null_count, pi);
 
@@ -268,7 +268,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	/* This entry must be updated before we return. */
 	xt = x_table_store(lw, rw, le, re, null_count, pi);
 
-	xt->set->count = count;  /* the count we already computed */
+	xt->set->count = count.total;  /* the count we already computed */
 	/* this count is non-zero */
 
 	if (rw == 1 + lw) return xt->set;
