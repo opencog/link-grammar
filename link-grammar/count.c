@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2013,2014 Linas Vepstas                                 */
+/* Copyright (c) 2013,2014,2015 Linas Vepstas                            */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -172,16 +172,23 @@ Count_bin table_lookup(count_context_t * ctxt,
 }
 
 /**
- * Returns 0 if and only if this entry is in the hash table
- * with a count value of 0.
+ * psuedocount is used to check to see if a parse is even possible,
+ * before wasting cpu time performing an actual count, only to discover
+ * that it is zero.
+ *
+ * Returns false if and only if this entry is in the hash table
+ * with a count value of 0. If an entry is not in the hash table,
+ * we have to assume the worst case: that the count might be non-zero,
+ * and since we don't know, we return true.  However, if the entry is
+ * in the hash table, and its zero, then we know, for sure, that the
+ * count is zero.
  */
-static Count_bin pseudocount(count_context_t * ctxt,
+static bool pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
-                       unsigned int cost)
+                       unsigned int null_count)
 {
-	static Count_bin one = {1};
-	Count_bin count = table_lookup(ctxt, lw, rw, le, re, cost);
-	if (count.total == 0) return count; else return one;
+	Count_bin count = table_lookup(ctxt, lw, rw, le, re, null_count);
+	if (count.total == 0) return false; else return true;
 }
 
 static Count_bin do_count(fast_matcher_t *mchxt,
@@ -303,9 +310,9 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			for (lnull_cnt = 0; lnull_cnt < null_count_p1; lnull_cnt++)
 			{
 				bool Lmatch, Rmatch;
-				Count_bin leftcount = zero;
-				Count_bin rightcount = zero;
-				Count_bin pseudototal;
+				bool leftpcount = false;
+				bool rightpcount = false;
+				bool pseudototal = false;
 
 				rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
@@ -318,52 +325,60 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				Rmatch = (d->right != NULL) && (re != NULL) &&
 				         do_match(d->right, re, w, rw);
 
+				/* First, perform pseudocounting as an optimization. If
+				 * the pseudocount is zero, then we know that the true
+				 * count will be zero, and so skip counting entirely,
+				 * in that case.
+				 */
 				if (Lmatch)
 				{
-					leftcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
-					if (le->multi)
-						hist_accumv(&leftcount,
-							pseudocount(ctxt, lw, w, le, d->left->next, lnull_cnt));
-					if (d->left->multi)
-						hist_accumv(&leftcount,
-							pseudocount(ctxt, lw, w, le->next, d->left, lnull_cnt));
-					if (le->multi && d->left->multi)
-						hist_accumv(&leftcount,
-							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt));
+					leftpcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
+					if (!leftpcount && le->multi)
+						leftpcount =
+							pseudocount(ctxt, lw, w, le, d->left->next, lnull_cnt);
+					if (!leftpcount && d->left->multi)
+						leftpcount =
+							pseudocount(ctxt, lw, w, le->next, d->left, lnull_cnt);
+					if (!leftpcount && le->multi && d->left->multi)
+						leftpcount =
+							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 				}
 
 				if (Rmatch)
 				{
-					rightcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
-					if (d->right->multi)
-						hist_accumv(&rightcount,
-							pseudocount(ctxt, w,rw,d->right,re->next, rnull_cnt));
-					if (re->multi)
-						hist_accumv(&rightcount,
-							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt));
-					if (d->right->multi && re->multi)
-						hist_accumv(&rightcount,
-							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt));
+					rightpcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
+					if (!rightpcount && d->right->multi)
+						rightpcount =
+							pseudocount(ctxt, w,rw, d->right, re->next, rnull_cnt);
+					if (!rightpcount && re->multi)
+						rightpcount =
+							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt);
+					if (!rightpcount && d->right->multi && re->multi)
+						rightpcount =
+							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 
 				/* total number where links are used on both sides */
-				hist_prod(&pseudototal, &leftcount, &rightcount);
+				pseudototal = leftpcount && rightpcount;
 
-				if (leftcount.total > 0) {
+				if (!pseudototal && leftpcount) {
 					/* evaluate using the left match, but not the right */
-					hist_muladdv(&pseudototal, &leftcount,
-						pseudocount(ctxt, w, rw, d->right, re, rnull_cnt));
+					pseudototal =
+						pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
-				if ((le == NULL) && (rightcount.total > 0)) {
+				if (!pseudototal && (le == NULL) && rightpcount) {
 					/* evaluate using the right match, but not the left */
-					hist_muladdv(&pseudototal, &rightcount,
-						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt));
+					pseudototal =
+						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 				}
 
-				/* now pseudototal is 0 implies that we know that the true total is 0 */
-				if (pseudototal.total != 0) {
-					rightcount = zero;
-					leftcount = zero;
+				/* If pseudototal is false, that implies that we know
+				 * that the true total is 0. So we don't bother counting
+				 * at all, in tha case. */
+				if (pseudototal)
+				{
+					Count_bin leftcount = zero;
+					Count_bin rightcount = zero;
 					if (Lmatch) {
 						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 						if (le->multi)
