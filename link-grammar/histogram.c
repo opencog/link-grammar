@@ -15,10 +15,10 @@
 
 void hist_sum(Count_bin* sum, Count_bin* a, Count_bin* b)
 {
-	sum->count = a->count + b->count;
+	sum->total = a->total + b->total;
 }
 
 void hist_prod(Count_bin* prod, Count_bin* a, Count_bin* b)
 {
-	prod->count = a->count * b->count;
+	prod->total = a->total * b->total;
 }

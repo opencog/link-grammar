@@ -407,12 +407,12 @@ static s64 do_count(fast_matcher_t *mchxt,
  * The count returned here is meant to be completely accurate; it is
  * not an approximation!
  */
-s64 do_parse(Sentence sent,
-             fast_matcher_t *mchxt,
-             count_context_t *ctxt,
-             int null_count, Parse_Options opts)
+Count_bin do_parse(Sentence sent,
+                   fast_matcher_t *mchxt,
+                   count_context_t *ctxt,
+                   int null_count, Parse_Options opts)
 {
-	s64 total;
+	Count_bin hist;
 
 	ctxt->current_resources = opts->resources;
 	ctxt->exhausted = false;
@@ -424,12 +424,12 @@ s64 do_parse(Sentence sent,
 	/* ctxt->null_block = 1; */
 	ctxt->islands_ok = opts->islands_ok;
 
-	total = do_count(mchxt, ctxt, -1, sent->length, NULL, NULL, null_count+1);
+	hist.total = do_count(mchxt, ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
 	ctxt->checktimer = 0;
-	return total;
+	return hist;
 }
 
 void delete_unmarked_disjuncts(Sentence sent)

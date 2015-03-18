@@ -1418,10 +1418,12 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	nl = opts->min_null_count;
 	while (true)
 	{
+		Count_bin hist;
 		s64 total;
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
-		total = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
+		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
+		total = hist.total;
 
 		if (opts->verbosity > 1)
 		{

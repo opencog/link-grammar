@@ -11,11 +11,11 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "structures.h" /* for s64 */
+#include "histogram.h" /* for s64 */
 
 s64  table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
 bool do_match(Connector *a, Connector *b, int wa, int wb);
-s64  do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
+Count_bin do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
 void delete_unmarked_disjuncts(Sentence sent);
 
 count_context_t* alloc_count_context(size_t);

@@ -25,7 +25,7 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 /* A histogram distribution of the parse counts. */
 struct Count_bin_s
 {
-	s64 count;
+	s64 total;
 };
 
 typedef struct Count_bin_s Count_bin;
