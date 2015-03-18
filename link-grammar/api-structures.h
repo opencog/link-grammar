@@ -183,18 +183,14 @@ struct Link_s
 	const char * link_name; /* Spelling of full link name */
 };
 
-/**
- * N_words:
- *   The number of words in the current sentence.  Computed by
- *   separate_sentence().
- */
 struct Parse_info_struct
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size;
 	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
-	int            N_words;
+	int            N_words; /* Number of words in current sentence;
+	                         * Computed by separate_sentence() */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
