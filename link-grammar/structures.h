@@ -347,7 +347,7 @@ struct Parse_set_struct
 {
 	s64 count;  /* the number of ways */
 	Parse_choice * first;
-	Parse_choice * current;  /* used to enumerate linkages */
+	Parse_choice * tail;
 };
 
 struct X_table_connector_struct

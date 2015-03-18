@@ -32,7 +32,7 @@
 static Parse_set * dummy_set(void)
 {
 	static Parse_set ds;
-	ds.first = ds.current = NULL;
+	ds.first = ds.tail = NULL;
 	ds.count = 1;
 	return &ds;
 }
@@ -74,7 +74,7 @@ make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
 }
 
 /**
- * Put this parse_choice into a given set.  The current pointer is always
+ * Put this parse_choice into a given set.  The tail pointer is always
  * left pointing to the end of the list.
  */
 static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
@@ -85,9 +85,9 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 	}
 	else
 	{
-		s->current->next = pc;
+		s->tail->next = pc;
 	}
-	s->current = pc;
+	s->tail = pc;
 	pc->next = NULL;
 }
 
@@ -186,7 +186,7 @@ static X_table_connector * x_table_store(int lw, int rw,
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
 	n->set.first = NULL;
-	n->set.current = NULL;
+	n->set.tail = NULL;
 	n->set.count = 0;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
 	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
@@ -328,7 +328,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			d = m->d;
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
-				rnull_count = null_count-lnull_count;
+				rnull_count = null_count - lnull_count;
 				/* now lnull_count and rnull_count are the null_counts we're assigning to
 				 * those parts respectively */
 
@@ -412,8 +412,6 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		}
 		put_match_list(mchxt, m1);
 	}
-	// WTF, how is this not a leak!?
-	xt->set.current = xt->set.first;
 	return &xt->set;
 }
 
@@ -470,18 +468,11 @@ bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
                     count_context_t *ctxt,
                     unsigned int null_count, Parse_Options opts)
 {
-	Parse_set * whole_set;
-
-	whole_set =
+	sent->parse_info->parse_set =
 		mk_parse_set(sent, mchxt, ctxt,
 		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
 		             opts->islands_ok, sent->parse_info);
 
-	if ((whole_set != NULL) && (whole_set->current != NULL)) {
-		whole_set->current = whole_set->first;
-	}
-
-	sent->parse_info->parse_set = whole_set;
 
 	return set_overflowed(sent->parse_info);
 }
