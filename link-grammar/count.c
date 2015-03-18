@@ -295,20 +295,20 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m != NULL; m = m->next)
 		{
-			unsigned int lcost, rcost;
+			unsigned int lnull_cnt, rnull_cnt;
 			unsigned int null_count_p1;
 			Disjunct * d;
 			d = m->d;
 			null_count_p1 = null_count + 1; /* avoid gcc warning: unsafe loop opt */
-			for (lcost = 0; lcost < null_count_p1; lcost++)
+			for (lnull_cnt = 0; lnull_cnt < null_count_p1; lnull_cnt++)
 			{
 				bool Lmatch, Rmatch;
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
 				Count_bin pseudototal;
 
-				rcost = null_count - lcost;
-				/* Now lcost and rcost are the costs we're assigning
+				rnull_cnt = null_count - lnull_cnt;
+				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
 				 * to those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
@@ -320,30 +320,30 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 
 				if (Lmatch)
 				{
-					leftcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lcost);
+					leftcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 					if (le->multi)
 						hist_accumv(&leftcount,
-							pseudocount(ctxt, lw, w, le, d->left->next, lcost));
+							pseudocount(ctxt, lw, w, le, d->left->next, lnull_cnt));
 					if (d->left->multi)
 						hist_accumv(&leftcount,
-							pseudocount(ctxt, lw, w, le->next, d->left, lcost));
+							pseudocount(ctxt, lw, w, le->next, d->left, lnull_cnt));
 					if (le->multi && d->left->multi)
 						hist_accumv(&leftcount,
-							pseudocount(ctxt, lw, w, le, d->left, lcost));
+							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt));
 				}
 
 				if (Rmatch)
 				{
-					rightcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rcost);
+					rightcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 					if (d->right->multi)
 						hist_accumv(&rightcount,
-							pseudocount(ctxt, w,rw,d->right,re->next, rcost));
+							pseudocount(ctxt, w,rw,d->right,re->next, rnull_cnt));
 					if (re->multi)
 						hist_accumv(&rightcount,
-							pseudocount(ctxt, w, rw, d->right->next, re, rcost));
+							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt));
 					if (d->right->multi && re->multi)
 						hist_accumv(&rightcount,
-							pseudocount(ctxt, w, rw, d->right, re, rcost));
+							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt));
 				}
 
 				/* total number where links are used on both sides */
@@ -352,12 +352,12 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				if (leftcount.total > 0) {
 					/* evaluate using the left match, but not the right */
 					hist_muladdv(&pseudototal, &leftcount,
-						pseudocount(ctxt, w, rw, d->right, re, rcost));
+						pseudocount(ctxt, w, rw, d->right, re, rnull_cnt));
 				}
 				if ((le == NULL) && (rightcount.total > 0)) {
 					/* evaluate using the right match, but not the left */
 					hist_muladdv(&pseudototal, &rightcount,
-						pseudocount(ctxt, lw, w, le, d->left, lcost));
+						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt));
 				}
 
 				/* now pseudototal is 0 implies that we know that the true total is 0 */
@@ -365,29 +365,29 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					rightcount = zero;
 					leftcount = zero;
 					if (Lmatch) {
-						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lcost);
+						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 						if (le->multi)
 							hist_accumv(&leftcount,
-								do_count(mchxt, ctxt, lw, w, le, d->left->next, lcost));
+								do_count(mchxt, ctxt, lw, w, le, d->left->next, lnull_cnt));
 						if (d->left->multi)
 							hist_accumv(&leftcount,
-								 do_count(mchxt, ctxt, lw, w, le->next, d->left, lcost));
+								 do_count(mchxt, ctxt, lw, w, le->next, d->left, lnull_cnt));
 						if (le->multi && d->left->multi)
 							hist_accumv(&leftcount,
-								do_count(mchxt, ctxt, lw, w, le, d->left, lcost));
+								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 
 					if (Rmatch) {
-						rightcount = do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rcost);
+						rightcount = do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 						if (d->right->multi)
 							hist_accumv(&rightcount,
-								do_count(mchxt, ctxt, w, rw, d->right,re->next, rcost));
+								do_count(mchxt, ctxt, w, rw, d->right,re->next, rnull_cnt));
 						if (re->multi)
 							hist_accumv(&rightcount,
-								do_count(mchxt, ctxt, w, rw, d->right->next, re, rcost));
+								do_count(mchxt, ctxt, w, rw, d->right->next, re, rnull_cnt));
 						if (d->right->multi && re->multi)
 							hist_accumv(&rightcount,
-								do_count(mchxt, ctxt, w, rw, d->right, re, rcost));
+								do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 
 					/* Total number where links are used on both sides */
@@ -397,13 +397,13 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					{
 						/* Evaluate using the left match, but not the right */
 						hist_muladdv(&total, &leftcount,
-							do_count(mchxt, ctxt, w, rw, d->right, re, rcost));
+							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 					if ((le == NULL) && (rightcount.total > 0))
 					{
 						/* Evaluate using the right match, but not the left */
 						hist_muladdv(&total, &rightcount,
-							do_count(mchxt, ctxt, lw, w, le, d->left, lcost));
+							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 
 					/* Sigh. Overflows can and do occur, esp for the ANY language. */
