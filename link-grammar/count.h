@@ -20,4 +20,3 @@ void delete_unmarked_disjuncts(Sentence sent);
 
 count_context_t* alloc_count_context(size_t);
 void free_count_context(count_context_t*);
-

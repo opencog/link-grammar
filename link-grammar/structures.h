@@ -17,6 +17,7 @@
 #include "api-types.h"
 #include "api-structures.h"
 #include "dict-structures.h"  /* For Exp, Exp_list */
+#include "histogram.h"  /* Count_bin */
 #include "utilities.h"  /* Needed for inline defn in Windows */
 
 
@@ -83,15 +84,6 @@
 #define UNLIMITED_LEN 255
 #define SHORT_LEN 6
 #define NO_WORD 255
-
-#ifndef _MSC_VER
-typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
-#define PARSE_NUM_OVERFLOW (1LL<<24)
-#else
-/* Microsoft Visual C Version 6 doesn't support long long. */
-typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
-#define PARSE_NUM_OVERFLOW (((s64)1)<<24)
-#endif
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.

@@ -94,6 +94,7 @@ liblink_grammar_la_SOURCES =        \
 	expand.c                         \
 	extract-links.c                  \
 	fast-match.c                     \
+	histogram.c                      \
 	idiom.c                          \
 	linkage.c                        \
 	post-process.c                   \
@@ -136,6 +137,7 @@ liblink_grammar_la_SOURCES =        \
 	externs.h                        \
 	extract-links.h                  \
 	fast-match.h                     \
+	histogram.h                      \
 	idiom.h                          \
 	link-includes.h                  \
 	linkage.h                        \
