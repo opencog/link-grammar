@@ -35,7 +35,6 @@ typedef struct Count_bin_s Count_bin;
 
 Count_bin hist_zero(void);
 Count_bin hist_one(void);
-Count_bin hist_bad(void);
 
 void hist_accum(Count_bin* sum, double, const Count_bin*);
 void hist_accumv(Count_bin* sum, double, const Count_bin);

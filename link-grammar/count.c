@@ -161,13 +161,13 @@ find_table_pointer(count_context_t *ctxt,
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
-Count_bin table_lookup(count_context_t * ctxt,
+Count_bin* table_lookup(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int cost)
 {
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
-	if (t == NULL) return hist_bad(); else return t->count;
+	if (t == NULL) return NULL; else return &t->count;
 }
 
 /**
@@ -186,8 +186,10 @@ static bool pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int null_count)
 {
-	Count_bin count = table_lookup(ctxt, lw, rw, le, re, null_count);
-	if (count.total == 0) return false; else return true;
+	Count_bin * count = table_lookup(ctxt, lw, rw, le, re, null_count);
+	if (NULL == count) return true;
+	if (count->total == 0) return false;
+	return true;
 }
 
 static Count_bin do_count(fast_matcher_t *mchxt,

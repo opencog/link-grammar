@@ -27,12 +27,6 @@ Count_bin hist_one(void)
 	return one;
 }
 
-Count_bin hist_bad(void)
-{
-	static Count_bin bad = {-1};
-	return bad;
-}
-
 #define BIN_WIDTH 0.334
 
 void hist_accum(Count_bin* sum, double cost, const Count_bin* a)

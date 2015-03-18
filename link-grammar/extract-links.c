@@ -245,20 +245,21 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	Match_node * m, *m1;
 	X_table_connector *xt;
-	Count_bin count;
+	Count_bin * count;
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
 
 	count = table_lookup(ctxt, lw, rw, le, re, null_count);
 
 	/*
-	  assert(count >= 0, "mk_parse_set() called on params that were not in the table.");
+	  assert(count !=NULL, "mk_parse_set() called on params that were not in the table.");
 	  Actually, we can't assert this, because of the pseudocount technique that's
 	  used in count().  It's not the case that every call to mk_parse_set() has already
 	  been put into the table.
 	 */
 
-	if ((count.total == 0) || (count.total == -1)) return NULL;
+	if (NULL == count) return NULL;
+	if (count->total == 0) return NULL;
 
 	xt = x_table_pointer(lw, rw, le, re, null_count, pi);
 
@@ -268,7 +269,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	/* This entry must be updated before we return. */
 	xt = x_table_store(lw, rw, le, re, null_count, pi);
 
-	xt->set->count = count.total;  /* the count we already computed */
+	xt->set->count = count->total;  /* the count we already computed */
 	/* this count is non-zero */
 
 	if (rw == 1 + lw) return xt->set;
