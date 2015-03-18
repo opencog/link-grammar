@@ -112,13 +112,13 @@ bool do_match(Connector *a, Connector *b, int aw, int bw)
 static Table_connector * table_store(count_context_t *ctxt,
                                      int lw, int rw,
                                      Connector *le, Connector *re,
-                                     unsigned int cost, s64 count)
+                                     unsigned int cost)
 {
 	Table_connector *t, *n;
 	unsigned int h;
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
-	n->count.total = count;
+	n->count.total = 0;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
 	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
@@ -155,7 +155,7 @@ find_table_pointer(count_context_t *ctxt,
 	                       resources_exhausted(ctxt->current_resources)))
 	{
 		ctxt->exhausted = true;
-		return table_store(ctxt, lw, rw, le, re, cost, 0);
+		return table_store(ctxt, lw, rw, le, re, cost);
 	}
 	else return NULL;
 }
@@ -198,7 +198,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 
 	/* Create the table entry with a tentative null count of 0. 
 	 * This count must be updated before we return. */
-	t = table_store(ctxt, lw, rw, le, re, null_count, 0);
+	t = table_store(ctxt, lw, rw, le, re, null_count);
 
 	if (rw == 1+lw)
 	{
