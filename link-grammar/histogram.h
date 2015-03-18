@@ -27,7 +27,7 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 struct Count_bin_s
 {
 	s64 total;
-	s64 bins[NUM_BINS];
+	s64 bin[NUM_BINS];
 };
 
 typedef struct Count_bin_s Count_bin;
@@ -36,11 +36,11 @@ Count_bin hist_zero(void);
 Count_bin hist_one(void);
 Count_bin hist_bad(void);
 
-void hist_accum(Count_bin* sum, Count_bin*);
-void hist_accumv(Count_bin* sum, const Count_bin);
-void hist_sum(Count_bin* sum, Count_bin*, Count_bin*);
-void hist_prod(Count_bin* prod, Count_bin*, Count_bin*);
-void hist_muladd(Count_bin* prod, Count_bin*, Count_bin*);
-void hist_muladdv(Count_bin* prod, Count_bin*, const Count_bin);
+void hist_accum(Count_bin* sum, double, const Count_bin*);
+void hist_accumv(Count_bin* sum, double, const Count_bin);
+void hist_sum(Count_bin* sum, const Count_bin*, const Count_bin*);
+void hist_prod(Count_bin* prod, const Count_bin*, const Count_bin*);
+void hist_muladd(Count_bin* prod, const Count_bin*, const Count_bin*);
+void hist_muladdv(Count_bin* prod, const Count_bin*, const Count_bin);
 
 #endif /* _HISTOGRAM_H_ */

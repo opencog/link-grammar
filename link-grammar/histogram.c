@@ -9,19 +9,20 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <math.h>
 #include "histogram.h"
 
 /* A histogram distribution of the parse counts. */
 
 Count_bin hist_zero(void)
 {
-	static Count_bin zero = {0};
+	static Count_bin zero = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 	return zero;
 }
 
 Count_bin hist_one(void)
 {
-	static Count_bin one = {1};
+	static Count_bin one = {1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 	return one;
 }
 
@@ -31,32 +32,40 @@ Count_bin hist_bad(void)
 	return bad;
 }
 
-void hist_accum(Count_bin* sum, Count_bin* a)
+#define BIN_WIDTH 0.333
+
+void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
 {
+	int i;
+	int start = (int) floor (cost/BIN_WIDTH);
 	sum->total += a->total;
+	for (i = start; i < NUM_BINS; i++)
+	{
+		sum->bin[i] += a->bin[i-start];
+	}
 }
 
-void hist_accumv(Count_bin* sum, const Count_bin a)
+void hist_accumv(Count_bin* sum, double cost, const Count_bin a)
 {
-	sum->total += a.total;
+	hist_accum(sum, cost, &a);
 }
 
-void hist_sum(Count_bin* sum, Count_bin* a, Count_bin* b)
+void hist_sum(Count_bin* sum, const Count_bin* a, const Count_bin* b)
 {
 	sum->total = a->total + b->total;
 }
 
-void hist_prod(Count_bin* prod, Count_bin* a, Count_bin* b)
+void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
 {
 	prod->total = a->total * b->total;
 }
 
-void hist_muladd(Count_bin* acc, Count_bin* a, Count_bin* b)
+void hist_muladd(Count_bin* acc, const Count_bin* a, const Count_bin* b)
 {
 	acc->total += a->total * b->total;
 }
 
-void hist_muladdv(Count_bin* acc, Count_bin* a, const Count_bin b)
+void hist_muladdv(Count_bin* acc, const Count_bin* a, const Count_bin b)
 {
-	acc->total += a->total * b.total;
+	hist_muladd(acc, a, &b);
 }

@@ -263,11 +263,11 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			{
 				if (d->left == NULL)
 				{
-					hist_accumv(&t->count,
+					hist_accumv(&t->count, d->cost,
 						do_count(mchxt, ctxt, w, rw, d->right, NULL, null_count-1));
 				}
 			}
-			hist_accumv(&t->count,
+			hist_accumv(&t->count, 0.0,
 				do_count(mchxt, ctxt, w, rw, NULL, NULL, null_count-1));
 		}
 		return t->count;
@@ -300,10 +300,10 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		for (; m != NULL; m = m->next)
 		{
 			unsigned int lnull_cnt, rnull_cnt;
-			unsigned int null_count_p1;
-			Disjunct * d;
-			d = m->d;
-			null_count_p1 = null_count + 1; /* avoid gcc warning: unsafe loop opt */
+			Disjunct * d = m->d;
+			/* _p1 avoids a gcc warning about unsafe loop opt */
+			unsigned int null_count_p1 = null_count + 1;
+
 			for (lnull_cnt = 0; lnull_cnt < null_count_p1; lnull_cnt++)
 			{
 				bool Lmatch, Rmatch;
@@ -379,26 +379,26 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					if (Lmatch) {
 						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 						if (le->multi)
-							hist_accumv(&leftcount,
+							hist_accumv(&leftcount, d->cost,
 								do_count(mchxt, ctxt, lw, w, le, d->left->next, lnull_cnt));
 						if (d->left->multi)
-							hist_accumv(&leftcount,
+							hist_accumv(&leftcount, d->cost,
 								 do_count(mchxt, ctxt, lw, w, le->next, d->left, lnull_cnt));
 						if (le->multi && d->left->multi)
-							hist_accumv(&leftcount,
+							hist_accumv(&leftcount, d->cost,
 								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 
 					if (Rmatch) {
 						rightcount = do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 						if (d->right->multi)
-							hist_accumv(&rightcount,
+							hist_accumv(&rightcount, d->cost,
 								do_count(mchxt, ctxt, w, rw, d->right,re->next, rnull_cnt));
 						if (re->multi)
-							hist_accumv(&rightcount,
+							hist_accumv(&rightcount, d->cost,
 								do_count(mchxt, ctxt, w, rw, d->right->next, re, rnull_cnt));
 						if (d->right->multi && re->multi)
-							hist_accumv(&rightcount,
+							hist_accumv(&rightcount, d->cost,
 								do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 
