@@ -78,8 +78,8 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 	if (sent_len >= 10)
 	{
-		shift = 12 + (sent_len) / 6 ; 
-	} 
+		shift = 12 + (sent_len) / 6 ;
+	}
 	else
 	{
 		shift = 12;
@@ -89,7 +89,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	if (24 < shift) shift = 24;
 	ctxt->table_size = (1U << shift);
 	ctxt->log2_table_size = shift;
-	ctxt->table = (Table_connector**) 
+	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
@@ -106,7 +106,7 @@ bool do_match(Connector *a, Connector *b, int aw, int bw)
 	return easy_match(a->string, b->string);
 }
 
-/** 
+/**
  * Stores the value in the table.  Assumes it's not already there.
  */
 static Table_connector * table_store(count_context_t *ctxt,
@@ -128,9 +128,9 @@ static Table_connector * table_store(count_context_t *ctxt,
 }
 
 /** returns the pointer to this info, NULL if not there */
-static Table_connector * 
+static Table_connector *
 find_table_pointer(count_context_t *ctxt,
-                   int lw, int rw, 
+                   int lw, int rw,
                    Connector *le, Connector *re,
                    unsigned int cost)
 {
@@ -151,7 +151,7 @@ find_table_pointer(count_context_t *ctxt,
 	 */
 	ctxt->checktimer ++;
 	if (ctxt->exhausted || ((0 == ctxt->checktimer%450100) &&
-	                       (ctxt->current_resources != NULL) && 
+	                       (ctxt->current_resources != NULL) &&
 	                       resources_exhausted(ctxt->current_resources)))
 	{
 		ctxt->exhausted = true;
@@ -183,7 +183,7 @@ static s64 pseudocount(count_context_t * ctxt,
 	if (count.total == 0) return 0; else return 1;
 }
 
-static s64 do_count(fast_matcher_t *mchxt, 
+static s64 do_count(fast_matcher_t *mchxt,
                     count_context_t *ctxt,
                     int lw, int rw,
                     Connector *le, Connector *re, int null_count)
@@ -198,7 +198,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 
 	if (t) return t->count.total;
 
-	/* Create the table entry with a tentative null count of 0. 
+	/* Create the table entry with a tentative null count of 0.
 	 * This count must be updated before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
@@ -306,9 +306,9 @@ static s64 do_count(fast_matcher_t *mchxt,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-				Lmatch = (le != NULL) && (d->left != NULL) && 
+				Lmatch = (le != NULL) && (d->left != NULL) &&
 				         do_match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && 
+				Rmatch = (d->right != NULL) && (re != NULL) &&
 				         do_match(d->right, re, w, rw);
 
 				if (Lmatch)
@@ -386,7 +386,7 @@ static s64 do_count(fast_matcher_t *mchxt,
 }
 
 
-/** 
+/**
  * Returns the number of ways the sentence can be parsed with the
  * specified null count. Assumes that the fast-matcher and the count
  * context have already been initialized, and are freed later. The
