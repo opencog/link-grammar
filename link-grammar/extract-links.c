@@ -196,19 +196,6 @@ static X_table_connector * x_table_store(int lw, int rw,
 	return n;
 }
 
-#ifdef UNUSED_FUNCTION
-static void x_table_update(int lw, int rw, Connector *le, Connector *re,
-                unsigned int null_count, Parse_set * set, Parse_info pi)
-{
-	/* Stores the value in the x_table.  Unlike x_table_store, it assumes it's already there */
-	X_table_connector *t = x_table_pointer(lw, rw, le, re, null_count, pi);
-
-	assert(t != NULL, "This entry is supposed to be in the x_table.");
-	t->set = set;
-}
-#endif
-
-
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
@@ -226,15 +213,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
                  Connector *le, Connector *re, unsigned int null_count,
                  bool islands_ok, Parse_info pi)
 {
-	Disjunct * d, * dis;
 	int start_word, end_word, w;
-	bool Lmatch, Rmatch;
-	unsigned int lnull_count, rnull_count;
-	int i, j;
-	Parse_set *ls[4], *rs[4], *lset, *rset;
-	Parse_choice * a_choice;
-
-	Match_node * m, *m1;
 	X_table_connector *xt;
 	Count_bin * count;
 
@@ -267,8 +246,11 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	if ((le == NULL) && (re == NULL))
 	{
-		if (!islands_ok && (lw != -1)) return &xt->set;
+		Parse_set* pset;
+		Disjunct* dis;
+		Parse_choice * a_choice;
 
+		if (!islands_ok && (lw != -1)) return &xt->set;
 		if (null_count == 0) return &xt->set;
 
 		w = lw + 1;
@@ -276,21 +258,21 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		{
 			if (dis->left == NULL)
 			{
-				rs[0] = mk_parse_set(sent, mchxt, ctxt, dis, NULL, w, rw, dis->right,
+				pset = mk_parse_set(sent, mchxt, ctxt, dis, NULL, w, rw, dis->right,
 				                  NULL, null_count-1, islands_ok, pi);
-				if (rs[0] == NULL) continue;
+				if (pset == NULL) continue;
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-				                       rs[0], w, rw, NULL, NULL,
+				                       pset, w, rw, NULL, NULL,
 				                       NULL, NULL, NULL);
 				put_choice_in_set(&xt->set, a_choice);
 			}
 		}
-		rs[0] = mk_parse_set(sent, mchxt, ctxt, NULL, NULL, w, rw, NULL, NULL,
+		pset = mk_parse_set(sent, mchxt, ctxt, NULL, NULL, w, rw, NULL, NULL,
 		                  null_count-1, islands_ok, pi);
-		if (rs[0] != NULL)
+		if (pset != NULL)
 		{
 			a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-			                       rs[0], w, rw, NULL, NULL,
+			                       pset, w, rw, NULL, NULL,
 			                       NULL, NULL, NULL);
 			put_choice_in_set(&xt->set, a_choice);
 		}
@@ -322,12 +304,17 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	for (w = start_word; w < end_word; w++)
 	{
-		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
+		Match_node * m, *mlist;
+		mlist = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m != NULL; m = m->next)
 		{
-			d = m->d;
+			unsigned int lnull_count, rnull_count;
+			Disjunct* d = m->d;
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
+				int i, j;
+				bool Lmatch, Rmatch;
+				Parse_set *ls[4], *rs[4], *lset, *rset;
 				rnull_count = null_count - lnull_count;
 				/* now lnull_count and rnull_count are the null_counts we're assigning to
 				 * those parts respectively */
@@ -360,6 +347,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					if (ls[i] == NULL) continue;
 					for (j=0; j<4; j++)
 					{
+						Parse_choice * a_choice;
 						if (rs[j] == NULL) continue;
 						a_choice = make_choice(ls[i], lw, w, le, d->left,
 						                       rs[j], w, rw, d->right, re,
@@ -376,6 +364,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					{
 						for (i=0; i<4; i++)
 						{
+							Parse_choice * a_choice;
 							if (ls[i] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
@@ -397,6 +386,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					{
 						for (i=0; i<4; i++)
 						{
+							Parse_choice * a_choice;
 							if (rs[i] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
@@ -410,7 +400,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				}
 			}
 		}
-		put_match_list(mchxt, m1);
+		put_match_list(mchxt, mlist);
 	}
 	return &xt->set;
 }
