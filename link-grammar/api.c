@@ -1423,7 +1423,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
-		total = hist.total;
+		total = hist_total(&hist);
 
 		if (opts->verbosity > 1)
 		{

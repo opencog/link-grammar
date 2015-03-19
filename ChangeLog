@@ -6,7 +6,7 @@ Version 5.3.0: (XXX 2015)
  * Hebrew dictionary expansion.
  * Enhanced diagram printing, giving more space for link names.
  * Minor work on phonetic agreement for 'a' vs. 'an'.
- * Add histogram of parse results.
+ * Add ability to histogram the costs of different parses.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.

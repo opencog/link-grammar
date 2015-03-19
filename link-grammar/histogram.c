@@ -10,9 +10,9 @@
 /*************************************************************************/
 
 #include <math.h>
-#include <stdio.h>
 #include "histogram.h"
 
+#ifdef PERFORM_COUNT_HISTOGRAMMING
 /* A histogram distribution of the parse counts. */
 
 Count_bin hist_zero(void)
@@ -130,3 +130,4 @@ void hist_muladdv(Count_bin* acc, const Count_bin* a, double cost, const Count_b
 {
 	hist_muladd(acc, a, cost, &b);
 }
+#endif /* PERFORM_COUNT_HISTOGRAMMING */

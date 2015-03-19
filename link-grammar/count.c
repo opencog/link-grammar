@@ -118,7 +118,6 @@ static Table_connector * table_store(count_context_t *ctxt,
 	unsigned int h;
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
-	n->count.total = 0;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
 	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
@@ -188,7 +187,7 @@ static bool pseudocount(count_context_t * ctxt,
 {
 	Count_bin * count = table_lookup(ctxt, lw, rw, le, re, null_count);
 	if (NULL == count) return true;
-	if (count->total == 0) return false;
+	if (hist_total(count) == 0) return false;
 	return true;
 }
 
@@ -407,13 +406,13 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					/* Total number where links are used on both sides */
 					hist_muladd(&total, &leftcount, 0.0, &rightcount);
 
-					if (leftcount.total > 0)
+					if (0 < hist_total(&leftcount))
 					{
 						/* Evaluate using the left match, but not the right */
 						hist_muladdv(&total, &leftcount, d->cost,
 							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 					}
-					if ((le == NULL) && (rightcount.total > 0))
+					if ((le == NULL) && (0 < hist_total(&rightcount)))
 					{
 						/* Evaluate using the right match, but not the left */
 						hist_muladdv(&total, &rightcount, d->cost,
@@ -421,9 +420,13 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					}
 
 					/* Sigh. Overflows can and do occur, esp for the ANY language. */
-					if (INT_MAX < total.total)
+					if (INT_MAX < hist_total(&total))
 					{
+#ifdef PERFORM_COUNT_HISTOGRAMMING
 						total.total = INT_MAX;
+#else
+						total = INT_MAX;
+#endif /* PERFORM_COUNT_HISTOGRAMMING */
 						t->count = total;
 						put_match_list(mchxt, m1);
 						return total;
@@ -441,7 +444,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 /**
  * Returns the number of ways the sentence can be parsed with the
  * specified null count. Assumes that the fast-matcher and the count
- * context have already been initialized, and are freed later. The
+ * context have already been initialized, and will be freed later. The
  * "null_count" argument is the number of words that are allowed to
  * have no links to them.
  *
@@ -460,6 +463,12 @@ static Count_bin do_count(fast_matcher_t *mchxt,
  *
  * The count returned here is meant to be completely accurate; it is
  * not an approximation!
+ *
+ * Currently, the code has been designed to maintain a histogram of
+ * the cost of each of the parses. The number and width of the bins
+ * is adjustable in histogram.c. At this time, the histogram is not
+ * used anywhere, and a 3-5% speedup is available if it is avoided.
+ * We plan to use this historgram, later ....
  */
 Count_bin do_parse(Sentence sent,
                    fast_matcher_t *mchxt,

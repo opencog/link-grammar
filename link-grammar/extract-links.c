@@ -222,7 +222,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	/* If there's no counter, then there's no way to parse. */
 	if (NULL == count) return NULL;
-	if (count->total == 0) return NULL;
+	if (hist_total(count) == 0) return NULL;
 
 	xt = x_table_pointer(lw, rw, le, re, null_count, pi);
 
@@ -234,7 +234,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	xt = x_table_store(lw, rw, le, re, null_count, pi);
 
 	/* The count we previously computed; its non-zero. */
-	xt->set.count = count->total;
+	xt->set.count = hist_total(count);
 
 	if (rw == 1 + lw) return &xt->set;
 
