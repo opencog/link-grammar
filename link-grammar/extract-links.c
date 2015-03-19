@@ -39,7 +39,8 @@ static void free_set(Parse_set *s)
 {
 	Parse_choice *p, *xp;
 	if (s == NULL) return;
-	for (p=s->first; p != NULL; p = xp) {
+	for (p=s->first; p != NULL; p = xp)
+	{
 		xp = p->next;
 		xfree((void *)p, sizeof(*p));
 	}
@@ -307,7 +308,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			{
 				int i, j;
 				bool Lmatch, Rmatch;
-				Parse_set *ls[4], *rs[4], *lset, *rset;
+				Parse_set *ls[4], *rs[4];
+
 				rnull_count = null_count - lnull_count;
 				/* now lnull_count and rnull_count are the null_counts we're assigning to
 				 * those parts respectively */
@@ -352,7 +354,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
 				{
 					/* evaluate using the left match, but not the right */
-					rset = mk_parse_set(sent, mchxt, ctxt, d, rd, w, rw, d->right, re, rnull_count, islands_ok, pi);
+					Parse_set* rset = mk_parse_set(sent, mchxt, ctxt, d, rd, w, rw, d->right, re, rnull_count, islands_ok, pi);
 					if (rset != NULL)
 					{
 						for (i=0; i<4; i++)
@@ -373,7 +375,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 				{
 					/* evaluate using the right match, but not the left */
-					lset = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le, d->left, lnull_count, islands_ok, pi);
+					Parse_set* lset = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le, d->left, lnull_count, islands_ok, pi);
 
 					if (lset != NULL)
 					{
