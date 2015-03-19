@@ -31,9 +31,7 @@
 
 static Parse_set * dummy_set(void)
 {
-	static Parse_set ds;
-	ds.first = ds.tail = NULL;
-	ds.count = 1;
+	static Parse_set ds = {1, NULL, NULL};
 	return &ds;
 }
 
