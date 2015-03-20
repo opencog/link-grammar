@@ -113,16 +113,16 @@ nonCAP.zzz: ZZZ-;
 % complements (i.e. so that "blah blah blah, he said" doesn't
 % get the MX link at lower cost than the CP link...)
 <post-nominal-x>:
-  ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+  [{[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
 
 <post-nominal-s>:
-  ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+  [{[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
 
 <post-nominal-p>:
-  ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+  [{[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
 
 <post-nominal-u>:
-  ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
+  [{[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
 
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>:
