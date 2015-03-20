@@ -8977,7 +8977,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 %
 ",":
   ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
-  or [[<semicol>]]
+  or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or <verb-conjunction>
