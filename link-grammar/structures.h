@@ -346,6 +346,7 @@ struct Parse_choice_struct
 struct Parse_set_struct
 {
 	s64 count;  /* the number of ways */
+	double cost_cutoff;
 	Parse_choice * first;
 	Parse_choice * tail;
 };

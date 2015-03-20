@@ -37,7 +37,6 @@ struct Count_bin_s
 	s64 total;
 	s64 bin[NUM_BINS];
 	s64 overrun;
-	double level;
 };
 
 typedef struct Count_bin_s Count_bin;
@@ -53,7 +52,7 @@ void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
 
 static inline s64 hist_total(Count_bin* tot) { return tot->total; }
 
-void hist_set_level(Count_bin*, int count);
+double hist_cost_cutoff(Count_bin*, int count);
 
 #else
 
@@ -74,6 +73,8 @@ static inline void hist_muladdv(Count_bin* prod, Count_bin* a, double cost, Coun
 	{ *prod += (*a) * b; }
 
 static inline s64 hist_total(Count_bin* tot) { return *tot; }
+
+static inline double hist_cost_cutoff(Count_bin* tot, int count) { return 1.0e38; }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 

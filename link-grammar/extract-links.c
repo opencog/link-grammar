@@ -31,7 +31,7 @@
 
 static Parse_set * dummy_set(void)
 {
-	static Parse_set ds = {1, NULL, NULL};
+	static Parse_set ds = {1, 1.0e38, NULL, NULL};
 	return &ds;
 }
 
@@ -235,6 +235,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 	/* The count we previously computed; its non-zero. */
 	xt->set.count = hist_total(count);
+
+#define NUM_PARSES 4
+	xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
 
 	if (rw == 1 + lw) return &xt->set;
 

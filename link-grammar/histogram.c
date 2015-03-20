@@ -18,14 +18,14 @@
 Count_bin hist_zero(void)
 {
 	static Count_bin zero
-		= {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, 0.0};
+		= {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
 	return zero;
 }
 
 Count_bin hist_one(void)
 {
 	static Count_bin one
-		= {1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, 0.0};
+		= {1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
 	return one;
 }
 
@@ -139,7 +139,7 @@ void hist_muladdv(Count_bin* acc, const Count_bin* a, double cost, const Count_b
 	hist_muladd(acc, a, cost, &b);
 }
 
-void hist_set_level(Count_bin* hist, int count)
+double hist_cost_cutoff(Count_bin* hist, int count)
 {
 	int i;
 	s64 cnt = 0;
@@ -149,7 +149,7 @@ void hist_set_level(Count_bin* hist, int count)
 		cnt += hist->bin[i];
 		if (count <= cnt) break;
 	}
-	hist->level = ((double) i) * BIN_WIDTH;
+	return ((double) i) * BIN_WIDTH;
 }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
