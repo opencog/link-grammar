@@ -118,6 +118,9 @@ nonCAP.zzz: ZZZ-;
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
 % Post-nominal qualifiers, complete with commas, etc.
+% We give these a small cost, so that they don't hide quotational
+% complements (i.e. so that "blah blah blah, he said" doesn't
+% get the MX link at lower cost than the CP link...)
 <post-nominal-x>:
   ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
@@ -5949,18 +5952,21 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.1.p:
   <verb-pv> or <verb-phrase-opener>;
 
+% Paraphrasing, quotational complements:
+<paraph-null>: [()];
+
 <vc-paraph>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>)
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
     [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-paraph-inv>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>)
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or <paraph-null>)
       & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-it-paraph>:
-  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>)
+  {@MV+} & (Xd- or Xq-) & (Xc+ or <paraph-null>)
     & (COqi+ or (CPi- & {CC+}) or Eqi+ or <verb-wall>);
 
 % paraphrasing verbs like "say", "reply"
