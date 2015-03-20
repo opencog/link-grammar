@@ -2967,8 +2967,9 @@ We ate so-called 'brain food' for lunch.
 Sweat stood on his brow, fury was bright in his one good eye.
 
 % Automatic sentence splitting.  A period or question mark, mid-text,
-% will split the sentence into two.
+% will split the sentence into two. Note capitalization is handled.
 who is Obama? where was he born?
+Who is Obama? Where was he born?
 
 % Some commas seem inappropriately placed, but are common none-the-less:
 % Note these are essentially garden-path sentences, which is why people
