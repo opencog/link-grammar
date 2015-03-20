@@ -90,6 +90,16 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 	pc->next = NULL;
 }
 
+static void record_choice(
+    Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
+    Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
+    Disjunct *ld, Disjunct *md, Disjunct *rd, Parse_set *s)
+{
+	put_choice_in_set(s, make_choice(lset, llw, lrw, llc, lrc,
+	                                 rset, rlw, rrw, rlc, rrc,
+	                                 ld, md, rd));
+}
+
 /**
  * Allocate the parse info struct
  *
@@ -245,7 +255,6 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	{
 		Parse_set* pset;
 		Disjunct* dis;
-		Parse_choice * a_choice;
 
 		if (!islands_ok && (lw != -1)) return &xt->set;
 		if (null_count == 0) return &xt->set;
@@ -258,20 +267,18 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				pset = mk_parse_set(sent, mchxt, ctxt, dis, NULL, w, rw, dis->right,
 				                  NULL, null_count-1, islands_ok, pi);
 				if (pset == NULL) continue;
-				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-				                       pset, w, rw, NULL, NULL,
-				                       NULL, NULL, NULL);
-				put_choice_in_set(&xt->set, a_choice);
+				record_choice(dummy_set(), lw, w, NULL, NULL,
+				              pset,        w, rw, NULL, NULL,
+				              NULL, NULL, NULL, &xt->set);
 			}
 		}
 		pset = mk_parse_set(sent, mchxt, ctxt, NULL, NULL, w, rw, NULL, NULL,
 		                  null_count-1, islands_ok, pi);
 		if (pset != NULL)
 		{
-			a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-			                       pset, w, rw, NULL, NULL,
-			                       NULL, NULL, NULL);
-			put_choice_in_set(&xt->set, a_choice);
+			record_choice(dummy_set(), lw, w, NULL, NULL,
+			              pset,        w, rw, NULL, NULL,
+			              NULL, NULL, NULL, &xt->set);
 		}
 		return &xt->set;
 	}
@@ -345,12 +352,10 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					if (ls[i] == NULL) continue;
 					for (j=0; j<4; j++)
 					{
-						Parse_choice * a_choice;
 						if (rs[j] == NULL) continue;
-						a_choice = make_choice(ls[i], lw, w, le, d->left,
-						                       rs[j], w, rw, d->right, re,
-						                       ld, d, rd);
-						put_choice_in_set(&xt->set, a_choice);
+						record_choice(ls[i], lw, w, le, d->left,
+						              rs[j], w, rw, d->right, re,
+						              ld, d, rd, &xt->set);
 					}
 				}
 
@@ -362,15 +367,13 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					{
 						for (i=0; i<4; i++)
 						{
-							Parse_choice * a_choice;
 							if (ls[i] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
-							a_choice = make_choice(ls[i], lw, w, le, d->left,
-							         rset, w, rw, NULL /* d->right */,
-							         re,  /* the NULL indicates no link*/
-							         ld, d, rd);
-							put_choice_in_set(&xt->set, a_choice);
+							record_choice(ls[i], lw, w, le, d->left,
+							              rset, w, rw, NULL /* d->right */,
+							              re,  /* the NULL indicates no link*/
+							              ld, d, rd, &xt->set);
 						}
 					}
 				}
@@ -384,15 +387,13 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					{
 						for (i=0; i<4; i++)
 						{
-							Parse_choice * a_choice;
 							if (rs[i] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
-							a_choice = make_choice(lset, lw, w, NULL /* le */,
-							          d->left,  /* NULL indicates no link */
-							          rs[i], w, rw, d->right, re,
-							          ld, d, rd);
-							put_choice_in_set(&xt->set, a_choice);
+							record_choice(lset, lw, w, NULL /* le */,
+							              d->left,  /* NULL indicates no link */
+							              rs[i], w, rw, d->right, re,
+							              ld, d, rd, &xt->set);
 						}
 					}
 				}
