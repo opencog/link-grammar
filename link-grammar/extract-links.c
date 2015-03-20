@@ -249,7 +249,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 #define NUM_PARSES 4
 	xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
 
-	if (rw == 1 + lw) return &xt->set;
+	/* If the two words are next to each other, the count == 1 */
+	if (lw + 1 == rw) return &xt->set;
 
 	if ((le == NULL) && (re == NULL))
 	{
