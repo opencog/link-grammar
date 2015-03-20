@@ -1350,8 +1350,8 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 
 /* Return true if the word might be capitalized by convention:
  * -- if its the first word of a sentence
- * -- if its the first word following a colon, a period, or any bullet
- *    (For example:  VII. Ancient Rome)
+ * -- if its the first word following a colon, a period, a question mark,
+ *    or any bullet (For example:  VII. Ancient Rome)
  * -- if its the first word of a quote
  *
  * XXX FIXME: These rules are rather English-centric.  Someone should
@@ -1365,8 +1365,13 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 	if (MT_INFRASTRUCTURE == word->prev[0]->morpheme_type) return true;
 
 	/* Words following colons are capitalizable. */
+	/* Mid-text periods and question marks are sentence-splitters. */
 	if (strcmp(":", word->prev[0]->subword) == 0 ||
-		 strcmp(".", word->prev[0]->subword) == 0 )
+		 strcmp(".", word->prev[0]->subword) == 0 ||
+		 strcmp("?", word->prev[0]->subword) == 0 ||
+		 strcmp("!", word->prev[0]->subword) == 0 ||
+		 strcmp("？", word->prev[0]->subword) == 0 ||
+		 strcmp("！", word->prev[0]->subword) == 0 )
 		return true;
 	if (is_afdict_str(dict, word->prev[0]->subword, AFDICT_BULLETS))
 		return true;
