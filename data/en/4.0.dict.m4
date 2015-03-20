@@ -8903,15 +8903,46 @@ EMOTICON :
   or ((Xp- or ({@Xca-} & [[Xc-]])) & RW+)
   or Xi-;
 
+% The WV+ after the Xx+ allows the root verb after the punct to attach
+% to the wall.  e.g. "A woman lives next door, who is a nurse."
+% The naked WV+ without any W+ allows "that I did not know."
+% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
+% The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
+%     insane?", "Are you the one?"
+% Xy is for new sentences. "Who is Obama? Where was he born?"
+% XXX TODO: afer all WV's work, the WV link should no longer be optional...
+% XXX that is, change <WALL> to just WV+.
+% XXX {ZZZ+} got temporarily added for using quotes and virtual CAPs morphemes
+% as empty words. Remove when they are integrated into the dict.
+<sent-start>:
+  {ZZZ+} & (((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
+  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
+    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+}));
+
+LEFT-WALL: <sent-start>;
+
+% Cost on Xc- because Xc is intended for commas, not sentence-ends.
+% Without this cost, the right wall gets used incorrectly with MX links.
+RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
+
+% mid-text period, question mark. Splits into two sentences.
+<sent-split>: Xp- & <sent-start>;
+
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin."
 % get linked incorrectly with the MX link.
-".": ((Xp- or ({@Xca-} & [[Xc-]])) & RW+) or Xi-;
+".":
+  ((Xp- or ({@Xca-} & [[Xc-]])) & RW+)
+  or Xi-
+  or <sent-split>;
 
-"!" "?" ‽ ؟ ？！: ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
+"!" "?" ‽ ؟ ？！:
+   ((Xp- or ({@Xca-} & Xc-)) & RW+)
+   or ({@Xca-} & Xq+)
+   or <sent-split>;
 
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
-% a semicolon. -- looks a lot like LEFT-WALL  We do need Wa for comma's
+% a semicolon. -- looks a lot like <sent-start>.  We do need Wa for comma's
 <semicol>:
   {@Xca-} & Xx-
     & (((Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+) & <WALL>)
@@ -9155,25 +9186,6 @@ UNKNOWN-WORD.v:
 % Add a miniscule cost, so that the noun-form is prefered, when
 % availble.
 UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
-
-% The WV+ after the Xx+ allows the root verb after the punct to attach
-% to the wall.  e.g. "A woman lives next door, who is a nurse."
-% The naked WV+ without any W+ allows "that I did not know."
-% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
-% The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
-%     insane?", "Are you the one?"
-% XXX TODO: afer all WV's work, the WV link should no longer be optional...
-% XXX that is, change <WALL> to just WV+.
-% XXX {ZZZ+} got temporarily added for using quotes and virtual CAPs morphemes
-% as empty words. Remove when they are integrated into the dict.
-LEFT-WALL:
-  {ZZZ+} & (((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
-  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
-    & <WALL> & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+}));
-
-% Cost on Xc- because Xc is intended for commas, not sentence-ends.
-% Without this cost, the right wall gets used incorrectly with MX links.
-RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % These are the link-types that are not subject to the length limit.
 % Always use "+" for these.  Some of these are obvious. Some deserve
