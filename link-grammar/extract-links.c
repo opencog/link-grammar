@@ -31,7 +31,8 @@
 
 static Parse_set * dummy_set(void)
 {
-	static Parse_set ds = {1, 1.0e38, NULL, NULL};
+	// static Parse_set ds = {1, 1.0e38, NULL, NULL};
+	static Parse_set ds = {1, NULL, NULL};
 	return &ds;
 }
 
@@ -247,7 +248,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	xt->set.count = hist_total(count);
 
 #define NUM_PARSES 4
-	xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
+	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
 
 	/* If the two words are next to each other, the count == 1 */
 	if (lw + 1 == rw) return &xt->set;
@@ -336,7 +337,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				Rmatch = (d->right != NULL) && (re != NULL)
 				         && do_match(d->right, re, w, rw);
 
-				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
+				for (i=0; i<4; i++) { ls[i] = rs[i] = NULL; }
 				if (Lmatch)
 				{
 					ls[0] = mk_parse_set(sent, mchxt, ctxt,
