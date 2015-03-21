@@ -227,6 +227,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		return t->count;
 	}
 
+	/* The left and right connectors are null, but the two words are
+	 * NOT next to each-other. */
 	if ((le == NULL) && (re == NULL))
 	{
 		if (!ctxt->islands_ok && (lw != -1))
@@ -234,12 +236,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			/* If we don't allow islands (a set of words linked together
 			 * but separate from the rest of the sentence) then the
 			 * null_count of skipping n words is just n. */
-			/* null_block is always 1 these days. */
-			/* if (null_count == ((rw-lw-1) + ctxt->null_block-1) / ctxt->null_block) */
 			if (null_count == (rw-lw-1))
 			{
-				/* If null_block=4 then the null_count of
-				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
 				t->count = hist_one();
 			}
 			else

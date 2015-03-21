@@ -254,6 +254,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	/* If the two words are next to each other, the count == 1 */
 	if (lw + 1 == rw) return &xt->set;
 
+	/* The left and right connectors are null, but the two words are
+	 * NOT next to each-other.  */
 	if ((le == NULL) && (re == NULL))
 	{
 		Parse_set* pset;
