@@ -652,7 +652,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 		partial_init_linkage(lkg, pi->N_words);
 		extract_links(lkg, pi);
 		/* Because the empty words are used only in the parsing stage, they are
-		 * removed here along with their links so from now on we will not need to
+		 * removed here along with their links, so from now on we will not need to
 		 * consider them. */
 		remove_empty_words(lkg);
 	}

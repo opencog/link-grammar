@@ -17,18 +17,26 @@
 
 Count_bin hist_zero(void)
 {
-	static Count_bin zero = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
+	static Count_bin zero
+		= {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
 	return zero;
 }
 
 Count_bin hist_one(void)
 {
-	static Count_bin one = {1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
+	static Count_bin one
+		= {1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
 	return one;
 }
 
 #define BIN_WIDTH 0.334
 
+/**
+ * Accumulate counts in 'a', adding them to sum.
+ * The histogram is shifted by the amount 'cost'.
+ * That is, the bins are shifted over by the interger part of the cost
+ * (scaled to the bin-width).
+ */
 void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
 {
 	unsigned int i;
@@ -50,18 +58,14 @@ void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
 	sum->overrun += a->overrun;
 }
 
+/** Same as above */
 void hist_accumv(Count_bin* sum, double cost, const Count_bin a)
 {
 	hist_accum(sum, cost, &a);
 }
 
-void hist_sum(Count_bin* sum, const Count_bin* a, const Count_bin* b)
-{
-	sum->total = a->total + b->total;
-}
-
 /**
- * Create a product of histogrammed counts.
+ * Create a product of two histogrammed counts.
  * Observe that doing so requires a kind-of cross-product to
  * be performed, thus, a nested double sum.
  */
@@ -119,6 +123,10 @@ void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
 #endif
 }
 
+/**
+ * Multiply two historams 'a' and 'b', and accumulate them into 'acc'.
+ * The accumulated historgram is first shifted by 'cost'.
+ */
 void hist_muladd(Count_bin* acc, const Count_bin* a, double cost, const Count_bin* b)
 {
 	Count_bin tmp;
@@ -130,4 +138,18 @@ void hist_muladdv(Count_bin* acc, const Count_bin* a, double cost, const Count_b
 {
 	hist_muladd(acc, a, cost, &b);
 }
+
+double hist_cost_cutoff(Count_bin* hist, int count)
+{
+	int i;
+	s64 cnt = 0;
+
+	for (i=0; i<NUM_BINS; i++)
+	{
+		cnt += hist->bin[i];
+		if (count <= cnt) break;
+	}
+	return ((double) i) * BIN_WIDTH;
+}
+
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
