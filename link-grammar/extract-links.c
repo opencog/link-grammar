@@ -32,7 +32,7 @@
 static Parse_set * dummy_set(void)
 {
 	// static Parse_set ds = {1, 1.0e38, NULL, NULL};
-	static Parse_set ds = {1, NULL, NULL};
+	static Parse_set ds = {1, 1, NULL, NULL};
 	return &ds;
 }
 
@@ -249,6 +249,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 #define NUM_PARSES 4
 	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
+	xt->set.recount = 1;
 
 	/* If the two words are next to each other, the count == 1 */
 	if (lw + 1 == rw) return &xt->set;
@@ -260,6 +261,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 		if (!islands_ok && (lw != -1)) return &xt->set;
 		if (null_count == 0) return &xt->set;
+
+		xt->set.recount = 0;
 
 		w = lw + 1;
 		for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
@@ -273,6 +276,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				record_choice(dummy_set(), lw, w, NULL, NULL,
 				              pset,        w, rw, NULL, NULL,
 				              NULL, NULL, NULL, &xt->set);
+				xt->set.recount += pset->recount;
 			}
 		}
 		pset = mk_parse_set(sent, mchxt, ctxt,
@@ -283,6 +287,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			record_choice(dummy_set(), lw, w, NULL, NULL,
 			              pset,        w, rw, NULL, NULL,
 			              NULL, NULL, NULL, &xt->set);
+			xt->set.recount += pset->recount;
 		}
 		return &xt->set;
 	}
@@ -311,6 +316,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	 * it may omit some optimizations. */
 	if (UINT_MAX == null_count) return NULL;
 
+	xt->set.recount = 0;
 	for (w = start_word; w < end_word; w++)
 	{
 		Match_node * m, *mlist;
@@ -393,6 +399,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 						record_choice(ls[i], lw, w, le, d->left,
 						              rs[j], w, rw, d->right, re,
 						              ld, d, rd, &xt->set);
+						xt->set.recount += ls[i]->recount * rs[j]->recount;
 					}
 				}
 
@@ -413,6 +420,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 							              rset, w, rw, NULL /* d->right */,
 							              re,  /* the NULL indicates no link*/
 							              ld, d, rd, &xt->set);
+							xt->set.recount += ls[i]->recount * rset->recount;
 						}
 					}
 				}
@@ -426,15 +434,16 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 					if (lset != NULL)
 					{
-						for (i=0; i<4; i++)
+						for (j=0; j<4; j++)
 						{
-							if (rs[i] == NULL) continue;
+							if (rs[j] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
 							record_choice(lset, lw, w, NULL /* le */,
 							              d->left,  /* NULL indicates no link */
-							              rs[i], w, rw, d->right, re,
+							              rs[j], w, rw, d->right, re,
 							              ld, d, rd, &xt->set);
+							xt->set.recount += lset->recount * rs[j]->recount;
 						}
 					}
 				}
