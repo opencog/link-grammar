@@ -159,9 +159,23 @@ double hist_cost_cutoff(Count_bin* hist, int count)
 	for (i=0; i<NUM_BINS; i++)
 	{
 		cnt += hist->bin[i];
-		if (count <= cnt) break;
+		if (count <= cnt)
+			return ((double) i + hist->base) * BIN_WIDTH;
 	}
-	return ((double) i + hist->base) * BIN_WIDTH;
+	return 1.0e38;
+}
+
+s64 hist_cut_total(Count_bin* hist, int min_total)
+{
+	int i;
+	s64 cnt = 0;
+
+	for (i=0; i<NUM_BINS; i++)
+	{
+		cnt += hist->bin[i];
+		if (min_total <= cnt) return cnt;
+	}
+	return hist->total;
 }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */

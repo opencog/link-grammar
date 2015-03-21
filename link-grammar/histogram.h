@@ -62,6 +62,7 @@ void hist_muladd(Count_bin* prod, const Count_bin*, double, const Count_bin*);
 void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
 
 static inline s64 hist_total(Count_bin* tot) { return tot->total; }
+s64 hist_cut_total(Count_bin* tot, int min_total);
 
 double hist_cost_cutoff(Count_bin*, int count);
 
@@ -84,6 +85,7 @@ static inline void hist_muladdv(Count_bin* prod, Count_bin* a, double cost, Coun
 	{ *prod += (*a) * b; }
 
 static inline s64 hist_total(Count_bin* tot) { return *tot; }
+static inline s64 hist_cut_total(Count_bin* tot, int min_total) { return *tot; }
 
 static inline double hist_cost_cutoff(Count_bin* tot, int count) { return 1.0e38; }
 
