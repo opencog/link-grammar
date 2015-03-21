@@ -18,14 +18,14 @@
 Count_bin hist_zero(void)
 {
 	static Count_bin zero
-		= {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
+		= {0, 0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
 	return zero;
 }
 
 Count_bin hist_one(void)
 {
 	static Count_bin one
-		= {1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
+		= {0, 1, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
 	return one;
 }
 
@@ -44,9 +44,18 @@ void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
 
 	// Skip, if nothing to accumulate.
 	if (0 == a->total) return;
-
-	start = (unsigned int) floor (cost / BIN_WIDTH);
 	sum->total += a->total;
+
+	// The cost tells us how much to offset the histogram in a,
+	// before accumulating it.  'base' is the bin number of the first
+	// non-empty bin.
+	start = (unsigned int) floor (cost / BIN_WIDTH);
+	if (0 == sum->bin[0])
+	{
+		sum->base = start;
+		start = 0;
+	}
+
 	for (i = start; i < NUM_BINS; i++)
 	{
 		sum->bin[i] += a->bin[i-start];
@@ -72,6 +81,9 @@ void hist_accumv(Count_bin* sum, double cost, const Count_bin a)
 void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
 {
 	unsigned int i, k;
+
+	// Skip, if the product is zero.
+	if (0 == a->total || 0 == b->total) return;
 	prod->total = a->total * b->total;
 
 // #define SLOW_BUT_SIMPLE 1
@@ -129,7 +141,7 @@ void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
  */
 void hist_muladd(Count_bin* acc, const Count_bin* a, double cost, const Count_bin* b)
 {
-	Count_bin tmp;
+	Count_bin tmp = hist_zero();
 	hist_prod(&tmp, a, b);
 	hist_accum(acc, cost, &tmp);
 }
@@ -149,7 +161,7 @@ double hist_cost_cutoff(Count_bin* hist, int count)
 		cnt += hist->bin[i];
 		if (count <= cnt) break;
 	}
-	return ((double) i) * BIN_WIDTH;
+	return ((double) i + hist->base) * BIN_WIDTH;
 }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */

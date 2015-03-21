@@ -171,8 +171,8 @@ Count_bin* table_lookup(count_context_t * ctxt,
 
 /**
  * psuedocount is used to check to see if a parse is even possible,
- * before wasting cpu time performing an actual count, only to discover
- * that it is zero.
+ * so that we don't waste cpu time performing an actual count, only
+ * to discover that it is zero.
  *
  * Returns false if and only if this entry is in the hash table
  * with a count value of 0. If an entry is not in the hash table,
@@ -202,7 +202,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	int start_word, end_word, w;
 	Table_connector *t;
 
-	if (null_count < 0) return zero;  /* can this ever happen?? */
+	assert (0 <= null_count, "Bad null count");
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
@@ -354,23 +354,23 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 
-				/* total number where links are used on both sides */
+				/* Total number where links are used on both sides */
 				pseudototal = leftpcount && rightpcount;
 
 				if (!pseudototal && leftpcount) {
-					/* evaluate using the left match, but not the right */
+					/* Evaluate using the left match, but not the right. */
 					pseudototal =
 						pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 				if (!pseudototal && (le == NULL) && rightpcount) {
-					/* evaluate using the right match, but not the left */
+					/* Evaluate using the right match, but not the left. */
 					pseudototal =
 						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 				}
 
-				/* If pseudototal is zero, that implies that we know
-				 * that the true total is zero. So we don't bother counting
-				 * at all, in tha case. */
+				/* If pseudototal is zero (false), that implies that
+				 * we know that the true total is zero. So we don't
+				 * bother counting at all, in that case. */
 				if (pseudototal)
 				{
 					Count_bin leftcount = zero;
