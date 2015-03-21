@@ -8,6 +8,7 @@ Version 5.3.0: (XXX 2015)
  * Minor work on phonetic agreement for 'a' vs. 'an'.
  * Add ability to histogram the costs of different parses.
  * Improve support for splitting sentences.
+ * Change default setting of 'islands_ok' to true.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
