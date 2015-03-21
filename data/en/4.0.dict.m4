@@ -4869,7 +4869,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
   [[CX- & {@MV+}]];
 
 want.v need.v: VERB_PLI(<vc-want>);
-need.i: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
+need.i need'st: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: VERB_S_T(<vc-want>);
 wanted.v-d needed.v-d: VERB_SPPP_T(<vc-want>) or <verb-pv> or <verb-adj>
 or <verb-phrase-opener>;

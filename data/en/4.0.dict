@@ -6158,7 +6158,7 @@ want.v need.v:
   ((<verb-pl,i> & (<vc-want>)) or
   (<verb-and-pl-> & ((<vc-want>) or ())) or
   ((<vc-want>) & <verb-and-pl+>));
-need.i: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
+need.i need'st: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: 
   ((<verb-s> & (<vc-want>)) or
   (<verb-and-sp-i-> & ([<vc-want>]0.2 or ())) or
