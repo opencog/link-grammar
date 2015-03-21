@@ -265,16 +265,18 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		{
 			if (dis->left == NULL)
 			{
-				pset = mk_parse_set(sent, mchxt, ctxt, dis, NULL, w, rw, dis->right,
-				                  NULL, null_count-1, islands_ok, pi);
+				pset = mk_parse_set(sent, mchxt, ctxt,
+				                    dis, NULL, w, rw, dis->right,
+				                    NULL, null_count-1, islands_ok, pi);
 				if (pset == NULL) continue;
 				record_choice(dummy_set(), lw, w, NULL, NULL,
 				              pset,        w, rw, NULL, NULL,
 				              NULL, NULL, NULL, &xt->set);
 			}
 		}
-		pset = mk_parse_set(sent, mchxt, ctxt, NULL, NULL, w, rw, NULL, NULL,
-		                  null_count-1, islands_ok, pi);
+		pset = mk_parse_set(sent, mchxt, ctxt,
+		                    NULL, NULL, w, rw, NULL, NULL,
+		                    null_count-1, islands_ok, pi);
 		if (pset != NULL)
 		{
 			record_choice(dummy_set(), lw, w, NULL, NULL,
@@ -302,16 +304,17 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		end_word = re->word + 1;
 	}
 
-	/* This condition can never be true here. It is included so GCC will be able
-	 * to optimize the loop over "null_count".  Without this check, GCC thinks this
-	 * loop may be an infinite loop and it may omit some optimizations. */
+	/* This condition can never be true here. It is included so GCC
+	 * will be able to optimize the loop over "null_count".  Without
+	 * this check, GCC thinks this loop may be an infinite loop and
+	 * it may omit some optimizations. */
 	if (UINT_MAX == null_count) return NULL;
 
 	for (w = start_word; w < end_word; w++)
 	{
 		Match_node * m, *mlist;
-		mlist = m = form_match_list(mchxt, w, le, lw, re, rw);
-		for (; m != NULL; m = m->next)
+		mlist = form_match_list(mchxt, w, le, lw, re, rw);
+		for (m = mlist; m != NULL; m = m->next)
 		{
 			unsigned int lnull_count, rnull_count;
 			Disjunct* d = m->d;
@@ -321,35 +324,67 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				bool Lmatch, Rmatch;
 				Parse_set *ls[4], *rs[4];
 
+				/* Here, lnull_count and rnull_count are the null_counts
+				 * we're assigning to those parts respectively. */
 				rnull_count = null_count - lnull_count;
-				/* now lnull_count and rnull_count are the null_counts we're assigning to
-				 * those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 
-				Lmatch = (le != NULL) && (d->left != NULL) && do_match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && do_match(d->right, re, w, rw);
+				Lmatch = (le != NULL) && (d->left != NULL)
+				         && do_match(le, d->left, lw, w);
+				Rmatch = (d->right != NULL) && (re != NULL)
+				         && do_match(d->right, re, w, rw);
+
 				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
 				if (Lmatch)
 				{
-					ls[0] = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le->next, d->left->next, lnull_count, islands_ok, pi);
-					if (le->multi) ls[1] = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le, d->left->next, lnull_count, islands_ok, pi);
-					if (d->left->multi) ls[2] = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le->next, d->left, lnull_count, islands_ok, pi);
-					if (le->multi && d->left->multi) ls[3] = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le, d->left, lnull_count, islands_ok, pi);
+					ls[0] = mk_parse_set(sent, mchxt, ctxt,
+					             ld, d, lw, w, le->next, d->left->next,
+					             lnull_count, islands_ok, pi);
+
+					if (le->multi)
+						ls[1] = mk_parse_set(sent, mchxt, ctxt,
+						              ld, d, lw, w, le, d->left->next,
+						              lnull_count, islands_ok, pi);
+
+					if (d->left->multi)
+						ls[2] = mk_parse_set(sent, mchxt, ctxt,
+						              ld, d, lw, w, le->next, d->left,
+						              lnull_count, islands_ok, pi);
+
+					if (le->multi && d->left->multi)
+						ls[3] = mk_parse_set(sent, mchxt, ctxt,
+						              ld, d, lw, w, le, d->left,
+						              lnull_count, islands_ok, pi);
 				}
+
 				if (Rmatch)
 				{
-					rs[0] = mk_parse_set(sent, mchxt, ctxt, d, rd, w, rw, d->right->next, re->next, rnull_count, islands_ok, pi);
-					if (d->right->multi) rs[1] = mk_parse_set(sent, mchxt, ctxt, d, rd, w,rw,d->right,re->next, rnull_count, islands_ok, pi);
-					if (re->multi) rs[2] = mk_parse_set(sent, mchxt, ctxt, d, rd, w, rw, d->right->next, re, rnull_count, islands_ok, pi);
-					if (d->right->multi && re->multi) rs[3] = mk_parse_set(sent, mchxt, ctxt, d, rd, w, rw, d->right, re, rnull_count, islands_ok, pi);
+					rs[0] = mk_parse_set(sent, mchxt, ctxt,
+					                 d, rd, w, rw, d->right->next, re->next,
+					                 rnull_count, islands_ok, pi);
+
+					if (d->right->multi)
+						rs[1] = mk_parse_set(sent, mchxt, ctxt,
+					                 d, rd, w, rw, d->right, re->next,
+						              rnull_count, islands_ok, pi);
+
+					if (re->multi)
+						rs[2] = mk_parse_set(sent, mchxt, ctxt,
+						              d, rd, w, rw, d->right->next, re,
+						              rnull_count, islands_ok, pi);
+
+					if (d->right->multi && re->multi)
+						rs[3] = mk_parse_set(sent, mchxt, ctxt,
+						              d, rd, w, rw, d->right, re,
+						              rnull_count, islands_ok, pi);
 				}
 
 				for (i=0; i<4; i++)
 				{
-					/* this ordering is probably not consistent with that
-					 *  needed to use list_links */
+					/* This ordering is probably not consistent with that
+					 * needed to use list_links. (??) */
 					if (ls[i] == NULL) continue;
 					for (j=0; j<4; j++)
 					{
@@ -362,8 +397,10 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
 				{
-					/* evaluate using the left match, but not the right */
-					Parse_set* rset = mk_parse_set(sent, mchxt, ctxt, d, rd, w, rw, d->right, re, rnull_count, islands_ok, pi);
+					/* Evaluate using the left match, but not the right */
+					Parse_set* rset = mk_parse_set(sent, mchxt, ctxt,
+					                        d, rd, w, rw, d->right, re,
+					                        rnull_count, islands_ok, pi);
 					if (rset != NULL)
 					{
 						for (i=0; i<4; i++)
@@ -381,8 +418,10 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				if ((le == NULL) && (rs[0] != NULL ||
 				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 				{
-					/* evaluate using the right match, but not the left */
-					Parse_set* lset = mk_parse_set(sent, mchxt, ctxt, ld, d, lw, w, le, d->left, lnull_count, islands_ok, pi);
+					/* Evaluate using the right match, but not the left */
+					Parse_set* lset = mk_parse_set(sent, mchxt, ctxt,
+					                        ld, d, lw, w, le, d->left,
+					                        lnull_count, islands_ok, pi);
 
 					if (lset != NULL)
 					{
