@@ -345,7 +345,11 @@ struct Parse_choice_struct
 
 struct Parse_set_struct
 {
-	s64 count;    /* The number of ways to parse. */
+	short          lw, rw; /* left and right word index */
+	unsigned short null_count; /* number of island words */
+	Connector      *le, *re;
+
+	s64 count;      /* The number of ways to parse. */
 	/* s64 recount;  Exactly the same as above, but counted at a later stage. */
 	s64 cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
 	double cost_cutoff;
@@ -355,10 +359,7 @@ struct Parse_set_struct
 
 struct X_table_connector_struct
 {
-	short             lw, rw;
-	unsigned short    null_count; /* number of island words */
 	Parse_set         set;
-	Connector         *le, *re;
 	X_table_connector *next;
 };
 

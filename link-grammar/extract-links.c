@@ -31,7 +31,7 @@
 
 static Parse_set * dummy_set(void)
 {
-	static Parse_set ds = {1, 1, 1.0e38, NULL, NULL};
+	static Parse_set ds = {-2, -2, 0, NULL, NULL, 1, 1, 1.0e38, NULL, NULL};
 	return &ds;
 }
 
@@ -176,9 +176,9 @@ static X_table_connector * x_table_pointer(int lw, int rw,
 	X_table_connector *t;
 	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
-		if ((t->lw == lw) && (t->rw == rw) &&
-		    (t->le == le) && (t->re == re) &&
-		    (t->null_count == null_count))  return t;
+		if ((t->set.lw == lw) && (t->set.rw == rw) &&
+		    (t->set.le == le) && (t->set.re == re) &&
+		    (t->set.null_count == null_count))  return t;
 	}
 	return NULL;
 }
@@ -194,10 +194,15 @@ static X_table_connector * x_table_store(int lw, int rw,
 	unsigned int h;
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
+	n->set.lw = lw;
+	n->set.rw = rw;
+	n->set.null_count = null_count;
+	n->set.le = le;
+	n->set.re = re;
+	n->set.count = 0;
 	n->set.first = NULL;
 	n->set.tail = NULL;
-	n->set.count = 0;
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
+
 	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
 	t = pi->x_table[h];
 	n->next = t;
