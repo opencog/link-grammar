@@ -290,6 +290,11 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
  * parse_cost (and the loop is tiny), so there's no reason to bother
  * to fix this.  The number of times through the loop is counted with
  * 'match_cost', if verbosity>1, then it this will be printed at the end.
+ *
+ * Well, with one exception: for long sentences that have parse
+ * overflows, this can sometimes get match lists that are hundreds of
+ * elements long, dominating the total time spent in the algo; viz.
+ * in excess of 50% of the time.
  */
 Match_node *
 form_match_list(fast_matcher_t *ctxt, int w,
