@@ -29,12 +29,6 @@
  * continuation).
  */
 
-static Parse_set * dummy_set(void)
-{
-	static Parse_set ds = {-2, -2, 0, NULL, NULL, 1, 1, 1.0e38, NULL, NULL};
-	return &ds;
-}
-
 static void free_set(Parse_set *s)
 {
 	Parse_choice *p, *xp;
@@ -210,6 +204,19 @@ static X_table_connector * x_table_store(int lw, int rw,
 	return n;
 }
 
+/** Create a bogus parse set that only holds lw, rw. */
+static Parse_set* dummy_set(int lw, int rw,
+                            unsigned int null_count, Parse_info pi)
+{
+	X_table_connector *dummy;
+	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pi);
+	if (dummy) return &dummy->set;
+
+	dummy = x_table_store(lw, rw, NULL, NULL, null_count, pi);
+	dummy->set.count = 1;
+	return &dummy->set;
+}
+
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
@@ -267,6 +274,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	if ((le == NULL) && (re == NULL))
 	{
 		Parse_set* pset;
+		Parse_set* dummy;
 		Disjunct* dis;
 
 		if (!islands_ok && (lw != -1)) return &xt->set;
@@ -283,8 +291,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				                    dis, NULL, w, rw, dis->right, NULL,
 				                    null_count-1, islands_ok, pi);
 				if (pset == NULL) continue;
-				record_choice(dummy_set(), lw, w, NULL, NULL,
-				              pset,        w, rw, NULL, NULL,
+				dummy = dummy_set(lw, w, null_count-1, pi);
+				record_choice(dummy, lw, w, NULL, NULL,
+				              pset,  w, rw, NULL, NULL,
 				              NULL, NULL, NULL, &xt->set);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
@@ -294,8 +303,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		                    null_count-1, islands_ok, pi);
 		if (pset != NULL)
 		{
-			record_choice(dummy_set(), lw, w, NULL, NULL,
-			              pset,        w, rw, NULL, NULL,
+			dummy = dummy_set(lw, w, null_count-1, pi);
+			record_choice(dummy, lw, w, NULL, NULL,
+			              pset,  w, rw, NULL, NULL,
 			              NULL, NULL, NULL, &xt->set);
 			RECOUNT({xt->set.recount += pset->recount;})
 		}

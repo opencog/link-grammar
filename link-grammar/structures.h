@@ -347,7 +347,7 @@ struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */
 	unsigned short null_count; /* number of island words */
-	Connector      *le, *re;
+	Connector      *le, *re; /* pending, unconnected connectors */
 
 	s64 count;      /* The number of ways to parse. */
 	/* s64 recount;  Exactly the same as above, but counted at a later stage. */
