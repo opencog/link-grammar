@@ -289,7 +289,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
  * eliminate duplicates.  In practice the match_cost is less than the
  * parse_cost (and the loop is tiny), so there's no reason to bother
  * to fix this.  The number of times through the loop is counted with
- * 'match_cost', if verbosity>1, then it this will be prnted at the end.
+ * 'match_cost', if verbosity>1, then it this will be printed at the end.
  */
 Match_node *
 form_match_list(fast_matcher_t *ctxt, int w,
@@ -331,12 +331,12 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	mr = front;   /* mr is now the list of things that could match the right */
 
-	/* Now we want to eliminate duplicates from the lists */
+	/* Now we want to eliminate duplicates from the lists. */
 	free_later = NULL;
 	front = NULL;
 	for (mx = mr; mx != NULL; mx = mz)
 	{
-		/* see if mx in first list, put it in if its not */
+		/* See if mx in first list, put it in if its not. */
 		mz = mx->next;
 		ctxt->match_cost++;
 		for (my=ml; my!=NULL; my=my->next) {
@@ -346,7 +346,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		if (my != NULL) { /* mx was in the l list */
 			mx->next = free_later;
 			free_later = mx;
-		} else {  /* it was not there */
+		} else {  /* It was not there. */
 			mx->next = front;
 			front = mx;
 		}
@@ -354,7 +354,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	mr = front;  /* mr is now the abbreviated right list */
 	put_match_list(ctxt, free_later);
 
-	/* now catenate the two lists */
+	/* Now catenate the two lists. */
 	if (mr == NULL) return ml;
 	if (ml == NULL) return mr;
 	for (mx = mr; mx->next != NULL; mx = mx->next)
