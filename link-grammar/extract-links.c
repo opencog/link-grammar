@@ -41,8 +41,8 @@ static void free_set(Parse_set *s)
 }
 
 static Parse_choice *
-make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
-            Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
+make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
+            Parse_set *rset, Connector * rlc, Connector * rrc,
             Disjunct *ld, Disjunct *md, Disjunct *rd)
 {
 	Parse_choice *pc;
@@ -50,14 +50,14 @@ make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
 	pc->next = NULL;
 	pc->set[0] = lset;
 	pc->link[0].link_name = NULL;
-	pc->link[0].lw = llw;
-	pc->link[0].rw = lrw;
+	pc->link[0].lw = lset->lw;
+	pc->link[0].rw = lset->rw;
 	pc->link[0].lc = llc;
 	pc->link[0].rc = lrc;
 	pc->set[1] = rset;
 	pc->link[1].link_name = NULL;
-	pc->link[1].lw = rlw;
-	pc->link[1].rw = rrw;
+	pc->link[1].lw = rset->lw;
+	pc->link[1].rw = rset->rw;
 	pc->link[1].lc = rlc;
 	pc->link[1].rc = rrc;
 	pc->ld = ld;
@@ -85,12 +85,12 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 }
 
 static void record_choice(
-    Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
-    Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
+    Parse_set *lset, Connector * llc, Connector * lrc,
+    Parse_set *rset, Connector * rlc, Connector * rrc,
     Disjunct *ld, Disjunct *md, Disjunct *rd, Parse_set *s)
 {
-	put_choice_in_set(s, make_choice(lset, llw, lrw, llc, lrc,
-	                                 rset, rlw, rrw, rlc, rrc,
+	put_choice_in_set(s, make_choice(lset, llc, lrc,
+	                                 rset, rlc, rrc,
 	                                 ld, md, rd));
 }
 
@@ -292,8 +292,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				                    null_count-1, islands_ok, pi);
 				if (pset == NULL) continue;
 				dummy = dummy_set(lw, w, null_count-1, pi);
-				record_choice(dummy, lw, w, NULL, NULL,
-				              pset,  w, rw, NULL, NULL,
+				record_choice(dummy, NULL, NULL,
+				              pset,  NULL, NULL,
 				              NULL, NULL, NULL, &xt->set);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
@@ -304,8 +304,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		if (pset != NULL)
 		{
 			dummy = dummy_set(lw, w, null_count-1, pi);
-			record_choice(dummy, lw, w, NULL, NULL,
-			              pset,  w, rw, NULL, NULL,
+			record_choice(dummy, NULL, NULL,
+			              pset,  NULL, NULL,
 			              NULL, NULL, NULL, &xt->set);
 			RECOUNT({xt->set.recount += pset->recount;})
 		}
@@ -416,8 +416,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					for (j=0; j<4; j++)
 					{
 						if (rs[j] == NULL) continue;
-						record_choice(ls[i], lw, w, le, d->left,
-						              rs[j], w, rw, d->right, re,
+						record_choice(ls[i], le, d->left,
+						              rs[j], d->right, re,
 						              ld, d, rd, &xt->set);
 						RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
 					}
@@ -436,8 +436,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 							if (ls[i] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
-							record_choice(ls[i], lw, w, le, d->left,
-							              rset, w, rw, NULL /* d->right */,
+							record_choice(ls[i], le, d->left,
+							              rset,  NULL /* d->right */,
 							              re,  /* the NULL indicates no link*/
 							              ld, d, rd, &xt->set);
 							RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
@@ -459,9 +459,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 							if (rs[j] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
-							record_choice(lset, lw, w, NULL /* le */,
-							              d->left,  /* NULL indicates no link */
-							              rs[j], w, rw, d->right, re,
+							record_choice(lset, NULL /* le */,
+							                    d->left,  /* NULL indicates no link */
+							              rs[j], d->right, re,
 							              ld, d, rd, &xt->set);
 							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
 						}
