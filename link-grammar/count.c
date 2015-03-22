@@ -31,8 +31,7 @@ struct Table_connector_s
 	Connector        *le, *re;
 	Count_bin        count;
 	short            lw, rw;
-	unsigned short   cost; /* Cost, here and below, is actually the
-	                        * null-count being considered. */
+	unsigned short   null_count;
 };
 
 struct count_context_s
@@ -112,14 +111,14 @@ bool do_match(Connector *a, Connector *b, int aw, int bw)
 static Table_connector * table_store(count_context_t *ctxt,
                                      int lw, int rw,
                                      Connector *le, Connector *re,
-                                     unsigned int cost)
+                                     unsigned int null_count)
 {
 	Table_connector *t, *n;
 	unsigned int h;
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
+	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, null_count);
 	t = ctxt->table[h];
 	n->next = t;
 	ctxt->table[h] = n;
@@ -131,15 +130,15 @@ static Table_connector *
 find_table_pointer(count_context_t *ctxt,
                    int lw, int rw,
                    Connector *le, Connector *re,
-                   unsigned int cost)
+                   unsigned int null_count)
 {
 	Table_connector *t;
-	unsigned int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	unsigned int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, null_count);
 	t = ctxt->table[h];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw)
 		    && (t->le == le) && (t->re == re)
-		    && (t->cost == cost))  return t;
+		    && (t->null_count == null_count))  return t;
 	}
 
 	/* Create a new connector only if resources are exhausted.
@@ -154,7 +153,7 @@ find_table_pointer(count_context_t *ctxt,
 	                       resources_exhausted(ctxt->current_resources)))
 	{
 		ctxt->exhausted = true;
-		return table_store(ctxt, lw, rw, le, re, cost);
+		return table_store(ctxt, lw, rw, le, re, null_count);
 	}
 	else return NULL;
 }
@@ -162,9 +161,9 @@ find_table_pointer(count_context_t *ctxt,
 /** returns the count for this quintuple if there, -1 otherwise */
 Count_bin* table_lookup(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
-                       unsigned int cost)
+                       unsigned int null_count)
 {
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
 	if (t == NULL) return NULL; else return &t->count;
 }
