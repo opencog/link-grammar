@@ -345,9 +345,10 @@ struct Parse_choice_struct
 
 struct Parse_set_struct
 {
-	s64 count;    /* the number of ways */
-	s64 recount;  /* count, but only up to the cutoff */
-	// double cost_cutoff;
+	s64 count;    /* The number of ways to parse. */
+	/* s64 recount;  Exactly the same as above, but counted at a later stage. */
+	s64 cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
+	double cost_cutoff;
 	Parse_choice * first;
 	Parse_choice * tail;
 };
