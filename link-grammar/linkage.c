@@ -505,11 +505,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * indication would be shown at all. */
 
 					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
-					s = malloc(strlen(t)+1+strlen(regex_name)+sizeof("[]"));
+					/* 4 = 1(null) + 1(guess_mark) + 2 (sizeof "[]") */
+					s = malloc(strlen(t) + strlen(regex_name) + 4);
 					strncpy(s, t, baselen);
 					s[baselen] = '[';
-					s[baselen+1] = guess_mark;
-					strcpy(s+baselen+2, regex_name);
+					s[baselen + 1] = guess_mark;
+					strcpy(s + baselen + 2, regex_name);
 					strcat(s, "]");
 					if (NULL != sm) strcat(s, sm);
 					t = s;
