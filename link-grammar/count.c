@@ -153,7 +153,9 @@ find_table_pointer(count_context_t *ctxt,
 	                       resources_exhausted(ctxt->current_resources)))
 	{
 		ctxt->exhausted = true;
-		return table_store(ctxt, lw, rw, le, re, null_count);
+		t = table_store(ctxt, lw, rw, le, re, null_count);
+		t->count = hist_zero();
+		return t;
 	}
 	else return NULL;
 }
