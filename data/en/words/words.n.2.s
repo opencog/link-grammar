@@ -8595,6 +8595,8 @@ reindeer.p
 reinforcements.n
 reins.n
 reinterpretations.n
+reinventions.n
+re-inventions.n
 reissues.n
 reiterations.n
 rejections.n
