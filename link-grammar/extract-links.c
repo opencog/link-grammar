@@ -280,8 +280,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			if (dis->left == NULL)
 			{
 				pset = mk_parse_set(sent, mchxt, ctxt,
-				                    dis, NULL, w, rw, dis->right,
-				                    NULL, null_count-1, islands_ok, pi);
+				                    dis, NULL, w, rw, dis->right, NULL,
+				                    null_count-1, islands_ok, pi);
 				if (pset == NULL) continue;
 				record_choice(dummy_set(), lw, w, NULL, NULL,
 				              pset,        w, rw, NULL, NULL,
