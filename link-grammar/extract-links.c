@@ -217,6 +217,43 @@ static Parse_set* dummy_set(int lw, int rw,
 	return &dummy->set;
 }
 
+static int cost_compare(const void *a, const void *b)
+{
+	const Match_node* const * ma  = a;
+	const Match_node* const * mb = b;
+	return (*ma)->d->cost > (*mb)->d->cost;
+}
+
+/**
+ * Sort the matchlist into ascending disjunct cost. The goal here
+ * is to issue the lowest-cost disjuncts first, so that the parse
+ * set ends up quasi-sorted. This is not enough to get us a totally
+ * sorted parse set, but it does guarantee that at least the very
+ * first parse really will be the lowest cost.
+ */
+static Match_node* sort_matchlist(Match_node* mlist)
+{
+	Match_node* mx;
+	Match_node** marr;
+	size_t len = 1;
+	size_t i;
+
+	for (mx = mlist; mx->next != NULL; mx = mx->next) len++;
+	if (1 == len) return mlist;
+
+	/* Avoid blowing out the stack. Its hopless. */
+	if (100000 < len) return mlist;
+
+	marr = alloca(len * sizeof(Match_node*));
+	i = 0;
+	for (mx = mlist; mx != NULL; mx = mx->next) marr[i++] = mx;
+
+	qsort((void *) marr, len, sizeof(Match_node*), cost_compare);
+	for (i=0; i<len-1; i++) marr[i]->next = marr[i+1];
+	marr[len-1]->next = NULL;
+	return marr[0];
+}
+
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
@@ -341,6 +378,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	{
 		Match_node * m, *mlist;
 		mlist = form_match_list(mchxt, w, le, lw, re, rw);
+		if (mlist) mlist = sort_matchlist(mlist);
 		for (m = mlist; m != NULL; m = m->next)
 		{
 			unsigned int lnull_count, rnull_count;
