@@ -224,6 +224,7 @@ static int cost_compare(const void *a, const void *b)
 	return (*ma)->d->cost > (*mb)->d->cost;
 }
 
+#ifdef FINISH_THIS_IDEA_MAYBE_LATER
 /**
  * Sort the matchlist into ascending disjunct cost. The goal here
  * is to issue the lowest-cost disjuncts first, so that the parse
@@ -253,6 +254,7 @@ static Match_node* sort_matchlist(Match_node* mlist)
 	marr[len-1]->next = NULL;
 	return marr[0];
 }
+#endif /* FINISH_THIS_IDEA_MAYBE_LATER */
 
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
@@ -296,9 +298,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	xt->set.count = hist_total(count);
 
 #define NUM_PARSES 4
-	xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
-	xt->set.cut_count = hist_cut_total(count, NUM_PARSES);
-// double cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
+	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
+	// xt->set.cut_count = hist_cut_total(count, NUM_PARSES);
 
 #define RECOUNT(X)  /* Make it disappear... */
 	RECOUNT({xt->set.recount = 1;})
@@ -378,7 +379,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	{
 		Match_node * m, *mlist;
 		mlist = form_match_list(mchxt, w, le, lw, re, rw);
-		if (mlist) mlist = sort_matchlist(mlist);
+		// if (mlist) mlist = sort_matchlist(mlist);
 		for (m = mlist; m != NULL; m = m->next)
 		{
 			unsigned int lnull_count, rnull_count;

@@ -63,4 +63,3 @@ bool lg_expand_disjunct_list(Sentence sent)
 
 	return expanded;
 }
-

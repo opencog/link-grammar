@@ -26,8 +26,8 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
  * Count Histogramming is currently not required for anything, and the
  * code runs about 6% faster when it is disabled.
  *
- */
 #define PERFORM_COUNT_HISTOGRAMMING 1
+ */
 #ifdef PERFORM_COUNT_HISTOGRAMMING
 
 /**
