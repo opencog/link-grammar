@@ -118,10 +118,11 @@ static Table_connector * table_store(count_context_t *ctxt,
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
-	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, null_count);
+	h = pair_hash(ctxt->table_size, lw, rw, le, re, null_count);
 	t = ctxt->table[h];
 	n->next = t;
 	ctxt->table[h] = n;
+
 	return n;
 }
 
@@ -133,7 +134,7 @@ find_table_pointer(count_context_t *ctxt,
                    unsigned int null_count)
 {
 	Table_connector *t;
-	unsigned int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, null_count);
+	unsigned int h = pair_hash(ctxt->table_size,lw, rw, le, re, null_count);
 	t = ctxt->table[h];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw)

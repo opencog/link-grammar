@@ -121,19 +121,18 @@ static inline int connector_hash(Connector * c)
  * hash function. Based on some tests, this seems to be an almost
  * "perfect" hash, in that almost all hash buckets have the same size!
  */
-static inline unsigned int pair_hash(unsigned int log2_table_size,
+static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
                             const Connector *le, const Connector *re,
                             unsigned int cost)
 {
-	unsigned int table_size = (1 << log2_table_size);
-	unsigned int i = 0;
+	unsigned int i;
 
 #if 0
  	/* hash function. Based on some tests, this seems to be
 	 * an almost "perfect" hash, in that almost all hash buckets
 	 * have the same size! */
-	i += 1 << cost;
+	i = 1 << cost;
 	i += 1 << (lw % (log2_table_size-1));
 	i += 1 << (rw % (log2_table_size-1));
 	i += ((unsigned int) le) >> 2;

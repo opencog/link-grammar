@@ -168,7 +168,7 @@ static X_table_connector * x_table_pointer(int lw, int rw,
                               unsigned int null_count, Parse_info pi)
 {
 	X_table_connector *t;
-	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count)];
+	t = pi->x_table[pair_hash(pi->x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
 		if ((t->set.lw == lw) && (t->set.rw == rw) &&
 		    (t->set.le == le) && (t->set.re == re) &&
@@ -197,7 +197,7 @@ static X_table_connector * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
+	h = pair_hash(pi->x_table_size, lw, rw, le, re, null_count);
 	t = pi->x_table[h];
 	n->next = t;
 	pi->x_table[h] = n;
