@@ -279,6 +279,15 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	return ctxt;
 }
 
+static int addr_compare(const void *a, const void *b)
+{
+	const Match_node* const * ma = a;
+	const Match_node* const * mb = b;
+	if ((*ma)->d < (*mb)->d) return -1;
+	if ((*ma)->d > (*mb)->d) return 1;
+	return 0;
+}
+
 /**
  * Forms and returns a list of disjuncts coming from word w, that might
  * match lc or rc or both. The lw and rw are the words from which lc
@@ -301,6 +310,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
+	size_t rlen = 0, llen = 0;
 	Match_node *ml, *mr, *mx, *my, *mz, *front, *free_later;
 
 	if (lc != NULL) {
@@ -322,6 +332,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		my->d = mx->d;
 		my->next = front;
 		front = my;
+		llen++;
 	}
 	ml = front;   /* ml is now the list of things that could match the left */
 
@@ -333,31 +344,106 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		my->d = mx->d;
 		my->next = front;
 		front = my;
+		rlen++;
 	}
 	mr = front;   /* mr is now the list of things that could match the right */
 
+	if (mr == NULL) return ml;
+	if (ml == NULL) return mr;
+
 	/* Now we want to eliminate duplicates from the lists. */
-	free_later = NULL;
-	front = NULL;
-	for (mx = mr; mx != NULL; mx = mz)
+	/* If the left-lest is reasonably short, then just do a quadratic
+	 * search for duplicates. But if the list is long, optimize the
+	 * search.
+	 */
+	// if (200 < llen) printf("duuuuuude it is this %d\n", llen);
+	if (0)
 	{
-		/* See if mx in first list, put it in if its not. */
-		mz = mx->next;
-		ctxt->match_cost++;
-		for (my=ml; my!=NULL; my=my->next) {
+		free_later = NULL;
+		front = NULL;
+		for (mx = mr; mx != NULL; mx = mz)
+		{
+			/* See if mx in first list, put it in if its not. */
+			mz = mx->next;
 			ctxt->match_cost++;
-			if (mx->d == my->d) break;
+			for (my=ml; my!=NULL; my=my->next) {
+				ctxt->match_cost++;
+				if (mx->d == my->d) break;
+			}
+			if (my != NULL) { /* mx was in the l list */
+				mx->next = free_later;
+				free_later = mx;
+			} else {  /* It was not there. */
+				mx->next = front;
+				front = mx;
+			}
 		}
-		if (my != NULL) { /* mx was in the l list */
-			mx->next = free_later;
-			free_later = mx;
-		} else {  /* It was not there. */
-			mx->next = front;
-			front = mx;
-		}
+		mr = front;  /* mr is now the abbreviated right list */
+		put_match_list(ctxt, free_later);
 	}
-	mr = front;  /* mr is now the abbreviated right list */
-	put_match_list(ctxt, free_later);
+	else
+	{
+		size_t i,j;
+		Match_node* mx;
+		Match_node** mra = alloca(rlen * sizeof(Match_node*));
+		Match_node** mla = alloca(llen * sizeof(Match_node*));
+
+		i = 0;
+		for (mx = mr; mx != NULL; mx = mx->next) mra[i++] = mx;
+		qsort((void *) mra, rlen, sizeof(Match_node*), addr_compare);
+
+		i = 0;
+		for (mx = ml; mx != NULL; mx = mx->next) mla[i++] = mx;
+		qsort((void *) mla, llen, sizeof(Match_node*), addr_compare);
+
+		free_later = NULL;
+		front = NULL;
+		i = 0;
+		j = 0;
+		while (i < rlen)
+		{
+printf("duude start i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+			while (i< rlen && mra[i]->d < mla[j]->d)
+			{
+				mra[i]->next = front;
+				front = mra[i];
+				i++;
+printf("duude iiadv i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+			}
+			if (i == rlen) break;
+printf("duude whati i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+
+			if (mra[i]->d == mla[j]->d)
+			{
+				mra[i]->next = free_later;
+				free_later = mra[i];
+				i++; j++;
+printf("duude equij i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+			}
+			if (i == rlen) break;
+
+printf("duude whatz i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+			while (j < llen && mra[i]->d > mla[j]->d)
+			{
+printf("duude jadvj i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+				j++;
+			}
+			if (j == llen)
+			{
+				while (i < rlen)
+				{
+					mra[i]->next = front;
+					front = mra[i];
+					i++;
+printf("duude finis i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+				}
+				break;
+			}
+		}
+printf("duude completo i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
+		mr = front;  /* mr is now the abbreviated right list */
+		put_match_list(ctxt, free_later);
+	}
 
 	/* Now catenate the two lists. */
 	if (mr == NULL) return ml;

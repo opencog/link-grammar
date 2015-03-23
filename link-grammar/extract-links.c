@@ -217,14 +217,16 @@ static Parse_set* dummy_set(int lw, int rw,
 	return &dummy->set;
 }
 
+#ifdef FINISH_THIS_IDEA_MAYBE_LATER
 static int cost_compare(const void *a, const void *b)
 {
-	const Match_node* const * ma  = a;
+	const Match_node* const * ma = a;
 	const Match_node* const * mb = b;
-	return (*ma)->d->cost > (*mb)->d->cost;
+	if ((*ma)->d->cost < (*mb)->d->cost) return -1;
+	if ((*ma)->d->cost > (*mb)->d->cost) return 1;
+	return 0;
 }
 
-#ifdef FINISH_THIS_IDEA_MAYBE_LATER
 /**
  * Sort the matchlist into ascending disjunct cost. The goal here
  * is to issue the lowest-cost disjuncts first, so that the parse
