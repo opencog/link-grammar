@@ -77,7 +77,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 	if (sent_len >= 10)
 	{
-		shift = 12 + (sent_len) / 6 ;
+		shift = 12 + (sent_len) / 4 ;
 	}
 	else
 	{
