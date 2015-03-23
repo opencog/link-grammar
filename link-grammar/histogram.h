@@ -30,10 +30,21 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
  */
 #ifdef PERFORM_COUNT_HISTOGRAMMING
 
-/* A histogram distribution of the parse counts. */
+/**
+ * A histogram distribution of the parse counts.
+ * The histogram is with respect to the cost of the parse.  Thus, each
+ * bin of the historgram contains a count of the number of parses
+ * acheivable with that cost.  Rather than setting the baseline cost
+ * at zero, it is dynamically scaled, so that 'base' is the number of
+ * the first bin with a non-zero count in it.  If there are counts that
+ * don't fit into the available bins, then they are accumulated into
+ * the overrun bin.  It is always the case that
+ *     total == sum_i bin[i] + overrun
+ */
 #define NUM_BINS 12
 struct Count_bin_s
 {
+	short base;
 	s64 total;
 	s64 bin[NUM_BINS];
 	s64 overrun;
@@ -51,6 +62,7 @@ void hist_muladd(Count_bin* prod, const Count_bin*, double, const Count_bin*);
 void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
 
 static inline s64 hist_total(Count_bin* tot) { return tot->total; }
+s64 hist_cut_total(Count_bin* tot, int min_total);
 
 double hist_cost_cutoff(Count_bin*, int count);
 
@@ -73,6 +85,7 @@ static inline void hist_muladdv(Count_bin* prod, Count_bin* a, double cost, Coun
 	{ *prod += (*a) * b; }
 
 static inline s64 hist_total(Count_bin* tot) { return *tot; }
+static inline s64 hist_cut_total(Count_bin* tot, int min_total) { return *tot; }
 
 static inline double hist_cost_cutoff(Count_bin* tot, int count) { return 1.0e38; }
 

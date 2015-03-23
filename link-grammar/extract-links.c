@@ -29,13 +29,6 @@
  * continuation).
  */
 
-static Parse_set * dummy_set(void)
-{
-	// static Parse_set ds = {1, 1.0e38, NULL, NULL};
-	static Parse_set ds = {1, NULL, NULL};
-	return &ds;
-}
-
 static void free_set(Parse_set *s)
 {
 	Parse_choice *p, *xp;
@@ -48,8 +41,8 @@ static void free_set(Parse_set *s)
 }
 
 static Parse_choice *
-make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
-            Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
+make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
+            Parse_set *rset, Connector * rlc, Connector * rrc,
             Disjunct *ld, Disjunct *md, Disjunct *rd)
 {
 	Parse_choice *pc;
@@ -57,14 +50,14 @@ make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
 	pc->next = NULL;
 	pc->set[0] = lset;
 	pc->link[0].link_name = NULL;
-	pc->link[0].lw = llw;
-	pc->link[0].rw = lrw;
+	pc->link[0].lw = lset->lw;
+	pc->link[0].rw = lset->rw;
 	pc->link[0].lc = llc;
 	pc->link[0].rc = lrc;
 	pc->set[1] = rset;
 	pc->link[1].link_name = NULL;
-	pc->link[1].lw = rlw;
-	pc->link[1].rw = rrw;
+	pc->link[1].lw = rset->lw;
+	pc->link[1].rw = rset->rw;
 	pc->link[1].lc = rlc;
 	pc->link[1].rc = rrc;
 	pc->ld = ld;
@@ -92,12 +85,12 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 }
 
 static void record_choice(
-    Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
-    Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
+    Parse_set *lset, Connector * llc, Connector * lrc,
+    Parse_set *rset, Connector * rlc, Connector * rrc,
     Disjunct *ld, Disjunct *md, Disjunct *rd, Parse_set *s)
 {
-	put_choice_in_set(s, make_choice(lset, llw, lrw, llc, lrc,
-	                                 rset, rlw, rrw, rlc, rrc,
+	put_choice_in_set(s, make_choice(lset, llc, lrc,
+	                                 rset, rlc, rrc,
 	                                 ld, md, rd));
 }
 
@@ -175,11 +168,11 @@ static X_table_connector * x_table_pointer(int lw, int rw,
                               unsigned int null_count, Parse_info pi)
 {
 	X_table_connector *t;
-	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count)];
+	t = pi->x_table[pair_hash(pi->x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
-		if ((t->lw == lw) && (t->rw == rw) &&
-		    (t->le == le) && (t->re == re) &&
-		    (t->null_count == null_count))  return t;
+		if ((t->set.lw == lw) && (t->set.rw == rw) &&
+		    (t->set.le == le) && (t->set.re == re) &&
+		    (t->set.null_count == null_count))  return t;
 	}
 	return NULL;
 }
@@ -195,16 +188,75 @@ static X_table_connector * x_table_store(int lw, int rw,
 	unsigned int h;
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
+	n->set.lw = lw;
+	n->set.rw = rw;
+	n->set.null_count = null_count;
+	n->set.le = le;
+	n->set.re = re;
+	n->set.count = 0;
 	n->set.first = NULL;
 	n->set.tail = NULL;
-	n->set.count = 0;
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
-	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
+
+	h = pair_hash(pi->x_table_size, lw, rw, le, re, null_count);
 	t = pi->x_table[h];
 	n->next = t;
 	pi->x_table[h] = n;
 	return n;
 }
+
+/** Create a bogus parse set that only holds lw, rw. */
+static Parse_set* dummy_set(int lw, int rw,
+                            unsigned int null_count, Parse_info pi)
+{
+	X_table_connector *dummy;
+	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pi);
+	if (dummy) return &dummy->set;
+
+	dummy = x_table_store(lw, rw, NULL, NULL, null_count, pi);
+	dummy->set.count = 1;
+	return &dummy->set;
+}
+
+#ifdef FINISH_THIS_IDEA_MAYBE_LATER
+static int cost_compare(const void *a, const void *b)
+{
+	const Match_node* const * ma = a;
+	const Match_node* const * mb = b;
+	if ((*ma)->d->cost < (*mb)->d->cost) return -1;
+	if ((*ma)->d->cost > (*mb)->d->cost) return 1;
+	return 0;
+}
+
+/**
+ * Sort the matchlist into ascending disjunct cost. The goal here
+ * is to issue the lowest-cost disjuncts first, so that the parse
+ * set ends up quasi-sorted. This is not enough to get us a totally
+ * sorted parse set, but it does guarantee that at least the very
+ * first parse really will be the lowest cost.
+ */
+static Match_node* sort_matchlist(Match_node* mlist)
+{
+	Match_node* mx;
+	Match_node** marr;
+	size_t len = 1;
+	size_t i;
+
+	for (mx = mlist; mx->next != NULL; mx = mx->next) len++;
+	if (1 == len) return mlist;
+
+	/* Avoid blowing out the stack. Its hopless. */
+	if (100000 < len) return mlist;
+
+	marr = alloca(len * sizeof(Match_node*));
+	i = 0;
+	for (mx = mlist; mx != NULL; mx = mx->next) marr[i++] = mx;
+
+	qsort((void *) marr, len, sizeof(Match_node*), cost_compare);
+	for (i=0; i<len-1; i++) marr[i]->next = marr[i+1];
+	marr[len-1]->next = NULL;
+	return marr[0];
+}
+#endif /* FINISH_THIS_IDEA_MAYBE_LATER */
 
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
@@ -249,17 +301,26 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 #define NUM_PARSES 4
 	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
+	// xt->set.cut_count = hist_cut_total(count, NUM_PARSES);
+
+#define RECOUNT(X)  /* Make it disappear... */
+	RECOUNT({xt->set.recount = 1;})
 
 	/* If the two words are next to each other, the count == 1 */
 	if (lw + 1 == rw) return &xt->set;
 
+	/* The left and right connectors are null, but the two words are
+	 * NOT next to each-other.  */
 	if ((le == NULL) && (re == NULL))
 	{
 		Parse_set* pset;
+		Parse_set* dummy;
 		Disjunct* dis;
 
 		if (!islands_ok && (lw != -1)) return &xt->set;
 		if (null_count == 0) return &xt->set;
+
+		RECOUNT({xt->set.recount = 0;})
 
 		w = lw + 1;
 		for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
@@ -267,12 +328,14 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			if (dis->left == NULL)
 			{
 				pset = mk_parse_set(sent, mchxt, ctxt,
-				                    dis, NULL, w, rw, dis->right,
-				                    NULL, null_count-1, islands_ok, pi);
+				                    dis, NULL, w, rw, dis->right, NULL,
+				                    null_count-1, islands_ok, pi);
 				if (pset == NULL) continue;
-				record_choice(dummy_set(), lw, w, NULL, NULL,
-				              pset,        w, rw, NULL, NULL,
+				dummy = dummy_set(lw, w, null_count-1, pi);
+				record_choice(dummy, NULL, NULL,
+				              pset,  NULL, NULL,
 				              NULL, NULL, NULL, &xt->set);
+				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
 		pset = mk_parse_set(sent, mchxt, ctxt,
@@ -280,9 +343,11 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		                    null_count-1, islands_ok, pi);
 		if (pset != NULL)
 		{
-			record_choice(dummy_set(), lw, w, NULL, NULL,
-			              pset,        w, rw, NULL, NULL,
+			dummy = dummy_set(lw, w, null_count-1, pi);
+			record_choice(dummy, NULL, NULL,
+			              pset,  NULL, NULL,
 			              NULL, NULL, NULL, &xt->set);
+			RECOUNT({xt->set.recount += pset->recount;})
 		}
 		return &xt->set;
 	}
@@ -311,10 +376,12 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	 * it may omit some optimizations. */
 	if (UINT_MAX == null_count) return NULL;
 
+	RECOUNT({xt->set.recount = 0;})
 	for (w = start_word; w < end_word; w++)
 	{
 		Match_node * m, *mlist;
 		mlist = form_match_list(mchxt, w, le, lw, re, rw);
+		// if (mlist) mlist = sort_matchlist(mlist);
 		for (m = mlist; m != NULL; m = m->next)
 		{
 			unsigned int lnull_count, rnull_count;
@@ -390,9 +457,10 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					for (j=0; j<4; j++)
 					{
 						if (rs[j] == NULL) continue;
-						record_choice(ls[i], lw, w, le, d->left,
-						              rs[j], w, rw, d->right, re,
+						record_choice(ls[i], le, d->left,
+						              rs[j], d->right, re,
 						              ld, d, rd, &xt->set);
+						RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
 					}
 				}
 
@@ -409,10 +477,11 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 							if (ls[i] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
-							record_choice(ls[i], lw, w, le, d->left,
-							              rset, w, rw, NULL /* d->right */,
+							record_choice(ls[i], le, d->left,
+							              rset,  NULL /* d->right */,
 							              re,  /* the NULL indicates no link*/
 							              ld, d, rd, &xt->set);
+							RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
 						}
 					}
 				}
@@ -426,15 +495,16 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 					if (lset != NULL)
 					{
-						for (i=0; i<4; i++)
+						for (j=0; j<4; j++)
 						{
-							if (rs[i] == NULL) continue;
+							if (rs[j] == NULL) continue;
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
-							record_choice(lset, lw, w, NULL /* le */,
-							              d->left,  /* NULL indicates no link */
-							              rs[i], w, rw, d->right, re,
+							record_choice(lset, NULL /* le */,
+							                    d->left,  /* NULL indicates no link */
+							              rs[j], d->right, re,
 							              ld, d, rd, &xt->set);
+							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
 						}
 					}
 				}

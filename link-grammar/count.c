@@ -31,8 +31,7 @@ struct Table_connector_s
 	Connector        *le, *re;
 	Count_bin        count;
 	short            lw, rw;
-	unsigned short   cost; /* Cost, here and below, is actually the
-	                        * null-count being considered. */
+	unsigned short   null_count;
 };
 
 struct count_context_s
@@ -78,7 +77,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 	if (sent_len >= 10)
 	{
-		shift = 12 + (sent_len) / 6 ;
+		shift = 12 + (sent_len) / 4 ;
 	}
 	else
 	{
@@ -112,17 +111,18 @@ bool do_match(Connector *a, Connector *b, int aw, int bw)
 static Table_connector * table_store(count_context_t *ctxt,
                                      int lw, int rw,
                                      Connector *le, Connector *re,
-                                     unsigned int cost)
+                                     unsigned int null_count)
 {
 	Table_connector *t, *n;
 	unsigned int h;
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
+	h = pair_hash(ctxt->table_size, lw, rw, le, re, null_count);
 	t = ctxt->table[h];
 	n->next = t;
 	ctxt->table[h] = n;
+
 	return n;
 }
 
@@ -131,15 +131,15 @@ static Table_connector *
 find_table_pointer(count_context_t *ctxt,
                    int lw, int rw,
                    Connector *le, Connector *re,
-                   unsigned int cost)
+                   unsigned int null_count)
 {
 	Table_connector *t;
-	unsigned int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	unsigned int h = pair_hash(ctxt->table_size,lw, rw, le, re, null_count);
 	t = ctxt->table[h];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw)
 		    && (t->le == le) && (t->re == re)
-		    && (t->cost == cost))  return t;
+		    && (t->null_count == null_count))  return t;
 	}
 
 	/* Create a new connector only if resources are exhausted.
@@ -154,7 +154,9 @@ find_table_pointer(count_context_t *ctxt,
 	                       resources_exhausted(ctxt->current_resources)))
 	{
 		ctxt->exhausted = true;
-		return table_store(ctxt, lw, rw, le, re, cost);
+		t = table_store(ctxt, lw, rw, le, re, null_count);
+		t->count = hist_zero();
+		return t;
 	}
 	else return NULL;
 }
@@ -162,17 +164,17 @@ find_table_pointer(count_context_t *ctxt,
 /** returns the count for this quintuple if there, -1 otherwise */
 Count_bin* table_lookup(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
-                       unsigned int cost)
+                       unsigned int null_count)
 {
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
 	if (t == NULL) return NULL; else return &t->count;
 }
 
 /**
  * psuedocount is used to check to see if a parse is even possible,
- * before wasting cpu time performing an actual count, only to discover
- * that it is zero.
+ * so that we don't waste cpu time performing an actual count, only
+ * to discover that it is zero.
  *
  * Returns false if and only if this entry is in the hash table
  * with a count value of 0. If an entry is not in the hash table,
@@ -202,7 +204,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	int start_word, end_word, w;
 	Table_connector *t;
 
-	if (null_count < 0) return zero;  /* can this ever happen?? */
+	assert (0 <= null_count, "Bad null count");
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
@@ -227,6 +229,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		return t->count;
 	}
 
+	/* The left and right connectors are null, but the two words are
+	 * NOT next to each-other. */
 	if ((le == NULL) && (re == NULL))
 	{
 		if (!ctxt->islands_ok && (lw != -1))
@@ -234,12 +238,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			/* If we don't allow islands (a set of words linked together
 			 * but separate from the rest of the sentence) then the
 			 * null_count of skipping n words is just n. */
-			/* null_block is always 1 these days. */
-			/* if (null_count == ((rw-lw-1) + ctxt->null_block-1) / ctxt->null_block) */
 			if (null_count == (rw-lw-1))
 			{
-				/* If null_block=4 then the null_count of
-				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
 				t->count = hist_one();
 			}
 			else
@@ -356,23 +356,23 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 
-				/* total number where links are used on both sides */
+				/* Total number where links are used on both sides */
 				pseudototal = leftpcount && rightpcount;
 
 				if (!pseudototal && leftpcount) {
-					/* evaluate using the left match, but not the right */
+					/* Evaluate using the left match, but not the right. */
 					pseudototal =
 						pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 				if (!pseudototal && (le == NULL) && rightpcount) {
-					/* evaluate using the right match, but not the left */
+					/* Evaluate using the right match, but not the left. */
 					pseudototal =
 						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 				}
 
-				/* If pseudototal is zero, that implies that we know
-				 * that the true total is zero. So we don't bother counting
-				 * at all, in tha case. */
+				/* If pseudototal is zero (false), that implies that
+				 * we know that the true total is zero. So we don't
+				 * bother counting at all, in that case. */
 				if (pseudototal)
 				{
 					Count_bin leftcount = zero;

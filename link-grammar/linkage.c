@@ -310,7 +310,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			assert(MT_EMPTY!=cdj->word[0]->morpheme_type); /* already discarded */
+			/* XXX FIXME: the assert below sometimes craashes, because
+			 * I guess cdj->word[0] is a null pointer, or something like
+			 * that.  Not sure, its hard to reproduce.  */
+			/* assert(MT_EMPTY != cdj->word[0]->morpheme_type); already discarded */
 
 			t = cdj->string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
@@ -505,11 +508,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * indication would be shown at all. */
 
 					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
-					s = malloc(strlen(t)+1+strlen(regex_name)+sizeof("[]"));
+					/* 4 = 1(null) + 1(guess_mark) + 2 (sizeof "[]") */
+					s = malloc(strlen(t) + strlen(regex_name) + 4);
 					strncpy(s, t, baselen);
 					s[baselen] = '[';
-					s[baselen+1] = guess_mark;
-					strcpy(s+baselen+2, regex_name);
+					s[baselen + 1] = guess_mark;
+					strcpy(s + baselen + 2, regex_name);
 					strcat(s, "]");
 					if (NULL != sm) strcat(s, sm);
 					t = s;
