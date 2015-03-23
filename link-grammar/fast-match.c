@@ -354,11 +354,13 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	/* Now we want to eliminate duplicates from the lists. */
 	/* If the left-lest is reasonably short, then just do a quadratic
 	 * search for duplicates. But if the list is long, optimize the
-	 * search.
+	 * search.  Based on quickie measurements, the optimized version
+	 * seems to dominate when 250 < llen and 8 < rlen. Roughly.
 	 */
-	// if (200 < llen) printf("duuuuuude it is this %d\n", llen);
-	if (0)
+	if (llen < 250 || rlen < 9)
 	{
+		/* Perform a simple quadratic-time search. viz two nested loops.
+		 * Runtime blows up horribly for lengths over a few hundred. */
 		free_later = NULL;
 		front = NULL;
 		for (mx = mr; mx != NULL; mx = mz)
@@ -383,6 +385,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
+		/* Perform an O(N log N) search, by sorting first, and then
+		 * doing a linear-line run through the sorted arrays.
+		 */
 		size_t i,j;
 		Match_node* mx;
 		Match_node** mra = alloca(rlen * sizeof(Match_node*));
@@ -396,38 +401,34 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		for (mx = ml; mx != NULL; mx = mx->next) mla[i++] = mx;
 		qsort((void *) mla, llen, sizeof(Match_node*), addr_compare);
 
+		/* Compare addresses side-by side in a linear loop.
+		 * Be careful not to run past bounds arrays. */
 		free_later = NULL;
 		front = NULL;
 		i = 0;
 		j = 0;
 		while (i < rlen)
 		{
-printf("duude start i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
-			while (i< rlen && mra[i]->d < mla[j]->d)
+			while (i < rlen && mra[i]->d < mla[j]->d)
 			{
 				mra[i]->next = front;
 				front = mra[i];
 				i++;
-printf("duude iiadv i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 			}
 			if (i == rlen) break;
-printf("duude whati i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 
 			if (mra[i]->d == mla[j]->d)
 			{
 				mra[i]->next = free_later;
 				free_later = mra[i];
 				i++; j++;
-printf("duude equij i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 			}
 			if (i == rlen) break;
 
-printf("duude whatz i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 			while (j < llen && mra[i]->d > mla[j]->d)
-			{
-printf("duude jadvj i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 				j++;
-			}
+
+			/* Drain the rest of the right-hand list. */
 			if (j == llen)
 			{
 				while (i < rlen)
@@ -435,12 +436,10 @@ printf("duude jadvj i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 					mra[i]->next = front;
 					front = mra[i];
 					i++;
-printf("duude finis i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 				}
 				break;
 			}
 		}
-printf("duude completo i=%d j=%d rlen=%d llen=%d\n", i,j, rlen, llen);
 		mr = front;  /* mr is now the abbreviated right list */
 		put_match_list(ctxt, free_later);
 	}
