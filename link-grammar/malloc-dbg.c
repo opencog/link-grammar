@@ -53,27 +53,31 @@ static void init_io(void)
 static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 {
 	int i;
-	for (i=0; i<TBLSZ; i++)
+	if (NULL != mem)
 	{
-		if (mem == loc[i].mem)
+		for (i=0; i<mcnt; i++)
 		{
-#if TRACK_LEAK
-			loc[i].mem = nm;
-			loc[i].caller = (void *) -1;
-			loc[i].sz = n_bytes;
-#endif
-			allprt(fh, "realloc free %d %p\n", i, mem);
-			if (loc[i].free)
+			if (mem == loc[i].mem)
 			{
-				fprintf(fh, "Error realloc of prev free %d %p\n", i, mem);
+#if TRACK_LEAK
+				loc[i].mem = nm;
+				loc[i].caller = (void *) -1;
+				loc[i].sz = n_bytes;
+#endif
+				allprt(fh, "realloc free %d %p\n", i, mem);
+				if (loc[i].free)
+				{
+					fprintf(fh, "Error realloc of prev free %d %p\n", i, mem);
+				}
+				loc[i].free = true;
+				break;
 			}
-			loc[i].free = true;
-			break;
 		}
-	}
-	if (TBLSZ == i)
-	{
-		fprintf(fh, "Error: realloc address not previously alloed!\n");
+		if (mcnt == i)
+		{
+			fprintf(fh, "Error: realloc address %d %p not previously alloed!\n",
+				mcnt, mem);
+		}
 	}
 
 	__realloc_hook = old_realloc_hook;
@@ -84,33 +88,55 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 #if TRACK_LEAK
 	if (i < TBLSZ) return nm;
 #endif
-	if (i < TBLSZ)
+	if (mem == nm)
 	{
 		loc[i].mem = nm;
 		loc[i].caller = caller;
 		loc[i].sz = n_bytes;
-		mcnt++;
 		loc[i].cnt = mcnt;
 		loc[i].free = false;
 		allprt(fh, "realloc reuse alloc %d %p\n", i, nm);
 		return nm;
 	}
 
-	for (i=0; i<TBLSZ; i++)
+	if (NULL != mem)
 	{
-		if ((void *) -1 == loc[i].mem)
+		for (i=0; i<mcnt; i++)
 		{
-			loc[i].mem = nm;
-			loc[i].sz = n_bytes;
-			loc[i].caller = caller;
-			mcnt ++;
-			loc[i].cnt = mcnt;
-			loc[i].free = false;
-			allprt(fh, "realloc new alloc %d %p\n", i, nm);
-			break;
+			if (nm == loc[i].mem)
+			{
+				loc[i].mem = nm;
+				loc[i].sz = n_bytes;
+				loc[i].caller = caller;
+				loc[i].cnt = mcnt;
+				loc[i].free = false;
+				allprt(fh, "realloc recycle alloc %d %p\n", i, nm);
+				return nm;
+			}
 		}
 	}
-	if (i == TBLSZ) exit(1);
+	else i = mcnt;
+
+	if (i == mcnt)
+	{
+		if ((void *) -1 != loc[i].mem)
+		{
+			printf("internal error - realloc %d\n", i);
+			exit(1);
+		}
+		loc[i].mem = nm;
+		loc[i].sz = n_bytes;
+		loc[i].caller = caller;
+		loc[i].cnt = mcnt;
+		mcnt++;
+		loc[i].free = false;
+		allprt(fh, "realloc new alloc %d %p\n", i, nm);
+	}
+	if (mcnt == TBLSZ)
+	{
+		printf("ran out of memory -reallo\n");
+		exit(1);
+	}
 	return nm;
 }
 
@@ -124,7 +150,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 
 	init_io();
 	int i;
-	for (i=0; i<TBLSZ; i++)
+	for (i=0; i<mcnt; i++)
 	{
 		if (mem == loc[i].mem)
 		{
@@ -132,35 +158,37 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 			loc[i].caller = caller;
 			allprt(fh,"malloc reuse %d %p\n", i, mem);
 			loc[i].sz = n_bytes;
-			mcnt ++;
 			loc[i].cnt = mcnt;
+			if (!loc[i].free)
+			{
+				fprintf(fh, "Error: mallocing an address %d %p that is in use\n",
+					i, mem);
+			}
 			loc[i].free = false;
 			break;
 		}
 	}
-	if (i == TBLSZ)
+	if (i == mcnt)
 	{
-		for (i=0; i<TBLSZ; i++)
+		if ((void *) -1 != loc[i].mem)
 		{
-			if ((void *) -1 == loc[i].mem)
-			{
-				loc[i].mem = mem;
-				loc[i].caller = caller;
-				allprt(fh,"malloc fresh %d %p\n", i, mem);
-				loc[i].sz = n_bytes;
-				mcnt ++;
-				loc[i].cnt = mcnt;
-				loc[i].free = false;
-				break;
-			}
+			printf("internal error - malloc %d\n", i);
+			exit(1);
 		}
+		loc[i].mem = mem;
+		loc[i].caller = caller;
+		allprt(fh,"malloc fresh %d %p\n", i, mem);
+		loc[i].sz = n_bytes;
+		loc[i].cnt = mcnt;
+		mcnt ++;
+		loc[i].free = false;
 	}
 
+#if REPORT
 	/* This will be hit if there is a slow memory leak */
 	if (i == TBLSZ)
 	{
 		size_t totsz=0;
-#if REPORT
 		for (i=0; i<TBLSZ; i++)
 		{
 		  /* size_t off = loc[i].caller - (void *) my_malloc_hook; */
@@ -168,9 +196,15 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 			       i, loc[i].caller, loc[i].sz, loc[i].cnt);
 			totsz += loc[i].sz;
 		}
-#endif
 		fprintf (fh, "Total Size=%zu\n", totsz);
 		*((int *)0) = 1; /* Force a crash, pop into debugger. */
+		exit(1);
+	}
+#endif
+
+	if (mcnt == TBLSZ)
+	{
+		printf("ran out of memory -mallo\n");
 		exit(1);
 	}
 
@@ -185,7 +219,7 @@ static void my_free_hook(void * mem, const void * caller)
 	__malloc_hook = old_malloc_hook;
 	__free_hook = old_free_hook;
 	int i;
-	for (i=0; i<TBLSZ; i++)
+	for (i=0; i<mcnt; i++)
 	{
 		if (mem == loc[i].mem)
 		{
