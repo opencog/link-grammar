@@ -44,7 +44,7 @@
  % effect is that mass nouns are inconsistently treated as sometimes
  % singular, sometimes plural. e.g. words.n.3 gets <noun-sub-s> &
  % <noun-main-m>. This is a kind-of ugly tangle, it should really
- % be sorted out so that links are properly marks as s, p or m.
+ % be sorted out so that links are properly marked as s, p or m.
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
