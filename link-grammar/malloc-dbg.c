@@ -36,7 +36,7 @@ typedef struct {
 
 // static loc_t loc[TBLSZ];
 static loc_t *loc;
-static int mcnt = 0;
+static volatile int mcnt = 0;
 
 static FILE *fh = NULL;
 
@@ -73,12 +73,13 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 				break;
 			}
 		}
-		if (mcnt == i)
+		if (i == mcnt)
 		{
 			fprintf(fh, "Error: realloc address %d %p not previously alloed!\n",
 				mcnt, mem);
 		}
 	}
+	else i = mcnt;
 
 	__realloc_hook = old_realloc_hook;
 	void * nm = realloc(mem, n_bytes);
@@ -99,23 +100,19 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 		return nm;
 	}
 
-	if (NULL != mem)
+	for (i=0; i<mcnt; i++)
 	{
-		for (i=0; i<mcnt; i++)
+		if (nm == loc[i].mem)
 		{
-			if (nm == loc[i].mem)
-			{
-				loc[i].mem = nm;
-				loc[i].sz = n_bytes;
-				loc[i].caller = caller;
-				loc[i].cnt = mcnt;
-				loc[i].free = false;
-				allprt(fh, "realloc recycle alloc %d %p\n", i, nm);
-				return nm;
-			}
+			loc[i].mem = nm;
+			loc[i].sz = n_bytes;
+			loc[i].caller = caller;
+			loc[i].cnt = mcnt;
+			loc[i].free = false;
+			allprt(fh, "realloc recycle alloc %d %p\n", i, nm);
+			return nm;
 		}
 	}
-	else i = mcnt;
 
 	if (i == mcnt)
 	{
@@ -128,8 +125,10 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 		loc[i].sz = n_bytes;
 		loc[i].caller = caller;
 		loc[i].cnt = mcnt;
-		mcnt++;
 		loc[i].free = false;
+
+		mcnt++;
+		if (mcnt%1000000 == 0) fprintf(fh, "Up to %d mallos\n", mcnt);
 		allprt(fh, "realloc new alloc %d %p\n", i, nm);
 	}
 	if (mcnt == TBLSZ)
@@ -177,11 +176,13 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 		}
 		loc[i].mem = mem;
 		loc[i].caller = caller;
-		allprt(fh,"malloc fresh %d %p\n", i, mem);
 		loc[i].sz = n_bytes;
 		loc[i].cnt = mcnt;
-		mcnt ++;
 		loc[i].free = false;
+
+		allprt(fh,"malloc fresh %d %p\n", i, mem);
+		mcnt ++;
+		if (mcnt%1000000 == 0) fprintf(fh, "Up to %d mallos\n", mcnt);
 	}
 
 #if REPORT
@@ -285,6 +286,7 @@ void report_mem_dbg(void)
 void my_init_hook(void);
 void my_init_hook(void)
 {
+return;
 	static bool is_init = false;
 	if (is_init) return;
 	is_init = true;
