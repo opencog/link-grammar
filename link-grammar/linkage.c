@@ -293,10 +293,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 				/* Put brackets around the null word. */
 				l = strlen(t) + 2;
-				s = (char *) malloc(l+1);
-				sprintf(s, "[%s]", t);
+				s = (char *) alloca(l+1);
+				s[0] = '[';
+				strcpy(&s[1], t);
+				s[l] = ']';
 				t = string_set_add(s, sent->string_set);
-				free(s);
 				lgdebug(D_CCW, " %s\n", t);
 			}
 		}
@@ -472,12 +473,15 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				if ((!(w->status & WS_GUESS) && (w->status & WS_INDICT))
 				    || !DISPLAY_GUESS_MARKS)
 				{
-					s = strdup(t);
+					s = alloca(strlen(t)+1);
+					strcpy(s, t);
+					if (sm) s[sm-t] = SUBSCRIPT_DOT;
+					t = string_set_add(s, sent->string_set);
 				}
 				else
 				{
-					size_t baselen = NULL == sm ? strlen(t) : (size_t)(sm-t);
-					const char *regex_name = w->regex_name;
+					size_t baselen;
+					const char *regex_name;
 					char guess_mark;
 
 					switch (w->status & WS_GUESS)
@@ -496,7 +500,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							break;
 						default:
 							assert(0, "Missing 'case: %2x'", w->status & WS_GUESS);
-
 					}
 
 					/* In the case of display_morphology==0, the guess indication of
@@ -507,9 +510,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * a guess indication but the last subword doesn't have, no guess
 					 * indication would be shown at all. */
 
+					regex_name = w->regex_name;
 					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
 					/* 4 = 1(null) + 1(guess_mark) + 2 (sizeof "[]") */
-					s = malloc(strlen(t) + strlen(regex_name) + 4);
+					baselen = NULL == sm ? strlen(t) : (size_t)(sm-t);
+					s = alloca(strlen(t) + strlen(regex_name) + 4);
 					strncpy(s, t, baselen);
 					s[baselen] = '[';
 					s[baselen + 1] = guess_mark;
@@ -518,11 +523,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					if (NULL != sm) strcat(s, sm);
 					t = s;
 					sm = strrchr(t, SUBSCRIPT_MARK);
+					if (sm) s[sm-t] = SUBSCRIPT_DOT;
+					t = string_set_add(s, sent->string_set);
 				}
-
-				if (sm) s[sm-t] = SUBSCRIPT_DOT;
-				t = string_set_add(s, sent->string_set);
-				free(s);
 			}
 		}
 
