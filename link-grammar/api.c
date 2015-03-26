@@ -503,6 +503,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 
 	/* Now actually malloc the array in which we will process linkages. */
+	/* We may have been called before, e.g this might be a panic parse,
+	 * and the linkages array may stiil be there from last time. */
+	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
 	/* Generate an array of linkage indices to examine */
