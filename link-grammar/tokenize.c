@@ -2077,7 +2077,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	        word, word_can_lrsplit, gword_status(sent, unsplit_word));
 
 	/* Generate random morphology */
-	if (dict->anysplit) anysplit(sent, unsplit_word);
+	if (dict->affix_table && dict->affix_table->anysplit)
+		anysplit(sent, unsplit_word);
 
 	/* OK, now try to strip affixes. */
 

@@ -202,6 +202,7 @@ void free_anysplit(Dictionary afdict)
 	free_regexs(as->regmid);
 	free_regexs(as->regsuf);
 	free(as);
+	afdict->anysplit = NULL;
 }
 
 /*
@@ -319,7 +320,8 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 }
 
 
-/* Affix classes:
+/**
+ * Affix classes:
  * REGPARTS  Max number of word partitions. Value 0 disables anysplit.
  * REGPRE    Regex for prefix
  * REGMID    Regex for middle suffixes
@@ -332,6 +334,9 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 
 /**
  * Initialize the anysplit parameter and cache structure.
+ * Return true if initializaion suceeded, or if dictionary does not use
+ * anysplit (its not an error to not use anysplit!).  Return false if
+ * init failed.
  */
 bool anysplit_init(Dictionary afdict)
 {
@@ -375,12 +380,14 @@ bool anysplit_init(Dictionary afdict)
 	as->nparts = atoi(regparts->string[0]);
 	if (as->nparts < 0)
 	{
+		free_anysplit(afdict);
 		prt_error("Error: File %s: Value of %s must be a non-negative number",
 		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return false;
 	}
 	if (0 == as->nparts)
 	{
+		free_anysplit(afdict);
 		prt_error("Warning: File %s: Anysplit disabled (0: %s)\n",
 		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
@@ -388,6 +395,7 @@ bool anysplit_init(Dictionary afdict)
 
 	if (2 != regalts->length)
 	{
+		free_anysplit(afdict);
 		prt_error("Error: File %s: Must have %s defined with 2 values",
 		          afdict->name, afdict_classname[AFDICT_REGALTS]);
 		return false;
@@ -396,6 +404,7 @@ bool anysplit_init(Dictionary afdict)
 	as->altsmax = atoi(regalts->string[1]);
 	if ((atoi(regalts->string[0]) <= 0) || (atoi(regalts->string[1]) <= 0))
 	{
+		free_anysplit(afdict);
 		prt_error("Error: File %s: Value of %s must be 2 positive numbers",
 		          afdict->name, afdict_classname[AFDICT_REGALTS]);
 		return false;
@@ -434,7 +443,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	char *suffix_string = alloca(l+1);   /* word + NUL */
 	bool use_sampling = true;
 	const char infix_mark = INFIX_MARK(afdict);
-
 
 	if (NULL == afdict) return false;
 	as = afdict->anysplit;
