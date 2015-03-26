@@ -392,7 +392,7 @@ bool parse_options_memory_exhausted(Parse_Options opts) {
 }
 
 bool parse_options_resources_exhausted(Parse_Options opts) {
-	return (resources_timer_expired(opts->resources) || resources_memory_exhausted(opts->resources));
+	return (resources_exhausted(opts->resources));
 }
 
 void parse_options_reset_resources(Parse_Options opts) {
@@ -503,6 +503,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 
 	/* Now actually malloc the array in which we will process linkages. */
+	/* We may have been called before, e.g this might be a panic parse,
+	 * and the linkages array may stiil be there from last time. */
+	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
 	/* Generate an array of linkage indices to examine */
@@ -1407,7 +1410,12 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	mchxt = alloc_fast_matcher(sent);
 	ctxt = alloc_count_context(sent->length);
 	print_time(opts, "Initialized fast matcher");
-	if (resources_exhausted(opts->resources)) return;
+	if (resources_exhausted(opts->resources))
+	{
+		free_count_context(ctxt);
+		free_fast_matcher(mchxt);
+		return;
+	}
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before

@@ -1248,8 +1248,10 @@ static CNode * linkage_constituent_tree(Linkage linkage)
 }
 
 /* Make the compiler shut up about the deprecated functions */
+/*
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+*/
 
 static void linkage_free_constituent_tree(CNode * n)
 {
@@ -1302,4 +1304,3 @@ void linkage_free_constituent_tree_str(char * s)
 {
 	exfree(s, strlen(s)+1);
 }
-

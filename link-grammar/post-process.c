@@ -122,25 +122,34 @@ static bool link_in_domain(size_t link, const Domain * d)
 /* Returns true if the domains actually form a properly nested structure */
 static bool check_domain_nesting(Postprocessor *pp, int num_links)
 {
+	size_t id1, id2;
 	Domain * d1, * d2;
 	int counts[4];
 	char mark[MAX_NUM_LINKS];
 	List_o_links * lol;
 	int i;
-	for (d1=pp->pp_data.domain_array; d1 < pp->pp_data.domain_array + pp->pp_data.N_domains; d1++) {
-		for (d2=d1+1; d2 < pp->pp_data.domain_array + pp->pp_data.N_domains; d2++) {
-			memset(mark, 0, num_links*(sizeof mark[0]));
-			for (lol=d2->lol; lol != NULL; lol = lol->next) {
+	for (id1 = 0; id1 < pp->pp_data.N_domains; id1++)
+	{
+		d1 = &pp->pp_data.domain_array[id1];
+		for (id2 = id1+1; id2 < pp->pp_data.N_domains; id2++)
+		{
+			d2 = &pp->pp_data.domain_array[id2];
+
+			memset(mark, 0, num_links);
+			for (lol=d2->lol; lol != NULL; lol = lol->next)
 				mark[lol->link] = 1;
-			}
-			for (lol=d1->lol; lol != NULL; lol = lol->next) {
+
+			for (lol=d1->lol; lol != NULL; lol = lol->next)
 				mark[lol->link] += 2;
-			}
+
 			counts[0] = counts[1] = counts[2] = counts[3] = 0;
 			for (i=0; i<num_links; i++)
-				counts[(int)mark[i]]++;/* (int) cast avoids compiler warning DS 7/97 */
+			{
+				assert(mark[i] < 4, "Miscount of link marks!");
+				counts[(size_t)mark[i]]++; /* cast avoids compiler warning */
+			}
 			if ((counts[1] > 0) && (counts[2] > 0) && (counts[3] > 0))
-		return false;
+				return false;
 		}
 	}
 	return true;
@@ -194,7 +203,7 @@ void post_process_free_data(PP_data * ppd)
 	}
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
-	ppd->length = 0;
+	ppd->num_words = 0;
 	ppd->N_domains = 0;
 }
 
@@ -203,7 +212,7 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
                              int w, pp_linkset *ls)
 {
 	List_o_links *lol;
-	assert(w < pp->pp_data.length, "Bad word index");
+	assert(w < pp->pp_data.num_words, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -275,7 +284,7 @@ static void alloc_pp_node(Postprocessor *pp)
 	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
 	/* highly unlikely that the number of links will ever exceed this */
-	ppn->dtsz = 2 * pp->pp_data.length;
+	ppn->dtsz = 2 * pp->pp_data.num_words;
 	dz = ppn->dtsz * sizeof(D_type_list*);
 	ppn->d_type_array = (D_type_list **) malloc (dz);
 	memset(ppn->d_type_array, 0, dz);
@@ -299,6 +308,11 @@ static void clear_pp_node(Postprocessor *pp)
 
 
 /************************ rule application *******************************/
+
+static void clear_visited(Postprocessor *pp)
+{
+	memset(pp->visited, 0, pp->pp_data.num_words * sizeof(bool));
+}
 
 static bool apply_rules(Postprocessor *pp,
                         bool (applyfn) (Postprocessor *, Linkage, pp_rule *),
@@ -453,11 +467,11 @@ static void reachable_without_dfs(Postprocessor *pp,
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
 	List_o_links *lol;
-	assert(w < pp->pp_data.length, "Bad word index");
+	assert(w < pp->pp_data.num_words, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
-		assert(lol->word < pp->pp_data.length, "Bad word index");
+		assert(lol->word < pp->pp_data.num_words, "Bad word index");
 		if (!pp->visited[lol->word] &&
 		    !(w == a && lol->word == b) &&
 		    !(w == b && lol->word == a))
@@ -479,14 +493,14 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
 	size_t w;
-	for (w = 0; w < pp->pp_data.length; w++)
+	for (w = 0; w < pp->pp_data.num_words; w++)
 	{
 		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 		{
 			if (w > lol->word) continue;	/* only consider each edge once */
 			if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
-			memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
+			clear_visited(pp);
 			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
 			if (!pp->visited[lol->word]) return false;
 		}
@@ -498,10 +512,10 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		/* (w, lol->word) are the left and right ends of the edge we're considering */
 		if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
-		memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
+		clear_visited(pp);
 		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
 
-		assert(lol->word < pp->pp_data.length, "Bad word index");
+		assert(lol->word < pp->pp_data.num_words, "Bad word index");
 		if (!pp->visited[lol->word]) return false;
 	}
 
@@ -543,10 +557,10 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	List_o_links * lol;
 
 	/* Get more size, if needed */
-	if (pp->pp_data.wowlen <= pp->pp_data.length)
+	if (pp->pp_data.wowlen <= pp->pp_data.num_words)
 	{
 		size_t newsz;
-		pp->pp_data.wowlen += pp->pp_data.length;
+		pp->pp_data.wowlen += pp->pp_data.num_words;
 		newsz = pp->pp_data.wowlen * sizeof(List_o_links *);
 		pp->pp_data.word_links = (List_o_links **) realloc(
 			pp->pp_data.word_links, newsz);
@@ -582,19 +596,10 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	}
 }
 
-static void setup_domain_array(Postprocessor *pp, size_t n,
+static void setup_domain_array(Postprocessor *pp,
                                const char *string, int start_link)
 {
-	/* set pp->visited[i] to false */
-	/* Grab more memory if needed */
-	if (pp->vlength <= pp->pp_data.length)
-	{
-		size_t newsz;
-		pp->vlength += pp->pp_data.length;
-		newsz = pp->vlength * sizeof(bool);
-		pp->visited = (bool *) realloc(pp->visited, newsz);
-	}
-	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
+	size_t n = pp->pp_data.N_domains;
 
 	/* Grab more memory if needed */
 	if (pp->pp_data.domlen <= n)
@@ -606,22 +611,26 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 		incsz = DOMINC * sizeof(Domain);
 		pp->pp_data.domain_array = (Domain *) realloc(pp->pp_data.domain_array,
 			newsz);
-		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0, incsz);
+		memset(&pp->pp_data.domain_array[n], 0, incsz);
 	}
 
 	pp->pp_data.domain_array[n].string = string;
 	pp->pp_data.domain_array[n].lol    = NULL;
 	pp->pp_data.domain_array[n].size   = 0;
 	pp->pp_data.domain_array[n].start_link = start_link;
+
+	pp->pp_data.N_domains++;
+	assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
 }
 
 static void add_link_to_domain(Postprocessor *pp, int link)
 {
-	List_o_links *lol;
-	lol = (List_o_links *) malloc(sizeof(List_o_links));
-	lol->next = pp->pp_data.domain_array[pp->pp_data.N_domains].lol;
-	pp->pp_data.domain_array[pp->pp_data.N_domains].lol = lol;
-	pp->pp_data.domain_array[pp->pp_data.N_domains].size++;
+	size_t n = pp->pp_data.N_domains - 1;  /* the very last one */
+	List_o_links *lol = (List_o_links *) malloc(sizeof(List_o_links));
+
+	lol->next = pp->pp_data.domain_array[n].lol;
+	pp->pp_data.domain_array[n].lol = lol;
+	pp->pp_data.domain_array[n].size++;
 	lol->link = link;
 }
 
@@ -629,7 +638,7 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
-	assert(w < pp->pp_data.length, "Bad word index");
+	assert(w < pp->pp_data.num_words, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -654,7 +663,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                    size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
-	assert(w < pp->pp_data.length, "Bad word index");
+	assert(w < pp->pp_data.num_words, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -665,7 +674,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
-		assert(lol->word < pp->pp_data.length, "Bad word index");
+		assert(lol->word < pp->pp_data.num_words, "Bad word index");
 		if ((!pp->visited[lol->word]) && !(w == root && lol->word < w) &&
 		     !(lol->word < root && lol->word < w &&
 		          pp_linkset_match(pp->knowledge->restricted_links,
@@ -680,7 +689,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                     size_t w, size_t root, size_t right, size_t start_link)
 {
 	List_o_links * lol;
-	assert(w < pp->pp_data.length, "Bad word index");
+	assert(w < pp->pp_data.num_words, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -691,7 +700,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
-		assert(lol->word < pp->pp_data.length, "Bad word index");
+		assert(lol->word < pp->pp_data.num_words, "Bad word index");
 		if (!pp->visited[lol->word] && !(w == root && lol->word >= right) &&
 		    !(w == root && lol->word < root) &&
 		       !(lol->word < root && lol->word < w &&
@@ -707,7 +716,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
                                     size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
-	assert(w < pp->pp_data.length, "Bad word index");
+	assert(w < pp->pp_data.num_words, "Bad word index");
 	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
@@ -718,7 +727,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
-		assert(lol->word < pp->pp_data.length, "Bad word index");
+		assert(lol->word < pp->pp_data.num_words, "Bad word index");
 		if (!pp->visited[lol->word] && (lol->word != right))
 		{
 			depth_first_search(pp, sublinkage, lol->word, right, start_link);
@@ -746,46 +755,43 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
 		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
 				add_link_to_domain(pp, link);
+
+			clear_visited(pp);
 			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
 							 sublinkage->link_array[link].lw, link);
-
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp, link);
+
+			clear_visited(pp);
 			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
 			                       sublinkage->link_array[link].lw, link);
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			/* do not add the starter link to its urfl_only domain */
+			clear_visited(pp);
 			d_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].rw, link);
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->left_domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			/* do not add the starter link to a left domain */
+			clear_visited(pp);
 			left_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                        sublinkage->link_array[link].rw, link);
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 	}
 
@@ -991,6 +997,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	/* 60 is just starting size, these are expanded if needed */
 	pp->vlength = 60;
 	pp->visited = (bool*) malloc(pp->vlength * sizeof(bool));
+	memset(pp->visited, 0, pp->vlength * sizeof(bool));
 
 	pp->pp_data.links_to_ignore = NULL;
 	pp->pp_data.domlen = 60;
@@ -1115,7 +1122,17 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	// XXX wtf .. why is this not leaking memory ?
 	pp->pp_data.links_to_ignore = NULL;
 
-	pp->pp_data.length = sublinkage->num_words;
+	pp->pp_data.num_words = sublinkage->num_words;
+
+	/* Grab more memory if needed */
+	if (pp->vlength <= pp->pp_data.num_words)
+	{
+		size_t newsz;
+		pp->vlength += pp->pp_data.num_words;
+		newsz = pp->vlength * sizeof(bool);
+		pp->visited = (bool *) realloc(pp->visited, newsz);
+	}
+	clear_visited(pp);
 
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
