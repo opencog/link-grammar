@@ -1407,7 +1407,12 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	mchxt = alloc_fast_matcher(sent);
 	ctxt = alloc_count_context(sent->length);
 	print_time(opts, "Initialized fast matcher");
-	if (resources_exhausted(opts->resources)) return;
+	if (resources_exhausted(opts->resources))
+	{
+		free_count_context(ctxt);
+		free_fast_matcher(mchxt);
+		return;
+	}
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before
