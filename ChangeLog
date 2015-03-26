@@ -10,6 +10,7 @@ Version 5.3.0: (XXX 2015)
  * Improve support for splitting sentences.
  * Change default setting of 'islands_ok' to true.
  * Improve performance on long sentences.
+ * Fix rare crash due to memory corruption on long sentences.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.

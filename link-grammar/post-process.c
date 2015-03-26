@@ -617,7 +617,7 @@ static void setup_domain_array(Postprocessor *pp,
 		incsz = DOMINC * sizeof(Domain);
 		pp->pp_data.domain_array = (Domain *) realloc(pp->pp_data.domain_array,
 			newsz);
-		memset(&pp->pp_data.domain_array[pp->pp_data.domlen], 0, incsz);
+		memset(&pp->pp_data.domain_array[n], 0, incsz);
 	}
 
 	pp->pp_data.domain_array[n].string = string;
