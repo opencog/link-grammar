@@ -282,20 +282,6 @@ AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
 
 # ====================================================================
 
-AC_ARG_ENABLE( anysplit,
-  [  --enable-anysplit       enable use of the "any" language word splitter],
-  [],
-  [enable_anysplit=no]
-)
-if test "x$enable_anysplit" = "xyes"
-then
-	CPPFLAGS="${CPPFLAGS} -DUSE_ANYSPLIT=1"
-fi
-
-AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_anysplit} = xyes)
-
-# ====================================================================
-
 AC_ARG_ENABLE( wordgraph_display,
   [  --enable-wordgraph-display       enable graphical display of the Wordgraph],
   [],

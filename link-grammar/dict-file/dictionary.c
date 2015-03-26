@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "anysplit.h"
 #include "api-structures.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -27,9 +28,6 @@
 #include "word-utils.h"
 #include "dict-sql/read-sql.h"  /* Temporary hack */
 
-#ifdef USE_ANYSPLIT
-#include "anysplit.h"
-#endif
 
 /***************************************************************
 *
@@ -409,9 +407,7 @@ static bool afdict_init(Dictionary dict)
 	if (! afdict_to_wide(afdict, AFDICT_QUOTES)) return false;
 	if (! afdict_to_wide(afdict, AFDICT_BULLETS)) return false;
 
-#ifdef USE_ANYSPLIT
 	if (! anysplit_init(afdict)) return false;
-#endif
 
 	return true;
 }
@@ -466,9 +462,7 @@ dictionary_six_str(const char * lang,
 #ifdef HAVE_SQLITE
 	dict->db_handle = NULL;
 #endif
-#ifdef USE_ANYSPLIT
 	dict->anysplit = NULL;
-#endif
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
