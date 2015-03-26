@@ -46,13 +46,14 @@ typedef enum {
 	AFDICT_INFIXMARK,
 	AFDICT_STEMSUBSCR,
 	AFDICT_SANEMORPHISM,
-#ifdef USE_ANYSPLIT
+
+	/* The below are used only for random morphology via regex */
 	AFDICT_REGPRE,
 	AFDICT_REGMID,
 	AFDICT_REGSUF,
 	AFDICT_REGALTS,
 	AFDICT_REGPARTS,
-#endif
+
 	AFDICT_NUM_ENTRIES
 } afdict_classnum;
 
@@ -70,16 +71,13 @@ typedef enum {
 	"STEMSUBSCR",  /* Subscripts for stems */ \
 	"SANEMORPHISM", /* Regex for sane_morphism() */
 
-#ifdef USE_ANYSPLIT
+/* The regexes below are used only for random morphology generation */
 #define AFDICT_CLASSNAMES2 \
 	"REGPRE",      /* Regex for prefix */ \
 	"REGMID",      /* Regex for middle parts */ \
 	"REGSUF",      /* Regex for suffix */ \
 	"REGALTS",     /* Min&max number of alternatives to issue for a word */\
 	"REGPARTS",    /* Max number of word partitions */
-#else
-#define AFDICT_CLASSNAMES2
-#endif
 
 #define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2 "last classname"
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])

@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "anysplit.h"
 #include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
@@ -24,10 +25,6 @@
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
-
-#ifdef USE_ANYSPLIT
-#include "anysplit.h"
-#endif
 
 /* ======================================================================== */
 /* Affix type finding */
@@ -364,9 +361,7 @@ void dictionary_delete(Dictionary dict)
 	pp_knowledge_close(dict->hpsg_knowledge);
 	string_set_delete(dict->string_set);
 	free_regexs(dict->regex_root);
-#ifdef USE_ANYSPLIT
 	free_anysplit(dict);
-#endif
 	free_dictionary(dict);
 	xfree(dict, sizeof(struct Dictionary_s));
 	object_open(NULL, NULL, NULL); /* Free the directory path cache */

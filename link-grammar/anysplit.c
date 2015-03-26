@@ -9,12 +9,9 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifdef USE_ANYSPLIT
-
 /**
  * anysplit.c -- code that splits words into random morphemes.
  * This is used for the language-learning/morpheme-learning project.
- * This code is conditionally compiled, because ...
  */
 
 /* General assumptions:
@@ -570,5 +567,3 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 
 	return true;
 }
-
-#endif /* USE_ANYSPLIT */

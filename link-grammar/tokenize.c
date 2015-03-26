@@ -17,6 +17,7 @@
 #endif
 #include <limits.h>
 
+#include "anysplit.h"
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -33,10 +34,6 @@
 #include "wordgraph.h"
 #include "word-utils.h"
 #include "stdarg.h"
-
-#ifdef USE_ANYSPLIT
-#include "anysplit.h"
-#endif
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
@@ -394,9 +391,6 @@ static bool is_contraction_word(const char *s)
  *
  * TODO Support also middle morphemes if needed.
  */
-#ifndef USE_ANYSPLIT
-static
-#endif
 #define D_IWA 3
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                               const char *label,
