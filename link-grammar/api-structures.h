@@ -285,7 +285,7 @@ struct PP_data_s
 	size_t N_domains;
 	Domain * domain_array;          /* The domains, sorted by size */
 	size_t domlen;                  /* Allocated size of domain_array */
-	size_t length;                  /* Length of current linkage */
+	size_t num_words;               /* Number of words in linkage */
 	List_o_links * links_to_ignore;
 };
 
