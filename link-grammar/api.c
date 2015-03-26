@@ -392,7 +392,7 @@ bool parse_options_memory_exhausted(Parse_Options opts) {
 }
 
 bool parse_options_resources_exhausted(Parse_Options opts) {
-	return (resources_timer_expired(opts->resources) || resources_memory_exhausted(opts->resources));
+	return (resources_exhausted(opts->resources));
 }
 
 void parse_options_reset_resources(Parse_Options opts) {
