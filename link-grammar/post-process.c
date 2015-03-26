@@ -582,9 +582,11 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	}
 }
 
-static void setup_domain_array(Postprocessor *pp, size_t n,
+static void setup_domain_array(Postprocessor *pp,
                                const char *string, int start_link)
 {
+	size_t n = pp->pp_data.N_domains;
+
 	/* set pp->visited[i] to false */
 	/* Grab more memory if needed */
 	if (pp->vlength <= pp->pp_data.length)
@@ -613,15 +615,19 @@ static void setup_domain_array(Postprocessor *pp, size_t n,
 	pp->pp_data.domain_array[n].lol    = NULL;
 	pp->pp_data.domain_array[n].size   = 0;
 	pp->pp_data.domain_array[n].start_link = start_link;
+
+	pp->pp_data.N_domains++;
+	assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
 }
 
 static void add_link_to_domain(Postprocessor *pp, int link)
 {
-	List_o_links *lol;
-	lol = (List_o_links *) malloc(sizeof(List_o_links));
-	lol->next = pp->pp_data.domain_array[pp->pp_data.N_domains].lol;
-	pp->pp_data.domain_array[pp->pp_data.N_domains].lol = lol;
-	pp->pp_data.domain_array[pp->pp_data.N_domains].size++;
+	size_t n = pp->pp_data.N_domains - 1;  /* the very last one */
+	List_o_links *lol = (List_o_links *) malloc(sizeof(List_o_links));
+
+	lol->next = pp->pp_data.domain_array[n].lol;
+	pp->pp_data.domain_array[n].lol = lol;
+	pp->pp_data.domain_array[n].size++;
 	lol->link = link;
 }
 
@@ -746,46 +752,37 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
 		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
 				add_link_to_domain(pp, link);
 			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
 							 sublinkage->link_array[link].lw, link);
-
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp, link);
 			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
 			                       sublinkage->link_array[link].lw, link);
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			/* do not add the starter link to its urfl_only domain */
 			d_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].rw, link);
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->left_domain_starter_links, s))
 		{
-			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			setup_domain_array(pp, s, link);
 			/* do not add the starter link to a left domain */
 			left_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                        sublinkage->link_array[link].rw, link);
-			pp->pp_data.N_domains++;
-			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 	}
 
