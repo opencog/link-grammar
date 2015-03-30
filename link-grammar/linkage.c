@@ -296,7 +296,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				s = (char *) alloca(l+1);
 				s[0] = '[';
 				strcpy(&s[1], t);
-				s[l] = ']';
+				s[l-1] = ']';
+				s[l] = '\0';
 				t = string_set_add(s, sent->string_set);
 				lgdebug(D_CCW, " %s\n", t);
 			}
