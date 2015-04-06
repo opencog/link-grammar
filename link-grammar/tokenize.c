@@ -1918,7 +1918,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * contents:
 			 * ............................something
 			 */
-			if (n_r_stripped >= MAX_STRIP-1) {
+			if (n_r_stripped >= MAX_STRIP-1)
+			{
 				lgdebug(+D_SW, "Left-strip of >= %d tokens\n", MAX_STRIP-1);
 				return; /* XXX */
 			}
@@ -2026,7 +2027,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * contents:
 		 * 10............................
 		 */
-		if (n_r_stripped >= MAX_STRIP-1) {
+		if (n_r_stripped >= MAX_STRIP-1)
+		{
 			lgdebug(+D_SW, "Right-strip of >= %d tokens\n", MAX_STRIP-1);
 			return; /* XXX */
 		}
@@ -2123,8 +2125,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	        word, word_can_split, word_is_known,
 	        (NULL == unsplit_word->regex_name) ? "" : unsplit_word->regex_name);
 
-	if (is_utf8_upper(word)) {
-		if (!test_enabled("dictcap")) {
+	if (is_utf8_upper(word))
+	{
+		if (!test_enabled("dictcap"))
+		{
 			/** Hard-coded English-centric capitalization handling.
 			 *
 			 * FIXME: Capitalization handling should be done using the dict.
@@ -2609,7 +2613,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
 				 wordpos, altlen(sent->word[wordpos].alternatives), s,
 				 w->regex_name ? w->regex_name : "");
-		while (we) {
+		while (we)
+		{
 			printf(" xstring='%s' expr=", we->string);
 			print_expression(we->exp);
 			we = we->next;
