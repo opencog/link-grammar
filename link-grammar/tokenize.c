@@ -1396,6 +1396,10 @@ static bool is_known_word(Sentence sent, const char *word)
  * Note: spellcheck_suggest(), which is invoked by this function, returns
  * guesses for words containing numbers (including words consisting of digits
  * only). Hence this function should not be called for such words.
+ * 
+ * Note that a lowercase word can be spell-corrected to an uppercase word.
+ * FIXME? Should we allow that only if the lc version of the corrected word
+ * is the same?
  */
 static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
                                   Parse_Options opts)
@@ -2099,7 +2103,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					  word, word_can_split);
 
 			/* XXX WS_FIRSTUPPER marking is missing here! */
-			if ((is_capitalizable(dict, unsplit_word)) && is_utf8_upper(word))
+			if ((is_capitalizable(dict, unsplit_word)) && is_utf8_upper(word) &&
+			    !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
 			{
 				downcase_utf8_str(downcase, word, downcase_size);
 				word_can_split |=
