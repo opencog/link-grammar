@@ -2131,36 +2131,40 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * FIXME: Capitalization handling should be done using the dict.
 			 *
 			 * If the word is capitalized and, issue as alternatives:
-			 * - Issue its lowercase version if it is in a capitalizable position
-			 *   and also it is in the dict.
+			 * - Issue its lowercase version if it is in a capitalizable
+			 *   position and also it is in the dict.
 			 * - Issue it (capitalized) too as a word to regex (so the
 			 *   capitalized-words regex disjuncts will be used), in these
-			 *   conditions (cumulative): -- It could not be split (else
-			 *   capitalization has been handled XXX).  -- It is not in the dict
-			 *   (it has already been issued in that case).  -- It is not in a
-			 *   capitalizable position in the sentence.  -- Its lowercase version
-			 *   is in the dict file (not regex) and it is an entity (checked
-			 *   capitalized) or a common entity (checked as lowercase).
+			 *   conditions (cumulative):
+			 *   -- It could not be split (else capitalization has been
+			 *      handled XXX).
+			 *   -- It is not in the dict (it has already been issued in
+			 *      that case).
+			 *   -- It is not in a capitalizable position in the sentence.
+			 *   -- Its lowercase version is in the dict file (not regex) and
+			 *      it is an entity (checked capitalized) or a common entity
+			 *      (checked as lowercase).
 			 *
 			 *   Comments from a previous release:
 			 *
-			 * * Common entity (checked as lowercase): This allows common nouns
-			 *   and adjectives to be used for entity names: e.g. "Great Southern
-			 *   Union declares bankruptcy", allowing Great to be capitalized,
-			 *   while preventing an upper-case "She" being used as a proper name
-			 *   in "She declared bankruptcy".
+			 * * Common entity (checked as lowercase): This allows common
+			 *   nouns and adjectives to be used for entity names: e.g. "Great
+			 *   Southern Union declares bankruptcy", allowing Great to be
+			 *   capitalized, while preventing an upper-case "She" being used
+			 *   as a proper name in "She declared bankruptcy".
 			 *
 			 * * Entity (checked capitalized): We need to *add* Sue.f (female
-			 *   name Sue) even though sue.v (the verb "to sue") is in the dict. So
-			 *   test for capitalized entity names.  FIXME: [ap] Since capitalized
-			 *   words which are in the dict file are now issued anyway as
-			 *   uppercase, and the capitalized-words regexes are not marked in the
-			 *   dict as entities, this may have effect only for capitalized words
-			 *   that match non-capitalized-words regexes that are marked as
-			 *   entities. I don't know about such, and if there are indeed no such
-			 *   regexes, it looks like the is_entity() check is redundant.  A test
-			 *   "is_entity" added below to check if there is any sentence in the
-			 *   batches that contradicts that.
+			 *   name Sue) even though sue.v (the verb "to sue") is in the
+			 *   dict.  So test for capitalized entity names.  FIXME: [ap]
+			 *   Since capitalized words which are in the dict file are now
+			 *   issued anyway as uppercase, and the capitalized-words regexes
+			 *   are not marked in the dict as entities, this may have effect
+			 *   only for capitalized words that match non-capitalized-words
+			 *   regexes that are marked as entities. I don't know about such,
+			 *   and if there are indeed no such regexes, it looks like the
+			 *   is_entity() check is redundant.  A test "is_entity" added
+			 *   below to check if there is any sentence in the batches that
+			 *   contradicts that.
 			 */
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
