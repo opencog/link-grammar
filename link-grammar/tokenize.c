@@ -2204,9 +2204,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					(is_entity(dict, word) || is_common_entity(dict, downcase)))))
 			{
 				/* Issue it (capitalized) too */
-
-		/* This is the lc version. The original word can be restored later, if
-		 * needed, through the unsplit word. */
 				if ((NULL != regex_name))
 				{
 					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word, regex_name);
