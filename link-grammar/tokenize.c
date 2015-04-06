@@ -1841,7 +1841,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	bool stripped;
 	const char *wp;
 	const char *temp_wend;
-	const char *regex_name = NULL;
 
 	size_t n_r_stripped = 0;
 	const char *r_stripped[MAX_STRIP];   /* these were stripped from the right */
@@ -2111,7 +2110,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	if (!word_is_known)
 	{
-		regex_name = match_regex(dict->regex_root, word);
+		const char *regex_name = match_regex(dict->regex_root, word);
 		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
 		{
 			unsplit_word->status |= WS_REGEX;
@@ -2122,7 +2121,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "After split step, word=%s can_split=%d is_known=%d RE=%s\n",
 	        word, word_can_split, word_is_known,
-	        NULL == regex_name ? "" : regex_name);
+	        (NULL == unsplit_word->regex_name) ? "" : unsplit_word->regex_name);
 
 	if (is_utf8_upper(word)) {
 		if (!test_enabled("dictcap")) {
@@ -2208,13 +2207,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					(is_entity(dict, word) || is_common_entity(dict, downcase)))))
 			{
 				/* Issue it (capitalized) too */
-				if ((NULL != regex_name))
+				if ((NULL != unsplit_word->regex_name))
 				{
-					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word, regex_name);
+					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word,
+					        unsplit_word->regex_name);
 					issue_word_alternative(sent, unsplit_word, "REuc",
 					                       0,NULL, 1,&word, 0,NULL);
-					unsplit_word->status |= WS_REGEX;
-					unsplit_word->regex_name = regex_name;
 					word_is_known = true;
 
 					if (test_enabled("is_entity") && is_entity(dict, word))
@@ -2242,7 +2240,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 *   it also should not be issued, even if is_utf8_upper(word),
 			 *   e.g Y'gonna or Let's. */
 			if (!(unsplit_word->status & WS_INDICT) &&
-			    is_re_capitalized(word, regex_name))
+			    is_re_capitalized(word, unsplit_word->regex_name))
 			{
 				issue_dictcap(sent, /*is_cap*/true, unsplit_word, word);
 			}
@@ -2273,10 +2271,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!(word_is_known ||  lc_word_is_in_dict ||
 	      (word_can_split && !is_contraction_word(word))))
 	{
-		if ((NULL != regex_name))
+		if ((NULL != unsplit_word->regex_name))
 		{
 			lgdebug(+D_SW, "Adding word '%s' for regex, match=%s\n",
-			        word, regex_name);
+			        word, unsplit_word->regex_name);
 			issue_word_alternative(sent, unsplit_word, "RE",
 			                       0,NULL, 1,&word, 0,NULL);
 
