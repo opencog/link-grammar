@@ -539,7 +539,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				{
 					/* If we are here, there is tokenization logic error in the
 					 * program, as the word has been issued as an alternative of
-					 * itself an additional time. If we proceed would mess the
+					 * itself an additional time. If we proceed it would mess the
 					 * Wordgraph pointers. Just warn (if verbosity>0) and return.
 					 * The return value is not likely to be used in such a case,
 					 * since this is an issuing of a single word.
@@ -1935,7 +1935,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * http://en.wiktionary.org/wiki/Category:English_double_contractions*/
 			if (!word_is_known)
 			{
-				/* This is not a really a debug message, so it is in verbosity 1.
+				/* This is not really a debug message, so it is in verbosity 1.
 				 * XXX Maybe prt_error()? */
 				lgdebug(+1, "Contracted word part %s is not in the dict\n", word);
 			}
@@ -2060,7 +2060,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				  print_rev_word_array(sent, r_stripped, n_r_stripped),
 				  word, wend, units_wend, temp_word);
 
-		/* If n_r_stripped exceed max, the "word" is most likely includes a long
+		/* If n_r_stripped exceed max, the "word" most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
 		 * and move on.
 		 * FIXME: Word separation may still be needed, e.g. for a table of
@@ -2147,7 +2147,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 *
 			 * FIXME: Capitalization handling should be done using the dict.
 			 *
-			 * If the word is capitalized and, issue as alternatives:
+			 * If the word is capitalized, then issue as alternatives:
 			 * - Issue its lowercase version if it is in a capitalizable
 			 *   position and also it is in the dict.
 			 * - Issue it (capitalized) too as a word to regex (so the

@@ -297,7 +297,7 @@ bool in_same_alternative(Gword *w1, Gword *w2)
 	/* The following is wrong!  Comparison to the hier_position of the
 	 * termination word is actually needed when there are alternatives of
 	 * different lengthes at the end of a sentence.  This check then prevents
-	 * the generation of null words on the shorter alternative. */
+	 * the generation of empty words on the shorter alternative. */
 	if ((NULL == w1->next) || (NULL == w2->next)) return false;/* termination */
 #endif
 
@@ -837,7 +837,7 @@ static void wordgraph_unlink_xtmpfile(void)
 }
 
 /**
- * Display the word-graph it in the indicated mode.
+ * Display the word-graph in the indicated mode.
  * This is for debug. It is not reentrant due to the static pid and the
  * possibly created fixed filenames.
  * When Using X11, a "dot -Txlib" program is launched on the graph
@@ -915,7 +915,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	}
 
 #if !defined HAVE_FORK || defined POPEN_DOT
-	x_popen((mode & WGR_X11)? POPEN_DOT_CMD: POPEN_DOT_CMD_WINDOWS, wgds);
+	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_WINDOWS, wgds);
 #else
 	{
 		const char *const args[] = { DOT_COMMAND, DOT_DRIVER, gvf_name, NULL };

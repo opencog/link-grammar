@@ -24,7 +24,7 @@
 
 /**
  * Print connector list to string.
- * This reverses the order of the connecters in the connector list,
+ * This reverses the order of the connectors in the connector list,
  * so that the resulting list is in the same order as it would appear
  * in the dictionary. The character 'dir' is appended to each connector.
  */
