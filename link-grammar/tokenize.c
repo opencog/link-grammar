@@ -1787,7 +1787,7 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
  * Check if the word is capitalized according to the regex definitions.
  * XXX Not nice - try to avoid the need of using it.
  */
-static bool is_re_capitalized(const char *word, const char *regex_name)
+static bool is_re_capitalized(const char *regex_name)
 {
 	return ((NULL != regex_name) && (NULL != strstr(regex_name, "CAPITALIZED")));
 }
@@ -2249,7 +2249,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 *   it also should not be issued, even if is_utf8_upper(word),
 			 *   e.g Y'gonna or Let's. */
 			if (!(unsplit_word->status & WS_INDICT) &&
-			    is_re_capitalized(word, unsplit_word->regex_name))
+			    is_re_capitalized(unsplit_word->regex_name))
 			{
 				issue_dictcap(sent, /*is_cap*/true, unsplit_word, word);
 			}
