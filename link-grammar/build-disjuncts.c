@@ -404,7 +404,7 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn)
  * expressions.  Returns NULL if it's not there.  If there, it builds the list
  * of expressions for the word, and returns a pointer to it.
  * The subword of Gword w is used for this lookup, unless the subword is
- * explicitely given as parameter s. The subword of Gword w is always used as
+ * explicitly given as parameter s. The subword of Gword w is always used as
  * the base word for each expression, and its subscript is the one from the
  * dictionary word of the expression.
  */

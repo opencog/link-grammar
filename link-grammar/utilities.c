@@ -792,7 +792,7 @@ char * dictionary_get_data_dir(void)
  * Otherwise, it looks for the file in a sequence of directories, as
  * specified in the dictpath array, until it finds it.
  *
- * If it s still not found, it may be that the user specified a relative
+ * If it is still not found, it may be that the user specified a relative
  * path, so it tries to open the exact file.
  *
  * Associated data files are looked in the *same* directory in which the
