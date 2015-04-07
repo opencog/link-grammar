@@ -1792,6 +1792,43 @@ static bool is_re_capitalized(const char *regex_name)
 	return ((NULL != regex_name) && (NULL != strstr(regex_name, "CAPITALIZED")));
 }
 
+static bool morpheme_split(Sentence sent, Gword *unsplit_word,
+                           bool issue_alternatives)
+{
+	bool word_can_split;
+	const char *word =unsplit_word->subword;
+
+	if (0 < AFCLASS(sent->dict->affix_table, AFDICT_MPRE)->length)
+	{
+		/* FIXME: Unify with suffix_split(). */
+		word_can_split = mprefix_split(sent, unsplit_word);
+		lgdebug(+D_SW, "Tried mprefix_split word=%s, can_split=%d\n",
+				  word, word_can_split);
+	}
+	else
+	{
+		word_can_split = suffix_split(sent, unsplit_word, word, issue_alternatives);
+		lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
+				  word, word_can_split);
+
+		/* XXX WS_FIRSTUPPER marking is missing here! */
+		if ((is_capitalizable(sent->dict, unsplit_word)) && is_utf8_upper(word) &&
+			 !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
+		{
+			int downcase_size = strlen(unsplit_word->subword)+MB_LEN_MAX+1;
+			char *const downcase = alloca(downcase_size);
+
+			downcase_utf8_str(downcase, word, downcase_size);
+			word_can_split |=
+				suffix_split(sent, unsplit_word, downcase, issue_alternatives);
+			lgdebug(+D_SW, "Tried to split lc=%s, now can_split=%d\n",
+					  downcase, word_can_split);
+		}
+	}
+
+	return word_can_split;
+}
+
 /**
  * Separate a word to subwords in all the possible ways.
  * unsplit_word is the current Wordgraph word to be separated to subwords.
@@ -1836,7 +1873,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 {
 	Dictionary dict = sent->dict;
 	bool word_is_known = false;
-	bool word_can_split = false;
+	bool word_can_split;
 	bool word_can_lrsplit = false;   /* This is needed to prevent spelling on
 	                                  * compound subwords, like "Word." while
 	                                  * still allowing capitalization handling
@@ -1948,8 +1985,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			word_can_lrsplit = true;
 		}
 
-		lgdebug(+D_SW, "1: Continue with word %s, can_split=%d status=%s\n",
-		        word, word_can_split, gword_status(sent, unsplit_word));
+		lgdebug(+D_SW, "1: Continue with word %s status=%s\n",
+		        word, gword_status(sent, unsplit_word));
 
 		/* Strip off punctuation and units, etc. on the right-hand side.  Try
 		 * rpunc, then units, then rpunc, then units again, in a loop. We do this
@@ -2086,34 +2123,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		anysplit(sent, unsplit_word);
 
 	/* OK, now try to strip affixes. */
-
-	if (!word_can_split)
-	{
-		if (0 < AFCLASS(dict->affix_table, AFDICT_MPRE)->length)
-		{
-			/* FIXME: Unify with suffix_split(). */
-			word_can_split |= mprefix_split(sent, unsplit_word);
-			lgdebug(+D_SW, "Tried mprefix_split word=%s, can_split=%d\n",
-					  word, word_can_split);
-			if (word_can_split)  return;
-		} else
-		{
-			word_can_split = suffix_split(sent, unsplit_word, word, true);
-			lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
-					  word, word_can_split);
-
-			/* XXX WS_FIRSTUPPER marking is missing here! */
-			if ((is_capitalizable(dict, unsplit_word)) && is_utf8_upper(word) &&
-			    !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
-			{
-				downcase_utf8_str(downcase, word, downcase_size);
-				word_can_split |=
-					suffix_split(sent, unsplit_word, downcase, true);
-				lgdebug(+D_SW, "Tried to split lc=%s, now can_split=%d\n",
-						  downcase, word_can_split);
-			}
-		}
-	}
+	word_can_split = morpheme_split(sent, unsplit_word, true);
 
 	if (!word_is_known)
 	{
@@ -2925,3 +2935,4 @@ bool sentence_in_dictionary(Sentence sent)
 	}
 	return ok_so_far;
 }
+
