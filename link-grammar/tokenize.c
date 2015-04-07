@@ -1226,9 +1226,8 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
  * To implement this function in a way which is appropriate for more languages,
  * Hunspell-like definitions (but more general) are needed.
  */
-static bool mprefix_split(Sentence sent, Gword *unsplit_word)
+static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 {
-	const char *word = unsplit_word->subword;
 	int i;
 	Afdict_class *mprefix_list;
 	int mp_strippable;
@@ -1236,18 +1235,19 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 	const char *newword;
 	const char *w;
 	int sz = 0;
-	bool word_is_in_dict;
-	int split_prefix_i = 0;      /* split prefix index */
+	bool word_is_in_dict = false;
+	int split_prefix_i = 0;  /* split prefix index */
 	const char *split_prefix[HEB_PRENUM_MAX]; /* the whole prefix */
-	bool *pseen;                 /* prefix "subword" seen (not allowed again) */
-	int pfound;                  /* index of longer prefix found at a prefix level */
+	bool *pseen;             /* prefix "subword" seen (not allowed again) */
+	int pfound;              /* index of longer prefix found at a prefix level */
 	Dictionary dict = sent->dict;
 	int wordlen;
 	int wlen;
 	int plen = 0;
 	Gword *altp;
+	bool split_check = (NULL == unsplit_word);
 
-	/* set up affix table  */
+	/* Set up affix table  */
 	if (NULL == dict->affix_table) return false;
 	mprefix_list = AFCLASS(dict->affix_table, AFDICT_MPRE);
 	mp_strippable = mprefix_list->length;
@@ -1260,7 +1260,6 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 	/* Assuming zeroed-out bytes are interpreted as false. */
 	memset(pseen, 0, mp_strippable * sizeof(*pseen));
 
-	word_is_in_dict = false;
 	w = word;
 	wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
 	do
@@ -1269,11 +1268,11 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 
 		for (i=0; i<mp_strippable; i++)
 		{
-			/* subwords in a prefix are unique */
+			/* Subwords in a prefix are unique */
 			if (pseen[i])
 				continue;
 
-			/* the letter "ו" can only be the first prefix subword */
+			/* The letter "ו" can only be the first prefix subword */
 			if ((split_prefix_i > 0) &&
 			 HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו")))
 			{
@@ -1287,14 +1286,14 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 			{
 				if (-1 == pfound) pfound = i;
 				newword = w + plen;
-				/* check for non-vav before vav */
+				/* Check for non-vav before vav */
 				if (!HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(newword, "ו")))
 				{
-					/* non-vav before a single-vav - not in a prefix */
+					/* Non-vav before a single-vav - not in a prefix */
 					if (!HEB_CHAREQ(newword+HEB_UTF8_BYTES, "ו"))
 						continue;
 
-					/* non-vav before 2-vav */
+					/* Non-vav before 2-vav */
 					if (newword[HEB_UTF8_BYTES+1])
 						newword += HEB_UTF8_BYTES; /* strip one 'ו' */
 					/* TBD: check word also without stripping. */
@@ -1304,13 +1303,14 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 				if (0 == sz) /* stand-alone prefix */
 				{
 					word_is_in_dict = true;
-					/* add the prefix alone */
+					/* Add the prefix alone */
 					lgdebug(+3, "Whole-word prefix: %s\n", word);
+					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPW",
 					          split_prefix_i+1,split_prefix, 0,NULL, 0,NULL);
 					tokenization_done(dict, altp);
-					/* if the prefix is a valid word,
-					 * it has been added in separate_word() as a word */
+					/* If the prefix is a valid word,
+					 * It has been added in separate_word() as a word */
 					break;
 				}
 				if (find_word_in_dict(dict, newword))
@@ -1318,6 +1318,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 					word_is_in_dict = true;
 					lgdebug(+3, "Splitting off a prefix: %.*s-%s\n",
 					        wordlen-sz, word, newword);
+					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPS",
 					          split_prefix_i+1,split_prefix, 1,&newword, 0,NULL);
 					tokenization_done(dict, altp);
@@ -1326,7 +1327,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 		}
 		if ((-1 != pfound) && (i != pfound))
 		{
-			/* a previous prefix is the longer one - use it */
+			/* A previous prefix is the longer one - use it */
 			split_prefix[split_prefix_i] = mprefix[pfound];
 			plen = strlen(mprefix[pfound]);
 			w += plen;
@@ -1375,6 +1376,41 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 	return false;
 }
 
+#define D_MS 3
+static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
+{
+	bool word_can_split;
+
+	if (0 < AFCLASS(sent->dict->affix_table, AFDICT_MPRE)->length)
+	{
+		word_can_split = mprefix_split(sent, unsplit_word, word);
+		lgdebug(+D_MS, "Tried mprefix_split word=%s, can_split=%d\n",
+				  word, word_can_split);
+	}
+	else
+	{
+		word_can_split = suffix_split(sent, unsplit_word, word);
+		lgdebug(+D_MS, "Tried to split word=%s, can_split=%d\n",
+				  word, word_can_split);
+
+		/* XXX WS_FIRSTUPPER marking is missing here! */
+		if ((is_capitalizable(sent->dict, unsplit_word)) && is_utf8_upper(word) &&
+			 !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
+		{
+			int downcase_size = strlen(unsplit_word->subword)+MB_LEN_MAX+1;
+			char *const downcase = alloca(downcase_size);
+
+			downcase_utf8_str(downcase, word, downcase_size);
+			word_can_split |=
+				suffix_split(sent, unsplit_word, downcase);
+			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
+					  downcase, word_can_split);
+		}
+	}
+
+	return word_can_split;
+}
+
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 #define MAX_NUM_SPELL_GUESSES 3 /* FIXME */
 /* TODO Change !spell to be an integer which will be this limit. */
@@ -1382,7 +1418,7 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 static bool is_known_word(Sentence sent, const char *word)
 {
 	return (boolean_dictionary_lookup(sent->dict, word) ||
-	        suffix_split(sent, NULL, word));
+	        morpheme_split(sent, NULL, word));
 }
 
 /**
@@ -1792,42 +1828,6 @@ static bool is_re_capitalized(const char *regex_name)
 	return ((NULL != regex_name) && (NULL != strstr(regex_name, "CAPITALIZED")));
 }
 
-static bool morpheme_split(Sentence sent, Gword *unsplit_word)
-{
-	bool word_can_split;
-	const char *word =unsplit_word->subword;
-
-	if (0 < AFCLASS(sent->dict->affix_table, AFDICT_MPRE)->length)
-	{
-		/* FIXME: Unify with suffix_split(). */
-		word_can_split = mprefix_split(sent, unsplit_word);
-		lgdebug(+D_SW, "Tried mprefix_split word=%s, can_split=%d\n",
-				  word, word_can_split);
-	}
-	else
-	{
-		word_can_split = suffix_split(sent, unsplit_word, word);
-		lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
-				  word, word_can_split);
-
-		/* XXX WS_FIRSTUPPER marking is missing here! */
-		if ((is_capitalizable(sent->dict, unsplit_word)) && is_utf8_upper(word) &&
-			 !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
-		{
-			int downcase_size = strlen(unsplit_word->subword)+MB_LEN_MAX+1;
-			char *const downcase = alloca(downcase_size);
-
-			downcase_utf8_str(downcase, word, downcase_size);
-			word_can_split |=
-				suffix_split(sent, unsplit_word, downcase);
-			lgdebug(+D_SW, "Tried to split lc=%s, now can_split=%d\n",
-					  downcase, word_can_split);
-		}
-	}
-
-	return word_can_split;
-}
-
 /**
  * Separate a word to subwords in all the possible ways.
  * unsplit_word is the current Wordgraph word to be separated to subwords.
@@ -2122,7 +2122,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		anysplit(sent, unsplit_word);
 
 	/* OK, now try to strip affixes. */
-	word_can_split = morpheme_split(sent, unsplit_word);
+	word_can_split = morpheme_split(sent, unsplit_word, word);
 
 	if (!word_is_known)
 	{
