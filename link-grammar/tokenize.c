@@ -1022,8 +1022,7 @@ static bool add_alternative_with_subscr(Sentence sent,
  *
  * The prefix code is only lightly validated by actual use.
  */
-static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
-                         bool issue_alternatives)
+static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 {
 	int i, j;
 	Afdict_class *prefix_list, *suffix_list;
@@ -1034,6 +1033,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
 	const Dictionary dict = sent->dict;
 	const char *wend = w + strlen(w);
 	char *newword = alloca(wend-w+1);
+	bool issue_alternatives = (NULL != unsplit_word);
 
 	/* Set up affix tables. */
 	if (NULL == dict->affix_table) return false;
@@ -1382,7 +1382,7 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 static bool is_known_word(Sentence sent, const char *word)
 {
 	return (boolean_dictionary_lookup(sent->dict, word) ||
-	        suffix_split(sent, NULL, word, /*issue_alternatives*/false));
+	        suffix_split(sent, NULL, word));
 }
 
 /**
@@ -1792,8 +1792,7 @@ static bool is_re_capitalized(const char *regex_name)
 	return ((NULL != regex_name) && (NULL != strstr(regex_name, "CAPITALIZED")));
 }
 
-static bool morpheme_split(Sentence sent, Gword *unsplit_word,
-                           bool issue_alternatives)
+static bool morpheme_split(Sentence sent, Gword *unsplit_word)
 {
 	bool word_can_split;
 	const char *word =unsplit_word->subword;
@@ -1807,7 +1806,7 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word,
 	}
 	else
 	{
-		word_can_split = suffix_split(sent, unsplit_word, word, issue_alternatives);
+		word_can_split = suffix_split(sent, unsplit_word, word);
 		lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
 				  word, word_can_split);
 
@@ -1820,7 +1819,7 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word,
 
 			downcase_utf8_str(downcase, word, downcase_size);
 			word_can_split |=
-				suffix_split(sent, unsplit_word, downcase, issue_alternatives);
+				suffix_split(sent, unsplit_word, downcase);
 			lgdebug(+D_SW, "Tried to split lc=%s, now can_split=%d\n",
 					  downcase, word_can_split);
 		}
@@ -2123,7 +2122,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		anysplit(sent, unsplit_word);
 
 	/* OK, now try to strip affixes. */
-	word_can_split = morpheme_split(sent, unsplit_word, true);
+	word_can_split = morpheme_split(sent, unsplit_word);
 
 	if (!word_is_known)
 	{
