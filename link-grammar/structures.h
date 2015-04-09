@@ -193,21 +193,21 @@ typedef enum
 
 /* Word status */
 /* - Tokenization */
-#define WS_UNKNOWN   1<<0 /* Unknown word (FIXME? Unused) */
-#define WS_REGEX     1<<1 /* Matches a regex */
-#define WS_SPELL     1<<2 /* Result of a spell guess */
-#define WS_RUNON     1<<3 /* Separated from words run-on */
-#define WS_HASALT    1<<4 /* Has alternatives (one or more)*/
-#define WS_UNSPLIT   1<<5 /* It's an alternative to itself as an unsplit word */
-#define WS_INDICT    1<<6 /* boolean_dictionary_lookup() is true */
-#define WS_FIRSTUPPER 1<<7 /* Subword is the lc version of its unsplit_word.
+#define WS_UNKNOWN (1<<0) /* Unknown word (FIXME? Unused) */
+#define WS_REGEX   (1<<1) /* Matches a regex */
+#define WS_SPELL   (1<<2) /* Result of a spell guess */
+#define WS_RUNON   (1<<3) /* Separated from words run-on */
+#define WS_HASALT  (1<<4) /* Has alternatives (one or more)*/
+#define WS_UNSPLIT (1<<5) /* It's an alternative to itself as an unsplit word */
+#define WS_INDICT  (1<<6) /* boolean_dictionary_lookup() is true */
+#define WS_FIRSTUPPER (1<<7) /* Subword is the lc version of its unsplit_word.
                               The idea of marking subwords this way, in order to
                               enable restoring their original capitalization,
                               may be wrong in general, since in some languages
                               the process is not always reversible. Instead,
                               the original word may be saved. */
 /* - Post linkage stage. XXX Experimental. */
-#define WS_PL        1<<14 /* Post-Linkage, not belonging to tokenization */
+#define WS_PL      (1<<14) /* Post-Linkage, not belonging to tokenization */
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 

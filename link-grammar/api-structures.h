@@ -365,11 +365,11 @@ struct Linkage_s
 	size_t          cdsz;         /* Alloc'ed length of chosen_disjuncts */
 	char **         disjunct_list_str; /* Stringified version of above */
 #ifdef USE_CORPUS
-	Sense **        sense_list;   /* Word senses, infered from disjuncts */
+	Sense **        sense_list;   /* Word senses, inferred from disjuncts */
 #endif
 
    Gword **wg_path;              /* Linkage Wordgraph path */
-   Gword **wg_path_display;      /* ... for !morfology=0. Exprimental. */
+   Gword **wg_path_display;      /* ... for !morphology=0. Experimental. */
    //size_t *wg_path_index;      /* Displayed-word indices in wg_path (FIXME?)*/
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */

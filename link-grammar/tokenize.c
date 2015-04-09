@@ -539,7 +539,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				{
 					/* If we are here, there is tokenization logic error in the
 					 * program, as the word has been issued as an alternative of
-					 * itself an additional time. If we proceed would mess the
+					 * itself an additional time. If we proceed it would mess the
 					 * Wordgraph pointers. Just warn (if verbosity>0) and return.
 					 * The return value is not likely to be used in such a case,
 					 * since this is an issuing of a single word.
@@ -1022,8 +1022,7 @@ static bool add_alternative_with_subscr(Sentence sent,
  *
  * The prefix code is only lightly validated by actual use.
  */
-static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
-                         bool issue_alternatives)
+static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 {
 	int i, j;
 	Afdict_class *prefix_list, *suffix_list;
@@ -1034,6 +1033,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w,
 	const Dictionary dict = sent->dict;
 	const char *wend = w + strlen(w);
 	char *newword = alloca(wend-w+1);
+	bool issue_alternatives = (NULL != unsplit_word);
 
 	/* Set up affix tables. */
 	if (NULL == dict->affix_table) return false;
@@ -1226,9 +1226,8 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
  * To implement this function in a way which is appropriate for more languages,
  * Hunspell-like definitions (but more general) are needed.
  */
-static bool mprefix_split(Sentence sent, Gword *unsplit_word)
+static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 {
-	const char *word = unsplit_word->subword;
 	int i;
 	Afdict_class *mprefix_list;
 	int mp_strippable;
@@ -1236,18 +1235,19 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 	const char *newword;
 	const char *w;
 	int sz = 0;
-	bool word_is_in_dict;
-	int split_prefix_i = 0;      /* split prefix index */
+	bool word_is_in_dict = false;
+	int split_prefix_i = 0;  /* split prefix index */
 	const char *split_prefix[HEB_PRENUM_MAX]; /* the whole prefix */
-	bool *pseen;                 /* prefix "subword" seen (not allowed again) */
-	int pfound;                  /* index of longer prefix found at a prefix level */
+	bool *pseen;             /* prefix "subword" seen (not allowed again) */
+	int pfound;              /* index of longer prefix found at a prefix level */
 	Dictionary dict = sent->dict;
 	int wordlen;
 	int wlen;
 	int plen = 0;
 	Gword *altp;
+	bool split_check = (NULL == unsplit_word);
 
-	/* set up affix table  */
+	/* Set up affix table  */
 	if (NULL == dict->affix_table) return false;
 	mprefix_list = AFCLASS(dict->affix_table, AFDICT_MPRE);
 	mp_strippable = mprefix_list->length;
@@ -1260,7 +1260,6 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 	/* Assuming zeroed-out bytes are interpreted as false. */
 	memset(pseen, 0, mp_strippable * sizeof(*pseen));
 
-	word_is_in_dict = false;
 	w = word;
 	wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
 	do
@@ -1269,11 +1268,11 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 
 		for (i=0; i<mp_strippable; i++)
 		{
-			/* subwords in a prefix are unique */
+			/* Subwords in a prefix are unique */
 			if (pseen[i])
 				continue;
 
-			/* the letter "ו" can only be the first prefix subword */
+			/* The letter "ו" can only be the first prefix subword */
 			if ((split_prefix_i > 0) &&
 			 HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו")))
 			{
@@ -1287,14 +1286,14 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 			{
 				if (-1 == pfound) pfound = i;
 				newword = w + plen;
-				/* check for non-vav before vav */
+				/* Check for non-vav before vav */
 				if (!HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(newword, "ו")))
 				{
-					/* non-vav before a single-vav - not in a prefix */
+					/* Non-vav before a single-vav - not in a prefix */
 					if (!HEB_CHAREQ(newword+HEB_UTF8_BYTES, "ו"))
 						continue;
 
-					/* non-vav before 2-vav */
+					/* Non-vav before 2-vav */
 					if (newword[HEB_UTF8_BYTES+1])
 						newword += HEB_UTF8_BYTES; /* strip one 'ו' */
 					/* TBD: check word also without stripping. */
@@ -1304,13 +1303,14 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 				if (0 == sz) /* stand-alone prefix */
 				{
 					word_is_in_dict = true;
-					/* add the prefix alone */
+					/* Add the prefix alone */
 					lgdebug(+3, "Whole-word prefix: %s\n", word);
+					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPW",
 					          split_prefix_i+1,split_prefix, 0,NULL, 0,NULL);
 					tokenization_done(dict, altp);
-					/* if the prefix is a valid word,
-					 * it has been added in separate_word() as a word */
+					/* If the prefix is a valid word,
+					 * It has been added in separate_word() as a word */
 					break;
 				}
 				if (find_word_in_dict(dict, newword))
@@ -1318,6 +1318,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 					word_is_in_dict = true;
 					lgdebug(+3, "Splitting off a prefix: %.*s-%s\n",
 					        wordlen-sz, word, newword);
+					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPS",
 					          split_prefix_i+1,split_prefix, 1,&newword, 0,NULL);
 					tokenization_done(dict, altp);
@@ -1326,7 +1327,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word)
 		}
 		if ((-1 != pfound) && (i != pfound))
 		{
-			/* a previous prefix is the longer one - use it */
+			/* A previous prefix is the longer one - use it */
 			split_prefix[split_prefix_i] = mprefix[pfound];
 			plen = strlen(mprefix[pfound]);
 			w += plen;
@@ -1375,6 +1376,41 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 	return false;
 }
 
+#define D_MS 3
+static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
+{
+	bool word_can_split;
+
+	if (0 < AFCLASS(sent->dict->affix_table, AFDICT_MPRE)->length)
+	{
+		word_can_split = mprefix_split(sent, unsplit_word, word);
+		lgdebug(+D_MS, "Tried mprefix_split word=%s, can_split=%d\n",
+				  word, word_can_split);
+	}
+	else
+	{
+		word_can_split = suffix_split(sent, unsplit_word, word);
+		lgdebug(+D_MS, "Tried to split word=%s, can_split=%d\n",
+				  word, word_can_split);
+
+		/* XXX WS_FIRSTUPPER marking is missing here! */
+		if ((is_capitalizable(sent->dict, unsplit_word)) && is_utf8_upper(word) &&
+			 !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
+		{
+			int downcase_size = strlen(unsplit_word->subword)+MB_LEN_MAX+1;
+			char *const downcase = alloca(downcase_size);
+
+			downcase_utf8_str(downcase, word, downcase_size);
+			word_can_split |=
+				suffix_split(sent, unsplit_word, downcase);
+			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
+					  downcase, word_can_split);
+		}
+	}
+
+	return word_can_split;
+}
+
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 #define MAX_NUM_SPELL_GUESSES 3 /* FIXME */
 /* TODO Change !spell to be an integer which will be this limit. */
@@ -1382,7 +1418,7 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 static bool is_known_word(Sentence sent, const char *word)
 {
 	return (boolean_dictionary_lookup(sent->dict, word) ||
-	        suffix_split(sent, NULL, word, /*issue_alternatives*/false));
+	        morpheme_split(sent, NULL, word));
 }
 
 /**
@@ -1396,6 +1432,10 @@ static bool is_known_word(Sentence sent, const char *word)
  * Note: spellcheck_suggest(), which is invoked by this function, returns
  * guesses for words containing numbers (including words consisting of digits
  * only). Hence this function should not be called for such words.
+ * 
+ * Note that a lowercase word can be spell-corrected to an uppercase word.
+ * FIXME? Should we allow that only if the lc version of the corrected word
+ * is the same?
  */
 static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
                                   Parse_Options opts)
@@ -1783,7 +1823,7 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
  * Check if the word is capitalized according to the regex definitions.
  * XXX Not nice - try to avoid the need of using it.
  */
-static bool is_re_capitalized(const char *word, const char *regex_name)
+static bool is_re_capitalized(const char *regex_name)
 {
 	return ((NULL != regex_name) && (NULL != strstr(regex_name, "CAPITALIZED")));
 }
@@ -1832,7 +1872,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 {
 	Dictionary dict = sent->dict;
 	bool word_is_known = false;
-	bool word_can_split = false;
+	bool word_can_split;
 	bool word_can_lrsplit = false;   /* This is needed to prevent spelling on
 	                                  * compound subwords, like "Word." while
 	                                  * still allowing capitalization handling
@@ -1841,7 +1881,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	bool stripped;
 	const char *wp;
 	const char *temp_wend;
-	const char *regex_name = NULL;
 
 	size_t n_r_stripped = 0;
 	const char *r_stripped[MAX_STRIP];   /* these were stripped from the right */
@@ -1896,7 +1935,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * http://en.wiktionary.org/wiki/Category:English_double_contractions*/
 			if (!word_is_known)
 			{
-				/* This is not a really a debug message, so it is in verbosity 1.
+				/* This is not really a debug message, so it is in verbosity 1.
 				 * XXX Maybe prt_error()? */
 				lgdebug(+1, "Contracted word part %s is not in the dict\n", word);
 			}
@@ -1919,7 +1958,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * contents:
 			 * ............................something
 			 */
-			if (n_r_stripped >= MAX_STRIP-1) {
+			if (n_r_stripped >= MAX_STRIP-1)
+			{
 				lgdebug(+D_SW, "Left-strip of >= %d tokens\n", MAX_STRIP-1);
 				return; /* XXX */
 			}
@@ -1944,8 +1984,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			word_can_lrsplit = true;
 		}
 
-		lgdebug(+D_SW, "1: Continue with word %s, can_split=%d status=%s\n",
-		        word, word_can_split, gword_status(sent, unsplit_word));
+		lgdebug(+D_SW, "1: Continue with word %s status=%s\n",
+		        word, gword_status(sent, unsplit_word));
 
 		/* Strip off punctuation and units, etc. on the right-hand side.  Try
 		 * rpunc, then units, then rpunc, then units again, in a loop. We do this
@@ -2020,14 +2060,15 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				  print_rev_word_array(sent, r_stripped, n_r_stripped),
 				  word, wend, units_wend, temp_word);
 
-		/* If n_r_stripped exceed max, the "word" is most likely includes a long
+		/* If n_r_stripped exceed max, the "word" most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
 		 * and move on.
 		 * FIXME: Word separation may still be needed, e.g. for a table of
 		 * contents:
 		 * 10............................
 		 */
-		if (n_r_stripped >= MAX_STRIP-1) {
+		if (n_r_stripped >= MAX_STRIP-1)
+		{
 			lgdebug(+D_SW, "Right-strip of >= %d tokens\n", MAX_STRIP-1);
 			return; /* XXX */
 		}
@@ -2081,37 +2122,11 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		anysplit(sent, unsplit_word);
 
 	/* OK, now try to strip affixes. */
-
-	if (!word_can_split)
-	{
-		if (0 < AFCLASS(dict->affix_table, AFDICT_MPRE)->length)
-		{
-			/* FIXME: Unify with suffix_split(). */
-			word_can_split |= mprefix_split(sent, unsplit_word);
-			lgdebug(+D_SW, "Tried mprefix_split word=%s, can_split=%d\n",
-					  word, word_can_split);
-			if (word_can_split)  return;
-		} else
-		{
-			word_can_split = suffix_split(sent, unsplit_word, word, true);
-			lgdebug(+D_SW, "Tried to split word=%s, can_split=%d\n",
-					  word, word_can_split);
-
-			/* XXX WS_FIRSTUPPER marking is missing here! */
-			if ((is_capitalizable(dict, unsplit_word)) && is_utf8_upper(word))
-			{
-				downcase_utf8_str(downcase, word, downcase_size);
-				word_can_split |=
-					suffix_split(sent, unsplit_word, downcase, true);
-				lgdebug(+D_SW, "Tried to split lc=%s, now can_split=%d\n",
-						  downcase, word_can_split);
-			}
-		}
-	}
+	word_can_split = morpheme_split(sent, unsplit_word, word);
 
 	if (!word_is_known)
 	{
-		regex_name = match_regex(dict->regex_root, word);
+		const char *regex_name = match_regex(dict->regex_root, word);
 		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
 		{
 			unsplit_word->status |= WS_REGEX;
@@ -2122,45 +2137,51 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "After split step, word=%s can_split=%d is_known=%d RE=%s\n",
 	        word, word_can_split, word_is_known,
-	        NULL == regex_name ? "" : regex_name);
+	        (NULL == unsplit_word->regex_name) ? "" : unsplit_word->regex_name);
 
-	if (is_utf8_upper(word)) {
-		if (!test_enabled("dictcap")) {
+	if (is_utf8_upper(word))
+	{
+		if (!test_enabled("dictcap"))
+		{
 			/** Hard-coded English-centric capitalization handling.
 			 *
 			 * FIXME: Capitalization handling should be done using the dict.
 			 *
-			 * If the word is capitalized and, issue as alternatives:
-			 * - Issue its lowercase version if it is in a capitalizable position
-			 *   and also it is in the dict.
+			 * If the word is capitalized, then issue as alternatives:
+			 * - Issue its lowercase version if it is in a capitalizable
+			 *   position and also it is in the dict.
 			 * - Issue it (capitalized) too as a word to regex (so the
 			 *   capitalized-words regex disjuncts will be used), in these
-			 *   conditions (cumulative): -- It could not be split (else
-			 *   capitalization has been handled XXX).  -- It is not in the dict
-			 *   (it has already been issued in that case).  -- It is not in a
-			 *   capitalizable position in the sentence.  -- Its lowercase version
-			 *   is in the dict file (not regex) and it is an entity (checked
-			 *   capitalized) or a common entity (checked as lowercase).
+			 *   conditions (cumulative):
+			 *   -- It could not be split (else capitalization has been
+			 *      handled XXX).
+			 *   -- It is not in the dict (it has already been issued in
+			 *      that case).
+			 *   -- It is not in a capitalizable position in the sentence.
+			 *   -- Its lowercase version is in the dict file (not regex) and
+			 *      it is an entity (checked capitalized) or a common entity
+			 *      (checked as lowercase).
 			 *
 			 *   Comments from a previous release:
 			 *
-			 * * Common entity (checked as lowercase): This allows common nouns
-			 *   and adjectives to be used for entity names: e.g. "Great Southern
-			 *   Union declares bankruptcy", allowing Great to be capitalized,
-			 *   while preventing an upper-case "She" being used as a proper name
-			 *   in "She declared bankruptcy".
+			 * * Common entity (checked as lowercase): This allows common
+			 *   nouns and adjectives to be used for entity names: e.g. "Great
+			 *   Southern Union declares bankruptcy", allowing Great to be
+			 *   capitalized, while preventing an upper-case "She" being used
+			 *   as a proper name in "She declared bankruptcy".
 			 *
 			 * * Entity (checked capitalized): We need to *add* Sue.f (female
-			 *   name Sue) even though sue.v (the verb "to sue") is in the dict. So
-			 *   test for capitalized entity names.  FIXME: [ap] Since capitalized
-			 *   words which are in the dict file are now issued anyway as
-			 *   uppercase, and the capitalized-words regexes are not marked in the
-			 *   dict as entities, this may have effect only for capitalized words
-			 *   that match non-capitalized-words regexes that are marked as
-			 *   entities. I don't know about such, and if there are indeed no such
-			 *   regexes, it looks like the is_entity() check is redundant.  A test
-			 *   "is_entity" added below to check if there is any sentence in the
-			 *   batches that contradicts that.
+			 *   name Sue) even though sue.v (the verb "to sue") is in the
+			 *   dict.  So test for capitalized entity names.  FIXME: [ap]
+			 *   Since capitalized words which are in the dict file are now
+			 *   issued anyway as uppercase, and the capitalized-words regexes
+			 *   are not marked in the dict as entities, this may have effect
+			 *   only for capitalized words that match non-capitalized-words
+			 *   regexes that are marked as entities. I don't know about such,
+			 *   and if there are indeed no such regexes, it looks like the
+			 *   is_entity() check is redundant.  A test "is_entity" added
+			 *   below to check if there is any sentence in the batches that
+			 *   contradicts that.
 			 */
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
@@ -2204,16 +2225,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					(is_entity(dict, word) || is_common_entity(dict, downcase)))))
 			{
 				/* Issue it (capitalized) too */
-
-		/* This is the lc version. The original word can be restored later, if
-		 * needed, through the unsplit word. */
-				if ((NULL != regex_name))
+				if ((NULL != unsplit_word->regex_name))
 				{
-					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word, regex_name);
+					lgdebug(+D_SW, "Adding uc word=%s RE=%s\n", word,
+					        unsplit_word->regex_name);
 					issue_word_alternative(sent, unsplit_word, "REuc",
 					                       0,NULL, 1,&word, 0,NULL);
-					unsplit_word->status |= WS_REGEX;
-					unsplit_word->regex_name = regex_name;
 					word_is_known = true;
 
 					if (test_enabled("is_entity") && is_entity(dict, word))
@@ -2241,7 +2258,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 *   it also should not be issued, even if is_utf8_upper(word),
 			 *   e.g Y'gonna or Let's. */
 			if (!(unsplit_word->status & WS_INDICT) &&
-			    is_re_capitalized(word, regex_name))
+			    is_re_capitalized(unsplit_word->regex_name))
 			{
 				issue_dictcap(sent, /*is_cap*/true, unsplit_word, word);
 			}
@@ -2272,10 +2289,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!(word_is_known ||  lc_word_is_in_dict ||
 	      (word_can_split && !is_contraction_word(word))))
 	{
-		if ((NULL != regex_name))
+		if ((NULL != unsplit_word->regex_name))
 		{
 			lgdebug(+D_SW, "Adding word '%s' for regex, match=%s\n",
-			        word, regex_name);
+			        word, unsplit_word->regex_name);
 			issue_word_alternative(sent, unsplit_word, "RE",
 			                       0,NULL, 1,&word, 0,NULL);
 
@@ -2610,7 +2627,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
 				 wordpos, altlen(sent->word[wordpos].alternatives), s,
 				 w->regex_name ? w->regex_name : "");
-		while (we) {
+		while (we)
+		{
 			printf(" xstring='%s' expr=", we->string);
 			print_expression(we->exp);
 			we = we->next;
@@ -2916,3 +2934,4 @@ bool sentence_in_dictionary(Sentence sent)
 	}
 	return ok_so_far;
 }
+

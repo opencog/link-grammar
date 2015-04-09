@@ -146,8 +146,8 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
 #define HIDE_MORPHO   (!display_morphology)
-/* TODO? !display_->regex_name_marks is not implemented. */
-#define DISPLAY_GUESS_MARKS true // (opts->display_->regex_name_marks)
+/* TODO? !display_guess_marks is not implemented. */
+#define DISPLAY_GUESS_MARKS true // (opts->display_guess_marks)
 
 /**
  * This takes the Wordgraph path array and uses it to
@@ -157,16 +157,16 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  *    A pointer to an array of pointers to strings.  These are the words to be
  *    displayed when printing the solution, the links, etc.  Computed as a
  *    function of chosen_disjuncts[] by compute_chosen_words().  This differs
- *    from sentence[].alternatives because it contains the subscripts.  It
+ *    from sentence.word[].alternatives because it contains the subscripts.  It
  *    differs from chosen_disjunct[].string in that the idiom symbols have been
  *    removed.  Furthermore, several chosen_disjuncts[].string elements may be
  *    combined into one chosen_words[] element if opts->display_morphology==0 or
  *    that they where linkage null-words that are morphemes of the same original
  *    word (i.e. subwords of an unsplit_word which are marked as morphemes).
  *
- * wordgraph_path
+ * wg_path
  *    A pointer to a NULL-terminated array of pointers to Wordgraph words.
- *    It corresponds 1-1 to the chosen_disjuncts array in parse_info.
+ *    It corresponds 1-1 to the chosen_disjuncts array in Linkage structure.
  *    A new one is constructed below to correspond 1-1 to chosen_words.
  *
  *    FIXME Sometimes the word strings are taken from chosen_disjuncts,
@@ -322,7 +322,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 			if (0)
 			{
-				/* TOOO */
+				/* TODO */
 			}
 			else
 			{
@@ -339,7 +339,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				{
 					/* Concatenate the word morphemes together into one word.
 					 * Concatenate their subscripts into one subscript.
-					 * Use suffix separator SUBSCRIPT_SEP.
+					 * Use subscript separator SUBSCRIPT_SEP.
 					 * XXX Check whether we can encounter an idiom word here.
 					 * FIXME Combining contracted words is not handled yet, because
 					 * combining morphemes which have non-LL links to other words is
@@ -378,7 +378,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						 * less clear).
 						 * Put SUBSCRIPT_SEP between the subscripts.
 						 * XXX No 1-1 correspondence between the hidden base words
-						 * and the subscripts after the join, in case there are a base
+						 * and the subscripts after the join, in case there are base
 						 * words with and without subscripts. */
 
 						const char subscript_sep_str[] = { SUBSCRIPT_SEP, '\0'};

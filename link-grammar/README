@@ -21,10 +21,10 @@ Instead of tokenizing all the words in one pass directly into the
 word-array of the parser, it now tokenizes them using a graph which its
 nodes are "subwords".  Initially the original sentence words are tokenized
 to subwords only by whitespace. After that step, each subword is handled in
-its turn, and get split to further subwords if needed. A special care is
+its turn, and gets split to further subwords if needed. A special care is
 taken if one of the alternatives of a subword is the subword itself
-(alone, which is usual, or with a dict-cap token - a thing that is not
-explained here).
+(alone, which is usual, or with a dict-cap token - a new experimental
+mechanism which is described below).
 
 The new way of tokenizing is much more flexible that the old one, and it
 serves as an infrastructure on which new tokenizing and display features
@@ -104,7 +104,7 @@ It can display the graph using X11 if available when the x flag is set
 uses the "dot" command of Graphviz. Graphviz can be installed as part of
 Cygwin, or separately (http://www.graphviz.org/Download_windows.php).
 Both PhotoViewer.dll (if used) and "dot" must be in the command path.
-BTW, when running under Cygwin, don't exist LinkGrammarExe by using ^C or
+BTW, when running under Cygwin, don't exit LinkGrammarExe by using ^C or
 ^Z - the shell may get stuck because the program somehow continues to run
 in the background. Instead, exit using !exit .
 
@@ -126,7 +126,7 @@ following can be used: !test=dictcap,removeZZZ .
 
 HOWTO use the new regex tokenizer/splitter
 ------------------------------------------
-Its new, experimental code. 
+It's new, experimental code. 
 
 To compile: ../configure --enable-regex-tokenizer
 
