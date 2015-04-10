@@ -769,6 +769,10 @@ int main(int argc, char * argv[])
 		if (strncmp(input_string, "!file", 5) == 0)
 		{
 			char * filename = &input_string[6];
+			int fnlen = strlen(filename);
+
+			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
+
 			input_fh = fopen(filename, "r");
 			if (NULL == input_fh)
 			{
