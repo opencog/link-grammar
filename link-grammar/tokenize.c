@@ -1377,6 +1377,11 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 }
 
 #define D_MS 3
+/*
+ * Split the given word "word" to morphemes.
+ * If unsplit_word is not NULL then issue alternatives.
+ * Else only check the word can split (to validate a spell guess).
+ */
 static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 {
 	bool word_can_split;
@@ -1394,10 +1399,11 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 				  word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
-		if ((is_capitalizable(sent->dict, unsplit_word)) && is_utf8_upper(word) &&
-			 !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
+		if ((NULL != unsplit_word) && is_utf8_upper(word) &&
+		    is_capitalizable(sent->dict, unsplit_word) &&
+		    !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
 		{
-			int downcase_size = strlen(unsplit_word->subword)+MB_LEN_MAX+1;
+			int downcase_size = strlen(word)+MB_LEN_MAX+1;
 			char *const downcase = alloca(downcase_size);
 
 			downcase_utf8_str(downcase, word, downcase_size);
