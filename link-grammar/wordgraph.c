@@ -57,6 +57,7 @@ Gword *gword_new(Sentence sent, const char *s)
 	word->node_num = sent->gword_node_num++;
 	word->split_counter = 0;
 	word->null_subwords = NULL;
+	word->hier_depth = 0;
 
 	return word;
 }
