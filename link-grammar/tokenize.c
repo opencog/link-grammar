@@ -1377,6 +1377,11 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 }
 
 #define D_MS 3
+/*
+ * Split the given word "word" to morphemes.
+ * If unsplit_word is not NULL then issue alternatives.
+ * Else only check the word can split (to validate a spell guess).
+ */
 static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 {
 	bool word_can_split;
@@ -1394,10 +1399,11 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 				  word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
-		if ((is_capitalizable(sent->dict, unsplit_word)) && is_utf8_upper(word) &&
-			 !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
+		if ((NULL != unsplit_word) && is_utf8_upper(word) &&
+		    is_capitalizable(sent->dict, unsplit_word) &&
+		    !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
 		{
-			int downcase_size = strlen(unsplit_word->subword)+MB_LEN_MAX+1;
+			int downcase_size = strlen(word)+MB_LEN_MAX+1;
 			char *const downcase = alloca(downcase_size);
 
 			downcase_utf8_str(downcase, word, downcase_size);
@@ -2320,7 +2326,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	    opts->use_spell_guess && dict->spell_checker)
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
-		lgdebug(+D_SW, "Spell suggest=%ud\n", spell_suggest);
+		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
 	}
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
@@ -2721,20 +2727,23 @@ printf("DEBUG: in_same_alternative=%d\n",
 
 		/* Go upward and find the sentence word. */
 		unsplit_word  = wp_old->word;
-		while (unsplit_word->unsplit_word != sent->wordgraph)
+		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
-			assert(NULL != unsplit_word, "'%s': Unsplit word not found",
-					 wg_word->subword);
-			unsplit_word = unsplit_word->unsplit_word;
-		}
+			while (unsplit_word->unsplit_word != sent->wordgraph)
+			{
+				assert(NULL != unsplit_word, "'%s': Unsplit word not found",
+						 wg_word->subword);
+				unsplit_word = unsplit_word->unsplit_word;
+			}
 
-		assert(NULL != unsplit_word->subword, "Unsplit word not found");
+			assert(NULL != unsplit_word->subword, "Unsplit word not found");
 
-		if (unsplit_word != last_unsplit_word)
-		{
-			/* This is a new sentence word - use it as the unsplit word. */
-			wa_word->unsplit_word = unsplit_word->subword;
-			last_unsplit_word = unsplit_word;
+			if (unsplit_word != last_unsplit_word)
+			{
+				/* This is a new sentence word - use it as the unsplit word. */
+				wa_word->unsplit_word = unsplit_word->subword;
+				last_unsplit_word = unsplit_word;
+			}
 		}
 
 		empty_word_encountered = false;
@@ -2783,7 +2792,7 @@ printf("DEBUG: in_same_alternative=%d\n",
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
-			if (NULL == wg_word->next) continue; /* avoid termination word */
+			if (NULL == wg_word->next) continue; /* XXX avoid termination word */
 
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
@@ -2808,7 +2817,8 @@ printf("DEBUG: in_same_alternative=%d\n",
 
 			if (wpp_old->next_ok)
 			{
-				lgdebug(+D_FW, "Advancing '%s' next_ok\n", wg_word->subword);
+				lgdebug(+D_FW, "Advancing %zu:%s next_ok\n", wg_word->node_num,
+				        wg_word->subword);
 				for (next = wg_word->next; NULL != *next; next++)
 				{
 					wordgraph_pathpos_append(&wp_new, *next, false,
@@ -2825,7 +2835,7 @@ printf("DEBUG: in_same_alternative=%d\n",
 			{
 				bool same_alternative = false;
 
-				if (NULL == wg_word->next) continue; /* avoid termination word */
+				if (NULL == wg_word->next) continue; /* termination word */
 
 				if (NULL != wp_new)
 				{
@@ -2851,7 +2861,8 @@ printf("DEBUG: in_same_alternative=%d\n",
 				 * again in the pathpos queue the current word, marking it was
 				 * "same_word". This will cause generation of an empty word in the
 				 * next round. */
-				lgdebug(+D_FW, "Advancing '%s': ", wg_word->subword);
+				lgdebug(+D_FW, "Advancing %zu:%s: ", wg_word->node_num,
+				        wg_word->subword);
 				if (same_alternative)
 				{
 					lgdebug(D_FW, "No (same alt)\n");
