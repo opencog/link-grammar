@@ -4490,7 +4490,7 @@ There's more where that came from.
 There's plenty more where that came from.
 
 % --------------------------------------------------------------------
-% setences that parse, but not correctly:
+% sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
@@ -4505,7 +4505,7 @@ There's plenty more where that came from.
 I slipped on the ice as I ran home.
 
 % --------------------------------------------------------------------
-% assorted unclassified breakages, wating for a fix:
+% assorted unclassified breakages, waiting for a fix:
 Although society has excluded the patients in the ward for their unique qualities, they feel 'safer' trying to fit in because they receive approval from nurses and the representatives of society.
 
 92 Chapter 10.............................................................................................................................................
@@ -4516,13 +4516,24 @@ Although society has excluded the patients in the ward for their unique qualitie
 *Bitter gourdはにがうりだそうであってるのかはちょっと不安ですが翻訳ソフトでやくしてみました。
 *Синтезируется из глюкозы в тканях и органах, например в сердце, печени, почках.
 
-% The period occuring "midword" with no spaces around it was causing
+% The period occurring "midword" with no spaces around it was causing
 % the dictionary lookup to go crazy. dict_order_user() fixes this, by
 % avoiding special treatment of periods when user-input strings are
 % provided.
 *You need it most.Either way you cant lose.
 
-% The very long setences that take forever to  parse are now in the
+% These sentences caused crashes in the initial wordgraph version.
+% (spell=4 in order to be compatible with future code that will make up to N
+% corrections when spell=N.)
+!spell=4
+*lgdebug(+D_IWA, "(%s) Gword %zu:%s split (split_counter=%zu) into", label,
+*@s
+% The following is corrected to: Vicki[~].f 's[~].v here
+vibeix here
+!spell=0
+% --------------------------------------------------------------------
+
+% The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch
 % --------------------------------------------------------------------
 % --------------------------- THE END --------------------------------
