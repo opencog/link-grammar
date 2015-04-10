@@ -2326,7 +2326,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	    opts->use_spell_guess && dict->spell_checker)
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
-		lgdebug(+D_SW, "Spell suggest=%ud\n", spell_suggest);
+		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
 	}
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
