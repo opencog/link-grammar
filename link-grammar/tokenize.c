@@ -2727,20 +2727,23 @@ printf("DEBUG: in_same_alternative=%d\n",
 
 		/* Go upward and find the sentence word. */
 		unsplit_word  = wp_old->word;
-		while (unsplit_word->unsplit_word != sent->wordgraph)
+		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
-			assert(NULL != unsplit_word, "'%s': Unsplit word not found",
-					 wg_word->subword);
-			unsplit_word = unsplit_word->unsplit_word;
-		}
+			while (unsplit_word->unsplit_word != sent->wordgraph)
+			{
+				assert(NULL != unsplit_word, "'%s': Unsplit word not found",
+						 wg_word->subword);
+				unsplit_word = unsplit_word->unsplit_word;
+			}
 
-		assert(NULL != unsplit_word->subword, "Unsplit word not found");
+			assert(NULL != unsplit_word->subword, "Unsplit word not found");
 
-		if (unsplit_word != last_unsplit_word)
-		{
-			/* This is a new sentence word - use it as the unsplit word. */
-			wa_word->unsplit_word = unsplit_word->subword;
-			last_unsplit_word = unsplit_word;
+			if (unsplit_word != last_unsplit_word)
+			{
+				/* This is a new sentence word - use it as the unsplit word. */
+				wa_word->unsplit_word = unsplit_word->subword;
+				last_unsplit_word = unsplit_word;
+			}
 		}
 
 		empty_word_encountered = false;
@@ -2789,7 +2792,7 @@ printf("DEBUG: in_same_alternative=%d\n",
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
-			if (NULL == wg_word->next) continue; /* avoid termination word */
+			if (NULL == wg_word->next) continue; /* XXX avoid termination word */
 
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
@@ -2814,7 +2817,8 @@ printf("DEBUG: in_same_alternative=%d\n",
 
 			if (wpp_old->next_ok)
 			{
-				lgdebug(+D_FW, "Advancing '%s' next_ok\n", wg_word->subword);
+				lgdebug(+D_FW, "Advancing %zu:%s next_ok\n", wg_word->node_num,
+				        wg_word->subword);
 				for (next = wg_word->next; NULL != *next; next++)
 				{
 					wordgraph_pathpos_append(&wp_new, *next, false,
@@ -2831,7 +2835,7 @@ printf("DEBUG: in_same_alternative=%d\n",
 			{
 				bool same_alternative = false;
 
-				if (NULL == wg_word->next) continue; /* avoid termination word */
+				if (NULL == wg_word->next) continue; /* termination word */
 
 				if (NULL != wp_new)
 				{
@@ -2857,7 +2861,8 @@ printf("DEBUG: in_same_alternative=%d\n",
 				 * again in the pathpos queue the current word, marking it was
 				 * "same_word". This will cause generation of an empty word in the
 				 * next round. */
-				lgdebug(+D_FW, "Advancing '%s': ", wg_word->subword);
+				lgdebug(+D_FW, "Advancing %zu:%s: ", wg_word->node_num,
+				        wg_word->subword);
 				if (same_alternative)
 				{
 					lgdebug(D_FW, "No (same alt)\n");
