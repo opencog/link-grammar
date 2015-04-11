@@ -655,8 +655,8 @@ static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modes
 				{
 					if (NULL != old_unsplit) append_string(wgd, "}\n");
 					append_string(wgd, "subgraph \"cluster-%p\" {", w->unsplit_word);
-					append_string(wgd, "label=\"%s\"; \n",
-					              wlabel(sent, w->unsplit_word));
+					append_string(wgd, "label=\"%zu %s\"; \n",
+						w->unsplit_word->node_num, wlabel(sent, w->unsplit_word));
 
 					old_unsplit = w->unsplit_word;
 				}
