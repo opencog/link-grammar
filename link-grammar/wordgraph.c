@@ -869,6 +869,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 
 	/* No check is done for correct flags - at most "mode" will be nonsense. */
 	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++) mode |= 1<<(*mp-'a');
+	/* test=wg: sets the mode to ":" (0x2000000) and thus no flags are set. */
 	if ((0 == mode) || (WGR_X11 == mode))
 		mode |= WGR_LEGEND|WGR_DBGLABEL|WGR_UNSPLIT;
 

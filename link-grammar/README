@@ -87,9 +87,9 @@ representation of the word graph. The graphs can be displayed in several
 ways, controlled by one-letter flags. The command !test=wg enables the
 display of a graphs which includes no "prev" links for clarity, but
 includes "unsplit word" links.  Other graphical representation modes can be
-enabled by !test=wg=FLAGS, when FLAGS are lowercase letters as defined in
-wordgraph.h.  For example, !test=wg=s displays unsplit_words as subgraphs,
-and the p flag adds "prev" links.
+enabled by !test=wg:FLAGS, when FLAGS are lowercase letters as defined in
+wordgraph.h.  For example, !test=wg:sl displays unsplit_words as subgraphs,
+with a legend, and the p flag adds "prev" links.
 The graphical display still needs improvements in order to be able to
 display complex word-graph situations in a simple manner.  The graphical
 display code is not compiled by default because it involves invocation of
@@ -100,7 +100,7 @@ this feature.
 On Windows this feature is enabled when compiled with USE_WORDGRAPH_DISPLAY.
 By default, it invokes PhotoViewer.dll for displaying the graph.
 It can display the graph using X11 if available when the x flag is set
-(i.e. !test=wg=x), for example when running under Cygwin/X. In any case it
+(i.e. !test=wg:x), for example when running under Cygwin/X. In any case it
 uses the "dot" command of Graphviz. Graphviz can be installed as part of
 Cygwin, or separately (http://www.graphviz.org/Download_windows.php).
 Both PhotoViewer.dll (if used) and "dot" must be in the command path.
