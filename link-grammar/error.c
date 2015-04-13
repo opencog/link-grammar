@@ -151,7 +151,7 @@ const char *feature_enabled(const char * list, const char * feature)
 	strcat(buff, ",");
 
 	if (NULL != strstr(list, buff)) return ",";
-	buff[len+1] = '='; /* check for "feature=..." */
+	buff[len+1] = ':'; /* check for "feature:..." */
 	if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
 	return NULL;
 }

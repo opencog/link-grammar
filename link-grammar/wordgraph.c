@@ -453,7 +453,7 @@ GNUC_UNUSED const char *gword_morpheme(Sentence sent, const Gword *w)
 #if USE_WORDGRAPH_DISPLAY
 /* === Wordgraph graphical representation === */
 
-static void wordgraph_legend(String *wgd)
+static void wordgraph_legend(String *wgd, unsigned int mode)
 {
 	size_t i;
 	static char const *wst[] = {
@@ -465,14 +465,21 @@ static void wordgraph_legend(String *wgd)
 		"IN", "In the dict file",
 		"FI", "First char is uppercase"
 	};
+
 	append_string(wgd,
 		"subgraph cluster_legend {\n"
 		"label=Legend;\n"
+		"%s"
 		"legend [label=\"subword\\n(status-flags)\\nmorpheme-type\"];\n"
 		"legend [xlabel=\"ordinal-number\\ndebug-label\"];\n"
+		"%s"
 		"legend_width [width=4.5 height=0 shape=none label=<\n"
 		"<table border='0' cellborder='1' cellspacing='0'>\n"
-		"<tr><td colspan='2'>status-flags</td></tr>\n"
+		"<tr><td colspan='2'>status-flags</td></tr>\n",
+		(mode & WGR_SUB) ? "subgraph cluster_unsplit_word {\n"
+		                   "label=\"ordinal-number unsplit-word\";\n" : "",
+		(mode & WGR_SUB) ? "}\n" : ""
+
 	);
 	for (i = 0; i < sizeof(wst)/sizeof(wst[0]); i += 2)
 	{
@@ -541,7 +548,7 @@ static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modes
 
 	append_string(wgd, "# Mode: %s\n", modestr);
 	append_string(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
-	if (mode & WGR_LEGEND) wordgraph_legend(wgd);
+	if (mode & WGR_LEGEND) wordgraph_legend(wgd, mode);
 	append_string(wgd, "\"%p\" [shape=box,style=filled,color=\".7 .3 1.0\"];\n",
 	              sent->wordgraph);
 
@@ -655,8 +662,8 @@ static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modes
 				{
 					if (NULL != old_unsplit) append_string(wgd, "}\n");
 					append_string(wgd, "subgraph \"cluster-%p\" {", w->unsplit_word);
-					append_string(wgd, "label=\"%s\"; \n",
-					              wlabel(sent, w->unsplit_word));
+					append_string(wgd, "label=\"%zu %s\"; \n",
+						w->unsplit_word->node_num, wlabel(sent, w->unsplit_word));
 
 					old_unsplit = w->unsplit_word;
 				}
@@ -869,6 +876,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 
 	/* No check is done for correct flags - at most "mode" will be nonsense. */
 	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++) mode |= 1<<(*mp-'a');
+	/* test=wg: sets the mode to ":" (0x2000000) and thus no flags are set. */
 	if ((0 == mode) || (WGR_X11 == mode))
 		mode |= WGR_LEGEND|WGR_DBGLABEL|WGR_UNSPLIT;
 
