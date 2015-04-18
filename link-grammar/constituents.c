@@ -1296,7 +1296,8 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 	{
 		return print_flat_constituents(linkage);
 	}
-	assert(0, "Illegal mode in linkage_print_constituent_tree");
+	prt_error("Warning: Illegal mode %d for printing constituents\n"
+	          "Allowed values: %d to %d\n", mode, NO_DISPLAY, MAX_STYLES);
 	return NULL;
 }
 

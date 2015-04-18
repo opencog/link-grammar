@@ -303,6 +303,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		}
 		else
 		{
+			copts->display_constituents = 0;
 			fprintf(stderr, "Can't generate constituents.\n");
 			fprintf(stderr, "Constituent processing has been turned off.\n");
 		}
