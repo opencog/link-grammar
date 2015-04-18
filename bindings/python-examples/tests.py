@@ -438,6 +438,18 @@ class ZENLangTestCase(unittest.TestCase):
                     self.assertEqual(linkage.diagram(), diagram)
         parses.close()
 
+class ZENConstituentsCase(unittest.TestCase):
+    def setUp(self):
+        self.d, self.po = Dictionary(lang='en'), ParseOptions()
+
+    def test_a_constiuents_after_parse_list(self):
+        """
+        Validate that the post-processing data of the first linkage is not
+        getting clobbered by later linkages.
+        """
+        linkages = list(Sentence("This is a test.", self.d, self.po).parse())
+        self.assertEqual(linkages[0].constituent_tree(),
+                "(S (NP this.p)\n   (VP is.v\n       (NP a test.n))\n   .)\n")
 
 # Tests are run in alphabetical order; do the language tests last.
 class ZDELangTestCase(unittest.TestCase):
