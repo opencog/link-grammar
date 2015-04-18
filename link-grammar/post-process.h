@@ -28,6 +28,8 @@
 #include "api-types.h"
 #include "structures.h"
 
+void post_process_new_domain_array(Postprocessor *);
+void post_process_free_domain_array(PP_data *);
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
