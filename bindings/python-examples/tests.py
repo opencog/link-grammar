@@ -416,28 +416,21 @@ class ZENLangTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()
 
-    # Reads linkages from a test-file.
     def test_getting_links(self):
-        parses = open(clg.test_data_srcdir + "parses-en.txt")
-        diagram = None
-        sent = None
-        for line in parses :
-            # Lines starting with I are the input sentences
-            if 'I' == line[0] :
-                sent = line[1:]
-                diagram = ""
+        linkage_testfile(self, self.d, self.po)
 
-            # Lines starting with O are the parse diagrams
-            if 'O' == line[0] :
-                diagram += line[1:]
+class ZENConstituentsCase(unittest.TestCase):
+    def setUp(self):
+        self.d, self.po = Dictionary(lang='en'), ParseOptions()
 
-                # We have a complete diagram if it ends with an
-                # empty line.
-                if '\n' == line[1] and 1 < len(diagram) :
-                    linkage = Sentence(sent, self.d, self.po).parse().next()
-                    self.assertEqual(linkage.diagram(), diagram)
-        parses.close()
-
+    def test_a_constiuents_after_parse_list(self):
+        """
+        Validate that the post-processing data of the first linkage is not
+        getting clobbered by later linkages.
+        """
+        linkages = list(Sentence("This is a test.", self.d, self.po).parse())
+        self.assertEqual(linkages[0].constituent_tree(),
+                "(S (NP this.p)\n   (VP is.v\n       (NP a test.n))\n   .)\n")
 
 # Tests are run in alphabetical order; do the language tests last.
 class ZDELangTestCase(unittest.TestCase):
@@ -479,27 +472,7 @@ class ZLTLangTestCase(unittest.TestCase):
 
     # Reads linkages from a test-file.
     def test_getting_links(self):
-        parses = open(clg.test_data_srcdir + "parses-lt.txt")
-        diagram = None
-        sent = None
-        for line in parses :
-            # Lines starting with I are the input sentences
-            if 'I' == line[0] :
-                sent = line[1:]
-                diagram = ""
-
-            # Lines starting with O are the parse diagrams
-            if 'O' == line[0] :
-                diagram += line[1:]
-
-                # We have a complete diagram if it ends with an
-                # empty line.
-                if '\n' == line[1] and 1 < len(diagram) :
-                    linkage = Sentence(sent, self.d, self.po).parse().next()
-                    self.assertEqual(linkage.diagram(), diagram)
-
-        parses.close()
-
+        linkage_testfile(self, self.d, self.po)
 
 # Tests are run in alphabetical order; do the language tests last.
 class ZRULangTestCase(unittest.TestCase):
@@ -547,5 +520,42 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
+def linkage_testfile(self, dict, popt):
+    """
+    Reads sentences and their corresponding
+    linkage diagrams / constituent printings.
+    """
+    parses = open(clg.test_data_srcdir + "parses-" + clg.dictionary_get_lang(dict._obj) + ".txt")
+    diagram = None
+    sent = None
+    for line in parses :
+        # Lines starting with I are the input sentences
+        if 'I' == line[0] :
+            sent = line[1:]
+            diagram = ""
+            constituents = ""
+            linkages = Sentence(sent, dict, popt).parse()
+            linkage = linkages.next()
+
+        # Generate the next linkage of the last input sentence
+        if 'N' == line[0] :
+            diagram = ""
+            constituents = ""
+            linkage = linkages.next()
+
+        # Lines starting with O are the parse diagram
+        # It ends with an empty line
+        if 'O' == line[0] :
+            diagram += line[1:]
+            if '\n' == line[1] and 1 < len(diagram) :
+                self.assertEqual(linkage.diagram(), diagram)
+
+        # Lines starting with C are the constituent output (type 1)
+        # It ends with an empty line
+        if 'C' == line[0] :
+            if '\n' == line[1] and 1 < len(constituents) :
+                self.assertEqual(linkage.constituent_tree(), constituents)
+            constituents += line[1:]
+    parses.close()
 
 unittest.main()
