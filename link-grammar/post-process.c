@@ -182,18 +182,9 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 	}
 }
 
-/**
- * Gets called after every invocation of post_process()
- */
-void post_process_free_data(PP_data * ppd)
+void post_process_free_domain_array(PP_data *ppd)
 {
-	size_t w, d;
-	for (w = 0; w < ppd->wowlen; w++)
-	{
-		free_List_o_links(ppd->word_links[w]);
-		ppd->word_links[w] = NULL;
-	}
-
+	size_t d;
 	for (d = 0; d < ppd->domlen; d++)
 	{
 		free_List_o_links(ppd->domain_array[d].lol);
@@ -201,6 +192,21 @@ void post_process_free_data(PP_data * ppd)
 		free_D_tree_leaves(ppd->domain_array[d].child);
 		ppd->domain_array[d].child = NULL;
 	}
+}
+
+/**
+ * Gets called after every invocation of post_process()
+ */
+void post_process_free_data(PP_data * ppd)
+{
+	size_t w;
+	for (w = 0; w < ppd->wowlen; w++)
+	{
+		free_List_o_links(ppd->word_links[w]);
+		ppd->word_links[w] = NULL;
+	}
+
+	post_process_free_domain_array(ppd);
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
 	ppd->num_words = 0;
@@ -967,6 +973,15 @@ void post_process_close(PostProcessor *pp)
 	post_process_free(pp);
 }
 
+#define PP_INITLEN 60 /* just starting size, it is expanded if needed */
+
+void post_process_new_domain_array(Postprocessor *pp)
+{
+	pp->pp_data.domlen = PP_INITLEN;
+	pp->pp_data.domain_array = (Domain*) malloc(pp->pp_data.domlen * sizeof(Domain));
+	memset(pp->pp_data.domain_array, 0, pp->pp_data.domlen * sizeof(Domain));
+}
+
 /**
  * read rules from path and initialize the appropriate fields in
  * a postprocessor structure, a pointer to which is returned.
@@ -994,17 +1009,14 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 
 	pp->q_pruned_rules = false;
 
-	/* 60 is just starting size, these are expanded if needed */
-	pp->vlength = 60;
+	pp->vlength = PP_INITLEN;
 	pp->visited = (bool*) malloc(pp->vlength * sizeof(bool));
 	memset(pp->visited, 0, pp->vlength * sizeof(bool));
 
 	pp->pp_data.links_to_ignore = NULL;
-	pp->pp_data.domlen = 60;
-	pp->pp_data.domain_array = (Domain*) malloc(pp->pp_data.domlen * sizeof(Domain));
-	memset(pp->pp_data.domain_array, 0, pp->pp_data.domlen * sizeof(Domain));
+	post_process_new_domain_array(pp);
 
-	pp->pp_data.wowlen = 60;
+	pp->pp_data.wowlen = PP_INITLEN;
 	pp->pp_data.word_links = (List_o_links **) malloc(pp->pp_data.wowlen * sizeof(List_o_links*));
 	memset(pp->pp_data.word_links, 0, pp->pp_data.wowlen * sizeof(List_o_links *));
 
