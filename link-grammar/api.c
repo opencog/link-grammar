@@ -815,26 +815,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	memset(sent, 0, sizeof(struct Sentence_s));
 
-#if 0
-	/* memset above already zeros these for us */
-	sent->length = 0;
-	sent->word = NULL;
-	sent->num_linkages_found = 0;
-	sent->num_linkages_alloced = 0;
-	sent->num_linkages_post_processed = 0;
-	sent->num_valid_linkages = 0;
-	sent->lnkages = NULL;
-	sent->null_count = 0;
-	sent->parse_info = NULL;
-
-#ifdef USE_SAT_SOLVER
-	sent->hook = NULL;
-#endif /* USE_SAT_SOLVER */
-
-	sent->t_start = 0;
-	sent->t_count = 0;
-#endif
-
 	sent->dict = dict;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
@@ -1369,11 +1349,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	lifo->N_violations++;
 	lifo->pp_violation_msg = "Invalid morphism construction.";
 	lkg->wg_path = NULL;
-#if 0 /* They cannot be displayed now since they lack a Wordgraph path. */
-	if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
-#else
 	lifo->discarded = true;
-#endif
 	lgdebug(4, "%p FAILED\n", lkg);
 	return false;
 }

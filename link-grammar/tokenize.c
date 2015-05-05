@@ -2681,18 +2681,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	size_t max_words = 0;
 	bool error_encountered = false;
 
-#if 0
-/* Debug info for a sentence consists of (unquoted):
- *  - a single word: "Mr." (Mr. and Mr).
- *  - a single word "הכלב" (כלב and כ=). */
-printf("DEBUG: w1: %s\n", sent->wordgraph->next[0]->next[1]->subword); /* Mr. */
-printf("DEBUG: w2: %s\n", sent->wordgraph->next[0]->next[0]->subword); /* Mr */
-/* These words should not be in the same alternative. */
-printf("DEBUG: in_same_alternative=%d\n",
-       in_same_alternative(sent->wordgraph->next[0]->next[1],
-       sent->wordgraph->next[0]->next[0]));
-#endif
-
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
 	/* Establish an upper bound on the total number of words, to prevent an
