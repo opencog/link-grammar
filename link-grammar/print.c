@@ -39,7 +39,7 @@
  * needed to fully fit the names of the links between them.
  * FIXME Long link names between more distant words may still not
  * fit the space between these words.
- * 
+ *
  * Return the number of characters needed for the all the words,
  * including the space needed for the link names as described above.
  */

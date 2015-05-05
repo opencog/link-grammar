@@ -639,7 +639,7 @@ static void remove_empty_words(Linkage lkg)
 			new_lnk->link_name = old_lnk->link_name;
 			j++;
 		}
-	}	
+	}
 	lkg->num_links = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 }
@@ -1389,8 +1389,8 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		/* Don't bother with linkages that already failed post-processing... */
 		if (0 != lkg->lifo.N_violations) continue;
 
-      if (!sane_linkage_morphism(sent, lkg, opts))
-          N_invalid_morphism ++;
+		if (!sane_linkage_morphism(sent, lkg, opts))
+			N_invalid_morphism ++;
 	}
 
 	if (opts->verbosity > 1)
@@ -1543,4 +1543,3 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	return sent->num_valid_linkages;
 }
-

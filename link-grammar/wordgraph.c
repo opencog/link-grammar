@@ -268,7 +268,7 @@ const Gword **wordgraph_hier_position(Gword *word)
 /**
  * Find if 2 words are in the same alternative of their common ancestor
  * unsplit_word.
- * "Same alternative" means at the direct alternative or any level below it. 
+ * "Same alternative" means at the direct alternative or any level below it.
  * A
  * |
  * +-B C D
@@ -281,7 +281,7 @@ const Gword **wordgraph_hier_position(Gword *word)
  * J and E (but not J and B) are in the same alternative of their common
  * ancestor unsplit_word A.
  * J and G are not in the same alternative (common ancestor unsplit_word F).
- * 
+ *
  * Return true if they are, false otherwise.
  */
 bool in_same_alternative(Gword *w1, Gword *w2)
@@ -309,18 +309,17 @@ bool in_same_alternative(Gword *w1, Gword *w2)
 
 	/* In the even positions we have an unsplit_word.
 	 * In the odd positions we have an alternative_id.
-	 * 
+	 *
 	 * If we are here when i is even, it means the preceding alternative_id was
 	 * the same in the two words - so they belong to the same alternative.  If
 	 * i is 0, it means these are sentence words, and sentence words are all in
 	 * the same alternative (including the dummy termination word).
 	 * If the hierarchy-position vectors are equal, i is also even, and words
 	 * with equal hierarchy-position vectors are in the same alternative.
-	 * 
+	 *
 	 * If we are here when i is odd, it means the alternative_id at i is not
 	 * the same in the given words, but their preceding unsplit_words are the
 	 * same - so they clearly not in the same alternative.
-	 *   
 	 */
 	if (0 == i%2) return true;
 

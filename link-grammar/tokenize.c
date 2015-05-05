@@ -1438,7 +1438,7 @@ static bool is_known_word(Sentence sent, const char *word)
  * Note: spellcheck_suggest(), which is invoked by this function, returns
  * guesses for words containing numbers (including words consisting of digits
  * only). Hence this function should not be called for such words.
- * 
+ *
  * Note that a lowercase word can be spell-corrected to an uppercase word.
  * FIXME? Should we allow that only if the lc version of the corrected word
  * is the same?
@@ -2109,7 +2109,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			sz = wend-word;
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
-			
+
 			if (!find_word_in_dict(dict, unsplit_word->subword) ||
 			    find_word_in_dict(dict, temp_word))
 			{
@@ -2557,16 +2557,16 @@ static Word *word_new(Sentence sent)
 
 /**
  * Build the expression lists for a given word at the current word-array word.
- * 
+ *
  * The resulted word-array is later used as an input to the parser.
- * 
+ *
  * Algorithm:
  * Apply the following step to all words w:
  * If w is in the dictionary, use it.
  * Else if w is identified by regex matching, use the
  * appropriately matched disjunct collection.
  * Otherwise w is unknown - use the disjunct collection of UNKNOWN_WORD.
- * 
+ *
  * FIXME For now, also add an element to the alternatives array, so the rest of
  * program will work fine (print_sentence_word_alternatives(),
  * sentence_in_dictionary(), verr_msg()).
@@ -2945,4 +2945,3 @@ bool sentence_in_dictionary(Sentence sent)
 	}
 	return ok_so_far;
 }
-

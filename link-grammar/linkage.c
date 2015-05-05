@@ -108,7 +108,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	new_word->status |= WS_PL;
 	new_word->label = "NJ";
 	new_word->null_subwords = NULL;
-	
+
 	/* Link the null_subwords links of the added unifying node to the null
 	 * subwords it unified. */
 	for (w = start; w <= end; w++)
@@ -198,7 +198,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	if (D_CCW <= opts->verbosity)
 		print_lwg_path(lwg_path);
-	
+
 	for (i = 0; i < linkage->num_words; i++)
 	{
 		Disjunct *cdj = cdjp[i];
@@ -287,7 +287,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						t = wgnull->subword;
 					}
 				}
-										
+
 				nullblock_start = NULL;
 				nbsize = 0;
 
@@ -426,7 +426,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 										 * need to move it to the position of the prefix.
 										 * FIXME: May still not be good enough. */
 										move_combined_word = i+m-1;
-										
+
 										/* And the later chosen_word assignment should be:
 										 * chosen_words[-1 == move_combined_word ?
 										 *    move_combined_word : i] = t;
@@ -631,7 +631,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			new_lnk->link_name = old_lnk->link_name;
 			j++;
 		}
-	}	
+	}
 #endif
 
 	linkage->num_links = j;
@@ -666,7 +666,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	/* We've already done core post-processing earlier.
 	 * Run the post-processing needed for constituent (hpsg)
 	 * printing.
-	 * 
+	 *
 	 * FIXME: For efficiency (in case the user doesn't need to print the
 	 * constituents) linkage_post_process() can be moved to
 	 * linkage_print_constituent_tree() and

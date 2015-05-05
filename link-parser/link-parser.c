@@ -804,7 +804,7 @@ int main(int argc, char * argv[])
 				if (copts->batch_mode) batch_in_progress = true;
 			}
 		}
-		
+
 		if (copts->echo_on)
 		{
 			printf("%s\n", input_string);
