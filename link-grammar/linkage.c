@@ -665,9 +665,19 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 
 	/* We've already done core post-processing earlier.
 	 * Run the post-processing needed for constituent (hpsg)
-	 * printing. */
+	 * printing.
+	 * 
+	 * FIXME: For efficiency (in case the user doesn't need to print the
+	 * constituents) linkage_post_process() can be moved to
+	 * linkage_print_constituent_tree() and
+	 * linkage_post_process()/do_post_process() need to be changed
+	 * accordingly. In any case, for additional efficiency, the linkage
+	 * struct can be changed to include only the domain_array stuff, but
+	 * then we need in it also a pointer to the Sentence struct (or
+	 * to constituent_pp in it). [ap] */
 	linkage_post_process(linkage, sent->constituent_pp, opts);
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
+	post_process_new_domain_array(sent->constituent_pp);
 
 	return linkage;
 }

@@ -441,6 +441,11 @@ static void free_linkages(Sentence sent)
 		lg_sense_delete(linkage);
 #endif
 
+		/* Note: linkage->hpsg_pp_data.domain_array originally got
+		 * allocated in sent->constituent_pp->pp_data. */
+		post_process_free_domain_array(&linkage->hpsg_pp_data);
+		free(linkage->hpsg_pp_data.domain_array);
+
 		linkage_free_pp_info(linkage);
 
 		/* XXX FIXME */
