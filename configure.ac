@@ -765,7 +765,6 @@ data/tr/Makefile
 data/demo-sql/Makefile
 man/Makefile
 autopackage/default.apspec
-link-grammar.xcode/Makefile
 viterbi/Makefile
 ])
 AC_OUTPUT
