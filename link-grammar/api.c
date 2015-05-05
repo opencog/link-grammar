@@ -509,7 +509,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 
 	/* Now actually malloc the array in which we will process linkages. */
 	/* We may have been called before, e.g this might be a panic parse,
-	 * and the linkages array may stiil be there from last time. */
+	 * and the linkages array may still be there from last time. */
 	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
@@ -1012,7 +1012,7 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 /**
  * Construct word paths (one or more) through the Wordgraph.
  *
- * Add 'add_word" to the potential path.
+ * Add 'current_word" to the potential path.
  * Add "p" to the path queue, which defines the start of the next potential
  * paths to be checked.
  *

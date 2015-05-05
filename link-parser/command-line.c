@@ -104,7 +104,7 @@ static Switch default_switches[] =
 	{"debug",      String, "comma-separated function list to debug", &local.debug},
 	{"test",       String, "comma-separated features to test", &local.test},
 #ifdef USE_VITERBI
-	{"viterbi",    Bool, "Use Viterbit-based parser",       &local.use_viterbi},
+	{"viterbi",    Bool, "Use Viterbi-based parser",        &local.use_viterbi},
 #endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
@@ -506,7 +506,7 @@ Command_Options* command_options_create(void)
 	co->popts = parse_options_create();
 	co->panic_opts = parse_options_create();
 
-	/* "Unlimited" screen wdith when writing to a file, auto-updated
+	/* "Unlimited" screen width when writing to a file, auto-updated
 	 * later, wen writing to a tty. */
 	co->screen_width = 16381;
 	co->allow_null = true;

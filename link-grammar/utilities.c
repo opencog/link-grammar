@@ -831,7 +831,7 @@ void * object_open(const char *filename,
 	/* Look for absolute filename.
 	 * Unix: starts with leading slash.
 	 * Windows: starts with C:\  except that the drive letter may differ.
-	 * Note that only native windows C library uses backslashs; mingw
+	 * Note that only native windows C library uses backslashes; mingw
 	 * seems to use forward-slash, from what I can tell.
 	 */
 	if ((filename[0] == '/')

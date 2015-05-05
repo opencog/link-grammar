@@ -1081,7 +1081,7 @@ static size_t report_unused_rule(pp_rule *set)
 	{
 		if (0 == set[i].use_count)
 		{
-			printf("Unsued rule: %s\n", set[i].msg);
+			printf("Unused rule: %s\n", set[i].msg);
 			cnt++;
 		}
 	}
@@ -1284,5 +1284,5 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
         violated rule, so it should come first in applying the rules.
 
     Modifications, 9/97 ALB:
-     Deglobalization. Made code constistent with api.
+     Deglobalization. Made code consistent with api.
    */

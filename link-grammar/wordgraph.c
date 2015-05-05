@@ -297,7 +297,7 @@ bool in_same_alternative(Gword *w1, Gword *w2)
 #if 0 /* BUG */
 	/* The following is wrong!  Comparison to the hier_position of the
 	 * termination word is actually needed when there are alternatives of
-	 * different lengthes at the end of a sentence.  This check then prevents
+	 * different lengths at the end of a sentence.  This check then prevents
 	 * the generation of empty words on the shorter alternative. */
 	if ((NULL == w1->next) || (NULL == w2->next)) return false;/* termination */
 #endif

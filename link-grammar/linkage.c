@@ -312,7 +312,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			/* XXX FIXME: the assert below sometimes craashes, because
+			/* XXX FIXME: the assert below sometimes crashes, because
 			 * I guess cdj->word[0] is a null pointer, or something like
 			 * that.  Not sure, its hard to reproduce.  */
 			/* assert(MT_EMPTY != cdj->word[0]->morpheme_type); already discarded */

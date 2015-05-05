@@ -201,7 +201,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
 #endif
 
-/* Optimizations etc. that only gcc undersatands */
+/* Optimizations etc. that only gcc understands */
 #if __GNUC__ > 2
 #define GNUC_MALLOC __attribute__ ((malloc))
 #define GNUC_UNUSED __attribute__ ((unused))
@@ -314,7 +314,7 @@ static inline const char * skip_utf8_upper(const char * s)
 /**
  * Return true if the initial upper-case letters of the
  * two input strings match. Comparison stops when
- * both srings descend to lowercase.
+ * both strings descend to lowercase.
  */
 static inline bool utf8_upper_match(const char * s, const char * t)
 {
