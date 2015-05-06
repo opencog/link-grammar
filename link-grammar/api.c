@@ -1301,7 +1301,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			if (NULL != uw)
 			{
 				*affix_types_p++ = AFFIXTYPE_END;
-				lgdebug(4, "%zu End of Gword %s\n", uw->subword);
+				lgdebug(4, "%p End of Gword %s\n", lkg, uw->subword);
 			}
 		}
 #endif
