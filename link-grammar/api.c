@@ -708,20 +708,11 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded) continue;
+		if (lifo->discarded) continue; /* Invalid morphism construction */
 
 		/* We need link names, even if morfo check fails */
 		if (!twopass) compute_link_names(lkg, sent->string_set);
 
-		/* N_violations could be non-zero if the linkage failed the
-		 * morphology check */
-		if (lifo->N_violations)
-		{
-			/* Arrange for displaying "Invalid morphism construction" sentences
-			 * if they are not discarded (for debug). */
-			N_linkages_post_processed++;
-			continue;
-		}
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 	   post_process_free_data(&sent->postprocessor->pp_data);
 
