@@ -1184,7 +1184,6 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
 
 
 #define HEB_PRENUM_MAX 5   /* no more than 5 prefix "subwords" */
-#define HEB_MPREFIX_MAX 16 /* >mp_strippable (13) */
 #define HEB_UTF8_BYTES 2   /* Hebrew UTF8 characters are always 2-byte */
 #define HEB_CHAREQ(s, c) (strncmp(s, c, HEB_UTF8_BYTES) == 0)
 /**
