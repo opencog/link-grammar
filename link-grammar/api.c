@@ -1184,6 +1184,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			break;
 		}
 
+		/* This causes a crash when using !use-sat. It should be fixed. [ap] */
 		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
 		if (4 <= opts->verbosity) print_with_subscript_dot(cdj->string);

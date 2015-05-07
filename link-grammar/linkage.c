@@ -314,7 +314,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 			/* XXX FIXME: the assert below sometimes crashes, because
 			 * I guess cdj->word[0] is a null pointer, or something like
-			 * that.  Not sure, its hard to reproduce.  */
+			 * that.  Not sure, its hard to reproduce.
+			 *
+			 * This happens on !use-sat. It should be fixed. [ap] */
 			/* assert(MT_EMPTY != cdj->word[0]->morpheme_type); already discarded */
 
 			t = cdj->string;
@@ -530,7 +532,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			}
 		}
 
-		assert(t != NULL, "Word %d: NULL");
+		assert(t != NULL, "Word %zu: NULL", i);
 		chosen_words[i] = t;
 	}
 
