@@ -202,12 +202,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	for (i = 0; i < linkage->num_words; i++)
 	{
 		Disjunct *cdj = cdjp[i];
-		Gword *w;           /* current word */
-		const Gword *nw;    /* next word (NULL if none) */
-		Gword **wgp;        /* wordgraph_path traversing pointer */
+		Gword *w;              /* current word */
+		const Gword *nw;       /* next word (NULL if none) */
+		Gword **wgp;           /* wordgraph_path traversing pointer */
 
-		const char *t;      /* current word string */
-		bool nb_end;        /* current word is at end of a nullblock */
+		const char *t = NULL;  /* current word string */
+		bool nb_end;           /* current word is at end of a nullblock */
 		bool join_alt = false; /* morpheme-join this alternative */
 		char *s;
 		size_t l;
@@ -530,6 +530,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			}
 		}
 
+		assert(t != NULL, "Word %d: NULL");
 		chosen_words[i] = t;
 	}
 
