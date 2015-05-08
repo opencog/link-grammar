@@ -60,4 +60,3 @@
 %"[aeiouy]$" "[rst][^=]$": REGSUF+;
 
 % End of Anysplit parameters
-

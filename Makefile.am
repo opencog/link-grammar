@@ -9,8 +9,7 @@ SUBDIRS =               \
    tests                \
    morphology           \
    data                 \
-   man                  \
-   link-grammar.xcode
+   man
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = link-grammar.pc

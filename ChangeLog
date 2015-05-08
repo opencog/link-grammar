@@ -12,6 +12,7 @@ Version 5.3.0: (XXX 2015)
  * Improve performance on long sentences.
  * Fix rare crash due to memory corruption on long sentences.
  * Random morphology generation can be enabled at runtime.
+ * Remove obsolete, unmaintained MacOSX build file.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
