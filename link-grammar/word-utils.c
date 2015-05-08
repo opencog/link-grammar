@@ -444,8 +444,8 @@ int calculate_connector_hash(Connector * c)
 	 * For both English and Russian, there are about 100 pre-defined
 	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
 	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of settting up the hash table dominates the
-	 * cost of collistions. */
+	 * Turns out the cost of setting up the hash table dominates the
+	 * cost of collisions. */
 #ifdef USE_DJB2
 	/* djb2 hash */
 	i = 5381;

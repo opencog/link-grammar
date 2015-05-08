@@ -74,41 +74,41 @@ typedef struct
 
 static Switch default_switches[] =
 {
-   {"bad",        Bool, "Display of bad linkages",         &local.display_bad},
-   {"batch",      Bool, "Batch mode",                      &local.batch_mode},
-   {"cluster",    Bool, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
-   {"constituents", Int,  "Generate constituent output",   &local.display_constituents},
-   {"cost-model", Int,  "Cost model used for ranking",     &local.cost_model},
-   {"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
-   {"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
-   {"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
-   {"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
-   {"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
-   {"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
-   {"links",      Bool, "Display of complete link data",   &local.display_links},
-   {"memory",     Int,  "Max memory allowed",              &local.memory},
-   {"morphology", Bool, "Display word morphology",         &local.display_morphology},
-   {"null",       Bool, "Allow null links",                &local.allow_null},
-   {"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
-   {"postscript", Bool, "Generate postscript output",      &local.display_postscript},
-   {"senses",     Bool, "Display of word senses",          &local.display_senses},
-   {"short",      Int,  "Max length of short links",       &local.short_length},
+	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
+	{"batch",      Bool, "Batch mode",                      &local.batch_mode},
+	{"cluster",    Bool, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
+	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
+	{"cost-model", Int,  "Cost model used for ranking",     &local.cost_model},
+	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
+	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
+	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
+	{"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
+	{"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
+	{"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
+	{"links",      Bool, "Display of complete link data",   &local.display_links},
+	{"memory",     Int,  "Max memory allowed",              &local.memory},
+	{"morphology", Bool, "Display word morphology",         &local.display_morphology},
+	{"null",       Bool, "Allow null links",                &local.allow_null},
+	{"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
+	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
+	{"senses",     Bool, "Display of word senses",          &local.display_senses},
+	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-   {"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
+	{"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
-   {"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
+	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
-   {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
+	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
-   {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-   {"debug",      String, "comma-separated function list to debug", &local.debug},
-   {"test",       String, "comma-separated features to test", &local.test},
+	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
+	{"debug",      String, "comma-separated function list to debug", &local.debug},
+	{"test",       String, "comma-separated features to test", &local.test},
 #ifdef USE_VITERBI
-   {"viterbi",    Bool, "Use Viterbit-based parser",       &local.use_viterbi},
+	{"viterbi",    Bool, "Use Viterbi-based parser",        &local.use_viterbi},
 #endif
-   {"walls",      Bool, "Display wall words",              &local.display_walls},
-   {"width",      Int,  "The width of the display",        &local.screen_width},
-   {NULL,         Bool,  NULL,                             NULL}
+	{"walls",      Bool, "Display wall words",              &local.display_walls},
+	{"width",      Int,  "The width of the display",        &local.screen_width},
+	{NULL,         Bool,  NULL,                             NULL}
 };
 
 struct {const char * s; const char * str;} user_command[] =
@@ -134,7 +134,7 @@ static void clean_up_string(char * s)
 	y = x = s;
 	while(*x != '\0')
 	{
-		w = mbrtowc(&p, x, len, &state); 
+		w = mbrtowc(&p, x, len, &state);
 		if ((0 == w) || ((size_t)-1 == w)) break;
 		len -= w;
 
@@ -147,7 +147,7 @@ static void clean_up_string(char * s)
 	*y = '\0';
 }
 
-/** 
+/**
  * Return TRUE if s points to a number:
  * optional + or - followed by 1 or more
  *	digits.
@@ -166,7 +166,7 @@ static bool is_numerical_rhs(char *s)
 
 	for (; *s != '\0'; s+=w)
 	{
-		w = mbrtowc(&p, s, len, &state); 
+		w = mbrtowc(&p, s, len, &state);
 		if (0 == w) break;
 		if ((size_t)-1 == w) return false;
 		len -= w;
@@ -203,7 +203,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 	/* Look for boolean flippers */
 	for (i=0; as[i].string != NULL; i++)
 	{
-		if ((Bool == as[i].param_type) && 
+		if ((Bool == as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			count++;
@@ -399,7 +399,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 	count = 0;
 	for (i = 0; as[i].string != NULL; i++)
 	{
-		if ((Bool != as[i].param_type) && 
+		if ((Bool != as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			j = i;
@@ -506,7 +506,7 @@ Command_Options* command_options_create(void)
 	co->popts = parse_options_create();
 	co->panic_opts = parse_options_create();
 
-	/* "Unlimited" screen wdith when writing to a file, auto-updated
+	/* "Unlimited" screen width when writing to a file, auto-updated
 	 * later, wen writing to a tty. */
 	co->screen_width = 16381;
 	co->allow_null = true;

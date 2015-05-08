@@ -255,7 +255,7 @@ char * print_one_disjunct(Disjunct *dj)
 	p = prt_con(dj->left, p, '-', &bufsz);
 	p = prt_con(dj->right, p, '+', &bufsz);
 	buff[MAX_LINE-1] = 0;
-	
+
 	return strdup(buff);
 }
 

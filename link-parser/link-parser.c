@@ -13,7 +13,7 @@
 
  /****************************************************************************
  *
- *   This is a simple example of the link parser API.  It similates most of
+ *   This is a simple example of the link parser API.  It simulates most of
  *   the functionality of the original link grammar parser, allowing sentences
  *   to be typed in either interactively or in "batch" mode (if -batch is
  *   specified on the command line, and stdin is redirected to a file).
@@ -592,7 +592,7 @@ fail:
 	struct winsize ws;
 	int fd = fileno(stdout);
 
-	/* If ther is no controlling terminal, the fileno will fail. This
+	/* If there is no controlling terminal, the fileno will fail. This
 	 * seems to happen while building docker images, I don't know why.
 	 */
 	if (fd < 0) return;
@@ -804,7 +804,7 @@ int main(int argc, char * argv[])
 				if (copts->batch_mode) batch_in_progress = true;
 			}
 		}
-		
+
 		if (copts->echo_on)
 		{
 			printf("%s\n", input_string);
@@ -863,7 +863,7 @@ int main(int argc, char * argv[])
 #endif
 
 			/* Try using a larger list of disjuncts */
-			/* XXX fixme: the lg_expand_disjunct_list() routine is not
+			/* XXX FIXME: the lg_expand_disjunct_list() routine is not
 			 * currently a part of the public API; it should be made so,
 			 * or this expansion idea should be abandoned... not sure which.
 			 */

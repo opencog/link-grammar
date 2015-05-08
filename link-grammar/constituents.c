@@ -56,10 +56,10 @@ typedef struct CNode_s CNode;
 /* Invariant: Leaf if child==NULL */
 struct CNode_s
 {
-  char  * label;
-  CNode * child;
-  CNode * next;
-  int   start, end;
+	char  * label;
+	CNode * child;
+	CNode * next;
+	int   start, end;
 };
 
 /* ================================================================ */
@@ -329,7 +329,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 			}
 			if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
 				ctxt->constituent[c].left++;
-		}	
+		}
 	}
 }
 
@@ -393,7 +393,7 @@ static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 	for (w1 = 0; w1 < linkage->num_words; w1++)
 		ctxt->wordtype[w1] = NONE;
 
-	for (l1 = 0; l1 < linkage_get_num_links(linkage); l1++) {	
+	for (l1 = 0; l1 < linkage_get_num_links(linkage); l1++) {
 		w1=linkage_get_link_rword(linkage, l1);
 		label1 = linkage_get_link_label(linkage, l1);
 		if ((uppercompare(label1, "S")==0) ||
@@ -956,7 +956,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 	}
 
 	if (verbosity >= 2)
-		printf("\n");			
+		printf("\n");
 
 	/* Skip left wall; don't skip right wall, since it may
 	 * have constituent boundaries. */

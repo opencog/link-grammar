@@ -509,7 +509,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 
 	/* Now actually malloc the array in which we will process linkages. */
 	/* We may have been called before, e.g this might be a panic parse,
-	 * and the linkages array may stiil be there from last time. */
+	 * and the linkages array may still be there from last time. */
 	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
@@ -639,7 +639,7 @@ static void remove_empty_words(Linkage lkg)
 			new_lnk->link_name = old_lnk->link_name;
 			j++;
 		}
-	}	
+	}
 	lkg->num_links = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 }
@@ -708,20 +708,11 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded) continue;
+		if (lifo->discarded) continue; /* Invalid morphism construction */
 
 		/* We need link names, even if morfo check fails */
 		if (!twopass) compute_link_names(lkg, sent->string_set);
 
-		/* N_violations could be non-zero if the linkage failed the
-		 * morphology check */
-		if (lifo->N_violations)
-		{
-			/* Arrange for displaying "Invalid morphism construction" sentences
-			 * if they are not discarded (for debug). */
-			N_linkages_post_processed++;
-			continue;
-		}
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 	   post_process_free_data(&sent->postprocessor->pp_data);
 
@@ -814,26 +805,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	memset(sent, 0, sizeof(struct Sentence_s));
-
-#if 0
-	/* memset above already zeros these for us */
-	sent->length = 0;
-	sent->word = NULL;
-	sent->num_linkages_found = 0;
-	sent->num_linkages_alloced = 0;
-	sent->num_linkages_post_processed = 0;
-	sent->num_valid_linkages = 0;
-	sent->lnkages = NULL;
-	sent->null_count = 0;
-	sent->parse_info = NULL;
-
-#ifdef USE_SAT_SOLVER
-	sent->hook = NULL;
-#endif /* USE_SAT_SOLVER */
-
-	sent->t_start = 0;
-	sent->t_count = 0;
-#endif
 
 	sent->dict = dict;
 	sent->string_set = string_set_create();
@@ -1012,7 +983,7 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 /**
  * Construct word paths (one or more) through the Wordgraph.
  *
- * Add 'add_word" to the potential path.
+ * Add 'current_word" to the potential path.
  * Add "p" to the path queue, which defines the start of the next potential
  * paths to be checked.
  *
@@ -1213,6 +1184,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			break;
 		}
 
+		/* This causes a crash when using !use-sat. It should be fixed. [ap] */
 		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
 		if (4 <= opts->verbosity) print_with_subscript_dot(cdj->string);
@@ -1330,7 +1302,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			if (NULL != uw)
 			{
 				*affix_types_p++ = AFFIXTYPE_END;
-				lgdebug(4, "%zu End of Gword %s\n", uw->subword);
+				lgdebug(4, "%p End of Gword %s\n", lkg, uw->subword);
 			}
 		}
 #endif
@@ -1369,11 +1341,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	lifo->N_violations++;
 	lifo->pp_violation_msg = "Invalid morphism construction.";
 	lkg->wg_path = NULL;
-#if 0 /* They cannot be displayed now since they lack a Wordgraph path. */
-	if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
-#else
 	lifo->discarded = true;
-#endif
 	lgdebug(4, "%p FAILED\n", lkg);
 	return false;
 }
@@ -1389,8 +1357,8 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		/* Don't bother with linkages that already failed post-processing... */
 		if (0 != lkg->lifo.N_violations) continue;
 
-      if (!sane_linkage_morphism(sent, lkg, opts))
-          N_invalid_morphism ++;
+		if (!sane_linkage_morphism(sent, lkg, opts))
+			N_invalid_morphism ++;
 	}
 
 	if (opts->verbosity > 1)
@@ -1543,4 +1511,3 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	return sent->num_valid_linkages;
 }
-

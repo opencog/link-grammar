@@ -334,7 +334,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 
 /**
  * Initialize the anysplit parameter and cache structure.
- * Return true if initializaion suceeded, or if dictionary does not use
+ * Return true if initialization succeeded, or if dictionary does not use
  * anysplit (its not an error to not use anysplit!).  Return false if
  * init failed.
  */

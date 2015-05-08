@@ -208,7 +208,7 @@ struct Sentence_s
 	/* Wordgraph stuff. FIXME: typedef for structs. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
 	Gword *last_word;            /* FIXME Last issued word */
-	struct word_queue           /* element in queue of words to tokenize */
+	struct word_queue            /* Element in queue of words to tokenize */
 	{
 		Gword *word;
 		struct word_queue *next;
@@ -236,11 +236,6 @@ struct Sentence_s
 
 	/* parse_info not used by SAT solver */
 	Parse_info     parse_info;  /* Set of parses for the sentence */
-
-	/* Tokenizer internal/private state */
-	bool   * post_quote;        /* Array, one entry per word, true if quote */
-	int    t_start;             /* start word of the current token sequence */
-	int    t_count;             /* word count in the current token sequence */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;

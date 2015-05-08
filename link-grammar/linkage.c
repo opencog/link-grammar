@@ -108,7 +108,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	new_word->status |= WS_PL;
 	new_word->label = "NJ";
 	new_word->null_subwords = NULL;
-	
+
 	/* Link the null_subwords links of the added unifying node to the null
 	 * subwords it unified. */
 	for (w = start; w <= end; w++)
@@ -198,16 +198,16 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	if (D_CCW <= opts->verbosity)
 		print_lwg_path(lwg_path);
-	
+
 	for (i = 0; i < linkage->num_words; i++)
 	{
 		Disjunct *cdj = cdjp[i];
-		Gword *w;           /* current word */
-		const Gword *nw;    /* next word (NULL if none) */
-		Gword **wgp;        /* wordgraph_path traversing pointer */
+		Gword *w;              /* current word */
+		const Gword *nw;       /* next word (NULL if none) */
+		Gword **wgp;           /* wordgraph_path traversing pointer */
 
-		const char *t;      /* current word string */
-		bool nb_end;        /* current word is at end of a nullblock */
+		const char *t = NULL;  /* current word string */
+		bool nb_end;           /* current word is at end of a nullblock */
 		bool join_alt = false; /* morpheme-join this alternative */
 		char *s;
 		size_t l;
@@ -287,7 +287,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						t = wgnull->subword;
 					}
 				}
-										
+
 				nullblock_start = NULL;
 				nbsize = 0;
 
@@ -312,9 +312,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			/* XXX FIXME: the assert below sometimes craashes, because
+			/* XXX FIXME: the assert below sometimes crashes, because
 			 * I guess cdj->word[0] is a null pointer, or something like
-			 * that.  Not sure, its hard to reproduce.  */
+			 * that.  Not sure, its hard to reproduce.
+			 *
+			 * This happens on !use-sat. It should be fixed. [ap] */
 			/* assert(MT_EMPTY != cdj->word[0]->morpheme_type); already discarded */
 
 			t = cdj->string;
@@ -426,7 +428,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 										 * need to move it to the position of the prefix.
 										 * FIXME: May still not be good enough. */
 										move_combined_word = i+m-1;
-										
+
 										/* And the later chosen_word assignment should be:
 										 * chosen_words[-1 == move_combined_word ?
 										 *    move_combined_word : i] = t;
@@ -530,6 +532,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			}
 		}
 
+		assert(t != NULL, "Word %zu: NULL", i);
 		chosen_words[i] = t;
 	}
 
@@ -631,7 +634,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			new_lnk->link_name = old_lnk->link_name;
 			j++;
 		}
-	}	
+	}
 #endif
 
 	linkage->num_links = j;
@@ -666,7 +669,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	/* We've already done core post-processing earlier.
 	 * Run the post-processing needed for constituent (hpsg)
 	 * printing.
-	 * 
+	 *
 	 * FIXME: For efficiency (in case the user doesn't need to print the
 	 * constituents) linkage_post_process() can be moved to
 	 * linkage_print_constituent_tree() and

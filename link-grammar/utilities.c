@@ -543,7 +543,7 @@ dyn_str* dyn_str_new(void)
 	ds->str[0] = 0x0;
 	return ds;
 }
- 
+
 void dyn_str_delete(dyn_str* ds)
 {
 	free(ds->str);
@@ -561,7 +561,6 @@ void dyn_strcat(dyn_str* ds, const char *str)
 	strcpy (ds->str+ds->end, str);
 	ds->end += l;
 }
- 
 
 /* =========================================================== */
 /* File path and dictionary open routines below */
@@ -705,7 +704,7 @@ char * dictionary_get_data_dir(void)
 		data_dir = safe_strdup(custom_data_dir);
 		return data_dir;
 	}
-	
+
 #ifdef ENABLE_BINRELOC
 	data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
@@ -832,7 +831,7 @@ void * object_open(const char *filename,
 	/* Look for absolute filename.
 	 * Unix: starts with leading slash.
 	 * Windows: starts with C:\  except that the drive letter may differ.
-	 * Note that only native windows C library uses backslashs; mingw 
+	 * Note that only native windows C library uses backslashes; mingw
 	 * seems to use forward-slash, from what I can tell.
 	 */
 	if ((filename[0] == '/')

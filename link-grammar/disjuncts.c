@@ -71,7 +71,7 @@ static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
  * representation of the disjunct is needed for most of the corpus
  * statistics functions: this string, together with the subscripted
  * word, is used as a key to index the statistics information in the
- * database. 
+ * database.
  */
 void lg_compute_disjunct_strings(Linkage lkg)
 {
@@ -90,4 +90,3 @@ void lg_compute_disjunct_strings(Linkage lkg)
 		lkg->disjunct_list_str[w] = strdup(djstr);
 	}
 }
-

@@ -1184,7 +1184,6 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
 
 
 #define HEB_PRENUM_MAX 5   /* no more than 5 prefix "subwords" */
-#define HEB_MPREFIX_MAX 16 /* >mp_strippable (13) */
 #define HEB_UTF8_BYTES 2   /* Hebrew UTF8 characters are always 2-byte */
 #define HEB_CHAREQ(s, c) (strncmp(s, c, HEB_UTF8_BYTES) == 0)
 /**
@@ -1438,7 +1437,7 @@ static bool is_known_word(Sentence sent, const char *word)
  * Note: spellcheck_suggest(), which is invoked by this function, returns
  * guesses for words containing numbers (including words consisting of digits
  * only). Hence this function should not be called for such words.
- * 
+ *
  * Note that a lowercase word can be spell-corrected to an uppercase word.
  * FIXME? Should we allow that only if the lc version of the corrected word
  * is the same?
@@ -2109,7 +2108,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			sz = wend-word;
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
-			
+
 			if (!find_word_in_dict(dict, unsplit_word->subword) ||
 			    find_word_in_dict(dict, temp_word))
 			{
@@ -2557,16 +2556,16 @@ static Word *word_new(Sentence sent)
 
 /**
  * Build the expression lists for a given word at the current word-array word.
- * 
+ *
  * The resulted word-array is later used as an input to the parser.
- * 
+ *
  * Algorithm:
  * Apply the following step to all words w:
  * If w is in the dictionary, use it.
  * Else if w is identified by regex matching, use the
  * appropriately matched disjunct collection.
  * Otherwise w is unknown - use the disjunct collection of UNKNOWN_WORD.
- * 
+ *
  * FIXME For now, also add an element to the alternatives array, so the rest of
  * program will work fine (print_sentence_word_alternatives(),
  * sentence_in_dictionary(), verr_msg()).
@@ -2680,18 +2679,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	const Gword *last_unsplit_word = NULL;
 	size_t max_words = 0;
 	bool error_encountered = false;
-
-#if 0
-/* Debug info for a sentence consists of (unquoted):
- *  - a single word: "Mr." (Mr. and Mr).
- *  - a single word "הכלב" (כלב and כ=). */
-printf("DEBUG: w1: %s\n", sent->wordgraph->next[0]->next[1]->subword); /* Mr. */
-printf("DEBUG: w2: %s\n", sent->wordgraph->next[0]->next[0]->subword); /* Mr */
-/* These words should not be in the same alternative. */
-printf("DEBUG: in_same_alternative=%d\n",
-       in_same_alternative(sent->wordgraph->next[0]->next[1],
-       sent->wordgraph->next[0]->next[0]));
-#endif
 
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
@@ -2945,4 +2932,3 @@ bool sentence_in_dictionary(Sentence sent)
 	}
 	return ok_so_far;
 }
-

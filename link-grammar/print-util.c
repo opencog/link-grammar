@@ -105,7 +105,7 @@ size_t append_utf8_char(String * string, const char * mbs)
 	size_t n = utf8_next(mbs);
 
 	assert(n<10, "Multi-byte character is too long!");
-	strncpy(buf, mbs, n); 
+	strncpy(buf, mbs, n);
 	buf[n] = 0;
 	append_string(string, "%s", buf);
 	return n;
