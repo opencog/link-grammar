@@ -1417,7 +1417,6 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 }
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-#define MAX_NUM_SPELL_GUESSES 3 /* FIXME */
 /* TODO Change !spell to be an integer which will be this limit. */
 
 static bool is_known_word(Sentence sent, const char *word)
@@ -1430,7 +1429,7 @@ static bool is_known_word(Sentence sent, const char *word)
  * Try to spell guess an unknown word, and issue the results as alternatives.
  * There are two kind of guesses:
  * - Separating run-on words into an exact combination of words, usually 2.
- * - Find similar words.
+ * - Find similar words. These are limited to use_spell_guess alternatives.
  *
  * Return true if corrections have been issued, else false.
  *
@@ -1470,7 +1469,10 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			printf("- %s\n", alternates[j]);
 		}
 	}
-	/* Word split for run-on and guessed words. */
+	/* Word split for run-on and guessed words.
+	 * Note: We suppose here, for the purpose of checking the use_spell_guess
+	 * limit, that spellcheck_suggest() returns the run-on splits before the
+	 * spell corrections. */
 	for (j=0; j<n; j++)
 	{
 		Gword *altp;
@@ -1520,7 +1522,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			//else printf("Spell guess '%s' ignored\n", alternates[j]);
 		}
 
-		if (num_guesses > MAX_NUM_SPELL_GUESSES) break;
+		if (num_guesses >= opts->use_spell_guess) break;
 	}
 	if (alternates) spellcheck_free_suggest(alternates, n);
 

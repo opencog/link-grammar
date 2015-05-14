@@ -271,7 +271,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
                          Link(linkage, 6, '.','RW','RW','RIGHT-WALL'))
 
     def test_d_spell_guessing_on(self):
-        self.po.spell_guess = True
+        self.po.spell_guess = 7
         result = self.parse_sent("I love going to shoop.")
         resultx = result[0] if result else []
         for resultx in result:
@@ -281,7 +281,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shop[~].v', '.', 'RIGHT-WALL'])
 
     def test_e_spell_guessing_off(self):
-        self.po.spell_guess = False
+        self.po.spell_guess = 0
         result = self.parse_sent("I love going to shoop.")
         self.assertEqual(list(result[0].words()),
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shoop[?].v', '.', 'RIGHT-WALL'])

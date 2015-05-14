@@ -197,15 +197,21 @@ class ParseOptions(object):
     @property
     def spell_guess(self):
         """
-         Whether or not to running the spelling guesser on unknown words.
+         Whether or not to run the spelling guesser on unknown words.
+         The default number of maximum number of spell corrections per word
+         is 7, and can be set when an optional value is supplied.
         """
-        return clg.parse_options_get_spell_guess(self._obj) == 1
+        return clg.parse_options_get_spell_guess(self._obj) == 7
 
     @spell_guess.setter
     def spell_guess(self, value):
-        if not isinstance(value, bool):
-            raise TypeError("spell_guess must be set to a bool")
-        clg.parse_options_set_spell_guess(self._obj, 1 if value else 0)
+        """
+         The value is the maximum number of spell corrections per word.
+         If non-zero, unlimited run-on corrections will be issued too.
+        """
+        if not isinstance(value, int):
+            raise TypeError("spell_guess must be set to an integer")
+        clg.parse_options_set_spell_guess(self._obj, value)
 
     @property
     def all_short_connectors(self):
