@@ -28,7 +28,7 @@ int main()
 	setlocale(LC_ALL, "en_US.UTF-8");
 
 	Parse_Options opts = parse_options_create();
-	parse_options_set_spell_guess(opts, false);
+	parse_options_set_spell_guess(opts, 0);
 
 	for (int i=0; i<20; i++)
 	{
@@ -51,8 +51,8 @@ int main()
 			sentence_split(sent, opts);
 			int num_linkages = sentence_parse(sent, opts);
 			if (num_linkages > 0) {
-		   	Linkage linkage = linkage_create(0, sent, opts);
-		   	linkage_delete(linkage);
+				Linkage linkage = linkage_create(0, sent, opts);
+				linkage_delete(linkage);
 			}
 			sentence_delete(sent);
 		}

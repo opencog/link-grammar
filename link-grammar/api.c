@@ -115,7 +115,7 @@ Parse_Options parse_options_create(void)
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = true;
-	po->use_spell_guess = true;
+	po->use_spell_guess = 7;
 	po->use_sat_solver = false;
 	po->use_viterbi = false;
 
@@ -319,11 +319,11 @@ bool parse_options_get_islands_ok(Parse_Options opts) {
 	return opts->islands_ok;
 }
 
-void parse_options_set_spell_guess(Parse_Options opts, bool dummy) {
+void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
 	opts->use_spell_guess = dummy;
 }
 
-bool parse_options_get_spell_guess(Parse_Options opts) {
+int parse_options_get_spell_guess(Parse_Options opts) {
 	return opts->use_spell_guess;
 }
 

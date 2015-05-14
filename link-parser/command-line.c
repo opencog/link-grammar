@@ -94,7 +94,7 @@ static Switch default_switches[] =
 	{"senses",     Bool, "Display of word senses",          &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-	{"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
+	{"spell",      Int, "Use up to this many spell-guesses per unknown word", &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
@@ -246,14 +246,14 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 
 	if (strcmp(s, "variables") == 0)
 	{
-		printf(" Variable     Controls                                      Value\n");
-		printf(" --------     --------                                      -----\n");
+		printf(" Variable     Controls                                          Value\n");
+		printf(" --------     --------                                          -----\n");
 		for (i = 0; as[i].string != NULL; i++)
 		{
 			printf(" ");
 			left_print_string(stdout, as[i].string, "             ");
 			left_print_string(stdout, as[i].description,
-			            "                                              ");
+			            "                                                  ");
 			if (Float == as[i].param_type)
 			{
 				/* Float point print! */

@@ -17,7 +17,7 @@ int main()
     opts = parse_options_create();
     parse_options_set_max_null_count(opts, 10);
     parse_options_set_display_morphology(opts, 1);
-    parse_options_set_spell_guess(opts, false);
+    parse_options_set_spell_guess(opts, 0);
 
     dict = dictionary_create_lang("en");
     if (!dict) {

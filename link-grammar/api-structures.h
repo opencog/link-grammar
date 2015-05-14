@@ -67,7 +67,7 @@ struct Parse_Options_s
 	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Options governing the tokenizer (sentence-splitter) */
-	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */
+	int use_spell_guess;  /* Perform spell-guessing of unknown words. */
 
 	/* Choice of the parser to use */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
