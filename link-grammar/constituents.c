@@ -1268,7 +1268,7 @@ static void linkage_free_constituent_tree(CNode * n)
  * Print out the constituent tree.
  * mode 1: treebank-style constituent tree
  * mode 2: flat, bracketed tree [A like [B this B] A]
- * mode 3: flat, treebank-style tree (A like (B this) )
+ * mode 3: flat, treebank-style tree (A like (B this))
  */
 char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode)
 {
