@@ -666,21 +666,8 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	/* Perform remaining initialization we haven't done yet...*/
 	compute_chosen_words(sent, linkage, opts);
 
-	/* We've already done core post-processing earlier.
-	 * Run the post-processing needed for constituent (hpsg)
-	 * printing.
-	 *
-	 * FIXME: For efficiency (in case the user doesn't need to print the
-	 * constituents) linkage_post_process() can be moved to
-	 * linkage_print_constituent_tree() and
-	 * linkage_post_process()/do_post_process() need to be changed
-	 * accordingly. In any case, for additional efficiency, the linkage
-	 * struct can be changed to include only the domain_array stuff, but
-	 * then we need in it also a pointer to the Sentence struct (or
-	 * to constituent_pp in it). [ap] */
-	linkage_post_process(linkage, sent->constituent_pp, opts);
-	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
-	post_process_new_domain_array(sent->constituent_pp);
+	linkage->sent = sent;
+	linkage->is_sent_long = (linkage->num_words >= opts->twopass_length);
 
 	return linkage;
 }
@@ -882,12 +869,11 @@ void linkage_free_pp_info(Linkage lkg)
  * I just don't see a lot of utility or value-add here ... this could be
  * reduced to a plain do_post_process
  */
-void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_Options opts)
+void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 {
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
-	bool is_long;
 
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
@@ -913,8 +899,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor, Parse_
 	}
 
 	/* Step two: actually do the post-processing */
-	is_long = (linkage->num_words >= opts->twopass_length);
-	pp = do_post_process(postprocessor, linkage, is_long);
+	pp = do_post_process(postprocessor, linkage, linkage->is_sent_long);
 
 	/* Step three: copy the post-processing results over into the linkage */
 	if (pp->violation != NULL)

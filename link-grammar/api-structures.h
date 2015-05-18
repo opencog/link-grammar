@@ -82,7 +82,7 @@ struct Parse_Options_s
 	                          will be generated (default=FALSE) */
 	bool use_cluster_disjuncts; /* Attempt using a broader list of disjuncts */
 	size_t short_length;   /* Links that are limited in length can be
-	                        * no longer than this.  Default = 6 */
+	                          no longer than this.  Default = 6 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 
@@ -137,12 +137,12 @@ struct Dictionary_s
 	struct anysplit_params * anysplit;
 
 	/* If not null, then use spelling guesser for unknown words */
-	void *          spell_checker; /* spell checker handle */
+	void *          spell_checker;     /* spell checker handle */
 #if USE_CORPUS
-	Corpus *        corpus; /* Statistics database */
+	Corpus *        corpus;            /* Statistics database */
 #endif
 #ifdef HAVE_SQLITE
-	void *          db_handle; /* database handle */
+	void *          db_handle;         /* database handle */
 #endif
 
 	void (*insert_entry)(Dictionary, Dict_node *, int);
@@ -154,7 +154,7 @@ struct Dictionary_s
 	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
 	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
 	Connector_set * unlimited_connector_set; /* NULL=everything is unlimited */
-	String_set *    string_set;   /* Set of link names in the dictionary */
+	String_set *    string_set;        /* Set of link names in the dictionary */
 	Word_file *     word_file_header;
 
 	/* exp_list links together all the Exp structs that are allocated
@@ -190,7 +190,7 @@ struct Parse_info_struct
 	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	int            N_words; /* Number of words in current sentence;
-	                         * Computed by separate_sentence() */
+	                           Computed by separate_sentence() */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -214,8 +214,8 @@ struct Sentence_s
 		struct word_queue *next;
 	} *word_queue;
 	struct word_queue *word_queue_last;
-	size_t gword_node_num;         /* Debug - for differentiating between
-	                                * wordgraph nodes with identical subwords. */
+	size_t gword_node_num;       /* Debug - for differentiating between
+	                                wordgraph nodes with identical subwords. */
 
 	/* Parse results */
 	int    num_linkages_found;  /* Total number before postprocessing.  This
@@ -241,8 +241,7 @@ struct Sentence_s
 	unsigned int rand_state;
 
 #ifdef USE_SAT_SOLVER
-	/* Hook for the SAT solver */
-	void *hook;
+	void *hook;                 /* Hook for the SAT solver */
 #endif /* USE_SAT_SOLVER */
 };
 
@@ -350,6 +349,7 @@ struct Linkage_info_struct
 struct Linkage_s
 {
 	WordIdx         num_words;    /* Number of (tokenized) words */
+	bool            is_sent_long; /* num_words >= twopass_length */
 	const char *  * word;         /* Array of word spellings */
 
 	size_t          num_links;    /* Number of links in array */
@@ -363,14 +363,15 @@ struct Linkage_s
 	Sense **        sense_list;   /* Word senses, inferred from disjuncts */
 #endif
 
-   Gword **wg_path;              /* Linkage Wordgraph path */
-   Gword **wg_path_display;      /* ... for !morphology=0. Experimental. */
-   //size_t *wg_path_index;      /* Displayed-word indices in wg_path (FIXME?)*/
+	Gword **wg_path;              /* Linkage Wordgraph path */
+	Gword **wg_path_display;      /* ... for !morphology=0. Experimental. */
+	//size_t *wg_path_index;      /* Displayed-word indices in wg_path (FIXME?)*/
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */
 	PP_data         hpsg_pp_data; /* Used in constituent code */
+
+	Sentence        sent;         /* Used for common linkage data */
 };
 
 #endif
-

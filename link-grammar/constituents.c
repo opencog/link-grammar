@@ -1048,13 +1048,19 @@ exprint_constituent_structure(con_context_t *ctxt,
 
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
-	int numcon_total, numcon_subl;
+	int numcon_total= 0, numcon_subl;
 	char * q;
+	Sentence sent = linkage->sent;
 
+	assert(NULL != sent->lnkages, "No linkages"); /* Sentence already free()'d */
 	ctxt->phrase_ss = string_set_create();
-	numcon_total = 0;
-
 	generate_misc_word_info(ctxt, linkage);
+
+	if (NULL ==  sent->constituent_pp)         /* First time for this sentence */
+		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
+	linkage_post_process(linkage, sent->constituent_pp);
+	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
+	post_process_new_domain_array(sent->constituent_pp);
 
 	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
 	numcon_total += numcon_subl;
@@ -1268,7 +1274,7 @@ static void linkage_free_constituent_tree(CNode * n)
  * Print out the constituent tree.
  * mode 1: treebank-style constituent tree
  * mode 2: flat, bracketed tree [A like [B this B] A]
- * mode 3: flat, treebank-style tree (A like (B this) )
+ * mode 3: flat, treebank-style tree (A like (B this))
  */
 char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode)
 {
