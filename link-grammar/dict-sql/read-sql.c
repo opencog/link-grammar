@@ -316,11 +316,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
-	dict->version = NULL;
-	dict->num_entries = 0;
-	dict->affix_table = NULL;
-	dict->regex_root = NULL;
-
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
 	t = strrchr (lang, '/');
@@ -357,11 +352,9 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->use_unknown_word = true;
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
-	if (dict_node != NULL) {
+	if (dict_node != NULL)
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
-	} else {
-		dict->unlimited_connector_set = NULL;
-	}
+
 	free_lookup_list(dict, dict_node);
 
 	return dict;

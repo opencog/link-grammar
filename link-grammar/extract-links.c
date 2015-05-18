@@ -110,8 +110,6 @@ Parse_info parse_info_new(int nwords)
 	memset(pi, 0, sizeof(struct Parse_info_struct));
 	pi->N_words = nwords;
 
-	pi->parse_set = NULL;
-
 	/* Alloc the x_table */
 	if (nwords >= 10) {
 		log2_table_size = 14;

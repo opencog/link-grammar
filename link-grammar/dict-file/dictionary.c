@@ -448,22 +448,6 @@ dictionary_six_str(const char * lang,
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
-	dict->num_entries = 0;
-	dict->is_special = false;
-	dict->already_got_it = '\0';
-	dict->line_number = 0;
-	dict->root = NULL;
-	dict->regex_root = NULL;
-	dict->word_file_header = NULL;
-	dict->exp_list.exp_list = NULL;
-	dict->affix_table = NULL;
-	dict->recursive_error = false;
-	dict->version = NULL;
-#ifdef HAVE_SQLITE
-	dict->db_handle = NULL;
-#endif
-	dict->anysplit = NULL;
-
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
 	t = strrchr (lang, '/');
@@ -561,11 +545,9 @@ dictionary_six_str(const char * lang,
 	dict->use_unknown_word = true;
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
-	if (dict_node != NULL) {
+	if (dict_node != NULL)
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
-	} else {
-		dict->unlimited_connector_set = NULL;
-	}
+
 	free_lookup(dict_node);
 
 	return dict;

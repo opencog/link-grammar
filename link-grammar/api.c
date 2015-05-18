@@ -816,11 +816,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
-	sent->word_queue = NULL;
-	sent->word_queue_last = NULL;
-	sent->last_word = NULL;
-	sent->gword_node_num = 0;
-
 	return sent;
 }
 
