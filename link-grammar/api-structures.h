@@ -349,6 +349,7 @@ struct Linkage_info_struct
 struct Linkage_s
 {
 	WordIdx         num_words;    /* Number of (tokenized) words */
+	bool            is_sent_long; /* num_words >= twopass_length */
 	const char *  * word;         /* Array of word spellings */
 
 	size_t          num_links;    /* Number of links in array */
@@ -369,6 +370,8 @@ struct Linkage_s
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP info, one for each link */
 	PP_data         hpsg_pp_data; /* Used in constituent code */
+
+	Sentence        sent;         /* Used for common linkage data */
 };
 
 #endif

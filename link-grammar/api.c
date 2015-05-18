@@ -811,7 +811,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->rand_state = global_rand_state;
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
-	sent->constituent_pp = post_process_new(dict->hpsg_knowledge);
 
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);

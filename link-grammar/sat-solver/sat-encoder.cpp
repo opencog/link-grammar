@@ -1293,7 +1293,7 @@ Linkage SATEncoder::get_next_linkage()
 
     // perform the post-processing
     sane_linkage_morphism(_sent, lkg, _opts);
-    linkage_post_process(lkg, _sent->postprocessor, _opts);
+    linkage_post_process(lkg, _sent->postprocessor);
     linkage_score(lkg, _opts);
 
     if (0 == lkg->lifo.N_violations) {
