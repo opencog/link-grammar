@@ -1802,8 +1802,8 @@ bool read_dictionary(Dictionary dict)
  * on failure. However, this is a big fix, because the failure is several
  * functions deep, all not returning a value or returning a value for another
  * purpose. An easy fix, which has advantages for other things, is to add (and
- * use here) a "char *last_error" field in the Sentence structure, serving like
- * an "errno" of library calls.
+ * use here) a "char *last_error" field in the Dictionary structure, serving
+ * like an "errno" of library calls.
  */
 
 static void display_word_split(Dictionary dict,
