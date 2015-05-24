@@ -81,7 +81,7 @@ link\-parser \- parse natural language sentences using Link Grammar
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invoke bold face and italics,
 .\" respectively.
-\fBlink\-parser\fP is the command-line wrapper to the link\-grammar
+\fBlink\-parser\fP is the command-line wrapper to the \%link\-grammar
 natural language parsing library.  This library will parse English
 language sentences, generating linkage trees showing relationships
 between the subject, the verb, and various adjectives, adverbs,
@@ -112,7 +112,7 @@ LEFT\-WALL reading.g a man.n page.n is.v informative.a .
 The \fBlink\-parser\fP command-line tool is useful for
 general exploration and use, although it is presumed that, for the
 parsing of large quantities of text, a custom application, making
-use of the link\-grammar library, will be written.  Several such
+use of the \%link\-grammar library, will be written.  Several such
 applications are described on the Link Grammar web page (see SEE ALSO
 below); these include
 the AbiWord grammar checker, and the RelEx semantic relation extractor.
@@ -153,7 +153,7 @@ the constituent tree can also be enabled. Other output controls include
 the printing of disjuncts, complete link data, and word senses.
 .PP
 In order to analyze sentences, \%\fBlink\-parser\fP depends on a
-link\-grammar dictionary.  This contains lists of words and associated
+\%link\-grammar dictionary.  This contains lists of words and associated
 metadata about their grammatical properties.  An English language
 dictionary is provided by default.  If other language dictionaries
 are installed in the default search locations, these may be explicitly
@@ -229,7 +229,7 @@ wildcard character '*' can be specified as the last character of the
 word in order to find multiple matches.
 
 Default values of the options below are shown in parenthesis. Most of
-them are the default ones of the link\-grammar library.
+them are the default ones of the \%link\-grammar library.
 Boolean default values are shown as \fBon\fP (1) or \fBoff\fP (0).
 .TP
 .BR \-bad \ (off)
@@ -276,17 +276,16 @@ A word with no linkage.
 .IP word[?].x
 An unknown word whose POS category x has been found by the parser.
 .IP word[!]
-An unknown word whose link\-grammar dictionary entry has been assigned
+An unknown word whose \%link\-grammar dictionary entry has been assigned
 by a RegEx.
-.br
 (Use !morphology=1 to see the said dictionary entry.)
 .IP word[~]
 There was an unknown word in this position, and it has got replaced,
-using a spell guess with this word, that is found in the link\-grammar
+using a spell guess with this word, that is found in the \%link\-grammar
 dictionary.
 .IP word[&]
 This word is a part of an unknown word which has been found to consist
-of two or more words that are in the link\-grammar dictionary.
+of two or more words that are in the \%link\-grammar dictionary.
 .RE
 .TP
 .BR \-islands-ok \ (on)
@@ -315,7 +314,7 @@ Generate postscript output.
 Display word senses.
 .TP
 .BR \-short \ (16)
-Max length of short links.
+Maximum length of short links.
 .TP
 .BR \-spell \ (7)
 If zero, no spell and run-on corrections of unknown words are performed.
@@ -342,30 +341,45 @@ The width of the display.
 * When writing to a terminal, this value is set from its width.
 
 .SH FILES
-The following files are per-language, and are normally found under a
-leading directory path "data/\fILL\fP/", when \fILL\fP is the 2-letter
-ISO language code:
-.TP
-.I 4.0.dict
+The following files are per-language, when \fILL\fP is the 2-letter
+ISO language code..TP
+.I \fILL\fP/4.0.dict
 The Link Grammar dictionary.
 .TP
-.I 4.0.affix
+.I \fILL\fP/4.0.affix
 Values of entities used in tokenization.
 .TP
-.I 4.0.regex
+.I \fILL\fP/4.0.regex
 Regular expressions (see
 .BR regex (7))
 that are used to match tokens not found in the dictionary.
 .TP
-.I 4.0.knowledge
+.I \fILL\fP/4.0.knowledge
 Post-processing definitions.
 .TP
-.I 4.0.constituent-knowledge
+.I \fILL\fP/4.0.constituent\-knowledge
 Definitions for producing a constituent tree.
+.TP 0
+.sp
+The directory search order for these files is:
+.I "./"
+.br
+.I "data/"
+.br
+.I "../"
+.br
+.I "../data/"
+.sp -1
+.ie "\?%BINRELOC%\?"\?-DENABLE_BINRELOC\?" \{
+.I "%BIN_DIR%/link\-grammar/"
+\}
+.el \{
+.I "%DATA_DIR%/link\-grammar/"
+\}
 
 .SH SEE ALSO
 .nh
-Information on the link\-grammar shared-library API and the link types
+Information on the \%link\-grammar shared-library API and the link types
 used in the parse is available at the
 .UR http://www.abisource.com/projects/link-grammar/
 AbiWord website
@@ -376,7 +390,7 @@ Peer-reviewed papers explaining Link Grammar can be found at
 original CMU site
 .UE .
 .PP
-The source code of \%\fBlink\-parser\fP and the link\-grammar library is
+The source code of \%\fBlink\-parser\fP and the \%link\-grammar library is
 located at
 .UR https://github.com/opencog/link-grammar
 GitHub
@@ -388,9 +402,9 @@ link-grammar Google group
 .UE .
 .SH AUTHOR
 .nh
-\fBlink\-parser\fP was written by Daniel Sleator <sleator@cs.cmu.edu>,
-Davy Temperley <dtemp@theory.esm.rochester.edu>, and John Lafferty
-<lafferty@cs.cmu.edu>
+\fBlink\-parser\fP and the \%link\-grammar library were written by Daniel
+Sleator <sleator@cs.cmu.edu>, Davy Temperley <dtemp@theory.esm.rochester.edu>,
+and John Lafferty <lafferty@cs.cmu.edu>
 .PP
 This manual page was written by Ken Bloom <kbloom@gmail.com>,
 for the Debian project, and updated by Linas Vepstas
