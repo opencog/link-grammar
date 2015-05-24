@@ -35,31 +35,17 @@
 
 Gword *gword_new(Sentence sent, const char *s)
 {
-	Gword * const word = malloc(sizeof(*word));
+	Gword * const gword = malloc(sizeof(*gword));
 
-	/* FIXME? NULL can be used if the word is yet unknown. Is it needed? */
-	if (NULL== s) lgdebug(+0, "Null-string subword\n");
-	word->subword = (NULL == s) ? NULL : string_set_add(s, sent->string_set);
+	memset(gword, 0, sizeof(*gword));
+	assert(NULL != gword, "Null-string subword");
+	gword->subword = string_set_add(s, sent->string_set);
 
-	if (NULL != sent->last_word) sent->last_word->chain_next = word;
-	sent->last_word = word;
-	word->unsplit_word = NULL;
-	word->chain_next = NULL;
-	word->prev = word->next = NULL;
-	word->issued_unsplit = false;
-	word->tokenizing_step = 0;
-	word->status = 0;
-	word->morpheme_type = MT_INVALID;
-	word->label = NULL;
-	word->regex_name = NULL;
-	word->alternative_id = NULL;
-	word->hier_position = NULL;
-	word->node_num = sent->gword_node_num++;
-	word->split_counter = 0;
-	word->null_subwords = NULL;
-	word->hier_depth = 0;
+	if (NULL != sent->last_word) sent->last_word->chain_next = gword;
+	sent->last_word = gword;
+	gword->node_num = sent->gword_node_num++;
 
-	return word;
+	return gword;
 }
 
 Gword *empty_word(void)
