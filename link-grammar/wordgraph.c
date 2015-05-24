@@ -879,6 +879,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	{
 		FILE *gvf;
 		bool gvf_error = false;
+		static bool wordgraph_unlink_xtmpfile_needed = true;
 
 		concatfn(gvf_name, TMPDIR, DOT_FILENAME);
 		gvf = fopen(gvf_name, "w");
@@ -907,7 +908,13 @@ void wordgraph_show(Sentence sent, const char *modestr)
 			free(wgds);
 			return;
 		}
-		atexit(wordgraph_unlink_xtmpfile);
+
+		if (wordgraph_unlink_xtmpfile_needed)
+		{
+			/* The filename is fixed - removal needed only once. */
+			wordgraph_unlink_xtmpfile_needed = false;
+			atexit(wordgraph_unlink_xtmpfile);
+		}
 	}
 
 #if !defined HAVE_FORK || defined POPEN_DOT
