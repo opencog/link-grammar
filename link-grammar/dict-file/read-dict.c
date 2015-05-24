@@ -1814,6 +1814,8 @@ static void display_word_split(Dictionary dict,
 	Sentence sent;
 	struct Parse_Options_s display_word_opts = *opts;
 
+	if ('\0' == word) return; /* avoid trying null strings */
+
 	parse_options_set_spell_guess(&display_word_opts, 0);
 	sent = sentence_create(word, dict);
 	if (0 > sentence_split(sent, &display_word_opts)) return;
