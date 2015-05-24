@@ -2519,16 +2519,17 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		word->tokenizing_step = TS_DONE;
 	}
 
-
-	/* test=wg (for the default) or test=wg:flags (for flags see wordgraph.h) */
-	if (test_enabled("wg"))
-		wordgraph_show(sent, test_enabled("wg"));
-
 	/* Return true if at least one sentence word has been issued */
 	for (word = sent->wordgraph; NULL != word->next; word = word->next[0])
 	{
 		if ((word->morpheme_type != MT_INFRASTRUCTURE) &&
-		    (word->morpheme_type != MT_WALL)) return true;
+		    (word->morpheme_type != MT_WALL))
+		{
+			/* !test=wg or !test=wg:flags (for flags see wordgraph.h) */
+			if (test_enabled("wg"))
+				wordgraph_show(sent, test_enabled("wg"));
+			return true;
+		}
 	}
 	return false; /* Something is wrong */
 
