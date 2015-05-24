@@ -493,8 +493,10 @@ static const char *wlabel(Sentence sent, const Gword *w)
 	dyn_str *l = dyn_str_new();
 	char c0[] = "\0\0";
 
-	assert((NULL != w) && (NULL != w->subword) && ('\0' != *w->subword),
-	       "Word and subword should exist");
+	assert((NULL != w) && (NULL != w->subword), "Word must exist");
+	if ('\0' == *w->subword)
+		 return string_set_add("(nothing)", sent->string_set);
+
 	if (w == sent->wordgraph) dyn_strcat(l, sentence_label);
 
 	for (s = w->subword; *s; s++)
