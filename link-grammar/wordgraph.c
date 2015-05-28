@@ -493,8 +493,10 @@ static const char *wlabel(Sentence sent, const Gword *w)
 	dyn_str *l = dyn_str_new();
 	char c0[] = "\0\0";
 
-	assert((NULL != w) && (NULL != w->subword) && ('\0' != *w->subword),
-	       "Word and subword should exist");
+	assert((NULL != w) && (NULL != w->subword), "Word must exist");
+	if ('\0' == *w->subword)
+		 return string_set_add("(nothing)", sent->string_set);
+
 	if (w == sent->wordgraph) dyn_strcat(l, sentence_label);
 
 	for (s = w->subword; *s; s++)
@@ -877,6 +879,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	{
 		FILE *gvf;
 		bool gvf_error = false;
+		static bool wordgraph_unlink_xtmpfile_needed = true;
 
 		concatfn(gvf_name, TMPDIR, DOT_FILENAME);
 		gvf = fopen(gvf_name, "w");
@@ -905,7 +908,13 @@ void wordgraph_show(Sentence sent, const char *modestr)
 			free(wgds);
 			return;
 		}
-		atexit(wordgraph_unlink_xtmpfile);
+
+		if (wordgraph_unlink_xtmpfile_needed)
+		{
+			/* The filename is fixed - removal needed only once. */
+			wordgraph_unlink_xtmpfile_needed = false;
+			atexit(wordgraph_unlink_xtmpfile);
+		}
 	}
 
 #if !defined HAVE_FORK || defined POPEN_DOT
