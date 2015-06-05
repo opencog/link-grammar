@@ -4,7 +4,7 @@ TI BIt MVs TO Mv Mg* MVa OF ON IN QI Ma CP* CPi CPx MVt S##w MX#r Pp MVi MVg Mgp
 S##t S##h S##b S##q L MX#a MG JG MX#x U S##d JT MVh Mr B#w B#d MVb COq Mj OD CX S##g PF Zc MX#d Bc
 K NIax 
 
-DOMAIN_CONTAINS_LINKS: 
+DOMAIN_CONTAINS_LINKS:
 
 URFL_ONLY_DOMAIN_STARTER_LINKS: 
 
@@ -115,7 +115,7 @@ NIax h
 ; These links are not put in the word/link graph. They also cannot be the 
 ; starter links for a domain. 
 
-IGNORE_THESE_LINKS: Xca  HA
+IGNORE_THESE_LINKS: Xca  HA COi
 
 
 
@@ -127,5 +127,5 @@ IGNORE_THESE_LINKS: Xca  HA
 
 RESTRICTED_LINKS: 
    B#*  D##w   B#w   B#d   AFh  MVt   Xx   HL   SFsic  AFd   Bc   CX  EAh  
-   H   HA   PFc   B#j   Wd   PF   Z   BW   CV   IV   WV
+   H   HA   PFc   B#j   Wd   PF   Z   BW   CV   IV   WV   Wi
 
