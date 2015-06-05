@@ -8242,8 +8242,7 @@ across along: <prep-across>;
 
 off:
   <prep-across>
-  or (MVp+ & {Xc+ & {Xd-}} & COp+)
-  or K-;
+  or (MVp+ & {Xc+ & {Xd-}} & COp+);
 
 past.p:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
