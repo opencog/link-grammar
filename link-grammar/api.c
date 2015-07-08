@@ -766,6 +766,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
 {
+	if (0 == sent->num_linkages_found) return;
 	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
