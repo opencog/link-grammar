@@ -12,19 +12,23 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(CXX_FLAGS) \
 # -----------------------------------------------------------
 # TESTS declares the tests to actually run;
 # check_PROGRAMS are the binaries to build.
-TESTS = dict-reopen multi-thread
-check_PROGRAMS = dict-reopen multi-thread
+check_PROGRAMS = dict-reopen multi-thread mem-leak
+TESTS = $(check_PROGRAMS)
+
+LDFLAGS += $(LINK_CXXFLAGS)
 
 dict_reopen_SOURCES = dict-reopen.cc
 multi_thread_SOURCES = multi-thread.cc
+mem_leak_SOURCES = mem-leak.cc
 
 LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
 if HAVE_SQLITE
 LDADD += $(SQLITE3_LIBS)
 endif
 
+multi_thread_LDADD = -lpthread $(LDADD)
+
 if WITH_SAT_SOLVER
 LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
-
