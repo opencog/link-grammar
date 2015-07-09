@@ -14,7 +14,8 @@ Version 5.3.0: (XXX 2015)
  * Random morphology generation can be enabled at runtime.
  * Remove obsolete, unmaintained MacOSX build file.
  * Extensive updates to man page.
- * Fix crash on long sentences (issue #137)
+ * Fix crash on long sentences (issue #137).
+ * Fix a memory leak in language bindings (issue #138).
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.

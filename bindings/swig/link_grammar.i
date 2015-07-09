@@ -122,6 +122,7 @@ int  sentence_link_cost(Sentence sent, int i);
 %newobject linkage_print_links_and_domains;
 %newobject linkage_print_diagram;
 %newobject linkage_print_postscript;
+%newobject linkage_print_constituent_tree;
 
 Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);
