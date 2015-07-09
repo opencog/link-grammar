@@ -857,6 +857,9 @@ void linkage_free_pp_info(Linkage lkg)
 
 /**
  * Part of the API. Although maybe it shouldn't be.
+ * It has been updated to initialize sent->constituent_pp, instead of
+ * doing it in linkage_create(), so it will be done only on demand.
+ *
  * This is just a wrapper around do_post_process, and all that it does
  * is to set up some domain data in the linkage->pp_info pointer.
  * There do not seem to be any users for this data !?  Should this
@@ -876,7 +879,14 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 	D_type_list * d;
 
 	if (NULL == linkage) return;
-	if (NULL == postprocessor) return;
+
+	if (NULL == postprocessor)
+	{
+		Sentence sent = linkage->sent;
+
+		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
+		postprocessor = sent->constituent_pp;
+	}
 
 	/* Step one: because we might be called multiple times, first we clean
 	 * up and free the domain name data left over from a previous call. */

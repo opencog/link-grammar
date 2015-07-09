@@ -1056,8 +1056,6 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	ctxt->phrase_ss = string_set_create();
 	generate_misc_word_info(ctxt, linkage);
 
-	if (NULL ==  sent->constituent_pp)         /* First time for this sentence */
-		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
 	linkage_post_process(linkage, sent->constituent_pp);
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
 	post_process_new_domain_array(sent->constituent_pp);

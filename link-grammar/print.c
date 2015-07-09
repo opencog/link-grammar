@@ -185,6 +185,8 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	char * links_string;
 	const char ** dname;
 
+	linkage_post_process(linkage, linkage->sent->constituent_pp);
+
 	longest = 0;
 	for (link=0; link<N_links; link++)
 	{
