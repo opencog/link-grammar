@@ -2684,6 +2684,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	const Gword *last_unsplit_word = NULL;
 	size_t max_words = 0;
 	bool error_encountered = false;
+	bool right_wall_encountered = false;
 
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
@@ -2696,7 +2697,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	/* Populate the pathpos word queue */
 	for (next = sent->wordgraph->next; *next; next++)
 	{
-		wordgraph_pathpos_append(&wp_new, *next, false,
+		wordgraph_pathpos_append(&wp_new, *next,
+		                         false/* used */,
+		                         false/* same_word */,
 		                         true/* diff_alternative */);
 	}
 
@@ -2742,7 +2745,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		/* Generate the X-nodes. */
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
-
 			wg_word = wpp_old->word;
 			if (NULL == wg_word->next) continue; /* XXX avoid termination */
 
@@ -2765,10 +2767,18 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			}
 			else
 			{
+				/* Words are not supposed to get issued more than once. */
+				assert(!wpp_old->used, "Word %zu:%s has been used\n",
+				       wg_word->node_num, wpp_old->word->subword);
+
 				/* This is a new wordgraph word.
 				 */
+				assert(!right_wall_encountered, "Extra word");
 				if (!determine_word_expressions(sent, wg_word, opts))
-						error_encountered = true;
+					error_encountered = true;
+				if ((MT_WALL == wg_word->morpheme_type) &&
+				    0== strcmp(wg_word->subword, RIGHT_WALL_WORD))
+					right_wall_encountered = true;
 				wpp_old->used = true;
 			}
 		}
@@ -2800,8 +2810,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				if (is_alternative_next_word(wg_word, *next) &&
 				    (NULL == (*next)->prev[1]))
 				{
-					lgdebug(+D_FW, "Word '%s' next '%s' next_ok\n",
-					        wg_word->subword, (*next)->subword);
+					lgdebug(+D_FW, "Word %zu:'%s' next %zu:'%s' next_ok\n",
+					        wg_word->node_num, wg_word->subword,
+					        (*next)->node_num, (*next)->subword);
 					wpp_old->next_ok = true;
 					break;
 				}
@@ -2813,8 +2824,10 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				        wg_word->subword);
 				for (next = wg_word->next; NULL != *next; next++)
 				{
-					wordgraph_pathpos_append(&wp_new, *next, false,
-					                      true/* diff_alternative */);
+					wordgraph_pathpos_append(&wp_new, *next,
+					                         false/* used */,
+					                         false/* same_word */,
+					                         true/* diff_alternative */);
 				}
 			}
 		}
@@ -2838,10 +2851,14 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 							if ((wpp_new->word != *next) &&
 							    in_same_alternative(wpp_new->word, *next))
 							{
+								lgdebug(+D_FW, "same_alternative: %zu:%s and %zu:%s\n",
+								        wpp_new->word->node_num, wpp_new->word->subword,
+								        (*next)->node_num, (*next)->subword);
 								same_alternative = true;
 								break;
 							}
 						}
+						if (same_alternative) break; /* shortcut */
 					}
 				}
 
@@ -2855,19 +2872,24 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				 * next round. */
 				lgdebug(+D_FW, "Advancing %zu:%s: ", wg_word->node_num,
 				        wg_word->subword);
+
 				if (same_alternative)
 				{
-					lgdebug(D_FW, "No (same alt)\n");
-					wordgraph_pathpos_append(&wp_new, wg_word, true,
-					                      true/* diff_alternative */);
+					lgdebug(D_FW, "No (same alt) used=%d\n", wpp_old->used);
+					wordgraph_pathpos_append(&wp_new, wg_word,
+					                         wpp_old->used,
+					                         true/* same_word */,
+					                         true/* diff_alternative */);
 				}
 				else
 				{
 					bool added = false;
 
 					for (next = wg_word->next; NULL != *next; next++)
-						added |= wordgraph_pathpos_append(&wp_new, *next, false,
-						                               true/* diff_alternative */);
+						added |= wordgraph_pathpos_append(&wp_new, *next,
+						                                  false/* used */,
+						                                  false/* same_word */,
+						                                  true/* diff_alternative */);
 					if (added)
 					{
 						lgdebug(D_FW, "Yes\n");
