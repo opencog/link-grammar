@@ -2573,7 +2573,8 @@ static Word *word_new(Sentence sent)
  * program will work fine (print_sentence_word_alternatives(),
  * sentence_in_dictionary(), verr_msg()).
  */
-#define D_AXN 5
+#define D_X_NODE 8
+#define D_DWE 5
 static bool determine_word_expressions(Sentence sent, Gword *w,
                                        Parse_Options opts)
 {
@@ -2583,27 +2584,27 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	const char *s = w->subword;
 	X_node * we = NULL;
 
-	lgdebug(+D_AXN, "Word %zu subword '%s'", wordpos, s);
+	lgdebug(+D_DWE, "Word %zu subword %zu:'%s'", wordpos, w->node_num, s);
 	if (NULL != sent->word[wordpos].unsplit_word)
-		lgdebug(D_AXN, " (unsplit '%s')", sent->word[wordpos].unsplit_word);
-	lgdebug(D_AXN, "\n");
+		lgdebug(D_DWE, " (unsplit '%s')", sent->word[wordpos].unsplit_word);
+	lgdebug(D_DWE, "\n");
 
 	/* Generate an "alternatives" component. */
 	altappend(sent, &sent->word[wordpos].alternatives, s);
 
 	if (w->status & WS_INDICT)
 	{
-		lgdebug(D_AXN, "WS_INDICT %s\n", w->subword);
+		lgdebug(D_DWE, "WS_INDICT %s\n", w->subword);
 		we = build_word_expressions(sent, w, NULL);
 	}
 	else if (w->status & WS_REGEX)
 	{
-		lgdebug(D_AXN, "WS_REGEX %s\n", w->subword);
+		lgdebug(D_DWE, "WS_REGEX %s\n", w->subword);
 		we = build_word_expressions(sent, w, w->regex_name);
 	}
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
-		lgdebug(+D_AXN, "UNKNOWN_WORD %s\n", s);
+		lgdebug(+D_DWE, "UNKNOWN_WORD %s\n", s);
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
 		assert(we, UNKNOWN_WORD "must be defined in the dictionary!");
 		w->morpheme_type = MT_UNKNOWN;
@@ -2629,7 +2630,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (3 < opts->verbosity)
+	if (D_X_NODE <= opts->verbosity)
 	{
 		/* Print the X_node details for the word. */
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
@@ -2645,6 +2646,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 
 	return true;
 }
+#undef D_DWE
 
 /**
  * Find whether w1 and w2 have been generated together in the same alternative.
@@ -2682,6 +2684,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	const Gword *last_unsplit_word = NULL;
 	size_t max_words = 0;
 	bool error_encountered = false;
+	bool right_wall_encountered = false;
 
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
@@ -2694,8 +2697,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	/* Populate the pathpos word queue */
 	for (next = sent->wordgraph->next; *next; next++)
 	{
-		wordgraph_pathpos_append(&wp_new, *next, false,
-		                         true/* diff_alternative */);
+		wordgraph_pathpos_add(&wp_new, *next,
+		                      false/* used */, false/* same_word */,
+		                      true/* diff_alternative */);
 	}
 
 	/* Scan the wordgraph and flatten it. */
@@ -2740,7 +2744,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		/* Generate the X-nodes. */
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
-
 			wg_word = wpp_old->word;
 			if (NULL == wg_word->next) continue; /* XXX avoid termination */
 
@@ -2763,10 +2766,18 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			}
 			else
 			{
+				/* Words are not supposed to get issued more than once. */
+				assert(!wpp_old->used, "Word %zu:%s has been used\n",
+				       wg_word->node_num, wpp_old->word->subword);
+
 				/* This is a new wordgraph word.
 				 */
+				assert(!right_wall_encountered, "Extra word");
 				if (!determine_word_expressions(sent, wg_word, opts))
-						error_encountered = true;
+					error_encountered = true;
+				if ((MT_WALL == wg_word->morpheme_type) &&
+				    0== strcmp(wg_word->subword, RIGHT_WALL_WORD))
+					right_wall_encountered = true;
 				wpp_old->used = true;
 			}
 		}
@@ -2798,8 +2809,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				if (is_alternative_next_word(wg_word, *next) &&
 				    (NULL == (*next)->prev[1]))
 				{
-					lgdebug(+D_FW, "Word '%s' next '%s' next_ok\n",
-					        wg_word->subword, (*next)->subword);
+					lgdebug(+D_FW, "Word %zu:'%s' next %zu:'%s' next_ok\n",
+					        wg_word->node_num, wg_word->subword,
+					        (*next)->node_num, (*next)->subword);
 					wpp_old->next_ok = true;
 					break;
 				}
@@ -2811,7 +2823,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				        wg_word->subword);
 				for (next = wg_word->next; NULL != *next; next++)
 				{
-					wordgraph_pathpos_append(&wp_new, *next, false,
+					wordgraph_pathpos_add(&wp_new, *next,
+					                      false/* used */, false/* same_word */,
 					                      true/* diff_alternative */);
 				}
 			}
@@ -2836,10 +2849,14 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 							if ((wpp_new->word != *next) &&
 							    in_same_alternative(wpp_new->word, *next))
 							{
+								lgdebug(+D_FW, "same_alternative: %zu:%s and %zu:%s\n",
+								        wpp_new->word->node_num, wpp_new->word->subword,
+								        (*next)->node_num, (*next)->subword);
 								same_alternative = true;
 								break;
 							}
 						}
+						if (same_alternative) break; /* shortcut */
 					}
 				}
 
@@ -2853,10 +2870,12 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				 * next round. */
 				lgdebug(+D_FW, "Advancing %zu:%s: ", wg_word->node_num,
 				        wg_word->subword);
+
 				if (same_alternative)
 				{
-					lgdebug(D_FW, "No (same alt)\n");
-					wordgraph_pathpos_append(&wp_new, wg_word, true,
+					lgdebug(D_FW, "No (same alt) used=%d\n", wpp_old->used);
+					wordgraph_pathpos_add(&wp_new, wg_word,
+					                      wpp_old->used, true/* same_word */,
 					                      true/* diff_alternative */);
 				}
 				else
@@ -2864,7 +2883,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 					bool added = false;
 
 					for (next = wg_word->next; NULL != *next; next++)
-						added |= wordgraph_pathpos_append(&wp_new, *next, false,
+						added |= wordgraph_pathpos_add(&wp_new, *next,
+						                               false/* used */,
+						                               false/* same_word */,
 						                               true/* diff_alternative */);
 					if (added)
 					{

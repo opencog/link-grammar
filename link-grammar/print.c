@@ -81,9 +81,11 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 		 */
 		len = utf8_strlen(linkage->word[i]);
 		center_t = tot + (len/2);
+#if 0
 		if (i > start_word)
 			center[i] = MAX(center_t, center[i-1] + link_len[i] + 1);
 		else
+#endif
 			center[i] = center_t;
 		word_offset[i] = center[i] - center_t;
 		tot += len+1 + word_offset[i];
@@ -1429,9 +1431,9 @@ void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
 	lgdebug(+D_WPP, "\n");
 	for (; NULL != wp->word; wp++)
 	{
-		lgdebug(D_WPP, "%zu: word '%s', same=%d used=%d level=%zu\n",
-		        i++, wp->word->subword, wp->same_word, wp->used,
-		        wp->word->hier_depth);
+		lgdebug(D_WPP, "%zu: %zu:word '%s', same=%d used=%d level=%zu\n",
+		        i++, wp->word->node_num, wp->word->subword, wp->same_word,
+		        wp->used, wp->word->hier_depth);
 	}
 }
 #undef D_WPP

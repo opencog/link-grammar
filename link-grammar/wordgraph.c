@@ -125,13 +125,30 @@ Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
 	return wp;
 }
 
-bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool same_word,
-                           bool diff_alternative)
+/**
+ * Insert the gword into the path queue in reverse order of its hier_depth.
+ *
+ * The deepest wordgraph alternatives must be scanned first.
+ * Otherwise, this sentence fails: "T" to let there a notice
+ * (It depends on "T" matching EMOTICON.)
+ *
+ * Parameters:
+ *   same_word: mark that the same word is queued again.
+ * For validation code only (until the wordgraph version is mature):
+ *   used: mark that the word has already been issued into the 2D-array.
+ *   diff_alternative: validate we don't queue words from the same alternative.
+ */
+bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
+                              bool same_word, bool diff_alternative)
 {
 	size_t n = wordgraph_pathpos_len(*wp);
 	Wordgraph_pathpos *wpt;
+	size_t insert_here = n;
 
 	assert(NULL != p);
+	wordgraph_hier_position(p); /* in case it is not set yet */
+
+	if (7 <= verbosity) { printf("\n"); print_hier_position(p); }
 
 	if (NULL != *wp)
 	{
@@ -140,12 +157,17 @@ bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool same_word,
 			if (p == wpt->word)
 				return false; /* already in the pathpos queue - nothing to do */
 
+			/* Insert in reverse order of hier_depth. */
+			if ((n == insert_here) && (p->hier_depth >= wpt->word->hier_depth))
+				insert_here = wpt - *wp;
+
 			/* Validate that there are no words in the pathpos queue from the same
-			 * alternative */
+			 * alternative. This can be commented out when the wordgraph code is
+			 * mature. FIXME */
 			if (diff_alternative)
 			{
 				assert(same_word||wpt->same_word||!in_same_alternative(p,wpt->word),
-				       "wordgraph_pathpos_append(): "
+				       "wordgraph_pathpos_add(): "
 				       "Word%zu '%s' is from same alternative of word%zu '%s'",
 				       p->node_num, p->subword,
 				       wpt->word->node_num, wpt->word->subword);
@@ -153,11 +175,18 @@ bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool same_word,
 		}
 	}
 
+
 	*wp = wordgraph_pathpos_resize(*wp, n);
-	(*wp)[n].word = p;
-	(*wp)[n].same_word = same_word;
-	(*wp)[n].used = false;
-	(*wp)[n].next_ok = false;
+	if (insert_here < n)
+	{
+		memmove(&(*wp)[insert_here+1], &(*wp)[insert_here],
+		        (n - insert_here) * sizeof (*wpt));
+	}
+
+	(*wp)[insert_here].word = p;
+	(*wp)[insert_here].same_word = same_word;
+	(*wp)[insert_here].used = used;
+	(*wp)[insert_here].next_ok = false;
 
 	return true;
 }
@@ -172,6 +201,7 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 {
 	const Gword **p;
 
+	fflush(stdout);
 	fprintf(stderr, "[Word %zu:%s hier_position(hier_depth=%zu): ",
 	        word->node_num, word->subword, word->hier_depth);
 	assert(2*word->hier_depth==gwordlist_len(word->hier_position), "word '%s'",
