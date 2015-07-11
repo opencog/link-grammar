@@ -137,10 +137,8 @@ Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
  * For validation code only (until the wordgraph version is mature):
  *   used: mark that the word has already been issued into the 2D-array.
  *   diff_alternative: validate we don't queue words from the same alternative.
- *
- * FIXME: Change the function name to wordgraph_pathpos_add().
  */
-bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool used,
+bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
                               bool same_word, bool diff_alternative)
 {
 	size_t n = wordgraph_pathpos_len(*wp);
@@ -169,7 +167,7 @@ bool wordgraph_pathpos_append(Wordgraph_pathpos **wp, Gword *p, bool used,
 			if (diff_alternative)
 			{
 				assert(same_word||wpt->same_word||!in_same_alternative(p,wpt->word),
-				       "wordgraph_pathpos_append(): "
+				       "wordgraph_pathpos_add(): "
 				       "Word%zu '%s' is from same alternative of word%zu '%s'",
 				       p->node_num, p->subword,
 				       wpt->word->node_num, wpt->word->subword);
