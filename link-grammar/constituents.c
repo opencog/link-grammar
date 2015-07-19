@@ -1060,6 +1060,11 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
 	do_post_process(sent->constituent_pp, linkage, linkage->is_sent_long);
 
+	/** No-op. If we wanted to debug domain names, we could do this...
+	 * linkage_free_pp_info(linkage);
+	 * linkage_set_domain_names(sent->constituent_pp, linkage);
+	 */
+
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
 	post_process_new_domain_array(sent->constituent_pp);
 
