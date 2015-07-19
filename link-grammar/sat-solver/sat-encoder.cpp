@@ -1291,9 +1291,9 @@ Linkage SATEncoder::get_next_linkage()
     exfree(linkage, sizeof(struct Linkage_s));
     linkage = NULL;
 
-    // perform the post-processing
+    // Perform the post-processing
     sane_linkage_morphism(_sent, lkg, _opts);
-    linkage_post_process(lkg, _sent->postprocessor);
+    do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
     linkage_score(lkg, _opts);
 
     if (0 == lkg->lifo.N_violations) {

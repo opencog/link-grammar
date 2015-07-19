@@ -961,18 +961,6 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 /***************** definitions of exported functions ***********************/
 
-PostProcessor * post_process_open(const char *path)
-{
-	pp_knowledge *kno = pp_knowledge_open(path);
-	return post_process_new(kno);
-}
-
-void post_process_close(PostProcessor *pp)
-{
-	pp_knowledge_close(pp->knowledge);
-	post_process_free(pp);
-}
-
 #define PP_INITLEN 60 /* just starting size, it is expanded if needed */
 
 void post_process_new_domain_array(Postprocessor *pp)
@@ -1286,3 +1274,18 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
     Modifications, 9/97 ALB:
      Deglobalization. Made code consistent with api.
    */
+
+/* ------ Deprecated functions, remove these someday ------ */
+PostProcessor * post_process_open(const char *path)
+{
+	pp_knowledge *kno = pp_knowledge_open(path);
+	return post_process_new(kno);
+}
+
+void post_process_close(PostProcessor *pp)
+{
+	pp_knowledge_close(pp->knowledge);
+	post_process_free(pp);
+}
+
+void linkage_post_process(Linkage lkg, Postprocessor * pp) {}

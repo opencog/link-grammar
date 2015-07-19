@@ -314,22 +314,6 @@ link_public_api(const char *)
 
 /**********************************************************************
  *
- * Functions that allow special-purpose post-processing of linkages
- *
- ***********************************************************************/
-
-/** Do not use in new code! */
-typedef struct Postprocessor_s PostProcessor;
-
-link_public_api(PostProcessor *)
-     post_process_open(const char *path);
-link_public_api(void)
-     post_process_close(PostProcessor *);
-link_public_api(void)
-     linkage_post_process(Linkage, PostProcessor *);
-
-/**********************************************************************
- *
  * Internal functions -- do not use these in new code!
  * These are not intended for general public use, but are required to
  * get the link-parser executable to link under MSVC6.
@@ -385,6 +369,22 @@ link_public_api(void)
 #else
  #define MS_DEPRECATED
 #endif
+
+/**********************************************************************
+ *
+ * Functions that allow special-purpose post-processing of linkages
+ *
+ ***********************************************************************/
+
+/** Do not use in new code! */
+typedef struct Postprocessor_s PostProcessor;
+
+MS_DEPRECATED link_public_api(PostProcessor *)
+     post_process_open(const char *path) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(void)
+     post_process_close(PostProcessor *) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(void)
+     linkage_post_process(Linkage, PostProcessor *) GNUC_DEPRECATED;
 
 LINK_END_DECLS
 
