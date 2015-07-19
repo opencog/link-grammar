@@ -190,19 +190,15 @@ static char current_name[] = "AAAAAAAA";
 
 static void increment_current_name(void)
 {
-	int i, carry;
-	i = CN_size-1;
-	carry = 1;
-	while (carry == 1) {
+	int i = CN_size-1;
+
+	do
+	{
 		current_name[i]++;
-		if (current_name[i] == 'Z'+1) {
-			current_name[i] = 'A';
-			carry = 1;
-		} else {
-			carry = 0;
-		}
-		i--;
-	}
+		if (current_name[i] <= 'Z') return;
+		current_name[i] = 'A';
+	} while (i-- > 0);
+	assert(0, "increment_current_name: Overflow\n");
 }
 
 /**
