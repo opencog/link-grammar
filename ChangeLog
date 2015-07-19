@@ -16,6 +16,8 @@ Version 5.3.0: (XXX 2015)
  * Extensive updates to man page.
  * Fix crash on long sentences (issue #137).
  * Fix a memory leak in language bindings (issue #138).
+ * Remove bogus post-processor API function.
+ * Fix broken domain letter printing.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.

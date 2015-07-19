@@ -110,6 +110,7 @@ linkage_get_violation_name
 post_process_open
 post_process_close
 linkage_post_process
+do_post_process
 lg_mbrtowc
 prt_error
 exalloc

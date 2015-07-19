@@ -312,6 +312,103 @@ static void clear_pp_node(Postprocessor *pp)
 	}
 }
 
+static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
+{
+	if (!linkage) return false;
+	if (index >= linkage->num_links) return false;
+	return true;
+}
+
+int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
+{
+	if (!verify_link_index(linkage, index)) return -1;
+	return linkage->pp_info[index].num_domains;
+}
+
+const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
+{
+	if (!verify_link_index(linkage, index)) return NULL;
+	return linkage->pp_info[index].domain_name;
+}
+
+const char * linkage_get_violation_name(const Linkage linkage)
+{
+	return linkage->lifo.pp_violation_msg;
+}
+
+static void exfree_domain_names(PP_info *ppi)
+{
+	if (ppi->num_domains > 0)
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
+}
+
+void linkage_free_pp_info(Linkage lkg)
+{
+	size_t j;
+	if (!lkg || !lkg->pp_info) return;
+
+	for (j = 0; j < lkg->num_links; ++j)
+		exfree_domain_names(&lkg->pp_info[j]);
+	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
+	lkg->pp_info = NULL;
+}
+
+/**
+ * Store the domain names in the linkage.
+ * This is an utter waste of CPU time, if on is not interested
+ * in printing the domain names.
+ *
+ * XXX TODO: refactor, so that this does not need to be called except
+ * when printing the domain names.
+ */
+void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
+{
+	PP_node * pp;
+	size_t j, k;
+	D_type_list * d;
+
+	if (NULL == linkage) return;
+	if (NULL == postprocessor) return;
+
+	/* The only reason to build the type array is for this function. */
+	build_type_array(postprocessor);
+
+	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
+
+	for (j = 0; j < linkage->num_links; ++j)
+	{
+		linkage->pp_info[j].num_domains = 0;
+		linkage->pp_info[j].domain_name = NULL;
+	}
+
+	/* Copy the post-processing results over into the linkage */
+	pp = postprocessor->pp_node;
+	if (pp->violation != NULL)
+		return;
+
+	for (j = 0; j < linkage->num_links; ++j)
+	{
+		k = 0;
+		for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
+		linkage->pp_info[j].num_domains = k;
+		if (k > 0)
+		{
+			linkage->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
+		}
+		k = 0;
+		for (d = pp->d_type_array[j]; d != NULL; d = d->next)
+		{
+			char buff[5];
+			snprintf(buff, 5, "%c", d->type);
+			linkage->pp_info[j].domain_name[k] =
+			      string_set_add (buff, postprocessor->string_set);
+
+			k++;
+		}
+	}
+}
 
 /************************ rule application *******************************/
 
@@ -961,18 +1058,6 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 /***************** definitions of exported functions ***********************/
 
-PostProcessor * post_process_open(const char *path)
-{
-	pp_knowledge *kno = pp_knowledge_open(path);
-	return post_process_new(kno);
-}
-
-void post_process_close(PostProcessor *pp)
-{
-	pp_knowledge_close(pp->knowledge);
-	post_process_free(pp);
-}
-
 #define PP_INITLEN 60 /* just starting size, it is expanded if needed */
 
 void post_process_new_domain_array(Postprocessor *pp)
@@ -1181,7 +1266,6 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	}
 
 	report_pp_stats(pp);
-	build_type_array(pp);
 
 	return pp->pp_node;
 }
@@ -1286,3 +1370,18 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
     Modifications, 9/97 ALB:
      Deglobalization. Made code consistent with api.
    */
+
+/* ------ Deprecated functions, remove these someday ------ */
+PostProcessor * post_process_open(const char *path)
+{
+	pp_knowledge *kno = pp_knowledge_open(path);
+	return post_process_new(kno);
+}
+
+void post_process_close(PostProcessor *pp)
+{
+	pp_knowledge_close(pp->knowledge);
+	post_process_free(pp);
+}
+
+void linkage_post_process(Linkage lkg, Postprocessor * pp) {}
