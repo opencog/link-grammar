@@ -148,7 +148,9 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	assert(NULL != p);
 	wordgraph_hier_position(p); /* in case it is not set yet */
 
+#ifdef DEBUG
 	if (7 <= verbosity) { printf("\n"); print_hier_position(p); }
+#endif
 
 	if (NULL != *wp)
 	{
