@@ -309,15 +309,7 @@ struct Regex_node_s
 	Regex_node *next;
 };
 
-/* Davy added these */
-struct List_o_links_struct
-{
-	size_t link;     /* the link number */
-	size_t word;     /* the word at the other end of this link */
-	signed char dir; /* 0: undirected, 1: away from me, -1: toward me */
-	List_o_links * next;
-};
-
+/* The parse_choice is used to extract links for a given parse */
 typedef struct Parse_choice_struct Parse_choice;
 
 struct Parse_choice_struct
@@ -364,6 +356,15 @@ struct PP_node_struct
 	size_t dtsz;
 	D_type_list **d_type_array;
 	const char *violation;
+};
+
+/* Davy added these */
+struct List_o_links_struct
+{
+	size_t link;     /* the link number */
+	size_t word;     /* the word at the other end of this link */
+	signed char dir; /* 0: undirected, 1: away from me, -1: toward me */
+	List_o_links * next;
 };
 
 /* from pp_linkset.c */
