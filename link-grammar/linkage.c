@@ -933,3 +933,47 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 		}
 	}
 }
+
+void linkage_set_domain_names(Linkage linkage, Postprocessor * postprocessor)
+{
+	PP_node * pp;
+	size_t j, k;
+	D_type_list * d;
+
+	if (NULL == linkage) return;
+	if (NULL == postprocessor) return;
+
+	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
+
+	for (j = 0; j < linkage->num_links; ++j)
+	{
+		linkage->pp_info[j].num_domains = 0;
+		linkage->pp_info[j].domain_name = NULL;
+	}
+
+	pp = postprocessor->pp_node;
+	/* Copy the post-processing results over into the linkage */
+	if (pp->violation != NULL)
+		return;
+
+	for (j = 0; j < linkage->num_links; ++j)
+	{
+		k = 0;
+		for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
+		linkage->pp_info[j].num_domains = k;
+		if (k > 0)
+		{
+			linkage->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
+		}
+		k = 0;
+		for (d = pp->d_type_array[j]; d != NULL; d = d->next)
+		{
+			char buff[5];
+			snprintf(buff, 5, "%c", d->type);
+			linkage->pp_info[j].domain_name[k] =
+			      string_set_add (buff, postprocessor->string_set);
+
+			k++;
+		}
+	}
+}
