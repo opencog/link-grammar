@@ -249,8 +249,8 @@ struct Sentence_s
  *
  * Post processing
  * XXX FIXME: most of these structures should not be in the
- * public API; they're here only because they're tangled into
- * sublinkages, which will go away when fat-links are removed.
+ * public API; they're here because they're tangled into the
+ * hpsg post-processing.
  **********************************************************/
 
 struct Domain_s
@@ -281,12 +281,6 @@ struct PP_data_s
 	size_t domlen;                  /* Allocated size of domain_array */
 	size_t num_words;               /* Number of words in linkage */
 	List_o_links * links_to_ignore;
-};
-
-struct PP_info_s
-{
-	size_t          num_domains;
-	const char **   domain_name;
 };
 
 struct Postprocessor_s
@@ -328,6 +322,12 @@ struct Linkage_info_struct
 	double disjunct_cost;
 	double corpus_cost;
 	const char *pp_violation_msg;
+};
+
+struct PP_info_s
+{
+	size_t          num_domains;
+	const char **   domain_name;
 };
 
 /**
