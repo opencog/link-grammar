@@ -720,7 +720,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		/* XXX There is no need to set the domain names if we are not
 		 * printing them. However, defering this until later requires
 		 * a huge code re-org, because the needed info is discarded
-		 * much too soon. */
+		 * much too soon. This costs about 1% performance penalty. */
 		linkage_set_domain_names(sent->postprocessor, lkg);
 
 	   post_process_free_data(&sent->postprocessor->pp_data);
