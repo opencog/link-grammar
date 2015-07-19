@@ -309,21 +309,6 @@ struct Regex_node_s
 	Regex_node *next;
 };
 
-/* The following three structs comprise what is returned by post_process(). */
-typedef struct D_type_list_struct D_type_list;
-struct D_type_list_struct
-{
-	D_type_list * next;
-	int type;
-};
-
-struct PP_node_struct
-{
-	size_t dtsz;
-	D_type_list **d_type_array;
-	const char *violation;
-};
-
 /* Davy added these */
 struct List_o_links_struct
 {
@@ -361,6 +346,24 @@ struct X_table_connector_struct
 {
 	Parse_set         set;
 	X_table_connector *next;
+};
+
+/* ----------------------------------------------------------------- */
+/* Post-processing-related structures */
+
+/* The following two structs comprise what is returned by post_process(). */
+typedef struct D_type_list_struct D_type_list;
+struct D_type_list_struct
+{
+	D_type_list * next;
+	int type;
+};
+
+struct PP_node_struct
+{
+	size_t dtsz;
+	D_type_list **d_type_array;
+	const char *violation;
 };
 
 /* from pp_linkset.c */
