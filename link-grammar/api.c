@@ -716,7 +716,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		if (!twopass) compute_link_names(lkg, sent->string_set);
 
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
-		linkage_set_domain_names(lkg, sent->postprocessor);
+		linkage_set_domain_names(sent->postprocessor, lkg);
 
 	   post_process_free_data(&sent->postprocessor->pp_data);
 
