@@ -716,6 +716,11 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		if (!twopass) compute_link_names(lkg, sent->string_set);
 
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
+
+		/* XXX There is no need to set the domain names if we are not
+		 * printing them. However, defering this until later requires
+		 * a huge code re-org, because the needed info is discarded
+		 * much too soon. */
 		linkage_set_domain_names(sent->postprocessor, lkg);
 
 	   post_process_free_data(&sent->postprocessor->pp_data);

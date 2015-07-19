@@ -355,6 +355,14 @@ void linkage_free_pp_info(Linkage lkg)
 	lkg->pp_info = NULL;
 }
 
+/**
+ * Store the domain names in the linkage.
+ * This is an utter waste of CPU time, if on is not interested
+ * in printing the domain names.
+ *
+ * XXX TODO: refactor, so that this does not need to be called except
+ * when printing the domain names.
+ */
 void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
 {
 	PP_node * pp;
@@ -364,6 +372,9 @@ void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
 
+	/* The only reason to build the type array is for this function. */
+	build_type_array(postprocessor);
+
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 
 	for (j = 0; j < linkage->num_links; ++j)
@@ -372,8 +383,8 @@ void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
 		linkage->pp_info[j].domain_name = NULL;
 	}
 
-	pp = postprocessor->pp_node;
 	/* Copy the post-processing results over into the linkage */
+	pp = postprocessor->pp_node;
 	if (pp->violation != NULL)
 		return;
 
@@ -1255,7 +1266,6 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	}
 
 	report_pp_stats(pp);
-	build_type_array(pp);
 
 	return pp->pp_node;
 }
