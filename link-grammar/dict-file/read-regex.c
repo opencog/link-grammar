@@ -19,15 +19,15 @@
   into the Dictionary from a given file.
 
   The format of the regex file is as follows:
-  
+
   Lines starting with "%" are comments and are ignored.
   All other nonempty lines must follow the following format:
-  
+
       REGEX_NAME:  /pattern/
-  
+
   here REGEX_NAME is an identifying unique name for the regex.
   This name is used to determine the disjuncts that will be assigned to
-  tokens matching the pattern, so in the dictionary file (e.g. 4.0.dict) 
+  tokens matching the pattern, so in the dictionary file (e.g. 4.0.dict)
   you must have something like
 
      REGEX_NAME:  (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+);
@@ -47,7 +47,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 	char regex[MAX_REGEX_LENGTH];
 	int c,prev,i,line=1;
 	FILE *fp;
-	
+
 	fp = dictopen(file_name, "r");
 	if (fp == NULL)
 	{
@@ -62,7 +62,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		do
 		{
 			do
-			{ 
+			{
 				c = fgetc(fp);
 				if (c == '\n') { line++; }
 			}
@@ -92,12 +92,12 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		}
 		while ((!lg_isspace(c)) && (c != ':') && (c != EOF));
 		name[i] = '\0';
-		
+
 		/* Skip possible whitespace after name, expect colon. */
 		while (lg_isspace(c))
-		{ 
+		{
 			if (c == '\n') { line++; }
-			c = fgetc(fp); 
+			c = fgetc(fp);
 		}
 		if (c != ':')
 		{
@@ -109,10 +109,11 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		do
 		{
 			if (c == '\n') { line++; }
-			c = fgetc(fp); 
+			c = fgetc(fp);
 		}
 		while (lg_isspace(c));
-		if (c != '/') {
+		if (c != '/')
+		{
 			prt_error("Error: Regex missing leading slash on line %d\n", line);
 			goto failure;
 		}
@@ -148,7 +149,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		new_re->re      = NULL;
 		new_re->next    = NULL;
 		*tail = new_re;
-		tail	= &new_re->next;
+		tail = &new_re->next;
 	}
 
 	fclose(fp);
