@@ -15,10 +15,13 @@
 #include <stddef.h>
 #include <regex.h>
 #include "api-structures.h"
+#include "error.h"          /* verbosity */
+#include "externs.h"        /* lgdebug() */
 #include "dict-api.h"
 #include "link-includes.h"
 #include "regex-morph.h"
 #include "structures.h"
+
 
 /**
  * Support for the regular-expression based token matching system
@@ -86,9 +89,11 @@ int compile_regexs(Regex_node *re, Dictionary dict)
  * On match, returns the name of the first matching regex.
  * If no match is found, returns NULL.
  */
+#define D_MRE 3
 const char *match_regex(const Regex_node *re, const char *s)
 {
 	int rc;
+	const char *nre_name;
 
 	while (re != NULL)
 	{
@@ -106,17 +111,27 @@ const char *match_regex(const Regex_node *re, const char *s)
 		rc = regexec((regex_t*) re->re, s, 0, NULL, 0);
 		if (0 == rc)
 		{
-			return re->name; /* match found. just return--no multiple matches. */
+			
+			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!re->neg], re->name, s);
+			if (!re->neg)
+				return re->name; /* Match found - return--no multiple matches. */
+
+			/* Negative match - skip this regex name. */
+			for (nre_name = re->name; re->next != NULL; re = re->next)
+			{
+				if (strcmp(nre_name, re->next->name) != 0) break;
+			}
 		}
 		else if (rc != REG_NOMATCH)
 		{
-			/* We have an error. TODO: more appropriate error handling.*/
+			/* We have an error. */
 			prt_regerror("Regex matching error", re, rc);
 		}
 		re = re->next;
 	}
-	return NULL; /* no matches. */
+	return NULL; /* No matches. */
 }
+#undef D_MRE
 
 /**
  * Delete associated storage

@@ -58,6 +58,8 @@ int read_regex_file(Dictionary dict, const char *file_name)
 	/* read in regexs. loop broken on EOF. */
 	while (1)
 	{
+		bool neg = false;
+
 		/* skip whitespace and comments. */
 		do
 		{
@@ -112,6 +114,16 @@ int read_regex_file(Dictionary dict, const char *file_name)
 			c = fgetc(fp);
 		}
 		while (lg_isspace(c));
+		if (c == '!')
+		{
+			neg = true;
+			do
+			{
+				if (c == '\n') { line++; }
+				c = fgetc(fp);
+			}
+			while (lg_isspace(c));
+		}
 		if (c != '/')
 		{
 			prt_error("Error: Regex missing leading slash on line %d\n", line);
@@ -146,6 +158,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		new_re = (Regex_node *) malloc(sizeof(Regex_node));
 		new_re->name    = strdup(name);
 		new_re->pattern = strdup(regex);
+		new_re->neg     = neg;
 		new_re->re      = NULL;
 		new_re->next    = NULL;
 		*tail = new_re;

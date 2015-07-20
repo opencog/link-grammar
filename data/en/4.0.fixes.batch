@@ -4533,6 +4533,10 @@ vibeix here
 !spell=0
 % --------------------------------------------------------------------
 
+% The initial "T" used to match EMOTICON before the introduction
+% of negative regex'es. Now !/^"/ blocks that.
+*"T" This is a test
+
 % The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch
 % --------------------------------------------------------------------
