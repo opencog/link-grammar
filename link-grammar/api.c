@@ -833,10 +833,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	Dictionary dict = sent->dict;
 	bool fw_failed = false;
 
-	/* Cleanup stuff previously allocated. This is because some free
-	 * routines depend on sent-length, which might change in different
-	 * parse-opts settings.
-	 */
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))
 	{
