@@ -145,7 +145,7 @@ static bool in_afdict_class(Dictionary dict, wchar_t wc, afdict_classnum cn)
 		(const wchar_t *)AFCLASS(dict->affix_table, cn)->string;
 
 	if (NULL == classchars) return false;
-	return (NULL !=  wcschr(classchars, wc));
+	return (NULL != wcschr(classchars, wc));
 }
 
 static bool is_afdict_str(Dictionary dict, const char *str, afdict_classnum cn)
@@ -241,7 +241,7 @@ static void gwordqueue_add(const Sentence sent, Gword *const word)
 static void word_label(Sentence sent, Gword *w, const char *op,
                        const char *label)
 {
-	const size_t s =  (NULL == w->label) ? 0 : strlen(w->label);
+	const size_t s = (NULL == w->label) ? 0 : strlen(w->label);
 	char *new_label = alloca(s + strlen(label) + 1 + 2 + 1); /* len+op+()+NUL */
 
 	if (0 != s)
@@ -310,7 +310,7 @@ static void word_label(Sentence sent, Gword *w, const char *op,
  * FIXME XXX What if a non-first subword is unknown and cannot split further?
  * For example, for ('50s,) we get an alternative (' 50s ,) in which (50s)
  * cannot split further because another alternative also starts with (50), but
- * (50s) is an unknown word (that doesn't usually cause a trouble because if
+ * (50s) is an unknown word (that doesn't usually cause a trouble because
  * tokens in that alternative don't have a linkage). It will be a good idea to
  * find out exactly how it happens and a way to avoid that.  A fix "by force"
  * may be to explicitly mark unknown-words in separate_word() (as originally
@@ -348,7 +348,7 @@ static bool word_start_another_alternative(Dictionary dict,
  * may need a generalization.
  * FIXME? Try to work-around the current need of this functions.
  */
-static char contraction_chars[] = "\'`";
+static char contraction_chars[] = "'`";
 
 #if 0
 static bool is_contraction_suffix(const char *s)
@@ -451,7 +451,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		}
 	}
 	lgdebug(D_IWA, "\n");
-	buff = alloca(maxword + 2);	/* strlen + INFIX_MARK + NULL */
+	buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NULL */
 
 	for (at = PREFIX; at < END; at++)
 	{
@@ -761,7 +761,7 @@ static void remqueue_gword(const Sentence sent)
 
 	/* If the word should have an alternative which includes itself, add it as an
 	 * additional alternative (unless it has already been added, as indicated by
-	 * WS_UNSPLIT ).
+	 * WS_UNSPLIT).
 	 * See the comments in issue_word_alternative() where remqueue_gword is
 	 * mentioned. */
 	if (w->issued_unsplit && (w->status & WS_HASALT) && !(w->status & WS_UNSPLIT))
@@ -1164,7 +1164,7 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
 	Gword *alternative_id = altp->alternative_id;
 
 	for (; (NULL != altp) && (altp->alternative_id == alternative_id);
-		  altp = altp->next[0])
+	     altp = altp->next[0])
 	{
 		if (NULL == altp) break; /* just in case this is a dummy word */
 
@@ -1389,13 +1389,13 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 	{
 		word_can_split = mprefix_split(sent, unsplit_word, word);
 		lgdebug(+D_MS, "Tried mprefix_split word=%s, can_split=%d\n",
-				  word, word_can_split);
+		        word, word_can_split);
 	}
 	else
 	{
 		word_can_split = suffix_split(sent, unsplit_word, word);
 		lgdebug(+D_MS, "Tried to split word=%s, can_split=%d\n",
-				  word, word_can_split);
+		        word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
 		if ((NULL != unsplit_word) && is_utf8_upper(word) &&
@@ -1409,7 +1409,7 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 			word_can_split |=
 				suffix_split(sent, unsplit_word, downcase);
 			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
-					  downcase, word_can_split);
+			        downcase, word_can_split);
 		}
 	}
 
@@ -1784,7 +1784,7 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 	dictcap[0] = is_cap ? CAP1st : CAPnon;
 	dictcap[1] = word;
 	lgdebug(+D_SW, "Adding %s word=%s RE=%s\n", dictcap[0], word,
-			  NULL == unsplit_word->regex_name ? "" : unsplit_word->regex_name);
+	        NULL == unsplit_word->regex_name ? "" : unsplit_word->regex_name);
 	altp = issue_word_alternative(sent, unsplit_word, dictcap[0],
 											0,NULL, 2,dictcap, 0,NULL);
 
@@ -2063,9 +2063,9 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					!boolean_dictionary_lookup(dict, temp_word));
 
 		lgdebug(+D_SW, "After strip_right: n_r_stripped=(%s) "
-				  "word='%s' wend='%s' units_wend='%s' temp_word='%s'\n",
-				  print_rev_word_array(sent, r_stripped, n_r_stripped),
-				  word, wend, units_wend, temp_word);
+		        "word='%s' wend='%s' units_wend='%s' temp_word='%s'\n",
+		        print_rev_word_array(sent, r_stripped, n_r_stripped),
+		        word, wend, units_wend, temp_word);
 
 		/* If n_r_stripped exceed max, the "word" most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
