@@ -7,11 +7,12 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.0 (formatted as V5v1v0+)
-<dictionary-version-number>: V5v1v0+;
+% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
+<dictionary-version-number>: V5v3v0+;
 
 LEFT-WALL: ANY+;
 ANY-WORD: {@ANY-} & {@ANY+};
 ANY-PUNCT: {@ANY-} & {@ANY+};
+UNKNOWN-WORD: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};
