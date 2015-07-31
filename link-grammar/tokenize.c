@@ -1964,6 +1964,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * FIXME: Word separation may still be needed, e.g. for a table of
 			 * contents:
 			 * ............................something
+			 * FIXME: "return" here prevents matching a regex.
 			 */
 			if (n_r_stripped >= MAX_STRIP-1)
 			{
@@ -1978,8 +1979,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			                       0,NULL, n_r_stripped,r_stripped, 0,NULL);
 
 			/* Its possible that the token consisted entirely of
-			 * left-punctuation, in which case, wp is an empty string. */
-			if ('\0' == *wp)
+			 * left-punctuation, in which case, wp is an empty string.
+			 * In case this is a single token (n_r_stripped == 1), we have
+			 * to continue processing, because it may match a regex. */
+			if ('\0' == *wp && n_r_stripped != 1)
 			{
 				/* Suppose no more alternatives in such a case. */
 				lgdebug(+D_SW, "1: Word '%s' all left-puncts - done\n",
