@@ -854,7 +854,13 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		}
 	}
 
-	if (fw_failed) return -3;
+	if (fw_failed)
+	{
+		/* Make sure an error message is always printed.
+		 * So it may be redundant. */
+		prt_error("Error: sentence_split(): Internal error detected");
+		return -3;
+	}
 
 	return 0;
 }
