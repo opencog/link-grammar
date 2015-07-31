@@ -301,6 +301,7 @@ struct Regex_node_s
 {
 	char *name;      /* The identifying name of the regex */
 	char *pattern;   /* The regular expression pattern */
+	bool neg;        /* Negate the match */
 	void *re;        /* The compiled regex. void * to avoid
 	                    having re library details invading the
 	                    rest of the LG system; regex-morph.c

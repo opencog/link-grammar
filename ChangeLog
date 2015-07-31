@@ -18,7 +18,7 @@ Version 5.3.0: (XXX 2015)
  * Fix a memory leak in language bindings (issue #138).
  * Remove bogus post-processor API function.
  * Fix broken domain letter printing.
- * Fix punctuation bug in the any/amy languages.
+ * New regex-file feature - negative regex'es.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.

@@ -13,6 +13,10 @@
 % Note that the order of the regular expressions matters: matches will
 % be attempted in the order in which the regexs appear in this file,
 % and only the first match will be used.
+%
+% Regex'es that are preceded by !, if they match a token, stop
+% further match tries of the same regex name. Thus, they can serve
+% as a kind of a negative look-ahead.
 
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"
@@ -235,6 +239,7 @@ HYPHENATED-WORDS:
   /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
 
 % Emoticon checks must come *after* the above, so that the above take precedence.
+% See Wikipedia List_of_emoticons (also the References section).
 %
 % Emoticons must be entirely made of punctuation, length 2 or longer ;) 
 % XXX [:punct:] is strangely broken, I have to add ;-< explicitly
@@ -249,6 +254,7 @@ HYPHENATED-WORDS:
 %
 % EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 % EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+EMOTICON: !/^"|[[:alnum:]]+"$/
 EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 
 % Part numbers should not match words with punctuation at their end.
