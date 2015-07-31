@@ -2564,10 +2564,10 @@ static Word *word_new(Sentence sent)
  *
  * Algorithm:
  * Apply the following step to all words w:
- * If w is in the dictionary, use it.
- * Else if w is identified by regex matching, use the
- * appropriately matched disjunct collection.
- * Otherwise w is unknown - use the disjunct collection of UNKNOWN_WORD.
+ *   - If w is in the dictionary, use it.
+ *   - Else if w is identified by regex matching, use the appropriately
+ *     matched disjunct collection.
+ *   - Otherwise w is unknown - use the disjunct collection of UNKNOWN_WORD.
  *
  * FIXME For now, also add an element to the alternatives array, so the rest of
  * program will work fine (print_sentence_word_alternatives(),
@@ -2613,6 +2613,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	{
 		/* The word is unknown, but UNKNOWN_WORD cannot be used.
 		 * An error message will eventually be printed. */
+		prt_error("Error: Word '%s': word is unknown\n", w->subword);
 		return false;
 	}
 
@@ -2672,6 +2673,7 @@ static bool same_unsplit_word(Sentence sent, const Gword *w1, const Gword *w2)
 
 /**
  * "Flatten" the wordgraph into a word array.
+ * Return false if an error was encountered.
  */
 #define D_FW 5
 bool flatten_wordgraph(Sentence sent, Parse_Options opts)
