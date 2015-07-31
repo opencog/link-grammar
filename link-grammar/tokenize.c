@@ -314,7 +314,7 @@ static void word_label(Sentence sent, Gword *w, const char *op,
  * tokens in that alternative don't have a linkage). It will be a good idea to
  * find out exactly how it happens and a way to avoid that.  A fix "by force"
  * may be to explicitly mark unknown-words in separate_word() (as originally
- * designed) and in wordgraph_flatten() ignore alternatives that have
+ * designed) and in flatten_wordgraph() ignore alternatives that have
  * so-unmarked unknown words.
  */
 static bool word_start_another_alternative(Dictionary dict,
@@ -1854,7 +1854,7 @@ static bool is_re_capitalized(const char *regex_name)
  * The original separate_word() function directly created the 2D-word-array used
  * by the parser. This version of separate_word() is a rewrite that creates a
  * word graph, referred in the comments as Wordgraph. It is later converted to
- * the said 2D-word-array by wordgraph_flatten().
+ * the said 2D-word-array by flatten_wordgraph().
  *
  * The current separate_word() code is still too similar to the old one, even
  * though some principles of operation are radically different: the separated
@@ -2220,12 +2220,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			}
 
 			lgdebug(+D_SW, "Word=%s lc=%s in_dict=%d is_known=%d can_split=%d "
-					  "is_capitalizable=%d lc_is_in_dict=%d "
-					  "is_entity=%d is_common_entity=%d\n",
-					  word, downcase, !!(unsplit_word->status & WS_INDICT),
-					  word_is_known, word_can_split,
-					  word_is_capitalizable, lc_word_is_in_dict,
-					  is_entity(dict, word), is_common_entity(dict, downcase));
+			        "is_capitalizable=%d lc_is_in_dict=%d "
+			        "is_entity=%d is_common_entity=%d\n",
+			        word, downcase, !!(unsplit_word->status & WS_INDICT),
+			        word_is_known, word_can_split,
+			        word_is_capitalizable, lc_word_is_in_dict,
+			        is_entity(dict, word), is_common_entity(dict, downcase));
 
 			if (!word_can_split && !word_is_known &&
 				 (!word_is_capitalizable || (lc_word_is_in_dict &&
