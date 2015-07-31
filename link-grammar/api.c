@@ -833,10 +833,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	Dictionary dict = sent->dict;
 	bool fw_failed = false;
 
-	/* Cleanup stuff previously allocated. This is because some free
-	 * routines depend on sent-length, which might change in different
-	 * parse-opts settings.
-	 */
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))
 	{
@@ -858,7 +854,13 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		}
 	}
 
-	if (fw_failed) return -3;
+	if (fw_failed)
+	{
+		/* Make sure an error message is always printed.
+		 * So it may be redundant. */
+		prt_error("Error: sentence_split(): Internal error detected");
+		return -3;
+	}
 
 	return 0;
 }
