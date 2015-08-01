@@ -2649,6 +2649,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 }
 #undef D_DWE
 
+#if 0 /* unused */
 /**
  * Find whether w1 and w2 have been generated together in the same alternative.
  */
@@ -2661,6 +2662,7 @@ static bool is_alternative_next_word(const Gword *w1, const Gword *w2)
 	        w2->subword, w2->alternative_id, w2->alternative_id->subword);
 	return (w1->alternative_id == w2->alternative_id);
 }
+#endif
 
 #ifdef FIXIT /* unused */
 /* XXX WS_UNSPLIT */
@@ -2691,10 +2693,14 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
 	/* Establish an upper bound on the total number of words, to prevent an
-	 * infinite loop in case of a bug. */
+	 * infinite loop in case of a bug. At the same time, calculate the
+	 * hierarchy position of the word. */
 	for (wg_word = sent->wordgraph->chain_next; wg_word;
 	     wg_word = wg_word->chain_next)
+	{
+		wordgraph_hier_position(wg_word);
 		max_words++;
+	}
 
 	/* Populate the pathpos word queue */
 	for (next = sent->wordgraph->next; *next; next++)
@@ -2801,19 +2807,19 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
 			       "'%s'->next[0]==NULL", wg_word->subword);
 			assert((NULL != wg_word->next[0]->prev)
-					 || (NULL != wg_word->next[0]->next),
-			       "Bad wordgraph: '%s'->next[0]->prev==NULL", wg_word->subword);
+					 || (NULL != wg_word->next[0]->next),  "Bad wordgraph: "
+			       "'%s'->next[0]->prev/next==NULL", wg_word->subword);
 			assert(NULL != wg_word->next[0]->prev[0], "Bad wordgraph: "
 			       "'%s'->next[0]->prev[0]==NULL", wg_word->subword);
 
 			for (next = wg_word->next; NULL != *next; next++)
 			{
-				if (is_alternative_next_word(wg_word, *next) &&
+				if (wg_word->hier_depth <= (*next)->hier_depth &&
 				    (NULL == (*next)->prev[1]))
 				{
-					lgdebug(+D_FW, "Word %zu:'%s' next %zu:'%s' next_ok\n",
-					        wg_word->node_num, wg_word->subword,
-					        (*next)->node_num, (*next)->subword);
+					lgdebug(+D_FW, "Word %zu:%s(%zu) next %zu:%s(%zu) next_ok\n",
+					        wg_word->node_num, wg_word->subword, wg_word->hier_depth,
+					        (*next)->node_num, (*next)->subword, (*next)->hier_depth);
 					wpp_old->next_ok = true;
 					break;
 				}
