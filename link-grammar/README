@@ -49,7 +49,7 @@ tokenization, as in previous releases.
 
 Since the parser cannot currently use the word-graph directly, there is a
 need to convert it to the 2D-word-array that it uses. This is implemented
-by the function wordgraph_flatten(), which uses a complex algorithm: It
+by the function flatten_wordgraph(), which uses a complex algorithm: It
 scans all the word-graph paths in parallel, trying to advance to the next
 words and to issue them into the 2D-word-array.
 
@@ -57,8 +57,8 @@ It advances to the next word of a given word in rounds, using two passes, one
 word per word-graph path on each round:
 Pass 1. Next words which are in the same alternative of the given word.
 Pass 2. Next words which are in a different alternative (of the common
-ancestor word) of words that has already been advanced to in the previous
-pass and this pass.
+ancestor word) of words that has already been advanced to in pass 1
+and this pass.
 
 The words that got advanced to are issued into the 2D-word-array.  It is
 possible that the second pass above cannot get advance in particular
@@ -78,7 +78,7 @@ to a single tokenization alternative of that word.
 It now works in another way - it validates that the chosen words create a
 path in the word-graph. In case of "null-words" - words with no linkage -
 the first path which is encountered is used. It means that a word in the
-word-graph corresponding to a null-word, may be only one of the potential
+word-graph path corresponding to a null-word, may be only one of the potential
 possibilities.
 
 Another feature that has been implemented, mainly for debug (but it can
@@ -114,6 +114,13 @@ before them (or to the LEFT-WALL). In order to compare detailed batch runs with
 previous versions of the library, a !test=removeZZZ can be used to remove the
 quote display.
 
+Not as in previous releases, capital letters which got downcased are not
+restored for display if the affected words have a linkage.
+
+The Boolean-SAT parser is now not functional (it segfaults), because it
+has not been converted yet to have word-graph word pointers in the
+disjunct structures.
+
 A new experimental handling of capital words using the dictionary has been
 introduced. It inserts the token 1stCAP before the uc version, and nonCAP before
 the lc one, as discussed in:
@@ -121,7 +128,6 @@ https://groups.google.com/forum/?hl=en#!topic/link-grammar/hmK5gjXYWbk
 It is enabled by !test=dictcap . The special "dictcap" tokens are not yet
 discarded, so in order to compare results to previous library versions, the
 following can be used: !test=dictcap,removeZZZ .
-
 
 
 HOWTO use the new regex tokenizer/splitter
