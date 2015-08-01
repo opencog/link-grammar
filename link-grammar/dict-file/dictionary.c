@@ -370,6 +370,7 @@ static bool afdict_init(Dictionary dict)
 		sm_re->name = strdup(afdict_classname[AFDICT_SANEMORPHISM]);
 		sm_re->re = NULL;
 		sm_re->next = NULL;
+		sm_re->neg = false;
 		rc = compile_regexs(afdict->regex_root, afdict);
 		if (rc) {
 			prt_error("Error: afdict_init: Failed to compile "

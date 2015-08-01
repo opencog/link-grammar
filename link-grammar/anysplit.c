@@ -313,6 +313,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 		new_re->pattern = s;
 		new_re->re      = NULL;
 		new_re->next    = NULL;
+		new_re->neg = false; /* TODO (if needed): Negative regex'es. */
 		*tail = new_re;
 		tail	= &new_re->next;
 	}
