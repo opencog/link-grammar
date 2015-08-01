@@ -145,7 +145,7 @@ static bool in_afdict_class(Dictionary dict, wchar_t wc, afdict_classnum cn)
 		(const wchar_t *)AFCLASS(dict->affix_table, cn)->string;
 
 	if (NULL == classchars) return false;
-	return (NULL !=  wcschr(classchars, wc));
+	return (NULL != wcschr(classchars, wc));
 }
 
 static bool is_afdict_str(Dictionary dict, const char *str, afdict_classnum cn)
@@ -241,7 +241,7 @@ static void gwordqueue_add(const Sentence sent, Gword *const word)
 static void word_label(Sentence sent, Gword *w, const char *op,
                        const char *label)
 {
-	const size_t s =  (NULL == w->label) ? 0 : strlen(w->label);
+	const size_t s = (NULL == w->label) ? 0 : strlen(w->label);
 	char *new_label = alloca(s + strlen(label) + 1 + 2 + 1); /* len+op+()+NUL */
 
 	if (0 != s)
@@ -310,11 +310,11 @@ static void word_label(Sentence sent, Gword *w, const char *op,
  * FIXME XXX What if a non-first subword is unknown and cannot split further?
  * For example, for ('50s,) we get an alternative (' 50s ,) in which (50s)
  * cannot split further because another alternative also starts with (50), but
- * (50s) is an unknown word (that doesn't usually cause a trouble because if
+ * (50s) is an unknown word (that doesn't usually cause a trouble because
  * tokens in that alternative don't have a linkage). It will be a good idea to
  * find out exactly how it happens and a way to avoid that.  A fix "by force"
  * may be to explicitly mark unknown-words in separate_word() (as originally
- * designed) and in wordgraph_flatten() ignore alternatives that have
+ * designed) and in flatten_wordgraph() ignore alternatives that have
  * so-unmarked unknown words.
  */
 static bool word_start_another_alternative(Dictionary dict,
@@ -348,7 +348,7 @@ static bool word_start_another_alternative(Dictionary dict,
  * may need a generalization.
  * FIXME? Try to work-around the current need of this functions.
  */
-static char contraction_chars[] = "\'`";
+static char contraction_chars[] = "'`";
 
 #if 0
 static bool is_contraction_suffix(const char *s)
@@ -451,7 +451,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		}
 	}
 	lgdebug(D_IWA, "\n");
-	buff = alloca(maxword + 2);	/* strlen + INFIX_MARK + NULL */
+	buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NULL */
 
 	for (at = PREFIX; at < END; at++)
 	{
@@ -761,7 +761,7 @@ static void remqueue_gword(const Sentence sent)
 
 	/* If the word should have an alternative which includes itself, add it as an
 	 * additional alternative (unless it has already been added, as indicated by
-	 * WS_UNSPLIT ).
+	 * WS_UNSPLIT).
 	 * See the comments in issue_word_alternative() where remqueue_gword is
 	 * mentioned. */
 	if (w->issued_unsplit && (w->status & WS_HASALT) && !(w->status & WS_UNSPLIT))
@@ -1164,7 +1164,7 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
 	Gword *alternative_id = altp->alternative_id;
 
 	for (; (NULL != altp) && (altp->alternative_id == alternative_id);
-		  altp = altp->next[0])
+	     altp = altp->next[0])
 	{
 		if (NULL == altp) break; /* just in case this is a dummy word */
 
@@ -1389,13 +1389,13 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 	{
 		word_can_split = mprefix_split(sent, unsplit_word, word);
 		lgdebug(+D_MS, "Tried mprefix_split word=%s, can_split=%d\n",
-				  word, word_can_split);
+		        word, word_can_split);
 	}
 	else
 	{
 		word_can_split = suffix_split(sent, unsplit_word, word);
 		lgdebug(+D_MS, "Tried to split word=%s, can_split=%d\n",
-				  word, word_can_split);
+		        word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
 		if ((NULL != unsplit_word) && is_utf8_upper(word) &&
@@ -1409,7 +1409,7 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 			word_can_split |=
 				suffix_split(sent, unsplit_word, downcase);
 			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
-					  downcase, word_can_split);
+			        downcase, word_can_split);
 		}
 	}
 
@@ -1784,7 +1784,7 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 	dictcap[0] = is_cap ? CAP1st : CAPnon;
 	dictcap[1] = word;
 	lgdebug(+D_SW, "Adding %s word=%s RE=%s\n", dictcap[0], word,
-			  NULL == unsplit_word->regex_name ? "" : unsplit_word->regex_name);
+	        NULL == unsplit_word->regex_name ? "" : unsplit_word->regex_name);
 	altp = issue_word_alternative(sent, unsplit_word, dictcap[0],
 											0,NULL, 2,dictcap, 0,NULL);
 
@@ -1854,7 +1854,7 @@ static bool is_re_capitalized(const char *regex_name)
  * The original separate_word() function directly created the 2D-word-array used
  * by the parser. This version of separate_word() is a rewrite that creates a
  * word graph, referred in the comments as Wordgraph. It is later converted to
- * the said 2D-word-array by wordgraph_flatten().
+ * the said 2D-word-array by flatten_wordgraph().
  *
  * The current separate_word() code is still too similar to the old one, even
  * though some principles of operation are radically different: the separated
@@ -2066,9 +2066,9 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					!boolean_dictionary_lookup(dict, temp_word));
 
 		lgdebug(+D_SW, "After strip_right: n_r_stripped=(%s) "
-				  "word='%s' wend='%s' units_wend='%s' temp_word='%s'\n",
-				  print_rev_word_array(sent, r_stripped, n_r_stripped),
-				  word, wend, units_wend, temp_word);
+		        "word='%s' wend='%s' units_wend='%s' temp_word='%s'\n",
+		        print_rev_word_array(sent, r_stripped, n_r_stripped),
+		        word, wend, units_wend, temp_word);
 
 		/* If n_r_stripped exceed max, the "word" most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
@@ -2223,12 +2223,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			}
 
 			lgdebug(+D_SW, "Word=%s lc=%s in_dict=%d is_known=%d can_split=%d "
-					  "is_capitalizable=%d lc_is_in_dict=%d "
-					  "is_entity=%d is_common_entity=%d\n",
-					  word, downcase, !!(unsplit_word->status & WS_INDICT),
-					  word_is_known, word_can_split,
-					  word_is_capitalizable, lc_word_is_in_dict,
-					  is_entity(dict, word), is_common_entity(dict, downcase));
+			        "is_capitalizable=%d lc_is_in_dict=%d "
+			        "is_entity=%d is_common_entity=%d\n",
+			        word, downcase, !!(unsplit_word->status & WS_INDICT),
+			        word_is_known, word_can_split,
+			        word_is_capitalizable, lc_word_is_in_dict,
+			        is_entity(dict, word), is_common_entity(dict, downcase));
 
 			if (!word_can_split && !word_is_known &&
 				 (!word_is_capitalizable || (lc_word_is_in_dict &&
@@ -2652,6 +2652,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 }
 #undef D_DWE
 
+#if 0 /* unused */
 /**
  * Find whether w1 and w2 have been generated together in the same alternative.
  */
@@ -2664,6 +2665,7 @@ static bool is_alternative_next_word(const Gword *w1, const Gword *w2)
 	        w2->subword, w2->alternative_id, w2->alternative_id->subword);
 	return (w1->alternative_id == w2->alternative_id);
 }
+#endif
 
 #ifdef FIXIT /* unused */
 /* XXX WS_UNSPLIT */
@@ -2694,10 +2696,14 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
 	/* Establish an upper bound on the total number of words, to prevent an
-	 * infinite loop in case of a bug. */
+	 * infinite loop in case of a bug. At the same time, calculate the
+	 * hierarchy position of the word. */
 	for (wg_word = sent->wordgraph->chain_next; wg_word;
 	     wg_word = wg_word->chain_next)
+	{
+		wordgraph_hier_position(wg_word);
 		max_words++;
+	}
 
 	/* Populate the pathpos word queue */
 	for (next = sent->wordgraph->next; *next; next++)
@@ -2804,19 +2810,19 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
 			       "'%s'->next[0]==NULL", wg_word->subword);
 			assert((NULL != wg_word->next[0]->prev)
-					 || (NULL != wg_word->next[0]->next),
-			       "Bad wordgraph: '%s'->next[0]->prev==NULL", wg_word->subword);
+					 || (NULL != wg_word->next[0]->next),  "Bad wordgraph: "
+			       "'%s'->next[0]->prev/next==NULL", wg_word->subword);
 			assert(NULL != wg_word->next[0]->prev[0], "Bad wordgraph: "
 			       "'%s'->next[0]->prev[0]==NULL", wg_word->subword);
 
 			for (next = wg_word->next; NULL != *next; next++)
 			{
-				if (is_alternative_next_word(wg_word, *next) &&
+				if (wg_word->hier_depth <= (*next)->hier_depth &&
 				    (NULL == (*next)->prev[1]))
 				{
-					lgdebug(+D_FW, "Word %zu:'%s' next %zu:'%s' next_ok\n",
-					        wg_word->node_num, wg_word->subword,
-					        (*next)->node_num, (*next)->subword);
+					lgdebug(+D_FW, "Word %zu:%s(%zu) next %zu:%s(%zu) next_ok\n",
+					        wg_word->node_num, wg_word->subword, wg_word->hier_depth,
+					        (*next)->node_num, (*next)->subword, (*next)->hier_depth);
 					wpp_old->next_ok = true;
 					break;
 				}

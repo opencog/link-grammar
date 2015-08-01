@@ -4286,8 +4286,6 @@ if it weren't for Joe, it would work.
 if it were not for Joe, it would work.
 If it weren't for the Democratic Party, health care reform would have passed.
 
-Just two days after President Obama extolled Chuck Grassley's bipartisan spirit on health care reform, Grassley effectively stuck a hot poker in the President's eye, saying that if it weren't for the Democratic Party's willingness to negotiate with him, health care reform would have already passed the Senate.
-
 % Someone... who...
 Someone is outside who wants to see you.
 
@@ -4536,6 +4534,19 @@ vibeix here
 % The initial "T" used to match EMOTICON before the introduction
 % of negative regex'es. Now !/^"/ blocks that.
 *"T" This is a test
+
+% Sentences that caused a mess in the wordgraph flattening code:
+
+% Issue #146: The mess depends on both "To" and "To matching EMOTICON.
+% There can be any >5 words after "To".
+*"To" It's to let; there's a notice on the door
+
+% In the following sentence, the wordgraph complexity is because both
+% <vc-do> and vc-do are considered valid words (<vc-do> is in the dict,
+% vc-do matchesa regex), there are two alternatives, the later one is
+% longer due to ( [ and <,and there is an additional alternative level
+% when vc-do> gets broken to vc-do and > .
+*([<vc-do>
 
 % The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch
