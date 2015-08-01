@@ -129,8 +129,10 @@ Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
  * Insert the gword into the path queue in reverse order of its hier_depth.
  *
  * The deepest wordgraph alternatives must be scanned first.
- * Otherwise, this sentence fails: "T" to let there a notice
- * (It depends on "T" matching EMOTICON.)
+ * Otherwise, this sentence causes a flattening mess:
+ * "T" this is a flattening test
+ * (The mess depends on both "T" and "T matching EMOTICON, and any
+ * 5 words after "T".)
  *
  * Parameters:
  *   same_word: mark that the same word is queued again.
@@ -146,7 +148,6 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	size_t insert_here = n;
 
 	assert(NULL != p);
-	wordgraph_hier_position(p); /* in case it is not set yet */
 
 #ifdef DEBUG
 	if (7 <= verbosity) { printf("\n"); print_hier_position(p); }
@@ -176,7 +177,6 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 			}
 		}
 	}
-
 
 	*wp = wordgraph_pathpos_resize(*wp, n);
 	if (insert_here < n)
@@ -257,6 +257,9 @@ const Gword **wordgraph_hier_position(Gword *word)
 
 	if (NULL != word->hier_position) return word->hier_position; /* from cache */
 
+	/*
+	 * Compute the length of the hier_position vector.
+	 */
 	for (w = find_real_unsplit_word(word, true); NULL != w; w = w->unsplit_word)
 		i++;
 	if (0 == i) i = 1; /* Handle the dummy start/end words, just in case. */
