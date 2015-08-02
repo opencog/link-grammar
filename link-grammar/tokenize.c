@@ -1155,8 +1155,10 @@ static void tokenization_done(Dictionary dict, Gword *altp)
 	}
 }
 
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 /**
  * Set the status of all the words in a given alternative.
+ * Currently used to mark words that are a result of a spelling.
  */
 static void set_alt_word_status(Dictionary dict, Gword *altp,
                                 unsigned int status)
@@ -1181,6 +1183,7 @@ static void set_alt_word_status(Dictionary dict, Gword *altp,
 		if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
 	}
 }
+#endif /* HAVE_HUNSPELL */
 
 
 #define HEB_PRENUM_MAX 5   /* no more than 5 prefix "subwords" */
