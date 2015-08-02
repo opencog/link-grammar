@@ -6,6 +6,11 @@ sudo: false
 
 cache: apt
 
+# For installing packages
+addons:
+    apt:
+        packages:
+            - autoconf-archive
 before_script:
     - ./autogen.sh --no-configure
     - mkdir build
