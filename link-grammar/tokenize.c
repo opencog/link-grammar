@@ -37,6 +37,7 @@
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
+#define D_SW 3                      /* debug level for word splits */
 
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
@@ -956,9 +957,16 @@ error:
 
 /**
  * Add the given prefix, word and suffix as an alternative.
- * IF STEMSUBSCR is define in the affix file, use its values as possible
- * subscripts for the word.
+ * If STEMSUBSCR is define in the affix file, use its values as possible
+ * subscripts for the word. In that case, if the word cannot be found in
+ * the dict with any of the given stem suffixes, the alternative is not
+ * valid and thus not added.
  *
+ * If unsplit_word is null, this function actually only checks whether
+ * the alternative is valid as described above. This is used for checking
+ * is a spell guess result if valid if the word itself is not in the dict.
+ *
+ * Return true if the alternative is valid, else false.
  */
 static bool add_alternative_with_subscr(Sentence sent,
                                         Gword * unsplit_word,
@@ -971,13 +979,18 @@ static bool add_alternative_with_subscr(Sentence sent,
 	   AFCLASS(dict->affix_table, AFDICT_STEMSUBSCR);
 	const char ** stemsubscr = stemsubscr_list->string;
 	size_t stemsubscr_count = stemsubscr_list->length;
-	bool word_is_in_dict = true;
+	bool word_is_in_dict = false;
+	bool issue_alternatives = (NULL != unsplit_word);
 
 	if (0 == stemsubscr_count)
 	{
-		issue_word_alternative(sent, unsplit_word, "AWS",
-		                       (prefix ? 1 : 0),&prefix, 1,&word,
-		                       (suffix ? 1 : 0),&suffix);
+		word_is_in_dict = true;
+		if (issue_alternatives)
+		{
+			issue_word_alternative(sent, unsplit_word, "AWS",
+			                       (prefix ? 1 : 0),&prefix, 1,&word,
+			                       (suffix ? 1 : 0),&suffix);
+		}
 	}
 	else
 	{
@@ -1000,12 +1013,18 @@ static bool add_alternative_with_subscr(Sentence sent,
 			/* We should not match regexes to stems. */
 			if (boolean_dictionary_lookup(dict, w))
 			{
-				issue_word_alternative(sent, unsplit_word, "AWS",
-				   (prefix ? 1 : 0),&prefix, 1,(const char **)&w, 1,&suffix);
+				word_is_in_dict = true;
+				if (issue_alternatives)
+				{
+					issue_word_alternative(sent, unsplit_word, "AWS",
+					   (prefix ? 1 : 0),&prefix, 1,(const char **)&w, 1,&suffix);
+				}
 			}
 		}
 	}
 
+	lgdebug(+D_SW,"Stem subscript not found: p:%s t:%s s:%s\n",
+	        prefix ? prefix : "(none)", word, suffix ? suffix : "(none)");
 	return word_is_in_dict;
 }
 
@@ -1021,6 +1040,11 @@ static bool add_alternative_with_subscr(Sentence sent,
  * as there can still be no links between some of its parts.
  *
  * The prefix code is only lightly validated by actual use.
+ *
+ * If unsplit_word is null, this function actually only checks whether
+ * the word can split. This is used for checking if a spell guess result is
+ * valid if the word itself is not in the dict. See also
+ * add_alternative_with_subscr().
  */
 static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 {
@@ -1033,7 +1057,6 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 	const Dictionary dict = sent->dict;
 	const char *wend = w + strlen(w);
 	char *newword = alloca(wend-w+1);
-	bool issue_alternatives = (NULL != unsplit_word);
 
 	/* Set up affix tables. */
 	if (NULL == dict->affix_table) return false;
@@ -1079,15 +1102,14 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 				 *
 				 * Note: Not like a previous version, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
-				if ((is_contraction_word(w) && issue_alternatives &&
+				if ((is_contraction_word(w) &&
 				    find_word_in_dict(dict, newword)) ||
 				    boolean_dictionary_lookup(dict, newword))
 				{
-					did_split = issue_alternatives ?
+					did_split = true;
+					word_can_split =
 						add_alternative_with_subscr(sent, unsplit_word,
-						                            NULL, newword, *suffix) :
-						true;
-					word_can_split |= did_split;
+						                            NULL, newword, *suffix);
 				}
 			}
 		}
@@ -1118,10 +1140,9 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 					/* ??? Do we need a regex match? */
 					if (boolean_dictionary_lookup(dict, newword))
 					{
-						word_can_split |= issue_alternatives ?
+						word_can_split =
 							add_alternative_with_subscr(sent, unsplit_word, prefix[j],
-							                            newword, *suffix) :
-							true;
+								                         newword, *suffix);
 					}
 				}
 			}
@@ -1741,8 +1762,6 @@ p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nr
 	*wend = temp_wend;
 	return stripped;
 }
-
-#define D_SW 3
 
 /**
  * Issue an alternative that starts with w and continue with r_stripped[].
