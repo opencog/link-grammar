@@ -145,7 +145,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 	return 0;
 }
 
-void spellcheck_free_suggest(char **sug, int size)
+void spellcheck_free_suggest(void *chk, char **sug, int size)
 {
 	int i = 0;
 	for (i = 0; i < size; ++i) {

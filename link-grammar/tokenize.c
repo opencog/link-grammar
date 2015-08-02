@@ -1527,7 +1527,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 
 		if (num_guesses >= opts->use_spell_guess) break;
 	}
-	if (alternates) spellcheck_free_suggest(alternates, n);
+	if (alternates) spellcheck_free_suggest(dict->spell_checker, alternates, n);
 
 	return ((num_guesses > 0) || (runon_word_corrections > 0));
 }

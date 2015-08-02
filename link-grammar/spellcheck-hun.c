@@ -122,9 +122,9 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 	return Hunspell_suggest((Hunhandle *)chk, sug, word);
 }
 
-void spellcheck_free_suggest(char **sug, int size)
+void spellcheck_free_suggest(void *chk, char **sug, int size)
 {
-	free(sug);
+	Hunspell_free_list((Hunhandle *)chk, &sug, size);
 }
 
 #endif /* #ifdef HAVE_HUNSPELL */
