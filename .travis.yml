@@ -1,0 +1,21 @@
+os:
+  - linux
+
+# Using the container infrastructure.
+sudo: false
+
+cache: apt
+
+before_script:
+    - ./autogen.sh --no-configure
+    - mkdir build
+    - cd build
+    - ../configure
+
+script:
+    - make -j$(nproc)
+    - link-parser/link-parser < ../data/en/4.0.batch
+    - link-parser/link-parser < ../data/en/4.0.fixes.batch
+    - link-parser/link-parser < ../data/en/4.0.biolg.batch
+    - link-parser/link-parser < ../data/lt/4.0.batch
+    - link-parser/link-parser < ../data/ru/4.0.batch
