@@ -31,7 +31,7 @@ static const char *hunspell_dict_dirs[] = {
 	"/usr/share/hunspell",
 	"/usr/local/share/myspell",
 	"/usr/local/share/hunspell",
-	HUNSPELL_DICT_DIR	
+	HUNSPELL_DICT_DIR
 };
 
 static const char *spellcheck_lang_mapping[] = {
