@@ -28,7 +28,8 @@ static const char *spellcheck_lang_mapping[] = {
 	"en", "en_US",
 	"ru", "ru_RU",
 	"he", "he_IL",
-	"de", "de_DE"
+	"de", "de_DE",
+	"lt", "lt_LT",
 };
 
 struct linkgrammar_aspell {

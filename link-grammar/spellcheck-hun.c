@@ -35,8 +35,17 @@ static const char *hunspell_dict_dirs[] = {
 };
 
 static const char *spellcheck_lang_mapping[] = {
-	"en" /* link-grammar language */, "en-US" /* hunspell filename */,
-	"en" /* link-grammar language */, "en_US" /* hunspell filename */
+/* link-grammar language, Hunspell filename */
+	"en", "en-US",
+	"en", "en_US",
+	"ru", "ru-RU",
+	"ru", "ru_RU",
+	"he", "he-IL",
+	"he", "he_IL",
+	"de", "de-DE",
+	"de", "de_DE",
+	"lt", "lt-LT",
+	"lt", "lt_LT",
 };
 
 #define FPATHLEN 256
