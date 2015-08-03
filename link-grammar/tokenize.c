@@ -1441,8 +1441,6 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 }
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-/* TODO Change !spell to be an integer which will be this limit. */
-
 static bool is_known_word(Sentence sent, const char *word)
 {
 	return (boolean_dictionary_lookup(sent->dict, word) ||
