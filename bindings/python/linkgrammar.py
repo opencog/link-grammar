@@ -318,7 +318,7 @@ class Linkage(object):
     def diagram(self, display_walls=False, screen_width=180):
         return clg.linkage_print_diagram(self._obj, display_walls, screen_width)
 
-    def postscript(self, display_walls=True, print_ps_header=0):
+    def postscript(self, display_walls=True, print_ps_header=False):
         return clg.linkage_print_postscript(self._obj, display_walls, print_ps_header)
 
     def senses(self):
