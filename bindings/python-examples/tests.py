@@ -5,7 +5,6 @@
 #
 import os
 import locale
-from itertools import chain
 import unittest
 
 from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary
@@ -508,7 +507,6 @@ class ZRULangTestCase(unittest.TestCase):
         self.assertEqual(linkage.link(5),
                          Link(linkage, 5, '.','RW','RW','RIGHT-WALL'))
 
-
     # Expect morphological splitting to apply.
     def test_d_morphology(self):
         self.po.display_morphology = True
@@ -528,9 +526,9 @@ def linkage_testfile(self, dict, popt):
     parses = open(clg.test_data_srcdir + "parses-" + clg.dictionary_get_lang(dict._obj) + ".txt")
     diagram = None
     sent = None
-    for line in parses :
+    for line in parses:
         # Lines starting with I are the input sentences
-        if 'I' == line[0] :
+        if 'I' == line[0]:
             sent = line[1:]
             diagram = ""
             constituents = ""
@@ -538,22 +536,22 @@ def linkage_testfile(self, dict, popt):
             linkage = linkages.next()
 
         # Generate the next linkage of the last input sentence
-        if 'N' == line[0] :
+        if 'N' == line[0]:
             diagram = ""
             constituents = ""
             linkage = linkages.next()
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
-        if 'O' == line[0] :
+        if 'O' == line[0]:
             diagram += line[1:]
-            if '\n' == line[1] and 1 < len(diagram) :
+            if '\n' == line[1] and 1 < len(diagram):
                 self.assertEqual(linkage.diagram(), diagram)
 
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
-        if 'C' == line[0] :
-            if '\n' == line[1] and 1 < len(constituents) :
+        if 'C' == line[0]:
+            if '\n' == line[1] and 1 < len(constituents):
                 self.assertEqual(linkage.constituent_tree(), constituents)
             constituents += line[1:]
     parses.close()

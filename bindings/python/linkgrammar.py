@@ -13,16 +13,16 @@ __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
 
 class ParseOptions(object):
     def __init__(self, verbosity=0,
-                       linkage_limit=100,
-                       min_null_count=0,
-                       max_null_count=0,
-                       islands_ok=False,
-                       short_length=6,
-                       all_short_connectors=False,
-                       display_morphology=False,
-                       spell_guess=False,
-                       max_parse_time=-1,
-                       disjunct_cost=2.7):
+                 linkage_limit=100,
+                 min_null_count=0,
+                 max_null_count=0,
+                 islands_ok=False,
+                 short_length=6,
+                 all_short_connectors=False,
+                 display_morphology=False,
+                 spell_guess=False,
+                 max_parse_time=-1,
+                 disjunct_cost=2.7):
 
         self._obj = clg.parse_options_create()
         self.verbosity = verbosity
@@ -318,7 +318,7 @@ class Linkage(object):
     def diagram(self, display_walls=False, screen_width=180):
         return clg.linkage_print_diagram(self._obj, display_walls, screen_width)
 
-    def postscript(self, display_walls=True, print_ps_header=0):
+    def postscript(self, display_walls=True, print_ps_header=False):
         return clg.linkage_print_postscript(self._obj, display_walls, print_ps_header)
 
     def senses(self):
@@ -326,7 +326,6 @@ class Linkage(object):
 
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
-
 
 class Sentence(object):
     text = None
@@ -348,8 +347,24 @@ class Sentence(object):
     def split(self):
         return clg.sentence_split(self._obj)
 
-    def parse(self):
-        n = clg.sentence_parse(self._obj, self.parse_options._obj)
-        for i in xrange(n):
-            yield Linkage(i, self, self.parse_options._obj)
+    def num_valid_linkages(self):
+        return clg.sentence_num_valid_linkages(self._obj)
 
+    class sentence_parse(object):
+        def __init__(self, sent):
+            self.sent = sent
+            self.num = 0
+            clg.sentence_parse(sent._obj, sent.parse_options._obj)
+
+        def __iter__(self):
+            return self
+
+        def next(self):
+            if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
+                raise StopIteration()
+            linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
+            self.num += 1
+            return linkage
+
+    def parse(self):
+        return self.sentence_parse(self)
