@@ -349,9 +349,9 @@ void linkage_free_pp_info(Linkage lkg)
 	size_t j;
 	if (!lkg || !lkg->pp_info) return;
 
-	for (j = 0; j < lkg->num_links; ++j)
+	for (j = 0; j < lkg->ppisz; ++j)
 		exfree_domain_names(&lkg->pp_info[j]);
-	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
+	exfree(lkg->pp_info, sizeof(PP_info) * lkg->ppisz);
 	lkg->pp_info = NULL;
 }
 
@@ -374,6 +374,10 @@ void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
 
 	/* The only reason to build the type array is for this function. */
 	build_type_array(postprocessor);
+
+	/* Keep track of pp_info's alloc'ed length, in case linkage->num_links
+	 * shrinks due to discarded ZZZ links (and maybe others). */
+	linkage->ppisz = linkage->num_links;
 
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 
