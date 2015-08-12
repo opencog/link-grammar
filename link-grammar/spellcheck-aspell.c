@@ -28,7 +28,8 @@ static const char *spellcheck_lang_mapping[] = {
 	"en", "en_US",
 	"ru", "ru_RU",
 	"he", "he_IL",
-	"de", "de_DE"
+	"de", "de_DE",
+	"lt", "lt_LT",
 };
 
 struct linkgrammar_aspell {
@@ -145,7 +146,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 	return 0;
 }
 
-void spellcheck_free_suggest(char **sug, int size)
+void spellcheck_free_suggest(void *chk, char **sug, int size)
 {
 	int i = 0;
 	for (i = 0; i < size; ++i) {

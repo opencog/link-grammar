@@ -340,25 +340,8 @@ AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
 
 # ====================================================================
 
-ASpellFound=no
-if test "$do_aspell" = yes ; then
-	PKG_CHECK_MODULES([ASPELL], [aspell], [ASpellFound=yes], [ASpellFound=no])
-	save_cpp_flags=${CPPFLAGS}
-	CPPFLAGS="${CPPFLAGS} ${ASPELL_CFLAGS}"
-	AC_CHECK_HEADER([aspell.h], [ASpellFound=yes], ASpellFound=no)
-	AC_CHECK_LIB(aspell, new_aspell_config, [], [ASpellFound=no])
-	CPPFLAGS=$save_cpp_flags
-	if test  "x${ASpellFound}" = "xyes"; then
-		AC_DEFINE(HAVE_ASPELL, 1, [Define for compilation])
-		AC_SUBST(ASPELL_LIBS)
-		AC_SUBST(ASPELL_CFLAGS)
-
-		# If aspell enabled and found, then do NOT do hunspell
-		do_hunspell=no
-	fi
-fi
-
-AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
+# 2015-08: The current default for speller is hunspell, since aspell is not
+# yet thread safe.
 
 HunSpellDictDir=
 HunSpellFound=no
@@ -386,11 +369,31 @@ if test x"$do_hunspell" = xyes; then
 			echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
+
+		# If hunspell enabled and found, then do NOT do aspell
+		do_aspell=no
 	fi
 
 fi
 
 AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
+
+ASpellFound=no
+if test "$do_aspell" = yes ; then
+	PKG_CHECK_MODULES([ASPELL], [aspell], [ASpellFound=yes], [ASpellFound=no])
+	save_cpp_flags=${CPPFLAGS}
+	CPPFLAGS="${CPPFLAGS} ${ASPELL_CFLAGS}"
+	AC_CHECK_HEADER([aspell.h], [ASpellFound=yes], ASpellFound=no)
+	AC_CHECK_LIB(aspell, new_aspell_config, [], [ASpellFound=no])
+	CPPFLAGS=$save_cpp_flags
+	if test  "x${ASpellFound}" = "xyes"; then
+		AC_DEFINE(HAVE_ASPELL, 1, [Define for compilation])
+		AC_SUBST(ASPELL_LIBS)
+		AC_SUBST(ASPELL_CFLAGS)
+	fi
+fi
+
+AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
 
 # ====================================================================
 
