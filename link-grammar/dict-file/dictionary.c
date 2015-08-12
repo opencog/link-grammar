@@ -100,7 +100,7 @@ static void affix_list_add(Dictionary afdict, Afdict_class * ac,
 
 static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 {
-	Dict_node * dnx = NULL;	
+	Dict_node * dnx = NULL;
 	for (; NULL != dn; dn = dnx)
 	{
 		char *string;
@@ -153,7 +153,7 @@ static int revcmplen(const void *a, const void *b)
 /**
  * Traverse the main dict in dictionary order, and extract all the suffixes
  * and prefixes - every time we see a new suffix/prefix (the previous one is
- * remembered by w_last), we save it in the the corresponding affix-class list.
+ * remembered by w_last), we save it in the corresponding affix-class list.
  * The saved affixes don't include the infix mark.
  *
  * The empty word is not an affix so it is ignored.
@@ -310,11 +310,14 @@ static bool afdict_init(Dictionary dict)
 	}
 	/* XXX For now there is a possibility to use predefined SUF and PRE lists.
 	 * So if SUF or PRE are defined, don't extract any of them from the dict. */
-	if (1 == ac->length && (0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
-			                 (0 == AFCLASS(afdict, AFDICT_SUF)->length))
+	if (1 == ac->length)
 	{
-		char last_entry[MAX_WORD+1] = "";
-		get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+		if ((0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
+		    (0 == AFCLASS(afdict, AFDICT_SUF)->length))
+		{
+			char last_entry[MAX_WORD+1] = "";
+			get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+		}
 	}
 	else
 	{
