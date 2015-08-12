@@ -11,7 +11,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 %nouns: man, woman, kid, apple
 adam kadın çocuk elma: {W-} & {@A-} & {Ds-} & {O+} & (({SJl+} & {SJr-}) or {S3s+});
- 
+
 %pronouns: I, thou, he/she, we, you, they
 ben :   {W-} & (({SJl+} & {SJr-}) or {S1s+});
 sen :   {W-} & (({SJl+} & {SJr-}) or {S2s+});
@@ -25,7 +25,7 @@ onlar : {W-} & (({SJl+} & {SJr-}) or {S3p+});
 adamlar : {W-} & {@A-} & {Ds-} & {O+} & (({SJl+} & {SJr-}) or {S3p+});
 
 %determiners (most of, some, every
-çoğu : Ds+; 
+çoğu : Ds+;
 bazı: Dmc+ ;
 her.d bir.d : Ds+ ;
 
@@ -33,7 +33,7 @@ her.d bir.d : Ds+ ;
 çok.ad : {W-} & EA+;
 
 %verbs: come, finish
-gel.= bitir.= ye.=: W- & ({VJl+} & {VJr-}) & (VPast+ or VPres+ or VImp+);
+gel.= bitir.= ye.=: {W-} & ({VJl+} & {VJr-}) & (VPast+ or VPres+ or VImp+);
 
 %transitive verbs: eat
 % ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
@@ -54,9 +54,9 @@ ve.j-n: {W-} & {A-} & SJl- & SJr+ & {S3p+}  ;
 ve.j-a: {W-} & AJl- & AJr+ & {A+} ;
 ve.j-v: {W-} & VJl- & VJr+ & {S-} ;
 
-%punctuations 
-",": (SJl- & SJr+ & SJl+ ) 
-   or (AJl- & AJr+ & AJl+) 
+%punctuations
+",": (SJl- & SJr+ & SJl+ )
+   or (AJl- & AJr+ & AJl+)
    or (VJl- & VJr+ & VJl+) ;
 %",": Xc- & Xd+;
 

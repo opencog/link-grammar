@@ -1,8 +1,15 @@
+!batch
+!verbosity=1
+!echo
+!limit=1000
+!morphology=1
+!spell=0
+
 % man came
 adam geldi
 % men came (colloquial)
 adamlar geldi
-% men came 
+% men came
 adamlar geldiler
 % man and woman came
 adam ve kadın geldi
@@ -23,11 +30,8 @@ onlar geldiler
 %They came (colloquial) (doesn't parse as it should)
 onlar geldi
 % man came and finished (doesn't parse as it should)
-adam geldi ve bitirdi 
+adam geldi ve bitirdi
 % man ate (how can I make the man-ate link be preferntially subject and not object)
-adam yedi 
+adam yedi
 % man ate apple (doesn't parse as it should)
 adam elma yedi
-
- 
-
