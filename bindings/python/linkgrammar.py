@@ -347,8 +347,24 @@ class Sentence(object):
     def split(self):
         return clg.sentence_split(self._obj)
 
-    def parse(self):
-        n = clg.sentence_parse(self._obj, self.parse_options._obj)
-        for i in xrange(n):
-            yield Linkage(i, self, self.parse_options._obj)
+    def num_valid_linkages(self):
+        return clg.sentence_num_valid_linkages(self._obj)
 
+    class sentence_parse(object):
+        def __init__(self, sent):
+            self.sent = sent
+            self.num = 0
+            clg.sentence_parse(sent._obj, sent.parse_options._obj)
+
+        def __iter__(self):
+            return self
+
+        def next(self):
+            if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
+                raise StopIteration()
+            linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
+            self.num += 1
+            return linkage
+
+    def parse(self):
+        return self.sentence_parse(self)
