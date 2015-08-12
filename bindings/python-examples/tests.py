@@ -5,7 +5,6 @@
 #
 import os
 import locale
-from itertools import chain
 import unittest
 
 from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary
