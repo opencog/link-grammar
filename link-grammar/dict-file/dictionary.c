@@ -310,11 +310,14 @@ static bool afdict_init(Dictionary dict)
 	}
 	/* XXX For now there is a possibility to use predefined SUF and PRE lists.
 	 * So if SUF or PRE are defined, don't extract any of them from the dict. */
-	if (1 == ac->length && (0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
-			                 (0 == AFCLASS(afdict, AFDICT_SUF)->length))
+	if (1 == ac->length)
 	{
-		char last_entry[MAX_WORD+1] = "";
-		get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+		if ((0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
+		    (0 == AFCLASS(afdict, AFDICT_SUF)->length))
+		{
+			char last_entry[MAX_WORD+1] = "";
+			get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+		}
 	}
 	else
 	{
