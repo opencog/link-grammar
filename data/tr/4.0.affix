@@ -11,3 +11,4 @@
 
 =: INFIXMARK+;
 /tr/suff-list: SUF+;
+.=: STEMSUBSCR+;
