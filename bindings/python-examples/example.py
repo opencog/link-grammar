@@ -21,20 +21,22 @@ def desc(linkage):
 
 
 # English is the default language
-linkages = Sentence("This is a test.", Dictionary(), po).parse()
-print "English: found ", len(linkages), "linkages"
+sent = Sentence("This is a test.", Dictionary(), po)
+linkages = sent.parse()
+print "English: found ", sent.num_valid_linkages(), "linkages"
 for linkage in linkages:
     desc(linkage)
 
 # Russian
-linkages = Sentence("это большой тест.", Dictionary('ru'), po).parse()
-print "Russian: found ", len(linkages), "linkages"
+sent = Sentence("это большой тест.", Dictionary('ru'), po)
+linkages = sent.parse()
+print "Russian: found ", sent.num_valid_linkages(), "linkages"
 for linkage in linkages:
     desc(linkage)
 
 # Turkish
-linkages = Sentence("çok şişman adam geldi", Dictionary('tr'), po).parse()
-print "Turkish: found ", len(linkages), "linkages"
+sent = Sentence("çok şişman adam geldi", Dictionary('tr'), po)
+linkages = sent.parse()
+print "Turkish: found ", sent.num_valid_linkages(), "linkages"
 for linkage in linkages:
     desc(linkage)
-
