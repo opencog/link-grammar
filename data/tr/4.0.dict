@@ -33,7 +33,7 @@ her.d bir.d : Ds+ ;
 çok.ad : {W-} & EA+;
 
 %verbs: come, finish
-gel.= bitir.= ye.=: W- & ({VJl+} & {VJr-}) & (VPast+ or VPres+ or VImp+);
+gel.= bitir.= ye.=: {W-} & ({VJl+} & {VJr-}) & (VPast+ or VPres+ or VImp+);
 
 %transitive verbs: eat
 % ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
