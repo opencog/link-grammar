@@ -13,16 +13,16 @@ __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
 
 class ParseOptions(object):
     def __init__(self, verbosity=0,
-                       linkage_limit=100,
-                       min_null_count=0,
-                       max_null_count=0,
-                       islands_ok=False,
-                       short_length=6,
-                       all_short_connectors=False,
-                       display_morphology=False,
-                       spell_guess=False,
-                       max_parse_time=-1,
-                       disjunct_cost=2.7):
+                 linkage_limit=100,
+                 min_null_count=0,
+                 max_null_count=0,
+                 islands_ok=False,
+                 short_length=6,
+                 all_short_connectors=False,
+                 display_morphology=False,
+                 spell_guess=False,
+                 max_parse_time=-1,
+                 disjunct_cost=2.7):
 
         self._obj = clg.parse_options_create()
         self.verbosity = verbosity
@@ -326,7 +326,6 @@ class Linkage(object):
 
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
-
 
 class Sentence(object):
     text = None
