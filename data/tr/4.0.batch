@@ -1,3 +1,10 @@
+!batch
+!verbosity=1
+!echo
+!limit=1000
+!morphology=1
+!spell=0
+
 % man came
 adam geldi
 % men came (colloquial)
