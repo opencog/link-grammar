@@ -362,6 +362,12 @@ class Sentence(object):
     def num_valid_linkages(self):
         return clg.sentence_num_valid_linkages(self._obj)
 
+    def num_linkages_found(self):
+        return clg.sentence_num_linkages_found(self._obj)
+
+    def num_linkages_post_processed(self):
+        return clg.sentence_num_linkages_post_processed(self._obj)
+
     class sentence_parse(object):
         def __init__(self, sent):
             self.sent = sent
