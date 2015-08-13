@@ -344,8 +344,10 @@ class Sentence(object):
             clg.sentence_delete(self._obj)
             del self._obj
 
-    def split(self):
-        return clg.sentence_split(self._obj)
+    def split(self, parse_options=None):
+        if not parse_options:
+            parse_options = self.parse_options
+        return clg.sentence_split(self._obj, parse_options._obj)
 
     def num_valid_linkages(self):
         return clg.sentence_num_valid_linkages(self._obj)
