@@ -328,14 +328,24 @@ class Linkage(object):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
 class Sentence(object):
+    """
+    sent = Sentence("This is a test.", Dictionary(), ParseOptions())
+    # split() before parse() is optional.
+    # split() has ParseOptions as an optional argument
+    # (defaults to that of Sentence)
+    if sent.split(ParseOptions(verbosity=2)) < 0:
+        print "Cannot split sentence"
+    else
+        linkages = sent.parse()
+        print "English: found ", sent.num_valid_linkages(), "linkages"
+        for linkage in linkages:
+            print linkage.diagram()
+    """
     text = None
     dict = None
     parse_options = None
 
     def __init__(self, text, dict, parse_options):
-        """
-        In python 2.x, txt should be unicode string like u'Bo-bo-bo'
-        """
         self.text, self.dict, self.parse_options = text, dict, parse_options  # keep all args passed into clg.* fn
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
@@ -344,11 +354,19 @@ class Sentence(object):
             clg.sentence_delete(self._obj)
             del self._obj
 
-    def split(self):
-        return clg.sentence_split(self._obj)
+    def split(self, parse_options=None):
+        if not parse_options:
+            parse_options = self.parse_options
+        return clg.sentence_split(self._obj, parse_options._obj)
 
     def num_valid_linkages(self):
         return clg.sentence_num_valid_linkages(self._obj)
+
+    def num_linkages_found(self):
+        return clg.sentence_num_linkages_found(self._obj)
+
+    def num_linkages_post_processed(self):
+        return clg.sentence_num_linkages_post_processed(self._obj)
 
     class sentence_parse(object):
         def __init__(self, sent):
