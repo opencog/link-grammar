@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf8 -*-
 #
-# Link Grammar example usage 
+# Link Grammar example usage
 #
 import locale
 
@@ -13,10 +13,10 @@ locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 po = ParseOptions()
 
-def desc(linkage):
-    print linkage.diagram()
+def desc(lkg):
+    print lkg.diagram()
     print 'Postscript:'
-    print linkage.postscript()
+    print lkg.postscript()
     print '---'
 
 
