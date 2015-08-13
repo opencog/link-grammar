@@ -330,7 +330,10 @@ class Linkage(object):
 class Sentence(object):
     """
     sent = Sentence("This is a test.", Dictionary(), ParseOptions())
-    if sent.split(ParseOptions(verbosity=2)) < 0: # split() before parse() is optional
+    # split() before parse() is optional.
+    # split() has ParseOptions as an optional argument
+    # (defaults to that of Sentence)
+    if sent.split(ParseOptions(verbosity=2)) < 0:
         print "Cannot split sentence"
     else
         linkages = sent.parse()
