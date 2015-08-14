@@ -15,11 +15,8 @@ RUN apt-get update
 RUN apt-get -y install git vim rlwrap
 
 # Build tools
-RUN apt-get -y install autoconf-archive
-RUN apt-get -y install gcc g++ make
-RUN apt-get -y install libtool
-RUN apt-get -y install libgc-dev
-
+RUN apt-get -y install autoconf-archive gcc g++ make libtool libgc-dev \
+                       pkg-config
 
 # Create and switch user. The user is privileged with no password required
 # Becareful with this one on sharing volume. Only mount user-space directories.
