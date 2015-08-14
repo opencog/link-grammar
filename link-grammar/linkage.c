@@ -133,10 +133,10 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  * below, we remove them from the linkage, as well as the links that
  * connect to them.
  *
- * The empty word device must be defined in the dictionary of every language for
- * which alternatives can be generated. This may happen in case of morpheme and
- * contraction splitting, spell ->regex_names, and unit-strip.
- * For more information, see EMPTY_WORD.zzz in the dict file.
+ * When the word-graph is converted ("flattened") to the 2D array used by
+ * the parser, empty words are issued whenever needed.  This essentially
+ * means that the empty word (EMPTY-WORD.zzz) must be defined in the
+ * dictionary of every language.
  */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
