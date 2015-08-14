@@ -466,7 +466,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			if (!join_alt) gwordlist_append(&n_lwg_path, *wgp);
 
 			/*
-			 * Add ->regex_name marks in [] if needed, at the end of the base word.
+			 * Add guess marks in [] if needed, at the end of the base word.
 			 * Convert the badly-printing ^C into a period.
 			 */
 			if (t)
