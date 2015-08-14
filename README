@@ -3,7 +3,6 @@
                        -------------------
                           Version 5.3.0
 
-[![Build Status](https://travis-ci.org/opencog/link-grammar.svg?branch=master)](https://travis-ci.org/opencog/link-grammar)
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -1397,3 +1396,6 @@ However, the few tracts, the poetry, and the novels that embodied the social vis
 
 73 words + 8 punct: 145 seconds
 Cortes in his various letters again and again claims the Emperor's patronage of his bold defiance of the Emperor's officers on the ground that the latter in their action were moved solely by considerations of their personal gain, whereas he, Cortes, was striving to endow his sovereign with a rich new empire and boundless treasure whilst carrying into the dark pagan land, at the sword's point, the gentle creed of the Christian God.
+
+
+
