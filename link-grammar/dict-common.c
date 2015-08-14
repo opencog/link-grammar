@@ -333,6 +333,7 @@ static void affix_list_delete(Dictionary dict)
 		if (atc->string) free(atc->string);
 	}
 	free(dict->afdict_class);
+	dict->afdict_class = NULL;
 }
 
 void dictionary_delete(Dictionary dict)
