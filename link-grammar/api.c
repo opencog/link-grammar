@@ -718,7 +718,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 
 		/* XXX There is no need to set the domain names if we are not
-		 * printing them. However, defering this until later requires
+		 * printing them. However, deferring this until later requires
 		 * a huge code re-org, because the needed info is discarded
 		 * much too soon. This costs about 1% performance penalty. */
 		linkage_set_domain_names(sent->postprocessor, lkg);
@@ -1081,13 +1081,13 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  * FIXME? In this version of the function, 'b' is not yet supported,
  * so "w|ts" is converted to "^(w|ts)+$" for now. */
 
-#define AFFIXTYPE_PREFIX	'p'	/* prefix */
-#define AFFIXTYPE_STEM		't'	/* stem */
-#define AFFIXTYPE_SUFFIX	's'	/* suffix */
-#define AFFIXTYPE_MIDDLE	'm'	/* middle morpheme */
-#define AFFIXTYPE_WORD		'w'	/* regular word */
+#define AFFIXTYPE_PREFIX   'p'   /* prefix */
+#define AFFIXTYPE_STEM     't'   /* stem */
+#define AFFIXTYPE_SUFFIX   's'   /* suffix */
+#define AFFIXTYPE_MIDDLE   'm'   /* middle morpheme */
+#define AFFIXTYPE_WORD     'w'   /* regular word */
 #ifdef WORD_BOUNDARIES
-#define AFFIXTYPE_END		'b'	/* end of input word */
+#define AFFIXTYPE_END      'b'   /* end of input word */
 #endif
 
 /**

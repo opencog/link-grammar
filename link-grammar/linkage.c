@@ -40,7 +40,7 @@
  * join_buff is a zeroed-out buffer which has enough room for morpheme to be
  * added + terminating NUL.
  * In case INFIXMARK is not defined in the affix file, it is '\0'. However,
- * in that case are no MT_PREFIX, MT_SUFFIX and MT_MIDDLE morpheme types.
+ * in that case there are no MT_PREFIX, MT_SUFFIX and MT_MIDDLE morpheme types.
  *
  * FIXME Combining contracted words is not handled yet, because combining
  * morphemes which have non-LL links to other words is not yet implemented.
@@ -214,8 +214,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		size_t m;
 
 		lgdebug(D_CCW, "Loop start, word%zu: cdj %s, path %s\n",
-				  i, cdj ? cdj->string : "NULL",
-				  lwg_path[i] ? lwg_path[i]->subword : "NULL");
+		        i, cdj ? cdj->string : "NULL",
+		        lwg_path[i] ? lwg_path[i]->subword : "NULL");
 
 		w = lwg_path[i];
 		nw = lwg_path[i+1];
@@ -264,7 +264,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					lgdebug(D_CCW, "Combining null subwords");
 					/* Use alternative_id to check for start of alternative. */
 					if (((*nullblock_start)->alternative_id == *nullblock_start)
-								&& nb_end)
+					    && nb_end)
 					{
 						/* Case 2: A null unsplit_word (all-nulls alternative).*/
 						lgdebug(D_CCW, " (null alternative)\n");
@@ -692,7 +692,7 @@ size_t linkage_get_num_links(const Linkage linkage)
 static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 {
 	if (!linkage) return false;
-	if	(index >= linkage->num_links) return false;
+	if (index >= linkage->num_links) return false;
 	return true;
 }
 
