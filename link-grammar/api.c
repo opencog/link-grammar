@@ -657,6 +657,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
+
 		if (lifo->discarded || lifo->N_violations) continue;
 
 		partial_init_linkage(lkg, pi->N_words);
@@ -691,8 +692,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			Linkage lkg = &sent->lnkages[in];
 			Linkage_info *lifo = &lkg->lifo;
-			if (lifo->discarded) continue;
-			if (lifo->N_violations) continue;
+
+			if (lifo->discarded || lifo->N_violations) continue;
 
 			post_process_scan_linkage(sent->postprocessor, lkg);
 
@@ -707,7 +708,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded) continue; /* Invalid morphism construction */
+		if (lifo->discarded || lifo->N_violations) continue;
 
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 
@@ -743,7 +744,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
-		if (lifo->discarded) continue;
+
+		if (lifo->discarded || lifo->N_violations) continue;
+
 		N_valid_linkages--;
 		lifo->N_violations++;
 
