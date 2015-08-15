@@ -7972,17 +7972,17 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 <paraph-null>: [()];
 
 <vc-paraph>:
-  {@MV+} & (((Xd- or Xq-) & (Xp+ or <paraph-null>)
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
     [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-paraph-inv>:
-  {@MV+} & (((Xd- or Xq-) & (Xp+ or <paraph-null>)
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-it-paraph>:
-  {@MV+} & (Xd- or Xq-) & (Xp+ or <paraph-null>)
+  {@MV+} & (Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
     & (COqi+ or (CPi- & {CC+}) or Eqi+ or <verb-wall>);
 
 % paraphrasing verbs like "say", "reply"
