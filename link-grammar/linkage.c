@@ -35,6 +35,10 @@
 #define INFIX_MARK_L 1 /* INFIX_MARK is 1 character */
 #define STEM_MARK_L  1 /* stem mark is 1 character */
 
+/* Marks around a null word. */
+#define NULLWORD_START '['
+#define NULLWORD_END   ']'
+
 /**
  * Append an unmarked (i.e. without INFIXMARK) morpheme to join_buff.
  * join_buff is a zeroed-out buffer which has enough room for morpheme to be
@@ -327,9 +331,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				/* Put brackets around the null word. */
 				l = strlen(t) + 2;
 				s = (char *) alloca(l+1);
-				s[0] = '[';
+				s[0] = NULLWORD_START;
 				strcpy(&s[1], t);
-				s[l-1] = ']';
+				s[l-1] = NULLWORD_END;
 				s[l] = '\0';
 				t = string_set_add(s, sent->string_set);
 				lgdebug(D_CCW, " %s\n", t);
