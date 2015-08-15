@@ -591,6 +591,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 	}
 
+	/* If morphology printing is being suppressed, then all links
+	 * connecting morphemes will be discarded. */
 	if (HIDE_MORPHO)
 	{
 		/* Discard morphology links. */
