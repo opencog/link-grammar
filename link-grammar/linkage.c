@@ -358,9 +358,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		{
 			/* This word has a linkage. */
 
-			/* FIXME If the original word was capitalized in a capitalizable
-			 * position, the displayed word may be its downcase version. */
-
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
