@@ -33,10 +33,10 @@ her.d bir.d : Ds+ ;
 çok.ad : {W-} & EA+;
 
 %verbs: come, finish
-gel.= bitir.= ye.=: {W-} & ({VJl+} & {VJr-}) & (VPast+ or VPres+ or VImp+);
+gel.= bitir.=: {W-} & {VJr-} & (VPast+ or VPres+ or VImp+) & {VJl+};
 
 %transitive verbs: eat
-% ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
+ye.=:{W-} & {VJr-} & (VPast+ or VPres+ or VImp+) & {VJl+} & {O-};
 
 %verb suffixes: past tense, present cont., imperative
 =dim.past1s: {VPast-} & {S1s-};
