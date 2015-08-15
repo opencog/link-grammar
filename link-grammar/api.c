@@ -661,6 +661,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 
 		partial_init_linkage(lkg, pi->N_words);
 		extract_links(lkg, pi);
+		compute_link_names(lkg, sent->string_set);
 		/* Because the empty words are used only in the parsing stage, they are
 		 * removed here along with their links, so from now on we will not need to
 		 * consider them. */
@@ -691,10 +692,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			Linkage lkg = &sent->lnkages[in];
 			Linkage_info *lifo = &lkg->lifo;
 			if (lifo->discarded) continue;
-
-			/* We still need link names, even if there has been a morfo
-			 * violation. */
-			compute_link_names(lkg, sent->string_set);
 			if (lifo->N_violations) continue;
 
 			post_process_scan_linkage(sent->postprocessor, lkg);
@@ -711,9 +708,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage_info *lifo = &lkg->lifo;
 
 		if (lifo->discarded) continue; /* Invalid morphism construction */
-
-		/* We need link names, even if morfo check fails */
-		if (!twopass) compute_link_names(lkg, sent->string_set);
 
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 
@@ -750,7 +744,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 		if (lifo->discarded) continue;
-		if (!twopass) compute_link_names(lkg, sent->string_set);
 		N_valid_linkages--;
 		lifo->N_violations++;
 
