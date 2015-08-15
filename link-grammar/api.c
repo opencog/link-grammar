@@ -624,26 +624,7 @@ static void remove_empty_words(Linkage lkg)
 		print_chosen_disjuncts_words(lkg);
 	}
 
-	for (i = 0, j = 0; i < lkg->num_links; i++)
-	{
-		const Link *old_lnk = &(lkg->link_array[i]);
-
-		if ((-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
-		{
-			Link *new_lnk = &(lkg->link_array[j]);
-
-			/* Copy the entire link contents, thunking the word numbers.
-			 * Note that j is always <= i so this is always safe. */
-			new_lnk->lw = remap[old_lnk->lw];
-			new_lnk->rw = remap[old_lnk->rw];
-			new_lnk->lc = old_lnk->lc;
-			new_lnk->rc = old_lnk->rc;
-			new_lnk->link_name = old_lnk->link_name;
-			j++;
-		}
-	}
-	lkg->num_links = j;
-	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
 
 /** The extract_links() call sets the chosen_disjuncts array */
