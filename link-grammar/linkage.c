@@ -339,16 +339,19 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				nbsize = 0;
 				show_word[i] = true;
 
-				/* Put brackets around the null word. */
-				l = strlen(t) + 2;
-				s = (char *) alloca(l+1);
-				s[0] = NULLWORD_START;
-				strcpy(&s[1], t);
-				s[l-1] = NULLWORD_END;
-				s[l] = '\0';
-				t = string_set_add(s, sent->string_set);
-				lgdebug(D_CCW, " %s\n", t);
-				/* Null words have no links, so take care not to drop them. */
+				if (MT_WALL != w->morpheme_type)
+				{
+					/* Put brackets around the null word. */
+					l = strlen(t) + 2;
+					s = (char *) alloca(l+1);
+					s[0] = NULLWORD_START;
+					strcpy(&s[1], t);
+					s[l-1] = NULLWORD_END;
+					s[l] = '\0';
+					t = string_set_add(s, sent->string_set);
+					lgdebug(D_CCW, " %s\n", t);
+					/* Null words have no links, so take care not to drop them. */
+				}
 			}
 		}
 		else
@@ -576,15 +579,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 		assert(t != NULL, "Word %zu: NULL", i);
 		chosen_words[i] = t;
-	}
-
-	if (sent->dict->left_wall_defined)
-	{
-		chosen_words[0] = LEFT_WALL_DISPLAY;
-	}
-	if (sent->dict->right_wall_defined)
-	{
-		chosen_words[linkage->num_words-1] = RIGHT_WALL_DISPLAY;
 	}
 
 	/* Conditional test removal of quotation marks and the "capdict" tokens,
