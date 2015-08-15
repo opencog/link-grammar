@@ -624,26 +624,7 @@ static void remove_empty_words(Linkage lkg)
 		print_chosen_disjuncts_words(lkg);
 	}
 
-	for (i = 0, j = 0; i < lkg->num_links; i++)
-	{
-		const Link *old_lnk = &(lkg->link_array[i]);
-
-		if ((-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
-		{
-			Link *new_lnk = &(lkg->link_array[j]);
-
-			/* Copy the entire link contents, thunking the word numbers.
-			 * Note that j is always <= i so this is always safe. */
-			new_lnk->lw = remap[old_lnk->lw];
-			new_lnk->rw = remap[old_lnk->rw];
-			new_lnk->lc = old_lnk->lc;
-			new_lnk->rc = old_lnk->rc;
-			new_lnk->link_name = old_lnk->link_name;
-			j++;
-		}
-	}
-	lkg->num_links = j;
-	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
 
 /** The extract_links() call sets the chosen_disjuncts array */
@@ -657,10 +638,12 @@ static void compute_chosen_disjuncts(Sentence sent)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
+
 		if (lifo->discarded || lifo->N_violations) continue;
 
 		partial_init_linkage(lkg, pi->N_words);
 		extract_links(lkg, pi);
+		compute_link_names(lkg, sent->string_set);
 		/* Because the empty words are used only in the parsing stage, they are
 		 * removed here along with their links, so from now on we will not need to
 		 * consider them. */
@@ -690,12 +673,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			Linkage lkg = &sent->lnkages[in];
 			Linkage_info *lifo = &lkg->lifo;
-			if (lifo->discarded) continue;
 
-			/* We still need link names, even if there has been a morfo
-			 * violation. */
-			compute_link_names(lkg, sent->string_set);
-			if (lifo->N_violations) continue;
+			if (lifo->discarded || lifo->N_violations) continue;
 
 			post_process_scan_linkage(sent->postprocessor, lkg);
 
@@ -710,15 +689,12 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded) continue; /* Invalid morphism construction */
-
-		/* We need link names, even if morfo check fails */
-		if (!twopass) compute_link_names(lkg, sent->string_set);
+		if (lifo->discarded || lifo->N_violations) continue;
 
 		ppn = do_post_process(sent->postprocessor, lkg, twopass);
 
 		/* XXX There is no need to set the domain names if we are not
-		 * printing them. However, defering this until later requires
+		 * printing them. However, deferring this until later requires
 		 * a huge code re-org, because the needed info is discarded
 		 * much too soon. This costs about 1% performance penalty. */
 		linkage_set_domain_names(sent->postprocessor, lkg);
@@ -749,8 +725,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
-		if (lifo->discarded) continue;
-		if (!twopass) compute_link_names(lkg, sent->string_set);
+
+		if (lifo->discarded || lifo->N_violations) continue;
+
 		N_valid_linkages--;
 		lifo->N_violations++;
 
@@ -780,7 +757,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
-#if 0
+#ifdef DEBUG
 	/* num_linkages_post_processed sanity check (ONLY). */
 	{
 		size_t in;
@@ -1081,13 +1058,13 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  * FIXME? In this version of the function, 'b' is not yet supported,
  * so "w|ts" is converted to "^(w|ts)+$" for now. */
 
-#define AFFIXTYPE_PREFIX	'p'	/* prefix */
-#define AFFIXTYPE_STEM		't'	/* stem */
-#define AFFIXTYPE_SUFFIX	's'	/* suffix */
-#define AFFIXTYPE_MIDDLE	'm'	/* middle morpheme */
-#define AFFIXTYPE_WORD		'w'	/* regular word */
+#define AFFIXTYPE_PREFIX   'p'   /* prefix */
+#define AFFIXTYPE_STEM     't'   /* stem */
+#define AFFIXTYPE_SUFFIX   's'   /* suffix */
+#define AFFIXTYPE_MIDDLE   'm'   /* middle morpheme */
+#define AFFIXTYPE_WORD     'w'   /* regular word */
 #ifdef WORD_BOUNDARIES
-#define AFFIXTYPE_END		'b'	/* end of input word */
+#define AFFIXTYPE_END      'b'   /* end of input word */
 #endif
 
 /**
