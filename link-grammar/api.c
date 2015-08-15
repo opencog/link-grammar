@@ -776,7 +776,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
-#if 0
+#ifdef DEBUG
 	/* num_linkages_post_processed sanity check (ONLY). */
 	{
 		size_t in;
