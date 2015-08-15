@@ -153,6 +153,13 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 /* TODO? !display_guess_marks is not implemented. */
 #define DISPLAY_GUESS_MARKS true // (opts->display_guess_marks)
 
+/* FIXME: Define an affix class MORPHOLOGY_LINKS. */
+static inline bool is_morphology_link(const char *link_name)
+{
+	return (NULL != link_name) &&
+	        (0 == strncmp(link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
+}
+
 /*
  * Remap the link array according to discarded words.
  * The remap[] elements indicate the new WordIdx of the word.
@@ -216,7 +223,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	WordIdx j;
 	Disjunct **cdjp = linkage->chosen_disjuncts;
 	const char **chosen_words = alloca(linkage->num_words * sizeof(*chosen_words));
-	size_t *remap = alloca(linkage->num_words * sizeof(*remap));
+	int *remap = alloca(linkage->num_words * sizeof(*remap));
+	bool *show_word = alloca(linkage->num_words * sizeof(*show_word));
 	bool display_morphology = opts->display_morphology;
 
 	Gword **lwg_path = linkage->wg_path;
@@ -232,6 +240,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
 	size_t nbsize = 0;              /* number of word in a null block */
 	Gword *unsplit_word = NULL;
+
+	memset(show_word, 0, linkage->num_words * sizeof(*show_word));
 
 	if (D_CCW <= opts->verbosity)
 		print_lwg_path(lwg_path);
@@ -327,6 +337,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 				nullblock_start = NULL;
 				nbsize = 0;
+				show_word[i] = true;
 
 				/* Put brackets around the null word. */
 				l = strlen(t) + 2;
@@ -337,6 +348,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				s[l] = '\0';
 				t = string_set_add(s, sent->string_set);
 				lgdebug(D_CCW, " %s\n", t);
+				/* Null words have no links, so take care not to drop them. */
 			}
 		}
 		else
@@ -450,13 +462,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 								{
 									sm += 1 + STEM_MARK_L; /* sm+strlen(".=") */
 									if ('\0' == *sm) sm = NULL;
-									/* FIXME: By NULLifying the stem subword here, we
-									 * suppose thats a stem has only LL-type link, which
-									 * will get removed here later. In case it has non-LL
-									 * links, then drawing the links diagram would
-									 * segfault. We could use " " but it draws an
-									 * extra blank in the diagram. */
-									chosen_words[i+m] = NULL;
 #if 0
 									if ((cnt-1) == m)
 									{
@@ -595,86 +600,48 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		}
 	}
 
+	if (HIDE_MORPHO)
+	{
+		/* Discard morphology links. */
+		for (i=0; i<linkage->num_links; i++)
+		{
+			Link * lnk = &linkage->link_array[i];
+
+			if (is_morphology_link(lnk->link_name))
+			{
+				/* Mark link for discarding. */
+				lnk->link_name = NULL;
+			}
+			else
+			{
+				/* Mark word for not discarding. */
+				show_word[lnk->rw] = true;
+				show_word[lnk->lw] = true;
+			}
+		}
+	}
+
 	/* We alloc a little more than needed, but so what... */
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 
 	/* Copy over the chosen words, dropping the discarded words. */
 	for (i=0, j=0; i<linkage->num_words; ++i)
 	{
-		if (chosen_words[i])
+		if (chosen_words[i] && (!HIDE_MORPHO || show_word[i]))
 		{
 			linkage->word[j] = chosen_words[i];
 			remap[i] = j;
 			j++;
 		}
+		else
+		{
+			remap[i] = -1;
+		}
 	}
 	linkage->num_words = j;
 
-#if 0
-	/* Now, discard links to the empty word.  If morphology printing
-	 * is being suppressed, then all links connecting morphemes will
-	 * be discarded as well.
-	 */
-	for (i=0, j=0; i<linkage->num_links; i++)
-	{
-		Link * lnk = &(linkage->link_array[i]);
-		if (NULL == chosen_words[lnk->lw] ||
-		    NULL == chosen_words[lnk->rw])
-		{
-			bool sane = (0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS));
-			sane = sane || (HIDE_MORPHO &&
-			     0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
-			assert(sane, "Something wrong with linkage processing");
-		}
-		else
-		{
-			/* Copy the entire link contents, thunking the word numbers.
-			 * Note that j is always <= i so this is always safe. */
-			linkage->link_array[j].lw = remap[lnk->lw];
-			linkage->link_array[j].rw = remap[lnk->rw];
-			linkage->link_array[j].lc = linkage->link_array[i].lc;
-			linkage->link_array[j].rc = linkage->link_array[i].rc;
-			linkage->link_array[j].link_name = linkage->link_array[i].link_name;
-			j++;
-		}
-	}
-	linkage->num_links = j;
-#else
-	/* A try to be more general (FIXME: It is not enough).
-	 * Discard the LL links unconditionally.
-	 * The NULL||'\0'||' ' is to allow easy feature experiments.
-	 * FIXME: Define an affix class MORPHOLOGY_LINKS. */
-	for (i=0, j=0; i<linkage->num_links; i++)
-	{
-		Link *old_lnk = &(linkage->link_array[i]);
-		const char *lcw = chosen_words[old_lnk->lw];
-		const char *rcw = chosen_words[old_lnk->rw];
+	remap_linkages(linkage, remap); /* Update linkage->link_array / num_links. */
 
-		if (((NULL == lcw) || ('\0' == *lcw) || (' ' == *lcw) ||
-			 (NULL == rcw) || ('\0' == *rcw) || (' ' == *rcw)) &&
-			 ((0 == strcmp(old_lnk->link_name, EMPTY_WORD_SUPPRESS)) ||
-			  (HIDE_MORPHO &&
-			   (0 == strncmp(old_lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)))))
-		{
-			;
-		}
-		else
-		{
-			Link * new_lnk = &(linkage->link_array[j]);
-
-			/* Copy the entire link contents, thunking the word numbers.
-			 * Note that j is always <= i so this is always safe. */
-			new_lnk->lw = remap[old_lnk->lw];
-			new_lnk->rw = remap[old_lnk->rw];
-			new_lnk->lc = old_lnk->lc;
-			new_lnk->rc = old_lnk->rc;
-			new_lnk->link_name = old_lnk->link_name;
-			j++;
-		}
-	}
-#endif
-
-	linkage->num_links = j;
 	linkage->wg_path_display = n_lwg_path;
 
 	if (D_CCW <= opts->verbosity)
