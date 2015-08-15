@@ -357,7 +357,7 @@ void linkage_free_pp_info(Linkage lkg)
 
 /**
  * Store the domain names in the linkage.
- * This is an utter waste of CPU time, if on is not interested
+ * This is an utter waste of CPU time, if one is not interested
  * in printing the domain names.
  *
  * XXX TODO: refactor, so that this does not need to be called except
