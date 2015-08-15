@@ -149,6 +149,39 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 /* TODO? !display_guess_marks is not implemented. */
 #define DISPLAY_GUESS_MARKS true // (opts->display_guess_marks)
 
+/*
+ * Remap the link array according to discarded words.
+ * The remap[] elements indicate the new WordIdx of the word.
+ * A value which is -1 indicates a discarded word.
+ * A NULL link_array element indicates a discarded link.
+ */
+void remap_linkages(Linkage lkg, const int *remap)
+{
+	LinkIdx i, j;
+
+	for (i = 0, j = 0; i < lkg->num_links; i++)
+	{
+		const Link *old_lnk = &lkg->link_array[i];
+
+		if (NULL == old_lnk->link_name) continue; /* discarded link */
+		if ((-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
+		{
+			Link *new_lnk = &lkg->link_array[j];
+
+			/* Copy the entire link contents, thunking the word numbers.
+			 * Note that j is always <= i so this is always safe. */
+			new_lnk->lw = remap[old_lnk->lw];
+			new_lnk->rw = remap[old_lnk->rw];
+			new_lnk->lc = old_lnk->lc;
+			new_lnk->rc = old_lnk->rc;
+			new_lnk->link_name = old_lnk->link_name;
+			j++;
+		}
+	}
+	lkg->num_links = j;
+	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+}
+
 /**
  * This takes the Wordgraph path array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.
