@@ -954,11 +954,10 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 	}
 }
 
-static void build_domain_forest(Postprocessor *pp, Linkage sublinkage)
+static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 {
 	size_t d, d1, link;
 	DTreeLeaf * dtl;
-	PP_data *pp_data = &pp->pp_data;
 
 	if (pp_data->N_domains > 0)
 	{
@@ -1025,7 +1024,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	/* build graph; confirm that it's legally connected */
 	build_graph(pp, sublinkage);
 	build_domains(pp, sublinkage);
-	build_domain_forest(pp, sublinkage);
+	build_domain_forest(&pp->pp_data, sublinkage);
 
 #if defined(CHECK_DOMAIN_NESTING)
 	/* These messages were deemed to not be useful, so
