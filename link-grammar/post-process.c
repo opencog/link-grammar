@@ -1030,20 +1030,20 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	/* These messages were deemed to not be useful, so
 		 this code is commented out.	See comment above. */
 	if (!check_domain_nesting(pp, sublinkage->num_links))
-			printf("WARNING: The domains are not nested.\n");
+		printf("WARNING: The domains are not nested.\n");
 #endif
 
 	/* The order below should be optimal for most cases */
 	if (!apply_relevant_rules(pp, apply_contains_one, sublinkage,
-								pp->knowledge->contains_one_rules,
-								pp->relevant_contains_one_rules, msg)) return 1;
+	                          pp->knowledge->contains_one_rules,
+	                          pp->relevant_contains_one_rules, msg)) return 1;
 	if (!apply_relevant_rules(pp, apply_contains_none, sublinkage,
-								pp->knowledge->contains_none_rules,
-									pp->relevant_contains_none_rules, msg)) return 1;
+	                          pp->knowledge->contains_none_rules,
+	                          pp->relevant_contains_none_rules, msg)) return 1;
 	if (!apply_rules(pp_data, apply_must_form_a_cycle, sublinkage,
-					 pp->knowledge->form_a_cycle_rules,msg)) return 1;
+	                 pp->knowledge->form_a_cycle_rules,msg)) return 1;
 	if (!apply_rules(pp_data, apply_bounded, sublinkage,
-					 pp->knowledge->bounded_rules, msg)) return 1;
+	                 pp->knowledge->bounded_rules, msg)) return 1;
 	return 0; /* This linkage satisfied all the rules */
 }
 
@@ -1069,7 +1069,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 		if (rule->msg == NULL) break;
 		if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
 		{
-			/* mark rule as being relevant to this sentence */
+			/* Mark rule as being relevant to this sentence */
 			pp->relevant_contains_one_rules[rcoIDX++] = coIDX;
 			pp_linkset_add(pp->set_of_links_in_an_active_rule, rule->selector);
 		}
