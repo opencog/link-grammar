@@ -44,5 +44,6 @@ bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
 void linkage_free_pp_info(Linkage);
 
 void build_type_array(Postprocessor*);
+void linkage_set_domain_names(Postprocessor*, Linkage);
 
 #endif

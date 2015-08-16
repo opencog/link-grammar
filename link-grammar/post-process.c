@@ -328,17 +328,16 @@ static void clear_pp_node(Postprocessor *pp)
 
 /* ================ compute the domain names ============= */
 /**
- * Store the domain names in the linkage.
+ * Store the domain names in the linkage. These are not needed
+ * unless the user asks the domain names to be printed!
  */
-static void linkage_set_domain_names(Linkage linkage)
+void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 {
-	Postprocessor *postprocessor;
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
 
 	if (NULL == linkage) return;
-	postprocessor = linkage->sent->postprocessor;
 	if (NULL == postprocessor) return;
 
 	/* Keep track of pp_info's alloc'ed length, in case linkage->num_links
@@ -390,25 +389,13 @@ static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return -1;
-
-	/* Don't bother computing the domain names unless someone
-	 * asks for them. */
-	Linkage lkg = (Linkage) linkage; /* cast away constness */
-	if (NULL == lkg->pp_info)
-		linkage_set_domain_names(lkg);
-	return lkg->pp_info[index].num_domains;
+	return linkage->pp_info[index].num_domains;
 }
 
 const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-
-	/* Don't bother computing the domain names unless someone
-	 * asks for them. */
-	Linkage lkg = (Linkage) linkage; /* cast away constness */
-	if (NULL == lkg->pp_info)
-		linkage_set_domain_names(lkg);
-	return lkg->pp_info[index].domain_name;
+	return linkage->pp_info[index].domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
