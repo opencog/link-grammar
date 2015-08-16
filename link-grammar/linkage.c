@@ -166,14 +166,14 @@ static inline bool is_morphology_link(const char *link_name)
  */
 void remap_linkages(Linkage lkg, const int *remap)
 {
-	LinkIdx i, j;
+	LinkIdx i, j, k;
 
 	for (i = 0, j = 0; i < lkg->num_links; i++)
 	{
 		const Link *old_lnk = &lkg->link_array[i];
 
-		if (NULL == old_lnk->link_name) continue; /* discarded link */
-		if ((-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
+		if (NULL != old_lnk->link_name &&  /* discarded link */
+		   (-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
 		{
 			Link *new_lnk = &lkg->link_array[j];
 
@@ -184,9 +184,26 @@ void remap_linkages(Linkage lkg, const int *remap)
 			new_lnk->lc = old_lnk->lc;
 			new_lnk->rc = old_lnk->rc;
 			new_lnk->link_name = old_lnk->link_name;
+
+			/* Remap the pp_info, too. */
+			if (lkg->pp_info)
+				lkg->pp_info[j] = lkg->pp_info[i];
+
 			j++;
 		}
+		else
+		{
+			/* Whack this slot of pp_info. */
+			if (lkg->pp_info)
+				exfree_domain_names(&lkg->pp_info[i]);
+		}
 	}
+
+	/* Zero out the rest of the domain name array
+	 * (its already been copied to a new location, above). */
+	if (lkg->pp_info)
+		for (k=j; k<i; k++) lkg->pp_info[k].num_domains = 0;
+
 	lkg->num_links = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 }

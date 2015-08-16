@@ -340,10 +340,6 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
 
-	/* Keep track of pp_info's alloc'ed length, in case linkage->num_links
-	 * shrinks due to discarded ZZZ links (and maybe others). */
-	linkage->ppisz = linkage->num_links;
-
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 
 	for (j = 0; j < linkage->num_links; ++j)
@@ -403,7 +399,7 @@ const char * linkage_get_violation_name(const Linkage linkage)
 	return linkage->lifo.pp_violation_msg;
 }
 
-static void exfree_domain_names(PP_info *ppi)
+void exfree_domain_names(PP_info *ppi)
 {
 	if (ppi->num_domains > 0)
 		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
@@ -416,9 +412,9 @@ void linkage_free_pp_info(Linkage lkg)
 	size_t j;
 	if (!lkg || !lkg->pp_info) return;
 
-	for (j = 0; j < lkg->ppisz; ++j)
+	for (j = 0; j < lkg->num_links; ++j)
 		exfree_domain_names(&lkg->pp_info[j]);
-	exfree(lkg->pp_info, sizeof(PP_info) * lkg->ppisz);
+	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
 	lkg->pp_info = NULL;
 }
 
