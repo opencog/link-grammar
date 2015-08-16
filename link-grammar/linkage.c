@@ -142,8 +142,6 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  * means that the empty word (EMPTY-WORD.zzz) must be defined in the
  * dictionary of every language.
  */
-#define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
-
 #define SUBSCRIPT_SEP SUBSCRIPT_DOT /* multiple-subscript separator */
 
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
