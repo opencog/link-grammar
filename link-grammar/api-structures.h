@@ -281,6 +281,9 @@ struct PP_data_s
 	size_t domlen;                  /* Allocated size of domain_array */
 	size_t num_words;               /* Number of words in linkage */
 	List_o_links * links_to_ignore;
+
+	bool *visited;                  /* For the depth-first search */
+	size_t vlength;                 /* Length of visited array */
 };
 
 /* A new Postprocessor stuct is alloe for each sentence. It contains
@@ -300,8 +303,6 @@ struct Postprocessor_s
 
 	/* Per-linkage state; this data must be reset prior to processing
 	 * each new linkage. */
-	bool *visited;               /* For the depth-first search */
-	size_t vlength;              /* Length of visited array */
 	PP_node *pp_node;
 	PP_data pp_data;
 };

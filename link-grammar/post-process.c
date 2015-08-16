@@ -220,11 +220,11 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
                              int w, pp_linkset *ls)
 {
 	List_o_links *lol;
-	assert(w < pp->pp_data.num_words, "Bad word index");
-	pp->visited[w] = true;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	assert(w < pp_data->num_words, "Bad word index");
+	pp_data->visited[w] = true;
+	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
-		if (!pp->visited[lol->word] &&
+		if (!pp_data->visited[lol->word] &&
 				!pp_linkset_match(ls, sublinkage->link[lol->link]->name))
 			connectivity_dfs(pp, sublinkage, lol->word, ls);
 	}
@@ -435,9 +435,9 @@ void linkage_free_pp_info(Linkage lkg)
 
 /************************ rule application *******************************/
 
-static void clear_visited(Postprocessor *pp)
+static void clear_visited(PP_data *pp_data)
 {
-	memset(pp->visited, 0, pp->pp_data.num_words * sizeof(bool));
+	memset(pp_data->visited, 0, pp_data->num_words * sizeof(bool));
 }
 
 static bool apply_rules(Postprocessor *pp,
@@ -600,11 +600,11 @@ static void reachable_without_dfs(Postprocessor *pp,
 	 * any direct edge between word a and word b. */
 	List_o_links *lol;
 	assert(w < pp_data->num_words, "Bad word index");
-	pp->visited[w] = true;
+	pp_data->visited[w] = true;
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		assert(lol->word < pp_data->num_words, "Bad word index");
-		if (!pp->visited[lol->word] &&
+		if (!pp_data->visited[lol->word] &&
 		    !(w == a && lol->word == b) &&
 		    !(w == b && lol->word == a))
 		{
@@ -634,9 +634,9 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 			if (w > lol->word) continue;	/* only consider each edge once */
 			if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
-			clear_visited(pp);
+			clear_visited(pp_data);
 			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
-			if (!pp->visited[lol->word]) return false;
+			if (!pp_data->visited[lol->word]) return false;
 		}
 	}
 
@@ -646,11 +646,11 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		/* (w, lol->word) are the left and right ends of the edge we're considering */
 		if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
-		clear_visited(pp);
+		clear_visited(pp_data);
 		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
 
 		assert(lol->word < pp_data->num_words, "Bad word index");
-		if (!pp->visited[lol->word]) return false;
+		if (!pp_data->visited[lol->word]) return false;
 	}
 
 	return true;
@@ -778,7 +778,7 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
-	pp->visited[w] = true;
+	pp_data->visited[w] = true;
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (lol->word < w && lol->link != start_link)
@@ -788,7 +788,7 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
-		if (!pp->visited[lol->word] && (lol->word != root) &&
+		if (!pp_data->visited[lol->word] && (lol->word != root) &&
 		       !(lol->word < root && lol->word < w &&
 		       pp_linkset_match(pp->knowledge->restricted_links,
 		                sublinkage->link_array[lol->link].link_name)))
@@ -805,7 +805,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
-	pp->visited[w] = true;
+	pp_data->visited[w] = true;
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if ((lol->word < w)	&& (lol->link != start_link) && (w != root))
@@ -816,7 +816,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		assert(lol->word < pp_data->num_words, "Bad word index");
-		if ((!pp->visited[lol->word]) && !(w == root && lol->word < w) &&
+		if ((!pp_data->visited[lol->word]) && !(w == root && lol->word < w) &&
 		     !(lol->word < root && lol->word < w &&
 		          pp_linkset_match(pp->knowledge->restricted_links,
 		                sublinkage->link_array[lol->link].link_name)))
@@ -833,7 +833,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
-	pp->visited[w] = true;
+	pp_data->visited[w] = true;
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if ((lol->word < w) && (lol->link != start_link) && (w != root))
@@ -844,7 +844,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		assert(lol->word < pp_data->num_words, "Bad word index");
-		if (!pp->visited[lol->word] && !(w == root && lol->word >= right) &&
+		if (!pp_data->visited[lol->word] && !(w == root && lol->word >= right) &&
 		    !(w == root && lol->word < root) &&
 		       !(lol->word < root && lol->word < w &&
 		          pp_linkset_match(pp->knowledge->restricted_links,
@@ -862,7 +862,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
-	pp->visited[w] = true;
+	pp_data->visited[w] = true;
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (lol->word < w && lol->link != start_link)
@@ -873,7 +873,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		assert(lol->word < pp_data->num_words, "Bad word index");
-		if (!pp->visited[lol->word] && (lol->word != right))
+		if (!pp_data->visited[lol->word] && (lol->word != right))
 		{
 			depth_first_search(pp, sublinkage, lol->word, right, start_link);
 		}
@@ -906,7 +906,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
 				add_link_to_domain(pp_data, link);
 
-			clear_visited(pp);
+			clear_visited(pp_data);
 			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
 							 sublinkage->link_array[link].lw, link);
 		}
@@ -917,7 +917,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp_data, link);
 
-			clear_visited(pp);
+			clear_visited(pp_data);
 			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
 			                       sublinkage->link_array[link].lw, link);
 		}
@@ -926,7 +926,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		{
 			setup_domain_array(pp, s, link);
 			/* do not add the starter link to its urfl_only domain */
-			clear_visited(pp);
+			clear_visited(pp_data);
 			d_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].rw, link);
@@ -936,7 +936,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		{
 			setup_domain_array(pp, s, link);
 			/* do not add the starter link to a left domain */
-			clear_visited(pp);
+			clear_visited(pp_data);
 			left_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                        sublinkage->link_array[link].rw, link);
 		}
@@ -1143,11 +1143,11 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 
 	pp->q_pruned_rules = false;
 
-	pp->vlength = PP_INITLEN;
-	pp->visited = (bool*) malloc(pp->vlength * sizeof(bool));
-	memset(pp->visited, 0, pp->vlength * sizeof(bool));
-
 	pp_data = &pp->pp_data;
+	pp_data->vlength = PP_INITLEN;
+	pp_data->visited = (bool*) malloc(pp_data->vlength * sizeof(bool));
+	memset(pp_data->visited, 0, pp_data->vlength * sizeof(bool));
+
 	pp_data->links_to_ignore = NULL;
 	pp_new_domain_array(pp_data);
 
@@ -1172,10 +1172,10 @@ void post_process_free(Postprocessor *pp)
 	pp->knowledge = NULL;
 	free_pp_node(pp);
 
-	free(pp->visited);
 
 	pp_data = &pp->pp_data;
 	post_process_free_data(pp_data);
+	free(pp_data->visited);
 	free(pp_data->domain_array);
 	free(pp_data->word_links);
 
@@ -1278,14 +1278,14 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	pp_data->num_words = sublinkage->num_words;
 
 	/* Grab more memory if needed */
-	if (pp->vlength <= pp_data->num_words)
+	if (pp_data->vlength <= pp_data->num_words)
 	{
 		size_t newsz;
-		pp->vlength += pp_data->num_words;
-		newsz = pp->vlength * sizeof(bool);
-		pp->visited = (bool *) realloc(pp->visited, newsz);
+		pp_data->vlength += pp_data->num_words;
+		newsz = pp_data->vlength * sizeof(bool);
+		pp_data->visited = (bool *) realloc(pp_data->visited, newsz);
 	}
-	clear_visited(pp);
+	clear_visited(pp_data);
 
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
