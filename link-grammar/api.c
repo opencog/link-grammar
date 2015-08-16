@@ -696,11 +696,12 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		/* XXX There is no need to set the domain names if we are not
 		 * printing them. However, deferring this until later requires
 		 * a huge code re-org, because pp_data is needed to get the
-		 * domain type array, and pp_data is deleted immedately below.
-		 * Basically, pp_data should be a part of the linkage, and not
-		 * part of the Postprocessor struct.
+		 * domain type array, and pp_data is deleted immediately below.
+		 * Basically, pp_data and pp_node should be a part of the linkage,
+		 * and not part of the Postprocessor struct.
 		 * This costs about 1% performance penalty. */
 		build_type_array(sent->postprocessor);
+		linkage_set_domain_names(sent->postprocessor, lkg);
 
 	   post_process_free_data(&sent->postprocessor->pp_data);
 
