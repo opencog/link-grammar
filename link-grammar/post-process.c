@@ -760,9 +760,8 @@ static void setup_domain_array(Postprocessor *pp,
 	assert(pp_data->N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
 }
 
-static void add_link_to_domain(Postprocessor *pp, int link)
+static void add_link_to_domain(PP_data *pp_data, int link)
 {
-	PP_data *pp_data = &pp->pp_data;
 	size_t n = pp_data->N_domains - 1;  /* the very last one */
 	List_o_links *lol = (List_o_links *) malloc(sizeof(List_o_links));
 
@@ -784,7 +783,7 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	{
 		if (lol->word < w && lol->link != start_link)
 		{
-			add_link_to_domain(pp, lol->link);
+			add_link_to_domain(pp_data, lol->link);
 		}
 	}
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
@@ -811,7 +810,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	{
 		if ((lol->word < w)	&& (lol->link != start_link) && (w != root))
 		{
-			add_link_to_domain(pp, lol->link);
+			add_link_to_domain(pp_data, lol->link);
 		}
 	}
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
@@ -839,7 +838,7 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	{
 		if ((lol->word < w) && (lol->link != start_link) && (w != root))
 		{
-			add_link_to_domain(pp, lol->link);
+			add_link_to_domain(pp_data, lol->link);
 		}
 	}
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
@@ -868,7 +867,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	{
 		if (lol->word < w && lol->link != start_link)
 		{
-			add_link_to_domain(pp, lol->link);
+			add_link_to_domain(pp_data, lol->link);
 		}
 	}
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
@@ -905,7 +904,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		{
 			setup_domain_array(pp, s, link);
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
-				add_link_to_domain(pp, link);
+				add_link_to_domain(pp_data, link);
 
 			clear_visited(pp);
 			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
@@ -916,7 +915,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		{
 			setup_domain_array(pp, s, link);
 			/* always add the starter link to its urfl domain */
-			add_link_to_domain(pp, link);
+			add_link_to_domain(pp_data, link);
 
 			clear_visited(pp);
 			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
