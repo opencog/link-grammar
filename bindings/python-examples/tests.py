@@ -20,8 +20,6 @@ locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
-        # Make sure we use an absolute path, else "Error opening word file..."
-        datadir = os.path.abspath(datadir)
         clg.dictionary_set_data_dir(datadir)
         clg.test_data_srcdir = os.getenv("srcdir")
         if clg.test_data_srcdir:
