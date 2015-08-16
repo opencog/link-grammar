@@ -172,8 +172,8 @@ void remap_linkages(Linkage lkg, const int *remap)
 	{
 		const Link *old_lnk = &lkg->link_array[i];
 
-		if (NULL == old_lnk->link_name) continue; /* discarded link */
-		if ((-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
+		if (NULL != old_lnk->link_name &&  /* discarded link */
+		   (-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
 		{
 			Link *new_lnk = &lkg->link_array[j];
 
@@ -184,9 +184,21 @@ void remap_linkages(Linkage lkg, const int *remap)
 			new_lnk->lc = old_lnk->lc;
 			new_lnk->rc = old_lnk->rc;
 			new_lnk->link_name = old_lnk->link_name;
+
+			/* Remap the pp_info, too. */
+			if (lkg->pp_info)
+				lkg->pp_info[j] = lkg->pp_info[i];
+
 			j++;
 		}
+		else
+		{
+			/* Whack this slot of pp_info. */
+			if (lkg->pp_info)
+				exfree_domain_names(&lkg->pp_info[i]);
+		}
 	}
+
 	lkg->num_links = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 }

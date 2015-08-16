@@ -403,7 +403,7 @@ const char * linkage_get_violation_name(const Linkage linkage)
 	return linkage->lifo.pp_violation_msg;
 }
 
-static void exfree_domain_names(PP_info *ppi)
+void exfree_domain_names(PP_info *ppi)
 {
 	if (ppi->num_domains > 0)
 		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);

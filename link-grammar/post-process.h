@@ -45,5 +45,6 @@ void linkage_free_pp_info(Linkage);
 
 void build_type_array(Postprocessor*);
 void linkage_set_domain_names(Postprocessor*, Linkage);
+void exfree_domain_names(PP_info *);
 
 #endif
