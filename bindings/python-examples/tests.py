@@ -21,11 +21,12 @@ def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
         clg.dictionary_set_data_dir(datadir)
-        clg.test_data_srcdir = os.getenv("srcdir")
-        if clg.test_data_srcdir:
-            clg.test_data_srcdir += "/"
-        else:
-            clg.test_data_srcdir = ""
+
+    clg.test_data_srcdir = os.getenv("srcdir")
+    if clg.test_data_srcdir:
+        clg.test_data_srcdir += "/"
+    else:
+        clg.test_data_srcdir = ""
 
 # The tests are run in alphabetical order....
 #
