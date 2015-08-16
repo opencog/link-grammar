@@ -1066,7 +1066,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	 */
 
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
-	post_process_new_domain_array(sent->constituent_pp);
+	pp_new_domain_array(&linkage->hpsg_pp_data);
 
 	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
 	numcon_total += numcon_subl;
