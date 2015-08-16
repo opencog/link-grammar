@@ -65,10 +65,12 @@ bool post_process_match(const char *s, const char *t)
 
 /***************** utility routines (not exported) ***********************/
 
+/**
+ * Returns false if the string s does not match anything in
+ * the array. The array elements are post-processing symbols.
+ */
 static int string_in_list(const char * s, const char * a[])
 {
-	/* returns false if the string s does not match anything in
-		 the array.	The array elements are post-processing symbols */
 	int i;
 	for (i=0; a[i] != NULL; i++)
 		if (post_process_match(a[i], s)) return true;
@@ -469,13 +471,13 @@ apply_relevant_rules(Postprocessor *pp,
 	int i, idx;
 	PP_data *pp_data = &pp->pp_data;
 
-	/* if we didn't accumulate link names for this sentence, we need to apply
-		 all rules */
+	/* If we didn't accumulate link names for this sentence, we need
+	 *  to apply all rules. */
 	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) {
 		return apply_rules(pp_data, applyfn, sublinkage, rule_array, msg);
 	}
 
-	/* we did, and we don't */
+	/* We did, and we don't. */
 	for (i = 0; (idx = relevant_rules[i]) != -1; i++)
 	{
 		*msg = rule_array[idx].msg;
@@ -509,7 +511,7 @@ apply_contains_one(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 			for (dtl = pp_data->domain_array[d].child; dtl != NULL; dtl = dtl->next)
 			{
 				if (string_in_list(sublinkage->link_array[dtl->link].link_name,
-									 rule->link_array))
+				                   rule->link_array))
 				{
 					count=1;
 					break;
@@ -903,7 +905,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 
 			clear_visited(pp_data);
 			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
-							 sublinkage->link_array[link].lw, link);
+			                   sublinkage->link_array[link].lw, link);
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, s))
@@ -948,8 +950,8 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 	{
 		i = find_domain_name(pp, pp_data->domain_array[d].string);
 		if (i == SIZE_MAX)
-			 prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE",
-					 pp_data->domain_array[d].string);
+			prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE",
+			          pp_data->domain_array[d].string);
 		pp_data->domain_array[d].type = i;
 	}
 }
@@ -979,8 +981,8 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 			}
 		}
 	}
-	/* the parent links of domain nodes have been established.
-		 now do the leaves */
+	/* The parent links of domain nodes have been established.
+	 * Now do the leaves. */
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
 		pp_data->domain_array[d].child = NULL;
@@ -1028,7 +1030,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 
 #if defined(CHECK_DOMAIN_NESTING)
 	/* These messages were deemed to not be useful, so
-		 this code is commented out.	See comment above. */
+	 * this code is commented out.	See comment above. */
 	if (!check_domain_nesting(pp, sublinkage->num_links))
 		printf("WARNING: The domains are not nested.\n");
 #endif
@@ -1091,9 +1093,9 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 	if (verbosity > 1)
 	{
 		printf("PP: Saw %zd unique link names in all linkages.\n",
-				pp_linkset_population(pp->set_of_links_of_sentence));
+		       pp_linkset_population(pp->set_of_links_of_sentence));
 		printf("PP: Using %i 'contains one' rules and %i 'contains none' rules\n",
-			   rcoIDX, rcnIDX);
+		       rcoIDX, rcnIDX);
 	}
 }
 
