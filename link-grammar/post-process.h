@@ -41,6 +41,7 @@ bool     post_process_match(const char *, const char *);  /* utility function */
 bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
 
 void linkage_free_pp_info(Linkage);
-void linkage_set_domain_names(Postprocessor *, Linkage);
+
+void build_type_array(Postprocessor*);
 
 #endif

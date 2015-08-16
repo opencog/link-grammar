@@ -283,6 +283,9 @@ struct PP_data_s
 	List_o_links * links_to_ignore;
 };
 
+/* A new Postprocessor stuct is alloe for each sentence. It contains
+ * sentence-specific post-processing nformation.
+ */
 struct Postprocessor_s
 {
 	pp_knowledge  * knowledge;           /* Internal rep'n of the actual rules */
@@ -293,9 +296,10 @@ struct Postprocessor_s
 	int *relevant_contains_one_rules;        /* -1-terminated list of indices  */
 	int *relevant_contains_none_rules;
 	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
-
-	/* The following maintain state during a call to post_process() */
 	String_set *string_set;      /* Link names seen for sentence */
+
+	/* Per-linkage state; this data must be reset prior to processing
+	 * each new linkage. */
 	bool *visited;               /* For the depth-first search */
 	size_t vlength;              /* Length of visited array */
 	PP_node *pp_node;

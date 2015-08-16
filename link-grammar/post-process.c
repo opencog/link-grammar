@@ -239,7 +239,15 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 	}
 }
 
-static void build_type_array(Postprocessor *pp)
+/**
+ * This is used in one place only: to set up the domain type array,
+ * which is needed in only one place ever: when printing the domain
+ * names.  If the domain names are not being printed, then this is
+ * a complete waste of CPU time.
+ *
+ * XXX refactor so that this is not done, unless the names are printed.
+ */
+void build_type_array(Postprocessor *pp)
 {
 	D_type_list * dtl;
 	size_t d;
@@ -312,68 +320,20 @@ static void clear_pp_node(Postprocessor *pp)
 	}
 }
 
-static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
-{
-	if (!linkage) return false;
-	if (index >= linkage->num_links) return false;
-	return true;
-}
-
-int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
-{
-	if (!verify_link_index(linkage, index)) return -1;
-	return linkage->pp_info[index].num_domains;
-}
-
-const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
-{
-	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->pp_info[index].domain_name;
-}
-
-const char * linkage_get_violation_name(const Linkage linkage)
-{
-	return linkage->lifo.pp_violation_msg;
-}
-
-static void exfree_domain_names(PP_info *ppi)
-{
-	if (ppi->num_domains > 0)
-		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
-	ppi->domain_name = NULL;
-	ppi->num_domains = 0;
-}
-
-void linkage_free_pp_info(Linkage lkg)
-{
-	size_t j;
-	if (!lkg || !lkg->pp_info) return;
-
-	for (j = 0; j < lkg->ppisz; ++j)
-		exfree_domain_names(&lkg->pp_info[j]);
-	exfree(lkg->pp_info, sizeof(PP_info) * lkg->ppisz);
-	lkg->pp_info = NULL;
-}
-
+/* ================ compute the domain names ============= */
 /**
  * Store the domain names in the linkage.
- * This is an utter waste of CPU time, if one is not interested
- * in printing the domain names.
- *
- * XXX TODO: refactor, so that this does not need to be called except
- * when printing the domain names.
  */
-void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
+static void linkage_set_domain_names(Linkage linkage)
 {
+	Postprocessor *postprocessor;
 	PP_node * pp;
 	size_t j, k;
 	D_type_list * d;
 
 	if (NULL == linkage) return;
+	postprocessor = linkage->sent->postprocessor;
 	if (NULL == postprocessor) return;
-
-	/* The only reason to build the type array is for this function. */
-	build_type_array(postprocessor);
 
 	/* Keep track of pp_info's alloc'ed length, in case linkage->num_links
 	 * shrinks due to discarded ZZZ links (and maybe others). */
@@ -412,6 +372,61 @@ void linkage_set_domain_names(Postprocessor * postprocessor, Linkage linkage)
 			k++;
 		}
 	}
+}
+
+static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
+{
+	if (!linkage) return false;
+	if (index >= linkage->num_links) return false;
+	return true;
+}
+
+int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
+{
+	if (!verify_link_index(linkage, index)) return -1;
+
+	/* Don't bother computing the domain names unless someone
+	 * asks for them. */
+	Linkage lkg = (Linkage) linkage; /* cast away constness */
+	if (NULL == lkg->pp_info)
+		linkage_set_domain_names(lkg);
+	return lkg->pp_info[index].num_domains;
+}
+
+const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
+{
+	if (!verify_link_index(linkage, index)) return NULL;
+
+	/* Don't bother computing the domain names unless someone
+	 * asks for them. */
+	Linkage lkg = (Linkage) linkage; /* cast away constness */
+	if (NULL == lkg->pp_info)
+		linkage_set_domain_names(lkg);
+	return lkg->pp_info[index].domain_name;
+}
+
+const char * linkage_get_violation_name(const Linkage linkage)
+{
+	return linkage->lifo.pp_violation_msg;
+}
+
+static void exfree_domain_names(PP_info *ppi)
+{
+	if (ppi->num_domains > 0)
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
+}
+
+void linkage_free_pp_info(Linkage lkg)
+{
+	size_t j;
+	if (!lkg || !lkg->pp_info) return;
+
+	for (j = 0; j < lkg->ppisz; ++j)
+		exfree_domain_names(&lkg->pp_info[j]);
+	exfree(lkg->pp_info, sizeof(PP_info) * lkg->ppisz);
+	lkg->pp_info = NULL;
 }
 
 /************************ rule application *******************************/
