@@ -352,7 +352,8 @@ The width of the display.
 
 .SH FILES
 The following files are per-language, when \fILL\fP is the 2-letter
-ISO language code..TP
+ISO language code.
+.TP
 .I \fILL\fP/4.0.dict
 The Link Grammar dictionary.
 .TP
