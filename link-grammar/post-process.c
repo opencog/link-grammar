@@ -184,7 +184,7 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 	}
 }
 
-void post_process_free_domain_array(PP_data *ppd)
+void pp_free_domain_array(PP_data *ppd)
 {
 	size_t d;
 	for (d = 0; d < ppd->domlen; d++)
@@ -208,7 +208,7 @@ void post_process_free_data(PP_data * ppd)
 		ppd->word_links[w] = NULL;
 	}
 
-	post_process_free_domain_array(ppd);
+	pp_free_domain_array(ppd);
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
 	ppd->num_words = 0;
@@ -1108,9 +1108,8 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 #define PP_INITLEN 60 /* just starting size, it is expanded if needed */
 
-void post_process_new_domain_array(Postprocessor *pp)
+void pp_new_domain_array(PP_data *pp_data)
 {
-	PP_data *pp_data = &pp->pp_data;
 	pp_data->domlen = PP_INITLEN;
 	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
 	memset(pp_data->domain_array, 0, pp_data->domlen * sizeof(Domain));
@@ -1150,7 +1149,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 
 	pp_data = &pp->pp_data;
 	pp_data->links_to_ignore = NULL;
-	post_process_new_domain_array(pp);
+	pp_new_domain_array(pp_data);
 
 	pp_data->wowlen = PP_INITLEN;
 	pp_data->word_links = (List_o_links **) malloc(pp_data->wowlen * sizeof(List_o_links*));
