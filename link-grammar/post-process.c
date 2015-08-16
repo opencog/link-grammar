@@ -655,8 +655,8 @@ apply_bounded(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 
 /**
  * fill in the pp->pp_data.word_links array with a list of words
- * neighboring each word (actually a list of links).	The dir fields
- * are not set, since this is an undirected graph.
+ * neighboring each word (actually a list of links).  This is an
+ * undirected graph.
  */
 static void build_graph(Postprocessor *pp, Linkage sublinkage)
 {

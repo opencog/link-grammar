@@ -364,7 +364,6 @@ struct List_o_links_struct
 {
 	size_t link;     /* the link number */
 	size_t word;     /* the word at the other end of this link */
-	signed char dir; /* 0: undirected, 1: away from me, -1: toward me */
 	List_o_links * next;
 };
 
