@@ -352,7 +352,8 @@ The width of the display.
 
 .SH FILES
 The following files are per-language, when \fILL\fP is the 2-letter
-ISO language code..TP
+ISO language code.
+.TP
 .I \fILL\fP/4.0.dict
 The Link Grammar dictionary.
 .TP
@@ -379,6 +380,8 @@ The directory search order for these files is:
 .I "../"
 .br
 .I "../data/"
+.br
+.R A custom path, as set by the API call \%\fBdictionary_set_data_dir()\fP.
 .br
 .\" A tricky adaptation for man2html (1.6.15) and grohtml (1.22.2),
 .\" to prevent an extra blank line.
