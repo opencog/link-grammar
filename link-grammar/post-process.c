@@ -591,11 +591,9 @@ apply_contains_one_globally(Postprocessor *pp, Linkage sublinkage, pp_rule *rule
  * simply by deleting the link, then seeing if the end points of that
  * link are still connected.
  */
-static void reachable_without_dfs(Postprocessor *pp,
+static void reachable_without_dfs(PP_data *pp_data,
                     Linkage sublinkage, size_t a, size_t b, size_t w)
 {
-	PP_data *pp_data = &pp->pp_data;
-
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
 	List_o_links *lol;
@@ -608,7 +606,7 @@ static void reachable_without_dfs(Postprocessor *pp,
 		    !(w == a && lol->word == b) &&
 		    !(w == b && lol->word == a))
 		{
-				reachable_without_dfs(pp, sublinkage, a, b, lol->word);
+				reachable_without_dfs(pp_data, sublinkage, a, b, lol->word);
 		}
 	}
 }
@@ -635,7 +633,7 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 			if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
 			clear_visited(pp_data);
-			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
+			reachable_without_dfs(pp_data, sublinkage, w, lol->word, w);
 			if (!pp_data->visited[lol->word]) return false;
 		}
 	}
@@ -647,7 +645,7 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 		if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
 		clear_visited(pp_data);
-		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
+		reachable_without_dfs(pp_data, sublinkage, w, lol->word, w);
 
 		assert(lol->word < pp_data->num_words, "Bad word index");
 		if (!pp_data->visited[lol->word]) return false;
