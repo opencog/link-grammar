@@ -166,7 +166,7 @@ static inline bool is_morphology_link(const char *link_name)
  */
 void remap_linkages(Linkage lkg, const int *remap)
 {
-	LinkIdx i, j;
+	LinkIdx i, j, k;
 
 	for (i = 0, j = 0; i < lkg->num_links; i++)
 	{
@@ -198,6 +198,11 @@ void remap_linkages(Linkage lkg, const int *remap)
 				exfree_domain_names(&lkg->pp_info[i]);
 		}
 	}
+
+	/* Zero out the rest of the domain name array
+	 * (its already been copied to a new location, above). */
+	if (lkg->pp_info)
+		for (k=j; k<i; k++) lkg->pp_info[k].num_domains = 0;
 
 	lkg->num_links = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
