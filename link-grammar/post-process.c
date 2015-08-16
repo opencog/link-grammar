@@ -440,8 +440,8 @@ static void clear_visited(PP_data *pp_data)
 	memset(pp_data->visited, 0, pp_data->num_words * sizeof(bool));
 }
 
-static bool apply_rules(Postprocessor *pp,
-                        bool (applyfn) (Postprocessor *, Linkage, pp_rule *),
+static bool apply_rules(PP_data *pp_data,
+                        bool (applyfn) (PP_data *, Linkage, pp_rule *),
                         Linkage sublinkage,
                         pp_rule *rule_array,
                         const char **msg)
@@ -449,7 +449,7 @@ static bool apply_rules(Postprocessor *pp,
 	int i;
 	for (i = 0; (*msg = rule_array[i].msg) != NULL; i++)
 	{
-		if (!applyfn(pp, sublinkage, &(rule_array[i])))
+		if (!applyfn(pp_data, sublinkage, &(rule_array[i])))
 		{
 			rule_array[i].use_count ++;
 			return false;
@@ -460,25 +460,26 @@ static bool apply_rules(Postprocessor *pp,
 
 static bool
 apply_relevant_rules(Postprocessor *pp,
-                     bool (applyfn)(Postprocessor *, Linkage, pp_rule *),
+                     bool (applyfn)(PP_data *, Linkage, pp_rule *),
                      Linkage sublinkage,
                      pp_rule *rule_array,
                      int *relevant_rules,
                      const char **msg)
 {
 	int i, idx;
+	PP_data *pp_data = &pp->pp_data;
 
 	/* if we didn't accumulate link names for this sentence, we need to apply
 		 all rules */
 	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) {
-		return apply_rules(pp, applyfn, sublinkage, rule_array, msg);
+		return apply_rules(pp_data, applyfn, sublinkage, rule_array, msg);
 	}
 
 	/* we did, and we don't */
 	for (i = 0; (idx = relevant_rules[i]) != -1; i++)
 	{
 		*msg = rule_array[idx].msg;
-		if (!applyfn(pp, sublinkage, &(rule_array[idx]))) return false;
+		if (!applyfn(pp_data, sublinkage, &(rule_array[idx]))) return false;
 	}
 	return true;
 }
@@ -489,11 +490,10 @@ apply_relevant_rules(Postprocessor *pp,
  * string matching)
  */
 static bool
-apply_contains_one(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
+apply_contains_one(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 {
 	DTreeLeaf * dtl;
 	size_t d, count;
-	PP_data *pp_data = &pp->pp_data;
 
 	for (d=0; d<pp_data->N_domains; d++)
 	{
@@ -528,10 +528,9 @@ apply_contains_one(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
  * from the link_array contained in the rule. Uses exact string matching.
  */
 static bool
-apply_contains_none(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
+apply_contains_none(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 {
 	size_t d;
-	PP_data *pp_data = &pp->pp_data;
 
 	for (d=0; d<pp_data->N_domains; d++)
 	{
@@ -561,7 +560,7 @@ apply_contains_none(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
  * (2) it does, and it also contains one or more from the rule's link set
  */
 static bool
-apply_contains_one_globally(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
+apply_contains_one_globally(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 {
 	size_t i, j, count;
 	for (i = 0; i < sublinkage->num_links; i++)
@@ -619,11 +618,10 @@ static void reachable_without_dfs(PP_data *pp_data,
  * these links.
  */
 static bool
-apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
+apply_must_form_a_cycle(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
 	size_t w;
-	PP_data *pp_data = &pp->pp_data;
 
 	for (w = 0; w < pp_data->num_words; w++)
 	{
@@ -660,12 +658,11 @@ apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
  * of the root word of the domain.
  */
 static bool
-apply_bounded(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
+apply_bounded(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 {
 	size_t d, lw;
 	List_o_links * lol;
 	char d_type = rule->domain;
-	PP_data *pp_data = &pp->pp_data;
 
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
@@ -1044,9 +1041,9 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	if (!apply_relevant_rules(pp, apply_contains_none, sublinkage,
 								pp->knowledge->contains_none_rules,
 									pp->relevant_contains_none_rules, msg)) return 1;
-	if (!apply_rules(pp, apply_must_form_a_cycle, sublinkage,
+	if (!apply_rules(pp_data, apply_must_form_a_cycle, sublinkage,
 					 pp->knowledge->form_a_cycle_rules,msg)) return 1;
-	if (!apply_rules(pp, apply_bounded, sublinkage,
+	if (!apply_rules(pp_data, apply_bounded, sublinkage,
 					 pp->knowledge->bounded_rules, msg)) return 1;
 	return 0; /* This linkage satisfied all the rules */
 }
