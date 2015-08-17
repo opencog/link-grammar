@@ -197,20 +197,26 @@ class ParseOptions(object):
     @property
     def spell_guess(self):
         """
-         Whether or not to run the spelling guesser on unknown words.
-         The default number of maximum number of spell corrections per word
-         is 7, and can be set when an optional value is supplied.
+         If greater then 0, the spelling guesser is used on unknown words.
+         In that case, it performs at most this number of spell corrections
+         per word, and performs run-on corrections which are not limited in
+         their number. If 0 - the spelling guesser would not be used.
         """
-        return clg.parse_options_get_spell_guess(self._obj) == 7
+        return clg.parse_options_get_spell_guess(self._obj)
 
     @spell_guess.setter
     def spell_guess(self, value):
         """
-         The value is the maximum number of spell corrections per word.
-         If non-zero, unlimited run-on corrections will be issued too.
+         If the value is an int, it is the maximum number of spell corrections
+         per word. If it is True, an int value of 7 is assumed. A value of
+         0 or False disables the spelling guesser.
+         In case the spelling guesser is not disabled, run-on corrections will
+         be issued too, not limited in their number.
         """
-        if not isinstance(value, int):
-            raise TypeError("spell_guess must be set to an integer")
+        if not isinstance(value, bool) and (not isinstance(value, int) or value < 0):
+            raise TypeError("spell_guess must be set to bool or a non-negative integer")
+        if isinstance(value, bool):
+            value = 7 if value else 0
         clg.parse_options_set_spell_guess(self._obj, value)
 
     @property

@@ -20,14 +20,13 @@ locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
-        # Make sure we use an absolute path, else "Error opening word file..."
-        datadir = os.path.abspath(datadir)
         clg.dictionary_set_data_dir(datadir)
-        clg.test_data_srcdir = os.getenv("srcdir")
-        if clg.test_data_srcdir:
-            clg.test_data_srcdir += "/"
-        else:
-            clg.test_data_srcdir = ""
+
+    clg.test_data_srcdir = os.getenv("srcdir")
+    if clg.test_data_srcdir:
+        clg.test_data_srcdir += "/"
+    else:
+        clg.test_data_srcdir = ""
 
 # The tests are run in alphabetical order....
 #
@@ -166,6 +165,14 @@ class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_all_short_connectors_to_non_boolean_raises_type_error(self):
         po = ParseOptions()
         self.assertRaises(TypeError, setattr, po, "all_short_connectors", "a")
+
+    def test_setting_spell_guess(self):
+        po = ParseOptions(spell_guess=True)
+        self.assertEqual(po.spell_guess, 7)
+        po = ParseOptions(spell_guess=5)
+        self.assertEqual(po.spell_guess, 5)
+        po = ParseOptions(spell_guess=False)
+        self.assertEqual(po.spell_guess, 0)
 
     def test_specifying_parse_options(self):
         po = ParseOptions(linkage_limit=99)
