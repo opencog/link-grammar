@@ -166,6 +166,14 @@ class BParseOptionsTestCase(unittest.TestCase):
         po = ParseOptions()
         self.assertRaises(TypeError, setattr, po, "all_short_connectors", "a")
 
+    def test_setting_spell_guess(self):
+        po = ParseOptions(spell_guess=True)
+        self.assertEqual(po.spell_guess, 7)
+        po = ParseOptions(spell_guess=5)
+        self.assertEqual(po.spell_guess, 5)
+        po = ParseOptions(spell_guess=False)
+        self.assertEqual(po.spell_guess, 0)
+
     def test_specifying_parse_options(self):
         po = ParseOptions(linkage_limit=99)
         self.assertEqual(clg.parse_options_get_linkage_limit(po._obj), 99)
