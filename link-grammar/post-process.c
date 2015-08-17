@@ -341,12 +341,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	if (NULL == postprocessor) return;
 
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
-
-	for (j = 0; j < linkage->num_links; ++j)
-	{
-		linkage->pp_info[j].num_domains = 0;
-		linkage->pp_info[j].domain_name = NULL;
-	}
+	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
 
 	/* Copy the post-processing results over into the linkage */
 	pp = postprocessor->pp_node;
@@ -365,8 +360,8 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 		k = 0;
 		for (d = pp->d_type_array[j]; d != NULL; d = d->next)
 		{
-			char buff[5];
-			snprintf(buff, 5, "%c", d->type);
+			char buff[] = {d->type, '\0'};
+
 			linkage->pp_info[j].domain_name[k] =
 			      string_set_add (buff, postprocessor->string_set);
 
