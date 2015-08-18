@@ -159,10 +159,12 @@ static inline bool is_morphology_link(const char *link_name)
 }
 
 /*
- * Remap the link array according to discarded words.
+ * Remap the link array according to discarded links and words.
+ * If pp_info exists, remap it too.
+ *
  * The remap[] elements indicate the new WordIdx of the word.
  * A value which is -1 indicates a discarded word.
- * A NULL link_array element indicates a discarded link.
+ * A NULL link_name indicates a discarded link.
  */
 void remap_linkages(Linkage lkg, const int *remap)
 {
