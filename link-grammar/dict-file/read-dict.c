@@ -1818,13 +1818,13 @@ static void display_word_split(Dictionary dict,
 
 	parse_options_set_spell_guess(&display_word_opts, 0);
 	sent = sentence_create(word, dict);
-	if (0 > sentence_split(sent, &display_word_opts)) return;
-
-	/* List the splits */
-	print_sentence_word_alternatives(sent, false, NULL, NULL);
-	/* List the disjuncts information. */
-	print_sentence_word_alternatives(sent, false, display, NULL);
-
+	if (0 == sentence_split(sent, &display_word_opts))
+	{
+		/* List the splits */
+		print_sentence_word_alternatives(sent, false, NULL, NULL);
+		/* List the disjuncts information. */
+		print_sentence_word_alternatives(sent, false, display, NULL);
+	}
 	sentence_delete(sent);
 }
 
