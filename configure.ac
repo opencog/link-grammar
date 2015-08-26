@@ -150,10 +150,7 @@ then
 	CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
 	LDFLAGS="${LDFLAGS} -g"
-	AC_DEFINE(DEBUG_MEMORY,1)
 	AC_DEFINE(DEBUG,1)
-else
-	AC_DEFINE(DEBUG_MEMORY,0)
 fi
 
 # ====================================================================
