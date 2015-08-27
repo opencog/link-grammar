@@ -374,7 +374,6 @@ struct Linkage_s
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_info *       pp_info;      /* PP domain info, one for each link */
-	PP_data         hpsg_pp_data; /* Used in constituent code */
 
 	Sentence        sent;         /* Used for common linkage data */
 };
