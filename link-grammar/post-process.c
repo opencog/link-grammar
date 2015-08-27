@@ -1109,10 +1109,10 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	pp->relevant_contains_none_rules =
 	      (int *) malloc ((pp->knowledge->n_contains_none_rules + 1)
 	                      *(sizeof pp->relevant_contains_none_rules[0]));
-	pp->relevant_contains_one_rules[0]	= -1;
+	pp->relevant_contains_one_rules[0] = -1;
 	pp->relevant_contains_none_rules[0] = -1;
 	pp->pp_node = NULL;
-	pp->n_local_rules_firing	= 0;
+	pp->n_local_rules_firing = 0;
 	pp->n_global_rules_firing = 0;
 
 	pp->q_pruned_rules = false;
