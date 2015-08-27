@@ -1046,6 +1046,8 @@ exprint_constituent_structure(con_context_t *ctxt,
 	return p;
 }
 
+void free_List_o_links(List_o_links *lol);
+
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
 	int numcon_total= 0, numcon_subl;
@@ -1058,6 +1060,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	if (NULL ==  sent->constituent_pp)         /* First time for this sentence */
 		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
+
 	do_post_process(sent->constituent_pp, linkage, linkage->is_sent_long);
 
 	/** No-op. If we wanted to debug domain names, we could do this...
@@ -1066,7 +1069,6 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	 */
 
 	linkage->hpsg_pp_data = sent->constituent_pp->pp_data;
-	pp_new_domain_array(&linkage->hpsg_pp_data);
 
 	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
 	numcon_total += numcon_subl;
@@ -1080,6 +1082,9 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;
+
+	post_process_free_data(&sent->constituent_pp->pp_data);
+
 	return q;
 }
 
