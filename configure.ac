@@ -147,8 +147,12 @@ AC_ARG_ENABLE( debug,
 
 if test "x$enable_debug" = "xyes"
 then
-	CFLAGS="${CFLAGS//-O[[2-9]]} -g"
-	CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
+	# Only bash supports double-backslash... Well, dash does too...
+	# But not the NetBSD sh, so use sed instead.
+	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
+	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
+	CFLAGS=`echo ${CFLAGS} -g |sed "s/-O[[2-9]]//g"`
+	CXXFLAGS=`echo ${CXXFLAGS} -g |sed "s/-O[[2-9]]//g"`
 	LDFLAGS="${LDFLAGS} -g"
 	AC_DEFINE(DEBUG,1)
 fi
