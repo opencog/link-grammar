@@ -41,6 +41,9 @@ extern "C" {
 #define DEBUG_print(x)
 #endif
 
+// Convert a NULL C string pointer, for printing a possibly NULL string
+#define N(s) ((s) ? (s) : "(null)")
+
 /*-------------------------------------------------------------------------*
  *               C N F   C O N V E R S I O N                               *
  *-------------------------------------------------------------------------*/
@@ -234,7 +237,7 @@ void SATEncoder::build_word_tags()
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word ." << w << ".: " << _sent->word[w].unsplit_word << " (null)" <<  endl);
+      DEBUG_print("Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << " (null)" <<  endl);
       continue;
     }
 
@@ -242,7 +245,7 @@ void SATEncoder::build_word_tags()
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
 #ifdef _DEBUG
-    cout << "Word ." << w << ".: " << _sent->word[w].unsplit_word << endl;
+    cout << "Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << endl;
     //print_expression(exp);
     cout << endl;
 #endif
@@ -298,7 +301,7 @@ void SATEncoder::generate_satisfaction_conditions()
 {
   for (size_t w = 0; w < _sent->length; w++) {
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word: " << _sent->word[w].unsplit_word << " : " << "(null)" << endl);
+      DEBUG_print("Word: " << N(_sent->word[w].unsplit_word) << " : " << "(null)" << endl);
       handle_null_expression(w);
       continue;
     }
@@ -307,7 +310,7 @@ void SATEncoder::generate_satisfaction_conditions()
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
 #ifdef _DEBUG
-    cout << "Word: " << _sent->word[w].unsplit_word << endl;
+    cout << "Word: " << N(_sent->word[w].unsplit_word) << endl;
     //print_expression(exp);
     cout << endl;
 #endif
