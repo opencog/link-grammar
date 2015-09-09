@@ -20,12 +20,16 @@ struct PositionConnector
 {
   PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
                     double cst, double pcst, bool lr, bool ll,
-                    const std::vector<int>& er, const std::vector<int>& el)
+                    const std::vector<int>& er, const std::vector<int>& el, const Gword *gw)
     : exp(e), connector(c), dir(d), word(w), position(p),
       cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
-      eps_right(er), eps_left(el)
+      eps_right(er), eps_left(el), gword(gw)
   {
+    if (gw == NULL) {
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; gword: " << (gw ? gw->subword : "(null)") << endl;
+    }
+
     /*
     cout << c->string << " : ." << w << ". : ." << p << ". ";
     if (leading_right) {
@@ -60,6 +64,9 @@ struct PositionConnector
   bool leading_left;
   std::vector<int> eps_right;
   std::vector<int> eps_left;
+
+  // The corresponding wordgraph word
+  const Gword *gword;
 
   // Matches with other words
   std::vector<PositionConnector*> matches;
@@ -146,7 +153,7 @@ public:
                          std::vector<int>& eps_right,
                          std::vector<int>& eps_left,
                          char* var, bool root, double parent_cost,
-                         Exp* parent);
+                         Exp* parent, const X_node *w_xnode);
 
   // Caches information about the found matches to the _matches vector, and also
   // updates the _matches vector of all connectors in the given tag.

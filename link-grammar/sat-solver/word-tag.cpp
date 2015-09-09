@@ -6,13 +6,14 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 std::vector<int>& eps_right,
                                 std::vector<int>& eps_left,
                                 char* var, bool root, double parent_cost,
-                                Exp* parent_exp)
+                                Exp* parent_exp, const X_node *w_xnode)
 {
   double cost = parent_cost + exp->cost;
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
 
     const char* name = exp->u.string;
+    const Gword *x_node_gword =  w_xnode ?  w_xnode->word : NULL;
 
     Connector* connector = connector_new();
     connector->multi = exp->multi;
@@ -26,7 +27,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _right_connectors.push_back(
            PositionConnector(parent_exp, connector, '+', _word, dfs_position,
                              exp->cost, cost, leading_right, false,
-                             eps_right, eps_left));
+                             eps_right, eps_left, x_node_gword));
       leading_right = false;
       break;
     case '-':
@@ -35,7 +36,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _left_connectors.push_back(
            PositionConnector(parent_exp, connector, '-', _word, dfs_position,
                              exp->cost, cost, false, leading_left,
-                             eps_right, eps_left));
+                             eps_right, eps_left, x_node_gword));
       leading_left = false;
       break;
     default:
@@ -48,7 +49,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       if (exp->u.l != NULL && exp->u.l->next == NULL) {
         /* unary and - skip */
         insert_connectors(exp->u.l->e, dfs_position, leading_right,
-             leading_left, eps_right, eps_left, var, root, cost, parent_exp);
+             leading_left, eps_right, eps_left, var, root, cost, parent_exp, w_xnode);
       } else {
         int i;
         E_list* l;
@@ -67,12 +68,11 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           fast_sprintf(s, i);
 
           insert_connectors(l->e, dfs_position, leading_right, leading_left,
-                eps_right, eps_left, new_var, false, cost, parent_exp);
+                eps_right, eps_left, new_var, false, cost, parent_exp, w_xnode);
+
           if (leading_right && var != NULL) {
             eps_right.push_back(_variables->epsilon(new_var, '+'));
           }
-
-
           if (leading_left && var != NULL) {
             eps_left.push_back(_variables->epsilon(new_var, '-'));
           }
@@ -82,7 +82,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     if (exp->u.l != NULL && exp->u.l->next == NULL) {
       /* unary or - skip */
       insert_connectors(exp->u.l->e, dfs_position, leading_right, leading_left,
-          eps_right, eps_left, var, root, cost, exp->u.l->e);
+          eps_right, eps_left, var, root, cost, exp->u.l->e, w_xnode);
     } else {
       int i;
       E_list* l;
@@ -105,7 +105,28 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         *s++ = 'd';
         fast_sprintf(s, i);
 
-        insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost, l->e);
+        assert(w_xnode != NULL);
+        if (root && parent_exp == NULL && l->e != w_xnode->exp) {
+          E_list *we = NULL;
+
+          if (w_xnode->exp->type == OR_type) {
+            for (we = w_xnode->exp->u.l; we != NULL; we = we-> next)
+            {
+              if (l->e == we->e)
+                break;
+            }
+          }
+          if (we == NULL) {
+            //cout << ">>>>>> NEXT W_XNODE" << endl;
+            w_xnode = w_xnode->next;
+            assert(w_xnode != NULL);
+          }
+        }
+        if (0 && root && parent_exp == NULL) {
+          cout << "Word"<<_word<<"; var:" << var << "; ALT " << i << ": " << (w_xnode ? w_xnode->word->subword : "NULL X_node") << ' ' << endl;
+        }
+        insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost, l->e, w_xnode);
+
         if (lr)
           lr_true = true;
         if (ll)

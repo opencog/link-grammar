@@ -237,7 +237,7 @@ void SATEncoder::build_word_tags()
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << " (null)" <<  endl);
+      cerr << "Error: Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << "NULL X_node" <<  endl;
       continue;
     }
 
@@ -257,7 +257,7 @@ void SATEncoder::build_word_tags()
     std::vector<int> eps_right, eps_left;
 
     _word_tags[w].insert_connectors(exp, dfs_position, leading_right,
-         leading_left, eps_right, eps_left, name, true, 0, NULL);
+         leading_left, eps_right, eps_left, name, true, 0, NULL, _sent->word[w].x);
 
     if (join)
       free_alternatives(exp);
