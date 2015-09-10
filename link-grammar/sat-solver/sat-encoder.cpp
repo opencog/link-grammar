@@ -1516,8 +1516,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     PositionConnector* lpc = _word_tags[var->left_word].get(var->left_position);
     PositionConnector* rpc = _word_tags[var->right_word].get(var->right_position);
-    lpc->connector->word = var->left_word; // XXX is this needed ?
-    rpc->connector->word = var->right_word; // XXX is this needed ?
+    //lpc->connector->word = var->left_word; // XXX is this needed ?
+    //rpc->connector->word = var->right_word; // XXX is this needed ?
     clink.lc = lpc->connector;
     clink.rc = rpc->connector;
 
