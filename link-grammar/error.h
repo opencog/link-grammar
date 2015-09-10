@@ -15,12 +15,12 @@
 
 #include "link-includes.h"
 
-typedef struct 
+typedef struct
 {
 	Sentence sent;
 } err_ctxt;
 
-typedef enum 
+typedef enum
 {
 	Fatal = 1,
 	Error,
@@ -45,9 +45,9 @@ const char *feature_enabled(const char *, const char *);
  */
 #define lgdebug(level, ...) \
 (((verbosity >= (level)) && \
-	 (('\0' == debug[0]) || feature_enabled(debug, __func__))) \
-	 ? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : (void)0), \
-	 printf(__VA_ARGS__)) : (void)0)
+	(('\0' == debug[0]) || feature_enabled(debug, __func__))) \
+	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : (void)0), \
+	printf(__VA_ARGS__)) : (void)0)
 
 /**
  * Return TRUE if the given feature (a string) is set in the !test variable
