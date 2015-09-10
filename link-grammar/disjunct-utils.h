@@ -22,7 +22,7 @@ unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
 char * print_one_disjunct(Disjunct *);
-void word_record_in_disjunct(X_node *, Disjunct *);
+void word_record_in_disjunct(const Gword *, Disjunct *);
 void disjunct_word_print(Disjunct *);
 
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

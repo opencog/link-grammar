@@ -265,11 +265,11 @@ char * print_one_disjunct(Disjunct *dj)
  * Record the wordgraph word to which the X-node belongs, in each of its
  * disjuncts.
  */
-void word_record_in_disjunct(X_node * x, Disjunct * d)
+void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 {
 	for (;d != NULL; d=d->next) {
 		d->word = malloc(sizeof(*d->word)*2);
-		d->word[0] = x->word;
+		d->word[0] = gw;
 		d->word[1] = NULL;
 	}
 }
