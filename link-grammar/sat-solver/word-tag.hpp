@@ -20,14 +20,14 @@ struct PositionConnector
 {
   PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
                     double cst, double pcst, bool lr, bool ll,
-                    const std::vector<int>& er, const std::vector<int>& el, const Gword *gw)
+                    const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode)
     : exp(e), connector(c), dir(d), word(w), position(p),
       cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
-      eps_right(er), eps_left(el), gword(gw)
+      eps_right(er), eps_left(el), w_xnode(w_xnode)
   {
-    if (gw == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; gword: " << (gw ? gw->subword : "(null)") << endl;
+    if (w_xnode == NULL) {
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; X_node: " << (w_xnode?w_xnode->string: "(null)") << endl;
     }
 
     /*
@@ -65,8 +65,9 @@ struct PositionConnector
   std::vector<int> eps_right;
   std::vector<int> eps_left;
 
-  // The corresponding wordgraph word
-  const Gword *gword;
+
+  // The corresponding X_node - chosen-disjuncts[]
+  const X_node *w_xnode;
 
   // Matches with other words
   std::vector<PositionConnector*> matches;

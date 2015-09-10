@@ -1544,13 +1544,16 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 // all teh exp flow through this code could be removed. Arghhh.
     Disjunct *d;
 
+    const X_node *left_xnode = lpc->w_xnode;
+    const X_node *right_xnode = rpc->w_xnode;
+
     // For empty words, only create a dummy disjunct - for remove_empty_word()
-    if (lpc->gword->morpheme_type == MT_EMPTY ||
-        rpc->gword->morpheme_type == MT_EMPTY) {
+    if (left_xnode->word->morpheme_type == MT_EMPTY ||
+        right_xnode->word->morpheme_type == MT_EMPTY) {
       // XXX Why right_expression is NULL? And why left_expression is only ZZZ+?
       // Hence, to prevent triggering an assert() in build_clause(), the
       // disjunct for the empty word (right_word) is built with left_exp.
-      d = build_disjuncts_for_exp(var->left_exp, rpc->gword->subword, UNLIMITED_LEN);
+      d = build_disjuncts_for_exp(var->left_exp, right_xnode->string, UNLIMITED_LEN);
       word_record_in_disjunct(empty_word(), d);
       lkg->chosen_disjuncts[var->right_word] = d;
       continue;
@@ -1565,8 +1568,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
         lgdebug(+1, "left_exp==NULL for: left_word %d connector %s\n",
              var->left_word, clink.lc->string);
       }
-      d = build_disjuncts_for_exp(var->left_exp, lpc->gword->subword, UNLIMITED_LEN);
-      word_record_in_disjunct(lpc->gword, d);
+      d = build_disjuncts_for_exp(var->left_exp, left_xnode->string, UNLIMITED_LEN);
+      word_record_in_disjunct(left_xnode->word, d);
       lkg->chosen_disjuncts[var->left_word] = d;
       _sent->word[var->left_word].d = d; // for free_disjuncts()
     }
@@ -1576,8 +1579,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
         lgdebug(+1, "right_exp==NULL for: right_word %d connector %s\n",
              var->right_word, clink.lc->string);
       }
-      d = build_disjuncts_for_exp(var->right_exp, rpc->gword->subword, UNLIMITED_LEN);
-      word_record_in_disjunct(rpc->gword, d);
+      d = build_disjuncts_for_exp(var->right_exp, right_xnode->string, UNLIMITED_LEN);
+      word_record_in_disjunct(right_xnode->word, d);
       lkg->chosen_disjuncts[var->right_word] = d;
       _sent->word[var->right_word].d = d; // for free_disjuncts()
     }

@@ -19,7 +19,6 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     dfs_position++;
 
     const char* name = exp->u.string;
-    const Gword *x_node_gword =  w_xnode ?  w_xnode->word : NULL;
 
     Connector* connector = connector_new();
     connector->multi = exp->multi;
@@ -33,7 +32,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _right_connectors.push_back(
            PositionConnector(parent_exp, connector, '+', _word, dfs_position,
                              exp->cost, cost, leading_right, false,
-                             eps_right, eps_left, x_node_gword));
+                             eps_right, eps_left, w_xnode));
       leading_right = false;
       break;
     case '-':
@@ -42,7 +41,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _left_connectors.push_back(
            PositionConnector(parent_exp, connector, '-', _word, dfs_position,
                              exp->cost, cost, false, leading_left,
-                             eps_right, eps_left, x_node_gword));
+                             eps_right, eps_left, w_xnode));
       leading_left = false;
       break;
     default:
