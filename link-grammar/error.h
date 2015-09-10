@@ -46,8 +46,8 @@ const char *feature_enabled(const char *, const char *);
 #define lgdebug(level, ...) \
 (((verbosity >= (level)) && \
 	(('\0' == debug[0]) || feature_enabled(debug, __func__))) \
-	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : (void)0), \
-	printf(__VA_ARGS__)) : (void)0)
+	? ((STRINGIFY(level)[0] == '+' ? (void)printf("%s: ", __func__) : (void)0), \
+	(void)printf(__VA_ARGS__)) : (void)0)
 
 /**
  * Return TRUE if the given feature (a string) is set in the !test variable
