@@ -139,3 +139,4 @@ regex_tokenizer_test
 check_link_size
 partial_init_linkage
 word_record_in_disjunct
+feature_enabled

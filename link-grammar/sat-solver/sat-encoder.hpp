@@ -291,6 +291,9 @@ class SATEncoderConjunctionFreeSentences : public SATEncoder
 public:
   SATEncoderConjunctionFreeSentences(Sentence sent, Parse_Options  opts)
     : SATEncoder(sent, opts) {
+    verbosity = opts->verbosity;
+    debug = opts->debug;
+    test = opts->test;
   }
 
   virtual void handle_null_expression(int w);
@@ -304,5 +307,9 @@ public:
   virtual bool sat_extract_links(Linkage);
 
   virtual void generate_encoding_specific_clauses();
+
+  int verbosity;
+  const char *debug;
+  const char *test;
 };
 

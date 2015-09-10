@@ -1,6 +1,12 @@
 #include "word-tag.hpp"
 #include "fast-sprintf.hpp"
 
+extern "C" {
+#include "error.h"
+#include "utilities.h"
+}
+
+#define D_IC 6
 void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 bool& leading_right, bool& leading_left,
                                 std::vector<int>& eps_right,
@@ -105,7 +111,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         *s++ = 'd';
         fast_sprintf(s, i);
 
-        assert(w_xnode != NULL);
+        lgdebug(+D_IC, "Word%d: var: %s; exp%d; X_node: %s\n",
+                _word, var, i, w_xnode ? w_xnode->word->subword : "NULL X_node");
+        assert(w_xnode != NULL, "NULL X_node for var %s", new_var);
         if (root && parent_exp == NULL && l->e != w_xnode->exp) {
           E_list *we = NULL;
 
@@ -117,13 +125,10 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
             }
           }
           if (we == NULL) {
-            //cout << ">>>>>> NEXT W_XNODE" << endl;
+            lgdebug(+D_IC, "Next w_xnode for word %d is needed\n", _word);
             w_xnode = w_xnode->next;
-            assert(w_xnode != NULL);
+            assert(w_xnode != NULL, "NULL next X_node for var %s", new_var);
           }
-        }
-        if (0 && root && parent_exp == NULL) {
-          cout << "Word"<<_word<<"; var:" << var << "; ALT " << i << ": " << (w_xnode ? w_xnode->word->subword : "NULL X_node") << ' ' << endl;
         }
         insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost, l->e, w_xnode);
 
@@ -137,8 +142,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     }
   }
 }
-
-
+#undef D_IC
 
 void WordTag::find_matches(int w, const char* C, char dir, std::vector<PositionConnector*>& matches)
 {

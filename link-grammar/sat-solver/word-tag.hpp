@@ -102,6 +102,9 @@ public:
   WordTag(int word, Variables* variables, Sentence sent, Parse_Options opts)
     : _word(word), _variables(variables), _sent(sent), _opts(opts) {
     _match_possible.resize(_sent->length);
+    verbosity = opts->verbosity;
+    debug = opts->debug;
+    test = opts->test;
   }
 
   const std::vector<PositionConnector>& get_left_connectors() const {
@@ -172,6 +175,9 @@ public:
     return _match_possible[wi].find(pi) != _match_possible[wi].end();
   }
 
+  int verbosity;
+  const char *debug;
+  const char *test;
 };
 
 #endif
