@@ -26,6 +26,7 @@ extern "C" {
 #include "analyze-linkage.h"
 #include "build-disjuncts.h"
 #include "dict-file/read-dict.h"
+#include "disjunct-utils.h"
 #include "extract-links.h"
 #include "linkage.h"
 #include "post-process.h"
@@ -1513,26 +1514,17 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     clink.lw = var->left_word;
     clink.rw = var->right_word;
 
-    Connector* connector;
-
-    // XXX Should not alloc a new one, but use the connector from
-    // the PositionConnector class ...
-    connector = connector_new();
-    connector->string = var->left_connector;
-    connector->word = var->left_word; // XXX is this needed ?
-    clink.lc = connector;
-
-    connector = connector_new();
-    connector->string = var->right_connector;
-    connector->word = var->right_word; // XXX is this needed ?
-    clink.rc = connector;
+    PositionConnector* lpc = _word_tags[var->left_word].get(var->left_position);
+    PositionConnector* rpc = _word_tags[var->right_word].get(var->right_position);
+    lpc->connector->word = var->left_word; // XXX is this needed ?
+    rpc->connector->word = var->right_word; // XXX is this needed ?
+    clink.lc = lpc->connector;
+    clink.rc = rpc->connector;
 
     // Indicate the disjuncts, too.
     // This is needed so that compute_chosen_word works correctly.
 
-// FIXME -- this is deeply and fundamentally broken. First, we should not
-// use unsplit_word below, but instead, get the string from the X_node.
-// However, the X_node was discarded previously, up above.  Next, we are
+// FIXME -- this is deeply and fundamentally broken. We are
 // trying to reconstruct the actual disjunct that was used, but we aren't
 // really doing that correctly, because we never recorded the DNF that
 // was used.  Maybe .. maybe we could hack around this by looking at the
@@ -1546,15 +1538,13 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     // XXX FIXME -- the chosen disjunct has probably already been
     // set for this word .. don't set it again.  Oh, and it should
     // be consistent, too ...
-    d = build_disjuncts_for_exp(var->left_exp,
-                                _sent->word[var->left_word].unsplit_word,
-                                UNLIMITED_LEN);
+    d = build_disjuncts_for_exp(var->left_exp, lpc->gword->subword, UNLIMITED_LEN);
+    word_record_in_disjunct(lpc->gword, d);
     _sent->word[var->left_word].d = d;
     lkg->chosen_disjuncts[clink.lw] = d;
 
-    d = build_disjuncts_for_exp(var->right_exp,
-                                _sent->word[var->right_word].unsplit_word,
-                                 UNLIMITED_LEN);
+    d = build_disjuncts_for_exp(var->right_exp, rpc->gword->subword, UNLIMITED_LEN);
+    word_record_in_disjunct(rpc->gword, d);
     _sent->word[var->right_word].d = d;
     lkg->chosen_disjuncts[clink.rw] = d;
 
