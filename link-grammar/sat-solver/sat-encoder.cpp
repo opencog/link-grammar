@@ -33,6 +33,7 @@ extern "C" {
 #include "preparation.h"
 #include "score.h"
 #include "utilities.h"
+#include "wordgraph.h"
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
@@ -1245,6 +1246,8 @@ void SATEncoder::pp_prune()
  * sat_extract_links is called, instead of normal extract_links().
  * It would be good to refactor this and the other to make them even
  * more similar, because right now, its confusing ...
+ * XXX Now the corresponding function is compute_chosen_disjuncts(),
+ * which may be even more confusing.
  */
 Linkage SATEncoder::create_linkage()
 {
@@ -1255,6 +1258,10 @@ Linkage SATEncoder::create_linkage()
 
   sat_extract_links(linkage);
 
+  /* Because the empty words are used only in the parsing stage, they are
+   * removed here along with their links, so from now on we will not need to
+   * consider them. */
+  remove_empty_words(linkage);
   return linkage;
 }
 
@@ -1521,6 +1528,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     clink.lc = lpc->connector;
     clink.rc = rpc->connector;
 
+    current_link++;
+
     // Indicate the disjuncts, too.
     // This is needed so that compute_chosen_word works correctly.
 
@@ -1534,6 +1543,18 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 // all we need here are the X_node strings, and nothing else, and so ...
 // all teh exp flow through this code could be removed. Arghhh.
     Disjunct *d;
+
+    // For empty words, only create a dummy disjunct - for remove_empty_word()
+    if (lpc->gword->morpheme_type == MT_EMPTY ||
+        rpc->gword->morpheme_type == MT_EMPTY) {
+      // XXX Why right_expression is NULL? And why left_expression is only ZZZ+?
+      // Hence, to prevent triggering an assert() in build_clause(), the
+      // disjunct for the empty word (right_word) is built with left_exp.
+      d = build_disjuncts_for_exp(var->left_exp, rpc->gword->subword, UNLIMITED_LEN);
+      word_record_in_disjunct(empty_word(), d);
+      lkg->chosen_disjuncts[var->right_word] = d;
+      continue;
+    }
 
     // XXX FIXME -- the chosen disjunct has probably already been
     // set for this word .. don't set it again.  Oh, and it should
@@ -1561,7 +1582,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
       _sent->word[var->right_word].d = d; // for free_disjuncts()
     }
 
-    current_link++;
   }
 
   lkg->num_links = current_link;
