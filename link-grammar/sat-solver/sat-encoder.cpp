@@ -1538,15 +1538,20 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     // XXX FIXME -- the chosen disjunct has probably already been
     // set for this word .. don't set it again.  Oh, and it should
     // be consistent, too ...
-    d = build_disjuncts_for_exp(var->left_exp, lpc->gword->subword, UNLIMITED_LEN);
-    word_record_in_disjunct(lpc->gword, d);
-    _sent->word[var->left_word].d = d;
-    lkg->chosen_disjuncts[clink.lw] = d;
 
-    d = build_disjuncts_for_exp(var->right_exp, rpc->gword->subword, UNLIMITED_LEN);
-    word_record_in_disjunct(rpc->gword, d);
-    _sent->word[var->right_word].d = d;
-    lkg->chosen_disjuncts[clink.rw] = d;
+    if (_sent->word[var->left_word].d == NULL) {
+      d = build_disjuncts_for_exp(var->left_exp, lpc->gword->subword, UNLIMITED_LEN);
+      word_record_in_disjunct(lpc->gword, d);
+      _sent->word[var->left_word].d = d;
+      lkg->chosen_disjuncts[clink.lw] = d;
+    }
+
+    if (_sent->word[var->right_word].d == NULL) {
+      d = build_disjuncts_for_exp(var->right_exp, rpc->gword->subword, UNLIMITED_LEN);
+      word_record_in_disjunct(rpc->gword, d);
+      _sent->word[var->right_word].d = d;
+      lkg->chosen_disjuncts[clink.rw] = d;
+    }
 
     current_link++;
   }
