@@ -580,48 +580,6 @@ void check_link_size(Linkage lkg)
 	}
 }
 
-/**
- * Remove the empty words from a linkage.
- * XXX Should we remove here also the dict-cap tokens? In any case, for now they
- * are left for debug.
- */
-static void remove_empty_words(Linkage lkg)
-{
-	size_t i, j;
-	Disjunct **cdj = lkg->chosen_disjuncts;
-	int *remap = alloca(lkg->num_words * sizeof(*remap));
-
-	if (4 <= verbosity)
-	{
-		lgdebug(0, "Info: chosen_disjuncts before removing empty words:\n");
-		print_chosen_disjuncts_words(lkg);
-	}
-
-	for (i = 0, j = 0; i < lkg->num_words; i++)
-	{
-		if ((NULL != cdj[i]) && (MT_EMPTY == cdj[i]->word[0]->morpheme_type))
-		{
-			remap[i] = -1;
-		}
-		else
-		{
-			cdj[j] = cdj[i];
-			remap[i] = j;
-			j++;
-		}
-	}
-	lkg->num_words = j;
-	/* Unused memory not freed - all of it will be freed in free_linkages(). */
-
-	if (4 <= verbosity)
-	{
-		lgdebug(0, "Info: chosen_disjuncts after removing empty words:\n");
-		print_chosen_disjuncts_words(lkg);
-	}
-
-	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
-}
-
 /** The extract_links() call sets the chosen_disjuncts array */
 static void compute_chosen_disjuncts(Sentence sent)
 {
