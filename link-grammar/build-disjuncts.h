@@ -22,4 +22,5 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn);
 
 #ifdef DEBUG
 void prt_exp(Exp *, int);
+void prt_exp_mem(Exp *, int);
 #endif
