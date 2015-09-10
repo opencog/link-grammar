@@ -1539,18 +1539,26 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     // set for this word .. don't set it again.  Oh, and it should
     // be consistent, too ...
 
-    if (_sent->word[var->left_word].d == NULL) {
+    if (lkg->chosen_disjuncts[var->left_word] == NULL) {
+      if (var->left_exp == NULL) {
+        lgdebug(+1, "left_exp==NULL for: left_word %d connector %s\n",
+             var->left_word, clink.lc->string);
+      }
       d = build_disjuncts_for_exp(var->left_exp, lpc->gword->subword, UNLIMITED_LEN);
       word_record_in_disjunct(lpc->gword, d);
-      _sent->word[var->left_word].d = d;
-      lkg->chosen_disjuncts[clink.lw] = d;
+      lkg->chosen_disjuncts[var->left_word] = d;
+      _sent->word[var->left_word].d = d; // for free_disjuncts()
     }
 
-    if (_sent->word[var->right_word].d == NULL) {
+    if (lkg->chosen_disjuncts[var->right_word] == NULL) {
+      if (var->right_exp == NULL) {
+        lgdebug(+1, "right_exp==NULL for: right_word %d connector %s\n",
+             var->right_word, clink.lc->string);
+      }
       d = build_disjuncts_for_exp(var->right_exp, rpc->gword->subword, UNLIMITED_LEN);
       word_record_in_disjunct(rpc->gword, d);
-      _sent->word[var->right_word].d = d;
-      lkg->chosen_disjuncts[clink.rw] = d;
+      lkg->chosen_disjuncts[var->right_word] = d;
+      _sent->word[var->right_word].d = d; // for free_disjuncts()
     }
 
     current_link++;
