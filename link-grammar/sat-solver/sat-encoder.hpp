@@ -19,6 +19,11 @@ public:
       _sent(sent), _opts(opts)
   {
     _cost_cutoff = parse_options_get_disjunct_cost(opts);
+
+    verbosity = opts->verbosity;
+    debug = opts->debug;
+    test = opts->test;
+
     // Preprocess word tags of the sentence
     build_word_tags();
   }
@@ -34,6 +39,11 @@ public:
 
   // Solve the formula, returning the next linkage.
   Linkage get_next_linkage();
+
+private:
+  int verbosity;
+  const char *debug;
+  const char *test;
 
 protected:
 

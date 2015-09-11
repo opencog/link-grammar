@@ -239,7 +239,8 @@ void SATEncoder::build_word_tags()
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) {
-      cerr << "Error: Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << ": NULL X_node" <<  endl;
+      // Most probably everything got pruned. There will be no linkage.
+      lgdebug(+0, "Word%zu %s: NULL X_node\n", w, N(_sent->word[w].unsplit_word));
       continue;
     }
 
