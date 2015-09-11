@@ -24,10 +24,10 @@ struct PositionConnector
     : exp(e), connector(c), dir(d), word(w), position(p),
       cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
-      eps_right(er), eps_left(el), w_xnode(w_xnode)
+      eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
-    if (w_xnode == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; X_node: " << (w_xnode?w_xnode->string: "(null)") << endl;
+    if (word_xnode == NULL) {
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
 
     /*
@@ -67,7 +67,7 @@ struct PositionConnector
 
 
   // The corresponding X_node - chosen-disjuncts[]
-  const X_node *w_xnode;
+  const X_node *word_xnode;
 
   // Matches with other words
   std::vector<PositionConnector*> matches;
@@ -157,7 +157,7 @@ public:
                          std::vector<int>& eps_right,
                          std::vector<int>& eps_left,
                          char* var, bool root, double parent_cost,
-                         Exp* parent, const X_node *w_xnode);
+                         Exp* parent, const X_node *word_xnode);
 
   // Caches information about the found matches to the _matches vector, and also
   // updates the _matches vector of all connectors in the given tag.

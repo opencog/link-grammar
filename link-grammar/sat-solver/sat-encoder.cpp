@@ -239,7 +239,7 @@ void SATEncoder::build_word_tags()
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) {
-      cerr << "Error: Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << "NULL X_node" <<  endl;
+      cerr << "Error: Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << ": NULL X_node" <<  endl;
       continue;
     }
 
@@ -1544,8 +1544,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 // all teh exp flow through this code could be removed. Arghhh.
     Disjunct *d;
 
-    const X_node *left_xnode = lpc->w_xnode;
-    const X_node *right_xnode = rpc->w_xnode;
+    const X_node *left_xnode = lpc->word_xnode;
+    const X_node *right_xnode = rpc->word_xnode;
 
     // For empty words, only create a dummy disjunct - for remove_empty_word()
     if (left_xnode->word->morpheme_type == MT_EMPTY ||
