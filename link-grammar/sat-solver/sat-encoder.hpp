@@ -318,6 +318,7 @@ public:
 
   virtual void generate_encoding_specific_clauses();
 
+private:
   int verbosity;
   const char *debug;
   const char *test;

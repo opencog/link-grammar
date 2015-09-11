@@ -176,6 +176,7 @@ public:
     return _match_possible[wi].find(pi) != _match_possible[wi].end();
   }
 
+private:
   int verbosity;
   const char *debug;
   const char *test;
