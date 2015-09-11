@@ -371,7 +371,17 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 		linkage = linkage_create(i, sent, opts);
 
 		/* Currently, sat solver returns NULL when there ain't no more */
-		if (!linkage) break;
+		if (!linkage)
+		{
+			if (verbosity > 0)
+			{
+				if (0 == i)
+					fprintf(stdout, "No linkages found.\n");
+				else
+					fprintf(stdout, "No more linkages.\n");
+			}
+			break;
+		}
 
 		if (verbosity > 0)
 		{
