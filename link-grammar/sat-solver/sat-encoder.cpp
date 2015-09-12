@@ -1507,7 +1507,7 @@ void SATEncoder::generate_linked_min_max_planarity()
   }
 }
 
-static Exp *null_exp()
+static Exp* null_exp()
 {
   static Exp e;
 
@@ -1516,6 +1516,24 @@ static Exp *null_exp()
   e.type = AND_type;
   return &e;
 }
+
+static Exp* PositionConnector2exp(const PositionConnector* pc)
+{
+    Exp* e = (Exp*)xalloc(sizeof(Exp));
+    e->type = CONNECTOR_type;
+    e->dir = pc->dir;
+    e->multi = pc->connector->multi;
+    e->u.string = pc->connector->string;
+    e->cost = pc->cost;
+
+    return e;
+}
+
+#if 0
+static bool is_multi(const Connector* c, const Exp *e)
+{
+}
+#endif
 
 static void add_anded_exp(Exp*& orig, Exp* addit)
 {
@@ -1534,7 +1552,7 @@ static void add_anded_exp(Exp*& orig, Exp* addit)
       elist->e = addit;
 
       // The updated orig is addit & orig
-      orig =(Exp*)xalloc(sizeof(Exp));
+      orig = (Exp*)xalloc(sizeof(Exp));
       orig->type = AND_type;
       orig->cost = 0.0;
       orig->u.l = elist;
@@ -1591,12 +1609,16 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
       continue;
     }
 
-    add_anded_exp(exp_word[var->left_word], var->left_exp);
-    add_anded_exp(exp_word[var->right_word], var->right_exp);
+    Exp* lcexp = PositionConnector2exp(lpc);
+    Exp* rcexp = PositionConnector2exp(rpc);
+    add_anded_exp(exp_word[var->left_word], lcexp);
+    add_anded_exp(exp_word[var->right_word], rcexp);
 
     if (verbosity >= D_SEL) {
-      cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
-      cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
+      //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
+      cout<< "LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
+      //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
+      cout<< "RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
       cout<< "L+L: "; print_expression(exp_word[var->left_word]);
       cout<< "R+R: "; print_expression(exp_word[var->right_word]);
     }
@@ -1622,7 +1644,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   for (WordIdx wi = 0; wi < _sent->length; wi++) {
     Exp *de = exp_word[wi];
 
-    //cout<<"Exp "<<wi<<": "<<endl; print_expression(de);
     // Skip empty words
     if (xnode_word[wi] == NULL)
       continue;
