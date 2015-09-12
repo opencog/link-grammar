@@ -25,6 +25,10 @@ using std::endl;
 extern "C" {
 #include "analyze-linkage.h"
 #include "build-disjuncts.h"
+#ifdef DEBUG
+#include <dict-api.h>             // for print_expression()
+#endif
+#include "dict-common.h"          // for Exp_create()
 #include "dict-file/read-dict.h"
 #include "disjunct-utils.h"
 #include "extract-links.h"
@@ -1503,10 +1507,53 @@ void SATEncoder::generate_linked_min_max_planarity()
   }
 }
 
+static Exp *null_exp()
+{
+  static Exp e;
+
+  if (e.type) return &e;
+  e.u.l = NULL;
+  e.type = AND_type;
+  return &e;
+}
+
+static void add_anded_exp(Exp*& orig, Exp* addit)
+{
+    if (orig == NULL)
+    {
+      orig = addit;
+    } else {
+      // flist is orig
+      E_list* flist = (E_list*)xalloc(sizeof(E_list));
+      flist->e = orig;
+      flist->next = NULL;
+
+      // elist is addit, orig
+      E_list* elist = (E_list*)xalloc(sizeof(E_list));
+      elist->next = flist;
+      elist->e = addit;
+
+      // The updated orig is addit & orig
+      orig =(Exp*)xalloc(sizeof(Exp));
+      orig->type = AND_type;
+      orig->cost = 0.0;
+      orig->u.l = elist;
+    }
+}
+
+#define D_SEL 5
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
+  lgdebug(+D_SEL, "Index %d\n", lkg->lifo.index);
 
+  Disjunct *d;
   int current_link = 0;
+
+  Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
+  memset(exp_word, 0, _sent->length * sizeof(Exp));
+  const X_node **xnode_word = (const X_node **)alloca(_sent->length * sizeof(X_node));
+  memset(xnode_word, 0, _sent->length * sizeof(X_node));
+
   const std::vector<int>& link_variables = _variables->link_variables();
   std::vector<int>::const_iterator i;
   for (i = link_variables.begin(); i != link_variables.end(); i++) {
@@ -1519,31 +1566,15 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     check_link_size(lkg);
     Link& clink = lkg->link_array[current_link];
+    current_link++;
     clink.lw = var->left_word;
     clink.rw = var->right_word;
 
     PositionConnector* lpc = _word_tags[var->left_word].get(var->left_position);
     PositionConnector* rpc = _word_tags[var->right_word].get(var->right_position);
-    //lpc->connector->word = var->left_word; // XXX is this needed ?
-    //rpc->connector->word = var->right_word; // XXX is this needed ?
+
     clink.lc = lpc->connector;
     clink.rc = rpc->connector;
-
-    current_link++;
-
-    // Indicate the disjuncts, too.
-    // This is needed so that compute_chosen_word works correctly.
-
-// FIXME -- this is deeply and fundamentally broken. We are
-// trying to reconstruct the actual disjunct that was used, but we aren't
-// really doing that correctly, because we never recorded the DNF that
-// was used.  Maybe .. maybe we could hack around this by looking at the
-// actual connectors that were used for each word, and combine those to
-// get the disjunct ... so its a mess.
-// Its not ever clear to me why chosen_words needs disjuncts .. really
-// all we need here are the X_node strings, and nothing else, and so ...
-// all teh exp flow through this code could be removed. Arghhh.
-    Disjunct *d;
 
     const X_node *left_xnode = lpc->word_xnode;
     const X_node *right_xnode = rpc->word_xnode;
@@ -1560,32 +1591,51 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
       continue;
     }
 
-    // XXX FIXME -- the chosen disjunct has probably already been
-    // set for this word .. don't set it again.  Oh, and it should
-    // be consistent, too ...
+    add_anded_exp(exp_word[var->left_word], var->left_exp);
+    add_anded_exp(exp_word[var->right_word], var->right_exp);
 
-    if (lkg->chosen_disjuncts[var->left_word] == NULL) {
-      if (var->left_exp == NULL) {
-        lgdebug(+1, "left_exp==NULL for: left_word %d connector %s\n",
-             var->left_word, clink.lc->string);
-      }
-      d = build_disjuncts_for_exp(var->left_exp, left_xnode->string, UNLIMITED_LEN);
-      word_record_in_disjunct(left_xnode->word, d);
-      lkg->chosen_disjuncts[var->left_word] = d;
-      _sent->word[var->left_word].d = d; // for free_disjuncts()
+    if (verbosity >= D_SEL) {
+      cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
+      cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
+      cout<< "L+L: "; print_expression(exp_word[var->left_word]);
+      cout<< "R+R: "; print_expression(exp_word[var->right_word]);
     }
 
-    if (lkg->chosen_disjuncts[var->right_word] == NULL) {
-      if (var->right_exp == NULL) {
-        lgdebug(+1, "right_exp==NULL for: right_word %d connector %s\n",
-             var->right_word, clink.lc->string);
-      }
-      d = build_disjuncts_for_exp(var->right_exp, right_xnode->string, UNLIMITED_LEN);
-      word_record_in_disjunct(right_xnode->word, d);
-      lkg->chosen_disjuncts[var->right_word] = d;
-      _sent->word[var->right_word].d = d; // for free_disjuncts()
+    if (xnode_word[var->left_word] && xnode_word[var->left_word] != left_xnode) {
+      lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
+               var->left_word, xnode_word[var->left_word]->word->subword,
+              left_xnode->word->subword);
+    }
+    if (xnode_word[var->right_word] && xnode_word[var->right_word] != right_xnode) {
+      lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
+              var->right_word, xnode_word[var->right_word]->word->subword,
+              right_xnode->word->subword);
     }
 
+    xnode_word[var->left_word] = left_xnode;
+    xnode_word[var->right_word] = right_xnode;
+  }
+
+  // Now build the disjuncts.
+  // This is needed so that compute_chosen_word works correctly.
+  // Just in case there is no expression for a disjunct, a null one is used.
+  for (WordIdx wi = 0; wi < _sent->length; wi++) {
+    Exp *de = exp_word[wi];
+
+    //cout<<"Exp "<<wi<<": "<<endl; print_expression(de);
+    // Skip empty words
+    if (xnode_word[wi] == NULL)
+      continue;
+
+    if (de == NULL) {
+      de = null_exp();
+      lgdebug(+0, "Warning: No expression for word %zu\n", wi);
+    }
+
+    d = build_disjuncts_for_exp(de, xnode_word[wi]->string, UNLIMITED_LEN);
+    word_record_in_disjunct(xnode_word[wi]->word, d);
+    lkg->chosen_disjuncts[wi] = d;
+    _sent->word[wi].d = d; // for free_disjuncts()
   }
 
   lkg->num_links = current_link;
@@ -1594,6 +1644,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
 }
+#undef D_SEL
 
 
 /****************************************************************************
