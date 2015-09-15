@@ -21,11 +21,16 @@ struct PositionConnector
   PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
                     double cst, double pcst, bool lr, bool ll,
                     const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode)
-    : exp(e), connector(c), dir(d), word(w), position(p),
+    : exp(e), dir(d), word(w), position(p),
       cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
+    // Initialize some fields in the connector struct.
+    connector.string = c->string;
+    connector.multi = c->multi;
+    connector.length_limit = c->length_limit;
+
     if (word_xnode == NULL) {
        cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
@@ -48,7 +53,7 @@ struct PositionConnector
   Exp* exp;
 
   // Connector itself
-  Connector* connector;
+  Connector connector;
   // Direction
   char dir;
   // word in a sentence that this connector belongs to

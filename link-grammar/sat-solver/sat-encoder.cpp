@@ -510,12 +510,12 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
     if (dir == '+') {
       rhs.push(Lit(_variables->link_cost(wi, pi, Ci, e,
                                          (*i)->word, (*i)->position,
-                                         (*i)->connector->string,
+                                         (*i)->connector.string,
                                          (*i)->exp,
                                          cost + (*i)->cost)));
     } else if (dir == '-'){
       rhs.push(Lit(_variables->link((*i)->word, (*i)->position,
-                                    (*i)->connector->string,
+                                    (*i)->connector.string,
                                     (*i)->exp,
                                     wi, pi, Ci, e)));
     }
@@ -709,8 +709,8 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i >= *mw2i) {
               clause.growTo(2);
-              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector->string));
-              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector->string));
+              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
+              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
             }
           }
@@ -755,8 +755,8 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i <= *mw2i) {
               clause.growTo(2);
-              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector->string));
-              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector->string));
+              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
+              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
             }
           }
@@ -1089,16 +1089,16 @@ void SATEncoder::power_prune()
     const std::vector<PositionConnector>& rc = _word_tags[wl].get_right_connectors();
     std::vector<PositionConnector>::const_iterator rci;
     for (rci = rc.begin(); rci != rc.end(); rci++) {
-      if (!(*rci).leading_right || (*rci).connector->multi)
+      if (!(*rci).leading_right || (*rci).connector.multi)
         continue;
 
       const std::vector<PositionConnector*>& matches = rci->matches;
       for (std::vector<PositionConnector*>::const_iterator lci = matches.begin(); lci != matches.end(); lci++) {
-        if (!(*lci)->leading_left || (*lci)->connector->multi || (*lci)->word <= wl + 2)
+        if (!(*lci)->leading_left || (*lci)->connector.multi || (*lci)->word <= wl + 2)
           continue;
 
-        //        printf("LR: .%d. .%d. %s\n", wl, rci->position, rci->connector->string);
-        //        printf("LL: .%d. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector->string);
+        //        printf("LR: .%d. .%d. %s\n", wl, rci->position, rci->connector.string);
+        //        printf("LL: .%d. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector.string);
 
         vec<Lit> clause;
         for (std::vector<int>::const_iterator i = rci->eps_right.begin(); i != rci->eps_right.end(); i++) {
@@ -1112,8 +1112,8 @@ void SATEncoder::power_prune()
         add_additional_power_pruning_conditions(clause, wl, (*lci)->word);
 
         clause.push(~Lit(_variables->link(
-               wl, rci->position, rci->connector->string, rci->exp,
-               (*lci)->word, (*lci)->position, (*lci)->connector->string, (*lci)->exp)));
+               wl, rci->position, rci->connector.string, rci->exp,
+               (*lci)->word, (*lci)->position, (*lci)->connector.string, (*lci)->exp)));
         add_clause(clause);
       }
     }
@@ -1133,8 +1133,8 @@ void SATEncoder::power_prune()
       for (std::vector<PositionConnector*>::const_iterator lci = matches.begin(); lci != matches.end(); lci++) {
         if (!(*lci)->leading_left || (*lci)->word != wl + 1)
           continue;
-        int link = _variables->link(wl, rci->position, rci->connector->string,
-                                    (*lci)->word, (*lci)->position, (*lci)->connector->string);
+        int link = _variables->link(wl, rci->position, rci->connector.string,
+                                    (*lci)->word, (*lci)->position, (*lci)->connector.string);
         std::vector<int> clause(2);
         clause[0] = -link;
 
@@ -1178,8 +1178,8 @@ void SATEncoder::power_prune()
       for (j = matches.begin(); j != matches.end(); j++) {
         if (std::find(certainly_deep_left[(*j)->word].begin(), certainly_deep_left[(*j)->word].end(),
                       *j) != certainly_deep_left[(*j)->word].end()) {
-          generate_literal(-_variables->link((*i)->word, (*i)->position, (*i)->connector->string,
-                                             (*j)->word, (*j)->position, (*j)->connector->string));
+          generate_literal(-_variables->link((*i)->word, (*i)->position, (*i)->connector.string,
+                                             (*j)->word, (*j)->position, (*j)->connector.string));
         }
       }
     }
@@ -1416,7 +1416,7 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
       for (c = w1_connectors.begin(); c != w1_connectors.end(); c++) {
         assert(c->word == w1, "Connector word must match");
         if (_word_tags[w2].match_possible(c->word, c->position)) {
-          rhs.push(Lit(_variables->link_cw(w2, c->word, c->position, c->connector->string)));
+          rhs.push(Lit(_variables->link_cw(w2, c->word, c->position, c->connector.string)));
         }
       }
 
@@ -1522,8 +1522,8 @@ static Exp* PositionConnector2exp(const PositionConnector* pc)
     Exp* e = (Exp*)xalloc(sizeof(Exp));
     e->type = CONNECTOR_type;
     e->dir = pc->dir;
-    e->multi = pc->connector->multi;
-    e->u.string = pc->connector->string;
+    e->multi = pc->connector.multi;
+    e->u.string = pc->connector.string;
     e->cost = pc->cost;
 
     return e;
@@ -1591,8 +1591,13 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     PositionConnector* lpc = _word_tags[var->left_word].get(var->left_position);
     PositionConnector* rpc = _word_tags[var->right_word].get(var->right_position);
 
-    clink.lc = lpc->connector;
-    clink.rc = rpc->connector;
+    // Allocate memory for the connectors, because they should persist
+    // beyond the lifetime of the sat-solver data structures.
+    clink.lc = connector_new();
+    clink.rc = connector_new();
+
+    *clink.lc = lpc->connector;
+    *clink.rc = rpc->connector;
 
     const X_node *left_xnode = lpc->word_xnode;
     const X_node *right_xnode = rpc->word_xnode;
@@ -1707,4 +1712,15 @@ extern "C" void sat_sentence_delete(Sentence sent)
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return;
   delete encoder;
+
+  Linkage lkgs = sent->lnkages;
+  if (!lkgs) return;
+
+  for (LinkIdx li = 0; li < sent->num_linkages_alloced; li++) {
+    Linkage lkg = &lkgs[li];
+    for(size_t lai = 0; lai < lkg->num_links; lai++) {
+      free(lkg->link_array[lai].rc);
+      free(lkg->link_array[lai].lc);
+    }
+  }
 }
