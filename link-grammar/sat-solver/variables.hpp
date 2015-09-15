@@ -75,6 +75,10 @@ public:
         delete *i;
       }
     }
+
+    for (size_t i = 0; i < _linked_variables.size(); i++)
+      delete _linked_variables[i];
+
     delete _guiding;
   }
 
