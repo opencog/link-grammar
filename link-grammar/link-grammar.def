@@ -142,3 +142,4 @@ word_record_in_disjunct
 feature_enabled
 empty_word
 remove_empty_words
+free_Exp

@@ -1662,6 +1662,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     word_record_in_disjunct(xnode_word[wi]->word, d);
     lkg->chosen_disjuncts[wi] = d;
     _sent->word[wi].d = d; // for free_disjuncts()
+    free_Exp(de);
   }
 
   lkg->num_links = current_link;
