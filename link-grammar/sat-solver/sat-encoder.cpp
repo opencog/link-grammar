@@ -1287,50 +1287,56 @@ void SATEncoder::generate_linkage_prohibiting()
 
 Linkage SATEncoder::get_next_linkage()
 {
-  if (l_False == _solver->solve()) return NULL;
+  bool connected;
+  do {
+    if (l_False == _solver->solve()) return NULL;
+
+    std::vector<int> components;
+    connected = connectivity_components(components);
+    if (!connected) {
+      lgdebug(+2, "Linkage DISCONNECTED\n");
+      generate_disconnectivity_prohibiting(components);
+      // Use !test=linkage-disconnected to see these linkages
+      if (test_enabled("linkage-disconnected")) {
+        cout << "Linkage DISCONNECTED" << endl;
+        connected = true; // pretend it is connected
+      }
+    }
+  } while (!connected);
+
+  generate_linkage_prohibiting();
+
   Linkage linkage = create_linkage();
   Linkage lkg = NULL;
 
-  std::vector<int> components;
-  bool connected = connectivity_components(components);
-  if (connected) {
-    // num_connected_linkages++;
+  // Expand the linkage array.
+  int index = _sent->num_linkages_alloced;
+  _sent->num_linkages_alloced++;
+  size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
+  _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
 
-    // Expand the linkage array.
-    int index = _sent->num_linkages_alloced;
-    _sent->num_linkages_alloced++;
-    size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-    _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
+  lkg = &_sent->lnkages[index];
+  *lkg = *linkage;  /* copy en-mass */
+  exfree(linkage, sizeof(struct Linkage_s));
+  linkage = NULL;
 
-    lkg = &_sent->lnkages[index];
-    *lkg = *linkage;  /* copy en-mass */
-    exfree(linkage, sizeof(struct Linkage_s));
-    linkage = NULL;
+  // Perform the post-processing
+  sane_linkage_morphism(_sent, lkg, _opts);
+  do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
+  build_type_array(_sent->postprocessor);
+  linkage_set_domain_names(_sent->postprocessor, lkg);
+  post_process_free_data(&_sent->postprocessor->pp_data);
+  linkage_score(lkg, _opts);
 
-    // Perform the post-processing
-    sane_linkage_morphism(_sent, lkg, _opts);
-    do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
-    build_type_array(_sent->postprocessor);
-    linkage_set_domain_names(_sent->postprocessor, lkg);
-    post_process_free_data(&_sent->postprocessor->pp_data);
-    linkage_score(lkg, _opts);
+  if (0 == lkg->lifo.N_violations) {
+    _sent->num_valid_linkages++;
+  }
 
-    if (0 == lkg->lifo.N_violations) {
-      _sent->num_valid_linkages++;
-    }
-
-    // sane_morphism will increment N_violations if its insane...
-    if (0 == lkg->lifo.N_violations) {
-      cout << "Linkage PP OK" << endl;
-    } else {
-      cout << "Linkage PP NOT OK" << endl;
-    }
-
-    generate_linkage_prohibiting();
+  // sane_morphism will increment N_violations if its insane...
+  if (0 == lkg->lifo.N_violations) {
+    cout << "Linkage PP OK" << endl;
   } else {
-    cout << "Linkage DISCONNECTED" << endl;
-    generate_disconnectivity_prohibiting(components);
-    exfree(linkage, sizeof(struct Linkage_s));
+    cout << "Linkage PP NOT OK" << endl;
   }
 
   _solver->printStats();
