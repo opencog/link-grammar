@@ -1310,6 +1310,9 @@ Linkage SATEncoder::get_next_linkage()
     // Perform the post-processing
     sane_linkage_morphism(_sent, lkg, _opts);
     do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
+    build_type_array(_sent->postprocessor);
+    linkage_set_domain_names(_sent->postprocessor, lkg);
+    post_process_free_data(&_sent->postprocessor->pp_data);
     linkage_score(lkg, _opts);
 
     if (0 == lkg->lifo.N_violations) {

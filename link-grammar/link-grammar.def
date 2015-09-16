@@ -143,3 +143,6 @@ feature_enabled
 empty_word
 remove_empty_words
 free_Exp
+linkage_set_domain_names
+post_process_free_data
+build_type_array
