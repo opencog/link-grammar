@@ -1661,7 +1661,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     d = build_disjuncts_for_exp(de, xnode_word[wi]->string, UNLIMITED_LEN);
     word_record_in_disjunct(xnode_word[wi]->word, d);
     lkg->chosen_disjuncts[wi] = d;
-    _sent->word[wi].d = d; // for free_disjuncts()
     free_Exp(de);
   }
 
@@ -1719,9 +1718,14 @@ extern "C" void sat_sentence_delete(Sentence sent)
 
   for (LinkIdx li = 0; li < sent->num_linkages_alloced; li++) {
     Linkage lkg = &lkgs[li];
+    // Free the connectors
     for(size_t lai = 0; lai < lkg->num_links; lai++) {
       free(lkg->link_array[lai].rc);
       free(lkg->link_array[lai].lc);
+    }
+    // Free the disjuncts
+    for (size_t cdi = 0; cdi < lkg->num_words; cdi++) {
+      free_disjuncts(lkg->chosen_disjuncts[cdi]);
     }
   }
 }
