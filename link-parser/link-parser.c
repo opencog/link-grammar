@@ -370,6 +370,14 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 
 		linkage = linkage_create(i, sent, opts);
 
+		/* Currently, sat solver sets the linkage violation indication
+		 * only when it creates the linkage as a result of the above call. */
+		if ((sentence_num_violations(sent, i) > 0) &&
+			!copts->display_bad)
+		{
+			continue;
+		}
+
 		/* Currently, sat solver returns NULL when there ain't no more */
 		if (!linkage)
 		{

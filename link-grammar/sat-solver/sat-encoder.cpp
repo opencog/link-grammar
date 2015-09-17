@@ -1285,9 +1285,9 @@ void SATEncoder::generate_linkage_prohibiting()
 
 Linkage SATEncoder::get_next_linkage()
 {
-  Linkage linkage;
+  Linkage linkage = NULL;
   bool connected;
-  bool sane;
+  bool sane = true;
   bool display_linkage_disconnected = false;
 
   /* Loop until a good linkage is found.
@@ -1337,27 +1337,23 @@ Linkage SATEncoder::get_next_linkage()
   Linkage lkg = &_sent->lnkages[index];
   *lkg = *linkage;  /* copy en-mass */
   exfree(linkage, sizeof(struct Linkage_s));
-  linkage = NULL;
 
   // Perform the rest of the post-processing
-  do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
+  PP_node *ppn = do_post_process(_sent->postprocessor, lkg, false);
+  if (NULL != ppn->violation) {
+    lkg->lifo.N_violations++;
+    lkg->lifo.pp_violation_msg = ppn->violation;
+  } else {
+    _sent->num_valid_linkages++;
+  }
+
   build_type_array(_sent->postprocessor);
   linkage_set_domain_names(_sent->postprocessor, lkg);
   post_process_free_data(&_sent->postprocessor->pp_data);
   linkage_score(lkg, _opts);
 
-  if (0 == lkg->lifo.N_violations) {
-    _sent->num_valid_linkages++;
-  }
-
-  // sane_morphism will increment N_violations if its insane...
-  if (0 == lkg->lifo.N_violations) {
-    cout << "Linkage PP OK" << endl;
-  } else {
-    cout << "Linkage PP NOT OK" << endl;
-  }
-
-  _solver->printStats();
+  if (NULL == ppn->violation && verbosity > 1)
+    _solver->printStats();
   return lkg;
 }
 
