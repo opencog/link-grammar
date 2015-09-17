@@ -1287,27 +1287,48 @@ void SATEncoder::generate_linkage_prohibiting()
 
 Linkage SATEncoder::get_next_linkage()
 {
+  Linkage linkage;
   bool connected;
+  bool sane;
+  bool display_linkage_disconnected = false;
+
+  /* Loop until a good linkage is found.
+   * Insane (mixed alternatives) linkages are always ignored.
+   * Disconnected linkages are normally ignored, unless
+   * !test=linkage-disconnected is used (and they are sane) */
   do {
     if (l_False == _solver->solve()) return NULL;
 
     std::vector<int> components;
     connected = connectivity_components(components);
+
+    // Prohibit this solution so the next ones can be found
     if (!connected) {
-      lgdebug(+2, "Linkage DISCONNECTED\n");
       generate_disconnectivity_prohibiting(components);
-      // Use !test=linkage-disconnected to see these linkages
-      if (test_enabled("linkage-disconnected")) {
-        cout << "Linkage DISCONNECTED" << endl;
-        connected = true; // pretend it is connected
+      display_linkage_disconnected = test_enabled("linkage-disconnected");
+    } else {
+      generate_linkage_prohibiting();
+    }
+
+    if (connected || display_linkage_disconnected) {
+      linkage = create_linkage();
+      sane = sane_linkage_morphism(_sent, linkage, _opts);
+      if (!sane) {
+          free_linkage(linkage);
+          continue; // skip this linkage
       }
     }
-  } while (!connected);
 
-  generate_linkage_prohibiting();
+    if (!connected) {
+      if (display_linkage_disconnected) {
+        cout << "Linkage DISCONNECTED" << endl;
+      } else {
+        lgdebug(+2, "Linkage DISCONNECTED (skipped)\n");
+      }
+    }
+  } while (!sane || !(connected || display_linkage_disconnected));
 
-  Linkage linkage = create_linkage();
-  Linkage lkg = NULL;
+  assert(linkage, "No linkage");
 
   // Expand the linkage array.
   int index = _sent->num_linkages_alloced;
@@ -1315,13 +1336,12 @@ Linkage SATEncoder::get_next_linkage()
   size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
   _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
 
-  lkg = &_sent->lnkages[index];
+  Linkage lkg = &_sent->lnkages[index];
   *lkg = *linkage;  /* copy en-mass */
   exfree(linkage, sizeof(struct Linkage_s));
   linkage = NULL;
 
-  // Perform the post-processing
-  sane_linkage_morphism(_sent, lkg, _opts);
+  // Perform the rest of the post-processing
   do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
   build_type_array(_sent->postprocessor);
   linkage_set_domain_names(_sent->postprocessor, lkg);
