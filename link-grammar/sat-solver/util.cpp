@@ -8,7 +8,7 @@ extern "C" {
 /**
  * Free all the connectors and disjuncts of a specific linkage.
  */
-void free_linkage(Linkage lkg)
+void free_linkage_connectors_and_disjuncts(Linkage lkg)
 {
   // Free the connectors
   for(size_t i = 0; i < lkg->num_links; i++) {
