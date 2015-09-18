@@ -315,6 +315,7 @@ public:
 
   virtual void generate_linked_definitions();
   virtual bool sat_extract_links(Linkage);
+  virtual Exp* PositionConnector2exp(const PositionConnector*);
 
   virtual void generate_encoding_specific_clauses();
 

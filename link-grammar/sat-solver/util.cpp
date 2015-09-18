@@ -3,7 +3,6 @@
 extern "C" {
 #include "api-structures.h"
 #include "structures.h"
-#include "disjunct-utils.h"
 };
 
 /**
@@ -20,6 +19,40 @@ void free_linkage(Linkage lkg)
   for (size_t i = 0; i < lkg->num_words; i++) {
     free_disjuncts(lkg->chosen_disjuncts[i]);
   }
+}
+
+Exp* null_exp()
+{
+  static Exp e;
+
+  if (e.type) return &e;
+  e.u.l = NULL;
+  e.type = AND_type;
+  return &e;
+}
+
+void add_anded_exp(Exp*& orig, Exp* addit)
+{
+    if (orig == NULL)
+    {
+      orig = addit;
+    } else {
+      // flist is orig
+      E_list* flist = (E_list*)xalloc(sizeof(E_list));
+      flist->e = orig;
+      flist->next = NULL;
+
+      // elist is addit, orig
+      E_list* elist = (E_list*)xalloc(sizeof(E_list));
+      elist->next = flist;
+      elist->e = addit;
+
+      // The updated orig is addit & orig
+      orig = (Exp*)xalloc(sizeof(Exp));
+      orig->type = AND_type;
+      orig->cost = 0.0;
+      orig->u.l = elist;
+    }
 }
 
 bool isEndingInterpunction(const char* str)

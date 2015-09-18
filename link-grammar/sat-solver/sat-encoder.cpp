@@ -28,16 +28,14 @@ extern "C" {
 #ifdef DEBUG
 #include <dict-api.h>             // for print_expression()
 #endif
-#include "dict-common.h"          // for Exp_create()
 #include "dict-file/read-dict.h"
-#include "disjunct-utils.h"
 #include "extract-links.h"
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
 #include "score.h"
-#include "utilities.h"
-#include "wordgraph.h"
+//#include "utilities.h"         // XXX do we need it?
+#include "wordgraph.h"           // for empty_word()
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
@@ -1536,17 +1534,7 @@ void SATEncoder::generate_linked_min_max_planarity()
   }
 }
 
-static Exp* null_exp()
-{
-  static Exp e;
-
-  if (e.type) return &e;
-  e.u.l = NULL;
-  e.type = AND_type;
-  return &e;
-}
-
-static Exp* PositionConnector2exp(const PositionConnector* pc)
+Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {
     Exp* e = (Exp*)xalloc(sizeof(Exp));
     e->type = CONNECTOR_type;
@@ -1556,36 +1544,6 @@ static Exp* PositionConnector2exp(const PositionConnector* pc)
     e->cost = pc->cost;
 
     return e;
-}
-
-#if 0
-static bool is_multi(const Connector* c, const Exp *e)
-{
-}
-#endif
-
-static void add_anded_exp(Exp*& orig, Exp* addit)
-{
-    if (orig == NULL)
-    {
-      orig = addit;
-    } else {
-      // flist is orig
-      E_list* flist = (E_list*)xalloc(sizeof(E_list));
-      flist->e = orig;
-      flist->next = NULL;
-
-      // elist is addit, orig
-      E_list* elist = (E_list*)xalloc(sizeof(E_list));
-      elist->next = flist;
-      elist->e = addit;
-
-      // The updated orig is addit & orig
-      orig = (Exp*)xalloc(sizeof(Exp));
-      orig->type = AND_type;
-      orig->cost = 0.0;
-      orig->u.l = elist;
-    }
 }
 
 #define D_SEL 5
