@@ -412,16 +412,10 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
-static void free_linkages(Sentence sent)
+void free_linkage(Linkage linkage)
 {
-	size_t in;
-	Linkage lkgs = sent->lnkages;
-	if (!lkgs) return;
-
-	for (in=0; in<sent->num_linkages_alloced; in++)
-	{
 		size_t j;
-		Linkage linkage = &lkgs[in];
+
 		exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 		exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 		free(linkage->link_array);
@@ -446,6 +440,17 @@ static void free_linkages(Sentence sent)
 		/* XXX FIXME */
 		free(linkage->wg_path);
 		free(linkage->wg_path_display);
+}
+
+static void free_linkages(Sentence sent)
+{
+	size_t in;
+	Linkage lkgs = sent->lnkages;
+	if (!lkgs) return;
+
+	for (in=0; in<sent->num_linkages_alloced; in++)
+	{
+		free_linkage(&lkgs[in]);
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
