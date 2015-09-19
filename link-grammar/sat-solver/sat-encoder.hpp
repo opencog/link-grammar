@@ -116,7 +116,7 @@ protected:
   virtual void generate_linked_definitions() = 0;
 
   // In order to reduce the number of clauses, some linked(wi, wj)
-  // variables can apriori be eliminated. The information about pairs
+  // variables can a priori be eliminated. The information about pairs
   // of words that can be linked is kept in this matrix.
   MatrixUpperTriangle<int> _linked_possible;
 
@@ -137,7 +137,7 @@ protected:
 #ifdef _CONNECTIVITY_
   // Generate clauses that encode the connectivity requirement of the
   // linkage. Experiments showed that it is better to check the
-  // connectivity aposteriori and this method has been excised.
+  // connectivity a posteriori and this method has been excised.
   void generate_connectivity();
 #endif
 
@@ -179,7 +179,7 @@ protected:
   // Power pruning
   void power_prune();
   // auxiliary method that extends power pruning clauses with additional literals
-  // (e.g., link should not be power-prunned if there words are fat-linked)
+  // (e.g., link should not be power-pruned if there words are fat-linked)
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr)
   {}
 
@@ -237,7 +237,7 @@ protected:
   /*
    *   Word tags of the words in a sentence kept in a preprocessed
    *   form. This enables users to get information about the
-   *   connectors in a very eficient way.
+   *   connectors in a very efficient way.
    */
   // Word tags
   std::vector<WordTag> _word_tags;

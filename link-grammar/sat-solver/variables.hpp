@@ -101,7 +101,7 @@ public:
     return var;
   }
 
-  // If the cost is explicitely given, guiding params are calculated
+  // If the cost is explicitly given, guiding params are calculated
   // using the cost. Any params set earlier are overridden.
   int string_cost(const char* name, double cost)
   {
@@ -308,7 +308,7 @@ public:
     return var;
   }
 
-  // Auxilary variables used for connectivity encoding
+  // Auxiliary variables used for connectivity encoding
   int l_con(int i, int j, int k) {
     int var;
     if (!get_lcon_variable(i, j, k, var))

@@ -383,7 +383,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         Lit lhs = Lit(_variables->string_cost(var, e->cost));
         generate_and_definition(lhs, rhs);
 
-        /* Preceeds */
+        /* Precedes */
         int dfs_position_tmp = dfs_position;
         for (l = e->u.l; l->next != NULL; l = l->next) {
           generate_conjunct_order_constraints(w, l->e, l->next->e, dfs_position_tmp);
@@ -559,7 +559,7 @@ int SATEncoder::empty_connectors(Exp* e, char dir)
     }
     return true;
   } else
-    throw std::string("Unkown connector type");
+    throw std::string("Unknown connector type");
 }
 
 int SATEncoder::non_empty_connectors(Exp* e, char dir)
@@ -579,7 +579,7 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
     }
     return false;
   } else
-    throw std::string("Unkown connector type");
+    throw std::string("Unknown connector type");
 }
 
 bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
