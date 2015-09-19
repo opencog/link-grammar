@@ -479,7 +479,7 @@ static void batch_process_some_linkages(Label label,
 	if (there_was_an_error(label, sent, opts))
 	{
 		/* If linkages were found, print them */
-		if (sentence_num_linkages_found(sent) > 0) {
+		if (sentence_num_linkages_found(sent) >= 0) {
 			Linkage linkage = NULL;
 			/* If we found at least one good linkage, print it. */
 			if (sentence_num_valid_linkages(sent) > 0) {
