@@ -1245,22 +1245,23 @@ void SATEncoder::pp_prune()
  *                         D E C O D I N G                                  *
  *--------------------------------------------------------------------------*/
 
-/* This is very similar to the api call linkage_create(), except that
- * sat_extract_links is called, instead of normal extract_links().
+/**
+ * Create the next linkage.
+ * This is very similar to compute_chosen_disjuncts(), except that
+ * sat_extract_links() is called, instead of normal extract_links().
  * It would be good to refactor this and the other to make them even
- * more similar, because right now, its confusing ...
- * XXX Now the corresponding function is compute_chosen_disjuncts(),
- * which may be even more confusing.
+ * more similar, because else, its confusing ...
+ * FIXME? Use a shared function for the code here.
  */
 Linkage SATEncoder::create_linkage()
 {
   /* Using exalloc since this is external to the parser itself. */
   Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
   memset(linkage, 0, sizeof(struct Linkage_s));
+
   partial_init_linkage(linkage, _sent->length);
-
   sat_extract_links(linkage);
-
+  compute_link_names(linkage, _sent->string_set);
   /* Because the empty words are used only in the parsing stage, they are
    * removed here along with their links, so from now on we will not need to
    * consider them. */
@@ -1671,11 +1672,12 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     lkg->chosen_disjuncts[wi] = d;
     free_Exp(de);
   }
+
+  // This is needed so the empty-word disjuncts will get freed
   assert(lkg->chosen_disjuncts[0], "Must have at least one non-empty word");
   catenate_disjuncts(lkg->chosen_disjuncts[0], empty_words_tofree);
 
   lkg->num_links = current_link;
-  compute_link_names(lkg, _sent->string_set);
 
   DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
