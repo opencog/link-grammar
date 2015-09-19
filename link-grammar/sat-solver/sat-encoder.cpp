@@ -1312,7 +1312,15 @@ Linkage SATEncoder::get_next_linkage()
       linkage = create_linkage();
       sane = sane_linkage_morphism(_sent, linkage, _opts);
       if (!sane) {
+cout<<"INSANE: "<<_sent->num_linkages_alloced<<endl;
+          /* We cannot elegantly add this linkage to sent->linkges[] -
+           * to be freed in sentence_delete(), since insane linkages
+           * must be there with index > num_linkages_post_processed - so
+           * they remain hidden, but num_linkages_post_processed is an
+           * arbitrary number here.  So we must free it here. */
+          free_linkage_connectors_and_disjuncts(linkage);
           free_linkage(linkage);
+          free(linkage);
           continue; // skip this linkage
       }
     }
@@ -1542,6 +1550,17 @@ Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionCon
     return e;
 }
 
+// FIXME - put under a class or move to util.cpp.
+static Connector * empty_word_connector()
+{
+  static Connector c;
+
+  if (c.string != NULL) return &c;
+  c.string = EMPTY_CONNECTOR;
+
+  return &c;
+}
+
 #define D_SEL 5
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
@@ -1549,6 +1568,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
   Disjunct *d;
   int current_link = 0;
+  Disjunct *empty_words_tofree = NULL;
 
   Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
   memset(exp_word, 0, _sent->length * sizeof(Exp));
@@ -1574,14 +1594,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     PositionConnector* lpc = _word_tags[var->left_word].get(var->left_position);
     PositionConnector* rpc = _word_tags[var->right_word].get(var->right_position);
 
-    // Allocate memory for the connectors, because they should persist
-    // beyond the lifetime of the sat-solver data structures.
-    clink.lc = connector_new();
-    clink.rc = connector_new();
-
-    *clink.lc = lpc->connector;
-    *clink.rc = rpc->connector;
-
     const X_node *left_xnode = lpc->word_xnode;
     const X_node *right_xnode = rpc->word_xnode;
 
@@ -1594,8 +1606,21 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
       d = build_disjuncts_for_exp(var->left_exp, right_xnode->string, UNLIMITED_LEN);
       word_record_in_disjunct(empty_word(), d);
       lkg->chosen_disjuncts[var->right_word] = d;
+      if (empty_words_tofree == NULL)
+        empty_words_tofree = d;
+      else
+        catenate_disjuncts(empty_words_tofree, d);
+      clink.lc = clink.rc = empty_word_connector();
       continue;
     }
+
+    // Allocate memory for the connectors, because they should persist
+    // beyond the lifetime of the sat-solver data structures.
+    clink.lc = connector_new();
+    clink.rc = connector_new();
+
+    *clink.lc = lpc->connector;
+    *clink.rc = rpc->connector;
 
     Exp* lcexp = PositionConnector2exp(lpc);
     Exp* rcexp = PositionConnector2exp(rpc);
@@ -1646,6 +1671,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     lkg->chosen_disjuncts[wi] = d;
     free_Exp(de);
   }
+  assert(lkg->chosen_disjuncts[0], "Must have at least one non-empty word");
+  catenate_disjuncts(lkg->chosen_disjuncts[0], empty_words_tofree);
 
   lkg->num_links = current_link;
   compute_link_names(lkg, _sent->string_set);
