@@ -190,7 +190,7 @@ protected:
 
   // Add the specified clause to the solver
   void add_clause(vec<Lit>& clause) {
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
     print_clause(clause);
 #endif
     for (int i = 0; i < clause.size(); i++) {

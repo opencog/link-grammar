@@ -25,9 +25,7 @@ using std::endl;
 extern "C" {
 #include "analyze-linkage.h"
 #include "build-disjuncts.h"
-#ifdef DEBUG
 #include <dict-api.h>             // for print_expression()
-#endif
 #include "dict-file/read-dict.h"
 #include "extract-links.h"
 #include "linkage.h"
@@ -39,11 +37,13 @@ extern "C" {
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
 #define DEBUG_print(x) (cout << x << endl)
 #else
 #define DEBUG_print(x)
 #endif
+
+#define D_SAT 5
 
 // Convert a NULL C string pointer, for printing a possibly NULL string
 #define N(s) ((s) ? (s) : "(null)")
@@ -242,14 +242,14 @@ void SATEncoder::build_word_tags()
 
     if (_sent->word[w].x == NULL) {
       // Most probably everything got pruned. There will be no linkage.
-      lgdebug(+0, "Word%zu %s: NULL X_node\n", w, N(_sent->word[w].unsplit_word));
+      lgdebug(+D_SAT, "Word%zu %s: NULL X_node\n", w, N(_sent->word[w].unsplit_word));
       continue;
     }
 
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
     cout << "Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << endl;
     //print_expression(exp);
     cout << endl;
@@ -314,7 +314,7 @@ void SATEncoder::generate_satisfaction_conditions()
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
     cout << "Word: " << N(_sent->word[w].unsplit_word) << endl;
     //print_expression(exp);
     cout << endl;
@@ -1313,7 +1313,6 @@ Linkage SATEncoder::get_next_linkage()
       linkage = create_linkage();
       sane = sane_linkage_morphism(_sent, linkage, _opts);
       if (!sane) {
-cout<<"INSANE: "<<_sent->num_linkages_alloced<<endl;
           /* We cannot elegantly add this linkage to sent->linkges[] -
            * to be freed in sentence_delete(), since insane linkages
            * must be there with index > num_linkages_post_processed - so
@@ -1395,7 +1394,7 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
 
   Lit lhs = Lit(_variables->string_cost(var, cost));
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
   cout << "*** Connector: ." << wi << ". ." << pi << ". " << Ci << dir << endl;
 #endif
 
@@ -1427,7 +1426,7 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
   }
   DEBUG_print("--------- end multi");
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
   cout << "*** End Connector: ." << wi << ". ." << pi << ". " <<  Ci << endl;
 #endif
 }
@@ -1562,10 +1561,9 @@ static Connector * empty_word_connector()
   return &c;
 }
 
-#define D_SEL 5
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
-  lgdebug(+D_SEL, "Index %d\n", lkg->lifo.index);
+  lgdebug(+D_SAT, "Index %d\n", lkg->lifo.index);
 
   Disjunct *d;
   int current_link = 0;
@@ -1628,7 +1626,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     add_anded_exp(exp_word[var->left_word], lcexp);
     add_anded_exp(exp_word[var->right_word], rcexp);
 
-    if (verbosity >= D_SEL) {
+    if (verbosity >= D_SAT) {
       //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
       cout<< "LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
       //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
@@ -1682,8 +1680,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
 }
-#undef D_SEL
-
 
 /****************************************************************************
  *              Main entry point into the SAT parser                        *

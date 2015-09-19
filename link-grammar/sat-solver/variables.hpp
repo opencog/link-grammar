@@ -13,10 +13,10 @@
 #define  MAX_VARIABLE_NAME 256
 
 
-// #define _DEBUG
+// #define SAT_DEBUG
 // #define _VARS
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
 #define _VARS
 #endif
 
