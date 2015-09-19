@@ -1317,7 +1317,7 @@ Linkage SATEncoder::get_next_linkage()
            * to be freed in sentence_delete(), since insane linkages
            * must be there with index > num_linkages_post_processed - so
            * they remain hidden, but num_linkages_post_processed is an
-           * arbitrary number here.  So we must free it here. */
+           * arbitrary number.  So we must free it here. */
           free_linkage_connectors_and_disjuncts(linkage);
           free_linkage(linkage);
           free(linkage);
@@ -1352,7 +1352,10 @@ Linkage SATEncoder::get_next_linkage()
     lkg->lifo.N_violations++;
     lkg->lifo.pp_violation_msg = ppn->violation;
   } else {
-    _sent->num_valid_linkages++;
+    // XXX We cannot maintain num_valid_linkages, because it starts from
+    // a high number. If we start it from 0, then on value 1 link-parser
+    // would report "Unique linkage".
+    //_sent->num_valid_linkages++;
   }
 
   build_type_array(_sent->postprocessor);
@@ -1694,23 +1697,62 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   sent->hook = encoder;
   encoder->encode();
 
-  // XXX this is wrong, we actually don't know yet ...
-  // If we don't return some large number here, then the
-  // Command-line client will fail to print all of the possible
-  // linkages. Work around this by lying ...
-  sent->num_valid_linkages = 222;
-  sent->num_linkages_post_processed = 222;
+  LinkageIdx linkage_limit = opts->linkage_limit;
+  LinkageIdx k;
+  Linkage lkg = NULL;
+
+  /* Due to the nature of SAT solving, we cannot know in advance the
+   * number of linkages. But in order to process batch files, we must
+   * know if there is at least one valid linkage. We limit ourself in
+   * that check to the linkage_limit number of linkages (settable by
+   * !limit).  Normally the following loop terminates after one or a few
+   * iterations, when a valid link is found or when no more links are
+   * found.
+   *
+   * Note that trying to find here the first valid linkage doesn't add
+   * overhead to an interactive user. It also doesn't add overhead to
+   * batch processing, which needs anyway to find out if there is a
+   * valid linkage in order to be any useful. */
+  for (k = 0; k < linkage_limit; k++)
+  {
+    lkg = encoder->get_next_linkage();
+    if (lkg == NULL || lkg->lifo.N_violations == 0) break;
+  }
+
+  if (lkg == NULL || k == linkage_limit) {
+    // We don't have a valid linkages among the first linkage_limit ones
+    sent->num_valid_linkages = 0;
+    sent->num_linkages_post_processed = k;
+  } else {
+    /* We found a valid linkage.
+     * XXX However, the following setting is wrong, as we actually don't
+     * know yet the number of linkages...
+     * If we don't return some large number here, then the
+     * Command-line client will fail to print all of the possible
+     * linkages. Work around this by lying... */
+    sent->num_valid_linkages = linkage_limit;
+    sent->num_linkages_post_processed = linkage_limit;
+  }
 
   return 0;
 }
 
-// XXX Caution -- assumes that k increases by one every time this
-// is called ... we should check and assert if this is not the case.
-// XXX FIXME
-extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
+/**
+ * Get a SAT linkage.
+ * Validate that k is not too big.
+ * If the k'th linkage already exists, return it.
+ * Else k is the next linkage index - get the next SAT solution.
+ */
+extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options  opts)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
+
+  assert(k <= encoder->_sent->num_linkages_alloced,
+         "Given linkage index %zu is greater than the maximum expected one %zu",
+         k, encoder->_sent->num_linkages_alloced);
+  if (k < encoder->_sent->num_linkages_alloced)
+    return &encoder->_sent->lnkages[k];
 
   return encoder->get_next_linkage();
 }
@@ -1724,6 +1766,6 @@ extern "C" void sat_sentence_delete(Sentence sent)
   Linkage lkgs = sent->lnkages;
   if (!lkgs) return;
 
-  for (LinkIdx li = 0; li < sent->num_linkages_alloced; li++)
+  for (LinkageIdx li = 0; li < sent->num_linkages_alloced; li++)
     free_linkage_connectors_and_disjuncts(&lkgs[li]);
 }

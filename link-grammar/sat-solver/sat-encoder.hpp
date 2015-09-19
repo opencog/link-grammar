@@ -12,7 +12,7 @@ public:
   // Construct the encoder based on given sentence
   SATEncoder(Sentence sent, Parse_Options  opts)
     : _variables(new Variables(sent)), _solver(new Solver()),
-      _sent(sent), _opts(opts)
+      _opts(opts), _sent(sent)
   {
     _cost_cutoff = parse_options_get_disjunct_cost(opts);
 
@@ -280,12 +280,12 @@ protected:
   // The MiniSAT solver instance. The solver keeps the set of clauses.
   Solver* _solver;
 
-  // Sentence that is being parsed.
-  Sentence _sent;
-
   // Parse options.
   Parse_Options  _opts;
 
+public:
+  // Sentence that is being parsed.
+  Sentence _sent;
 };
 
 
