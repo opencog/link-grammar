@@ -977,8 +977,6 @@ static Exp * make_connector(Dictionary dict)
 /* ======================================================================== */
 /* Empty-word handling. */
 
-#define EMPTY_CONNECTOR "ZZZ"
-
 /** Insert empty-word connectors.
  *
  * The "empty word" is a concept used in order to make the current parser able
