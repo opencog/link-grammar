@@ -138,3 +138,12 @@ compute_chosen_words
 regex_tokenizer_test
 check_link_size
 partial_init_linkage
+word_record_in_disjunct
+feature_enabled
+empty_word
+remove_empty_words
+free_Exp
+linkage_set_domain_names
+post_process_free_data
+build_type_array
+free_linkage

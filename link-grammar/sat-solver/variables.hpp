@@ -13,10 +13,10 @@
 #define  MAX_VARIABLE_NAME 256
 
 
-// #define _DEBUG
+// #define SAT_DEBUG
 // #define _VARS
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
 #define _VARS
 #endif
 
@@ -75,6 +75,10 @@ public:
         delete *i;
       }
     }
+
+    for (size_t i = 0; i < _linked_variables.size(); i++)
+      delete _linked_variables[i];
+
     delete _guiding;
   }
 
@@ -97,7 +101,7 @@ public:
     return var;
   }
 
-  // If the cost is explicitely given, guiding params are calculated
+  // If the cost is explicitly given, guiding params are calculated
   // using the cost. Any params set earlier are overridden.
   int string_cost(const char* name, double cost)
   {
@@ -304,7 +308,7 @@ public:
     return var;
   }
 
-  // Auxilary variables used for connectivity encoding
+  // Auxiliary variables used for connectivity encoding
   int l_con(int i, int j, int k) {
     int var;
     if (!get_lcon_variable(i, j, k, var))

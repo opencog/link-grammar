@@ -370,8 +370,26 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 
 		linkage = linkage_create(i, sent, opts);
 
+		/* Currently, sat solver sets the linkage violation indication
+		 * only when it creates the linkage as a result of the above call. */
+		if ((sentence_num_violations(sent, i) > 0) &&
+			!copts->display_bad)
+		{
+			continue;
+		}
+
 		/* Currently, sat solver returns NULL when there ain't no more */
-		if (!linkage) break;
+		if (!linkage)
+		{
+			if (verbosity > 0)
+			{
+				if (0 == i)
+					fprintf(stdout, "No linkages found.\n");
+				else
+					fprintf(stdout, "No more linkages.\n");
+			}
+			break;
+		}
 
 		if (verbosity > 0)
 		{
@@ -461,7 +479,7 @@ static void batch_process_some_linkages(Label label,
 	if (there_was_an_error(label, sent, opts))
 	{
 		/* If linkages were found, print them */
-		if (sentence_num_linkages_found(sent) > 0) {
+		if (sentence_num_linkages_found(sent) >= 0) {
 			Linkage linkage = NULL;
 			/* If we found at least one good linkage, print it. */
 			if (sentence_num_valid_linkages(sent) > 0) {

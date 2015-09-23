@@ -45,6 +45,7 @@
 #define EMPTY_WORD_DOT   "EMPTY-WORD.zzz"  /* Has SUBSCRIPT_DOT in it! */
 #define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
 #define EMPTY_WORD_DISPLAY "∅"   /* Empty word representation for debug */
+#define EMPTY_CONNECTOR "ZZZ"
 
 /* Dictionary capitalization handling */
 #define CAP1st "1stCAP" /* Next word is capitalized */

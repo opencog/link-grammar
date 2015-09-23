@@ -20,12 +20,21 @@ struct PositionConnector
 {
   PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
                     double cst, double pcst, bool lr, bool ll,
-                    const std::vector<int>& er, const std::vector<int>& el)
-    : exp(e), connector(c), dir(d), word(w), position(p),
+                    const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode)
+    : exp(e), dir(d), word(w), position(p),
       cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
-      eps_right(er), eps_left(el)
+      eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
+    // Initialize some fields in the connector struct.
+    connector.string = c->string;
+    connector.multi = c->multi;
+    connector.length_limit = c->length_limit;
+
+    if (word_xnode == NULL) {
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
+    }
+
     /*
     cout << c->string << " : ." << w << ". : ." << p << ". ";
     if (leading_right) {
@@ -44,7 +53,7 @@ struct PositionConnector
   Exp* exp;
 
   // Connector itself
-  Connector* connector;
+  Connector connector;
   // Direction
   char dir;
   // word in a sentence that this connector belongs to
@@ -60,6 +69,10 @@ struct PositionConnector
   bool leading_left;
   std::vector<int> eps_right;
   std::vector<int> eps_left;
+
+
+  // The corresponding X_node - chosen-disjuncts[]
+  const X_node *word_xnode;
 
   // Matches with other words
   std::vector<PositionConnector*> matches;
@@ -95,6 +108,9 @@ public:
   WordTag(int word, Variables* variables, Sentence sent, Parse_Options opts)
     : _word(word), _variables(variables), _sent(sent), _opts(opts) {
     _match_possible.resize(_sent->length);
+    verbosity = opts->verbosity;
+    debug = opts->debug;
+    test = opts->test;
   }
 
   const std::vector<PositionConnector>& get_left_connectors() const {
@@ -146,7 +162,7 @@ public:
                          std::vector<int>& eps_right,
                          std::vector<int>& eps_left,
                          char* var, bool root, double parent_cost,
-                         Exp* parent);
+                         Exp* parent, const X_node *word_xnode);
 
   // Caches information about the found matches to the _matches vector, and also
   // updates the _matches vector of all connectors in the given tag.
@@ -165,6 +181,10 @@ public:
     return _match_possible[wi].find(pi) != _match_possible[wi].end();
   }
 
+private:
+  int verbosity;
+  const char *debug;
+  const char *test;
 };
 
 #endif

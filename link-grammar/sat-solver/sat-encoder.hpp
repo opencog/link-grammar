@@ -1,9 +1,5 @@
 #include "link-includes.h"
 
-extern "C" int sat_encode(Sentence sent, Parse_Options  opts);
-extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts);
-extern "C" void sat_sentence_delete(Sentence sent);
-
 #include "word-tag.hpp"
 
 /**
@@ -16,9 +12,14 @@ public:
   // Construct the encoder based on given sentence
   SATEncoder(Sentence sent, Parse_Options  opts)
     : _variables(new Variables(sent)), _solver(new Solver()),
-      _sent(sent), _opts(opts)
+      _opts(opts), _sent(sent)
   {
     _cost_cutoff = parse_options_get_disjunct_cost(opts);
+
+    verbosity = opts->verbosity;
+    debug = opts->debug;
+    test = opts->test;
+
     // Preprocess word tags of the sentence
     build_word_tags();
   }
@@ -34,6 +35,11 @@ public:
 
   // Solve the formula, returning the next linkage.
   Linkage get_next_linkage();
+
+private:
+  int verbosity;
+  const char *debug;
+  const char *test;
 
 protected:
 
@@ -106,7 +112,7 @@ protected:
   virtual void generate_linked_definitions() = 0;
 
   // In order to reduce the number of clauses, some linked(wi, wj)
-  // variables can apriori be eliminated. The information about pairs
+  // variables can a priori be eliminated. The information about pairs
   // of words that can be linked is kept in this matrix.
   MatrixUpperTriangle<int> _linked_possible;
 
@@ -127,7 +133,7 @@ protected:
 #ifdef _CONNECTIVITY_
   // Generate clauses that encode the connectivity requirement of the
   // linkage. Experiments showed that it is better to check the
-  // connectivity aposteriori and this method has been excised.
+  // connectivity a posteriori and this method has been excised.
   void generate_connectivity();
 #endif
 
@@ -169,7 +175,7 @@ protected:
   // Power pruning
   void power_prune();
   // auxiliary method that extends power pruning clauses with additional literals
-  // (e.g., link should not be power-prunned if there words are fat-linked)
+  // (e.g., link should not be power-pruned if there words are fat-linked)
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr)
   {}
 
@@ -184,7 +190,7 @@ protected:
 
   // Add the specified clause to the solver
   void add_clause(vec<Lit>& clause) {
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
     print_clause(clause);
 #endif
     for (int i = 0; i < clause.size(); i++) {
@@ -227,7 +233,7 @@ protected:
   /*
    *   Word tags of the words in a sentence kept in a preprocessed
    *   form. This enables users to get information about the
-   *   connectors in a very eficient way.
+   *   connectors in a very efficient way.
    */
   // Word tags
   std::vector<WordTag> _word_tags;
@@ -274,12 +280,12 @@ protected:
   // The MiniSAT solver instance. The solver keeps the set of clauses.
   Solver* _solver;
 
-  // Sentence that is being parsed.
-  Sentence _sent;
-
   // Parse options.
   Parse_Options  _opts;
 
+public:
+  // Sentence that is being parsed.
+  Sentence _sent;
 };
 
 
@@ -291,6 +297,9 @@ class SATEncoderConjunctionFreeSentences : public SATEncoder
 public:
   SATEncoderConjunctionFreeSentences(Sentence sent, Parse_Options  opts)
     : SATEncoder(sent, opts) {
+    verbosity = opts->verbosity;
+    debug = opts->debug;
+    test = opts->test;
   }
 
   virtual void handle_null_expression(int w);
@@ -302,7 +311,13 @@ public:
 
   virtual void generate_linked_definitions();
   virtual bool sat_extract_links(Linkage);
+  virtual Exp* PositionConnector2exp(const PositionConnector*);
 
   virtual void generate_encoding_specific_clauses();
+
+private:
+  int verbosity;
+  const char *debug;
+  const char *test;
 };
 

@@ -11,7 +11,7 @@ extern "C" {
 
 };
 
-// This class represents different guding strategies of LinkParser SAT search
+// This class represents different guiding strategies of LinkParser SAT search
 class Guiding {
 public:
   struct SATParameters {
@@ -21,7 +21,7 @@ public:
     /* What is the decision priority of the variable with the given number
        during the SAT search? */
     double priority;
-    /* What is the preffered polarity of the variable with the given number
+    /* What is the preferred polarity of the variable with the given number
        during the SAT search? */
     double polarity;
   };

@@ -25,21 +25,28 @@ using std::endl;
 extern "C" {
 #include "analyze-linkage.h"
 #include "build-disjuncts.h"
+#include <dict-api.h>             // for print_expression()
 #include "dict-file/read-dict.h"
 #include "extract-links.h"
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
 #include "score.h"
-#include "utilities.h"
+//#include "utilities.h"         // XXX do we need it?
+#include "wordgraph.h"           // for empty_word()
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
 #define DEBUG_print(x) (cout << x << endl)
 #else
 #define DEBUG_print(x)
 #endif
+
+#define D_SAT 5
+
+// Convert a NULL C string pointer, for printing a possibly NULL string
+#define N(s) ((s) ? (s) : "(null)")
 
 /*-------------------------------------------------------------------------*
  *               C N F   C O N V E R S I O N                               *
@@ -234,15 +241,16 @@ void SATEncoder::build_word_tags()
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word ." << w << ".: " << _sent->word[w].unsplit_word << " (null)" <<  endl);
+      // Most probably everything got pruned. There will be no linkage.
+      lgdebug(+D_SAT, "Word%zu %s: NULL X_node\n", w, N(_sent->word[w].unsplit_word));
       continue;
     }
 
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
-#ifdef _DEBUG
-    cout << "Word ." << w << ".: " << _sent->word[w].unsplit_word << endl;
+#ifdef SAT_DEBUG
+    cout << "Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << endl;
     //print_expression(exp);
     cout << endl;
 #endif
@@ -254,7 +262,7 @@ void SATEncoder::build_word_tags()
     std::vector<int> eps_right, eps_left;
 
     _word_tags[w].insert_connectors(exp, dfs_position, leading_right,
-         leading_left, eps_right, eps_left, name, true, 0, NULL);
+         leading_left, eps_right, eps_left, name, true, 0, NULL, _sent->word[w].x);
 
     if (join)
       free_alternatives(exp);
@@ -298,7 +306,7 @@ void SATEncoder::generate_satisfaction_conditions()
 {
   for (size_t w = 0; w < _sent->length; w++) {
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word: " << _sent->word[w].unsplit_word << " : " << "(null)" << endl);
+      DEBUG_print("Word: " << N(_sent->word[w].unsplit_word) << " : " << "(null)" << endl);
       handle_null_expression(w);
       continue;
     }
@@ -306,8 +314,8 @@ void SATEncoder::generate_satisfaction_conditions()
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
-#ifdef _DEBUG
-    cout << "Word: " << _sent->word[w].unsplit_word << endl;
+#ifdef SAT_DEBUG
+    cout << "Word: " << N(_sent->word[w].unsplit_word) << endl;
     //print_expression(exp);
     cout << endl;
 #endif
@@ -375,7 +383,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         Lit lhs = Lit(_variables->string_cost(var, e->cost));
         generate_and_definition(lhs, rhs);
 
-        /* Preceeds */
+        /* Precedes */
         int dfs_position_tmp = dfs_position;
         for (l = e->u.l; l->next != NULL; l = l->next) {
           generate_conjunct_order_constraints(w, l->e, l->next->e, dfs_position_tmp);
@@ -500,12 +508,12 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
     if (dir == '+') {
       rhs.push(Lit(_variables->link_cost(wi, pi, Ci, e,
                                          (*i)->word, (*i)->position,
-                                         (*i)->connector->string,
+                                         (*i)->connector.string,
                                          (*i)->exp,
                                          cost + (*i)->cost)));
     } else if (dir == '-'){
       rhs.push(Lit(_variables->link((*i)->word, (*i)->position,
-                                    (*i)->connector->string,
+                                    (*i)->connector.string,
                                     (*i)->exp,
                                     wi, pi, Ci, e)));
     }
@@ -551,7 +559,7 @@ int SATEncoder::empty_connectors(Exp* e, char dir)
     }
     return true;
   } else
-    throw std::string("Unkown connector type");
+    throw std::string("Unknown connector type");
 }
 
 int SATEncoder::non_empty_connectors(Exp* e, char dir)
@@ -571,7 +579,7 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
     }
     return false;
   } else
-    throw std::string("Unkown connector type");
+    throw std::string("Unknown connector type");
 }
 
 bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
@@ -699,8 +707,8 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i >= *mw2i) {
               clause.growTo(2);
-              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector->string));
-              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector->string));
+              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
+              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
             }
           }
@@ -745,8 +753,8 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i <= *mw2i) {
               clause.growTo(2);
-              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector->string));
-              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector->string));
+              clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
+              clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
             }
           }
@@ -1079,16 +1087,16 @@ void SATEncoder::power_prune()
     const std::vector<PositionConnector>& rc = _word_tags[wl].get_right_connectors();
     std::vector<PositionConnector>::const_iterator rci;
     for (rci = rc.begin(); rci != rc.end(); rci++) {
-      if (!(*rci).leading_right || (*rci).connector->multi)
+      if (!(*rci).leading_right || (*rci).connector.multi)
         continue;
 
       const std::vector<PositionConnector*>& matches = rci->matches;
       for (std::vector<PositionConnector*>::const_iterator lci = matches.begin(); lci != matches.end(); lci++) {
-        if (!(*lci)->leading_left || (*lci)->connector->multi || (*lci)->word <= wl + 2)
+        if (!(*lci)->leading_left || (*lci)->connector.multi || (*lci)->word <= wl + 2)
           continue;
 
-        //        printf("LR: .%d. .%d. %s\n", wl, rci->position, rci->connector->string);
-        //        printf("LL: .%d. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector->string);
+        //        printf("LR: .%d. .%d. %s\n", wl, rci->position, rci->connector.string);
+        //        printf("LL: .%d. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector.string);
 
         vec<Lit> clause;
         for (std::vector<int>::const_iterator i = rci->eps_right.begin(); i != rci->eps_right.end(); i++) {
@@ -1102,8 +1110,8 @@ void SATEncoder::power_prune()
         add_additional_power_pruning_conditions(clause, wl, (*lci)->word);
 
         clause.push(~Lit(_variables->link(
-               wl, rci->position, rci->connector->string, rci->exp,
-               (*lci)->word, (*lci)->position, (*lci)->connector->string, (*lci)->exp)));
+               wl, rci->position, rci->connector.string, rci->exp,
+               (*lci)->word, (*lci)->position, (*lci)->connector.string, (*lci)->exp)));
         add_clause(clause);
       }
     }
@@ -1123,8 +1131,8 @@ void SATEncoder::power_prune()
       for (std::vector<PositionConnector*>::const_iterator lci = matches.begin(); lci != matches.end(); lci++) {
         if (!(*lci)->leading_left || (*lci)->word != wl + 1)
           continue;
-        int link = _variables->link(wl, rci->position, rci->connector->string,
-                                    (*lci)->word, (*lci)->position, (*lci)->connector->string);
+        int link = _variables->link(wl, rci->position, rci->connector.string,
+                                    (*lci)->word, (*lci)->position, (*lci)->connector.string);
         std::vector<int> clause(2);
         clause[0] = -link;
 
@@ -1168,8 +1176,8 @@ void SATEncoder::power_prune()
       for (j = matches.begin(); j != matches.end(); j++) {
         if (std::find(certainly_deep_left[(*j)->word].begin(), certainly_deep_left[(*j)->word].end(),
                       *j) != certainly_deep_left[(*j)->word].end()) {
-          generate_literal(-_variables->link((*i)->word, (*i)->position, (*i)->connector->string,
-                                             (*j)->word, (*j)->position, (*j)->connector->string));
+          generate_literal(-_variables->link((*i)->word, (*i)->position, (*i)->connector.string,
+                                             (*j)->word, (*j)->position, (*j)->connector.string));
         }
       }
     }
@@ -1237,20 +1245,27 @@ void SATEncoder::pp_prune()
  *                         D E C O D I N G                                  *
  *--------------------------------------------------------------------------*/
 
-/* This is very similar to the api call linkage_create(), except that
- * sat_extract_links is called, instead of normal extract_links().
+/**
+ * Create the next linkage.
+ * This is very similar to compute_chosen_disjuncts(), except that
+ * sat_extract_links() is called, instead of normal extract_links().
  * It would be good to refactor this and the other to make them even
- * more similar, because right now, its confusing ...
+ * more similar, because else, its confusing ...
+ * FIXME? Use a shared function for the code here.
  */
 Linkage SATEncoder::create_linkage()
 {
   /* Using exalloc since this is external to the parser itself. */
   Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
   memset(linkage, 0, sizeof(struct Linkage_s));
+
   partial_init_linkage(linkage, _sent->length);
-
   sat_extract_links(linkage);
-
+  compute_link_names(linkage, _sent->string_set);
+  /* Because the empty words are used only in the parsing stage, they are
+   * removed here along with their links, so from now on we will not need to
+   * consider them. */
+  remove_empty_words(linkage);
   return linkage;
 }
 
@@ -1271,50 +1286,85 @@ void SATEncoder::generate_linkage_prohibiting()
 
 Linkage SATEncoder::get_next_linkage()
 {
-  if (l_False == _solver->solve()) return NULL;
-  Linkage linkage = create_linkage();
-  Linkage lkg = NULL;
+  Linkage linkage = NULL;
+  bool connected;
+  bool sane = true;
+  bool display_linkage_disconnected = false;
 
-  std::vector<int> components;
-  bool connected = connectivity_components(components);
-  if (connected) {
-    // num_connected_linkages++;
+  /* Loop until a good linkage is found.
+   * Insane (mixed alternatives) linkages are always ignored.
+   * Disconnected linkages are normally ignored, unless
+   * !test=linkage-disconnected is used (and they are sane) */
+  do {
+    if (l_False == _solver->solve()) return NULL;
 
-    // Expand the linkage array.
-    int index = _sent->num_linkages_alloced;
-    _sent->num_linkages_alloced++;
-    size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-    _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
+    std::vector<int> components;
+    connected = connectivity_components(components);
 
-    lkg = &_sent->lnkages[index];
-    *lkg = *linkage;  /* copy en-mass */
-    exfree(linkage, sizeof(struct Linkage_s));
-    linkage = NULL;
-
-    // Perform the post-processing
-    sane_linkage_morphism(_sent, lkg, _opts);
-    do_post_process(_sent->postprocessor, lkg, lkg->is_sent_long);
-    linkage_score(lkg, _opts);
-
-    if (0 == lkg->lifo.N_violations) {
-      _sent->num_valid_linkages++;
-    }
-
-    // sane_morphism will increment N_violations if its insane...
-    if (0 == lkg->lifo.N_violations) {
-      cout << "Linkage PP OK" << endl;
+    // Prohibit this solution so the next ones can be found
+    if (!connected) {
+      generate_disconnectivity_prohibiting(components);
+      display_linkage_disconnected = test_enabled("linkage-disconnected");
     } else {
-      cout << "Linkage PP NOT OK" << endl;
+      generate_linkage_prohibiting();
     }
 
-    generate_linkage_prohibiting();
+    if (connected || display_linkage_disconnected) {
+      linkage = create_linkage();
+      sane = sane_linkage_morphism(_sent, linkage, _opts);
+      if (!sane) {
+          /* We cannot elegantly add this linkage to sent->linkges[] -
+           * to be freed in sentence_delete(), since insane linkages
+           * must be there with index > num_linkages_post_processed - so
+           * they remain hidden, but num_linkages_post_processed is an
+           * arbitrary number.  So we must free it here. */
+          free_linkage_connectors_and_disjuncts(linkage);
+          free_linkage(linkage);
+          free(linkage);
+          continue; // skip this linkage
+      }
+    }
+
+    if (!connected) {
+      if (display_linkage_disconnected) {
+        cout << "Linkage DISCONNECTED" << endl;
+      } else {
+        lgdebug(+2, "Linkage DISCONNECTED (skipped)\n");
+      }
+    }
+  } while (!sane || !(connected || display_linkage_disconnected));
+
+  assert(linkage, "No linkage");
+
+  // Expand the linkage array.
+  int index = _sent->num_linkages_alloced;
+  _sent->num_linkages_alloced++;
+  size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
+  _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
+
+  Linkage lkg = &_sent->lnkages[index];
+  *lkg = *linkage;  /* copy en-mass */
+  exfree(linkage, sizeof(struct Linkage_s));
+
+  // Perform the rest of the post-processing
+  PP_node *ppn = do_post_process(_sent->postprocessor, lkg, false);
+  if (NULL != ppn->violation) {
+    lkg->lifo.N_violations++;
+    lkg->lifo.pp_violation_msg = ppn->violation;
   } else {
-    cout << "Linkage DISCONNECTED" << endl;
-    generate_disconnectivity_prohibiting(components);
-    exfree(linkage, sizeof(struct Linkage_s));
+    // XXX We cannot maintain num_valid_linkages, because it starts from
+    // a high number. If we start it from 0, then on value 1 link-parser
+    // would report "Unique linkage".
+    //_sent->num_valid_linkages++;
   }
 
-  _solver->printStats();
+  build_type_array(_sent->postprocessor);
+  linkage_set_domain_names(_sent->postprocessor, lkg);
+  post_process_free_data(&_sent->postprocessor->pp_data);
+  linkage_score(lkg, _opts);
+
+  if (NULL == ppn->violation && verbosity > 1)
+    _solver->printStats();
   return lkg;
 }
 
@@ -1347,7 +1397,7 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
 
   Lit lhs = Lit(_variables->string_cost(var, cost));
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
   cout << "*** Connector: ." << wi << ". ." << pi << ". " << Ci << dir << endl;
 #endif
 
@@ -1379,7 +1429,7 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
   }
   DEBUG_print("--------- end multi");
 
-#ifdef _DEBUG
+#ifdef SAT_DEBUG
   cout << "*** End Connector: ." << wi << ". ." << pi << ". " <<  Ci << endl;
 #endif
 }
@@ -1400,7 +1450,7 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
       for (c = w1_connectors.begin(); c != w1_connectors.end(); c++) {
         assert(c->word == w1, "Connector word must match");
         if (_word_tags[w2].match_possible(c->word, c->position)) {
-          rhs.push(Lit(_variables->link_cw(w2, c->word, c->position, c->connector->string)));
+          rhs.push(Lit(_variables->link_cw(w2, c->word, c->position, c->connector.string)));
         }
       }
 
@@ -1491,10 +1541,42 @@ void SATEncoder::generate_linked_min_max_planarity()
   }
 }
 
+Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
+{
+    Exp* e = (Exp*)xalloc(sizeof(Exp));
+    e->type = CONNECTOR_type;
+    e->dir = pc->dir;
+    e->multi = pc->connector.multi;
+    e->u.string = pc->connector.string;
+    e->cost = pc->cost;
+
+    return e;
+}
+
+// FIXME - put under a class or move to util.cpp.
+static Connector * empty_word_connector()
+{
+  static Connector c;
+
+  if (c.string != NULL) return &c;
+  c.string = EMPTY_CONNECTOR;
+
+  return &c;
+}
+
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
+  lgdebug(+D_SAT, "Index %d\n", lkg->lifo.index);
 
+  Disjunct *d;
   int current_link = 0;
+  Disjunct *empty_words_tofree = NULL;
+
+  Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
+  memset(exp_word, 0, _sent->length * sizeof(Exp));
+  const X_node **xnode_word = (const X_node **)alloca(_sent->length * sizeof(X_node));
+  memset(xnode_word, 0, _sent->length * sizeof(X_node));
+
   const std::vector<int>& link_variables = _variables->link_variables();
   std::vector<int>::const_iterator i;
   for (i = link_variables.begin(); i != link_variables.end(); i++) {
@@ -1507,64 +1589,100 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     check_link_size(lkg);
     Link& clink = lkg->link_array[current_link];
+    current_link++;
     clink.lw = var->left_word;
     clink.rw = var->right_word;
 
-    Connector* connector;
+    PositionConnector* lpc = _word_tags[var->left_word].get(var->left_position);
+    PositionConnector* rpc = _word_tags[var->right_word].get(var->right_position);
 
-    // XXX Should not alloc a new one, but use the connector from
-    // the PositionConnector class ...
-    connector = connector_new();
-    connector->string = var->left_connector;
-    connector->word = var->left_word; // XXX is this needed ?
-    clink.lc = connector;
+    const X_node *left_xnode = lpc->word_xnode;
+    const X_node *right_xnode = rpc->word_xnode;
 
-    connector = connector_new();
-    connector->string = var->right_connector;
-    connector->word = var->right_word; // XXX is this needed ?
-    clink.rc = connector;
+    // For empty words, only create a dummy disjunct - for remove_empty_word()
+    if (left_xnode->word->morpheme_type == MT_EMPTY ||
+        right_xnode->word->morpheme_type == MT_EMPTY) {
+      // XXX Why right_expression is NULL? And why left_expression is only ZZZ+?
+      // Hence, to prevent triggering an assert() in build_clause(), the
+      // disjunct for the empty word (right_word) is built with left_exp.
+      d = build_disjuncts_for_exp(var->left_exp, right_xnode->string, UNLIMITED_LEN);
+      word_record_in_disjunct(empty_word(), d);
+      lkg->chosen_disjuncts[var->right_word] = d;
+      if (empty_words_tofree == NULL)
+        empty_words_tofree = d;
+      else
+        catenate_disjuncts(empty_words_tofree, d);
+      clink.lc = clink.rc = empty_word_connector();
+      continue;
+    }
 
-    // Indicate the disjuncts, too.
-    // This is needed so that compute_chosen_word works correctly.
+    // Allocate memory for the connectors, because they should persist
+    // beyond the lifetime of the sat-solver data structures.
+    clink.lc = connector_new();
+    clink.rc = connector_new();
 
-// FIXME -- this is deeply and fundamentally broken. First, we should not
-// use unsplit_word below, but instead, get the string from the X_node.
-// However, the X_node was discarded previously, up above.  Next, we are
-// trying to reconstruct the actual disjunct that was used, but we aren't
-// really doing that correctly, because we never recorded the DNF that
-// was used.  Maybe .. maybe we could hack around this by looking at the
-// actual connectors that were used for each word, and combine those to
-// get the disjunct ... so its a mess.
-// Its not ever clear to me why chosen_words needs disjuncts .. really
-// all we need here are the X_node strings, and nothing else, and so ...
-// all teh exp flow through this code could be removed. Arghhh.
-    Disjunct *d;
+    *clink.lc = lpc->connector;
+    *clink.rc = rpc->connector;
 
-    // XXX FIXME -- the chosen disjunct has probably already been
-    // set for this word .. don't set it again.  Oh, and it should
-    // be consistent, too ...
-    d = build_disjuncts_for_exp(var->left_exp,
-                                _sent->word[var->left_word].unsplit_word,
-                                UNLIMITED_LEN);
-    _sent->word[var->left_word].d = d;
-    lkg->chosen_disjuncts[clink.lw] = d;
+    Exp* lcexp = PositionConnector2exp(lpc);
+    Exp* rcexp = PositionConnector2exp(rpc);
+    add_anded_exp(exp_word[var->left_word], lcexp);
+    add_anded_exp(exp_word[var->right_word], rcexp);
 
-    d = build_disjuncts_for_exp(var->right_exp,
-                                _sent->word[var->right_word].unsplit_word,
-                                 UNLIMITED_LEN);
-    _sent->word[var->right_word].d = d;
-    lkg->chosen_disjuncts[clink.rw] = d;
+    if (verbosity >= D_SAT) {
+      //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
+      cout<< "LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
+      //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
+      cout<< "RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
+      cout<< "L+L: "; print_expression(exp_word[var->left_word]);
+      cout<< "R+R: "; print_expression(exp_word[var->right_word]);
+    }
 
-    current_link++;
+    if (xnode_word[var->left_word] && xnode_word[var->left_word] != left_xnode) {
+      lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
+               var->left_word, xnode_word[var->left_word]->word->subword,
+              left_xnode->word->subword);
+    }
+    if (xnode_word[var->right_word] && xnode_word[var->right_word] != right_xnode) {
+      lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
+              var->right_word, xnode_word[var->right_word]->word->subword,
+              right_xnode->word->subword);
+    }
+
+    xnode_word[var->left_word] = left_xnode;
+    xnode_word[var->right_word] = right_xnode;
   }
 
+  // Now build the disjuncts.
+  // This is needed so that compute_chosen_word works correctly.
+  // Just in case there is no expression for a disjunct, a null one is used.
+  for (WordIdx wi = 0; wi < _sent->length; wi++) {
+    Exp *de = exp_word[wi];
+
+    // Skip empty words
+    if (xnode_word[wi] == NULL)
+      continue;
+
+    if (de == NULL) {
+      de = null_exp();
+      lgdebug(+0, "Warning: No expression for word %zu\n", wi);
+    }
+
+    d = build_disjuncts_for_exp(de, xnode_word[wi]->string, UNLIMITED_LEN);
+    word_record_in_disjunct(xnode_word[wi]->word, d);
+    lkg->chosen_disjuncts[wi] = d;
+    free_Exp(de);
+  }
+
+  // This is needed so the empty-word disjuncts will get freed
+  assert(lkg->chosen_disjuncts[0], "Must have at least one non-empty word");
+  catenate_disjuncts(lkg->chosen_disjuncts[0], empty_words_tofree);
+
   lkg->num_links = current_link;
-  compute_link_names(lkg, _sent->string_set);
 
   DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
 }
-
 
 /****************************************************************************
  *              Main entry point into the SAT parser                        *
@@ -1579,23 +1697,62 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   sent->hook = encoder;
   encoder->encode();
 
-  // XXX this is wrong, we actually don't know yet ...
-  // If we don't return some large number here, then the
-  // Command-line client will fail to print all of the possible
-  // linkages. Work around this by lying ...
-  sent->num_valid_linkages = 222;
-  sent->num_linkages_post_processed = 222;
+  LinkageIdx linkage_limit = opts->linkage_limit;
+  LinkageIdx k;
+  Linkage lkg = NULL;
+
+  /* Due to the nature of SAT solving, we cannot know in advance the
+   * number of linkages. But in order to process batch files, we must
+   * know if there is at least one valid linkage. We limit ourself in
+   * that check to the linkage_limit number of linkages (settable by
+   * !limit).  Normally the following loop terminates after one or a few
+   * iterations, when a valid link is found or when no more links are
+   * found.
+   *
+   * Note that trying to find here the first valid linkage doesn't add
+   * overhead to an interactive user. It also doesn't add overhead to
+   * batch processing, which needs anyway to find out if there is a
+   * valid linkage in order to be any useful. */
+  for (k = 0; k < linkage_limit; k++)
+  {
+    lkg = encoder->get_next_linkage();
+    if (lkg == NULL || lkg->lifo.N_violations == 0) break;
+  }
+
+  if (lkg == NULL || k == linkage_limit) {
+    // We don't have a valid linkages among the first linkage_limit ones
+    sent->num_valid_linkages = 0;
+    sent->num_linkages_post_processed = k;
+  } else {
+    /* We found a valid linkage.
+     * XXX However, the following setting is wrong, as we actually don't
+     * know yet the number of linkages...
+     * If we don't return some large number here, then the
+     * Command-line client will fail to print all of the possible
+     * linkages. Work around this by lying... */
+    sent->num_valid_linkages = linkage_limit;
+    sent->num_linkages_post_processed = linkage_limit;
+  }
 
   return 0;
 }
 
-// XXX Caution -- assumes that k increases by one every time this
-// is called ... we should check and assert if this is not the case.
-// XXX FIXME
-extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
+/**
+ * Get a SAT linkage.
+ * Validate that k is not too big.
+ * If the k'th linkage already exists, return it.
+ * Else k is the next linkage index - get the next SAT solution.
+ */
+extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options  opts)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
+
+  assert(k <= encoder->_sent->num_linkages_alloced,
+         "Given linkage index %zu is greater than the maximum expected one %zu",
+         k, encoder->_sent->num_linkages_alloced);
+  if (k < encoder->_sent->num_linkages_alloced)
+    return &encoder->_sent->lnkages[k];
 
   return encoder->get_next_linkage();
 }
@@ -1605,4 +1762,10 @@ extern "C" void sat_sentence_delete(Sentence sent)
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return;
   delete encoder;
+
+  Linkage lkgs = sent->lnkages;
+  if (!lkgs) return;
+
+  for (LinkageIdx li = 0; li < sent->num_linkages_alloced; li++)
+    free_linkage_connectors_and_disjuncts(&lkgs[li]);
 }

@@ -412,16 +412,10 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
-static void free_linkages(Sentence sent)
+void free_linkage(Linkage linkage)
 {
-	size_t in;
-	Linkage lkgs = sent->lnkages;
-	if (!lkgs) return;
-
-	for (in=0; in<sent->num_linkages_alloced; in++)
-	{
 		size_t j;
-		Linkage linkage = &lkgs[in];
+
 		exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 		exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 		free(linkage->link_array);
@@ -446,6 +440,17 @@ static void free_linkages(Sentence sent)
 		/* XXX FIXME */
 		free(linkage->wg_path);
 		free(linkage->wg_path_display);
+}
+
+static void free_linkages(Sentence sent)
+{
+	size_t in;
+	Linkage lkgs = sent->lnkages;
+	if (!lkgs) return;
+
+	for (in=0; in<sent->num_linkages_alloced; in++)
+	{
+		free_linkage(&lkgs[in]);
 	}
 
 	exfree(lkgs, sent->num_linkages_alloced * sizeof(struct Linkage_s));
@@ -578,48 +583,6 @@ void check_link_size(Linkage lkg)
 		lkg->lasz = 2 * lkg->lasz + 10;
 		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
 	}
-}
-
-/**
- * Remove the empty words from a linkage.
- * XXX Should we remove here also the dict-cap tokens? In any case, for now they
- * are left for debug.
- */
-static void remove_empty_words(Linkage lkg)
-{
-	size_t i, j;
-	Disjunct **cdj = lkg->chosen_disjuncts;
-	int *remap = alloca(lkg->num_words * sizeof(*remap));
-
-	if (4 <= verbosity)
-	{
-		lgdebug(0, "Info: chosen_disjuncts before removing empty words:\n");
-		print_chosen_disjuncts_words(lkg);
-	}
-
-	for (i = 0, j = 0; i < lkg->num_words; i++)
-	{
-		if ((NULL != cdj[i]) && (MT_EMPTY == cdj[i]->word[0]->morpheme_type))
-		{
-			remap[i] = -1;
-		}
-		else
-		{
-			cdj[j] = cdj[i];
-			remap[i] = j;
-			j++;
-		}
-	}
-	lkg->num_words = j;
-	/* Unused memory not freed - all of it will be freed in free_linkages(). */
-
-	if (4 <= verbosity)
-	{
-		lgdebug(0, "Info: chosen_disjuncts after removing empty words:\n");
-		print_chosen_disjuncts_words(lkg);
-	}
-
-	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
 
 /** The extract_links() call sets the chosen_disjuncts array */
@@ -936,7 +899,6 @@ int sentence_num_violations(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0;
 
-	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->lnkages) return 0;
 	if (sent->num_linkages_alloced <= i) return 0; /* bounds check */
 	return sent->lnkages[i].lifo.N_violations;

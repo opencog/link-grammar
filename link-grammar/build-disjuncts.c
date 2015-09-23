@@ -347,6 +347,41 @@ void prt_exp(Exp *e, int i)
 		printf("con=%s\n", e->u.string);
 	}
 }
+
+void prt_exp_mem(Exp *e, int i)
+{
+	const char *type;
+
+	if (e == NULL) return;
+
+	if (e->type > 0 && e->type < 4)
+	{
+		type = ((const char *[]) {"OR_type", "AND_type", "CONNECTOR_type"}) [e->type-1];
+	}
+	else
+	{
+		type = "unknown";
+	}
+
+	for(int j =0; j<i; j++) printf(" ");
+	printf ("e=%p: type=%d (%s) dir=%c multi=%d cost=%f\n", e, e->type, type, e->dir, e->multi, e->cost);
+	if (e->type != CONNECTOR_type)
+	{
+		E_list *l = e->u.l;
+		for(int j =0; j<i+2; j++) printf(" ");
+		printf("E_list=%p\n", l);
+		while(l)
+		{
+			prt_exp_mem(l->e, i+2);
+			l = l->next;
+		}
+	}
+	else
+	{
+		for(int j =0; j<i; j++) printf(" ");
+		printf("con=%s\n", e->u.string);
+	}
+}
 #endif
 
 /**
@@ -462,7 +497,7 @@ void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
 			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff);
-			word_record_in_disjunct(x, dx);
+			word_record_in_disjunct(x->word, dx);
 			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;
