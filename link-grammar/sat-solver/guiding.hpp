@@ -109,7 +109,7 @@ protected:
     _parameters[var].priority = priority;
     _parameters[var].polarity = polarity;
 
-    //    printf("Set: %d %s .%g. .%g.\n", var, isDecision ? "true" : "false", priority, polarity);
+    //printf("Set: %zu %s .%g. .%g.\n", var, isDecision ? "true" : "false", priority, polarity);
   }
 
 
