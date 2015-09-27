@@ -111,17 +111,14 @@ post_process_open
 post_process_close
 linkage_post_process
 do_post_process
-lg_mbrtowc
 prt_error
 exalloc
 xalloc
-xfree
 compute_link_names
 sane_linkage_morphism
 post_process_match
 match_in_connector_set
 init_connector
-lg_strlcpy
 lg_compute_disjunct_strings
 lg_expand_disjunct_list
 object_open
@@ -132,9 +129,7 @@ count_disjuncts
 print_one_disjunct
 build_disjuncts_for_exp
 connector_new
-free_connectors
 left_print_string
-compute_chosen_words
 regex_tokenizer_test
 check_link_size
 partial_init_linkage
