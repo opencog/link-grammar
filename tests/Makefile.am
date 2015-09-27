@@ -29,6 +29,5 @@ endif
 multi_thread_LDADD = -lpthread $(LDADD)
 
 if WITH_SAT_SOLVER
-LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
