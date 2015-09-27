@@ -2,8 +2,6 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/link-grammar \
 	-I$(top_srcdir)/link-grammar/minisat -I$(top_builddir) \
 	$(WARN_CXXXFLAGS)
 
-libsat_solver_includedir = $(includedir)/link-grammar $(includedir)/link-grammar/minisat
-
 noinst_LTLIBRARIES = libsat-solver.la
 
 libsat_solver_la_SOURCES = \
