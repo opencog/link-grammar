@@ -1303,6 +1303,11 @@ Linkage SATEncoder::get_next_linkage()
 
     // Prohibit this solution so the next ones can be found
     if (!connected) {
+      /* A disconnected linkage (XXX why?).
+       * Observation: Some of the linkages after a disconnected one is
+       * found, may repeat previous linkages (the reason is yet unknown).
+       * Example sentence:
+       * The stupidity of the senators annoyed all my friends */
       generate_disconnectivity_prohibiting(components);
       display_linkage_disconnected = test_enabled("linkage-disconnected");
     } else {
