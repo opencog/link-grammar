@@ -20,6 +20,8 @@ Version 5.3.0: (XXX 2015)
  * Fix broken domain letter printing.
  * New regex-file feature - negative regex'es.
  * Correct the handling of moprhology stems with non-LL links.
+ * Fix !!LEFT-WALL and !!RIGHT-WALL
+ * SAT solver now linked statically
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
