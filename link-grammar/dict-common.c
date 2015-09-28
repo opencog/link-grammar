@@ -414,6 +414,7 @@ void print_expression(Exp * n)
 
 #else /* INFIX_NOTATION */
 
+#define COST_FMT "%.3f"
 /**
  * print the expression, in infix-style
  */
@@ -421,6 +422,7 @@ static void print_expression_parens(const Exp * n, int need_parens)
 {
 	E_list * el;
 	int i, icost;
+	double dcost;
 
 	if (n == NULL)
 	{
@@ -429,6 +431,17 @@ static void print_expression_parens(const Exp * n, int need_parens)
 	}
 
 	icost = (int) (n->cost);
+	dcost = n->cost - icost;
+	if (dcost > 10E-4)
+	{
+		dcost = n->cost;
+		icost = 1;
+	}
+	else
+	{
+		dcost = 0;
+	}
+
 	/* print the connector only */
 	if (n->type == CONNECTOR_type)
 	{
@@ -436,6 +449,7 @@ static void print_expression_parens(const Exp * n, int need_parens)
 		if (n->multi) printf("@");
 		printf("%s%c", n->u.string, n->dir);
 		for (i=0; i<icost; i++) printf("]");
+		if (0 != dcost) printf(COST_FMT, dcost);
 		return;
 	}
 
@@ -446,6 +460,7 @@ static void print_expression_parens(const Exp * n, int need_parens)
 		for (i=0; i<icost; i++) printf("[");
 		printf ("()");
 		for (i=0; i<icost; i++) printf("]");
+		if (0 != dcost) printf(COST_FMT, dcost);
 		return;
 	}
 
@@ -469,6 +484,7 @@ static void print_expression_parens(const Exp * n, int need_parens)
 	if ((n->type == AND_type) && (el->next == NULL))
 	{
 		for (i=0; i<icost; i++) printf("]");
+		if (0 != dcost) printf(COST_FMT, dcost);
 		if ((icost == 0) && need_parens) printf(")");
 		return;
 	}
@@ -497,6 +513,7 @@ static void print_expression_parens(const Exp * n, int need_parens)
 	}
 
 	for (i=0; i<icost; i++) printf("]");
+	if (0 != dcost) printf(COST_FMT, dcost);
 	if ((icost == 0) && need_parens) printf(")");
 }
 
