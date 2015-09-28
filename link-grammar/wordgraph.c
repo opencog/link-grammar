@@ -889,7 +889,7 @@ static void wordgraph_unlink_xtmpfile(void)
 void wordgraph_show(Sentence sent, const char *modestr)
 {
 	String *wgd;
-	char *gvf_name;
+	char *gvf_name = NULL;
 	bool generate_gvfile = test_enabled("gvfile"); /* keep it for debug */
 	char *wgds;
 	bool gvfile = false;
@@ -956,6 +956,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_WINDOWS, wgds);
 #else
 	{
+		assert(NULL != gvf_name, "DOT filename not initialized (#define mess?)");
 		const char *const args[] = { DOT_COMMAND, DOT_DRIVER, gvf_name, NULL };
 		x_forkexec(args, &pid);
 	}
