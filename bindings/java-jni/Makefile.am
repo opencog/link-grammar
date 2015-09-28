@@ -28,7 +28,6 @@ liblink_grammar_java_la_LIBADD  += ${ASPELL_LIBS}
 endif
 
 if WITH_SAT_SOLVER
-liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
