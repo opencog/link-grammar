@@ -1210,8 +1210,9 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 	size_t wi;   /* Internal sentence word index */
 	size_t ai;   /* Index of a word alternative */
 	size_t sentlen = sent->length;     /* Shortened if there is a right-wall */
-	int first_sentence_word = 0;       /* Used for skipping a left-wall */
+	size_t first_sentence_word = 0;    /* Used for skipping a left-wall */
 	bool word_split = false;           /* !!word got split */
+	Dictionary dict = sent->dict;
 
 	if (0 == sentlen)
 	{
@@ -1227,10 +1228,12 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 	else
 	{
 		/* For analyzing words we need to ignore the left/right walls */
-		if (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD))
+		if (dict->left_wall_defined &&
+		    (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD)))
 			first_sentence_word = 1;
-		if ((NULL != sent->word[sentlen-1].unsplit_word) &&
-		 (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
+		if (dict->right_wall_defined &&
+		    ((NULL != sent->word[sentlen-1].unsplit_word)) &&
+		    (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
 			sentlen--;
 
 		/* Find if a word got split. This is indicated by:
@@ -1341,7 +1344,8 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					struct tokenpos firstpos = { wt };
 
 					print_sentence_word_alternatives(sent, false, NULL, &firstpos);
-					if ((firstpos.wi != wi) || (firstpos.ai != ai))
+					if (((firstpos.wi != wi) || (firstpos.ai != ai)) &&
+					  firstpos.wi >= first_sentence_word) // allow !!LEFT_WORD
 					{
 						/* We encountered this token earlier */
 						if (NULL != display)
