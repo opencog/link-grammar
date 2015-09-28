@@ -1303,6 +1303,11 @@ Linkage SATEncoder::get_next_linkage()
 
     // Prohibit this solution so the next ones can be found
     if (!connected) {
+      /* A disconnected linkage (XXX why?).
+       * Observation: Some of the linkages after a disconnected one is
+       * found, may repeat previous linkages (the reason is yet unknown).
+       * Example sentence:
+       * The stupidity of the senators annoyed all my friends */
       generate_disconnectivity_prohibiting(components);
       display_linkage_disconnected = test_enabled("linkage-disconnected");
     } else {
@@ -1674,7 +1679,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     free_Exp(de);
   }
 
-  // This is needed so the empty-word disjuncts will get freed
+  // This is needed so that the empty-word disjuncts will get freed
   assert(lkg->chosen_disjuncts[0], "Must have at least one non-empty word");
   catenate_disjuncts(lkg->chosen_disjuncts[0], empty_words_tofree);
 
@@ -1706,8 +1711,8 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
    * know if there is at least one valid linkage. We limit ourself in
    * that check to the linkage_limit number of linkages (settable by
    * !limit).  Normally the following loop terminates after one or a few
-   * iterations, when a valid link is found or when no more links are
-   * found.
+   * iterations, when a valid linkage is found or when no more linkages
+   * are found.
    *
    * Note that trying to find here the first valid linkage doesn't add
    * overhead to an interactive user. It also doesn't add overhead to

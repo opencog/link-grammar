@@ -93,7 +93,18 @@ public:
     for (size_t v = 0; v < _parameters.size(); v++) {
       solver->setDecisionVar(v, _parameters[v].isDecision);
       if (_parameters[v].isDecision) {
-        solver->setActivity(v, _parameters[v].priority);
+        /* The following setActivity() call may significantly damage
+         * the performance (timeit -r 6 -n 6):
+         * -30% for en/4.0.fixes.batch.
+         * -5% for en/4.0.batch.
+         * ~0% for ru/4.0.fixes.batch (i.e. it doesn't matter).
+         * It still damages the performance also when producing all the
+         * linkages (tested with !limit=10000).
+         * The link cost influences the priority (set_cost()), but the
+         * produced linkages using it are not according to cost order anyway.
+         * Most probably it should be removed (its is not supported
+         * anyway in Minisat >= 2.2). */
+        //solver->setActivity(v, _parameters[v].priority);
         /* TODO: make polarity double instead of boolean*/
         solver->setPolarity(v, _parameters[v].polarity > 0.0);
       }
@@ -109,7 +120,7 @@ protected:
     _parameters[var].priority = priority;
     _parameters[var].polarity = polarity;
 
-    //    printf("Set: %d %s .%g. .%g.\n", var, isDecision ? "true" : "false", priority, polarity);
+    //printf("Set: %zu %s .%g. .%g.\n", var, isDecision ? "true" : "false", priority, polarity);
   }
 
 

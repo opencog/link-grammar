@@ -478,7 +478,11 @@ static void batch_process_some_linkages(Label label,
 
 	if (there_was_an_error(label, sent, opts))
 	{
-		/* If linkages were found, print them */
+		/* If linkages were found, print them.
+		 * The equality check takes care for the SAT solver, which, for
+		 * now, sets num_valid_linkages==0. In any case, if there are
+		 * actually no linkages, linkage_create() will return NULL, and
+		 * nothing will be processed. */
 		if (sentence_num_linkages_found(sent) >= 0) {
 			Linkage linkage = NULL;
 			/* If we found at least one good linkage, print it. */
