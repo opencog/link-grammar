@@ -34,7 +34,7 @@
  *
  * Suffixes have the form =asdf.asdf or possibly just =asdf without
  * the dot (subscript mark). The "null" suffixes have the form
- * =.asdf (always with the ubscript mark, as there are several).
+ * =.asdf (always with the subscript mark, as there are several).
  * Ordinary equals signs appearing in regular text are either = or =[!].
  */
 bool is_suffix(const char infix_mark, const char* w)
@@ -272,7 +272,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 /**
  * The following two functions free the Exp s and the
  * E_lists of the dictionary.  Not to be confused with
- * free_E_list in utilities.c
+ * free_E_list in word-utils.c.
  */
 static void free_Elist(E_list * l)
 {
