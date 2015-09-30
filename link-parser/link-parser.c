@@ -941,6 +941,15 @@ int main(int argc, char * argv[])
 				/* print_total_time(opts); */
 				batch_errors++;
 				if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
+				/* If the parser used was the SAT solver, set the panic parser to
+				 * it too.
+				 * FIXME? Currently, the SAT solver code is not too useful in
+				 * panic mode since it doesn't handle parsing with null words, so
+				 * using the regular parser in that case could be beneficial.
+				 * However, this currently causes a crash due to a memory
+				 * management mess. */
+				parse_options_set_use_sat_parser(copts->panic_opts,
+					parse_options_get_use_sat_parser(opts));
 				parse_options_reset_resources(copts->panic_opts);
 				parse_options_set_verbosity(copts->panic_opts, verbosity);
 				num_linkages = sentence_parse(sent, copts->panic_opts);
