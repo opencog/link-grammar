@@ -3,6 +3,7 @@
 extern "C" {
 #include "api-structures.h"
 #include "structures.h"
+#include "linkage.h"
 };
 
 /**
@@ -19,6 +20,22 @@ void free_linkage_connectors_and_disjuncts(Linkage lkg)
   for (size_t i = 0; i < lkg->num_words; i++) {
     free_disjuncts(lkg->chosen_disjuncts[i]);
   }
+}
+
+/**
+ * Free all the connectors and disjuncts of all the linkages.
+ */
+void sat_free_linkages(Sentence sent)
+{
+  Linkage lkgs = sent->lnkages;
+
+  for (LinkageIdx li = 0; li < sent->num_linkages_alloced; li++) {
+    free_linkage_connectors_and_disjuncts(&lkgs[li]);
+    free_linkage(&lkgs[li]);
+  }
+  free(lkgs);
+  sent->lnkages = 0;
+  sent->num_linkages_alloced = 0;
 }
 
 Exp* null_exp()

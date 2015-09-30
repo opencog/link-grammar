@@ -23,15 +23,13 @@ using std::endl;
 
 
 extern "C" {
-#include "analyze-linkage.h"
-#include "build-disjuncts.h"
+#include "analyze-linkage.h"      // for compute_link_names()
+#include "build-disjuncts.h"      // for build_disjuncts_for_exp()
 #include <dict-api.h>             // for print_expression()
-#include "dict-file/read-dict.h"
-#include "extract-links.h"
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
-#include "score.h"
+#include "score.h"               // for linkage_score()
 //#include "utilities.h"         // XXX do we need it?
 #include "wordgraph.h"           // for empty_word()
 }
@@ -1689,18 +1687,30 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   return false;
 }
 
-/****************************************************************************
- *              Main entry point into the SAT parser                        *
- ****************************************************************************/
+/**
+ * Main entry point into the SAT parser.
+ * A note about panic mode:
+ * The current version of Minisat we use doesn't support timeouts.
+ * (Minisat >= 2.2 supports timeout.) In addition, currently parsing
+ * with null words is not supported here.
+ * So nothing particularly useful happens in a panic mode, and it is
+ * left for the user to disable it.
+ * Observation: Apparently the panic options somehow may cause an
+ * immediate failure to find a solution (not checked why).
+ */
 extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;
-  if (encoder) delete encoder;
+  if (encoder) {
+    delete encoder;
+    sat_free_linkages(sent);
+  }
 
   // Prepare for parsing - extracted for "preparation.c"
   encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   sent->hook = encoder;
   encoder->encode();
+
 
   LinkageIdx linkage_limit = opts->linkage_limit;
   LinkageIdx k;
@@ -1771,6 +1781,5 @@ extern "C" void sat_sentence_delete(Sentence sent)
   Linkage lkgs = sent->lnkages;
   if (!lkgs) return;
 
-  for (LinkageIdx li = 0; li < sent->num_linkages_alloced; li++)
-    free_linkage_connectors_and_disjuncts(&lkgs[li]);
+  sat_free_linkages(sent);
 }
