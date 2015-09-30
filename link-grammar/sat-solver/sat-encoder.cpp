@@ -23,15 +23,13 @@ using std::endl;
 
 
 extern "C" {
-#include "analyze-linkage.h"
-#include "build-disjuncts.h"
+#include "analyze-linkage.h"      // for compute_link_names()
+#include "build-disjuncts.h"      // for build_disjuncts_for_exp()
 #include <dict-api.h>             // for print_expression()
-#include "dict-file/read-dict.h"
-#include "extract-links.h"
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
-#include "score.h"
+#include "score.h"               // for linkage_score()
 //#include "utilities.h"         // XXX do we need it?
 #include "wordgraph.h"           // for empty_word()
 }
