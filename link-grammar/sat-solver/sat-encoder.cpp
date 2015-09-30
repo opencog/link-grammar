@@ -1771,6 +1771,5 @@ extern "C" void sat_sentence_delete(Sentence sent)
   Linkage lkgs = sent->lnkages;
   if (!lkgs) return;
 
-  for (LinkageIdx li = 0; li < sent->num_linkages_alloced; li++)
-    free_linkage_connectors_and_disjuncts(&lkgs[li]);
+  sat_free_linkages(sent);
 }
