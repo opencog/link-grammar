@@ -1700,6 +1700,17 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
  */
 extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 {
+  if (opts->min_null_count > 0) {
+    // The sat solver doesn't support (yet) parsing with nulls.
+    // For now, just avoid the delay of a useless re-parsing.
+    if (opts->verbosity >= 1)
+      prt_error("Info: use-sat: Cannot parse with null links (yet).\n"
+                "              Set the \"null\" option to 0 to turn off parsing with null links.");
+    sent->num_valid_linkages = 0;
+    sent->num_linkages_post_processed = 0;
+    return 0;
+  }
+
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (encoder) {
     delete encoder;
@@ -1738,6 +1749,12 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     // We don't have a valid linkages among the first linkage_limit ones
     sent->num_valid_linkages = 0;
     sent->num_linkages_post_processed = k;
+    if (opts->max_null_count > 0) {
+      // The sat solver doesn't support (yet) parsing with nulls.
+      if (opts->verbosity >= 1)
+        prt_error("Info: use-sat: Cannot parse with null links (yet).\n"
+                  "              Set the \"null\" option to 0 to turn off parsing with null links.");
+    }
   } else {
     /* We found a valid linkage.
      * XXX However, the following setting is wrong, as we actually don't
