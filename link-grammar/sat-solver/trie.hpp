@@ -33,7 +33,7 @@ private:
   // Number of supported chars - digits + upper + lower + other + addition-for-hexadecimal-base
   const static int NUM_CHARS = 10 + 1 + 10 + 1 + 6;
   // hash chars
-  int char_to_pos(char c);
+  ssize_t char_to_pos(char c);
 
   bool _terminal;
   Trie* _next[NUM_CHARS];
@@ -57,8 +57,8 @@ Trie<T>::~Trie() {
 
 
 template <class T>
-int Trie<T>::char_to_pos(char c) {
-  static int pos[] = {
+ssize_t Trie<T>::char_to_pos(char c) {
+  static ssize_t pos[] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -94,7 +94,7 @@ template <class T>
 void Trie<T>::insert(const char* key, T value) {
   Trie* t = this;
   while(*key != '\0') {
-    int pos = char_to_pos(*key);
+    ssize_t pos = char_to_pos(*key);
     if (!t->_next[pos]) {
       t->_next[pos] = new Trie();
     }
@@ -109,7 +109,7 @@ template <class T>
 T Trie<T>::lookup(const char* key) {
   Trie* t = this;
   while(*key != '\0') {
-    int pos = char_to_pos(*key);
+    ssize_t pos = char_to_pos(*key);
     t = t->_next[pos];
     if (!t) {
       return NOT_FOUND;
