@@ -30,8 +30,8 @@ private:
 
 
 
-  // Number of supported chars - digits + upper + lower + other
-  const static int NUM_CHARS = 10 + 1 + 10 + 1;
+  // Number of supported chars - digits + upper + lower + other + addition-for-hexadecimal-base
+  const static int NUM_CHARS = 10 + 1 + 10 + 1 + 6;
   // hash chars
   int char_to_pos(char c);
 
@@ -63,7 +63,7 @@ int Trie<T>::char_to_pos(char c) {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-    -1, -1, -1, -1, -1, -1, -1,
+    22, 23, 24, 25, 26, 27, -1,
 //   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U   V   W   X   Y   Z
     -1, -1, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, 11, -1,
