@@ -272,6 +272,7 @@ public:
    * linked to a connector
    */
 
+#if 0
   // If guiding params for this variable are not set earlier, they are
   // now set to default
   int link_top_cw(int wi, int wj, int pj, const char* cj) {
@@ -289,6 +290,7 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
+#endif
 
 
 #ifdef _CONNECTIVITY_
@@ -526,6 +528,7 @@ private:
   // Additional info about the link_top_cw(wi, wj, pj) variable with the given number
   std::vector<LinkTopCWVar*> _link_top_cw_variables;
 
+#if 0
   // Set this additional info
   void add_link_top_cw_variable(int i, int j, int pj, const char* cj, size_t var) {
     char name[MAX_VARIABLE_NAME];
@@ -548,6 +551,7 @@ private:
     _link_top_cw_variables[var] = new LinkTopCWVar(name, i, j, cj);
     _link_top_cw_variables_indices.push_back(var);
   }
+#endif
 
   /*
    *   Information about the link_cw(w, wj, pj) variables
