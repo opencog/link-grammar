@@ -449,6 +449,10 @@ private:
   void add_link_variable(int i, int pi, const char* ci, Exp* ei,
                          int j, int pj, const char* cj, Exp* ej, size_t var)
   {
+  /* The following variable is created but is never inserted to the trie,
+     and generating it has an observable performance impact.
+     The trie even doesn't have 'k'. */
+#if 0
     char name[MAX_VARIABLE_NAME];
     char* s = name;
     *s++ = 'l';    *s++ = 'i';     *s++ = 'n';     *s++ = 'k';
@@ -464,12 +468,14 @@ private:
     s = fast_sprintf(s, pj);
     *s++ = '_';
     s = fast_sprintf(s, cj);
+#endif
     char* label = construct_link_label(ci, cj);
 
     if (var >= _link_variables.size()) {
       _link_variables.resize(var + 1, 0);
     }
-    _link_variables[var] = new LinkVar(name, label, i, pi, j, pj, ci, cj, ei, ej);
+    // The first argument was the redundant variable eliminated above
+    _link_variables[var] = new LinkVar("", label, i, pi, j, pj, ci, cj, ei, ej);
     _link_variables_indices.push_back(var);
   }
 
