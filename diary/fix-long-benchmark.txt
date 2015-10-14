@@ -1,0 +1,50 @@
+2015-10-06 [ap]
+data/en/4.0.fix-long.batch CPU time (u+s seconds)
+link-parser parameters: [-u] -panic -timeout=10000 data/en/BATCH-FILE >/dev/null
+(No actual timeouts happened with the standard parser.
+The sat-solver code doesn't stop on timeouts in any case.)
+
+Exactly the same number of errors were observed in all the SAT libraries,
+but the case indicated in comment [*2].
+
+Most of the time measures were done by "timeit -r 6 -n 6" (best-of-6-runs
+taken 6 times and averaged).
+
+BATCH-FILE ---> | 4.0.fix-long.batch | 4.0.fix-long.batch | 4.0.fixes.batch | 4.0.batch
+----------------|--------------------|--------------------|-----------------|----------
+standard solver |       10647[*2]    |      6140[*7]      |       17.0      |   4.18
+
+sat-solver:
+
+BATCH-FILE-|          | Current Minisat |Minisat-2.2+| Glucose-4.0[*5]| CMS[*3]
+----------------------|-----------------|------------|----------------|--------
+4.0.batch             |    5.6          |     5.5    |    5.3         | 14.3
+4.0.fixes.batch       |  ~11.5          |   ~11.5    |  ~11.5         | 32
+4.0.fix-long.batch[*4]|3440(3520)13E[*1]| 252(309)12E| 194(212)11E    | 177(177)10E
+4.0.fix-long.batch[*6]|   240           |  193       |   141          | 137
+
+[*1] **Without** this sentence, on which it gets stuck for more than 10 CPU hours
+(program interrupted after that, twice):
+The problematic sentence:timeit -r 1 -n 10 "lg  -u  -panic -time=100000 < /tmp/flb > /dev/null"
+In Buddhism there are 84 Mahasiddhas: Acinta, Ajogi, Anangapa, Aryadeva, Babhaha, Bhadrapa, Bhandepa, Bhiksanapa, Bhusuku, Camaripa, Campaka, Carbaripa, Catrapa, Caurangipa, Celukapa, Darikapa, Dengipa, Dhahulipa, Dharmapa, Dhilipa, Dhobipa, Dhokaripa Dombipa, Dukhandi, Ghantapa, Gharbari, Godhuripa, Goraksa, Indrabhuti, Jalandhara, Jayananda, Jogipa, Kalapa, Kamparipa, Kambala, Kanakhala, Kanhapa, Kankana, Kankaripa, Kantalipa, Kapalapa, Khadgapa, Kilakilapa, Kirapalapa, Kokilipa, Kotalipa, Kucipa, Kukkuripa, Kumbharipa, Laksminkara, Lilapa, Lucikapa, Luipa, Mahipa, Manibhadra, Medhini, Mekhala, Mekopa, Minapa, Nagabodhi, Nagarjuna, Nalinapa, Naropa, Nirgunapa, Pacaripa, Pankajapa, Putalipa, Rahula, Saraha, Sakara, Samudra, Santipa, Sarvabhaksa, Savaripa, Syalipa, Tantepa, Tantipa, Thaganapa, Tilopa, Udhilipa, Upanaha, Vinapa, Virupa, Vyalipa.
+
+This sentence took *95%* of the CPU time of this batch run:
+When Sir William Petre first bought the manor, he repaired thither and found, in the middest part of the demesne lands, the situation of an old house scant meet for a farmer to dwell upon, having about it divers houses of office as well builded as the inner houses were, which, when he had well perused and found the commodity of the ground to be such as he could well like of, then forthwith he caused all those old houses to be pulled down and, in stead of them, hath at his own great costs and charges erected and builded other new houses, very fair, large and stately, made of brick and embattled, and hath besides enclosed all the demesne lands lying round about his house with a fair large pale, parklike.
+
+See **[*6]** for run times without these 2 problematic sentences.
+
+[*2] Using the "time" command. The default !links=1000 was used. Trying with !links=5 shows that fetching the linkages has a relatively negligible overhead.
+
+[*3] CryptoMiniSAT, one thread (in my tests, it didn't scale well with more threads, taking actually much more CPU and more elapse-time with number of threads >1).
+
+[*4] Best of 10 runs (average of 10 runs). nnE: number of errors. It is not clear how the number of errors can be different - does the SAT library miss solutions, or is it a problem in the LG sat-solver code that interprets the solutions?
+
+[*5] Haven't tried with more than one thread (yet).
+
+[*6] timeit -r 6 -n 6
+
+[*7] Without the 2 problematic sentences (see [*1]).
+
+---
+Note (2015-10-14): Some tweaking in guiding.cpp was needed due to library API
+changes or due to improve speed. See ru-benchmark.txt.

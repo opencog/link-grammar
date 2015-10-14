@@ -1,0 +1,39 @@
+2015-10-14 [ap]
+data/ru/4.0.batch CPU time (u+s seconds)
+link-parser parameters: [-u] -panic -timeout=10000 data/ru/4.0.batch
+Timing by: timeit -r 6 -n 6 "command>/dev/null" (best of multiple runs, rounded to 0.1)
+
+The following statements in guiding.cpp are set differently, as indicated:
+        A solver->setDecisionVar(v, _parameters[v].isDecision);
+        B solver->varBumpActivity(v, _parameters[v].priority);
+        C solver->setPolarity(v, _parameters[v].polarity > 0.0);
+
+(// means commented out.)
+
+[*1]
+        A
+        B
+        C
+[*2]
+        A
+        //B
+        //C
+[*3]
+        A
+        // B
+        C
+[*4]
+        // A
+        // B
+        // C
+
+Standard parser: 16.7
+
+sat-solver:
+
+ Current Minisat  | Minisat-2.2+  | Glucose-4.0  |    CryptoMiniSat(CMS)
+------------------|---------------|--------------|----------------------
+        9.1       |    9.0        |    10.1      |    12.2
+        [*1]      |    [*2]       |    [*3]      |    [*4]
+
+Note: The libraries that excels in very long English sentences Glucose-4.0 and CMS) are slower here.
