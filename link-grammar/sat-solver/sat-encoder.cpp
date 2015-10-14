@@ -254,7 +254,10 @@ void SATEncoder::build_word_tags()
 #endif
 
     char name[MAX_VARIABLE_NAME];
-    sprintf(name, "w%zu", w);
+    // sprintf(name, "w%zu", w);
+    name[0] = 'w';
+    fast_sprintf(name+1, w);
+
     bool leading_right = true;
     bool leading_left = true;
     std::vector<int> eps_right, eps_left;
@@ -319,7 +322,9 @@ void SATEncoder::generate_satisfaction_conditions()
 #endif
 
     char name[MAX_VARIABLE_NAME];
-    sprintf(name, "w%zu", w);
+    // sprintf(name, "w%zu", w);
+    name[0] = 'w';
+    fast_sprintf(name+1, w);
 
     determine_satisfaction(w, name);
     int dfs_position = 0;
@@ -489,9 +494,12 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
 
-  char str[MAX_VARIABLE_NAME];
-  sprintf(str, "w%zd", wj);
-  Lit condition = Lit(_variables->string(str));
+  char name[MAX_VARIABLE_NAME];
+  // sprintf(name, "w%zu", wj);
+  name[0] = 'w';
+  fast_sprintf(name+1, wj);
+
+  Lit condition = Lit(_variables->string(name));
 
   vec<Lit> rhs;
 
@@ -946,7 +954,9 @@ void SATEncoder::generate_epsilon_definitions()
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
     char name[MAX_VARIABLE_NAME];
-    sprintf(name, "w%zu", w);
+    // sprintf(name, "w%zu", w);
+    name[0] = 'w';
+    fast_sprintf(name+1, w);
 
     int dfs_position;
 

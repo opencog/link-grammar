@@ -272,6 +272,7 @@ public:
    * linked to a connector
    */
 
+#if 0
   // If guiding params for this variable are not set earlier, they are
   // now set to default
   int link_top_cw(int wi, int wj, int pj, const char* cj) {
@@ -289,6 +290,7 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
+#endif
 
 
 #ifdef _CONNECTIVITY_
@@ -449,6 +451,10 @@ private:
   void add_link_variable(int i, int pi, const char* ci, Exp* ei,
                          int j, int pj, const char* cj, Exp* ej, size_t var)
   {
+  /* The following variable is created but is never inserted to the trie,
+     and generating it has an observable performance impact.
+     The trie even doesn't have 'k'. */
+#if 0
     char name[MAX_VARIABLE_NAME];
     char* s = name;
     *s++ = 'l';    *s++ = 'i';     *s++ = 'n';     *s++ = 'k';
@@ -464,12 +470,14 @@ private:
     s = fast_sprintf(s, pj);
     *s++ = '_';
     s = fast_sprintf(s, cj);
+#endif
     char* label = construct_link_label(ci, cj);
 
     if (var >= _link_variables.size()) {
       _link_variables.resize(var + 1, 0);
     }
-    _link_variables[var] = new LinkVar(name, label, i, pi, j, pj, ci, cj, ei, ej);
+    // The first argument was the redundant variable eliminated above
+    _link_variables[var] = new LinkVar("", label, i, pi, j, pj, ci, cj, ei, ej);
     _link_variables_indices.push_back(var);
   }
 
@@ -520,6 +528,7 @@ private:
   // Additional info about the link_top_cw(wi, wj, pj) variable with the given number
   std::vector<LinkTopCWVar*> _link_top_cw_variables;
 
+#if 0
   // Set this additional info
   void add_link_top_cw_variable(int i, int j, int pj, const char* cj, size_t var) {
     char name[MAX_VARIABLE_NAME];
@@ -542,6 +551,7 @@ private:
     _link_top_cw_variables[var] = new LinkTopCWVar(name, i, j, cj);
     _link_top_cw_variables_indices.push_back(var);
   }
+#endif
 
   /*
    *   Information about the link_cw(w, wj, pj) variables

@@ -2,17 +2,14 @@
 
 char* fast_sprintf(char* buffer, int num)
 {
-  char* begin = buffer;
-  do {
-    *buffer++ = '0' + num % 10;
-    num /= 10;
-  } while (num > 0);
-  char* end = buffer - 1;
-
-  for (; begin < end; begin++, end--) {
-    char tmp = *begin;
-    *begin = *end;
-    *end = tmp;
+  // num is 0 or 1 most of the times
+  if (num < 16) {
+    *buffer++ = '0' + num;
+  } else {
+    do {
+      *buffer++ = '0' + num % 16;
+      num /= 16;
+    } while (num > 0);
   }
 
   *buffer = '\0';
