@@ -57,7 +57,6 @@ static int right_disjunct_list_length(const Disjunct * d)
 struct fast_matcher_s
 {
 	size_t size;
-	unsigned int match_cost;     /* used for nothing but debugging ... */
 	unsigned int *l_table_size;  /* the sizes of the hash tables */
 	unsigned int *r_table_size;
 
@@ -120,7 +119,6 @@ void free_fast_matcher(fast_matcher_t *mchxt)
 	size_t w;
 	unsigned int i;
 
-	if (verbosity > 1) printf("%d Match cost\n", mchxt->match_cost);
 	for (w = 0; w < mchxt->size; w++)
 	{
 		for (i = 0; i < mchxt->l_table_size[w]; i++)
@@ -242,7 +240,6 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	ctxt->l_table = xalloc(2 * sent->length * sizeof(Match_node **));
 	ctxt->r_table = ctxt->l_table + sent->length;
 	memset(ctxt->l_table, 0, 2 * sent->length * sizeof(Match_node **));
-	ctxt->match_cost = 0;
 	ctxt->mn_free_list = NULL;
 
 	for (w=0; w<sent->length; w++)
@@ -279,39 +276,20 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	return ctxt;
 }
 
-static int addr_compare(const void *a, const void *b)
-{
-	const Match_node* const * ma = a;
-	const Match_node* const * mb = b;
-	if ((*ma)->d < (*mb)->d) return -1;
-	if ((*ma)->d > (*mb)->d) return 1;
-	return 0;
-}
-
 /**
  * Forms and returns a list of disjuncts coming from word w, that might
  * match lc or rc or both. The lw and rw are the words from which lc
  * and rc came respectively.
  *
  * The list is returned in a linked list of Match_nodes.
- * The list contains no duplicates.  A quadratic algorithm is used to
- * eliminate duplicates.  In practice the match_cost is less than the
- * parse_cost (and the loop is tiny), so there's no reason to bother
- * to fix this.  The number of times through the loop is counted with
- * 'match_cost', if verbosity>1, then it this will be printed at the end.
- *
- * Well, with one exception: for long sentences that have parse
- * overflows, this can sometimes get match lists that are hundreds of
- * elements long, dominating the total time spent in the algo; viz.
- * in excess of 50% of the time.
+ * The list contains no duplicates.
  */
 Match_node *
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	size_t rlen = 0, llen = 0;
-	Match_node *ml, *mr, *mx, *my, *mz, *front, *free_later;
+	Match_node *ml, *mr, *mx, *my, *mr_end, *front;
 
 	if (lc != NULL) {
 		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
@@ -324,131 +302,47 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		mr = NULL;
 	}
 
+	/* In order to eliminate duplicates from the lists, we mark the disjuncts. */
+	for (mx = mr; mx != NULL; mx = mx->next)
+	{
+		if (mx->d->right->word > rw) break;
+		mx->d->marked = true;
+	}
+	mr_end = mx;
+
 	front = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
+		mx->d->marked = false;
 		my = get_match_node(ctxt);
 		my->d = mx->d;
 		my->next = front;
 		front = my;
-		llen++;
 	}
 	ml = front;   /* ml is now the list of things that could match the left */
 
 	front = NULL;
-	for (mx = mr; mx != NULL; mx = mx->next)
+	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		if (mx->d->right->word > rw) break;
-		my = get_match_node(ctxt);
-		my->d = mx->d;
-		my->next = front;
-		front = my;
-		rlen++;
+		if (mx->d->marked)
+		{
+			/* mx is not in the l list. */
+			my = get_match_node(ctxt);
+			my->d = mx->d;
+			my->next = front;
+			front = my;
+		}
 	}
 	mr = front;   /* mr is now the list of things that could match the right */
 
 	if (mr == NULL) return ml;
 	if (ml == NULL) return mr;
 
-	/* Now we want to eliminate duplicates from the lists. */
-	/* If the left-lest is reasonably short, then just do a quadratic
-	 * search for duplicates. But if the list is long, optimize the
-	 * search.  Based on quickie measurements, the optimized version
-	 * seems to dominate when 250 < llen and 8 < rlen. Roughly.
-	 */
-	if (llen < 250 || rlen < 9)
-	{
-		/* Perform a simple quadratic-time search. viz two nested loops.
-		 * Runtime blows up horribly for lengths over a few hundred. */
-		free_later = NULL;
-		front = NULL;
-		for (mx = mr; mx != NULL; mx = mz)
-		{
-			/* See if mx in first list, put it in if its not. */
-			mz = mx->next;
-			ctxt->match_cost++;
-			for (my=ml; my!=NULL; my=my->next) {
-				ctxt->match_cost++;
-				if (mx->d == my->d) break;
-			}
-			if (my != NULL) { /* mx was in the l list */
-				mx->next = free_later;
-				free_later = mx;
-			} else {  /* It was not there. */
-				mx->next = front;
-				front = mx;
-			}
-		}
-		mr = front;  /* mr is now the abbreviated right list */
-		put_match_list(ctxt, free_later);
-	}
-	else
-	{
-		/* Perform an O(N log N) search, by sorting first, and then
-		 * doing a linear-line run through the sorted arrays.
-		 */
-		size_t i,j;
-		Match_node* mx;
-		Match_node** mra = alloca(rlen * sizeof(Match_node*));
-		Match_node** mla = alloca(llen * sizeof(Match_node*));
-
-		i = 0;
-		for (mx = mr; mx != NULL; mx = mx->next) mra[i++] = mx;
-		qsort((void *) mra, rlen, sizeof(Match_node*), addr_compare);
-
-		i = 0;
-		for (mx = ml; mx != NULL; mx = mx->next) mla[i++] = mx;
-		qsort((void *) mla, llen, sizeof(Match_node*), addr_compare);
-
-		/* Compare addresses side-by side in a linear loop.
-		 * Be careful not to run past bounds arrays. */
-		free_later = NULL;
-		front = NULL;
-		i = 0;
-		j = 0;
-		while (i < rlen)
-		{
-			while (i < rlen && mra[i]->d < mla[j]->d)
-			{
-				mra[i]->next = front;
-				front = mra[i];
-				i++;
-			}
-			if (i == rlen) break;
-
-			if (mra[i]->d == mla[j]->d)
-			{
-				mra[i]->next = free_later;
-				free_later = mra[i];
-				i++; j++;
-			}
-			if (i == rlen) break;
-
-			while (j < llen && mra[i]->d > mla[j]->d)
-				j++;
-
-			/* Drain the rest of the right-hand list. */
-			if (j == llen)
-			{
-				while (i < rlen)
-				{
-					mra[i]->next = front;
-					front = mra[i];
-					i++;
-				}
-				break;
-			}
-		}
-		mr = front;  /* mr is now the abbreviated right list */
-		put_match_list(ctxt, free_later);
-	}
-
 	/* Now catenate the two lists. */
-	if (mr == NULL) return ml;
-	if (ml == NULL) return mr;
 	for (mx = mr; mx->next != NULL; mx = mx->next)
 	  ;
 	mx->next = ml;
+
 	return mr;
 }
