@@ -21,8 +21,9 @@ Version 5.3.0: (XXX 2015)
  * New regex-file feature - negative regex'es.
  * Correct the handling of moprhology stems with non-LL links.
  * Fix !!LEFT-WALL and !!RIGHT-WALL
- * SAT solver now linked statically
+ * SAT solver now linked statically.
  * Assorted SAT sovler cleanup and improvements.
+ * Performance improvement in fast macher: 15% faster on fixes.batch.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
