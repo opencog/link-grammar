@@ -60,10 +60,9 @@ char * string_copy(String *s)
 void append_string(String * string, const char *fmt, ...)
 {
 #define TMPLEN 1024
-	char temp_string[TMPLEN];
+	char temp_buffer[TMPLEN];
+	char * temp_string = temp_buffer;
 	size_t templen;
-	char * p;
-	size_t new_size;
 	va_list args;
 #ifdef _MSC_VER
 	char * tmp = alloca(strlen(fmt)+1);
@@ -76,26 +75,32 @@ void append_string(String * string, const char *fmt, ...)
 
 	va_start(args, fmt);
 	templen = vsnprintf(temp_string, TMPLEN, fmt, args);
+	if ((int)templen < 0) goto error;
+	if (templen >= TMPLEN)
+	{
+		/* TMPLEN is too small - use a bigger buffer */
+		templen = vsnprintf(NULL, 0, fmt, args);
+		if ((int)templen < 0) goto error;
+
+		temp_string = alloca(templen+1);
+		templen = vsnprintf(temp_string, templen+1, fmt, args);
+		if ((int)templen < 0) goto error;
+	}
 	va_end(args);
 
 	if (string->allocated <= string->eos + templen)
 	{
-		new_size = 2 * string->allocated + templen + 1;
-		p = (char *) exalloc(sizeof(char)*new_size);
-		strcpy(p, string->p);
-		strcpy(p + string->eos, temp_string);
-
-		exfree(string->p, sizeof(char)*string->allocated);
-
-		string->p = p;
-		string->allocated = new_size;
-		string->eos += templen;
+		string->allocated = 2 * string->allocated + templen + 1;
+		string->p = (char *)realloc(string->p, string->allocated);
 	}
-	else
-	{
-		strcpy(string->p + string->eos, temp_string);
-		string->eos += templen;
-	}
+	strcpy(string->p + string->eos, temp_string);
+	string->eos += templen;
+	return;
+
+error:
+	/* Some error has occurred */
+	prt_error("Error: append_string(): "
+				 "vsnprintf() returned a negative value");
 }
 
 size_t append_utf8_char(String * string, const char * mbs)
