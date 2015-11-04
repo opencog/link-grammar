@@ -42,7 +42,7 @@ Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
 bool word_has_connector(Dict_node *, const char *, char);
 const char * word_only_connector(Dict_node *);
-bool match_in_connector_set(Connector_set*, Connector*, int dir);
+bool match_in_connector_set(Connector_set*, Connector*);
 
 
 /**
