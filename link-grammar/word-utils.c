@@ -207,19 +207,11 @@ void free_connectors(Connector *e)
 Connector * connector_new(void)
 {
 	Connector *c = (Connector *) xalloc(sizeof(Connector));
-	c->length_limit = UNLIMITED_LEN;
+	init_connector(c);
 	c->string = "";
-	c->hash = -1;
 	c->multi = false;
 	c->next = NULL;
 	c->tableNext = NULL;
-	return c;
-}
-
-Connector * init_connector(Connector *c)
-{
-	c->hash = -1;
-	c->length_limit = UNLIMITED_LEN;
 	return c;
 }
 
