@@ -133,19 +133,6 @@ static inline unsigned int hash_S(Connector * c)
 	return (h & (CONTABSZ-1));
 }
 
-/**
- * This is almost identical to do_match().  Its reason for existance
- * is the rather subtle fact that with "and" can transform a "Ss"
- * connector into "Sp".  This means that in order for pruning to
- * work, we must allow a "Ss" connector on word match an "Sp" connector
- * on a word to its right.  This is what this version of match allows.
- * We assume that a is on a word to the left of b.
- */
-static inline bool prune_match(Connector *a, Connector *b)
-{
-	return easy_match(a->string, b->string);
-}
-
 static void zero_connector_table(connector_table *ct)
 {
 	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
@@ -543,27 +530,15 @@ static Exp* purge_Exp(Exp *e)
 /**
  * Returns TRUE if c can match anything in the set S (err. the connector table ct).
  */
-static inline bool matches_S(connector_table *ct, Connector * c, char dir)
+static inline bool matches_S(connector_table *ct, Connector * c)
 {
 	Connector * e;
-	unsigned int h = hash_S(c);
 
-	if (dir == '-')
+	for (e = ct[hash_S(c)]; e != NULL; e = e->tableNext)
 	{
-		for (e = ct[h]; e != NULL; e = e->tableNext)
-		{
-			if (prune_match(e, c)) return true;
-		}
-		return false;
+		if (easy_match(e->string, c->string)) return true;
 	}
-	else
-	{
-		for (e = ct[h]; e != NULL; e = e->tableNext)
-		{
-			if (prune_match(c, e)) return true;
-		}
-		return false;
-	}
+	return false;
 }
 
 /**
@@ -582,7 +557,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 			Connector dummy;
 			init_connector(&dummy);
 			dummy.string = e->u.string;
-			if (!matches_S(ct, &dummy, dir))
+			if (!matches_S(ct, &dummy))
 			{
 				e->u.string = NULL;
 				count++;
