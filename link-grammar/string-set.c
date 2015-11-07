@@ -10,6 +10,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <stdint.h>                     // uintptr_t
+
 #include "const-prime.h"
 #include "memory-pool.h"
 #include "string-set.h"
@@ -63,6 +65,51 @@ static unsigned int stride_hash_string(const char *str, const String_set *ss)
 	return accum;
 }
 
+#ifdef STR_POOL
+static void ss_pool_alloc(size_t pool_size_add, String_set *ss)
+{
+	str_mem_pool *new_mem_pool = malloc(pool_size_add);
+	new_mem_pool->size = pool_size_add;
+
+	new_mem_pool->prev = ss->string_pool;
+	ss->string_pool = new_mem_pool;
+	ss->alloc_next = ss->string_pool->block;
+
+	ss->pool_free_count = pool_size_add - sizeof(str_mem_pool);
+}
+
+static void ss_pool_delete(String_set *ss)
+{
+	str_mem_pool *m, *m_prev;
+
+	for (m = ss->string_pool; m != NULL; m = m_prev)
+	{
+		m_prev = m->prev;
+		free(m);
+	}
+}
+
+#define STR_ALIGNMENT 16
+
+static char *ss_stralloc(size_t str_size, String_set *ss)
+{
+	ss->pool_free_count -= str_size;
+	if (ss->pool_free_count < 0)
+		ss_pool_alloc((str_size&MEM_POOL_INCR) + MEM_POOL_INCR, ss);
+
+	char *str_address = ss->alloc_next;
+	ss->alloc_next += str_size;
+	ss->alloc_next = (char *)ALIGN((uintptr_t)ss->alloc_next, STR_ALIGNMENT);
+	size_t total_size = str_size + (ss->alloc_next - str_address);
+
+	ss->pool_free_count -= total_size;
+	return str_address;
+}
+#else
+#define ss_stralloc(x, ss) malloc(x)
+#define ss_pool_alloc(a, b)
+#endif
+
 String_set * string_set_create(void)
 {
 	String_set *ss;
@@ -73,6 +120,9 @@ String_set * string_set_create(void)
 	ss->table = malloc(ss->size * sizeof(ss_slot));
 	memset(ss->table, 0, ss->size*sizeof(ss_slot));
 	ss->count = 0;
+	ss->string_pool = NULL;
+	ss_pool_alloc(MEM_POOL_INIT, ss);
+
 	return ss;
 }
 
@@ -146,11 +196,11 @@ const char * string_set_add(const char * source_string, String_set * ss)
 #ifdef DEBUG
 	/* Store the String_set structure address for debug verifications */
 	size_t mlen = (len&~(sizeof(ss)-1)) + 2*sizeof(ss);
-	str = (char *) malloc(mlen);
+	str = ss_stralloc(mlen, ss);
 	*(String_set **)&str[mlen-sizeof(ss)] = ss;
-#else
-	str = (char *) malloc(len);
-#endif
+#else /* !DEBUG */
+	str = ss_stralloc(len, ss);
+#endif /* DEBUG */
 	memcpy(str, source_string, len);
 	ss->table[p].str = str;
 	ss->table[p].hash = h;
@@ -174,13 +224,19 @@ const char * string_set_lookup(const char * source_string, String_set * ss)
 
 void string_set_delete(String_set *ss)
 {
+	if (ss == NULL) return;
+
+#ifdef STR_POOL
+	ss_pool_delete(ss);
+#else
 	size_t i;
 
-	if (ss == NULL) return;
 	for (i=0; i<ss->size; i++)
 	{
 		if (ss->table[i].str != NULL) free((void *)ss->table[i].str);
 	}
+#endif /* STR_POOL */
+
 	free(ss->table);
 	free(ss);
 }
