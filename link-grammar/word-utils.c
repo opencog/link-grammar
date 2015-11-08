@@ -294,15 +294,15 @@ void connector_set_delete(Connector_set * conset)
  * d='-' means this connector is on the left side of the disjunct.
  */
 
-bool match_in_connector_set(Connector_set *conset, Connector * c, int dir)
+bool match_in_connector_set(Connector_set *conset, Connector * c)
 {
 	unsigned int h;
 	Connector * c1;
 	if (conset == NULL) return false;
-	h = connector_set_hash(conset, c->string, dir);
+	h = connector_set_hash(conset, c->string, '+');
 	for (c1 = conset->hash_table[h]; c1 != NULL; c1 = c1->next)
 	{
-		if (easy_match(c1->string, c->string) && (dir == c1->word)) return true;
+		if (easy_match(c1->string, c->string)) return true;
 	}
 	return false;
 }

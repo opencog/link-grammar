@@ -142,7 +142,7 @@ public:
     if (parse_options_get_all_short_connectors(_opts)) {
       c->length_limit = short_len;
     }
-    else if (conset == NULL || match_in_connector_set(conset, c, '+')) {
+    else if (conset == NULL || match_in_connector_set(conset, c)) {
       c->length_limit = UNLIMITED_LEN;
     } else {
       c->length_limit = short_len;
