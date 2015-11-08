@@ -16,7 +16,7 @@ WORDS=                   \
    words.v.sub
 
 
-wordsdir=$(pkgdatadir)/ar/words
+wordsdir=$(pkgdatadir)/fa/words
 words_DATA = $(WORDS)
 
 EXTRA_DIST = $(WORDS)
