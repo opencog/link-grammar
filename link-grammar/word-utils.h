@@ -34,8 +34,14 @@ void free_X_nodes(X_node *);
 
 /* Connector utilities ... */
 Connector * connector_new(void);
-Connector * init_connector(Connector *c);
 void free_connectors(Connector *);
+
+static inline Connector * init_connector(Connector *c)
+{
+	c->hash = -1;
+	c->length_limit = UNLIMITED_LEN;
+	return c;
+}
 
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);
