@@ -29,10 +29,8 @@ set_connector_list_length_limit(Connector *c,
                                 Parse_Options opts)
 {
 	for (; c!=NULL; c=c->next) {
-		if (parse_options_get_all_short_connectors(opts)) {
-			c->length_limit = short_len;
-		}
-		else if (conset == NULL || match_in_connector_set(conset, c)) {
+		if (!opts->all_short &&
+		    (conset == NULL || match_in_connector_set(conset, c))) {
 			c->length_limit = UNLIMITED_LEN;
 		} else {
 			c->length_limit = short_len;
@@ -44,7 +42,7 @@ static void
 set_connector_length_limits(Sentence sent, Parse_Options opts)
 {
 	size_t i;
-	size_t len = opts->short_length;
+	unsigned int len = opts->short_length;
 	Connector_set * ucs = sent->dict->unlimited_connector_set;
 
 	if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;

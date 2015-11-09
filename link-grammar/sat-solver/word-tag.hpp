@@ -134,18 +134,16 @@ public:
 
   void set_connector_length_limit(Connector* c)
   {
-    int short_len = _opts->short_length;
-    if (short_len > UNLIMITED_LEN)
-      short_len = UNLIMITED_LEN;
+    unsigned int len = _opts->short_length;
+    Connector_set * conset = _sent->dict->unlimited_connector_set;
 
-    Connector_set *conset = _sent->dict->unlimited_connector_set;
-    if (parse_options_get_all_short_connectors(_opts)) {
-      c->length_limit = short_len;
-    }
-    else if (conset == NULL || match_in_connector_set(conset, c)) {
+    if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
+
+    if (!_opts->all_short &&
+        (conset == NULL || match_in_connector_set(conset, c))) {
       c->length_limit = UNLIMITED_LEN;
     } else {
-      c->length_limit = short_len;
+      c->length_limit = len;
     }
   }
 
