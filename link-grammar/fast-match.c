@@ -311,6 +311,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	mr_end = mx;
 
 	front = NULL;
+	/* Construct the list of things that could match the left. */
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
@@ -320,9 +321,8 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		my->next = front;
 		front = my;
 	}
-	ml = front;   /* ml is now the list of things that could match the left */
 
-	front = NULL;
+	/* Append the list of things that could match the right. */
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
 		if (mx->d->marked)
@@ -334,15 +334,6 @@ form_match_list(fast_matcher_t *ctxt, int w,
 			front = my;
 		}
 	}
-	mr = front;   /* mr is now the list of things that could match the right */
 
-	if (mr == NULL) return ml;
-	if (ml == NULL) return mr;
-
-	/* Now catenate the two lists. */
-	for (mx = mr; mx->next != NULL; mx = mx->next)
-	  ;
-	mx->next = ml;
-
-	return mr;
+	return front;
 }
