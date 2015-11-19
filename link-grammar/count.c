@@ -100,6 +100,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 bool do_match(Connector *a, Connector *b, int aw, int bw)
 {
 	int dist = bw - aw;
+	if (NULL == a || NULL == b) return false;
 	assert(aw < bw, "do_match() did not receive params in the natural order.");
 	if (dist > a->length_limit || dist > b->length_limit) return false;
 	return easy_match(a->string, b->string);
@@ -302,12 +303,14 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		{
 			unsigned int lnull_cnt, rnull_cnt;
 			Disjunct * d = m->d;
+			bool Lmatch = do_match(le, d->left, lw, w);
+			bool Rmatch = do_match(d->right, re, w, rw);
+
 			/* _p1 avoids a gcc warning about unsafe loop opt */
 			unsigned int null_count_p1 = null_count + 1;
 
 			for (lnull_cnt = 0; lnull_cnt < null_count_p1; lnull_cnt++)
 			{
-				bool Lmatch, Rmatch;
 				bool leftpcount = false;
 				bool rightpcount = false;
 				bool pseudototal = false;
@@ -318,10 +321,6 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-				Lmatch = (le != NULL) && (d->left != NULL) &&
-				         do_match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) &&
-				         do_match(d->right, re, w, rw);
 
 				/* First, perform pseudocounting as an optimization. If
 				 * the pseudocount is zero, then we know that the true
