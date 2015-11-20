@@ -14,6 +14,7 @@
 #include "api-structures.h"
 #include "externs.h"
 #include "fast-match.h"
+#include "string-set.h"
 #include "word-utils.h"
 
 /**
@@ -203,6 +204,59 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 }
 
 /**
+ * Validate that the uppercase part of two connectors are the same.
+ * Return true if so, false otherwise.
+ * FIXME: Use connector enumeration.
+ */
+static bool con_uc_eq(const Connector *c1, const Connector *c2)
+{
+
+	if (string_set_cmp(c1->string, c2->string)) return true;
+	if (c1->hash != c2->hash) return false;
+	if (c1->uc_length != c1->uc_length) return false;
+
+	const char *uc1 = &c1->string[c1->uc_start];
+	const char *uc2 = &c2->string[c2->uc_start];
+	/* We arrive here for less than 50% of the cases for "en" and
+	 * less then 20% of the cases for "ru", and the following
+	 * condition is always true.
+	 * How come 2 different uc strings never have the same hash value? */
+	if (0 == strncmp(uc1, uc2, c1->uc_length)) return true;
+
+	return false;
+}
+
+static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
+                                          Connector * c, int dir)
+{
+		unsigned int h, s;
+
+		s = h = connector_hash(c) & (size-1);
+
+		if (dir == 1) {
+			while (NULL != t[h])
+			{
+				if (con_uc_eq(t[h]->d->right, c)) break;
+				h = (h + 1) & (size-1);
+				if (NULL == t[h]) break;
+				if (h == s) return NULL;
+			}
+		}
+		else
+		{
+			while (NULL != t[h])
+			{
+				if (con_uc_eq(t[h]->d->left, c)) break;
+				h = (h + 1) & (size-1);
+				if (NULL == t[h]) break;
+				if (h == s) return NULL;
+			}
+		}
+
+		return &t[h];
+}
+
+/**
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  * dir =  1, we're putting this into a right table.
@@ -211,16 +265,20 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 static void put_into_match_table(unsigned int size, Match_node ** t,
 								 Disjunct * d, Connector * c, int dir )
 {
-	unsigned int h;
-	Match_node * m;
-	h = connector_hash(c) & (size-1);
+	Match_node *m, **xl;
+
 	m = (Match_node *) xalloc (sizeof(Match_node));
 	m->next = NULL;
 	m->d = d;
+
+	xl = get_match_table_entry(size, t, c, dir);
+	assert(NULL != xl, "get_match_table_entry: Overflow\n");
 	if (dir == 1) {
-		t[h] = add_to_right_table_list(m, t[h]);
-	} else {
-		t[h] = add_to_left_table_list(m, t[h]);
+		*xl = add_to_right_table_list(m, *xl);
+	}
+	else
+	{
+		*xl = add_to_left_table_list(m, *xl);
 	}
 }
 
@@ -289,17 +347,16 @@ form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *ml, *mr, *mx, *my, *mr_end, *front;
+	Match_node *mx, *my, *mr_end, *front, **mxp;
+	Match_node *ml = NULL, *mr = NULL;
 
 	if (lc != NULL) {
-		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
-	} else {
-		ml = NULL;
+		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
+		if (NULL != mxp) ml = *mxp;
 	}
 	if (rc != NULL) {
-		mr = ctxt->r_table[w][connector_hash(rc) & (ctxt->r_table_size[w]-1)];
-	} else {
-		mr = NULL;
+		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
+		if (NULL != mxp) mr = *mxp;
 	}
 
 	/* In order to eliminate duplicates from the lists, we mark the disjuncts. */

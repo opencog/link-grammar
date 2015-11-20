@@ -458,6 +458,7 @@ int calculate_connector_hash(Connector * c)
 	i = 0;
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
+	c->uc_start = s - c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i += *s;
@@ -475,6 +476,7 @@ int calculate_connector_hash(Connector * c)
 	i = 0;
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
+	c->uc_start = s - c->string;
 	while (isupper((int) *s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
@@ -482,6 +484,8 @@ int calculate_connector_hash(Connector * c)
 	}
 #endif /* USE_SDBM */
 
+	c->lc_start = ('\0' == *s) ? 0 : s - c->string;
+	c->uc_length = s - c->string - c->uc_start;
 	c->hash = i;
 	return i;
 }
