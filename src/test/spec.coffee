@@ -4,16 +4,19 @@ describe 'Link Grammar Tests', ->
 	require 'should'
 
 	linkGrammar = new LinkGrammar()
-	
+
 	linkage = linkGrammar.parse 'turn off the light'
-		
+
+	it 'should not crash', ->
+		(-> linkGrammar.parse('string')).should.throw('No links found')
+
 	it 'should have the correct number of links', ->
 		linkage.links[2].left.word.should.equal 'turn'
 		linkage.links.length.should.equal 5
 
 	it 'should have the correct tree', ->
 		linkage.tree.child.child.label.should.equal 'turn'
-	
+
 	it 'should have word list', ->
 		linkage.words.length.should.equal 6
 

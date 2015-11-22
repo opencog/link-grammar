@@ -16,7 +16,7 @@ Easier references to base types of data.
 
 These are just references to different native structs, which are all just pointers because we never use their actual referenced object.
 
-    ParseOptions = pointerType 
+    ParseOptions = pointerType
     Dictionary = pointerType
     Sentence = pointerType
     Linkage = pointerType
@@ -78,7 +78,7 @@ Default configuration for data paths.
 Main parser class which interfaces the native library to make it very simple to get link grammar data from an input string.
 
     class LinkGrammar
-    	
+
 A few utility methods for the parser.
 
         constructor: (config) ->
@@ -87,12 +87,15 @@ A few utility methods for the parser.
             lib.parse_options_set_verbosity @options, (if @config.verbose then 1  else 0)
             @dictionary = lib.dictionary_create @config.dictPath, @config.ppPath, @config.consPath, @config.affixPath
 
-Parse input, and return linkage.
+Parse input, and return linkage if exists.
 
         parse: (input, index) ->
             sentence = lib.sentence_create input, @dictionary
-            numLinkages = lib.sentence_parse sentence, @options 
-            new Linkage lib.linkage_create index or 0, sentence, @options
+            numLinkages = lib.sentence_parse sentence, @options
+            if numLinkages > 0
+              new Linkage lib.linkage_create index or 0, sentence, @options
+            else
+              throw new Error('No links found')
 
 Linkage class which allows for more specific parsing of grammar.
 
@@ -146,14 +149,14 @@ Get array of grammar links based on linkage.
                     link.right.type = temp[1]
                 link
             ), @
-                
+
 Get parsed words with their grammar type and index
 
         getWords: ->
             _.chain(@links)
                 .map (link) -> [link.left, link.right]
                 .flatten()
-                .uniq (link) -> link.word 
+                .uniq (link) -> link.word
                 .value()
 
 Get list of links by specific label type
@@ -177,5 +180,5 @@ Get list of connector links for a specific word
                         source: link.right
                         target: link.left
             words
-    
+
     module.exports = LinkGrammar
