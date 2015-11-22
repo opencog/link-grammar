@@ -1,4 +1,4 @@
-Version 5.3.0: (XXX 2015)
+Version 5.3.0: (22 November 2015)
  * Major redesign of the python bindings.
  * Major redesign of sentence tokenization (the "wordgraph" design)
  * Verb 'steal' is optionally transitive.

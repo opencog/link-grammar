@@ -12,10 +12,10 @@ dict_DATA = $(DICTS)
 
 # Do NOT install the batch files!
 EXTRA_DIST = $(DICTS)         \
-	4.0.dict.m4                \
-	4.0.batch                  \
-	4.0.biolg.batch            \
-	4.0.fixes.batch            \
-	4.0.fix-long.batch         \
-	4.0.voa.batch              \
+	corpus-dict.m4             \
+	corpus-basic.batch         \
+	corpus-biolg.batch         \
+	corpus-fixes.batch         \
+	corpus-fix-long.batch      \
+	corpus-voa.batch           \
 	tiny.dict
