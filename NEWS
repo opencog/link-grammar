@@ -1,3 +1,72 @@
+[ANNOUNCE] Link Grammar version 5.3.0 is now available. Download from:
+
+http://www.abiword.org/downloads/link-grammar/5.3.0/link-grammar-5.3.0.tar.gz
+
+This is a major release of the parser, with many important changes in
+it. Most fundamentally, the tokenizer has been completely redesigned;
+the tokenizer is the device that splits sentences in sequences of words
+and (for non-English languages) morphemes.
+
+Another very important change: The python bindings are completely
+redesigned, and not in a backwards-compatible way. The new python
+bindings are much closer to how the parsing process should be thought
+about in the abstract.
+
+There are also varius fixes: the SAT solver is no longer crippled.
+Assorted performance speedups have been implemented, especially
+affecting longer sentences.  Assorted bugs and cleanup has been
+performed.
+
+The ChangeLog notes other fixes as well:
+
+Version 5.3.0: (22 November 2015)
+ * Major redesign of the python bindings.
+ * Major redesign of sentence tokenization (the "wordgraph" design)
+ * Verb 'steal' is optionally transitive.
+ * Fixes for misc MSVC warnings.
+ * Hebrew dictionary expansion.
+ * Enhanced diagram printing, giving more space for link names.
+ * Minor work on phonetic agreement for 'a' vs. 'an'.
+ * Add ability to histogram the costs of different parses.
+ * Improve support for splitting sentences.
+ * Change default setting of 'islands_ok' to true.
+ * Improve performance on long sentences.
+ * Fix rare crash due to memory corruption on long sentences.
+ * Random morphology generation can be enabled at runtime.
+ * Remove obsolete, unmaintained MacOSX build file.
+ * Extensive updates to man page.
+ * Fix crash on long sentences (issue #137).
+ * Fix a memory leak in language bindings (issue #138).
+ * Remove bogus post-processor API function.
+ * Fix broken domain letter printing.
+ * New regex-file feature - negative regex'es.
+ * Correct the handling of moprhology stems with non-LL links.
+ * Fix !!LEFT-WALL and !!RIGHT-WALL
+ * SAT solver now linked statically.
+ * Assorted SAT sovler cleanup and improvements.
+ * Performance improvement in fast macher: 15% faster on fixes.batch.
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English, Russian,
+Arabic and Persian (and other languages as well), based on Link Grammar,
+an original theory of syntax and morphology.  Given a sentence, the
+system assigns to it a syntactic structure, which consists of a set of
+labelled links connecting pairs of words. The parser also produces a
+"constituent" (HPSG style phrase tree) representation of a sentence
+(showing noun phrases, verb phrases, etc.).  The RelEx extension
+provides Stanford-style Dependency Grammar output.
+
+
+
+=================================================================
+=================================================================
+=================================================================
+
 
 [ANNOUNCE] Link Grammar version 5.2.0 is now available. Download from:
 
