@@ -797,6 +797,5 @@ $PACKAGE-$VERSION  build configuration settings
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
-	Anysplit word splitter:         ${enable_anysplit}
 	RegEx tokenizer:                ${enable_regex_tokenizer}
 "
