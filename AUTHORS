@@ -23,7 +23,8 @@ as a part of the 2008 Google Summer of Code (GSoC) project for OpenCog.
 Russian dictionaries were provided by
 Sergey Protasov <svp_at_tj.ru>
 
-Support for Hebrew, and a complete overhaul of tokenization:
+Support for Hebrew, a complete overhaul of tokenization, and assorted
+general maintenance and performance work:
 Amir Plivatsky <amirpli_at_gmail.com>
 
 Turkish dictionaries by
