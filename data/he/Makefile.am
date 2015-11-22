@@ -11,4 +11,4 @@ dict_DATA = $(DICTS)
 
 # Do NOT install the batch files!
 EXTRA_DIST = $(DICTS)            \
-      4.0.batch
+      corpus-basic.batch

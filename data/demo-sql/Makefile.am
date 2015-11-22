@@ -2,7 +2,6 @@
 DICTS=                           \
       dict.db                    \
       4.0.affix                  \
-      4.0.batch                  \
       4.0.constituent-knowledge  \
       4.0.knowledge              \
       4.0.regex
@@ -11,4 +10,5 @@ DICTS=                           \
 # dictdir=$(pkgdatadir)/demo-sql
 # dict_DATA = $(DICTS)
 
-EXTRA_DIST = $(DICTS)
+EXTRA_DIST = $(DICTS)            \
+      corpus-basic.batch
