@@ -158,7 +158,7 @@ liblink_grammar_la_SOURCES =        \
 	structures.h                     \
 	tokenize.h                       \
 	utilities.h                      \
-	wordgraph.h
+	wordgraph.h                      \
 	word-utils.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
