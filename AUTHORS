@@ -1,16 +1,14 @@
 
+In quasi-historical order:
+
 Original Authors:
 Davy Temperley: http://theory.esm.rochester.edu/temperley/
 Daniel Sleator: http://www.cs.cmu.edu/~sleator/
 John Lafferty: http://www.cs.cmu.edu/~lafferty/
 
 Much additional work has been done by many different developers.
-The current lead developer is 
+The current lead developer is
 Linas Vepstas: http://linas.org/
-
-The SAT parser code was developed by 
-Filip Maric <filipmaric_at_gmail.com> 
-as a part of the 2008 Google Summer of Code (GSoC) project for OpenCog.
 
 Arabic dictionaries were provided by
 Warren Casbeer and Jon Dehdari
@@ -18,17 +16,21 @@ Warren Casbeer and Jon Dehdari
 Farsi dictionaries were provided by
 Jon Dehdari
 
-Indonesian dictionaries were provided by
-Hendy Irawan (ceefour)
+The SAT parser code was developed by
+Filip Maric <filipmaric_at_gmail.com>
+as a part of the 2008 Google Summer of Code (GSoC) project for OpenCog.
 
 Russian dictionaries were provided by
 Sergey Protasov <svp_at_tj.ru>
 
-Turkish dictionaries by 
-Can John Bruce <can.bruce_at_yale.edu>
-
 Support for Hebrew, and a complete overhaul of tokenization:
 Amir Plivatsky <amirpli_at_gmail.com>
+
+Turkish dictionaries by
+Can John Bruce <can.bruce_at_yale.edu>
+
+Indonesian dictionaries were provided by
+Hendy Irawan (ceefour)
 
 Some of the people who have contributed patches and fixes include:
 (In alphabetical order)
@@ -56,4 +58,3 @@ Alexander Tkachuk <alexander.tkachuk_at_gmail.com>
 Vincent Untz <vuntz_at_opensuse.org>
 Max Vyaznikov http://myclerk.ru
 Bruce Wilcox <gowilcox_at_gmail.com>
-
