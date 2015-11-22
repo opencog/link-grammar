@@ -1,3 +1,6 @@
+Version 5.3.1: (22 November 2015)
+ * Fix build break with SAT solver.
+
 Version 5.3.0: (22 November 2015)
  * Major redesign of the python bindings.
  * Major redesign of sentence tokenization (the "wordgraph" design)

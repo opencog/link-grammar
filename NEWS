@@ -12,7 +12,7 @@ redesigned, and not in a backwards-compatible way. The new python
 bindings are much closer to how the parsing process should be thought
 about in the abstract.
 
-There are also varius fixes: the SAT solver is no longer crippled.
+There are also various fixes: the SAT solver is no longer crippled.
 Assorted performance speedups have been implemented, especially
 affecting longer sentences.  Assorted bugs and cleanup has been
 performed.
