@@ -1,9 +1,10 @@
 SUBDIRS=words
 
-DICTS=					         \
+DICTS=                        \
 	4.0.affix                  \
 	4.0.constituent-knowledge  \
 	4.0.dict                   \
+	4.0.dict.m4                \
 	4.0.knowledge              \
 	4.0.regex
 
@@ -12,7 +13,6 @@ dict_DATA = $(DICTS)
 
 # Do NOT install the batch files!
 EXTRA_DIST = $(DICTS)         \
-	corpus-dict.m4             \
 	corpus-basic.batch         \
 	corpus-biolg.batch         \
 	corpus-fixes.batch         \
