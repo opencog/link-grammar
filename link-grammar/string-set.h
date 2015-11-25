@@ -30,6 +30,7 @@ void         string_set_delete(String_set *ss);
 
 /**
  * Compare 2 strings, assuming they are in the same string-set.
+ * Two string-set strings are equal if and only if their pointers are equal.
  * Return true if they are equal, else false.
  * In debug mode, also "validate" that the strings are indeed from the
  * same string-set, and that their comparison is as expected.
