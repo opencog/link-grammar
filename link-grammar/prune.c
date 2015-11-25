@@ -20,6 +20,7 @@
 #include "print.h"
 #include "prune.h"
 #include "resources.h"
+#include "string-set.h"
 #include "word-utils.h"
 
 #define CONTABSZ 8192
@@ -151,7 +152,7 @@ static void insert_connector(connector_table *ct, Connector * c)
 
 	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
-		if (strcmp(c->string, e->string) == 0)
+		if (string_set_cmp(c->string, e->string))
 			return;
 	}
 	c->tableNext = ct[h];
@@ -1401,7 +1402,7 @@ static Cms * lookup_in_cms_table(multiset_table *cmt, const char * str)
 	Cms * cms;
 	for (cms = cmt->cms_table[cms_hash(str)]; cms != NULL; cms = cms->next)
 	{
-		if(strcmp(str, cms->name) == 0) return cms;
+		if (string_set_cmp(str, cms->name)) return cms;
 	}
 	return NULL;
 }

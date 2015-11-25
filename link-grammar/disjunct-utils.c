@@ -14,6 +14,7 @@
 #include <string.h>
 #include "disjunct-utils.h"
 #include "externs.h"
+#include "string-set.h"
 #include "structures.h"
 #include "utilities.h"
 #include "wordgraph.h"
@@ -102,14 +103,14 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
  */
 static bool connectors_equal_prune(Connector *c1, Connector *c2)
 {
-	return (c1->multi == c2->multi) &&
-		   (strcmp(c1->string, c2->string) == 0);
+	return string_set_cmp(c1->string, c2->string) && (c1->multi == c2->multi);
 }
 
 /** returns TRUE if the disjuncts are exactly the same */
 static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 {
 	Connector *e1, *e2;
+
 	e1 = d1->left;
 	e2 = d2->left;
 	while ((e1 != NULL) && (e2 != NULL)) {

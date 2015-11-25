@@ -21,6 +21,7 @@
 #include "count.h"
 #include "dict-api.h"
 #include "disjunct-utils.h"
+#include "string-set.h"
 #include "word-utils.h"
 
 /* ======================================================== */
@@ -102,7 +103,7 @@ static int exp_compare(Exp * e1, Exp * e2)
 		if (e1->dir != e2->dir)
 			return 0;
 		/* printf("%s %s\n",e1->u.string,e2->u.string); */
-		if (strcmp(e1->u.string,e2->u.string)!=0)
+		if (!string_set_cmp(e1->u.string, e2->u.string))
 			return 0;
 	}
 	else
