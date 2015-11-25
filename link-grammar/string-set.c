@@ -140,7 +140,14 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	if (ss->table[p] != NULL) return ss->table[p];
 	
 	len = strlen(source_string);
+#ifdef DEBUG
+	/* Store the String_set structure address for debug verifications */
+	len = ((len+1)&~(sizeof(ss)-1)) + 2*sizeof(ss);
+	str = (char *) xalloc(len);
+	*(String_set **)&str[len-sizeof(ss)] = ss;
+#else
 	str = (char *) xalloc(len+1);
+#endif
 	strcpy(str, source_string);
 	ss->table[p] = str;
 	ss->count++;
