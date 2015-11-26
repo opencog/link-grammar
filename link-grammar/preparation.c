@@ -31,7 +31,7 @@ set_connector_list_length_limit(Connector *c,
 	for (; c!=NULL; c=c->next)
 	{
 		if (opts->all_short ||
-		    !(conset == NULL || match_in_connector_set(conset, c)))
+		    (conset != NULL && !match_in_connector_set(conset, c)))
 		{
 			c->length_limit = short_len;
 		}
