@@ -140,9 +140,12 @@ public:
     if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
 
     if (_opts->all_short ||
-        !(conset == NULL || match_in_connector_set(conset, c)))
-	 {
+        (conset != NULL && !match_in_connector_set(conset, c)))
+  {
       c->length_limit = len;
+    }
+    else {
+      c->length_limit = UNLIMITED_LEN;
     }
   }
 
