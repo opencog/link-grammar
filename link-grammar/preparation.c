@@ -28,11 +28,11 @@ set_connector_list_length_limit(Connector *c,
                                 int short_len,
                                 Parse_Options opts)
 {
-	for (; c!=NULL; c=c->next) {
-		if (!opts->all_short &&
-		    (conset == NULL || match_in_connector_set(conset, c))) {
-			c->length_limit = UNLIMITED_LEN;
-		} else {
+	for (; c!=NULL; c=c->next)
+	{
+		if (opts->all_short ||
+		    !(conset == NULL || match_in_connector_set(conset, c)))
+		{
 			c->length_limit = short_len;
 		}
 	}
