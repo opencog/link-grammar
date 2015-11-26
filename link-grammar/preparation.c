@@ -45,6 +45,7 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 	unsigned int len = opts->short_length;
 	Connector_set * ucs = sent->dict->unlimited_connector_set;
 
+	if (len >= sent->length) return; /* No point to enforce short_length. */
 	if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
 
 	for (i=0; i<sent->length; i++) {
