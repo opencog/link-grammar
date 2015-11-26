@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
-<dictionary-version-number>: V5v3v0+;
+% Dictionary version number is 5.3.2 (formatted as V5v3v2+)
+<dictionary-version-number>: V5v3v2+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -50,7 +50,7 @@
 
 % The empty word is a used in the 2D array used by the parser,
 % in "word slots" in which "no word" is a possibility to consider.
-% When the Wordgraph is converted ("falttened") to this 2D array,
+% When the Wordgraph is converted ("flattened") to this 2D array,
 % empty words are issued whenever needed.
 % FIXME: A better comment maybe.
 % See also EMPTY-WORD.x for the highly-unusual situation that EMPTY-WORD
