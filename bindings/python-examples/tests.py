@@ -3,7 +3,8 @@
 #
 # Python link-grammar test script
 #
-import os
+from __future__ import print_function
+import sys, os
 import locale
 import unittest
 
@@ -242,8 +243,17 @@ class DBasicParsingTestCase(unittest.TestCase):
         linkage = self.parse_sent("This is a silly sentence.")[0]
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
+class ESATsolverTestCase(unittest.TestCase):
+    def setUp(self):
+        self.d, self.po = Dictionary(lang='en'), ParseOptions()
+        self.po = ParseOptions(use_sat=True)
+        if self.po.use_sat != True:
+            raise unittest.SkipTest("Library not configured with SAT parser")
 
-class EEnglishLinkageTestCase(unittest.TestCase):
+    def test_SAT_getting_links(self):
+        linkage_testfile(self, self.d, self.po, 'sat')
+
+class HEnglishLinkageTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(), ParseOptions()
 
@@ -525,12 +535,14 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
-def linkage_testfile(self, dict, popt):
+def linkage_testfile(self, dict, popt, desc = ''):
     """
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
     """
-    parses = open(clg.test_data_srcdir + "parses-" + clg.dictionary_get_lang(dict._obj) + ".txt")
+    if '' != desc:
+        desc = desc + '-'
+    parses = open(clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(dict._obj) + ".txt")
     diagram = None
     sent = None
     for line in parses:
@@ -562,5 +574,9 @@ def linkage_testfile(self, dict, popt):
                 self.assertEqual(linkage.constituent_tree(), constituents)
             constituents += line[1:]
     parses.close()
+
+def warning(*msg):
+    progname = os.path.basename(sys.argv[0])
+    print("{}: Warning:".format(progname), *msg, file=sys.stderr)
 
 unittest.main()
