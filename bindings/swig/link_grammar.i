@@ -1,3 +1,9 @@
+/**********************************************************************
+*
+* SWIG Foreign Function Interface (FFI) definition for the Link Grammar
+* shared (dynamic) library.
+*
+***********************************************************************/
 %module clinkgrammar
 %{
 
@@ -150,4 +156,3 @@ double linkage_disjunct_cost(Linkage linkage);
 int linkage_link_cost(Linkage linkage);
 double linkage_corpus_cost(Linkage linkage);
 const char * linkage_get_violation_name(Linkage linkage);
-
