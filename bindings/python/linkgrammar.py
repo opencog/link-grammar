@@ -21,6 +21,7 @@ class ParseOptions(object):
                  all_short_connectors=False,
                  display_morphology=False,
                  spell_guess=False,
+                 use_sat=False,
                  max_parse_time=-1,
                  disjunct_cost=2.7):
 
@@ -34,6 +35,7 @@ class ParseOptions(object):
         self.all_short_connectors = all_short_connectors
         self.display_morphology = display_morphology
         self.spell_guess = spell_guess
+        self.use_sat = use_sat
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
 
@@ -218,6 +220,20 @@ class ParseOptions(object):
         if isinstance(value, bool):
             value = 7 if value else 0
         clg.parse_options_set_spell_guess(self._obj, value)
+
+    @property
+    def use_sat(self):
+        """
+        To be used after enabling the use of the SAT solver in order to
+        validate that it is supported by the LG library.
+        """
+        return clg.parse_options_get_use_sat_parser(self._obj)
+
+    @use_sat.setter
+    def use_sat(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("use_sat must be set to a bool")
+        clg.parse_options_set_use_sat_parser(self._obj, value)
 
     @property
     def all_short_connectors(self):
