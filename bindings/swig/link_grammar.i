@@ -82,6 +82,8 @@ int  parse_options_get_spell_guess(Parse_Options opts);
 void parse_options_set_all_short_connectors(Parse_Options opts, int val);
 int  parse_options_get_all_short_connectors(Parse_Options opts);
 void parse_options_reset_resources(Parse_Options opts);
+void parse_options_set_use_sat_parser(Parse_Options opts, bool val);
+bool parse_options_get_use_sat_parser(Parse_Options opts);
 
 /**********************************************************************
 *
