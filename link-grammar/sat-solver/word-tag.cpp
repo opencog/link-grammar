@@ -21,6 +21,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     const char* name = exp->u.string;
 
     Connector connector;
+    init_connector(&connector);
     connector.multi = exp->multi;
     connector.string = name;
     set_connector_length_limit(&connector);
