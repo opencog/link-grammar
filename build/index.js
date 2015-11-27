@@ -36,7 +36,11 @@
 
   apiTemplate = {
     parse_options_create: [ParseOptions, []],
+    parse_options_set_null_block: [ref.types["void"], [ParseOptions, int]],
+    parse_options_set_islands_ok: [ref.types["void"], [ParseOptions, int]],
     parse_options_set_verbosity: [ref.types["void"], [ParseOptions, int]],
+    parse_options_set_allow_null: [ref.types["void"], [ParseOptions, int]],
+    parse_options_set_max_null_count: [ref.types["void"], [ParseOptions, int]],
     dictionary_create: [Dictionary, [string, string, string, string]],
     sentence_create: [Sentence, [string, Dictionary]],
     sentence_parse: [int, [Sentence, ParseOptions]],
@@ -81,6 +85,8 @@
       this.config = _.extend(config || {}, defaultConfig);
       this.options = lib.parse_options_create();
       lib.parse_options_set_verbosity(this.options, (this.config.verbose ? 1 : 0));
+      lib.parse_options_set_allow_null(this.options, 1);
+      lib.parse_options_set_max_null_count(this.options, 3);
       this.dictionary = lib.dictionary_create(this.config.dictPath, this.config.ppPath, this.config.consPath, this.config.affixPath);
     }
 

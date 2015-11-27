@@ -7,8 +7,12 @@ describe 'Link Grammar Tests', ->
 
 	linkage = linkGrammar.parse 'turn off the light'
 
+	it 'should handle null links', ->
+		temp = linkGrammar.parse('do not be wise in your own estimation.')
+		temp.links.length.should.equal 8
+
 	it 'should not crash', ->
-		(-> linkGrammar.parse('string')).should.throw('No links found')
+		(-> linkGrammar.parse('crap crap crap crap crap')).should.throw('No links found')
 
 	it 'should have the correct number of links', ->
 		linkage.links[2].left.word.should.equal 'turn'

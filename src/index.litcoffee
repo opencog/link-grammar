@@ -35,7 +35,11 @@ Here are the templates for the native functions we will use.
 
     apiTemplate =
         parse_options_create: [ ParseOptions, [ ] ]
+        parse_options_set_null_block: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_islands_ok: [ ref.types.void, [ ParseOptions, int ] ]
         parse_options_set_verbosity: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_allow_null: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_max_null_count: [ ref.types.void, [ ParseOptions, int ] ]
         dictionary_create: [ Dictionary, [ string, string, string, string ] ]
         sentence_create: [ Sentence, [ string, Dictionary ] ]
         sentence_parse: [ int, [ Sentence, ParseOptions ] ]
@@ -85,6 +89,8 @@ A few utility methods for the parser.
             @config = _.extend config or {}, defaultConfig
             @options = lib.parse_options_create()
             lib.parse_options_set_verbosity @options, (if @config.verbose then 1  else 0)
+            lib.parse_options_set_allow_null @options, 1
+            lib.parse_options_set_max_null_count @options, 3
             @dictionary = lib.dictionary_create @config.dictPath, @config.ppPath, @config.consPath, @config.affixPath
 
 Parse input, and return linkage if exists.
