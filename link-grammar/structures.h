@@ -93,7 +93,7 @@
  */
 struct Connector_struct
 {
-	int16_t hash;
+	int32_t hash;
 	uint8_t word;
 	             /* The nearest word to my left (or right) that
 	                this could connect to.  Computed by power pruning */
@@ -106,7 +106,7 @@ struct Connector_struct
 	                this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
 	Connector * next;
-	const char * string;  /* The connector name, e.g. AB+ */
+	const char * string; /* The connector name w/o the direction mark, e.g. AB */
 
 	/* Hash table next pointer, used only during pruning. */
 	Connector * tableNext;
