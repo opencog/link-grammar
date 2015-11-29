@@ -92,7 +92,7 @@
 struct Connector_struct
 {
 	int hash;
-	unsigned short word;
+	unsigned char word;
 	             /* The nearest word to my left (or right) that
 	                this could connect to.  Computed by power pruning */
 	unsigned char length_limit;

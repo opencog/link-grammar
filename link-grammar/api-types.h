@@ -26,7 +26,7 @@
  * should fit in two bytes (because the word field of a connector is an
  * unsigned short).
  */
-#define MAX_SENTENCE 65534      /* Maximum number of words in a sentence */
+#define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
 /* Widely used private typedefs */
 typedef struct Connector_struct Connector;
