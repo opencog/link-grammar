@@ -1303,7 +1303,9 @@ mine.p yours theirs hers ours:
   or SJl+
   or SJr-;
 
-its my.p your their our thy:
+% yisser yousser ye'r: Irish English second-person possessive --
+% https://en.wikipedia.org/wiki/Irish_English
+its my.p your their our thy yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
@@ -1318,15 +1320,6 @@ you:
   or [<CLAUSE> & Pg+]
   or [Ds+];
 
-% youse yous yis ye: second-person plural -- Irish English --
-% https://en.wikipedia.org/wiki/Irish_English
-youse yous yis ye:
-  J- or Ox-
-  or (Sp+ & <CLAUSE>)
-  or SIp-
-  or SJlp+
-  or [<CLAUSE> & Pg+];
-
 thou: Sp+ & <CLAUSE>;
 
 % Y'gotta, Y'gonna
@@ -1334,7 +1327,10 @@ Y' y' y'all: Sp+ & <CLAUSE>;
 
 % basilect you
 % Pg+: "yo leavin' already?" verb "are" is missing.
-yo: J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
+% youse yous yis ye: second-person plural -- Irish English --
+% https://en.wikipedia.org/wiki/Irish_English
+youse yous yis ye ya yo:
+  J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
   or (<CLAUSE> & Pg+);
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
