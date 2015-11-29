@@ -2842,6 +2842,10 @@ are.v:
   Spx- & (({@EBm+} & ((((O*t+ & <verb-wall>) or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or (Pa+ & <verb-wall>) )) or
     ({N+} & (Pg+ or Pv+)));
 
+% yisser: "you're" Irish English
+% Interesting -- no way to put a WV- link in here ...
+yisser.v: (Pa+ & Wd-);
+
 % Q-: "How was the movie?"
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
