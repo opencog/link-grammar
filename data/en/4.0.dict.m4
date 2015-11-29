@@ -489,16 +489,17 @@ Gen.x Gov.x Hon.x Hr.x Hosp.x HMS.x Insp.x Lieut.x Lt.x MM.x MR.x MRS.x
 MS.x Maj.x Messrs.x Mlle.x Mme.x Mr.x Mrs.x Ms.x Msgr.x Mt.x Op.x
 Ord.x Pfc.x Ph.x Prof.x Pvt.x Rep.x Reps.x Res.x Rev.x Rt.x
 Sen.x Sens.x Sfc.x Sgt.x Sr.x St.x Supt.x Surg.x:
-  [[G+]];
+  [G+];
 
 % Street addresses, company abbreviations
+% Cost on Xi+: don't link to period, if we've already got one!
 St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y
 Gr.y Gr..y Ln.y Ln..y Rd.y Rd..y Rt.y Rt..y
 Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y
 Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
-  ({[X-]} & G-) & {Xi+} & {[MG+]} &
+  ({[X-]} & G-) & {[[Xi+]]} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
       (({@MX+} & (JG- or <noun-main-s>)) or
       <noun-and-s> or
