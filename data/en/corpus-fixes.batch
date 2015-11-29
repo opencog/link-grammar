@@ -3055,6 +3055,7 @@ Step 1: Get a hammer.
 2: Get nail.
 3: Hit it hard.
 
+% Smaller numbers get special treatment in the dict. Try bigger numbers.
 1. Get a hammer.
 2. Get nail.
 3. Hit it hard.
@@ -3379,6 +3380,9 @@ How could it be so?
 
 
 % Requests, directives, commands, imperatives.
+Do not be wise in your own estimation.
+Do be wise in your choices.
+
 Go play.
 Go play ball!
 You and Rover go play fetch.
