@@ -14,7 +14,7 @@
 #ifndef _STRUCTURES_H_
 #define _STRUCTURES_H_
 
-#include "stdint.h"
+#include <stdint.h>
 
 #include "api-types.h"
 #include "api-structures.h"
