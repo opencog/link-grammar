@@ -84,7 +84,7 @@ CFLAGS="${CFLAGS} -O3"
 # CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++11"
 CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++03"
 
-# The std=c99 flag provides the proper float-pt math decls working,
+# The std=c99/c11 flag provides the proper float-pt math decls working,
 # e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
 # needed to get fileno, strdup, etc. and so it needs to be manually
 # enabled again.
@@ -93,7 +93,7 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++03"
 # hiding strdup, etc. again.
 # CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_POSIX_C_SOURCE -D_GNU_SOURCE"
 
-# Final solution: enable std=c99, explitictly turn on BSD and SVID and
+# Final solution: enable std=c11, explitictly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
 #
 if test x${native_win32} = xyes; then
@@ -108,7 +108,7 @@ if test x${native_win32} = xyes; then
 	# LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
 else
 	# Else standard Linux/*BSD environment.
-	CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
+	CFLAGS="${CFLAGS} -std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
 fi
 
 # _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
