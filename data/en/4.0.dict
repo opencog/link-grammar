@@ -1318,6 +1318,15 @@ you:
   or [<CLAUSE> & Pg+]
   or [Ds+];
 
+% youse yous yis ye: second-person plural -- Irish English --
+% https://en.wikipedia.org/wiki/Irish_English
+youse yous yis ye:
+  J- or Ox-
+  or (Sp+ & <CLAUSE>)
+  or SIp-
+  or SJlp+
+  or [<CLAUSE> & Pg+];
+
 thou: Sp+ & <CLAUSE>;
 
 % Y'gotta, Y'gonna
