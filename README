@@ -897,11 +897,14 @@ TODO -- Working Notes:
     * I taught him (how) to swim.
     * I told him (that) it was gone.
     * (It) looks good.
+    * (You) go home!
 
     One possible solution to the unvoiced-word problem might be to
     allow the LG rules to insert alternatives during the early culling
     stages.  This avoids the need to pre-insert all possible
     alternatives during tokenization...
+
+    See github https://github.com/opencog/link-grammar/issues/224
 
   punctuation, zero-copula, zero-that:
      Poorly punctuated sentences cause problems:  for example:
