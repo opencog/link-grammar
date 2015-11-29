@@ -14,6 +14,8 @@
 #ifndef _STRUCTURES_H_
 #define _STRUCTURES_H_
 
+#include "stdint.h"
+
 #include "api-types.h"
 #include "api-structures.h"
 #include "dict-structures.h"  /* For Exp, Exp_list */
@@ -91,11 +93,11 @@
  */
 struct Connector_struct
 {
-	int hash;
-	unsigned short word;
+	int32_t hash;
+	uint8_t word;
 	             /* The nearest word to my left (or right) that
 	                this could connect to.  Computed by power pruning */
-	unsigned char length_limit;
+	uint8_t length_limit;
 	             /* If this is a length limited connector, this
 	                gives the limit of the length of the link
 	                that can be used on this connector.  Since
@@ -104,7 +106,7 @@ struct Connector_struct
 	                this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
 	Connector * next;
-	const char * string;  /* The connector name, e.g. AB+ */
+	const char * string; /* The connector name w/o the direction mark, e.g. AB */
 
 	/* Hash table next pointer, used only during pruning. */
 	Connector * tableNext;
