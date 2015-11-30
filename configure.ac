@@ -80,9 +80,21 @@ AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
 # ====================================================================
+
+AC_MSG_CHECKING([for 64-bit Apple OSX])
+case "$host" in
+  x86_64-*-darwin*)
+    apple_osx=yes
+    ;;
+  *)
+    apple_osx=no
+    ;;
+esac
+AC_MSG_RESULT([$apple_osx])
+
+# ====================================================================
 CFLAGS="${CFLAGS} -O3"
-# CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++11"
-CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++03"
+CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
 # The std=c99/c11 flag provides the proper float-pt math decls working,
 # e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
@@ -99,6 +111,7 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall -std=c++03"
 if test x${native_win32} = xyes; then
 	# Vikas says that -std=gnu99 is needed on cygwin/mingw
 	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
+	CXXFLAGS="${CXXFLAGS} -std=c++03"
 	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
 	# I'm unclear as to why these are not being set automatically,
 	# by mingw itself .. but what the hey ... this can't hurt, right?
@@ -106,31 +119,25 @@ if test x${native_win32} = xyes; then
 	# Setting these screws up the remainder of the configure script.
 	# CFLAGS="${CFLAGS} -I/usr/include/mingw -D__MINGW32__"
 	# LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
+
+else
+if test x${apple_osx} = xyes; then
+	# Even modern 64-bit Apple machines build 32-bit binaries by default.
+	# So force a 64-bit build if a 64-bit CPU is found.
+
+	CFLAGS="${CFLAGS} -arch x86_64"
+	CXXFLAGS="${CXXFLAGS} -std=c++11 -stdlib=libc++"
 else
 	# Else standard Linux/*BSD environment.
 	CFLAGS="${CFLAGS} -std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
+	CXXFLAGS="${CXXFLAGS} -std=c++11"
+fi
 fi
 
 # _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
 # is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
 # specified (no effect). So just add it.
 CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
-
-# ====================================================================
-# Even modern 64-bit Apple machines build 32-bit binaries by default.
-# So force a 64-bit build if a 64-bit CPU is found.
-
-AC_MSG_CHECKING([for 64-bit Apple OSX])
-case "$host" in
-  x86_64-*-darwin*)
-    apple_osx=yes
-    CFLAGS="${CFLAGS} -arch x86_64"
-    ;;
-  *)
-    apple_osx=no
-    ;;
-esac
-AC_MSG_RESULT([$apple_osx])
 
 # ====================================================================
 # Autopackage binreloc.
