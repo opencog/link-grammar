@@ -2868,6 +2868,7 @@ deities.n
 delays.n
 delegates.n
 delegations.n
+deletables.n
 deletions.n
 deliberations.n
 delicacies.n
@@ -5314,6 +5315,7 @@ independents.n
 indexes.n
 Indians.n
 indicators.n
+indices.n
 indictments.n
 indies.n
 indignities.n
@@ -10158,6 +10160,7 @@ subheadings.n
 subjects.n
 subjugations.n
 subleases.n
+sublicenses.n
 sublimates.n
 sublimations.n
 submarines.n

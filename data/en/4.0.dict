@@ -9735,7 +9735,7 @@ good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
 tough.a:
   <adj-good> & <wantPHc>;
 
-unusual.a useful.a impossible.a annoying.a unfair.a :
+unusual.a useful.a impossible.a annoying.a unfair.a unuseful.a:
   <adj-good> & <wantPHv>;
 
 a_bitch :
