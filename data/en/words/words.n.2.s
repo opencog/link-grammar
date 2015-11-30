@@ -648,6 +648,7 @@ backings.n
 backlashes.n
 backlogs.n
 backpacks.n
+backquotes.n
 backrooms.n
 backscratchers.n
 backseats.n
@@ -656,6 +657,7 @@ backslashes.n
 backs.n
 backspaces.n
 backstrokes.n
+backticks.n
 backups.n
 backwaters.n
 bacteriologists.n
@@ -1016,6 +1018,7 @@ blazes.n
 bleats.n
 bleeps.n
 blemishes.n
+blenders.n
 blends.n
 blessings.n
 blighters.n
@@ -1233,6 +1236,7 @@ breakaways.n
 breakdowns.n
 breakers.n
 breakfasts.n
+breakpoints.n
 breaks.n
 breakthroughs.n
 breakups.n
@@ -1481,6 +1485,7 @@ caliphs.n
 callers.n
 callings.n
 calliopes.n
+call-outs.n
 calls.n
 calories.n
 calumnies.n
@@ -1641,6 +1646,8 @@ catchments.n
 catchwords.n
 catechisms.n
 categories.n
+catenas.n
+catenations.n
 caterers.n
 caterpillars.n
 catfish.p
@@ -2004,7 +2011,6 @@ clunks.n
 clusters.n
 clutches.n
 clutters.n
-co-stars.n
 coaches.n
 coalfields.n
 coalitions.n
@@ -2453,6 +2459,7 @@ cosmetics.n
 cosmologys.n
 cosmonauts.n
 cosmopolitans.n
+co-stars.n
 costs.n
 costumes.n
 costumiers.n
@@ -2863,6 +2870,7 @@ deities.n
 delays.n
 delegates.n
 delegations.n
+deletables.n
 deletions.n
 deliberations.n
 delicacies.n
@@ -2937,6 +2945,7 @@ derricks.n
 dervishes.n
 descants.n
 descendants.n
+descenders.n
 descents.n
 descriptions.n
 deserters.n
@@ -3114,6 +3123,7 @@ disillusionments.n
 disincentives.n
 disinclinations.n
 disinfectants.n
+disjunctions.n
 disks.n
 dislocations.n
 disloyalties.n
@@ -3584,6 +3594,7 @@ entrees.n
 entrepots.n
 entrepreneurs.n
 entries.n
+entropies.n
 envelopes.n
 envelopments.n
 environmentalists.n
@@ -3770,6 +3781,7 @@ expressways.n
 expulsions.n
 extensions.n
 exteriors.n
+externs.n
 extinguishers.n
 extracts.n
 extraditions.n
@@ -3981,8 +3993,8 @@ finger-posts.n
 fingerprints.n
 fingers.n
 fingertips.n
-finks.n
 finishes.n
+finks.n
 Finns.n
 fins.n
 fiords.n
@@ -4722,8 +4734,8 @@ gymnasts.n
 gyms.n
 gynaecologists.n
 gynecologists.n
-gyps.n
 gypsies.n
+gyps.n
 gyrations.n
 gyroscopes.n
 gyros.n
@@ -5202,6 +5214,7 @@ icons.n
 idealists.n
 idealizations.n
 ideals.n
+identifiers.n
 identities.n
 ideologies.n
 ideologues.n
@@ -5304,6 +5317,7 @@ independents.n
 indexes.n
 Indians.n
 indicators.n
+indices.n
 indictments.n
 indies.n
 indignities.n
@@ -5359,6 +5373,8 @@ inheritors.n
 inhibitions.n
 inhibitors.n
 iniquities.n
+initialisations.n
+initializations.n
 initials.n
 initiates.n
 initiatives.n
@@ -7104,7 +7120,9 @@ opportunists.n
 opposites.n
 oppressors.n
 opticians.n
+optimisations.n
 optimists.n
+optimizations.n
 optimums.n
 oracles.n
 orals.n
@@ -7335,6 +7353,7 @@ paratroopers.n
 parcels.n
 parchments.n
 pardons.n
+parens.n
 parents.n
 pariahs.n
 parishes.n
@@ -8001,6 +8020,7 @@ preoccupations.n
 preparations.n
 preponderances.n
 prepositions.n
+preprocessors.n
 preps.n
 prerogatives.n
 preschools.n
@@ -8013,8 +8033,8 @@ presents.n
 preservatives.n
 preservers.n
 preserves.n
-presets.n
 pre-sets.n
+presets.n
 presidencies.n
 presidents.n
 Presidents.n
@@ -8133,6 +8153,7 @@ pronouncements.n
 pronouns.n
 proofreaders.n
 propagandists.n
+propagations.n
 propagators.n
 propellants.n
 propellents.n
@@ -8595,8 +8616,8 @@ reindeer.p
 reinforcements.n
 reins.n
 reinterpretations.n
-reinventions.n
 re-inventions.n
+reinventions.n
 reissues.n
 reiterations.n
 rejections.n
@@ -9556,8 +9577,8 @@ slates.n
 slats.n
 slaughterers.n
 slaughterhouses.n
-slaves.n
 slavers.n
+slaves.n
 slayers.n
 sledgehammers.n
 sleds.n
@@ -10141,6 +10162,7 @@ subheadings.n
 subjects.n
 subjugations.n
 subleases.n
+sublicenses.n
 sublimates.n
 sublimations.n
 submarines.n

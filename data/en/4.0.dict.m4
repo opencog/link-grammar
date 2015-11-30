@@ -3054,7 +3054,7 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % variable, so e.g. we could assign a high cost to the transitive use
 % of some of these verbs ... Note that most of will never be transitive
 % in the active present tense: one never says "it rains cats and dogs".
-% I'm too lazy to manually sort through this, si, instead, there is a
+% I'm too lazy to manually sort through this, so, instead, there is a
 % high-cost {[[O+]]} added to some of these.
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v
@@ -7699,7 +7699,7 @@ good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
 tough.a:
   <adj-good> & <wantPHc>;
 
-unusual.a useful.a impossible.a annoying.a unfair.a :
+unusual.a useful.a impossible.a annoying.a unfair.a unuseful.a:
   <adj-good> & <wantPHv>;
 
 a_bitch :
