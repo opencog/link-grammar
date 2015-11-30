@@ -193,23 +193,30 @@ BUILDING on MacOS:
 ------------------
    Plain-vanilla Link Grammar should compile and run on Apple MacOSX
    just fine, as described above.  At this time, there are no reported
-   issues. The language bindings for python and java may require
-   additional packages to be installed.  See http://www.macports.org/
-   to find these, and obtain additional information.
+   issues.
 
-   There is a portfile here:
+   The language bindings for python and java may require additional
+   packages to be installed.  A working editline is nice, since it
+   allows you to use the arrow keys in the command-lne client.
+   See http://www.macports.org/ to find these.
+
+   You almost surely do not need a Mac portfile; but you can still
+   find one here:
    http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
-   but it does not appear to specify any additional steps or work.
+   It does not currently specify any additional steps to perform.
 
-   Users who intend to use the java bindings with java6 will need to
-   make sure to compile link-grammar to produce a 64-bit binary, as
-   this is not automatic on OSX. Do this during configure:
+   If you do NOT need the java bindings, you should almost surely
+   configure with
 
-      ./configure CFLAGS="-arch x86_64"
+      ./configure --disable-java-bindings
 
-   Be sure to set the JDK_HOME environment variable to wherever
-   <Headers/jni.h> is.   Set the JAVA_HOME variable to the location of
-   the java compiler.
+   By default, java requires a 64-bit binary, and not all MacOS systems
+   have a 64-bit devel environment installed.
+
+   If you do want Java bindings, be sure to set the JDK_HOME environment
+   variable to wherever <Headers/jni.h> is.   Set the JAVA_HOME variable
+   to the location of the java compiler.  Make sure you have ant
+   installed.
 
 
 BUILDING on Windows

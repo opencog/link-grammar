@@ -122,10 +122,6 @@ if test x${native_win32} = xyes; then
 
 else
 if test x${apple_osx} = xyes; then
-	# Even modern 64-bit Apple machines build 32-bit binaries by default.
-	# So force a 64-bit build if a 64-bit CPU is found.
-	CFLAGS="${CFLAGS} -arch x86_64"
-
 	# I'm confused, but it seems both gcc and clang on mac need
 	# to link to -stdlib=libc++
 	CXXFLAGS="${CXXFLAGS} -std=c++11 -stdlib=libc++"
@@ -499,6 +495,14 @@ AC_SUBST(REGEX_LIBS)
 JNIfound=no
 
 if test "x$enable_java_bindings" = "xyes"; then
+
+	if test x${apple_osx} = xyes; then
+		# Java on Apple OSX requies a 64-bit build. However, even
+		# modern 64-bit Apple machines build 32-bit binaries by default.
+		# So force a 64-bit build if a 64-bit CPU is found.
+		CFLAGS="${CFLAGS} -arch x86_64"
+	fi
+
    AC_MSG_CHECKING(for jni.h)
 
    # Try looking for jni in the standard locations first.
