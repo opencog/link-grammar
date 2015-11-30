@@ -191,15 +191,15 @@ CREATING the system:
 
 BUILDING on MacOS:
 ------------------
-   Apple MacOSX users will probably need to obtain missing packages
-   from MacPorts in order to successfully build on MacOS. See
-   http://www.macports.org/ for details.
+   Plain-vanilla Link Grammar should compile and run on Apple MacOSX
+   just fine, as described above.  At this time, there are no reported
+   issues. The language bindings for python and java may require
+   additional packages to be installed.  See http://www.macports.org/
+   to find these, and obtain additional information.
 
-   See also:
+   There is a portfile here:
    http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
-
-   A MacOS project file can be found in the directory link-grammar.xcode
-   It is probably stale and out-of-date; can someone send me a new one?
+   but it does not appear to specify any additional steps or work.
 
    Users who intend to use the java bindings with java6 will need to
    make sure to compile link-grammar to produce a 64-bit binary, as
