@@ -1016,6 +1016,7 @@ blazes.n
 bleats.n
 bleeps.n
 blemishes.n
+blenders.n
 blends.n
 blessings.n
 blighters.n
@@ -1233,6 +1234,7 @@ breakaways.n
 breakdowns.n
 breakers.n
 breakfasts.n
+breakpoints.n
 breaks.n
 breakthroughs.n
 breakups.n
@@ -1481,6 +1483,7 @@ caliphs.n
 callers.n
 callings.n
 calliopes.n
+call-outs.n
 calls.n
 calories.n
 calumnies.n
@@ -1641,6 +1644,8 @@ catchments.n
 catchwords.n
 catechisms.n
 categories.n
+catenas.n
+catenations.n
 caterers.n
 caterpillars.n
 catfish.p
@@ -2004,7 +2009,6 @@ clunks.n
 clusters.n
 clutches.n
 clutters.n
-co-stars.n
 coaches.n
 coalfields.n
 coalitions.n
@@ -2453,6 +2457,7 @@ cosmetics.n
 cosmologys.n
 cosmonauts.n
 cosmopolitans.n
+co-stars.n
 costs.n
 costumes.n
 costumiers.n
@@ -2937,6 +2942,7 @@ derricks.n
 dervishes.n
 descants.n
 descendants.n
+descenders.n
 descents.n
 descriptions.n
 deserters.n
@@ -3114,6 +3120,7 @@ disillusionments.n
 disincentives.n
 disinclinations.n
 disinfectants.n
+disjunctions.n
 disks.n
 dislocations.n
 disloyalties.n
@@ -3981,8 +3988,8 @@ finger-posts.n
 fingerprints.n
 fingers.n
 fingertips.n
-finks.n
 finishes.n
+finks.n
 Finns.n
 fins.n
 fiords.n
@@ -4722,8 +4729,8 @@ gymnasts.n
 gyms.n
 gynaecologists.n
 gynecologists.n
-gyps.n
 gypsies.n
+gyps.n
 gyrations.n
 gyroscopes.n
 gyros.n
@@ -7335,6 +7342,7 @@ paratroopers.n
 parcels.n
 parchments.n
 pardons.n
+parens.n
 parents.n
 pariahs.n
 parishes.n
@@ -8001,6 +8009,7 @@ preoccupations.n
 preparations.n
 preponderances.n
 prepositions.n
+preprocessors.n
 preps.n
 prerogatives.n
 preschools.n
@@ -8013,8 +8022,8 @@ presents.n
 preservatives.n
 preservers.n
 preserves.n
-presets.n
 pre-sets.n
+presets.n
 presidencies.n
 presidents.n
 Presidents.n
@@ -8133,6 +8142,7 @@ pronouncements.n
 pronouns.n
 proofreaders.n
 propagandists.n
+propagations.n
 propagators.n
 propellants.n
 propellents.n
@@ -8595,8 +8605,8 @@ reindeer.p
 reinforcements.n
 reins.n
 reinterpretations.n
-reinventions.n
 re-inventions.n
+reinventions.n
 reissues.n
 reiterations.n
 rejections.n
@@ -9556,8 +9566,8 @@ slates.n
 slats.n
 slaughterers.n
 slaughterhouses.n
-slaves.n
 slavers.n
+slaves.n
 slayers.n
 sledgehammers.n
 sleds.n

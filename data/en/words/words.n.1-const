@@ -392,6 +392,7 @@ blazer.n
 bleat.n
 bleep.n
 blemish.n
+blender.n
 blend.n
 blighter.n
 blight.s
@@ -610,6 +611,7 @@ breakdown.s
 breaker.n
 breakfast.s
 break.n
+breakpoint.n
 breakthrough.n
 breakup.n
 breakwater.n
@@ -857,6 +859,7 @@ caliph.n
 caller.n
 calliope.s
 call.n
+call-out.n
 calorie.n
 calumny.s
 calypso.n
@@ -1018,6 +1021,8 @@ catch.n
 catchword.n
 catechism.s
 category.n
+catena.n
+catenation.n
 caterer.n
 caterpillar.n
 catfish.s
@@ -1383,7 +1388,6 @@ clunk.n
 cluster.n
 clutch.n
 clutter.s
-co-star.n
 coach.n
 coalfield.n
 coalition.n
@@ -1825,6 +1829,7 @@ cosmetician.n
 cosmology.s
 cosmonaut.n
 cosmopolitan.n
+co-star.n
 cost.s
 costume.s
 costumier.n
@@ -2310,6 +2315,7 @@ derrick.n
 dervish.n
 descant.n
 descendant.n
+descender.n
 descent.s
 description.n
 deserter.n
@@ -2488,6 +2494,7 @@ disillusionment.s
 disincentive.n
 disinclination.s
 disinfectant.s
+disjunction.n
 disk.n
 dislocation.s
 disloyalty.s
@@ -2960,8 +2967,8 @@ fingernail.n
 finger-post.n
 fingerprint.n
 fingertip.n
-fink.n
 finish.n
+fink.n
 fin.n
 Finn.n
 fiord.n
@@ -3262,8 +3269,8 @@ fruitcake.s
 fruit.s
 fryer.n
 fuchsia.n
-fuck.n
 fucker.n
+fuck.n
 fuel.s
 fugitive.n
 fuglung.s
@@ -3402,8 +3409,8 @@ gecko.n
 geezer.n
 geisha.n
 gelding.n
-gel.s
 gell.n
+gel.s
 gem.n
 gemshorn.s
 gendarme.n
@@ -4030,8 +4037,8 @@ homeworld.n
 homicide.s
 homily.s
 homolog.n
-homo.n
 homomorphism.n
+homo.n
 homonym.n
 homophone.n
 homosexual.n
@@ -5318,8 +5325,8 @@ Moroccan.s
 moron.n
 morpheme.n
 morphe.n
-morph.n
 morphism.n
+morph.n
 morrow.n
 morsel.n
 morsing.s
@@ -5759,6 +5766,7 @@ paratrooper.n
 parcel.n
 parchment.s
 pardon.s
+paren.n
 parent.n
 pariah.n
 parishioner.n
@@ -6422,6 +6430,7 @@ preoccupation.s
 preparation.s
 preponderance.n
 preposition.n
+preprocessor.n
 prep.s
 prerogative.n
 preschool.n
@@ -6434,8 +6443,8 @@ present.n
 preservative.n
 preserve.n
 preserver.n
-preset.n
 pre-set.n
+preset.n
 presidency.n
 president.n
 President.n
@@ -6550,6 +6559,7 @@ pronouncement.n
 pronoun.n
 proofreader.n
 propagandist.n
+propagation.n
 propagator.n
 propellant.s
 propellent.s
@@ -7007,8 +7017,8 @@ reindeer.s
 reinforcement.s
 rein.n
 reinterpretation.s
-reinvention.n
 re-invention.n
+reinvention.n
 reissue.n
 reiteration.s
 rejection.s
@@ -8653,10 +8663,10 @@ surface.n
 surfboard.n
 surfboat.s
 surfeit.n
-surjection.n
 surge.n
 surgeon.n
 surgery.s
+surjection.n
 surname.n
 surplus.n
 surprise.s
@@ -9064,9 +9074,9 @@ toffee.s
 toga.n
 toggle.n
 toilet.n
-token.n
 tokenization.n
 tokenizer.n
+token.n
 tolerance.s
 tollbooth.n
 tollgate.n
@@ -9764,9 +9774,9 @@ whisk.n
 whisky.s
 whisper.n
 whistle.s
-whit.n
 white.s
 whiting.s
+whit.n
 whiz.n
 whodunit.n
 whole.n
