@@ -125,7 +125,7 @@ if test x${apple_osx} = xyes; then
 	# I'm confused, but it seems both gcc and clang on mac need
 	# to link to -stdlib=libc++
 	CXXFLAGS="${CXXFLAGS} -std=c++11 -stdlib=libc++"
-	LDFLAGS="${LDFLAGS} -stdlib=libc++"
+	LDFLAGS="${LDFLAGS} -stdlib=libc++ -lc++"
 else
 	# Else standard Linux/*BSD environment.
 	CFLAGS="${CFLAGS} -std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
