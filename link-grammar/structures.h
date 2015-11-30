@@ -132,6 +132,7 @@ struct Disjunct_struct
 	Connector *left, *right;
 	double cost;
 	bool marked;               /* unmarked disjuncts get deleted */
+	bool match_left, match_right; /* used only during parsing */
 	const Gword **word;        /* NULL terminated list of originating words */
 };
 

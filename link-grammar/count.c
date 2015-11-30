@@ -303,8 +303,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		{
 			unsigned int lnull_cnt, rnull_cnt;
 			Disjunct * d = m->d;
-			bool Lmatch = do_match(le, d->left, lw, w);
-			bool Rmatch = do_match(d->right, re, w, rw);
+			bool Lmatch = d->match_left;
+			bool Rmatch = d->match_right;
 
 			/* _p1 avoids a gcc warning about unsafe loop opt */
 			unsigned int null_count_p1 = null_count + 1;

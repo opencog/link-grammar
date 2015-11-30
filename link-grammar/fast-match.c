@@ -12,6 +12,7 @@
 /**************************************************************************/
 
 #include "api-structures.h"
+#include "count.h"
 #include "externs.h"
 #include "fast-match.h"
 #include "string-set.h"
@@ -335,12 +336,20 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 }
 
 /**
- * Forms and returns a list of disjuncts coming from word w, that might
- * match lc or rc or both. The lw and rw are the words from which lc
- * and rc came respectively.
+ * Forms and returns a list of disjuncts coming from word w, that
+ * actually matches lc or rc or both. The lw and rw are the words from
+ * which lc and rc came respectively.
  *
- * The list is returned in a linked list of Match_nodes.
- * The list contains no duplicates.
+ * The list is returned in a linked list of Match_nodes.  This list
+ * contains no duplicates, because when processing the ml list, only
+ * elements whose match_left is true are included, and such elements are
+ * not included again when processing the mr list.
+ *
+ * Note that if both lc and rc match the corresponding connectors of w,
+ * match_left is set to true when the ml list is processed and the
+ * disjunct is then added to the result list, and match_right of the
+ * same disjunct is set to true when the mr list is processed, and this
+ * disjunct is not added again.
  */
 Match_node *
 form_match_list(fast_matcher_t *ctxt, int w,
@@ -350,20 +359,21 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	Match_node *mx, *my, *mr_end, *front, **mxp;
 	Match_node *ml = NULL, *mr = NULL;
 
-	if (lc != NULL) {
+	if (lc != NULL)
+	{
 		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
 		if (NULL != mxp) ml = *mxp;
 	}
-	if (rc != NULL) {
+	if (rc != NULL)
+	{
 		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
 		if (NULL != mxp) mr = *mxp;
 	}
 
-	/* In order to eliminate duplicates from the lists, we mark the disjuncts. */
 	for (mx = mr; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->right->word > rw) break;
-		mx->d->marked = true;
+		mx->d->match_left = false;
 	}
 	mr_end = mx;
 
@@ -372,24 +382,31 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
-		mx->d->marked = false;
+
+		mx->d->match_left = do_match(lc, mx->d->left, lw, w);
+		if (!mx->d->match_left) continue;
+		mx->d->match_right = false;
+
 		my = get_match_node(ctxt);
 		my->d = mx->d;
 		my->next = front;
 		front = my;
 	}
 
-	/* Append the list of things that could match the right. */
+	/* Append the list of things that could match the right.
+	 * Note that it is important to set here match_right correctly even
+	 * if we are going to skip this element here because its match_left
+	 * is true, since then it means it is already included in the match
+	 * list. */
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		if (mx->d->marked)
-		{
-			/* mx is not in the l list. */
-			my = get_match_node(ctxt);
-			my->d = mx->d;
-			my->next = front;
-			front = my;
-		}
+		mx->d->match_right = do_match(mx->d->right, rc, w, rw);
+		if (!mx->d->match_right || mx->d->match_left) continue;
+
+		my = get_match_node(ctxt);
+		my->d = mx->d;
+		my->next = front;
+		front = my;
 	}
 
 	return front;

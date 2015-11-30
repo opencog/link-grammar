@@ -384,8 +384,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		{
 			unsigned int lnull_count, rnull_count;
 			Disjunct* d = m->d;
-			bool Lmatch = do_match(le, d->left, lw, w);
-			bool Rmatch = do_match(d->right, re, w, rw);
+			bool Lmatch = d->match_left;
+			bool Rmatch = d->match_right;
 
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
