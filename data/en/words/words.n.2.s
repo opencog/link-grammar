@@ -3591,6 +3591,7 @@ entrees.n
 entrepots.n
 entrepreneurs.n
 entries.n
+entropies.n
 envelopes.n
 envelopments.n
 environmentalists.n
@@ -3777,6 +3778,7 @@ expressways.n
 expulsions.n
 extensions.n
 exteriors.n
+externs.n
 extinguishers.n
 extracts.n
 extraditions.n
@@ -5209,6 +5211,7 @@ icons.n
 idealists.n
 idealizations.n
 ideals.n
+identifiers.n
 identities.n
 ideologies.n
 ideologues.n
@@ -5366,6 +5369,8 @@ inheritors.n
 inhibitions.n
 inhibitors.n
 iniquities.n
+initialisations.n
+initializations.n
 initials.n
 initiates.n
 initiatives.n
@@ -7111,7 +7116,9 @@ opportunists.n
 opposites.n
 oppressors.n
 opticians.n
+optimisations.n
 optimists.n
+optimizations.n
 optimums.n
 oracles.n
 orals.n

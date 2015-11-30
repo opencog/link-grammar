@@ -819,6 +819,7 @@ entrant.n
 entree.n
 entrepot.n
 entrepreneur.n
+entropy.n
 entry.s
 envelope.n
 envelopment.n
@@ -1004,6 +1005,7 @@ expulsion.s
 extension.s
 extent.s
 exterior.n
+extern.n
 extinguisher.n
 extract.s
 extradition.s
@@ -1042,6 +1044,7 @@ iconoclast.n
 idealist.n
 idealization.s
 ideal.n
+identifier.n
 identity.s
 ideologue.n
 ideology.s
@@ -1196,6 +1199,8 @@ inheritor.n
 inhibition.s
 inhibitor.n
 iniquity.s
+initialisation.n
+initialization.n
 initial.n
 initiate.n
 initiative.s
@@ -1475,7 +1480,9 @@ opportunist.n
 opposite.n
 oppressor.n
 optician.n
+optimisation.n
 optimist.n
+optimization.n
 optimum.n
 opus.s
 oracle.n
