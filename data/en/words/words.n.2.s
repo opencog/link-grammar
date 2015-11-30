@@ -648,6 +648,7 @@ backings.n
 backlashes.n
 backlogs.n
 backpacks.n
+backquotes.n
 backrooms.n
 backscratchers.n
 backseats.n
@@ -656,6 +657,7 @@ backslashes.n
 backs.n
 backspaces.n
 backstrokes.n
+backticks.n
 backups.n
 backwaters.n
 bacteriologists.n
