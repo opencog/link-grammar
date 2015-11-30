@@ -359,15 +359,27 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	Match_node *mx, *my, *mr_end, *front, **mxp;
 	Match_node *ml = NULL, *mr = NULL;
 
-	if (lc != NULL)
+	/* Get the lists of candidate matching disjuncts of word w for lc and
+	 * rc.  Consider each of these lists only if the length_limit of lc
+	 * rc and also w, is not greater then the distance between their word
+	 * and the word w. */
+	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
 	{
 		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
-		if (NULL != mxp) ml = *mxp;
+		if ((NULL != mxp) && (NULL != *mxp) &&
+		    ((w - lw) <= (*mxp)->d->left->length_limit))
+		{
+			ml = *mxp;
+		}
 	}
-	if (rc != NULL)
+	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
 	{
 		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
-		if (NULL != mxp) mr = *mxp;
+		if ((NULL != mxp) && (NULL != *mxp) &&
+		    ((rw - w) <= (*mxp)->d->right->length_limit))
+		{
+			mr = *mxp;
+		}
 	}
 
 	for (mx = mr; mx != NULL; mx = mx->next)
