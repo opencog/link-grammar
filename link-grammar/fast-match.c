@@ -335,6 +335,33 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	return ctxt;
 }
 
+typedef struct
+{
+	const char *string;
+	bool match;
+} match_cache;
+
+/**
+ * If the match result of connector a is cached - return it.
+ * Else return the result of the actual matching - after caching it.
+ */
+static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
+{
+	/* The following uses a string-set compare - string_set_cmp() cannot
+	 * be used here because c_con->string may be NULL. */
+	match_stats(c_con->string == a->string ? NULL : c1, NULL);
+	if (c_con->string == a->string) return c_con->match;
+
+	/* If any of the connectors doesn't have a lc part, they match
+	 * because only matching lists with connectors with same uc part as
+	 * in the connector to be matched are used. */
+	c_con->match = (0 == b->lc_start) || (0 == a->lc_start) ||
+	               easy_match(a->string, b->string);
+	c_con->string = a->string;
+
+	return c_con->match;
+}
+
 /**
  * Forms and returns a list of disjuncts coming from word w, that
  * actually matches lc or rc or both. The lw and rw are the words from
@@ -358,6 +385,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 {
 	Match_node *mx, *my, *mr_end, *front, **mxp;
 	Match_node *ml = NULL, *mr = NULL;
+	match_cache mc;
 
 	/* Get the lists of candidate matching disjuncts of word w for lc and
 	 * rc.  Consider each of these lists only if the length_limit of lc
@@ -391,11 +419,12 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	front = NULL;
 	/* Construct the list of things that could match the left. */
+	mc.string = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
 
-		mx->d->match_left = do_match(lc, mx->d->left, lw, w);
+		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc);
 		if (!mx->d->match_left) continue;
 		mx->d->match_right = false;
 
@@ -410,9 +439,10 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * if we are going to skip this element here because its match_left
 	 * is true, since then it means it is already included in the match
 	 * list. */
+	mc.string = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		mx->d->match_right = do_match(mx->d->right, rc, w, rw);
+		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc);
 		if (!mx->d->match_right || mx->d->match_left) continue;
 
 		my = get_match_node(ctxt);
