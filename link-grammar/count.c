@@ -93,19 +93,6 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
 
-/*
- * Returns TRUE if s and t match according to the connector matching
- * rules.
- */
-bool do_match(Connector *a, Connector *b, int aw, int bw)
-{
-	int dist = bw - aw;
-	if (NULL == a || NULL == b) return false;
-	assert(aw < bw, "do_match() did not receive params in the natural order.");
-	if (dist > a->length_limit || dist > b->length_limit) return false;
-	return easy_match(a->string, b->string);
-}
-
 /**
  * Stores the value in the table.  Assumes it's not already there.
  */
