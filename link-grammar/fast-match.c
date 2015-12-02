@@ -340,6 +340,41 @@ typedef struct
 	bool match;
 } match_cache;
 
+#if 0
+/**
+ * Print statistics on various connector matching aspects.
+ * A summary can be found by the shell commans:
+ * link-parser < file.batch | grep match_stats: | sort | uniq -c
+ */
+static void match_stats(Connector *c1, Connector *c2)
+{
+	if (NULL == c1) printf("match_stats: cache\n");
+	if (NULL == c2) return;
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		printf("match_stats: h/d mismatch\n");
+	}
+
+	if (0 == c1->lc_start) printf("match_stats: no lc (c1)\n");
+	if (0 == c2->lc_start) printf("match_stats: no lc (c2)\n");
+
+	if (string_set_cmp(c1->string, c2->string)) printf("match_stats: same\n");
+
+	const char *a = &c1->string[c1->lc_start];
+	const char *b = &c2->string[c2->lc_start];
+	do
+	{
+		if (*a != *b && (*a != '*') && (*b != '*')) printf("match_stats: lc false\n");
+		a++;
+		b++;
+	} while (*a != '\0' && *b != '\0');
+	printf("match_stats: lc true\n");
+}
+#else
+#define match_stats(a, b)
+#endif
+
 /**
  * Compare two connectors, utilizing features of the match lists.
  * This function uses shortcuts to speed up the comparison.
@@ -350,6 +385,7 @@ typedef struct
  */
 static bool easy_match_list(Connector *c1, Connector *c2)
 {
+	match_stats(c1, c2);
 	/* If the head/dependent parts are the same, no match*/
 	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
 	    (c1->string[0] == c2->string[0]))
@@ -369,7 +405,6 @@ static bool easy_match_list(Connector *c1, Connector *c2)
 	do
 	{
 		if (*a != *b && (*a != '*') && (*b != '*')) return false;
-
 		a++;
 		b++;
 	} while (*a != '\0' && *b != '\0');
@@ -385,6 +420,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 {
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
+	match_stats(c_con->string == a->string ? NULL : a, NULL);
 	if (c_con->string == a->string) return c_con->match;
 
 	/* No cache exists. Check if the connectors match and cache the result. */
