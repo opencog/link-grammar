@@ -376,22 +376,33 @@ static void match_stats(Connector *c1, Connector *c2)
 #endif
 
 /**
- * Compare two connectors, utilizing features of the match lists.
- * This function uses shortcuts to speed up the comparison.
- * Especially, we know that the uc parts of the connectors are the same,
- * because we fetch the matching lists according to the uc part or the
- * connectors to be matched. So the uc parts are not checked here.
- * FIXME: Use connector enumeration.
+ * Return false if the connectors cannot match due to identical
+ * head/dependent parts. Else return true.
  */
-static bool easy_match_list(Connector *c1, Connector *c2)
+static bool match_hd(Connector *c1, Connector *c2)
 {
-	match_stats(c1, c2);
-	/* If the head/dependent parts are the same, no match*/
 	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
 	    (c1->string[0] == c2->string[0]))
 	{
 		return false;
 	}
+	return true;
+}
+
+/**
+ * Compare two connectors, utilizing features of the match lists.
+ * This function uses shortcuts to speed up the comparison.
+ * Especially, we know that the uc parts of the connectors are the same,
+ * because we fetch the matching lists according to the uc part or the
+ * connectors to be matched. So the uc parts are not checked here.
+ * The head/dependent indications are not checked here, but in the
+ * caller function, to save CPU when the connectors don't match
+ * otherwise. This is because h/d mismatch is rare.
+ * FIXME: Use connector enumeration.
+ */
+static bool easy_match_list(Connector *c1, Connector *c2)
+{
+	match_stats(c1, c2);
 
 	/* If the connectors are identical, they match. */
 	if (string_set_cmp(c1->string, c2->string)) return true;
@@ -424,7 +435,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	if (c_con->string == a->string) return c_con->match;
 
 	/* No cache exists. Check if the connectors match and cache the result. */
-	c_con->match = easy_match_list(a, b);
+	c_con->match = easy_match_list(a, b) && match_hd(a, b);
 	c_con->string = a->string;
 
 	return c_con->match;
