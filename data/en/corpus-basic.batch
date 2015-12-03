@@ -446,7 +446,8 @@ The public seem to love him, no matter what he does
 %VERBS 
 
 Abrams does like programming
-*Abrams does be a good programmer
+% Allow "does be", so that we can parse Irish English.
+% *Abrams does be a good programmer
 He is being hired by another company
 He is looking for another job
 Fred has had five years of experience as a programmer
