@@ -66,7 +66,7 @@ EMPTY-WORD.zzz: ZZZ-;
 » 》 】 』 ` “: QU- & CP+;
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
-""": QU-;
+""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+);
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -10981,7 +10981,7 @@ EMOTICON :
 
 LEFT-WALL:
   <sent-start>
-  or (QU+ & <sent-start> & {Xc+} & QU+ & (Wd+ or Wq+) & CP+);
+  or (QU+ & <sent-start> & {Xc+} & QU+);
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
