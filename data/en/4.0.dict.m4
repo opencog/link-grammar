@@ -5966,17 +5966,26 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
 
-% xxxxxxxxxxxxxxxxx
+% Quote with or without quotation marks.
+% "This is a test," she said.
+% We should go, I agreed.
+% Its confusing as to how to best link this. With the quotation marks,
+% the comma must link under the quotes, and "she said" works like a new
+% sentence. Without the quotes, the comma can link like the filler-it
+% example below. Resolving these two is why {Xd- or Xq-} is optional.
 <vc-paraph>:
-  {@MV+} & (((Xd- or Xq- or [()]) & (Xc+ or Xp+ or <paraph-null>)
+  {@MV+} & (({Xd- or Xq-} & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
     [(Xc+ or Xe+) & <embed-verb>]);
 
+%
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
     or [(Xc+ or Xe+) & <embed-verb>]);
 
+% filler-it: "The President is busy, it seems."
+% The (Xd- or Xq-) links to the previous comma.
 <vc-it-paraph>:
   {@MV+} & (Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
     & (COqi+ or (CPi- & {CC+}) or Eqi+ or <verb-wall>);
