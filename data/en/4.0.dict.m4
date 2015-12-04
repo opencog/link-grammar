@@ -8945,7 +8945,7 @@ EMOTICON :
 
 LEFT-WALL:
   <sent-start>
-  or (QU+ & <sent-start> & {Xc+} & QU+);
+  or (QU+ & <sent-start> & {Xc+} & QUc+);
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
@@ -8962,8 +8962,10 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   or Xi-
   or <sent-split>;
 
+% Optional RW: "Is this a test?" she asked.
 "!" "?" ‽ ؟ ？！:
-   ((Xp- or ({@Xca-} & Xc-)) & RW+)
+   (Xp- & RW+)
+   or ({@Xca-} & Xc- & {[RW+]})
    or ({@Xca-} & Xq+)
    or <sent-split>;
 
