@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.2 (formatted as V5v3v2+)
-<dictionary-version-number>: V5v3v2+;
+% Dictionary version number is 5.3.3 (formatted as V5v3v3+)
+<dictionary-version-number>: V5v3v3+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -71,11 +71,11 @@ EMPTY-WORD.zzz: ZZZ-;
 % TODO: Add ' and ` also as quotation marks.
 % For a list see:
 % http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-« 《 【 『 ` „: ZZZ-;
-» 》 】 』 ` “: ZZZ-;
+« 《 【 『 ` „: QU-;
+» 》 】 』 ` “: QU- & CP+;
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
-""": ZZZ-;
+""": QU-;
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -2257,7 +2257,8 @@ per "/.per": Us+ & Mp-;
 % like to get rid of it.  But that would take a lot of B and AF link fiddling
 % about, so we have to live with this for now.
 %
-% Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined with <verb-wall>
+% Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined
+% with <verb-wall>
 %
 <verb-wall>: dWV- or dCV- or dIV- or [[()]];
 % <verb-wall>: dWV- or dCV- or dIV-;
@@ -5965,8 +5966,9 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
 
+% xxxxxxxxxxxxxxxxx
 <vc-paraph>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+  {@MV+} & (((Xd- or Xq- or [()]) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
     [(Xc+ or Xe+) & <embed-verb>]);
 
@@ -8935,14 +8937,15 @@ EMOTICON :
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
-% XXX {ZZZ+} got temporarily added for using quotes and virtual CAPs morphemes
-% as empty words. Remove when they are integrated into the dict.
+% {QU+} added for using quotes and virtual CAPs morphemes. (??)
 <sent-start>:
-  {ZZZ+} & (((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
+  ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
-    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+}));
+    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+});
 
-LEFT-WALL: <sent-start>;
+LEFT-WALL:
+  <sent-start>
+  or (QU+ & <sent-start> & {Xc+} & QU+ & (Wd+ or Wq+) & CP+);
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
