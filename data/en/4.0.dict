@@ -66,7 +66,9 @@ EMPTY-WORD.zzz: ZZZ-;
 » 》 】 』 ` “: QU- & CP+;
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
-""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+);
+
+% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
+""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -10982,15 +10984,18 @@ EMOTICON :
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
-% {QU+} added for using quotes and virtual CAPs morphemes. (??)
 <sent-start>:
   ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
     & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+});
 
+% QU+ links to quoted phrases.
+% ZZZ+ is a "temporary" addition for randomly-quoted crap, and
+% virtual CAPs morphemes. (??)
 LEFT-WALL:
   <sent-start>
-  or (QU+ & <sent-start> & {Xc+} & QUc+);
+  or (QU+ & <sent-start> & Xc+ & QUc+)
+  or [ZZZ+ & <sent-start>];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
