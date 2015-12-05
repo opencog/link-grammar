@@ -2731,7 +2731,9 @@ hadn't.v-d hadn’t.v-d:
 %     For example, "injured.a" vs. injured.v-d" in "the player is injured",
 %     which should get Pa+ not Pv+.
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
-% must leave the field" cannot take a wall.
+%     must leave the field" cannot take a wall.
+% [I*v+].2: the cost should maybe be evenn higher, to avoid linking
+%     past-tense 'were' to infinitives. "The rooms were let."
 
 <vc-be-no-obj>:
   ({@EBm+} & ((
@@ -2747,7 +2749,7 @@ hadn't.v-d hadn’t.v-d:
     or THb+
     or <to-verb>
     or (Pa+ & {<verb-wall>})))
-  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or I*v+))
+  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
@@ -3172,7 +3174,15 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
   <verb-adj> or
   <verb-phrase-opener>;
 
-hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
+let.w sublet.v:
+  VERB_PLI(`<vc-tr,intr>');
+
+let.w-d sublet.v-d:
+  VERB_SPPP_T(`<vc-tr,intr>')
+  or <verb-pv>
+  or <verb-adj>;
+
+hurt.v-d thrust.v-d broadcast.v-d outbid.v-d:
   VERB_SPPP_T(`<vc-tr,intr>')
   or (<verb-ico> & <vc-tr,intr>)
   or <verb-pv>
