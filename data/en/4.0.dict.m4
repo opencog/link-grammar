@@ -2959,9 +2959,10 @@ should.v:
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
+% <verb-wall>: "I sure wish he would."
 would.v:
   ((SI+ or SFI+) & ((<verb-rq> & {Vw+} & I+) or CQ-)) or
-  ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
 % TO+: "I ought to."
