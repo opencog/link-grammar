@@ -11211,6 +11211,7 @@ vetos.n
 vets.n
 viaducts.n
 vials.n
+vibes.n
 vibraphones.n
 vibraslaps.n
 vibrations.n
