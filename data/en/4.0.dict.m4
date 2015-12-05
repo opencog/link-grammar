@@ -67,17 +67,20 @@ changecom(`%')
 EMPTY-WORD.zzz: ZZZ-;
 
 % Quotation marks.
-% Unimplemented here yet - behave as empty words.
-% TODO: Add ' and ` also as quotation marks.
+% TODO: Add ' as quotation mark.
 % For a list see:
 % http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-« 《 【 『 ` „: QU-;
-» 》 】 』 ` “: QU- & CP+;
+
+« 《 【 『 ` „:
+  QUd-;
+» 》 】 』 ` “:
+  QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+;
+
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
+""": QUd- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
