@@ -2962,16 +2962,6 @@ Mary wentshopping atthe store.
 Its broken.
 It's broken.
 
-% quotations can be used for grouping modifiers into an almost-idiom
-We ate so-called 'brain food' for lunch.
-
-"This is a test," she said.
-"Is this a test?" she asked.
-
-Mr. Johnson, who was working in his field that morning, said, "The alien spaceship appeared right before my own two eyes."
-"I didn't see an actual alien being," Mr. Johnson said, "but I sure wish I had.
-Although Mr. Johnson has seen odd happenings on the farm, he stated that the spaceship "certainly takes the cake" when it comes to unexplainable activity.
-
 % In repsonse to "So, did you do it?"
 I sure wish I had.
 I sure wish I did.
@@ -3149,6 +3139,13 @@ Well, I told her, "This is it."
 % Still broken:
 "On second thought," he said, "this is it".
 He tells her, "Well, this is it."
+
+Mr. Johnson, who was working in his field that morning, said, "The alien spaceship appeared right before my own two eyes."
+"I didn't see an actual alien being," Mr. Johnson said, "but I sure wish I had.
+Although Mr. Johnson has seen odd happenings on the farm, he stated that the spaceship "certainly takes the cake" when it comes to unexplainable activity.
+
+% quotations can be used for grouping modifiers into an almost-idiom
+We ate so-called 'brain food' for lunch.
 
 
 %
