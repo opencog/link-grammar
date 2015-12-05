@@ -2964,11 +2964,11 @@ would.v:
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
+% TO+: "I ought to."
 ought.v:
-  ((<verb-rq> & (SI+ or SFI+)) or
-    <verb-x-sp> or
-    <verb-and-sp->) &
-  (<to-verb> or (N+ & I+));
+  ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp> or <verb-and-sp->)
+    & (<to-verb> or (N+ & I+) or TO+)
+    & <verb-wall>;
 
 % <verb-wall>: "I know I won't."
 won't can't mustn't couldn't shouldn't cannot needn't
