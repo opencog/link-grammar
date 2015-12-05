@@ -2822,7 +2822,7 @@ is.v:
       & {@MV+})
       or (Pp+ & {THi+ or @MV+})
       or THb+
-      or <to-verb>
+      or (<to-verb> & <verb-wall>)
       or (Pa+ & <verb-wall>)))
     or ({Pp+} & Pg+)
     or Pv+
