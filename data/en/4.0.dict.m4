@@ -5976,13 +5976,13 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % sentence. Without the quotes, the comma can link like the filler-it
 % example below.
 %
-% QU+ & <embed-verb> & QU+: He said, "This is it".
+% QU+ & <embed-verb> & QU+: He said, "This is it."
 <vc-paraph>:
   ({@MV+} & (Xc+ or Xp+) & CP- & {CC+})
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & QU+);
+  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & {X+} & QU+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
@@ -6027,29 +6027,37 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q hiss.q:
-  {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
+  {@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 
 says.q hisses.q:
-  {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
+  {@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d hissed.q-d:
-  {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+  {@E-} & (((S- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 saying.q hissing.q:
-  {@E-} & Pg- & <vc-paraph>;
+  {@E-} & Pg- & <verb-wall> & <vc-paraph>;
 
 avow.q:
- [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+ [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
-tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
-tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.q-d: {@E-} & (((S- or PP- or SI*j+) & O+) or (Pv- & <verb-wall>)) & <vc-paraph>;
-telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
+tell.q:
+  [[{@E-} & (Sp- or I- or SIpj+) & O+ & <verb-wall> & <vc-paraph>]];
+tells.q:
+  [[{@E-} & (Ss- or SIsj+) & O+ & <verb-wall> & <vc-paraph>]];
+told.q-d:
+  {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <verb-wall> & <vc-paraph>;
+telling.q:
+  [[{@E-} & Pg- & O+ & <verb-wall> & <vc-paraph>]];
 
-ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
-asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.q-d: {@E-} & (((S- or PP-) & {O+}) or (Pv- & <verb-wall>) or SI*j+) & <vc-paraph>;
-asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
+ask.q:
+  [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <verb-wall> & <vc-paraph>]];
+asks.q:
+  [[{@E-} & ((Ss- & {O+}) or SIsj+) & <verb-wall> & <vc-paraph>]];
+asked.q-d:
+  {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <verb-wall> & <vc-paraph>;
+asking.q:
+  [[{@E-} & Pg- & {O+} & <verb-wall> & <vc-paraph>]];
 
 % idiomatic "voted yes/no" expressions using the V link.
 % "he answered yes", "say yes!", "Just say no!"
