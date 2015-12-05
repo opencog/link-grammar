@@ -5976,9 +5976,10 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % sentence. Without the quotes, the comma can link like the filler-it
 % example below. Resolving these two is why {Xd- or Xq-} is optional.
 <vc-paraph>:
-  {@MV+} & (({Xd- or Xq-} & (Xc+ or Xp+ or <paraph-null>)
-      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
-    [(Xc+ or Xe+) & <embed-verb>]);
+  ({@MV+} & (Xc+ or Xp+ or <paraph-null>) & CP- & {CC+})
+  or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
+  or ({@MV+} & [(Xc+ or Xe+) & <embed-verb>]);
 
 %
 <vc-paraph-inv>:
