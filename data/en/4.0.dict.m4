@@ -75,7 +75,9 @@ EMPTY-WORD.zzz: ZZZ-;
 » 》 】 』 ` “: QU- & CP+;
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
-""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+);
+
+% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
+""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -5975,13 +5977,17 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Its confusing as to how to best link this. With the quotation marks,
 % the comma must link under the quotes, and "she said" works like a new
 % sentence. Without the quotes, the comma can link like the filler-it
-% example below. Resolving these two is why {Xd- or Xq-} is optional.
-<vc-paraph>:
-  {@MV+} & (({Xd- or Xq-} & (Xc+ or Xp+ or <paraph-null>)
-      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
-    [(Xc+ or Xe+) & <embed-verb>]);
-
+% example below.
 %
+% QU+ & <embed-verb> & QU+: He said, "This is it."
+<vc-paraph>:
+  ({@MV+} & (Xc+ or Xp+) & CP- & {CC+})
+  or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
+  or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
+  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & {X+} & QU+);
+
+% Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
@@ -6024,29 +6030,37 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q hiss.q:
-  {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
+  {@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 
 says.q hisses.q:
-  {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
+  {@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d hissed.q-d:
-  {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+  {@E-} & (((S- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 saying.q hissing.q:
-  {@E-} & Pg- & <vc-paraph>;
+  {@E-} & Pg- & <verb-wall> & <vc-paraph>;
 
 avow.q:
- [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+ [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
-tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
-tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.q-d: {@E-} & (((S- or PP- or SI*j+) & O+) or (Pv- & <verb-wall>)) & <vc-paraph>;
-telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
+tell.q:
+  [[{@E-} & (Sp- or I- or SIpj+) & O+ & <verb-wall> & <vc-paraph>]];
+tells.q:
+  [[{@E-} & (Ss- or SIsj+) & O+ & <verb-wall> & <vc-paraph>]];
+told.q-d:
+  {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <verb-wall> & <vc-paraph>;
+telling.q:
+  [[{@E-} & Pg- & O+ & <verb-wall> & <vc-paraph>]];
 
-ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
-asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.q-d: {@E-} & (((S- or PP-) & {O+}) or (Pv- & <verb-wall>) or SI*j+) & <vc-paraph>;
-asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
+ask.q:
+  [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <verb-wall> & <vc-paraph>]];
+asks.q:
+  [[{@E-} & ((Ss- & {O+}) or SIsj+) & <verb-wall> & <vc-paraph>]];
+asked.q-d:
+  {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <verb-wall> & <vc-paraph>;
+asking.q:
+  [[{@E-} & Pg- & {O+} & <verb-wall> & <vc-paraph>]];
 
 % idiomatic "voted yes/no" expressions using the V link.
 % "he answered yes", "say yes!", "Just say no!"
@@ -8949,15 +8963,18 @@ EMOTICON :
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
-% {QU+} added for using quotes and virtual CAPs morphemes. (??)
 <sent-start>:
   ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
     & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+});
 
+% QU+ links to quoted phrases.
+% ZZZ+ is a "temporary" addition for randomly-quoted crap, and
+% virtual CAPs morphemes. (??)
 LEFT-WALL:
   <sent-start>
-  or (QU+ & <sent-start> & {Xc+} & QUc+);
+  or (QU+ & <sent-start> & Xc+ & QUc+)
+  or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.

@@ -3138,7 +3138,18 @@ VII. Egypt
 
 % quoted words and phrases:
 We should distinguish between "who" and "whom" but who fucking cares?
-He said "blah blah blah".
+He said "blah blah blah."
+
+He said, "This is it."
+He tells her, "this is it."
+Well, I told her, "This is it."
+"This is a test," she said.
+"Is this a test?" she asked.
+
+% Still broken:
+"On second thought," he said, "this is it".
+He tells her, "Well, this is it."
+
 
 %
 % Institutionalized phrases:
