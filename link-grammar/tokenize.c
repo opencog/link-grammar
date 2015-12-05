@@ -984,12 +984,17 @@ static bool add_alternative_with_subscr(Sentence sent,
 
 	if (0 == stemsubscr_count)
 	{
-		word_is_in_dict = true;
 		if (issue_alternatives)
 		{
+			word_is_in_dict = true;
 			issue_word_alternative(sent, unsplit_word, "AWS",
 			                       (prefix ? 1 : 0),&prefix, 1,&word,
 			                       (suffix ? 1 : 0),&suffix);
+		}
+		else
+		{
+			/* This is a compound-word spell check. Reject unknown words. */
+			word_is_in_dict = boolean_dictionary_lookup(dict, word);
 		}
 	}
 	else
