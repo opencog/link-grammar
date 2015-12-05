@@ -5982,7 +5982,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & QU+ & {Xp+});
+  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & {X+} & QU+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
@@ -6033,7 +6033,7 @@ says.q hisses.q:
   {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d hissed.q-d:
-  {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+  {@E-} & (((S- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 saying.q hissing.q:
   {@E-} & Pg- & <vc-paraph>;
