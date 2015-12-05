@@ -67,17 +67,20 @@ changecom(`%')
 EMPTY-WORD.zzz: ZZZ-;
 
 % Quotation marks.
-% Unimplemented here yet - behave as empty words.
-% TODO: Add ' and ` also as quotation marks.
+% TODO: Add ' as quotation mark.
 % For a list see:
 % http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-« 《 【 『 ` „: QU-;
-» 》 】 』 ` “: QU- & CP+;
+
+« 《 【 『 ` „:
+  QUd-;
+» 》 】 』 ` “:
+  QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+;
+
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
+""": QUd- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -2588,8 +2591,10 @@ does.v:
   or ((SIs+ or SFIs+) & ((<verb-rq> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
+% <verb-x-sp> & <verb-wall>: "I sure wish I did"
 did.v-d:
   (<verb-x-sp> & <vc-do>)
+  or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & @MV+)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
   or ((SI+ or SFI+) & ((<verb-rq> & I*d+) or CQ-));
@@ -2620,22 +2625,23 @@ doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
+% <verb-wall>: "I know he didn't"
 don't don’t:
   ((<verb-rq> & (SIp+ or SFIp+) & I*d+) or
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or <verb-wall> or [[()]]);
 
 doesn't doesn’t:
   ((<verb-rq> & (SIs+ or SFIs+) & I*d+) or
-  <verb-x-s>) & (I*d+ or [[()]]);
+  <verb-x-s>) & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
-  ((<verb-rq> & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]);
+  ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp>)
+     & (I*d+ or <verb-wall> or [[()]]);
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
   ({{Ic-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+  (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
@@ -2661,9 +2667,11 @@ has.v:
   VERB_X_S(<vc-have>)
   or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
 
+% <verb-x-sp> & <verb-wall>: "I sure wish I had"
 had.v-d:
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
   (<verb-x-sp> & <vc-have>) or
+  (<verb-x-sp> & <verb-wall>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
   (<verb-x-pp> &
     (<to-verb> or
@@ -2935,42 +2943,51 @@ weren't.v-d weren’t.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
+% Except ... "You know you can", "You know you must"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
-  or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]]))
+  or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
+
+% "I sure wish I could."
+could.v-d:
+  <verb-x-sp> & <verb-wall>;
 
 %I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
 ’ll 'll: S- & I+;
 
+% <verb-wall>: "You know you should."
 should.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
+% <verb-wall>: "I sure wish he would."
 would.v:
   ((SI+ or SFI+) & ((<verb-rq> & {Vw+} & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
+% TO+: "I ought to."
 ought.v:
-  ((<verb-rq> & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-))) or
-    <verb-and-sp->) &
-  (<to-verb> or (N+ & I+));
+  ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp> or <verb-and-sp->)
+    & (<to-verb> or (N+ & I+) or TO+)
+    & <verb-wall>;
 
+% <verb-wall>: "I know I won't."
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
   (<verb-rq> & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]])) or
+  (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>);
 
+% <verb-wall>: "I know I wouldn't."
 wouldn't wouldn’t:
   (<verb-rq> & (SI+ or SFI+) & {RT+} & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or [[()]])) or
+  (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
 

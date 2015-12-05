@@ -2962,8 +2962,35 @@ Mary wentshopping atthe store.
 Its broken.
 It's broken.
 
-% quotations can be used for grouping modifiers into an almost-idiom
-We ate so-called 'brain food' for lunch.
+% In repsonse to "So, did you do it?"
+I sure wish I ...
+I sure wish I had.
+I sure wish I did.
+I sure wish I could.
+I sure wish he would.
+I sure wish I hadn't.
+I sure wish I didn't.
+I sure hope I don't.
+I am sure I haven't.
+I am sure I won't.
+I know I wouldn't.
+I know I ought to.
+You know you should.
+You know you can.
+You know you must.
+
+I know he doesn't.
+I know he didn't.
+You know you needn't.
+
+Why, I ought to ....
+I ought to.
+I ought to do it.
+I ought to go there.
+I ought to tell her.
+I know I ought to.
+I know I ought to tell her.
+
 
 % punctuation: sometimes commas are used as if they were semicolons:
 Sweat stood on his brow, fury was bright in his one good eye.
@@ -3127,6 +3154,13 @@ Well, I told her, "This is it."
 % Still broken:
 "On second thought," he said, "this is it".
 He tells her, "Well, this is it."
+
+Mr. Johnson, who was working in his field that morning, said, "The alien spaceship appeared right before my own two eyes."
+"I didn't see an actual alien being," Mr. Johnson said, "but I sure wish I had."
+Although Mr. Johnson has seen odd happenings on the farm, he stated that the spaceship "certainly takes the cake" when it comes to unexplainable activity.
+
+% quotations can be used for grouping modifiers into an almost-idiom
+We ate so-called 'brain food' for lunch.
 
 
 %
