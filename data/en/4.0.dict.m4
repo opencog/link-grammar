@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.2 (formatted as V5v3v2+)
-<dictionary-version-number>: V5v3v2+;
+% Dictionary version number is 5.3.3 (formatted as V5v3v3+)
+<dictionary-version-number>: V5v3v3+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -71,11 +71,13 @@ EMPTY-WORD.zzz: ZZZ-;
 % TODO: Add ' and ` also as quotation marks.
 % For a list see:
 % http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-« 《 【 『 ` „: ZZZ-;
-» 》 】 』 ` “: ZZZ-;
+« 《 【 『 ` „: QU-;
+» 》 】 』 ` “: QU- & CP+;
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
-""": ZZZ-;
+
+% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
+""": QU- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -2257,7 +2259,8 @@ per "/.per": Us+ & Mp-;
 % like to get rid of it.  But that would take a lot of B and AF link fiddling
 % about, so we have to live with this for now.
 %
-% Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined with <verb-wall>
+% Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined
+% with <verb-wall>
 %
 <verb-wall>: dWV- or dCV- or dIV- or [[()]];
 % <verb-wall>: dWV- or dCV- or dIV-;
@@ -5965,16 +5968,30 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
 
+% Quote with or without quotation marks.
+% "This is a test," she said.
+% We should go, I agreed.
+% Its confusing as to how to best link this. With the quotation marks,
+% the comma must link under the quotes, and "she said" works like a new
+% sentence. Without the quotes, the comma can link like the filler-it
+% example below.
+%
+% QU+ & <embed-verb> & QU+: He said, "This is it".
 <vc-paraph>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
-    [(Xc+ or Xe+) & <embed-verb>]);
+  ({@MV+} & (Xc+ or Xp+) & CP- & {CC+})
+  or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
+  or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
+  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & QU+);
 
+% Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
     or [(Xc+ or Xe+) & <embed-verb>]);
 
+% filler-it: "The President is busy, it seems."
+% The (Xd- or Xq-) links to the previous comma.
 <vc-it-paraph>:
   {@MV+} & (Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
     & (COqi+ or (CPi- & {CC+}) or Eqi+ or <verb-wall>);
@@ -8935,14 +8952,18 @@ EMOTICON :
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
-% XXX {ZZZ+} got temporarily added for using quotes and virtual CAPs morphemes
-% as empty words. Remove when they are integrated into the dict.
 <sent-start>:
-  {ZZZ+} & (((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
+  ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
-    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+}));
+    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+});
 
-LEFT-WALL: <sent-start>;
+% QU+ links to quoted phrases.
+% ZZZ+ is a "temporary" addition for randomly-quoted crap, and
+% virtual CAPs morphemes. (??)
+LEFT-WALL:
+  <sent-start>
+  or (QU+ & <sent-start> & Xc+ & QUc+)
+  or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
@@ -8959,8 +8980,10 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   or Xi-
   or <sent-split>;
 
+% Optional RW: "Is this a test?" she asked.
 "!" "?" ‽ ؟ ？！:
-   ((Xp- or ({@Xca-} & Xc-)) & RW+)
+   (Xp- & RW+)
+   or ({@Xca-} & Xc- & {[RW+]})
    or ({@Xca-} & Xq+)
    or <sent-split>;
 
