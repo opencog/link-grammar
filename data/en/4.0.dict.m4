@@ -2632,13 +2632,13 @@ doesn't doesn’t:
   <verb-x-s>) & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
-  ((<verb-rq> & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or <verb-wall> or [[()]]);
+  ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp>)
+     & (I*d+ or <verb-wall> or [[()]]);
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
   ({{Ic-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or <verb-wall> or [[()]]));
+  (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
@@ -2942,7 +2942,7 @@ weren't.v-d weren’t.v-d:
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
-  or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]]))
+  or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or [[()]]))
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
@@ -2955,13 +2955,13 @@ could.v-d:
 
 should.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 would.v:
   ((SI+ or SFI+) & ((<verb-rq> & {Vw+} & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
 % TO+: "I ought to."
@@ -2974,14 +2974,14 @@ ought.v:
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
   (<verb-rq> & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or <verb-wall> or [[()]])) or
+  (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>);
 
 % <verb-wall>: "I know I wouldn't."
 wouldn't wouldn’t:
   (<verb-rq> & (SI+ or SFI+) & {RT+} & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or <verb-wall> or [[()]])) or
+  (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
 
