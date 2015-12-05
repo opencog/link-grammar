@@ -2953,7 +2953,7 @@ would.v:
 
 ought.v:
   ((<verb-rq> & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-))) or
+    <verb-x-sp> or
     <verb-and-sp->) &
   (<to-verb> or (N+ & I+));
 
