@@ -5974,12 +5974,15 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Its confusing as to how to best link this. With the quotation marks,
 % the comma must link under the quotes, and "she said" works like a new
 % sentence. Without the quotes, the comma can link like the filler-it
-% example below. Resolving these two is why {Xd- or Xq-} is optional.
+% example below.
+%
+% QU+ & <embed-verb> & QU+: He said, "This is it".
 <vc-paraph>:
   ({@MV+} & (Xc+ or Xp+) & CP- & {CC+})
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
-  or ({@MV+} & [(Xc+ or Xe+) & <embed-verb>]);
+  or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
+  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & QU+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
