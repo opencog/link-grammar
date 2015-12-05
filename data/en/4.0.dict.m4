@@ -8959,7 +8959,7 @@ EMOTICON :
 LEFT-WALL:
   <sent-start>
   or (QU+ & <sent-start> & Xc+ & QUc+)
-  or [ZZZ+ & <sent-start>];
+  or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
