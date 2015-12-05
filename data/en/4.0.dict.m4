@@ -2959,16 +2959,18 @@ ought.v:
     <verb-and-sp->) &
   (<to-verb> or (N+ & I+));
 
+% <verb-wall>: "I know I won't."
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
   (<verb-rq> & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]])) or
+  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>);
 
+% <verb-wall>: "I know I wouldn't."
 wouldn't wouldn’t:
   (<verb-rq> & (SI+ or SFI+) & {RT+} & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or [[()]])) or
+  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
 
