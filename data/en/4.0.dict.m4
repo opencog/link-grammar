@@ -40,7 +40,7 @@ changecom(`%')
  % XI. ADVERBS
  %    A. Mainly adjectival; B. Mainly post-verbal; C. Post-verbal/pre-verbal;
  %    D. Post-verbal/pre-verbal/openers; E. Post-verbal/openers;
- %    F. Pre-verbal/openers	
+ %    F. Pre-verbal/openers
  % XII. MISCELLANEOUS WORDS AND PUNCTUATION
  %
  %
@@ -401,7 +401,9 @@ PL-CAPITALIZED-WORDS:
 % men and women.
 /en/words/entities.given-bisex.sing
 /en/words/entities.given-female.sing
-/en/words/entities.given-male.sing:
+/en/words/entities.given-male.sing
+/en/words/entities.goddesses
+/en/words/entities.gods:
   <marker-entity> or <given-names> or <directive-opener>;
 
 % Special handling for certain given names. These are words that have a
@@ -2731,7 +2733,9 @@ hadn't.v-d hadn’t.v-d:
 %     For example, "injured.a" vs. injured.v-d" in "the player is injured",
 %     which should get Pa+ not Pv+.
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
-% must leave the field" cannot take a wall.
+%     must leave the field" cannot take a wall.
+% [I*v+].2: the cost should maybe be evenn higher, to avoid linking
+%     past-tense 'were' to infinitives. "The rooms were let."
 
 <vc-be-no-obj>:
   ({@EBm+} & ((
@@ -2747,7 +2751,7 @@ hadn't.v-d hadn’t.v-d:
     or THb+
     or <to-verb>
     or (Pa+ & {<verb-wall>})))
-  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or I*v+))
+  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
@@ -2822,7 +2826,7 @@ is.v:
       & {@MV+})
       or (Pp+ & {THi+ or @MV+})
       or THb+
-      or <to-verb>
+      or (<to-verb> & <verb-wall>)
       or (Pa+ & <verb-wall>)))
     or ({Pp+} & Pg+)
     or Pv+
@@ -3172,7 +3176,15 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
   <verb-adj> or
   <verb-phrase-opener>;
 
-hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
+let.w sublet.v:
+  VERB_PLI(`<vc-tr,intr>');
+
+let.w-d sublet.v-d:
+  VERB_SPPP_T(`<vc-tr,intr>')
+  or <verb-pv>
+  or <verb-adj>;
+
+hurt.v-d thrust.v-d broadcast.v-d outbid.v-d:
   VERB_SPPP_T(`<vc-tr,intr>')
   or (<verb-ico> & <vc-tr,intr>)
   or <verb-pv>
@@ -4042,7 +4054,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 
 <vc-forget>:
   {<vc-trans>} or
-  ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));					
+  ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
@@ -4803,7 +4815,7 @@ setting.g: (<vc-set> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 free.i straight.i loose.i: Vs- & {MV+};
 
 <vc-hold>:
-  ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vh+}) or [[@MV+ & O*n+]]) & {@MV+};		
+  ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vh+}) or [[@MV+ & O*n+]]) & {@MV+};
 
 hold.v: VERB_PLI(<vc-hold>);
 holds.v: VERB_S_T(<vc-hold>);
@@ -5887,7 +5899,7 @@ does_so takes_place shows_up pleads_guilty pleads_innocent
 takes_office does_battle gives_way makes_way takes_part catches_up
 catches_on files_suit picks_up takes_off breaks_free takes_over
 jumps_ship sees_fit lets_go takes_note comes_true comes_clean
-comes_of_age: 			
+comes_of_age:
   VERB_S_T(<vc-intrans>);
 
 showed_up pleaded_guilty pleaded_innocent made_way caught_up caught_on
@@ -7595,7 +7607,7 @@ n't n’t: N- or EB-;
 % e.g. "Frank felt vindicated when his long time rival Bill revealed that
 % he was the winner of the competition."
 frank.a:
-	[<marker-common-entity> or <ordinary-const-adj>]0.2;
+  [<marker-common-entity> or <ordinary-const-adj>]0.2;
 
 % Add a miniscule cost, so that the noun form is prefered...
 % An older formulation of this used Ah- as the link, but I don't see
@@ -8295,7 +8307,7 @@ different.a:
 than_expected than_imagined than_proposed than_suspected than_realized
 than_intended than_supposed than_reported than_ever than_usual
 than_normal than_suggested than_anticipated than_recommended: MVt-;
-	
+
 more_than no_more_than fewer_than less_than as_many_as an_estimated
 an_additional up_to as_much_as no_fewer_than no_less_than greater_than: EN+;
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
@@ -8720,7 +8732,7 @@ immediately stat.e: ({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}} & CO+) o
 soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or EB- or Qe+ or <advcl-verb>)) or ({EA- or EF+} & (Pa- or AF+));
 
-certainly possibly probably importantly remarkably interestingly:	
+certainly possibly probably importantly remarkably interestingly:
 {EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
 ({Xc+ & {Xd-}} & EB-));
 

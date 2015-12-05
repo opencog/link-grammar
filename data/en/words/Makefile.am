@@ -4,6 +4,8 @@ WORDS=			\
 	entities.given-bisex.sing \
 	entities.given-female.sing \
 	entities.given-male.sing \
+	entities.goddesses \
+	entities.gods \
 	entities.locations.sing \
 	entities.national.sing \
 	entities.organizations.sing \
