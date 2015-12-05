@@ -401,7 +401,9 @@ PL-CAPITALIZED-WORDS:
 % men and women.
 /en/words/entities.given-bisex.sing
 /en/words/entities.given-female.sing
-/en/words/entities.given-male.sing:
+/en/words/entities.given-male.sing
+/en/words/entities.goddesses
+/en/words/entities.gods:
   <marker-entity> or <given-names> or <directive-opener>;
 
 % Special handling for certain given names. These are words that have a
