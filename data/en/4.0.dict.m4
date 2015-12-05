@@ -6000,7 +6000,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+) & QU+ & <embed-verb> & {X+} & QU+);
+  or ({@MV+} & (Xc+ or Xe+) & QU+ & (<embed-verb> or Wi+) & {X+} & QU+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
