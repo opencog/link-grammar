@@ -2618,22 +2618,23 @@ doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
+% <verb-wall>: "I know he didn't"
 don't don’t:
   ((<verb-rq> & (SIp+ or SFIp+) & I*d+) or
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or <verb-wall> or [[()]]);
 
 doesn't doesn’t:
   ((<verb-rq> & (SIs+ or SFIs+) & I*d+) or
-  <verb-x-s>) & (I*d+ or [[()]]);
+  <verb-x-s>) & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
   ((<verb-rq> & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]);
+    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or <verb-wall> or [[()]]);
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
   ({{Ic-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
