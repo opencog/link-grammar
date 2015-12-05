@@ -74,13 +74,14 @@ EMPTY-WORD.zzz: ZZZ-;
 « 《 【 『 ` „:
   QUd-;
 » 》 】 』 ` “:
-  QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+;
+  QUc- & W+ & (CP+ or [()]);
 
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-""": QUd- or (QUc- & (Wd+ or Wq+ or Ws+ or Wj+) & CP+) or [[ZZZ-]];
+% CP or [()]: "Let's go!" she said.
+""": QUd- or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
