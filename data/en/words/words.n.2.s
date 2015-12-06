@@ -3300,6 +3300,7 @@ draperies.n
 drapers.n
 drapes.n
 draughts.n
+drawbacks.n
 drawbridges.n
 drawers.n
 drawing-rooms.n

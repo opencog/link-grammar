@@ -1,4 +1,3 @@
-inducible.a
 abdominal.a
 aberrant.a
 abhorrent.a
@@ -103,6 +102,7 @@ agape.a
 aged.a
 ageless.a
 agglomerate.a
+agglutinative.a
 aggressive.a
 agile.a
 agitated.a
@@ -329,10 +329,10 @@ ascetic.a
 ascorbic.a
 asexual.a
 ashen.a
-assigned.a
 asinine.a
 assertive.a
 assiduous.a
+assigned.a
 assistive.a
 associative.a
 assorted.a
@@ -887,6 +887,7 @@ indolent.a
 indomitable.a
 indoor.a
 indubitable.a
+inducible.a
 inductive.a
 indulgent.a
 industrial.a
@@ -935,6 +936,7 @@ inflammatory.a
 inflatable.a
 inflational.a
 inflationary.a
+inflectional.a
 inflexible.a
 influential.a
 informal.a
@@ -1441,6 +1443,7 @@ unburied.a
 unburnt.a
 unbuttoned.a
 uncanny.a
+uncareful.a
 unceasing.a
 uncensored.a
 unceremonious.a
@@ -1697,11 +1700,13 @@ uninhabitable.a
 uninhabited.a
 uninhabitted.a
 uninhibited.a
+uninitialized.a
 uninitiated.a
 uninjured.a
 uninspired.a
 uninspiring.a
 uninstalled.a
+uninstructive.a
 uninsured.a
 unintelligent.a
 unintelligible.a
@@ -1772,8 +1777,8 @@ unopened.a
 unopposed.a
 unoptimizable.a
 unoptimized.a
-unordered.a
 unorderable.a
+unordered.a
 unoriginal.a
 unorthodox.a
 unpaid.a
@@ -1783,7 +1788,9 @@ unpalatable.a
 unparalleled.a
 unpardonable.a
 unparished.a
+unparsable.a
 unpasteurized.a
+unpatched.a
 unpatriotic.a
 unpaved.a
 unpegged.a
@@ -1801,6 +1808,7 @@ unpowered.a
 unprecedented.a
 unpredictable.a
 unpredicted.a
+unprefixed.a
 unprejudiced.a
 unprepared.a
 unpressurized.a
@@ -1971,6 +1979,7 @@ untreated.a
 untricked.a
 untried.a
 untroubled.a
+untruncated.a
 untrustworthy.a
 untruthful.a
 untucked.a
