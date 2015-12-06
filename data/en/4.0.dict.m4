@@ -4174,8 +4174,12 @@ started.v-d stopped.v-d tried.v-d:
   (<verb-pv-b> & {K+} & {@MV+}) or
   ({K+} & <verb-phrase-opener>);
 
-starting.g stopping.g trying.g: (<vc-start> & <verb-ge>) or <verb-ge-d>;
-starting.v stopping.v trying.v: <verb-pg> & <vc-start>;
+starting.g stopping.g trying.g
+startin'.g startin.g stoppin'.g stoppin.g tryin'.g tryin.g:
+  (<vc-start> & <verb-ge>) or <verb-ge-d>;
+starting.v stopping.v trying.v
+startin'.v startin.v stoppin'.v stoppin.v tryin'.v tryin.v:
+  <verb-pg> & <vc-start>;
 
 % The Pg+ doesn't really apply to all of these ...
 <vc-dispute>: <vc-trans> or
@@ -4758,15 +4762,16 @@ got.v-d: VERB_SPPP_T(<vc-get>);
 
 % basilect
 % "I gotta go now"
+% He said, "I gotta go now."
 gotta.v-d:
   (I*t+ & <verb-x-pg>)
-  or ({@E-} & Sp*i- & WV- & I*t+);
+  or ({@E-} & Sp*i- & <verb-wall> & I*t+);
 
 gotten.v:
   VERB_PP(<vc-get>) or
   (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or
   ({K+ or Pp+} & <verb-phrase-opener>);
-getting.v: <verb-pg> & <vc-get>;
+getting.v gettin'.v gettin.v: <verb-pg> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
 % Pa+: "He left unarmed"
