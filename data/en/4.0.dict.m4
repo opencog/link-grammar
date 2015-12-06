@@ -5260,7 +5260,7 @@ charged.v-d:
   VERB_SPPP_T(<vc-write>) or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
-written.v drawn.v:
+written.v-d drawn.v-d w/o.v-d:
   VERB_PP(<vc-write>) or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
@@ -6174,17 +6174,21 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   [({Xc+ & {Xd-}} & CO+)] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
-under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or [MVp- & B-] or (Yd- & Pp-);
-below above behind.p: ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or [MVp- & B-];
-within:                        ({JQ+} & J+ & <prep-main-a>)           or [MVp- & B-];
-during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or [MVp- & B-];
+under beneath:
+  ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or [MVp- & B-] or (Yd- & Pp-);
+below above behind.p:
+  ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or [MVp- & B-];
+within w/i:
+           ({JQ+} & J+ & <prep-main-a>)           or [MVp- & B-];
+during:
+           ({JQ+} & J+ & (<prep-main-a> or UN-))  or [MVp- & B-];
 
 from:
   ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
   or [MVp- & B-]
   or NIr+;
 
-at toward towards without:
+at toward towards without w/o.p:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
    or [MVp- & B-];
 
@@ -6209,7 +6213,8 @@ between:
   or [MVp- & B-]
   or NIr+;
 
-with:
+% w/ as a common abbreviation for with
+with w/:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-))
   or (Jw+ & (RJrj- or RJlj+))
   or [MVp- & B-]
