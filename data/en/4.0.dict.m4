@@ -4434,7 +4434,9 @@ hypothesizing.v hypothesising.v documenting.v envisaging.v:
 
 <vc-guess>: {<vc-trans>} or
   ({@MV+} & (TH+ or QI+ or <embed-verb> or RSe+ or Zs-));
-guess.v estimate.v understand.v notice.v explain.v demonstrate.v:
+
+% esplain: basilect of explain
+guess.v estimate.v understand.v notice.v explain.v esplain.v demonstrate.v:
   VERB_PLI(<vc-guess>);
 guesses.v estimates.v understands.v notices.v explains.v demonstrates.v:
   VERB_S_T(<vc-guess>);
@@ -4771,7 +4773,7 @@ gotten.v:
   VERB_PP(<vc-get>) or
   (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or
   ({K+ or Pp+} & <verb-phrase-opener>);
-getting.v gettin'.v gettin.v: <verb-pg> & <vc-get>;
+getting.v gettin'.v gettin.v: <verb-pg> & <verb-wall> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
 % Pa+: "He left unarmed"
