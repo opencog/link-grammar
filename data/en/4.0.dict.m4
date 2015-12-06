@@ -624,6 +624,7 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.1-const :
   <marker-common-entity> or <common-const-noun>;
 
+% XXX eliminate this, it serves no purpose, sort into vowels and consts.
 /en/words/words.n.1.gerund :
   <marker-common-entity> or <common-noun>;
 
