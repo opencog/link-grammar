@@ -8986,17 +8986,20 @@ EMOTICON :
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
+%
+% XXX everywhere where Ws+ is used above, should probably be wi-wall!?
+<wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
+<wi-wall>: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
 <sent-start>:
-  ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
-  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
-    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+});
+  (<wo-wall> or <wi-wall>) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+};
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
 % virtual CAPs morphemes. (??)
+% (Xc+ or [()]): allow missing comma, but at a price.
 LEFT-WALL:
   <sent-start>
-  or (QUd+ & <sent-start> & Xc+ & QUc+)
+  or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
@@ -9015,7 +9018,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % You were asking, "How might this work?" so I answered.
 % should thes be a <sent-start> ??? why not?
 <post-quote>:
-  QUc- & {(W+ & <WALL>) or CP+};
+  QUc- & {<wo-wall> or <wi-wall> or CP+};
 
 « 《 【 『 ` „:
   QUd-;
@@ -9026,7 +9029,6 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-% CP or [()]: "Let's go!" she said.
 % Cannot use a blanket W+ here to pick up all W connectors,
 % since 
 """: QUd- or <post-quote> or [[ZZZ-]];
@@ -9049,10 +9051,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
 % a semicolon. -- looks a lot like <sent-start>.  We do need Wa for comma's
 <semicol>:
-  {@Xca-} & Xx-
-    & (((Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+) & <WALL>)
-      or (Wa+ or Wi+ or Ww+ or Qd+))
-    & {Xx+};
+  {@Xca-} & Xx- & (<wo-wall> or <wi-wall>) & {Xx+};
 
 ";" ；: <semicol>;
 
