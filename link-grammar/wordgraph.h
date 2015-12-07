@@ -2,6 +2,7 @@
 /* Wordgraph display representation modes. */
 #define lo(l) (l-'a')
 #define WGR_SUB      (1<<lo('s')) /* Unsplit words as subgraphs */
+#define WGR_COMPACT  (1<<lo('c')) /* Compact. Just now applies only to 's'. */
 #define WGR_PREV     (1<<lo('p')) /* Prev links */
 #define WGR_UNSPLIT  (1<<lo('u')) /* Unsplit_word links */
 #define WGR_DBGLABEL (1<<lo('d')) /* Debug label addition */
