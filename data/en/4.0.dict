@@ -57,23 +57,6 @@
 % appears in the input text.
 EMPTY-WORD.zzz: ZZZ-;
 
-% Quotation marks.
-% TODO: Add ' as quotation mark.
-% For a list see:
-% http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-
-« 《 【 『  „:
-  QUd-;
-» 》 】 』 ` “:
-  QUc- & W+ & (CP+ or [()]);
-
-% For now, using ".x and ".y in the above definitions multiplies the number
-% of linkages by 2^(number of "). So it is separated below.
-
-% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-% CP or [()]: "Let's go!" she said.
-""": QUd- or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
-
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
 nonCAP.zzz: ZZZ-;
@@ -109,7 +92,7 @@ nonCAP.zzz: ZZZ-;
 % The RJ links connect to "and"; the l,r prevent cross-linking
 <clause-conjoin>: RJrc- or RJlc+;
 
-% {@COd-} : "That is the man who, in Joes opinion, we should hire"
+% {@COd-} : "That is the man who, in Joe's opinion, we should hire"
 <CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
 <S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))};
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
@@ -11063,6 +11046,29 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % mid-text period, question mark. Splits into two sentences.
 <sent-split>: Xp- & <sent-start>;
 
+% Quotation marks.
+% TODO: Add ' as quotation mark.
+% For a list see:
+% http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
+
+% After a closing quote, the sentence may continue...
+% You were asking, "How might this work?" so I answered.
+% should thes be a <sent-start> ??? why not?
+<post-quote>:
+  QUd- & {W+ & <WALL>};
+
+« 《 【 『  „:
+  <post-quote>;
+» 》 】 』 ` “:
+  QUc- & W+ & (CP+ or [()]);
+
+% For now, using ".x and ".y in the above definitions multiplies the number
+% of linkages by 2^(number of "). So it is separated below.
+
+% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
+% CP or [()]: "Let's go!" she said.
+""": <post-quote> or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
+
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin."
 % get linked incorrectly with the MX link.
@@ -11079,7 +11085,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
    or <sent-split>;
 
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
-% a semicolon. -- looks a lot like <sent-start>.  We do need Wa for comma's
+% a semicolon. -- looks a lot like <sent-start>.  We do need Wa for commas
 <semicol>:
   {@Xca-} & Xx-
     & (((Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+) & <WALL>)

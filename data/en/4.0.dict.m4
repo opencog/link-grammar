@@ -66,23 +66,6 @@ changecom(`%')
 % appears in the input text.
 EMPTY-WORD.zzz: ZZZ-;
 
-% Quotation marks.
-% TODO: Add ' as quotation mark.
-% For a list see:
-% http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
-
-« 《 【 『 ` „:
-  QUd-;
-» 》 】 』 ` “:
-  QUc- & W+ & (CP+ or [()]);
-
-% For now, using ".x and ".y in the above definitions multiplies the number
-% of linkages by 2^(number of "). So it is separated below.
-
-% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-% CP or [()]: "Let's go!" she said.
-""": QUd- or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
-
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
 nonCAP.zzz: ZZZ-;
@@ -9019,6 +9002,29 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % mid-text period, question mark. Splits into two sentences.
 <sent-split>: Xp- & <sent-start>;
+
+% Quotation marks.
+% TODO: Add ' as quotation mark.
+% For a list see:
+% http://en.wikipedia.org/wiki/Quotation_mark_glyphs#Quotation_marks_in_Unicode
+
+% After a closing quote, the sentence may continue...
+% You were asking, "How might this work?" so I answered.
+% should thes be a <sent-start> ??? why not?
+<post-quote>:
+  QUd- & {W+ & <WALL>};
+
+« 《 【 『 ` „:
+  <post-quote>;
+» 》 】 』 ` “:
+  QUc- & W+ & (CP+ or [()]);
+
+% For now, using ".x and ".y in the above definitions multiplies the number
+% of linkages by 2^(number of "). So it is separated below.
+
+% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
+% CP or [()]: "Let's go!" she said.
+""": <post-quote> or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
 
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin."
