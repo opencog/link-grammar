@@ -2803,7 +2803,7 @@ is.v:
   [(<verb-x-s,u> &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
-        or [K+]
+        or [K+ & <verb-wall>]
         or BI+
         or OF+
         or (Osi+ & R+ & Bs+)
