@@ -8012,6 +8012,15 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.1.p:
   <verb-pv> or <verb-phrase-opener>;
 
+% -----------------------------------------------------------------
+% wall connectors
+% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
+% The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
+%     insane?", "Are you the one?"
+% XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
+<wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
+<wi-wall>: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
+
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
 
@@ -8031,7 +8040,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
   or ({@MV+} & (Xc+ or Xe+ or [[()]])
-    & QUd+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QUc+);
+    & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
@@ -11023,16 +11032,10 @@ EMOTICON :
 % The WV+ after the Xx+ allows the root verb after the punct to attach
 % to the wall.  e.g. "A woman lives next door, who is a nurse."
 % The naked WV+ without any W+ allows "that I did not know."
-% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
-% The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
-%     insane?", "Are you the one?"
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
 %
-% XXX everywhere where Ws+ is used above, should probably be wi-wall!?
-<wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
-<wi-wall>: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
 <sent-start>:
   (<wo-wall> or <wi-wall>) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+};
 
