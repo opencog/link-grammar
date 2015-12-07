@@ -5574,15 +5574,18 @@ tellin': <verb-pg> & <vc-tell>;
 
 % (QI+ & {MV+}): "I did not ask why until recently"
 <vc-ask>:
-  ({(O+ & {O*n+}) or <b-minus>} & {@MV+} & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-}) or
-  ([[@MV+ & O*n+ & {@MV+}]]);
+  ({(O+ & {O*n+}) or <b-minus>} & {@MV+}
+    & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-})
+  or ([[@MV+ & O*n+ & {@MV+}]]);
 
 ask.v: VERB_PLI(<vc-ask>);
 asks.v: VERB_S_T(<vc-ask>);
-asked.v-d: VERB_SPPP_T(<vc-ask>) or
-         (<verb-pv> & {<to-verb> or QI+ or BW- or TH+ or TS+}) or
-         (<verb-pv-b> & O+ & {@MV+}) or
-         ({{@MV+} & (<to-verb> or QI+ or TH+ or TS+)} & <verb-phrase-opener>);
+asked.v-d:
+  VERB_SPPP_T(<vc-ask>)
+  or (<verb-pv> & {<to-verb> or QI+ or BW- or TH+ or TS+})
+  or (<verb-pv-b> & O+ & {@MV+})
+  or ({{@MV+} & (<to-verb> or QI+ or TH+ or TS+)} & <verb-phrase-opener>);
+
 asking.g: (<vc-ask> & <verb-ge>) or <verb-ge-d>;
 asking.v: <verb-pg> & <vc-ask>;
 
@@ -6074,7 +6077,7 @@ said.q-d:
   {@E-} & (((S- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 saying.q:
-  {@E-} & Pg- & <verb-wall> & <vc-paraph>;
+  {@E-} & Pg- & <vc-paraph>;
 
 avow.q:
  [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
@@ -6086,7 +6089,7 @@ tells.q:
 told.q-d:
   {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <verb-wall> & <vc-paraph>;
 telling.q:
-  [[{@E-} & Pg- & O+ & <verb-wall> & <vc-paraph>]];
+  [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
 ask.q:
   [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <verb-wall> & <vc-paraph>]];
@@ -6095,7 +6098,7 @@ asks.q:
 asked.q-d:
   {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <verb-wall> & <vc-paraph>;
 asking.q:
-  [[{@E-} & Pg- & {O+} & <verb-wall> & <vc-paraph>]];
+  {@E-} & Pg- & {O+} & <vc-paraph>;
 
 % idiomatic "voted yes/no" expressions using the V link.
 % "he answered yes", "say yes!", "Just say no!"
