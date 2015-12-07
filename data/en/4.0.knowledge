@@ -224,7 +224,7 @@ CONTAINS_ONE_RULES:
 ; The wtwo below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm     , "Incorrect use of 'how'17" ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm     , "Incorrect use of 'how'18"  ,
- Qe    ,  EEh           		              , "Incorrect use of adverb19"  ,
+ Qe    ,  EEh  EAh                          , "Incorrect use of adverb19"  ,
  THi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'20" ,
  TSi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'21" ,
  QIi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'22" ,
