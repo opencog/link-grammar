@@ -6007,7 +6007,8 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+ or [[()]]) & QUd+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QUc+);
+  or ({@MV+} & (Xc+ or Xe+ or [[()]])
+    & QUd+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QUc+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
@@ -9014,7 +9015,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % You were asking, "How might this work?" so I answered.
 % should thes be a <sent-start> ??? why not?
 <post-quote>:
-  QUc- & W+ & (<WALL> or CP+ or [()]);
+  QUc- & {(W+ & <WALL>) or CP+};
 
 « 《 【 『 ` „:
   QUd-;
