@@ -126,7 +126,7 @@ NIax h
 ; These links are not put in the word/link graph. They also cannot be the 
 ; starter links for a domain. 
 
-IGNORE_THESE_LINKS: Xca  HA
+IGNORE_THESE_LINKS: Xca  HA COi
 
 
 

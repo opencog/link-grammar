@@ -2284,7 +2284,7 @@ per "/.per": Us+ & Mp-;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({COi-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
