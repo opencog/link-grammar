@@ -7258,16 +7258,16 @@ once.e:
 
 % Should these be treated as clause-openers (taking CO link)?
 % e.g. "Also on this list is the Colossus of Rhodes."
-% Currently, they take Wc- as they are "coordinating conjuctions"
-% that are tied to previous sentences (i.e. to the left-wall).
 % Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
 % XXX should review these, they probably overlap the other conjunction
 % usages below.
 %
 % not.ij seems to result in bad parses quite often, do we need it?
+% Xx-: provides a better way of doing coordination, since it is not
+% head-verb crossing, the way that CC is.  Basically, CC is deprecated!
 %
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
+  [([{Xd-} & CC-] or Xx-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
