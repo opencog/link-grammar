@@ -2300,10 +2300,8 @@ per "/.per": Us+ & Mp-;
 <verb-adj>:  {@E-} & [A+]0.5;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
-% (<verb-wall> or [()].1): perfer a link to wall, if possible:
-%                         e.g. "you did send him that note!"
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or [()].1) & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
@@ -9306,12 +9304,6 @@ once.e:
 % XXX should review these, they probably overlap the other conjunction
 % usages below.
 %
-% not.ij seems to result in bad parses quite often, do we need it?
-% Xx-: provides a better way of doing coordination, since it is not
-% head-verb crossing, the way that CC is.  Basically, CC is deprecated!
-%
-but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & ([CC-] or Xx-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+)];
 
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
@@ -11129,6 +11121,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   or (SJl- & SJr+ & SJl+);
 
 % :.j
+% Should we be using <sent-start> here? why or why not?
 <colon>:
   {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or <ton-verb>) & {Xx+}) or Xe-);
 
@@ -11137,6 +11130,17 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   [<colon>]
   or (Wd- & W+)
   or (NI- & WV- & W+);
+
+% Coordinating conjunctions that behave like punctuation.  These
+% connect whole clauses.  Should wee use <sent-start> here? Why not?
+%
+% not.ij seems to result in bad parses quite often, do we need it?
+% Xx-: provides a better way of doing coordination, since it is not
+% head-verb crossing, the way that CC is.  Basically, CC is deprecated!
+%
+but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
+  [{Xd-} & ([CC-] or Xx-) & {Xc+}
+    & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
 ..y *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
