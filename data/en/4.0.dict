@@ -8030,7 +8030,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+ or [[()]]) & QU+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QU+);
+  or ({@MV+} & (Xc+ or Xe+ or [[()]]) & QUd+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QUc+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
@@ -11038,7 +11038,7 @@ EMOTICON :
 % virtual CAPs morphemes. (??)
 LEFT-WALL:
   <sent-start>
-  or (QU+ & <sent-start> & Xc+ & QUc+)
+  or (QUd+ & <sent-start> & Xc+ & QUc+)
   or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
@@ -11057,19 +11057,21 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % You were asking, "How might this work?" so I answered.
 % should thes be a <sent-start> ??? why not?
 <post-quote>:
-  QUd- & {W+ & <WALL>};
+  QUc- & W+ & (<WALL> or CP+ or [()]);
 
 « 《 【 『  „:
-  <post-quote>;
+  QUd-;
 » 》 】 』 ` “:
-  QUc- & W+ & (CP+ or [()]);
+  <post-quote>;
 
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
 % CP or [()]: "Let's go!" she said.
-""": <post-quote> or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
+% Cannot use a blanket W+ here to pick up all W connectors,
+% since 
+""": QUd- or <post-quote> or [[ZZZ-]];
 
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin."
