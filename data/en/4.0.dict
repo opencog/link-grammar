@@ -2344,9 +2344,10 @@ per "/.per": Us+ & Mp-;
     or [[Wq- & PF+ & {@MV+} & {CC+}]]);
 
 % Relative clause, or question.
-% Qw- & <verb-wall>: "where are they?" -- verb must connect to wall.
-% Qd-: "does he drink?" -- Qd connects directly to wall.
-<verb-rq>: Rw- or ({Ic-} & (Qd- or (Qw- & <verb-wall>))) or [()];
+% Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
+% Qe-: "How many times did you do it?"
+% Qd-: "Does he drink?" -- Qd connects directly to wall.
+<verb-rq>: Rw- or ({Ic-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -2789,7 +2790,7 @@ is.v:
   [(<verb-x-s,u> &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
-        or [K+]
+        or [K+ & <verb-wall>]
         or BI+
         or OF+
         or (Osi+ & R+ & Bs+)
@@ -8011,6 +8012,15 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.1.p:
   <verb-pv> or <verb-phrase-opener>;
 
+% -----------------------------------------------------------------
+% wall connectors
+% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
+% The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
+%     insane?", "Are you the one?"
+% XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
+<wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
+<wi-wall>: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
+
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
 
@@ -8029,7 +8039,8 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+ or [[()]]) & QU+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QU+);
+  or ({@MV+} & (Xc+ or Xe+ or [[()]])
+    & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
@@ -9148,13 +9159,17 @@ whether_or_not:
 
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
+% (EAh+ or EEh+) & Ww-: "How big?" "How quickly?"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
-  or ({EW-} & Ww- & (({EL+} & Qw+) or AF+ or ()))
+  or ({EW-} & Ww- & [[()]])
+  or ({EW-} & Wq- & (({EL+} & Qw+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
-  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
+  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)))
+;
+%%%  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -9613,16 +9628,17 @@ n't n’t: N- or EB-;
 %
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
-%
+% (EAh- & {Qe+}): "How big?"  "How tall?"
 <ordinary-adj>:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or <adj-op>);
+    or <adj-op>))
+  or (EAh- & {Qe+});
 
 % PH-: connect, phonetically, to a/an if it is there.
 <ordinary-vowel-adj>:
@@ -10727,16 +10743,23 @@ occasionally.e often.e originally.e:
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently
 % COa+ prevents linking of these to relative causes (via COd- on CLAUSE)
+% (EEh- & {Qe+}): "How quickly?"
 <ordinary-adv>:
-  {EE- or EF+} &
-    (({Xd- & Xc+} & MVa-) or
-    Em+ or
-    ({Xc+ & {Xd-}} & COa+) or
-    Qe+ or
-    <advcl-verb> or
-    <adverb-join> or
-    [[EA+]]);
+  ({EE- or EF+} &
+    (({Xd- & Xc+} & MVa-)
+    or Em+
+    or ({Xc+ & {Xd-}} & COa+)
+    or Qe+
+    or <advcl-verb>
+    or <adverb-join>
+    or [[EA+]]))
+  or (EEh- & {Qe+});
 
+% XXX fixme: there are things in there, like "tall.e" that seem not to
+% belong??
+% XXX fixme: the Qe construction is weird:
+%    "How slickly did he talk?"
+%    "*How slickly did you say it was?"
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
 
@@ -11020,23 +11043,20 @@ EMOTICON :
 % The WV+ after the Xx+ allows the root verb after the punct to attach
 % to the wall.  e.g. "A woman lives next door, who is a nurse."
 % The naked WV+ without any W+ allows "that I did not know."
-% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
-% The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
-%     insane?", "Are you the one?"
 % Xy is for new sentences. "Who is Obama? Where was he born?"
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
+%
 <sent-start>:
-  ((Wa+ or Wi+ or Ww+ or Qd+) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+})
-  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+)
-    & <WALL> & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+});
+  (<wo-wall> or <wi-wall>) & {CP+} & {(Xx+ or Xp+) & {hWV+}} & {RW+ or Xp+};
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
 % virtual CAPs morphemes. (??)
+% (Xc+ or [()]): allow missing comma, but at a price.
 LEFT-WALL:
   <sent-start>
-  or (QU+ & <sent-start> & Xc+ & QUc+)
+  or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
@@ -11055,19 +11075,20 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % You were asking, "How might this work?" so I answered.
 % should thes be a <sent-start> ??? why not?
 <post-quote>:
-  QUd- & {W+ & <WALL>};
+  QUc- & {<wo-wall> or <wi-wall> or CP+};
 
 « 《 【 『  „:
-  <post-quote>;
+  QUd-;
 » 》 】 』 ` “:
-  QUc- & W+ & (CP+ or [()]);
+  <post-quote>;
 
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-% CP or [()]: "Let's go!" she said.
-""": <post-quote> or (QUc- & W+ & (CP+ or [()])) or [[ZZZ-]];
+% Cannot use a blanket W+ here to pick up all W connectors,
+% since 
+""": QUd- or <post-quote> or [[ZZZ-]];
 
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin."
@@ -11085,12 +11106,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
    or <sent-split>;
 
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
-% a semicolon. -- looks a lot like <sent-start>.  We do need Wa for commas
+% a semicolon. -- looks a lot like <sent-start>.  We do need Wa for comma's
 <semicol>:
-  {@Xca-} & Xx-
-    & (((Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+) & <WALL>)
-      or (Wa+ or Wi+ or Ww+ or Qd+))
-    & {Xx+};
+  {@Xca-} & Xx- & (<wo-wall> or <wi-wall>) & {Xx+};
 
 ";" ；: <semicol>;
 
@@ -11143,9 +11161,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % not.ij seems to result in bad parses quite often, do we need it?
 % Xx-: provides a better way of doing coordination, since it is not
 % head-verb crossing, the way that CC is.  Basically, CC is deprecated!
-%
+% Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & ([CC-] or Xx-) & {Xc+}
+  [{Xd-} & ([CC-] or Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
@@ -11212,7 +11230,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 "&": G- & {Xd- & G-} & G+;
 
-"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+"’" "": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 % Possessives
 "'s.p" "’s.p":

@@ -203,8 +203,9 @@ FORM_A_CYCLE_RULES:
 ; set in the 2nd column. The individual rules are demarcated by semicolons and
 ; the fields within a rule are demarcated by commas. 
 
+; XXX fixme -- Qd should be replaced by Qw in first four.
 CONTAINS_ONE_RULES:
- SI#*  ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion1" ,
+ SI#*  ,  Wq    Qd    Qw    CQ    PFc       , "Bad use of s-v inversion1" ,
  SI#x  ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion2" ,
  SFI##* , Wq    Qd    CQ    PFc             , "Bad use of s-v inversion3",
  SXI   ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion4" ,
@@ -215,25 +216,24 @@ CONTAINS_ONE_RULES:
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
  Mj    ,  Jw    JQ                          , "Incorrect relative10" ,
  MX#j  ,  Jw    JQ                          , "Incorrect relative11" ,
- Wj    ,  Jw    JQ                          , "Misuse of preposition12"     ,
- JQ    ,  Mj    Wj    MX#j                  , "Misuse of preposition13"     ,
- Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14"     ,
- B#j   ,  Jr                                , "Incorrect relative15"       ,
- Jr    ,  B#j                               , "Incorrect relative16"       ,
- EAh   ,  AF    Bsm    B*m    Qe    Ca    AFm              
-					    , "Incorrect use of 'how'17"    ,
- EEh   ,  AF    Bsm    B*m    Qe    Ca    AFm               
-					    , "Incorrect use of 'how'18"    ,
- Qe    ,  EEh           		    , "Incorrect use of adverb19"   ,
- THi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'20"  ,
- TSi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'21"   ,
- QIi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'22"    ,
- TOi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'23"     ,
- Ci    ,  SFsi   SFIsi   OXi                , "Complement requires 'it'24"     ,
- COqi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'25"     ,
- CPi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'26"     ,
- Eqi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'27"     ,
- LEi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'28"     ,
+ Wj    ,  Jw    JQ                          , "Misuse of preposition12" ,
+ JQ    ,  Mj    Wj    MX#j                  , "Misuse of preposition13" ,
+ Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14" ,
+ B#j   ,  Jr                                , "Incorrect relative15"    ,
+ Jr    ,  B#j                               , "Incorrect relative16"    ,
+; The wtwo below prevent "How big?" and "How quickly?"
+; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm     , "Incorrect use of 'how'17" ,
+; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm     , "Incorrect use of 'how'18"  ,
+ Qe    ,  EEh  EAh                          , "Incorrect use of adverb19"  ,
+ THi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'20" ,
+ TSi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'21" ,
+ QIi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'22" ,
+ TOi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'23" ,
+ Ci    ,  SFsi   SFIsi   OXi                , "Complement requires 'it'24" ,
+ COqi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'25" ,
+ CPi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'26" ,
+ Eqi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'27" ,
+ LEi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'28" ,
  MVti  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'29"     ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
@@ -304,18 +304,18 @@ CONTAINS_ONE_RULES:
 B#m  ,   D##w   H   HA                     , "Bad use of gerund68"   
 
 CONTAINS_NONE_RULES:
- S     ,  Spxi                  	    , "Bad n-v agreement69" ,
- SI     , SIpxi                		    , "Bad n-v agreement70" ,
- Ws    ,  B#m   Ca   BT      		    , "Question inversion violated71" ,
+ S     ,  Spxi                             , "Bad n-v agreement69" ,
+ SI     , SIpxi                            , "Bad n-v agreement70" ,
+ Ws    ,  B#m   Ca   BT                    , "Question inversion violated71" ,
  SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta         
-					    , "Bad use of 'filler' subject72" ,
+                                           , "Bad use of 'filler' subject72" ,
  SFI   ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta        
-					    , "Bad use of 'filler' subject73" ,
+                                           , "Bad use of 'filler' subject73" ,
  OX    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta        
-					    , "Bad use of 'filler' subject74" ,
- MXsr  ,  Sp#w 				    , "Bad n-v agreement75" ,
- MXpr  ,  Ss#w   S#iw			    , "Bad n-v agreement76" ,
- Mr    ,  B#*				    , "Bad use of 'whose'77"
+                                           , "Bad use of 'filler' subject74" ,
+ MXsr  ,  Sp#w                             , "Bad n-v agreement75" ,
+ MXpr  ,  Ss#w   S#iw                      , "Bad n-v agreement76" ,
+ Mr    ,  B#*                              , "Bad use of 'whose'77"
 
 
 ; ----------------------------------------------------------------------
