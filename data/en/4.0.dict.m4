@@ -2353,9 +2353,10 @@ per "/.per": Us+ & Mp-;
     or [[Wq- & PF+ & {@MV+} & {CC+}]]);
 
 % Relative clause, or question.
-% Qw- & <verb-wall>: "where are they?" -- verb must connect to wall.
-% Qd-: "does he drink?" -- Qd connects directly to wall.
-<verb-rq>: Rw- or ({Ic-} & (Qd- or (Qw- & <verb-wall>))) or [()];
+% Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
+% Qe-: "How many times did you do it?"
+% Qd-: "Does he drink?" -- Qd connects directly to wall.
+<verb-rq>: Rw- or ({Ic-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
