@@ -8041,12 +8041,13 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % example below.
 %
 % QU+ & <embed-verb> & QU+: He said, "This is it."
+% Xc+ or Xe+ or [[()]]: punctuation is commonly missing.
 <vc-paraph>:
   ({@MV+} & (Xc+ or Xp+) & CP- & {CC+})
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
-  or [{@MV+} & (Xc+ or Xe+) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+) & QU+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QU+);
+  or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
+  or ({@MV+} & (Xc+ or Xe+ or [[()]]) & QU+ & (<embed-verb> or Wi+ or Qd+) & {X+} & QU+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
