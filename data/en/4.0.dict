@@ -11008,9 +11008,10 @@ so_that such_that:
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
 please.e:
-{EE- or EF+} & (({Xd- & Xc+} & MVa-) or
-({Xc+ & {Xd-}} & (Em+ or CO+)) or
-Qe+ or <advcl-verb> or [[EA+]]);
+  {EE- or EF+} & (({Xd- & Xc+} & MVa-)
+  or ({Xc+ & {Xd-}} & ([Em+]0.1 or CO+))
+  or Qe+
+  or <advcl-verb> or [[EA+]]);
 
 % polite command verb
 please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
