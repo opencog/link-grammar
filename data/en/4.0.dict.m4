@@ -7108,7 +7108,7 @@ whether_or_not:
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
-  or ({EW-} & Ww- & (({EL+} & Qw+) or AF+ or ()))
+  or ({EW-} & Ww- & (({EL+} & Q+) or AF+ or [[()]]))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
