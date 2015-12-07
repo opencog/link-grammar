@@ -9100,9 +9100,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % not.ij seems to result in bad parses quite often, do we need it?
 % Xx-: provides a better way of doing coordination, since it is not
 % head-verb crossing, the way that CC is.  Basically, CC is deprecated!
-%
+% Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & ([CC-] or Xx-) & {Xc+}
+  [{Xd-} & ([CC-] or Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
