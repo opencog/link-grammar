@@ -2309,8 +2309,10 @@ per "/.per": Us+ & Mp-;
 <verb-adj>:  {@E-} & [A+]0.5;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
+% (<verb-wall> or [()].1): perfer a link to wall, if possible:
+%                         e.g. "you did send him that note!"
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or [()].1) & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
@@ -2372,7 +2374,7 @@ per "/.per": Us+ & Mp-;
 % Relative clause, or question.
 % Q-: "where are they?" -- verb must connect to wall.
 % Qd-: "does he drink?" -- Qd connects directly to wall.
-<verb-rq>: Rw- or ({Ic-} & (Qd- or (Q- & <verb-wall>))) or [()];
+<verb-rq>: Rw- or ({Ic-} & (Qd- or [Q- & <verb-wall>].1)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -5123,14 +5125,13 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % (): "I already gave", "I already gave at the office"
 % K+: "She gave in to him"
 <vc-give>:
-  (()
-    or K+
+  { K+
     or (B- & {O+ or K+})
     or <vc-opt-ditrans-costly>
     or (O+ & K+)
     or (K+ & {[[@MV+]]} & O*n+)
     or ([[@MV+ & O*n+]])
-  ) & {@MV+};
+  } & {@MV+};
 
 give.v send.v bring.v lend.v issue.v hand.v pour.v:
   VERB_PLI(<vc-give>);
@@ -7091,7 +7092,7 @@ when:
 % N+: "why not?"  "Why the hell not?"
 why:
   {EL+} & (
-    ({EW-} & Ww- & (Q+ or N+ or {()}))
+    ({EW-} & (Ww- or Wq-) & {Q+ or N+})
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or COa+
