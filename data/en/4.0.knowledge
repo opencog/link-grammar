@@ -203,7 +203,7 @@ FORM_A_CYCLE_RULES:
 ; set in the 2nd column. The individual rules are demarcated by semicolons and
 ; the fields within a rule are demarcated by commas. 
 
-; XXX fixme -- Qd should be replaced by Qw and Wq by Ww in first four.
+; XXX fixme -- Qd should be replaced by Qw in first four.
 CONTAINS_ONE_RULES:
  SI#*  ,  Wq    Qd    Qw    CQ    PFc       , "Bad use of s-v inversion1" ,
  SI#x  ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion2" ,
