@@ -7116,6 +7116,7 @@ whether_or_not:
 
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
+% (EAh+ or EEh+) & Ww-: "How big?" "How quickly?"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
@@ -7123,7 +7124,8 @@ how:
   or ({EW-} & Wq- & (({EL+} & Qw+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
-  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
+  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)))
+  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -7584,14 +7586,15 @@ n't n’t: N- or EB-;
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
 %
 <ordinary-adj>:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or <adj-op>);
+    or <adj-op>))
+  or (EAh- & {Qe+});
 
 % PH-: connect, phonetically, to a/an if it is there.
 <ordinary-vowel-adj>:
@@ -8706,6 +8709,11 @@ occasionally.e often.e originally.e:
     <adverb-join> or
     [[EA+]]);
 
+% XXX fixme: there are things in there, like "tall.e" that seem not to
+% belong??
+% XXX fixme: the Qe construction is weird:
+%    "How slickly did he talk?"
+%    "*How slickly did you say it was?"
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
 
