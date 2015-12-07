@@ -9168,7 +9168,8 @@ how:
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)))
-  or ((EAh+ or EEh+) & Ww-);
+;
+%%%  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -9627,7 +9628,7 @@ n't n’t: N- or EB-;
 %
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
-%
+% (EAh- & {Qe+}): "How big?"  "How tall?"
 <ordinary-adj>:
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
@@ -10742,15 +10743,17 @@ occasionally.e often.e originally.e:
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently
 % COa+ prevents linking of these to relative causes (via COd- on CLAUSE)
+% (EEh- & {Qe+}): "How quickly?"
 <ordinary-adv>:
-  {EE- or EF+} &
-    (({Xd- & Xc+} & MVa-) or
-    Em+ or
-    ({Xc+ & {Xd-}} & COa+) or
-    Qe+ or
-    <advcl-verb> or
-    <adverb-join> or
-    [[EA+]]);
+  ({EE- or EF+} &
+    (({Xd- & Xc+} & MVa-)
+    or Em+
+    or ({Xc+ & {Xd-}} & COa+)
+    or Qe+
+    or <advcl-verb>
+    or <adverb-join>
+    or [[EA+]]))
+  or (EEh- & {Qe+});
 
 % XXX fixme: there are things in there, like "tall.e" that seem not to
 % belong??
