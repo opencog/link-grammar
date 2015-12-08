@@ -1134,8 +1134,10 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 			for (j = 0; j < p_strippable; j++)
 			{
 				size_t prelen = strlen(prefix[j]);
-				/* The remaining w is too short for a possible match. */
-				if ((wend-w) - suflen < prelen) continue;
+				/* The remaining w is too short for a possible match.
+				 * NOTE: A zero length "stem" is not allowed here. In any
+				 * case, it cannot be handled (yet) by the rest of the code. */
+				if ((wend-w) - suflen <= prelen) continue;
 				if (strncmp(w, prefix[j], prelen) == 0)
 				{
 					size_t sz = MIN((wend-w) - suflen - prelen, MAX_WORD);
