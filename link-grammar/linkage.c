@@ -43,24 +43,25 @@
  * Append an unmarked (i.e. without INFIXMARK) morpheme to join_buff.
  * join_buff is a zeroed-out buffer which has enough room for morpheme to be
  * added + terminating NUL.
- * In case INFIXMARK is not defined in the affix file, it is '\0'. However,
- * in that case there are no MT_PREFIX, MT_SUFFIX and MT_MIDDLE morpheme types.
+ * Note that MT_PREFIX or MT_SUFFIX can be without an INFIX_MARK, in case
+ * INFIX_MARK is not defined. XXX: What about MT_MIDDLE? (not in use yet).
  *
  * FIXME Combining contracted words is not handled yet, because combining
  * morphemes which have non-LL links to other words is not yet implemented.
  */
-static void add_morpheme_unmarked(char *join_buff, const char *wm,
-                                  Morpheme_type mt)
+static void add_morpheme_unmarked(Sentence sent, char *join_buff,
+                                  const char *wm, Morpheme_type mt)
 {
+	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 	const char *sm =  strrchr(wm, SUBSCRIPT_MARK);
 
 	if (NULL == sm) sm = (char *)wm + strlen(wm);
 
-	if (MT_PREFIX == mt)
+	if ((MT_PREFIX == mt) && (infix_mark == sm[-INFIX_MARK_L]))
 		strncat(join_buff, wm, sm-wm-INFIX_MARK_L);
-	else if (MT_SUFFIX == mt)
+	else if ((MT_SUFFIX == mt) && (infix_mark == wm[0]))
 		strncat(join_buff, INFIX_MARK_L+wm, sm-wm-INFIX_MARK_L);
-	else if (MT_MIDDLE == mt)
+	else if ((MT_MIDDLE == mt))
 		strncat(join_buff, INFIX_MARK_L+wm, sm-wm-2*INFIX_MARK_L);
 	else
 		strncat(join_buff, wm, sm-wm);
@@ -80,7 +81,8 @@ static const char *join_null_word(Sentence sent, Gword **wgp, size_t count)
 	memset(join_buff, '\0', join_len+1);
 
 	for (i = 0; i < count; i++)
-		add_morpheme_unmarked(join_buff, wgp[i]->subword, wgp[i]->morpheme_type);
+		add_morpheme_unmarked(sent, join_buff, wgp[i]->subword,
+		                      wgp[i]->morpheme_type);
 
 	s = string_set_add(join_buff, sent->string_set);
 
@@ -105,7 +107,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	usubword = calloc(join_len+1, 1); /* zeroed out */
 
 	for (w = start; w <= end; w++)
-		add_morpheme_unmarked(usubword, (*w)->subword, (*w)->morpheme_type);
+		add_morpheme_unmarked(sent, usubword, (*w)->subword, (*w)->morpheme_type);
 
 	new_word = gword_new(sent, usubword);
 	free(usubword);
@@ -500,7 +502,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						/* 1. Join base words. (Could just use the unsplit_word.) */
 						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)
 						{
-							add_morpheme_unmarked(join, cdjp[i+m]->string,
+							add_morpheme_unmarked(sent, join, cdjp[i+m]->string,
 							                      (*wgaltp)->morpheme_type);
 						}
 
