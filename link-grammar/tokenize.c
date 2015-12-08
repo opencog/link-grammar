@@ -995,7 +995,8 @@ static bool add_alternative_with_subscr(Sentence sent,
 		}
 		else
 		{
-			/* This is a compound-word spell check. Reject unknown words. */
+			/* This is a compound-word spell check. Reject unknown words.
+			 * XXX: What if the word is capitalized? */
 			word_is_in_dict = boolean_dictionary_lookup(dict, word);
 		}
 	}
