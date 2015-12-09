@@ -965,6 +965,8 @@ error:
  * If unsplit_word is null, this function actually only checks whether
  * the alternative is valid as described above. This is used for checking
  * is a spell guess result if valid if the word itself is not in the dict.
+ * FIXME: If a word can split it doesn't follow it is a "real" dictionary
+ * word, as there can still be no links between some of its parts.
  *
  * Return true if the alternative is valid, else false.
  */
@@ -993,7 +995,8 @@ static bool add_alternative_with_subscr(Sentence sent,
 		}
 		else
 		{
-			/* This is a compound-word spell check. Reject unknown words. */
+			/* This is a compound-word spell check. Reject unknown words.
+			 * XXX: What if the word is capitalized? */
 			word_is_in_dict = boolean_dictionary_lookup(dict, word);
 		}
 	}
@@ -1038,11 +1041,6 @@ static bool add_alternative_with_subscr(Sentence sent,
  * It can also split contracted words (like he's).
  * Alternatives are generated if issue_alternatives=true.
  * Return value:
- * If issue_alternatives=true: true only if the word can morpheme-split.
- * If issue_alternatives=false: true only if the word can split.
- *
- * FIXME: If a word can split it doesn't follow it is a "real" dictionary word,
- * as there can still be no links between some of its parts.
  *
  * The prefix code is only lightly validated by actual use.
  *
@@ -1101,10 +1099,6 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 				 * In case we try to split a contracted word, the first word
 				 * may match a regex. Hence find_word_in_dict() is used and
 				 * not boolean_dictionary_lookup().
-				 * However, if this is a check whether the word is a known one
-				 * (argument issue_alternatives=false), we shouldn't allow words
-				 * which are not in the dict file.
-				 *
 				 * Note: Not like a previous version, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
 				if ((is_contraction_word(w) &&
@@ -1134,8 +1128,10 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 			for (j = 0; j < p_strippable; j++)
 			{
 				size_t prelen = strlen(prefix[j]);
-				/* The remaining w is too short for a possible match. */
-				if ((wend-w) - suflen < prelen) continue;
+				/* The remaining w is too short for a possible match.
+				 * NOTE: A zero length "stem" is not allowed here. In any
+				 * case, it cannot be handled (yet) by the rest of the code. */
+				if ((wend-w) - suflen <= prelen) continue;
 				if (strncmp(w, prefix[j], prelen) == 0)
 				{
 					size_t sz = MIN((wend-w) - suflen - prelen, MAX_WORD);
