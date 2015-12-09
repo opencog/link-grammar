@@ -8436,6 +8436,9 @@ to.r:
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
+care_of c/o:
+  MVp- & J+;
+
 % --------------------------------------------------------
 % Preps suggesting comparative relations, orderings
 

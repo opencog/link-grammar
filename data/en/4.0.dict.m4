@@ -6393,6 +6393,10 @@ to.r:
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
+% Mail addresses.
+care_of c/o:
+  MVp- & J+;
+
 % --------------------------------------------------------
 % Preps suggesting comparative relations, orderings
 
