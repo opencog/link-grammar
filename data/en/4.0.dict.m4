@@ -1325,7 +1325,7 @@ you:
 thou: Sp+ & <CLAUSE>;
 
 % Y'gotta, Y'gonna
-Y' y' y'all: Sp+ & <CLAUSE>;
+Y' y' y'all: (Sp+ & <CLAUSE>) or SIp-;
 
 % basilect you
 % Pg+: "yo leavin' already?" verb "are" is missing.

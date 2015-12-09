@@ -31,7 +31,8 @@
 
 % Prefixes
 % Y'gotta Y'gonna
-y': PRE+;
+% coffe w/milk
+y' w/: PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!

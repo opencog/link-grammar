@@ -2098,9 +2098,6 @@ He's out running.
 He's out for lunch.
 He's out on the town.
 
-% "I need help with that."
-I need help w/that.
-
 % as ....
 It is no longer portrayed as having the power to protect against sin.
 You are portrayed as having the power to make decisions.
@@ -2597,9 +2594,13 @@ We left w/o him.
 It comes w/o batteries.
 It comes with batteries.
 It comes w/ batteries.
+It comes w/batteries.
 The value is within parameters.
 The value is w/i parameters.
 
+% "I need help with that."
+I need help w/that.
+I take coffee w/milk.
 
 % Measurement units
 There is a nineteen minute gap in the tapes.
@@ -3666,6 +3667,7 @@ You gotta do it this way
 Y'got to do it this way
 Y'gotta do it this way
 I'm tellin' yo, y'gotta do it this way
+Are y'gonna do it?
 Well, I've been tryin' to esplain it to ya
 Well, I been tryin' to esplain it to ya
 
