@@ -9201,7 +9201,7 @@ that_there: Ds+;
 
 % (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
-because:
+because b/c bc cuz cos coz cause.j 'cause b'cause b'cuz bec bcoz:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-)))
   or (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-)))
   or (Rnx+ & <verb-wall> & <CLAUSE-E>);
