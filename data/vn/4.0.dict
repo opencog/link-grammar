@@ -276,3 +276,18 @@ và : ();
 lẽ_ra có_lẽ : CL+ or (DT_GT- & (GT_ĐT+ or GT_TT+));
 một_cách : ĐT_TT- & TT+;
 sau_đó ngày_nay vì_thế : CL+ & {ĐT_GT- or EV-};
+
+% Regex not supported.
+HMS-TIME: XXX-;
+DECADE-TIME: XXX-;
+DAY-ORDINALS: XXX-;
+ORDINALS: XXX-;
+NUMBERS: XXX-;
+FRACTION: XXX-;
+ROMAN-NUMERAL-WORDS: XXX-;
+INITIALS: XXX-;
+GREEK-LETTER-AND-NUMBER: XXX-;
+PL-GREEK-LETTER-AND-NUMBER: XXX-;
+CAPITALIZED-WORDS: XXX-;
+HYPHENATED-WORDS: XXX-;
+UNKNOWN-WORD: XXX-;
