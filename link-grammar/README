@@ -117,10 +117,6 @@ quote display.
 Not as in previous releases, capital letters which got downcased are not
 restored for display if the affected words have a linkage.
 
-The Boolean-SAT parser is now not functional (it segfaults), because it
-has not been converted yet to have word-graph word pointers in the
-disjunct structures.
-
 A new experimental handling of capital words using the dictionary has been
 introduced. It inserts the token 1stCAP before the uc version, and nonCAP before
 the lc one, as discussed in:
