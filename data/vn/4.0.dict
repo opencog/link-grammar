@@ -7,6 +7,11 @@
 % project; this includes a version of the link-grammar perser
 % written in Java.
 
+% Guide to links:
+% ĐT = động từ = verb
+% DT = danh từ = noun
+% TĐT=trước động từ=preceding verb
+
 % Danh từ
 bàn ghế giường áo quần sách quyển_sách báo nhà cửa
 người hổ voi chó mèo cá cá_vàng cá_chép rắn
