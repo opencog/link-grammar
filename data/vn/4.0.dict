@@ -15,7 +15,7 @@ sao trời cỏ cây hoa lá nước bố mẹ con anh chị
 em ông bà cô chú bác giờ lít thước tấc mét
 héc_ta tỉnh huyện xã phường phòng ban xe_đạp xe_máy
 tôi tao tớ hắn ta chúng_ta chúng_tôi mình chúng_mình
-mày mi chúng_mày cậu nó chúng_nó họ hắn sinh_viên
+mày mi chúng_mày cậu nó chúng_nó họ sinh_viên
 học_sinh giáo_viên lò_xo âm_mưu quân_sự vụ quan_hệ
 ngoại_giao độc_lập vùng lực_lượng mật_vụ đơn_vị tăng
 chuyện thông_tin áp_lực cuộc_chiến chữ ti_vi thủ_quân
@@ -25,7 +25,7 @@ bóng cầu_thủ thành_tích chuyên_môn tuổi trận câu_lạc_bộ
 điều quy_định vấn_đề lương thuế công_nhân hội_đồng
 tuyên_bố hành_động điểm chương_trình báo_cáo tháng bánh
 kẹo cổ_động_viên việc bản tương_lai bạn HLV mục_tiêu
-ông_chủ cách thời_gian lời quá_trình loài_người con_người
+ông_chủ cách thời_gian lời.n quá_trình loài_người con_người
 khả_năng nhiễm_sắc_thể gene tên chức_năng người_ta cá_thể
 đực loài chuột nháy_mắt bọ_ngựa lao tóm hồi chim_ruồi
 xác_chết máy_ảnh kiểu chim tự_nhiên côn_trùng chúng
@@ -69,7 +69,7 @@ cái chiếc tấm bộ con : TDT3+;
 
 % Trước danh từ 2
 những các mỗi mọi : TDT2+;
-từng : TDT2+ or TĐT2_1+ or TTT2_1+ or TST2_1+;
+% từng : TDT2+ or TĐT2_1+ or TTT2_1+ or TST2_1+;
 
 % Trước danh từ 1
 toàn_thể tất_thảy tất_cả toàn_bộ bất_kỳ : TDT1+;
@@ -104,7 +104,7 @@ ra vào theo sang :
 để : LT_ĐT+ & (TT_GT- or ĐT_GT- or SDT4- or ({PH+} & CL+));
 
 % Sau danh từ 6
-đó đấy kia ấy này đây : GT_DT- or SDT6- or DT_LA+;
+đó đấy kia ấy đây : GT_DT- or SDT6- or DT_LA+;
 thế : GT_DT- or SDT6- or DT_LA+ or ĐT_DT-;
 này : GT_DT- or SDT6-;
 
@@ -116,7 +116,7 @@ là :
 
 % Động từ
 đi đứng chạy ngồi bơi nhảy khóc cười rơi rụng
-mơ đi_làm ngủ đi_ngủ ăn_nói đồng_ý trò_chuyện
+mơ.w đi_làm ngủ đi_ngủ ăn_nói đồng_ý trò_chuyện
 nấu_ăn gắng đứng_dậy hành_xử giao_kèo ở_lại tiến_hóa
 sinh_sản vật_lộn tắt_thở rơi_xuống thụ_phấn phát_quang :
 % [v]
@@ -144,8 +144,8 @@ giúp sản_xuất phát_ra sử_dụng đưa sinh_hạ tìm_ra
    & {ĐT_LT+} & {THT- or THS+}
    & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-);
 
-nói biết hỏi xác_nhận bác_bỏ bảo cho_rằng khẳng_định
-cho_biết trả lời :
+nói biết hỏi.v xác_nhận bác_bỏ bảo cho_rằng khẳng_định
+cho_biết trả lời.v :
 % [v]
   ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-})
       or TT_ĐT-
@@ -156,7 +156,7 @@ cho_biết trả lời :
   & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-);
 
 % Động từ yêu cầu, sai khiến
-ra_lệnh bắt bắt_buộc ép nài_ép hỏi đòi_hỏi cấm cho_phép
+ra_lệnh bắt bắt_buộc ép nài_ép hỏi.w đòi_hỏi cấm cho_phép
 yêu_cầu đề_nghị kêu_gọi quyết_định cân_nhắc cảm_thấy :
 % [v]
   ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-})
@@ -166,7 +166,7 @@ yêu_cầu đề_nghị kêu_gọi quyết_định cân_nhắc cảm_thấy :
    & {THT- or THS+} & {EV+} & {SDT5- or CL-} & {CO-}) or ({DT_ĐT-} & BI-);
 
 % Động từ tình thái
-phải dám nỡ nên có_thể không_thể định :
+phải dám nỡ nên.v có_thể không_thể định :
 % [v]
   (({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {{TĐT4-} & TĐT3-} & {TĐT4-})
       or TT_ĐT-
@@ -175,7 +175,7 @@ phải dám nỡ nên có_thể không_thể định :
     & ({EV+} & {SDT5- or CL-} & {CO-});
 
 muốn cần thích sợ mong mong_chờ tiếc hối_tiếc
-sợ lo_lắng nhớ mơ ước quên kiên_nhẫn giận :
+lo_lắng nhớ mơ.v ước quên kiên_nhẫn giận :
 % [v]
   ((({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {{TĐT4-} & TĐT3-} & {TĐT4-})
       or TT_ĐT-
@@ -184,7 +184,7 @@ sợ lo_lắng nhớ mơ ước quên kiên_nhẫn giận :
     & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-);
 
 % Động từ chỉ sự bắt đầu, tiếp diễn
-bắt_đầu tiếp_tục thôi dừng kết_thúc dừng :
+bắt_đầu tiếp_tục thôi dừng kết_thúc :
 % [v]
   ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-})
       or TT_ĐT-
@@ -197,13 +197,13 @@ bắt_đầu tiếp_tục thôi dừng kết_thúc dừng :
 thường hay luôn : TĐT1+ or TTT1+ or TST1+;
 
 % Trước động từ 2.1 và tính từ 2.1
-không chẳng chưa chưa từng : TĐT2_1+ or TTT2_1+ or TST2_1+;
+không chẳng chưa chưa_từng : TĐT2_1+ or TTT2_1+ or TST2_1+;
 
 % Trước động từ 2.2 và tính từ 2.2
 rất hơi khá chỉ : TĐT2_2+ or TTT2_2+ or TST2_2+;
 
 % Trước động từ 3 và tính từ 3
-đã đang sẽ vừa mới sắp sắp sửa : TĐT3+ or TTT3+ or TST3+;
+đã đang sẽ vừa mới sắp sắp_sửa : TĐT3+ or TTT3+ or TST3+;
 
 % Trước động từ 4 và tính từ 4
 cũng vẫn còn cứ : TĐT4+ or TTT4+ or TST4+;
@@ -261,7 +261,7 @@ ai :
   {ĐT_DT- or SS_DT- or GT_DT- or DT_LA+ or DT_ĐT+ or DT_TT+ or DT_THI+} & {R-};
 
 % Các từ nối trong câu ghép
-tuy_nhiên nhưng nên cho_nên nhờ_đó : CL+ & (EV- or QHT-);
+tuy_nhiên nhưng nên.w cho_nên nhờ_đó : CL+ & (EV- or QHT-);
 bởi_vì vì : (GT_DT+ or CL+) & {PH+} & (EV- or (CO+ or QHT+));
 dù : CL+ & {PH+} & (EV- or (CO+ or QHT+));
 sau_khi khi : CL+ & {PH+} & (EV- or CO+);
