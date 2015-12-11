@@ -5,13 +5,13 @@
 # written in Java.
 
 # Danh từ
-bàn | ghế | giường | áo | quần | sách | quyển sách | báo | nhà | cửa | người | hổ | voi | chó | mèo | cá | cá vàng | cá chép | rắn | thằn lằn | đất | đá | gỗ | sắt | thép | núi | sông | biển | trăng | sao | trời | cỏ | cây | hoa | lá | nước | bố | mẹ | con | anh | chị | em | ông | bà | cô | chú | bác | giờ | lít | thước | tấc | mét | héc ta | tỉnh | huyện | xã | phường | phòng | ban | xe đạp | xe máy | tôi | tao | tớ | hắn | ta | chúng ta | chúng tôi | mình | chúng mình | mày | mi | chúng mày | cậu | nó | chúng nó | họ | hắn | sinh viên | học sinh | giáo viên | lò xo | âm mưu | quân sự | vụ | quan hệ | ngoại giao | độc lập | vùng | lực lượng | mật vụ | đơn vị | tăng | chuyện | thông tin | áp lực | cuộc chiến | chữ | ti vi | thủ quân | con đường | vô địch | trận đấu | cơ hội | danh hiệu | đội | mùa | bóng | cầu thủ | thành tích | chuyên môn | tuổi | trận | câu lạc bộ | đội tuyển | quốc gia | mùa giải | thử thách | phản ứng | tối hậu thư | điều | quy định | vấn đề | lương | thuế | công nhân | hội đồng | tuyên bố | hành động | điểm | chương trình | báo cáo | tháng | bánh | kẹo | cổ động viên | việc | bản | tương lai | bạn | HLV | mục tiêu | ông chủ | cách | thời gian | lời | quá trình | loài người | con người | khả năng | nhiễm sắc thể | gene | tên | chức năng | người ta | cá thể | đực | loài | chuột | nháy mắt | bọ ngựa | lao | tóm | hồi | chim ruồi | xác chết | máy ảnh | kiểu | chim | tự nhiên | côn trùng | chúng | nhóm | nguồn gốc | mật hoa | động vật | hoạt động | thực vật | sứa | cơ thể | mô | ánh sáng | phôi thai | khỉ | ống nghiệm | phôi | tử cung | khỉ cái | đứa con | nghiên cứu | bệnh truyền nhiễm | rối loạn | miễn dịch | thần kinh | bệnh | y học | con khỉ | giới | khoa học | lũ | con cháu | vật | thí nghiệm : [n] (SDT1- & {SDT1+}) or ({TDT3-} & {TDT2- or ST_DT-} & {TDT1-} & {SDT1+} & {SDT2+} & {SDT3+} & {SDT4+} & {SDT6+} & {{{MA+} & SDT5+} & (SS_DT- or DT_LA+)} & {{{MA+} & SDT5+} & (GT_DT- or ĐT_DT- or DT_ĐT+ or DT_TT+ or DT_THI+ or DT_LA+ or LA_DT-)})
+bàn | ghế | giường | áo | quần | sách | quyển_sách | báo | nhà | cửa | người | hổ | voi | chó | mèo | cá | cá vàng | cá_chép | rắn | thằn_lằn | đất | đá | gỗ | sắt | thép | núi | sông | biển | trăng | sao | trời | cỏ | cây | hoa | lá | nước | bố | mẹ | con | anh | chị | em | ông | bà | cô | chú | bác | giờ | lít | thước | tấc | mét | héc_ta | tỉnh | huyện | xã | phường | phòng | ban | xe_đạp | xe_máy | tôi | tao | tớ | hắn | ta | chúng_ta | chúng_tôi | mình | chúng_mình | mày | mi | chúng mày | cậu | nó | chúng_nó | họ | hắn | sinh_viên | học_sinh | giáo_viên | lò_xo | âm_mưu | quân_sự | vụ | quan_hệ | ngoại_giao | độc_lập | vùng | lực_lượng | mật_vụ | đơn_vị | tăng | chuyện | thông_tin | áp_lực | cuộc_chiến | chữ | ti_vi | thủ_quân | con_đường | vô_địch | trận_đấu | cơ_hội | danh_hiệu | đội | mùa | bóng | cầu_thủ | thành tích | chuyên_môn | tuổi | trận | câu_lạc_bộ | đội_tuyển | quốc_gia | mùa_giải | thử_thách | phản_ứng | tối_hậu_thư | điều | quy_định | vấn_đề | lương | thuế | công_nhân | hội_đồng | tuyên_bố | hành động | điểm | chương_trình | báo_cáo | tháng | bánh | kẹo | cổ_động_viên | việc | bản | tương_lai | bạn | HLV | mục_tiêu | ông_chủ | cách | thời_gian | lời | quá_trình | loài người | con_người | khả_năng | nhiễm sắc thể | gene | tên | chức_năng | người_ta | cá_thể | đực | loài | chuột | nháy_mắt | bọ_ngựa | lao | tóm | hồi | chim_ruồi | xác_chết | máy_ảnh | kiểu | chim | tự_nhiên | côn_trùng | chúng | nhóm | nguồn_gốc | mật_hoa | động_vật | hoạt_động | thực_vật | sứa | cơ_thể | mô | ánh_sáng | phôi_thai | khỉ | ống_nghiệm | phôi | tử_cung | khỉ_cái | đứa_con | nghiên_cứu | bệnh truyền nhiễm | rối_loạn | miễn dịch | thần_kinh | bệnh | y_học | con_khỉ | giới | khoa_học | lũ | con_cháu | vật | thí nghiệm : [n] (SDT1- & {SDT1+}) or ({TDT3-} & {TDT2- or ST_DT-} & {TDT1-} & {SDT1+} & {SDT2+} & {SDT3+} & {SDT4+} & {SDT6+} & {{{MA+} & SDT5+} & (SS_DT- or DT_LA+)} & {{{MA+} & SDT5+} & (GT_DT- or ĐT_DT- or DT_ĐT+ or DT_TT+ or DT_THI+ or DT_LA+ or LA_DT-)})
 
 # Danh từ tổng hợp
-đất đá | núi non | sông biển | trăng sao : [n] (SDT1- & {SDT1+}) or ({TDT1-} & {SDT1+} & {@SDT2+} & {SDT3+} & {SDT4+} & {{MA+} & SDT5+} & {SDT6+} & {SS_DT- or DT_LA+} & {GT_DT- or ĐT_DT- or DT_ĐT+ or DT_TT+ or DT_THI+})
+đất đá | núi_non | sông_biển | trăng sao : [n] (SDT1- & {SDT1+}) or ({TDT1-} & {SDT1+} & {@SDT2+} & {SDT3+} & {SDT4+} & {{MA+} & SDT5+} & {SDT6+} & {SS_DT- or DT_LA+} & {GT_DT- or ĐT_DT- or DT_ĐT+ or DT_TT+ or DT_THI+})
 
 # Tên riêng
-NAME | Tbilisi | Nga | Saakashvili | Gruzia | Arsenal | MU | Nou Camp | Fabregas | Seoul | Bình Nhưỡng | Bảo an | Liên Hợp Quốc | Kaka | Carlo Ancelotti | Chelsea | David Beckham | Paolo Maldini | Ancelotti | Roman Abramovich | San Siro | Man | City | Man City | Milan | Y | SRY | Trochilidae | châu Mỹ | protein | virus | Hideyuki Okano | Okano : (SDT1- & {SDT1+}) or ({SDT1+} & {@SDT2+} & {SDT4+} & {{{MA+} & SDT5+} & (SS_DT- or DT_LA+)} & {{{MA+} & SDT5+} & (GT_DT- or ĐT_DT- or DT_ĐT+ or @DT_TT+ or DT_THI+)})
+NAME | Tbilisi | Nga | Saakashvili | Gruzia | Arsenal | MU | Nou_Camp | Fabregas | Seoul | Bình_Nhưỡng | Bảo_an | Liên Hợp Quốc | Kaka | Carlo_Ancelotti | Chelsea | David_Beckham | Paolo_Maldini | Ancelotti | Roman_Abramovich | San_Siro | Man | City | Man_City | Milan | Y | SRY | Trochilidae | châu_Mỹ | protein | virus | Hideyuki_Okano | Okano : (SDT1- & {SDT1+}) or ({SDT1+} & {@SDT2+} & {SDT4+} & {{{MA+} & SDT5+} & (SS_DT- or DT_LA+)} & {{{MA+} & SDT5+} & (GT_DT- or ĐT_DT- or DT_ĐT+ or @DT_TT+ or DT_THI+)})
 
 # Trước danh từ 3
 cái | chiếc | tấm | bộ | con : TDT3+
@@ -21,10 +21,10 @@ những | các | mỗi | mọi : TDT2+
 từng : TDT2+ or TĐT2_1+ or TTT2_1+ or TST2_1+
 
 # Trước danh từ 1
-toàn thể | tất thảy | tất cả | toàn bộ | bất kỳ : TDT1+
+toàn thể | tất_thảy | tất_cả | toàn bộ | bất kỳ : TDT1+
 
 # Số từ
-một | hai | ba | 22 | 200 | 40 | 3 | vài | phần lớn | 9 | 5 : (({TST2_1- or TST2_2-} & {{TST4-} & TST3-} & {TST4-}) & {TST-}) & {DT_ĐT-} & ST_DT+
+một | hai | ba | 22 | 200 | 40 | 3 | vài | phần_lớn | 9 | 5 : (({TST2_1- or TST2_2-} & {{TST4-} & TST3-} & {TST4-}) & {TST-}) & {DT_ĐT-} & ST_DT+
 
 khoảng | chừng : TST+
 
@@ -34,7 +34,7 @@ bằng | về : (SDT3- or ĐT_GT- or TT_GT-) & GT_DT+
 # Sau danh từ 4
 của : SDT4- & GT_DT+
 
-dưới | trước | sau | ngoài | với | tại | trên | như | cho | đối với | trong : GT_DT+ & (TT_GT- or ĐT_GT- or SDT4- or ({PH+} & CL+))
+dưới | trước | sau | ngoài | với | tại | trên | như | cho | đối_với | trong : GT_DT+ & (TT_GT- or ĐT_GT- or SDT4- or ({PH+} & CL+))
 
 từ | bởi | cùng | khỏi : GT_DT+ & (TT_GT- or ĐT_GT- or ({PH+} & CL+))
 
@@ -51,22 +51,22 @@ này : GT_DT- or SDT6-
 là : (({TĐT1-} & {TĐT2_1-} & {TĐT3-} & {TĐT4-}) or TĐT5- or TT_ĐT-) & {DT_LA- or THI_ĐT-} & {LA_DT+ or ĐT_TT+}
 
 # Động từ
-đi | đứng | chạy | ngồi | bơi | nhảy | khóc | cười | rơi | rụng | mơ | đi làm | ngủ | đi ngủ | ăn nói | đồng ý | trò chuyện | nấu ăn | gắng | đứng dậy | hành xử | giao kèo | ở lại | tiến hóa | sinh sản | vật lộn | tắt thở | rơi xuống | thụ phấn | phát quang : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_LT+} & {THT- or THS+} & {EV+} & {SDT5- or CL-} & {CO-}) or ({DT_ĐT-} & BI-)
+đi | đứng | chạy | ngồi | bơi | nhảy | khóc | cười | rơi | rụng | mơ | đi làm | ngủ | đi_ngủ | ăn_nói | đồng_ý | trò_chuyện | nấu_ăn | gắng | đứng_dậy | hành xử | giao_kèo | ở_lại | tiến_hóa | sinh_sản | vật_lộn | tắt_thở | rơi_xuống | thụ_phấn | phát quang : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_LT+} & {THT- or THS+} & {EV+} & {SDT5- or CL-} & {CO-}) or ({DT_ĐT-} & BI-)
 
-tới | học | làm | ăn | đọc | viết | nghe | xem | gặp | thấy | đánh | đuổi | đợi | phát hiện | đảo chính | tấn công | cắt | công nhận | có | chịu | nuôi | đánh bật | chứng tỏ | giành | chấp nhận | ở | đạt | đợi chờ | chơi | tập trung | gọi | vạch | chỉ trích | đến | hoàn thành | trở thành | chọn | xảy ra | mất | mang | nhìn thấy | chống cự | lấy | chụp | xếp | thuộc | săn đuổi | giúp | sản xuất | phát ra | sử dụng | đưa | sinh hạ | tìm ra | điều trị | đối phó | truyền | tạo | hy vọng : [v] ((({TĐT1-} & {TĐT2_1-} & {TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT- or BI-} & {ĐT_XONG+} & {ĐT_DT+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_LT+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
+tới | học | làm | ăn | đọc | viết | nghe | xem | gặp | thấy | đánh | đuổi | đợi | phát_hiện | đảo_chính | tấn_công | cắt | công_nhận | có | chịu | nuôi | đánh_bật | chứng_tỏ | giành | chấp_nhận | ở | đạt | đợi_chờ | chơi | tập_trung | gọi | vạch | chỉ_trích | đến | hoàn thành | trở thành | chọn | xảy_ra | mất | mang | nhìn_thấy | chống_cự | lấy | chụp | xếp | thuộc | săn_đuổi | giúp | sản_xuất | phát_ra | sử_dụng | đưa | sinh_hạ | tìm_ra | điều_trị | đối_phó | truyền | tạo | hy vọng : [v] ((({TĐT1-} & {TĐT2_1-} & {TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT- or BI-} & {ĐT_XONG+} & {ĐT_DT+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_LT+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
 
-nói | biết | hỏi | xác nhận | bác bỏ | bảo | cho rằng | khẳng định | cho biết | trả lời : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_DT+ or R+ or CL+} & {ĐT_LT+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
+nói | biết | hỏi | xác_nhận | bác_bỏ | bảo | cho_rằng | khẳng_định | cho_biết | trả lời : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_DT+ or R+ or CL+} & {ĐT_LT+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
 
 # Động từ yêu cầu, sai khiến
-ra lệnh | bắt | bắt buộc | ép | nài ép | hỏi | đòi hỏi | cấm | cho phép | yêu cầu | đề nghị | kêu gọi | quyết định | cân nhắc | cảm thấy : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {CL+} & {ĐT_LT+ or ĐT_SS+} & {THT- or THS+} & {EV+} & {SDT5- or CL-} & {CO-}) or ({DT_ĐT-} & BI-)
+ra lệnh | bắt | bắt_buộc | ép | nài ép | hỏi | đòi_hỏi | cấm | cho_phép | yêu_cầu | đề_nghị | kêu_gọi | quyết_định | cân_nhắc | cảm thấy : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {CL+} & {ĐT_LT+ or ĐT_SS+} & {THT- or THS+} & {EV+} & {SDT5- or CL-} & {CO-}) or ({DT_ĐT-} & BI-)
 
 # Động từ tình thái
-phải | dám | nỡ | nên | có thể | không thể | định : [v] (({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or THI_ĐT- or LT_ĐT-} & ĐT_ĐT+ & {ĐT_LT+ or ĐT_SS+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})
+phải | dám | nỡ | nên | có_thể | không_thể | định : [v] (({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or THI_ĐT- or LT_ĐT-} & ĐT_ĐT+ & {ĐT_LT+ or ĐT_SS+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})
 
-muốn | cần | thích | sợ | mong | mong chờ | tiếc | hối tiếc | sợ | lo lắng | nhớ | mơ | ước | quên | kiên nhẫn | giận : [v] ((({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_DT+ or ĐT_ĐT+ or ĐT_TT+} & {SĐT+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
+muốn | cần | thích | sợ | mong | mong_chờ | tiếc | hối_tiếc | sợ | lo_lắng | nhớ | mơ | ước | quên | kiên_nhẫn | giận : [v] ((({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_DT+ or ĐT_ĐT+ or ĐT_TT+} & {SĐT+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
 
 # Động từ chỉ sự bắt đầu, tiếp diễn
-bắt đầu | tiếp tục | thôi | dừng | kết thúc | dừng : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {ĐT_DT+ or @ĐT_ĐT+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_LT+ or ĐT_SS+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
+bắt đầu | tiếp_tục | thôi | dừng | kết_thúc | dừng : [v] ((({TĐT1-} & {TĐT2_1-} & {{TĐT4-} & TĐT3-} & {TĐT4-}) or TT_ĐT- or ({TT_ĐT-} & TĐT5-)) & {DT_ĐT- or ĐT_ĐT- or THI_ĐT- or LT_ĐT-} & {ĐT_XONG+} & {ĐT_DT+ or @ĐT_ĐT+} & {ĐT_TT+} & {ĐT_GT+} & {ĐT_LT+ or ĐT_SS+} & {THT- or THS+} & ({EV+} & {SDT5- or CL-} & {CO-})) or ({DT_ĐT-} & BI-)
 
 # Trước động từ 1 và tính từ 1
 thường | hay | luôn : TĐT1+ or TTT1+ or TST1+
@@ -92,7 +92,7 @@ bị : (({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {TĐT3-} & {TĐT4-}) or TĐT5-) & {
 được : ((({TĐT1-} & {TĐT2_1- or TĐT2_2-} & {TĐT3-} & {TĐT4-}) or TĐT5-) & {DT_ĐT- or SDT5- or THI_ĐT- or LT_ĐT- or ĐT_ĐT-} & BI+ & {ĐT_LT+} & ({THT-} or {THS+} or ({EV+} & {CL-} & {CO-}))) or ĐT_XONG-
 
 # Tính từ
-tốt | đẹp | xấu | sạch | bẩn | đỏ | xanh | vàng | đen | trắng | thiếu | đủ | nhanh | chậm | hỏng | nóng | lạnh | mát | hấp dẫn | chính xác | nặng nề | ly khai | vui vẻ | thật | khó | sẵn sàng | tất nhiên | đáng | thất vọng | hài lòng | hiện tại | ở đây | hạnh phúc | gần | cuối cùng | chuyên nghiệp | lập tức | gay gắt | riêng | muộn | đắt | chăm | thấp | tuyệt vời | rõ ràng | chính thức | hoàn toàn | có thật | chung | đơn tính | quan trọng | có ích | hiện đại | hiệu quả | lùn : (({TTT1-} & {TTT2_1- or TTT2_2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TT_TT-) & {TT_TT+} & {DT_TT- or SDT2- or TT- or ĐT_TT- or THI_TT- or BI-} & {TT_ĐT+ or TT_GT+ or TT_LT+} & {STT+ or TT_SS+} & {THT- or THS+} & {EV+} & {CL-} & {CO-}
+tốt | đẹp | xấu | sạch | bẩn | đỏ | xanh | vàng | đen | trắng | thiếu | đủ | nhanh | chậm | hỏng | nóng | lạnh | mát | hấp_dẫn | chính_xác | nặng_nề | ly_khai | vui_vẻ | thật | khó | sẵn sàng | tất_nhiên | đáng | thất_vọng | hài lòng | hiện_tại | ở_đây | hạnh_phúc | gần | cuối_cùng | chuyên_nghiệp | lập_tức | gay_gắt | riêng | muộn | đắt | chăm | thấp | tuyệt_vời | rõ ràng | chính_thức | hoàn toàn | có_thật | chung | đơn_tính | quan_trọng | có_ích | hiện_đại | hiệu_quả | lùn : (({TTT1-} & {TTT2_1- or TTT2_2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TT_TT-) & {TT_TT+} & {DT_TT- or SDT2- or TT- or ĐT_TT- or THI_TT- or BI-} & {TT_ĐT+ or TT_GT+ or TT_LT+} & {STT+ or TT_SS+} & {THT- or THS+} & {EV+} & {CL-} & {CO-}
 
 nhiều | ít | tân : (({TTT1-} & {TTT2_1- or TTT2_2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TT_TT-) & (({TT_TT+} & {DT_TT- or SDT2- or ĐT_TT- or THI_TT- or BI-} & {TT_ĐT+ or TT_GT+} & {STT+ or TT_SS+} & {THT- or THS+} & ({EV+} & {CL-} & {CO-})) or ST_DT-)
 
@@ -125,7 +125,7 @@ khi nào | bao giờ: (THT+ or THS-) & {R-}
 ai : {ĐT_DT- or SS_DT- or GT_DT- or DT_LA+ or DT_ĐT+ or DT_TT+ or DT_THI+} & {R-}
 
 # Các từ nối trong câu ghép
-tuy nhiên | nhưng | nên | cho nên | nhờ đó : CL+ & (EV- or QHT-)
+tuy nhiên | nhưng | nên | cho_nên | nhờ đó : CL+ & (EV- or QHT-)
 bởi vì | vì : (GT_DT+ or CL+) & {PH+} & (EV- or (CO+ or QHT+))
 dù : CL+ & {PH+} & (EV- or (CO+ or QHT+))
 sau khi | khi : CL+ & {PH+} & (EV- or CO+)
