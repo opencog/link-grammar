@@ -2316,14 +2316,17 @@ per "/.per": Us+ & Mp-;
 
 <b-minus>: B*d- or B*j- or (B*w- & {<verb-wall>}) or (B*m- & <verb-wall>);
 
-<verb-ge>:
+<verb-ge-nos>:
   {@E-} & (
     <MX-PHRASE>
     or <OPENER>
-    or ({[DP-]} & Ss*g+ & <CLAUSE>)
     or ({[DP-]} & (SIs*g- or <costly-null>))
     or [DP- & J-]
     or [<fronted>]);
+
+<verb-ge>:
+  <verb-ge-nos>
+  or ({@E-} & {[DP-]} & Ss*g+ & <CLAUSE>);
 
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
@@ -3830,8 +3833,10 @@ cut.v:
   <verb-adj> or ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
+% <verb-ge-nos>: <vc-kick> has O+ in it; so must not have S+ in <verb-ge>
+%            "Carrying the box was a small child"
 /en/words/words.v.8.5:
-  (<vc-kick> & <verb-ge>) or
+  (<vc-kick> & <verb-ge-nos>) or
    <verb-ge-d>;
 
 % --------------------------------------------------------------
