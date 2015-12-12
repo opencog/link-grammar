@@ -286,10 +286,16 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	{
 		Match_node *m, *m1;
 		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
+#ifdef VERIFY_MATCH_LIST
+		int id = m ? m->d->match_id : 0;
+#endif
 		for (; m != NULL; m = m->next)
 		{
 			unsigned int lnull_cnt, rnull_cnt;
 			Disjunct * d = m->d;
+#ifdef VERIFY_MATCH_LIST
+			assert(id == d->match_id, "Modified id (%d!=%d)\n", id, d->match_id);
+#endif
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
 

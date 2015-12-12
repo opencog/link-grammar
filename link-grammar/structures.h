@@ -125,6 +125,9 @@ static inline const char * connector_get_string(Connector *c)
 	return c->string;
 }
 
+//#ifdef DEBUG
+#define VERIFY_MATCH_LIST
+//#endif
 struct Disjunct_struct
 {
 	Disjunct *next;
@@ -132,8 +135,12 @@ struct Disjunct_struct
 	Connector *left, *right;
 	double cost;
 	bool marked;               /* unmarked disjuncts get deleted */
-	bool match_left, match_right; /* used only during parsing */
 	const Gword **word;        /* NULL terminated list of originating words */
+	/* Used only during chart-parsing, for the match list. */
+	bool match_left, match_right;
+#ifdef VERIFY_MATCH_LIST
+	int match_id;              /* verify the match list integrity */
+#endif
 };
 
 typedef struct Match_node_struct Match_node;
