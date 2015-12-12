@@ -2296,8 +2296,12 @@ per "/.per": Us+ & Mp-;
 <verb-adj>:  {@E-} & [A+]0.5;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
+% [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
+%        allows a really weird subject-object inversion to proceed:
+%        e.g. "In the corner lay it" with it as object. That's just
+%        wrong... but this requires lots of places to fix.
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({[CO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & PF- & {<verb-wall>} & SI+;
@@ -3132,11 +3136,13 @@ lain.v: VERB_PP(<vc-bulge>);
 <vc-come>:
   ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus>} & {@MV+})
   or ({@MV+} & Pa+);
-come.v: VERB_PLI(<vc-come>) or
-  VERB_PP(<vc-come>) or
-  ({@E-} & Ix- & O*t+);
-comes.v: VERB_S_I(<vc-come>);
-came.v-d: VERB_SPPP_I(<vc-come>);
+come.v:
+  VERB_PLI(<vc-come>)
+  or VERB_PP(<vc-come>)
+  or ({@E-} & Ix- & O*t+)
+  or <verb-sip>;
+comes.v: VERB_S_I(<vc-come>) or <verb-si>;
+came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
 
 % --------------------------------------------------------------
 % optionally transitive verbs
@@ -6181,10 +6187,10 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 
 % Wj- & Qd+: questions: By what means will you arrive?
 <prep-main-a>:
-  <prep-main-b> or
-  (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-))) or
-  (Wj- & Qd+) or
-  <fronted>;
+  <prep-main-b>
+  or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
+  or (Wj- & Qd+)
+  or <fronted>;
 
 <prep-main-t>:
   <conjoin-preps> or
@@ -6315,15 +6321,20 @@ around:
   or [MVp- & B-]
   or [EN+] or MVa-;
 
-% "They ran the motor flat out"
+% K-: "They ran the motor flat out"
+flat_out: K-;
+
 % EN- & Pp-: "you are halfway out"
 % EN- & J-: "We stopped, about halfway up"
-out.r flat_out up.r down.r:
+% J+ & <fronted>: "Down the stairs came the dog"
+out.r up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-))
   or K-
   or ({Yd-} & Pp-)
   or (EN- & (Pp- or J-))
+  or (J+ & <fronted>)
   or [MVp- & B-];
+
 
 by:
   <alter-preps>
@@ -6430,7 +6441,11 @@ worth.p: (Mp- & (J+ or OF+)) or (Paf- & Mgp+) or (Pa- & (J+ or B-));
 opposite.p: J+ & <prep-main-b>;
 better_off worse_off: {EC-} & Pa- & {Pg+};
 
-off_of out_of:  ({JQ+} & J+ & <prep-main-b>) or [MVp- & B-];
+% J+ & <fronted>: "out of the tree fell the squirrel."
+off_of out_of:
+  ({JQ+} & J+ & <prep-main-b>)
+  or [MVp- & B-]
+  or (J+ & <fronted>);
 
 despite notwithstanding
 other_than apart_from aside_from:
@@ -6590,6 +6605,7 @@ over_here: Wi-;
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
 % Wi-: "There!"
+% <fronted>: "there lay the ball"
 there.r:
   J-
   or <prep-main-b>
@@ -7233,11 +7249,13 @@ ever_since:
 after:
   {EI- or Yt-}
     & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or <advcl-verb> or Qe+))
+      or (J+ & <fronted>)
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))));
 
 before:
   ({EI- or Yt-}
     & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
+      or (J+ & <fronted>)
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
   or (Yt- & (<advcl-verb> or Qe+));
 
