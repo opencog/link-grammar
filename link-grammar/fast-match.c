@@ -337,7 +337,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 #if 0
 /**
  * Print statistics on various connector matching aspects.
- * A summary can be found by the shell commans:
+ * A summary can be found by the shell commands:
  * link-parser < file.batch | grep match_stats: | sort | uniq -c
  */
 static void match_stats(Connector *c1, Connector *c2)
