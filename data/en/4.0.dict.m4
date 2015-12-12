@@ -2794,13 +2794,14 @@ hadn't.v-d hadn’t.v-d:
 % Unfortunately, this allows "There is chasing dogs", which pairs SFu to Op
 % and has to be removed via post-processing.
 % EQ: "Everyone knows that 2 + 2 is 4"
-% <verb-rq> & (SIs+ or SFIs+):  "Is it in place?")
+% <verb-rq> & (SIs*x+ or SFIs+):  "Is it in place?")
 % It does not use a wall, because Qd connects to the wall already.
+% SIs*x blocks SIs*g: "*There is chasing dogs"
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be-no-wall>})
+  or (<verb-rq> & (SIs*x+ or SFIs+) & {<vc-be-no-wall>})
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
 % Similar to above, but no S-O inversion, and no equation.
