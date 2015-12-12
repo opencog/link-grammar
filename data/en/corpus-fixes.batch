@@ -894,13 +894,13 @@ plenty of others thought so too
 
 % ===================================================================
 % Subject verb inversion
-% Examples from wikipedia
-% Currently, these all fail very badly.
+% Many examples from wikipedia
 
 % Archaic fairy-tale / children's book registers (inverted subject/object)
-Far out in the sea lived a fish.
+far out in the sea lived a fish.
 A fish lived far out in the sea.
 
+% Locative subject-object iversion
 under the tree sat Jim
 *Under the tree sat he.
 under the tree sits Jim, looking lonely
@@ -912,6 +912,7 @@ Along the riverbank grew some flowers.
 Along the riverbank grow some flowers.
 Beside Sally ran Jim
 
+% Direcitve subject-object inversion
 Down the stairs came the dog
 *Down the stairs came it.
 

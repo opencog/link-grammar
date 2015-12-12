@@ -3078,11 +3078,16 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 /en/words/words.v.1.1: VERB_PLI(({[[O+]]} & <vc-intrans>));
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
-/en/words/words.v.1.2: VERB_S_I(<vc-intrans>);
+% <verb-si>: Locative subj-obj inversion "far out in the sea lives a fish"
+% XXX Some but not all of these verbs allow inversion; should be sorted.
+/en/words/words.v.1.2:
+  VERB_S_I(<vc-intrans>)
+  or <verb-si>;
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
 /en/words/words.v.1.3:
-  VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
+  VERB_SPPP_I(({[[O+]]} & <vc-intrans>))
+  or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
 rusted.v-d:
@@ -9063,7 +9068,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
 % Cannot use a blanket W+ here to pick up all W connectors,
-% since 
+% since
 """: QUd- or <post-quote> or [[ZZZ-]];
 
 % Cost on Xc- because Xc is intended for commas, not periods.

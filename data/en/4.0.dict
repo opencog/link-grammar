@@ -3068,17 +3068,22 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
   ((({[[O+]]} & <vc-intrans>)) & <verb-and-pl+>));
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
-/en/words/words.v.1.2: 
+% <verb-si>: Locative subj-obj inversion "far out in the sea lives a fish"
+% XXX Some but not all of these verbs allow inversion; should be sorted.
+/en/words/words.v.1.2:
+  
   ((<verb-s> & (<vc-intrans>)) or
   (<verb-and-s-> & ([<vc-intrans>] or ())) or
-  ((<vc-intrans>) & <verb-and-s+>));
+  ((<vc-intrans>) & <verb-and-s+>))
+  or <verb-si>;
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
 /en/words/words.v.1.3:
   
   ((<verb-sp,pp> & (({[[O+]]} & <vc-intrans>))) or
   (<verb-and-sp-i-> & ([({[[O+]]} & <vc-intrans>)] or ())) or
-  ((({[[O+]]} & <vc-intrans>)) & <verb-and-sp-i+>));
+  ((({[[O+]]} & <vc-intrans>)) & <verb-and-sp-i+>))
+  or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
 rusted.v-d:
