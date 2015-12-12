@@ -274,6 +274,10 @@ nonCAP.zzz: ZZZ-;
 % We don't handle Ct,Cta in the above, because the AF and B link plays
 % the role of CV, connecting to the head-verb.
 
+% Fronted prepositional and participle phrases, used with
+% subject-object inversion.
+<fronted>: Wq- & PF+;
+
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 <directive-opener>:
   {[[Wa-]]} &
@@ -2236,7 +2240,7 @@ per "/.per": Us+ & Mp-;
 % <verb-pp>   : to past-participles
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
-%
+% <verb-si>   : subject inversion
 
 % <verb-wall>: these connect to the head verb:
 % WV connects the wall to the head-verb,
@@ -2295,6 +2299,8 @@ per "/.per": Us+ & Mp-;
 <verb-i>:    {@E-} & I- & <verb-wall>;
 <verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
+
+<verb-si>:   {@E-} & PF- & {<verb-wall>} & SI+;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
 % many transitive verb constructions.  For quetions, we need to force
@@ -3565,6 +3571,7 @@ cut.v:
   (<verb-ico> & <vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or ({K+} & <verb-phrase-opener>);
+
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 /en/words/words.v.8.5:
   (<vc-kick> & <verb-ge>) or
@@ -3837,8 +3844,8 @@ staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-stand>: {({@MV+} & Pa+) or ({O+ or <b-minus>} & {K+} & {@MV+})};
 stand.v sit.v: VERB_PLI(<vc-stand>);
-stands.v sits.v: VERB_S_T(<vc-stand>);
-stood.v-d sat.v-d: VERB_SPPP_T(<vc-stand>);
+stands.v sits.v: VERB_S_T(<vc-stand>) or <verb-si>;
+stood.v-d sat.v-d: VERB_SPPP_T(<vc-stand>) or <verb-si>;
 standing.v sitting.v: <verb-pg> & <vc-stand>;
 standing.g sitting.g: (<vc-stand> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 

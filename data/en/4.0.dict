@@ -2227,7 +2227,7 @@ per "/.per": Us+ & Mp-;
 % <verb-pp>   : to past-participles
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
-%
+% <verb-si>   : subject inversion
 
 % <verb-wall>: these connect to the head verb:
 % WV connects the wall to the head-verb,
@@ -2286,6 +2286,8 @@ per "/.per": Us+ & Mp-;
 <verb-i>:    {@E-} & I- & <verb-wall>;
 <verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
+
+<verb-si>:   {@E-} & PF- & {<verb-wall>} & SI+;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
 % many transitive verb constructions.  For quetions, we need to force
@@ -4313,12 +4315,12 @@ stands.v sits.v:
   ((<verb-s> & (<vc-stand>)) or
   (<verb-and-sp-i-> & ([<vc-stand>]0.2 or ())) or
   ((<vc-stand>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-si>;
 stood.v-d sat.v-d: 
   ((<verb-sp,pp> & (<vc-stand>)) or
   (<verb-and-sp-i-> & ([<vc-stand>]0.2 or ())) or
   ((<vc-stand>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-si>;
 standing.v sitting.v: <verb-pg> & <vc-stand>;
 standing.g sitting.g: (<vc-stand> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 
@@ -8436,6 +8438,7 @@ to.r:
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
+% Mail addresses.
 care_of c/o:
   MVp- & J+;
 
