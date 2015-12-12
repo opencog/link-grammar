@@ -2739,7 +2739,7 @@ hadn't.v-d hadn’t.v-d:
       or [K+]
       or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
-      or PF-
+      or (PF- & <verb-wall>)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
       or ([[()]] & <verb-wall>)) & {@MV+})
