@@ -2320,7 +2320,8 @@ per "/.per": Us+ & Mp-;
   {@E-} & (
     <MX-PHRASE>
     or <OPENER>
-    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
+    or ({[DP-]} & Ss*g+ & <CLAUSE>)
+    or ({[DP-]} & (SIs*g- or <costly-null>))
     or [DP- & J-]
     or [<fronted>]);
 
