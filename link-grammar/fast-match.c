@@ -475,7 +475,13 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+	/* The string field is initialized to NULL, and this is enough because
+	 * the connector string cannot be NULL, as it actually fetched a
+	 * non-empty match list. */
 	if (c_con->string == a->string) return c_con->match;
+#pragma GCC diagnostic pop
 
 	/* No cache exists. Check if the connectors match and cache the result. */
 	c_con->match = easy_match_list(a, b) && match_hd(a, b);
