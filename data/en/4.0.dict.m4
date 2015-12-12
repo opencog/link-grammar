@@ -2337,15 +2337,14 @@ per "/.per": Us+ & Mp-;
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
 % <noun-and-u>: allows use of gerunds as nouns.
-% VJ*g: ??? this is commented out, where would this occur?
 <verb-ge-d>:
   (<noun-modifiers> &
     (Dmu- or [[()]]) &
     (({[[Ds-]]} & OF+) or [[()]]) &
     ((<noun-sub-s> & {@MXs+} &
       ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
-     AJra- or AJla+ or
-     <noun-and-u>)) or
+      AJra- or AJla+ or
+      <noun-and-u>)) or
   [[AN+]];
 
 <verb-pg,ge>:
