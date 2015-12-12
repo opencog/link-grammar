@@ -334,12 +334,6 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	return ctxt;
 }
 
-typedef struct
-{
-	const char *string;
-	bool match;
-} match_cache;
-
 #if 0
 /**
  * Print statistics on various connector matching aspects.
@@ -374,72 +368,6 @@ static void match_stats(Connector *c1, Connector *c2)
 #else
 #define match_stats(a, b)
 #endif
-
-/**
- * Return false if the connectors cannot match due to identical
- * head/dependent parts. Else return true.
- */
-static bool match_hd(Connector *c1, Connector *c2)
-{
-	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
-	    (c1->string[0] == c2->string[0]))
-	{
-		return false;
-	}
-	return true;
-}
-
-/**
- * Compare two connectors, utilizing features of the match lists.
- * This function uses shortcuts to speed up the comparison.
- * Especially, we know that the uc parts of the connectors are the same,
- * because we fetch the matching lists according to the uc part or the
- * connectors to be matched. So the uc parts are not checked here.
- * The head/dependent indications are not checked here, but in the
- * caller function, to save CPU when the connectors don't match
- * otherwise. This is because h/d mismatch is rare.
- * FIXME: Use connector enumeration.
- */
-static bool easy_match_list(Connector *c1, Connector *c2)
-{
-	match_stats(c1, c2);
-
-	/* If the connectors are identical, they match. */
-	if (string_set_cmp(c1->string, c2->string)) return true;
-
-	/* If any of the connectors doesn't have a lc part, they match */
-	if ((0 == c2->lc_start) || (0 == c1->lc_start)) return true;
-
-	/* Compare the lc parts according to the connector matching rules. */
-	const char *a = &c1->string[c1->lc_start];
-	const char *b = &c2->string[c2->lc_start];
-	do
-	{
-		if (*a != *b && (*a != '*') && (*b != '*')) return false;
-		a++;
-		b++;
-	} while (*a != '\0' && *b != '\0');
-
-	return true;
-}
-
-/**
- * If the match result of connector a is cached - return it.
- * Else return the result of the actual matching - after caching it.
- */
-static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
-{
-	/* The following uses a string-set compare - string_set_cmp() cannot
-	 * be used here because c_con->string may be NULL. */
-	match_stats(c_con->string == a->string ? NULL : a, NULL);
-	if (c_con->string == a->string) return c_con->match;
-
-	/* No cache exists. Check if the connectors match and cache the result. */
-	c_con->match = easy_match_list(a, b) && match_hd(a, b);
-	c_con->string = a->string;
-
-	return c_con->match;
-}
 
 #ifdef DEBUG
 #undef N
@@ -483,6 +411,78 @@ static void print_match_list(int id, Match_node *m, int w,
 #else
 #define print_match_list(...)
 #endif
+
+/**
+ * Compare two connectors, utilizing features of the match lists.
+ * This function uses shortcuts to speed up the comparison.
+ * Especially, we know that the uc parts of the connectors are the same,
+ * because we fetch the matching lists according to the uc part or the
+ * connectors to be matched. So the uc parts are not checked here.
+ * The head/dependent indications are not checked here, but in the
+ * caller function, to save CPU when the connectors don't match
+ * otherwise. This is because h/d mismatch is rare.
+ * FIXME: Use connector enumeration.
+ */
+static bool easy_match_list(Connector *c1, Connector *c2)
+{
+	match_stats(c1, c2);
+
+	/* If the connectors are identical, they match. */
+	if (string_set_cmp(c1->string, c2->string)) return true;
+
+	/* If any of the connectors doesn't have a lc part, they match */
+	if ((0 == c2->lc_start) || (0 == c1->lc_start)) return true;
+
+	/* Compare the lc parts according to the connector matching rules. */
+	const char *a = &c1->string[c1->lc_start];
+	const char *b = &c2->string[c2->lc_start];
+	do
+	{
+		if (*a != *b && (*a != '*') && (*b != '*')) return false;
+		a++;
+		b++;
+	} while (*a != '\0' && *b != '\0');
+
+	return true;
+}
+
+/**
+ * Return false if the connectors cannot match due to identical
+ * head/dependent parts. Else return true.
+ */
+static bool match_hd(Connector *c1, Connector *c2)
+{
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		return false;
+	}
+	return true;
+}
+
+typedef struct
+{
+	const char *string;
+	bool match;
+} match_cache;
+
+/**
+ * If the match result of connector a is cached - return it.
+ * Else return the result of the actual matching - after caching it.
+ */
+static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
+{
+	/* The following uses a string-set compare - string_set_cmp() cannot
+	 * be used here because c_con->string may be NULL. */
+	match_stats(c_con->string == a->string ? NULL : a, NULL);
+	if (c_con->string == a->string) return c_con->match;
+
+	/* No cache exists. Check if the connectors match and cache the result. */
+	c_con->match = easy_match_list(a, b) && match_hd(a, b);
+	c_con->string = a->string;
+
+	return c_con->match;
+}
 
 /**
  * Forms and returns a list of disjuncts coming from word w, that
