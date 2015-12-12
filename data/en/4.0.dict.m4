@@ -2301,6 +2301,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & PF- & {<verb-wall>} & SI+;
+<verb-sip>:  {@E-} & PF- & {<verb-wall>} & SIp+;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
 % many transitive verb constructions.  For quetions, we need to force
@@ -3107,14 +3108,17 @@ arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 /en/words/words.v.5.3:
   VERB_SPPP_I(<vc-bulge>) or
   <verb-adj>;
-slunk.v-d: VERB_SPPP_I(<vc-bulge>);
 
-lay.v-d: VERB_SP_I(<vc-bulge>);
+slunk.v-d: VERB_SPPP_I(<vc-bulge>) or <verb-si>;
+
+lay.v-d: VERB_SP_I(<vc-bulge>) or <verb-si>;
+
 lain.v: VERB_PP(<vc-bulge>);
 /en/words/words.v.5.4:
   (<vc-bulge> & <verb-pg,ge>) or
   <verb-adj> or
   <verb-ge-d>;
+
 % --------------------------------------------------------------
 
 % irregular -- coming is in words.v.5.4 ...
@@ -3354,14 +3358,16 @@ run.v:
   or ({K+} & <verb-phrase-opener>);
 
 runs.v beats.v catches.v drives.v strikes.v:
-  VERB_S_T(<vc-run>);
+  VERB_S_T(<vc-run>)
+  or <verb-si>;
 
 % <verb-pv>: "He was struck by the bus"
 % <verb-pvk> with K+: "He was caught up in his work"
 % Pa+: "He was struck dumb"
 ran.v-d caught.v-d drove.v-d struck.v-d:
   VERB_SPPP_T(<vc-run>)
-  or (<verb-pvk> & {Pa+});
+  or (<verb-pvk> & {Pa+})
+  or <verb-si>;
 
 % XXX is all this stuff really necessary?
 beat.v-d:
@@ -3838,8 +3844,8 @@ gonna.v:
 % transitive: "stay the prisoner's execution"
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+}) or (O+ & {@MV+})};
 stay.v: VERB_PLI(<vc-stay>);
-stays.v: VERB_S_T(<vc-stay>);
-stayed.v-d: VERB_SPPP_T(<vc-stay>);
+stays.v: VERB_S_T(<vc-stay>) or <verb-si>;
+stayed.v-d: VERB_SPPP_T(<vc-stay>) or <verb-si>;
 staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-stand>: {({@MV+} & Pa+) or ({O+ or <b-minus>} & {K+} & {@MV+})};
@@ -4603,9 +4609,9 @@ remaining.v: <verb-pg> & <vc-remain>;
     or (K+ & {[[@MV+]]} & O*n+)
     or [[@MV+ & O*n+]]) & {@MV+});
 
-grow.v: VERB_PLI(<vc-grow>);
-grows.v: VERB_S_T(<vc-grow>);
-grew.v-d: VERB_SP_T(<vc-grow>);
+grow.v: VERB_PLI(<vc-grow>) or <verb-sip>;
+grows.v: VERB_S_T(<vc-grow>) or <verb-si>;
+grew.v-d: VERB_SP_T(<vc-grow>) or <verb-si>;
 grown.v:
   VERB_PP(<vc-grow>) or
   (<verb-pv-b> & {K+} & {@MV+}) or

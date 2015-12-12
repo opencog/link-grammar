@@ -2292,6 +2292,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & PF- & {<verb-wall>} & SI+;
+<verb-sip>:  {@E-} & PF- & {<verb-wall>} & SIp+;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
 % many transitive verb constructions.  For quetions, we need to force
@@ -3118,15 +3119,17 @@ arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
   (<verb-and-sp-i-> & ([<vc-bulge>] or ())) or
   ((<vc-bulge>) & <verb-and-sp-i+>)) or
   <verb-adj>;
+
 slunk.v-d: 
   ((<verb-sp,pp> & (<vc-bulge>)) or
   (<verb-and-sp-i-> & ([<vc-bulge>] or ())) or
-  ((<vc-bulge>) & <verb-and-sp-i+>));
+  ((<vc-bulge>) & <verb-and-sp-i+>)) or <verb-si>;
 
 lay.v-d: 
   ((<verb-sp> & (<vc-bulge>)) or
   (<verb-and-sp-i-> & ([<vc-bulge>] or ())) or
-  ((<vc-bulge>) & <verb-and-sp-i+>));
+  ((<vc-bulge>) & <verb-and-sp-i+>)) or <verb-si>;
+
 lain.v: 
   ((<verb-pp> & (<vc-bulge>)) or
   (<verb-and-had-> & ([<vc-bulge>] or ())) or
@@ -3135,6 +3138,7 @@ lain.v:
   (<vc-bulge> & <verb-pg,ge>) or
   <verb-adj> or
   <verb-ge-d>;
+
 % --------------------------------------------------------------
 
 % irregular -- coming is in words.v.5.4 ...
@@ -3487,7 +3491,8 @@ runs.v beats.v catches.v drives.v strikes.v:
   ((<verb-s> & (<vc-run>)) or
   (<verb-and-sp-i-> & ([<vc-run>]0.2 or ())) or
   ((<vc-run>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>)
+  or <verb-si>;
 
 % <verb-pv>: "He was struck by the bus"
 % <verb-pvk> with K+: "He was caught up in his work"
@@ -3498,7 +3503,8 @@ ran.v-d caught.v-d drove.v-d struck.v-d:
   (<verb-and-sp-i-> & ([<vc-run>]0.2 or ())) or
   ((<vc-run>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or (<verb-pvk> & {Pa+});
+  or (<verb-pvk> & {Pa+})
+  or <verb-si>;
 
 % XXX is all this stuff really necessary?
 beat.v-d:
@@ -4303,12 +4309,12 @@ stays.v:
   ((<verb-s> & (<vc-stay>)) or
   (<verb-and-sp-i-> & ([<vc-stay>]0.2 or ())) or
   ((<vc-stay>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-si>;
 stayed.v-d: 
   ((<verb-sp,pp> & (<vc-stay>)) or
   (<verb-and-sp-i-> & ([<vc-stay>]0.2 or ())) or
   ((<vc-stay>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-si>;
 staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-stand>: {({@MV+} & Pa+) or ({O+ or <b-minus>} & {K+} & {@MV+})};
@@ -5659,17 +5665,17 @@ remaining.v: <verb-pg> & <vc-remain>;
 grow.v: 
   ((<verb-pl,i> & (<vc-grow>)) or
   (<verb-and-pl-> & ((<vc-grow>) or ())) or
-  ((<vc-grow>) & <verb-and-pl+>));
+  ((<vc-grow>) & <verb-and-pl+>)) or <verb-sip>;
 grows.v: 
   ((<verb-s> & (<vc-grow>)) or
   (<verb-and-sp-i-> & ([<vc-grow>]0.2 or ())) or
   ((<vc-grow>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-si>;
 grew.v-d: 
   ((<verb-sp> & (<vc-grow>)) or
   (<verb-and-sp-i-> & ([<vc-grow>]0.2 or ())) or
   ((<vc-grow>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-si>;
 grown.v:
   
   ((<verb-pp> & (<vc-grow>)) or
