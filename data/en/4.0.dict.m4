@@ -276,7 +276,7 @@ nonCAP.zzz: ZZZ-;
 
 % Fronted prepositional and participle phrases, used with
 % subject-object inversion.
-<fronted>: Wq- & PF+;
+<fronted>: [Wq- & PF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 <directive-opener>:
@@ -1830,7 +1830,7 @@ not_enough:
     or AN+ or Yd+ or Ya+))
   or (NIfp- & {NIr-} & NItp+ & (
     NM- or AN+ or ({Xc+ & Xd-} & Ma-)
-    or (Wq- & PF+)
+    or <fronted>
     or MVp- or Pp- or FM-
     or (Xc+ & Xd- & (MVx- or MX-))));
 
@@ -2326,7 +2326,7 @@ per "/.per": Us+ & Mp-;
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
     or [DP- & J-]
-    or [[Wq- & PF+]]);
+    or [<fronted>]);
 
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
@@ -2348,7 +2348,7 @@ per "/.per": Us+ & Mp-;
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
     or [DP- & J-]
-    or [[Wq- & PF+ & {@MV+}]]
+    or [[<fronted> & {@MV+}]]
     or Mg-
     or Pg-);
 
@@ -2356,7 +2356,7 @@ per "/.per": Us+ & Mp-;
   {@E-} & {@MV+} & (
     <MX-PHRASE>
     or <OPENER>
-    or [[Wq- & PF+ & {@MV+} & {CC+}]]);
+    or [[<fronted> & {@MV+} & {CC+}]]);
 
 % Relative clause, or question.
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
@@ -2397,7 +2397,7 @@ per "/.per": Us+ & Mp-;
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
     or [DP- & J-]
-    or [[Wq- & PF+ & {@MV+}]]) & <verb-wall>);
+    or [[<fronted> & {@MV+}]]) & <verb-wall>);
 
 % Almost identical to the above, except that the verb attaches to the
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
@@ -6171,7 +6171,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   <prep-main-b> or
   (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-))) or
   (Wj- & Qd+) or
-  [Wq- & PF+];
+  <fronted>;
 
 <prep-main-t>:
   <conjoin-preps> or
@@ -6407,8 +6407,8 @@ care_of c/o:
 % --------------------------------------------------------
 % Preps suggesting comparative relations, orderings
 
-besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
-throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
+besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or <fronted>);
+throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or <fronted>);
 
 versus: (J+ & Mp-) or (G- & G+);
 vs: {Xi+} & G- & G+;
@@ -6545,7 +6545,7 @@ nowhere:
 near.p:
   ({EE- or EF+} & (
     <alter-preps>
-    or (J+ & (<prep-main-b> or FM- or [Wq- & PF+]))))
+    or (J+ & (<prep-main-b> or FM- or <fronted>))))
   or (EE- & {Xc+} & COp+)
   or (EE- & FM-);
 
@@ -6566,7 +6566,7 @@ all_over all_around:
   {J+} & (Mp- or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-);
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
-% or the more questionable [Wq- & PF+].  Note that (Wd- & PF+) is barred
+% or the more questionable <fronted>.  Note that (Wd- & PF+) is barred
 % by the post-processing rules.  Maybe PF is reasonable.. but SFst seems
 % better at the moment.
 here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
@@ -6596,7 +6596,7 @@ inside.r outside.r underneath alongside:
   or ({J+} & (<prep-main-b> or FM-));
 
 amid plus.p minus.p via onto:
-  J+ & (<prep-main-b> or [Wq- & PF+]);
+  J+ & (<prep-main-b> or <fronted>);
 
 % Bare-naked MVp-: "I want it back"
 back.r: ({Yd-} & K-) or (MVp+ & (MVp- or FM-)) or MVp-;
@@ -6605,12 +6605,12 @@ forth aside.p: K- or MVa-;
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
   <alter-preps> or
-  (J+ & (<prep-main-b> or FM- or [Wq- & PF+]));
+  (J+ & (<prep-main-b> or FM- or <fronted>));
 
 ahead_of by_way_of akin_to betwixt vis-a-vis in_lieu_of on_account_of
 in_place_of in_search_of:
   <alter-preps> or
-  (J+ & (<prep-main-b> or [Wq- & PF+]));
+  (J+ & (<prep-main-b> or <fronted>));
 
 % --------------------------------------------------------
 % More complex space-like prepositional phrases
@@ -6662,7 +6662,7 @@ upstream downstream 5' 3':
   ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} &
     (({Xc+ & Xd-} & (Ma- or MJra-)) or
     MJra+ or
-    (Wq- & PF+) or
+    <fronted> or
     MVp- or
     Pp- or
     FM- or
@@ -7086,7 +7086,7 @@ when:
   or (Mv- & <subcl-verb>)
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
-  or ({EW-} & Ww- & (Qw+ or PF+ or ()))
+  or ({EW-} & Ww- & {Qw+ or PF+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
@@ -8961,7 +8961,8 @@ so:
   (EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+))
-  or (Wq- & (PF+ or CQ+))
+  or <fronted>
+  or (Wq- & CQ+)
   or O-
   or Js-;
 
