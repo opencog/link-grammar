@@ -2344,7 +2344,7 @@ per "/.per": Us+ & Mp-;
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
     or [DP- & J-]
-    or [[<fronted> & {@MV+}]]
+    or [<fronted> & {@MV+}]
     or Mg-
     or Pg-);
 
@@ -2352,7 +2352,7 @@ per "/.per": Us+ & Mp-;
   {@E-} & {@MV+} & (
     <MX-PHRASE>
     or <OPENER>
-    or [[<fronted> & {@MV+} & {CC+}]]);
+    or [<fronted> & {@MV+} & {CC+}]);
 
 % Relative clause, or question.
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
@@ -2393,7 +2393,7 @@ per "/.per": Us+ & Mp-;
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
     or [DP- & J-]
-    or [[<fronted> & {@MV+}]]) & <verb-wall>);
+    or [<fronted> & {@MV+}]) & <verb-wall>);
 
 % Almost identical to the above, except that the verb attaches to the
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
