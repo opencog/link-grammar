@@ -4280,11 +4280,14 @@ go.v:
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
 % However, prefer Pg over O*t when possible...
 goes.v:
-  (<verb-y-s> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>))) or
-  (<verb-and-s-> & <vc-go>) or (<vc-go> & <verb-and-s+>);
+  (<verb-y-s> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>)))
+  or (<verb-and-s-> & <vc-go>)
+  or (<vc-go> & <verb-and-s+>);
 went.v-d:
-  (<verb-y-sp> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>))) or
-  (<verb-and-sp-i-> & <vc-go>) or (<vc-go> & <verb-and-sp-i+>);
+  (<verb-y-sp> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>)))
+  or (<verb-and-sp-i-> & <vc-go>)
+  or (<vc-go> & <verb-and-sp-i+>)
+  or <verb-si>;
 
 gone.v: 
   ((<verb-pp> & (<vc-go>)) or
@@ -8346,11 +8349,13 @@ through.r right_through straight_through:
   or K-
   or [MVp- & B-];
 
-across along: <prep-across>;
+across along: <prep-across> or <fronted>;
 
+% <fronted>: "off went the cavalry"
 off:
   <prep-across>
-  or (MVp+ & {Xc+ & {Xd-}} & COp+);
+  or (MVp+ & {Xc+ & {Xd-}} & COp+)
+  or <fronted>;
 
 past.p:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
@@ -8361,21 +8366,23 @@ around:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
   or K-
+  or MVa-
+  or <fronted>
   or [MVp- & B-]
-  or [EN+] or MVa-;
+  or [EN+];
 
 % K-: "They ran the motor flat out"
 flat_out: K-;
 
 % EN- & Pp-: "you are halfway out"
 % EN- & J-: "We stopped, about halfway up"
-% J+ & <fronted>: "Down the stairs came the dog"
+% {J+} & <fronted>: "Down the stairs came the dog", "Down came the dog".
 out.r up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-))
   or K-
   or ({Yd-} & Pp-)
   or (EN- & (Pp- or J-))
-  or (J+ & <fronted>)
+  or ({J+} & <fronted>)
   or [MVp- & B-];
 
 
@@ -10790,6 +10797,7 @@ occasionally.e often.e originally.e:
 % abjectly ably abnormally abortively abruptly absent-mindedly absently
 % COa+ prevents linking of these to relative causes (via COd- on CLAUSE)
 % (EEh- & {Qe+}): "How quickly?"
+% <fronted>: "Onward came the cavalry"
 <ordinary-adv>:
   ({EE- or EF+} &
     (({Xd- & Xc+} & MVa-)
@@ -10798,6 +10806,7 @@ occasionally.e often.e originally.e:
     or Qe+
     or <advcl-verb>
     or <adverb-join>
+    or <fronted>
     or [[EA+]]))
   or (EEh- & {Qe+});
 

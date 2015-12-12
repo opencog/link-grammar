@@ -113,6 +113,9 @@ It has a tensile toughness of 0.34 joules per cubic metre
 % Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.
 
+% Parses, but not correctly! "at once" should stick together.
+*They were at once shelled and fired on by the machine guns
+
 % ----------------------------------------------------------
 % Phonetics: distinguish a/an usage with vowels/consonants:
 *I ate a apple.
@@ -932,6 +935,9 @@ Under that tree sleeps only Larry.
 Into the room came two students
 Down the stairs came the dog
 *Down the stairs came it.
+
+At last the infantry were ready, and off went the cavalry to the right
+Onward went the cavalry, spurred to extraordinary exertion by the fact that provisions began to run short.
 
 A good gift is flowers
 *A good gift is they
