@@ -2870,7 +2870,7 @@ was.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>})
+  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>} & <verb-wall>)
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
