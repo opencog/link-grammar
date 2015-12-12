@@ -441,6 +441,49 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	return c_con->match;
 }
 
+#ifdef DEBUG
+#undef N
+#define N(c) (c?c->string:"")
+
+/**
+ * Print the match list, including connector match indications.
+ * Usage: link-parser -v=5 [-debug=print_match_list]
+ * Output format:
+ * MATCH_NODE list_id:  lw>lc   [=]   left<w>right   [=]    rc<rw
+ *
+ * Regretfully this version doesn't indicate which match shortcut have been
+ * used, and which nodes are from mr or ml or both (the full print version
+ * clutters the source code very much, as it needs to be inserted in plenty
+ * of places.)
+ *
+ * FIXME It is not clear to me why these printout are intermixed by stderr
+ * printouts, as prt_error() flushes stdout. For example:
+ *
+ * MATCH_NODE    49: 02>O*t       =        Os<04>                     <06
+ * link-grammar: Info: Total count with 0 null links:   4
+ * ++++Counted parses                          0.00 seconds
+ * MATCH_NODE    58: 00>RW        =        RW<05>                     <06
+ */
+static void print_match_list(int id, Match_node *m, int w,
+                             Connector *lc, int lw,
+                             Connector *rc, int rw)
+{
+	if (verbosity < 5) return;
+
+	for (; m != NULL; m = m->next)
+	{
+		Disjunct *d = m->d;
+
+		printf("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
+		       id, lw , N(lc), d->match_left ? '=': ' ',
+		       N(d->left), w, N(d->right),
+		       d->match_right? '=' : ' ', N(rc), rw);
+	}
+}
+#else
+#define print_match_list(...)
+#endif
+
 /**
  * Forms and returns a list of disjuncts coming from word w, that
  * actually matches lc or rc or both. The lw and rw are the words from
@@ -541,5 +584,6 @@ form_match_list(fast_matcher_t *ctxt, int w,
 #endif
 	}
 
+	print_match_list(lid, front, w, lc, lw, rc, rw);
 	return front;
 }
