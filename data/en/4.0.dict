@@ -3069,7 +3069,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
 % <verb-si>: Locative subj-obj inversion "far out in the sea lives a fish"
-% XXX Some but not all of these verbs allow inversion; should be sorted.
+% XXX Some but not all of these verbs allow inversion; basically,
+% anything that is not locative or directive won't allow inversion.
 /en/words/words.v.1.2:
   
   ((<verb-s> & (<vc-intrans>)) or
@@ -3117,13 +3118,14 @@ arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 /en/words/words.v.5.2: 
   ((<verb-s> & (<vc-bulge>)) or
   (<verb-and-s-> & ([<vc-bulge>] or ())) or
-  ((<vc-bulge>) & <verb-and-s+>));
+  ((<vc-bulge>) & <verb-and-s+>)) or <verb-si>;
 /en/words/words.v.5.3:
   
   ((<verb-sp,pp> & (<vc-bulge>)) or
   (<verb-and-sp-i-> & ([<vc-bulge>] or ())) or
-  ((<vc-bulge>) & <verb-and-sp-i+>)) or
-  <verb-adj>;
+  ((<vc-bulge>) & <verb-and-sp-i+>))
+  or <verb-adj>
+  or <verb-si>;
 
 slunk.v-d: 
   ((<verb-sp,pp> & (<vc-bulge>)) or
@@ -8623,7 +8625,10 @@ all_over all_around:
 % or the more questionable <fronted>.  Note that (Wd- & PF+) is barred
 % by the post-processing rules.  Maybe PF is reasonable.. but SFst seems
 % better at the moment.
-here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
+here: J- or <prep-main-b> or (SFst+ & <CLAUSE>) or <fronted>;
+
+% Wi-:  [come] Over here!
+over_here: Wi-;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
@@ -8634,6 +8639,7 @@ there.r:
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
   or SFIst-
   or SFIp-
+  or <fronted>
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
@@ -11111,7 +11117,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
 % Cannot use a blanket W+ here to pick up all W connectors,
-% since 
+% since
 """: QUd- or <post-quote> or [[ZZZ-]];
 
 % Cost on Xc- because Xc is intended for commas, not periods.

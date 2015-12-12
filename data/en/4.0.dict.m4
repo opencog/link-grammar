@@ -3079,7 +3079,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
 % <verb-si>: Locative subj-obj inversion "far out in the sea lives a fish"
-% XXX Some but not all of these verbs allow inversion; should be sorted.
+% XXX Some but not all of these verbs allow inversion; basically,
+% anything that is not locative or directive won't allow inversion.
 /en/words/words.v.1.2:
   VERB_S_I(<vc-intrans>)
   or <verb-si>;
@@ -3109,10 +3110,11 @@ arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v
 /en/words/words.v.5.1: VERB_PLI(<vc-bulge>);
-/en/words/words.v.5.2: VERB_S_I(<vc-bulge>);
+/en/words/words.v.5.2: VERB_S_I(<vc-bulge>) or <verb-si>;
 /en/words/words.v.5.3:
-  VERB_SPPP_I(<vc-bulge>) or
-  <verb-adj>;
+  VERB_SPPP_I(<vc-bulge>)
+  or <verb-adj>
+  or <verb-si>;
 
 slunk.v-d: VERB_SPPP_I(<vc-bulge>) or <verb-si>;
 
@@ -6580,7 +6582,10 @@ all_over all_around:
 % or the more questionable <fronted>.  Note that (Wd- & PF+) is barred
 % by the post-processing rules.  Maybe PF is reasonable.. but SFst seems
 % better at the moment.
-here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
+here: J- or <prep-main-b> or (SFst+ & <CLAUSE>) or <fronted>;
+
+% Wi-:  [come] Over here!
+over_here: Wi-;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
@@ -6591,6 +6596,7 @@ there.r:
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
   or SFIst-
   or SFIp-
+  or <fronted>
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;

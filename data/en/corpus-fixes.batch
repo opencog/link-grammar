@@ -912,12 +912,15 @@ Along the riverbank grew some flowers.
 Along the riverbank grow some flowers.
 Beside Sally ran Jim
 
+And so stays the situation.
+And so stayed the situation.
+
+Here lies the ball.
+There lay the ball.
+
 % Direcitve subject-object inversion
 Down the stairs came the dog
 *Down the stairs came it.
-
-And so stays the situation.
-And so stayed the situation.
 
 A good gift is flowers
 *A good gift is they
@@ -3592,6 +3595,10 @@ You bastard! she hissed.
 You!
 You bastard, you!
 That asshole!
+
+Over here!
+Come over here!
+John, over here!
 
 % Affirmative replies
 What did you see?
