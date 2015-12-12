@@ -417,9 +417,9 @@ static void print_match_list(int id, Match_node *m, int w,
  * This function uses shortcuts to speed up the comparison.
  * Especially, we know that the uc parts of the connectors are the same,
  * because we fetch the matching lists according to the uc part or the
- * connectors to be matched. So the uc parts are not checked here.
- * The head/dependent indications are not checked here, but in the
- * caller function, to save CPU when the connectors don't match
+ * connectors to be matched. So the uc parts are not checked here. The
+ * head/dependent indicators are in the caller function, and only when
+ * connectors match here, to save CPU when the connectors don't match
  * otherwise. This is because h/d mismatch is rare.
  * FIXME: Use connector enumeration.
  */
