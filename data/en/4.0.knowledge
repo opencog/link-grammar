@@ -207,10 +207,10 @@ FORM_A_CYCLE_RULES:
 CONTAINS_ONE_RULES:
  SI#*  ,  Wq    Qd    Qw    CQ    PFc       , "Bad use of s-v inversion1" ,
  SI#x  ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion2" ,
- SFI##* , Wq    Qd    CQ    PFc             , "Bad use of s-v inversion3",
+ SFI##* , Wq    Qd    CQ    PFc             , "Bad use of s-v inversion3" ,
  SXI   ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion4" ,
- Ws    ,  D##w    S##w    H                 , "S-V inversion required5",
- I#a   ,  B#m    B#w                        , "incorrect use of 'to'6"       ,
+ Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
+ I#a   ,  B#m   B#w                         , "incorrect use of 'to'6"  ,
  Wq    ,  SI    SFI   SXI                   , "S-V inversion required7" ,
  Qd    ,  SI    SFI   SXI                   , "S-V inversion required8" ,
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
@@ -221,9 +221,9 @@ CONTAINS_ONE_RULES:
  Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14" ,
  B#j   ,  Jr                                , "Incorrect relative15"    ,
  Jr    ,  B#j                               , "Incorrect relative16"    ,
-; The wtwo below prevent "How big?" and "How quickly?"
-; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm     , "Incorrect use of 'how'17" ,
-; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm     , "Incorrect use of 'how'18"  ,
+; The two below prevent "How big?" and "How quickly?"
+; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
+; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
  Qe    ,  EEh  EAh                          , "Incorrect use of adverb19"  ,
  THi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'20" ,
  TSi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'21" ,
@@ -237,7 +237,8 @@ CONTAINS_ONE_RULES:
  MVti  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'29"     ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
-; SFs, SFp SFu: force subject-object agreement for singular/plural/uncountable noun objects
+; SFs, SFp SFu: force subject-object agreement for
+; singular/plural/uncountable noun objects
  SFst  ,  O*t   Ost   Omt   Omm   Bs#t    B*#t    Bc#t    , "Bad use of 'there'32s"           ,
  SFp   ,  O*t   Opt   Omt   Omm   Bp#t    B*#t    Bc#t    , "Bad use of 'there'32p"           ,
  SFu   ,  O*t   Out   Omt   Omm   Bp#t    B*#t    Bc#t    , "Bad use of 'there'32u"           ,
