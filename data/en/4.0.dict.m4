@@ -276,7 +276,7 @@ nonCAP.zzz: ZZZ-;
 
 % Fronted prepositional and participle phrases, used with
 % subject-object inversion.
-<fronted>: [Wq- & PF+];
+<fronted>: [Wd- & PF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 <directive-opener>:
