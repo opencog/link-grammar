@@ -2832,7 +2832,7 @@ is.v:
     or ({Pp+} & Pg+)
     or Pv+
     or PP+))
-  or (SIs+ & PF-)
+  or (SIs+ & Qw- & <verb-wall>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)];
 
@@ -7132,11 +7132,11 @@ although in_as_much_as whilst whereas whereof wherein:
 % nouns to be in their own class...
 when:
   ((WN- or BIh-) & <subcl-verb>)
-  or ((PF+ or <ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+  or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
-  or ({EW-} & Ww- & {Qw+ or PF+})
+  or ({EW-} & Ww- & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
@@ -7159,12 +7159,12 @@ why:
 where:
   {EL+}
     & (
-      ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Qw+))
+      ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
-      or ((WR+ or <subcl-verb> or <ton-verb> or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
-      or ((<subcl-verb> or PF+ or WR+) & <prep-main-b>));
+      or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+      or ((<subcl-verb> or WR+) & <prep-main-b>));
 
 whether:
   ((QI- or BIq-) & (<subcl-verb> or <ton-verb>))
@@ -7404,7 +7404,7 @@ nor.j-m:
 % Conjoined question words.
 % When and where is the party?
 % How and why did you do that?
-and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
+and.j-q: (QJ- & QJ+) & ((Wq- & Q+) or QI-);
 
 % conjoined adverbs/prepositional phrases
 % RJ*v: adverbs
@@ -7639,7 +7639,7 @@ n't n’t: N- or EB-;
 
 % Common disjuncts shared by virtually all adjectives.
 <adj-op>:
-  [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]]
+  [{@E-} & {@MV+} & <fronted> & {@MV+} & {CC+}]
   or (AJra- & {@MV+})
   or ({@MV+} & AJla+)
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
