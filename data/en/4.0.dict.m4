@@ -275,8 +275,8 @@ nonCAP.zzz: ZZZ-;
 % the role of CV, connecting to the head-verb.
 
 % Fronted prepositional and participle phrases, used with
-% subject-object inversion.
-<fronted>: [Wd- & PF+];
+% subject-object inversion.  Wp connect to preps only.
+<fronted>: [Wp- & PF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 <directive-opener>:
@@ -6032,7 +6032,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 %     insane?", "Are you the one?"
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
-<wi-wall>: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
+<wi-wall>: (Wd+ or Wp+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
@@ -6626,7 +6626,7 @@ there.r:
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
   or SFIst-
   or SFIp-
-  or (Wd- & PFt+)
+  or (Wp- & PFt+)
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
@@ -7118,7 +7118,7 @@ whence whither:
 
 although in_as_much_as whilst whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
-  or ({Xd-} & CC- & Wd+);
+  or ({Xd-} & CC- & (Wd+ or Wp+));
 
 % QI- & (): "I do not know when"
 % (Mv- & Cs+): "an examination when it happened revealed chicanery"
@@ -7292,7 +7292,7 @@ if_possible if_necessary:
 if_so:
   ({Xc+ & {Xd-}} & CO+);
 
-no_wonder: Wd+ & Wc-;
+no_wonder: (Wd+ or Wp+) & Wc-;
 
 while:
   ((<subcl-verb> or Mgp+ or Mp+)
@@ -7600,8 +7600,8 @@ neither.r:
   or (Wa- & {OF+});
 
 nor.r: ((Xd- & CC-) or Wd-) & Qd+;
-for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
-yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
+for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Wp+ or Qd+ or Ws+ or Wq+)]];
+yet.r: ((({Xd-} & CC-) or Wc-) & (Wd+ or Wp+)) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
 thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or
 ({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
@@ -8865,7 +8865,7 @@ in_fact of_course in_effect for_example for_instance e.g. i.e. :
   or ({Xc+ & {Xd-}} & CO+)
   or (EB- & {Xc+})
   or (Xd- & EB- & Xc+)
-  or ({Xd-} & CC- & Wd+);
+  or ({Xd-} & CC- & (Wd+ or Wp+));
 
 % -----------------------------------------------------------
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
@@ -9014,7 +9014,7 @@ too:
 so:
   (EAxk+ & {HA+})
   or ({EZ-} & EExk+)
-  or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+))
+  or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Qd+ or Ws+ or Wq+))
   or <fronted>
   or (Wq- & CQ+)
   or O-

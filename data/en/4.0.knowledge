@@ -62,7 +62,7 @@ URFL_ONLY_DOMAIN_STARTER_LINKS:  SFsx   Ss#g   COp
 
 DOMAIN_CONTAINS_LINKS: 
  Mg*   Mx   Bsd   MX#a   Ma#*   Mv*   MX#r   Ss#d   Ws   Wq  Qd   Mj   Wj 
- Wi  MX#j   AFd   PFc   Jr   Wd   Mr
+ Wi  MX#j   AFd   PFc   Jr   Wd   Wp   Mr
 
 
 
@@ -205,8 +205,8 @@ FORM_A_CYCLE_RULES:
 
 ; XXX fixme -- Qd should be replaced by Qw in first four.
 CONTAINS_ONE_RULES:
- SI#*  ,  Wq    Qd    Qw    CQ    PFc  Wd   , "Bad use of s-v inversion1" ,
- SI#x  ,  Wq    Qd    CQ    PFc   Wd        , "Bad use of s-v inversion2" ,
+ SI#*  ,  Wq    Qd    Qw    CQ    PFc  Wp   , "Bad use of s-v inversion1" ,
+ SI#x  ,  Wq    Qd    CQ    PFc   Wp        , "Bad use of s-v inversion2" ,
  SFI##* , Wq    Qd    CQ    PFc             , "Bad use of s-v inversion3" ,
  SXI   ,  Wq    Qd    CQ    PFc             , "Bad use of s-v inversion4" ,
  Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
