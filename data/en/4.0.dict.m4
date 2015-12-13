@@ -7496,6 +7496,9 @@ or.j-n:
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
 %     a cost only because its a kind of a strange construction ...
 % SJl- & SJr+ & SJl+: cascading nor's: "Neither snow nor rain nor heat..."
+% SI- can be singular or plural: for example:
+% "There is neither a dog nor a cat here"
+% "Are neither John nor I invited?"
 nor.j-n:
   SJl- & (XJn- or [()]) & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJl+);
 
