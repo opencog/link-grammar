@@ -6620,13 +6620,16 @@ over_here: Wi-;
 % EN- & J-: "we stopped about halway there"
 % Wi-: "There!"
 % <fronted>: "there lay the ball"
+% Well, except that 'fronted' converts some illegal parses into
+% SV inversions e.g. "there are a dog and cat here".
+% Basically, we need a differnt kind of PF for "are"...
 there.r:
   J-
   or <prep-main-b>
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
   or SFIst-
   or SFIp-
-  or <fronted>
+ %  or <fronted>
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
