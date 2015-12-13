@@ -2742,7 +2742,7 @@ hadn't.v-d hadn’t.v-d:
       or [K+]
       or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
-      or (PF- & <verb-wall>)
+      or (PFb- & <verb-wall>)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
       or ([[()]] & <verb-wall>)) & {@MV+})
@@ -2757,7 +2757,7 @@ hadn't.v-d hadn’t.v-d:
 % constructions, so that WV links to the "and.j-v" instead of "be".
 %
 <vc-be-no-obj-no-wall>:
-  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
+  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PFb- or
       (Osi+ & R+ & Bs+) or
       (Opi+ & R+ & Bp+) or
       [[()]]) & {@MV+}) or
@@ -2814,7 +2814,7 @@ is.v:
 % <verb-x-s,u> & PP+: "He's gone to Boston"  (viz "He has gone to Boston")
 % But also, some contractions are prohibited:
 % *That's just the kind of person he's -- so: Ss- & PF- not allowed
-% SIs+ & PF-: "Where's the ball?"
+% SIs+ & PFb-: "Where's the ball?"
 's.v ’s.v:
   [(<verb-x-s,u> &
     (({@EBm+} & (((
@@ -6608,9 +6608,8 @@ all_over all_around:
   {J+} & (Mp- or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-);
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
-% or the more questionable <fronted>.  Note that (Wd- & PF+) is barred
-% by the post-processing rules.  Maybe PF is reasonable.. but SFst seems
-% better at the moment.
+% or the more questionable <fronted>.  Maybe PF is reasonable.. but
+% SFst seems better at the moment.
 here: J- or <prep-main-b> or (SFst+ & <CLAUSE>) or <fronted>;
 
 % Wi-:  [come] Over here!
@@ -6619,17 +6618,15 @@ over_here: Wi-;
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
 % Wi-: "There!"
-% <fronted>: "there lay the ball"
-% Well, except that 'fronted' converts some illegal parses into
-% SV inversions e.g. "there are a dog and cat here".
-% Basically, we need a differnt kind of PF for "are"...
+% Wd- & PFt+: "there lay the ball"; the PFt+ prevents connections to
+%             the PFb- on <vc-be>.
 there.r:
   J-
   or <prep-main-b>
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
   or SFIst-
   or SFIp-
- %  or <fronted>
+  or (Wd- & PFt+)
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
