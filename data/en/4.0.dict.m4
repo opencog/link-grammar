@@ -3235,8 +3235,8 @@ judging.g:
 
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v:VERB_PLI(<vc-rise>);
-rises.v falls.v: VERB_S_I(<vc-rise>);
-rose.v-d fell.v-d: VERB_SPPP_I(<vc-rise>);
+rises.v falls.v: VERB_S_I(<vc-rise>) or <verb-si>;
+rose.v-d fell.v-d: VERB_SPPP_I(<vc-rise>) or <verb-si>;
 
 risen.v: VERB_PP(<vc-rise>);
 

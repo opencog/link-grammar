@@ -3321,11 +3321,11 @@ rise.v fall.v:
 rises.v falls.v: 
   ((<verb-s> & (<vc-rise>)) or
   (<verb-and-s-> & ([<vc-rise>] or ())) or
-  ((<vc-rise>) & <verb-and-s+>));
+  ((<vc-rise>) & <verb-and-s+>)) or <verb-si>;
 rose.v-d fell.v-d: 
   ((<verb-sp,pp> & (<vc-rise>)) or
   (<verb-and-sp-i-> & ([<vc-rise>] or ())) or
-  ((<vc-rise>) & <verb-and-sp-i+>));
+  ((<vc-rise>) & <verb-and-sp-i+>)) or <verb-si>;
 
 risen.v: 
   ((<verb-pp> & (<vc-rise>)) or
