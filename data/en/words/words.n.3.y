@@ -81,6 +81,8 @@ brilliance.n-u
 brutality.n-u
 buoyancy.n-u
 bureaucracy.n-u
+calm.n-u
+calmness.n-u
 capability.n-u
 captivity.n-u
 catholicity.n-u
@@ -598,6 +600,7 @@ purity.n-u
 pusillanimity.n-u
 putty.n-u
 quality.n-u
+quiet.n-u
 quince.n-u
 radiance.n-u
 radioactivity.n-u

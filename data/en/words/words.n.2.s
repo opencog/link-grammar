@@ -8841,6 +8841,7 @@ rites.n
 rituals.n
 rivalries.n
 rivals.n
+riverbanks.n
 riverbeds.n
 riversides.n
 rivers.n

@@ -36,6 +36,10 @@ I did not understand one smidgin of that lecture. Not one whit.
 Not one tittle. Not one whit.
 I'm getting a bad vibe from this.
 
+An eerie silence befell the room
+an eerie calm settled down on the room
+an eerie quiet preceded the explosion.
+he had an easy calmness about him
 
 % Verbs that didn't have corresponding nouns -- bop.v was clobbering bop.n
 I like the sound of bop.
@@ -108,6 +112,9 @@ It has a tensile toughness of 0.34 joules per cubic metre
 % Parses, but not correctly!
 % Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.
+
+% Parses, but not correctly! "at once" should stick together.
+*They were at once shelled and fired on by the machine guns
 
 % ----------------------------------------------------------
 % Phonetics: distinguish a/an usage with vowels/consonants:
@@ -894,36 +901,61 @@ plenty of others thought so too
 
 % ===================================================================
 % Subject verb inversion
-% Examples from wikipedia
-% Currently, these all fail very badly.
+% Many examples from wikipedia
 
 % Archaic fairy-tale / children's book registers (inverted subject/object)
-Far out in the sea lived a fish.
+far out in the sea lived a fish.
 A fish lived far out in the sea.
 
+% Locative subject-object iversion
 under the tree sat Jim
 *Under the tree sat he.
+under the tree sits Jim, looking lonely
 
 beside the river sat Jim
 beside the river ran Jim
-Along the vines lay Jim
+Along the riverbank lay some smooth stones.
+Along the riverbank grew some flowers.
+Along the riverbank grow some flowers.
+for along the riverbank grow some flowers.
+yet along the riverbank grow some flowers.
 Beside Sally ran Jim
 
+And so stays the situation.
+And so stayed the situation.
+
+Here lies the ball.
+There lay the ball.
+And so there lay the matter, until Jill decided to challenge him.
+Beneath, there lay in mobile contiguity the essential elements of living matter.
+No matter what the motive was, there the money lay
+There lay the reason for the groans.
+
+In the corner lay a lamp.
+*In the corner lay it.
+
+Under that tree sleeps only Larry.
+
+% Direcitve subject-object inversion
+Into the room came two students
 Down the stairs came the dog
 *Down the stairs came it.
 
+At last the infantry were ready, and off went the cavalry to the right
+Onward went the cavalry, spurred to extraordinary exertion by the fact that provisions began to run short.
+
 A good gift is flowers
 *A good gift is they
-
-% Locative inversion
-In the corner lay a lamp.
-*In the corner lay it.
 
 % Directive inversion
 Into the room came two students.
 *Into the room came they.
 Out of the tree fell the squirrel.
 *Out of the tree fell it.
+
+After the speeches came the toasts
+Before the storm came an eerie quiet
+Before the storm came an eerie calm
 
 % comparative inversion
 It was too difficult a question.
@@ -1597,6 +1629,8 @@ I wonder why you said that?
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
+% "How big a dog is it?" should parse .. and it does, but the
+% parse is incorrect, so we put a * in front, for now.
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -2109,6 +2143,8 @@ You come across as authoritative.
 He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
 
+There it lay, inert matter, as it had always lain, since the beginning of time.
+There it lay, as it had always lain, since the beginning of time.
 
 % Problems with "go":
 Let's go shop.
@@ -3586,6 +3622,10 @@ You!
 You bastard, you!
 That asshole!
 
+Over here!
+Come over here!
+John, over here!
+
 % Affirmative replies
 What did you see?
 A red car.
@@ -4488,7 +4528,7 @@ Maybe it works now...
 % See wikipedia article on gapping
 Should I attempt to call you, or you me?
 
-% The below parses, but parses incorrectly.
+% The below parses (as it should), but parses incorrectly.
 *Susan likes to work the late shift, and Sam the early shift.
 
 % Compound queries
@@ -4576,7 +4616,7 @@ Mike finished in first place, and John in last.
 The teacher's shouting startled the student.
 
 % "and so" is linked with Wq, should not be.
-% i.e. this parses, but incorrectly
+% i.e. this parses(as it should), but incorrectly
 *Rama ate the apple, and so did Mohan.
 
 % Automatic possesive guessing broken when entity is in the dictionary:
@@ -4661,6 +4701,7 @@ There's plenty more where that came from.
 % --------------------------------------------------------------------
 % sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
+% viz they should parse,
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
 *He was so foolish as to lie.
@@ -4670,7 +4711,6 @@ There's plenty more where that came from.
 *Fuck off and have a great day, twit!
 *Fuck off and have a great day, jerk!
 
-% Use to parse incorrectly, but looks OK to me now ...
 I slipped on the ice as I ran home.
 
 % --------------------------------------------------------------------
