@@ -2155,7 +2155,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	/* OK, now try to strip affixes. */
 	word_can_split = morpheme_split(sent, unsplit_word, word);
 
-	if (!word_is_known)
+	/* If the word is unknown, then try to guess its category by regexes.
+	 * A word that can split is considered known, unless it is a contraction,
+	 * in which case we need a regex for things like 1960's.
+	 * The first regex which matches (if any) is used.
+	 * An alternative consisting of the word has already been generated. */
+	if (!word_is_known && (!word_can_split || is_contraction_word(word)))
 	{
 		const char *regex_name = match_regex(dict->regex_root, word);
 		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
