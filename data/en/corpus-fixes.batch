@@ -1624,6 +1624,8 @@ I wonder why you said that?
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
+% "How big a dog is it?" should parse .. and it does, but the
+% parse is incorrect, so we put a * in front, for now.
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -4519,7 +4521,7 @@ Maybe it works now...
 % See wikipedia article on gapping
 Should I attempt to call you, or you me?
 
-% The below parses, but parses incorrectly.
+% The below parses (as it should), but parses incorrectly.
 *Susan likes to work the late shift, and Sam the early shift.
 
 % Compound queries
@@ -4607,7 +4609,7 @@ Mike finished in first place, and John in last.
 The teacher's shouting startled the student.
 
 % "and so" is linked with Wq, should not be.
-% i.e. this parses, but incorrectly
+% i.e. this parses(as it should), but incorrectly
 *Rama ate the apple, and so did Mohan.
 
 % Automatic possesive guessing broken when entity is in the dictionary:
@@ -4692,6 +4694,7 @@ There's plenty more where that came from.
 % --------------------------------------------------------------------
 % sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
+% viz they should parse,
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
 *He was so foolish as to lie.
@@ -4701,7 +4704,6 @@ There's plenty more where that came from.
 *Fuck off and have a great day, twit!
 *Fuck off and have a great day, jerk!
 
-% Use to parse incorrectly, but looks OK to me now ...
 I slipped on the ice as I ran home.
 
 % --------------------------------------------------------------------
