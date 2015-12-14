@@ -7295,8 +7295,9 @@ if_so:
 
 no_wonder: (Wd+ or Wp+ or Wr+) & Wc-;
 
+% Pa+: "it can be pressed into shape while cold"
 while:
-  ((<subcl-verb> or Mgp+ or Mp+)
+  ((<subcl-verb> or Mgp+ or Mp+ or Pa+)
     & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)));
 
 <adverb-join>: RJlv+ or RJrv-;
