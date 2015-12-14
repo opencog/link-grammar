@@ -995,19 +995,26 @@ static bool possible_connection(prune_context *pc,
 	/* Two deep connectors can't work */
 	if ((lc->word > rword) || (rc->word < lword)) return false;
 
-	assert(lword < rword, "Bad word order in possible connection.");
+	dist = rword - lword;
+	// assert(0 < dist, "Bad word order in possible connection.");
 
 	/* Word range constraints */
-	if (lword == rword-1) {
+	if (1 == dist)
+	{
 		if (!((lc->next == NULL) && (rc->next == NULL))) return false;
 	}
 	else
+	if (dist > lc->length_limit || dist > rc->length_limit)
+	{
+		return false;
+	}
 	/* If the words are NOT next to each other, then there must be
 	 * at least one intervening connector (i.e. cannot have both
 	 * lc->next amnd rc->next being null).  But we only enforce this
 	 * when we think its still possible to have a complete parse,
 	 * i.e. before well allow null-linked words.
 	 */
+	else
 	if ((!pc->null_links) &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
@@ -1015,9 +1022,6 @@ static bool possible_connection(prune_context *pc,
 	{
 		return false;
 	}
-
-	dist = rword - lword;
-	if (dist > lc->length_limit || dist > rc->length_limit) return false;
 
 	return easy_match(lc->string, rc->string);
 }
