@@ -1955,7 +1955,8 @@ twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
 thirty-first.ti DAY-ORDINALS.ti: TM-;
 
 % Years w/o apostrophe: e.g. 47 Ford Fairlane or 57 Chevy
-01 02 03 040 05 06 07 08 09: <date-id> or [[G+]];
+01 02 03 04 05 06 07 08 09: <date-id> or [[G+]];
+% 10-31 are month-days, treated above.
 32 33 34 35 36 37 38 39
 40 41 42 43 44 45 46 47 48 49
 50 51 52 53 54 55 56 57 58 59
