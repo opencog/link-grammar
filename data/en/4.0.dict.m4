@@ -8289,8 +8289,9 @@ much:
 
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;
-significantly substantially: ({EE- or EF+} &
-(EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+))) or ({EE-} & EB-);
+significantly substantially:
+  ({EE- or EF+} & (EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+)))
+  or ({EE-} & EB-);
 
 % comparative adjectives
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
@@ -8603,7 +8604,10 @@ more_and_more less_and_less more_or_less: Em+ or Wa-;
 % with a noun-form (as opposed to being verb-derived) A lot of these are
 % of the "-ically" form
 /en/words/words.adv.3:
-EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} & CO+);
+  EA+
+  or ({Xd- & Xc+} & (E+ or MVa-))
+  or EBm-
+  or ({{Xd-} & Xc+} & CO+);
 
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 % academically administratively aesthetically
@@ -8665,10 +8669,17 @@ short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
 %ADVERBS USABLE POST-VERBALLY OR PRE-VERBALLY
 properly.e: ({Xd- & Xc+} & MVa-) or Em+;
 
+% XXX??? This is a proper subset of the connectors in <ordinary-adv>
+% but why?  Why narrow it like this?
 finely specially literally heavily alternately severely dearly
-voluntarily dramatically flatly purposely jointly narrowly
-universally thickly widely: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or
-Qe+ or <advcl-verb> or [[EA+]]);
+voluntarily flatly purposely jointly universally thickly widely:
+  {EE- or EF+} &
+    (({Xd- & Xc+} & MVa-)
+    or Em+
+    or Qe+
+    or <advcl-verb>
+    or [[EA+]]);
+
 respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
@@ -8765,10 +8776,12 @@ occasionally.e often.e originally.e:
 % COa+ prevents linking of these to relative causes (via COd- on CLAUSE)
 % (EEh- & {Qe+}): "How quickly?"
 % <fronted>: "Onward came the cavalry"
+% ECa+: "It is vastly cheaper"
 <ordinary-adv>:
   ({EE- or EF+} &
     (({Xd- & Xc+} & MVa-)
     or Em+
+    or ECa+
     or ({Xc+ & {Xd-}} & COa+)
     or Qe+
     or <advcl-verb>
