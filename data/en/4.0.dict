@@ -2722,6 +2722,7 @@ hadn't.v-d hadn’t.v-d:
 %     must leave the field" cannot take a wall.
 % [I*v+].2: the cost should maybe be evenn higher, to avoid linking
 %     past-tense 'were' to infinitives. "The rooms were let."
+% PFb- & <verb-wall> & Pa+: "cheaper than direct, slime is greener."
 
 <vc-be-no-obj>:
   ({@EBm+} & ((
@@ -2729,13 +2730,13 @@ hadn't.v-d hadn’t.v-d:
       or [K+]
       or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
-      or (PFb- & <verb-wall>)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
       or ([[()]] & <verb-wall>)) & {@MV+})
     or (<verb-wall> & Pp+ & {THi+ or @MV+})
     or THb+
     or <to-verb>
+    or (PFb- & <verb-wall> & {Pa+})
     or (Pa+ & {<verb-wall>})))
   or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
@@ -10338,13 +10339,15 @@ significantly substantially:
 
 % comparative adjectives
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
+% Wd- & MVt+ & Xc+ & PFb+: subject-verb inversion:
+%       "cheaper than dirt, slime is better"
 <comp-adj>:
-  ({ECa-} &
-    (((Pam- or Mam- or AFm+ or AJrc-) & {@MV+}) or
-    ({[[@Ec-]]} & {Xc+} & Am+) or
-    AJlc+))
-  or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)))
-  or (Wd- & MVt+ & {Xc+} & PFb+ );
+  ({ECa-} & (
+    ((Pam- or Mam- or AFm+ or AJrc-) & {@MV+})
+    or ({[[@Ec-]]} & {Xc+} & Am+)
+    or (Wd- & MVt+ & Xc+ & PFb+)
+    or AJlc+))
+  or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
 

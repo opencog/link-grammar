@@ -2735,6 +2735,7 @@ hadn't.v-d hadn’t.v-d:
 %     must leave the field" cannot take a wall.
 % [I*v+].2: the cost should maybe be evenn higher, to avoid linking
 %     past-tense 'were' to infinitives. "The rooms were let."
+% PFb- & <verb-wall> & Pa+: "cheaper than direct, slime is greener."
 
 <vc-be-no-obj>:
   ({@EBm+} & ((
@@ -2742,13 +2743,13 @@ hadn't.v-d hadn’t.v-d:
       or [K+]
       or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
-      or (PFb- & <verb-wall>)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
       or ([[()]] & <verb-wall>)) & {@MV+})
     or (<verb-wall> & Pp+ & {THi+ or @MV+})
     or THb+
     or <to-verb>
+    or (PFb- & <verb-wall> & {Pa+})
     or (Pa+ & {<verb-wall>})))
   or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
