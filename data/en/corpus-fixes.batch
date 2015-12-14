@@ -1896,7 +1896,7 @@ John is rather incomparably smarter.
 It's a rather inherently better method.
 John is quite certainly a better choice.
 
-% But sometimes we modify teh comparative, instead:
+% But sometimes we modify the comparative, instead:
 it is vastly cheaper
 it is dramatically cheaper
 
@@ -4007,6 +4007,12 @@ There will be a lot fewer yet much larger fish as a result.
 he ran the longest and the farthest
 he ran the longest and farthest
 he ran the slowest but the farthest
+
+It is less costly and lighter
+It is lighter and less costly
+It is good enough and lighter
+It is cheaper and good enough
+
 
 % some idiomatic comparative-like expressions
 That will more and more be the case

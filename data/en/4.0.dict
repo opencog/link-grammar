@@ -10002,6 +10002,7 @@ clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
 clear.i: {EA- or EF+} & Vm- & TH+;
 sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
 
+% (AJrc- & {@MV+}): "It is lighter and less costly"
 tactful.a conventional.a advisable.a prudent.a sensible.a tactless.a polite.a
 impolite.a arrogant.a conceited.a obnoxious.a valuable.a reasonable.a
 unreasonable.a traditional.a unnecessary.a tempting.a usual.a
@@ -10015,13 +10016,14 @@ mandatory.a meaningless.a preferable.a senseless.a trivial.a
 wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}}) or
-    ({@MV+} & {<toi-verb> & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
+    or ({@MV+} & {<toi-verb> & {LE+}} & MJla+)
+    or AA+
+    or <adj-op>
+    or (AJrc- & {@MV+})
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]);
 
 unknown.a questionable.a:
   {EA- or EF+} &
