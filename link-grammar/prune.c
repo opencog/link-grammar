@@ -1038,6 +1038,8 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	C_list *cl;
 	power_table *pt;
 
+	if (word_c - w > c->length_limit) return false;
+
 	pt = pc->pt;
 	size = pt->r_table_size[w];
 	h = connector_hash(c) & (size-1);
@@ -1062,6 +1064,8 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	unsigned int size, h;
 	C_list *cl;
 	power_table *pt;
+
+	if (w - word_c > c->length_limit) return false;
 
 	pt = pc->pt;
 	size = pt->l_table_size[w];
