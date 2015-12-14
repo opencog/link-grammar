@@ -8302,7 +8302,7 @@ significantly substantially:
   ({ECa-} & (
     ((Pam- or Mam- or AFm+ or AJrc-) & {@MV+})
     or ({[[@Ec-]]} & {Xc+} & Am+)
-    or (Wd- & MVt+ & Xc+ & PFb+)
+    or (Wd- & {@MV+} & MVt+ & Xc+ & PFb+)
     or AJlc+))
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
