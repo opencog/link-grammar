@@ -14,6 +14,7 @@
 #include "api-structures.h"
 #include "externs.h"
 #include "fast-match.h"
+#include "string-set.h"
 #include "word-utils.h"
 
 /**
@@ -203,6 +204,59 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 }
 
 /**
+ * Validate that the uppercase part of two connectors are the same.
+ * Return true if so, false otherwise.
+ * FIXME: Use connector enumeration.
+ */
+static bool con_uc_eq(const Connector *c1, const Connector *c2)
+{
+
+	if (string_set_cmp(c1->string, c2->string)) return true;
+	if (c1->hash != c2->hash) return false;
+	if (c1->uc_length != c1->uc_length) return false;
+
+	const char *uc1 = &c1->string[c1->uc_start];
+	const char *uc2 = &c2->string[c2->uc_start];
+	/* We arrive here for less than 50% of the cases for "en" and
+	 * less then 20% of the cases for "ru", and the following
+	 * condition is always true.
+	 * How come 2 different uc strings never have the same hash value? */
+	if (0 == strncmp(uc1, uc2, c1->uc_length)) return true;
+
+	return false;
+}
+
+static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
+                                          Connector * c, int dir)
+{
+		unsigned int h, s;
+
+		s = h = connector_hash(c) & (size-1);
+
+		if (dir == 1) {
+			while (NULL != t[h])
+			{
+				if (con_uc_eq(t[h]->d->right, c)) break;
+				h = (h + 1) & (size-1);
+				if (NULL == t[h]) break;
+				if (h == s) return NULL;
+			}
+		}
+		else
+		{
+			while (NULL != t[h])
+			{
+				if (con_uc_eq(t[h]->d->left, c)) break;
+				h = (h + 1) & (size-1);
+				if (NULL == t[h]) break;
+				if (h == s) return NULL;
+			}
+		}
+
+		return &t[h];
+}
+
+/**
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  * dir =  1, we're putting this into a right table.
@@ -211,16 +265,20 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 static void put_into_match_table(unsigned int size, Match_node ** t,
 								 Disjunct * d, Connector * c, int dir )
 {
-	unsigned int h;
-	Match_node * m;
-	h = connector_hash(c) & (size-1);
+	Match_node *m, **xl;
+
 	m = (Match_node *) xalloc (sizeof(Match_node));
 	m->next = NULL;
 	m->d = d;
+
+	xl = get_match_table_entry(size, t, c, dir);
+	assert(NULL != xl, "get_match_table_entry: Overflow\n");
 	if (dir == 1) {
-		t[h] = add_to_right_table_list(m, t[h]);
-	} else {
-		t[h] = add_to_left_table_list(m, t[h]);
+		*xl = add_to_right_table_list(m, *xl);
+	}
+	else
+	{
+		*xl = add_to_left_table_list(m, *xl);
 	}
 }
 
@@ -276,64 +334,262 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	return ctxt;
 }
 
+#if 0
 /**
- * Forms and returns a list of disjuncts coming from word w, that might
- * match lc or rc or both. The lw and rw are the words from which lc
- * and rc came respectively.
+ * Print statistics on various connector matching aspects.
+ * A summary can be found by the shell commands:
+ * link-parser < file.batch | grep match_stats: | sort | uniq -c
+ */
+static void match_stats(Connector *c1, Connector *c2)
+{
+	if (NULL == c1) printf("match_stats: cache\n");
+	if (NULL == c2) return;
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		printf("match_stats: h/d mismatch\n");
+	}
+
+	if (0 == c1->lc_start) printf("match_stats: no lc (c1)\n");
+	if (0 == c2->lc_start) printf("match_stats: no lc (c2)\n");
+
+	if (string_set_cmp(c1->string, c2->string)) printf("match_stats: same\n");
+
+	const char *a = &c1->string[c1->lc_start];
+	const char *b = &c2->string[c2->lc_start];
+	do
+	{
+		if (*a != *b && (*a != '*') && (*b != '*')) printf("match_stats: lc false\n");
+		a++;
+		b++;
+	} while (*a != '\0' && *b != '\0');
+	printf("match_stats: lc true\n");
+}
+#else
+#define match_stats(a, b)
+#endif
+
+#ifdef DEBUG
+#undef N
+#define N(c) (c?c->string:"")
+
+/**
+ * Print the match list, including connector match indications.
+ * Usage: link-parser -v=5 [-debug=print_match_list]
+ * Output format:
+ * MATCH_NODE list_id:  lw>lc   [=]   left<w>right   [=]    rc<rw
  *
- * The list is returned in a linked list of Match_nodes.
- * The list contains no duplicates.
+ * Regretfully this version doesn't indicate which match shortcut have been
+ * used, and which nodes are from mr or ml or both (the full print version
+ * clutters the source code very much, as it needs to be inserted in plenty
+ * of places.)
+ *
+ * FIXME It is not clear to me why these printout are intermixed by stderr
+ * printouts, as prt_error() flushes stdout. For example:
+ *
+ * MATCH_NODE    49: 02>O*t       =        Os<04>                     <06
+ * link-grammar: Info: Total count with 0 null links:   4
+ * ++++Counted parses                          0.00 seconds
+ * MATCH_NODE    58: 00>RW        =        RW<05>                     <06
+ */
+static void print_match_list(int id, Match_node *m, int w,
+                             Connector *lc, int lw,
+                             Connector *rc, int rw)
+{
+	if (verbosity < 5) return;
+
+	for (; m != NULL; m = m->next)
+	{
+		Disjunct *d = m->d;
+
+		printf("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
+		       id, lw , N(lc), d->match_left ? '=': ' ',
+		       N(d->left), w, N(d->right),
+		       d->match_right? '=' : ' ', N(rc), rw);
+	}
+}
+#else
+#define print_match_list(...)
+#endif
+
+/**
+ * Compare two connectors, utilizing features of the match lists.
+ * This function uses shortcuts to speed up the comparison.
+ * Especially, we know that the uc parts of the connectors are the same,
+ * because we fetch the matching lists according to the uc part or the
+ * connectors to be matched. So the uc parts are not checked here. The
+ * head/dependent indicators are in the caller function, and only when
+ * connectors match here, to save CPU when the connectors don't match
+ * otherwise. This is because h/d mismatch is rare.
+ * FIXME: Use connector enumeration.
+ */
+static bool easy_match_list(Connector *c1, Connector *c2)
+{
+	match_stats(c1, c2);
+
+	/* If the connectors are identical, they match. */
+	if (string_set_cmp(c1->string, c2->string)) return true;
+
+	/* If any of the connectors doesn't have a lc part, they match */
+	if ((0 == c2->lc_start) || (0 == c1->lc_start)) return true;
+
+	/* Compare the lc parts according to the connector matching rules. */
+	const char *a = &c1->string[c1->lc_start];
+	const char *b = &c2->string[c2->lc_start];
+	do
+	{
+		if (*a != *b && (*a != '*') && (*b != '*')) return false;
+		a++;
+		b++;
+	} while (*a != '\0' && *b != '\0');
+
+	return true;
+}
+
+/**
+ * Return false if the connectors cannot match due to identical
+ * head/dependent parts. Else return true.
+ */
+static bool match_hd(Connector *c1, Connector *c2)
+{
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		return false;
+	}
+	return true;
+}
+
+typedef struct
+{
+	const char *string;
+	bool match;
+} match_cache;
+
+/**
+ * If the match result of connector a is cached - return it.
+ * Else return the result of the actual matching - after caching it.
+ */
+static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
+{
+	/* The following uses a string-set compare - string_set_cmp() cannot
+	 * be used here because c_con->string may be NULL. */
+	match_stats(c_con->string == a->string ? NULL : a, NULL);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+	/* The string field is initialized to NULL, and this is enough because
+	 * the connector string cannot be NULL, as it actually fetched a
+	 * non-empty match list. */
+	if (c_con->string == a->string) return c_con->match;
+#pragma GCC diagnostic pop
+
+	/* No cache exists. Check if the connectors match and cache the result. */
+	c_con->match = easy_match_list(a, b) && match_hd(a, b);
+	c_con->string = a->string;
+
+	return c_con->match;
+}
+
+/**
+ * Forms and returns a list of disjuncts coming from word w, that
+ * actually matches lc or rc or both. The lw and rw are the words from
+ * which lc and rc came respectively.
+ *
+ * The list is returned in a linked list of Match_nodes.  This list
+ * contains no duplicates, because when processing the ml list, only
+ * elements whose match_left is true are included, and such elements are
+ * not included again when processing the mr list.
+ *
+ * Note that if both lc and rc match the corresponding connectors of w,
+ * match_left is set to true when the ml list is processed and the
+ * disjunct is then added to the result list, and match_right of the
+ * same disjunct is set to true when the mr list is processed, and this
+ * disjunct is not added again.
  */
 Match_node *
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *ml, *mr, *mx, *my, *mr_end, *front;
+	Match_node *mx, *my, *mr_end, *front, **mxp;
+	Match_node *ml = NULL, *mr = NULL;
+	match_cache mc;
 
-	if (lc != NULL) {
-		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
-	} else {
-		ml = NULL;
+#ifdef VERIFY_MATCH_LIST
+	static int id = 0;
+	int lid = ++id; /* A local copy, for multi-threading support. */
+#endif
+
+	/* Get the lists of candidate matching disjuncts of word w for lc and
+	 * rc.  Consider each of these lists only if the length_limit of lc
+	 * rc and also w, is not greater then the distance between their word
+	 * and the word w. */
+	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
+	{
+		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
+		if ((NULL != mxp) && (NULL != *mxp) &&
+		    ((w - lw) <= (*mxp)->d->left->length_limit))
+		{
+			ml = *mxp;
+		}
 	}
-	if (rc != NULL) {
-		mr = ctxt->r_table[w][connector_hash(rc) & (ctxt->r_table_size[w]-1)];
-	} else {
-		mr = NULL;
+	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
+	{
+		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
+		if ((NULL != mxp) && (NULL != *mxp) &&
+		    ((rw - w) <= (*mxp)->d->right->length_limit))
+		{
+			mr = *mxp;
+		}
 	}
 
-	/* In order to eliminate duplicates from the lists, we mark the disjuncts. */
 	for (mx = mr; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->right->word > rw) break;
-		mx->d->marked = true;
+		mx->d->match_left = false;
 	}
 	mr_end = mx;
 
 	front = NULL;
 	/* Construct the list of things that could match the left. */
+	mc.string = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
-		mx->d->marked = false;
+
+		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc);
+		if (!mx->d->match_left) continue;
+		mx->d->match_right = false;
+
 		my = get_match_node(ctxt);
 		my->d = mx->d;
 		my->next = front;
 		front = my;
+#ifdef VERIFY_MATCH_LIST
+		mx->d->match_id = lid;
+#endif
 	}
 
-	/* Append the list of things that could match the right. */
+	/* Append the list of things that could match the right.
+	 * Note that it is important to set here match_right correctly even
+	 * if we are going to skip this element here because its match_left
+	 * is true, since then it means it is already included in the match
+	 * list. */
+	mc.string = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		if (mx->d->marked)
-		{
-			/* mx is not in the l list. */
-			my = get_match_node(ctxt);
-			my->d = mx->d;
-			my->next = front;
-			front = my;
-		}
+		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc);
+		if (!mx->d->match_right || mx->d->match_left) continue;
+
+		my = get_match_node(ctxt);
+		my->d = mx->d;
+		my->next = front;
+		front = my;
+#ifdef VERIFY_MATCH_LIST
+		mx->d->match_id = lid;
+#endif
 	}
 
+	print_match_list(lid, front, w, lc, lw, rc, rw);
 	return front;
 }

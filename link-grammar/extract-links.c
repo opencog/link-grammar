@@ -384,10 +384,12 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		{
 			unsigned int lnull_count, rnull_count;
 			Disjunct* d = m->d;
+			bool Lmatch = d->match_left;
+			bool Rmatch = d->match_right;
+
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
 				int i, j;
-				bool Lmatch, Rmatch;
 				Parse_set *ls[4], *rs[4];
 
 				/* Here, lnull_count and rnull_count are the null_counts
@@ -396,11 +398,6 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-
-				Lmatch = (le != NULL) && (d->left != NULL)
-				         && do_match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL)
-				         && do_match(d->right, re, w, rw);
 
 				for (i=0; i<4; i++) { ls[i] = rs[i] = NULL; }
 				if (Lmatch)
