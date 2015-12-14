@@ -26,11 +26,11 @@ static void
 set_connector_list_length_limit(Connector *c,
                                 Connector_set *conset,
                                 int short_len,
-                                Parse_Options opts)
+                                bool all_short)
 {
 	for (; c!=NULL; c=c->next)
 	{
-		if (opts->all_short ||
+		if (all_short ||
 		    (conset != NULL && !match_in_connector_set(conset, c)))
 		{
 			c->length_limit = short_len;
@@ -43,16 +43,19 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 {
 	size_t i;
 	unsigned int len = opts->short_length;
+	bool all_short = opts->all_short;
 	Connector_set * ucs = sent->dict->unlimited_connector_set;
 
 	if (len >= sent->length) return; /* No point to enforce short_length. */
 	if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
 
-	for (i=0; i<sent->length; i++) {
+	for (i=0; i<sent->length; i++)
+	{
 		Disjunct *d;
-		for (d = sent->word[i].d; d != NULL; d = d->next) {
-			set_connector_list_length_limit(d->left, ucs, len, opts);
-			set_connector_list_length_limit(d->right, ucs, len, opts);
+		for (d = sent->word[i].d; d != NULL; d = d->next)
+		{
+			set_connector_list_length_limit(d->left, ucs, len, all_short);
+			set_connector_list_length_limit(d->right, ucs, len, all_short);
 		}
 	}
 }
