@@ -10342,8 +10342,9 @@ significantly substantially:
   ({ECa-} &
     (((Pam- or Mam- or AFm+ or AJrc-) & {@MV+}) or
     ({[[@Ec-]]} & {Xc+} & Am+) or
-    AJlc+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+    AJlc+))
+  or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)))
+  or (Wd- & MVt+ & {Xc+} & PFb+ );
 
 /en/words/words.adj.2: <comp-adj>;
 

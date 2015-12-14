@@ -8295,12 +8295,15 @@ significantly substantially:
 
 % comparative adjectives
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
+% Wd- & MVt+ & Xc+ & PFb+: subject-verb inversion:
+%       "cheaper than dirt, slime is better"
 <comp-adj>:
-  ({ECa-} &
-    (((Pam- or Mam- or AFm+ or AJrc-) & {@MV+}) or
-    ({[[@Ec-]]} & {Xc+} & Am+) or
-    AJlc+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa-} & (
+    ((Pam- or Mam- or AFm+ or AJrc-) & {@MV+})
+    or ({[[@Ec-]]} & {Xc+} & Am+)
+    or (Wd- & MVt+ & Xc+ & PFb+)
+    or AJlc+))
+  or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
 
