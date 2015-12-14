@@ -1392,7 +1392,7 @@ TODO -- Working Notes:
 A performance diary:
 --------------------
 Time to parse some long sentences:
-The original results below were for version ...
+The original results below were for version 5.0.8 (April 2014)
 The June 2014 results are for version 5.1.0
 
 These are very highly dependent on the aggressiveness of the token
