@@ -1316,6 +1316,12 @@ TODO -- Working Notes:
       > along with many other words such as godel "size" and migdal
       > "tower".
 
+   Dealing with long, ambiguos sentences:
+      These are busted up by humans into smaller sentences that "hang
+      together" as phrase-structures, viz compunded sentences. The most
+      likely parse is then when each of the quasi sub-sentences is
+      parsed correctly.
+
    Alternatives:
       A partial solution to the morphology problem and the idiom problem
       in link-grammar is to elevate the use of "alternatives" in the
