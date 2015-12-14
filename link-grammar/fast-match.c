@@ -422,9 +422,11 @@ static void print_match_list(int id, Match_node *m, int w,
 #endif
 
 /**
- * Compare two connectors, utilizing features of the match lists.
- * This function uses shortcuts to speed up the comparison.
- * Especially, we know that the uc parts of the connectors are the same,
+ * Compare only the lower-case parts of two connectors. When this
+ * function is called, it is assumed that the upper-case parts are
+ * equal, and thus do not need to be checked again.
+ *
+ * We know that the uc parts of the connectors are the same,
  * because we fetch the matching lists according to the uc part or the
  * connectors to be matched. So the uc parts are not checked here. The
  * head/dependent indicators are in the caller function, and only when
@@ -432,7 +434,7 @@ static void print_match_list(int id, Match_node *m, int w,
  * otherwise. This is because h/d mismatch is rare.
  * FIXME: Use connector enumeration.
  */
-static bool easy_match_list(Connector *c1, Connector *c2)
+static bool match_lower_case(Connector *c1, Connector *c2)
 {
 	match_stats(c1, c2);
 
@@ -476,8 +478,12 @@ typedef struct
 } match_cache;
 
 /**
- * If the match result of connector a is cached - return it.
- * Else return the result of the actual matching - after caching it.
+ * Match the lower-case parts of connectors, and the head-dependent,
+ * using a cache of the most recent compare.  Due to the way disjuncts
+ * are written, we are often asked to compare to the same connector
+ * 3 or 4 times in a row. So if we already did that compare, just use
+ * the cached result. (i.e. the caching here is almost trivial, but it
+ * works well).
  */
 static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 {
@@ -493,7 +499,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 #pragma GCC diagnostic pop
 
 	/* No cache exists. Check if the connectors match and cache the result. */
-	c_con->match = easy_match_list(a, b) && match_hd(a, b);
+	c_con->match = match_lower_case(a, b) && match_hd(a, b);
 	c_con->string = a->string;
 
 	return c_con->match;
