@@ -7821,7 +7821,8 @@ unpleasant.a illegal.a:
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>));
+    or ({<tot-verb>} & <adj-op>)
+    or AJr-);
 
 good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
 tough.a:
@@ -8695,8 +8696,16 @@ long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;
 
-well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or <advcl-verb> or [E+]))
-  or [{EA- or EF+} & (Pa- or AF+)] or Yd+;
+% AJr-: "That is fine and well enough!"
+well.e:
+  ({EE- or EF+} & (
+    ({Xd- & Xc+} & MVa-)
+    or Qe+
+    or <advcl-verb>
+    or AJr-
+    or [E+]))
+  or [{EA- or EF+} & (Pa- or AF+)]
+  or Yd+;
 
 exactly.e:
   E+
