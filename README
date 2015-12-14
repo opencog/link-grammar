@@ -1395,6 +1395,10 @@ Time to parse some long sentences:
 The original results below were for version ...
 The June 2014 results are for version 5.1.0
 
+These are very highly dependent on the aggressiveness of the token
+splitter, on the short length, on the cost-max and the spell checker.
+Suggest using flags: -spell=0 -short=10 -cost-max=2.1
+
 25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014) (0.2 secs SAT, June 2014)
 Hot runners usually make the mold more expensive to manufacture and run, but allow savings by reducing plastic waste and by reducing the cycle time.
 
@@ -1407,11 +1411,8 @@ In vivo studies of the activity of four of the kinases, KinA, KinC, KinD (ykvD) 
 56 words + 8 punct: 4.5 seconds (1.45 secs June 2014) (0.38 secs, SAT June 2014)
 New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...  is nearly very good indeed - but it is not the The Producers ... this story ... does not lend itself to stage adaptation in the way of the earlier movie ... Now for the good news ... Brooks and Stroman pull out every stop.
 
-57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014) (0.68 secs, June 2014)
+57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014) (0.68 secs, SAT June 2014)
 However, the few tracts, the poetry, and the novels that embodied the social vision of Young England were directed to a New Generation of educated, religious, and socially conscious conservatives, who, like Young Englanders, were appalled at the despiritualizing effects of industrialization and the perceived amorality of Benthamite philosophy, which they blamed equally for Victorian social injustices.
 
 73 words + 8 punct: 145 seconds
 Cortes in his various letters again and again claims the Emperor's patronage of his bold defiance of the Emperor's officers on the ground that the latter in their action were moved solely by considerations of their personal gain, whereas he, Cortes, was striving to endow his sovereign with a rich new empire and boundless treasure whilst carrying into the dark pagan land, at the sword's point, the gentle creed of the Christian God.
-
-
-
