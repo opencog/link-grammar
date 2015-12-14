@@ -558,7 +558,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, 100);
 	parse_options_set_max_parse_time(opts, 60);
-	parse_options_set_islands_ok(opts, true);
+	parse_options_set_islands_ok(opts, false);
 	parse_options_set_short_length(opts, 12);
 	parse_options_set_all_short_connectors(opts, 1);
 	parse_options_set_linkage_limit(opts, 100);
@@ -729,7 +729,7 @@ int main(int argc, char * argv[])
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_set_short_length(opts, 16);
-	parse_options_set_islands_ok(opts, true);
+	parse_options_set_islands_ok(opts, false);
 
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with

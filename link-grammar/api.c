@@ -114,7 +114,7 @@ Parse_Options parse_options_create(void)
 	po->disjunct_cost = 2.7; /* 3.0 is needed for Russian dicts */
 	po->min_null_count = 0;
 	po->max_null_count = 0;
-	po->islands_ok = true;
+	po->islands_ok = false;
 	po->use_spell_guess = 7;
 	po->use_sat_solver = false;
 	po->use_viterbi = false;
