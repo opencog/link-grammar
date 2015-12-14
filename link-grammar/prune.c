@@ -1038,8 +1038,6 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	C_list *cl;
 	power_table *pt;
 
-	if (word_c - w > c->length_limit) return false;
-
 	pt = pc->pt;
 	size = pt->r_table_size[w];
 	h = connector_hash(c) & (size-1);
@@ -1065,8 +1063,6 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	C_list *cl;
 	power_table *pt;
 
-	if (w - word_c > c->length_limit) return false;
-
 	pt = pc->pt;
 	size = pt->l_table_size[w];
 	h = connector_hash(c) & (size-1);
@@ -1090,16 +1086,20 @@ static int
 left_connector_list_update(prune_context *pc, Connector *c,
                            int word_c, int w, bool shallow)
 {
-	int n;
+	int n, lb;
 	bool foundmatch;
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, word_c, w, false) - 1;
 	if (((int) c->word) < n) n = c->word;
 
+	/* lb is now the leftmost word we need to check */
+	lb = word_c - c->length_limit;
+	if (0 > lb) lb = 0;
+
 	/* n is now the rightmost word we need to check */
 	foundmatch = false;
-	for (; n >= 0 ; n--)
+	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
 		if (right_table_search(pc, n, c, shallow, word_c))
@@ -1128,16 +1128,20 @@ static size_t
 right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
                             size_t word_c, size_t w, bool shallow)
 {
-	size_t n;
+	size_t n, ub;
 	bool foundmatch;
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, sent, c->next, word_c, w, false) + 1;
 	if (c->word > n) n = c->word;
 
+	/* ub is now the rightmost word we need to check */
+	ub = word_c + c->length_limit;
+	if (ub > sent->length) ub = sent->length;
+
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
-	for (; n < sent->length ; n++)
+	for (; n < ub ; n++)
 	{
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, word_c))
