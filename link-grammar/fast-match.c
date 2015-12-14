@@ -204,23 +204,25 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 }
 
 /**
- * Validate that the uppercase part of two connectors are the same.
- * Return true if so, false otherwise.
+ * Compare only the uppercase part of two connectors.
+ * Return true if they are the same, else false.
  * FIXME: Use connector enumeration.
  */
 static bool con_uc_eq(const Connector *c1, const Connector *c2)
 {
-
 	if (string_set_cmp(c1->string, c2->string)) return true;
 	if (c1->hash != c2->hash) return false;
 	if (c1->uc_length != c1->uc_length) return false;
 
+	/* We arrive here for less than 50% of the cases for "en" and
+	 * less then 20% of the cases for "ru", and, in practice, the
+	 * two strings are always equal, because there is almost never
+	 * a hash collision that would lead to a miscompare, because
+	 * we are hashing, at most, a few dozen connectors into a
+	 * 16-bit hash space (65536 slots).
+	 */
 	const char *uc1 = &c1->string[c1->uc_start];
 	const char *uc2 = &c2->string[c2->uc_start];
-	/* We arrive here for less than 50% of the cases for "en" and
-	 * less then 20% of the cases for "ru", and the following
-	 * condition is always true.
-	 * How come 2 different uc strings never have the same hash value? */
 	if (0 == strncmp(uc1, uc2, c1->uc_length)) return true;
 
 	return false;
@@ -229,31 +231,38 @@ static bool con_uc_eq(const Connector *c1, const Connector *c2)
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
                                           Connector * c, int dir)
 {
-		unsigned int h, s;
+	unsigned int h, s;
 
-		s = h = connector_hash(c) & (size-1);
+	s = h = connector_hash(c) & (size-1);
 
-		if (dir == 1) {
-			while (NULL != t[h])
-			{
-				if (con_uc_eq(t[h]->d->right, c)) break;
-				h = (h + 1) & (size-1);
-				if (NULL == t[h]) break;
-				if (h == s) return NULL;
-			}
-		}
-		else
+	if (dir == 1) {
+		while (NULL != t[h])
 		{
-			while (NULL != t[h])
-			{
-				if (con_uc_eq(t[h]->d->left, c)) break;
-				h = (h + 1) & (size-1);
-				if (NULL == t[h]) break;
-				if (h == s) return NULL;
-			}
-		}
+			if (con_uc_eq(t[h]->d->right, c)) break;
 
-		return &t[h];
+			/* Increment and try again. Every hash bucket MUST have
+			 * a unique upper-case part, since later on, we only
+			 * compare the lower-case parts, assuming upper-case
+			 * parts are already equal. So just look for teh next
+			 * unused hash bucket.
+			 */
+			h = (h + 1) & (size-1);
+			if (NULL == t[h]) break;
+			if (h == s) return NULL;
+		}
+	}
+	else
+	{
+		while (NULL != t[h])
+		{
+			if (con_uc_eq(t[h]->d->left, c)) break;
+			h = (h + 1) & (size-1);
+			if (NULL == t[h]) break;
+			if (h == s) return NULL;
+		}
+	}
+
+	return &t[h];
 }
 
 /**
@@ -263,7 +272,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
  * dir = -1, we're putting this into a left table.
  */
 static void put_into_match_table(unsigned int size, Match_node ** t,
-								 Disjunct * d, Connector * c, int dir )
+                                 Disjunct * d, Connector * c, int dir )
 {
 	Match_node *m, **xl;
 
