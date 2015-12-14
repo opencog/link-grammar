@@ -10538,11 +10538,15 @@ notoriously.e:
 % Adverbs whose main use is adjectival, but can be used with
 % adverbs such as "faster", "dumber", etc.
 % "That one is marginally better". (thus EBm+)
-% "It's an inherently better method" thus E+ link
+% "It's an inherently better method" thus EC+ link
 fabulously incomparably inherently marginally moderately
 relatively ridiculously
 unacceptably unarguably undeniably unimaginably:
-  ({EE-} & EA+) or EE+ or ({EE-} & EBm-) or E+;
+  ({EE-} &
+    (EA+
+    or EC+
+    or EBm-))
+  or EE+;
 
 wide.e: EE+;
 
