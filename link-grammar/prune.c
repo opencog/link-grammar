@@ -1084,17 +1084,17 @@ left_table_search(prune_context *pc, int w, Connector *c,
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
-                           int word_c, int w, bool shallow)
+                           int w, bool shallow)
 {
 	int n, lb;
 	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = left_connector_list_update(pc, c->next, word_c, w, false) - 1;
+	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (((int) c->word) < n) n = c->word;
 
 	/* lb is now the leftmost word we need to check */
-	lb = word_c - c->length_limit;
+	lb = w - c->length_limit;
 	if (0 > lb) lb = 0;
 
 	/* n is now the rightmost word we need to check */
@@ -1102,7 +1102,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
-		if (right_table_search(pc, n, c, shallow, word_c))
+		if (right_table_search(pc, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1126,17 +1126,17 @@ left_connector_list_update(prune_context *pc, Connector *c,
  */
 static size_t
 right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
-                            size_t word_c, size_t w, bool shallow)
+                            size_t w, bool shallow)
 {
 	size_t n, ub;
 	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = right_connector_list_update(pc, sent, c->next, word_c, w, false) + 1;
+	n = right_connector_list_update(pc, sent, c->next, w, false) + 1;
 	if (c->word > n) n = c->word;
 
 	/* ub is now the rightmost word we need to check */
-	ub = word_c + c->length_limit;
+	ub = w + c->length_limit;
 	if (ub > sent->length) ub = sent->length;
 
 	/* n is now the leftmost word we need to check */
@@ -1144,7 +1144,7 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
-		if (left_table_search(pc, n, c, shallow, word_c))
+		if (left_table_search(pc, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1190,7 +1190,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
-				if (left_connector_list_update(pc, d->left, w, w, true) < 0) {
+				if (left_connector_list_update(pc, d->left, w, true) < 0) {
 					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1226,7 +1226,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
-				if (right_connector_list_update(pc, sent, d->right, w, w, true) >= sent->length) {
+				if (right_connector_list_update(pc, sent, d->right, w, true) >= sent->length) {
 					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1262,7 +1262,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pt = NULL;
 	pc->pt = NULL;
 
-	if (verbosity > 2) printf("power prune cost: %d\n", pc->power_cost);
+	if (verbosity >= 2) printf("power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned");
 	if (verbosity > 2)
