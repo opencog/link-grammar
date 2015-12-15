@@ -50,6 +50,27 @@ const char *feature_enabled(const char *, const char *);
 	(void)printf(__VA_ARGS__)) : (void)0)
 
 /**
+ * Wrap-up a debug-messages block.
+ * Preceding the level number by a + (+level) adds printing of the
+ * function name.
+ * The !debug variable can be set to a comma-separated list of functions
+ * in order to restrict the debug messages to these functions only.
+ *
+ * Return true if the debug-messages block should be executed, else false.
+ *
+ * Usage example, for debug messages at verbosity V:
+ * if (debug_level(V))
+ * {
+ * 	print_disjunct(d);
+ * }
+ */
+#define debug_level(level) \
+(((verbosity >= (level)) && \
+	(('\0' == debug[0]) || feature_enabled(debug, __func__))) \
+	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : 0), true)  \
+	: false)
+
+/**
  * Return TRUE if the given feature (a string) is set in the !test variable
  * (a comma-separated feature list).
  */
