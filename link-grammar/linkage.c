@@ -217,15 +217,16 @@ void remap_linkages(Linkage lkg, const int *remap)
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
  */
+#define D_REE 3
 void remove_empty_words(Linkage lkg)
 {
 	size_t i, j;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
 
-	if (4 <= verbosity)
+	if (debug_level(+D_REE))
 	{
-		lgdebug(0, "Info: chosen_disjuncts before removing empty words:\n");
+		printf("Info: chosen_disjuncts before:\n");
 		print_chosen_disjuncts_words(lkg);
 	}
 
@@ -245,14 +246,15 @@ void remove_empty_words(Linkage lkg)
 	lkg->num_words = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 
-	if (4 <= verbosity)
+	if (debug_level(+D_REE))
 	{
-		lgdebug(0, "Info: chosen_disjuncts after removing empty words:\n");
+		printf("Info: chosen_disjuncts after:\n");
 		print_chosen_disjuncts_words(lkg);
 	}
 
 	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
+#undef D_REE
 
 /**
  * This takes the Wordgraph path array and uses it to
