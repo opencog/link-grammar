@@ -1047,6 +1047,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  *
  * Return true if the linkage is good, else return false.
  */
+#define D_SLM 4
 bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
@@ -1076,11 +1077,11 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	{
 		Disjunct *cdj;            /* chosen disjunct */
 
-		lgdebug(4, "%p Word %zu: ", lkg, i);
+		lgdebug(D_SLM, "%p Word %zu: ", lkg, i);
 
 		if (NULL == wp_new)
 		{
-			lgdebug(+4, "- No more words in the wordgraph\n");
+			lgdebug(+D_SLM, "- No more words in the wordgraph\n");
 			match_found = false;
 			break;
 		}
@@ -1097,7 +1098,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		/* Handle null words */
 		if (NULL == cdj)
 		{
-			lgdebug(4, "- Null word\n");
+			lgdebug(D_SLM, "- Null word\n");
 			/* A null word matches any word in the Wordgraph -
 			 * so, unconditionally proceed in all paths in parallel. */
 			match_found = false;
@@ -1124,7 +1125,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		if (!match_found)
 		{
 			const char *e = "Internal error: Too many words in the linkage\n";
-			lgdebug(4, "- %s", e);
+			lgdebug(D_SLM, "- %s", e);
 			prt_error("Error: %s.", e);
 			break;
 		}
@@ -1132,7 +1133,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		/* This causes a crash when using !use-sat. It should be fixed. [ap] */
 		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
-		if (4 <= opts->verbosity) print_with_subscript_dot(cdj->string);
+		if (debug_level(D_SLM)) print_with_subscript_dot(cdj->string);
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */
@@ -1158,10 +1159,10 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		{
 			/* FIXME? A message can be added here if there are too many words
 			 * in the linkage (can happen only if there is an internal error). */
-			lgdebug(4, "- No Wordgraph match\n");
+			lgdebug(D_SLM, "- No Wordgraph match\n");
 			break;
 		}
-		lgdebug(4, "\n");
+		lgdebug(D_SLM, "\n");
 	}
 
 	if (match_found)
@@ -1181,7 +1182,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			}
 		}
 		if (!match_found)
-		    lgdebug(4, "%p Missing word(s) at the end of the linkage.\n", lkg);
+		    lgdebug(D_SLM, "%p Missing word(s) at the end of the linkage.\n", lkg);
 	}
 
 #define DEBUG_morpheme_type 0
@@ -1229,7 +1230,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			}
 
 #if DEBUG_morpheme_type
-			lgdebug(4, "Word %zu: %s affixtype=%c\n",
+			lgdebug(D_SLM, "Word %zu: %s affixtype=%c\n",
 			     i, (*w)->subword,  *affix_types_p);
 #endif
 
@@ -1247,7 +1248,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			if (NULL != uw)
 			{
 				*affix_types_p++ = AFFIXTYPE_END;
-				lgdebug(4, "%p End of Gword %s\n", lkg, uw->subword);
+				lgdebug(D_SLM, "%p End of Gword %s\n", lkg, uw->subword);
 			}
 		}
 #endif
@@ -1274,9 +1275,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	{
 		if ('\0' != affix_types[0])
 		{
-			lgdebug(4, "%p Morpheme type combination '%s'\n", lkg, affix_types);
+			lgdebug(D_SLM, "%p Morpheme type combination '%s'\n", lkg, affix_types);
 		}
-		lgdebug(+4, "%p SUCCEEDED\n", lkg);
+		lgdebug(+D_SLM, "%p SUCCEEDED\n", lkg);
 		lkg->wg_path = lwg_path;
 		return true;
 	}
@@ -1287,9 +1288,10 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	lifo->pp_violation_msg = "Invalid morphism construction.";
 	lkg->wg_path = NULL;
 	lifo->discarded = true;
-	lgdebug(4, "%p FAILED\n", lkg);
+	lgdebug(D_SLM, "%p FAILED\n", lkg);
 	return false;
 }
+#undef D_SLM
 
 static void sane_morphism(Sentence sent, Parse_Options opts)
 {
