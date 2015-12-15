@@ -384,7 +384,7 @@ static void match_stats(Connector *c1, Connector *c2)
 
 /**
  * Print the match list, including connector match indications.
- * Usage: link-parser -v=5 [-debug=print_match_list]
+ * Usage: link-parser -verbosity=9 -debug=print_match_list
  * Output format:
  * MATCH_NODE list_id:  lw>lc   [=]   left<w>right   [=]    rc<rw
  *
@@ -405,7 +405,7 @@ static void print_match_list(int id, Match_node *m, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw)
 {
-	if (verbosity < 5) return;
+	if (!debug_level(9)) return;
 
 	for (; m != NULL; m = m->next)
 	{
