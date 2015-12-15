@@ -30,8 +30,12 @@ set_connector_list_length_limit(Connector *c,
 {
 	for (; c!=NULL; c=c->next)
 	{
-		if (all_short ||
-		    (conset != NULL && !match_in_connector_set(conset, c)))
+		if (0 == strncmp(c->string, "ZZZ", 3))
+		{
+			c->length_limit = 1;
+		}
+		else if (all_short ||
+		         (conset != NULL && !match_in_connector_set(conset, c)))
 		{
 			c->length_limit = short_len;
 		}
