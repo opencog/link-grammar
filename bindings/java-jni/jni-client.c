@@ -151,7 +151,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_disjunct_cost(ptd->opts, 2.7f);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
-	parse_options_set_short_length(ptd->opts, 10);
+	parse_options_set_short_length(ptd->opts, 16);
 	parse_options_set_verbosity(ptd->opts, 0);
 	parse_options_set_spell_guess(ptd->opts, false);
 
@@ -219,8 +219,8 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	if (ptd->sent == NULL)
 		return;
 
-	/* First parse with cost 0 or 1 and no null links or fat links */
-	parse_options_set_disjunct_cost(opts, 2.0f);
+	/* First parse with cost 0 or 1 and no null links */
+	parse_options_set_disjunct_cost(opts, 2.7f);
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_reset_resources(opts);
@@ -621,7 +621,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
- 	/* Does not need to be freed, points into linkage */
+	/* Does not need to be freed, points into linkage */
 	const char *s = linkage_get_link_llabel(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
@@ -636,7 +636,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
- 	/* Does not need to be freed, points into linkage */
+	/* Does not need to be freed, points into linkage */
 	const char *s = linkage_get_link_rlabel(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
@@ -651,7 +651,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkLabel(JNIEnv *env, jclass cls, jint i)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
- 	/* Does not need to be freed, points into linkage */
+	/* Does not need to be freed, points into linkage */
 	const char *s = linkage_get_link_label(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
@@ -691,4 +691,3 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 	linkage_free_diagram(s);
 	return j;
 }
-
