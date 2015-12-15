@@ -81,14 +81,6 @@ nonCAP.zzz: ZZZ-;
 
 % NOUNS
 
-% The marker-entity is used to identify identity names.
-% The marker-common-entity is used to identify all common nouns
-% and adjectives that might appear in entity names:
-% e.g. "Great Southern Federal Bank and Railroad" or "Aluminum Bahrain"
-% These markers are used in the Java interfaces, to help identify entities.
-<marker-entity>: XXXENTITY+;
-<marker-common-entity>: XXXGIVEN+;
-
 % The RJ links connect to "and"; the l,r prevent cross-linking
 <clause-conjoin>: RJrc- or RJlc+;
 
@@ -282,15 +274,6 @@ nonCAP.zzz: ZZZ-;
 % ({[[@MX+]]} & AN+) comes from postposed modifiers:
 % "Codon 311 (Cys --> Ser) polymorphism"
 %
-% We do NOT tag these with <marker-entity>, a this messes up first-word
-% processing in tokenize.c.  So for example, we do *not* want "There"
-% in "There they are" tagged as an entity, just because its capitalized.
-% We really do want to force the lower-case usage, because the lower case
-% is in the dict, and its the right word to use. (The only entities that
-% should be tagged as such are those that are in the dicts, in thier
-% capitalized form, e.g. "Sue.f" female given name as opposed to "sue.v"
-% verb in the sentence "Sue went to the store.")
-%
 % To help discourage capitalized use when the lower-case is in the dict,
 % we give a slight cost to [<noun-sub-s> & (JG- or <noun-main-s>)] to
 % discourage use as a common noun, so that the lower-case version can
@@ -382,7 +365,7 @@ PL-CAPITALIZED-WORDS:
 /en/words/entities.given-male.sing
 /en/words/entities.goddesses
 /en/words/entities.gods:
-  <marker-entity> or <given-names> or <directive-opener>;
+  <given-names> or <directive-opener>;
 
 % Special handling for certain given names. These are words that have a
 % lower-case analog in the dictionary, and are also used in upper-case
@@ -390,10 +373,10 @@ PL-CAPITALIZED-WORDS:
 % this use of "City" would prevent it from being recognized in other
 % (non-idiomatic) proper name constructions, e.g. New York City.
 /en/words/entities.organizations.sing:
-  <marker-entity> or <entity-singular>;
+  <entity-singular>;
 
 /en/words/entities.locations.sing:
-  <marker-entity> or <entity-singular>;
+  <entity-singular>;
 
 % words.n.4: nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
@@ -598,18 +581,18 @@ HYPHENATED-WORDS.n:
     or (YS+ & Ds**c-));
 
 /en/words/words.n.1-vowel :
-  <marker-common-entity> or <common-vowel-noun>;
+  <common-vowel-noun>;
 /en/words/words.n.1-const :
-  <marker-common-entity> or <common-const-noun>;
+  <common-const-noun>;
 
 % XXX eliminate this, it serves no purpose, sort into vowels and consts.
 /en/words/words.n.1.gerund :
-  <marker-common-entity> or <common-noun>;
+  <common-noun>;
 
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n
 /en/words/words.n.2.s :
-  <marker-common-entity> or <generic-plural-id>;
+  <generic-plural-id>;
 
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
@@ -621,7 +604,6 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 %
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n
 /en/words/words.n.2.x :
-  <marker-common-entity> or
   (<noun-modifiers> &
     ([[AN+]]
     or (GN+ & (DD- or [()]))
@@ -679,9 +661,9 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
 /en/words/words.n.3-vowel:
-  <marker-common-entity> or <mass-vowel-noun>;
+  <mass-vowel-noun>;
 /en/words/words.n.3-const:
-  <marker-common-entity> or <mass-const-noun>;
+  <mass-const-noun>;
 
 % Gonna treat these as mass nouns, not sure if this is correct.
 % "She wished me goodnight" "She wishes you well"
@@ -690,7 +672,7 @@ good-night.n-u goodnight.n-u welcome.n-u well.n-u:
   <mass-noun>;
 
 % Want to cost this so that it doesn't interfere with given name "Tom".
-tom.n-u: [<marker-common-entity> or <mass-noun>];
+tom.n-u: [<mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.a) and so we don't want to
 % allow these to take AN+ links (we want to have red.a get used instead).
@@ -703,8 +685,7 @@ tom.n-u: [<marker-common-entity> or <mass-noun>];
 auburn.n black.n blue.n brown.n green.n gray.n ochre.n
 pink.n purple.n red.n
 tawny.n ultramarine.n umber.n yellow.n:
-  <marker-common-entity>
-  or (<noun-modifiers> & (
+  (<noun-modifiers> & (
     (GN+ & (DD- or [()]))
     or Up-
     or ({Dmu-} & Wa-)
@@ -715,8 +696,7 @@ tawny.n ultramarine.n umber.n yellow.n:
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
 /en/words/entities.us-states.sing:
-  <marker-entity>
-  or ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+  ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} &
     (({MG+} & {@MX+} & (JG- or <noun-main-s> or <noun-and-s>))
     or G+
     or ({[[MG+]]} & (AN+ or YS+ or YP+))))
@@ -726,7 +706,7 @@ tawny.n ultramarine.n umber.n yellow.n:
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION
 % This must appear after other categories so it doesnt interfere with those.
 /en/words/entities.national.sing:
-<marker-entity> or <entity-singular>;
+<entity-singular>;
 
 % Enable parsing of "Mother likes her"
 % Informal only, see formal version below.
@@ -826,7 +806,6 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
 % we want to give these a cost, so that they don't get the first choice.
 /en/words/measures.1:
   (OFd+ & Dm+ & {A-} & D-)
-  or <marker-common-entity>
   or <costly-common-noun>;
 
 % determiner constructions, with a dangling of:
@@ -836,7 +815,6 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
 % The [<generic-plural-id>] is from words.n.2.s
 /en/words/measures.2:
   (OFd+ & (NIn+ or Dm+) & {A-} & {Dmcn-})
-  or <marker-common-entity>
   or [<generic-plural-id>];
 
 <kind-of>:
@@ -1197,7 +1175,7 @@ place.n:
 
 % NMa+: "Go to spot X on the map."
 spot.n:
-  <marker-common-entity> or (<common-noun> & {NMa+});
+  <common-noun> & {NMa+};
 
 
 % NMa+: "It all happens at time T."
@@ -1359,12 +1337,9 @@ we:
   or SIp- or SJlp+ or SJrp-;
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
-% We use <marker-entity> here to prevent lower-case magnling by
-% the tokenizer.
 % SJrp-: allows only "...and I", disallows "I and ..."
 I.p:
-  <marker-entity>
-  or ((Sp*i+ or SX+) & <CLAUSE>)
+  ((Sp*i+ or SX+) & <CLAUSE>)
   or SIp*i-
   or SJr-
   or SJl+
@@ -1915,17 +1890,14 @@ ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 % Wd- & NIa+: Allow numbered, bulleted lists: "B: Press button firmly"
 % Ju-: "It runs from T until the end"
 %
-% <marker-entity>: without this, the tokenizer destroys the upper-case,
-%   when it occurs as the first letter in the sentence.
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
-  <marker-entity>
-  or NMa-
+  NMa-
   or ((Wd- or NMa-) & NIa+)
   or Ju-;
 
 % Avoid having I.id interfere with pronoun I.
-I.id: [[<marker-entity> or NMa- or (Wd- & NIa+)]];
+I.id: [[NMa- or (Wd- & NIa+)]];
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
@@ -8979,7 +8951,7 @@ astronomical_unit light-year.i:
 % make sure that mile.i always has precedence over mile.n
 % XXX TODO: probably same for the other .i's above...
 mile.n:
-  <marker-common-entity> or [<common-noun>];
+  [<common-noun>];
 
 a_long_way: Yd+;
 point.i percentage_point:
@@ -9714,18 +9686,16 @@ n't n’t: N- or EB-;
   <ordinary-adj> & <wantPHc>;
 
 /en/words/words.adj.1-vowel :
-  <marker-common-entity> or
   <ordinary-vowel-adj>;
 
 /en/words/words.adj.1-const :
-  <marker-common-entity> or
   <ordinary-const-adj>;
 
 % Make the given name Frank be prefered to 'frank.a'
 % e.g. "Frank felt vindicated when his long time rival Bill revealed that
 % he was the winner of the competition."
 frank.a:
-  [<marker-common-entity> or <ordinary-const-adj>]0.2;
+  [<ordinary-const-adj>]0.2;
 
 % Add a miniscule cost, so that the noun form is prefered...
 % An older formulation of this used Ah- as the link, but I don't see
@@ -9879,11 +9849,10 @@ unusual.a useful.a impossible.a annoying.a unfair.a unuseful.a:
 a_bitch :
   <adj-good>;
 
-great.a: <marker-common-entity> or (<adj-good> & <wantPHc>);
+great.a: <adj-good> & <wantPHc>;
 
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
-  <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+ & <wantPHv>)
     or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
@@ -9895,7 +9864,6 @@ important.a essential.a imperative.a:
 
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
-  <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
     or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
@@ -9913,7 +9881,6 @@ logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
 absurd.a natural.a alarming.a acceptable.a unacceptable.a deplorable.a
 detestable.a scary.a shocking.a
 poetical.a:
-  <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}})
@@ -10209,11 +10176,10 @@ outstanding.a available.a:
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
 
 north.a south.a east.a west.a northeast.a northwest.a southeast.a southwest.a:
-<marker-common-entity> or
 A+ or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-))))
 or [[DD- & <noun-main-p>]];
 northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a
-southwestern.a: <marker-common-entity> or A+ or G+;
+southwestern.a: A+ or G+;
 
 % .. is this correct?
 benumbed.a bespattered.a non_compos_mentis dead_on_arrival
