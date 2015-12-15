@@ -25,6 +25,8 @@ ru -- Russian.  Complete set of dictionaries, should parse most text.
 
 tr -- Turkish. Experimental prototype. Contains a few dozen words.
 
+vn -- Vietnamese. Experimental prototype. Contains a few hundred words.
+
 any -- Will parse "any" language, exploring all combinatoric possibilities.
        This is useful for certain machine-learning tasks, when one might
        want to iterate over all possible parse trees in every way.

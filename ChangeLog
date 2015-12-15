@@ -46,7 +46,7 @@ Version 5.3.0: (22 November 2015)
  * Fix !!LEFT-WALL and !!RIGHT-WALL
  * SAT solver now linked statically.
  * Assorted SAT sovler cleanup and improvements.
- * Performance improvement in fast macher: 15% faster on fixes.batch.
+ * Performance improvement in fast matcher: 15% faster on fixes.batch.
 
 Version 5.2.5: (1 February 2015)
  * Fix contracted "is" verb.
