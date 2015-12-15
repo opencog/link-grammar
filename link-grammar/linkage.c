@@ -424,12 +424,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			/* XXX FIXME: the assert below sometimes crashes, because
-			 * I guess cdj->word[0] is a null pointer, or something like
-			 * that.  Not sure, its hard to reproduce.
-			 *
-			 * This happens on !use-sat. It should be fixed. [ap] */
-			/* assert(MT_EMPTY != cdj->word[0]->morpheme_type); already discarded */
+			assert(MT_EMPTY != cdj->word[0]->morpheme_type);/* already discarded */
 
 			t = cdj->string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
