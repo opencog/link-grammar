@@ -534,20 +534,12 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
 	{
 		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
-		if ((NULL != mxp) && (NULL != *mxp) &&
-		    ((w - lw) <= (*mxp)->d->left->length_limit))
-		{
-			ml = *mxp;
-		}
+		if (NULL != mxp) ml = *mxp;
 	}
 	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
 	{
 		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
-		if ((NULL != mxp) && (NULL != *mxp) &&
-		    ((rw - w) <= (*mxp)->d->right->length_limit))
-		{
-			mr = *mxp;
-		}
+		if (NULL != mxp) mr = *mxp;
 	}
 
 	for (mx = mr; mx != NULL; mx = mx->next)
@@ -563,6 +555,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
+		if ((w - lw) > mx->d->left->length_limit) continue;
 
 		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc);
 		if (!mx->d->match_left) continue;
@@ -585,6 +578,8 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	mc.string = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
+		if ((rw - w) > mx->d->right->length_limit) continue;
+
 		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc);
 		if (!mx->d->match_right || mx->d->match_left) continue;
 
