@@ -217,15 +217,16 @@ void remap_linkages(Linkage lkg, const int *remap)
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
  */
+#define D_REE 3
 void remove_empty_words(Linkage lkg)
 {
 	size_t i, j;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
 
-	if (4 <= verbosity)
+	if (debug_level(+D_REE))
 	{
-		lgdebug(0, "Info: chosen_disjuncts before removing empty words:\n");
+		printf("Info: chosen_disjuncts before:\n");
 		print_chosen_disjuncts_words(lkg);
 	}
 
@@ -245,14 +246,15 @@ void remove_empty_words(Linkage lkg)
 	lkg->num_words = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 
-	if (4 <= verbosity)
+	if (debug_level(+D_REE))
 	{
-		lgdebug(0, "Info: chosen_disjuncts after removing empty words:\n");
+		printf("Info: chosen_disjuncts after:\n");
 		print_chosen_disjuncts_words(lkg);
 	}
 
 	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
+#undef D_REE
 
 /**
  * This takes the Wordgraph path array and uses it to
@@ -422,12 +424,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			/* XXX FIXME: the assert below sometimes crashes, because
-			 * I guess cdj->word[0] is a null pointer, or something like
-			 * that.  Not sure, its hard to reproduce.
-			 *
-			 * This happens on !use-sat. It should be fixed. [ap] */
-			/* assert(MT_EMPTY != cdj->word[0]->morpheme_type); already discarded */
+			assert(MT_EMPTY != cdj->word[0]->morpheme_type);/* already discarded */
 
 			t = cdj->string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
