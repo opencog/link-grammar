@@ -19,6 +19,7 @@
 #include "print.h"
 #include "prune.h"
 #include "resources.h"
+#include "string-set.h"
 #include "structures.h"
 #include "word-utils.h"
 
@@ -26,11 +27,12 @@ static void
 set_connector_list_length_limit(Connector *c,
                                 Connector_set *conset,
                                 int short_len,
-                                bool all_short)
+                                bool all_short,
+                                const char * ZZZ)
 {
 	for (; c!=NULL; c=c->next)
 	{
-		if (0 == strncmp(c->string, "ZZZ", 3))
+		if (string_set_cmp (ZZZ, c->string))
 		{
 			c->length_limit = 1;
 		}
@@ -49,6 +51,7 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 	unsigned int len = opts->short_length;
 	bool all_short = opts->all_short;
 	Connector_set * ucs = sent->dict->unlimited_connector_set;
+	const char * ZZZ = string_set_add("ZZZ", sent->dict->string_set);
 
 	if (0)
 	{
@@ -66,8 +69,8 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 		Disjunct *d;
 		for (d = sent->word[i].d; d != NULL; d = d->next)
 		{
-			set_connector_list_length_limit(d->left, ucs, len, all_short);
-			set_connector_list_length_limit(d->right, ucs, len, all_short);
+			set_connector_list_length_limit(d->left, ucs, len, all_short, ZZZ);
+			set_connector_list_length_limit(d->right, ucs, len, all_short, ZZZ);
 		}
 	}
 }
