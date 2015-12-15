@@ -30,8 +30,12 @@ set_connector_list_length_limit(Connector *c,
 {
 	for (; c!=NULL; c=c->next)
 	{
-		if (all_short ||
-		    (conset != NULL && !match_in_connector_set(conset, c)))
+		if (0 == strncmp(c->string, "ZZZ", 3))
+		{
+			c->length_limit = 1;
+		}
+		else if (all_short ||
+		         (conset != NULL && !match_in_connector_set(conset, c)))
 		{
 			c->length_limit = short_len;
 		}
@@ -46,7 +50,15 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 	bool all_short = opts->all_short;
 	Connector_set * ucs = sent->dict->unlimited_connector_set;
 
-	if (len >= sent->length) return; /* No point to enforce short_length. */
+	if (0)
+	{
+		/* Not setting the length_limit saves observable time. However, if we
+		 * would like to set the ZZZ connector length_limit to 1 for all
+		 * sentences, we cannot do the following.
+		 * FIXME(?): Use a flag that the sentence contains an empty word. */
+		if (len >= sent->length) return; /* No point to enforce short_length. */
+	}
+
 	if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
 
 	for (i=0; i<sent->length; i++)

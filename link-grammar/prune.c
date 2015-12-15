@@ -1141,7 +1141,7 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
-	for (; n < ub ; n++)
+	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, word_c))
