@@ -392,14 +392,6 @@ static void match_stats(Connector *c1, Connector *c2)
  * used, and which nodes are from mr or ml or both (the full print version
  * clutters the source code very much, as it needs to be inserted in plenty
  * of places.)
- *
- * FIXME It is not clear to me why these printout are intermixed by stderr
- * printouts, as prt_error() flushes stdout. For example:
- *
- * MATCH_NODE    49: 02>O*t       =        Os<04>                     <06
- * link-grammar: Info: Total count with 0 null links:   4
- * ++++Counted parses                          0.00 seconds
- * MATCH_NODE    58: 00>RW        =        RW<05>                     <06
  */
 static void print_match_list(int id, Match_node *m, int w,
                              Connector *lc, int lw,
