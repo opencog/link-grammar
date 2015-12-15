@@ -38,6 +38,7 @@
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
 #define D_SW 3                      /* debug level for word splits */
+#define D_UN 3                      /* debug level for units/punct */
 
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
@@ -335,7 +336,7 @@ static bool word_start_another_alternative(Dictionary dict,
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
 			 !find_word_in_dict(dict, altword0))))
 		{
-			lgdebug(+2, "Preventing alt starts with %s due to existing %s\n",
+			lgdebug(+D_UN, "Preventing alt starts with %s due to existing %s\n",
 			        altword0, (*n)->subword);
 			return true;
 		}
@@ -1328,7 +1329,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 				{
 					word_is_in_dict = true;
 					/* Add the prefix alone */
-					lgdebug(+3, "Whole-word prefix: %s\n", word);
+					lgdebug(+D_UN, "Whole-word prefix: %s\n", word);
 					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPW",
 					          split_prefix_i+1,split_prefix, 0,NULL, 0,NULL);
@@ -1340,7 +1341,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 				if (find_word_in_dict(dict, newword))
 				{
 					word_is_in_dict = true;
-					lgdebug(+3, "Splitting off a prefix: %.*s-%s\n",
+					lgdebug(+D_UN, "Splitting off a prefix: %.*s-%s\n",
 					        wordlen-sz, word, newword);
 					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPS",
@@ -1581,7 +1582,7 @@ static const char *strip_left(Sentence sent, const char * w,
 
 			if (strncmp(w, lpunc[i], sz) == 0)
 			{
-				lgdebug(2, "w='%s' found lpunc '%s'\n", w, lpunc[i]);
+				lgdebug(D_UN, "w='%s' found lpunc '%s'\n", w, lpunc[i]);
 				r_stripped[(*n_r_stripped)++] = lpunc[i];
 				w += sz;
 				break;
@@ -1718,7 +1719,7 @@ static bool strip_right(Sentence sent,
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "%d: strip_right(%s): w='%s' rword '%s'\n",
+				lgdebug(D_UN, "%d: strip_right(%s): w='%s' rword '%s'\n",
 				        p, afdict_classname[classnum], temp_wend-len, t);
 				r_stripped[*n_r_stripped+nrs] = t;
 				nrs++;
@@ -1741,7 +1742,7 @@ static bool strip_right(Sentence sent,
 	 * since it is invoked with the last byte... */
 	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1))
 	{
-		lgdebug(2, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
+		lgdebug(D_UN, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
 			 p, afdict_classname[classnum], word, temp_wend[-1]);
 		return false;
 	}
@@ -1754,7 +1755,7 @@ static bool strip_right(Sentence sent,
 		temp_wend += len;
 	}
 
-	lgdebug(2, "%d: strip_right(%s): return %s; n_r_stripped=%d+%d, wend='%s' temp_wend='%s'\n",
+	lgdebug(D_UN, "%d: strip_right(%s): return %s; n_r_stripped=%d+%d, wend='%s' temp_wend='%s'\n",
 p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nrs,*wend,temp_wend);
 
 	*n_r_stripped += nrs;
