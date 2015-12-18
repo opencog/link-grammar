@@ -9,3 +9,8 @@ almost surely be using those instead of these, here.
 
 See example.pl for a demo.
 
+The build of the perl bindings is disabled by default; there are c++11
+incompatibilities in 5.18/CORE/perl.h that cause issues for various
+compilers.  You can enalbe the perl bindings by saying:
+
+   ./configure --enable-perl-bindings

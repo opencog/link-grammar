@@ -11,6 +11,7 @@ Version 5.3.3: (XXX 2016)
  * Performance improvements on long sentences. (pull #247)
  * Change default setting of 'islands_ok' back to false (bug #140).
  * Fix for build break on Mac OSX el_capitan w/clang (bug #255).
+ * Disable perl bindings by default; use Lingua::LinkParser
 
 Version 5.3.2: (4 December 2015)
  * Performance improvements, esp. for long sentences.
