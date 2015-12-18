@@ -75,6 +75,6 @@ const char *feature_enabled(const char *, const char *);
  * (a comma-separated feature list).
  */
 #define test_enabled(feature) \
-	(('\0' != test) ? feature_enabled(test, feature) : NULL)
+	(('\0' != test[0]) ? feature_enabled(test, feature) : NULL)
 
 #endif
