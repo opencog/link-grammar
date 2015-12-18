@@ -618,6 +618,8 @@ fi
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
 # ===================================================================
+
+PerlFound=no
 if test "x$enable_perl_bindings" = "xyes"; then
 	# Look for the perl bits and pieces...
 	# AX_PERL_EXT isn't working for me ...
