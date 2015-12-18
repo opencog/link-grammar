@@ -219,6 +219,13 @@ AC_ARG_ENABLE( python-bindings,
   [enable_python_bindings=no]
 )
 
+# Perl now disabled by default
+AC_ARG_ENABLE( perl-bindings,
+  [  --enable-perl-bindings  create perl bindings to the link-grammar library],
+  [],
+  [enable_perl_bindings=no]
+)
+
 # ====================================================================
 # SAT solver now enabled by default
 
@@ -612,30 +619,34 @@ fi
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
 # ===================================================================
-# Look for the perl bits and pieces...
-# AX_PERL_EXT isn't working for me ...
-# AX_PATH_EXT
-if test -z "$PERL_EXT_INC" ; then
-	PERL_EXT_INC=`perl -MConfig -e 'print $Config{archlib}'`
-fi
-AC_MSG_RESULT([$PERL_EXT_INC])
-PERL_CFLAGS="-I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
-AC_SUBST(PERL_EXT_INC)
-AC_SUBST(PERL_CFLAGS)
+if test "x$enable_perl_bindings" = "xyes"; then
+	# Look for the perl bits and pieces...
+	# AX_PERL_EXT isn't working for me ...
+	# AX_PATH_EXT
+	if test -z "$PERL_EXT_INC" ; then
+		PERL_EXT_INC=`perl -MConfig -e 'print $Config{archlib}'`
+	fi
+	AC_MSG_RESULT([$PERL_EXT_INC])
+	PERL_CFLAGS="-I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
+	AC_SUBST(PERL_EXT_INC)
+	AC_SUBST(PERL_CFLAGS)
 
-# PERL_EXT_LIB is where to install, typically /usr/local/lib/perl/5.14.2
-# or similar.
-if test -z "$PERL_EXT_LIB" ; then
-	PERL_EXT_LIB=`perl -MConfig -e 'print $Config{sitearchexp}'`
-fi
-AC_MSG_RESULT([$PERL_EXT_LIB])
-AC_SUBST(PERL_EXT_LIB)
+	# PERL_EXT_LIB is where to install, typically /usr/local/lib/perl/5.14.2
+	# or similar.
+	if test -z "$PERL_EXT_LIB" ; then
+		PERL_EXT_LIB=`perl -MConfig -e 'print $Config{sitearchexp}'`
+	fi
+	AC_MSG_RESULT([$PERL_EXT_LIB])
+	AC_SUBST(PERL_EXT_LIB)
 
-save_cpp_flags=${CPPFLAGS}
-CPPFLAGS="${CPPFLAGS} ${PERL_CFLAGS}"
-AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
-AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
-CPPFLAGS=$save_cpp_flags
+	save_cpp_flags=${CPPFLAGS}
+	CPPFLAGS="${CPPFLAGS} ${PERL_CFLAGS}"
+	AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
+	AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
+	CPPFLAGS=$save_cpp_flags
+else
+	AM_CONDITIONAL(HAVE_PERL, false)
+fi
 
 # ===================================================================
 # Find python things.
