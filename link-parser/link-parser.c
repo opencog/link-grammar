@@ -339,6 +339,26 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 	}
 }
 
+/**
+ * Check for the auto-next-linkage test request (for LG code development).
+ * It is given using the special command: test=auto-next-linkage[:display_max]
+ * when :display_max is an optional indication of the maximum number of
+ * linkages to auto-display (the default is DISPLAY_MAX).
+ * For example, to issue up to 20000 linkages for each batch sentence,
+ * the following can be used:
+ * link-parser -limit=30000 -test=auto-next-linkage:20000 < file.batch
+ */
+static int auto_next_linkage_test(const char *test)
+{
+	char auto_next_linkage_str[] = ",auto-next-linkage";
+	char *auto_next_linkage_pos = strstr(test, auto_next_linkage_str);
+	int max_display;
+
+	if (auto_next_linkage_pos == NULL) return 0;
+	max_display = atoi(auto_next_linkage_pos + sizeof(auto_next_linkage_str));
+	if (max_display != 0) return max_display;
+	return DISPLAY_MAX;
+}
 
 static int process_some_linkages(Sentence sent, Command_Options* copts)
 {
@@ -347,17 +367,26 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 	Linkage linkage;
 	double corpus_cost;
 	Parse_Options opts = copts->popts;
+	int display_max = DISPLAY_MAX;
+	bool auto_next_linkage = false;
+
+	i = auto_next_linkage_test(test);
+	if (i != 0)
+	{
+		display_max = i;
+		auto_next_linkage = true;
+	}
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
 	num_to_query = sentence_num_linkages_post_processed(sent);
 	if (!copts->display_bad)
 	{
 		num_to_display = MIN(sentence_num_valid_linkages(sent),
-		                     DISPLAY_MAX);
+		                     display_max);
 	}
 	else
 	{
-		num_to_display = MIN(num_to_query, DISPLAY_MAX);
+		num_to_display = MIN(num_to_query, display_max);
 	}
 
 	for (i=0, num_displayed=0; i<num_to_query; i++)
@@ -431,7 +460,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 
 		if (++num_displayed < num_to_display)
 		{
-			if (!strstr(test, ",auto-next-linkage,"))
+			if (!auto_next_linkage)
 			{
 				if (verbosity > 0)
 				{
@@ -818,7 +847,7 @@ int main(int argc, char * argv[])
 		{
 			/* In batch mode warn only once.
 			 * In auto-next-linkage mode don't warn at all. */
-			if (!batch_in_progress && (NULL == strstr(test, ",auto-next-linkage,")))
+			if (!batch_in_progress && !auto_next_linkage_test(test))
 			{
 				fflush(stdout);
 				/* Remind the developer this is a test mode. */
