@@ -85,7 +85,10 @@ nonCAP.zzz: ZZZ-;
 % The marker-common-entity is used to identify all common nouns
 % and adjectives that might appear in entity names:
 % e.g. "Great Southern Federal Bank and Railroad" or "Aluminum Bahrain"
-% These markers are used in the Java interfaces, to help identify entities.
+% These markers are used by the tokenizer, to help identify entities,
+% which can appear capitalized at the start of sentences.  (Actually,
+% at this time, only <marker-common-entity> is used. We keep around
+% <marker-entity> just in case :-)
 <marker-entity>: XXXENTITY+;
 <marker-common-entity>: XXXGIVEN+;
 
