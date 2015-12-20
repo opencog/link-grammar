@@ -2259,7 +2259,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			if (!word_can_split && !word_is_known &&
 				 (!word_is_capitalizable || (lc_word_is_in_dict &&
-					(is_entity(dict, word) || is_common_entity(dict, downcase)))))
+					(is_common_entity(dict, downcase) || is_entity(dict, word)))))
 			{
 				/* Issue it (capitalized) too */
 				if ((NULL != unsplit_word->regex_name))
