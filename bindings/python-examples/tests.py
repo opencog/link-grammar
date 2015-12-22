@@ -351,7 +351,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'May.f', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('May sat down.')[0].words()),
-             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
 
         # McGyver is not in the dict, but is regex-matched.
         self.assertEqual(list(self.parse_sent('McGyver\'s going?')[0].words()),
