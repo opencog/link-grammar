@@ -10,6 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _FAST_MATCH_H_
+#define _FAST_MATCH_H_
+
 #include "link-includes.h"
 #include "structures.h"
 
@@ -19,3 +22,5 @@ void free_fast_matcher(fast_matcher_t*);
 
 Match_node * form_match_list(fast_matcher_t *, int, Connector *, int, Connector *, int);
 void put_match_list(fast_matcher_t *, Match_node *);
+
+#endif
