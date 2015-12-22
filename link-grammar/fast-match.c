@@ -30,8 +30,15 @@
  * is created by calling the alloc_fast_matcher() function.
  *
  * free_fast_matcher() is used to free the matcher.
- * put_match_list() releases the memory that form_match_list returned.
+ * form_match_list() manages its memory as a "stack" - match-lists are
+ * pushed on this stack. The said stack size gets over 2048 entries only
+ * for long and/or complex sentences.
+ * pop_match_list() releases the memory that form_match_list() returned
+ * by unwinding this stack.
  */
+
+#define MATCH_LIST_SIZE_INIT 4096 /* the initial size of the match-list stack */
+#define MATCH_LIST_SIZE_INC 2     /* match-list stack increase size factor */
 
 /**
  * returns the number of disjuncts in the list that have non-null
@@ -55,52 +62,19 @@ static int right_disjunct_list_length(const Disjunct * d)
 	return i;
 }
 
-struct fast_matcher_s
-{
-	size_t size;
-	unsigned int *l_table_size;  /* the sizes of the hash tables */
-	unsigned int *r_table_size;
-
-	/* the beginnings of the hash tables */
-	Match_node *** l_table;
-	Match_node *** r_table;
-
-	/* I'll pedantically maintain my own list of these cells */
-	Match_node * mn_free_list;
-};
-
-
 /**
- * Return a match node to be used by the caller
+ * Return a match-list element to be used by the caller.
  */
-static Match_node * get_match_node(fast_matcher_t *ctxt)
+static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 {
-	Match_node * m;
-	if (ctxt->mn_free_list != NULL)
+	if (ctxt->match_list_end > ctxt->match_list_size)
 	{
-		m = ctxt->mn_free_list;
-		ctxt->mn_free_list = m->next;
+		ctxt->match_list_size *= MATCH_LIST_SIZE_INC;
+		ctxt->match_list = realloc(ctxt->match_list,
+		                      ctxt->match_list_size * sizeof(*ctxt->match_list));
 	}
-	else
-	{
-		m = (Match_node *) xalloc(sizeof(Match_node));
-	}
-	return m;
-}
 
-/**
- * Put these nodes back onto my free list
- */
-void put_match_list(fast_matcher_t *ctxt, Match_node *m)
-{
-	Match_node * xm;
-
-	for (; m != NULL; m = xm)
-	{
-		xm = m->next;
-		m->next = ctxt->mn_free_list;
-		ctxt->mn_free_list = m;
-	}
+	ctxt->match_list[ctxt->match_list_end++] = d;
 }
 
 static void free_match_list(Match_node * t)
@@ -133,8 +107,10 @@ void free_fast_matcher(fast_matcher_t *mchxt)
 		}
 		xfree((char *)mchxt->r_table[w], mchxt->r_table_size[w] * sizeof (Match_node *));
 	}
-	free_match_list(mchxt->mn_free_list);
-	mchxt->mn_free_list = NULL;
+
+	free(mchxt->match_list);
+	lgdebug(5, "Sentence size %zu, match_list_size %zu\n",
+	        mchxt->size, mchxt->match_list_size);
 
 	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
 	xfree(mchxt->l_table, mchxt->size * sizeof(Match_node **));
@@ -307,7 +283,10 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	ctxt->l_table = xalloc(2 * sent->length * sizeof(Match_node **));
 	ctxt->r_table = ctxt->l_table + sent->length;
 	memset(ctxt->l_table, 0, 2 * sent->length * sizeof(Match_node **));
-	ctxt->mn_free_list = NULL;
+
+	ctxt->match_list_size = MATCH_LIST_SIZE_INIT;
+	ctxt->match_list = xalloc(ctxt->match_list_size * sizeof(*ctxt->match_list));
+	ctxt->match_list_end = 0;
 
 	for (w=0; w<sent->length; w++)
 	{
@@ -393,15 +372,16 @@ static void match_stats(Connector *c1, Connector *c2)
  * clutters the source code very much, as it needs to be inserted in plenty
  * of places.)
  */
-static void print_match_list(int id, Match_node *m, int w,
+static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw)
 {
 	if (!debug_level(9)) return;
+	Disjunct **m = &ctxt->match_list[mlb];
 
-	for (; m != NULL; m = m->next)
+	for (; NULL != *m; m++)
 	{
-		Disjunct *d = m->d;
+		Disjunct *d = *m;
 
 		printf("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
 		       id, lw , N(lc), d->match_left ? '=': ' ',
@@ -513,12 +493,13 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
  * same disjunct is set to true when the mr list is processed, and this
  * disjunct is not added again.
  */
-Match_node *
+size_t
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *mx, *my, *mr_end, *front, **mxp;
+	Match_node *mx, *mr_end, **mxp;
+	size_t front = ctxt->match_list_end;
 	Match_node *ml = NULL, *mr = NULL;
 	match_cache mc;
 
@@ -549,7 +530,6 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	mr_end = mx;
 
-	front = NULL;
 	/* Construct the list of things that could match the left. */
 	mc.string = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
@@ -561,13 +541,10 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		if (!mx->d->match_left) continue;
 		mx->d->match_right = false;
 
-		my = get_match_node(ctxt);
-		my->d = mx->d;
-		my->next = front;
-		front = my;
 #ifdef VERIFY_MATCH_LIST
 		mx->d->match_id = lid;
 #endif
+		push_match_list_element(ctxt, mx->d);
 	}
 
 	/* Append the list of things that could match the right.
@@ -583,15 +560,13 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc);
 		if (!mx->d->match_right || mx->d->match_left) continue;
 
-		my = get_match_node(ctxt);
-		my->d = mx->d;
-		my->next = front;
-		front = my;
 #ifdef VERIFY_MATCH_LIST
 		mx->d->match_id = lid;
 #endif
+		push_match_list_element(ctxt, mx->d);
 	}
 
-	print_match_list(lid, front, w, lc, lw, rc, rw);
+	push_match_list_element(ctxt, NULL);
+	print_match_list(ctxt, lid, front, w, lc, lw, rc, rw);
 	return front;
 }

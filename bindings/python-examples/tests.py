@@ -280,7 +280,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.link(3),
                          Link(linkage, 3, 'this.p','Ss*b','Ss','is.v'))
         self.assertEqual(linkage.link(4),
-                         Link(linkage, 4, 'is.v','O*m','Os','sentence.n'))
+                         Link(linkage, 4, 'is.v','O*t','Os','sentence.n'))
         self.assertEqual(linkage.link(5),
                          Link(linkage, 5, 'a','Ds**c','Ds**c','sentence.n'))
         self.assertEqual(linkage.link(6),

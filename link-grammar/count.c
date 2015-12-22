@@ -284,21 +284,22 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 
 	for (w = start_word; w < end_word; w++)
 	{
-		Match_node *m, *m1;
-		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
+		size_t mlb, mle;
+		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
 #ifdef VERIFY_MATCH_LIST
-		int id = m ? m->d->match_id : 0;
+		int id = get_match_list_element(mchxt, mlb) ?
+		            get_match_list_element(mchxt, mlb)->match_id : 0;
 #endif
-		for (; m != NULL; m = m->next)
+		for (; mchxt->match_list[mle] != NULL; mle++)
 		{
 			unsigned int lnull_cnt, rnull_cnt;
-			Disjunct * d = m->d;
-#ifdef VERIFY_MATCH_LIST
-			assert(id == d->match_id, "Modified id (%d!=%d)\n", id, d->match_id);
-#endif
+			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
 
+#ifdef VERIFY_MATCH_LIST
+			assert(id == d->match_id, "Modified id (%d!=%d)\n", id, d->match_id);
+#endif
 			/* _p1 avoids a gcc warning about unsafe loop opt */
 			unsigned int null_count_p1 = null_count + 1;
 
@@ -420,13 +421,13 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 						total = INT_MAX;
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 						t->count = total;
-						put_match_list(mchxt, m1);
+						pop_match_list(mchxt, mlb);
 						return total;
 					}
 				}
 			}
 		}
-		put_match_list(mchxt, m1);
+		pop_match_list(mchxt, mlb);
 	}
 	t->count = total;
 	return total;
