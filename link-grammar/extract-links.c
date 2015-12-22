@@ -377,13 +377,13 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	RECOUNT({xt->set.recount = 0;})
 	for (w = start_word; w < end_word; w++)
 	{
-		Match_node * m, *mlist;
-		mlist = form_match_list(mchxt, w, le, lw, re, rw);
+		size_t mlb, mle;
+		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
 		// if (mlist) mlist = sort_matchlist(mlist);
-		for (m = mlist; m != NULL; m = m->next)
+		for (; mchxt->match_list[mle] != NULL; mle++)
 		{
 			unsigned int lnull_count, rnull_count;
-			Disjunct* d = m->d;
+			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
 
@@ -505,7 +505,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				}
 			}
 		}
-		put_match_list(mchxt, mlist);
+		pop_match_list(mchxt, mlb);
 	}
 	return &xt->set;
 }
