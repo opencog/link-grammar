@@ -380,7 +380,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		size_t mlb, mle;
 		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
 		// if (mlist) mlist = sort_matchlist(mlist);
-		for (; mchxt->match_list[mle] != NULL; mle++)
+		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			unsigned int lnull_count, rnull_count;
 			Disjunct *d = get_match_list_element(mchxt, mle);

@@ -63,7 +63,7 @@ static int right_disjunct_list_length(const Disjunct * d)
 }
 
 /**
- * Return a match-list element to be used by the caller.
+ * Push a match-list element into the match-list array.
  */
 static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 {

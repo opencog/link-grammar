@@ -290,7 +290,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		int id = get_match_list_element(mchxt, mlb) ?
 		            get_match_list_element(mchxt, mlb)->match_id : 0;
 #endif
-		for (; mchxt->match_list[mle] != NULL; mle++)
+		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			unsigned int lnull_cnt, rnull_cnt;
 			Disjunct *d = get_match_list_element(mchxt, mle);
