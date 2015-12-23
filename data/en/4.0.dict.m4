@@ -3907,9 +3907,10 @@ reigned.v-d ruled.w-d: VERB_SPPP_I(<vc-reign>);
 reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: "She looked him over."
-% [K+]0.05: perfer Pa+ to K+ whenever possible: "She looked up"
-<vc-look>: {({@MV+} & (LI+ or Pa+))
-  or ({[K+]0.05 or AF-} & {@MV+})
+% [K+]0.2: perfer Pa+ to K+ whenever possible: "She looked up"
+% [Pa+]0.1: perfer MVa to Pa whenever possible: "She look right"
+<vc-look>: {({@MV+} & (LI+ or [Pa+]0.1))
+  or ({[K+]0.2 or AF-} & {@MV+})
   or ((O+ & K+) & {@MV+})};
 look.v: VERB_PLI(<vc-look>);
 looks.v: VERB_S_T(<vc-look>);
