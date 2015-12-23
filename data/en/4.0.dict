@@ -4416,8 +4416,11 @@ reigned.v-d ruled.w-d:
 reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: "She looked him over."
-% [K+]0.2: perfer Pa+ to K+ whenever possible: "She looked up"
-% [Pa+]0.1: perfer MVa to Pa whenever possible: "She look right"
+% MVa+ connects to adverbs.
+% Pa+ connects to common adjectives (predicative adjectives)
+% K+ connects to particles.
+% [Pa+]0.1: prefer MVa to Pa whenever possible: "She look right"
+% [K+]0.2: prefer Pa+ to K+ whenever possible: "She looked up"
 <vc-look>: {({@MV+} & (LI+ or [Pa+]0.1))
   or ({[K+]0.2 or AF-} & {@MV+})
   or ((O+ & K+) & {@MV+})};
@@ -8388,6 +8391,7 @@ around:
 % K-: "They ran the motor flat out"
 flat_out: K-;
 
+% up, down behaving as prepositions.
 % EN- & Pp-: "you are halfway out"
 % EN- & J-: "We stopped, about halfway up"
 % {J+} & <fronted>: "Down the stairs came the dog", "Down came the dog".
@@ -10714,7 +10718,8 @@ high.e deep.e low.e:
     <advcl-verb> or
     Qe+);
 
-left.e right.e straight.e:
+% up, down behaving as adverbs: "She looked down"
+left.e right.e straight.e up.e down.e:
   ({EE- or EF+} &
     (({Xd- & Xc+} & MVa-)
     or ({Xc+ & {Xd-}} & CO+)
