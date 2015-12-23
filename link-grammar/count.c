@@ -461,7 +461,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
  * the cost of each of the parses. The number and width of the bins
  * is adjustable in histogram.c. At this time, the histogram is not
  * used anywhere, and a 3-5% speedup is available if it is avoided.
- * We plan to use this historgram, later ....
+ * We plan to use this histogram, later ....
  */
 Count_bin do_parse(Sentence sent,
                    fast_matcher_t *mchxt,
