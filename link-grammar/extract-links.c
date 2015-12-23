@@ -242,7 +242,7 @@ static Match_node* sort_matchlist(Match_node* mlist)
 	for (mx = mlist; mx->next != NULL; mx = mx->next) len++;
 	if (1 == len) return mlist;
 
-	/* Avoid blowing out the stack. Its hopless. */
+	/* Avoid blowing out the stack. Its hopeless. */
 	if (100000 < len) return mlist;
 
 	marr = alloca(len * sizeof(Match_node*));
@@ -290,7 +290,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	/* Perhaps we've already computed it; if so, return it. */
 	if (xt != NULL) return &xt->set;
 
-	/* Start it out with the empty set of parse chocies. */
+	/* Start it out with the empty set of parse choices. */
 	/* This entry must be updated before we return. */
 	xt = x_table_store(lw, rw, le, re, null_count, pi);
 
@@ -380,7 +380,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		size_t mlb, mle;
 		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
 		// if (mlist) mlist = sort_matchlist(mlist);
-		for (; mchxt->match_list[mle] != NULL; mle++)
+		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			unsigned int lnull_count, rnull_count;
 			Disjunct *d = get_match_list_element(mchxt, mle);
@@ -532,7 +532,7 @@ static bool set_overflowed(Parse_info pi)
 {
 	unsigned int i;
 
-	assert(pi->x_table != NULL, "called set_verflowed with x_table==NULL");
+	assert(pi->x_table != NULL, "called set_overflowed with x_table==NULL");
 	for (i=0; i<pi->x_table_size; i++)
 	{
 		X_table_connector *t;

@@ -41,7 +41,7 @@
 #define MATCH_LIST_SIZE_INC 2     /* match-list stack increase size factor */
 
 /**
- * returns the number of disjuncts in the list that have non-null
+ * Returns the number of disjuncts in the list that have non-null
  * left connector lists.
  */
 static int left_disjunct_list_length(const Disjunct * d)
@@ -63,7 +63,7 @@ static int right_disjunct_list_length(const Disjunct * d)
 }
 
 /**
- * Return a match-list element to be used by the caller.
+ * Push a match-list element into the match-list array.
  */
 static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 {
@@ -219,7 +219,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 			/* Increment and try again. Every hash bucket MUST have
 			 * a unique upper-case part, since later on, we only
 			 * compare the lower-case parts, assuming upper-case
-			 * parts are already equal. So just look for teh next
+			 * parts are already equal. So just look for the next
 			 * unused hash bucket.
 			 */
 			h = (h + 1) & (size-1);
