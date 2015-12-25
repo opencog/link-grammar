@@ -416,6 +416,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	bool subword_eq_unsplit_word;
 	char *buff;
 	size_t maxword = 0;
+	bool last_split = false;        /* this is a final token */
 #ifdef DEBUG
 	Gword *sole_alternative_of_itself = NULL;
 #endif
@@ -464,14 +465,20 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			token_ord++;
 			switch (at)
 			{
-				size_t sz;
-
 				/* Mark the token with INFIX_MARK if needed. */
 				case PREFIX: /* set to word= */
-					sz = strlen(*affix);
-					strncpy(buff, *affix, sz);
-					buff[sz] = infix_mark;
-					buff[sz+1] = '\0';
+					if ('\0' == infix_mark)
+					{
+						buff = (char *)*affix;
+					}
+					else
+					{
+						size_t sz = strlen(*affix);
+						memcpy(buff, *affix, sz);
+						buff[sz] = infix_mark;
+						buff[sz+1] = '\0';
+						last_split = true;
+					}
 					if (is_contraction_word(unsplit_word->subword))
 						morpheme_type = MT_CONTR;
 					else
@@ -480,21 +487,30 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				case STEM:   /* already word, word.=, word.=x */
 					/* Stems are already marked with a stem subscript, if needed.
 					 * The possible marks are set in the affix class STEMSUBSCR. */
-					strcpy(buff, *affix);
-					morpheme_type = is_stem(buff) ? MT_STEM : MT_WORD;
+					buff = (char *)*affix;
+					if (is_stem(buff))
+					{
+						morpheme_type = MT_STEM;
+						last_split = true;
+					}
+					else
+					{
+						morpheme_type = MT_WORD;
+					}
 					break;
 				case SUFFIX: /* set to =word */
 					/* If the suffix starts with an apostrophe, don't mark it */
 					if ((('\0' != (*affix)[0]) && !is_utf8_alpha(*affix)) ||
 					    '\0' == infix_mark)
 					{
-						strcpy(buff, *affix);
+						buff = (char *)*affix;
 						if (is_contraction_word(unsplit_word->subword))
 							morpheme_type = MT_CONTR;
 						else
 							morpheme_type = MT_WORD;
 						break;
 					}
+					last_split = true;
 					buff[0] = infix_mark;
 					strcpy(&buff[1], *affix);
 					morpheme_type = MT_SUFFIX;
@@ -587,6 +603,15 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				subword->unsplit_word = unsplit_word;
 				subword->split_counter = unsplit_word->split_counter + 1;
 				subword->morpheme_type = morpheme_type;
+				if (last_split)
+				{
+					/* This is a stem, or an affix which is marked by INFIX_MARK.
+					 * Hence it must be a dict word - regex/spell are not done
+					 * for stems/affixes. Also, it cannot split further.
+					 * Save resources by marking it accordingly. */
+					subword->status |= WS_INDICT;
+					subword->tokenizing_step = TS_DONE;
+				}
 				word_label(sent, subword, "+", label);
 
 				/* If the subword is equal to the unsplit_word (may happen when the
