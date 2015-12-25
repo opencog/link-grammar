@@ -465,18 +465,20 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			token_ord++;
 			switch (at)
 			{
-				size_t sz;
-
 				/* Mark the token with INFIX_MARK if needed. */
 				case PREFIX: /* set to word= */
-					sz = strlen(*affix);
-					strncpy(buff, *affix, sz);
-					if ('\0' != infix_mark)
+					if ('\0' == infix_mark)
 					{
-						buff[sz++] = infix_mark;
+						buff = (char *)*affix;
+					}
+					else
+					{
+						size_t sz = strlen(*affix);
+						memcpy(buff, *affix, sz);
+						buff[sz] = infix_mark;
+						buff[sz+1] = '\0';
 						last_split = true;
 					}
-					buff[sz] = '\0';
 					if (is_contraction_word(unsplit_word->subword))
 						morpheme_type = MT_CONTR;
 					else
@@ -485,7 +487,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				case STEM:   /* already word, word.=, word.=x */
 					/* Stems are already marked with a stem subscript, if needed.
 					 * The possible marks are set in the affix class STEMSUBSCR. */
-					strcpy(buff, *affix);
+					buff = (char *)*affix;
 					if (is_stem(buff))
 					{
 						morpheme_type = MT_STEM;
@@ -501,7 +503,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					if ((('\0' != (*affix)[0]) && !is_utf8_alpha(*affix)) ||
 					    '\0' == infix_mark)
 					{
-						strcpy(buff, *affix);
+						buff = (char *)*affix;
 						if (is_contraction_word(unsplit_word->subword))
 							morpheme_type = MT_CONTR;
 						else
