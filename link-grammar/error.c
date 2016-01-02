@@ -20,7 +20,7 @@
 #include "structures.h"
 #include "api-structures.h"
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(LINK_GRAMMAR_STATIC)
 #define DLLEXPORT __declspec(dllexport)
 #else
 #define DLLEXPORT
