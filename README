@@ -243,6 +243,13 @@ BUILDING on Windows
    See also:
    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
+   By default, the library is configured to create a DLL. If you want
+   to instead build a static library, the macro LINK_GRAMMAR_STATIC must
+   be defined before the inclusion of any header files for both the compiling
+   of the link-grammar library and for the application that uses it. Other
+   compiler settings will also have to be changed to create a static library
+   of course.
+
    The different build methods below are NOT regularly tested, and
    some link-grammar versions may have build issues.  If you are an
    experienced Windows developer who knows how to make things work
