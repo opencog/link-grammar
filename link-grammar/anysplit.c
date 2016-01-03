@@ -49,9 +49,6 @@ typedef struct split_cache /* split cached by word length */
 	bool *p_selected;    /* list of selected splits */
 } split_cache;
 
-#ifndef NUMELEMS
-#define NUMELEMS(a) (sizeof(a) / sizeof((a)[0]))
-#endif
 typedef struct anysplit_params
 {
 	int nparts;                /* maximum number of suffixes to split to */
@@ -191,7 +188,7 @@ void free_anysplit(Dictionary afdict)
 
 	if (NULL == as) return;
 
-	for (i = 0; i < NUMELEMS(as->scl); i++)
+	for (i = 0; i < ARRAY_SIZE(as->scl); i++)
 	{
 		if (NULL == as->scl[i].sp) continue;
 		free(as->scl[i].sp);
@@ -367,7 +364,7 @@ bool anysplit_init(Dictionary afdict)
 	}
 
 	as = malloc(sizeof(anysplit_params));
-	for (i = 0; i < NUMELEMS(as->scl); i++) as->scl[i].sp = NULL;
+	for (i = 0; i < ARRAY_SIZE(as->scl); i++) as->scl[i].sp = NULL;
 	afdict->anysplit = as;
 
 	as->regpre = regbuild(regpre->string, regpre->length, AFDICT_REGPRE);

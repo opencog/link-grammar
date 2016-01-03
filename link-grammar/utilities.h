@@ -201,6 +201,10 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
 #endif
 
+#if !defined(ARRAY_SIZE)
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+#endif
+
 /* Optimizations etc. that only gcc understands */
 #if __GNUC__ > 2
 #define GNUC_MALLOC __attribute__ ((malloc))
