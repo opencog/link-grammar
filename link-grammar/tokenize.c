@@ -1132,7 +1132,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 				    boolean_dictionary_lookup(dict, newword))
 				{
 					did_split = true;
-					word_can_split =
+					word_can_split |=
 						add_alternative_with_subscr(sent, unsplit_word,
 						                            NULL, newword, *suffix);
 				}
@@ -1167,7 +1167,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 					/* ??? Do we need a regex match? */
 					if (boolean_dictionary_lookup(dict, newword))
 					{
-						word_can_split =
+						word_can_split |=
 							add_alternative_with_subscr(sent, unsplit_word, prefix[j],
 								                         newword, *suffix);
 					}
