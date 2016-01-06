@@ -452,7 +452,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			        ('\0' == (*affix)[0]) ? "[null]" : *affix);
 		}
 	}
-	lgdebug(D_IWA, "\n");
+
 	char * const buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NUL */
 	const char *token;
 
