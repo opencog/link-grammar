@@ -396,17 +396,17 @@ static bool is_contraction_word(const char *s)
 #define D_IWA 3
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                               const char *label,
-                              int prefnum, const char **prefix,
-                              int stemnum, const char ** stem,
-                              int suffnum, const char **suffix)
+                              int prefnum, const char * const *prefix,
+                              int stemnum, const char * const *stem,
+                              int suffnum, const char * const *suffix)
 {
-	int ai = 0;                    /* affix index */
-	const char **affix;            /* affix list pointer */
-	const char **affixlist[] = { prefix, stem, suffix, NULL };
+	int ai = 0;                     /* affix index */
+	const char * const *affix;      /* affix list pointer */
+	const char * const * const affixlist[] = { prefix, stem, suffix, NULL };
 	const int numlist[] = { prefnum, stemnum, suffnum };
 	enum affixtype { PREFIX, STEM, SUFFIX, END };
 	enum affixtype at;
-	char infix_mark = INFIX_MARK(sent->dict->affix_table);
+	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 	Gword *subword;                 /* subword of the current token */
 	Gword *psubword = NULL;         /* subword of the previous token */
 	const size_t token_tot = prefnum + stemnum + suffnum; /* number of tokens */
@@ -414,7 +414,6 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	Morpheme_type morpheme_type;
 	Gword *alternative_id = NULL;   /* to be set to the start subword */
 	bool subword_eq_unsplit_word;
-	char *buff;
 	size_t maxword = 0;
 	bool last_split = false;        /* this is a final token */
 #ifdef DEBUG
@@ -454,7 +453,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		}
 	}
 	lgdebug(D_IWA, "\n");
-	buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NULL */
+	char * const buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NUL */
+	const char *token;
 
 	for (at = PREFIX; at < END; at++)
 	{
@@ -463,21 +463,19 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		for (affix = affixlist[at]; affixnum-- > 0; affix++, ai++)
 		{
 			token_ord++;
+			token = *affix; /* avoid copying if possible */
 			switch (at)
 			{
 				/* Mark the token with INFIX_MARK if needed. */
 				case PREFIX: /* set to word= */
-					if ('\0' == infix_mark)
-					{
-						buff = (char *)*affix;
-					}
-					else
+					if ('\0' != infix_mark)
 					{
 						size_t sz = strlen(*affix);
 						memcpy(buff, *affix, sz);
 						buff[sz] = infix_mark;
 						buff[sz+1] = '\0';
 						last_split = true;
+						token = buff;
 					}
 					if (is_contraction_word(unsplit_word->subword))
 						morpheme_type = MT_CONTR;
@@ -487,8 +485,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				case STEM:   /* already word, word.=, word.=x */
 					/* Stems are already marked with a stem subscript, if needed.
 					 * The possible marks are set in the affix class STEMSUBSCR. */
-					buff = (char *)*affix;
-					if (is_stem(buff))
+					if (is_stem(token))
 					{
 						morpheme_type = MT_STEM;
 						last_split = true;
@@ -503,7 +500,6 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					if ((('\0' != (*affix)[0]) && !is_utf8_alpha(*affix)) ||
 					    '\0' == infix_mark)
 					{
-						buff = (char *)*affix;
 						if (is_contraction_word(unsplit_word->subword))
 							morpheme_type = MT_CONTR;
 						else
@@ -514,6 +510,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					buff[0] = infix_mark;
 					strcpy(&buff[1], *affix);
 					morpheme_type = MT_SUFFIX;
+					token = buff;
 					break;
 				case END:
 					assert(true, "affixtype END reached");
@@ -521,14 +518,14 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 
 			/* FIXME Use another method instead of checking the label. */
 			if (1 == token_ord && 1 < token_tot && label[0] == 'r' &&
-				 word_start_another_alternative(sent->dict, unsplit_word, buff))
+				 word_start_another_alternative(sent->dict, unsplit_word, token))
 			{
 				/* When called due to left/right strip, the code shouldn't use the
 				 * returned value due to the possibility of this returned NULL. */
 				return NULL;
 			}
 
-			subword_eq_unsplit_word= (0 == strcmp(unsplit_word->subword, buff));
+			subword_eq_unsplit_word= (0 == strcmp(unsplit_word->subword, token));
 
 			if ((1 == token_tot) && subword_eq_unsplit_word)
 			{
@@ -599,7 +596,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			else
 			{
 				/* Add the token as a subword of this alternative */
-				subword = gword_new(sent, buff);
+				subword = gword_new(sent, token);
 				subword->unsplit_word = unsplit_word;
 				subword->split_counter = unsplit_word->split_counter + 1;
 				subword->morpheme_type = morpheme_type;

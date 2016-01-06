@@ -18,6 +18,6 @@ bool flatten_wordgraph(Sentence, Parse_Options);
 
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                      const char *label,
-                     int prefnum, const char **prefix,
-                     int stemnum, const char **stem,
-                     int suffnum, const char **suffix);
+                     int prefnum, const char * const *prefix,
+                     int stemnum, const char * const *stem,
+                     int suffnum, const char * const *suffix);
