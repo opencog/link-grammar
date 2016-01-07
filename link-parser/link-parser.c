@@ -328,7 +328,7 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 		{
 			fprintf(stdout, "Found %d linkage%s (%d had no P.P. violations)",
 					sentence_num_linkages_post_processed(sent),
-					sentence_num_linkages_found(sent) == 1 ? "" : "s",
+					sentence_num_linkages_post_processed(sent) == 1 ? "" : "s",
 					sentence_num_valid_linkages(sent));
 		}
 		if (sentence_null_count(sent) > 0)
