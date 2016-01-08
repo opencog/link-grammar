@@ -331,7 +331,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('Jumbo sat down.')[0].words()),
-             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
 
         # Red is in dict, lower-case, as noun, too.
         # There's no way to really know, syntactically, that Red
@@ -351,7 +351,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'May.f', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('May sat down.')[0].words()),
-             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.e', '.', 'RIGHT-WALL'])
 
         # McGyver is not in the dict, but is regex-matched.
         self.assertEqual(list(self.parse_sent('McGyver\'s going?')[0].words()),
@@ -362,7 +362,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('McGyver sat down.')[0].words()),
-             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('McGyver Industries stock declined.')[0].words()),
              ['LEFT-WALL', 'McGyver[!]', 'Industries[!]',
