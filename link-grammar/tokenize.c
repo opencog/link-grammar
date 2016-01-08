@@ -819,6 +819,29 @@ static Gword *wordgraph_getqueue_word(Sentence sent)
 	return w;
 }
 
+/**
+ * Prevent a further tokenization of all the subwords in the given alternative.
+ * To be used if the alternative represents a final tokenization.
+ */
+static void tokenization_done(Dictionary dict, Gword *altp)
+{
+
+	Gword *alternative_id = altp->alternative_id;
+
+	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
+	{
+		if (NULL == altp) break; /* just in case this is a dummy word */
+
+		/* Mark only words that are in the dict file.
+		 * Other words need further processing. */
+		if (boolean_dictionary_lookup(dict, altp->subword))
+		{
+			altp->status |= WS_INDICT;
+			altp->tokenizing_step = TS_DONE;
+		}
+	}
+}
+
 /*
 	Here's a summary of how subscripts are handled:
 
@@ -1179,30 +1202,6 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 	}
 
 	return word_can_split;
-}
-
-/**
- * Prevent a further tokenization of all the subwords in the given alternative.
- * To be used if further tokenization would create bogus words.
- */
-static void tokenization_done(Dictionary dict, Gword *altp)
-{
-
-	Gword *alternative_id = altp->alternative_id;
-
-	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
-	{
-		if (NULL == altp) break; /* just in case this is a dummy word */
-
-		/* We are bypassing separate_word(), so mark it here if needed. */
-		if (boolean_dictionary_lookup(dict, altp->subword))
-			 altp->status |= WS_INDICT;
-
-		altp->tokenizing_step = TS_DONE;
-
-		/* XXX Why this was needed?! */
-		if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
-	}
 }
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
