@@ -350,35 +350,40 @@ static bool word_start_another_alternative(Dictionary dict,
  * may need a generalization.
  * FIXME? Try to work-around the current need of this functions.
  */
-static char contraction_chars[] = "'`";
+static char const *contraction_char[] = { "'", "’" };
 
 #if 0
 static bool is_contraction_suffix(const char *s)
 {
-	const char *p;
+	size_t len = strlen(s);
 
-	for (p = contraction_chars; '\0' != *p; p++)
-		if (s[0] == *p) return true;
+	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
+	{
+		size_t cclen = strlen(contraction_char[i]);
+		if (len < cclen) continue;
+		if (0 == strncmp(s+len-cclen, contraction_char[i], cclen)) return true;
+	}
 
 	return false;
 }
 
 static bool is_contraction_prefix(const char *s)
 {
-	const char *p;
-	size_t len = strlen(s);
-
-	for (p = contraction_chars; '\0' != *p; p++)
-		if (s[len] == *p) return true;
-
+	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
+	{
+		size_t cclen = strlen(contraction_char[i]);
+		if (0 == strncmp(s, contraction_char[i], cclen)) return true;
+	}
 	return false;
 }
 #endif
 
 static bool is_contraction_word(const char *s)
 {
-	if ('\0' == s[0]) return false; /* just in case */
-	if (NULL != strpbrk(s+1, contraction_chars)) return true;
+	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
+	{
+		if (NULL != strstr(s, contraction_char[i])) return true;
+	}
 	return false;
 }
 
