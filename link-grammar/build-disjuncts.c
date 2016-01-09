@@ -459,7 +459,7 @@ X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(add_empty_word(dict, &eli, dn));
+		x->exp = copy_Exp(dn->exp);
 		if (NULL == s)
 		{
 			x->string = dn->string;

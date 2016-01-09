@@ -28,6 +28,7 @@
 #include "tokenize.h"
 #include "utilities.h"
 #include "word-file.h"
+#include "word-utils.h"
 #include "utilities.h"
 
 const char * linkgrammar_get_version(void)
@@ -1008,56 +1009,45 @@ static Exp * make_connector(Dictionary dict)
  * FIXME However, the ZZZ connectors are still found in the chosen disjuncts
  * and can be visible in the API.
  */
-
-Exp* add_empty_word(Dictionary const dict, Exp_list * eli, Dict_node * dn)
+void add_empty_word(Dictionary const dict, X_node *x)
 {
-	size_t len;
 	Exp *zn, *an;
 	E_list *elist, *flist;
-	/* We assume the affix file has been read by now, so INFIX_MARK is set */
-	char infix_mark = INFIX_MARK(dict->affix_table);
+	Exp_list eli = { NULL };
 
-	if (! dict->empty_word_defined) return dn->exp;
+	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
+	if (MT_WALL == x->word->morpheme_type) return;
 
-	if (is_stem(dn->string)) return dn->exp;
-	len = strlen(dn->string);
-	if ((len > 1) && (infix_mark == dn->string[0])) return dn->exp;
-	if ((len > 1) && (infix_mark == dn->string[len-1])) return dn->exp;
-	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return dn->exp;
-	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return dn->exp;
-	//lgdebug(+0, "Processing '%s'\n", dn->string);
+	/* Replace plain-word-exp by {ZZZ+} & (plain-word-exp) in each X_node.  */
+	for(; NULL != x; x = x->next)
+	{
+		/* zn points at {ZZZ+} */
+		zn = Exp_create(&eli);
+		zn->dir = '+';
+		zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+		zn->multi = false;
+		zn->type = CONNECTOR_type;
+		zn->cost = 0.0;
+		zn = make_optional_node(&eli, zn);
 
-	/* If we are here, then this appears to be not a stem, not a
-	 * suffix, and not an idiom word.
-	 * Create {ZZZ+} & (plain-word-exp). */
+		/* flist is plain-word-exp */
+		flist = (E_list *) xalloc(sizeof(E_list));
+		flist->next = NULL;
+		flist->e = x->exp;
 
-	/* zn points at {ZZZ+} */
-	zn = Exp_create(eli);
-	zn->dir = '+';
-	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
-	zn->multi = false;
-	zn->type = CONNECTOR_type;
-	zn->cost = 0.0;
-	zn = make_optional_node(eli, zn);
+		/* elist is {ZZZ+} , (plain-word-exp) */
+		elist = (E_list *) xalloc(sizeof(E_list));
+		elist->next = flist;
+		elist->e = zn;
 
-	/* flist is plain-word-exp */
-	flist = (E_list *) xalloc(sizeof(E_list));
-	flist->next = NULL;
-	flist->e = dn->exp;
+		/* an will be {ZZZ+} & (plain-word-exp) */
+		an = Exp_create(&eli);
+		an->type = AND_type;
+		an->cost = 0.0;
+		an->u.l = elist;
 
-	/* elist is {ZZZ+} , (plain-word-exp) */
-	elist = (E_list *) xalloc(sizeof(E_list));
-	elist->next = flist;
-	elist->e = zn;
-
-	/* an will be {ZZZ+} & (plain-word-exp) */
-	an = Exp_create(eli);
-	an->type = AND_type;
-	an->cost = 0.0;
-	an->u.l = elist;
-
-	/* Return {ZZZ+} & (plain-word-exp) */
-	return an;
+		x->exp = an;
+	}
 }
 
 /* ======================================================================== */
