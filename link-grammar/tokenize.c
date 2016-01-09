@@ -2631,7 +2631,6 @@ static Word *word_new(Sentence sent)
 #define D_X_NODE 8
 #define D_DWE 5
 static bool determine_word_expressions(Sentence sent, Gword *w,
-                                       Parse_Options opts,
                                        unsigned int *ZZZ_added)
 {
 	Dictionary dict = sent->dict;
@@ -2700,7 +2699,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (D_X_NODE <= opts->verbosity)
+	if (D_X_NODE <= verbosity)
 	{
 		/* Print the X_node details for the word. */
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
@@ -2837,7 +2836,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 					if (!sent->dict->empty_word_defined)
 						prt_error("Error: %s must be defined!\n", EMPTY_WORD_DOT);
 
-					if (!determine_word_expressions(sent, empty_word(), opts, &ZZZ_added))
+					if (!determine_word_expressions(sent, empty_word(), &ZZZ_added))
 						error_encountered = true;
 					empty_word_encountered = true;
 				}
@@ -2851,7 +2850,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				/* This is a new wordgraph word.
 				 */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, opts, &ZZZ_added))
+				if (!determine_word_expressions(sent, wg_word, &ZZZ_added))
 					error_encountered = true;
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    0== strcmp(wg_word->subword, RIGHT_WALL_WORD))
