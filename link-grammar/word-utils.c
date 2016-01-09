@@ -348,7 +348,7 @@ static bool exp_has_connector(Exp * e, const char * cs, char direction)
 	}
 	for (el = e->u.l; el != NULL; el = el->next)
 	{
-		if (exp_has_connector(el->e, cs, direction)) return false;
+		if (exp_has_connector(el->e, cs, direction)) return true;
 	}
 	return false;
 }
