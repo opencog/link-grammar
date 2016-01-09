@@ -365,6 +365,19 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 #endif /* CRAZY_OBESE_CHECKING_AGLO */
 
 /**
+ * Find if an expression has a connector ZZZ- (that an empty-word has).
+ * FIXME: This is a costly way to find it. A cheaper way is to mark
+ * such words at dictionary read time (or to add a "shallow" flag to
+ * exp_has_connector()).
+ **/
+bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
+{
+	const char *cs = string_set_lookup(EMPTY_CONNECTOR, dict->string_set);
+	if (NULL == cs) return false;
+	return exp_has_connector(exp, cs, '-', /*smart_match*/false);
+}
+
+/**
  * If word has a connector, return it.
  * If word has more than one connector, return NULL.
  */

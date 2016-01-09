@@ -23,6 +23,7 @@ void free_Exp(Exp *);
 void free_E_list(E_list *);
 int  size_of_expression(Exp *);
 Exp * copy_Exp(Exp *);
+bool is_exp_like_empty_word(Dictionary dict, Exp *);
 /* int exp_compare(Exp * e1, Exp * e2); */
 /* int exp_contains(Exp * super, Exp * sub); */
 
