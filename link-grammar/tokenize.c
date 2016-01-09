@@ -2699,7 +2699,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (D_X_NODE <= verbosity)
+	if (debug_level(D_X_NODE))
 	{
 		/* Print the X_node details for the word. */
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
