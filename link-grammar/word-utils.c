@@ -337,25 +337,30 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 }
 #else /* CRAZY_OBESE_CHECKING_AGLO */
 
-static bool exp_has_connector(Exp * e, const char * cs, char direction)
+/**
+ * Return true if the given expression has the given connector.
+ * The connector cs argument must originally be in the dictionary string set.
+ */
+static bool exp_has_connector(const Exp * e, const char * cs, char direction,
+                              bool smart_match)
 {
 	E_list * el;
 	if (e->type == CONNECTOR_type)
 	{
-		if (direction == e->dir)
-			return easy_match(e->u.string, cs);
-		return false;
+		if (direction != e->dir) return false;
+		return smart_match ? easy_match(e->u.string, cs)
+		                   : string_set_cmp(e->u.string, cs);
 	}
 	for (el = e->u.l; el != NULL; el = el->next)
 	{
-		if (exp_has_connector(el->e, cs, direction)) return true;
+		if (exp_has_connector(el->e, cs, direction, smart_match)) return true;
 	}
 	return false;
 }
 
 bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 {
-	return exp_has_connector(dn->exp, cs, direction);
+	return exp_has_connector(dn->exp, cs, direction, /*smart_match*/true);
 }
 #endif /* CRAZY_OBESE_CHECKING_AGLO */
 
