@@ -15,12 +15,8 @@
  */
 
 #include <math.h>
-#include <stdio.h>
-#include <stdint.h>
 
-#include "count.h"
 #include "dict-api.h"
-#include "disjunct-utils.h"
 #include "string-set.h"
 #include "word-utils.h"
 
