@@ -33,7 +33,6 @@
 #include "utilities.h"
 #include "wordgraph.h"
 #include "word-utils.h"
-#include "stdarg.h"
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
