@@ -989,15 +989,15 @@ static Exp * make_connector(Dictionary dict)
  * but can also be split into эт.= =о.mnsi. The problem arises because это.msi
  * is a single word, while эт.= =о.mnsi counts as two words, and there is no
  * pretty way to handle both during parsing. Thus a work-around is introduced:
- * add the empty word =.zzz: ZZZ+; to the dictionary.  This becomes a
- * pseudo-suffix that can attach to any plain word.  It can attach to any
- * plain word only because the routine below, add_empty_word(), adds the
- * corresponding connector ZZZ- to the plain word.  This is done "on the fly",
- * because we don't want to pollute the dictionary with this stuff.  Besides,
- * the Russian dictionary has more then 23K words that qualify for this
- * treatment (It has 22.5K words that appear both as plain words, and as
- * stems, and can thus attach to null suffixes. For non-null suffix splits,
- * there are clearly many more.)
+ * add the empty word EMPTY-WORD.zzz: ZZZ+; to the dictionary.  This becomes
+ * a pseudo-suffix that can attach to the previous word. It can attach to
+ * the previous word only because the routine below, add_empty_word(), adds
+ * the corresponding connector ZZZ- to the word.  This is done "on the
+ * fly", because we don't want to pollute the dictionary with this stuff.
+ * Besides, the Russian dictionary has more then 23K words that qualify for
+ * this treatment (It has 22.5K words that appear both as plain words, and
+ * as stems, and can thus attach to null suffixes. For non-null suffix
+ * splits, there are clearly many more.)
  *
  * The empty words are removed from the linkages after the parsing step.
  * FIXME However, the ZZZ connectors are still found in the chosen disjuncts
