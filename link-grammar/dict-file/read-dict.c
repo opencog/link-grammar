@@ -1035,6 +1035,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		 * handling sentences with multi-suffix splits (less empty-word
 		 * connectors in the sentence). */
 		if (is_stem(x->string)) continue; /* Avoid an unneeded overhead. */
+		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
 		zn = Exp_create(&eli);
