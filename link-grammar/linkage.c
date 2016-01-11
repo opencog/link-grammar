@@ -530,7 +530,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 										move_combined_word = i+m-1;
 
 										/* And the later chosen_word assignment should be:
-										 * chosen_words[-1 == move_combined_word ?
+										 * chosen_words[-1 != move_combined_word ?
 										 *    move_combined_word : i] = t;
 										 */
 									}
