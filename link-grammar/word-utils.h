@@ -14,8 +14,6 @@
 #ifndef _LINK_GRAMMAR_WORD_UTILS_H_
 #define _LINK_GRAMMAR_WORD_UTILS_H_
 
-#include "api-types.h"
-#include "dict-structures.h"
 #include "structures.h"
 
 /* Exp utilities ... */
