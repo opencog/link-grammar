@@ -11,13 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>
 #include <string.h>
 
 #include "build-disjuncts.h"
-#include "dict-api.h"
 #include "dict-common.h"
-#include "disjunct-utils.h"
 #include "error.h"
 #include "print.h"
 #include "externs.h"
@@ -25,11 +22,8 @@
 #include "read-dict.h"
 #include "regex-morph.h"
 #include "string-set.h"
-#include "tokenize.h"
 #include "utilities.h"
 #include "word-file.h"
-#include "word-utils.h"
-#include "utilities.h"
 
 const char * linkgrammar_get_version(void)
 {
