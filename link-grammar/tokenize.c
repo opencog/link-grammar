@@ -33,7 +33,6 @@
 #include "utilities.h"
 #include "wordgraph.h"
 #include "word-utils.h"
-#include "stdarg.h"
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
@@ -2632,7 +2631,7 @@ static Word *word_new(Sentence sent)
 #define D_X_NODE 8
 #define D_DWE 5
 static bool determine_word_expressions(Sentence sent, Gword *w,
-                                       Parse_Options opts)
+                                       unsigned int *ZZZ_added)
 {
 	Dictionary dict = sent->dict;
 	const size_t wordpos = sent->length - 1;
@@ -2640,27 +2639,24 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	const char *s = w->subword;
 	X_node * we = NULL;
 
-	lgdebug(+D_DWE, "Word %zu subword %zu:'%s'", wordpos, w->node_num, s);
+	lgdebug(+D_DWE, "Word %zu subword %zu:'%s' status %s",
+	        wordpos, w->node_num, s, gword_status(sent, w));
 	if (NULL != sent->word[wordpos].unsplit_word)
 		lgdebug(D_DWE, " (unsplit '%s')", sent->word[wordpos].unsplit_word);
-	lgdebug(D_DWE, "\n");
 
 	/* Generate an "alternatives" component. */
 	altappend(sent, &sent->word[wordpos].alternatives, s);
 
 	if (w->status & WS_INDICT)
 	{
-		lgdebug(D_DWE, "WS_INDICT %s\n", w->subword);
 		we = build_word_expressions(sent, w, NULL);
 	}
 	else if (w->status & WS_REGEX)
 	{
-		lgdebug(D_DWE, "WS_REGEX %s\n", w->subword);
 		we = build_word_expressions(sent, w, w->regex_name);
 	}
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
-		lgdebug(+D_DWE, "UNKNOWN_WORD %s\n", s);
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
 		assert(we, UNKNOWN_WORD "must be defined in the dictionary!");
 		w->morpheme_type = MT_UNKNOWN;
@@ -2672,6 +2668,22 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		prt_error("Error: Word '%s': word is unknown\n", w->subword);
 		return false;
 	}
+
+	/* If the current word is an empty-word (or like it), add a
+	 * connector for an empty-word (EMPTY_CONNECTOR - ZZZ+) to the
+	 * previous word. See the comments at add_empty_word().
+	 * As a shortcut, only the first x-node is checked here for ZZZ-,
+	 * supposing that the word has it in all of its dict entries
+	 * (in any case, currently there is only 1 entry for each such word).
+	 * Note that ZZZ_added starts by 0 and so also wordpos, and that the
+	 * first sentence word (usually LEFT-WALL) doesn't need a check. */
+	if ((wordpos != *ZZZ_added) && is_exp_like_empty_word(dict, we->exp))
+	{
+		lgdebug(D_DWE, " (has ZZZ-)");
+		add_empty_word(dict, sent->word[wordpos-1].x);
+		*ZZZ_added = wordpos; /* Remember it for not doing it again */
+	}
+	lgdebug(D_DWE, "\n");
 
 #ifdef DEBUG
 	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
@@ -2687,7 +2699,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (D_X_NODE <= opts->verbosity)
+	if (debug_level(D_X_NODE))
 	{
 		/* Print the X_node details for the word. */
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
@@ -2745,6 +2757,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	size_t max_words = 0;
 	bool error_encountered = false;
 	bool right_wall_encountered = false;
+	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
@@ -2823,7 +2836,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 					if (!sent->dict->empty_word_defined)
 						prt_error("Error: %s must be defined!\n", EMPTY_WORD_DOT);
 
-					if (!determine_word_expressions(sent, empty_word(), opts))
+					if (!determine_word_expressions(sent, empty_word(), &ZZZ_added))
 						error_encountered = true;
 					empty_word_encountered = true;
 				}
@@ -2837,7 +2850,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				/* This is a new wordgraph word.
 				 */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, opts))
+				if (!determine_word_expressions(sent, wg_word, &ZZZ_added))
 					error_encountered = true;
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    0== strcmp(wg_word->subword, RIGHT_WALL_WORD))
