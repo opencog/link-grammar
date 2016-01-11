@@ -341,8 +341,8 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
  * Return true if the given expression has the given connector.
  * The connector cs argument must originally be in the dictionary string set.
  */
-static bool exp_has_connector(const Exp * e, const char * cs, char direction,
-                              bool smart_match)
+static bool exp_has_connector(const Exp * e, int depth, const char * cs,
+                              char direction, bool smart_match)
 {
 	E_list * el;
 	if (e->type == CONNECTOR_type)
@@ -351,30 +351,37 @@ static bool exp_has_connector(const Exp * e, const char * cs, char direction,
 		return smart_match ? easy_match(e->u.string, cs)
 		                   : string_set_cmp(e->u.string, cs);
 	}
+
+	if (depth == 0) return false;
+	if (depth > 0) depth--;
+
 	for (el = e->u.l; el != NULL; el = el->next)
 	{
-		if (exp_has_connector(el->e, cs, direction, smart_match)) return true;
+		if (exp_has_connector(el->e, depth, cs, direction, smart_match))
+			return true;
 	}
 	return false;
 }
 
 bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 {
-	return exp_has_connector(dn->exp, cs, direction, /*smart_match*/true);
+	return exp_has_connector(dn->exp, -1, cs, direction, /*smart_match*/true);
 }
 #endif /* CRAZY_OBESE_CHECKING_AGLO */
 
 /**
  * Find if an expression has a connector ZZZ- (that an empty-word has).
- * FIXME: This is a costly way to find it. A cheaper way is to mark
- * such words at dictionary read time (or to add a "shallow" flag to
- * exp_has_connector()).
+ * This is a costly way to find it. To reduce the overhead, the
+ * exp_has_connector() "depth" argument limits the expression depth check,
+ * supposing the ZZZ- connectors are not deep in the word expression.
+ * FIXME? A cheaper way is to have a dictionary entry which lists such
+ * words, or to mark such words at dictionary read time.
  **/
 bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
 {
 	const char *cs = string_set_lookup(EMPTY_CONNECTOR, dict->string_set);
 	if (NULL == cs) return false;
-	return exp_has_connector(exp, cs, '-', /*smart_match*/false);
+	return exp_has_connector(exp, 2, cs, '-', /*smart_match*/false);
 }
 
 /**
