@@ -530,7 +530,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 										move_combined_word = i+m-1;
 
 										/* And the later chosen_word assignment should be:
-										 * chosen_words[-1 == move_combined_word ?
+										 * chosen_words[-1 != move_combined_word ?
 										 *    move_combined_word : i] = t;
 										 */
 									}
@@ -675,10 +675,15 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	/* We alloc a little more than needed, but so what... */
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 
-	/* Copy over the chosen words, dropping the discarded words. */
+	/* Copy over the chosen words, dropping the discarded words.
+	 * However, don't discard existing words (chosen_words[i][0]).
+	 * Note that if a word only has morphology links and is not combined with
+	 * another word, then it will get displayed with no links at all (e.g.
+	 * when explicitly specifying root and suffix for debug: root.= =suf */
 	for (i=0, j=0; i<linkage->num_words; ++i)
 	{
-		if (chosen_words[i] && (!HIDE_MORPHO || show_word[i]))
+		if (chosen_words[i] &&
+		    (chosen_words[i][0] || (!HIDE_MORPHO || show_word[i])))
 		{
 			linkage->word[j] = chosen_words[i];
 			remap[i] = j;
