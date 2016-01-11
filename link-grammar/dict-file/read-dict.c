@@ -1021,6 +1021,21 @@ void add_empty_word(Dictionary const dict, X_node *x)
 	/* Replace plain-word-exp by {ZZZ+} & (plain-word-exp) in each X_node.  */
 	for(; NULL != x; x = x->next)
 	{
+		/* Ignore stems for now, decreases a little the overhead for
+       * stem-suffix languages.
+       * This line should be removed if these 2 conditions happen together:
+       * 1. Multi-stem splits are to be supported.
+       * 2. Affix splits are done by wordgraph splits.
+       *
+		 * FIXME: A more general solution instead of this line is to add
+		 * empty-word connectors only to the x-nodes that need them, instead
+		 * of adding them, like now, to all the x-nodes of the word that come
+		 * before the empty-word. This will support wordgraph affix splits (if
+		 * will ever be done) and will slightly increase the efficiency of
+		 * handling sentences with multi-suffix splits (less empty-word
+		 * connectors in the sentence). */
+		if (is_stem(x->string)) continue; /* Avoid an unneeded overhead. */
+
 		/* zn points at {ZZZ+} */
 		zn = Exp_create(&eli);
 		zn->dir = '+';
