@@ -1016,11 +1016,11 @@ void add_empty_word(Dictionary const dict, X_node *x)
 	for(; NULL != x; x = x->next)
 	{
 		/* Ignore stems for now, decreases a little the overhead for
-       * stem-suffix languages.
-       * This line should be removed if these 2 conditions happen together:
-       * 1. Multi-stem splits are to be supported.
-       * 2. Affix splits are done by wordgraph splits.
-       *
+		 * stem-suffix languages.
+		 * This line should be removed if these 2 conditions happen together:
+		 * 1. Multi-stem splits are to be supported.
+		 * 2. Affix splits are done by wordgraph splits.
+		 *
 		 * FIXME: A more general solution instead of this line is to add
 		 * empty-word connectors only to the x-nodes that need them, instead
 		 * of adding them, like now, to all the x-nodes of the word that come
