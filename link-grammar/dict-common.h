@@ -14,8 +14,6 @@
 #ifndef _LG_DICT_COMMON_H_
 #define  _LG_DICT_COMMON_H_
 
-#include "api-types.h"
-#include "dict-structures.h"
 #include "structures.h"
 
 /* The functions here are for link-grammar internal use only.
