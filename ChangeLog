@@ -1,5 +1,5 @@
 Version 5.3.4: (XXX 2016)
- * stuff
+ * Fix broken handling of apostrophe.
 
 Version 5.3.3: (23 December 2015)
  * Improve support for quoted phrases.

@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.3 (formatted as V5v3v3+)
-<dictionary-version-number>: V5v3v3+;
+% Dictionary version number is 5.3.4 (formatted as V5v3v4+)
+<dictionary-version-number>: V5v3v4+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -309,7 +309,7 @@ nonCAP.zzz: ZZZ-;
 % play this role.  Likewise th cost on [AN+].
 %
 % The cost on AN+ also discourages crazy AN links to noun cognates of verbs:
-% e.g.  "The Western Railroad runs through town" -- down't want AN to runs.n.
+% e.g.  "The Western Railroad runs through town" -- don't want AN to runs.n.
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
@@ -7256,6 +7256,7 @@ as_soon_as:
   <subcl-verb> & {Xc+ & {Xd-}} & CO*s+;
 
 % J+ & CO+: "Until yesterday, ..."
+% The double-back-tick becomes a single backtick after m4
 until 'til ’til ‘til ``til til till.r:
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
@@ -7420,7 +7421,7 @@ and.j-q: (QJ- & QJ+) & ((Wq- & Q+) or QI-);
 % RJ*t: that "He said that ... and that ..."
 % RJ*c: subordinate clauses: "Although he said ... and he did ..., ..."
 % RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
-% RJ*r: "those" relative clauses: "...: those who do and those who don''t"
+% RJ*r: "those" relative clauses: "...: those who do and those who don't"
 and.j-r or.j-r:
   ((RJlv- & RJrv+) & MVr-) or
   ((RJlt- & RJrt+) & TH-) or
@@ -7451,7 +7452,7 @@ and.j-r or.j-r:
                    ({Xd-} & SJlp- & SJru+ & {[[Xc+]]}) or
                    ({Xd-} & SJls- & SJru+ & {[[Xc+]]});
 
-% Give AN+ a cost, because in general, we don't want to conjoind nouns,
+% Give AN+ a cost, because in general, we don't want to conjoin nouns,
 % and then use the resulting phrase to modify another noun ...
 <noun-conj-head>: Ju- or SJl+ or [[AN+]];
 
@@ -7504,7 +7505,7 @@ or.j-n:
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
-% XJn-" "neither this nor that"
+% XJn- "neither this nor that"
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
 %     a cost only because its a kind of a strange construction ...
 % SJl- & SJr+ & SJl+: cascading nor's: "Neither snow nor rain nor heat..."
@@ -9145,7 +9146,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <post-quote>:
   QUc- & {<wo-wall> or <wi-wall> or CP+};
 
-« 《 【 『 ` „:
+% The double-backtic becomes a single backtic after m4 (but only in this
+% line! It gets messed up if we also do the second one!)
+« 《 【 『 `` „:
   QUd-;
 » 》 】 』 ` “:
   <post-quote>;
