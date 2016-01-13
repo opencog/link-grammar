@@ -9298,7 +9298,8 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 "&": G- & {Xd- & G-} & G+;
 
-"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+% The double-single-quote is converted to a single single quote by m4.
+"’" "''": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 % Possessives
 "'s.p" "’s.p":
