@@ -2669,6 +2669,17 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		return false;
 	}
 
+#ifdef DEBUG
+	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
+#else
+	if (NULL == we)
+	{
+		/* FIXME Change it to assert() when the Wordgraph version is mature. */
+		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
+		return false;
+	}
+#endif
+
 	/* If the current word is an empty-word (or like it), add a
 	 * connector for an empty-word (EMPTY_CONNECTOR - ZZZ+) to the
 	 * previous word. See the comments at add_empty_word().
@@ -2684,17 +2695,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		*ZZZ_added = wordpos; /* Remember it for not doing it again */
 	}
 	lgdebug(D_DWE, "\n");
-
-#ifdef DEBUG
-	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
-#else
-	if (NULL == we)
-	{
-		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
-		return false;
-	}
-#endif
 
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
