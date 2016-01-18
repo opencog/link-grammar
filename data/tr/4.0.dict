@@ -1,58 +1,68 @@
 %
-% Turkish dictionary -- experimental -- 2014 -- Can John Bruce
+% Turkish dictionary -- experimental -- 2016 -- Tatiana Batura
 %
 % Dictionary version number is 5.3.0 (formatted as V5v3v0+)
 <dictionary-version-number>: V5v3v0+;
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
-%adjectives: fat, sick, angry
-şişman.a hasta.a kızgın.a : {W-} & {EA-} & (({AJl+} & {AJr-}) or {A+}) ;
 
-%nouns: man, woman, kid, apple
-adam kadın çocuk elma: {W-} & {@A-} & {Ds-} & {O+} & (({SJl+} & {SJr-}) or {S3s+});
 
-%pronouns: I, thou, he/she, we, you, they
-ben :   {W-} & (({SJl+} & {SJr-}) or {S1s+});
-sen :   {W-} & (({SJl+} & {SJr-}) or {S2s+});
-o:      {W-} & (({SJl+} & {SJr-}) or {S3s+});
-biz :   {W-} & (({SJl+} & {SJr-}) or {S1p+});
-siz :   {W-} & (({SJl+} & {SJr-}) or {S2p+});
-onlar : {W-} & (({SJl+} & {SJr-}) or {S3p+});
+kırmızı: {AO+};
+araba.=: {AO-} & {Nl+};
+=da.=: {Nl-} & {Nv+};
+=ki.=: {Nv-} & {Np+};
+=ler.=: {Np-} & {Na+};
+=i.na: {Na-} & {OV+};
+gör.=: {OV-} & {Va1s+};
+=düm.va1s: {Va1s-};
 
-%plural nouns (not sure I need this, I could do it with a suffix)
-%adamlar kadınlar elmalar: {W-} & {@A-} & {Dmc-} & {O+} & (({SJl+} & {SJr-}) or {S3p+});
-adamlar : {W-} & {@A-} & {Ds-} & {O+} & (({SJl+} & {SJr-}) or {S3p+});
 
-%determiners (most of, some, every
-çoğu : Ds+;
-bazı: Dmc+ ;
-her.d bir.d : Ds+ ;
+onlar.=: {Pg+};
+=ın.pg: {Pg-} & {OO3+};
+senin: {OO2+};
 
-%adverbs
-çok.ad : {W-} & EA+;
+ne: {R+};
 
-%verbs: come, finish
-gel.= bitir.=: {W-} & {VJr-} & (VPast+ or VPres+ or VImp+) & {VJl+};
+% suffixes for _bilmiyorum_
+=um.v1s : {V1s-} & {S1s-};
+=yor.=: {V1s+} & {Vr-};  % can also be other links like {V2s+} or {V3s+} ??? etc
+=mi.=: {Vn-} & {Vr+};
 
-%transitive verbs: eat
-ye.=:{W-} & {VJr-} & (VPast+ or VPres+ or VImp+) & {VJl+} & {O-};
+% suffixes for _istediğini_
+=ni.na: {Na-} & {OV+};
+%=i.na: {Na-} & {OV+};
+=i.=: {Na+} & {Np3-} & {OO3-}; 
+=in.=: {Na+} & {Np2-} & {OO2-};
+=diğ.= : {Nv-} & ({Np2+} or {Np3+});
 
-%verb suffixes: past tense, present cont., imperative
-=dim.past1s: {VPast-} & {S1s-};
-=din.past2s: {VPast-} & {S2s-};
-=di.past3s: {VPast-} & {S3s-};
-=dik.past1p: {VPast-} & {S1p-};
-=diniz.past2p: {VPast-} & {S2p-};
-=diler.past3p: {VPast-} & {S3p-};
-=di.past3p: {VPast-} & {S3p-};
-=iyor.pres3s: {VPres-} & {S2s-};
-=.imp: VImp-;
+% verbs
+bil.= : ({Vn+} or {Vr+}) & {OV-};
+iste.= : {Nv+} & {R-};
 
-%conjunctions: and
-ve.j-n: {W-} & {A-} & SJl- & SJr+ & {S3p+}  ;
-ve.j-a: {W-} & AJl- & AJr+ & {A+} ;
-ve.j-v: {W-} & VJl- & VJr+ & {S-} ;
+
+% with null suffix
+adam.=: {Np+} or ({S3s+} & {N+});
+=lar: {Np-} & {S3p+};
+=.n: {N-}; 
+
+
+%adam: {S3s+};
+%adam.=: {Np+};
+%=lar: {Np-} & {S3p+};
+
+elma: {OV+};
+
+ye.=: ({Va3s+} or {Va3p+}) & {OV-};
+=di.va3s: {Va3s-} & {S3s-};
+=di.va3p: {Va3p-} & {S3p-};
+
+%=diler.va3p: {Va3p-} & {S3p-};
+
+=di.=: {Vp+} & {Va3p-} & {S3p-};
+=ler.va3p: {Vp-};
+
+
 
 %punctuations
 ",": (SJl- & SJr+ & SJl+ )

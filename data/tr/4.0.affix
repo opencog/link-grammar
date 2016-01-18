@@ -1,13 +1,11 @@
-")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』」 "’’" "’" ''.y '.y
-"%" "," "." 。 ":" ";" "?" "!" ‽ ؟ ？！ ….y ....y "”" "–" "‐" 、 ～
-¢ ₵ ™ ℠ : RPUNC+;
+")" "%" "," "." ":" ";" "?" "!" "''" "'" "'s": RPUNC+;
+"(" "$" "``": LPUNC+;
 
-"(" "{" "[" "<" « 〈 （ 〔 《 【 ［ 『 「 `` „ “ ‘ ''.x '.x ….x ....x
-¿ ¡ "$"
-£ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
-† †† ‡ § ¶ © ® ℗ № "#": LPUNC+;
+dakileri da ki ler i leri kileri düm di lar diler um yor mi ni i in diğ ın diğini ini yorum miyorum: SUF+;
 
 ""«»《》【】『』`„“": QUOTES+;
 
 =: INFIXMARK+;
 .=: STEMSUBSCR+;
+
+
