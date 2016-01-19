@@ -604,14 +604,25 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				subword->unsplit_word = unsplit_word;
 				subword->split_counter = unsplit_word->split_counter + 1;
 				subword->morpheme_type = morpheme_type;
+
 				if (last_split)
 				{
+#if 0
+					/* XXX the new Turkish experimental dictionary depend on
+					 * specifying compound suffixes which are not in the dict file,
+					 * in the SUF affix class. This allows them to split farther.
+					 * However, here is a need to detail all the supported
+					 * combinations of compound suffixes.
+					 * FIXME: There is a need for a real multi affix splitter.
+					 * (last_split will get optimized out by the compiler.) */
+
 					/* This is a stem, or an affix which is marked by INFIX_MARK.
 					 * Hence it must be a dict word - regex/spell are not done
 					 * for stems/affixes. Also, it cannot split further.
 					 * Save resources by marking it accordingly. */
 					subword->status |= WS_INDICT;
 					subword->tokenizing_step = TS_DONE;
+#endif
 				}
 				word_label(sent, subword, "+", label);
 
@@ -2669,6 +2680,17 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		return false;
 	}
 
+#ifdef DEBUG
+	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
+#else
+	if (NULL == we)
+	{
+		/* FIXME Change it to assert() when the Wordgraph version is mature. */
+		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
+		return false;
+	}
+#endif
+
 	/* If the current word is an empty-word (or like it), add a
 	 * connector for an empty-word (EMPTY_CONNECTOR - ZZZ+) to the
 	 * previous word. See the comments at add_empty_word().
@@ -2684,17 +2706,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		*ZZZ_added = wordpos; /* Remember it for not doing it again */
 	}
 	lgdebug(D_DWE, "\n");
-
-#ifdef DEBUG
-	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
-#else
-	if (NULL == we)
-	{
-		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
-		return false;
-	}
-#endif
 
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
