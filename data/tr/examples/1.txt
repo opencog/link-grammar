@@ -1,5 +1,0 @@
-!morphology
-adam yedi
-adamlar yedi
-adamlar elma yedi
-adamlar elma yediler
