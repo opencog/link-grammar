@@ -413,7 +413,8 @@ PL-CAPITALIZED-WORDS:
     or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
-    or Us- or ({D*u-} & Wa-));
+    or Us-
+	 or ({D*u-} & Wa-));
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
@@ -555,6 +556,8 @@ HYPHENATED-WORDS.n:
 % by appearing as objects (O-) connector when really the verb form (Pg-)
 % is what should be happening. So rip these words out... (similar remarks for
 % words.n.3)
+% [Wa-]0.05: give a very mild preference to words that could be verbs
+%            (and thus imparatives) e.g. Smile!
 <common-noun>:
   <noun-modifiers> &
     (({NMa+} & AN+)
@@ -565,7 +568,7 @@ HYPHENATED-WORDS.n:
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & Wa-));
+    or ({Ds-} & [Wa-]0.05));
 
 % Preliminary experimental split for supporting a/an phonetic change
 % for common nouns starting with vowels or consonant's.
@@ -575,7 +578,7 @@ HYPHENATED-WORDS.n:
     (SJrs-
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & Wa-)))
+    or ({Ds-} & [Wa-]0.05)))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
@@ -3074,6 +3077,10 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % in the active present tense: one never says "it rains cats and dogs".
 % I'm too lazy to manually sort through this, so, instead, there is a
 % high-cost {[[O+]]} added to some of these.
+%
+% There are a fair number of verbs in her that can be used as
+% imperatives, although most cannot (or would be awkward). So that
+% also could be sorted out.
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v
 /en/words/words.v.1.1: 
