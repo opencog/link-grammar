@@ -5835,23 +5835,29 @@ bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
   ((O+ or <b-minus>) & {@MV+} & {THi+}) or
   ([[@MV+ & O*n+]]);
 
-surprise.v alarm.v amaze.v amuse.v astonish.v astound.v excite.v depress.v
-disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v:
+surprise.v alarm.v amaze.v amuse.v annoy.v
+astonish.v astound.v depress.v disgust.v distress.v
+dismay.v embarrass.v engage.v excite.v irritate.v:
   VERB_S_PLI(<vc-surprise>);
-surprises.v alarms.v amazes.v amuses.v astonishes.v astounds.v excites.v depresses.v
-disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
+
+surprises.v alarms.v amazes.v amuses.v annoys.v
+astonishes.v astounds.v depresses.v disgusts.v distresses.v
+dismays.v embarrasses.v engages.v excites.v irritates.v:
   VERB_S_S(<vc-surprise>);
-surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
-depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v
-annoyed.v-d:
+
+surprised.v-d alarmed.v-d amazed.v-d amused.v-d annoyed.v-d
+astonished.v-d astounded.v-d depressed.v-d disgusted.v-d distressed.v-d
+dismayed.v-d embarrassed.v-d engaged.v-d excited.v-d irritated.v-d:
   VERB_S_SPPP(<vc-surprise>) or <verb-pv> or <verb-phrase-opener>;
-surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
-exciting.v depressing.v disgusting.v distressing.v dismaying.v
-embarrassing.v annoying.v:
+
+surprising.v alarming.v amazing.v amusing.v annoying.v
+astonishing.v astounding.v depressing.v disgusting.v distressing.v
+dismaying.v embarrassing.v engaging.v exciting.v irritating.v:
   <verb-s-pg> & <vc-surprise>;
-surprising.g alarming.g amazing.g amusing.g astonishing.g astounding.g
-exciting.g depressing.g disgusting.g distressing.g dismaying.g
-embarrassing.g annoying.g:
+
+surprising.g alarming.g amazing.g amusing.g annoying.g
+astonishing.g astounding.g depressing.g disgusting.g distressing.g
+dismaying.g embarrassing.g engaging.g exciting.g irritating.g:
   (<vc-surprise> & <verb-ge>) or <verb-ge-d>;
 
 <vc-prove>:
