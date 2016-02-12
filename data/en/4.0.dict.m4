@@ -6712,7 +6712,9 @@ uptown downtown.r offshore.r underground.r out_of_town:
 
 /en/words/words-medical.prep.1: <common-prep>;
 
-backward forwards.r backwards sideways ashore abreast aft
+backward backwards forwards.r
+leftward leftwards rightward rightwards
+sideways ashore abreast aft
 half-way.r halfway.r
 two-fold downhill southward underfoot westward eastward
 northward overnight.r on_hold on_track in_situ in_toto off_balance
