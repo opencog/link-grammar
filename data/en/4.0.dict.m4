@@ -6710,6 +6710,8 @@ uptown downtown.r offshore.r underground.r out_of_town:
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
 
+herewith hereinafter therefrom therein thereon thereupon: <common-prep>;
+
 /en/words/words-medical.prep.1: <common-prep>;
 
 backward backwards forwards.r
@@ -6722,7 +6724,8 @@ in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
 behind_schedule ahead_of_schedule for_good for_keeps
 out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
-in_phase neck_and_neck under_contract:
+in_phase neck_and_neck under_contract
+no_place out-of-doors out_of_hospital:
   <common-prep>;
 
 % K-: "put forward the argument..."
