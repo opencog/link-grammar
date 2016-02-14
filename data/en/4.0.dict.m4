@@ -240,17 +240,21 @@ nonCAP.zzz: ZZZ-;
 % The "of night" can connect to the left noun, but rarely to the right noun
 % because it should then connect to the "and", not the right noun.
 % but then: "neither heat nor gloom of night shall stop me"
-% Looks like only a proper semantic decision can determine the correct parse here ...
+% Looks like only a proper semantic decision can determine the correct
+% parse here ...
 %
 % Add cost to M+, so that "a number of recommendations and suggestions"
-%   gets priority in modifying the and.j-n
+% "of" gets priority in modifying the and.j-n instead of "recommendations".
+% However, this cost then causes the following to parse incorrectly:
+% "...went to hell yesterday and heaven on Tuesday."
+% Arghh...
 <noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
-<noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-);
-<noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
-<noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
+<noun-and-p>: ({[@M+]0.4} & SJlp+) or ({[[@M+]]} & SJrp-);
+<noun-and-u>: ({[@M+]0.4} & SJlu+) or ({[[@M+]]} & SJru-);
+<noun-and-x>: ({[@M+]0.4} & SJl+) or ({[[@M+]]} & SJr-);
 <noun-and-p,u>:
-  ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or
-  ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
+  ({[@M+]0.4} & SJlp+) or ({[[@M+]]} & SJrp-) or
+  ({[@M+]0.4} & SJlu+) or ({[[@M+]]} & SJru-);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -6211,10 +6215,12 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <alter-preps>: MJrj- or MJlj+;
 
 % Mp- (which modifies nouns) has a cost, so that modifying verbs
-% (using MVp-) is generally preferred.
+% (using MVp-) is generally preferred.  The cost is small, though,
+% to allow modifiers on conjoined nouns to work well.
+% e.g. "...went to hell yesterday and heaven on Tuesday"
 <prep-main-b>:
   <conjoin-preps>
-  or [Mp-] or Pp- or MVp-
+  or [Mp-]0.4 or Pp- or MVp-
   or [({Xc+ & {Xd-}} & CO+)]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
