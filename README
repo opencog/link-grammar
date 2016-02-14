@@ -565,25 +565,32 @@ Spell Checking:
 
 Corpus Statistics:
 ------------------
-   The parser now contains some experimental code for using corpus
-   statistics to provide a parse ranking, and to assign WordNet word
-   senses to word, based on their grammatical usage.  An overview of
-   the idea is given on the OpenCog blog, here:
+   Version 4.4.2 (January 2009) introduces a parse-ranking system based
+   on corpus statistics.  This allows the most likely parse to be
+   identified in terms of the probabilities of word disjuincts observed
+   on actual text.  The system also includes a way to assign WordNet
+   word senses to a word, based on the grammatical usage of tha word.
+   An overview of the idea is given on the OpenCog blog, here:
 
    http://brainwave.opencog.org/2009/01/12/determining-word-senses-from-grammatical-usage/
-
-   It is planned that the Corpus statistics database will be used to
-   guide the SAT solver.
 
    To enable the corpus statistics, specify
 
       ./configure --enable-corpus-stats
 
-   prior to compiling.  The database itself can be downloaded from
+   prior to compiling.  
+
+   There are no currently-maintained databases for this ranking system.
+   Older databases can be downloaded from
 
       http://www.abisource.com/downloads/link-grammar/sense-dictionary/
    or
       http://gnucash.org/linas/nlp/data/linkgrammar-wsd/
+
+   These older databases are not very accurate, since the English
+   language dictionaries have seen significant changes since these
+   were first created.  To be usable, the databases should be recreated
+   for eht curent dictionaries.
 
    The data is contained in an sqlite3 database file,
 
@@ -594,7 +601,7 @@ Corpus Statistics:
    contains the "en" directory. For default unix installations, the
    final location would be
 
-       /usr/local/share/link-grammar/sql/disjuncts.db
+      /usr/local/share/link-grammar/sql/disjuncts.db
 
    where, by comparison, the usual dictionary would be at
 
@@ -794,6 +801,14 @@ SAT solver:
    prior to compiling.
 
 
+Phonetics
+---------
+   A/An phonetic determiners before consonants/vowels are handled by a
+   new PH link type, linking the determiner to the word immediately
+   following it.  Status: Introduced in version 5.1.0 (August 2014).
+   Mostly done, although many special-case nouns are unfinished.
+
+
 Directional Links
 -----------------
    Directional links are needed for some languages, such as Lithuanian,
@@ -802,15 +817,91 @@ Directional Links
    the dependent. This is achieved by prefixing connectors with
    a single *lower case* letter: h,d, indicating 'head' and 'dependent'.
    The linkage rules are such that h matches either nothing or d, and
-   d matches h or nothing. New feature in version 5.1.0.
+   d matches h or nothing. This is a new feature in version 5.1.0
+   (August 2014). The website provides additional documentation.
 
 
-Phonetics
----------
-   A/An phonetic determiners before consonants/vowels are handled by a
-   new PH link type, linking the determiner to the word immediately
-   following it.  Status: mostly done, more testing needed. The rules
-   could be simplified.  Many special-case nouns are unfinished.
+Type Theory
+-----------
+   -- Although link-grammar links are un-oriented, it seems that a 
+      defacto direction can be given to them that is completely
+      consistent with a dependency grammar.
+
+   -- Dependency-grammar arrows are:
+        * anti-reflexive (a word cannot depend on itself)
+        * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
+          depend on Word1) (so e.g. determiners depend on nouns)
+        * anti-transitive (if Word1 depends on Word2 and Word2 depends
+          on Word3, then Word1 cannot depend directly on Word3)
+      The last property means that dependency graphs are always
+      skeletons of limits (in the sense of category theory).
+      Here, by "limit" we mean that the dependency arrow is the
+      universal, unique arrow through which all other dependencies
+      must pass (i.e. limit in the sense of category theory).
+      Note, however: skeletons are not categories: the first property
+      means there are no identity morphisms, the third property says
+      that arrows are not composable.
+
+xxxxxxxxxx
+
+   no-links-cross: Link Grammar uses a constraint that all linkages must
+      be planar graphs. While this is mostly correct, it would probably
+      be more correct to use "landmark transitivity" as articulated by
+      Hudson in the Word Grammar theory.  This might allow the elimination
+      of most or all post-processing rules.
+
+      This is done by making each link directional: one end of the link
+      is the parent. (e.g. noun, noun-modifier: the noun is the parent).
+      Parents are landmarks for children.  Transitivity is applied to
+      parent-child relationships. Specifically, the no-links-cross
+      rule is replaced by two landmark transitivity rules:
+
+      -- If B is a landmark for C, then  A is also a type-L landmark for C
+      -- If A is a landmark for C, then B is also a landmark for C
+
+      where type-L means either a right-going or left-going link.
+
+     See http://goertzel.org/ProwlGrammar.pdf for details.
+     See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
+
+     Related notions:
+     http://en.wikipedia.org/wiki/Catena_(linguistics)
+
+     Places where no-links-cross seems to be violated in English:
+     "He is either in the 105th or the 106th battalion."
+     "He is in either the 105th or the 106th battalion."
+     Both seem to be acceptable in English, but require two different
+     parse trees when no-links is enforced. Similarly:
+     "He is either here or he is there."
+     "He either is here or he is there."
+
+     Other examples, per And Rosta:
+     "He had been allowed to eat a cake by Sophy that she had made him
+     specially" -- The allowed--by link crosses cake--that
+
+     "a very much easier book indeed": an--book, very--indeed
+     "an easy book to read": an--book, easy--to
+     "a more difficult book than that one": a--book, more--than
+
+     "It was announced that remains have been found of the ark of the covenant"
+     that--have crosses remains--of
+
+
+Type Theory
+-----------
+Link Grammar can be understood in the context of type theory.
+Link types can be mapped to types that appear in categorial grammars.
+The nice thing about link-grammar is that the link types form a type
+system that is much easier to use and comprehend than that of categorial
+grammar, and yet can be directly converted to that system!  That is,
+link-grammar is completely compatible with categorial grammar, and is
+easier-to-use.
+
+The foundational LG papers make comments to this effect; however, see
+also work by Bob Coeke on category theory and grammar.  Coecke's
+diagramatic approach is essentially identical to the diagrams given in
+the foundational LG papers; it becomes abundantly clear that the
+category theoretic approach is equivalent to Link Grammar.
 
 
 ADDRESSES
@@ -824,6 +915,7 @@ ADDRESSES
    maintainers can be contacted at:
 
      Linas Vepstas - <linasvepstas@gmail.com>
+     Amir Plivatsky - <amirpli@gmail.com>
      Dom Lachowicz - <domlachowicz@gmail.com>
 
    A complete list of authors and copyright holders can be found in the
@@ -844,44 +936,6 @@ ADDRESSES
      Carnegie Mellon University        www.cs.cmu.edu/~lafferty
      Pittsburgh, PA 15213
 
-
-Mathematical Theory:
---------------------
-   The mathematical theory of link-grammar is deeper and more
-   interesting than the original, foundational papers on it let on.
-   This section provides a random list of remarks about this.
-
-   -- Although link-grammar links are un-oriented, a defacto direction
-      can be given to them that is completely consistent with a
-      dependency grammar.
-
-   -- Dependency-grammar arrows are:
-        * anti-reflexive (a word cannot depend on itself)
-        * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
-          depend on Word1) (so e.g. determiners depend on nouns)
-        * anti-transitive (if Word1 depends on Word2 and Word2 depends
-          on Word3, then Word1 cannot depend directly on Word3)
-      The last property means that dependency graphs are always
-      skeletons of limits (in the sense of category theory).
-      Here, by "limit" we mean that the dependency arrow is the
-      universal, unique arrow through which all other dependencies
-      must pass (i.e. limit in the sense of category theory).
-      Note, however: skeletons are not categories: the first property
-      means there are no identity morphisms, the third property says
-      that arrows are not composable.
-
-   -- Link types can be handled with "type theory".  In particular,
-      Link types can be mapped to types that appear in categorial
-      grammars.  The nice thing about link-grammar is that the link
-      types form a type system that is much easier to use and comprehend
-      than that of categorial grammar, and yet can be directly converted
-      to that system!  That is, link-grammar is completely compatible
-      with categorial grammar, and is easier-to-use.
-
-      See, for example, the work by Bob Coeke on category theory and
-      grammar; there, it becomes abundantly clear that the category
-      theoretic approach is equivalent to link-grammar, even though
-      this is not stated anywhere.
 
 
 TODO -- Working Notes:
@@ -1085,49 +1139,6 @@ TODO -- Working Notes:
       for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
       This results is some ugly parsing for sentences containing such
       quotes. (Note that these are in 4.0.affix).
-
-
-   no-links-cross: Link Grammar uses a constraint that all linkages must
-      be planar graphs. While this is mostly correct, it would probably
-      be more correct to use "landmark transitivity" as articulated by
-      Hudson in the Word Grammar theory.  This might allow the elimination
-      of most or all post-processing rules.
-
-      This is done by making each link directional: one end of the link
-      is the parent. (e.g. noun, noun-modifier: the noun is the parent).
-      Parents are landmarks for children.  Transitivity is applied to
-      parent-child relationships. Specifically, the no-links-cross
-      rule is replaced by two landmark transitivity rules:
-
-      -- If B is a landmark for C, then  A is also a type-L landmark for C
-      -- If A is a landmark for C, then B is also a landmark for C
-
-      where type-L means either a right-going or left-going link.
-
-     See http://goertzel.org/ProwlGrammar.pdf for details.
-     See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
-
-     Related notions:
-     http://en.wikipedia.org/wiki/Catena_(linguistics)
-
-     Places where no-links-cross seems to be violated in English:
-     "He is either in the 105th or the 106th battalion."
-     "He is in either the 105th or the 106th battalion."
-     Both seem to be acceptable in English, but require two different
-     parse trees when no-links is enforced. Similarly:
-     "He is either here or he is there."
-     "He either is here or he is there."
-
-     Other examples, per And Rosta:
-     "He had been allowed to eat a cake by Sophy that she had made him
-     specially" -- The allowed--by link crosses cake--that
-
-     "a very much easier book indeed": an--book, very--indeed
-     "an easy book to read": an--book, easy--to
-     "a more difficult book than that one": a--book, more--than
-
-     "It was announced that remains have been found of the ark of the covenant"
-     that--have crosses remains--of
 
 
   "to be fishing": Link grammar offers four parses of "I was fishing for
