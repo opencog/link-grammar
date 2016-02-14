@@ -578,7 +578,7 @@ Corpus Statistics:
 
       ./configure --enable-corpus-stats
 
-   prior to compiling.  
+   prior to compiling.
 
    There are no currently-maintained databases for this ranking system.
    Older databases can be downloaded from
@@ -820,28 +820,52 @@ Directional Links
    d matches h or nothing. This is a new feature in version 5.1.0
    (August 2014). The website provides additional documentation.
 
+   Although the English-langauge link-grammar links are un-oriented,
+   it seems that a defacto direction can be given to them that is
+   completely consistent with standard conceptions of a dependency
+   grammar.
 
-Type Theory
------------
-   -- Although link-grammar links are un-oriented, it seems that a 
-      defacto direction can be given to them that is completely
-      consistent with a dependency grammar.
+   The dependency arrows have the following properites:
 
-   -- Dependency-grammar arrows are:
-        * anti-reflexive (a word cannot depend on itself)
-        * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
-          depend on Word1) (so e.g. determiners depend on nouns)
-        * anti-transitive (if Word1 depends on Word2 and Word2 depends
-          on Word3, then Word1 cannot depend directly on Word3)
-      The last property means that dependency graphs are always
-      skeletons of limits (in the sense of category theory).
-      Here, by "limit" we mean that the dependency arrow is the
-      universal, unique arrow through which all other dependencies
-      must pass (i.e. limit in the sense of category theory).
-      Note, however: skeletons are not categories: the first property
-      means there are no identity morphisms, the third property says
-      that arrows are not composable.
+    * anti-reflexive (a word cannot depend on itself; it cannot point
+      at itself.)
 
+    * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
+      depend on Word1) (so, e.g. determiners depend on nouns, but
+      never vice-versa)
+
+    * The arrows are neither transitive, nor anti-transitive: a single
+      word may be ruled by several heads.  For example:
+
+              +------>WV------->+
+              +-->Wd-->+<--Ss<--+
+              |        |        |
+          LEFT-WALL   she    thinks.v
+
+      That is, there is a path to the subject, "she", directly from the
+      left wall, via the Wd link, as well as indirectly, from the wall
+      to the root verb, and thence to the subject.  Similar loops form
+      with the B and R links.  Such loops are useful for constraining
+      the possible number of parses: the constraint occurs in
+      conjunction with the "no links cross" meta-rule.
+
+   There are several related mathematical notions, but none quite
+   capture directional LG:
+
+    * Directional LG graphs resemble DAGS, except that LG allows only
+      one wall (on "top" element).
+
+    * Directional LG graphs resemble strict partial orders, except that
+      the LG arrows are usually not transitive.
+
+    * Directional LG graphs resemble catena
+      http://en.wikipedia.org/wiki/Catena_(linguistics)
+      except that catena are strictly anti-transitive -- the path to
+      any word is unique, in a catena.
+
+
+Link Crossing
+-------------
 xxxxxxxxxx
 
    no-links-cross: Link Grammar uses a constraint that all linkages must
@@ -865,7 +889,6 @@ xxxxxxxxxx
      See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
 
      Related notions:
-     http://en.wikipedia.org/wiki/Catena_(linguistics)
 
      Places where no-links-cross seems to be violated in English:
      "He is either in the 105th or the 106th battalion."
