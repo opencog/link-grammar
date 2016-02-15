@@ -849,6 +849,9 @@ Directional Links
       the possible number of parses: the constraint occurs in
       conjunction with the "no links cross" meta-rule.
 
+    * The graphs are planar; that is, no two edges may cross. See,
+      however, the discussion below.
+
    There are several related mathematical notions, but none quite
    capture directional LG:
 
@@ -866,39 +869,94 @@ Directional Links
 
 Link Crossing
 -------------
-xxxxxxxxxx
+The foundational LG papers mandate the planarity of the parse graphs.
+This is based on a very old observation that dependencies almost never
+cross in natural langauges: humans simply do not speak in sentences
+where links cross.  Imposing planarity constraints then provides a
+strong engineering and algorithmic constraint on the resulting parses:
+the total number of parses to be considered is sharply reduced, and
+thus the overall speed of parsing can be greatly increased.
 
-   no-links-cross: Link Grammar uses a constraint that all linkages must
-      be planar graphs. While this is mostly correct, it would probably
-      be more correct to use "landmark transitivity" as articulated by
-      Hudson in the Word Grammar theory.  This might allow the elimination
-      of most or all post-processing rules.
+However, there are occasional, relatively rare exceptions to this
+planarity rule; such exceptions are observed in almost all languages.
+A number of these exceptions are given for English, below.
 
-      This is done by making each link directional: one end of the link
-      is the parent. (e.g. noun, noun-modifier: the noun is the parent).
-      Parents are landmarks for children.  Transitivity is applied to
-      parent-child relationships. Specifically, the no-links-cross
-      rule is replaced by two landmark transitivity rules:
+Thus, it seems important to relax the planarity constraint, and find
+something else that is almost as strict, but still allows infrequent
+exceptions.  It would appear that the concept of "landmark transitivity"
+as defined by Richard Hudson in his theory of "Word Grammar", and then
+advocated by Ben Goertzel, just might be such a mechanism.
 
-      -- If B is a landmark for C, then  A is also a type-L landmark for C
-      -- If A is a landmark for C, then B is also a landmark for C
+   ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf
+   http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
+   http://goertzel.org/ProwlGrammar.pdf
 
-      where type-L means either a right-going or left-going link.
+This mechanism works as follows:
 
-     See http://goertzel.org/ProwlGrammar.pdf for details.
-     See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
+ * First, every link must be directional, with a head and a dependent.
+   That is, we are concerned with directional-LG links, which are
+   of the form x--A-->y or y<--A--x for words x,y and LG link type A.
 
-     Related notions:
+ * Given either the directional-LG relation x--A-->y or y<--A--x,
+   define the dependency relation x-->y.  That is, ignore the link-type
+   label.
 
-     Places where no-links-cross seems to be violated in English:
+ * Heads are landmarks for dependents. If the dependency relation
+   x --> y holds, then x is said to be a landmark for y, and the
+   predicate land(x,y) is true, while the predicate land(y,x) is false.
+   Here, x and y are words, while --> is the landmark relation.
+
+ * Although the basic directional-LG links form landmark relations,
+   the total set of landmark relations is extended by transitive closure.
+   That is, if land(x,y) and land(y,z) then land(x,z).  That is, the
+   basic directional-LG links are "generators" of landmarks; they
+   generate by means of transitivity.  Note that the transitive closure
+   is unique.
+
+ * In addition to the above landmark relation, there are two additional
+   relations: the before and after landmark relations. (In English,
+   these correspond to left and right; in Hebrew, the opposite).
+   That is, since words come in chronological order in a sentence,
+   the dependency relation can point either left or right.  The
+   previously-defined landmark relation only described the dependency
+   order; we now introduce the word-sequence order. Thus, there are
+   are land-before() and land-after() relations that capture both
+   the dependency relation, and the word-order relation.
+
+ * Notation: the before-landmark relation land-B(x,y) corresponds to
+   x-->y (in English, reversed in right-left langauges such as Hebrew),
+   whereas the after-landmark relation land-A(x,y) corresponds to y<--x.
+   That is, land(x,y) == land-B(x,y) or land-A(x,y) holds as a statement
+   about the predicate form of the relations.
+
+ * As before, the full set of directional landmarks are obtained by
+   transitive closure applied to the directional-LG links.  Two
+   different rules are used to perform this closure:
+
+   -- land-B(x,y) and land(y,z) ==> land-B(x,y)
+   -- land-A(x,y) and land(y,z) ==> land-A(x,y)
+
+Parsing is then performed by joining LG connectors in the usual manner,
+to form a directional link. The transitive closure of the directional
+landmarks are then computed. Finally, any parse that does not conclude
+with the "left wall" being the upper-most landmark is discarded.
+
+Examples where the no-links-cross constraint seems to be violated,
+in English:
+
      "He is either in the 105th or the 106th battalion."
      "He is in either the 105th or the 106th battalion."
-     Both seem to be acceptable in English, but require two different
-     parse trees when no-links is enforced. Similarly:
+
+Both seem to be acceptable in English, but the ambiguity of the
+"in-either" temporal ordering requires two different parse trees, if
+the no-links-cross rule is to be enforced. This seems un-natural.
+Similarly:
+
      "He is either here or he is there."
      "He either is here or he is there."
 
-     Other examples, per And Rosta:
+Other examples, per And Rosta:
+
      "He had been allowed to eat a cake by Sophy that she had made him
      specially" -- The allowed--by link crosses cake--that
 
@@ -908,6 +966,28 @@ xxxxxxxxxx
 
      "It was announced that remains have been found of the ark of the covenant"
      that--have crosses remains--of
+
+There is a natural crossing, driven by conjunctions:
+
+     "I was in hell yesterday and heaven on Tuesday."
+
+the "natural" linkage is to use MV liks to connect "yesterday" and "on
+Tuesday" to the verb. However, if this is done, then these must cross
+the links from the conjunction "and" to "heaven" and "hell".  This can
+be worked around partly as follows:
+
+                   +-------->Ju--------->+
+                   |    +<------SJlp<----+
+     +<-SX<-+->Pp->+    +-->Mpn->+       +->SJru->+->Mp->+->Js->+
+     |      |      |    |        |       |        |      |      |
+     I     was    in  hell   yesterday  and    heaven    on  Tuesday
+
+but the desired MV links from the verb to the time-prepositions
+"yesterday" and "on Tuesday" are missing -- whereas they are present,
+when the individual sentences "I was in hell yeseterday" and
+"I was in heaven on Tuesday" are parsed.  Using a conjunction should
+not wreck the relations that get used; but this requires link-crossing.
+
 
 
 Type Theory
