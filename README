@@ -423,31 +423,39 @@ RUNNING the program:
 
 TESTING the program:
 --------------------
-   The program can run in batch mode for testing the system on a large
-   number of sentences.  The following command runs the parser on
-   a file called 4.0.batch
+   There are several ways to test the resulting build.  If the Python
+   bindings are built, then a test program can be found in the file
+   ./bindings/python-examples/tests.py -- When run, it should pass.
 
-       ./link-parser < 4.0.batch
+   There are also multiple batches of test/example sentences in the
+   langauge data directories, generally having the names corpus-*.batch
+   The parser program can be run in batch mode, for testing the system
+   on a large number of sentences.  The following command runs the
+   parser on a file called corpus-basic.batch
 
-   The line "!batch" near the top of 4.0.batch turns on batch mode.  In
-   this mode sentences labeled with an initial "*" should be rejected
-   and those not starting with a "*" should be accepted.  The current
-   batch file does report some errors, as do the files "4.0.biolg.batch"
-   and "4.0.fixes.batch".  Work is ongoing to fix these.
+       ./link-parser < corpus-basic.batch
 
-   The "4.0.fixes.batch" file contains many thousands of sentences that
-   have been fixed since the original 4.1 release of link-grammar. The
-   "4.0.biolg.batch" contains biology/medical-text sentences from the
-   BioLG project.
+   The line `!batch` near the top of corpus-basic.batch turns on batch
+   mode.  In this mode, sentences labeled with an initial `*` should be
+   rejected and those not starting with a `*` should be accepted.  This
+   batch file does report some errors, as do the files `corpus-biolg.batch`
+   and `corpus-fixes.batch`.  Work is ongoing to fix these.
+
+   The `corpus-fixes.batch` file contains many thousands of sentences
+   that have been fixed since the original 4.1 release of link-grammar.
+   The `corpus-biolg.batch` contains biology/medical-text sentences from
+   the BioLG project. The `corpus-voa.batch` contains samples from Voice
+   of America; the `corpus-failures.batch` contains a large number of
+   failures.
 
    The following numbers are subject to change, but, at this time, the
    number of errors one can expect to observe in each of these files
-   are as follows:
+   are roughly as follows:
 
-   en/4.0.batch:         61 errors
-   en/4.0.fixes.batch:   401 errors
-   lt/4.0.batch:         17 errors
-   ru/4.0.batch:         31 errors
+   en/corpus-basic.batch:      61 errors
+   en/corpus-fixes.batch:     401 errors
+   lt/corpus-basic.batch:      17 errors
+   ru/corpus-basic.batch:      31 errors
 
    The bindings/python directory contains a unit test for the python
    bindings. It also performs several basic checks that stress the
