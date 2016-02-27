@@ -9,8 +9,12 @@
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that remain to be fixed.
 %
-% The below either caused crashes, or take too long to parse.
+% Long sentences that struggle to parse correctly
+% --------------------------------------------------------------------
+Radically cheaper, quicker and less energy-intensive to produce than regular steel, Flash Bainite is stronger than titanium by weight, and ductile enough to be pressed into shape while cold without thinning or cracking.
 
+
+% The below either caused crashes, or take too long to parse.
 % --------------------------------------------------------------------
 % Crashes of various sorts.
 

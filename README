@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 5.3.2
+                          Version 5.3.4
 
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
@@ -80,7 +80,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-5.3.2.tar.gz.asc
+   gpg --verify link-grammar-5.3.4.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -242,6 +242,13 @@ BUILDING on Windows
    http://gnuwin32.sourceforge.net/packages/regex.htm
    See also:
    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
+
+   By default, the library is configured to create a DLL. If you want
+   to instead build a static library, the macro LINK_GRAMMAR_STATIC must
+   be defined before the inclusion of any header files for both the compiling
+   of the link-grammar library and for the application that uses it. Other
+   compiler settings will also have to be changed to create a static library
+   of course.
 
    The different build methods below are NOT regularly tested, and
    some link-grammar versions may have build issues.  If you are an
@@ -416,31 +423,39 @@ RUNNING the program:
 
 TESTING the program:
 --------------------
-   The program can run in batch mode for testing the system on a large
-   number of sentences.  The following command runs the parser on
-   a file called 4.0.batch
+   There are several ways to test the resulting build.  If the Python
+   bindings are built, then a test program can be found in the file
+   ./bindings/python-examples/tests.py -- When run, it should pass.
 
-       ./link-parser < 4.0.batch
+   There are also multiple batches of test/example sentences in the
+   langauge data directories, generally having the names corpus-*.batch
+   The parser program can be run in batch mode, for testing the system
+   on a large number of sentences.  The following command runs the
+   parser on a file called corpus-basic.batch
 
-   The line "!batch" near the top of 4.0.batch turns on batch mode.  In
-   this mode sentences labeled with an initial "*" should be rejected
-   and those not starting with a "*" should be accepted.  The current
-   batch file does report some errors, as do the files "4.0.biolg.batch"
-   and "4.0.fixes.batch".  Work is ongoing to fix these.
+       ./link-parser < corpus-basic.batch
 
-   The "4.0.fixes.batch" file contains many thousands of sentences that
-   have been fixed since the original 4.1 release of link-grammar. The
-   "4.0.biolg.batch" contains biology/medical-text sentences from the
-   BioLG project.
+   The line `!batch` near the top of corpus-basic.batch turns on batch
+   mode.  In this mode, sentences labeled with an initial `*` should be
+   rejected and those not starting with a `*` should be accepted.  This
+   batch file does report some errors, as do the files `corpus-biolg.batch`
+   and `corpus-fixes.batch`.  Work is ongoing to fix these.
+
+   The `corpus-fixes.batch` file contains many thousands of sentences
+   that have been fixed since the original 4.1 release of link-grammar.
+   The `corpus-biolg.batch` contains biology/medical-text sentences from
+   the BioLG project. The `corpus-voa.batch` contains samples from Voice
+   of America; the `corpus-failures.batch` contains a large number of
+   failures.
 
    The following numbers are subject to change, but, at this time, the
    number of errors one can expect to observe in each of these files
-   are as follows:
+   are roughly as follows:
 
-   en/4.0.batch:         61 errors
-   en/4.0.fixes.batch:   401 errors
-   lt/4.0.batch:         17 errors
-   ru/4.0.batch:         31 errors
+   en/corpus-basic.batch:      61 errors
+   en/corpus-fixes.batch:     401 errors
+   lt/corpus-basic.batch:      17 errors
+   ru/corpus-basic.batch:      31 errors
 
    The bindings/python directory contains a unit test for the python
    bindings. It also performs several basic checks that stress the
@@ -558,25 +573,32 @@ Spell Checking:
 
 Corpus Statistics:
 ------------------
-   The parser now contains some experimental code for using corpus
-   statistics to provide a parse ranking, and to assign WordNet word
-   senses to word, based on their grammatical usage.  An overview of
-   the idea is given on the OpenCog blog, here:
+   Version 4.4.2 (January 2009) introduces a parse-ranking system based
+   on corpus statistics.  This allows the most likely parse to be
+   identified in terms of the probabilities of word disjuincts observed
+   on actual text.  The system also includes a way to assign WordNet
+   word senses to a word, based on the grammatical usage of tha word.
+   An overview of the idea is given on the OpenCog blog, here:
 
    http://brainwave.opencog.org/2009/01/12/determining-word-senses-from-grammatical-usage/
-
-   It is planned that the Corpus statistics database will be used to
-   guide the SAT solver.
 
    To enable the corpus statistics, specify
 
       ./configure --enable-corpus-stats
 
-   prior to compiling.  The database itself can be downloaded from
+   prior to compiling.
+
+   There are no currently-maintained databases for this ranking system.
+   Older databases can be downloaded from
 
       http://www.abisource.com/downloads/link-grammar/sense-dictionary/
    or
       http://gnucash.org/linas/nlp/data/linkgrammar-wsd/
+
+   These older databases are not very accurate, since the English
+   language dictionaries have seen significant changes since these
+   were first created.  To be usable, the databases should be recreated
+   for eht curent dictionaries.
 
    The data is contained in an sqlite3 database file,
 
@@ -587,7 +609,7 @@ Corpus Statistics:
    contains the "en" directory. For default unix installations, the
    final location would be
 
-       /usr/local/share/link-grammar/sql/disjuncts.db
+      /usr/local/share/link-grammar/sql/disjuncts.db
 
    where, by comparison, the usual dictionary would be at
 
@@ -787,6 +809,14 @@ SAT solver:
    prior to compiling.
 
 
+Phonetics
+---------
+   A/An phonetic determiners before consonants/vowels are handled by a
+   new PH link type, linking the determiner to the word immediately
+   following it.  Status: Introduced in version 5.1.0 (August 2014).
+   Mostly done, although many special-case nouns are unfinished.
+
+
 Directional Links
 -----------------
    Directional links are needed for some languages, such as Lithuanian,
@@ -795,15 +825,194 @@ Directional Links
    the dependent. This is achieved by prefixing connectors with
    a single *lower case* letter: h,d, indicating 'head' and 'dependent'.
    The linkage rules are such that h matches either nothing or d, and
-   d matches h or nothing. New feature in version 5.1.0.
+   d matches h or nothing. This is a new feature in version 5.1.0
+   (August 2014). The website provides additional documentation.
+
+   Although the English-langauge link-grammar links are un-oriented,
+   it seems that a defacto direction can be given to them that is
+   completely consistent with standard conceptions of a dependency
+   grammar.
+
+   The dependency arrows have the following properites:
+
+    * anti-reflexive (a word cannot depend on itself; it cannot point
+      at itself.)
+
+    * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
+      depend on Word1) (so, e.g. determiners depend on nouns, but
+      never vice-versa)
+
+    * The arrows are neither transitive, nor anti-transitive: a single
+      word may be ruled by several heads.  For example:
+
+              +------>WV------->+
+              +-->Wd-->+<--Ss<--+
+              |        |        |
+          LEFT-WALL   she    thinks.v
+
+      That is, there is a path to the subject, "she", directly from the
+      left wall, via the Wd link, as well as indirectly, from the wall
+      to the root verb, and thence to the subject.  Similar loops form
+      with the B and R links.  Such loops are useful for constraining
+      the possible number of parses: the constraint occurs in
+      conjunction with the "no links cross" meta-rule.
+
+    * The graphs are planar; that is, no two edges may cross. See,
+      however, the discussion below.
+
+   There are several related mathematical notions, but none quite
+   capture directional LG:
+
+    * Directional LG graphs resemble DAGS, except that LG allows only
+      one wall (on "top" element).
+
+    * Directional LG graphs resemble strict partial orders, except that
+      the LG arrows are usually not transitive.
+
+    * Directional LG graphs resemble catena
+      http://en.wikipedia.org/wiki/Catena_(linguistics)
+      except that catena are strictly anti-transitive -- the path to
+      any word is unique, in a catena.
 
 
-Phonetics
----------
-   A/An phonetic determiners before consonants/vowels are handled by a
-   new PH link type, linking the determiner to the word immediately
-   following it.  Status: mostly done, more testing needed. The rules
-   could be simplified.  Many special-case nouns are unfinished.
+Link Crossing
+-------------
+The foundational LG papers mandate the planarity of the parse graphs.
+This is based on a very old observation that dependencies almost never
+cross in natural langauges: humans simply do not speak in sentences
+where links cross.  Imposing planarity constraints then provides a
+strong engineering and algorithmic constraint on the resulting parses:
+the total number of parses to be considered is sharply reduced, and
+thus the overall speed of parsing can be greatly increased.
+
+However, there are occasional, relatively rare exceptions to this
+planarity rule; such exceptions are observed in almost all languages.
+A number of these exceptions are given for English, below.
+
+Thus, it seems important to relax the planarity constraint, and find
+something else that is almost as strict, but still allows infrequent
+exceptions.  It would appear that the concept of "landmark transitivity"
+as defined by Richard Hudson in his theory of "Word Grammar", and then
+advocated by Ben Goertzel, just might be such a mechanism.
+
+   ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf
+   http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
+   http://goertzel.org/ProwlGrammar.pdf
+
+This mechanism works as follows:
+
+ * First, every link must be directional, with a head and a dependent.
+   That is, we are concerned with directional-LG links, which are
+   of the form x--A-->y or y<--A--x for words x,y and LG link type A.
+
+ * Given either the directional-LG relation x--A-->y or y<--A--x,
+   define the dependency relation x-->y.  That is, ignore the link-type
+   label.
+
+ * Heads are landmarks for dependents. If the dependency relation
+   x --> y holds, then x is said to be a landmark for y, and the
+   predicate land(x,y) is true, while the predicate land(y,x) is false.
+   Here, x and y are words, while --> is the landmark relation.
+
+ * Although the basic directional-LG links form landmark relations,
+   the total set of landmark relations is extended by transitive closure.
+   That is, if land(x,y) and land(y,z) then land(x,z).  That is, the
+   basic directional-LG links are "generators" of landmarks; they
+   generate by means of transitivity.  Note that the transitive closure
+   is unique.
+
+ * In addition to the above landmark relation, there are two additional
+   relations: the before and after landmark relations. (In English,
+   these correspond to left and right; in Hebrew, the opposite).
+   That is, since words come in chronological order in a sentence,
+   the dependency relation can point either left or right.  The
+   previously-defined landmark relation only described the dependency
+   order; we now introduce the word-sequence order. Thus, there are
+   are land-before() and land-after() relations that capture both
+   the dependency relation, and the word-order relation.
+
+ * Notation: the before-landmark relation land-B(x,y) corresponds to
+   x-->y (in English, reversed in right-left langauges such as Hebrew),
+   whereas the after-landmark relation land-A(x,y) corresponds to y<--x.
+   That is, land(x,y) == land-B(x,y) or land-A(x,y) holds as a statement
+   about the predicate form of the relations.
+
+ * As before, the full set of directional landmarks are obtained by
+   transitive closure applied to the directional-LG links.  Two
+   different rules are used to perform this closure:
+
+   -- land-B(x,y) and land(y,z) ==> land-B(x,y)
+   -- land-A(x,y) and land(y,z) ==> land-A(x,y)
+
+Parsing is then performed by joining LG connectors in the usual manner,
+to form a directional link. The transitive closure of the directional
+landmarks are then computed. Finally, any parse that does not conclude
+with the "left wall" being the upper-most landmark is discarded.
+
+Examples where the no-links-cross constraint seems to be violated,
+in English:
+
+     "He is either in the 105th or the 106th battalion."
+     "He is in either the 105th or the 106th battalion."
+
+Both seem to be acceptable in English, but the ambiguity of the
+"in-either" temporal ordering requires two different parse trees, if
+the no-links-cross rule is to be enforced. This seems un-natural.
+Similarly:
+
+     "He is either here or he is there."
+     "He either is here or he is there."
+
+Other examples, per And Rosta:
+
+     "He had been allowed to eat a cake by Sophy that she had made him
+     specially" -- The allowed--by link crosses cake--that
+
+     "a very much easier book indeed": an--book, very--indeed
+     "an easy book to read": an--book, easy--to
+     "a more difficult book than that one": a--book, more--than
+
+     "It was announced that remains have been found of the ark of the covenant"
+     that--have crosses remains--of
+
+There is a natural crossing, driven by conjunctions:
+
+     "I was in hell yesterday and heaven on Tuesday."
+
+the "natural" linkage is to use MV liks to connect "yesterday" and "on
+Tuesday" to the verb. However, if this is done, then these must cross
+the links from the conjunction "and" to "heaven" and "hell".  This can
+be worked around partly as follows:
+
+                   +-------->Ju--------->+
+                   |    +<------SJlp<----+
+     +<-SX<-+->Pp->+    +-->Mpn->+       +->SJru->+->Mp->+->Js->+
+     |      |      |    |        |       |        |      |      |
+     I     was    in  hell   yesterday  and    heaven    on  Tuesday
+
+but the desired MV links from the verb to the time-prepositions
+"yesterday" and "on Tuesday" are missing -- whereas they are present,
+when the individual sentences "I was in hell yeseterday" and
+"I was in heaven on Tuesday" are parsed.  Using a conjunction should
+not wreck the relations that get used; but this requires link-crossing.
+
+
+
+Type Theory
+-----------
+Link Grammar can be understood in the context of type theory.
+Link types can be mapped to types that appear in categorial grammars.
+The nice thing about link-grammar is that the link types form a type
+system that is much easier to use and comprehend than that of categorial
+grammar, and yet can be directly converted to that system!  That is,
+link-grammar is completely compatible with categorial grammar, and is
+easier-to-use.
+
+The foundational LG papers make comments to this effect; however, see
+also work by Bob Coeke on category theory and grammar.  Coecke's
+diagramatic approach is essentially identical to the diagrams given in
+the foundational LG papers; it becomes abundantly clear that the
+category theoretic approach is equivalent to Link Grammar.
 
 
 ADDRESSES
@@ -817,6 +1026,7 @@ ADDRESSES
    maintainers can be contacted at:
 
      Linas Vepstas - <linasvepstas@gmail.com>
+     Amir Plivatsky - <amirpli@gmail.com>
      Dom Lachowicz - <domlachowicz@gmail.com>
 
    A complete list of authors and copyright holders can be found in the
@@ -837,44 +1047,6 @@ ADDRESSES
      Carnegie Mellon University        www.cs.cmu.edu/~lafferty
      Pittsburgh, PA 15213
 
-
-Mathematical Theory:
---------------------
-   The mathematical theory of link-grammar is deeper and more
-   interesting than the original, foundational papers on it let on.
-   This section provides a random list of remarks about this.
-
-   -- Although link-grammar links are un-oriented, a defacto direction
-      can be given to them that is completely consistent with a
-      dependency grammar.
-
-   -- Dependency-grammar arrows are:
-        * anti-reflexive (a word cannot depend on itself)
-        * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
-          depend on Word1) (so e.g. determiners depend on nouns)
-        * anti-transitive (if Word1 depends on Word2 and Word2 depends
-          on Word3, then Word1 cannot depend directly on Word3)
-      The last property means that dependency graphs are always
-      skeletons of limits (in the sense of category theory).
-      Here, by "limit" we mean that the dependency arrow is the
-      universal, unique arrow through which all other dependencies
-      must pass (i.e. limit in the sense of category theory).
-      Note, however: skeletons are not categories: the first property
-      means there are no identity morphisms, the third property says
-      that arrows are not composable.
-
-   -- Link types can be handled with "type theory".  In particular,
-      Link types can be mapped to types that appear in categorial
-      grammars.  The nice thing about link-grammar is that the link
-      types form a type system that is much easier to use and comprehend
-      than that of categorial grammar, and yet can be directly converted
-      to that system!  That is, link-grammar is completely compatible
-      with categorial grammar, and is easier-to-use.
-
-      See, for example, the work by Bob Coeke on category theory and
-      grammar; there, it becomes abundantly clear that the category
-      theoretic approach is equivalent to link-grammar, even though
-      this is not stated anywhere.
 
 
 TODO -- Working Notes:
@@ -1080,49 +1252,6 @@ TODO -- Working Notes:
       quotes. (Note that these are in 4.0.affix).
 
 
-   no-links-cross: Link Grammar uses a constraint that all linkages must
-      be planar graphs. While this is mostly correct, it would probably
-      be more correct to use "landmark transitivity" as articulated by
-      Hudson in the Word Grammar theory.  This might allow the elimination
-      of most or all post-processing rules.
-
-      This is done by making each link directional: one end of the link
-      is the parent. (e.g. noun, noun-modifier: the noun is the parent).
-      Parents are landmarks for children.  Transitivity is applied to
-      parent-child relationships. Specifically, the no-links-cross
-      rule is replaced by two landmark transitivity rules:
-
-      -- If B is a landmark for C, then  A is also a type-L landmark for C
-      -- If A is a landmark for C, then B is also a landmark for C
-
-      where type-L means either a right-going or left-going link.
-
-     See http://goertzel.org/ProwlGrammar.pdf for details.
-     See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
-
-     Related notions:
-     http://en.wikipedia.org/wiki/Catena_(linguistics)
-
-     Places where no-links-cross seems to be violated in English:
-     "He is either in the 105th or the 106th battalion."
-     "He is in either the 105th or the 106th battalion."
-     Both seem to be acceptable in English, but require two different
-     parse trees when no-links is enforced. Similarly:
-     "He is either here or he is there."
-     "He either is here or he is there."
-
-     Other examples, per And Rosta:
-     "He had been allowed to eat a cake by Sophy that she had made him
-     specially" -- The allowed--by link crosses cake--that
-
-     "a very much easier book indeed": an--book, very--indeed
-     "an easy book to read": an--book, easy--to
-     "a more difficult book than that one": a--book, more--than
-
-     "It was announced that remains have been found of the ark of the covenant"
-     that--have crosses remains--of
-
-
   "to be fishing": Link grammar offers four parses of "I was fishing for
      evidence", two of which are given low scores, and two are given
      high scores. Of the two with high scores, one parse is clearly bad.
@@ -1316,6 +1445,12 @@ TODO -- Working Notes:
       > along with many other words such as godel "size" and migdal
       > "tower".
 
+   Dealing with long, ambiguos sentences:
+      These are busted up by humans into smaller sentences that "hang
+      together" as phrase-structures, viz compunded sentences. The most
+      likely parse is then when each of the quasi sub-sentences is
+      parsed correctly.
+
    Alternatives:
       A partial solution to the morphology problem and the idiom problem
       in link-grammar is to elevate the use of "alternatives" in the
@@ -1386,8 +1521,12 @@ TODO -- Working Notes:
 A performance diary:
 --------------------
 Time to parse some long sentences:
-The original results below were for version ...
+The original results below were for version 5.0.8 (April 2014)
 The June 2014 results are for version 5.1.0
+
+These are very highly dependent on the aggressiveness of the token
+splitter, on the short length, on the cost-max and the spell checker.
+Suggest using flags: -spell=0 -short=10 -cost-max=2.1
 
 25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014) (0.2 secs SAT, June 2014)
 Hot runners usually make the mold more expensive to manufacture and run, but allow savings by reducing plastic waste and by reducing the cycle time.
@@ -1401,11 +1540,8 @@ In vivo studies of the activity of four of the kinases, KinA, KinC, KinD (ykvD) 
 56 words + 8 punct: 4.5 seconds (1.45 secs June 2014) (0.38 secs, SAT June 2014)
 New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...  is nearly very good indeed - but it is not the The Producers ... this story ... does not lend itself to stage adaptation in the way of the earlier movie ... Now for the good news ... Brooks and Stroman pull out every stop.
 
-57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014) (0.68 secs, June 2014)
+57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014) (0.68 secs, SAT June 2014)
 However, the few tracts, the poetry, and the novels that embodied the social vision of Young England were directed to a New Generation of educated, religious, and socially conscious conservatives, who, like Young Englanders, were appalled at the despiritualizing effects of industrialization and the perceived amorality of Benthamite philosophy, which they blamed equally for Victorian social injustices.
 
 73 words + 8 punct: 145 seconds
 Cortes in his various letters again and again claims the Emperor's patronage of his bold defiance of the Emperor's officers on the ground that the latter in their action were moved solely by considerations of their personal gain, whereas he, Cortes, was striving to endow his sovereign with a rich new empire and boundless treasure whilst carrying into the dark pagan land, at the sword's point, the gentle creed of the Christian God.
-
-
-

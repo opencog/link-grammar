@@ -14,6 +14,7 @@ backboard.n
 backbone.s
 backdoor.n
 backdrop.n
+backend.n
 backer.n
 backfill.n
 background.n
@@ -22,6 +23,7 @@ backlash.s
 backlog.n
 back.n
 backpack.n
+backport.n
 backquote.n
 backroom.n
 backscratcher.n
@@ -31,6 +33,7 @@ backslash.n
 backspace.n
 backstroke.s
 backtick.n
+backtrack.n
 backup.n
 backwater.n
 bacteria.s
@@ -519,6 +522,8 @@ bookseller.n
 bookshop.n
 bookstall.n
 bookworm.n
+boolean.n
+Boolean.n
 boomerang.n
 boomer.n
 boom.n
@@ -1770,6 +1775,8 @@ copartnership.n
 cope.n
 cop.n
 coppersmith.n
+coprocess.n
+coprocessor.n
 copse.n
 copula.n
 copycat.n
@@ -4102,6 +4109,7 @@ hotel.n
 hothead.n
 hothouse.n
 hotplate.n
+hotspot.n
 hound.n
 hourglass.n
 houseboat.s
@@ -4168,6 +4176,7 @@ hussar.n
 hussy.n
 hustler.n
 hut.n
+hvac.n HVAC.n
 hyacinth.n
 hyaena.n
 hybrid.n
@@ -4719,6 +4728,7 @@ lolly.n
 longboat.s
 longbow.n
 longing.s
+look-alike.n
 look.n
 lookout.n
 loom.n
@@ -5204,6 +5214,7 @@ miscalculation.s
 miscarriage.s
 miscellany.n
 misconception.s
+misconfiguration.n
 miscount.n
 miscreant.n
 misdeal.n
@@ -6346,6 +6357,7 @@ postgraduate.n
 postmark.n
 postmaster.n
 postponement.s
+postprocessor.n
 post.s
 postscript.n
 posture.s
@@ -6377,6 +6389,7 @@ practicality.s
 practice.s
 practitioner.n
 praesidium.n
+pragma.n
 pragmatist.n
 prairie.n
 pram.n
@@ -7239,6 +7252,7 @@ rite.n
 ritual.s
 rival.n
 rivalry.s
+riverbank.n
 riverbed.n
 river.n
 riverside.n
@@ -7626,6 +7640,7 @@ seed.n
 seeker.n
 seer.n
 seesaw.n
+segfault.n
 segmentation.s
 segment.n
 segue.n
@@ -7859,6 +7874,7 @@ sickle.n
 sickness.s
 sideboard.n
 sidecar.n
+side-effect.n
 sidekick.n
 sidelight.n
 sideline.n
@@ -8023,6 +8039,7 @@ smack.n
 smallholder.n
 smallholding.n
 smalt.s
+smartphone.n
 smash.n
 smear.n
 smell.n
@@ -8586,6 +8603,8 @@ substantive.n
 substitute.n
 substitution.s
 substrate.n
+substring.n
+subsystem.n
 subterfuge.s
 subtitle.n
 subtlety.s
@@ -8593,6 +8612,7 @@ subtraction.s
 suburb.n
 subversive.n
 subway.n
+subword.n
 succession.s
 successor.n
 success.s
@@ -9512,6 +9532,7 @@ vet.n
 veto.n
 viaduct.n
 vial.n
+vibe.n
 vibraphone.s
 vibraslap.s
 vibration.s
@@ -9608,6 +9629,7 @@ vulgarity.s
 vulnerability.s
 vulture.n
 vulva.n
+w/o.n
 wafer.n
 waffle.n
 wage.n
@@ -9779,6 +9801,7 @@ whisky.s
 whisper.n
 whistle.s
 white.s
+whitespace.n
 whiting.s
 whit.n
 whiz.n
@@ -9797,6 +9820,7 @@ wiggle.n
 wig.n
 wigwam.n
 wiki.n
+wildcard.n
 wildebeest.n
 willow.s
 wimp.n
@@ -9854,6 +9878,7 @@ woodwind.n
 woofer.n
 woof.n
 word.n
+workaround.n
 workbench.n
 workbook.n
 workday.n
@@ -9885,6 +9910,8 @@ wrinkle.n
 wristband.n
 wrist.n
 wristwatch.n
+write-off.n
+writeoff.n
 writer.n
 writing.s
 writ.n

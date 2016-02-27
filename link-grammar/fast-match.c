@@ -14,6 +14,7 @@
 #include "api-structures.h"
 #include "externs.h"
 #include "fast-match.h"
+#include "string-set.h"
 #include "word-utils.h"
 
 /**
@@ -29,11 +30,18 @@
  * is created by calling the alloc_fast_matcher() function.
  *
  * free_fast_matcher() is used to free the matcher.
- * put_match_list() releases the memory that form_match_list returned.
+ * form_match_list() manages its memory as a "stack" - match-lists are
+ * pushed on this stack. The said stack size gets over 2048 entries only
+ * for long and/or complex sentences.
+ * pop_match_list() releases the memory that form_match_list() returned
+ * by unwinding this stack.
  */
 
+#define MATCH_LIST_SIZE_INIT 4096 /* the initial size of the match-list stack */
+#define MATCH_LIST_SIZE_INC 2     /* match-list stack increase size factor */
+
 /**
- * returns the number of disjuncts in the list that have non-null
+ * Returns the number of disjuncts in the list that have non-null
  * left connector lists.
  */
 static int left_disjunct_list_length(const Disjunct * d)
@@ -54,52 +62,19 @@ static int right_disjunct_list_length(const Disjunct * d)
 	return i;
 }
 
-struct fast_matcher_s
-{
-	size_t size;
-	unsigned int *l_table_size;  /* the sizes of the hash tables */
-	unsigned int *r_table_size;
-
-	/* the beginnings of the hash tables */
-	Match_node *** l_table;
-	Match_node *** r_table;
-
-	/* I'll pedantically maintain my own list of these cells */
-	Match_node * mn_free_list;
-};
-
-
 /**
- * Return a match node to be used by the caller
+ * Push a match-list element into the match-list array.
  */
-static Match_node * get_match_node(fast_matcher_t *ctxt)
+static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 {
-	Match_node * m;
-	if (ctxt->mn_free_list != NULL)
+	if (ctxt->match_list_end > ctxt->match_list_size)
 	{
-		m = ctxt->mn_free_list;
-		ctxt->mn_free_list = m->next;
+		ctxt->match_list_size *= MATCH_LIST_SIZE_INC;
+		ctxt->match_list = realloc(ctxt->match_list,
+		                      ctxt->match_list_size * sizeof(*ctxt->match_list));
 	}
-	else
-	{
-		m = (Match_node *) xalloc(sizeof(Match_node));
-	}
-	return m;
-}
 
-/**
- * Put these nodes back onto my free list
- */
-void put_match_list(fast_matcher_t *ctxt, Match_node *m)
-{
-	Match_node * xm;
-
-	for (; m != NULL; m = xm)
-	{
-		xm = m->next;
-		m->next = ctxt->mn_free_list;
-		ctxt->mn_free_list = m;
-	}
+	ctxt->match_list[ctxt->match_list_end++] = d;
 }
 
 static void free_match_list(Match_node * t)
@@ -132,8 +107,10 @@ void free_fast_matcher(fast_matcher_t *mchxt)
 		}
 		xfree((char *)mchxt->r_table[w], mchxt->r_table_size[w] * sizeof (Match_node *));
 	}
-	free_match_list(mchxt->mn_free_list);
-	mchxt->mn_free_list = NULL;
+
+	free(mchxt->match_list);
+	lgdebug(5, "Sentence size %zu, match_list_size %zu\n",
+	        mchxt->size, mchxt->match_list_size);
 
 	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
 	xfree(mchxt->l_table, mchxt->size * sizeof(Match_node **));
@@ -203,24 +180,90 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 }
 
 /**
+ * Compare only the uppercase part of two connectors.
+ * Return true if they are the same, else false.
+ * FIXME: Use connector enumeration.
+ */
+static bool con_uc_eq(const Connector *c1, const Connector *c2)
+{
+	if (string_set_cmp(c1->string, c2->string)) return true;
+	if (c1->hash != c2->hash) return false;
+	if (c1->uc_length != c1->uc_length) return false;
+
+	/* We arrive here for less than 50% of the cases for "en" and
+	 * less then 20% of the cases for "ru", and, in practice, the
+	 * two strings are always equal, because there is almost never
+	 * a hash collision that would lead to a miscompare, because
+	 * we are hashing, at most, a few dozen connectors into a
+	 * 16-bit hash space (65536 slots).
+	 */
+	const char *uc1 = &c1->string[c1->uc_start];
+	const char *uc2 = &c2->string[c2->uc_start];
+	if (0 == strncmp(uc1, uc2, c1->uc_length)) return true;
+
+	return false;
+}
+
+static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
+                                          Connector * c, int dir)
+{
+	unsigned int h, s;
+
+	s = h = connector_hash(c) & (size-1);
+
+	if (dir == 1) {
+		while (NULL != t[h])
+		{
+			if (con_uc_eq(t[h]->d->right, c)) break;
+
+			/* Increment and try again. Every hash bucket MUST have
+			 * a unique upper-case part, since later on, we only
+			 * compare the lower-case parts, assuming upper-case
+			 * parts are already equal. So just look for the next
+			 * unused hash bucket.
+			 */
+			h = (h + 1) & (size-1);
+			if (NULL == t[h]) break;
+			if (h == s) return NULL;
+		}
+	}
+	else
+	{
+		while (NULL != t[h])
+		{
+			if (con_uc_eq(t[h]->d->left, c)) break;
+			h = (h + 1) & (size-1);
+			if (NULL == t[h]) break;
+			if (h == s) return NULL;
+		}
+	}
+
+	return &t[h];
+}
+
+/**
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  * dir =  1, we're putting this into a right table.
  * dir = -1, we're putting this into a left table.
  */
 static void put_into_match_table(unsigned int size, Match_node ** t,
-								 Disjunct * d, Connector * c, int dir )
+                                 Disjunct * d, Connector * c, int dir )
 {
-	unsigned int h;
-	Match_node * m;
-	h = connector_hash(c) & (size-1);
+	Match_node *m, **xl;
+
 	m = (Match_node *) xalloc (sizeof(Match_node));
 	m->next = NULL;
 	m->d = d;
+
+	xl = get_match_table_entry(size, t, c, dir);
+	assert(NULL != xl, "get_match_table_entry: Overflow\n");
 	if (dir == 1) {
-		t[h] = add_to_right_table_list(m, t[h]);
-	} else {
-		t[h] = add_to_left_table_list(m, t[h]);
+		*xl = add_to_right_table_list(m, *xl);
+	}
+	else
+	{
+		*xl = add_to_left_table_list(m, *xl);
 	}
 }
 
@@ -240,7 +283,10 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	ctxt->l_table = xalloc(2 * sent->length * sizeof(Match_node **));
 	ctxt->r_table = ctxt->l_table + sent->length;
 	memset(ctxt->l_table, 0, 2 * sent->length * sizeof(Match_node **));
-	ctxt->mn_free_list = NULL;
+
+	ctxt->match_list_size = MATCH_LIST_SIZE_INIT;
+	ctxt->match_list = xalloc(ctxt->match_list_size * sizeof(*ctxt->match_list));
+	ctxt->match_list_end = 0;
 
 	for (w=0; w<sent->length; w++)
 	{
@@ -276,64 +322,251 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	return ctxt;
 }
 
+#if 0
 /**
- * Forms and returns a list of disjuncts coming from word w, that might
- * match lc or rc or both. The lw and rw are the words from which lc
- * and rc came respectively.
- *
- * The list is returned in a linked list of Match_nodes.
- * The list contains no duplicates.
+ * Print statistics on various connector matching aspects.
+ * A summary can be found by the shell commands:
+ * link-parser < file.batch | grep match_stats: | sort | uniq -c
  */
-Match_node *
+static void match_stats(Connector *c1, Connector *c2)
+{
+	if (NULL == c1) printf("match_stats: cache\n");
+	if (NULL == c2) return;
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		printf("match_stats: h/d mismatch\n");
+	}
+
+	if (0 == c1->lc_start) printf("match_stats: no lc (c1)\n");
+	if (0 == c2->lc_start) printf("match_stats: no lc (c2)\n");
+
+	if (string_set_cmp(c1->string, c2->string)) printf("match_stats: same\n");
+
+	const char *a = &c1->string[c1->lc_start];
+	const char *b = &c2->string[c2->lc_start];
+	do
+	{
+		if (*a != *b && (*a != '*') && (*b != '*')) printf("match_stats: lc false\n");
+		a++;
+		b++;
+	} while (*a != '\0' && *b != '\0');
+	printf("match_stats: lc true\n");
+}
+#else
+#define match_stats(a, b)
+#endif
+
+#ifdef DEBUG
+#undef N
+#define N(c) (c?c->string:"")
+
+/**
+ * Print the match list, including connector match indications.
+ * Usage: link-parser -verbosity=9 -debug=print_match_list
+ * Output format:
+ * MATCH_NODE list_id:  lw>lc   [=]   left<w>right   [=]    rc<rw
+ *
+ * Regretfully this version doesn't indicate which match shortcut have been
+ * used, and which nodes are from mr or ml or both (the full print version
+ * clutters the source code very much, as it needs to be inserted in plenty
+ * of places.)
+ */
+static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
+                             Connector *lc, int lw,
+                             Connector *rc, int rw)
+{
+	if (!debug_level(9)) return;
+	Disjunct **m = &ctxt->match_list[mlb];
+
+	for (; NULL != *m; m++)
+	{
+		Disjunct *d = *m;
+
+		printf("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
+		       id, lw , N(lc), d->match_left ? '=': ' ',
+		       N(d->left), w, N(d->right),
+		       d->match_right? '=' : ' ', N(rc), rw);
+	}
+}
+#else
+#define print_match_list(...)
+#endif
+
+/**
+ * Compare only the lower-case parts of two connectors. When this
+ * function is called, it is assumed that the upper-case parts are
+ * equal, and thus do not need to be checked again.
+ *
+ * We know that the uc parts of the connectors are the same,
+ * because we fetch the matching lists according to the uc part or the
+ * connectors to be matched. So the uc parts are not checked here. The
+ * head/dependent indicators are in the caller function, and only when
+ * connectors match here, to save CPU when the connectors don't match
+ * otherwise. This is because h/d mismatch is rare.
+ * FIXME: Use connector enumeration.
+ */
+static bool match_lower_case(Connector *c1, Connector *c2)
+{
+	match_stats(c1, c2);
+
+	/* If the connectors are identical, they match. */
+	if (string_set_cmp(c1->string, c2->string)) return true;
+
+	/* If any of the connectors doesn't have a lc part, they match */
+	if ((0 == c2->lc_start) || (0 == c1->lc_start)) return true;
+
+	/* Compare the lc parts according to the connector matching rules. */
+	const char *a = &c1->string[c1->lc_start];
+	const char *b = &c2->string[c2->lc_start];
+	do
+	{
+		if (*a != *b && (*a != '*') && (*b != '*')) return false;
+		a++;
+		b++;
+	} while (*a != '\0' && *b != '\0');
+
+	return true;
+}
+
+/**
+ * Return false if the connectors cannot match due to identical
+ * head/dependent parts. Else return true.
+ */
+static bool match_hd(Connector *c1, Connector *c2)
+{
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		return false;
+	}
+	return true;
+}
+
+typedef struct
+{
+	const char *string;
+	bool match;
+} match_cache;
+
+/**
+ * Match the lower-case parts of connectors, and the head-dependent,
+ * using a cache of the most recent compare.  Due to the way disjuncts
+ * are written, we are often asked to compare to the same connector
+ * 3 or 4 times in a row. So if we already did that compare, just use
+ * the cached result. (i.e. the caching here is almost trivial, but it
+ * works well).
+ */
+static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
+{
+	/* The following uses a string-set compare - string_set_cmp() cannot
+	 * be used here because c_con->string may be NULL. */
+	match_stats(c_con->string == a->string ? NULL : a, NULL);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+	/* The string field is initialized to NULL, and this is enough because
+	 * the connector string cannot be NULL, as it actually fetched a
+	 * non-empty match list. */
+	if (c_con->string == a->string) return c_con->match;
+#pragma GCC diagnostic pop
+
+	/* No cache exists. Check if the connectors match and cache the result. */
+	c_con->match = match_lower_case(a, b) && match_hd(a, b);
+	c_con->string = a->string;
+
+	return c_con->match;
+}
+
+/**
+ * Forms and returns a list of disjuncts coming from word w, that
+ * actually matches lc or rc or both. The lw and rw are the words from
+ * which lc and rc came respectively.
+ *
+ * The list is returned in a linked list of Match_nodes.  This list
+ * contains no duplicates, because when processing the ml list, only
+ * elements whose match_left is true are included, and such elements are
+ * not included again when processing the mr list.
+ *
+ * Note that if both lc and rc match the corresponding connectors of w,
+ * match_left is set to true when the ml list is processed and the
+ * disjunct is then added to the result list, and match_right of the
+ * same disjunct is set to true when the mr list is processed, and this
+ * disjunct is not added again.
+ */
+size_t
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *ml, *mr, *mx, *my, *mr_end, *front;
+	Match_node *mx, *mr_end, **mxp;
+	size_t front = ctxt->match_list_end;
+	Match_node *ml = NULL, *mr = NULL;
+	match_cache mc;
 
-	if (lc != NULL) {
-		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
-	} else {
-		ml = NULL;
+#ifdef VERIFY_MATCH_LIST
+	static int id = 0;
+	int lid = ++id; /* A local copy, for multi-threading support. */
+#endif
+
+	/* Get the lists of candidate matching disjuncts of word w for lc and
+	 * rc.  Consider each of these lists only if the length_limit of lc
+	 * rc and also w, is not greater then the distance between their word
+	 * and the word w. */
+	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
+	{
+		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
+		if (NULL != mxp) ml = *mxp;
 	}
-	if (rc != NULL) {
-		mr = ctxt->r_table[w][connector_hash(rc) & (ctxt->r_table_size[w]-1)];
-	} else {
-		mr = NULL;
+	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
+	{
+		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
+		if (NULL != mxp) mr = *mxp;
 	}
 
-	/* In order to eliminate duplicates from the lists, we mark the disjuncts. */
 	for (mx = mr; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->right->word > rw) break;
-		mx->d->marked = true;
+		mx->d->match_left = false;
 	}
 	mr_end = mx;
 
-	front = NULL;
 	/* Construct the list of things that could match the left. */
+	mc.string = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->word < lw) break;
-		mx->d->marked = false;
-		my = get_match_node(ctxt);
-		my->d = mx->d;
-		my->next = front;
-		front = my;
+		if ((w - lw) > mx->d->left->length_limit) continue;
+
+		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc);
+		if (!mx->d->match_left) continue;
+		mx->d->match_right = false;
+
+#ifdef VERIFY_MATCH_LIST
+		mx->d->match_id = lid;
+#endif
+		push_match_list_element(ctxt, mx->d);
 	}
 
-	/* Append the list of things that could match the right. */
+	/* Append the list of things that could match the right.
+	 * Note that it is important to set here match_right correctly even
+	 * if we are going to skip this element here because its match_left
+	 * is true, since then it means it is already included in the match
+	 * list. */
+	mc.string = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		if (mx->d->marked)
-		{
-			/* mx is not in the l list. */
-			my = get_match_node(ctxt);
-			my->d = mx->d;
-			my->next = front;
-			front = my;
-		}
+		if ((rw - w) > mx->d->right->length_limit) continue;
+
+		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc);
+		if (!mx->d->match_right || mx->d->match_left) continue;
+
+#ifdef VERIFY_MATCH_LIST
+		mx->d->match_id = lid;
+#endif
+		push_match_list_element(ctxt, mx->d);
 	}
 
+	push_match_list_element(ctxt, NULL);
+	print_match_list(ctxt, lid, front, w, lc, lw, rc, rw);
 	return front;
 }

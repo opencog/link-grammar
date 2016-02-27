@@ -242,7 +242,7 @@ static Match_node* sort_matchlist(Match_node* mlist)
 	for (mx = mlist; mx->next != NULL; mx = mx->next) len++;
 	if (1 == len) return mlist;
 
-	/* Avoid blowing out the stack. Its hopless. */
+	/* Avoid blowing out the stack. Its hopeless. */
 	if (100000 < len) return mlist;
 
 	marr = alloca(len * sizeof(Match_node*));
@@ -290,7 +290,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	/* Perhaps we've already computed it; if so, return it. */
 	if (xt != NULL) return &xt->set;
 
-	/* Start it out with the empty set of parse chocies. */
+	/* Start it out with the empty set of parse choices. */
 	/* This entry must be updated before we return. */
 	xt = x_table_store(lw, rw, le, re, null_count, pi);
 
@@ -377,17 +377,19 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	RECOUNT({xt->set.recount = 0;})
 	for (w = start_word; w < end_word; w++)
 	{
-		Match_node * m, *mlist;
-		mlist = form_match_list(mchxt, w, le, lw, re, rw);
+		size_t mlb, mle;
+		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
 		// if (mlist) mlist = sort_matchlist(mlist);
-		for (m = mlist; m != NULL; m = m->next)
+		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			unsigned int lnull_count, rnull_count;
-			Disjunct* d = m->d;
+			Disjunct *d = get_match_list_element(mchxt, mle);
+			bool Lmatch = d->match_left;
+			bool Rmatch = d->match_right;
+
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
 				int i, j;
-				bool Lmatch, Rmatch;
 				Parse_set *ls[4], *rs[4];
 
 				/* Here, lnull_count and rnull_count are the null_counts
@@ -396,11 +398,6 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-
-				Lmatch = (le != NULL) && (d->left != NULL)
-				         && do_match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL)
-				         && do_match(d->right, re, w, rw);
 
 				for (i=0; i<4; i++) { ls[i] = rs[i] = NULL; }
 				if (Lmatch)
@@ -508,7 +505,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				}
 			}
 		}
-		put_match_list(mchxt, mlist);
+		pop_match_list(mchxt, mlb);
 	}
 	return &xt->set;
 }
@@ -535,7 +532,7 @@ static bool set_overflowed(Parse_info pi)
 {
 	unsigned int i;
 
-	assert(pi->x_table != NULL, "called set_verflowed with x_table==NULL");
+	assert(pi->x_table != NULL, "called set_overflowed with x_table==NULL");
 	for (i=0; i<pi->x_table_size; i++)
 	{
 		X_table_connector *t;

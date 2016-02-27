@@ -19,6 +19,7 @@ It was announced that remains have been found of the ark of the covenant
 
 % Missing verb-wall links
 They were of a single mind.
+What's up?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Miscellaneous missing nouns.
@@ -31,9 +32,14 @@ Computers suck dick
 I found a subgraph isomorphism that is isometric to the epimorphism.
 I installed one splitter near the antenna and two more before the amplifier.
 I installed one splitter near the antenna and two more splitters before the amplifier.
-I did not understand one smidgin or that lecture. Not one whit.
+I did not understand one smidgin of that lecture. Not one whit.
 Not one tittle. Not one whit.
+I'm getting a bad vibe from this.
 
+An eerie silence befell the room
+an eerie calm settled down on the room
+an eerie quiet preceded the explosion.
+he had an easy calmness about him
 
 % Verbs that didn't have corresponding nouns -- bop.v was clobbering bop.n
 I like the sound of bop.
@@ -107,6 +113,9 @@ It has a tensile toughness of 0.34 joules per cubic metre
 % Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.
 
+% Parses, but not correctly! "at once" should stick together.
+*They were at once shelled and fired on by the machine guns
+
 % ----------------------------------------------------------
 % Phonetics: distinguish a/an usage with vowels/consonants:
 *I ate a apple.
@@ -170,6 +179,16 @@ John is bigger than Dave is.
 John wants more cookies than Dave wants.
 It was covered with bites.
 Alice took a bite out of it.
+
+% Leasing and subleasing.
+It's to let.
+It's to let; there's a notice on the door.
+She has a room to let in her house.
+The landlord is letting the office to a local company.
+Let's sublet that room!
+Yes, we will sublet that room!
+Preliminary contracts were let and tunneling work started.
+The rooms were let.
 
 % wikipedia sentences
 Hatem Mohamed Mersal (born 20 January 1975) is an Egyptian long jumper.
@@ -395,6 +414,30 @@ what for?
 How come?
 How many?
 How?
+
+How quickly?
+
+How big?
+How small?
+How high?
+How big did he talk?
+How big is it?
+How big did you say it was?
+*How slickly did you say it was?
+How high did you say it was?
+How tall did you say he was?
+
+% Arghhh this is a mess. Some of these want to use AF+,
+% others seem to be more comfortable with Qe+ and its not clear
+% how to be consistent.
+How common did you say it was?
+How common?
+How often?
+How often does it happen?
+How shocking?
+How shocking was it?
+How shocking did you say it was?
+
 
 Who?
 who else?
@@ -858,30 +901,51 @@ plenty of others thought so too
 
 % ===================================================================
 % Subject verb inversion
-% Examples from wikipedia
-% Currently, these all fail very badly.
+% Many examples from wikipedia
 
 % Archaic fairy-tale / children's book registers (inverted subject/object)
-Far out in the sea lived a fish.
+far out in the sea lived a fish.
 A fish lived far out in the sea.
 
+% Locative subject-object iversion
 under the tree sat Jim
 *Under the tree sat he.
+under the tree sits Jim, looking lonely
 
 beside the river sat Jim
 beside the river ran Jim
-Along the vines lay Jim
+Along the riverbank lay some smooth stones.
+Along the riverbank grew some flowers.
+Along the riverbank grow some flowers.
+for along the riverbank grow some flowers.
+yet along the riverbank grow some flowers.
 Beside Sally ran Jim
 
+And so stays the situation.
+And so stayed the situation.
+
+Here lies the ball.
+There lay the ball.
+And so there lay the matter, until Jill decided to challenge him.
+Beneath, there lay in mobile contiguity the essential elements of living matter.
+No matter what the motive was, there the money lay
+There lay the reason for the groans.
+
+In the corner lay a lamp.
+*In the corner lay it.
+
+Under that tree sleeps only Larry.
+
+% Directive subject-object inversion
+Into the room came two students
 Down the stairs came the dog
 *Down the stairs came it.
 
+At last the infantry were ready, and off went the cavalry to the right
+Onward went the cavalry, spurred to extraordinary exertion by the fact that provisions began to run short.
+
 A good gift is flowers
 *A good gift is they
-
-% Locative inversion
-In the corner lay a lamp.
-*In the corner lay it.
 
 % Directive inversion
 Into the room came two students.
@@ -889,9 +953,19 @@ Into the room came two students.
 Out of the tree fell the squirrel.
 *Out of the tree fell it.
 
+After the speeches came the toasts
+Before the storm came an eerie quiet
+Before the storm came an eerie calm
+
 % comparative inversion
 It was too difficult a question.
 It was too long a journey.
+
+Cheaper than dirt, slime is greener
+radically cheaper than regular steel, Flash Bainite is stronger than titanium
+radically cheaper to produce than regular steel, Flash Bainite is stronger than titanium
+
+
 
 % ===================================================================
 % assorted mis-classified verbs.
@@ -1174,6 +1248,12 @@ he was declared dead of suffocation.
 He was judged innocent
 we judged him as innocent as a lamb
 He was judged innocent of the crime
+
+it can be pressed into shape while cold
+
+I gave it an up vote.
+Give it a down vote.
+Give it a down-vote.
 
 % turn - ditransitive with adjective (predicative adjective) Pa**j link
 The thought was turning him green with envy.
@@ -1561,6 +1641,8 @@ I wonder why you said that?
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
+% "How big a dog is it?" should parse .. and it does, but the
+% parse is incorrect, so we put a * in front, for now.
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -1820,6 +1902,10 @@ John is rather incomparably smarter.
 It's a rather inherently better method.
 John is quite certainly a better choice.
 
+% But sometimes we modify the comparative, instead:
+it is vastly cheaper
+it is dramatically cheaper
+
 % Similar buggy sentences:
 *John is nimbly strongly dull.
 *John is boundlessly charmingly polite.
@@ -2062,9 +2148,6 @@ He's out running.
 He's out for lunch.
 He's out on the town.
 
-% "I need help with that."
-I need help w/that.
-
 % as ....
 It is no longer portrayed as having the power to protect against sin.
 You are portrayed as having the power to make decisions.
@@ -2076,6 +2159,8 @@ You come across as authoritative.
 He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
 
+There it lay, inert matter, as it had always lain, since the beginning of time.
+There it lay, as it had always lain, since the beginning of time.
 
 % Problems with "go":
 Let's go shop.
@@ -2551,6 +2636,44 @@ How open will he be with the truth?
 How tight is that connection?
 How loose is that connection?
 
+% Abbreviations
+The asset was written off.
+The asset was w/o.
+Its is a complete write-off.
+Its is a complete w/o.
+We left without him.
+We left w/o him.
+It comes w/o batteries.
+It comes with batteries.
+It comes w/ batteries.
+It comes w/batteries.
+The value is within parameters.
+The value is w/i parameters.
+
+% "I need help with that."
+I need help w/that.
+I take coffee w/milk.
+
+I'm telling you b/c you need to know.
+I'm telling you 'cause you need to know.
+
+% heating, ventilation and air conditioning.
+It comes with a/c.
+The a/c stopped working.
+The A/C stopped working.
+Just go hire an HVAC guy.
+
+% radio control
+I want an r/c car for Christmas!
+He got himself an R/C plane!
+
+% input/output
+There's a bottleneck in the i/o subsystem.
+Let's re-examine the I/O system architecture.
+
+% care of
+It is addressed c/o the Smith family.
+
 % Measurement units
 There is a nineteen minute gap in the tapes.
 There is a 12 year gap in the records.
@@ -2962,8 +3085,35 @@ Mary wentshopping atthe store.
 Its broken.
 It's broken.
 
-% quotations can be used for grouping modifiers into an almost-idiom
-We ate so-called 'brain food' for lunch.
+% In repsonse to "So, did you do it?"
+I sure wish I ...
+I sure wish I had.
+I sure wish I did.
+I sure wish I could.
+I sure wish he would.
+I sure wish I hadn't.
+I sure wish I didn't.
+I sure hope I don't.
+I am sure I haven't.
+I am sure I won't.
+I know I wouldn't.
+I know I ought to.
+You know you should.
+You know you can.
+You know you must.
+
+I know he doesn't.
+I know he didn't.
+You know you needn't.
+
+Why, I ought to ....
+I ought to.
+I ought to do it.
+I ought to go there.
+I ought to tell her.
+I know I ought to.
+I know I ought to tell her.
+
 
 % punctuation: sometimes commas are used as if they were semicolons:
 Sweat stood on his brow, fury was bright in his one good eye.
@@ -3114,9 +3264,41 @@ VII. Egypt
 ◇ This is a bullet
 ◎ This is a bullet
 
-% quoted words and phrases:
+% Quoted words and phrases:
 We should distinguish between "who" and "whom" but who fucking cares?
-He said "blah blah blah".
+He said "blah blah blah."
+
+He said, "This is it."
+He tells her, "this is it."
+Well, I told her, "This is it."
+"This is a test," she said.
+"Is this a test?" she asked.
+She asked, "Is this a test?"
+"Let's go!" she said.
+He said, "Let's go!"
+"Let go of me!" she screamed.
+"Let go of me!" she sobbed.
+"Are you mad at me?" he demanded.
+"What's up?" he asked.
+You asked, "How might this work?"
+You were asking, "How might this work?"
+You were asking "How might this work?"
+You were asked, "How might this work?"
+You asked, "How might this work?" so I answered.
+You asked, "How might this work?" so I gave an answer.
+You were asking, "How might this work?" so I answered.
+
+% Still broken:
+"On second thought," he said, "this is it".
+He tells her, "Well, this is it."
+
+Mr. Johnson, who was working in his field that morning, said, "The alien spaceship appeared right before my own two eyes."
+"I didn't see an actual alien being," Mr. Johnson said, "but I sure wish I had."
+Although Mr. Johnson has seen odd happenings on the farm, he stated that the spaceship "certainly takes the cake" when it comes to unexplainable activity.
+
+% quotations can be used for grouping modifiers into an almost-idiom
+We ate so-called 'brain food' for lunch.
+
 
 %
 % Institutionalized phrases:
@@ -3373,6 +3555,7 @@ I told you so!
 But I don't agree.
 Do you think so, too?
 Because I said so!
+Cuz I said so!
 Do it like so.
 Do it like this.
 It must be done exactly like so.
@@ -3454,6 +3637,10 @@ You bastard! she hissed.
 You!
 You bastard, you!
 That asshole!
+
+Over here!
+Come over here!
+John, over here!
 
 % Affirmative replies
 What did you see?
@@ -3550,13 +3737,19 @@ I'm gonna hit you.
 It looks like it ain't gonna rain today.
 Y'gonna go?
 I gotta go.
+He said, "I gotta go now."
 I really gotta go.
 You got to do it this way
 You gotta do it this way
 Y'got to do it this way
 Y'gotta do it this way
 I'm tellin' yo, y'gotta do it this way
+Are y'gonna do it?
 Well, I've been tryin' to esplain it to ya
+Well, I been tryin' to esplain it to ya
+
+Well, it just keeps startin' and stoppin'
+He's gettin' ink done.
 
 Y'all come back now, y'hear?
 You leaving already?
@@ -3820,6 +4013,17 @@ There will be a lot fewer yet much larger fish as a result.
 he ran the longest and the farthest
 he ran the longest and farthest
 he ran the slowest but the farthest
+
+It is less costly and lighter
+It is lighter and less costly
+It is good enough and lighter
+It is cheaper and good enough
+It is cheaper and less energy-intensive
+It is cheaper and less energy-intensive to produce
+
+That is fine and well enough!
+That is fine and well enough, young man!
+
 
 % some idiomatic comparative-like expressions
 That will more and more be the case
@@ -4351,7 +4555,7 @@ Maybe it works now...
 % See wikipedia article on gapping
 Should I attempt to call you, or you me?
 
-% The below parses, but parses incorrectly.
+% The below parses (as it should), but parses incorrectly.
 *Susan likes to work the late shift, and Sam the early shift.
 
 % Compound queries
@@ -4439,7 +4643,7 @@ Mike finished in first place, and John in last.
 The teacher's shouting startled the student.
 
 % "and so" is linked with Wq, should not be.
-% i.e. this parses, but incorrectly
+% i.e. this parses(as it should), but incorrectly
 *Rama ate the apple, and so did Mohan.
 
 % Automatic possesive guessing broken when entity is in the dictionary:
@@ -4524,6 +4728,7 @@ There's plenty more where that came from.
 % --------------------------------------------------------------------
 % sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
+% viz they should parse,
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
 *He was so foolish as to lie.
@@ -4533,7 +4738,6 @@ There's plenty more where that came from.
 *Fuck off and have a great day, twit!
 *Fuck off and have a great day, jerk!
 
-% Use to parse incorrectly, but looks OK to me now ...
 I slipped on the ice as I ran home.
 
 % --------------------------------------------------------------------

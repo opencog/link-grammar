@@ -57,7 +57,6 @@ static inline char * deinflect(const char * str)
  * names. */
 
 const char * afdict_classname[] = { AFDICT_CLASSNAMES };
-#define NUMELEMS(a) (sizeof(a) / sizeof(a[0]))
 
 /**
  * Find the affix table entry for given connector name.
@@ -68,7 +67,7 @@ Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 	const char ** ac;
 
 	for (ac = afdict_classname;
-	     ac < &afdict_classname[NUMELEMS(afdict_classname)]; ac++)
+	     ac < &afdict_classname[ARRAY_SIZE(afdict_classname)]; ac++)
 	{
 		if (0 == strcmp(*ac, con))
 			return &afdict->afdict_class[ac - afdict_classname];
@@ -282,7 +281,7 @@ static bool afdict_init(Dictionary dict)
 	 * it is fixed to preserve the order, reverse here the word list for
 	 * each affix class. */
 	for (ac = afdict->afdict_class;
-		  ac < &afdict->afdict_class[NUMELEMS(afdict_classname)]; ac++)
+		  ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 	{
 		int i;
 		int l = ac->length - 1;
@@ -330,7 +329,7 @@ static bool afdict_init(Dictionary dict)
 		size_t l;
 
 		for (ac = afdict->afdict_class;
-		     ac < &afdict->afdict_class[NUMELEMS(afdict_classname)]; ac++)
+		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 		{
 				if (0 == ac->length) continue;
 				lgdebug(+0, "Class %s, %zd items:",
@@ -496,8 +495,8 @@ dictionary_six_str(const char * lang,
 
 		/* initialize the class table */
 		dict->afdict_class =
-		   malloc(sizeof(*dict->afdict_class) * NUMELEMS(afdict_classname));
-		for (i = 0; i < NUMELEMS(afdict_classname); i++)
+		   malloc(sizeof(*dict->afdict_class) * ARRAY_SIZE(afdict_classname));
+		for (i = 0; i < ARRAY_SIZE(afdict_classname); i++)
 		{
 			dict->afdict_class[i].mem_elems = 0;
 			dict->afdict_class[i].length = 0;

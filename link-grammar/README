@@ -89,7 +89,7 @@ display of a graphs which includes no "prev" links for clarity, but
 includes "unsplit word" links.  Other graphical representation modes can be
 enabled by !test=wg:FLAGS, when FLAGS are lowercase letters as defined in
 wordgraph.h.  For example, !test=wg:sl displays unsplit_words as subgraphs,
-with a legend, and the p flag adds "prev" links.
+with a legend, and adding the p flag (i.e. !test=wg:slp) adds "prev" links.
 The graphical display still needs improvements in order to be able to
 display complex word-graph situations in a simple manner.  The graphical
 display code is not compiled by default because it involves invocation of
@@ -116,10 +116,6 @@ quote display.
 
 Not as in previous releases, capital letters which got downcased are not
 restored for display if the affected words have a linkage.
-
-The Boolean-SAT parser is now not functional (it segfaults), because it
-has not been converted yet to have word-graph word pointers in the
-disjunct structures.
 
 A new experimental handling of capital words using the dictionary has been
 introduced. It inserts the token 1stCAP before the uc version, and nonCAP before

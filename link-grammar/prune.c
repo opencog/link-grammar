@@ -995,19 +995,26 @@ static bool possible_connection(prune_context *pc,
 	/* Two deep connectors can't work */
 	if ((lc->word > rword) || (rc->word < lword)) return false;
 
-	assert(lword < rword, "Bad word order in possible connection.");
+	dist = rword - lword;
+	// assert(0 < dist, "Bad word order in possible connection.");
 
 	/* Word range constraints */
-	if (lword == rword-1) {
+	if (1 == dist)
+	{
 		if (!((lc->next == NULL) && (rc->next == NULL))) return false;
 	}
 	else
+	if (dist > lc->length_limit || dist > rc->length_limit)
+	{
+		return false;
+	}
 	/* If the words are NOT next to each other, then there must be
 	 * at least one intervening connector (i.e. cannot have both
 	 * lc->next amnd rc->next being null).  But we only enforce this
 	 * when we think its still possible to have a complete parse,
 	 * i.e. before well allow null-linked words.
 	 */
+	else
 	if ((!pc->null_links) &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
@@ -1015,9 +1022,6 @@ static bool possible_connection(prune_context *pc,
 	{
 		return false;
 	}
-
-	dist = rword - lword;
-	if (dist > lc->length_limit || dist > rc->length_limit) return false;
 
 	return easy_match(lc->string, rc->string);
 }
@@ -1080,21 +1084,25 @@ left_table_search(prune_context *pc, int w, Connector *c,
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
-                           int word_c, int w, bool shallow)
+                           int w, bool shallow)
 {
-	int n;
+	int n, lb;
 	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = left_connector_list_update(pc, c->next, word_c, w, false) - 1;
+	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (((int) c->word) < n) n = c->word;
+
+	/* lb is now the leftmost word we need to check */
+	lb = w - c->length_limit;
+	if (0 > lb) lb = 0;
 
 	/* n is now the rightmost word we need to check */
 	foundmatch = false;
-	for (; n >= 0 ; n--)
+	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
-		if (right_table_search(pc, n, c, shallow, word_c))
+		if (right_table_search(pc, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1118,21 +1126,25 @@ left_connector_list_update(prune_context *pc, Connector *c,
  */
 static size_t
 right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
-                            size_t word_c, size_t w, bool shallow)
+                            size_t w, bool shallow)
 {
-	size_t n;
+	size_t n, ub;
 	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = right_connector_list_update(pc, sent, c->next, word_c, w, false) + 1;
+	n = right_connector_list_update(pc, sent, c->next, w, false) + 1;
 	if (c->word > n) n = c->word;
+
+	/* ub is now the rightmost word we need to check */
+	ub = w + c->length_limit;
+	if (ub > sent->length) ub = sent->length;
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
-	for (; n < sent->length ; n++)
+	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
-		if (left_table_search(pc, n, c, shallow, word_c))
+		if (left_table_search(pc, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1178,7 +1190,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
-				if (left_connector_list_update(pc, d->left, w, w, true) < 0) {
+				if (left_connector_list_update(pc, d->left, w, true) < 0) {
 					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1214,7 +1226,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
-				if (right_connector_list_update(pc, sent, d->right, w, w, true) >= sent->length) {
+				if (right_connector_list_update(pc, sent, d->right, w, true) >= sent->length) {
 					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1250,7 +1262,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pt = NULL;
 	pc->pt = NULL;
 
-	if (verbosity > 2) printf("power prune cost: %d\n", pc->power_cost);
+	if (verbosity >= 2) printf("power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned");
 	if (verbosity > 2)

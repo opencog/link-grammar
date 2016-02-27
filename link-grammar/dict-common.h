@@ -14,8 +14,7 @@
 #ifndef _LG_DICT_COMMON_H_
 #define  _LG_DICT_COMMON_H_
 
-#include "api-types.h"
-#include "dict-structures.h"
+#include "structures.h"
 
 /* The functions here are for link-grammar internal use only.
  * They are not part of the public API. */
@@ -24,7 +23,7 @@ bool find_word_in_dict(Dictionary dict, const char *);
 Afdict_class * afdict_find(Dictionary, const char *, bool);
 
 Exp * Exp_create(Exp_list *);
-Exp * add_empty_word(Dictionary const, Exp_list *, Dict_node *);
+void add_empty_word(Dictionary const, X_node *);
 void free_Exp_list(Exp_list *);
 
 void patch_subscript(char *);

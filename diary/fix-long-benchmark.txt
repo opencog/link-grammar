@@ -25,7 +25,7 @@ BATCH-FILE-|          | Current Minisat |Minisat-2.2+| Glucose-4.0[*5]| CMS[*3]
 
 [*1] **Without** this sentence, on which it gets stuck for more than 10 CPU hours
 (program interrupted after that, twice):
-The problematic sentence:timeit -r 1 -n 10 "lg  -u  -panic -time=100000 < /tmp/flb > /dev/null"
+The problematic sentence:
 In Buddhism there are 84 Mahasiddhas: Acinta, Ajogi, Anangapa, Aryadeva, Babhaha, Bhadrapa, Bhandepa, Bhiksanapa, Bhusuku, Camaripa, Campaka, Carbaripa, Catrapa, Caurangipa, Celukapa, Darikapa, Dengipa, Dhahulipa, Dharmapa, Dhilipa, Dhobipa, Dhokaripa Dombipa, Dukhandi, Ghantapa, Gharbari, Godhuripa, Goraksa, Indrabhuti, Jalandhara, Jayananda, Jogipa, Kalapa, Kamparipa, Kambala, Kanakhala, Kanhapa, Kankana, Kankaripa, Kantalipa, Kapalapa, Khadgapa, Kilakilapa, Kirapalapa, Kokilipa, Kotalipa, Kucipa, Kukkuripa, Kumbharipa, Laksminkara, Lilapa, Lucikapa, Luipa, Mahipa, Manibhadra, Medhini, Mekhala, Mekopa, Minapa, Nagabodhi, Nagarjuna, Nalinapa, Naropa, Nirgunapa, Pacaripa, Pankajapa, Putalipa, Rahula, Saraha, Sakara, Samudra, Santipa, Sarvabhaksa, Savaripa, Syalipa, Tantepa, Tantipa, Thaganapa, Tilopa, Udhilipa, Upanaha, Vinapa, Virupa, Vyalipa.
 
 This sentence took *95%* of the CPU time of this batch run:
@@ -41,10 +41,10 @@ See **[*6]** for run times without these 2 problematic sentences.
 
 [*5] Haven't tried with more than one thread (yet).
 
-[*6] timeit -r 6 -n 6
+[*6] timeit -r 6 -n 6. Without the 2 problematic sentences (see [*1]).
 
 [*7] Without the 2 problematic sentences (see [*1]).
 
 ---
 Note (2015-10-14): Some tweaking in guiding.cpp was needed due to library API
-changes or due to improve speed. See ru-benchmark.txt.
+changes or to improve speed. See ru-benchmark.txt.

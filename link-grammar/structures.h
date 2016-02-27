@@ -93,7 +93,7 @@
  */
 struct Connector_struct
 {
-	int32_t hash;
+	int16_t hash;
 	uint8_t word;
 	             /* The nearest word to my left (or right) that
 	                this could connect to.  Computed by power pruning */
@@ -105,6 +105,9 @@ struct Connector_struct
 	                name, efficiency is the only reason to store
 	                this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
+	uint8_t lc_start;     /* lc start position (or 0) - for match speedup. */
+	uint8_t uc_length;    /* uc part length - for match speedup. */
+	uint8_t uc_start;     /* uc start position - for match speedup. */
 	Connector * next;
 	const char * string; /* The connector name w/o the direction mark, e.g. AB */
 
@@ -122,6 +125,9 @@ static inline const char * connector_get_string(Connector *c)
 	return c->string;
 }
 
+//#ifdef DEBUG
+#define VERIFY_MATCH_LIST
+//#endif
 struct Disjunct_struct
 {
 	Disjunct *next;
@@ -130,6 +136,11 @@ struct Disjunct_struct
 	double cost;
 	bool marked;               /* unmarked disjuncts get deleted */
 	const Gword **word;        /* NULL terminated list of originating words */
+	/* Used only during chart-parsing, for the match list. */
+	bool match_left, match_right;
+#ifdef VERIFY_MATCH_LIST
+	int match_id;              /* verify the match list integrity */
+#endif
 };
 
 typedef struct Match_node_struct Match_node;

@@ -18,6 +18,9 @@ link-grammar.pc
 link-grammar.spec
 libtool
 link-grammar-*.jar
+link-grammar-*.tar.gz
+link-grammar-*.tar.gz.asc
+link-grammar-*.tar.gz.md5
 .lg_history
 Makefile.in
 Makefile

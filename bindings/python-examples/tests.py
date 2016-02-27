@@ -280,7 +280,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.link(3),
                          Link(linkage, 3, 'this.p','Ss*b','Ss','is.v'))
         self.assertEqual(linkage.link(4),
-                         Link(linkage, 4, 'is.v','O*m','Os','sentence.n'))
+                         Link(linkage, 4, 'is.v','O*t','Os','sentence.n'))
         self.assertEqual(linkage.link(5),
                          Link(linkage, 5, 'a','Ds**c','Ds**c','sentence.n'))
         self.assertEqual(linkage.link(6),
@@ -331,7 +331,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('Jumbo sat down.')[0].words()),
-             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
 
         # Red is in dict, lower-case, as noun, too.
         # There's no way to really know, syntactically, that Red
@@ -351,7 +351,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'May.f', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('May sat down.')[0].words()),
-             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.e', '.', 'RIGHT-WALL'])
 
         # McGyver is not in the dict, but is regex-matched.
         self.assertEqual(list(self.parse_sent('McGyver\'s going?')[0].words()),
@@ -362,7 +362,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('McGyver sat down.')[0].words()),
-             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('McGyver Industries stock declined.')[0].words()),
              ['LEFT-WALL', 'McGyver[!]', 'Industries[!]',

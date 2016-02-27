@@ -33,11 +33,11 @@
 #include "utilities.h"
 #include "wordgraph.h"
 #include "word-utils.h"
-#include "stdarg.h"
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
 #define D_SW 3                      /* debug level for word splits */
+#define D_UN 3                      /* debug level for units/punct */
 
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
@@ -335,7 +335,7 @@ static bool word_start_another_alternative(Dictionary dict,
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
 			 !find_word_in_dict(dict, altword0))))
 		{
-			lgdebug(+2, "Preventing alt starts with %s due to existing %s\n",
+			lgdebug(+D_UN, "Preventing alt starts with %s due to existing %s\n",
 			        altword0, (*n)->subword);
 			return true;
 		}
@@ -349,35 +349,40 @@ static bool word_start_another_alternative(Dictionary dict,
  * may need a generalization.
  * FIXME? Try to work-around the current need of this functions.
  */
-static char contraction_chars[] = "'`";
+static char const *contraction_char[] = { "'", "’" };
 
 #if 0
 static bool is_contraction_suffix(const char *s)
 {
-	const char *p;
+	size_t len = strlen(s);
 
-	for (p = contraction_chars; '\0' != *p; p++)
-		if (s[0] == *p) return true;
+	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
+	{
+		size_t cclen = strlen(contraction_char[i]);
+		if (len < cclen) continue;
+		if (0 == strncmp(s+len-cclen, contraction_char[i], cclen)) return true;
+	}
 
 	return false;
 }
 
 static bool is_contraction_prefix(const char *s)
 {
-	const char *p;
-	size_t len = strlen(s);
-
-	for (p = contraction_chars; '\0' != *p; p++)
-		if (s[len] == *p) return true;
-
+	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
+	{
+		size_t cclen = strlen(contraction_char[i]);
+		if (0 == strncmp(s, contraction_char[i], cclen)) return true;
+	}
 	return false;
 }
 #endif
 
 static bool is_contraction_word(const char *s)
 {
-	if ('\0' == s[0]) return false; /* just in case */
-	if (NULL != strpbrk(s+1, contraction_chars)) return true;
+	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
+	{
+		if (NULL != strstr(s, contraction_char[i])) return true;
+	}
 	return false;
 }
 
@@ -395,17 +400,17 @@ static bool is_contraction_word(const char *s)
 #define D_IWA 3
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                               const char *label,
-                              int prefnum, const char **prefix,
-                              int stemnum, const char ** stem,
-                              int suffnum, const char **suffix)
+                              int prefnum, const char * const *prefix,
+                              int stemnum, const char * const *stem,
+                              int suffnum, const char * const *suffix)
 {
-	int ai = 0;                    /* affix index */
-	const char **affix;            /* affix list pointer */
-	const char **affixlist[] = { prefix, stem, suffix, NULL };
+	int ai = 0;                     /* affix index */
+	const char * const *affix;      /* affix list pointer */
+	const char * const * const affixlist[] = { prefix, stem, suffix, NULL };
 	const int numlist[] = { prefnum, stemnum, suffnum };
 	enum affixtype { PREFIX, STEM, SUFFIX, END };
 	enum affixtype at;
-	char infix_mark = INFIX_MARK(sent->dict->affix_table);
+	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 	Gword *subword;                 /* subword of the current token */
 	Gword *psubword = NULL;         /* subword of the previous token */
 	const size_t token_tot = prefnum + stemnum + suffnum; /* number of tokens */
@@ -413,8 +418,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	Morpheme_type morpheme_type;
 	Gword *alternative_id = NULL;   /* to be set to the start subword */
 	bool subword_eq_unsplit_word;
-	char *buff;
 	size_t maxword = 0;
+	bool last_split = false;        /* this is a final token */
 #ifdef DEBUG
 	Gword *sole_alternative_of_itself = NULL;
 #endif
@@ -451,8 +456,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			        ('\0' == (*affix)[0]) ? "[null]" : *affix);
 		}
 	}
-	lgdebug(D_IWA, "\n");
-	buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NULL */
+
+	char * const buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NUL */
+	const char *token;
 
 	for (at = PREFIX; at < END; at++)
 	{
@@ -461,16 +467,20 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		for (affix = affixlist[at]; affixnum-- > 0; affix++, ai++)
 		{
 			token_ord++;
+			token = *affix; /* avoid copying if possible */
 			switch (at)
 			{
-				size_t sz;
-
 				/* Mark the token with INFIX_MARK if needed. */
 				case PREFIX: /* set to word= */
-					sz = strlen(*affix);
-					strncpy(buff, *affix, sz);
-					buff[sz] = infix_mark;
-					buff[sz+1] = '\0';
+					if ('\0' != infix_mark)
+					{
+						size_t sz = strlen(*affix);
+						memcpy(buff, *affix, sz);
+						buff[sz] = infix_mark;
+						buff[sz+1] = '\0';
+						last_split = true;
+						token = buff;
+					}
 					if (is_contraction_word(unsplit_word->subword))
 						morpheme_type = MT_CONTR;
 					else
@@ -479,24 +489,32 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				case STEM:   /* already word, word.=, word.=x */
 					/* Stems are already marked with a stem subscript, if needed.
 					 * The possible marks are set in the affix class STEMSUBSCR. */
-					strcpy(buff, *affix);
-					morpheme_type = is_stem(buff) ? MT_STEM : MT_WORD;
+					if (is_stem(token))
+					{
+						morpheme_type = MT_STEM;
+						last_split = true;
+					}
+					else
+					{
+						morpheme_type = MT_WORD;
+					}
 					break;
 				case SUFFIX: /* set to =word */
 					/* If the suffix starts with an apostrophe, don't mark it */
 					if ((('\0' != (*affix)[0]) && !is_utf8_alpha(*affix)) ||
 					    '\0' == infix_mark)
 					{
-						strcpy(buff, *affix);
 						if (is_contraction_word(unsplit_word->subword))
 							morpheme_type = MT_CONTR;
 						else
 							morpheme_type = MT_WORD;
 						break;
 					}
+					last_split = true;
 					buff[0] = infix_mark;
 					strcpy(&buff[1], *affix);
 					morpheme_type = MT_SUFFIX;
+					token = buff;
 					break;
 				case END:
 					assert(true, "affixtype END reached");
@@ -504,14 +522,14 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 
 			/* FIXME Use another method instead of checking the label. */
 			if (1 == token_ord && 1 < token_tot && label[0] == 'r' &&
-				 word_start_another_alternative(sent->dict, unsplit_word, buff))
+				 word_start_another_alternative(sent->dict, unsplit_word, token))
 			{
 				/* When called due to left/right strip, the code shouldn't use the
 				 * returned value due to the possibility of this returned NULL. */
 				return NULL;
 			}
 
-			subword_eq_unsplit_word= (0 == strcmp(unsplit_word->subword, buff));
+			subword_eq_unsplit_word= (0 == strcmp(unsplit_word->subword, token));
 
 			if ((1 == token_tot) && subword_eq_unsplit_word)
 			{
@@ -582,10 +600,30 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			else
 			{
 				/* Add the token as a subword of this alternative */
-				subword = gword_new(sent, buff);
+				subword = gword_new(sent, token);
 				subword->unsplit_word = unsplit_word;
 				subword->split_counter = unsplit_word->split_counter + 1;
 				subword->morpheme_type = morpheme_type;
+
+				if (last_split)
+				{
+#if 0
+					/* XXX the new Turkish experimental dictionary depend on
+					 * specifying compound suffixes which are not in the dict file,
+					 * in the SUF affix class. This allows them to split farther.
+					 * However, here is a need to detail all the supported
+					 * combinations of compound suffixes.
+					 * FIXME: There is a need for a real multi affix splitter.
+					 * (last_split will get optimized out by the compiler.) */
+
+					/* This is a stem, or an affix which is marked by INFIX_MARK.
+					 * Hence it must be a dict word - regex/spell are not done
+					 * for stems/affixes. Also, it cannot split further.
+					 * Save resources by marking it accordingly. */
+					subword->status |= WS_INDICT;
+					subword->tokenizing_step = TS_DONE;
+#endif
+				}
 				word_label(sent, subword, "+", label);
 
 				/* If the subword is equal to the unsplit_word (may happen when the
@@ -791,6 +829,29 @@ static Gword *wordgraph_getqueue_word(Sentence sent)
 	return w;
 }
 
+/**
+ * Prevent a further tokenization of all the subwords in the given alternative.
+ * To be used if the alternative represents a final tokenization.
+ */
+static void tokenization_done(Dictionary dict, Gword *altp)
+{
+
+	Gword *alternative_id = altp->alternative_id;
+
+	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
+	{
+		if (NULL == altp) break; /* just in case this is a dummy word */
+
+		/* Mark only words that are in the dict file.
+		 * Other words need further processing. */
+		if (boolean_dictionary_lookup(dict, altp->subword))
+		{
+			altp->status |= WS_INDICT;
+			altp->tokenizing_step = TS_DONE;
+		}
+	}
+}
+
 /*
 	Here's a summary of how subscripts are handled:
 
@@ -965,6 +1026,8 @@ error:
  * If unsplit_word is null, this function actually only checks whether
  * the alternative is valid as described above. This is used for checking
  * is a spell guess result if valid if the word itself is not in the dict.
+ * FIXME: If a word can split it doesn't follow it is a "real" dictionary
+ * word, as there can still be no links between some of its parts.
  *
  * Return true if the alternative is valid, else false.
  */
@@ -984,12 +1047,18 @@ static bool add_alternative_with_subscr(Sentence sent,
 
 	if (0 == stemsubscr_count)
 	{
-		word_is_in_dict = true;
 		if (issue_alternatives)
 		{
+			word_is_in_dict = true;
 			issue_word_alternative(sent, unsplit_word, "AWS",
 			                       (prefix ? 1 : 0),&prefix, 1,&word,
 			                       (suffix ? 1 : 0),&suffix);
+		}
+		else
+		{
+			/* This is a compound-word spell check. Reject unknown words.
+			 * XXX: What if the word is capitalized? */
+			word_is_in_dict = boolean_dictionary_lookup(dict, word);
 		}
 	}
 	else
@@ -1033,11 +1102,6 @@ static bool add_alternative_with_subscr(Sentence sent,
  * It can also split contracted words (like he's).
  * Alternatives are generated if issue_alternatives=true.
  * Return value:
- * If issue_alternatives=true: true only if the word can morpheme-split.
- * If issue_alternatives=false: true only if the word can split.
- *
- * FIXME: If a word can split it doesn't follow it is a "real" dictionary word,
- * as there can still be no links between some of its parts.
  *
  * The prefix code is only lightly validated by actual use.
  *
@@ -1096,10 +1160,6 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 				 * In case we try to split a contracted word, the first word
 				 * may match a regex. Hence find_word_in_dict() is used and
 				 * not boolean_dictionary_lookup().
-				 * However, if this is a check whether the word is a known one
-				 * (argument issue_alternatives=false), we shouldn't allow words
-				 * which are not in the dict file.
-				 *
 				 * Note: Not like a previous version, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
 				if ((is_contraction_word(w) &&
@@ -1107,7 +1167,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 				    boolean_dictionary_lookup(dict, newword))
 				{
 					did_split = true;
-					word_can_split =
+					word_can_split |=
 						add_alternative_with_subscr(sent, unsplit_word,
 						                            NULL, newword, *suffix);
 				}
@@ -1129,8 +1189,10 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 			for (j = 0; j < p_strippable; j++)
 			{
 				size_t prelen = strlen(prefix[j]);
-				/* The remaining w is too short for a possible match. */
-				if ((wend-w) - suflen < prelen) continue;
+				/* The remaining w is too short for a possible match.
+				 * NOTE: A zero length "stem" is not allowed here. In any
+				 * case, it cannot be handled (yet) by the rest of the code. */
+				if ((wend-w) - suflen <= prelen) continue;
 				if (strncmp(w, prefix[j], prelen) == 0)
 				{
 					size_t sz = MIN((wend-w) - suflen - prelen, MAX_WORD);
@@ -1140,7 +1202,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 					/* ??? Do we need a regex match? */
 					if (boolean_dictionary_lookup(dict, newword))
 					{
-						word_can_split =
+						word_can_split |=
 							add_alternative_with_subscr(sent, unsplit_word, prefix[j],
 								                         newword, *suffix);
 					}
@@ -1150,30 +1212,6 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 	}
 
 	return word_can_split;
-}
-
-/**
- * Prevent a further tokenization of all the subwords in the given alternative.
- * To be used if further tokenization would create bogus words.
- */
-static void tokenization_done(Dictionary dict, Gword *altp)
-{
-
-	Gword *alternative_id = altp->alternative_id;
-
-	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
-	{
-		if (NULL == altp) break; /* just in case this is a dummy word */
-
-		/* We are bypassing separate_word(), so mark it here if needed. */
-		if (boolean_dictionary_lookup(dict, altp->subword))
-			 altp->status |= WS_INDICT;
-
-		altp->tokenizing_step = TS_DONE;
-
-		/* XXX Why this was needed?! */
-		if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
-	}
 }
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
@@ -1327,7 +1365,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 				{
 					word_is_in_dict = true;
 					/* Add the prefix alone */
-					lgdebug(+3, "Whole-word prefix: %s\n", word);
+					lgdebug(+D_UN, "Whole-word prefix: %s\n", word);
 					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPW",
 					          split_prefix_i+1,split_prefix, 0,NULL, 0,NULL);
@@ -1339,7 +1377,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 				if (find_word_in_dict(dict, newword))
 				{
 					word_is_in_dict = true;
-					lgdebug(+3, "Splitting off a prefix: %.*s-%s\n",
+					lgdebug(+D_UN, "Splitting off a prefix: %.*s-%s\n",
 					        wordlen-sz, word, newword);
 					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPS",
@@ -1580,7 +1618,7 @@ static const char *strip_left(Sentence sent, const char * w,
 
 			if (strncmp(w, lpunc[i], sz) == 0)
 			{
-				lgdebug(2, "w='%s' found lpunc '%s'\n", w, lpunc[i]);
+				lgdebug(D_UN, "w='%s' found lpunc '%s'\n", w, lpunc[i]);
 				r_stripped[(*n_r_stripped)++] = lpunc[i];
 				w += sz;
 				break;
@@ -1717,7 +1755,7 @@ static bool strip_right(Sentence sent,
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "%d: strip_right(%s): w='%s' rword '%s'\n",
+				lgdebug(D_UN, "%d: strip_right(%s): w='%s' rword '%s'\n",
 				        p, afdict_classname[classnum], temp_wend-len, t);
 				r_stripped[*n_r_stripped+nrs] = t;
 				nrs++;
@@ -1740,7 +1778,7 @@ static bool strip_right(Sentence sent,
 	 * since it is invoked with the last byte... */
 	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1))
 	{
-		lgdebug(2, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
+		lgdebug(D_UN, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
 			 p, afdict_classname[classnum], word, temp_wend[-1]);
 		return false;
 	}
@@ -1753,7 +1791,7 @@ static bool strip_right(Sentence sent,
 		temp_wend += len;
 	}
 
-	lgdebug(2, "%d: strip_right(%s): return %s; n_r_stripped=%d+%d, wend='%s' temp_wend='%s'\n",
+	lgdebug(D_UN, "%d: strip_right(%s): return %s; n_r_stripped=%d+%d, wend='%s' temp_wend='%s'\n",
 p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nrs,*wend,temp_wend);
 
 	*n_r_stripped += nrs;
@@ -2154,7 +2192,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	/* OK, now try to strip affixes. */
 	word_can_split = morpheme_split(sent, unsplit_word, word);
 
-	if (!word_is_known)
+	/* If the word is unknown, then try to guess its category by regexes.
+	 * A word that can split is considered known, unless it is a contraction,
+	 * in which case we need a regex for things like 1960's.
+	 * The first regex which matches (if any) is used.
+	 * An alternative consisting of the word has already been generated. */
+	if (!word_is_known && (!word_can_split || is_contraction_word(word)))
 	{
 		const char *regex_name = match_regex(dict->regex_root, word);
 		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
@@ -2252,7 +2295,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			if (!word_can_split && !word_is_known &&
 				 (!word_is_capitalizable || (lc_word_is_in_dict &&
-					(is_entity(dict, word) || is_common_entity(dict, downcase)))))
+					(is_common_entity(dict, downcase) || is_entity(dict, word)))))
 			{
 				/* Issue it (capitalized) too */
 				if ((NULL != unsplit_word->regex_name))
@@ -2599,7 +2642,7 @@ static Word *word_new(Sentence sent)
 #define D_X_NODE 8
 #define D_DWE 5
 static bool determine_word_expressions(Sentence sent, Gword *w,
-                                       Parse_Options opts)
+                                       unsigned int *ZZZ_added)
 {
 	Dictionary dict = sent->dict;
 	const size_t wordpos = sent->length - 1;
@@ -2607,27 +2650,24 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	const char *s = w->subword;
 	X_node * we = NULL;
 
-	lgdebug(+D_DWE, "Word %zu subword %zu:'%s'", wordpos, w->node_num, s);
+	lgdebug(+D_DWE, "Word %zu subword %zu:'%s' status %s",
+	        wordpos, w->node_num, s, gword_status(sent, w));
 	if (NULL != sent->word[wordpos].unsplit_word)
 		lgdebug(D_DWE, " (unsplit '%s')", sent->word[wordpos].unsplit_word);
-	lgdebug(D_DWE, "\n");
 
 	/* Generate an "alternatives" component. */
 	altappend(sent, &sent->word[wordpos].alternatives, s);
 
 	if (w->status & WS_INDICT)
 	{
-		lgdebug(D_DWE, "WS_INDICT %s\n", w->subword);
 		we = build_word_expressions(sent, w, NULL);
 	}
 	else if (w->status & WS_REGEX)
 	{
-		lgdebug(D_DWE, "WS_REGEX %s\n", w->subword);
 		we = build_word_expressions(sent, w, w->regex_name);
 	}
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
-		lgdebug(+D_DWE, "UNKNOWN_WORD %s\n", s);
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
 		assert(we, UNKNOWN_WORD "must be defined in the dictionary!");
 		w->morpheme_type = MT_UNKNOWN;
@@ -2651,10 +2691,26 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	}
 #endif
 
+	/* If the current word is an empty-word (or like it), add a
+	 * connector for an empty-word (EMPTY_CONNECTOR - ZZZ+) to the
+	 * previous word. See the comments at add_empty_word().
+	 * As a shortcut, only the first x-node is checked here for ZZZ-,
+	 * supposing that the word has it in all of its dict entries
+	 * (in any case, currently there is only 1 entry for each such word).
+	 * Note that ZZZ_added starts by 0 and so also wordpos, and that the
+	 * first sentence word (usually LEFT-WALL) doesn't need a check. */
+	if ((wordpos != *ZZZ_added) && is_exp_like_empty_word(dict, we->exp))
+	{
+		lgdebug(D_DWE, " (has ZZZ-)");
+		add_empty_word(dict, sent->word[wordpos-1].x);
+		*ZZZ_added = wordpos; /* Remember it for not doing it again */
+	}
+	lgdebug(D_DWE, "\n");
+
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (D_X_NODE <= opts->verbosity)
+	if (debug_level(D_X_NODE))
 	{
 		/* Print the X_node details for the word. */
 		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
@@ -2712,6 +2768,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	size_t max_words = 0;
 	bool error_encountered = false;
 	bool right_wall_encountered = false;
+	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
 	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
 
@@ -2790,7 +2847,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 					if (!sent->dict->empty_word_defined)
 						prt_error("Error: %s must be defined!\n", EMPTY_WORD_DOT);
 
-					if (!determine_word_expressions(sent, empty_word(), opts))
+					if (!determine_word_expressions(sent, empty_word(), &ZZZ_added))
 						error_encountered = true;
 					empty_word_encountered = true;
 				}
@@ -2804,7 +2861,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				/* This is a new wordgraph word.
 				 */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, opts))
+				if (!determine_word_expressions(sent, wg_word, &ZZZ_added))
 					error_encountered = true;
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    0== strcmp(wg_word->subword, RIGHT_WALL_WORD))

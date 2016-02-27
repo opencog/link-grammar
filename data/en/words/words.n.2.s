@@ -3300,6 +3300,7 @@ draperies.n
 drapers.n
 drapes.n
 draughts.n
+drawbacks.n
 drawbridges.n
 drawers.n
 drawing-rooms.n
@@ -8840,6 +8841,7 @@ rites.n
 rituals.n
 rivalries.n
 rivals.n
+riverbanks.n
 riverbeds.n
 riversides.n
 rivers.n
@@ -11211,6 +11213,7 @@ vetos.n
 vets.n
 viaducts.n
 vials.n
+vibes.n
 vibraphones.n
 vibraslaps.n
 vibrations.n

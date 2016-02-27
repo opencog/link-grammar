@@ -93,18 +93,6 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
 
-/*
- * Returns TRUE if s and t match according to the connector matching
- * rules.
- */
-bool do_match(Connector *a, Connector *b, int aw, int bw)
-{
-	int dist = bw - aw;
-	assert(aw < bw, "do_match() did not receive params in the natural order.");
-	if (dist > a->length_limit || dist > b->length_limit) return false;
-	return easy_match(a->string, b->string);
-}
-
 /**
  * Stores the value in the table.  Assumes it's not already there.
  */
@@ -296,18 +284,27 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 
 	for (w = start_word; w < end_word; w++)
 	{
-		Match_node *m, *m1;
-		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
-		for (; m != NULL; m = m->next)
+		size_t mlb, mle;
+		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
+#ifdef VERIFY_MATCH_LIST
+		int id = get_match_list_element(mchxt, mlb) ?
+		            get_match_list_element(mchxt, mlb)->match_id : 0;
+#endif
+		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			unsigned int lnull_cnt, rnull_cnt;
-			Disjunct * d = m->d;
+			Disjunct *d = get_match_list_element(mchxt, mle);
+			bool Lmatch = d->match_left;
+			bool Rmatch = d->match_right;
+
+#ifdef VERIFY_MATCH_LIST
+			assert(id == d->match_id, "Modified id (%d!=%d)\n", id, d->match_id);
+#endif
 			/* _p1 avoids a gcc warning about unsafe loop opt */
 			unsigned int null_count_p1 = null_count + 1;
 
 			for (lnull_cnt = 0; lnull_cnt < null_count_p1; lnull_cnt++)
 			{
-				bool Lmatch, Rmatch;
 				bool leftpcount = false;
 				bool rightpcount = false;
 				bool pseudototal = false;
@@ -318,10 +315,6 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-				Lmatch = (le != NULL) && (d->left != NULL) &&
-				         do_match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) &&
-				         do_match(d->right, re, w, rw);
 
 				/* First, perform pseudocounting as an optimization. If
 				 * the pseudocount is zero, then we know that the true
@@ -428,13 +421,13 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 						total = INT_MAX;
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 						t->count = total;
-						put_match_list(mchxt, m1);
+						pop_match_list(mchxt, mlb);
 						return total;
 					}
 				}
 			}
 		}
-		put_match_list(mchxt, m1);
+		pop_match_list(mchxt, mlb);
 	}
 	t->count = total;
 	return total;
@@ -468,7 +461,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
  * the cost of each of the parses. The number and width of the bins
  * is adjustable in histogram.c. At this time, the histogram is not
  * used anywhere, and a 3-5% speedup is available if it is avoided.
- * We plan to use this historgram, later ....
+ * We plan to use this histogram, later ....
  */
 Count_bin do_parse(Sentence sent,
                    fast_matcher_t *mchxt,

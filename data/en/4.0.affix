@@ -18,12 +18,22 @@
   : RPUNC+; 
 
 % Punctuation appearing on the left-side of words.
-"(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［ 『 「 、.x `.x `` „ ‘ ''.x '.x ….x ....x
+% Lots of styles of open-parenthesis
+% Lots of currency symbols
+% Paragraph marks
+% Assorted bullets and dingbats
+% Dashes of various sorts
+% "real" English prefixes: Y' w/
+% Y'gotta Y'gonna
+% coffe w/milk
+"(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［
+『 「 、.x `.x `` „ ‘ ''.x '.x ….x ....x
 ¿ ¡ "$" US$ USD C$ 
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#"
 * • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎ 
 –.x ━.x ー.x -- - ‧.x
+y' w/
   : LPUNC+;
 
 % Suffixes
@@ -31,7 +41,8 @@
 
 % Prefixes
 % Y'gotta Y'gonna
-y': PRE+;
+% coffe w/milk
+% y' w/: PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!
