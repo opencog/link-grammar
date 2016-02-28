@@ -6,7 +6,7 @@ DICTS=                         \
 	4.0.knowledge               \
 	4.0.regex
 
-dictdir=$(pkgdatadir)/kz3
+dictdir=$(pkgdatadir)/kz
 dict_DATA = $(DICTS)
 
 # Do NOT install the batch files!
