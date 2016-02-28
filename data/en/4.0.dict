@@ -240,12 +240,12 @@ nonCAP.zzz: ZZZ-;
 % "...went to hell yesterday and heaven on Tuesday."
 % Arghh...
 <noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
-<noun-and-p>: ({[@M+]0.4} & SJlp+) or ({[[@M+]]} & SJrp-);
-<noun-and-u>: ({[@M+]0.4} & SJlu+) or ({[[@M+]]} & SJru-);
-<noun-and-x>: ({[@M+]0.4} & SJl+) or ({[[@M+]]} & SJr-);
+<noun-and-p>: ({[@M+]0.4 or Mp+} & SJlp+) or ({[@M+]1.4 or [Mp+]} & SJrp-);
+<noun-and-u>: ({[@M+]0.4 or Mp+} & SJlu+) or ({[@M+]1.4 or [Mp+]} & SJru-);
+<noun-and-x>: ({[@M+]0.4 or Mp+} & SJl+) or ({[@M+]1.4 or [Mp+]} & SJr-);
 <noun-and-p,u>:
-  ({[@M+]0.4} & SJlp+) or ({[[@M+]]} & SJrp-) or
-  ({[@M+]0.4} & SJlu+) or ({[[@M+]]} & SJru-);
+  ({[@M+]0.4 or Mp+} & SJlp+) or ({[@M+]1.4 or [Mp+]} & SJrp-) or
+  ({[@M+]0.4 or Mp+} & SJlu+) or ({[@M+]1.4 or [Mp+]} & SJru-);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
