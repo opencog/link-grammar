@@ -1,6 +1,7 @@
 Version 5.3.4: (XXX 2016)
  * Fix broken handling of apostrophe.
  * Revamp the README file; describe transitivity.
+ * Revised Turkish dictionary from Tatiana Batura, et al.
  * Prototype Kazakh dictionary from Tatiana Batura, et al.
 
 Version 5.3.3: (23 December 2015)

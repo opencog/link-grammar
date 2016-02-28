@@ -1,8 +1,8 @@
 %
 % Turkish dictionary -- experimental -- 2016 -- Tatiana Batura, Maria Mitkovskaya, Natalya Semenova
 %
-% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
-<dictionary-version-number>: V5v3v0+;
+% Dictionary version number is 5.3.4 (formatted as V5v3v4+)
+<dictionary-version-number>: V5v3v4+;
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
