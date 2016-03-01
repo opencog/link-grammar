@@ -569,8 +569,8 @@ HYPHENATED-WORDS.n:
 % by appearing as objects (O-) connector when really the verb form (Pg-)
 % is what should be happening. So rip these words out... (similar remarks for
 % words.n.3)
-% [Wa-]0.05: give a very mild preference to words that could be verbs
-%            (and thus imparatives) e.g. Smile!
+% [Wa-]0.02: give a very mild preference to words that could be verbs
+%            (and thus imperatives) e.g. Smile!
 <common-noun>:
   <noun-modifiers> &
     (({NMa+} & AN+)
@@ -581,7 +581,7 @@ HYPHENATED-WORDS.n:
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & [Wa-]0.05));
+    or ({Ds-} & [Wa-]0.02));
 
 % Preliminary experimental split for supporting a/an phonetic change
 % for common nouns starting with vowels or consonant's.
@@ -671,11 +671,13 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % XXX FIXME: this has only partial phonetic support.  I guess the Dm+ need to
 % be fixed up as well.
+% [Wa-]0.02: give a very mild preference to words that could be verbs
+%            (and thus imperatives) e.g. Worry!
 <mass-phonetic>:
   <noun-modifiers> &
     ((GN+ & (DD- or [()]))
     or Up-
-    or ({Dm-} & Wa-)
+    or ({Dm-} & [Wa-]0.02)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
@@ -4385,9 +4387,11 @@ noting.v confirming.v stressing.v assuming.v:
 believe.v answer.v worry.v protest.v: VERB_PLI(<vc-believe>);
 believes.v answers.v worries.v protests.v: VERB_S_T(<vc-believe>);
 believed.v-d answered.v-d worried.v-d protested.v-d:
-  VERB_SPPP_T(<vc-believe>) or (<verb-s-pv> & {THi+ or <tof-verb>}) or <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-believe>) or
+  (<verb-s-pv> & {THi+ or <tof-verb>}) or
+  <verb-phrase-opener>;
 believing.g answering.g worrying.g protesting.g:
-(<vc-believe> & <verb-ge>) or <verb-ge-d>;
+  (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
 
 
