@@ -4,6 +4,7 @@ Version 5.3.4: (XXX 2016)
  * Revised Turkish dictionary from Tatiana Batura, et al.
  * Prototype Kazakh dictionary from Tatiana Batura, et al.
  * Parse priority tweaks for the OpenCog chatbot.
+ * Fix Windows printing problem affecting certain utf8 codepoints.
 
 Version 5.3.3: (23 December 2015)
  * Improve support for quoted phrases.
