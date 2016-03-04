@@ -235,6 +235,18 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
+#ifdef _MSC_VER
+	/* mbrlen does not work correctly on Windows. See issue #285 */
+	/* https://github.com/opencog/link-grammar/issues/285 */
+	size_t len = 0;
+	while (0 != *s)
+	{
+		if ((0x80 <= ((unsigned char) *s)) &&
+		(((unsigned char) *s) < 0xc0)) { s++; len++; }
+		else return len+1;
+	}
+	return len;
+#else
 	size_t len;
 	mbstate_t mbs;
 	memset(&mbs, 0, sizeof(mbs));
@@ -243,8 +255,8 @@ static inline size_t utf8_next(const char *s)
 		/* Too long or malformed sequence, step one byte. */
 		return 1;
 	}
-
 	return len;
+#endif
 }
 
 static inline int is_utf8_upper(const char *s)
