@@ -6,67 +6,67 @@
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
-мен.pron: {S1s+};
-сен.pron: {S2s+};
-сіз.pron: {Sr2s+};
-ол.pron: {S3s+};
+мен.pron: S1s+;
+сен.pron: S2s+;
+сіз.pron: Sr2s+;
+ол.pron: S3s+;
 
-біз.pron: {S1p+};
-сендер.pron: {S2p+};
-сіздер.pron: {Sr2p+};
-олар.pron: {S3p+};
+біз.pron: S1p+;
+сендер.pron: S2p+;
+сіздер.pron: Sr2p+;
+олар.pron: S3p+;
 
-менің.pron: {OF1+};
-сенің.pron: {OF2+};
-сіздің.pron: {OFr2+};
-оның.pron: {OF3+};
+менің.pron: OF1+;
+сенің.pron: OF2+;
+сіздің.pron: OFr2+;
+оның.pron: OF3+;
 
-біздің.pron: {OF1p+};
-сендердің.pron: {OF2p+};
-сіздердің.pron: {OFr2p+};
-олардың.pron: {OF3p+};
-
+біздің.pron: OF1p+;
+сендердің.pron: OF2p+;
+сіздердің.pron: OFr2p+;
+олардың.pron: OF3p+;
 
 %adjectives beautiful white red
 әдемі.= ақ.= қызыл.=: {AO+} & {EI-};
 
-
 %nouns human girl boy dog cat
-адам.= қыз.= бала.= ит.= мысық.= алма.= гүл.=: {@AO-} & {Nl+} & {Np+} & (({S3s+} & {N+}) or ({OV+} & {Na+}));
+адам.= қыз.= бала.= ит.= мысық.= алма.= гүл.=: {@AO-} & {Np+} & ({S3s+} & {N+});
 
+=.n: {N-} & {S1s+} & {S2s+} & {S3s+}; %Nominative and null suffix 
 
 % plural suffixes 
-=тар.= =тер.= =дар.= =дер.= =лар.= =лер.=: {Np-} & ({N+} or {Na+} or {Ng+}) & {S3p+};
-=.n: {N-} & ({S3s+} or {S3p+}); %Nominative and null suffix 
+=тар.= =тер.= =дар.= =дер.= =лар.= =лер.=: {Np-} & {Na+} & {Ng+} & ({S3p+} & {N+});
 
 
-% Genitive .ng  (ілік септік)
-=ның.ng =нің.ng =дың.ng =дің.ng =тың.ng =тің.ng: {J+} & {Ng-} & {OF3+}; 
+% Genitive .ng  (ілік септік, родительный падеж)
+=ның.ng =нің.ng =дың.ng =дің.ng =тың.ng =тің.ng: {Ng-} & {OF3+} & {J+};
 
-% Dative .nd
-=ге.nd: {Nd-} & {OV+};
+% Dative .nd (барыс септік, дательный падеж)
+=ға.nd =ге.nd =қа.nd =ке.nd =на.nd =не.nd =а.nd =е.nd: {Nd-} & {OV+};
+% & {Np-}  если добавить, начинаются противоречия
+
+% Accusative .na (табыс септік, винительный падеж)
+%=ды.na =ді.na 
+=ты.na =ті.na =ны.na =ні.na =н.na: {Na-} & {OV+};
+
+% Locative .nl (жатыс септік, местный/предложный падеж)
+=да.nl =де.nl =та.nl =те.nl =нда.nl =нде.nl: {Nl-} & {J+};
+
+% Ablative .nb (шығыс септік, исходный падеж)
+=дан.nb =ден.nb =тан.nb =тен.nb =нан.nb =нен.nb: {Nb-};
+
+% Instrumental .ni (көмектес септік, творительный падеж)
+=бен.ni =пен.ni =мен.ni: {Ni-};
 
 
-% Accusative .na
-=i.na =ı.na =u.na =ü.na =yi.na =yı.na =yu.na =yü.na: {Na-} & {OV+};
-
-% Instrumental .ni 
-% ? в русском это творительный падеж
-=yla.ni =ile.ni =yle.ni: {Ni-};
-
-% Locative .nl
-% ? в русском это предложный падеж
-=da.nl =de.nl =ta.nl =te.nl: {Nl-};
-
-% Ablative .nb
-=den.nb =ten.nb =dan.nb =tan.nb: {Nb-};
 
 %postpositions 
 артынан артында алдында алдынан: {OJV+} & {J-};
 
 
-%verbs
-же.= бол.= қу.= кел.=: {OJV-} & {OV-}; %{Vac+};
+% verbs
+же.= бол.= қу.= кел.=: {OJV-} & {OV-};
+
 
 % suffixes for verbs (past present future, there are 7 tenses)
 %субъективное прошедшее
@@ -76,8 +76,8 @@ EMPTY-WORD.zzz: ZZZ-;
 =қан.var =ған.var =кен.var ген.var: {Var-};
 
 %категорическое прошедшее
-=дым.vac =дім.vac: {S1s-} or {S1p-} & {Vac-};
-=ді.vac =ды.vac =ты.vac =ті.vac: {S3s-} or {S3p-}; %{Vac-}
+=ды.vac =ді.vac =ты.vac =ті.vac: {S3s-}; %& {Vac-};
+=дым.vac =дім.vac: {S1s-};
 
 %конкретное настоящее
 =п.vr =ып.vr =іп.vr =а.vr =е.vr: {Vr-};
@@ -92,7 +92,7 @@ EMPTY-WORD.zzz: ZZZ-;
 =мақ.vfg =мек.vfg =пақ.vfg =пек.vfg: {Vfg-};
 
 
-=ым =ім: {S1s-} & {OF1-};
+=ым =ім: {OF1-};
 
 
 
