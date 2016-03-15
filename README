@@ -45,18 +45,20 @@ CONTENTS of this directory:
    data/en/4.0.regex        Regular expression-based morphology guesser.
    data/en/tiny.dict        A small example dictionary.
    data/en/words/*          A directory full of word lists.
-   data/en/4.0*.batch       These files contain sentences (both grammatical
+   data/en/corpus*.batch    These files contain sentences (both grammatical
                             and ungrammatical ones) that are used for
                             testing the link-parser These can be
                             run through the parser with the command
-                            "./link-parser < 4.0.*.batch"
+                            "./link-parser < corpus.*.batch"
    data/ru/*                A full-fledged Russian dictionary
-   data/ar/*                An Arabic dictionary
+   data/ar/*                A fairly complete Arabic dictionary
    data/fa/*                A Persian (Farsi) dictionary
    data/de/*                A small prototype German dictionary
    data/lt/*                A small prototype Lithuanian dictionary
    data/id/*                A small prototype Indonesian dictionary
+   data/vn/*                A small prototype Vietnamese dictionary
    data/he/*                An experimental Hebrew dictionary
+   data/kz/*                An experimental Kazakh dictionary
    data/tr/*                An experimental Turkish dictionary
 
    morphology/ar            An Arabic morphology analyzer
@@ -910,7 +912,7 @@ This mechanism works as follows:
    label.
 
  * Heads are landmarks for dependents. If the dependency relation
-   x --> y holds, then x is said to be a landmark for y, and the
+   x-->y holds, then x is said to be a landmark for y, and the
    predicate land(x,y) is true, while the predicate land(y,x) is false.
    Here, x and y are words, while --> is the landmark relation.
 
@@ -1093,12 +1095,15 @@ TODO -- Working Notes:
      deal with this in a simple, fast, elegant way?  Similar questions
      for zero-copula and zero-that sentences.
 
-
   Bad grammar: When a sentence fails to parse, look for:
     * confused words: its/it's, there/their/they're, to/too, your/you're ...
+      These could be added at high cost to the dicts.
     * missing apostrophes in possessives: "the peoples desires"
     * determiner agreement errors: "a books"
     * aux verb agreement errors: "to be hooks up"
+
+      Poor agreement might be handled by giving a cost to mismatched
+      lower-case connector letters.
 
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
@@ -1135,9 +1140,9 @@ TODO -- Working Notes:
     name of a proper brand; but this is outside of the "normal"
     dictionary (?) (but maybe should be in the dictionary!))
 
-    More examples: "high water" can have A joining high.a and AN joining
-    high.n; these two should either be collapsed into one, or one should
-    be eliminated.
+    More examples: "high water" can have the connector A joining high.a
+    and AN joining high.n; these two should either be collapsed into
+    one, or one should be eliminated.
 
 
   WordNet hinting:
