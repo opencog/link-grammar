@@ -9174,20 +9174,24 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <post-quote>:
   QUc- & {<wo-wall> or <wi-wall> or CP+};
 
-% The double-backtic becomes a single backtic after m4 (but only in this
-% line! It gets messed up if we also do the second one!)
-« 《 【 『 `` „:
+« 《 【 『 „:
   QUd-;
-» 》 】 』 ` “:
+» 》 】 』 “:
   <post-quote>;
 
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
 % [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
-% Cannot use a blanket W+ here to pick up all W connectors,
-% since
+% Cannot use a blanket W+ here to pick up all W connectors, because ... ??
 """: QUd- or <post-quote> or [[ZZZ-]];
+
+% Using backtic.x and backtic.y in the above definitions multiplies the
+% number of linkages by 2^(number of backtics). So it is treated as a
+% single item, below.
+changequote(\,/)dnl
+`: QUd- or <post-quote>;
+changequote dnl
 
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin."
