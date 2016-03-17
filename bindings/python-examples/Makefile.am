@@ -15,5 +15,6 @@ EXTRA_DIST =         \
    example.py        \
    parses-en.txt     \
    parses-lt.txt     \
+   parses-sat-en.txt \
    tests.py
 
