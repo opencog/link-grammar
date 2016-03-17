@@ -1,10 +1,10 @@
-Version 5.3.4: (XXX 2016)
- * Fix broken handling of apostrophe.
+Version 5.3.4: (16 March 2016)
+ * Fix broken handling of apostrophe (issue #281).
  * Revamp the README file; describe transitivity.
  * Revised Turkish dictionary from Tatiana Batura, et al.
  * Prototype Kazakh dictionary from Tatiana Batura, et al.
  * Parse priority tweaks for the OpenCog chatbot.
- * Fix Windows printing problem affecting certain utf8 codepoints.
+ * Fix Windows printing problem affecting some utf8 codepoints (issue #285).
 
 Version 5.3.3: (23 December 2015)
  * Improve support for quoted phrases.
