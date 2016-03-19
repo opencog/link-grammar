@@ -39,7 +39,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 % plural suffixes
 =тар.= =тер.= =дар.= =дер.= =лар.= =лер.=:
-  {Np-} & (Na+ or Ng+ or (S3p+ & N+));
+  (Np- or  Na+ or Ng+ or ({Np-} & S3p+ & {N+})) & {W-};
 
 
 % Genitive .ng  (ілік септік, родительный падеж)
@@ -69,7 +69,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 
 % verbs
-же.= бол.= қу.= кел.=: {OJV-} & {OV-};
+же.= бол.= қу.= кел.=: (OJV- or OV- or V+ or ()) & {S1+};
 
 
 % suffixes for verbs (past present future, there are 7 tenses)
@@ -80,8 +80,8 @@ EMPTY-WORD.zzz: ZZZ-;
 =қан.var =ған.var =кен.var ген.var: Var-;
 
 %категорическое прошедшее
-=ды.vac =ді.vac =ты.vac =ті.vac: {S3s-}; %& Vac-;
-=дым.vac =дім.vac: {S1s-};
+=ды.vac =ді.vac =ты.vac =ті.vac: {V-} & {S3-} & {V-}; %& Vac-;
+=дым.vac =дім.vac: S1s-;
 
 %конкретное настоящее
 =п.vr =ып.vr =іп.vr =а.vr =е.vr: Vr-;
