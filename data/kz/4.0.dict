@@ -1,30 +1,32 @@
 %
-% Kazakh dictionary -- experimental -- 2016 -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova 
+% Kazakh dictionary -- experimental -- 2016
+% -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
-% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
-<dictionary-version-number>: V5v3v0+;
+% Dictionary version number is 5.3.5 (formatted as V5v3v5+)
+<dictionary-version-number>: V5v3v5+;
+
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
-мен.pron: S1s+;
-сен.pron: S2s+;
-сіз.pron: Sr2s+;
-ол.pron: S3s+;
+мен.pron: W- & S1s+;
+сен.pron: W- & S2s+;
+сіз.pron: W- & Sr2s+;
+ол.pron: W- & S3s+;
 
-біз.pron: S1p+;
-сендер.pron: S2p+;
-сіздер.pron: Sr2p+;
-олар.pron: S3p+;
+біз.pron: W- & S1p+;
+сендер.pron: W- & S2p+;
+сіздер.pron: W- & Sr2p+;
+олар.pron: W- & S3p+;
 
-менің.pron: OF1+;
-сенің.pron: OF2+;
-сіздің.pron: OFr2+;
-оның.pron: OF3+;
+менің.pron: W- & OF1+;
+сенің.pron: W- & OF2+;
+сіздің.pron: W- & OFr2+;
+оның.pron: W- & OF3+;
 
-біздің.pron: OF1p+;
-сендердің.pron: OF2p+;
-сіздердің.pron: OFr2p+;
-олардың.pron: OF3p+;
+біздің.pron: W- & OF1p+;
+сендердің.pron: W- & OF2p+;
+сіздердің.pron: W- & OFr2p+;
+олардың.pron: W- & OF3p+;
 
 %adjectives beautiful white red
 әдемі.= ақ.= қызыл.=: {AO+} & {EI-};
@@ -32,9 +34,9 @@ EMPTY-WORD.zzz: ZZZ-;
 %nouns human girl boy dog cat
 адам.= қыз.= бала.= ит.= мысық.= алма.= гүл.=: {@AO-} & {Np+} & ({S3s+} & {N+});
 
-=.n: {N-} & {S1s+} & {S2s+} & {S3s+}; %Nominative and null suffix 
+=.n: {N-} & {S1s+} & {S2s+} & {S3s+}; %Nominative and null suffix
 
-% plural suffixes 
+% plural suffixes
 =тар.= =тер.= =дар.= =дер.= =лар.= =лер.=: {Np-} & {Na+} & {Ng+} & ({S3p+} & {N+});
 
 
@@ -46,7 +48,7 @@ EMPTY-WORD.zzz: ZZZ-;
 % & {Np-}  если добавить, начинаются противоречия
 
 % Accusative .na (табыс септік, винительный падеж)
-%=ды.na =ді.na 
+%=ды.na =ді.na
 =ты.na =ті.na =ны.na =ні.na =н.na: {Na-} & {OV+};
 
 % Locative .nl (жатыс септік, местный/предложный падеж)
@@ -60,7 +62,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 
 
-%postpositions 
+%postpositions
 артынан артында алдында алдынан: {OJV+} & {J-};
 
 
