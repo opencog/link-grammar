@@ -33,7 +33,7 @@ EMPTY-WORD.zzz: ZZZ-;
 
 %nouns human girl boy dog cat
 адам.= қыз.= бала.= ит.= мысық.= алма.= гүл.=:
-   {@AO-} & (Np+ or (S3+ & {N+}));
+   {@AO-} & (Np+ or ({S3+} & N+)) & {W-};
 
 =.n: N- & {W-} & (S1s+ or S2s+ or S3s+); %Nominative and null suffix
 
@@ -80,7 +80,7 @@ EMPTY-WORD.zzz: ZZZ-;
 =қан.var =ған.var =кен.var ген.var: Var-;
 
 %категорическое прошедшее
-=ды.vac =ді.vac =ты.vac =ті.vac: {V-} & {@S3-}; %& Vac-;
+=ды.vac =ді.vac =ты.vac =ті.vac: {V-} & {OV-} & {@S3-}; %& Vac-;
 =дым.vac =дім.vac: S1s-;
 
 %конкретное настоящее
