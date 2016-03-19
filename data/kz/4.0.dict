@@ -1,98 +1,102 @@
 %
-% Kazakh dictionary -- experimental -- 2016 -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova 
+% Kazakh dictionary -- experimental -- 2016
+% -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
-% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
-<dictionary-version-number>: V5v3v0+;
+% Dictionary version number is 5.3.5 (formatted as V5v3v5+)
+<dictionary-version-number>: V5v3v5+;
+
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
 
-мен.pron: S1s+;
-сен.pron: S2s+;
-сіз.pron: Sr2s+;
-ол.pron: S3s+;
+мен.pron: {W-} & S1s+;
+сен.pron: {W-} & S2s+;
+сіз.pron: {W-} & Sr2s+;
+ол.pron: {W-} & S3s+;
 
-біз.pron: S1p+;
-сендер.pron: S2p+;
-сіздер.pron: Sr2p+;
-олар.pron: S3p+;
+біз.pron: {W-} & S1p+;
+сендер.pron: {W-} & S2p+;
+сіздер.pron: {W-} & Sr2p+;
+олар.pron: {W-} & S3p+;
 
-менің.pron: OF1+;
-сенің.pron: OF2+;
-сіздің.pron: OFr2+;
-оның.pron: OF3+;
+менің.pron: {W-} & OF1+;
+сенің.pron: {W-} & OF2+;
+сіздің.pron: {W-} & OFr2+;
+оның.pron: {W-} & OF3+;
 
-біздің.pron: OF1p+;
-сендердің.pron: OF2p+;
-сіздердің.pron: OFr2p+;
-олардың.pron: OF3p+;
+біздің.pron: {W-} & OF1p+;
+сендердің.pron: {W-} & OF2p+;
+сіздердің.pron: {W-} & OFr2p+;
+олардың.pron: {W-} & OF3p+;
 
 %adjectives beautiful white red
 әдемі.= ақ.= қызыл.=: {AO+} & {EI-};
 
 %nouns human girl boy dog cat
-адам.= қыз.= бала.= ит.= мысық.= алма.= гүл.=: {@AO-} & {Np+} & ({S3s+} & {N+});
+адам.= қыз.= бала.= ит.= мысық.= алма.= гүл.=:
+   {@AO-} & (Np+ or ({S3+} & {N+})) & {W-};
 
-=.n: {N-} & {S1s+} & {S2s+} & {S3s+}; %Nominative and null suffix 
+=.n: N- & {W-} & (S1s+ or S2s+ or S3s+); %Nominative and null suffix
 
-% plural suffixes 
-=тар.= =тер.= =дар.= =дер.= =лар.= =лер.=: {Np-} & {Na+} & {Ng+} & ({S3p+} & {N+});
+% plural suffixes
+=тар.= =тер.= =дар.= =дер.= =лар.= =лер.=:
+  (Np- or  Na+ or Ng+ or ({Np-} & S3p+ & {N+})) & {W-};
 
 
 % Genitive .ng  (ілік септік, родительный падеж)
-=ның.ng =нің.ng =дың.ng =дің.ng =тың.ng =тің.ng: {Ng-} & {OF3+} & {J+};
+=ның.ng =нің.ng =дың.ng =дің.ng =тың.ng =тің.ng: Ng- & {W-} & {OF3+} & {J+};
 
 % Dative .nd (барыс септік, дательный падеж)
-=ға.nd =ге.nd =қа.nd =ке.nd =на.nd =не.nd =а.nd =е.nd: {Nd-} & {OV+};
+=ға.nd =ге.nd =қа.nd =ке.nd =на.nd =не.nd =а.nd =е.nd: Nd- & {W-} & {OV+};
 % & {Np-}  если добавить, начинаются противоречия
 
 % Accusative .na (табыс септік, винительный падеж)
-%=ды.na =ді.na 
-=ты.na =ті.na =ны.na =ні.na =н.na: {Na-} & {OV+};
+%=ды.na =ді.na
+=ты.na =ті.na =ны.na =ні.na =н.na: Na- & {W-} & {OV+};
 
 % Locative .nl (жатыс септік, местный/предложный падеж)
-=да.nl =де.nl =та.nl =те.nl =нда.nl =нде.nl: {Nl-} & {J+};
+=да.nl =де.nl =та.nl =те.nl =нда.nl =нде.nl: Nl- & {W-} & {J+};
 
 % Ablative .nb (шығыс септік, исходный падеж)
-=дан.nb =ден.nb =тан.nb =тен.nb =нан.nb =нен.nb: {Nb-};
+=дан.nb =ден.nb =тан.nb =тен.nb =нан.nb =нен.nb: Nb- & {W-};
 
 % Instrumental .ni (көмектес септік, творительный падеж)
-=бен.ni =пен.ni =мен.ni: {Ni-};
+=бен.ni =пен.ni =мен.ni: Ni- & {W-};
 
 
 
-%postpositions 
+%postpositions
 артынан артында алдында алдынан: {OJV+} & {J-};
 
 
 % verbs
-же.= бол.= қу.= кел.=: {OJV-} & {OV-};
+же.= бол.= қу.= кел.=: (OJV- or OV- or V+ or ()) & {S1+};
 
 
 % suffixes for verbs (past present future, there are 7 tenses)
 %субъективное прошедшее
-=ыпты.vas =іпті.vas: {Vas-};
+=ыпты.vas =іпті.vas: Vas-;
 
 %результативное прошедшее
-=қан.var =ған.var =кен.var ген.var: {Var-};
+=қан.var =ған.var =кен.var ген.var: Var-;
 
 %категорическое прошедшее
-=ды.vac =ді.vac =ты.vac =ті.vac: {S3s-}; %& {Vac-};
-=дым.vac =дім.vac: {S1s-};
+=ды.vac =ді.vac =ты.vac =ті.vac: {V-} & {OV-} & {@S3-}; %& Vac-;
+=дым.vac =дім.vac: S1s-;
 
 %конкретное настоящее
-=п.vr =ып.vr =іп.vr =а.vr =е.vr: {Vr-};
+=п.vr =ып.vr =іп.vr =а.vr =е.vr: Vr-;
 
 %переходное будущее
-=ады.vft =еді.vft: {Vft-};
+=ады.vft =еді.vft: Vft-;
 
 %предположительное будущее
-=ар.vfs =ер.vfs: {Vfs-};
+=ар.vfs =ер.vfs: Vfs-;
 
 %целенаправленное будущее
-=мақ.vfg =мек.vfg =пақ.vfg =пек.vfg: {Vfg-};
+=мақ.vfg =мек.vfg =пақ.vfg =пек.vfg: Vfg-;
 
 
-=ым =ім: {OF1-};
+=ым =ім: N- & OF1-;
 
 
 
@@ -118,7 +122,7 @@ PL-GREEK-LETTER-AND-NUMBER: XXX-;
 UNITS: XXX-;
 FOLD-WORDS: XXX-;
 PL-CAPITALIZED-WORDS: XXX-;
-CAPITALIZED-WORDS: {S3s+};
+CAPITALIZED-WORDS: {W-} & {S3s+};
 ING-WORDS: XXX-;
 S-WORDS: XXX-;
 ED-WORDS: XXX-;
@@ -132,4 +136,3 @@ LATIN-ADJ-P-NOUN-WORDS: XXX-;
 LATIN-ADJ-S-NOUN-WORDS: XXX-;
 HYPHENATED-WORDS: XXX-;
 UNKNOWN-WORD: XXX-;
-

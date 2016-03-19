@@ -5,7 +5,7 @@
 %!spell=0
 %!limit=1000
 %!verbosity=1
-%!walls=1
+!walls=1
 
 ит мысықтың артынан қуды
 %the dog chased the cat
@@ -36,5 +36,3 @@
 
 менің гүлім
 %мои цветы
-
-
