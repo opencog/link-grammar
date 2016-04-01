@@ -401,6 +401,8 @@ class Sentence(object):
 
         def next(self):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
+                if 0 == self.num:
+                    return None
                 raise StopIteration()
             linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
             self.num += 1
