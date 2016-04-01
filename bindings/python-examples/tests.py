@@ -435,6 +435,9 @@ class ZENLangTestCase(unittest.TestCase):
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
 
+    def test_quotes(self):
+        linkage_testfile(self, self.d, self.po, 'quotes')
+
 class ZENConstituentsCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()

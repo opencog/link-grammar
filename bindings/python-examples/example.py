@@ -6,12 +6,16 @@
 import locale
 
 from linkgrammar import Sentence, ParseOptions, Dictionary
-# from linkgrammar import _clinkgrammar as clg
+try:
+    import linkgrammar._clinkgrammar as clg
+except ImportError:
+    import _clinkgrammar as clg
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
+print "Version:", clg.linkgrammar_get_version()
 po = ParseOptions()
-#po = ParseOptions(linkage_limit=3)
+#po = ParseOptions(short_length=16)
 
 def desc(lkg):
     print lkg.diagram()
@@ -36,12 +40,14 @@ def linkage_stat(psent, lang):
                  psent.num_valid_linkages(), random)
 
 
+
 # English is the default language
-sent = Sentence("This is a test.", Dictionary(), po)
+sent = Sentence("he said: `this is a backtic test`", Dictionary(), po)
 linkages = sent.parse()
 linkage_stat(sent, 'English')
 for linkage in linkages:
     desc(linkage)
+exit(0)
 
 # Russian
 sent = Sentence("это большой тест.", Dictionary('ru'), po)
