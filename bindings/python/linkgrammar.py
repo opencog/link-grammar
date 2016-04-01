@@ -17,7 +17,7 @@ class ParseOptions(object):
                  min_null_count=0,
                  max_null_count=0,
                  islands_ok=False,
-                 short_length=6,
+                 short_length=16,
                  all_short_connectors=False,
                  display_morphology=False,
                  spell_guess=False,
