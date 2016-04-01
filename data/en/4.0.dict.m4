@@ -7285,7 +7285,9 @@ as_soon_as:
 
 % J+ & CO+: "Until yesterday, ..."
 % The double-back-tick becomes a single backtick after m4
-until 'til ’til ‘til ``til til till.r:
+changequote(\,/)dnl
+until 'til ’til ‘til `til til till.r:
+changequote dnl
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
@@ -9334,7 +9336,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 "&": G- & {Xd- & G-} & G+;
 
 % The double-single-quote is converted to a single single quote by m4.
-"’" "''": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 % Possessives
 "'s.p" "’s.p":
