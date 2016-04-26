@@ -425,7 +425,7 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 		int c = '*'; \
 		int n; \
 		for ( n = 0; n < max_size && \
-			     (c = fgetc( yyin )) != EOF && c != '\n'; ) \
+			     (c = lg_fgetc( yyin )) != EOF && c != '\n'; ) \
 			buf[n++] = c; \
 		if ( c == '\n' ) \
 			buf[n++] = '\n'; \
