@@ -17,7 +17,7 @@ class ParseOptions(object):
                  min_null_count=0,
                  max_null_count=0,
                  islands_ok=False,
-                 short_length=6,
+                 short_length=16,
                  all_short_connectors=False,
                  display_morphology=False,
                  spell_guess=False,
@@ -401,6 +401,8 @@ class Sentence(object):
 
         def next(self):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
+                if 0 == self.num:
+                    return None
                 raise StopIteration()
             linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
             self.num += 1

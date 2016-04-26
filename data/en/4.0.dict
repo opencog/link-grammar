@@ -9329,7 +9329,7 @@ as_soon_as:
 % J+ & CO+: "Until yesterday, ..."
 % The double-back-tick becomes a single backtick after m4
 until 'til ’til ‘til `til til till.r:
-  ((Mgp+ or J+ or JT+ or UN+)
+   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
 
@@ -9523,7 +9523,7 @@ and.j-r or.j-r:
                    ({Xd-} & SJlp- & SJru+ & {[[Xc+]]}) or
                    ({Xd-} & SJls- & SJru+ & {[[Xc+]]});
 
-% Give AN+ a cost, because in general, we dont want to conjoin nouns,
+% Give AN+ a cost, because in general, we don't want to conjoin nouns,
 % and then use the resulting phrase to modify another noun ...
 <noun-conj-head>: Ju- or SJl+ or [[AN+]];
 
@@ -11375,7 +11375,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 "&": G- & {Xd- & G-} & G+;
 
 % The double-single-quote is converted to a single single quote by m4.
-"’" "''": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 % Possessives
 "'s.p" "’s.p":
