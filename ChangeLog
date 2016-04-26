@@ -1,5 +1,6 @@
 Version 5.3.5: (XXX 2016)
  * Linas hacked Kazakh
+ * MacOS bug fix: fgetc behaves oddly in OSX, see bug #293.
 
 Version 5.3.4: (16 March 2016)
  * Fix broken handling of apostrophe (issue #281).

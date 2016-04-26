@@ -232,10 +232,10 @@ static int fget_input_char(FILE *in, FILE *out, Command_Options* copts)
 
 	/* For UTF-8 input, I think its still technically correct to
 	 * use fgetc() and not fgetwc() at this point. */
-	c = fgetc(in);
+	c = lg_fgetc(in);
 	if (c != '\n')
 	{
-		ungetc(c, in);
+		lg_ungetc(c, in);
 		input_pending = true;
 	}
 	return c;

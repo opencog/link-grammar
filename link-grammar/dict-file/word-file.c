@@ -27,14 +27,14 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 	int c, j;
 
 	do {
-		c = fgetc(fp);
+		c = lg_fgetc(fp);
 	} while ((c != EOF) && lg_isspace(c));
 	if (c == EOF) return NULL;
 
 	for (j=0; (j <= MAX_WORD-1) && (!lg_isspace(c)) && (c != EOF); j++)
 	{
 		word[j] = c;
-		c = fgetc(fp);
+		c = lg_fgetc(fp);
 	}
 
 	if (j >= MAX_WORD) {
