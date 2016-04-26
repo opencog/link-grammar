@@ -121,12 +121,6 @@ link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *)
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
 #endif /* _MSC_VER || __MINGW32__ */
 
-#if __APPLE__
-/* Junk, to keep the Mac OSX linker happy, because this is listed in
- * the link-grammar.def symbol export file.  */
-void lg_mbrtowc(void);
-#endif
-
 /*
  * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
  * chars ... However, MS Visual C does, as does MinGW.  Since
@@ -160,6 +154,32 @@ void lg_mbrtowc(void);
 #else
   #define lg_isspace isspace
 #endif
+
+
+#if __APPLE__
+/* Junk, to keep the Mac OSX linker happy, because this is listed in
+ * the link-grammar.def symbol export file.  */
+void lg_mbrtowc(void);
+#endif
+
+#if __APPLE__
+/* It appears that fgetc on Mac OS 10.11.3 "El Capitan" has a weird
+ * or broken version of fgetc() that flubs reads of utf8 chars when
+ * the locale is not set to "C" -- in particular, it fails for the
+ * en_US.utf8 locale; see bug report #293
+ * https://github.com/opencog/link-grammar/issues/293
+ */
+static inline int lg_fgetc(FILE *stream)
+{
+	char c[4];  /* general overflow paranoia */
+	size_t nr = fread(c, 1, 1, stream);
+	if (0 == nr) return EOF;
+	return (int) c;
+}
+#else
+#define lg_fgetc(S) fgetc(S)
+#endif
+
 
 #if defined(__sun__)
 int strncasecmp(const char *s1, const char *s2, size_t n);
