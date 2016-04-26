@@ -174,10 +174,20 @@ static inline int lg_fgetc(FILE *stream)
 	char c[4];  /* general overflow paranoia */
 	size_t nr = fread(c, 1, 1, stream);
 	if (0 == nr) return EOF;
-	return (int) c;
+	return (int) c[0];
 }
+
+static inline int lg_ungetc(int c, FILE *stream)
+{
+	/* This should work, because we never unget past the newline char. */
+	int rc = fseek(stream, -1, SEEK_CUR);
+	if (rc) return EOF;
+	return c;
+}
+
 #else
-#define lg_fgetc(S) fgetc(S)
+#define lg_fgetc   fgetc
+#define lg_ungetc  ungetc
 #endif
 
 
