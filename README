@@ -572,14 +572,21 @@ Spell Checking:
 
 Corpus Statistics:
 ------------------
-   Version 4.4.2 (January 2009) introduces a parse-ranking system based
+   Version 4.4.2 (January 2009) introduced a parse-ranking system based
    on corpus statistics.  This allows the most likely parse to be
-   identified in terms of the probabilities of word disjuincts observed
+   identified in terms of the probabilities of word disjuncts observed
    on actual text.  The system also includes a way to assign WordNet
    word senses to a word, based on the grammatical usage of tha word.
    An overview of the idea is given on the OpenCog blog, here:
 
    http://brainwave.opencog.org/2009/01/12/determining-word-senses-from-grammatical-usage/
+
+   As of 2012, this parse-ranking system is obsolescent. The primary
+   issue is that the data files need to be rebuilt, to reflect the new
+   dictionary structure; the version skew between the old databases and
+   the current dictionaries will invalidate results.  If you are
+   interested, contact the mailing list, and take a look at
+   https://github.com/opencog/link-grammar/issues/292
 
    To enable the corpus statistics, specify
 
