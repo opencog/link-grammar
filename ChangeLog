@@ -1,5 +1,8 @@
+Version 5.3.6: (XXX 2016)
+ * XXX
+
 Version 5.3.5: (28 April 2016)
- * Modified (hacked) Kazakh
+ * Modified (hacked) Kazakh dictionary.
  * MacOS bug fix: fgetc behaves oddly in OSX, see bug #293.
 
 Version 5.3.4: (16 March 2016)
