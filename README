@@ -199,7 +199,7 @@ BUILDING on MacOS:
 
    The language bindings for python and java may require additional
    packages to be installed.  A working editline is nice, since it
-   allows you to use the arrow keys in the command-lne client.
+   allows you to use the arrow keys in the command-line client.
    See http://www.macports.org/ to find these.
 
    You almost surely do not need a Mac portfile; but you can still
