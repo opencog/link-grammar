@@ -679,13 +679,13 @@ Directional Links
       conjunction with the "no links cross" meta-rule.
 
     * The graphs are planar; that is, no two edges may cross. See,
-      however, the discussion below.
+      however, the "link-crossing" discussion below.
 
    There are several related mathematical notions, but none quite
    capture directional LG:
 
     * Directional LG graphs resemble DAGS, except that LG allows only
-      one wall (on "top" element).
+      one wall (one "top" element).
 
     * Directional LG graphs resemble strict partial orders, except that
       the LG arrows are usually not transitive.
