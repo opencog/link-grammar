@@ -715,8 +715,8 @@ BioLG merger:
       hints for unknown words.
    -- XML I/O. The BioLG code can output parsed text in a certain
       idiosyncratic XML format.
-   -- "term support". Link-grammar does support "entity placeholders",
-      which provides an equivalent function.
+   -- "term support".  Experiments from the 2007-2009 time-frame
+      indicate these were useless.
    -- The link type CH. This was a large, intrusive, incompatible change
       to the dictionary, and it is not strictly required -- there is a
       better, alternative way of handling adj-noun-adj-noun chains commonly
