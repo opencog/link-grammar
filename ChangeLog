@@ -1,5 +1,5 @@
 Version 5.3.6: (XXX 2016)
- * XXX
+ * Add missing `parses-quotes-en.txt` file that python tests need.
 
 Version 5.3.5: (28 April 2016)
  * Modified (hacked) Kazakh dictionary.
