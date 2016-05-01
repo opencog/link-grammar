@@ -1,3 +1,6 @@
+Version 5.3.7: (XXX 2016)
+ * XXX
+
 Version 5.3.6: (30 April 2016)
  * Add missing `parses-quotes-en.txt` file that python tests need.
  * Fix build break related to lg_fgetc when libeditline is missing.
