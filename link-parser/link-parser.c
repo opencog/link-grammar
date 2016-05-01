@@ -55,6 +55,9 @@
 #endif
 
 #include "../link-grammar/link-includes.h"
+#ifndef HAVE_EDITLINE
+  #include "../link-grammar/utilities.h" /* for lg_fgetc */
+#endif
 #include "command-line.h"
 #include "lg_readline.h"
 #ifdef USE_VITERBI
