@@ -1,3 +1,6 @@
+Version 5.3.8: (XXX 2016)
+ * XXX
+
 Version 5.3.7: (7 May 2016)
  * Fix another MacOS build break, regarding library exports.
 
