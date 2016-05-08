@@ -1,5 +1,5 @@
-Version 5.3.7: (XXX 2016)
- * XXX
+Version 5.3.7: (7 May 2016)
+ * Fix another MacOS build break, regarding library exports.
 
 Version 5.3.6: (30 April 2016)
  * Add missing `parses-quotes-en.txt` file that python tests need.
