@@ -241,7 +241,7 @@ static int wctomb_check(char *s, wchar_t wc)
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
 	if (nr < 0) {
-		wprintf(L"Fatal Error: wctomb_check failed: %d %S\n", nr, &wc);
+		wprintf(L"Fatal Error: wctomb_check failed: %d %ls\n", nr, &wc);
 		exit(1);
 	}
 	/* XXX TODO Perhaps the below needs to be uncommented?  .. tucker says no ... */
