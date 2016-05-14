@@ -21,7 +21,7 @@
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
-#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+#define strncasecmp(a,b,s) _strnicmp((a),(b),(s))
 #endif
 
 static struct
