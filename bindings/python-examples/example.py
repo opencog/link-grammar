@@ -56,7 +56,7 @@ for linkage in linkages:
     desc(linkage)
 
 # Turkish
-po = ParseOptions(islands_ok=True, max_null_count=1,display_morphology=True)
+po = ParseOptions(islands_ok=True, max_null_count=1, display_morphology=True)
 sent = Sentence("Senin ne istediğini bilmiyorum", Dictionary('tr'), po)
 linkages = sent.parse()
 linkage_stat(sent, 'Turkish')
