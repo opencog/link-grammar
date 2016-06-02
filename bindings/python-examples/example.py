@@ -42,12 +42,11 @@ def linkage_stat(psent, lang):
 
 
 # English is the default language
-sent = Sentence("he said: `this is a backtic test`", Dictionary(), po)
+sent = Sentence("This is a test.", Dictionary(), po)
 linkages = sent.parse()
 linkage_stat(sent, 'English')
 for linkage in linkages:
     desc(linkage)
-exit(0)
 
 # Russian
 sent = Sentence("это большой тест.", Dictionary('ru'), po)
