@@ -202,6 +202,11 @@ class DBasicParsingTestCase(unittest.TestCase):
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
 
+    def test_that_parse_returns_empty_iterator_on_no_linkage(self):
+        result = self.parse_sent("This this doesn't parse");
+        for _ in result:
+            assert False, "Unexpected linkage iteration"
+
     def test_that_parse_sent_returns_list_of_linkage_objects_for_valid_sentence(self):
         result = self.parse_sent("This is a relatively simple sentence.")
         self.assertTrue(isinstance(result[0], Linkage))
