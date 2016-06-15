@@ -156,12 +156,12 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	*/
 	#pragma warning(push)
 	#pragma warning(disable: 4311)
-	#endif
+#endif
 	i = ((unsigned long)le) + (i << 6) + (i << 16) - i;
 	i = ((unsigned long)re) + (i << 6) + (i << 16) - i;
-	#ifdef _MSC_VER
+#ifdef _MSC_VER
 	#pragma warning(pop)
-	#endif
+#endif
 #endif
 
 	return i & (table_size-1);
