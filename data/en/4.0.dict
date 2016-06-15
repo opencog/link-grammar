@@ -701,7 +701,8 @@ adieu.n-u bye.n-u farewell.n-u fare-thee-well good-bye.n-u goodbye.n-u
 good-night.n-u goodnight.n-u welcome.n-u well.n-u:
   <mass-noun>;
 
-% Want to cost this so that it doesn't interfere with given name "Tom".
+% Disambiguation: Want to cost this so that it doesn't interfere with
+% given name "Tom".
 tom.n-u: [<marker-common-entity> or <mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.a) and so we don't want to
@@ -3475,6 +3476,14 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   ((<verb-pl,i> & (<vc-fill>)) or
   (<verb-and-pl-> & ((<vc-fill>) or ())) or
   ((<vc-fill>) & <verb-and-pl+>));
+
+% Disambiguation: add a cost so that Bob the given name is preferred
+% to bob the verb: "Bob lives in China".
+bob.v:
+  [ 
+  ((<verb-pl,i> & (<vc-fill>)) or
+  (<verb-and-pl-> & ((<vc-fill>) or ())) or
+  ((<vc-fill>) & <verb-and-pl+>)) ]0.2;
 
 % ------------------------------------------------------------
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
