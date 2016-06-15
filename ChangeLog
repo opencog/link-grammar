@@ -1,5 +1,8 @@
 Version 5.3.8: (XXX 2016)
  * Disambiguate "Bob" the given name from "bob" the verb.
+ * Pull req #300: Crash while parsing certain Russian sentences.
+ * Pull req #301: MSVC compiler error, and warnings.
+ * Pull req #304: Python failure when no parses are possible.
 
 Version 5.3.7: (7 May 2016)
  * Fix another MacOS build break, regarding library exports.
