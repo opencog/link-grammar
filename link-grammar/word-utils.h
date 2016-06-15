@@ -152,8 +152,8 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	i = rw + (i << 6) + (i << 16) - i;
 #ifdef _MSC_VER
 	/* Prevent cluttering the compilation output with 32 such warnings:
-	* warning C4311: 'type cast': pointer truncation from 'const Connector *' to 'unsigned long'
-	*/
+	 * warning C4311: 'type cast':
+	 *         pointer truncation from 'const Connector *' to 'unsigned long' */
 	#pragma warning(push)
 	#pragma warning(disable: 4311)
 #endif
