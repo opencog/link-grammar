@@ -66,10 +66,6 @@
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
 
-#if !defined(MIN)
-#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
-#endif
-
 static int batch_errors = 0;
 static bool input_pending = false;
 static int verbosity = 0;

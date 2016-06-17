@@ -12,6 +12,10 @@
 #ifndef _PARSER_UTILITIES_
 #define _PARSER_UTILITIES_
 
+#if !defined(MIN)
+#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
+#endif
+
 #ifndef HAVE_EDITLINE
 
 /* This if/endif block is a copy from link-grammar/utilities.h. */
@@ -44,5 +48,10 @@ static inline int lg_ungetc(int c, FILE *stream)
 #endif
 
 #endif // HAVE_EDITLINE
+
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define strncasecmp(a,b,s) _strnicmp((a),(b),(s))
+#endif
 
 #endif // _PARSER_UTILITIES_
