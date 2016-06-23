@@ -55,9 +55,7 @@
 #endif
 
 #include "../link-grammar/link-includes.h"
-#ifndef HAVE_EDITLINE
-  #include "../link-grammar/utilities.h" /* for lg_fgetc */
-#endif
+#include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
 #ifdef USE_VITERBI
@@ -67,10 +65,6 @@
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
-
-#if !defined(MIN)
-#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
-#endif
 
 static int batch_errors = 0;
 static bool input_pending = false;

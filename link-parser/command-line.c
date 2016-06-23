@@ -16,13 +16,9 @@
 #include <wchar.h>
 #include <wctype.h>
 
+#include "parser-utilities.h"
 #include "command-line.h"
 #include <link-grammar/link-includes.h>
-
-#ifdef _MSC_VER
-#define strcasecmp _stricmp
-#define strncasecmp(a,b,s) _strnicmp((a),(b),(s))
-#endif
 
 static struct
 {

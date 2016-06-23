@@ -14,6 +14,7 @@ bin_PROGRAMS=link-parser
 link_parser_SOURCES = link-parser.c \
                       command-line.c \
                       lg_readline.c \
+		      parser-utilities.h \
                       command-line.h \
                       lg_readline.h
 
