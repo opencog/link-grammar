@@ -1,0 +1,87 @@
+Note: See also "BUILDING on Windows" in "../README".
+
+This directory contains project files for building Link Grammar with the
+Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
+the Community Edition of that product.
+
+The regex package, which includes libraries and header files, must be
+separately downloaded. Also see GNUREGEX_DIR below.
+
+The build files make use of two User Macros, defined in the property
+sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
+
+-- GNUREGEX_DIR must be pointing to an unzipped POSIX regex distribution
+   (which has the subdirectories "include" and "lib"). Its default is
+   "%HOMEDRIVE%%HOMEPATH%\Libraries\gnuregex".
+   If the environment variable GNUREGEX exists, its value is used instead.
+   The library file name is assumed to be "regex.lib" and needs to be
+   generated from the DLL if it is not included in the distribution (see
+   http://stackoverflow.com/questions/9946322).
+
+-- JAVA_HOME, if used, must be pointing to a locally installed SDK/JDK,
+   which has the subdirectories "include" and "include/win32" (defined in
+   the LinkGrammarJava project under Common properties->C/C++->General->
+   Additional Include Directories.
+   If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
+   variable (check it) then there is no need to define this User Macro.
+
+
+Compiling
+---------
+- To compile LinkGrammar, open the solution file LinkGrammar.sln and build
+
+- The solution configuration is configured to create a debug version by
+  default.  It's probably a good idea to switch a "Release" configuration.
+  You can do this at Build Menu->Configuration Manager.
+
+- The wordgraph-display feature is enabled when compiled with
+  USE_WORDGRAPH_DISPLAY (defined in the LGfeatures property sheet
+  Common properties->C/C++->Preprocessor/Preprocessor Definitions.
+
+
+Running
+-------
+The last step of the "LinkGrammarExe" project creates "link-parser.bat".  Copy
+it to somewhere in your PATH and then customize it if needed (don't customize
+it in-place, since rebuilding would overwrite it). Especially, add to PATH the
+directory in which the regex DLL resides (see the line containing "DLLs"). If
+you would like to display the wordgraph (see below) set also the PATH for
+"dot.exe" if it is not already in your PATH.
+
+If USE_WORDGRAPH_DISPLAY has been used when compiling (the default), then
+typing !test=wg at the "link-parser" prompt can be used in order to display the
+wordgraph of the next sentences to be parsed. See "../linkgrammar/README" for
+how to use optional display flags.  By default, "PhotoViewer.dll" is invoked to
+display the graph.  If X11 is available and your "dot.exe" command has the
+"xlib" driver, it can be used to display the wordgraph when the x flag is set
+(i.e.  !test=wg:x), for example when running under Cygwin/X. In any case it
+uses the "dot" command of Graphviz. Graphviz can be installed as part of Cygwin
+(in which case it included the "xlib" driver"), or separately
+(http://www.graphviz.org/Download_windows.php).  Both "PhotoViewer.dll" (if
+used) and "dot" must be in your PATH (if needed, you can customized that in a
+copy of "link-parser.bat", as described above).
+
+BTW, when running under Cygwin, don't exit link-parser by using ^C or ^Z -
+the shell may get stuck because the program somehow may continue to run in the
+background.  Instead, exit using !exit .
+
+
+NOTE: The created DLLs need the MSVC14 runtime environment to run. This is
+normally already installed in your machine with the installation of the IDE.
+But to be able to run Link Grammar on other computer you need to install the
+Visual C++ Redistributable for Visual Studio 2015 from:
+https://www.microsoft.com/en-us/download/details.aspx?id=48145
+This redistributable does not contain debug version of the MSVC runtime, so
+only "Release" Link Grammar will work with it.
+
+
+Implementation notes:
+---------------------
+
+- The file "link-grammar/link-features.h.in" has a Custom Build Tool definition
+  which invokes "mk-link-features-h" to generate
+  "link-grammar/link-features.h", with LINK_*_VERSION variable replacement as
+  defined in "configure.ac".
+
+- The project file "LinkGrammarExe" has a Post-Build-Event definition for
+  generating "link-parser.bat".
