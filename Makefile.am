@@ -33,21 +33,17 @@ EXTRA_DIST =            \
 	docker/docker-parser/Dockerfile        \
 	docker/docker-python/Dockerfile        \
 	docker/docker-server/Dockerfile        \
-	msvc9/LinkGrammarExe.vcproj            \
-	msvc9/LinkGrammarJava.vcproj           \
-	msvc9/LinkGrammar.sln                  \
-	msvc9/LinkGrammar.vcproj               \
-	msvc9/README                           \
-	msvc12/LinkGrammarExe.vcproj           \
-	msvc12/LinkGrammarExe.vcxproj          \
-	msvc12/LinkGrammarExe.vcxproj.filters  \
-	msvc12/LinkGrammarJava.vcproj          \
-	msvc12/LinkGrammarJava.vcxproj         \
-	msvc12/LinkGrammarJava.vcxproj.filters \
-	msvc12/LinkGrammar.sln                 \
-	msvc12/LinkGrammar.vcproj              \
-	msvc12/LinkGrammar.vcxproj             \
-	msvc12/LinkGrammar.vcxproj.filters     \
-	msvc12/LinkGrammar.vcxproj.user        \
-	msvc12/README                          \
+	msvc14/LGlib-features.props            \
+	msvc14/LinkGrammarExe.vcxproj          \
+	msvc14/LinkGrammarExe.vcxproj.filters  \
+	msvc14/LinkGrammarJava.vcxproj         \
+	msvc14/LinkGrammarJava.vcxproj.filters \
+	msvc14/LinkGrammar.sln                 \
+	msvc14/LinkGrammar.vcxproj             \
+	msvc14/LinkGrammar.vcxproj.filters     \
+	msvc14/Local.props                     \
+	msvc14/mk-link-features-h.bat          \
+	msvc14/MSVC-common.props               \
+	msvc14/post-build.bat                  \
+	msvc14/README                          \
 	TODO
