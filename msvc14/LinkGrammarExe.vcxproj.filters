@@ -32,5 +32,8 @@
     <ClInclude Include="..\link-parser\lg_readline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\link-parser\parser-utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

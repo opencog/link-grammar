@@ -98,15 +98,7 @@ may not be desired by some users. Use --enable-wordgraph-display to enable
 this feature.
 
 On Windows this feature is enabled when compiled with USE_WORDGRAPH_DISPLAY.
-By default, it invokes PhotoViewer.dll for displaying the graph.
-It can display the graph using X11 if available when the x flag is set
-(i.e. !test=wg:x), for example when running under Cygwin/X. In any case it
-uses the "dot" command of Graphviz. Graphviz can be installed as part of
-Cygwin, or separately (http://www.graphviz.org/Download_windows.php).
-Both PhotoViewer.dll (if used) and "dot" must be in the command path.
-BTW, when running under Cygwin, don't exit LinkGrammarExe by using ^C or
-^Z - the shell may get stuck because the program somehow continues to run
-in the background. Instead, exit using !exit .
+See "../msvcNN/RDADME" (NN is the MSVC version) for further details.
 
 Quotes now are not discarded, but are considered to be regular dict tokens.
 In this version they have no significant linkage and always attach to the word

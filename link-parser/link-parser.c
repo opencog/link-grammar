@@ -719,10 +719,10 @@ int main(int argc, char * argv[])
 		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 #else
- #pragma message("WARNING: Windows console (cmd.exe) does not support unicode input!\nWill attempt to convert from the native encoding!");
+ #pragma message("WARNING: Windows console (cmd.exe) does not support unicode input!\nWill attempt to convert from the native encoding!")
 	fprintf(stderr,
 	    "%s: Warning: Windows console (cmd.exe) does not support unicode\n"
-	    "input!  Will attempt to convert from the native encoding!", argv[0]);
+	    "input!  Will attempt to convert from the native encoding!\n", argv[0]);
 #endif
 
 	for (; i<argc; i++)
