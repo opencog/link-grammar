@@ -91,3 +91,23 @@ Implementation notes:
 
 - The project file "LinkGrammarExe" has a Post-Build-Event definition for
   generating "link-parser.bat".
+
+
+Using a remote network share
+----------------------------
+In order to use a link-grammar source repository from a network share (e.g. via
+Samba), and still be able to use the custom build steps in the Project files,
+there is a need to "convince" Windows it is a local filesystem.  Else you will
+get "UNC path are not supported." on the batch runs, with bad results. This
+method will also allow the "link-parser.bat" file to run.  (For other solutions
+see tackoverflow.com/questions/9013941). You will need to find out by yourself
+if this makes a security or another problem in your case.
+
+Here is what worked for me:
+Suppose you use host:/usr/local/src remotely as share "src":
+
+mklink /J src-j \\host\src
+mklink /D src src-link
+
+The second one needs administrator privileges.
+Then use the repository through "src".
