@@ -4,9 +4,15 @@ This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
 the Community Edition of that product.
 
+
+Dependencies
+------------
 The regex package, which includes libraries and header files, must be
 separately downloaded. Also see GNUREGEX_DIR below.
 
+
+Setup
+-----
 The build files make use of two User Macros, defined in the property
 sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
 
