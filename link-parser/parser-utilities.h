@@ -12,6 +12,10 @@
 #ifndef _PARSER_UTILITIES_
 #define _PARSER_UTILITIES_
 
+#if _MSC_VER
+#include <io.h> /* for isatty() */
+#endif
+
 #if !defined(MIN)
 #define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
 #endif
