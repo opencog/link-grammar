@@ -63,9 +63,6 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 #ifdef _MSC_VER
-/* The Microsoft Visual C compiler doesn't support the "inline" keyword.
- * But it does support _inline as a synonym... */
-#define inline _inline
 
 /* These definitions are incorrect, as these functions are different(!)
  * (non-standard functionality).
