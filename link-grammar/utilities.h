@@ -67,12 +67,20 @@ void *alloca (size_t);
  * But it does support _inline as a synonym... */
 #define inline _inline
 
-/* MS Visual C does not have any function normally found in strings.h */
-/* In particular, be careful to avoid including strings.h */
-
+/* These definitions are incorrect, as these functions are different(!)
+ * (non-standard functionality).
+ * See http://stackoverflow.com/questions/27754492 . Fortunately,
+ * MSVC 14 supports C99 functions so these definitions are now unneeded.
+ * (LG library compilation is unsupported for previous MSVC versions.)
+ * (Left here for documentation.) */
+#if 0
 /* MS Visual C uses non-standard string function names */
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
+#endif
+
+/* MS Visual C does not have any function normally found in strings.h */
+/* In particular, be careful to avoid including strings.h */
 #define strcasecmp _stricmp
 #ifndef strdup
 #define strdup _strdup
