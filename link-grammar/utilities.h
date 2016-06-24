@@ -87,15 +87,6 @@ void *alloca (size_t);
 #endif
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
-/* Microsoft does not support %zu -- it wants %Iu */
-int printf_compat(const char *, ...);
-int fprintf_compat(FILE *, const char *, ...);
-int sprintf_compat(char *, const char *, ...);
-
-#define fprintf fprintf_compat
-#define printf printf_compat
-#define sprintf sprintf_compat
-
 /* MS Visual C does not support some C99 standard floating-point functions */
 #define fmaxf(a,b) ((a) > (b) ? (a) : (b))
 #define floorf(x) floor(x)
