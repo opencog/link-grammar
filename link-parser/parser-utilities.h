@@ -1,5 +1,6 @@
 /***************************************************************************/
 /* Copyright (c) 2016 Linas Vepstas                                        */
+/* Copyright (c) 2016 Amir Plivatsky                                       */
 /* All rights reserved                                                     */
 /*                                                                         */
 /* Use of the link grammar parsing system is subject to the terms of the   */
