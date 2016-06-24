@@ -27,7 +27,7 @@ endif
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CXXFLAGS) \
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
 	$(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la

@@ -672,7 +672,6 @@ int main(int argc, char * argv[])
 	const char     *language="en";  /* default to english, and not locale */
 	int             num_linkages, i;
 	Label           label = NO_LABEL;
-	const char      *codeset;
 	const char      *locale = NULL;
 	Command_Options *copts;
 	Parse_Options   opts;
@@ -704,7 +703,7 @@ int main(int argc, char * argv[])
 	/* Check to make sure the current locale is UTF8; if its not,
 	 * then force-set this to the english utf8 locale
 	 */
-	codeset = nl_langinfo(CODESET);
+	const char *codeset = nl_langinfo(CODESET);
 	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
 	{
 		fprintf(stderr,
