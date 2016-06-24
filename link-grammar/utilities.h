@@ -23,6 +23,9 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#ifdef _MSC_VER
+#define _CRT_RAND_S
+#endif
 #include <stdlib.h>
 #include <string.h>
 

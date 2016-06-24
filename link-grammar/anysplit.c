@@ -19,6 +19,8 @@
  * - int is >= 32 bit (for random number)
  */
 
+#include "utilities.h" /* included first, for MSVC rand_s() */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,7 +34,6 @@
 #include "regex-morph.h"
 #include "structures.h"
 #include "tokenize.h"
-#include "utilities.h"
 
 #include "anysplit.h"
 
