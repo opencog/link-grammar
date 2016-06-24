@@ -85,9 +85,8 @@ typedef enum
 static char* oem_to_utf8(char *instring)
 {
 	char * out;
-	wchar_t *winput, *wp;
+	wchar_t *winput;
 	size_t len;
-	const char *p;
 	int cv;
 	unsigned int consolecp;
 
