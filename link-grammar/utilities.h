@@ -87,11 +87,6 @@ void *alloca (size_t);
 #endif
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
-/* MS Visual C does not support some C99 standard floating-point functions */
-#define fmaxf(a,b) ((a) > (b) ? (a) : (b))
-#define floorf(x) floor(x)
-#define ceilf(x) ceil(x)
-
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)
 
