@@ -136,22 +136,22 @@ void prt_error(const char *fmt, ...)
 
 /**
  * Check whether the given feature is enabled. It is considered
- * enabled if it is found in the comma-separated list of features.
- * This list, if not empty, has a leading and a trailing comma.
- * Return NULL if not enabled, else non-NULL. If the feature appears
- * as "feature=val", return pointer to val.
+ * enabled if it is found in the comma delimited list of features.
+ * This list, if not empty, has a leading and a trailing commas.
+ * Return NULL if not enabled, else ",". If the feature appears
+ * as "feature:param", return a pointer to param.
  */
 const char *feature_enabled(const char * list, const char * feature)
 {
 	size_t len = strlen(feature);
-	char *buff = alloca(len + 2 + 1); /* leading comma + comma/eq + NUL */
+	char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
 
 	buff[0] = ',';
 	strcpy(buff+1, feature);
 	strcat(buff, ",");
 
 	if (NULL != strstr(list, buff)) return ",";
-	buff[len+1] = ':'; /* check for "feature:..." */
+	buff[len+1] = ':'; /* check for "feature:param" */
 	if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
 	return NULL;
 }
