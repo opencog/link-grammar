@@ -13,6 +13,9 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
+extern "C" {
+#include "sat-encoder.h"
+}
 #include "sat-encoder.hpp"
 #include "variables.hpp"
 #include "word-tag.hpp"
