@@ -49,6 +49,12 @@ struct PositionConnector
     */
   }
 
+  // Added only to suppress the warning:
+  // warning: inlining failed in call to ‘PositionConnector::~PositionConnector() noexcept’: call is unlikely and code size would grow [-Winline]
+  // See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70328
+  // Can be removed when this GCC problem is fixed.
+  ~PositionConnector() {};
+
   // Original expression that this connector came from
   Exp* exp;
 
@@ -112,6 +118,12 @@ public:
     debug = opts->debug;
     test = opts->test;
   }
+
+  // Added only to suppress the warning:
+  // warning: inlining failed in call to ‘WordTag::~WordTag() noexcept’: call is unlikely and code size would grow [-Winline]
+  // See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70328
+  // Can be removed when this GCC problem is fixed.
+  ~WordTag() {};
 
   const std::vector<PositionConnector>& get_left_connectors() const {
     return _left_connectors;
