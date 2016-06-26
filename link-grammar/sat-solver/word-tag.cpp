@@ -2,6 +2,10 @@
 #include "fast-sprintf.hpp"
 
 extern "C" {
+#ifdef DEBUG
+#include <build-disjuncts.h>      // for prt_exp_mem()
+#include <dict-api.h>             // for print_expression()
+#endif
 #include "error.h"
 #include "utilities.h"
 }
@@ -15,6 +19,15 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 Exp* parent_exp, const X_node *word_xnode)
 {
   double cost = parent_cost + exp->cost;
+
+#ifdef DEBUG
+  if (0 && debug_level(+D_IC)) { // Extreme debug
+    printf("Expression type %d for Word%d, var %s:\n", exp->type, _word, var);
+    printf("parent_exp: "); print_expression(parent_exp);
+    printf("exp: "); print_expression(exp);
+  }
+#endif
+
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
 
@@ -103,6 +116,13 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         last_var++;
       }
 
+#ifdef DEBUG
+      if (0 && debug_level(+D_IC)) { // Extreme debug
+        printf("Word%d, var %s OR_type:\n", _word, var);
+        printf("exp mem: "); prt_exp_mem(exp, 0);
+      }
+#endif
+
       for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
         bool lr = leading_right, ll = leading_left;
         std::vector<int> er = eps_right, el = eps_left;
@@ -111,8 +131,8 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         *s++ = 'd';
         fast_sprintf(s, i);
 
-        lgdebug(+D_IC, "Word%d: var: %s; exp%d; X_node: %s\n",
-                _word, var, i, word_xnode ? word_xnode->word->subword : "NULL X_node");
+        lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
+                _word, var, i, l, word_xnode ? word_xnode->word->subword : "NULL X_node");
         assert(word_xnode != NULL, "NULL X_node for var %s", new_var);
         if (root && parent_exp == NULL && l->e != word_xnode->exp) {
           E_list *we = NULL;
