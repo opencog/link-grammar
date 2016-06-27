@@ -1,3 +1,5 @@
+.deps
+.libs
 autom4te.cache
 autogen.err
 aclocal.m4
@@ -30,3 +32,4 @@ m4
 patches
 py-compile
 test-driver
+svn-commit.tmp*
