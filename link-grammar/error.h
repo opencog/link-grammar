@@ -30,7 +30,7 @@ typedef enum
 } severity;
 
 void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
-const char *feature_enabled(const char *, const char *);
+const char *feature_enabled(const char *, ...);
 
 #ifdef _WIN32
 # define __func__ __FUNCTION__
@@ -45,7 +45,8 @@ const char *feature_enabled(const char *, const char *);
  */
 #define lgdebug(level, ...) \
 (((verbosity >= (level)) && \
-	(('\0' == debug[0]) || feature_enabled(debug, __func__))) \
+	(('\0' == debug[0]) || \
+	feature_enabled(debug, __func__, __FILE__, NULL))) \
 	? ((STRINGIFY(level)[0] == '+' ? (void)printf("%s: ", __func__) : (void)0), \
 	(void)printf(__VA_ARGS__)) : (void)0)
 
@@ -66,7 +67,8 @@ const char *feature_enabled(const char *, const char *);
  */
 #define debug_level(level) \
 (((verbosity >= (level)) && \
-	(('\0' == debug[0]) || feature_enabled(debug, __func__))) \
+	(('\0' == debug[0]) || \
+	feature_enabled(debug, __func__, __FILE__, NULL))) \
 	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : 0), true)  \
 	: false)
 
@@ -75,6 +77,6 @@ const char *feature_enabled(const char *, const char *);
  * (a comma-separated feature list).
  */
 #define test_enabled(feature) \
-	(('\0' != test[0]) ? feature_enabled(test, feature) : NULL)
+	(('\0' != test[0]) ? feature_enabled(test, feature, NULL) : NULL)
 
 #endif
