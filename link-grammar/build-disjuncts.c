@@ -363,12 +363,15 @@ void prt_exp_mem(Exp *e, int i)
 	}
 
 	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: type=%d (%s) dir=%c multi=%d cost=%f\n", e, e->type, type, e->dir, e->multi, e->cost);
+	printf ("e=%p: type=%d (%s) dir=%c multi=%d cost=%f\n", e, e->type, type, e->type==3?e->dir:' ', e->type==3?e->multi:0, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
-		E_list *l = e->u.l;
+		E_list *l;
+		int c = 0;
+		for (l = e->u.l; NULL != l; l = l->next) c++;
 		for(int j =0; j<i+2; j++) printf(" ");
-		printf("E_list=%p\n", l);
+		l = e->u.l;
+		printf("E_list=%p count %d\n", l, c);
 		while(l)
 		{
 			prt_exp_mem(l->e, i+2);

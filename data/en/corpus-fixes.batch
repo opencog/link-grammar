@@ -4786,6 +4786,11 @@ vibeix here
 % when vc-do> gets broken to vc-do and > .
 *([<vc-do>
 
+% Sentences with all-capital words caused assertion failure in the SAT
+% parser after commit "add_empty_word(): Invoke only when needed". Got fix
+% on commit "Fix "Assertion (word_xnode != NULL) failed" in SAT solver".
+This is a TEST
+
 % The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch
 % --------------------------------------------------------------------
