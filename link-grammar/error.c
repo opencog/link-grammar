@@ -140,21 +140,34 @@ void prt_error(const char *fmt, ...)
  * This list, if not empty, has a leading and a trailing commas.
  * Return NULL if not enabled, else ",". If the feature appears
  * as "feature:param", return a pointer to param.
+ * @param    list Comma delimited list of features (start/end commas too).
+ * @param    ... List of features to check.
+ * @return   If not enabled - NULL; Else "," or the feature param if exists.
  */
-const char *feature_enabled(const char * list, const char * feature)
+const char *feature_enabled(const char * list, ...)
 {
-	size_t len = strlen(feature);
-	char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
 
-	buff[0] = ',';
-	strcpy(buff+1, feature);
-	strcat(buff, ",");
+	const char *feature;
+	va_list given_features;
+	va_start(given_features, feature);
 
-	if (NULL != strstr(list, buff)) return ",";
-	buff[len+1] = ':'; /* check for "feature:param" */
-	if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
+	while (NULL != (feature = va_arg(given_features, char *)))
+	{
+		size_t len = strlen(feature);
+		char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
+
+		if ('/' == feature[0]) feature = strrchr(feature, '/') + 1;
+		buff[0] = ',';
+		strcpy(buff+1, feature);
+		strcat(buff, ",");
+
+		if (NULL != strstr(list, buff)) return ",";
+		buff[len+1] = ':'; /* check for "feature:param" */
+		if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
+	}
+	va_end(given_features);
+
 	return NULL;
 }
-
 
 /* ============================================================ */
