@@ -363,7 +363,9 @@ void prt_exp_mem(Exp *e, int i)
 	}
 
 	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: type=%d (%s) dir=%c multi=%d cost=%f\n", e, e->type, type, e->type==3?e->dir:' ', e->type==3?e->multi:0, e->cost);
+	printf ("e=%p: type=%d (%s) dir=%c multi=%d cost=%f\n", e, e->type, type,
+	        e->type==CONNECTOR_type?e->dir:' ',
+	        e->type==CONNECTOR_type?e->multi:0, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
 		E_list *l;
