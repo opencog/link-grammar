@@ -1,5 +1,6 @@
 /***************************************************************************/
 /* Copyright (c) 2016 Linas Vepstas                                        */
+/* Copyright (c) 2016 Amir Plivatsky                                       */
 /* All rights reserved                                                     */
 /*                                                                         */
 /* Use of the link grammar parsing system is subject to the terms of the   */
@@ -11,6 +12,10 @@
 
 #ifndef _PARSER_UTILITIES_
 #define _PARSER_UTILITIES_
+
+#if _MSC_VER
+#include <io.h> /* for isatty() */
+#endif
 
 #if !defined(MIN)
 #define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))

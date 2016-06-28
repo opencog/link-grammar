@@ -701,7 +701,7 @@ MAYBE_WARN_CXX="-Wall -Wextra \
 -Wno-attributes -Wno-long-long -Winline"
 
 MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
--Wnested-externs -Wdeclaration-after-statement -Wold-style-definition"
+-Wnested-externs -Wold-style-definition"
 
 MAYBE_WARN="$MAYBE_WARN_CXX $MAYBE_WARN_C"
 

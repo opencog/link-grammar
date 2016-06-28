@@ -23,6 +23,9 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#ifdef _MSC_VER
+#define _CRT_RAND_S
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -63,35 +66,26 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 #ifdef _MSC_VER
-/* The Microsoft Visual C compiler doesn't support the "inline" keyword.
- * But it does support _inline as a synonym... */
-#define inline _inline
 
-/* MS Visual C does not have any function normally found in strings.h */
-/* In particular, be careful to avoid including strings.h */
-
+/* These definitions are incorrect, as these functions are different(!)
+ * (non-standard functionality).
+ * See http://stackoverflow.com/questions/27754492 . Fortunately,
+ * MSVC 14 supports C99 functions so these definitions are now unneeded.
+ * (LG library compilation is unsupported for previous MSVC versions.)
+ * (Left here for documentation.) */
+#if 0
 /* MS Visual C uses non-standard string function names */
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
+#endif
+
+/* MS Visual C does not have any function normally found in strings.h */
+/* In particular, be careful to avoid including strings.h */
 #define strcasecmp _stricmp
 #ifndef strdup
 #define strdup _strdup
 #endif
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
-
-/* Microsoft does not support %zu -- it wants %Iu */
-int printf_compat(const char *, ...);
-int fprintf_compat(FILE *, const char *, ...);
-int sprintf_compat(char *, const char *, ...);
-
-#define fprintf fprintf_compat
-#define printf printf_compat
-#define sprintf sprintf_compat
-
-/* MS Visual C does not support some C99 standard floating-point functions */
-#define fmaxf(a,b) ((a) > (b) ? (a) : (b))
-#define floorf(x) floor(x)
-#define ceilf(x) ceil(x)
 
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)

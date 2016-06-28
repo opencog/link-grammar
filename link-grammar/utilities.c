@@ -1130,50 +1130,6 @@ char * get_default_locale(void)
 }
 
 /* ============================================================= */
-/* MSVC: Utilities for converting %zu to %Iu */
-
-#ifdef _MSC_VER
-int printf_compat(const char *format, ...)
-{
-	char * tmp = alloca(strlen(format)+1);
-	char * tok = tmp;
-	va_list args;
-
-	strcpy(tmp, format);
-	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
-	va_start(args, format);
-	return vprintf(tmp, args); /* fine on MSVC to return before va_end() */
-	va_end(args);
-}
-
-int fprintf_compat(FILE *file, const char *format, ...)
-{
-	char * tmp = alloca(strlen(format)+1);
-	char * tok = tmp;
-	va_list args;
-
-	strcpy(tmp, format);
-	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
-	va_start(args, format);
-	return vfprintf(file, tmp, args); /* fine on MSVC to return before va_end() */
-	va_end(args);
-}
-
-int sprintf_compat(char *str, const char *format, ...)
-{
-	char * tmp = alloca(strlen(format)+1);
-	char * tok = tmp;
-	va_list args;
-
-	strcpy(tmp, format);
-	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
-	va_start(args, format);
-	return vsprintf(str, tmp, args); /* fine on MSVC to return before va_end() */
-	va_end(args);
-}
-#endif /* _MSC_VER */
-
-/* ============================================================= */
 /* Alternatives utilities */
 
 static const char ** resize_alts(const char **arr, size_t len)
