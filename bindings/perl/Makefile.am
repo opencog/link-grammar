@@ -15,7 +15,7 @@ dist_pkgperl_SCRIPTS = \
    $(top_builddir)/bindings/perl/clinkgrammar.pm
 
 if HAVE_SWIG
-$(BUILT_SOURCES): $(SWIG_SOURCES)
+$(BUILT_SOURCES) $(dist_pkgperl_SCRIPTS): $(SWIG_SOURCES)
 	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -I$(top_builddir) -o $@ $<
 else
 $(BUILT_SOURCES):
