@@ -60,7 +60,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH LINK-PARSER 1 "2015-05-12" "Version 5.3.0"
+.TH LINK-PARSER 1 "2016-06-29" "Version 5.3.8"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -107,16 +107,17 @@ Starts the parser interactive shell.  Enter any sentence to parse:
 .EX
 linkparser> \fBReading a man page is informative.\fP
 
-Found 4 linkages (4 had no P.P. violations)
-  Linkage 1, cost vector = (UNUSED=0 DIS=0 FAT=0 AND=0 LEN=12)
+Found 12 linkages (12 had no P.P. violations)
+	Linkage 1, cost vector = (UNUSED=0 DIS= 0.20 LEN=16)
 
-    +------------------------Xp-----------------------+
-    |         +---------Ss*g---------+                |
-    |         +-------Os-------+     |                |
-    |         |     +----Ds----+     |                |
-    +----Wd---+     |   +--AN--+     +---Pa---+       |
-    |         |     |   |      |     |        |       |
-LEFT\-WALL reading.g a man.n page.n is.v informative.a .
+    +------------------------Xp------------------------+
+    +--------------->WV-------------->+                |
+    |         +----------Ss*g---------+                |
+    |         +--------Os-------+     |                |
+    |         |     +---Ds**x---+     |                |
+    +----Wd---+     |    +---A--+     +---Pa---+       |
+    |         |     |    |      |     |        |       |
+LEFT\-WALL reading.g a man.ij page.n is.v informative.a .
 .EE
 .SH BACKGROUND
 The \fBlink\-parser\fP command-line tool is useful for
