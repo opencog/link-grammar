@@ -21,7 +21,7 @@
         <javac includeantruntime="false" debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="@srcdir@"/>
         </javac>
-        <jar basedir="bin" destfile="linkgrammar-@VERSION@.jar">
+        <jar basedir="bin" destfile="linkgrammar-@VERSION@.jar" excludes="Makefile*">
             <manifest>
                 <attribute name="Implementation-Title" value="Link Grammar Parser Java Bindings"/>
                 <attribute name="Implementation-URL" value="http://www.abisource.com/projects/link-grammar/"/>
