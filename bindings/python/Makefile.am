@@ -31,7 +31,7 @@ DISTCLEANFILES =                                   \
    $(top_builddir)/bindings/python/__init__.py
 
 if HAVE_SWIG
-$(BUILT_SOURCES): $(SWIG_SOURCES)
+$(BUILT_SOURCES) $(pkgpython_PYTHON): $(SWIG_SOURCES)
 	$(SWIG) -python -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 endif
 
@@ -57,6 +57,8 @@ _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 EXTRA_DIST =         \
    AUTHORS           \
    LICENSE           \
-   README.md         \
-   __init__.py.in    \
-   linkgrammar.py
+   README.md
+
+if HAVE_SWIG
+EXTRA_DIST += __init__.py.in linkgrammar.py
+endif
