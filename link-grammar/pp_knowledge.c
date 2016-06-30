@@ -104,7 +104,7 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   pp_linkset *ls;
   if (!pp_lexer_set_label(k->lt, label)) {
     if (debug_level(+D_PPK))
-      printf("PP warning: File %s: Link set %s not defined: assuming empty.\n",
+      prt_error("Warning: File %s: Link set %s not defined: assuming empty.",
              k->path, label);
     n_strings = 0;
   }
@@ -151,8 +151,8 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
       if (debug_level(+D_PPK))
-          printf("PP warning: File %s: Not using any 'form a cycle' rules\n",
-                 k->path);
+          prt_error("Warning: File %s: Not using any 'form a cycle' rules",
+                    k->path);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -199,7 +199,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
       if (debug_level(+D_PPK))
-        printf("PP warning: File %s: Not using any 'bounded' rules\n", k->path);
+        prt_error("Warning: File %s: Not using any 'bounded' rules", k->path);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -246,7 +246,7 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
       if (debug_level(+D_PPK))
-        printf("PP warning: File %s: Not using any %s rules\n", k->path, label);
+        prt_error("Warning: File %s: Not using any %s rules", k->path, label);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
