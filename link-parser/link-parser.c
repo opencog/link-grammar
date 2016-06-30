@@ -693,6 +693,15 @@ int main(int argc, char * argv[])
 		i++;
 	}
 
+	for (; i<argc; i++)
+	{
+		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
+		{
+			printf("Version: %s\n", linkgrammar_get_version());
+			exit(0);
+		}
+	}
+
 	copts = command_options_create();
 	opts = copts->popts;
 	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
@@ -735,15 +744,6 @@ int main(int argc, char * argv[])
 	    "%s: Warning: Windows console (cmd.exe) does not support unicode\n"
 	    "input!  Will attempt to convert from the native encoding!\n", argv[0]);
 #endif
-
-	for (; i<argc; i++)
-	{
-		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
-		{
-			printf("Version: %s\n", linkgrammar_get_version());
-			exit(0);
-		}
-	}
 
 	if (language && *language)
 		dict = dictionary_create_lang(language);
