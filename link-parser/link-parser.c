@@ -693,6 +693,25 @@ int main(int argc, char * argv[])
 		i++;
 	}
 
+	copts = command_options_create();
+	opts = copts->popts;
+	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
+	{
+		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
+		exit(-1);
+	}
+
+	/* Process command line variable-setting commands (only) */
+	for (i = 1; i < argc; i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
+			if ((var[0] != '!') && issue_special_command(var, copts, NULL))
+				print_usage(argv[0]);
+		}
+	}
+
 #if !defined(_MSC_VER) && !defined(__MINGW32__)
 	/* Get the locale from the environment...
 	 * Perhaps we should someday get it from the dictionary ??
@@ -726,14 +745,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	copts = command_options_create();
-	opts = copts->popts;
-	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
-	{
-		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
-		exit(-1);
-	}
-
 	if (language && *language)
 		dict = dictionary_create_lang(language);
 	else
@@ -761,18 +772,12 @@ int main(int argc, char * argv[])
 	 */
 	parse_options_set_disjunct_cost(opts, 2.7);
 
-	/* Process the command line commands */
+	/* Process the command line '!' commands */
 	for (i = 1; i<argc; i++)
 	{
-		if (argv[i][0] == '-')
+		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{
-			int rc;
-			if (argv[i][1] == '-')
-				rc = issue_special_command(argv[i]+2, copts, dict);
-			else
-				rc = issue_special_command(argv[i]+1, copts, dict);
-
-			if (rc)
+			if (issue_special_command(argv[i]+1, copts, dict))
 				print_usage(argv[0]);
 		}
 	}
