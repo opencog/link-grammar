@@ -37,6 +37,8 @@
 
 #include "anysplit.h"
 
+#define D_AS 10          /* verbosity level for this file */
+
 extern const char * const afdict_classname[];
 
 typedef int p_start;     /* partition start in a word */
@@ -351,8 +353,7 @@ bool anysplit_init(Dictionary afdict)
 
 	if (0 == regparts->length)
 	{
-		/* FIXME: Early assignment of verbosity by -v=x argument. */
-		if (verbosity > 1)
+		if (debug_level(+D_AS))
 			prt_error("Warning: File %s: Anysplit disabled (%s not defined)",
 		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
