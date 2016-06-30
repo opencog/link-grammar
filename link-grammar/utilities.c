@@ -921,13 +921,10 @@ bool file_exists(const char * dict_name)
 	int fd;
 	struct stat buf;
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-	/* binary, otherwise fstat file length is confused by crlf
-	 * counted as one byte. */
+	/* On Windows, 'b' (binary mode) is mandatory, otherwise fstat file length
+	 * is confused by crlf counted as one byte. POSIX systems just ignore it. */
 	FILE *fp = dictopen(dict_name, "rb");
-#else
-	FILE *fp = dictopen(dict_name, "r");
-#endif
+
 	if (fp == NULL)
 		return false;
 
@@ -952,13 +949,10 @@ char *get_file_contents(const char * dict_name)
 	struct stat buf;
 	char * contents, *p;
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-	/* binary, otherwise fstat file length is confused by crlf
-	 * counted as one byte. */
+	/* On Windows, 'b' (binary mode) is mandatory, otherwise fstat file length
+	 * is confused by crlf counted as one byte. POSIX systems just ignore it. */
 	FILE *fp = dictopen(dict_name, "rb");
-#else
-	FILE *fp = dictopen(dict_name, "r");
-#endif
+
 	if (fp == NULL)
 		return NULL;
 
