@@ -26,6 +26,7 @@
 #include "string-set.h"
 #include "utilities.h"
 
+#define D_PPK 10                       /* verbosity level for this file */
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
 
 /****************** non-exported functions ***************************/
@@ -102,7 +103,7 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   int n_strings,i;
   pp_linkset *ls;
   if (!pp_lexer_set_label(k->lt, label)) {
-    if (1 < verbosity)
+    if (debug_level(+D_PPK))
       printf("PP warning: File %s: Link set %s not defined: assuming empty.\n",
              k->path, label);
     n_strings = 0;
@@ -149,7 +150,7 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
-      if (1 < verbosity)
+      if (debug_level(+D_PPK))
           printf("PP warning: File %s: Not using any 'form a cycle' rules\n",
                  k->path);
   }
@@ -197,7 +198,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   size_t r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
-      if (1 < verbosity)
+      if (debug_level(+D_PPK))
         printf("PP warning: File %s: Not using any 'bounded' rules\n", k->path);
   }
   else {
@@ -244,7 +245,7 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
-      if (1 < verbosity)
+      if (debug_level(+D_PPK))
         printf("PP warning: File %s: Not using any %s rules\n", k->path, label);
   }
   else {
