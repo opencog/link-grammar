@@ -767,7 +767,7 @@ int main(int argc, char * argv[])
 		if (argv[i][0] == '-')
 		{
 			int rc;
-			if (argv[i][1] == '!' || argv[i][1] == '-')
+			if (argv[i][1] == '-')
 				rc = issue_special_command(argv[i]+2, copts, dict);
 			else
 				rc = issue_special_command(argv[i]+1, copts, dict);
