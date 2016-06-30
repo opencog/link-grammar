@@ -47,7 +47,6 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_HEADER_STDC
 LT_INIT([win32-dll])
-AM_BINRELOC
 PKG_PROG_PKG_CONFIG
 
 # The below says "use the C compiler for all remaining tests".
@@ -137,11 +136,6 @@ fi
 # is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
 # specified (no effect). So just add it.
 CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
-
-# ====================================================================
-# Autopackage binreloc.
-
-AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
 # ====================================================================
 # Debugging
@@ -796,7 +790,6 @@ data/tr/Makefile
 data/vn/Makefile
 data/demo-sql/Makefile
 man/Makefile
-autopackage/default.apspec
 viterbi/Makefile
 ])
 AC_OUTPUT
@@ -808,7 +801,6 @@ $PACKAGE-$VERSION  build configuration settings
 	prefix:                         ${prefix}
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
-	autopackage relocatable binary: ${br_cv_binreloc}
 	Posix threads:                  ${enable_pthreads}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}

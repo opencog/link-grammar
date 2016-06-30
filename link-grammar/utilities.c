@@ -33,10 +33,6 @@
 #include "structures.h"
 #include "utilities.h"
 
-#ifdef ENABLE_BINRELOC
-#include "prefix.h"
-#endif /* BINRELOC */
-
 #ifdef _WIN32
 #  include <windows.h>
  #define DIR_SEPARATOR "\\"
@@ -705,9 +701,7 @@ char * dictionary_get_data_dir(void)
 		return data_dir;
 	}
 
-#ifdef ENABLE_BINRELOC
-	data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
-#elif defined(_WIN32)
+#if defined(_WIN32)
 	/* Dynamically locate library and return containing directory.
 	 * FIXME: A rewrite is needed. */
 	hInstance = GetModuleHandle("link-grammar.dll");
