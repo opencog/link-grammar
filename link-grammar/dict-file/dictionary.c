@@ -271,6 +271,7 @@ static int cmplen(const void *a, const void *b)
  * needed - especially to first free memory and initialize the affix dict
  * structure.).
  */
+#define D_AI 10
 static bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
@@ -324,7 +325,7 @@ static bool afdict_init(Dictionary dict)
 		affix_list_add(afdict, &afdict->afdict_class[AFDICT_INFIXMARK], "");
 	}
 
-	if (0 || 4 < verbosity) /* debug - !verbosity is not set so early for now */
+	if (debug_level(+D_AI))
 	{
 		size_t l;
 
@@ -339,6 +340,7 @@ static bool afdict_init(Dictionary dict)
 				lgdebug(0, "\n");
 		}
 	}
+#undef D_AI
 
 	/* Store the SANEMORPHISM regex in the unused (up to now)
 	 * regex_root element of the affix dictionary, and precompile it */
