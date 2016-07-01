@@ -883,7 +883,8 @@ void * object_open(const char *filename,
 		size_t i;
 
 		path_found = strdup((NULL != completename) ? completename : filename);
-		prt_error("Info: Dictionary found at %s", path_found);
+		if (0 < verbosity)
+			prt_error("Info: Dictionary found at %s", path_found);
 		for (i = 0; i < 2; i++)
 		{
 			char *root = strrchr(path_found, DIR_SEPARATOR[0]);

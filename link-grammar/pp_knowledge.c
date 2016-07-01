@@ -26,15 +26,17 @@
 #include "string-set.h"
 #include "utilities.h"
 
+#define D_PPK 10                       /* verbosity level for this file */
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
 
 /****************** non-exported functions ***************************/
 
-static void check_domain_is_legal(const char *p)
+static void check_domain_is_legal(pp_knowledge *k, const char *p)
 {
   if (0x0 != p[1])
   {
-    prt_error("Fatal Error: post_process(): Domain (%s) must be a single character", p);
+    prt_error("Fatal Error: File %s: Domain (%s) must be a single character",
+              k->path, p);
     exit(1);
   }
 }
@@ -65,13 +67,20 @@ static void read_starting_link_table(pp_knowledge *k)
   const char label[] = "STARTING_LINK_TYPE_TABLE";
   size_t i, n_tokens, even;
 
-  assert(pp_lexer_set_label(k->lt, label),
-    "Fatal error: post_process: Couldn't find starting link table %s", label);
+  if (!pp_lexer_set_label(k->lt, label))
+  {
+    prt_error("Fatal error: File %s: Couldn't find starting link table %s",
+              k->path, label);
+    exit(1);
+  }
 
   n_tokens = pp_lexer_count_tokens_of_label(k->lt);
   even = n_tokens % 2;
-  assert(0 == even,
-    "Fatal error: post_process: Link table must have format [<link> <domain name>]+");
+  if(0 != even)
+  {
+    prt_error("Fatal error: Link table must have format [<link> <domain name>]+");
+    exit(1);
+  }
 
   k->nStartingLinks = n_tokens/2;
   k->starting_link_lookup_table = (StartingLinkAndDomain*)
@@ -84,7 +93,7 @@ static void read_starting_link_table(pp_knowledge *k)
 
       /* read the domain type of the link */
       p = pp_lexer_get_next_token_of_label(k->lt);
-      check_domain_is_legal(p);
+      check_domain_is_legal(k, p);
       k->starting_link_lookup_table[i].domain = (int) p[0];
   }
 
@@ -101,8 +110,9 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   int n_strings,i;
   pp_linkset *ls;
   if (!pp_lexer_set_label(k->lt, label)) {
-    if (1 < verbosity)
-      printf("PP warning: Link set %s not defined: assuming empty.\n",label);
+    if (debug_level(+D_PPK))
+      prt_error("Warning: File %s: Link set %s not defined: assuming empty",
+             k->path, label);
     n_strings = 0;
   }
   else n_strings = pp_lexer_count_tokens_of_label(k->lt);
@@ -147,8 +157,9 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
-      if (1 < verbosity)
-          printf("PP warning: Not using any 'form a cycle' rules\n");
+      if (debug_level(+D_PPK))
+          prt_error("Warning: File %s: Not using any 'form a cycle' rules",
+                    k->path);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -162,7 +173,7 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens <= 0)
       {
-        prt_error("Fatal Error: syntax error in knowledge file");
+        prt_error("Fatal Error: Syntax error in knowledge file %s", k->path);
         exit(1);
       }
       lsHandle = pp_linkset_open(n_tokens);
@@ -174,7 +185,8 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-         prt_error("Fatal Error: post_process: Invalid syntax (rule %zu of %s)",r+1,label);
+         prt_error("Fatal Error: File %s: Invalid syntax (rule %zu of %s)",
+                   k->path, r+1,label);
          exit(1);
       }
       k->form_a_cycle_rules[r].msg = string_set_add(tokens[0], k->string_set);
@@ -193,7 +205,8 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   size_t r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
-      if (1 < verbosity) printf("PP warning: Not using any 'bounded' rules\n");
+      if (debug_level(+D_PPK))
+        prt_error("Warning: File %s: Not using any 'bounded' rules", k->path);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -206,7 +219,8 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Fatal Error: post_process: Invalid syntax: rule %zu of %s",r+1,label);
+        prt_error("Fatal Error: File %s: Invalid syntax: rule %zu of %s",
+                  k->path, r+1,label);
         exit(1);
       }
       k->bounded_rules[r].domain = (int) tokens[0][0];
@@ -215,7 +229,8 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Fatal Error: post_process: Invalid syntax: rule %zu of %s",r+1,label);
+        prt_error("Fatal Error: File %s: Invalid syntax: rule %zu of %s",
+                  k->path, r+1,label);
         exit(1);
       }
       k->bounded_rules[r].msg = string_set_add(tokens[0], k->string_set);
@@ -237,7 +252,8 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
-      if (1 < verbosity) printf("PP warning: Not using any %s rules\n", label);
+      if (debug_level(+D_PPK))
+        prt_error("Warning: File %s: Not using any %s rules", k->path, label);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -248,8 +264,12 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
     {
       /* first read link */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
-      assert ((n_tokens <= 1),
-        "Fatal Error: post_process: Invalid syntax in %s (rule %zu)", label, r+1);
+      if (n_tokens > 1)
+      {
+        prt_error("Fatal Error: File %s: Invalid syntax in %s (rule %zu)",
+                  k->path, label, r+1);
+        exit(1);
+      }
 
       (*rules)[r].selector = string_set_add(tokens[0], k->string_set);
 
@@ -268,8 +288,12 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
 
       /* read error message */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
-      assert ((n_tokens <= 1),
-        "Fatal Error: post_process: Invalid syntax in %s (rule %zu)", label, r+1);
+      if (n_tokens > 1)
+      {
+        prt_error("Fatal Error: File %s: Invalid syntax in %s (rule %zu)",
+                  k->path, label, r+1);
+        exit(1);
+      }
 
       (*rules)[r].msg = string_set_add(tokens[0], k->string_set);
       (*rules)[r].use_count = 0;
