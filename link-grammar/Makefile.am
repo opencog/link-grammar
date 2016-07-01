@@ -64,10 +64,6 @@ if WITH_CORPUS
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
 endif
 
-if WITH_BINRELOC
-liblink_grammar_la_LIBADD  += -lpthread
-endif
-
 if WITH_PTHREADS
 liblink_grammar_la_LIBADD  += -lpthread
 endif
@@ -101,7 +97,6 @@ liblink_grammar_la_SOURCES =        \
 	pp_knowledge.c                   \
 	pp_lexer.c                       \
 	pp_linkset.c                     \
-	prefix.c                         \
 	preparation.c                    \
 	print.c                          \
 	print-util.c                     \
@@ -169,7 +164,6 @@ liblink_grammar_include_HEADERS =   \
 	dict-structures.h
 
 EXTRA_DIST=                         \
-	prefix.h                         \
 	link-grammar.def                 \
 	README                           \
 	dict-sql/dict.sql                \

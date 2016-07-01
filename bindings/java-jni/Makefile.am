@@ -35,10 +35,6 @@ if WITH_CORPUS
 liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
 endif
 
-if WITH_BINRELOC
-liblink_grammar_java_la_LIBADD  += -lpthread
-endif
-
 if WITH_PTHREADS
 liblink_grammar_java_la_LIBADD  += -lpthread
 endif

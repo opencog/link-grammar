@@ -549,9 +549,6 @@ MULTI-THREADED USE:
                      needed.
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
-      prefix.c     - not thread-safe, but doesn't need to be; used only
-                     during initialization, and only if binreloc turned
-                     on. But binreloc is never used by anyone !?
       pp_lexer.c  -- autogened code, original lex sources lost.
                      This is only used when reading dictionaries,
                      during initialization, and so doesn't need
