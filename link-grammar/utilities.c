@@ -24,6 +24,7 @@
 	#include <unistd.h>
 #else
 	#include <windows.h>
+	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
 #endif /* _WIN32 */
 
 #ifdef USE_PTHREADS
@@ -585,98 +586,6 @@ char * join_path(const char * prefix, const char * suffix)
 	return path;
 }
 
-/* borrowed from glib */
-/* Used only for Windows builds */
-#ifdef _WIN32
-static char*
-path_get_dirname (const char *file_name)
-{
-	register char *base;
-	register int len;
-
-	base = strrchr (file_name, DIR_SEPARATOR[0]);
-#ifdef _WIN32
-	{
-		char *q = strrchr (file_name, '/');
-		if (base == NULL || (q != NULL && q > base))
-			base = q;
-	}
-#endif
-	if (!base)
-	{
-#ifdef _WIN32
-		if (is_utf8_alpha (file_name) && file_name[1] == ':')
-		{
-			char drive_colon_dot[4];
-
-			drive_colon_dot[0] = file_name[0];
-			drive_colon_dot[1] = ':';
-			drive_colon_dot[2] = '.';
-			drive_colon_dot[3] = '\0';
-
-			return safe_strdup (drive_colon_dot);
-		}
-#endif
-		return safe_strdup (".");
-	}
-
-	while (base > file_name && IS_DIR_SEPARATOR (*base))
-		base--;
-
-#ifdef _WIN32
-	/* base points to the char before the last slash.
-	 *
-	 * In case file_name is the root of a drive (X:\) or a child of the
-	 * root of a drive (X:\foo), include the slash.
-	 *
-	 * In case file_name is the root share of an UNC path
-	 * (\\server\share), add a slash, returning \\server\share\ .
-	 *
-	 * In case file_name is a direct child of a share in an UNC path
-	 * (\\server\share\foo), include the slash after the share name,
-	 * returning \\server\share\ .
-	 */
-	if (base == file_name + 1 && is_utf8_alpha (file_name) && file_name[1] == ':')
-		base++;
-	else if (IS_DIR_SEPARATOR (file_name[0]) &&
-	         IS_DIR_SEPARATOR (file_name[1]) &&
-	         file_name[2] &&
-	         !IS_DIR_SEPARATOR (file_name[2]) &&
-	         base >= file_name + 2)
-	{
-		const char *p = file_name + 2;
-		while (*p && !IS_DIR_SEPARATOR (*p))
-			p++;
-		if (p == base + 1)
-		{
-			len = (int) strlen (file_name) + 1;
-			base = (char *)malloc(len + 1);
-			strcpy (base, file_name);
-			base[len-1] = DIR_SEPARATOR[0];
-			base[len] = 0;
-			return base;
-		}
-		if (IS_DIR_SEPARATOR (*p))
-		{
-			p++;
-			while (*p && !IS_DIR_SEPARATOR (*p))
-				p++;
-			if (p == base + 1)
-				base++;
-		}
-	}
-#endif
-
-	len = (int) 1 + base - file_name;
-
-	base = (char *)malloc(len + 1);
-	memmove (base, file_name, len);
-	base[len] = 0;
-
-	return base;
-}
-#endif /* _WIN32 */
-
 /* global - but that's OK, since this is set only during initialization,
  * and is is thenceforth a read-only item. So it doesn't need to be
  * locked.
@@ -691,9 +600,6 @@ void dictionary_set_data_dir(const char * path)
 
 char * dictionary_get_data_dir(void)
 {
-#ifdef _WIN32
-	HINSTANCE hInstance;
-#endif
 	char * data_dir = NULL;
 
 	if (custom_data_dir != NULL) {
@@ -702,67 +608,35 @@ char * dictionary_get_data_dir(void)
 	}
 
 #if defined(_WIN32)
-	/* Dynamically locate library and return containing directory.
-	 * FIXME: A rewrite is needed. */
-	hInstance = GetModuleHandle("link-grammar.dll");
-	if (hInstance != NULL)
-	{
-		char dll_path[MAX_PATH];
+	/* Dynamically locate invocation directory of our program.
+	 * Non-ASCII characters are not supported (files will not be found). */
+	char prog_path[MAX_PATH_NAME];
 
-		if (GetModuleFileName(hInstance, dll_path, MAX_PATH))
-		{
-#ifdef _DEBUG
-			prt_error("Info: GetModuleFileName=%s", (dll_path ? dll_path : "NULL"));
-#endif
-			data_dir = path_get_dirname(dll_path);
-		}
+	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
+	{
+		prt_error("Warning: GetModuleFileName error %d\n", GetLastError());
 	}
 	else
 	{
-		/* BHayes added else block for when link-grammar.dll is not found 11apr11 */
-		/* This requests module handle for the current program */
-		hInstance = GetModuleHandle(NULL);
-		if (hInstance != NULL)
+		if (NULL == prog_path)
 		{
-			char prog_path16[MAX_PATH];
-			printf("  found ModuleHandle for current program so try to get Filename for current program \n");
-			if (GetModuleFileName(hInstance, prog_path16, MAX_PATH))
+			/* Can it happen? */
+			prt_error("Warning: GetModuleFileName returned a NULL program path!");
+		}
+		else
+		{
+			if (!PathRemoveFileSpecA(prog_path))
 			{
-				char * data_dir16 = NULL;
-
-				if (sizeof(TCHAR) == 1)
-				{
-				    data_dir16 = path_get_dirname(prog_path16);
-				}
-				else
-				{
-					// convert 2-byte to 1-byte encoding of prog_path
-					char prog_path[MAX_PATH/2];
-
-					int i, k;
-					for (i = 0; i < MAX_PATH; i++)
-					{
-						k = i + i;
-						if (prog_path16[k] == 0 )
-						{
-							prog_path[i] = 0;
-							break; // found the string ending null char
-						}
-						// XXX this cannot possibly be correct for UTF-16 filepaths!! ?? FIXME
-						prog_path[i] = prog_path16[k];
-					}
-#ifdef _DEBUG
-					prt_error("Info: GetModuleFileName=%s", (prog_path ? prog_path : "NULL"));
+				prt_error("Warning: Cannot get directory from program path '%s'!",
+				          prog_path);
+			}
+			else
+			{
+#if _DEBUG
+				prt_error("Warning: Info: Found dir for current prog %s\n",
+				          prog_path);
 #endif
-				    data_dir16 = path_get_dirname(prog_path);
-				}
-				if (data_dir16 != NULL)
-				{
-					printf("   found dir for current prog %s\n", data_dir16);
-				}
-				return data_dir16;  // return path of data directory here instead of below
-			} else {
-				printf("   FAIL GetModuleFileName for current program \n");
+				data_dir = safe_strdup(prog_path);
 			}
 		}
 	}
@@ -889,9 +763,6 @@ void * object_open(const char *filename,
 			char *root = strrchr(path_found, DIR_SEPARATOR[0]);
 			if (NULL != root) *root = '\0';
 		}
-#ifdef _DEBUG
-		prt_error("Info: object_open() path_found=%s", path_found);
-#endif
 	}
 
 	free(data_dir);
