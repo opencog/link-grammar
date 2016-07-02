@@ -242,7 +242,6 @@
     <ClInclude Include="..\link-grammar\pp_knowledge.h" />
     <ClInclude Include="..\link-grammar\pp_lexer.h" />
     <ClInclude Include="..\link-grammar\pp_linkset.h" />
-    <ClInclude Include="..\link-grammar\prefix.h" />
     <ClInclude Include="..\link-grammar\preparation.h" />
     <ClInclude Include="..\link-grammar\print-util.h" />
     <ClInclude Include="..\link-grammar\print.h" />
@@ -283,7 +282,6 @@
     <ClCompile Include="..\link-grammar\pp_knowledge.c" />
     <ClCompile Include="..\link-grammar\pp_lexer.c" />
     <ClCompile Include="..\link-grammar\pp_linkset.c" />
-    <ClCompile Include="..\link-grammar\prefix.c" />
     <ClCompile Include="..\link-grammar\preparation.c" />
     <ClCompile Include="..\link-grammar\print-util.c" />
     <ClCompile Include="..\link-grammar\print.c" />
