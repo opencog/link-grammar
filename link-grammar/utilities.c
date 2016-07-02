@@ -22,6 +22,8 @@
 
 #ifndef _WIN32
 	#include <unistd.h>
+#else
+	#include <windows.h>
 #endif /* _WIN32 */
 
 #ifdef USE_PTHREADS
@@ -33,7 +35,6 @@
 #include "utilities.h"
 
 #ifdef _WIN32
-	#include <windows.h>
 	#define DIR_SEPARATOR "\\"
 #else
 	#define DIR_SEPARATOR "/"
