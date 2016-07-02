@@ -21,12 +21,11 @@
 #include <stdarg.h>
 
 #ifndef _WIN32
-#include <unistd.h>
+	#include <unistd.h>
 #endif /* _WIN32 */
 
-
 #ifdef USE_PTHREADS
-#include <pthread.h>
+	#include <pthread.h>
 #endif
 
 #include "string-set.h"
@@ -34,17 +33,17 @@
 #include "utilities.h"
 
 #ifdef _WIN32
-#  include <windows.h>
- #define DIR_SEPARATOR "\\"
+	#include <windows.h>
+	#define DIR_SEPARATOR "\\"
 #else
- #define DIR_SEPARATOR "/"
+	#define DIR_SEPARATOR "/"
 #endif
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR[0] == (ch))
 #ifndef DICTIONARY_DIR
- #define DEFAULTPATH NULL
+	#define DEFAULTPATH NULL
 #else
- #define DEFAULTPATH DICTIONARY_DIR
+	#define DEFAULTPATH DICTIONARY_DIR
 #endif
 
 /* This file contains certain general utilities. */
@@ -765,9 +764,8 @@ char * dictionary_get_data_dir(void)
 				printf("   FAIL GetModuleFileName for current program \n");
 			}
 		}
-   }
+	}
 #endif
-
 
 	return data_dir;
 }
@@ -1021,10 +1019,10 @@ win32_getlocale (void)
 	    !GetLocaleInfo (lcid, LOCALE_SISO3166CTRYNAME, iso3166, sizeof (iso3166)))
 		return safe_strdup ("C");
 
-	/* Strip off the sorting rules, keep only the language part.	*/
+	/* Strip off the sorting rules, keep only the language part. */
 	langid = LANGIDFROMLCID (lcid);
 
-	/* Split into language and territory part.	*/
+	/* Split into language and territory part. */
 	primary = PRIMARYLANGID (langid);
 	sub = SUBLANGID (langid);
 
@@ -1042,7 +1040,7 @@ win32_getlocale (void)
 					break;
 			}
 			break;
-		case LANG_SERBIAN:								/* LANG_CROATIAN == LANG_SERBIAN */
+		case LANG_SERBIAN: /* LANG_CROATIAN == LANG_SERBIAN */
 			switch (sub)
 			{
 				case SUBLANG_SERBIAN_LATIN:
