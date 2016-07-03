@@ -102,10 +102,16 @@ Parse_Options parse_options_create(void)
 	po = (Parse_Options) xalloc(sizeof(struct Parse_Options_s));
 
 	/* Here's where the values are initialized */
-	po->verbosity = 1;
-	po->debug = (char *)"";
-	po->test = (char *)"";
+
+	/* The parse_options_set_(verbosity|debug|test) functions set also the
+	 * corresponding global variables. So these globals are initialized
+	 * here too. */
+	verbosity = po->verbosity = 1;
+	debug = po->debug = (char *)"";
+	test = po->test = (char *)"";
+
 	po->linkage_limit = 100;
+
 
 	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
 	 * assorted fractional costs, without going to cost 3.0, which
@@ -1402,10 +1408,6 @@ static void free_sentence_disjuncts(Sentence sent)
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
-
-	verbosity = opts->verbosity;
-	debug = opts->debug;
-	test = opts->test;
 
 	sent->num_valid_linkages = 0;
 
