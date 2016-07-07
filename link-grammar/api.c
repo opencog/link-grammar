@@ -110,9 +110,6 @@ Parse_Options parse_options_create(void)
 	debug = po->debug = (char *)"";
 	test = po->test = (char *)"";
 
-	po->linkage_limit = 100;
-
-
 	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
 	 * assorted fractional costs, without going to cost 3.0, which
 	 * is used only during panic-parsing.
@@ -124,6 +121,7 @@ Parse_Options parse_options_create(void)
 	po->use_spell_guess = 7;
 	po->use_sat_solver = false;
 	po->use_viterbi = false;
+	po->linkage_limit = 100;
 
 #ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
