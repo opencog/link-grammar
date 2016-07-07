@@ -114,7 +114,7 @@ Parse_Options parse_options_create(void)
 	 * assorted fractional costs, without going to cost 3.0, which
 	 * is used only during panic-parsing.
 	 */
-	po->disjunct_cost = 2.7; /* 3.0 is needed for Russian dicts */
+	po->disjunct_cost = 2.7;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = false;
