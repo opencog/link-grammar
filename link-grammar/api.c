@@ -110,20 +110,18 @@ Parse_Options parse_options_create(void)
 	debug = po->debug = (char *)"";
 	test = po->test = (char *)"";
 
-	po->linkage_limit = 100;
-
-
 	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
 	 * assorted fractional costs, without going to cost 3.0, which
 	 * is used only during panic-parsing.
 	 */
-	po->disjunct_cost = 2.7; /* 3.0 is needed for Russian dicts */
+	po->disjunct_cost = 2.7;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = false;
 	po->use_spell_guess = 7;
 	po->use_sat_solver = false;
 	po->use_viterbi = false;
+	po->linkage_limit = 100;
 
 #ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
