@@ -17,10 +17,6 @@ except ImportError:
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
-if (sys.version_info > (3, 0)):
-    def unicode(x):
-        return str(x)
-
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
@@ -37,12 +33,12 @@ def setUpModule():
 # First test: test the test framework itself ...
 class AAALinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):
-        self.assertEqual(unicode(Link(None, 0, 'Left','Link','Link','Right')),
-                         u'Link: Left-Link-Right')
+        self.assertEqual(str(Link(None, 0, 'Left','Link','Link','Right')),
+                         u'Left-Link-Right')
 
     def test_link_display_with_identical_link_type2(self):
-        self.assertEqual(unicode(Link(None, 0, 'Left','Link','Link*','Right')),
-                         u'Link: Left-Link-Link*-Right')
+        self.assertEqual(str(Link(None, 0, 'Left','Link','Link*','Right')),
+                         u'Left-Link-Link*-Right')
 
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):

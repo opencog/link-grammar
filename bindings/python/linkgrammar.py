@@ -269,10 +269,6 @@ class Dictionary(object):
     def get_max_cost(self):
         return clg.dictionary_get_max_cost(self._obj)
 
-if (sys.version_info > (3, 0)):
-    def unicode(x):
-        return x.__unicode__()
-
 class Link(object):
     def __init__(self, linkage, index, left_word, left_label, right_label, right_word):
         self.linkage, self.index = linkage, index
@@ -283,14 +279,17 @@ class Link(object):
         return self.left_word == other.left_word and self.left_label == other.left_label and \
                self.right_word == other.right_word and self.right_label == other.right_label
 
-    def __unicode__(self):
+    def __str__(self):
         if self.left_label == self.right_label:
             return u"%s-%s-%s" % (self.left_word, self.left_label, self.right_word)
         else:
             return u"%s-%s-%s-%s" % (self.left_word, self.left_label, self.right_label, self.right_word)
 
+    def __unicode__(self):
+        return self.__str__()
+
     def __repr__(self):
-        return u"Link: %s" % unicode(self)
+        return u"Link: %s" % self.__str__()
 
     def __len__(self):
         return clg.linkage_get_link_length(self.linkage._obj, self.index)
