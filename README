@@ -372,6 +372,11 @@ RUNNING the program:
    combinations or variants of these, depending on your operating
    system.
 
+   In order to debug dictionary search/opening, use verbosity level 3.
+   For example:
+
+      link-parser data/en -verbosity=3
+
 
 TESTING the program:
 --------------------
