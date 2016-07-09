@@ -36,8 +36,8 @@
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
-#define D_SW 3                      /* debug level for word splits */
-#define D_UN 3                      /* debug level for units/punct */
+#define D_SW 6                      /* debug level for word splits */
+#define D_UN 6                      /* debug level for units/punct */
 
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
@@ -259,7 +259,7 @@ static void word_label(Sentence sent, Gword *w, const char *op,
 	w->label = string_set_add(new_label, sent->string_set);
 }
 
-#define D_WSAA 7
+#define D_WSAA 9
 /**
  * Disallow unsplit_word alternatives with the same subword string path.
  * (I.e. we are talking about preventing Wordgraph paths consisting of the same
@@ -342,6 +342,7 @@ static bool word_start_another_alternative(Dictionary dict,
 	}
 	return false;
 }
+#undef D_WSAA
 
 /**
  * Find if a suffix is of a contraction.
@@ -397,7 +398,7 @@ static bool is_contraction_word(const char *s)
  *
  * TODO Support also middle morphemes if needed.
  */
-#define D_IWA 3
+#define D_IWA 6
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                               const char *label,
                               int prefnum, const char * const *prefix,
@@ -786,7 +787,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 }
 #undef D_IWA
 
-#define D_RWW 3
+#define D_RWW 6
 static void remqueue_gword(const Sentence sent)
 {
 	struct word_queue *const wq = sent->word_queue;
@@ -1437,7 +1438,7 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 	return false;
 }
 
-#define D_MS 3
+#define D_MS 6
 /*
  * Split the given word "word" to morphemes.
  * If unsplit_word is not NULL then issue alternatives.
@@ -2639,8 +2640,8 @@ static Word *word_new(Sentence sent)
  * program will work fine (print_sentence_word_alternatives(),
  * sentence_in_dictionary(), verr_msg()).
  */
-#define D_X_NODE 8
-#define D_DWE 5
+#define D_X_NODE 9
+#define D_DWE 8
 static bool determine_word_expressions(Sentence sent, Gword *w,
                                        unsigned int *ZZZ_added)
 {
@@ -2756,7 +2757,7 @@ static bool same_unsplit_word(Sentence sent, const Gword *w1, const Gword *w2)
  * "Flatten" the wordgraph into a word array.
  * Return false if an error was encountered.
  */
-#define D_FW 5
+#define D_FW 8
 bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;

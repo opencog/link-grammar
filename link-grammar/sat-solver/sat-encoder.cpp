@@ -1645,7 +1645,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     add_anded_exp(exp_word[var->left_word], lcexp);
     add_anded_exp(exp_word[var->right_word], rcexp);
 
-    if (verbosity >= D_SAT) {
+    if (debug_level(D_SAT)) {
       //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
       cout<< "LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
       //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);

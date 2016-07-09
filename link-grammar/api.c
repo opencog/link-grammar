@@ -705,7 +705,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	print_time(opts, "Postprocessed all linkages");
 
-	if (opts->verbosity > 1)
+	if (debug_level(6))
 	{
 		err_ctxt ec;
 		ec.sent = sent;
@@ -1051,7 +1051,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  *
  * Return true if the linkage is good, else return false.
  */
-#define D_SLM 4
+#define D_SLM 7
 bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
@@ -1311,7 +1311,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			N_invalid_morphism ++;
 	}
 
-	if (opts->verbosity > 1)
+	if (debug_level(5))
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
 		          "invalid morphology construction\n",
@@ -1356,7 +1356,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		if (opts->verbosity > 1)
+		if (debug_level(5))
 		{
 			prt_error("Info: Total count with %zu null links:   %lld\n",
 			          sent->null_count, total);

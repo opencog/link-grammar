@@ -89,7 +89,7 @@ int compile_regexs(Regex_node *re, Dictionary dict)
  * On match, returns the name of the first matching regex.
  * If no match is found, returns NULL.
  */
-#define D_MRE 3
+#define D_MRE 6
 const char *match_regex(const Regex_node *re, const char *s)
 {
 	int rc;
