@@ -13,21 +13,21 @@
 #include <time.h>
 
 #if !defined(_WIN32)
-   #include <sys/time.h>
-   #include <sys/resource.h>
+	#include <sys/time.h>
+	#include <sys/resource.h>
 #endif
 
 #if defined(__linux__)
-/* based on reading the man page for getrusage on linux, I inferred that
-   I needed to include this.  However it doesn't seem to be necessary */
-   #include <unistd.h>
+	/* based on reading the man page for getrusage on linux, I inferred that
+	   I needed to include this.  However it doesn't seem to be necessary */
+	#include <unistd.h>
 #endif
 
 #if defined(__hpux__)
-  #include <sys/syscall.h>
-  int syscall(int, int, struct rusage *rusage);  /* can't find
-													the prototype for this */
-  #define getrusage(a, b)  syscall(SYS_GETRUSAGE, (a), (b))
+	#include <sys/syscall.h>
+	int syscall(int, int, struct rusage *rusage);  /* can't find
+	                                                  the prototype for this */
+	#define getrusage(a, b)  syscall(SYS_GETRUSAGE, (a), (b))
 #endif /* __hpux__ */
 
 #if defined(__sun__)
@@ -116,7 +116,7 @@ bool resources_exhausted(Resources r)
 bool resources_timer_expired(Resources r)
 {
 	if (r->max_parse_time == MAX_PARSE_TIME_UNLIMITED) return false;
-	else return (r->timer_expired || 
+	else return (r->timer_expired ||
 	     (current_usage_time() - r->time_when_parse_started > r->max_parse_time));
 }
 
@@ -162,7 +162,7 @@ static void resources_print_total_space(int verbosity, Resources r)
 		printf("++++");
 		left_print_string(stdout, "Total space",
 		                  "                                            ");
-		printf("%zu bytes (%zu max)\n", 
+		printf("%zu bytes (%zu max)\n",
 			get_space_in_use(), get_max_space_used());
 	}
 }

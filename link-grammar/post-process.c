@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
- /* see bottom of file for comments on post processing */
+/* see bottom of file for comments on post processing */
 
 #include <memory.h>
 #include <stdint.h>
@@ -466,7 +466,7 @@ apply_relevant_rules(Postprocessor *pp,
 
 /**
  * returns true if and only if all groups containing the specified link
- * contain at least one from the required list.	(as determined by exact
+ * contain at least one from the required list. (as determined by exact
  * string matching)
  */
 static bool
@@ -607,7 +607,7 @@ apply_must_form_a_cycle(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 	{
 		for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 		{
-			if (w > lol->word) continue;	/* only consider each edge once */
+			if (w > lol->word) continue; /* only consider each edge once */
 			if (!pp_linkset_match(rule->link_set, sublinkage->link_array[lol->link].link_name)) continue;
 
 			clear_visited(pp_data);
@@ -783,7 +783,7 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	pp_data->visited[w] = true;
 	for (lol = pp_data->word_links[w]; lol != NULL; lol = lol->next)
 	{
-		if ((lol->word < w)	&& (lol->link != start_link) && (w != root))
+		if ((lol->word < w) && (lol->link != start_link) && (w != root))
 		{
 			add_link_to_domain(pp_data, lol->link);
 		}
@@ -1008,7 +1008,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 
 #if defined(CHECK_DOMAIN_NESTING)
 	/* These messages were deemed to not be useful, so
-	 * this code is commented out.	See comment above. */
+	 * this code is commented out. See comment above. */
 	if (!check_domain_nesting(pp, sublinkage->num_links))
 		printf("WARNING: The domains are not nested.\n");
 #endif
@@ -1054,7 +1054,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 			pp_linkset_add(pp->set_of_links_in_an_active_rule, rule->selector);
 		}
 	}
-	pp->relevant_contains_one_rules[rcoIDX] = -1;	/* end sentinel */
+	pp->relevant_contains_one_rules[rcoIDX] = -1;  /* end sentinel */
 
 	for (cnIDX = 0; ; cnIDX++)
 	{
