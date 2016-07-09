@@ -33,15 +33,6 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 {
-#ifdef _MSC_VER
-	char * tmp = alloca(strlen(fmt)+1);
-	char * tok = tmp;
-
-	strcpy(tmp, fmt);
-	while ((tok = strstr(tok, "%zu"))) { tok[1] = 'I'; tok++;}
-	fmt = tmp;
-#endif
-
 	/* As we are printing to stderr, make sure that stdout has been
 	 * written out first. */
 	fflush(stdout);

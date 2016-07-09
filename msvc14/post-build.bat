@@ -44,6 +44,6 @@ echo %~f0: Info: Creating %lgcmd%.bat in %cd%
 	echo.
 
 	echo REM Chdir to the link-grammar source directory so the data directory is found.
-	echo cd %cd%\..
+	echo cd /D %cd%\..
 	echo %1 %%*
 ) > %lgcmd%.bat

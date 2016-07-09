@@ -84,9 +84,6 @@
     <ClCompile Include="..\link-grammar\pp_linkset.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\link-grammar\prefix.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\link-grammar\preparation.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -213,9 +210,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\pp_linkset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\prefix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\preparation.h">
