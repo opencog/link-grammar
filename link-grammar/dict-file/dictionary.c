@@ -74,8 +74,8 @@ Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 	}
 	if (notify_err) {
 		prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
-                "\tThis class name will be ignored.",
-                con, afdict->line_number, afdict->name);
+		          "\tThis class name will be ignored.",
+		          con, afdict->line_number, afdict->name);
 	}
 	return NULL;
 }
@@ -108,9 +108,9 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 		{
 			/* ??? should we support here more than one class? */
 			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
-					  "\tWord has more than one connector.\n"
-					  "\tThis word will be ignored.",
-					  dn->string, afdict->line_number, afdict->name);
+			          "\tWord has more than one connector.\n"
+			          "\tThis word will be ignored.",
+			          dn->string, afdict->line_number, afdict->name);
 			return;
 		}
 
@@ -174,7 +174,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	if (w_len > MAX_WORD)
 	{
 		prt_error("Error: word '%s' too long (%zd), program may malfunction\n",
-				w, w_len);
+		          w, w_len);
 		w_len = MAX_WORD;
 	}
 	/* (strlen(w_last) can be cached for speedup) */
@@ -301,8 +301,8 @@ static bool afdict_init(Dictionary dict)
 	if ((1 < ac->length) || ((1 == ac->length) && (1 != strlen(ac->string[0]))))
 	{
 		prt_error("Error: afdict_init: Invalid value for class %s in file %s"
-					 " (should have been one ASCII punctuation - ignored)\n",
-					  afdict_classname[AFDICT_INFIXMARK], afdict->name);
+		          " (should have been one ASCII punctuation - ignored)\n",
+		          afdict_classname[AFDICT_INFIXMARK], afdict->name);
 		free((void *)ac->string);
 		ac->length = 0;
 		ac->mem_elems = 0;
@@ -334,7 +334,7 @@ static bool afdict_init(Dictionary dict)
 		{
 				if (0 == ac->length) continue;
 				lgdebug(+0, "Class %s, %zd items:",
-						  afdict_classname[ac-afdict->afdict_class], ac->length);
+				        afdict_classname[ac-afdict->afdict_class], ac->length);
 				for (l = 0; l < ac->length; l++)
 					lgdebug(0, " '%s'", ac->string[l]);
 				lgdebug(0, "\n");
@@ -589,7 +589,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	}
 
 	dict = dictionary_six_str(lang, input, dict_name, pp_name,
-				  cons_name, affix_name, regex_name);
+	                          cons_name, affix_name, regex_name);
 
 	free(input);
 	return dict;
