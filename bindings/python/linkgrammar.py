@@ -5,7 +5,7 @@
 # See http://www.abisource.com/projects/link-grammar/api/index.html to get
 # more information about C API
 
-import _clinkgrammar as clg
+import linkgrammar._clinkgrammar as clg   # In Python3 just _clinkgrammar raises exception thst the module is not found.
 
 
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
@@ -40,7 +40,7 @@ class ParseOptions(object):
         self.disjunct_cost = disjunct_cost
 
     def __del__(self):
-        if hasattr(self, '_obj'):
+        if hasattr(self, '_obj') and clg:
             clg.parse_options_delete(self._obj)
             del self._obj
 
@@ -407,6 +407,8 @@ class Sentence(object):
             linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
             self.num += 1
             return linkage
+
+        __next__=next      # Account python3
 
     def parse(self):
         return self.sentence_parse(self)
