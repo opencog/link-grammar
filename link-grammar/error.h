@@ -15,6 +15,9 @@
 
 #include "link-includes.h"
 
+#define D_USER_MAX   4   /* Top verbosity level for user info. */
+#define D_USER_FILES 3   /* Verbosity level to display data file search. */
+
 typedef struct
 {
 	Sentence sent;
@@ -40,11 +43,14 @@ const char *feature_enabled(const char *, ...);
  * Print a debug message at verbosity >= level.
  * Preceding the level number by a + (+level) adds printing of the
  * function name.
+ * Level numbers 2 to D_USER_MAX are not printed on verbosity>D_USER_MAX,
+ * because they are designed only for extended user information.
  * The !debug variable can be set to a comma-separated list of functions
  * in order to restrict the debug messages to these functions only.
  */
 #define lgdebug(level, ...) \
-(((verbosity >= (level)) && \
+(((verbosity>=(level)) && (((level)<=1) || \
+	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
 	feature_enabled(debug, __func__, __FILE__, NULL))) \
 	? ((STRINGIFY(level)[0] == '+' ? (void)printf("%s: ", __func__) : (void)0), \
@@ -66,10 +72,11 @@ const char *feature_enabled(const char *, ...);
  * }
  */
 #define debug_level(level) \
-(((verbosity >= (level)) && \
+(((verbosity>=(level)) && (((level)<=1) || \
+	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
 	feature_enabled(debug, __func__, __FILE__, NULL))) \
-	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : 0), true)  \
+	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : 0), true) \
 	: false)
 
 /**

@@ -458,9 +458,7 @@ dictionary_six_str(const char * lang,
 	t = strrchr (lang, '/');
 	t = (NULL == t) ? lang : t+1;
 	dict->lang = string_set_add(t, dict->string_set);
-#ifdef _DEBUG
-	prt_error("Info: Language: %s\n", dict->lang);
-#endif
+	lgdebug(D_USER_FILES, "Info: Language: %s\n", dict->lang);
 	dict->name = string_set_add(dict_name, dict->string_set);
 
 	/*
