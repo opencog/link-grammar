@@ -6,7 +6,7 @@
 # more information about C API
 
 import linkgrammar._clinkgrammar as clg   # In Python3 just _clinkgrammar raises exception thst the module is not found.
-
+import sys
 
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
 
@@ -263,6 +263,9 @@ class Dictionary(object):
     def get_max_cost(self):
         return clg.dictionary_get_max_cost(self._obj)
 
+if (sys.version_info > (3, 0)):
+    def unicode(x):
+        return x.__unicode__()
 
 class Link(object):
     def __init__(self, linkage, index, left_word, left_label, right_label, right_word):
@@ -312,7 +315,7 @@ class Linkage(object):
         return clg.linkage_get_num_links(self._obj)
 
     def words(self):
-        for i in xrange(self.num_of_words()):
+        for i in range(self.num_of_words()):
             yield self.word(i)
 
     def word(self, i):
@@ -331,7 +334,7 @@ class Linkage(object):
                     self.word(clg.linkage_get_link_rword(self._obj, i)))
 
     def links(self):
-        for i in xrange(self.num_of_links()):
+        for i in range(self.num_of_links()):
             yield self.link(i)
 
     def violation_name(self):

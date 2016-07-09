@@ -17,6 +17,9 @@ except ImportError:
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
+if (sys.version_info > (3, 0)):
+    def unicode(x):
+        return str(x)
 
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
@@ -35,11 +38,11 @@ def setUpModule():
 class AAALinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):
         self.assertEqual(unicode(Link(None, 0, 'Left','Link','Link','Right')),
-                         u'Left-Link-Right')
+                         u'Link: Left-Link-Right')
 
     def test_link_display_with_identical_link_type2(self):
         self.assertEqual(unicode(Link(None, 0, 'Left','Link','Link*','Right')),
-                         u'Left-Link-Link*-Right')
+                         u'Link: Left-Link-Link*-Right')
 
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
@@ -219,7 +222,10 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
+        if (sys.version_info > (3, 0)):
+            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
+        else:
+            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
         self.assertTrue(1 < len(result))
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
