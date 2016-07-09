@@ -705,6 +705,7 @@ void * object_open(const char *filename,
 #if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
 		|| ((filename[1] == ':')
 			 && ((filename[2] == '\\') || (filename[2] == '/')))
+		|| (filename[0] == '\\') /* UNC path */
 #endif
 	   )
 	{
