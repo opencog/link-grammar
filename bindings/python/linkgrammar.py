@@ -5,8 +5,14 @@
 # See http://www.abisource.com/projects/link-grammar/api/index.html to get
 # more information about C API
 
-import linkgrammar._clinkgrammar as clg   # In Python3 just _clinkgrammar raises exception thst the module is not found.
 import sys
+
+# In Python3, importing just _clinkgrammar raises exception that the
+# module is not found.
+try:
+    import linkgrammar._clinkgrammar as clg
+except ImportError:
+    import _clinkgrammar as clg
 
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
 

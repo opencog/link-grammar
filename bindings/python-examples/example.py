@@ -7,10 +7,7 @@ from __future__ import print_function, division  # We require Python 2.6 or late
 import locale
 
 from linkgrammar import Sentence, ParseOptions, Dictionary
-try:
-    import linkgrammar._clinkgrammar as clg
-except ImportError:
-    import _clinkgrammar as clg
+import linkgrammar._clinkgrammar as clg
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
