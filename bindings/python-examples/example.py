@@ -3,8 +3,8 @@
 #
 # Link Grammar example usage
 #
-import locale
 from __future__ import print_function, division  # We require Python 2.6 or later
+import locale
 
 from linkgrammar import Sentence, ParseOptions, Dictionary
 try:
