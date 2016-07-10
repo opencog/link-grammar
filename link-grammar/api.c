@@ -1265,8 +1265,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			/* Notify to stdout, so it will be shown along with the result.
 			 * XXX We should have a better way to notify. */
 			if (0 < opts->verbosity)
-				printf("Warning: Invalid morpheme type combination '%s', "
-				       "run with !bad and !verbosity=4 to debug\n", affix_types);
+				printf("Warning: Invalid morpheme type combination '%s'.\n"
+				       "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
+				       " to debug\n", affix_types);
 		}
 	}
 

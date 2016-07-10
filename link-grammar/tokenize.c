@@ -429,7 +429,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	{
 		prt_error("Error: Word %s reached %d splits. "
 		          "It will not get split further. The result is undefined.\n"
-		          "Use !verbosity=4 to debug\n",
+		          "Run with !verbosity="STRINGIFY(D_SW)" to debug\n",
 		          unsplit_word->subword, MAX_SPLITS);
 		unsplit_word->tokenizing_step = TS_DONE;
 		/* We cannot return NULL here, because it is unexpected by the caller,
