@@ -577,7 +577,7 @@ SAT solver:
      still cannot rank sentences by cost, which is the most basic parse
      ranking that we've got... In order not to show incorrect costs, the
      DIS= field in the status message is always 0.
-   - Disjunct order shown by the !disjunct link-parser command.
+   - Connector order shown by the !disjunct link-parser command.
      Currently it is just a "random" order.
    - Parsing with null count.
    - No panic timeout.
