@@ -132,6 +132,7 @@ int  sentence_link_cost(Sentence sent, int i);
 %newobject linkage_print_postscript;
 %newobject linkage_print_constituent_tree;
 
+
 Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);
 
@@ -160,13 +161,20 @@ char * linkage_print_senses(Linkage linkage);
 }
 char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 
+%typemap(newfree) char * {
+   linkage_free_disjuncts($1);
+}
+char * linkage_print_disjuncts(const Linkage linkage);
 
+%typemap(newfree) char * {
+   linkage_free_pp_msgs($1);
+}
+char * linkage_print_pp_msgs(Linkage linkage);
 
-// Reset to default
+// Reset to default.
 %typemap(newfree) char * {
    free($1);
 }
-
 int linkage_get_num_words(Linkage linkage);
 int linkage_get_num_links(Linkage linkage);
 int linkage_get_link_lword(Linkage linkage, int index);
