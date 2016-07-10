@@ -385,7 +385,7 @@ TESTING the program:
    ./bindings/python-examples/tests.py -- When run, it should pass.
 
    There are also multiple batches of test/example sentences in the
-   langauge data directories, generally having the names corpus-*.batch
+   language data directories, generally having the names corpus-*.batch
    The parser program can be run in batch mode, for testing the system
    on a large number of sentences.  The following command runs the
    parser on a file called corpus-basic.batch
@@ -604,12 +604,12 @@ Directional Links
    d matches h or nothing. This is a new feature in version 5.1.0
    (August 2014). The website provides additional documentation.
 
-   Although the English-langauge link-grammar links are un-oriented,
+   Although the English-language link-grammar links are un-oriented,
    it seems that a defacto direction can be given to them that is
    completely consistent with standard conceptions of a dependency
    grammar.
 
-   The dependency arrows have the following properites:
+   The dependency arrows have the following properties:
 
     * anti-reflexive (a word cannot depend on itself; it cannot point
       at itself.)
@@ -655,7 +655,7 @@ Link Crossing
 -------------
 The foundational LG papers mandate the planarity of the parse graphs.
 This is based on a very old observation that dependencies almost never
-cross in natural langauges: humans simply do not speak in sentences
+cross in natural languages: humans simply do not speak in sentences
 where links cross.  Imposing planarity constraints then provides a
 strong engineering and algorithmic constraint on the resulting parses:
 the total number of parses to be considered is sharply reduced, and
@@ -708,7 +708,7 @@ This mechanism works as follows:
    the dependency relation, and the word-order relation.
 
  * Notation: the before-landmark relation land-B(x,y) corresponds to
-   x-->y (in English, reversed in right-left langauges such as Hebrew),
+   x-->y (in English, reversed in right-left languages such as Hebrew),
    whereas the after-landmark relation land-A(x,y) corresponds to y<--x.
    That is, land(x,y) == land-B(x,y) or land-A(x,y) holds as a statement
    about the predicate form of the relations.
@@ -755,7 +755,7 @@ There is a natural crossing, driven by conjunctions:
 
      "I was in hell yesterday and heaven on Tuesday."
 
-the "natural" linkage is to use MV liks to connect "yesterday" and "on
+the "natural" linkage is to use MV links to connect "yesterday" and "on
 Tuesday" to the verb. However, if this is done, then these must cross
 the links from the conjunction "and" to "heaven" and "hell".  This can
 be worked around partly as follows:
@@ -768,7 +768,7 @@ be worked around partly as follows:
 
 but the desired MV links from the verb to the time-prepositions
 "yesterday" and "on Tuesday" are missing -- whereas they are present,
-when the individual sentences "I was in hell yeseterday" and
+when the individual sentences "I was in hell yesterday" and
 "I was in heaven on Tuesday" are parsed.  Using a conjunction should
 not wreck the relations that get used; but this requires link-crossing.
 
@@ -780,7 +780,7 @@ Link Grammar can be understood in the context of type theory.
 A simple introduction to type theory can be found in chapter 1
 of the HoTT book: https://homotopytypetheory.org/book/
 This book is freely available online and strongly recommended if
-you are intersted in types.
+you are interested in types.
 
 Link types can be mapped to types that appear in categorial grammars.
 The nice thing about link-grammar is that the link types form a type
@@ -1014,7 +1014,7 @@ TODO -- Working Notes:
       enable/disable parsing specific to different dialects/sociolects,
       simply by altering the network of link costs.
 
-      Perhaps a simpler alternative would be to have labelled costs (a
+      Perhaps a simpler alternative would be to have labeled costs (a
       cost vector), so that different dialects assign different costs to
       various links.  A dialect would be specified during the parse,
       thus causing the costs for that dialect to be employed during
@@ -1233,9 +1233,9 @@ TODO -- Working Notes:
       > along with many other words such as godel "size" and migdal
       > "tower".
 
-   Dealing with long, ambiguos sentences:
+   Dealing with long, ambiguous sentences:
       These are busted up by humans into smaller sentences that "hang
-      together" as phrase-structures, viz compunded sentences. The most
+      together" as phrase-structures, viz compounded sentences. The most
       likely parse is then when each of the quasi sub-sentences is
       parsed correctly.
 
