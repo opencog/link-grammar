@@ -29,7 +29,13 @@ class ParseOptions(object):
                  spell_guess=False,
                  use_sat=False,
                  max_parse_time=-1,
-                 disjunct_cost=2.7):
+                 disjunct_cost=2.7,
+            #     debug="",
+            #     test="",
+                 use_viterbi=False,
+                 use_cluster_disjuncts=False,
+                 repeatable_rand=False
+    ):
 
         self._obj = clg.parse_options_create()
         self.verbosity = verbosity
@@ -44,6 +50,11 @@ class ParseOptions(object):
         self.use_sat = use_sat
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
+        # self.debug = debug
+        # self.test = test
+        self.use_viterbi = use_viterbi
+        self.use_cluster_disjuncts = use_cluster_disjuncts
+        self.repeatable_rand = repeatable_rand
 
     def __del__(self):
         if hasattr(self, '_obj') and clg:
@@ -242,6 +253,76 @@ class ParseOptions(object):
         clg.parse_options_set_use_sat_parser(self._obj, value)
 
     @property
+    def debug(self):
+        """
+        Returns debug option as list of comma separated functions.
+        """
+        return clg.parse_options_get_debug(self._obj)
+
+    @debug.setter
+    def debug(self, value):
+        """
+        Set debug option as list of comma separated functions.
+        """
+        clg.parse_options_set_debug(self._obj, value)
+
+    @property
+    def test(self):
+        """
+        Returns test option as list of comma separated functions.
+        """
+        return clg.parse_options_get_test(self._obj)
+
+    @test.setter
+    def test(self, value):
+        """
+        Set test option as list of comma separated functions.
+        """
+        clg.parse_options_set_test(self._obj, value)
+
+    @property
+    def use_viterbi(self):
+        """
+        Use viterbi option for an algorithms.
+        """
+        return clg.parse_options_get_use_viterbi(self._obj)
+
+    @use_viterbi.setter
+    def use_viterbi(self, value):
+        """
+        Set viterbi option: an option for an algorithm.
+        """
+        clg.parse_options_set_use_viterbi(self._obj, value)
+
+    @property
+    def use_cluster_disjuncts(self):
+        """
+        Use clusters to loosen parsing, an option.
+        """
+        return clg.parse_options_get_use_cluster_disjuncts(self._obj)
+
+    @use_cluster_disjuncts.setter
+    def use_cluster_disjuncts(self, value):
+        """
+        Use clusters to loosen parsing, an option.
+        """
+        clg.parse_options_set_use_cluster_disjuncts(self._obj, value)
+
+    @property
+    def repeatable_rand(self):
+        """
+
+        """
+        return clg.parse_options_get_repeatable_rand(self._obj)
+
+    @repeatable_rand.setter
+    def repeatable_rand(self, value):
+        """
+
+        """
+        clg.parse_options_set_repeatable_rand(self._obj, value)
+
+    @property
     def all_short_connectors(self):
         """
          If true, then all connectors have length restrictions imposed on
@@ -301,8 +382,9 @@ class Link(object):
 
 class Linkage(object):
 
-    def __init__(self, idx, sentence, parse_options):
+    def __init__(self, idx, sentence, parse_options, valid=True):
         self.sentence, self.parse_options = sentence, parse_options  # keep all args passed into clg.* fn
+        self.valid=valid # Is it a valid linkage
         self._obj = clg.linkage_create(idx, sentence._obj, parse_options)
 
     def __del__(self):
@@ -410,19 +492,60 @@ class Sentence(object):
             self.num = 0
             clg.sentence_parse(sent._obj, sent.parse_options._obj)
 
+        def has_valid(self):
+            return 0 < self.sent.num_valid_linkages()
+
+        def has_linkages(self):
+            return 0 < self.sent.num_linkages_found()
+
+        def linkages(self, limit=1):
+            if self.has_valid():
+                return self
+            return self.sent.sentence_linkages(self.sent, limit=limit)
+
         def __iter__(self):
-            if (0 == clg.sentence_num_valid_linkages(self.sent._obj)):
+            if self.has_valid():
+                return self
+            else:
                 return iter(())
-            return self
 
         def next(self):
-            if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
+            if self.num == self.sent.num_valid_linkages():
                 raise StopIteration()
             linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
             self.num += 1
             return linkage
 
         __next__=next      # Account python3
+
+    class sentence_linkages(object):
+        def __init__(self, sent, limit=1):
+            self.sent = sent
+            self.num = 0
+            self.limit = limit
+            clg.sentence_parse(sent._obj, sent.parse_options._obj)
+
+        def has_valid(self):
+            return False
+
+        def has_linkages(self):
+            return 0 < self.sent.num_linkages_found()
+
+        def __iter__(self):
+            if self.has_linkages():
+                return self
+            else:
+                return iter(())
+
+        def next(self):
+            if self.num >= self.limit or self.num >= self.sent.num_linkages_found():
+                raise StopIteration()
+            linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj,
+                              valid=False)
+            self.num += 1
+            return linkage
+
+        __next__=next
 
     def parse(self):
         return self.sentence_parse(self)

@@ -91,6 +91,20 @@ void parse_options_reset_resources(Parse_Options opts);
 void parse_options_set_use_sat_parser(Parse_Options opts, bool val);
 bool parse_options_get_use_sat_parser(Parse_Options opts);
 
+void parse_options_set_debug(Parse_Options opts, const char * debug);
+char * parse_options_get_debug(Parse_Options opts);
+void parse_options_set_test(Parse_Options opts, const char * test);
+char * parse_options_get_test(Parse_Options opts);
+void parse_options_set_use_viterbi(Parse_Options opts, bool use_viterbi);
+bool parse_options_get_use_viterbi(Parse_Options opts);
+void parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool val);
+bool parse_options_get_use_cluster_disjuncts(Parse_Options opts);
+void parse_options_set_repeatable_rand(Parse_Options opts, bool val);
+bool parse_options_get_repeatable_rand(Parse_Options opts);
+
+
+
+
 /**********************************************************************
 *
 * Functions to manipulate Sentences
