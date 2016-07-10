@@ -357,6 +357,12 @@ class Linkage(object):
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
+    def pp_msgs(self):
+        return clg.linkage_print_pp_msgs(self._obj)
+
+    def disjuncts(self):
+        return clg.linkage_print_disjuncts(self._obj)
+
 class Sentence(object):
     """
     sent = Sentence("This is a test.", Dictionary(), ParseOptions())
