@@ -1048,12 +1048,22 @@ TODO -- Working Notes:
       http://www.corpus.bham.ac.uk/publications/index.shtml
 
 
-   Quotations: Currently, tokenize.c ignores all ASCII double-quotes
-      (grep for "quote_found" in the source). However, it does not do this
-      for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
-      This results is some ugly parsing for sentences containing such
-      quotes. (Note that these are in 4.0.affix).
-
+   Quotations: tokenize.c tokenizes Double-quotes and some UTF8 quotes
+      (see the RPUNC/LPUNC class in en/4.0.affix - the QUOTES class is
+      not used for that, but for capitalization support), with some very
+      basic support in the English dictionary (see "% Quotation marks."
+      there).  However, it does not do this for the various "curly" UTF8
+      quotes, such as ‘these’ and “these”.  This results is some ugly
+      parsing for sentences containing such quotes. (Note that these are
+      in 4.0.affix).
+      A mechanism is needed to disentangle the quoting from the quoted
+      text, so that each can be parsed appropriately.  Its somewhat
+      unclear how to handle this within link-grammar. This is somewhat
+      related to the problem of morphology (parsing words as if they
+      were "mini-sentences",) idioms (phrases that are treated as if
+      they were singe words), set-phrase structures (if ... then ... not
+      only... but also ...) which have a long-range structure similar to
+      quoted text (he said ...).
 
   "to be fishing": Link grammar offers four parses of "I was fishing for
      evidence", two of which are given low scores, and two are given
