@@ -16,6 +16,7 @@ BUILT_PY_SOURCES = $(top_builddir)/bindings/python/clinkgrammar.py
 pkgpythondir=$(pythondir)/linkgrammar
 pkgpyexecdir=$(pythondir)/linkgrammar
 
+# Files that get installed in $pkgpythondir
 pkgpython_PYTHON =                                 \
    linkgrammar.py                                  \
    $(top_builddir)/bindings/python/__init__.py     \
@@ -32,6 +33,7 @@ DISTCLEANFILES =                                   \
    $(top_builddir)/bindings/python/__init__.py
 
 if HAVE_SWIG
+# Swig builds these ....
 $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) -python -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 endif
@@ -44,7 +46,7 @@ pkgpyexec_LTLIBRARIES = _clinkgrammar.la
 
 _clinkgrammar_la_SOURCES = $(BUILT_C_SOURCES) $(SWIG_SOURCES)
 
-# $(top_builddir) to pick up autogened link-grammar/link-features.h
+# $(top_builddir) to pick up autogen'ed link-grammar/link-features.h
 _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
    $(PYTHON_CPPFLAGS)             \
@@ -60,6 +62,8 @@ EXTRA_DIST =         \
    LICENSE           \
    README.md
 
+# If swig is not installed, then `make dist` will fail (because of the
+# missing clinkgrammar.py files). So, avoid that trouble now.
 if HAVE_SWIG
 EXTRA_DIST += __init__.py.in linkgrammar.py
 endif
