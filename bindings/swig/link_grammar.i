@@ -134,8 +134,38 @@ int  sentence_link_cost(Sentence sent, int i);
 
 Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);
+
+%typemap(newfree) char * {
+   linkage_free_diagram($1);
+}
 char * linkage_print_diagram(Linkage linkage, bool display_walls, size_t screen_width);
+
+%typemap(newfree) char * {
+   linkage_free_postscript($1);
+}
 char * linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header);
+
+%typemap(newfree) char * {
+   linkage_free_links_and_domains($1);
+}
+char * linkage_print_links_and_domains(Linkage linkage);
+
+%typemap(newfree) char * {
+   linkage_free_senses($1);
+}
+char * linkage_print_senses(Linkage linkage);
+
+%typemap(newfree) char * {
+   linkage_free_constituent_tree_str($1);
+}
+char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
+
+
+
+// Reset to default
+%typemap(newfree) char * {
+   free($1);
+}
 
 int linkage_get_num_words(Linkage linkage);
 int linkage_get_num_links(Linkage linkage);
@@ -150,9 +180,7 @@ const char ** linkage_get_link_domain_names(Linkage linkage, int index);
 const char ** linkage_get_words(Linkage linkage);
 //const char *  linkage_get_disjunct(Linkage linkage, int w);
 const char *  linkage_get_word(Linkage linkage, int w);
-char * linkage_print_links_and_domains(Linkage linkage);
-char * linkage_print_senses(Linkage linkage);
-char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
+
 int linkage_unused_word_cost(Linkage linkage);
 double linkage_disjunct_cost(Linkage linkage);
 int linkage_link_cost(Linkage linkage);
