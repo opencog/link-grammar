@@ -651,7 +651,7 @@ fi
 
 PythonFound=no
 if test "x$enable_python_bindings" = "xyes"; then
-	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
+	AM_PATH_PYTHON(3.0, [PythonFound=yes], [PythonFound=no])
 	AX_PYTHON_DEVEL
 	AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 else
