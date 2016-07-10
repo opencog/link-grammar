@@ -208,7 +208,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if (!(strcmp(ctxt->constituent[c1].type, ctype1)==0))
 			continue;
 
-		if (verbosity >= 2)
+		if (debug_level(5))
 			printf("Generating complement constituent for c %d of type %s\n",
 				   c1, ctype1);
 		done = false;
@@ -259,7 +259,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					ctxt->constituent[c].domain_type = 'x';
 					ctxt->constituent[c].start_link =
 						string_set_add("XX", ctxt->phrase_ss);
-					if (verbosity >= 2)
+					if (debug_level(5))
 					{
 						printf("Larger c found: c %d (%s); ",
 							   c2, ctype2);
@@ -272,7 +272,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 				}
 			}
 		}
-		if (verbosity >= 2)
+		if (debug_level(5))
 		{
 			if (done == false)
 				printf("No constituent added, because no larger %s " \
@@ -321,7 +321,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 						w = ctxt->constituent[c].left - 1;
 						ctxt->constituent[c2].right = w;
 
-						if (verbosity >= 2)
+						if (debug_level(5))
 							printf("Adjusting constituent %d:\n", c2);
 						print_constituent(ctxt, linkage, c2);
 					}
@@ -578,7 +578,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		ctxt->constituent[c].valid = true;
 		ctxt->constituent[c].domain_type = 'x';
 		numcon_total++;
-		if (verbosity >= 2)
+		if (debug_level(5))
 			printf("Adding global sentence constituent:\n");
 		print_constituent(ctxt, linkage, c);
 	}
@@ -821,7 +821,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	numcon_subl = c - numcon_total;
 	/* numcon_subl = handle_islands(linkage, numcon_total, numcon_subl);  */
 
-	if (verbosity >= 2)
+	if (debug_level(5))
 		printf("Constituents added at first stage:\n");
 
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
@@ -902,21 +902,21 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 						(strcmp(linkage->word[ctxt->constituent[c2].right],
 								"RIGHT-WALL") == 0))
 					{
-						if (verbosity >= 2)
+						if (debug_level(5))
 							printf("Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made = true;
 					}
 					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
 					{
-						if (verbosity >= 2)
+						if (debug_level(5))
 							printf("Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
 						adjustment_made = true;
 					}
 					else
 					{
-						if (verbosity >= 2)
+						if (debug_level(5))
 						{
 							err_ctxt ec = { linkage->sent };
 							err_msg(&ec, Warn,
@@ -956,7 +956,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 		rightdone[c] = false;
 	}
 
-	if (verbosity >= 2)
+	if (debug_level(5))
 		printf("\n");
 
 	/* Skip left wall; don't skip right wall, since it may

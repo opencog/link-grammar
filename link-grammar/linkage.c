@@ -217,7 +217,7 @@ void remap_linkages(Linkage lkg, const int *remap)
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
  */
-#define D_REE 3
+#define D_REE 9
 void remove_empty_words(Linkage lkg)
 {
 	size_t i, j;
@@ -279,7 +279,7 @@ void remove_empty_words(Linkage lkg)
  *    FIXME Sometimes the word strings are taken from chosen_disjuncts,
  *    and sometimes from wordgraph subwords.
  */
-#define D_CCW 5
+#define D_CCW 8
 void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 {
 	WordIdx i;   /* index of chosen_words */
@@ -706,6 +706,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		print_lwg_path(n_lwg_path);
 	}
 }
+#undef D_CCW
 
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {

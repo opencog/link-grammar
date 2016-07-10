@@ -1422,7 +1422,7 @@ void print_lwg_path(Gword **w)
 	lgdebug(0, "\n");
 }
 
-#define D_WPP 5
+#define D_WPP 8
 void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
 {
 	size_t i = 0;

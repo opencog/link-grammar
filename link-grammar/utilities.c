@@ -25,6 +25,7 @@
 #else
 	#include <windows.h>
 	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
+	#include <direct.h>  /* For getcwd(). */
 #endif /* _WIN32 */
 
 #ifdef USE_PTHREADS
@@ -632,10 +633,12 @@ char * dictionary_get_data_dir(void)
 			}
 			else
 			{
-#if _DEBUG
-				prt_error("Warning: Info: Found dir for current prog %s\n",
-				          prog_path);
-#endif
+				/* Unconvertible characters are marked as '?' */
+				char *unsuppored = (NULL != strchr(prog_path, '?')) ?
+					" (containing unsupported character)" : "";
+
+				lgdebug(D_USER_FILES, "Info: Directory of executable: %s%s\n",
+				        unsuppored, prog_path);
 				data_dir = safe_strdup(prog_path);
 			}
 		}
@@ -669,6 +672,7 @@ char * dictionary_get_data_dir(void)
  * If the filename argument is NULL, the function just invalidates this
  * directory path cache.
  */
+#define NOTFOUND(fp) ((NULL == (fp)) ? " (Not found)" : "")
 void * object_open(const char *filename,
                    void * (*opencb)(const char *, const void *),
                    const void * user_data)
@@ -690,9 +694,14 @@ void * object_open(const char *filename,
 	if (NULL == path_found)
 	{
 		data_dir = dictionary_get_data_dir();
-#ifdef _DEBUG
-		prt_error("Info: data_dir=%s", (data_dir?data_dir:"NULL"));
-#endif
+		if (debug_level(D_USER_FILES))
+		{
+			char cwd[MAX_PATH_NAME];
+			char *cwdp = getcwd(cwd, sizeof(cwd));
+			printf("Info: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
+			printf("Info: Last-resort data directory: %s\n",
+					  data_dir ? data_dir : "NULL");
+		}
 	}
 
 	/* Look for absolute filename.
@@ -711,9 +720,7 @@ void * object_open(const char *filename,
 	{
 		/* opencb() returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
-#ifdef _DEBUG
-		prt_error("Info: 1: object_open() trying %s=%d", filename, NULL!=fp);
-#endif
+		lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", filename, NOTFOUND(fp));
 	}
 	else
 	{
@@ -738,9 +745,7 @@ void * object_open(const char *filename,
 			free(completename);
 			completename = join_path(*path, filename);
 			fp = opencb(completename, user_data);
-#ifdef _DEBUG
-			prt_error("Info: 2: object_open() trying %s=%d", completename, NULL!=fp);
-#endif
+			lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", completename, NOTFOUND(fp));
 			if ((NULL != fp) || (NULL != path_found)) break;
 		}
 	}
@@ -748,9 +753,7 @@ void * object_open(const char *filename,
 	if (NULL == fp)
 	{
 		fp = opencb(filename, user_data);
-#ifdef _DEBUG
-		prt_error("Info: 3: object_open() trying %s=%d", filename, NULL!=fp);
-#endif
+		lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", filename, NOTFOUND(fp));
 	}
 	else if (NULL == path_found)
 	{
@@ -770,6 +773,7 @@ void * object_open(const char *filename,
 	free(completename);
 	return fp;
 }
+#undef NOTFOUND
 
 static void *dict_file_open(const char *fullname, const void *how)
 {
