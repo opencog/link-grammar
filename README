@@ -1270,10 +1270,10 @@ TODO -- Working Notes:
       Word struct.  Originally, these were morphological split alternatives
       for the Russian dicts, but really, they are a way of hierarchically
       arranging choices for words...
-      1) create struct alternative for struct word
-      2) fix sane_morpheme to use that.
-      Status: A basic design for this has been sketched on the public
-      mailing list.  AmirP is working on it.
+
+      Status: DONE! Implemented from version 5.3.0. See the section
+      titled "Introduction of a word-graph for tokenizing" in
+      link-grammar/README.
 
    Morphology printing:
       Instead of hard-coding LL, declare which links are morpho links
