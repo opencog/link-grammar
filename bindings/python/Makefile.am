@@ -32,7 +32,7 @@ DISTCLEANFILES =                                   \
 
 if HAVE_SWIG
 $(BUILT_SOURCES) $(pkgpython_PYTHON): $(SWIG_SOURCES)
-	$(SWIG) -python -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(SWIG) -python3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 endif
 
 # The la MUST have the same name as the pm,
