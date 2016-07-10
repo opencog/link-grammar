@@ -36,6 +36,9 @@ if HAVE_SWIG
 # Swig builds these ....
 $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) -python -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+else
+$(BUILT_C_SOURCES) $(BUILT_PY_SOURCES):
+	touch $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES)
 endif
 
 # The la MUST have the same name as the pm,
@@ -60,10 +63,6 @@ _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 EXTRA_DIST =         \
    AUTHORS           \
    LICENSE           \
-   README.md
-
-# If swig is not installed, then `make dist` will fail (because of the
-# missing clinkgrammar.py files). So, avoid that trouble now.
-if HAVE_SWIG
-EXTRA_DIST += __init__.py.in linkgrammar.py
-endif
+   README.md         \
+   __init__.py.in    \
+   linkgrammar.py
