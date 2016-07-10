@@ -14,6 +14,10 @@ fa -- Farsi.  To be used with morphology engine; see morphology/fa
 
 he -- Hebrew. Experimental prototype. Contains a few dozen words.
 
+id -- Indonesian. Experimental prototype. Contains a few hundred words.
+
+kz -- Kazakh. Experimental prototype. Contains a few dozen words.
+
 lt -- Lithuanian. Experimental prototype. Contains a few hundred words,
       and implements only a few parts of speech.
 
