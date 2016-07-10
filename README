@@ -848,12 +848,23 @@ TODO -- Working Notes:
 
   Capitalized first words:
     There are subtle technical issues for handling capitalized first
-    words. This needs to be fixed. See tokenize.c circa line 586 for
-    details.  Also line 1131.
+    words. This needs to be fixed. In addition, for now these words are
+    shown uncapitalized in the result linkages. This can be fixed.
 
     Maybe capitalization could be handled in the same way that a/an
     could be handled!  After all, its essentially a nearest-neighbor
     phenomenon!
+
+  Capitalization-mark tokens:
+    The proximal issue is to add a cost, so that Bill gets a lower
+    cost than bill.n when parsing "Bill went on a walk".  The best
+    solution would be to add a 'capitalization-mark token' during
+    tokenization; this token precedes capitalized words. The
+    dictionary then explicitly links to this token, with rules similar
+    to the a/an phonetic distinction.  The point here is that this
+    moves capitalization out of ad-hoc C code and into the dictionary,
+    where it can be handled like any other language feature.
+    The tokenizer includes experimental code for that.
 
   Zero/phantom words:  Expressions such as "Looks good" have an implicit
     "it" (also called a zero-it or phantom-it) in them; that is, the
@@ -1265,16 +1276,6 @@ TODO -- Working Notes:
          -- DONE! The new symbols are ^ for commuting-& and $ to mean
             either + or -.
             This still needs to be documented.
-
-   Capitalization-mark tokens:
-      The proximal issue is to add a cost, so that Bill gets a lower
-      cost than bill.n when parsing "Bill went on a walk".  The best
-      solution would be to add a 'capitalization-mark token' during
-      tokenization; this token precedes capitalized words. The
-      dictionary then explicitly links to this token, with rules similar
-      to the a/an phonetic distinction.  The point here is that this
-      moves capitalization out of ad-hoc C code and into the dictionary,
-      where it can be handled like any other language feature.
 
    Incremental sentence parsing:
       There are multiple reasons to support incremental parsing:
