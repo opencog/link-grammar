@@ -570,13 +570,17 @@ SAT solver:
    solver. The SAT solver has a bit more overhead for shorter sentences,
    but is faster for long sentences.  To work properly, it needs to be
    attached to a parse ranking system.  This work is incomplete,
-   although the prototype works.  it is not yet well-integrated with
-   the system, and needs cleanup.  In particular, it fails to handle
-   morphemes correctly (i.e. to use compute_chosen_words() in
-   SATEncoder::create_linkage() -- this needs fixing.  The
-   chosen_disjuncts array is not filled out, and thus, there is no
-   awareness of disjunct costs, which is the most basic parse ranking
-   that we've got ...)
+   although the prototype works.  It is not yet well-integrated with
+   the system, and needs cleanup.
+   Still not handled (or handled incorrectly):
+   - Disjunct cost: Cost of null expressions is disregarded. Thus, it
+     still cannot rank sentences by cost, which is the most basic parse
+     ranking that we've got... In order not to show incorrect costs, the
+     DIS= field in the status message is always 0.
+   - Disjunct order shown by the !disjunct link-parser command.
+     Currently it is just a "random" order.
+   - Parsing with null count.
+   - No panic timeout.
 
    The SAT solver is enabled by default.  It can be disabled by specifying
 
