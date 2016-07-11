@@ -748,7 +748,7 @@ Other examples, per And Rosta:
      "He had been allowed to eat a cake by Sophy that she had made him
      specially" -- The allowed--by link crosses cake--that
 
-     "a very much easier book indeed": an--book, very--indeed
+     "a very much easier book indeed": a--book, very--indeed
      "an easy book to read": an--book, easy--to
      "a more difficult book than that one": a--book, more--than
 
@@ -885,7 +885,7 @@ TODO -- Working Notes:
 
     See github https://github.com/opencog/link-grammar/issues/224
 
-  punctuation, zero-copula, zero-that:
+  Punctuation, zero-copula, zero-that:
      Poorly punctuated sentences cause problems:  for example:
      "Mike was not first, nor was he last."
      "Mike was not first nor was he last."
@@ -947,7 +947,7 @@ TODO -- Working Notes:
     Use WordNet to reduce the number for parses for sentences containing
     compound verb phrases, such as "give up", "give off", etc.
 
-  incremental parsing: to avoid a combinatorial explosion of parses,
+  Incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,
     the parse of the last half of a long, run-on sentence should not be
