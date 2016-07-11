@@ -140,7 +140,7 @@ const char *feature_enabled(const char * list, ...)
 
 	const char *feature;
 	va_list given_features;
-	va_start(given_features, feature);
+	va_start(given_features, list);
 
 	while (NULL != (feature = va_arg(given_features, char *)))
 	{

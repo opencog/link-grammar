@@ -429,7 +429,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	{
 		prt_error("Error: Word %s reached %d splits. "
 		          "It will not get split further. The result is undefined.\n"
-		          "Use !verbosity=4 to debug\n",
+		          "Run with !verbosity="STRINGIFY(D_SW)" to debug\n",
 		          unsplit_word->subword, MAX_SPLITS);
 		unsplit_word->tokenizing_step = TS_DONE;
 		/* We cannot return NULL here, because it is unexpected by the caller,
@@ -1521,7 +1521,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 	/* Else, ask the spell-checker for alternate spellings
 	 * and see if these are in the dict. */
 	n = spellcheck_suggest(dict->spell_checker, &alternates, word);
-	if (3 < verbosity)
+	if (debug_level(+D_SW))
 	{
 		printf("Info: guess_misspelled_word() spellcheck_suggest for %s:%s\n",
 		       word, (0 == n) ? " (nothing)" : "");
@@ -2994,7 +2994,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	free(wp_new);
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
-	if (D_FW <= opts->verbosity)
+	if (debug_level(D_SW))
 		print_sentence_word_alternatives(sent, true, NULL, NULL);
 
 	return !error_encountered;
