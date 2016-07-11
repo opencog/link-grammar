@@ -30,5 +30,3 @@ EXTRA_DIST =                              \
    autoit/README                          \
    lisp/link-interface.cl                 \
    swig/link_grammar.i
-
-

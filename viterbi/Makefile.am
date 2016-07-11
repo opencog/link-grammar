@@ -63,6 +63,4 @@ EXTRA_DIST =            \
    README               \
    README.atombase
 
-
-
 endif

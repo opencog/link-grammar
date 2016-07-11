@@ -59,5 +59,3 @@ EXTRA_DIST =     \
    README        \
    example.pl    \
    test.pl
-
-

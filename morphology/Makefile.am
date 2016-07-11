@@ -18,4 +18,3 @@ EXTRA_DIST=
 	fa/scripts/utf8_2_roman_1-7.pl    \
 	fa/scripts/win1256_2_roman_1-5.pl \
 	fa/scripts/win1256_2_roman.tcl
-

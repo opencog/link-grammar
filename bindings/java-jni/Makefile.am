@@ -1,11 +1,11 @@
-# 
+#
 # Automake file for building liblink-grammar-java.so
 #
 
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\"
 
-# $(top_builddir) to pick up autogened link-grammar/link-features.h 
+# $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(JAVA_CPPFLAGS) \
 	$(WARN_CFLAGS)
 
@@ -46,6 +46,5 @@ liblink_grammar_java_la_SOURCES =   \
 	jni-client.h                     \
 	jni-client.c
 
-EXTRA_DIST=                               \
+EXTRA_DIST=                         \
 	link-grammar-java.def
-

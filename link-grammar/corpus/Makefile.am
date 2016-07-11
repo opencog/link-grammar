@@ -31,8 +31,8 @@ EXTRA_DIST=                               \
 # Don't build the tools by default; only the maintainer (me) needs
 # to run this tool.
 #
-# Specifying the binaries here leads to circular Make dependencies 
-# which I am too lazy to fix.  To build the tool, you need to uncomment 
+# Specifying the binaries here leads to circular Make dependencies
+# which I am too lazy to fix.  To build the tool, you need to uncomment
 # the below, then run a two-step build process:
 #    autogen.sh ; make
 #    autogen.sh --enable-corpus-stats ; make
