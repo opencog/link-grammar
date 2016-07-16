@@ -35,10 +35,6 @@ typedef enum
 void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
 const char *feature_enabled(const char *, ...);
 
-#ifdef _WIN32
-# define __func__ __FUNCTION__
-#endif
-
 /**
  * Print a debug message at verbosity >= level.
  * Preceding the level number by a + (+level) adds printing of the
