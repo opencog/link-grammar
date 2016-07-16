@@ -147,7 +147,16 @@ const char *feature_enabled(const char * list, ...)
 		size_t len = strlen(feature);
 		char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
 
-		if ('/' == feature[0]) feature = strrchr(feature, '/') + 1;
+		/* The "feature" variable may contain a full/relative file path.
+		 * If so, extract the file name from it. On Windows first try the
+		 * native separator \, but also try /. */
+		const char *dir_sep = NULL;
+#ifdef _WIN32
+		dir_sep = strrchr(feature, '\\');
+#endif
+		if (NULL == dir_sep) dir_sep = strrchr(feature, '/');
+		if (NULL != dir_sep) feature = dir_sep + 1;
+
 		buff[0] = ',';
 		strcpy(buff+1, feature);
 		strcat(buff, ",");
