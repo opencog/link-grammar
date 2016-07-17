@@ -725,7 +725,7 @@ int main(int argc, char * argv[])
 	/* Get the locale from the environment...
 	 * Perhaps we should someday get it from the dictionary ??
 	 */
-	locale = setlocale(LC_ALL, "");
+	locale = setlocale(LC_CTYPE, "");
 
 	/* Check to make sure the current locale is UTF8; if its not,
 	 * then force-set this to the english utf8 locale
