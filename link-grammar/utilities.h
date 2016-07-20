@@ -79,12 +79,6 @@ void *alloca (size_t);
 #define vsnprintf _vsnprintf
 #endif
 
-/* MS Visual C does not have any function normally found in strings.h */
-/* In particular, be careful to avoid including strings.h */
-#define strcasecmp _stricmp
-#ifndef strdup
-#define strdup _strdup
-#endif
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
 /* MS changed the name of rand_r to rand_s */
