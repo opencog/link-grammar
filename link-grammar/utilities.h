@@ -84,6 +84,12 @@ void *alloca (size_t);
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)
 
+/* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
+ * This happens, for example, when the argument is "const void **". */
+#define free(x) free((void *)x)
+#define realloc(x, s) realloc((void *)x, s)
+#define memcpy(x, y, s) memcpy((void *)x, (void *)y, s)
+#define qsort(x, y, z, w) qsort((void *)x, y, z, w)
 #endif /* _MSC_VER */
 
 /* Apparently, MinGW is also missing a variety of standard functions.
