@@ -108,7 +108,6 @@ char * strndup (const char *str, size_t size);
  * cygwin just doesn't work very well. So we use our own custom version,
  * instead.
  */
-link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
 #ifdef mbrtowc
 #undef mbrtowc
 #endif
@@ -147,13 +146,6 @@ link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *)
   #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 #else
   #define lg_isspace isspace
-#endif
-
-
-#if __APPLE__
-/* Junk, to keep the Mac OSX linker happy, because this is listed in
- * the link-grammar.def symbol export file.  */
-void lg_mbrtowc(void);
 #endif
 
 #if __APPLE__
@@ -409,15 +401,6 @@ void * xalloc(size_t) GNUC_MALLOC;
 void * exalloc(size_t) GNUC_MALLOC;
 
 /* Tracking the space usage can help with debugging */
-#if defined(_WIN32) || __APPLE__
-  /* **MUST** define for win32, Mac OSX, because xfree is listed in
-   * link-grammar.def and the win/osx linker fails if there is no
-   * xfree. So, keep the linker happy. (xfree is used in both dict-file
-   * and sat solver.)
-   */
-  #define TRACK_SPACE_USAGE 1
-#endif /* defined(_WIN32) || __APPLE__ */
-
 #ifdef TRACK_SPACE_USAGE
 void xfree(void *, size_t);
 void exfree(void *, size_t);
