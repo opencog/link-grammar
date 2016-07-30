@@ -115,8 +115,7 @@ void left_print_string(FILE * fp, const char * s, const char * t)
 	fprintf(fp, "%-*s", width, s);
 }
 
-#ifdef _WIN32  /* should be !defined(HAVE_STRNDUP) */
-
+#ifndef HAVE_STRNDUP
 /* Emulates glibc's strndup() */
 char *
 strndup (const char *str, size_t size)
@@ -135,8 +134,7 @@ strndup (const char *str, size_t size)
 	result[size] = 0x0;
 	return result;
 }
-
-#endif /* _WIN32 should be !HAVE_STRNDUP */
+#endif /* !HAVE_STRNDUP */
 
 /* ============================================================= */
 /* UTF8 utilities */
