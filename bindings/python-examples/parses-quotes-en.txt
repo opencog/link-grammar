@@ -24,3 +24,15 @@ O    +--Wd--+--Ss-+-QUd+    +-Ss*b+  |       +----A----+   |
 O    |      |     |    |    |     |  |       |         |   |
 OLEFT-WALL he said.q-d ` this.p is.v a backtic[!].a test.n ` 
 O
+
+I“What are you doing?” she asked.
+O
+O    +---------------QUc--------------+                
+O    +--------------Xc--------------+ |                
+O    +----------->WV---------->+    | |                
+O    |         +------Bsw------+    | |                
+O    +----Wq---+    +---Pg*b---+    | +----CP---+      
+O    +-QUd-+   +-Rw-+SIpx+     |    | |  +--Ss--+--Xp-+
+O    |     |   |    |    |     |    | |  |      |     |
+OLEFT-WALL “ what are.v you doing.v ? ” she asked.q-d . 
+O 
