@@ -181,14 +181,12 @@ strndup (const char *str, size_t size)
 /* ============================================================= */
 /* UTF8 utilities */
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-
 /** Returns length of UTF8 character.
  * Current algo is based on the first character only.
  * If pointer is not pointing at first char, no not a valid value, returns 0.
  * Returns 0 for NULL as well.
  */
-static int get_utf8_charlen(const char *xc)
+int utf8_charlen(const char *xc)
 {
 	unsigned char c;
 
@@ -201,6 +199,8 @@ static int get_utf8_charlen(const char *xc)
 	if ((c >= 0xf0) && (c <= 0xf4)) return 4; /* First byte of a code point U +10000 - U +10FFFF */
 	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
 
 /**
  * (Experimental) Implementation of mbrtowc for Windows.
@@ -216,7 +216,7 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	if (0 == n) return -2;
 	if (0 == *s) { *pwc = 0; return 0; }
 
-	nb = get_utf8_charlen(s);
+	nb = utf8_charlen(s);
 	if (0 == nb) return 0;
 	if (0 > nb) return nb;
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, NULL, 0);
