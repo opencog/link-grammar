@@ -61,6 +61,11 @@ extern "C"
 void *alloca (size_t);
 #endif
 
+#ifndef strdupa
+/* In the following, the argument should not have side effects. */
+#define strdupa(s) strcpy(alloca(strlen(s)+1), s)
+#endif
+
 #ifdef _WIN32
 #include <windows.h>
 #include <mbctype.h>
