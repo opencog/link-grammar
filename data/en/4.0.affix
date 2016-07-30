@@ -12,8 +12,8 @@
 % Punctuation appearing on the right-side of words.
 % Note: the ellipsis ....y must appear *before* the dot ".", else the
 % splitting won't work right.
-")" "}" "]" ">" "".y" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" “ ''.y '.y `.y
-"%" "," ....y "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y "”" ━.y –.y ー.y ‐.y 、.y
+")" "}" "]" ">" "".y" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ” ''.y '.y `.y
+"%" "," ....y "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y ━.y –.y ー.y ‐.y 、.y
 ～ ¢ ₵ ™ ℠
   : RPUNC+;
 
@@ -27,7 +27,7 @@
 % Y'gotta Y'gonna
 % coffe w/milk
 "(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［
-『 「 、.x `.x `` „ ‘ ''.x '.x ….x ....x
+『 「 、.x `.x `` „ ‘ “ ''.x '.x ….x ....x
 ¿ ¡ "$" US$ USD C$
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#"
@@ -46,7 +46,7 @@ y' w/
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!
-""«»《》【】『』`„“": QUOTES+;
+""«»《》【】『』`„“”": QUOTES+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various symbols!!
