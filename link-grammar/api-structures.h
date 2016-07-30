@@ -123,6 +123,7 @@ struct Dictionary_s
 	const char *    name;
 	const char *    lang;
 	const char *    version;
+	const char *    locale;
 	int             num_entries;
 
 	bool         use_unknown_word;
