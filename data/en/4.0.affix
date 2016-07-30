@@ -1,12 +1,12 @@
-% 
-% Affixes get stripped off the left and right side of words 
+%
+% Affixes get stripped off the left and right side of words
 % i.e. spaces are inserted between the affix and the word itself.
 %
 % Some of the funky UTF-8 parenthesis are used in Asian texts.
 % In order to allow single straight quote ' and double straight quote ''
 % to be stripped off from both the left and the right, they are
 % distinguished by the suffix .x and .y (as as Mr.x Mrs.x or Jr.y Sr.y)
-% 
+%
 % 。is an end-of-sentence marker used in Japanese texts.
 
 % Punctuation appearing on the right-side of words.
@@ -14,8 +14,8 @@
 % splitting won't work right.
 ")" "}" "]" ">" "".y" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" “ ''.y '.y `.y
 "%" "," ....y "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y "”" ━.y –.y ー.y ‐.y 、.y
-～ ¢ ₵ ™ ℠ 
-  : RPUNC+; 
+～ ¢ ₵ ™ ℠
+  : RPUNC+;
 
 % Punctuation appearing on the left-side of words.
 % Lots of styles of open-parenthesis
@@ -28,10 +28,10 @@
 % coffe w/milk
 "(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［
 『 「 、.x `.x `` „ ‘ ''.x '.x ….x ....x
-¿ ¡ "$" US$ USD C$ 
+¿ ¡ "$" US$ USD C$
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#"
-* • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎ 
+* • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎
 –.x ━.x ー.x -- - ‧.x
 y' w/
   : LPUNC+;
