@@ -75,10 +75,7 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 		int len, center_t;
 
 		/* Centers obtained by counting the characters,
-		 * not the bytes in the string.
-		 * len = strlen(linkage->word[i]);
-		 * len = mbsrtowcs(NULL, &linkage->word[i], 0, &mbss);
-		 */
+		 * not the bytes in the string. */
 		len = utf8_strlen(linkage->word[i]);
 		center_t = tot + (len/2);
 #if 1 /* Long labels - disable in order to compare output with old versions. */
