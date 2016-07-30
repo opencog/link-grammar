@@ -89,6 +89,8 @@ void *alloca (size_t);
 
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)
+/* And strtok_r is strtok_s */
+#define strtok_r strtok_s
 
 #endif /* _MSC_VER */
 
@@ -97,9 +99,6 @@ void *alloca (size_t);
  * programs on Windows.
  * MINGW is also known as MSYS */
 #if defined(_MSC_VER) || defined(__MINGW32__)
-
-/* strtok_r() is missing in Windows */
-char * strtok_r (char *s, const char *delim, char **saveptr);
 
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
