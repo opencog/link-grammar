@@ -25,6 +25,89 @@
 #include "utilities.h"
 #include "word-file.h"
 
+/**
+ * Format the given locale for use in setlocale().
+ * POSIX systems and Windows use different conventions.
+ * @param dict Used for putting the returned value in a string-set.
+ * @return The formatted locale, directly usable in setlocale().
+ */
+static const char * format_locale(Dictionary dict, const char *locale)
+{
+	if (NULL == locale) return NULL;
+
+#ifdef _WIN32
+	wchar_t wlocale[LOCALE_NAME_MAX_LENGTH];
+	wchar_t wtmpbuf[LOCALE_NAME_MAX_LENGTH];
+	char tmpbuf[LOCALE_NAME_MAX_LENGTH];
+	char locale_buf[LOCALE_NAME_MAX_LENGTH];
+	size_t r;
+
+	r = mbstowcs(wlocale, locale, MAX(strlen(locale)+1, LOCALE_NAME_MAX_LENGTH));
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting %s to wide character.", locale);
+		return NULL;
+	}
+	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
+
+	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
+	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
+	{
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: "
+		          "Error %d", locale, GetLastError());
+		return NULL;
+	}
+	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting %ls from wide character.", wtmpbuf);
+		return NULL;
+	}
+	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
+	if (0 == strncmp(tmpbuf, "Unknown", 7))
+	{
+		prt_error("Error: Unknown language code in locale %s", locale);
+		return NULL;
+	}
+	strcpy(locale_buf, tmpbuf);
+	strcat(locale_buf, "_");
+
+	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
+	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
+	{
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: ",
+		          "Error %d", locale, GetLastError());
+		return NULL;
+	}
+	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting %ls from wide character.", wtmpbuf);
+		return NULL;
+	}
+	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
+	if (0 == strncmp(tmpbuf, "Unknown", 7))
+	{
+		prt_error("Error: Unknown territory code in locale %s", locale);
+		return NULL;
+	}
+	strcat(locale_buf, tmpbuf);
+
+#else /* Assuming POSIX */
+	char *p;
+	char *locale_buf = alloca(strlen(locale) + sizeof(".UTF-8"));
+
+	strcpy(locale_buf, locale);
+	for (p = locale_buf; ('-' != *p) && ('_' != *p) && ('\0' != *p); p++)
+		*p = tolower(*p);
+	if ('-' == *p) *p = '_';
+	for (; '\0' != *p; p++) *p = toupper(*p);
+	strcpy(p, ".UTF-8");
+#endif
+
+	return string_set_add(locale_buf, dict->string_set);
+}
+
 const char * linkgrammar_get_version(void)
 {
 	const char *s = "link-grammar-" LINK_VERSION_STRING;
