@@ -850,44 +850,35 @@ win32_getlocale (void)
 
 char * get_default_locale(void)
 {
-	char * locale, * needle;
+	const char *lc_vars[] = {"LC_ALL", "LC_CTYPE", "LANG", NULL};
+	char *ev;
+	const char **evname;
+	char *locale = NULL;
 
-	locale = NULL;
-
+	for(evname = lc_vars; NULL != *evname; evname++)
+	{
+		ev = getenv(*evname);
+		if ((NULL != ev) && ('\0' != ev[0])) break;
+	}
+	if (NULL != *evname)
+	{
+		locale = ev;
+		lgdebug(D_USER_FILES, "Info: Environment locale %s=%s\n", *evname, ev);
+	}
+	else
+	{
+		lgdebug(D_USER_FILES, "Info: Environment locale not set\n");
 #ifdef _WIN32
-	if(!locale)
-		locale = win32_getlocale ();
+		locale = win32_getlocale();
+		if (NULL == locale)
+			lgdebug(D_USER_FILES, "Warning: Cannot find user default locale\n");
+		else
+			lgdebug(D_USER_FILES, "Info: User default locale %s\n", locale);
+		return locale; /* Already strdup'ed */
 #endif
-
-	if(!locale)
-		locale = safe_strdup (getenv ("LANG"));
-
-#if defined(HAVE_LC_MESSAGES)
-	if(!locale)
-		locale = safe_strdup (setlocale (LC_MESSAGES, NULL));
-#endif
-
-	if(!locale)
-		locale = safe_strdup (setlocale (LC_ALL, NULL));
-
-	if(!locale || strcmp(locale, "C") == 0) {
-		free(locale);
-		locale = safe_strdup("en");
 	}
 
-	/* strip off "@euro" from en_GB@euro */
-	if ((needle = strchr (locale, '@')) != NULL)
-		*needle = '\0';
-
-	/* strip off ".UTF-8" from en_GB.UTF-8 */
-	if ((needle = strchr (locale, '.')) != NULL)
-		*needle = '\0';
-
-	/* strip off "_GB" from en_GB */
-	if ((needle = strchr (locale, '_')) != NULL)
-		*needle = '\0';
-
-	return locale;
+	return strdup(locale);
 }
 
 /* ============================================================= */
