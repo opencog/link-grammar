@@ -44,6 +44,9 @@ link_public_api(const char *)
 link_public_api(const char *)
 	linkgrammar_get_dict_version(Dictionary);
 
+link_public_api(const char *)
+	linkgrammar_get_dict_locale(Dictionary);
+
 /**********************************************************************
  *
  * Functions to manipulate Dictionaries
