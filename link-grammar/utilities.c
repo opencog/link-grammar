@@ -819,88 +819,33 @@ char *get_file_contents(const char * dict_name)
 /* Locale routines */
 
 #ifdef _WIN32
-
 static char *
 win32_getlocale (void)
 {
-	LCID lcid;
-	LANGID langid;
-	char *ev;
-	int primary, sub;
-	char bfr[64];
-	char iso639[10];
-	char iso3166[10];
-	const char *script = NULL;
+	char lbuf[10];
+	char locale[32];
 
-	/* Let the user override the system settings through environment
-	 * variables, as on POSIX systems. Note that in GTK+ applications
-	 * since GTK+ 2.10.7 setting either LC_ALL or LANG also sets the
-	 * Win32 locale and C library locale through code in gtkmain.c.
-	 */
-	if (((ev = getenv ("LC_ALL")) != NULL && ev[0] != '\0')
-	 || ((ev = getenv ("LC_MESSAGES")) != NULL && ev[0] != '\0')
-	 || ((ev = getenv ("LANG")) != NULL && ev[0] != '\0'))
-		return safe_strdup (ev);
+	LCID lcid = GetThreadLocale();
 
-	lcid = GetThreadLocale ();
-
-	if (!GetLocaleInfo (lcid, LOCALE_SISO639LANGNAME, iso639, sizeof (iso639)) ||
-	    !GetLocaleInfo (lcid, LOCALE_SISO3166CTRYNAME, iso3166, sizeof (iso3166)))
-		return safe_strdup ("C");
-
-	/* Strip off the sorting rules, keep only the language part. */
-	langid = LANGIDFROMLCID (lcid);
-
-	/* Split into language and territory part. */
-	primary = PRIMARYLANGID (langid);
-	sub = SUBLANGID (langid);
-
-	/* Handle special cases */
-	switch (primary)
+	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO639LANGNAME, lbuf, sizeof(lbuf)))
 	{
-		case LANG_AZERI:
-			switch (sub)
-			{
-				case SUBLANG_AZERI_LATIN:
-					script = "@Latn";
-					break;
-				case SUBLANG_AZERI_CYRILLIC:
-					script = "@Cyrl";
-					break;
-			}
-			break;
-		case LANG_SERBIAN: /* LANG_CROATIAN == LANG_SERBIAN */
-			switch (sub)
-			{
-				case SUBLANG_SERBIAN_LATIN:
-				case 0x06: /* Serbian (Latin) - Bosnia and Herzegovina */
-					script = "@Latn";
-					break;
-			}
-			break;
-		case LANG_UZBEK:
-			switch (sub)
-			{
-				case SUBLANG_UZBEK_LATIN:
-					script = "@Latn";
-					break;
-				case SUBLANG_UZBEK_CYRILLIC:
-					script = "@Cyrl";
-					break;
-			}
-			break;
+		prt_error("Error: GetLocaleInfoA LOCALE_SENGLISHLANGUAGENAME LCID=%d: "
+		          "Error %d", lcid, GetLastError());
+		return NULL;
 	}
+	strcpy(locale, lbuf);
+	strcat(locale, "-");
 
-	strcat (bfr, iso639);
-	strcat (bfr, "_");
-	strcat (bfr, iso3166);
+	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO3166CTRYNAME, lbuf, sizeof(lbuf)))
+	{
+		prt_error("Error: GetLocaleInfoA LOCALE_SISO3166CTRYNAME LCID=%d: "
+		          "Error %d", lcid, GetLastError());
+		return NULL;
+	}
+	strcat(locale, lbuf);
 
-	if (script)
-		strcat (bfr, script);
-
-	return safe_strdup (bfr);
+	return strdup(locale);
 }
-
 #endif
 
 char * get_default_locale(void)
