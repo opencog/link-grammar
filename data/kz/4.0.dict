@@ -4,6 +4,7 @@
 %
 % Dictionary version number is 5.3.5 (formatted as V5v3v5+)
 <dictionary-version-number>: V5v3v5+;
+<dictionary-locale>: KK4kz+;
 
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;

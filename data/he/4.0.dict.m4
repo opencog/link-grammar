@@ -47,6 +47,7 @@ changecom(`%')dnl
 
 % Dictionary version number is 5.3.0 (formatted as V5v3v0+)
 <dictionary-version-number>: V5v3v0+;
+<dictionary-locale>: HE4il+;
 
 % The empty word.
 EMPTY-WORD.zzz: ZZZ-;
