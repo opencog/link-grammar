@@ -751,7 +751,7 @@ static void wordgraph_show_cancel(void)
 
 #define POPEN_DOT_CMD DOT_COMMAND" "DOT_DRIVER
 #ifndef POPEN_DOT_CMD_WINDOWS
-#  if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+#  ifdef _WIN32
 #    ifndef IMAGE_VIEWER
 #      define IMAGE_VIEWER "rundll32 PhotoViewer,ImageView_Fullscreen"
 #    endif
@@ -836,7 +836,7 @@ static void x_forkexec(const char *const argv[], pid_t *pid)
 }
 #endif /* !defined HAVE_FORK || defined POPEN_DOT */
 
-#if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 #define TMPDIR (getenv("TEMP") ? getenv("TEMP") : ".")
 #else
 #define TMPDIR (getenv("TMPDIR") ? getenv("TMPDIR") : "/tmp")

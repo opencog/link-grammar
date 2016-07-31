@@ -83,7 +83,7 @@ typedef enum
 } Label;
 
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 /* Windows console (cmd.exe) input to utf8 */
 static char* oem_to_utf8(char *instring)
 {
@@ -726,7 +726,7 @@ int main(int argc, char * argv[])
 
 	locale = set_program_locale(use_locale, LAST_RESORT_LOCALE);
 
-#if !defined(_MSC_VER) && !defined(__MINGW32__)
+#ifndef _WIN32
 	/* Check to make sure the current locale is UTF-8; if its not,
 	 * then force-set this to the English UTF-8 locale.
 	 */

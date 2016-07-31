@@ -158,8 +158,7 @@ int utf8_charlen(const char *xc)
 	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-
+#ifdef _WIN32
 /**
  * (Experimental) Implementation of mbrtowc for Windows.
  * This is required because the other, commonly available implementations
@@ -182,12 +181,12 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	if (0 == nb2) return 0;
 	return nb;
 }
-#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
+#endif /* _WIN32 */
 
 static int wctomb_check(char *s, wchar_t wc)
 {
 	int nr;
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
 	if (nr < 0) {
@@ -663,7 +662,7 @@ void * object_open(const char *filename,
 	 * seems to use forward-slash, from what I can tell.
 	 */
 	if ((filename[0] == '/')
-#if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 		|| ((filename[1] == ':')
 			 && ((filename[2] == '\\') || (filename[2] == '/')))
 		|| (filename[0] == '\\') /* UNC path */

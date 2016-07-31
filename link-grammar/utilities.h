@@ -103,8 +103,7 @@ void *alloca (size_t);
  * Not surprising, since MinGW is intended for compiling Windows
  * programs on Windows.
  * MINGW is also known as MSYS */
-#if defined(_MSC_VER) || defined(__MINGW32__)
-
+#ifdef _WIN32
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
 
@@ -117,7 +116,7 @@ char * strndup (const char *str, size_t size);
 #endif
 size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
-#endif /* _MSC_VER || __MINGW32__ */
+#endif /* _WIN32 */
 
 /*
  * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
@@ -147,7 +146,7 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
  * when passed utf8. Thus, limit to 7 bits for windows. */
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
   #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 #else
   #define lg_isspace isspace
@@ -239,7 +238,7 @@ static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
 #else
 	return mbsrtowcs(NULL, &s, 0, &mbss);
