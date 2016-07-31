@@ -54,6 +54,12 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif
 
+#ifndef _WIN32
+#define LAST_RESORT_LOCALE "en_US.UTF-8" /* Supposing POSIX systems */
+#else
+#define LAST_RESORT_LOCALE ""            /* Use user default locale */
+#endif
+
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
@@ -587,6 +593,38 @@ fail:
 #endif /* _WIN32 */
 }
 
+static const char *set_program_locale(const char *locale,
+                               const char *locale1)
+{
+	const char *rlocale = NULL;
+
+	if (NULL != locale)
+		rlocale = setlocale(LC_CTYPE, locale);
+	if (NULL == rlocale)
+	{
+		if (NULL != locale)
+			prt_error("Warning: Failed to set locale to \"%s\".", locale);
+		if ((NULL != locale1) && (0 != strcmp(locale, locale1)))
+		{
+			prt_error("Info: Force-setting to \"%s\"", locale1);
+			rlocale = setlocale(LC_CTYPE, locale1);
+			if (NULL == rlocale)
+			{
+				prt_error("Warning: Failed to set locale to \"%s\".", locale1);
+				prt_error("Info: Force-setting to \"C\"");
+				rlocale = setlocale(LC_CTYPE, "C");
+				if (NULL == rlocale) /* "Cannot happen" */
+				{
+					prt_error("Fatal error: Failed to set locale to \"C\".");
+					exit(EXIT_FAILURE);
+				}
+			}
+		}
+	}
+
+	return rlocale;
+}
+
 int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
@@ -654,25 +692,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-#if !defined(_MSC_VER) && !defined(__MINGW32__)
-	/* Get the locale from the environment...
-	 * Perhaps we should someday get it from the dictionary ??
-	 */
-	locale = setlocale(LC_CTYPE, "");
-
-	/* Check to make sure the current locale is UTF8; if its not,
-	 * then force-set this to the english utf8 locale
-	 */
-	const char *codeset = nl_langinfo(CODESET);
-	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
-	{
-		fprintf(stderr,
-		    "%s: Warning: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
-		     argv[0], codeset);
-		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
-	}
-#endif
-
 	if (language && *language)
 	{
 		dict = dictionary_create_lang(language);
@@ -696,6 +715,30 @@ int main(int argc, char * argv[])
 	win32_set_utf8_output();
 #endif
 
+	const char *use_locale = linkgrammar_get_dict_locale(dict);
+	if (NULL == use_locale)
+	{
+			prt_error("Warning: Cannot determine the locale "
+			          "from the dictionary and the environment.");
+			prt_error("Info: Force-setting to \"%s\".", LAST_RESORT_LOCALE);
+			use_locale = LAST_RESORT_LOCALE;
+	}
+
+	locale = set_program_locale(use_locale, LAST_RESORT_LOCALE);
+
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
+	/* Check to make sure the current locale is UTF-8; if its not,
+	 * then force-set this to the English UTF-8 locale.
+	 */
+	const char *codeset = nl_langinfo(CODESET);
+	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
+	{
+		prt_error("Warning: Locale %s (codeset %s) was not UTF-8",
+		          locale, codeset);
+		locale = set_program_locale(LAST_RESORT_LOCALE, LAST_RESORT_LOCALE);
+	}
+#endif
+
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with
 	 * rules that have a cost of 2.0.
@@ -714,9 +757,7 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-#if !defined(_MSC_VER) && !defined(__MINGW32__)
 	prt_error("Info: Using locale %s.", locale);
-#endif
 	prt_error("Info: Dictionary version %s.",
 		linkgrammar_get_dict_version(dict));
 	prt_error("Info: Library version %s. Enter \"!help\" for help.",
