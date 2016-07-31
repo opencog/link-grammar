@@ -234,7 +234,7 @@ static utf8char get_character(Dictionary dict, int quote_mode)
 		if (c == '\n')
 			dict->line_number++;
 
-		/* If its a 7-bit ascii, we are done */
+		/* If it's a 7-bit ascii, we are done */
 		if ((0 == i) && ((c & 0x80) == 0x0))
 		{
 			uc[0] = c;
@@ -326,7 +326,7 @@ static bool link_advance(Dictionary dict)
 			return false;
 		}
 		if (quote_mode) {
-			if (c[0] == '\"' &&
+			if (c[0] == '"' &&
 			    /* Check the next character too, to allow " in words */
 			    (*dict->pin == ':' || *dict->pin == ';' ||
 			    lg_isspace(*dict->pin))) {
@@ -575,7 +575,7 @@ static bool dict_match(const char * s, const char * t)
 	/* dt is NULL when there's no prefix ... */
 	if (dt == NULL && ds != NULL) {
 		if (((int)strlen(t)) > (ds-s)) return false;   /* we need to do this to ensure that */
-		return (strncmp(s, t, ds-s) == 0);	           /* "i.e." does not match "i.e" */
+		return (strncmp(s, t, ds-s) == 0);             /* "i.e." does not match "i.e" */
 	} else if (dt != NULL && ds == NULL) {
 		if (((int)strlen(s)) > (dt-t)) return false;
 		return (strncmp(s, t, dt-t) == 0);
@@ -878,7 +878,7 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 {
 	Exp* n = Exp_create(&dict->exp_list);
 	n->dir = dict->token[i];
-	dict->token[i] = '\0';				   /* get rid of the + or - */
+	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
 		n->u.string = string_set_add(dict->token+1, dict->string_set);
@@ -945,7 +945,7 @@ static Exp * make_connector(Dictionary dict)
 		else if (dict->token[i] == ANY_DIR)
 		{
 			Exp *plu, *min;
-			/* If we are here, then its a bi-directional connector.
+			/* If we are here, then it's a bi-directional connector.
 			 * Make both a + and a - version, and or them together.  */
 			dict->token[i] = '+';
 			plu = make_dir_connector(dict, i);
@@ -1373,7 +1373,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
  * once at the end. This is a **LOT LOT** quicker than maintaining an
  * AVL tree along the way (less than quarter-of-a-second vs. about
  * a minute or more!) FWIW, the DSW tree is even more balanced than
- * the AVL tree is (its less deep, more full).
+ * the AVL tree is (it's less deep, more full).
  *
  * The DSW algo, with C++ code, is described in
  *
@@ -1891,7 +1891,7 @@ static void display_word_info(Dictionary dict, const char * word)
 		return;
 	}
 
-	/* Recurse, if its a regex match */
+	/* Recurse, if it's a regex match */
 	regex_name = match_regex(dict->regex_root, word);
 	if (regex_name)
 	{
@@ -1914,7 +1914,7 @@ static void display_word_expr(Dictionary dict, const char * word)
 		return;
 	}
 
-	/* Recurse, if its a regex match */
+	/* Recurse, if it's a regex match */
 	regex_name = match_regex(dict->regex_root, word);
 	if (regex_name)
 	{
