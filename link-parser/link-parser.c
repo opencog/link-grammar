@@ -74,6 +74,7 @@ static int batch_errors = 0;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
+static bool isatty_stdin, isatty_stdout;
 
 typedef enum
 {
@@ -636,6 +637,9 @@ int main(int argc, char * argv[])
 	Command_Options *copts;
 	Parse_Options   opts;
 	bool batch_in_progress = false;
+
+	isatty_stdin = isatty(fileno(stdin));
+	isatty_stdout = isatty(fileno(stdout));
 
 #if LATER
 	/* Try to catch the SIGWINCH ... except this is not working. */
