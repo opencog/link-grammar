@@ -65,7 +65,6 @@
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
 
 static int batch_errors = 0;
-static bool input_pending = false;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
@@ -108,12 +107,15 @@ static char* oem_to_utf8(char *instring)
 #endif
 
 static char *
-fget_input_string(FILE *in, FILE *out, Command_Options* copts)
+fget_input_string(FILE *in, FILE *out, bool check_return)
 {
+	static char input_string[MAX_INPUT];
+	static bool input_pending = false;
+
 	if ((in != stdin) || !isatty(fileno(stdin)))
 	{
-		static char input_string[MAX_INPUT];
-		input_pending = false;
+		/* Here the input is not from a terminal. */
+		if (check_return) return (char *)"x"; /* XXX One linkage per sentence. */
 		if (fgets(input_string, MAX_INPUT, in))
 		{
 			char *lf = strchr(input_string, '\n');
@@ -123,91 +125,41 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 		return NULL;
 	}
 
-#ifdef HAVE_EDITLINE
-	static char * pline = NULL;
-	const char * prompt = "linkparser> ";
+	/* If we are here, the input is from a terminal. */
+	static char *pline;
+	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
 
-	if (input_pending && pline != NULL)
+	if (input_pending)
 	{
 		input_pending = false;
 		return pline;
 	}
-	if (copts->batch_mode || verbosity == 0 || input_pending)
-	{
-		prompt = "";
-	}
-	input_pending = false;
+
+#ifdef HAVE_EDITLINE
+	#ifdef _WIN32
+		#error __FILE__ ": Cannot use HAVE_EDITLINE "
+		                "(the console already has line editing and history)."
+	#endif /* _WIN32 */
 	pline = lg_readline(prompt);
+#else
+	fprintf(out, prompt);
+	fflush(out);
+#ifdef _WIN32
+	pline = get_console_line();
+#else
+	pline = fgets(input_string, MAX_INPUT, in);
+#endif /* _WIN32 */
+#endif /* HAVE_EDITLINE */
+
+	if (NULL == pline) return NULL;                /* EOF */
+	if (check_return)
+	{
+		if ('\0' == pline[0]) return (char *)"\n"; /* Continue linkage display */
+		input_pending = true;
+		return (char *)"x";                        /* Stop linkage display */
+	}
 
 	return pline;
-
-#else
-	static char input_string[MAX_INPUT];
-
-	if (!copts->batch_mode && verbosity > 0 && !input_pending)
-	{
-		fprintf(out, "linkparser> ");
-		fflush(out);
-	}
-	input_pending = false;
-
-#if defined(_MSC_VER) || defined(__MINGW32__)
-	/* Windows console input comes using the console codepage;
-	 * convert it to utf8 */
-	if (stdin == in)
-	{
-		static char * pline = NULL;
-		if (fgets(input_string, MAX_INPUT, in))
-		{
-			char *cr, *lf;
-			if (pline) free(pline);
-			pline = oem_to_utf8(input_string);
-
-			cr = strchr(pline, '\r');
-			if (cr) *cr = '\0';
-			lf = strchr(pline, '\n');
-			if (lf) *lf = '\0';
-
-			return pline;
-		}
-	}
-#else
-	/* Linux et al return UTF-8 multi-byte strings. */
-	if (fgets(input_string, MAX_INPUT, in)) return input_string;
-#endif
-	return NULL;
-#endif
-}
-
-static int fget_input_char(FILE *in, FILE *out, Command_Options* copts)
-{
-#ifdef HAVE_EDITLINE
-	char * pline = fget_input_string(in, out, copts);
-	if (NULL == pline) return EOF;
-	if (*pline)
-	{
-		input_pending = true;
-		return *pline;
-	}
-	return '\n';
-
-#else
-	int c;
-
-	if (!copts->batch_mode && verbosity > 0)
-		fprintf(out, "linkparser> ");
-	fflush(out);
-
-	/* For UTF-8 input, I think its still technically correct to
-	 * use fgetc() and not fgetwc() at this point. */
-	c = lg_fgetc(in);
-	if (c != '\n')
-	{
-		lg_ungetc(c, in);
-		input_pending = true;
-	}
-	return c;
-#endif
 }
 
 /**************************************************************************
@@ -328,9 +280,8 @@ static int auto_next_linkage_test(const char *test)
 	return DISPLAY_MAX;
 }
 
-static int process_some_linkages(Sentence sent, Command_Options* copts)
+static const char*process_some_linkages(Sentence sent, Command_Options* copts)
 {
-	int c;
 	int i, num_to_query, num_to_display, num_displayed;
 	Linkage linkage;
 	double corpus_cost;
@@ -434,8 +385,8 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				c = fget_input_char(stdin, stdout, copts);
-				if (c != '\n') return c;
+				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
+				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
 		else
@@ -443,7 +394,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 			break;
 		}
 	}
-	return 'x';
+	return "x";
 }
 
 static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
@@ -747,6 +698,10 @@ int main(int argc, char * argv[])
 		}
 	}
 
+#ifdef _WIN32
+	win32_set_utf8_output();
+#endif
+
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with
 	 * rules that have a cost of 2.0.
@@ -783,7 +738,7 @@ int main(int argc, char * argv[])
 		debug = parse_options_get_debug(opts);
 		test = parse_options_get_test(opts);
 
-		input_string = fget_input_string(input_fh, stdout, copts);
+		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
 		check_winsize(copts);
 
 		if (NULL == input_string)
@@ -978,8 +933,8 @@ int main(int argc, char * argv[])
 			}
 			else
 			{
-				int c = process_some_linkages(sent, copts);
-				if (c == EOF)
+				const char *rc = process_some_linkages(sent, copts);
+				if (NULL == rc)
 				{
 					sentence_delete(sent);
 					sent = NULL;
