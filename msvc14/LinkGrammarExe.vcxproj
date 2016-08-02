@@ -22,6 +22,7 @@
     <ClCompile Include="..\link-parser\command-line.c" />
     <ClCompile Include="..\link-parser\lg_readline.c" />
     <ClCompile Include="..\link-parser\link-parser.c" />
+    <ClCompile Include="..\link-parser\parser-utilities.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-parser\command-line.h" />

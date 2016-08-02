@@ -54,7 +54,6 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif
 
-#include "../link-grammar/link-includes.h"
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
@@ -62,7 +61,6 @@
 #include "../viterbi/viterbi.h"
 #endif
 
-#define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
 

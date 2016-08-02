@@ -24,6 +24,9 @@
     <ClCompile Include="..\link-parser\link-parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-parser\parser-utilities.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-parser\command-line.h">
