@@ -112,17 +112,22 @@ static char* oem_to_utf8(char *instring)
 static char *
 fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 {
-#ifdef HAVE_EDITLINE
-	static char * pline = NULL;
-	const char * prompt = "linkparser> ";
-
-	if (in != stdin)
+	if ((in != stdin) || !isatty(fileno(stdin)))
 	{
 		static char input_string[MAX_INPUT];
 		input_pending = false;
-		if (fgets(input_string, MAX_INPUT, in)) return input_string;
+		if (fgets(input_string, MAX_INPUT, in))
+		{
+			char *lf = strchr(input_string, '\n');
+			if (lf) *lf = '\0';
+			return input_string;
+		}
 		return NULL;
 	}
+
+#ifdef HAVE_EDITLINE
+	static char * pline = NULL;
+	const char * prompt = "linkparser> ";
 
 	if (input_pending && pline != NULL)
 	{
@@ -166,28 +171,6 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 			if (lf) *lf = '\0';
 
 			return pline;
-		}
-	}
-	else
-	{
-		/* It appears that MS Win always provides wide chars, even if
-		 * one asked for "just a string".  So lets explicitly ask for
-		 * wide chars here, and convert to multi-byte UTF-8 on the fly.
-		 */
-		wchar_t winput_string[MAX_INPUT];
-		if (fgetws(winput_string, MAX_INPUT, in))
-		{
-			size_t nc = wcstombs(input_string, winput_string, MAX_INPUT);
-			if (nc && (((size_t) -1) != nc))
-			{
-				char *cr, *lf;
-				cr = strchr(input_string, '\r');
-				if (cr) *cr = '\0';
-				lf = strchr(input_string, '\n');
-				if (lf) *lf = '\0';
-
-				return input_string;
-			}
 		}
 	}
 #else
