@@ -141,7 +141,7 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 	}
 	input_pending = false;
 	if (pline) free(pline);
-	pline = lg_readline(prompt, copts->batch_mode);
+	pline = lg_readline(prompt);
 
 	return pline;
 
