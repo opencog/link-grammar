@@ -671,12 +671,6 @@ int main(int argc, char * argv[])
 		     argv[0], codeset);
 		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
-#else
-	#define WINDOWS_CONSOLE_UNICODE_MESSAGE \
-		"Warning: Windows console (cmd.exe) does not support Unicode input!\n" \
-		"\tWill attempt to convert from the native encoding!"
-	#pragma message(__FILE__ ": " WINDOWS_CONSOLE_UNICODE_MESSAGE)
-	prt_error(WINDOWS_CONSOLE_UNICODE_MESSAGE);
 #endif
 
 	if (language && *language)
