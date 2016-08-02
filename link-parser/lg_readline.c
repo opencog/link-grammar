@@ -10,16 +10,16 @@
 /***************************************************************************/
 
 /**
- * Arghhhh. This hacks around mutiple stupidities in readline/editline.
+ * Arghhhh. This hacks around multiple stupidities in readline/editline.
  * 1) most versions of editline don't have wide-char support.
  * 2) No versions of editline have UTF8 support.
  * So basically readline() is just plain broken.
- * So hack one up, using the wide-char interfaces.  This is a hack. Argh. 
+ * So hack one up, using the wide-char interfaces.  This is a hack. Argh.
  *
- * Double-arghh.  Current versions of readline hang in an infinte loop
+ * Double-arghh.  Current versions of readline hang in an infinite loop
  * on __read_nocancel() in read_char() called from el_wgets() (line 92
  * below) when the input is "He said 《 This is bull shit 》" Notice
- * the unicode angle-brackets. 
+ * the unicode angle-brackets.
  */
 
 #include "lg_readline.h"
@@ -108,7 +108,7 @@ char *lg_readline(const char *mb_prompt)
 	 * strip away the trailing newline, if any. */
 	nl = strchr(mb_line, '\n');
 	if (nl) *nl = 0x0;
-	
+
 	return mb_line;
 }
 
@@ -121,10 +121,10 @@ char *lg_readline(const char *prompt)
 	char * pline = readline(prompt);
 
 	/* Save non-blank lines */
-   if (pline && *pline)
-   {
-      if (*pline) add_history(pline);
-   }
+	if (pline && *pline)
+	{
+		if (*pline) add_history(pline);
+	}
 
 	return pline;
 }
