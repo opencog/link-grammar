@@ -25,14 +25,12 @@
 #include "lg_readline.h"
 
 #ifdef HAVE_EDITLINE
-
 #include <string.h>
 #include <histedit.h>
+#include <stdlib.h>
 
 #ifdef HAVE_WIDECHAR_EDITLINE
-
 #include <stdbool.h>
-#include <stdlib.h>
 
 static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
@@ -40,18 +38,17 @@ static wchar_t * prompt(EditLine *el)
 	return wc_prompt;
 }
 
-
 char *lg_readline(const char *mb_prompt)
 {
 	static bool is_init = false;
 	static HistoryW *hist = NULL;
 	static HistEventW ev;
 	static EditLine *el = NULL;
+	static char *mb_line;
 
 	int numc;
 	size_t byte_len;
 	const wchar_t *wc_line;
-	char *mb_line;
 	char *nl;
 
 	if (!is_init)
@@ -101,6 +98,7 @@ char *lg_readline(const char *mb_prompt)
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 
 	byte_len = wcstombs(NULL, wc_line, 0) + 4;
+	free(mb_line);
 	mb_line = malloc(byte_len);
 	wcstombs(mb_line, wc_line, byte_len);
 
@@ -118,7 +116,10 @@ char *lg_readline(const char *mb_prompt)
 
 char *lg_readline(const char *prompt)
 {
-	char * pline = readline(prompt);
+	static char *pline;
+
+	free(pline);
+	pline = readline(prompt);
 
 	/* Save non-blank lines */
 	if (pline && *pline)

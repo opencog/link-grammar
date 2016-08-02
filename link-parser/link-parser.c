@@ -116,12 +116,6 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 	static char * pline = NULL;
 	const char * prompt = "linkparser> ";
 
-	if (NULL == in)
-	{
-		if (pline) free(pline);
-		return NULL;
-	}
-
 	if (in != stdin)
 	{
 		static char input_string[MAX_INPUT];
@@ -140,15 +134,12 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 		prompt = "";
 	}
 	input_pending = false;
-	if (pline) free(pline);
 	pline = lg_readline(prompt);
 
 	return pline;
 
 #else
 	static char input_string[MAX_INPUT];
-
-	if (NULL == in) return NULL;
 
 	if (!copts->batch_mode && verbosity > 0 && !input_pending)
 	{
@@ -1031,7 +1022,6 @@ int main(int argc, char * argv[])
 	/* Free stuff, so that mem-leak detectors don't complain. */
 	command_options_delete(copts);
 	dictionary_delete(dict);
-	fget_input_string(NULL, NULL, NULL);
 
 	printf ("Bye.\n");
 	return 0;
