@@ -201,59 +201,36 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 }
 
 /**
- * Convert a list of utf8 chars to wide-chars.  The reason for doing
- * this is kind-of dorky: its so that we can easily find,
- * character-by-character, if a given character is a quotation mark
- * or a bullet.  This works only because the quotation marks and
- * bullets are exactly one (wide) character in length. I would like
- * it better if we didn't do this wide-char conversion, since wide-chars
- * are badly-behaved in crazy locales, and on MS Windows.
+ * Concatenate the definitions for the given affix class.
+ * This allows specifying the characters in different definitions
+ * instead in a one long string, e.g. instead of:
+ * ""«»《》【】『』`„": QUOTES+;
+ * One can specify (note the added spaces):
+ * """  «»  《》 【】 『』  ` „: QUOTES+;
+ * Or even:
+ * """: QUOTES+;
+ * «» : QUOTES+;
+ * etc.
+ * Note that if there are no definitions or only one definition, there is
+ * nothing to do.
+ * The result is written to the first entry.
+ * @param classno The given affix class.
  */
-static bool afdict_to_wide(Dictionary afdict, int classno)
+static void concat_class(Dictionary afdict, int classno)
 {
 	Afdict_class * ac;
-	wchar_t * wqs;
-	mbstate_t mbs;
 	size_t i;
-	size_t w;
 	dyn_str * qs;
-	const char *pqs;
 
 	ac = AFCLASS(afdict, classno);
-	if (0 == ac->length) return true;
+	if (1 >= ac->length) return;
 
 	qs = dyn_str_new();
 	for (i = 0; i < ac->length; i++)
 		dyn_strcat(qs, ac->string[i]);
 
-	/*
-	 * Convert utf8 to wide chars before use.
-	 * In case of error the result is undefined.
-	 */
-	pqs = qs->str;
-	memset(&mbs, 0, sizeof(mbs));
-	w = mbsrtowcs(NULL, &pqs, 0, &mbs);
-	if (0 > (int) w) /* mbsrtowcs returns ((size_t) -1) on error */
-	{
-		prt_error("Error: Affix dictionary: %s: "
-		          "Invalid utf8 character\n", afdict_classname[classno]);
-		return false;
-	}
-
-	/* Store the wide char version at the AFCLASS entry. */
-	if (ac->mem_elems <= w)
-	{
-		ac->mem_elems = w + 1;
-		ac->string = realloc(ac->string, sizeof(*wqs) * ac->mem_elems);
-	}
-	wqs = (wchar_t *)ac->string;
-	pqs = qs->str;
-	(void)mbsrtowcs(wqs, &pqs, w, &mbs);
-	wqs[w] = L'\0';
-
+	ac->string[0] = string_set_add(qs->str, afdict->string_set);
 	dyn_str_delete(qs);
-
-	return true;
 }
 
 /* Compare lengths of strings, for qsort */
@@ -409,8 +386,8 @@ static bool afdict_init(Dictionary dict)
 	}
 #endif /* AFDICT_ORDER_NOT_PRESERVED */
 
-	if (! afdict_to_wide(afdict, AFDICT_QUOTES)) return false;
-	if (! afdict_to_wide(afdict, AFDICT_BULLETS)) return false;
+	concat_class(afdict, AFDICT_QUOTES);
+	concat_class(afdict, AFDICT_BULLETS);
 
 	if (! anysplit_init(afdict)) return false;
 

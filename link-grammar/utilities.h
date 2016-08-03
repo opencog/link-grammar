@@ -370,6 +370,7 @@ static inline bool utf8_upper_match(const char * s, const char * t)
 
 void downcase_utf8_str(char *to, const char * from, size_t usize);
 void upcase_utf8_str(char *to, const char * from, size_t usize);
+int utf8_charlen(const char *);
 
 size_t lg_strlcpy(char * dest, const char *src, size_t size);
 void safe_strcpy(char *u, const char * v, size_t usize);

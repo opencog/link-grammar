@@ -140,25 +140,26 @@ static bool word_has_alternative(const Gword *word)
  * Return TRUE if the character is in afdict_classnum.
  */
 
-static bool in_afdict_class(Dictionary dict, wchar_t wc, afdict_classnum cn)
+/**
+ * Search in s the first character from utf-8 string xc.
+ */
+static char *utf8_str1chr(const char *s, const char *xc)
 {
-	const wchar_t *classchars =
-		(const wchar_t *)AFCLASS(dict->affix_table, cn)->string;
+	/* FIXME use strndupa() */
+	int len = utf8_charlen(xc);
+	char *xc1 = alloca(len+1);
+	strncpy(xc1, xc, len);
+	xc1[len] = '\0';
 
-	if (NULL == classchars) return false;
-	return (NULL != wcschr(classchars, wc));
+	return strstr(s, xc1);
 }
 
-static bool is_afdict_str(Dictionary dict, const char *str, afdict_classnum cn)
+static bool in_afdict_class(Dictionary dict, afdict_classnum cn, const char *s)
 {
-	mbstate_t mbs;
-	wchar_t c;
-	int nb;
+	if (0 == AFCLASS(dict->affix_table, cn)->length) return false;
+	const char *classchars = AFCLASS(dict->affix_table, cn)->string[0];
 
-	memset(&mbs, 0, sizeof(mbs));
-	nb = mbrtowc(&c, str, MB_CUR_MAX, &mbs);
-	if (0 > nb) return false;
-	return in_afdict_class(dict, c, cn);
+	return NULL != utf8_str1chr(classchars, s);
 }
 
 /**
@@ -1430,9 +1431,9 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 		 strcmp("？", word->prev[0]->subword) == 0 ||
 		 strcmp("！", word->prev[0]->subword) == 0 )
 		return true;
-	if (is_afdict_str(dict, word->prev[0]->subword, AFDICT_BULLETS))
+	if (in_afdict_class(dict, AFDICT_BULLETS, word->prev[0]->subword))
 		return true;
-	if (is_afdict_str(dict, word->prev[0]->subword, AFDICT_QUOTES))
+	if (in_afdict_class(dict, AFDICT_QUOTES, word->prev[0]->subword))
 		return true;
 
 	return false;

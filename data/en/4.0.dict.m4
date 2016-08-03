@@ -9181,9 +9181,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <post-quote>:
   QUc- & {<wo-wall> or <wi-wall> or CP+};
 
-« 《 【 『 „:
+« 《 【 『 „ “:
   QUd-;
-» 》 】 』 “:
+» 》 】 』 ”:
   <post-quote>;
 
 % For now, using ".x and ".y in the above definitions multiplies the number
