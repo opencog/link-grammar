@@ -115,48 +115,7 @@ void left_print_string(FILE * fp, const char * s, const char * t)
 	fprintf(fp, "%-*s", width, s);
 }
 
-#ifdef _WIN32  /* should be !defined(HAVE_STRTOK_R) */
-
-char *
-strtok_r (char *s, const char *delim, char **saveptr)
-{
-	char *p;
-
-	if (s == NULL)
-		s = *saveptr;
-
-	if (s == NULL)
-		return NULL;
-
-	/* Skip past any delimiters. */
-	/* while (*s && strchr (delim, *s)) s++; */
-	s += strspn(s, delim);
-
-	if (*s == '\0')
-	{
-		*saveptr = NULL;
-		return NULL;
-	}
-
-	/* Look for end of the token. */
-	/* p = s; while (*p && !strchr (delim, *p)) p++; */
-	p = strpbrk(s, delim);
-	if (p == NULL)
-	{
-		*saveptr = NULL;
-		return s;
-	}
-
-	*p = 0x0;
-	*saveptr = p+1;
-
-	return s;
-}
-
-#endif /* _WIN32 should be !HAVE_STROTOK_R */
-
-#ifdef _WIN32  /* should be !defined(HAVE_STRNDUP) */
-
+#ifndef HAVE_STRNDUP
 /* Emulates glibc's strndup() */
 char *
 strndup (const char *str, size_t size)
@@ -175,8 +134,7 @@ strndup (const char *str, size_t size)
 	result[size] = 0x0;
 	return result;
 }
-
-#endif /* _WIN32 should be !HAVE_STRNDUP */
+#endif /* !HAVE_STRNDUP */
 
 /* ============================================================= */
 /* UTF8 utilities */
