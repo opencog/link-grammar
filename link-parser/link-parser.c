@@ -668,7 +668,7 @@ int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
 	Dictionary      dict;
-	const char     *language="en";  /* default to english, and not locale */
+	const char     *language = NULL;
 	int             num_linkages, i;
 	Label           label = NO_LABEL;
 	const char      *locale = NULL;
@@ -747,15 +747,24 @@ int main(int argc, char * argv[])
 #endif
 
 	if (language && *language)
-		dict = dictionary_create_lang(language);
-	else
-		dict = dictionary_create_default_lang();
-
-	if (dict == NULL)
 	{
-		fprintf(stderr, "%s: Fatal error: Unable to open dictionary.\n", argv[0]);
-		exit(-1);
+		dict = dictionary_create_lang(language);
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open dictionary.");
+			exit(-1);
+		}
 	}
+	else
+	{
+		dict = dictionary_create_default_lang();
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open default dictionary.");
+			exit(-1);
+		}
+	}
+
 
 	setup_panic_parse_options(copts->panic_opts);
 	copts->panic_mode = true;
