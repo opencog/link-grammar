@@ -79,17 +79,17 @@ void *alloca (size_t);
 #define vsnprintf _vsnprintf
 #endif
 
-/* MS Visual C does not have any function normally found in strings.h */
-/* In particular, be careful to avoid including strings.h */
-#define strcasecmp _stricmp
-#ifndef strdup
-#define strdup _strdup
-#endif
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)
 
+/* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
+ * This happens, for example, when the argument is "const void **". */
+#define free(x) free((void *)x)
+#define realloc(x, s) realloc((void *)x, s)
+#define memcpy(x, y, s) memcpy((void *)x, (void *)y, s)
+#define qsort(x, y, z, w) qsort((void *)x, y, z, w)
 #endif /* _MSC_VER */
 
 /* Apparently, MinGW is also missing a variety of standard functions.
@@ -108,7 +108,6 @@ char * strndup (const char *str, size_t size);
  * cygwin just doesn't work very well. So we use our own custom version,
  * instead.
  */
-link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
 #ifdef mbrtowc
 #undef mbrtowc
 #endif
@@ -147,13 +146,6 @@ link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *)
   #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 #else
   #define lg_isspace isspace
-#endif
-
-
-#if __APPLE__
-/* Junk, to keep the Mac OSX linker happy, because this is listed in
- * the link-grammar.def symbol export file.  */
-void lg_mbrtowc(void);
 #endif
 
 #if __APPLE__
@@ -405,15 +397,6 @@ void * xalloc(size_t) GNUC_MALLOC;
 void * exalloc(size_t) GNUC_MALLOC;
 
 /* Tracking the space usage can help with debugging */
-#if defined(_WIN32) || __APPLE__
-  /* **MUST** define for win32, Mac OSX, because xfree is listed in
-   * link-grammar.def and the win/osx linker fails if there is no
-   * xfree. So, keep the linker happy. (xfree is used in both dict-file
-   * and sat solver.)
-   */
-  #define TRACK_SPACE_USAGE 1
-#endif /* defined(_WIN32) || __APPLE__ */
-
 #ifdef TRACK_SPACE_USAGE
 void xfree(void *, size_t);
 void exfree(void *, size_t);
