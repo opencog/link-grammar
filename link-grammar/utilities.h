@@ -196,23 +196,19 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 
 #define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-#define assert(ex, ...) {                                                   \
-	if (!(ex)) {                                                             \
-		prt_error("\nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
-		fprintf(stderr, "\n");                                                \
-		*((volatile int*) 0x0) = 42;  /* leave stack trace in debugger */     \
-	}                                                                        \
-}
+#ifdef _WIN32
+#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
 #else
+#define DEBUG_TRAP __builtin_trap()
+#endif
+
 #define assert(ex, ...) {                                                   \
 	if (!(ex)) {                                                             \
 		prt_error("\nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
 		fprintf(stderr, "\n");                                                \
-		__builtin_trap();  /* leave stack trace in debugger */                \
+		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
 	}                                                                        \
 }
-#endif
 
 #if defined(__UCLIBC__)
 #define fmaxf(a,b) ((a) > (b) ? (a) : (b))

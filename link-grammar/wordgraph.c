@@ -50,7 +50,6 @@ Gword *gword_new(Sentence sent, const char *s)
 
 Gword *empty_word(void)
 {
-#ifndef MSC_VER
 	static Gword e = {
 		.subword = EMPTY_WORD_MARK,
 		.unsplit_word = &e,
@@ -58,15 +57,6 @@ Gword *empty_word(void)
 		.alternative_id = &e,
 		.status = WS_INDICT,
 	};
-#else
-	static Gword e;
-
-	e.subword = EMPTY_WORD_MARK;
-	e.unsplit_word = &e;
-	e.morpheme_type = MT_EMPTY;
-	e.alternative_id = &e;
-	e.status = WS_INDICT;
-#endif
 
 	return &e;
 }
