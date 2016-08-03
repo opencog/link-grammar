@@ -88,8 +88,26 @@ char *get_console_line(void)
 	return utf8inbuf;
 }
 
+int console_output_cp;
+static void restore_console_cp(void)
+{
+	SetConsoleOutputCP(console_output_cp);
+}
+
+static BOOL CtrlHandler(DWORD fdwCtrlType)
+{
+	if ((CTRL_C_EVENT == fdwCtrlType) || (CTRL_BREAK_EVENT  == fdwCtrlType))
+	{
+		fprintf(stderr, "Interrupt\n");
+		restore_console_cp();
+		exit(2);
+	}
+	return FALSE;
+}
+
+#include <locale.h>
 /**
- * Set the output file conversion attributes for transparency.
+ * Set the output conversion attributes for transparency.
  * This way UTF-8 output doesn't pass any conversion.
  */
 void win32_set_utf8_output(void)
@@ -98,6 +116,13 @@ void win32_set_utf8_output(void)
 	{
 		prt_error("Warning: _setmode(fileno(stdout), _O_BINARY): %s",
 			strerror(errno));
+	}
+
+	console_output_cp = GetConsoleOutputCP();
+	atexit(restore_console_cp);
+	if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE))
+	{
+		prt_error("Warning: Cannot not set code page restore handler");
 	}
 	if (!SetConsoleOutputCP(CP_UTF8))
 	{
