@@ -107,7 +107,6 @@ static BOOL CtrlHandler(DWORD fdwCtrlType)
 	return FALSE;
 }
 
-#include <locale.h>
 /**
  * Set the output conversion attributes for transparency.
  * This way UTF-8 output doesn't pass any conversion.
@@ -142,4 +141,4 @@ void win32_set_utf8_output(void)
 			CP_UTF8, GetLastError());
 	}
 }
-#endif
+#endif /* _WIN32 */

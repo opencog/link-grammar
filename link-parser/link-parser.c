@@ -48,24 +48,24 @@
 #else
 #include <windows.h>
 #include <wchar.h>
-#endif
+#endif /* _WIN32 */
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
-#endif
+#endif /* _MSC_VER */
 
 #ifndef _WIN32
 #define LAST_RESORT_LOCALE "en_US.UTF-8" /* Supposing POSIX systems */
 #else
 #define LAST_RESORT_LOCALE ""            /* Use user default locale */
-#endif
+#endif /* _WIN32 */
 
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
 #ifdef USE_VITERBI
 #include "../viterbi/viterbi.h"
-#endif
+#endif /* USE_VITERBI */
 
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
@@ -110,7 +110,7 @@ static char* oem_to_utf8(char *instring)
 
 	return out;
 }
-#endif
+#endif /* _WIN32 */
 
 static char *
 fget_input_string(FILE *in, FILE *out, bool check_return)
@@ -713,7 +713,7 @@ int main(int argc, char * argv[])
 
 #ifdef _WIN32
 	win32_set_utf8_output();
-#endif
+#endif /* _WIN32 */
 
 	const char *use_locale = linkgrammar_get_dict_locale(dict);
 	if (NULL == use_locale)
@@ -737,7 +737,7 @@ int main(int argc, char * argv[])
 		          locale, codeset);
 		locale = set_program_locale(LAST_RESORT_LOCALE, LAST_RESORT_LOCALE);
 	}
-#endif
+#endif /* !_WIN32 */
 
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with
@@ -844,7 +844,7 @@ int main(int argc, char * argv[])
 			viterbi_parse(input_string, dict);
 		}
 		else
-#endif
+#endif /* USE_VITERBI */
 		{
 			sent = sentence_create(input_string, dict);
 
@@ -882,7 +882,7 @@ int main(int argc, char * argv[])
 				num_linkages = sentence_parse(sent, opts);
 				if (num_linkages < 0) continue;
 			}
-#endif
+#endif /* 0 */
 
 			/* Try using a larger list of disjuncts */
 			/* XXX FIXME: the lg_expand_disjunct_list() routine is not

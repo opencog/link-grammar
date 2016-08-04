@@ -30,7 +30,7 @@
 
 #ifdef USE_PTHREADS
 	#include <pthread.h>
-#endif
+#endif /* USE_PTHREADS */
 
 #include "string-set.h"
 #include "structures.h"
@@ -40,7 +40,7 @@
 	#define DIR_SEPARATOR "\\"
 #else
 	#define DIR_SEPARATOR "/"
-#endif
+#endif /*_WIN32 */
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR[0] == (ch))
 #ifndef DICTIONARY_DIR
@@ -203,7 +203,7 @@ static int wctomb_check(char *s, wchar_t wc)
 		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
 		exit(1);
 	}
-#endif
+#endif /* _WIN32 */
 	return nr;
 }
 
@@ -341,7 +341,7 @@ static void space_key_alloc(void)
 }
 #else
 static space_t space;
-#endif
+#endif /* USE_PTHREADS */
 
 static space_t * do_init_memusage(void)
 {
@@ -352,7 +352,7 @@ static space_t * do_init_memusage(void)
 	pthread_setspecific(space_key, s);
 #else
 	s = &space;
-#endif
+#endif  /* USE_PTHREADS */
 
 	s->max_space_used = 0;
 	s->space_in_use = 0;
@@ -376,7 +376,7 @@ void init_memusage(void)
 	static bool mem_inited = false;
 	if (mem_inited) return;
 	mem_inited = true;
-#endif
+#endif /* USE_PTHREADS */
 	do_init_memusage();
 }
 
@@ -388,7 +388,7 @@ static inline space_t *getspace(void)
 	return do_init_memusage();
 #else
 	return &space;
-#endif
+#endif /* USE_PTHREADS */
 }
 
 /**
@@ -559,7 +559,7 @@ char * dictionary_get_data_dir(void)
 		return data_dir;
 	}
 
-#if defined(_WIN32)
+#ifdef _WIN32
 	/* Dynamically locate invocation directory of our program.
 	 * Non-ASCII characters are not supported (files will not be found). */
 	char prog_path[MAX_PATH_NAME];
@@ -594,7 +594,7 @@ char * dictionary_get_data_dir(void)
 			}
 		}
 	}
-#endif
+#endif /* _WIN32 */
 
 	return data_dir;
 }
@@ -666,7 +666,7 @@ void * object_open(const char *filename,
 		|| ((filename[1] == ':')
 			 && ((filename[2] == '\\') || (filename[2] == '/')))
 		|| (filename[0] == '\\') /* UNC path */
-#endif
+#endif /* _WIN32 */
 	   )
 	{
 		/* opencb() returns NULL if the file does not exist. */
@@ -845,7 +845,7 @@ win32_getlocale (void)
 
 	return strdup(locale);
 }
-#endif
+#endif /* _WIN32 */
 
 char * get_default_locale(void)
 {
@@ -874,7 +874,7 @@ char * get_default_locale(void)
 		else
 			lgdebug(D_USER_FILES, "Debug: User default locale %s\n", locale);
 		return locale; /* Already strdup'ed */
-#endif
+#endif /* _WIN32 */
 	}
 
 	return strdup(locale);
