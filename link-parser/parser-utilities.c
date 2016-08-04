@@ -130,14 +130,6 @@ void win32_set_utf8_output(void)
 	}
 }
 
-#include <stdio.h>
-#include <io.h>
-
-#include <errno.h>
-#include <wchar.h>
-#include <windows.h>
-#include <winternl.h>
-
 /**
  * isatty() compatibility for running under Cygwin when compiling
  * using the Windows native C library.
