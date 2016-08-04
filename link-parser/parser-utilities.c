@@ -88,9 +88,11 @@ char *get_console_line(void)
 	return utf8inbuf;
 }
 
-int console_output_cp;
+static int console_input_cp;
+static int console_output_cp;
 static void restore_console_cp(void)
 {
+	SetConsoleCP(console_input_cp);
 	SetConsoleOutputCP(console_output_cp);
 }
 
@@ -118,12 +120,22 @@ void win32_set_utf8_output(void)
 			strerror(errno));
 	}
 
+	console_input_cp = GetConsoleCP();
 	console_output_cp = GetConsoleOutputCP();
 	atexit(restore_console_cp);
 	if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE))
 	{
 		prt_error("Warning: Cannot not set code page restore handler");
 	}
+	/* For file output. It is too late for output pipes.
+	 * If output pipe is desired, one case set CP_UTF8 by the
+	 * command "chcp 65001" before invoking link-parser. */
+	if (!SetConsoleCP(CP_UTF8))
+	{
+		prt_error("Warning: Cannot set input codepage %d (error %d)",
+			CP_UTF8, GetLastError());
+	}
+	/* For Console output. */
 	if (!SetConsoleOutputCP(CP_UTF8))
 	{
 		prt_error("Warning: Cannot set output codepage %d (error %d)",
