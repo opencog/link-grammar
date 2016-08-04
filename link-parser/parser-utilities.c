@@ -175,27 +175,26 @@ int lg_isatty(int fd)
 	NTSTATUS status;
 	IO_STATUS_BLOCK io;
 	long buf[66];  /* NAME_MAX + 1 + sizeof ULONG */
-	PFILE_NAME_INFORMATION pfni = (PFILE_NAME_INFORMATION) buf;
+	PFILE_NAME_INFORMATION pfni = (PFILE_NAME_INFORMATION)buf;
 	PWCHAR cp;
 
 	/* First check using _isatty.
-
-		 Note that this returns the wrong result for NUL, for instance!
-		 Workaround is not to use _isatty at all, but rather GetFileType
-		 plus object name checking. */
-	if (_isatty (fd))
+		Note that this returns the wrong result for NUL, for instance!
+		Workaround is not to use _isatty at all, but rather GetFileType
+		plus object name checking. */
+	if (_isatty(fd))
 		return 1;
 
 	/* Now fetch the underlying HANDLE. */
-	fh = (HANDLE) _get_osfhandle (fd);
-	if (!fh || fh == INVALID_HANDLE_VALUE)
-		{
-		  errno = EBADF;
-		  return 0;
-		}
+	fh = (HANDLE)_get_osfhandle(fd);
+	if (!fh || (INVALID_HANDLE_VALUE == fh))
+	{
+		errno = EBADF;
+		return 0;
+	}
 
 	/* Must be a pipe. */
-	if (GetFileType (fh) != FILE_TYPE_PIPE)
+	if (GetFileType(fh) != FILE_TYPE_PIPE)
 		goto no_tty;
 
 	/* Calling the native NT function NtQueryInformationFile is required to
@@ -211,7 +210,7 @@ int lg_isatty(int fd)
 			if (!pNtQueryInformationFile)
 				goto no_tty;
 		}
-	if (!NT_SUCCESS (pNtQueryInformationFile (fh, &io, pfni, sizeof buf,
+	if (!NT_SUCCESS (pNtQueryInformationFile(fh, &io, pfni, sizeof buf,
 						 FileNameInformation)))
 		goto no_tty;
 
@@ -219,24 +218,23 @@ int lg_isatty(int fd)
 	pfni->FileName[pfni->FileNameLength / sizeof (WCHAR)] = L'\0';
 
 	/* Now check the name pattern.  The filename of a Cygwin pseudo tty pipe
-		 looks like this:
+	   looks like this:
 
 			 \cygwin-%16llx-pty%d-{to,from}-master
 
-		 %16llx is the hash of the Cygwin installation, (to support multiple
-		 parallel installations), %d id the pseudo tty number, "to" or "from"
-		 differs the pipe direction. "from" is a stdin, "to" a stdout-like
-		 pipe. */
+		%16llx is the hash of the Cygwin installation, (to support multiple
+		parallel installations), %d id the pseudo tty number, "to" or "from"
+		differs the pipe direction. "from" is a stdin, "to" a stdout-like
+		pipe. */
 	cp = pfni->FileName;
-	if (!wcsncmp (cp, L"\\cygwin-", 8)
-			&& !wcsncmp (cp + 24, L"-pty", 4))
-		{
-			cp = wcschr (cp + 28, '-');
-			if (!cp)
-				goto no_tty;
-			if (!wcscmp (cp, L"-from-master") || !wcscmp (cp, L"-to-master"))
-				return 1;
-		}
+	if (!wcsncmp(cp, L"\\cygwin-", 8) && !wcsncmp(cp + 24, L"-pty", 4))
+	{
+		cp = wcschr(cp + 28, '-');
+		if (!cp)
+			goto no_tty;
+		if (!wcscmp(cp, L"-from-master") || !wcscmp(cp, L"-to-master"))
+			return 1;
+	}
 no_tty:
 	errno = EINVAL;
 	return 0;
