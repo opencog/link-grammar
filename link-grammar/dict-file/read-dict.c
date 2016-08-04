@@ -189,7 +189,8 @@ locale_error:
 		free((void *)locale);
 		locale = sslocale;
 #endif
-		prt_error("Info: Fall back to locale \"%s\".", locale);
+		prt_error("Info: No dictionary locale definition - \"%s\" is used.",
+		          locale);
 		return locale;
 	}
 }
