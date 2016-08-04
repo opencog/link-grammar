@@ -137,7 +137,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 	Dict_node *dn = lookup_list(dict, "<dictionary-locale>");
 	if (NULL == dn)
 	{
-		lgdebug(D_USER_FILES, "Info: Dictionary locale is not defined.\n");
+		lgdebug(D_USER_FILES, "Debug: Dictionary locale is not defined.\n");
 		goto locale_error;
 	}
 
@@ -170,7 +170,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 	}
 
 	free_lookup(dn);
-	lgdebug(D_USER_FILES, "Info: Dictionary locale: %s\n", dict->locale);
+	lgdebug(D_USER_FILES, "Debug: Dictionary locale: %s\n", dict->locale);
 	return dict->locale;
 
 locale_error:

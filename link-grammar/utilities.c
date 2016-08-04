@@ -588,7 +588,7 @@ char * dictionary_get_data_dir(void)
 				char *unsuppored = (NULL != strchr(prog_path, '?')) ?
 					" (containing unsupported character)" : "";
 
-				lgdebug(D_USER_FILES, "Info: Directory of executable: %s%s\n",
+				lgdebug(D_USER_FILES, "Debug: Directory of executable: %s%s\n",
 				        unsuppored, prog_path);
 				data_dir = safe_strdup(prog_path);
 			}
@@ -649,8 +649,8 @@ void * object_open(const char *filename,
 		{
 			char cwd[MAX_PATH_NAME];
 			char *cwdp = getcwd(cwd, sizeof(cwd));
-			printf("Info: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
-			printf("Info: Last-resort data directory: %s\n",
+			printf("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
+			printf("Debug: Last-resort data directory: %s\n",
 					  data_dir ? data_dir : "NULL");
 		}
 	}
@@ -671,7 +671,7 @@ void * object_open(const char *filename,
 	{
 		/* opencb() returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
-		lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", filename, NOTFOUND(fp));
+		lgdebug(D_USER_FILES, "Debug: Opening file %s%s\n", filename, NOTFOUND(fp));
 	}
 	else
 	{
@@ -696,7 +696,7 @@ void * object_open(const char *filename,
 			free(completename);
 			completename = join_path(*path, filename);
 			fp = opencb(completename, user_data);
-			lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", completename, NOTFOUND(fp));
+			lgdebug(D_USER_FILES, "Debug: Opening file %s%s\n", completename, NOTFOUND(fp));
 			if ((NULL != fp) || (NULL != path_found)) break;
 		}
 	}
@@ -704,7 +704,7 @@ void * object_open(const char *filename,
 	if (NULL == fp)
 	{
 		fp = opencb(filename, user_data);
-		lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", filename, NOTFOUND(fp));
+		lgdebug(D_USER_FILES, "Debug: Opening file %s%s\n", filename, NOTFOUND(fp));
 	}
 	else if (NULL == path_found)
 	{
@@ -862,17 +862,17 @@ char * get_default_locale(void)
 	if (NULL != *evname)
 	{
 		locale = ev;
-		lgdebug(D_USER_FILES, "Info: Environment locale %s=%s\n", *evname, ev);
+		lgdebug(D_USER_FILES, "Debug: Environment locale %s=%s\n", *evname, ev);
 	}
 	else
 	{
-		lgdebug(D_USER_FILES, "Info: Environment locale not set\n");
+		lgdebug(D_USER_FILES, "Debug: Environment locale not set\n");
 #ifdef _WIN32
 		locale = win32_getlocale();
 		if (NULL == locale)
-			lgdebug(D_USER_FILES, "Warning: Cannot find user default locale\n");
+			lgdebug(D_USER_FILES, "Debug: Cannot find user default locale\n");
 		else
-			lgdebug(D_USER_FILES, "Info: User default locale %s\n", locale);
+			lgdebug(D_USER_FILES, "Debug: User default locale %s\n", locale);
 		return locale; /* Already strdup'ed */
 #endif
 	}

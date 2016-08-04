@@ -321,7 +321,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	t = strrchr (lang, '/');
 	t = (NULL == t) ? lang : t+1;
 	dict->lang = string_set_add(t, dict->string_set);
-	lgdebug(D_USER_FILES, "Info: Language: %s\n", dict->lang);
+	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
