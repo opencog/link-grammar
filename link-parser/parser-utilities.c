@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#endif
+#endif /* _WIN32 */
 
 #ifdef _WIN32
 /**
@@ -130,7 +130,6 @@ void win32_set_utf8_output(void)
 	}
 }
 
-#if 0/* error C2081: 'FILE_INFORMATION_CLASSX': name in formal parameter list illegal */
 #include <stdio.h>
 #include <io.h>
 
@@ -138,27 +137,6 @@ void win32_set_utf8_output(void)
 #include <wchar.h>
 #include <windows.h>
 #include <winternl.h>
-
-#ifndef __MINGW64_VERSION_MAJOR
-/* MS winternl.h defines FILE_INFORMATION_CLASS, but with only a
-	 different single member. */
-enum FILE_INFORMATION_CLASSX
-{
-	FileNameInformation = 9
-};
-
-typedef struct _FILE_NAME_INFORMATION
-{
-	ULONG FileNameLength;
-	WCHAR FileName[1];
-} FILE_NAME_INFORMATION, *PFILE_NAME_INFORMATION;
-
-NTSTATUS (NTAPI *pNtQueryInformationFile) (HANDLE, PIO_STATUS_BLOCK, PVOID,
-						ULONG, FILE_INFORMATION_CLASSX);
-#else
-NTSTATUS (NTAPI *pNtQueryInformationFile) (HANDLE, PIO_STATUS_BLOCK, PVOID,
-						ULONG, FILE_INFORMATION_CLASS);
-#endif
 
 /**
  * isatty() compatibility for running under Cygwin when compiling
@@ -172,10 +150,8 @@ NTSTATUS (NTAPI *pNtQueryInformationFile) (HANDLE, PIO_STATUS_BLOCK, PVOID,
 int lg_isatty(int fd)
 {
 	HANDLE fh;
-	NTSTATUS status;
-	IO_STATUS_BLOCK io;
 	long buf[66];  /* NAME_MAX + 1 + sizeof ULONG */
-	PFILE_NAME_INFORMATION pfni = (PFILE_NAME_INFORMATION)buf;
+	PFILE_NAME_INFO pfni = (PFILE_NAME_INFO)buf;
 	PWCHAR cp;
 
 	/* First check using _isatty.
@@ -197,22 +173,11 @@ int lg_isatty(int fd)
 	if (GetFileType(fh) != FILE_TYPE_PIPE)
 		goto no_tty;
 
-	/* Calling the native NT function NtQueryInformationFile is required to
-		 support pre-Vista systems.  If that's of no concern, Vista introduced
-		 the GetFileInformationByHandleEx call with the FileNameInfo info class,
-		 which can be used instead. */
-	if (!pNtQueryInformationFile)
-		{
-			pNtQueryInformationFile = (NTSTATUS (NTAPI *)(HANDLE, PIO_STATUS_BLOCK,
-							PVOID, ULONG, FILE_INFORMATION_CLASS))
-						 GetProcAddress (GetModuleHandle ("ntdll.dll"),
-								 "NtQueryInformationFile");
-			if (!pNtQueryInformationFile)
-				goto no_tty;
-		}
-	if (!NT_SUCCESS (pNtQueryInformationFile(fh, &io, pfni, sizeof buf,
-						 FileNameInformation)))
+	if (!GetFileInformationByHandleEx(fh, FileNameInfo, pfni, sizeof(buf)))
+	{
+		printf("GetFileInformationByHandleEx: Error %d\n", GetLastError());
 		goto no_tty;
+	}
 
 	/* The filename is not guaranteed to be NUL-terminated. */
 	pfni->FileName[pfni->FileNameLength / sizeof (WCHAR)] = L'\0';
@@ -239,5 +204,4 @@ no_tty:
 	errno = EINVAL;
 	return 0;
 }
-#endif /* 0 */
-#endif
+#endif /* _WIN32 */

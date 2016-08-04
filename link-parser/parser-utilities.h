@@ -26,10 +26,13 @@
 #endif
 
 #ifdef _WIN32
-char *get_console_line(void);
-void win32_set_utf8_output(void);
 #define strcasecmp _stricmp
 #define strncasecmp(a,b,s) _strnicmp((a),(b),(s))
+
+char *get_console_line(void);
+void win32_set_utf8_output(void);
+int lg_isatty(int);
+#define isatty lg_isatty
 #endif /* _WIN32 */
 
 #endif // _PARSER_UTILITIES_
