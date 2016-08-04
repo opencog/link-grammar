@@ -41,7 +41,7 @@ char *get_console_line(void)
 		                             NULL, OPEN_EXISTING, 0, NULL);
 		if (INVALID_HANDLE_VALUE == console_handle)
 		{
-			prt_error("CreateFileA CONIN$: Error %d\n", GetLastError());
+			prt_error("CreateFileA CONIN$: Error %d.", GetLastError());
 			return NULL;
 		}
 	}
@@ -58,7 +58,7 @@ char *get_console_line(void)
 	                            sizeof(utf8inbuf), NULL, NULL);
 	if (0 == nchar)
 	{
-		prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d",
+		prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d.",
 		          GetLastError());
 		return NULL;
 	}
@@ -67,7 +67,7 @@ char *get_console_line(void)
 	const char *invlid_char  = strstr(utf8inbuf, "\xEF\xBF\xBD");
 	if (NULL != invlid_char)
 	{
-		prt_error("Warning: Invalid input character encountered");
+		prt_error("Warning: Invalid input character encountered.");
 	}
 	/* ^Z (EOF mark) is a character here. Convert it to an EOF indication. */
 	char *ctrl_z = strchr(utf8inbuf, '\x1A');
@@ -116,7 +116,7 @@ void win32_set_utf8_output(void)
 {
 	if (-1 == _setmode(fileno(stdout), _O_BINARY))
 	{
-		prt_error("Warning: _setmode(fileno(stdout), _O_BINARY): %s",
+		prt_error("Warning: _setmode(fileno(stdout), _O_BINARY): %s.",
 			strerror(errno));
 	}
 
@@ -125,20 +125,20 @@ void win32_set_utf8_output(void)
 	atexit(restore_console_cp);
 	if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE))
 	{
-		prt_error("Warning: Cannot not set code page restore handler");
+		prt_error("Warning: Cannot not set code page restore handler.");
 	}
 	/* For file output. It is too late for output pipes.
 	 * If output pipe is desired, one case set CP_UTF8 by the
 	 * command "chcp 65001" before invoking link-parser. */
 	if (!SetConsoleCP(CP_UTF8))
 	{
-		prt_error("Warning: Cannot set input codepage %d (error %d)",
+		prt_error("Warning: Cannot set input codepage %d (error %d).",
 			CP_UTF8, GetLastError());
 	}
 	/* For Console output. */
 	if (!SetConsoleOutputCP(CP_UTF8))
 	{
-		prt_error("Warning: Cannot set output codepage %d (error %d)",
+		prt_error("Warning: Cannot set output codepage %d (error %d).",
 			CP_UTF8, GetLastError());
 	}
 }
