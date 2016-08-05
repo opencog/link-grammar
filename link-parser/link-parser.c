@@ -543,7 +543,6 @@ static void check_winsize(Command_Options* copts)
 {
 	if (!isatty_stdout) return;
 #ifdef _WIN32
-	/* untested code .. does this actually work ??? */
 	HANDLE console;
 	CONSOLE_SCREEN_BUFFER_INFO info;
 
