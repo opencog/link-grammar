@@ -863,6 +863,17 @@ char * get_default_locale(void)
 	{
 		locale = ev;
 		lgdebug(D_USER_FILES, "Debug: Environment locale %s=%s\n", *evname, ev);
+#ifdef _WIN32
+		/* If compiled with MSVC/MSYS, we still support running under Cygwin. */
+		const char *ostype = getenv("OSTYPE");
+		if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
+		{
+			/* Convert to Windows style locale */
+			locale = strdupa(locale);
+			locale[strcspn(locale, "_")] = '-';
+			locale[strcspn(locale, ".@")] = '\0';
+		}
+#endif /* _WIN32 */
 	}
 	else
 	{
