@@ -75,6 +75,9 @@ static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
 static bool isatty_stdin, isatty_stdout;
+#ifdef _WIN32
+static bool running_under_cygwin = false;
+#endif /* _WIN32 */
 
 typedef enum
 {
@@ -152,7 +155,10 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 	fprintf(out, prompt);
 	fflush(out);
 #ifdef _WIN32
-	pline = get_console_line();
+	if (!running_under_cygwin)
+		pline = get_console_line();
+	else
+		pline = fgets(input_string, MAX_INPUT, in);
 #else
 	pline = fgets(input_string, MAX_INPUT, in);
 #endif /* _WIN32 */
@@ -633,6 +639,15 @@ int main(int argc, char * argv[])
 
 	isatty_stdin = isatty(fileno(stdin));
 	isatty_stdout = isatty(fileno(stdout));
+
+#ifdef _WIN32
+	/* If compiled with MSVC/MSYS, we still support running under Cygwin.
+	 * This is done by checking running_under_cygwin to resolve
+	 * incompatibilities. */
+	const char *ostype = getenv("OSTYPE");
+	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
+		running_under_cygwin = true;
+#endif /* _WIN32 */
 
 #if LATER
 	/* Try to catch the SIGWINCH ... except this is not working. */
