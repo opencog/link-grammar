@@ -660,6 +660,15 @@ else
 	AM_CONDITIONAL(HAVE_PYTHON, false)
 fi
 
+Python3Found=no
+if test "x$enable_python3_bindings" = "xyes"; then
+	AM_PATH_PYTHON(3.4, [Python3Found=yes], [Python3Found=no])
+	AX_PYTHON_DEVEL
+	AM_CONDITIONAL(HAVE_PYTHON3, test x${Python3Found} = xyes)
+else
+	AM_CONDITIONAL(HAVE_PYTHON3, false)
+fi
+
 # ====================================================================
 # check compiler flags
 
@@ -811,7 +820,8 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python interfaces:              ${PythonFound}
+	Python2 interfaces:             ${PythonFound}
+	Python3 interfaces:             ${Python3Found}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
