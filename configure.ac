@@ -654,7 +654,7 @@ fi
 PythonFound=no
 if test "x$enable_python_bindings" = "xyes"; then
 	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
-	AX_PYTHON_DEVEL
+	AX_PYTHON_DEVEL(>= ’2.6’)
 	AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 else
 	AM_CONDITIONAL(HAVE_PYTHON, false)
@@ -663,7 +663,7 @@ fi
 Python3Found=no
 if test "x$enable_python3_bindings" = "xyes"; then
 	AM_PATH_PYTHON(3.4, [Python3Found=yes], [Python3Found=no])
-	AX_PYTHON_DEVEL
+	AX_PYTHON_DEVEL(>= ’3.4’)
 	AM_CONDITIONAL(HAVE_PYTHON3, test x${Python3Found} = xyes)
 else
 	AM_CONDITIONAL(HAVE_PYTHON3, false)

@@ -13,7 +13,7 @@ BUILT_PY_SOURCES = $(top_builddir)/bindings/python3/clinkgrammar3.py
 # directory "link-grammar".  Turns out python cannot tolerate dashes.
 # Thus, typically, it will install into
 # /usr/local/lib/python3.4/dist-packages/linkgrammar (without the dash)
-pkgpythondir=$(pythondir)/linkgrammar
+pkgpython3dir=$(pythondir)/linkgrammar
 pkgpyexecdir=$(pythondir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
