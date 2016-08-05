@@ -542,19 +542,17 @@ static void print_usage(char *str)
 static void check_winsize(Command_Options* copts)
 {
 	if (!isatty_stdout) return;
+	int fd = fileno(stdout);
 #ifdef _WIN32
 	HANDLE console;
 	CONSOLE_SCREEN_BUFFER_INFO info;
 
 	/* Create a handle to the console screen. */
-	console = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
-		0, NULL);
-	if (console == INVALID_HANDLE_VALUE) goto fail;
+	console = (HANDLE)_get_osfhandle(fd);
+	if (!console || (console == INVALID_HANDLE_VALUE)) goto fail;
 
 	/* Calculate the size of the console window. */
 	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
-	CloseHandle(console);
 
 	copts->screen_width = info.srWindow.Right - info.srWindow.Left;
 	return;
@@ -564,7 +562,6 @@ fail:
 	return;
 #else
 	struct winsize ws;
-	int fd = fileno(stdout);
 
 	/* If there is no controlling terminal, the fileno will fail. This
 	 * seems to happen while building docker images, I don't know why.
