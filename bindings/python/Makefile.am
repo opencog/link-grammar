@@ -28,7 +28,7 @@ maintainer-clean-local:
 	-rm -f $(BUILT_C_SOURCES)
 	-rm -f $(BUILT_PY_SOURCES)
 
-# Don't remove __init__.py; that one is build by configure!
+# Don't remove __init__.py; it is built by configure!
 DISTCLEANFILES =                                   \
    $(top_builddir)/bindings/python/__init__.py
 
