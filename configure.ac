@@ -210,9 +210,15 @@ AC_ARG_ENABLE( java-bindings,
   [enable_java_bindings=yes])
 
 AC_ARG_ENABLE( python-bindings,
-  [  --enable-python-bindings  create python bindings to the link-grammar library],
+  [  --enable-python-bindings  create python 2.7 bindings to the link-grammar library],
   [],
   [enable_python_bindings=no]
+)
+
+AC_ARG_ENABLE( python3-bindings,
+  [  --enable-python3-bindings  create python 3.4 bindings to the link-grammar library],
+  [],
+  [enable_python3_bindings=no]
 )
 
 # Perl now disabled by default
@@ -654,7 +660,7 @@ fi
 PythonFound=no
 if test "x$enable_python_bindings" = "xyes"; then
 	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
-	AX_PYTHON_DEVEL(>= ’2.6’)
+	AX_PYTHON_DEVEL(>= '2.6')
 	AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 else
 	AM_CONDITIONAL(HAVE_PYTHON, false)
@@ -663,7 +669,7 @@ fi
 Python3Found=no
 if test "x$enable_python3_bindings" = "xyes"; then
 	AM_PATH_PYTHON(3.4, [Python3Found=yes], [Python3Found=no])
-	AX_PYTHON_DEVEL(>= ’3.4’)
+	AX_PYTHON_DEVEL(>= '3.4')
 	AM_CONDITIONAL(HAVE_PYTHON3, test x${Python3Found} = xyes)
 else
 	AM_CONDITIONAL(HAVE_PYTHON3, false)
