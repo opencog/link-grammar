@@ -1,8 +1,10 @@
-# Python bindings for Link Grammar
+# Python3 bindings for Link Grammar
 
 Description
 ===========
-This directory contains a Python interface to the Link Grammar C library.
+This directory contains a Python 3.4 interface to the Link Grammar
+C library.  The interface generated uses the configuration files in
+the `python` directory.
 
 
 Testing

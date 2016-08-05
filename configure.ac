@@ -777,6 +777,8 @@ bindings/ocaml/Makefile
 bindings/perl/Makefile
 bindings/python/Makefile
 bindings/python/__init__.py
+bindings/python3/Makefile
+bindings/python3/__init__.py
 bindings/python-examples/Makefile
 morphology/Makefile
 link-parser/Makefile
