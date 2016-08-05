@@ -115,6 +115,7 @@ char * strndup (const char *str, size_t size);
 #ifdef mbrtowc
 #undef mbrtowc
 #endif
+size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
 #endif /* _MSC_VER || __MINGW32__ */
 
