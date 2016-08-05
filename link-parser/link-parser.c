@@ -541,12 +541,11 @@ static void print_usage(char *str)
  */
 static void check_winsize(Command_Options* copts)
 {
+	if (!isatty_stdout) return;
 #ifdef _WIN32
 	/* untested code .. does this actually work ??? */
 	HANDLE console;
 	CONSOLE_SCREEN_BUFFER_INFO info;
-
-	if (!isatty_stdout) return;
 
 	/* Create a handle to the console screen. */
 	console = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE,
@@ -575,8 +574,7 @@ fail:
 
 	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
 	{
-		if (!isatty_stdout)
-			perror("stdout: ioctl TIOCGWINSZ");
+		perror("stdout: ioctl TIOCGWINSZ");
 		return;
 	}
 
