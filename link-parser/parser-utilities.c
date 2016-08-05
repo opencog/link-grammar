@@ -1,6 +1,7 @@
 /***************************************************************************/
 /* Copyright (c) 2016 Amir Plivatsky                                       */
-/* Copyright (c) 2016 Linas Vepstas                                        */
+/* lg_isatty() is based on code sent to the Cygwin discussion group by     */
+/* Corinna Vinschen, Cygwin Project Co-Leader, on 2012.                    */
 /* All rights reserved                                                     */
 /*                                                                         */
 /* Use of the link grammar parsing system is subject to the terms of the   */
@@ -153,13 +154,25 @@ int lg_isatty(int fd)
 	if (_isatty(fd))
 		return 1;
 
-	/* Now fetch the underlying HANDLE. */
+	/* Fetch the underlying HANDLE. */
 	fh = (HANDLE)_get_osfhandle(fd);
 	if (!fh || (INVALID_HANDLE_VALUE == fh))
 	{
 		errno = EBADF;
 		return 0;
 	}
+
+/* Windows _isatty() is buggy: It returns a nonzero for the NUL device! */
+#if 0
+	if (_isatty(fd))
+		return 1;
+#else
+	/* This detects a console device reliably. */
+	CONSOLE_SCREEN_BUFFER_INFO sbi;
+	DWORD mode;
+	if (GetConsoleMode(fh, &mode) || GetConsoleScreenBufferInfo(fh, &sbi))
+		return 1;
+#endif
 
 	/* Must be a pipe. */
 	if (GetFileType(fh) != FILE_TYPE_PIPE)
