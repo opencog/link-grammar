@@ -210,9 +210,15 @@ AC_ARG_ENABLE( java-bindings,
   [enable_java_bindings=yes])
 
 AC_ARG_ENABLE( python-bindings,
-  [  --enable-python-bindings  create python bindings to the link-grammar library],
+  [  --enable-python-bindings  create python 2.7 bindings to the link-grammar library],
   [],
   [enable_python_bindings=no]
+)
+
+AC_ARG_ENABLE( python3-bindings,
+  [  --enable-python3-bindings  create python 3.4 bindings to the link-grammar library],
+  [],
+  [enable_python3_bindings=no]
 )
 
 # Perl now disabled by default
@@ -654,10 +660,19 @@ fi
 PythonFound=no
 if test "x$enable_python_bindings" = "xyes"; then
 	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
-	AX_PYTHON_DEVEL
+	AX_PYTHON_DEVEL(>= '2.6')
 	AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 else
 	AM_CONDITIONAL(HAVE_PYTHON, false)
+fi
+
+Python3Found=no
+if test "x$enable_python3_bindings" = "xyes"; then
+	AM_PATH_PYTHON(3.4, [Python3Found=yes], [Python3Found=no])
+	AX_PYTHON_DEVEL(>= '3.4')
+	AM_CONDITIONAL(HAVE_PYTHON3, test x${Python3Found} = xyes)
+else
+	AM_CONDITIONAL(HAVE_PYTHON3, false)
 fi
 
 # ====================================================================
@@ -768,6 +783,8 @@ bindings/ocaml/Makefile
 bindings/perl/Makefile
 bindings/python/Makefile
 bindings/python/__init__.py
+bindings/python3/Makefile
+bindings/python3/__init__.py
 bindings/python-examples/Makefile
 morphology/Makefile
 link-parser/Makefile
@@ -811,7 +828,8 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python interfaces:              ${PythonFound}
+	Python2 interfaces:             ${PythonFound}
+	Python3 interfaces:             ${Python3Found}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}

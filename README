@@ -34,7 +34,8 @@ CONTENTS of this directory:
    bindings/java/*          Optional Java language bindings.
    bindings/lisp/*          Optional Common Lisp language bindings.
    bindings/ocaml/*         Optional OCaML language bindings.
-   bindings/python/*        Optional Python language bindings.
+   bindings/python/*        Optional Python2 language bindings.
+   bindings/python3/*       Optional Python3 language bindings.
    bindings/swig/*          SWIG interface file, for other FFI interfaces.
 
    data/en/*                English language dictionaries.
@@ -155,19 +156,27 @@ CREATING the system:
    If JAVA_HOME isn't set, if jni.h isn't found, or if ant isn't found,
    then the java bindings will not be built.
 
-   Python Bindings
-   ---------------------
+   Python2 and Python3 Bindings
+   ----------------------------
    The python bindings are NOT built by default. To enable this, run
-   configure as follows:
+   configure as one of the following:
 
       ./configure --enable-python-bindings
+      ./configure --enable-python3-bindings
 
    The use of the Python bindings is *OPTIONAL*; you do not need these if
    you do not plan to use link-grammar with python.  If you do enable the
-   python bindings, be sure to install the python-devel package.
+   python bindings, be sure that the python-devel package was previously
+   installed.
 
    The linkgrammar.py module provides a high-level interface in Python.
    The example.py script provides a demo. and tests.py runs unit tests.
+
+   The first option builds bindings compatible with python2.7; the
+   second specifies python3.4.  Both options cannot be specified at the
+   same time; however, after building and installing the one, the other
+   can be built and installed ... but only if you really, really need
+   both.
 
    Install location
    ----------------

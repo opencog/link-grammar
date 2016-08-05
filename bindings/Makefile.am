@@ -22,6 +22,10 @@ if HAVE_PYTHON
 SUBDIRS += python python-examples
 endif
 
+if HAVE_PYTHON3
+SUBDIRS += python3 python-examples
+endif
+
 
 EXTRA_DIST =                              \
    README                                 \

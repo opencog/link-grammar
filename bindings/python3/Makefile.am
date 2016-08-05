@@ -5,22 +5,22 @@
 #
 
 SWIG_SOURCES = ../swig/link_grammar.i
-# BUILT_C_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
-BUILT_C_SOURCES = ../../bindings/python/lg_python_wrap.cc
-BUILT_PY_SOURCES = $(top_builddir)/bindings/python/clinkgrammar.py
+# BUILT_C_SOURCES = $(top_builddir)/bindings/python3/lg_python_wrap.cc
+BUILT_C_SOURCES = ../../bindings/python3/lg_python_wrap.cc
+BUILT_PY_SOURCES = $(top_builddir)/bindings/python3/clinkgrammar.py
 
 # Over-ride the install location, so as to remove the dash in the
 # directory "link-grammar".  Turns out python cannot tolerate dashes.
 # Thus, typically, it will install into
-# /usr/local/lib/python2.7/dist-packages/linkgrammar (without the dash)
-pkgpythondir=$(pythondir)/linkgrammar
+# /usr/local/lib/python3.4/dist-packages/linkgrammar (without the dash)
+pkgpython3dir=$(pythondir)/linkgrammar
 pkgpyexecdir=$(pythondir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
-pkgpython_PYTHON =                                 \
-   linkgrammar.py                                  \
-   $(top_builddir)/bindings/python/__init__.py     \
-   $(top_builddir)/bindings/python/clinkgrammar.py
+pkgpython3_PYTHON =                                 \
+   ../../bindings/python/linkgrammar.py             \
+   $(top_builddir)/bindings/python3/__init__.py     \
+   $(top_builddir)/bindings/python3/clinkgrammar.py
 
 
 # These are packaged in the tarball; make clean should not remove them.
@@ -30,12 +30,12 @@ maintainer-clean-local:
 
 # Don't remove __init__.py; it is built by configure!
 DISTCLEANFILES =                                   \
-   $(top_builddir)/bindings/python/__init__.py
+   $(top_builddir)/bindings/python3/__init__.py
 
 if HAVE_SWIG
 # Swig builds these ....
 $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_SOURCES)
-	$(SWIG) -python -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(SWIG) -python -py3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 else
 $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES):
 	touch $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES)
@@ -61,8 +61,5 @@ _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 
 EXTRA_DIST =         \
-   AUTHORS           \
-   LICENSE           \
    README.md         \
-   __init__.py.in    \
-   linkgrammar.py
+   __init__.py.in
