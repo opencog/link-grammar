@@ -18,7 +18,7 @@ pkgpyexecdir=$(pythondir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
 pkgpython3_PYTHON =                                 \
-   linkgrammar.py                                  \
+   ../../bindings/python/linkgrammar.py             \
    $(top_builddir)/bindings/python3/__init__.py     \
    $(top_builddir)/bindings/python3/clinkgrammar3.py
 
