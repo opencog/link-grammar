@@ -119,7 +119,7 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 	static char input_string[MAX_INPUT];
 	static bool input_pending = false;
 
-	if ((in != stdin) || !isatty(fileno(stdin)))
+	if ((in != stdin) || !isatty_stdin)
 	{
 		/* Here the input is not from a terminal. */
 		if (check_return) return (char *)"x"; /* XXX One linkage per sentence. */
@@ -546,8 +546,7 @@ static void check_winsize(Command_Options* copts)
 	HANDLE console;
 	CONSOLE_SCREEN_BUFFER_INFO info;
 
-	int fd = fileno(stdout);
-	if (!isatty(fd)) return;
+	if (!isatty_stdout) return;
 
 	/* Create a handle to the console screen. */
 	console = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE,
@@ -576,7 +575,7 @@ fail:
 
 	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
 	{
-		if (isatty(fd))
+		if (!isatty_stdout)
 			perror("stdout: ioctl TIOCGWINSZ");
 		return;
 	}
