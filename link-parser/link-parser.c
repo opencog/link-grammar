@@ -165,7 +165,7 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 #endif /* _WIN32 */
 #endif /* HAVE_EDITLINE */
 
-	if (NULL == pline) return NULL;                /* EOF */
+	if (NULL == pline) return NULL;      /* EOF */
 	if (('\0' != input_string[MAX_INPUT-2]) &&
 	    ('\n' != input_string[MAX_INPUT-2]))
 	{
@@ -174,9 +174,10 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 	}
 	if (check_return)
 	{
-		if ('\0' == pline[0]) return (char *)"\n"; /* Continue linkage display */
+		if (('\0' == pline[0]) || ('\r' == pline[0]) || ('\n' == pline[0]))
+			return (char *)"\n";           /* Continue linkage display */
 		input_pending = true;
-		return (char *)"x";                        /* Stop linkage display */
+		return (char *)"x";               /* Stop linkage display */
 	}
 
 	return pline;
@@ -828,7 +829,8 @@ int main(int argc, char * argv[])
 		}
 
 		/* If the input string is just whitespace, then ignore it. */
-		if (strspn(input_string, " \t\v") == strlen(input_string)) continue;
+		if (strspn(input_string, " \t\v\r\n\xA0") == strlen(input_string))
+			continue;
 
 		if (special_command(input_string, copts, dict)) continue;
 
