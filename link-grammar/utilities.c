@@ -216,7 +216,9 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	char low[MB_LEN_MAX];
 	mbstate_t mbs;
 
-	to[0] = '\0'; /* Make sure it doesn't contain garbage in case of an error */
+	/* Make sure it doesn't contain garbage in case of an error */
+	if (to != from) strcpy(to, from);
+
 	memset(&mbs, 0, sizeof(mbs));
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
