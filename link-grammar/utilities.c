@@ -178,7 +178,7 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	if (0 > nb) return nb;
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, NULL, 0);
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, pwc, nb2);
-	if (0 == nb2) return 0;
+	if (0 == nb2) return (size_t)-1;
 	return nb;
 }
 #endif /* _WIN32 */
