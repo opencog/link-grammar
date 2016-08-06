@@ -189,10 +189,7 @@ static int wctomb_check(char *s, wchar_t wc)
 #ifdef _WIN32
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
-	if (0 == nr) {
-		printf("Fatal Error %d: wctomb_check failed: %d\n", GetLastError());
-		exit(1);
-	}
+	if (0 == nr) return -1;
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
