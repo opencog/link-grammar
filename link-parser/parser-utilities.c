@@ -69,10 +69,6 @@ char *get_console_line(void)
 	/* ^Z is read as a character. Convert it to an EOF indication. */
 	if ('\x1A' == utf8inbuf[0]) /* Only handle it at line start. */
 		return NULL;
-	/* Note that nchar includes the terminating NUL. */
-	if (3 <= nchar)                  /* Avoid a crash - just in case. */
-		if ('\r' == utf8inbuf[nchar-3])
-			utf8inbuf[nchar-3] = '\0';    /* Discard \r\n */
 
 	return utf8inbuf;
 }
