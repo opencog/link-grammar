@@ -86,36 +86,6 @@ typedef enum
 	NO_LABEL = ' '
 } Label;
 
-
-#ifdef _WIN32
-/* Windows console (cmd.exe) input to utf8 */
-static char* oem_to_utf8(char *instring)
-{
-	char * out;
-	wchar_t *winput;
-	size_t len;
-	int cv;
-	unsigned int consolecp;
-
-	consolecp = GetConsoleOutputCP();
-
-	/* Convert input string to wide chars. */
-	len = strlen(instring) + 1;
-	cv = MultiByteToWideChar(consolecp, 0, instring, len, NULL, 0);
-	winput = (wchar_t*) malloc(cv * sizeof(wchar_t));
-	cv = MultiByteToWideChar(consolecp, 0, instring, len, winput, cv);
-
-	/* Convert wide chars to utf8. */
-	cv = WideCharToMultiByte(CP_UTF8, 0, winput, len, NULL, 0, NULL, NULL);
-	out = (char*) malloc(cv);
-	cv = WideCharToMultiByte(CP_UTF8, 0, winput, len, out, cv, NULL, NULL);
-
-	free(winput);
-
-	return out;
-}
-#endif /* _WIN32 */
-
 static char *
 fget_input_string(FILE *in, FILE *out, bool check_return)
 {
