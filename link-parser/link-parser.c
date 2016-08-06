@@ -126,13 +126,7 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 	{
 		/* Here the input is not from a terminal. */
 		if (check_return) return (char *)"x"; /* XXX One linkage per sentence. */
-		if (fgets(input_string, MAX_INPUT, in))
-		{
-			char *lf = strchr(input_string, '\n');
-			if (lf) *lf = '\0';
-			return input_string;
-		}
-		return NULL;
+		return fgets(input_string, MAX_INPUT, in);
 	}
 
 	/* If we are here, the input is from a terminal. */
