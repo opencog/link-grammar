@@ -154,6 +154,7 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 #else
 	fprintf(out, prompt);
 	fflush(out);
+	input_string[MAX_INPUT-2] = '\0';
 #ifdef _WIN32
 	if (!running_under_cygwin)
 		pline = get_console_line();
@@ -165,6 +166,12 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 #endif /* HAVE_EDITLINE */
 
 	if (NULL == pline) return NULL;                /* EOF */
+	if (('\0' != input_string[MAX_INPUT-2]) &&
+	    ('\n' != input_string[MAX_INPUT-2]))
+	{
+		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT-1);
+		/* TODO: Ignore it and its continuation part(s). */
+	}
 	if (check_return)
 	{
 		if ('\0' == pline[0]) return (char *)"\n"; /* Continue linkage display */
