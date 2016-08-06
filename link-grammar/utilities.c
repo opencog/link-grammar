@@ -223,7 +223,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid multi-byte string!");
+		prt_error("Error: Invalid UTF-8 string!");
 		return;
 	}
 	c = towlower(c);
@@ -233,7 +233,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't downcase multi-byte string!");
+		prt_error("Error: can't downcase UTF-8 string!");
 		return;
 	}
 
@@ -265,7 +265,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid multi-byte string!");
+		prt_error("Error: Invalid UTF-8-byte string!");
 		return;
 	}
 	c = towupper(c);
@@ -275,7 +275,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't upcase multi-byte string!");
+		prt_error("Error: can't upcase UTF-8-byte string!");
 		return;
 	}
 
