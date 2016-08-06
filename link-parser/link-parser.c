@@ -69,6 +69,7 @@
 
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
+#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
 
 static int batch_errors = 0;
 static int verbosity = 0;
@@ -451,7 +452,6 @@ static void batch_process_some_linkages(Label label,
 
 static bool special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
-	if (input_string[0] == '\n') return true;
 	if (input_string[0] == COMMENT_CHAR) return true;
 	if (input_string[0] == '!') {
 		if (strncmp(input_string, "!panic_", 7) == 0)
@@ -768,6 +768,13 @@ int main(int argc, char * argv[])
 			continue;
 		}
 
+		/* Discard whitespace characters from end of string. */
+		for (char *p = &input_string[strlen(input_string)-1];
+		     (p > input_string) && strchr(WHITESPACE, *p) ; p--)
+		{
+			*p = '\0';
+		}
+
 		if ((strcmp(input_string, "!quit") == 0) ||
 		    (strcmp(input_string, "!exit") == 0)) break;
 
@@ -793,7 +800,7 @@ int main(int argc, char * argv[])
 		}
 
 		/* If the input string is just whitespace, then ignore it. */
-		if (strspn(input_string, " \t\v\r\n\xA0") == strlen(input_string))
+		if (strspn(input_string, WHITESPACE) == strlen(input_string))
 			continue;
 
 		if (special_command(input_string, copts, dict)) continue;
