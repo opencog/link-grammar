@@ -190,11 +190,9 @@ static int wctomb_check(char *s, wchar_t wc)
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
 	if (0 == nr) {
-		wprintf(L"Fatal Error: wctomb_check failed: %d %ls\n", nr, &wc);
+		printf("Fatal Error %d: wctomb_check failed: %d\n", GetLastError());
 		exit(1);
 	}
-	/* XXX TODO Perhaps the below needs to be uncommented?  .. tucker says no ... */
-	/* nr = nr / sizeof(wchar_t); */
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
