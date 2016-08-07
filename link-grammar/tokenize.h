@@ -10,6 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _TOKENIZE_H
+#define _TOKENIZE_H
+
 #include "api-types.h"
 
 bool separate_sentence(Sentence, Parse_Options);
@@ -21,3 +24,4 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                      int prefnum, const char * const *prefix,
                      int stemnum, const char * const *stem,
                      int suffnum, const char * const *suffix);
+#endif /* _TOKENIZE_H */

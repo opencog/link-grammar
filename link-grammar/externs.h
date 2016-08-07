@@ -10,7 +10,10 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _EXTERNS_H
+#define _EXTERNS_H
 /* verbosity global is held in utilities.c */
 extern int verbosity;          /* the verbosity level for error messages */
 extern char * debug;           /* comma-separated function list to debug */
 extern char * test;            /* comma-separated function list to debug */
+#endif /* _EXTERNS_H */
