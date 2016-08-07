@@ -91,6 +91,8 @@ void *alloca (size_t);
 /* And strtok_r is strtok_s */
 #define strtok_r strtok_s
 
+#define locale_t _locale_t
+
 /* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
  * This happens, for example, when the argument is "const void **". */
 #define free(x) free((void *)x)
