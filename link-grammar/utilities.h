@@ -13,9 +13,16 @@
 #ifndef _LINK_GRAMMAR_UTILITIES_H_
 #define _LINK_GRAMMAR_UTILITIES_H_
 
-#ifdef __CYGWIN__
-#define _WIN32 1
-#endif /* __CYGWIN__ */
+/* The _Win32 definitions are for native-Windows compilers.
+ * This includes MSVC (only version >=14 is supported) and MINGW (known
+ * also as MSYS). The _WIN32 definitions are not for Cygwin, which doesn't
+ * define _WIN32.
+ * FIXME: Because the full Windows support is still in the works, only the
+ * MSVC support is validated. Most probably the Cygwin compilation support
+ * is broken (but the intention is that MSVC-compiled library, and the
+ * link-parser program, will be fine for Cygwin usage). The MINGW support
+ * is also not validated.
+ */
 
 #ifndef _WIN32
 #include <langinfo.h>
@@ -100,11 +107,6 @@ void *alloca (size_t);
 #define memcpy(x, y, s) memcpy((void *)x, (void *)y, s)
 #define qsort(x, y, z, w) qsort((void *)x, y, z, w)
 #endif /* _MSC_VER */
-
-/* Apparently, MinGW is also missing a variety of standard functions.
- * Not surprising, since MinGW is intended for compiling Windows
- * programs on Windows.
- * MINGW is also known as MSYS. FIXME - move the comment to the start. */
 
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
