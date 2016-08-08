@@ -99,6 +99,13 @@ void *alloca (size_t);
 #define strtok_r strtok_s
 
 #define locale_t _locale_t
+#define iswupper_l  _iswupper_l
+#define iswalpha_l  _iswalpha_l
+#define iswdigit_l  _iswdigit_l
+#define iswspace_l  _iswspace_l
+#define towlower_l  _towlower_l
+#define towupper_l  _towupper_l
+#define freelocale _free_locale
 
 /* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
  * This happens, for example, when the argument is "const void **". */
