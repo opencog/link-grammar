@@ -118,31 +118,6 @@ char * strndup (const char *str, size_t size);
 #endif
 size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
-
-/*
- * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
- * chars ... However, MS Visual C does, as does MinGW.  Since
- * some users have both cygwin and MinGW installed, crap out the
- * UTF8 code only when MinGW is missing (and the CYGWIN version
- * is very old) XXX This code is dangerous and should be removed.
- */
-#if defined (__CYGWIN__) && !defined(__MINGW32__)
-#if CYGWIN_VERSION_DLL_MAJOR < 1007
-#error "Your Cygwin version is too old! Version 1.7 or later is needed for UTF8 support!"
-#define mbstate_t char
-#define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
-#define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
-#define mbrlen(s,n,m)     (1)
-#define iswupper  isupper
-#define iswalpha  isalpha
-#define iswdigit  isdigit
-#define iswspace  isspace
-#define wchar_t   char
-#define towlower  tolower
-#define towupper  toupper
-#endif /* CYGWIN_VERSION_DLL_MAJOR < 1007 */
-#endif /* __CYGWIN__ and not __MINGW32__ */
-
 #endif /* _WIN32 */
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
