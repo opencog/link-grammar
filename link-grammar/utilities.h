@@ -104,8 +104,8 @@ void *alloca (size_t);
 /* Apparently, MinGW is also missing a variety of standard functions.
  * Not surprising, since MinGW is intended for compiling Windows
  * programs on Windows.
- * MINGW is also known as MSYS */
-#ifdef _WIN32
+ * MINGW is also known as MSYS. FIXME - move the comment to the start. */
+
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
 
@@ -118,7 +118,6 @@ char * strndup (const char *str, size_t size);
 #endif
 size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
-#endif /* _WIN32 */
 
 /*
  * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
