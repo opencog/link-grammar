@@ -66,7 +66,14 @@ struct CNode_s
 
 static inline bool uppercompare(const char * s, const char * t)
 {
+#if 0  /* Non-ASCII definition are not supported.  */
 	return (false == utf8_upper_match(s,t));
+#endif
+	while (isupper(*s) || isupper(*t))
+	{
+		if (*s++ != *t++) return true;
+	}
+	return false;
 }
 
 /**
