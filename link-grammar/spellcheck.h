@@ -9,6 +9,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _SPELLCHECK_H
+#define _SPELLCHECK_H
+
 #include "api-types.h"
 
 #if (defined HAVE_HUNSPELL) || (defined HAVE_ASPELL)
@@ -29,3 +32,5 @@ static inline int spellcheck_suggest(void * chk, char ***sug, const char * word)
 static inline void spellcheck_free_suggest(void * chk, char **sug, int size) {}
 
 #endif 
+
+#endif /* _SPELLCHECK_H */

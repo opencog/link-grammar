@@ -10,6 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _COUNT_H
+#define _COUNT_H
+
 #include "api-structures.h"
 #include "histogram.h" /* for s64 */
 
@@ -19,3 +22,4 @@ void delete_unmarked_disjuncts(Sentence sent);
 
 count_context_t* alloc_count_context(size_t);
 void free_count_context(count_context_t*);
+#endif /* _COUNT_H */

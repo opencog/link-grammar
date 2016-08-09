@@ -1,3 +1,6 @@
+#ifndef _WORDGRAPH_H
+#define _WORDGRAPH_H
+
 #ifdef USE_WORDGRAPH_DISPLAY
 /* Wordgraph display representation modes. */
 #define lo(l) (l-'a')
@@ -30,3 +33,4 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **, Gword *, bool, bool, bool);
 
 const char *gword_status(Sentence, const Gword *);
 const char *gword_morpheme(Sentence sent, const Gword *w);
+#endif /* _WORDGRAPH_H */

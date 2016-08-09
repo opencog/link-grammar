@@ -33,6 +33,8 @@
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
 
+#include <locale.h>                /* for locale_t */
+
 #include "api-types.h"
 #include "dict-structures.h"
 #include "corpus/corpus.h"

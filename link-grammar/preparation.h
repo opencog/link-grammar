@@ -11,7 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _PREPARATION_H
+#define _PREPARATION_H
 #include "link-includes.h"
 
 void prepare_to_parse(Sentence, Parse_Options);
-
+#endif /* _PREPARATION_H */

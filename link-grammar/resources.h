@@ -10,6 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _RESOURCES_H
+#define _RESOURCES_H
+
 #include "api-types.h"
 #include "link-includes.h"
 
@@ -22,3 +25,4 @@ bool      resources_memory_exhausted(Resources r);
 bool      resources_exhausted(Resources r);
 Resources resources_create(void); 
 void      resources_delete(Resources ti);
+#endif /* _RESOURCES_H */

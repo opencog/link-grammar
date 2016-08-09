@@ -10,6 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _PRINT_H
+#define _PRINT_H
+
 #include "link-includes.h"
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")  /* the string to use to show the wall */
@@ -24,3 +27,4 @@ void print_with_subscript_dot(const char *);
 void print_chosen_disjuncts_words(const Linkage);
 void print_lwg_path(Gword **);
 void print_wordgraph_pathpos(const Wordgraph_pathpos *);
+#endif /* _PRINT_H */
