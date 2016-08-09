@@ -741,9 +741,9 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-	prt_error("Info: Using locale %s.", locale);
-	prt_error("Info: Dictionary version %s.",
-		linkgrammar_get_dict_version(dict));
+	prt_error("Info: Dictionary version %s, locale %s",
+		linkgrammar_get_dict_version(dict),
+		linkgrammar_get_dict_locale(dict));
 	prt_error("Info: Library version %s. Enter \"!help\" for help.",
 		linkgrammar_get_version());
 
