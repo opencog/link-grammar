@@ -24,10 +24,6 @@
  * is also not validated.
  */
 
-#ifndef _WIN32
-#include <langinfo.h>
-#endif
-
 #include <ctype.h>
 #include <stdio.h>
 #ifdef _MSC_VER
