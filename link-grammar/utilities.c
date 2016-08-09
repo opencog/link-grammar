@@ -22,6 +22,7 @@
 
 #ifndef _WIN32
 	#include <unistd.h>
+	#include <langinfo.h>
 #else
 	#include <windows.h>
 	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
@@ -813,6 +814,79 @@ char *get_file_contents(const char * dict_name)
 
 /* ======================================================== */
 /* Locale routines */
+
+/**
+ * Create a locale object from the given locale string.
+ * @param locale Locale string, in the native OS format.
+ * @return Locale object for the given locale
+ * Note: It has to be freed by freelocale().
+ */
+locale_t newlocale_LC_CTYPE(const char *locale)
+{
+	locale_t locobj;
+#ifdef _WIN32
+		locobj = _create_locale(LC_CTYPE, locale);
+#else
+		locobj = newlocale(LC_CTYPE_MASK, locale, (locale_t)0);
+#endif /* _WIN32 */
+		return locobj;
+}
+
+/**
+ * Check that the given locale known by the system.
+ * @param locale Locale string
+ * @return True if known, false if unknown.
+ */
+bool is_known_locale(const char *locale)
+{
+		locale_t ltmp = newlocale_LC_CTYPE(locale);
+		if ((locale_t)0 == ltmp) return false;
+		freelocale(ltmp);
+		return true;
+}
+
+/**
+ * Ensure that the program's locale has a UTF-8 codeset.
+ */
+void set_utf8_program_locale(void)
+{
+#ifndef _WIN32
+	static bool utf8_program_locale_checked = false;;
+
+	if (utf8_program_locale_checked) return;
+
+	/* The LG library doesn't use mbrtowc_l(), since it doesn't exists in
+	 * the dynamic glibc (2.22). mbsrtowcs_l() could also be used, but for
+	 * some reason it exists only in the static glibc.
+	 * In order that mbrtowc() will work for any UTF-8 character, UTF-8
+	 * codeset is ensured. */
+	const char *codeset = nl_langinfo(CODESET);
+	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
+	{
+		const char *locale = setlocale(LC_CTYPE, NULL);
+		/* Avoid an initial spurious message. */
+		if ((0 != strcmp(locale, "C")) && (0 != strcmp(locale, "POSIX")))
+		{
+			prt_error("Warning: Program locale %s (codeset %s) was not UTF-8; "
+						 "force-setting to en_US.UTF-8", locale, codeset);
+		}
+		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
+		if (NULL == locale)
+		{
+			prt_error("Warning: Program locale en_US.UTF-8 could not be set; "
+			          "force-setting to C.UTF-8");
+			locale = setlocale(LC_CTYPE, "C.UTF-8");
+			if (NULL == locale)
+			{
+				prt_error("Warning: Could not set a UTF-8 program locale; "
+				          "Program may malfunction");
+			}
+		}
+	}
+
+	utf8_program_locale_checked = true;
+#endif
+}
 
 #ifdef _WIN32
 static char *
