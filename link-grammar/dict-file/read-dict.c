@@ -29,83 +29,30 @@
  * Format the given locale for use in setlocale().
  * POSIX systems and Windows use different conventions.
  * @param dict Used for putting the returned value in a string-set.
+ * @param ll Locale 2-letter language code.
+ * @param cc Locale 2-letter territory code.
  * @return The formatted locale, directly usable in setlocale().
  */
-static const char * format_locale(Dictionary dict, const char *locale)
+static const char * format_locale(Dictionary dict,
+                                  const char *ll, const char *cc)
 {
-	if (NULL == locale) return NULL;
+	unsigned char *locale_ll = (unsigned char *)strdupa(ll);
+	unsigned char *locale_cc = (unsigned char *)strdupa(cc);
+
+	for (unsigned char *p = locale_ll; '\0' != *p; p++) *p = tolower(*p);
+	for (unsigned char *p = locale_cc; '\0' != *p; p++) *p = toupper(*p);
 
 #ifdef _WIN32
-	wchar_t wlocale[LOCALE_NAME_MAX_LENGTH];
-	wchar_t wtmpbuf[LOCALE_NAME_MAX_LENGTH];
-	char tmpbuf[LOCALE_NAME_MAX_LENGTH];
-	char locale_buf[LOCALE_NAME_MAX_LENGTH];
-	size_t r;
-
-	r = mbstowcs(wlocale, locale, MAX(strlen(locale)+1, LOCALE_NAME_MAX_LENGTH));
-	if ((size_t)-1 == r)
-	{
-		prt_error("Error: Error converting %s to wide character.", locale);
-		return NULL;
-	}
-	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
-
-	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
-	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
-	{
-		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: "
-		          "Error %d", locale, GetLastError());
-		return NULL;
-	}
-	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
-	if ((size_t)-1 == r)
-	{
-		prt_error("Error: Error converting %ls from wide character.", wtmpbuf);
-		return NULL;
-	}
-	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
-	if (0 == strncmp(tmpbuf, "Unknown", 7))
-	{
-		prt_error("Error: Unknown language code in locale %s", locale);
-		return NULL;
-	}
-	strcpy(locale_buf, tmpbuf);
-	strcat(locale_buf, "_");
-
-	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
-	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
-	{
-		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: ",
-		          "Error %d", locale, GetLastError());
-		return NULL;
-	}
-	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
-	if ((size_t)-1 == r)
-	{
-		prt_error("Error: Error converting %ls from wide character.", wtmpbuf);
-		return NULL;
-	}
-	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
-	if (0 == strncmp(tmpbuf, "Unknown", 7))
-	{
-		prt_error("Error: Unknown territory code in locale %s", locale);
-		return NULL;
-	}
-	strcat(locale_buf, tmpbuf);
-
+	const int locale_size = strlen(ll) + 1 + strlen(cc) + 1;
+	char *locale = alloca(locale_size);
+	snprintf(locale, locale_size, "%s-%s", locale_ll, locale_cc);
 #else /* Assuming POSIX */
-	char *p;
-	char *locale_buf = alloca(strlen(locale) + sizeof(".UTF-8"));
-
-	strcpy(locale_buf, locale);
-	for (p = locale_buf; ('-' != *p) && ('_' != *p) && ('\0' != *p); p++)
-		*p = tolower(*p);
-	if ('-' == *p) *p = '_';
-	for (; '\0' != *p; p++) *p = toupper(*p);
-	strcpy(p, ".UTF-8");
+	const int locale_size = strlen(ll) + 1 + strlen(cc) + sizeof(".UTF-8");
+	char *locale = alloca(locale_size);
+	snprintf(locale, locale_size, "%s_%s.UTF-8", locale_ll, locale_cc);
 #endif
 
-	return string_set_add(locale_buf, dict->string_set);
+	return string_set_add(locale, dict->string_set);
 }
 
 /**
@@ -125,16 +72,13 @@ static const char * format_locale(Dictionary dict, const char *locale)
  * @param dict The dictionary for which the locale is needed.
  * @return The locale, in a format suitable for use by setlocale().
  */
-#ifdef _WIN32
-	#define CLOCALE "C"
-#else
-	#define CLOCALE "C.UTF-8"
-#endif
 const char * linkgrammar_get_dict_locale(Dictionary dict)
 {
 	if (dict->locale) return dict->locale;
 
+	const char *locale;
 	Dict_node *dn = lookup_list(dict, "<dictionary-locale>");
+
 	if (NULL == dn)
 	{
 		lgdebug(D_USER_FILES, "Debug: Dictionary locale is not defined.\n");
@@ -143,7 +87,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 	if (0 == strcmp(dn->exp->u.string, "C"))
 	{
-		dict->locale = string_set_add(CLOCALE, dict->string_set);
+		locale = string_set_add("C", dict->string_set);
 	}
 	else
 	{
@@ -159,19 +103,19 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 			goto locale_error;
 		}
 
-		char locale[sizeof(locale_ll)+1+sizeof(locale_cc)]; /* more than needed */
-		snprintf(locale, sizeof(locale), "%s-%s", locale_ll, locale_cc);
-		dict->locale = format_locale(dict, locale);
-		if (NULL == dict->locale)
+		locale = format_locale(dict, locale_ll, locale_cc);
+
+		if (!is_known_locale(locale))
 		{
-			prt_error("Error: Cannot decode dictionary locale %s.", dn->exp->u.string);
+			lgdebug(D_USER_FILES, "Debug: Dictionary locale %s unknown\n", locale);
 			goto locale_error;
 		}
 	}
 
 	free_lookup(dn);
-	lgdebug(D_USER_FILES, "Debug: Dictionary locale: %s\n", dict->locale);
-	return dict->locale;
+	lgdebug(D_USER_FILES, "Debug: Dictionary locale: %s\n", locale);
+	dict->locale = locale;
+	return locale;
 
 locale_error:
 	{
@@ -179,19 +123,16 @@ locale_error:
 
 		const char *locale = get_default_locale();
 		if (NULL == locale) return NULL;
-#ifdef _WIN32
-		const char *win32_locale = format_locale(dict, locale);
-		free((void *)locale);
-		if (NULL == win32_locale) return NULL;
-		locale = win32_locale; /* already in string-set */
-#else
 		const char *sslocale = string_set_add(locale, dict->string_set);
 		free((void *)locale);
-		locale = sslocale;
-#endif
-		prt_error("Info: No dictionary locale definition - \"%s\" is used.",
-		          locale);
-		return locale;
+		prt_error("Info: No dictionary locale definition - %s will be used.",
+		          sslocale);
+		if (!is_known_locale(sslocale))
+		{
+			lgdebug(D_USER_FILES, "Debug: Unknown locale %s...\n", sslocale);
+			return NULL;
+		}
+		return sslocale;
 	}
 }
 

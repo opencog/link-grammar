@@ -83,15 +83,15 @@ static bool is_entity(Dictionary dict, const char * str)
  * Basically, if word starts with upper-case latter, we assume
  * its a proper name, and that's that.
  */
-static bool is_proper_name(const char * word)
+static bool is_proper_name(const char * word, locale_t dict_locale)
 {
-	return is_utf8_upper(word);
+	return is_utf8_upper(word, dict_locale);
 }
 
 /**
  * Returns true if the word contains digits.
  */
-static bool contains_digits(const char * s)
+static bool contains_digits(const char * s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	int nb = 1;
@@ -102,7 +102,7 @@ static bool contains_digits(const char * s)
 	{
 		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 		if (nb < 0) return false;
-		if (iswdigit(c)) return true;
+		if (iswdigit_l(c, dict_locale)) return true;
 		s += nb;
 	}
 	return false;
@@ -165,9 +165,9 @@ static bool in_afdict_class(Dictionary dict, afdict_classnum cn, const char *s)
 /**
  * Return TRUE if the character is white-space
  */
-static bool is_space(wchar_t wc)
+static bool is_space(wchar_t wc, locale_t dict_locale)
 {
-	if (iswspace(wc)) return true;
+	if (iswspace_l(wc, dict_locale)) return true;
 
 	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
 	/* For some reason, iswspace doesn't get this */
@@ -195,18 +195,18 @@ static bool is_space(wchar_t wc)
  * e.g. American million: 1,000,000.00  Euro million: 1.000.000,00
  * We also allow U+00A0 "no-break space"
  */
-static bool is_number(const char * s)
+static bool is_number(Dictionary dict, const char * s)
 {
 	mbstate_t mbs;
 	int nb = 1;
 	wchar_t c;
-	if (!is_utf8_digit(s)) return false;
+	if (!is_utf8_digit(s, Dictionary dict)) return false;
 
 	memset(&mbs, 0, sizeof(mbs));
 	while ((*s != 0) && (0 < nb))
 	{
 		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
-		if (iswdigit(c)) { s += nb; }
+		if (iswdigit_l(dict, c)) { s += nb; }
 
 		/* U+00A0 no break space */
 		else if (0xa0 == c) { s += nb; }
@@ -503,7 +503,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					break;
 				case SUFFIX: /* set to =word */
 					/* If the suffix starts with an apostrophe, don't mark it */
-					if ((('\0' != (*affix)[0]) && !is_utf8_alpha(*affix)) ||
+					if ((('\0' != (*affix)[0]) &&
+					     !is_utf8_alpha(*affix, sent->dict->locale_t)) ||
 					    '\0' == infix_mark)
 					{
 						if (is_contraction_word(unsplit_word->subword))
@@ -1462,14 +1463,14 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 		        word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
-		if ((NULL != unsplit_word) && is_utf8_upper(word) &&
+		if ((NULL != unsplit_word) && is_utf8_upper(word, sent->dict->locale_t) &&
 		    is_capitalizable(sent->dict, unsplit_word) &&
 		    !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
 		{
 			int downcase_size = strlen(word)+MB_LEN_MAX+1;
 			char *const downcase = alloca(downcase_size);
 
-			downcase_utf8_str(downcase, word, downcase_size);
+			downcase_utf8_str(downcase, word, downcase_size, sent->dict->locale_t);
 			word_can_split |=
 				suffix_split(sent, unsplit_word, downcase);
 			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
@@ -1776,9 +1777,9 @@ static bool strip_right(Sentence sent,
 	/* If there is a non-null root, we require that it ends with a number,
 	 * to ensure we stripped off all units. This prevents striping
 	 * off "h." from "20th.".
-	 * FIXME: is_utf8_digit(temp_wend-1) here can only check ASCII digits,
+	 * FIXME: is_utf8_digit(temp_wend-1, dict) here can only check ASCII digits,
 	 * since it is invoked with the last byte... */
-	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1))
+	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1, dict->locale_t))
 	{
 		lgdebug(D_UN, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
 			 p, afdict_classname[classnum], word, temp_wend[-1]);
@@ -2214,7 +2215,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	        word, word_can_split, word_is_known,
 	        (NULL == unsplit_word->regex_name) ? "" : unsplit_word->regex_name);
 
-	if (is_utf8_upper(word))
+	if (is_utf8_upper(word, dict->locale_t))
 	{
 		if (!test_enabled("dictcap"))
 		{
@@ -2261,7 +2262,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
 			if ('\0' == downcase[0])
-				downcase_utf8_str(downcase, word, downcase_size);
+				downcase_utf8_str(downcase, word, downcase_size, dict->locale_t);
 			lc_word_is_in_dict = boolean_dictionary_lookup(dict, downcase);
 
 			if (word_is_capitalizable)
@@ -2330,7 +2331,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			/* - If the (uc) word is in the dict, it has already been issued.
 			 * - If the word is not a capitalized word according to the regex file,
-			 *   it also should not be issued, even if is_utf8_upper(word),
+			 *   it also should not be issued, even if is_utf8_upper(word, dict),
 			 *   e.g Y'gonna or Let's. */
 			if (!(unsplit_word->status & WS_INDICT) &&
 			    is_re_capitalized(unsplit_word->regex_name))
@@ -2338,7 +2339,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				issue_dictcap(sent, /*is_cap*/true, unsplit_word, word);
 			}
 
-			downcase_utf8_str(downcase, word, downcase_size);
+			downcase_utf8_str(downcase, word, downcase_size, dict->locale_t);
 			/* Issue the lc version if it is known.
 			 * FIXME? Issuing only known lc words prevents using the unknown-word
 			 * device for words in capitalizable position (when the word is a uc
@@ -2390,8 +2391,9 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	 * 1. The word if not in the main dict but matches a regex.
 	 * 2. The word an unknown capitalized word.
 	 */
-	if (!word_can_lrsplit &&
-	    !word_is_known && !contains_digits(word) && !is_proper_name(word) &&
+	if (!word_can_lrsplit && !word_is_known &&
+	    !contains_digits(word, dict->locale_t) &&
+	    !is_proper_name(word, dict->locale_t) &&
 	    opts->use_spell_guess && dict->spell_checker)
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
@@ -2532,7 +2534,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		if (0 > nb) goto failure;
 
 
-		while (is_space(c))
+		while (is_space(c, dict->locale_t))
 		{
 			word_start += nb;
 			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
@@ -2546,7 +2548,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!is_space(c) && (c != 0) && (0 < nb))
+		while (!is_space(c, dict->locale_t) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);

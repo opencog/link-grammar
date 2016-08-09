@@ -256,7 +256,7 @@ static inline size_t utf8_next(const char *s)
 #endif
 }
 
-static inline int is_utf8_upper(const char *s)
+static inline int is_utf8_upper(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -265,11 +265,11 @@ static inline int is_utf8_upper(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswupper(c)) return nbytes;
+	if (iswupper_l(c, dict_locale)) return nbytes;
 	return 0;
 }
 
-static inline int is_utf8_alpha(const char *s)
+static inline int is_utf8_alpha(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -278,11 +278,11 @@ static inline int is_utf8_alpha(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswalpha(c)) return nbytes;
+	if (iswalpha_l(c, dict_locale)) return nbytes;
 	return 0;
 }
 
-static inline int is_utf8_digit(const char *s)
+static inline int is_utf8_digit(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -291,11 +291,11 @@ static inline int is_utf8_digit(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswdigit(c)) return nbytes;
+	if (iswdigit_l(c, dict_locale)) return nbytes;
 	return 0;
 }
 
-static inline int is_utf8_space(const char *s)
+static inline int is_utf8_space(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -304,7 +304,7 @@ static inline int is_utf8_space(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswspace(c)) return nbytes;
+	if (iswspace_l(c, dict_locale)) return nbytes;
 
 	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
 	/* For some reason, iswspace doesn't get this */
@@ -356,8 +356,8 @@ static inline bool utf8_upper_match(const char * s, const char * t,
 }
 #endif /* Not in use. */
 
-void downcase_utf8_str(char *to, const char * from, size_t usize);
-void upcase_utf8_str(char *to, const char * from, size_t usize);
+void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
+void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 int utf8_charlen(const char *);
 
 size_t lg_strlcpy(char * dest, const char *src, size_t size);
