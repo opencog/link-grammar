@@ -40,7 +40,6 @@
 
 /* Used for terminal resizing */
 #ifndef _WIN32
-#include <langinfo.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
@@ -565,38 +564,6 @@ fail:
 #endif /* _WIN32 */
 }
 
-static const char *set_program_locale(const char *locale,
-                               const char *locale1)
-{
-	const char *rlocale = NULL;
-
-	if (NULL != locale)
-		rlocale = setlocale(LC_CTYPE, locale);
-	if (NULL == rlocale)
-	{
-		if (NULL != locale)
-			prt_error("Warning: Failed to set locale to \"%s\".", locale);
-		if ((NULL != locale1) && (0 != strcmp(locale, locale1)))
-		{
-			prt_error("Info: Force-setting to \"%s\"", locale1);
-			rlocale = setlocale(LC_CTYPE, locale1);
-			if (NULL == rlocale)
-			{
-				prt_error("Warning: Failed to set locale to \"%s\".", locale1);
-				prt_error("Info: Force-setting to \"C\"");
-				rlocale = setlocale(LC_CTYPE, "C");
-				if (NULL == rlocale) /* "Cannot happen" */
-				{
-					prt_error("Fatal error: Failed to set locale to \"C\".");
-					exit(EXIT_FAILURE);
-				}
-			}
-		}
-	}
-
-	return rlocale;
-}
-
 int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
@@ -604,7 +571,6 @@ int main(int argc, char * argv[])
 	const char     *language = NULL;
 	int             num_linkages, i;
 	Label           label = NO_LABEL;
-	const char      *locale = NULL;
 	Command_Options *copts;
 	Parse_Options   opts;
 	bool batch_in_progress = false;
@@ -698,30 +664,6 @@ int main(int argc, char * argv[])
 #ifdef _WIN32
 	win32_set_utf8_output();
 #endif /* _WIN32 */
-
-	const char *use_locale = linkgrammar_get_dict_locale(dict);
-	if (NULL == use_locale)
-	{
-			prt_error("Warning: Cannot determine the locale "
-			          "from the dictionary and the environment.");
-			prt_error("Info: Force-setting to \"%s\".", LAST_RESORT_LOCALE);
-			use_locale = LAST_RESORT_LOCALE;
-	}
-
-	locale = set_program_locale(use_locale, LAST_RESORT_LOCALE);
-
-#ifndef _WIN32
-	/* Check to make sure the current locale is UTF-8; if its not,
-	 * then force-set this to the English UTF-8 locale.
-	 */
-	const char *codeset = nl_langinfo(CODESET);
-	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
-	{
-		prt_error("Warning: Locale %s (codeset %s) was not UTF-8",
-		          locale, codeset);
-		locale = set_program_locale(LAST_RESORT_LOCALE, LAST_RESORT_LOCALE);
-	}
-#endif /* !_WIN32 */
 
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with
