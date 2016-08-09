@@ -333,13 +333,14 @@ static inline int is_utf8_space(const char *s)
 	return 0;
 }
 
-static inline const char * skip_utf8_upper(const char * s)
+#if 0 /* Not in use. */
+static inline const char * skip_utf8_upper(const char * s, locale_t dict_locale)
 {
-	int nb = is_utf8_upper(s);
+	int nb = is_utf8_upper(s, dict_locale);
 	while (nb)
 	{
 		s += nb;
-		nb = is_utf8_upper(s);
+		nb = is_utf8_upper(s, dict_locale);
 	}
 	return s;
 }
@@ -349,7 +350,8 @@ static inline const char * skip_utf8_upper(const char * s)
  * two input strings match. Comparison stops when
  * both strings descend to lowercase.
  */
-static inline bool utf8_upper_match(const char * s, const char * t)
+static inline bool utf8_upper_match(const char * s, const char * t,
+                                    locale_t dict_locale)
 {
 	mbstate_t mbs, mbt;
 	wchar_t ws, wt;
@@ -361,7 +363,7 @@ static inline bool utf8_upper_match(const char * s, const char * t)
 	ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
 	nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
 	if (ns < 0 || nt < 0) return false;  /* invalid mb sequence */
-	while (iswupper(ws) || iswupper(wt))
+	while (iswupper_l(ws, dict_locale) || iswupper_l(wt, dict_locale))
 	{
 		if (ws != wt) return false;
 		s += ns;
@@ -372,6 +374,7 @@ static inline bool utf8_upper_match(const char * s, const char * t)
 	}
 	return true;
 }
+#endif /* Not in use. */
 
 void downcase_utf8_str(char *to, const char * from, size_t usize);
 void upcase_utf8_str(char *to, const char * from, size_t usize);
