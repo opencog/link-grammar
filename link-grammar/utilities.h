@@ -94,6 +94,7 @@ void *alloca (size_t);
 /* And strtok_r is strtok_s */
 #define strtok_r strtok_s
 
+#define HAVE_LOCALE_T
 #define locale_t _locale_t
 #define iswupper_l  _iswupper_l
 #define iswalpha_l  _iswalpha_l
@@ -167,6 +168,20 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 /* This does not appear to be in string.h header file in sunos
    (Or in linux when I compile with -ansi) */
 #endif
+
+/* Cygwin < 2.6.0 doesn't have locale_t. */
+#ifdef HAVE_LOCALE_T
+locale_t newlocale_LC_CTYPE(const char *);
+#else
+typedef int locale_t;
+#define iswupper_l(c, l) iswupper(c)
+#define iswalpha_l(c, l) iswalpha(c)
+#define iswdigit_l(c, l) iswdigit(c)
+#define iswspace_l(c, l) iswspace(c)
+#define towlower_l(c, l) towlower(c)
+#define towupper_l(c, l) towupper(c)
+#define freelocale(l)
+#endif /* HAVE_LOCALE_T */
 
 #define STR(x) #x
 #define STRINGIFY(x) STR(x)
@@ -408,7 +423,6 @@ void * object_open(const char *filename,
 
 bool file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
-locale_t newlocale_LC_CTYPE(const char *);
 void set_utf8_program_locale(void);
 bool is_known_locale(const char *);
 

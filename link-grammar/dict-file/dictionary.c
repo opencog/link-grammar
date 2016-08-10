@@ -506,6 +506,8 @@ dictionary_six_str(const char * lang,
 	}
 
 	dict->locale = linkgrammar_get_dict_locale(dict);
+
+#ifdef HAVE_LOCALE_T
 	if (NULL != dict->locale)
 		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
 	set_utf8_program_locale();
@@ -522,6 +524,7 @@ dictionary_six_str(const char * lang,
 	}
 	/* If dict->locale is still not set, there is a bug. */
 	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
+#endif /* HAVE_LOCALE_T */
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
