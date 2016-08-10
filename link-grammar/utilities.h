@@ -31,19 +31,8 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
-
-#ifndef __CYGWIN__
-/* I was told that cygwin does not have these files. */
 #include <wchar.h>
 #include <wctype.h>
-#endif
-
-#if defined(__CYGWIN__) && defined(__MINGW32__)
-/* Some users have CygWin and MinGW installed!
- * In this case, use the MinGW versions of UTF-8 support. */
-#include <wchar.h>
-#include <wctype.h>
-#endif
 
 #include "error.h"
 
