@@ -64,6 +64,8 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
+dnl Check for types
+AC_CHECK_TYPES([locale_t], [], [], [[#include <locale.h>]])
 
 # ====================================================================
 
