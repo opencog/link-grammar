@@ -56,7 +56,6 @@ AC_LANG([C])
 
 AC_C_CONST
 
-AC_CHECK_FUNCS(towupper)
 AC_CHECK_FUNCS(strndup)
 
 AC_FUNC_ALLOCA
