@@ -413,7 +413,7 @@ void * object_open(const char *filename,
 bool file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
 void set_utf8_program_locale(void);
-bool is_known_locale(const char *);
+bool try_locale(const char *);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1

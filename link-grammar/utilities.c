@@ -834,14 +834,28 @@ locale_t newlocale_LC_CTYPE(const char *locale)
 
 /**
  * Check that the given locale known by the system.
+ * In case we don't have locale_t, actually set the locale
+ * in order to find out if it is fine. This side effect doesn't cause
+ * harm, as the local would be set up to that value anyway shortly.
  * @param locale Locale string
  * @return True if known, false if unknown.
  */
-bool is_known_locale(const char *locale)
+bool try_locale(const char *locale)
 {
+#ifdef HAVE_LOCALE_T
 		locale_t ltmp = newlocale_LC_CTYPE(locale);
 		if ((locale_t)0 == ltmp) return false;
 		freelocale(ltmp);
+#else
+		lgdebug(D_USER_FILES, "Debug: Setting program's locale %s", locale);
+		if (NULL == setlocale(LC_CTYPE, locale))
+		{
+			lgdebug(D_USER_FILES, " failed!\n");
+			return false;
+		}
+		lgdebug(D_USER_FILES, ".\n");
+#endif /* HAVE_LOCALE_T */
+
 		return true;
 }
 

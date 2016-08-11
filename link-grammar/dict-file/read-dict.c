@@ -105,7 +105,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 		locale = format_locale(dict, locale_ll, locale_cc);
 
-		if (!is_known_locale(locale))
+		if (!try_locale(locale))
 		{
 			lgdebug(D_USER_FILES, "Debug: Dictionary locale %s unknown\n", locale);
 			goto locale_error;
@@ -127,7 +127,7 @@ locale_error:
 		free((void *)locale);
 		prt_error("Info: No dictionary locale definition - %s will be used.",
 		          sslocale);
-		if (!is_known_locale(sslocale))
+		if (!try_locale(sslocale))
 		{
 			lgdebug(D_USER_FILES, "Debug: Unknown locale %s...\n", sslocale);
 			return NULL;
