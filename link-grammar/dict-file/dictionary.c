@@ -505,12 +505,15 @@ dictionary_six_str(const char * lang,
 		return dict;
 	}
 
+	/* If we don't have a locale per dictionary, the following
+	 * will also set the program's locale. */
 	dict->locale = linkgrammar_get_dict_locale(dict);
+	set_utf8_program_locale();
 
 #ifdef HAVE_LOCALE_T
+	/* We have a locale per dictionary. */
 	if (NULL != dict->locale)
 		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
-	set_utf8_program_locale();
 
 	/* If we didn't succeed to set the dictionary locale, the program will
 	 * SEGFAULT when it tries to use it with the isw*() functions.
@@ -524,6 +527,12 @@ dictionary_six_str(const char * lang,
 	}
 	/* If dict->locale is still not set, there is a bug. */
 	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
+#else
+	/* We don't have a locale per dictionary - but anyway make sure
+	 * dict->locale is consistent with the current program's locale,
+	 * and especially that it is not NULL. It still indicates the intended
+	 * locale of this dictionary and the locale of the compiled regexs. */
+	dict->locale = setlocale(LC_CTYPE, NULL);
 #endif /* HAVE_LOCALE_T */
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
@@ -537,7 +546,8 @@ dictionary_six_str(const char * lang,
 
 	/*
 	 * Process the regex file.
-	 * We have to compile regexs using the dictionary locale.
+	 * We have to compile regexs using the dictionary locale,
+	 * so make a temporary locale swap.
 	 */
 	if (read_regex_file(dict, regex_name)) goto failure;
 

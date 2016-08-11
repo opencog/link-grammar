@@ -815,6 +815,7 @@ char *get_file_contents(const char * dict_name)
 /* ======================================================== */
 /* Locale routines */
 
+#ifdef HAVE_LOCALE_T
 /**
  * Create a locale object from the given locale string.
  * @param locale Locale string, in the native OS format.
@@ -831,6 +832,7 @@ locale_t newlocale_LC_CTYPE(const char *locale)
 #endif /* _WIN32 */
 		return locobj;
 }
+#endif /* HAVE_LOCALE_T */
 
 /**
  * Check that the given locale known by the system.
@@ -865,10 +867,6 @@ bool try_locale(const char *locale)
 void set_utf8_program_locale(void)
 {
 #ifndef _WIN32
-	static bool utf8_program_locale_checked = false;;
-
-	if (utf8_program_locale_checked) return;
-
 	/* The LG library doesn't use mbrtowc_l(), since it doesn't exists in
 	 * the dynamic glibc (2.22). mbsrtowcs_l() could also be used, but for
 	 * some reason it exists only in the static glibc.
@@ -893,12 +891,10 @@ void set_utf8_program_locale(void)
 			if (NULL == locale)
 			{
 				prt_error("Warning: Could not set a UTF-8 program locale; "
-				          "Program may malfunction");
+				          "program may malfunction");
 			}
 		}
 	}
-
-	utf8_program_locale_checked = true;
 #endif
 }
 
