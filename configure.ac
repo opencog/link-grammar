@@ -414,24 +414,6 @@ AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
 
 # ====================================================================
 
-# It's not enough that locale.h is present; link-grammar really
-# wants to have LC_MESSAGES as well, so test for it explicitly.
-
-AC_DEFUN([GLIB_LC_MESSAGES],
-  [AC_CHECK_HEADERS([locale.h])
-    if test $ac_cv_header_locale_h = yes; then
-      AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
-        [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[return LC_MESSAGES]])],[am_cv_val_LC_MESSAGES=yes],[am_cv_val_LC_MESSAGES=no])])
-      if test $am_cv_val_LC_MESSAGES = yes; then
-        AC_DEFINE(HAVE_LC_MESSAGES, 1,
-          [Define if your <locale.h> file defines LC_MESSAGES.])
-      fi
-    fi])
-
-GLIB_LC_MESSAGES
-
-# ====================================================================
-
 # Enable editline by default
 AC_ARG_ENABLE( editline,
   [  --disable-editline      disable use of editline],
