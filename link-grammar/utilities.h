@@ -26,9 +26,9 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define _CRT_RAND_S
-#endif
+#endif /* _WIN32 */
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
