@@ -564,7 +564,7 @@ char * dictionary_get_data_dir(void)
 
 	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
 	{
-		prt_error("Warning: GetModuleFileName error %d\n", GetLastError());
+		prt_error("Warning: GetModuleFileName error %d", (int)GetLastError());
 	}
 	else
 	{
@@ -910,7 +910,7 @@ win32_getlocale (void)
 	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO639LANGNAME, lbuf, sizeof(lbuf)))
 	{
 		prt_error("Error: GetLocaleInfoA LOCALE_SENGLISHLANGUAGENAME LCID=%d: "
-		          "Error %d", lcid, GetLastError());
+		          "Error %d", (int)lcid, (int)GetLastError());
 		return NULL;
 	}
 	strcpy(locale, lbuf);
@@ -919,7 +919,7 @@ win32_getlocale (void)
 	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO3166CTRYNAME, lbuf, sizeof(lbuf)))
 	{
 		prt_error("Error: GetLocaleInfoA LOCALE_SISO3166CTRYNAME LCID=%d: "
-		          "Error %d", lcid, GetLastError());
+		          "Error %d", (int)lcid, (int)GetLastError());
 		return NULL;
 	}
 	strcat(locale, lbuf);

@@ -39,15 +39,15 @@ char *get_console_line(void)
 		                             NULL, OPEN_EXISTING, 0, NULL);
 		if (!console_handle || (INVALID_HANDLE_VALUE == console_handle))
 		{
-			prt_error("CreateFileA CONIN$: Error %d.", GetLastError());
+			prt_error("CreateFileA CONIN$: Error %d.", (int)GetLastError());
 			return NULL;
 		}
 	}
 
-	int nchar;
+	DWORD nchar;
 	if (!ReadConsoleW(console_handle, &winbuf, MAX_INPUT-sizeof(wchar_t), &nchar, NULL))
 	{
-		printf("ReadConsoleW: Error %d\n", GetLastError());
+		printf("ReadConsoleW: Error %d\n", (int)GetLastError());
 		return NULL;
 	}
 	winbuf[nchar] = L'\0';
@@ -57,7 +57,7 @@ char *get_console_line(void)
 	if (0 == nchar)
 	{
 		prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d.",
-		          GetLastError());
+		          (int)GetLastError());
 		return NULL;
 	}
 
@@ -117,16 +117,17 @@ void win32_set_utf8_output(void)
 	if (!SetConsoleCP(CP_UTF8))
 	{
 		prt_error("Warning: Cannot set input codepage %d (error %d).",
-			CP_UTF8, GetLastError());
+			CP_UTF8, (int)GetLastError());
 	}
 	/* For Console output. */
 	if (!SetConsoleOutputCP(CP_UTF8))
 	{
 		prt_error("Warning: Cannot set output codepage %d (error %d).",
-			CP_UTF8, GetLastError());
+			CP_UTF8, (int)GetLastError());
 	}
 }
 
+#include <winternl.h>
 /**
  * isatty() compatibility for running under Cygwin when compiling
  * using the Windows native C library.
@@ -176,7 +177,7 @@ int lg_isatty(int fd)
 
 	if (!GetFileInformationByHandleEx(fh, FileNameInfo, pfni, sizeof(buf)))
 	{
-		printf("GetFileInformationByHandleEx: Error %d\n", GetLastError());
+		printf("GetFileInformationByHandleEx: Error %d\n", (int)GetLastError());
 		goto no_tty;
 	}
 
