@@ -47,6 +47,7 @@
 #else
 #include <windows.h>
 #include <wchar.h>
+#include <io.h>
 #endif /* _WIN32 */
 
 #ifdef _MSC_VER

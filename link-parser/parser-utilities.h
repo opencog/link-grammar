@@ -15,10 +15,6 @@
 
 #include "../link-grammar/link-includes.h"
 
-#if _WIN32
-#include <io.h> /* for isatty() */
-#endif
-
 #define MAX_INPUT 1024
 
 #if !defined(MIN)

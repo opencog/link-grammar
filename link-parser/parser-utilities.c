@@ -10,16 +10,16 @@
 /* forms, with or without modification, subject to certain conditions.     */
 /*                                                                         */
 /***************************************************************************/
-#include "parser-utilities.h"
 
 #ifdef _WIN32
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#endif /* _WIN32 */
+#include <io.h>
 
-#ifdef _WIN32
+#include "parser-utilities.h"
+
 /**
  * Get a line from the console in UTF-8.
  * This function bypasses the code page conversion and reads Unicode
