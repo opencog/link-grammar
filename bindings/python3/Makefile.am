@@ -23,6 +23,12 @@ pkgpython3_PYTHON =                                 \
    $(top_builddir)/bindings/python3/clinkgrammar.py
 
 
+# Apparently, anaconda does not work without this!?
+# This seems wrong and lme to me, but see issue #298
+pkgpypathdir=$(pythondir)
+pkgpypath_PYTHON =                                 \
+   linkgrammar.pth
+
 # These are packaged in the tarball; make clean should not remove them.
 maintainer-clean-local:
 	-rm -f $(BUILT_C_SOURCES)
@@ -62,4 +68,5 @@ _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 EXTRA_DIST =         \
    README.md         \
+   linkgrammar.pth	\
    __init__.py.in
