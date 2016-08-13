@@ -76,7 +76,9 @@ void *alloca (size_t);
 #define vsnprintf _vsnprintf
 #endif
 
+#ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+#endif
 
 /* MS changed the name of rand_r to rand_s */
 #define rand_r(seedp) rand_s(seedp)

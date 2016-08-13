@@ -27,7 +27,9 @@
 
 #ifdef _WIN32
 #define strcasecmp _stricmp
-#define strncasecmp(a,b,s) _strnicmp((a),(b),(s))
+#ifndef strncasecmp
+#define strncasecmp _strnicmp
+#endif
 
 char *get_console_line(void);
 void win32_set_utf8_output(void);
