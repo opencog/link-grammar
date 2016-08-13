@@ -60,12 +60,7 @@ void *alloca (size_t);
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
 
-#ifdef _WIN32
-#include <windows.h>
-#include <mbctype.h>
-
 #ifdef _MSC_VER
-
 /* These definitions are incorrect, as these functions are different(!)
  * (non-standard functionality).
  * See http://stackoverflow.com/questions/27754492 . Fortunately,
@@ -77,6 +72,18 @@ void *alloca (size_t);
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #endif
+
+/* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
+ * This happens, for example, when the argument is "const void **". */
+#define free(x) free((void *)x)
+#define realloc(x, s) realloc((void *)x, s)
+#define memcpy(x, y, s) memcpy((void *)x, (void *)y, s)
+#define qsort(x, y, z, w) qsort((void *)x, y, z, w)
+#endif /* _MSC_VER */
+
+#ifdef _WIN32
+#include <windows.h>
+#include <mbctype.h>
 
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
@@ -96,14 +103,6 @@ void *alloca (size_t);
 #define towlower_l  _towlower_l
 #define towupper_l  _towupper_l
 #define freelocale _free_locale
-
-/* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
- * This happens, for example, when the argument is "const void **". */
-#define free(x) free((void *)x)
-#define realloc(x, s) realloc((void *)x, s)
-#define memcpy(x, y, s) memcpy((void *)x, (void *)y, s)
-#define qsort(x, y, z, w) qsort((void *)x, y, z, w)
-#endif /* _MSC_VER */
 
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
