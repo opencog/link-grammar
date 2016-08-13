@@ -67,15 +67,13 @@ static bool is_idiom_string(const char * s)
 }
 
 /**
- * return true if the string s is a sequence of digits.
+ * Return true if the string s is a sequence of digits.
  */
 static bool is_number(const char *s)
 {
-	int nb;
 	while(*s != '\0') {
-		nb = is_utf8_digit(s);
-		if (!nb) return false;
-		s += nb;
+		if (!isdigit(*s)) return false;
+		s++;
 	}
 	return true;
 }
