@@ -28,6 +28,8 @@
 /**
  * Format the given locale for use in setlocale().
  * POSIX systems and Windows use different conventions.
+ * On Windows, convert to full language and territory names, because the
+ * short ones doesn't work for some reason on every system (including MinGW).
  * @param dict Used for putting the returned value in a string-set.
  * @param ll Locale 2-letter language code.
  * @param cc Locale 2-letter territory code.
@@ -46,6 +48,63 @@ static const char * format_locale(Dictionary dict,
 	const int locale_size = strlen(ll) + 1 + strlen(cc) + 1;
 	char *locale = alloca(locale_size);
 	snprintf(locale, locale_size, "%s-%s", locale_ll, locale_cc);
+
+	wchar_t wlocale[LOCALE_NAME_MAX_LENGTH];
+	wchar_t wtmpbuf[LOCALE_NAME_MAX_LENGTH];
+	char tmpbuf[LOCALE_NAME_MAX_LENGTH];
+	char locale_buf[LOCALE_NAME_MAX_LENGTH];
+	size_t r;
+
+	r = mbstowcs(wlocale, locale, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting %s to wide character.", locale);
+		return NULL;
+	}
+	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
+
+	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
+	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
+	{
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: "
+		          "Error %d", locale, (int)GetLastError());
+		return NULL;
+	}
+	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting locale language from wide character.");
+		return NULL;
+	}
+	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
+	if (0 == strncmp(tmpbuf, "Unknown", 7))
+	{
+		prt_error("Error: Unknown territory code in locale %s", locale);
+		return NULL;
+	}
+	strcpy(locale_buf, tmpbuf);
+	strcat(locale_buf, "_");
+
+	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
+	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
+	{
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: "
+		          "Error %d", locale, (int)GetLastError());
+		return NULL;
+	}
+	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting locale territory from wide character.");
+		return NULL;
+	}
+	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
+	if (0 == strncmp(tmpbuf, "Unknown", 7))
+	{
+		prt_error("Error: Unknown territory code in locale %s", locale);
+		return NULL;
+	}
+	locale = strcat(locale_buf, tmpbuf);
 #else /* Assuming POSIX */
 	const int locale_size = strlen(ll) + 1 + strlen(cc) + sizeof(".UTF-8");
 	char *locale = alloca(locale_size);
