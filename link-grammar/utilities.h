@@ -94,7 +94,14 @@ void *alloca (size_t);
 /* And strtok_r is strtok_s */
 #define strtok_r strtok_s
 
+/* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.
+ * However, MinGW currently doesn't have locale_t. If/when it has locale_t,
+ * "configure" will define HAVE_LOCALE_T for it. */
+#ifndef __MINGW32__
 #define HAVE_LOCALE_T
+#endif
+
+#ifdef HAVE_LOCALE_T
 #define locale_t _locale_t
 #define iswupper_l  _iswupper_l
 #define iswalpha_l  _iswalpha_l
@@ -103,6 +110,7 @@ void *alloca (size_t);
 #define towlower_l  _towlower_l
 #define towupper_l  _towupper_l
 #define freelocale _free_locale
+#endif /* HAVE_LOCALE_T */
 
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
