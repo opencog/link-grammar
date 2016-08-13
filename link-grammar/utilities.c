@@ -583,11 +583,11 @@ char * dictionary_get_data_dir(void)
 			else
 			{
 				/* Unconvertible characters are marked as '?' */
-				char *unsuppored = (NULL != strchr(prog_path, '?')) ?
+				const char *unsupported = (NULL != strchr(prog_path, '?')) ?
 					" (containing unsupported character)" : "";
 
 				lgdebug(D_USER_FILES, "Debug: Directory of executable: %s%s\n",
-				        unsuppored, prog_path);
+				        unsupported, prog_path);
 				data_dir = safe_strdup(prog_path);
 			}
 		}
