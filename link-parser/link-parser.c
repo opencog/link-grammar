@@ -710,6 +710,16 @@ int main(int argc, char * argv[])
 		exit(-1);
 	}
 
+	setup_panic_parse_options(copts->panic_opts);
+	copts->panic_mode = true;
+
+	parse_options_set_max_parse_time(opts, 30);
+	parse_options_set_linkage_limit(opts, 1000);
+	parse_options_set_min_null_count(opts, 0);
+	parse_options_set_max_null_count(opts, 0);
+	parse_options_set_short_length(opts, 16);
+	parse_options_set_islands_ok(opts, false);
+
 	/* Process command line variable-setting commands (only) */
 	for (i = 1; i < argc; i++)
 	{
@@ -764,17 +774,6 @@ int main(int argc, char * argv[])
 			exit(-1);
 		}
 	}
-
-
-	setup_panic_parse_options(copts->panic_opts);
-	copts->panic_mode = true;
-
-	parse_options_set_max_parse_time(opts, 30);
-	parse_options_set_linkage_limit(opts, 1000);
-	parse_options_set_min_null_count(opts, 0);
-	parse_options_set_max_null_count(opts, 0);
-	parse_options_set_short_length(opts, 16);
-	parse_options_set_islands_ok(opts, false);
 
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with
