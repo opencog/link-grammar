@@ -1346,7 +1346,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					{
 						/* We encountered this token earlier */
 						if (NULL != display)
-							lgdebug(5, "Skipping repeated %s\n", wt);
+							lgdebug(6, "Skipping repeated %s\n", wt);
 						continue;
 					}
 				}

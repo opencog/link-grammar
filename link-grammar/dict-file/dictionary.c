@@ -248,7 +248,7 @@ static int cmplen(const void *a, const void *b)
  * needed - especially to first free memory and initialize the affix dict
  * structure.).
  */
-#define D_AI 10
+#define D_AI 11
 static bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
@@ -416,6 +416,7 @@ dictionary_six(const char * lang, const char * dict_name,
  * Read dictionary entries from a wide-character string "input".
  * All other parts are read from files.
  */
+#define D_DICT 10
 static Dictionary
 dictionary_six_str(const char * lang,
                    const char * input,
@@ -435,7 +436,7 @@ dictionary_six_str(const char * lang,
 	t = strrchr (lang, '/');
 	t = (NULL == t) ? lang : t+1;
 	dict->lang = string_set_add(t, dict->string_set);
-	lgdebug(D_USER_FILES, "Info: Language: %s\n", dict->lang);
+	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 	dict->name = string_set_add(dict_name, dict->string_set);
 
 	/*
@@ -504,6 +505,36 @@ dictionary_six_str(const char * lang,
 		return dict;
 	}
 
+	/* If we don't have a locale per dictionary, the following
+	 * will also set the program's locale. */
+	dict->locale = linkgrammar_get_dict_locale(dict);
+	set_utf8_program_locale();
+
+#ifdef HAVE_LOCALE_T
+	/* We have a locale per dictionary. */
+	if (NULL != dict->locale)
+		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
+
+	/* If we didn't succeed to set the dictionary locale, the program will
+	 * SEGFAULT when it tries to use it with the isw*() functions.
+	 * So set it to the current program's locale as a last resort. */
+	if (NULL == dict->locale)
+	{
+		dict->locale = setlocale(LC_CTYPE, NULL);
+		dict->locale_t = newlocale_LC_CTYPE(setlocale(LC_CTYPE, NULL));
+		prt_error("Warning: Couldn't set dictionary locale! "
+		          "Using current program locale %s", dict->locale);
+	}
+	/* If dict->locale is still not set, there is a bug. */
+	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
+#else
+	/* We don't have a locale per dictionary - but anyway make sure
+	 * dict->locale is consistent with the current program's locale,
+	 * and especially that it is not NULL. It still indicates the intended
+	 * locale of this dictionary and the locale of the compiled regexs. */
+	dict->locale = setlocale(LC_CTYPE, NULL);
+#endif /* HAVE_LOCALE_T */
+
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
 	{
@@ -513,8 +544,25 @@ dictionary_six_str(const char * lang,
 	if (! afdict_init(dict))
 		goto failure;
 
+	/*
+	 * Process the regex file.
+	 * We have to compile regexs using the dictionary locale,
+	 * so make a temporary locale swap.
+	 */
 	if (read_regex_file(dict, regex_name)) goto failure;
-	if (compile_regexs(dict->regex_root, dict)) goto failure;
+
+	const char *locale = setlocale(LC_CTYPE, NULL);
+	locale = strdupa(locale); /* setlocale() uses static memory. */
+	setlocale(LC_CTYPE, dict->locale);
+	lgdebug(+D_DICT, "Regexs locale %s\n", setlocale(LC_CTYPE, NULL));
+
+	if (compile_regexs(dict->regex_root, dict))
+	{
+		locale = setlocale(LC_CTYPE, locale);
+		goto failure;
+	}
+	locale = setlocale(LC_CTYPE, locale);
+	assert(NULL != locale, "Cannot restore program locale\n");
 
 #ifdef USE_CORPUS
 	dict->corpus = lg_corpus_new();

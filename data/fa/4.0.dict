@@ -12,6 +12,7 @@
 
 % Dictionary version number is 5.0.1 (formatted as V5v0v1+)
 <dictionary-version-number>: V5v0v1+;
+<dictionary-locale>: FA4ir+;
 
 % PERSIAN SYNTAX NOTES:
 %	-Normal Order:	(S) (PP) (O) V

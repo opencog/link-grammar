@@ -15,7 +15,7 @@ try:
 except ImportError:
     import _clinkgrammar as clg
 
-locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+locale.setlocale(locale.LC_CTYPE, "en_US.UTF-8")
 
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
@@ -178,7 +178,6 @@ class BParseOptionsTestCase(unittest.TestCase):
         po = ParseOptions(linkage_limit=99)
         self.assertEqual(clg.parse_options_get_linkage_limit(po._obj), 99)
 
-
 class CParseOptionsTestCase(unittest.TestCase):
 
     def test_that_sentence_can_be_destroyed_when_linkages_still_exist(self):
@@ -249,6 +248,12 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual([len(l) for l in linkage.links()], [5,2,1,1,2,1,1])
         linkage = self.parse_sent("This is a silly sentence.")[0]
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
+
+    def test_dictionary_locale_definition(self):
+        oldlocale = locale.setlocale(locale.LC_CTYPE, "tr_TR.UTF-8")
+        self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
+             ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
+        locale.setlocale(locale.LC_CTYPE, oldlocale);
 
 class ESATsolverTestCase(unittest.TestCase):
     def setUp(self):

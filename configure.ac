@@ -64,6 +64,8 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
+dnl Check for types
+AC_CHECK_TYPES([locale_t], [], [], [[#include <locale.h>]])
 
 # ====================================================================
 
@@ -112,6 +114,8 @@ if test x${native_win32} = xyes; then
 	# Vikas says that -std=gnu99 is needed on cygwin/mingw
 	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
 	CXXFLAGS="${CXXFLAGS} -std=c++03"
+	# We need the shlwapi for PathRemoveFileSpecA().
+	LDFLAGS="${LDFLAGS} -lshlwapi"
 	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
 	# I'm unclear as to why these are not being set automatically,
 	# by mingw itself .. but what the hey ... this can't hurt, right?
@@ -119,6 +123,17 @@ if test x${native_win32} = xyes; then
 	# Setting these screws up the remainder of the configure script.
 	# CFLAGS="${CFLAGS} -I/usr/include/mingw -D__MINGW32__"
 	# LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
+
+	# By default, MinGW doesn't know about %zu, which we use a lot, even
+	# on systems which have MSVC14, which has c99 stdio (printf prints
+	# "zu"). Add __USE_MINGW_ANSI_STDIO in order to solve that.
+	AC_DEFINE(__USE_MINGW_ANSI_STDIO, 1)
+	AC_DEFINE(__printf__, gnu_printf)
+
+	# Only running on Vista and on is supported.
+	AC_DEFINE(NTDDI_VERSION, NTDDI_VISTA)
+	AC_DEFINE(_WIN32_WINNT, NTDDI_VISTA)
+
 
 else
 if test x${apple_osx} = xyes; then
@@ -409,24 +424,6 @@ if test "$do_aspell" = yes ; then
 fi
 
 AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
-
-# ====================================================================
-
-# It's not enough that locale.h is present; link-grammar really
-# wants to have LC_MESSAGES as well, so test for it explicitly.
-
-AC_DEFUN([GLIB_LC_MESSAGES],
-  [AC_CHECK_HEADERS([locale.h])
-    if test $ac_cv_header_locale_h = yes; then
-      AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
-        [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[return LC_MESSAGES]])],[am_cv_val_LC_MESSAGES=yes],[am_cv_val_LC_MESSAGES=no])])
-      if test $am_cv_val_LC_MESSAGES = yes; then
-        AC_DEFINE(HAVE_LC_MESSAGES, 1,
-          [Define if your <locale.h> file defines LC_MESSAGES.])
-      fi
-    fi])
-
-GLIB_LC_MESSAGES
 
 # ====================================================================
 

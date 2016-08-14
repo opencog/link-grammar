@@ -2,6 +2,7 @@
 
 % Dictionary version number is 5.3.3 (formatted as V5v3v3+)
 <dictionary-version-number>: V5v3v3+;
+<dictionary-locale>: VI4vn+;
 
 % See https://bitbucket.org/ngocminh/lienkate for the master
 % project; this includes a version of the link-grammar perser

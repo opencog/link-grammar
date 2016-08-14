@@ -25,6 +25,176 @@
 #include "utilities.h"
 #include "word-file.h"
 
+/**
+ * Format the given locale for use in setlocale().
+ * POSIX systems and Windows use different conventions.
+ * On Windows, convert to full language and territory names, because the
+ * short ones doesn't work for some reason on every system (including MinGW).
+ * @param dict Used for putting the returned value in a string-set.
+ * @param ll Locale 2-letter language code.
+ * @param cc Locale 2-letter territory code.
+ * @return The formatted locale, directly usable in setlocale().
+ */
+static const char * format_locale(Dictionary dict,
+                                  const char *ll, const char *cc)
+{
+	unsigned char *locale_ll = (unsigned char *)strdupa(ll);
+	unsigned char *locale_cc = (unsigned char *)strdupa(cc);
+
+	for (unsigned char *p = locale_ll; '\0' != *p; p++) *p = tolower(*p);
+	for (unsigned char *p = locale_cc; '\0' != *p; p++) *p = toupper(*p);
+
+#ifdef _WIN32
+	const int locale_size = strlen(ll) + 1 + strlen(cc) + 1;
+	char *locale = alloca(locale_size);
+	snprintf(locale, locale_size, "%s-%s", locale_ll, locale_cc);
+
+	wchar_t wlocale[LOCALE_NAME_MAX_LENGTH];
+	wchar_t wtmpbuf[LOCALE_NAME_MAX_LENGTH];
+	char tmpbuf[LOCALE_NAME_MAX_LENGTH];
+	char locale_buf[LOCALE_NAME_MAX_LENGTH];
+	size_t r;
+
+	r = mbstowcs(wlocale, locale, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting %s to wide character.", locale);
+		return NULL;
+	}
+	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
+
+	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
+	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
+	{
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: "
+		          "Error %d", locale, (int)GetLastError());
+		return NULL;
+	}
+	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting locale language from wide character.");
+		return NULL;
+	}
+	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
+	if (0 == strncmp(tmpbuf, "Unknown", 7))
+	{
+		prt_error("Error: Unknown territory code in locale %s", locale);
+		return NULL;
+	}
+	strcpy(locale_buf, tmpbuf);
+	strcat(locale_buf, "_");
+
+	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
+	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
+	{
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: "
+		          "Error %d", locale, (int)GetLastError());
+		return NULL;
+	}
+	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
+	if ((size_t)-1 == r)
+	{
+		prt_error("Error: Error converting locale territory from wide character.");
+		return NULL;
+	}
+	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
+	if (0 == strncmp(tmpbuf, "Unknown", 7))
+	{
+		prt_error("Error: Unknown territory code in locale %s", locale);
+		return NULL;
+	}
+	locale = strcat(locale_buf, tmpbuf);
+#else /* Assuming POSIX */
+	const int locale_size = strlen(ll) + 1 + strlen(cc) + sizeof(".UTF-8");
+	char *locale = alloca(locale_size);
+	snprintf(locale, locale_size, "%s_%s.UTF-8", locale_ll, locale_cc);
+#endif
+
+	return string_set_add(locale, dict->string_set);
+}
+
+/**
+ * Return a locale for the given dictionary, in the OS format.
+ * - If <dictionary-locale> is defined, use it.
+ * - Else use the locale from the environment.
+ * - On Windows, if no environment locale use the default locale.
+ *
+ * <dictionary-locale>: LL4cc+;
+ * LL is the ISO639 language code in uppercase,
+ * cc is the ISO3166 territory code in lowercase.
+ * This particular capitalization is needed for the value to be a
+ * valid LG connector.
+ * For transliterated dictionaries:
+ * <dictionary-locale>: C+;
+ *
+ * @param dict The dictionary for which the locale is needed.
+ * @return The locale, in a format suitable for use by setlocale().
+ */
+const char * linkgrammar_get_dict_locale(Dictionary dict)
+{
+	if (dict->locale) return dict->locale;
+
+	const char *locale;
+	Dict_node *dn = lookup_list(dict, "<dictionary-locale>");
+
+	if (NULL == dn)
+	{
+		lgdebug(D_USER_FILES, "Debug: Dictionary locale is not defined.\n");
+		goto locale_error;
+	}
+
+	if (0 == strcmp(dn->exp->u.string, "C"))
+	{
+		locale = string_set_add("C", dict->string_set);
+	}
+	else
+	{
+		char c;
+		char locale_ll[4], locale_cc[3];
+		int locale_numelement = sscanf(dn->exp->u.string, "%3[A-Z]4%2[a-z]%c",
+										locale_ll, locale_cc, &c);
+		if (2 != locale_numelement)
+		{
+			prt_error("Error: <dictionary-locale> should be in the form LL4cc+\n"
+						 "\t(LL: language code; cc: territory code) "
+						 "\tor C+ for transliterated dictionaries.");
+			goto locale_error;
+		}
+
+		locale = format_locale(dict, locale_ll, locale_cc);
+
+		if (!try_locale(locale))
+		{
+			lgdebug(D_USER_FILES, "Debug: Dictionary locale %s unknown\n", locale);
+			goto locale_error;
+		}
+	}
+
+	free_lookup(dn);
+	lgdebug(D_USER_FILES, "Debug: Dictionary locale: %s\n", locale);
+	dict->locale = locale;
+	return locale;
+
+locale_error:
+	{
+		free_lookup(dn);
+
+		const char *locale = get_default_locale();
+		if (NULL == locale) return NULL;
+		const char *sslocale = string_set_add(locale, dict->string_set);
+		free((void *)locale);
+		prt_error("Info: No dictionary locale definition - %s will be used.",
+		          sslocale);
+		if (!try_locale(sslocale))
+		{
+			lgdebug(D_USER_FILES, "Debug: Unknown locale %s...\n", sslocale);
+			return NULL;
+		}
+		return sslocale;
+	}
+}
+
 const char * linkgrammar_get_version(void)
 {
 	const char *s = "link-grammar-" LINK_VERSION_STRING;
@@ -535,19 +705,21 @@ static inline int dict_order_bare(const char *s, const Dict_node * dn)
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
  * his behavior matches that of the function dict_order_bare().
  */
+#define D_DOW 6
 static inline int dict_order_wild(const char * s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 
-	lgdebug(+5, "search-word='%s' dict-word='%s'\n", s, t);
+	lgdebug(+D_DOW, "search-word='%s' dict-word='%s'\n", s, t);
 	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (*s == *t)) {s++; t++;}
 
 	if (*s == WILD_TYPE) return 0;
 
-	lgdebug(5, "Result: '%s'-'%s'=%d\n",
+	lgdebug(D_DOW, "Result: '%s'-'%s'=%d\n",
 	 s, t, ((*s == SUBSCRIPT_MARK)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
 	return ((*s == SUBSCRIPT_MARK)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
+#undef D_DOW
 
 /**
  * dict_match --  return true if strings match, else false.

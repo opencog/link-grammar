@@ -39,7 +39,7 @@
 #include "dict-structures.h"
 #include "corpus/corpus.h"
 #include "error.h"
-#include "utilities.h"	/* For wchar_t */
+#include "utilities.h"
 
 struct Cost_Model_s
 {
@@ -123,6 +123,8 @@ struct Dictionary_s
 	const char *    name;
 	const char *    lang;
 	const char *    version;
+	const char *    locale;
+	locale_t        locale_t;
 	int             num_entries;
 
 	bool         use_unknown_word;

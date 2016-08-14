@@ -40,7 +40,6 @@
 
 /* Used for terminal resizing */
 #ifndef _WIN32
-#include <langinfo.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
@@ -48,29 +47,38 @@
 #else
 #include <windows.h>
 #include <wchar.h>
-#endif
+#include <io.h>
+#endif /* _WIN32 */
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
-#endif
+#endif /* _MSC_VER */
 
-#include "../link-grammar/link-includes.h"
+#ifndef _WIN32
+#define LAST_RESORT_LOCALE "en_US.UTF-8" /* Supposing POSIX systems */
+#else
+#define LAST_RESORT_LOCALE ""            /* Use user default locale */
+#endif /* _WIN32 */
+
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
 #ifdef USE_VITERBI
 #include "../viterbi/viterbi.h"
-#endif
+#endif /* USE_VITERBI */
 
-#define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
+#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
 
 static int batch_errors = 0;
-static bool input_pending = false;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
+static bool isatty_stdin, isatty_stdout;
+#ifdef _WIN32
+static bool running_under_cygwin = false;
+#endif /* _WIN32 */
 
 typedef enum
 {
@@ -79,163 +87,65 @@ typedef enum
 	NO_LABEL = ' '
 } Label;
 
-
-#if defined(_MSC_VER) || defined(__MINGW32__)
-/* Windows console (cmd.exe) input to utf8 */
-static char* oem_to_utf8(char *instring)
-{
-	char * out;
-	wchar_t *winput;
-	size_t len;
-	int cv;
-	unsigned int consolecp;
-
-	consolecp = GetConsoleOutputCP();
-
-	/* Convert input string to wide chars. */
-	len = strlen(instring) + 1;
-	cv = MultiByteToWideChar(consolecp, 0, instring, len, NULL, 0);
-	winput = (wchar_t*) malloc(cv * sizeof(wchar_t));
-	cv = MultiByteToWideChar(consolecp, 0, instring, len, winput, cv);
-
-	/* Convert wide chars to utf8. */
-	cv = WideCharToMultiByte(CP_UTF8, 0, winput, len, NULL, 0, NULL, NULL);
-	out = (char*) malloc(cv);
-	cv = WideCharToMultiByte(CP_UTF8, 0, winput, len, out, cv, NULL, NULL);
-
-	free(winput);
-
-	return out;
-}
-#endif
-
 static char *
-fget_input_string(FILE *in, FILE *out, Command_Options* copts)
+fget_input_string(FILE *in, FILE *out, bool check_return)
 {
-#ifdef HAVE_EDITLINE
-	static char * pline = NULL;
-	const char * prompt = "linkparser> ";
+	static char input_string[MAX_INPUT];
+	static bool input_pending = false;
 
-	if (NULL == in)
+	if ((in != stdin) || !isatty_stdin)
 	{
-		if (pline) free(pline);
-		return NULL;
+		/* Here the input is not from a terminal. */
+		if (check_return) return (char *)"x"; /* XXX One linkage per sentence. */
+		return fgets(input_string, MAX_INPUT, in);
 	}
 
-	if (in != stdin)
-	{
-		static char input_string[MAX_INPUT];
-		input_pending = false;
-		if (fgets(input_string, MAX_INPUT, in)) return input_string;
-		return NULL;
-	}
+	/* If we are here, the input is from a terminal. */
+	static char *pline;
+	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
 
-	if (input_pending && pline != NULL)
+	if (input_pending)
 	{
 		input_pending = false;
 		return pline;
 	}
-	if (copts->batch_mode || verbosity == 0 || input_pending)
+
+#ifdef HAVE_EDITLINE
+	#ifdef _WIN32
+		#error __FILE__ ": Cannot use HAVE_EDITLINE "
+		                "(the console already has line editing and history)."
+	#endif /* _WIN32 */
+	pline = lg_readline(prompt);
+#else
+	fprintf(out, prompt);
+	fflush(out);
+	input_string[MAX_INPUT-2] = '\0';
+#ifdef _WIN32
+	if (!running_under_cygwin)
+		pline = get_console_line();
+	else
+		pline = fgets(input_string, MAX_INPUT, in);
+#else
+	pline = fgets(input_string, MAX_INPUT, in);
+#endif /* _WIN32 */
+#endif /* HAVE_EDITLINE */
+
+	if (NULL == pline) return NULL;      /* EOF */
+	if (('\0' != input_string[MAX_INPUT-2]) &&
+	    ('\n' != input_string[MAX_INPUT-2]))
 	{
-		prompt = "";
+		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT-1);
+		/* TODO: Ignore it and its continuation part(s). */
 	}
-	input_pending = false;
-	if (pline) free(pline);
-	pline = lg_readline(prompt, copts->batch_mode);
+	if (check_return)
+	{
+		if (('\0' == pline[0]) || ('\r' == pline[0]) || ('\n' == pline[0]))
+			return (char *)"\n";           /* Continue linkage display */
+		input_pending = true;
+		return (char *)"x";               /* Stop linkage display */
+	}
 
 	return pline;
-
-#else
-	static char input_string[MAX_INPUT];
-
-	if (NULL == in) return NULL;
-
-	if (!copts->batch_mode && verbosity > 0 && !input_pending)
-	{
-		fprintf(out, "linkparser> ");
-		fflush(out);
-	}
-	input_pending = false;
-
-#if defined(_MSC_VER) || defined(__MINGW32__)
-	/* Windows console input comes using the console codepage;
-	 * convert it to utf8 */
-	if (stdin == in)
-	{
-		static char * pline = NULL;
-		if (fgets(input_string, MAX_INPUT, in))
-		{
-			char *cr, *lf;
-			if (pline) free(pline);
-			pline = oem_to_utf8(input_string);
-
-			cr = strchr(pline, '\r');
-			if (cr) *cr = '\0';
-			lf = strchr(pline, '\n');
-			if (lf) *lf = '\0';
-
-			return pline;
-		}
-	}
-	else
-	{
-		/* It appears that MS Win always provides wide chars, even if
-		 * one asked for "just a string".  So lets explicitly ask for
-		 * wide chars here, and convert to multi-byte UTF-8 on the fly.
-		 */
-		wchar_t winput_string[MAX_INPUT];
-		if (fgetws(winput_string, MAX_INPUT, in))
-		{
-			size_t nc = wcstombs(input_string, winput_string, MAX_INPUT);
-			if (nc && (((size_t) -1) != nc))
-			{
-				char *cr, *lf;
-				cr = strchr(input_string, '\r');
-				if (cr) *cr = '\0';
-				lf = strchr(input_string, '\n');
-				if (lf) *lf = '\0';
-
-				return input_string;
-			}
-		}
-	}
-#else
-	/* Linux et al return UTF-8 multi-byte strings. */
-	if (fgets(input_string, MAX_INPUT, in)) return input_string;
-#endif
-	return NULL;
-#endif
-}
-
-static int fget_input_char(FILE *in, FILE *out, Command_Options* copts)
-{
-#ifdef HAVE_EDITLINE
-	char * pline = fget_input_string(in, out, copts);
-	if (NULL == pline) return EOF;
-	if (*pline)
-	{
-		input_pending = true;
-		return *pline;
-	}
-	return '\n';
-
-#else
-	int c;
-
-	if (!copts->batch_mode && verbosity > 0)
-		fprintf(out, "linkparser> ");
-	fflush(out);
-
-	/* For UTF-8 input, I think its still technically correct to
-	 * use fgetc() and not fgetwc() at this point. */
-	c = lg_fgetc(in);
-	if (c != '\n')
-	{
-		lg_ungetc(c, in);
-		input_pending = true;
-	}
-	return c;
-#endif
 }
 
 /**************************************************************************
@@ -356,9 +266,8 @@ static int auto_next_linkage_test(const char *test)
 	return DISPLAY_MAX;
 }
 
-static int process_some_linkages(Sentence sent, Command_Options* copts)
+static const char*process_some_linkages(Sentence sent, Command_Options* copts)
 {
-	int c;
 	int i, num_to_query, num_to_display, num_displayed;
 	Linkage linkage;
 	double corpus_cost;
@@ -462,8 +371,8 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				c = fget_input_char(stdin, stdout, copts);
-				if (c != '\n') return c;
+				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
+				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
 		else
@@ -471,7 +380,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 			break;
 		}
 	}
-	return 'x';
+	return "x";
 }
 
 static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
@@ -543,7 +452,6 @@ static void batch_process_some_linkages(Label label,
 
 static bool special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
-	if (input_string[0] == '\n') return true;
 	if (input_string[0] == COMMENT_CHAR) return true;
 	if (input_string[0] == '!') {
 		if (strncmp(input_string, "!panic_", 7) == 0)
@@ -611,23 +519,18 @@ static void print_usage(char *str)
  */
 static void check_winsize(Command_Options* copts)
 {
+	if (!isatty_stdout) return;
+	int fd = fileno(stdout);
 #ifdef _WIN32
-	/* untested code .. does this actually work ??? */
 	HANDLE console;
 	CONSOLE_SCREEN_BUFFER_INFO info;
 
-	int fd = fileno(stdout);
-	if (!isatty(fd)) return;
-
 	/* Create a handle to the console screen. */
-	console = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
-		0, NULL);
-	if (console == INVALID_HANDLE_VALUE) goto fail;
+	console = (HANDLE)_get_osfhandle(fd);
+	if (!console || (console == INVALID_HANDLE_VALUE)) goto fail;
 
 	/* Calculate the size of the console window. */
 	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
-	CloseHandle(console);
 
 	copts->screen_width = info.srWindow.Right - info.srWindow.Left;
 	return;
@@ -637,7 +540,6 @@ fail:
 	return;
 #else
 	struct winsize ws;
-	int fd = fileno(stdout);
 
 	/* If there is no controlling terminal, the fileno will fail. This
 	 * seems to happen while building docker images, I don't know why.
@@ -646,8 +548,7 @@ fail:
 
 	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
 	{
-		if (isatty(fd))
-			perror("stdout: ioctl TIOCGWINSZ");
+		perror("stdout: ioctl TIOCGWINSZ");
 		return;
 	}
 
@@ -671,10 +572,21 @@ int main(int argc, char * argv[])
 	const char     *language = NULL;
 	int             num_linkages, i;
 	Label           label = NO_LABEL;
-	const char      *locale = NULL;
 	Command_Options *copts;
 	Parse_Options   opts;
 	bool batch_in_progress = false;
+
+	isatty_stdin = isatty(fileno(stdin));
+	isatty_stdout = isatty(fileno(stdout));
+
+#ifdef _WIN32
+	/* If compiled with MSVC/MSYS, we still support running under Cygwin.
+	 * This is done by checking running_under_cygwin to resolve
+	 * incompatibilities. */
+	const char *ostype = getenv("OSTYPE");
+	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
+		running_under_cygwin = true;
+#endif /* _WIN32 */
 
 #if LATER
 	/* Try to catch the SIGWINCH ... except this is not working. */
@@ -731,30 +643,9 @@ int main(int argc, char * argv[])
 		}
 	}
 
-#if !defined(_MSC_VER) && !defined(__MINGW32__)
-	/* Get the locale from the environment...
-	 * Perhaps we should someday get it from the dictionary ??
-	 */
-	locale = setlocale(LC_CTYPE, "");
-
-	/* Check to make sure the current locale is UTF8; if its not,
-	 * then force-set this to the english utf8 locale
-	 */
-	const char *codeset = nl_langinfo(CODESET);
-	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
-	{
-		fprintf(stderr,
-		    "%s: Warning: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
-		     argv[0], codeset);
-		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
-	}
-#else
-	#define WINDOWS_CONSOLE_UNICODE_MESSAGE \
-		"Warning: Windows console (cmd.exe) does not support Unicode input!\n" \
-		"\tWill attempt to convert from the native encoding!"
-	#pragma message(__FILE__ ": " WINDOWS_CONSOLE_UNICODE_MESSAGE)
-	prt_error(WINDOWS_CONSOLE_UNICODE_MESSAGE);
-#endif
+#ifdef _WIN32
+	win32_set_utf8_output();
+#endif /* _WIN32 */
 
 	if (language && *language)
 	{
@@ -793,11 +684,9 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-#if !defined(_MSC_VER) && !defined(__MINGW32__)
-	prt_error("Info: Using locale %s.", locale);
-#endif
-	prt_error("Info: Dictionary version %s.",
-		linkgrammar_get_dict_version(dict));
+	prt_error("Info: Dictionary version %s, locale %s",
+		linkgrammar_get_dict_version(dict),
+		linkgrammar_get_dict_locale(dict));
 	prt_error("Info: Library version %s. Enter \"!help\" for help.",
 		linkgrammar_get_version());
 
@@ -811,7 +700,7 @@ int main(int argc, char * argv[])
 		debug = parse_options_get_debug(opts);
 		test = parse_options_get_test(opts);
 
-		input_string = fget_input_string(input_fh, stdout, copts);
+		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
 		check_winsize(copts);
 
 		if (NULL == input_string)
@@ -820,6 +709,13 @@ int main(int argc, char * argv[])
 			fclose (input_fh);
 			input_fh = stdin;
 			continue;
+		}
+
+		/* Discard whitespace characters from end of string. */
+		for (char *p = &input_string[strlen(input_string)-1];
+		     (p > input_string) && strchr(WHITESPACE, *p) ; p--)
+		{
+			*p = '\0';
 		}
 
 		if ((strcmp(input_string, "!quit") == 0) ||
@@ -847,7 +743,8 @@ int main(int argc, char * argv[])
 		}
 
 		/* If the input string is just whitespace, then ignore it. */
-		if (strspn(input_string, " \t\v") == strlen(input_string)) continue;
+		if (strspn(input_string, WHITESPACE) == strlen(input_string))
+			continue;
 
 		if (special_command(input_string, copts, dict)) continue;
 
@@ -882,7 +779,7 @@ int main(int argc, char * argv[])
 			viterbi_parse(input_string, dict);
 		}
 		else
-#endif
+#endif /* USE_VITERBI */
 		{
 			sent = sentence_create(input_string, dict);
 
@@ -920,7 +817,7 @@ int main(int argc, char * argv[])
 				num_linkages = sentence_parse(sent, opts);
 				if (num_linkages < 0) continue;
 			}
-#endif
+#endif /* 0 */
 
 			/* Try using a larger list of disjuncts */
 			/* XXX FIXME: the lg_expand_disjunct_list() routine is not
@@ -1006,8 +903,8 @@ int main(int argc, char * argv[])
 			}
 			else
 			{
-				int c = process_some_linkages(sent, copts);
-				if (c == EOF)
+				const char *rc = process_some_linkages(sent, copts);
+				if (NULL == rc)
 				{
 					sentence_delete(sent);
 					sent = NULL;
@@ -1031,7 +928,6 @@ int main(int argc, char * argv[])
 	/* Free stuff, so that mem-leak detectors don't complain. */
 	command_options_delete(copts);
 	dictionary_delete(dict);
-	fget_input_string(NULL, NULL, NULL);
 
 	printf ("Bye.\n");
 	return 0;

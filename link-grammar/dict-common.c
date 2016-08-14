@@ -91,15 +91,19 @@ void patch_subscript(char * s)
 
 Dictionary dictionary_create_default_lang(void)
 {
-	Dictionary dictionary;
-	char * lang;
+	Dictionary dictionary = NULL;
+	char * lang = get_default_locale(); /* E.g. ll_CC.UTF_8 or ll-CC */
 
-	lang = get_default_locale();
-	if (lang && *lang) {
+	if (lang && *lang)
+	{
+		lang[strcspn(lang, "_-")] = '\0';
 		dictionary = dictionary_create_lang(lang);
-		free(lang);
-	} else {
-		/* Default to en when locales are broken (e.g. WIN32) */
+	}
+	free(lang);
+
+	/* Fall back to English if no default locale or no matching dict. */
+	if (NULL == dictionary)
+	{
 		dictionary = dictionary_create_lang("en");
 	}
 
@@ -353,6 +357,9 @@ void dictionary_delete(Dictionary dict)
 		dictionary_delete(dict->affix_table);
 	}
 	spellcheck_destroy(dict->spell_checker);
+	if ((locale_t)0 != dict->locale_t) {
+		freelocale(dict->locale_t);
+	}
 
 	connector_set_delete(dict->unlimited_connector_set);
 

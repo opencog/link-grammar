@@ -22,6 +22,7 @@
 
 #ifndef _WIN32
 	#include <unistd.h>
+	#include <langinfo.h>
 #else
 	#include <windows.h>
 	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
@@ -30,7 +31,7 @@
 
 #ifdef USE_PTHREADS
 	#include <pthread.h>
-#endif
+#endif /* USE_PTHREADS */
 
 #include "string-set.h"
 #include "structures.h"
@@ -40,7 +41,7 @@
 	#define DIR_SEPARATOR "\\"
 #else
 	#define DIR_SEPARATOR "/"
-#endif
+#endif /*_WIN32 */
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR[0] == (ch))
 #ifndef DICTIONARY_DIR
@@ -158,8 +159,7 @@ int utf8_charlen(const char *xc)
 	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-
+#ifdef _WIN32
 /**
  * (Experimental) Implementation of mbrtowc for Windows.
  * This is required because the other, commonly available implementations
@@ -179,23 +179,18 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	if (0 > nb) return nb;
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, NULL, 0);
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, pwc, nb2);
-	if (0 == nb2) return 0;
+	if (0 == nb2) return (size_t)-1;
 	return nb;
 }
-#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
+#endif /* _WIN32 */
 
 static int wctomb_check(char *s, wchar_t wc)
 {
 	int nr;
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
-	if (nr < 0) {
-		wprintf(L"Fatal Error: wctomb_check failed: %d %ls\n", nr, &wc);
-		exit(1);
-	}
-	/* XXX TODO Perhaps the below needs to be uncommented?  .. tucker says no ... */
-	/* nr = nr / sizeof(wchar_t); */
+	if (0 == nr) return -1;
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
@@ -204,7 +199,7 @@ static int wctomb_check(char *s, wchar_t wc)
 		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
 		exit(1);
 	}
-#endif
+#endif /* _WIN32 */
 	return nr;
 }
 
@@ -215,29 +210,31 @@ static int wctomb_check(char *s, wchar_t wc)
  * because the byte-counts might not match up, e.g. German ß and SS.
  * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
-void downcase_utf8_str(char *to, const char * from, size_t usize)
+void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_t)
 {
 	wchar_t c;
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
 	mbstate_t mbs;
 
-	to[0] = '\0'; /* Make sure it doesn't contain garbage in case of an error */
+	/* Make sure it doesn't contain garbage in case of an error */
+	if (to != from) strcpy(to, from);
+
 	memset(&mbs, 0, sizeof(mbs));
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid multi-byte string!");
+		prt_error("Error: Invalid UTF-8 string!");
 		return;
 	}
-	c = towlower(c);
+	c = towlower_l(c, locale_t);
 	nbl = wctomb_check(low, c);
 
 	/* Check for error on an in-place copy */
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't downcase multi-byte string!");
+		prt_error("Error: can't downcase UTF-8 string!");
 		return;
 	}
 
@@ -258,7 +255,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
  * because the byte-counts might not match up, e.g. German ß and SS.
  * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
-void upcase_utf8_str(char *to, const char * from, size_t usize)
+void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_t)
 {
 	wchar_t c;
 	int i, nbl, nbh;
@@ -269,17 +266,17 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid multi-byte string!");
+		prt_error("Error: Invalid UTF-8-byte string!");
 		return;
 	}
-	c = towupper(c);
+	c = towupper_l(c, locale_t);
 	nbl = wctomb_check(low, c);
 
 	/* Check for error on an in-place copy */
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't upcase multi-byte string!");
+		prt_error("Error: can't upcase UTF-8-byte string!");
 		return;
 	}
 
@@ -342,7 +339,7 @@ static void space_key_alloc(void)
 }
 #else
 static space_t space;
-#endif
+#endif /* USE_PTHREADS */
 
 static space_t * do_init_memusage(void)
 {
@@ -353,7 +350,7 @@ static space_t * do_init_memusage(void)
 	pthread_setspecific(space_key, s);
 #else
 	s = &space;
-#endif
+#endif  /* USE_PTHREADS */
 
 	s->max_space_used = 0;
 	s->space_in_use = 0;
@@ -377,7 +374,7 @@ void init_memusage(void)
 	static bool mem_inited = false;
 	if (mem_inited) return;
 	mem_inited = true;
-#endif
+#endif /* USE_PTHREADS */
 	do_init_memusage();
 }
 
@@ -389,7 +386,7 @@ static inline space_t *getspace(void)
 	return do_init_memusage();
 #else
 	return &space;
-#endif
+#endif /* USE_PTHREADS */
 }
 
 /**
@@ -560,14 +557,14 @@ char * dictionary_get_data_dir(void)
 		return data_dir;
 	}
 
-#if defined(_WIN32)
+#ifdef _WIN32
 	/* Dynamically locate invocation directory of our program.
 	 * Non-ASCII characters are not supported (files will not be found). */
 	char prog_path[MAX_PATH_NAME];
 
 	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
 	{
-		prt_error("Warning: GetModuleFileName error %d\n", GetLastError());
+		prt_error("Warning: GetModuleFileName error %d", (int)GetLastError());
 	}
 	else
 	{
@@ -586,16 +583,16 @@ char * dictionary_get_data_dir(void)
 			else
 			{
 				/* Unconvertible characters are marked as '?' */
-				char *unsuppored = (NULL != strchr(prog_path, '?')) ?
+				const char *unsupported = (NULL != strchr(prog_path, '?')) ?
 					" (containing unsupported character)" : "";
 
-				lgdebug(D_USER_FILES, "Info: Directory of executable: %s%s\n",
-				        unsuppored, prog_path);
+				lgdebug(D_USER_FILES, "Debug: Directory of executable: %s%s\n",
+				        unsupported, prog_path);
 				data_dir = safe_strdup(prog_path);
 			}
 		}
 	}
-#endif
+#endif /* _WIN32 */
 
 	return data_dir;
 }
@@ -650,8 +647,8 @@ void * object_open(const char *filename,
 		{
 			char cwd[MAX_PATH_NAME];
 			char *cwdp = getcwd(cwd, sizeof(cwd));
-			printf("Info: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
-			printf("Info: Last-resort data directory: %s\n",
+			printf("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
+			printf("Debug: Last-resort data directory: %s\n",
 					  data_dir ? data_dir : "NULL");
 		}
 	}
@@ -663,16 +660,16 @@ void * object_open(const char *filename,
 	 * seems to use forward-slash, from what I can tell.
 	 */
 	if ((filename[0] == '/')
-#if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 		|| ((filename[1] == ':')
 			 && ((filename[2] == '\\') || (filename[2] == '/')))
 		|| (filename[0] == '\\') /* UNC path */
-#endif
+#endif /* _WIN32 */
 	   )
 	{
 		/* opencb() returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
-		lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", filename, NOTFOUND(fp));
+		lgdebug(D_USER_FILES, "Debug: Opening file %s%s\n", filename, NOTFOUND(fp));
 	}
 	else
 	{
@@ -697,7 +694,7 @@ void * object_open(const char *filename,
 			free(completename);
 			completename = join_path(*path, filename);
 			fp = opencb(completename, user_data);
-			lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", completename, NOTFOUND(fp));
+			lgdebug(D_USER_FILES, "Debug: Opening file %s%s\n", completename, NOTFOUND(fp));
 			if ((NULL != fp) || (NULL != path_found)) break;
 		}
 	}
@@ -705,7 +702,7 @@ void * object_open(const char *filename,
 	if (NULL == fp)
 	{
 		fp = opencb(filename, user_data);
-		lgdebug(D_USER_FILES, "Info: Opening file %s%s\n", filename, NOTFOUND(fp));
+		lgdebug(D_USER_FILES, "Debug: Opening file %s%s\n", filename, NOTFOUND(fp));
 	}
 	else if (NULL == path_found)
 	{
@@ -818,131 +815,161 @@ char *get_file_contents(const char * dict_name)
 /* ======================================================== */
 /* Locale routines */
 
+#ifdef HAVE_LOCALE_T
+/**
+ * Create a locale object from the given locale string.
+ * @param locale Locale string, in the native OS format.
+ * @return Locale object for the given locale
+ * Note: It has to be freed by freelocale().
+ */
+locale_t newlocale_LC_CTYPE(const char *locale)
+{
+	locale_t locobj;
 #ifdef _WIN32
+		locobj = _create_locale(LC_CTYPE, locale);
+#else
+		locobj = newlocale(LC_CTYPE_MASK, locale, (locale_t)0);
+#endif /* _WIN32 */
+		return locobj;
+}
+#endif /* HAVE_LOCALE_T */
 
+/**
+ * Check that the given locale known by the system.
+ * In case we don't have locale_t, actually set the locale
+ * in order to find out if it is fine. This side effect doesn't cause
+ * harm, as the local would be set up to that value anyway shortly.
+ * @param locale Locale string
+ * @return True if known, false if unknown.
+ */
+bool try_locale(const char *locale)
+{
+#ifdef HAVE_LOCALE_T
+		locale_t ltmp = newlocale_LC_CTYPE(locale);
+		if ((locale_t)0 == ltmp) return false;
+		freelocale(ltmp);
+#else
+		lgdebug(D_USER_FILES, "Debug: Setting program's locale %s", locale);
+		if (NULL == setlocale(LC_CTYPE, locale))
+		{
+			lgdebug(D_USER_FILES, " failed!\n");
+			return false;
+		}
+		lgdebug(D_USER_FILES, ".\n");
+#endif /* HAVE_LOCALE_T */
+
+		return true;
+}
+
+/**
+ * Ensure that the program's locale has a UTF-8 codeset.
+ */
+void set_utf8_program_locale(void)
+{
+#ifndef _WIN32
+	/* The LG library doesn't use mbrtowc_l(), since it doesn't exists in
+	 * the dynamic glibc (2.22). mbsrtowcs_l() could also be used, but for
+	 * some reason it exists only in the static glibc.
+	 * In order that mbrtowc() will work for any UTF-8 character, UTF-8
+	 * codeset is ensured. */
+	const char *codeset = nl_langinfo(CODESET);
+	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
+	{
+		const char *locale = setlocale(LC_CTYPE, NULL);
+		/* Avoid an initial spurious message. */
+		if ((0 != strcmp(locale, "C")) && (0 != strcmp(locale, "POSIX")))
+		{
+			prt_error("Warning: Program locale %s (codeset %s) was not UTF-8; "
+						 "force-setting to en_US.UTF-8", locale, codeset);
+		}
+		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
+		if (NULL == locale)
+		{
+			prt_error("Warning: Program locale en_US.UTF-8 could not be set; "
+			          "force-setting to C.UTF-8");
+			locale = setlocale(LC_CTYPE, "C.UTF-8");
+			if (NULL == locale)
+			{
+				prt_error("Warning: Could not set a UTF-8 program locale; "
+				          "program may malfunction");
+			}
+		}
+	}
+#endif
+}
+
+#ifdef _WIN32
 static char *
 win32_getlocale (void)
 {
-	LCID lcid;
-	LANGID langid;
-	char *ev;
-	int primary, sub;
-	char bfr[64];
-	char iso639[10];
-	char iso3166[10];
-	const char *script = NULL;
+	char lbuf[10];
+	char locale[32];
 
-	/* Let the user override the system settings through environment
-	 * variables, as on POSIX systems. Note that in GTK+ applications
-	 * since GTK+ 2.10.7 setting either LC_ALL or LANG also sets the
-	 * Win32 locale and C library locale through code in gtkmain.c.
-	 */
-	if (((ev = getenv ("LC_ALL")) != NULL && ev[0] != '\0')
-	 || ((ev = getenv ("LC_MESSAGES")) != NULL && ev[0] != '\0')
-	 || ((ev = getenv ("LANG")) != NULL && ev[0] != '\0'))
-		return safe_strdup (ev);
+	LCID lcid = GetThreadLocale();
 
-	lcid = GetThreadLocale ();
-
-	if (!GetLocaleInfo (lcid, LOCALE_SISO639LANGNAME, iso639, sizeof (iso639)) ||
-	    !GetLocaleInfo (lcid, LOCALE_SISO3166CTRYNAME, iso3166, sizeof (iso3166)))
-		return safe_strdup ("C");
-
-	/* Strip off the sorting rules, keep only the language part. */
-	langid = LANGIDFROMLCID (lcid);
-
-	/* Split into language and territory part. */
-	primary = PRIMARYLANGID (langid);
-	sub = SUBLANGID (langid);
-
-	/* Handle special cases */
-	switch (primary)
+	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO639LANGNAME, lbuf, sizeof(lbuf)))
 	{
-		case LANG_AZERI:
-			switch (sub)
-			{
-				case SUBLANG_AZERI_LATIN:
-					script = "@Latn";
-					break;
-				case SUBLANG_AZERI_CYRILLIC:
-					script = "@Cyrl";
-					break;
-			}
-			break;
-		case LANG_SERBIAN: /* LANG_CROATIAN == LANG_SERBIAN */
-			switch (sub)
-			{
-				case SUBLANG_SERBIAN_LATIN:
-				case 0x06: /* Serbian (Latin) - Bosnia and Herzegovina */
-					script = "@Latn";
-					break;
-			}
-			break;
-		case LANG_UZBEK:
-			switch (sub)
-			{
-				case SUBLANG_UZBEK_LATIN:
-					script = "@Latn";
-					break;
-				case SUBLANG_UZBEK_CYRILLIC:
-					script = "@Cyrl";
-					break;
-			}
-			break;
+		prt_error("Error: GetLocaleInfoA LOCALE_SENGLISHLANGUAGENAME LCID=%d: "
+		          "Error %d", (int)lcid, (int)GetLastError());
+		return NULL;
 	}
+	strcpy(locale, lbuf);
+	strcat(locale, "-");
 
-	strcat (bfr, iso639);
-	strcat (bfr, "_");
-	strcat (bfr, iso3166);
+	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO3166CTRYNAME, lbuf, sizeof(lbuf)))
+	{
+		prt_error("Error: GetLocaleInfoA LOCALE_SISO3166CTRYNAME LCID=%d: "
+		          "Error %d", (int)lcid, (int)GetLastError());
+		return NULL;
+	}
+	strcat(locale, lbuf);
 
-	if (script)
-		strcat (bfr, script);
-
-	return safe_strdup (bfr);
+	return strdup(locale);
 }
-
-#endif
+#endif /* _WIN32 */
 
 char * get_default_locale(void)
 {
-	char * locale, * needle;
+	const char *lc_vars[] = {"LC_ALL", "LC_CTYPE", "LANG", NULL};
+	char *ev;
+	const char **evname;
+	char *locale = NULL;
 
-	locale = NULL;
-
+	for(evname = lc_vars; NULL != *evname; evname++)
+	{
+		ev = getenv(*evname);
+		if ((NULL != ev) && ('\0' != ev[0])) break;
+	}
+	if (NULL != *evname)
+	{
+		locale = ev;
+		lgdebug(D_USER_FILES, "Debug: Environment locale %s=%s\n", *evname, ev);
 #ifdef _WIN32
-	if(!locale)
-		locale = win32_getlocale ();
-#endif
-
-	if(!locale)
-		locale = safe_strdup (getenv ("LANG"));
-
-#if defined(HAVE_LC_MESSAGES)
-	if(!locale)
-		locale = safe_strdup (setlocale (LC_MESSAGES, NULL));
-#endif
-
-	if(!locale)
-		locale = safe_strdup (setlocale (LC_ALL, NULL));
-
-	if(!locale || strcmp(locale, "C") == 0) {
-		free(locale);
-		locale = safe_strdup("en");
+		/* If compiled with MSVC/MSYS, we still support running under Cygwin. */
+		const char *ostype = getenv("OSTYPE");
+		if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
+		{
+			/* Convert to Windows style locale */
+			locale = strdupa(locale);
+			locale[strcspn(locale, "_")] = '-';
+			locale[strcspn(locale, ".@")] = '\0';
+		}
+#endif /* _WIN32 */
+	}
+	else
+	{
+		lgdebug(D_USER_FILES, "Debug: Environment locale not set\n");
+#ifdef _WIN32
+		locale = win32_getlocale();
+		if (NULL == locale)
+			lgdebug(D_USER_FILES, "Debug: Cannot find user default locale\n");
+		else
+			lgdebug(D_USER_FILES, "Debug: User default locale %s\n", locale);
+		return locale; /* Already strdup'ed */
+#endif /* _WIN32 */
 	}
 
-	/* strip off "@euro" from en_GB@euro */
-	if ((needle = strchr (locale, '@')) != NULL)
-		*needle = '\0';
-
-	/* strip off ".UTF-8" from en_GB.UTF-8 */
-	if ((needle = strchr (locale, '.')) != NULL)
-		*needle = '\0';
-
-	/* strip off "_GB" from en_GB */
-	if ((needle = strchr (locale, '_')) != NULL)
-		*needle = '\0';
-
-	return locale;
+	return safe_strdup(locale);
 }
 
 /* ============================================================= */

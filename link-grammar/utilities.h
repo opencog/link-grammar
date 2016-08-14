@@ -13,41 +13,35 @@
 #ifndef _LINK_GRAMMAR_UTILITIES_H_
 #define _LINK_GRAMMAR_UTILITIES_H_
 
-#ifdef __CYGWIN__
-#define _WIN32 1
-#endif /* __CYGWIN__ */
-
-#ifndef _WIN32
-#include <langinfo.h>
-#endif
+/* The _Win32 definitions are for native-Windows compilers.
+ * This includes MSVC (only version >=14 is supported) and MINGW (known
+ * also as MSYS). The _WIN32 definitions are not for Cygwin, which doesn't
+ * define _WIN32.
+ * FIXME: Because the full Windows support is still in the works, only the
+ * MSVC support is validated. Most probably the Cygwin compilation support
+ * is broken (but the intention is that MSVC-compiled library, and the
+ * link-parser program, will be fine for Cygwin usage). The MINGW support
+ * is also not validated.
+ */
 
 #include <ctype.h>
 #include <stdio.h>
-#ifdef _MSC_VER
+#ifdef _WIN32
 #define _CRT_RAND_S
-#endif
+#endif /* _WIN32 */
 #include <stdlib.h>
 #include <string.h>
-
-#ifndef __CYGWIN__
-/* I was told that cygwin does not have these files. */
 #include <wchar.h>
 #include <wctype.h>
-#endif
-
-#if defined(__CYGWIN__) && defined(__MINGW32__)
-/* Some users have CygWin and MinGW installed!
- * In this case, use the MinGW versions of UTF-8 support. */
-#include <wchar.h>
-#include <wctype.h>
-#endif
 
 #include "error.h"
 
 #ifdef HAVE_ALLOCA_H
 # include <alloca.h>
 #elif defined __GNUC__
+#ifndef alloca
 # define alloca __builtin_alloca
+#endif /* !alloca */
 #elif defined _AIX
 # define alloca __alloca
 #elif defined _MSC_VER
@@ -66,12 +60,7 @@ void *alloca (size_t);
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
 
-#ifdef _WIN32
-#include <windows.h>
-#include <mbctype.h>
-
 #ifdef _MSC_VER
-
 /* These definitions are incorrect, as these functions are different(!)
  * (non-standard functionality).
  * See http://stackoverflow.com/questions/27754492 . Fortunately,
@@ -84,13 +73,6 @@ void *alloca (size_t);
 #define vsnprintf _vsnprintf
 #endif
 
-#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
-
-/* MS changed the name of rand_r to rand_s */
-#define rand_r(seedp) rand_s(seedp)
-/* And strtok_r is strtok_s */
-#define strtok_r strtok_s
-
 /* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
  * This happens, for example, when the argument is "const void **". */
 #define free(x) free((void *)x)
@@ -99,11 +81,36 @@ void *alloca (size_t);
 #define qsort(x, y, z, w) qsort((void *)x, y, z, w)
 #endif /* _MSC_VER */
 
-/* Apparently, MinGW is also missing a variety of standard functions.
- * Not surprising, since MinGW is intended for compiling Windows
- * programs on Windows.
- * MINGW is also known as MSYS */
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
+#include <windows.h>
+#include <mbctype.h>
+
+#ifndef strncasecmp
+#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+#endif
+
+/* MS changed the name of rand_r to rand_s */
+#define rand_r(seedp) rand_s(seedp)
+/* And strtok_r is strtok_s */
+#define strtok_r strtok_s
+
+/* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.
+ * However, MinGW currently doesn't have locale_t. If/when it has locale_t,
+ * "configure" will define HAVE_LOCALE_T for it. */
+#ifndef __MINGW32__
+#define HAVE_LOCALE_T
+#endif
+
+#ifdef HAVE_LOCALE_T
+#define locale_t _locale_t
+#define iswupper_l  _iswupper_l
+#define iswalpha_l  _iswalpha_l
+#define iswdigit_l  _iswdigit_l
+#define iswspace_l  _iswspace_l
+#define towlower_l  _towlower_l
+#define towupper_l  _towupper_l
+#define freelocale _free_locale
+#endif /* HAVE_LOCALE_T */
 
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
@@ -117,37 +124,11 @@ char * strndup (const char *str, size_t size);
 #endif
 size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
-#endif /* _MSC_VER || __MINGW32__ */
-
-/*
- * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
- * chars ... However, MS Visual C does, as does MinGW.  Since
- * some users have both cygwin and MinGW installed, crap out the
- * UTF8 code only when MinGW is missing (and the CYGWIN version
- * is very old) XXX This code is dangerous and should be removed.
- */
-#if defined (__CYGWIN__) && !defined(__MINGW32__)
-#if CYGWIN_VERSION_DLL_MAJOR < 1007
-#error "Your Cygwin version is too old! Version 1.7 or later is needed for UTF8 support!"
-#define mbstate_t char
-#define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
-#define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
-#define mbrlen(s,n,m)     (1)
-#define iswupper  isupper
-#define iswalpha  isalpha
-#define iswdigit  isdigit
-#define iswspace  isspace
-#define wchar_t   char
-#define towlower  tolower
-#define towupper  toupper
-#endif /* CYGWIN_VERSION_DLL_MAJOR < 1007 */
-#endif /* __CYGWIN__ and not __MINGW32__ */
-
 #endif /* _WIN32 */
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
  * when passed utf8. Thus, limit to 7 bits for windows. */
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
   #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 #else
   #define lg_isspace isspace
@@ -187,6 +168,20 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 /* This does not appear to be in string.h header file in sunos
    (Or in linux when I compile with -ansi) */
 #endif
+
+/* Cygwin < 2.6.0 doesn't have locale_t. */
+#ifdef HAVE_LOCALE_T
+locale_t newlocale_LC_CTYPE(const char *);
+#else
+typedef int locale_t;
+#define iswupper_l(c, l) iswupper(c)
+#define iswalpha_l(c, l) iswalpha(c)
+#define iswdigit_l(c, l) iswdigit(c)
+#define iswspace_l(c, l) iswspace(c)
+#define towlower_l(c, l) towlower(c)
+#define towupper_l(c, l) towupper(c)
+#define freelocale(l)
+#endif /* HAVE_LOCALE_T */
 
 #define STR(x) #x
 #define STRINGIFY(x) STR(x)
@@ -239,7 +234,7 @@ static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
 #else
 	return mbsrtowcs(NULL, &s, 0, &mbss);
@@ -276,7 +271,7 @@ static inline size_t utf8_next(const char *s)
 #endif
 }
 
-static inline int is_utf8_upper(const char *s)
+static inline int is_utf8_upper(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -285,11 +280,11 @@ static inline int is_utf8_upper(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswupper(c)) return nbytes;
+	if (iswupper_l(c, dict_locale)) return nbytes;
 	return 0;
 }
 
-static inline int is_utf8_alpha(const char *s)
+static inline int is_utf8_alpha(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -298,11 +293,11 @@ static inline int is_utf8_alpha(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswalpha(c)) return nbytes;
+	if (iswalpha_l(c, dict_locale)) return nbytes;
 	return 0;
 }
 
-static inline int is_utf8_digit(const char *s)
+static inline int is_utf8_digit(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -311,11 +306,11 @@ static inline int is_utf8_digit(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswdigit(c)) return nbytes;
+	if (iswdigit_l(c, dict_locale)) return nbytes;
 	return 0;
 }
 
-static inline int is_utf8_space(const char *s)
+static inline int is_utf8_space(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
 	wchar_t c;
@@ -324,7 +319,7 @@ static inline int is_utf8_space(const char *s)
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
-	if (iswspace(c)) return nbytes;
+	if (iswspace_l(c, dict_locale)) return nbytes;
 
 	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
 	/* For some reason, iswspace doesn't get this */
@@ -376,8 +371,8 @@ static inline bool utf8_upper_match(const char * s, const char * t,
 }
 #endif /* Not in use. */
 
-void downcase_utf8_str(char *to, const char * from, size_t usize);
-void upcase_utf8_str(char *to, const char * from, size_t usize);
+void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
+void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 int utf8_charlen(const char *);
 
 size_t lg_strlcpy(char * dest, const char *src, size_t size);
@@ -428,6 +423,8 @@ void * object_open(const char *filename,
 
 bool file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
+void set_utf8_program_locale(void);
+bool try_locale(const char *);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1

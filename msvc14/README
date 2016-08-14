@@ -34,7 +34,11 @@ sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
 
 Compiling
 ---------
-- To compile LinkGrammar, open the solution file LinkGrammar.sln and build
+- Compiling and running got checked on Windows 10, but is intended to be
+  compatible to Vista and on (XP is not supported).
+
+- To compile LinkGrammar, open the solution file LinkGrammar.sln, change
+  the solution platform to x64 if desired, and build.
 
 - The solution configuration is configured to create a debug version by
   default.  It's probably a good idea to switch a "Release" configuration.
@@ -67,10 +71,9 @@ uses the "dot" command of Graphviz. Graphviz can be installed as part of Cygwin
 used) and "dot" must be in your PATH (if needed, you can customized that in a
 copy of "link-parser.bat", as described above).
 
-BTW, when running under Cygwin, don't exit link-parser by using ^C or ^Z -
-the shell may get stuck because the program somehow may continue to run in the
-background.  Instead, exit using !exit .
-
+BTW, when running and MSVC-compiled binary under Cygwin, don't exit
+link-parser by using ^Z - the shell may get stuck because the program
+somehow may continue to run in the background.  Instead, exit using !exit .
 
 NOTE: The created DLLs need the MSVC14 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
@@ -80,6 +83,43 @@ https://www.microsoft.com/en-us/download/details.aspx?id=48145
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
+Locale settings
+---------------
+In this version, the language dictionaries under the data directory define
+the locale that they need in order to process input sentences and the
+library automatically uses this locale, in a manner that is intended to be
+compatible with multi open different dictionaries per thread.
+
+If you use a dictionary which doesn't have this definition, or would like
+to set the default language when link-parser is invoked without a language
+argument, you can set the locale using the environment variable LANG,
+using a 2-letter language code and a 2-letter country code:
+
+> set LANG=ll-CC
+For example:
+> set LANG=en-US
+
+If you open a dictionary which doesn't have a locale definition, from a
+program (C program or a language with LG bindings) you have to set the
+correct locale (for the whole program or the particular thread)for the
+dictionary before creating the dictionary.  Alternatively, the LANG
+environment variable can be set before creating the dictionary.
+
+The code page of the console should not be changed, unless it is desired
+to pipe the output to another program. In that case, this other program
+may read garbage due to a limitation in the way cmd.exe implements pipes.
+This can be solved as following ("more" is the example program)
+
+link-parser | (chcp 65001 & more)
+
+In that case "more" will be able to read UTF-8 input. However, the
+display may still not be perfect due to additional cmd.exe limitations.
+
+Console fonts
+-------------
+Courier New may be appropriate for all the languages in the data
+directory. If you don't have it in the console menu, it can be added
+through the registry (Google it).
 
 Implementation notes:
 ---------------------

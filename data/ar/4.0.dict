@@ -4,6 +4,7 @@
 %
 % Dictionary version number is 5.0.1 (formatted as V5v0v1+)
 <dictionary-version-number>: V5v0v1+;
+<dictionary-locale>: C+; % Only the English alphabet is in use here
 
 
 % Link Types:  [Forms in brackets roughly equate with English Link Grammar]
