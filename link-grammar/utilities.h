@@ -14,14 +14,10 @@
 #define _LINK_GRAMMAR_UTILITIES_H_
 
 /* The _Win32 definitions are for native-Windows compilers.
- * This includes MSVC (only version >=14 is supported) and MINGW (known
- * also as MSYS). The _WIN32 definitions are not for Cygwin, which doesn't
- * define _WIN32.
- * FIXME: Because the full Windows support is still in the works, only the
- * MSVC support is validated. Most probably the Cygwin compilation support
- * is broken (but the intention is that MSVC-compiled library, and the
- * link-parser program, will be fine for Cygwin usage). The MINGW support
- * is also not validated.
+ * This includes MSVC (only version >=14 is supported) and MINGW (under
+ * MSYS or Cygwin). The _WIN32 definitions are not for Cygwin, which
+ * doesn't define _WIN32.
+ * FIXME: MinGW still has problems with UTF-8 output.
  */
 
 #include <ctype.h>

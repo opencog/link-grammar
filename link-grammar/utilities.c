@@ -266,7 +266,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid UTF-8-byte string!");
+		prt_error("Error: Invalid UTF-8 string!");
 		return;
 	}
 	c = towupper_l(c, locale_t);
@@ -276,7 +276,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't upcase UTF-8-byte string!");
+		prt_error("Error: can't upcase UTF-8 string!");
 		return;
 	}
 
