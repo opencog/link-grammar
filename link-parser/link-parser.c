@@ -643,6 +643,10 @@ int main(int argc, char * argv[])
 		}
 	}
 
+#ifdef _WIN32
+	win32_set_utf8_output();
+#endif /* _WIN32 */
+
 	if (language && *language)
 	{
 		dict = dictionary_create_lang(language);
@@ -661,10 +665,6 @@ int main(int argc, char * argv[])
 			exit(-1);
 		}
 	}
-
-#ifdef _WIN32
-	win32_set_utf8_output();
-#endif /* _WIN32 */
 
 	/* The English and Russian dicts use a cost of 2.7, which allows
 	 * regexes with a fractional cost of less than 1 to be used with
