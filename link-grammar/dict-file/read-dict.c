@@ -705,19 +705,21 @@ static inline int dict_order_bare(const char *s, const Dict_node * dn)
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
  * his behavior matches that of the function dict_order_bare().
  */
+#define D_DOW 6
 static inline int dict_order_wild(const char * s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 
-	lgdebug(+5, "search-word='%s' dict-word='%s'\n", s, t);
+	lgdebug(+D_DOW, "search-word='%s' dict-word='%s'\n", s, t);
 	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (*s == *t)) {s++; t++;}
 
 	if (*s == WILD_TYPE) return 0;
 
-	lgdebug(5, "Result: '%s'-'%s'=%d\n",
+	lgdebug(D_DOW, "Result: '%s'-'%s'=%d\n",
 	 s, t, ((*s == SUBSCRIPT_MARK)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
 	return ((*s == SUBSCRIPT_MARK)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
+#undef D_DOW
 
 /**
  * dict_match --  return true if strings match, else false.
