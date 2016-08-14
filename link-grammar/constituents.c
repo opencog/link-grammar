@@ -21,6 +21,8 @@
 #include "print-util.h"
 #include "string-set.h"
 
+#define D_CONST 8 /* debug level for this file */
+
 #define OPEN_BRACKET '['
 #define CLOSE_BRACKET ']'
 
@@ -104,7 +106,6 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 {
 	size_t w;
-	if (verbosity < 2) return;
 
 	printf("  c %2d %4s [%c] (%2zu-%2zu): ",
 		   c, ctxt->constituent[c].type, ctxt->constituent[c].domain_type,
@@ -215,7 +216,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if (!(strcmp(ctxt->constituent[c1].type, ctype1)==0))
 			continue;
 
-		if (debug_level(5))
+		if (debug_level(D_CONST))
 			printf("Generating complement constituent for c %d of type %s\n",
 				   c1, ctype1);
 		done = false;
@@ -266,7 +267,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					ctxt->constituent[c].domain_type = 'x';
 					ctxt->constituent[c].start_link =
 						string_set_add("XX", ctxt->phrase_ss);
-					if (debug_level(5))
+					if (debug_level(D_CONST))
 					{
 						printf("Larger c found: c %d (%s); ",
 							   c2, ctype2);
@@ -279,7 +280,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 				}
 			}
 		}
-		if (debug_level(5))
+		if (debug_level(D_CONST))
 		{
 			if (done == false)
 				printf("No constituent added, because no larger %s " \
@@ -328,9 +329,11 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 						w = ctxt->constituent[c].left - 1;
 						ctxt->constituent[c2].right = w;
 
-						if (debug_level(5))
+						if (debug_level(D_CONST))
+						{
 							printf("Adjusting constituent %d:\n", c2);
-						print_constituent(ctxt, linkage, c2);
+							print_constituent(ctxt, linkage, c2);
+						}
 					}
 				}
 			}
@@ -585,9 +588,11 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		ctxt->constituent[c].valid = true;
 		ctxt->constituent[c].domain_type = 'x';
 		numcon_total++;
-		if (debug_level(5))
+		if (debug_level(D_CONST))
+		{
 			printf("Adding global sentence constituent:\n");
-		print_constituent(ctxt, linkage, c);
+			print_constituent(ctxt, linkage, c);
+		}
 	}
 
 	return numcon_total;
@@ -828,12 +833,13 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	numcon_subl = c - numcon_total;
 	/* numcon_subl = handle_islands(linkage, numcon_total, numcon_subl);  */
 
-	if (debug_level(5))
-		printf("Constituents added at first stage:\n");
-
-	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+	if (debug_level(D_CONST))
 	{
-		print_constituent(ctxt, linkage, c);
+		printf("Constituents added at first stage:\n");
+		for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+		{
+			print_constituent(ctxt, linkage, c);
+		}
 	}
 
 	/* Opener case - generates S around main clause.
@@ -909,21 +915,21 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 						(strcmp(linkage->word[ctxt->constituent[c2].right],
 								"RIGHT-WALL") == 0))
 					{
-						if (debug_level(5))
+						if (debug_level(D_CONST))
 							printf("Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made = true;
 					}
 					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
 					{
-						if (debug_level(5))
+						if (debug_level(D_CONST))
 							printf("Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
 						adjustment_made = true;
 					}
 					else
 					{
-						if (debug_level(5))
+						if (debug_level(D_CONST))
 						{
 							err_ctxt ec = { linkage->sent };
 							err_msg(&ec, Warn,
@@ -963,7 +969,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 		rightdone[c] = false;
 	}
 
-	if (debug_level(5))
+	if (debug_level(D_CONST))
 		printf("\n");
 
 	/* Skip left wall; don't skip right wall, since it may
