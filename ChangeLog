@@ -7,6 +7,8 @@ Version 5.3.8: (XXX 2016)
  * Pull req #317: Make Java build reproducible.
  * Remove (obsolete) binreloc support.
  * Enable both python2.7 and python3.4 bindings to be built.
+ * Improved Cygwin and MinGW support (as well as improved MSVC support).
+ * Dictionaries now specify the appropriate locale.
 
 Version 5.3.7: (7 May 2016)
  * Fix another MacOS build break, regarding library exports.
