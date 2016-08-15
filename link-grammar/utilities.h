@@ -234,7 +234,7 @@ static inline size_t utf8_strlen(const char *s)
 	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
 #else
 	return mbsrtowcs(NULL, &s, 0, &mbss);
-#endif
+#endif /* _WIN32 */
 }
 
 /**
@@ -243,7 +243,7 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
-#ifdef _MSC_VER
+#ifdef _WIN32
 	/* mbrlen does not work correctly on Windows. See issue #285 */
 	/* https://github.com/opencog/link-grammar/issues/285 */
 	size_t len = 0;
@@ -264,7 +264,7 @@ static inline size_t utf8_next(const char *s)
 		return 1;
 	}
 	return len;
-#endif
+#endif /* _WIN32 */
 }
 
 static inline int is_utf8_upper(const char *s, locale_t dict_locale)
@@ -432,4 +432,4 @@ static inline unsigned int next_power_of_two_up(unsigned int i)
    return j;
 }
 
-#endif
+#endif /* _LINK_GRAMMAR_UTILITIES_H_ */
