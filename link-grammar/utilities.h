@@ -243,7 +243,7 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
-#ifdef _MSC_VER
+#ifdef _WIN32
 	/* mbrlen does not work correctly on Windows. See issue #285 */
 	/* https://github.com/opencog/link-grammar/issues/285 */
 	size_t len = 0;
