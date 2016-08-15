@@ -18,7 +18,6 @@
 
 #include <locale.h>
 #include <stdio.h>
-#include <fcntl.h>
 #include "link-grammar/link-includes.h"
 
 static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent_str)
@@ -34,7 +33,6 @@ static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent
 		{
 			Linkage linkage = linkage_create(li, sent, opts);
 			char * str = linkage_print_diagram(linkage, true, 80);
-			printf("%s: %s\n%s\n", dictionary_get_lang(dict), sent_str, str);
 			linkage_free_diagram(str);
 			str = linkage_print_links_and_domains(linkage);
 			linkage_free_links_and_domains(str);
@@ -43,144 +41,65 @@ static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent
 			str = linkage_print_constituent_tree(linkage, SINGLE_LINE);
 			linkage_free_constituent_tree_str(str);
 			linkage_delete(linkage);
-			fflush(stdout);
 		}
 	}
 	sentence_delete(sent);
 }
 
-static void parse_sents(Dictionary dict, int dictnum, Parse_Options opts, int thread_id)
+static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int niter)
 {
-	const char *sent_en[] = {
+	const char *sents[] = {
 		"Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.",
 		"Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a social disease.",
-		"Is it fine?",
 		"It was covered with bites.",
 		"I have no idea what that is.",
 		"His shout had been involuntary, something anybody might have done.",
-		"Is it fine?",
 		"He obtained the lease of the manor of Great Burstead Grange (near East Horndon) from the Abbey of Stratford Langthorne, and purchased the manor of Bayhouse in West Thurrock.",
 		"We ate popcorn and watched movies on TV for three days.",
-		"Is it fine?",
 		"Sweat stood on his brow, fury was bright in his one good eye.",
 		"One of the things you do when you stop your bicycle is apply the brake.",
-		"The line extends 10 miles offshore.",
-		"Is it fine?",
-		NULL
-	};
-	const char *sent_ru[] = {
-		"под броню боевого робота устремились потоки энергии.",
-		"Она ушла",
-		"он был хороший доктор",
-		"он был доктор",
-		"среди собравшихся прокатился ропот удивления",
-		"осталось снять две последние группы",
-		"Потолок зала поддерживали металлические колонны.",
-		"через четверть часа здесь будет полно полицейских.",
-		NULL
-	};
-	const char *sent_tr[] = {
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		"Senin ne istediğini bilmiyorum",
-		NULL
+		"The line extends 10 miles offshore."
+// "под броню боевого робота устремились потоки энергии.",
+// "через четверть часа здесь будет полно полицейских."
 	};
 
-	const char **sent = dictnum==1 ? sent_en : (dictnum==2 ? sent_ru :sent_tr);
-	printf("DICTNUM %d\n", dictnum);
-	fflush(stdout);
+	int nsents = sizeof(sents) / sizeof(const char *);
 
-	for (int i=0; sent[i] != NULL; ++i)
+	for (int j=0; j<niter; j += nsents)
 	{
-		parse_one_sent(dict, opts, sent[i]);
+		for (int i=0; i < nsents; ++i)
+		{
+			parse_one_sent(dict, opts, sents[i]);
+		}
 	}
 }
 
 int main(int argc, char* argv[])
 {
-
 	setlocale(LC_ALL, "en_US.UTF-8");
 	Parse_Options opts = parse_options_create();
-	parse_options_set_verbosity(opts, 3);
-	parse_options_set_islands_ok(opts, 1);
-	parse_options_set_max_null_count(opts, 1);
-
-	Dictionary dict_en = dictionary_create_lang("en");
-	if (!dict_en) {
-		printf ("Fatal error: Unable to open the \"en\" dictionary\n");
-		return 1;
-	}
-	Dictionary dict_ru = dictionary_create_lang("ru");
-	if (!dict_ru) {
-		printf ("Fatal error: Unable to open the \"ru\" dictionary\n");
-		return 1;
-	}
-	Dictionary dict_tr = dictionary_create_lang("tr");
-	if (!dict_tr) {
-		printf ("Fatal error: Unable to open the \"tr\" dictionary\n");
+	// Dictionary dict = dictionary_create_lang("ru");
+	Dictionary dict = dictionary_create_lang("en");
+	if (!dict) {
+		printf ("Fatal error: Unable to open the dictionary\n");
 		return 1;
 	}
 
-	//fcntl(1, F_SETFL, O_APPEND);
+	int n_threads = 10;
+	int niter = 300;
+
+	printf("Creating %d threads, each parsing %d sentences\n",
+		 n_threads, niter);
 	std::vector<std::thread> thread_pool;
-	thread_pool.push_back(std::thread(parse_sents, dict_en, 1, opts, 1));
-	thread_pool.push_back(std::thread(parse_sents, dict_ru, 2, opts, 2));
-	thread_pool.push_back(std::thread(parse_sents, dict_tr, 3, opts, 3));
-	thread_pool.push_back(std::thread(parse_sents, dict_ru, 2, opts, 2));
-	thread_pool.push_back(std::thread(parse_sents, dict_en, 1, opts, 1));
+	for (int i=0; i < n_threads; i++) {
+		thread_pool.push_back(std::thread(parse_sents, dict, opts, i, niter));
+	}
 
 	// Wait for all threads to complete
 	for (std::thread& t : thread_pool) t.join();
 	printf("Done with multi-threaded parsing\n");
 
-	dictionary_delete(dict_en);
-	dictionary_delete(dict_ru);
-	dictionary_delete(dict_tr);
+	dictionary_delete(dict);
 	parse_options_delete(opts);
 	return 0;
 }

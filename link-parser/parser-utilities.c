@@ -112,7 +112,7 @@ void win32_set_utf8_output(void)
 		prt_error("Warning: Cannot not set code page restore handler.");
 	}
 	/* For file output. It is too late for output pipes.
-	 * If output pipe is desired, one case set CP_UTF8 by the
+	 * If output pipe is desired, one can set CP_UTF8 by the
 	 * command "chcp 65001" before invoking link-parser. */
 	if (!SetConsoleCP(CP_UTF8))
 	{

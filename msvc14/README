@@ -88,7 +88,7 @@ Locale settings
 In this version, the language dictionaries under the data directory define
 the locale that they need in order to process input sentences and the
 library automatically uses this locale, in a manner that is intended to be
-compatible with multi open different dictionaries per thread.
+compatible with creating several different dictionaries per thread.
 
 If you use a dictionary which doesn't have this definition, or would like
 to set the default language when link-parser is invoked without a language
