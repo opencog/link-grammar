@@ -3004,7 +3004,8 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
   (<verb-rq> & (SI+ or SFI+) & I+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
-  ({@E-} & I+ & <verb-and-sp+>);
+  ({@E-} & I+ & <verb-and-sp+>) or
+  Wa-;
 
 % <verb-wall>: "I know I wouldn't."
 wouldn't wouldn’t:
@@ -8964,8 +8965,10 @@ instead.e maybe.e:
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections. These are semantically important,
 % so they've got to parse!
-no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
-ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
+no.ij nope.ij nah.ij no_way never.ij not_possible
+yes.ij yeah.ij yep.ij yup.ij
+ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij
+good.ij good_enough fair_enough whatever.ij
 hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course
 oh_no oh_my oh_dear dear.ij Lordy
 yikes ouch my.ij my_oh_my my_my my_my_my tsk tsk_tsk tsk_tsk_tsk:
