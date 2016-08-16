@@ -999,3 +999,46 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 }
 
 /* ============================================================= */
+
+#ifdef __MINGW32__
+/*
+ * Since _USE_MINGW_ANSI_STDIO=1 is used in order to support C99 STDIO
+ * including the %z formats, MinGW uses its own *printf() functions (and not
+ * the Windows ones). However, its printf()/fprintf() functions cannot write
+ * UTF-8 to the console (to files/pipes they write UTF-8 just fine).  It
+ * turned out the problem is that they use the putchar() of Windows, which
+ * doesn't support writing UTF-8 only when writing to the console!  This
+ * problem is not fixed even in Windows 10 and the latest MinGW in Cygwin
+ * 2.5.2.
+ *
+ * The workaround implemented here is to reimplement the corresponding MinGW
+ * internal functions, and use fputs() to write the result.
+ *
+ * (Reimplementing printf()/fprintf() this way didn't work even with the
+ * compilation flag -fno-builtin .)
+ */
+
+int __mingw_vfprintf (FILE * __restrict__ stream, const char * __restrict__ fmt,
+                      va_list vl)
+{
+	int n = vsnprintf(NULL, 0, fmt, vl);
+	if (0 > n) return n;
+	char *buf = malloc(n+1);
+	n = vsnprintf(buf, n+1, fmt, vl);
+	if (0 > n)
+	{
+		free(buf);
+		return n;
+	}
+
+	n = fputs(buf, stdout);
+	free(buf);
+	return n;
+}
+
+int __mingw_vprintf (const char * __restrict__ fmt, va_list vl)
+{
+	return __mingw_vfprintf(stdout, fmt, vl);
+}
+#endif /* __MINGW32__ */
+/* ============================================================= */
