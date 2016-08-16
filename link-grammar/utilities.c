@@ -44,7 +44,7 @@
 #endif /*_WIN32 */
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR[0] == (ch))
-#ifndef DICTIONARY_DIR
+#if !defined( DICTIONARY_DIR) || !defined(__MINGW32__)
 	#define DEFAULTPATH NULL
 #else
 	#define DEFAULTPATH DICTIONARY_DIR
