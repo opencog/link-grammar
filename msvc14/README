@@ -4,12 +4,20 @@ This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
 the Community Edition of that product.
 
+Supported target versions
+-------------------------
+The intention is to support versions from Vista on (some WIN32
+functions which are used are not supported in earlier versions.)
+
+The definitions for that:
+In each project file - Target Platform version: 8.1
+In the MSVC-common property file - C/C++->Preprocessor:
+NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;
 
 Dependencies
 ------------
 The regex package, which includes libraries and header files, must be
 separately downloaded. Also see GNUREGEX_DIR below.
-
 
 Setup
 -----
@@ -30,7 +38,6 @@ sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
    Additional Include Directories.
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
-
 
 Compiling
 ---------
