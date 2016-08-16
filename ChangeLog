@@ -1,4 +1,4 @@
-Version 5.3.8: (XXX 2016)
+Version 5.3.8: (15 August 2016)
  * Disambiguate "Bob" the given name from "bob" the verb.
  * Pull req #300: Crash while parsing certain Russian sentences.
  * Pull req #301: MSVC compiler error, and warnings.
