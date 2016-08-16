@@ -132,7 +132,7 @@ if test x${native_win32} = xyes; then
 
 	# Only running on Vista and on is supported.
 	AC_DEFINE(NTDDI_VERSION, NTDDI_VISTA)
-	AC_DEFINE(_WIN32_WINNT, NTDDI_VISTA)
+	AC_DEFINE(_WIN32_WINNT, _WIN32_WINNT_VISTA)
 
 
 else
