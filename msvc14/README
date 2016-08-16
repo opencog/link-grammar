@@ -9,9 +9,9 @@ Supported target versions
 The intention is to support versions from Vista on (some WIN32
 functions which are used are not supported in earlier versions.)
 
-The definitions for that:
+The system compatibility definitions:
 In each project file - Target Platform version: 8.1
-In the MSVC-common property file - C/C++->Preprocessor:
+In the MSVC-common property sheet - C/C++->Preprocessor:
 NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;
 
 Dependencies
@@ -52,9 +52,15 @@ Compiling
   You can do this at Build Menu->Configuration Manager.
 
 - The wordgraph-display feature is enabled when compiled with
-  USE_WORDGRAPH_DISPLAY (defined in the LGfeatures property sheet
-  Common properties->C/C++->Preprocessor/Preprocessor Definitions.
+  USE_WORDGRAPH_DISPLAY (already defined in the LGfeatures property sheet
+  Common properties->C/C++->Preprocessor/Preprocessor Definitions).
 
+- By default, the library is configured to create a DLL. If you want
+  to instead build a static library, the macro LINK_GRAMMAR_STATIC must
+  be defined before the inclusion of any header files for both the compiling
+  of the link-grammar library and for the application that uses it. Other
+  compiler settings will also have to be changed to create a static library
+  of course.
 
 Running
 -------
