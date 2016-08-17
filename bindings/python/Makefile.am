@@ -56,8 +56,7 @@ _clinkgrammar_la_CPPFLAGS =       \
    -I$(top_srcdir)                \
    -I$(top_builddir)
 
-_clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module
-_clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
+_clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module -no-undefined
 
 
 EXTRA_DIST =         \
