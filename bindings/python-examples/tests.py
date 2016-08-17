@@ -168,6 +168,8 @@ class BParseOptionsTestCase(unittest.TestCase):
 
     def test_setting_spell_guess(self):
         po = ParseOptions(spell_guess=True)
+        if po.spell_guess == 0:
+            raise unittest.SkipTest("Library is not configured with spell guess")
         self.assertEqual(po.spell_guess, 7)
         po = ParseOptions(spell_guess=5)
         self.assertEqual(po.spell_guess, 5)
@@ -300,6 +302,8 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 
     def test_d_spell_guessing_on(self):
         self.po.spell_guess = 7
+        if self.po.spell_guess == 0:
+            raise unittest.SkipTest("Library is not configured with spell guess")
         result = self.parse_sent("I love going to shoop.")
         resultx = result[0] if result else []
         for resultx in result:
