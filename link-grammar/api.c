@@ -270,9 +270,11 @@ void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 #ifdef USE_SAT_SOLVER
 	opts->use_sat_solver = dummy;
 #else
-	if (dummy)
-		prt_error("Error: cannot enable the Boolean SAT parser; this"
-					 " library was built without SAT solver support.");
+	if (dummy && (verbosity > D_USER_BASIC))
+	{
+		prt_error("Error: Cannot enable the Boolean SAT parser; "
+		          "this library was built without SAT solver support.");
+	}
 #endif
 }
 
