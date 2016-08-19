@@ -67,6 +67,7 @@ AC_CHECK_FUNCS(prctl)
 dnl Check for types
 AC_CHECK_TYPES([locale_t], [], [], [[#include <locale.h>]])
 
+dnl Check for specific OSs
 # ====================================================================
 
 AC_MSG_CHECKING([for native Win32])
@@ -81,7 +82,17 @@ esac
 AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
-# ====================================================================
+AC_MSG_CHECKING([for Cygwin])
+case "$host" in
+  *-*-cygwin*)
+    cygwin=yes
+    ;;
+  *)
+    cygwin=no
+    ;;
+esac
+AC_MSG_RESULT([$cygwin])
+AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
 
 AC_MSG_CHECKING([for 64-bit Apple OSX])
 case "$host" in
@@ -95,6 +106,7 @@ esac
 AC_MSG_RESULT([$apple_osx])
 
 # ====================================================================
+
 CFLAGS="${CFLAGS} -O3"
 CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
