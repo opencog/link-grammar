@@ -62,8 +62,17 @@ _clinkgrammar_la_CPPFLAGS =       \
    -I$(top_srcdir)                \
    -I$(top_builddir)
 
-_clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module -no-undefined
-_clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
+# On Cygwin, a DLL with version is named name-major.dll with no symlink to
+# it of an unversioned name (at least up and including libtool 2.4.6).
+# This is bad for Python modules, as they must have an identifier name.
+if OS_CYGWIN
+AVOID_VERSION = -avoid-version
+endif
+_clinkgrammar_la_LDFLAGS =                        \
+    -version-info @VERSION_INFO@ $(AVOID_VERSION) \
+    $(PYTHON_LDFLAGS) -module -no-undefined
+_clinkgrammar_la_LIBADD =                         \
+    $(top_builddir)/link-grammar/liblink-grammar.la $(PYTHON_LIBS)
 
 
 EXTRA_DIST =         \
