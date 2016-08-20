@@ -301,26 +301,26 @@
   <ItemGroup>
     <CustomBuild Include="..\link-grammar\link-features.h.in">
       <FileType>Document</FileType>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating link-features.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating ..\link-grammar\link-features.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\link-grammar\link-features.h</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\link-grammar\link-features.h.in;..\configure.ac</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating link-features.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating ..\link-grammar\link-features.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\link-grammar\link-features.h</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\link-grammar\link-features.h.in;..\configure.ac</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating link-features.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating ..\link-grammar\link-features.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\link-grammar\link-features.h</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\link-grammar\link-features.h.in;..\configure.ac</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating link-features.h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating ..\link-grammar\link-features.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\link-grammar\link-features.h</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\link-grammar\link-features.h.in;..\configure.ac</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mk-link-features-h</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mk-link-features-h</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mk-link-features-h</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mk-link-features-h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
