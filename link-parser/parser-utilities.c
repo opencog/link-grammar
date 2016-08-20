@@ -17,6 +17,9 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <io.h>
+#ifdef __MINGW32__
+#include <malloc.h>
+#endif /* __MINGW32__ */
 
 #include "parser-utilities.h"
 
@@ -207,3 +210,33 @@ no_tty:
 	return 0;
 }
 #endif /* _WIN32 */
+
+#ifdef __MINGW32__
+/*
+ * A workaround for printing UTF-8 on the console.
+ * These functions are also implemented in the LG library.
+ * For the strange story see the comment in utilities.c there.
+ */
+
+int __mingw_vfprintf (FILE * __restrict__ stream, const char * __restrict__ fmt, va_list vl)
+{
+	int n = vsnprintf(NULL, 0, fmt, vl);
+	if (0 > n) return n;
+	char *buf = malloc(n+1);
+	n = vsnprintf(buf, n+1, fmt, vl);
+	if (0 > n)
+	{
+		free(buf);
+		return n;
+	}
+
+	n = fputs(buf, stdout);
+	free(buf);
+	return n;
+}
+
+int __mingw_vprintf (const char * __restrict__ fmt, va_list vl)
+{
+	return __mingw_vfprintf(stdout, fmt, vl);
+}
+#endif /* __MINGW32__ */

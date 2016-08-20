@@ -70,6 +70,7 @@ CONTENTS of this directory:
    configure                The GNU configuration script
    autogen.sh               Developer's configure maintenance tool
    msvc14                   Microsoft Visual-C project files
+   mingw                    Information on using MinGW under MSYS or Cygwin
 
 
 UNPACKING and signature verification:
@@ -237,7 +238,8 @@ BUILDING on Windows
    compatibility layer for Windows.  Unfortunately, the Cygwin system
    is not compatible with Java for Windows.  Another way is use the
    MSVC system.  A third way is to use the MinGW system, which uses the
-   Gnu toolset to compile windows programs.
+   Gnu toolset to compile windows programs. The source code supports
+   Windows systems from Vista on.
 
    Link-grammar requires a working version of POSIX-standard regex
    libraries.  Since these are not provided by Microsoft, a copy must
@@ -253,13 +255,6 @@ BUILDING on Windows
    http://gnuwin32.sourceforge.net/packages/regex.htm
    See also:
    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
-
-   By default, the library is configured to create a DLL. If you want
-   to instead build a static library, the macro LINK_GRAMMAR_STATIC must
-   be defined before the inclusion of any header files for both the compiling
-   of the link-grammar library and for the application that uses it. Other
-   compiler settings will also have to be changed to create a static library
-   of course.
 
    The different build methods below are NOT regularly tested, and
    some link-grammar versions may have build issues.  If you are an
@@ -277,57 +272,15 @@ BUILDING on Windows (Cygwin)
    Unfortunately, the Cygwin system is not compatible with Java, so if
    you need the Java bindings, you must use MSVC or MinGW, below.
 
-
 BUILDING on Windows (MinGW)
 ---------------------------
-   Another way to build link-grammar is to use the MinGW/MSYS, which
-   uses the Gnu toolset to compile Windows programs for Windows. This
-   is probably the easiest way to obtain workable Java bindings for
-   Windows.  Download and install MinGW, MSYS and MSYS-DTK from
-   http://mingw.org.
+   Another way to build link-grammar is to use MinGW, which uses the GNU
+   toolset to compile Windows programs for Windows. Using MinGW/MSYS is
+   probably the easiest way to obtain workable Java bindings for Windows.
+   Download and install MinGW, MSYS and MSYS-DTK from http://mingw.org.
 
-   Then build and install link-grammar with
-
-       ./configure
-       make
-       make install
-
-   If you used the standard installation paths, the directory /usr/ is
-   mapped to C:\msys\1.0, so after 'make install', the libraries and
-   executable will be found at C:\msys\1.0\local\bin and the dictionary
-   files at C:\msys\1.0\local\share\link-grammar.
-
-   In order to use the Java bindings you'll need to build two extra
-   DLLs, by running the following commands from the link-grammar base
-   directory:
-
-       cd link-grammar
-
-       gcc -g -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at \
-       .libs/analyze-linkage.o .libs/and.o .libs/api.o \
-       .libs/build-disjuncts.o .libs/constituents.o \
-       .libs/count.o .libs/disjuncts.o .libs/disjunct-utils.o \
-       .libs/error.o .libs/expand.o .libs/extract-links.o \
-       .libs/fast-match.o .libs/idiom.o .libs/massage.o \
-       .libs/post-process.o .libs/pp_knowledge.o .libs/pp_lexer.o \
-       .libs/pp_linkset.o .libs/prefix.o .libs/preparation.o \
-       .libs/print-util.o .libs/print.o .libs/prune.o \
-       .libs/read-dict.o .libs/read-regex.o .libs/regex-morph.o \
-       .libs/resources.o .libs/spellcheck-aspell.o \
-       .libs/spellcheck-hun.o .libs/string-set.o .libs/tokenize.o \
-       .libs/utilities.o .libs/word-file.o .libs/word-utils.o \
-       -o /usr/local/bin/link-grammar.dll
-
-       gcc -g -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at \
-       .libs/jni-client.o /usr/local/bin/link-grammar.dll \
-       -o /usr/local/bin/link-grammar-java.dll
-
-   This will create link-grammar.dll and link-grammar-java.dll in the
-   directory c:\msys\1.0\local\bin . These files, together with
-   link-grammar-*.jar, will be used by Java programs.
-
-   Make sure that this directory is in the %PATH setting, as otherwise,
-   the DLL's will not be found.
+   For more details see mingw/README.MSYS .
+   You can also build with MinGW under Cygwin. See mingw/README.Cygwin .
 
 
 BUILDING and RUNNING on Windows (MSVC)
@@ -337,25 +290,31 @@ BUILDING and RUNNING on Windows (MSVC)
 
 RUNNING the program:
 --------------------
-   To run the program issue the Unix command:
+   To run the program issue the command (supposing it is in your PATH):
 
-       ./link-parser
+       link-parser [arguments]
 
    This starts the program.  The program has many user-settable variables
    and options. These can be displayed by entering !var at the link-parser
    prompt.  Entering !help will display some additional commands.
 
-   The dictionaries contain some utf-8 punctuation. These may generate
-   errors for users in a non-utf-8 locale, such as the "C" locale.
-   The locale can be set, for example, by saying
+   The dictionaries are arranged in directories whose name is the 2-letter
+   language code. The link-parser program searches for such a language
+   directory in that order, directly or under a directory names "data":
 
-       export LANG=en_US.UTF-8
+   1. Under your current directory.
+   2. Unless compiled with MSVC or run under the Windows console:
+      At the installed location (typically in /usr/local/share/link-grammar).
+   3. If compiled on Windows: In the directory of the link-parser
+      executable (may be in a different location than the link-parser
+      command, which may be a script).
 
-   at the shell prompt.
+   If link-parser cannot find the desired dictionary, use verbosity
+   level 3 to debug the problem; for example:
 
-   By default, the parser will use dictionaries at the installed location
-   (typically in /usr/local/share). Other locations can be specified on
-   the command line; for example:
+      link-parser ru -verbosity=3
+
+   Other locations can be specified on the command line; for example:
 
       link-parser ../path/to-my/modified/data/en
 
@@ -365,7 +324,11 @@ RUNNING the program:
    The Russian dictionaries are in data/ru. Thus, the Russian parser
    can be started as:
 
-      link-parser data/ru
+      link-parser ru
+
+   If you don't supply an argument to link-parser, it searches for a
+   language according to your current locale setup. If it cannot find such
+   a language directory, it defaults to "en".
 
    If you see errors similar to this:
 
@@ -381,11 +344,6 @@ RUNNING the program:
    combinations or variants of these, depending on your operating
    system.
 
-   In order to debug dictionary search/opening, use verbosity level 3.
-   For example:
-
-      link-parser data/en -verbosity=3
-
 
 TESTING the program:
 --------------------
@@ -399,7 +357,7 @@ TESTING the program:
    on a large number of sentences.  The following command runs the
    parser on a file called corpus-basic.batch
 
-       ./link-parser < corpus-basic.batch
+       link-parser < corpus-basic.batch
 
    The line `!batch` near the top of corpus-basic.batch turns on batch
    mode.  In this mode, sentences labeled with an initial `*` should be
@@ -418,10 +376,10 @@ TESTING the program:
    number of errors one can expect to observe in each of these files
    are roughly as follows:
 
-   en/corpus-basic.batch:      61 errors
-   en/corpus-fixes.batch:     401 errors
-   lt/corpus-basic.batch:      17 errors
-   ru/corpus-basic.batch:      31 errors
+   en/corpus-basic.batch:      64 errors
+   en/corpus-fixes.batch:     407 errors
+   lt/corpus-basic.batch:      15 errors
+   ru/corpus-basic.batch:      47 errors
 
    The bindings/python directory contains a unit test for the python
    bindings. It also performs several basic checks that stress the
@@ -534,7 +492,7 @@ Spell Checking:
    aspell is used, else hunspell is used.
 
    Spell checking may be disabled at runtime, in the link-parser client
-   with the !spell flag.  Enter !help for more details.
+   with the !spell=0 flag.  Enter !help for more details.
 
 
 MULTI-THREADED USE:

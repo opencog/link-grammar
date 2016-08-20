@@ -4,12 +4,20 @@ This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
 the Community Edition of that product.
 
+Supported target versions
+-------------------------
+The intention is to support versions from Vista on (some WIN32
+functions which are used are not supported in earlier versions.)
+
+The system compatibility definitions:
+In each project file - Target Platform version: 8.1
+In the MSVC-common property sheet - C/C++->Preprocessor:
+NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;
 
 Dependencies
 ------------
 The regex package, which includes libraries and header files, must be
 separately downloaded. Also see GNUREGEX_DIR below.
-
 
 Setup
 -----
@@ -31,7 +39,6 @@ sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
 
-
 Compiling
 ---------
 - Compiling and running got checked on Windows 10, but is intended to be
@@ -45,9 +52,15 @@ Compiling
   You can do this at Build Menu->Configuration Manager.
 
 - The wordgraph-display feature is enabled when compiled with
-  USE_WORDGRAPH_DISPLAY (defined in the LGfeatures property sheet
-  Common properties->C/C++->Preprocessor/Preprocessor Definitions.
+  USE_WORDGRAPH_DISPLAY (already defined in the LGfeatures property sheet
+  Common properties->C/C++->Preprocessor/Preprocessor Definitions).
 
+- By default, the library is configured to create a DLL. If you want
+  to instead build a static library, the macro LINK_GRAMMAR_STATIC must
+  be defined before the inclusion of any header files for both the compiling
+  of the link-grammar library and for the application that uses it. Other
+  compiler settings will also have to be changed to create a static library
+  of course.
 
 Running
 -------

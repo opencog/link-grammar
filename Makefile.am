@@ -46,4 +46,6 @@ EXTRA_DIST =            \
 	msvc14/MSVC-common.props               \
 	msvc14/post-build.bat                  \
 	msvc14/README                          \
+	mingw/README.Cygwin
+	mingw/README.MSYS
 	TODO

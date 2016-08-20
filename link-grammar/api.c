@@ -118,10 +118,14 @@ Parse_Options parse_options_create(void)
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = false;
-	po->use_spell_guess = 7;
 	po->use_sat_solver = false;
 	po->use_viterbi = false;
 	po->linkage_limit = 100;
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
+	po->use_spell_guess = 7;
+#else
+	po->use_spell_guess = 0;
+#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 #ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
@@ -266,9 +270,11 @@ void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 #ifdef USE_SAT_SOLVER
 	opts->use_sat_solver = dummy;
 #else
-	if (dummy)
-		prt_error("Error: cannot enable the Boolean SAT parser; this"
-					 " library was built without SAT solver support.");
+	if (dummy && (verbosity > D_USER_BASIC))
+	{
+		prt_error("Error: Cannot enable the Boolean SAT parser; "
+		          "this library was built without SAT solver support.");
+	}
 #endif
 }
 
@@ -325,7 +331,16 @@ bool parse_options_get_islands_ok(Parse_Options opts) {
 }
 
 void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	opts->use_spell_guess = dummy;
+#else
+	if (dummy && (verbosity > D_USER_BASIC))
+	{
+		prt_error("Error: Cannot enable spell guess; "
+		        "this library was built without spell guess support.");
+	}
+
+#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 }
 
 int parse_options_get_spell_guess(Parse_Options opts) {
