@@ -7,12 +7,8 @@ import sys, os
 import locale
 import unittest
 
-from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary
-
-try:
-    import linkgrammar._clinkgrammar as clg
-except ImportError:
-    import _clinkgrammar as clg
+from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
+                        Clinkgrammar as clg
 
 locale.setlocale(locale.LC_CTYPE, "en_US.UTF-8")
 

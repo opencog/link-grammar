@@ -11,7 +11,8 @@ try:
 except ImportError:
     import clinkgrammar as clg
 
-__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
+Clinkgrammar = clg
+__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence', 'Clinkgrammar']
 
 
 class ParseOptions(object):
