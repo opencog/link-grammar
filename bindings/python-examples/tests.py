@@ -10,8 +10,6 @@ import unittest
 from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
                         Clinkgrammar as clg
 
-locale.setlocale(locale.LC_CTYPE, "en_US.UTF-8")
-
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
