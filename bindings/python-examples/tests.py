@@ -245,10 +245,11 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
     def test_dictionary_locale_definition(self):
-        oldlocale = locale.setlocale(locale.LC_CTYPE, "tr_TR.UTF-8")
+        tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
+        oldlocale = locale.setlocale(locale.LC_CTYPE, tr_locale)
         self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
              ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
-        locale.setlocale(locale.LC_CTYPE, oldlocale);
+        locale.setlocale(locale.LC_CTYPE, oldlocale)
 
 class ESATsolverTestCase(unittest.TestCase):
     def setUp(self):
