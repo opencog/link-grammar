@@ -404,7 +404,7 @@ class Sentence(object):
             clg.sentence_parse(sent._obj, sent.parse_options._obj)
 
         def __iter__(self):
-            if (0 == clg.sentence_num_valid_linkages(self.sent._obj)):
+            if 0 == clg.sentence_num_valid_linkages(self.sent._obj):
                 return iter(())
             return self
 

@@ -196,7 +196,7 @@ class DBasicParsingTestCase(unittest.TestCase):
         return list(Sentence(text, self.d, self.po).parse())
 
     def test_that_parse_returns_empty_iterator_on_no_linkage(self):
-        result = self.parse_sent("This this doesn't parse");
+        result = self.parse_sent("This this doesn't parse")
         for _ in result:
             assert False, "Unexpected linkage iteration"
 
@@ -212,7 +212,7 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        if (sys.version_info > (3, 0)):
+        if sys.version_info > (3, 0):
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         else:
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
