@@ -1,16 +1,15 @@
 # -*- coding: utf8 -*-
-#
-# High-level Python bindings build on top of the low-level
-# C API (clinkgrammar)
-# See http://www.abisource.com/projects/link-grammar/api/index.html to get
-# more information about C API
+"""
+High-level Python bindings build on top of the low-level
+C API (clinkgrammar)
+See http://www.abisource.com/projects/link-grammar/api/index.html to get
+more information about C API
+"""
 
-# In Python3, importing just _clinkgrammar raises exception that the
-# module is not found.
 try:
-    import linkgrammar._clinkgrammar as clg
+    import linkgrammar.clinkgrammar as clg
 except ImportError:
-    import _clinkgrammar as clg
+    import clinkgrammar as clg
 
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
 
