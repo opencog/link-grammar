@@ -7,8 +7,28 @@ import sys, os
 import locale
 import unittest
 
+# Show information on this program run
+print('Running by:', sys.executable)
+print('Running {} in:'.format(sys.argv[0]), os.getcwd())
+for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
+    print('{}={}'.format(v, os.environ.get(v)))
+#===
+
+
 from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
                         Clinkgrammar as clg
+
+
+# Show the location and version of the bindings modules
+for module in 'linkgrammar', '_clinkgrammar':
+    if module in sys.modules:
+        print("Using", sys.modules[module], end='')
+        if hasattr(sys.modules[module], '__version__'):
+            print(' version', sys.modules[module].__version__, end='')
+        print()
+    else:
+        print("Warning: Module", module,  "not loaded.")
+#===
 
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
@@ -591,5 +611,6 @@ def linkage_testfile(self, dict, popt, desc = ''):
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
+
 
 unittest.main()
