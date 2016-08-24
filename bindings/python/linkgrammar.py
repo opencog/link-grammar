@@ -6,6 +6,7 @@ See http://www.abisource.com/projects/link-grammar/api/index.html to get
 more information about C API
 """
 
+#pylint: disable=no-name-in-module,import-error
 try:
     import linkgrammar.clinkgrammar as clg
 except ImportError:
