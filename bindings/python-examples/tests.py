@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding: utf8
-#
-# Python link-grammar test script
-#
+"""Python link-grammar test script"""
+
 from __future__ import print_function
 import sys, os
 import locale
