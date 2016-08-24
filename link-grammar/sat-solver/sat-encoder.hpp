@@ -36,6 +36,9 @@ public:
   // Solve the formula, returning the next linkage.
   Linkage get_next_linkage();
 
+  // Next linkage index in the linkage array
+  LinkageIdx _next_linkage_index;
+
 private:
   int verbosity;
   const char *debug;
