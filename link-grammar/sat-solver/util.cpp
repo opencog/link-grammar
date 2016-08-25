@@ -25,16 +25,16 @@ void free_linkage_connectors_and_disjuncts(Linkage lkg)
 /**
  * Free all the connectors and disjuncts of all the linkages.
  */
-void sat_free_linkages(Sentence sent)
+void sat_free_linkages(Sentence sent, LinkageIdx next_linkage_index)
 {
   Linkage lkgs = sent->lnkages;
 
-  for (LinkageIdx li = 0; li < sent->num_linkages_alloced; li++) {
+  for (LinkageIdx li = 0; li < next_linkage_index; li++) {
     free_linkage_connectors_and_disjuncts(&lkgs[li]);
     free_linkage(&lkgs[li]);
   }
   free(lkgs);
-  sent->lnkages = 0;
+  sent->lnkages = NULL;
   sent->num_linkages_alloced = 0;
 }
 

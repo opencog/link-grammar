@@ -1352,13 +1352,29 @@ Linkage SATEncoder::get_next_linkage()
 
   assert(linkage, "No linkage");
 
+  /*
+   * We cannot expand the linkage array on demand, since the API uses
+   * linkage pointers, and they would become invalid if realloc()
+   * changes the address of the memory block. */
+#if 0
   // Expand the linkage array.
   int index = _sent->num_linkages_alloced;
   _sent->num_linkages_alloced++;
   size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
   _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
+#endif /* 0 */
 
-  Linkage lkg = &_sent->lnkages[index];
+  if (NULL == _sent->lnkages)
+  {
+    _sent->num_linkages_alloced = _opts->linkage_limit;
+    size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
+    _sent->lnkages = (Linkage)exalloc(nbytes);
+    _next_linkage_index = 0;
+  }
+  assert(_next_linkage_index<_sent->num_linkages_alloced, "_sent->lnkages ovl");
+
+  Linkage lkg = &_sent->lnkages[_next_linkage_index];
+  _next_linkage_index++;
   *lkg = *linkage;  /* copy en-mass */
   exfree(linkage, sizeof(struct Linkage_s));
 
@@ -1726,8 +1742,8 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (encoder) {
+    sat_free_linkages(sent, encoder->_next_linkage_index);
     delete encoder;
-    sat_free_linkages(sent);
   }
 
   // Prepare for parsing - extracted for "preparation.c"
@@ -1742,9 +1758,9 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 
   /* Due to the nature of SAT solving, we cannot know in advance the
    * number of linkages. But in order to process batch files, we must
-   * know if there is at least one valid linkage. We limit ourself in
-   * that check to the linkage_limit number of linkages (settable by
-   * !limit).  Normally the following loop terminates after one or a few
+   * know if there is at least one valid linkage. We check up to
+   * linkage_limit number of linkages (settable by !limit).
+   * Normally the following loop terminates after one or a few
    * iterations, when a valid linkage is found or when no more linkages
    * are found.
    *
@@ -1793,10 +1809,10 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
 
-  assert(k <= encoder->_sent->num_linkages_alloced,
+  assert(k <= encoder->_next_linkage_index,
          "Given linkage index %zu is greater than the maximum expected one %zu",
-         k, encoder->_sent->num_linkages_alloced);
-  if (k < encoder->_sent->num_linkages_alloced)
+         k, encoder->_next_linkage_index);
+  if (k < encoder->_next_linkage_index)
     return &encoder->_sent->lnkages[k];
 
   return encoder->get_next_linkage();
@@ -1806,10 +1822,7 @@ extern "C" void sat_sentence_delete(Sentence sent)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return;
+
+  sat_free_linkages(sent, encoder->_next_linkage_index);
   delete encoder;
-
-  Linkage lkgs = sent->lnkages;
-  if (!lkgs) return;
-
-  sat_free_linkages(sent);
 }

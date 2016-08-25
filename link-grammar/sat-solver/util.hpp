@@ -11,6 +11,7 @@ extern "C" {
 bool isEndingInterpunction(const char* str);
 const char* word(Sentence sent, int w);
 void free_linkage_connectors_and_disjuncts(Linkage);
+void sat_free_linkages(Sentence, LinkageIdx);
 void sat_free_linkages(Sentence);
 Exp* null_exp();
 void add_anded_exp(Exp*&, Exp*);
