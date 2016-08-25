@@ -50,10 +50,6 @@ class ParseOptions(object):
             del self._obj
 
     @property
-    def version(self):
-        return clg.linkgrammar_get_version()
-
-    @property
     def verbosity(self):
         """
         This is the level of description printed to stderr/stdout about the
