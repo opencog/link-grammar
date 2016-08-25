@@ -332,6 +332,9 @@ class Linkage(object):
     def link_cost(self):
         return clg.linkage_link_cost(self._obj)
 
+    def disjunct_cost(self):
+        return clg.linkage_disjunct_cost(self._obj)
+
     def link(self, i):
         return Link(self, i, self.word(clg.linkage_get_link_lword(self._obj, i)),
                     clg.linkage_get_link_llabel(self._obj, i),
