@@ -265,8 +265,6 @@ class Dictionary(object):
             clg.dictionary_delete(self._obj)
             del self._obj
 
-    def get_max_cost(self):
-        return clg.dictionary_get_max_cost(self._obj)
 
 class Link(object):
     def __init__(self, linkage, index, left_word, left_label, right_label, right_word):
