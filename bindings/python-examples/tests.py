@@ -568,14 +568,14 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
-def linkage_testfile(self, dict, popt, desc = ''):
+def linkage_testfile(self, lgdict, popt, desc = ''):
     """
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
     """
     if '' != desc:
         desc = desc + '-'
-    testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(dict._obj) + ".txt"
+    testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
     parses = open(testfile)
     diagram = None
     sent = None
@@ -587,7 +587,7 @@ def linkage_testfile(self, dict, popt, desc = ''):
             sent = line[1:]
             diagram = ""
             constituents = ""
-            linkages = Sentence(sent, dict, popt).parse()
+            linkages = Sentence(sent, lgdict, popt).parse()
             linkage = linkages.next()
 
         # Generate the next linkage of the last input sentence
