@@ -370,10 +370,6 @@ class Sentence(object):
         for linkage in linkages:
             print linkage.diagram()
     """
-    text = None
-    dict = None
-    parse_options = None
-
     def __init__(self, text, dict, parse_options):
         self.text, self.dict, self.parse_options = text, dict, parse_options  # keep all args passed into clg.* fn
         self._obj = clg.sentence_create(self.text, self.dict._obj)
