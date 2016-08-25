@@ -265,6 +265,9 @@ class Dictionary(object):
             clg.dictionary_delete(self._obj)
             del self._obj
 
+    def linkgrammar_get_dict_version(self):
+        return clg.linkgrammar_get_dict_version(self._obj)
+
 
 class Link(object):
     def __init__(self, linkage, index, left_word, left_label, right_label, right_word):
