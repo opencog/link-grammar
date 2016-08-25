@@ -575,10 +575,13 @@ def linkage_testfile(self, dict, popt, desc = ''):
     """
     if '' != desc:
         desc = desc + '-'
-    parses = open(clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(dict._obj) + ".txt")
+    testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(dict._obj) + ".txt"
+    parses = open(testfile)
     diagram = None
     sent = None
+    lineno = 0
     for line in parses:
+        lineno += 1
         # Lines starting with I are the input sentences
         if 'I' == line[0]:
             sent = line[1:]
@@ -591,7 +594,9 @@ def linkage_testfile(self, dict, popt, desc = ''):
         if 'N' == line[0]:
             diagram = ""
             constituents = ""
-            linkage = linkages.next()
+            linkage = next(linkages, None)
+            if not linkage:
+                assert False, "{}:{}: Sentence has too few linkages".format(testfile, lineno)
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
