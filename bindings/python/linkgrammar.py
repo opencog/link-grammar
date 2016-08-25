@@ -268,6 +268,9 @@ class Dictionary(object):
     def linkgrammar_get_dict_version(self):
         return clg.linkgrammar_get_dict_version(self._obj)
 
+    def linkgrammar_get_dict_locale(self):
+        return clg.linkgrammar_get_dict_locale(self._obj)
+
 
 class Link(object):
     def __init__(self, linkage, index, left_word, left_label, right_label, right_word):
