@@ -203,6 +203,7 @@ class CParseOptionsTestCase(unittest.TestCase):
         that parsers can be created and deleted without regard for
         the existence of PYTHON Linkage objects
         """
+        #pylint: disable=unused-variable
         s = Sentence('This is a sentence.', Dictionary(), ParseOptions())
         linkages = s.parse()
         del s
