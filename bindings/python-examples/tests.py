@@ -218,8 +218,10 @@ class DBasicParsingTestCase(unittest.TestCase):
 
     def test_that_parse_returns_empty_iterator_on_no_linkage(self):
         result = self.parse_sent("This this doesn't parse")
+        linkage_exists = False
         for _ in result:
-            assert False, "Unexpected linkage iteration"
+            linkage_exists = True
+            self.assertFalse(linkage_exists, "Unparsable sentence has linkages.")
 
     def test_that_parse_sent_returns_list_of_linkage_objects_for_valid_sentence(self):
         result = self.parse_sent("This is a relatively simple sentence.")
@@ -597,7 +599,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             constituents = ""
             linkage = next(linkages, None)
             if not linkage:
-                assert False, "{}:{}: Sentence has too few linkages".format(testfile, lineno)
+                self.assertTrue(linkage, "{}:{}: Sentence has too few linkages".format(testfile, lineno))
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
