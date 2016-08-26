@@ -6,7 +6,14 @@
 
 # Run tests.py if the user says 'make check'
 TESTS = tests.py
-TESTS_ENVIRONMENT = PYTHONPATH=$(srcdir)/../python:../python/.libs LINK_GRAMMAR_DATA=$(srcdir)/../../data
+AM_TESTS_ENVIRONMENT = python=$(PYTHON) \
+   PYTHONPATH=$(srcdir)/../python:../$${python\#\#*/}:../$${python\#\#*/}/.libs \
+   LINK_GRAMMAR_DATA=$(srcdir)/../../data; \
+   export PYTHONPATH LINK_GRAMMAR_DATA;
+
+TEST_EXTENSIONS = .py
+PY_LOG_COMPILER = $(PYTHON)
+#AM_PY_LOG_FLAGS = -v
 
 EXTRA_DIST =         \
    AUTHORS           \

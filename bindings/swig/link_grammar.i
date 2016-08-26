@@ -35,6 +35,7 @@ typedef enum
 
 const char * linkgrammar_get_version(void);
 const char * linkgrammar_get_dict_version(Dictionary dict);
+const char * linkgrammar_get_dict_locale(Dictionary dict);
 
 /**********************************************************************
 *
@@ -48,6 +49,7 @@ const char * dictionary_get_lang(Dictionary dict);
 
 void dictionary_delete(Dictionary dict);
 void dictionary_set_data_dir(const char * path);
+%newobject dictionary_get_data_dir;
 char * dictionary_get_data_dir(void);
 
 /**********************************************************************

@@ -1,20 +1,19 @@
 # -*- coding: utf8 -*-
-#
-# High-level Python bindings build on top of the low-level
-# C API (clinkgrammar)
-# See http://www.abisource.com/projects/link-grammar/api/index.html to get
-# more information about C API
+"""
+High-level Python bindings build on top of the low-level
+C API (clinkgrammar)
+See http://www.abisource.com/projects/link-grammar/api/index.html to get
+more information about C API
+"""
 
-import sys
-
-# In Python3, importing just _clinkgrammar raises exception that the
-# module is not found.
+#pylint: disable=no-name-in-module,import-error
 try:
-    import linkgrammar._clinkgrammar as clg
+    import linkgrammar.clinkgrammar as clg
 except ImportError:
-    import _clinkgrammar as clg
+    import clinkgrammar as clg
 
-__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence']
+Clinkgrammar = clg
+__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence', 'Clinkgrammar']
 
 
 class ParseOptions(object):
@@ -49,10 +48,6 @@ class ParseOptions(object):
         if hasattr(self, '_obj') and clg:
             clg.parse_options_delete(self._obj)
             del self._obj
-
-    @property
-    def version(self):
-        return clg.linkgrammar_get_version()
 
     @property
     def verbosity(self):
@@ -266,8 +261,12 @@ class Dictionary(object):
             clg.dictionary_delete(self._obj)
             del self._obj
 
-    def get_max_cost(self):
-        return clg.dictionary_get_max_cost(self._obj)
+    def linkgrammar_get_dict_version(self):
+        return clg.linkgrammar_get_dict_version(self._obj)
+
+    def linkgrammar_get_dict_locale(self):
+        return clg.linkgrammar_get_dict_locale(self._obj)
+
 
 class Link(object):
     def __init__(self, linkage, index, left_word, left_label, right_label, right_word):
@@ -332,6 +331,9 @@ class Linkage(object):
     def link_cost(self):
         return clg.linkage_link_cost(self._obj)
 
+    def disjunct_cost(self):
+        return clg.linkage_disjunct_cost(self._obj)
+
     def link(self, i):
         return Link(self, i, self.word(clg.linkage_get_link_lword(self._obj, i)),
                     clg.linkage_get_link_llabel(self._obj, i),
@@ -371,12 +373,8 @@ class Sentence(object):
         for linkage in linkages:
             print linkage.diagram()
     """
-    text = None
-    dict = None
-    parse_options = None
-
-    def __init__(self, text, dict, parse_options):
-        self.text, self.dict, self.parse_options = text, dict, parse_options  # keep all args passed into clg.* fn
+    def __init__(self, text, lgdict, parse_options):
+        self.text, self.dict, self.parse_options = text, lgdict, parse_options  # keep all args passed into clg.* fn
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
     def __del__(self):
@@ -405,7 +403,7 @@ class Sentence(object):
             clg.sentence_parse(sent._obj, sent.parse_options._obj)
 
         def __iter__(self):
-            if (0 == clg.sentence_num_valid_linkages(self.sent._obj)):
+            if 0 == clg.sentence_num_valid_linkages(self.sent._obj):
                 return iter(())
             return self
 

@@ -1,21 +1,34 @@
 #!/usr/bin/env python
 # coding: utf8
-#
-# Python link-grammar test script
-#
+"""Python link-grammar test script"""
+
 from __future__ import print_function
 import sys, os
 import locale
 import unittest
 
-from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary
+# Show information on this program run
+print('Running by:', sys.executable)
+print('Running {} in:'.format(sys.argv[0]), os.getcwd())
+for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
+    print('{}={}'.format(v, os.environ.get(v)))
+#===
 
-try:
-    import linkgrammar._clinkgrammar as clg
-except ImportError:
-    import _clinkgrammar as clg
 
-locale.setlocale(locale.LC_CTYPE, "en_US.UTF-8")
+from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
+                        Clinkgrammar as clg
+
+
+# Show the location and version of the bindings modules
+for module in 'linkgrammar', '_clinkgrammar':
+    if module in sys.modules:
+        print("Using", sys.modules[module], end='')
+        if hasattr(sys.modules[module], '__version__'):
+            print(' version', sys.modules[module].__version__, end='')
+        print()
+    else:
+        print("Warning: Module", module,  "not loaded.")
+#===
 
 def setUpModule():
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
@@ -190,6 +203,7 @@ class CParseOptionsTestCase(unittest.TestCase):
         that parsers can be created and deleted without regard for
         the existence of PYTHON Linkage objects
         """
+        #pylint: disable=unused-variable
         s = Sentence('This is a sentence.', Dictionary(), ParseOptions())
         linkages = s.parse()
         del s
@@ -203,9 +217,11 @@ class DBasicParsingTestCase(unittest.TestCase):
         return list(Sentence(text, self.d, self.po).parse())
 
     def test_that_parse_returns_empty_iterator_on_no_linkage(self):
-        result = self.parse_sent("This this doesn't parse");
+        result = self.parse_sent("This this doesn't parse")
+        linkage_exists = False
         for _ in result:
-            assert False, "Unexpected linkage iteration"
+            linkage_exists = True
+            self.assertFalse(linkage_exists, "Unparsable sentence has linkages.")
 
     def test_that_parse_sent_returns_list_of_linkage_objects_for_valid_sentence(self):
         result = self.parse_sent("This is a relatively simple sentence.")
@@ -219,7 +235,7 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        if (sys.version_info > (3, 0)):
+        if sys.version_info > (3, 0):
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         else:
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
@@ -252,10 +268,11 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
     def test_dictionary_locale_definition(self):
-        oldlocale = locale.setlocale(locale.LC_CTYPE, "tr_TR.UTF-8")
+        tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
+        oldlocale = locale.setlocale(locale.LC_CTYPE, tr_locale)
         self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
              ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
-        locale.setlocale(locale.LC_CTYPE, oldlocale);
+        locale.setlocale(locale.LC_CTYPE, oldlocale)
 
 class ESATsolverTestCase(unittest.TestCase):
     def setUp(self):
@@ -554,30 +571,35 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
-def linkage_testfile(self, dict, popt, desc = ''):
+def linkage_testfile(self, lgdict, popt, desc = ''):
     """
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
     """
     if '' != desc:
         desc = desc + '-'
-    parses = open(clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(dict._obj) + ".txt")
+    testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
+    parses = open(testfile)
     diagram = None
     sent = None
+    lineno = 0
     for line in parses:
+        lineno += 1
         # Lines starting with I are the input sentences
         if 'I' == line[0]:
             sent = line[1:]
             diagram = ""
             constituents = ""
-            linkages = Sentence(sent, dict, popt).parse()
+            linkages = Sentence(sent, lgdict, popt).parse()
             linkage = linkages.next()
 
         # Generate the next linkage of the last input sentence
         if 'N' == line[0]:
             diagram = ""
             constituents = ""
-            linkage = linkages.next()
+            linkage = next(linkages, None)
+            if not linkage:
+                self.assertTrue(linkage, "{}:{}: Sentence has too few linkages".format(testfile, lineno))
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
@@ -597,5 +619,6 @@ def linkage_testfile(self, dict, popt, desc = ''):
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
+
 
 unittest.main()
