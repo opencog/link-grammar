@@ -598,8 +598,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             diagram = ""
             constituents = ""
             linkage = next(linkages, None)
-            if not linkage:
-                self.assertTrue(linkage, "{}:{}: Sentence has too few linkages".format(testfile, lineno))
+            self.assertTrue(linkage, "{}:{}: Sentence has too few linkages".format(testfile, lineno))
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
