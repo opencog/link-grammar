@@ -1,6 +1,7 @@
 Version 5.3.9: (XXX 2016)
  * Pull req #354: Major changes to support Cygwin.
  * Pull req #356: SAT parser bug fix.
+ * General python binding cleanup.
 
 Version 5.3.8: (15 August 2016)
  * Disambiguate "Bob" the given name from "bob" the verb.
