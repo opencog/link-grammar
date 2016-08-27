@@ -310,8 +310,6 @@ class Linkage(object):
             clg.linkage_delete(self._obj)
             del self._obj
 
-    def null_count(self):
-        return clg.sentence_null_count(self._obj)
 
     def num_of_words(self):
         return clg.linkage_get_num_words(self._obj)
@@ -396,6 +394,10 @@ class Sentence(object):
 
     def num_linkages_post_processed(self):
         return clg.sentence_num_linkages_post_processed(self._obj)
+
+    def null_count(self):
+        """Number of null links in the linkages of this sentence."""
+        return clg.sentence_null_count(self._obj)
 
     class sentence_parse(object):
         def __init__(self, sent):
