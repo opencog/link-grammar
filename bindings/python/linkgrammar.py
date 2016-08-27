@@ -302,7 +302,8 @@ class Link(object):
 class Linkage(object):
 
     def __init__(self, idx, sentence, parse_options):
-        self.sentence, self.parse_options = sentence, parse_options  # keep all args passed into clg.* fn
+        # Keep all args passed into clg.* functions.
+        self.sentence, self.parse_options = sentence, parse_options
         self._obj = clg.linkage_create(idx, sentence._obj, parse_options)
 
     def __del__(self):
@@ -373,7 +374,8 @@ class Sentence(object):
             print linkage.diagram()
     """
     def __init__(self, text, lgdict, parse_options):
-        self.text, self.dict, self.parse_options = text, lgdict, parse_options  # keep all args passed into clg.* fn
+        # Keep all args passed into clg.* functions.
+        self.text, self.dict, self.parse_options = text, lgdict, parse_options
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
     def __del__(self):
@@ -417,7 +419,7 @@ class Sentence(object):
             self.num += 1
             return linkage
 
-        __next__=next      # Account python3
+        __next__= next              # Account python3
 
     def parse(self):
         return self.sentence_parse(self)
