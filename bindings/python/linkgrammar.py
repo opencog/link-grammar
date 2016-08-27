@@ -6,10 +6,11 @@ See http://www.abisource.com/projects/link-grammar/api/index.html to get
 more information about C API
 """
 
-#pylint: disable=no-name-in-module,import-error
 try:
+    #pylint: disable=no-name-in-module
     import linkgrammar.clinkgrammar as clg
 except ImportError:
+    #pylint: import-error
     import clinkgrammar as clg
 
 Clinkgrammar = clg
@@ -61,8 +62,8 @@ class ParseOptions(object):
     def verbosity(self, value):
         if not isinstance(value, int):
             raise TypeError("Verbosity must be set to an integer")
-        if value not in (0, 1, 2, 3, 4, 5, 6):
-            raise ValueError("Verbosity levels can be any integer between 0 and 6 inclusive")
+        if value not in range(0,15):
+            raise ValueError("Verbosity levels can be any integer between 0 and 15 inclusive")
         clg.parse_options_set_verbosity(self._obj, value)
 
     @property
@@ -301,7 +302,8 @@ class Link(object):
 class Linkage(object):
 
     def __init__(self, idx, sentence, parse_options):
-        self.sentence, self.parse_options = sentence, parse_options  # keep all args passed into clg.* fn
+        # Keep all args passed into clg.* functions.
+        self.sentence, self.parse_options = sentence, parse_options
         self._obj = clg.linkage_create(idx, sentence._obj, parse_options)
 
     def __del__(self):
@@ -309,8 +311,12 @@ class Linkage(object):
             clg.linkage_delete(self._obj)
             del self._obj
 
-    def null_count(self):
-        return clg.sentence_null_count(self._obj)
+    def __nonzero__(self):
+        """Return False for SAT sentinel value (NULL); else return True."""
+        return bool(self._obj)
+
+    __bool__ = __nonzero__      # Account python3
+
 
     def num_of_words(self):
         return clg.linkage_get_num_words(self._obj)
@@ -374,7 +380,8 @@ class Sentence(object):
             print linkage.diagram()
     """
     def __init__(self, text, lgdict, parse_options):
-        self.text, self.dict, self.parse_options = text, lgdict, parse_options  # keep all args passed into clg.* fn
+        # Keep all args passed into clg.* functions.
+        self.text, self.dict, self.parse_options = text, lgdict, parse_options
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
     def __del__(self):
@@ -383,6 +390,7 @@ class Sentence(object):
             del self._obj
 
     def split(self, parse_options=None):
+        """Split a sentence. If an error occurs, return a negative number."""
         if not parse_options:
             parse_options = self.parse_options
         return clg.sentence_split(self._obj, parse_options._obj)
@@ -396,11 +404,25 @@ class Sentence(object):
     def num_linkages_post_processed(self):
         return clg.sentence_num_linkages_post_processed(self._obj)
 
+    def __len__(self):
+        """The number of tokens in the sentence."""
+        return clg.sentence_length(self._obj)
+
+    def null_count(self):
+        """Number of null links in the linkages of this sentence."""
+        return clg.sentence_null_count(self._obj)
+
     class sentence_parse(object):
         def __init__(self, sent):
             self.sent = sent
             self.num = 0
-            clg.sentence_parse(sent._obj, sent.parse_options._obj)
+            self.rc = clg.sentence_parse(sent._obj, sent.parse_options._obj)
+
+        def __nonzero__(self):
+            """Return False if there was a split or parse error; else return True."""
+            return self.rc >= 0
+
+        __bool__ = __nonzero__      # Account python3
 
         def __iter__(self):
             if 0 == clg.sentence_num_valid_linkages(self.sent._obj):
@@ -411,10 +433,12 @@ class Sentence(object):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
                 raise StopIteration()
             linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
+            if not linkage:  # SAT sentinel value
+                raise StopIteration()
             self.num += 1
             return linkage
 
-        __next__=next      # Account python3
+        __next__= next              # Account python3
 
     def parse(self):
         return self.sentence_parse(self)
