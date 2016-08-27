@@ -384,6 +384,7 @@ class Sentence(object):
             del self._obj
 
     def split(self, parse_options=None):
+        """Split a sentence. If an error occurs, return a negative number."""
         if not parse_options:
             parse_options = self.parse_options
         return clg.sentence_split(self._obj, parse_options._obj)
@@ -405,7 +406,13 @@ class Sentence(object):
         def __init__(self, sent):
             self.sent = sent
             self.num = 0
-            clg.sentence_parse(sent._obj, sent.parse_options._obj)
+            self.rc = clg.sentence_parse(sent._obj, sent.parse_options._obj)
+
+        def __nonzero__(self):
+            """Return False if there was a split or parse error; else return True."""
+            return self.rc >= 0
+
+        __bool__ = __nonzero__      # Account python3
 
         def __iter__(self):
             if 0 == clg.sentence_num_valid_linkages(self.sent._obj):
