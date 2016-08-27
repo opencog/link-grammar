@@ -398,6 +398,10 @@ class Sentence(object):
     def num_linkages_post_processed(self):
         return clg.sentence_num_linkages_post_processed(self._obj)
 
+    def __len__(self):
+        """The number of tokens in the sentence."""
+        return clg.sentence_length(self._obj)
+
     def null_count(self):
         """Number of null links in the linkages of this sentence."""
         return clg.sentence_null_count(self._obj)
