@@ -311,6 +311,12 @@ class Linkage(object):
             clg.linkage_delete(self._obj)
             del self._obj
 
+    def __nonzero__(self):
+        """Return False for SAT sentinel value (NULL); else return True."""
+        return bool(self._obj)
+
+    __bool__ = __nonzero__      # Account python3
+
 
     def num_of_words(self):
         return clg.linkage_get_num_words(self._obj)
@@ -427,6 +433,8 @@ class Sentence(object):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
                 raise StopIteration()
             linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
+            if not linkage:  # SAT sentinel value
+                raise StopIteration()
             self.num += 1
             return linkage
 
