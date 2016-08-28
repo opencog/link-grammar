@@ -25,3 +25,15 @@ EXTRA_DIST =         \
    parses-quotes-en.txt \
    parses-sat-en.txt \
    tests.py
+
+
+# Installation checks, to be manually done after "make install".
+# 1. Check the usability of Python's linkgrammar module directory.
+# 2  Check the usability of the link-grammar system language directory.
+#
+# To run these checks, issue "make installcheck" from a regular user.
+installcheck-local:
+	for d in . .. ../data ./data; do \
+		[ ! -d $$d/en ] ||  { echo "Unexpected dictionary $$d/en"; exit 1; }; \
+	done
+	PYTHONPATH=$(pythondir) srcdir=$(srcdir) $(PYTHON) $(srcdir)/tests.py ${TESTSFLAGS}
