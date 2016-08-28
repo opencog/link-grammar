@@ -1,19 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: utf8 -*-
-#
-# Link Grammar example usage
-#
+"""Link Grammar example usage"""
+
 from __future__ import print_function, division  # We require Python 2.6 or later
-import locale
 
-from linkgrammar import Sentence, ParseOptions, Dictionary
-import linkgrammar._clinkgrammar as clg
-
-locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+from linkgrammar import Sentence, ParseOptions, Dictionary, Clinkgrammar as clg
 
 print ("Version:", clg.linkgrammar_get_version())
-po = ParseOptions()
-#po = ParseOptions(short_length=16)
+po = ParseOptions(verbosity=1)
 
 def desc(lkg):
     print (lkg.diagram())
@@ -44,17 +38,17 @@ sent = Sentence("This is a test.", Dictionary(), po)
 linkages = sent.parse()
 linkage_stat(sent, 'English')
 for linkage in linkages:
-        desc(linkage)
+    desc(linkage)
 
 # Russian
 sent = Sentence("Целью курса является обучение магистрантов основам построения и функционирования программного обеспечения сетей ЭВМ.", Dictionary('ru'), po)
 linkages = sent.parse()
 linkage_stat(sent, 'Russian')
 for linkage in linkages:
-        desc(linkage)
+    desc(linkage)
 
 # Turkish
-po = ParseOptions(islands_ok=True, max_null_count=1, display_morphology=True)
+po = ParseOptions(islands_ok=True, max_null_count=1, display_morphology=True, verbosity=1)
 sent = Sentence("Senin ne istediğini bilmiyorum", Dictionary('tr'), po)
 linkages = sent.parse()
 linkage_stat(sent, 'Turkish')
