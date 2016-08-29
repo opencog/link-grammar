@@ -4,7 +4,7 @@
 
 Ithis is a test
 O
-O    +----->WV----->+---Ost--+
+O    +----->WV----->+---Osm--+
 O    +---Wd---+-Ss*b+  +Ds**c+
 O    |        |     |  |     |
 OLEFT-WALL this.p is.v a  test.n 
@@ -15,7 +15,7 @@ C       (NP a test.n)))
 C
 N
 O
-O    +----->WV----->+---Osm--+
+O    +----->WV----->+---Ost--+
 O    +---Wd---+-Ss*b+  +Ds**c+
 O    |        |     |  |     |
 OLEFT-WALL this.p is.v a  test.n 
