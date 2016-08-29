@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 5.3.9
+                          Version 5.3.10
 
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
@@ -84,7 +84,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-5.3.9.tar.gz.asc
+   gpg --verify link-grammar-5.3.10.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -104,6 +104,7 @@ CREATING the system:
 
         ./configure
         make
+        make check
 
    To install, change user to "root" and say
 
@@ -113,7 +114,11 @@ CREATING the system:
    This will install the liblink-grammar.so library into /usr/local/lib,
    the header files in /usr/local/include/link-grammar, and the
    dictionaries into /usr/local/share/link-grammar.  Running 'ldconfig'
-   will rebuild the shared library cache.
+   will rebuild the shared library cache.  To verify that the install was
+   successful, run (as a non-root user)
+
+        make installcheck
+
 
    Editline
    --------
