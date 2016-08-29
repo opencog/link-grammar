@@ -10,7 +10,7 @@
 Ithey have told of the soldiers' fear
 O
 O    +--------->WV-------->+     +----------Jp----------+
-O    +---Wd--+--Sp-+---PP--+-OFw-+  +--Dmc--+--YP-+D*u*c+
+O    +---Wd--+--Sp-+---PP--+-OFj-+  +--Dmc--+--YP-+D*u*c+
 O    |       |     |       |     |  |       |     |     |
 OLEFT-WALL they have.v told.v-d of the soldiers.n '  fear.n 
 O
@@ -18,7 +18,7 @@ O
 Ihe said `this is a backtic test`
 O
 O                 +-------------------QUc------------------+
-O                 +------>WV----->+---------Ost--------+   |
+O                 +------>WV----->+---------Osm--------+   |
 O    +---->WV---->+----Wd---+     |  +------Ds**x------+   |
 O    +--Wd--+--Ss-+-QUd+    +-Ss*b+  |       +----A----+   |
 O    |      |     |    |    |     |  |       |         |   |
