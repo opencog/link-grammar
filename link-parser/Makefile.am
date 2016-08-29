@@ -34,3 +34,18 @@ if WITH_VITERBI
 link_parser_LDADD += $(top_builddir)/viterbi/libvitacog.la
 link_parser_LDADD += $(LIBGC_LIBS)
 endif
+
+
+# Installation checks, to be manually done after "make install".
+# link-parser checks:
+# 1. Show the location of its binary.
+# 2. Check that it can find the system link-grammar dictionary directory.
+# Note the "cd .libs" - it ensures that it will not find "../data".
+# To run these checks, issue "make installcheck" from a regular user.
+installcheck-local:
+	echo; echo -n 'Location of '; whereis -b link-parser; echo
+	[ "`which link-parser`" == $(bindir)/link-parser ] # Validate binary location
+	cd .libs; for d in . .. ../data ./data; do \
+		[ ! -d $$d/en ] ||  { echo "Unexpected dictionary $$d/en"; exit 1; }; \
+	done
+	cd .libs; echo "This is a test" | link-parser
