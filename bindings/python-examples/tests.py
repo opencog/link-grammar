@@ -7,6 +7,8 @@ import sys, os
 import locale
 import unittest
 
+import lg_testutils # Found in the same directory of this test script
+
 # Show information on this program run
 print('Running by:', sys.executable)
 print('Running {} in:'.format(sys.argv[0]), os.getcwd())
@@ -20,7 +22,7 @@ from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
 
 
 # Show the location and version of the bindings modules
-for module in 'linkgrammar', '_clinkgrammar':
+for module in 'linkgrammar', '_clinkgrammar', 'lg_testutils':
     if module in sys.modules:
         print("Using", sys.modules[module], end='')
         if hasattr(sys.modules[module], '__version__'):
@@ -35,11 +37,9 @@ def setUpModule():
     if datadir:
         clg.dictionary_set_data_dir(datadir)
 
-    clg.test_data_srcdir = os.getenv("srcdir")
+    clg.test_data_srcdir = os.getenv("srcdir", os.path.dirname(sys.argv[0]))
     if clg.test_data_srcdir:
         clg.test_data_srcdir += "/"
-    else:
-        clg.test_data_srcdir = ""
 
 # The tests are run in alphabetical order....
 #
@@ -311,7 +311,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.link(3),
                          Link(linkage, 3, 'this.p','Ss*b','Ss','is.v'))
         self.assertEqual(linkage.link(4),
-                         Link(linkage, 4, 'is.v','O*t','Os','sentence.n'))
+                         Link(linkage, 4, 'is.v','O*m','Os','sentence.n'))
         self.assertEqual(linkage.link(5),
                          Link(linkage, 5, 'a','Ds**c','Ds**c','sentence.n'))
         self.assertEqual(linkage.link(6),
@@ -364,7 +364,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('Jumbo sat down.')[0].words()),
-             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
         # Red is in dict, lower-case, as noun, too.
         # There's no way to really know, syntactically, that Red
@@ -384,7 +384,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'May.f', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('May sat down.')[0].words()),
-             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.e', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
         # McGyver is not in the dict, but is regex-matched.
         self.assertEqual(list(self.parse_sent('McGyver\'s going?')[0].words()),
@@ -395,7 +395,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('McGyver sat down.')[0].words()),
-             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.a', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('McGyver Industries stock declined.')[0].words()),
              ['LEFT-WALL', 'McGyver[!]', 'Industries[!]',
@@ -619,5 +619,8 @@ def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
 
+
+# Decorate Sentence.parse with eqcost_soretd_parse.
+lg_testutils.add_eqcost_linkage_order(Sentence)
 
 unittest.main()

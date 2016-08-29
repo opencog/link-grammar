@@ -429,6 +429,9 @@ class Sentence(object):
                 return iter(())
             return self
 
+        def __len__(self):
+            return clg.sentence_num_linkages_found(self.sent._obj)
+
         def next(self):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
                 raise StopIteration()
