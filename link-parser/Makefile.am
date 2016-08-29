@@ -43,9 +43,10 @@ endif
 # Note the "cd .libs" - it ensures that it will not find "../data".
 # To run these checks, issue "make installcheck" from a regular user.
 installcheck-local:
-	echo; echo -n 'Location of '; whereis -b link-parser; echo
-	[ "`which link-parser`" == $(bindir)/link-parser ] # Validate binary location
-	cd .libs; for d in . .. ../data ./data; do \
+	$(AM_V_at)echo; echo -n 'Location of '; cd .libs; whereis -b link-parser; echo
+	$(AM_V_at)cd .libs; [ "`which link-parser`" == $(bindir)/link-parser ] || \
+		{ echo "Incorrect location for link-parser: `which link-parser`"; exit 1; }
+	$(AM_V_at)cd .libs; for d in . .. ../data ./data; do \
 		[ ! -d $$d/en ] ||  { echo "Unexpected dictionary $$d/en"; exit 1; }; \
 	done
 	cd .libs; echo "This is a test" | link-parser

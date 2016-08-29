@@ -33,7 +33,7 @@ EXTRA_DIST =         \
 #
 # To run these checks, issue "make installcheck" from a regular user.
 installcheck-local:
-	for d in . .. ../data ./data; do \
+	$(AM_V_at)for d in . .. ../data ./data; do \
 		[ ! -d $$d/en ] ||  { echo "Unexpected dictionary $$d/en"; exit 1; }; \
 	done
 	PYTHONPATH=$(pythondir) srcdir=$(srcdir) $(PYTHON) $(srcdir)/tests.py ${TESTSFLAGS}
