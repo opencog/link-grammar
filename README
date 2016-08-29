@@ -36,6 +36,8 @@ CONTENTS of this directory:
    bindings/ocaml/*         Optional OCaML language bindings.
    bindings/python/*        Optional Python2 language bindings.
    bindings/python3/*       Optional Python3 language bindings.
+   bindings/python-examples/* Link-grammar test suite and
+                            Python language binding usage example.
    bindings/swig/*          SWIG interface file, for other FFI interfaces.
 
    data/en/*                English language dictionaries.
@@ -355,6 +357,8 @@ TESTING the program:
    There are several ways to test the resulting build.  If the Python
    bindings are built, then a test program can be found in the file
    ./bindings/python-examples/tests.py -- When run, it should pass.
+   For more details see README.md in the bindings/python-examples
+   directory.
 
    There are also multiple batches of test/example sentences in the
    language data directories, generally having the names corpus-*.batch
