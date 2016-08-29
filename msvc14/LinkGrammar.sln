@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarJava", "LinkGrammarJava.vcxproj", "{D74DF531-C18E-4988-8A8C-4F23556DEC1B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -15,12 +15,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarExe", "LinkGramm
 		{0A6C539A-3140-48BD-865C-05F45637B93B} = {0A6C539A-3140-48BD-865C-05F45637B93B}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Python2", "Python2.vcxproj", "{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Python3", "Python3.vcxproj", "{B3AF571B-F80D-4A9C-A8C4-29026316A000}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
 		Debug|Win32 = Debug|Win32
-		Release|x64 = Release|x64
+		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -46,6 +50,22 @@ Global
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|Win32.Build.0 = Release|Win32
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|x64.ActiveCfg = Release|x64
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|x64.Build.0 = Release|x64
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Debug|Win32.Build.0 = Debug|Win32
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Debug|x64.ActiveCfg = Debug|x64
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Debug|x64.Build.0 = Debug|x64
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Release|Win32.ActiveCfg = Release|Win32
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Release|Win32.Build.0 = Release|Win32
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Release|x64.ActiveCfg = Release|x64
+		{4DBD8AF9-67E2-4F55-B8BD-99903151A98C}.Release|x64.Build.0 = Release|x64
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Debug|Win32.Build.0 = Debug|Win32
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Debug|x64.ActiveCfg = Debug|x64
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Debug|x64.Build.0 = Debug|x64
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Release|Win32.ActiveCfg = Release|Win32
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Release|Win32.Build.0 = Release|Win32
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Release|x64.ActiveCfg = Release|x64
+		{B3AF571B-F80D-4A9C-A8C4-29026316A000}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

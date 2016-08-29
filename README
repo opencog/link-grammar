@@ -35,7 +35,7 @@ CONTENTS of this directory:
    bindings/lisp/*          Optional Common Lisp language bindings.
    bindings/ocaml/*         Optional OCaML language bindings.
    bindings/python/*        Optional Python2 language bindings.
-   bindings/python3/*       Optional Python3 languagSe bindings.
+   bindings/python3/*       Optional Python3 language bindings.
    bindings/python-examples/* Link-grammar test suite and
                             Python language binding usage example.
    bindings/swig/*          SWIG interface file, for other FFI interfaces.

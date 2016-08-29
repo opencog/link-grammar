@@ -1,11 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition=" '$(GNUREGEX)' == '' " Label="UserMacros">
+  <PropertyGroup Condition=" '$(GNUREGEX)' == '' " Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
     <GNUREGEX_DIR>$(HOMEDRIVE)$(HOMEPATH)\Libraries\gnuregex</GNUREGEX_DIR>
+    <PYTHON2>C:\Python27</PYTHON2>
+    <PYTHON2_INCLUDE>$(PYTHON2)\include</PYTHON2_INCLUDE>
+    <PYTHON2_LIB>$(PYTHON2)\libs\python27.lib</PYTHON2_LIB>
+    <PYTHON2_EXE>$(PYTHON2)\python.exe</PYTHON2_EXE>
+    <PYTHON3>C:\Python34</PYTHON3>
+    <PYTHON3_INCLUDE>$(PYTHON3)\include</PYTHON3_INCLUDE>
+    <PYTHON3_LIB>$(PYTHON3)\libs\python34.lib</PYTHON3_LIB>
+    <PYTHON3_EXE>$(PYTHON3)\python.exe</PYTHON3_EXE>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(GNUREGEX)' != '' ">
-    <GNUREGEX_DIR>$(GNUREGEX)</GNUREGEX_DIR>
-  </PropertyGroup>
+  <PropertyGroup Condition=" '$(GNUREGEX)' != '' " />
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -14,6 +21,30 @@
   <ItemGroup>
     <BuildMacro Include="GNUREGEX_DIR">
       <Value>$(GNUREGEX_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON2">
+      <Value>$(PYTHON2)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON2_INCLUDE">
+      <Value>$(PYTHON2_INCLUDE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON2_LIB">
+      <Value>$(PYTHON2_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON2_EXE">
+      <Value>$(PYTHON2_EXE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON3">
+      <Value>$(PYTHON3)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON3_INCLUDE">
+      <Value>$(PYTHON3_INCLUDE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON3_LIB">
+      <Value>$(PYTHON3_LIB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PYTHON3_EXE">
+      <Value>$(PYTHON3_EXE)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
