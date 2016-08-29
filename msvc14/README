@@ -1,8 +1,14 @@
+Building and Running on Windows
+===============================
 Note: See also "BUILDING on Windows" in "../README".
 
 This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
 the Community Edition of that product.
+
+**!!!WARNING!!!**
+In the examples below, "console-prompt>" at start of line means the console
+prompt.  Don't type it because the result could be destructive!
 
 Supported target versions
 -------------------------
@@ -19,10 +25,16 @@ Dependencies
 The regex package, which includes libraries and header files, must be
 separately downloaded. Also see GNUREGEX_DIR below.
 
+For Python bindings, install the desired Python distributions from
+https://www.python.org/downloads/windows/ .
+You also have to install SWIG from http://www.swig.org/download
+
+The bindings were testes using swigwin-3.0.10 with Python 2.7.12 and 3.4.4.
+
 Setup
 -----
-The build files make use of two User Macros, defined in the property
-sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
+The build files make use of User Macros, defined in the property
+sheet "Local", as follows:
 
 -- GNUREGEX_DIR must be pointing to an unzipped POSIX regex distribution
    (which has the subdirectories "include" and "lib"). Its default is
@@ -38,6 +50,22 @@ sheet "Local" - GNUREGEX_DIR and (optionally) JAVA_HOME, as follows:
    Additional Include Directories.
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
+
+### Definitions for Python bindings
+
+--- PYTHON2         - The default is: C:\Python27
+--- PYTHON2_INCLUDE - The default is: $(PYTHON2)\include
+--- PYTHON2_LIB     - The default is: $(PYTHON2)\lib
+--- PYTHON2_EXE     - The default is: $(PYTHON2)\python.exe
+
+--- PYTHON3         - The default is: C:\Python34
+--- PYTHON3_INCLUDE - The default is: $(PYTHON3)\include
+--- PYTHON3_LIB     - The default is: $(PYTHON3)\lib
+--- PYTHON3_EXE     - The default is: $(PYTHON3)\python.exe
+
+If you want to build any of the bindings, make sure it is marked for build
+in the configuration manager, or select "build" for the desired bindings in
+Solution Explorer.
 
 Compiling
 ---------
@@ -96,8 +124,36 @@ https://www.microsoft.com/en-us/download/details.aspx?id=48145
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
-Locale settings
----------------
+Running Python programs
+-----------------------
+Since the Link Grammar library has no installation script yet,
+running Python programs that use the bindings needs a careful setup
+of PYTHONPATH and PATH. A program named make-check.py (named after
+"make check" that run tests.py in the POSIX distribution) is provided to
+set them automatically, to make it easy to make Python tests.
+
+Also see "Permanent installation".
+
+### Usage
+console-prompt>cd msvc14
+console-prompt>.\make-check [PYTHON_FLAGS] PYTHON_OUTDIR [script.py] [ARGUMENTS]
+
+- PYTHON_FLAGS: Optional flags for the Python program, e.g. -vv to debug
+imports.
+- PYTHON_OUTDIR: The directory to which the Python bindings got written.
+For example, x64\Release\Python3 .
+- script.py: Path leading to the script. To run tests.py in its default
+location (..\bindings\python-examples\tests.py) you can leave it empty.
+- ARGUMENTS: Optional script arguments, for example -v for tests.py.
+
+So in order to run tests.py wth Python2 for a Debug compilation on x64 platform,
+enter:
+console-prompt>cd msvc14
+console-prompt>.\make-check x64\Debug\Python2
+
+
+Locale and code page settings
+-----------------------------
 In this version, the language dictionaries under the data directory define
 the locale that they need in order to process input sentences and the
 library automatically uses this locale, in a manner that is intended to be
@@ -108,9 +164,9 @@ to set the default language when link-parser is invoked without a language
 argument, you can set the locale using the environment variable LANG,
 using a 2-letter language code and a 2-letter country code:
 
-> set LANG=ll-CC
+console-prompt>set LANG=ll-CC
 For example:
-> set LANG=en-US
+console-prompt>set LANG=en-US
 
 If you open a dictionary which doesn't have a locale definition, from a
 program (C program or a language with LG bindings) you have to set the
@@ -127,12 +183,41 @@ link-parser | (chcp 65001 & more)
 
 In that case "more" will be able to read UTF-8 input. However, the
 display may still not be perfect due to additional cmd.exe limitations.
+The code page can changed manually to 65001, see below in the "Note for
+Python bindings".
+
+### A note for the Python bindings
+In order to produce UTF-8 output to the console, it needs use the CP_UTF8
+code page (65001):
+
+console-prompt> chcp
+Active code page NNNN
+console-prompt> chcp 65001
+Active code page: 65001
+
+Other programs may malfunction with this code page, so it can be restored
+when needed (or this console window can be used only for working with
+link-grammar). The link-parser command also changes the code page to
+CP_UTF8, but it restores the original one on exit.
 
 Console fonts
 -------------
 Courier New may be appropriate for all the languages in the data
 directory. If you don't have it in the console menu, it can be added
 through the registry (Google it).
+
+Permanent installation
+----------------------
+For using the library independently of the build directory:
+1. If Python bindings were generated, copy the following modules to a
+   directory "linkgrammar" in a fixed location: linkgrammar.py,
+   clinkgrammar.py, __init__.py, _clinkgrammar.pyd .
+   Set the PYTHONPATH environment variable to point to the said
+   "linkgrammar" directory.
+2. Copy the link-grammar DLL to a fixed location.
+   Add the DLL location permanently to PATH.
+3. Copy the "data" directory to the location of the DLL so it will get found.
+
 
 Implementation notes:
 ---------------------
