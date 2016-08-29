@@ -35,11 +35,9 @@ def setUpModule():
     if datadir:
         clg.dictionary_set_data_dir(datadir)
 
-    clg.test_data_srcdir = os.getenv("srcdir")
+    clg.test_data_srcdir = os.getenv("srcdir", os.path.dirname(sys.argv[0]))
     if clg.test_data_srcdir:
         clg.test_data_srcdir += "/"
-    else:
-        clg.test_data_srcdir = ""
 
 # The tests are run in alphabetical order....
 #
