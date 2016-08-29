@@ -1,5 +1,5 @@
 Version 5.3.10: (XXX 2016?)
- * stuff
+ * Implement `make installcheck`.
 
 Version 5.3.9: (27 August 2016)
  * Pull req #354: Major changes to support Cygwin.
