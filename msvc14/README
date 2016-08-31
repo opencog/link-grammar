@@ -129,28 +129,34 @@ Running Python programs
 Since the Link Grammar library has no installation script yet,
 running Python programs that use the bindings needs a careful setup
 of PYTHONPATH and PATH. A program named make-check.py (named after
-"make check" that run tests.py in the POSIX distribution) is provided to
-set them automatically, to make it easy to make Python tests.
+"make check" that runs tests.py in POSIX systems) is provided to
+set them automatically.
 
 Also see "Permanent installation".
 
-### Usage
-console-prompt>cd msvc14
-console-prompt>.\make-check [PYTHON_FLAGS] PYTHON_OUTDIR [script.py] [ARGUMENTS]
+### Using make-check.py
+The **make-check.py** program is designed to reside in the MSVC
+configuration directory.  However, it can run from any directory.
 
-- PYTHON_FLAGS: Optional flags for the Python program, e.g. -vv to debug
+console-prompt>make-check [PYTHON_FLAG] PYTHON_OUTDIR [script.py] [ARGUMENTS]
+
+- PYTHON_FLAG: Optional flag for the Python program, e.g. -vv to debug
 imports.
 - PYTHON_OUTDIR: The directory to which the Python bindings got written.
 For example, x64\Release\Python3 .
 - script.py: Path leading to the script. To run tests.py in its default
-location (..\bindings\python-examples\tests.py) you can leave it empty.
+location you can leave it empty.
 - ARGUMENTS: Optional script arguments, for example -v for tests.py.
 
-So in order to run tests.py wth Python2 for a Debug compilation on x64 platform,
-enter:
-console-prompt>cd msvc14
-console-prompt>.\make-check x64\Debug\Python2
+So in order to run tests.py with Python2 for a Debug compilation on x64
+platform, enter:
 
+console-prompt>make-check x64\Debug\Python2
+
+The following starts an interactive Python with the correct PYTHONPATH
+and PATH:
+
+console-prompt>make-check.py x64\Debug\Python2 ""
 
 Locale and code page settings
 -----------------------------
@@ -190,9 +196,9 @@ Python bindings".
 In order to produce UTF-8 output to the console, it needs use the CP_UTF8
 code page (65001):
 
-console-prompt> chcp
+console-prompt>chcp
 Active code page NNNN
-console-prompt> chcp 65001
+console-prompt>chcp 65001
 Active code page: 65001
 
 Other programs may malfunction with this code page, so it can be restored
