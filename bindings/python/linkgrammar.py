@@ -46,7 +46,7 @@ class ParseOptions(object):
         self.disjunct_cost = disjunct_cost
 
     def __del__(self):
-        if hasattr(self, '_obj') and clg:
+        if hasattr(self, '_obj')
             clg.parse_options_delete(self._obj)
             del self._obj
 
@@ -258,7 +258,7 @@ class Dictionary(object):
         self._obj = clg.dictionary_create_lang(lang)
 
     def __del__(self):
-        if hasattr(self, '_obj') and clg:
+        if hasattr(self, '_obj')
             clg.dictionary_delete(self._obj)
             del self._obj
 
@@ -307,7 +307,7 @@ class Linkage(object):
         self._obj = clg.linkage_create(idx, sentence._obj, parse_options)
 
     def __del__(self):
-        if hasattr(self, '_obj') and clg:
+        if hasattr(self, '_obj')
             clg.linkage_delete(self._obj)
             del self._obj
 
@@ -385,7 +385,7 @@ class Sentence(object):
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
     def __del__(self):
-        if hasattr(self, '_obj') and clg:
+        if hasattr(self, '_obj')
             clg.sentence_delete(self._obj)
             del self._obj
 
