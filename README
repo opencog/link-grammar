@@ -386,7 +386,7 @@ TESTING the program:
    are roughly as follows:
 
    en/corpus-basic.batch:      64 errors
-   en/corpus-fixes.batch:     407 errors
+   en/corpus-fixes.batch:     406 errors
    lt/corpus-basic.batch:      15 errors
    ru/corpus-basic.batch:      47 errors
 
