@@ -253,14 +253,27 @@ class ParseOptions(object):
         clg.parse_options_set_all_short_connectors(self._obj, 1 if value else 0)
 
 
+class LG_DictionaryError(Exception):
+    pass
+
 class Dictionary(object):
     def __init__(self, lang='en'):
         self._obj = clg.dictionary_create_lang(lang)
+        if not self._obj:
+            raise LG_DictionaryError('Error: Failed to open dictionary {!r}'.format(lang))
 
     def __del__(self):
         if hasattr(self, '_obj') and clg:
             clg.dictionary_delete(self._obj)
             del self._obj
+
+    def __nonzero__(self):
+        """Return False iff the dictionary could not be opened or has been closed"""
+        if not hasattr(self, '_obj'):
+            return False
+        return bool(self._obj)
+
+    __bool__ = __nonzero__      # Account python3
 
     def linkgrammar_get_dict_version(self):
         return clg.linkgrammar_get_dict_version(self._obj)
