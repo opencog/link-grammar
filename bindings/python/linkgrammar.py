@@ -262,6 +262,9 @@ class Dictionary(object):
         if not self._obj:
             raise LG_DictionaryError('Error: Failed to open dictionary {!r}'.format(lang))
 
+    def __str__(self):
+        return clg.dictionary_get_lang(self._obj)
+
     def __del__(self):
         if hasattr(self, '_obj') and clg:
             clg.dictionary_delete(self._obj)
