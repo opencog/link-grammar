@@ -867,7 +867,7 @@ bool try_locale(const char *locale)
 void set_utf8_program_locale(void)
 {
 #ifndef _WIN32
-	/* The LG library doesn't use mbrtowc_l(), since it doesn't exists in
+	/* The LG library doesn't use mbrtowc_l(), since it doesn't exist in
 	 * the dynamic glibc (2.22). mbsrtowcs_l() could also be used, but for
 	 * some reason it exists only in the static glibc.
 	 * In order that mbrtowc() will work for any UTF-8 character, UTF-8
@@ -945,7 +945,7 @@ char * get_default_locale(void)
 		locale = ev;
 		lgdebug(D_USER_FILES, "Debug: Environment locale %s=%s\n", *evname, ev);
 #ifdef _WIN32
-		/* If compiled with MSVC/MSYS, we still support running under Cygwin. */
+		/* If compiled with MSVC/MinGW, we still support running under Cygwin. */
 		const char *ostype = getenv("OSTYPE");
 		if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
 		{
