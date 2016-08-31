@@ -3070,7 +3070,9 @@ I told you so :)
 Have a happy day 8->
 Ouch =D
 Hey ಠ-ಠ
-:っ)
+% The following intentionally starts with whitespace
+% (see PARSE_WITH_DISJUNCT_COST_GT_0 in link-parser.c).
+ :っ)
 ◠‿◠
 ^m^
 ＠^^
