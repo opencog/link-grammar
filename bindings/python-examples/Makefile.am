@@ -24,6 +24,7 @@ EXTRA_DIST =         \
    parses-lt.txt     \
    parses-quotes-en.txt \
    parses-sat-en.txt \
+   lg_testutils.py   \
    tests.py
 
 
