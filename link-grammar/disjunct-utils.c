@@ -96,6 +96,18 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	return (i & (dt->dup_table_size-1));
 }
 
+/* FIXME? Can the same word get appended again? If so - prevent it. */
+static void disjuct_gwordlist_append(Disjunct * dx, const Gword **word)
+{
+	size_t to_word_arr_len = gwordlist_len(dx->word);
+	size_t from_word_arr_len = gwordlist_len(word);
+
+	dx->word = realloc(dx->word,
+	   sizeof(*(dx->word)) * (to_word_arr_len + from_word_arr_len + 1));
+	memcpy(&dx->word[to_word_arr_len], word,
+	       sizeof(*dx->word) * (from_word_arr_len + 1));
+}
+
 /**
  * The connectors must be exactly equal.  A similar function
  * is connectors_equal_AND(), but that ignores priorities,
@@ -134,6 +146,59 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 	return (strcmp(d1->string, d2->string) == 0);
 }
 
+/**
+ * Duplicate the given connector chain.
+ * If the argument is NULL, return NULL.
+ */
+static Connector *connectors_dup(Connector *origc)
+{
+	Connector head;
+	Connector *prevc = &head;
+	Connector *newc = &head;
+	Connector *t;
+
+	for (t = origc; t != NULL;  t = t->next)
+	{
+		newc = connector_new();
+		*newc = *t;
+
+		prevc->next = newc;
+		prevc = newc;
+	}
+	newc->next = NULL;
+
+	return head.next;
+}
+
+/**
+ * Duplicate the given disjunct chain.
+ * If the argument is NULL, return NULL.
+ */
+Disjunct *disjuncts_dup(Disjunct *origd)
+{
+	Disjunct head;
+	Disjunct *prevd = &head;
+	Disjunct *newd = &head;
+	Disjunct *t;
+
+	for (t = origd; t != NULL; t = t->next)
+	{
+		newd = (Disjunct *)xalloc(sizeof(Disjunct));
+		newd->string = t->string;
+		newd->cost = t->cost;
+		newd->left = connectors_dup(t->left);
+		newd->right = connectors_dup(t->right);
+		newd->word = NULL;
+		disjuct_gwordlist_append(newd, t->word);
+
+		prevd->next = newd;
+		prevd = newd;
+	}
+	newd->next = NULL;
+
+	return head.next;
+}
+
 static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
 	size_t i;
@@ -152,18 +217,6 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 {
 	xfree(dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
 	xfree(dt, sizeof(disjunct_dup_table));
-}
-
-/* FIXME? Can the same word get appended again? If so - prevent it. */
-static void disjuct_gwordlist_append(Disjunct * dx, const Gword **word)
-{
-	size_t to_word_arr_len = gwordlist_len(dx->word);
-	size_t from_word_arr_len = gwordlist_len(word);
-
-	dx->word = realloc(dx->word,
-	   sizeof(*(dx->word)) * (to_word_arr_len + from_word_arr_len + 1));
-	memcpy(&dx->word[to_word_arr_len], word,
-	       sizeof(*dx->word) * (from_word_arr_len + 1));
 }
 
 /**

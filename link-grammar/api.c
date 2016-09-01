@@ -1335,39 +1335,108 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	}
 }
 
-/** Misnamed, this has nothing to do with chart parsing */
+static void free_sentence_disjuncts(Sentence sent)
+{
+	size_t i;
+
+	for (i = 0; i < sent->length; ++i)
+	{
+		free_disjuncts(sent->word[i].d);
+		sent->word[i].d = NULL;
+	}
+}
+
+/**
+ * chart_parse() -- parse the given sentence.
+ * (Misnamed, this has nothing to do with chart parsing.)
+ * Do the parse with the minimum number of null-links within the range
+ * specified by opts->min_null_count and opts->max_null_count.
+ *
+ * To that end, call do_parse() with an increasing null_count, from
+ * opts->min_null_count up to (including) opts->max_null_count, until a
+ * parse is found.
+ *
+ * A note about the disjuncts save/restore that is done here:
+ * To increase the parsing speed, before invoking do_parse(),
+ * pp_and_power_prune() is invoked to removes connectors which have no
+ * possibility to connect. It includes a significant optimization when
+ * null_count==0 that makes a more aggressive removal, but this
+ * optimization is not appropriate when null_count>0.
+ *
+ * So in case this optimization has been done and a complete parse (i.e.
+ * a parse when null_count==0) is not found, we are left with sentence
+ * disjuncts which are not appropriate to continue do_parse() tries with
+ * null_count>0. To solve that, we need to restore the original
+ * disjuncts of the sentence and call pp_and_power_prune() once again.
+ */
 static void chart_parse(Sentence sent, Parse_Options opts)
 {
-	int nl;
-	fast_matcher_t * mchxt;
+	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt;
+	bool pp_and_power_prune_done = false;
+	Disjunct **disjuncts_copy = NULL;
+	bool is_null_count_0 = (0 == opts->min_null_count);
+	int max_null_count = MIN((int)sent->length, opts->max_null_count);
 
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
-
-	mchxt = alloc_fast_matcher(sent);
 	ctxt = alloc_count_context(sent->length);
-	print_time(opts, "Initialized fast matcher");
-	if (resources_exhausted(opts->resources))
+
+	if (is_null_count_0 && (0 < max_null_count))
 	{
-		free_count_context(ctxt);
-		free_fast_matcher(mchxt);
-		return;
+		/* Save the disjuncts in case we need to parse with null_count>0. */
+		disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
+		for (size_t i = 0; i < sent->length; i++)
+			disjuncts_copy[i] = disjuncts_dup(sent->word[i].d);
 	}
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before
 	 * building another.  Huh ?? How could that happen? */
+#ifdef DEBUG
+	if (sent->parse_info) fprintf(stderr, "XXX Freeing parse_info\n");
+#endif
 	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);
 
-	nl = opts->min_null_count;
-	while (true)
+	for (int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
 		Count_bin hist;
 		s64 total;
+
+		if (!pp_and_power_prune_done)
+		{
+			if (0 != nl)
+			{
+				pp_and_power_prune_done = true;
+				if (is_null_count_0)
+					opts->min_null_count = 1; /* Don't optimize for null_count==0. */
+
+				/* We are parsing now with null_count>0, when previously we
+				 * parsed with null_count==0. Restore the save disjuncts. */
+				if (NULL != disjuncts_copy)
+				{
+					for (size_t i = 0; i < sent->length; i++)
+					{
+						free_disjuncts(sent->word[i].d);
+						sent->word[i].d = disjuncts_copy[i];
+					}
+					disjuncts_copy = NULL;
+				}
+			}
+			pp_and_power_prune(sent, opts);
+			if (is_null_count_0) opts->min_null_count = 0;
+			if (resources_exhausted(opts->resources)) break;
+
+			free_fast_matcher(mchxt);
+			mchxt = alloc_fast_matcher(sent);
+			print_time(opts, "Initialized fast matcher");
+		}
+
 		if (resources_exhausted(opts->resources)) break;
+		free_linkages(sent);
+
 		sent->null_count = nl;
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
@@ -1390,33 +1459,22 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sane_morphism(sent, opts);
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
+		if ((0 == nl) && (0 < max_null_count))
+			lgdebug(1, "No complete linkages found.\n");
 
 		/* If we are here, then no valid linkages were found.
 		 * If there was a parse overflow, give up now. */
 		if (PARSE_NUM_OVERFLOW < total) break;
-
-		/* loop termination */
-		if (nl == opts->max_null_count) break;
-
-		/* If we are here, we are going round again. Free stuff. */
-		free_linkages(sent);
-		nl++;
 	}
 	sort_linkages(sent, opts);
 
+	if (NULL != disjuncts_copy)
+	{
+		for (size_t i = 0; i < sent->length; i++)
+			free_disjuncts(disjuncts_copy[i]);
+	}
 	free_count_context(ctxt);
 	free_fast_matcher(mchxt);
-}
-
-static void free_sentence_disjuncts(Sentence sent)
-{
-	size_t i;
-
-	for (i = 0; i < sent->length; ++i)
-	{
-		free_disjuncts(sent->word[i].d);
-		sent->word[i].d = NULL;
-	}
 }
 
 int sentence_parse(Sentence sent, Parse_Options opts)

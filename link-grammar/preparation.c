@@ -104,6 +104,5 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 
 	set_connector_length_limits(sent, opts);
-	pp_and_power_prune(sent, opts);
 }
 
