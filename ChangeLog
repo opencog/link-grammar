@@ -1,5 +1,6 @@
 Version 5.3.10: (XXX 2016?)
  * Implement `make installcheck`.
+ * Pull #371: Simplification of API when handling disconnected words.
 
 Version 5.3.9: (27 August 2016)
  * Pull req #354: Major changes to support Cygwin.
