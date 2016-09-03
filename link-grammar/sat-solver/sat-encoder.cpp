@@ -1814,13 +1814,19 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
 
-  assert(k <= encoder->_next_linkage_index,
-         "Given linkage index %zu is greater than the maximum expected one %zu",
-         k, encoder->_next_linkage_index);
-  if (k < encoder->_next_linkage_index)
+                                                 // linkage index k is:
+  if (k >= encoder->_sent->num_valid_linkages)   // > allocated memory
+    return NULL;
+  if(k > encoder->_next_linkage_index)           // skips unproduced linkages
+  {
+    prt_error("Error: Linkage index %zu is greater than the "
+              "maximum expected one %zu", k, encoder->_next_linkage_index);
+    return NULL;
+  }
+  if (k < encoder->_next_linkage_index)          // already produced
     return &encoder->_sent->lnkages[k];
 
-  return encoder->get_next_linkage();
+  return encoder->get_next_linkage();            // exactly next to produce
 }
 
 extern "C" void sat_sentence_delete(Sentence sent)
