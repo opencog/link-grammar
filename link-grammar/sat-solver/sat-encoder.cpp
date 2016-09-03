@@ -1378,6 +1378,11 @@ Linkage SATEncoder::get_next_linkage()
   *lkg = *linkage;  /* copy en-mass */
   exfree(linkage, sizeof(struct Linkage_s));
 
+  /* The link-parser code checks the next linkage for num_violations
+   * (to save calls to linkage_create()). Allow for that practice. */
+  if (_next_linkage_index < _sent->num_linkages_alloced)
+    lkg[1].lifo.N_violations = 0;
+
   // Perform the rest of the post-processing
   PP_node *ppn = do_post_process(_sent->postprocessor, lkg, false);
   if (NULL != ppn->violation) {
@@ -1809,13 +1814,19 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
 
-  assert(k <= encoder->_next_linkage_index,
-         "Given linkage index %zu is greater than the maximum expected one %zu",
-         k, encoder->_next_linkage_index);
-  if (k < encoder->_next_linkage_index)
+                                                 // linkage index k is:
+  if (k >= encoder->_sent->num_valid_linkages)   // > allocated memory
+    return NULL;
+  if(k > encoder->_next_linkage_index)           // skips unproduced linkages
+  {
+    prt_error("Error: Linkage index %zu is greater than the "
+              "maximum expected one %zu", k, encoder->_next_linkage_index);
+    return NULL;
+  }
+  if (k < encoder->_next_linkage_index)          // already produced
     return &encoder->_sent->lnkages[k];
 
-  return encoder->get_next_linkage();
+  return encoder->get_next_linkage();            // exactly next to produce
 }
 
 extern "C" void sat_sentence_delete(Sentence sent)

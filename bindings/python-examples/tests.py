@@ -211,17 +211,30 @@ class CParseOptionsTestCase(unittest.TestCase):
 
 class DBasicParsingTestCase(unittest.TestCase):
     def setUp(self):
-        self.d, self.po = Dictionary(), ParseOptions()
+        self.d = Dictionary()
+        self.po = None
 
-    def parse_sent(self, text):
-        return list(Sentence(text, self.d, self.po).parse())
+    def parse_sent(self, text, po=ParseOptions()):
+        return list(Sentence(text, self.d, po).parse())
 
     def test_that_parse_returns_empty_iterator_on_no_linkage(self):
+        """Parsing a bad sentence with no null-links shouldn't give any linkage."""
         result = self.parse_sent("This this doesn't parse")
         linkage_exists = False
         for _ in result:
             linkage_exists = True
             self.assertFalse(linkage_exists, "Unparsable sentence has linkages.")
+
+    def test_that_parse_returns_empty_iterator_on_no_linkage_sat(self):
+        """Parsing a bad sentence with no null-links shouldn't give any linkage (sat)"""
+        self.po = ParseOptions(use_sat=True)
+        if self.po.use_sat != True:
+            raise unittest.SkipTest("Library not configured with SAT parser")
+        result = self.parse_sent("This this doesn't parse", self.po)
+        linkage_exists = False
+        for _ in result:
+            linkage_exists = True
+            self.assertFalse(linkage_exists, "SAT: Unparsable sentence has linkages.")
 
     def test_that_parse_sent_returns_list_of_linkage_objects_for_valid_sentence(self):
         result = self.parse_sent("This is a relatively simple sentence.")
