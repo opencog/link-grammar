@@ -141,8 +141,10 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 	}
 	if ((e1 != NULL) || (e2 != NULL)) return false;
 
-	/* Save cpu time by comparing this last, since this will
-	 * almost always be true. */
+	/* Save CPU time by comparing this last, since this will
+	 * almost always be true. Rarely, the strings are not from
+	 * the same string_set and hence the 2-step comparison. */
+	if (d1->string == d2->string) return true;
 	return (strcmp(d1->string, d2->string) == 0);
 }
 
