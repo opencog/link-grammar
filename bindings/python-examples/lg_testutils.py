@@ -7,7 +7,7 @@ def add_eqcost_linkage_order(original_class):
     be in a deterministic order.
     Usage: lg_testutils.add_eqcost_linkage_order(Sentence)
     """
-    class eqcost_soretd_parse(object):
+    class eqcost_soretd_parse(original_class.sentence_parse):
         """
         Sort equal-cost linkages according to the alphabetic order of their
         diagram string, on demand.  We need it because the order of linkages
@@ -16,7 +16,8 @@ def add_eqcost_linkage_order(original_class):
         """
         def __init__(self, linkages):
             self.linkages = linkages
-            self.ok = bool(linkages)
+            self.sent = linkages.sent
+            self.rc = linkages.rc
             self.linkage_list = [] # List of equal-cost linkages
             self.num = 0
             self.cost = None
@@ -24,12 +25,6 @@ def add_eqcost_linkage_order(original_class):
 
         def __iter__(self):
             return self
-
-        def __nonzero__(self):
-            """Return False if there was a split or parse error; else return True."""
-            return self.ok
-
-        __bool__ = __nonzero__      # Account python3
 
         def next(self):
             # If the list of equal-cost linkages has exhausted, fetch a new one.
