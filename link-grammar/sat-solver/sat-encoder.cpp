@@ -1378,6 +1378,11 @@ Linkage SATEncoder::get_next_linkage()
   *lkg = *linkage;  /* copy en-mass */
   exfree(linkage, sizeof(struct Linkage_s));
 
+  /* The link-parser code checks the next linkage for num_violations
+   * (to save calls to linkage_create()). Allow for that practice. */
+  if (_next_linkage_index < _sent->num_linkages_alloced)
+    lkg[1].lifo.N_violations = 0;
+
   // Perform the rest of the post-processing
   PP_node *ppn = do_post_process(_sent->postprocessor, lkg, false);
   if (NULL != ppn->violation) {
