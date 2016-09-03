@@ -471,6 +471,30 @@ class ZENLangTestCase(unittest.TestCase):
     def test_quotes(self):
         linkage_testfile(self, self.d, self.po, 'quotes')
 
+    def test_null_link_range_starting_with_zero(self):
+        """Test parsing with a minimal number of null-links, including 0."""
+        # This sentence has no complete linkage. Validate that the library
+        # doesn't mangle parsing with null-count>0 due to power_prune()'s
+        # connector-discard optimization at null-count==0.  Without commit
+        # "Allow calling chart_parse() with and w/o nulls", the number of
+        # linkages here is 1 instead of 2 and the unused_word_cost is 5.
+        self.po = ParseOptions(min_null_count=0, max_null_count=999)
+        linkages = Sentence('about people attended', self.d, self.po).parse()
+        self.assertEqual(len(linkages), 2)
+        self.assertEqual(linkages.next().unused_word_cost(), 1)
+        # Expected parses:
+        # 1:
+        #    +------------>WV------------>+
+        #    +--------Wd-------+----Sp----+
+        #    |                 |          |
+        #LEFT-WALL [about] people.p attended.v-d
+        # 2:
+        #
+        #            +----Sp----+
+        #            |          |
+        #[about] people.p attended.v-d
+
+
 class ZENConstituentsCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()

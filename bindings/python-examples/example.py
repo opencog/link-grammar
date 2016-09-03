@@ -32,13 +32,21 @@ def linkage_stat(psent, lang):
                  psent.num_valid_linkages(), random))
 
 
+en_lines = [
+    'This is a test.',
+    'I feel is the exciter than other things', # from issue #303 (10 linkages)
+]
+
+po = ParseOptions(min_null_count=0, max_null_count=999)
 
 # English is the default language
-sent = Sentence("This is a test.", Dictionary(), po)
-linkages = sent.parse()
-linkage_stat(sent, 'English')
-for linkage in linkages:
-    desc(linkage)
+en_dir = Dictionary() # open the dictionary only once
+for text in en_lines:
+    sent = Sentence(text, en_dir, po)
+    linkages = sent.parse()
+    linkage_stat(sent, 'English')
+    for linkage in linkages:
+        desc(linkage)
 
 # Russian
 sent = Sentence("Целью курса является обучение магистрантов основам построения и функционирования программного обеспечения сетей ЭВМ.", Dictionary('ru'), po)
@@ -54,3 +62,6 @@ linkages = sent.parse()
 linkage_stat(sent, 'Turkish')
 for linkage in linkages:
     desc(linkage)
+
+# Prevent interleaving "Dictionary close" messages
+po = ParseOptions(verbosity=0)

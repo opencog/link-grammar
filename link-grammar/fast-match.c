@@ -94,6 +94,7 @@ void free_fast_matcher(fast_matcher_t *mchxt)
 	size_t w;
 	unsigned int i;
 
+	if (NULL == mchxt) return;
 	for (w = 0; w < mchxt->size; w++)
 	{
 		for (i = 0; i < mchxt->l_table_size[w]; i++)
