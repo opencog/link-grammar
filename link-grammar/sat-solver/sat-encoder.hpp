@@ -37,7 +37,7 @@ public:
   Linkage get_next_linkage();
 
   // Next linkage index in the linkage array
-  LinkageIdx _next_linkage_index;
+  LinkageIdx _next_linkage_index = 0;
 
 private:
   int verbosity;
