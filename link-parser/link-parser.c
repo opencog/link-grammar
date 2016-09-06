@@ -666,12 +666,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	/* The English and Russian dicts use a cost of 2.7, which allows
-	 * regexes with a fractional cost of less than 1 to be used with
-	 * rules that have a cost of 2.0.
-	 */
-	parse_options_set_disjunct_cost(opts, 2.7);
-
 	/* Process the command line '!' commands */
 	for (i = 1; i<argc; i++)
 	{
