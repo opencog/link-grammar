@@ -117,7 +117,7 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 	#endif /* _WIN32 */
 	pline = lg_readline(prompt);
 #else
-	fprintf(out, prompt);
+	fprintf(out, "%s", prompt);
 	fflush(out);
 	input_string[MAX_INPUT-2] = '\0';
 #ifdef _WIN32
