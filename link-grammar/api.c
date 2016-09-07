@@ -1475,6 +1475,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		/* If we are here, then no valid linkages were found.
 		 * If there was a parse overflow, give up now. */
 		if (PARSE_NUM_OVERFLOW < total) break;
+		//if (sent->num_linkages_found > 0 && nl>0) printf("NUM_LINKAGES_FOUND %d\n", sent->num_linkages_found);
 	}
 	sort_linkages(sent, opts);
 

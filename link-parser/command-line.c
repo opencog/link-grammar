@@ -489,9 +489,20 @@ static void put_local_vars_in_opts(Command_Options* copts)
 int issue_special_command(const char * line, Command_Options* opts, Dictionary dict)
 {
 	int rc;
+	Parse_Options save = NULL;
+
+	if (strncmp(line, "panic_", 6) == 0)
+	{
+		line += 6;
+		save = opts->popts;
+		opts->popts = opts->panic_opts;
+	}
+
 	put_opts_in_local_vars(opts);
 	rc = x_issue_special_command(line, opts, dict);
 	put_local_vars_in_opts(opts);
+
+	if (save) opts->popts = save;
 	return rc;
 }
 

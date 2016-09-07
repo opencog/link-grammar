@@ -87,28 +87,10 @@ typedef enum
 	NO_LABEL = ' '
 } Label;
 
-static char *
-fget_input_string(FILE *in, FILE *out, bool check_return)
+static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 {
-	static char input_string[MAX_INPUT];
-	static bool input_pending = false;
-
-	if ((in != stdin) || !isatty_stdin)
-	{
-		/* Here the input is not from a terminal. */
-		if (check_return) return (char *)"x"; /* XXX One linkage per sentence. */
-		return fgets(input_string, MAX_INPUT, in);
-	}
-
-	/* If we are here, the input is from a terminal. */
 	static char *pline;
 	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
-
-	if (input_pending)
-	{
-		input_pending = false;
-		return pline;
-	}
 
 #ifdef HAVE_EDITLINE
 	#ifdef _WIN32
@@ -119,7 +101,6 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 #else
 	fprintf(out, "%s", prompt);
 	fflush(out);
-	input_string[MAX_INPUT-2] = '\0';
 #ifdef _WIN32
 	if (!running_under_cygwin)
 		pline = get_console_line();
@@ -130,13 +111,43 @@ fget_input_string(FILE *in, FILE *out, bool check_return)
 #endif /* _WIN32 */
 #endif /* HAVE_EDITLINE */
 
+	return pline;
+}
+
+static char * fget_input_string(FILE *in, FILE *out, bool check_return)
+{
+	static char *pline;
+	static char input_string[MAX_INPUT];
+	static bool input_pending = false;
+
+	if (input_pending)
+	{
+		input_pending = false;
+		return pline;
+	}
+
+	input_string[MAX_INPUT-2] = '\0';
+
+	if ((in != stdin) || !isatty_stdin)
+	{
+		/* Get input from a file. */
+		pline = fgets(input_string, MAX_INPUT, in);
+	}
+	else
+	{
+		/* If we are here, the input is from a terminal. */
+		pline = get_terminal_line(input_string, in, out);
+	}
+
 	if (NULL == pline) return NULL;      /* EOF */
+
 	if (('\0' != input_string[MAX_INPUT-2]) &&
 	    ('\n' != input_string[MAX_INPUT-2]))
 	{
 		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT-1);
 		/* TODO: Ignore it and its continuation part(s). */
 	}
+
 	if (check_return)
 	{
 		if (('\0' == pline[0]) || ('\r' == pline[0]) || ('\n' == pline[0]))
@@ -266,7 +277,8 @@ static int auto_next_linkage_test(const char *test)
 	return DISPLAY_MAX;
 }
 
-static const char*process_some_linkages(Sentence sent, Command_Options* copts)
+static const char *process_some_linkages(FILE *in, Sentence sent,
+                                         Command_Options* copts)
 {
 	int i, num_to_query, num_to_display, num_displayed;
 	Linkage linkage;
@@ -367,11 +379,11 @@ static const char*process_some_linkages(Sentence sent, Command_Options* copts)
 		{
 			if (!auto_next_linkage)
 			{
-				if (verbosity > 0)
+				if ((verbosity > 0) && (in == stdin) && isatty_stdin && isatty_stdout)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
+				char *rc = fget_input_string(in, stdout, /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -454,15 +466,6 @@ static bool special_command(char *input_string, Command_Options* copts, Dictiona
 {
 	if (input_string[0] == COMMENT_CHAR) return true;
 	if (input_string[0] == '!') {
-		if (strncmp(input_string, "!panic_", 7) == 0)
-		{
-			Parse_Options save = copts->popts;
-			copts->popts = copts->panic_opts;
-			issue_special_command(input_string+7, copts, dict);
-			copts->popts = save;
-			return true;
-		}
-
 		issue_special_command(input_string+1, copts, dict);
 		return true;
 	}
@@ -905,7 +908,7 @@ int main(int argc, char * argv[])
 			}
 			else
 			{
-				const char *rc = process_some_linkages(sent, copts);
+				const char *rc = process_some_linkages(input_fh, sent, copts);
 				if (NULL == rc)
 				{
 					sentence_delete(sent);
