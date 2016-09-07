@@ -578,6 +578,12 @@ if test "x$enable_java_bindings" = "xyes"; then
          -I/usr/lib/jvm/java-7-openjdk-amd64/include \
          -I/usr/lib/jvm/java-7-openjdk-amd64/include/freebsd \
          -I/usr/lib/jvm/java-7-openjdk-amd64/include/linux \
+         -I/usr/lib/jvm/java-8-openjdk-amd64/include \
+         -I/usr/lib/jvm/java-8-openjdk-amd64/include/freebsd \
+         -I/usr/lib/jvm/java-8-openjdk-amd64/include/linux \
+         -I/usr/lib/jvm/java-9-openjdk-amd64/include \
+         -I/usr/lib/jvm/java-9-openjdk-amd64/include/freebsd \
+         -I/usr/lib/jvm/java-9-openjdk-amd64/include/linux \
          -I/c/java/jdk1.6.0/include/ \
          -I/c/java/jdk1.6.0/include/win32/ \
          -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
