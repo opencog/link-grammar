@@ -9106,9 +9106,12 @@ too:
     or (Xd- & Xc+ & E+));
 
 % Wi+: "So, don't do it!"
+% Em+: "That is so not going to happen"
+% EExk+: "That is so very beautiful"
 so:
   (EAxk+ & {HA+})
   or ({EZ-} & EExk+)
+  or Em+
   or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
   or <fronted>
   or (Wq- & CQ+)
