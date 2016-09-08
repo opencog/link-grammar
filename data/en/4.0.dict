@@ -263,6 +263,9 @@ nonCAP.zzz: ZZZ-;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
 
+% Connects verb to coordinating conjunction.
+<coord-verb>: VC+;
+
 <subord-verb>: CV+;
 <embed-verb>: Ce+ & CV+;
 <subcl-verb>: Cs+ & CV+;
@@ -2238,7 +2241,7 @@ per "/.per": Us+ & Mp-;
 <OPENER>: {Xd-} & Xc+ & COp+;
 
 % <coord>: connects to coordinating conjunction.
-<coord>: CC-;
+<coord>: ([[CC-]] or VC-);
 
 % These are the verb-form expressions for ordinary verbs.
 %
@@ -2258,6 +2261,7 @@ per "/.per": Us+ & Mp-;
 % WV connects the wall to the head-verb,
 % CV connects the dominating clause to the head verb of the dependent clause.
 % IV connects infinitives to the head-verb
+% VC connects the head-word to a subsequent coordinating conjunction.
 %
 % There are some other such connectors that don't quite fit this patten:
 % AF, and in many cases B (for example TOt+ & B+) for this reason, we
@@ -2268,8 +2272,8 @@ per "/.per": Us+ & Mp-;
 % Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined
 % with <verb-wall>
 %
-<verb-wall>: dWV- or dCV- or dIV- or [[()]];
-% <verb-wall>: dWV- or dCV- or dIV-;
+<verb-wall>: ((dWV- or dCV- or dIV-) & {VC+}) or [[()]];
+% <verb-wall>: (dWV- or dCV- or dIV-) & {VC+};
 
 % When we are done, remove the option costly NULL below.
 <WALL>: hWV+ or [[()]];
@@ -11380,11 +11384,11 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % connect whole clauses.  Should wee use <sent-start> here? Why not?
 %
 % not.ij seems to result in bad parses quite often, do we need it?
-% Xx-: provides a better way of doing coordination, since it is not
-% head-verb crossing, the way that CC is.  Basically, CC is deprecated!
+% [Xx-]0.1: provides coordination to the wall. Has a cost, so that
+%           VC- is prefered way of coordinating.
 % Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & ([<coord>] or Xx- or Wc-) & {Xc+}
+  [{Xd-} & (<coord> or [Xx-]0.1 or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
