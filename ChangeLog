@@ -4,6 +4,7 @@ Version 5.3.10: (XXX 2016?)
  * Fix SAT parser crashes.
  * Expand default list of Java JDK search paths.
  * Fix python bindings: after timeout, no further parsing is performed.
+ * Fix various adverbial, conjunctive uses of "so".
 
 Version 5.3.9: (27 August 2016)
  * Pull req #354: Major changes to support Cygwin.

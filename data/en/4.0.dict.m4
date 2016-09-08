@@ -9108,6 +9108,7 @@ too:
 % Wi+: "So, don't do it!"
 % Em+: "That is so not going to happen"
 % EExk+: "That is so very beautiful"
+% MVp-: "Hold the brush so"
 so:
   (EAxk+ & {HA+})
   or ({EZ-} & EExk+)
@@ -9115,6 +9116,7 @@ so:
   or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
   or <fronted>
   or (Wq- & CQ+)
+  or MVp-
   or O-
   or Js-;
 
