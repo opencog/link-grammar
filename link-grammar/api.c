@@ -1503,10 +1503,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	/* Initialize/free any leftover garbage */
 	free_sentence_disjuncts(sent);  /* Is this really needed ??? */
-	resources_reset_space(opts->resources);
-
-	if (resources_exhausted(opts->resources))
-		return 0;
+	resources_reset(opts->resources);
 
 	/* Expressions were previously set up during the tokenize stage. */
 	expression_prune(sent);
