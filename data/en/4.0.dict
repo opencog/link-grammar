@@ -8097,7 +8097,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 %     insane?", "Are you the one?"
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
-<wi-wall>: (Wd+ or Wp+ or Wr+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+) & <WALL>;
+<wi-wall>: (Wd+ or Wp+ or Wr+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Wo+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
@@ -8513,7 +8513,7 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 %            This is where landmark transitivity could fix things,
 %            by placing a link between "what" and "do".
 to.r:
-  ({@E-} & {N+} & I*t+ & TO-)
+  ({@E-} & {N+} & I*t+ & (TO- or Wo-))
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
     or (SFsx+ & <S-CLAUSE>)
