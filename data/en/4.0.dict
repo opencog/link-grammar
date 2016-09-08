@@ -1319,7 +1319,7 @@ mine.p yours theirs hers ours:
 
 % yisser yousser ye'r: Irish English second-person possessive --
 % https://en.wikipedia.org/wiki/Irish_English
-its my.p your their our thy yisser.p yousser ye'r:
+its my.p me.p your their our thy yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
@@ -4054,6 +4054,7 @@ appeared.v-d:
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
+% N+: "It seems not"
 <vc-seem>:
   {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
 seem.v: 
@@ -11018,30 +11019,76 @@ statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
 instead.e maybe.e:
   ({Xc+ & {Xd-}} & CO+);
 
+% Argumentatives (children gain-saying).
+not.intj is_too is_not is_so unh_unh: Wa-;
+
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections. These are semantically important,
 % so they've got to parse!
+% Wa- & Wa+: "Oh my God"
 no.ij nope.ij nah.ij no_way never.ij not_possible
 yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij
 good.ij good_enough fair_enough whatever.ij
 hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course
-oh_no oh_my oh_dear dear.ij Lordy
-yikes ouch my.ij my_oh_my my_my my_my_my tsk tsk_tsk tsk_tsk_tsk:
+gesundheit
+oh_no oh_my oh_my_days
+ohmigod OMG oh_em_gee omigosh
+oh_dear dear_me dearie_me deary_me dear.ij
+dear_Lord dear_Lordy Lord_be_praised
+Lordy my_Lord
+fuck_me fucking_hell
+uh_huh uh uhh uuh unh
+my.ij my_oh_my my_my my_my_my
+tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
-  or Wa-;
+  or (Wa- & {Wa+});
 
 % Like above, but also used as plain-old interjections, so treat
 % as adjectives, as well.
+% A- & Wa-: "Holy Mother of God"
+howdy phew psst pssst ahem
+ah ahh eh ehh hmm hmmm huh
+oops eep egad egads ermahgerd ouch alas whoa whoah
 oh.ij ohh doh dohh woo_hoo
-gee gosh wow.ij ah ahh eh ehh hmm hmmm
-goody.ij jeepers Jee-sus oops amen.ij huh
-howdy dammit shucks.ij golly
-sonuvabitch aw aww awww oh_great oh_wow:
+boo.ij booo boooo phooey pooh
+wow.ij wowie wowee wowzers whoopee hurray hurrah rah rahh hooray
+ooo oo hoo hoowee hoo-wee who-wee hubba whammo wammo
+yikes yowza yowzah zoiks zoinks zounds zowie
+goody.ij
+amen.ij alrighty
+jeepers Jee-sus
+Kee-reist Christ Christ_almighty JHC
+Jesus_Christ Jesus_fucking_Christ Jesus_H_Christ
+Christ_alive crikey cripes Jiminy_Cricket
+Jaysus Jeebus Jehoshaphat sweet_Jesus
+jeez jeez_Louise jimminy geez geez_Louise geeminy
+God_Almighty God_almighty God_in_heaven
+drat.ij shoot.ij blast.ij doggone doggone_it rats.ij
+dammit god_dammit goddammit damn_it damn_it_all
+dang dagnabit dagnabbit dag-nabbit dag_nabbit dagnabbit_all darn.ij
+shucks.ij golly golly_gee golly_gee_willikers good_golly
+golly_gosh gosh gee gee_whiz gee_willikers my_gosh blimey
+gadzooks ye_gods
+gracious_sakes good_gracious goodness_gracious goodness_gracious_me
+goodness_me great_googly_moogly great_Ceasar great_Scott
+good_heavens good_gravy land_sakes sakes_alive snakes_alive
+heavens_to_Betsy heavens_above
+by_God by_golly by_Jove by_jingo
+dear_God
+sacre_bleu
+ay caramba kamoley kamoly moley moly
+holy_Moses mother_of_God Mother_of_God
+mother_of_God mama_mia mamma_mia
+sonuvabitch son_of_a_bitch
+heck sodding_hell
+aw aww awww oh_great oh_wow
+er err.ij errr um.ij umm
+anyways honey.ij man.ij baby.ij hush.ij:
   <ordinary-adj>
-  or ({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+)
+  or ({{Ic-} & Wi-} & {{Xd-} & Xc+} & Ic+)
   or <directive-opener>
-  or Wa-;
+  or (({A-} or {E-} or {EE-}) & Wa-);
 
 % A single plain hello all by itself.  Costly, because these days,
 % its not normally a sentence opener.
@@ -11198,12 +11245,6 @@ so_on the_like vice_versa v.v.:
   <noun-and-x> or
   ((<verb-i> or <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or
   M- or MV-;
-
-% Assorted interjections, treat like unknown adjectives.
-er err.ij errr um.ij umm uh uhh ooo hoo zowie hubba Kee-reist whammo
-heck anyways honey.ij man.ij baby.ij hush.ij:
-  <ordinary-adj> or
-  ({{Ic-} & [[Wa-]]} & {{Xd-} & Xc+} & Ic+);
 
 % Emoticons ... at start or end of sentences ...
 EMOTICON :
