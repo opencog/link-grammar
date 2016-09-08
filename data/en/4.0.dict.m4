@@ -3714,16 +3714,18 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 % XXX Why is there a cost on Pv+ ?? "John appeared vindicated"
+% N+: "It appears not"
 <vc-appear>:
-  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [Pv+]};
+  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or N+ or [Pv+]};
 appear.v: VERB_Y_PLI(<vc-appear>);
 appears.v: VERB_Y_S(<vc-appear>);
 appeared.v-d: VERB_Y_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
+% N+: "It seems not"
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [Pv+]);
+  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
 seem.v: VERB_Y_PLI(<vc-seem>);
 seems.v: VERB_Y_S(<vc-seem>);
 seemed.v-d: VERB_Y_SPPP(<vc-seem>);
@@ -8944,10 +8946,11 @@ though.e:
 
 % Nearly identical to words.adv.2, but do not force the EBm-
 % Wt-: single-word sentence: "Evidently"
+% Wt- & Pv+: "Evidently so"
 still.e presumably undoubtedly evidently apparently usually typically perhaps:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
-  or (Wt- & {Xc+})
+  or (Wt- & ({Xc+} or Pv+ or N+))
   or ({Xc+ & {Xd-}} & CO+)
   or EB-;
 
@@ -9108,15 +9111,18 @@ too:
 % Wi+: "So, don't do it!"
 % Em+: "That is so not going to happen"
 % EExk+: "That is so very beautiful"
+% EBb- & EAxk+: "It tastes bitter and so good"
 % MVp-: "Hold the brush so"
+% Pv-: "It seems so"
 so:
-  (EAxk+ & {HA+})
+  ({EBb-} & EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or Em+
   or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
   or <fronted>
   or (Wq- & CQ+)
   or MVp-
+  or Pv-
   or O-
   or Js-;
 
