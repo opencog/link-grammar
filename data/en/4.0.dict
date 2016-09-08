@@ -11023,8 +11023,8 @@ instead.e maybe.e:
 not.intj is_too is_not is_so unh_unh: Wa-;
 
 % Openers to directives, commands (Ic+ connection to infinitives)
-% or single-word interjections. These are semantically important,
-% so they've got to parse!
+% or single-word interjections, exclamations.
+% These are semantically important, so they've got to parse!
 % Wa- & Wa+: "Oh my God"
 no.ij nope.ij nah.ij no_way never.ij not_possible
 yes.ij yeah.ij yep.ij yup.ij
