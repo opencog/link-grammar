@@ -106,9 +106,9 @@ nonCAP.zzz: ZZZ-;
 <clause-conjoin>: RJrc- or RJlc+;
 
 % {@COd-} : "That is the man who, in Joe's opinion, we should hire"
-<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
-<S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))};
-<CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
+<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-) or [Rn-]};
+<S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-)};
+<CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-) or Re-};
 
 % Post-nominal qualifiers, complete with commas, etc.
 % We give these a small cost, so that they don't hide quotational
@@ -2250,7 +2250,7 @@ per "/.per": Us+ & Mp-;
 <OPENER>: {Xd-} & Xc+ & COp+;
 
 % <coord>: connects to coordinating conjunction.
-<coord>: ([[CC-]] or VC-);
+<coord>: VC-;
 
 % These are the verb-form expressions for ordinary verbs.
 %
@@ -2389,7 +2389,7 @@ per "/.per": Us+ & Mp-;
   {@E-} & {@MV+} & (
     <MX-PHRASE>
     or <OPENER>
-    or [<fronted> & {@MV+} & {CC+}]);
+    or [<fronted> & {@MV+}]);
 
 % Relative clause, or question.
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
@@ -2704,7 +2704,7 @@ had.v-d:
     (<to-verb> or
     ((O+ or <b-minus>) & {@MV+} & {[I*j+ or Pv+]}) or
     (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or
-  [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+  [[(SI*j+ or SFI**j+) & PP+ & {{Xd-} & Xc+} & COp+]];
 
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
 ’d 'd: S- & (PP+ or I+);
@@ -2904,7 +2904,7 @@ were.v-d:
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>} & <verb-wall>)
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
-  or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+  or [[(SI*j+ or SFI**j+) & <vc-be> & {{Xd-} & Xc+} & COp+]];
 
 % Ss*w-: allows Wh subjets: "Who am I?"
 am.v:
@@ -2994,7 +2994,7 @@ should.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
-  [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+  [[(SI*j+ or SFI**j+) & I+ & {{Xd-} & Xc+} & COp+]];
 
 % <verb-wall>: "I sure wish he would."
 would.v:
@@ -6099,9 +6099,9 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % QU+ & <embed-verb> & QU+: He said, "This is it."
 % Xc+ or Xe+ or [[()]]: punctuation is commonly missing.
 <vc-paraph>:
-  ({@MV+} & (Xc+ or Xp+) & CP- & {CC+})
+  ({@MV+} & (Xc+ or Xp+) & CP-)
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)))
+      & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
   or ({@MV+} & (Xc+ or Xe+ or [[()]])
     & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
@@ -6109,14 +6109,14 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-      & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
+      & (COq+ or CPx- or Eq+ or <verb-wall>))
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."
 % The (Xd- or Xq-) links to the previous comma.
 <vc-it-paraph>:
   {@MV+} & (Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-    & (COqi+ or (CPi- & {CC+}) or Eqi+ or <verb-wall>);
+    & (COqi+ or CPi- or Eqi+ or <verb-wall>);
 
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
@@ -7703,7 +7703,7 @@ n't n’t: N- or EB-;
 
 % Common disjuncts shared by virtually all adjectives.
 <adj-op>:
-  [{@E-} & {@MV+} & <fronted> & {@MV+} & {CC+}]
+  [{@E-} & {@MV+} & <fronted> & {@MV+}]
   or (AJra- & {@MV+})
   or ({@MV+} & AJla+)
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
@@ -9139,10 +9139,10 @@ only:
   or (MVp+ & Wq- & Q+);
 
 never.i at_no_time not_once rarely.i since_when:
-  {MVp+} & Wq- & Q+ & {CC+};
+  {MVp+} & Wq- & Q+;
 
 not_since:
-  (J+ or <subcl-verb>) & Wq- & Q+ & {CC+};
+  (J+ or <subcl-verb>) & Wq- & Q+;
 
 even.e:
   E+
@@ -9553,7 +9553,7 @@ UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 %    from "puts" to "object".
 %
 UNLIMITED-CONNECTORS:
-      S+ & O+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+
+      S+ & O+ & CO+ & C+ & Xc+ & MV+ & TH+ & W+
       & RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
