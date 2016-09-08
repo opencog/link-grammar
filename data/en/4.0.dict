@@ -8509,7 +8509,9 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 % give [J+] a cost, so that numeric intervals are peferred
 % I*t+ & TO-: passes on the TO constraint down the line
 % I+ & MVi-: allows "What is there to do?"
-%            but also incorrectly allows: "he is going to do"
+%            but also incorrectly allows: "He is going to do"
+%            This is where landmark transitivity could fix things,
+%            by placing a link between "what" and "do".
 to.r:
   ({@E-} & {N+} & I*t+ & TO-)
   or ({@E-} & {NT-} & I+ &

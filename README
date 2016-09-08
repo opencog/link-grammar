@@ -705,6 +705,14 @@ to form a directional link. The transitive closure of the directional
 landmarks are then computed. Finally, any parse that does not conclude
 with the "left wall" being the upper-most landmark is discarded.
 
+Here is an example where landmark transitivity provides a natural
+solution to a (currently) broken parse. The "to.r" has a disjunct
+"I+ & MVi-" which allows "What is there to do?" to parse correctly.
+However, it also allows the incorrect parse "He is going to do".
+The fix would be to force "do" to take an object; however, a link
+from "do" to "what" is not allowed, because link-crossing would
+prevent it.
+
 Examples where the no-links-cross constraint seems to be violated,
 in English:
 
