@@ -6586,12 +6586,14 @@ then.r:
   or (S+ & Xd- & Xc+ & MVs-)
   or [[Mp-]];
 
+% Wt-: "Later."  (all by itself) but also: "Later, he left"
 later earlier:
   ({ECa- or Yt-} &
     (E+ or
     Mp- or
     Pp- or
     MVb- or
+    (Wt- & {Xc+}) or
     [({Xc+ & {Xd-}} & CO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
     ({[[@Ec-]]} & {Xc+} & A+) or
@@ -8938,9 +8940,11 @@ though.e:
   or ({Xc+ & {Xd-}} & CO+);
 
 % Nearly identical to words.adv.2, but do not force the EBm-
+% Wt-: single-word sentence: "Evidently"
 still.e presumably undoubtedly evidently apparently usually typically perhaps:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
+  or (Wt- & {Xc+})
   or ({Xc+ & {Xd-}} & CO+)
   or EB-;
 

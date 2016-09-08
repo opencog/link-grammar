@@ -3634,6 +3634,7 @@ Do not fail!
 % "To be" constructions
 To be continued
 Soon to be continued
+Apparently, to be continued.
 To not be continued
 To not be continued, it seems.
 Not to be continued, it seems.
@@ -3642,6 +3643,13 @@ To be decided
 to be determined
 to be done later
 to be avoided
+
+% Single-word "topic" responses, taking the Wt link.
+Apparently.
+Apparently so.
+Perhaps.
+Evidently.
+Usually.
 
 Hey, of course!
 Why, of course!
