@@ -97,7 +97,7 @@ nonCAP.zzz: ZZZ-;
 <clause-conjoin>: RJrc- or RJlc+;
 
 % {@COd-} : "That is the man who, in Joe's opinion, we should hire"
-<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-) or [Rn-]};
+<CLAUSE>:   {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-) or [Rn-]};
 <S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-)};
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & Wd-) or Re-};
 
@@ -2691,7 +2691,7 @@ had.v-d:
     (<to-verb> or
     ((O+ or <b-minus>) & {@MV+} & {[I*j+ or Pv+]}) or
     (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or
-  [[(SI*j+ or SFI**j+) & PP+ & {{Xd-} & Xc+} & COp+]];
+  [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & COp+))]];
 
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
 ’d 'd: S- & (PP+ or I+);
@@ -2891,7 +2891,7 @@ were.v-d:
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>} & <verb-wall>)
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
-  or [[(SI*j+ or SFI**j+) & <vc-be> & {{Xd-} & Xc+} & COp+]];
+  or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % Ss*w-: allows Wh subjets: "Who am I?"
 am.v:
@@ -2981,7 +2981,7 @@ should.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
-  [[(SI*j+ or SFI**j+) & I+ & {{Xd-} & Xc+} & COp+]];
+  [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % <verb-wall>: "I sure wish he would."
 would.v:
