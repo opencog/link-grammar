@@ -2237,6 +2237,9 @@ per "/.per": Us+ & Mp-;
 <MX-PHRASE>: Xd- & (Xc+ or <costly-null>) & (MX*p- or MVg-);
 <OPENER>: {Xd-} & Xc+ & COp+;
 
+% <coord>: connects to coordinating conjunction.
+<coord>: CC-;
+
 % These are the verb-form expressions for ordinary verbs.
 %
 % The general patterns here are:
@@ -8600,7 +8603,7 @@ lest:
 
 albeit:
   (<subcl-verb> & {Xc+ & {Xd-}} & CO*s+)
-  or ({Xd-} & CC- & Wd+);
+  or ({Xd-} & <coord> & Wd+);
 
 no_matter:
   QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
@@ -9221,7 +9224,7 @@ whence whither:
 
 although in_as_much_as whilst whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
-  or ({Xd-} & CC- & (Wd+ or Wp+ or Wr+));
+  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+));
 
 % QI- & (): "I do not know when"
 % (Mv- & Cs+): "an examination when it happened revealed chicanery"
@@ -9424,7 +9427,7 @@ once.e:
 % usages below.
 %
 
-and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
+and/or: [(({Xd-} & <coord>) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 % and used as a conjunction in proper names:
 % The Great Southern and Western Railroad
@@ -9703,11 +9706,11 @@ neither.r:
   or [[<noun-main-x>]]
   or (Wa- & {OF+});
 
-nor.r: ((Xd- & CC-) or Wd-) & Qd+;
-for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+)]];
-yet.r: ((({Xd-} & CC-) or Wc-) & (Wd+ or Wp+ or Wr+)) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
+nor.r: ((Xd- & <coord>) or Wd-) & Qd+;
+for.r: [[(({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+)]];
+yet.r: ((({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+)) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
-thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or
+thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & <coord> & Wd+) or
 ({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
 
 % EBy+ link is for "verbed not X but Y" "I saw not Mary, but John"
@@ -11004,7 +11007,7 @@ in_fact of_course in_effect for_example for_instance e.g. i.e. :
   or ({Xc+ & {Xd-}} & CO+)
   or (EB- & {Xc+})
   or (Xd- & EB- & Xc+)
-  or ({Xd-} & CC- & (Wd+ or Wp+ or Wr+));
+  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+));
 
 % -----------------------------------------------------------
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
@@ -11208,7 +11211,7 @@ so:
   ({EBb-} & EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or Em+
-  or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
+  or ((({Xd-} & <coord>) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
   or <fronted>
   or (Wq- & CQ+)
   or MVp-
@@ -11381,7 +11384,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % head-verb crossing, the way that CC is.  Basically, CC is deprecated!
 % Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & ([CC-] or Xx- or Wc-) & {Xc+}
+  [{Xd-} & ([<coord>] or Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
