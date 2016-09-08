@@ -401,6 +401,9 @@ PL-CAPITALIZED-WORDS:
 /en/words/entities.gods:
   <marker-entity> or <given-names> or <directive-opener>;
 
+% Given name "So.f" interferes with adverb "so" -- give it a cost.
+So.f: [[<given-names>]];
+
 % Special handling for certain given names. These are words that have a
 % lower-case analog in the dictionary, and are also used in upper-case
 % form in an "idiomatic name" e.g. Vatican_City.  Without the below,
@@ -9102,10 +9105,11 @@ too:
     or ({Xd- & Xc+} & MVa-)
     or (Xd- & Xc+ & E+));
 
+% Wi+: "So, don't do it!"
 so:
   (EAxk+ & {HA+})
   or ({EZ-} & EExk+)
-  or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+))
+  or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
   or <fronted>
   or (Wq- & CQ+)
   or O-
