@@ -11270,7 +11270,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <sent-split>: Xp- & <sent-start>;
 
 % In many ways, "so" acts as a synonym for a semicolon...
-% Wi+: "So, don't do it!"
+% <sent-start>: "So, don't do it!"
+%    The cost on sent-start is to force preference for CV over WV,
+%    whenever possible.
 % Em+: "That is so not going to happen"
 % EExk+: "That is so very beautiful"
 % EBb- & EAxk+: "It tastes bitter and so good"
@@ -11280,7 +11282,8 @@ so:
   ({EBb-} & EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or Em+
-  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-)) & <sent-start>)
+  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-))
+    & (<subcl-verb> or [<sent-start>]0.5))
   or <fronted>
   or (Wq- & CQ+)
   or MVp-
@@ -11288,6 +11291,8 @@ so:
   or O-
   or Js-;
 
+% Is <sent-start> ever needed here?
+% Should we be using <coord> instead of MVs- ??
 so_that such_that:
   <subcl-verb> & {Xd- & Xc+} & MVs-;
 
