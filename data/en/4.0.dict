@@ -11283,7 +11283,7 @@ so:
   ({EBb-} & EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or Em+
-  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
+  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-)) & <sent-start>)
   or <fronted>
   or (Wq- & CQ+)
   or MVp-
