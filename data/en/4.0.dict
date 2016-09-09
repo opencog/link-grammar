@@ -11374,9 +11374,11 @@ so:
   or (SJl- & SJr+ & SJl+);
 
 % :.j
-% Should we be using <sent-start> here? why or why not?
+% <sent-start> is needed for a wall-connection to the subsequent verb.
+% Should we also use a VC link here, similar to "so" ??
 <colon>:
-  {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or <ton-verb>) & {Xx+}) or Xe-);
+  {@Xca-} &
+    ((Xx- & (<sent-start> or J+ or Qd+ or TH+ or <ton-verb>) & {Xx+}) or Xe-);
 
 % Put a cost on this, because  we want to find other uses first ...
 ":.j":
