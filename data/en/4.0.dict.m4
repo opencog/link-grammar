@@ -2295,16 +2295,12 @@ per "/.per": Us+ & Mp-;
 % Pvp+ on to-be, using Pvv for the others, and demaninds the wall only for Pvp.
 % XXX FIXME, the above needs fixing.
 %
-% Pg- is naked, no verb-wall: "I like eating bass."
+% <verb-pp>: PP- & WV-: "I have seen it".
+% <verb-pg>: Pg- is naked, no verb-wall: "I like eating bass."
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
-% XXX FIXME: <verb-pp> is almost surely wrong; it should be a plain PP-
-% and the wall, if any, should ride with something else.
-% Example: " Joan made sure to thank Susan for all the help she had given."
-% The PP on "given" can't take a wall, it should take a B-.
-
 <verb-s>:    {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-pl>:   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-sp>:   {@E-} & ((S- & <verb-wall>) or (RS- & B-));
