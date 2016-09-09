@@ -9250,6 +9250,7 @@ so:
 
 % Is <sent-start> ever needed here?
 % Should we be using <coord> instead of MVs- ??
+% Or maybe every use of MVs- should be converted to <coord> ???
 so_that such_that:
   <subcl-verb> & {Xd- & Xc+} & MVs-;
 
@@ -9360,7 +9361,7 @@ changequote dnl
 %      (e.g. "John screamed when I arrived but Sue left")
 % Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & ([<coord>] or Xx- or Wc-) & {Xc+}
+  [{Xd-} & (Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
