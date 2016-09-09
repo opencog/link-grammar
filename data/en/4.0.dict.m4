@@ -9162,24 +9162,6 @@ too:
     or ({Xd- & Xc+} & MVa-)
     or (Xd- & Xc+ & E+));
 
-% Wi+: "So, don't do it!"
-% Em+: "That is so not going to happen"
-% EExk+: "That is so very beautiful"
-% EBb- & EAxk+: "It tastes bitter and so good"
-% MVp-: "Hold the brush so"
-% Pv-: "It seems so"
-so:
-  ({EBb-} & EAxk+ & {HA+})
-  or ({EZ-} & EExk+)
-  or Em+
-  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
-  or <fronted>
-  or (Wq- & CQ+)
-  or MVp-
-  or Pv-
-  or O-
-  or Js-;
-
 % original
 % sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-);
 % modified
@@ -9245,6 +9227,25 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % mid-text period, question mark. Splits into two sentences.
 <sent-split>: Xp- & <sent-start>;
+
+% In many ways, "so" acts as a synonym for a semicolon...
+% Wi+: "So, don't do it!"
+% Em+: "That is so not going to happen"
+% EExk+: "That is so very beautiful"
+% EBb- & EAxk+: "It tastes bitter and so good"
+% MVp-: "Hold the brush so"
+% Pv-: "It seems so"
+so:
+  ({EBb-} & EAxk+ & {HA+})
+  or ({EZ-} & EExk+)
+  or Em+
+  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-)) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+ or Wi+))
+  or <fronted>
+  or (Wq- & CQ+)
+  or MVp-
+  or Pv-
+  or O-
+  or Js-;
 
 % Quotation marks.
 % TODO: Add ' as quotation mark.
