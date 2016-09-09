@@ -9167,9 +9167,6 @@ too:
 % modified
 sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & MVa-) or E+);
 
-so_that such_that:
-  <subcl-verb> & {Xd- & Xc+} & MVs-;
-
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
 please.e:
@@ -9246,6 +9243,9 @@ so:
   or Pv-
   or O-
   or Js-;
+
+so_that such_that:
+  <subcl-verb> & {Xd- & Xc+} & MVs-;
 
 % Quotation marks.
 % TODO: Add ' as quotation mark.
