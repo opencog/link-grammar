@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.8 (formatted as V5v3v8+)
-<dictionary-version-number>: V5v3v8+;
+% Dictionary version number is 5.3.10 (formatted as V5v3v10+)
+<dictionary-version-number>: V5v3v10+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -2273,10 +2273,10 @@ per "/.per": Us+ & Mp-;
 % VC connects the head-word to a subsequent coordinating conjunction.
 %
 % There are some other such connectors that don't quite fit this patten:
-% AF, and in many cases B (for example TOt+ & B+) for this reason, we
+% AF, Z, and in many cases B (for example TOt+ & B+) for this reason, we
 % have to have a costly null [[()]] below, although we would really really
-% like to get rid of it.  But that would take a lot of B and AF link fiddling
-% about, so we have to live with this for now.
+% like to get rid of it.  But that would take a lot of Z and B and AF link
+% fiddling about, so we have to live with this for now.
 %
 % Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined
 % with <verb-wall>
@@ -2533,7 +2533,7 @@ define(`VERB_SP_T',`'VERB_x_T(<verb-sp>, $1))
 
 % as above but for past participles
 define(`VERB_PP',`'
-  ((<verb-pp> & ($1)) or
+  ((($1) & <verb-pp>) or
   (<verb-and-had-> & ([$1] or ())) or
   (($1) & <verb-and-had+>)))
 
@@ -3700,7 +3700,10 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
 % See also <vc-think> for the same problem.
-<vc-hope>: ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>}) or [[O+ & {@MV+}]];
+<vc-hope>:
+  ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
+  or [[O+ & {@MV+}]];
+
 hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: VERB_PLI(<vc-hope>);
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: VERB_S_I(<vc-hope>);
 pretended.v-d prayed.v-d: VERB_SPPP_I(<vc-hope>);
@@ -4366,9 +4369,11 @@ imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
 % Pa**j link: The doctor declared him insane.
-<vc-declare>: <vc-trans> or
+<vc-declare>:
+  <vc-trans> or
   ({@MV+} & (<embed-verb> or TH+ or RSe+ or Pg+ or Z-)) or
   ((O+ or <b-minus>) & ({@MV+} & Pa**j+));
+
 declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
   VERB_PLI(<vc-declare>);
