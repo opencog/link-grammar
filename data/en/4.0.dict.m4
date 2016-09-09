@@ -9343,11 +9343,13 @@ changequote dnl
 % connect whole clauses.  Should wee use <sent-start> here? Why not?
 %
 % not.ij seems to result in bad parses quite often, do we need it?
-% [Xx-]0.1: provides coordination to the wall. Has a cost, so that
-%           VC- is prefered way of coordinating.
+% Xx-: provides coordination to the wall.
+%      The cost on [<coord>] is to use the Xx when possible, because
+%      the VC link often does not go leftwards far enough.
+%      (e.g. "John screamed when I arrived but Sue left")
 % Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
-  [{Xd-} & (<coord> or [Xx-]0.1 or Wc-) & {Xc+}
+  [{Xd-} & ([<coord>] or Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
