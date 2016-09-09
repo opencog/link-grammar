@@ -9242,6 +9242,7 @@ so:
     & (<subcl-verb> or [<sent-start>]0.5))
   or <fronted>
   or (Wq- & CQ+)
+  or Wa-
   or MVp-
   or Pv-
   or O-
