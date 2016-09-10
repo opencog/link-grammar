@@ -4923,10 +4923,11 @@ intended.v-d: VERB_SPPP_T(<vc-intend>) or (<verb-pv> & {<to-verb> or Z- or @MV+}
 intending.g: (<vc-intend> & <verb-ge>) or <verb-ge-d>;
 intending.v: <verb-pg> & <vc-intend>;
 
+% TO+: "I dare you to!"
 <vc-dare>:
   (N+ & I+) or
   ({@MV+} & <to-verb>) or
-  ((O+ or <b-minus>) & {@MV+} & <too-verb>);
+  ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TO+));
 
 dare.v: VERB_PLI(<vc-dare>);
 dares.v: VERB_S_T(<vc-dare>);
