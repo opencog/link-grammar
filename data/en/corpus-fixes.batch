@@ -2452,6 +2452,17 @@ Kids will frolic in the summer.
 He would labor over it for hours.
 That circuit will jitter intermittently.
 
+% "to be" auxiliary with date modifiers (not copula)
+I was by then dominated by my aunt
+I was until now dominated by my aunt
+I was until recently dominated by my aunt
+
+I am, since yesterday, quite recovered
+I've been, since January, quite hopeful
+I've been since January quite hopeful
+I was, before Friday, quite unhappy.
+
+
 % Idiomatic usage of "of"
 You must beware of the tiger.
 You must be wary of the tiger.
@@ -2588,6 +2599,7 @@ The stock, to be purchased on the open market, will be added to assets.
 The parts, being obtained as we speak, will arrive this afternoon.
 
 % zero-copula (missing "to be") post-nominal MX broken-ness:
+% These are really really broken!
 The event, being historically insignificant, will soon be forgotten
 The event, historically insignificant, will soon be forgotten
 The event, historically important , will be long commemorated

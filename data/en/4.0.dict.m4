@@ -2754,6 +2754,8 @@ hadn't.v-d hadn’t.v-d:
 %     over Pv+ whenever the same word appears as both adjective and verb.
 %     For example, "injured.a" vs. injured.v-d" in "the player is injured",
 %     which should get Pa+ not Pv+.
+% MV+ & Pv+: "I was by then dominated by my aunt"
+% MV+ & Pa+: "I was, before Friday, quite unhappy."
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
 %     must leave the field" cannot take a wall.
 % [I*v+].2: the cost should maybe be evenn higher, to avoid linking
@@ -2773,8 +2775,8 @@ hadn't.v-d hadn’t.v-d:
     or THb+
     or <to-verb>
     or (PFb- & <verb-wall> & {Pa+})
-    or (Pa+ & {<verb-wall>})))
-  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or [I*v+].2))
+    or ({MV+} & Pa+ & {<verb-wall>})))
+  or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
@@ -7322,7 +7324,7 @@ as_if as_though:
 as_soon_as:
   <subcl-verb> & {Xc+ & {Xd-}} & CO*s+;
 
-% J+ & CO+: "Until yesterday, ..."
+% J+ & CO+: "Until yesterday, ..." XXX this is wrong, should be JT+???
 changequote(\,/)dnl
 until 'til ’til ‘til `til til till.r:
 changequote dnl
