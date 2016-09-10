@@ -6183,10 +6183,12 @@ intending.v: <verb-pg> & <vc-intend>;
   ({N+} & I+) or
   ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
-dare.v: 
+dare.v:
+  
   ((<verb-pl,i> & (<vc-dare>)) or
   (<verb-and-pl-> & ((<vc-dare>) or ())) or
-  ((<vc-dare>) & <verb-and-pl+>));
+  ((<vc-dare>) & <verb-and-pl+>))
+  or (SI+ & <verb-rq> & I+);
 dares.v: 
   ((<verb-s> & (<vc-dare>)) or
   (<verb-and-sp-i-> & ([<vc-dare>]0.2 or ())) or

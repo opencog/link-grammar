@@ -4931,7 +4931,10 @@ intending.v: <verb-pg> & <vc-intend>;
   ({N+} & I+) or
   ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
-dare.v: VERB_PLI(<vc-dare>);
+% SI+ & <verb-rq> & I+: "How dare you disobey orders"
+dare.v:
+  VERB_PLI(<vc-dare>)
+  or (SI+ & <verb-rq> & I+);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d:
   VERB_SPPP_T(<vc-dare>)
