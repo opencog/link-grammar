@@ -6175,11 +6175,11 @@ intended.v-d:
 intending.g: (<vc-intend> & <verb-ge>) or <verb-ge-d>;
 intending.v: <verb-pg> & <vc-intend>;
 
-% TO+ & Xc+: "I dare you to!"
+% TO+: "I dare you to!"
 <vc-dare>:
-  (N+ & I+) or
+  ({N+} & I+) or
   ({@MV+} & <to-verb>) or
-  ((O+ or <b-minus>) & {@MV+} & (<too-verb> or (TO+ & Xc+)));
+  ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TO+));
 
 dare.v: 
   ((<verb-pl,i> & (<vc-dare>)) or

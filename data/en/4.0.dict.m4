@@ -4925,7 +4925,7 @@ intending.v: <verb-pg> & <vc-intend>;
 
 % TO+: "I dare you to!"
 <vc-dare>:
-  (N+ & I+) or
+  ({N+} & I+) or
   ({@MV+} & <to-verb>) or
   ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TO+));
 
