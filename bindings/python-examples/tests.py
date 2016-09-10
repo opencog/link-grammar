@@ -287,6 +287,12 @@ class DBasicParsingTestCase(unittest.TestCase):
              ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
         locale.setlocale(locale.LC_CTYPE, oldlocale)
 
+    # If \w is supported, other \ shortcuts are hopefully supported too.
+    def test_regex_class_shortcut_support(self):
+        r"""Test that regexes support \w"""
+        linkage = self.parse_sent("This is a _regex_ive regex test")[0]
+        self.assertEqual(linkage.word(4), '_regex_ive[!].a')
+
 class ESATsolverTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()
