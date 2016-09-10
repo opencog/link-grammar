@@ -131,16 +131,16 @@ static inline const char * connector_get_string(Connector *c)
 struct Disjunct_struct
 {
 	Disjunct *next;
-	const char * string;       /* subscripted dictionary word */
 	Connector *left, *right;
 	double cost;
 	bool marked;               /* unmarked disjuncts get deleted */
-	const Gword **word;        /* NULL terminated list of originating words */
-	/* Used only during chart-parsing, for the match list. */
+	/* match_left, right used only during parsing, for the match list. */
 	bool match_left, match_right;
 #ifdef VERIFY_MATCH_LIST
 	int match_id;              /* verify the match list integrity */
 #endif
+	const Gword **word;        /* NULL terminated list of originating words */
+	const char * string;       /* subscripted dictionary word */
 };
 
 typedef struct Match_node_struct Match_node;
