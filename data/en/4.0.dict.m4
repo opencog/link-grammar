@@ -1719,8 +1719,10 @@ plenty:
   or [MVa-]
   or Wa-;
 
+% SJr-: "someone or other would always complain"
 other:
   Dmu+ or
+  SJr- or
   ({ND-} & {DD-} & Dmc+) or
   (DD- & (Ds+ or DD+ or <noun-main-s> or <noun-and-s>));
 

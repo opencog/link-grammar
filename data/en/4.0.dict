@@ -1710,8 +1710,10 @@ plenty:
   or [MVa-]
   or Wa-;
 
+% SJr-: "someone or other would always complain"
 other:
   Dmu+ or
+  SJr- or
   ({ND-} & {DD-} & Dmc+) or
   (DD- & (Ds+ or DD+ or <noun-main-s> or <noun-and-s>));
 
@@ -6185,6 +6187,7 @@ intending.v: <verb-pg> & <vc-intend>;
   ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
 % SI+ & <verb-rq> & I+: "How dare you disobey orders"
+% <verb-s> & N+ & I+: "He dare not lie to me!" (singular subject)
 dare.v:
   
   ((<verb-pl,i> & (<vc-dare>)) or
