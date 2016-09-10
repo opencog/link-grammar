@@ -64,7 +64,12 @@ int compile_regexs(Regex_node *re, Dictionary dict)
 			/* re->re = pcre_compile(re->pattern, 0, &error, &erroroffset, NULL); */
 			preg = (regex_t *) malloc (sizeof(regex_t));
 			re->re = preg;
-			rc = regcomp(preg, re->pattern, REG_EXTENDED);
+
+			/* REG_ENHANCED is needed for OS X to support \w etc. */
+#ifndef REG_ENHANCED
+#define REG_ENHANCED 0
+#endif
+			rc = regcomp(preg, re->pattern, REG_EXTENDED|REG_ENHANCED);
 			if (rc)
 			{
 				prt_regerror("Failed to compile regex", re, rc);
