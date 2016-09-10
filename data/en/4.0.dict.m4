@@ -4926,14 +4926,17 @@ intending.v: <verb-pg> & <vc-intend>;
 % O+ & TO+: "I dare you to!"
 % TO+ & Xc+: "try it if you dare to!"
 % I+: auxilliary: "no one dared say a word"
+% N+ & TO: "I dare not to say the truth"
 <vc-dare>:
-  ({@MV+} & {<to-verb> or (TO+ & Xc+)}) or
+  ({N+} & {@MV+} & {<to-verb> or (TO+ & Xc+)}) or
   ({N+} & I+) or
   ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
 % SI+ & <verb-rq> & I+: "How dare you disobey orders"
+% <verb-s> & N+ & I+: "He dare not lie to me!" (singular subject)
 dare.v:
   VERB_PLI(<vc-dare>)
+  or (<verb-s> & N+ & I+)
   or (SI+ & <verb-rq> & I+);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d:
