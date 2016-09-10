@@ -6175,10 +6175,12 @@ intended.v-d:
 intending.g: (<vc-intend> & <verb-ge>) or <verb-ge-d>;
 intending.v: <verb-pg> & <vc-intend>;
 
-% TO+: "I dare you to!"
+% O+ & TO+: "I dare you to!"
+% TO+ & Xc+: "try it if you dare to!"
+% I+: auxilliary: "no one dared say a word"
 <vc-dare>:
+  ({@MV+} & {<to-verb> or (TO+ & Xc+)}) or
   ({N+} & I+) or
-  ({@MV+} & <to-verb>) or
   ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TO+));
 
 dare.v: 
@@ -6276,9 +6278,10 @@ refusing.g: (<vc-refuse> & <verb-ge>) or <verb-ge-d>;
 refusing.v: <verb-pg> & <vc-refuse>;
 
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
-% [TO+]: allows null-infinitive: "Because I want to."
+% TO+ & Xc+: allows null-infinitive: "Because I want to."
+% intransitive: "Try it if you want"
 <vc-want>:
-  ({@MV+} & (<to-verb> or [TO+])) or
+  ({@MV+} & ({<to-verb>} or (TO+ & Xc+))) or
   ((O+ or <b-minus> or OX+) & {@MV+} & {<too-verb> or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & {@MV+}]];
