@@ -7,6 +7,7 @@ Version 5.3.10: (XXX 2016?)
  * Fix various adverbial, conjunctive uses of "so".
  * Extended list of exclamations.
  * Remove CC link, add VC link, for clauses to coordinating conjunctions.
+ * Fixes for the verb "dare"
  * Fix OSX build break, concerning undefined locale_t.
 
 Version 5.3.9: (27 August 2016)

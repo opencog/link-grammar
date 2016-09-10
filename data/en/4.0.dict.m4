@@ -4929,7 +4929,7 @@ intending.v: <verb-pg> & <vc-intend>;
 <vc-dare>:
   ({@MV+} & {<to-verb> or (TO+ & Xc+)}) or
   ({N+} & I+) or
-  ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TO+));
+  ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
 dare.v: VERB_PLI(<vc-dare>);
 dares.v: VERB_S_T(<vc-dare>);
