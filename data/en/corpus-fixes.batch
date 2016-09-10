@@ -265,9 +265,6 @@ He tried to saw up the wood.
 We were sawing wood when it happened.
 We were sawing up the wood when it happened.
 
-% grab with preposition
-He grabbed at it
-
 % Assorted adverbial modifiers
 It has been unbelievably poorly managed.
 It has been notoriously managed.
@@ -514,7 +511,10 @@ We looked for 3-amino-3-azabicyclo[3,3,0]octane hydrochloride
 
 They are a three times defeated team.
 
-% Verbs taking prepositions
+% intransitive verbs taking prepositions
+He grabbed at it
+
+% transitive verbs taking prepositions
 He dished it out at the unsuspecting onlookers.
 I ladled it carefully into a bowl.
 You should ladle it out.
@@ -524,6 +524,7 @@ He ladled the molten hot metal into the mold.
 It was molten hot.
 It was piping hot.
 It was devilishly hot.
+
 
 % mass nouns that were incorrectly classified as count nouns.
 % Nouns that can be used in an indefinite manner.
@@ -2262,10 +2263,14 @@ He jumped about.
 % adverbs w/ reversed preposition locations
 % Using MVa- seems like the only solution...
 People glanced fearfully around at the impassive troops.
+He looked around, fearfully.
 He looked around fearfully.
 He looked fearfully around.
+*He looked fearfully, around.
+He looked about, fearfully.
 He looked about fearfully.
 He looked fearfully about.
+*He looked fearfully, about.
 
 % Set phrases involving "so" -- this is an exhaustive list !
 % There are no other verbs that take "so" -- should there be 
