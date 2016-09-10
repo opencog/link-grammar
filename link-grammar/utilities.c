@@ -13,12 +13,15 @@
 
 #include <ctype.h>
 #include <limits.h>
-#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdarg.h>
+#include <locale.h>
+#ifdef HAVE_LOCALE_T_IN_XLOCALE_H
+#include <xlocale.h>
+#endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #ifndef _WIN32
 	#include <unistd.h>

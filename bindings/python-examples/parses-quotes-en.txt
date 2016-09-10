@@ -15,14 +15,14 @@ O    |       |     |       |     |  |       |     |     |
 OLEFT-WALL they have.v told.v-d of the soldiers.n '  fear.n 
 O
 
-Ihe said `this is a backtic test`
+Ihe said `this is a backtick test`
 O
-O                 +-------------------QUc------------------+
-O                 +------>WV----->+---------Osm--------+   |
-O    +---->WV---->+----Wd---+     |  +------Ds**x------+   |
-O    +--Wd--+--Ss-+-QUd+    +-Ss*b+  |       +----A----+   |
-O    |      |     |    |    |     |  |       |         |   |
-OLEFT-WALL he said.q-d ` this.p is.v a backtic[!].a test.n ` 
+O                 +------------------QUc-----------------+
+O                 +------>WV----->+--------Osm-------+   |
+O    +---->WV---->+----Wd---+     |  +-----Ds**x-----+   |
+O    +--Wd--+--Ss-+-QUd+    +-Ss*b+  |      +---AN---+   |
+O    |      |     |    |    |     |  |      |        |   |
+OLEFT-WALL he said.q-d ` this.p is.v a backtick.n test.n ` 
 O
 
 I“What are you doing?” she asked.

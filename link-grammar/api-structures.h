@@ -33,7 +33,13 @@
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
 
-#include <locale.h>                /* for locale_t */
+/* For locale_t */
+#ifdef HAVE_LOCALE_T_IN_LOCALE_H
+#include <locale.h>
+#endif /* HAVE_LOCALE_T_IN_LOCALE_H */
+#ifdef HAVE_LOCALE_T_IN_XLOCALE_H
+#include <xlocale.h>
+#endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "api-types.h"
 #include "dict-structures.h"

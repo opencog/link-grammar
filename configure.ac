@@ -64,8 +64,21 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
-dnl Check for types
-AC_CHECK_TYPES([locale_t], [], [], [[#include <locale.h>]])
+dnl For locale_t
+AC_MSG_CHECKING(for locale_t in locale.h)
+AC_LINK_IFELSE(
+[AC_LANG_PROGRAM([#include <locale.h>], [locale_t lt = NULL])],
+AC_MSG_RESULT(yes)
+AC_DEFINE([HAVE_LOCALE_T_IN_LOCALE_H], 1, [Define to 1 if locale_t is defined in locale.h]),
+AC_MSG_RESULT(no)
+  AC_MSG_CHECKING(for locale_t in xlocale.h)
+  AC_LINK_IFELSE(
+  [AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
+  AC_MSG_RESULT(yes)
+  AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
+  AC_MSG_RESULT(no)
+  )
+)
 
 dnl Check for specific OSs
 # ====================================================================
@@ -773,6 +786,8 @@ LINK_CC_TRY_FLAG([-fno-strict-aliasing],
 		[LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
 
 AC_SUBST(LINK_CFLAGS)
+
+LINK_CC_TRY_FLAG([-Wmaybe-uninitialized -Werror], [AC_DEFINE(HAVE_MAYBE_UNINITIALIZED)])
 
 # ===================================================================
 

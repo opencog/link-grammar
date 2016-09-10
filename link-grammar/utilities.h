@@ -29,6 +29,10 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <locale.h>
+#ifdef HAVE_LOCALE_T_IN_XLOCALE_H
+#include <xlocale.h>
+#endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "error.h"
 
@@ -76,6 +80,10 @@ void *alloca (size_t);
 #define memcpy(x, y, s) memcpy((void *)x, (void *)y, s)
 #define qsort(x, y, z, w) qsort((void *)x, y, z, w)
 #endif /* _MSC_VER */
+
+#if defined(HAVE_LOCALE_T_IN_LOCALE_H) || defined(HAVE_LOCALE_T_IN_XLOCALE_H)
+#define HAVE_LOCALE_T 1
+#endif /* HAVE_LOCALE_T_IN_LOCALE_H || HAVE_LOCALE_T_IN_XLOCALE_H) */
 
 #ifdef _WIN32
 #include <windows.h>
