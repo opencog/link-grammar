@@ -13,12 +13,9 @@
 #ifndef _LINK_GRAMMAR_UTILITIES_H_
 #define _LINK_GRAMMAR_UTILITIES_H_
 
-/* The _Win32 definitions are for native-Windows compilers.
- * This includes MSVC (only version >=14 is supported) and MINGW (under
- * MSYS or Cygwin). The _WIN32 definitions are not for Cygwin, which
- * doesn't define _WIN32.
- * FIXME: MinGW still has problems with UTF-8 output.
- */
+/* The _Win32 definitions are for native-Windows compilers.  This includes
+ * MSVC (only versions >=14 are supported) and MINGW (under MSYS or Cygwin).
+ * The _WIN32 definitions are not for Cygwin, which doesn't define _WIN32. */
 
 #include <ctype.h>
 #include <stdio.h>
