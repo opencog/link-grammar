@@ -787,6 +787,8 @@ LINK_CC_TRY_FLAG([-fno-strict-aliasing],
 
 AC_SUBST(LINK_CFLAGS)
 
+LINK_CC_TRY_FLAG([-Wmaybe-uninitialized -Werror], [AC_DEFINE(HAVE_MAYBE_UNINITIALIZED)])
+
 # ===================================================================
 
 AC_SUBST(CFLAGS)
