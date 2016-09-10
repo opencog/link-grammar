@@ -2778,17 +2778,18 @@ hadn't.v-d hadn’t.v-d:
   (({N+} or {Pp+}) & Pg*b+);
 
 % O*m+ allows "If only there were more!"
+% THb+ allows "It is your fault that you're a failure."
 <vc-be-obj>:
-  {@EBm+} & (O*t+ or O*m+) & {@MV+};
+  {@EBm+} & (O*t+ or O*m+) & {@MV+} & {THb+};
 
 <vc-be-obj-p>:
-  {@EBm+} & (Opt+ or Omm+) & {@MV+};
+  {@EBm+} & (Opt+ or Omm+) & {@MV+} & {THb+};
 
 <vc-be-obj-sp>:
-  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+};
+  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & {THb+};
 
 <vc-be-obj-u>:
-  {@EBm+} & Out+ & {@MV+};
+  {@EBm+} & Out+ & {@MV+} & {THb+};
 
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
@@ -2833,7 +2834,7 @@ is.v:
         or OF+
         or (Osi+ & R+ & Bs+)
         or (Opi+ & R+ & Bp+))
-      & {@MV+})
+      & {@MV+} & {THb+})
       or (Pp+ & {THi+ or @MV+})
       or THb+
       or (<to-verb> & <verb-wall>)
