@@ -1161,7 +1161,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 
 		/* left-to-right pass */
 		for (w = 0; w < sent->length; w++) {
-			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
 				if (left_connector_list_update(pc, d->left, w, true) < 0) {
@@ -1197,7 +1196,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 		/* right-to-left pass */
 
 		for (w = sent->length-1; w != (size_t) -1; w--) {
-			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
 				if (right_connector_list_update(pc, sent, d->right, w, true) >= sent->length) {
@@ -1607,11 +1605,18 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
 	power_prune(sent, opts);
+	pp_prune(sent, opts);
 
+	return;
+
+	// Not reached. We can actually gain a few percent of
+	// performance be skipping the loop below. Mostly, it just
+	// does a lot of work, and pretty much finds nothing.
+	// And so we skip it.
+#ifdef ONLY_IF_YOU_THINK_THIS_IS_WORTH_IT
 	for (;;) {
-		if (parse_options_resources_exhausted(opts)) break;
 		if (pp_prune(sent, opts) == 0) break;
-		if (parse_options_resources_exhausted(opts)) break;
 		if (power_prune(sent, opts) == 0) break;
 	}
+#endif
 }

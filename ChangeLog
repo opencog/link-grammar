@@ -7,7 +7,7 @@ Version 5.3.10: (XXX 2016?)
  * Fix various adverbial, conjunctive uses of "so".
  * Extended list of exclamations.
  * Remove CC link, add VC link, for clauses to coordinating conjunctions.
- * Fixes for the verb "dare"
+ * Fixes for the verb "dare", "someone or other", etc.
  * Fix OSX build break, concerning undefined locale_t.
  * Pull #385: Fix ancient bug that made dictionary debugging difficult.
 
