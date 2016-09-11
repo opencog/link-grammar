@@ -855,52 +855,6 @@ static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, 
 }
 
 /**
- * Set c->nearest_word to the nearest word that this connector could
- * possibly connect to.  The connector *might*, in the end,
- * connect to something more distant, but this is the nearest
- * one that could be connected.
- */
-static int set_dist_fields(Connector * c, size_t w, int delta)
-{
-	int i;
-	if (c == NULL) return (int) w;
-	i = set_dist_fields(c->next, w, delta) + delta;
-	c->nearest_word = i;
-	return i;
-}
-
-/**
- * Initialize the word fields of the connectors, and
- * eliminate those disjuncts that are so long, that they
- * would need to connect past the end of the sentence.
- */
-static void setup_connectors(Sentence sent)
-{
-	size_t w;
-	Disjunct * d, * xd, * head;
-	for (w=0; w<sent->length; w++)
-	{
-		head = NULL;
-		for (d=sent->word[w].d; d!=NULL; d=xd)
-		{
-			xd = d->next;
-			if ((set_dist_fields(d->left, w, -1) < 0) ||
-			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
-			{
-				d->next = NULL;
-				free_disjuncts(d);
-			}
-			else
-			{
-				d->next = head;
-				head = d;
-			}
-		}
-		sent->word[w].d = head;
-	}
-}
-
-/**
  * Allocates and builds the initial power hash tables
  */
 static power_table * power_table_new(Sentence sent)
@@ -1652,7 +1606,6 @@ static int pp_prune(Sentence sent, Parse_Options opts)
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
-	setup_connectors(sent);
 	power_prune(sent, opts);
 
 	for (;;) {

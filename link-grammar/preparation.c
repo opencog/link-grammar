@@ -75,6 +75,53 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 	}
 }
 
+
+/**
+ * Set c->nearest_word to the nearest word that this connector could
+ * possibly connect to.  The connector *might*, in the end,
+ * connect to something more distant, but this is the nearest
+ * one that could be connected.
+ */
+static int set_dist_fields(Connector * c, size_t w, int delta)
+{
+	int i;
+	if (c == NULL) return (int) w;
+	i = set_dist_fields(c->next, w, delta) + delta;
+	c->nearest_word = i;
+	return i;
+}
+
+/**
+ * Initialize the word fields of the connectors, and
+ * eliminate those disjuncts that are so long, that they
+ * would need to connect past the end of the sentence.
+ */
+static void setup_connectors(Sentence sent)
+{
+	size_t w;
+	Disjunct * d, * xd, * head;
+	for (w=0; w<sent->length; w++)
+	{
+		head = NULL;
+		for (d=sent->word[w].d; d!=NULL; d=xd)
+		{
+			xd = d->next;
+			if ((set_dist_fields(d->left, w, -1) < 0) ||
+			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
+			{
+				d->next = NULL;
+				free_disjuncts(d);
+			}
+			else
+			{
+				d->next = head;
+				head = d;
+			}
+		}
+		sent->word[w].d = head;
+	}
+}
+
 /**
  * Assumes that the sentence expression lists have been generated.
  */
@@ -104,5 +151,5 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 
 	set_connector_length_limits(sent, opts);
+	setup_connectors(sent);
 }
-
