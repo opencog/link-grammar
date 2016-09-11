@@ -182,6 +182,15 @@ Cost_Model_type parse_options_get_cost_model_type(Parse_Options opts)
 	return opts->cost_model.type;
 }
 
+void parse_options_set_perform_pp_prune(Parse_Options opts, bool dummy)
+{
+	opts->perform_pp_prune = dummy;
+}
+
+bool parse_options_get_perform_pp_prune(Parse_Options opts) {
+	return opts->perform_pp_prune;
+}
+
 void parse_options_set_verbosity(Parse_Options opts, int dummy)
 {
 	opts->verbosity = dummy;

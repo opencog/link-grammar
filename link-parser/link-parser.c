@@ -772,6 +772,14 @@ int main(int argc, char * argv[])
 			label = strip_off_label(input_string);
 		}
 
+		// Post-processing-based pruning will clip away connectors
+		// that we might otherwise want to examine. So disable PP
+		// pruning in this situation.
+		if (copts->display_bad)
+			parse_options_set_perform_pp_prune(opts, false);
+		else
+			parse_options_set_perform_pp_prune(opts, true);
+
 #ifdef USE_VITERBI
 		/* Compile-time optional, for now, since it don't work yet. */
 		if (parse_options_get_use_viterbi(opts))
