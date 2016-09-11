@@ -523,7 +523,7 @@ dictionary_six_str(const char * lang,
 		dict->locale = setlocale(LC_CTYPE, NULL);
 		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
 		prt_error("Warning: Couldn't set dictionary locale! "
-		          "Using current program locale %s", dict->locale);
+		          "Using current program locale \"%s\"", dict->locale);
 	}
 	/* If dict->locale_t is still not set, there is a bug. */
 	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
@@ -557,7 +557,7 @@ dictionary_six_str(const char * lang,
 	const char *locale = setlocale(LC_CTYPE, NULL);
 	locale = strdupa(locale); /* setlocale() uses static memory. */
 	setlocale(LC_CTYPE, dict->locale);
-	lgdebug(+D_DICT, "Regexs locale %s\n", setlocale(LC_CTYPE, NULL));
+	lgdebug(+D_DICT, "Regexs locale \"%s\"\n", setlocale(LC_CTYPE, NULL));
 
 	if (compile_regexs(dict->regex_root, dict))
 	{

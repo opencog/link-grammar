@@ -79,7 +79,7 @@ static const char * format_locale(Dictionary dict,
 	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
 	if (0 == strncmp(tmpbuf, "Unknown", 7))
 	{
-		prt_error("Error: Unknown territory code in locale %s", locale);
+		prt_error("Error: Unknown territory code in locale \"%s\"", locale);
 		return NULL;
 	}
 	strcpy(locale_buf, tmpbuf);
@@ -101,7 +101,7 @@ static const char * format_locale(Dictionary dict,
 	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
 	if (0 == strncmp(tmpbuf, "Unknown", 7))
 	{
-		prt_error("Error: Unknown territory code in locale %s", locale);
+		prt_error("Error: Unknown territory code in locale \"%s\"", locale);
 		return NULL;
 	}
 	locale = strcat(locale_buf, tmpbuf);
@@ -166,13 +166,13 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 		if (!try_locale(locale))
 		{
-			lgdebug(D_USER_FILES, "Debug: Dictionary locale %s unknown\n", locale);
+			lgdebug(D_USER_FILES, "Debug: Dictionary locale \"%s\" unknown\n", locale);
 			goto locale_error;
 		}
 	}
 
 	free_lookup(dn);
-	lgdebug(D_USER_FILES, "Debug: Dictionary locale: %s\n", locale);
+	lgdebug(D_USER_FILES, "Debug: Dictionary locale: \"%s\"\n", locale);
 	dict->locale = locale;
 	return locale;
 
@@ -184,11 +184,11 @@ locale_error:
 		if (NULL == locale) return NULL;
 		const char *sslocale = string_set_add(locale, dict->string_set);
 		free((void *)locale);
-		prt_error("Info: No dictionary locale definition - %s will be used.",
+		prt_error("Info: No dictionary locale definition - \"%s\" will be used.",
 		          sslocale);
 		if (!try_locale(sslocale))
 		{
-			lgdebug(D_USER_FILES, "Debug: Unknown locale %s...\n", sslocale);
+			lgdebug(D_USER_FILES, "Debug: Unknown locale \"%s\"...\n", sslocale);
 			return NULL;
 		}
 		return sslocale;

@@ -841,7 +841,7 @@ locale_t newlocale_LC_CTYPE(const char *locale)
  * Check that the given locale known by the system.
  * In case we don't have locale_t, actually set the locale
  * in order to find out if it is fine. This side effect doesn't cause
- * harm, as the local would be set up to that value anyway shortly.
+ * harm, as the locale would be set up to that value anyway shortly.
  * @param locale Locale string
  * @return True if known, false if unknown.
  */
@@ -852,7 +852,7 @@ bool try_locale(const char *locale)
 		if ((locale_t)0 == ltmp) return false;
 		freelocale(ltmp);
 #else
-		lgdebug(D_USER_FILES, "Debug: Setting program's locale %s", locale);
+		lgdebug(D_USER_FILES, "Debug: Setting program's locale \"%s\"", locale);
 		if (NULL == setlocale(LC_CTYPE, locale))
 		{
 			lgdebug(D_USER_FILES, " failed!\n");
@@ -882,7 +882,7 @@ void set_utf8_program_locale(void)
 		/* Avoid an initial spurious message. */
 		if ((0 != strcmp(locale, "C")) && (0 != strcmp(locale, "POSIX")))
 		{
-			prt_error("Warning: Program locale %s (codeset %s) was not UTF-8; "
+			prt_error("Warning: Program locale \"%s\" (codeset %s) was not UTF-8; "
 						 "force-setting to en_US.UTF-8", locale, codeset);
 		}
 		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
@@ -946,7 +946,7 @@ char * get_default_locale(void)
 	if (NULL != *evname)
 	{
 		locale = ev;
-		lgdebug(D_USER_FILES, "Debug: Environment locale %s=%s\n", *evname, ev);
+		lgdebug(D_USER_FILES, "Debug: Environment locale \"%s=%s\"\n", *evname, ev);
 #ifdef _WIN32
 		/* If compiled with MSVC/MinGW, we still support running under Cygwin. */
 		const char *ostype = getenv("OSTYPE");
@@ -967,7 +967,7 @@ char * get_default_locale(void)
 		if (NULL == locale)
 			lgdebug(D_USER_FILES, "Debug: Cannot find user default locale\n");
 		else
-			lgdebug(D_USER_FILES, "Debug: User default locale %s\n", locale);
+			lgdebug(D_USER_FILES, "Debug: User default locale \"%s\"\n", locale);
 		return locale; /* Already strdup'ed */
 #endif /* _WIN32 */
 	}
