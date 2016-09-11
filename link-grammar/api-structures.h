@@ -297,8 +297,8 @@ struct PP_data_s
 	size_t vlength;                 /* Length of visited array */
 };
 
-/* A new Postprocessor stuct is alloe for each sentence. It contains
- * sentence-specific post-processing nformation.
+/* A new Postprocessor struct is alloc'ed for each sentence. It contains
+ * sentence-specific post-processing information.
  */
 struct Postprocessor_s
 {
