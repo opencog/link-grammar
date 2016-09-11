@@ -854,6 +854,12 @@ static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, 
 	m->shallow = shal;
 }
 
+/**
+ * Set c->word to the nearest word that this connector could
+ * possibly connect to.  The connector *might*, in the end,
+ * connect to something more distant, but this is the nearest
+ * one that could be connected.
+ */
 static int set_dist_fields(Connector * c, size_t w, int delta)
 {
 	int i;
@@ -865,7 +871,8 @@ static int set_dist_fields(Connector * c, size_t w, int delta)
 
 /**
  * Initialize the word fields of the connectors, and
- * eliminate those disjuncts with illegal connectors.
+ * eliminate those disjuncts that are so long, that they
+ * would need to connect past the end of the sentence.
  */
 static void setup_connectors(Sentence sent)
 {
