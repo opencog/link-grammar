@@ -504,7 +504,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				case SUFFIX: /* set to =word */
 					/* If the suffix starts with an apostrophe, don't mark it */
 					if ((('\0' != (*affix)[0]) &&
-					     !is_utf8_alpha(*affix, sent->dict->locale_t)) ||
+					     !is_utf8_alpha(*affix, sent->dict->ctype)) ||
 					    '\0' == infix_mark)
 					{
 						if (is_contraction_word(unsplit_word->subword))
@@ -1463,14 +1463,14 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 		        word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
-		if ((NULL != unsplit_word) && is_utf8_upper(word, sent->dict->locale_t) &&
+		if ((NULL != unsplit_word) && is_utf8_upper(word, sent->dict->ctype) &&
 		    is_capitalizable(sent->dict, unsplit_word) &&
 		    !(unsplit_word->status & (WS_SPELL|WS_RUNON)))
 		{
 			int downcase_size = strlen(word)+MB_LEN_MAX+1;
 			char *const downcase = alloca(downcase_size);
 
-			downcase_utf8_str(downcase, word, downcase_size, sent->dict->locale_t);
+			downcase_utf8_str(downcase, word, downcase_size, sent->dict->ctype);
 			word_can_split |=
 				suffix_split(sent, unsplit_word, downcase);
 			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
@@ -1779,7 +1779,7 @@ static bool strip_right(Sentence sent,
 	 * off "h." from "20th.".
 	 * FIXME: is_utf8_digit(temp_wend-1, dict) here can only check ASCII digits,
 	 * since it is invoked with the last byte... */
-	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1, dict->locale_t))
+	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1, dict->ctype))
 	{
 		lgdebug(D_UN, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
 			 p, afdict_classname[classnum], word, temp_wend[-1]);
@@ -2215,7 +2215,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	        word, word_can_split, word_is_known,
 	        (NULL == unsplit_word->regex_name) ? "" : unsplit_word->regex_name);
 
-	if (is_utf8_upper(word, dict->locale_t))
+	if (is_utf8_upper(word, dict->ctype))
 	{
 		if (!test_enabled("dictcap"))
 		{
@@ -2262,7 +2262,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
 			if ('\0' == downcase[0])
-				downcase_utf8_str(downcase, word, downcase_size, dict->locale_t);
+				downcase_utf8_str(downcase, word, downcase_size, dict->ctype);
 			lc_word_is_in_dict = boolean_dictionary_lookup(dict, downcase);
 
 			if (word_is_capitalizable)
@@ -2339,7 +2339,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				issue_dictcap(sent, /*is_cap*/true, unsplit_word, word);
 			}
 
-			downcase_utf8_str(downcase, word, downcase_size, dict->locale_t);
+			downcase_utf8_str(downcase, word, downcase_size, dict->ctype);
 			/* Issue the lc version if it is known.
 			 * FIXME? Issuing only known lc words prevents using the unknown-word
 			 * device for words in capitalizable position (when the word is a uc
@@ -2392,8 +2392,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	 * 2. The word an unknown capitalized word.
 	 */
 	if (!word_can_lrsplit && !word_is_known &&
-	    !contains_digits(word, dict->locale_t) &&
-	    !is_proper_name(word, dict->locale_t) &&
+	    !contains_digits(word, dict->ctype) &&
+	    !is_proper_name(word, dict->ctype) &&
 	    opts->use_spell_guess && dict->spell_checker)
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
@@ -2534,7 +2534,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		if (0 > nb) goto failure;
 
 
-		while (is_space(c, dict->locale_t))
+		while (is_space(c, dict->ctype))
 		{
 			word_start += nb;
 			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
@@ -2548,7 +2548,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!is_space(c, dict->locale_t) && (c != 0) && (0 < nb))
+		while (!is_space(c, dict->ctype) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);

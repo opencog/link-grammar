@@ -513,7 +513,7 @@ dictionary_six_str(const char * lang,
 #ifdef HAVE_LOCALE_T
 	/* We have a locale per dictionary. */
 	if (NULL != dict->locale)
-		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
+		dict->ctype = newlocale_LC_CTYPE(dict->locale);
 
 	/* If we didn't succeed to set the dictionary locale, the program will
 	 * SEGFAULT when it tries to use it with the isw*() functions.
@@ -521,12 +521,12 @@ dictionary_six_str(const char * lang,
 	if (NULL == dict->locale)
 	{
 		dict->locale = setlocale(LC_CTYPE, NULL);
-		dict->locale_t = newlocale_LC_CTYPE(setlocale(LC_CTYPE, NULL));
+		dict->ctype = newlocale_LC_CTYPE(setlocale(LC_CTYPE, NULL));
 		prt_error("Warning: Couldn't set dictionary locale! "
 		          "Using current program locale %s", dict->locale);
 	}
 	/* If dict->locale is still not set, there is a bug. */
-	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
+	assert((locale_t)0 != dict->ctype, "Dictionary locale is not set.");
 #else
 	/* We don't have a locale per dictionary - but anyway make sure
 	 * dict->locale is consistent with the current program's locale,

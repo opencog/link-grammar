@@ -130,8 +130,8 @@ struct Dictionary_s
 	const char *    name;
 	const char *    lang;
 	const char *    version;
-	const char *    locale;
-	locale_t        locale_t;
+	const char *    locale;        /* Locale name */
+	locale_t        ctype;         /* Locale argument for the *_l() functions */
 	int             num_entries;
 
 	bool         use_unknown_word;
