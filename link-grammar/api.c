@@ -113,6 +113,8 @@ Parse_Options parse_options_create(void)
 	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
 	 * assorted fractional costs, without going to cost 3.0, which
 	 * is used only during panic-parsing.
+	 * XXX In the long run, this should be fetched from the dictionary
+	 * (and should probably not be a parse option).
 	 */
 	po->disjunct_cost = 2.7;
 	po->min_null_count = 0;
