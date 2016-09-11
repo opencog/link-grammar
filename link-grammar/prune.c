@@ -877,12 +877,12 @@ static power_table * power_table_new(Sentence sent)
 	{
 		/* The below uses variable-sized hash tables. This seems to
 		 * provide performance that is equal or better than the best
-		 * fixed-size prformance.
+		 * fixed-size performance.
 		 * The best fixed-size performance seems to come at about
 		 * a 1K table size, for both English and Russian. (Both have
 		 * about 100 fixed link-types, and many thousands of auto-genned
 		 * link types (IDxxx idioms for both, LLxxx suffix links for
-		 * Russian).  Plusses and minuses:
+		 * Russian).  Pluses and minuses:
 		 * + small fixed tables are faster to initialize.
 		 * - small fixed tables have more collisions
 		 * - variable-size tables require counting connectors.
@@ -902,7 +902,7 @@ static power_table * power_table_new(Sentence sent)
 			c = d->left;
 			if (c != NULL) {
 				put_into_power_table(size, t, c, true);
-				for (c=c->next; c!=NULL; c=c->next){
+				for (c=c->next; c!=NULL; c=c->next) {
 					put_into_power_table(size, t, c, false);
 				}
 			}
@@ -958,10 +958,10 @@ static void clean_table(unsigned int size, C_list ** t)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
-static bool possible_connection(prune_context *pc,
-                               Connector *lc, Connector *rc,
-                               bool lshallow, bool rshallow,
-                               int lword, int rword)
+static bool possible_connection(bool no_null_links,
+                                Connector *lc, Connector *rc,
+                                bool lshallow, bool rshallow,
+                                int lword, int rword)
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
@@ -975,7 +975,7 @@ static bool possible_connection(prune_context *pc,
 	/* Word range constraints */
 	if (1 == dist)
 	{
-		if (!((lc->next == NULL) && (rc->next == NULL))) return false;
+		if ((lc->next != NULL) || (rc->next != NULL)) return false;
 	}
 	else
 	if (dist > lc->length_limit || dist > rc->length_limit)
@@ -989,7 +989,7 @@ static bool possible_connection(prune_context *pc,
 	 * i.e. before well allow null-linked words.
 	 */
 	else
-	if ((!pc->null_links) &&
+	if (no_null_links &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
 	    (!lc->multi) && (!rc->multi))
@@ -1005,22 +1005,18 @@ static bool possible_connection(prune_context *pc,
  * a connector that can match to c.  shallow tells if c is shallow.
  */
 static bool
-right_table_search(prune_context *pc, int w, Connector *c,
+right_table_search(bool nonul, power_table *pt, int w, Connector *c,
                    bool shallow, int word_c)
 {
 	unsigned int size, h;
 	C_list *cl;
-	power_table *pt;
 
-	pt = pc->pt;
 	size = pt->r_table_size[w];
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
-		{
+		if (possible_connection(nonul, cl->c, c, cl->shallow, shallow, w, word_c))
 			return true;
-		}
 	}
 	return false;
 }
@@ -1030,19 +1026,17 @@ right_table_search(prune_context *pc, int w, Connector *c,
  * a connector that can match to c.  shallows tells if c is shallow
  */
 static bool
-left_table_search(prune_context *pc, int w, Connector *c,
+left_table_search(bool nonul, power_table *pt, int w, Connector *c,
                   bool shallow, int word_c)
 {
 	unsigned int size, h;
 	C_list *cl;
-	power_table *pt;
 
-	pt = pc->pt;
 	size = pt->l_table_size[w];
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
+		if (possible_connection(nonul, c, cl->c, shallow, cl->shallow, word_c, w))
 			return true;
 	}
 	return false;
@@ -1061,7 +1055,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
                            int w, bool shallow)
 {
 	int n, lb;
-	bool foundmatch;
+	bool foundmatch, no_null_links;
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
@@ -1073,10 +1067,11 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	/* n is now the rightmost word we need to check */
 	foundmatch = false;
+	no_null_links = !pc->null_links;
 	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
-		if (right_table_search(pc, n, c, shallow, w))
+		if (right_table_search(no_null_links, pc->pt, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1103,7 +1098,7 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
                             size_t w, bool shallow)
 {
 	size_t n, ub;
-	bool foundmatch;
+	bool foundmatch, no_null_links;
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, sent, c->next, w, false) + 1;
@@ -1115,10 +1110,11 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
+	no_null_links = !pc->null_links;
 	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
-		if (left_table_search(pc, n, c, shallow, w))
+		if (left_table_search(no_null_links, pc->pt, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
