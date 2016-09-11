@@ -975,7 +975,7 @@ static bool possible_connection(prune_context *pc,
 	/* Word range constraints */
 	if (1 == dist)
 	{
-		if (!((lc->next == NULL) && (rc->next == NULL))) return false;
+		if ((lc->next != NULL) || (rc->next != NULL)) return false;
 	}
 	else
 	if (dist > lc->length_limit || dist > rc->length_limit)
@@ -1018,9 +1018,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
-		{
 			return true;
-		}
 	}
 	return false;
 }
