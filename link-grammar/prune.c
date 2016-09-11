@@ -958,10 +958,10 @@ static void clean_table(unsigned int size, C_list ** t)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
-static bool possible_connection(Connector *lc, Connector *rc,
+static bool possible_connection(bool no_null_links,
+                                Connector *lc, Connector *rc,
                                 bool lshallow, bool rshallow,
-                                int lword, int rword,
-                                bool no_null_links)
+                                int lword, int rword)
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
@@ -1018,7 +1018,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(cl->c, c, cl->shallow, shallow, w, word_c, no_null_links))
+		if (possible_connection(no_null_links, cl->c, c, cl->shallow, shallow, w, word_c))
 			return true;
 	}
 	return false;
@@ -1042,7 +1042,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(c, cl->c, shallow, cl->shallow, word_c, w, no_null_links))
+		if (possible_connection(no_null_links, c, cl->c, shallow, cl->shallow, word_c, w))
 			return true;
 	}
 	return false;
