@@ -140,6 +140,7 @@ Parse_Options parse_options_create(void)
 #endif /* USE_CORPUS */
 	po->short_length = 16;
 	po->all_short = false;
+	po->perform_pp_prune = true;
 	po->twopass_length = 30;
 	po->repeatable_rand = true;
 	po->resources = resources_create();

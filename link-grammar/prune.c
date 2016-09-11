@@ -1520,6 +1520,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	multiset_table *cmt;
 
 	if (sent->postprocessor == NULL) return 0;
+	if (!opts->perform_pp_prune) return 0;
 
 	knowledge = sent->postprocessor->knowledge;
 
