@@ -958,10 +958,10 @@ static void clean_table(unsigned int size, C_list ** t)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
-static bool possible_connection(prune_context *pc,
-                               Connector *lc, Connector *rc,
-                               bool lshallow, bool rshallow,
-                               int lword, int rword)
+static bool possible_connection(Connector *lc, Connector *rc,
+                                bool lshallow, bool rshallow,
+                                int lword, int rword,
+                                bool no_null_links)
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
@@ -989,7 +989,7 @@ static bool possible_connection(prune_context *pc,
 	 * i.e. before well allow null-linked words.
 	 */
 	else
-	if ((!pc->null_links) &&
+	if (no_null_links &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
 	    (!lc->multi) && (!rc->multi))
@@ -1012,12 +1012,13 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	C_list *cl;
 	power_table *pt;
 
+	bool no_null_links = !pc->null_links;
 	pt = pc->pt;
 	size = pt->r_table_size[w];
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
+		if (possible_connection(cl->c, c, cl->shallow, shallow, w, word_c, no_null_links))
 			return true;
 	}
 	return false;
@@ -1035,12 +1036,13 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	C_list *cl;
 	power_table *pt;
 
+	bool no_null_links = !pc->null_links;
 	pt = pc->pt;
 	size = pt->l_table_size[w];
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
+		if (possible_connection(c, cl->c, shallow, cl->shallow, word_c, w, no_null_links))
 			return true;
 	}
 	return false;
