@@ -864,6 +864,36 @@ static int set_dist_fields(Connector * c, size_t w, int delta)
 }
 
 /**
+ * Initialize the word fields of the connectors, and
+ * eliminate those disjuncts with illegal connectors.
+ */
+static void setup_connectors(Sentence sent)
+{
+	size_t w;
+	Disjunct * d, * xd, * head;
+	for (w=0; w<sent->length; w++)
+	{
+		head = NULL;
+		for (d=sent->word[w].d; d!=NULL; d=xd)
+		{
+			xd = d->next;
+			if ((set_dist_fields(d->left, w, -1) < 0) ||
+			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
+			{
+				d->next = NULL;
+				free_disjuncts(d);
+			}
+			else
+			{
+				d->next = head;
+				head = d;
+			}
+		}
+		sent->word[w].d = head;
+	}
+}
+
+/**
  * Allocates and builds the initial power hash tables
  */
 static power_table * power_table_new(Sentence sent)
@@ -872,7 +902,7 @@ static power_table * power_table_new(Sentence sent)
 	size_t w, len;
 	unsigned int i, size;
 	C_list ** t;
-	Disjunct * d, * xd, * head;
+	Disjunct * d;
 	Connector * c;
 
 	pt = (power_table *) xalloc (sizeof(power_table));
@@ -882,24 +912,7 @@ static power_table * power_table_new(Sentence sent)
 	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
 	pt->r_table = pt->l_table + sent->length;
 
-   /* First, we initialize the word fields of the connectors, and
-	  eliminate those disjuncts with illegal connectors */
-	for (w=0; w<sent->length; w++)
-	{
-	  head = NULL;
-	  for (d=sent->word[w].d; d!=NULL; d=xd) {
-		  xd = d->next;
-		  if ((set_dist_fields(d->left, w, -1) < 0) ||
-			  (set_dist_fields(d->right, w, 1) >= (int) sent->length)) {
-			  d->next = NULL;
-			  free_disjuncts(d);
-		  } else {
-			  d->next = head;
-			  head = d;
-		  }
-	  }
-	  sent->word[w].d = head;
-	}
+	setup_connectors(sent);
 
 	for (w=0; w<sent->length; w++)
 	{
