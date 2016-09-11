@@ -518,14 +518,14 @@ dictionary_six_str(const char * lang,
 	/* If we didn't succeed to set the dictionary locale, the program will
 	 * SEGFAULT when it tries to use it with the isw*() functions.
 	 * So set it to the current program's locale as a last resort. */
-	if (NULL == dict->locale)
+	if (NULL == dict->locale_t)
 	{
 		dict->locale = setlocale(LC_CTYPE, NULL);
-		dict->locale_t = newlocale_LC_CTYPE(setlocale(LC_CTYPE, NULL));
+		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
 		prt_error("Warning: Couldn't set dictionary locale! "
 		          "Using current program locale %s", dict->locale);
 	}
-	/* If dict->locale is still not set, there is a bug. */
+	/* If dict->locale_t is still not set, there is a bug. */
 	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
 #else
 	/* We don't have a locale per dictionary - but anyway make sure
@@ -534,6 +534,9 @@ dictionary_six_str(const char * lang,
 	 * locale of this dictionary and the locale of the compiled regexs. */
 	dict->locale = setlocale(LC_CTYPE, NULL);
 #endif /* HAVE_LOCALE_T */
+
+	/* Previous setlocale() result is not valid after its next call. */
+	dict->locale = string_set_add(dict->locale, dict->string_set);
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
