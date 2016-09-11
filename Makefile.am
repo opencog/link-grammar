@@ -42,10 +42,13 @@ EXTRA_DIST =            \
 	msvc14/LinkGrammar.vcxproj             \
 	msvc14/LinkGrammar.vcxproj.filters     \
 	msvc14/Local.props                     \
-	msvc14/mk-link-features-h.bat          \
+	msvc14/confvar.bat                     \
 	msvc14/MSVC-common.props               \
 	msvc14/post-build.bat                  \
+	msvc14/Python2.vcxproj                 \
+	msvc14/Python2.vcxproj.filters         \
+	msvc14/Python3.vcxproj.filters         \
 	msvc14/README                          \
-	mingw/README.Cygwin
-	mingw/README.MSYS
+	mingw/README.Cygwin                    \
+	mingw/README.MSYS                      \
 	TODO
