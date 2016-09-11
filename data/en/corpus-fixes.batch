@@ -2599,16 +2599,18 @@ The stock, to be purchased on the open market, will be added to assets.
 The parts, being obtained as we speak, will arrive this afternoon.
 
 % zero-copula (missing "to be") post-nominal MX broken-ness:
-% These are really really broken!
 The event, being historically insignificant, will soon be forgotten
 The event, historically insignificant, will soon be forgotten
 The event, historically important, will be long commemorated
 the argument, fundamentally flawed, was soon destroyed
 the argument, being fundamentally flawed, was soon destroyed
-the dog, unsatisfied, barked loudly.
 The lady, unpleased by this rude behavior, spoke sharply
+
+% The following fall victim to post-processing "Bad use of adjective65"
+% However, they seem OK enough to me ... they do work, in context.
 The lady, unpleased, spoke sharply
 The lady, displeased, spoke sharply
+the dog, unsatisfied, barked loudly.
 
 % another zero-copula
 Shades of Cyc, where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.

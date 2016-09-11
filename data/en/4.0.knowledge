@@ -296,8 +296,8 @@ CONTAINS_ONE_RULES:
 ; nasty constructions ... however, it also prevents some good
 ; ones, too. e.g. "The dog, unsatisfied, barked loudly"
 ;
-; MX#a  ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya  MJ
-;			                    , "Bad use of adjective65"    ,
+MX#a  ,  TO  TOf  TH  MVp  TOt  QI  OF  MVt  MVz  MVh  Ytm Ya  MJ E EA
+			                    , "Bad use of adjective65"    ,
 
 ; There's no JUNK connector, which means that Oxn is
 ; prohibited from ever occuring. 4.0.batch covers this.
