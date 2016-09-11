@@ -130,7 +130,8 @@ static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
 	if (l == NULL) return m;
 
 	/* Insert m at head of list */
-	if ((m->d->right->word) <= (l->d->right->word)) {
+	if ((m->d->right->nearest_word) <= (l->d->right->nearest_word))
+	{
 		m->next = l;
 		return m;
 	}
@@ -138,7 +139,8 @@ static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
 	/* Walk list to insertion point */
 	prev = l;
 	p = prev->next;
-	while (p != NULL && ((m->d->right->word) > (p->d->right->word))) {
+	while (p != NULL && ((m->d->right->nearest_word) > (p->d->right->nearest_word)))
+	{
 		prev = p;
 		p = p->next;
 	}
@@ -161,7 +163,8 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 	if (l == NULL) return m;
 
 	/* Insert m at head of list */
-	if ((m->d->left->word) >= (l->d->left->word)) {
+	if ((m->d->left->nearest_word) >= (l->d->left->nearest_word))
+	{
 		m->next = l;
 		return m;
 	}
@@ -169,7 +172,8 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 	/* Walk list to insertion point */
 	prev = l;
 	p = prev->next;
-	while (p != NULL && ((m->d->left->word) < (p->d->left->word))) {
+	while (p != NULL && ((m->d->left->nearest_word) < (p->d->left->nearest_word)))
+	{
 		prev = p;
 		p = p->next;
 	}
@@ -530,7 +534,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	for (mx = mr; mx != NULL; mx = mx->next)
 	{
-		if (mx->d->right->word > rw) break;
+		if (mx->d->right->nearest_word > rw) break;
 		mx->d->match_left = false;
 	}
 	mr_end = mx;
@@ -539,7 +543,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	mc.string = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
-		if (mx->d->left->word < lw) break;
+		if (mx->d->left->nearest_word < lw) break;
 		if ((w - lw) > mx->d->left->length_limit) continue;
 
 		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc);

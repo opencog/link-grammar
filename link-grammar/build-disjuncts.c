@@ -274,7 +274,7 @@ static Connector * extract_connectors(Tconnector *e, int c)
 		e1->next = extract_connectors(e->next,c);
 		e1->multi = e->multi;
 		e1->string = e->string;
-		e1->word = 0;
+		e1->nearest_word = 0;
 		return e1;
 	}
 	else

@@ -77,7 +77,7 @@ struct prune_context_s
 	bool null_links;
 	int power_cost;
 	int N_changed;   /* counts the number of changes
-						   of c->word fields in a pass */
+						   of c->nearest_word fields in a pass */
 	power_table *pt;
 	Sentence sent;
 };
@@ -854,15 +854,6 @@ static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, 
 	m->shallow = shal;
 }
 
-static int set_dist_fields(Connector * c, size_t w, int delta)
-{
-	int i;
-	if (c == NULL) return (int) w;
-	i = set_dist_fields(c->next, w, delta) + delta;
-	c->word = i;
-	return i;
-}
-
 /**
  * Allocates and builds the initial power hash tables
  */
@@ -872,7 +863,7 @@ static power_table * power_table_new(Sentence sent)
 	size_t w, len;
 	unsigned int i, size;
 	C_list ** t;
-	Disjunct * d, * xd, * head;
+	Disjunct * d;
 	Connector * c;
 
 	pt = (power_table *) xalloc (sizeof(power_table));
@@ -881,25 +872,6 @@ static power_table * power_table_new(Sentence sent)
 	pt->r_table_size = pt->l_table_size + sent->length;
 	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
 	pt->r_table = pt->l_table + sent->length;
-
-   /* First, we initialize the word fields of the connectors, and
-	  eliminate those disjuncts with illegal connectors */
-	for (w=0; w<sent->length; w++)
-	{
-	  head = NULL;
-	  for (d=sent->word[w].d; d!=NULL; d=xd) {
-		  xd = d->next;
-		  if ((set_dist_fields(d->left, w, -1) < 0) ||
-			  (set_dist_fields(d->right, w, 1) >= (int) sent->length)) {
-			  d->next = NULL;
-			  free_disjuncts(d);
-		  } else {
-			  d->next = head;
-			  head = d;
-		  }
-	  }
-	  sent->word[w].d = head;
-	}
 
 	for (w=0; w<sent->length; w++)
 	{
@@ -970,7 +942,7 @@ static void clean_table(unsigned int size, C_list ** t)
 		head = NULL;
 		for (m = t[i]; m != NULL; m = xm) {
 			xm = m->next;
-			if (m->c->word != BAD_WORD) {
+			if (m->c->nearest_word != BAD_WORD) {
 				m->next = head;
 				head = m;
 			} else {
@@ -995,7 +967,7 @@ static bool possible_connection(prune_context *pc,
 	if ((!lshallow) && (!rshallow)) return false;
 
 	/* Two deep connectors can't work */
-	if ((lc->word > rword) || (rc->word < lword)) return false;
+	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
 	dist = rword - lword;
 	// assert(0 < dist, "Bad word order in possible connection.");
@@ -1081,7 +1053,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * w-1, w-2, w-3...  Returns the word to which the first connector of
  * the list could possibly be matched.  If c is NULL, returns w.  If
  * there is no way to match this list, it returns a negative number.
- * If it does find a way to match it, it updates the c->word fields
+ * If it does find a way to match it, it updates the c->nearest_word fields
  * correctly.
  */
 static int
@@ -1093,7 +1065,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
-	if (((int) c->word) < n) n = c->word;
+	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
 	/* lb is now the leftmost word we need to check */
 	lb = w - c->length_limit;
@@ -1110,9 +1082,9 @@ left_connector_list_update(prune_context *pc, Connector *c,
 			break;
 		}
 	}
-	if (n < ((int) c->word))
+	if (n < ((int) c->nearest_word))
 	{
-		c->word = n;
+		c->nearest_word = n;
 		pc->N_changed++;
 	}
 	return (foundmatch ? n : -1);
@@ -1124,7 +1096,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * the list could possibly be matched.  If c is NULL, returns w.  If
  * there is no way to match this list, it returns a number greater than
  * N_words - 1.   If it does find a way to match it, it updates the
- * c->word fields correctly.
+ * c->nearest_word fields correctly.
  */
 static size_t
 right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
@@ -1135,11 +1107,11 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, sent, c->next, w, false) + 1;
-	if (c->word > n) n = c->word;
+	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
 	ub = w + c->length_limit;
-	if (ub > sent->length) ub = sent->length;
+	if (ub > sent->length) ub = sent->length - 1;
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
@@ -1152,8 +1124,8 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 			break;
 		}
 	}
-	if (n > c->word) {
-		c->word = n;
+	if (n > c->nearest_word) {
+		c->nearest_word = n;
 		pc->N_changed++;
 	}
 	return (foundmatch ? n : sent->length);
@@ -1193,8 +1165,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
 				if (left_connector_list_update(pc, d->left, w, true) < 0) {
-					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
-					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
+					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
+					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
 					total_deleted++;
 				}
@@ -1204,7 +1176,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			nd = NULL;
 			for (d = sent->word[w].d; d != NULL; d = dx) {
 				dx = d->next;
-				if ((d->left != NULL) && (d->left->word == BAD_WORD)) {
+				if ((d->left != NULL) && (d->left->nearest_word == BAD_WORD)) {
 					d->next = free_later;
 					free_later = d;
 				} else {
@@ -1229,8 +1201,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
 				if (right_connector_list_update(pc, sent, d->right, w, true) >= sent->length) {
-					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
-					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
+					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
+					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
 					total_deleted++;
 				}
@@ -1239,7 +1211,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			nd = NULL;
 			for (d = sent->word[w].d; d != NULL; d = dx) {
 				dx = d->next;
-				if ((d->right != NULL) && (d->right->word == BAD_WORD)) {
+				if ((d->right != NULL) && (d->right->nearest_word == BAD_WORD)) {
 					d->next = free_later;
 					free_later = d;
 				} else {
@@ -1520,6 +1492,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	multiset_table *cmt;
 
 	if (sent->postprocessor == NULL) return 0;
+	if (!opts->perform_pp_prune) return 0;
 
 	knowledge = sent->postprocessor->knowledge;
 

@@ -139,6 +139,10 @@ link_public_api(void)
 link_public_api(Cost_Model_type)
      parse_options_get_cost_model_type(Parse_Options opts);
 link_public_api(void)
+     parse_options_set_perform_pp_prune(Parse_Options opts, bool pp_prune);
+link_public_api(bool)
+     parse_options_get_perform_pp_prune(Parse_Options opts);
+link_public_api(void)
      parse_options_set_use_sat_parser(Parse_Options opts, bool use_sat_solver);
 link_public_api(bool)
      parse_options_get_use_sat_parser(Parse_Options opts);

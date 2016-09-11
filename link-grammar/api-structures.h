@@ -69,13 +69,13 @@ struct Resources_s
 struct Parse_Options_s
 {
 	/* General options */
-	int verbosity;         /* Level of detail to give about the computation 0 */
+	short verbosity;       /* Level of detail to give about the computation 0 */
 	char * debug;          /* comma-separated function names to debug "" */
 	char * test;           /* comma-separated features to test "" */
 	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Options governing the tokenizer (sentence-splitter) */
-	int use_spell_guess;  /* Perform spell-guessing of unknown words. */
+	short use_spell_guess;  /* Perform spell-guessing of unknown words. */
 
 	/* Choice of the parser to use */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
@@ -83,8 +83,8 @@ struct Parse_Options_s
 
 	/* Options governing the parser internals operation */
 	double disjunct_cost;  /* Max disjunct cost to allow */
-	int min_null_count;    /* The minimum number of null links to allow */
-	int max_null_count;    /* The maximum number of null links to allow */
+	short min_null_count;  /* The minimum number of null links to allow */
+	short max_null_count;  /* The maximum number of null links to allow */
 	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
@@ -95,6 +95,7 @@ struct Parse_Options_s
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 
 	/* Options governing post-processing */
+	bool perform_pp_prune; /* Perform post-processing-based pruning */
 	size_t twopass_length; /* min sent length for two-pass post processing */
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 

@@ -140,6 +140,7 @@ Parse_Options parse_options_create(void)
 #endif /* USE_CORPUS */
 	po->short_length = 16;
 	po->all_short = false;
+	po->perform_pp_prune = true;
 	po->twopass_length = 30;
 	po->repeatable_rand = true;
 	po->resources = resources_create();
@@ -179,6 +180,15 @@ void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 Cost_Model_type parse_options_get_cost_model_type(Parse_Options opts)
 {
 	return opts->cost_model.type;
+}
+
+void parse_options_set_perform_pp_prune(Parse_Options opts, bool dummy)
+{
+	opts->perform_pp_prune = dummy;
+}
+
+bool parse_options_get_perform_pp_prune(Parse_Options opts) {
+	return opts->perform_pp_prune;
 }
 
 void parse_options_set_verbosity(Parse_Options opts, int dummy)

@@ -94,9 +94,6 @@
 struct Connector_struct
 {
 	int16_t hash;
-	uint8_t word;
-	             /* The nearest word to my left (or right) that
-	                this could connect to.  Computed by power pruning */
 	uint8_t length_limit;
 	             /* If this is a length limited connector, this
 	                gives the limit of the length of the link
@@ -104,6 +101,10 @@ struct Connector_struct
 	                this is strictly a function of the connector
 	                name, efficiency is the only reason to store
 	                this.  If no limit, the value is set to 255. */
+	uint8_t nearest_word;
+	             /* The nearest word to my left (or right) that
+	                this could ever connect to.  Computed by
+	                setup_connectors() */
 	bool multi;  /* TRUE if this is a multi-connector */
 	uint8_t lc_start;     /* lc start position (or 0) - for match speedup. */
 	uint8_t uc_length;    /* uc part length - for match speedup. */
@@ -131,16 +132,16 @@ static inline const char * connector_get_string(Connector *c)
 struct Disjunct_struct
 {
 	Disjunct *next;
-	const char * string;       /* subscripted dictionary word */
 	Connector *left, *right;
 	double cost;
 	bool marked;               /* unmarked disjuncts get deleted */
-	const Gword **word;        /* NULL terminated list of originating words */
-	/* Used only during chart-parsing, for the match list. */
+	/* match_left, right used only during parsing, for the match list. */
 	bool match_left, match_right;
 #ifdef VERIFY_MATCH_LIST
 	int match_id;              /* verify the match list integrity */
 #endif
+	const Gword **word;        /* NULL terminated list of originating words */
+	const char * string;       /* subscripted dictionary word */
 };
 
 typedef struct Match_node_struct Match_node;

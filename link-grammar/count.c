@@ -137,7 +137,7 @@ find_table_pointer(count_context_t *ctxt,
 	 * in maybe 5-10 timer calls per second.
 	 */
 	ctxt->checktimer ++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%450100) &&
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%1450100) &&
 	                       (ctxt->current_resources != NULL) &&
 	                       resources_exhausted(ctxt->current_resources)))
 	{
@@ -268,7 +268,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	}
 	else
 	{
-		start_word = le->word;
+		start_word = le->nearest_word;
 	}
 
 	if (re == NULL)
@@ -277,7 +277,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	}
 	else
 	{
-		end_word = re->word +1;
+		end_word = re->nearest_word +1;
 	}
 
 	total = zero;
