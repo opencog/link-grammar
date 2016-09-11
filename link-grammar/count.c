@@ -137,7 +137,7 @@ find_table_pointer(count_context_t *ctxt,
 	 * in maybe 5-10 timer calls per second.
 	 */
 	ctxt->checktimer ++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%450100) &&
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%1450100) &&
 	                       (ctxt->current_resources != NULL) &&
 	                       resources_exhausted(ctxt->current_resources)))
 	{

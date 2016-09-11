@@ -691,7 +691,7 @@ int main(int argc, char * argv[])
 		linkgrammar_get_version());
 
 	/* Main input loop */
-	while (1)
+	while (true)
 	{
 		char *input_string;
 		Sentence sent = NULL;
