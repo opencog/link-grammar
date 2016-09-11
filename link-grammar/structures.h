@@ -94,9 +94,6 @@
 struct Connector_struct
 {
 	int16_t hash;
-	uint8_t word;
-	             /* The nearest word to my left (or right) that
-	                this could connect to.  Computed by power pruning */
 	uint8_t length_limit;
 	             /* If this is a length limited connector, this
 	                gives the limit of the length of the link
@@ -104,6 +101,10 @@ struct Connector_struct
 	                this is strictly a function of the connector
 	                name, efficiency is the only reason to store
 	                this.  If no limit, the value is set to 255. */
+	uint8_t nearest_word;
+	             /* The nearest word to my left (or right) that
+	                this could ever connect to.  Computed by
+	                setup_connectors() */
 	bool multi;  /* TRUE if this is a multi-connector */
 	uint8_t lc_start;     /* lc start position (or 0) - for match speedup. */
 	uint8_t uc_length;    /* uc part length - for match speedup. */

@@ -356,7 +356,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	}
 	else
 	{
-		start_word = le->word;
+		start_word = le->nearest_word;
 	}
 
 	if (re == NULL)
@@ -365,7 +365,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	}
 	else
 	{
-		end_word = re->word + 1;
+		end_word = re->nearest_word + 1;
 	}
 
 	/* This condition can never be true here. It is included so GCC
