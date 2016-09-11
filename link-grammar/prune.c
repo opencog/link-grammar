@@ -877,12 +877,12 @@ static power_table * power_table_new(Sentence sent)
 	{
 		/* The below uses variable-sized hash tables. This seems to
 		 * provide performance that is equal or better than the best
-		 * fixed-size prformance.
+		 * fixed-size performance.
 		 * The best fixed-size performance seems to come at about
 		 * a 1K table size, for both English and Russian. (Both have
 		 * about 100 fixed link-types, and many thousands of auto-genned
 		 * link types (IDxxx idioms for both, LLxxx suffix links for
-		 * Russian).  Plusses and minuses:
+		 * Russian).  Pluses and minuses:
 		 * + small fixed tables are faster to initialize.
 		 * - small fixed tables have more collisions
 		 * - variable-size tables require counting connectors.
@@ -902,7 +902,7 @@ static power_table * power_table_new(Sentence sent)
 			c = d->left;
 			if (c != NULL) {
 				put_into_power_table(size, t, c, true);
-				for (c=c->next; c!=NULL; c=c->next){
+				for (c=c->next; c!=NULL; c=c->next) {
 					put_into_power_table(size, t, c, false);
 				}
 			}
