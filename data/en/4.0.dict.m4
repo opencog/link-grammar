@@ -1719,8 +1719,10 @@ plenty:
   or [MVa-]
   or Wa-;
 
+% SJr-: "someone or other would always complain"
 other:
   Dmu+ or
+  SJr- or
   ({ND-} & {DD-} & Dmc+) or
   (DD- & (Ds+ or DD+ or <noun-main-s> or <noun-and-s>));
 
@@ -2752,6 +2754,8 @@ hadn't.v-d hadn’t.v-d:
 %     over Pv+ whenever the same word appears as both adjective and verb.
 %     For example, "injured.a" vs. injured.v-d" in "the player is injured",
 %     which should get Pa+ not Pv+.
+% MV+ & Pv+: "I was by then dominated by my aunt"
+% MV+ & Pa+: "I was, before Friday, quite unhappy."
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
 %     must leave the field" cannot take a wall.
 % [I*v+].2: the cost should maybe be evenn higher, to avoid linking
@@ -2771,8 +2775,8 @@ hadn't.v-d hadn’t.v-d:
     or THb+
     or <to-verb>
     or (PFb- & <verb-wall> & {Pa+})
-    or (Pa+ & {<verb-wall>})))
-  or ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or [I*v+].2))
+    or ({MV+} & Pa+ & {<verb-wall>})))
+  or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
@@ -2791,17 +2795,18 @@ hadn't.v-d hadn’t.v-d:
   (({N+} or {Pp+}) & Pg*b+);
 
 % O*m+ allows "If only there were more!"
+% THb+ allows "It is your fault that you're a failure."
 <vc-be-obj>:
-  {@EBm+} & (O*t+ or O*m+) & {@MV+};
+  {@EBm+} & (O*t+ or O*m+) & {@MV+} & {THb+};
 
 <vc-be-obj-p>:
-  {@EBm+} & (Opt+ or Omm+) & {@MV+};
+  {@EBm+} & (Opt+ or Omm+) & {@MV+} & {THb+};
 
 <vc-be-obj-sp>:
-  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+};
+  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & {THb+};
 
 <vc-be-obj-u>:
-  {@EBm+} & Out+ & {@MV+};
+  {@EBm+} & Out+ & {@MV+} & {THb+};
 
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
@@ -2846,7 +2851,7 @@ is.v:
         or OF+
         or (Osi+ & R+ & Bs+)
         or (Opi+ & R+ & Bp+))
-      & {@MV+})
+      & {@MV+} & {THb+})
       or (Pp+ & {THi+ or @MV+})
       or THb+
       or (<to-verb> & <verb-wall>)
@@ -4922,12 +4927,21 @@ intended.v-d: VERB_SPPP_T(<vc-intend>) or (<verb-pv> & {<to-verb> or Z- or @MV+}
 intending.g: (<vc-intend> & <verb-ge>) or <verb-ge-d>;
 intending.v: <verb-pg> & <vc-intend>;
 
+% O+ & TO+: "I dare you to!"
+% TO+ & Xc+: "try it if you dare to!"
+% I+: auxilliary: "no one dared say a word"
+% N+ & TO: "I dare not to say the truth"
 <vc-dare>:
-  (N+ & I+) or
-  ({@MV+} & <to-verb>) or
-  ((O+ or <b-minus>) & {@MV+} & <too-verb>);
+  ({N+} & {@MV+} & {<to-verb> or (TO+ & Xc+)}) or
+  ({N+} & I+) or
+  ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
-dare.v: VERB_PLI(<vc-dare>);
+% SI+ & <verb-rq> & I+: "How dare you disobey orders"
+% <verb-s> & N+ & I+: "He dare not lie to me!" (singular subject)
+dare.v:
+  VERB_PLI(<vc-dare>)
+  or (<verb-s> & N+ & I+)
+  or (SI+ & <verb-rq> & I+);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d:
   VERB_SPPP_T(<vc-dare>)
@@ -4978,9 +4992,10 @@ refusing.g: (<vc-refuse> & <verb-ge>) or <verb-ge-d>;
 refusing.v: <verb-pg> & <vc-refuse>;
 
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
-% [TO+]: allows null-infinitive: "Because I want to."
+% TO+ & Xc+: allows null-infinitive: "Because I want to."
+% intransitive: "Try it if you want"
 <vc-want>:
-  ({@MV+} & (<to-verb> or [TO+])) or
+  ({@MV+} & ({<to-verb>} or (TO+ & Xc+))) or
   ((O+ or <b-minus> or OX+) & {@MV+} & {<too-verb> or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & {@MV+}]];
@@ -7309,7 +7324,7 @@ as_if as_though:
 as_soon_as:
   <subcl-verb> & {Xc+ & {Xd-}} & CO*s+;
 
-% J+ & CO+: "Until yesterday, ..."
+% J+ & CO+: "Until yesterday, ..." XXX this is wrong, should be JT+???
 changequote(\,/)dnl
 until 'til ’til ‘til `til til till.r:
 changequote dnl

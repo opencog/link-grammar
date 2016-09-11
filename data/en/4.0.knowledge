@@ -291,7 +291,12 @@ CONTAINS_ONE_RULES:
 					    , "Bad use of adjective63"    ,
  Mam   ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya
 					    , "Bad use of adjective64"    ,
- MX#a  ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya  MJ
+;
+; The rule below sounds nice, in principle, in preventing some
+; nasty constructions ... however, it also prevents some good
+; ones, too. e.g. "The dog, unsatisfied, barked loudly"
+;
+MX#a  ,  TO  TOf  TH  MVp  TOt  QI  OF  MVt  MVz  MVh  Ytm Ya  MJ E EA
 			                    , "Bad use of adjective65"    ,
 
 ; There's no JUNK connector, which means that Oxn is

@@ -265,9 +265,6 @@ He tried to saw up the wood.
 We were sawing wood when it happened.
 We were sawing up the wood when it happened.
 
-% grab with preposition
-He grabbed at it
-
 % Assorted adverbial modifiers
 It has been unbelievably poorly managed.
 It has been notoriously managed.
@@ -514,7 +511,10 @@ We looked for 3-amino-3-azabicyclo[3,3,0]octane hydrochloride
 
 They are a three times defeated team.
 
-% Verbs taking prepositions
+% intransitive verbs taking prepositions
+He grabbed at it
+
+% transitive verbs taking prepositions
 He dished it out at the unsuspecting onlookers.
 I ladled it carefully into a bowl.
 You should ladle it out.
@@ -524,6 +524,7 @@ He ladled the molten hot metal into the mold.
 It was molten hot.
 It was piping hot.
 It was devilishly hot.
+
 
 % mass nouns that were incorrectly classified as count nouns.
 % Nouns that can be used in an indefinite manner.
@@ -1115,6 +1116,7 @@ He drew me a picture.
 She bore me a child.
 She bore me.
 I dare you.
+I dare you to!
 She dared me.
 She dared me to jump.
 She had written him off.
@@ -1133,6 +1135,22 @@ She danced me a little dance.
 They danced away on a cloud.
 They danced off on a cloud.
 We danced it up.
+
+% verb "dare" fixes
+no one dared say a word
+try it if you want
+try it if you want to
+try it if you dare
+try it if you dare to
+John dared him to jump
+don't dare blame anyone else
+don't you dare blame anyone else
+So don't dare blame anyone else
+Don't you dare stop me, you common little man!
+Sue dared the anger of her family
+How dare you disobey orders
+I dare not to say the truth
+He dare not lie to me!
 
 % ditransitive greetings and various assorted verb issues
 She wished me good luck
@@ -2245,10 +2263,14 @@ He jumped about.
 % adverbs w/ reversed preposition locations
 % Using MVa- seems like the only solution...
 People glanced fearfully around at the impassive troops.
+He looked around, fearfully.
 He looked around fearfully.
 He looked fearfully around.
+*He looked fearfully, around.
+He looked about, fearfully.
 He looked about fearfully.
 He looked fearfully about.
+*He looked fearfully, about.
 
 % Set phrases involving "so" -- this is an exhaustive list !
 % There are no other verbs that take "so" -- should there be 
@@ -2410,6 +2432,12 @@ There will be blood on your hands
 There is a wart on his hands
 There are warts on his hands
 
+it is your fault that you're a failure
+it's your fault that you're a failure
+it's really your fault that you're a failure
+it's really your fault in the end that you're a failure
+it's really your fault, in the end, that you're a failure
+
 
 What the beep was that?
 We'll cab on over to the restaurant later.
@@ -2423,6 +2451,17 @@ That reeks of favoritism.
 Kids will frolic in the summer.
 He would labor over it for hours.
 That circuit will jitter intermittently.
+
+% "to be" auxiliary with date modifiers (not copula)
+I was by then dominated by my aunt
+I was until now dominated by my aunt
+I was until recently dominated by my aunt
+
+I am, since yesterday, quite recovered
+I've been, since January, quite hopeful
+I've been since January quite hopeful
+I was, before Friday, quite unhappy.
+
 
 % Idiomatic usage of "of"
 You must beware of the tiger.
@@ -2562,9 +2601,16 @@ The parts, being obtained as we speak, will arrive this afternoon.
 % zero-copula (missing "to be") post-nominal MX broken-ness:
 The event, being historically insignificant, will soon be forgotten
 The event, historically insignificant, will soon be forgotten
-The event, historically important , will be long commemorated
+The event, historically important, will be long commemorated
 the argument, fundamentally flawed, was soon destroyed
 the argument, being fundamentally flawed, was soon destroyed
+The lady, unpleased by this rude behavior, spoke sharply
+
+% The following fall victim to post-processing "Bad use of adjective65"
+% However, they seem OK enough to me ... they do work, in context.
+The lady, unpleased, spoke sharply
+The lady, displeased, spoke sharply
+the dog, unsatisfied, barked loudly.
 
 % another zero-copula
 Shades of Cyc, where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.
@@ -4305,6 +4351,8 @@ this one and another were damaged
 this one and another one were damaged
 this one and one more were damaged
 He talks of this and that
+
+someone or other would always complain
 
 % Contradictions, corrections, gain-saying
 I saw not Mary, but John.
