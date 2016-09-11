@@ -147,13 +147,6 @@ int lg_isatty(int fd)
 	PFILE_NAME_INFO pfni = (PFILE_NAME_INFO)buf;
 	PWCHAR cp;
 
-	/* First check using _isatty.
-		Note that this returns the wrong result for NUL, for instance!
-		Workaround is not to use _isatty at all, but rather GetFileType
-		plus object name checking. */
-	if (_isatty(fd))
-		return 1;
-
 	/* Fetch the underlying HANDLE. */
 	fh = (HANDLE)_get_osfhandle(fd);
 	if (!fh || (INVALID_HANDLE_VALUE == fh))
