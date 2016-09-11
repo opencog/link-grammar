@@ -919,8 +919,6 @@ static power_table * power_table_new(Sentence sent)
 	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
 	pt->r_table = pt->l_table + sent->length;
 
-	setup_connectors(sent);
-
 	for (w=0; w<sent->length; w++)
 	{
 		/* The below uses variable-sized hash tables. This seems to
@@ -1654,6 +1652,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
+	setup_connectors(sent);
 	power_prune(sent, opts);
 
 	for (;;) {
