@@ -1139,7 +1139,7 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 
 	/* ub is now the rightmost word we need to check */
 	ub = w + c->length_limit;
-	if (ub > sent->length) ub = sent->length;
+	if (ub > sent->length) ub = sent->length - 1;
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
