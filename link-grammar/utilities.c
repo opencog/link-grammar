@@ -829,11 +829,11 @@ locale_t newlocale_LC_CTYPE(const char *locale)
 {
 	locale_t locobj;
 #ifdef _WIN32
-		locobj = _create_locale(LC_CTYPE, locale);
+	locobj = _create_locale(LC_CTYPE, locale);
 #else
-		locobj = newlocale(LC_CTYPE_MASK, locale, (locale_t)0);
+	locobj = newlocale(LC_CTYPE_MASK, locale, (locale_t)0);
 #endif /* _WIN32 */
-		return locobj;
+	return locobj;
 }
 #endif /* HAVE_LOCALE_T */
 
