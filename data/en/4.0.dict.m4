@@ -4371,10 +4371,11 @@ proclaiming.g:
 imagine.v: VERB_PLI(<vc-imagine>);
 imagines.v:  VERB_S_T(<vc-imagine>);
 imagined.v:
-  VERB_SPPP_T(<vc-imagine>) or
-  (<verb-s-pv> & {THi+}) or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-imagine>)
+  or (<verb-s-pv> & {THi+})
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
@@ -4394,10 +4395,11 @@ confirms.v stresses.v assumes.v:
 declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v
 confirmed.v-d stressed.v-d assumed.v-d:
-  VERB_SPPP_T(<vc-declare>) or
-  (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) }) or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-declare>)
+  or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 foresaw.v-d: VERB_SP_T(<vc-declare>);
 foreseen.v:
   VERB_PP(<vc-declare>) or
@@ -5107,8 +5109,12 @@ perceiving.v: <verb-pg> & <vc-perceive>;
 
 report.v: VERB_PLI(<vc-report>);
 reports.v: VERB_S_T(<vc-report>);
-reported.v-d: VERB_SPPP_T(<vc-report>) or (<verb-s-pv> & {<tof-verb> or Z-}) or
-<verb-adj> or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
+reported.v-d:
+  VERB_SPPP_T(<vc-report>)
+  or (<verb-s-pv> & {<tof-verb> or Z-})
+  or <verb-adj>
+  or <verb-manner>
+  or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
 reporting.g: (<vc-report> & <verb-ge>) or <verb-ge-d>;
 reporting.v: <verb-pg> & <vc-report>;
 
@@ -8349,7 +8355,7 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
-as_reported as_imagined as_suspected as_anticipated as_predicted
+as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed
 as_hypothesized as_hypothesised as_discussed as_established
 as_compared as_determined as_measured as_assessed as_demonstrated
@@ -8361,10 +8367,10 @@ as_studied as_inferred as_exemplified as_used as_expressed
 as_visualized as_tested as_manifested as_illustrated as_applied
 as_mediated as_characterized as_affected as_examined as_ascertained
 as_quantified as_influenced as_represented as_marked as_induced
-as_concluded as_calculated as_verified as_required as_recognized
+as_calculated as_verified as_required as_recognized
 as_probed as_presented as_obtained as_needed as_indexed as_derived
 as_based as_analysed as_supported as_restricted as_recorded
-as_recommended as_quantitated as_produced as_postulated as_noted
+as_recommended as_quantitated as_produced as_postulated
 as_caused as_summarized as_prepared as_outlined as_occurred
 as_modified as_localized as_involved as_implied as_gauged as_exhibited
 as_encountered as_displayed as_contained as_catalyzed as_advocated
