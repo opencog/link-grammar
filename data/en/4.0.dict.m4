@@ -3697,7 +3697,7 @@ endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 happen.v occur.v: VERB_PLI(<vc-happen>);
 happens.v occurs.v: VERB_S_I(<vc-happen>);
 happened.v-d occured.v-d occurred.v-d: VERB_SPPP_I(<vc-happen>);
-happening.v occurring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
+happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
 % ditransitve
 <vc-wish>:
@@ -6162,7 +6162,9 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % two-word passives
 % done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
 /en/words/words.v.1.p:
-  <verb-pv> or <verb-phrase-opener>;
+  <verb-pv>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 
 % -----------------------------------------------------------------
 % wall connectors
@@ -8394,10 +8396,13 @@ as.e-c:
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (MVs- & Pm+)
+  or (Xd- & MVs- & Pm+ & Xc+)
+  or (Pm+ & {Xc+ & {Xd-}} & CO+)
+  or (MVz- & Pm+)
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
@@ -8412,9 +8417,6 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
-
-% words.v.1.3
-as_occurred
 
 % words.v.2.3
 as_compared
