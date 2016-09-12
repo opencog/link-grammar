@@ -8319,10 +8319,11 @@ as.e-c:
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
+% MVs- & Pv+: "She sang as promised."
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
-  or ((<subcl-verb> or Pv+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (MVi- & TO+)
@@ -8332,6 +8333,12 @@ as_is: {Xd- & Xc+} & MVs-;
 
 as_possible: MVz-;
 
+% Yuck. This is a long list ... If could be eliminated by changing
+% as.e above to (for example), have "MVs- & Pv+" in it.  However,
+% that would allow some invalid constructions: "as said"
+% Many of these should not allow MVz ...
+% These also fail with auxilliaries: "as can be xxx", "as was xxx"
+% "as will be xxx"
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed
 as_hypothesized as_hypothesised as_discussed as_established
@@ -8351,7 +8358,7 @@ as_recommended as_quantitated as_produced as_postulated as_noted
 as_caused as_summarized as_prepared as_outlined as_occurred
 as_modified as_localized as_involved as_implied as_gauged as_exhibited
 as_encountered as_displayed as_contained as_catalyzed as_advocated
-as_achieved:
+as_achieved as_promised as_agreed as_arranged:
   MVz-
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & MVs-);
