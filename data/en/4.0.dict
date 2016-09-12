@@ -10383,6 +10383,7 @@ as_possible: MVz-;
 % Many of these should not allow MVz ...
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
+% They're all manner verbs...
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed
 as_hypothesized as_hypothesised as_discussed as_established
@@ -10402,7 +10403,7 @@ as_recommended as_quantitated as_produced as_postulated as_noted
 as_caused as_summarized as_prepared as_outlined as_occurred
 as_modified as_localized as_involved as_implied as_gauged as_exhibited
 as_encountered as_displayed as_contained as_catalyzed as_advocated
-as_achieved as_promised as_agreed as_arranged:
+as_achieved as_promised as_agreed as_arranged as_shown:
   MVz-
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & MVs-);
