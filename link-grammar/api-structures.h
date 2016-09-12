@@ -130,8 +130,8 @@ struct Dictionary_s
 	const char *    name;
 	const char *    lang;
 	const char *    version;
-	const char *    locale;
-	locale_t        locale_t;
+	const char *    locale;        /* Locale name */
+	locale_t        ctype;         /* Locale argument for the *_l() functions */
 	int             num_entries;
 
 	bool         use_unknown_word;
@@ -297,8 +297,8 @@ struct PP_data_s
 	size_t vlength;                 /* Length of visited array */
 };
 
-/* A new Postprocessor stuct is alloe for each sentence. It contains
- * sentence-specific post-processing nformation.
+/* A new Postprocessor struct is alloc'ed for each sentence. It contains
+ * sentence-specific post-processing information.
  */
 struct Postprocessor_s
 {
