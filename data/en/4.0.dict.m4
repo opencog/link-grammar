@@ -4277,8 +4277,11 @@ recorded.v-d deduced.v-d envisioned.v-d
 recounted.v-d signified.v-d clarified.v-d disclosed.v-d
 recollected.v-d adduced.v-d posited.v-d
 reiterated.v-d inferred.v-d presupposed.v-d:
- VERB_SPPP_T(<vc-dispute>) or (<verb-s-pv> & {THi+}) or <verb-adj>
-or <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-dispute>)
+  or (<verb-s-pv> & {THi+})
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 recognizing.g disputing.g accepting.g calculating.g deducing.g recording.g
 envisioning.g recounting.g signifying.g clarifying.g disclosing.g
 recollecting.g adducing.g positing.g reiterating.g inferring.g presupposing.g:
@@ -4536,7 +4539,8 @@ estimated.v-d:
   VERB_SPPP_T(<vc-guess>) or
   (<verb-s-pv> & {THi+}) or
   <verb-phrase-opener> or
-  <verb-adj>;
+  <verb-adj> or
+  <verb-manner>;
 guessing.g estimating.g understanding.g noticing.g explaining.g
 demonstrating.g: (<vc-guess> & <verb-ge>) or <verb-ge-d>;
 guessing.v estimating.v understanding.v noticing.v explaining.v
@@ -4594,7 +4598,9 @@ study.v: VERB_PLI(<vc-study>);
 studies.v: VERB_S_T(<vc-study>);
 studied.v-d:
   VERB_SPPP_T(<vc-study>) or
-  <verb-pv> or <verb-adj> or
+  <verb-pv> or
+  <verb-adj> or
+  <verb-manner> or
   <verb-phrase-opener>;
 studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
 studying.v: <verb-pg> & <vc-study>;
@@ -5557,6 +5563,7 @@ forbidden.v:
   (<verb-pv> & {<to-verb>}) or
   <verb-adj> or
   ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+
 designing.g permitting.g pressuring.g causing.g enabling.g
 training.g sentencing.g authorizing.g prompting.g
 spurring.g inviting.g disinclining.g
@@ -5565,7 +5572,8 @@ enticing.g inspiring.g aiding.g employing.g educating.g tempting.g
 condemning.g commissioning.g counseling.g inducing.g instructing.g
 licensing.g inciting.g nominating.g destining.g provoking.g challenging.g
 exhorting.g imploring.g motivating.g impelling.g:
-(<vc-design> & <verb-ge>) or <verb-ge-d>;
+  (<vc-design> & <verb-ge>) or <verb-ge-d>;
+
 designing.v permitting.v pressuring.v causing.v enabling.v
 training.v sentencing.v authorizing.v using.v prompting.v disinclining.v
 spurring.v inviting.v reelecting.v encouraging.v drafting.v hiring.v
@@ -5573,13 +5581,15 @@ enticing.v inspiring.v aiding.v employing.v educating.v tempting.v
 condemning.v commissioning.v counseling.v inducing.v instructing.v
 licensing.v inciting.v nominating.v destining.v provoking.v challenging.v
 exhorting.v imploring.v motivating.v impelling.v:
-<verb-pg> & <vc-design>;
+  <verb-pg> & <vc-design>;
+
 used.v-d:
   VERB_SPPP_T(<vc-design>) or
   (<verb-pv> & {<too-verb>}) or
   (<verb-sp> & <to-verb>) or
   ({@MV+} & {<too-verb>} & <verb-phrase-opener>) or
-  <verb-adj>;
+  <verb-adj> or
+  <verb-manner>;
 using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 % --------------------------------------------------
@@ -6003,6 +6013,7 @@ described.v-d:
   VERB_SPPP_T(<vc-describe>) or
   (<verb-pv> & {AZ+ or Z-}) or
   <verb-adj> or
+  <verb-manner> or
   ({@MV+} & {AZ+} & <verb-phrase-opener>);
 describing.g: (<vc-describe> & <verb-ge>) or <verb-ge-d>;
 describing.v: <verb-pg> & <vc-describe>;
@@ -8379,29 +8390,70 @@ as_possible: MVz-;
 % "as will be xxx"
 % They're all manner verbs...
 % words.v.2.3
-as_compared as_measured
+as_compared
+as_measured
+as_related
+as_expressed
+as_applied
+as_mediated
 
 % words.v.4.3
 as_detected
 as_defined
+as_monitored
+as_assayed
+as_identified
+as_visualized
+as_manifested
+as_illustrated
+as_affected
+as_quantified
+as_influenced
+as_represented
 
 % words-medical.v.4.3
 as_evidenced
+as_exemplified
 
-as_monitored as_described as_confirmed as_assayed as_estimated
-as_identified as_deduced as_related
-as_studied as_inferred as_exemplified as_used as_expressed
-as_visualized as_manifested as_illustrated as_applied
-as_mediated as_characterized as_affected as_ascertained
-as_quantified as_influenced as_represented as_marked as_induced
-as_calculated as_verified as_required as_recognized
-as_probed as_presented as_obtained as_needed as_indexed as_derived
-as_based as_supported as_restricted as_recorded
-as_quantitated as_produced as_postulated
-as_caused as_summarized as_prepared as_outlined as_occurred
-as_modified as_localized as_implied as_gauged as_exhibited
-as_encountered as_displayed as_contained as_catalyzed
-as_achieved as_promised as_agreed as_arranged as_shown:
+
+as_characterized
+as_ascertained
+
+as_marked
+as_induced
+as_verified
+as_required
+as_probed
+as_presented
+as_obtained
+as_needed
+as_indexed
+as_derived
+as_based
+as_supported
+as_restricted
+as_quantitated
+as_produced
+as_postulated
+as_caused
+as_summarized
+as_prepared
+as_outlined
+as_occurred
+as_modified
+as_localized
+as_implied
+as_gauged
+as_exhibited
+as_encountered
+as_displayed
+as_contained
+as_catalyzed
+as_achieved
+as_promised
+as_agreed
+as_arranged
+as_shown:
   MVz-
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & MVs-);
