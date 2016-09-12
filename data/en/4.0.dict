@@ -4141,9 +4141,11 @@ supposed.v-d:
   ((<verb-sp,pp> & (<vc-assert>)) or
   (<verb-and-sp-i-> & ([<vc-assert>]0.2 or ())) or
   ((<vc-assert>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  (<verb-s-pv> & {<tof-verb> or THi+ or Z-}) or
-  <verb-adj>;
+  <verb-and-sp-t>)
+  or (<verb-s-pv> & {<tof-verb> or THi+ or Z-})
+  or <verb-adj>
+  or <verb-manner>;
+
 asserting.v contending.v remarking.v retorting.v intimating.v
 exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
 supposing.v:
@@ -4857,12 +4859,16 @@ proposes.v:
   (<verb-and-sp-i-> & ([<vc-propose>]0.2 or ())) or
   ((<vc-propose>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-proposed.v-d: 
+proposed.v-d:
+  
   ((<verb-sp,pp> & (<vc-propose>)) or
   (<verb-and-sp-i-> & ([<vc-propose>]0.2 or ())) or
   ((<vc-propose>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-(<verb-s-pv> & {THi+ or TSi+ or Z-}) or <verb-adj> or <verb-phrase-opener>;
+  <verb-and-sp-t>)
+  or (<verb-s-pv> & {THi+ or TSi+ or Z-})
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
@@ -5581,11 +5587,16 @@ discusses.v:
   (<verb-and-sp-i-> & ([<vc-discuss>]0.2 or ())) or
   ((<vc-discuss>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-discussed.v-d: 
+discussed.v-d:
+  
   ((<verb-sp,pp> & (<vc-discuss>)) or
   (<verb-and-sp-i-> & ([<vc-discuss>]0.2 or ())) or
   ((<vc-discuss>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or <verb-pv> or <verb-adj> or <verb-phrase-opener>;
+  <verb-and-sp-t>)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 discussing.g: (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
 discussing.v:
 <verb-pg> & <vc-discuss>;
@@ -6182,12 +6193,16 @@ intends.v:
   (<verb-and-sp-i-> & ([<vc-intend>]0.2 or ())) or
   ((<vc-intend>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-intended.v-d: 
+intended.v-d:
+  
   ((<verb-sp,pp> & (<vc-intend>)) or
   (<verb-and-sp-i-> & ([<vc-intend>]0.2 or ())) or
   ((<vc-intend>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or (<verb-pv> & {<to-verb> or Z- or @MV+})
- or <verb-adj> or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
+  <verb-and-sp-t>)
+  or (<verb-pv> & {<to-verb> or Z- or @MV+})
+  or <verb-adj>
+  or <verb-manner>
+  or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
 intending.g: (<vc-intend> & <verb-ge>) or <verb-ge-d>;
 intending.v: <verb-pg> & <vc-intend>;
 
@@ -10401,9 +10416,8 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
-as_proposed as_intended as_supposed
-as_discussed
-as_compared as_measured as_demonstrated
+as_compared
+as_measured as_demonstrated
 as_evidenced as_judged as_detected as_opposed
 as_defined as_reflected
 as_monitored as_described as_confirmed as_assayed as_estimated
