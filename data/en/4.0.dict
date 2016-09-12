@@ -10372,6 +10372,8 @@ as.e:
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
+as_is: {Xd- & Xc+} & MVs-;
+
 as_possible: MVz-;
 
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
