@@ -125,14 +125,14 @@ struct Exp_list_s
 
 struct Dictionary_s
 {
-	Dict_node *     root;
-	Regex_node *    regex_root;
-	const char *    name;
-	const char *    lang;
-	const char *    version;
-	const char *    locale;        /* Locale name */
-	locale_t        ctype;         /* Locale argument for the *_l() functions */
-	int             num_entries;
+	Dict_node *  root;
+	Regex_node * regex_root;
+	const char * name;
+	const char * lang;
+	const char * version;
+	const char * locale;    /* Locale name */
+	locale_t     lctype;    /* Locale argument for the *_l() functions */
+	int          num_entries;
 
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
