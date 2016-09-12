@@ -10349,6 +10349,8 @@ further.r:
   ({Xd-} & Xc+ & CO+);
 
 % links to adverbs on left..
+% EEy+: "The price didn't drop nearly as fast."
+% EAy+: "He is as smart"
 % Hmm, probably want to give EAy a cost, to avoid its use in
 % "William is described as smooth, yet thoughtful"
 as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
@@ -10363,13 +10365,13 @@ as.e-c:
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
-% MVs- & Pv+: "She sang as promised."
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
+  or (MVs- & Pm+)
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
