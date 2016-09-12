@@ -505,37 +505,34 @@ dictionary_six_str(const char * lang,
 		return dict;
 	}
 
-	/* If we don't have a locale per dictionary, the following
-	 * will also set the program's locale. */
+	/* Get the locale from the dictionary. */
 	dict->locale = linkgrammar_get_dict_locale(dict);
-	set_utf8_program_locale();
 
-#ifdef HAVE_LOCALE_T
-	/* We have a locale per dictionary. */
-	if (NULL != dict->locale)
-		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
-
-	/* If we didn't succeed to set the dictionary locale, the program will
-	 * SEGFAULT when it tries to use it with the isw*() functions.
-	 * So set it to the current program's locale as a last resort. */
-	if (NULL == dict->locale_t)
+	/* If there was no locale in the dictionary - then set dict->locale
+	 * so that it is consistent with the current program's locale.
+	 * It will be used as the intended locale of this dictionary, and
+	 * the locale of the compiled regexs. If the locale is not set,
+	 * the program will SEGFAULT when uses the isw*() functions.
+	 * So set it to the current program's locale as a last resort.
+	 */
+	if (NULL == dict->locale)
 	{
 		dict->locale = setlocale(LC_CTYPE, NULL);
-		dict->locale_t = newlocale_LC_CTYPE(dict->locale);
 		prt_error("Warning: Couldn't set dictionary locale! "
 		          "Using current program locale \"%s\"", dict->locale);
 	}
-	/* If dict->locale_t is still not set, there is a bug. */
-	assert((locale_t)0 != dict->locale_t, "Dictionary locale is not set.");
-#else
-	/* We don't have a locale per dictionary - but anyway make sure
-	 * dict->locale is consistent with the current program's locale,
-	 * and especially that it is not NULL. It still indicates the intended
-	 * locale of this dictionary and the locale of the compiled regexs. */
-	dict->locale = setlocale(LC_CTYPE, NULL);
+
+	dict->ctype = 0;
+#ifdef HAVE_LOCALE_T
+	dict->ctype = newlocale_LC_CTYPE(dict->locale);
+
+	/* If dict->locale is still not set, there is a bug. */
+	assert((locale_t) 0 != dict->ctype, "Dictionary locale is not set.");
 #endif /* HAVE_LOCALE_T */
 
-	/* Previous setlocale() result is not valid after its next call. */
+	set_utf8_program_locale();
+
+	/* Previous setlocale() result is not valid after this next call. (???) */
 	dict->locale = string_set_add(dict->locale, dict->string_set);
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);

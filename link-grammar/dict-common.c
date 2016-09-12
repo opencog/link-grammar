@@ -357,8 +357,8 @@ void dictionary_delete(Dictionary dict)
 		dictionary_delete(dict->affix_table);
 	}
 	spellcheck_destroy(dict->spell_checker);
-	if ((locale_t)0 != dict->locale_t) {
-		freelocale(dict->locale_t);
+	if ((locale_t)0 != dict->ctype) {
+		freelocale(dict->ctype);
 	}
 
 	connector_set_delete(dict->unlimited_connector_set);
