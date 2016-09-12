@@ -2318,6 +2318,9 @@ per "/.per": Us+ & Mp-;
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 <verb-adj>:  {@E-} & [A+]0.5;
 
+% used only in "as verb" constructions: "He did it as expected"
+<verb-manner>: Pm-;
+
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
 %        allows a really weird subject-object inversion to proceed:
@@ -4908,14 +4911,18 @@ holding.g: (<vc-hold> & <verb-ge>) or <verb-ge-d>;
 hostage.i captive.i: Vh- or Vth-;
 
 <vc-expect>:
-  ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>)) or
-  ((O+ or <b-minus> or OX+) & {@MV+} & {<too-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>))
+  or ((O+ or <b-minus> or OX+) & {@MV+} & {<too-verb>})
+  or ([[@MV+ & O*n+]]);
 
 expect.v claim.v: VERB_PLI(<vc-expect>);
 expects.v claims.v: VERB_S_T(<vc-expect>);
-expected.v-d claimed.v-d: VERB_SPPP_T(<vc-expect>) or (<verb-s-pv> &
-{<tof-verb> or THi+ or Z-}) or <verb-adj> or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
+expected.v-d claimed.v-d:
+  VERB_SPPP_T(<vc-expect>)
+  or (<verb-s-pv> & {<tof-verb> or THi+ or Z-})
+  or <verb-adj>
+  or <verb-manner>
+  or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
 expecting.g claiming.g: (<vc-expect> & <verb-ge>) or <verb-ge-d>;
 expecting.v claiming.v: <verb-pg> & <vc-expect>;
 
@@ -8342,7 +8349,7 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
-as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
+as_reported as_imagined as_suspected as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed
 as_hypothesized as_hypothesised as_discussed as_established
 as_compared as_determined as_measured as_assessed as_demonstrated
