@@ -4856,9 +4856,9 @@ getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 leave.v: VERB_PLI(<vc-leave>);
 leaves.v: VERB_S_T(<vc-leave>);
 left.v-d:
-  VERB_SPPP_T(<vc-leave>) or
-  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or
-  ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-phrase-opener>);
+  VERB_SPPP_T(<vc-leave>)
+  or (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+))
+  or ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-phrase-opener>);
 leaving.v leavin'.v: <verb-pg> & <vc-leave>;
 leaving.g leavin'.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
@@ -8319,7 +8319,7 @@ as.e-c:
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or ((<subcl-verb> or Pv+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];

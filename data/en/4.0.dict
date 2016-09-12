@@ -6056,9 +6056,9 @@ left.v-d:
   ((<verb-sp,pp> & (<vc-leave>)) or
   (<verb-and-sp-i-> & ([<vc-leave>]0.2 or ())) or
   ((<vc-leave>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or
-  ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-phrase-opener>);
+  <verb-and-sp-t>)
+  or (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+))
+  or ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-phrase-opener>);
 leaving.v leavin'.v: <verb-pg> & <vc-leave>;
 leaving.g leavin'.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
@@ -10363,7 +10363,7 @@ as.e-c:
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or ((<subcl-verb> or Pv+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
