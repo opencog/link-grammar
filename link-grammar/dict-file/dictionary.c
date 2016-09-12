@@ -522,6 +522,10 @@ dictionary_six_str(const char * lang,
 		          "Using current program locale \"%s\"", dict->locale);
 	}
 
+	/* setlocale() returns a string owned by the system. Copy it. */
+	dict->locale = string_set_add(dict->locale, dict->string_set);
+
+
 #ifdef HAVE_LOCALE_T
 	dict->lctype = newlocale_LC_CTYPE(dict->locale);
 
@@ -532,9 +536,6 @@ dictionary_six_str(const char * lang,
 #endif /* HAVE_LOCALE_T */
 
 	set_utf8_program_locale();
-
-	/* Previous setlocale() result is not valid after this next call. (???) */
-	dict->locale = string_set_add(dict->locale, dict->string_set);
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
