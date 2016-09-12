@@ -3475,11 +3475,13 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words.v.4.2: VERB_S_T(<vc-trans>);
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
 
+% <verb-manner> is too broad for most of these, but is OK for many.
 /en/words/words.v.4.3:
-  VERB_SPPP_T(<vc-trans>) or
-  <verb-pv> or
-  (({@E-} or {@EA-} or {@AN-}) & [A+]0.5) or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-trans>)
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
+  or <verb-manner>
+  or <verb-phrase-opener>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
 % The candle guttered. It plummeted to the bottom. Prices plummeted!
@@ -3487,6 +3489,7 @@ running.g beating.g catching.g driving.g striking.g:
   VERB_SPPP_T(<vc-trans>)
   or <verb-pv>
   or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
+  or <verb-manner>
   or <verb-phrase-opener>;
 
 /en/words/words.v.4.4
@@ -4335,6 +4338,7 @@ trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
   VERB_SPPP_T(<vc-sense>)
   or (<verb-s-pv> & {THi+})
   or <verb-adj>
+  or <verb-manner>
   or <verb-phrase-opener>;
 
 sensing.v doubting.v reckoning.v reaffirming.v stipulating.v
@@ -8389,6 +8393,10 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
+
+% words.v.1.3
+as_occurred
+
 % words.v.2.3
 as_compared
 as_measured
@@ -8396,60 +8404,21 @@ as_related
 as_expressed
 as_applied
 as_mediated
+as_derived
+as_localized
 
-% words.v.4.3
-as_detected
-as_defined
-as_monitored
-as_assayed
-as_identified
-as_visualized
-as_manifested
-as_illustrated
-as_affected
-as_quantified
-as_influenced
-as_represented
-
-% words-medical.v.4.3
-as_evidenced
-as_exemplified
+% words.v.8.3
+as_marked
 
 
 as_characterized
-as_ascertained
-
-as_marked
 as_induced
 as_verified
 as_required
-as_probed
-as_presented
-as_obtained
 as_needed
-as_indexed
-as_derived
-as_based
-as_supported
-as_restricted
-as_quantitated
-as_produced
-as_postulated
 as_caused
-as_summarized
 as_prepared
 as_outlined
-as_occurred
-as_modified
-as_localized
-as_implied
-as_gauged
-as_exhibited
-as_encountered
-as_displayed
-as_contained
-as_catalyzed
-as_achieved
 as_promised
 as_agreed
 as_arranged
