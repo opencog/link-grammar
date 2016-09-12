@@ -3714,9 +3714,10 @@ hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: VERB_S_I(<vc-hope>)
 pretended.v-d prayed.v-d: VERB_SPPP_I(<vc-hope>);
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
+% Pv- all by itself: "He left without a fuss, as hoped"
 hoped.v-d voted.v-d vowed.v-d:
   VERB_SPPP_T(<vc-hope>) or
-  (<verb-s-pv> & THi+);
+  (<verb-s-pv> & {THi+});
 
 % Pv- all by itself: "He painted the fence, as agreed."
 agreed.v-d: VERB_SPPP_T(<vc-hope>) or (<verb-pv> & {TH+});
