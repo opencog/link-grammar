@@ -3721,13 +3721,15 @@ hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: VERB_S_I(<vc-hope>)
 pretended.v-d prayed.v-d: VERB_SPPP_I(<vc-hope>);
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
-% Pv- all by itself: "He left without a fuss, as hoped"
 hoped.v-d voted.v-d vowed.v-d:
-  VERB_SPPP_T(<vc-hope>) or
-  (<verb-s-pv> & {THi+});
+  VERB_SPPP_T(<vc-hope>)
+  or (<verb-s-pv> & THi+)
+  or <verb-manner>;
 
-% Pv- all by itself: "He painted the fence, as agreed."
-agreed.v-d: VERB_SPPP_T(<vc-hope>) or (<verb-pv> & {TH+});
+agreed.v-d:
+  VERB_SPPP_T(<vc-hope>)
+  or (<verb-pv> & TH+)
+  or <verb-manner>;
 swore.v-d: VERB_SP_T(<vc-hope>);
 sworn.v: VERB_PP(<vc-hope>) or <verb-adj>;
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
@@ -4096,6 +4098,7 @@ threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   VERB_SPPP_T(<vc-threaten>) or
   <verb-pv> or
   <verb-adj> or
+  <verb-manner> or
   <verb-phrase-opener>;
 
 meaning.g arranging.g threatening.g pledging.g:
@@ -5046,8 +5049,12 @@ refusing.v: <verb-pg> & <vc-refuse>;
 want.v need.v: VERB_PLI(<vc-want>);
 need.i need'st: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: VERB_S_T(<vc-want>);
-wanted.v-d needed.v-d: VERB_SPPP_T(<vc-want>) or <verb-pv> or <verb-adj>
-or <verb-phrase-opener>;
+wanted.v-d needed.v-d:
+  VERB_SPPP_T(<vc-want>)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 wanting.g needing.g: (<vc-want> & <verb-ge>) or <verb-ge-d>;
 wanting.v needing.v: <verb-pg> & <vc-want>;
 
@@ -5075,8 +5082,12 @@ choosing.v: <verb-pg> & <vc-choose>;
 
 prepare.v press.v: VERB_PLI(<vc-prepare>);
 prepares.v presses.v: VERB_S_T(<vc-prepare>);
-prepared.v-d pressed.v-d: VERB_SPPP_T(<vc-prepare>) or <verb-pv> or
-<verb-adj> or <verb-phrase-opener>;
+prepared.v-d pressed.v-d:
+  VERB_SPPP_T(<vc-prepare>)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 preparing.g pressing.g: (<vc-prepare> & <verb-ge>) or <verb-ge-d>;
 preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 
@@ -5088,8 +5099,12 @@ preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 
 require.v: VERB_PLI(<vc-require>);
 requires.v: VERB_S_T(<vc-require>);
-required.v-d: VERB_SPPP_T(<vc-require>) or
-(<verb-pv> & {<to-verb> or TSi+}) or <verb-adj> or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
+required.v-d:
+  VERB_SPPP_T(<vc-require>)
+  or (<verb-pv> & {<to-verb> or TSi+})
+  or <verb-adj>
+  or <verb-manner>
+  or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
 requiring.g: (<vc-require> & <verb-ge>) or <verb-ge-d>;
 requiring.v: <verb-pg> & <vc-require>;
 
@@ -5455,6 +5470,7 @@ promised.v-d:
   VERB_SPPP_T(<vc-promise>)
   or (<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & (<to-verb> or <embed-verb> or TH+ or RSe+ or Zs-))))
   or <verb-adj>
+  or <verb-manner>
   or ({O+ or [[@MV+ & O*n+]] or ({{@MV+} & (<to-verb> or <embed-verb> or TH+)})} & <verb-phrase-opener>);
 promising.g: (<vc-promise> & <verb-ge>) or <verb-ge-d>;
 promising.v: <verb-pg> & <vc-promise>;
@@ -5474,6 +5490,7 @@ shows.v: VERB_S_T(<vc-show>);
 showed.v-d: VERB_SP_T(<vc-show>);
 shown.v:
   VERB_PP(<vc-show>) or
+  <verb-manner> or
   (<verb-s-pv-b> &
     (({O+ or K+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
     ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs-)))) or
@@ -5560,6 +5577,7 @@ implored.v-d motivated.v-d impelled.v-d:
   VERB_SPPP_T(<vc-design>) or
   (<verb-pv> & {<to-verb>}) or
   <verb-adj> or
+  <verb-manner> or
   ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
 forbade.v-d: VERB_SP_T(<vc-design>);
 forbidden.v:
@@ -6032,6 +6050,7 @@ portrayed.v-d depicted.v-d regarded.v-d viewed.v-d characterized.v-d:
   VERB_SPPP_T(<vc-portray>) or
   (<verb-pv> & {AZ+}) or
   <verb-adj> or
+  <verb-manner> or
   ({@MV+} & {AZ+} & <verb-phrase-opener>);
 portraying.g depicting.g regarding.g viewing.g characterizing.g:
   (<vc-portray> & <verb-ge>) or <verb-ge-d>;
@@ -8408,21 +8427,8 @@ as_derived
 as_localized
 
 % words.v.8.3
-as_marked
+as_marked:
 
-
-as_characterized
-as_induced
-as_verified
-as_required
-as_needed
-as_caused
-as_prepared
-as_outlined
-as_promised
-as_agreed
-as_arranged
-as_shown:
   MVz-
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & MVs-);
