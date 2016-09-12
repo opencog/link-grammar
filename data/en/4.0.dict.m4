@@ -3257,10 +3257,11 @@ bid.v-d bade.v-d:
 judge.v: VERB_PLI(`<vc-judge>');
 judges.v: VERB_S_T(`<vc-judge>');
 judged.v-d:
-  VERB_SPPP_T(`<vc-judge>') or
-  (<verb-pv> & {{@MV+} & Pa+}) or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(`<vc-judge>')
+  or (<verb-pv> & {{@MV+} & Pa+})
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 judging.v:
   <verb-pg> & <vc-judge>;
 judging.g:
@@ -4296,7 +4297,8 @@ repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d:
   VERB_SPPP_T(<vc-repeat>) or
   <verb-pv> or
   <verb-phrase-opener> or
-  <verb-adj>;
+  <verb-adj> or
+  <verb-manner>;
 provided.v-d:
   VERB_SPPP_T(<vc-repeat>) or
   <verb-pv> or
@@ -4526,7 +4528,10 @@ guess.v estimate.v understand.v notice.v explain.v esplain.v demonstrate.v:
 guesses.v estimates.v understands.v notices.v explains.v demonstrates.v:
   VERB_S_T(<vc-guess>);
 guessed.v-d understood.v-d noticed.v-d explained.v-d demonstrated.v-d:
-  VERB_SPPP_T(<vc-guess>) or (<verb-s-pv> & {THi+}) or <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-guess>)
+  or (<verb-s-pv> & {THi+})
+  or <verb-manner>
+  or <verb-phrase-opener>;
 estimated.v-d:
   VERB_SPPP_T(<vc-guess>) or
   (<verb-s-pv> & {THi+}) or
@@ -4621,6 +4626,7 @@ necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d:
   VERB_SPPP_T(<vc-oppose>) or
   <verb-pv> or
   <verb-adj> or
+  <verb-manner> or
   <verb-phrase-opener>;
 
 opposing.g enjoying.g advocating.g contemplating.g
@@ -8372,10 +8378,16 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
-as_compared
-as_measured as_demonstrated
-as_evidenced as_judged as_detected as_opposed
-as_defined as_reflected
+% words.v.2.3
+as_compared as_measured
+
+% words.v.4.3
+as_detected
+as_defined
+
+% words-medical.v.4.3
+as_evidenced
+
 as_monitored as_described as_confirmed as_assayed as_estimated
 as_identified as_deduced as_related
 as_studied as_inferred as_exemplified as_used as_expressed
@@ -8387,8 +8399,8 @@ as_probed as_presented as_obtained as_needed as_indexed as_derived
 as_based as_supported as_restricted as_recorded
 as_quantitated as_produced as_postulated
 as_caused as_summarized as_prepared as_outlined as_occurred
-as_modified as_localized as_involved as_implied as_gauged as_exhibited
-as_encountered as_displayed as_contained as_catalyzed as_advocated
+as_modified as_localized as_implied as_gauged as_exhibited
+as_encountered as_displayed as_contained as_catalyzed
 as_achieved as_promised as_agreed as_arranged as_shown:
   MVz-
   or ({Xc+ & {Xd-}} & CO+)
