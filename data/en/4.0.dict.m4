@@ -4484,10 +4484,11 @@ analysed.v analyzed.v assessed.v established.v evaluated.v examined.v
 questioned.v tested.v
 hypothesized.v-d hypothesised.v-d well-established.v-d documented.v-d
 envisaged.v-d:
-  VERB_SPPP_T(<vc-predict>) or
-  (<verb-s-pv> & {THi+}) or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-predict>)
+  or (<verb-s-pv> & {THi+})
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 
 % the second line is almost, not quite, <verb-s-pv>
 said.v-d:
@@ -5946,10 +5947,11 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 suggest.v anticipate.v recommend.v: VERB_PLI(<vc-suggest>);
 suggests.v anticipates.v recommends.v: VERB_S_T(<vc-suggest>);
 suggested.v-d anticipated.v-d recommended.v-d:
-  VERB_SPPP_T(<vc-suggest>) or
-  (<verb-s-pv> & {THi+ or TSi+ or Z-}) or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-suggest>)
+  or (<verb-s-pv> & {THi+ or TSi+ or Z-})
+  or <verb-adj>
+  or <verb-manner>
+  or <verb-phrase-opener>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>;
 suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
@@ -8355,22 +8357,21 @@ as_possible: MVz-;
 % These also fail with auxilliaries: "as can be xxx", "as was xxx"
 % "as will be xxx"
 % They're all manner verbs...
-as_anticipated as_predicted
-as_realized as_proposed as_intended as_supposed
-as_hypothesized as_hypothesised as_discussed as_established
-as_compared as_determined as_measured as_assessed as_demonstrated
-as_evidenced as_indicated as_revealed as_judged as_detected as_opposed
-as_observed as_defined as_reflected as_evaluated as_suggested
+as_proposed as_intended as_supposed
+as_discussed
+as_compared as_measured as_demonstrated
+as_evidenced as_judged as_detected as_opposed
+as_defined as_reflected
 as_monitored as_described as_confirmed as_assayed as_estimated
-as_analyzed as_identified as_deduced as_documented as_related
+as_identified as_deduced as_related
 as_studied as_inferred as_exemplified as_used as_expressed
-as_visualized as_tested as_manifested as_illustrated as_applied
-as_mediated as_characterized as_affected as_examined as_ascertained
+as_visualized as_manifested as_illustrated as_applied
+as_mediated as_characterized as_affected as_ascertained
 as_quantified as_influenced as_represented as_marked as_induced
 as_calculated as_verified as_required as_recognized
 as_probed as_presented as_obtained as_needed as_indexed as_derived
-as_based as_analysed as_supported as_restricted as_recorded
-as_recommended as_quantitated as_produced as_postulated
+as_based as_supported as_restricted as_recorded
+as_quantitated as_produced as_postulated
 as_caused as_summarized as_prepared as_outlined as_occurred
 as_modified as_localized as_involved as_implied as_gauged as_exhibited
 as_encountered as_displayed as_contained as_catalyzed as_advocated
