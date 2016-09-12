@@ -10362,12 +10362,14 @@ as.e-c:
   or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
+% MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((<subcl-verb> or Pv+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
+  or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
 as_possible: MVz-;
@@ -11293,7 +11295,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % Em+: "That is so not going to happen"
 % EExk+: "That is so very beautiful"
 % EBb- & EAxk+: "It tastes bitter and so good"
-% MVp-: "Hold the brush so"
+% MVp- & Xc+: "Hold the brush so"
 % Pv-: "It seems so"
 so:
   ({EBb-} & EAxk+ & {HA+})
@@ -11304,7 +11306,7 @@ so:
   or <fronted>
   or (Wq- & CQ+)
   or Wa-
-  or MVp-
+  or (MVp- & Xc+)
   or Pv-
   or O-
   or Js-;
