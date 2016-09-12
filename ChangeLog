@@ -4,7 +4,7 @@ Version 5.3.10: (XXX 2016?)
  * Fix SAT parser crashes.
  * Expand default list of Java JDK search paths.
  * Fix python bindings: after timeout, no further parsing is performed.
- * Fix various adverbial, conjunctive uses of "so".
+ * Fix various adverbial, conjunctive uses of "as", "so".
  * Extended list of exclamations.
  * Remove CC link, add VC link, for clauses to coordinating conjunctions.
  * Fixes for the verb "dare", "someone or other", etc.

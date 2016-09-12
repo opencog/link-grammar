@@ -4021,19 +4021,20 @@ pretended.v-d prayed.v-d:
   ((<vc-hope>) & <verb-and-sp-i+>));
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
+% Pv- all by itself: "She sang well, as hoped."
 hoped.v-d voted.v-d vowed.v-d:
   
   ((<verb-sp,pp> & (<vc-hope>)) or
   (<verb-and-sp-i-> & ([<vc-hope>]0.2 or ())) or
   ((<vc-hope>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
-  (<verb-s-pv> & THi+);
+  (<verb-s-pv> & {THi+});
 
 agreed.v-d: 
   ((<verb-sp,pp> & (<vc-hope>)) or
   (<verb-and-sp-i-> & ([<vc-hope>]0.2 or ())) or
   ((<vc-hope>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or (<verb-pv> & TH+);
+  <verb-and-sp-t>) or (<verb-pv> & {TH+});
 swore.v-d: 
   ((<verb-sp> & (<vc-hope>)) or
   (<verb-and-sp-i-> & ([<vc-hope>]0.2 or ())) or
