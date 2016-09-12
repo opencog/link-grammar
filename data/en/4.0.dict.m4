@@ -3694,10 +3694,10 @@ endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
 <vc-happen>: {@MV+} & {<to-verb> or THi+};
-happen.v: VERB_PLI(<vc-happen>);
-happens.v: VERB_S_I(<vc-happen>);
-happened.v-d: VERB_SPPP_I(<vc-happen>);
-happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
+happen.v occur.v: VERB_PLI(<vc-happen>);
+happens.v occurs.v: VERB_S_I(<vc-happen>);
+happened.v-d occured.v-d occurred.v-d: VERB_SPPP_I(<vc-happen>);
+happening.v occurring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
 % ditransitve
 <vc-wish>:
