@@ -522,12 +522,13 @@ dictionary_six_str(const char * lang,
 		          "Using current program locale \"%s\"", dict->locale);
 	}
 
-	dict->lctype = 0;
 #ifdef HAVE_LOCALE_T
 	dict->lctype = newlocale_LC_CTYPE(dict->locale);
 
 	/* If dict->locale is still not set, there is a bug. */
 	assert((locale_t) 0 != dict->lctype, "Dictionary locale is not set.");
+#else
+	dict->lctype = 0;
 #endif /* HAVE_LOCALE_T */
 
 	set_utf8_program_locale();
