@@ -11299,11 +11299,12 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % EBb- & EAxk+: "It tastes bitter and so good"
 % MVp- & Xc+: "Hold the brush so"
 % Pv-: "It seems so"
+% MVs-: "she insisted, so we will do it"
 so:
   ({EBb-} & EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or Em+
-  or ((({Xd-} & <coord> & Xs-) or ({Xc+} & Wc-))
+  or ((({Xd-} & (MVs- or [<coord>]) & Xs-) or ({Xc+} & Wc-))
     & (<subcl-verb> or [<sent-start>]0.5))
   or <fronted>
   or (Wq- & CQ+)
