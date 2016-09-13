@@ -2310,15 +2310,15 @@ per "/.per": Us+ & Mp-;
 % kind of like manner adverbial phrases.  Only certain verbs have
 % this "manner" format, but they are not well-sorted out.
 %
-% Sa*a-: "He did it as expected"
-% Sa*a- & MXsr-: "the movie, as filmed, is too long"
+% Sa*v-: "He did it as expected"
+% Sa*v- & MXsr-: "the movie, as filmed, is too long"
 %      The cost on MXsr+ is to give MVs preference for
 %        "She sang well, as planned"
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
 % Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
 <verb-manner>:
-  (Sa*a- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
+  (Sa*v- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -2699,10 +2699,10 @@ has.v:
   or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
-% Sa*v- & PPf+: "as had been agreed, the work began on Monday"
+% Sa*a- & PPf+: "as had been agreed, the work began on Monday"
 had.v-d:
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
-  (Sa*v- & PPf+) or
+  (Sa*a- & PPf+) or
   (<verb-x-sp> & <vc-have>) or
   (<verb-x-sp> & <verb-wall>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
@@ -2835,13 +2835,13 @@ hadn't.v-d hadn’t.v-d:
 % <verb-rq> & (SIs*x+ or SFIs+):  "Is it in place?")
 % It does not use a wall, because Qd connects to the wall already.
 % SIs*x blocks SIs*g: "*There is chasing dogs"
-% Sa*v- & Pv+: "..., as is agreed."
+% Sa*a- & Pv+: "..., as is agreed."
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or (<verb-rq> & (SIs*x+ or SIs*b+ or SFIs+) & {<vc-be-no-wall>})
-  or (Sa*v- & Pv+)
+  or (Sa*a- & Pv+)
   or (Ss*w- & <verb-wall> & Pp+ & TO+ & IV+)
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
@@ -2902,12 +2902,12 @@ are.v:
 yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
-% Sa*v- & Pv+: "..., as was promised."
+% Sa*a- & Pv+: "..., as was promised."
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (Sa*v- & Pv+)
+  or (Sa*a- & Pv+)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
@@ -2989,11 +2989,11 @@ weren't.v-d weren’t.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
-% Sa*v- & Ix+: "..., as shall be proven"
+% Sa*a- & Ix+: "..., as shall be proven"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
-  or (Sa*v- & Ix+)
+  or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
@@ -10475,15 +10475,15 @@ as.e-c:
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
-% MVs- & Sa*a+: "he left as agreed"
-% MVs- & Sa*v+ & CV+: " ..., as shall be proven"
+% MVs- & Sa*v+: "he left as agreed"
+% MVs- & Sa*a+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
 % Cz+ & CV+: "the accused, as it shall be shown, is innocent"
 %      use Cz instead of <subcl-verb> because post-processing kills the
 %      Cs link with a "Unbounded s domain78" error.
 %
-<as-subj>: Sa*a+ or (Sa*v+ & CV+);
+<as-subj>: Sa*v+ or (Sa*a+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
