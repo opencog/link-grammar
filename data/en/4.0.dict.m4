@@ -2325,9 +2325,9 @@ per "/.per": Us+ & Mp-;
 %        "She sang well, as planned"
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
-% Pv- & MXsr-: "The accused, as shall be proven, is innocent"
+% Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
 <verb-manner>:
-  (Sa*a- or Pv-) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
+  (Sa*a- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -8434,11 +8434,9 @@ as.e-c:
 % MVs- & Sa*v+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
-% XXX FIXME:  "the accused, as it shall be shown, is innocent"
-%     should get a CV link btween "it" and "shown" but for some reason,
-%     its not coming out and I can't tell why.
-%     using Cz instead of <subcl-verb> because PP "Unbounded s domain78"
-%     kills the Cs link here. Arghhh.
+% Cz+ & CV+: "the accused, as it shall be shown, is innocent"
+%      use Cz instead of <subcl-verb> because post-processing kills the
+%      Cs link with a "Unbounded s domain78" error.
 %
 <as-subj>: Sa*a+ or (Sa*v+ & CV+);
 as.e:
@@ -8447,7 +8445,8 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or ((<subcl-verb> or <as-subj>) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-  or (Cz+ & {CV+})
+  or (Cz+ & CV+)
+  or <as-subj>
   or (MVz- & Sa*a+)
   or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
   or (MVi- & TO+)
