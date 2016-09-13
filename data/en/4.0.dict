@@ -2832,11 +2832,13 @@ hadn't.v-d hadn’t.v-d:
 % <verb-rq> & (SIs*x+ or SFIs+):  "Is it in place?")
 % It does not use a wall, because Qd connects to the wall already.
 % SIs*x blocks SIs*g: "*There is chasing dogs"
+% Sa*v- & Pv+: "..., as is agreed."
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or (<verb-rq> & (SIs*x+ or SIs*b+ or SFIs+) & {<vc-be-no-wall>})
+  or (Sa*v- & Pv+)
   or (Ss*w- & <verb-wall> & Pp+ & TO+ & IV+)
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
