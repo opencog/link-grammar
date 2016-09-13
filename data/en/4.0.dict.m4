@@ -6580,7 +6580,8 @@ unlike:
      or (Xd- & Xc+ & (E+ or MVx-)));
 
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
-% The Jd+ forces a link to the object as well.
+%      The Jd+ forces a link to the object as well.
+% Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
 of:
   ({JQ+}
     & (J+ or Mgp+ or QI+)
@@ -6590,6 +6591,7 @@ of:
       or (Xd- & Xc+ & MX*x-)
       or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & CO+)]]))
+  or (Wj- & JQ+ & J+ & Qd+)
   or (OFd- & Jd+)
   or ((OFj- or Mp-) & B-)
   or (MG- & JG+)
