@@ -2319,9 +2319,11 @@ per "/.per": Us+ & Mp-;
 % MXsr-: "the movie, as filmed, is too long"
 % CO+: "as promised, she left"
 % MVs-: "she left as promised"
+% {MV+}: "the man, as acquiescing as he was, set a bad precedent."
+%        I want to use MVz+ for above, but it doesn't work...
 <verb-manner>:
   (Pm- & (MVs- or MXs-))
-  or (Pm- & Xd- & (MVs- or MXsr-) & (Xc+ or Xp+ or Xx+ or Xe+))
+  or (Pm- & Xd- & (MVs- or MXsr-) & {MV+} & (Xc+ or Xp+ or Xx+ or Xe+))
   or (Pm- & {Xc+ & {Xd-}} & CO+);
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
