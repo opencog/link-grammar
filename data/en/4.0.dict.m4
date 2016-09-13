@@ -2319,15 +2319,15 @@ per "/.per": Us+ & Mp-;
 % kind of like manner adverbial phrases.  Only certain verbs have
 % this "manner" format, but they are not well-sorted out.
 %
-% S**a-: "He did it as expected"
-% S**a- & MXsr-: "the movie, as filmed, is too long"
+% Sa*a-: "He did it as expected"
+% Sa*a- & MXsr-: "the movie, as filmed, is too long"
 %      The cost on MXsr+ is to give MVs preference for
 %        "She sang well, as planned"
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
 % Pv- & MXsr-: "The accused, as shall be proven, is innocent"
 <verb-manner>:
-  (S**a- or Pv-) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
+  (Sa*a- or Pv-) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -2910,12 +2910,12 @@ are.v:
 yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
-% S**a- & Pv+: "..., as was promised."
+% Sa*a- & Pv+: "..., as was promised."
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (S**a- & Pv+)
+  or (Sa*a- & Pv+)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
@@ -2997,11 +2997,11 @@ weren't.v-d weren’t.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
-% S**a- & Ix+: "..., as shall be proven"
+% Sa*a- & Ix+: "..., as shall be proven"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
-  or (S**a- & Ix+)
+  or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
@@ -8426,8 +8426,8 @@ as.e-c:
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
-% MVs- & S**a+: "he left as agreed"
-% MVs- & S**a+ & CV+: " ..., as shall be proven"
+% MVs- & Sa*a+: "he left as agreed"
+% MVs- & Sa*a+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
 % XXX FIXME:  "the accused, as it shall be shown, is innocent"
@@ -8441,10 +8441,10 @@ as.e:
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
-  or ((<subcl-verb> or S**a+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or ((<subcl-verb> or Sa*a+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (Cz+ & {CV+})
-  or (MVz- & S**a+)
-  or ({{Xd-} & MVs-} & S**a+ & {CV+} & {Xc+})
+  or (MVz- & Sa*a+)
+  or ({{Xd-} & MVs-} & Sa*a+ & {CV+} & {Xc+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
