@@ -505,16 +505,29 @@ dictionary_six_str(const char * lang,
 		return dict;
 	}
 
-	/* Get the locale from the dictionary. */
+	/* Get the locale for the dictionary. The first one of the
+	 * following which exists, is used:
+	 * 1. The locale which is defined in the dictionary.
+	 * 2. The locale from the environment.
+	 * 3. On Windows - the user's default locale.
+	 * NULL is returned if the locale is not valid.
+	 * Note:
+	 * If we don't have locale_t, as a side effect of checking the locale
+	 * it is set as the program's locale (as desired).  However, in that
+	 * case if it is not valid and this is the first dictionary which is
+	 * opened, the program's locale may remain the initial one, i.e. "C"
+	 * (unless the API user changed it). */
 	dict->locale = linkgrammar_get_dict_locale(dict);
 
-	/* If there was no locale in the dictionary - then set dict->locale
-	 * so that it is consistent with the current program's locale.
-	 * It will be used as the intended locale of this dictionary, and
-	 * the locale of the compiled regexs. If the locale is not set,
-	 * the program will SEGFAULT when uses the isw*() functions.
-	 * So set it to the current program's locale as a last resort.
-	 */
+	/* If the program's locale doesn't have a UTF-8 codeset (e.g. it is
+	 * "C", or because the API user has set it incorrectly) set it to one
+	 * that has it. */
+	set_utf8_program_locale();
+
+	/* If the dictionary locale couldn't be established - then set
+	 * dict->locale so that it is consistent with the current program's
+	 * locale.  It will be used as the intended locale of this
+	 * dictionary, and the locale of the compiled regexs. */
 	if (NULL == dict->locale)
 	{
 		dict->locale = setlocale(LC_CTYPE, NULL);
@@ -527,15 +540,20 @@ dictionary_six_str(const char * lang,
 
 
 #ifdef HAVE_LOCALE_T
+	/* Since linkgrammar_get_dict_locale() (which is called above)
+	 * validates the locale, the following call is guaranteed to succeed. */
 	dict->lctype = newlocale_LC_CTYPE(dict->locale);
 
-	/* If dict->locale is still not set, there is a bug. */
+	/* If dict->locale is still not set, there is a bug.
+	 * Without this assert(), the program may SEGFAULT when it
+	 * uses the isw*() functions. */
 	assert((locale_t) 0 != dict->lctype, "Dictionary locale is not set.");
 #else
 	dict->lctype = 0;
 #endif /* HAVE_LOCALE_T */
 
-	set_utf8_program_locale();
+	/* setlocale() returns a string owned by the system. Copy it. */
+	dict->locale = string_set_add(dict->locale, dict->string_set);
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
@@ -553,17 +571,17 @@ dictionary_six_str(const char * lang,
 	 */
 	if (read_regex_file(dict, regex_name)) goto failure;
 
-	const char *locale = setlocale(LC_CTYPE, NULL);
-	locale = strdupa(locale); /* setlocale() uses static memory. */
+	const char *locale = setlocale(LC_CTYPE, NULL); /* Save current locale. */
+	locale = strdupa(locale); /* setlocale() uses its own memory. */
 	setlocale(LC_CTYPE, dict->locale);
 	lgdebug(+D_DICT, "Regexs locale \"%s\"\n", setlocale(LC_CTYPE, NULL));
 
 	if (compile_regexs(dict->regex_root, dict))
 	{
-		locale = setlocale(LC_CTYPE, locale);
+		locale = setlocale(LC_CTYPE, locale);         /* Restore the locale. */
 		goto failure;
 	}
-	locale = setlocale(LC_CTYPE, locale);
+	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */
 	assert(NULL != locale, "Cannot restore program locale\n");
 
 #ifdef USE_CORPUS
