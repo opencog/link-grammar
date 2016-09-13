@@ -2700,6 +2700,7 @@ has.v:
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
 had.v-d:
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
+(Sa*v- & PPf+) or
   (<verb-x-sp> & <vc-have>) or
   (<verb-x-sp> & <verb-wall>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
@@ -10480,15 +10481,16 @@ as.e-c:
 %     using Cz instead of <subcl-verb> because PP "Unbounded s domain78"
 %     kills the Cs link here. Arghhh.
 %
+<as-subj>: Sa*a+ or (Sa*v+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
-  or ((<subcl-verb> or Sa*a+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or ((<subcl-verb> or <as-subj>) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (Cz+ & {CV+})
   or (MVz- & Sa*a+)
-  or ({{Xd-} & MVs-} & (Sa*a+ or (Sa*v+ & CV+)) & {Xc+})
+  or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
