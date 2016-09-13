@@ -2315,13 +2315,16 @@ per "/.per": Us+ & Mp-;
 <verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
-% used only in "as verb" constructions: "He did it as expected"
-% MXsr-: "the movie, as filmed, is too long"
-%      cost on MX- is for "She sang well, as planned."
+% used only in "as verb" constructions:
+% Sa-: "He did it as expected"
+% Sa- & MXsr-: "the movie, as filmed, is too long"
+%      The cost on MXsr+ is to give MVs preference for
+%        "She sang well, as planned"
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
+% Pv- & MXsr-: "The accused, as shall be proven, is innocent"
 <verb-manner>:
-  (Sa- & {Xd-} & {MXsr- & {MV+}} & {Xc+});
+  (Sa- or Pv-) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -8431,7 +8434,7 @@ as.e:
   or (AZ- & Pa+)
   or ((<subcl-verb> or Sa+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (MVz- & Sa+)
-  or ({{Xd-} & MVs-} & Sa+ & {CV+})
+  or ({{Xd-} & MVs-} & Sa+ & {CV+} & {Xc+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
