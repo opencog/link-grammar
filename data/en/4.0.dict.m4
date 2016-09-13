@@ -2712,9 +2712,10 @@ has.v:
   or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
+% Sa*v- & PPf+: "as had been agreed, the work began on Monday"
 had.v-d:
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
-(Sa*v- & PPf+) or
+  (Sa*v- & PPf+) or
   (<verb-x-sp> & <vc-have>) or
   (<verb-x-sp> & <verb-wall>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
