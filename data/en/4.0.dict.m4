@@ -2908,10 +2908,12 @@ are.v:
 yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
+% Pm- & Pv+: "..., as was promised."
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
+  or (Pm- & Pv+)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
@@ -3745,14 +3747,16 @@ hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: VERB_S_I(<vc-hope>)
 pretended.v-d prayed.v-d: VERB_SPPP_I(<vc-hope>);
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
+% Naked Pv+: "..., as was hoped."
 hoped.v-d voted.v-d vowed.v-d:
   VERB_SPPP_T(<vc-hope>)
-  or (<verb-s-pv> & THi+)
+  or (<verb-s-pv> & {THi+})
   or <verb-manner>;
 
+% Naked Pv+: "..., as was agreed."
 agreed.v-d:
   VERB_SPPP_T(<vc-hope>)
-  or (<verb-pv> & TH+)
+  or (<verb-pv> & {TH+})
   or <verb-manner>;
 swore.v-d: VERB_SP_T(<vc-hope>);
 sworn.v: VERB_PP(<vc-hope>) or <verb-adj>;
@@ -8429,7 +8433,7 @@ as.e:
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (MVz- & Pm+)
   or Pm+
-  or (Xd- & MVs- & Pm+ & CV+ & (Xc+ or Xp+ or Xx+ or Xe+))
+  or ({Xd-} & MVs- & Pm+ & CV+ & (Xc+ or Xp+ or Xx+ or Xe+))
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
