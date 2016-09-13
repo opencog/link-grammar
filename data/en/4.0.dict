@@ -7784,6 +7784,7 @@ bet.v-d:
   ((<vc-bet>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
   (<verb-ico> & <vc-bet>) or
+  <verb-manner> or
   (<verb-pv> & {O+ or <b-minus>} & {@MV+} & {TH+ or <embed-verb> or RSe+ or @MV+});
 bets.v: 
   ((<verb-s> & (<vc-bet>)) or

@@ -5953,6 +5953,7 @@ clearing.v: <verb-pg> & <vc-clear>;
 bet.v-d:
   VERB_SPPP_T(<vc-bet>) or
   (<verb-ico> & <vc-bet>) or
+  <verb-manner> or
   (<verb-pv> & {O+ or <b-minus>} & {@MV+} & {TH+ or <embed-verb> or RSe+ or @MV+});
 bets.v: VERB_S_T(<vc-bet>);
 betted.v-d:
