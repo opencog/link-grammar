@@ -2897,12 +2897,12 @@ are.v:
 yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
-% Sa*a- & Pv+: "..., as was promised."
+% Sa*v- & Pv+: "..., as was promised."
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (Sa*a- & Pv+)
+  or (Sa*v- & Pv+)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
@@ -10469,7 +10469,7 @@ as.e-c:
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
 % MVs- & Sa*a+: "he left as agreed"
-% MVs- & Sa*a+ & CV+: " ..., as shall be proven"
+% MVs- & Sa*v+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
 % XXX FIXME:  "the accused, as it shall be shown, is innocent"
@@ -10486,7 +10486,7 @@ as.e:
   or ((<subcl-verb> or Sa*a+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (Cz+ & {CV+})
   or (MVz- & Sa*a+)
-  or ({{Xd-} & MVs-} & Sa*a+ & {CV+} & {Xc+})
+  or ({{Xd-} & MVs-} & (Sa*a+ or (Sa*v+ & CV+)) & {Xc+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
