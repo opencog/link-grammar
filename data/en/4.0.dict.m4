@@ -2319,7 +2319,13 @@ per "/.per": Us+ & Mp-;
 <verb-adj>:  {@E-} & [A+]0.5;
 
 % used only in "as verb" constructions: "He did it as expected"
-<verb-manner>: Pm-;
+% MX-: "the movie, as filmed, is too long"
+% CO+: "as promised, she left"
+% MVs-: "she left as promised"
+<verb-manner>:
+  (Pm- & (MVs- or MX-))
+  or (Pm- & Xd- & (MVs- or MX-) & Xc+)
+  or (Pm- & {Xc+ & {Xd-}} & CO+);
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
@@ -8409,10 +8415,8 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-  or (MVs- & Pm+)
-  or (Xd- & MVs- & Pm+ & Xc+)
-  or (Pm+ & {Xc+ & {Xd-}} & CO+)
   or (MVz- & Pm+)
+  or Pm+
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
