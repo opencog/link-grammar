@@ -2433,8 +2433,8 @@ per "/.per": Us+ & Mp-;
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (S- or SF- or PPf- or (RS- & B-));
-<verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
+<verb-x-sp,pp>: {@E-} & (Ss- or Sp- or SF- or PPf- or (RS- & B-));
+<verb-x-sp>: {@E-} & (Ss- or Sp- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 
