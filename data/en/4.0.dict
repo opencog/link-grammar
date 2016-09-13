@@ -2318,6 +2318,8 @@ per "/.per": Us+ & Mp-;
   or (Pm- & {Xc+ & {Xd-}} & CO+);
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
+% From what I can tell, <verb-manner> can be used anywhere that
+% <verb-adj> can be...
 <verb-adj>:
   ({@E-} & [A+]0.5)
   or <verb-manner>;
