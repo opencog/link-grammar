@@ -2249,7 +2249,7 @@ per "/.per": Us+ & Mp-;
 %VERBS
 
 <MX-PHRASE>: Xd- & (Xc+ or <costly-null>) & (MX*p- or MVg-);
-<OPENER>: {Xd-} & Xc+ & COp+;
+<OPENER>: {Xd-} & Xc+ & [COp+]0.2;
 
 % <coord>: connects to coordinating conjunction.
 <coord>: VC-;
