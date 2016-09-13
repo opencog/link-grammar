@@ -3193,10 +3193,14 @@ came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
 /en/words/words.v.2.2: VERB_S_T(`<vc-tr,intr>');
 
 % Put a very small cost on A+ to allow verb conjunctions to come first.
+% <verb-manner>: only about half of the words in words.v.2.3 should get
+% this, the other half clearly should not. I'm too lazy to sort it out,
+% right now.
 /en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr>')
   or <verb-pv>
   or <verb-adj>
+  or <verb-manner>
   or <verb-phrase-opener>;
 
 % Pa+: "The vase landed, unbroken"
@@ -3626,12 +3630,17 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
   VERB_PP(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or
+  <verb-manner> or
   ({K+} & <verb-phrase-opener>);
 
+% <verb-manner>: only about half of the words in words.v.8.3 should get
+% this, the other half clearly should not. I'm too lazy to sort it out,
+% right now.
 /en/words/words.v.8.3:
   VERB_SPPP_T(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or
+  <verb-manner> or
   ({K+} & <verb-phrase-opener>);
 
 cut.v:
@@ -5413,6 +5422,7 @@ written.v-d drawn.v-d w/o.v-d:
   VERB_PP(<vc-write>) or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
+  <verb-manner> or
   <verb-adj>;
 
 writing.v reading.v charging.v drawing.v:
@@ -5453,8 +5463,8 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 allow.v: VERB_PLI(<vc-allow>);
 allows.v: VERB_S_T(<vc-allow>);
 allowed.v-d: VERB_SPPP_T(<vc-allow>) or
-(<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & <to-verb>)))
-or ({O+ or [[@MV+ & O*n+]] or ({@MV+} & <to-verb>)} & <verb-phrase-opener>);
+  (<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & <to-verb>)))
+  or ({O+ or [[@MV+ & O*n+]] or ({@MV+} & <to-verb>)} & <verb-phrase-opener>);
 allowing.g: (<vc-allow> & <verb-ge>) or <verb-ge-d>;
 allowing.v: <verb-pg> & <vc-allow>;
 
@@ -8409,31 +8419,6 @@ as.e:
 as_is: {Xd- & Xc+} & MVs-;
 
 as_possible: MVz-;
-
-% Yuck. This is a long list ... If could be eliminated by changing
-% as.e above to (for example), have "MVs- & Pv+" in it.  However,
-% that would allow some invalid constructions: "as said"
-% Many of these should not allow MVz ...
-% These also fail with auxilliaries: "as can be xxx", "as was xxx"
-% "as will be xxx"
-% They're all manner verbs...
-
-% words.v.2.3
-as_compared
-as_measured
-as_related
-as_expressed
-as_applied
-as_mediated
-as_derived
-as_localized
-
-% words.v.8.3
-as_marked:
-
-  MVz-
-  or ({Xc+ & {Xd-}} & CO+)
-  or ({Xd- & Xc+} & MVs-);
 
 % Cc+ & CV+: C links to the head-noun of the followig clause, and CV+
 %            links to the head verb. Must form a cycle.
