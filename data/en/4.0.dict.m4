@@ -2997,11 +2997,9 @@ weren't.v-d weren’t.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
-% Sa*a- & Ix+: "..., as shall be proven"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
-  or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
