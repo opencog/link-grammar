@@ -2318,12 +2318,10 @@ per "/.per": Us+ & Mp-;
 % used only in "as verb" constructions: "He did it as expected"
 % MXsr-: "the movie, as filmed, is too long"
 %      cost on MX- is for "She sang well, as planned."
-% CO+: "as promised, she left"
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
 <verb-manner>:
-  (Sa- & {MXs-})
-  or (Sa- & Xd- & {MXsr- & {MV+}});
+  (Sa- & {Xd-} & {MXsr- & {MV+}} & {Xc+});
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -8433,7 +8431,7 @@ as.e:
   or (AZ- & Pa+)
   or ((<subcl-verb> or Sa+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (MVz- & Sa+)
-  or ({Xd-} & MVs- & Sa+ & {CV+})
+  or ({{Xd-} & MVs-} & Sa+ & {CV+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
