@@ -22,6 +22,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 #include <cstdio>
 #include <map>
+#include <inttypes.h>
 
 #include "Vec.h"
 #include "Heap.h"
@@ -235,13 +236,13 @@ class Solver {
   }
 
   void printStats() {
-    printf("restarts              : .%zu.\n", starts);
-    printf("conflicts             : .%-12zu.   \n", conflicts);
-    printf("decisions             : .%-12zu.   (%4.2f %% random) \n", decisions, 
-	   (float)rnd_decisions*100 / (float)decisions);
-    printf("propagations          : .%-12zu.   \n", propagations);
-    printf("conflict literals     : .%-12zu.   (%4.2f %% deleted)\n", tot_literals, 
-	   (max_literals - tot_literals)*100 / (double)max_literals);
+    printf("restarts              : .%-12" PRIu64 ".\n", starts);
+    printf("conflicts             : .%-12" PRIu64 ".\n", conflicts);
+    printf("decisions             : .%-12" PRIu64 ".   (%4.2f %% random)\n",
+           decisions, (float)rnd_decisions*100 / (float)decisions);
+    printf("propagations          : .%-12" PRIu64 ".\n", propagations);
+    printf("conflict literals     : .%-12" PRIu64 ".   (%4.2f %% deleted)\n",
+           tot_literals, (max_literals - tot_literals)*100 / (double)max_literals);
   }
 
 
