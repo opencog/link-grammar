@@ -8630,9 +8630,10 @@ unlike:
 % Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
 % QI+ & CV+: "She kept an organized record of which employees took their vacations"
 %      The QI makes it interrogative, the CV links head word.
+% (Js+ or Jp+ or Ju+): we explicitly exclude Jw+ as that leads to bad parses.
 of:
   ({JQ+}
-    & (J+ or Mgp+ or (QI+ & {CV+}))
+    & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
       or OFj-
       or OFw-
