@@ -2306,17 +2306,19 @@ per "/.per": Us+ & Mp-;
 <verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
-% Cost: "He was driven home" should NOT use driven.v as adjective!
-<verb-adj>:  {@E-} & [A+]0.5;
-
 % used only in "as verb" constructions: "He did it as expected"
-% MX-: "the movie, as filmed, is too long"
+% MXsr-: "the movie, as filmed, is too long"
 % CO+: "as promised, she left"
 % MVs-: "she left as promised"
 <verb-manner>:
-  (Pm- & (MVs- or MX-))
-  or (Pm- & Xd- & (MVs- or MX-) & (Xc+ or Xp+ or Xx+ or Xe+))
+  (Pm- & (MVs- or MXs-))
+  or (Pm- & Xd- & (MVs- or MXsr-) & (Xc+ or Xp+ or Xx+ or Xe+))
   or (Pm- & {Xc+ & {Xd-}} & CO+);
+
+% Cost: "He was driven home" should NOT use driven.v as adjective!
+<verb-adj>:
+  ({@E-} & [A+]0.5)
+  or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
