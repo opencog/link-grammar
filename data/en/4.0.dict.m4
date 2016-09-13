@@ -2324,7 +2324,7 @@ per "/.per": Us+ & Mp-;
 % MVs-: "she left as promised"
 <verb-manner>:
   (Pm- & (MVs- or MX-))
-  or (Pm- & Xd- & (MVs- or MX-) & Xc+)
+  or (Pm- & Xd- & (MVs- or MX-) & (Xc+ or Xp+ or Xx+ or Xe+))
   or (Pm- & {Xc+ & {Xd-}} & CO+);
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
