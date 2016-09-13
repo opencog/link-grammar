@@ -2323,9 +2323,9 @@ per "/.per": Us+ & Mp-;
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
 <verb-manner>:
-  (Pm- & (MVs- or MXs-))
-  or (Pm- & Xd- & (MVs- or [MXsr-]0.5) & {MV+} & (Xc+ or Xp+ or Xx+ or Xe+))
-  or (Pm- & {Xc+ & {Xd-}} & CO+);
+  (AV- & (MVs- or MXs-))
+  or (AV- & Xd- & (MVs- or [MXsr-]0.5) & {MV+} & (Xc+ or Xp+ or Xx+ or Xe+))
+  or (AV- & {Xc+ & {Xd-}} & CO+);
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -2908,12 +2908,12 @@ are.v:
 yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
-% Pm- & Pv+: "..., as was promised."
+% AV- & Pv+: "..., as was promised."
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (Pm- & Pv+)
+  or (AV- & Pv+)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
@@ -2995,11 +2995,11 @@ weren't.v-d weren’t.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
-% Pm- & Ix+: "..., as shall be proven"
+% AV- & Ix+: "..., as shall be proven"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
-  or (Pm- & Ix+)
+  or (AV- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
@@ -8422,8 +8422,8 @@ as.e-c:
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
-% Pm+: "he left as agreed"
-% MVs- & Pm+ & CV+: " ..., as shall be proven"
+% AV+: "he left as agreed"
+% MVs- & AV+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
 as.e:
@@ -8432,9 +8432,9 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-  or (MVz- & Pm+)
-  or Pm+
-  or ({Xd-} & MVs- & Pm+ & CV+ & (Xc+ or Xp+ or Xx+ or Xe+))
+  or (MVz- & AV+)
+  or AV+
+  or ({Xd-} & MVs- & AV+ & CV+ & (Xc+ or Xp+ or Xx+ or Xe+))
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
