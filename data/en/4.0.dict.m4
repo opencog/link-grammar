@@ -2319,15 +2319,15 @@ per "/.per": Us+ & Mp-;
 % kind of like manner adverbial phrases.  Only certain verbs have
 % this "manner" format, but they are not well-sorted out.
 %
-% Sa-: "He did it as expected"
-% Sa- & MXsr-: "the movie, as filmed, is too long"
+% Sa*a-: "He did it as expected"
+% Sa*a- & MXsr-: "the movie, as filmed, is too long"
 %      The cost on MXsr+ is to give MVs preference for
 %        "She sang well, as planned"
 % {MV+}: "the man, as acquiescing as he was, set a bad precedent."
 %        I want to use MVz+ for above, but it doesn't work...
-% Pv- & MXsr-: "The accused, as shall be proven, is innocent"
+% Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
 <verb-manner>:
-  (Sa- or Pv-) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
+  (Sa*a- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -2430,11 +2430,12 @@ per "/.per": Us+ & Mp-;
 % These are used almost exclusively with auxiliary verbs.
 % This is why they don't have & <verb-wall> in them: we don't want the
 % auxiliary attaching to the wall, we want only the main verb doing this.
+% The Ss- or Sp- prevent attachements to Sa- for "as.e" phrases.
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (S- or SF- or PPf- or (RS- & B-));
-<verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
+<verb-x-sp,pp>: {@E-} & (Ss- or Sp- or SF- or PPf- or (RS- & B-));
+<verb-x-sp>: {@E-} & (Ss- or Sp- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 
@@ -2711,8 +2712,10 @@ has.v:
   or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
+% Sa*v- & PPf+: "as had been agreed, the work began on Monday"
 had.v-d:
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
+  (Sa*v- & PPf+) or
   (<verb-x-sp> & <vc-have>) or
   (<verb-x-sp> & <verb-wall>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
@@ -2845,11 +2848,13 @@ hadn't.v-d hadn’t.v-d:
 % <verb-rq> & (SIs*x+ or SFIs+):  "Is it in place?")
 % It does not use a wall, because Qd connects to the wall already.
 % SIs*x blocks SIs*g: "*There is chasing dogs"
+% Sa*v- & Pv+: "..., as is agreed."
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or (<verb-rq> & (SIs*x+ or SIs*b+ or SFIs+) & {<vc-be-no-wall>})
+  or (Sa*v- & Pv+)
   or (Ss*w- & <verb-wall> & Pp+ & TO+ & IV+)
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
@@ -2910,12 +2915,12 @@ are.v:
 yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
-% Sa- & Pv+: "..., as was promised."
+% Sa*v- & Pv+: "..., as was promised."
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (Sa- & Pv+)
+  or (Sa*v- & Pv+)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
@@ -2997,11 +3002,11 @@ weren't.v-d weren’t.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
-% Sa- & Ix+: "..., as shall be proven"
+% Sa*v- & Ix+: "..., as shall be proven"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
-  or (Sa- & Ix+)
+  or (Sa*v- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
@@ -8426,25 +8431,23 @@ as.e-c:
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
-% MVs- & Sa+: "he left as agreed"
-% MVs- & Sa+ & CV+: " ..., as shall be proven"
+% MVs- & Sa*a+: "he left as agreed"
+% MVs- & Sa*v+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
-% XXX FIXME:  "the accused, as it shall be shown, is innocent"
-%     should get a CV link btween "it" and "shown" but for some reason,
-%     its not coming out and I can't tell why.
-%     using Cz instead of <subcl-verb> because PP "Unbounded s domain78"
-%     kills the Cs link here. Arghhh.
+% Cz+ & CV+: "the accused, as it shall be shown, is innocent"
+%      use Cz instead of <subcl-verb> because post-processing kills the
+%      Cs link with a "Unbounded s domain78" error.
 %
+<as-subj>: Sa*a+ or (Sa*v+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
-  or ((<subcl-verb> or Sa+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-  or (Cz+ & {CV+})
-  or (MVz- & Sa+)
-  or ({{Xd-} & MVs-} & Sa+ & {CV+} & {Xc+})
+  or ((<subcl-verb> or <as-subj>) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or (Cz+ & CV+)
+  or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
