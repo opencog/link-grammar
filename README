@@ -1094,6 +1094,7 @@ TODO -- Working Notes:
      circumpositions or even more complicated multi-word structures.
      One mechanism is by ordinary links; see the V, XJ and RJ links.
      The other mechanism is by means of post-processing rules.
+     (For example, the "filler-it" SF rules use post-processing.)
      However, rules for many common forms have not yet been written.
      The general problem is of supporting structures that have "holes"
      in the middle, that require "lacing" to tie them together.
@@ -1127,6 +1128,8 @@ TODO -- Working Notes:
 
     "if ... only ..." "If there were only more like you!"
     "... not only, ... but also ..."
+
+    "As ..., so ..."  "As it was commanded, so it shall be done"
 
     "Either ... or ..."
     "Both ... and  ..."  "Both June and Tom are coming"
