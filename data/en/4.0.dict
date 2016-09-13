@@ -10471,12 +10471,19 @@ as.e-c:
 % MVs- & Sa+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
+% XXX FIXME:  "the accused, as it shall be shown, is innocent"
+%     should get a CV link btween "it" and "shown" but for some reason,
+%     its not coming out and I can't tell why.
+%     using Cz instead of <subcl-verb> because PP "Unbounded s domain78"
+%     kills the Cs link here. Arghhh.
+%
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or ((<subcl-verb> or Sa+) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or (Cz+ & {CV+})
   or (MVz- & Sa+)
   or ({{Xd-} & MVs-} & Sa+ & {CV+} & {Xc+})
   or (MVi- & TO+)
