@@ -6582,9 +6582,11 @@ unlike:
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
 %      The Jd+ forces a link to the object as well.
 % Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
+% QI+ & CV+: "She kept an organized record of which employees took their vacations"
+%      The QI makes it interrogative, the CV links head word.
 of:
   ({JQ+}
-    & (J+ or Mgp+ or QI+)
+    & (J+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
       or OFj-
       or OFw-
