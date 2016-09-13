@@ -2315,7 +2315,10 @@ per "/.per": Us+ & Mp-;
 <verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
-% used only in "as verb" constructions:
+% used only in "as <past-participle>" constructions, which behave
+% kind of like manner adverbial phrases.  Only certain verbs have
+% this "manner" format, but they are not well-sorted out.
+%
 % Sa-: "He did it as expected"
 % Sa- & MXsr-: "the movie, as filmed, is too long"
 %      The cost on MXsr+ is to give MVs preference for
