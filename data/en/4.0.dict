@@ -10490,8 +10490,6 @@ as.e:
   or (AZ- & Pa+)
   or ((<subcl-verb> or <as-subj>) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (Cz+ & CV+)
-  or <as-subj>
-  or (MVz- & Sa*a+)
   or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
