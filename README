@@ -385,8 +385,8 @@ TESTING the program:
    number of errors one can expect to observe in each of these files
    are roughly as follows:
 
-   en/corpus-basic.batch:      64 errors
-   en/corpus-fixes.batch:     406 errors
+   en/corpus-basic.batch:      72 errors
+   en/corpus-fixes.batch:     404 errors
    lt/corpus-basic.batch:      15 errors
    ru/corpus-basic.batch:      47 errors
 
@@ -850,6 +850,14 @@ TODO -- Working Notes:
     where it can be handled like any other language feature.
     The tokenizer includes experimental code for that.
 
+  Punctuation, zero-copula, zero-that:
+    Poorly punctuated sentences cause problems:  for example:
+      "Mike was not first, nor was he last."
+      "Mike was not first nor was he last."
+    The one without the comma currently fails to parse.  How can we
+    deal with this in a simple, fast, elegant way?  Similar questions
+    for zero-copula and zero-that sentences.
+
   Zero/phantom words:  Expressions such as "Looks good" have an implicit
     "it" (also called a zero-it or phantom-it) in them; that is, the
     sentence should really parse as "(it) looks good".  The dictionary
@@ -861,21 +869,26 @@ TODO -- Working Notes:
     * I told him (that) it was gone.
     * (It) looks good.
     * (You) go home!
-
-    One possible solution to the unvoiced-word problem might be to
-    allow the LG rules to insert alternatives during the early culling
-    stages.  This avoids the need to pre-insert all possible
-    alternatives during tokenization...
+    * (Are) you all right?
 
     See github https://github.com/opencog/link-grammar/issues/224
 
-  Punctuation, zero-copula, zero-that:
-     Poorly punctuated sentences cause problems:  for example:
-     "Mike was not first, nor was he last."
-     "Mike was not first nor was he last."
-     The one without the comma currently fails to parse.  How can we
-     deal with this in a simple, fast, elegant way?  Similar questions
-     for zero-copula and zero-that sentences.
+    One possible solution is to perform a one-point compactification.
+    The dictionary contains the phantom words, and thier connectors.
+    Ordinary disjuncts can link to these, but should do so using
+    a special initial lower-case letter (say, 'z', in addition to
+    'h' and 't' as is currently implemented).  The parser, as it
+    works, examines the initial letter of each connector: if it is
+    'z', then the usual pruning rules no longer apply, and one or
+    more phantom words are selected out of the bucket of phantom words.
+    (This bucket is kept out-of-line, it is not yet placed into
+    sentence word sequence order, which is why the usual pruning rules
+    get modified.)  Otherwise, parsing continues as normal. At the end
+    of parsing, if there are any phantom words that are linked, then
+    all of the connectors on the disjunct must be satisfied (of course!)
+    else the linkage is invalid. After parsing, the phantom words can
+    be inserted into the sentence, with the location deduced from link
+    lengths.
 
   Bad grammar: When a sentence fails to parse, look for:
     * confused words: its/it's, there/their/they're, to/too, your/you're ...
@@ -884,8 +897,8 @@ TODO -- Working Notes:
     * determiner agreement errors: "a books"
     * aux verb agreement errors: "to be hooks up"
 
-      Poor agreement might be handled by giving a cost to mismatched
-      lower-case connector letters.
+    Poor agreement might be handled by giving a cost to mismatched
+    lower-case connector letters.
 
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
@@ -1020,8 +1033,10 @@ TODO -- Working Notes:
       parse ranking.
 
       Imperatives:
-      "Push button"
-      "Push button firmly"
+         "Push button"
+         "Push button firmly"
+
+      The zero/phantom-word solution, described above, should help with this.
 
    Hand-refining verb patterns:
       A good reference for refining verb usage patterns is:
