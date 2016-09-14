@@ -44,6 +44,7 @@ static struct
 	int display_on;
 	ConstituentDisplayStyle display_constituents;
 	int display_postscript;
+	int display_ps_header;
 	int display_bad;
 	int display_links;
 	int display_walls;
@@ -87,6 +88,7 @@ static Switch default_switches[] =
 	{"null",       Bool, "Allow null links",                &local.allow_null},
 	{"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
 	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
+	{"ps-header",  Bool, "Generate postscript header",      &local.display_ps_header},
 	{"senses",     Bool, "Display of word senses",          &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
@@ -439,6 +441,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_on = copts->display_on;
 	local.display_walls = copts->display_walls;
 	local.display_postscript = copts->display_postscript;
+	local.display_ps_header = copts->display_ps_header;
 	local.display_constituents = copts->display_constituents;
 
 	local.display_bad = copts->display_bad;
@@ -478,6 +481,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_on = local.display_on;
 	copts->display_walls = local.display_walls;
 	copts->display_postscript = local.display_postscript;
+	copts->display_ps_header = local.display_ps_header;
 	copts->display_constituents = local.display_constituents;
 
 	copts->display_bad = local.display_bad;
@@ -523,6 +527,7 @@ Command_Options* command_options_create(void)
 	co->display_on = true;
 	co->display_walls = false;
 	co->display_postscript = false;
+	co->display_ps_header = false;
 	co->display_constituents = NO_DISPLAY;
 
 	co->display_bad = false;

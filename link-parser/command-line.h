@@ -28,6 +28,7 @@ typedef struct {
 	bool display_on;        /* if true, output graphical linkage diagram */
 	bool display_walls;     /* if true, show the wall words in the linkage diagram */
 	bool display_postscript;/* if true, output postscript linkage */
+	bool display_ps_header; /* if true, output postscript headers */
 	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */
 
 	bool display_bad;       /* if true, bad linkages are displayed */

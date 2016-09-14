@@ -206,7 +206,8 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 	}
 	if (copts->display_postscript)
 	{
-		string = linkage_print_postscript(linkage, copts->display_walls, false);
+		string = linkage_print_postscript(linkage,
+		          copts->display_walls, copts->display_ps_header);
 		fprintf(stdout, "%s\n", string);
 		linkage_free_postscript(string);
 	}
