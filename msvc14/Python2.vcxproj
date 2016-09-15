@@ -24,31 +24,35 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
-%40echo off</Command>
+swig.exe -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+%40echo off
+</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
-%40echo off</Command>
+swig.exe -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+%40echo off
+</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
 swig.exe -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
-%40echo off</Command>
+%40echo off
+</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
-%40echo off</Command>
+swig.exe -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+%40echo off
+</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating Python2 wrapper ^&amp; interface</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lg_python_wrap.cpp;$(IntDir)\clinkgrammar.py</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lg_python_wrap.cpp;$(OutDir)\clinkgrammar.py</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating Python2 wrapper ^&amp; interface</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\lg_python_wrap.cpp;$(IntDir)\clinkgrammar.py</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\lg_python_wrap.cpp;$(OutDir)\clinkgrammar.py</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating Python2 wrapper ^&amp; interface</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)\lg_python_wrap.cpp;$(OutDir)\clinkgrammar.py</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating Python2 wrapper ^&amp; interface</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\lg_python_wrap.cpp;$(IntDir)\clinkgrammar.py</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\lg_python_wrap.cpp;$(OutDir)\clinkgrammar.py</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\link-grammar\link-includes.h</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\link-grammar\link-includes.h</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\link-grammar\link-includes.h</AdditionalInputs>
@@ -73,19 +77,19 @@ swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.
   <ItemGroup>
     <CustomBuild Include="..\bindings\python\__init__.py.in">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(IntDir)__init__.py</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(IntDir)__init__.py</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">echo on &amp; cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(OutDir)__init__.py</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">echo on &amp; cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(OutDir)__init__.py</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">echo on &amp; cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(OutDir)__init__.py</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(IntDir)__init__.py</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating $(ProjectDir)$(IntDir)__init__.py</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating $(ProjectDir)$(IntDir)__init__.py</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo on &amp; cd $(ProjectDir) &amp; call confvar &lt;%(Identity) &gt;$(OutDir)__init__.py</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating $(OutDir)__init__.py</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating $(OutDir)__init__.py</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating $(OutDir)__init__.py</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating $(ProjectDir)$(IntDir)__init__.py</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)$(IntDir)__init__.py</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating $(OutDir)__init__.py</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)__init__.py</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)$(IntDir)__init__.py</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)__init__.py</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
@@ -93,7 +97,7 @@ swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)$(IntDir)__init__.py</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)__init__.py</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
@@ -163,7 +167,7 @@ swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.
     <TargetName>_clinkgrammar</TargetName>
     <TargetExt>.pyd</TargetExt>
     <IntDir>Temp\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -176,7 +180,7 @@ swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.
     <LinkIncremental>false</LinkIncremental>
     <TargetName>_clinkgrammar</TargetName>
     <TargetExt>.pyd</TargetExt>
-    <OutDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>Temp\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,7 +188,7 @@ swig.exe -python -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.
     <TargetName>_clinkgrammar</TargetName>
     <TargetExt>.pyd</TargetExt>
     <IntDir>Temp\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
