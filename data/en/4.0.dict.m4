@@ -7699,8 +7699,11 @@ or.j-n:
 % SI- can be singular or plural: for example:
 % "There is neither a dog nor a cat here"
 % "Are neither John nor I invited?"
+% Os- & Mp+: link the prep to the object, instead of the verb,
+%       esp when the verb is the copula.
 nor.j-n:
-  SJl- & (XJn- or [()]) & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJl+);
+  SJl- & (XJn- or [()]) & SJr+
+    & ((Wd- & S*x+) or SI- or (Os- & {Mp+}) or Wa- or SJl+);
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
