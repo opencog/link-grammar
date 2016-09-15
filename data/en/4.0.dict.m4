@@ -2817,17 +2817,23 @@ hadn't.v-d hadn’t.v-d:
 
 % O*m+ allows "If only there were more!"
 % THb+ allows "It is your fault that you're a failure."
+% The cost on @MV+ causes attachements to the object to be prefered
+% over attachments to the copula; for example, prepositions should
+% almost surely attach via Mp+ link to the object, as opposed to
+% using an MVp+ link to the copula. Example:
+% "There is neither pine nor apple in the pineapple."
+% "There is no ham in the hamburger, and neither pine nor apple in the pineapple."
 <vc-be-obj>:
-  {@EBm+} & (O*t+ or O*m+) & {@MV+} & {THb+};
+  {@EBm+} & (O*t+ or O*m+) & {[@MV+]} & {THb+};
 
 <vc-be-obj-p>:
-  {@EBm+} & (Opt+ or Omm+) & {@MV+} & {THb+};
+  {@EBm+} & (Opt+ or Omm+) & {[@MV+]} & {THb+};
 
 <vc-be-obj-sp>:
-  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & {THb+};
+  {@EBm+} & (Ost+ or Opt+ or Omm+) & {[@MV+]} & {THb+};
 
 <vc-be-obj-u>:
-  {@EBm+} & Out+ & {@MV+} & {THb+};
+  {@EBm+} & Out+ & {[@MV+]} & {THb+};
 
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
