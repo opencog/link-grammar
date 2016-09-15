@@ -7707,6 +7707,11 @@ or.j-n:
 % "Are neither John nor I invited?"
 % Os- & Mp+: link the prep to the object, instead of the verb,
 %       esp when the verb is the copula.
+% XXX FIXME: there should be a (SJr- & Mp+) here, to allow this:
+% "There is no ham in the hamburger, and neither pine nor apple in the pineapple."
+% However, it needs to be configured so that it accepts the SJr- from the
+% "and" only when there is no J link, as otherwise, i links at teh wrong
+% location. Ugh. what a big headache.
 nor.j-n:
   SJl- & (XJn- or [()]) & SJr+
     & ((Wd- & S*x+) or SI- or (Os- & {Mp+}) or Wa- or SJl+);
