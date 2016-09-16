@@ -1,9 +1,8 @@
 # -*- coding: utf8 -*-
 """
-High-level Python bindings build on top of the low-level
-C API (clinkgrammar)
+High-level Python bindings build on top of the low-level C API (clinkgrammar)
 See http://www.abisource.com/projects/link-grammar/api/index.html to get
-more information about C API
+more information about C API.
 """
 
 try:
@@ -69,7 +68,11 @@ class ParseOptions(object):
     @property
     def linkage_limit(self):
         """
-        This parameter determines the maximum number of linkages that are considered in post-processing. If more than linkage_limit linkages found, then a random sample of linkage_limit is chosen for post-processing. When this happen a warning is displayed at verbosity levels bigger than 1.
+        This parameter determines the maximum number of linkages that are
+        considered in post-processing. If more than linkage_limit linkages
+        found, then a random sample of linkage_limit is chosen for
+        post-processing. When this happen a warning is displayed at verbosity
+        levels bigger than 1.
         """
         return clg.parse_options_get_linkage_limit(self._obj)
 
@@ -457,7 +460,7 @@ class Sentence(object):
             self.num += 1
             return linkage
 
-        __next__= next              # Account python3
+        __next__ = next             # Account python3
 
     def parse(self):
         return self.sentence_parse(self)
