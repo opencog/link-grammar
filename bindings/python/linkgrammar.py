@@ -13,7 +13,8 @@ except ImportError:
     import clinkgrammar as clg
 
 Clinkgrammar = clg
-__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence', 'Clinkgrammar']
+__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence',
+           'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
 
 
 class ParseOptions(object):
