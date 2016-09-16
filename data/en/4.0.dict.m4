@@ -275,8 +275,8 @@ nonCAP.zzz: ZZZ-;
 % Connects verb to coordinating conjunction.
 <coord-verb>: VC+;
 
-<subord-verb>: CV+;
 <embed-verb>: Ce+ & CV+;
+<that-verb>: Cet+ & CV+;
 <subcl-verb>: Cs+ & CV+;
 <advcl-verb>: Ca+ & CV+;
 <fitcl-verb>: Ci+ & CV+;
@@ -3883,7 +3883,7 @@ thinks.v: VERB_S_T(<vc-think>);
 % <verb-s-pv> & Cet+: (phantom that) "It was previously thought they were wrong."
 thought.v-d:
   VERB_SPPP_T(<vc-think>)
-  or (<verb-s-pv> & {(Cet+ & <subord-verb>) or THi+ or Z-});
+  or (<verb-s-pv> & {<that-verb> or THi+ or Z-});
 
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
@@ -7395,7 +7395,7 @@ how:
 % EBx+: He told me that even his mother likes me
 % (perhaps this should be changed to a different EB ??)
 that.j-c:
-  ({EBx+} & Cet+ & <subord-verb> & ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
+  ({EBx+} & <that-verb> & ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
   or (TS- & (SI*j+ or SFI**j+) & I*j+);
 
 % D*u+: "Give me that thing"
@@ -9490,6 +9490,13 @@ changequote dnl
   [<colon>]
   or (Wd- & W+)
   or (NI- & WV- & W+);
+
+% :.p is a synonym for "that"
+% Ce- & Ss*b+: "He said: 1 + 1 = 2"
+% TH- & <that-verb>: "He said: the sky is blue"
+":.p":
+  (Ce- & Ss*b+)
+  or (TH- & <that-verb>);
 
 % Coordinating conjunctions that behave like punctuation.  These
 % connect whole clauses.  Should wee use <sent-start> here? Why not?

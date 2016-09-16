@@ -3252,6 +3252,11 @@ The answer to your question is yes.
 my answer is yes.
 my answer: maybe.
 
+% Colon as synonym for "that"
+He said: i = j + k
+He said: the sky is blue
+He said: "the sky is blue"
+
 % yes, no, maybe
 I voted yes.
 I will say yes
