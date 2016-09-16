@@ -294,6 +294,13 @@ class DBasicParsingTestCase(unittest.TestCase):
         linkage = self.parse_sent("This is a _regex_ive regex test")[0]
         self.assertEqual(linkage.word(4), '_regex_ive[!].a')
 
+    def test_timer_exhausted_exception(self):
+        self.po = ParseOptions(max_parse_time=1)
+        self.assertRaises(LG_TimerExhausted,
+                          self.parse_sent,
+                          "This should take more than one second to parse! " * 20,
+                          self.po)
+
 class ESATsolverTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()
