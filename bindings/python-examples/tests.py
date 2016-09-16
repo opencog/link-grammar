@@ -31,6 +31,8 @@ for module in 'linkgrammar', '_clinkgrammar', 'lg_testutils':
         print()
     else:
         print("Warning: Module", module,  "not loaded.")
+
+sys.stdout.flush()
 #===
 
 def setUpModule():
