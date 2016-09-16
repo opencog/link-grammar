@@ -17,8 +17,9 @@ for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
 #===
 
 
-from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
-                        Clinkgrammar as clg
+from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
+                         LG_DictionaryError, LG_TimerExhausted,
+                         Clinkgrammar as clg)
 
 
 # Show the location and version of the bindings modules
