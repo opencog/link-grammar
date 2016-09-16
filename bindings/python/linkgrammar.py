@@ -264,6 +264,7 @@ class Dictionary(object):
     def __init__(self, lang='en'):
         self._obj = clg.dictionary_create_lang(lang)
         if not self._obj:
+            # We should get the error message from the library.
             raise LG_DictionaryError('Error: Failed to open dictionary {!r}'.format(lang))
 
     def __str__(self):
