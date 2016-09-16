@@ -9,7 +9,7 @@ try:
     #pylint: disable=no-name-in-module
     import linkgrammar.clinkgrammar as clg
 except ImportError:
-    #pylint: import-error
+    #pylint: disable=import-error
     import clinkgrammar as clg
 
 Clinkgrammar = clg
