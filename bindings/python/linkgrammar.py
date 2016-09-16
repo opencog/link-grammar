@@ -1,20 +1,20 @@
 # -*- coding: utf8 -*-
 """
-High-level Python bindings build on top of the low-level
-C API (clinkgrammar)
+High-level Python bindings build on top of the low-level C API (clinkgrammar)
 See http://www.abisource.com/projects/link-grammar/api/index.html to get
-more information about C API
+more information about C API.
 """
 
 try:
     #pylint: disable=no-name-in-module
     import linkgrammar.clinkgrammar as clg
 except ImportError:
-    #pylint: import-error
+    #pylint: disable=import-error
     import clinkgrammar as clg
 
 Clinkgrammar = clg
-__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence', 'Clinkgrammar']
+__all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence',
+           'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
 
 
 class ParseOptions(object):
@@ -69,7 +69,11 @@ class ParseOptions(object):
     @property
     def linkage_limit(self):
         """
-        This parameter determines the maximum number of linkages that are considered in post-processing. If more than linkage_limit linkages found, then a random sample of linkage_limit is chosen for post-processing. When this happen a warning is displayed at verbosity levels bigger than 1.
+        This parameter determines the maximum number of linkages that are
+        considered in post-processing. If more than linkage_limit linkages
+        found, then a random sample of linkage_limit is chosen for
+        post-processing. When this happen a warning is displayed at verbosity
+        levels bigger than 1.
         """
         return clg.parse_options_get_linkage_limit(self._obj)
 
@@ -260,6 +264,7 @@ class Dictionary(object):
     def __init__(self, lang='en'):
         self._obj = clg.dictionary_create_lang(lang)
         if not self._obj:
+            # We should get the error message from the library.
             raise LG_DictionaryError('Error: Failed to open dictionary {!r}'.format(lang))
 
     def __str__(self):
@@ -381,6 +386,10 @@ class Linkage(object):
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
+
+class LG_TimerExhausted(Exception):
+    pass
+
 class Sentence(object):
     """
     sent = Sentence("This is a test.", Dictionary(), ParseOptions())
@@ -433,6 +442,8 @@ class Sentence(object):
             self.sent = sent
             self.num = 0
             self.rc = clg.sentence_parse(sent._obj, sent.parse_options._obj)
+            if clg.parse_options_timer_expired(sent.parse_options._obj):
+                raise LG_TimerExhausted()
 
         def __nonzero__(self):
             """Return False if there was a split or parse error; else return True."""
@@ -446,7 +457,7 @@ class Sentence(object):
             return self
 
         def __len__(self):
-            return clg.sentence_num_linkages_found(self.sent._obj)
+            return clg.sentence_num_valid_linkages(self.sent._obj)
 
         def next(self):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
@@ -457,7 +468,7 @@ class Sentence(object):
             self.num += 1
             return linkage
 
-        __next__= next              # Account python3
+        __next__ = next             # Account python3
 
     def parse(self):
         return self.sentence_parse(self)

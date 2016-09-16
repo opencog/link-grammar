@@ -752,8 +752,10 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
 #ifdef DEBUG
-	/* num_linkages_post_processed sanity check (ONLY). */
+	/* Skip in case of a timeout - sent->lnkages may be inconsistent then. */
+	if (!resources_exhausted(opts->resources))
 	{
+		/* num_linkages_post_processed sanity check (ONLY). */
 		size_t in;
 		size_t N_linkages_post_processed = 0;
 		for (in=0; in < sent->num_linkages_alloced; in++)

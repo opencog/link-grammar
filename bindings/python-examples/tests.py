@@ -17,8 +17,9 @@ for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
 #===
 
 
-from linkgrammar import Sentence, Linkage, ParseOptions, Link, Dictionary, \
-                        Clinkgrammar as clg
+from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
+                         LG_DictionaryError, LG_TimerExhausted,
+                         Clinkgrammar as clg)
 
 
 # Show the location and version of the bindings modules
@@ -44,7 +45,7 @@ def setUpModule():
 # The tests are run in alphabetical order....
 #
 # First test: test the test framework itself ...
-class AAALinkTestCase(unittest.TestCase):
+class AALinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):
         self.assertEqual(str(Link(None, 0, 'Left','Link','Link','Right')),
                          u'Left-Link-Right')
@@ -52,6 +53,10 @@ class AAALinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type2(self):
         self.assertEqual(str(Link(None, 0, 'Left','Link','Link*','Right')),
                          u'Left-Link-Link*-Right')
+
+class AAADictionaryTestCase(unittest.TestCase):
+    def test_open_nonexistent_dictionary(self):
+        self.assertRaises(LG_DictionaryError, Dictionary, 'No such language')
 
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
@@ -292,6 +297,13 @@ class DBasicParsingTestCase(unittest.TestCase):
         r"""Test that regexes support \w"""
         linkage = self.parse_sent("This is a _regex_ive regex test")[0]
         self.assertEqual(linkage.word(4), '_regex_ive[!].a')
+
+    def test_timer_exhausted_exception(self):
+        self.po = ParseOptions(max_parse_time=1)
+        self.assertRaises(LG_TimerExhausted,
+                          self.parse_sent,
+                          "This should take more than one second to parse! " * 20,
+                          self.po)
 
 class ESATsolverTestCase(unittest.TestCase):
     def setUp(self):
