@@ -384,6 +384,10 @@ class Linkage(object):
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
+
+class LG_TimerExhausted(Exception):
+    pass
+
 class Sentence(object):
     """
     sent = Sentence("This is a test.", Dictionary(), ParseOptions())
@@ -436,6 +440,8 @@ class Sentence(object):
             self.sent = sent
             self.num = 0
             self.rc = clg.sentence_parse(sent._obj, sent.parse_options._obj)
+            if clg.parse_options_timer_expired(sent.parse_options._obj):
+                raise LG_TimerExhausted()
 
         def __nonzero__(self):
             """Return False if there was a split or parse error; else return True."""
