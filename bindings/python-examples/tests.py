@@ -31,6 +31,8 @@ for module in 'linkgrammar', '_clinkgrammar', 'lg_testutils':
         print()
     else:
         print("Warning: Module", module,  "not loaded.")
+
+sys.stdout.flush()
 #===
 
 def setUpModule():
@@ -45,7 +47,7 @@ def setUpModule():
 # The tests are run in alphabetical order....
 #
 # First test: test the test framework itself ...
-class AALinkTestCase(unittest.TestCase):
+class AAALinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):
         self.assertEqual(str(Link(None, 0, 'Left','Link','Link','Right')),
                          u'Left-Link-Right')
@@ -54,7 +56,7 @@ class AALinkTestCase(unittest.TestCase):
         self.assertEqual(str(Link(None, 0, 'Left','Link','Link*','Right')),
                          u'Left-Link-Link*-Right')
 
-class AAADictionaryTestCase(unittest.TestCase):
+class AADictionaryTestCase(unittest.TestCase):
     def test_open_nonexistent_dictionary(self):
         self.assertRaises(LG_DictionaryError, Dictionary, 'No such language')
 
