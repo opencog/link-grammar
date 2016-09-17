@@ -608,9 +608,7 @@ dictionary_six_str(const char * lang,
 	return dict;
 
 failure:
-	string_set_delete(dict->string_set);
-	if (dict->affix_table) xfree(dict->affix_table, sizeof(struct Dictionary_s));
-	xfree(dict, sizeof(struct Dictionary_s));
+	dictionary_delete(dict);
 	return NULL;
 }
 

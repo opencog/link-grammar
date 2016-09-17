@@ -897,6 +897,17 @@ void free_lookup(Dict_node *llist)
 	}
 }
 
+void free_insert_list(Dict_node *ilist)
+{
+	Dict_node * n;
+	while (ilist != NULL)
+	{
+		n = ilist->left;
+		free_dict_node(ilist);
+		ilist = n;
+	}
+}
+
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
 	bool lookup_idioms = test_enabled("lookup-idioms");
@@ -1909,7 +1920,7 @@ static bool read_entry(Dictionary dict)
 	return true;
 
 syntax_error:
-	free_lookup(dn);
+	free_insert_list(dn);
 	return false;
 }
 
