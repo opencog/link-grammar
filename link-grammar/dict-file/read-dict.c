@@ -1915,7 +1915,12 @@ static bool read_entry(Dictionary dict)
 	return true;
 
 syntax_error:
-	free_lookup(dn);
+	while (dn != NULL)
+	{
+		dnx = dn->left;
+		free_dict_node(dn);
+		dn = dnx;
+	}
 	return false;
 }
 
