@@ -420,15 +420,6 @@ class Sentence(object):
             parse_options = self.parse_options
         return clg.sentence_split(self._obj, parse_options._obj)
 
-    def num_valid_linkages(self):
-        return clg.sentence_num_valid_linkages(self._obj)
-
-    def num_linkages_found(self):
-        return clg.sentence_num_linkages_found(self._obj)
-
-    def num_linkages_post_processed(self):
-        return clg.sentence_num_linkages_post_processed(self._obj)
-
     def __len__(self):
         """The number of tokens in the sentence."""
         return clg.sentence_length(self._obj)
