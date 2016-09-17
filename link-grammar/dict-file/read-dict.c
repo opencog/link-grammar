@@ -427,8 +427,8 @@ static utf8char get_character(Dictionary dict, int quote_mode)
 			uc[i] = c;
 			i++;
 		}
-		dict_error(dict, "Fatal Error: UTF8 char is too long");
-		exit(1);
+		dict_error(dict, "UTF8 char is too long");
+		return NULL;
 	}
 	uc[0] = 0x0;
 	return uc;
@@ -484,7 +484,12 @@ static bool link_advance(Dictionary dict)
 		return true;
 	}
 
-	do { c = get_character(dict, false); } while (lg_isspace(c[0]));
+	do
+	{
+		c = get_character(dict, false);
+		if (NULL == c) return false;
+	}
+	while (lg_isspace(c[0]));
 
 	quote_mode = false;
 
@@ -547,6 +552,7 @@ static bool link_advance(Dictionary dict)
 			}
 		}
 		c = get_character(dict, quote_mode);
+		if (NULL == c) return false;
 	}
 	return true;
 }
