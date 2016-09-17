@@ -792,13 +792,14 @@ char *get_file_contents(const char * dict_name)
 
 	/* Now, read the whole file. */
 	p = contents;
+	*p = '\0';
 	left = tot_size + 7;
 	while (1)
 	{
 		char *rv = fgets(p, left, fp);
 		if (NULL == rv || feof(fp))
 			break;
-		while (*p != 0x0) { p++; left--; }
+		while (*p != '\0') { p++; left--; }
 		if (left < 0)
 			 break;
 	}
