@@ -1,5 +1,6 @@
 Version 5.3.11: (XXX 2016?)
  * Re-enable postscript header printing!
+ * Cleanup python API (in a non-backwards-compat fashion)
 
 Version 5.3.10: (14 Sept 2016)
  * Implement `make installcheck`.
