@@ -386,11 +386,11 @@ static char *yytext;
 **************************************************************************/
 
 /* forward references for non-exported functions (and static variable) */
-static void check_string(const char *str);
+static bool check_string(const char *str);
 static void setup(PPLexTable *lt);
-static void set_label(PPLexTable *lt, const char *label);
-static void add_string_to_label(PPLexTable *lt, const char *str);
-static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
+static bool set_label(PPLexTable *lt, const char *label);
+static bool add_string_to_label(PPLexTable *lt, const char *str);
+static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
 static int  get_index_of_label(PPLexTable *lt, const char *label);
 static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 /* see above */
@@ -430,12 +430,12 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 		if ( c == '\n' ) \
 			buf[n++] = '\n'; \
 		if ( c == EOF && ferror( yyin ) ) \
-			YY_FATAL_ERROR( "input in flex scanner failed" ); \
+			{prt_error("Input in flex scanner failed"); reterror();} \
 		result = n; \
 		} \
 	else if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \
 		  && ferror( yyin ) ) \
-		YY_FATAL_ERROR( "input in flex scanner failed" );
+		{prt_error("Input in flex scanner failed"); reterror();}
 #endif
 
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
@@ -600,12 +600,12 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 	    /* #line 61 "pp_lexer.fl" --DS */
-{ set_label(clt, yytext); }
+{ if (!set_label(clt, yytext)) reterror(); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 	    /* #line 62 "pp_lexer.fl" --DS */
-{ add_set_of_strings_to_label(clt, &(yytext[1])); }
+{ if (!add_set_of_strings_to_label(clt, &(yytext[1]))) reterror(); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -615,12 +615,12 @@ YY_RULE_SETUP
 case 6:
 YY_RULE_SETUP
 	/* #line 64 "pp_lexer.fl" --DS */
-{ add_string_to_label(clt, yytext); }
+{ if (!add_string_to_label(clt, yytext)) reterror(); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 	/* #line 66 "pp_lexer.fl" --DS */
-{ prt_error("Fatal Error: pp_lexer: unable to parse knowledge file (line %i).\n",yylineno); exit(1); }
+{ prt_error("Error: pp_lexer: unable to parse file (line %i).", yylineno); reterror(); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
@@ -749,13 +749,16 @@ ECHO;
 				yy_cp = yy_c_buf_p;
 				yy_bp = yytext_ptr + YY_MORE_ADJ;
 				goto yy_find_action;
+
+			case FATAL_ERROR:
+				return FATAL_ERROR;
 			}
 		break;
 		}
 
 	default:
-		YY_FATAL_ERROR(
-			"fatal flex scanner internal error--no action found" );
+		prt_error("Fatal flex scanner internal error--no action found");
+		reterror();
 	} /* end of action switch */
 		} /* end of scanning one token */
 	} /* end of yylex */
@@ -777,8 +780,10 @@ static int yy_get_next_buffer(void)
 	int ret_val;
 
 	if ( yy_c_buf_p > &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
-		YY_FATAL_ERROR(
-		"fatal flex scanner internal error--end of buffer missed" );
+	{
+		prt_error("fatal flex scanner internal error--end of buffer missed");
+		reterror();
+	}
 
 	if ( yy_current_buffer->yy_fill_buffer == 0 )
 		{ /* Don't try to fill the buffer, so this is an EOF. */
@@ -821,8 +826,9 @@ static int yy_get_next_buffer(void)
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 #ifdef YY_USES_REJECT
-			YY_FATAL_ERROR(
-"input buffer overflow, can't enlarge buffer because scanner uses REJECT" );
+			prt_error(
+"Input buffer overflow, can't enlarge buffer because scanner uses REJECT");
+			reterror();
 #else
 
 			/* just a shorter name for the current buffer */
@@ -850,8 +856,10 @@ static int yy_get_next_buffer(void)
 				b->yy_ch_buf = 0;
 
 			if ( ! b->yy_ch_buf )
-				YY_FATAL_ERROR(
-				"fatal error - scanner input buffer overflow" );
+			{
+				prt_error("fatal error - scanner input buffer overflow");
+				reterror();
+			}
 
 			yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
@@ -1116,32 +1124,6 @@ static void yy_flex_free( void *ptr )
 
 /************************ exported functions ******************************/
 
-PPLexTable *pp_lexer_open(FILE *f)
-{
-  PPLexTable *lt;
-
-  assert(f, "pp_lexer_open: passed a NULL file pointer");
-
-  // initialiaze all yy static globals!! We do this here, so
-  // that we can be called multiple times w/o crash.
-  yy_current_buffer = NULL;
-  yy_c_buf_p = NULL;
-  yy_init = 1;
-  yy_start = 0;
-
-  yyin = f;            /* redirect lex to look at the specified file */
-  lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
-  setup(lt);
-  clt = lt;    /* set lt to be the current table, which yylex will fill in */
-  yylex();
-  clt = NULL;
-  lt->idx_of_active_label=-1;
-
-  yy_delete_buffer(yy_current_buffer);
-  yy_current_buffer = NULL;
-  return lt;
-}
-
 void pp_lexer_close(PPLexTable *lt)
 {
   int i;
@@ -1165,6 +1147,38 @@ void pp_lexer_close(PPLexTable *lt)
   yy_c_buf_p = NULL;
 }
 
+PPLexTable *pp_lexer_open(FILE *f)
+{
+  PPLexTable *lt;
+  bool yylex_ok = false;
+
+  assert(f, "pp_lexer_open: passed a NULL file pointer");
+
+  // initialiaze all yy static globals!! We do this here, so
+  // that we can be called multiple times w/o crash.
+  yy_current_buffer = NULL;
+  yy_c_buf_p = NULL;
+  yy_init = 1;
+  yy_start = 0;
+
+  yyin = f;            /* redirect lex to look at the specified file */
+  lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
+  setup(lt);
+  clt = lt;    /* set lt to be the current table, which yylex will fill in */
+  if (YY_NULL == yylex()) yylex_ok = true;
+  clt = NULL;
+  lt->idx_of_active_label=-1;
+
+  yy_delete_buffer(yy_current_buffer);
+  yy_current_buffer = NULL;
+  if (!yylex_ok)
+  {
+    pp_lexer_close(lt);
+    return NULL;
+  }
+  return lt;
+}
+
 int pp_lexer_set_label(PPLexTable *lt, const char *label)
 {
   /* set lexer state to first node of this label */
@@ -1181,8 +1195,8 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
   pp_label_node *p;
   if (lt->idx_of_active_label==-1)
   {
-	 prt_error("Fatal Error: pp_lexer: current label is invalid");
-    exit(1);
+    prt_error("Error: pp_lexer: current label is invalid");
+    return -1;
   }
   for (n=0, p=lt->nodes_of_label[lt->idx_of_active_label]; p;p=p->next, n++){}
   return n;
@@ -1205,8 +1219,8 @@ int pp_lexer_count_commas_of_label(PPLexTable *lt)
   pp_label_node *p;
   if (lt->idx_of_active_label==-1)
   {
-    prt_error("Fatal Error: pp_lexer: current label is invalid");
-    exit(1);
+    prt_error("Error: pp_lexer: current label is invalid");
+    return -1;
   }
   for (n=0,p=lt->nodes_of_label[lt->idx_of_active_label];p!=NULL;p=p->next)
     if (!strcmp(p->str, ",")) n++;
@@ -1261,7 +1275,7 @@ static void setup(PPLexTable *lt)
   lt->extents = 0;
 }
 
-static void set_label(PPLexTable *lt, const char *label)
+static bool set_label(PPLexTable *lt, const char *label)
 {
   int i;
   char *c;
@@ -1272,8 +1286,8 @@ static void set_label(PPLexTable *lt, const char *label)
   c=&(label_sans_colon[strlen(label_sans_colon)-1]);
   if (*c != ':')
   {
-    prt_error("Fatal Error: Label %s must end with :", label);
-    exit(1);
+    prt_error("Error: Label %s must end with :", label);
+    return false;
   }
   *c = 0;
 
@@ -1281,36 +1295,38 @@ static void set_label(PPLexTable *lt, const char *label)
   for (i=0;lt->labels[i]!=NULL && strcmp(lt->labels[i],label_sans_colon);i++) {}
   if (lt->labels[i]!=NULL)
   {
-    prt_error("Fatal Error: pp_lexer: label %s multiply defined!", label_sans_colon);
-    exit(1);
+    prt_error("Error: pp_lexer: label %s multiply defined!", label_sans_colon);
+    return false;
   }
 
   /* new label. Store it */
   if (i == PP_LEXER_MAX_LABELS-1)
   {
-    prt_error("Fatal Error: pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
-    exit(1);
+    prt_error("Error: pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
+    return false;
   }
   lt->labels[i] = string_set_add(label_sans_colon, lt->string_set);
   lt->idx_of_active_label = i;
 
   free(label_sans_colon);
+
+  return true;
 }
 
 
-static void add_string_to_label(PPLexTable *lt, const char *str)
+static bool add_string_to_label(PPLexTable *lt, const char *str)
 {
   /* add the single string str to the set of strings associated with label */
   pp_label_node *new_node;
 
   if (lt->idx_of_active_label == -1)
   {
-    prt_error("Fatal Error: pp_lexer: invalid syntax (line %i)",yylineno);
-    exit(1);
+    prt_error("Error: pp_lexer: invalid syntax (line %i)", yylineno);
+    return false;
   }
 
   /* make sure string is legal */
-  check_string(str);
+  if (!check_string(str)) return false;
 
   /* create a new node in (as yet to be determined) linked list of strings */
   new_node = (pp_label_node *) xalloc (sizeof(pp_label_node));
@@ -1330,9 +1346,11 @@ static void add_string_to_label(PPLexTable *lt, const char *str)
       lt->last_node_of_label[lt->idx_of_active_label]->next = new_node;
       lt->last_node_of_label[lt->idx_of_active_label]       = new_node;
     }
+
+  return true;
 }
 
-static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
+static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
 {
   /* add the set of strings, defined earlier by label_of_set, to the set of
      strings associated with the current label */
@@ -1340,17 +1358,19 @@ static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
   int idx_of_label_of_set;
   if (lt->idx_of_active_label==-1)
   {
-    prt_error("Fatal Error: pp_lexer: invalid syntax (line %i)",yylineno);
-    exit(1);
+    prt_error("Error: pp_lexer: invalid syntax (line %i)", yylineno);
+    return false;
   }
   if ((idx_of_label_of_set = get_index_of_label(lt, label_of_set))==-1)
   {
-    prt_error("Fatal Error: pp_lexer: label %s must be defined before it's referred to (line %i)"
-	  ,label_of_set, yylineno);
-    exit(1);
+    prt_error("Error: pp_lexer: label %s must be defined before it's referred to (line %i)",
+              label_of_set, yylineno);
+    return false;
   }
   for (p=lt->nodes_of_label[idx_of_label_of_set]; p!=NULL; p=p->next)
     add_string_to_label(lt, p->str);
+
+  return true;
 }
 
 static int get_index_of_label(PPLexTable *lt, const char *label)
@@ -1361,13 +1381,14 @@ static int get_index_of_label(PPLexTable *lt, const char *label)
   return -1;
 }
 
-static void check_string(const char *str)
+static bool check_string(const char *str)
 {
   if (strlen(str)>1 && strchr(str, ',')!=NULL)
   {
-    prt_error("Fatal Error: pp_lexer: string %s contains a comma, which is a no-no.",str);
-    exit(1);
+    prt_error("Error: pp_lexer: string %s contains a comma, which is a no-no.", str);
+    return false;
   }
+  return true;
 }
 
 

@@ -398,6 +398,7 @@ pp_knowledge *pp_knowledge_open(const char *path)
   *k = (pp_knowledge){0};
   k->lt = pp_lexer_open(f);
   fclose(f);
+  if (NULL == k->lt) goto failure;
   k->string_set = string_set_create();
   k->path = string_set_add(path, k->string_set);
   if (!read_starting_link_table(k)) goto failure;
@@ -423,7 +424,7 @@ void pp_knowledge_close(pp_knowledge *k)
   free_rules(k);
   pp_linkset_close(k->set_of_links_starting_bounded_domain);
   string_set_delete(k->string_set);
-  pp_lexer_close(k->lt);
+  if (NULL != k->lt) pp_lexer_close(k->lt);
   xfree((void*)k, sizeof(pp_knowledge));
 }
 
