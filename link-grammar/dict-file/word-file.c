@@ -73,9 +73,6 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 		return NULL;
 	}
 
-	/*printf("   Reading \"%s\"\n", file_name_copy);*/
-	/*printf("*"); fflush(stdout);*/
-
 	wf = (Word_file *) xalloc(sizeof (Word_file));
 	safe_strcpy(wf->file, file_name_copy, sizeof(wf->file));
 	wf->changed = false;
