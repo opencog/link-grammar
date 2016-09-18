@@ -70,7 +70,6 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	safe_strcpy(file_name_copy, filename+1, sizeof(file_name_copy)); /* get rid of leading '/' */
 
 	if ((fp = dictopen(file_name_copy, "r")) == NULL) {
-		prt_error("Error opening word file %s\n", file_name_copy);
 		return NULL;
 	}
 
