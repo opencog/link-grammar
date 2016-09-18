@@ -1116,6 +1116,8 @@ PPLexTable *pp_lexer_open(FILE *f)
 {
   PPLexTable *lt;
 
+  assert(f, "pp_lexer_open: passed a NULL file pointer");
+
   // initialiaze all yy static globals!! We do this here, so
   // that we can be called multiple times w/o crash.
   yy_current_buffer = NULL;
@@ -1123,11 +1125,6 @@ PPLexTable *pp_lexer_open(FILE *f)
   yy_init = 1;
   yy_start = 0;
 
-  if (f == NULL)
-  {
-    prt_error("Fatal Error: pp_lexer_open: passed a NULL file pointer");
-    exit(1);
-  }
   yyin = f;            /* redirect lex to look at the specified file */
   lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
   setup(lt);
