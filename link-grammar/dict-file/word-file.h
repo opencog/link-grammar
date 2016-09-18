@@ -18,8 +18,8 @@
 struct Word_file_struct
 {
 	Word_file * next;
-	char file[MAX_PATH_NAME+1];   /* the file name */
-	bool changed;                 /* TRUE if this file has been changed */
+	const char *file;    /* the file name */
+	bool changed;        /* TRUE if this file has been changed */
 };
 
 void free_Word_file(Word_file * wf);

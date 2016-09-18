@@ -65,16 +65,15 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	Word_file * wf;
 	FILE * fp;
 	const char * s;
-	char file_name_copy[MAX_PATH_NAME+1];
 
-	safe_strcpy(file_name_copy, filename+1, sizeof(file_name_copy)); /* get rid of leading '/' */
+	filename += 1; /* get rid of leading '/' */
 
-	if ((fp = dictopen(file_name_copy, "r")) == NULL) {
+	if ((fp = dictopen(filename, "r")) == NULL) {
 		return NULL;
 	}
 
 	wf = (Word_file *) xalloc(sizeof (Word_file));
-	safe_strcpy(wf->file, file_name_copy, sizeof(wf->file));
+	wf->file = string_set_add(filename, dict->string_set);
 	wf->changed = false;
 	wf->next = dict->word_file_header;
 	dict->word_file_header = wf;
