@@ -808,8 +808,9 @@ char *get_file_contents(const char * dict_name)
 
 	if (left < 0)
 	{
-		prt_error("Fatal Error: File size is insane!");
-		exit(1);
+		prt_error("Error: File size is insane!");
+		free(contents);
+		return NULL;
 	}
 
 	return contents;
