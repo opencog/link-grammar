@@ -446,6 +446,10 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 #define yyterminate() return YY_NULL
 #endif
 
+/* Definitions for error recovery. */
+#define FATAL_ERROR (-1)
+#define reterror() return FATAL_ERROR
+
 /* Number of entries by which start-condition stack grows. */
 #ifndef YY_START_STACK_INCR
 #define YY_START_STACK_INCR 25
