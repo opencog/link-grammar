@@ -31,14 +31,15 @@
 
 /****************** non-exported functions ***************************/
 
-static void check_domain_is_legal(pp_knowledge *k, const char *p)
+static bool check_domain_is_legal(pp_knowledge *k, const char *p)
 {
   if (0x0 != p[1])
   {
-    prt_error("Fatal Error: File %s: Domain (%s) must be a single character",
+    prt_error("Error: File %s: Domain (%s) must be a single character",
               k->path, p);
-    exit(1);
+    return false;
   }
+  return true;
 }
 
 static void initialize_set_of_links_starting_bounded_domain(pp_knowledge *k)
@@ -61,25 +62,27 @@ static void initialize_set_of_links_starting_bounded_domain(pp_knowledge *k)
  * This tells us what domain type each link belongs to.
  * This lookup table *must* be defined in the knowledge file.
  */
-static void read_starting_link_table(pp_knowledge *k)
+static bool read_starting_link_table(pp_knowledge *k)
 {
   const char *p;
   const char label[] = "STARTING_LINK_TYPE_TABLE";
-  size_t i, n_tokens, even;
+  size_t i, even;
+  int n_tokens;
 
   if (!pp_lexer_set_label(k->lt, label))
   {
-    prt_error("Fatal error: File %s: Couldn't find starting link table %s",
+    prt_error("Error: File %s: Couldn't find starting link table %s",
               k->path, label);
-    exit(1);
+    return false;
   }
 
   n_tokens = pp_lexer_count_tokens_of_label(k->lt);
+  if (-1 == n_tokens) return false;
   even = n_tokens % 2;
   if(0 != even)
   {
-    prt_error("Fatal error: Link table must have format [<link> <domain name>]+");
-    exit(1);
+    prt_error("Error: Link table must have format [<link> <domain name>]+");
+    return false;
   }
 
   k->nStartingLinks = n_tokens/2;
@@ -93,13 +96,16 @@ static void read_starting_link_table(pp_knowledge *k)
 
       /* read the domain type of the link */
       p = pp_lexer_get_next_token_of_label(k->lt);
-      check_domain_is_legal(k, p);
+      if (!check_domain_is_legal(k, p)) return false;
       k->starting_link_lookup_table[i].domain = (int) p[0];
   }
 
   /* end sentinel */
   k->starting_link_lookup_table[k->nStartingLinks].domain = -1;
+  return true;
 }
+
+static pp_linkset LINK_SET_ERROR; /* sentinel value for error */
 
 static pp_linkset *read_link_set(pp_knowledge *k,
                                  const char *label, String_set *ss)
@@ -109,13 +115,18 @@ static pp_linkset *read_link_set(pp_knowledge *k,
      in which case the set is taken to be empty. */
   int n_strings,i;
   pp_linkset *ls;
-  if (!pp_lexer_set_label(k->lt, label)) {
+  if (!pp_lexer_set_label(k->lt, label))
+  {
     if (debug_level(+D_PPK))
       prt_error("Warning: File %s: Link set %s not defined: assuming empty",
              k->path, label);
     n_strings = 0;
   }
-  else n_strings = pp_lexer_count_tokens_of_label(k->lt);
+  else
+  {
+    n_strings = pp_lexer_count_tokens_of_label(k->lt);
+    if (-1 == n_strings) return &LINK_SET_ERROR;
+  }
   ls = pp_linkset_open(n_strings);
   for (i=0; i<n_strings; i++)
     pp_linkset_add(ls,
@@ -123,18 +134,35 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   return ls;
 }
 
-static void read_link_sets(pp_knowledge *k)
+static bool read_link_sets(pp_knowledge *k)
 {
   String_set *ss = k->string_set;   /* shorthand */
   k->domain_starter_links     =read_link_set(k,"DOMAIN_STARTER_LINKS",ss);
+  if (&LINK_SET_ERROR == k->domain_starter_links) return false;
+
   k->urfl_domain_starter_links=read_link_set(k,"URFL_DOMAIN_STARTER_LINKS",ss);
+  if (&LINK_SET_ERROR == k->urfl_domain_starter_links) return false;
+
   k->domain_contains_links    =read_link_set(k,"DOMAIN_CONTAINS_LINKS",ss);
+  if (&LINK_SET_ERROR == k->domain_contains_links) return false;
+
   k->ignore_these_links       =read_link_set(k,"IGNORE_THESE_LINKS",ss);
+  if (&LINK_SET_ERROR == k->ignore_these_links) return false;
+
   k->restricted_links         =read_link_set(k,"RESTRICTED_LINKS",ss);
+  if (&LINK_SET_ERROR == k->domain_starter_links) return false;
+
   k->must_form_a_cycle_links  =read_link_set(k,"MUST_FORM_A_CYCLE_LINKS",ss);
+  if (&LINK_SET_ERROR == k->must_form_a_cycle_links) return false;
+
   k->urfl_only_domain_starter_links=
       read_link_set(k,"URFL_ONLY_DOMAIN_STARTER_LINKS",ss);
+  if (&LINK_SET_ERROR == k->urfl_only_domain_starter_links) return false;
+
   k->left_domain_starter_links=read_link_set(k,"LEFT_DOMAIN_STARTER_LINKS",ss);
+  if (&LINK_SET_ERROR == k->left_domain_starter_links) return false;
+
+  return true;
 }
 
 static void free_link_sets(pp_knowledge *k)
@@ -149,7 +177,7 @@ static void free_link_sets(pp_knowledge *k)
   pp_linkset_close(k->left_domain_starter_links);
 }
 
-static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
+static bool read_form_a_cycle_rules(pp_knowledge *k, const char *label)
 {
   size_t n_commas, n_tokens;
   size_t r, i;
@@ -173,8 +201,8 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens <= 0)
       {
-        prt_error("Fatal Error: Syntax error in knowledge file %s", k->path);
-        exit(1);
+        prt_error("Error: File %s: Syntax error", k->path);
+        return false;
       }
       lsHandle = pp_linkset_open(n_tokens);
       for (i=0; i<n_tokens; i++)
@@ -185,9 +213,9 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-         prt_error("Fatal Error: File %s: Invalid syntax (rule %zu of %s)",
+         prt_error("Error: File %s: Invalid syntax (rule %zu of %s)",
                    k->path, r+1,label);
-         exit(1);
+         return false;
       }
       k->form_a_cycle_rules[r].msg = string_set_add(tokens[0], k->string_set);
       k->form_a_cycle_rules[r].use_count = 0;
@@ -196,9 +224,11 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   /* sentinel entry */
   k->form_a_cycle_rules[k->n_form_a_cycle_rules].msg = 0;
   k->form_a_cycle_rules[k->n_form_a_cycle_rules].use_count = 0;
+
+  return true;
 }
 
-static void read_bounded_rules(pp_knowledge *k, const char *label)
+static bool read_bounded_rules(pp_knowledge *k, const char *label)
 {
   const char **tokens;
   size_t n_commas, n_tokens;
@@ -219,9 +249,9 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Fatal Error: File %s: Invalid syntax: rule %zu of %s",
+        prt_error("Error: File %s: Invalid syntax: rule %zu of %s",
                   k->path, r+1,label);
-        exit(1);
+        return false;
       }
       k->bounded_rules[r].domain = (int) tokens[0][0];
 
@@ -229,9 +259,9 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Fatal Error: File %s: Invalid syntax: rule %zu of %s",
+        prt_error("Error: File %s: Invalid syntax: rule %zu of %s",
                   k->path, r+1,label);
-        exit(1);
+        return false;
       }
       k->bounded_rules[r].msg = string_set_add(tokens[0], k->string_set);
       k->bounded_rules[r].use_count = 0;
@@ -240,14 +270,17 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   /* sentinel entry */
   k->bounded_rules[k->n_bounded_rules].msg = 0;
   k->bounded_rules[k->n_bounded_rules].use_count = 0;
+
+  return true;
 }
 
-static void read_contains_rules(pp_knowledge *k, const char *label,
+static bool read_contains_rules(pp_knowledge *k, const char *label,
                                 pp_rule **rules, size_t *nRules)
 {
   /* Reading the 'contains_one_rules' and reading the
      'contains_none_rules' into their respective arrays */
-  size_t n_commas, n_tokens, i, r;
+  size_t n_tokens, i, r;
+  int n_commas;
   const char *p;
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
@@ -257,6 +290,7 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
+    if (-1 == n_commas) return false;
     *nRules = (n_commas + 1)/3;
   }
   *rules = (pp_rule*) xalloc ((1+*nRules)*sizeof(pp_rule));
@@ -266,9 +300,9 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-        prt_error("Fatal Error: File %s: Invalid syntax in %s (rule %zu)",
+        prt_error("Error: File %s: Invalid syntax in %s (rule %zu)",
                   k->path, label, r+1);
-        exit(1);
+        return false;
       }
 
       (*rules)[r].selector = string_set_add(tokens[0], k->string_set);
@@ -290,9 +324,9 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-        prt_error("Fatal Error: File %s: Invalid syntax in %s (rule %zu)",
+        prt_error("Error: File %s: Invalid syntax in %s (rule %zu)",
                   k->path, label, r+1);
-        exit(1);
+        return false;
       }
 
       (*rules)[r].msg = string_set_add(tokens[0], k->string_set);
@@ -302,17 +336,22 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   /* sentinel entry */
   (*rules)[*nRules].msg = 0;
   (*rules)[*nRules].use_count = 0;
+
+  return true;
 }
 
 
-static void read_rules(pp_knowledge *k)
+static bool read_rules(pp_knowledge *k)
 {
-  read_form_a_cycle_rules(k, "FORM_A_CYCLE_RULES");
-  read_bounded_rules(k,  "BOUNDED_RULES");
-  read_contains_rules(k, "CONTAINS_ONE_RULES" ,
-                      &(k->contains_one_rules), &(k->n_contains_one_rules));
-  read_contains_rules(k, "CONTAINS_NONE_RULES",
-                      &(k->contains_none_rules), &(k->n_contains_none_rules));
+  if (!read_form_a_cycle_rules(k, "FORM_A_CYCLE_RULES")) return false;
+  if (!read_bounded_rules(k,  "BOUNDED_RULES")) return false;
+  if (!read_contains_rules(k, "CONTAINS_ONE_RULES" ,
+      &(k->contains_one_rules), &(k->n_contains_one_rules)))
+    return false;
+  if (!read_contains_rules(k, "CONTAINS_NONE_RULES",
+      &(k->contains_none_rules), &(k->n_contains_none_rules)))
+    return false;
+  return true;
 }
 
 static void free_rules(pp_knowledge *k)
@@ -320,17 +359,20 @@ static void free_rules(pp_knowledge *k)
   size_t r;
   size_t rs = sizeof(pp_rule);
   pp_rule *rule;
-  for (r=0; k->contains_one_rules[r].msg!=0; r++)
+  if (NULL != k->contains_one_rules)
   {
-    rule = &(k->contains_one_rules[r]);    /* shorthand */
-    xfree((void*) rule->link_array, (1+rule->link_set_size)*sizeof(char*));
-    pp_linkset_close(rule->link_set);
-  }
-  for (r=0; k->contains_none_rules[r].msg!=0; r++)
-  {
-    rule = &(k->contains_none_rules[r]);   /* shorthand */
-    xfree((void *)rule->link_array, (1+rule->link_set_size)*sizeof(char*));
-    pp_linkset_close(rule->link_set);
+    for (r=0; k->contains_one_rules[r].msg!=0; r++)
+    {
+      rule = &(k->contains_one_rules[r]);    /* shorthand */
+      xfree((void*) rule->link_array, (1+rule->link_set_size)*sizeof(char*));
+      pp_linkset_close(rule->link_set);
+    }
+    for (r=0; k->contains_none_rules[r].msg!=0; r++)
+    {
+      rule = &(k->contains_none_rules[r]);   /* shorthand */
+      xfree((void *)rule->link_array, (1+rule->link_set_size)*sizeof(char*));
+      pp_linkset_close(rule->link_set);
+    }
   }
 
   for (r = 0; r < k->n_form_a_cycle_rules; r++)
@@ -347,21 +389,28 @@ pp_knowledge *pp_knowledge_open(const char *path)
 {
   /* read knowledge from disk into pp_knowledge */
   FILE *f = dictopen(path, "r");
-  pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
-  if (!f)
+  if (NULL == f)
   {
-    prt_error("Fatal Error: Couldn't find post-process knowledge file %s", path);
-    exit(1);
+    prt_error("Error: Couldn't find post-process knowledge file %s", path);
+    return NULL;
   }
+  pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
+  *k = (pp_knowledge){0};
   k->lt = pp_lexer_open(f);
   fclose(f);
   k->string_set = string_set_create();
   k->path = string_set_add(path, k->string_set);
-  read_starting_link_table(k);
-  read_link_sets(k);
-  read_rules(k);
+  if (!read_starting_link_table(k)) goto failure;
+
+  if (!read_link_sets(k)) goto failure;
+  if (!read_rules(k)) goto failure;
   initialize_set_of_links_starting_bounded_domain(k);
   return k;
+
+failure:
+  prt_error("Error: Unable to open knowledge file %s.", path);
+  pp_knowledge_close(k);
+  return NULL;
 }
 
 void pp_knowledge_close(pp_knowledge *k)

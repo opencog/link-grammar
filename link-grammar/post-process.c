@@ -1405,6 +1405,7 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 PostProcessor * post_process_open(const char *path)
 {
 	pp_knowledge *kno = pp_knowledge_open(path);
+	if (NULL == kno) return NULL;
 	return post_process_new(kno);
 }
 
