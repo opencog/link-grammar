@@ -10096,6 +10096,10 @@ a_bitch :
 
 great.a: <marker-common-entity> or (<adj-good> & <wantPHc>);
 
+% Surely this is incomplete...
+one_and_only:
+  A+;
+
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
   <marker-common-entity> or
@@ -11554,7 +11558,7 @@ so_that such_that:
 % Wc-: "But my efforts to win his heart have failed"
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
   [{Xd-} & (Xx- or Wc-) & {Xc+}
-    & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>];
+    & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
 ..y *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
