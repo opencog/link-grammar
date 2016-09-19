@@ -364,6 +364,9 @@ PL-CAPITALIZED-WORDS:
 % Careful for bad parses of
 % "This is the dog and cat Pat and I chased and ate"
 % "actress Whoopi Goldberg and singer Michael Jackson attended the ceremony"
+%
+% Some given names cause problems, though. See tom.n-u, bob.v, frank.a
+% frank.v, Frank.b, An.f below.
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [GN-]2.1 or [[{@A-} & {D-}]]} &
@@ -3733,7 +3736,7 @@ beset.v mistaken.v underwritten.v:
   <verb-adj> or
   <verb-phrase-opener>;
 
-% Unlikely transitive verb. Here, we single out 'frankk', as that is a
+% Unlikely transitive verb. Here, we single out 'frank', as that is a
 % rare verb, and it causes conflicts witht the given name 'Frank.b'.
 % For example: "Frank felt vindicated".
 <vc-trans-unlikely>:
