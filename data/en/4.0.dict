@@ -11319,13 +11319,17 @@ mainly primarily:
   or (MVl- & (MVa+ or MVp+ or MVs+));
 
 % The MV- links seem to really confuse the issue... kill them.
+% Except they are really needed:
+% MVl- & MVp+: "I am here only for a few days"
+% MVa-: "This can saw only wood"
 only:
   La-
   or E+
   or EN+
   or EB-
-%  or (MVl- & (MVp+ or MVa+ or MVs+))
-%  or MVa-
+  or (MVl- & MVp+)
+% or (MVl- & (MVa+ or MVs+))
+  or MVa-
   or (Rnx+ & <CLAUSE-E>)
   or (MVp+ & Wq- & Q+);
 

@@ -2428,6 +2428,25 @@ Because I want to talk.
 Because I said so.
 Only I say so.
 
+% "just" takes MVa- link (just like "only")
+They do just that.
+He did just what you asked.
+
+% "only" has to have MVa- and MVl- & MVp+ links
+I am only here for a few days
+I am here only for a few days
+I am here for a few days only
+
+My phone can make calls only to family in this area
+My phone can make only calls to family in this area
+My phone can make calls only to family in this area
+My phone can make calls to family only in this area
+
+% phantom prepositions -- phantom "for"
+I am only here a few days
+I am here only a few days
+I am here a few days only
+
 This sentence parses badly.
 The bad parse was due to the improper parsing of the sentence.
 
@@ -3641,10 +3660,6 @@ The poor dears were so confused!
 % Broken idiomatic clauses ... (phantom/zero subjects)
 Heard that before?
 Just a coincidence?
-
-% "just" takes MVa- link (just like "only")
-They do just that.
-He did just what you asked.
 
 % Multiple MV links
 % All the different comma arrangements are valid, and make subtle
