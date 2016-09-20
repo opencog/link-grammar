@@ -290,9 +290,10 @@ nonCAP.zzz: ZZZ-;
 <fronted>: [Wp- & PF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
+% Xc+ & Qd+: "Susan, am I right?"
 <directive-opener>:
   {[[Wa-]]} &
-    ((Xc+ & Ic+) or
+    ((Xc+ & Qd+) or
     ({Xd-} & (Xc+ or [[()]]) & [[COa+]]));
 
 % Just pure singular entities, no mass nouns
