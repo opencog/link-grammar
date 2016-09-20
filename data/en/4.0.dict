@@ -282,15 +282,11 @@ nonCAP.zzz: ZZZ-;
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 % COa+ is used to block links to COd-
-% Qo+ is used to connect openers to subject-verb inverted questions:
-%     "On arrival, can you do it?"
-%     Wp- is used for these, lower-case-p implying.. prepositional!
-%     (?is that the right thing to do?)
 % Xc+ & Ic+: connect to imperatives (infinitve verbs): "Anyhow, don't"
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    ({Xd-} & (Xc+ or [[()]]) & ([COa+] or (Wp- & Qo+))));
+    ({Xd-} & (Xc+ or [[()]]) & [COa+]));
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -2411,8 +2407,7 @@ per "/.per": Us+ & Mp-;
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
 % Qe-: "How many times did you do it?"
 % Qd-: "Does he drink?" -- Qd connects directly to wall.
-% Qo-: "On arrival, can you do it?"
-<verb-rq>: Rw- or ({Ic-} & (Qd- or ((Qw- or Qe- or Qo-) & <verb-wall>))) or [()];
+<verb-rq>: Rw- or ({Ic-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
