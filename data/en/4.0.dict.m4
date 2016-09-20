@@ -5392,15 +5392,18 @@ passing.g buying.g paying.g selling.g dealing.g telegraphing.g wiring.g:
 passing.v buying.v paying.v selling.v dealing.v telegraphing.v wiring.v:
   <verb-pg> & <vc-pass>;
 
-% opt-ditransitive
 % Xd- & O+ & Xc+ & Eq+: "risks, as one could call them, are stupid."
+<vc-para-naming>:
+  (Xd- & O+ & {@MV+} & Xc+ & Eq+);
+
+% opt-ditransitive
 <vc-call>:
   ({(B- & {O+ or Pa+ or K+})
     or <vc-opt-ditrans>
     or (O+ & (Pa+ or K+))
     or (K+ & {{[[@MV+]]} & O*n+})
     or ([[@MV+ & O*n+]])} & {@MV+})
-  or (Xd- & O+ & Xc+ & Eq+);
+  or <vc-para-naming>;
 
 % This is not quite right:
 % "she called him" but "*she shouted him"
@@ -5691,11 +5694,13 @@ electing.g appointing.g: (<vc-elect> & <verb-ge>) or <verb-ge-d>;
 electing.v appointing.v: <verb-pg> & <vc-elect>;
 
 % vc-name is a ditransitive extension of vc-trans (with an extra TI+)
+% <vc-para-naming>: "risks, as one might name them, are stupid."
 <vc-name>:
-  ( <vc-opt-ditrans> or
-    (O+ & {[[@MV+]]} & TI+) or
-    (B- & {O+ or TI+}) or
-    ([[@MV+ & O*n+]])) & {@MV+};
+  ((<vc-opt-ditrans>
+    or (O+ & {[[@MV+]]} & TI+)
+    or (B- & {O+ or TI+})
+    or ([[@MV+ & O*n+]])) & {@MV+})
+  or <vc-para-naming>;
 
 name.v designate.v label.v: VERB_PLI(<vc-name>);
 names.v designates.v labels.v: VERB_S_T(<vc-elect>);
