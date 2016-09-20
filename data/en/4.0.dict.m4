@@ -290,11 +290,8 @@ nonCAP.zzz: ZZZ-;
 <fronted>: [Wp- & PF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
-% Xc+ & Qd+: "Susan, am I right?"
 <directive-opener>:
-  {[[Wa-]]} &
-    ((Xc+ & Qd+) or
-    ({Xd-} & (Xc+ or [[()]]) & [[COa+]]));
+  {[[Wa-]]} & {Xd-} & (Xc+ or [[()]]) & COa+;
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -9217,22 +9214,23 @@ ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
 bye.ij goodbye.ij:
   Wa-;
 
-% Openers to directives, commands (Ic+ connection to infinitives)
-anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
+% Openers to directives, commands
+% E+: "you should instead go home"
+%     "It will, more often than not, go by train."
 prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
-later_on for_now more_often_than_not:
-  <directive-opener>
-  or ({Xd- & Xc+} & MVa-);
+later_on for_now more_often_than_not
+
+anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
+on_second_thought
 
 again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
 even_so all_of_a_sudden:
   <directive-opener>
-  or E+
-  or ({Xd- & Xc+} & MVa-);
+  or ({Xd- & Xc+} & (MVa- or E+));
 
 for_sure for_certain for_real:
   <directive-opener>
@@ -9240,7 +9238,7 @@ for_sure for_certain for_real:
 
 % sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-  <directive-opener>;
+  <directive-opener> or Wa-;
 
 % -----------------------------------------------------------
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)
