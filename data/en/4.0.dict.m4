@@ -292,10 +292,11 @@ nonCAP.zzz: ZZZ-;
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 % COa+ is used to block links to COd-
 % Xc+ & Ic+: connect to imperatives (infinitve verbs): "Anyhow, don't"
+% Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-(Wc- & Xc+ & Qd+) or
+    (Wc- & (Xc+ or [()]) & Qd+) or
     ({Xd-} & (Xc+ or [[()]]) & [COa+]));
 
 % Just pure singular entities, no mass nouns
@@ -9150,6 +9151,8 @@ yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij
 good.ij good_enough fair_enough whatever.ij
 hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course
+however.ij really.ij then.ij say.ij seriously.ij
+just_asking wondering.ij
 gesundheit
 oh_no oh_my oh_my_days
 ohmigod OMG oh_em_gee omigosh
