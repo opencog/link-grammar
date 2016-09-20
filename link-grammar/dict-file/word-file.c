@@ -14,11 +14,14 @@
 #include "dict-common.h"
 #include "string-set.h"
 #include "structures.h"
+#include "read-dict.h"
 #include "word-file.h"
 
 /**
  * Reads in one word from the file, allocates space for it,
  * and returns it.
+ *
+ * In case of an error, return a null string (cannot be a valid word).
  */
 static const char * get_a_word(Dictionary dict, FILE * fp)
 {
@@ -38,10 +41,9 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 	}
 
 	if (j >= MAX_WORD) {
-		word[MAX_WORD] = 0x0;
-		prt_error("Fatal Error: The dictionary contains a word that "
-		          "is too long. The word was: %s", word);
-		exit(1);
+		word[MAX_WORD] = '\0';
+		prt_error("The dictionary contains a word that is too long: %s", word);
+		return ""; /* error indication */
 	}
 	word[j] = '\0';
 	patch_subscript(word);
@@ -63,25 +65,26 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	Word_file * wf;
 	FILE * fp;
 	const char * s;
-	char file_name_copy[MAX_PATH_NAME+1];
 
-	safe_strcpy(file_name_copy, filename+1, sizeof(file_name_copy)); /* get rid of leading '/' */
+	filename += 1; /* get rid of leading '/' */
 
-	if ((fp = dictopen(file_name_copy, "r")) == NULL) {
-		prt_error("Error opening word file %s\n", file_name_copy);
+	if ((fp = dictopen(filename, "r")) == NULL) {
 		return NULL;
 	}
 
-	/*printf("   Reading \"%s\"\n", file_name_copy);*/
-	/*printf("*"); fflush(stdout);*/
-
 	wf = (Word_file *) xalloc(sizeof (Word_file));
-	safe_strcpy(wf->file, file_name_copy, sizeof(wf->file));
+	wf->file = string_set_add(filename, dict->string_set);
 	wf->changed = false;
 	wf->next = dict->word_file_header;
 	dict->word_file_header = wf;
 
 	while ((s = get_a_word(dict, fp)) != NULL) {
+		if ('\0' == s[0]) /* returned error indication */
+		{
+			fclose(fp);
+			free_insert_list(dn);
+			return NULL;
+		}
 		Dict_node * dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
 		dn_new->left = dn;
 		dn = dn_new;
