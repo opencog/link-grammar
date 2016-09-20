@@ -29,6 +29,10 @@
 #include "print-util.h"
 #include "wordgraph.h"
 
+#ifdef __APPLE__
+#define POPEN_DOT
+#endif /* __APPLE__ */
+
 /* === Gword utilities === */
 /* Many more Gword utilities, that are used only in particular files,
  * are defined in these files statically. */
@@ -758,6 +762,13 @@ static void wordgraph_show_cancel(void)
 #    define WGJPG "%TEMP%\\lg-wg.jpg"
 #    define POPEN_DOT_CMD_NATIVE \
 				DOT_COMMAND" -Tjpg>"WGJPG"&"IMAGE_VIEWER" "WGJPG"&del "WGJPG
+#  elif __APPLE__
+#    ifndef IMAGE_VIEWER
+#      define IMAGE_VIEWER "open -W"
+#    endif
+#    define WGJPG "$TMPDIR/lg-wg.jpg"
+#    define POPEN_DOT_CMD_NATIVE \
+				DOT_COMMAND" -Tjpg>"WGJPG";"IMAGE_VIEWER" "WGJPG";rm "WGJPG
 #  else
 #    define POPEN_DOT_CMD_NATIVE POPEN_DOT_CMD
 #  endif
