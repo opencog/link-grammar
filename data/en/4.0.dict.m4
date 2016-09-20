@@ -6233,10 +6233,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % -----------------------------------------------------------------
 % wall connectors
 % The naked Wi+, without a WV+, links to imperatives: "put it on the table".
+% The naked Wn+, without a WV+, links to nominals: "what a shame!".
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
-<wo-wall>: Wa+ or Wi+ or Ww+ or Qd+;
+<wo-wall>: Wa+ or Wi+ or Wn+ or Ww+ or Qd+;
 <wi-wall>: (Wd+ or Wp+ or Wr+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Wo+) & <WALL>;
 
 % Paraphrasing, quotational complements:
@@ -7250,7 +7251,7 @@ who:
 % Ww-: Dr. Who: "What!"
 % {EL+} & Ww-: "What else?" "What the fuck?"
 % Xc+ & Ic+: "What, were you expecting Santa?"
-% Wd- & O+: "What a jerk!"
+% Wn- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
 % Jw-: "To what do you owe your success?"
 what:
@@ -7261,7 +7262,7 @@ what:
       or (R+ & (Bsw+ or BW+)))
     & {EW-} & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Ww-)
-  or (Wd- & O+)
+  or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)

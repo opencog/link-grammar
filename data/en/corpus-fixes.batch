@@ -343,12 +343,6 @@ He is a good enough player
 *He was very lucky enough
 *He was very good enough
 
-% What expletives, profanities
-What a lousy example sentence!
-What a cad!
-What an idiot!
-What a jerk!
-
 He is such a little shit.
 He is such a little fuck.
 I don't give a flying fuck.
@@ -936,6 +930,20 @@ In the corner lay a lamp.
 *In the corner lay it.
 
 Under that tree sleeps only Larry.
+
+% Verb-object inversion
+% .. and verb-object inversion with null copula.
+What a shame that was
+What a fiasco that was
+What a shame!
+What a fiasco!
+What a great day today!
+
+% What expletives, profanities
+What a lousy example sentence!
+What a cad!
+What an idiot!
+What a jerk!
 
 % Directive subject-object inversion
 Into the room came two students
@@ -3573,6 +3581,7 @@ Sir, please don't do that.
 
 Tsk tsk, you dog!
 Tsk, tsk, you dog!
+
 Tsk tsk, what a shame!
 Tsk, tsk, what a shame!
 My, what a shame!
