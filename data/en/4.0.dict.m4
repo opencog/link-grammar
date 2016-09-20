@@ -5392,13 +5392,15 @@ passing.g buying.g paying.g selling.g dealing.g telegraphing.g wiring.g:
 passing.v buying.v paying.v selling.v dealing.v telegraphing.v wiring.v:
   <verb-pg> & <vc-pass>;
 
-% ditransitive
+% opt-ditransitive
+% Xd- & O+ & Xc+ & Eq+: "risks, as one could call them, are stupid."
 <vc-call>:
-  {(B- & {O+ or Pa+ or K+}) or
-    <vc-opt-ditrans> or
-    (O+ & (Pa+ or K+)) or
-    (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & {@MV+};
+  ({(B- & {O+ or Pa+ or K+})
+    or <vc-opt-ditrans>
+    or (O+ & (Pa+ or K+))
+    or (K+ & {{[[@MV+]]} & O*n+})
+    or ([[@MV+ & O*n+]])} & {@MV+})
+  or (Xd- & O+ & Xc+ & Eq+);
 
 % This is not quite right:
 % "she called him" but "*she shouted him"
