@@ -4866,14 +4866,18 @@ for_granted: Vtg-;
 
 % VERBS TAKING [OBJ] + [OTHER COMPLEMENT]
 % basically, all these are <vc-trans> plus mess
+% I think the WR- here is dead and not used. See other WR- below
 <vc-put>:
   ((K+ & {[[@MV+]]} & O*n+) or
   ((O+ or <b-minus>) & (K+ or Pp+ or WR-)) or
   (Vp+ & (Zs- or MVa+))) & {@MV+};
 
+
+% I- & WR- & <verb-wall> & O+: "where did you put it?"
 put.v-d:
   VERB_SPPP_T(<vc-put>) or
   (<verb-ico> & <vc-put>) or
+  ({@E-} & I- & WR- & <verb-wall> & O+) or
   (<verb-pv-b> & (K+ or Pp+ or WR-) & {@MV+}) or
   ((K+ or Pp+) & <verb-phrase-opener>);
 puts.v: VERB_S_T(<vc-put>);
