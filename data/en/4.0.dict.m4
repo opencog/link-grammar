@@ -329,7 +329,7 @@ INITIALS <entity-singular>:
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({@A- or G-} & {D-} & Wa-)
-  or <directive-opener>;
+  or [[<directive-opener>]];
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % prefered to the regex match (i.e. for a common noun starting a
@@ -356,7 +356,7 @@ PL-CAPITALIZED-WORDS:
       or AN+
       or G+))
   or ({@A- or G-} & {D-} & Wa-)
-  or <directive-opener>;
+  or [[<directive-opener>]];
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
@@ -403,7 +403,7 @@ PL-CAPITALIZED-WORDS:
 /en/words/entities.given-male.sing
 /en/words/entities.goddesses
 /en/words/entities.gods:
-  <marker-entity> or <given-names> or <directive-opener>;
+  <marker-entity> or <given-names> or [[<directive-opener>]];
 
 % Given name "So.f" interferes with adverb "so" -- give it a cost.
 So.f: [[<given-names>]];
@@ -9215,7 +9215,7 @@ bye.ij goodbye.ij:
   Wa-;
 
 % Openers to directives, commands
-% E+: "you should instead go home"
+% E+: split infinitives, e.g. "you should instead go home"
 %     "It will, more often than not, go by train."
 prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
