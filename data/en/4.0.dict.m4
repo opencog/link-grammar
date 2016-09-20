@@ -6275,23 +6275,23 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
 /en/words/words.v.10.1:
-  [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+  [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.10.2:
-  [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
+  [[{@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
 
 % XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
   {@E-} & (
-    ((S- or PP-) & <vc-paraph>)
+    ((S- or PP-) & <verb-wall> & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or [Pvf- & <vc-it-paraph>]);
 
 read.q-d:
-   {@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & (((S- or I- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 wrote.q-d:
-   {@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & ((S- & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 written.q: {@E-} & PP- & <vc-paraph>;
 
