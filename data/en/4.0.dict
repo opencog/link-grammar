@@ -8779,23 +8779,25 @@ recently:
     or Qe+
     or [[Mp-]]);
 
+% Wc- & Qd+: "Now, am I right?"
 now.r:
   ({Xd- & Xc+} & MVp-)
   or Pp-
   or E+
   or ({Xc+ & {Xd-}} & CO+)
+  or (Wc- & (Xc+ or [()]) & Qd+)
   or EB-
   or [[Mp-]];
 
-% <directive-opener>: "Then, am I right?"
+% Wc- & Qd+: "Then, am I right?"
 then.r:
   ({Xd- & Xc+} & MVp-)
   or Pp-
   or E+
   or ({Xc+ & {Xd-}} & CO+)
+  or (Wc- & (Xc+ or [()]) & Qd+)
   or EB-
   or (S+ & Xd- & Xc+ & MVs-)
-  or <directive-opener>
   or [[Mp-]];
 
 % Wt-: "Later."  (all by itself) but also: "Later, he left"
@@ -11130,14 +11132,14 @@ certainly possibly probably importantly remarkably interestingly:
 
 % These are taken from words.adv.2 and allowed EB- when separated by
 % commas.
-% <directive-opener>: "however, am I right?"
+% Wc- & Qd+: "however, am I right?"
 however.e consequently.e moreover.e potentially.e conversely.e
 finally.e actually.e thusly.e:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
-  or ({Xc+ & {Xd-}} & EBm-)
-  or <directive-opener>;
+  or (Wc- & (Xc+ or [()]) & Qd+)
+  or ({Xc+ & {Xd-}} & EBm-);
 
 % TODO: "similarly" and "differently" get very different linking requirements.
 % see if these should be made the same.
