@@ -6994,19 +6994,26 @@ the_next the_previous the_following this_past:
 <relative-date>:
   <prep-main-t> or JT- or Js- or YS+ or [[<noun-main-s>]];
 
+% Date inverted relative: "What a great day yesterday was!"
+% "What a great day was yesterday!"
+<date-inv-rel>: Ss+ & Rn-;
+
+% {Xd-} & MX-: "What a great day today!"
 today tonight:
   <relative-date>
+  or <date-inv-rel>
   or ({Xd-} & MX-)
   or [[E+]];
 
 yesterday:
-  {TD+} & (<relative-date> or [[E+]]);
+  {TD+} & (<relative-date> or <date-inv-rel> or [[E+]]);
 
 tomorrow:
-  {TD+} & <relative-date>;
+  {TD+} & (<relative-date> or <date-inv-rel>);
 
 Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
-  ((DTn- or DTie- or [()]) & {G-} & {TD+ or TW+} & (<relative-date> or ON-))
+  ((DTn- or DTie- or [()]) & {G-} & {TD+ or TW+}
+    & (<relative-date> or <date-inv-rel> or ON-))
   or [[AN+]];
 
 morning.i afternoon.i night.i evening.i:
@@ -7029,6 +7036,7 @@ July August.i September.i October November December:
     or JT-
     or [[<noun-main-s> or MVp- or Mp- or AN+]]))
   or (ND- & TY+ & MVp-)
+  or <date-inv-rel>
   or AN+
   or Wa-;
 
