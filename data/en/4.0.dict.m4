@@ -2421,6 +2421,10 @@ per "/.per": Us+ & Mp-;
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
 <verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+% Just like above, but no aux, shuld always be anded with I+.
+% The idea here is that the verb on the other end of the I+ will
+% connect to the wall.
+<verb-rq-aux>: Rw- or ({{Xd-} & Iq-} & (Qd- or Qw- or Qe-)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -2631,7 +2635,7 @@ do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & ((<verb-rq> & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & ((<verb-rq-aux> & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & {@MV+} & IV-)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
@@ -2641,7 +2645,7 @@ do.v:
 does.v:
   VERB_X_S(<vc-do>)
   or ({@E-} & Ss- & <verb-wall> & @MV+)
-  or ((SIs+ or SFIs+) & ((<verb-rq> & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
 % <verb-x-sp> & <verb-wall>: "I sure wish I did"
@@ -2650,7 +2654,7 @@ did.v-d:
   or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & @MV+)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & ((<verb-rq> & I*d+) or CQ-));
+  or ((SI+ or SFI+) & ((<verb-rq-aux> & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
@@ -2683,16 +2687,16 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 % Ic- & Wi-: "In total, dont!"
 % Wi- & I*d+: "Don't do that!"
 don't don’t:
-  (((<verb-rq> & (SIp+ or SFIp+) & I*d+)
+  (((<verb-rq-aux> & (SIp+ or SFIp+) & I*d+)
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
   or ({@E-} & {Ic-} & Wi- & {I*d+});
 
 doesn't doesn’t:
-  ((<verb-rq> & (SIs+ or SFIs+) & I*d+) or
+  ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or
   <verb-x-s>) & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
-  ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp>)
+  ((<verb-rq-aux> & (SI+ or SFI+)) or <verb-x-sp>)
      & (I*d+ or <verb-wall> or [[()]]);
 
 daren't mayn't shan't oughtn't mightn't
@@ -3023,7 +3027,7 @@ weren't.v-d weren’t.v-d:
 % Except ... "You know you can", "You know you must"
 % Sa*a- & Ix+: "..., as shall be proven"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
-  ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
+  ((SI+ or SFI+) & ((<verb-rq-aux> & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
@@ -3038,14 +3042,14 @@ could.v-d:
 
 % <verb-wall>: "You know you should."
 should.v:
-  ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq-aux> & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % <verb-wall>: "I sure wish he would."
 would.v:
-  ((SI+ or SFI+) & ((<verb-rq> & {Vw+} & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {Vw+} & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & {@MV+}) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
@@ -3058,7 +3062,7 @@ ought.v:
 % <verb-wall>: "I know I won't."
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
-  (<verb-rq> & (SI+ or SFI+) & I+) or
+  (<verb-rq-aux> & (SI+ or SFI+) & I+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>) or
@@ -3066,7 +3070,7 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
 
 % <verb-wall>: "I know I wouldn't."
 wouldn't wouldn’t:
-  (<verb-rq> & (SI+ or SFI+) & {RT+} & I+) or
+  (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & I+) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
@@ -5041,12 +5045,12 @@ intending.v: <verb-pg> & <vc-intend>;
   ({N+} & I+) or
   ((O+ or <b-minus>) & {@MV+} & {<too-verb> or (TO+ & Xc+)});
 
-% SI+ & <verb-rq> & I+: "How dare you disobey orders"
+% SI+ & <verb-rq-aux> & I+: "How dare you disobey orders"
 % <verb-s> & N+ & I+: "He dare not lie to me!" (singular subject)
 dare.v:
   VERB_PLI(<vc-dare>)
   or (<verb-s> & N+ & I+)
-  or (SI+ & <verb-rq> & I+);
+  or (SI+ & <verb-rq-aux> & I+);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d:
   VERB_SPPP_T(<vc-dare>)
