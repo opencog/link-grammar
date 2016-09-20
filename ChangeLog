@@ -3,6 +3,7 @@ Version 5.3.11: (XXX 2016?)
  * Cleanup python API (in a non-backwards-compat fashion).
  * Fix certain adverbial uses of "only".
  * Fix some interjective openers to questions.
+ * Fix serious error with subject-verb inversion to past participle.
 
 Version 5.3.10: (14 Sept 2016)
  * Implement `make installcheck`.
