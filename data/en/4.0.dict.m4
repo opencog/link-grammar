@@ -9223,6 +9223,7 @@ bye.ij goodbye.ij:
   Wa-;
 
 % Openers to directives, commands
+% Ic+: connection to infinitive imperatives: "on arrival, do it!"
 % E+: split infinitives, e.g. "you should instead go home"
 %     "It will, more often than not, go by train."
 prima_facie before_long
