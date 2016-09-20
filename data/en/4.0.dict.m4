@@ -7248,9 +7248,11 @@ UNITS: <units-suffix>;
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
 % {EL+ & {N+}} & Wd-: "Who?" "Who else?" "Who else not?"
 % Wq- & Qw+: "who are they?"
+% Jw-: "For who were you mistaken?"
 who:
   (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
+  or Jw-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
   or (Wq- & Qw+)
@@ -7293,6 +7295,7 @@ which:
 which_way:
   <directive-opener> or Wi-;
 
+% Jw-: "From whom did you run?"
 whom:
   (R- & <porcl-verb>)
   or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
@@ -7350,9 +7353,11 @@ whichever:
        or [[(O- or J-) & CX+]]))
   or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
+% Jw-: "From whither did it come?"
 whence whither:
-  {EL+} & (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)
-    or ({Xd- & Xc+} & MVs-)));
+  {EL+} & ((<subcl-verb> & (({Xc+ & {Xd-}} & CO+)
+      or ({Xd- & Xc+} & MVs-)))
+    or Jw-);
 
 although in_as_much_as whilst whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
@@ -7391,11 +7396,13 @@ why:
 % R+ & Bsw+: "Where does it go to?"
 % Cs+ & Bsw+ & QI-: "Can you tell us where those strange ideas came from?"
 % {EW-}: "about where did you put it?"
+% Jw-: "From where did you get it?"
 where:
   {EL+}
     & (
       ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]
+      or Jw-
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
       or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
