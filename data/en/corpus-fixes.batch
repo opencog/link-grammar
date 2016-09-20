@@ -540,6 +540,33 @@ A length of chain was wrapped around the tree.
 He left town early next morning.
 I gave her a check for deposit.
 
+% words that can be both mass and count nouns
+They are like family to us.
+He is like family to us.
+
+it is at an equilibrium
+it is in equilibrium
+
+% Buggy classification of mass nouns (words.n.3)
+% The -ity, -acy and -ance words are now in words.n.3.y
+There was an abundance of poverty.
+There was a continuity of action.
+There was a certain crudity to his actions.
+It showed a certain abundance. 
+He had a certain panache.
+He sank into a delirium.
+It was a detriment to further action.
+He demonstrated a certain ignorance.
+We were unable to find a common ground.
+
+He took the effort to make amends
+He had the imprudence to laugh
+He has the impunity to do as he pleases
+He has the balls to do as he pleases
+He had the honesty to come clean
+He has the panache to pull it off
+The solution had the acidity to eat through walls
+
 % More nouns that can be indefinite .. magazine, crisis, 
 % musical instruments.
 He wrote for Playboy magazine.
@@ -554,10 +581,6 @@ He took the effort to make amends
 % 'level' is a modifier: "He keeps a level head in an emergency"
 The process uses abrB transcription as an indicator of Spo0A~P level
 The platform was at knee level.
-
-% 'family' as a mass noun
-They are like family to us.
-He is like family to us.
 
 % Test cases for noun countable/uncountable nouns:
 I have much furniture.
@@ -2075,26 +2098,6 @@ He barks at me nightly.
 He sits near me nightly.
 He sits near me occasionally.
 My boyfriend dresses very simply.
-
-% Buggy classification of mass nouns (words.n.3)
-% The -ity, -acy and -ance words are now in words.n.3.y
-There was an abundance of poverty.
-There was a continuity of action.
-There was a certain crudity to his actions.
-It showed a certain abundance. 
-He had a certain panache.
-He sank into a delirium.
-It was a detriment to further action.
-He demonstrated a certain ignorance.
-We were unable to find a common ground.
-
-He took the effort to make amends
-He had the imprudence to laugh
-He has the impunity to do as he pleases
-He has the balls to do as he pleases
-He had the honesty to come clean
-He has the panache to pull it off
-The solution had the acidity to eat through walls
 
 
 % Time-related verb modifier
