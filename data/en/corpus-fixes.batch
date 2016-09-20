@@ -522,6 +522,21 @@ Finn pushed at the door.
 % Some given names can be proper names
 The late Mr. Tom will be sorely missed.
 
+% Collistions between given names and oteh words
+% Should be OK now; given name 'Frank' collides with frank.a, frank.v
+Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.
+
+% Sue (female given name) vs. "to sue" (verb).
+Sue answered the door.
+
+% Tom as a mass noun interferes with far-more-likely common-name "Tom".
+Could we add some tom-tom to that track?
+
+% Some plural capitalized words are singular entities. Treat them well.
+% e.g. last name Johns, or Hotchkiss are not actually plurals ...
+Johns gave it to me.
+Hotchkiss gave it to me.
+
 % Proper name modifiers
 It dates back to fifteenth century France.
 
@@ -557,7 +572,7 @@ it is in equilibrium
 There was an abundance of poverty.
 There was a continuity of action.
 There was a certain crudity to his actions.
-It showed a certain abundance. 
+It showed a certain abundance.
 He had a certain panache.
 He sank into a delirium.
 It was a detriment to further action.
@@ -572,7 +587,7 @@ He had the honesty to come clean
 He has the panache to pull it off
 The solution had the acidity to eat through walls
 
-% More nouns that can be indefinite .. magazine, crisis, 
+% More nouns that can be indefinite .. magazine, crisis,
 % musical instruments.
 He wrote for Playboy magazine.
 I know how to play guitar.
@@ -596,9 +611,9 @@ That bitch did it!
 % ===================================================================
 % quasi-numeric determiners aka quantifying determiners
 % There are a zillion of these, mostly due to the product of the
-% special-case quantifiers (some of, none of, all of, etc) with objects, 
+% special-case quantifiers (some of, none of, all of, etc) with objects,
 % subjects, and determiners (of these, of those, of it, etc.)
-% 
+%
 I have a lot of time
 I have some number of cookies
 I have a passel load of cookies
@@ -626,7 +641,7 @@ I ate a couple of the cookies.
 
 % XXX TODO: squonky determiners with "of"
 %
-% Note how many of these allow a determiner "the beer", "this beer", 
+% Note how many of these allow a determiner "the beer", "this beer",
 % "I drank a pint of beer", "I drank a pint of this beer", while
 % others insist on it!  "*I drank the rest of beer", "*I drank all of beer"
 % Yet others forbid it: "*I drank another of the beer", "*I drank a couple
@@ -660,7 +675,7 @@ I ate a little of the cookies.
 *I ate a little of cookies.
 
 % XXX "I ate little", and little should MV "ate", and not "fish"
-% whereas "I ate a little" and it should be Os on "ate", right? 
+% whereas "I ate a little" and it should be Os on "ate", right?
 I ate little of the fish.
 
 % phantom "bit": "I drank a little (bit) of beer"
@@ -693,7 +708,7 @@ I drank a small part of the beer.
 I ate a part of the cake.
 
 % cookie, unlike cake or beer, is normally a count noun; however, it can be
-% sometimes partitioned.  (viz, its "optionally" a mass noun.) 
+% sometimes partitioned.  (viz, its "optionally" a mass noun.)
 I ate a part of the cookie.
 
 I drank all of the beer.
@@ -4626,8 +4641,10 @@ I idolized and idealized the man.
 I grimaced and idolized the man.
 
 % correct parse is "I (saw and greeted) Sue"
-*I saw and greeted Sue.
-we sang and danced the night away
+I saw and greeted Sue.
+
+% correct parse is "we (sang and danced) the night away"
+*we sang and danced the night away
 He shrank and withdrew from the crowd
 The boat lurched forward and sank
 She will blush and start blathering at the mention of his name
@@ -4899,16 +4916,13 @@ Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a so
 Senator Johnson introduced a bill on the 12th of July.
 Senator Johnson introduced a bill of July.
 
-% Should be OK now; given name 'Frank' collides with frank.a, frank.v
-Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.
-
 % "one to two" should modify hours.
 It starts one to two hours later.
 It starts one or two hours later.
 
 % None of the generated parses are correct; all are garbage.
 % Put a star in front of this -- the sentence is good, the parses are bad.
-% The issue is that right/straight fail to modofy 'through'; if they did,
+% The issue is that right/straight fail to modify 'through'; if they did,
 % then all would be good.
 *Bill went over the river and right through the woods.
 *Bill went over the river and straight through the woods.
@@ -4942,17 +4956,6 @@ Hooker's philosophy was to build and sell
 John's remark was awkward.
 John's sudden outburst was awkward.
 Lady's dress was awkward.
-
-% Some plural capitalized words are singular entities. Treat them well.
-% e.g. last name Johns, or Hotchkiss are not actually plurals ... 
-Johns gave it to me.
-Hotchkiss gave it to me.
-
-% Sue (female given name) vs. "to sue" (verb).
-Sue answered the door.
-
-% Tom as a mass noun interferes with far-more-likely common-name "Tom".
-Could we add some tom-tom to that track?
 
 % Other capitalization issues:
 We are from the planet Gorpon.
