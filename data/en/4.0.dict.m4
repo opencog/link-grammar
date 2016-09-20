@@ -295,6 +295,7 @@ nonCAP.zzz: ZZZ-;
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
+(Wc- & Xc+ & Qd+) or
     ({Xd-} & (Xc+ or [[()]]) & [COa+]));
 
 % Just pure singular entities, no mass nouns
@@ -2416,7 +2417,9 @@ per "/.per": Us+ & Mp-;
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
 % Qe-: "How many times did you do it?"
 % Qd-: "Does he drink?" -- Qd connects directly to wall.
-<verb-rq>: Rw- or ({Ic-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+% Iq-: "The big question is did he do it?"
+% Xd- & Iq-: "The big question is, did he do it?"
+<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
