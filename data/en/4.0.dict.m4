@@ -6995,7 +6995,9 @@ the_next the_previous the_following this_past:
   <prep-main-t> or JT- or Js- or YS+ or [[<noun-main-s>]];
 
 today tonight:
-  <relative-date> or [[E+]];
+  <relative-date>
+  or ({Xd-} & MX-)
+  or [[E+]];
 
 yesterday:
   {TD+} & (<relative-date> or [[E+]]);
