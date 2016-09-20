@@ -8481,9 +8481,11 @@ within w/i:
 during:
            ({JQ+} & J+ & (<prep-main-a> or UN-))  or [MVp- & B-];
 
+% EW+ "From where did it come?"
 from:
   ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
   or [MVp- & B-]
+  or EW+
   or NIr+;
 
 at toward towards without w/o.p:
@@ -9403,11 +9405,12 @@ whichever:
        or [[(O- or J-) & CX+]]))
   or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
-% Jw-: "From whither did it come?"
+% Ww- & Qw+: "whither did it come?"
+% EW-: "From whither did it come?"
 whence whither:
   {EL+} & ((<subcl-verb> & (({Xc+ & {Xd-}} & CO+)
       or ({Xd- & Xc+} & MVs-)))
-    or Jw-);
+    or ({EW-} & Ww- & Qw+));
 
 although in_as_much_as whilst whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
@@ -9452,7 +9455,6 @@ where:
     & (
       ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]
-      or Jw-
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
       or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
