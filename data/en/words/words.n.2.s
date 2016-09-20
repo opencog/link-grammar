@@ -3631,6 +3631,7 @@ equals.n
 equations.n
 equators.n
 equestrians.n
+equilibriums.n
 equinoxes.n
 equities.n
 equivalences.n

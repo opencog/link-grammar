@@ -20,6 +20,7 @@ dodecahedra.n
 dressing.p
 emphases.p
 enzyme.p
+equilibria.p
 feet.p
 firemen.p
 fishermen.p
