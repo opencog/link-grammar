@@ -21,33 +21,11 @@ It was announced that remains have been found of the ark of the covenant
 They were of a single mind.
 What's up?
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Miscellaneous missing nouns.
-He picked up the game die.
-People use espresso to make other coffee drinks.
-Espresso is a coffee drink.
-Bill sold his children to the gypsies
-Computers suck ass
-Computers suck dick
-I found a subgraph isomorphism that is isometric to the epimorphism.
-I installed one splitter near the antenna and two more before the amplifier.
-I installed one splitter near the antenna and two more splitters before the amplifier.
-I did not understand one smidgin of that lecture. Not one whit.
-Not one tittle. Not one whit.
-I'm getting a bad vibe from this.
 
 An eerie silence befell the room
 an eerie calm settled down on the room
 an eerie quiet preceded the explosion.
 he had an easy calmness about him
-
-% Verbs that didn't have corresponding nouns -- bop.v was clobbering bop.n
-I like the sound of bop.
-She was the co-star.
-Who did you give the slavers?
-
-% Confusing given names
-Finn pushed at the door.
 
 % Missing or miscategorized verbs
 Don't overexcite him!
@@ -137,36 +115,6 @@ He gave me an acrylic lens.
 *He gave me a acrylic lens.
 He gave me an Afghan rug
 *He gave me a Afghan rug
-
-% nouns not in nouns.1
-*an majority agree
-a majority agree
-*an number agree
-a number agree
-
-it's a kind of test
-*it's an kind of test
-it's a silly kind of test
-*it's an silly kind of test
-it's an unusual kind of test
-*it's a unusual kind of test
-
-This is a crucial test.
-*This is an crucial test.
-
-*it's an sort of test
-it's a sort of test
-there's an argument brewing
-*there's a argument brewing
-he gave me an excuse
-*he gave me a excuse
-That is an issue
-*That is a issue
-*There is an way
-There is a way
-*There is an place
-There is a place
-
 
 % ----------------------------------------------------------
 % Misc stuff
@@ -456,11 +404,92 @@ Bring whoever you wish
 Use whatever the fuck pleases you.
 Do whatever the fuck pleases you.
 
+% intransitive verbs taking prepositions
+He grabbed at it
+
+% transitive verbs taking prepositions
+He dished it out at the unsuspecting onlookers.
+I ladled it carefully into a bowl.
+You should ladle it out.
+He ladles it with a large wooden spoon.
+He was ladling the molten steel when the crucible tipped.
+He ladled the molten hot metal into the mold.
+It was molten hot.
+It was piping hot.
+It was devilishly hot.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ==========================================================
+% NOUNS misclassified and mangled
+%
+% Miscellaneous missing nouns.
+He picked up the game die.
+People use espresso to make other coffee drinks.
+Espresso is a coffee drink.
+Bill sold his children to the gypsies
+Computers suck ass
+Computers suck dick
+I found a subgraph isomorphism that is isometric to the epimorphism.
+I installed one splitter near the antenna and two more before the amplifier.
+I installed one splitter near the antenna and two more splitters before the amplifier.
+I did not understand one smidgin of that lecture. Not one whit.
+Not one tittle. Not one whit.
+I'm getting a bad vibe from this.
+% mass nouns that were incorrectly classified as count nouns.
+% Nouns that can be used in an indefinite manner.
+I will give you a piece of armament.
+I will give you a piece of bagel.
+I will give you a bit of courtesy.
+Give me a piece of almond.
+Give me a bit of anaesthetic.
+Give me a piece of apple.
+He broke off a piece of bagel and gave it to me.
+A piece of asteroid broke off.
+Add one spoonful of avocado.
+I ate a bit of biscuit.
+She exposed a bit of bikini to us.
+A piece of cactus went sailing through the air.
+There were three cacti in front of us.
+Add a cup of finely shredded carrot.
+A length of chain was wrapped around the tree.
+He left town early next morning.
+I gave her a check for deposit.
+
+% ----------------
+% nouns not in nouns.1
+*an majority agree
+a majority agree
+*an number agree
+a number agree
+
+it's a kind of test
+*it's an kind of test
+it's a silly kind of test
+*it's an silly kind of test
+it's an unusual kind of test
+*it's a unusual kind of test
+
+This is a crucial test.
+*This is an crucial test.
+
+*it's an sort of test
+it's a sort of test
+there's an argument brewing
+*there's a argument brewing
+he gave me an excuse
+*he gave me a excuse
+That is an issue
+*That is a issue
+*There is an way
+There is a way
+*There is an place
+There is a place
+
 % Pronoun fixes
 I'll hire whomever I can find.
 I'll hire whomever.
 I'll hire whoever.
-
 
 % Proper names (entities) in the form of noun modifiers
 % The problem is that some of these appear in entity names
@@ -487,6 +516,9 @@ He is the man from Syndicated Features
 He represents the Undersea Exploration Company
 He represents the Equatorial Antarctic Bank
 
+% Confusing given names
+Finn pushed at the door.
+
 % Some given names can be proper names
 The late Mr. Tom will be sorely missed.
 
@@ -505,44 +537,13 @@ We looked for 3-amino-3-azabicyclo[3,3,0]octane hydrochloride
 
 They are a three times defeated team.
 
-% intransitive verbs taking prepositions
-He grabbed at it
+% ----------------
+% Verbs that didn't have corresponding nouns -- bop.v was clobbering bop.n
+I like the sound of bop.
+She was the co-star.
+Who did you give the slavers?
 
-% transitive verbs taking prepositions
-He dished it out at the unsuspecting onlookers.
-I ladled it carefully into a bowl.
-You should ladle it out.
-He ladles it with a large wooden spoon.
-He was ladling the molten steel when the crucible tipped.
-He ladled the molten hot metal into the mold.
-It was molten hot.
-It was piping hot.
-It was devilishly hot.
-
-
-% ==========================================================
-% NOUNS misclassified and mangled
-%
-% mass nouns that were incorrectly classified as count nouns.
-% Nouns that can be used in an indefinite manner.
-I will give you a piece of armament.
-I will give you a piece of bagel.
-I will give you a bit of courtesy.
-Give me a piece of almond.
-Give me a bit of anaesthetic.
-Give me a piece of apple.
-He broke off a piece of bagel and gave it to me.
-A piece of asteroid broke off.
-Add one spoonful of avocado.
-I ate a bit of biscuit.
-She exposed a bit of bikini to us.
-A piece of cactus went sailing through the air.
-There were three cacti in front of us.
-Add a cup of finely shredded carrot.
-A length of chain was wrapped around the tree.
-He left town early next morning.
-I gave her a check for deposit.
-
+% ----------------
 % words that can be both mass and count nouns
 They are like family to us.
 He is like family to us.
@@ -550,6 +551,7 @@ He is like family to us.
 it is at an equilibrium
 it is in equilibrium
 
+% ----------------
 % Buggy classification of mass nouns (words.n.3)
 % The -ity, -acy and -ance words are now in words.n.3.y
 There was an abundance of poverty.
