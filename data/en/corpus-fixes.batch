@@ -520,6 +520,9 @@ It was piping hot.
 It was devilishly hot.
 
 
+% ==========================================================
+% NOUNS misclassified and mangled
+%
 % mass nouns that were incorrectly classified as count nouns.
 % Nouns that can be used in an indefinite manner.
 I will give you a piece of armament.
@@ -586,79 +589,7 @@ The platform was at knee level.
 I have much furniture.
 *I have many furniture.
 
-
 That bitch did it!
-
-% Special-case superlative adjectives
-% "favorite" can take determiner "a"
-Arkansas  has become a favorite place for older people to retire.
-Global Trotter, a favorite, seems unlikely to place.
-
-% Superlatives without preceeding determiners.
-He likes you best.
-He bores you most.
-He bores you the most.
-He likes you least.
-He likes you plenty.
-Mr. Bingley may like you the best of the party.
-He may like you best of all.
-He may like you the best of all.
-He may like you least of all.
-He may like you the least of all.
-He may like you most of all.
-He may like you the most of all.
-
-% Interuptives with preps. These probably should take CO links.
-You, least of all, should know.
-You, most of all, should know.
-You, out of everyone, should know.
-You, at least, should know.
-we should at least feed the goats in the petting area
-This is the man who, in some ways, I would like to hire
-
-% Verbs acting as adjectival modifiers (A+ link):
-% Everything in v.2.3, v.4.3, v.6.3 and v.8.3, and special cases:
-This has become a very politicized deal.
-You need to provide an ordered list.
-The given reference is incorrect.
-The provided reference is incorrect.
-The allied army is on the move.
-The adjusted balance is incorrect.
-The poured concrete slowly hardened.
-The wired connection has gone bad.
-The telegraphed orders never arrived.
-Do you have any ruled paper?
-I gave him some ruled paper.
-
-% Pg+ links between verbs and gerunds 
-He imagined hitting the ball.
-She imagined photographing the couple.
-He feared hitting the wall.
-I emphasize hitting your targets in my lectures.
-He confirmed missing his targets
-He regretted firing the man.
-I regret really smashing it.
-He disputed punching the man.
-I recollect raising the bar for that team.
-I envision building a very tall building.
-He tried stopping the man.
-I enjoy running the show.
-
-% Here a Ce+ link is used to attach to the subject
-% i.e. the gerund, acting as a noun. e.g pushing, trusting  
-He conceded pushing the button was a mistake.
-We concluded trusting him was a mistake.
-We concluded that trusting him was a mistake.
-
-% come, came with gerunds
-The dog came running at the master's call.
-The dog comes running when he's called.
-The ball came flying at his head.
-
-% gerunds with determiners
-It's a polishing of prose.
-It is a thinning of the herd
-The event features a running of the bulls
 
 % ===================================================================
 % quasi-numeric determiners aka quantifying determiners
@@ -898,7 +829,6 @@ I have a breed of goats.
 Copelatus stavropolitanus is a species of diving beetle.
 
 What degree of trust do you put in him?
-
 
 % And not just as objects, but subjects too.
 A number of people took part in the riot.
@@ -1294,6 +1224,80 @@ John imagines himself lost in the woods.
 John imagines himself singing from a mountaintop
 I imagined myself dozing on a sunny beach
 John imagined Mary as innocent as a lamb.
+
+% ======================================================
+% Adjectives!
+%
+% Special-case superlative adjectives
+% "favorite" can take determiner "a"
+Arkansas  has become a favorite place for older people to retire.
+Global Trotter, a favorite, seems unlikely to place.
+
+% Superlatives without preceeding determiners.
+He likes you best.
+He bores you most.
+He bores you the most.
+He likes you least.
+He likes you plenty.
+Mr. Bingley may like you the best of the party.
+He may like you best of all.
+He may like you the best of all.
+He may like you least of all.
+He may like you the least of all.
+He may like you most of all.
+He may like you the most of all.
+
+% Interuptives with preps. These probably should take CO links.
+You, least of all, should know.
+You, most of all, should know.
+You, out of everyone, should know.
+You, at least, should know.
+we should at least feed the goats in the petting area
+This is the man who, in some ways, I would like to hire
+
+% Verbs acting as adjectival modifiers (A+ link):
+% Everything in v.2.3, v.4.3, v.6.3 and v.8.3, and special cases:
+This has become a very politicized deal.
+You need to provide an ordered list.
+The given reference is incorrect.
+The provided reference is incorrect.
+The allied army is on the move.
+The adjusted balance is incorrect.
+The poured concrete slowly hardened.
+The wired connection has gone bad.
+The telegraphed orders never arrived.
+Do you have any ruled paper?
+I gave him some ruled paper.
+
+% Pg+ links between verbs and gerunds 
+He imagined hitting the ball.
+She imagined photographing the couple.
+He feared hitting the wall.
+I emphasize hitting your targets in my lectures.
+He confirmed missing his targets
+He regretted firing the man.
+I regret really smashing it.
+He disputed punching the man.
+I recollect raising the bar for that team.
+I envision building a very tall building.
+He tried stopping the man.
+I enjoy running the show.
+
+% Here a Ce+ link is used to attach to the subject
+% i.e. the gerund, acting as a noun. e.g pushing, trusting  
+He conceded pushing the button was a mistake.
+We concluded trusting him was a mistake.
+We concluded that trusting him was a mistake.
+
+% come, came with gerunds
+The dog came running at the master's call.
+The dog comes running when he's called.
+The ball came flying at his head.
+
+% gerunds with determiners
+It's a polishing of prose.
+It is a thinning of the herd
+The event features a running of the bulls
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%% Predicative adjectives %%%%%%%%%%%%%%%%%%%
