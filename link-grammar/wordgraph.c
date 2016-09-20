@@ -955,6 +955,16 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		}
 	}
 
+#if _WIN32
+#define EXITKEY "ALT-F4"
+#elif __APPLE__
+#define EXITKEY "⌘-Q"
+#endif
+
+#ifdef EXITKEY
+	printf("Press "EXITKEY" in the graphical display window to continue\n");
+#endif
+
 #if !defined HAVE_FORK || defined POPEN_DOT
 	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_NATIVE, wgds);
 #else
