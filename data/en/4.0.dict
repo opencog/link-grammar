@@ -281,10 +281,14 @@ nonCAP.zzz: ZZZ-;
 <fronted>: [Wp- & PF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
+% COa+ is used to block links to COd-
+% Xc+ & Ic+: connect to imperatives (infinitve verbs): "Anyhow, don't"
+% Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    ({Xd-} & (Xc+ or [[()]]) & [[COa+]]));
+    (Wc- & (Xc+ or [()]) & Qd+) or
+    ({Xd-} & (Xc+ or [[()]]) & [COa+]));
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -366,7 +370,7 @@ PL-CAPITALIZED-WORDS:
 % "actress Whoopi Goldberg and singer Michael Jackson attended the ceremony"
 %
 % Some given names cause problems, though. See tom.n-u, bob.v, frank.a
-% frank.v, Frank.b, An.f below.
+% frank.v, Frank.b, An.f In.f So.f below.
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [GN-]2.1 or [[{@A-} & {D-}]]} &
@@ -398,8 +402,8 @@ PL-CAPITALIZED-WORDS:
 /en/words/entities.gods:
   <marker-entity> or <given-names> or <directive-opener>;
 
-% Given name "So.f" interferes with adverb "so" -- give it a cost.
-So.f: [[<given-names>]];
+% Given names An In So interfere with misc words -- give them a cost.
+An.f In.f So.f: [[<given-names>]];
 
 % Special handling for certain given names. These are words that have a
 % lower-case analog in the dictionary, and are also used in upper-case
@@ -2405,7 +2409,9 @@ per "/.per": Us+ & Mp-;
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
 % Qe-: "How many times did you do it?"
 % Qd-: "Does he drink?" -- Qd connects directly to wall.
-<verb-rq>: Rw- or ({Ic-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+% Iq-: "The big question is did he do it?"
+% Xd- & Iq-: "The big question is, did he do it?"
+<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -2653,10 +2659,14 @@ doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
-% <verb-wall>: "I know he didn't"
+% <verb-wall>: "I know he didn't", "I know they don't"
+% Wi-: "Don't!"
+% Ic- & Wi-: "In total, dont!"
+% Wi- & I*d+: "Don't do that!"
 don't don’t:
-  ((<verb-rq> & (SIp+ or SFIp+) & I*d+) or
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or <verb-wall> or [[()]]);
+  (((<verb-rq> & (SIp+ or SFIp+) & I*d+)
+    or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
+  or ({@E-} & {Ic-} & Wi- & {I*d+});
 
 doesn't doesn’t:
   ((<verb-rq> & (SIs+ or SFIs+) & I*d+) or
@@ -11185,6 +11195,8 @@ yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij
 good.ij good_enough fair_enough whatever.ij
 hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course
+however.ij really.ij then.ij say.ij seriously.ij
+just_asking wondering.ij
 gesundheit
 oh_no oh_my oh_my_days
 ohmigod OMG oh_em_gee omigosh
@@ -11260,22 +11272,24 @@ ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
 bye.ij goodbye.ij:
   Wa-;
 
-% Openers to directives, commands (Ic+ connection to infinitives)
-anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
+% Openers to directives, commands
+% Ic+: connection to infinitive imperatives: "on arrival, do it!"
+% E+: split infinitives, e.g. "you should instead go home"
+%     "It will, more often than not, go by train."
 prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
-later_on for_now more_often_than_not:
-  <directive-opener>
-  or ({Xd- & Xc+} & MVa-);
+later_on for_now more_often_than_not
+
+anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
+on_second_thought
 
 again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
 even_so all_of_a_sudden:
   <directive-opener>
-  or E+
-  or ({Xd- & Xc+} & MVa-);
+  or ({Xd- & Xc+} & (MVa- or E+));
 
 for_sure for_certain for_real:
   <directive-opener>
@@ -11283,7 +11297,7 @@ for_sure for_certain for_real:
 
 % sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-  <directive-opener>;
+  <directive-opener> or Wa-;
 
 % -----------------------------------------------------------
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)

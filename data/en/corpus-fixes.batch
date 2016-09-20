@@ -1759,6 +1759,8 @@ where did it happen, ma'am?
 John, why did you say that?
 why did you say that, John?
 
+my dear sir, that can't be right!
+my lady, that can't be right!
 
 % exemplary
 It was an action exemplary of his conduct
@@ -3488,7 +3490,7 @@ This, I did not know!
 Some days, the trains run on time.
 Some of the time, I really  hate it.
 The rest of the time, we goof off.
-Part of the year, we goof off. 
+part of the year, we goof off.
 
 % Opening idioms
 % some of these have a phantom-that e.g. "I'm telling you that ..."
@@ -3505,6 +3507,24 @@ Mark my words, she'll do it.
 well, I'll say, she did it!
 Oh my God, she did it!
 Can you believe it?
+
+% Openers to questions
+However, am I right?
+Well, am I right?
+So, am I right?
+Really, am I right?
+Anyhow, am I right?
+John, am I right?
+Then, am I right?
+So then, am I right?
+Say, am I right?
+Seriously, am I right?
+Seriously then, am I right?
+Just asking, am I right?
+Wondering, am I right?
+So I am wondering, am I right?
+So then I am wondering, am I right?
+So then, I am wondering, am I right?
 
 % Yes, no as openers
 No, it wasn't John.
@@ -3528,6 +3548,8 @@ No, don't do that.
 Don't do that!
 No, do not do that.
 Okay, don't do that.
+Anyhow, don't.
+In total, don't.
 Yes, go.
 Please, yes.
 Thank you, no.
@@ -3614,6 +3636,8 @@ John, doesn't that strike you as odd?
 John, have you thought about it?
 John, is it true?
 On arrival, can you do it?
+For now, can you do it?
+On second thought, can you do it?
 
 Yes, be alert!
 Yes, go play ball.
@@ -3656,6 +3680,10 @@ Be a good dear and take my luggage.
 Be a darling, take my luggage.
 The poor dears were so confused!
 
+% Split infinitives
+you should, on second thought, go home
+you should instead go home
+It will, more often than not, go by train.
 
 % Broken idiomatic clauses ... (phantom/zero subjects)
 Heard that before?
