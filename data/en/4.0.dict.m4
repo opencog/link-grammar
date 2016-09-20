@@ -293,9 +293,13 @@ nonCAP.zzz: ZZZ-;
 % COa+ is used to block links to COd-
 % Qo+ is used to connect openers to subject-verb inverted questions:
 %     "On arrival, can you do it?"
-%     Wp- is used for these, lower-case-p implying.. prepositional! (?is that OK?)
+%     Wp- is used for these, lower-case-p implying.. prepositional!
+%     (?is that the right thing to do?)
+% Xc+ & Ic+: connect to imperatives (infinitve verbs): "Anyhow, don't"
 <directive-opener>:
-  {[[Wa-]]} & {Xd-} & (Xc+ or [[()]]) & (COa+ or (Wp- & Qo+));
+  {[[Wa-]]} &
+    ((Xc+ & Ic+) or
+    ({Xd-} & (Xc+ or [[()]]) & ([COa+] or (Wp- & Qo+))));
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -333,7 +337,7 @@ INITIALS <entity-singular>:
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({@A- or G-} & {D-} & Wa-)
-  or [[<directive-opener>]];
+  or <directive-opener>;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % prefered to the regex match (i.e. for a common noun starting a
@@ -360,7 +364,7 @@ PL-CAPITALIZED-WORDS:
       or AN+
       or G+))
   or ({@A- or G-} & {D-} & Wa-)
-  or [[<directive-opener>]];
+  or <directive-opener>;
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
@@ -407,7 +411,7 @@ PL-CAPITALIZED-WORDS:
 /en/words/entities.given-male.sing
 /en/words/entities.goddesses
 /en/words/entities.gods:
-  <marker-entity> or <given-names> or [[<directive-opener>]];
+  <marker-entity> or <given-names> or <directive-opener>;
 
 % Given name "So.f" interferes with adverb "so" -- give it a cost.
 So.f: [[<given-names>]];
@@ -2675,10 +2679,14 @@ doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
-% <verb-wall>: "I know he didn't"
+% <verb-wall>: "I know he didn't", "I know they don't"
+% Wi-: "Don't!"
+% Ic- & Wi-: "In total, dont!"
+% Wi- & I*d+: "Don't do that!"
 don't don’t:
-  ((<verb-rq> & (SIp+ or SFIp+) & I*d+) or
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or <verb-wall> or [[()]]);
+  (((<verb-rq> & (SIp+ or SFIp+) & I*d+)
+    or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
+  or ({@E-} & {Ic-} & Wi- & {I*d+});
 
 doesn't doesn’t:
   ((<verb-rq> & (SIs+ or SFIs+) & I*d+) or
