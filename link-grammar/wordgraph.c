@@ -750,16 +750,16 @@ static void wordgraph_show_cancel(void)
 #define DOT_FILENAME "lg-wg.vg"
 
 #define POPEN_DOT_CMD DOT_COMMAND" "DOT_DRIVER
-#ifndef POPEN_DOT_CMD_WINDOWS
+#ifndef POPEN_DOT_CMD_NATIVE
 #  ifdef _WIN32
 #    ifndef IMAGE_VIEWER
 #      define IMAGE_VIEWER "rundll32 PhotoViewer,ImageView_Fullscreen"
 #    endif
 #    define WGJPG "%TEMP%\\lg-wg.jpg"
-#    define POPEN_DOT_CMD_WINDOWS \
+#    define POPEN_DOT_CMD_NATIVE \
 				DOT_COMMAND" -Tjpg>"WGJPG"&"IMAGE_VIEWER" "WGJPG"&del "WGJPG
 #  else
-#    define POPEN_DOT_CMD_WINDOWS POPEN_DOT_CMD
+#    define POPEN_DOT_CMD_NATIVE POPEN_DOT_CMD
 #  endif
 #endif
 
@@ -945,7 +945,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	}
 
 #if !defined HAVE_FORK || defined POPEN_DOT
-	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_WINDOWS, wgds);
+	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_NATIVE, wgds);
 #else
 	{
 		assert(NULL != gvf_name, "DOT filename not initialized (#define mess?)");
