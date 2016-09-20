@@ -602,10 +602,6 @@ He took the effort to make amends
 The process uses abrB transcription as an indicator of Spo0A~P level
 The platform was at knee level.
 
-% Test cases for noun countable/uncountable nouns:
-I have much furniture.
-*I have many furniture.
-
 That bitch did it!
 
 % ===================================================================
@@ -614,6 +610,9 @@ That bitch did it!
 % special-case quantifiers (some of, none of, all of, etc) with objects,
 % subjects, and determiners (of these, of those, of it, etc.)
 %
+I have much furniture.
+*I have many furniture.
+
 I have a lot of time
 I have some number of cookies
 I have a passel load of cookies
