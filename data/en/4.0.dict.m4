@@ -381,7 +381,7 @@ PL-CAPITALIZED-WORDS:
 % "actress Whoopi Goldberg and singer Michael Jackson attended the ceremony"
 %
 % Some given names cause problems, though. See tom.n-u, bob.v, frank.a
-% frank.v, Frank.b, An.f below.
+% frank.v, Frank.b, An.f In.f So.f below.
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [GN-]2.1 or [[{@A-} & {D-}]]} &
@@ -413,8 +413,8 @@ PL-CAPITALIZED-WORDS:
 /en/words/entities.gods:
   <marker-entity> or <given-names> or <directive-opener>;
 
-% Given name "So.f" interferes with adverb "so" -- give it a cost.
-So.f: [[<given-names>]];
+% Given names An In So interfere with misc words -- give them a cost.
+An.f In.f So.f: [[<given-names>]];
 
 % Special handling for certain given names. These are words that have a
 % lower-case analog in the dictionary, and are also used in upper-case
