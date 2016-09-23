@@ -134,6 +134,7 @@ liblink_grammar_la_SOURCES =        \
 	fast-match.h                     \
 	histogram.h                      \
 	idiom.h                          \
+	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
 	post-process.h                   \

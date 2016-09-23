@@ -257,6 +257,9 @@
     <ClInclude Include="..\link-grammar\wordgraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\link-grammar\lg_assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\link-grammar\link-features.h.in" />

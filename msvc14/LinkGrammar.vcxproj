@@ -235,6 +235,7 @@
     <ClInclude Include="..\link-grammar\extract-links.h" />
     <ClInclude Include="..\link-grammar\fast-match.h" />
     <ClInclude Include="..\link-grammar\idiom.h" />
+    <ClInclude Include="..\link-grammar\lg_assert.h" />
     <ClInclude Include="..\link-grammar\link-features.h" />
     <ClInclude Include="..\link-grammar\link-includes.h" />
     <ClInclude Include="..\link-grammar\linkage.h" />
