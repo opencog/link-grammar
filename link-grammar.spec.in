@@ -15,7 +15,7 @@ Buildroot: /var/tmp/%{name}-%{version}-%{release}-root
 URL: http://abisource.com/projects/link-grammar/
 
 #Requires: 
-BuildRequires: hunspell-devel, java-devel, jpackage-utils, libedit-devel, ant
+BuildRequires: hunspell-devel, java-devel, jpackage-utils, libedit-devel, ant, minisat-devel
 
 %description
 The Link Grammar Parser is a syntactic parser of English, Russian,
@@ -50,7 +50,7 @@ CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh --prefix=%{_prefix} --no-configure
 fi
 
 %configure
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{_prefix} --enable-python-bindings --disable-sat-solver --disable-aspell
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{_prefix} --enable-python-bindings --disable-aspell
 
 if [ "$SMP" != "" ]; then
   (%__make "MAKE=%__make -k -j $SMP"; exit 0)
@@ -81,6 +81,9 @@ find $RPM_BUILD_ROOT/%{_libdir} -name \*.la -exec rm -f \{\} \;
 %__rm -r $RPM_BUILD_ROOT
 
 %changelog
+* Fri Sep 23 2016 Amir Plivatsky <amirpli@gmail.com>
+- Add minisat dependency.
+- Enable the SAT-solver (enabled by default).
 * Fri Jun 27 2014 Linas Vepstas <linasvepstas@gmail.com>
 - Freshen with newer URL, dependencies.
 * Sat Feb 5 2005 Dom Lachowicz <cinamod@hotmail.com>
