@@ -5,13 +5,6 @@
 #undef assert
 #include "util.hpp"
 
-extern "C" {
-
-#include "api-structures.h"
-#include "structures.h"
-
-};
-
 using namespace Minisat;
 
 // This class represents different guiding strategies of LinkParser SAT search
