@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#include "utilities.h" /* Only for assert() for IDEs */
+#include "lg_assert.h"
 
 /*
    Trie that supports strings made out of alphabeth letters,
