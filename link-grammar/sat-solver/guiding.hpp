@@ -1,7 +1,8 @@
 #ifndef __GUIDING_HPP__
 #define __GUIDING_HPP__
 
-#include "Solver.h"
+#include <core/Solver.h>
+#undef assert
 #include "util.hpp"
 
 extern "C" {
@@ -10,6 +11,8 @@ extern "C" {
 #include "structures.h"
 
 };
+
+using namespace Minisat;
 
 // This class represents different guiding strategies of LinkParser SAT search
 class Guiding {

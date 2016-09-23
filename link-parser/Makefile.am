@@ -27,7 +27,7 @@ link_parser_LDADD += $(SQLITE3_LIBS)
 endif
 
 if WITH_SAT_SOLVER
-link_parser_LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+link_parser_LDADD  += ${MINISAT_LIBS}
 endif
 
 if WITH_VITERBI

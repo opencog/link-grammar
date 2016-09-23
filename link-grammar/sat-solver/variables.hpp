@@ -3,9 +3,23 @@
 
 #include <vector>
 #include <map>
+#include <iostream>
+
+using std::cout;
+using std::cerr;
+using std::endl;
 
 #include "guiding.hpp"
-#include "Solver.h"
+
+#define assert(ex, ...) {                                                   \
+	if (!(ex)) {                                                             \
+		prt_error("\nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
+		fprintf(stderr, "\n");                                                \
+		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
+	}                                                                        \
+}
+
+
 #include "trie.hpp"
 #include "matrix-ut.hpp"
 #include "fast-sprintf.hpp"

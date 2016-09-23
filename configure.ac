@@ -138,7 +138,7 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 if test x${native_win32} = xyes; then
 	# Vikas says that -std=gnu99 is needed on cygwin/mingw
 	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
-	CXXFLAGS="${CXXFLAGS} -std=c++03"
+	CXXFLAGS="${CXXFLAGS} -std=c++11"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
 	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
@@ -277,14 +277,20 @@ AC_ARG_ENABLE( sat-solver,
 )
 
 if test "x$enable_sat_solver" = "xyes"; then
-	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
-
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
 	AC_CHECK_HEADER([stdio.h],,
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
+
+	AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
+		[AC_MSG_ERROR([No minisat2 library found])])
+	AC_SUBST(MINISAT_LIBS)
 	AC_LANG([C])
+
+	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
+	MINISAT_INCLUDES=/usr/include/minisat
+	AC_SUBST(MINISAT_INCLUDES)
 fi
 
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
@@ -801,7 +807,6 @@ link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
 link-grammar/corpus/Makefile
-link-grammar/minisat/Makefile
 link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
 bindings/Makefile

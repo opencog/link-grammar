@@ -5,7 +5,7 @@
 SUBDIRS=
 
 if WITH_SAT_SOLVER
-SUBDIRS += minisat sat-solver
+SUBDIRS += sat-solver
 endif
 
 if WITH_CORPUS
@@ -57,7 +57,7 @@ endif
 
 if WITH_SAT_SOLVER
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
-liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+liblink_grammar_la_LIBADD  += ${MINISAT_LIBS}
 endif
 
 if WITH_CORPUS
