@@ -32,6 +32,7 @@
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "error.h"
+#include "lg_assert.h"
 
 #ifdef HAVE_ALLOCA_H
 # include <alloca.h>
@@ -186,22 +187,6 @@ typedef int locale_t;
 
 #define STR(x) #x
 #define STRINGIFY(x) STR(x)
-
-#define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
-
-#ifdef _WIN32
-#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
-#else
-#define DEBUG_TRAP __builtin_trap()
-#endif
-
-#define assert(ex, ...) {                                                   \
-	if (!(ex)) {                                                             \
-		prt_error("\nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
-		fprintf(stderr, "\n");                                                \
-		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
-	}                                                                        \
-}
 
 #if defined(__UCLIBC__)
 #define fmaxf(a,b) ((a) > (b) ? (a) : (b))
