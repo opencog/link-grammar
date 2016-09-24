@@ -5,6 +5,10 @@
 #undef assert
 #include "util.hpp"
 
+#ifndef HAVE_SETPOLARITY_BOOL // setPolarity has lbool argument, not bool
+#define setPolarity(v, b) setPolarity(v, toLbool(b))
+#endif
+
 using namespace Minisat;
 
 // This class represents different guiding strategies of LinkParser SAT search
