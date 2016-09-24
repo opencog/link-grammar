@@ -283,14 +283,36 @@ if test "x$enable_sat_solver" = "xyes"; then
 	AC_CHECK_HEADER([stdio.h],,
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
 
+	CPPFLAGS_SAVE="$CPPFLAGS"
+	CPPFLAGS="$CPPFLAGS -isystem /usr/include/minisat"
+
 	AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
 		[AC_MSG_ERROR([No minisat2 library found])])
 	AC_SUBST(MINISAT_LIBS)
-	AC_LANG([C])
+
+	AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$CPPFLAGS"],
+	                [AC_MSG_ERROR([minisat2 headers not found in $CPPFLAGS])])
+
+	dnl Adapt to slight variations in minisat2.2 code
+	# The function for making a literal can be Lit() or mkLit()
+	AC_CHECK_DECL([mkLit], [AC_DEFINE(HAVE_MKLIT, 1, [Define if exists])], [],
+		[#include <minisat/core/Solver.h>]
+		[using namespace Minisat;]
+		[Solver x;])
+	# setPolarity() second argument can be bool or lbool
+	AC_CHECK_DECL([x.Solver::setPolarity(Var, bool)],
+	   [AC_MSG_NOTICE([Found setPolarity bool])]
+		[AC_DEFINE(HAVE_SETPOLARITY_BOOL, 1, [Define if setPolarity has bool argument])],
+	   [AC_MSG_NOTICE([Supposing setPolarity lbool])],
+		[#include <minisat/core/Solver.h>]
+		[using namespace Minisat;]
+		[Solver x;])
+
+	CPPFLAGS="$CPPFLAGS_SAVE"
 
 	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
-	MINISAT_INCLUDES=/usr/include/minisat
 	AC_SUBST(MINISAT_INCLUDES)
+	AC_LANG([C])
 fi
 
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
