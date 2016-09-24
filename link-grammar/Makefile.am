@@ -4,8 +4,12 @@
 
 SUBDIRS=
 
+if LIBMINISAT_BUNDLED
+MINISAT_DIR = minisat
+endif
+
 if WITH_SAT_SOLVER
-SUBDIRS += sat-solver
+SUBDIRS += $(MINISAT_DIR) sat-solver
 endif
 
 if WITH_CORPUS
@@ -57,8 +61,12 @@ endif
 
 if WITH_SAT_SOLVER
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
+if LIBMINISAT_BUNDLED
+liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+else !LIBMINISAT_BUNDLED
 liblink_grammar_la_LIBADD  += ${MINISAT_LIBS}
-endif
+endif !LIBMINISAT_BUNDLED
+endif WITH_SAT_SOLVER
 
 if WITH_CORPUS
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
