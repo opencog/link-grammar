@@ -5,6 +5,8 @@ Version 5.3.11: (XXX 2016?)
  * Fix some interjective openers to questions.
  * Fix serious error with subject-verb inversion to past participle.
  * Remove most calls to exit() from the library.
+ * Update the SAT solver code to use MiniSAT 2.2.
+ * Use the system minisat2 library if available, instead of the bundled one.
 
 Version 5.3.10: (14 Sept 2016)
  * Implement `make installcheck`.
