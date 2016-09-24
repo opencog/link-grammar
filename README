@@ -558,11 +558,20 @@ SAT solver:
    - Parsing with null count.
    - No panic timeout.
 
-   The SAT solver is enabled by default.  It can be disabled by specifying
+   The SAT solver is enabled by default. If the minisat2 library package
+   is installed in the system along with its header files (e.g. RPM
+   package minisat2-devel, deb package minisat2) then it is used. Else,
+   a bundled minisat2 library code is used.
+
+   The following forces using the bundled minisat library:
+
+      ./configure --enable-sat-solver=bundled
+
+   The SAT solver can be disabled by specifying
 
       ./configure --disable-sat-solver
 
-   prior to compiling.
+   (Both are to be done prior to compiling.)
 
 
 Phonetics
