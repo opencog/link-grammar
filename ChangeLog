@@ -1,3 +1,6 @@
+Version 5.3.12: (??? 2016?)
+ * Stuff.
+
 Version 5.3.11: (26 Sept 2016)
  * Re-enable postscript header printing!
  * Cleanup python API (in a non-backwards-compat fashion).
