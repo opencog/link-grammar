@@ -29,5 +29,9 @@ endif
 multi_thread_LDADD = -lpthread $(LDADD)
 
 if WITH_SAT_SOLVER
+if LIBMINISAT_BUNDLED
 LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+else !LIBMINISAT_BUNDLED
+LDADD  += ${MINISAT_LIBS}
+endif !LIBMINISAT_BUNDLED
 endif
