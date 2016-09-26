@@ -28,7 +28,11 @@ liblink_grammar_java_la_LIBADD  += ${ASPELL_LIBS}
 endif
 
 if WITH_SAT_SOLVER
+if LIBMINISAT_BUNDLED
 liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+else !LIBMINISAT_BUNDLED
+liblink_grammar_java_la_LIBADD  += ${MINISAT_LIBS}
+endif !LIBMINISAT_BUNDLED
 endif
 
 if WITH_CORPUS
