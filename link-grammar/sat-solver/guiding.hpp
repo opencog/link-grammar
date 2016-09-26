@@ -1,15 +1,15 @@
 #ifndef __GUIDING_HPP__
 #define __GUIDING_HPP__
 
-#include "Solver.h"
+#include <core/Solver.h>
+#undef assert
 #include "util.hpp"
 
-extern "C" {
+#ifndef HAVE_SETPOLARITY_BOOL // setPolarity has lbool argument, not bool
+#define setPolarity(v, b) setPolarity(v, toLbool(b))
+#endif
 
-#include "api-structures.h"
-#include "structures.h"
-
-};
+using namespace Minisat;
 
 // This class represents different guiding strategies of LinkParser SAT search
 class Guiding {

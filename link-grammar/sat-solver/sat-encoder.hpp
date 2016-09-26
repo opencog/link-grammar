@@ -2,6 +2,8 @@
 
 #include "word-tag.hpp"
 
+using namespace Minisat;
+
 /**
  *    Base class for all SAT encodings
  */

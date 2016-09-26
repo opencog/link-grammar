@@ -6,10 +6,10 @@
 
 Ithis is a test
 O
-O    +----->WV----->+---Osm--+
-O    +---Wd---+-Ss*b+  +Ds**c+
-O    |        |     |  |     |
-OLEFT-WALL this.p is.v a  test.n 
+O         +---Osm--+
+O   +-Ss*b+  +Ds**c+
+O   |     |  |     |
+Othis.p is.v a  test.n 
 O
 C(S (NP this.p)
 C   (VP is.v

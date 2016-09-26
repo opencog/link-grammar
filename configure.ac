@@ -138,7 +138,7 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 if test x${native_win32} = xyes; then
 	# Vikas says that -std=gnu99 is needed on cygwin/mingw
 	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
-	CXXFLAGS="${CXXFLAGS} -std=c++03"
+	CXXFLAGS="${CXXFLAGS} -std=c++11"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
 	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
@@ -269,24 +269,73 @@ AC_ARG_ENABLE( perl-bindings,
 
 # ====================================================================
 # SAT solver now enabled by default
+# First try to use the minisat system library.
+# If the library or the headers are not found, use the bundled library
 
 AC_ARG_ENABLE( sat-solver,
-  [  --disable-sat-solver     disable use of the Boolean SAT parser (default is enabled)],
-  [],
-  [enable_sat_solver=yes]
-)
 
-if test "x$enable_sat_solver" = "xyes"; then
-	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
+   [  --disable-sat-solver    disable use of the Boolean SAT parser (default is enabled)
+  --enable-sat-solver=ARG
+                          enable use of the Boolean SAT parser
+                          ARG=yes (default): Use the system minisat library if possible
+                          ARG=bundled: Use the bundled minisat library],
+  [if test "x$enableval" = xbundled; then
+		use_minisat_bundled_library=yes
+	   enable_sat_solver=yes
+	fi], [enable_sat_solver=yes])
 
+if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; then
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
 	AC_CHECK_HEADER([stdio.h],,
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
+
+	CPPFLAGS_SAVE="$CPPFLAGS"
+	CPPFLAGS="$CPPFLAGS -isystem /usr/include/minisat"
+
+	AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
+		[ use_minisat_bundled_library=yes ]
+		[AC_MSG_NOTICE([No minisat2 library found - using the bundled library])])
+
+	AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$CPPFLAGS"],
+		[ use_minisat_bundled_library=yes ]
+		[AC_MSG_NOTICE([minisat2 headers not found in $CPPFLAGS - using the bundled library])])
+
+	if test -z "$use_minisat_bundled_library"; then
+		dnl Adapt to slight variations in minisat2.2 code
+		# The function for making a literal can be Lit() or mkLit()
+		AC_CHECK_DECL([mkLit], [AC_DEFINE(HAVE_MKLIT, 1, [Define if exists])], [],
+			[#include <minisat/core/Solver.h>]
+			[using namespace Minisat;]
+			[Solver x;])
+		# setPolarity() second argument can be bool or lbool
+		AC_CHECK_DECL([x.Solver::setPolarity(Var, bool)],
+			[AC_MSG_NOTICE([Found setPolarity bool])]
+			[AC_DEFINE(HAVE_SETPOLARITY_BOOL, 1, [Define if setPolarity has bool argument])],
+			[AC_MSG_NOTICE([Supposing setPolarity lbool])],
+			[#include <minisat/core/Solver.h>]
+			[using namespace Minisat;]
+			[Solver x;])
+	fi
+
+	CPPFLAGS="$CPPFLAGS_SAVE"
 	AC_LANG([C])
+
 fi
 
+if test -n "$use_minisat_bundled_library"; then
+	use_minisat_bundled_library=' (using the bundled minisat library)'
+	AC_DEFINE(HAVE_MKLIT, 1)
+fi
+
+if test "x$enable_sat_solver" = "xyes"; then
+	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
+	AC_SUBST(MINISAT_LIBS)
+	AC_SUBST(MINISAT_INCLUDES)
+fi
+
+AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
 
 # ====================================================================
@@ -734,7 +783,7 @@ MAYBE_WARN_CXX="-Wall -Wextra \
 -Wsign-compare -Werror-implicit-function-declaration \
 -Wpointer-arith -Wwrite-strings -Wmissing-declarations \
 -Wpacked -Wswitch-enum -Wmissing-format-attribute \
--Wstrict-aliasing=2 -Winit-self \
+-Wstrict-aliasing -Winit-self \
 -Wno-missing-field-initializers -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long -Winline"
 
@@ -862,7 +911,7 @@ $PACKAGE-$VERSION  build configuration settings
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
-	Boolean SAT parser:             ${enable_sat_solver}
+	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}

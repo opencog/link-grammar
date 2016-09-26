@@ -3,9 +3,13 @@
 
 #include <vector>
 #include <map>
+#include <iostream>
+
+using std::cout;
+using std::cerr;
+using std::endl;
 
 #include "guiding.hpp"
-#include "Solver.h"
 #include "trie.hpp"
 #include "matrix-ut.hpp"
 #include "fast-sprintf.hpp"

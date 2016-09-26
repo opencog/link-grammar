@@ -3,14 +3,7 @@
 
 #include <vector>
 
-#ifndef assert
-#define assert(ex,string) {                                       \
-    if (!(ex)) {                                                  \
-        printf("Assertion failed: %s\n", string);                 \
-        exit(1);                                                  \
-    }                                                             \
-}
-#endif
+#include "lg_assert.h"
 
 template<class T>
 class Matrix {

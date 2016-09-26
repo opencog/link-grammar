@@ -1,11 +1,9 @@
 #ifndef __TRIE_HPP__
 #define __TRIE_HPP__
 
-extern "C" {
-#include "utilities.h"
-};
+#include <stdlib.h>
 
-#include <string>
+#include "lg_assert.h"
 
 /*
    Trie that supports strings made out of alphabeth letters,

@@ -12,17 +12,20 @@
 using std::cout;
 using std::cerr;
 using std::endl;
+using std::vector;
 
 extern "C" {
 #include "sat-encoder.h"
 }
+#include "core/Solver.h"
+#undef assert
+
 #include "sat-encoder.hpp"
 #include "variables.hpp"
 #include "word-tag.hpp"
 #include "matrix-ut.hpp"
 #include "clock.hpp"
 #include "fast-sprintf.hpp"
-#include "minisat/Solver.h"
 
 
 extern "C" {
@@ -36,6 +39,10 @@ extern "C" {
 //#include "utilities.h"         // XXX do we need it?
 #include "wordgraph.h"           // for empty_word()
 }
+
+#ifdef HAVE_MKLIT
+#define Lit(...) mkLit(__VA_ARGS__)
+#endif
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
 #ifdef SAT_DEBUG
@@ -910,7 +917,7 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
         clause.push(Lit(var));
       }
     }
-    _solver->addConflictingClause(clause);
+    _solver->addClause(clause);
     if (different_components.size() == 2)
       break;
   }
@@ -1292,7 +1299,7 @@ void SATEncoder::generate_linkage_prohibiting()
       clause.push(Lit(var));
     }
   }
-  _solver->addConflictingClause(clause);
+  _solver->addClause(clause);
 }
 
 Linkage SATEncoder::get_next_linkage()
@@ -1307,7 +1314,7 @@ Linkage SATEncoder::get_next_linkage()
    * Disconnected linkages are normally ignored, unless
    * !test=linkage-disconnected is used (and they are sane) */
   do {
-    if (l_False == _solver->solve()) return NULL;
+    if (!_solver->solve()) return NULL;
 
     std::vector<int> components;
     connected = connectivity_components(components);
@@ -1400,8 +1407,8 @@ Linkage SATEncoder::get_next_linkage()
   post_process_free_data(&_sent->postprocessor->pp_data);
   linkage_score(lkg, _opts);
 
-  if (NULL == ppn->violation && verbosity > 1)
-    _solver->printStats();
+  //if (NULL == ppn->violation && verbosity > 1)
+  //  _solver->printStats();
   return lkg;
 }
 

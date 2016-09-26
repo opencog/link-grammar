@@ -42,15 +42,16 @@ def add_eqcost_linkage_order(original_class):
                             linkage = self.linkages.next()
                         except StopIteration:
                             break
-                    cost = [linkage.unused_word_cost(),
-                            linkage.disjunct_cost(),
-                            linkage.link_cost()]
-                    if not self.cost:
-                        self.cost = cost
-                    else:
-                        if self.cost != cost:
-                            self.saved_next = linkage
-                            break
+                    if not self.sent.parse_options.use_sat:
+                        cost = [linkage.unused_word_cost(),
+                                linkage.disjunct_cost(),
+                                linkage.link_cost()]
+                        if not self.cost:
+                            self.cost = cost
+                        else:
+                            if self.cost != cost:
+                                self.saved_next = linkage
+                                break
                     self.linkage_list.append(linkage)
 
                 if not self.linkage_list:

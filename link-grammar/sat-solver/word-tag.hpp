@@ -5,8 +5,6 @@
 #include <map>
 #include <set>
 
-#include "link-includes.h"
-
 extern "C" {
 #include "count.h"
 #include "prune.h"
