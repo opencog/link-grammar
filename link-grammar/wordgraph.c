@@ -29,6 +29,10 @@
 #include "print-util.h"
 #include "wordgraph.h"
 
+#ifdef __APPLE__
+#define POPEN_DOT
+#endif /* __APPLE__ */
+
 /* === Gword utilities === */
 /* Many more Gword utilities, that are used only in particular files,
  * are defined in these files statically. */
@@ -750,16 +754,23 @@ static void wordgraph_show_cancel(void)
 #define DOT_FILENAME "lg-wg.vg"
 
 #define POPEN_DOT_CMD DOT_COMMAND" "DOT_DRIVER
-#ifndef POPEN_DOT_CMD_WINDOWS
+#ifndef POPEN_DOT_CMD_NATIVE
 #  ifdef _WIN32
 #    ifndef IMAGE_VIEWER
 #      define IMAGE_VIEWER "rundll32 PhotoViewer,ImageView_Fullscreen"
 #    endif
 #    define WGJPG "%TEMP%\\lg-wg.jpg"
-#    define POPEN_DOT_CMD_WINDOWS \
+#    define POPEN_DOT_CMD_NATIVE \
 				DOT_COMMAND" -Tjpg>"WGJPG"&"IMAGE_VIEWER" "WGJPG"&del "WGJPG
+#  elif __APPLE__
+#    ifndef IMAGE_VIEWER
+#      define IMAGE_VIEWER "open -W"
+#    endif
+#    define WGJPG "$TMPDIR/lg-wg.jpg"
+#    define POPEN_DOT_CMD_NATIVE \
+				DOT_COMMAND" -Tjpg>"WGJPG";"IMAGE_VIEWER" "WGJPG";rm "WGJPG
 #  else
-#    define POPEN_DOT_CMD_WINDOWS POPEN_DOT_CMD
+#    define POPEN_DOT_CMD_NATIVE POPEN_DOT_CMD
 #  endif
 #endif
 
@@ -944,8 +955,18 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		}
 	}
 
+#if _WIN32
+#define EXITKEY "ALT-F4"
+#elif __APPLE__
+#define EXITKEY "⌘-Q"
+#endif
+
+#ifdef EXITKEY
+	printf("Press "EXITKEY" in the graphical display window to continue\n");
+#endif
+
 #if !defined HAVE_FORK || defined POPEN_DOT
-	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_WINDOWS, wgds);
+	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_NATIVE, wgds);
 #else
 	{
 		assert(NULL != gvf_name, "DOT filename not initialized (#define mess?)");
