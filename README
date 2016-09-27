@@ -492,7 +492,7 @@ Using the Network Server
      storeDiagramString:true, text: this is a test.
 
 
-Spell Checking:
+Spell Guessing:
 ---------------
    The parser will run a spell-checker at an early stage, if it
    encounters a word that it does not know, and cannot guess, based on
@@ -500,7 +500,7 @@ Spell Checking:
    spell-checkers; if the aspell devel environment is found, then
    aspell is used, else hunspell is used.
 
-   Spell checking may be disabled at runtime, in the link-parser client
+   Spell guessing may be disabled at runtime, in the link-parser client
    with the !spell=0 flag.  Enter !help for more details.
 
 

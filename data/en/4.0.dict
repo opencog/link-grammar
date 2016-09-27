@@ -11703,13 +11703,15 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 % -------------------------------------------------------------------------
 % Common typographical errors
-% Asign a cost of 1.7 for no good reason. Fee free to change this.
+% Asign a cost of 1.7 for no good reason. Feel free to change this.
 
 then.#than: [than.e]1.7;
 than.#then: [then.r]1.7;
 there.#their: [their.p]1.7;
-theres.#theirs: [theirs.p]1.7;
+% theres.#theirs: [theirs.p]1.7;
 
+% there.#they're: [they're]1.7;
+% all.#all_of: [all_of]1.7;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
