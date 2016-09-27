@@ -962,7 +962,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 #endif
 
 #ifdef EXITKEY
-	printf("Press "EXITKEY" in the graphical display window to continue\n");
+	printf("To continue, press "EXITKEY" in the graphical display window\n");
 #endif
 
 #if !defined HAVE_FORK || defined POPEN_DOT
