@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.11 (formatted as V5v3v11+)
-<dictionary-version-number>: V5v3v11+;
+% Dictionary version number is 5.3.12 (formatted as V5v3v12+)
+<dictionary-version-number>: V5v3v12+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -1338,9 +1338,14 @@ mine.p yours theirs hers ours:
 
 % yisser yousser ye'r: Irish English second-person possessive --
 % https://en.wikipedia.org/wiki/Irish_English
-its my.p me.p your their our thy yisser.p yousser ye'r:
+its my.p your their our thy yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
+
+% Cost on D, DD: avoids use as determiner on "Make me coffee"
+me.p:
+  DP+
+  or [{AL-} & {@L+} & (D+ or DD+)];
 
 % [<CLAUSE> & Pg+]: "you leaving already?"
 % Wa-: "You!"
