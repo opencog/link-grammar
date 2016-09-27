@@ -9664,7 +9664,11 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 % Asign a cost of 1.7 for no good reason. Feel free to change this.
 
 then.#than: [than.e]1.7;
-than.#then: [then.r]1.7;
+than.#then-r: [then.r]1.7;
+than.#then-i: [then.i]1.7;
+
+% rather_then: rather_than;
+
 there.#their: [their.p]1.7;
 % theres.#theirs: [theirs.p]1.7;
 
