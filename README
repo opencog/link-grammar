@@ -859,6 +859,18 @@ TODO -- Working Notes:
     where it can be handled like any other language feature.
     The tokenizer includes experimental code for that.
 
+  Corpus-statistics-based parse ranking:
+    The old for parse ranking via corpus statistics needs to be revived.
+    The issue can be illustrated with these example sentences:
+        "Please the customer, bring in the money"
+        "Please, turn off the lights"
+    In the first sentence, the comma acts as a conjunction of two
+    directives (imperatives). In the second sentence, it is much too
+    easy to mistake "please" for a verb, the comma for a conjunction,
+    and come to the conclusion that one should please some unstated
+    object, and then turn off the lights. (Perhaps one is pleasing
+    by turning off the lights?)
+
   Punctuation, zero-copula, zero-that:
     Poorly punctuated sentences cause problems:  for example:
       "Mike was not first, nor was he last."
