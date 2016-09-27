@@ -20,6 +20,7 @@ EXTRA_DIST =         \
    LICENSE           \
    README.md         \
    example.py        \
+   sentence-check.py \
    parses-en.txt     \
    parses-lt.txt     \
    parses-quotes-en.txt \
