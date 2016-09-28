@@ -9626,6 +9626,11 @@ but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
 ....wh ….wh:
   RS- & B-;
 
+% Conjoined: "either ... or  ..."
+....n:
+  ({D+} & SJl+)
+  or ({D+} & SJr-);
+
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
 "%" ‰ ‱ : (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
@@ -9675,6 +9680,10 @@ there.#their: [their.p]1.7;
 
 % there.#they're: [they're]1.7;
 % all.#all_of: [all_of]1.7;
+
+% Using "or" instead of "nor" is a common mistake.
+% "Neither this or that one will do"
+or.#nor-j-n: [nor.j-n];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
