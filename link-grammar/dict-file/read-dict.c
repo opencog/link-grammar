@@ -140,7 +140,8 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 	if (NULL == dn)
 	{
-		lgdebug(D_USER_FILES, "Debug: Dictionary locale is not defined.\n");
+		lgdebug(D_USER_FILES, "Debug: Dictionary '%s': Locale is not defined.\n",
+		        dict->name);
 		goto locale_error;
 	}
 
@@ -156,9 +157,11 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 										locale_ll, locale_cc, &c);
 		if (2 != locale_numelement)
 		{
-			prt_error("Error: <dictionary-locale> should be in the form LL4cc+\n"
+			prt_error("Error: \"<dictionary-locale>: %s\" "
+			          "should be in the form LL4cc+\n"
 						 "\t(LL: language code; cc: territory code) "
-						 "\tor C+ for transliterated dictionaries.");
+						 "\tor C+ for transliterated dictionaries.",
+						 dn->exp->u.string);
 			goto locale_error;
 		}
 
@@ -166,7 +169,8 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 		if (!try_locale(locale))
 		{
-			lgdebug(D_USER_FILES, "Debug: Dictionary locale \"%s\" unknown\n", locale);
+			prt_error("Debug: Dictionary \"%s\": Locale \"%s\" unknown",
+			          dict->name, locale);
 			goto locale_error;
 		}
 	}
@@ -184,8 +188,8 @@ locale_error:
 		if (NULL == locale) return NULL;
 		const char *sslocale = string_set_add(locale, dict->string_set);
 		free((void *)locale);
-		prt_error("Info: No dictionary locale definition - \"%s\" will be used.",
-		          sslocale);
+		prt_error("Info: Dictionary '%s': No locale definition - "
+		          "\"%s\" will be used.", dict->name, sslocale);
 		if (!try_locale(sslocale))
 		{
 			lgdebug(D_USER_FILES, "Debug: Unknown locale \"%s\"...\n", sslocale);
