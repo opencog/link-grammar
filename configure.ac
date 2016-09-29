@@ -71,13 +71,13 @@ AC_LINK_IFELSE(
 AC_MSG_RESULT(yes)
 AC_DEFINE([HAVE_LOCALE_T_IN_LOCALE_H], 1, [Define to 1 if locale_t is defined in locale.h]),
 AC_MSG_RESULT(no)
-  AC_MSG_CHECKING(for locale_t in xlocale.h)
-  AC_LINK_IFELSE(
-  [AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
-  AC_MSG_RESULT(yes)
-  AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
-  AC_MSG_RESULT(no)
-  )
+	AC_MSG_CHECKING(for locale_t in xlocale.h)
+	AC_LINK_IFELSE(
+	[AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
+	AC_MSG_RESULT(yes)
+	AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
+	AC_MSG_RESULT(no)
+	)
 )
 
 dnl Check for specific OSs
@@ -242,7 +242,6 @@ AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
 
 # ====================================================================
 # Java now enabled by default
-
 AC_ARG_ENABLE( java-bindings,
   [  --disable-java-bindings disable build of java bindings (default is enabled)],
   [],
@@ -405,7 +404,7 @@ AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 # If sqlite3 and pkg-config are not found on MacOS, then
 # recommend that user install MacPorts http://www.macports.org/
 if test "x${SQLiteFound}" = "xyes"; then
- 	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
+	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
 fi
 
 # Don't set the CPPFLAGS unless we can find the library too.
