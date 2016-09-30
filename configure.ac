@@ -292,6 +292,8 @@ if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; the
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
 
 	CPPFLAGS_SAVE="$CPPFLAGS"
+	dnl FIXME: Allow using --with-minisat2=DIR
+	dnl and/or specifying specific include/library locations.
 	CPPFLAGS="$CPPFLAGS -isystem /usr/include/minisat"
 
 	AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
@@ -323,7 +325,6 @@ if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; the
 
 	CPPFLAGS="$CPPFLAGS_SAVE"
 	AC_LANG([C])
-
 fi
 
 if test -n "$use_minisat_bundled_library"; then
