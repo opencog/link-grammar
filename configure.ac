@@ -734,23 +734,76 @@ fi
 
 # ===================================================================
 # Find python things.
-#
-# Since AX_PYTHON_DEVEL will hard-fail if python-devel is not installed,
-# it is up to the user to explicitly ask for python, if they want it.
 
-PythonFound=no
-if test "x$enable_python_bindings" = "xyes"; then
-	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
-	AX_PYTHON_DEVEL(>= '2.6')
+dnl AX_PYTHON_DEVEL uses AC_MSG_ERROR in case it doesn't find things.
+dnl Temporarily make AC_MSG_ERROR a soft error (to be restored by popdef()).
+pushdef([AC_MSG_ERROR])
+define([AC_MSG_ERROR],
+	lg_python_unusable=yes
+	[AC_MSG_NOTICE([$1])])
+
+Python2Found=no # This and the next variables should persist the Python2 check
+PYTHON2= PYTHON2_CPPFLAGS= PYTHON2_LIBS= PYTHON2_LDFLAGS= python2dir=
+AC_VARNAMES_CHECKPOINT # Remember the current variable names
+
+if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; then
+	AM_PATH_PYTHON(PYTHON2_REQUIRED, [Python2Found=yes], [Python2Found=no])
+	AX_PYTHON_DEVEL(>= 'PYTHON2_REQUIRED')
+	test -n "$lg_python_unusable" && Python2Found=no
+	if test x$Python2Found = xyes; then
+		Python2Found=$PYTHON_VERSION
+		PYTHON2=$PYTHON
+		PYTHON2_CPPFLAGS=$PYTHON_CPPFLAGS
+		PYTHON2_LIBS=$PYTHON_LIBS
+		PYTHON2_LDFLAGS=$PYTHON_LDFLAGS
+		python2dir=$pythondir
+		AC_SUBST(PYTHON2_CPPFLAGS)
+		AC_SUBST(PYTHON2_LIBS)
+		AC_SUBST(PYTHON2_LDFLAGS)
+		AC_SUBST(python2dir)
+	fi
 fi
-AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
+AC_VARNAMES_RESTORE    # Discard all the added variables
+AM_CONDITIONAL(HAVE_PYTHON2, test x$Python2Found != xno)
 
+PYTHON= # Search for another version.
 Python3Found=no
-if test "x$enable_python_bindings" = "xyes"; then
-	AM_PATH_PYTHON(3.4, [Python3Found=yes], [Python3Found=no])
-	AX_PYTHON_DEVEL(>= '3.4')
+if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x3; then
+	AM_PATH_PYTHON(PYTHON3_REQUIRED, [Python3Found=yes], [Python3Found=no])
+	AX_PYTHON_DEVEL(>= 'PYTHON3_REQUIRED')
+	test -n "$lg_python_unusable" && Python3Found=no
+	if test x$Python3Found = xyes; then
+		Python3Found=$PYTHON_VERSION
+		#PYTHON3=$PYTHON
+		PYTHON3_CPPFLAGS=$PYTHON_CPPFLAGS
+		PYTHON3_LIBS=$PYTHON_LIBS
+		PYTHON3_LDFLAGS=$PYTHON_LDFLAGS
+		python3dir=$pythondir
+		AC_SUBST(PYTHON3_CPPFLAGS)
+		AC_SUBST(PYTHON3_LIBS)
+		AC_SUBST(PYTHON3_LDFLAGS)
+		AC_SUBST(python3dir)
+	fi
 fi
-AM_CONDITIONAL(HAVE_PYTHON3, test x${Python3Found} = xyes)
+AM_CONDITIONAL(HAVE_PYTHON3, test x$Python3Found != xno)
+
+# Python binary default for "make check" - $PYTHON2 if exists.
+# This is used for the definitions of the pre/post install tests.
+if test -n "$PYTHON2"; then
+	PYTHON=$PYTHON2
+	pythondir=$python2dir
+fi
+AC_SUBST(PYTHON)
+AC_SUBST(pythondir)
+
+# HAVE_PYTHON is redefined if we have both Python2 and Python3. This
+# generates a lot of compiler warnings. But we don't use it - so discard it.
+# Note: The v command allows to differentiate between the two flavors of sed.
+edit_in_place=-i
+sed v </dev/null 2>/dev/null || edit_in_place="-i ''"
+sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
+
+popdef([AC_MSG_ERROR])
 
 # ====================================================================
 # check compiler flags
@@ -907,7 +960,7 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python2 interfaces:             ${PythonFound}
+	Python2 interfaces:             ${Python2Found}
 	Python3 interfaces:             ${Python3Found}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}

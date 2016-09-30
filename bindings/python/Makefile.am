@@ -13,8 +13,8 @@ BUILT_PY_SOURCES = $(top_builddir)/bindings/python/clinkgrammar.py
 # directory "link-grammar".  Turns out python cannot tolerate dashes.
 # Thus, typically, it will install into
 # /usr/local/lib/python2.7/dist-packages/linkgrammar (without the dash)
-pkgpythondir=$(pythondir)/linkgrammar
-pkgpyexecdir=$(pythondir)/linkgrammar
+pkgpythondir=$(python2dir)/linkgrammar
+pkgpyexecdir=$(python2dir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
 pkgpython_PYTHON =                                 \
@@ -52,7 +52,7 @@ _clinkgrammar_la_SOURCES = $(BUILT_C_SOURCES) $(SWIG_SOURCES)
 # $(top_builddir) to pick up autogen'ed link-grammar/link-features.h
 _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
-   $(PYTHON_CPPFLAGS)             \
+   $(PYTHON2_CPPFLAGS)            \
    -I$(top_srcdir)                \
    -I$(top_builddir)
 
@@ -64,9 +64,9 @@ AVOID_VERSION = -avoid-version
 endif
 _clinkgrammar_la_LDFLAGS =                        \
     -version-info @VERSION_INFO@ $(AVOID_VERSION) \
-    $(PYTHON_LDFLAGS) -module -no-undefined
+    $(PYTHON2_LDFLAGS) -module -no-undefined
 _clinkgrammar_la_LIBADD =                         \
-    $(top_builddir)/link-grammar/liblink-grammar.la $(PYTHON_LIBS)
+    $(top_builddir)/link-grammar/liblink-grammar.la $(PYTHON2_LIBS)
 
 
 EXTRA_DIST =         \
