@@ -247,16 +247,20 @@ AC_ARG_ENABLE( java-bindings,
   [],
   [enable_java_bindings=yes])
 
+# Python is now enabled by default
+define([PYTHON2_REQUIRED], [2.6])
+define([PYTHON3_REQUIRED], [3.4])
 AC_ARG_ENABLE( python-bindings,
-  [  --enable-python-bindings  create python 2.7 bindings to the link-grammar library],
-  [],
-  [enable_python_bindings=no]
-)
-
-AC_ARG_ENABLE( python3-bindings,
-  [  --enable-python3-bindings  create python 3.4 bindings to the link-grammar library],
-  [],
-  [enable_python3_bindings=no]
+	[  --disable-python-bindings  disable build of python bindings
+                          (default is enabled)
+  --enable-python-bindings[[=ARG]]
+                          create python bindings to the link-grammar library
+                          (minimum versions: PYTHON2_REQUIRED and PYTHON3_REQUIRED).
+                          ARG=yes (default): create both python 2 & 3 bindings
+                          ARG=2: create only python 2 bindings
+                          ARG=3: create only python 3 bindings],
+                          [enable_python_bindings="${enableval:-yes}"],
+                          [enable_python_bindings=yes]
 )
 
 # Perl now disabled by default
