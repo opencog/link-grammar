@@ -193,7 +193,7 @@ static bool con_uc_eq(const Connector *c1, const Connector *c2)
 {
 	if (string_set_cmp(c1->string, c2->string)) return true;
 	if (c1->hash != c2->hash) return false;
-	if (c1->uc_length != c1->uc_length) return false;
+	if (c1->uc_length != c2->uc_length) return false;
 
 	/* We arrive here for less than 50% of the cases for "en" and
 	 * less then 20% of the cases for "ru", and, in practice, the
