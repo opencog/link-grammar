@@ -273,10 +273,12 @@ AC_ARG_ENABLE( perl-bindings,
 
 AC_ARG_ENABLE( sat-solver,
 
-   [  --disable-sat-solver    disable use of the Boolean SAT parser (default is enabled)
+   [  --disable-sat-solver    disable use of the Boolean SAT parser
+                          (default is enabled)
   --enable-sat-solver=[[ARG]]
                           enable use of the Boolean SAT parser
-                          ARG=yes (default): Use the system minisat library if possible
+                          ARG=yes (default): Use the system minisat library
+                          if possible
                           ARG=bundled: Use the bundled minisat library],
   [if test "x$enableval" = xbundled; then
 		use_minisat_bundled_library=yes
