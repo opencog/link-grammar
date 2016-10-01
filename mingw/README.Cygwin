@@ -31,9 +31,9 @@ Configuring
   POSIX regex for Windows. The library basename must b:e "libregex". The
   -host value is for compiling for 64-bits.
 
-  The SAT solver cannot be enabled for now due to a missing definition in
-the build system. Python bindings fail because it currently tries to use the Cygwin Python
-  system. More development work is needed on these.
+  The SAT solver cannot be enabled for now due to a missing definition in the
+  build system. Python bindings fail because it currently tries to use the
+  Cygwin Python system. More development work is needed on these.
 
   (The Java bindings has not been tested in this version. Most probably the
   way described in README.MSYS can be used.)
