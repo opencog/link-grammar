@@ -284,6 +284,14 @@ AC_ARG_ENABLE( sat-solver,
 	   enable_sat_solver=yes
 	fi], [enable_sat_solver=yes])
 
+if test "x$enable_sat_solver" = "xyes"; then
+	dnl 1. Abort and notify if no zlib.h. 2. Adapt for non-standard location.
+	AC_MSG_NOTICE([The minisat2 library/headers require zlib.h])
+	dnl The bundled library doesn't actually need -lz
+	AX_CHECK_ZLIB([ZLIB_CPPFLAGS="-isystem $ZLIB_HOME/include"],[])
+	test "x$ZLIB_CPPFLAGS" = "x-isystem /usr/include" && ZLIB_CPPFLAGS=
+fi
+
 if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; then
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
@@ -294,7 +302,7 @@ if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; the
 	CPPFLAGS_SAVE="$CPPFLAGS"
 	dnl FIXME: Allow using --with-minisat2=DIR
 	dnl and/or specifying specific include/library locations.
-	CPPFLAGS="$CPPFLAGS -isystem /usr/include/minisat"
+	CPPFLAGS="$CPPFLAGS -isystem /usr/include/minisat $ZLIB_CPPFLAGS"
 
 	AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
 		[ use_minisat_bundled_library=yes ]
