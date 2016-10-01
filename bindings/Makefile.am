@@ -18,14 +18,22 @@ if HAVE_PERL
 SUBDIRS += perl
 endif
 
-if HAVE_PYTHON
-SUBDIRS += python python-examples
+if HAVE_PYTHON2
+SUBDIRS += python
 endif
 
 if HAVE_PYTHON3
-SUBDIRS += python3 python-examples
+SUBDIRS += python3
 endif
 
+# Add python-examples only once - else make enters it twice.
+if HAVE_PYTHON2
+SUBDIRS += python-examples
+else !HAVE_PYTHON2
+if HAVE_PYTHON3
+SUBDIRS += python-examples
+endif HAVE_PYTHON3
+endif !HAVE_PYTHON2
 
 EXTRA_DIST =                              \
    README                                 \

@@ -13,11 +13,11 @@ BUILT_PY_SOURCES = $(top_builddir)/bindings/python3/clinkgrammar.py
 # directory "link-grammar".  Turns out python cannot tolerate dashes.
 # Thus, typically, it will install into
 # /usr/local/lib/python3.4/dist-packages/linkgrammar (without the dash)
-pkgpython3dir=$(pythondir)/linkgrammar
-pkgpyexecdir=$(pythondir)/linkgrammar
+pkgpythondir=$(python3dir)/linkgrammar
+pkgpyexecdir=$(python3dir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
-pkgpython3_PYTHON =                                 \
+pkgpython_PYTHON =                                 \
    ../../bindings/python/linkgrammar.py             \
    $(top_builddir)/bindings/python3/__init__.py     \
    $(top_builddir)/bindings/python3/clinkgrammar.py
@@ -25,7 +25,7 @@ pkgpython3_PYTHON =                                 \
 
 # Apparently, anaconda does not work without this!?
 # This seems wrong and lme to me, but see issue #298
-pkgpypathdir=$(pythondir)
+pkgpypathdir=$(python3dir)
 pkgpypath_PYTHON =                                 \
    linkgrammar.pth
 
@@ -58,7 +58,7 @@ _clinkgrammar_la_SOURCES = $(BUILT_C_SOURCES) $(SWIG_SOURCES)
 # $(top_builddir) to pick up autogen'ed link-grammar/link-features.h
 _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
-   $(PYTHON_CPPFLAGS)             \
+   $(PYTHON3_CPPFLAGS)            \
    -I$(top_srcdir)                \
    -I$(top_builddir)
 
@@ -70,12 +70,12 @@ AVOID_VERSION = -avoid-version
 endif
 _clinkgrammar_la_LDFLAGS =                        \
     -version-info @VERSION_INFO@ $(AVOID_VERSION) \
-    $(PYTHON_LDFLAGS) -module -no-undefined
+    $(PYTHON3_LDFLAGS) -module -no-undefined
 _clinkgrammar_la_LIBADD =                         \
-    $(top_builddir)/link-grammar/liblink-grammar.la $(PYTHON_LIBS)
+    $(top_builddir)/link-grammar/liblink-grammar.la $(PYTHON3_LIBS)
 
 
 EXTRA_DIST =         \
    README.md         \
-   linkgrammar.pth	\
+   linkgrammar.pth   \
    __init__.py.in

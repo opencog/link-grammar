@@ -71,13 +71,13 @@ AC_LINK_IFELSE(
 AC_MSG_RESULT(yes)
 AC_DEFINE([HAVE_LOCALE_T_IN_LOCALE_H], 1, [Define to 1 if locale_t is defined in locale.h]),
 AC_MSG_RESULT(no)
-  AC_MSG_CHECKING(for locale_t in xlocale.h)
-  AC_LINK_IFELSE(
-  [AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
-  AC_MSG_RESULT(yes)
-  AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
-  AC_MSG_RESULT(no)
-  )
+	AC_MSG_CHECKING(for locale_t in xlocale.h)
+	AC_LINK_IFELSE(
+	[AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
+	AC_MSG_RESULT(yes)
+	AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
+	AC_MSG_RESULT(no)
+	)
 )
 
 dnl Check for specific OSs
@@ -242,22 +242,25 @@ AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
 
 # ====================================================================
 # Java now enabled by default
-
 AC_ARG_ENABLE( java-bindings,
   [  --disable-java-bindings disable build of java bindings (default is enabled)],
   [],
   [enable_java_bindings=yes])
 
+# Python is now enabled by default
+define([PYTHON2_REQUIRED], [2.6])
+define([PYTHON3_REQUIRED], [3.4])
 AC_ARG_ENABLE( python-bindings,
-  [  --enable-python-bindings  create python 2.7 bindings to the link-grammar library],
-  [],
-  [enable_python_bindings=no]
-)
-
-AC_ARG_ENABLE( python3-bindings,
-  [  --enable-python3-bindings  create python 3.4 bindings to the link-grammar library],
-  [],
-  [enable_python3_bindings=no]
+	[  --disable-python-bindings  disable build of python bindings
+                          (default is enabled)
+  --enable-python-bindings[[=ARG]]
+                          create python bindings to the link-grammar library
+                          (minimum versions: PYTHON2_REQUIRED and PYTHON3_REQUIRED).
+                          ARG=yes (default): create both python 2 & 3 bindings
+                          ARG=2: create only python 2 bindings
+                          ARG=3: create only python 3 bindings],
+                          [enable_python_bindings="${enableval:-yes}"],
+                          [enable_python_bindings=yes]
 )
 
 # Perl now disabled by default
@@ -274,10 +277,12 @@ AC_ARG_ENABLE( perl-bindings,
 
 AC_ARG_ENABLE( sat-solver,
 
-   [  --disable-sat-solver    disable use of the Boolean SAT parser (default is enabled)
-  --enable-sat-solver=ARG
+   [  --disable-sat-solver    disable use of the Boolean SAT parser
+                          (default is enabled)
+  --enable-sat-solver=[[ARG]]
                           enable use of the Boolean SAT parser
-                          ARG=yes (default): Use the system minisat library if possible
+                          ARG=yes (default): Use the system minisat library
+                          if possible
                           ARG=bundled: Use the bundled minisat library],
   [if test "x$enableval" = xbundled; then
 		use_minisat_bundled_library=yes
@@ -421,7 +426,7 @@ AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 # If sqlite3 and pkg-config are not found on MacOS, then
 # recommend that user install MacPorts http://www.macports.org/
 if test "x${SQLiteFound}" = "xyes"; then
- 	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
+	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
 fi
 
 # Don't set the CPPFLAGS unless we can find the library too.
@@ -745,27 +750,76 @@ fi
 
 # ===================================================================
 # Find python things.
-#
-# Since AX_PYTHON_DEVEL will hard-fail if python-devel is not installed,
-# it is up to the user to explicitly ask for python, if they want it.
 
-PythonFound=no
-if test "x$enable_python_bindings" = "xyes"; then
-	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
-	AX_PYTHON_DEVEL(>= '2.6')
-	AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
-else
-	AM_CONDITIONAL(HAVE_PYTHON, false)
+dnl AX_PYTHON_DEVEL uses AC_MSG_ERROR in case it doesn't find things.
+dnl Temporarily make AC_MSG_ERROR a soft error (to be restored by popdef()).
+pushdef([AC_MSG_ERROR])
+define([AC_MSG_ERROR],
+	lg_python_unusable=yes
+	[AC_MSG_NOTICE([$1])])
+
+Python2Found=no # This and the next variables should persist the Python2 check
+PYTHON2= PYTHON2_CPPFLAGS= PYTHON2_LIBS= PYTHON2_LDFLAGS= python2dir=
+AC_VARNAMES_CHECKPOINT # Remember the current variable names
+
+if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; then
+	AM_PATH_PYTHON(PYTHON2_REQUIRED, [Python2Found=yes], [Python2Found=no])
+	AX_PYTHON_DEVEL(>= 'PYTHON2_REQUIRED')
+	test -n "$lg_python_unusable" && Python2Found=no
+	if test x$Python2Found = xyes; then
+		Python2Found=$PYTHON_VERSION
+		PYTHON2=$PYTHON
+		PYTHON2_CPPFLAGS=$PYTHON_CPPFLAGS
+		PYTHON2_LIBS=$PYTHON_LIBS
+		PYTHON2_LDFLAGS=$PYTHON_LDFLAGS
+		python2dir=$pythondir
+		AC_SUBST(PYTHON2_CPPFLAGS)
+		AC_SUBST(PYTHON2_LIBS)
+		AC_SUBST(PYTHON2_LDFLAGS)
+		AC_SUBST(python2dir)
+	fi
 fi
+AC_VARNAMES_RESTORE    # Discard all the added variables
+AM_CONDITIONAL(HAVE_PYTHON2, test x$Python2Found != xno)
 
+PYTHON= # Search for another version.
 Python3Found=no
-if test "x$enable_python3_bindings" = "xyes"; then
-	AM_PATH_PYTHON(3.4, [Python3Found=yes], [Python3Found=no])
-	AX_PYTHON_DEVEL(>= '3.4')
-	AM_CONDITIONAL(HAVE_PYTHON3, test x${Python3Found} = xyes)
-else
-	AM_CONDITIONAL(HAVE_PYTHON3, false)
+if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x3; then
+	AM_PATH_PYTHON(PYTHON3_REQUIRED, [Python3Found=yes], [Python3Found=no])
+	AX_PYTHON_DEVEL(>= 'PYTHON3_REQUIRED')
+	test -n "$lg_python_unusable" && Python3Found=no
+	if test x$Python3Found = xyes; then
+		Python3Found=$PYTHON_VERSION
+		#PYTHON3=$PYTHON
+		PYTHON3_CPPFLAGS=$PYTHON_CPPFLAGS
+		PYTHON3_LIBS=$PYTHON_LIBS
+		PYTHON3_LDFLAGS=$PYTHON_LDFLAGS
+		python3dir=$pythondir
+		AC_SUBST(PYTHON3_CPPFLAGS)
+		AC_SUBST(PYTHON3_LIBS)
+		AC_SUBST(PYTHON3_LDFLAGS)
+		AC_SUBST(python3dir)
+	fi
 fi
+AM_CONDITIONAL(HAVE_PYTHON3, test x$Python3Found != xno)
+
+# Python binary default for "make check" - $PYTHON2 if exists.
+# This is used for the definitions of the pre/post install tests.
+if test -n "$PYTHON2"; then
+	PYTHON=$PYTHON2
+	pythondir=$python2dir
+fi
+AC_SUBST(PYTHON)
+AC_SUBST(pythondir)
+
+# HAVE_PYTHON is redefined if we have both Python2 and Python3. This
+# generates a lot of compiler warnings. But we don't use it - so discard it.
+# Note: The v command allows to differentiate between the two flavors of sed.
+edit_in_place=-i
+sed v </dev/null 2>/dev/null || edit_in_place="-i ''"
+sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
+
+popdef([AC_MSG_ERROR])
 
 # ====================================================================
 # check compiler flags
@@ -922,7 +976,7 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python2 interfaces:             ${PythonFound}
+	Python2 interfaces:             ${Python2Found}
 	Python3 interfaces:             ${Python3Found}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
