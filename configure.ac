@@ -117,6 +117,7 @@ case "$host" in
     ;;
 esac
 AC_MSG_RESULT([$apple_osx])
+AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
 
 # ====================================================================
 
