@@ -293,12 +293,7 @@ if test "x$enable_sat_solver" = "xyes"; then
 fi
 
 if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; then
-	# We want to check for C++; the easiest way to do this is to
-	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
-	AC_CHECK_HEADER([stdio.h],,
-		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
-
 	CPPFLAGS_SAVE="$CPPFLAGS"
 	dnl FIXME: Allow using --with-minisat2=DIR
 	dnl and/or specifying specific include/library locations.
@@ -341,6 +336,16 @@ if test -n "$use_minisat_bundled_library"; then
 fi
 
 if test "x$enable_sat_solver" = "xyes"; then
+	# We want to check for C++; the easiest way to do this is to
+	# use c++ to compile stdio.h and bomb if it fails.
+	AC_LANG([C++])
+	AC_CHECK_HEADER([stdio.h],,
+		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
+	if test x${apple_osx} != xyes; then
+		AC_CHECK_LIB(stdc++, main)
+	fi
+	AC_LANG([C])
+
 	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
 	AC_SUBST(MINISAT_LIBS)
 	AC_SUBST(MINISAT_INCLUDES)
