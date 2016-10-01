@@ -1,6 +1,7 @@
 Version 5.3.12: (??? 2016?)
  * Fix bug in 'any' language (opencog/relex/issues/248).
  * Preliminary support for common typos in English.
+ * Enable both python2 & python3 bindings by default.
 
 Version 5.3.11: (26 Sept 2016)
  * Re-enable postscript header printing!
