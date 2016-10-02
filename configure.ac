@@ -260,7 +260,8 @@ AC_ARG_ENABLE( python-bindings,
                           ARG=yes (default): create both python 2 & 3 bindings
                           ARG=2: create only python 2 bindings
                           ARG=3: create only python 3 bindings],
-                          [enable_python_bindings="${enableval:-yes}"],
+                          [enable_python_bindings="$enableval";
+                           test -z "$enableval" && enable_python_bindings=yes],
                           [enable_python_bindings=yes]
 )
 
