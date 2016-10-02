@@ -30,9 +30,13 @@ libtoolize --force --copy || {
 
 # Produce aclocal.m4, so autoconf gets the automake macros it needs
 # 
-echo "Creating aclocal.m4: aclocal $ACLOCAL_FLAGS"
+case `uname` in
+    CYGWIN*)
+        include_dir='-I m4' # Needed for Cygwin only.
+esac
+echo "Creating aclocal.m4: aclocal $include_dir $ACLOCAL_FLAGS"
 
-aclocal $ACLOCAL_FLAGS 2>> autogen.err
+aclocal $include_dir $ACLOCAL_FLAGS 2>> autogen.err
 
 # Produce all the `GNUmakefile.in's and create neat missing things
 # like `install-sh', etc.
