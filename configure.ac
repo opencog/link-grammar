@@ -177,6 +177,7 @@ fi
 # is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
 # specified (no effect). So just add it.
 CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
+CXXFLAGS="${CXXFLAGS} -D_DEFAULT_SOURCE"
 
 # ====================================================================
 # Debugging
