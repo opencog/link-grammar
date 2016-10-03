@@ -823,6 +823,14 @@ sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
 
 popdef([AC_MSG_ERROR])
 
+if test x$enable_python_bindings != xno; then
+	if test x$Python2Found = xno -a x$Python3Found = xno; then
+		AC_MSG_ERROR(
+			[Python binding is requested, but an approprite Python version
+                  could not be configured.])
+	fi
+fi
+
 # ====================================================================
 # check compiler flags
 
