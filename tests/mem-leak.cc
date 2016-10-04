@@ -19,6 +19,7 @@ int main()
     parse_options_set_display_morphology(opts, 1);
     parse_options_set_spell_guess(opts, 0);
 
+    dictionary_set_data_dir("../../data");
     dict = dictionary_create_lang("en");
     if (!dict) {
         printf ("Fatal error: Unable to open the dictionary\n");

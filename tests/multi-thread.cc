@@ -78,6 +78,7 @@ int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
 	Parse_Options opts = parse_options_create();
+	dictionary_set_data_dir("../../data");
 	// Dictionary dict = dictionary_create_lang("ru");
 	Dictionary dict = dictionary_create_lang("en");
 	if (!dict) {
