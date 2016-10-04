@@ -292,6 +292,10 @@ AC_ARG_ENABLE( sat-solver,
 	fi], [enable_sat_solver=yes])
 
 if test "x$enable_sat_solver" = "xyes"; then
+	AC_LANG([C++])
+	AC_CHECK_HEADER([stdio.h],,
+		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
+	AC_LANG([C])
 	dnl 1. Abort and notify if no zlib.h. 2. Adapt for non-standard location.
 	AC_MSG_NOTICE([The minisat2 library/headers require zlib.h])
 	dnl The bundled library doesn't actually need -lz
@@ -346,8 +350,6 @@ if test "x$enable_sat_solver" = "xyes"; then
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
-	AC_CHECK_HEADER([stdio.h],,
-		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
 	if test x${apple_osx} != xyes; then
 		AC_CHECK_LIB(stdc++, main)
 	fi
