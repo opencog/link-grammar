@@ -260,7 +260,8 @@ AC_ARG_ENABLE( python-bindings,
                           ARG=yes (default): create both python 2 & 3 bindings
                           ARG=2: create only python 2 bindings
                           ARG=3: create only python 3 bindings],
-                          [enable_python_bindings="${enableval:-yes}"],
+                          [enable_python_bindings="$enableval";
+                           test -z "$enableval" && enable_python_bindings=yes],
                           [enable_python_bindings=yes]
 )
 
@@ -821,6 +822,14 @@ sed v </dev/null 2>/dev/null || edit_in_place="-i ''"
 sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
 
 popdef([AC_MSG_ERROR])
+
+if test x$enable_python_bindings != xno; then
+	if test x$Python2Found = xno -a x$Python3Found = xno; then
+		AC_MSG_ERROR(
+			[Python binding is requested, but an approprite Python version
+                  could not be configured.])
+	fi
+fi
 
 # ====================================================================
 # check compiler flags
