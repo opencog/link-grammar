@@ -17,9 +17,16 @@ JAVA_SRCS =                             \
 linkgrammar-@VERSION@.jar: $(JAVA_SRCS)
 	ant
 
+# distclean-generic will delete build.xml, so clean-local must run
+# first.... but then, build.xml doesn't get removed :-(
+distclean-generic: clean-local
+distclean-local: clean-local
+	-rm -f build.xml
+
 # Let ant delete the files that ant creates.
 clean-local:
 	ant clean
+	-rm -f *.jar
 
 javadir=$(datadir)/java
 java_DATA = linkgrammar-@VERSION@.jar
