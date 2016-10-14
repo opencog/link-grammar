@@ -292,37 +292,55 @@ AC_ARG_ENABLE( sat-solver,
 	   enable_sat_solver=yes
 	fi], [enable_sat_solver=yes])
 
-if test "x$enable_sat_solver" = "xyes"; then
+if test "x$enable_sat_solver" = xyes; then
+	# The sat-solver code is in C++; so the link-grammar library should now
+	# directly require libstdc++ instead of indirectly depend on its
+	# availability via the minisat2 library.
+	test x${apple_osx} = xyes || AC_CHECK_LIB(stdc++, main)
+
+	# We want to check for C++; the easiest way to do this is to
+	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
 	AC_CHECK_HEADER([stdio.h],,
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
-	AC_LANG([C])
+
 	dnl 1. Abort and notify if no zlib.h. 2. Adapt for non-standard location.
-	AC_MSG_NOTICE([The minisat2 library/headers require zlib.h])
+	AC_MSG_NOTICE([The minisat2 headers include zlib.h])
 	dnl The bundled library doesn't actually need -lz
 	AX_CHECK_ZLIB([ZLIB_CPPFLAGS="-isystem $ZLIB_HOME/include"],[])
 	test "x$ZLIB_CPPFLAGS" = "x-isystem /usr/include" && ZLIB_CPPFLAGS=
-fi
 
-if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; then
-	AC_LANG([C++])
 	CPPFLAGS_SAVE="$CPPFLAGS"
-	dnl FIXME: Allow using --with-minisat2=DIR
-	dnl and/or specifying specific include/library locations.
-	CPPFLAGS="$CPPFLAGS -isystem /usr/include/minisat $ZLIB_CPPFLAGS"
-
-	AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
-		[ use_minisat_bundled_library=yes ]
-		[AC_MSG_NOTICE([No system minisat2 library found - using the bundled library])])
 
 	if test -z "$use_minisat_bundled_library"; then
-		AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$CPPFLAGS"],
+		# Check if we can link with the system's minisat2 library.
+		# If this is not possible, arrange for using the bundled minisat2
+		# library code by setting use_minisat_bundled_library=yes.
+
+		dnl FIXME: Allow using --with-minisat2=DIR
+		dnl and/or specifying specific include/library locations.
+		minisat_headers="-isystem /usr/include/minisat"
+		CPPFLAGS="$CPPFLAGS $minisat_headers $ZLIB_CPPFLAGS"
+
+		AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
+			[ use_minisat_bundled_library=yes ]
+			[AC_MSG_NOTICE([No system minisat2 library found - using the bundled library])])
+
+		AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$minisat_headers"],
 			[ use_minisat_bundled_library=yes ]
 			[AC_MSG_NOTICE([System minisat2 headers not found in $CPPFLAGS - using the bundled library])])
 	fi
 
-	if test -z "$use_minisat_bundled_library"; then
-		dnl Adapt to slight variations in minisat2.2 code
+	dnl Note that the above checks may find the need to use the bundled library
+	dnl code even if it wasn't specifically requested.
+
+	if test -n "$use_minisat_bundled_library"; then
+		use_minisat_bundled_library=' (using the bundled minisat library)'
+		AC_DEFINE(HAVE_MKLIT, 1)
+	else
+		dnl We are going to use the system's minisat2 library.
+		dnl Adapt to slight variations in minisat2.2 code.
+
 		# The function for making a literal can be Lit() or mkLit()
 		AC_CHECK_DECL([mkLit], [AC_DEFINE(HAVE_MKLIT, 1, [Define if exists])], [],
 			[#include <minisat/core/Solver.h>]
@@ -336,33 +354,19 @@ if test "x$enable_sat_solver" = "xyes" -a -z "$use_minisat_bundled_library"; the
 			[#include <minisat/core/Solver.h>]
 			[using namespace Minisat;]
 			[Solver x;])
+
+		AC_SUBST(MINISAT_LIBS)
+		AC_SUBST(MINISAT_INCLUDES)
+		AC_SUBST(ZLIB_CPPFLAGS)
 	fi
 
-	CPPFLAGS="$CPPFLAGS_SAVE"
+	CPPFLAGS_SAVE=$CPPFLAGS
 	AC_LANG([C])
-fi
-
-if test -n "$use_minisat_bundled_library"; then
-	use_minisat_bundled_library=' (using the bundled minisat library)'
-	AC_DEFINE(HAVE_MKLIT, 1)
-fi
-
-if test "x$enable_sat_solver" = "xyes"; then
-	# We want to check for C++; the easiest way to do this is to
-	# use c++ to compile stdio.h and bomb if it fails.
-	AC_LANG([C++])
-	if test x${apple_osx} != xyes; then
-		AC_CHECK_LIB(stdc++, main)
-	fi
-	AC_LANG([C])
-
-	CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
-	AC_SUBST(MINISAT_LIBS)
-	AC_SUBST(MINISAT_INCLUDES)
+	CPPFLAGS="$CPPFLAGS -DUSE_SAT_SOLVER=1"
 fi
 
 AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
-AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
+AM_CONDITIONAL(WITH_SAT_SOLVER, test "x$enable_sat_solver" = xyes)
 
 # ====================================================================
 # Viterbi disabled by default
