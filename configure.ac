@@ -357,6 +357,7 @@ if test "x$enable_sat_solver" = xyes; then
 
 		AC_SUBST(MINISAT_LIBS)
 		AC_SUBST(MINISAT_INCLUDES)
+		AC_SUBST(ZLIB_CPPFLAGS)
 	fi
 
 	CPPFLAGS_SAVE=$CPPFLAGS
