@@ -795,7 +795,7 @@ if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x3; th
 	test -n "$lg_python_unusable" && Python3Found=no
 	if test x$Python3Found = xyes; then
 		Python3Found=$PYTHON_VERSION
-		#PYTHON3=$PYTHON
+		PYTHON3=$PYTHON
 		PYTHON3_CPPFLAGS=$PYTHON_CPPFLAGS
 		PYTHON3_LIBS=$PYTHON_LIBS
 		PYTHON3_LDFLAGS=$PYTHON_LDFLAGS
@@ -815,6 +815,7 @@ if test -n "$PYTHON2"; then
 	pythondir=$python2dir
 fi
 AC_SUBST(PYTHON)
+AC_SUBST(PYTHON3)
 AC_SUBST(pythondir)
 
 # HAVE_PYTHON is redefined if we have both Python2 and Python3. This

@@ -4,6 +4,8 @@
 # Created by Linas Vepstas February 2014
 #
 
+PYTHON = $(PYTHON3) # For py-compile.
+
 SWIG_SOURCES = ../swig/link_grammar.i
 # BUILT_C_SOURCES = $(top_builddir)/bindings/python3/lg_python_wrap.cc
 BUILT_C_SOURCES = ../../bindings/python3/lg_python_wrap.cc
