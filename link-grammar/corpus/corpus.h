@@ -3,7 +3,7 @@
  *
  * Data for corpus statistics, used to provide a parse ranking
  * to drive the SAT solver, as well as parse ranking with the
- * ordinary solver. 
+ * ordinary solver.
  *
  * Copyright (c) 2008, 2009 Linas Vepstas <linasvepstas@gmail.com>
  */
@@ -11,11 +11,12 @@
 #ifndef _LINKGRAMMAR_CORPUS_H
 #define _LINKGRAMMAR_CORPUS_H
 
-#include "../api-types.h"
 #include "../link-includes.h"
-#include "../utilities.h"
 
 #ifdef USE_CORPUS
+
+#include "../api-types.h"
+#include "../utilities.h"
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
@@ -37,10 +38,10 @@ void lg_sense_delete(Linkage);
 
 static inline void lg_corpus_score(Linkage l) {}
 static inline void lg_corpus_linkage_senses(Linkage l) {}
-static inline Sense * lg_get_word_sense(Linkage lkg, WordIdx word) { return NULL; }
-static inline Sense * lg_sense_next(Sense *s ) {return NULL; }
-static inline const char * lg_sense_get_sense(Sense *s) { return NULL; }
-static inline double lg_sense_get_score(Sense *s) { return 0.0; }
+static inline void * lg_get_word_sense(Linkage lkg, WordIdx word) { return NULL; }
+static inline void * lg_sense_next(void *s) {return NULL; }
+static inline const char * lg_sense_get_sense(void *s) { return NULL; }
+static inline double lg_sense_get_score(void *s) { return 0.0; }
 static inline double lg_corpus_disjunct_score(Linkage linkage, WordIdx w) { return 998.0; }
 #endif /* USE_CORPUS */
 

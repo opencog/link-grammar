@@ -3,8 +3,6 @@
 
 extern "C" {
 #include "link-includes.h"
-#include "api-structures.h"
-#include "structures.h"
 #include "disjunct-utils.h"
 }
 

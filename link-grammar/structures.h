@@ -20,8 +20,6 @@
 #include "api-structures.h"
 #include "dict-structures.h"  /* For Exp, Exp_list */
 #include "histogram.h"  /* Count_bin */
-#include "utilities.h"  /* Needed for inline defn in Windows */
-
 
 #define NEGATIVECOST -1000000
 /* This is a hack that allows one to discard disjuncts containing

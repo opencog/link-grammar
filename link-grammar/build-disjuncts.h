@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _LINKGRAMMAR_BUILD_DISJUNCTS_H
+#define _LINKGRAMMAR_BUILD_DISJUNCTS_H
+
 #include "api-types.h"
 #include "structures.h"
 
@@ -23,4 +26,6 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn);
 #ifdef DEBUG
 void prt_exp(Exp *, int);
 void prt_exp_mem(Exp *, int);
-#endif
+#endif /* DEBUG */
+
+#endif /* _LINKGRAMMAR_BUILD_DISJUNCTS_H */
