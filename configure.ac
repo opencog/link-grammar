@@ -360,9 +360,8 @@ if test "x$enable_sat_solver" = xyes; then
 		AC_SUBST(ZLIB_CPPFLAGS)
 	fi
 
-	CPPFLAGS_SAVE=$CPPFLAGS
 	AC_LANG([C])
-	CPPFLAGS="$CPPFLAGS -DUSE_SAT_SOLVER=1"
+	CPPFLAGS="$CPPFLAGS_SAVE -DUSE_SAT_SOLVER=1"
 fi
 
 AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
