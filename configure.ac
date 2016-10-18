@@ -357,11 +357,11 @@ if test "x$enable_sat_solver" = xyes; then
 
 		AC_SUBST(MINISAT_LIBS)
 		AC_SUBST(MINISAT_INCLUDES)
-		AC_SUBST(ZLIB_CPPFLAGS)
 	fi
 
 	AC_LANG([C])
 	CPPFLAGS="$CPPFLAGS_SAVE -DUSE_SAT_SOLVER=1"
+	AC_SUBST(ZLIB_CPPFLAGS)
 fi
 
 AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
