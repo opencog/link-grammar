@@ -326,9 +326,11 @@ if test "x$enable_sat_solver" = xyes; then
 			[ use_minisat_bundled_library=yes ]
 			[AC_MSG_NOTICE([No system minisat2 library found - using the bundled library])])
 
-		AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$minisat_headers"],
-			[ use_minisat_bundled_library=yes ]
-			[AC_MSG_NOTICE([System minisat2 headers not found in $CPPFLAGS - using the bundled library])])
+		if test -z "$use_minisat_bundled_library"; then
+			AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$minisat_headers"],
+				[ use_minisat_bundled_library=yes ]
+				[AC_MSG_NOTICE([System minisat2 headers not found in $CPPFLAGS - using the bundled library])])
+		fi
 	fi
 
 	dnl Note that the above checks may find the need to use the bundled library
