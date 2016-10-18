@@ -326,9 +326,11 @@ if test "x$enable_sat_solver" = xyes; then
 			[ use_minisat_bundled_library=yes ]
 			[AC_MSG_NOTICE([No system minisat2 library found - using the bundled library])])
 
-		AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$minisat_headers"],
-			[ use_minisat_bundled_library=yes ]
-			[AC_MSG_NOTICE([System minisat2 headers not found in $CPPFLAGS - using the bundled library])])
+		if test -z "$use_minisat_bundled_library"; then
+			AC_CHECK_HEADER([minisat/core/Solver.h], [MINISAT_INCLUDES="$minisat_headers"],
+				[ use_minisat_bundled_library=yes ]
+				[AC_MSG_NOTICE([System minisat2 headers not found in $CPPFLAGS - using the bundled library])])
+		fi
 	fi
 
 	dnl Note that the above checks may find the need to use the bundled library
@@ -357,12 +359,11 @@ if test "x$enable_sat_solver" = xyes; then
 
 		AC_SUBST(MINISAT_LIBS)
 		AC_SUBST(MINISAT_INCLUDES)
-		AC_SUBST(ZLIB_CPPFLAGS)
 	fi
 
-	CPPFLAGS_SAVE=$CPPFLAGS
 	AC_LANG([C])
-	CPPFLAGS="$CPPFLAGS -DUSE_SAT_SOLVER=1"
+	CPPFLAGS="$CPPFLAGS_SAVE -DUSE_SAT_SOLVER=1"
+	AC_SUBST(ZLIB_CPPFLAGS)
 fi
 
 AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
