@@ -449,11 +449,9 @@ dictionary_six_str(const char * lang,
 		/* To disable spell-checking, just set the checker to NULL */
 		dict->spell_checker = spellcheck_create(dict->lang);
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-		/* TODO:
-		 * 1. Set the spell option to 0, to signify no spell checking is done.
-		 * 2. On verbosity >= 1, add a detailed message on the reason. */
-		if (NULL == dict->spell_checker)
-			prt_error("Info: Spell checker disabled.");
+		/* FIXME: Move to spellcheck-*.c */
+		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
+			prt_error("Info: %s: Spell checker disabled.", dict->lang);
 #endif
 		dict->insert_entry = insert_list;
 
