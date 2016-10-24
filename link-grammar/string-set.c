@@ -34,7 +34,7 @@
 
    String_set * string_set_create(void);
      Create a new empty String_set.
- 
+
    string_set_delete(String_set *ss);
      Free all the space associated with this string set.
 
@@ -108,7 +108,7 @@ static void grow_table(String_set *ss)
 	String_set old;
 	size_t i;
 	unsigned int p;
-	
+
 	old = *ss;
 	ss->size = next_prime_up(2 * old.size);  /* at least double the size */
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
@@ -133,12 +133,12 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	char * str;
 	size_t len;
 	unsigned int p;
-	
+
 	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
 
 	p = find_place(source_string, ss);
 	if (ss->table[p] != NULL) return ss->table[p];
-	
+
 	len = strlen(source_string);
 #ifdef DEBUG
 	/* Store the String_set structure address for debug verifications */
@@ -151,19 +151,19 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	strcpy(str, source_string);
 	ss->table[p] = str;
 	ss->count++;
-	
+
 	/* We just added it to the table.
 	   If the table got too big, we grow it.
 	   Too big is defined as being more than 3/4 full */
 	if ((4 * ss->count) > (3 * ss->size)) grow_table(ss);
-	
+
 	return str;
 }
 
 const char * string_set_lookup(const char * source_string, String_set * ss)
 {
 	unsigned int p;
-	
+
 	p = find_place(source_string, ss);
 	return ss->table[p];
 }
@@ -171,7 +171,7 @@ const char * string_set_lookup(const char * source_string, String_set * ss)
 void string_set_delete(String_set *ss)
 {
 	size_t i;
-	
+
 	if (ss == NULL) return;
 	for (i=0; i<ss->size; i++)
 	{
