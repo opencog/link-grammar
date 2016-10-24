@@ -20,9 +20,6 @@
 #include "structures.h"
 #include "api-structures.h"
 
-
-/* ============================================================ */
-
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 	GNUC_PRINTF(3,0);
 
@@ -164,5 +161,3 @@ const char *feature_enabled(const char * list, ...)
 
 	return NULL;
 }
-
-/* ============================================================ */
