@@ -20,7 +20,6 @@
 #include "api-structures.h"
 #include "disjuncts.h"
 #include "structures.h"
-#include "utilities.h"
 
 /**
  * Print connector list to string.

@@ -22,7 +22,6 @@
 #include "string-set.h"
 #include "structures.h"
 #include "print.h"      /* needs structure.h */
-#include "utilities.h"
 #include "word-utils.h"
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */

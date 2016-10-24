@@ -22,15 +22,11 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word);
 void spellcheck_free_suggest(void * chk, char **sug, int size);
 
 #else
-
-#include "utilities.h"  /* For MSVC inline portability */
-
 static inline void * spellcheck_create(const char * lang) { return NULL; }
 static inline void spellcheck_destroy(void * chk) {}
 static inline bool spellcheck_test(void * chk, const char * word) { return false; }
 static inline int spellcheck_suggest(void * chk, char ***sug, const char * word) { return 0; }
 static inline void spellcheck_free_suggest(void * chk, char **sug, int size) {}
-
 #endif 
 
 #endif /* _SPELLCHECK_H */

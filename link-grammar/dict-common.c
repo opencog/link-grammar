@@ -20,7 +20,6 @@
 #include "spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
-#include "utilities.h"
 #include "word-utils.h"
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"

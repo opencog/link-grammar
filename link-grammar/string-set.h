@@ -12,9 +12,11 @@
 #ifndef _STRING_SET_H_
 #define _STRING_SET_H_
 
+#include <string.h>
 #include <stddef.h>
+
 #include "api-types.h"
-#include "utilities.h"
+#include "lg_assert.h"
 
 struct String_set_s
 {
