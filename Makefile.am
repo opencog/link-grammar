@@ -50,6 +50,7 @@ EXTRA_DIST =            \
 	msvc14/Python2.vcxproj.filters         \
 	msvc14/Python3.vcxproj.filters         \
 	msvc14/README                          \
+	msvc14/make-check.py                   \
 	mingw/README.Cygwin                    \
 	mingw/README.MSYS                      \
 	TODO
