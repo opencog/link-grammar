@@ -32,7 +32,7 @@ def error(msg):
         print(msg)
     prog = os.path.basename(sys.argv[0])
     print("Usage: ", prog, '[python_flag] PYTHON_OUTDIR [script.py] [script_args]')
-    print('\tOUTDIR is in the format of "x64\\Debug\\Python2"')
+    print(r'\tOUTDIR is in the format of "x64\Debug\Python2"')
     sys.exit(1)
 
 local_prop = {}
