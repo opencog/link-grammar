@@ -75,8 +75,8 @@ def get_prop(prop, default=NODEFAULT):
                       format(prop_rep, local_prop_file))
         prop_val = str.replace(prop_val, '$('+prop_rep+')', prop_repval)
 
-
     return prop_val
+
 
 #---
 #print('Running by:', sys.executable)
