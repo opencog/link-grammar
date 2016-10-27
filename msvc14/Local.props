@@ -3,6 +3,7 @@
   <PropertyGroup Condition=" '$(GNUREGEX)' == '' " Label="UserMacros" />
   <PropertyGroup Label="UserMacros">
     <GNUREGEX_DIR>$(HOMEDRIVE)$(HOMEPATH)\Libraries\gnuregex</GNUREGEX_DIR>
+    <LG_DLLPATH>$(GNUREGEX_DIR)\lib</LG_DLLPATH>
     <PYTHON2>C:\Python27</PYTHON2>
     <PYTHON2_INCLUDE>$(PYTHON2)\include</PYTHON2_INCLUDE>
     <PYTHON2_LIB>$(PYTHON2)\libs\python27.lib</PYTHON2_LIB>
@@ -21,6 +22,10 @@
   <ItemGroup>
     <BuildMacro Include="GNUREGEX_DIR">
       <Value>$(GNUREGEX_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="LG_DLLPATH">
+      <Value>$(LG_DLLPATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="PYTHON2">
       <Value>$(PYTHON2)</Value>

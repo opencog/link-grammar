@@ -35,26 +35,55 @@ def error(msg):
     print('\tOUTDIR is in the format of "x64\\Debug\\Python2"')
     sys.exit(1)
 
-def get_prop(vsfile, prop):
-    """
-    Get a macro definition from a .prop file.
-    I'm too lazy to leave the file open in case more properties are needed,
-    or to read a list of properties in one scan. However, efficiency is not
-    needed here.
-    """
+local_prop = {}
+def read_props(vsfile):
+    """ Read all the User Macros from the local properties file. """
     vs_f = open(vsfile, 'r')
-    var_re = re.compile('<'+prop+'>([^<]*)<')
+    macdef_re = re.compile(r'<(\w+)>([^<]*)<')
     for line in vs_f:
-        get_prop_m = re.search(var_re, line)
-        if get_prop_m != None:
-            return get_prop_m.group(1)
-    return None
+        read_m = re.search(macdef_re, line)
+        if None == read_m:
+            continue
+        if 2 != len(read_m.groups()):
+            error('Bad line in "{}": {}'.format(vsfile, line))
+        local_prop[read_m.group(1)] = read_m.group(2)
+    if not local_prop:
+        error('No properties found in {}.'.format(vsfile))
+
+NODEFAULT = object()
+prop_re = re.compile(r'\$\((\w+)')
+def get_prop(prop, default=NODEFAULT):
+    """
+    Resolve a macro definition.
+    """
+    prop_val = local_prop.get(prop, None)
+    if None == prop_val:
+        if default is NODEFAULT:
+            error('Property "{}" not found in {}' .format(prop, local_prop_file))
+        return default
+
+    while True:
+        prop_m = re.search(prop_re, prop_val)
+        if None == prop_m:
+            break
+        prop_rep = prop_m.group(1)
+        prop_repval = local_prop.get(prop_rep, None)
+        if None == prop_repval:
+            prop_repval = os.getenv(prop_rep)
+            if None == prop_repval:
+                error('Property "{}" not found in "{}" and also not in the environment'. \
+                      format(prop_rep, local_prop_file))
+        prop_val = str.replace(prop_val, '$('+prop_rep+')', prop_repval)
+
+
+    return prop_val
 
 #---
 #print('Running by:', sys.executable)
 
 rundir = os.path.dirname(sys.argv[0])
 local_prop_file = rundir + '\\' + local_prop_file
+read_props(local_prop_file)
 
 if len(sys.argv) < 2:
     error('Missing argument')
@@ -75,15 +104,8 @@ if not m or len(m.groups()) != 2:
     error('Invalid output directory "{}"'.format(outdir))
 config = m.group(1)
 pydir = m.group(2).upper()
-pyloc = get_prop(local_prop_file, pydir)
-if pyloc == None:
-    error('Python definition "{}" not found in {}' . \
-          format(pyloc, local_prop_file))
-pyexe = get_prop(local_prop_file, pydir+'_EXE')
-if pyexe == None:
-    error('Python executable definition "{}" not found in {}' . \
-          format(pydir+'_EXE', local_prop_file))
-pyexe = str.replace(pyexe, '$('+pydir+')', pyloc)
+
+pyexe = get_prop(pydir+'_EXE')
 
 if len(sys.argv) == 2:
     if sys.argv[1] == '' or sys.argv[1][0] != '-':
@@ -97,7 +119,11 @@ args = ''
 if len(sys.argv) >= 2:
     args = ' '.join(sys.argv[1:])
 
-os.environ["PATH"] = ('{};' + os.environ["PATH"]).format(config)
+path = os.environ["PATH"]
+dllpath = get_prop('LG_DLLPATH')
+# For DLLs - linkgrammar-*.dll and regex.dll
+os.environ["PATH"] = ('{};{};{}').format(config, dllpath, path)
+#print("PATH=" + os.environ["PATH"])
 
 # For linkgrammar.py, clinkgrammar.py and _clinkgrammar.pyd
 os.environ["PYTHONPATH"] = \
