@@ -44,6 +44,10 @@ sheet "Local", as follows:
    generated from the DLL if it is not included in the distribution (see
    http://stackoverflow.com/questions/9946322).
 
+-- LG_DLLPATH should include the directory of the regex DLL, which is
+   normally under GNUREGEX_DIR (or it can be a central DLL directory etc.).
+   The default is "$(GNUREGEX_DIR)\lib".
+
 -- JAVA_HOME, if used, must be pointing to a locally installed SDK/JDK,
    which has the subdirectories "include" and "include/win32" (defined in
    the LinkGrammarJava project under Common properties->C/C++->General->
@@ -94,10 +98,10 @@ Running
 -------
 The last step of the "LinkGrammarExe" project creates "link-parser.bat".  Copy
 it to somewhere in your PATH and then customize it if needed (don't customize
-it in-place, since rebuilding would overwrite it). Especially, add to PATH the
-directory in which the regex DLL resides (see the line containing "DLLs"). If
-you would like to display the wordgraph (see below) set also the PATH for
-"dot.exe" if it is not already in your PATH.
+it in-place, since rebuilding would overwrite it). Note that it prepends PATH
+with the User Macro LG_DLLPATH (see Setup above).  If you would like to display
+the wordgraph (see below) set also the PATH for "dot.exe" if it is not already
+in your PATH.
 
 If USE_WORDGRAPH_DISPLAY has been used when compiling (the default), then
 typing !test=wg at the "link-parser" prompt can be used in order to display the
