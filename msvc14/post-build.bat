@@ -30,10 +30,8 @@ echo %~f0: Info: Creating %lgcmd%.bat in %cd%
 	echo REM Copy it to a directory in your PATH and modify it if needed.
 	echo.
 
-	echo REM PATH customization - uncomment and change if needed
-	echo.
-	echo REM DLLs central directory
-	echo REM set "PATH=%%PATH%%;%HOMEDRIVE%%HOMEPATH%\DLLs"
+	echo REM The following prepends LG_DDLPATH from msvc14\Local.props
+	echo set "PATH=%LG_DLLPATH%;%%PATH%%"
 	echo.
 	echo REM For USE_WORDGRAPH_DISPLAY
 	echo REM Path for "dot.exe"
