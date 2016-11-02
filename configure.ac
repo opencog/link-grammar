@@ -85,6 +85,10 @@ dnl in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
 
+dnl Check for a keyword for Thread Local Storage declaration.
+dnl If found - define TLS to it.
+AX_TLS(,:)
+
 dnl Check for specific OSs
 # ====================================================================
 
