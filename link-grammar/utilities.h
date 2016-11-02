@@ -53,6 +53,14 @@ extern "C"
 void *alloca (size_t);
 #endif
 
+#ifndef TLS
+#ifdef _MSC_VER
+#define TLS __declspec(thread)
+#else
+#define TLS
+#endif /* _MSC_VER */
+#endif /* !TLS */
+
 #ifndef strdupa
 /* In the following, the argument should not have side effects. */
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
