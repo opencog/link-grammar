@@ -95,13 +95,12 @@ void *alloca (size_t);
 #include <windows.h>
 #include <mbctype.h>
 
+/* Compatibility definitions. */
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
-
-/* MS changed the name of rand_r to rand_s */
+/* Note that "#define _CRT_RAND_S" is needed before "#include <stdlib.h>" */
 #define rand_r(seedp) rand_s(seedp)
-/* And strtok_r is strtok_s */
 #define strtok_r strtok_s
 
 /* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.
