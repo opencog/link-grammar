@@ -45,9 +45,14 @@ const char *feature_enabled(const char *, ...);
 (((verbosity>=(level)) && (((level)<=1) || \
 	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
-	feature_enabled(debug, __func__, __FILE__, NULL))) \
-	? ((STRINGIFY(level)[0] == '+' ? (void)printf("%s: ", __func__) : (void)0), \
-	(void)printf(__VA_ARGS__)) : (void)0)
+	feature_enabled(debug, __func__, __FILE__, NULL))) ? \
+	( \
+		(STRINGIFY(level)[0] == '+' ? \
+			(void)err_msg(Trace, "%s: ", __func__) : \
+			(void)0), \
+		(void)err_msg(Trace,  __VA_ARGS__) \
+	) : \
+	(void)0)
 
 /**
  * Wrap-up a debug-messages block.
