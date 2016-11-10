@@ -288,7 +288,7 @@ void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 	if (dummy && (verbosity > D_USER_BASIC))
 	{
 		prt_error("Error: Cannot enable the Boolean SAT parser; "
-		          "this library was built without SAT solver support.");
+		          "this library was built without SAT solver support.\n");
 	}
 #endif
 }
@@ -352,7 +352,7 @@ void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
 	if (dummy && (verbosity > D_USER_BASIC))
 	{
 		prt_error("Error: Cannot enable spell guess; "
-		        "this library was built without spell guess support.");
+		        "this library was built without spell guess support.\n");
 	}
 
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
@@ -873,7 +873,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	{
 		/* Make sure an error message is always printed.
 		 * So it may be redundant. */
-		prt_error("Error: sentence_split(): Internal error detected");
+		prt_error("Error: sentence_split(): Internal error detected\n");
 		return -3;
 	}
 
@@ -1200,9 +1200,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (!match_found)
 		{
-			const char *e = "Internal error: Too many words in the linkage\n";
-			lgdebug(D_SLM, "- %s", e);
-			prt_error("Error: %s.", e);
+			const char *e = "Internal error: Too many words in the linkage";
+			lgdebug(D_SLM, "- %s\n", e);
+			prt_error("Error: %s.\n", e);
 			break;
 		}
 
@@ -1579,7 +1579,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
-		prt_error("WARNING: Combinatorial explosion! nulls=%zu cnt=%d\n"
+		prt_error("Warning: Combinatorial explosion! nulls=%zu cnt=%d\n"
 			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
 			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);

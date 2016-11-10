@@ -344,7 +344,7 @@ void dictionary_delete(Dictionary dict)
 	if (!dict) return;
 
 	if (verbosity > 0) {
-		prt_error("Info: Freeing dictionary %s", dict->name);
+		prt_error("Info: Freeing dictionary %s\n", dict->name);
 	}
 
 #ifdef USE_CORPUS

@@ -1746,7 +1746,8 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     // For now, just avoid the delay of a useless re-parsing.
     if (opts->verbosity >= 1)
       prt_error("Info: use-sat: Cannot parse with null links (yet).\n"
-                "              Set the \"null\" option to 0 to turn off parsing with null links.");
+                "              Set the \"null\" option to 0 to turn off "
+                "parsing with null links.\n");
     sent->num_valid_linkages = 0;
     sent->num_linkages_post_processed = 0;
     return 0;
@@ -1793,8 +1794,9 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     if (opts->max_null_count > 0) {
       // The sat solver doesn't support (yet) parsing with nulls.
       if (opts->verbosity >= 1)
-        prt_error("Info: use-sat: Cannot parse with null links (yet).\n"
-                  "              Set the \"null\" option to 0 to turn off parsing with null links.");
+      prt_error("Info: use-sat: Cannot parse with null links (yet).\n"
+                "              Set the \"null\" option to 0 to turn off "
+                "parsing with null links.\n");
     }
   } else {
     /* We found a valid linkage.
@@ -1827,7 +1829,7 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   if(k > encoder->_next_linkage_index)           // skips unproduced linkages
   {
     prt_error("Error: Linkage index %zu is greater than the "
-              "maximum expected one %zu", k, encoder->_next_linkage_index);
+              "maximum expected one %zu\n", k, encoder->_next_linkage_index);
     return NULL;
   }
   if (k < encoder->_next_linkage_index)          // already produced

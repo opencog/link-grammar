@@ -363,13 +363,13 @@ bool anysplit_init(Dictionary afdict)
 	if (0 == regparts->length)
 	{
 		if (debug_level(+D_AS))
-			prt_error("Warning: File %s: Anysplit disabled (%s not defined)",
-			          afdict->name, afdict_classname[AFDICT_REGPARTS]);
+			prt_error("Warning: File %s: Anysplit disabled (%s not defined)\n",
+		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
 	}
 	if (1 != regparts->length)
 	{
-		prt_error("Error: File %s: Must have %s defined with one value",
+		prt_error("Error: File %s: Must have %s defined with one value\n",
 		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return false;
 	}
@@ -390,7 +390,7 @@ bool anysplit_init(Dictionary afdict)
 	if (as->nparts < 0)
 	{
 		free_anysplit(afdict);
-		prt_error("Error: File %s: Value of %s must be a non-negative number",
+		prt_error("Error: File %s: Value of %s must be a non-negative number\n",
 		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return false;
 	}
@@ -405,7 +405,7 @@ bool anysplit_init(Dictionary afdict)
 	if (2 != regalts->length)
 	{
 		free_anysplit(afdict);
-		prt_error("Error: File %s: Must have %s defined with 2 values",
+		prt_error("Error: File %s: Must have %s defined with 2 values\n",
 		          afdict->name, afdict_classname[AFDICT_REGALTS]);
 		return false;
 	}
@@ -414,7 +414,7 @@ bool anysplit_init(Dictionary afdict)
 	if ((atoi(regalts->string[0]) <= 0) || (atoi(regalts->string[1]) <= 0))
 	{
 		free_anysplit(afdict);
-		prt_error("Error: File %s: Value of %s must be 2 positive numbers",
+		prt_error("Error: File %s: Value of %s must be 2 positive numbers\n",
 		          afdict->name, afdict_classname[AFDICT_REGALTS]);
 		return false;
 	}

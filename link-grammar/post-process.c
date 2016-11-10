@@ -928,7 +928,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 	{
 		i = find_domain_name(pp, pp_data->domain_array[d].string);
 		if (i == SIZE_MAX)
-			prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE",
+			prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE\n",
 			          pp_data->domain_array[d].string);
 		pp_data->domain_array[d].type = i;
 	}
@@ -1010,7 +1010,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	/* These messages were deemed to not be useful, so
 	 * this code is commented out. See comment above. */
 	if (!check_domain_nesting(pp, sublinkage->num_links))
-		printf("WARNING: The domains are not nested.\n");
+		printf("Warning: The domains are not nested.\n");
 #endif
 
 	/* The order below should be optimal for most cases */

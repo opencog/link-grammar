@@ -41,7 +41,7 @@ static void prt_regerror(const char *msg, const Regex_node *re, int rc)
 					re->pattern, re->name, erroroffset, error);
 	*/
 	regerror(rc, re->re, errbuf, errbuf_size);
-	prt_error("Error: %s: \"%s\" (%s): %s", msg, re->pattern, re->name, errbuf);
+	prt_error("Error: %s: \"%s\" (%s): %s\n", msg, re->pattern, re->name, errbuf);
 	free(errbuf);
 }
 

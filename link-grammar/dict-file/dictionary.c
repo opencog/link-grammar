@@ -74,7 +74,7 @@ Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 	}
 	if (notify_err) {
 		prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
-		          "\tThis class name will be ignored.",
+		          "\tThis class name will be ignored.\n",
 		          con, afdict->line_number, afdict->name);
 	}
 	return NULL;
@@ -109,7 +109,7 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 			/* ??? should we support here more than one class? */
 			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 			          "\tWord has more than one connector.\n"
-			          "\tThis word will be ignored.",
+			          "\tThis word will be ignored.\n",
 			          dn->string, afdict->line_number, afdict->name);
 			return;
 		}
@@ -451,7 +451,7 @@ dictionary_six_str(const char * lang,
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
-			prt_error("Info: %s: Spell checker disabled.", dict->lang);
+			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
 		dict->insert_entry = insert_list;
 
@@ -530,7 +530,7 @@ dictionary_six_str(const char * lang,
 	{
 		dict->locale = setlocale(LC_CTYPE, NULL);
 		prt_error("Warning: Couldn't set dictionary locale! "
-		          "Using current program locale \"%s\"", dict->locale);
+		          "Using current program locale \"%s\"\n", dict->locale);
 	}
 
 	/* setlocale() returns a string owned by the system. Copy it. */
@@ -556,7 +556,7 @@ dictionary_six_str(const char * lang,
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
 	{
-		prt_error("Error: Could not open affix file %s", affix_name);
+		prt_error("Error: Could not open affix file %s\n", affix_name);
 		goto failure;
 	}
 	if (! afdict_init(dict))
@@ -629,7 +629,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	char* input = get_file_contents(dict_name);
 	if (NULL == input)
 	{
-		prt_error("Error: Could not open dictionary %s", dict_name);
+		prt_error("Error: Could not open dictionary %s\n", dict_name);
 		return NULL;
 	}
 
@@ -670,7 +670,7 @@ Dictionary dictionary_create_from_file(const char * lang)
 	}
 	else
 	{
-		prt_error("Error: No language specified!");
+		prt_error("Error: No language specified!\n");
 		dictionary = NULL;
 	}
 

@@ -793,14 +793,14 @@ static void x_popen(const char *cmd, const char *wgds)
 
 	if (NULL == cmdf)
 	{
-		prt_error("Error: popen of '%s' failed: %s", cmd, strerror(errno));
+		prt_error("Error: popen of '%s' failed: %s\n", cmd, strerror(errno));
 	}
 	else
 	{
 		if (fprintf(cmdf, "%s", wgds) == -1)
-			prt_error("Error: print to display command: %s", strerror(errno));
+			prt_error("Error: print to display command: %s\n", strerror(errno));
 		if (pclose(cmdf) == -1)
-			prt_error("Error: pclose of display command: %s", strerror(errno));
+			prt_error("Error: pclose of display command: %s\n", strerror(errno));
 	}
 }
 #else
@@ -816,7 +816,7 @@ static void x_forkexec(const char *const argv[], pid_t *pid)
 		if (0 == rpid) return; /* viewer still active */
 		if (-1 == rpid)
 		{
-			prt_error("Error: waitpid(%d): %s", *pid, strerror(errno));
+			prt_error("Error: waitpid(%d): %s\n", *pid, strerror(errno));
 			*pid = 0;
 			return;
 		}
@@ -835,7 +835,7 @@ static void x_forkexec(const char *const argv[], pid_t *pid)
 #endif
 			/* Not closing fd 0/1/2, to allow interaction with the program */
 			execvp(argv[0], (char **)argv);
-			prt_error("Error: execlp of %s: %s", argv[0], strerror(errno));
+			prt_error("Error: execlp of %s: %s\n", argv[0], strerror(errno));
 			_exit(1);
 		default:
 #ifndef HAVE_PRCTL
@@ -923,7 +923,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		gvf = fopen(gvf_name, "w");
 		if (NULL == gvf)
 		{
-			prt_error("Error: wordgraph_show: open %s failed: %s",
+			prt_error("Error: wordgraph_show: open %s failed: %s\n",
 						 gvf_name, strerror(errno));
 		}
 		else
@@ -931,13 +931,13 @@ void wordgraph_show(Sentence sent, const char *modestr)
 			if (fprintf(gvf, "%s", wgds) == -1)
 			{
 				gvf_error = true;
-				prt_error("Error: wordgraph_show: print to %s failed: %s",
+				prt_error("Error: wordgraph_show: print to %s failed: %s\n",
 							 gvf_name, strerror(errno));
 			}
 			if (fclose(gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: wordgraph_show: close %s failed: %s",
+				prt_error("Error: wordgraph_show: close %s failed: %s\n",
 							  gvf_name, strerror(errno));
 			}
 		}
@@ -979,6 +979,6 @@ void wordgraph_show(Sentence sent, const char *modestr)
 #else
 void wordgraph_show(Sentence sent, const char *modestr)
 {
-		prt_error("Error: Not configured with --enable-wordgraph-display");
+		prt_error("Error: Not configured with --enable-wordgraph-display\n");
 }
 #endif /* USE_WORDGRAPH_DISPLAY */

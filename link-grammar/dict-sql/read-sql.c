@@ -328,7 +328,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
-			prt_error("Info: %s: Spell checker disabled.", dict->lang);
+			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;

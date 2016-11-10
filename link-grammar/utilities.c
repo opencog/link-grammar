@@ -260,7 +260,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid UTF-8 string!");
+		prt_error("Error: Invalid UTF-8 string!\n");
 		return;
 	}
 	c = towlower_l(c, locale_t);
@@ -270,7 +270,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't downcase UTF-8 string!");
+		prt_error("Error: can't downcase UTF-8 string!\n");
 		return;
 	}
 
@@ -302,7 +302,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid UTF-8 string!");
+		prt_error("Error: Invalid UTF-8 string!\n");
 		return;
 	}
 	c = towupper_l(c, locale_t);
@@ -312,7 +312,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't upcase UTF-8 string!");
+		prt_error("Error: can't upcase UTF-8 string!\n");
 		return;
 	}
 
@@ -464,7 +464,7 @@ void * xalloc(size_t size)
 #endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space. (int)");
+		prt_error("Fatal Error: Ran out of space. (int)\n");
 		abort();
 		exit(1);
 	}
@@ -497,7 +497,7 @@ void * exalloc(size_t size)
 
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space. (ext)");
+		prt_error("Fatal Error: Ran out of space. (ext)\n");
 		abort();
 		exit(1);
 	}
@@ -600,20 +600,20 @@ char * dictionary_get_data_dir(void)
 
 	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
 	{
-		prt_error("Warning: GetModuleFileName error %d", (int)GetLastError());
+		prt_error("Warning: GetModuleFileName error %d\n", (int)GetLastError());
 	}
 	else
 	{
 		if (NULL == prog_path)
 		{
 			/* Can it happen? */
-			prt_error("Warning: GetModuleFileName returned a NULL program path!");
+			prt_error("Warning: GetModuleFileName returned a NULL program path!\n");
 		}
 		else
 		{
 			if (!PathRemoveFileSpecA(prog_path))
 			{
-				prt_error("Warning: Cannot get directory from program path '%s'!",
+				prt_error("Warning: Cannot get directory from program path '%s'!\n",
 				          prog_path);
 			}
 			else
@@ -746,7 +746,7 @@ void * object_open(const char *filename,
 
 		path_found = strdup((NULL != completename) ? completename : filename);
 		if (0 < verbosity)
-			prt_error("Info: Dictionary found at %s", path_found);
+			prt_error("Info: Dictionary found at %s\n", path_found);
 		for (i = 0; i < 2; i++)
 		{
 			char *root = strrchr(path_found, DIR_SEPARATOR[0]);
@@ -841,7 +841,7 @@ char *get_file_contents(const char * dict_name)
 
 	if (left < 0)
 	{
-		prt_error("Error: File size is insane!");
+		prt_error("Error: File size is insane!\n");
 		free(contents);
 		return NULL;
 	}
@@ -918,18 +918,18 @@ void set_utf8_program_locale(void)
 		if ((0 != strcmp(locale, "C")) && (0 != strcmp(locale, "POSIX")))
 		{
 			prt_error("Warning: Program locale \"%s\" (codeset %s) was not UTF-8; "
-						 "force-setting to en_US.UTF-8", locale, codeset);
+						 "force-setting to en_US.UTF-8\n", locale, codeset);
 		}
 		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
 		if (NULL == locale)
 		{
 			prt_error("Warning: Program locale en_US.UTF-8 could not be set; "
-			          "force-setting to C.UTF-8");
+			          "force-setting to C.UTF-8\n");
 			locale = setlocale(LC_CTYPE, "C.UTF-8");
 			if (NULL == locale)
 			{
 				prt_error("Warning: Could not set a UTF-8 program locale; "
-				          "program may malfunction");
+				          "program may malfunction\n");
 			}
 		}
 	}
@@ -948,7 +948,7 @@ win32_getlocale (void)
 	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO639LANGNAME, lbuf, sizeof(lbuf)))
 	{
 		prt_error("Error: GetLocaleInfoA LOCALE_SENGLISHLANGUAGENAME LCID=%d: "
-		          "Error %d", (int)lcid, (int)GetLastError());
+		          "Error %d\n", (int)lcid, (int)GetLastError());
 		return NULL;
 	}
 	strcpy(locale, lbuf);
@@ -957,7 +957,7 @@ win32_getlocale (void)
 	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO3166CTRYNAME, lbuf, sizeof(lbuf)))
 	{
 		prt_error("Error: GetLocaleInfoA LOCALE_SISO3166CTRYNAME LCID=%d: "
-		          "Error %d", (int)lcid, (int)GetLastError());
+		          "Error %d\n", (int)lcid, (int)GetLastError());
 		return NULL;
 	}
 	strcat(locale, lbuf);
