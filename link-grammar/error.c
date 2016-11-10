@@ -19,18 +19,235 @@
 #include "error.h"
 #include "structures.h"
 #include "api-structures.h"
+#include "print-util.h"
 
-static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
+static TLS lg_error *lasterror;
+static TLS void *error_handler_data;
+static void default_error_handler(lg_error *, void *);
+static TLS lg_error_handler error_handler = default_error_handler;
+
+/* This list should match enum lg_error_severity. */
+#define MAX_SEVERITY_LABEL_SIZE 64 /* In bytes. */
+const char *severity_label_by_level[] =
+{
+	"Fatal error", "Error", "Warning", "Info", "Debug", "Trace", /*lg_None*/"",
+	NULL
+};
+
+/* Name to prepend to messages. */
+static const char libname[] = "link-grammar";
+
+/* === Error queue utilities ======================================== */
+static lg_error *error_queue_resize(lg_error *lge, int len)
+{
+	lge = realloc(lge, (len+2) * sizeof(lg_error));
+	lge[len+1].msg = NULL;
+	return lge;
+}
+
+static int error_queue_len(lg_error *lge)
+{
+	size_t len = 0;
+	if (lge)
+		while (NULL != lge[len].msg) len++;
+	return len;
+}
+
+static void error_queue_append(lg_error **lge, lg_error *current_error)
+{
+	int n = error_queue_len(*lge);
+
+	*lge = error_queue_resize(*lge, n);
+	current_error->msg = strdup(current_error->msg);
+	(*lge)[n] = *current_error;
+}
+/* ==================================================================*/
+
+/**
+ * Return the error severity according to the start of the error string.
+ * If an error severity is not found - return None.
+ */
+static lg_error_severity message_error_severity(const char *msg)
+{
+	for (const char **llp = severity_label_by_level; NULL != *llp; llp++)
+	{
+		for (const char *s = *llp, *t = msg; ; s++, t++)
+		{
+			if ((':' == *t) && (t > msg))
+			{
+				return (int)(llp - severity_label_by_level + 1);
+			}
+			if ((*s != *t) || ('\0' == *s)) break;
+		}
+	}
+
+	return None;
+}
+
+static void lg_error_msg_free(lg_error *lge)
+{
+		free((void *)lge->msg);
+		free((void *)lge->severity_label);
+}
+
+/* === API functions ================================================*/
+/**
+ * Set the error handler function to the given one.
+ * @param lg_error_handler New error handler function
+ * @param data Argument for the error handler function
+ */
+lg_error_handler lg_error_set_handler(lg_error_handler f, void *data)
+{
+	const lg_error_handler oldf = error_handler;
+	error_handler = f;
+	error_handler_data = data;
+	return oldf;
+}
+
+const void *lg_error_set_handler_data(void * data)
+{
+	const char *old_data = error_handler_data;
+
+	error_handler_data = data;
+	return old_data;
+}
+
+/**
+ * Print the error queue and free it.
+ * @param f Error handler function
+ * @param data Argument for the error handler function
+ * @return Number of errors
+ */
+int lg_error_printall(lg_error_handler f, void *data)
+{
+	int n = error_queue_len(lasterror);
+	if (0 == n) return 0;
+
+	for (lg_error *lge = &lasterror[n-1]; lge >= lasterror; lge--)
+	{
+		if (NULL == f)
+			default_error_handler(lge, data);
+		else
+			f(lasterror, data);
+		lg_error_msg_free(lge);
+	}
+	free(lasterror);
+	lasterror = NULL;
+
+	return n;
+}
+
+/**
+ * Clear the error queue. Free all of its memory.
+ * @return Number of errors
+ */
+int lg_error_clearall(void)
+{
+	if (NULL == lasterror) return 0;
+	int nerrors = 0;
+
+	for (lg_error *lge = lasterror; NULL != lge->msg; lge++)
+	{
+		nerrors++;
+		lg_error_msg_free(lge);
+	}
+	free(lasterror);
+	lasterror = NULL;
+
+	return nerrors;
+}
+
+/**
+ * Format the given raw error message.
+ * Create a complete error message, ready to be printed.
+ * If the severity is not None, add the library name.
+ * Also add the severity label.
+ * @param lge The raw error message.
+ * @return The complete error message. The caller needs to free the memory.
+ */
+char *lg_error_formatmsg(lg_error *lge)
+{
+	char *formated_error_message;
+	//printf("DEBUG-lg_format_error: msg=%s sev=%d\n", lge->msg, lge->severity);
+
+	String *s = string_new();
+
+	/* Prepend libname to messages with higher severity than Debug. */
+	if (lge->severity < Debug)
+		append_string(s, "%s: ", libname);
+
+	/* Prepend severity label to messages which don't already have it. */
+	if (None == message_error_severity(lge->msg))
+		append_string(s, "%s", lge->severity_label);
+
+	append_string(s, "%s", lge->msg);
+
+	formated_error_message = string_copy(s);
+	string_delete(s);
+
+	return formated_error_message;
+}
+/* ================================================================== */
+
+/**
+ * The default error handler callback function.
+ * @param lge The raw error message.
+ */
+static void default_error_handler(lg_error *lge, void *data)
+{
+	FILE *outfile = stdout;
+
+	if (((NULL == data) && (lge->severity <= Debug)) ||
+	    ((NULL != data) && (lge->severity <= *(lg_error_severity *)data) &&
+	     (None !=  lge->severity)))
+	if (((NULL == data) && (lge->severity < Debug)) ||
+	    ((NULL != data) && (lge->severity < *(lg_error_severity *)data) &&
+	     (None !=  lge->severity)))
+	{
+		fflush(stdout); /* Make sure that stdout has been written out first. */
+		outfile = stderr;
+	}
+
+	char *msg = lg_error_formatmsg(lge);
+	fprintf(outfile, "%s", msg);
+	free(msg);
+
+	fflush(outfile); /* Also stderr, in case some OS does some strange thing */
+}
+
+/**
+ * Convert a numerical severity level to its corresponding string.
+ */
+static const char *error_severity_label(lg_error_severity sev)
+{
+	char *sevlabel;
+	sevlabel = alloca(MAX_SEVERITY_LABEL_SIZE);
+
+	if (None == sev)
+	{
+		sevlabel[0] = '\0';
+	}
+	else if ((sev < 1) || (sev > None))
+	{
+		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d: ", sev);
+	}
+	else
+	{
+		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "%s: ",
+		         severity_label_by_level[sev-1]);
+	}
+
+	return strdup(sevlabel);
+}
+
+static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 	GNUC_PRINTF(3,0);
 
-static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
+static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 {
-	/* As we are printing to stderr, make sure that stdout has been
-	 * written out first. */
-	fflush(stdout);
+	String *outbuf = string_new();
 
-	fprintf(stderr, "link-grammar: ");
-	vfprintf(stderr, fmt, args);
+	vappend_string(outbuf, fmt, args);
 
 	if ((Info != sev) && ec->sent != NULL)
 	{
@@ -59,7 +276,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		/* The solution is just to print all the sentence tokenized subwords in
 		 * their order in the sentence, without duplications. */
 
-		fprintf(stderr,
+		append_string(outbuf,
 		        "\tFailing sentence contains the following words/morphemes:\n\t");
 		for (i=0; i<ec->sent->length; i++)
 		{
@@ -77,7 +294,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 						{
 							next_word = true;
 							if (a != b) break;
-							fprintf(stderr, "%s ", *a);
+							append_string(outbuf, "%s ", *a);
 							break;
 						}
 					}
@@ -87,11 +304,29 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		}
 #endif
 	}
-	fprintf(stderr, "\n");
-	fflush(stderr); /* In case some OS does some strange thing */
+	append_string(outbuf, "\n");
+
+	lg_error current_error;
+	/* current_error.ec = *ec; */
+	current_error.msg = string_value(outbuf);
+	lg_error_severity msg_sev = message_error_severity(current_error.msg);
+	current_error.severity = ((None == msg_sev) && (0 != sev)) ? sev : msg_sev;
+	current_error.severity_label = error_severity_label(current_error.severity);
+
+	if (NULL == error_handler)
+	{
+		error_queue_append(&lasterror, &current_error);
+	}
+	else
+	{
+		error_handler(&current_error, error_handler_data);
+		free((void *)current_error.severity_label);
+	}
+
+	string_delete(outbuf);
 }
 
-void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
+void err_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -101,19 +336,12 @@ void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
 
 void prt_error(const char *fmt, ...)
 {
-	severity sev;
 	err_ctxt ec;
 	va_list args;
 
-	sev = Error;
-	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
-	if (0 == strncmp(fmt, "Error:", 6)) sev = Error;
-	if (0 == strncmp(fmt, "Warn", 4)) sev = Warn;
-	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
-
 	ec.sent = NULL;
 	va_start(args, fmt);
-	verr_msg(&ec, sev, fmt, args);
+	verr_msg(&ec, 0, fmt, args);
 	va_end(args);
 }
 

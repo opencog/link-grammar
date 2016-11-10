@@ -28,16 +28,7 @@ typedef struct
 	Sentence sent;
 } err_ctxt;
 
-typedef enum
-{
-	Fatal = 1,
-	Error,
-	Warn,
-	Info,
-	Debug
-} severity;
-
-void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
+void err_msg(err_ctxt *, lg_error_severity, const char *fmt, ...) GNUC_PRINTF(3,4);
 const char *feature_enabled(const char *, ...);
 
 /**

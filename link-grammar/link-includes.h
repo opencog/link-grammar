@@ -51,6 +51,44 @@ link_public_api(const char *)
 
 /**********************************************************************
  *
+ * Functions and definitions for the error handler.
+ *
+ ***********************************************************************/
+typedef enum
+{
+	Fatal = 1,
+	Error,
+	Warn,
+	Info,
+	Debug,
+	Trace,
+	None
+} lg_error_severity;
+
+/* Raw error message. */
+typedef struct lg_error {
+	/* err_ctxt ec; */
+	lg_error_severity severity;
+	const char *severity_label;
+	const char *msg;
+} lg_error;
+
+/* Error handler callback function. */
+typedef void (*lg_error_handler)(lg_error *, void *);
+
+link_public_api(lg_error_handler)
+     lg_error_set_handler(lg_error_handler, void *data);
+link_public_api(const void *)
+     lg_error_set_handler_data(void * data);
+link_public_api(char *)
+     lg_error_formatmsg(lg_error *lge);
+link_public_api(int)
+     lg_error_printall(lg_error_handler, void *data);
+link_public_api(int)
+     lg_error_clearall(void);
+
+/**********************************************************************
+ *
  * Functions to manipulate Dictionaries
  *
  ***********************************************************************/
