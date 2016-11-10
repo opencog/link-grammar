@@ -664,7 +664,7 @@ static const char * cons_of_domain(const Linkage linkage, char domain_type)
 	default:
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msg(&ec, Error, "Error: Illegal domain: %c\n", domain_type);
+			err_msgc(&ec, Error, "Error: Illegal domain: %c", domain_type);
 			return "";
 		}
 	}
@@ -821,12 +821,12 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (ctxt->constituent[c].domain_type == '\0')
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msg(&ec, Error, "Error: no domain type assigned to constituent\n");
+			err_msgc(&ec, Error, "Error: no domain type assigned to constituent");
 		}
 		if (ctxt->constituent[c].start_link == NULL)
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msg(&ec, Error, "Error: no type assigned to constituent\n");
+			err_msgc(&ec, Error, "Error: no type assigned to constituent");
 		}
 	}
 
@@ -932,9 +932,9 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 						if (debug_level(D_CONST))
 						{
 							err_ctxt ec = { linkage->sent };
-							err_msg(&ec, Warn,
+							err_msgc(&ec, Warn,
 							      "Warning: the constituents aren't nested! "
-							      "Adjusting them. (%d, %d)\n", c, c2);
+							      "Adjusting them. (%d, %d)", c, c2);
 					  }
 					  ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}

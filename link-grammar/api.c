@@ -511,10 +511,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 
 	if (overflowed && (1 < opts->verbosity))
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Warn, "Warning: Count overflow.\n"
-		  "Considering a random subset of %zu of an unknown and large number of linkages\n",
+		err_ctxt ec = { sent };
+		err_msgc(&ec, Warn, "Warning: Count overflow.\n"
+		  "Considering a random subset of %zu of an unknown and large number of linkages",
 			opts->linkage_limit);
 	}
 	N_linkages_found = sent->num_linkages_found;
@@ -533,10 +532,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1)
 		{
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Warn,
-			    "Warning: Considering a random subset of %zu of %zu linkages\n",
+			err_ctxt ec = { sent };
+			err_msgc(&ec, Warn,
+			    "Warning: Considering a random subset of %zu of %zu linkages",
 			    N_linkages_alloced, N_linkages_found);
 		}
 	}
@@ -770,9 +768,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	if (debug_level(6))
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
+		err_msg(Info, "Info: %zu of %zu linkages with no P.P. violations",
 		        N_valid_linkages, N_linkages_post_processed);
 	}
 

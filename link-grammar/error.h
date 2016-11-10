@@ -28,7 +28,8 @@ typedef struct
 	Sentence sent;
 } err_ctxt;
 
-void err_msg(err_ctxt *, lg_error_severity, const char *fmt, ...) GNUC_PRINTF(3,4);
+void err_msgc(err_ctxt *, lg_error_severity, const char *fmt, ...) GNUC_PRINTF(3,4);
+#define err_msg(...) err_msgc(NULL, __VA_ARGS__)
 const char *feature_enabled(const char *, ...);
 
 /**

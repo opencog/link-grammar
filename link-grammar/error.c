@@ -249,7 +249,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 
 	vappend_string(outbuf, fmt, args);
 
-	if ((Info != sev) && ec->sent != NULL)
+	if ((NULL != ec) && (NULL != ec->sent))
 	{
 		size_t i, j;
 		const char **a, **b;
@@ -326,7 +326,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 	string_delete(outbuf);
 }
 
-void err_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
+void err_msgc(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -336,12 +336,10 @@ void err_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
 
 void prt_error(const char *fmt, ...)
 {
-	err_ctxt ec;
 	va_list args;
 
-	ec.sent = NULL;
 	va_start(args, fmt);
-	verr_msg(&ec, 0, fmt, args);
+	verr_msg(NULL, 0, fmt, args);
 	va_end(args);
 }
 
