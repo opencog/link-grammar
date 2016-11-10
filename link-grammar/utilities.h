@@ -66,6 +66,16 @@ void *alloca (size_t);
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
 
+/* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
+#ifdef _WIN32
+#define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
+#else
+#ifdef _GNU_SOURCE
+/* Emulate the POSIX version; assuming len>0 and a successful call. */
+#define strerror_r(errno, buf, len) abs((strcpy(buf, strerror_r (errno, buf, len)), 0))
+#endif /* _GNU_SOURCE */
+#endif /* _WIN32 */
+
 #ifdef _MSC_VER
 /* These definitions are incorrect, as these functions are different(!)
  * (non-standard functionality).
