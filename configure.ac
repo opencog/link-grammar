@@ -773,6 +773,12 @@ PYTHON2= PYTHON2_CPPFLAGS= PYTHON2_LIBS= PYTHON2_LDFLAGS= python2dir=
 AC_VARNAMES_CHECKPOINT # Remember the current variable names
 
 if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; then
+	# Check whether "python" is actually Python3 (as on Gentoo and Arch). If so,
+	# if Python2 exists it is most probably "python2" (but surely not "python").
+	AC_MSG_CHECKING([whether "python" is Python3])
+	AM_PYTHON_CHECK_VERSION([python], [3],
+	   [AC_MSG_RESULT(yes); PYTHON=python2], [AC_MSG_RESULT(no)])
+
 	AM_PATH_PYTHON(PYTHON2_REQUIRED, [Python2Found=yes], [Python2Found=no])
 	AX_PYTHON_DEVEL(>= 'PYTHON2_REQUIRED')
 	test -n "$lg_python_unusable" && Python2Found=no
@@ -815,10 +821,15 @@ AM_CONDITIONAL(HAVE_PYTHON3, test x$Python3Found != xno)
 
 # Python binary default for "make check" - $PYTHON2 if exists.
 # This is used for the definitions of the pre/post install tests.
+# $LG_PYDIR is used to construct $PYTHONPATH.
 if test -n "$PYTHON2"; then
 	PYTHON=$PYTHON2
 	pythondir=$python2dir
+	LG_PYDIR=python
+else
+	LG_PYDIR=python3
 fi
+AC_SUBST(LG_PYDIR)
 AC_SUBST(PYTHON)
 AC_SUBST(PYTHON3)
 AC_SUBST(pythondir)
