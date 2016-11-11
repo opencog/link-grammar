@@ -326,8 +326,9 @@ Dictionary dictionary_create_from_db(const char *lang)
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-	if (NULL == dict->spell_checker)
-		prt_error("Info: Spell checker disabled.");
+		/* FIXME: Move to spellcheck-*.c */
+		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
+			prt_error("Info: %s: Spell checker disabled.", dict->lang);
 #endif
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;
