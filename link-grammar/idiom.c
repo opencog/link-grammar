@@ -18,7 +18,6 @@
 #include "idiom.h"
 #include "string-set.h"
 #include "structures.h"
-#include "utilities.h"
 
 /**
  * Find if a string signifies an idiom.

@@ -19,7 +19,6 @@
 
 #include "link-includes.h"
 #include "spellcheck.h"
-#include "utilities.h"  /* For Win32 compatibility */
 
 #define ASPELL_LANG_KEY  "lang"
 /* FIXME: Move to a definition file (affix file?). */

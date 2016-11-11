@@ -20,14 +20,6 @@
 #include "structures.h"
 #include "api-structures.h"
 
-#if defined(_MSC_VER) && !defined(LINK_GRAMMAR_STATIC)
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT
-#endif
-
-/* ============================================================ */
-
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 	GNUC_PRINTF(3,0);
 
@@ -169,5 +161,3 @@ const char *feature_enabled(const char * list, ...)
 
 	return NULL;
 }
-
-/* ============================================================ */

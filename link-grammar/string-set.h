@@ -4,7 +4,7 @@
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
-/* license set forth in the LICENSE file included with this software.    */ 
+/* license set forth in the LICENSE file included with this software.    */
 /* This license allows free redistribution and use in source and binary  */
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
@@ -12,9 +12,11 @@
 #ifndef _STRING_SET_H_
 #define _STRING_SET_H_
 
+#include <string.h>
 #include <stddef.h>
+
 #include "api-types.h"
-#include "utilities.h"
+#include "lg_assert.h"
 
 struct String_set_s
 {
