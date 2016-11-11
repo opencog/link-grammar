@@ -344,7 +344,7 @@ if test "x$enable_sat_solver" = xyes; then
 		dnl Adapt to slight variations in minisat2.2 code.
 
 		# The function for making a literal can be Lit() or mkLit()
-		AC_CHECK_DECL([mkLit], [AC_DEFINE(HAVE_MKLIT, 1, [Define if exists])], [],
+		AC_CHECK_DECL([mkLit(Var, bool)], [AC_DEFINE(HAVE_MKLIT, 1, [Define if exists])], [],
 			[#include <minisat/core/Solver.h>]
 			[using namespace Minisat;]
 			[Solver x;])
