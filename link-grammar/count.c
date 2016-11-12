@@ -298,7 +298,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			bool Rmatch = d->match_right;
 
 #ifdef VERIFY_MATCH_LIST
-			assert(id == d->match_id, "Modified id (%d!=%d)\n", id, d->match_id);
+			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
 			/* _p1 avoids a gcc warning about unsafe loop opt */
 			unsigned int null_count_p1 = null_count + 1;

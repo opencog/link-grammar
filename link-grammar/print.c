@@ -1253,7 +1253,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 
 				/* There should always be at least one alternative */
 				assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu", wi);
 
 				if (NULL != w.alternatives[1])
 				{
@@ -1299,7 +1299,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu", wi);
 
 		//printf("DEBUG: word%zu '%s' nalts %zu\n",
 		//	 wi, sent->word[wi].unsplit_word, altlen(sent->word[wi].alternatives));

@@ -680,7 +680,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 							}
 							assert(NULL != *n, "Adding subword '%s': "
 							       "No corresponding next link for a prev link: "
-							       "prevword='%s' word='%s'\n",
+							       "prevword='%s' word='%s'",
 							       subword->subword, (*p)->subword, unsplit_word->subword);
 						}
 					}
@@ -727,7 +727,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 							assert(NULL!=*p,
 								"Adding subword '%s': "
 								"No corresponding prev link for a next link"
-								"nextword='%s' word='%s'\n",
+								"nextword='%s' word='%s'",
 								subword->subword, (*n)->subword, unsplit_word->subword);
 						}
 
@@ -758,7 +758,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					sole_alternative_of_itself : alternative_id;
 				Gword **alts;
 
-				assert(curr_alt, "'%s': No alt mark\n", unsplit_word->subword);
+				assert(curr_alt, "'%s': No alt mark", unsplit_word->subword);
 				assert(prev, "'%s': No prev", unsplit_word->subword);
 				assert(prev[0], "'%s': No prev[0]", unsplit_word->subword);
 				assert(prev[0]->next, "%s': No next",prev[0]->subword);
@@ -2690,7 +2690,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	if (NULL == we)
 	{
 		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
+		prt_error("Error: Word '%s': Internal error: NULL X_node", w->subword);
 		return false;
 	}
 #endif
@@ -2859,7 +2859,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			else
 			{
 				/* Words are not supposed to get issued more than once. */
-				assert(!wpp_old->used, "Word %zu:%s has been used\n",
+				assert(!wpp_old->used, "Word %zu:%s has been used",
 				       wg_word->node_num, wpp_old->word->subword);
 
 				/* This is a new wordgraph word.

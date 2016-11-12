@@ -262,7 +262,7 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	m->d = d;
 
 	xl = get_match_table_entry(size, t, c, dir);
-	assert(NULL != xl, "get_match_table_entry: Overflow\n");
+	assert(NULL != xl, "get_match_table_entry: Overflow");
 	if (dir == 1) {
 		*xl = add_to_right_table_list(m, *xl);
 	}

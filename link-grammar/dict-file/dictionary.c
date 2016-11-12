@@ -580,7 +580,7 @@ dictionary_six_str(const char * lang,
 		goto failure;
 	}
 	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */
-	assert(NULL != locale, "Cannot restore program locale\n");
+	assert(NULL != locale, "Cannot restore program locale");
 
 #ifdef USE_CORPUS
 	dict->corpus = lg_corpus_new();
