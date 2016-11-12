@@ -1452,7 +1452,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	 * if it was previously parsed.  If so we free it up before
 	 * building another.  Huh ?? How could that happen? */
 #ifdef DEBUG
-	if (sent->parse_info) fprintf(stderr, "XXX Freeing parse_info\n");
+	if (sent->parse_info) err_msg(Debug, "XXX Freeing parse_info\n");
 #endif
 	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);

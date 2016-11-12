@@ -221,8 +221,8 @@ static int split(int word_length, int nparts, split_cache *scl)
 		//printf("nsplits %zu\n", nsplits);
 		if (0 == nsplits)
 		{
-			fprintf(stderr, "Error: nsplits=%zu (word_length=%d, nparts=%d)\n",
-				nsplits, word_length, nparts);
+			prt_error("Error: nsplits=0 (word_length=%d, nparts=%d)\n",
+				word_length, nparts);
 			return 0;
 		}
 		scl->sp = malloc(sizeof(p_start)*nparts * nsplits);
