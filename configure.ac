@@ -190,6 +190,23 @@ CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
 CXXFLAGS="${CXXFLAGS} -D_DEFAULT_SOURCE"
 
 # ====================================================================
+# TLS support (for per-thread error handling)
+
+error_handler_per_thread=no
+AC_ARG_ENABLE([TLS],
+  [AS_HELP_STRING([--disable-TLS], [Do not use TLS (disable per-thread error handling)])],
+  [],
+  [enable_TLS=yes])
+
+if test "x$enable_TLS" == xyes
+then
+	dnl Check for a keyword for Thread Local Storage declaration.
+	dnl If found - define TLS to it.
+	AX_TLS(,:)
+	test "$ac_cv_tls" != "none" && error_handler_per_thread=yes
+fi
+
+# ====================================================================
 # Debugging
 
 AC_ARG_ENABLE( debug,
@@ -1015,6 +1032,7 @@ $PACKAGE-$VERSION  build configuration settings
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Posix threads:                  ${enable_pthreads}
+	Error handler per-thread:       ${error_handler_per_thread}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}
 	Java libraries:                 ${JNIfound}
