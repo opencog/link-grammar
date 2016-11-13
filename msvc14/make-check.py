@@ -112,7 +112,7 @@ if len(sys.argv) == 2:
         pyscript = sys.argv.pop(1)
 
 if pyscript != '':
-    if pyscript[0] not in ('.', '\\'):
+    if '\\' not in pyscript:
         pyscript = rundir + '\\' + scriptdir + '\\' + pyscript
 
 args = ''
