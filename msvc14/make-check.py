@@ -32,7 +32,7 @@ def error(msg):
         print(msg)
     prog = os.path.basename(sys.argv[0])
     print("Usage: ", prog, '[python_flag] PYTHON_OUTDIR [script.py] [script_args]')
-    print(r'\tOUTDIR is in the format of "x64\Debug\Python2"')
+    print(r'        OUTDIR is in the format of "x64\Debug\Python2"')
     sys.exit(1)
 
 local_prop = {}
@@ -112,7 +112,7 @@ if len(sys.argv) == 2:
         pyscript = sys.argv.pop(1)
 
 if pyscript != '':
-    if pyscript[0] not in ('.', '\\'):
+    if '\\' not in pyscript:
         pyscript = rundir + '\\' + scriptdir + '\\' + pyscript
 
 args = ''

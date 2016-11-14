@@ -140,22 +140,34 @@ Also see "Permanent installation".
 
 ### Using make-check.py
 The **make-check.py** program is designed to reside in the MSVC
-configuration directory.  However, it can run from any directory.
+configuration directory.  However, it can run from any directory
+using a full or a relative path to invoke it.
 
+Usage:
 console-prompt>make-check [PYTHON_FLAG] PYTHON_OUTDIR [script.py] [ARGUMENTS]
 
 - PYTHON_FLAG: Optional flag for the Python program, e.g. -vv to debug
 imports.
 - PYTHON_OUTDIR: The directory to which the Python bindings got written.
 For example, x64\Release\Python3 .
-- script.py: Path leading to the script. To run tests.py in its default
-location you can leave it empty.
+- script.py: Path leading to the script. If only a filename is specified
+(i.e. no "\" in the path) the specified script file is taken from the
+"bindings\python-examples\" directory.  In order to run tests.py in
+its default location you can leave it empty.
 - ARGUMENTS: Optional script arguments, for example -v for tests.py.
 
 So in order to run tests.py with Python2 for a Debug compilation on x64
 platform, enter:
 
 console-prompt>make-check x64\Debug\Python2
+
+To debug a Python3 script "mylgtest.py" that resides in
+"bindings\python-examples":
+
+console-prompt>make-check -mpdb x64\Debug\Python3 mylgtest.py
+
+To run a script in your home directory:
+console-prompt>make-check x64\Debug\Python3 \Users\username\mylgtest.py
 
 The following starts an interactive Python with the correct PYTHONPATH
 and PATH:
