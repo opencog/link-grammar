@@ -2,6 +2,10 @@ Version 5.3.12: (??? 2016?)
  * Fix bug in 'any' language (opencog/relex/issues/248).
  * Preliminary support for common typos in English.
  * Enable both python2 & python3 bindings by default.
+ * Fix locale_t use for the newly introduced Cygwin 2.6.0.
+ * Include in the distribution the missing make-check.py (for Windows).
+ * Minisat configuration improvements + fix a problem on Gentoo.
+ * When using the bundled minisat, link it statically and don't install it.
 
 Version 5.3.11: (26 Sept 2016)
  * Re-enable postscript header printing!
