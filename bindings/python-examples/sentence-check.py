@@ -67,7 +67,7 @@ for sentence_text in iter(sys.stdin.readline, ''):
     if DISPLAY_GUESSES:
         linkages, check_first = itertools.tee(linkages)
         # Check the first linkage for regexed/unknown words
-        linkage = check_first.next()
+        linkage = next(check_first)
         for word in list(linkage.words()):
             # search for something[x]
             if re.search(r'\S+\[[^]]+]', word):
