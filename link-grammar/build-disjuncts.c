@@ -353,7 +353,7 @@ void prt_exp_mem(Exp *e, int i)
 
 	if (e == NULL) return;
 
-	if (e->type > 0 && e->type < 4)
+	if (e->type > 0 && e->type <= 3)
 	{
 		type = ((const char *[]) {"OR_type", "AND_type", "CONNECTOR_type"}) [e->type-1];
 	}
