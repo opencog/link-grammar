@@ -56,13 +56,13 @@ link_public_api(const char *)
  ***********************************************************************/
 typedef enum
 {
-	Fatal = 1,
-	Error,
-	Warn,
-	Info,
-	Debug,
-	Trace,
-	None
+	lg_Fatal = 1,
+	lg_Error,
+	lg_Warn,
+	lg_Info,
+	lg_Debug,
+	lg_Trace,
+	lg_None
 } lg_error_severity;
 
 /* Raw error message. */

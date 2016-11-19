@@ -512,7 +512,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	if (overflowed && (1 < opts->verbosity))
 	{
 		err_ctxt ec = { sent };
-		err_msgc(&ec, Warn, "Warning: Count overflow.\n"
+		err_msgc(&ec, lg_Warn, "Warning: Count overflow.\n"
 		  "Considering a random subset of %zu of an unknown and large number of linkages",
 			opts->linkage_limit);
 	}
@@ -533,7 +533,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		if (opts->verbosity > 1)
 		{
 			err_ctxt ec = { sent };
-			err_msgc(&ec, Warn,
+			err_msgc(&ec, lg_Warn,
 			    "Warning: Considering a random subset of %zu of %zu linkages",
 			    N_linkages_alloced, N_linkages_found);
 		}
@@ -768,7 +768,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	if (debug_level(6))
 	{
-		err_msg(Info, "Info: %zu of %zu linkages with no P.P. violations",
+		err_msg(lg_Info, "Info: %zu of %zu linkages with no P.P. violations",
 		        N_valid_linkages, N_linkages_post_processed);
 	}
 
@@ -1452,7 +1452,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	 * if it was previously parsed.  If so we free it up before
 	 * building another.  Huh ?? How could that happen? */
 #ifdef DEBUG
-	if (sent->parse_info) err_msg(Debug, "XXX Freeing parse_info\n");
+	if (sent->parse_info) err_msg(lg_Debug, "XXX Freeing parse_info\n");
 #endif
 	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);

@@ -81,7 +81,7 @@ static lg_error_severity message_error_severity(const char *msg)
 		}
 	}
 
-	return None;
+	return lg_None;
 }
 
 static void lg_error_msg_free(lg_error *lge)
@@ -160,7 +160,7 @@ int lg_error_clearall(void)
 /**
  * Format the given raw error message.
  * Create a complete error message, ready to be printed.
- * If the severity is not None, add the library name.
+ * If the severity is not lg_None, add the library name.
  * Also add the severity label.
  * @param lge The raw error message.
  * @return The complete error message. The caller needs to free the memory.
@@ -172,11 +172,11 @@ char *lg_error_formatmsg(lg_error *lge)
 	String *s = string_new();
 
 	/* Prepend libname to messages with higher severity than Debug. */
-	if (lge->severity < Debug)
+	if (lge->severity < lg_Debug)
 		append_string(s, "%s: ", libname);
 
 	/* Prepend severity label to messages which don't already have it. */
-	if (None == message_error_severity(lge->msg))
+	if (lg_None == message_error_severity(lge->msg))
 		append_string(s, "%s", lge->severity_label);
 
 	append_string(s, "%s", lge->msg);
@@ -196,12 +196,12 @@ static void default_error_handler(lg_error *lge, void *data)
 {
 	FILE *outfile = stdout;
 
-	if (((NULL == data) && (lge->severity <= Debug)) ||
+	if (((NULL == data) && (lge->severity <= lg_Debug)) ||
 	    ((NULL != data) && (lge->severity <= *(lg_error_severity *)data) &&
-	     (None !=  lge->severity)))
-	if (((NULL == data) && (lge->severity < Debug)) ||
+	     (lg_None !=  lge->severity)))
+	if (((NULL == data) && (lge->severity < lg_Debug)) ||
 	    ((NULL != data) && (lge->severity < *(lg_error_severity *)data) &&
-	     (None !=  lge->severity)))
+	     (lg_None !=  lge->severity)))
 	{
 		fflush(stdout); /* Make sure that stdout has been written out first. */
 		outfile = stderr;
@@ -222,11 +222,11 @@ static const char *error_severity_label(lg_error_severity sev)
 	char *sevlabel;
 	sevlabel = alloca(MAX_SEVERITY_LABEL_SIZE);
 
-	if (None == sev)
+	if (lg_None == sev)
 	{
 		sevlabel[0] = '\0';
 	}
-	else if ((sev < 1) || (sev > None))
+	else if ((sev < 1) || (sev > lg_None))
 	{
 		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d: ", sev);
 	}
@@ -335,7 +335,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 	/* current_error.ec = *ec; */
 	current_error.msg = string_value(outbuf);
 	lg_error_severity msg_sev = message_error_severity(current_error.msg);
-	current_error.severity = ((None == msg_sev) && (0 != sev)) ? sev : msg_sev;
+	current_error.severity = ((lg_None == msg_sev) && (0 != sev)) ? sev : msg_sev;
 	current_error.severity_label = error_severity_label(current_error.severity);
 
 	if (NULL == error_handler)

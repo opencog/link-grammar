@@ -197,18 +197,18 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 {
 	const Gword **p;
 
-	err_msg(Debug, "[Word %zu:%s hier_position(hier_depth=%zu): ",
+	err_msg(lg_Debug, "[Word %zu:%s hier_position(hier_depth=%zu): ",
 	        word->node_num, word->subword, word->hier_depth);
 	assert(2*word->hier_depth==gwordlist_len(word->hier_position), "word '%s'",
 	       word->subword);
 
 	for (p = word->hier_position; NULL != *p; p += 2)
 	{
-		err_msg(Debug, "(%zu:%s/%zu:%s)",
+		err_msg(lg_Debug, "(%zu:%s/%zu:%s)",
 		        p[0]->node_num, debug_show_subword(p[0]),
 		        p[1]->node_num, debug_show_subword(p[1]));
 	}
-	err_msg(Debug, "]\n");
+	err_msg(lg_Debug, "]\n");
 }
 #endif
 

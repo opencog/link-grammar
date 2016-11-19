@@ -3043,7 +3043,7 @@ bool sentence_in_dictionary(Sentence sent)
 	if (!ok_so_far)
 	{
 		err_ctxt ec = { sent };
-		err_msgc(&ec, Error, "Error: Sentence not in dictionary\n%s", temp);
+		err_msgc(&ec, lg_Error, "Error: Sentence not in dictionary\n%s", temp);
 	}
 	return ok_so_far;
 }

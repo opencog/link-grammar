@@ -48,9 +48,9 @@ const char *feature_enabled(const char *, ...);
 	feature_enabled(debug, __func__, __FILE__, NULL))) ? \
 	( \
 		(STRINGIFY(level)[0] == '+' ? \
-			(void)err_msg(Trace, "%s: ", __func__) : \
+			(void)err_msg(lg_Trace, "%s: ", __func__) : \
 			(void)0), \
-		(void)err_msg(Trace,  __VA_ARGS__) \
+		(void)err_msg(lg_Trace,  __VA_ARGS__) \
 	) : \
 	(void)0)
 
