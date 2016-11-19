@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.3.12],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.3.13],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=3
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=12
+LINK_MICRO_VERSION=13
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -307,7 +307,13 @@ if test "x$enable_sat_solver" = xyes; then
 	dnl 1. Abort and notify if no zlib.h. 2. Adapt for non-standard location.
 	AC_MSG_NOTICE([The minisat2 headers include zlib.h])
 	dnl The bundled library doesn't actually need -lz
-	AX_CHECK_ZLIB([ZLIB_CPPFLAGS="-isystem $ZLIB_HOME/include"],[])
+	AX_CHECK_ZLIB([ZLIB_CPPFLAGS="-isystem $ZLIB_HOME/include"],
+		[AC_MSG_NOTICE([No zlib library found - not building sat solver])
+		enable_sat_solver=no])
+fi
+
+# If zlib not found, then don't continue with minisat.
+if test "x$enable_sat_solver" = xyes; then
 	test "x$ZLIB_CPPFLAGS" = "x-isystem /usr/include" && ZLIB_CPPFLAGS=
 
 	CPPFLAGS_SAVE="$CPPFLAGS"
@@ -388,7 +394,7 @@ if test "x$enable_viterbi" = "xyes"; then
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the Viterbi parser])])
 	AC_LANG([C])
 
-	# The vieterbi decoder is designed to leak memory like crazy.
+	# The viterbi decoder is designed to leak memory like crazy.
 	# Must use garbage collection in order for it to work.
 	PKG_CHECK_MODULES([LIBGC], [bdw-gc], [gc=yes], [gc=no])
 	AC_SUBST(LIBGC_LIBS)
@@ -845,7 +851,7 @@ popdef([AC_MSG_ERROR])
 
 if test x$enable_python_bindings != xno; then
 	if test x$Python2Found = xno -a x$Python3Found = xno; then
-		AC_MSG_ERROR(
+		AC_MSG_NOTICE(
 			[Python binding is requested, but an approprite Python version
                   could not be configured.])
 	fi
