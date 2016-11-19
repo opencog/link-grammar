@@ -851,7 +851,7 @@ popdef([AC_MSG_ERROR])
 
 if test x$enable_python_bindings != xno; then
 	if test x$Python2Found = xno -a x$Python3Found = xno; then
-		AC_MSG_ERROR(
+		AC_MSG_NOTICE(
 			[Python binding is requested, but an approprite Python version
                   could not be configured.])
 	fi
