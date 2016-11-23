@@ -622,7 +622,7 @@ int main(int argc, char * argv[])
 	opts = copts->popts;
 	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
 	{
-		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
+		prt_error("Fatal error: unable to create parse options\n");
 		exit(-1);
 	}
 

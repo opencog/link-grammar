@@ -683,8 +683,8 @@ void * object_open(const char *filename,
 		{
 			char cwd[MAX_PATH_NAME];
 			char *cwdp = getcwd(cwd, sizeof(cwd));
-			printf("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
-			printf("Debug: Last-resort data directory: %s\n",
+			prt_error("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
+			prt_error("Debug: Last-resort data directory: %s\n",
 					  data_dir ? data_dir : "NULL");
 		}
 	}

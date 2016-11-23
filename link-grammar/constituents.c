@@ -107,13 +107,13 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 {
 	size_t w;
 
-	printf("  c %2d %4s [%c] (%2zu-%2zu): ",
+	err_msg(lg_Debug, "  c %2d %4s [%c] (%2zu-%2zu): ",
 		   c, ctxt->constituent[c].type, ctxt->constituent[c].domain_type,
 		   ctxt->constituent[c].left, ctxt->constituent[c].right);
 	for (w = ctxt->constituent[c].left; w <= ctxt->constituent[c].right; w++) {
-		printf("%s ", linkage->word[w]); /**PV**/
+		err_msg(lg_Debug, "%s ", linkage->word[w]); /**PV**/
 	}
-	printf("\n");
+	err_msg(lg_Debug, "\n");
 }
 
 /******************************************************
@@ -217,7 +217,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			continue;
 
 		if (debug_level(D_CONST))
-			printf("Generating complement constituent for c %d of type %s\n",
+			err_msg(lg_Debug, "Generating complement constituent for c %d of type %s\n",
 				   c1, ctype1);
 		done = false;
 		for (w2 = ctxt->constituent[c1].left; (done == false) && (w2 != (size_t)-1); w2--)
@@ -269,9 +269,8 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 						string_set_add("XX", ctxt->phrase_ss);
 					if (debug_level(D_CONST))
 					{
-						printf("Larger c found: c %d (%s); ",
-							   c2, ctype2);
-						printf("Adding constituent:\n");
+						err_msg(lg_Debug, "Larger c found: c %d (%s); ", c2, ctype2);
+						err_msg(lg_Debug, "Adding constituent:\n\\");
 						print_constituent(ctxt, linkage, c);
 					}
 					c++;
@@ -283,7 +282,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if (debug_level(D_CONST))
 		{
 			if (done == false)
-				printf("No constituent added, because no larger %s " \
+				err_msg(lg_Debug, "No constituent added, because no larger %s" \
 					   " was found\n", ctype2);
 		}
 	}
@@ -331,7 +330,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 
 						if (debug_level(D_CONST))
 						{
-							printf("Adjusting constituent %d:\n", c2);
+							err_msg(lg_Debug, "Adjusting constituent %d:\n\\", c2);
 							print_constituent(ctxt, linkage, c2);
 						}
 					}
@@ -590,7 +589,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		numcon_total++;
 		if (debug_level(D_CONST))
 		{
-			printf("Adding global sentence constituent:\n");
+			err_msg(lg_Debug, "Adding global sentence constituent:\n\\");
 			print_constituent(ctxt, linkage, c);
 		}
 	}
@@ -835,9 +834,11 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	if (debug_level(D_CONST))
 	{
-		printf("Constituents added at first stage:\n");
+		err_msg(lg_Debug, "Constituents added at first stage:\n\\");
 		for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 		{
+			/* FIXME: Here it cannot be printed as one debug message because
+			 * a newline is printed at the end. */
 			print_constituent(ctxt, linkage, c);
 		}
 	}
@@ -916,14 +917,14 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 								"RIGHT-WALL") == 0))
 					{
 						if (debug_level(D_CONST))
-							printf("Adjusting %d to fix comma overlap\n", c2);
+							err_msg(lg_Debug, "Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made = true;
 					}
 					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
 					{
 						if (debug_level(D_CONST))
-							printf("Adjusting c %d to fix comma overlap\n", c);
+							err_msg(lg_Debug, "Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
 						adjustment_made = true;
 					}
@@ -968,9 +969,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 		leftdone[c] = false;
 		rightdone[c] = false;
 	}
-
-	if (debug_level(D_CONST))
-		printf("\n");
 
 	/* Skip left wall; don't skip right wall, since it may
 	 * have constituent boundaries. */

@@ -1010,7 +1010,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	/* These messages were deemed to not be useful, so
 	 * this code is commented out. See comment above. */
 	if (!check_domain_nesting(pp, sublinkage->num_links))
-		printf("Warning: The domains are not nested.\n");
+		prt_error("Warning: The domains are not nested.\n");
 #endif
 
 	/* The order below should be optimal for most cases */
@@ -1070,9 +1070,10 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 	if (debug_level(5))
 	{
-		printf("PP: Saw %zd unique link names in all linkages.\n",
+		err_msg(lg_Debug, "PP: Saw %zd unique link names in all linkages.\n\\",
 		       pp_linkset_population(pp->set_of_links_of_sentence));
-		printf("PP: Using %i 'contains one' rules and %i 'contains none' rules\n",
+		err_msg(lg_Debug, "PP: Using %i 'contains one' rules "
+		                  "and %i 'contains none' rules\n",
 		       rcoIDX, rcnIDX);
 	}
 }
@@ -1180,7 +1181,7 @@ static size_t report_rule_use(pp_rule *set)
 	size_t i;
 	for (i=0; set[i].msg != NULL; i++)
 	{
-		printf("usage: %d rule: %s\n", set[i].use_count, set[i].msg);
+		err_msg(lg_Debug, "Used: %d rule: %s\n", set[i].use_count, set[i].msg);
 		cnt++;
 	}
 	return cnt;
@@ -1194,7 +1195,7 @@ static size_t report_unused_rule(pp_rule *set)
 	{
 		if (0 == set[i].use_count)
 		{
-			printf("Unused rule: %s\n", set[i].msg);
+			err_msg(lg_Debug, "Unused rule: %s\n", set[i].msg);
 			cnt++;
 		}
 	}
@@ -1208,28 +1209,28 @@ static void report_pp_stats(Postprocessor *pp)
 	pp_knowledge * kno;
 	if (!debug_level(9)) return;
 
-	printf("PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
+	err_msg(lg_Debug, "PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
 	kno = pp->knowledge;
 
-	printf("\nPP stats: form_a_cycle_rules\n");
+	err_msg(lg_Debug, "\nPP stats: form_a_cycle_rules\n");
 	rule_cnt += report_rule_use(kno->form_a_cycle_rules);
 
-	printf("\nPP stats: contains_one_rules\n");
+	err_msg(lg_Debug, "\nPP stats: contains_one_rules\n");
 	rule_cnt += report_rule_use(kno->contains_one_rules);
 
-	printf("\nPP stats: contains_none_rules\n");
+	err_msg(lg_Debug, "\nPP stats: contains_none_rules\n");
 	rule_cnt += report_rule_use(kno->contains_none_rules);
 
-	printf("\nPP stats: bounded_rules\n");
+	err_msg(lg_Debug, "\nPP stats: bounded_rules\n");
 	rule_cnt += report_rule_use(kno->bounded_rules);
 
-	printf("\nPP stats: Rules that were not used:\n");
+	err_msg(lg_Debug, "\nPP stats: Rules that were not used:\n");
 	unused_cnt += report_unused_rule(kno->form_a_cycle_rules);
 	unused_cnt += report_unused_rule(kno->contains_one_rules);
 	unused_cnt += report_unused_rule(kno->contains_none_rules);
 	unused_cnt += report_unused_rule(kno->bounded_rules);
 
-	printf("\nPP stats: %zd of %zd rules unused\n", unused_cnt, rule_cnt);
+	err_msg(lg_Debug, "\nPP stats: %zd of %zd rules unused\n", unused_cnt, rule_cnt);
 }
 
 /**

@@ -270,7 +270,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		}
 	}
 
-	if (debug_level(5) && (count != 0)) printf("killed %u duplicates\n", count);
+	lgdebug(+5+(0==count)*1000, "Killed %u duplicates\n", count);
 
 	disjunct_dup_table_delete(dt);
 	return d;

@@ -1525,11 +1525,18 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 	n = spellcheck_suggest(dict->spell_checker, &alternates, word);
 	if (debug_level(+D_SW))
 	{
-		printf("Info: guess_misspelled_word() spellcheck_suggest for %s:%s\n",
-		       word, (0 == n) ? " (nothing)" : "");
+		lgdebug(0, "spellcheck_suggest for %s:\\", word);
+		if (0 == n)
+			lgdebug(0, " (nothing)\n");
+		else
+			lgdebug(0, "\n\\");
+
 		for (j=0; j<n; j++)
 		{
-			printf("- %s\n", alternates[j]);
+			if (n-1 != j)
+				lgdebug(0, "- %s\n\\", alternates[j]);
+			else
+				lgdebug(0, "- %s\n", alternates[j]);
 		}
 	}
 	/* Word split for run-on and guessed words.

@@ -1157,7 +1157,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (NULL == wp_new)
 		{
-			lgdebug(+D_SLM, "- No more words in the wordgraph\n");
+			lgdebug(D_SLM, "- No more words in the wordgraph\n");
 			match_found = false;
 			break;
 		}
@@ -1208,7 +1208,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
-		if (debug_level(D_SLM)) print_with_subscript_dot(cdj->string);
+		if (debug_level(D_SLM))
+		{
+			char *djw_tmp = strdupa(cdj->string);
+			char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
+			if (NULL != sm) *sm = SUBSCRIPT_DOT;
+			lgdebug(0, "%s", djw_tmp);
+		}
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */
@@ -1337,9 +1343,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			/* Notify to stdout, so it will be shown along with the result.
 			 * XXX We should have a better way to notify. */
 			if (0 < opts->verbosity)
-				printf("Warning: Invalid morpheme type combination '%s'.\n"
-				       "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
-				       " to debug\n", affix_types);
+				prt_error("Warning: Invalid morpheme type combination '%s'.\n"
+				          "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
+				          " to debug\n", affix_types);
 		}
 	}
 

@@ -226,7 +226,7 @@ void remove_empty_words(Linkage lkg)
 
 	if (debug_level(+D_REE))
 	{
-		printf("Info: chosen_disjuncts before:\n");
+		err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
 		print_chosen_disjuncts_words(lkg);
 	}
 
@@ -248,7 +248,7 @@ void remove_empty_words(Linkage lkg)
 
 	if (debug_level(+D_REE))
 	{
-		printf("Info: chosen_disjuncts after:\n");
+		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
 		print_chosen_disjuncts_words(lkg);
 	}
 
