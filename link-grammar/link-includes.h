@@ -396,7 +396,7 @@ link_public_api(void)
 #define GNUC_PRINTF( format_idx, arg_idx )
 #endif
 
-link_public_api(void)
+link_public_api(int)
      prt_error(const char *fmt, ...) GNUC_PRINTF(1,2);
 
 /*******************************************************

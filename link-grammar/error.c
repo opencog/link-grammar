@@ -360,13 +360,31 @@ void err_msgc(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
 	va_end(args);
 }
 
-void prt_error(const char *fmt, ...)
+/**
+ * Issue the given message.
+ * This is an API function.
+ *
+ * Usage notes:
+ * The severity can be specified as an initial string in the message,
+ * such as "Error: Rest of message".  For known severity names see
+ * \link severity_label_by_level List of severity strings. \endlink.
+ * See \link verr_msg \endlink for how the severity is handled
+ * if it is not specified.
+ *
+ * @fmt printf()-like format.
+ * @... printf()-like arguments.
+ * @retrun Always 0, not to be used. This is needed so prt_error()
+ * can be used in complex macros that have to use the comma operator.
+ */
+int prt_error(const char *fmt, ...)
 {
 	va_list args;
 
 	va_start(args, fmt);
 	verr_msg(NULL, 0, fmt, args);
 	va_end(args);
+
+	return 0;
 }
 
 /**
