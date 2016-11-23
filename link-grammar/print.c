@@ -1223,7 +1223,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		return;
 	}
 
-	if (debugprint) lgdebug(+0, "\n");
+	if (debugprint) lgdebug(+0, "\n\\");
 	else if (NULL != tokenpos)
 		; /* Do nothing */
 	else
@@ -1295,7 +1295,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
 		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
 #endif
-		if (debugprint) lgdebug(0, "  word%zu: %s\n   ", wi, w.unsplit_word);
+		if (debugprint) lgdebug(0, "  word%zu: %s\n\\", wi, w.unsplit_word);
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
@@ -1396,7 +1396,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 			//if (word_split && (NULL == display)) printf("\n");
 		}
 		wi--;
-		if (debugprint) lgdebug(0, "\n");
+		if (debugprint) lgdebug(0, "\n\\");
 	}
 	if (debugprint) lgdebug(0, "\n");
 	else if (word_split) printf("\n\n");
