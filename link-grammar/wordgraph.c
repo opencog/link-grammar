@@ -144,7 +144,7 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	assert(NULL != p);
 
 #ifdef DEBUG
-	if (debug_level(9)) { printf("\n"); print_hier_position(p); }
+	if (debug_level(+9)) print_hier_position(p);
 #endif
 
 	if (NULL != *wp)
@@ -961,7 +961,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 #endif
 
 #ifdef EXITKEY
-	printf("Press "EXITKEY" in the graphical display window to continue\n");
+	prt_error("Press "EXITKEY" in the graphical display window to continue\n");
 #endif
 
 #if !defined HAVE_FORK || defined POPEN_DOT
