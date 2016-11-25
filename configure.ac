@@ -80,6 +80,11 @@ AC_MSG_RESULT(no)
 	)
 )
 
+dnl CentOS-7 (at least) needs these to expose the C99 format and limit macros
+dnl in C++ source code.  They are needed for minisat.
+AC_DEFINE(__STDC_FORMAT_MACROS)
+AC_DEFINE(__STDC_LIMIT_MACROS)
+
 dnl Check for specific OSs
 # ====================================================================
 
