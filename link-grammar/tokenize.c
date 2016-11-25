@@ -955,7 +955,7 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 				{
 					if (c == s)
 					{
-						printf(SYNTHSPLIT_ERROR("(empty subword)."), w);
+						prt_error(SYNTHSPLIT_ERROR("(empty subword)."), w);
 						goto error;
 					}
 					strncpy(alt, s, c-s);
@@ -988,13 +988,13 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 				      ((*c >= '0') && (*c <= '9')) ||
 				      ('_' == *c)))
 				{
-					printf(SYNTHSPLIT_ERROR("('%c' not alphanumeric)."), w, *c);
+					prt_error(SYNTHSPLIT_ERROR("('%c' not alphanumeric)."), w, *c);
 					goto error;
 				}
 		}
 		if (0 > plevel)
 		{
-			printf(SYNTHSPLIT_ERROR("extra ')'"), w);
+			prt_error(SYNTHSPLIT_ERROR("extra ')'"), w);
 			goto error;
 		}
 
@@ -1002,7 +1002,7 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 
 	if (0 < plevel)
 	{
-		printf(SYNTHSPLIT_ERROR("missing '('."), w);
+		prt_error(SYNTHSPLIT_ERROR("missing '('."), w);
 		goto error;
 	}
 
@@ -1589,7 +1589,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 				set_alt_word_status(sent->dict, altp, WS_SPELL);
 				num_guesses++;
 			}
-			//else printf("Spell guess '%s' ignored\n", alternates[j]);
+			//else prt_error("Debug: Spell guess '%s' ignored\n", alternates[j]);
 		}
 
 		if (num_guesses >= opts->use_spell_guess) break;
@@ -2724,12 +2724,12 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	if (debug_level(D_X_NODE))
 	{
 		/* Print the X_node details for the word. */
-		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
+		prt_error("Debug: Tokenize word/alt=%zu/%zu '%s' re=%s\n\\",
 				 wordpos, altlen(sent->word[wordpos].alternatives), s,
 				 w->regex_name ? w->regex_name : "");
 		while (we)
 		{
-			printf(" xstring='%s' expr=", we->string);
+			prt_error(" xstring='%s' expr=", we->string);
 			print_expression(we->exp);
 			we = we->next;
 		}
