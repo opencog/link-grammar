@@ -21,10 +21,13 @@
 #include "api-structures.h"
 #include "print-util.h"
 
-static TLS lg_error *lasterror;
-static TLS void *error_handler_data;
-static void default_error_handler(lg_error *, void *);
-static TLS lg_error_handler error_handler = default_error_handler;
+static void default_error_handler(lg_errinfo *, void *);
+static TLS struct
+{
+	lg_error_handler handler;
+	void *handler_data;
+	lg_errinfo *errmsg;
+} lg_error = { default_error_handler };
 
 /* This list should match enum lg_error_severity. */
 #define MAX_SEVERITY_LABEL_SIZE 64 /* In bytes. */
@@ -38,27 +41,27 @@ const char *severity_label_by_level[] =
 static const char libname[] = "link-grammar";
 
 /* === Error queue utilities ======================================== */
-static lg_error *error_queue_resize(lg_error *lge, int len)
+static lg_errinfo *error_queue_resize(lg_errinfo *lge, int len)
 {
-	lge = realloc(lge, (len+2) * sizeof(lg_error));
-	lge[len+1].msg = NULL;
+	lge = realloc(lge, (len+2) * sizeof(lg_errinfo));
+	lge[len+1].text = NULL;
 	return lge;
 }
 
-static int error_queue_len(lg_error *lge)
+static int error_queue_len(lg_errinfo *lge)
 {
 	size_t len = 0;
 	if (lge)
-		while (NULL != lge[len].msg) len++;
+		while (NULL != lge[len].text) len++;
 	return len;
 }
 
-static void error_queue_append(lg_error **lge, lg_error *current_error)
+static void error_queue_append(lg_errinfo **lge, lg_errinfo *current_error)
 {
 	int n = error_queue_len(*lge);
 
 	*lge = error_queue_resize(*lge, n);
-	current_error->msg = strdup(current_error->msg);
+	current_error->text = strdup(current_error->text);
 	(*lge)[n] = *current_error;
 }
 /* ==================================================================*/
@@ -67,13 +70,13 @@ static void error_queue_append(lg_error **lge, lg_error *current_error)
  * Return the error severity according to the start of the error string.
  * If an error severity is not found - return None.
  */
-static lg_error_severity message_error_severity(const char *msg)
+static lg_error_severity message_error_severity(const char *msgtext)
 {
 	for (const char **llp = severity_label_by_level; NULL != *llp; llp++)
 	{
-		for (const char *s = *llp, *t = msg; ; s++, t++)
+		for (const char *s = *llp, *t = msgtext; ; s++, t++)
 		{
-			if ((':' == *t) && (t > msg))
+			if ((':' == *t) && (t > msgtext))
 			{
 				return (int)(llp - severity_label_by_level + 1);
 			}
@@ -84,9 +87,9 @@ static lg_error_severity message_error_severity(const char *msg)
 	return lg_None;
 }
 
-static void lg_error_msg_free(lg_error *lge)
+static void lg_error_msg_free(lg_errinfo *lge)
 {
-		free((void *)lge->msg);
+		free((void *)lge->text);
 		free((void *)lge->severity_label);
 }
 
@@ -98,17 +101,17 @@ static void lg_error_msg_free(lg_error *lge)
  */
 lg_error_handler lg_error_set_handler(lg_error_handler f, void *data)
 {
-	const lg_error_handler oldf = error_handler;
-	error_handler = f;
-	error_handler_data = data;
+	const lg_error_handler oldf = lg_error.handler;
+	lg_error.handler = f;
+	lg_error.handler_data = data;
 	return oldf;
 }
 
 const void *lg_error_set_handler_data(void * data)
 {
-	const char *old_data = error_handler_data;
+	const char *old_data = lg_error.handler_data;
 
-	error_handler_data = data;
+	lg_error.handler_data = data;
 	return old_data;
 }
 
@@ -120,19 +123,19 @@ const void *lg_error_set_handler_data(void * data)
  */
 int lg_error_printall(lg_error_handler f, void *data)
 {
-	int n = error_queue_len(lasterror);
+	int n = error_queue_len(lg_error.errmsg);
 	if (0 == n) return 0;
 
-	for (lg_error *lge = &lasterror[n-1]; lge >= lasterror; lge--)
+	for (lg_errinfo *lge = &lg_error.errmsg[n-1]; lge >= lg_error.errmsg; lge--)
 	{
 		if (NULL == f)
 			default_error_handler(lge, data);
 		else
-			f(lasterror, data);
+			f(lg_error.errmsg, data);
 		lg_error_msg_free(lge);
 	}
-	free(lasterror);
-	lasterror = NULL;
+	free(lg_error.errmsg);
+	lg_error.errmsg = NULL;
 
 	return n;
 }
@@ -143,16 +146,16 @@ int lg_error_printall(lg_error_handler f, void *data)
  */
 int lg_error_clearall(void)
 {
-	if (NULL == lasterror) return 0;
+	if (NULL == lg_error.errmsg) return 0;
 	int nerrors = 0;
 
-	for (lg_error *lge = lasterror; NULL != lge->msg; lge++)
+	for (lg_errinfo *lge = lg_error.errmsg; NULL != lge->text; lge++)
 	{
 		nerrors++;
 		lg_error_msg_free(lge);
 	}
-	free(lasterror);
-	lasterror = NULL;
+	free(lg_error.errmsg);
+	lg_error.errmsg = NULL;
 
 	return nerrors;
 }
@@ -165,7 +168,7 @@ int lg_error_clearall(void)
  * @param lge The raw error message.
  * @return The complete error message. The caller needs to free the memory.
  */
-char *lg_error_formatmsg(lg_error *lge)
+char *lg_error_formatmsg(lg_errinfo *lge)
 {
 	char *formated_error_message;
 
@@ -176,10 +179,10 @@ char *lg_error_formatmsg(lg_error *lge)
 		append_string(s, "%s: ", libname);
 
 	/* Prepend severity label to messages which don't already have it. */
-	if (lg_None == message_error_severity(lge->msg))
+	if (lg_None == message_error_severity(lge->text))
 		append_string(s, "%s", lge->severity_label);
 
-	append_string(s, "%s", lge->msg);
+	append_string(s, "%s", lge->text);
 
 	formated_error_message = string_copy(s);
 	string_delete(s);
@@ -192,7 +195,7 @@ char *lg_error_formatmsg(lg_error *lge)
  * The default error handler callback function.
  * @param lge The raw error message.
  */
-static void default_error_handler(lg_error *lge, void *data)
+static void default_error_handler(lg_errinfo *lge, void *data)
 {
 	FILE *outfile = stdout;
 
@@ -207,9 +210,9 @@ static void default_error_handler(lg_error *lge, void *data)
 		outfile = stderr;
 	}
 
-	char *msg = lg_error_formatmsg(lge);
-	fprintf(outfile, "%s", msg);
-	free(msg);
+	char *msgtext = lg_error_formatmsg(lge);
+	fprintf(outfile, "%s", msgtext);
+	free(msgtext);
 
 	fflush(outfile); /* Also stderr, in case some OS does some strange thing */
 }
@@ -331,20 +334,21 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 	if ((NULL != ec) && (NULL != ec->sent))
 		print_sentence_context(outbuf, ec);
 
-	lg_error current_error;
+	lg_errinfo current_error;
 	/* current_error.ec = *ec; */
-	current_error.msg = string_value(outbuf);
-	lg_error_severity msg_sev = message_error_severity(current_error.msg);
+	current_error.text = string_value(outbuf);
+	lg_error_severity msg_sev = message_error_severity(current_error.text);
 	current_error.severity = ((lg_None == msg_sev) && (0 != sev)) ? sev : msg_sev;
 	current_error.severity_label = error_severity_label(current_error.severity);
 
-	if (NULL == error_handler)
+
+	if (NULL == lg_error.handler)
 	{
-		error_queue_append(&lasterror, &current_error);
+		error_queue_append(&lg_error.errmsg, &current_error);
 	}
 	else
 	{
-		error_handler(&current_error, error_handler_data);
+		lg_error.handler(&current_error, lg_error.handler_data);
 		free((void *)current_error.severity_label);
 	}
 
