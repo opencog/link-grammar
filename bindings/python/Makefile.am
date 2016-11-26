@@ -5,6 +5,7 @@
 #
 
 SWIG_SOURCES = ../swig/link_grammar.i
+SWIG_INCLUDES = ../../link-grammar/link-includes.h
 # BUILT_C_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
 BUILT_C_SOURCES = ../../bindings/python/lg_python_wrap.cc
 BUILT_PY_SOURCES = $(top_builddir)/bindings/python/clinkgrammar.py
@@ -34,6 +35,7 @@ DISTCLEANFILES =                                   \
 
 if HAVE_SWIG
 # Swig builds these ....
+$(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_INCLUDES)
 $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) -python -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 else

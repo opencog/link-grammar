@@ -5,6 +5,7 @@
 #
 
 SWIG_SOURCES = ../swig/link_grammar.i
+SWIG_INCLUDES = ../../link-grammar/link-includes.h
 # BUILT_SOURCES = $(top_builddir)/bindings/perl/lg_perl_wrap.cc
 BUILT_SOURCES = ../../bindings/perl/lg_perl_wrap.cc
 
@@ -15,6 +16,7 @@ dist_pkgperl_SCRIPTS = \
    $(top_builddir)/bindings/perl/clinkgrammar.pm
 
 if HAVE_SWIG
+$(BUILT_SOURCES) $(dist_pkgperl_SCRIPTS): $(SWIG_INCLUDES)
 $(BUILT_SOURCES) $(dist_pkgperl_SCRIPTS): $(SWIG_SOURCES)
 	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -I$(top_builddir) -o $@ $<
 else
