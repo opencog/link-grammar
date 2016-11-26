@@ -629,7 +629,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	char* input = get_file_contents(dict_name);
 	if (NULL == input)
 	{
-		prt_error("Error: Could not open dictionary %s\n", dict_name);
+		prt_error("Error: Could not open dictionary \"%s\"\n", dict_name);
 		return NULL;
 	}
 

@@ -1832,7 +1832,7 @@ static bool read_entry(Dictionary dict)
 			instr = get_file_contents(dict_name + skip_slash);
 			if (NULL == instr)
 			{
-				prt_error("Error: Could not open subdictionary %s\n", dict_name);
+				prt_error("Error: Could not open subdictionary \"%s\"\n", dict_name);
 				goto syntax_error;
 			}
 			dict->input = instr;
