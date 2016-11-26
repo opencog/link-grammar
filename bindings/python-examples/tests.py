@@ -18,7 +18,7 @@ for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
 
 
 from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
-                         LG_DictionaryError, LG_TimerExhausted,
+                         LG_Error, LG_DictionaryError, LG_TimerExhausted,
                          Clinkgrammar as clg)
 
 
@@ -58,7 +58,8 @@ class AAALinkTestCase(unittest.TestCase):
 
 class AADictionaryTestCase(unittest.TestCase):
     def test_open_nonexistent_dictionary(self):
-        self.assertRaises(LG_DictionaryError, Dictionary, 'No such language')
+        self.assertRaises(LG_DictionaryError, Dictionary, 'No such language test 1')
+        self.assertRaises(LG_Error, Dictionary, 'No such language test 2')
 
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):

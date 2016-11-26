@@ -14,7 +14,7 @@ except ImportError:
 
 Clinkgrammar = clg
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence',
-           'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
+           'LG_Error', 'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
 
 # A decorator to ensure keyword-only arguments to __init__ (besides self).
 # In Python3 it can be done by using "*" as the second __init__ argument,
@@ -275,7 +275,10 @@ class ParseOptions(object):
         clg.parse_options_set_all_short_connectors(self._obj, 1 if value else 0)
 
 
-class LG_DictionaryError(Exception):
+class LG_Error(Exception):
+    pass
+
+class LG_DictionaryError(LG_Error):
     pass
 
 class Dictionary(object):
@@ -405,7 +408,7 @@ class Linkage(object):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
 
-class LG_TimerExhausted(Exception):
+class LG_TimerExhausted(LG_Error):
     pass
 
 class Sentence(object):
