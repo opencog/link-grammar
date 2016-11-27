@@ -276,7 +276,34 @@ class ParseOptions(object):
 
 
 class LG_Error(Exception):
-    pass
+    @staticmethod
+    def set_handler(ehandler_function, ehandler_data=None):
+        old_handler = clg._py_error_set_handler((ehandler_function, ehandler_data))
+        if isinstance(old_handler, str):
+            return LG_Error._default_handler
+        return old_handler
+
+    # lg_error_formatmsg is implemented as method "formatmsg" on errinfo
+    #@staticmethod
+    #def format(lgerror):
+    #    return clg.lg_error_formatmsg(lgerror)
+
+    @staticmethod
+    def printall(ehandler_func, ehandler_data=None):
+        return clg._py_error_printall((ehandler_func, ehandler_data))
+
+    @staticmethod
+    def clearall():
+        return clg.lg_error_clearall()
+
+    @staticmethod
+    def message(msg):
+        return clg._prt_error(msg)
+
+    @staticmethod
+    def _default_handler(errinfo, data):
+        # Exceptions (on data): TypeError, ValueError
+        clg._py_error_default_handler(errinfo, data)
 
 class LG_DictionaryError(LG_Error):
     pass
