@@ -178,9 +178,8 @@ char *lg_error_formatmsg(lg_errinfo *lge)
 	if (lge->severity < lg_Debug)
 		append_string(s, "%s: ", libname);
 
-	/* Prepend severity label to messages which don't already have it. */
-	if (lg_None == message_error_severity(lge->text))
-		append_string(s, "%s", lge->severity_label);
+	if ((NULL != lge->severity_label) && ('\0' != lge->severity_label[0]))
+		append_string(s, "%s: ", lge->severity_label);
 
 	append_string(s, "%s", lge->text);
 
@@ -222,8 +221,7 @@ static void default_error_handler(lg_errinfo *lge, void *data)
  */
 static const char *error_severity_label(lg_error_severity sev)
 {
-	char *sevlabel;
-	sevlabel = alloca(MAX_SEVERITY_LABEL_SIZE);
+	char *sevlabel = alloca(MAX_SEVERITY_LABEL_SIZE);
 
 	if (lg_None == sev)
 	{
@@ -231,12 +229,11 @@ static const char *error_severity_label(lg_error_severity sev)
 	}
 	else if ((sev < 1) || (sev > lg_None))
 	{
-		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d: ", sev);
+		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d", sev);
 	}
 	else
 	{
-		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "%s: ",
-		         severity_label_by_level[sev-1]);
+		sevlabel = (char *)severity_label_by_level[sev-1];
 	}
 
 	return strdup(sevlabel);
@@ -336,11 +333,18 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 
 	lg_errinfo current_error;
 	/* current_error.ec = *ec; */
-	current_error.text = string_value(outbuf);
-	lg_error_severity msg_sev = message_error_severity(current_error.text);
+	const char *error_text = string_value(outbuf);
+	lg_error_severity msg_sev = message_error_severity(error_text);
+	if (lg_None != msg_sev)
+	{
+		/* Strip off the error severity label, for consistency.
+		 * lg_error_format() will reconstruct it. */
+		error_text = strchr(error_text, ':') + 1;
+		error_text += strspn(error_text, " \t");
+	}
+	current_error.text = error_text;
 	current_error.severity = ((lg_None == msg_sev) && (0 != sev)) ? sev : msg_sev;
 	current_error.severity_label = error_severity_label(current_error.severity);
-
 
 	if (NULL == lg_error.handler)
 	{
