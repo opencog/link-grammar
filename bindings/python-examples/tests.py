@@ -222,6 +222,11 @@ class DBasicParsingTestCase(unittest.TestCase):
         cls.d = Dictionary()
         cls.po = None
 
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
+
     def parse_sent(self, text, po=ParseOptions()):
         return list(Sentence(text, self.d, po).parse())
 
@@ -322,6 +327,11 @@ class HEnglishLinkageTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d, cls.po = Dictionary(), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
@@ -501,6 +511,11 @@ class ZENLangTestCase(unittest.TestCase):
     def setUpClass(cls):
         cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
 
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
+
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
 
@@ -536,6 +551,11 @@ class ZENConstituentsCase(unittest.TestCase):
     def setUpClass(cls):
         cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
 
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
+
     def test_a_constiuents_after_parse_list(self):
         """
         Validate that the post-processing data of the first linkage is not
@@ -550,6 +570,11 @@ class ZDELangTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d, cls.po = Dictionary(lang='de'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
@@ -593,6 +618,11 @@ class ZRULangTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d, cls.po = Dictionary(lang='ru'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
