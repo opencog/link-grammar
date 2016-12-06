@@ -40,7 +40,7 @@ lgdict = Dictionary('en')
 po.verbosity = 0         # 1=more verbose; 2=trace; >5=debug
 po.max_null_count = 999  # > allowed maximum number of words
 po.max_parse_time = 10   # actual parse timeout may be about twice bigger
-po.spell = 0             # spell guesses are not handled in this demo
+po.spell_guess = 0       # spell guesses are not handled in this demo
 
 # iter(): avoid python2 input buffering
 for sentence_text in iter(sys.stdin.readline, ''):
