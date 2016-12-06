@@ -16,8 +16,19 @@ Clinkgrammar = clg
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence',
            'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
 
+# A decorator to ensure keyword-only arguments to __init__ (besides self).
+# In Python3 it can be done by using "*" as the second __init__ argument,
+# but here it is done with a decorator so it will work also in Python2.
+def kwargs_only(init):
+    def new_init(self_, *args, **kwargs):
+        if args:
+            raise TypeError("{}: Positional arguments are "
+                            "not allowed".format(self_.__class__.__name__))
+        return init(self_, **kwargs)
+    return new_init
 
 class ParseOptions(object):
+    @kwargs_only
     def __init__(self, verbosity=0,
                  linkage_limit=100,
                  min_null_count=0,
