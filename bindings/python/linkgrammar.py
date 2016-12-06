@@ -45,6 +45,13 @@ class ParseOptions(object):
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
 
+    # Allow only the attribute names listed below.
+    def __setattr__(self, name, value):
+        if not hasattr(self, name) and name != "_obj":
+            # TypeError for consistency. It maybe should have been NameError.
+            raise TypeError('Unknown parse option "{}".'.format(name))
+        super(self.__class__, self).__setattr__(name, value)
+
     def __del__(self):
         if hasattr(self, '_obj'):
             clg.parse_options_delete(self._obj)
