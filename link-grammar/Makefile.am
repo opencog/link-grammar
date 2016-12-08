@@ -36,6 +36,8 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
 
 lib_LTLIBRARIES = liblink-grammar.la
 
+EXTRA_liblink_grammar_la_DEPENDENCIES = $(srcdir)/link-grammar.def
+
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
 	-export-dynamic -no-undefined \
 	-export-symbols $(srcdir)/link-grammar.def \
