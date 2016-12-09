@@ -215,6 +215,18 @@ class CParseOptionsTestCase(unittest.TestCase):
         linkages = s.parse()
         del s
 
+    def test_that_invalid_options_are_disallowed(self):
+        self.assertRaisesRegexp(TypeError, "unexpected keyword argument",
+                                ParseOptions, invalid_option=1)
+
+    def test_that_invalid_option_properties_cannot_be_used(self):
+        po = ParseOptions()
+        self.assertRaisesRegexp(TypeError, "Unknown parse option",
+                                setattr, po, "invalid_option", 1)
+
+    def test_that_ParseOptions_cannot_get_positional_arguments(self):
+        self.assertRaisesRegexp(TypeError, "Positional arguments are not allowed",
+                                ParseOptions, 1)
 
 class DBasicParsingTestCase(unittest.TestCase):
     @classmethod
