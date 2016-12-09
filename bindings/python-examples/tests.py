@@ -217,9 +217,15 @@ class CParseOptionsTestCase(unittest.TestCase):
 
 
 class DBasicParsingTestCase(unittest.TestCase):
-    def setUp(self):
-        self.d = Dictionary()
-        self.po = None
+    @classmethod
+    def setUpClass(cls):
+        cls.d = Dictionary()
+        cls.po = None
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text, po=ParseOptions()):
         return list(Sentence(text, self.d, po).parse())
@@ -318,8 +324,14 @@ class ESATsolverTestCase(unittest.TestCase):
         linkage_testfile(self, self.d, self.po, 'sat')
 
 class HEnglishLinkageTestCase(unittest.TestCase):
-    def setUp(self):
-        self.d, self.po = Dictionary(), ParseOptions()
+    @classmethod
+    def setUpClass(cls):
+        cls.d, cls.po = Dictionary(), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
@@ -495,8 +507,14 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 
 
 class ZENLangTestCase(unittest.TestCase):
-    def setUp(self):
-        self.d, self.po = Dictionary(lang='en'), ParseOptions()
+    @classmethod
+    def setUpClass(cls):
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
@@ -529,8 +547,14 @@ class ZENLangTestCase(unittest.TestCase):
 
 
 class ZENConstituentsCase(unittest.TestCase):
-    def setUp(self):
-        self.d, self.po = Dictionary(lang='en'), ParseOptions()
+    @classmethod
+    def setUpClass(cls):
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def test_a_constiuents_after_parse_list(self):
         """
@@ -543,8 +567,14 @@ class ZENConstituentsCase(unittest.TestCase):
 
 # Tests are run in alphabetical order; do the language tests last.
 class ZDELangTestCase(unittest.TestCase):
-    def setUp(self):
-        self.d, self.po = Dictionary(lang='de'), ParseOptions()
+    @classmethod
+    def setUpClass(cls):
+        cls.d, cls.po = Dictionary(lang='de'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
@@ -585,8 +615,14 @@ class ZLTLangTestCase(unittest.TestCase):
 
 # Tests are run in alphabetical order; do the language tests last.
 class ZRULangTestCase(unittest.TestCase):
-    def setUp(self):
-        self.d, self.po = Dictionary(lang='ru'), ParseOptions()
+    @classmethod
+    def setUpClass(cls):
+        cls.d, cls.po = Dictionary(lang='ru'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
