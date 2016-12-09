@@ -13,6 +13,7 @@
 #ifndef _LINKINCLUDESH_
 #define _LINKINCLUDESH_
 
+#ifndef SWIG
 #include <stdbool.h> /* Needed for bool typedef */
 #include <stdio.h>   /* Needed for FILE* below */
 #include <link-grammar/link-features.h>
@@ -29,6 +30,7 @@ LINK_BEGIN_DECLS
 	#define false                           0
 	#define __bool_true_false_are_defined   1
 #endif
+#endif /* !SWIG */
 
 /**********************************************************************
  *
@@ -383,6 +385,7 @@ link_public_api(void)
  *
  ***********************************************************************/
 
+#ifndef SWIG
 /** Do not use in new code! */
 typedef struct Postprocessor_s PostProcessor;
 
@@ -394,5 +397,6 @@ MS_DEPRECATED link_public_api(void)
      linkage_post_process(Linkage, PostProcessor *) GNUC_DEPRECATED;
 
 LINK_END_DECLS
+#endif /* !SWIG */
 
 #endif

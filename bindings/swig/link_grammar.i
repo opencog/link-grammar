@@ -11,26 +11,16 @@
 
 %}
 
-typedef struct Dictionary_s * Dictionary;
-typedef struct Parse_Options_s * Parse_Options;
-typedef struct Sentence_s * Sentence;
-typedef struct Linkage_s * Linkage;
-typedef struct Postprocessor_s PostProcessor;
-
-typedef enum
-{
-   NO_DISPLAY = 0,        /** Display is disabled */
-   MULTILINE = 1,         /** multi-line, indented display */
-   BRACKET_TREE = 2,      /** single-line, bracketed tree */
-   SINGLE_LINE = 3,       /** single line, round parenthesis */
-   MAX_STYLES = 3         /* this must always be last, largest */
-} ConstituentDisplayStyle;
-
-typedef enum
-{
-   VDAL=1, /* Sort by Violations, Disjunct cost, Link cost */
-   CORPUS, /* Sort by Corpus cost */
-} Cost_Model_type;
+/* Grab non-function definitions so we do not need to repeat them here. */
+%rename("$ignore", %$isfunction) "";
+#define link_public_api(x) x
+#ifndef bool                         /* Prevent syntax errors if no bool. */
+#define bool int
+#endif /* bool */
+%immutable;                          /* Future-proof for const definitions. */
+%include ../link-grammar/link-includes.h
+%mutable;
+%rename("%s") "";                    /* Grab everything for the rest of file. */
 
 
 const char * linkgrammar_get_version(void);
