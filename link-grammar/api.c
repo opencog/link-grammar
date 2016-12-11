@@ -1522,8 +1522,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sane_morphism(sent, opts);
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
-		if ((0 == nl) && (0 < max_null_count))
-			lgdebug(1, "No complete linkages found.\n");
+		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
+			prt_error("No complete linkages found.\n");
 
 		/* If we are here, then no valid linkages were found.
 		 * If there was a parse overflow, give up now. */
