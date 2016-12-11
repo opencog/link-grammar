@@ -325,13 +325,14 @@ static bool word_start_another_alternative(Dictionary dict,
 {
 	Gword **n;
 
+	lgdebug(+D_WSAA, "\n"); /* Terminate a previous partial trace message. */
 	lgdebug(+D_WSAA, "Checking %s in alternatives of %zu:%s (prev %zu:%s)\n",
 	        altword0, unsplit_word->node_num, unsplit_word->subword,
 	        unsplit_word->prev[0]->node_num, unsplit_word->prev[0]->subword);
 
 	for (n = unsplit_word->prev[0]->next; NULL != *n; n++)
 	{
-		lgdebug(D_WSAA, "Comparing alt %s\n", (*n)->subword);
+		lgdebug(D_WSAA, "Comparing alt %s\n\\", (*n)->subword);
 		if ((0 == strcmp((*n)->subword, altword0) ||
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
 			 !find_word_in_dict(dict, altword0))))
