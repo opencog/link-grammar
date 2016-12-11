@@ -64,19 +64,19 @@ const char *feature_enabled(const char *, ...);
  * Return true if the debug-messages block should be executed, else false.
  *
  * Usage example, for debug messages at verbosity V:
- * if (debug_level(V))
+ * if (verbosity_level(V))
  * {
  *    print_disjunct(d);
  * }
  *
  * The optional printing of the function name is done here by prt_error()
  * and not err_msg(), in order to not specify the message severity.
- * Also not there is no trailing newline  in that case. These things
+ * Also note there is no trailing newline in that case. These things
  * ensured the message severity will be taken from a following message
- * which includes a newline. So debug_level()V) can be used for any
+ * which includes a newline. So verbosity_level()V) can be used for any
  * desired message severity.
  */
-#define debug_level(level) \
+#define verbosity_level(level) \
 (((verbosity>=(level)) && (((level)<=1) || \
 	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \

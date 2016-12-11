@@ -21,7 +21,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
   double cost = parent_cost + exp->cost;
 
 #ifdef DEBUG
-  if (0 && debug_level(+D_IC)) { // Extreme debug
+  if (0 && verbosity_level(+D_IC)) { // Extreme debug
     printf("Expression type %d for Word%d, var %s:\n", exp->type, _word, var);
     printf("parent_exp: "); print_expression(parent_exp);
     printf("exp: "); print_expression(exp);
@@ -117,7 +117,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       }
 
 #ifdef DEBUG
-      if (0 && debug_level(+D_IC)) { // Extreme debug
+      if (0 && verbosity_level(+D_IC)) { // Extreme debug
         printf("Word%d, var %s OR_type:\n", _word, var);
         printf("exp mem: "); prt_exp_mem(exp, 0);
       }

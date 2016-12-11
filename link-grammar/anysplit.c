@@ -362,7 +362,7 @@ bool anysplit_init(Dictionary afdict)
 
 	if (0 == regparts->length)
 	{
-		if (debug_level(+D_AS))
+		if (verbosity_level(+D_AS))
 			prt_error("Warning: File %s: Anysplit disabled (%s not defined)\n",
 		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;

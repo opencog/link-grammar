@@ -130,7 +130,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	size_t i;
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
-	if (debug_level(5)) {
+	if (verbosity_level(5)) {
 		printf("After expanding expressions into disjuncts:");
 		print_disjunct_counts(sent);
 	}
@@ -145,7 +145,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Eliminated duplicate disjuncts");
 
-	if (debug_level(5)) {
+	if (verbosity_level(5)) {
 		printf("\nAfter expression pruning and duplicate elimination:\n");
 		print_disjunct_counts(sent);
 	}

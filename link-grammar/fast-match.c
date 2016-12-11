@@ -381,7 +381,7 @@ static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw)
 {
-	if (!debug_level(9)) return;
+	if (!verbosity_level(9)) return;
 	Disjunct **m = &ctxt->match_list[mlb];
 
 	for (; NULL != *m; m++)

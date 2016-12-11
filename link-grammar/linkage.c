@@ -224,7 +224,7 @@ void remove_empty_words(Linkage lkg)
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
 
-	if (debug_level(+D_REE))
+	if (verbosity_level(+D_REE))
 	{
 		err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
 		print_chosen_disjuncts_words(lkg);
@@ -246,7 +246,7 @@ void remove_empty_words(Linkage lkg)
 	lkg->num_words = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
 
-	if (debug_level(+D_REE))
+	if (verbosity_level(+D_REE))
 	{
 		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
 		print_chosen_disjuncts_words(lkg);

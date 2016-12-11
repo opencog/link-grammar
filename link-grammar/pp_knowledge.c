@@ -115,7 +115,7 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   pp_linkset *ls;
   if (!pp_lexer_set_label(k->lt, label))
   {
-    if (debug_level(+D_PPK))
+    if (verbosity_level(+D_PPK))
       prt_error("Warning: File %s: Link set %s not defined: assuming empty\n",
              k->path, label);
     n_strings = 0;
@@ -183,7 +183,7 @@ static bool read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
-      if (debug_level(+D_PPK))
+      if (verbosity_level(+D_PPK))
           prt_error("Warning: File %s: Not using any 'form a cycle' rules\n",
                     k->path);
   }
@@ -233,7 +233,7 @@ static bool read_bounded_rules(pp_knowledge *k, const char *label)
   size_t r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
-      if (debug_level(+D_PPK))
+      if (verbosity_level(+D_PPK))
         prt_error("Warning: File %s: Not using any 'bounded' rules\n", k->path);
   }
   else {
@@ -283,7 +283,7 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
-      if (debug_level(+D_PPK))
+      if (verbosity_level(+D_PPK))
         prt_error("Warning: File %s: Not using any %s rules\n", k->path, label);
   }
   else {

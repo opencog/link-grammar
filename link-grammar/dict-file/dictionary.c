@@ -302,7 +302,7 @@ static bool afdict_init(Dictionary dict)
 		affix_list_add(afdict, &afdict->afdict_class[AFDICT_INFIXMARK], "");
 	}
 
-	if (debug_level(+D_AI))
+	if (verbosity_level(+D_AI))
 	{
 		size_t l;
 
@@ -450,7 +450,7 @@ dictionary_six_str(const char * lang,
 		dict->spell_checker = spellcheck_create(dict->lang);
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
-		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
+		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
 			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
 		dict->insert_entry = insert_list;

@@ -1068,7 +1068,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 	}
 	pp->relevant_contains_none_rules[rcnIDX] = -1;
 
-	if (debug_level(5))
+	if (verbosity_level(5))
 	{
 		err_msg(lg_Debug, "PP: Saw %zd unique link names in all linkages.\n\\",
 		       pp_linkset_population(pp->set_of_links_of_sentence));
@@ -1207,7 +1207,7 @@ static void report_pp_stats(Postprocessor *pp)
 	size_t rule_cnt = 0;
 	size_t unused_cnt = 0;
 	pp_knowledge * kno;
-	if (!debug_level(9)) return;
+	if (!verbosity_level(9)) return;
 
 	err_msg(lg_Debug, "PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
 	kno = pp->knowledge;

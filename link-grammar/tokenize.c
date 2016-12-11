@@ -1524,7 +1524,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 	/* Else, ask the spell-checker for alternate spellings
 	 * and see if these are in the dict. */
 	n = spellcheck_suggest(dict->spell_checker, &alternates, word);
-	if (debug_level(+D_SW))
+	if (verbosity_level(+D_SW))
 	{
 		lgdebug(0, "spellcheck_suggest for %s:\\", word);
 		if (0 == n)
@@ -2722,7 +2722,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (debug_level(D_X_NODE))
+	if (verbosity_level(D_X_NODE))
 	{
 		/* Print the X_node details for the word. */
 		prt_error("Debug: Tokenize word/alt=%zu/%zu '%s' re=%s\n\\",
@@ -3005,7 +3005,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	free(wp_new);
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
-	if (debug_level(D_SW))
+	if (verbosity_level(D_SW))
 		print_sentence_word_alternatives(sent, true, NULL, NULL);
 
 	return !error_encountered;

@@ -679,7 +679,7 @@ void * object_open(const char *filename,
 	if (NULL == path_found)
 	{
 		data_dir = dictionary_get_data_dir();
-		if (debug_level(D_USER_FILES))
+		if (verbosity_level(D_USER_FILES))
 		{
 			char cwd[MAX_PATH_NAME];
 			char *cwdp = getcwd(cwd, sizeof(cwd));

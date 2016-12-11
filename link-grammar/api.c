@@ -766,7 +766,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	print_time(opts, "Postprocessed all linkages");
 
-	if (debug_level(6))
+	if (verbosity_level(6))
 	{
 		err_msg(lg_Info, "Info: %zu of %zu linkages with no P.P. violations",
 		        N_valid_linkages, N_linkages_post_processed);
@@ -1208,7 +1208,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
-		if (debug_level(D_SLM))
+		if (verbosity_level(D_SLM))
 		{
 			char *djw_tmp = strdupa(cdj->string);
 			char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
@@ -1390,7 +1390,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			N_invalid_morphism ++;
 	}
 
-	if (debug_level(5))
+	if (verbosity_level(5))
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
 		          "invalid morphology construction\n",
@@ -1504,7 +1504,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		if (debug_level(5))
+		if (verbosity_level(5))
 		{
 			prt_error("Info: Total count with %zu null links:   %lld\n",
 			          sent->null_count, total);

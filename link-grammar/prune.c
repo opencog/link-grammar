@@ -676,7 +676,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("l->r pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
@@ -712,7 +712,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("r->l pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
@@ -1181,7 +1181,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			}
 			sent->word[w].d = nd;
 		}
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("l->r pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
 		}
@@ -1216,7 +1216,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("r->l pass changed %d and deleted %zu\n",
 				pc->N_changed, N_deleted);
@@ -1230,10 +1230,11 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pt = NULL;
 	pc->pt = NULL;
 
-	if (debug_level(D_PRUNE)) printf("power prune cost: %d\n", pc->power_cost);
+	if (verbosity_level(D_PRUNE))
+		printf("power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned");
-	if (debug_level(D_PRUNE))
+	if (verbosity_level(D_PRUNE))
 	{
 		printf("\nAfter power_pruning:\n");
 		print_disjunct_counts(sent);
@@ -1576,12 +1577,13 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if (debug_level(D_PRUNE)) printf("pp_prune pass deleted %d\n", N_deleted);
+		if (verbosity_level(D_PRUNE))
+			printf("pp_prune pass deleted %d\n", N_deleted);
 	}
 	delete_unmarked_disjuncts(sent);
 	cms_table_delete(cmt);
 
-	if (debug_level(D_PRUNE))
+	if (verbosity_level(D_PRUNE))
 	{
 		printf("\nAfter pp_pruning:\n");
 		print_disjunct_counts(sent);
