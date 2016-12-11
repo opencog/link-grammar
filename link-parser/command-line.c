@@ -183,18 +183,15 @@ static void setival(Switch s, int val)
 	*((int *) s.ptr) = val;
 }
 
-static int x_issue_special_command(const char * line, Command_Options *copts, Dictionary dict)
+static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
-	char *s, myline[1000], *x, *y;
+	char *s, *x, *y;
 	int i, count, j, k;
 	Switch * as = default_switches;
 	Parse_Options opts = copts->popts;
 
-	strncpy(myline, line, sizeof(myline));
-	myline[sizeof(myline)-1] = '\0';
-	clean_up_string(myline);
-
-	s = myline;
+	clean_up_string(line);
+	s = line;
 	j = k = -1;
 	count = 0;
 
@@ -233,16 +230,11 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
 			return 0;
 		}
-		else
-		{
-			/* Found an abbreviated command, but it wasn't a boolean */
-			/* Replace the abbreviated command by the full one */
-			/* Basically, this just fixes !v and !h for use below. */
-			strcpy(s, user_command[k].s);
-		}
-	}
 
-	if (strcmp(s, "variables") == 0)
+			/* Found an abbreviated command, but it wasn't a boolean.
+			 * It means it is a user command, to be handled below. */
+
+	if (strcmp(user_command[k].s, "variables") == 0)
 	{
 		printf(" Variable     Controls                                          Value\n");
 		printf(" --------     --------                                          -----\n");
@@ -279,7 +271,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 		return 0;
 	}
 
-	if (strcmp(s, "help") == 0)
+	if (strcmp(user_command[k].s, "help") == 0)
 	{
 		printf("Special commands always begin with \"!\".  Command and variable names\n");
 		printf("can be abbreviated.  Here is a list of the commands:\n\n");
@@ -311,6 +303,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 		return 0;
 	}
 #endif
+	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
 	for (x=s; (*x != '=') && (*x != '\0') ; x++)
@@ -411,7 +404,7 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 		return -1;
 	}
 
-	printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", myline);
+	printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", line);
 	return -1;
 }
 
@@ -503,8 +496,10 @@ int issue_special_command(const char * line, Command_Options* opts, Dictionary d
 	}
 
 	put_opts_in_local_vars(opts);
-	rc = x_issue_special_command(line, opts, dict);
+	char *cline = strdup(line);
+	rc = x_issue_special_command(cline, opts, dict);
 	put_local_vars_in_opts(opts);
+	free(cline);
 
 	if (save) opts->popts = save;
 	return rc;
