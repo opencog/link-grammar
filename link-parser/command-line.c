@@ -231,77 +231,77 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			return 0;
 		}
 
-			/* Found an abbreviated command, but it wasn't a boolean.
-			 * It means it is a user command, to be handled below. */
+		/* Found an abbreviated command, but it wasn't a boolean.
+		 * It means it is a user command, to be handled below. */
 
-	if (strcmp(user_command[k].s, "variables") == 0)
-	{
-		printf(" Variable     Controls                                          Value\n");
-		printf(" --------     --------                                          -----\n");
-		for (i = 0; as[i].string != NULL; i++)
+		if (strcmp(user_command[k].s, "variables") == 0)
 		{
-			printf(" ");
-			left_print_string(stdout, as[i].string, "             ");
-			left_print_string(stdout, as[i].description,
-			            "                                                  ");
-			if (Float == as[i].param_type)
+			printf(" Variable     Controls                                          Value\n");
+			printf(" --------     --------                                          -----\n");
+			for (i = 0; as[i].string != NULL; i++)
 			{
-				/* Float point print! */
-				printf("%5.2f", *((double *)as[i].ptr));
-			}
-			else
-			if ((Bool == as[i].param_type) || Int == as[i].param_type)
-			{
-				printf("%5d", ival(as[i]));
-			}
-			else
-			if (String == as[i].param_type)
-			{
-				printf("%s", *(char **)as[i].ptr);
-			}
-			if (Bool == as[i].param_type)
-			{
-				if (ival(as[i])) printf(" (On)"); else printf(" (Off)");
+				printf(" ");
+				left_print_string(stdout, as[i].string, "             ");
+				left_print_string(stdout, as[i].description,
+								"                                                  ");
+				if (Float == as[i].param_type)
+				{
+					/* Float point print! */
+					printf("%5.2f", *((double *)as[i].ptr));
+				}
+				else
+				if ((Bool == as[i].param_type) || Int == as[i].param_type)
+				{
+					printf("%5d", ival(as[i]));
+				}
+				else
+				if (String == as[i].param_type)
+				{
+					printf("%s", *(char **)as[i].ptr);
+				}
+				if (Bool == as[i].param_type)
+				{
+					if (ival(as[i])) printf(" (On)"); else printf(" (Off)");
+				}
+				printf("\n");
 			}
 			printf("\n");
+			printf("Toggle a boolean variable as in \"!batch\"; ");
+			printf("set a variable as in \"!width=100\".\n");
+			return 0;
 		}
-		printf("\n");
-		printf("Toggle a boolean variable as in \"!batch\"; ");
-		printf("set a variable as in \"!width=100\".\n");
-		return 0;
-	}
 
-	if (strcmp(user_command[k].s, "help") == 0)
-	{
-		printf("Special commands always begin with \"!\".  Command and variable names\n");
-		printf("can be abbreviated.  Here is a list of the commands:\n\n");
-		for (i=0; user_command[i].s != NULL; i++) {
-			printf(" !");
-			left_print_string(stdout, user_command[i].s, "               ");
-			left_print_string(stdout, user_command[i].str, "                                                    ");
+		if (strcmp(user_command[k].s, "help") == 0)
+		{
+			printf("Special commands always begin with \"!\".  Command and variable names\n");
+			printf("can be abbreviated.  Here is a list of the commands:\n\n");
+			for (i=0; user_command[i].s != NULL; i++) {
+				printf(" !");
+				left_print_string(stdout, user_command[i].s, "               ");
+				left_print_string(stdout, user_command[i].str, "                                                    ");
+				printf("\n");
+			}
+			printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
+			printf("                 A wildcard * may be used to find multiple matches.\n");
 			printf("\n");
+			printf(" !<var>          Toggle the specified boolean variable.\n");
+			printf(" !<var>=<val>    Assign that value to that variable.\n");
+			return 0;
 		}
-		printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
-		printf("                 A wildcard * may be used to find multiple matches.\n");
-		printf("\n");
-		printf(" !<var>          Toggle the specified boolean variable.\n");
-		printf(" !<var>=<val>    Assign that value to that variable.\n");
-		return 0;
-	}
 
-	if (s[0] == '!')
-	{
-		dict_display_word_info(dict, s+1, opts);
-		dict_display_word_expr(dict, s+1, opts);
-		return 0;
-	}
+		if (s[0] == '!')
+		{
+			dict_display_word_info(dict, s+1, opts);
+			dict_display_word_expr(dict, s+1, opts);
+			return 0;
+		}
 #ifdef USE_REGEX_TOKENIZER
-	if (s[0] == '/')
-	{
-		int rc = regex_tokenizer_test(dict, s+1);
-		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
-		return 0;
-	}
+		if (s[0] == '/')
+		{
+			int rc = regex_tokenizer_test(dict, s+1);
+			if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
+			return 0;
+		}
 #endif
 	}
 
