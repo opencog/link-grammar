@@ -288,22 +288,22 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			printf(" !<var>=<val>    Assign that value to that variable.\n");
 			return 0;
 		}
-
-		if (s[0] == '!')
-		{
-			dict_display_word_info(dict, s+1, opts);
-			dict_display_word_expr(dict, s+1, opts);
-			return 0;
-		}
-#ifdef USE_REGEX_TOKENIZER
-		if (s[0] == '/')
-		{
-			int rc = regex_tokenizer_test(dict, s+1);
-			if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
-			return 0;
-		}
-#endif
 	}
+
+	if (s[0] == '!')
+	{
+		dict_display_word_info(dict, s+1, opts);
+		dict_display_word_expr(dict, s+1, opts);
+		return 0;
+	}
+#ifdef USE_REGEX_TOKENIZER
+	if (s[0] == '/')
+	{
+		int rc = regex_tokenizer_test(dict, s+1);
+		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
+		return 0;
+	}
+#endif
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
 	for (x=s; (*x != '=') && (*x != '\0') ; x++)
