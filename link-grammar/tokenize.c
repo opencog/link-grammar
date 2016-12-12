@@ -2011,9 +2011,11 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * http://en.wiktionary.org/wiki/Category:English_double_contractions*/
 			if (!word_is_known)
 			{
-				/* This is not really a debug message, so it is in verbosity 1.
-				 * XXX Maybe prt_error()? */
-				lgdebug(+1, "Contracted word part %s is not in the dict\n", word);
+				/* Note: If we are here it means dict->affix_table is not NULL. */
+				prt_error("Warning: Contracted word part %s is in '%s/%s' "
+				          "but not in '%s/%s'\n", word,
+				          dict->lang, dict->affix_table->name,
+				          dict->lang, dict->name);
 			}
 			return;
 		}
