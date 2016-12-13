@@ -2200,24 +2200,22 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "Processing word: '%s'\n", word);
 
-	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
+	if (boolean_dictionary_lookup(dict, word))
 	{
-		/* The word is a result of spelling.
-		 * So it it is in the dict, and doesn't need right/left stripping. */
+		lgdebug(+D_SW, "0: Adding '%s' as is, before split tries, status=%s\n",
+		        word, gword_status(sent, unsplit_word));
+		issue_word_alternative(sent, unsplit_word, "W", 0,NULL, 1,&word, 0,NULL);
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
 	}
+
+	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
+	{
+		/* The word is a result of spelling, so it doesn't need right/left
+		 * stripping. Skip it. */
+	}
 	else
 	{
-		if (boolean_dictionary_lookup(dict, word))
-		{
-			lgdebug(+D_SW, "0: Adding '%s' as is, before split tries\n", word);
-			issue_word_alternative(sent, unsplit_word, "W",
-			                       0,NULL, 1,&word, 0,NULL);
-			unsplit_word->status |= WS_INDICT;
-			word_is_known = true;
-		}
-
 		if ((MT_CONTR == unsplit_word->morpheme_type))
 		{
 			/* The word is the contracted part of a contraction. It was most
