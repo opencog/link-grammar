@@ -727,7 +727,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	/* Perform remaining initialization we haven't done yet...*/
 	compute_chosen_words(sent, linkage, opts);
 
-	linkage->sent = sent;
 	linkage->is_sent_long = (linkage->num_words >= opts->twopass_length);
 
 	return linkage;
