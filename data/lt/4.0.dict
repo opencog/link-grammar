@@ -15,10 +15,6 @@
 <dictionary-version-number>: V5v1v0+;
 <dictionary-locale>: LT4lt+;
 
-% Empty word; required for basic morphology analysis.
-EMPTY-WORD.zzz: ZZZ-;
-%
-%
 % Ženklai:
 % Ą Č Ę Ė Į Š Ų Ū Ž
 % ą č ė ę į š ū ų ž

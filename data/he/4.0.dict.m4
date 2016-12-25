@@ -49,9 +49,6 @@ changecom(`%')dnl
 <dictionary-version-number>: V5v3v0+;
 <dictionary-locale>: HE4il+;
 
-% The empty word.
-EMPTY-WORD.zzz: ZZZ-;
-
 % For now.
 LEFT-WALL: {Wa+} or {Wd+} or ();
 

@@ -6,9 +6,6 @@
 <dictionary-version-number>: V5v3v5+;
 <dictionary-locale>: KK4kz+;
 
-% The empty word.
-EMPTY-WORD.zzz: ZZZ-;
-
 мен.pron: {W-} & S1s+;
 сен.pron: {W-} & S2s+;
 сіз.pron: {W-} & Sr2s+;
