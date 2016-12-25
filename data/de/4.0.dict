@@ -11,10 +11,6 @@
 <dictionary-version-number>: V5v0v2+;
 <dictionary-locale>: DE4de+;
 
-% Word-count balancing for suffixes
-EMPTY-WORD.zzz: ZZZ-;
-
-
 % NOUNS, PRONOUNS
 
 % Masculine singular

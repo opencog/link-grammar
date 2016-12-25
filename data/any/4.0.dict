@@ -16,6 +16,3 @@ ANY-PUNCT: {@ANY-} & {@ANY+};
 UNKNOWN-WORD: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};
-
-% Needed to get single-quotes to parse: e.g. "'relex' is the best"
-EMPTY-WORD.zzz: ZZZ-;

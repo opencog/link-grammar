@@ -11,9 +11,6 @@
 <dictionary-version-number>: V5v1v0+;
 <dictionary-locale>: RU4ru+;
 
-% The empty word.
-EMPTY-WORD.zzz: ZZZ-;
-
 <costly-null>: [[[[]]]];
 
 <наречие-куда>: ({Xc-} & Ed-) or ({XIc+} & EId+) or ({Xt- & S-});
