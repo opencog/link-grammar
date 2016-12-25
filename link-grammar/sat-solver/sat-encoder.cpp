@@ -336,7 +336,9 @@ void SATEncoder::generate_satisfaction_conditions()
     name[0] = 'w';
     fast_sprintf(name+1, w);
 
-    determine_satisfaction(w, name);
+    if (!_sent->word[w].optional)
+      determine_satisfaction(w, name);
+
     int dfs_position = 0;
     generate_satisfaction_for_expression(w, dfs_position, exp, name, 0);
 
