@@ -176,6 +176,7 @@ struct Word_struct
 
 	X_node * x;          /* Sentence starts out with these, */
 	Disjunct * d;        /* eventually these get generated. */
+	bool optional;       /* Linkage is optional. */
 
 	const char **alternatives;
 };
