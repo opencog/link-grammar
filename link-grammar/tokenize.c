@@ -2632,6 +2632,7 @@ static Word *word_new(Sentence sent)
 		sent->word[len].x= NULL;
 		sent->word[len].unsplit_word = NULL;
 		sent->word[len].alternatives = NULL;
+		sent->word[len].optional = false;
 		sent->length++;
 
 		return &sent->word[len];
