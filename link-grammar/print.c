@@ -1372,7 +1372,17 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					wt = wprint;
 				}
 
-				if (debugprint) lgdebug(0, " %s", '\0' == wt[0] ? "[missing]" : wt);
+				if (debugprint)
+				{
+					const char *opt_start = "", *opt_end = "";
+					if (sent->word[wi].optional)
+					{
+						opt_start = "{";
+						opt_end = "}";
+					}
+					lgdebug(0, " %s%s%s",
+					        opt_start, '\0' == wt[0] ? "[missing]" : wt, opt_end);
+				}
 
 				/* Don't try to give info on the empty word. */
 				if (('\0' != wt[0]) && (0 != strcmp(wt, EMPTY_WORD_DISPLAY)))
