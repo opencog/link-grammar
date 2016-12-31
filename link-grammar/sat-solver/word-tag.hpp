@@ -6,13 +6,10 @@
 #include <set>
 
 extern "C" {
-#include "count.h"
-#include "prune.h"
 #include "word-utils.h"
 };
 
 #include "variables.hpp"
-
 
 struct PositionConnector
 {
