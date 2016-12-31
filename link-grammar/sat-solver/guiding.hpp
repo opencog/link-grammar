@@ -86,8 +86,10 @@ public:
     setParameters(var, isDecision, 0.0, 0.0);
   }
 
+#if 0
   /* thin_link variables */
   virtual void setThinLinkParameters (int var, int wi, int wj) = 0;
+#endif
 
   /* Pass SAT search parameters to the MiniSAT solver */
   void passParametersToSolver(Solver* solver) {
@@ -169,6 +171,7 @@ public:
     setParameters(var, isDecision, priority, polarity);
   }
 
+#if 0
   void setThinLinkParameters(int var, int i, int j)
   {
     bool isDecision = true;
@@ -191,6 +194,7 @@ public:
 
     setParameters(var, isDecision, priority, polarity);
   }
+#endif
 };
 
 
@@ -232,9 +236,11 @@ public:
     setParameters(var, isDecision, priority, polarity);
   }
 
+#if 0
   void setThinLinkParameters(int var, int i, int j) {
     bool isDecision = false;
     setParameters(var, isDecision, 0.0, 0.0);
   }
+#endif
 };
 #endif

@@ -226,6 +226,7 @@ public:
     return var;
   }
 
+#if 0
   /*
    *             thin_link(wi, wj)
    * Variables that specify that two words are linked by a thin link
@@ -244,6 +245,7 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
+#endif
 
   /*
    *                   link_cw(wi, wj, pj)
