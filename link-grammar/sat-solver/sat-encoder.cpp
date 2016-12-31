@@ -231,8 +231,13 @@ void SATEncoder::encode() {
  *-------------------------------------------------------------------------*/
 void SATEncoder::build_word_tags()
 {
+  char name[MAX_VARIABLE_NAME];
+  name[0] = 'w';
+
   for (size_t w = 0; w < _sent->length; w++) {
-    _word_tags.push_back(WordTag(w, _variables, _sent, _opts));
+    // sprintf(name, "w%zu", w);
+    fast_sprintf(name+1, w);
+    _word_tags.push_back(WordTag(w, name, _variables, _sent, _opts));
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) {
@@ -249,11 +254,6 @@ void SATEncoder::build_word_tags()
     //print_expression(exp);
     cout << endl;
 #endif
-
-    char name[MAX_VARIABLE_NAME];
-    // sprintf(name, "w%zu", w);
-    name[0] = 'w';
-    fast_sprintf(name+1, w);
 
     bool leading_right = true;
     bool leading_left = true;
@@ -492,14 +492,7 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
   char dir = e->dir;
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
-
-  char name[MAX_VARIABLE_NAME];
-  // sprintf(name, "w%zu", wj);
-  name[0] = 'w';
-  fast_sprintf(name+1, wj);
-
-  Lit condition = Lit(_variables->string(name));
-
+  Lit condition = Lit(_word_tags[wj].var);
   vec<Lit> rhs;
 
   // Collect matches (wi, pi) with word wj
