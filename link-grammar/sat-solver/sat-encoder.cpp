@@ -135,6 +135,7 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
   }
 }
 
+#if 0
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition1, Lit condition2, Lit lhs, vec<Lit>& rhs) {
   {
     vec<Lit> clause(2);
@@ -156,6 +157,7 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
     add_clause(clause);
   }
 }
+#endif
 
 void SATEncoder::generate_xor_conditions(vec<Lit>& vect) {
   vec<Lit> clause(2);
@@ -272,6 +274,7 @@ void SATEncoder::build_word_tags()
   }
 }
 
+#if 0
 void SATEncoder::find_all_matches_between_words(size_t w1, size_t w2,
                                                 std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches) {
   const std::vector<PositionConnector>& w1_right = _word_tags[w1].get_right_connectors();
@@ -294,6 +297,7 @@ bool SATEncoder::matches_in_interval(int wi, int pi, int l, int r) {
   }
   return false;
 }
+#endif
 
 /*-------------------------------------------------------------------------*
  *                     S A T I S F A C T I O N                             *
@@ -564,6 +568,7 @@ int SATEncoder::empty_connectors(Exp* e, char dir)
     throw std::string("Unknown connector type");
 }
 
+#if 0
 int SATEncoder::non_empty_connectors(Exp* e, char dir)
 {
   if (e->type == CONNECTOR_type) {
@@ -583,6 +588,7 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
   } else
     throw std::string("Unknown connector type");
 }
+#endif
 
 bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
                                              std::vector<PositionConnector*>& connectors)
@@ -616,6 +622,7 @@ void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_positio
   }
 }
 
+#if 0
 void SATEncoder::certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_position,
                                        std::vector<PositionConnector*>& connectors, bool has_right) {
   if (exp->type == CONNECTOR_type) {
@@ -646,6 +653,7 @@ void SATEncoder::certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_posi
     }
   }
 }
+#endif
 
 void SATEncoder::leading_connectors(int w, Exp* exp, char dir, int& dfs_position, vector<PositionConnector*>& connectors) {
   if (exp->type == CONNECTOR_type) {
@@ -1485,6 +1493,7 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
   DEBUG_print("------- end linked definitions");
 }
 
+#if 0
 void SATEncoder::generate_linked_min_max_planarity()
 {
   DEBUG_print("---- linked_max");
@@ -1564,6 +1573,7 @@ void SATEncoder::generate_linked_min_max_planarity()
     }
   }
 }
+#endif
 
 Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {

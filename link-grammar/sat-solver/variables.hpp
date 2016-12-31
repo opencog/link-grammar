@@ -173,6 +173,7 @@ public:
     return var;
   }
 
+#if 0
   // If guiding params are unknown, they are set do default
   int linked_min(int wi, int wj) {
     int var;
@@ -185,8 +186,7 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
-
-
+#endif
 
   /*
    *                  link(wi, pi, wj, pj)
@@ -417,10 +417,12 @@ public:
     const char* connector;
   };
 
+#if 0
   // Returns additional info about the given link_top_cw variable
   const LinkTopCWVar* link_top_cw_variable(int var) const {
     return _link_top_cw_variables[var];
   }
+#endif
 
   /* Pass SAT search parameters to the MiniSAT solver */
   void setVariableParameters(Solver* solver) {
@@ -675,9 +677,11 @@ private:
     return get_3int_variable(i, j, pj, var, _link_cw_variable_map);
   }
 
+#if 0
   bool get_link_top_cw_variable(int i, int j, int pj, int& var) {
     return get_3int_variable(i, j, pj, var, _link_top_cw_variable_map);
   }
+#endif
 
 
 #ifdef _CONNECTIVITY_

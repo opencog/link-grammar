@@ -251,12 +251,14 @@ protected:
   void build_word_tags();
 
 
+#if 0
   // Find all matching connectors between two words
   void find_all_matches_between_words(size_t w1, size_t w2,
                                       std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches);
 
   // Check if the connector (wi, pi) can match any word in [l, r)
   bool matches_in_interval(int wi, int pi, int l, int r);
+#endif
 
 
   // Join several expressions corresponding to different dictionary
