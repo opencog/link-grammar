@@ -27,7 +27,6 @@ extern "C" {
 #include "clock.hpp"
 #include "fast-sprintf.hpp"
 
-
 extern "C" {
 #include "analyze-linkage.h"      // for compute_link_names()
 #include "build-disjuncts.h"      // for build_disjuncts_for_exp()
@@ -39,10 +38,6 @@ extern "C" {
 //#include "utilities.h"         // XXX do we need it?
 #include "wordgraph.h"           // for empty_word()
 }
-
-#ifdef HAVE_MKLIT
-#define Lit(...) mkLit(__VA_ARGS__)
-#endif
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
 #ifdef SAT_DEBUG

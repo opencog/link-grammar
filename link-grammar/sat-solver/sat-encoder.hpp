@@ -4,6 +4,10 @@
 
 using namespace Minisat;
 
+#ifdef HAVE_MKLIT
+#define Lit(...) mkLit(__VA_ARGS__)
+#endif
+
 /**
  *    Base class for all SAT encodings
  */
