@@ -33,7 +33,6 @@ extern "C" {
 #include "dict-api.h"             // for print_expression()
 #include "linkage.h"
 #include "post-process.h"
-#include "preparation.h"
 #include "score.h"               // for linkage_score()
 //#include "utilities.h"         // XXX do we need it?
 #include "wordgraph.h"           // for empty_word()
