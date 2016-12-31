@@ -1,6 +1,7 @@
 #ifndef __GUIDING_HPP__
 #define __GUIDING_HPP__
 
+#include <vector>
 #include <core/Solver.h>
 #undef assert
 #include "util.hpp"
