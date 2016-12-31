@@ -66,16 +66,14 @@ void SATEncoder::generate_literal(Lit l) {
 }
 
 void SATEncoder::generate_and_definition(Lit lhs, vec<Lit>& rhs) {
-  vec<Lit> clause;
+  vec<Lit> clause(2);
   for (int i = 0; i < rhs.size(); i++) {
-    clause.growTo(2);
     clause[0] = ~lhs;
     clause[1] = rhs[i];
     add_clause(clause);
   }
 
   for (int i = 0; i < rhs.size(); i++) {
-    clause.growTo(2);
     clause[0] = ~rhs[i];
     clause[1] = lhs;
     add_clause(clause);
@@ -83,10 +81,8 @@ void SATEncoder::generate_and_definition(Lit lhs, vec<Lit>& rhs) {
 }
 void SATEncoder::generate_classical_and_definition(Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
-
       clause[0] = ~lhs;
       clause[1] = rhs[i];
       add_clause(clause);
@@ -105,9 +101,8 @@ void SATEncoder::generate_classical_and_definition(Lit lhs, vec<Lit>& rhs) {
 
 void SATEncoder::generate_or_definition(Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
       clause[0] = lhs;
       clause[1] = ~rhs[i];
       add_clause(clause);
@@ -126,9 +121,8 @@ void SATEncoder::generate_or_definition(Lit lhs, vec<Lit>& rhs) {
 
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
       clause[0] = lhs;
       clause[1] = ~rhs[i];
       add_clause(clause);
@@ -148,9 +142,8 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
 
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition1, Lit condition2, Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
       clause[0] = lhs;
       clause[1] = ~rhs[i];
       add_clause(clause);
@@ -170,12 +163,11 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
 }
 
 void SATEncoder::generate_xor_conditions(vec<Lit>& vect) {
-  vec<Lit> clause;
+  vec<Lit> clause(2);
   for (int i = 0; i < vect.size(); i++) {
     for (int j = i + 1; j < vect.size(); j++) {
       if (vect[i] == vect[j])
         continue;
-      clause.growTo(2);
       clause[0] = ~vect[i];
       clause[1] = ~vect[j];
       add_clause(clause);
@@ -195,14 +187,13 @@ void SATEncoder::generate_or(vec<Lit>& vect) {
 }
 
 void SATEncoder::generate_equivalence_definition(Lit l1, Lit l2) {
+  vec<Lit> clause(2);
   {
-    vec<Lit> clause(2);
     clause[0] = ~l1;
     clause[1] = l2;
     add_clause(clause);
   }
   {
-    vec<Lit> clause(2);
     clause[0] = l1;
     clause[1] = ~l2;
     add_clause(clause);
@@ -695,7 +686,7 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
   int dfs_position_e2 = dfs_position_e1;
   leading_connectors(w, e2, '+', dfs_position_e2, first_right_in_e2);
 
-  vec<Lit> clause;
+  vec<Lit> clause(2);
 
   if (!last_right_in_e1.empty() && !first_right_in_e2.empty()) {
     std::vector<PositionConnector*>::iterator i, j;
@@ -722,7 +713,6 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
         for (mw1i = mw1.begin(); mw1i != mw1.end(); mw1i++) {
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i >= *mw2i) {
-              clause.growTo(2);
               clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
               clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
@@ -768,7 +758,6 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
         for (mw1i = mw1.begin(); mw1i != mw1.end(); mw1i++) {
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i <= *mw2i) {
-              clause.growTo(2);
               clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
               clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
@@ -928,7 +917,7 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
  *--------------------------------------------------------------------------*/
 void SATEncoder::generate_planarity_conditions()
 {
-  vec<Lit> clause;
+  vec<Lit> clause(2);
   for (size_t wi1 = 0; wi1 < _sent->length; wi1++) {
     for (size_t wj1 = wi1+1; wj1 < _sent->length; wj1++) {
       for (size_t wi2 = wj1+1; wi2 < _sent->length; wi2++) {
@@ -937,7 +926,6 @@ void SATEncoder::generate_planarity_conditions()
         for (size_t wj2 = wi2+1; wj2 < _sent->length; wj2++) {
           if (!_linked_possible(wj1, wj2))
             continue;
-          clause.growTo(2);
           clause[0] = ~Lit(_variables->linked(wi1, wi2));
           clause[1] = ~Lit(_variables->linked(wj1, wj2));
           add_clause(clause);
