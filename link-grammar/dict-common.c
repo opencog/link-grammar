@@ -515,7 +515,16 @@ static void print_expression_parens(const Exp * n, int need_parens)
 			print_expression_parens(el->e, true);
 		}
 		if (el->next != NULL)
-			printf ("\nERROR! Unexpected list!\n");
+		{
+			// printf ("\nERROR! Unexpected list!\n");
+			/* The SAT parser just naively joins all X_node expressions
+			 * using "or", and this check used to give an error due to that,
+			 * preventing a convenient debugging.
+			 * Just accept it (but mark it with '!'). */
+			if (n->type == AND_type) printf(" &! ");
+			if (n->type == OR_type) printf(" or! ");
+			print_expression_parens(el->next->e, true);
+		}
 	}
 
 	for (i=0; i<icost; i++) printf("]");
