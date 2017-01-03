@@ -27,7 +27,7 @@ using std::endl;
 
 
 #ifdef _VARS
-extern ostream& var_defs_stream;
+extern std::ostream& var_defs_stream;
 #endif
 
 static char* construct_link_label(const char* connector1, const char* connector2) {
