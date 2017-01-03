@@ -349,7 +349,8 @@ void prt_exp(Exp *e, int i)
 
 void prt_exp_mem(Exp *e, int i)
 {
-	const char *type;
+	char unknown_type[32] = "";
+	const char *type = unknown_type;
 
 	if (e == NULL) return;
 
@@ -359,31 +360,33 @@ void prt_exp_mem(Exp *e, int i)
 	}
 	else
 	{
-		type = "unknown";
+		snprintf(unknown_type, sizeof(type)-1, "unknown-%d", e->type);
+		type = unknown_type;
 	}
 
 	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: type=%d (%s) dir=%c multi=%d cost=%f\n", e, e->type, type,
-	        e->type==CONNECTOR_type?e->dir:' ',
-	        e->type==CONNECTOR_type?e->multi:0, e->cost);
+	printf ("e=%p: %s cost=%f\n", e, type, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
 		E_list *l;
-		int c = 0;
-		for (l = e->u.l; NULL != l; l = l->next) c++;
 		for(int j =0; j<i+2; j++) printf(" ");
-		l = e->u.l;
-		printf("E_list=%p count %d\n", l, c);
-		while(l)
+		printf("E_list=%p (", e->u.l);
+		for (l = e->u.l; NULL != l; l = l->next)
+		{
+			printf("%p", l->e);
+			if (NULL != l->next) printf(" ");
+		}
+		printf(")\n");
+
+		for (l = e->u.l; NULL != l; l = l->next)
 		{
 			prt_exp_mem(l->e, i+2);
-			l = l->next;
 		}
 	}
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s\n", e->u.string);
+		printf("con=%s dir=%c multi=%d\n", e->u.string, e->dir, e->multi);
 	}
 }
 #endif
