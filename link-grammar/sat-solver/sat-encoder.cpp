@@ -1592,8 +1592,6 @@ static Connector * empty_word_connector()
 
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
-  lgdebug(+D_SAT, "Index %d\n", lkg->lifo.index);
-
   Disjunct *d;
   int current_link = 0;
   Disjunct *empty_words_tofree = NULL;
