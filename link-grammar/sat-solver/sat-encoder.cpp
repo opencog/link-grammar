@@ -1332,7 +1332,7 @@ Linkage SATEncoder::get_next_linkage()
       if (display_linkage_disconnected) {
         cout << "Linkage DISCONNECTED" << endl;
       } else {
-        lgdebug(+2, "Linkage DISCONNECTED (skipped)\n");
+        lgdebug(+D_SAT, "Linkage DISCONNECTED (skipped)\n");
       }
     }
   } while (!sane || !(connected || display_linkage_disconnected));
