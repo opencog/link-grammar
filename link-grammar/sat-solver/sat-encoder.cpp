@@ -1657,9 +1657,9 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     if (verbosity_level(D_SAT)) {
       //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
-      cout<< "LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
+      cout<< "w"<<var->left_word<<" LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
       //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
-      cout<< "RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
+      cout<< "w"<<var->right_word<<" RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
       cout<< "L+L: "; print_expression(exp_word[var->left_word]);
       cout<< "R+R: "; print_expression(exp_word[var->right_word]);
     }
