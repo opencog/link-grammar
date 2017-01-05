@@ -1666,13 +1666,13 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     if (xnode_word[var->left_word] && xnode_word[var->left_word] != left_xnode) {
       lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
-               var->left_word, xnode_word[var->left_word]->word->subword,
-              left_xnode->word->subword);
+              var->left_word, xnode_word[var->left_word]->string,
+              left_xnode->string);
     }
     if (xnode_word[var->right_word] && xnode_word[var->right_word] != right_xnode) {
       lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
-              var->right_word, xnode_word[var->right_word]->word->subword,
-              right_xnode->word->subword);
+              var->right_word, xnode_word[var->right_word]->string,
+              right_xnode->string);
     }
 
     xnode_word[var->left_word] = left_xnode;
