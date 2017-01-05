@@ -13,7 +13,8 @@
 % Note: the ellipsis ....y must appear *before* the dot ".", else the
 % splitting won't work right.
 ")" "}" "]" ">" "".y" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ” ''.y '.y `.y
-"%" "," ....y "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y ━.y –.y ー.y ‐.y 、.y
+"%" "," ....y "." 。 ￼ ￼  .y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！
+….y ━.y –.y ー.y ‐.y 、.y
 ～ ¢ ₵ ™ ℠
   : RPUNC+;
 
