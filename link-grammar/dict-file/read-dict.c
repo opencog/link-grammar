@@ -1159,36 +1159,10 @@ static Exp * make_connector(Dictionary dict)
 /* ======================================================================== */
 /* Empty-word handling. */
 
-/** Insert empty-word connectors.
- *
- * The "empty word" is a concept used in order to make the current parser able
- * to parse "alternatives" within a sentence. The "empty word" can link to any
- * word as a pseudo-suffix and hence it is issued when a word is optional, a
- * thing that happens when there are word alternatives with a different number
- * of tokens in each of them.
- *
- * Such alternatives can be created when splitting words into morphemes, such
- * as stem and suffix, in multiple ways, when correcting spell errors, when
- * splitting contractions, or when splitting punctuation off words or into
- * smaller parts.
- *
- * For example, in the Russian dictionary, это.msi appears as a single word,
- * but can also be split into эт.= =о.mnsi. The problem arises because это.msi
- * is a single word, while эт.= =о.mnsi counts as two words, and there is no
- * pretty way to handle both during parsing. Thus a work-around is introduced:
- * add the empty word EMPTY-WORD.zzz: ZZZ+; to the dictionary.  This becomes
- * a pseudo-suffix that can attach to the previous word. It can attach to
- * the previous word only because the routine below, add_empty_word(), adds
- * the corresponding connector ZZZ- to the word.  This is done "on the
- * fly", because we don't want to pollute the dictionary with this stuff.
- * Besides, the Russian dictionary has more then 23K words that qualify for
- * this treatment (It has 22.5K words that appear both as plain words, and
- * as stems, and can thus attach to null suffixes. For non-null suffix
- * splits, there are clearly many more.)
- *
- * The empty words are removed from the linkages after the parsing step.
- * FIXME However, the ZZZ connectors are still found in the chosen disjuncts
- * and can be visible in the API.
+/** Insert ZZZ+ connectors.
+ *  This function was mainly used to support using empty-words, a concept
+ *  that has been eliminated. However, it is still used to support linking of
+ *  quotes that don't get the QUc/QUd links.
  */
 void add_empty_word(Dictionary const dict, X_node *x)
 {
@@ -1203,18 +1177,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 	for(; NULL != x; x = x->next)
 	{
 		/* Ignore stems for now, decreases a little the overhead for
-		 * stem-suffix languages.
-		 * This line should be removed if these 2 conditions happen together:
-		 * 1. Multi-stem splits are to be supported.
-		 * 2. Affix splits are done by wordgraph splits.
-		 *
-		 * FIXME: A more general solution instead of this line is to add
-		 * empty-word connectors only to the x-nodes that need them, instead
-		 * of adding them, like now, to all the x-nodes of the word that come
-		 * before the empty-word. This will support wordgraph affix splits (if
-		 * will ever be done) and will slightly increase the efficiency of
-		 * handling sentences with multi-suffix splits (less empty-word
-		 * connectors in the sentence). */
+		 * stem-suffix languages. */
 		if (is_stem(x->string)) continue; /* Avoid an unneeded overhead. */
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
