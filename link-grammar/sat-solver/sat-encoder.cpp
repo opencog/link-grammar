@@ -112,6 +112,7 @@ void SATEncoder::generate_or_definition(Lit lhs, vec<Lit>& rhs) {
   }
 }
 
+#if 0
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs) {
   {
     vec<Lit> clause(2);
@@ -132,6 +133,7 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
     add_clause(clause);
   }
 }
+#endif
 
 #if 0
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition1, Lit condition2, Lit lhs, vec<Lit>& rhs) {
@@ -497,7 +499,6 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
   char dir = e->dir;
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
-  Lit condition = Lit(_word_tags[wj].var);
   vec<Lit> rhs;
 
   // Collect matches (wi, pi) with word wj
@@ -524,7 +525,7 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
 
   // Generate clauses
   DEBUG_print("--------- link_cw as ordinary down");
-  generate_conditional_lr_implication_or_definition(condition, lhs, rhs);
+  generate_or_definition(lhs, rhs);
   generate_xor_conditions(rhs);
   DEBUG_print("--------- end link_cw as ordinary down");
 }
