@@ -857,8 +857,8 @@ int sentence_split(Sentence sent, Parse_Options opts)
 
 	/* Flatten the word graph created by separate_sentence() to a 2D-word-array
 	 * which is compatible to the current parsers.
-	 * This may fail if the EMPTY_WORD_DOT or UNKNOWN_WORD words are needed but
-	 * are not defined in the dictionary, or an internal error happens. */
+	 * This may fail if UNKNOWN_WORD is needed but
+	 * is not defined in the dictionary, or an internal error happens. */
 	fw_failed = !flatten_wordgraph(sent, opts);
 
 	/* If unknown_word is not defined, then no special processing
@@ -1207,15 +1207,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			break;
 		}
 
-		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
-
-		if (verbosity_level(D_SLM))
-		{
-			char *djw_tmp = strdupa(cdj->string);
-			char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
-			if (NULL != sm) *sm = SUBSCRIPT_DOT;
-			lgdebug(0, "%s", djw_tmp);
-		}
+		if (verbosity_level(D_SLM)) print_with_subscript_dot(cdj->string);
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */
@@ -1285,7 +1277,6 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		for (w = wpp->path; *w; w++)
 		{
 			i++;
-			if (MT_EMPTY == (*w)->morpheme_type) continue; /* really a null word */
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wswitch-enum"

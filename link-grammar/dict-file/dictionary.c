@@ -183,8 +183,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		strncpy(w_last, w, w_len);
 		w_last[w_len] = '\0';
 
-		if ((infix_mark == w_last[0]) &&
-			 (0 != strcmp(w_last, EMPTY_WORD_MARK)))
+		if (infix_mark == w_last[0])
 		{
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], w_last+1);
 		}
@@ -588,8 +587,6 @@ dictionary_six_str(const char * lang,
 
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
-
-	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
 
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	if (NULL == dict->base_knowledge) goto failure;

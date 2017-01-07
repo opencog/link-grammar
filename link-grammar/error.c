@@ -274,7 +274,6 @@ static void print_sentence_context(String *outbuf, const err_ctxt *ec)
 		{
 			bool next_word = false;
 
-			if (0 == strcmp(*a, EMPTY_WORD_MARK)) continue;
 			for (j=0; j<ec->sent->length; j++)
 			{
 				for (b = ec->sent->word[j].alternatives; NULL != *b; b++)
