@@ -304,28 +304,37 @@ bool SATEncoder::matches_in_interval(int wi, int pi, int l, int r) {
 
 void SATEncoder::generate_satisfaction_conditions()
 {
+  char name[MAX_VARIABLE_NAME] = "w";
+
   for (size_t w = 0; w < _sent->length; w++) {
+
+#ifdef SAT_DEBUG
+    cout << "Word " << w << ": " << N(_sent->word[w].unsplit_word);
+    if (_sent->word[w].optional) cout << " (optional)";
+    cout << endl;
+    //print_expression(exp);
+    cout << endl;
+#endif
+
+    fast_sprintf(name+1, w);
+
+    if (_sent->word[w].optional)
+      _variables->string(name);
+    else
+      determine_satisfaction(w, name);
+
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word: " << N(_sent->word[w].unsplit_word) << " : " << "(null)" << endl);
-      handle_null_expression(w);
-      continue;
+      if (!_sent->word[w].optional) {
+        // Most probably everything got pruned. There will be no linkage.
+        lgdebug(+D_SAT, "Word%zu '%s': Null X_node\n", w, _sent->word[w].unsplit_word);
+        handle_null_expression(w);
+      }
+      continue; // No expression to handle.
     }
 
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
-#ifdef SAT_DEBUG
-    cout << "Word: " << N(_sent->word[w].unsplit_word) << endl;
-    //print_expression(exp);
-    cout << endl;
-#endif
-
-    char name[MAX_VARIABLE_NAME];
-    // sprintf(name, "w%zu", w);
-    name[0] = 'w';
-    fast_sprintf(name+1, w);
-
-    determine_satisfaction(w, name);
     int dfs_position = 0;
     generate_satisfaction_for_expression(w, dfs_position, exp, name, 0);
 
