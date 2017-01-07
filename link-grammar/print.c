@@ -1354,9 +1354,6 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					}
 				}
 
-				if (0 == strcmp(wt, EMPTY_WORD_MARK))
-					wt = EMPTY_WORD_DISPLAY;
-
 				/* Restore SUBSCRIPT_DOT for printing */
 				st = strrchr(wt, SUBSCRIPT_MARK);
 				if (st)
@@ -1379,7 +1376,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 				}
 
 				/* Don't try to give info on the empty word. */
-				if (('\0' != wt[0]) && (0 != strcmp(wt, EMPTY_WORD_DISPLAY)))
+				if ('\0' != wt[0])
 				{
 					/* For now each word component is called "Token".
 					 * TODO: Its type can be decoded and a more precise
@@ -1465,8 +1462,6 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 
 		if (NULL == cdj)
 			djw = "[]"; /* null word */
-		else if (MT_EMPTY == cdj->word[0]->morpheme_type)
-			djw = EMPTY_WORD_DISPLAY;
 		else if ('\0' == cdj->string[0])
 			djw = "\\0"; /* null string - something is wrong */
 		else
