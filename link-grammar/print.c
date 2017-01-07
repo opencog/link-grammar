@@ -1329,13 +1329,8 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 				const char *st = NULL;
 				char *wprint = NULL;
 
-				/* In the Wordgraph version alternative slots are not balanced
-				 * with empty words. To see these places for debug, later
-				 * here "[missing]" is printed if wt is "". */
-				if (ai >= nalts)
-					wt = ""; /* missing */
-				else
-					wt = sent->word[wi].alternatives[ai];
+				if (ai >= nalts) continue;
+				wt = sent->word[wi].alternatives[ai];
 
 				/* Don't display information again for the same word */
 				if ((NULL != tokenpos) && (0 == strcmp(tokenpos->token, wt)))
@@ -1380,8 +1375,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 						opt_start = "{";
 						opt_end = "}";
 					}
-					lgdebug(0, " %s%s%s",
-					        opt_start, '\0' == wt[0] ? "[missing]" : wt, opt_end);
+					lgdebug(0, " %s%s%s", opt_start, wt, opt_end);
 				}
 
 				/* Don't try to give info on the empty word. */
