@@ -1461,7 +1461,7 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
-			djw = "[]"; /* null word */
+			djw = lkg->sent->word[i].optional ? "{}" : "[]";
 		else if ('\0' == cdj->string[0])
 			djw = "\\0"; /* null string - something is wrong */
 		else
