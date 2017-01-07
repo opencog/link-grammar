@@ -35,7 +35,6 @@ extern "C" {
 #include "post-process.h"
 #include "score.h"               // for linkage_score()
 //#include "utilities.h"         // XXX do we need it?
-#include "wordgraph.h"           // for empty_word()
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
@@ -1585,22 +1584,10 @@ Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionCon
     return e;
 }
 
-// FIXME - put under a class or move to util.cpp.
-static Connector * empty_word_connector()
-{
-  static Connector c;
-
-  if (c.string != NULL) return &c;
-  c.string = EMPTY_CONNECTOR;
-
-  return &c;
-}
-
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
   Disjunct *d;
   int current_link = 0;
-  Disjunct *empty_words_tofree = NULL;
 
   Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
   memset(exp_word, 0, _sent->length * sizeof(Exp));
@@ -1628,23 +1615,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     const X_node *left_xnode = lpc->word_xnode;
     const X_node *right_xnode = rpc->word_xnode;
-
-    // For empty words, only create a dummy disjunct - for remove_empty_word()
-    if (left_xnode->word->morpheme_type == MT_EMPTY ||
-        right_xnode->word->morpheme_type == MT_EMPTY) {
-      // XXX Why right_expression is NULL? And why left_expression is only ZZZ+?
-      // Hence, to prevent triggering an assert() in build_clause(), the
-      // disjunct for the empty word (right_word) is built with left_exp.
-      d = build_disjuncts_for_exp(var->left_exp, right_xnode->string, UNLIMITED_LEN);
-      word_record_in_disjunct(empty_word(), d);
-      lkg->chosen_disjuncts[var->right_word] = d;
-      if (empty_words_tofree == NULL)
-        empty_words_tofree = d;
-      else
-        catenate_disjuncts(empty_words_tofree, d);
-      clink.lc = clink.rc = empty_word_connector();
-      continue;
-    }
 
     // Allocate memory for the connectors, because they should persist
     // beyond the lifetime of the sat-solver data structures.
@@ -1689,9 +1659,13 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   for (WordIdx wi = 0; wi < _sent->length; wi++) {
     Exp *de = exp_word[wi];
 
-    // Skip empty words
+    // Skip optional words
     if (xnode_word[wi] == NULL)
+    {
+      if (!_sent->word[wi].optional)
+        prt_error("Warning: Non-optional word %zu has no linkage\n", wi);
       continue;
+    }
 
     if (de == NULL) {
       de = null_exp();
@@ -1703,10 +1677,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     lkg->chosen_disjuncts[wi] = d;
     free_Exp(de);
   }
-
-  // This is needed so that the empty-word disjuncts will get freed
-  assert(lkg->chosen_disjuncts[0], "Must have at least one non-empty word");
-  catenate_disjuncts(lkg->chosen_disjuncts[0], empty_words_tofree);
 
   lkg->num_links = current_link;
 
@@ -1749,7 +1719,6 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   sent->hook = encoder;
   encoder->encode();
-
 
   LinkageIdx linkage_limit = opts->linkage_limit;
   LinkageIdx k;
