@@ -52,8 +52,10 @@ Gword *gword_new(Sentence sent, const char *s)
 	return gword;
 }
 
+/* FIXME: Remove it. */
 Gword *empty_word(void)
 {
+	/*
 	static Gword e = {
 		.subword = EMPTY_WORD_MARK,
 		.unsplit_word = &e,
@@ -61,8 +63,8 @@ Gword *empty_word(void)
 		.alternative_id = &e,
 		.status = WS_INDICT,
 	};
-
-	return &e;
+	*/
+	return NULL;
 }
 
 static Gword **gwordlist_resize(Gword **arr, size_t len)

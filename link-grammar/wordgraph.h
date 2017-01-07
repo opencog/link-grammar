@@ -17,8 +17,7 @@
 void wordgraph_show(Sentence, const char *);
 
 Gword *gword_new(Sentence, const char *);
-Gword *empty_word(void);
-
+Gword *empty_word(void); /* FIXME: Remove it. */
 size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
 

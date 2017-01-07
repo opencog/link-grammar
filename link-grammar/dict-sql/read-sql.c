@@ -349,8 +349,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
 
-	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
-
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
 

@@ -42,9 +42,6 @@
  */
 #define SUBSCRIPT_MARK '\3'
 #define SUBSCRIPT_DOT '.'
-#define EMPTY_WORD_DOT   "EMPTY-WORD.zzz"  /* Has SUBSCRIPT_DOT in it! */
-#define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
-#define EMPTY_WORD_DISPLAY "∅"   /* Empty word representation for debug */
 #define EMPTY_CONNECTOR "ZZZ"
 
 /* Dictionary capitalization handling */
@@ -188,7 +185,7 @@ typedef enum
 	MT_FEATURE,            /* Pseudo morpheme, currently capitalization marks */
 	MT_INFRASTRUCTURE,     /* Start and end Wordgraph pseudo-words */
 	MT_WALL,               /* The LEFT-WALL and RIGHT-WALL pseudo-words */
-	MT_EMPTY,              /* Empty word */
+	MT_EMPTY,              /* Empty word FIXME: Remove it. */
 	MT_UNKNOWN,            /* Unknown word (FIXME? Unused) */
 	/* Experimental for Semitic languages (yet unused) */
 	MT_TEMPLATE,
