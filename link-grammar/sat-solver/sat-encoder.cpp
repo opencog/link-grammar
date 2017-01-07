@@ -240,18 +240,15 @@ void SATEncoder::build_word_tags()
     _word_tags.push_back(WordTag(w, name, _variables, _sent, _opts));
     int dfs_position = 0;
 
-    if (_sent->word[w].x == NULL) {
-      // Most probably everything got pruned. There will be no linkage.
-      lgdebug(+D_SAT, "Word%zu %s: NULL X_node\n", w, N(_sent->word[w].unsplit_word));
-      continue;
-    }
+    if (_sent->word[w].x == NULL) continue;
 
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
 #ifdef SAT_DEBUG
     cout << "Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << endl;
-    //print_expression(exp);
+    print_expression(exp);
+    //prt_exp_mem(exp, 0);
     cout << endl;
 #endif
 
