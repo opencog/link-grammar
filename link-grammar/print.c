@@ -1272,10 +1272,10 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		 *   ה=  כלב  לב  ב=
 		 *   ה=  כ=  ל=
 		 *   ה=  כ=
-		 * For "'50s," (∅ means empty word):
+		 * For "'50s,"
 		 *   ' s s ,
-		 *   '50 50 , ∅
-		 *   '50s ∅
+		 *   '50 50 ,
+		 *   '50s
 		 * Clearly, this is not informative any more. Instead, one line with a
 		 * list of tokens (without repetitions) is printed
 		 * ה= כלב לב ב= כ= ל=

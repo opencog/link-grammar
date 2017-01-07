@@ -154,8 +154,6 @@ static int revcmplen(const void *a, const void *b)
  * and prefixes - every time we see a new suffix/prefix (the previous one is
  * remembered by w_last), we save it in the corresponding affix-class list.
  * The saved affixes don't include the infix mark.
- *
- * The empty word is not an affix so it is ignored.
  */
 static void get_dict_affixes(Dictionary dict, Dict_node * dn,
                              char infix_mark, char * w_last)

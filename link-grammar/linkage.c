@@ -129,21 +129,6 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  * for working with linkages.
  */
 
-/*
- * The "empty word" is a concept used in order to make the current parser able
- * to parse "alternatives" within a sentence. The "empty word" can link to any
- * word, hence it is issued when a word is optional, a thing that happens when
- * there are alternatives with different number of tokens in each of them.
- *
- * However, the empty words are not needed after the linkage step, and so,
- * below, we remove them from the linkage, as well as the links that
- * connect to them.
- *
- * When the word-graph is converted ("flattened") to the 2D array used by
- * the parser, empty words are issued whenever needed.  This essentially
- * means that the empty word (EMPTY-WORD.zzz) must be defined in the
- * dictionary of every language.
- */
 #define SUBSCRIPT_SEP SUBSCRIPT_DOT /* multiple-subscript separator */
 
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
@@ -213,7 +198,7 @@ void remap_linkages(Linkage lkg, const int *remap)
 }
 
 /**
- * Remove the empty words from a linkage.
+ * Remove unlinked optional words from a linkage.
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
  */

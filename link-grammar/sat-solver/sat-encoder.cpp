@@ -1280,10 +1280,7 @@ Linkage SATEncoder::create_linkage()
   partial_init_linkage(_sent, linkage, _sent->length);
   sat_extract_links(linkage);
   compute_link_names(linkage, _sent->string_set);
-  /* Because the empty words are used only in the parsing stage, they are
-   * removed here along with their links, so from now on we will not need to
-   * consider them. */
-  remove_empty_words(linkage);
+  remove_empty_words(linkage);  /* Discard optional words. */
   return linkage;
 }
 
