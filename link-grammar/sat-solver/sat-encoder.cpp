@@ -14,6 +14,10 @@ using std::cerr;
 using std::endl;
 using std::vector;
 
+/* Most of the power pruning is ifdef'ed out intentionally, because The
+ * encoding totally malfunctions when this code is defined. */
+//#define POWER_PRUNE_CONNECTORS
+
 extern "C" {
 #include "sat-encoder.h"
 }
@@ -1087,6 +1091,7 @@ void SATEncoder::power_prune()
 {
   generate_epsilon_definitions();
 
+#ifdef POWER_PRUNE_CONNECTORS
   // on two non-adjacent words, a pair of connectors can be used only
   // if not [both of them are the deepest].
 
@@ -1123,6 +1128,7 @@ void SATEncoder::power_prune()
       }
     }
   }
+#endif
 
   /*
   // on two adjacent words, a pair of connectors can be used only if
