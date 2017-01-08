@@ -853,7 +853,52 @@ void SATEncoder::dfs(int node, const MatrixUpperTriangle<int>& graph, int compon
   }
 }
 
+/* Temporary debug (may be needed again for adding parsing with null-links).
+ * This allows to do "CXXFLAGS=-DCONNECTIVITY_DEBUG configure" or
+ * "make CXXFLAGS=-DCONNECTIVITY_DEBUG" . */
+//#define CONNECTIVITY_DEBUG
+#ifdef CONNECTIVITY_DEBUG
+#undef CONNECTIVITY_DEBUG
+#define CONNECTIVITY_DEBUG(x) x
+static void debug_generate_disconnectivity_prohibiting(vector<int> components,
+                                      std::vector<int> different_components) {
 
+  printf("generate_disconnectivity_prohibiting: ");
+  for (auto c: components) cout << c << " ";
+  cout << endl;
+  for (auto c: different_components) cout << c << " ";
+  cout << endl;
+}
+#else
+#define debug_generate_disconnectivity_prohibiting(x, y)
+#define CONNECTIVITY_DEBUG(x)
+#endif
+
+/*
+ * The idea here is to save issuing a priori a lot of clauses to enforce
+ * linkage connectivity (i.e. no islands), and instead do it when
+ * a solution finds a disconnected linkage. This works well for valid
+ * sentences because their solutions tend to be connected or mostly connected.
+ */
+
+ /**
+  * Find the connectivity vector of the linkage.
+  * @param components (result) A connectivity vector whose components
+  * correspond to the linkage words.
+  * @return true iff the linkage is completely connected (ignoring
+  * optional words).
+  *
+  * Each segment in the linkage is numbered by the ordinal number of its
+  * start word. Each vector component is numbered according to the segment
+  * in which the corresponding word resides.
+  * For example, a linkage with 7 words, which consists of 3 segments
+  * (islands) of 2,2,3 words, will be represented as: 0 0 1 1 2 2 2.
+  *
+  * In order to support optional words (words that are allowed to have
+  * no connectivity), optional words which don't participate in the linkage
+  * are marked with -1 instead of their segment number, and are disregarded
+  * in the connectivity test.
+  */
 bool SATEncoder::connectivity_components(std::vector<int>& components) {
   // get satisfied linked(wi, wj) variables
   const std::vector<int>& linked_variables = _variables->linked_variables();
@@ -865,12 +910,24 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
     }
   }
 
+  // Words that are not in the linkage don't need to be connected.
+  // (For now these can be only be words marked as "optional").
+  std::vector<bool> is_linked_word(_sent->length, false);
+  for (size_t node = 0; node < _sent->length; node++) {
+    is_linked_word[node] = _solver->model[_word_tags[node].var] == l_True;
+  }
+
   // build the connectivity graph
   MatrixUpperTriangle<int> graph(_sent->length, 0);
   std::vector<int>::const_iterator i;
+  CONNECTIVITY_DEBUG(printf("connectivity_components words:\n"));
   for (i = satisfied_linked_variables.begin(); i != satisfied_linked_variables.end(); i++) {
-    graph.set(_variables->linked_variable(*i)->left_word,
-              _variables->linked_variable(*i)->right_word, 1);
+    const int lv_l = _variables->linked_variable(*i)->left_word;
+    const int lv_r = _variables->linked_variable(*i)->right_word;
+
+    if (!is_linked_word[lv_l] || !is_linked_word[lv_r]) continue;
+    graph.set(lv_l, lv_r, 1);
+    CONNECTIVITY_DEBUG(printf("L%d R%d\n", lv_l, lv_r));
   }
 
   // determine the connectivity components
@@ -878,13 +935,24 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
   std::fill(components.begin(), components.end(), -1);
   for (size_t node = 0; node < _sent->length; node++)
     dfs(node, graph, node, components);
+
+  CONNECTIVITY_DEBUG(printf("connectivity_components: "));
   bool connected = true;
   for (size_t node = 0; node < _sent->length; node++) {
-    if (components[node] != 0) {
-      connected = false;
+    CONNECTIVITY_DEBUG(
+      if (is_linked_word[node]) printf("%d ", components[node]);
+      else                      printf("[%d] ", components[node]);
+    )
+    if (is_linked_word[node]) {
+      if (components[node] != 0) {
+        connected = false;
+      }
+    } else {
+       components[node] = -1;
     }
   }
 
+  CONNECTIVITY_DEBUG(printf(" connected=%d\n", connected));
   return connected;
 }
 
@@ -910,15 +978,33 @@ static void pmodel(Solver *solver, vec<Lit> &clause) {
 }
 #endif
 
+/**
+ * Generate clauses to enforce exactly the missing connectivity.
+ * @param components A connectivity vector as computed by
+ * connectivity_components().
+ *
+ * Iterate the list of possible links between words, and find links
+ * between words that are found in different segments according to the
+ * connectivity vector. For each two segments, issue a clause asserting
+ * that at least one of the corresponding links must exist.
+ *
+ * In order to support optional words, optional words which don't have links
+ * (marked as -1 in the connectivity vector) are ignored. A missing link
+ * between words when one of them is optional (referred to as a
+ * "conditional_link" below) is considered missing only if both words exist
+ * in the linkage.
+ */
 void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> components) {
   // vector of unique components
   std::vector<int> different_components = components;
   std::sort(different_components.begin(), different_components.end());
   different_components.erase(std::unique(different_components.begin(), different_components.end()),
                              different_components.end());
-
+  debug_generate_disconnectivity_prohibiting(components, different_components);
   // Each connected component must contain a branch going out of it
   std::vector<int>::const_iterator c;
+  if (*different_components.begin() == -1)
+    different_components.erase(different_components.begin());
   for (c = different_components.begin(); c != different_components.end(); c++) {
     vec<Lit> clause;
     const std::vector<int>& linked_variables = _variables->linked_variables();
@@ -927,10 +1013,41 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
       const Variables::LinkedVar* lv = _variables->linked_variable(var);
       if ((components[lv->left_word] == *c && components[lv->right_word] != *c) ||
           (components[lv->left_word] != *c && components[lv->right_word] == *c)) {
-        clause.push(Lit(var));
+
+        CONNECTIVITY_DEBUG(printf(" %d(%d-%d)", var, lv->left_word, lv->right_word));
+        bool optlw_exists = _sent->word[lv->left_word].optional &&
+                            _solver->model[lv->left_word] == l_True;
+        bool optrw_exists = _sent->word[lv->right_word].optional &&
+                            _solver->model[lv->right_word] == l_True;
+        if (optlw_exists || optrw_exists) {
+          int conditional_link_var;
+          bool conditional_link_var_exists;
+
+          CONNECTIVITY_DEBUG(printf("R ")); // "replaced"
+          char name[MAX_VARIABLE_NAME] = "0";
+          sprintf(name+1, "%dw%dw%d", var, optlw_exists?lv->left_word:255,
+                                           optrw_exists?lv->right_word:255);
+          conditional_link_var_exists = _variables->var_exists(name);
+          conditional_link_var = _variables->string(name);
+
+          if (!conditional_link_var_exists) {
+            Lit lhs = Lit(conditional_link_var);
+            vec<Lit> rhs;
+            rhs.push(Lit(var));
+            if (optlw_exists) rhs.push(~Lit(_word_tags[lv->left_word].var));
+            if (optrw_exists) rhs.push(~Lit(_word_tags[lv->right_word].var));
+            generate_or_definition(lhs, rhs);
+          }
+
+          var = conditional_link_var; // Replace it by its conditional link var
+        }
+        clause.push(Lit(var)); // Implied link var is used if needed
       }
     }
+    CONNECTIVITY_DEBUG(printf("\n"));
     _solver->addClause(clause);
+
+    // Avoid issuing two identical clauses
     if (different_components.size() == 2)
       break;
   }
@@ -1332,11 +1449,6 @@ Linkage SATEncoder::get_next_linkage()
 
     // Prohibit this solution so the next ones can be found
     if (!connected) {
-      /* A disconnected linkage (XXX why?).
-       * Observation: Some of the linkages after a disconnected one is
-       * found, may repeat previous linkages (the reason is yet unknown).
-       * Example sentence:
-       * The stupidity of the senators annoyed all my friends */
       generate_disconnectivity_prohibiting(components);
       display_linkage_disconnected = test_enabled("linkage-disconnected");
     } else {

@@ -283,7 +283,6 @@ protected:
   // Generate clause that prohibits the current model
   void generate_linkage_prohibiting();
 
-
   // Object that contains all information about the variable
   // encoding.
   Variables* _variables;

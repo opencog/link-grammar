@@ -91,6 +91,16 @@ public:
    * General purpose variables specified by their names
    */
 
+  bool var_exists(const char* name) {
+    try {
+      int num = _variable_trie.lookup(name);
+      return num != Trie<int>::NOT_FOUND;
+      } catch (const std::string& s) {
+          cout << s << endl;
+          exit(EXIT_FAILURE);
+        }
+  }
+
   // If guiding params are unknown, they are set do default
   int string(const char* name)
   {
