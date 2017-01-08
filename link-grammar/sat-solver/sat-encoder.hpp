@@ -308,6 +308,19 @@ class SATEncoderConjunctionFreeSentences : public SATEncoder
 public:
   SATEncoderConjunctionFreeSentences(Sentence sent, Parse_Options  opts)
     : SATEncoder(sent, opts) {
+#if 0
+    fprintf(stderr, "random_var_freq=%e\ngarbage_frac=%e\nclause_decay=%e\n"
+           "restart_first=%d\nvar_decay=%e\n",
+           _solver->random_var_freq, _solver->garbage_frac, _solver->clause_decay,
+           _solver->restart_first, _solver->var_decay);
+
+    _solver->random_var_freq = 0;
+    _solver->garbage_frac = 0.2;
+    _solver->clause_decay = 0.999;
+    _solver->restart_first = 100;
+    _solver->var_decay = 0.99;
+#endif
+
     verbosity = opts->verbosity;
     debug = opts->debug;
     test = opts->test;
