@@ -3,10 +3,8 @@
  */
 #include <cstdlib>
 #include <cstdio>
-#include <cstring>
 #include <iostream>
 #include <vector>
-#include <map>
 #include <algorithm>
 #include <iterator>
 using std::cout;
@@ -38,7 +36,6 @@ extern "C" {
 #include "linkage.h"
 #include "post-process.h"
 #include "score.h"               // for linkage_score()
-//#include "utilities.h"         // XXX do we need it?
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
