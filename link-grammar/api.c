@@ -664,7 +664,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded || lifo->N_violations) continue;
+		if (lifo->discarded) continue;
 
 		partial_init_linkage(sent, lkg, pi->N_words);
 		extract_links(lkg, pi);
