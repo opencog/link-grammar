@@ -744,9 +744,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	/* If the timer expired, then we never finished post-processing.
 	 * Mark the remaining sentences as bad, as otherwise strange
-	 * results get reported.  At any rate, need to compute the link
-	 * names, as otherwise linkage_create() will crash and burn
-	 * trying to touch them. */
+	 * results get reported. */
 	for (; in < N_linkages_alloced; in++)
 	{
 		Linkage lkg = &sent->lnkages[in];
