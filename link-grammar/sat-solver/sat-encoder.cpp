@@ -1384,6 +1384,7 @@ Linkage SATEncoder::get_next_linkage()
   if (NULL != ppn->violation) {
     lkg->lifo.N_violations++;
     lkg->lifo.pp_violation_msg = ppn->violation;
+    lgdebug(+D_SAT, "Postprocessing error: %s\n", lkg->lifo.pp_violation_msg);
   } else {
     // XXX We cannot maintain num_valid_linkages, because it starts from
     // a high number. If we start it from 0, then on value 1 link-parser
