@@ -71,9 +71,11 @@ void add_anded_exp(Exp*& orig, Exp* addit)
     }
 }
 
+#if 0
 bool isEndingInterpunction(const char* str)
 {
   return strcmp(str, ".") == 0 ||
     strcmp(str, "?") == 0 ||
     strcmp(str, "!") == 0;
 }
+#endif
