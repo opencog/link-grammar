@@ -234,7 +234,8 @@ typedef int locale_t;
 
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
- * string.  This is needed when printing strings in a formatted way.
+ * string. This is NOT the same as the column-width of the printed
+ * string! For that, see utf8_strwidth() below.
  */
 static inline size_t utf8_strlen(const char *s)
 {
@@ -246,6 +247,12 @@ static inline size_t utf8_strlen(const char *s)
 	return mbsrtowcs(NULL, &s, 0, &mbss);
 #endif /* _WIN32 */
 }
+
+/**
+ * Return the length, in column-widths, of the utf8-encoded
+ * string.  This is needed when printing formatted strings.
+ */
+size_t utf8_strwidth(const char *);
 
 /**
  * Return the distance, in bytes, to the next character, in this
