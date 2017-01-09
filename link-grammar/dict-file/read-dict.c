@@ -2019,6 +2019,8 @@ static void display_word_split(Dictionary dict,
 	sentence_delete(sent);
 }
 
+#define DJ_COL_WIDTH sizeof("                         ")
+
 /**
  * Display the number of disjuncts associated with this dict node
  */
@@ -2037,7 +2039,7 @@ static void display_counts(const char *word, Dict_node *dn)
 		t = strrchr(s, SUBSCRIPT_MARK);
 		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
-		left_print_string(stdout, s, "                         ");
+		left_print_string(stdout, s, DJ_COL_WIDTH);
 		free(s);
 		printf(" %8u  disjuncts ", len);
 		if (dn->file != NULL)
@@ -2063,7 +2065,7 @@ static void display_expr(const char *word, Dict_node *dn)
 		t = strrchr(s, SUBSCRIPT_MARK);
 		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
-		left_print_string(stdout, s, "                         ");
+		left_print_string(stdout, s, DJ_COL_WIDTH);
 		free(s);
 		print_expression(dn->exp);
 		if (NULL != dn->right) /* avoid extra newlines at the end */

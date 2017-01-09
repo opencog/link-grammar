@@ -126,6 +126,8 @@ bool resources_memory_exhausted(Resources r)
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 
+#define RES_COL_WIDTH sizeof("                                     ")
+
 /** print out the cpu ticks since this was last called */
 static void resources_print_time(int verbosity, Resources r, const char * s)
 {
@@ -133,8 +135,7 @@ static void resources_print_time(int verbosity, Resources r, const char * s)
 	now = current_usage_time();
 	if (verbosity > 1) {
 		printf("++++");
-		left_print_string(stdout, s,
-			"                                     ");
+		left_print_string(stdout, s, RES_COL_WIDTH);
 		printf("%7.2f seconds\n", now - r->when_last_called);
 	}
 	r->when_last_called = now;
@@ -148,8 +149,7 @@ static void resources_print_total_time(int verbosity, Resources r)
 	r->cumulative_time += (now - r->time_when_parse_started) ;
 	if (verbosity > 0) {
 		printf("++++");
-		left_print_string(stdout, "Time",
-		                  "                                           ");
+		left_print_string(stdout, "Time", RES_COL_WIDTH);
 		printf("%7.2f seconds (%.2f total)\n",
 			   now - r->time_when_parse_started, r->cumulative_time);
 	}
@@ -160,8 +160,7 @@ static void resources_print_total_space(int verbosity, Resources r)
 {
 	if (verbosity > 1) {
 		printf("++++");
-		left_print_string(stdout, "Total space",
-		                  "                                            ");
+		left_print_string(stdout, "Total space", RES_COL_WIDTH);
 		printf("%zu bytes (%zu max)\n",
 			get_space_in_use(), get_max_space_used());
 	}

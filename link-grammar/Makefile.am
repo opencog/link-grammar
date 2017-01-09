@@ -120,6 +120,7 @@ liblink_grammar_la_SOURCES =        \
 	string-set.c                     \
 	tokenize.c                       \
 	utilities.c                      \
+	wcwidth.c                        \
 	wordgraph.c                      \
 	word-utils.c                     \
 	anysplit.h                       \

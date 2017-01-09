@@ -326,6 +326,7 @@ link_public_api(const char *)
  * Internal functions -- do not use these in new code!
  * These are not intended for general public use, but are required to
  * get the link-parser executable to link under MSVC6.
+ * XXX FIXME we're on msvc14 now, do we still need these??
  *
  ***********************************************************************/
 
@@ -334,7 +335,7 @@ link_public_api(void)
 link_public_api(void)
      dict_display_word_info(Dictionary dict, const char *, Parse_Options opts);
 link_public_api(void)
-     left_print_string(FILE* fp, const char *, const char *);
+     left_print_string(FILE* fp, const char *, int);
 link_public_api(bool)
      lg_expand_disjunct_list(Sentence sent);
 

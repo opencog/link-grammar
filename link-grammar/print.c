@@ -73,9 +73,9 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	{
 		int len, center_t;
 
-		/* Centers obtained by counting the characters,
+		/* Centers obtained by counting the characters column widths,
 		 * not the bytes in the string. */
-		len = utf8_strlen(linkage->word[i]);
+		len = utf8_strwidth(linkage->word[i]);
 		center_t = tot + (len/2);
 #if 1 /* Long labels - disable in order to compare output with old versions. */
 		if (i > start_word)
@@ -109,8 +109,8 @@ typedef struct
 static void left_append_string(String * string, const char * s, const char * t)
 {
 	size_t i;
-	size_t slen = utf8_strlen(s);
-	size_t tlen = utf8_strlen(t);
+	size_t slen = utf8_strwidth(s);
+	size_t tlen = utf8_strwidth(t);
 
 	for (i = 0; i < tlen; i++)
 	{
@@ -279,7 +279,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (mark) *mark = SUBSCRIPT_DOT;
 
 		/* Make sure the glyphs align during printing. */
-		pad += strlen(infword) - utf8_strlen(infword);
+		pad += strlen(infword) - utf8_strwidth(infword);
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		if (NULL == dj) dj = "";
@@ -306,9 +306,7 @@ build_linkage_postscript_string(const Linkage linkage,
 {
 	int link, i,j;
 	int d;
-	int N_wall_connectors;
 	bool print_word_0, print_word_N;
-	bool suppressor_used;
 	int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	String  * string;
@@ -317,9 +315,9 @@ build_linkage_postscript_string(const Linkage linkage,
 
 	string = string_new();
 
-	N_wall_connectors = 0;
-	suppressor_used = false;
 	if (!display_walls) {
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
 		for (j=0; j<N_links; j++) {
 			if (ppla[j].lw == 0) {
 				if (ppla[j].rw == linkage->num_words-1) continue;
@@ -329,22 +327,26 @@ build_linkage_postscript_string(const Linkage linkage,
 				}
 			}
 		}
+		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
+						|| (N_wall_connectors != 1));
 	}
-	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_0 = true;
 
-	N_wall_connectors = 0;
-	suppressor_used = false;
-	for (j=0; j<N_links; j++) {
-		if (ppla[j].rw == linkage->num_words-1) {
-			N_wall_connectors ++;
-			if (strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)==0){
-				suppressor_used = true;
+	if (!display_walls) {
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
+		for (j=0; j<N_links; j++) {
+			if (ppla[j].rw == linkage->num_words-1) {
+				N_wall_connectors ++;
+				if (strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)==0){
+					suppressor_used = true;
+				}
 			}
 		}
+		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
+						|| (N_wall_connectors != 1));
 	}
-	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_N = true;
 
 	if (print_word_0) d=0; else d=1;
 
@@ -413,8 +415,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	const char *s;
 	char *t;
 	bool print_word_0 , print_word_N;
-	int N_wall_connectors;
-	bool suppressor_used;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
 	unsigned int line_len, link_length;
@@ -431,10 +431,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	string = string_new();
 
 	/* Do we want to print the left wall? */
-	N_wall_connectors = 0;
-	suppressor_used = false;
 	if (!display_walls)
 	{
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
 		for (j=0; j<N_links; j++)
 		{
 			if (0 == ppla[j].lw)
@@ -447,26 +447,31 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				}
 			}
 		}
+		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors != 1));
 	}
-	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_0 = true;
 
 	/* Do we want to print the right wall? */
-	N_wall_connectors = 0;
-	suppressor_used = false;
-	for (j=0; j<N_links; j++)
+	if (!display_walls)
 	{
-		if (ppla[j].rw == linkage->num_words-1)
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
+		for (j=0; j<N_links; j++)
 		{
-			N_wall_connectors ++;
-			if (0 == strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
+			if (ppla[j].rw == linkage->num_words-1)
 			{
-				suppressor_used = true;
+				N_wall_connectors ++;
+				if (0 == strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
+				{
+					suppressor_used = true;
+				}
 			}
 		}
+		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors != 1));
 	}
-	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_N = true;
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
@@ -631,14 +636,14 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
-		/* Count number of multi-byte chars in the words,
+		/* Count the column-widths of the words,
 		 * up to the max screen width. */
 		unsigned int uwidth = 0;
 		do {
-			uwidth += word_offset[i] + utf8_strlen(linkage->word[i]) + 1;
+			uwidth += word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
 			i++;
 		} while ((i < N_words_to_print) &&
-			(uwidth + word_offset[i] + utf8_strlen(linkage->word[i]) + 1 <
+			(uwidth + word_offset[i] + utf8_strwidth(linkage->word[i]) + 1 <
 			                                                      x_screen_width));
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */

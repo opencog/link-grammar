@@ -1,5 +1,5 @@
-Version 5.3.14 (?? 2016 ??)
- * Some sort of new work will be done.
+Version 5.3.14 (?? 2017)
+ * Fix printing widths for Chinese ideographs.
 
 Version 5.3.13 (19 Nov 2016)
  * Fix fatal errors w/ zlib-dev and python dependencies.
