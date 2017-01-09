@@ -108,14 +108,13 @@ void safe_strcat(char *u, const char *v, size_t usize)
 }
 
 /**
- * Prints s in a field width of string t, with no truncation.
- * FIXME: make t a number.
- * (In a previous version of this function, s got truncated to the
- * field width.)
+ * Prints string `s`, aligned to the left, in a field width `w`.
+ * If the width of `s` is shorter than `w`, then the remainder of
+ * field is padded with blanks (on the right).
  */
-void left_print_string(FILE * fp, const char * s, const char * t)
+void left_print_string(FILE * fp, const char * s, int w)
 {
-	int width = strlen(t) + strlen(s) - utf8_strlen(s);
+	int width = w + strlen(s) - utf8_strwidth(s);
 	fprintf(fp, "%-*s", width, s);
 }
 
