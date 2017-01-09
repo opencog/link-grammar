@@ -42,6 +42,9 @@
 #include "wordgraph.h"
 #include "word-utils.h"
 
+/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
+static unsigned int global_rand_state = 0;
+
 /***************************************************************
 *
 * Routines for setting Parse_Options
@@ -805,9 +808,6 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 * Routines for creating and destroying processing Sentences
 *
 ****************************************************************/
-
-/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
-static unsigned int global_rand_state = 0;
 
 Sentence sentence_create(const char *input_string, Dictionary dict)
 {
