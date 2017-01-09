@@ -108,9 +108,9 @@ void safe_strcat(char *u, const char *v, size_t usize)
 }
 
 /**
- * Prints s in a field width of string ti, with no truncation.
+ * Prints s in a field width of string t, with no truncation.
  * FIXME: make t a number.
- * (In a previous version of this function s got truncated to the
+ * (In a previous version of this function, s got truncated to the
  * field width.)
  */
 void left_print_string(FILE * fp, const char * s, const char * t)

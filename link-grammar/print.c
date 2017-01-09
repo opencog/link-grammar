@@ -73,9 +73,9 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	{
 		int len, center_t;
 
-		/* Centers obtained by counting the characters,
+		/* Centers obtained by counting the characters column widths,
 		 * not the bytes in the string. */
-		len = utf8_strlen(linkage->word[i]);
+		len = utf8_strwidth(linkage->word[i]);
 		center_t = tot + (len/2);
 #if 1 /* Long labels - disable in order to compare output with old versions. */
 		if (i > start_word)
@@ -109,8 +109,8 @@ typedef struct
 static void left_append_string(String * string, const char * s, const char * t)
 {
 	size_t i;
-	size_t slen = utf8_strlen(s);
-	size_t tlen = utf8_strlen(t);
+	size_t slen = utf8_strwidth(s);
+	size_t tlen = utf8_strwidth(t);
 
 	for (i = 0; i < tlen; i++)
 	{
@@ -279,7 +279,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (mark) *mark = SUBSCRIPT_DOT;
 
 		/* Make sure the glyphs align during printing. */
-		pad += strlen(infword) - utf8_strlen(infword);
+		pad += strlen(infword) - utf8_strwidth(infword);
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		if (NULL == dj) dj = "";
@@ -636,14 +636,14 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
-		/* Count number of multi-byte chars in the words,
+		/* Count the column-widths of the words,
 		 * up to the max screen width. */
 		unsigned int uwidth = 0;
 		do {
-			uwidth += word_offset[i] + utf8_strlen(linkage->word[i]) + 1;
+			uwidth += word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
 			i++;
 		} while ((i < N_words_to_print) &&
-			(uwidth + word_offset[i] + utf8_strlen(linkage->word[i]) + 1 <
+			(uwidth + word_offset[i] + utf8_strwidth(linkage->word[i]) + 1 <
 			                                                      x_screen_width));
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
