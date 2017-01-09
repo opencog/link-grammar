@@ -564,10 +564,14 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 	else
 	{
+		unsigned int rand_state = N_linkages_found + sent->length;
+
 		/* There are more linkages found than we can handle */
 		/* Pick a (quasi-)uniformly distributed random subset. */
-		if (opts->repeatable_rand)
-			sent->rand_state = N_linkages_found + sent->length;
+		if (0 != sent->rand_state)
+		{
+			rand_state = sent->rand_state;
+		}
 
 		for (in=0; in<N_linkages_alloced; in++)
 		{
@@ -578,7 +582,12 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 			block_bottom = (int) (((double) in) * frac);
 			block_top = (int) (((double) (in+1)) * frac);
 			sent->lnkages[in].lifo.index = block_bottom +
-				(rand_r(&sent->rand_state) % (block_top-block_bottom));
+				(rand_r(&rand_state) % (block_top-block_bottom));
+		}
+
+		if (0 != sent->rand_state)
+		{
+			sent->rand_state = rand_state;
 		}
 	}
 
@@ -780,7 +789,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 ****************************************************************/
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
-static unsigned int global_rand_state;
+static unsigned int global_rand_state = 0;
 
 Sentence sentence_create(const char *input_string, Dictionary dict)
 {
@@ -805,6 +814,15 @@ int sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	bool fw_failed = false;
+
+	/* 0 == global_rand_state denotes "repeatable rand".
+	 * If non-zero, set it here so that anysplit can use it.
+	 */
+	if (false == opts->repeatable_rand && 0 == sent->rand_state)
+	{
+		if (0 == global_rand_state) global_rand_state = 42;
+		sent->rand_state = global_rand_state;
+	}
 
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))

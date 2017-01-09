@@ -574,6 +574,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		free(suffixes);
 	}
 
-	sent->rand_state = seed;
+	/* 0 == sent->rand_state denotes "repeatable rand". */
+	if (0 != sent->rand_state) sent->rand_state = seed;
 	return true;
 }
