@@ -568,6 +568,12 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		/* If this is the "any" language (or "amy"), and the user has
 		 * asked for a random linkage assortment, then really provide
 		 * that.  Used in language-learning.
+		 *
+		 * Note that the use of "random" like this will generate
+		 * the "birthday paradox" - some linakges will get repeated,
+		 * others will get omitted. This is OK, even for very short
+		 * sentences, where it will become apparent that not all
+		 * possibilites were enumerated, and that others got repeated.
 		 */
 		if (0 != sent->rand_state && sent->dict->shuffle_linkages)
 		{
@@ -777,6 +783,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 static void sort_linkages(Sentence sent, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
+
+	/* It they're randomized, don't bother sorting */
+	if (0 != sent->rand_state && sent->dict->shuffle_linkages) return;
+
 	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
