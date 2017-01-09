@@ -42,6 +42,9 @@
 #include "wordgraph.h"
 #include "word-utils.h"
 
+/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
+static unsigned int global_rand_state = 0;
+
 /***************************************************************
 *
 * Routines for setting Parse_Options
@@ -377,6 +380,9 @@ bool parse_options_get_all_short_connectors(Parse_Options opts) {
 
 void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
 	opts->repeatable_rand = val;
+
+	/* This too -- zero is used to indicate repeatability. */
+	global_rand_state = val;
 }
 
 bool parse_options_get_repeatable_rand(Parse_Options opts) {
@@ -559,15 +565,40 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 	else if (N_linkages_found == N_linkages_alloced)
 	{
-		for (in=0; in<N_linkages_alloced; in++)
-			sent->lnkages[in].lifo.index = in;
+		/* If this is the "any" language (or "amy"), and the user has
+		 * asked for a random linkage assortment, then really provide
+		 * that.  Used in language-learning.
+		 *
+		 * Note that the use of "random" like this will generate
+		 * the "birthday paradox" - some linakges will get repeated,
+		 * others will get omitted. This is OK, even for very short
+		 * sentences, where it will become apparent that not all
+		 * possibilites were enumerated, and that others got repeated.
+		 */
+		if (0 != sent->rand_state && sent->dict->shuffle_linkages)
+		{
+			for (in=0; in<N_linkages_alloced; in++)
+			{
+				sent->lnkages[in].lifo.index =
+					rand_r(&sent->rand_state) % N_linkages_alloced;
+			}
+		}
+		else
+		{
+			for (in=0; in<N_linkages_alloced; in++)
+				sent->lnkages[in].lifo.index = in;
+		}
 	}
 	else
 	{
+		unsigned int rand_state = N_linkages_found + sent->length;
+
 		/* There are more linkages found than we can handle */
 		/* Pick a (quasi-)uniformly distributed random subset. */
-		if (opts->repeatable_rand)
-			sent->rand_state = N_linkages_found + sent->length;
+		if (0 != sent->rand_state)
+		{
+			rand_state = sent->rand_state;
+		}
 
 		for (in=0; in<N_linkages_alloced; in++)
 		{
@@ -578,7 +609,12 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 			block_bottom = (int) (((double) in) * frac);
 			block_top = (int) (((double) (in+1)) * frac);
 			sent->lnkages[in].lifo.index = block_bottom +
-				(rand_r(&sent->rand_state) % (block_top-block_bottom));
+				(rand_r(&rand_state) % (block_top-block_bottom));
+		}
+
+		if (0 != sent->rand_state)
+		{
+			sent->rand_state = rand_state;
 		}
 	}
 
@@ -747,6 +783,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 static void sort_linkages(Sentence sent, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
+
+	/* It they're randomized, don't bother sorting */
+	if (0 != sent->rand_state && sent->dict->shuffle_linkages) return;
+
 	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
@@ -779,9 +819,6 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 *
 ****************************************************************/
 
-/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
-static unsigned int global_rand_state;
-
 Sentence sentence_create(const char *input_string, Dictionary dict)
 {
 	Sentence sent;
@@ -805,6 +842,15 @@ int sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	bool fw_failed = false;
+
+	/* 0 == global_rand_state denotes "repeatable rand".
+	 * If non-zero, set it here so that anysplit can use it.
+	 */
+	if (false == opts->repeatable_rand && 0 == sent->rand_state)
+	{
+		if (0 == global_rand_state) global_rand_state = 42;
+		sent->rand_state = global_rand_state;
+	}
 
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))
