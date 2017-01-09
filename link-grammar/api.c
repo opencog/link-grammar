@@ -377,6 +377,9 @@ bool parse_options_get_all_short_connectors(Parse_Options opts) {
 
 void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
 	opts->repeatable_rand = val;
+
+	/* This too -- zero is used to indicate repeatability. */
+	global_rand_state = val;
 }
 
 bool parse_options_get_repeatable_rand(Parse_Options opts) {
