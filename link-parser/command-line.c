@@ -92,7 +92,7 @@ static Switch default_switches[] =
 	{"senses",     Bool, "Display of word senses",          &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-	{"spell",      Int, "Use up to this many spell-guesses per unknown word", &local.spell_guess},
+	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
@@ -241,8 +241,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			for (i = 0; as[i].string != NULL; i++)
 			{
 				printf(" ");
-				left_print_string(stdout, as[i].string, 14);
-				left_print_string(stdout, as[i].description, 51);
+				left_print_string(stdout, as[i].string, 13);
+				left_print_string(stdout, as[i].description, 46);
 				if (Float == as[i].param_type)
 				{
 					/* Float point print! */
