@@ -114,7 +114,8 @@ static void cache_partitions(p_list pl, int *ps, int p)
 	/* ps[3] = 9  */
 
 /**
- * scl: If NULL, return the index of the last split. Else cache the splits into scl.
+ * `scl`: If NULL, return the index of the last split, else cache the
+ * splits into scl.
  */
 static int split_and_cache(int word_length, int nparts, split_cache *scl)
 {
@@ -236,7 +237,7 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 /**
  * Return a number between 0 and nsplits-1, including.
- * No need for a good randomness.
+ * No need for a good randomness; mediocre randomess is enough.
  * We suppose int is 32 bit.
  */
 static int rng_uniform(unsigned int *seedp, size_t nsplits)
@@ -438,7 +439,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t rndtried = 0;
 	size_t rndissued = 0;
 	size_t i;
-	unsigned int seed = 0;
+	unsigned int seed = sent->rand_state;
 	char *prefix_string = alloca(l+2+1); /* word + ".=" + NUL */
 	char *suffix_string = alloca(l+1);   /* word + NUL */
 	bool use_sampling = true;
@@ -573,5 +574,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		free(suffixes);
 	}
 
+	sent->rand_state = seed;
 	return true;
 }
