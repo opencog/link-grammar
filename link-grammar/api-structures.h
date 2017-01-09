@@ -139,6 +139,7 @@ struct Dictionary_s
 	bool         left_wall_defined;
 	bool         right_wall_defined;
 	bool         empty_word_defined;
+	bool         shuffle_linkages;
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;

@@ -559,8 +559,23 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 	else if (N_linkages_found == N_linkages_alloced)
 	{
-		for (in=0; in<N_linkages_alloced; in++)
-			sent->lnkages[in].lifo.index = in;
+		/* If this is the "any" language (or "amy"), and the user has
+		 * asked for a random linkage assortment, then really provide
+		 * that.  Used in language-learning.
+		 */
+		if (0 != sent->rand_state && sent->dict->shuffle_linkages)
+		{
+			for (in=0; in<N_linkages_alloced; in++)
+			{
+				sent->lnkages[in].lifo.index =
+					rand_r(&sent->rand_state) % N_linkages_alloced;
+			}
+		}
+		else
+		{
+			for (in=0; in<N_linkages_alloced; in++)
+				sent->lnkages[in].lifo.index = in;
+		}
 	}
 	else
 	{

@@ -599,6 +599,10 @@ dictionary_six_str(const char * lang,
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
 
+	dict->shuffle_linkages = false;
+	if (0 == strcmp(dict->lang, "any") || NULL != dict->anysplit)
+		dict->shuffle_linkages = true;
+
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
 	if (dict_node != NULL)
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
