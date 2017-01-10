@@ -1493,9 +1493,11 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
 void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
 {
   _linked_possible.resize(_sent->length, 1);
+  vector<vec<Lit>> linked_to_word(_sent->length);
 
   DEBUG_print("------- linked definitions");
   for (size_t w1 = 0; w1 < _sent->length; w1++) {
+    vec<Lit> linked;
     for (size_t w2 = w1 + 1; w2 < _sent->length; w2++) {
       DEBUG_print("---------- ." << w1 << ". ." << w2 << ".");
       Lit lhs = Lit(_variables->linked(w1, w2));
@@ -1512,6 +1514,26 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
 
       _linked_possible.set(w1, w2, rhs.size() > 0);
       generate_or_definition(lhs, rhs);
+
+      /* Optional words that have no links should be "down", as a mark that
+       * they are missing in the linkage.
+       * Collect all possible word links, per word, to be used below. */
+      if (rhs.size() > 0) {
+        if (_sent->word[w1].optional) {
+          linked_to_word[w1].push(Lit(_variables->linked(w1, w2)));
+        }
+        if (_sent->word[w2].optional) {
+          linked_to_word[w2].push(Lit(_variables->linked(w1, w2)));
+        }
+      }
+    }
+
+    if (_sent->word[w1].optional) {
+      /* The word should be connected to at least another word in order to be
+       * in the linkage. */
+      DEBUG_print("------------S not linked -> no word (w" << w1 << ")");
+      generate_or_definition(Lit(_word_tags[w1].var), linked_to_word[w1]);
+      DEBUG_print("------------E not linked -> no word");
     }
   }
   DEBUG_print("------- end linked definitions");
