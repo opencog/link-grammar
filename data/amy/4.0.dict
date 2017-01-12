@@ -7,8 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.12 (formatted as V5v3v12+)
-<dictionary-version-number>: V5v3v12+;
+% Dictionary version number is 5.3.14 (formatted as V5v3v14+)
+<dictionary-version-number>: V5v3v14+;
 
 EMPTY-WORD.zzz: ZZZ-;
 
@@ -19,6 +19,6 @@ ANY-PUNCT: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};
 
-
+MOR-PREF: PF+;
+MOR-STEM: {@PF-} & LL+;
 MOR-SUFF: LL- & {@ANY-} & {@ANY+};
-MOR-STEM: LL+;
