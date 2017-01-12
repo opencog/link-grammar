@@ -35,9 +35,19 @@ any -- Will parse "any" language, exploring all combinatoric possibilities.
        This is useful for certain machine-learning tasks, when one might
        want to iterate over all possible parse trees in every way.
 
+ady -- Will parse "any" language, exploring all possible morphological
+       decompositions of the words in a sentence, as well as using
+       random linkages between words and morphemes. The assumed
+       morphology splits a word into at most two parts: a stem,
+       having no syntactic structure, and a suffix, which carries
+       the inflection -- that is, the stem carries all the syntactic
+       structure.
+
 amy -- Will parse "any" language, exploring all possible morphological
        decompositions of the words in a sentence, as well as using
-       random linkages between words and morphemes.
+       random linkages between words and morphemes. Configured to
+       explore morphology of 3 or more parts: syntactically inactive
+       prefixes and stems, and a single syntactically active suffix.
 
 demo-sql -- An almost empty demonstration dictionary, showing what an
        SQLite-backed dictionary might look like.

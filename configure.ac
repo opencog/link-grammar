@@ -979,6 +979,7 @@ morphology/Makefile
 link-parser/Makefile
 tests/Makefile
 data/Makefile
+data/ady/Makefile
 data/amy/Makefile
 data/any/Makefile
 data/ar/Makefile
