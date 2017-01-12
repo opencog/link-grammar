@@ -269,15 +269,15 @@ static bool morpheme_match(Sentence sent, const char *word, int l, p_list pl)
 		prefix_string[pl[p]-pos] = '\0';
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
-		 * REGMID only to the middle suffixes, and REGSUF only to the suffix part -
-		 * which cannot be the prefix. */
+		 * REGMID only to the middle suffixes, and REGSUF only to the
+		 * suffix part - which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
 		else if (pl[p] == l) re = as->regsuf;
 		else re = as->regmid;
 		lgdebug(2, "re=%s part%d=%s: ", re->name, p, prefix_string);
 
 		/* A NULL regex always matches */
-		if ((NULL != re) && (NULL == match_regex(re ,prefix_string)))
+		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))
 		{
 			lgdebug(2, "No match\n");
 			return false;
