@@ -284,6 +284,26 @@ static inline size_t utf8_next(const char *s)
 #endif /* _WIN32 */
 }
 
+/**
+ * Copy `n` utf8 characters from `src` to `dest`.
+ * Return the number of bytes actually copied.
+ * The `dest` must have enough room to hold the copy.
+ */
+static inline size_t utf8_strncpy(char *dest, const char *src, size_t n)
+{
+	size_t b = 0;
+	while (0 < n)
+	{
+		size_t k = utf8_next(src);
+		b += k;
+		while (0 < k) { *dest = *src; dest++; src++; k--; }
+		n--;
+		if (0x0 == *src) break;
+	}
+
+	return b;
+}
+
 static inline int is_utf8_upper(const char *s, locale_t dict_locale)
 {
 	mbstate_t mbs;
