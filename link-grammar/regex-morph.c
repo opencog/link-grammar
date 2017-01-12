@@ -102,21 +102,19 @@ const char *match_regex(const Regex_node *re, const char *s)
 
 	while (re != NULL)
 	{
-		if (re->re == NULL)
-		{
-			/* Re not compiled; if this happens, it's likely an
-			 *  internal error, but nevermind for now.  */
-			continue;
-		}
-		/* Try to match with no extra data (NULL), whole str (0 to strlen(s)),
-		 * and default options (second 0). */
-		/* int rc = pcre_exec(re->re, NULL, s, strlen(s), 0,
-		 *                    0, ovector, PCRE_OVEC_SIZE); */
+		/* Make sure the regex has been compiled. */
+		assert(re->re);
+
+#if 0
+		/* Try to match with no extra data (NULL), whole str
+		 * (0 to strlen(s)), and default options (second 0). */
+		int rc = pcre_exec(re->re, NULL, s, strlen(s), 0,
+		                   0, ovector, PCRE_OVEC_SIZE);
+#endif
 
 		rc = regexec((regex_t*) re->re, s, 0, NULL, 0);
 		if (0 == rc)
 		{
-			
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!re->neg], re->name, s);
 			if (!re->neg)
 				return re->name; /* Match found - return--no multiple matches. */

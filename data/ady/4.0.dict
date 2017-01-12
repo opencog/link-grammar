@@ -1,7 +1,7 @@
 
  %***************************************************************************%
  %                                                                           %
- %       Copyright (C) 2013, 2014 Linas Vepstas                              %
+ %       Copyright (C) 2013, 2014, 2017 Linas Vepstas                        %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
@@ -19,6 +19,9 @@ ANY-PUNCT: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};
 
-MOR-PREF: PF+;
-MOR-STEM: {@PF-} & LL+;
-MOR-SUFF: LL- & {@ANY-} & {@ANY+};
+
+% A simple two-part morphology:  Some stem, which carries only
+% semantics but no syntax, and a single suffix, which carries
+% all of the syntactic information.
+SIMPLE-STEM: LL+;
+SIMPLE-SUFF: LL- & {@ANY-} & {@ANY+};

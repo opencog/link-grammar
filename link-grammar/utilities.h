@@ -239,6 +239,22 @@ typedef int locale_t;
 size_t utf8_strwidth(const char *);
 
 /**
+ * Return the length, in codepoints/glyphs, of the utf8-encoded
+ * string.  The string is assumed to be null-terminated.
+ * This is needed when splitting words into morphemes.
+ */
+static inline size_t utf8_strlen(const char *s)
+{
+	mbstate_t mbss;
+	memset(&mbss, 0, sizeof(mbss));
+#if defined(_MSC_VER) || defined(__MINGW32__)
+	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
+#else
+	return mbsrtowcs(NULL, &s, 0, &mbss);
+#endif
+}
+
+/**
  * Return the distance, in bytes, to the next character, in the
  * input utf8-encoded string.
  */
@@ -266,6 +282,39 @@ static inline size_t utf8_next(const char *s)
 	}
 	return len;
 #endif /* _WIN32 */
+}
+
+/**
+ * Return the length, in codepoints/glyphs, of the utf8-encoded
+ * string.  The string is assumed to be at least `len` code-points
+ * long. This is needed when splitting words into morphemes.
+ */
+static inline size_t utf8_strnlen(const char *s, size_t len)
+{
+	size_t by = 0;
+	while (0 < len) { by += utf8_next(&s[by]); }
+	return by;
+}
+
+
+/**
+ * Copy `n` utf8 characters from `src` to `dest`.
+ * Return the number of bytes actually copied.
+ * The `dest` must have enough room to hold the copy.
+ */
+static inline size_t utf8_strncpy(char *dest, const char *src, size_t n)
+{
+	size_t b = 0;
+	while (0 < n)
+	{
+		size_t k = utf8_next(src);
+		b += k;
+		while (0 < k) { *dest = *src; dest++; src++; k--; }
+		n--;
+		if (0x0 == *src) break;
+	}
+
+	return b;
 }
 
 static inline int is_utf8_upper(const char *s, locale_t dict_locale)

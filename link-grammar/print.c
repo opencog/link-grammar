@@ -1316,9 +1316,13 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		for (ai=0; ai < max_nalt;  ai++)
 		{
 			if (debugprint)
+			{
+				if (0 < ai) lgdebug(0, "\n   ");
 				lgdebug(0, "   alt%zu:", ai);
+			}
+
 			for (wi = w_start; (wi == w_start) ||
-			 ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
+			    ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
 			{
 				size_t nalts = altlen(sent->word[wi].alternatives);
 				const char *wt;

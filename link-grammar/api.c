@@ -1092,13 +1092,14 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
 /* ============================================================== */
 /* A kind of morphism post-processing */
 
-/* These letters create a string that should be matched by a SANEMORPHISM regex,
- * given in the affix file. The empty word doesn't have a letter. E.g. for the
- * Russian dictionary: "w|ts". It is converted here to: "^((w|ts)b)+$".
+/* These letters create a string that should be matched by a
+ * SANEMORPHISM regex, given in the affix file. The empty word
+ * doesn't have a letter. E.g. for the Russian dictionary: "w|ts".
+ * It is converted here to: "^((w|ts)b)+$".
  * It matches "wbtsbwbtsbwb" but not "wbtsbwsbtsb".
  * FIXME? In this version of the function, 'b' is not yet supported,
- * so "w|ts" is converted to "^(w|ts)+$" for now. */
-
+ * so "w|ts" is converted to "^(w|ts)+$" for now.
+ */
 #define AFFIXTYPE_PREFIX   'p'   /* prefix */
 #define AFFIXTYPE_STEM     't'   /* stem */
 #define AFFIXTYPE_SUFFIX   's'   /* suffix */

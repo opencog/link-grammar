@@ -215,6 +215,8 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 	if (NULL == scl->sp)
 	{
+		// XXX FIXME -- there are more efficient ways of counting
+		// the number of splits. But this is OK for now.
 		nsplits = split_and_cache(word_length, nparts, NULL);
 		//printf("nsplits %zu\n", nsplits);
 		if (0 == nsplits)
@@ -251,38 +253,44 @@ static int rng_uniform(unsigned int *seedp, size_t nsplits)
 
 }
 
-static bool morpheme_match(Sentence sent, const char *word, int l, p_list pl)
+/* lutf is the length of the string, measured in code-points,
+ * blen is the length of the string, measured in bytes.
+ */
+static bool morpheme_match(Sentence sent,
+	const char *word, size_t lutf, p_list pl)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as = afdict->anysplit;
-	int pos = 0;
+	size_t bos = 0, cpos = 0; /* byte offset, code-point offset */
 	int p;
 	Regex_node *re;
-	char *prefix_string = alloca(l+1);
+	size_t blen = strlen(word);
+	char *prefix_string = alloca(blen+1);
 
 	lgdebug(+2, "word=%s: ", word);
 	for (p = 0; p < as->nparts; p++)
 	{
-		strncpy(prefix_string, &word[pos], pl[p]-pos);
-		prefix_string[pl[p]-pos] = '\0';
+		size_t b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+		prefix_string[b] = '\0';
+		bos += b;
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
-		 * REGMID only to the middle suffixes, and REGSUF only to the suffix part -
-		 * which cannot be the prefix. */
+		 * REGMID only to the middle suffixes, and REGSUF only to the
+		 * suffix part - which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
-		else if (pl[p] == l) re = as->regsuf;
+		else if (pl[p] == (int) lutf) re = as->regsuf;
 		else re = as->regmid;
 		lgdebug(2, "re=%s part%d=%s: ", re->name, p, prefix_string);
 
 		/* A NULL regex always matches */
-		if ((NULL != re) && (NULL == match_regex(re ,prefix_string)))
+		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))
 		{
 			lgdebug(2, "No match\n");
 			return false;
 		}
 
-		pos = pl[p];
-		if (pos == l) break;
+		cpos = pl[p];
+		if (cpos == lutf) break;
 	}
 
 	lgdebug(2, "Match\n");
@@ -356,7 +364,7 @@ bool anysplit_init(Dictionary afdict)
 	{
 		if (debug_level(+D_AS))
 			prt_error("Warning: File %s: Anysplit disabled (%s not defined)",
-		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
+			          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
 	}
 	if (1 != regparts->length)
@@ -431,8 +439,9 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t stemsubscr_len;
 
 	size_t l = strlen(word);
+	size_t lutf = utf8_strlen(word);
 	p_list pl;
-	size_t pos;
+	size_t bos, cpos; /* byte offset, codepoint offset */
 	int p;
 	int sample_point;
 	size_t nsplits;
@@ -441,7 +450,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t i;
 	unsigned int seed = sent->rand_state;
 	char *prefix_string = alloca(l+2+1); /* word + ".=" + NUL */
-	char *suffix_string = alloca(l+1);   /* word + NUL */
+	char *suffix_string = alloca(l+1+1); /* "=" + word + NUL */
 	bool use_sampling = true;
 	const char infix_mark = INFIX_MARK(afdict);
 
@@ -461,8 +470,8 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		strlen(stemsubscr->string[0]);
 
 	/* Don't split morphemes again. If INFIXMARK and/or SUBSCRMARK are
-	 * not defined in the affix file, then morphemes may get split again unless
-	 * restricted by REGPRE/REGMID/REGSUF. */
+	 * not defined in the affix file, then morphemes may get split again,
+	 * unless restricted by REGPRE/REGMID/REGSUF. */
 	if (word[0] == infix_mark) return true;
 	if ((l > stemsubscr_len) &&
 	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
@@ -474,7 +483,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	gw = word;
 #endif
 
-	nsplits = split(l, as->nparts, &as->scl[l]);
+	nsplits = split(lutf, as->nparts, &as->scl[lutf]);
 	if (0 == nsplits)
 	{
 		prt_error("Warning: anysplit(): split() failed (shouldn't happen)\n");
@@ -492,7 +501,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	        "as->altsmin=%zu, as->altsmax=%zu\n", use_sampling ? "" : " no",
 	        word, nsplits, as->nparts, as->altsmin, as->altsmax);
 
-	while (rndtried < nsplits && (!use_sampling || (rndissued < as->altsmin)))
+	while (rndtried < nsplits && (!use_sampling || (rndissued < as->altsmax)))
 	{
 		if (use_sampling)
 		{
@@ -510,17 +519,17 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 
 		lgdebug(2, "Sample: %d ", sample_point);
-		if (as->scl[l].p_tried[sample_point])
+		if (as->scl[lutf].p_tried[sample_point])
 		{
 			lgdebug(4, "(repeated)\n");
 			continue;
 		}
 		lgdebug(4, "(new)");
 		rndtried++;
-		as->scl[l].p_tried[sample_point] = true;
-		if (morpheme_match(sent, word, l, &as->scl[l].sp[sample_point*as->nparts]))
+		as->scl[lutf].p_tried[sample_point] = true;
+		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
 		{
-			as->scl[l].p_selected[sample_point] = true;
+			as->scl[lutf].p_selected[sample_point] = true;
 			rndissued++;
 		}
 		else
@@ -529,48 +538,58 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 	}
 
-	lgdebug(2, "Results: word '%s' (length=%zu): %zu/%zu:\n", word, l, rndissued, nsplits);
+	lgdebug(2, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
 	{
 		const char **suffixes = NULL;
 		int num_suffixes = 0;
 
-		if (!as->scl[l].p_selected[i]) continue;
+		if (!as->scl[lutf].p_selected[i]) continue;
 
-		pl = &as->scl[l].sp[i*as->nparts];
-		pos = 0;
+		pl = &as->scl[lutf].sp[i*as->nparts];
+		bos = 0;
+		cpos = 0;
 		for (p = 0; p < as->nparts; p++)
 		{
-			if (pl[0] == (int)l)  /* This is the whole word */
+			size_t b = 0;
+			if (pl[0] == (int)lutf)  /* This is the whole word */
 			{
-				strncpy(prefix_string, &word[pos], pl[p]-pos);
-				prefix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+				prefix_string[b] = '\0';
 			}
 			else
-			if (0 == pos)   /* The first but not the only morpheme */
+			if (0 == cpos)   /* The first, but not the only morpheme */
 			{
-				strncpy(prefix_string, &word[pos], pl[p]-pos);
-				prefix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+				prefix_string[b] = '\0';
 
 				if (0 != stemsubscr->length)
 				    strcat(prefix_string, stemsubscr->string[0]);
 			}
-			else           /* 2nd and on morphemes */
+			else           /* 2nd and subsequent morphemes */
 			{
-				strncpy(suffix_string, &word[pos], pl[p]-pos);
-				suffix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(suffix_string, &word[bos], pl[p]-cpos);
+				suffix_string[b] = '\0';
 				altappend(sent, &suffixes, suffix_string);
 				num_suffixes++;
 			}
 
-			pos = pl[p];
-			if (pos == l) break;
+			bos += b;
+			cpos = pl[p];
+			// if (cpos == lutf) break; /* Same thing as below...*/
+			if (bos == l) break;
 		}
 
+		// XXX FIXME -- this is wrong, it calls the stem the "prefix",
+		// it doesn't actually handle true prfixes, and assumes a
+		// variable number of suffixes
 		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
 		issue_word_alternative(sent, unsplit_word, "AS",
-		   0,NULL,  1,(const char **)&prefix_string, num_suffixes,suffixes);
+		        0, NULL,  /* Zero prefixes */
+		        1, (const char **)&prefix_string,
+		        num_suffixes,suffixes);
 		free(suffixes);
 	}
 
