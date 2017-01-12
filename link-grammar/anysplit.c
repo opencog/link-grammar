@@ -435,7 +435,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t l = strlen(word);
 	size_t lutf = utf8_strlen(word);
 	p_list pl;
-	size_t pos;
+	size_t bos, cpos; /* byte offset, codepoint offset */
 	int p;
 	int sample_point;
 	size_t nsplits;
@@ -542,33 +542,37 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		if (!as->scl[l].p_selected[i]) continue;
 
 		pl = &as->scl[l].sp[i*as->nparts];
-		pos = 0;
+		bos = 0;
+		cpos = 0;
 		for (p = 0; p < as->nparts; p++)
 		{
+			size_t b = 0;
 			if (pl[0] == (int)l)  /* This is the whole word */
 			{
-				strncpy(prefix_string, &word[pos], pl[p]-pos);
-				prefix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+				prefix_string[b] = '\0';
 			}
 			else
-			if (0 == pos)   /* The first, but not the only morpheme */
+			if (0 == cpos)   /* The first, but not the only morpheme */
 			{
-				strncpy(prefix_string, &word[pos], pl[p]-pos);
-				prefix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+				prefix_string[b] = '\0';
 
 				if (0 != stemsubscr->length)
 				    strcat(prefix_string, stemsubscr->string[0]);
 			}
 			else           /* 2nd and subsequent morphemes */
 			{
-				strncpy(suffix_string, &word[pos], pl[p]-pos);
-				suffix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(suffix_string, &word[bos], pl[p]-cpos);
+				suffix_string[b] = '\0';
 				altappend(sent, &suffixes, suffix_string);
 				num_suffixes++;
 			}
 
-			pos = pl[p];
-			if (pos == l) break;
+			bos += b;
+			cpos = pl[p];
+			// if (cpos == lutf) break; /* Same thing as below...*/
+			if (bos == l) break;
 		}
 
 		// XXX FIXME -- this is wrong, it calls the stem the "prefix",
