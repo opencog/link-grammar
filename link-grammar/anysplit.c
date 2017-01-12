@@ -433,6 +433,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t stemsubscr_len;
 
 	size_t l = strlen(word);
+	size_t lutf = utf8_strlen(word);
 	p_list pl;
 	size_t pos;
 	int p;
@@ -463,8 +464,8 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		strlen(stemsubscr->string[0]);
 
 	/* Don't split morphemes again. If INFIXMARK and/or SUBSCRMARK are
-	 * not defined in the affix file, then morphemes may get split again unless
-	 * restricted by REGPRE/REGMID/REGSUF. */
+	 * not defined in the affix file, then morphemes may get split again,
+	 * unless restricted by REGPRE/REGMID/REGSUF. */
 	if (word[0] == infix_mark) return true;
 	if ((l > stemsubscr_len) &&
 	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
@@ -476,7 +477,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	gw = word;
 #endif
 
-	nsplits = split(l, as->nparts, &as->scl[l]);
+	nsplits = split(lutf, as->nparts, &as->scl[l]);
 	if (0 == nsplits)
 	{
 		prt_error("Warning: anysplit(): split() failed (shouldn't happen)\n");
