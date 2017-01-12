@@ -253,26 +253,32 @@ static int rng_uniform(unsigned int *seedp, size_t nsplits)
 
 }
 
-static bool morpheme_match(Sentence sent, const char *word, int l, p_list pl)
+/* lutf is the length of the string, measured in code-points,
+ * blen is the length of the string, measured in bytes.
+ */
+static bool morpheme_match(Sentence sent,
+	const char *word, size_t lutf, p_list pl)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as = afdict->anysplit;
-	int pos = 0;
+	size_t bos = 0, cpos = 0; /* byte offset, code-point offset */
 	int p;
 	Regex_node *re;
-	char *prefix_string = alloca(l+1);
+	size_t blen = strlen(word);
+	char *prefix_string = alloca(blen+1);
 
 	lgdebug(+2, "word=%s: ", word);
 	for (p = 0; p < as->nparts; p++)
 	{
-		strncpy(prefix_string, &word[pos], pl[p]-pos);
-		prefix_string[pl[p]-pos] = '\0';
+		size_t b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+		prefix_string[b] = '\0';
+		bos += b;
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
 		 * REGMID only to the middle suffixes, and REGSUF only to the
 		 * suffix part - which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
-		else if (pl[p] == l) re = as->regsuf;
+		else if (pl[p] == (int) lutf) re = as->regsuf;
 		else re = as->regmid;
 		lgdebug(2, "re=%s part%d=%s: ", re->name, p, prefix_string);
 
@@ -283,8 +289,8 @@ static bool morpheme_match(Sentence sent, const char *word, int l, p_list pl)
 			return false;
 		}
 
-		pos = pl[p];
-		if (pos == l) break;
+		cpos = pl[p];
+		if (cpos == lutf) break;
 	}
 
 	lgdebug(2, "Match\n");
@@ -477,7 +483,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	gw = word;
 #endif
 
-	nsplits = split(lutf, as->nparts, &as->scl[l]);
+	nsplits = split(lutf, as->nparts, &as->scl[lutf]);
 	if (0 == nsplits)
 	{
 		prt_error("Warning: anysplit(): split() failed (shouldn't happen)\n");
@@ -513,17 +519,17 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 
 		lgdebug(2, "Sample: %d ", sample_point);
-		if (as->scl[l].p_tried[sample_point])
+		if (as->scl[lutf].p_tried[sample_point])
 		{
 			lgdebug(4, "(repeated)\n");
 			continue;
 		}
 		lgdebug(4, "(new)");
 		rndtried++;
-		as->scl[l].p_tried[sample_point] = true;
-		if (morpheme_match(sent, word, l, &as->scl[l].sp[sample_point*as->nparts]))
+		as->scl[lutf].p_tried[sample_point] = true;
+		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
 		{
-			as->scl[l].p_selected[sample_point] = true;
+			as->scl[lutf].p_selected[sample_point] = true;
 			rndissued++;
 		}
 		else
@@ -532,22 +538,23 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 	}
 
-	lgdebug(2, "Results: word '%s' (length=%zu): %zu/%zu:\n", word, l, rndissued, nsplits);
+	lgdebug(2, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
 	{
 		const char **suffixes = NULL;
 		int num_suffixes = 0;
 
-		if (!as->scl[l].p_selected[i]) continue;
+		if (!as->scl[lutf].p_selected[i]) continue;
 
-		pl = &as->scl[l].sp[i*as->nparts];
+		pl = &as->scl[lutf].sp[i*as->nparts];
 		bos = 0;
 		cpos = 0;
 		for (p = 0; p < as->nparts; p++)
 		{
 			size_t b = 0;
-			if (pl[0] == (int)l)  /* This is the whole word */
+			if (pl[0] == (int)lutf)  /* This is the whole word */
 			{
 				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
 				prefix_string[b] = '\0';
