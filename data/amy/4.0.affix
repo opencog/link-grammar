@@ -6,9 +6,8 @@
 =: INFIXMARK+;
 
 % Program and dictionary sanity check: Allow only these combinations.
-% (w: word, t:stem, s: suffix)
-
-% For REGPARTS > 2
+% (w: word, p:prefix, m:middle, t:stem, s: suffix)
+%
 % See the file api.c circa line 1100 for details
 % (or grep for AFFIXTYPE in the code).
 "w|ts|pts|pms": SANEMORPHISM+;
