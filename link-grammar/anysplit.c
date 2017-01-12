@@ -215,6 +215,8 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 	if (NULL == scl->sp)
 	{
+		// XXX FIXME -- there are more efficient ways of counting
+		// the number of splits. But this is OK for now.
 		nsplits = split_and_cache(word_length, nparts, NULL);
 		//printf("nsplits %zu\n", nsplits);
 		if (0 == nsplits)
@@ -492,7 +494,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	        "as->altsmin=%zu, as->altsmax=%zu\n", use_sampling ? "" : " no",
 	        word, nsplits, as->nparts, as->altsmin, as->altsmax);
 
-	while (rndtried < nsplits && (!use_sampling || (rndissued < as->altsmin)))
+	while (rndtried < nsplits && (!use_sampling || (rndissued < as->altsmax)))
 	{
 		if (use_sampling)
 		{
