@@ -239,6 +239,22 @@ typedef int locale_t;
 size_t utf8_strwidth(const char *);
 
 /**
+ * Return the length, in codepoints/glyphs, of the utf8-encoded
+ * string.  This is needed when splitting words into morphemes.
+ */
+static inline size_t utf8_strlen(const char *s)
+{
+	mbstate_t mbss;
+	memset(&mbss, 0, sizeof(mbss));
+#if defined(_MSC_VER) || defined(__MINGW32__)
+	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
+#else
+	return mbsrtowcs(NULL, &s, 0, &mbss);
+#endif
+}
+
+
+/**
  * Return the distance, in bytes, to the next character, in the
  * input utf8-encoded string.
  */
