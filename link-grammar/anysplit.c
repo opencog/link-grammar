@@ -550,7 +550,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 				prefix_string[pl[p]-pos] = '\0';
 			}
 			else
-			if (0 == pos)   /* The first but not the only morpheme */
+			if (0 == pos)   /* The first, but not the only morpheme */
 			{
 				strncpy(prefix_string, &word[pos], pl[p]-pos);
 				prefix_string[pl[p]-pos] = '\0';
@@ -558,7 +558,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 				if (0 != stemsubscr->length)
 				    strcat(prefix_string, stemsubscr->string[0]);
 			}
-			else           /* 2nd and on morphemes */
+			else           /* 2nd and subsequent morphemes */
 			{
 				strncpy(suffix_string, &word[pos], pl[p]-pos);
 				suffix_string[pl[p]-pos] = '\0';
