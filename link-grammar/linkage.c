@@ -159,19 +159,28 @@ void remap_linkages(Linkage lkg, const int *remap)
 
 	for (i = 0, j = 0; i < lkg->num_links; i++)
 	{
-		const Link *old_lnk = &lkg->link_array[i];
+		Link *old_lnk = &lkg->link_array[i];
 
 		if (NULL != old_lnk->link_name &&  /* discarded link */
 		   (-1 != remap[old_lnk->rw]) && (-1 != remap[old_lnk->lw]))
 		{
 			Link *new_lnk = &lkg->link_array[j];
+			Connector *ctmp;
 
 			/* Copy the entire link contents, thunking the word numbers.
 			 * Note that j is always <= i so this is always safe. */
+
 			new_lnk->lw = remap[old_lnk->lw];
 			new_lnk->rw = remap[old_lnk->rw];
+
+			ctmp = new_lnk->lc;
 			new_lnk->lc = old_lnk->lc;
+			old_lnk->lc = ctmp;
+
+			ctmp = new_lnk->rc;
 			new_lnk->rc = old_lnk->rc;
+			old_lnk->rc = ctmp;
+
 			new_lnk->link_name = old_lnk->link_name;
 
 			/* Remap the pp_info, too. */

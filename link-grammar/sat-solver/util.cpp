@@ -11,7 +11,7 @@ extern "C" {
 void free_linkage_connectors_and_disjuncts(Linkage lkg)
 {
   // Free the connectors
-  for(size_t i = 0; i < lkg->num_links; i++) {
+  for(size_t i = 0; i < lkg->lasz; i++) {
     free(lkg->link_array[i].rc);
     free(lkg->link_array[i].lc);
   }
