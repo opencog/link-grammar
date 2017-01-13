@@ -888,6 +888,28 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
   return connected;
 }
 
+#ifdef SAT_DEBUG
+#define MVALUE(s, v) (s->model[v] == l_True?'T':(s->model[v] == l_False?'f':'u'))
+static void pmodel(Solver *solver, int var) {
+  printf("%c\n", MVALUE(solver, var));
+}
+
+static void pmodel(Solver *solver, vec<Lit> &clause) {
+  vector<int> t;
+  for (int i = 0; i < clause.size(); i++) {
+    int v = var(clause[i]);
+    printf("%d:%c ", v, MVALUE(solver, v));
+    if (solver->model[v] == l_True) t.push_back(v);
+  }
+  printf("\n");
+  if (t.size()) {
+    printf("l_True:");
+    for (auto i: t) printf(" %d", i);
+    printf("\n");
+  }
+}
+#endif
+
 void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> components) {
   // vector of unique components
   std::vector<int> different_components = components;
