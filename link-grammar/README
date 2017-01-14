@@ -13,7 +13,7 @@ The dict-sql directory contains code to read dictionaries from an SQL DB.
    (unfinished, under development!)
 
 
-Version 5.3.15 - Improved error notification facility
+Version 5.3.14 - Improved error notification facility
 -----------------------------------------------------
 
 This code is still "experimental", so its API may get changed.
