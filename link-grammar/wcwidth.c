@@ -51,12 +51,13 @@
  * http://www.unicode.org/unicode/reports/tr11/
  *
  * Markus Kuhn -- 2007-05-26 (Unicode 5.0)
+ * Copyright (c) 2014 Jeff Quast <contact@jeffquast.com>
  * Copyright (C) Fredrik Fornwall 2016.
- * Distributed under the MIT License.
+ * Copyright (c) 2017 Linas Vepstas - updated for Unicode 9.
  *
  * Original version: http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
  *
- * Updated with latest tables from
+ * Updated with latest Unicode-9 tables from
  * https://github.com/termux/wcwidth/blob/master/wcwidth.c
  */
 
@@ -130,6 +131,7 @@ int mk_wcwidth(wchar_t ucs)
 
   // From https://github.com/jquast/wcwidth/blob/master/wcwidth/table_zero.py
   // at commit 0d7de112202cc8b2ebe9232ff4a5c954f19d561a (2016-07-02):
+  // Original source: DerivedGeneralCategory-9.0.0.txt
   static const struct interval combining[] = {
     {0x0300, 0x036f},  // Combining Grave Accent  ..Combining Latin Small Le
     {0x0483, 0x0489},  // Combining Cyrillic Titlo..Combining Cyrillic Milli
@@ -418,8 +420,7 @@ int mk_wcwidth(wchar_t ucs)
 
   // https://github.com/jquast/wcwidth/blob/master/wcwidth/table_wide.py
   // at commit 0d7de112202cc8b2ebe9232ff4a5c954f19d561a (2016-07-02):
-  // This includes the usual CJK code points, but also the newly-issued
-  // wide emoji's.
+  // Original source: EastAsianWidth-9.0.0.txt
   static struct interval WIDE_GLYPH[] = {
     {0x1100, 0x115f},  // Hangul Choseong Kiyeok  ..Hangul Choseong Filler
     {0x231a, 0x231b},  // Watch                   ..Hourglass
