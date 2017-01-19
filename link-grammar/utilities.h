@@ -26,6 +26,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <wcwidth.h>
 #include <locale.h>
 #ifdef HAVE_LOCALE_T_IN_XLOCALE_H
 #include <xlocale.h>

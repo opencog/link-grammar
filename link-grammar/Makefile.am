@@ -165,6 +165,7 @@ liblink_grammar_la_SOURCES =        \
 	structures.h                     \
 	tokenize.h                       \
 	utilities.h                      \
+	wcwidth.h                        \
 	wordgraph.h                      \
 	word-utils.h
 
