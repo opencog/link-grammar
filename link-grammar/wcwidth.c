@@ -63,6 +63,7 @@
  * which I assume is more accurate...
  */
 
+#include <stdbool.h>
 #include <wchar.h>
 #include "wcwidth.h"
 
@@ -72,12 +73,13 @@ struct interval {
 };
 
 /* auxiliary function for binary search in interval table */
-static int bisearch(wchar_t ucs, const struct interval *table, int max) {
+static bool bisearch(wchar_t ucs, const struct interval *table, int max)
+{
   int min = 0;
   int mid;
 
   if (ucs < table[0].first || ucs > table[max].last)
-    return 0;
+    return false;
   while (max >= min) {
     mid = (min + max) / 2;
     if (ucs > table[mid].last)
@@ -85,10 +87,10 @@ static int bisearch(wchar_t ucs, const struct interval *table, int max) {
     else if (ucs < table[mid].first)
       max = mid - 1;
     else
-      return 1;
+      return true;
   }
 
-  return 0;
+  return false;
 }
 
 
@@ -426,6 +428,14 @@ int mk_wcwidth(wchar_t ucs)
   /* binary search in table of non-spacing characters */
   if (bisearch(ucs, combining,
                sizeof(combining) / sizeof(struct interval) - 1))
+    return 0;
+
+  /* Other zero-width characters not in table above. */
+  if ((0x200B <= ucs && ucs <= 0x200F) ||
+      ucs == 0x2028 ||
+      ucs == 0x2029 ||
+      (0x202A <= ucs && ucs <= 0x202E) ||
+      (0x2060 <= ucs && ucs <= 0x2063))
     return 0;
 
   /* if we arrive here, ucs is not a combining or C0/C1 control character */
