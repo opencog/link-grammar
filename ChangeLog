@@ -1,5 +1,5 @@
 Version 5.3.14 (19 Jan 2017)
- * Fix printing widths for CJK ideographs and emoji's.
+ * Fix printing widths for Unicode-9 CJK ideographs and emoji's.
  * Fix broken randomization in the "any" language.
  * Add UTF-8 support to the random morpheme splitter (amy).
  * Create an "ady" language for two-part morphology splits.
