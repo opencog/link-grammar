@@ -288,7 +288,7 @@ void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 	if (dummy && (verbosity > D_USER_BASIC))
 	{
 		prt_error("Error: Cannot enable the Boolean SAT parser; "
-		          "this library was built without SAT solver support.");
+		          "this library was built without SAT solver support.\n");
 	}
 #endif
 }
@@ -352,7 +352,7 @@ void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
 	if (dummy && (verbosity > D_USER_BASIC))
 	{
 		prt_error("Error: Cannot enable spell guess; "
-		        "this library was built without spell guess support.");
+		        "this library was built without spell guess support.\n");
 	}
 
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
@@ -511,10 +511,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 
 	if (overflowed && (1 < opts->verbosity))
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Warn, "Warning: Count overflow.\n"
-		  "Considering a random subset of %zu of an unknown and large number of linkages\n",
+		err_ctxt ec = { sent };
+		err_msgc(&ec, lg_Warn, "Warning: Count overflow.\n"
+		  "Considering a random subset of %zu of an unknown and large number of linkages",
 			opts->linkage_limit);
 	}
 	N_linkages_found = sent->num_linkages_found;
@@ -533,10 +532,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1)
 		{
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Warn,
-			    "Warning: Considering a random subset of %zu of %zu linkages\n",
+			err_ctxt ec = { sent };
+			err_msgc(&ec, lg_Warn,
+			    "Warning: Considering a random subset of %zu of %zu linkages",
 			    N_linkages_alloced, N_linkages_found);
 		}
 	}
@@ -768,11 +766,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	print_time(opts, "Postprocessed all linkages");
 
-	if (debug_level(6))
+	if (verbosity_level(6))
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
+		err_msg(lg_Info, "Info: %zu of %zu linkages with no P.P. violations",
 		        N_valid_linkages, N_linkages_post_processed);
 	}
 
@@ -877,7 +873,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	{
 		/* Make sure an error message is always printed.
 		 * So it may be redundant. */
-		prt_error("Error: sentence_split(): Internal error detected");
+		prt_error("Error: sentence_split(): Internal error detected\n");
 		return -3;
 	}
 
@@ -1161,7 +1157,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (NULL == wp_new)
 		{
-			lgdebug(+D_SLM, "- No more words in the wordgraph\n");
+			lgdebug(D_SLM, "- No more words in the wordgraph\n");
 			match_found = false;
 			break;
 		}
@@ -1204,15 +1200,21 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (!match_found)
 		{
-			const char *e = "Internal error: Too many words in the linkage\n";
-			lgdebug(D_SLM, "- %s", e);
-			prt_error("Error: %s.", e);
+			const char *e = "Internal error: Too many words in the linkage";
+			lgdebug(D_SLM, "- %s\n", e);
+			prt_error("Error: %s.\n", e);
 			break;
 		}
 
 		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
 
-		if (debug_level(D_SLM)) print_with_subscript_dot(cdj->string);
+		if (verbosity_level(D_SLM))
+		{
+			char *djw_tmp = strdupa(cdj->string);
+			char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
+			if (NULL != sm) *sm = SUBSCRIPT_DOT;
+			lgdebug(0, "%s", djw_tmp);
+		}
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */
@@ -1341,9 +1343,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			/* Notify to stdout, so it will be shown along with the result.
 			 * XXX We should have a better way to notify. */
 			if (0 < opts->verbosity)
-				printf("Warning: Invalid morpheme type combination '%s'.\n"
-				       "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
-				       " to debug\n", affix_types);
+				prt_error("Warning: Invalid morpheme type combination '%s'.\n"
+				          "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
+				          " to debug\n", affix_types);
 		}
 	}
 
@@ -1388,7 +1390,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			N_invalid_morphism ++;
 	}
 
-	if (debug_level(5))
+	if (verbosity_level(5))
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
 		          "invalid morphology construction\n",
@@ -1456,7 +1458,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	 * if it was previously parsed.  If so we free it up before
 	 * building another.  Huh ?? How could that happen? */
 #ifdef DEBUG
-	if (sent->parse_info) fprintf(stderr, "XXX Freeing parse_info\n");
+	if (sent->parse_info) err_msg(lg_Debug, "XXX Freeing parse_info\n");
 #endif
 	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);
@@ -1502,7 +1504,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		if (debug_level(5))
+		if (verbosity_level(5))
 		{
 			prt_error("Info: Total count with %zu null links:   %lld\n",
 			          sent->null_count, total);
@@ -1520,8 +1522,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sane_morphism(sent, opts);
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
-		if ((0 == nl) && (0 < max_null_count))
-			lgdebug(1, "No complete linkages found.\n");
+		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
+			prt_error("No complete linkages found.\n");
 
 		/* If we are here, then no valid linkages were found.
 		 * If there was a parse overflow, give up now. */
@@ -1583,7 +1585,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
-		prt_error("WARNING: Combinatorial explosion! nulls=%zu cnt=%d\n"
+		prt_error("Warning: Combinatorial explosion! nulls=%zu cnt=%d\n"
 			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
 			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);

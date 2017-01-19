@@ -16,6 +16,7 @@
 
 #include "api-structures.h"
 #include "expand.h"
+#include "externs.h"
 #include "disjunct-utils.h"
 #include "word-utils.h"
 #include "corpus/cluster.h"
@@ -26,7 +27,7 @@ static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
 {
 	Disjunct *dj;
 	dj = lg_cluster_get_disjuncts(clu, x->string);
-	if (dj) printf("Expanded %s \n", x->string);
+	if (dj && (verbosity > 0)) prt_error("Expanded %s \n", x->string);
 	return dj;
 }
 

@@ -3,6 +3,7 @@ Version 5.3.14 (?? 2017)
  * Fix broken randomization in the "any" language.
  * Add UTF-8 support to the random morpheme splitter (amy).
  * Create an "ady" language for two-part morphology splits.
+ * Improved error notification facility (experimental).
 
 Version 5.3.13 (19 Nov 2016)
  * Fix fatal errors w/ zlib-dev and python dependencies.

@@ -1223,7 +1223,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		return;
 	}
 
-	if (debugprint) lgdebug(+0, "\n");
+	if (debugprint) lgdebug(+0, "\n\\");
 	else if (NULL != tokenpos)
 		; /* Do nothing */
 	else
@@ -1253,7 +1253,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 
 				/* There should always be at least one alternative */
 				assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu", wi);
 
 				if (NULL != w.alternatives[1])
 				{
@@ -1295,13 +1295,13 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
 		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
 #endif
-		if (debugprint) lgdebug(0, "  word%zu: %s\n   ", wi, w.unsplit_word);
+		if (debugprint) lgdebug(0, "  word%zu: %s\n\\", wi, w.unsplit_word);
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu", wi);
 
-		//printf("DEBUG: word%zu '%s' nalts %zu\n",
+		//err_msg(lg_Debug, "word%zu '%s' nalts %zu\n",
 		//	 wi, sent->word[wi].unsplit_word, altlen(sent->word[wi].alternatives));
 
 		for (wi = w_start; (wi == w_start) ||
@@ -1396,7 +1396,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 			//if (word_split && (NULL == display)) printf("\n");
 		}
 		wi--;
-		if (debugprint) lgdebug(0, "\n");
+		if (debugprint) lgdebug(0, "\n\\");
 	}
 	if (debugprint) lgdebug(0, "\n");
 	else if (word_split) printf("\n\n");
@@ -1420,10 +1420,7 @@ void print_with_subscript_dot(const char *s)
 void print_lwg_path(Gword **w)
 {
 	lgdebug(+0, " ");
-	for (; *w; w++)
-	{
-		print_with_subscript_dot((*w)->subword);
-	}
+	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
 	lgdebug(0, "\n");
 }
 
@@ -1454,8 +1451,9 @@ void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
 void print_chosen_disjuncts_words(const Linkage lkg)
 {
 	size_t i;
+	String *djwbuf = string_new();
 
-	lgdebug(+0, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
 	for (i = 0; i < lkg->num_words; i++)
 	{
 		Disjunct *cdj = lkg->chosen_disjuncts[i];
@@ -1470,7 +1468,12 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 		else
 			djw = cdj->string;
 
-		print_with_subscript_dot(djw);
+		char *djw_tmp = strdupa(djw);
+		char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
+		if (NULL != sm) *sm = SUBSCRIPT_DOT;
+
+		append_string(djwbuf, "%s ", djw_tmp);
 	}
-	lgdebug(0, "\n");
+	err_msg(lg_Debug, "%s\n", string_value(djwbuf));
+	string_delete(djwbuf);
 }

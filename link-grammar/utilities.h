@@ -53,10 +53,28 @@ extern "C"
 void *alloca (size_t);
 #endif
 
+#ifndef TLS
+#ifdef _MSC_VER
+#define TLS __declspec(thread)
+#else
+#define TLS
+#endif /* _MSC_VER */
+#endif /* !TLS */
+
 #ifndef strdupa
 /* In the following, the argument should not have side effects. */
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
+
+/* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
+#ifdef _WIN32
+#define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
+#else
+#ifdef _GNU_SOURCE
+/* Emulate the POSIX version; assuming len>0 and a successful call. */
+#define strerror_r(errno, buf, len) abs((strcpy(buf, strerror_r (errno, buf, len)), 0))
+#endif /* _GNU_SOURCE */
+#endif /* _WIN32 */
 
 #ifdef _MSC_VER
 /* These definitions are incorrect, as these functions are different(!)
@@ -87,13 +105,12 @@ void *alloca (size_t);
 #include <windows.h>
 #include <mbctype.h>
 
+/* Compatibility definitions. */
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
-
-/* MS changed the name of rand_r to rand_s */
+/* Note that "#define _CRT_RAND_S" is needed before "#include <stdlib.h>" */
 #define rand_r(seedp) rand_s(seedp)
-/* And strtok_r is strtok_s */
 #define strtok_r strtok_s
 
 /* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.

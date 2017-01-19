@@ -325,13 +325,14 @@ static bool word_start_another_alternative(Dictionary dict,
 {
 	Gword **n;
 
+	lgdebug(+D_WSAA, "\n"); /* Terminate a previous partial trace message. */
 	lgdebug(+D_WSAA, "Checking %s in alternatives of %zu:%s (prev %zu:%s)\n",
 	        altword0, unsplit_word->node_num, unsplit_word->subword,
 	        unsplit_word->prev[0]->node_num, unsplit_word->prev[0]->subword);
 
 	for (n = unsplit_word->prev[0]->next; NULL != *n; n++)
 	{
-		lgdebug(D_WSAA, "Comparing alt %s\n", (*n)->subword);
+		lgdebug(D_WSAA, "Comparing alt %s\n\\", (*n)->subword);
 		if ((0 == strcmp((*n)->subword, altword0) ||
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
 			 !find_word_in_dict(dict, altword0))))
@@ -680,7 +681,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 							}
 							assert(NULL != *n, "Adding subword '%s': "
 							       "No corresponding next link for a prev link: "
-							       "prevword='%s' word='%s'\n",
+							       "prevword='%s' word='%s'",
 							       subword->subword, (*p)->subword, unsplit_word->subword);
 						}
 					}
@@ -727,7 +728,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 							assert(NULL!=*p,
 								"Adding subword '%s': "
 								"No corresponding prev link for a next link"
-								"nextword='%s' word='%s'\n",
+								"nextword='%s' word='%s'",
 								subword->subword, (*n)->subword, unsplit_word->subword);
 						}
 
@@ -758,7 +759,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					sole_alternative_of_itself : alternative_id;
 				Gword **alts;
 
-				assert(curr_alt, "'%s': No alt mark\n", unsplit_word->subword);
+				assert(curr_alt, "'%s': No alt mark", unsplit_word->subword);
 				assert(prev, "'%s': No prev", unsplit_word->subword);
 				assert(prev[0], "'%s': No prev[0]", unsplit_word->subword);
 				assert(prev[0]->next, "%s': No next",prev[0]->subword);
@@ -955,7 +956,7 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 				{
 					if (c == s)
 					{
-						printf(SYNTHSPLIT_ERROR("(empty subword)."), w);
+						prt_error(SYNTHSPLIT_ERROR("(empty subword)."), w);
 						goto error;
 					}
 					strncpy(alt, s, c-s);
@@ -988,13 +989,13 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 				      ((*c >= '0') && (*c <= '9')) ||
 				      ('_' == *c)))
 				{
-					printf(SYNTHSPLIT_ERROR("('%c' not alphanumeric)."), w, *c);
+					prt_error(SYNTHSPLIT_ERROR("('%c' not alphanumeric)."), w, *c);
 					goto error;
 				}
 		}
 		if (0 > plevel)
 		{
-			printf(SYNTHSPLIT_ERROR("extra ')'"), w);
+			prt_error(SYNTHSPLIT_ERROR("extra ')'"), w);
 			goto error;
 		}
 
@@ -1002,7 +1003,7 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 
 	if (0 < plevel)
 	{
-		printf(SYNTHSPLIT_ERROR("missing '('."), w);
+		prt_error(SYNTHSPLIT_ERROR("missing '('."), w);
 		goto error;
 	}
 
@@ -1523,13 +1524,20 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 	/* Else, ask the spell-checker for alternate spellings
 	 * and see if these are in the dict. */
 	n = spellcheck_suggest(dict->spell_checker, &alternates, word);
-	if (debug_level(+D_SW))
+	if (verbosity_level(+D_SW))
 	{
-		printf("Info: guess_misspelled_word() spellcheck_suggest for %s:%s\n",
-		       word, (0 == n) ? " (nothing)" : "");
+		lgdebug(0, "spellcheck_suggest for %s:\\", word);
+		if (0 == n)
+			lgdebug(0, " (nothing)\n");
+		else
+			lgdebug(0, "\n\\");
+
 		for (j=0; j<n; j++)
 		{
-			printf("- %s\n", alternates[j]);
+			if (n-1 != j)
+				lgdebug(0, "- %s\n\\", alternates[j]);
+			else
+				lgdebug(0, "- %s\n", alternates[j]);
 		}
 	}
 	/* Word split for run-on and guessed words.
@@ -1582,7 +1590,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 				set_alt_word_status(sent->dict, altp, WS_SPELL);
 				num_guesses++;
 			}
-			//else printf("Spell guess '%s' ignored\n", alternates[j]);
+			//else prt_error("Debug: Spell guess '%s' ignored\n", alternates[j]);
 		}
 
 		if (num_guesses >= opts->use_spell_guess) break;
@@ -2003,9 +2011,11 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * http://en.wiktionary.org/wiki/Category:English_double_contractions*/
 			if (!word_is_known)
 			{
-				/* This is not really a debug message, so it is in verbosity 1.
-				 * XXX Maybe prt_error()? */
-				lgdebug(+1, "Contracted word part %s is not in the dict\n", word);
+				/* Note: If we are here it means dict->affix_table is not NULL. */
+				prt_error("Warning: Contracted word part %s is in '%s/%s' "
+				          "but not in '%s/%s'\n", word,
+				          dict->lang, dict->affix_table->name,
+				          dict->lang, dict->name);
 			}
 			return;
 		}
@@ -2690,7 +2700,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	if (NULL == we)
 	{
 		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word '%s': Internal error: NULL X_node\n", w->subword);
+		prt_error("Error: Word '%s': Internal error: NULL X_node", w->subword);
 		return false;
 	}
 #endif
@@ -2714,15 +2724,15 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	/* At last .. concatenate the word expressions we build for
 	 * this alternative. */
 	sent->word[wordpos].x = catenate_X_nodes(sent->word[wordpos].x, we);
-	if (debug_level(D_X_NODE))
+	if (verbosity_level(D_X_NODE))
 	{
 		/* Print the X_node details for the word. */
-		printf("Tokenize word/alt=%zu/%zu '%s' re=%s\n",
+		prt_error("Debug: Tokenize word/alt=%zu/%zu '%s' re=%s\n\\",
 				 wordpos, altlen(sent->word[wordpos].alternatives), s,
 				 w->regex_name ? w->regex_name : "");
 		while (we)
 		{
-			printf(" xstring='%s' expr=", we->string);
+			prt_error(" xstring='%s' expr=", we->string);
 			print_expression(we->exp);
 			we = we->next;
 		}
@@ -2859,7 +2869,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			else
 			{
 				/* Words are not supposed to get issued more than once. */
-				assert(!wpp_old->used, "Word %zu:%s has been used\n",
+				assert(!wpp_old->used, "Word %zu:%s has been used",
 				       wg_word->node_num, wpp_old->word->subword);
 
 				/* This is a new wordgraph word.
@@ -2997,7 +3007,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	free(wp_new);
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
-	if (debug_level(D_SW))
+	if (verbosity_level(D_SW))
 		print_sentence_word_alternatives(sent, true, NULL, NULL);
 
 	return !error_encountered;
@@ -3042,9 +3052,8 @@ bool sentence_in_dictionary(Sentence sent)
 	}
 	if (!ok_so_far)
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Error, "Error: Sentence not in dictionary\n%s\n", temp);
+		err_ctxt ec = { sent };
+		err_msgc(&ec, lg_Error, "Error: Sentence not in dictionary\n%s", temp);
 	}
 	return ok_so_far;
 }

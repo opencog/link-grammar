@@ -42,7 +42,7 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 
 	if (j >= MAX_WORD) {
 		word[MAX_WORD] = '\0';
-		prt_error("The dictionary contains a word that is too long: %s", word);
+		prt_error("The dictionary contains a word that is too long: %s\n", word);
 		return ""; /* error indication */
 	}
 	word[j] = '\0';

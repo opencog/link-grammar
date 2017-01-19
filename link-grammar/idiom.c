@@ -195,7 +195,7 @@ static void increment_current_name(void)
 		if (current_name[i] <= 'Z') return;
 		current_name[i] = 'A';
 	} while (i-- > 0);
-	assert(0, "increment_current_name: Overflow\n");
+	assert(0, "increment_current_name: Overflow");
 }
 
 /**

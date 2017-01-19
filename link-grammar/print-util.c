@@ -12,6 +12,8 @@
 /*************************************************************************/
 
 #include <stdarg.h>
+#include <stdarg.h>
+#include <errno.h>
 #include "print-util.h"
 #include "utilities.h"
 
@@ -57,42 +59,65 @@ char * string_copy(String *s)
 	return p;
 }
 
-void append_string(String * string, const char *fmt, ...)
+static void string_append_l(String *string, const char *a, size_t len)
 {
-#define TMPLEN 1024
-	char temp_buffer[TMPLEN];
-	char * temp_string = temp_buffer;
-	size_t templen;
-	va_list args;
+	if (string->allocated <= string->eos + len)
+	{
+		string->allocated = 2 * string->allocated + len + 1;
+		string->p = (char *)realloc(string->p, string->allocated);
+	}
+	strcpy(string->p + string->eos, a);
+	string->eos += len;
+	return;
+}
 
-	va_start(args, fmt);
-	templen = vsnprintf(temp_string, TMPLEN, fmt, args);
+/* Note: As in the rest of the LG library, we assume here C99 compliance. */
+void vappend_string(String * string, const char *fmt, va_list args)
+{
+#define TMPLEN 1024 /* Big enough for a possible error message, see below */
+	char temp_buffer[TMPLEN];
+	char *temp_string = temp_buffer;
+	size_t templen;
+	va_list copy_args;
+
+	va_copy(copy_args, args);
+	templen = vsnprintf(temp_string, TMPLEN, fmt, copy_args);
+	va_end(copy_args);
+
 	if ((int)templen < 0) goto error;
+	// if (fmt[0] == '(') { errno=2; goto error;} /* Test the error reporting. */
+
 	if (templen >= TMPLEN)
 	{
-		/* TMPLEN is too small - use a bigger buffer */
-		templen = vsnprintf(NULL, 0, fmt, args);
-		if ((int)templen < 0) goto error;
-
+		/* TMPLEN is too small - use a bigger buffer. Couldn't actually
+		 * find any example of entering this code with TMPLEN=1024... */
 		temp_string = alloca(templen+1);
 		templen = vsnprintf(temp_string, templen+1, fmt, args);
 		if ((int)templen < 0) goto error;
 	}
 	va_end(args);
 
-	if (string->allocated <= string->eos + templen)
-	{
-		string->allocated = 2 * string->allocated + templen + 1;
-		string->p = (char *)realloc(string->p, string->allocated);
-	}
-	strcpy(string->p + string->eos, temp_string);
-	string->eos += templen;
+	string_append_l(string, temp_string, templen);
 	return;
 
 error:
-	/* Some error has occurred */
-	prt_error("Error: append_string(): "
-				 "vsnprintf() returned a negative value");
+	{
+		/* Some error has occurred */
+		const char msg[] = "[vappend_string(): ";
+		strcpy(temp_buffer, msg);
+		strerror_r(errno, temp_buffer+sizeof(msg)-1, TMPLEN-sizeof(msg));
+		strcat(temp_buffer, "]");
+		string_append_l(string, temp_string, strlen(temp_buffer));
+		return;
+	}
+}
+
+void append_string(String * string, const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+
+	vappend_string(string, fmt, args);
 }
 
 size_t append_utf8_char(String * string, const char * mbs)

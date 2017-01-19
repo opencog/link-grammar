@@ -356,7 +356,7 @@ static int callout(pcre_callout_block *cb)
 
 			lgdebug(2, "Current capture %d: s=%d, e=%d\n",
 			        cb->capture_last, cb_ov->s, cb_ov->e);
-			assert(cb_ov->s>=0 && cb_ov->e>=0, "Bad start/end in capture group %d: s=%d e=%d\n",
+			assert(cb_ov->s>=0 && cb_ov->e>=0, "Bad start/end in capture group %d: s=%d e=%d",
 			       cb->capture_last, cb_ov->s, cb_ov->e);
 
 			if (verbosity >= 6)
@@ -442,7 +442,7 @@ static int callout(pcre_callout_block *cb)
 				int numchar = cb_ov->e - cb_ov->s;
 
 				/* Debug: Sanity check. */
-				assert(numchar>=0, "numchar=%d\n", numchar);
+				assert(numchar>=0, "numchar=%d", numchar);
 				endname = NULL;
 				for (openp = &cd->pattern[cb->pattern_position-5]; *openp; openp--)
 				{

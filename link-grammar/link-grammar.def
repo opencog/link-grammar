@@ -123,3 +123,8 @@ print_one_disjunct
 build_disjuncts_for_exp
 left_print_string
 regex_tokenizer_test
+lg_error_set_handler
+lg_error_set_handler_data
+lg_error_formatmsg
+lg_error_printall
+lg_error_clearall

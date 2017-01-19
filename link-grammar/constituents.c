@@ -107,13 +107,13 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 {
 	size_t w;
 
-	printf("  c %2d %4s [%c] (%2zu-%2zu): ",
+	err_msg(lg_Debug, "  c %2d %4s [%c] (%2zu-%2zu): ",
 		   c, ctxt->constituent[c].type, ctxt->constituent[c].domain_type,
 		   ctxt->constituent[c].left, ctxt->constituent[c].right);
 	for (w = ctxt->constituent[c].left; w <= ctxt->constituent[c].right; w++) {
-		printf("%s ", linkage->word[w]); /**PV**/
+		err_msg(lg_Debug, "%s ", linkage->word[w]); /**PV**/
 	}
-	printf("\n");
+	err_msg(lg_Debug, "\n");
 }
 
 /******************************************************
@@ -216,8 +216,8 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if (!(strcmp(ctxt->constituent[c1].type, ctype1)==0))
 			continue;
 
-		if (debug_level(D_CONST))
-			printf("Generating complement constituent for c %d of type %s\n",
+		if (verbosity_level(D_CONST))
+			err_msg(lg_Debug, "Generating complement constituent for c %d of type %s\n",
 				   c1, ctype1);
 		done = false;
 		for (w2 = ctxt->constituent[c1].left; (done == false) && (w2 != (size_t)-1); w2--)
@@ -267,11 +267,10 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					ctxt->constituent[c].domain_type = 'x';
 					ctxt->constituent[c].start_link =
 						string_set_add("XX", ctxt->phrase_ss);
-					if (debug_level(D_CONST))
+					if (verbosity_level(D_CONST))
 					{
-						printf("Larger c found: c %d (%s); ",
-							   c2, ctype2);
-						printf("Adding constituent:\n");
+						err_msg(lg_Debug, "Larger c found: c %d (%s); ", c2, ctype2);
+						err_msg(lg_Debug, "Adding constituent:\n\\");
 						print_constituent(ctxt, linkage, c);
 					}
 					c++;
@@ -280,10 +279,10 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 				}
 			}
 		}
-		if (debug_level(D_CONST))
+		if (verbosity_level(D_CONST))
 		{
 			if (done == false)
-				printf("No constituent added, because no larger %s " \
+				err_msg(lg_Debug, "No constituent added, because no larger %s" \
 					   " was found\n", ctype2);
 		}
 	}
@@ -329,9 +328,9 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 						w = ctxt->constituent[c].left - 1;
 						ctxt->constituent[c2].right = w;
 
-						if (debug_level(D_CONST))
+						if (verbosity_level(D_CONST))
 						{
-							printf("Adjusting constituent %d:\n", c2);
+							err_msg(lg_Debug, "Adjusting constituent %d:\n\\", c2);
 							print_constituent(ctxt, linkage, c2);
 						}
 					}
@@ -588,9 +587,9 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		ctxt->constituent[c].valid = true;
 		ctxt->constituent[c].domain_type = 'x';
 		numcon_total++;
-		if (debug_level(D_CONST))
+		if (verbosity_level(D_CONST))
 		{
-			printf("Adding global sentence constituent:\n");
+			err_msg(lg_Debug, "Adding global sentence constituent:\n\\");
 			print_constituent(ctxt, linkage, c);
 		}
 	}
@@ -664,7 +663,7 @@ static const char * cons_of_domain(const Linkage linkage, char domain_type)
 	default:
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msg(&ec, Error, "Error: Illegal domain: %c\n", domain_type);
+			err_msgc(&ec, lg_Error, "Error: Illegal domain: %c", domain_type);
 			return "";
 		}
 	}
@@ -821,23 +820,25 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (ctxt->constituent[c].domain_type == '\0')
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msg(&ec, Error, "Error: no domain type assigned to constituent\n");
+			err_msgc(&ec, lg_Error, "Error: no domain type assigned to constituent");
 		}
 		if (ctxt->constituent[c].start_link == NULL)
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msg(&ec, Error, "Error: no type assigned to constituent\n");
+			err_msgc(&ec, lg_Error, "Error: no type assigned to constituent");
 		}
 	}
 
 	numcon_subl = c - numcon_total;
 	/* numcon_subl = handle_islands(linkage, numcon_total, numcon_subl);  */
 
-	if (debug_level(D_CONST))
+	if (verbosity_level(D_CONST))
 	{
-		printf("Constituents added at first stage:\n");
+		err_msg(lg_Debug, "Constituents added at first stage:\n\\");
 		for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 		{
+			/* FIXME: Here it cannot be printed as one debug message because
+			 * a newline is printed at the end. */
 			print_constituent(ctxt, linkage, c);
 		}
 	}
@@ -915,26 +916,26 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 						(strcmp(linkage->word[ctxt->constituent[c2].right],
 								"RIGHT-WALL") == 0))
 					{
-						if (debug_level(D_CONST))
-							printf("Adjusting %d to fix comma overlap\n", c2);
+						if (verbosity_level(D_CONST))
+							err_msg(lg_Debug, "Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made = true;
 					}
 					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
 					{
-						if (debug_level(D_CONST))
-							printf("Adjusting c %d to fix comma overlap\n", c);
+						if (verbosity_level(D_CONST))
+							err_msg(lg_Debug, "Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
 						adjustment_made = true;
 					}
 					else
 					{
-						if (debug_level(D_CONST))
+						if (verbosity_level(D_CONST))
 						{
 							err_ctxt ec = { linkage->sent };
-							err_msg(&ec, Warn,
+							err_msgc(&ec, lg_Warn,
 							      "Warning: the constituents aren't nested! "
-							      "Adjusting them. (%d, %d)\n", c, c2);
+							      "Adjusting them. (%d, %d)", c, c2);
 					  }
 					  ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}
@@ -968,9 +969,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 		leftdone[c] = false;
 		rightdone[c] = false;
 	}
-
-	if (debug_level(D_CONST))
-		printf("\n");
 
 	/* Skip left wall; don't skip right wall, since it may
 	 * have constituent boundaries. */

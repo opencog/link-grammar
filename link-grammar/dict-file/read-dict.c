@@ -58,7 +58,7 @@ static const char * format_locale(Dictionary dict,
 	r = mbstowcs(wlocale, locale, LOCALE_NAME_MAX_LENGTH);
 	if ((size_t)-1 == r)
 	{
-		prt_error("Error: Error converting %s to wide character.", locale);
+		prt_error("Error: Error converting %s to wide character.\n", locale);
 		return NULL;
 	}
 	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
@@ -66,20 +66,20 @@ static const char * format_locale(Dictionary dict,
 	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
 	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
 	{
-		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: "
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: \n"
 		          "Error %d", locale, (int)GetLastError());
 		return NULL;
 	}
 	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
 	if ((size_t)-1 == r)
 	{
-		prt_error("Error: Error converting locale language from wide character.");
+		prt_error("Error: Error converting locale language from wide character.\n");
 		return NULL;
 	}
 	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
 	if (0 == strncmp(tmpbuf, "Unknown", 7))
 	{
-		prt_error("Error: Unknown territory code in locale \"%s\"", locale);
+		prt_error("Error: Unknown territory code in locale \"%s\"\n", locale);
 		return NULL;
 	}
 	strcpy(locale_buf, tmpbuf);
@@ -88,20 +88,20 @@ static const char * format_locale(Dictionary dict,
 	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
 	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
 	{
-		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: "
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: \n"
 		          "Error %d", locale, (int)GetLastError());
 		return NULL;
 	}
 	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
 	if ((size_t)-1 == r)
 	{
-		prt_error("Error: Error converting locale territory from wide character.");
+		prt_error("Error: Error converting locale territory from wide character.\n");
 		return NULL;
 	}
 	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
 	if (0 == strncmp(tmpbuf, "Unknown", 7))
 	{
-		prt_error("Error: Unknown territory code in locale \"%s\"", locale);
+		prt_error("Error: Unknown territory code in locale \"%s\"\n", locale);
 		return NULL;
 	}
 	locale = strcat(locale_buf, tmpbuf);
@@ -160,7 +160,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 			prt_error("Error: \"<dictionary-locale>: %s\" "
 			          "should be in the form LL4cc+\n"
 						 "\t(LL: language code; cc: territory code) "
-						 "\tor C+ for transliterated dictionaries.",
+						 "\tor C+ for transliterated dictionaries.\n",
 						 dn->exp->u.string);
 			goto locale_error;
 		}
@@ -169,7 +169,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 		if (!try_locale(locale))
 		{
-			prt_error("Debug: Dictionary \"%s\": Locale \"%s\" unknown",
+			prt_error("Debug: Dictionary \"%s\": Locale \"%s\" unknown\n",
 			          dict->name, locale);
 			goto locale_error;
 		}
@@ -189,7 +189,7 @@ locale_error:
 		const char *sslocale = string_set_add(locale, dict->string_set);
 		free((void *)locale);
 		prt_error("Info: Dictionary '%s': No locale definition - "
-		          "\"%s\" will be used.", dict->name, sslocale);
+		          "\"%s\" will be used.\n", dict->name, sslocale);
 		if (!try_locale(sslocale))
 		{
 			lgdebug(D_USER_FILES, "Debug: Unknown locale \"%s\"...\n", sslocale);
@@ -348,19 +348,15 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 
 	if (s2)
 	{
-		err_ctxt ec;
-		ec.sent = NULL;
-		err_msg(&ec, Error, "Error parsing dictionary %s.\n"
-		          "%s %s\n\t line %d, tokens = %s\n",
+		err_msg(lg_Error, "Error parsing dictionary %s.\n"
+		          "%s %s\n\t line %d, tokens = %s",
 		        dict->name,
 		        s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		err_ctxt ec;
-		ec.sent = NULL;
-		err_msg(&ec, Error, "Error parsing dictionary %s.\n"
-		          "%s\n\t line %d, tokens = %s\n",
+		err_msg(lg_Error, "Error parsing dictionary %s.\n"
+		          "%s\n\t line %d, tokens = %s",
 		        dict->name,
 		        s, dict->line_number, tokens);
 	}
@@ -374,10 +370,8 @@ static void dict_error(Dictionary dict, const char * s)
 
 static void warning(Dictionary dict, const char * s)
 {
-	err_ctxt ec;
-	ec.sent = NULL;
-	err_msg(&ec, Warn, "Warning: %s\n"
-	        "\tline %d, current token = \"%s\"\n",
+	err_msg(lg_Warn, "Warning: %s\n"
+	        "\tline %d, current token = \"%s\"",
 	        s, dict->line_number, dict->token);
 }
 
@@ -1743,9 +1737,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else if (is_idiom_word(dn->string))
 	{
-		err_ctxt ec;
-		ec.sent = NULL;
-		err_msg(&ec, Warn, "Warning: Word \"%s\" found near line %d of %s.\n"
+		err_msg(lg_Warn, "Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.",
 		        dn->string, dict->line_number, dict->name);
@@ -1762,9 +1754,9 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-			fprintf(stderr, "\t%s", dnx->string);
+			prt_error("\a\t%s", dnx->string);
 		}
-		fprintf(stderr, "\n\tThis word will be ignored.\n");
+		prt_error("\a\n\tThis word will be ignored.\n");
 		free_lookup(dn_head);
 		free_dict_node(dn);
 	}
@@ -1808,7 +1800,7 @@ static bool read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				prt_error("Error opening word file %s", dict->token);
+				prt_error("Error opening word file %s\n", dict->token);
 				return false;
 			}
 		}
@@ -1840,7 +1832,7 @@ static bool read_entry(Dictionary dict)
 			instr = get_file_contents(dict_name + skip_slash);
 			if (NULL == instr)
 			{
-				prt_error("Error: Could not open subdictionary %s", dict_name);
+				prt_error("Error: Could not open subdictionary \"%s\"\n", dict_name);
 				goto syntax_error;
 			}
 			dict->input = instr;

@@ -18,7 +18,7 @@ for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
 
 
 from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
-                         LG_DictionaryError, LG_TimerExhausted,
+                         LG_Error, LG_DictionaryError, LG_TimerExhausted,
                          Clinkgrammar as clg)
 
 
@@ -58,7 +58,8 @@ class AAALinkTestCase(unittest.TestCase):
 
 class AADictionaryTestCase(unittest.TestCase):
     def test_open_nonexistent_dictionary(self):
-        self.assertRaises(LG_DictionaryError, Dictionary, 'No such language')
+        self.assertRaises(LG_DictionaryError, Dictionary, 'No such language test 1')
+        self.assertRaises(LG_Error, Dictionary, 'No such language test 2')
 
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
@@ -325,7 +326,159 @@ class DBasicParsingTestCase(unittest.TestCase):
                           "This should take more than one second to parse! " * 20,
                           self.po)
 
-class ESATsolverTestCase(unittest.TestCase):
+# The tests here are are numbered since their order is important.
+# They depend on the result and state of the previous ones as follows:
+# - set_handler() returned a value that depend on it previous invocation.
+# - A class variable "handler" to record its previous results.
+class EErrorFacilityTestCase(unittest.TestCase):
+    # Initialize class variables to invalid (for the test) values.
+    handler = {
+        "default":  lambda x, y=None: None,
+        "previous": lambda x, y=None: None
+    }
+
+    def setUp(self): # pylint: disable=attribute-defined-outside-init,no-member
+        self.testit = "testit"
+        self.testleaks = 0  # A repeat count for validating no memory leaks
+
+    @staticmethod
+    def error_handler_test(errinfo, data):
+        # A test error handler.  It assigns the errinfo struct as an attribute
+        # of its data so it can be examined after the call. In addition, the
+        # ability of the error handler to use its data argument is tested by
+        # the "testit" attribute.
+        if data is None:
+            return
+        data.errinfo = errinfo
+        data.gotit = data.testit
+
+    def test_10_set_error_handler(self):
+        # Set the error handler and validate that it
+        # gets the error info and the data.
+        self.__class__.handler["default"] = \
+            LG_Error.set_handler(self.error_handler_test, self)
+        self.assertEqual(self.__class__.handler["default"].__name__,
+                         "_default_handler")
+        self.gotit = None
+        self.assertRaises(LG_Error, Dictionary, "seh_dummy1")
+        self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_Error, "Error"))
+        self.assertEqual(self.gotit, "testit")
+        self.assertRegexpMatches(self.errinfo.text, "Could not open dictionary.*seh_dummy1")
+
+    def test_20_set_error_handler_None(self):
+        # Set the error handler to None and validate that printall()
+        # gets the error info and the data and returns the number of errors.
+        self.__class__.handler["previous"] = LG_Error.set_handler(None)
+        self.assertEqual(self.__class__.handler["previous"].__name__, "error_handler_test")
+        self.assertRaises(LG_Error, Dictionary, "seh_dummy2")
+        self.gotit = None
+        for i in range(0, 2+self.testleaks):
+            self.numerr = LG_Error.printall(self.error_handler_test, self)
+            if 0 == i:
+                self.assertEqual(self.numerr, 1)
+            if 1 == i:
+                self.assertEqual(self.numerr, 0)
+        self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_Error, "Error"))
+        self.assertEqual(self.gotit, "testit")
+        self.assertRegexpMatches(self.errinfo.text, ".*seh_dummy2")
+
+    def test_21_set_error_handler_None(self):
+        # Further test of correct number of errors.
+        self.numerr = 3
+        for _ in range(0, self.numerr):
+            self.assertRaises(LG_Error, Dictionary, "seh_dummy2")
+        self.numerr = LG_Error.printall(self.error_handler_test, None)
+        self.assertEqual(self.numerr, self.numerr)
+
+    def test_22_defaut_handler_param(self):
+        """Test bad data parameter to default error handler"""
+        # (It should be an integer >=0 and <= lg_None.)
+        # Here the error handler is still set to None.
+
+        # This test doesn't work - TypeError is somehow raised inside
+        # linkgrammar.py when _default_handler() is invoked as a callback.
+        #
+        #LG_Error.set_handler(self.__class__.handler["default"], "bad param")
+        #with self.assertRaises(TypeError):
+        #    try:
+        #        Dictionary("a visible dummy dict name (bad param test)")
+        #    except LG_Error:
+        #        pass
+
+        # So test it directly.
+        self.assertRaises(LG_Error, Dictionary, "a visible dummy dict name (bad param test)")
+        LG_Error.printall(self.error_handler_test, self) # grab a valid errinfo
+        self.assertRaisesRegexp(TypeError, "must be an integer",
+                                self.__class__.handler["default"],
+                                self.errinfo, "bad param")
+        self.assertRaisesRegexp(ValueError, "must be an integer",
+                                self.__class__.handler["default"],
+                                self.errinfo, clg.lg_None+1)
+        self.assertRaises(ValueError, self.__class__.handler["default"],
+                          self.errinfo, -1)
+        try:
+            self.param_ok = False
+            self.__class__.handler["default"](self.errinfo, 1)
+            self.param_ok = True
+        except (TypeError, ValueError):
+            self.assertTrue(self.param_ok)
+
+    def test_23_prt_error(self):
+        LG_Error.message("Info: prt_error test\n")
+        LG_Error.printall(self.error_handler_test, self)
+        self.assertRegexpMatches(self.errinfo.text, "prt_error test\n")
+        self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_Info, "Info"))
+
+    def test_24_prt_error_in_parts(self):
+        LG_Error.message("Trace: part one... ")
+        LG_Error.message("part two\n")
+        LG_Error.printall(self.error_handler_test, self)
+        self.assertEqual(self.errinfo.text, "part one... part two\n")
+        self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_Trace, "Trace"))
+
+    def test_25_prt_error_in_parts_with_embedded_newline(self):
+        LG_Error.message("Trace: part one...\n\\")
+        LG_Error.message("part two\n")
+        LG_Error.printall(self.error_handler_test, self)
+        self.assertEqual(self.errinfo.text, "part one...\npart two\n")
+        self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_Trace, "Trace"))
+
+    def test_26_prt_error_plain_message(self):
+        LG_Error.message("This is a regular output line.\n")
+        LG_Error.printall(self.error_handler_test, self)
+        self.assertEqual(self.errinfo.text, "This is a regular output line.\n")
+        self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_None, ""))
+
+    def test_30_formatmsg(self):
+        # Here the error handler is still set to None.
+        for _ in range (0, 1+self.testleaks):
+            self.assertRaises(LG_Error, Dictionary, "formatmsg-test-dummy-dict")
+            LG_Error.printall(self.error_handler_test, self)
+            self.assertRegexpMatches(self.errinfo.formatmsg(), "link-grammar: Error: .*formatmsg-test-dummy-dict")
+
+    def test_40_clearall(self):
+        # Here the error handler is still set to None.
+        # Call LG_Error.clearall() and validate it indeed clears the error.
+        self.assertRaises(LG_Error, Dictionary, "clearall-test-dummy-dict")
+        LG_Error.clearall()
+        self.testit = "clearall"
+        self.numerr = LG_Error.printall(self.error_handler_test, self)
+        self.assertEqual(self.numerr, 0)
+        self.assertFalse(hasattr(self, "gotit"))
+
+    def test_50_set_orig_error_handler(self):
+        # Set the error handler back to the default handler.
+        # The error message is now visible (but we cannot test that).
+        self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
+        self.assertIsNone(self.__class__.handler["previous"])
+        for _ in range(0, 1+self.testleaks):
+            self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
+        self.assertEqual(self.__class__.handler["previous"].__name__, "_default_handler")
+        self.errinfo = "dummy"
+        self.assertRaises(LG_Error, Dictionary, "a visible dummy dict name (default handler test)")
+        self.assertEqual(self.errinfo, "dummy")
+
+class FSATsolverTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()
         self.po = ParseOptions(use_sat=True)

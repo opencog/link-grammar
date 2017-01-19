@@ -83,13 +83,13 @@ Corpus * lg_corpus_new(void)
 		if (SQLITE_CANTOPEN == c->rc)
 		{
 			prt_error("Warning: File not found: %s\n"
-			          "\tWas looking for: " DBNAME,
+			          "\tWas looking for: " DBNAME "\n",
 				c->errmsg);
 		}
 		else
 		{ 
 			prt_error("Warning: Can't open database: %s\n"
-			          "\tWas looking for: " DBNAME,
+			          "\tWas looking for: " DBNAME "\n",
 				c->errmsg);
 		}
 		return c;

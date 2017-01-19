@@ -28,16 +28,8 @@ typedef struct
 	Sentence sent;
 } err_ctxt;
 
-typedef enum
-{
-	Fatal = 1,
-	Error,
-	Warn,
-	Info,
-	Debug
-} severity;
-
-void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
+void err_msgc(err_ctxt *, lg_error_severity, const char *fmt, ...) GNUC_PRINTF(3,4);
+#define err_msg(...) err_msgc(NULL, __VA_ARGS__)
 const char *feature_enabled(const char *, ...);
 
 /**
@@ -53,9 +45,14 @@ const char *feature_enabled(const char *, ...);
 (((verbosity>=(level)) && (((level)<=1) || \
 	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
-	feature_enabled(debug, __func__, __FILE__, NULL))) \
-	? ((STRINGIFY(level)[0] == '+' ? (void)printf("%s: ", __func__) : (void)0), \
-	(void)printf(__VA_ARGS__)) : (void)0)
+	feature_enabled(debug, __func__, __FILE__, NULL))) ? \
+	( \
+		(STRINGIFY(level)[0] == '+' ? \
+			(void)err_msg(lg_Trace, "%s: ", __func__) : \
+			(void)0), \
+		(void)err_msg(lg_Trace,  __VA_ARGS__) \
+	) : \
+	(void)0)
 
 /**
  * Wrap-up a debug-messages block.
@@ -67,17 +64,24 @@ const char *feature_enabled(const char *, ...);
  * Return true if the debug-messages block should be executed, else false.
  *
  * Usage example, for debug messages at verbosity V:
- * if (debug_level(V))
+ * if (verbosity_level(V))
  * {
- * 	print_disjunct(d);
+ *    print_disjunct(d);
  * }
+ *
+ * The optional printing of the function name is done here by prt_error()
+ * and not err_msg(), in order to not specify the message severity.
+ * Also note there is no trailing newline in that case. These things
+ * ensured the message severity will be taken from a following message
+ * which includes a newline. So verbosity_level()V) can be used for any
+ * desired message severity.
  */
-#define debug_level(level) \
+#define verbosity_level(level) \
 (((verbosity>=(level)) && (((level)<=1) || \
 	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
 	feature_enabled(debug, __func__, __FILE__, NULL))) \
-	? ((STRINGIFY(level)[0] == '+' ? printf("%s: ", __func__) : 0), true) \
+	? ((STRINGIFY(level)[0] == '+' ? prt_error("%s: ", __func__) : 0), true) \
 	: false)
 
 /**
