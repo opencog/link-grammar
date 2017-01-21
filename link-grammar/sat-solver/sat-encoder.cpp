@@ -914,7 +914,7 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
   // (For now these can be only be words marked as "optional").
   std::vector<bool> is_linked_word(_sent->length, false);
   for (size_t node = 0; node < _sent->length; node++) {
-    is_linked_word[node] = _solver->model[_word_tags[node].var] == l_True;
+    is_linked_word[node] = _solver->model[node] == l_True;
   }
 
   // build the connectivity graph
@@ -1037,8 +1037,8 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
             Lit lhs = Lit(conditional_link_var);
             vec<Lit> rhs;
             rhs.push(Lit(var));
-            if (optlw_exists) rhs.push(~Lit(_word_tags[lv->left_word].var));
-            if (optrw_exists) rhs.push(~Lit(_word_tags[lv->right_word].var));
+            if (optlw_exists) rhs.push(~Lit(lv->left_word));
+            if (optrw_exists) rhs.push(~Lit(lv->right_word));
             generate_or_definition(lhs, rhs);
           }
 
@@ -1051,8 +1051,8 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
     if (missing_word) {
       // The connectivity may be restored differently if a word reappears
       for (WordIdx w = 0; w < _sent->length; w++) {
-        if (_solver->model[_word_tags[w].var] == l_False)
-          clause.push(Lit(_word_tags[w].var));
+        if (_solver->model[w] == l_False)
+          clause.push(Lit(w));
       }
     }
     CONNECTIVITY_DEBUG(printf("\n"));
@@ -1655,7 +1655,7 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
       /* The word should be connected to at least another word in order to be
        * in the linkage. */
       DEBUG_print("------------S not linked -> no word (w" << w1 << ")");
-      generate_or_definition(Lit(_word_tags[w1].var), linked_to_word[w1]);
+      generate_or_definition(Lit(w1), linked_to_word[w1]);
       DEBUG_print("------------E not linked -> no word");
     }
   }

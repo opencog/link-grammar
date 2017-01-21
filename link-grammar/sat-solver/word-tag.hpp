@@ -107,14 +107,17 @@ private:
 
 public:
   WordTag(int word, const char* name, Variables* variables, Sentence sent, Parse_Options opts)
-    : _word(word), _variables(variables), _sent(sent), _opts(opts), var(_variables->string(name)) {
+    : _word(word), _variables(variables), _sent(sent), _opts(opts) {
     _match_possible.resize(_sent->length);
+
+    // The SAT word variables are set to be equal to the word numbers.
+    Var var = _variables->string(name);
+    assert(word == var);
+
     verbosity = opts->verbosity;
     debug = opts->debug;
     test = opts->test;
   }
-
-  int var; // The corresponding SAT variable.
 
   // Added only to suppress the warning:
   // warning: inlining failed in call to ‘WordTag::~WordTag() noexcept’: call is unlikely and code size would grow [-Winline]
