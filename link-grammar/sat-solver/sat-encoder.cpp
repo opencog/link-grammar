@@ -1003,8 +1003,11 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
   debug_generate_disconnectivity_prohibiting(components, different_components);
   // Each connected component must contain a branch going out of it
   std::vector<int>::const_iterator c;
-  if (*different_components.begin() == -1)
+  bool missing_word = false;
+  if (*different_components.begin() == -1) {
     different_components.erase(different_components.begin());
+    missing_word = true;
+  }
   for (c = different_components.begin(); c != different_components.end(); c++) {
     vec<Lit> clause;
     const std::vector<int>& linked_variables = _variables->linked_variables();
@@ -1042,6 +1045,14 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
           var = conditional_link_var; // Replace it by its conditional link var
         }
         clause.push(Lit(var)); // Implied link var is used if needed
+      }
+    }
+
+    if (missing_word) {
+      // The connectivity may be restored differently if a word reappears
+      for (WordIdx w = 0; w < _sent->length; w++) {
+        if (_solver->model[_word_tags[w].var] == l_False)
+          clause.push(Lit(_word_tags[w].var));
       }
     }
     CONNECTIVITY_DEBUG(printf("\n"));
