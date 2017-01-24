@@ -37,8 +37,6 @@
 
 #include "anysplit.h"
 
-#define D_AS 10          /* verbosity level for this file */
-
 extern const char * const afdict_classname[];
 
 typedef int p_start;     /* partition start in a word */
@@ -256,6 +254,7 @@ static int rng_uniform(unsigned int *seedp, size_t nsplits)
 /* lutf is the length of the string, measured in code-points,
  * blen is the length of the string, measured in bytes.
  */
+#define D_MM 7
 static bool morpheme_match(Sentence sent,
 	const char *word, size_t lutf, p_list pl)
 {
@@ -267,7 +266,7 @@ static bool morpheme_match(Sentence sent,
 	size_t blen = strlen(word);
 	char *prefix_string = alloca(blen+1);
 
-	lgdebug(+2, "word=%s: ", word);
+	lgdebug(+D_MM, "word=%s: ", word);
 	for (p = 0; p < as->nparts; p++)
 	{
 		size_t b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
@@ -280,12 +279,12 @@ static bool morpheme_match(Sentence sent,
 		if (0 == p) re = as->regpre;
 		else if (pl[p] == (int) lutf) re = as->regsuf;
 		else re = as->regmid;
-		lgdebug(2, "re=%s part%d=%s: ", re->name, p, prefix_string);
+		lgdebug(D_MM, "re=%s part%d=%s: ", re->name, p, prefix_string);
 
 		/* A NULL regex always matches */
 		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))
 		{
-			lgdebug(2, "No match\n");
+			lgdebug(D_MM, "No match\n");
 			return false;
 		}
 
@@ -293,9 +292,10 @@ static bool morpheme_match(Sentence sent,
 		if (cpos == lutf) break;
 	}
 
-	lgdebug(2, "Match\n");
+	lgdebug(D_MM, "Match\n");
 	return true;
 }
+#undef D_MM
 
 static Regex_node * regbuild(const char **regstring, int n, int classnum)
 {
@@ -348,6 +348,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
  * anysplit (its not an error to not use anysplit!).  Return false if
  * init failed.
  */
+#define D_AI 10
 bool anysplit_init(Dictionary afdict)
 {
 	anysplit_params *as;
@@ -362,7 +363,7 @@ bool anysplit_init(Dictionary afdict)
 
 	if (0 == regparts->length)
 	{
-		if (verbosity_level(+D_AS))
+		if (verbosity_level(+D_AI))
 			prt_error("Warning: File %s: Anysplit disabled (%s not defined)\n",
 		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
@@ -421,6 +422,7 @@ bool anysplit_init(Dictionary afdict)
 
 	return true;
 }
+#undef D_AI
 
 /**
  * Split randomly.
@@ -430,6 +432,7 @@ bool anysplit_init(Dictionary afdict)
  * - an error occurs (the behavior then is undefined).
  *   Such an error has not been observed yet.
  */
+#define D_AS 5
 bool anysplit(Sentence sent, Gword *unsplit_word)
 {
 	const char * word = unsplit_word->subword;
@@ -497,7 +500,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		use_sampling = false;
 	}
 
-	lgdebug(+2, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
+	lgdebug(+D_AS, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
 	        "as->altsmin=%zu, as->altsmax=%zu\n", use_sampling ? "" : " no",
 	        word, nsplits, as->nparts, as->altsmin, as->altsmax);
 
@@ -518,13 +521,13 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 			sample_point++;
 		}
 
-		lgdebug(2, "Sample: %d ", sample_point);
+		lgdebug(D_AS, "Sample: %d ", sample_point);
 		if (as->scl[lutf].p_tried[sample_point])
 		{
-			lgdebug(4, "(repeated)\n");
+			lgdebug(D_AS+1, "(repeated)\n");
 			continue;
 		}
-		lgdebug(4, "(new)");
+		lgdebug(D_AS+1, "(new)");
 		rndtried++;
 		as->scl[lutf].p_tried[sample_point] = true;
 		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
@@ -534,11 +537,11 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 		else
 		{
-			lgdebug(2, "\n");
+			lgdebug(D_AS, "\n");
 		}
 	}
 
-	lgdebug(2, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	lgdebug(D_AS, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
 	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
@@ -597,3 +600,4 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	if (0 != sent->rand_state) sent->rand_state = seed;
 	return true;
 }
+#undef D_AS
