@@ -380,8 +380,11 @@ static bool is_contraction_prefix(const char *s)
 }
 #endif
 
-static bool is_contraction_word(const char *s)
+static bool is_contraction_word(Dictionary dict, const char *s)
 {
+	if (dict->affix_table && dict->affix_table->anysplit)
+		return false;
+
 	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
 	{
 		if (NULL != strstr(s, contraction_char[i])) return true;
@@ -484,7 +487,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 						last_split = true;
 						token = buff;
 					}
-					if (is_contraction_word(unsplit_word->subword))
+					if (is_contraction_word(sent->dict, unsplit_word->subword))
 						morpheme_type = MT_CONTR;
 					else
 						morpheme_type = MT_PREFIX;
@@ -508,7 +511,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					     !is_utf8_alpha(*affix, sent->dict->lctype)) ||
 					    '\0' == infix_mark)
 					{
-						if (is_contraction_word(unsplit_word->subword))
+						if (is_contraction_word(sent->dict, unsplit_word->subword))
 							morpheme_type = MT_CONTR;
 						else
 							morpheme_type = MT_WORD;
@@ -1166,7 +1169,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 				 * not boolean_dictionary_lookup().
 				 * Note: Not like a previous version, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
-				if ((is_contraction_word(w) &&
+				if ((is_contraction_word(dict, w) &&
 				    find_word_in_dict(dict, newword)) ||
 				    boolean_dictionary_lookup(dict, newword))
 				{
@@ -2210,7 +2213,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	 * in which case we need a regex for things like 1960's.
 	 * The first regex which matches (if any) is used.
 	 * An alternative consisting of the word has already been generated. */
-	if (!word_is_known && (!word_can_split || is_contraction_word(word)))
+	if (!word_is_known && (!word_can_split || is_contraction_word(dict, word)))
 	{
 		const char *regex_name = match_regex(dict->regex_root, word);
 		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
@@ -2373,7 +2376,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	 * and if a capital-word regex has not been issued there, we should prevent
 	 * issuing it here. */
 	if (!(word_is_known ||  lc_word_is_in_dict ||
-	      (word_can_split && !is_contraction_word(word))))
+	      (word_can_split && !is_contraction_word(dict, word))))
 	{
 		if ((NULL != unsplit_word->regex_name))
 		{
