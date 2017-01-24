@@ -129,6 +129,9 @@
     <ClCompile Include="..\link-grammar\wordgraph.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\wcwidth.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-grammar\analyze-linkage.h">
@@ -258,6 +261,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\lg_assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\wcwidth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
