@@ -181,6 +181,19 @@ static bool pseudocount(count_context_t * ctxt,
 	return true;
 }
 
+/**
+ * Return the number of optional words strictly between w1 and w2.
+ */
+static int num_optional_words(count_context_t *ctxt, int w1, int w2)
+{
+	int n = 0;
+
+	for (int w = w1+1; w < w2; w++)
+		if (ctxt->local_sent[w].optional) n++;
+
+	return n;
+}
+
 static Count_bin do_count(fast_matcher_t *mchxt,
                           count_context_t *ctxt,
                           int lw, int rw,
@@ -226,7 +239,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			/* If we don't allow islands (a set of words linked together
 			 * but separate from the rest of the sentence) then the
 			 * null_count of skipping n words is just n. */
-			if (null_count == (rw-lw-1))
+			if (null_count == (rw-lw-1) - num_optional_words(ctxt, lw, rw))
 			{
 				t->count = hist_one();
 			}

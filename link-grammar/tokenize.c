@@ -1422,7 +1422,6 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
  */
 static bool is_capitalizable(const Dictionary dict, const Gword *word)
 {
-	if (MT_EMPTY == word->morpheme_type) return false; /* no prev pointer */
 	/* Words at the start of sentences are capitalizable */
 	if (MT_WALL == word->prev[0]->morpheme_type) return true;
 	if (MT_INFRASTRUCTURE == word->prev[0]->morpheme_type) return true;
@@ -2635,6 +2634,7 @@ static Word *word_new(Sentence sent)
 		sent->word[len].x= NULL;
 		sent->word[len].unsplit_word = NULL;
 		sent->word[len].alternatives = NULL;
+		sent->word[len].optional = false;
 		sent->length++;
 
 		return &sent->word[len];
@@ -2812,7 +2812,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	{
 		Word *wa_word; /* A word-array word (for the parsing stage) */
 		const Gword *unsplit_word;
-		bool empty_word_encountered;
 
 		assert(NULL != wp_new, "pathpos word queue is empty");
 		wp_old = wp_new;
@@ -2845,7 +2844,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		empty_word_encountered = false;
 		/* Generate the X-nodes. */
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
@@ -2854,20 +2852,13 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 			if (wpp_old->same_word)
 			{
-				/* We haven't advanced to the next wordgraph word, so its X-node has
-				 * already been generated in a previous word of the word array.
-				 * Generate an empty word if one has not already been generated.
-				 */
-				if (!empty_word_encountered)
-				{
-					/* ??? Should we check it earlier? */
-					if (!sent->dict->empty_word_defined)
-						prt_error("Error: %s must be defined!\n", EMPTY_WORD_DOT);
-
-					if (!determine_word_expressions(sent, empty_word(), &ZZZ_added))
-						error_encountered = true;
-					empty_word_encountered = true;
-				}
+				/* We haven't advanced to the next wordgraph word, so its X-node
+				 * has already been generated in a previous word of the word
+				 * array.  This means we are in a longer alternative which has
+				 * "extra" words that may not have links, and this is one of
+				 * them.  Mark it as "optional", so we consider that while
+				 * parsing, and then remove it in case it doesn't have links. */
+				sent->word[sent->length - 1].optional = true;
 			}
 			else
 			{

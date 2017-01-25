@@ -10,8 +10,6 @@
 % Dictionary version number is 5.3.14 (formatted as V5v3v14+)
 <dictionary-version-number>: V5v3v14+;
 
-EMPTY-WORD.zzz: ZZZ-;
-
 LEFT-WALL: ANY+;
 ANY-WORD: {@ANY-} & {@ANY+};
 UNKNOWN-WORD: {@ANY-} & {@ANY+};

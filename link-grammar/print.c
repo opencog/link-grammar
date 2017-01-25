@@ -1272,10 +1272,10 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		 *   ה=  כלב  לב  ב=
 		 *   ה=  כ=  ל=
 		 *   ה=  כ=
-		 * For "'50s," (∅ means empty word):
+		 * For "'50s,"
 		 *   ' s s ,
-		 *   '50 50 , ∅
-		 *   '50s ∅
+		 *   '50 50 ,
+		 *   '50s
 		 * Clearly, this is not informative any more. Instead, one line with a
 		 * list of tokens (without repetitions) is printed
 		 * ה= כלב לב ב= כ= ל=
@@ -1329,13 +1329,8 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 				const char *st = NULL;
 				char *wprint = NULL;
 
-				/* In the Wordgraph version alternative slots are not balanced
-				 * with empty words. To see these places for debug, later
-				 * here "[missing]" is printed if wt is "". */
-				if (ai >= nalts)
-					wt = ""; /* missing */
-				else
-					wt = sent->word[wi].alternatives[ai];
+				if (ai >= nalts) continue;
+				wt = sent->word[wi].alternatives[ai];
 
 				/* Don't display information again for the same word */
 				if ((NULL != tokenpos) && (0 == strcmp(tokenpos->token, wt)))
@@ -1359,9 +1354,6 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					}
 				}
 
-				if (0 == strcmp(wt, EMPTY_WORD_MARK))
-					wt = EMPTY_WORD_DISPLAY;
-
 				/* Restore SUBSCRIPT_DOT for printing */
 				st = strrchr(wt, SUBSCRIPT_MARK);
 				if (st)
@@ -1372,10 +1364,19 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					wt = wprint;
 				}
 
-				if (debugprint) lgdebug(0, " %s", '\0' == wt[0] ? "[missing]" : wt);
+				if (debugprint)
+				{
+					const char *opt_start = "", *opt_end = "";
+					if (sent->word[wi].optional)
+					{
+						opt_start = "{";
+						opt_end = "}";
+					}
+					lgdebug(0, " %s%s%s", opt_start, wt, opt_end);
+				}
 
 				/* Don't try to give info on the empty word. */
-				if (('\0' != wt[0]) && (0 != strcmp(wt, EMPTY_WORD_DISPLAY)))
+				if ('\0' != wt[0])
 				{
 					/* For now each word component is called "Token".
 					 * TODO: Its type can be decoded and a more precise
@@ -1460,9 +1461,7 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
-			djw = "[]"; /* null word */
-		else if (MT_EMPTY == cdj->word[0]->morpheme_type)
-			djw = EMPTY_WORD_DISPLAY;
+			djw = lkg->sent->word[i].optional ? "{}" : "[]";
 		else if ('\0' == cdj->string[0])
 			djw = "\\0"; /* null string - something is wrong */
 		else

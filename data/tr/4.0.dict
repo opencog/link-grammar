@@ -5,10 +5,6 @@
 <dictionary-version-number>: V5v3v4+;
 <dictionary-locale>: TR4tr+;
 
-% The empty word.
-EMPTY-WORD.zzz: ZZZ-;
-
-
 % adjectives
 kırmızı şişman hasta kızgın güzel genç yasli iyi kötü hos üzücü mutlu aç siyah beyaz mavi yeşil mor pembe sarı: {AO+};
 
