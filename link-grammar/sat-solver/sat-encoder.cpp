@@ -336,7 +336,9 @@ void SATEncoder::generate_satisfaction_conditions()
     name[0] = 'w';
     fast_sprintf(name+1, w);
 
-    determine_satisfaction(w, name);
+    if (!_sent->word[w].optional)
+      determine_satisfaction(w, name);
+
     int dfs_position = 0;
     generate_satisfaction_for_expression(w, dfs_position, exp, name, 0);
 
@@ -1277,7 +1279,7 @@ Linkage SATEncoder::create_linkage()
   Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
   memset(linkage, 0, sizeof(struct Linkage_s));
 
-  partial_init_linkage(linkage, _sent->length);
+  partial_init_linkage(_sent, linkage, _sent->length);
   sat_extract_links(linkage);
   compute_link_names(linkage, _sent->string_set);
   /* Because the empty words are used only in the parsing stage, they are

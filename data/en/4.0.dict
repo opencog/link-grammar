@@ -56,7 +56,7 @@
 % FIXME: A better comment maybe.
 % See also EMPTY-WORD.x for the highly-unusual situation that EMPTY-WORD
 % appears in the input text.
-EMPTY-WORD.zzz: ZZZ-;
+%EMPTY-WORD.zzz: ZZZ-;
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;

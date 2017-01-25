@@ -232,7 +232,7 @@ void remove_empty_words(Linkage lkg)
 
 	for (i = 0, j = 0; i < lkg->num_words; i++)
 	{
-		if ((NULL != cdj[i]) && (MT_EMPTY == cdj[i]->word[0]->morpheme_type))
+		if ((NULL == cdj[i]) && lkg->sent->word[i].optional)
 		{
 			remap[i] = -1;
 		}
@@ -727,7 +727,6 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	/* Perform remaining initialization we haven't done yet...*/
 	compute_chosen_words(sent, linkage, opts);
 
-	linkage->sent = sent;
 	linkage->is_sent_long = (linkage->num_words >= opts->twopass_length);
 
 	return linkage;

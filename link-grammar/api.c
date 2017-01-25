@@ -622,7 +622,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 }
 
 /* Partial, but not full initialization of the linakge struct ... */
-void partial_init_linkage(Linkage lkg, unsigned int N_words)
+void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 {
 	lkg->num_links = 0;
 	lkg->lasz = 2 * N_words;
@@ -640,6 +640,7 @@ void partial_init_linkage(Linkage lkg, unsigned int N_words)
 #endif
 
 	lkg->pp_info = NULL;
+	lkg->sent = sent;
 }
 
 void check_link_size(Linkage lkg)
@@ -665,7 +666,7 @@ static void compute_chosen_disjuncts(Sentence sent)
 
 		if (lifo->discarded || lifo->N_violations) continue;
 
-		partial_init_linkage(lkg, pi->N_words);
+		partial_init_linkage(sent, lkg, pi->N_words);
 		extract_links(lkg, pi);
 		compute_link_names(lkg, sent->string_set);
 		/* Because the empty words are used only in the parsing stage, they are

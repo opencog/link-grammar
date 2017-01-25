@@ -2635,6 +2635,7 @@ static Word *word_new(Sentence sent)
 		sent->word[len].x= NULL;
 		sent->word[len].unsplit_word = NULL;
 		sent->word[len].alternatives = NULL;
+		sent->word[len].optional = false;
 		sent->length++;
 
 		return &sent->word[len];
@@ -2860,12 +2861,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				 */
 				if (!empty_word_encountered)
 				{
-					/* ??? Should we check it earlier? */
-					if (!sent->dict->empty_word_defined)
-						prt_error("Error: %s must be defined!\n", EMPTY_WORD_DOT);
-
-					if (!determine_word_expressions(sent, empty_word(), &ZZZ_added))
-						error_encountered = true;
+					sent->word[sent->length - 1].optional = true;
 					empty_word_encountered = true;
 				}
 			}
