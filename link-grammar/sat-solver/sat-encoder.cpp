@@ -3,16 +3,18 @@
  */
 #include <cstdlib>
 #include <cstdio>
-#include <cstring>
 #include <iostream>
 #include <vector>
-#include <map>
 #include <algorithm>
 #include <iterator>
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::vector;
+
+/* Most of the power pruning is ifdef'ed out intentionally, because The
+ * encoding totally malfunctions when this code is defined. */
+//#define POWER_PRUNE_CONNECTORS
 
 extern "C" {
 #include "sat-encoder.h"
@@ -27,22 +29,14 @@ extern "C" {
 #include "clock.hpp"
 #include "fast-sprintf.hpp"
 
-
 extern "C" {
 #include "analyze-linkage.h"      // for compute_link_names()
 #include "build-disjuncts.h"      // for build_disjuncts_for_exp()
-#include <dict-api.h>             // for print_expression()
+#include "dict-api.h"             // for print_expression()
 #include "linkage.h"
 #include "post-process.h"
-#include "preparation.h"
 #include "score.h"               // for linkage_score()
-//#include "utilities.h"         // XXX do we need it?
-#include "wordgraph.h"           // for empty_word()
 }
-
-#ifdef HAVE_MKLIT
-#define Lit(...) mkLit(__VA_ARGS__)
-#endif
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
 #ifdef SAT_DEBUG
@@ -66,16 +60,14 @@ void SATEncoder::generate_literal(Lit l) {
 }
 
 void SATEncoder::generate_and_definition(Lit lhs, vec<Lit>& rhs) {
-  vec<Lit> clause;
+  vec<Lit> clause(2);
   for (int i = 0; i < rhs.size(); i++) {
-    clause.growTo(2);
     clause[0] = ~lhs;
     clause[1] = rhs[i];
     add_clause(clause);
   }
 
   for (int i = 0; i < rhs.size(); i++) {
-    clause.growTo(2);
     clause[0] = ~rhs[i];
     clause[1] = lhs;
     add_clause(clause);
@@ -83,10 +75,8 @@ void SATEncoder::generate_and_definition(Lit lhs, vec<Lit>& rhs) {
 }
 void SATEncoder::generate_classical_and_definition(Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
-
       clause[0] = ~lhs;
       clause[1] = rhs[i];
       add_clause(clause);
@@ -105,9 +95,8 @@ void SATEncoder::generate_classical_and_definition(Lit lhs, vec<Lit>& rhs) {
 
 void SATEncoder::generate_or_definition(Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
       clause[0] = lhs;
       clause[1] = ~rhs[i];
       add_clause(clause);
@@ -124,11 +113,11 @@ void SATEncoder::generate_or_definition(Lit lhs, vec<Lit>& rhs) {
   }
 }
 
+#if 0
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
       clause[0] = lhs;
       clause[1] = ~rhs[i];
       add_clause(clause);
@@ -145,12 +134,13 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
     add_clause(clause);
   }
 }
+#endif
 
+#if 0
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition1, Lit condition2, Lit lhs, vec<Lit>& rhs) {
   {
-    vec<Lit> clause;
+    vec<Lit> clause(2);
     for (int i = 0; i < rhs.size(); i++) {
-      clause.growTo(2);
       clause[0] = lhs;
       clause[1] = ~rhs[i];
       add_clause(clause);
@@ -168,14 +158,14 @@ void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition
     add_clause(clause);
   }
 }
+#endif
 
 void SATEncoder::generate_xor_conditions(vec<Lit>& vect) {
-  vec<Lit> clause;
+  vec<Lit> clause(2);
   for (int i = 0; i < vect.size(); i++) {
     for (int j = i + 1; j < vect.size(); j++) {
       if (vect[i] == vect[j])
         continue;
-      clause.growTo(2);
       clause[0] = ~vect[i];
       clause[1] = ~vect[j];
       add_clause(clause);
@@ -195,14 +185,13 @@ void SATEncoder::generate_or(vec<Lit>& vect) {
 }
 
 void SATEncoder::generate_equivalence_definition(Lit l1, Lit l2) {
+  vec<Lit> clause(2);
   {
-    vec<Lit> clause(2);
     clause[0] = ~l1;
     clause[1] = l2;
     add_clause(clause);
   }
   {
-    vec<Lit> clause(2);
     clause[0] = l1;
     clause[1] = ~l2;
     add_clause(clause);
@@ -244,29 +233,26 @@ void SATEncoder::encode() {
  *-------------------------------------------------------------------------*/
 void SATEncoder::build_word_tags()
 {
+  char name[MAX_VARIABLE_NAME];
+  name[0] = 'w';
+
   for (size_t w = 0; w < _sent->length; w++) {
-    _word_tags.push_back(WordTag(w, _variables, _sent, _opts));
+    // sprintf(name, "w%zu", w);
+    fast_sprintf(name+1, w);
+    _word_tags.push_back(WordTag(w, name, _variables, _sent, _opts));
     int dfs_position = 0;
 
-    if (_sent->word[w].x == NULL) {
-      // Most probably everything got pruned. There will be no linkage.
-      lgdebug(+D_SAT, "Word%zu %s: NULL X_node\n", w, N(_sent->word[w].unsplit_word));
-      continue;
-    }
+    if (_sent->word[w].x == NULL) continue;
 
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
 #ifdef SAT_DEBUG
     cout << "Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << endl;
-    //print_expression(exp);
+    print_expression(exp);
+    //prt_exp_mem(exp, 0);
     cout << endl;
 #endif
-
-    char name[MAX_VARIABLE_NAME];
-    // sprintf(name, "w%zu", w);
-    name[0] = 'w';
-    fast_sprintf(name+1, w);
 
     bool leading_right = true;
     bool leading_left = true;
@@ -286,6 +272,7 @@ void SATEncoder::build_word_tags()
   }
 }
 
+#if 0
 void SATEncoder::find_all_matches_between_words(size_t w1, size_t w2,
                                                 std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches) {
   const std::vector<PositionConnector>& w1_right = _word_tags[w1].get_right_connectors();
@@ -308,6 +295,7 @@ bool SATEncoder::matches_in_interval(int wi, int pi, int l, int r) {
   }
   return false;
 }
+#endif
 
 /*-------------------------------------------------------------------------*
  *                     S A T I S F A C T I O N                             *
@@ -315,28 +303,37 @@ bool SATEncoder::matches_in_interval(int wi, int pi, int l, int r) {
 
 void SATEncoder::generate_satisfaction_conditions()
 {
+  char name[MAX_VARIABLE_NAME] = "w";
+
   for (size_t w = 0; w < _sent->length; w++) {
+
+#ifdef SAT_DEBUG
+    cout << "Word " << w << ": " << N(_sent->word[w].unsplit_word);
+    if (_sent->word[w].optional) cout << " (optional)";
+    cout << endl;
+    //print_expression(exp);
+    cout << endl;
+#endif
+
+    fast_sprintf(name+1, w);
+
+    if (_sent->word[w].optional)
+      _variables->string(name);
+    else
+      determine_satisfaction(w, name);
+
     if (_sent->word[w].x == NULL) {
-      DEBUG_print("Word: " << N(_sent->word[w].unsplit_word) << " : " << "(null)" << endl);
-      handle_null_expression(w);
-      continue;
+      if (!_sent->word[w].optional) {
+        // Most probably everything got pruned. There will be no linkage.
+        lgdebug(+D_SAT, "Word%zu '%s': Null X_node\n", w, _sent->word[w].unsplit_word);
+        handle_null_expression(w);
+      }
+      continue; // No expression to handle.
     }
 
     bool join = _sent->word[w].x->next != NULL;
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
-#ifdef SAT_DEBUG
-    cout << "Word: " << N(_sent->word[w].unsplit_word) << endl;
-    //print_expression(exp);
-    cout << endl;
-#endif
-
-    char name[MAX_VARIABLE_NAME];
-    // sprintf(name, "w%zu", w);
-    name[0] = 'w';
-    fast_sprintf(name+1, w);
-
-    determine_satisfaction(w, name);
     int dfs_position = 0;
     generate_satisfaction_for_expression(w, dfs_position, exp, name, 0);
 
@@ -503,14 +500,6 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
   char dir = e->dir;
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
-
-  char name[MAX_VARIABLE_NAME];
-  // sprintf(name, "w%zu", wj);
-  name[0] = 'w';
-  fast_sprintf(name+1, wj);
-
-  Lit condition = Lit(_variables->string(name));
-
   vec<Lit> rhs;
 
   // Collect matches (wi, pi) with word wj
@@ -537,7 +526,7 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
 
   // Generate clauses
   DEBUG_print("--------- link_cw as ordinary down");
-  generate_conditional_lr_implication_or_definition(condition, lhs, rhs);
+  generate_or_definition(lhs, rhs);
   generate_xor_conditions(rhs);
   DEBUG_print("--------- end link_cw as ordinary down");
 }
@@ -578,6 +567,7 @@ int SATEncoder::empty_connectors(Exp* e, char dir)
     throw std::string("Unknown connector type");
 }
 
+#if 0
 int SATEncoder::non_empty_connectors(Exp* e, char dir)
 {
   if (e->type == CONNECTOR_type) {
@@ -597,6 +587,7 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
   } else
     throw std::string("Unknown connector type");
 }
+#endif
 
 bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
                                              std::vector<PositionConnector*>& connectors)
@@ -630,6 +621,7 @@ void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_positio
   }
 }
 
+#if 0
 void SATEncoder::certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_position,
                                        std::vector<PositionConnector*>& connectors, bool has_right) {
   if (exp->type == CONNECTOR_type) {
@@ -660,6 +652,7 @@ void SATEncoder::certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_posi
     }
   }
 }
+#endif
 
 void SATEncoder::leading_connectors(int w, Exp* exp, char dir, int& dfs_position, vector<PositionConnector*>& connectors) {
   if (exp->type == CONNECTOR_type) {
@@ -695,7 +688,7 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
   int dfs_position_e2 = dfs_position_e1;
   leading_connectors(w, e2, '+', dfs_position_e2, first_right_in_e2);
 
-  vec<Lit> clause;
+  vec<Lit> clause(2);
 
   if (!last_right_in_e1.empty() && !first_right_in_e2.empty()) {
     std::vector<PositionConnector*>::iterator i, j;
@@ -722,7 +715,6 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
         for (mw1i = mw1.begin(); mw1i != mw1.end(); mw1i++) {
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i >= *mw2i) {
-              clause.growTo(2);
               clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
               clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
@@ -768,7 +760,6 @@ void SATEncoder::generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, in
         for (mw1i = mw1.begin(); mw1i != mw1.end(); mw1i++) {
           for (mw2i = mw2.begin(); mw2i != mw2.end(); mw2i++) {
             if (*mw1i <= *mw2i) {
-              clause.growTo(2);
               clause[0] = ~Lit(_variables->link_cw(*mw1i, w, (*i)->position, (*i)->connector.string));
               clause[1] = ~Lit(_variables->link_cw(*mw2i, w, (*j)->position, (*j)->connector.string));
               add_clause(clause);
@@ -862,7 +853,52 @@ void SATEncoder::dfs(int node, const MatrixUpperTriangle<int>& graph, int compon
   }
 }
 
+/* Temporary debug (may be needed again for adding parsing with null-links).
+ * This allows to do "CXXFLAGS=-DCONNECTIVITY_DEBUG configure" or
+ * "make CXXFLAGS=-DCONNECTIVITY_DEBUG" . */
+//#define CONNECTIVITY_DEBUG
+#ifdef CONNECTIVITY_DEBUG
+#undef CONNECTIVITY_DEBUG
+#define CONNECTIVITY_DEBUG(x) x
+static void debug_generate_disconnectivity_prohibiting(vector<int> components,
+                                      std::vector<int> different_components) {
 
+  printf("generate_disconnectivity_prohibiting: ");
+  for (auto c: components) cout << c << " ";
+  cout << endl;
+  for (auto c: different_components) cout << c << " ";
+  cout << endl;
+}
+#else
+#define debug_generate_disconnectivity_prohibiting(x, y)
+#define CONNECTIVITY_DEBUG(x)
+#endif
+
+/*
+ * The idea here is to save issuing a priori a lot of clauses to enforce
+ * linkage connectivity (i.e. no islands), and instead do it when
+ * a solution finds a disconnected linkage. This works well for valid
+ * sentences because their solutions tend to be connected or mostly connected.
+ */
+
+ /**
+  * Find the connectivity vector of the linkage.
+  * @param components (result) A connectivity vector whose components
+  * correspond to the linkage words.
+  * @return true iff the linkage is completely connected (ignoring
+  * optional words).
+  *
+  * Each segment in the linkage is numbered by the ordinal number of its
+  * start word. Each vector component is numbered according to the segment
+  * in which the corresponding word resides.
+  * For example, a linkage with 7 words, which consists of 3 segments
+  * (islands) of 2,2,3 words, will be represented as: 0 0 1 1 2 2 2.
+  *
+  * In order to support optional words (words that are allowed to have
+  * no connectivity), optional words which don't participate in the linkage
+  * are marked with -1 instead of their segment number, and are disregarded
+  * in the connectivity test.
+  */
 bool SATEncoder::connectivity_components(std::vector<int>& components) {
   // get satisfied linked(wi, wj) variables
   const std::vector<int>& linked_variables = _variables->linked_variables();
@@ -874,12 +910,24 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
     }
   }
 
+  // Words that are not in the linkage don't need to be connected.
+  // (For now these can be only be words marked as "optional").
+  std::vector<bool> is_linked_word(_sent->length, false);
+  for (size_t node = 0; node < _sent->length; node++) {
+    is_linked_word[node] = _solver->model[node] == l_True;
+  }
+
   // build the connectivity graph
   MatrixUpperTriangle<int> graph(_sent->length, 0);
   std::vector<int>::const_iterator i;
+  CONNECTIVITY_DEBUG(printf("connectivity_components words:\n"));
   for (i = satisfied_linked_variables.begin(); i != satisfied_linked_variables.end(); i++) {
-    graph.set(_variables->linked_variable(*i)->left_word,
-              _variables->linked_variable(*i)->right_word, 1);
+    const int lv_l = _variables->linked_variable(*i)->left_word;
+    const int lv_r = _variables->linked_variable(*i)->right_word;
+
+    if (!is_linked_word[lv_l] || !is_linked_word[lv_r]) continue;
+    graph.set(lv_l, lv_r, 1);
+    CONNECTIVITY_DEBUG(printf("L%d R%d\n", lv_l, lv_r));
   }
 
   // determine the connectivity components
@@ -887,25 +935,79 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
   std::fill(components.begin(), components.end(), -1);
   for (size_t node = 0; node < _sent->length; node++)
     dfs(node, graph, node, components);
+
+  CONNECTIVITY_DEBUG(printf("connectivity_components: "));
   bool connected = true;
   for (size_t node = 0; node < _sent->length; node++) {
-    if (components[node] != 0) {
-      connected = false;
+    CONNECTIVITY_DEBUG(
+      if (is_linked_word[node]) printf("%d ", components[node]);
+      else                      printf("[%d] ", components[node]);
+    )
+    if (is_linked_word[node]) {
+      if (components[node] != 0) {
+        connected = false;
+      }
+    } else {
+       components[node] = -1;
     }
   }
 
+  CONNECTIVITY_DEBUG(printf(" connected=%d\n", connected));
   return connected;
 }
 
+#ifdef SAT_DEBUG
+#define MVALUE(s, v) (s->model[v] == l_True?'T':(s->model[v] == l_False?'f':'u'))
+static void pmodel(Solver *solver, int var) {
+  printf("%c\n", MVALUE(solver, var));
+}
+
+static void pmodel(Solver *solver, vec<Lit> &clause) {
+  vector<int> t;
+  for (int i = 0; i < clause.size(); i++) {
+    int v = var(clause[i]);
+    printf("%d:%c ", v, MVALUE(solver, v));
+    if (solver->model[v] == l_True) t.push_back(v);
+  }
+  printf("\n");
+  if (t.size()) {
+    printf("l_True:");
+    for (auto i: t) printf(" %d", i);
+    printf("\n");
+  }
+}
+#endif
+
+/**
+ * Generate clauses to enforce exactly the missing connectivity.
+ * @param components A connectivity vector as computed by
+ * connectivity_components().
+ *
+ * Iterate the list of possible links between words, and find links
+ * between words that are found in different segments according to the
+ * connectivity vector. For each two segments, issue a clause asserting
+ * that at least one of the corresponding links must exist.
+ *
+ * In order to support optional words, optional words which don't have links
+ * (marked as -1 in the connectivity vector) are ignored. A missing link
+ * between words when one of them is optional (referred to as a
+ * "conditional_link" below) is considered missing only if both words exist
+ * in the linkage.
+ */
 void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> components) {
   // vector of unique components
   std::vector<int> different_components = components;
   std::sort(different_components.begin(), different_components.end());
   different_components.erase(std::unique(different_components.begin(), different_components.end()),
                              different_components.end());
-
+  debug_generate_disconnectivity_prohibiting(components, different_components);
   // Each connected component must contain a branch going out of it
   std::vector<int>::const_iterator c;
+  bool missing_word = false;
+  if (*different_components.begin() == -1) {
+    different_components.erase(different_components.begin());
+    missing_word = true;
+  }
   for (c = different_components.begin(); c != different_components.end(); c++) {
     vec<Lit> clause;
     const std::vector<int>& linked_variables = _variables->linked_variables();
@@ -914,10 +1016,49 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
       const Variables::LinkedVar* lv = _variables->linked_variable(var);
       if ((components[lv->left_word] == *c && components[lv->right_word] != *c) ||
           (components[lv->left_word] != *c && components[lv->right_word] == *c)) {
-        clause.push(Lit(var));
+
+        CONNECTIVITY_DEBUG(printf(" %d(%d-%d)", var, lv->left_word, lv->right_word));
+        bool optlw_exists = _sent->word[lv->left_word].optional &&
+                            _solver->model[lv->left_word] == l_True;
+        bool optrw_exists = _sent->word[lv->right_word].optional &&
+                            _solver->model[lv->right_word] == l_True;
+        if (optlw_exists || optrw_exists) {
+          int conditional_link_var;
+          bool conditional_link_var_exists;
+
+          CONNECTIVITY_DEBUG(printf("R ")); // "replaced"
+          char name[MAX_VARIABLE_NAME] = "0";
+          sprintf(name+1, "%dw%dw%d", var, optlw_exists?lv->left_word:255,
+                                           optrw_exists?lv->right_word:255);
+          conditional_link_var_exists = _variables->var_exists(name);
+          conditional_link_var = _variables->string(name);
+
+          if (!conditional_link_var_exists) {
+            Lit lhs = Lit(conditional_link_var);
+            vec<Lit> rhs;
+            rhs.push(Lit(var));
+            if (optlw_exists) rhs.push(~Lit(lv->left_word));
+            if (optrw_exists) rhs.push(~Lit(lv->right_word));
+            generate_or_definition(lhs, rhs);
+          }
+
+          var = conditional_link_var; // Replace it by its conditional link var
+        }
+        clause.push(Lit(var)); // Implied link var is used if needed
       }
     }
+
+    if (missing_word) {
+      // The connectivity may be restored differently if a word reappears
+      for (WordIdx w = 0; w < _sent->length; w++) {
+        if (_solver->model[w] == l_False)
+          clause.push(Lit(w));
+      }
+    }
+    CONNECTIVITY_DEBUG(printf("\n"));
     _solver->addClause(clause);
+
+    // Avoid issuing two identical clauses
     if (different_components.size() == 2)
       break;
   }
@@ -928,7 +1069,7 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
  *--------------------------------------------------------------------------*/
 void SATEncoder::generate_planarity_conditions()
 {
-  vec<Lit> clause;
+  vec<Lit> clause(2);
   for (size_t wi1 = 0; wi1 < _sent->length; wi1++) {
     for (size_t wj1 = wi1+1; wj1 < _sent->length; wj1++) {
       for (size_t wi2 = wj1+1; wi2 < _sent->length; wi2++) {
@@ -937,7 +1078,6 @@ void SATEncoder::generate_planarity_conditions()
         for (size_t wj2 = wi2+1; wj2 < _sent->length; wj2++) {
           if (!_linked_possible(wj1, wj2))
             continue;
-          clause.growTo(2);
           clause[0] = ~Lit(_variables->linked(wi1, wi2));
           clause[1] = ~Lit(_variables->linked(wj1, wj2));
           add_clause(clause);
@@ -1098,6 +1238,7 @@ void SATEncoder::power_prune()
 {
   generate_epsilon_definitions();
 
+#ifdef POWER_PRUNE_CONNECTORS
   // on two non-adjacent words, a pair of connectors can be used only
   // if not [both of them are the deepest].
 
@@ -1134,6 +1275,7 @@ void SATEncoder::power_prune()
       }
     }
   }
+#endif
 
   /*
   // on two adjacent words, a pair of connectors can be used only if
@@ -1318,11 +1460,6 @@ Linkage SATEncoder::get_next_linkage()
 
     // Prohibit this solution so the next ones can be found
     if (!connected) {
-      /* A disconnected linkage (XXX why?).
-       * Observation: Some of the linkages after a disconnected one is
-       * found, may repeat previous linkages (the reason is yet unknown).
-       * Example sentence:
-       * The stupidity of the senators annoyed all my friends */
       generate_disconnectivity_prohibiting(components);
       display_linkage_disconnected = test_enabled("linkage-disconnected");
     } else {
@@ -1349,7 +1486,7 @@ Linkage SATEncoder::get_next_linkage()
       if (display_linkage_disconnected) {
         cout << "Linkage DISCONNECTED" << endl;
       } else {
-        lgdebug(+2, "Linkage DISCONNECTED (skipped)\n");
+        lgdebug(+D_SAT, "Linkage DISCONNECTED (skipped)\n");
       }
     }
   } while (!sane || !(connected || display_linkage_disconnected));
@@ -1392,6 +1529,7 @@ Linkage SATEncoder::get_next_linkage()
   if (NULL != ppn->violation) {
     lkg->lifo.N_violations++;
     lkg->lifo.pp_violation_msg = ppn->violation;
+    lgdebug(+D_SAT, "Postprocessing error: %s\n", lkg->lifo.pp_violation_msg);
   } else {
     // XXX We cannot maintain num_valid_linkages, because it starts from
     // a high number. If we start it from 0, then on value 1 link-parser
@@ -1478,9 +1616,11 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
 void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
 {
   _linked_possible.resize(_sent->length, 1);
+  vector<vec<Lit>> linked_to_word(_sent->length);
 
   DEBUG_print("------- linked definitions");
   for (size_t w1 = 0; w1 < _sent->length; w1++) {
+    vec<Lit> linked;
     for (size_t w2 = w1 + 1; w2 < _sent->length; w2++) {
       DEBUG_print("---------- ." << w1 << ". ." << w2 << ".");
       Lit lhs = Lit(_variables->linked(w1, w2));
@@ -1497,11 +1637,32 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
 
       _linked_possible.set(w1, w2, rhs.size() > 0);
       generate_or_definition(lhs, rhs);
+
+      /* Optional words that have no links should be "down", as a mark that
+       * they are missing in the linkage.
+       * Collect all possible word links, per word, to be used below. */
+      if (rhs.size() > 0) {
+        if (_sent->word[w1].optional) {
+          linked_to_word[w1].push(Lit(_variables->linked(w1, w2)));
+        }
+        if (_sent->word[w2].optional) {
+          linked_to_word[w2].push(Lit(_variables->linked(w1, w2)));
+        }
+      }
+    }
+
+    if (_sent->word[w1].optional) {
+      /* The word should be connected to at least another word in order to be
+       * in the linkage. */
+      DEBUG_print("------------S not linked -> no word (w" << w1 << ")");
+      generate_or_definition(Lit(w1), linked_to_word[w1]);
+      DEBUG_print("------------E not linked -> no word");
     }
   }
   DEBUG_print("------- end linked definitions");
 }
 
+#if 0
 void SATEncoder::generate_linked_min_max_planarity()
 {
   DEBUG_print("---- linked_max");
@@ -1581,6 +1742,7 @@ void SATEncoder::generate_linked_min_max_planarity()
     }
   }
 }
+#endif
 
 Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {
@@ -1594,24 +1756,10 @@ Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionCon
     return e;
 }
 
-// FIXME - put under a class or move to util.cpp.
-static Connector * empty_word_connector()
-{
-  static Connector c;
-
-  if (c.string != NULL) return &c;
-  c.string = EMPTY_CONNECTOR;
-
-  return &c;
-}
-
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
-  lgdebug(+D_SAT, "Index %d\n", lkg->lifo.index);
-
   Disjunct *d;
   int current_link = 0;
-  Disjunct *empty_words_tofree = NULL;
 
   Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
   memset(exp_word, 0, _sent->length * sizeof(Exp));
@@ -1640,23 +1788,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     const X_node *left_xnode = lpc->word_xnode;
     const X_node *right_xnode = rpc->word_xnode;
 
-    // For empty words, only create a dummy disjunct - for remove_empty_word()
-    if (left_xnode->word->morpheme_type == MT_EMPTY ||
-        right_xnode->word->morpheme_type == MT_EMPTY) {
-      // XXX Why right_expression is NULL? And why left_expression is only ZZZ+?
-      // Hence, to prevent triggering an assert() in build_clause(), the
-      // disjunct for the empty word (right_word) is built with left_exp.
-      d = build_disjuncts_for_exp(var->left_exp, right_xnode->string, UNLIMITED_LEN);
-      word_record_in_disjunct(empty_word(), d);
-      lkg->chosen_disjuncts[var->right_word] = d;
-      if (empty_words_tofree == NULL)
-        empty_words_tofree = d;
-      else
-        catenate_disjuncts(empty_words_tofree, d);
-      clink.lc = clink.rc = empty_word_connector();
-      continue;
-    }
-
     // Allocate memory for the connectors, because they should persist
     // beyond the lifetime of the sat-solver data structures.
     clink.lc = connector_new();
@@ -1672,22 +1803,22 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     if (verbosity_level(D_SAT)) {
       //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
-      cout<< "LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
+      cout<< "w"<<var->left_word<<" LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
       //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
-      cout<< "RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
+      cout<< "w"<<var->right_word<<" RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
       cout<< "L+L: "; print_expression(exp_word[var->left_word]);
       cout<< "R+R: "; print_expression(exp_word[var->right_word]);
     }
 
     if (xnode_word[var->left_word] && xnode_word[var->left_word] != left_xnode) {
       lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
-               var->left_word, xnode_word[var->left_word]->word->subword,
-              left_xnode->word->subword);
+              var->left_word, xnode_word[var->left_word]->string,
+              left_xnode->string);
     }
     if (xnode_word[var->right_word] && xnode_word[var->right_word] != right_xnode) {
       lgdebug(+0, "Warning: Inconsistent X_node for word %d (%s and %s)\n",
-              var->right_word, xnode_word[var->right_word]->word->subword,
-              right_xnode->word->subword);
+              var->right_word, xnode_word[var->right_word]->string,
+              right_xnode->string);
     }
 
     xnode_word[var->left_word] = left_xnode;
@@ -1700,9 +1831,13 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   for (WordIdx wi = 0; wi < _sent->length; wi++) {
     Exp *de = exp_word[wi];
 
-    // Skip empty words
+    // Skip optional words
     if (xnode_word[wi] == NULL)
+    {
+      if (!_sent->word[wi].optional)
+        prt_error("Warning: Non-optional word %zu has no linkage\n", wi);
       continue;
+    }
 
     if (de == NULL) {
       de = null_exp();
@@ -1714,10 +1849,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     lkg->chosen_disjuncts[wi] = d;
     free_Exp(de);
   }
-
-  // This is needed so that the empty-word disjuncts will get freed
-  assert(lkg->chosen_disjuncts[0], "Must have at least one non-empty word");
-  catenate_disjuncts(lkg->chosen_disjuncts[0], empty_words_tofree);
 
   lkg->num_links = current_link;
 
@@ -1760,7 +1891,6 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   sent->hook = encoder;
   encoder->encode();
-
 
   LinkageIdx linkage_limit = opts->linkage_limit;
   LinkageIdx k;
