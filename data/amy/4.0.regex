@@ -13,9 +13,9 @@ ANY-PUNCT:  /^[[:punct:]]+$/
 
 % Multi-part random morphology: match any string as prefix, stem, or
 % suffix.
-MOR-PREF: /^[[:alnum:]_'-]+.=/
-MOR-STEM: /=[[:alnum:]_'-]+.=/
-MOR-SUFF: /[[:alnum:]_'-]+$/
+MOR-PREF: /^[[:alnum:]_'-]+=$/
+MOR-STEM: /^[[:alnum:]_'-]+.=$/
+MOR-SUFF: /^=[[:alnum:]_'-]+$/
 
 % Match anything that doesn't match the above.
 % Match anything that isn't white-space.
