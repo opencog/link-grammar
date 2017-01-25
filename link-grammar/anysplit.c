@@ -452,8 +452,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t rndissued = 0;
 	size_t i;
 	unsigned int seed = sent->rand_state;
-	char *prefix_string = alloca(l+2+1); /* word + ".=" + NUL */
-	char *suffix_string = alloca(l+1+1); /* "=" + word + NUL */
+	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
 	const char infix_mark = INFIX_MARK(afdict);
 
@@ -476,6 +475,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	 * not defined in the affix file, then morphemes may get split again,
 	 * unless restricted by REGPRE/REGMID/REGSUF. */
 	if (word[0] == infix_mark) return true;
+	if (word[l-1] == infix_mark) return true;
 	if ((l > stemsubscr_len) &&
 	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
 		return true;
@@ -546,8 +546,9 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 
 	for (i = 0; i < nsplits; i++)
 	{
-		const char **suffixes = NULL;
-		int num_suffixes = 0;
+		const char **affixes = NULL;
+		int num_sufixes;
+		int num_affixes = 0;
 
 		if (!as->scl[lutf].p_selected[i]) continue;
 
@@ -559,25 +560,22 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 			size_t b = 0;
 			if (pl[0] == (int)lutf)  /* This is the whole word */
 			{
-				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
-				prefix_string[b] = '\0';
+				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
+				affix[b] = '\0';
 			}
 			else
 			if (0 == cpos)   /* The first, but not the only morpheme */
 			{
-				b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
-				prefix_string[b] = '\0';
-
-				if (0 != stemsubscr->length)
-				    strcat(prefix_string, stemsubscr->string[0]);
+				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
+				affix[b] = '\0';
 			}
 			else           /* 2nd and subsequent morphemes */
 			{
-				b = utf8_strncpy(suffix_string, &word[bos], pl[p]-cpos);
-				suffix_string[b] = '\0';
-				altappend(sent, &suffixes, suffix_string);
-				num_suffixes++;
+				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
+				affix[b] = '\0';
+				num_affixes++;
 			}
+			altappend(sent, &affixes, affix);
 
 			bos += b;
 			cpos = pl[p];
@@ -585,15 +583,45 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 			if (bos == l) break;
 		}
 
-		// XXX FIXME -- this is wrong, it calls the stem the "prefix",
-		// it doesn't actually handle true prfixes, and assumes a
-		// variable number of suffixes
+		const char **prefix_position, **stem_position , **suffix_position;
+		switch (num_affixes)
+		{
+			case 0:
+				prefix_position = NULL;
+				stem_position = &affixes[0]; /* May be just a word here */
+				suffix_position = NULL;
+				num_sufixes = 0;
+				break;
+			case 1:
+				prefix_position = NULL;
+				stem_position = &affixes[0];
+				suffix_position = &affixes[1];
+				num_sufixes = 1;
+				break;
+			default:
+				prefix_position =&affixes[0];
+				stem_position = &affixes[1];
+				suffix_position = &affixes[2];
+				num_sufixes = num_affixes - 1;
+				break;
+		}
+		if (num_affixes > 0)
+		{
+			if (0 != stemsubscr->length) {
+				strcpy(affix, stem_position[0]);
+				strcat(affix, stemsubscr->string[0]);
+				stem_position[0] = affix;
+			}
+		}
+
+		// XXX FIXME -- this is wrong - it assumes a
+		// variable number of suffixes.
 		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
 		issue_word_alternative(sent, unsplit_word, "AS",
-		        0, NULL,  /* Zero prefixes */
-		        1, (const char **)&prefix_string,
-		        num_suffixes,suffixes);
-		free(suffixes);
+		        (NULL == prefix_position) ? 0 : 1, prefix_position,
+		        1, stem_position,
+		        num_sufixes, suffix_position);
+		free(affixes);
 	}
 
 	/* 0 == sent->rand_state denotes "repeatable rand". */
