@@ -7,8 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.14 (formatted as V5v3v14+)
-<dictionary-version-number>: V5v3v14+;
+% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
+<dictionary-version-number>: V5v3v15+;
 
 LEFT-WALL: ANY+;
 ANY-WORD: {@ANY-} & {@ANY+};
