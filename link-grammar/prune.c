@@ -676,7 +676,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("l->r pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
@@ -712,7 +712,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("r->l pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
@@ -954,11 +954,26 @@ static void clean_table(unsigned int size, C_list ** t)
 }
 
 /**
+ * Find if words w1 and w2 may become adjacent due to optional words.
+ * This may happen if they only contain optional words between them.
+ *
+ * Return true iff they may become adjacent (i.e. all the words
+ * between them are optional).
+ */
+static bool optional_gap_collapse(Sentence sent, int w1, int w2)
+{
+	for (int w = w1+1; w < w2; w++)
+		if (!sent->word[w].optional) return false;
+
+	return true;
+}
+
+/**
  * This takes two connectors (and whether these are shallow or not)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
-static bool possible_connection(bool no_null_links,
+static bool possible_connection(Sentence sent, bool no_null_links,
                                 Connector *lc, Connector *rc,
                                 bool lshallow, bool rshallow,
                                 int lword, int rword)
@@ -992,7 +1007,8 @@ static bool possible_connection(bool no_null_links,
 	if (no_null_links &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
-	    (!lc->multi) && (!rc->multi))
+	    (!lc->multi) && (!rc->multi) &&
+	    !optional_gap_collapse(sent, lword, rword))
 	{
 		return false;
 	}
@@ -1005,7 +1021,7 @@ static bool possible_connection(bool no_null_links,
  * a connector that can match to c.  shallow tells if c is shallow.
  */
 static bool
-right_table_search(bool nonul, power_table *pt, int w, Connector *c,
+right_table_search(Sentence sent, bool nonul, power_table *pt, int w, Connector *c,
                    bool shallow, int word_c)
 {
 	unsigned int size, h;
@@ -1015,7 +1031,7 @@ right_table_search(bool nonul, power_table *pt, int w, Connector *c,
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(nonul, cl->c, c, cl->shallow, shallow, w, word_c))
+		if (possible_connection(sent, nonul, cl->c, c, cl->shallow, shallow, w, word_c))
 			return true;
 	}
 	return false;
@@ -1026,7 +1042,7 @@ right_table_search(bool nonul, power_table *pt, int w, Connector *c,
  * a connector that can match to c.  shallows tells if c is shallow
  */
 static bool
-left_table_search(bool nonul, power_table *pt, int w, Connector *c,
+left_table_search(Sentence sent, bool nonul, power_table *pt, int w, Connector *c,
                   bool shallow, int word_c)
 {
 	unsigned int size, h;
@@ -1036,7 +1052,7 @@ left_table_search(bool nonul, power_table *pt, int w, Connector *c,
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(nonul, c, cl->c, shallow, cl->shallow, word_c, w))
+		if (possible_connection(sent, nonul, c, cl->c, shallow, cl->shallow, word_c, w))
 			return true;
 	}
 	return false;
@@ -1051,14 +1067,14 @@ left_table_search(bool nonul, power_table *pt, int w, Connector *c,
  * correctly.
  */
 static int
-left_connector_list_update(prune_context *pc, Connector *c,
+left_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
                            int w, bool shallow)
 {
 	int n, lb;
 	bool foundmatch, no_null_links;
 
 	if (c == NULL) return w;
-	n = left_connector_list_update(pc, c->next, w, false) - 1;
+	n = left_connector_list_update(pc, sent, c->next, w, false) - 1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
 	/* lb is now the leftmost word we need to check */
@@ -1071,7 +1087,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
-		if (right_table_search(no_null_links, pc->pt, n, c, shallow, w))
+		if (right_table_search(sent, no_null_links, pc->pt, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1114,7 +1130,7 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
-		if (left_table_search(no_null_links, pc->pt, n, c, shallow, w))
+		if (left_table_search(sent, no_null_links, pc->pt, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1159,7 +1175,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 		for (w = 0; w < sent->length; w++) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
-				if (left_connector_list_update(pc, d->left, w, true) < 0) {
+				if (left_connector_list_update(pc, sent, d->left, w, true) < 0) {
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
@@ -1181,7 +1197,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			}
 			sent->word[w].d = nd;
 		}
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("l->r pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
 		}
@@ -1216,7 +1232,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 
-		if (debug_level(D_PRUNE))
+		if (verbosity_level(D_PRUNE))
 		{
 			printf("r->l pass changed %d and deleted %zu\n",
 				pc->N_changed, N_deleted);
@@ -1230,10 +1246,11 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pt = NULL;
 	pc->pt = NULL;
 
-	if (debug_level(D_PRUNE)) printf("power prune cost: %d\n", pc->power_cost);
+	if (verbosity_level(D_PRUNE))
+		printf("power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned");
-	if (debug_level(D_PRUNE))
+	if (verbosity_level(D_PRUNE))
 	{
 		printf("\nAfter power_pruning:\n");
 		print_disjunct_counts(sent);
@@ -1576,12 +1593,13 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if (debug_level(D_PRUNE)) printf("pp_prune pass deleted %d\n", N_deleted);
+		if (verbosity_level(D_PRUNE))
+			printf("pp_prune pass deleted %d\n", N_deleted);
 	}
 	delete_unmarked_disjuncts(sent);
 	cms_table_delete(cmt);
 
-	if (debug_level(D_PRUNE))
+	if (verbosity_level(D_PRUNE))
 	{
 		printf("\nAfter pp_pruning:\n");
 		print_disjunct_counts(sent);

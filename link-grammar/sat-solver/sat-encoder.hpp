@@ -4,6 +4,10 @@
 
 using namespace Minisat;
 
+#ifdef HAVE_MKLIT
+#define Lit(...) mkLit(__VA_ARGS__)
+#endif
+
 /**
  *    Base class for all SAT encodings
  */
@@ -247,12 +251,14 @@ protected:
   void build_word_tags();
 
 
+#if 0
   // Find all matching connectors between two words
   void find_all_matches_between_words(size_t w1, size_t w2,
                                       std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches);
 
   // Check if the connector (wi, pi) can match any word in [l, r)
   bool matches_in_interval(int wi, int pi, int l, int r);
+#endif
 
 
   // Join several expressions corresponding to different dictionary
@@ -276,7 +282,6 @@ protected:
 
   // Generate clause that prohibits the current model
   void generate_linkage_prohibiting();
-
 
   // Object that contains all information about the variable
   // encoding.
@@ -302,6 +307,19 @@ class SATEncoderConjunctionFreeSentences : public SATEncoder
 public:
   SATEncoderConjunctionFreeSentences(Sentence sent, Parse_Options  opts)
     : SATEncoder(sent, opts) {
+#if 0
+    fprintf(stderr, "random_var_freq=%e\ngarbage_frac=%e\nclause_decay=%e\n"
+           "restart_first=%d\nvar_decay=%e\n",
+           _solver->random_var_freq, _solver->garbage_frac, _solver->clause_decay,
+           _solver->restart_first, _solver->var_decay);
+
+    _solver->random_var_freq = 0;
+    _solver->garbage_frac = 0.2;
+    _solver->clause_decay = 0.999;
+    _solver->restart_first = 100;
+    _solver->var_decay = 0.99;
+#endif
+
     verbosity = opts->verbosity;
     debug = opts->debug;
     test = opts->test;

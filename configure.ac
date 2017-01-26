@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.3.13],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.3.14],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=3
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=13
+LINK_MICRO_VERSION=14
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -84,6 +84,10 @@ dnl CentOS-7 (at least) needs these to expose the C99 format and limit macros
 dnl in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
+
+dnl Check for a keyword for Thread Local Storage declaration.
+dnl If found - define TLS to it.
+AX_TLS(,:)
 
 dnl Check for specific OSs
 # ====================================================================
@@ -184,6 +188,23 @@ fi
 # specified (no effect). So just add it.
 CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
 CXXFLAGS="${CXXFLAGS} -D_DEFAULT_SOURCE"
+
+# ====================================================================
+# TLS support (for per-thread error handling)
+
+error_handler_per_thread=no
+AC_ARG_ENABLE([TLS],
+  [AS_HELP_STRING([--disable-TLS], [Do not use TLS (disable per-thread error handling)])],
+  [],
+  [enable_TLS=yes])
+
+if test "x$enable_TLS" == xyes
+then
+	dnl Check for a keyword for Thread Local Storage declaration.
+	dnl If found - define TLS to it.
+	AX_TLS(,:)
+	test "$ac_cv_tls" != "none" && error_handler_per_thread=yes
+fi
 
 # ====================================================================
 # Debugging
@@ -979,6 +1000,7 @@ morphology/Makefile
 link-parser/Makefile
 tests/Makefile
 data/Makefile
+data/ady/Makefile
 data/amy/Makefile
 data/any/Makefile
 data/ar/Makefile
@@ -1010,6 +1032,7 @@ $PACKAGE-$VERSION  build configuration settings
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Posix threads:                  ${enable_pthreads}
+	Error handler per-thread:       ${error_handler_per_thread}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}
 	Java libraries:                 ${JNIfound}

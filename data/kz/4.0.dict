@@ -2,12 +2,9 @@
 % Kazakh dictionary -- experimental -- 2016
 % -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
-% Dictionary version number is 5.3.5 (formatted as V5v3v5+)
-<dictionary-version-number>: V5v3v5+;
+% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
+<dictionary-version-number>: V5v3v15+;
 <dictionary-locale>: KK4kz+;
-
-% The empty word.
-EMPTY-WORD.zzz: ZZZ-;
 
 мен.pron: {W-} & S1s+;
 сен.pron: {W-} & S2s+;

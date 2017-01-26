@@ -42,6 +42,9 @@
 #include "wordgraph.h"
 #include "word-utils.h"
 
+/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
+static unsigned int global_rand_state = 0;
+
 /***************************************************************
 *
 * Routines for setting Parse_Options
@@ -285,7 +288,7 @@ void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 	if (dummy && (verbosity > D_USER_BASIC))
 	{
 		prt_error("Error: Cannot enable the Boolean SAT parser; "
-		          "this library was built without SAT solver support.");
+		          "this library was built without SAT solver support.\n");
 	}
 #endif
 }
@@ -349,7 +352,7 @@ void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
 	if (dummy && (verbosity > D_USER_BASIC))
 	{
 		prt_error("Error: Cannot enable spell guess; "
-		        "this library was built without spell guess support.");
+		        "this library was built without spell guess support.\n");
 	}
 
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
@@ -377,6 +380,9 @@ bool parse_options_get_all_short_connectors(Parse_Options opts) {
 
 void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
 	opts->repeatable_rand = val;
+
+	/* This too -- zero is used to indicate repeatability. */
+	global_rand_state = val;
 }
 
 bool parse_options_get_repeatable_rand(Parse_Options opts) {
@@ -505,10 +511,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 
 	if (overflowed && (1 < opts->verbosity))
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Warn, "Warning: Count overflow.\n"
-		  "Considering a random subset of %zu of an unknown and large number of linkages\n",
+		err_ctxt ec = { sent };
+		err_msgc(&ec, lg_Warn, "Warning: Count overflow.\n"
+		  "Considering a random subset of %zu of an unknown and large number of linkages",
 			opts->linkage_limit);
 	}
 	N_linkages_found = sent->num_linkages_found;
@@ -527,10 +532,9 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1)
 		{
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Warn,
-			    "Warning: Considering a random subset of %zu of %zu linkages\n",
+			err_ctxt ec = { sent };
+			err_msgc(&ec, lg_Warn,
+			    "Warning: Considering a random subset of %zu of %zu linkages",
 			    N_linkages_alloced, N_linkages_found);
 		}
 	}
@@ -559,15 +563,40 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 	else if (N_linkages_found == N_linkages_alloced)
 	{
-		for (in=0; in<N_linkages_alloced; in++)
-			sent->lnkages[in].lifo.index = in;
+		/* If this is the "any" language (or "amy"), and the user has
+		 * asked for a random linkage assortment, then really provide
+		 * that.  Used in language-learning.
+		 *
+		 * Note that the use of "random" like this will generate
+		 * the "birthday paradox" - some linakges will get repeated,
+		 * others will get omitted. This is OK, even for very short
+		 * sentences, where it will become apparent that not all
+		 * possibilites were enumerated, and that others got repeated.
+		 */
+		if (0 != sent->rand_state && sent->dict->shuffle_linkages)
+		{
+			for (in=0; in<N_linkages_alloced; in++)
+			{
+				sent->lnkages[in].lifo.index =
+					rand_r(&sent->rand_state) % N_linkages_alloced;
+			}
+		}
+		else
+		{
+			for (in=0; in<N_linkages_alloced; in++)
+				sent->lnkages[in].lifo.index = in;
+		}
 	}
 	else
 	{
+		unsigned int rand_state = N_linkages_found + sent->length;
+
 		/* There are more linkages found than we can handle */
 		/* Pick a (quasi-)uniformly distributed random subset. */
-		if (opts->repeatable_rand)
-			sent->rand_state = N_linkages_found + sent->length;
+		if (0 != sent->rand_state)
+		{
+			rand_state = sent->rand_state;
+		}
 
 		for (in=0; in<N_linkages_alloced; in++)
 		{
@@ -578,7 +607,12 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 			block_bottom = (int) (((double) in) * frac);
 			block_top = (int) (((double) (in+1)) * frac);
 			sent->lnkages[in].lifo.index = block_bottom +
-				(rand_r(&sent->rand_state) % (block_top-block_bottom));
+				(rand_r(&rand_state) % (block_top-block_bottom));
+		}
+
+		if (0 != sent->rand_state)
+		{
+			sent->rand_state = rand_state;
 		}
 	}
 
@@ -588,7 +622,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 }
 
 /* Partial, but not full initialization of the linakge struct ... */
-void partial_init_linkage(Linkage lkg, unsigned int N_words)
+void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 {
 	lkg->num_links = 0;
 	lkg->lasz = 2 * N_words;
@@ -606,6 +640,7 @@ void partial_init_linkage(Linkage lkg, unsigned int N_words)
 #endif
 
 	lkg->pp_info = NULL;
+	lkg->sent = sent;
 }
 
 void check_link_size(Linkage lkg)
@@ -629,15 +664,12 @@ static void compute_chosen_disjuncts(Sentence sent)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded || lifo->N_violations) continue;
+		if (lifo->discarded) continue;
 
-		partial_init_linkage(lkg, pi->N_words);
+		partial_init_linkage(sent, lkg, pi->N_words);
 		extract_links(lkg, pi);
 		compute_link_names(lkg, sent->string_set);
-		/* Because the empty words are used only in the parsing stage, they are
-		 * removed here along with their links, so from now on we will not need to
-		 * consider them. */
-		remove_empty_words(lkg);
+		remove_empty_words(lkg); /* Discard optional words. */
 	}
 }
 
@@ -712,9 +744,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	/* If the timer expired, then we never finished post-processing.
 	 * Mark the remaining sentences as bad, as otherwise strange
-	 * results get reported.  At any rate, need to compute the link
-	 * names, as otherwise linkage_create() will crash and burn
-	 * trying to touch them. */
+	 * results get reported. */
 	for (; in < N_linkages_alloced; in++)
 	{
 		Linkage lkg = &sent->lnkages[in];
@@ -732,11 +762,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	print_time(opts, "Postprocessed all linkages");
 
-	if (debug_level(6))
+	if (verbosity_level(6))
 	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
+		err_msg(lg_Info, "Info: %zu of %zu linkages with no P.P. violations",
 		        N_valid_linkages, N_linkages_post_processed);
 	}
 
@@ -747,6 +775,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 static void sort_linkages(Sentence sent, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
+
+	/* It they're randomized, don't bother sorting */
+	if (0 != sent->rand_state && sent->dict->shuffle_linkages) return;
+
 	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
@@ -779,9 +811,6 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 *
 ****************************************************************/
 
-/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
-static unsigned int global_rand_state;
-
 Sentence sentence_create(const char *input_string, Dictionary dict)
 {
 	Sentence sent;
@@ -806,6 +835,15 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	Dictionary dict = sent->dict;
 	bool fw_failed = false;
 
+	/* 0 == global_rand_state denotes "repeatable rand".
+	 * If non-zero, set it here so that anysplit can use it.
+	 */
+	if (false == opts->repeatable_rand && 0 == sent->rand_state)
+	{
+		if (0 == global_rand_state) global_rand_state = 42;
+		sent->rand_state = global_rand_state;
+	}
+
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))
 	{
@@ -814,8 +852,8 @@ int sentence_split(Sentence sent, Parse_Options opts)
 
 	/* Flatten the word graph created by separate_sentence() to a 2D-word-array
 	 * which is compatible to the current parsers.
-	 * This may fail if the EMPTY_WORD_DOT or UNKNOWN_WORD words are needed but
-	 * are not defined in the dictionary, or an internal error happens. */
+	 * This may fail if UNKNOWN_WORD is needed but
+	 * is not defined in the dictionary, or an internal error happens. */
 	fw_failed = !flatten_wordgraph(sent, opts);
 
 	/* If unknown_word is not defined, then no special processing
@@ -831,7 +869,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	{
 		/* Make sure an error message is always printed.
 		 * So it may be redundant. */
-		prt_error("Error: sentence_split(): Internal error detected");
+		prt_error("Error: sentence_split(): Internal error detected\n");
 		return -3;
 	}
 
@@ -1046,13 +1084,14 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
 /* ============================================================== */
 /* A kind of morphism post-processing */
 
-/* These letters create a string that should be matched by a SANEMORPHISM regex,
- * given in the affix file. The empty word doesn't have a letter. E.g. for the
- * Russian dictionary: "w|ts". It is converted here to: "^((w|ts)b)+$".
+/* These letters create a string that should be matched by a
+ * SANEMORPHISM regex, given in the affix file. The empty word
+ * doesn't have a letter. E.g. for the Russian dictionary: "w|ts".
+ * It is converted here to: "^((w|ts)b)+$".
  * It matches "wbtsbwbtsbwb" but not "wbtsbwsbtsb".
  * FIXME? In this version of the function, 'b' is not yet supported,
- * so "w|ts" is converted to "^(w|ts)+$" for now. */
-
+ * so "w|ts" is converted to "^(w|ts)+$" for now.
+ */
 #define AFFIXTYPE_PREFIX   'p'   /* prefix */
 #define AFFIXTYPE_STEM     't'   /* stem */
 #define AFFIXTYPE_SUFFIX   's'   /* suffix */
@@ -1114,7 +1153,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (NULL == wp_new)
 		{
-			lgdebug(+D_SLM, "- No more words in the wordgraph\n");
+			lgdebug(D_SLM, "- No more words in the wordgraph\n");
 			match_found = false;
 			break;
 		}
@@ -1157,15 +1196,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		if (!match_found)
 		{
-			const char *e = "Internal error: Too many words in the linkage\n";
-			lgdebug(D_SLM, "- %s", e);
-			prt_error("Error: %s.", e);
+			const char *e = "Internal error: Too many words in the linkage";
+			lgdebug(D_SLM, "- %s\n", e);
+			prt_error("Error: %s.\n", e);
 			break;
 		}
 
-		assert(MT_EMPTY != cdj->word[0]->morpheme_type); /* already discarded */
-
-		if (debug_level(D_SLM)) print_with_subscript_dot(cdj->string);
+		if (verbosity_level(D_SLM)) print_with_subscript_dot(cdj->string);
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */
@@ -1235,7 +1272,6 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		for (w = wpp->path; *w; w++)
 		{
 			i++;
-			if (MT_EMPTY == (*w)->morpheme_type) continue; /* really a null word */
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wswitch-enum"
@@ -1294,9 +1330,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			/* Notify to stdout, so it will be shown along with the result.
 			 * XXX We should have a better way to notify. */
 			if (0 < opts->verbosity)
-				printf("Warning: Invalid morpheme type combination '%s'.\n"
-				       "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
-				       " to debug\n", affix_types);
+				prt_error("Warning: Invalid morpheme type combination '%s'.\n"
+				          "Run with !bad and !verbosity>"STRINGIFY(D_USER_MAX)
+				          " to debug\n", affix_types);
 		}
 	}
 
@@ -1341,7 +1377,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			N_invalid_morphism ++;
 	}
 
-	if (debug_level(5))
+	if (verbosity_level(5))
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
 		          "invalid morphology construction\n",
@@ -1409,7 +1445,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	 * if it was previously parsed.  If so we free it up before
 	 * building another.  Huh ?? How could that happen? */
 #ifdef DEBUG
-	if (sent->parse_info) fprintf(stderr, "XXX Freeing parse_info\n");
+	if (sent->parse_info) err_msg(lg_Debug, "XXX Freeing parse_info\n");
 #endif
 	free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);
@@ -1455,7 +1491,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		if (debug_level(5))
+		if (verbosity_level(5))
 		{
 			prt_error("Info: Total count with %zu null links:   %lld\n",
 			          sent->null_count, total);
@@ -1473,8 +1509,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sane_morphism(sent, opts);
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
-		if ((0 == nl) && (0 < max_null_count))
-			lgdebug(1, "No complete linkages found.\n");
+		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
+			prt_error("No complete linkages found.\n");
 
 		/* If we are here, then no valid linkages were found.
 		 * If there was a parse overflow, give up now. */
@@ -1536,7 +1572,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
-		prt_error("WARNING: Combinatorial explosion! nulls=%zu cnt=%d\n"
+		prt_error("Warning: Combinatorial explosion! nulls=%zu cnt=%d\n"
 			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
 			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);

@@ -1,5 +1,14 @@
-Version 5.3.14 (?? 2016 ??)
- * Some sort of new work will be done.
+Version 5.3.15 (XXX 2017)
+ * Fix Windows compilation; the new wcwidth files were omitted.
+ * Fix "amy" language for 3-way random morphology splits.
+ * Remove the "EMPTY_WORD" device; it is no longer needed.
+
+Version 5.3.14 (19 Jan 2017)
+ * Fix printing widths for Unicode-9 CJK ideographs and emoji's.
+ * Fix broken randomization in the "any" language.
+ * Add UTF-8 support to the random morpheme splitter (amy).
+ * Create an "ady" language for two-part morphology splits.
+ * Improved error notification facility (experimental).
 
 Version 5.3.13 (19 Nov 2016)
  * Fix fatal errors w/ zlib-dev and python dependencies.

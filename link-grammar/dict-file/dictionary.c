@@ -74,7 +74,7 @@ Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 	}
 	if (notify_err) {
 		prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
-		          "\tThis class name will be ignored.",
+		          "\tThis class name will be ignored.\n",
 		          con, afdict->line_number, afdict->name);
 	}
 	return NULL;
@@ -109,7 +109,7 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 			/* ??? should we support here more than one class? */
 			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 			          "\tWord has more than one connector.\n"
-			          "\tThis word will be ignored.",
+			          "\tThis word will be ignored.\n",
 			          dn->string, afdict->line_number, afdict->name);
 			return;
 		}
@@ -154,8 +154,6 @@ static int revcmplen(const void *a, const void *b)
  * and prefixes - every time we see a new suffix/prefix (the previous one is
  * remembered by w_last), we save it in the corresponding affix-class list.
  * The saved affixes don't include the infix mark.
- *
- * The empty word is not an affix so it is ignored.
  */
 static void get_dict_affixes(Dictionary dict, Dict_node * dn,
                              char infix_mark, char * w_last)
@@ -183,8 +181,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		strncpy(w_last, w, w_len);
 		w_last[w_len] = '\0';
 
-		if ((infix_mark == w_last[0]) &&
-			 (0 != strcmp(w_last, EMPTY_WORD_MARK)))
+		if (infix_mark == w_last[0])
 		{
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], w_last+1);
 		}
@@ -302,7 +299,7 @@ static bool afdict_init(Dictionary dict)
 		affix_list_add(afdict, &afdict->afdict_class[AFDICT_INFIXMARK], "");
 	}
 
-	if (debug_level(+D_AI))
+	if (verbosity_level(+D_AI))
 	{
 		size_t l;
 
@@ -450,8 +447,8 @@ dictionary_six_str(const char * lang,
 		dict->spell_checker = spellcheck_create(dict->lang);
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
-		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
-			prt_error("Info: %s: Spell checker disabled.", dict->lang);
+		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
+			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
 		dict->insert_entry = insert_list;
 
@@ -530,7 +527,7 @@ dictionary_six_str(const char * lang,
 	{
 		dict->locale = setlocale(LC_CTYPE, NULL);
 		prt_error("Warning: Couldn't set dictionary locale! "
-		          "Using current program locale \"%s\"", dict->locale);
+		          "Using current program locale \"%s\"\n", dict->locale);
 	}
 
 	/* setlocale() returns a string owned by the system. Copy it. */
@@ -556,7 +553,7 @@ dictionary_six_str(const char * lang,
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
 	{
-		prt_error("Error: Could not open affix file %s", affix_name);
+		prt_error("Error: Could not open affix file %s\n", affix_name);
 		goto failure;
 	}
 	if (! afdict_init(dict))
@@ -580,7 +577,7 @@ dictionary_six_str(const char * lang,
 		goto failure;
 	}
 	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */
-	assert(NULL != locale, "Cannot restore program locale\n");
+	assert(NULL != locale, "Cannot restore program locale");
 
 #ifdef USE_CORPUS
 	dict->corpus = lg_corpus_new();
@@ -589,8 +586,6 @@ dictionary_six_str(const char * lang,
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
 
-	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
-
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	if (NULL == dict->base_knowledge) goto failure;
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
@@ -598,6 +593,10 @@ dictionary_six_str(const char * lang,
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
+
+	dict->shuffle_linkages = false;
+	if (0 == strcmp(dict->lang, "any") || NULL != dict->anysplit)
+		dict->shuffle_linkages = true;
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
 	if (dict_node != NULL)
@@ -625,7 +624,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	char* input = get_file_contents(dict_name);
 	if (NULL == input)
 	{
-		prt_error("Error: Could not open dictionary %s", dict_name);
+		prt_error("Error: Could not open dictionary \"%s\"\n", dict_name);
 		return NULL;
 	}
 
@@ -666,7 +665,7 @@ Dictionary dictionary_create_from_file(const char * lang)
 	}
 	else
 	{
-		prt_error("Error: No language specified!");
+		prt_error("Error: No language specified!\n");
 		dictionary = NULL;
 	}
 

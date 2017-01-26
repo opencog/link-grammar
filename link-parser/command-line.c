@@ -29,6 +29,7 @@ static struct
 	int memory;
 	int linkage_limit;
 	int islands_ok;
+	int repeatable_rand;
 	int spell_guess;
 	int short_length;
 	int batch_mode;
@@ -89,10 +90,11 @@ static Switch default_switches[] =
 	{"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
 	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
 	{"ps-header",  Bool, "Generate postscript header",      &local.display_ps_header},
+	{"rand",       Bool, "Use repeatable random numbers",   &local.repeatable_rand},
 	{"senses",     Bool, "Display of word senses",          &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-	{"spell",      Int, "Use up to this many spell-guesses per unknown word", &local.spell_guess},
+	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
@@ -241,9 +243,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			for (i = 0; as[i].string != NULL; i++)
 			{
 				printf(" ");
-				left_print_string(stdout, as[i].string, "             ");
-				left_print_string(stdout, as[i].description,
-								"                                                  ");
+				left_print_string(stdout, as[i].string, 13);
+				left_print_string(stdout, as[i].description, 46);
 				if (Float == as[i].param_type)
 				{
 					/* Float point print! */
@@ -277,8 +278,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			printf("can be abbreviated.  Here is a list of the commands:\n\n");
 			for (i=0; user_command[i].s != NULL; i++) {
 				printf(" !");
-				left_print_string(stdout, user_command[i].s, "               ");
-				left_print_string(stdout, user_command[i].str, "                                                    ");
+				left_print_string(stdout, user_command[i].s, 15);
+				left_print_string(stdout, user_command[i].str, 52);
 				printf("\n");
 			}
 			printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
@@ -380,7 +381,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		}
 		else
 		{
-			printf("Internal error: Unknown variable type %d\n", as[j].param_type);
+			prt_error("Error: Internal error: Unknown variable type %d\n",
+			          as[j].param_type);
 			return -1;
 		}
 	}
@@ -418,6 +420,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.memory = parse_options_get_max_memory(opts);;
 	local.linkage_limit = parse_options_get_linkage_limit(opts);
 	local.islands_ok = parse_options_get_islands_ok(opts);
+	local.repeatable_rand = parse_options_get_repeatable_rand(opts);
 	local.spell_guess = parse_options_get_spell_guess(opts);
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
@@ -455,6 +458,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_max_memory(opts, local.memory);
 	parse_options_set_linkage_limit(opts, local.linkage_limit);
 	parse_options_set_islands_ok(opts, local.islands_ok);
+	parse_options_set_repeatable_rand(opts, local.repeatable_rand);
 	parse_options_set_spell_guess(opts, local.spell_guess);
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_cost_model_type(opts, local.cost_model);

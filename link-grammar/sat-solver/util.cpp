@@ -11,7 +11,7 @@ extern "C" {
 void free_linkage_connectors_and_disjuncts(Linkage lkg)
 {
   // Free the connectors
-  for(size_t i = 0; i < lkg->num_links; i++) {
+  for(size_t i = 0; i < lkg->lasz; i++) {
     free(lkg->link_array[i].rc);
     free(lkg->link_array[i].lc);
   }
@@ -71,15 +71,11 @@ void add_anded_exp(Exp*& orig, Exp* addit)
     }
 }
 
+#if 0
 bool isEndingInterpunction(const char* str)
 {
   return strcmp(str, ".") == 0 ||
     strcmp(str, "?") == 0 ||
     strcmp(str, "!") == 0;
 }
-
-const char* word(Sentence sent, int w)
-{
-  // XXX FIXME this is fundamentally wrong, should explore all alternatives!
-  return sent->word[w].alternatives[0];
-}
+#endif

@@ -19,79 +19,347 @@
 #include "error.h"
 #include "structures.h"
 #include "api-structures.h"
+#include "print-util.h"
 
-static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
-	GNUC_PRINTF(3,0);
-
-static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
+static void default_error_handler(lg_errinfo *, void *);
+static TLS struct
 {
-	/* As we are printing to stderr, make sure that stdout has been
-	 * written out first. */
-	fflush(stdout);
+	lg_error_handler handler;
+	void *handler_data;
+	lg_errinfo *errmsg;
+} lg_error = { default_error_handler };
 
-	fprintf(stderr, "link-grammar: ");
-	vfprintf(stderr, fmt, args);
+/* This list should match enum lg_error_severity. */
+#define MAX_SEVERITY_LABEL_SIZE 64 /* In bytes. */
+const char *severity_label_by_level[] =
+{
+	"Fatal error", "Error", "Warning", "Info", "Debug", "Trace", /*lg_None*/"",
+	NULL
+};
 
-	if ((Info != sev) && ec->sent != NULL)
-	{
-		size_t i, j;
-		const char **a, **b;
+/* Name to prepend to messages. */
+static const char libname[] = "link-grammar";
 
-#if 0
-		/* Previous code. Documenting its problem:
-		 * In the current library version (using Wordgraph) it may print a
-		 * nonsense sequence of morphemes if the words have been split to
-		 * morphemes in various ways, because the "alternatives" array doesn't
-		 * hold real alternatives any more (see example in the comments of
-		 * print_sentence_word_alternatives()).
-		 *
-		 * We could print the first path in the Wordgraph, analogous to what we
-		 * did here, but (same problem as printing alternatives[0] only) it may
-		 * not contain all the words, including those that failed (because they
-		 * are in another path). */
-
-		fprintf(stderr, "\tFailing sentence was:\n\t");
-		for (i=0; i<ec->sent->length; i++)
-		{
-			fprintf(stderr, "%s ", ec->sent->word[i].alternatives[0]);
-		}
-#else
-		/* The solution is just to print all the sentence tokenized subwords in
-		 * their order in the sentence, without duplications. */
-
-		fprintf(stderr,
-		        "\tFailing sentence contains the following words/morphemes:\n\t");
-		for (i=0; i<ec->sent->length; i++)
-		{
-			for (a = ec->sent->word[i].alternatives; NULL != *a; a++)
-			{
-				bool next_word = false;
-
-				if (0 == strcmp(*a, EMPTY_WORD_MARK)) continue;
-				for (j=0; j<ec->sent->length; j++)
-				{
-					for (b = ec->sent->word[j].alternatives; NULL != *b; b++)
-					{
-						/* print only the first occurrence. */
-						if (0 == strcmp(*a, *b))
-						{
-							next_word = true;
-							if (a != b) break;
-							fprintf(stderr, "%s ", *a);
-							break;
-						}
-					}
-					if (next_word) break;
-				}
-			}
-		}
-#endif
-	}
-	fprintf(stderr, "\n");
-	fflush(stderr); /* In case some OS does some strange thing */
+/* === Error queue utilities ======================================== */
+static lg_errinfo *error_queue_resize(lg_errinfo *lge, int len)
+{
+	lge = realloc(lge, (len+2) * sizeof(lg_errinfo));
+	lge[len+1].text = NULL;
+	return lge;
 }
 
-void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
+static int error_queue_len(lg_errinfo *lge)
+{
+	size_t len = 0;
+	if (lge)
+		while (NULL != lge[len].text) len++;
+	return len;
+}
+
+static void error_queue_append(lg_errinfo **lge, lg_errinfo *current_error)
+{
+	int n = error_queue_len(*lge);
+
+	*lge = error_queue_resize(*lge, n);
+	current_error->text = strdup(current_error->text);
+	(*lge)[n] = *current_error;
+}
+/* ==================================================================*/
+
+/**
+ * Return the error severity according to the start of the error string.
+ * If an error severity is not found - return None.
+ */
+static lg_error_severity message_error_severity(const char *msgtext)
+{
+	for (const char **llp = severity_label_by_level; NULL != *llp; llp++)
+	{
+		for (const char *s = *llp, *t = msgtext; ; s++, t++)
+		{
+			if ((':' == *t) && (t > msgtext))
+			{
+				return (int)(llp - severity_label_by_level + 1);
+			}
+			if ((*s != *t) || ('\0' == *s)) break;
+		}
+	}
+
+	return lg_None;
+}
+
+static void lg_error_msg_free(lg_errinfo *lge)
+{
+		free((void *)lge->text);
+		free((void *)lge->severity_label);
+}
+
+/* === API functions ================================================*/
+/**
+ * Set the error handler function to the given one.
+ * @param lg_error_handler New error handler function
+ * @param data Argument for the error handler function
+ */
+lg_error_handler lg_error_set_handler(lg_error_handler f, void *data)
+{
+	const lg_error_handler oldf = lg_error.handler;
+	lg_error.handler = f;
+	lg_error.handler_data = data;
+	return oldf;
+}
+
+const void *lg_error_set_handler_data(void * data)
+{
+	const char *old_data = lg_error.handler_data;
+
+	lg_error.handler_data = data;
+	return old_data;
+}
+
+/**
+ * Print the error queue and free it.
+ * @param f Error handler function
+ * @param data Argument for the error handler function
+ * @return Number of errors
+ */
+int lg_error_printall(lg_error_handler f, void *data)
+{
+	int n = error_queue_len(lg_error.errmsg);
+	if (0 == n) return 0;
+
+	for (lg_errinfo *lge = &lg_error.errmsg[n-1]; lge >= lg_error.errmsg; lge--)
+	{
+		if (NULL == f)
+			default_error_handler(lge, data);
+		else
+			f(lg_error.errmsg, data);
+		lg_error_msg_free(lge);
+	}
+	free(lg_error.errmsg);
+	lg_error.errmsg = NULL;
+
+	return n;
+}
+
+/**
+ * Clear the error queue. Free all of its memory.
+ * @return Number of errors
+ */
+int lg_error_clearall(void)
+{
+	if (NULL == lg_error.errmsg) return 0;
+	int nerrors = 0;
+
+	for (lg_errinfo *lge = lg_error.errmsg; NULL != lge->text; lge++)
+	{
+		nerrors++;
+		lg_error_msg_free(lge);
+	}
+	free(lg_error.errmsg);
+	lg_error.errmsg = NULL;
+
+	return nerrors;
+}
+
+/**
+ * Format the given raw error message.
+ * Create a complete error message, ready to be printed.
+ * If the severity is not lg_None, add the library name.
+ * Also add the severity label.
+ * @param lge The raw error message.
+ * @return The complete error message. The caller needs to free the memory.
+ */
+char *lg_error_formatmsg(lg_errinfo *lge)
+{
+	char *formated_error_message;
+
+	String *s = string_new();
+
+	/* Prepend libname to messages with higher severity than Debug. */
+	if (lge->severity < lg_Debug)
+		append_string(s, "%s: ", libname);
+
+	if ((NULL != lge->severity_label) && ('\0' != lge->severity_label[0]))
+		append_string(s, "%s: ", lge->severity_label);
+
+	append_string(s, "%s", lge->text);
+
+	formated_error_message = string_copy(s);
+	string_delete(s);
+
+	return formated_error_message;
+}
+/* ================================================================== */
+
+/**
+ * The default error handler callback function.
+ * @param lge The raw error message.
+ */
+static void default_error_handler(lg_errinfo *lge, void *data)
+{
+	FILE *outfile = stdout;
+
+	if (((NULL == data) && (lge->severity <= lg_Debug)) ||
+	    ((NULL != data) && (lge->severity <= *(lg_error_severity *)data) &&
+	     (lg_None !=  lge->severity)))
+	if (((NULL == data) && (lge->severity < lg_Debug)) ||
+	    ((NULL != data) && (lge->severity < *(lg_error_severity *)data) &&
+	     (lg_None !=  lge->severity)))
+	{
+		fflush(stdout); /* Make sure that stdout has been written out first. */
+		outfile = stderr;
+	}
+
+	char *msgtext = lg_error_formatmsg(lge);
+	fprintf(outfile, "%s", msgtext);
+	free(msgtext);
+
+	fflush(outfile); /* Also stderr, in case some OS does some strange thing */
+}
+
+/**
+ * Convert a numerical severity level to its corresponding string.
+ */
+static const char *error_severity_label(lg_error_severity sev)
+{
+	char *sevlabel = alloca(MAX_SEVERITY_LABEL_SIZE);
+
+	if (lg_None == sev)
+	{
+		sevlabel[0] = '\0';
+	}
+	else if ((sev < 1) || (sev > lg_None))
+	{
+		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d", sev);
+	}
+	else
+	{
+		sevlabel = (char *)severity_label_by_level[sev-1];
+	}
+
+	return strdup(sevlabel);
+}
+
+static void print_sentence_context(String *outbuf, const err_ctxt *ec)
+{
+	size_t i, j;
+	const char **a, **b;
+
+#if 0
+	/* Previous code. Documenting its problem:
+	 * In the current library version (using Wordgraph) it may print a
+	 * nonsense sequence of morphemes if the words have been split to
+	 * morphemes in various ways, because the "alternatives" array doesn't
+	 * hold real alternatives any more (see example in the comments of
+	 * print_sentence_word_alternatives()).
+	 *
+	 * We could print the first path in the Wordgraph, analogous to what we
+	 * did here, but (same problem as printing alternatives[0] only) it may
+	 * not contain all the words, including those that failed (because they
+	 * are in another path). */
+
+	fprintf(stderr, "\tFailing sentence was:\n\t");
+	for (i=0; i<ec->sent->length; i++)
+	{
+		fprintf(stderr, "%s ", ec->sent->word[i].alternatives[0]);
+	}
+#else
+	/* The solution is just to print all the sentence tokenized subwords in
+	 * their order in the sentence, without duplications. */
+
+	append_string(outbuf,
+			  "\tFailing sentence contains the following words/morphemes:\n\t");
+	for (i=0; i<ec->sent->length; i++)
+	{
+		for (a = ec->sent->word[i].alternatives; NULL != *a; a++)
+		{
+			bool next_word = false;
+
+			for (j=0; j<ec->sent->length; j++)
+			{
+				for (b = ec->sent->word[j].alternatives; NULL != *b; b++)
+				{
+					/* print only the first occurrence. */
+					if (0 == strcmp(*a, *b))
+					{
+						next_word = true;
+						if (a != b) break;
+						append_string(outbuf, "%s ", *a);
+						break;
+					}
+				}
+				if (next_word) break;
+			}
+		}
+	}
+	append_string(outbuf, "\n");
+#endif
+}
+
+static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
+	GNUC_PRINTF(3,0);
+
+static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
+{
+	static TLS String *outbuf;
+	if (NULL == outbuf) outbuf = string_new();
+
+	/*
+	 * If the message is a complete one, it ends with a newline.  Else the
+	 * message is buffered in msg_buf until it is complete. A complete line
+	 * which is not a complete message is marked with a \ at its end (after
+	 * its newline), which is removed here. The newline and \ should be
+	 * specified only in the format string.
+	 */
+	char *nfmt;
+	bool partline = false;
+	const int fmtlen = strlen(fmt);
+
+	if ('\n' != fmt[fmtlen-1])
+	{
+		partline = true;
+		if ('\\' == fmt[fmtlen-1])
+		{
+			nfmt = strdupa(fmt);
+			nfmt[fmtlen-1] = '\0';
+			fmt = nfmt;
+		}
+	}
+	vappend_string(outbuf, fmt, args);
+	if (partline) return;
+
+	if ((NULL != ec) && (NULL != ec->sent))
+		print_sentence_context(outbuf, ec);
+
+	lg_errinfo current_error;
+	/* current_error.ec = *ec; */
+	const char *error_text = string_value(outbuf);
+	lg_error_severity msg_sev = message_error_severity(error_text);
+	if (lg_None != msg_sev)
+	{
+		/* Strip off the error severity label, for consistency.
+		 * lg_error_format() will reconstruct it. */
+		error_text = strchr(error_text, ':') + 1;
+		error_text += strspn(error_text, " \t");
+	}
+	current_error.text = error_text;
+	current_error.severity = ((lg_None == msg_sev) && (0 != sev)) ? sev : msg_sev;
+	current_error.severity_label = error_severity_label(current_error.severity);
+
+	if (NULL == lg_error.handler)
+	{
+		error_queue_append(&lg_error.errmsg, &current_error);
+	}
+	else
+	{
+		lg_error.handler(&current_error, lg_error.handler_data);
+		free((void *)current_error.severity_label);
+	}
+
+	string_delete(outbuf);
+	outbuf = NULL;
+}
+
+void err_msgc(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -99,22 +367,31 @@ void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
 	va_end(args);
 }
 
-void prt_error(const char *fmt, ...)
+/**
+ * Issue the given message.
+ * This is an API function.
+ *
+ * Usage notes:
+ * The severity can be specified as an initial string in the message,
+ * such as "Error: Rest of message".  For known severity names see
+ * \link severity_label_by_level List of severity strings. \endlink.
+ * See \link verr_msg \endlink for how the severity is handled
+ * if it is not specified.
+ *
+ * @fmt printf()-like format.
+ * @... printf()-like arguments.
+ * @retrun Always 0, not to be used. This is needed so prt_error()
+ * can be used in complex macros that have to use the comma operator.
+ */
+int prt_error(const char *fmt, ...)
 {
-	severity sev;
-	err_ctxt ec;
 	va_list args;
 
-	sev = Error;
-	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
-	if (0 == strncmp(fmt, "Error:", 6)) sev = Error;
-	if (0 == strncmp(fmt, "Warn", 4)) sev = Warn;
-	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
-
-	ec.sent = NULL;
 	va_start(args, fmt);
-	verr_msg(&ec, sev, fmt, args);
+	verr_msg(NULL, 0, fmt, args);
 	va_end(args);
+
+	return 0;
 }
 
 /**

@@ -33,7 +33,7 @@ static bool check_domain_is_legal(pp_knowledge *k, const char *p)
 {
   if (0x0 != p[1])
   {
-    prt_error("Error: File %s: Domain (%s) must be a single character",
+    prt_error("Error: File %s: Domain (%s) must be a single character\n",
               k->path, p);
     return false;
   }
@@ -69,7 +69,7 @@ static bool read_starting_link_table(pp_knowledge *k)
 
   if (!pp_lexer_set_label(k->lt, label))
   {
-    prt_error("Error: File %s: Couldn't find starting link table %s",
+    prt_error("Error: File %s: Couldn't find starting link table %s\n",
               k->path, label);
     return false;
   }
@@ -79,7 +79,7 @@ static bool read_starting_link_table(pp_knowledge *k)
   even = n_tokens % 2;
   if(0 != even)
   {
-    prt_error("Error: Link table must have format [<link> <domain name>]+");
+    prt_error("Error: Link table must have format [<link> <domain name>]+\n");
     return false;
   }
 
@@ -115,8 +115,8 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   pp_linkset *ls;
   if (!pp_lexer_set_label(k->lt, label))
   {
-    if (debug_level(+D_PPK))
-      prt_error("Warning: File %s: Link set %s not defined: assuming empty",
+    if (verbosity_level(+D_PPK))
+      prt_error("Warning: File %s: Link set %s not defined: assuming empty\n",
              k->path, label);
     n_strings = 0;
   }
@@ -183,8 +183,8 @@ static bool read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
-      if (debug_level(+D_PPK))
-          prt_error("Warning: File %s: Not using any 'form a cycle' rules",
+      if (verbosity_level(+D_PPK))
+          prt_error("Warning: File %s: Not using any 'form a cycle' rules\n",
                     k->path);
   }
   else {
@@ -199,7 +199,7 @@ static bool read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens <= 0)
       {
-        prt_error("Error: File %s: Syntax error", k->path);
+        prt_error("Error: File %s: Syntax error\n", k->path);
         return false;
       }
       lsHandle = pp_linkset_open(n_tokens);
@@ -211,7 +211,7 @@ static bool read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-         prt_error("Error: File %s: Invalid syntax (rule %zu of %s)",
+         prt_error("Error: File %s: Invalid syntax (rule %zu of %s)\n",
                    k->path, r+1,label);
          return false;
       }
@@ -233,8 +233,8 @@ static bool read_bounded_rules(pp_knowledge *k, const char *label)
   size_t r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
-      if (debug_level(+D_PPK))
-        prt_error("Warning: File %s: Not using any 'bounded' rules", k->path);
+      if (verbosity_level(+D_PPK))
+        prt_error("Warning: File %s: Not using any 'bounded' rules\n", k->path);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -247,7 +247,7 @@ static bool read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Error: File %s: Invalid syntax: rule %zu of %s",
+        prt_error("Error: File %s: Invalid syntax: rule %zu of %s\n",
                   k->path, r+1,label);
         return false;
       }
@@ -257,7 +257,7 @@ static bool read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Error: File %s: Invalid syntax: rule %zu of %s",
+        prt_error("Error: File %s: Invalid syntax: rule %zu of %s\n",
                   k->path, r+1,label);
         return false;
       }
@@ -283,8 +283,8 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
-      if (debug_level(+D_PPK))
-        prt_error("Warning: File %s: Not using any %s rules", k->path, label);
+      if (verbosity_level(+D_PPK))
+        prt_error("Warning: File %s: Not using any %s rules\n", k->path, label);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -298,7 +298,7 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-        prt_error("Error: File %s: Invalid syntax in %s (rule %zu)",
+        prt_error("Error: File %s: Invalid syntax in %s (rule %zu)\n",
                   k->path, label, r+1);
         return false;
       }
@@ -322,7 +322,7 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens > 1)
       {
-        prt_error("Error: File %s: Invalid syntax in %s (rule %zu)",
+        prt_error("Error: File %s: Invalid syntax in %s (rule %zu)\n",
                   k->path, label, r+1);
         return false;
       }
@@ -389,7 +389,7 @@ pp_knowledge *pp_knowledge_open(const char *path)
   FILE *f = dictopen(path, "r");
   if (NULL == f)
   {
-    prt_error("Error: Couldn't find post-process knowledge file %s", path);
+    prt_error("Error: Couldn't find post-process knowledge file %s\n", path);
     return NULL;
   }
   pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
@@ -407,7 +407,7 @@ pp_knowledge *pp_knowledge_open(const char *path)
   return k;
 
 failure:
-  prt_error("Error: Unable to open knowledge file %s.", path);
+  prt_error("Error: Unable to open knowledge file %s.\n", path);
   pp_knowledge_close(k);
   return NULL;
 }

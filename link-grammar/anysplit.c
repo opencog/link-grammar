@@ -37,8 +37,6 @@
 
 #include "anysplit.h"
 
-#define D_AS 10          /* verbosity level for this file */
-
 extern const char * const afdict_classname[];
 
 typedef int p_start;     /* partition start in a word */
@@ -114,7 +112,8 @@ static void cache_partitions(p_list pl, int *ps, int p)
 	/* ps[3] = 9  */
 
 /**
- * scl: If NULL, return the index of the last split. Else cache the splits into scl.
+ * `scl`: If NULL, return the index of the last split, else cache the
+ * splits into scl.
  */
 static int split_and_cache(int word_length, int nparts, split_cache *scl)
 {
@@ -214,12 +213,14 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 	if (NULL == scl->sp)
 	{
+		// XXX FIXME -- there are more efficient ways of counting
+		// the number of splits. But this is OK for now.
 		nsplits = split_and_cache(word_length, nparts, NULL);
 		//printf("nsplits %zu\n", nsplits);
 		if (0 == nsplits)
 		{
-			fprintf(stderr, "Error: nsplits=%zu (word_length=%d, nparts=%d)\n",
-				nsplits, word_length, nparts);
+			prt_error("Error: nsplits=0 (word_length=%d, nparts=%d)\n",
+				word_length, nparts);
 			return 0;
 		}
 		scl->sp = malloc(sizeof(p_start)*nparts * nsplits);
@@ -236,7 +237,7 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 /**
  * Return a number between 0 and nsplits-1, including.
- * No need for a good randomness.
+ * No need for a good randomness; mediocre randomess is enough.
  * We suppose int is 32 bit.
  */
 static int rng_uniform(unsigned int *seedp, size_t nsplits)
@@ -250,43 +251,51 @@ static int rng_uniform(unsigned int *seedp, size_t nsplits)
 
 }
 
-static bool morpheme_match(Sentence sent, const char *word, int l, p_list pl)
+/* lutf is the length of the string, measured in code-points,
+ * blen is the length of the string, measured in bytes.
+ */
+#define D_MM 7
+static bool morpheme_match(Sentence sent,
+	const char *word, size_t lutf, p_list pl)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as = afdict->anysplit;
-	int pos = 0;
+	size_t bos = 0, cpos = 0; /* byte offset, code-point offset */
 	int p;
 	Regex_node *re;
-	char *prefix_string = alloca(l+1);
+	size_t blen = strlen(word);
+	char *prefix_string = alloca(blen+1);
 
-	lgdebug(+2, "word=%s: ", word);
+	lgdebug(+D_MM, "word=%s: ", word);
 	for (p = 0; p < as->nparts; p++)
 	{
-		strncpy(prefix_string, &word[pos], pl[p]-pos);
-		prefix_string[pl[p]-pos] = '\0';
+		size_t b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
+		prefix_string[b] = '\0';
+		bos += b;
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
-		 * REGMID only to the middle suffixes, and REGSUF only to the suffix part -
-		 * which cannot be the prefix. */
+		 * REGMID only to the middle suffixes, and REGSUF only to the
+		 * suffix part - which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
-		else if (pl[p] == l) re = as->regsuf;
+		else if (pl[p] == (int) lutf) re = as->regsuf;
 		else re = as->regmid;
-		lgdebug(2, "re=%s part%d=%s: ", re->name, p, prefix_string);
+		lgdebug(D_MM, "re=%s part%d=%s: ", re->name, p, prefix_string);
 
 		/* A NULL regex always matches */
-		if ((NULL != re) && (NULL == match_regex(re ,prefix_string)))
+		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))
 		{
-			lgdebug(2, "No match\n");
+			lgdebug(D_MM, "No match\n");
 			return false;
 		}
 
-		pos = pl[p];
-		if (pos == l) break;
+		cpos = pl[p];
+		if (cpos == lutf) break;
 	}
 
-	lgdebug(2, "Match\n");
+	lgdebug(D_MM, "Match\n");
 	return true;
 }
+#undef D_MM
 
 static Regex_node * regbuild(const char **regstring, int n, int classnum)
 {
@@ -339,6 +348,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
  * anysplit (its not an error to not use anysplit!).  Return false if
  * init failed.
  */
+#define D_AI 10
 bool anysplit_init(Dictionary afdict)
 {
 	anysplit_params *as;
@@ -353,14 +363,14 @@ bool anysplit_init(Dictionary afdict)
 
 	if (0 == regparts->length)
 	{
-		if (debug_level(+D_AS))
-			prt_error("Warning: File %s: Anysplit disabled (%s not defined)",
+		if (verbosity_level(+D_AI))
+			prt_error("Warning: File %s: Anysplit disabled (%s not defined)\n",
 		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
 	}
 	if (1 != regparts->length)
 	{
-		prt_error("Error: File %s: Must have %s defined with one value",
+		prt_error("Error: File %s: Must have %s defined with one value\n",
 		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return false;
 	}
@@ -381,7 +391,7 @@ bool anysplit_init(Dictionary afdict)
 	if (as->nparts < 0)
 	{
 		free_anysplit(afdict);
-		prt_error("Error: File %s: Value of %s must be a non-negative number",
+		prt_error("Error: File %s: Value of %s must be a non-negative number\n",
 		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return false;
 	}
@@ -396,7 +406,7 @@ bool anysplit_init(Dictionary afdict)
 	if (2 != regalts->length)
 	{
 		free_anysplit(afdict);
-		prt_error("Error: File %s: Must have %s defined with 2 values",
+		prt_error("Error: File %s: Must have %s defined with 2 values\n",
 		          afdict->name, afdict_classname[AFDICT_REGALTS]);
 		return false;
 	}
@@ -405,13 +415,14 @@ bool anysplit_init(Dictionary afdict)
 	if ((atoi(regalts->string[0]) <= 0) || (atoi(regalts->string[1]) <= 0))
 	{
 		free_anysplit(afdict);
-		prt_error("Error: File %s: Value of %s must be 2 positive numbers",
+		prt_error("Error: File %s: Value of %s must be 2 positive numbers\n",
 		          afdict->name, afdict_classname[AFDICT_REGALTS]);
 		return false;
 	}
 
 	return true;
 }
+#undef D_AI
 
 /**
  * Split randomly.
@@ -421,6 +432,7 @@ bool anysplit_init(Dictionary afdict)
  * - an error occurs (the behavior then is undefined).
  *   Such an error has not been observed yet.
  */
+#define D_AS 5
 bool anysplit(Sentence sent, Gword *unsplit_word)
 {
 	const char * word = unsplit_word->subword;
@@ -430,17 +442,17 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t stemsubscr_len;
 
 	size_t l = strlen(word);
+	size_t lutf = utf8_strlen(word);
 	p_list pl;
-	size_t pos;
+	size_t bos, cpos; /* byte offset, codepoint offset */
 	int p;
 	int sample_point;
 	size_t nsplits;
 	size_t rndtried = 0;
 	size_t rndissued = 0;
 	size_t i;
-	unsigned int seed = 0;
-	char *prefix_string = alloca(l+2+1); /* word + ".=" + NUL */
-	char *suffix_string = alloca(l+1);   /* word + NUL */
+	unsigned int seed = sent->rand_state;
+	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
 	const char infix_mark = INFIX_MARK(afdict);
 
@@ -460,9 +472,10 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		strlen(stemsubscr->string[0]);
 
 	/* Don't split morphemes again. If INFIXMARK and/or SUBSCRMARK are
-	 * not defined in the affix file, then morphemes may get split again unless
-	 * restricted by REGPRE/REGMID/REGSUF. */
+	 * not defined in the affix file, then morphemes may get split again,
+	 * unless restricted by REGPRE/REGMID/REGSUF. */
 	if (word[0] == infix_mark) return true;
+	if (word[l-1] == infix_mark) return true;
 	if ((l > stemsubscr_len) &&
 	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
 		return true;
@@ -473,7 +486,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	gw = word;
 #endif
 
-	nsplits = split(l, as->nparts, &as->scl[l]);
+	nsplits = split(lutf, as->nparts, &as->scl[lutf]);
 	if (0 == nsplits)
 	{
 		prt_error("Warning: anysplit(): split() failed (shouldn't happen)\n");
@@ -487,11 +500,11 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		use_sampling = false;
 	}
 
-	lgdebug(+2, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
+	lgdebug(+D_AS, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
 	        "as->altsmin=%zu, as->altsmax=%zu\n", use_sampling ? "" : " no",
 	        word, nsplits, as->nparts, as->altsmin, as->altsmax);
 
-	while (rndtried < nsplits && (!use_sampling || (rndissued < as->altsmin)))
+	while (rndtried < nsplits && (!use_sampling || (rndissued < as->altsmax)))
 	{
 		if (use_sampling)
 		{
@@ -508,70 +521,111 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 			sample_point++;
 		}
 
-		lgdebug(2, "Sample: %d ", sample_point);
-		if (as->scl[l].p_tried[sample_point])
+		lgdebug(D_AS, "Sample: %d ", sample_point);
+		if (as->scl[lutf].p_tried[sample_point])
 		{
-			lgdebug(4, "(repeated)\n");
+			lgdebug(D_AS+1, "(repeated)\n");
 			continue;
 		}
-		lgdebug(4, "(new)");
+		lgdebug(D_AS+1, "(new)");
 		rndtried++;
-		as->scl[l].p_tried[sample_point] = true;
-		if (morpheme_match(sent, word, l, &as->scl[l].sp[sample_point*as->nparts]))
+		as->scl[lutf].p_tried[sample_point] = true;
+		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
 		{
-			as->scl[l].p_selected[sample_point] = true;
+			as->scl[lutf].p_selected[sample_point] = true;
 			rndissued++;
 		}
 		else
 		{
-			lgdebug(2, "\n");
+			lgdebug(D_AS, "\n");
 		}
 	}
 
-	lgdebug(2, "Results: word '%s' (length=%zu): %zu/%zu:\n", word, l, rndissued, nsplits);
+	lgdebug(D_AS, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
 	{
-		const char **suffixes = NULL;
-		int num_suffixes = 0;
+		const char **affixes = NULL;
+		int num_sufixes;
+		int num_affixes = 0;
 
-		if (!as->scl[l].p_selected[i]) continue;
+		if (!as->scl[lutf].p_selected[i]) continue;
 
-		pl = &as->scl[l].sp[i*as->nparts];
-		pos = 0;
+		pl = &as->scl[lutf].sp[i*as->nparts];
+		bos = 0;
+		cpos = 0;
 		for (p = 0; p < as->nparts; p++)
 		{
-			if (pl[0] == (int)l)  /* This is the whole word */
+			size_t b = 0;
+			if (pl[0] == (int)lutf)  /* This is the whole word */
 			{
-				strncpy(prefix_string, &word[pos], pl[p]-pos);
-				prefix_string[pl[p]-pos] = '\0';
+				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
+				affix[b] = '\0';
 			}
 			else
-			if (0 == pos)   /* The first but not the only morpheme */
+			if (0 == cpos)   /* The first, but not the only morpheme */
 			{
-				strncpy(prefix_string, &word[pos], pl[p]-pos);
-				prefix_string[pl[p]-pos] = '\0';
-
-				if (0 != stemsubscr->length)
-				    strcat(prefix_string, stemsubscr->string[0]);
+				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
+				affix[b] = '\0';
 			}
-			else           /* 2nd and on morphemes */
+			else           /* 2nd and subsequent morphemes */
 			{
-				strncpy(suffix_string, &word[pos], pl[p]-pos);
-				suffix_string[pl[p]-pos] = '\0';
-				altappend(sent, &suffixes, suffix_string);
-				num_suffixes++;
+				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
+				affix[b] = '\0';
+				num_affixes++;
 			}
+			altappend(sent, &affixes, affix);
 
-			pos = pl[p];
-			if (pos == l) break;
+			bos += b;
+			cpos = pl[p];
+			// if (cpos == lutf) break; /* Same thing as below...*/
+			if (bos == l) break;
 		}
 
+		const char **prefix_position, **stem_position , **suffix_position;
+		switch (num_affixes)
+		{
+			case 0:
+				prefix_position = NULL;
+				stem_position = &affixes[0]; /* May be just a word here */
+				suffix_position = NULL;
+				num_sufixes = 0;
+				break;
+			case 1:
+				prefix_position = NULL;
+				stem_position = &affixes[0];
+				suffix_position = &affixes[1];
+				num_sufixes = 1;
+				break;
+			default:
+				prefix_position =&affixes[0];
+				stem_position = &affixes[1];
+				suffix_position = &affixes[2];
+				num_sufixes = num_affixes - 1;
+				break;
+		}
+		if (num_affixes > 0)
+		{
+			if (0 != stemsubscr->length) {
+				strcpy(affix, stem_position[0]);
+				strcat(affix, stemsubscr->string[0]);
+				stem_position[0] = affix;
+			}
+		}
+
+		// XXX FIXME -- this is wrong - it assumes a
+		// variable number of suffixes.
 		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
 		issue_word_alternative(sent, unsplit_word, "AS",
-		   0,NULL,  1,(const char **)&prefix_string, num_suffixes,suffixes);
-		free(suffixes);
+		        (NULL == prefix_position) ? 0 : 1, prefix_position,
+		        1, stem_position,
+		        num_sufixes, suffix_position);
+		free(affixes);
 	}
 
+	/* 0 == sent->rand_state denotes "repeatable rand". */
+	if (0 != sent->rand_state) sent->rand_state = seed;
 	return true;
 }
+#undef D_AS

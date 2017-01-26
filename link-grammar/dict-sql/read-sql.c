@@ -327,8 +327,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->spell_checker = spellcheck_create(dict->lang);
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
-		if (debug_level(D_USER_BASIC) && (NULL == dict->spell_checker))
-			prt_error("Info: %s: Spell checker disabled.", dict->lang);
+		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
+			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;
@@ -348,8 +348,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 	/* Misc remaining common (generic) dict setup work */
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
-
-	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;

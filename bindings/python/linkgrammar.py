@@ -14,7 +14,7 @@ except ImportError:
 
 Clinkgrammar = clg
 __all__ = ['ParseOptions', 'Dictionary', 'Link', 'Linkage', 'Sentence',
-           'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
+           'LG_Error', 'LG_DictionaryError', 'LG_TimerExhausted', 'Clinkgrammar']
 
 # A decorator to ensure keyword-only arguments to __init__ (besides self).
 # In Python3 it can be done by using "*" as the second __init__ argument,
@@ -275,7 +275,37 @@ class ParseOptions(object):
         clg.parse_options_set_all_short_connectors(self._obj, 1 if value else 0)
 
 
-class LG_DictionaryError(Exception):
+class LG_Error(Exception):
+    @staticmethod
+    def set_handler(ehandler_function, ehandler_data=None):
+        old_handler = clg._py_error_set_handler((ehandler_function, ehandler_data))
+        if isinstance(old_handler, str):
+            return LG_Error._default_handler
+        return old_handler
+
+    # lg_error_formatmsg is implemented as method "formatmsg" on errinfo
+    #@staticmethod
+    #def format(lgerror):
+    #    return clg.lg_error_formatmsg(lgerror)
+
+    @staticmethod
+    def printall(ehandler_func, ehandler_data=None):
+        return clg._py_error_printall((ehandler_func, ehandler_data))
+
+    @staticmethod
+    def clearall():
+        return clg.lg_error_clearall()
+
+    @staticmethod
+    def message(msg):
+        return clg._prt_error(msg)
+
+    @staticmethod
+    def _default_handler(errinfo, data):
+        # Exceptions (on data): TypeError, ValueError
+        clg._py_error_default_handler(errinfo, data)
+
+class LG_DictionaryError(LG_Error):
     pass
 
 class Dictionary(object):
@@ -405,7 +435,7 @@ class Linkage(object):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
 
-class LG_TimerExhausted(Exception):
+class LG_TimerExhausted(LG_Error):
     pass
 
 class Sentence(object):

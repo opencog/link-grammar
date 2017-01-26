@@ -622,7 +622,7 @@ int main(int argc, char * argv[])
 	opts = copts->popts;
 	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
 	{
-		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
+		prt_error("Fatal error: unable to create parse options\n");
 		exit(-1);
 	}
 
@@ -656,7 +656,7 @@ int main(int argc, char * argv[])
 		dict = dictionary_create_lang(language);
 		if (dict == NULL)
 		{
-			prt_error("Fatal error: Unable to open dictionary.");
+			prt_error("Fatal error: Unable to open dictionary.\n");
 			exit(-1);
 		}
 	}
@@ -665,7 +665,7 @@ int main(int argc, char * argv[])
 		dict = dictionary_create_default_lang();
 		if (dict == NULL)
 		{
-			prt_error("Fatal error: Unable to open default dictionary.");
+			prt_error("Fatal error: Unable to open default dictionary.\n");
 			exit(-1);
 		}
 	}
@@ -682,10 +682,10 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-	prt_error("Info: Dictionary version %s, locale %s",
+	prt_error("Info: Dictionary version %s, locale %s\n",
 		linkgrammar_get_dict_version(dict),
 		linkgrammar_get_dict_locale(dict));
-	prt_error("Info: Library version %s. Enter \"!help\" for help.",
+	prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
 		linkgrammar_get_version());
 
 	/* Main input loop */

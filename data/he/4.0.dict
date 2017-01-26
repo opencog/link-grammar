@@ -40,12 +40,9 @@
 % Among numerous other things, changes to handle count/uncountable changes
 % have not been done yet. The created infrastructure for that may still need changes.
 
-% Dictionary version number is 5.3.0 (formatted as V5v3v0+)
-<dictionary-version-number>: V5v3v0+;
+% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
+<dictionary-version-number>: V5v3v15+;
 <dictionary-locale>: HE4il+;
-
-% The empty word.
-EMPTY-WORD.zzz: ZZZ-;
 
 % For now.
 LEFT-WALL: {Wa+} or {Wd+} or ();

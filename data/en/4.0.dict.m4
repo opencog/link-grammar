@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.12 (formatted as V5v3v12+)
-<dictionary-version-number>: V5v3v12+;
+% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
+<dictionary-version-number>: V5v3v15+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -57,15 +57,6 @@ changecom(`%')
  % be sorted out so that links are properly marked as s, p or m.
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
-
-% The empty word is a used in the 2D array used by the parser,
-% in "word slots" in which "no word" is a possibility to consider.
-% When the Wordgraph is converted ("flattened") to this 2D array,
-% empty words are issued whenever needed.
-% FIXME: A better comment maybe.
-% See also EMPTY-WORD.x for the highly-unusual situation that EMPTY-WORD
-% appears in the input text.
-EMPTY-WORD.zzz: ZZZ-;
 
 % Capitalization handling (null effect for now- behave as empty words).
 1stCAP.zzz: ZZZ-;
@@ -343,9 +334,6 @@ INITIALS <entity-singular>:
 % should have a cost that is even higher (so that we take the
 % capitalized version before we take any other matches.)
 CAPITALIZED-WORDS: [<entity-singular>]0.05;
-
-% Hack, see EMPTY-WORD, up top.
-EMPTY-WORD.x: CAPITALIZED-WORDS;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:

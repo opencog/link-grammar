@@ -33,6 +33,7 @@
 
 #include "error.h"
 #include "lg_assert.h"
+#include "wcwidth.h"
 
 #ifdef HAVE_ALLOCA_H
 # include <alloca.h>
@@ -53,10 +54,28 @@ extern "C"
 void *alloca (size_t);
 #endif
 
+#ifndef TLS
+#ifdef _MSC_VER
+#define TLS __declspec(thread)
+#else
+#define TLS
+#endif /* _MSC_VER */
+#endif /* !TLS */
+
 #ifndef strdupa
 /* In the following, the argument should not have side effects. */
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
+
+/* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
+#ifdef _WIN32
+#define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
+#else
+#ifdef _GNU_SOURCE
+/* Emulate the POSIX version; assuming len>0 and a successful call. */
+#define strerror_r(errno, buf, len) abs((strcpy(buf, strerror_r (errno, buf, len)), 0))
+#endif /* _GNU_SOURCE */
+#endif /* _WIN32 */
 
 #ifdef _MSC_VER
 /* These definitions are incorrect, as these functions are different(!)
@@ -87,13 +106,12 @@ void *alloca (size_t);
 #include <windows.h>
 #include <mbctype.h>
 
+/* Compatibility definitions. */
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
-
-/* MS changed the name of rand_r to rand_s */
+/* Note that "#define _CRT_RAND_S" is needed before "#include <stdlib.h>" */
 #define rand_r(seedp) rand_s(seedp)
-/* And strtok_r is strtok_s */
 #define strtok_r strtok_s
 
 /* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.
@@ -233,23 +251,30 @@ typedef int locale_t;
 #endif
 
 /**
+ * Return the width, in text-column-widths, of the utf8-encoded
+ * string.  This is needed when printing formatted strings.
+ */
+size_t utf8_strwidth(const char *);
+
+/**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
- * string.  This is needed when printing strings in a formatted way.
+ * string.  The string is assumed to be null-terminated.
+ * This is needed when splitting words into morphemes.
  */
 static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-#ifdef _WIN32
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
 #else
 	return mbsrtowcs(NULL, &s, 0, &mbss);
-#endif /* _WIN32 */
+#endif
 }
 
 /**
- * Return the distance, in bytes, to the next character, in this
- * input utf8-encoded string
+ * Return the distance, in bytes, to the next character, in the
+ * input utf8-encoded string.
  */
 static inline size_t utf8_next(const char *s)
 {
@@ -275,6 +300,39 @@ static inline size_t utf8_next(const char *s)
 	}
 	return len;
 #endif /* _WIN32 */
+}
+
+/**
+ * Return the length, in codepoints/glyphs, of the utf8-encoded
+ * string.  The string is assumed to be at least `len` code-points
+ * long. This is needed when splitting words into morphemes.
+ */
+static inline size_t utf8_strnlen(const char *s, size_t len)
+{
+	size_t by = 0;
+	while (0 < len) { by += utf8_next(&s[by]); }
+	return by;
+}
+
+
+/**
+ * Copy `n` utf8 characters from `src` to `dest`.
+ * Return the number of bytes actually copied.
+ * The `dest` must have enough room to hold the copy.
+ */
+static inline size_t utf8_strncpy(char *dest, const char *src, size_t n)
+{
+	size_t b = 0;
+	while (0 < n)
+	{
+		size_t k = utf8_next(src);
+		b += k;
+		while (0 < k) { *dest = *src; dest++; src++; k--; }
+		n--;
+		if (0x0 == *src) break;
+	}
+
+	return b;
 }
 
 static inline int is_utf8_upper(const char *s, locale_t dict_locale)

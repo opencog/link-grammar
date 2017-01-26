@@ -12,6 +12,8 @@
 
 #include <time.h>
 
+#include "externs.h"
+
 #if !defined(_WIN32)
 	#include <sys/time.h>
 	#include <sys/resource.h>
@@ -126,16 +128,16 @@ bool resources_memory_exhausted(Resources r)
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 
+#define RES_COL_WIDTH sizeof("                                     ")
+
 /** print out the cpu ticks since this was last called */
 static void resources_print_time(int verbosity, Resources r, const char * s)
 {
 	double now;
 	now = current_usage_time();
-	if (verbosity > 1) {
-		printf("++++");
-		left_print_string(stdout, s,
-			"                                     ");
-		printf("%7.2f seconds\n", now - r->when_last_called);
+	if (verbosity >= D_USER_TIMES)
+	{
+		prt_error("++++ %-36s %7.2f seconds\n", s, now - r->when_last_called);
 	}
 	r->when_last_called = now;
 }
@@ -146,24 +148,20 @@ static void resources_print_total_time(int verbosity, Resources r)
 	double now;
 	now = current_usage_time();
 	r->cumulative_time += (now - r->time_when_parse_started) ;
-	if (verbosity > 0) {
-		printf("++++");
-		left_print_string(stdout, "Time",
-		                  "                                           ");
-		printf("%7.2f seconds (%.2f total)\n",
-			   now - r->time_when_parse_started, r->cumulative_time);
+	if (verbosity >= D_USER_BASIC)
+	{
+		prt_error("++++ %-36s %7.2f seconds (%.2f total)\n", "Time",
+		          now - r->time_when_parse_started, r->cumulative_time);
 	}
 	r->time_when_parse_started = now;
 }
 
 static void resources_print_total_space(int verbosity, Resources r)
 {
-	if (verbosity > 1) {
-		printf("++++");
-		left_print_string(stdout, "Total space",
-		                  "                                            ");
-		printf("%zu bytes (%zu max)\n",
-			get_space_in_use(), get_max_space_used());
+	if (verbosity >= D_USER_TIMES)
+	{
+		prt_error("++++ %-36s %zu bytes (%zu max)\n", "Total space",
+		          get_space_in_use(), get_max_space_used());
 	}
 }
 

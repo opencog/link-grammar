@@ -108,14 +108,13 @@ void safe_strcat(char *u, const char *v, size_t usize)
 }
 
 /**
- * Prints s in a field width of string ti, with no truncation.
- * FIXME: make t a number.
- * (In a previous version of this function s got truncated to the
- * field width.)
+ * Prints string `s`, aligned to the left, in a field width `w`.
+ * If the width of `s` is shorter than `w`, then the remainder of
+ * field is padded with blanks (on the right).
  */
-void left_print_string(FILE * fp, const char * s, const char * t)
+void left_print_string(FILE * fp, const char * s, int w)
 {
-	int width = strlen(t) + strlen(s) - utf8_strlen(s);
+	int width = w + strlen(s) - utf8_strwidth(s);
 	fprintf(fp, "%-*s", width, s);
 }
 
@@ -161,6 +160,40 @@ int utf8_charlen(const char *xc)
 	if ((c >= 0xf0) && (c <= 0xf4)) return 4; /* First byte of a code point U +10000 - U +10FFFF */
 	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
+
+/* Implemented n wcwidth.c */
+extern int mk_wcwidth(wchar_t);
+
+/**
+ * Return the width, in text-column-widths, of the utf8-encoded
+ * string.  This is needed when printing formatted strings.
+ * European langauges will typically have widths equal to the
+ * `mblen` value below (returned by mbsrtowcs); they occupy one
+ * column-width per code-point.  The CJK ideographs occupy two
+ * column-widths per code-point. No clue about what happens for
+ * Arabic, or others.  See wcwidth.c for details.
+ */
+size_t utf8_strwidth(const char *s)
+{
+	mbstate_t mbss;
+	wchar_t ws[MAX_LINE];
+	size_t mblen, glyph_width=0, i;
+
+	memset(&mbss, 0, sizeof(mbss));
+
+#ifdef _WIN32
+	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, MAX_LINE) - 1;
+#else
+	mblen = mbsrtowcs(ws, &s, MAX_LINE, &mbss);
+#endif /* _WIN32 */
+
+	for (i=0; i<mblen; i++)
+	{
+		glyph_width += mk_wcwidth(ws[i]);
+	}
+	return glyph_width;
+}
+
 
 #ifdef _WIN32
 /**
@@ -227,7 +260,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid UTF-8 string!");
+		prt_error("Error: Invalid UTF-8 string!\n");
 		return;
 	}
 	c = towlower_l(c, locale_t);
@@ -237,7 +270,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't downcase UTF-8 string!");
+		prt_error("Error: can't downcase UTF-8 string!\n");
 		return;
 	}
 
@@ -269,7 +302,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
 	if (nbh < 0)
 	{
-		prt_error("Error: Invalid UTF-8 string!");
+		prt_error("Error: Invalid UTF-8 string!\n");
 		return;
 	}
 	c = towupper_l(c, locale_t);
@@ -279,7 +312,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't upcase UTF-8 string!");
+		prt_error("Error: can't upcase UTF-8 string!\n");
 		return;
 	}
 
@@ -431,7 +464,7 @@ void * xalloc(size_t size)
 #endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space. (int)");
+		prt_error("Fatal Error: Ran out of space. (int)\n");
 		abort();
 		exit(1);
 	}
@@ -464,7 +497,7 @@ void * exalloc(size_t size)
 
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space. (ext)");
+		prt_error("Fatal Error: Ran out of space. (ext)\n");
 		abort();
 		exit(1);
 	}
@@ -567,20 +600,20 @@ char * dictionary_get_data_dir(void)
 
 	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
 	{
-		prt_error("Warning: GetModuleFileName error %d", (int)GetLastError());
+		prt_error("Warning: GetModuleFileName error %d\n", (int)GetLastError());
 	}
 	else
 	{
 		if (NULL == prog_path)
 		{
 			/* Can it happen? */
-			prt_error("Warning: GetModuleFileName returned a NULL program path!");
+			prt_error("Warning: GetModuleFileName returned a NULL program path!\n");
 		}
 		else
 		{
 			if (!PathRemoveFileSpecA(prog_path))
 			{
-				prt_error("Warning: Cannot get directory from program path '%s'!",
+				prt_error("Warning: Cannot get directory from program path '%s'!\n",
 				          prog_path);
 			}
 			else
@@ -646,12 +679,12 @@ void * object_open(const char *filename,
 	if (NULL == path_found)
 	{
 		data_dir = dictionary_get_data_dir();
-		if (debug_level(D_USER_FILES))
+		if (verbosity_level(D_USER_FILES))
 		{
 			char cwd[MAX_PATH_NAME];
 			char *cwdp = getcwd(cwd, sizeof(cwd));
-			printf("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
-			printf("Debug: Last-resort data directory: %s\n",
+			prt_error("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
+			prt_error("Debug: Last-resort data directory: %s\n",
 					  data_dir ? data_dir : "NULL");
 		}
 	}
@@ -713,7 +746,7 @@ void * object_open(const char *filename,
 
 		path_found = strdup((NULL != completename) ? completename : filename);
 		if (0 < verbosity)
-			prt_error("Info: Dictionary found at %s", path_found);
+			prt_error("Info: Dictionary found at %s\n", path_found);
 		for (i = 0; i < 2; i++)
 		{
 			char *root = strrchr(path_found, DIR_SEPARATOR[0]);
@@ -808,7 +841,7 @@ char *get_file_contents(const char * dict_name)
 
 	if (left < 0)
 	{
-		prt_error("Error: File size is insane!");
+		prt_error("Error: File size is insane!\n");
 		free(contents);
 		return NULL;
 	}
@@ -885,18 +918,18 @@ void set_utf8_program_locale(void)
 		if ((0 != strcmp(locale, "C")) && (0 != strcmp(locale, "POSIX")))
 		{
 			prt_error("Warning: Program locale \"%s\" (codeset %s) was not UTF-8; "
-						 "force-setting to en_US.UTF-8", locale, codeset);
+						 "force-setting to en_US.UTF-8\n", locale, codeset);
 		}
 		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
 		if (NULL == locale)
 		{
 			prt_error("Warning: Program locale en_US.UTF-8 could not be set; "
-			          "force-setting to C.UTF-8");
+			          "force-setting to C.UTF-8\n");
 			locale = setlocale(LC_CTYPE, "C.UTF-8");
 			if (NULL == locale)
 			{
 				prt_error("Warning: Could not set a UTF-8 program locale; "
-				          "program may malfunction");
+				          "program may malfunction\n");
 			}
 		}
 	}
@@ -915,7 +948,7 @@ win32_getlocale (void)
 	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO639LANGNAME, lbuf, sizeof(lbuf)))
 	{
 		prt_error("Error: GetLocaleInfoA LOCALE_SENGLISHLANGUAGENAME LCID=%d: "
-		          "Error %d", (int)lcid, (int)GetLastError());
+		          "Error %d\n", (int)lcid, (int)GetLastError());
 		return NULL;
 	}
 	strcpy(locale, lbuf);
@@ -924,7 +957,7 @@ win32_getlocale (void)
 	if (0 >= GetLocaleInfoA(lcid, LOCALE_SISO3166CTRYNAME, lbuf, sizeof(lbuf)))
 	{
 		prt_error("Error: GetLocaleInfoA LOCALE_SISO3166CTRYNAME LCID=%d: "
-		          "Error %d", (int)lcid, (int)GetLastError());
+		          "Error %d\n", (int)lcid, (int)GetLastError());
 		return NULL;
 	}
 	strcat(locale, lbuf);

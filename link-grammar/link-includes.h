@@ -51,6 +51,45 @@ link_public_api(const char *)
 
 /**********************************************************************
  *
+ * Functions and definitions for the error handler.
+ *
+ ***********************************************************************/
+typedef enum
+{
+	lg_Fatal = 1,
+	lg_Error,
+	lg_Warn,
+	lg_Info,
+	lg_Debug,
+	lg_Trace,
+	lg_None
+} lg_error_severity;
+
+/* Raw error message. */
+typedef struct
+{
+	/* err_ctxt ec; */
+	lg_error_severity severity;
+	const char *severity_label;
+	const char *text;
+} lg_errinfo;
+
+/* Error handler callback function. */
+typedef void (*lg_error_handler)(lg_errinfo *, void *);
+
+link_public_api(lg_error_handler)
+     lg_error_set_handler(lg_error_handler, void *data);
+link_public_api(const void *)
+     lg_error_set_handler_data(void * data);
+link_public_api(char *)
+     lg_error_formatmsg(lg_errinfo *lge);
+link_public_api(int)
+     lg_error_printall(lg_error_handler, void *data);
+link_public_api(int)
+     lg_error_clearall(void);
+
+/**********************************************************************
+ *
  * Functions to manipulate Dictionaries
  *
  ***********************************************************************/
@@ -326,6 +365,7 @@ link_public_api(const char *)
  * Internal functions -- do not use these in new code!
  * These are not intended for general public use, but are required to
  * get the link-parser executable to link under MSVC6.
+ * XXX FIXME we're on msvc14 now, do we still need these??
  *
  ***********************************************************************/
 
@@ -334,7 +374,7 @@ link_public_api(void)
 link_public_api(void)
      dict_display_word_info(Dictionary dict, const char *, Parse_Options opts);
 link_public_api(void)
-     left_print_string(FILE* fp, const char *, const char *);
+     left_print_string(FILE* fp, const char *, int);
 link_public_api(bool)
      lg_expand_disjunct_list(Sentence sent);
 
@@ -357,7 +397,7 @@ link_public_api(void)
 #define GNUC_PRINTF( format_idx, arg_idx )
 #endif
 
-link_public_api(void)
+link_public_api(int)
      prt_error(const char *fmt, ...) GNUC_PRINTF(1,2);
 
 /*******************************************************

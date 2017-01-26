@@ -73,9 +73,9 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	{
 		int len, center_t;
 
-		/* Centers obtained by counting the characters,
+		/* Centers obtained by counting the characters column widths,
 		 * not the bytes in the string. */
-		len = utf8_strlen(linkage->word[i]);
+		len = utf8_strwidth(linkage->word[i]);
 		center_t = tot + (len/2);
 #if 1 /* Long labels - disable in order to compare output with old versions. */
 		if (i > start_word)
@@ -109,8 +109,8 @@ typedef struct
 static void left_append_string(String * string, const char * s, const char * t)
 {
 	size_t i;
-	size_t slen = utf8_strlen(s);
-	size_t tlen = utf8_strlen(t);
+	size_t slen = utf8_strwidth(s);
+	size_t tlen = utf8_strwidth(t);
 
 	for (i = 0; i < tlen; i++)
 	{
@@ -279,7 +279,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (mark) *mark = SUBSCRIPT_DOT;
 
 		/* Make sure the glyphs align during printing. */
-		pad += strlen(infword) - utf8_strlen(infword);
+		pad += strlen(infword) - utf8_strwidth(infword);
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		if (NULL == dj) dj = "";
@@ -306,9 +306,7 @@ build_linkage_postscript_string(const Linkage linkage,
 {
 	int link, i,j;
 	int d;
-	int N_wall_connectors;
 	bool print_word_0, print_word_N;
-	bool suppressor_used;
 	int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	String  * string;
@@ -317,9 +315,9 @@ build_linkage_postscript_string(const Linkage linkage,
 
 	string = string_new();
 
-	N_wall_connectors = 0;
-	suppressor_used = false;
 	if (!display_walls) {
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
 		for (j=0; j<N_links; j++) {
 			if (ppla[j].lw == 0) {
 				if (ppla[j].rw == linkage->num_words-1) continue;
@@ -329,22 +327,26 @@ build_linkage_postscript_string(const Linkage linkage,
 				}
 			}
 		}
+		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
+						|| (N_wall_connectors != 1));
 	}
-	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_0 = true;
 
-	N_wall_connectors = 0;
-	suppressor_used = false;
-	for (j=0; j<N_links; j++) {
-		if (ppla[j].rw == linkage->num_words-1) {
-			N_wall_connectors ++;
-			if (strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)==0){
-				suppressor_used = true;
+	if (!display_walls) {
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
+		for (j=0; j<N_links; j++) {
+			if (ppla[j].rw == linkage->num_words-1) {
+				N_wall_connectors ++;
+				if (strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)==0){
+					suppressor_used = true;
+				}
 			}
 		}
+		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
+						|| (N_wall_connectors != 1));
 	}
-	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_N = true;
 
 	if (print_word_0) d=0; else d=1;
 
@@ -413,8 +415,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	const char *s;
 	char *t;
 	bool print_word_0 , print_word_N;
-	int N_wall_connectors;
-	bool suppressor_used;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
 	unsigned int line_len, link_length;
@@ -431,10 +431,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	string = string_new();
 
 	/* Do we want to print the left wall? */
-	N_wall_connectors = 0;
-	suppressor_used = false;
 	if (!display_walls)
 	{
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
 		for (j=0; j<N_links; j++)
 		{
 			if (0 == ppla[j].lw)
@@ -447,26 +447,31 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				}
 			}
 		}
+		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors != 1));
 	}
-	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_0 = true;
 
 	/* Do we want to print the right wall? */
-	N_wall_connectors = 0;
-	suppressor_used = false;
-	for (j=0; j<N_links; j++)
+	if (!display_walls)
 	{
-		if (ppla[j].rw == linkage->num_words-1)
+		int N_wall_connectors = 0;
+		bool suppressor_used = false;
+		for (j=0; j<N_links; j++)
 		{
-			N_wall_connectors ++;
-			if (0 == strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
+			if (ppla[j].rw == linkage->num_words-1)
 			{
-				suppressor_used = true;
+				N_wall_connectors ++;
+				if (0 == strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
+				{
+					suppressor_used = true;
+				}
 			}
 		}
+		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
+					|| (N_wall_connectors != 1));
 	}
-	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1) || display_walls);
+	else print_word_N = true;
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
@@ -631,14 +636,14 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
-		/* Count number of multi-byte chars in the words,
+		/* Count the column-widths of the words,
 		 * up to the max screen width. */
 		unsigned int uwidth = 0;
 		do {
-			uwidth += word_offset[i] + utf8_strlen(linkage->word[i]) + 1;
+			uwidth += word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
 			i++;
 		} while ((i < N_words_to_print) &&
-			(uwidth + word_offset[i] + utf8_strlen(linkage->word[i]) + 1 <
+			(uwidth + word_offset[i] + utf8_strwidth(linkage->word[i]) + 1 <
 			                                                      x_screen_width));
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
@@ -1218,7 +1223,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		return;
 	}
 
-	if (debugprint) lgdebug(+0, "\n");
+	if (debugprint) lgdebug(+0, "\n\\");
 	else if (NULL != tokenpos)
 		; /* Do nothing */
 	else
@@ -1248,7 +1253,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 
 				/* There should always be at least one alternative */
 				assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+				 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu", wi);
 
 				if (NULL != w.alternatives[1])
 				{
@@ -1267,10 +1272,10 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		 *   ה=  כלב  לב  ב=
 		 *   ה=  כ=  ל=
 		 *   ה=  כ=
-		 * For "'50s," (∅ means empty word):
+		 * For "'50s,"
 		 *   ' s s ,
-		 *   '50 50 , ∅
-		 *   '50s ∅
+		 *   '50 50 ,
+		 *   '50s
 		 * Clearly, this is not informative any more. Instead, one line with a
 		 * list of tokens (without repetitions) is printed
 		 * ה= כלב לב ב= כ= ל=
@@ -1290,13 +1295,13 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
 		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
 #endif
-		if (debugprint) lgdebug(0, "  word%zu: %s\n   ", wi, w.unsplit_word);
+		if (debugprint) lgdebug(0, "  word%zu: %s\n\\", wi, w.unsplit_word);
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
-		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu\n", wi);
+		 ('\0' != w.alternatives[0][0]), "Missing alt for word %zu", wi);
 
-		//printf("DEBUG: word%zu '%s' nalts %zu\n",
+		//err_msg(lg_Debug, "word%zu '%s' nalts %zu\n",
 		//	 wi, sent->word[wi].unsplit_word, altlen(sent->word[wi].alternatives));
 
 		for (wi = w_start; (wi == w_start) ||
@@ -1311,22 +1316,21 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		for (ai=0; ai < max_nalt;  ai++)
 		{
 			if (debugprint)
+			{
+				if (0 < ai) lgdebug(0, "\n   ");
 				lgdebug(0, "   alt%zu:", ai);
+			}
+
 			for (wi = w_start; (wi == w_start) ||
-			 ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
+			    ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
 			{
 				size_t nalts = altlen(sent->word[wi].alternatives);
 				const char *wt;
 				const char *st = NULL;
 				char *wprint = NULL;
 
-				/* In the Wordgraph version alternative slots are not balanced
-				 * with empty words. To see these places for debug, later
-				 * here "[missing]" is printed if wt is "". */
-				if (ai >= nalts)
-					wt = ""; /* missing */
-				else
-					wt = sent->word[wi].alternatives[ai];
+				if (ai >= nalts) continue;
+				wt = sent->word[wi].alternatives[ai];
 
 				/* Don't display information again for the same word */
 				if ((NULL != tokenpos) && (0 == strcmp(tokenpos->token, wt)))
@@ -1350,9 +1354,6 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					}
 				}
 
-				if (0 == strcmp(wt, EMPTY_WORD_MARK))
-					wt = EMPTY_WORD_DISPLAY;
-
 				/* Restore SUBSCRIPT_DOT for printing */
 				st = strrchr(wt, SUBSCRIPT_MARK);
 				if (st)
@@ -1363,10 +1364,19 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					wt = wprint;
 				}
 
-				if (debugprint) lgdebug(0, " %s", '\0' == wt[0] ? "[missing]" : wt);
+				if (debugprint)
+				{
+					const char *opt_start = "", *opt_end = "";
+					if (sent->word[wi].optional)
+					{
+						opt_start = "{";
+						opt_end = "}";
+					}
+					lgdebug(0, " %s%s%s", opt_start, wt, opt_end);
+				}
 
 				/* Don't try to give info on the empty word. */
-				if (('\0' != wt[0]) && (0 != strcmp(wt, EMPTY_WORD_DISPLAY)))
+				if ('\0' != wt[0])
 				{
 					/* For now each word component is called "Token".
 					 * TODO: Its type can be decoded and a more precise
@@ -1387,7 +1397,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 			//if (word_split && (NULL == display)) printf("\n");
 		}
 		wi--;
-		if (debugprint) lgdebug(0, "\n");
+		if (debugprint) lgdebug(0, "\n\\");
 	}
 	if (debugprint) lgdebug(0, "\n");
 	else if (word_split) printf("\n\n");
@@ -1411,10 +1421,7 @@ void print_with_subscript_dot(const char *s)
 void print_lwg_path(Gword **w)
 {
 	lgdebug(+0, " ");
-	for (; *w; w++)
-	{
-		print_with_subscript_dot((*w)->subword);
-	}
+	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
 	lgdebug(0, "\n");
 }
 
@@ -1445,23 +1452,27 @@ void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
 void print_chosen_disjuncts_words(const Linkage lkg)
 {
 	size_t i;
+	String *djwbuf = string_new();
 
-	lgdebug(+0, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
 	for (i = 0; i < lkg->num_words; i++)
 	{
 		Disjunct *cdj = lkg->chosen_disjuncts[i];
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
-			djw = "[]"; /* null word */
-		else if (MT_EMPTY == cdj->word[0]->morpheme_type)
-			djw = EMPTY_WORD_DISPLAY;
+			djw = lkg->sent->word[i].optional ? "{}" : "[]";
 		else if ('\0' == cdj->string[0])
 			djw = "\\0"; /* null string - something is wrong */
 		else
 			djw = cdj->string;
 
-		print_with_subscript_dot(djw);
+		char *djw_tmp = strdupa(djw);
+		char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
+		if (NULL != sm) *sm = SUBSCRIPT_DOT;
+
+		append_string(djwbuf, "%s ", djw_tmp);
 	}
-	lgdebug(0, "\n");
+	err_msg(lg_Debug, "%s\n", string_value(djwbuf));
+	string_delete(djwbuf);
 }

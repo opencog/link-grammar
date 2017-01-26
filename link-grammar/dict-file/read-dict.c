@@ -58,7 +58,7 @@ static const char * format_locale(Dictionary dict,
 	r = mbstowcs(wlocale, locale, LOCALE_NAME_MAX_LENGTH);
 	if ((size_t)-1 == r)
 	{
-		prt_error("Error: Error converting %s to wide character.", locale);
+		prt_error("Error: Error converting %s to wide character.\n", locale);
 		return NULL;
 	}
 	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
@@ -66,20 +66,20 @@ static const char * format_locale(Dictionary dict,
 	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
 	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
 	{
-		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: "
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: \n"
 		          "Error %d", locale, (int)GetLastError());
 		return NULL;
 	}
 	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
 	if ((size_t)-1 == r)
 	{
-		prt_error("Error: Error converting locale language from wide character.");
+		prt_error("Error: Error converting locale language from wide character.\n");
 		return NULL;
 	}
 	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
 	if (0 == strncmp(tmpbuf, "Unknown", 7))
 	{
-		prt_error("Error: Unknown territory code in locale \"%s\"", locale);
+		prt_error("Error: Unknown territory code in locale \"%s\"\n", locale);
 		return NULL;
 	}
 	strcpy(locale_buf, tmpbuf);
@@ -88,20 +88,20 @@ static const char * format_locale(Dictionary dict,
 	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
 	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
 	{
-		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: "
+		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: \n"
 		          "Error %d", locale, (int)GetLastError());
 		return NULL;
 	}
 	r = wcstombs(tmpbuf, wtmpbuf, LOCALE_NAME_MAX_LENGTH);
 	if ((size_t)-1 == r)
 	{
-		prt_error("Error: Error converting locale territory from wide character.");
+		prt_error("Error: Error converting locale territory from wide character.\n");
 		return NULL;
 	}
 	tmpbuf[LOCALE_NAME_MAX_LENGTH-1] = '\0';
 	if (0 == strncmp(tmpbuf, "Unknown", 7))
 	{
-		prt_error("Error: Unknown territory code in locale \"%s\"", locale);
+		prt_error("Error: Unknown territory code in locale \"%s\"\n", locale);
 		return NULL;
 	}
 	locale = strcat(locale_buf, tmpbuf);
@@ -160,7 +160,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 			prt_error("Error: \"<dictionary-locale>: %s\" "
 			          "should be in the form LL4cc+\n"
 						 "\t(LL: language code; cc: territory code) "
-						 "\tor C+ for transliterated dictionaries.",
+						 "\tor C+ for transliterated dictionaries.\n",
 						 dn->exp->u.string);
 			goto locale_error;
 		}
@@ -169,7 +169,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 
 		if (!try_locale(locale))
 		{
-			prt_error("Debug: Dictionary \"%s\": Locale \"%s\" unknown",
+			prt_error("Debug: Dictionary \"%s\": Locale \"%s\" unknown\n",
 			          dict->name, locale);
 			goto locale_error;
 		}
@@ -189,7 +189,7 @@ locale_error:
 		const char *sslocale = string_set_add(locale, dict->string_set);
 		free((void *)locale);
 		prt_error("Info: Dictionary '%s': No locale definition - "
-		          "\"%s\" will be used.", dict->name, sslocale);
+		          "\"%s\" will be used.\n", dict->name, sslocale);
 		if (!try_locale(sslocale))
 		{
 			lgdebug(D_USER_FILES, "Debug: Unknown locale \"%s\"...\n", sslocale);
@@ -348,19 +348,15 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 
 	if (s2)
 	{
-		err_ctxt ec;
-		ec.sent = NULL;
-		err_msg(&ec, Error, "Error parsing dictionary %s.\n"
-		          "%s %s\n\t line %d, tokens = %s\n",
+		err_msg(lg_Error, "Error parsing dictionary %s.\n"
+		          "%s %s\n\t line %d, tokens = %s",
 		        dict->name,
 		        s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		err_ctxt ec;
-		ec.sent = NULL;
-		err_msg(&ec, Error, "Error parsing dictionary %s.\n"
-		          "%s\n\t line %d, tokens = %s\n",
+		err_msg(lg_Error, "Error parsing dictionary %s.\n"
+		          "%s\n\t line %d, tokens = %s",
 		        dict->name,
 		        s, dict->line_number, tokens);
 	}
@@ -374,10 +370,8 @@ static void dict_error(Dictionary dict, const char * s)
 
 static void warning(Dictionary dict, const char * s)
 {
-	err_ctxt ec;
-	ec.sent = NULL;
-	err_msg(&ec, Warn, "Warning: %s\n"
-	        "\tline %d, current token = \"%s\"\n",
+	err_msg(lg_Warn, "Warning: %s\n"
+	        "\tline %d, current token = \"%s\"",
 	        s, dict->line_number, dict->token);
 }
 
@@ -1165,36 +1159,10 @@ static Exp * make_connector(Dictionary dict)
 /* ======================================================================== */
 /* Empty-word handling. */
 
-/** Insert empty-word connectors.
- *
- * The "empty word" is a concept used in order to make the current parser able
- * to parse "alternatives" within a sentence. The "empty word" can link to any
- * word as a pseudo-suffix and hence it is issued when a word is optional, a
- * thing that happens when there are word alternatives with a different number
- * of tokens in each of them.
- *
- * Such alternatives can be created when splitting words into morphemes, such
- * as stem and suffix, in multiple ways, when correcting spell errors, when
- * splitting contractions, or when splitting punctuation off words or into
- * smaller parts.
- *
- * For example, in the Russian dictionary, это.msi appears as a single word,
- * but can also be split into эт.= =о.mnsi. The problem arises because это.msi
- * is a single word, while эт.= =о.mnsi counts as two words, and there is no
- * pretty way to handle both during parsing. Thus a work-around is introduced:
- * add the empty word EMPTY-WORD.zzz: ZZZ+; to the dictionary.  This becomes
- * a pseudo-suffix that can attach to the previous word. It can attach to
- * the previous word only because the routine below, add_empty_word(), adds
- * the corresponding connector ZZZ- to the word.  This is done "on the
- * fly", because we don't want to pollute the dictionary with this stuff.
- * Besides, the Russian dictionary has more then 23K words that qualify for
- * this treatment (It has 22.5K words that appear both as plain words, and
- * as stems, and can thus attach to null suffixes. For non-null suffix
- * splits, there are clearly many more.)
- *
- * The empty words are removed from the linkages after the parsing step.
- * FIXME However, the ZZZ connectors are still found in the chosen disjuncts
- * and can be visible in the API.
+/** Insert ZZZ+ connectors.
+ *  This function was mainly used to support using empty-words, a concept
+ *  that has been eliminated. However, it is still used to support linking of
+ *  quotes that don't get the QUc/QUd links.
  */
 void add_empty_word(Dictionary const dict, X_node *x)
 {
@@ -1209,18 +1177,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 	for(; NULL != x; x = x->next)
 	{
 		/* Ignore stems for now, decreases a little the overhead for
-		 * stem-suffix languages.
-		 * This line should be removed if these 2 conditions happen together:
-		 * 1. Multi-stem splits are to be supported.
-		 * 2. Affix splits are done by wordgraph splits.
-		 *
-		 * FIXME: A more general solution instead of this line is to add
-		 * empty-word connectors only to the x-nodes that need them, instead
-		 * of adding them, like now, to all the x-nodes of the word that come
-		 * before the empty-word. This will support wordgraph affix splits (if
-		 * will ever be done) and will slightly increase the efficiency of
-		 * handling sentences with multi-suffix splits (less empty-word
-		 * connectors in the sentence). */
+		 * stem-suffix languages. */
 		if (is_stem(x->string)) continue; /* Avoid an unneeded overhead. */
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
@@ -1743,9 +1700,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else if (is_idiom_word(dn->string))
 	{
-		err_ctxt ec;
-		ec.sent = NULL;
-		err_msg(&ec, Warn, "Warning: Word \"%s\" found near line %d of %s.\n"
+		err_msg(lg_Warn, "Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.",
 		        dn->string, dict->line_number, dict->name);
@@ -1762,9 +1717,9 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-			fprintf(stderr, "\t%s", dnx->string);
+			prt_error("\a\t%s", dnx->string);
 		}
-		fprintf(stderr, "\n\tThis word will be ignored.\n");
+		prt_error("\a\n\tThis word will be ignored.\n");
 		free_lookup(dn_head);
 		free_dict_node(dn);
 	}
@@ -1808,7 +1763,7 @@ static bool read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				prt_error("Error opening word file %s", dict->token);
+				prt_error("Error opening word file %s\n", dict->token);
 				return false;
 			}
 		}
@@ -1840,7 +1795,7 @@ static bool read_entry(Dictionary dict)
 			instr = get_file_contents(dict_name + skip_slash);
 			if (NULL == instr)
 			{
-				prt_error("Error: Could not open subdictionary %s", dict_name);
+				prt_error("Error: Could not open subdictionary \"%s\"\n", dict_name);
 				goto syntax_error;
 			}
 			dict->input = instr;
@@ -2019,6 +1974,8 @@ static void display_word_split(Dictionary dict,
 	sentence_delete(sent);
 }
 
+#define DJ_COL_WIDTH sizeof("                         ")
+
 /**
  * Display the number of disjuncts associated with this dict node
  */
@@ -2037,7 +1994,7 @@ static void display_counts(const char *word, Dict_node *dn)
 		t = strrchr(s, SUBSCRIPT_MARK);
 		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
-		left_print_string(stdout, s, "                         ");
+		left_print_string(stdout, s, DJ_COL_WIDTH);
 		free(s);
 		printf(" %8u  disjuncts ", len);
 		if (dn->file != NULL)
@@ -2063,7 +2020,7 @@ static void display_expr(const char *word, Dict_node *dn)
 		t = strrchr(s, SUBSCRIPT_MARK);
 		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
-		left_print_string(stdout, s, "                         ");
+		left_print_string(stdout, s, DJ_COL_WIDTH);
 		free(s);
 		print_expression(dn->exp);
 		if (NULL != dn->right) /* avoid extra newlines at the end */

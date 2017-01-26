@@ -52,8 +52,10 @@ Gword *gword_new(Sentence sent, const char *s)
 	return gword;
 }
 
+/* FIXME: Remove it. */
 Gword *empty_word(void)
 {
+	/*
 	static Gword e = {
 		.subword = EMPTY_WORD_MARK,
 		.unsplit_word = &e,
@@ -61,8 +63,8 @@ Gword *empty_word(void)
 		.alternative_id = &e,
 		.status = WS_INDICT,
 	};
-
-	return &e;
+	*/
+	return NULL;
 }
 
 static Gword **gwordlist_resize(Gword **arr, size_t len)
@@ -144,7 +146,7 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	assert(NULL != p);
 
 #ifdef DEBUG
-	if (debug_level(9)) { printf("\n"); print_hier_position(p); }
+	if (verbosity_level(+9)) print_hier_position(p);
 #endif
 
 	if (NULL != *wp)
@@ -197,19 +199,18 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 {
 	const Gword **p;
 
-	fflush(stdout);
-	fprintf(stderr, "[Word %zu:%s hier_position(hier_depth=%zu): ",
+	err_msg(lg_Debug, "[Word %zu:%s hier_position(hier_depth=%zu): ",
 	        word->node_num, word->subword, word->hier_depth);
 	assert(2*word->hier_depth==gwordlist_len(word->hier_position), "word '%s'",
 	       word->subword);
 
 	for (p = word->hier_position; NULL != *p; p += 2)
 	{
-		fprintf(stderr, "(%zu:%s/%zu:%s)",
+		err_msg(lg_Debug, "(%zu:%s/%zu:%s)",
 		        p[0]->node_num, debug_show_subword(p[0]),
 		        p[1]->node_num, debug_show_subword(p[1]));
 	}
-	fprintf(stderr, "]\n");
+	err_msg(lg_Debug, "]\n");
 }
 #endif
 
@@ -793,14 +794,14 @@ static void x_popen(const char *cmd, const char *wgds)
 
 	if (NULL == cmdf)
 	{
-		prt_error("Error: popen of '%s' failed: %s", cmd, strerror(errno));
+		prt_error("Error: popen of '%s' failed: %s\n", cmd, strerror(errno));
 	}
 	else
 	{
 		if (fprintf(cmdf, "%s", wgds) == -1)
-			prt_error("Error: print to display command: %s", strerror(errno));
+			prt_error("Error: print to display command: %s\n", strerror(errno));
 		if (pclose(cmdf) == -1)
-			prt_error("Error: pclose of display command: %s", strerror(errno));
+			prt_error("Error: pclose of display command: %s\n", strerror(errno));
 	}
 }
 #else
@@ -816,7 +817,7 @@ static void x_forkexec(const char *const argv[], pid_t *pid)
 		if (0 == rpid) return; /* viewer still active */
 		if (-1 == rpid)
 		{
-			prt_error("Error: waitpid(%d): %s", *pid, strerror(errno));
+			prt_error("Error: waitpid(%d): %s\n", *pid, strerror(errno));
 			*pid = 0;
 			return;
 		}
@@ -835,7 +836,7 @@ static void x_forkexec(const char *const argv[], pid_t *pid)
 #endif
 			/* Not closing fd 0/1/2, to allow interaction with the program */
 			execvp(argv[0], (char **)argv);
-			prt_error("Error: execlp of %s: %s", argv[0], strerror(errno));
+			prt_error("Error: execlp of %s: %s\n", argv[0], strerror(errno));
 			_exit(1);
 		default:
 #ifndef HAVE_PRCTL
@@ -923,7 +924,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		gvf = fopen(gvf_name, "w");
 		if (NULL == gvf)
 		{
-			prt_error("Error: wordgraph_show: open %s failed: %s",
+			prt_error("Error: wordgraph_show: open %s failed: %s\n",
 						 gvf_name, strerror(errno));
 		}
 		else
@@ -931,13 +932,13 @@ void wordgraph_show(Sentence sent, const char *modestr)
 			if (fprintf(gvf, "%s", wgds) == -1)
 			{
 				gvf_error = true;
-				prt_error("Error: wordgraph_show: print to %s failed: %s",
+				prt_error("Error: wordgraph_show: print to %s failed: %s\n",
 							 gvf_name, strerror(errno));
 			}
 			if (fclose(gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: wordgraph_show: close %s failed: %s",
+				prt_error("Error: wordgraph_show: close %s failed: %s\n",
 							  gvf_name, strerror(errno));
 			}
 		}
@@ -962,7 +963,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 #endif
 
 #ifdef EXITKEY
-	printf("Press "EXITKEY" in the graphical display window to continue\n");
+	prt_error("Press "EXITKEY" in the graphical display window to continue\n");
 #endif
 
 #if !defined HAVE_FORK || defined POPEN_DOT
@@ -979,6 +980,6 @@ void wordgraph_show(Sentence sent, const char *modestr)
 #else
 void wordgraph_show(Sentence sent, const char *modestr)
 {
-		prt_error("Error: Not configured with --enable-wordgraph-display");
+		prt_error("Error: Not configured with --enable-wordgraph-display\n");
 }
 #endif /* USE_WORDGRAPH_DISPLAY */
