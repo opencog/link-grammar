@@ -16,8 +16,9 @@
 % Anysplit parameters
 
 % Maximum number of word partitions
+% FYI: 3 barely works, 4 and higher mostly do not work.
 % 6: REGPARTS+;
-4: REGPARTS+;
+3: REGPARTS+;
 
 % Number of alternatives to issue for a word. Two values: minimum and maximum.
 % If the word has more possibilities to split than the minimum, but less
