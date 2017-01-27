@@ -2,6 +2,7 @@ Version 5.3.15 (XXX 2017)
  * Fix Windows compilation; the new wcwidth files were omitted.
  * Fix "amy" language for 3-way random morphology splits.
  * Remove the "EMPTY_WORD" device; it is no longer needed.
+ * Enable morphology display in the java bindings, by default.
 
 Version 5.3.14 (19 Jan 2017)
  * Fix printing widths for Unicode-9 CJK ideographs and emoji's.
