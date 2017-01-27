@@ -1277,16 +1277,9 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
 
-   /* We want to pick random linkages in four special cases:
-    * if there's an overflow,
-    * if more were found than what were asked for,
-    * if randomization was explicitly asked for.
-	 * If we are performing random morphology.
-    */
+   /* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
-	    (sent->num_linkages_found != (int) sent->num_linkages_alloced) ||
-	    (0 != sent->rand_state) ||
-	    (NULL != sent->dict->affix_table->anysplit);
+	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
 
 	Parse_info pi = sent->parse_info;
 	pi->rand_state = sent->rand_state;
