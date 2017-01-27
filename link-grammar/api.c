@@ -1361,8 +1361,10 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 }
 
 /**
- * chart_parse() -- parse the given sentence.
- * (Misnamed, this has nothing to do with chart parsing.)
+ * classic_parse() -- parse the given sentence.
+ * Perform parsing, using the original link-grammar parsing algorithm
+ * given in the original link-grammar papers.
+ *
  * Do the parse with the minimum number of null-links within the range
  * specified by opts->min_null_count and opts->max_null_count.
  *
@@ -1383,7 +1385,7 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
  * null_count>0. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
  */
-static void chart_parse(Sentence sent, Parse_Options opts)
+static void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt;
@@ -1529,7 +1531,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	else
 	{
-		chart_parse(sent, opts);
+		classic_parse(sent, opts);
 	}
 	print_time(opts, "Finished parse");
 
