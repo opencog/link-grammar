@@ -1078,9 +1078,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Wordgraph_pathpos *wp_old = NULL;
 	Wordgraph_pathpos *wpp;
 	Gword **next; /* next Wordgraph words of the current word */
-
 	size_t i;
-	Linkage_info * const lifo = &lkg->lifo;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
 	Gword **lwg_path;
@@ -1304,11 +1302,6 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	}
 
 	/* Oh no ... invalid morpheme combination! */
-	sent->num_valid_linkages --;
-	lifo->N_violations++;
-	lifo->pp_violation_msg = "Invalid morphism construction.";
-	lkg->wg_path = NULL;
-	lifo->discarded = true;
 	lgdebug(D_SLM, "%p FAILED\n", lkg);
 	return false;
 }
@@ -1326,7 +1319,17 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		if (0 != lkg->lifo.N_violations) continue;
 
 		if (!sane_linkage_morphism(sent, lkg, opts))
+		{
+			Linkage_info * const lifo = &lkg->lifo;
+
+			lifo->N_violations++;
+			lifo->pp_violation_msg = "Invalid morphism construction.";
+			lifo->discarded = true;
+			lkg->wg_path = NULL;
+
+			sent->num_valid_linkages --;
 			N_invalid_morphism ++;
+		}
 	}
 
 	if (verbosity_level(5))
