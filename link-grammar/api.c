@@ -1247,7 +1247,6 @@ static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
 		N_linkages_alloced = opts->linkage_limit;
 
 	sent->num_linkages_alloced = N_linkages_alloced;
-	sent->num_valid_linkages = N_linkages_alloced;
 
 	/* Now actually malloc the array in which we will process linkages. */
 	/* We may have been called before, e.g. this might be a panic parse,
@@ -1274,6 +1273,7 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 	Parse_info pi = sent->parse_info;
 
 	size_t N_invalid_morphism = 0;
+	sent->num_valid_linkages = sent->num_linkages_alloced;
 
 	for (size_t in=0; in < sent->num_linkages_alloced; in++)
 	{
@@ -1318,6 +1318,7 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 static void fill_em_up(Sentence sent, Parse_Options opts)
 {
 	Parse_info pi = sent->parse_info;
+	sent->num_valid_linkages = 0;
 
 	size_t in = 0;
 int foo=0;
@@ -1331,7 +1332,7 @@ foo++;
 		lifo->index = -(in+1);
 		lkg->lifo.index = -foo;
 
-printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+// printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		if (need_init)
 		{
 			partial_init_linkage(sent, lkg, pi->N_words);
@@ -1341,7 +1342,6 @@ printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		compute_link_names(lkg, sent->string_set);
 		remove_empty_words(lkg);
 
-		lkg->wg_path = NULL;
 		if (sane_linkage_morphism(sent, lkg, opts))
 		{
 			need_init = true;
@@ -1351,11 +1351,18 @@ printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		}
 		else
 		{
+lifo->discarded = true;
+			lkg->wg_path = NULL;
 			lkg->num_links = 0;
-// free lkg->chosen_disjuncts ??
+			memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
+			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
 		}
+in++;
+need_init = true;
 	}
-	sent->num_linkages_post_processed = sent->num_linkages_alloced;
+printf("duuude unscathed %d\n", sent->num_valid_linkages);
+	sent->num_linkages_post_processed = sent->num_valid_linkages;
+	// TODO sset lifo->discarded = true; for any remaining...
 }
 
 /**

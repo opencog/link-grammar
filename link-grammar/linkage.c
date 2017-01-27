@@ -153,7 +153,7 @@ static inline bool is_morphology_link(const char *link_name)
  * A value which is -1 indicates a discarded word.
  * A NULL link_name indicates a discarded link.
  */
-void remap_linkages(Linkage lkg, const int *remap)
+static void remap_linkages(Linkage lkg, const int *remap)
 {
 	LinkIdx i, j, k;
 
