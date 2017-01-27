@@ -986,8 +986,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 	Dictionary afdict = sent->dict->affix_table;       /* for SANEMORPHISM */
 	char *const affix_types = alloca(sent->length*2 + 1);   /* affix types */
-
 	affix_types[0] = '\0';
+
+	lkg->wg_path = NULL;
 
 	/* Populate the path word queue, initializing the path to NULL. */
 	for (next = sent->wordgraph->next; *next; next++)
@@ -1000,7 +1001,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	{
 		Disjunct *cdj;            /* chosen disjunct */
 
-		lgdebug(D_SLM, "%p Word %zu: ", lkg, i);
+		lgdebug(D_SLM, "lkg=%p Word %zu: ", lkg, i);
 
 		if (NULL == wp_new)
 		{
@@ -1297,7 +1298,6 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 			lifo->N_violations++;
 			lifo->pp_violation_msg = "Invalid morphism construction.";
 			lifo->discarded = true;
-			lkg->wg_path = NULL;
 			sent->num_valid_linkages --;
 			N_invalid_morphism ++;
 		}
@@ -1339,15 +1339,19 @@ static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
 
+	size_t itry = 0;
 	size_t in = 0;
-	bool need_init = true;
+	size_t maxtries = sent->num_linkages_alloced;
 #define MAX_TRIES 1000000
-	for (size_t itry=0; itry<MAX_TRIES; itry++)
+	if (pick_randomly) maxtries = MAX_TRIES;
+
+	bool need_init = true;
+	for (itry=0; itry<maxtries; itry++)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info * lifo = &lkg->lifo;
 
-		lifo->index = pick_randomly ? -(itry+1) : in;
+		lifo->index = pick_randomly ? -(itry+1) : itry;
 
 		if (need_init)
 		{
