@@ -595,7 +595,7 @@ dictionary_six_str(const char * lang,
 	dict->use_unknown_word = true;
 
 	dict->shuffle_linkages = false;
-	if (0 == strcmp(dict->lang, "any") || NULL != dict->anysplit)
+	if (0 == strcmp(dict->lang, "any") || NULL != dict->affix_table->anysplit)
 		dict->shuffle_linkages = true;
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
