@@ -455,32 +455,31 @@ static Linkage linkage_array_new(int num_to_alloc)
 
 void free_linkage(Linkage linkage)
 {
+	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
+	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
+	free(linkage->link_array);
+
+	/* Q: Why isn't this in a string set ?? A: Because there is no
+	 * string-set handy when we compute this. */
+	if (linkage->disjunct_list_str)
+	{
 		size_t j;
-
-		exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
-		exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
-		free(linkage->link_array);
-
-		/* Q: Why isn't this in a string set ?? A: Because there is no
-		 * string-set handy when we compute this. */
-		if (linkage->disjunct_list_str)
+		for (j=0; j<linkage->num_words; j++)
 		{
-			for (j=0; j<linkage->num_words; j++)
-			{
-				if (linkage->disjunct_list_str[j])
-					free(linkage->disjunct_list_str[j]);
-			}
-			free(linkage->disjunct_list_str);
+			if (linkage->disjunct_list_str[j])
+				free(linkage->disjunct_list_str[j]);
 		}
+		free(linkage->disjunct_list_str);
+	}
 #ifdef USE_CORPUS
-		lg_sense_delete(linkage);
+	lg_sense_delete(linkage);
 #endif
 
-		linkage_free_pp_info(linkage);
+	linkage_free_pp_info(linkage);
 
-		/* XXX FIXME */
-		free(linkage->wg_path);
-		free(linkage->wg_path_display);
+	/* XXX FIXME */
+	free(linkage->wg_path);
+	free(linkage->wg_path_display);
 }
 
 static void free_linkages(Sentence sent)
@@ -1340,6 +1339,9 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
 		}
 	}
+
+	/* The last one was alloced, but never actually used. Free it. */
+	if (!need_init) free_linkage(&sent->lnkages[in]);
 
 	/* The remainder of the array is garbage; we never filled it in.
 	 * So just pretend that it's shorter than it is */
