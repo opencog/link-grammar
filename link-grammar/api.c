@@ -536,7 +536,7 @@ void check_link_size(Linkage lkg)
 
 /** This does basic post-processing for all linkages.
  */
-static void post_process_linkages(Sentence sent, Parse_Options opts)
+static void post_process_lkgs(Sentence sent, Parse_Options opts)
 {
 	size_t in;
 	size_t N_linkages_post_processed = 0;
@@ -1234,48 +1234,21 @@ static void free_sentence_disjuncts(Sentence sent)
  * For longer sentences, this can even be 999 out of every 1000
  * that get mis-matched, and so we need to discard these earlier.
  */
-static void one_at_a_time(Sentence sent, fast_matcher_t* mchxt,
-                          count_context_t* ctxt,
-                          Parse_Options opts)
+static void fill_em_up(Sentence sent, Parse_Options opts)
 {
-	build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
-	print_time(opts, "Built parse set");
-
-	if (sent->num_linkages_found == 0)
-	{
-		sent->num_linkages_alloced = 0;
-		sent->num_linkages_post_processed = 0;
-		sent->num_valid_linkages = 0;
-		sent->lnkages = NULL;
-		return;
-	}
-
-	int N_linkages_alloced = sent->num_linkages_found;
-	if (N_linkages_alloced > (int) opts->linkage_limit)
-		N_linkages_alloced = opts->linkage_limit;
-
-	sent->num_linkages_alloced = N_linkages_alloced;
-	sent->num_valid_linkages = N_linkages_alloced;
-
-	/* Now actually malloc the array in which we will process linkages. */
-	/* We may have been called before, e.g. this might be a panic parse,
-	 * and the linkages array may still be there from last time.
-	 * XXX free_linkages() zeros sent->num_linkages_found. */
-	if (sent->lnkages) free_linkages(sent);
-	sent->lnkages = linkage_array_new(N_linkages_alloced);
-
 	Parse_info pi = sent->parse_info;
 
-	int in = 0;
+	size_t in = 0;
 int foo=0;
 	bool need_init = true;
-	while (in < N_linkages_alloced)
+	while (in < sent->num_linkages_alloced)
 	{
 		Linkage lkg = &sent->lnkages[in];
+		Linkage_info * lifo = &lkg->lifo;
 
 foo++;
-		lkg->lifo.index = -(in+1);
-		lkg->lifo.index = -foo;
+		lifo->index = -(in+1);
+		// lkg->lifo.index = -foo;
 
 		if (need_init)
 		{
@@ -1284,18 +1257,21 @@ foo++;
 		}
 		extract_links(lkg, pi);
 		compute_link_names(lkg, sent->string_set);
-		// remove_empty_words(lkg); /* Discard optional words. (???) */
+		remove_empty_words(lkg);
 
-printf("duude %d %d of %d\n", foo, in, N_linkages_alloced);
+		lkg->wg_path = NULL;
 		if (sane_linkage_morphism(sent, lkg, opts))
 		{
 			need_init = true;
 			in++;
+			sent->num_valid_linkages ++;
+printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		}
 	}
+	sent->num_linkages_post_processed = sent->num_linkages_alloced;
 }
 
-static void proc_linkages(Sentence sent, fast_matcher_t* mchxt,
+static void setup_linkages(Sentence sent, fast_matcher_t* mchxt,
                           count_context_t* ctxt,
                           Parse_Options opts)
 {
@@ -1319,22 +1295,12 @@ static void proc_linkages(Sentence sent, fast_matcher_t* mchxt,
 		return;
 	}
 
-	int N_linkages_alloced = sent->num_linkages_found;
-	if (N_linkages_alloced > (int) opts->linkage_limit)
+	size_t N_linkages_alloced = sent->num_linkages_found;
+	if (N_linkages_alloced > opts->linkage_limit)
 		N_linkages_alloced = opts->linkage_limit;
 
 	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_valid_linkages = N_linkages_alloced;
-
-	/*
-    * We want to pick random linkages in three special cases:
-    * if there's an overflow,
-    * if more were found than what were asked for,
-    * if randomization was explicitly asked for.
-    */
-	bool pick_randomly = overflowed ||
-	    (sent->num_linkages_found != N_linkages_alloced) ||
-	    (0 != sent->rand_state);
 
 	/* Now actually malloc the array in which we will process linkages. */
 	/* We may have been called before, e.g. this might be a panic parse,
@@ -1342,6 +1308,19 @@ static void proc_linkages(Sentence sent, fast_matcher_t* mchxt,
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
+}
+
+static void process_linkages(Sentence sent, Parse_Options opts)
+{
+	/*
+    * We want to pick random linkages in three special cases:
+    * if there's an overflow,
+    * if more were found than what were asked for,
+    * if randomization was explicitly asked for.
+    */
+	bool pick_randomly = overflowed ||
+	    (sent->num_linkages_found != (int) N_linkages_alloced) ||
+	    (0 != sent->rand_state);
 
 	Parse_info pi = sent->parse_info;
 
@@ -1359,7 +1338,7 @@ static void proc_linkages(Sentence sent, fast_matcher_t* mchxt,
 		/* The extract_links() call sets the chosen_disjuncts array */
 		extract_links(lkg, pi);
 		compute_link_names(lkg, sent->string_set);
-		remove_empty_words(lkg); /* Discard optional words. (???) */
+		remove_empty_words(lkg);
 
 		if (!sane_linkage_morphism(sent, lkg, opts))
 		{
@@ -1369,7 +1348,6 @@ static void proc_linkages(Sentence sent, fast_matcher_t* mchxt,
 			lkg->wg_path = NULL;
 			sent->num_valid_linkages --;
 			N_invalid_morphism ++;
-			continue;
 		}
 	}
 
@@ -1493,13 +1471,15 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		if (sent->dict->affix_table->anysplit)
 		{
 printf("duuuuuuuuuuuuuuuuuuuuuude \n");
-			one_at_a_time(sent, mchxt, ctxt, opts);
+			setup_linkages(sent, mchxt, ctxt, opts);
+			fill_em_up(sent, opts);
 		}
 		else
 		{
 			/* Normal processing path */
-			proc_linkages(sent, mchxt, ctxt, opts);
-			post_process_linkages(sent, opts);
+			setup_linkages(sent, mchxt, ctxt, opts);
+			process_linkages(sent, opts);
+			post_process_lkgs(sent, opts);
 		}
 		if (sent->num_valid_linkages > 0) break;
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
