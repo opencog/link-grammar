@@ -1343,7 +1343,7 @@ static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 	size_t in = 0;
 	size_t maxtries = sent->num_linkages_alloced;
 #define MAX_TRIES 1000000
-	if (pick_randomly) maxtries = MAX_TRIES;
+	if (pick_randomly) maxtries = sent->num_linkages_found;
 
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)
@@ -1378,6 +1378,10 @@ static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
 		}
 	}
+
+	/* The remainder of the array is garbage; we never filled it in.
+	 * So just pretend that it's shorter than it is */
+	sent->num_linkages_alloced = sent->num_valid_linkages;
 
 	if (verbosity_level(5))
 	{
