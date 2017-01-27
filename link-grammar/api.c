@@ -1269,68 +1269,15 @@ static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
 	return overflowed;
 }
 
-static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
-{
-	/*
-    * We want to pick random linkages in three special cases:
-    * if there's an overflow,
-    * if more were found than what were asked for,
-    * if randomization was explicitly asked for.
-    */
-	bool pick_randomly = overflowed ||
-	    (sent->num_linkages_found != (int) sent->num_linkages_alloced) ||
-	    (0 != sent->rand_state);
-
-	Parse_info pi = sent->parse_info;
-
-	size_t N_invalid_morphism = 0;
-	sent->num_valid_linkages = sent->num_linkages_alloced;
-
-	for (size_t in=0; in < sent->num_linkages_alloced; in++)
-	{
-		Linkage lkg = &sent->lnkages[in];
-		Linkage_info * lifo = &lkg->lifo;
-
-		lifo->index = pick_randomly? -(in+1) : in;
-
-		partial_init_linkage(sent, lkg, pi->N_words);
-
-		/* The extract_links() call sets the chosen_disjuncts array */
-		extract_links(lkg, pi);
-		compute_link_names(lkg, sent->string_set);
-		remove_empty_words(lkg);
-
-		if (!sane_linkage_morphism(sent, lkg, opts))
-		{
-			lifo->N_violations++;
-			lifo->pp_violation_msg = "Invalid morphism construction.";
-			lifo->discarded = true;
-			sent->num_valid_linkages --;
-			N_invalid_morphism ++;
-		}
-	}
-
-	if (verbosity_level(5))
-	{
-		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
-		          "invalid morphology construction\n",
-		          N_invalid_morphism, sent->num_linkages_alloced);
-	}
-}
-
-/* Special-case the "amy/ady" languages; the ones that perform
- * random morphological splitting. This is due to a feature/bug
- * in the parser design: not everything that it finds is valid,
- * because morphemes from the wrong splits were matched up.
- * For longer sentences, this can even be 999 out of every 1000
- * that get mis-matched, and so we need to discard these earlier.
+/**
+ * This fills the linkage array with morphologically-acceptable
+ * linakges.
  */
-static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
+static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
 
-	/*
-    * We want to pick random linkages in three special cases:
+   /* We want to pick random linkages in four special cases:
     * if there's an overflow,
     * if more were found than what were asked for,
     * if randomization was explicitly asked for.
@@ -1349,6 +1296,8 @@ static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 	size_t itry = 0;
 	size_t in = 0;
 	size_t maxtries = sent->num_linkages_alloced;
+
+	/* If we're picking randomly, then try as many as we are allowed. */
 	if (pick_randomly) maxtries = sent->num_linkages_found;
 
 	/* In the case of overflow, which will happen for some long
@@ -1369,6 +1318,8 @@ static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info * lifo = &lkg->lifo;
 
+		/* Negative values tell extract-links to pick randomly; for
+		 * reproducible-rand, the actual value is the rand seed. */
 		lifo->index = pick_randomly ? -(itry+1) : itry;
 
 		if (need_init)
@@ -1518,9 +1469,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		print_time(opts, "Counted parses");
 
 		bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
-		fill_em_up(sent, ovfl, opts);
-		// process_linkages(sent, ovfl, opts);
-
+		process_linkages(sent, ovfl, opts);
 		post_process_lkgs(sent, opts);
 
 		if (sent->num_valid_linkages > 0) break;
