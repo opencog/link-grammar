@@ -1318,21 +1318,36 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
  * For longer sentences, this can even be 999 out of every 1000
  * that get mis-matched, and so we need to discard these earlier.
  */
-static void fill_em_up(Sentence sent, Parse_Options opts)
+static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 {
+	if (0 == sent->num_linkages_found) return;
+
+	/*
+    * We want to pick random linkages in three special cases:
+    * if there's an overflow,
+    * if more were found than what were asked for,
+    * if randomization was explicitly asked for.
+	 * If we are performing random morphology.
+    */
+	bool pick_randomly = overflowed ||
+	    (sent->num_linkages_found != (int) sent->num_linkages_alloced) ||
+	    (0 != sent->rand_state) ||
+	    (NULL != sent->dict->affix_table->anysplit);
+
 	Parse_info pi = sent->parse_info;
 	pi->rand_state = sent->rand_state;
 	sent->num_valid_linkages = 0;
+	size_t N_invalid_morphism = 0;
 
 	size_t in = 0;
 	bool need_init = true;
 #define MAX_TRIES 1000000
-	for (int itry=0; itry<MAX_TRIES; itry++)
+	for (size_t itry=0; itry<MAX_TRIES; itry++)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info * lifo = &lkg->lifo;
 
-		lifo->index = -(itry+1);
+		lifo->index = pick_randomly ? -(itry+1) : in;
 
 		if (need_init)
 		{
@@ -1352,13 +1367,20 @@ static void fill_em_up(Sentence sent, Parse_Options opts)
 		}
 		else
 		{
+			N_invalid_morphism ++;
 			lkg->num_links = 0;
 			lkg->num_words = pi->N_words;
 			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
 		}
 	}
-	sent->num_linkages_post_processed = sent->num_valid_linkages;
+
+	if (verbosity_level(5))
+	{
+		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
+		          "invalid morphology construction\n",
+		          N_invalid_morphism, sent->num_linkages_alloced);
+	}
 }
 
 /**
@@ -1469,19 +1491,14 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
+		bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
+		fill_em_up(sent, ovfl, opts);
+		// process_linkages(sent, ovfl, opts);
+
 		/* Special-case the "amy/ady" morphology handling. */
-		if (sent->dict->affix_table->anysplit)
-		{
-			setup_linkages(sent, mchxt, ctxt, opts);
-			fill_em_up(sent, opts);
-		}
-		else
-		{
-			/* Normal processing path */
-			bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
-			process_linkages(sent, ovfl, opts);
+		if (NULL == sent->dict->affix_table->anysplit)
 			post_process_lkgs(sent, opts);
-		}
+
 		if (sent->num_valid_linkages > 0) break;
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
