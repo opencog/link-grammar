@@ -506,9 +506,6 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
                             count_context_t* ctxt,
                             Parse_Options opts)
 {
-	size_t in;
-	size_t N_linkages_found, N_linkages_alloced;
-
 	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
@@ -519,7 +516,6 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		  "Considering a random subset of %zu of an unknown and large number of linkages",
 			opts->linkage_limit);
 	}
-	N_linkages_found = sent->num_linkages_found;
 
 	if (sent->num_linkages_found == 0)
 	{
@@ -530,20 +526,17 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		return;
 	}
 
-	if (N_linkages_found > opts->linkage_limit)
+	int N_linkages_alloced = sent->num_linkages_found;
+	if (N_linkages_alloced > (int) opts->linkage_limit)
 	{
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1)
 		{
 			err_ctxt ec = { sent };
 			err_msgc(&ec, lg_Warn,
-			    "Warning: Considering a random subset of %zu of %zu linkages",
-			    N_linkages_alloced, N_linkages_found);
+			    "Warning: Considering a random subset of %d of %d linkages",
+			    N_linkages_alloced, sent->num_linkages_found);
 		}
-	}
-	else
-	{
-		N_linkages_alloced = N_linkages_found;
 	}
 
 	/* Now actually malloc the array in which we will process linkages. */
@@ -551,7 +544,6 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	 * and the linkages array may still be there from last time.
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
-	sent->num_linkages_found = N_linkages_found;
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
 	/* Generate an array of linkage indices to examine.
@@ -563,9 +555,10 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	 * if randomization was explicitly asked for.
 	 */
 	if (overflowed ||
-	    (N_linkages_found != N_linkages_alloced) ||
+	    (sent->num_linkages_found != N_linkages_alloced) ||
 	    (0 != sent->rand_state) )
 	{
+		int in;
 		for (in=0; in < N_linkages_alloced; in++)
 		{
 			sent->lnkages[in].lifo.index = -(in+1);
@@ -573,6 +566,7 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 	else
 	{
+		int in;
 		for (in=0; in<N_linkages_alloced; in++)
 			sent->lnkages[in].lifo.index = in;
 	}
@@ -1357,6 +1351,44 @@ static void free_sentence_disjuncts(Sentence sent)
 	}
 }
 
+/* Special-case the "amy/ady" languages; the ones that perform
+ * random morphological splitting. This is due to a feature/bug
+ * in the parser design: not everything that it finds is valid,
+ * because morphemes from the wrong splits were matched up.
+ * For longer sentences, this can even be 999 out of every 1000
+ * that get mis-matched, and so we need to discard these earlier.
+ */
+static void one_at_a_time(Sentence sent, fast_matcher_t* mchxt,
+                          count_context_t* ctxt,
+                          Parse_Options opts)
+{
+	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	print_time(opts, "Built parse set");
+
+	if (sent->num_linkages_found == 0)
+	{
+		sent->num_linkages_alloced = 0;
+		sent->num_linkages_post_processed = 0;
+		sent->num_valid_linkages = 0;
+		sent->lnkages = NULL;
+		return;
+	}
+
+	int N_linkages_alloced = sent->num_linkages_found;
+	if (N_linkages_alloced > (int) opts->linkage_limit)
+		N_linkages_alloced = opts->linkage_limit;
+
+	/* Now actually malloc the array in which we will process linkages. */
+	/* We may have been called before, e.g. this might be a panic parse,
+	 * and the linkages array may still be there from last time.
+	 * XXX free_linkages() zeros sent->num_linkages_found. */
+	if (sent->lnkages) free_linkages(sent);
+	sent->lnkages = linkage_array_new(N_linkages_alloced);
+
+	sent->num_linkages_alloced = N_linkages_alloced;
+	sent->num_valid_linkages = N_linkages_alloced;
+}
+
 /**
  * chart_parse() -- parse the given sentence.
  * (Misnamed, this has nothing to do with chart parsing.)
@@ -1465,10 +1497,19 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		select_linkages(sent, mchxt, ctxt, opts);
-		compute_chosen_disjuncts(sent);
-		sane_morphism(sent, opts);
-		post_process_linkages(sent, opts);
+		/* Special-case the "amy/ady" morphology handling. */
+		if (sent->dict->anysplit)
+		{
+			one_at_a_time(sent, mchxt, ctxt, opts);
+		}
+		else
+		{
+			/* Normal processing path */
+			select_linkages(sent, mchxt, ctxt, opts);
+			compute_chosen_disjuncts(sent);
+			sane_morphism(sent, opts);
+			post_process_linkages(sent, opts);
+		}
 		if (sent->num_valid_linkages > 0) break;
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
