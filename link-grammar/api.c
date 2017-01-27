@@ -1340,6 +1340,9 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 		}
 	}
 
+	/* The last one was alloced, but never actually used. Free it. */
+	if (!need_init) free_linkage(&sent->lnkages[in]);
+
 	/* The remainder of the array is garbage; we never filled it in.
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
