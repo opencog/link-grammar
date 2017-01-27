@@ -378,11 +378,14 @@ bool parse_options_get_all_short_connectors(Parse_Options opts) {
 	return opts->all_short;
 }
 
-void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
+/** True means "make it repeatable.". False means "make it random". */
+void parse_options_set_repeatable_rand(Parse_Options opts, bool val)
+{
 	opts->repeatable_rand = val;
 
-	/* This too -- zero is used to indicate repeatability. */
-	global_rand_state = val;
+	/* Zero is used to indicate repeatability. */
+	if (val) global_rand_state = 0;
+	else if (0 == global_rand_state) global_rand_state = 42;
 }
 
 bool parse_options_get_repeatable_rand(Parse_Options opts) {
@@ -499,128 +502,6 @@ static void free_linkages(Sentence sent)
 	sent->lnkages = NULL;
 }
 
-static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
-                            count_context_t* ctxt,
-                            Parse_Options opts)
-{
-	size_t in;
-	size_t N_linkages_found, N_linkages_alloced;
-
-	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
-	print_time(opts, "Built parse set");
-
-	if (overflowed && (1 < opts->verbosity))
-	{
-		err_ctxt ec = { sent };
-		err_msgc(&ec, lg_Warn, "Warning: Count overflow.\n"
-		  "Considering a random subset of %zu of an unknown and large number of linkages",
-			opts->linkage_limit);
-	}
-	N_linkages_found = sent->num_linkages_found;
-
-	if (sent->num_linkages_found == 0)
-	{
-		sent->num_linkages_alloced = 0;
-		sent->num_linkages_post_processed = 0;
-		sent->num_valid_linkages = 0;
-		sent->lnkages = NULL;
-		return;
-	}
-
-	if (N_linkages_found > opts->linkage_limit)
-	{
-		N_linkages_alloced = opts->linkage_limit;
-		if (opts->verbosity > 1)
-		{
-			err_ctxt ec = { sent };
-			err_msgc(&ec, lg_Warn,
-			    "Warning: Considering a random subset of %zu of %zu linkages",
-			    N_linkages_alloced, N_linkages_found);
-		}
-	}
-	else
-	{
-		N_linkages_alloced = N_linkages_found;
-	}
-
-	/* Now actually malloc the array in which we will process linkages. */
-	/* We may have been called before, e.g this might be a panic parse,
-	 * and the linkages array may still be there from last time.
-	 * XXX free_linkages() zeros sent->num_linkages_found. */
-	if (sent->lnkages) free_linkages(sent);
-	sent->num_linkages_found = N_linkages_found;
-	sent->lnkages = linkage_array_new(N_linkages_alloced);
-
-	/* Generate an array of linkage indices to examine */
-	if (overflowed)
-	{
-		/* The negative index means that a random subset of links
-		 * will be picked later on, in extract_links(). */
-		for (in=0; in < N_linkages_alloced; in++)
-		{
-			sent->lnkages[in].lifo.index = -(in+1);
-		}
-	}
-	else if (N_linkages_found == N_linkages_alloced)
-	{
-		/* If this is the "any" language (or "amy"), and the user has
-		 * asked for a random linkage assortment, then really provide
-		 * that.  Used in language-learning.
-		 *
-		 * Note that the use of "random" like this will generate
-		 * the "birthday paradox" - some linakges will get repeated,
-		 * others will get omitted. This is OK, even for very short
-		 * sentences, where it will become apparent that not all
-		 * possibilites were enumerated, and that others got repeated.
-		 */
-		if (0 != sent->rand_state && sent->dict->shuffle_linkages)
-		{
-			for (in=0; in<N_linkages_alloced; in++)
-			{
-				sent->lnkages[in].lifo.index =
-					rand_r(&sent->rand_state) % N_linkages_alloced;
-			}
-		}
-		else
-		{
-			for (in=0; in<N_linkages_alloced; in++)
-				sent->lnkages[in].lifo.index = in;
-		}
-	}
-	else
-	{
-		unsigned int rand_state = N_linkages_found + sent->length;
-
-		/* There are more linkages found than we can handle */
-		/* Pick a (quasi-)uniformly distributed random subset. */
-		if (0 != sent->rand_state)
-		{
-			rand_state = sent->rand_state;
-		}
-
-		for (in=0; in<N_linkages_alloced; in++)
-		{
-			size_t block_bottom, block_top;
-			double frac = (double) N_linkages_found;
-
-			frac /= (double) N_linkages_alloced;
-			block_bottom = (int) (((double) in) * frac);
-			block_top = (int) (((double) (in+1)) * frac);
-			sent->lnkages[in].lifo.index = block_bottom +
-				(rand_r(&rand_state) % (block_top-block_bottom));
-		}
-
-		if (0 != sent->rand_state)
-		{
-			sent->rand_state = rand_state;
-		}
-	}
-
-	sent->num_linkages_alloced = N_linkages_alloced;
-	/* Later, we subtract the number of invalid linkages */
-	sent->num_valid_linkages = N_linkages_alloced;
-}
-
 /* Partial, but not full initialization of the linakge struct ... */
 void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 {
@@ -643,39 +524,10 @@ void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 	lkg->sent = sent;
 }
 
-void check_link_size(Linkage lkg)
-{
-	if (lkg->lasz <= lkg->num_links)
-	{
-		lkg->lasz = 2 * lkg->lasz + 10;
-		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
-	}
-}
-
-/** The extract_links() call sets the chosen_disjuncts array */
-static void compute_chosen_disjuncts(Sentence sent)
-{
-	size_t in;
-	size_t N_linkages_alloced = sent->num_linkages_alloced;
-	Parse_info pi = sent->parse_info;
-
-	for (in=0; in < N_linkages_alloced; in++)
-	{
-		Linkage lkg = &sent->lnkages[in];
-		Linkage_info *lifo = &lkg->lifo;
-
-		if (lifo->discarded) continue;
-
-		partial_init_linkage(sent, lkg, pi->N_words);
-		extract_links(lkg, pi);
-		compute_link_names(lkg, sent->string_set);
-		remove_empty_words(lkg); /* Discard optional words. */
-	}
-}
-
-/** This does basic post-processing for all linkages.
+/**
+ * This does basic post-processing for all linkages.
  */
-static void post_process_linkages(Sentence sent, Parse_Options opts)
+static void post_process_lkgs(Sentence sent, Parse_Options opts)
 {
 	size_t in;
 	size_t N_linkages_post_processed = 0;
@@ -1126,9 +978,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Wordgraph_pathpos *wp_old = NULL;
 	Wordgraph_pathpos *wpp;
 	Gword **next; /* next Wordgraph words of the current word */
-
 	size_t i;
-	Linkage_info * const lifo = &lkg->lifo;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
 	Gword **lwg_path;
@@ -1352,38 +1202,10 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	}
 
 	/* Oh no ... invalid morpheme combination! */
-	sent->num_valid_linkages --;
-	lifo->N_violations++;
-	lifo->pp_violation_msg = "Invalid morphism construction.";
-	lkg->wg_path = NULL;
-	lifo->discarded = true;
 	lgdebug(D_SLM, "%p FAILED\n", lkg);
 	return false;
 }
 #undef D_SLM
-
-static void sane_morphism(Sentence sent, Parse_Options opts)
-{
-	size_t N_invalid_morphism = 0;
-	size_t lk;
-
-	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
-	{
-		Linkage lkg = &sent->lnkages[lk];
-		/* Don't bother with linkages that already failed post-processing... */
-		if (0 != lkg->lifo.N_violations) continue;
-
-		if (!sane_linkage_morphism(sent, lkg, opts))
-			N_invalid_morphism ++;
-	}
-
-	if (verbosity_level(5))
-	{
-		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
-		          "invalid morphology construction\n",
-		          N_invalid_morphism, sent->num_linkages_alloced);
-	}
-}
 
 static void free_sentence_disjuncts(Sentence sent)
 {
@@ -1394,6 +1216,153 @@ static void free_sentence_disjuncts(Sentence sent)
 		free_disjuncts(sent->word[i].d);
 		sent->word[i].d = NULL;
 	}
+}
+
+static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
+                          count_context_t* ctxt,
+                          Parse_Options opts)
+{
+	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	print_time(opts, "Built parse set");
+
+	if (overflowed && (1 < opts->verbosity))
+	{
+		err_ctxt ec = { sent };
+		err_msgc(&ec, lg_Warn, "Warning: Count overflow.\n"
+			"Considering a random subset of %zu of an unknown and large number of linkages",
+			opts->linkage_limit);
+	}
+
+	if (sent->num_linkages_found == 0)
+	{
+		sent->num_linkages_alloced = 0;
+		sent->num_linkages_post_processed = 0;
+		sent->num_valid_linkages = 0;
+		sent->lnkages = NULL;
+		return overflowed;
+	}
+
+	size_t N_linkages_alloced = sent->num_linkages_found;
+	if (N_linkages_alloced > opts->linkage_limit)
+		N_linkages_alloced = opts->linkage_limit;
+
+	sent->num_linkages_alloced = N_linkages_alloced;
+
+	/* Now actually malloc the array in which we will process linkages. */
+	/* We may have been called before, e.g. this might be a panic parse,
+	 * and the linkages array may still be there from last time.
+	 * XXX free_linkages() zeros sent->num_linkages_found. */
+	if (sent->lnkages) free_linkages(sent);
+	sent->lnkages = linkage_array_new(N_linkages_alloced);
+
+	return overflowed;
+}
+
+static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
+{
+	/*
+    * We want to pick random linkages in three special cases:
+    * if there's an overflow,
+    * if more were found than what were asked for,
+    * if randomization was explicitly asked for.
+    */
+	bool pick_randomly = overflowed ||
+	    (sent->num_linkages_found != (int) sent->num_linkages_alloced) ||
+	    (0 != sent->rand_state);
+
+	Parse_info pi = sent->parse_info;
+
+	size_t N_invalid_morphism = 0;
+	sent->num_valid_linkages = sent->num_linkages_alloced;
+
+	for (size_t in=0; in < sent->num_linkages_alloced; in++)
+	{
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info * lifo = &lkg->lifo;
+
+		lifo->index = pick_randomly? -(in+1) : in;
+
+		partial_init_linkage(sent, lkg, pi->N_words);
+
+		/* The extract_links() call sets the chosen_disjuncts array */
+		extract_links(lkg, pi);
+		compute_link_names(lkg, sent->string_set);
+		remove_empty_words(lkg);
+
+		if (!sane_linkage_morphism(sent, lkg, opts))
+		{
+			lifo->N_violations++;
+			lifo->pp_violation_msg = "Invalid morphism construction.";
+			lifo->discarded = true;
+			lkg->wg_path = NULL;
+			sent->num_valid_linkages --;
+			N_invalid_morphism ++;
+		}
+	}
+
+	if (verbosity_level(5))
+	{
+		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
+		          "invalid morphology construction\n",
+		          N_invalid_morphism, sent->num_linkages_alloced);
+	}
+}
+
+/* Special-case the "amy/ady" languages; the ones that perform
+ * random morphological splitting. This is due to a feature/bug
+ * in the parser design: not everything that it finds is valid,
+ * because morphemes from the wrong splits were matched up.
+ * For longer sentences, this can even be 999 out of every 1000
+ * that get mis-matched, and so we need to discard these earlier.
+ */
+static void fill_em_up(Sentence sent, Parse_Options opts)
+{
+	Parse_info pi = sent->parse_info;
+	sent->num_valid_linkages = 0;
+
+	size_t in = 0;
+int foo=0;
+	bool need_init = true;
+	while (in < sent->num_linkages_alloced)
+	{
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info * lifo = &lkg->lifo;
+
+foo++;
+		lifo->index = -(in+1);
+		lkg->lifo.index = -foo;
+
+// printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+		if (need_init)
+		{
+			partial_init_linkage(sent, lkg, pi->N_words);
+			need_init = false;
+		}
+		extract_links(lkg, pi);
+		compute_link_names(lkg, sent->string_set);
+		remove_empty_words(lkg);
+
+		if (sane_linkage_morphism(sent, lkg, opts))
+		{
+			need_init = true;
+			in++;
+			sent->num_valid_linkages ++;
+// printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+		}
+		else
+		{
+lifo->discarded = true;
+			lkg->wg_path = NULL;
+			lkg->num_links = 0;
+			memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
+			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
+		}
+in++;
+need_init = true;
+	}
+// printf("duuude unscathed %d\n", sent->num_valid_linkages);
+	sent->num_linkages_post_processed = sent->num_valid_linkages;
+	// TODO sset lifo->discarded = true; for any remaining...
 }
 
 /**
@@ -1504,10 +1473,20 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		select_linkages(sent, mchxt, ctxt, opts);
-		compute_chosen_disjuncts(sent);
-		sane_morphism(sent, opts);
-		post_process_linkages(sent, opts);
+		/* Special-case the "amy/ady" morphology handling. */
+		if (sent->dict->affix_table->anysplit)
+		{
+printf("duuuuuuuuuuuuuuuuuuuuuude \n");
+			setup_linkages(sent, mchxt, ctxt, opts);
+			fill_em_up(sent, opts);
+		}
+		else
+		{
+			/* Normal processing path */
+			bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
+			process_linkages(sent, ovfl, opts);
+			post_process_lkgs(sent, opts);
+		}
 		if (sent->num_valid_linkages > 0) break;
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");

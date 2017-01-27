@@ -572,6 +572,16 @@ bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	return set_overflowed(sent->parse_info);
 }
 
+// Cannot be static, also called by SAT-solver.
+void check_link_size(Linkage lkg)
+{
+	if (lkg->lasz <= lkg->num_links)
+	{
+		lkg->lasz = 2 * lkg->lasz + 10;
+		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
+	}
+}
+
 static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link * link)
 {
 	check_link_size(lkg);
@@ -642,9 +652,13 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
 void extract_links(Linkage lkg, Parse_info pi)
 {
 	int index = lkg->lifo.index;
-	if (index < 0) {
-		pi->rand_state = index;
+	if (index < 0)
+	{
+		bool repeatable = false;
+		if (0 == pi->rand_state) repeatable = true;
+		if (repeatable) pi->rand_state = index;
 		list_random_links(lkg, pi, pi->parse_set);
+		if (repeatable) pi->rand_state = 0;
 	}
 	else {
 		list_links(lkg, pi->parse_set, index);
