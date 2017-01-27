@@ -642,9 +642,13 @@ static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
 void extract_links(Linkage lkg, Parse_info pi)
 {
 	int index = lkg->lifo.index;
-	if (index < 0) {
-		pi->rand_state = index;
+	if (index < 0)
+	{
+		bool repeatable = false;
+		if (0 == pi->rand_state) repeatable = true;
+		if (repeatable) pi->rand_state = index;
 		list_random_links(lkg, pi, pi->parse_set);
+		if (repeatable) pi->rand_state = 0;
 	}
 	else {
 		list_links(lkg, pi->parse_set, index);
