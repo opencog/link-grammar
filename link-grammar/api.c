@@ -378,10 +378,12 @@ bool parse_options_get_all_short_connectors(Parse_Options opts) {
 	return opts->all_short;
 }
 
-void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
+/** True means "make it repeatable.". False means "make it random". */
+void parse_options_set_repeatable_rand(Parse_Options opts, bool val)
+{
 	opts->repeatable_rand = val;
 
-	/* This too -- zero is used to indicate repeatability. */
+	/* Zero is used to indicate repeatability. */
 	if (val) global_rand_state = 0;
 	else if (0 == global_rand_state) global_rand_state = 42;
 }
@@ -545,80 +547,34 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 	}
 
 	/* Now actually malloc the array in which we will process linkages. */
-	/* We may have been called before, e.g this might be a panic parse,
+	/* We may have been called before, e.g. this might be a panic parse,
 	 * and the linkages array may still be there from last time.
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
 	sent->num_linkages_found = N_linkages_found;
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
 
-	/* Generate an array of linkage indices to examine */
-	if (overflowed)
+	/* Generate an array of linkage indices to examine.
+	 * A negative index means that a random subset of links
+	 * will be picked later on, in extract_links().
+	 * We want to pick random linkages in three special cases:
+	 * if there's an overflow,
+	 * if more were found than what were asked for,
+	 * if randomization was explicitly asked for.
+	 */
+	if (overflowed ||
+	    (N_linkages_found != N_linkages_alloced) ||
+	    (0 != sent->rand_state) )
 	{
-		/* The negative index means that a random subset of links
-		 * will be picked later on, in extract_links(). */
 		for (in=0; in < N_linkages_alloced; in++)
 		{
 			sent->lnkages[in].lifo.index = -(in+1);
 		}
 	}
-	else if (N_linkages_found == N_linkages_alloced)
-	{
-		/* If this is the "any" language (or "amy"), and the user has
-		 * asked for a random linkage assortment, then really provide
-		 * that.  Used in language-learning.
-		 *
-		 * Note that the use of "random" like this will generate
-		 * the "birthday paradox" - some linakges will get repeated,
-		 * others will get omitted. This is OK, even for very short
-		 * sentences, where it will become apparent that not all
-		 * possibilites were enumerated, and that others got repeated.
-		 */
-		if (0 != sent->rand_state && sent->dict->shuffle_linkages)
-		{
-			for (in=0; in<N_linkages_alloced; in++)
-			{
-				sent->lnkages[in].lifo.index =
-					rand_r(&sent->rand_state) % N_linkages_alloced;
-			}
-		}
-		else
-		{
-			for (in=0; in<N_linkages_alloced; in++)
-				sent->lnkages[in].lifo.index = in;
-		}
-	}
 	else
 	{
-		unsigned int rand_state = N_linkages_found + sent->length;
-
-		/* There are more linkages found than we can handle */
-		/* Pick a (quasi-)uniformly distributed random subset. */
-		/* XXX FIXME -- why can't we just use the same mechanism
-		 * as "overflowed", above, and let extract_links() pick
-		 * for us? That is, just set index to negative number,
-		 * and be done with it? */
-		if (0 != sent->rand_state)
-		{
-			rand_state = sent->rand_state;
-		}
-
 		for (in=0; in<N_linkages_alloced; in++)
-		{
-			size_t block_bottom, block_top;
-			double frac = (double) N_linkages_found;
-
-			frac /= (double) N_linkages_alloced;
-			block_bottom = (int) (((double) in) * frac);
-			block_top = (int) (((double) (in+1)) * frac);
-			sent->lnkages[in].lifo.index = block_bottom +
-				(rand_r(&rand_state) % (block_top-block_bottom));
-		}
-
-		if (0 != sent->rand_state)
-		{
-			sent->rand_state = rand_state;
-		}
+			sent->lnkages[in].lifo.index = in;
 	}
 
 	sent->num_linkages_alloced = N_linkages_alloced;
