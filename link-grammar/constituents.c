@@ -1064,7 +1064,6 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	char * q;
 	Sentence sent = linkage->sent;
 
-	assert(NULL != sent->lnkages, "No linkages"); /* Sentence already free()'d */
 	ctxt->phrase_ss = string_set_create();
 	generate_misc_word_info(ctxt, linkage);
 

@@ -602,7 +602,7 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 	}
 }
 
-static void list_links(Linkage lkg, Parse_set * set, int index)
+static void list_links(Linkage lkg, const Parse_set * set, int index)
 {
 	 Parse_choice *pc;
 	 s64 n;
@@ -619,7 +619,7 @@ static void list_links(Linkage lkg, Parse_set * set, int index)
 	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
-static void list_random_links(Linkage lkg, Parse_info pi, Parse_set * set)
+static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
 {
 	Parse_choice *pc;
 	int num_pc, new_index;

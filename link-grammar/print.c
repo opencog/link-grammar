@@ -428,6 +428,9 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	char xpicture[MAX_HEIGHT][MAX_LINE];
 	size_t start[MAX_HEIGHT];
 
+	// Avoid pathological case and the resulting crash.
+	if (0 == linkage->num_words) return strdup("");
+
 	string = string_new();
 
 	/* Do we want to print the left wall? */

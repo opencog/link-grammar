@@ -535,6 +535,13 @@ static void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
 
+	/* Special-case the "amy/ady" morphology handling. */
+	if (sent->dict->affix_table->anysplit)
+	{
+		sent->num_linkages_post_processed = sent->num_valid_linkages;
+		return;
+	}
+
 	/* (optional) First pass: just visit the linkages */
 	/* The purpose of the first pass is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time the real work
@@ -959,11 +966,12 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  * another alternative. This can happen due to the way in which word
  * alternatives are implemented.
  *
- * It does so by checking that all the chosen disjuncts in a linkage (including
- * null words) match, in the same order, a path in the Wordgraph.
+ * It does so by checking that all the chosen disjuncts in a linkage
+ * (including null words) match, in the same order, a path in the
+ * Wordgraph.
  *
- * An important side effect of this check is that if the linkage is good,
- * its Wordgraph path is found.
+ * An important side effect of this check is that if the linkage is
+ * good, its Wordgraph path is found.
  *
  * Optionally (if SANEMORPHISM regex is defined in the affix file), it
  * also validates that the morpheme-type sequence is permitted for the
@@ -985,8 +993,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 	Dictionary afdict = sent->dict->affix_table;       /* for SANEMORPHISM */
 	char *const affix_types = alloca(sent->length*2 + 1);   /* affix types */
-
 	affix_types[0] = '\0';
+
+	lkg->wg_path = NULL;
 
 	/* Populate the path word queue, initializing the path to NULL. */
 	for (next = sent->wordgraph->next; *next; next++)
@@ -999,7 +1008,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	{
 		Disjunct *cdj;            /* chosen disjunct */
 
-		lgdebug(D_SLM, "%p Word %zu: ", lkg, i);
+		lgdebug(D_SLM, "lkg=%p Word %zu: ", lkg, i);
 
 		if (NULL == wp_new)
 		{
@@ -1087,8 +1096,10 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	if (match_found)
 	{
 		match_found = false;
-		/* Validate that there are no missing words in the linkage. It is so if
-		 * the dummy termination word is found in the new pathpos queue. */
+		/* Validate that there are no missing words in the linkage.
+		 * It is so, if the dummy termination word is found in the
+		 * new pathpos queue.
+		 */
 		if (NULL != wp_new)
 		{
 			for (wpp = wp_new; NULL != wpp->word; wpp++)
@@ -1258,81 +1269,52 @@ static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
 	return overflowed;
 }
 
+/**
+ * This fills the linkage array with morphologically-acceptable
+ * linakges.
+ */
 static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 {
-	/*
-    * We want to pick random linkages in three special cases:
-    * if there's an overflow,
-    * if more were found than what were asked for,
-    * if randomization was explicitly asked for.
-    */
+	if (0 == sent->num_linkages_found) return;
+
+   /* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
-	    (sent->num_linkages_found != (int) sent->num_linkages_alloced) ||
-	    (0 != sent->rand_state);
+	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
 
 	Parse_info pi = sent->parse_info;
-
-	size_t N_invalid_morphism = 0;
-	sent->num_valid_linkages = sent->num_linkages_alloced;
-
-	for (size_t in=0; in < sent->num_linkages_alloced; in++)
-	{
-		Linkage lkg = &sent->lnkages[in];
-		Linkage_info * lifo = &lkg->lifo;
-
-		lifo->index = pick_randomly? -(in+1) : in;
-
-		partial_init_linkage(sent, lkg, pi->N_words);
-
-		/* The extract_links() call sets the chosen_disjuncts array */
-		extract_links(lkg, pi);
-		compute_link_names(lkg, sent->string_set);
-		remove_empty_words(lkg);
-
-		if (!sane_linkage_morphism(sent, lkg, opts))
-		{
-			lifo->N_violations++;
-			lifo->pp_violation_msg = "Invalid morphism construction.";
-			lifo->discarded = true;
-			lkg->wg_path = NULL;
-			sent->num_valid_linkages --;
-			N_invalid_morphism ++;
-		}
-	}
-
-	if (verbosity_level(5))
-	{
-		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
-		          "invalid morphology construction\n",
-		          N_invalid_morphism, sent->num_linkages_alloced);
-	}
-}
-
-/* Special-case the "amy/ady" languages; the ones that perform
- * random morphological splitting. This is due to a feature/bug
- * in the parser design: not everything that it finds is valid,
- * because morphemes from the wrong splits were matched up.
- * For longer sentences, this can even be 999 out of every 1000
- * that get mis-matched, and so we need to discard these earlier.
- */
-static void fill_em_up(Sentence sent, Parse_Options opts)
-{
-	Parse_info pi = sent->parse_info;
+	pi->rand_state = sent->rand_state;
 	sent->num_valid_linkages = 0;
+	size_t N_invalid_morphism = 0;
 
+	size_t itry = 0;
 	size_t in = 0;
-int foo=0;
+	size_t maxtries = sent->num_linkages_alloced;
+
+	/* If we're picking randomly, then try as many as we are allowed. */
+	if (pick_randomly) maxtries = sent->num_linkages_found;
+
+	/* In the case of overflow, which will happen for some long
+	 * sentences, but is particularly common for the amy/ady random
+	 * splitters, we want to find as many morpho-acceptable linkages
+	 * as possible, but keep the CPU usage down, as these might be
+	 * very rare. This is due to a bug/feature in the interaction
+	 * between the word-graph and the parser: valid morph linkages
+	 * can be one-in-a-thousand.. or worse.  Search for them, but
+	 * don't over-do it.
+	 */
+#define MAX_TRIES 250000
+	if (MAX_TRIES < maxtries) maxtries = MAX_TRIES;
+
 	bool need_init = true;
-	while (in < sent->num_linkages_alloced)
+	for (itry=0; itry<maxtries; itry++)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info * lifo = &lkg->lifo;
 
-foo++;
-		lifo->index = -(in+1);
-		lkg->lifo.index = -foo;
+		/* Negative values tell extract-links to pick randomly; for
+		 * reproducible-rand, the actual value is the rand seed. */
+		lifo->index = pick_randomly ? -(itry+1) : itry;
 
-// printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		if (need_init)
 		{
 			partial_init_linkage(sent, lkg, pi->N_words);
@@ -1347,27 +1329,35 @@ foo++;
 			need_init = true;
 			in++;
 			sent->num_valid_linkages ++;
-// printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+			if (in >= sent->num_linkages_alloced) break;
 		}
 		else
 		{
-lifo->discarded = true;
-			lkg->wg_path = NULL;
+			N_invalid_morphism ++;
 			lkg->num_links = 0;
-			memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
+			lkg->num_words = pi->N_words;
+			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
 		}
-in++;
-need_init = true;
 	}
-// printf("duuude unscathed %d\n", sent->num_valid_linkages);
-	sent->num_linkages_post_processed = sent->num_valid_linkages;
-	// TODO sset lifo->discarded = true; for any remaining...
+
+	/* The remainder of the array is garbage; we never filled it in.
+	 * So just pretend that it's shorter than it is */
+	sent->num_linkages_alloced = sent->num_valid_linkages;
+
+	if (verbosity_level(5))
+	{
+		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
+		          "invalid morphology construction\n",
+		          N_invalid_morphism, sent->num_linkages_alloced);
+	}
 }
 
 /**
- * chart_parse() -- parse the given sentence.
- * (Misnamed, this has nothing to do with chart parsing.)
+ * classic_parse() -- parse the given sentence.
+ * Perform parsing, using the original link-grammar parsing algorithm
+ * given in the original link-grammar papers.
+ *
  * Do the parse with the minimum number of null-links within the range
  * specified by opts->min_null_count and opts->max_null_count.
  *
@@ -1388,7 +1378,7 @@ need_init = true;
  * null_count>0. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
  */
-static void chart_parse(Sentence sent, Parse_Options opts)
+static void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt;
@@ -1473,20 +1463,10 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		/* Special-case the "amy/ady" morphology handling. */
-		if (sent->dict->affix_table->anysplit)
-		{
-printf("duuuuuuuuuuuuuuuuuuuuuude \n");
-			setup_linkages(sent, mchxt, ctxt, opts);
-			fill_em_up(sent, opts);
-		}
-		else
-		{
-			/* Normal processing path */
-			bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
-			process_linkages(sent, ovfl, opts);
-			post_process_lkgs(sent, opts);
-		}
+		bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
+		process_linkages(sent, ovfl, opts);
+		post_process_lkgs(sent, opts);
+
 		if (sent->num_valid_linkages > 0) break;
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
@@ -1544,7 +1524,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	else
 	{
-		chart_parse(sent, opts);
+		classic_parse(sent, opts);
 	}
 	print_time(opts, "Finished parse");
 
