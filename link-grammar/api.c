@@ -959,11 +959,12 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  * another alternative. This can happen due to the way in which word
  * alternatives are implemented.
  *
- * It does so by checking that all the chosen disjuncts in a linkage (including
- * null words) match, in the same order, a path in the Wordgraph.
+ * It does so by checking that all the chosen disjuncts in a linkage
+ * (including null words) match, in the same order, a path in the
+ * Wordgraph.
  *
- * An important side effect of this check is that if the linkage is good,
- * its Wordgraph path is found.
+ * An important side effect of this check is that if the linkage is
+ * good, its Wordgraph path is found.
  *
  * Optionally (if SANEMORPHISM regex is defined in the affix file), it
  * also validates that the morpheme-type sequence is permitted for the
@@ -1087,8 +1088,10 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	if (match_found)
 	{
 		match_found = false;
-		/* Validate that there are no missing words in the linkage. It is so if
-		 * the dummy termination word is found in the new pathpos queue. */
+		/* Validate that there are no missing words in the linkage.
+		 * It is so, if the dummy termination word is found in the
+		 * new pathpos queue.
+		 */
 		if (NULL != wp_new)
 		{
 			for (wpp = wp_new; NULL != wpp->word; wpp++)
@@ -1318,21 +1321,19 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 static void fill_em_up(Sentence sent, Parse_Options opts)
 {
 	Parse_info pi = sent->parse_info;
+	pi->rand_state = sent->rand_state;
 	sent->num_valid_linkages = 0;
 
 	size_t in = 0;
-int foo=0;
 	bool need_init = true;
-	while (in < sent->num_linkages_alloced)
+#define MAX_TRIES 1000000
+	for (int itry=0; itry<MAX_TRIES; itry++)
 	{
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info * lifo = &lkg->lifo;
 
-foo++;
-		lifo->index = -(in+1);
-		lkg->lifo.index = -foo;
+		lifo->index = -(itry+1);
 
-// printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		if (need_init)
 		{
 			partial_init_linkage(sent, lkg, pi->N_words);
@@ -1347,22 +1348,17 @@ foo++;
 			need_init = true;
 			in++;
 			sent->num_valid_linkages ++;
-// printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+			if (in >= sent->num_linkages_alloced) break;
 		}
 		else
 		{
-lifo->discarded = true;
-			lkg->wg_path = NULL;
 			lkg->num_links = 0;
-			memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
+			lkg->num_words = pi->N_words;
+			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
 		}
-in++;
-need_init = true;
 	}
-// printf("duuude unscathed %d\n", sent->num_valid_linkages);
 	sent->num_linkages_post_processed = sent->num_valid_linkages;
-	// TODO sset lifo->discarded = true; for any remaining...
 }
 
 /**
@@ -1476,7 +1472,6 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		/* Special-case the "amy/ady" morphology handling. */
 		if (sent->dict->affix_table->anysplit)
 		{
-printf("duuuuuuuuuuuuuuuuuuuuuude \n");
 			setup_linkages(sent, mchxt, ctxt, opts);
 			fill_em_up(sent, opts);
 		}
