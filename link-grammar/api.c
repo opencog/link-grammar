@@ -535,6 +535,13 @@ static void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
 
+	/* Special-case the "amy/ady" morphology handling. */
+	if (sent->dict->affix_table->anysplit)
+	{
+		sent->num_linkages_post_processed = sent->num_valid_linkages;
+		return;
+	}
+
 	/* (optional) First pass: just visit the linkages */
 	/* The purpose of the first pass is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time the real work
@@ -1342,8 +1349,19 @@ static void fill_em_up(Sentence sent, bool overflowed, Parse_Options opts)
 	size_t itry = 0;
 	size_t in = 0;
 	size_t maxtries = sent->num_linkages_alloced;
-#define MAX_TRIES 1000000
 	if (pick_randomly) maxtries = sent->num_linkages_found;
+
+	/* In the case of overflow, which will happen for some long
+	 * sentences, but is particularly common for the amy/ady random
+	 * splitters, we want to find as many morpho-acceptable linkages
+	 * as possible, but keep the CPU usage down, as these might be
+	 * very rare. This is due to a bug/feature in the interaction
+	 * between the word-graph and the parser: valid morph linkages
+	 * can be one-in-a-thousand.. or worse.  Search for them, but
+	 * don't over-do it.
+	 */
+#define MAX_TRIES 250000
+	if (MAX_TRIES < maxtries) maxtries = MAX_TRIES;
 
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)
@@ -1503,9 +1521,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		fill_em_up(sent, ovfl, opts);
 		// process_linkages(sent, ovfl, opts);
 
-		/* Special-case the "amy/ady" morphology handling. */
-		if (NULL == sent->dict->affix_table->anysplit)
-			post_process_lkgs(sent, opts);
+		post_process_lkgs(sent, opts);
 
 		if (sent->num_valid_linkages > 0) break;
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
