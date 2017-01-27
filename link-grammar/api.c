@@ -617,9 +617,6 @@ static void compute_chosen_disjuncts(Sentence sent)
 	for (in=0; in < N_linkages_alloced; in++)
 	{
 		Linkage lkg = &sent->lnkages[in];
-		Linkage_info *lifo = &lkg->lifo;
-
-		if (lifo->discarded) continue;
 
 		partial_init_linkage(sent, lkg, pi->N_words);
 		extract_links(lkg, pi);
@@ -1362,7 +1359,7 @@ static void one_at_a_time(Sentence sent, fast_matcher_t* mchxt,
                           count_context_t* ctxt,
                           Parse_Options opts)
 {
-	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
 	if (sent->num_linkages_found == 0)
@@ -1384,6 +1381,23 @@ static void one_at_a_time(Sentence sent, fast_matcher_t* mchxt,
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(N_linkages_alloced);
+
+	Parse_info pi = sent->parse_info;
+
+	int in = 0;
+	while (in < N_linkages_alloced)
+	{
+		Linkage lkg = &sent->lnkages[in];
+
+		sent->lnkages[in].lifo.index = -(in+1);
+
+		partial_init_linkage(sent, lkg, pi->N_words);
+		extract_links(lkg, pi);
+		compute_link_names(lkg, sent->string_set);
+		// remove_empty_words(lkg); /* Discard optional words. (???) */
+
+		if (sane_linkage_morphism(sent, lkg, opts)) in++;
+	}
 
 	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_valid_linkages = N_linkages_alloced;
