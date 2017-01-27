@@ -17,6 +17,6 @@ ANY-PUNCT: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};
 
-MOR-PREF: PF+;
-MOR-STEM: {@PF-} & LL+;
+MOR-PREF: PL+;
+MOR-STEM: {@PL-} & LL+;
 MOR-SUFF: LL- & {@ANY-} & {@ANY+};

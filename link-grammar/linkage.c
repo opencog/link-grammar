@@ -131,6 +131,8 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 
 #define SUBSCRIPT_SEP SUBSCRIPT_DOT /* multiple-subscript separator */
 
+#define PREFIX_SUPPRESS ("PL") /* prefix links start with this */
+#define PREFIX_SUPPRESS_L 2    /* length of above */
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
@@ -141,8 +143,9 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 /* FIXME: Define an affix class MORPHOLOGY_LINKS. */
 static inline bool is_morphology_link(const char *link_name)
 {
-	return (NULL != link_name) &&
-	        (0 == strncmp(link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
+	if (NULL == link_name) return false;
+	return (0 == strncmp(link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L)) ||
+	       (0 == strncmp(link_name, PREFIX_SUPPRESS, PREFIX_SUPPRESS_L));
 }
 
 /*
