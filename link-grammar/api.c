@@ -524,17 +524,8 @@ void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 	lkg->sent = sent;
 }
 
-void check_link_size(Linkage lkg)
-{
-	if (lkg->lasz <= lkg->num_links)
-	{
-		lkg->lasz = 2 * lkg->lasz + 10;
-		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
-	}
-}
-
-
-/** This does basic post-processing for all linkages.
+/**
+ * This does basic post-processing for all linkages.
  */
 static void post_process_lkgs(Sentence sent, Parse_Options opts)
 {
@@ -1338,8 +1329,9 @@ int foo=0;
 
 foo++;
 		lifo->index = -(in+1);
-		// lkg->lifo.index = -foo;
+		lkg->lifo.index = -foo;
 
+printf("duude try to %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		if (need_init)
 		{
 			partial_init_linkage(sent, lkg, pi->N_words);
@@ -1356,6 +1348,11 @@ foo++;
 			in++;
 			sent->num_valid_linkages ++;
 printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+		}
+		else
+		{
+			lkg->num_links = 0;
+// free lkg->chosen_disjuncts ??
 		}
 	}
 	sent->num_linkages_post_processed = sent->num_linkages_alloced;

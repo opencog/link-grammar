@@ -572,6 +572,16 @@ bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	return set_overflowed(sent->parse_info);
 }
 
+// Cannot be static, also called by SAT-solver.
+void check_link_size(Linkage lkg)
+{
+	if (lkg->lasz <= lkg->num_links)
+	{
+		lkg->lasz = 2 * lkg->lasz + 10;
+		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
+	}
+}
+
 static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link * link)
 {
 	check_link_size(lkg);
