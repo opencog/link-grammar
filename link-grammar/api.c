@@ -382,7 +382,8 @@ void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
 	opts->repeatable_rand = val;
 
 	/* This too -- zero is used to indicate repeatability. */
-	global_rand_state = val;
+	if (val) global_rand_state = 0;
+	else if (0 == global_rand_state) global_rand_state = 42;
 }
 
 bool parse_options_get_repeatable_rand(Parse_Options opts) {
@@ -593,6 +594,10 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 
 		/* There are more linkages found than we can handle */
 		/* Pick a (quasi-)uniformly distributed random subset. */
+		/* XXX FIXME -- why can't we just use the same mechanism
+		 * as "overflowed", above, and let extract_links() pick
+		 * for us? That is, just set index to negative number,
+		 * and be done with it? */
 		if (0 != sent->rand_state)
 		{
 			rand_state = sent->rand_state;
