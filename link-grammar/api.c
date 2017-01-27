@@ -1347,7 +1347,7 @@ foo++;
 			need_init = true;
 			in++;
 			sent->num_valid_linkages ++;
-printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
+// printf("duude foo-sane %d %d of %d\n", foo, in, sent->num_linkages_alloced);
 		}
 		else
 		{
@@ -1360,7 +1360,7 @@ lifo->discarded = true;
 in++;
 need_init = true;
 	}
-printf("duuude unscathed %d\n", sent->num_valid_linkages);
+// printf("duuude unscathed %d\n", sent->num_valid_linkages);
 	sent->num_linkages_post_processed = sent->num_valid_linkages;
 	// TODO sset lifo->discarded = true; for any remaining...
 }
