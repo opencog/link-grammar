@@ -27,7 +27,7 @@ EXTRA_DIST =            \
 	LICENSE              \
 	MAINTAINERS          \
 	NEWS                 \
-	README               \
+	README.md            \
 	docker/docker-build.sh                 \
 	docker/docker-base/Dockerfile          \
 	docker/docker-parser/Dockerfile        \
