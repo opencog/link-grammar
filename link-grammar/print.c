@@ -1414,7 +1414,7 @@ void print_with_subscript_dot(const char *s)
 	const char *mark = strchr(s, SUBSCRIPT_MARK);
 	size_t len = NULL != mark ? (size_t)(mark - s) : strlen(s);
 
-	printf("%.*s%s%s ", (int)len,
+	prt_error("%.*s%s%s ", (int)len,
 			  s, NULL != mark ? "." : "", NULL != mark ? mark+1 : "");
 }
 
