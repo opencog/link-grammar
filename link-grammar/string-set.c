@@ -45,7 +45,7 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
-		accum = ((19 * accum) + ((unsigned char) *str)) % (ss->size);
+		accum = ((7 * accum) + ((unsigned char) *str)) % (ss->size);
 	return accum;
 }
 
