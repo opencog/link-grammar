@@ -44,8 +44,7 @@
 static unsigned int hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
-	int i=0;
-	for (;*str != '\0' && i<4; str++, i++)
+	for (;*str != '\0'; str++)
 		accum = ((19 * accum) + ((unsigned char) *str)) % (ss->size);
 	return accum;
 }
@@ -82,8 +81,9 @@ String_set * string_set_create(void)
 {
 	String_set *ss;
 	ss = (String_set *) xalloc(sizeof(String_set));
+	// ss->size = 1013; /* 1013 is a prime number */
+	// ss->size = 419; /* 419 is a prime number */
 	ss->size = 211; /* 211 is a prime number */
-	ss->size = 419; /* 419 is a prime number */
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;
