@@ -5,6 +5,7 @@ Version 5.3.15 (XXX 2017)
  * Enable morphology display in the java bindings, by default.
  * Improve random sampling in the "ady" language.
  * Improve performance by 10% to 15% for all languages.
+ * Convert Java bindings to use TLS for multi-threading.
 
 Version 5.3.14 (19 Jan 2017)
  * Fix printing widths for Unicode-9 CJK ideographs and emoji's.

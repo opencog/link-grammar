@@ -249,22 +249,6 @@ then
 fi
 
 # ====================================================================
-# pthreads disabled by default; pthreads not really needed.
-
-AC_ARG_ENABLE( pthreads,
-  [  --enable-pthreads       compile with pthread support],
-  [],
-  [enable_pthreads=no]
-)
-if test "x$enable_pthreads" = "xyes"
-then
-	CPPFLAGS="${CPPFLAGS} -DUSE_PTHREADS=1"
-fi
-
-
-AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
-
-# ====================================================================
 # Java now enabled by default
 AC_ARG_ENABLE( java-bindings,
   [  --disable-java-bindings disable build of java bindings (default is enabled)],
@@ -1027,7 +1011,6 @@ $PACKAGE-$VERSION  build configuration settings
 	prefix:                         ${prefix}
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
-	Posix threads:                  ${enable_pthreads}
 	Error handler per-thread:       ${error_handler_per_thread}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}
