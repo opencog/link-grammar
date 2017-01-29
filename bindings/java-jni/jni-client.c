@@ -37,41 +37,6 @@ typedef struct
 	int           num_linkages, cur_linkage;
 } per_thread_data;
 
-/* XXX FIXME
- * The per_thread_data struct should ideally be somehow
- * fetched from JNIEnv, or as an opaque pointer in the class.
- * Not clear how to do this .. perhaps use NewDirectByteBuffer()
- * and the java.nio.ByteBuffer class ?
- */
-#ifdef USE_PTHREADS
-static pthread_key_t java_key;
-static pthread_once_t java_key_once = PTHREAD_ONCE_INIT;
-
-static void java_key_alloc(void)
-{
-	pthread_key_create(&java_key, free);
-}
-#else
-static per_thread_data * global_ptd = NULL;
-#endif
-
-
-static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
-{
-#ifdef USE_PTHREADS
-	per_thread_data *ptd = pthread_getspecific(java_key);
-#else
-	per_thread_data *ptd = global_ptd;
-#endif
-	if (!ptd) Java_org_linkgrammar_LinkGrammar_init(env, cls);
-#ifdef USE_PTHREADS
-	ptd = pthread_getspecific(java_key);
-#else
-	ptd = global_ptd;
-#endif
-	return ptd;
-}
-
 static void setup_panic_parse_options(Parse_Options opts)
 {
 	parse_options_set_repeatable_rand(opts, false);
@@ -190,12 +155,15 @@ static void finish(per_thread_data *ptd)
 	parse_options_delete(ptd->panic_parse_opts);
 	ptd->panic_parse_opts = NULL;
 
-#ifdef USE_PTHREADS
-	pthread_setspecific(java_key, NULL);
-#else
-	global_ptd = NULL;
-#endif
 	free(ptd);
+}
+
+static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
+{
+   static TLS per_thread_data * local_ptd = NULL;
+	if (!local_ptd) local_ptd = init(env, cls);
+
+	return local_ptd;
 }
 
 /* ================================================================= */
@@ -376,17 +344,7 @@ Java_org_linkgrammar_LinkGrammar_getMaxLinkages(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 {
-#ifdef USE_PTHREADS
-	per_thread_data *ptd;
-	pthread_once(&java_key_once, java_key_alloc);
-	ptd = pthread_getspecific(java_key);
-	if (ptd) return;
-	ptd = init(env, cls);
-	pthread_setspecific(java_key, ptd);
-#else
-	if (global_ptd) return;
-	global_ptd = init(env, cls);
-#endif
+	get_ptd(env, cls);
 }
 
 /*
