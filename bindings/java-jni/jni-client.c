@@ -11,10 +11,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifdef USE_PTHREADS
-#include <pthread.h>
-#endif
-
 #include <link-grammar/api-structures.h>
 #include "link-grammar/corpus/corpus.h"
 #include "link-grammar/error.h"
@@ -175,7 +171,7 @@ static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 /* ================================================================= */
 /* Misc utilities */
 
-static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
+static void jParse(JNIEnv *env, per_thread_data *ptd, const char* inputString)
 {
 	Parse_Options opts = ptd->opts;
 	int jverbosity = parse_options_get_verbosity(opts);
@@ -244,6 +240,12 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 				prt_error("Error: JNI: Panic timer is expired!\n");
 		}
 	}
+}
+
+void unit_test_jparse(JNIEnv *env, const char* inputString);
+void unit_test_jparse(JNIEnv *env, const char* inputString)
+{
+	jParse(env, get_ptd(env, 0), inputString);
 }
 
 static void makeLinkage(per_thread_data *ptd)
