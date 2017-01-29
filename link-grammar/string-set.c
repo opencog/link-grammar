@@ -112,7 +112,7 @@ static void grow_table(String_set *ss)
 	unsigned int p;
 
 	old = *ss;
-	ss->size = next_prime_up(2 * old.size);  /* at least double the size */
+	ss->size = next_prime_up(3 * old.size);  /* at least triple the size */
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;
@@ -154,10 +154,10 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	ss->table[p] = str;
 	ss->count++;
 
-	/* We just added it to the table.
-	   If the table got too big, we grow it.
-	   Too big is defined as being more than 3/4 full */
-	if ((4 * ss->count) > (3 * ss->size)) grow_table(ss);
+	/* We just added it to the table.  If the table got too big,
+	 * we grow it.  Too big is defined as being more than 3/8 full.
+	 * There's a huge boost from keeping this sparse. */
+	if ((8 * ss->count) > (3 * ss->size)) grow_table(ss);
 
 	return str;
 }
