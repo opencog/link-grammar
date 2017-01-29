@@ -82,8 +82,8 @@ String_set * string_set_create(void)
 	String_set *ss;
 	ss = (String_set *) xalloc(sizeof(String_set));
 	// ss->size = 1013; /* 1013 is a prime number */
-	// ss->size = 419; /* 419 is a prime number */
-	ss->size = 211; /* 211 is a prime number */
+	// ss->size = 211; /* 211 is a prime number */
+	ss->size = 419; /* 419 is a prime number */
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;
