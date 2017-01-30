@@ -11,10 +11,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifdef USE_PTHREADS
-#include <pthread.h>
-#endif
-
 #include <link-grammar/api-structures.h>
 #include "link-grammar/corpus/corpus.h"
 #include "link-grammar/error.h"
@@ -28,49 +24,16 @@
 /* Default to the English language. */
 static const char* in_language = "en";
 
+/* Dicationary can be and should be shared by all. */
+static Dictionary dict = NULL;
+
 typedef struct
 {
-	Dictionary    dict;
 	Parse_Options opts, panic_parse_opts;
 	Sentence      sent;
 	Linkage       linkage;
 	int           num_linkages, cur_linkage;
 } per_thread_data;
-
-/* XXX FIXME
- * The per_thread_data struct should ideally be somehow
- * fetched from JNIEnv, or as an opaque pointer in the class.
- * Not clear how to do this .. perhaps use NewDirectByteBuffer()
- * and the java.nio.ByteBuffer class ?
- */
-#ifdef USE_PTHREADS
-static pthread_key_t java_key;
-static pthread_once_t java_key_once = PTHREAD_ONCE_INIT;
-
-static void java_key_alloc(void)
-{
-	pthread_key_create(&java_key, free);
-}
-#else
-static per_thread_data * global_ptd = NULL;
-#endif
-
-
-static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
-{
-#ifdef USE_PTHREADS
-	per_thread_data *ptd = pthread_getspecific(java_key);
-#else
-	per_thread_data *ptd = global_ptd;
-#endif
-	if (!ptd) Java_org_linkgrammar_LinkGrammar_init(env, cls);
-#ifdef USE_PTHREADS
-	ptd = pthread_getspecific(java_key);
-#else
-	ptd = global_ptd;
-#endif
-	return ptd;
-}
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
@@ -113,10 +76,11 @@ static void throwException(JNIEnv *env, const char* message)
 		(*env)->FatalError(env, "Fatal: link-grammar JNI: Cannot throw");
 }
 
-static per_thread_data * init(JNIEnv *env, jclass cls)
+static void global_init(JNIEnv *env)
 {
+	if (dict) return;
+
 	const char *codeset, *dict_version;
-	per_thread_data *ptd;
 
 	/* Get the locale from the environment...
 	 * perhaps we should someday get it from the dictionary ??
@@ -134,7 +98,20 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 
-	ptd = (per_thread_data *) malloc(sizeof(per_thread_data));
+	dict = dictionary_create_lang(in_language);
+	if (!dict) throwException(env, "Error: unable to open dictionary");
+	else test();
+
+	dict_version = linkgrammar_get_dict_version(dict);
+	prt_error("Info: JNI: dictionary version %s\n", dict_version);
+}
+
+static per_thread_data * init(JNIEnv *env)
+{
+	global_init(env);
+
+	per_thread_data *ptd = (per_thread_data *)
+		malloc(sizeof(per_thread_data));
 	memset(ptd, 0, sizeof(per_thread_data));
 
 	ptd->opts = parse_options_create();
@@ -161,13 +138,6 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	ptd->panic_parse_opts = parse_options_create();
 	setup_panic_parse_options(ptd->panic_parse_opts);
 
-	ptd->dict = dictionary_create_lang(in_language);
-	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
-	else test();
-
-	dict_version = linkgrammar_get_dict_version(ptd->dict);
-	prt_error("Info: JNI: dictionary version %s\n", dict_version);
-
 	return ptd;
 }
 
@@ -181,27 +151,27 @@ static void finish(per_thread_data *ptd)
 		linkage_delete(ptd->linkage);
 	ptd->linkage = NULL;
 
-	dictionary_delete(ptd->dict);
-	ptd->dict = NULL;
-
 	parse_options_delete(ptd->opts);
 	ptd->opts = NULL;
 
 	parse_options_delete(ptd->panic_parse_opts);
 	ptd->panic_parse_opts = NULL;
 
-#ifdef USE_PTHREADS
-	pthread_setspecific(java_key, NULL);
-#else
-	global_ptd = NULL;
-#endif
 	free(ptd);
+}
+
+static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
+{
+   static TLS per_thread_data * local_ptd = NULL;
+	if (!local_ptd) local_ptd = init(env);
+
+	return local_ptd;
 }
 
 /* ================================================================= */
 /* Misc utilities */
 
-static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
+static void jParse(JNIEnv *env, per_thread_data *ptd, const char* inputString)
 {
 	Parse_Options opts = ptd->opts;
 	int jverbosity = parse_options_get_verbosity(opts);
@@ -214,9 +184,9 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	if (ptd->sent)
 		sentence_delete(ptd->sent);
 
-	if (ptd->dict == NULL) throwException(env, "jParse: dictionary not open\n");
+	if (dict == NULL) throwException(env, "jParse: dictionary not open\n");
 	if (inputString == NULL) throwException(env, "jParse: no input sentence!\n");
-	ptd->sent = sentence_create(inputString, ptd->dict);
+	ptd->sent = sentence_create(inputString, dict);
 	ptd->num_linkages = 0;
 
 	if (ptd->sent == NULL)
@@ -272,6 +242,11 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	}
 }
 
+void unit_test_jparse(JNIEnv *env, const char* inputString)
+{
+	jParse(env, get_ptd(env, 0), inputString);
+}
+
 static void makeLinkage(per_thread_data *ptd)
 {
 	if (ptd->cur_linkage < ptd->num_linkages)
@@ -302,8 +277,8 @@ Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *env, jclass cls)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getDictVersion(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = get_ptd(env, cls);
-	const char *s = linkgrammar_get_dict_version(ptd->dict);
+	init(env);
+	const char *s = linkgrammar_get_dict_version(dict);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
 }
@@ -376,17 +351,7 @@ Java_org_linkgrammar_LinkGrammar_getMaxLinkages(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 {
-#ifdef USE_PTHREADS
-	per_thread_data *ptd;
-	pthread_once(&java_key_once, java_key_alloc);
-	ptd = pthread_getspecific(java_key);
-	if (ptd) return;
-	ptd = init(env, cls);
-	pthread_setspecific(java_key, ptd);
-#else
-	if (global_ptd) return;
-	global_ptd = init(env, cls);
-#endif
+	get_ptd(env, cls);
 }
 
 /*

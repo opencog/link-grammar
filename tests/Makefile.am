@@ -13,6 +13,14 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(CXX_FLAGS) \
 # TESTS declares the tests to actually run;
 # check_PROGRAMS are the binaries to build.
 check_PROGRAMS = dict-reopen multi-thread mem-leak
+
+if HAVE_JAVA
+check_PROGRAMS += multi-java
+AM_CPPFLAGS += $(JAVA_CPPFLAGS)
+multi_java_SOURCES = multi-java.cc
+multi_java_LDADD = -L$(top_builddir)/bindings/java-jni/ -llink-grammar-java -lpthread $(LDADD)
+endif
+
 TESTS = $(check_PROGRAMS)
 
 LDFLAGS += $(LINK_CXXFLAGS)

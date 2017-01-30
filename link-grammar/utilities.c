@@ -32,10 +32,6 @@
 	#include <direct.h>  /* For getcwd(). */
 #endif /* _WIN32 */
 
-#ifdef USE_PTHREADS
-	#include <pthread.h>
-#endif /* USE_PTHREADS */
-
 #include "string-set.h"
 #include "structures.h"
 #include "utilities.h"
@@ -351,42 +347,10 @@ typedef struct
 	size_t max_outstanding_exallocs;
 } space_t;
 
-#ifdef USE_PTHREADS
-static pthread_key_t space_key;
-static pthread_once_t space_key_once = PTHREAD_ONCE_INIT;
-
-static void fini_memusage(void)
-{
-	space_t *s = (space_t *) pthread_getspecific(space_key);
-	if (s)
-	{
-		free(s);
-		pthread_setspecific(space_key, NULL);
-	}
-	pthread_key_delete(space_key);
-	space_key = 0;
-}
-
-static void space_key_alloc(void)
-{
-	int rc = pthread_key_create(&space_key, free);
-	if (0 == rc)
-		atexit(fini_memusage);
-}
-#else
-static space_t space;
-#endif /* USE_PTHREADS */
-
+static TLS space_t space;
 static space_t * do_init_memusage(void)
 {
-	space_t *s;
-
-#ifdef USE_PTHREADS
-	s = (space_t *) malloc(sizeof(space_t));
-	pthread_setspecific(space_key, s);
-#else
-	s = &space;
-#endif  /* USE_PTHREADS */
+	space_t *s = &space;
 
 	s->max_space_used = 0;
 	s->space_in_use = 0;
@@ -404,25 +368,15 @@ static space_t * do_init_memusage(void)
 
 void init_memusage(void)
 {
-#ifdef USE_PTHREADS
-	pthread_once(&space_key_once, space_key_alloc);
-#else
 	static bool mem_inited = false;
 	if (mem_inited) return;
 	mem_inited = true;
-#endif /* USE_PTHREADS */
 	do_init_memusage();
 }
 
 static inline space_t *getspace(void)
 {
-#ifdef USE_PTHREADS
-	space_t *s = pthread_getspecific(space_key);
-	if (s) return s;
-	return do_init_memusage();
-#else
 	return &space;
-#endif /* USE_PTHREADS */
 }
 
 /**
