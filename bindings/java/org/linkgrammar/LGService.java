@@ -119,6 +119,10 @@ public class LGService
 		LinkGrammar.close();
 		initialized.set(Boolean.FALSE);
 	}
+	public static void do_finalize()
+	{
+		LinkGrammar.do_finalize();
+	}
 
 	private static void trace(String s)
 	{
