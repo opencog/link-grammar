@@ -81,9 +81,11 @@ static void parse_sents(int thread_id, int niter)
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
+	dictionary_set_data_dir("../../data");
+	Java_org_linkgrammar_LinkGrammar_init(NULL, 0);
 
 	int n_threads = 10;
-	int niter = 300;
+	int niter = 50;
 
 	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
