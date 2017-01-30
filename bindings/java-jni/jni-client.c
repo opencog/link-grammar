@@ -160,11 +160,10 @@ static void finish(per_thread_data *ptd)
 	free(ptd);
 }
 
+static TLS per_thread_data * local_ptd = NULL;
 static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 {
-   static TLS per_thread_data * local_ptd = NULL;
 	if (!local_ptd) local_ptd = init(env);
-
 	return local_ptd;
 }
 
@@ -380,8 +379,9 @@ Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = get_ptd(env, cls);
-	finish(ptd);
+	if (!local_ptd) return;
+	finish(local_ptd);
+	local_ptd = NULL;
 }
 
 /*
