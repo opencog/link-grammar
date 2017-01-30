@@ -23,7 +23,7 @@ public class LGConfig
 	private int maxParseSeconds = 60;
 	private double maxCost = -1.0;
 	private boolean allowSkippedWords = true;
-	private boolean storeConstituentString = true;
+	private boolean storeConstituentString = false;
 	private boolean storeDiagramString = false;
 	private boolean storeSense = false;
 	
