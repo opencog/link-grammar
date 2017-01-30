@@ -65,19 +65,7 @@ public class LGService
 	private static boolean verbose = false;
 	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	//
-	// The current Java bindings require each concurrent thread to
-	// initialize separately. This means that each thread has a
-	// separate copy of the dictionaries, which in unfortunate design.
-	// Nevertheless, we want to avoid initializing before every parse
-	// activity so we maintain a thread local flag and initialize on
-	// demand only.
-	//
-	// The C library itself does not have this restriction; one
-	// dictionary can be shared by many threads. However, the java
-	// bindings do have this restriction; the java bindings were
-	// never designed to be run multi-threaded. XXX This needs to be
-	// fixed.
+	// Multiple threads:
 	//
 	// The main problem is to detect when a thread completes its work
 	// and therefore LinkGrammar.close should be called to free
@@ -87,8 +75,8 @@ public class LGService
 	{ protected Boolean initialValue() { return Boolean.FALSE; } };
 
 	/**
-	 * <p>Return <code>true</code> if LinkGrammar is initialized for the current thread
-	 * and <code>false</code> otherwise.
+	 * <p>Return <code>true</code> if LinkGrammar is initialized for
+	 * the current thread and <code>false</code> otherwise.
 	 */
 	public static boolean isInitialized()
 	{
@@ -97,10 +85,12 @@ public class LGService
 
 	/**
 	 * <p>
-	 * Initialize LinkGrammar for the current thread, if this is not already done. Note that
-	 * this method is called by all other methods in this class that invoke LinkGrammar
-	 * so there's no really need to call it yourself. It is safe to call the method repeatedly.
-	 * Note that the dictionary language/location must be set *before* calling init.
+	 * Initialize LinkGrammar for the current thread, if this is not
+	 * already done. Note that this method is called by all other
+	 * methods in this class that invoke LinkGrammar so there's no
+	 * real need to call it yourself. It is safe to call the method
+	 * repeatedly. Note that the dictionary language/location must be
+	 * set *before* calling init.
 	 * </p>
 	 */
 	public static void init()
@@ -122,7 +112,6 @@ public class LGService
 		LinkGrammar.close();
 		initialized.set(Boolean.FALSE);
 	}
-
 
 	private static void trace(String s)
 	{
@@ -369,16 +358,21 @@ public class LGService
 
 	/**
 	 * <p>
-	 * Parse a piece of text with the given configuration and return the <code>ParseResult</code>.
+	 * Parse a piece of text with the given configuration and return
+	 * the <code>ParseResult</code>.
 	 * </p>
 	 *
-	 * @param config The configuration to be used. If this is the first time the <code>parse</code>
-	 * method is called within the current thread, the dictionary location (if not <code>null</code>)
-	 * of this parameter will be used to initialize the parser. Otherwise the dictionary location is
-	 * ignored.
+	 * @param config The configuration to be used. If this is the first
+	 * time the <code>parse</code> method is called within the current
+	 * thread, the dictionary location (if not <code>null</code>) of
+	 * this parameter will be used to initialize the parser. Otherwise
+	 * the dictionary location is ignored.
+	 *
 	 * @param text The text to parse, normally a single sentence.
-	 * @return The <code>ParseResult</code>. Note that <code>null</code> is never returned. If parsing
-	 * failed, there will be 0 linkages in the result.
+	 *
+	 * @return The <code>ParseResult</code>. Note that <code>null</code>
+	 * is never returned. If parsing failed, there will be 0 linkages in
+	 * the result.
 	 */
 	public static ParseResult parse(LGConfig config, String text)
 	{
@@ -479,4 +473,3 @@ public class LGService
 		}
 	}
 }
-
