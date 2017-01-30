@@ -83,7 +83,7 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_close
  * Method:    finalize
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_finalize
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_do_finalize
 	(JNIEnv *, jclass);
 
 /*

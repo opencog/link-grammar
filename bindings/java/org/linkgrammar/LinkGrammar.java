@@ -77,6 +77,7 @@ public class LinkGrammar
     public static native void parse(String sent);
 
     public static native void close();
+    public static native void do_finalize();
 
     // C sentence access functions
     public static native int getNumWords();

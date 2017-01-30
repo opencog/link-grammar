@@ -63,13 +63,20 @@ import java.util.concurrent.TimeUnit;
 public class LGService
 {
 	private static boolean verbose = false;
-	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	private static SimpleDateFormat dateFormatter =
+		 new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	// Multiple threads:
+	// Multi-threading:
 	//
-	// The main problem is to detect when a thread completes its work
-	// and therefore LinkGrammar.close should be called to free
-	// allocated memory. We leave that to the use of this class.
+	// Before thread-exit, the LinkGrammar.close() method should be
+	// called -- it frees the per-thread data structures in the JNI
+	// LinkGrammar code, specifically, the per-thread sentence and
+	// linkage data structures. A mem leak will result if this is not
+	// called before thread exit.
+	//
+	// Upon LinkGrammar class destruction: the LinkGrammar.do_finalize()
+	// method should be called -- it frees the global data structures
+	// (specifically, the dictionary, shared by all threads).
 	//
 	private static ThreadLocal<Boolean> initialized = new ThreadLocal<Boolean>()
 	{ protected Boolean initialValue() { return Boolean.FALSE; } };
