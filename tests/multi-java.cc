@@ -96,6 +96,9 @@ int main(int argc, char* argv[])
 
 	// Wait for all threads to complete
 	for (std::thread& t : thread_pool) t.join();
+
+	Java_org_linkgrammar_LinkGrammar_do_finalize(NULL, 0);
+
 	printf("Done with multi-threaded parsing\n");
 
 	return 0;

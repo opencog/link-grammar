@@ -80,6 +80,14 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_close
 
 /*
  * Class:     LinkGrammar
+ * Method:    finalize
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_do_finalize
+	(JNIEnv *, jclass);
+
+/*
+ * Class:     LinkGrammar
  * Method:    numWords
  * Signature: ()I
  */

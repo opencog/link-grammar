@@ -12,8 +12,8 @@ package org.linkgrammar;
 /**
  * A plain Java bean to hold configuration of the Link Grammar parser.
  * Some configuration parameters are not really passed onto the parser,
- * but applied only when constructing a <code>ParseResult</code>. Those
- * are <code>maxLinkages</code> and <code>allowSkippedWords</code>.
+ * but applied only when constructing a <code>ParseResult</code>. This
+ * is currently only <code>maxLinkages</code>.
  *
  * @author Borislav Iordanov
  */
@@ -22,11 +22,10 @@ public class LGConfig
 	private int maxLinkages = 25;
 	private int maxParseSeconds = 60;
 	private double maxCost = -1.0;
-	private boolean allowSkippedWords = true;
-	private boolean storeConstituentString = true;
+	private boolean storeConstituentString = false;
 	private boolean storeDiagramString = false;
 	private boolean storeSense = false;
-	
+
 	public int getMaxLinkages()
 	{
 		return maxLinkages;
@@ -51,14 +50,6 @@ public class LGConfig
 	{
 		maxCost = m;
 	}
-	public boolean isAllowSkippedWords()
-	{
-		return allowSkippedWords;
-	}
-	public void setAllowSkippedWords(boolean a)
-	{
-		allowSkippedWords = a;
-	}
 	public boolean isStoreConstituentString()
 	{
 		return storeConstituentString;
@@ -66,7 +57,7 @@ public class LGConfig
 	public void setStoreConstituentString(boolean s)
 	{
 		storeConstituentString = s;
-	}	
+	}
 
 	public boolean isStoreDiagramString()
 	{
@@ -75,7 +66,7 @@ public class LGConfig
 	public void setStoreDiagramString(boolean s)
 	{
 		storeDiagramString = s;
-	}	
+	}
 
 	public boolean isStoreSense()
 	{
@@ -84,5 +75,5 @@ public class LGConfig
 	public void setStoreSense(boolean s)
 	{
 		storeSense = s;
-	}	
+	}
 }
