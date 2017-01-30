@@ -68,6 +68,8 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_init
 JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_parse
 	(JNIEnv *, jclass, jstring);
 
+void unit_test_jparse(JNIEnv *, const char*);
+
 /*
  * Class:     LinkGrammar
  * Method:    close

@@ -242,7 +242,6 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, const char* inputString)
 	}
 }
 
-void unit_test_jparse(JNIEnv *env, const char* inputString);
 void unit_test_jparse(JNIEnv *env, const char* inputString)
 {
 	jParse(env, get_ptd(env, 0), inputString);

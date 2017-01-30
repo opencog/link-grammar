@@ -17,6 +17,8 @@ check_PROGRAMS = dict-reopen multi-thread mem-leak
 if HAVE_JAVA
 check_PROGRAMS += multi-java
 AM_CPPFLAGS += $(JAVA_CPPFLAGS)
+multi_java_SOURCES = multi-java.cc
+multi_java_LDADD = -L$(top_builddir)/bindings/java-jni/ -llink-grammar-java -lpthread $(LDADD)
 endif
 
 TESTS = $(check_PROGRAMS)
@@ -26,7 +28,6 @@ LDFLAGS += $(LINK_CXXFLAGS)
 dict_reopen_SOURCES = dict-reopen.cc
 multi_thread_SOURCES = multi-thread.cc
 mem_leak_SOURCES = mem-leak.cc
-multi_java_SOURCES = multi-java.cc
 
 LDADD = -L$(top_builddir)/link-grammar/ -llink-grammar
 if HAVE_SQLITE

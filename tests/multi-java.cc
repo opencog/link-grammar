@@ -48,7 +48,7 @@ static void parse_one_sent(const char *sent_str)
 	}
 }
 
-static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int niter)
+static void parse_sents(int thread_id, int niter)
 {
 	Java_org_linkgrammar_LinkGrammar_init(NULL, 0);
 
