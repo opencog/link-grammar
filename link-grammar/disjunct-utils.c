@@ -354,8 +354,8 @@ void disjunct_word_print(Disjunct * d)
 
 	for (; *wl; wl++)
 	{
-		printf("word '%s' unsplit '%s'%s", NULL == *(wl+1) ? "" : ",",
-		       (*wl)->subword, (*wl)->unsplit_word->subword);
+		printf("word '%s' unsplit '%s'%s", (*wl)->subword,
+		       (*wl)->unsplit_word->subword, NULL == *(wl+1) ? "" : ",");
 	}
 	printf("\n");
 }
