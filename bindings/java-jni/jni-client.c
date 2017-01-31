@@ -390,9 +390,9 @@ Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_org_linkgrammar_LinkGrammar_do_finalize(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_doFinalize(JNIEnv *env, jclass cls)
 {
-	dictionary_delete(dict);
+	if (dict) dictionary_delete(dict);
 	dict = NULL;
 }
 
