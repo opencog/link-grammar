@@ -97,15 +97,15 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 }
 
 /* FIXME? Can the same word get appended again? If so - prevent it. */
-static void disjuct_gwordlist_append(Disjunct * dx, const Gword **word)
+void gwordlist_append_list(const Gword ***to_word, const Gword **from_word)
 {
-	size_t to_word_arr_len = gwordlist_len(dx->word);
-	size_t from_word_arr_len = gwordlist_len(word);
+	size_t to_word_arr_len = gwordlist_len(*to_word);
+	size_t from_word_arr_len = gwordlist_len(from_word);
 
-	dx->word = realloc(dx->word,
-	   sizeof(*(dx->word)) * (to_word_arr_len + from_word_arr_len + 1));
-	memcpy(&dx->word[to_word_arr_len], word,
-	       sizeof(*dx->word) * (from_word_arr_len + 1));
+	*to_word = realloc(*to_word,
+	   sizeof(**to_word) * (to_word_arr_len + from_word_arr_len + 1));
+	memcpy(&(*to_word)[to_word_arr_len], from_word,
+	       sizeof(**to_word) * (from_word_arr_len + 1));
 }
 
 /**
@@ -191,7 +191,7 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 		newd->left = connectors_dup(t->left);
 		newd->right = connectors_dup(t->right);
 		newd->word = NULL;
-		disjuct_gwordlist_append(newd, t->word);
+		gwordlist_append_list(&newd->word, t->word);
 
 		prevd->next = newd;
 		prevd = newd;
@@ -253,7 +253,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
-			disjuct_gwordlist_append(dx, d->word);
+			gwordlist_append_list(&dx->word, d->word);
 			free_disjuncts(d);
 			count++;
 		}

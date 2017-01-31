@@ -25,5 +25,6 @@ char * print_one_disjunct(Disjunct *);
 void word_record_in_disjunct(const Gword *, Disjunct *);
 void disjunct_word_print(Disjunct *);
 Disjunct * disjuncts_dup(Disjunct *origd);
+void gwordlist_append_list(const Gword ***, const Gword **);
 
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */
