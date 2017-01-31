@@ -973,7 +973,7 @@ static bool optional_gap_collapse(Sentence sent, int w1, int w2)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
-static bool possible_connection(Sentence sent, bool no_null_links,
+static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
                                 bool lshallow, bool rshallow,
                                 int lword, int rword)
@@ -1004,11 +1004,11 @@ static bool possible_connection(Sentence sent, bool no_null_links,
 	 * i.e. before well allow null-linked words.
 	 */
 	else
-	if (no_null_links &&
+	if (!pc->null_links &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
 	    (!lc->multi) && (!rc->multi) &&
-	    !optional_gap_collapse(sent, lword, rword))
+	    !optional_gap_collapse(pc->sent, lword, rword))
 	{
 		return false;
 	}
@@ -1021,17 +1021,18 @@ static bool possible_connection(Sentence sent, bool no_null_links,
  * a connector that can match to c.  shallow tells if c is shallow.
  */
 static bool
-right_table_search(Sentence sent, bool nonul, power_table *pt, int w, Connector *c,
+right_table_search(prune_context *pc, int w, Connector *c,
                    bool shallow, int word_c)
 {
 	unsigned int size, h;
 	C_list *cl;
+	power_table *pt = pc->pt;
 
 	size = pt->r_table_size[w];
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(sent, nonul, cl->c, c, cl->shallow, shallow, w, word_c))
+		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
 			return true;
 	}
 	return false;
@@ -1042,17 +1043,18 @@ right_table_search(Sentence sent, bool nonul, power_table *pt, int w, Connector 
  * a connector that can match to c.  shallows tells if c is shallow
  */
 static bool
-left_table_search(Sentence sent, bool nonul, power_table *pt, int w, Connector *c,
+left_table_search(prune_context *pc, int w, Connector *c,
                   bool shallow, int word_c)
 {
 	unsigned int size, h;
 	C_list *cl;
+	power_table *pt = pc->pt;
 
 	size = pt->l_table_size[w];
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(sent, nonul, c, cl->c, shallow, cl->shallow, word_c, w))
+		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
 			return true;
 	}
 	return false;
@@ -1067,14 +1069,14 @@ left_table_search(Sentence sent, bool nonul, power_table *pt, int w, Connector *
  * correctly.
  */
 static int
-left_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
+left_connector_list_update(prune_context *pc, Connector *c,
                            int w, bool shallow)
 {
 	int n, lb;
-	bool foundmatch, no_null_links;
+	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = left_connector_list_update(pc, sent, c->next, w, false) - 1;
+	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
 	/* lb is now the leftmost word we need to check */
@@ -1083,11 +1085,10 @@ left_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 
 	/* n is now the rightmost word we need to check */
 	foundmatch = false;
-	no_null_links = !pc->null_links;
 	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
-		if (right_table_search(sent, no_null_links, pc->pt, n, c, shallow, w))
+		if (right_table_search(pc, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1110,14 +1111,15 @@ left_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
  * c->nearest_word fields correctly.
  */
 static size_t
-right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
+right_connector_list_update(prune_context *pc, Connector *c,
                             size_t w, bool shallow)
 {
 	size_t n, ub;
-	bool foundmatch, no_null_links;
+	bool foundmatch;
+	Sentence sent = pc->sent;
 
 	if (c == NULL) return w;
-	n = right_connector_list_update(pc, sent, c->next, w, false) + 1;
+	n = right_connector_list_update(pc, c->next, w, false) + 1;
 	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
@@ -1126,11 +1128,10 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
-	no_null_links = !pc->null_links;
 	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
-		if (left_table_search(sent, no_null_links, pc->pt, n, c, shallow, w))
+		if (left_table_search(pc, n, c, shallow, w))
 		{
 			foundmatch = true;
 			break;
@@ -1175,7 +1176,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 		for (w = 0; w < sent->length; w++) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
-				if (left_connector_list_update(pc, sent, d->left, w, true) < 0) {
+				if (left_connector_list_update(pc, d->left, w, true) < 0) {
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
@@ -1210,7 +1211,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 		for (w = sent->length-1; w != (size_t) -1; w--) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
-				if (right_connector_list_update(pc, sent, d->right, w, true) >= sent->length) {
+				if (right_connector_list_update(pc, d->right, w, true) >= sent->length) {
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
