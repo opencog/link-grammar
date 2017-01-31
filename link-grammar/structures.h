@@ -108,7 +108,11 @@ struct Connector_struct
 	const char * string; /* The connector name w/o the direction mark, e.g. AB */
 
 	/* Hash table next pointer, used only during pruning. */
-	Connector * tableNext;
+	union
+	{
+		Connector * tableNext;
+		const Gword **word;
+	};
 };
 
 static inline void connector_set_string(Connector *c, const char *s)
