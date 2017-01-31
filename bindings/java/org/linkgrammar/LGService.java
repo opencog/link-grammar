@@ -74,7 +74,7 @@ public class LGService
 	// linkage data structures. A mem leak will result if this is not
 	// called before thread exit.
 	//
-	// Upon LinkGrammar class destruction: the LinkGrammar.do_finalize()
+	// Upon LinkGrammar class destruction: the LinkGrammar.doFinalize()
 	// method should be called -- it frees the global data structures
 	// (specifically, the dictionary, shared by all threads).
 	//
@@ -119,9 +119,9 @@ public class LGService
 		LinkGrammar.close();
 		initialized.set(Boolean.FALSE);
 	}
-	public static void do_finalize()
+	public static void doFinalize()
 	{
-		LinkGrammar.do_finalize();
+		LinkGrammar.doFinalize();
 	}
 
 	private static void trace(String s)
