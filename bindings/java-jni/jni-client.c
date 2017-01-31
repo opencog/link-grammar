@@ -103,7 +103,8 @@ static void global_init(JNIEnv *env)
 	else test();
 
 	dict_version = linkgrammar_get_dict_version(dict);
-	prt_error("Info: JNI: dictionary version %s\n", dict_version);
+	prt_error("Info: JNI: dictionary language %s version %s\n",
+		in_language, dict_version);
 }
 
 static per_thread_data * init(JNIEnv *env)
