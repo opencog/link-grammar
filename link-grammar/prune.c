@@ -979,6 +979,7 @@ static bool possible_connection(prune_context *pc,
                                 int lword, int rword)
 {
 	int dist;
+	bool same_alternative = false;
 	if ((!lshallow) && (!rshallow)) return false;
 
 	/* Two deep connectors can't work */
@@ -1010,6 +1011,24 @@ static bool possible_connection(prune_context *pc,
 	    (!lc->multi) && (!rc->multi) &&
 	    !optional_gap_collapse(pc->sent, lword, rword))
 	{
+		return false;
+	}
+
+	for (Gword **lg = (Gword **)lc->word; NULL != (*lg); lg++) {
+		for (Gword **rg = (Gword **)rc->word; NULL != (*rg); rg++) {
+			if (in_same_alternative(*lg, *rg)) {
+				same_alternative = true;
+			}
+		}
+	}
+
+	//if (!easy_match(lc->string, rc->string)) return false;
+
+	if (!same_alternative) {
+		lgdebug(8, "w%d=%s and w%d=%s NSA\n",
+		       lword, lc->word[0]->subword,
+		       rword, rc->word[0]->subword);
+
 		return false;
 	}
 
