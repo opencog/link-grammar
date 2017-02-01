@@ -8,8 +8,9 @@
 #include <jni.h>
 #include <langinfo.h>
 #include <locale.h>
-#include <string.h>
+#include <stdatomic.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <link-grammar/api-structures.h>
 #include "link-grammar/corpus/corpus.h"
@@ -26,6 +27,7 @@ static const char* in_language = "en";
 
 /* Dicationary can be and should be shared by all. */
 static Dictionary dict = NULL;
+static atomic_flag dict_is_init = ATOMIC_FLAG_INIT;
 
 typedef struct
 {
@@ -76,9 +78,14 @@ static void throwException(JNIEnv *env, const char* message)
 		(*env)->FatalError(env, "Fatal: link-grammar JNI: Cannot throw");
 }
 
+// Note that we do NOT offer any kind of protection from having
+// another thread access the dictionary while this thread is still
+// setting it up. It is up to the user to make sure that this thread
+// (more generally, that all threads that call init) return before
+// any of the threads call the parse functions.
 static void global_init(JNIEnv *env)
 {
-	if (dict) return;
+	if (atomic_flag_test_and_set(&dict_is_init)) return;
 
 	const char *codeset, *dict_version;
 
@@ -398,8 +405,12 @@ Java_org_linkgrammar_LinkGrammar_doFinalize(JNIEnv *env, jclass cls)
 	if (local_ptd) finish(local_ptd);
 	local_ptd = NULL;
 
+	// Note that we do NOT offer any protection from having another
+	// thread access the dictionary, while this thread is finalizing.
+	// It is up to the user to avoid this kind of mistake!
 	if (dict) dictionary_delete(dict);
 	dict = NULL;
+	atomic_flag_clear(&dict_is_init);
 }
 
 /*
