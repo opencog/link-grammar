@@ -351,6 +351,8 @@ Java_org_linkgrammar_LinkGrammar_getMaxLinkages(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 {
+	// Force global init, always.
+	global_init(env);
 	get_ptd(env, cls);
 }
 
@@ -393,6 +395,9 @@ Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_doFinalize(JNIEnv *env, jclass cls)
 {
+	if (local_ptd) finish(local_ptd);
+	local_ptd = NULL;
+
 	if (dict) dictionary_delete(dict);
 	dict = NULL;
 }
