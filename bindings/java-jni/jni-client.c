@@ -83,6 +83,11 @@ static void throwException(JNIEnv *env, const char* message)
 // setting it up. It is up to the user to make sure that this thread
 // (more generally, that all threads that call init) return before
 // any of the threads call the parse functions.
+//
+// The only purpose of using the atomic_flag is to prevent two
+// different threads from accidentally trying to initialize the
+// dict at exactly the same time. (Which does seem like a reasonable
+// guarantee to offer).
 static void global_init(JNIEnv *env)
 {
 	if (atomic_flag_test_and_set(&dict_is_init)) return;
