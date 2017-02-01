@@ -543,15 +543,15 @@ The following exceptions and special notes apply:
 > by default) also has a global, and so requires
 > pthreads for tracking memory usage.
 
-*jni-client.c* − 
+*jni-client.c* −
 > uses per-thread struct. This should somehow be
 > attached to JNIEnv somehow.  A Java JNI expert is needed.
 
-*malloc-dbg.c* − 
+*malloc-dbg.c* −
 > not thread safe, not normally used;
 > only for debugging.
 
-*pp_lexer.c*  − 
+*pp_lexer.c*  −
 > autogened code, original lex sources lost.
 > This is only used when reading dictionaries,
 > during initialization, and so doesn't need
@@ -1211,7 +1211,7 @@ Hand-refining verb patterns:
     "I promise to be quiet from now on."
     "Keep going straight from that point on."
     "We went straight from here on."
-   
+
 ... from there on.
     "We went straight, from the house on to the woods."
     "We drove straight, from the hill onwards."
@@ -1363,7 +1363,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    parsed correctly.
 
 - Alternatives:
-   
+
    A partial solution to the morphology problem and the idiom problem
    in link-grammar is to elevate the use of "alternatives" in the
    Word struct.  Originally, these were morphological split alternatives
@@ -1375,7 +1375,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    link-grammar/README.
 
 - Morphology printing:
-   
+
    Instead of hard-coding LL, declare which links are morpho links
    in the dict.
 
@@ -1383,7 +1383,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    *  connectors with * direction, i.e. either left or right.
    *  symmetric (commuting) version of &.
    *  DONE! The new symbols are ^ for commuting-& and $ to meaneither + or -.
-   
+
    This still needs to be documented.
 
  - Incremental sentence parsing.
@@ -1391,7 +1391,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    * Real-time dialog
    * Parsing of multiple streams, e.g. from play/movie scripts
    * segmentation of exceptionally long sentences.
-   
+
    This could be implemented by saving dangling right-going
    connectors into a parse context, and then, when another sentence
    fragment arrives, use that context in place of the left-wall.
@@ -1401,7 +1401,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    that the correct solution is to use ICU http://site.icu-project.org/
    *  ICU pros: runs on windows
    *  ICU cons: big, complex
-  
+
    Another alternative is libunistring (which seems to be LGPL!?)
       http://www.gnu.org/software/libunistring/
    *  pros: smaller, simpler than ICU
@@ -1433,43 +1433,53 @@ Suggest using flags: -spell=0 -short=10 -cost-max=2.1
 
 25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014) (0.2 secs SAT, June 2014):
 ```text
-Hot runners usually make the mold more expensive to manufacture and run, 
+Hot runners usually make the mold more expensive to manufacture and run,
 but allow savings by reducing plastic waste and by reducing the cycle time.
 ```
 
 38 words + 4 punct: 2.4 seconds (2.6 secs, June 2014) (0.32 secs, SAT, June 2014):
 ```text
-The strongest rain ever recorded in India shut down the financial hub of Mumbai, snapped communication lines, 
-closed airports and forced thousands of people to sleep in their offices or walk home during the night, 
-officials said today.
+The strongest rain ever recorded in India shut down the financial hub
+of Mumbai, snapped communication lines, closed airports and forced
+thousands of people to sleep in their offices or walk home during the
+night, officials said today.
 ```
 
 50 words + 9 punct: 14 seconds (3.9 secs June 2014) (0.64 secs, SAT June 2014):
 ```text
-In vivo studies of the activity of four of the kinases, KinA, KinC, KinD (ykvD) and KinE (ykrQ), 
-using abrB transcription as an indicator of Spo0A~P level,revealed that KinC and KinD were responsible for Spo0A~P production
-during the exponential phase of growth in the absence of KinA and KinB.
+In vivo studies of the activity of four of the kinases, KinA, KinC,
+KinD (ykvD) and KinE (ykrQ), using abrB transcription as an indicator
+of Spo0A~P level,revealed that KinC and KinD were responsible for
+Spo0A~P production during the exponential phase of growth in the absence
+of KinA and KinB.
 ```
 
 56 words + 8 punct: 4.5 seconds (1.45 secs June 2014) (0.38 secs, SAT June 2014):
 ```text
-New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...  is nearly very good indeed - 
-but it is not the The Producers ... this story ... does not lend itself to stage adaptation in the way of the earlier movie ...
- Now for the good news ... Brooks and Stroman pull out every stop.
+New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...
+is nearly very good indeed - but it is not the The Producers ...
+this story ... does not lend itself to stage adaptation in the way of
+the earlier movie ...  Now for the good news ... Brooks and Stroman
+pull out every stop.
 ```
 
 57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014) (0.68 secs, SAT June 2014):
 ```text
-However, the few tracts, the poetry, and the novels that embodied the social vision of Young England were directed 
-to a New Generation of educated, religious, and socially conscious conservatives, who, like Young Englanders, 
-were appalled at the despiritualizing effects of industrialization and the perceived amorality of Benthamite philosophy, 
+However, the few tracts, the poetry, and the novels that embodied the
+social vision of Young England were directed to a New Generation of
+educated, religious, and socially conscious conservatives, who, like
+Young Englanders, were appalled at the despiritualizing effects of
+industrialization and the perceived amorality of Benthamite philosophy,
 which they blamed equally for Victorian social injustices.
 ```
 
 73 words + 8 punct: 145 seconds:
 ```text
-Cortes in his various letters again and again claims the Emperor's patronage of his bold defiance of the Emperor's 
-officers on the ground that the latter in their action were moved solely by considerations of their personal gain,
-whereas he, Cortes, was striving to endow his sovereign with a rich new empire and boundless treasure whilst carrying 
-into the dark pagan land, at the sword's point, the gentle creed of the Christian God.
-```text
+Cortes in his various letters again and again claims the Emperor's
+patronage of his bold defiance of the Emperor's officers on the ground
+that the latter in their action were moved solely by considerations of
+their personal gain, whereas he, Cortes, was striving to endow his
+sovereign with a rich new empire and boundless treasure whilst carrying
+into the dark pagan land, at the sword's point, the gentle creed of the
+Christian God.
+```
