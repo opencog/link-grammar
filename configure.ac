@@ -64,22 +64,6 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
-dnl For locale_t
-AC_MSG_CHECKING(for locale_t in locale.h)
-AC_LINK_IFELSE(
-[AC_LANG_PROGRAM([#include <locale.h>], [locale_t lt = NULL])],
-AC_MSG_RESULT(yes)
-AC_DEFINE([HAVE_LOCALE_T_IN_LOCALE_H], 1, [Define to 1 if locale_t is defined in locale.h]),
-AC_MSG_RESULT(no)
-	AC_MSG_CHECKING(for locale_t in xlocale.h)
-	AC_LINK_IFELSE(
-	[AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
-	AC_MSG_RESULT(yes)
-	AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
-	AC_MSG_RESULT(no)
-	)
-)
-
 dnl CentOS-7 (at least) needs these to expose the C99 format and limit macros
 dnl in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
@@ -184,6 +168,24 @@ fi
 # specified (no effect). So just add it.
 CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
 CXXFLAGS="${CXXFLAGS} -D_DEFAULT_SOURCE"
+
+# ====================================================================
+
+dnl For locale_t
+AC_MSG_CHECKING(for locale_t in locale.h)
+AC_LINK_IFELSE(
+[AC_LANG_PROGRAM([#include <locale.h>], [locale_t lt = NULL])],
+AC_MSG_RESULT(yes)
+AC_DEFINE([HAVE_LOCALE_T_IN_LOCALE_H], 1, [Define to 1 if locale_t is defined in locale.h]),
+AC_MSG_RESULT(no)
+	AC_MSG_CHECKING(for locale_t in xlocale.h)
+	AC_LINK_IFELSE(
+	[AC_LANG_PROGRAM([#include <xlocale.h>], [locale_t lt = NULL])],
+	AC_MSG_RESULT(yes)
+	AC_DEFINE([HAVE_LOCALE_T_IN_XLOCALE_H], 1, [Define to 1 if locale_t is defined in xlocale.h]),
+	AC_MSG_RESULT(no)
+	)
+)
 
 # ====================================================================
 # TLS support (for per-thread error handling)
