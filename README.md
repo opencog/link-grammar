@@ -1426,18 +1426,22 @@ A performance diary:
 Time to parse some long sentences:
 The original results below were for version 5.0.8 (April 2014)
 The June 2014 results are for version 5.1.0
+The Feb 2017 results are on version 5.3.15
+Times are user-times, with dict loading subtracted.
 
 These are very highly dependent on the aggressiveness of the token
 splitter, on the short length, on the cost-max and the spell checker.
 Suggest using flags: -spell=0 -short=10 -cost-max=2.1
 
-25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014) (0.2 secs SAT, June 2014):
+25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014)
+(0.2 secs SAT, June 2014):
 ```text
 Hot runners usually make the mold more expensive to manufacture and run,
 but allow savings by reducing plastic waste and by reducing the cycle time.
 ```
 
-38 words + 4 punct: 2.4 seconds (2.6 secs, June 2014) (0.32 secs, SAT, June 2014):
+38 words + 4 punct: 2.4 seconds (2.6 secs, June 2014)
+(0.32 secs, SAT, June 2014) (3.2 sec Feb 2017):
 ```text
 The strongest rain ever recorded in India shut down the financial hub
 of Mumbai, snapped communication lines, closed airports and forced
@@ -1445,7 +1449,8 @@ thousands of people to sleep in their offices or walk home during the
 night, officials said today.
 ```
 
-50 words + 9 punct: 14 seconds (3.9 secs June 2014) (0.64 secs, SAT June 2014):
+50 words + 9 punct: 14 seconds (3.9 secs June 2014)
+(0.64 secs, SAT June 2014) (2.1 secs Feb 2017):
 ```text
 In vivo studies of the activity of four of the kinases, KinA, KinC,
 KinD (ykvD) and KinE (ykrQ), using abrB transcription as an indicator
@@ -1454,7 +1459,8 @@ Spo0A~P production during the exponential phase of growth in the absence
 of KinA and KinB.
 ```
 
-56 words + 8 punct: 4.5 seconds (1.45 secs June 2014) (0.38 secs, SAT June 2014):
+56 words + 8 punct: 4.5 seconds (1.45 secs June 2014)
+(0.38 secs, SAT June 2014) (broken, Feb 2017):
 ```text
 New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...
 is nearly very good indeed - but it is not the The Producers ...
@@ -1463,7 +1469,8 @@ the earlier movie ...  Now for the good news ... Brooks and Stroman
 pull out every stop.
 ```
 
-57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014) (0.68 secs, SAT June 2014):
+57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014)
+(0.68 secs, SAT June 2014) (4.5 seconds 4.3.15 Feb 2017):
 ```text
 However, the few tracts, the poetry, and the novels that embodied the
 social vision of Young England were directed to a New Generation of
