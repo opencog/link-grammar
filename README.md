@@ -810,6 +810,22 @@ when the individual sentences "I was in hell yesterday" and
 "I was in heaven on Tuesday" are parsed.  Using a conjunction should
 not wreck the relations that get used; but this requires link-crossing.
 
+Another, simpler example:
+
+```text
+    +---->WV---->+
+    |            +--------IV---------->+
+    |            |           +<-VJlpi--+
+    |            |           |    +---xxx------------Js------->+
+    +--Wd--+-Sp*i+--TO-+-I*t-+-MVp+    +--VJrpi>+--MVp-+---Js->+
+    |      |     |     |     |    |    |        |      |       |
+LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
+```
+The above rally wants to have a `Js` link from 'at' to 'everything',
+but this `Js` link crosses (clashes with - marked by xxx) the link
+to the conjunction.  These two cases suggest that one sould/should
+allow most links to cross over the down-links to conjunctions.
+
 
 
 Type Theory
