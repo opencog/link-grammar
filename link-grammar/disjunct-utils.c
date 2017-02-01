@@ -329,35 +329,4 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 		d->word[1] = NULL;
 	}
 }
-
-/* Debug printout of a disjunct word list */
-void disjunct_word_print(Disjunct * d)
-{
-	const Gword *const *wl = d->word;
-	const char *c;
-
-	printf("Disjunct word: ");
-	for (c = d->string; '\0' != *c; c++)
-		printf("%c", *c == SUBSCRIPT_MARK ? '.' : *c);
-	printf("; Wordgraph: ");
-
-	if (NULL == wl)
-	{
-		printf("BUG: NULL list!\n");
-		return;
-	}
-	if (NULL == *wl)
-	{
-		printf("BUG: None\n");
-		return;
-	}
-
-	for (; *wl; wl++)
-	{
-		printf("word '%s' unsplit '%s'%s", (*wl)->subword,
-		       (*wl)->unsplit_word->subword, NULL == *(wl+1) ? "" : ",");
-	}
-	printf("\n");
-}
-
 /* ========================= END OF FILE ============================== */

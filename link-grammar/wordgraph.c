@@ -212,6 +212,31 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 	}
 	err_msg(lg_Debug, "]\n");
 }
+
+/* Debug printout of a wordgraph Gword list. */
+GNUC_UNUSED void gwordlist_print(const Gword **wl)
+{
+	printf("Gword list: ");
+
+	if (NULL == wl)
+	{
+		printf("(null)\n");
+		return;
+	}
+	if (NULL == *wl)
+	{
+		printf("No elements\n");
+		return;
+	}
+
+	for (; *wl; wl++)
+	{
+		printf("word %p '%s' unsplit '%s'%s", *wl, (*wl)->subword,
+		       (*wl)->unsplit_word->subword, NULL == *(wl+1) ? "" : ", ");
+	}
+	printf("\n");
+
+}
 #endif
 
 /**
