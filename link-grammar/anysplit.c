@@ -238,7 +238,7 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 /**
  * Return a number between 0 and nsplits-1, including.
- * No need for a good randomness; mediocre randomess is enough.
+ * No need for a good randomness; mediocre randomness is enough.
  * We suppose int is 32 bit.
  */
 static int rng_uniform(unsigned int *seedp, size_t nsplits)
@@ -325,7 +325,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 		new_re->next    = NULL;
 		new_re->neg = false; /* TODO (if needed): Negative regex'es. */
 		*tail = new_re;
-		tail	= &new_re->next;
+		tail = &new_re->next;
 	}
 	return regex_root;
 }
