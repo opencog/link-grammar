@@ -15,6 +15,7 @@
 #include "externs.h"
 #include "fast-match.h"
 #include "string-set.h"
+#include "wordgraph.h"
 #include "word-utils.h"
 
 /**
@@ -486,6 +487,55 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	return c_con->match;
 }
 
+typedef struct
+{
+	const Gword *word;
+	bool same_alternative;
+} gword_cache;
+
+/**
+ * Return true iff c1 and c2 are from the same alternative.
+ * If a wordgraph word of the checked connector is the same
+ * as of the previously checked one, use the cached result.
+ */
+#define ALT_CONNECTION_POSSIBLE
+#define OPTIMIZE_EN
+static bool alt_connection_possible(Connector *c1, Connector *c2,
+                                    gword_cache *c_con)
+{
+#ifdef ALT_CONNECTION_POSSIBLE
+	bool same_alternative = false;
+
+#ifdef OPTIMIZE_EN
+	/* Try a shortcut first. */
+	if ((c2->word[0]->hier_depth == 0) || (c1->word[0]->hier_depth == 0))
+	{
+			return true;
+	}
+#endif /* OPTIMIZE_EN */
+
+	if (c1->word[0] == c_con->word) return c_con->same_alternative;
+
+	for (Gword **ga = (Gword **)c1->word; NULL != (*ga); ga++) {
+		for (Gword **gb = (Gword **)c2->word; NULL != (*gb); gb++) {
+			if (in_same_alternative(*ga, *gb)) {
+				 same_alternative = true;
+				 break;
+			}
+		}
+		if (same_alternative) break;
+	}
+
+	c_con->same_alternative = same_alternative;
+	c_con->word = c1->word[0];
+
+
+	return same_alternative;
+#else
+	return true;
+#endif /* ALT_CONNECTION_POSSIBLE */
+}
+
 /**
  * Forms and returns a list of disjuncts coming from word w, that
  * actually matches lc or rc or both. The lw and rw are the words from
@@ -497,6 +547,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
  * not included again when processing the mr list.
  *
  * Note that if both lc and rc match the corresponding connectors of w,
+	gc.word = NULL;
  * match_left is set to true when the ml list is processed and the
  * disjunct is then added to the result list, and match_right of the
  * same disjunct is set to true when the mr list is processed, and this
@@ -511,6 +562,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	size_t front = ctxt->match_list_end;
 	Match_node *ml = NULL, *mr = NULL;
 	match_cache mc;
+	gword_cache gc;
+
+	gc.same_alternative = NULL;
 
 #ifdef VERIFY_MATCH_LIST
 	static int id = 0;
@@ -541,12 +595,14 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	/* Construct the list of things that could match the left. */
 	mc.string = NULL;
+	gc.word = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->nearest_word < lw) break;
 		if ((w - lw) > mx->d->left->length_limit) continue;
 
-		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc);
+		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc) &&
+		                    alt_connection_possible(mx->d->left, lc, &gc);
 		if (!mx->d->match_left) continue;
 		mx->d->match_right = false;
 
@@ -562,11 +618,13 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * is true, since then it means it is already included in the match
 	 * list. */
 	mc.string = NULL;
+	gc.word = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
 		if ((rw - w) > mx->d->right->length_limit) continue;
 
-		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc);
+		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc) &&
+			                  alt_connection_possible(mx->d->right, rc, &gc);
 		if (!mx->d->match_right || mx->d->match_left) continue;
 
 #ifdef VERIFY_MATCH_LIST
