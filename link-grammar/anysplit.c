@@ -37,6 +37,9 @@
 
 #include "anysplit.h"
 
+
+#define MAX_WORD_TO_SPLIT 31 /* in codepoins */
+
 extern const char * const afdict_classname[];
 
 typedef int p_start;     /* partition start in a word */
@@ -56,7 +59,7 @@ typedef struct anysplit_params
 	size_t altsmin;            /* minimum number of alternatives to generate */
 	size_t altsmax;            /* maximum number of alternatives to generate */
 	Regex_node *regpre, *regmid, *regsuf; /* issue matching combinations  */
-	split_cache scl[MAX_WORD]; /* split cache according to word length */
+	split_cache scl[MAX_WORD_TO_SPLIT]; /* split cache according to word length */
 } anysplit_params;
 
 #define DEBUG_ANYSPLIT 0
@@ -213,8 +216,6 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 	if (NULL == scl->sp)
 	{
-		// XXX FIXME -- there are more efficient ways of counting
-		// the number of splits. But this is OK for now.
 		nsplits = split_and_cache(word_length, nparts, NULL);
 		//printf("nsplits %zu\n", nsplits);
 		if (0 == nsplits)
@@ -237,7 +238,7 @@ static int split(int word_length, int nparts, split_cache *scl)
 
 /**
  * Return a number between 0 and nsplits-1, including.
- * No need for a good randomness; mediocre randomess is enough.
+ * No need for a good randomness; mediocre randomness is enough.
  * We suppose int is 32 bit.
  */
 static int rng_uniform(unsigned int *seedp, size_t nsplits)
@@ -324,7 +325,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 		new_re->next    = NULL;
 		new_re->neg = false; /* TODO (if needed): Negative regex'es. */
 		*tail = new_re;
-		tail	= &new_re->next;
+		tail = &new_re->next;
 	}
 	return regex_root;
 }
@@ -439,7 +440,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as;
 	Afdict_class * stemsubscr;
-	size_t stemsubscr_len;
 
 	size_t l = strlen(word);
 	size_t lutf = utf8_strlen(word);
@@ -454,12 +454,22 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	unsigned int seed = sent->rand_state;
 	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
-	const char infix_mark = INFIX_MARK(afdict);
 
 	if (NULL == afdict) return false;
 	as = afdict->anysplit;
 
 	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
+
+	if (TS_ANYSPLIT == unsplit_word->tokenizing_step)
+		return true; /* We already handled this token. */
+
+	if (lutf > MAX_WORD_TO_SPLIT)
+	{
+		Gword *w = issue_word_alternative(sent, unsplit_word, "AS>",
+		                       0,NULL, 1,&word, 0,NULL);
+		w->tokenizing_step = TS_ANYSPLIT;
+		return true;
+	}
 
 	if (0 == l)
 	{
@@ -468,17 +478,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	}
 
 	stemsubscr = AFCLASS(afdict, AFDICT_STEMSUBSCR);
-	stemsubscr_len = (NULL == stemsubscr->string[0]) ? 0 :
-		strlen(stemsubscr->string[0]);
-
-	/* Don't split morphemes again. If INFIXMARK and/or SUBSCRMARK are
-	 * not defined in the affix file, then morphemes may get split again,
-	 * unless restricted by REGPRE/REGMID/REGSUF. */
-	if (word[0] == infix_mark) return true;
-	if (word[l-1] == infix_mark) return true;
-	if ((l > stemsubscr_len) &&
-	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
-		return true;
 
 	// seed = time(NULL)+(unsigned int)(long)&seed;
 
@@ -617,10 +616,12 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		// XXX FIXME -- this is wrong - it assumes a
 		// variable number of suffixes.
 		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
-		issue_word_alternative(sent, unsplit_word, "AS",
+		Gword *alt = issue_word_alternative(sent, unsplit_word, "AS",
 		        (NULL == prefix_position) ? 0 : 1, prefix_position,
 		        1, stem_position,
 		        num_sufixes, suffix_position);
+		for (Gword *w = alt; w->alternative_id == alt; w = w->next[0])
+		w->tokenizing_step = TS_ANYSPLIT;
 		free(affixes);
 	}
 
