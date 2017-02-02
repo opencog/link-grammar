@@ -461,6 +461,9 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 
 	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
 
+	if (TS_ANYSPLIT == unsplit_word->tokenizing_step)
+		return true; /* We already handled this token. */
+
 	if (0 == l)
 	{
 		prt_error("Warning: anysplit(): word length 0\n");
@@ -617,10 +620,12 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		// XXX FIXME -- this is wrong - it assumes a
 		// variable number of suffixes.
 		/* Here a leading INFIX_MARK is added to the suffixes if needed. */
-		issue_word_alternative(sent, unsplit_word, "AS",
+		Gword *alt = issue_word_alternative(sent, unsplit_word, "AS",
 		        (NULL == prefix_position) ? 0 : 1, prefix_position,
 		        1, stem_position,
 		        num_sufixes, suffix_position);
+		for (Gword *w = alt; w->alternative_id == alt; w = w->next[0])
+		w->tokenizing_step = TS_ANYSPLIT;
 		free(affixes);
 	}
 
