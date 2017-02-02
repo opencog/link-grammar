@@ -37,6 +37,9 @@
 
 #include "anysplit.h"
 
+
+#define MAX_WORD_TO_SPLIT 31 /* in codepoins */
+
 extern const char * const afdict_classname[];
 
 typedef int p_start;     /* partition start in a word */
@@ -56,7 +59,7 @@ typedef struct anysplit_params
 	size_t altsmin;            /* minimum number of alternatives to generate */
 	size_t altsmax;            /* maximum number of alternatives to generate */
 	Regex_node *regpre, *regmid, *regsuf; /* issue matching combinations  */
-	split_cache scl[MAX_WORD]; /* split cache according to word length */
+	split_cache scl[MAX_WORD_TO_SPLIT]; /* split cache according to word length */
 } anysplit_params;
 
 #define DEBUG_ANYSPLIT 0
@@ -463,6 +466,14 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 
 	if (TS_ANYSPLIT == unsplit_word->tokenizing_step)
 		return true; /* We already handled this token. */
+
+	if (lutf > MAX_WORD_TO_SPLIT)
+	{
+		Gword *w = issue_word_alternative(sent, unsplit_word, "AS>",
+		                       0,NULL, 1,&word, 0,NULL);
+		w->tokenizing_step = TS_ANYSPLIT;
+		return true;
+	}
 
 	if (0 == l)
 	{
