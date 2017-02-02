@@ -63,12 +63,12 @@ CONTENTS of this directory:
 | morphology/ar | An Arabic morphology analyzer |
 | morphology/fa | An Persian morphology analyzer |
 |  |  |
-| YING | The license for this code and data |
-| ngeLog | A compendium of recent changes. |
-| figure | The GNU configuration script |
-| ogen.sh | Developer's configure maintenance tool |
-| c14 | Microsoft Visual-C project files |
-| gw | Information on using MinGW under MSYS or Cygwin |
+| COPYING | The license for this code and data |
+| ChangeLog | A compendium of recent changes. |
+| configure | The GNU configuration script |
+| autogen.sh | Developer's configure maintenance tool |
+| msvc14 | Microsoft Visual-C project files |
+| mingw | Information on using MinGW under MSYS or Cygwin |
 
 UNPACKING and signature verification:
 -------------------------------------
