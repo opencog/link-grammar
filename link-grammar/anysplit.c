@@ -442,7 +442,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as;
 	Afdict_class * stemsubscr;
-	size_t stemsubscr_len;
 
 	size_t l = strlen(word);
 	size_t lutf = utf8_strlen(word);
@@ -457,7 +456,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	unsigned int seed = sent->rand_state;
 	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
-	const char infix_mark = INFIX_MARK(afdict);
 
 	if (NULL == afdict) return false;
 	as = afdict->anysplit;
@@ -482,17 +480,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	}
 
 	stemsubscr = AFCLASS(afdict, AFDICT_STEMSUBSCR);
-	stemsubscr_len = (NULL == stemsubscr->string[0]) ? 0 :
-		strlen(stemsubscr->string[0]);
-
-	/* Don't split morphemes again. If INFIXMARK and/or SUBSCRMARK are
-	 * not defined in the affix file, then morphemes may get split again,
-	 * unless restricted by REGPRE/REGMID/REGSUF. */
-	if (word[0] == infix_mark) return true;
-	if (word[l-1] == infix_mark) return true;
-	if ((l > stemsubscr_len) &&
-	    (0 == strcmp(word+l-stemsubscr_len, stemsubscr->string[0])))
-		return true;
 
 	// seed = time(NULL)+(unsigned int)(long)&seed;
 
