@@ -96,16 +96,24 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	return (i & (dt->dup_table_size-1));
 }
 
-/* FIXME? Can the same word get appended again? If so - prevent it. */
+/**
+ * Append a Gword list to a given Gword list (w/o duplicates).
+ */
 void gwordlist_append_list(const Gword ***to_word, const Gword **from_word)
 {
 	size_t to_word_arr_len = gwordlist_len(*to_word);
-	size_t from_word_arr_len = gwordlist_len(from_word);
 
-	*to_word = realloc(*to_word,
-	   sizeof(**to_word) * (to_word_arr_len + from_word_arr_len + 1));
-	memcpy(&(*to_word)[to_word_arr_len], from_word,
-	       sizeof(**to_word) * (from_word_arr_len + 1));
+	for (const Gword **f = from_word; NULL != *f; f++)
+	{
+		size_t l;
+
+		/* Note: Must use indexing because to_word may get realloc'ed. */
+		for (l = 0; l < to_word_arr_len; l++)
+			if (*f == (*to_word)[l]) break; /* Filter duplicates. */
+
+		if (l == to_word_arr_len)
+			gwordlist_append((Gword ***)to_word, (Gword *)*f);
+	}
 }
 
 /**
