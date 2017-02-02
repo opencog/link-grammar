@@ -20,6 +20,7 @@ Gword *gword_new(Sentence, const char *);
 Gword *empty_word(void); /* FIXME: Remove it. */
 size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
+void gwordlist_append_list(const Gword ***, const Gword **);
 void gwordlist_print(const Gword **);
 
 const Gword **wordgraph_hier_position(Gword *);

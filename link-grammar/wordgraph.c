@@ -90,6 +90,26 @@ void gwordlist_append(Gword ***arrp, Gword *p)
 	(*arrp)[n] = p;
 }
 
+/**
+ * Append a Gword list to a given Gword list (w/o duplicates).
+ */
+void gwordlist_append_list(const Gword ***to_word, const Gword **from_word)
+{
+	size_t to_word_arr_len = gwordlist_len(*to_word);
+
+	for (const Gword **f = from_word; NULL != *f; f++)
+	{
+		size_t l;
+
+		/* Note: Must use indexing because to_word may get realloc'ed. */
+		for (l = 0; l < to_word_arr_len; l++)
+			if (*f == (*to_word)[l]) break; /* Filter duplicates. */
+
+		if (l == to_word_arr_len)
+			gwordlist_append((Gword ***)to_word, (Gword *)*f);
+	}
+}
+
 #if 0
 /**
  * Replace "count" words from the position "start" by word "wnew".
