@@ -112,12 +112,15 @@ size_t wordgraph_pathpos_len(Wordgraph_pathpos *wp)
 	return len;
 }
 
+/**
+ * `len` is the new length, not counting the terminating null entry.
+ */
 /* FIXME (efficiency): Initially allocate more than 2 elements */
 Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
                                             size_t len)
 {
-	wp = realloc(wp, (len+2) * sizeof(*wp));
-	wp[len+1].word = NULL;
+	wp = realloc(wp, (len+1) * sizeof(*wp));
+	wp[len].word = NULL;
 	return wp;
 }
 
@@ -174,11 +177,15 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 		}
 	}
 
-	*wp = wordgraph_pathpos_resize(*wp, n);
+	*wp = wordgraph_pathpos_resize(*wp, n+1);
+
 	if (insert_here < n)
 	{
+		/* n+1 because n is the length of the array, not including the
+		 * terminating null entry. We need to protect the terminating null.
+		 */
 		memmove(&(*wp)[insert_here+1], &(*wp)[insert_here],
-		        (n - insert_here) * sizeof (*wpt));
+		        (n+1 - insert_here) * sizeof (*wpt));
 	}
 
 	(*wp)[insert_here].word = p;

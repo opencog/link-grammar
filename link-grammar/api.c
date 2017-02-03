@@ -900,7 +900,7 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 
 	/* Not already in the path queue - add it. */
-	*nwp = wordgraph_pathpos_resize(*nwp, n);
+	*nwp = wordgraph_pathpos_resize(*nwp, n+1);
 	(*nwp)[n].word = p;
 
 	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
