@@ -495,8 +495,13 @@ typedef struct
 
 /**
  * Return true iff c1 and c2 are from the same alternative.
+ * An optimization for English checks if one of the connectors belong
+ * to an original sentence word (c2 is checked first for an inline
+ * optimization opportunity).
  * If a wordgraph word of the checked connector is the same
  * as of the previously checked one, use the cached result.
+ * (The first wordgraph word is used for cache validity indication,
+ * but there is only one most of the times anyway.)
  */
 #define ALT_CONNECTION_POSSIBLE
 #define OPTIMIZE_EN
@@ -516,6 +521,7 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 
 	if (c1->word[0] == c_con->word) return c_con->same_alternative;
 
+	/* Each of the loops is of one iteration most of the times. */
 	for (Gword **ga = (Gword **)c1->word; NULL != (*ga); ga++) {
 		for (Gword **gb = (Gword **)c2->word; NULL != (*gb); gb++) {
 			if (in_same_alternative(*ga, *gb)) {
