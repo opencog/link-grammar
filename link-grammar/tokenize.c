@@ -2686,7 +2686,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
-		assert(we, UNKNOWN_WORD "must be defined in the dictionary!");
+		assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
 		w->morpheme_type = MT_UNKNOWN;
 	}
 	else
