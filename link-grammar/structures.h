@@ -208,7 +208,7 @@ typedef enum
 
 /* Word status */
 /* - Tokenization */
-#define WS_UNKNOWN (1<<0) /* Unknown word (FIXME? Unused) */
+#define WS_UNKNOWN (1<<0) /* Unknown word */
 #define WS_REGEX   (1<<1) /* Matches a regex */
 #define WS_SPELL   (1<<2) /* Result of a spell guess */
 #define WS_RUNON   (1<<3) /* Separated from words run-on */

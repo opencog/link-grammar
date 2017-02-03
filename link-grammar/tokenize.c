@@ -2687,7 +2687,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	{
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
 		assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-		w->morpheme_type = MT_UNKNOWN;
+		w->status |= WS_UNKNOWN;
 	}
 	else
 	{
