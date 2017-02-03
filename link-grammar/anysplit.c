@@ -59,7 +59,7 @@ typedef struct anysplit_params
 	size_t altsmin;            /* minimum number of alternatives to generate */
 	size_t altsmax;            /* maximum number of alternatives to generate */
 	Regex_node *regpre, *regmid, *regsuf; /* issue matching combinations  */
-	split_cache scl[MAX_WORD_TO_SPLIT]; /* split cache according to word length */
+	split_cache scl[MAX_WORD_TO_SPLIT+1]; /* split cache according to word length */
 } anysplit_params;
 
 #define DEBUG_ANYSPLIT 0
