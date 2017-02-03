@@ -96,18 +96,6 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	return (i & (dt->dup_table_size-1));
 }
 
-/* FIXME? Can the same word get appended again? If so - prevent it. */
-static void disjuct_gwordlist_append(Disjunct * dx, const Gword **word)
-{
-	size_t to_word_arr_len = gwordlist_len(dx->word);
-	size_t from_word_arr_len = gwordlist_len(word);
-
-	dx->word = realloc(dx->word,
-	   sizeof(*(dx->word)) * (to_word_arr_len + from_word_arr_len + 1));
-	memcpy(&dx->word[to_word_arr_len], word,
-	       sizeof(*dx->word) * (from_word_arr_len + 1));
-}
-
 /**
  * The connectors must be exactly equal.  A similar function
  * is connectors_equal_AND(), but that ignores priorities,
@@ -191,7 +179,7 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 		newd->left = connectors_dup(t->left);
 		newd->right = connectors_dup(t->right);
 		newd->word = NULL;
-		disjuct_gwordlist_append(newd, t->word);
+		gwordlist_append_list(&newd->word, t->word);
 
 		prevd->next = newd;
 		prevd = newd;
@@ -253,7 +241,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
-			disjuct_gwordlist_append(dx, d->word);
+			gwordlist_append_list(&dx->word, d->word);
 			free_disjuncts(d);
 			count++;
 		}
@@ -329,35 +317,4 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 		d->word[1] = NULL;
 	}
 }
-
-/* Debug printout of a disjunct word list */
-void disjunct_word_print(Disjunct * d)
-{
-	const Gword *const *wl = d->word;
-	const char *c;
-
-	printf("Disjunct word: ");
-	for (c = d->string; '\0' != *c; c++)
-		printf("%c", *c == SUBSCRIPT_MARK ? '.' : *c);
-	printf("; Wordgraph: ");
-
-	if (NULL == wl)
-	{
-		printf("BUG: NULL list!\n");
-		return;
-	}
-	if (NULL == *wl)
-	{
-		printf("BUG: None\n");
-		return;
-	}
-
-	for (; *wl; wl++)
-	{
-		printf("word '%s' unsplit '%s'%s", NULL == *(wl+1) ? "" : ",",
-		       (*wl)->subword, (*wl)->unsplit_word->subword);
-	}
-	printf("\n");
-}
-
 /* ========================= END OF FILE ============================== */
