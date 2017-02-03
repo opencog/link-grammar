@@ -506,8 +506,11 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					}
 					break;
 				case SUFFIX: /* set to =word */
-					/* If the suffix starts with an apostrophe, don't mark it */
-					if ((('\0' != (*affix)[0]) &&
+					/* XXX If the suffix starts with an apostrophe, don't mark it.
+					 * Actually - any non-alpha is checked. The random-splitting
+					 * "languages" always need the suffix marking. */
+					if (((NULL == sent->dict->affix_table->anysplit) &&
+					     ('\0' != (*affix)[0]) &&
 					     !is_utf8_alpha(*affix, sent->dict->lctype)) ||
 					    '\0' == infix_mark)
 					{
