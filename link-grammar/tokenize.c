@@ -561,6 +561,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					word_label(sent, unsplit_word, "+", label);
 					word_label(sent, unsplit_word, NULL, "IU");
 					lgdebug(D_IWA, " (issued_unsplit)\n");
+					/* Note: The original morpheme_type is preserved.
+					 * The morpheme_type value set above is just ignored. */
 					return unsplit_word;
 				}
 
