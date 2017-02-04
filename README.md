@@ -259,7 +259,7 @@ Windows systems from Vista on.
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
 be obtained elsewhere.  One popular choice is TRE, available at:
-http://laurikari.net/tre/
+http://gnuwin32.sourceforge.net/packages/tre.htm
 
 Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
 available at:
