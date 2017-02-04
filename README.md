@@ -625,10 +625,10 @@ grammar.
 
 The dependency arrows have the following properties:
 
- * anti-reflexive (a word cannot depend on itself; it cannot point
+ * Anti-reflexive (a word cannot depend on itself; it cannot point
    at itself.)
 
- * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
+ * Anti-symmetric (if Word1 depends on Word2, then Word2 cannot
    depend on Word1) (so, e.g. determiners depend on nouns, but
    never vice-versa)
 
