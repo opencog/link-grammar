@@ -74,7 +74,7 @@ CONTENTS of this directory
 UNPACKING and signature verification
 ------------------------------------
 The system is distributed using the normal tar.gz format; it can be
-extracted using the "tar -zxf link-grammar.tar.gz" command at the
+extracted using the `tar -zxf link-grammar.tar.gz` command at the
 command line.
 
 The files have been digitally signed to make sure that there was no
@@ -92,7 +92,7 @@ gpg:                 aka "Linas Vepstas (LKML) <linasvepstas@gmail.com>"
 ```
 Alternately, the md5 check-sums can be verified. These do not provide
 cryptographic security, but they can detect simple corruption. To
-verify the check-sums, issue "md5sum -c MD5SUM" at the command line.
+verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 
 
 CREATING the system
@@ -241,7 +241,7 @@ By default, java requires a 64-bit binary, and not all MacOS systems
 have a 64-bit devel environment installed.
 
 If you do want Java bindings, be sure to set the JDK_HOME environment
-variable to wherever <Headers/jni.h> is.   Set the JAVA_HOME variable
+variable to wherever `<Headers/jni.h>` is.   Set the JAVA_HOME variable
 to the location of the java compiler.  Make sure you have ant
 installed.
 
@@ -305,12 +305,12 @@ link-parser [arguments]
 ```
 
 This starts the program.  The program has many user-settable variables
-and options. These can be displayed by entering !var at the link-parser
-prompt.  Entering !help will display some additional commands.
+and options. These can be displayed by entering `!var` at the link-parser
+prompt.  Entering `!help` will display some additional commands.
 
 The dictionaries are arranged in directories whose name is the 2-letter
 language code. The link-parser program searches for such a language
-directory in that order, directly or under a directory names "data":
+directory in that order, directly or under a directory names `data`:
 
 1. Under your current directory.
 2. Unless compiled with MSVC or run under the Windows console:
@@ -363,8 +363,8 @@ TESTING the program
 -------------------
 There are several ways to test the resulting build.  If the Python
 bindings are built, then a test program can be found in the file
-./bindings/python-examples/tests.py -- When run, it should pass.
-For more details see README.md in the bindings/python-examples
+`./bindings/python-examples/tests.py` -- When run, it should pass.
+For more details see `README.md` in the `bindings/python-examples`
 directory.
 
 There are also multiple batches of test/example sentences in the
@@ -435,13 +435,13 @@ JAVA bindings
 -------------
 This release includes Java bindings.  Their use is optional.
 
-The bindings will be built automatically if jni.h can be found.
+The bindings will be built automatically if `jni.h` can be found.
 Some common java JVM distributions (most notably, the ones from Sun)
 place this file in unusual locations, where it cannot be
 automatically found.  To remedy this, make sure that JAVA_HOME is
-set. The configure script looks for jni.h in $JAVA_HOME/Headers
-and in $JAVA_HOME/include; it also examines corresponding locations
-for $JDK_HOME.  If jni.h still cannot be found, specify the location
+set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
+and in `$JAVA_HOME/include`; it also examines corresponding locations
+for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
 with the CPPFLAGS variable: so, for example,
 ```
 export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
@@ -477,7 +477,7 @@ class, and in particular, the parse() method.  This class is a network
 client that connects to the JSON server, and converts the response
 back to results accessible via the ParseResult API.
 
-The above-described code will be built if Apache 'ant' is installed.
+The above-described code will be built if Apache `ant` is installed.
 
 
 Using the Network Server
@@ -516,7 +516,7 @@ spell-checkers; if the aspell devel environment is found, then
 aspell is used, else hunspell is used.
 
 Spell guessing may be disabled at runtime, in the link-parser client
-with the !spell=0 flag.  Enter !help for more details.
+with the `!spell=0` flag.  Enter `!help` for more details.
 
 
 MULTI-THREADED USE
@@ -575,7 +575,7 @@ Still not handled (or handled incorrectly):
   still cannot rank sentences by cost, which is the most basic parse
   ranking that we've got... In order not to show incorrect costs, the
   DIS= field in the status message is always 0.
-- Connector order shown by the !disjunct link-parser command.
+- Connector order shown by the `!disjunct` link-parser command.
   Currently it is just a "random" order.
 - Parsing with null count.
 - No panic timeout.
