@@ -271,12 +271,6 @@ http://gnuwin32.sourceforge.net/packages/regex.htm
 See also:
 http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
-The different build methods below are NOT regularly tested, and
-some link-grammar versions may have build issues.  If you are an
-experienced Windows developer who knows how to make things work
-in the Microsoft environment, your help would be appreciated!
-
-
 BUILDING on Windows (Cygwin)
 ----------------------------
 The easiest way to have link-grammar working on MS Windows is to
