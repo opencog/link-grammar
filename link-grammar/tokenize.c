@@ -506,8 +506,11 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					}
 					break;
 				case SUFFIX: /* set to =word */
-					/* If the suffix starts with an apostrophe, don't mark it */
-					if ((('\0' != (*affix)[0]) &&
+					/* XXX If the suffix starts with an apostrophe, don't mark it.
+					 * Actually - any non-alpha is checked. The random-splitting
+					 * "languages" always need the suffix marking. */
+					if (((NULL == sent->dict->affix_table->anysplit) &&
+					     ('\0' != (*affix)[0]) &&
 					     !is_utf8_alpha(*affix, sent->dict->lctype)) ||
 					    '\0' == infix_mark)
 					{
@@ -558,6 +561,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					word_label(sent, unsplit_word, "+", label);
 					word_label(sent, unsplit_word, NULL, "IU");
 					lgdebug(D_IWA, " (issued_unsplit)\n");
+					/* Note: The original morpheme_type is preserved.
+					 * The morpheme_type value set above is just ignored. */
 					return unsplit_word;
 				}
 
@@ -2686,8 +2691,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
 		we = build_word_expressions(sent, w, UNKNOWN_WORD);
-		assert(we, UNKNOWN_WORD "must be defined in the dictionary!");
-		w->morpheme_type = MT_UNKNOWN;
+		assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+		w->status |= WS_UNKNOWN;
 	}
 	else
 	{
