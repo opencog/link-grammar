@@ -904,7 +904,7 @@ words. This needs to be fixed. In addition, for now these words are
 shown uncapitalized in the result linkages. This can be fixed.
 
 Maybe capitalization could be handled in the same way that a/an
-could be handled!  After all, its essentially a nearest-neighbor
+could be handled!  After all, it's essentially a nearest-neighbor
 phenomenon!
 
 Capitalization-mark tokens:
@@ -1144,7 +1144,7 @@ Hand-refining verb patterns:
    parsing for sentences containing such quotes. (Note that these are
    in 4.0.affix).
    A mechanism is needed to disentangle the quoting from the quoted
-   text, so that each can be parsed appropriately.  Its somewhat
+   text, so that each can be parsed appropriately.  It's somewhat
    unclear how to handle this within link-grammar. This is somewhat
    related to the problem of morphology (parsing words as if they
    were "mini-sentences",) idioms (phrases that are treated as if
