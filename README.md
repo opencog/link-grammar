@@ -832,7 +832,7 @@ Type Theory
 -----------
 Link Grammar can be understood in the context of type theory.
 A simple introduction to type theory can be found in chapter 1
-of the HoTT book: https://homotopytypetheory.org/book/
+of the HoTT book: https://homotopytypetheory.org/book/ .<br>
 This book is freely available online and strongly recommended if
 you are interested in types.
 
