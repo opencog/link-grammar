@@ -1419,7 +1419,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    * finish sqlite3 work
 
 Version 6.0 TODO list:
-Version 6.0 will change Sentence to Sentence*, Linkage to Linkage* in the API.  Perhaps this is a bad idea...
+Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
 
 
 A performance diary:
