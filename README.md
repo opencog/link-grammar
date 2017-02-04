@@ -18,8 +18,8 @@ for more information.  This version is a continuation of the original
 parser posted at http://www.link.cs.cmu.edu/link
 
 
-CONTENTS of this directory:
----------------------------
+CONTENTS of this directory
+--------------------------
 
 | Content       | Description |
 | ------------- |-------------|
@@ -71,8 +71,8 @@ CONTENTS of this directory:
 | msvc14/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
 
-UNPACKING and signature verification:
--------------------------------------
+UNPACKING and signature verification
+------------------------------------
 The system is distributed using the normal tar.gz format; it can be
 extracted using the "tar -zxf link-grammar.tar.gz" command at the
 command line.
@@ -95,8 +95,8 @@ cryptographic security, but they can detect simple corruption. To
 verify the check-sums, issue "md5sum -c MD5SUM" at the command line.
 
 
-CREATING the system:
---------------------
+CREATING the system
+-------------------
 To compile the link-grammar shared library and demonstration program,
 at the command line, type:
 ```
@@ -215,8 +215,8 @@ systems, under various different Windows development environments.
 Specific OS-dependent notes follow.
 
 
-BUILDING on MacOS:
-------------------
+BUILDING on MacOS
+-----------------
 Plain-vanilla Link Grammar should compile and run on Apple MacOSX
 just fine, as described above.  At this time, there are no reported
 issues.
@@ -232,7 +232,7 @@ http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
 It does not currently specify any additional steps to perform.
 
 If you do NOT need the java bindings, you should almost surely
-configure with
+configure with:
 ```
 ./configure --disable-java-bindings
 ```
@@ -276,7 +276,7 @@ BUILDING on Windows (Cygwin)
 The easiest way to have link-grammar working on MS Windows is to
 use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
-install Cygwin from http://www.cygwin.com/
+install Cygwin from http://www.cygwin.com/ .
 
 Unfortunately, the Cygwin system is not compatible with Java, so if
 you need the Java bindings, you must use MSVC or MinGW, below.
@@ -297,8 +297,8 @@ BUILDING and RUNNING on Windows (MSVC)
 Microsoft Visual C/C++ project files can be found in the msvc14 directory.
 For directions see the README.md file there.
 
-RUNNING the program:
---------------------
+RUNNING the program
+-------------------
 To run the program issue the command (supposing it is in your PATH):
 ```
 link-parser [arguments]
@@ -331,7 +331,7 @@ link-parser ../path/to-my/modified/data/en
 ```
 
 When accessing dictionaries in non-standard locations, the standard
-file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
+file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.).
 
 The Russian dictionaries are in data/ru. Thus, the Russian parser
 can be started as:
@@ -359,8 +359,8 @@ combinations or variants of these, depending on your operating
 system.
 
 
-TESTING the program:
---------------------
+TESTING the program
+-------------------
 There are several ways to test the resulting build.  If the Python
 bindings are built, then a test program can be found in the file
 ./bindings/python-examples/tests.py -- When run, it should pass.
@@ -371,7 +371,7 @@ There are also multiple batches of test/example sentences in the
 language data directories, generally having the names corpus-*.batch
 The parser program can be run in batch mode, for testing the system
 on a large number of sentences.  The following command runs the
-parser on a file called corpus-basic.batch
+parser on a file called corpus-basic.batch;
 ```
 link-parser < corpus-basic.batch
 ```
@@ -403,21 +403,21 @@ bindings. It also performs several basic checks that stress the
 link-grammar libraries.
 
 
-USING the parser in your own applications:
-------------------------------------------
+USING the parser in your own applications
+-----------------------------------------
 There is an API (application program interface) to the parser.  This
 makes it easy to incorporate it into your own applications.  The API
 is documented on the web site.
 
 
-USING CMake:
-------------
+USING CMake
+-----------
 The FindLinkGrammar.cmake file can be used to test for and set up
 compilation in CMake-based build environments.
 
 
-USING pkg-config:
------------------
+USING pkg-config
+----------------
 To make compiling and linking easier, the current release uses
 the pkg-config system. To determine the location of the link-grammar
 header files, say `pkg-config --cflags link-grammar`  To obtain
@@ -431,8 +431,8 @@ $(EXE): $(OBJS)
    cc -g -o $@ $^ `pkg-config --libs link-grammar`
 ```
 
-JAVA bindings:
---------------
+JAVA bindings
+-------------
 This release includes Java bindings.  Their use is optional.
 
 The bindings will be built automatically if jni.h can be found.
@@ -507,8 +507,8 @@ transmitted. This can be obtained by sending messages of the form:
 storeDiagramString:true, text: this is a test.
 ```
 
-Spell Guessing:
----------------
+Spell Guessing
+--------------
 The parser will run a spell-checker at an early stage, if it
 encounters a word that it does not know, and cannot guess, based on
 morphology.  The configure script looks for the aspell or hunspell
@@ -519,8 +519,8 @@ Spell guessing may be disabled at runtime, in the link-parser client
 with the !spell=0 flag.  Enter !help for more details.
 
 
-MULTI-THREADED USE:
--------------------
+MULTI-THREADED USE
+------------------
 It is safe to use link-grammar for parsing in multiple threads, once
 the dictionaries have been loaded.  The dictionary loading itself is
 not thread-safe; it is not protected in any way.  Thus, link-grammar
@@ -558,8 +558,8 @@ The following exceptions and special notes apply:
 > to be thread safe.
 
 
-SAT solver:
------------
+SAT solver
+----------
 The current parser uses an algorithm that runs in O(N^3) time, for
 a sentence containing N words.
 
@@ -590,7 +590,7 @@ The following forces using the bundled minisat library:
 ./configure --enable-sat-solver=bundled
 ```
 
-The SAT solver can be disabled by specifying
+The SAT solver can be disabled by specifying:
 ```
 ./configure --disable-sat-solver
 ```
@@ -848,7 +848,7 @@ also work by Bob Coeke on category theory and grammar.  Coecke's
 diagramatic approach is essentially identical to the diagrams given in
 the foundational LG papers; it becomes abundantly clear that the
 category theoretic approach is equivalent to Link Grammar. See, for
-example, this introductory sketch:
+example, this introductory sketch
 http://www.cs.ox.ac.uk/people/bob.coecke/NewScientist.pdf
 and observe how the diagrams are essentially identical to the LG
 jigsaw-puzzle piece diagrams of the foundational LG publications.
@@ -889,8 +889,8 @@ AUTHORS file.  The original authors of the Link Grammar parser are:
 ```
 
 
-TODO -- Working Notes:
-----------------------
+TODO -- Working Notes
+---------------------
 Some working notes.
 
 Easy to fix: provide a more uniform API to the constituent tree.
@@ -1075,7 +1075,7 @@ Other benefits of a Viterbi decoder:
 
 One may argue that Viterbi is a more natural, biological way of
 working with sequences.  Some experimental, psychological support
-for this can be found here:
+for this can be found at
 http://www.sciencedaily.com/releases/2012/09/120925143555.htm
 per Morten Christiansen, Cornell professor of psychology.
 
@@ -1421,8 +1421,8 @@ Version 6.0 TODO list:
 Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
 
 
-A performance diary:
---------------------
+A performance diary
+-------------------
 Time to parse some long sentences:
 The original results below were for version 5.0.8 (April 2014)
 The June 2014 results are for version 5.1.0
