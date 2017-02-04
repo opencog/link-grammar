@@ -44,6 +44,15 @@ sheet "Local", as follows:
    generated from the DLL if it is not included in the distribution (see
    http://stackoverflow.com/questions/9946322).
 
+   A tested library can be downloaded from [Tre for Windows]
+   (http://gnuwin32.sourceforge.net/packages/tre.htm). If your system is
+   64-bits, use the provided 64-bits library. 
+
+   The corresponding lib file is missing there. If you have Cygwin
+   installed, you can generate it as follows (console command):
+
+   `dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_release/libtre_dll.dll`
+
 -- LG_DLLPATH should include the directory of the regex DLL, which is
    normally under GNUREGEX_DIR (or it can be a central DLL directory etc.).
    The default is "$(GNUREGEX_DIR)\lib".
@@ -189,6 +198,7 @@ using a 2-letter language code and a 2-letter country code:
 console-prompt>set LANG=ll-CC
 For example:
 console-prompt>set LANG=en-US
+
 
 If you open a dictionary which doesn't have a locale definition, from a
 program (C program or a language with LG bindings) you have to set the
