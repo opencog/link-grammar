@@ -228,7 +228,7 @@ See http://www.macports.org/ to find these.
 
 You almost surely do not need a Mac portfile; but you can still
 find one here:
-http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
+http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile .<br>
 It does not currently specify any additional steps to perform.
 
 If you do NOT need the java bindings, you should almost surely
