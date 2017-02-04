@@ -1387,7 +1387,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
    This still needs to be documented.
 
- - Incremental sentence parsing.
+- Incremental sentence parsing.
    There are multiple reasons to support incremental parsing:
    * Real-time dialog
    * Parsing of multiple streams, e.g. from play/movie scripts
