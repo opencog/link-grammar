@@ -295,7 +295,7 @@ You can also build with MinGW under Cygwin. See mingw/README.Cygwin .
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------
 Microsoft Visual C/C++ project files can be found in the msvc14 directory.
-For directions see the README file there.
+For directions see the README.md file there.
 
 RUNNING the program:
 --------------------
