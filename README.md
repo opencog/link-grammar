@@ -26,27 +26,27 @@ CONTENTS of this directory:
 | LICENSE     | The license describing terms of use |
 | link-grammar/*.c | The program.  (Written in ANSI-C) |
 | link-grammar/corpus/*.c | Optional corpus statistics database. |
-| link-grammar/minisat/* | Optional SAT Solver. (Written in C++) |
-| link-grammar/sat-solver | Optional SAT Solver. (Written in C++) |
-| link-grammar/viterbi | Experimental Viterbi algorithm parser. |
+| link-grammar/minisat/ | Optional SAT Solver. (Written in C++) |
+| link-grammar/sat-solver/ | Optional SAT Solver. (Written in C++) |
+| link-grammar/viterbi/ | Experimental Viterbi algorithm parser. |
 |  |  |
-| bindings/autoit/*  | Optional AutoIt language bindings. |
-| bindings/java/* | Optional Java language bindings. |
-| bindings/lisp/* | Optional Common Lisp language bindings. |
-| bindings/ocaml/* | Optional OCaML language bindings. |
-| bindings/python/*  | Optional Python2 language bindings. |
-| bindings/python3/* | Optional Python3 language bindings. |
-| bindings/python-examples/* | Link-grammar test suite and Python language binding usage example. |
-| bindings/swig/* | SWIG interface file, for other FFI interfaces. |
+| bindings/autoit/  | Optional AutoIt language bindings. |
+| bindings/java/ | Optional Java language bindings. |
+| bindings/lisp/ | Optional Common Lisp language bindings. |
+| bindings/ocaml/ | Optional OCaML language bindings. |
+| bindings/python/  | Optional Python2 language bindings. |
+| bindings/python3/ | Optional Python3 language bindings. |
+| bindings/python-examples/ | Link-grammar test suite and Python language binding usage example. |
+| bindings/swig/ | SWIG interface file, for other FFI interfaces. |
 |  |  |
-| data/en/* | English language dictionaries. |
+| data/en/ | English language dictionaries. |
 | data/en/4.0.dict | The file containing the dictionary definitions. |
 | data/en/4.0.knowledge | The post-processing knowledge file. |
 | data/en/4.0.constituents | The constituent knowledge file. |
 | data/en/4.0.affix | The affix (prefix/suffix) file. |
 | data/en/4.0.regex | Regular expression-based morphology guesser. |
 | data/en/tiny.dict | A small example dictionary. |
-| data/en/words/* | A directory full of word lists. |
+| data/en/words/ | A directory full of word lists. |
 | data/en/corpus*.batch | These files contain sentences (both grammatical and ungrammatical ones) that are used for testing the link-parser These can be run through the parser with the command `./link-parser < corpus.*.batch` |
 |  |  |
 | data/ru/* | A full-fledged Russian dictionary |
@@ -60,15 +60,15 @@ CONTENTS of this directory:
 | data/kz/* | An experimental Kazakh dictionary |
 | data/tr/* | An experimental Turkish dictionary |
 |  |  |
-| morphology/ar | An Arabic morphology analyzer |
-| morphology/fa | An Persian morphology analyzer |
+| morphology/ar/ | An Arabic morphology analyzer |
+| morphology/fa/ | An Persian morphology analyzer |
 |  |  |
 | COPYING | The license for this code and data |
 | ChangeLog | A compendium of recent changes. |
 | configure | The GNU configuration script |
 | autogen.sh | Developer's configure maintenance tool |
-| msvc14 | Microsoft Visual-C project files |
-| mingw | Information on using MinGW under MSYS or Cygwin |
+| msvc14/ | Microsoft Visual-C project files |
+| mingw/ | Information on using MinGW under MSYS or Cygwin |
 
 UNPACKING and signature verification:
 -------------------------------------
