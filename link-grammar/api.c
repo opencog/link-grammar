@@ -622,7 +622,7 @@ static void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 	if (verbosity_level(6))
 	{
-		err_msg(lg_Info, "Info: %zu of %zu linkages with no P.P. violations",
+		err_msg(lg_Info, "%zu of %zu linkages with no P.P. violations\n",
 		        N_valid_linkages, N_linkages_post_processed);
 	}
 
