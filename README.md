@@ -164,27 +164,32 @@ then the java bindings will not be built.
 
 Python2 and Python3 Bindings
 ----------------------------
-The python bindings are NOT built by default. To enable this, run
-configure as one of the following:
+The Python2 and Python3 bindings are built by default, providing that
+the corresponding Python developement packages are installed.
 
-```
-./configure --enable-python-bindings
-./configure --enable-python3-bindings
-```
+These packages are:
+- Linux:
+ * Systems using 'rpm' packages: Python2: python-devel; Python3: python3-devel
+ * Systems using 'deb' packages: Python2: python-dev; Python3: python3-dev
+- Windows:
+ * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
+   You also have to install SWIG from http://www.swig.org/download .
+- MacOS:
+ * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
 
 The use of the Python bindings is *OPTIONAL*; you do not need these if
-you do not plan to use link-grammar with python.  If you do enable the
-python bindings, be sure that the python-devel package was previously
-installed.
+you do not plan to use link-grammar with python.  If you like
+to disable these bindings, use one of:
+
+```
+./configure --diable-python-bindings
+./configure --disable-python2-bindings
+./configure --disable-python3-bindings
+```
 
 The linkgrammar.py module provides a high-level interface in Python.
-The example.py script provides a demo. and tests.py runs unit tests.
-
-The first option builds bindings compatible with python2.7; the
-second specifies python3.4.  Both options cannot be specified at the
-same time; however, after building and installing the one, the other
-can be built and installed ... but only if you really, really need
-both.
+The example.py and sentence-check.py scripts provide a demo,
+and tests.py runs unit tests.
 
 Install location
 ----------------
