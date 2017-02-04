@@ -67,6 +67,7 @@ CONTENTS of this directory:
 | ChangeLog | A compendium of recent changes. |
 | configure | The GNU configuration script |
 | autogen.sh | Developer's configure maintenance tool |
+| debug/ | Information for debugging the library |
 | msvc14/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
 
