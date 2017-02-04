@@ -1,0 +1,189 @@
+Debugging
+=========
+
+There link-grammar library has API calls to ease debugging and development.
+The `link-parser` program has corresponding options for this API.
+
+Only the `link-parser` options will be discussed here.
+Options to `link-parser` at the command-line are preceded with a '-' sign.
+You can use a unique prefix of an option name instead of its full name. At
+the **linkparser>** prompt or in batch files, options are preceded with
+a '**!**' character.
+
+For info on common options, see the "Special ! options" of the `link-grammar`
+manual. For a general help message use `link-parser -help`.
+
+
+Debugging options
+-----------------
+
+### 1) -verbosity=N (-v=N)
+Sets the verbosity level of the library to N (a small non-negative integer).
+
+#### Verbosity levels
+0: Certain informative messages are not printed by the
+library. First`link-parser` also doesn't print its usual **linkparser>**
+prompt. This is the current default verbosity level for the Python
+binding.
+
+1: This is the library default. This is also the default for
+`link-parser`.
+
+2: Display parsing steps time. In case an error/warning gets issued by the library,
+this may help finding out at which step it happened.
+
+3: Display data file search and locale setup. It can be used to debug
+problems with the locale setup or in finding the dictionary.
+
+4: Not is use for now.
+
+5-9: Show trace and debug messages regarding sentence handling. Higher
+levels include the messages of the lower ones.
+
+10-...: Show also trace and debug messages regarding reading the
+dictionary.  As with levels less than 10, higher levels include the
+messages of the lower ones.
+
+### 2) -debug=LOCATIONS (-de=LOCATIONS)
+Show only messages from these LOCATIONS. The LOCATIONS string is a
+comma-separated list of source file names (without specifying their
+directory) and function names (fully qualified for C++) from which to
+show the messages.
+
+For example, to only show messages from `flatten_wordgraph()` function
+or the print.c file:
+
+`link-parser -v=6 -debug=flatten_wordgraph,print.c`
+
+Note that since print.c is used to produce certain messages, it is
+currently needed to add it to the debug LOCATIONS list unless you
+explicitly specify also the function in print.c (to further restrict
+the messages).
+
+### 3) -test=FEATURES (-te=FEATURES)
+Enable certain features. These can be debug aids, or new features that
+are not yet official or fully-developed.
+
+For example, to automatically show all linkages of a sentence, the
+following can be done:
+
+`link-parser -test=auto-next-linkage`
+
+Useful examples
+---------------
+
+### -debug=...
+
+1) See the tokens after flattening into the word array used by the parser:
+
+`echo "Let's test it" | link-parser -v=6 -debug=flatten_wordgraph,print_sentence_word_alternatives`
+
+2) Trace the work of `sane_linkage_morphism()`:
+
+`lg -v=7 -debug=sane_linkage_morphism`
+
+3) Same as (2) above, but also see other messages from api.c:
+
+`lg -v=7 -debug=api.c`
+
+(`sane_linkage_morphism()` happens to be in api. so this includes its
+messages too).
+
+4) Debug the tokenizer:
+
+`lg -v=7 -debug=tokenizer.c`
+
+or, in order to display the word array:
+
+`lg -v=7 -debug=tokenize.c,print_sentence_word_alternatives`
+
+5) Debug post-processing:
+
+`lg -v=9 -debug=post-process.c`
+
+6) Debug reading the affix and knowledge files:
+
+`lg -v=11`
+
+### -test=...
+
+1) Automatically show all linkages:
+
+`lg -test=auto-next-linkage`
+Try to type some sentences at the **linkparser>** prompt to see its action.
+
+2) To print more that 1024 linkages in `link-parser` (this is the maximum
+`link-parser` would print by default), e.g. 20000:
+
+`lg -test=auto-next-linkage:20000`
+
+3) To print detailed linkages of **data/en/corpus-basic.batch**:
+
+`sed '/^*/d;/^!const/d;/^!batch/d' data/en/corpus-basic.batch | lg -test=auto-next-linkage`
+
+(If you cut&paste it to a terminal, remember to escape each of the "**!**" characters
+with a backslash.)
+
+This, along with "diff", "grep" etc., can be used in order to validate
+that a change didn't cause undesired effects. Special care should be taken
+if sentences with more than 1024 linkages are to be verified too (use a
+larger `-limit=N` and a use -test=auto-next-linkage:M`, when N>>M).
+
+Note that this technique is not very effective if the order to the
+linkages got changed (or if SAT-parser linkages need to be compared to the
+classic-parser linkages). In that case the detailed linkages results needs
+to be filtered through a script which sorts them according to some
+"canonical order".
+
+4) Display a the word-graph:
+Currently, to use this feature, the library needs to be compiled with
+`--enable-wordgraph-display`.
+
+`lg -test=wg`
+
+or
+
+`lg -test=wg:OPTIONS`
+
+For more examples of how to use the wordgraph display, see
+`link-grammar/README` and `msvc14/README`.
+
+Debugging and STDIO streams
+---------------------------
+Currently, messages at severity Warning and higher (i.e. also Error and
+Fatal) are printed to `stderr`. The others (at Info and below, i.e also
+Debug, Trace and None) are printed to `stdout`. The rational is that
+debugging messages, in order to be useful, need to appear along with the
+regular output of the program, while errors are exceptional and need to
+stand out when `link-parser`s `stdout` is redirected to a file.
+
+The C API includes the ability to set the severity level threshold above
+which messages are printed to `stderr` (see
+"Improved error notification facility"->"C API" in `link-grammar/README`).
+
+Note that when debugging errors during a sentence batch run, it may be useful to
+redirect also `stderr` to the same file (the error facility of the library
+flushes `stdout` before printing in order to preserve output order).
+
+Configuring for debug
+---------------------
+Use:
+
+`configure --enable-debug --enable-wordgraph-display`
+
+### --enable-debug
+Its sets the `-g` compiler option, and also the DEBUG definition.
+The DEBUG definition adds various validity checks, test messages, and
+some debug functions (that can be invoked, for example, from the
+debugger).
+
+### --enable-wordgraph-display
+If something goes wrong, it is often useful to display the wordgraph.
+The wordgraph display function can be invoked from `gdb` using:
+
+`call wordgraph_show(sent, "")`
+
+supposing that "sent" is available (the stacked can be rolled down for
+that using the "down" or "frame" `gdb` commands).
+
+(The second argument can include wordgraph display options.)
