@@ -49,16 +49,16 @@ CONTENTS of this directory:
 | data/en/words/ | A directory full of word lists. |
 | data/en/corpus*.batch | These files contain sentences (both grammatical and ungrammatical ones) that are used for testing the link-parser These can be run through the parser with the command `./link-parser < corpus.*.batch` |
 |  |  |
-| data/ru/* | A full-fledged Russian dictionary |
-| data/ar/* | A fairly complete Arabic dictionary |
-| data/fa/* | A Persian (Farsi) dictionary |
-| data/de/* | A small prototype German dictionary |
-| data/lt/* | A small prototype Lithuanian dictionary |
-| data/id/* | A small prototype Indonesian dictionary |
-| data/vn/* | A small prototype Vietnamese dictionary |
-| data/he/* | An experimental Hebrew dictionary |
-| data/kz/* | An experimental Kazakh dictionary |
-| data/tr/* | An experimental Turkish dictionary |
+| data/ru/ | A full-fledged Russian dictionary |
+| data/ar/ | A fairly complete Arabic dictionary |
+| data/fa/ | A Persian (Farsi) dictionary |
+| data/de/ | A small prototype German dictionary |
+| data/lt/ | A small prototype Lithuanian dictionary |
+| data/id/ | A small prototype Indonesian dictionary |
+| data/vn/ | A small prototype Vietnamese dictionary |
+| data/he/ | An experimental Hebrew dictionary |
+| data/kz/ | An experimental Kazakh dictionary |
+| data/tr/ | An experimental Turkish dictionary |
 |  |  |
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
