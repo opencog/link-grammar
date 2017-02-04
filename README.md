@@ -685,8 +685,8 @@ exceptions.  It would appear that the concept of "landmark transitivity"
 as defined by Richard Hudson in his theory of "Word Grammar", and then
 advocated by Ben Goertzel, just might be such a mechanism.
 
-ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf
-http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
+ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf<br>
+http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm<br>
 http://goertzel.org/ProwlGrammar.pdf
 
 This mechanism works as follows:
