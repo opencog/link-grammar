@@ -856,11 +856,8 @@ jigsaw-puzzle piece diagrams of the foundational LG publications.
 
 ADDRESSES
 ---------
-If you have any questions, or find any bugs, please feel free
-to send a note to the mailing list:
-```text
-link-grammar@googlegroups.com
-```
+If you have any questions, please feel free to send a note to the
+[mailing list](http://groups.google.com/group/link-grammar).
 
 Although all messages should go to the mailing list, the current
 maintainers can be contacted at:
