@@ -859,6 +859,10 @@ ADDRESSES
 If you have any questions, please feel free to send a note to the
 [mailing list](http://groups.google.com/group/link-grammar).
 
+The source code of link-parser and the link-grammar library is located at
+[GitHub](https://github.com/opencog/link-grammar).<br>
+For bug reports, please open an **issue** there.
+
 Although all messages should go to the mailing list, the current
 maintainers can be contacted at:
 ```text
@@ -951,7 +955,7 @@ Other examples, with the phantom word in parenthesis, include:
  * (You) go home!
  * (Are) you all right?
 
-See github https://github.com/opencog/link-grammar/issues/224
+See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
 
 One possible solution is to perform a one-point compactification.
 The dictionary contains the phantom words, and thier connectors.
