@@ -983,7 +983,7 @@ Bad grammar: When a sentence fails to parse, look for:
 
 Poor agreement might be handled by giving a cost to mismatched
 lower-case connector letters.
-Hand-refining verb patterns
+
 Poor linkage choices:
 Compare "she will be happier than before" to "she will be more happy
 than before." Current parser makes "happy" the head word, and "more"
@@ -1187,10 +1187,12 @@ Hand-refining verb patterns:<br>
   Sinclair, (ed) (2004) How to use corpora in language teaching,
   Amsterdam: John Benjamins
 
-  See also: Pattern Grammar: A CorpuHand-refining verb patternss-Driven Approach to the Lexical
-  Grammar of English Susan Hunston and Gill Francis (University of
-  Birmingham) Amsterdam: John Benjamins (Studies in corpus linguistics,
-  edited by Elena Tognini-Bonelli, volume 4), 2000
+  See also: Pattern Grammar: A Corpus-Driven Approach to the Lexical
+  Grammar of English<br>
+  Susan Hunston and Gill Francis (University of Birmingham)<br>
+  Amsterdam: John Benjamins (Studies in corpus linguistics,
+  edited by Elena Tognini-Bonelli, volume 4), 2000<br>
+  [Book review](http://www.aclweb.org/anthology/J01-2013).
 
   "holes" in collocations (aka "set phrases" of "phrasemes"):
   The link-grammar provides several mechanisms to support
