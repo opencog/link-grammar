@@ -1262,8 +1262,8 @@ is the "non-referential it", e.g.
 The above is supported by means of special disjuncts for 'it' and
 'that', which must occur in the same post-processing domain.
 
-See also:
-http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/extraposition.htm
+See also:<br>
+http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/extraposition.htm<br>
 http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
  "...from X and from Y"
