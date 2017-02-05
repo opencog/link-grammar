@@ -18,8 +18,8 @@ for more information.  This version is a continuation of the original
 parser posted at http://www.link.cs.cmu.edu/link
 
 
-CONTENTS of this directory:
----------------------------
+CONTENTS of this directory
+--------------------------
 
 | Content       | Description |
 | ------------- |-------------|
@@ -49,16 +49,16 @@ CONTENTS of this directory:
 | data/en/words/ | A directory full of word lists. |
 | data/en/corpus*.batch | These files contain sentences (both grammatical and ungrammatical ones) that are used for testing the link-parser These can be run through the parser with the command `./link-parser < corpus.*.batch` |
 |  |  |
-| data/ru/* | A full-fledged Russian dictionary |
-| data/ar/* | A fairly complete Arabic dictionary |
-| data/fa/* | A Persian (Farsi) dictionary |
-| data/de/* | A small prototype German dictionary |
-| data/lt/* | A small prototype Lithuanian dictionary |
-| data/id/* | A small prototype Indonesian dictionary |
-| data/vn/* | A small prototype Vietnamese dictionary |
-| data/he/* | An experimental Hebrew dictionary |
-| data/kz/* | An experimental Kazakh dictionary |
-| data/tr/* | An experimental Turkish dictionary |
+| data/ru/ | A full-fledged Russian dictionary |
+| data/ar/ | A fairly complete Arabic dictionary |
+| data/fa/ | A Persian (Farsi) dictionary |
+| data/de/ | A small prototype German dictionary |
+| data/lt/ | A small prototype Lithuanian dictionary |
+| data/id/ | A small prototype Indonesian dictionary |
+| data/vn/ | A small prototype Vietnamese dictionary |
+| data/he/ | An experimental Hebrew dictionary |
+| data/kz/ | An experimental Kazakh dictionary |
+| data/tr/ | An experimental Turkish dictionary |
 |  |  |
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
@@ -67,13 +67,14 @@ CONTENTS of this directory:
 | ChangeLog | A compendium of recent changes. |
 | configure | The GNU configuration script |
 | autogen.sh | Developer's configure maintenance tool |
+| debug/ | Information for debugging the library |
 | msvc14/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
 
-UNPACKING and signature verification:
--------------------------------------
+UNPACKING and signature verification
+------------------------------------
 The system is distributed using the normal tar.gz format; it can be
-extracted using the "tar -zxf link-grammar.tar.gz" command at the
+extracted using the `tar -zxf link-grammar.tar.gz` command at the
 command line.
 
 The files have been digitally signed to make sure that there was no
@@ -81,7 +82,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-gpg --verify link-grammar-5.3.14.tar.gz.asc
+`gpg --verify link-grammar-5.3.14.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -91,11 +92,11 @@ gpg:                 aka "Linas Vepstas (LKML) <linasvepstas@gmail.com>"
 ```
 Alternately, the md5 check-sums can be verified. These do not provide
 cryptographic security, but they can detect simple corruption. To
-verify the check-sums, issue "md5sum -c MD5SUM" at the command line.
+verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 
 
-CREATING the system:
---------------------
+CREATING the system
+-------------------
 To compile the link-grammar shared library and demonstration program,
 at the command line, type:
 ```
@@ -163,27 +164,32 @@ then the java bindings will not be built.
 
 Python2 and Python3 Bindings
 ----------------------------
-The python bindings are NOT built by default. To enable this, run
-configure as one of the following:
+The Python2 and Python3 bindings are built by default, providing that
+the corresponding Python developement packages are installed.
 
-```
-./configure --enable-python-bindings
-./configure --enable-python3-bindings
-```
+These packages are:
+- Linux:
+ * Systems using 'rpm' packages: Python2: python-devel; Python3: python3-devel
+ * Systems using 'deb' packages: Python2: python-dev; Python3: python3-dev
+- Windows:
+ * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
+   You also have to install SWIG from http://www.swig.org/download .
+- MacOS:
+ * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
 
 The use of the Python bindings is *OPTIONAL*; you do not need these if
-you do not plan to use link-grammar with python.  If you do enable the
-python bindings, be sure that the python-devel package was previously
-installed.
+you do not plan to use link-grammar with python.  If you like
+to disable these bindings, use one of:
+
+```
+./configure --diable-python-bindings
+./configure --disable-python2-bindings
+./configure --disable-python3-bindings
+```
 
 The linkgrammar.py module provides a high-level interface in Python.
-The example.py script provides a demo. and tests.py runs unit tests.
-
-The first option builds bindings compatible with python2.7; the
-second specifies python3.4.  Both options cannot be specified at the
-same time; however, after building and installing the one, the other
-can be built and installed ... but only if you really, really need
-both.
+The example.py and sentence-check.py scripts provide a demo,
+and tests.py runs unit tests.
 
 Install location
 ----------------
@@ -209,8 +215,8 @@ systems, under various different Windows development environments.
 Specific OS-dependent notes follow.
 
 
-BUILDING on MacOS:
-------------------
+BUILDING on MacOS
+-----------------
 Plain-vanilla Link Grammar should compile and run on Apple MacOSX
 just fine, as described above.  At this time, there are no reported
 issues.
@@ -222,11 +228,11 @@ See http://www.macports.org/ to find these.
 
 You almost surely do not need a Mac portfile; but you can still
 find one here:
-http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
+http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile .<br>
 It does not currently specify any additional steps to perform.
 
 If you do NOT need the java bindings, you should almost surely
-configure with
+configure with:
 ```
 ./configure --disable-java-bindings
 ```
@@ -235,7 +241,7 @@ By default, java requires a 64-bit binary, and not all MacOS systems
 have a 64-bit devel environment installed.
 
 If you do want Java bindings, be sure to set the JDK_HOME environment
-variable to wherever <Headers/jni.h> is.   Set the JAVA_HOME variable
+variable to wherever `<Headers/jni.h>` is.   Set the JAVA_HOME variable
 to the location of the java compiler.  Make sure you have ant
 installed.
 
@@ -253,30 +259,24 @@ Windows systems from Vista on.
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
 be obtained elsewhere.  One popular choice is TRE, available at:
-http://laurikari.net/tre/
+http://gnuwin32.sourceforge.net/packages/tre.htm
 
 Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
 available at:
-http://www.pcre.org/
+http://www.pcre.org/<br>
 Recent 32 and 64-bit binaries can be found at:
-http://www.airesoft.co.uk/pcre
+http://www.airesoft.co.uk/pcre<br>
 Older 32-bit binaries are at:
-http://gnuwin32.sourceforge.net/packages/regex.htm
+http://gnuwin32.sourceforge.net/packages/regex.htm<br>
 See also:
 http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
-
-The different build methods below are NOT regularly tested, and
-some link-grammar versions may have build issues.  If you are an
-experienced Windows developer who knows how to make things work
-in the Microsoft environment, your help would be appreciated!
-
 
 BUILDING on Windows (Cygwin)
 ----------------------------
 The easiest way to have link-grammar working on MS Windows is to
 use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
-install Cygwin from http://www.cygwin.com/
+install Cygwin from http://www.cygwin.com/ .
 
 Unfortunately, the Cygwin system is not compatible with Java, so if
 you need the Java bindings, you must use MSVC or MinGW, below.
@@ -295,22 +295,22 @@ You can also build with MinGW under Cygwin. See mingw/README.Cygwin .
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------
 Microsoft Visual C/C++ project files can be found in the msvc14 directory.
-For directions see the README file there.
+For directions see the README.md file there.
 
-RUNNING the program:
---------------------
+RUNNING the program
+-------------------
 To run the program issue the command (supposing it is in your PATH):
 ```
 link-parser [arguments]
 ```
 
 This starts the program.  The program has many user-settable variables
-and options. These can be displayed by entering !var at the link-parser
-prompt.  Entering !help will display some additional commands.
+and options. These can be displayed by entering `!var` at the link-parser
+prompt.  Entering `!help` will display some additional commands.
 
 The dictionaries are arranged in directories whose name is the 2-letter
 language code. The link-parser program searches for such a language
-directory in that order, directly or under a directory names "data":
+directory in that order, directly or under a directory names `data`:
 
 1. Under your current directory.
 2. Unless compiled with MSVC or run under the Windows console:
@@ -331,7 +331,7 @@ link-parser ../path/to-my/modified/data/en
 ```
 
 When accessing dictionaries in non-standard locations, the standard
-file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
+file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.).
 
 The Russian dictionaries are in data/ru. Thus, the Russian parser
 can be started as:
@@ -359,19 +359,19 @@ combinations or variants of these, depending on your operating
 system.
 
 
-TESTING the program:
---------------------
+TESTING the program
+-------------------
 There are several ways to test the resulting build.  If the Python
 bindings are built, then a test program can be found in the file
-./bindings/python-examples/tests.py -- When run, it should pass.
-For more details see README.md in the bindings/python-examples
+`./bindings/python-examples/tests.py` -- When run, it should pass.
+For more details see `README.md` in the `bindings/python-examples`
 directory.
 
 There are also multiple batches of test/example sentences in the
 language data directories, generally having the names corpus-*.batch
 The parser program can be run in batch mode, for testing the system
 on a large number of sentences.  The following command runs the
-parser on a file called corpus-basic.batch
+parser on a file called corpus-basic.batch;
 ```
 link-parser < corpus-basic.batch
 ```
@@ -403,21 +403,21 @@ bindings. It also performs several basic checks that stress the
 link-grammar libraries.
 
 
-USING the parser in your own applications:
-------------------------------------------
+USING the parser in your own applications
+-----------------------------------------
 There is an API (application program interface) to the parser.  This
 makes it easy to incorporate it into your own applications.  The API
 is documented on the web site.
 
 
-USING CMake:
-------------
+USING CMake
+-----------
 The FindLinkGrammar.cmake file can be used to test for and set up
 compilation in CMake-based build environments.
 
 
-USING pkg-config:
------------------
+USING pkg-config
+----------------
 To make compiling and linking easier, the current release uses
 the pkg-config system. To determine the location of the link-grammar
 header files, say `pkg-config --cflags link-grammar`  To obtain
@@ -431,17 +431,17 @@ $(EXE): $(OBJS)
    cc -g -o $@ $^ `pkg-config --libs link-grammar`
 ```
 
-JAVA bindings:
---------------
+JAVA bindings
+-------------
 This release includes Java bindings.  Their use is optional.
 
-The bindings will be built automatically if jni.h can be found.
+The bindings will be built automatically if `jni.h` can be found.
 Some common java JVM distributions (most notably, the ones from Sun)
 place this file in unusual locations, where it cannot be
 automatically found.  To remedy this, make sure that JAVA_HOME is
-set. The configure script looks for jni.h in $JAVA_HOME/Headers
-and in $JAVA_HOME/include; it also examines corresponding locations
-for $JDK_HOME.  If jni.h still cannot be found, specify the location
+set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
+and in `$JAVA_HOME/include`; it also examines corresponding locations
+for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
 with the CPPFLAGS variable: so, for example,
 ```
 export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
@@ -477,7 +477,7 @@ class, and in particular, the parse() method.  This class is a network
 client that connects to the JSON server, and converts the response
 back to results accessible via the ParseResult API.
 
-The above-described code will be built if Apache 'ant' is installed.
+The above-described code will be built if Apache `ant` is installed.
 
 
 Using the Network Server
@@ -507,8 +507,8 @@ transmitted. This can be obtained by sending messages of the form:
 storeDiagramString:true, text: this is a test.
 ```
 
-Spell Guessing:
----------------
+Spell Guessing
+--------------
 The parser will run a spell-checker at an early stage, if it
 encounters a word that it does not know, and cannot guess, based on
 morphology.  The configure script looks for the aspell or hunspell
@@ -516,11 +516,11 @@ spell-checkers; if the aspell devel environment is found, then
 aspell is used, else hunspell is used.
 
 Spell guessing may be disabled at runtime, in the link-parser client
-with the !spell=0 flag.  Enter !help for more details.
+with the `!spell=0` flag.  Enter `!help` for more details.
 
 
-MULTI-THREADED USE:
--------------------
+MULTI-THREADED USE
+------------------
 It is safe to use link-grammar for parsing in multiple threads, once
 the dictionaries have been loaded.  The dictionary loading itself is
 not thread-safe; it is not protected in any way.  Thus, link-grammar
@@ -558,8 +558,8 @@ The following exceptions and special notes apply:
 > to be thread safe.
 
 
-SAT solver:
------------
+SAT solver
+----------
 The current parser uses an algorithm that runs in O(N^3) time, for
 a sentence containing N words.
 
@@ -575,7 +575,7 @@ Still not handled (or handled incorrectly):
   still cannot rank sentences by cost, which is the most basic parse
   ranking that we've got... In order not to show incorrect costs, the
   DIS= field in the status message is always 0.
-- Connector order shown by the !disjunct link-parser command.
+- Connector order shown by the `!disjunct` link-parser command.
   Currently it is just a "random" order.
 - Parsing with null count.
 - No panic timeout.
@@ -590,7 +590,7 @@ The following forces using the bundled minisat library:
 ./configure --enable-sat-solver=bundled
 ```
 
-The SAT solver can be disabled by specifying
+The SAT solver can be disabled by specifying:
 ```
 ./configure --disable-sat-solver
 ```
@@ -624,10 +624,10 @@ grammar.
 
 The dependency arrows have the following properties:
 
- * anti-reflexive (a word cannot depend on itself; it cannot point
+ * Anti-reflexive (a word cannot depend on itself; it cannot point
    at itself.)
 
- * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
+ * Anti-symmetric (if Word1 depends on Word2, then Word2 cannot
    depend on Word1) (so, e.g. determiners depend on nouns, but
    never vice-versa)
 
@@ -685,8 +685,8 @@ exceptions.  It would appear that the concept of "landmark transitivity"
 as defined by Richard Hudson in his theory of "Word Grammar", and then
 advocated by Ben Goertzel, just might be such a mechanism.
 
-ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf
-http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
+ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf<br>
+http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm<br>
 http://goertzel.org/ProwlGrammar.pdf
 
 This mechanism works as follows:
@@ -832,7 +832,7 @@ Type Theory
 -----------
 Link Grammar can be understood in the context of type theory.
 A simple introduction to type theory can be found in chapter 1
-of the HoTT book: https://homotopytypetheory.org/book/
+of the HoTT book: https://homotopytypetheory.org/book/ .<br>
 This book is freely available online and strongly recommended if
 you are interested in types.
 
@@ -848,7 +848,7 @@ also work by Bob Coeke on category theory and grammar.  Coecke's
 diagramatic approach is essentially identical to the diagrams given in
 the foundational LG papers; it becomes abundantly clear that the
 category theoretic approach is equivalent to Link Grammar. See, for
-example, this introductory sketch:
+example, this introductory sketch
 http://www.cs.ox.ac.uk/people/bob.coecke/NewScientist.pdf
 and observe how the diagrams are essentially identical to the LG
 jigsaw-puzzle piece diagrams of the foundational LG publications.
@@ -856,11 +856,12 @@ jigsaw-puzzle piece diagrams of the foundational LG publications.
 
 ADDRESSES
 ---------
-If you have any questions, or find any bugs, please feel free
-to send a note to the mailing list:
-```text
-link-grammar@googlegroups.com
-```
+If you have any questions, please feel free to send a note to the
+[mailing list](http://groups.google.com/group/link-grammar).
+
+The source code of link-parser and the link-grammar library is located at
+[GitHub](https://github.com/opencog/link-grammar).<br>
+For bug reports, please open an **issue** there.
 
 Although all messages should go to the mailing list, the current
 maintainers can be contacted at:
@@ -889,8 +890,8 @@ AUTHORS file.  The original authors of the Link Grammar parser are:
 ```
 
 
-TODO -- Working Notes:
-----------------------
+TODO -- Working Notes
+---------------------
 Some working notes.
 
 Easy to fix: provide a more uniform API to the constituent tree.
@@ -903,7 +904,7 @@ words. This needs to be fixed. In addition, for now these words are
 shown uncapitalized in the result linkages. This can be fixed.
 
 Maybe capitalization could be handled in the same way that a/an
-could be handled!  After all, its essentially a nearest-neighbor
+could be handled!  After all, it's essentially a nearest-neighbor
 phenomenon!
 
 Capitalization-mark tokens:
@@ -954,7 +955,7 @@ Other examples, with the phantom word in parenthesis, include:
  * (You) go home!
  * (Are) you all right?
 
-See github https://github.com/opencog/link-grammar/issues/224
+See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
 
 One possible solution is to perform a one-point compactification.
 The dictionary contains the phantom words, and thier connectors.
@@ -1075,7 +1076,7 @@ Other benefits of a Viterbi decoder:
 
 One may argue that Viterbi is a more natural, biological way of
 working with sequences.  Some experimental, psychological support
-for this can be found here:
+for this can be found at
 http://www.sciencedaily.com/releases/2012/09/120925143555.htm
 per Morten Christiansen, Cornell professor of psychology.
 
@@ -1125,12 +1126,12 @@ Imperatives:
 ```
 The zero/phantom-word solution, described above, should help with this.
 
-Hand-refining verb patterns:
-   A good reference for refining verb usage patterns is:
-   COBUILD GRAMMAR PATTERNS 1: VERBS
-   from THE COBUILD SERIES /from/ THE BANK OF ENGLISH
-   HARPER COLLINS
-   online at https://arts-ccr-002.bham.ac.uk/ccr/patgram/
+Hand-refining verb patterns:<br>
+   A good reference for refining verb usage patterns is:<br>
+   COBUILD GRAMMAR PATTERNS 1: VERBS<br>
+   from THE COBUILD SERIES /from/ THE BANK OF ENGLISH<br>
+   HARPER COLLINS<br>
+   online at https://arts-ccr-002.bham.ac.uk/ccr/patgram/<br>
    http://www.corpus.bham.ac.uk/publications/index.shtml
 
 
@@ -1143,7 +1144,7 @@ Hand-refining verb patterns:
    parsing for sentences containing such quotes. (Note that these are
    in 4.0.affix).
    A mechanism is needed to disentangle the quoting from the quoted
-   text, so that each can be parsed appropriately.  Its somewhat
+   text, so that each can be parsed appropriately.  It's somewhat
    unclear how to handle this within link-grammar. This is somewhat
    related to the problem of morphology (parsing words as if they
    were "mini-sentences",) idioms (phrases that are treated as if
@@ -1187,9 +1188,11 @@ Hand-refining verb patterns:
   Amsterdam: John Benjamins
 
   See also: Pattern Grammar: A Corpus-Driven Approach to the Lexical
-  Grammar of English Susan Hunston and Gill Francis (University of
-  Birmingham) Amsterdam: John Benjamins (Studies in corpus linguistics,
-  edited by Elena Tognini-Bonelli, volume 4), 2000
+  Grammar of English<br>
+  Susan Hunston and Gill Francis (University of Birmingham)<br>
+  Amsterdam: John Benjamins (Studies in corpus linguistics,
+  edited by Elena Tognini-Bonelli, volume 4), 2000<br>
+  [Book review](http://www.aclweb.org/anthology/J01-2013).
 
   "holes" in collocations (aka "set phrases" of "phrasemes"):
   The link-grammar provides several mechanisms to support
@@ -1202,7 +1205,7 @@ Hand-refining verb patterns:
   in the middle, that require "lacing" to tie them together.
 
   For a general theory, see:
-  http://en.wikipedia.org/wiki/Catena_(linguistics)
+  [](http://en.wikipedia.org/wiki/Catena_(linguistics))
 
   For example, the adposition:
 ```text
@@ -1259,8 +1262,8 @@ is the "non-referential it", e.g.
 The above is supported by means of special disjuncts for 'it' and
 'that', which must occur in the same post-processing domain.
 
-See also:
-http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/extraposition.htm
+See also:<br>
+http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/extraposition.htm<br>
 http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
  "...from X and from Y"
@@ -1386,7 +1389,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
    This still needs to be documented.
 
- - Incremental sentence parsing.
+- Incremental sentence parsing.
    There are multiple reasons to support incremental parsing:
    * Real-time dialog
    * Parsing of multiple streams, e.g. from play/movie scripts
@@ -1418,11 +1421,11 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    * finish sqlite3 work
 
 Version 6.0 TODO list:
-Version 6.0 will change Sentence to Sentence*, Linkage to Linkage* in the API.  Perhaps this is a bad idea...
+Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
 
 
-A performance diary:
---------------------
+A performance diary
+-------------------
 Time to parse some long sentences:
 The original results below were for version 5.0.8 (April 2014)
 The June 2014 results are for version 5.1.0

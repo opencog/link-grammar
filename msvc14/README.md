@@ -1,6 +1,6 @@
 Building and Running on Windows
 ===============================
-Note: See also "BUILDING on Windows" in "../README".
+Note: See also "BUILDING on Windows" in `../README.md`.
 
 This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
@@ -17,8 +17,9 @@ functions which are used are not supported in earlier versions.)
 
 The system compatibility definitions:
 In each project file - Target Platform version: 8.1
-In the MSVC-common property sheet - C/C++->Preprocessor:
-NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;
+In the MSVC-common property sheet - **C/C++->Preprocessor**:
+
+`NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;`
 
 Dependencies
 ------------
@@ -26,8 +27,8 @@ The regex package, which includes libraries and header files, must be
 separately downloaded. Also see GNUREGEX_DIR below.
 
 For Python bindings, install the desired Python distributions from
-https://www.python.org/downloads/windows/ .
-You also have to install SWIG from http://www.swig.org/download
+[Python Releases for Windows](https://www.python.org/downloads/windows/).
+You also have to install SWIG from http://www.swig.org/download .
 
 The bindings were testes using swigwin-3.0.10 with Python 2.7.12 and 3.4.4.
 
@@ -36,36 +37,49 @@ Setup
 The build files make use of User Macros, defined in the property
 sheet "Local", as follows:
 
--- GNUREGEX_DIR must be pointing to an unzipped POSIX regex distribution
-   (which has the subdirectories "include" and "lib"). Its default is
-   "%HOMEDRIVE%%HOMEPATH%\Libraries\gnuregex".
+- GNUREGEX_DIR must be pointing to an unzipped POSIX regex distribution
+   (which has the subdirectories `include` and `lib`). Its default is
+   `%HOMEDRIVE%%HOMEPATH%\Libraries\gnuregex`.
    If the environment variable GNUREGEX exists, its value is used instead.
    The library file name is assumed to be "regex.lib" and needs to be
    generated from the DLL if it is not included in the distribution (see
    http://stackoverflow.com/questions/9946322).
 
--- LG_DLLPATH should include the directory of the regex DLL, which is
-   normally under GNUREGEX_DIR (or it can be a central DLL directory etc.).
-   The default is "$(GNUREGEX_DIR)\lib".
+   A tested library can be downloaded from [Tre for Windows]
+   (http://gnuwin32.sourceforge.net/packages/tre.htm). If your system is
+   64-bits, use the provided 64-bits library. 
 
--- JAVA_HOME, if used, must be pointing to a locally installed SDK/JDK,
-   which has the subdirectories "include" and "include/win32" (defined in
-   the LinkGrammarJava project under Common properties->C/C++->General->
-   Additional Include Directories.
+   The corresponding lib file is missing there. If you have Cygwin
+   installed, you can generate it as follows (console command):
+
+```
+dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_release/libtre_dll.dll
+```
+
+- LG_DLLPATH should include the directory of the regex DLL, which is
+   normally under GNUREGEX_DIR (or it can be a central DLL directory etc.).
+   The default is `$(GNUREGEX_DIR)\lib`.
+
+- JAVA_HOME, if used, must be pointing to a locally installed SDK/JDK,
+   which has the subdirectories "include" and `include/win32` (defined in
+   the LinkGrammarJava project under **Common properties->C/C++->General->
+   Additional Include Directories**.
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
 
 ### Definitions for Python bindings
 
---- PYTHON2         - The default is: C:\Python27
---- PYTHON2_INCLUDE - The default is: $(PYTHON2)\include
---- PYTHON2_LIB     - The default is: $(PYTHON2)\lib
---- PYTHON2_EXE     - The default is: $(PYTHON2)\python.exe
-
---- PYTHON3         - The default is: C:\Python34
---- PYTHON3_INCLUDE - The default is: $(PYTHON3)\include
---- PYTHON3_LIB     - The default is: $(PYTHON3)\lib
---- PYTHON3_EXE     - The default is: $(PYTHON3)\python.exe
+   |   |
+---|---|
+PYTHON2         | The default is: C:\Python27 |
+PYTHON2_INCLUDE | The default is: $(PYTHON2)\include |
+PYTHON2_LIB     | The default is: $(PYTHON2)\lib |
+PYTHON2_EXE     | The default is: $(PYTHON2)\python.exe |
+               |  |
+PYTHON3         | The default is: C:\Python34 |
+PYTHON3_INCLUDE | The default is: $(PYTHON3)\include |
+PYTHON3_LIB     | The default is: $(PYTHON3)\lib |
+PYTHON3_EXE     | The default is: $(PYTHON3)\python.exe |
 
 If you want to build any of the bindings, make sure it is marked for build
 in the configuration manager, or select "build" for the desired bindings in
@@ -81,11 +95,11 @@ Compiling
 
 - The solution configuration is configured to create a debug version by
   default.  It's probably a good idea to switch a "Release" configuration.
-  You can do this at Build Menu->Configuration Manager.
+  You can do this at **Build Menu->Configuration Manager**.
 
 - The wordgraph-display feature is enabled when compiled with
   USE_WORDGRAPH_DISPLAY (already defined in the LGfeatures property sheet
-  Common properties->C/C++->Preprocessor/Preprocessor Definitions).
+  **Common properties->C/C++->Preprocessor/Preprocessor Definitions**).
 
 - By default, the library is configured to create a DLL. If you want
   to instead build a static library, the macro LINK_GRAMMAR_STATIC must
@@ -96,35 +110,35 @@ Compiling
 
 Running
 -------
-The last step of the "LinkGrammarExe" project creates "link-parser.bat".  Copy
+The last step of the "LinkGrammarExe" project creates `link-parser.bat`.  Copy
 it to somewhere in your PATH and then customize it if needed (don't customize
 it in-place, since rebuilding would overwrite it). Note that it prepends PATH
 with the User Macro LG_DLLPATH (see Setup above).  If you would like to display
-the wordgraph (see below) set also the PATH for "dot.exe" if it is not already
+the wordgraph (see below) set also the PATH for `dot.exe` if it is not already
 in your PATH.
 
 If USE_WORDGRAPH_DISPLAY has been used when compiling (the default), then
-typing !test=wg at the "link-parser" prompt can be used in order to display the
-wordgraph of the next sentences to be parsed. See "../linkgrammar/README" for
-how to use optional display flags.  By default, "PhotoViewer.dll" is invoked to
-display the graph.  If X11 is available and your "dot.exe" command has the
-"xlib" driver, it can be used to display the wordgraph when the x flag is set
-(i.e.  !test=wg:x), for example when running under Cygwin/X. In any case it
-uses the "dot" command of Graphviz. Graphviz can be installed as part of Cygwin
-(in which case it included the "xlib" driver"), or separately
-(http://www.graphviz.org/Download_windows.php).  Both "PhotoViewer.dll" (if
-used) and "dot" must be in your PATH (if needed, you can customized that in a
-copy of "link-parser.bat", as described above).
+typing `!test=w`g at the `linkparser>` prompt can be used in order to display
+the wordgraph of the next sentences to be parsed. See `../linkgrammar/README`
+for how to use optional display flags.  By default, `PhotoViewer.dll` is
+invoked to display the graph.  If X11 is available and your `dot.exe` command
+has the "xlib" driver, it can be used to display the wordgraph when the x flag
+is set (i.e. `!test=wg:x`), for example when running under Cygwin/X. In any
+case it uses the `dot` command of Graphviz. Graphviz can be installed as part
+of Cygwin (in which case it included the "xlib" driver"), or separately from
+[Graphviz] (http://www.graphviz.org/Download_windows.php).
+Both `PhotoViewer.dll` (if used) and `dot` must be in your PATH (if needed,
+you can customized that in a copy of `link-parser.bat`, as described above).
 
 BTW, when running and MSVC-compiled binary under Cygwin, don't exit
-link-parser by using ^Z - the shell may get stuck because the program
-somehow may continue to run in the background.  Instead, exit using !exit .
+link-parser by using `^Z` - the shell may get stuck because the program
+somehow may continue to run in the background.  Instead, exit using `!exit` .
 
 NOTE: The created DLLs need the MSVC14 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
-But to be able to run Link Grammar on other computer you need to install the
-Visual C++ Redistributable for Visual Studio 2015 from:
-https://www.microsoft.com/en-us/download/details.aspx?id=48145
+But to be able to run Link Grammar on other computer you need to install
+[Visual C++ Redistributable for Visual Studio 2015]
+(https://www.microsoft.com/en-us/download/details.aspx?id=48145).
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
@@ -144,36 +158,39 @@ configuration directory.  However, it can run from any directory
 using a full or a relative path to invoke it.
 
 Usage:
+```
 console-prompt>make-check [PYTHON_FLAG] PYTHON_OUTDIR [script.py] [ARGUMENTS]
+```
 
-- PYTHON_FLAG: Optional flag for the Python program, e.g. -vv to debug
+- PYTHON_FLAG: Optional flag for the Python program, e.g. `-vv` to debug
 imports.
 - PYTHON_OUTDIR: The directory to which the Python bindings got written.
-For example, x64\Release\Python3 .
+For example, `x64\Release\Python3`.
 - script.py: Path leading to the script. If only a filename is specified
 (i.e. no "\" in the path) the specified script file is taken from the
-"bindings\python-examples\" directory.  In order to run tests.py in
+`bindings\python-examples\` directory.  In order to run tests.py in
 its default location you can leave it empty.
-- ARGUMENTS: Optional script arguments, for example -v for tests.py.
+- ARGUMENTS: Optional script arguments, for example `-v` for `tests.py`.
 
-So in order to run tests.py with Python2 for a Debug compilation on x64
+So in order to run `tests.py` with Python2 for a Debug compilation on x64
 platform, enter:
-
+```
 console-prompt>make-check x64\Debug\Python2
-
+```
 To debug a Python3 script "mylgtest.py" that resides in
-"bindings\python-examples":
-
+`bindings\python-examples`:
+```
 console-prompt>make-check -mpdb x64\Debug\Python3 mylgtest.py
-
+```
 To run a script in your home directory:
+```
 console-prompt>make-check x64\Debug\Python3 \Users\username\mylgtest.py
-
+```
 The following starts an interactive Python with the correct PYTHONPATH
 and PATH:
-
+```
 console-prompt>make-check.py x64\Debug\Python2 ""
-
+```
 Locale and code page settings
 -----------------------------
 In this version, the language dictionaries under the data directory define
@@ -185,10 +202,13 @@ If you use a dictionary which doesn't have this definition, or would like
 to set the default language when link-parser is invoked without a language
 argument, you can set the locale using the environment variable LANG,
 using a 2-letter language code and a 2-letter country code:
-
+```
 console-prompt>set LANG=ll-CC
+```
 For example:
+```
 console-prompt>set LANG=en-US
+```
 
 If you open a dictionary which doesn't have a locale definition, from a
 program (C program or a language with LG bindings) you have to set the
@@ -200,10 +220,10 @@ The code page of the console should not be changed, unless it is desired
 to pipe the output to another program. In that case, this other program
 may read garbage due to a limitation in the way cmd.exe implements pipes.
 This can be solved as following ("more" is the example program)
-
+```
 link-parser | (chcp 65001 & more)
-
-In that case "more" will be able to read UTF-8 input. However, the
+```
+In that case `more` will be able to read UTF-8 input. However, the
 display may still not be perfect due to additional cmd.exe limitations.
 The code page can changed manually to 65001, see below in the "Note for
 Python bindings".
@@ -212,10 +232,12 @@ Python bindings".
 In order to produce UTF-8 output to the console, it needs use the CP_UTF8
 code page (65001):
 
+```
 console-prompt>chcp
 Active code page NNNN
 console-prompt>chcp 65001
 Active code page: 65001
+```
 
 Other programs may malfunction with this code page, so it can be restored
 when needed (or this console window can be used only for working with
@@ -231,26 +253,29 @@ through the registry (Google it).
 Permanent installation
 ----------------------
 For using the library independently of the build directory:
-1. If Python bindings were generated, copy the following modules to a
-   directory "linkgrammar" in a fixed location: linkgrammar.py,
-   clinkgrammar.py, __init__.py, _clinkgrammar.pyd .
+
+1) If Python bindings were generated, copy the following modules to a
+   directory `linkgrammar` in a fixed location: `linkgrammar.py`,
+   `clinkgrammar.py`, `__init__.py`, `_clinkgrammar.pyd`.
    Set the PYTHONPATH environment variable to point to the said
    "linkgrammar" directory.
-2. Copy the link-grammar DLL to a fixed location.
+
+2) Copy the link-grammar DLL to a fixed location.
    Add the DLL location permanently to PATH.
-3. Copy the "data" directory to the location of the DLL so it will get found.
+
+3) Copy the `data` directory to the location of the DLL so it will get found.
 
 
 Implementation notes:
 ---------------------
 
-- The file "link-grammar/link-features.h.in" has a Custom Build Tool definition
-  which invokes "mk-link-features-h" to generate
-  "link-grammar/link-features.h", with LINK_*_VERSION variable replacement as
-  defined in "configure.ac".
+- The file `link-grammar/link-features.h.in` has a Custom Build Tool definition
+  which invokes `mk-link-features-h` to generate
+  `link-grammar/link-features.h`, with LINK_*_VERSION variable replacement as
+  defined in `configure.ac`.
 
-- The project file "LinkGrammarExe" has a Post-Build-Event definition for
-  generating "link-parser.bat".
+- The project file `LinkGrammarExe` has a Post-Build-Event definition for
+  generating `link-parser.bat`.
 
 
 Using a remote network share
@@ -265,9 +290,9 @@ if this makes a security or another problem in your case.
 
 Here is what worked for me:
 Suppose you use host:/usr/local/src remotely as share "src":
-
+```
 mklink /J src-j \\host\src
 mklink /D src src-link
-
+```
 The second one needs administrator privileges.
 Then use the repository through "src".

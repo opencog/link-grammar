@@ -14,8 +14,8 @@ For info on common options, see the "Special ! options" of the `link-grammar`
 manual. For a general help message use `link-parser -help`.
 
 
-Debugging options
------------------
+Debug options
+-------------
 
 ### 1) -verbosity=N (-v=N)
 Sets the verbosity level of the library to N (a small non-negative integer).
@@ -86,14 +86,14 @@ Useful examples
 
 `lg -v=7 -debug=api.c`
 
-(`sane_linkage_morphism()` happens to be in api. so this includes its
+(`sane_linkage_morphism()` happens to be in `api.c` so this includes its
 messages too).
 
 4) Debug the tokenizer:
 
 `lg -v=7 -debug=tokenizer.c`
 
-or, in order to display the word array:
+Or, in order to display the word array:
 
 `lg -v=7 -debug=tokenize.c,print_sentence_word_alternatives`
 
@@ -112,7 +112,7 @@ or, in order to display the word array:
 `lg -test=auto-next-linkage`
 Try to type some sentences at the **linkparser>** prompt to see its action.
 
-2) To print more that 1024 linkages in `link-parser` (this is the maximum
+2) Print more that 1024 linkages in `link-parser` (this is the maximum
 `link-parser` would print by default), e.g. 20000:
 
 `lg -test=auto-next-linkage:20000`
@@ -127,15 +127,15 @@ with a backslash.)
 This, along with "diff", "grep" etc., can be used in order to validate
 that a change didn't cause undesired effects. Special care should be taken
 if sentences with more than 1024 linkages are to be verified too (use a
-larger `-limit=N` and a use -test=auto-next-linkage:M`, when N>>M).
+larger `-limit=N` and -test=auto-next-linkage:M`, when N>>M).
 
 Note that this technique is not very effective if the order to the
 linkages got changed (or if SAT-parser linkages need to be compared to the
-classic-parser linkages). In that case the detailed linkages results needs
+classic-parser linkages). In that case the detailed linkages results need
 to be filtered through a script which sorts them according to some
 "canonical order".
 
-4) Display a the word-graph:
+4) Display the wordgraph:
 Currently, to use this feature, the library needs to be compiled with
 `--enable-wordgraph-display`.
 
@@ -150,8 +150,9 @@ For more examples of how to use the wordgraph display, see
 
 Debugging and STDIO streams
 ---------------------------
-Currently, messages at severity Warning and higher (i.e. also Error and
-Fatal) are printed to `stderr`. The others (at Info and below, i.e also
+Messages at severity Warning and higher (i.e. also Error and
+Fatal) are printed to `stderr`. The other severities
+(at Info and below, i.e also
 Debug, Trace and None) are printed to `stdout`. The rational is that
 debugging messages, in order to be useful, need to appear along with the
 regular output of the program, while errors are exceptional and need to
@@ -183,7 +184,7 @@ The wordgraph display function can be invoked from `gdb` using:
 
 `call wordgraph_show(sent, "")`
 
-supposing that "sent" is available (the stacked can be rolled down for
+supposing that "sent" is available (the stack can be rolled down for
 that using the "down" or "frame" `gdb` commands).
 
-(The second argument can include wordgraph display options.)
+The second argument can include wordgraph display options.
