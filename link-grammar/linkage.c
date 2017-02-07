@@ -236,16 +236,18 @@ void remove_empty_words(Linkage lkg)
 			j++;
 		}
 	}
-	lkg->num_words = j;
-	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+	if (lkg->num_words != j)
+	{
+		/* Unused memory not freed - all of it will be freed in free_linkages(). */
+		lkg->num_words = j;
+		remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
+	}
 
 	if (verbosity_level(+D_REE))
 	{
 		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
 		print_chosen_disjuncts_words(lkg);
 	}
-
-	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
 #undef D_REE
 
