@@ -16,7 +16,7 @@ void free_linkage_connectors_and_disjuncts(Linkage lkg)
     free(lkg->link_array[i].lc);
   }
   // Free the disjuncts
-  for (size_t i = 0; i < lkg->num_words; i++) {
+  for (size_t i = 0; i < lkg->cdsz; i++) {
     free_disjuncts(lkg->chosen_disjuncts[i]);
   }
 }
