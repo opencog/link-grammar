@@ -832,6 +832,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 						//printf(">>>SUBWORD '%s' %ld:%ld\n", subword->subword, subword->start-sent->orig_sentence, subword->end-sent->orig_sentence);
 					}
 
+					if (unsplit_word->status & WS_FIRSTUPPER)
+						subword->status |= WS_FIRSTUPPER;
+
 					/* Arrange for subword to be the "next" word of the previous
 					 * words of unsplit_word. There are 2 cases:
 					 * - If this is not the first alternative - add the subword to
