@@ -16,6 +16,8 @@
 #include "link-includes.h"
 #include "structures.h"
 
+#define ALT_CONNECTION_POSSIBLE /* validate alt connectivity */
+
 struct fast_matcher_s
 {
 	size_t size;

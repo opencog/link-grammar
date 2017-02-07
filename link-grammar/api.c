@@ -1355,6 +1355,24 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 	}
 }
 
+#ifdef ALT_CONNECTION_POSSIBLE
+/**
+ * Record the wordgraph word in each of its connectors.
+ * It is used for checking alternatives consistency.
+ */
+static void gword_record_in_connector(Sentence sent, Disjunct *d_array[])
+{
+	for (size_t w = 0; w < sent->length; w++) {
+		for (Disjunct *d = d_array[w]; d != NULL; d = d->next) {
+			for (Connector *c = d->right; NULL != c; c = c->next)
+				c->word = d->word;
+			for (Connector *c = d->left; NULL != c; c = c->next)
+				c->word = d->word;
+		}
+	}
+}
+#endif /* ALT_CONNECTION_POSSIBLE */
+
 /**
  * classic_parse() -- parse the given sentence.
  * Perform parsing, using the original link-grammar parsing algorithm
@@ -1401,6 +1419,25 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 		for (size_t i = 0; i < sent->length; i++)
 			disjuncts_copy[i] = disjuncts_dup(sent->word[i].d);
 	}
+
+#ifdef ALT_CONNECTION_POSSIBLE
+	 /* Put the Wordgraph word array from the disjuncts into each of their
+	  * connectors.  Note that in the case above when disjuncts_copy is
+	  * needed, we have to use it because some disjuncts pointed by the word
+	  * array may get freed by power_prune(), causing stale references in
+	  * connectors. FIXME: A nicer way to do it is desired. */
+	Disjunct **d_array = alloca(sent->length * sizeof(Disjunct *));
+	if (NULL != disjuncts_copy)
+	{
+		d_array = disjuncts_copy;
+	}
+	else
+	{
+		for (size_t i = 0; i < sent->length; i++)
+			d_array[i] = sent->word[i].d;
+	}
+	gword_record_in_connector(sent, d_array);
+#endif
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before
