@@ -185,7 +185,17 @@ static void remap_linkages(Linkage lkg, const int *remap)
 
 			new_lnk->link_name = old_lnk->link_name;
 
+			/* Remap the pp_info, too. */
+			if (lkg->pp_info)
+				lkg->pp_info[j] = lkg->pp_info[i];
+
 			j++;
+		}
+		else
+		{
+			/* Whack this slot of pp_info. */
+			if (lkg->pp_info)
+				exfree_domain_names(&lkg->pp_info[i]);
 		}
 	}
 
