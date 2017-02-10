@@ -33,7 +33,6 @@ void free_disjuncts(Disjunct *c)
 		c1 = c->next;
 		free_connectors(c->left);
 		free_connectors(c->right);
-		free(c->word);
 		xfree((char *)c, sizeof(Disjunct));
 	}
 }
@@ -178,9 +177,7 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 		newd->cost = t->cost;
 		newd->left = connectors_dup(t->left);
 		newd->right = connectors_dup(t->right);
-		newd->word = NULL;
-		gwordlist_append_list(&newd->word, t->word);
-
+		newd->originating_gword = t->originating_gword;
 		prevd->next = newd;
 		prevd = newd;
 	}
@@ -207,6 +204,84 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 {
 	xfree(dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
 	xfree(dt, sizeof(disjunct_dup_table));
+}
+
+#ifdef DEBUG
+GNUC_UNUSED static int gword_set_len(const gword_set *gl)
+{
+	int len = 0;
+	for (; NULL != gl; gl = gl->next) len++;
+	return len;
+}
+#endif
+
+/**
+ * Return a new gword_set element, initialized from the given element.
+ * @old_e Existing element.
+ */
+static gword_set *gword_set_element_new(gword_set *old_e)
+{
+	gword_set *new_e = malloc(sizeof(gword_set));
+	*new_e = (gword_set){0};
+
+	new_e->o_gword = old_e->o_gword;
+	gword_set *chain_next = old_e->chain_next;
+	old_e->chain_next = new_e;
+	new_e->chain_next = chain_next;
+
+	return new_e;
+}
+
+/**
+ * Add an element to existing gword_set. Uniqueness is assumed.
+ * @return A new set with the element.
+ */
+static gword_set *gword_set_add(gword_set *gset, gword_set *ge)
+{
+	gword_set *n = gword_set_element_new(ge);
+	n->next = gset;
+	gset = n;
+
+	return gset;
+}
+
+/**
+ * Combine the given gword sets.
+ * The gword sets are not modified.
+ * This function is used for adding the gword pointers of an eliminated
+ * disjunct to the ones of the kept disjuncts, with no duplicates.
+ *
+ * @kept gword_set of the kept disjunct.
+ * @eliminated gword_set of the eliminated disjunct.
+ * @return Use copy-on-write semantics - the gword_set of the kept disjunct
+ * just gets returned if there is nothing to add to it. Else - a new gword
+ * set is returned.
+ */
+static gword_set *gword_set_union(gword_set *kept, gword_set *eliminated)
+{
+	/* Preserve the gword pointers of the eliminated disjunct if different. */
+	gword_set *preserved_set = NULL;
+	for (gword_set *e = eliminated; NULL != e; e = e->next)
+	{
+		gword_set *k;
+
+		/* Ensure uniqueness. */
+		for (k = kept; NULL != k; k = k->next)
+			if (e->o_gword == k->o_gword) break;
+		if (NULL != k) continue;
+
+		preserved_set = gword_set_add(preserved_set, e);
+	}
+
+	if (preserved_set)
+	{
+		/* Preserve the originating gword pointers of the remaining disjunct. */
+		for (gword_set *k = kept; NULL != k; k = k->next)
+			preserved_set = gword_set_add(preserved_set, k);
+		kept = preserved_set;
+	}
+
+	return kept;
 }
 
 /**
@@ -241,7 +316,10 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
-			gwordlist_append_list(&dx->word, d->word);
+
+			dx->originating_gword =
+				gword_set_union(dx->originating_gword, d->originating_gword);
+
 			free_disjuncts(d);
 			count++;
 		}
@@ -312,9 +390,7 @@ char * print_one_disjunct(Disjunct *dj)
 void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 {
 	for (;d != NULL; d=d->next) {
-		d->word = malloc(sizeof(*d->word)*2);
-		d->word[0] = gw;
-		d->word[1] = NULL;
+		d->originating_gword = (gword_set *)&gw->gword_set_head;
 	}
 }
 /* ========================= END OF FILE ============================== */

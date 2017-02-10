@@ -83,6 +83,33 @@
 #define SHORT_LEN 6
 #define NO_WORD 255
 
+/* An ordered set of gword pointers, used to indicate the source gword
+ * (Wordgraph word) of disjuncts and connectors. Usually it contains only
+ * one element.  However, when a duplicate disjunct is eliminated (see
+ * eliminate_duplicate_disjuncts()) and it originated from a different
+ * gword (a relatively rare event) its gword is added to the gword_set of
+ * the remaining disjunct. A set of 3 elements is extremely rare. The
+ * original order is preserved, in a hope for better caching on
+ * alternatives match checks in fast-match.c.
+ *
+ * Memory management:
+ * A copy-on-write semantics is used when constructing a new gword_set.  It
+ * means that all the gword sets with one element are shared.  These gword
+ * sets are part of the Gword structure. Copied and added element are
+ * alloc'ed and chained. The result is that the chain_next of the gword
+ * sets that are part of each gword contains the list of alloc'ed elements -
+ * to be used in gword_set_delete() called *only* in sentence_delete().
+ * This ensures that the gword_set of connectors doesn't get stale when
+ * their disjuncts are deleted and later restored in one-parse when
+ * min_null_count=0 and max_null count>0 (see classic_parse()).
+ */
+typedef struct gword_set
+{
+	Gword *o_gword;
+	struct gword_set *next;
+	struct gword_set *chain_next;
+} gword_set;
+
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.
  */
@@ -111,7 +138,7 @@ struct Connector_struct
 	union
 	{
 		Connector * tableNext;
-		const Gword **word;
+		const gword_set *originating_gword;
 	};
 };
 
@@ -139,7 +166,7 @@ struct Disjunct_struct
 #ifdef VERIFY_MATCH_LIST
 	int match_id;              /* verify the match list integrity */
 #endif
-	const Gword **word;        /* NULL terminated list of originating words */
+	gword_set *originating_gword; /* List of originating gwords */
 	const char * string;       /* subscripted dictionary word */
 };
 
@@ -258,6 +285,9 @@ struct Gword_struct
 	Gword **next;        /* Right-going tree */
 	Gword **prev;        /* Left-going tree */
 	Gword *chain_next;   /* Next word in the chain of all words */
+
+	/* Disjuncts and connectors point back to their originating Gword(s). */
+	gword_set gword_set_head;
 
 	/* For debug and inspiration. */
 	const char *label;   /* Debug label - code locations of tokenization */

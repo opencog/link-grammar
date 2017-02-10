@@ -302,7 +302,6 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 			ndis->string = string;
 			ndis->cost = cl->cost;
 			ndis->next = dis;
-			ndis->word = NULL;
 			dis = ndis;
 		}
 	}

@@ -489,7 +489,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 
 typedef struct
 {
-	const Gword *word;
+	const Gword *gword;
 	bool same_alternative;
 } gword_cache;
 
@@ -513,18 +513,20 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 
 #ifdef OPTIMIZE_EN
 	/* Try a shortcut first. */
-	if ((c2->word[0]->hier_depth == 0) || (c1->word[0]->hier_depth == 0))
+	if ((c2->originating_gword->o_gword->hier_depth == 0) ||
+	    (c1->originating_gword->o_gword->hier_depth == 0))
 	{
 			return true;
 	}
 #endif /* OPTIMIZE_EN */
 
-	if (c1->word[0] == c_con->word) return c_con->same_alternative;
+	if (c1->originating_gword->o_gword == c_con->gword)
+		return c_con->same_alternative;
 
 	/* Each of the loops is of one iteration most of the times. */
-	for (Gword **ga = (Gword **)c1->word; NULL != (*ga); ga++) {
-		for (Gword **gb = (Gword **)c2->word; NULL != (*gb); gb++) {
-			if (in_same_alternative(*ga, *gb)) {
+	for (const gword_set *ga = c1->originating_gword; NULL != ga; ga = ga->next) {
+		for (const gword_set *gb = c2->originating_gword; NULL != gb; gb = gb->next) {
+			if (in_same_alternative(ga->o_gword, gb->o_gword)) {
 				 same_alternative = true;
 				 break;
 			}
@@ -533,7 +535,7 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 	}
 
 	c_con->same_alternative = same_alternative;
-	c_con->word = c1->word[0];
+	c_con->gword = c1->originating_gword->o_gword;
 
 
 	return same_alternative;
@@ -601,7 +603,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	/* Construct the list of things that could match the left. */
 	mc.string = NULL;
-	gc.word = NULL;
+	gc.gword = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->nearest_word < lw) break;
@@ -624,7 +626,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * is true, since then it means it is already included in the match
 	 * list. */
 	mc.string = NULL;
-	gc.word = NULL;
+	gc.gword = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
 		if ((rw - w) > mx->d->right->length_limit) continue;

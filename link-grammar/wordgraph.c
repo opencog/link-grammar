@@ -39,7 +39,7 @@
 
 Gword *gword_new(Sentence sent, const char *s)
 {
-	Gword * const gword = malloc(sizeof(*gword));
+	Gword *gword = malloc(sizeof(*gword));
 
 	memset(gword, 0, sizeof(*gword));
 	assert(NULL != gword, "Null-string subword");
@@ -48,6 +48,9 @@ Gword *gword_new(Sentence sent, const char *s)
 	if (NULL != sent->last_word) sent->last_word->chain_next = gword;
 	sent->last_word = gword;
 	gword->node_num = sent->gword_node_num++;
+
+	gword->gword_set_head = (gword_set){0};
+	gword->gword_set_head.o_gword = gword;
 
 	return gword;
 }
@@ -241,25 +244,20 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 }
 
 /* Debug printout of a wordgraph Gword list. */
-GNUC_UNUSED void gwordlist_print(const Gword **wl)
+GNUC_UNUSED void gword_set_print(const gword_set *gs)
 {
 	printf("Gword list: ");
 
-	if (NULL == wl)
+	if (NULL == gs)
 	{
 		printf("(null)\n");
 		return;
 	}
-	if (NULL == *wl)
-	{
-		printf("No elements\n");
-		return;
-	}
 
-	for (; *wl; wl++)
+	for (; NULL != gs; gs = gs->next)
 	{
-		printf("word %p '%s' unsplit '%s'%s", *wl, (*wl)->subword,
-		       (*wl)->unsplit_word->subword, NULL == *(wl+1) ? "" : ", ");
+		printf("word %p '%s' unsplit '%s'%s", gs->o_gword, (gs->o_gword)->subword,
+		       (gs->o_gword)->unsplit_word->subword, NULL==gs->next ? "" : ", ");
 	}
 	printf("\n");
 

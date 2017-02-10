@@ -778,11 +778,29 @@ static void word_queue_delete(Sentence sent)
 	sent->word_queue = NULL;
 }
 
+/**
+ * Delete the gword_set associated with the Wordgraph.
+ * @w First Wordgraph word.
+ */
+static void gword_set_delete(Gword *w)
+{
+	for (w = w->chain_next; NULL != w; w = w->chain_next)
+	{
+		gword_set *n;
+		for (gword_set *f = w->gword_set_head.chain_next; NULL != f; f = n)
+		{
+			n = f->chain_next;
+			free(f);
+		}
+	}
+}
+
 void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
+	gword_set_delete(sent->wordgraph);
 	wordgraph_delete(sent);
 	word_queue_delete(sent);
 	string_set_delete(sent->string_set);
@@ -1066,11 +1084,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		/* Proceed in all the paths in which the word is found. */
 		for (wpp = wp_old; NULL != wpp->word; wpp++)
 		{
-			const Gword **wlp; /* disjunct word list */
-
-			for (wlp = cdj->word; *wlp; wlp++)
+			for (gword_set *gl = cdj->originating_gword; NULL != gl; gl =  gl->next)
 			{
-				if (*wlp == wpp->word)
+				if (gl->o_gword == wpp->word)
 				{
 					match_found = true;
 					for (next = wpp->word->next; NULL != *next; next++)
