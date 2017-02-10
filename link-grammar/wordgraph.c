@@ -39,7 +39,7 @@
 
 Gword *gword_new(Sentence sent, const char *s)
 {
-	Gword * const gword = malloc(sizeof(*gword));
+	Gword *gword = malloc(sizeof(*gword));
 
 	memset(gword, 0, sizeof(*gword));
 	assert(NULL != gword, "Null-string subword");
@@ -48,6 +48,9 @@ Gword *gword_new(Sentence sent, const char *s)
 	if (NULL != sent->last_word) sent->last_word->chain_next = gword;
 	sent->last_word = gword;
 	gword->node_num = sent->gword_node_num++;
+
+	gword->gword_set_head = (gword_set){0};
+	gword->gword_set_head.o_gword = gword;
 
 	return gword;
 }
