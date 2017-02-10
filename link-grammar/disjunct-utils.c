@@ -209,6 +209,15 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 	xfree(dt, sizeof(disjunct_dup_table));
 }
 
+#ifdef DEBUG
+GNUC_UNUSED static int gword_set_len(const gword_set *gl)
+{
+	int len = 0;
+	for (; NULL != gl; gl = gl->next) len++;
+	return len;
+}
+#endif
+
 /**
  * Takes the list of disjuncts pointed to by d, eliminates all
  * duplicates, and returns a pointer to a new list.
