@@ -138,7 +138,7 @@ struct Connector_struct
 	union
 	{
 		Connector * tableNext;
-		const Gword **word;
+		const gword_set *originating_gword;
 	};
 };
 
@@ -166,7 +166,7 @@ struct Disjunct_struct
 #ifdef VERIFY_MATCH_LIST
 	int match_id;              /* verify the match list integrity */
 #endif
-	const Gword **word;        /* NULL terminated list of originating words */
+	gword_set *originating_gword; /* List of originating gwords */
 	const char * string;       /* subscripted dictionary word */
 };
 

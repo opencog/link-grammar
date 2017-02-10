@@ -405,8 +405,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			assert(MT_EMPTY != cdj->word[0]->morpheme_type);/* already discarded */
-
 			t = cdj->string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
 

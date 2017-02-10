@@ -33,7 +33,6 @@ void free_disjuncts(Disjunct *c)
 		c1 = c->next;
 		free_connectors(c->left);
 		free_connectors(c->right);
-		free(c->word);
 		xfree((char *)c, sizeof(Disjunct));
 	}
 }
@@ -178,9 +177,7 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 		newd->cost = t->cost;
 		newd->left = connectors_dup(t->left);
 		newd->right = connectors_dup(t->right);
-		newd->word = NULL;
-		gwordlist_append_list(&newd->word, t->word);
-
+		newd->originating_gword = t->originating_gword;
 		prevd->next = newd;
 		prevd = newd;
 	}
@@ -319,7 +316,10 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
-			gwordlist_append_list(&dx->word, d->word);
+
+			dx->originating_gword =
+				gword_set_union(dx->originating_gword, d->originating_gword);
+
 			free_disjuncts(d);
 			count++;
 		}
@@ -390,9 +390,7 @@ char * print_one_disjunct(Disjunct *dj)
 void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 {
 	for (;d != NULL; d=d->next) {
-		d->word = malloc(sizeof(*d->word)*2);
-		d->word[0] = gw;
-		d->word[1] = NULL;
+		d->originating_gword = (gword_set *)&gw->gword_set_head;
 	}
 }
 /* ========================= END OF FILE ============================== */
