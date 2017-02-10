@@ -778,6 +778,23 @@ static void word_queue_delete(Sentence sent)
 	sent->word_queue = NULL;
 }
 
+/**
+ * Delete the gword_set associated with the Wordgraph.
+ * @w First Wordgraph word.
+ */
+static void gword_set_delete(Gword *w)
+{
+	for (w = w->chain_next; NULL != w; w = w->chain_next)
+	{
+		gword_set *n;
+		for (gword_set *f = w->gword_set_head.chain_next; NULL != f; f = n)
+		{
+			n = f->chain_next;
+			free(f);
+		}
+	}
+}
+
 void sentence_delete(Sentence sent)
 {
 	if (!sent) return;

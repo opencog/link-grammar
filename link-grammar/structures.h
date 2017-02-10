@@ -286,6 +286,9 @@ struct Gword_struct
 	Gword **prev;        /* Left-going tree */
 	Gword *chain_next;   /* Next word in the chain of all words */
 
+	/* Disjuncts and connectors point back to their originating Gword(s). */
+	gword_set gword_set_head;
+
 	/* For debug and inspiration. */
 	const char *label;   /* Debug label - code locations of tokenization */
 	size_t node_num;     /* For differentiating words with identical subwords,
