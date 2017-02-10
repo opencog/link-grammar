@@ -185,7 +185,17 @@ static void remap_linkages(Linkage lkg, const int *remap)
 
 			new_lnk->link_name = old_lnk->link_name;
 
+			/* Remap the pp_info, too. */
+			if (lkg->pp_info)
+				lkg->pp_info[j] = lkg->pp_info[i];
+
 			j++;
+		}
+		else
+		{
+			/* Whack this slot of pp_info. */
+			if (lkg->pp_info)
+				exfree_domain_names(&lkg->pp_info[i]);
 		}
 	}
 
@@ -219,21 +229,25 @@ void remove_empty_words(Linkage lkg)
 		}
 		else
 		{
+			Disjunct *cdtmp = cdj[j];
 			cdj[j] = cdj[i];
+			cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
 			remap[i] = j;
 			j++;
 		}
 	}
-	lkg->num_words = j;
-	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+	if (lkg->num_words != j)
+	{
+		/* Unused memory not freed - all of it will be freed in free_linkages(). */
+		lkg->num_words = j;
+		remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
+	}
 
 	if (verbosity_level(+D_REE))
 	{
 		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
 		print_chosen_disjuncts_words(lkg);
 	}
-
-	remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
 }
 #undef D_REE
 
@@ -666,7 +680,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		if (chosen_words[i] &&
 		    (chosen_words[i][0] || (!HIDE_MORPHO || show_word[i])))
 		{
+			const char *cwtmp = linkage->word[j];
 			linkage->word[j] = chosen_words[i];
+			chosen_words[i] = cwtmp;
 			remap[i] = j;
 			j++;
 		}
