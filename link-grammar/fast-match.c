@@ -503,7 +503,6 @@ typedef struct
  * (The first wordgraph word is used for cache validity indication,
  * but there is only one most of the times anyway.)
  */
-#define ALT_CONNECTION_POSSIBLE
 #define OPTIMIZE_EN
 static bool alt_connection_possible(Connector *c1, Connector *c2,
                                     gword_cache *c_con)
