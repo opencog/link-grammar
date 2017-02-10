@@ -21,7 +21,7 @@ Gword *empty_word(void); /* FIXME: Remove it. */
 size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
 void gwordlist_append_list(const Gword ***, const Gword **);
-void gwordlist_print(const Gword **);
+void gword_set_print(const gword_set *);
 
 const Gword **wordgraph_hier_position(Gword *);
 void print_hier_position(const Gword *);
