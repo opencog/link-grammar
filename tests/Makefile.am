@@ -7,7 +7,7 @@ CXXFLAGS += -std=c++11
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(CXX_FLAGS) \
-    $(WARN_CXXFLAGS)
+    $(WARN_CXXFLAGS) -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 # -----------------------------------------------------------
 # TESTS declares the tests to actually run;

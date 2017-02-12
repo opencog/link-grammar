@@ -27,7 +27,7 @@ int main()
 
 	setlocale(LC_ALL, "en_US.UTF-8");
 
-	dictionary_set_data_dir("../../data");
+	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 	Parse_Options opts = parse_options_create();
 	parse_options_set_spell_guess(opts, 0);
 
