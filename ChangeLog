@@ -1,3 +1,6 @@
+Version 5.3.16 (XXX 2017)
+ * something, I'm sure
+
 Version 5.3.15 (12 Feb 2017)
  * Fix Windows compilation; the new wcwidth files were omitted.
  * Fix "amy" language for 3-way random morphology splits.
