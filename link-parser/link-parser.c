@@ -186,6 +186,21 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		fprintf(stdout, "%s", string);
 		linkage_free_diagram(string);
 	}
+	if ((mode = copts->display_constituents))
+	{
+		string = linkage_print_constituent_tree(linkage, mode);
+		if (string != NULL)
+		{
+			fprintf(stdout, "%s\n", string);
+			linkage_free_constituent_tree_str(string);
+		}
+		else
+		{
+			copts->display_constituents = 0;
+			fprintf(stderr, "Can't generate constituents.\n");
+			fprintf(stderr, "Constituent processing has been turned off.\n");
+		}
+	}
 	if (copts->display_links)
 	{
 		string = linkage_print_links_and_domains(linkage);
@@ -201,7 +216,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 	if (copts->display_disjuncts)
 	{
 		string = linkage_print_disjuncts(linkage);
-		fprintf(stdout, "%s", string);
+		fprintf(stdout, "%s\n", string);
 		linkage_free_disjuncts(string);
 	}
 	if (copts->display_postscript)
@@ -210,21 +225,6 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		          copts->display_walls, copts->display_ps_header);
 		fprintf(stdout, "%s\n", string);
 		linkage_free_postscript(string);
-	}
-	if ((mode = copts->display_constituents))
-	{
-		string = linkage_print_constituent_tree(linkage, mode);
-		if (string != NULL)
-		{
-			fprintf(stdout, "%s\n", string);
-			linkage_free_constituent_tree_str(string);
-		}
-		else
-		{
-			copts->display_constituents = 0;
-			fprintf(stderr, "Can't generate constituents.\n");
-			fprintf(stderr, "Constituent processing has been turned off.\n");
-		}
 	}
 }
 
