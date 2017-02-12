@@ -1,6 +1,6 @@
 Link Grammar Parser
 --------------
-Version 5.3.14
+Version 5.3.15
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -82,7 +82,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.3.14.tar.gz.asc`
+`gpg --verify link-grammar-5.3.15.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
