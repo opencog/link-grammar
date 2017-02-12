@@ -27,7 +27,8 @@ pkgpython_PYTHON =                                 \
 
 
 # Apparently, anaconda does not work without this!?
-# This seems wrong and lme to me, but see issue #298
+# This seems wrong and lame to me, but see issue #298
+# https://github.com/opencog/link-grammar/issues/298
 pkgpypathdir=$(python3dir)
 pkgpypath_PYTHON =                                 \
    linkgrammar.pth
