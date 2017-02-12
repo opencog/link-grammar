@@ -99,16 +99,16 @@ However, it is no substitute for the original papers published on the
 topic:
 * Daniel D. K. Sleator, Davy Temperley,
   ["Parsing English with a Link Grammar"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr91-196.pdf)
-  October 1991 **CMU-CS-91-196**.
+  October 1991 *CMU-CS-91-196*.
 * Daniel D. Sleator, Davy Temperley,
   ["Parsing English with a Link Grammar"] (http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/LG-IWPT93.pdf),
-  **Third International Workshop on Parsing Technologies** (1993).
+  *Third International Workshop on Parsing Technologies* (1993).
 * Dennis Grinberg, John Lafferty, Daniel Sleator,
   ["A Robust Parsing Algorithm for Link Grammars"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr95-125.pdf),
-  August 1995 **CMU-CS-95-125**.
+  August 1995 *CMU-CS-95-125*.
 * John Lafferty, Daniel Sleator, Davy Temperley,
   ["Grammatical Trigrams: A Probabilistic Model of Link Grammar"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/gram3gram.pdf),
-  1992 **AAAI Symposium on Probabilistic Approaches to Natural Language**.
+  1992 *AAAI Symposium on Probabilistic Approaches to Natural Language*.
 
 There are many more papers and references listed on the
 [primary Link Grammar website](https://www.abisource.com/projects/link-grammar/).
