@@ -9,6 +9,10 @@ DICTS=                           \
 dictdir=$(pkgdatadir)/de
 dict_DATA = $(DICTS)
 
+# The make uninstall target should remove directories we created.
+uninstall-hook:
+	-rmdir $(dictdir)
+
 # Do NOT install the batch files!
 EXTRA_DIST = $(DICTS)            \
       corpus-basic.batch

@@ -33,6 +33,11 @@ pkgpypathdir=$(python3dir)
 pkgpypath_PYTHON =                                 \
    linkgrammar.pth
 
+# The make uninstall target should remove directories we created.
+uninstall-hook:
+	-rmdir $(pkgpypathdir)/__pycache__
+	-rmdir $(pkgpypathdir)
+
 # These are packaged in the tarball; make clean should not remove them.
 maintainer-clean-local:
 	-rm -f $(BUILT_C_SOURCES)

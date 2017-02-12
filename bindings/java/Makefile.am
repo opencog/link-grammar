@@ -40,6 +40,9 @@ endif
 install-data-hook:
 	${LN_SF} ${javadir}/${java_DATA} ${DESTDIR}/${javadir}/linkgrammar.jar
 
+uninstall-hook:
+	-rm ${DESTDIR}/${javadir}/linkgrammar.jar
+
 
 EXTRA_DIST =                         \
    README                            \

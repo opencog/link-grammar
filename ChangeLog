@@ -6,6 +6,7 @@ Version 5.3.15 (XXX 2017)
  * Improve random sampling in the "ady" language.
  * Improve performance by 10% to 15% for all languages.
  * Fix broken multi-threading support in the Java bindings.
+ * Fix some of the `make uninstall` targets.
 
 Version 5.3.14 (19 Jan 2017)
  * Fix printing widths for Unicode-9 CJK ideographs and emoji's.

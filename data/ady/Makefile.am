@@ -10,3 +10,7 @@ dictdir=$(pkgdatadir)/ady
 dict_DATA = $(DICTS)
 
 EXTRA_DIST = $(DICTS)
+
+# The make uninstall target should remove directories we created.
+uninstall-hook:
+	-rmdir $(dictdir)

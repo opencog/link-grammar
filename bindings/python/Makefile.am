@@ -23,6 +23,9 @@ pkgpython_PYTHON =                                 \
    $(top_builddir)/bindings/python/__init__.py     \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
+# The make uninstall target should remove directories we created.
+uninstall-hook:
+	-rmdir $(pkgpythondir)
 
 # These are packaged in the tarball; make clean should not remove them.
 maintainer-clean-local:
