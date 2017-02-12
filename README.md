@@ -1,6 +1,6 @@
 Link Grammar Parser
 --------------
-*Version 5.3.15*
+***Version 5.3.15***
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -18,14 +18,13 @@ Please see the
 for more information.  This version is a continuation of the
 [original CMU parser](http://www.link.cs.cmu.edu/link).
 
-Examples
---------
+Quick Overview
+---------------
 The parser includes API's in various different programming languages,
 as well as a handy command-line tool for playing with it.  Here's some
 typical output:
 ```
 linkparser> This is a test!
-Found 4 linkages (4 had no P.P. violations)
 	Linkage 1, cost vector = (UNUSED=0 DIS= 0.00 LEN=6)
 
     +-------------Xp------------+
@@ -57,6 +56,39 @@ and also that the noun starts with a consonant. (The `PH` link, not
 required here, is used to force phonetic agreement, distinguishing
 'a' from 'an').  These link types are documented in the
 [English Link Documentation](https://www.abisource.com/projects/link-grammar/dict/index.html).
+
+The bottom of the display is a listing of the "disjuncts" used for
+each word. The disjuncts are simply a list of the connectors that
+werre employed to form the links. They are particularly intersting
+because they serve as an extremely fine-grained form of a "part of
+speech".  This, for example: the disjunct `S- O+` indicates a
+transitive verb: its a verb that takes both a subject and an object.
+The additional markup above indicates that 'is' is not only being used
+as a transitive verb, but it also indicates finer details: a transitive
+verb that took a singular subject, and was used (is usable as) the head
+verb of a sentence.  The floating-point value is the "cost" of the
+disjunct; it very roughly captures the idea of the log-probability
+of this particular grammatical usage.  Much as parts-of-speech correlate
+with word-meanings, so also fine-grains parts-of-speech correlate with
+much finer distinctions and gradations of meaning.
+
+The link-grammar parser also supports morphological analysis. Here is
+an example in Russian:
+```
+linkparser> это теста
+	Linkage 1, cost vector = (UNUSED=0 DIS= 0.00 LEN=4)
+
+             +-----MVAip-----+
+    +---Wd---+       +-LLCAG-+
+    |        |       |       |
+LEFT-WALL это.msi тест.= =а.ndnpi
+```
+
+The `LL` link connects the stem 'тест' to the suffix 'а'. The `MVA`
+link connects only to the suffix, because, in Russian, it is the
+suffixes that carry all of the syntactic structure, and not the stems.
+The Russian lexis is
+[documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
 
 
 Contents
