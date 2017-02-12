@@ -90,6 +90,26 @@ suffixes that carry all of the syntactic structure, and not the stems.
 The Russian lexis is
 [documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
 
+Theory and Documentation
+------------------------
+An extended overview and summary can be found in the
+[Link Grammar Wikipedia page](https://en.wikipedia.org/wiki/Link_grammar),
+which touches on most of the import, primary aspects of the theory.
+However, it is no substitute for the original papers published on the
+topic:
+* [here](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr91-196.pdf)
+* [here] (http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/LG-IWPT93.pdf)
+* [here] (http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr95-125.pdf)
+* [here] (http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/gram3gram.pdf)
+
+There are many more papers and references listed on the
+[primary Link Grammar website](https://www.abisource.com/projects/link-grammar/).
+
+See also the
+[C/C++ API documentation](https://www.abisource.com/projects/link-grammar/api/index.html).
+Bindings for other programming languages, including python, python3 and
+java, can be found in the [bindings directory](bindings).
+
 
 Contents
 --------
