@@ -1,6 +1,6 @@
 Link Grammar Parser
 --------------
-Version 5.3.15
+*Version 5.3.15*
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -13,13 +13,54 @@ available for both private and commercial use, with few restrictions.
 The terms of the license are given in the LICENSE file included with
 this software.
 
-Please see the web page http://www.abisource.com/projects/link-grammar/
-for more information.  This version is a continuation of the original
-parser posted at http://www.link.cs.cmu.edu/link
+Please see the
+[main web page](http://www.abisource.com/projects/link-grammar/)
+for more information.  This version is a continuation of the
+[original CMU parser](http://www.link.cs.cmu.edu/link).
+
+Examples
+--------
+The parser includes API's in various different programming languages,
+as well as a handy command-line tool for playing with it.  Here's some
+typical output:
+```
+linkparser> This is a test!
+Found 4 linkages (4 had no P.P. violations)
+	Linkage 1, cost vector = (UNUSED=0 DIS= 0.00 LEN=6)
+
+    +-------------Xp------------+
+    +----->WV----->+---Ost--+   |
+    +---Wd---+-Ss*b+  +Ds**c+   |
+    |        |     |  |     |   |
+LEFT-WALL this.p is.v a  test.n !
+
+(S (NP this.p) (VP is.v (NP a test.n)) !)
+
+            LEFT-WALL    0.000  Wd+ hWV+ Xp+
+               this.p    0.000  Wd- Ss*b+
+                 is.v    0.000  Ss- dWV- O*t+
+                    a    0.000  Ds**c+
+               test.n    0.000  Ds**c- Os-
+                    !    0.000  Xp- RW+
+           RIGHT-WALL    0.000  RW-
+
+```
+This rather busy display illustrates many interesting things. For
+example, the `Ss*b` link connects the verb and the subject, and
+indicates that the subject is singular.  Likewise, the `Ost` link
+connects the verb and the object, and also indicates that the object
+is singular. The `WV` (verb-wall) link points at the head-verb of
+the sentence, while the `Wd` link points at the head-noun. The `Xp`
+link connects to the trailing punctuation. The `Ds**c` link connects
+the noun to the determiner: it again confirms that the noun is singular,
+and also that the noun starts with a consonant. (The `PH` link, not
+required here, is used to force phonetic agreement, distinguishing
+'a' from 'an').  These link types are documented in the
+[English Link Documentation](https://www.abisource.com/projects/link-grammar/dict/index.html).
 
 
-CONTENTS of this directory
---------------------------
+Contents
+--------
 
 | Content       | Description |
 | ------------- |-------------|
