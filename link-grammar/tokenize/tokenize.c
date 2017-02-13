@@ -2449,6 +2449,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	        word, word_can_split, word_is_known,
 	        (NULL == unsplit_word->regex_name) ? "" : unsplit_word->regex_name);
 
+	/* FIXME: Handling of capitalized words that are a result of spelling. */
 	if (is_utf8_upper(word, dict->lctype))
 	{
 		if (!test_enabled("dictcap"))
