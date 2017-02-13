@@ -988,7 +988,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				}
 			}
 #endif
-			return alternative_id;
+
+	return alternative_id;
 }
 #undef D_IWA
 
