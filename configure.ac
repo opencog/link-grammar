@@ -218,9 +218,9 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`echo ${CFLAGS} -g |sed "s/-O[[2-9]]//g"`
-	CXXFLAGS=`echo ${CXXFLAGS} -g |sed "s/-O[[2-9]]//g"`
-	LDFLAGS="${LDFLAGS} -g"
+	CFLAGS=`echo -g ${CFLAGS} |sed "s/-O[[2-9]]//g"`
+	CXXFLAGS=`echo -g ${CXXFLAGS} |sed "s/-O[[2-9]]//g"`
+	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
 
