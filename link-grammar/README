@@ -16,7 +16,7 @@ The dict-sql directory contains code to read dictionaries from an SQL DB.
 Version 5.3.14 - Improved error notification facility
 =====================================================
 
-This code is still "experimental", so its API may get changed.
+This code is still "experimental", so its API may g780cdc1ed5dd3a99c6d25afbae27d84550994fedet changed.
 
 It is intended to be mostly compatible. It supports multi-threading -
 all of its operations are local per-thread.
@@ -36,10 +36,10 @@ until a newline (if a message ends with `\n\` this is an embedded
 newline). The severity level of the last part, if exists, is used for the
 whole message.
 
-- New "severity levels":
-  * Trace (for `lgdebug()`).
-  * Debug (for other debug messages).
-  * None (for plain messages that need to use the error facility).
+- New _severity levels_:
+  * **Trace** (for `lgdebug()`).
+  * **Debug** (for other debug messages).
+  * **None** (for plain messages that need to use the error facility).
 
 C API:
 ------
@@ -85,6 +85,7 @@ operator).
 `prt_error()` still gets the severity label as a message prefix.
 The list of error severities is defined as part of the API, and the
 prefix that is used here is without the `lg_` part of the corresponding
+enums.  The default severity is **None"**, i.e. a plain message.
 (However, the enum severity code can be specified with the internal API
 `err_msg()`. When both are specified, the label takes precedence. All of
 these ways have their use in the code.)
