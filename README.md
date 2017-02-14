@@ -284,8 +284,8 @@ to disable these bindings, use one of:
 
 ```
 ./configure --diable-python-bindings
-./configure --disable-python2-bindings
-./configure --disable-python3-bindings
+./configure --enable-python-bindings=2
+./configure --enable-python-bindings=3
 ```
 
 The linkgrammar.py module provides a high-level interface in Python.
