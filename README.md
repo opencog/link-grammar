@@ -389,14 +389,15 @@ toolset to compile Windows programs for Windows. Using MinGW/MSYS is
 probably the easiest way to obtain workable Java bindings for Windows.
 Download and install MinGW, MSYS and MSYS-DTK from http://mingw.org.
 
-For more details see mingw/README.MSYS .
-You can also build with MinGW under Cygwin. See mingw/README.Cygwin .
+For more details see [mingw/README.MSYS](mingw/README.MSYS).
+You can also build with MinGW under Cygwin.
+See [mingw/README.Cygwin](mingw/README.Cygwin).
 
 
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------
 Microsoft Visual C/C++ project files can be found in the msvc14 directory.
-For directions see the README.md file there.
+For directions see the [README.md](msvc14/README.md) file there.
 
 RUNNING the program
 -------------------
@@ -465,8 +466,8 @@ TESTING the program
 There are several ways to test the resulting build.  If the Python
 bindings are built, then a test program can be found in the file
 `./bindings/python-examples/tests.py` -- When run, it should pass.
-For more details see `README.md` in the `bindings/python-examples`
-directory.
+For more details see [README.md](bindings/python-examples/README.md)
+in the `bindings/python-examples` directory.
 
 There are also multiple batches of test/example sentences in the
 language data directories, generally having the names corpus-*.batch
@@ -1476,7 +1477,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
    Status: DONE! Implemented from version 5.3.0. See the section
    titled "Introduction of a word-graph for tokenizing" in
-   link-grammar/README.
+   [link-grammar/README](link-grammar/README).
 
 - Morphology printing:
 
