@@ -37,9 +37,9 @@ newline). The severity level of the last part, if exists, is used for the
 whole message.
 
 - New "severity levels":
-  -- Trace (for lgdebug()).
-  -- Debug (for other debug messages).
-  -- None (for plain messages that need to use the error facility).
+  * Trace (for lgdebug()).
+  * Debug (for other debug messages).
+  * None (for plain messages that need to use the error facility).
 
 C API:
 ------
