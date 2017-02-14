@@ -2740,7 +2740,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 				 w->regex_name ? w->regex_name : "");
 		while (we)
 		{
-			prt_error(" xstring='%s' expr=", we->string);
+			prt_error("Debug:  string='%s' expr=", we->string);
 			print_expression(we->exp);
 			we = we->next;
 		}

@@ -432,7 +432,7 @@ static void print_expression_parens(const Exp * n, int need_parens)
 
 	if (n == NULL)
 	{
-		printf("NULL expression");
+		err_msg(lg_Debug, "NULL expression");
 		return;
 	}
 
@@ -451,11 +451,11 @@ static void print_expression_parens(const Exp * n, int need_parens)
 	/* print the connector only */
 	if (n->type == CONNECTOR_type)
 	{
-		for (i=0; i<icost; i++) printf("[");
-		if (n->multi) printf("@");
-		printf("%s%c", n->u.string, n->dir);
-		for (i=0; i<icost; i++) printf("]");
-		if (0 != dcost) printf(COST_FMT, dcost);
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "[");
+		if (n->multi) err_msg(lg_Debug, "@");
+		err_msg(lg_Debug, "%s%c", n->u.string, n->dir);
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+		if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
 		return;
 	}
 
@@ -463,25 +463,25 @@ static void print_expression_parens(const Exp * n, int need_parens)
 	el = n->u.l;
 	if (el == NULL)
 	{
-		for (i=0; i<icost; i++) printf("[");
-		printf ("()");
-		for (i=0; i<icost; i++) printf("]");
-		if (0 != dcost) printf(COST_FMT, dcost);
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "[");
+		prt_error ("()");
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+		if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
 		return;
 	}
 
-	for (i=0; i<icost; i++) printf("[");
+	for (i=0; i<icost; i++) err_msg(lg_Debug, "[");
 	if ((n->type == OR_type) &&
 	    el && el->e && (NULL == el->e->u.l))
 	{
-		printf ("{");
-		if (NULL == el->next) printf("error-no-next");
+		prt_error ("{");
+		if (NULL == el->next) err_msg(lg_Debug, "error-no-next");
 		else print_expression_parens(el->next->e, false);
-		printf ("}");
+		prt_error ("}");
 		return;
 	}
 
-	if ((icost == 0) && need_parens) printf("(");
+	if ((icost == 0) && need_parens) err_msg(lg_Debug, "(");
 
 	/* print left side of binary expr */
 	print_expression_parens(el->e, true);
@@ -489,20 +489,20 @@ static void print_expression_parens(const Exp * n, int need_parens)
 	/* get a funny "and optional" when its a named expression thing. */
 	if ((n->type == AND_type) && (el->next == NULL))
 	{
-		for (i=0; i<icost; i++) printf("]");
-		if (0 != dcost) printf(COST_FMT, dcost);
-		if ((icost == 0) && need_parens) printf(")");
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+		if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
+		if ((icost == 0) && need_parens) err_msg(lg_Debug, ")");
 		return;
 	}
 
-	if (n->type == AND_type) printf(" & ");
-	if (n->type == OR_type) printf(" or ");
+	if (n->type == AND_type) err_msg(lg_Debug, " & ");
+	if (n->type == OR_type) err_msg(lg_Debug, " or ");
 
 	/* print right side of binary expr */
 	el = el->next;
 	if (el == NULL)
 	{
-		printf ("()");
+		prt_error ("()");
 	}
 	else
 	{
@@ -516,26 +516,26 @@ static void print_expression_parens(const Exp * n, int need_parens)
 		}
 		if (el->next != NULL)
 		{
-			// printf ("\nERROR! Unexpected list!\n");
+			// prt_error ("\nERROR! Unexpected list!\n");
 			/* The SAT parser just naively joins all X_node expressions
 			 * using "or", and this check used to give an error due to that,
 			 * preventing a convenient debugging.
 			 * Just accept it (but mark it with '!'). */
-			if (n->type == AND_type) printf(" &! ");
-			if (n->type == OR_type) printf(" or! ");
+			if (n->type == AND_type) err_msg(lg_Debug, " &! ");
+			if (n->type == OR_type) err_msg(lg_Debug, " or! ");
 			print_expression_parens(el->next->e, true);
 		}
 	}
 
-	for (i=0; i<icost; i++) printf("]");
-	if (0 != dcost) printf(COST_FMT, dcost);
-	if ((icost == 0) && need_parens) printf(")");
+	for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+	if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
+	if ((icost == 0) && need_parens) err_msg(lg_Debug, ")");
 }
 
 void print_expression(const Exp * n)
 {
 	print_expression_parens(n, false);
-	printf("\n");
+	err_msg(lg_Debug, "\n");
 }
 #endif /* INFIX_NOTATION */
 
