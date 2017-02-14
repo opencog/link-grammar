@@ -150,10 +150,10 @@ For more examples of how to use the wordgraph display, see
 
 Debugging and STDIO streams
 ---------------------------
-Messages at severity Warning and higher (i.e. also Error and
+Messages at severity Info and higher (i.e. also Warning, Error and
 Fatal) are printed to `stderr`. The other severities
-(at Info and below, i.e also
-Debug, Trace and None) are printed to `stdout`. The rational is that
+(at Debug and below, i.e also
+Trace and None) are printed to `stdout`. The rational is that
 debugging messages, in order to be useful, need to appear along with the
 regular output of the program, while errors are exceptional and need to
 stand out when `link-parser`s `stdout` is redirected to a file.
