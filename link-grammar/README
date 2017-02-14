@@ -20,7 +20,7 @@ This code is still "experimental", so its API may get changed.
 
 It is intended to be mostly compatible. It supports multi-threading -
 all of its operations are local per-thread.
-A visible change is that the first parameter of prt_error() should now end
+A visible change is that the first parameter of `prt_error()` should now end
 with a newline in order to actually issue a message. However, its previous
 auto-issuing of a newline was not documented.
 
@@ -32,68 +32,67 @@ or place (like a GUI window). This also allows to reformat the message.
 
 - Possibility to print a message in part and still have it printed as one
  complete message. The API for that is natural - messages are gathered
-until a newline (if a message ends with "\n\" this is an embedded
+until a newline (if a message ends with `\n\` this is an embedded
 newline). The severity level of the last part, if exists, is used for the
 whole message.
 
 - New "severity levels":
-  * Trace (for lgdebug()).
+  * Trace (for `lgdebug()`).
   * Debug (for other debug messages).
   * None (for plain messages that need to use the error facility).
 
 C API:
 ------
-1)  lg_error_handler lg_error_set_handler(lg_error_handler, void *data);
+1)  `lg_error_handler lg_error_set_handler(lg_error_handler, void *data);`
 
 Set an error handler function. Return the previous one.
 On first call it returns the default handler function, that is
 pre-installed on program start.
 If the error handler is set to NULL, the messages are just queued,
-and can be retrieved by lg_error_printall() (see (4) below).
+and can be retrieved by `lg_error_printall()` (see (4) below).
 
 For the default error handler, if data is not NULL, it is an
-(int *) severity_level. Messages with <= this level are printed to stdout.
+`(int *)` severity_level. Messages with <= this level are printed to stdout.
 The default is to print Debug and lower to stdout.
 For custom error handler it can be of course a more complex user-data.
 
-2)  const void *lg_error_set_handler_data(void * data);
+2)  `const void *lg_error_set_handler_data(void * data);`
 
 Return the current error handler user data.
 (This function is useful mainly for implementing correct language
 bindings, which may need to free previously-allocated user-data).
 
-3)   char *lg_error_formatmsg(lg_errinfo *lge);
+3)  `char *lg_error_formatmsg(lg_errinfo *lge);`
 
 Format the argument message.
-It adds "link-grammar" and severity.
-The lg_errinfo struct is part of the API.
+It adds `link-grammar` and severity.
+The `lg_errinfo` struct is part of the API.
 
-4)   int lg_error_printall(lg_error_handler, void *data);
+4)  `int lg_error_printall(lg_error_handler, void *data);`
 
 Print all the queued error messages and clear the queue.
 Return the number of messages.
 
-5)  int lg_error_clearall(void);
+5)  `int lg_error_clearall(void);`
 Clear the queue of error messages.
 Return the number of messages.
 
-6)  int prt_error(const char *fmt, ...);
+6)  `int prt_error(const char *fmt, ...);`
 Previously it was a void function, but now it returns int (always 0) so
 it can be used in complex macros (which make it necessary to use the comma
 operator).
 
-prt_error() still gets the severity label as a message prefix.
+`prt_error()` still gets the severity label as a message prefix.
 The list of error severities is defined as part of the API, and the
-prefix that is used here is without the "lg_" part of the corresponding
-enums.  The default severity is "None", i.e. a plain message.
+prefix that is used here is without the `lg_` part of the corresponding
 (However, the enum severity code can be specified with the internal API
-err_msg(). When both are specified, the label takes precedence. All of
+`err_msg()`. When both are specified, the label takes precedence. All of
 these ways have their use in the code.)
 
 Issuing a message in parts is supported. The message is collected until
 its end and issued as one complete message. Issuing an embedded newline is
 supported. In addition to a newline in a middle of string, which doesn't
-terminate the message, and ending "\n\\" is a embedded newline.
+terminate the message, and ending `\n\\` is a embedded newline.
 This allows, for example, constructing a single message using a loop or
 conditionals.
 
@@ -102,22 +101,24 @@ lg_errinfo structure.
 
 Notes:
 ------
-1.  lgdebug() (used internally to issue messages on verbosity levels > 0)
-now usually uses the new severity level lg_Trace (but sometimes lg_Debug
-or lg_Info).
+1.  `lgdebug(`) (used internally to issue messages on verbosity levels > 0)
+now usually uses the new severity level `lg_Trace` (but sometimes `lg_Debug`
+or `lg_Info`).
 
-2.  Some messages from the library may still use printf(), and the
+2.  Some messages from the library may still use `printf()`, and the
 intention is to convert them too to use the new error facility.
 
 Language bindings:
 ------------------
-A Complete Python binding is provided under class LG_Error:
+A Complete Python binding is provided under `class LG_Error`:
+```
 LG_Error.set_handler()
 LG_Error.printall()
 LG_Error.clearall()
 LG_Error.message()     # prt_error()
 errinfo.formatmsg()    # errinfo is the first argument of the error handler
 errinfo.severity, errinfo.severity_label, errinfo.text # lg_errinfo fields
+```
 
 LG_Error is also used as a general exception.
 See "tests.py" for usage of all of the above bindings.
@@ -159,7 +160,7 @@ tokenization, as in previous releases.
 
 Since the parser cannot currently use the word-graph directly, there is a
 need to convert it to the 2D-word-array that it uses. This is implemented
-by the function flatten_wordgraph(), which uses a complex algorithm: It
+by the function `flatten_wordgraph()`, which uses a complex algorithm: It
 scans all the word-graph paths in parallel, trying to advance to the next
 words and to issue them into the 2D-word-array.
 
@@ -181,7 +182,7 @@ words from the same alternative.
 As in the previous versions, due to the way alternatives are implemented,
 morphemes from different word-tokenization alternatives can be mixed in a
 linkage. Such linkages are of course useless and need to be detected and
-discarded. This is done by the sane_linkage_morphism() function. In the
+discarded. This is done by the `sane_linkage_morphism()` function. In the
 previous versions it validated that the chosen words (the words in the
 linkage) that are subwords (e.g. morphemes) of a sentence word, all belong
 to a single tokenization alternative of that word.
