@@ -330,6 +330,7 @@ but this should be fine:
 
 Some fun examples:
 
+```
 !/(.*)*/,test
 Modified pattern: (?:(.*)(?C))*$(?C1)
 Alternative 1:
@@ -364,11 +365,13 @@ Alternative 16:
  1 (1):  e (1,2)
  2 (1):  s (2,3)
  3 (1):  t (3,4)
+```
 
 (Some appear "twice" due to the terminating null match. I think I will
 discard such matches.).
 
 With splits to 2 parts only:
+```
 linkparser> !/(.*){2}/,test
 Modified pattern: (?:(.*)(?C)){2}$(?C1)
 Alternative 1:
@@ -386,25 +389,29 @@ Alternative 4:
 Alternative 5:
  0 (1):  test (0,4)
 linkparser> 
+```
 
-!/(?:(?<DICTWORD>.{2,}|a)(?<RPUNC>)?)+/,theriver,dangeroustonavigatebutimportantforcommerce,hasmanyshoals.
+`!/(?:(?<DICTWORD>.{2,}|a)(?<RPUNC>)?)+/,theriver,dangeroustonavigatebutimportantforcommerce,hasmanyshoals.`<br>
 (This is one long line, just test it...)
 
 
-!/(?<NUMBERS>)(?<rUNITS>)*(?<RPUNC>)*/,123.2milligram/terag/?!
+`!/(?<NUMBERS>)(?<rUNITS>)*(?<RPUNC>)*/,123.2milligram/terag/?!`<br>
 (test it...)
 
+```
 !/(?<DICTWORD>)(?<SUF>)/,there's
 Modified pattern: (?:(?<DICTWORD>.*)(?C))(?:(?<SUF>.*)(?C))$(?C1)
 Alternative 1:
  0 (1):  there (0,5) [DICTWORD]
  1 (2):  's (5,7) [SUF]
 linkparser> 
+```
 
 
 In the next example, we get only whole word and double-dash because
 it can only match wpwp (when w is DICTWORD and p is --).
 
+```
 !/(?:(?<DICTWORD>)(?<LPUNC>))+/,this--is--
 Modified pattern: (?:(?:(?<DICTWORD>.*)(?C))(?:(?<LPUNC>.*)(?C)))+$(?C1)
 Alternative 1:
@@ -414,8 +421,10 @@ Alternative 1:
  3 (2):  -- (8,10) [LPUNC]
  4 (1):   (10,10) [DICTWORD]
 linkparser> 
+```
 
 However, this breaks to single characters, as expected:
+```
 !/(?:(?<DICTWORD>)(?:(?<LPUNC>))*)+/,this--is--
 ...
 Alternative 360:
@@ -431,8 +440,10 @@ Alternative 360:
  9 (1):  - (9,10) [DICTWORD]
 10 (1):   (10,10) [DICTWORD]
 linkparser> 
+```
 
 But this stops after the first match:
+```
 !/(?:(?<DICTWORD>)(?:(?<LPUNC>)(*COMMIT))*)+/,this--is--
 Alternative 1:
  0 (1):  this (0,4) [DICTWORD]
@@ -441,8 +452,10 @@ Alternative 1:
  3 (2):  -- (8,10) [LPUNC]
  4 (1):   (10,10) [DICTWORD]
 linkparser> 
+````
 
 And this is even more interesting:
+```
 !/(?:(?<DICTWORD>)(*COMMIT)(?:(?<LPUNC>))*)+/,this--is--
 Alternative 1:
  0 (1):  this (0,4) [DICTWORD]
@@ -465,6 +478,7 @@ Alternative 3:
  4 (1):  - (9,10) [DICTWORD]
  5 (1):   (10,10) [DICTWORD]
 linkparser> 
+```
 
 It seems as if conditional matching using (?(condition)yes-pattern|no-pattern)
 or (*THEN) can do some fun things, but I don't have useful examples yet.
