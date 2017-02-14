@@ -232,7 +232,7 @@ following can be used: !test=dictcap,removeZZZ .
 
 HOWTO use the new regex tokenizer/splitter
 ==========================================
-It's new, experimental code. 
+It's new, experimental code.
 
 To compile: ../configure --enable-regex-tokenizer
 
@@ -390,7 +390,7 @@ Alternative 4:
  1 (1):  est (1,4)
 Alternative 5:
  0 (1):  test (0,4)
-linkparser> 
+linkparser>
 ```
 
 `!/(?:(?<DICTWORD>.{2,}|a)(?<RPUNC>)?)+/,theriver,dangeroustonavigatebutimportantforcommerce,hasmanyshoals.`<br>
@@ -406,7 +406,7 @@ Modified pattern: (?:(?<DICTWORD>.*)(?C))(?:(?<SUF>.*)(?C))$(?C1)
 Alternative 1:
  0 (1):  there (0,5) [DICTWORD]
  1 (2):  's (5,7) [SUF]
-linkparser> 
+linkparser>
 ```
 
 
@@ -422,7 +422,7 @@ Alternative 1:
  2 (1):  is (6,8) [DICTWORD]
  3 (2):  -- (8,10) [LPUNC]
  4 (1):   (10,10) [DICTWORD]
-linkparser> 
+linkparser>
 ```
 
 However, this breaks to single characters, as expected:
@@ -441,7 +441,7 @@ Alternative 360:
  8 (1):  - (8,9) [DICTWORD]
  9 (1):  - (9,10) [DICTWORD]
 10 (1):   (10,10) [DICTWORD]
-linkparser> 
+linkparser>
 ```
 
 But this stops after the first match:
@@ -453,7 +453,7 @@ Alternative 1:
  2 (1):  is (6,8) [DICTWORD]
  3 (2):  -- (8,10) [LPUNC]
  4 (1):   (10,10) [DICTWORD]
-linkparser> 
+linkparser>
 ````
 
 And this is even more interesting:
@@ -479,7 +479,7 @@ Alternative 3:
  3 (2):  - (8,9) [LPUNC]
  4 (1):  - (9,10) [DICTWORD]
  5 (1):   (10,10) [DICTWORD]
-linkparser> 
+linkparser>
 ```
 
 It seems as if conditional matching using (?(condition)yes-pattern|no-pattern)
