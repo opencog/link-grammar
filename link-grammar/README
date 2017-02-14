@@ -43,7 +43,7 @@ whole message.
 
 C API:
 ------
-1.  lg_error_handler lg_error_set_handler(lg_error_handler, void *data);
+1)  lg_error_handler lg_error_set_handler(lg_error_handler, void *data);
 
 Set an error handler function. Return the previous one.
 On first call it returns the default handler function, that is
@@ -56,28 +56,28 @@ For the default error handler, if data is not NULL, it is an
 The default is to print Debug and lower to stdout.
 For custom error handler it can be of course a more complex user-data.
 
-2.  const void *lg_error_set_handler_data(void * data);
+2)  const void *lg_error_set_handler_data(void * data);
 
 Return the current error handler user data.
 (This function is useful mainly for implementing correct language
 bindings, which may need to free previously-allocated user-data).
 
-3.   char *lg_error_formatmsg(lg_errinfo *lge);
+3)   char *lg_error_formatmsg(lg_errinfo *lge);
 
 Format the argument message.
 It adds "link-grammar" and severity.
 The lg_errinfo struct is part of the API.
 
-4.   int lg_error_printall(lg_error_handler, void *data);
+4)   int lg_error_printall(lg_error_handler, void *data);
 
 Print all the queued error messages and clear the queue.
 Return the number of messages.
 
-5.  int lg_error_clearall(void);
+5)  int lg_error_clearall(void);
 Clear the queue of error messages.
 Return the number of messages.
 
-5.  int prt_error(const char *fmt, ...);
+6)  int prt_error(const char *fmt, ...);
 Previously it was a void function, but now it returns int (always 0) so
 it can be used in complex macros (which make it necessary to use the comma
 operator).
