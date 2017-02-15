@@ -58,7 +58,7 @@ For custom error handler it can be of course a more complex user-data.
 
 2)  `const void *lg_error_set_handler_data(void * data);`
 
-Return the current error handler user data.
+Return the current error handler user-data.
 (This function is useful mainly for implementing correct language
 bindings, which may need to free previously-allocated user-data).
 
@@ -111,7 +111,7 @@ intention is to convert them too to use the new error facility.
 
 Language bindings:
 ------------------
-A Complete Python binding is provided under `class LG_Error`:
+A complete Python binding is provided under `class LG_Error`:
 ```
 LG_Error.set_handler()
 LG_Error.printall()
@@ -201,7 +201,7 @@ ways, controlled by one-letter flags. The command `!test=wg` enables the
 display of a graphs which includes no "prev" links for clarity, but
 includes "unsplit word" links.  Other graphical representation modes can be
 enabled by `!test=wg:FLAGS`, when FLAGS are lowercase letters as defined in
-wordgraph.h.  For example, `!test=wg:sl` displays unsplit_words as subgraphs,
+wordgraph.h.  For example, `!test=wg:sl` displays unsplit words as subgraphs,
 with a legend, and adding the `p` flag (i.e. `!test=wg:slp`) adds "prev" links.
 The graphical display still needs improvements in order to be able to
 display complex word-graph situations in a simple manner.  The graphical
@@ -308,7 +308,7 @@ currently be added by hand, as in:
 
 `/(?<DICTWORD>)-(?<DICTWORD>)/,khasdkflhdsfa`
 
-because the `-` character would create va hole in the result.
+because the `-` character would create a hole in the result.
 But this is fine (and also not tested...):
 
 `/(?<DICTWORD>)(-)(?<DICTWORD>)/,asdfkjajfahlad`
@@ -326,7 +326,7 @@ If you will find a use for internal capture groups, I can use them.
 Because of that, backreferences in regexes from the regex file are not
 supported (but there are currently none...).
 
-So this is not valid (a DICTWORD which matches a `NUMBER`)::
+So this is not valid (a DICTWORD which matches a `NUMBER`):
 
 `/(?<DICTWORD(?<NUMBER>))/,qazwsx`
 
