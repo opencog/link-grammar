@@ -127,8 +127,8 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 #
 if test x${native_win32} = xyes; then
 	# Vikas says that -std=gnu99 is needed on cygwin/mingw
-	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
-	CXXFLAGS="${CXXFLAGS} -std=c++11"
+	CFLAGS="-std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE ${CFLAGS}"
+	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
 	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
@@ -154,20 +154,20 @@ else
 if test x${apple_osx} = xyes; then
 	# I'm confused, but it seems both gcc and clang on mac need
 	# to link to -stdlib=libc++
-	CXXFLAGS="${CXXFLAGS} -std=c++11 -stdlib=libc++"
-	LDFLAGS="${LDFLAGS} -stdlib=libc++ -lc++"
+	CXXFLAGS="-std=c++11 -stdlib=libc++ ${CXXFLAGS}"
+	LDFLAGS="-stdlib=libc++ -lc++ ${LDFLAGS}"
 else
 	# Else standard Linux/*BSD environment.
-	CFLAGS="${CFLAGS} -std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
-	CXXFLAGS="${CXXFLAGS} -std=c++11"
+	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE ${CFLAGS}"
+	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 fi
 fi
 
 # _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
 # is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
 # specified (no effect). So just add it.
-CFLAGS="${CFLAGS} -D_DEFAULT_SOURCE"
-CXXFLAGS="${CXXFLAGS} -D_DEFAULT_SOURCE"
+CFLAGS="-D_DEFAULT_SOURCE ${CFLAGS}"
+CXXFLAGS="-D_DEFAULT_SOURCE ${CXXFLAGS}"
 
 # ====================================================================
 
@@ -218,9 +218,9 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`echo ${CFLAGS} -g |sed "s/-O[[2-9]]//g"`
-	CXXFLAGS=`echo ${CXXFLAGS} -g |sed "s/-O[[2-9]]//g"`
-	LDFLAGS="${LDFLAGS} -g"
+	CFLAGS=`echo -g ${CFLAGS} |sed "s/-O[[2-9]]//g"`
+	CXXFLAGS=`echo -g ${CXXFLAGS} |sed "s/-O[[2-9]]//g"`
+	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
 
