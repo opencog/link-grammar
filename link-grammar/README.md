@@ -16,7 +16,7 @@ The dict-sql directory contains code to read dictionaries from an SQL DB.
 Version 5.3.14 - Improved error notification facility
 =====================================================
 
-This code is still "experimental", so its API may g780cdc1ed5dd3a99c6d25afbae27d84550994fedet changed.
+This code is still "experimental", so it's API may be changed.
 
 It is intended to be mostly compatible. It supports multi-threading -
 all of its operations are local per-thread.
