@@ -97,8 +97,8 @@ terminate the message, and ending `\n\\` is a embedded newline.
 This allows, for example, constructing a single message using a loop or
 conditionals.
 
-See "link-includes.h" for the definition of severity levels and the
-`lg_errinfo` structure.
+See [link-includes.h](link-includes.h) for the definition of
+severity levels and the `lg_errinfo` structure.
 
 Notes:
 ------
@@ -122,7 +122,8 @@ errinfo.severity, errinfo.severity_label, errinfo.text # lg_errinfo fields
 ```
 
 `class LG_Error` is also used as a general exception.
-See "tests.py" for usage of all of the above bindings.
+See [tests.py](../bindings/python-examples/tests.py) for usage of all of these
+bindings.
 
 
 Version 5.3.0 - Introduction of a word-graph for tokenizing
