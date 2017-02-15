@@ -48,7 +48,7 @@ C API:
 Set an error handler function. Return the previous one.
 On first call it returns the default handler function, that is
 pre-installed on program start.
-If the error handler is set to NULL, the messages are just queued,
+If the error handler is set to `NULL`, the messages are just queued,
 and can be retrieved by `lg_error_printall()` (see (4) below).
 
 For the default error handler, if data is not NULL, it is an
@@ -78,7 +78,7 @@ Clear the queue of error messages.
 Return the number of messages.
 
 6)  `int prt_error(const char *fmt, ...);`
-Previously it was a void function, but now it returns int (always 0) so
+Previously it was a void function, but now it returns an `int` (always 0) so
 it can be used in complex macros (which make it necessary to use the comma
 operator).
 
@@ -98,7 +98,7 @@ This allows, for example, constructing a single message using a loop or
 conditionals.
 
 See "link-includes.h" for the definition of severity levels and the
-lg_errinfo structure.
+`lg_errinfo` structure.
 
 Notes:
 ------
@@ -121,7 +121,7 @@ errinfo.formatmsg()    # errinfo is the first argument of the error handler
 errinfo.severity, errinfo.severity_label, errinfo.text # lg_errinfo fields
 ```
 
-LG_Error is also used as a general exception.
+`class LG_Error` is also used as a general exception.
 See "tests.py" for usage of all of the above bindings.
 
 
@@ -196,50 +196,50 @@ possibilities.
 Another feature that has been implemented, mainly for debug (but it can
 also be useful for inspiration and fun), is displaying a graphical
 representation of the word graph. The graphs can be displayed in several
-ways, controlled by one-letter flags. The command !test=wg enables the
+ways, controlled by one-letter flags. The command `!test=wg` enables the
 display of a graphs which includes no "prev" links for clarity, but
 includes "unsplit word" links.  Other graphical representation modes can be
-enabled by !test=wg:FLAGS, when FLAGS are lowercase letters as defined in
-wordgraph.h.  For example, !test=wg:sl displays unsplit_words as subgraphs,
-with a legend, and adding the p flag (i.e. !test=wg:slp) adds "prev" links.
+enabled by `!test=wg:FLAGS`, when FLAGS are lowercase letters as defined in
+wordgraph.h.  For example, `!test=wg:sl` displays unsplit_words as subgraphs,
+with a legend, and adding the `p` flag (i.e. `!test=wg:slp`) adds "prev" links.
 The graphical display still needs improvements in order to be able to
 display complex word-graph situations in a simple manner.  The graphical
 display code is not compiled by default because it involves invocation of
-an external program (dot) and in addition, files are created, both things
-may not be desired by some users. Use --enable-wordgraph-display to enable
+an external program (`dot`) and in addition, files are created, both things
+may not be desired by some users. Use `--enable-wordgraph-display` to enable
 this feature.
 
-On Windows this feature is enabled when compiled with USE_WORDGRAPH_DISPLAY.
+On Windows this feature is enabled when compiled with `USE_WORDGRAPH_DISPLAY`.
 See "../msvcNN/RDADME" (NN is the MSVC version) for further details.
 
 Quotes now are not discarded, but are considered to be regular dict tokens.
 In this version they have no significant linkage and always attach to the word
 before them (or to the LEFT-WALL). In order to compare detailed batch runs with
-previous versions of the library, a !test=removeZZZ can be used to remove the
+previous versions of the library, a `!test=removeZZZ` can be used to remove the
 quote display.
 
 Not as in previous releases, capital letters which got downcased are not
 restored for display if the affected words have a linkage.
 
 A new experimental handling of capital words using the dictionary has been
-introduced. It inserts the token 1stCAP before the uc version, and nonCAP before
-the lc one, as discussed in:
+introduced. It inserts the token `1stCAP` before the uc version, and `nonCAP`
+before the lc one, as discussed in:
 https://groups.google.com/forum/?hl=en#!topic/link-grammar/hmK5gjXYWbk
-It is enabled by !test=dictcap . The special "dictcap" tokens are not yet
+It is enabled by `!test=dictcap`. The special "dictcap" tokens are not yet
 discarded, so in order to compare results to previous library versions, the
-following can be used: !test=dictcap,removeZZZ .
+following can be used: `!test=dictcap,removeZZZ`.
 
 
 HOWTO use the new regex tokenizer/splitter
 ==========================================
 It's new, experimental code.
 
-To compile: ../configure --enable-regex-tokenizer
+To compile: `../configure --enable-regex-tokenizer`
 
 
 
 - At the linkparser> prompt, enter:
-!/REGEX/,tokentosplit
+`!/REGEX/,tokentosplit`
 
 Currently, if tokentosplit contains white space, command-line.c discards
 it.
@@ -249,23 +249,22 @@ The regex syntax is designed so the regex is a valid one (although
 meaningless) as written, so compiling it would reveal syntax errors in
 it (the result of this initial compilation is not used).
 
-- All the /regexes/ are anchored at their start and end, as if ^ and $
+- All the /regexes/ are anchored at their start and end, as if `^` and `$`
   were used.
-
 - Mentioning a word class (x is an optional constraint, defaults to
-  ".*"):
+  `.*`):
 
-(?<CLASS>x)
+`(?<CLASS>x)`
 
 CLASS can be:
- * DICTWORD, to match a word from 4.0.dict.
+ * DICTWORD, to match a word from `4.0.dict`.
  * An affix class name (takes priority if there is a regex with the same
    name).
- * A regex name from 4.0.regex (prefix it with "r" if there is such an
+ * A regex name from `4.0.regex` (prefix it with `r` if there is such an
    affix class).
 
-For regexes from 4.0.regex, the code combine the ones with the same
-name, taking care to omit the ^ and $ from each, if exist (constraints
+For regexes from `4.0.regex`, the code combine the ones with the same
+name, taking care to omit the `^` and `$` from each, if exist (constraints
 are said to be supported  (not tested) and can be added if needed, but I
 could not find an example of anything useful).
 
@@ -280,39 +279,42 @@ is currently used.
 
 
 Examples:
- * (?<SUF>) match a suffix from the affix file
- * (?<NUMBER>) match the regex NUMBER
- * (?<UNITS>) match UNITS from the affix file.
- * (?<rUNITS>) match UNITS from the regex file.
- * (?<DICTWORD>) match a dictionary word.
- * <?<DICTWORDaSTEMSUBSCR>) match word.= (if STEMSUBSCR is ^C=).
- * <?<DICTWORDpINFIXMARK) match =word (if...)
+ * `(?<SUF>)` match a suffix from the affix file
+ * `(?<NUMBER>)` match the regex `NUMBER`.
+ * `(?<UNITS>)` match `UNITS` from the affix file.
+ * `(?<rUNITS>)` match `UNITS` from the regex file.
+ * `(?<DICTWORD>)` match a dictionary word.
+ * `<?<DICTWORDaSTEMSUBSCR>)` match word.= (if `STEMSUBSCR` is ^C=).
+ * `<?<DICTWORDpINFIXMARK)` match =word (if...)
 
-- Using word constrains (x in (?<CLASS>x) ):
+- Using word constrains (_x_ in `(?<CLASS>x)` ):
 Matching single letters by DISTWORD (because they are in the dict) may
 note be desired.
-In such a case x can be constrained to include 2 letters at least, plus
+In such a case _x_ can be constrained to include 2 letters at least, plus
 the desired 1-letter words.
-E.g.: (?<DICTWORD>.{2,}|a) , which matches words of 2 letters and more,
-plus the word "a".
+E.g.: `(?<DICTWORD>.{2,}|a)` , which matches words of 2 letters and more,
+plus the word `a`.
 
 - Currently the outer part of the regex should not contain alternations.
-  This is because I was too lazy to add code for adding (?:...) over it
-in such cases. So in order to contain alternations the (?:...) should
+  This is because I was too lazy to add code for adding `(?:...)` over it
+in such cases. So in order to contain alternations the `(?:...)` should
 currently be added by hand, as in:
 
-/(?:(?<UNITS>)|(?<RPUNC>))*/,dfs,dsfadsdsa,.?!sfads
+`/(?:(?<UNITS>)|(?<RPUNC>))*/,dfs,dsfadsdsa,.?!sfads`
 
 - Holes are not supported. For example, this is not fine (and not
   tested):
-/(?<DICTWORD>)-(?<DICTWORD>)/,khasdkflhdsfa
-because the "-" character would create va hole in the result.
+
+`/(?<DICTWORD>)-(?<DICTWORD>)/,khasdkflhdsfa`
+
+because the `-` character would create va hole in the result.
 But this is fine (and also not tested...):
-/(?<DICTWORD>)(-)(?<DICTWORD>)/,asdfkjajfahlad
+
+`/(?<DICTWORD>)(-)(?<DICTWORD>)/,asdfkjajfahlad`
 
 Currently, since named capturing groups are used for classes, if the same
 class name is used more than once, there may be a need to start the regex
-by (?J). This will be fixed later.
+by `(?J)`. This will be fixed later.
 
 - The regex cannot include nested capture groups, so inner groups, if
   needed, should be non-capturing ones.
@@ -323,12 +325,18 @@ If you will find a use for internal capture groups, I can use them.
 Because of that, backreferences in regexes from the regex file are not
 supported (but there are currently none...).
 
-So this is not valid (a DICTWORD which matches a NUMBER)::
-/(?<DICTWORD(?<NUMBER>))/,qazwsx
+So this is not valid (a DICTWORD which matches a `NUMBER`)::
+
+`/(?<DICTWORD(?<NUMBER>))/,qazwsx`
+
 and this too (a nonsense constraint for demo):
-/(?<DICTWORD>([A-Z][0-9])*)/,qazwsx
+
+`/(?<DICTWORD>([A-Z][0-9])*)/,qazwsx`
+
 but this should be fine:
-/(?<DICTWORD>(?:[A-Z][0-9])*)/,qazwsx
+
+`/(?<DICTWORD>(?:[A-Z][0-9])*)/,qazwsx`
+
 
 Some fun examples:
 
@@ -393,7 +401,9 @@ Alternative 5:
 linkparser>
 ```
 
-`!/(?:(?<DICTWORD>.{2,}|a)(?<RPUNC>)?)+/,theriver,dangeroustonavigatebutimportantforcommerce,hasmanyshoals.`<br>
+```
+!/(?:(?<DICTWORD>.{2,}|a)(?<RPUNC>)?)+/,theriver,dangeroustonavigatebutimportantforcommerce,hasmanyshoals.
+```
 (This is one long line, just test it...)
 
 
@@ -411,7 +421,7 @@ linkparser>
 
 
 In the next example, we get only whole word and double-dash because
-it can only match wpwp (when w is DICTWORD and p is --).
+it can only match wpwp (when w is DICTWORD and p is `--`).
 
 ```
 !/(?:(?<DICTWORD>)(?<LPUNC>))+/,this--is--
@@ -483,7 +493,7 @@ linkparser>
 ```
 
 It seems as if conditional matching using (?(condition)yes-pattern|no-pattern)
-or (*THEN) can do some fun things, but I don't have useful examples yet.
+or `(*THEN)` can do some fun things, but I don't have useful examples yet.
 
 The question is how to use this code for tokenization. I have some
 ideas, more on that later.
