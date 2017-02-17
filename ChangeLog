@@ -1,5 +1,6 @@
 Version 5.3.16 (XXX 2017)
- * something, I'm sure
+ * Fix python3 unit tests.
+ * Restore tty state after ctrl-C, ctrl-Z of the app.
 
 Version 5.3.15 (12 Feb 2017)
  * Fix Windows compilation; the new wcwidth files were omitted.
