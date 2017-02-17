@@ -844,6 +844,8 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     lineno = 0
     for line in parses:
         lineno += 1
+        if sys.version_info > (3, 0):
+            line = line.decode('utf-8')
         # Lines starting with I are the input sentences
         if 'I' == line[0]:
             sent = line[1:]
