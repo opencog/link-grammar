@@ -200,15 +200,11 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 		}
 	}
 
-	*wp = wordgraph_pathpos_resize(*wp, n+1);
-
+	*wp = wordgraph_pathpos_resize(*wp, n);
 	if (insert_here < n)
 	{
-		/* n+1 because n is the length of the array, not including the
-		 * terminating null entry. We need to protect the terminating null.
-		 */
 		memmove(&(*wp)[insert_here+1], &(*wp)[insert_here],
-		        (n+1 - insert_here) * sizeof (*wpt));
+		        (n - insert_here) * sizeof (*wpt));
 	}
 
 	(*wp)[insert_here].word = p;
