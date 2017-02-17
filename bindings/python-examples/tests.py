@@ -834,6 +834,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
     """
+    self.__class__.longMessage = True
     if '' != desc:
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
