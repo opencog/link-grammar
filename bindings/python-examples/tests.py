@@ -864,13 +864,13 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         if 'O' == line[0]:
             diagram += line[1:]
             if '\n' == line[1] and 1 < len(diagram):
-                self.assertEqual(linkage.diagram(), diagram)
+                self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
 
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
         if 'C' == line[0]:
             if '\n' == line[1] and 1 < len(constituents):
-                self.assertEqual(linkage.constituent_tree(), constituents)
+                self.assertEqual(linkage.constituent_tree(), constituents, "at {}:{}".format(testfile, lineno))
             constituents += line[1:]
     parses.close()
 
