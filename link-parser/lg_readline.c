@@ -68,6 +68,8 @@ char *lg_readline(const char *mb_prompt)
 		el_source(el, NULL);       /* Source the user's defaults file. */
 		history_w(hist, &ev, H_LOAD, HFILE);
 
+		el_set(el, EL_SIGNAL, 1); /* Restore tty setting on returning to shell */
+
 		/* By default, it comes up in vi mode, with the editor not in
 		 * insert mode; and even when in insert mode, it drops back to
 		 * command mode at the drop of a hat. Totally confusing/lame. */
