@@ -852,7 +852,8 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             diagram = ""
             constituents = ""
             linkages = Sentence(sent, lgdict, popt).parse()
-            linkage = linkages.next()
+            linkage = next(linkages, None)
+            self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
         if 'N' == line[0]:
