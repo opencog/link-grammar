@@ -9,8 +9,9 @@ The corpus directory contains code to read word-sense disambiguation
 data from an SQL file.
 
 The dict-file directory contains code to read dictionaries from files.
-The dict-sql directory contains code to read dictionaries from an SQL DB.
-   (unfinished, under development!)
+
+The dict-sql directory contains code to read dictionaries from an SQL DB
+   (unfinished, under development!).
 
 
 Version 5.3.14 - Improved error notification facility
@@ -26,13 +27,13 @@ auto-issuing of a newline was not documented.
 
 Features:
 ---------
-- Ability to intercept error messages (when required). This allow printing
+- Ability to intercept error messages (when required). This allows printing
 them not only to stdout/stderr, but to any other stream (like logging)
 or place (like a GUI window). This also allows to reformat the message.
 
-- Possibility to print a message in part and still have it printed as one
+- Possibility to print a message in parts and still have it printed as one
  complete message. The API for that is natural - messages are gathered
-until a newline (if a message ends with `\n\` this is an embedded
+until a newline (if a message ends with `\n\\` this is an embedded
 newline). The severity level of the last part, if exists, is used for the
 whole message.
 
@@ -102,9 +103,9 @@ severity levels and the `lg_errinfo` structure.
 
 Notes:
 ------
-1.  `lgdebug(`) (used internally to issue messages on verbosity levels > 0)
+1.  `lgdebug()` (used internally to issue messages on verbosity levels > 0)
 now usually uses the new severity level `lg_Trace` (but sometimes `lg_Debug`
-or `lg_Info`).
+or `lg_Info)`.
 
 2.  Some messages from the library may still use `printf()`, and the
 intention is to convert them too to use the new error facility.
