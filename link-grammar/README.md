@@ -103,9 +103,10 @@ severity levels and the `lg_errinfo` structure.
 
 Notes:
 ------
-1.  `lgdebug()` (used internally to issue messages on verbosity levels > 0)
-now usually uses the new severity level `lg_Trace` (but sometimes `lg_Debug`
-or `lg_Info)`.
+1.  `lgdebug()` (used internally to issue debug or informational messages at
+a given verbosity level) now usually uses by default the new severity level
+`lg_Trace` but can instead use other levels (currently it sometimes uses
+`lg_Debug` or `lg_Info)`.
 
 2.  Some messages from the library may still use `printf()`, and the
 intention is to convert them too to use the new error facility.
