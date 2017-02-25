@@ -1,5 +1,5 @@
 Link Grammar Parser
---------------
+===================
 ***Version 5.3.15***
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
