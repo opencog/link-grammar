@@ -196,6 +196,8 @@ the first path which is encountered is used. It means that a word in the
 word-graph path corresponding to a null-word, may be only one of the potential
 possibilities.
 
+Word-graph display
+------------------
 Another feature that has been implemented, mainly for debug (but it can
 also be useful for inspiration and fun), is displaying a graphical
 representation of the word graph. The graphs can be displayed in several
@@ -215,12 +217,16 @@ this feature.
 On Windows this feature is enabled when compiled with `USE_WORDGRAPH_DISPLAY`.
 See "../msvcNN/RDADME" (NN is the MSVC version) for further details.
 
+Quote handling
+--------------
 Quotes now are not discarded, but are considered to be regular dict tokens.
 In this version they have no significant linkage and always attach to the word
 before them (or to the LEFT-WALL). In order to compare detailed batch runs with
 previous versions of the library, a `!test=removeZZZ` can be used to remove the
 quote display.
 
+Handling capitalized words
+--------------------------
 Not as in previous releases, capital letters which got downcased are not
 restored for display if the affected words have a linkage.
 
