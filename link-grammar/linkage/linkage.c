@@ -237,7 +237,7 @@ static void print_chosen_disjuncts_words(const Linkage lkg)
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
  */
-#define D_REE 9
+#define D_REE 7
 void remove_empty_words(Linkage lkg)
 {
 	size_t i, j;

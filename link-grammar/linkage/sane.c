@@ -149,7 +149,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  *
  * Return true if the linkage is good, else return false.
  */
-#define D_SLM 7
+#define D_SLM 8
 bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
@@ -375,13 +375,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		{
 			lgdebug(D_SLM, "%p Morpheme type combination '%s'\n", lkg, affix_types);
 		}
-		lgdebug(+D_SLM, "%p SUCCEEDED\n", lkg);
+		lgdebug(+D_SLM-1, "%p SUCCEEDED\n", lkg);
 		lkg->wg_path = lwg_path;
 		return true;
 	}
 
 	/* Oh no ... invalid morpheme combination! */
-	lgdebug(D_SLM, "%p FAILED\n", lkg);
+	lgdebug(+D_SLM-1, "%p FAILED\n", lkg);
 	return false;
 }
 #undef D_SLM
