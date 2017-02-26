@@ -207,7 +207,7 @@ static void remap_linkages(Linkage lkg, const int *remap)
  *  Print the chosen_disjuncts words.
  *  This is used for debug, e.g. for tracking them in the Wordgraph display.
  */
-static void print_chosen_disjuncts_words(const Linkage lkg)
+static void print_chosen_disjuncts_words(const Linkage lkg, bool prt_optword)
 {
 	size_t i;
 	dyn_str *djwbuf = dyn_str_new();
@@ -219,7 +219,7 @@ static void print_chosen_disjuncts_words(const Linkage lkg)
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
-			djw = lkg->sent->word[i].optional ? "{}" : "[]";
+			djw = (prt_optword && lkg->sent->word[i].optional) ? "{}" : "[]";
 		else if ('\0' == cdj->word_string[0])
 			djw = "\\0"; /* null string - something is wrong */
 		else
@@ -247,7 +247,7 @@ void remove_empty_words(Linkage lkg)
 	if (verbosity_level(+D_REE))
 	{
 		err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
-		print_chosen_disjuncts_words(lkg);
+		print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
 	}
 
 	for (i = 0, j = 0; i < lkg->num_words; i++)
@@ -275,7 +275,7 @@ void remove_empty_words(Linkage lkg)
 	if (verbosity_level(+D_REE))
 	{
 		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
-		print_chosen_disjuncts_words(lkg);
+		print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
 	}
 }
 #undef D_REE
