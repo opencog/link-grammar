@@ -254,7 +254,14 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			/* There is no solution without nulls in this case. There is
 			 * a slight efficiency hack to separate this null_count==0
 			 * case out, but not necessary for correctness */
-			t->count = zero;
+			if ((rw-lw-1) == num_optional_words(ctxt, lw, rw))
+			{
+				t->count = hist_one();
+			}
+			else
+			{
+				t->count = zero;
+			}
 		}
 		else
 		{
