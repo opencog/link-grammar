@@ -9,8 +9,9 @@ The corpus directory contains code to read word-sense disambiguation
 data from an SQL file.
 
 The dict-file directory contains code to read dictionaries from files.
-The dict-sql directory contains code to read dictionaries from an SQL DB.
-   (unfinished, under development!)
+
+The dict-sql directory contains code to read dictionaries from an SQL DB
+   (unfinished, under development!).
 
 
 Version 5.3.14 - Improved error notification facility
@@ -26,13 +27,13 @@ auto-issuing of a newline was not documented.
 
 Features:
 ---------
-- Ability to intercept error messages (when required). This allow printing
+- Ability to intercept error messages (when required). This allows printing
 them not only to stdout/stderr, but to any other stream (like logging)
 or place (like a GUI window). This also allows to reformat the message.
 
-- Possibility to print a message in part and still have it printed as one
+- Possibility to print a message in parts and still have it printed as one
  complete message. The API for that is natural - messages are gathered
-until a newline (if a message ends with `\n\` this is an embedded
+until a newline (if a message ends with `\n\\` this is an embedded
 newline). The severity level of the last part, if exists, is used for the
 whole message.
 
@@ -102,9 +103,10 @@ severity levels and the `lg_errinfo` structure.
 
 Notes:
 ------
-1.  `lgdebug(`) (used internally to issue messages on verbosity levels > 0)
-now usually uses the new severity level `lg_Trace` (but sometimes `lg_Debug`
-or `lg_Info`).
+1.  `lgdebug()` (used internally to issue debug or informational messages at
+a given verbosity level) now usually uses by default the new severity level
+`lg_Trace` but can instead use other levels (currently it sometimes uses
+`lg_Debug` or `lg_Info)`.
 
 2.  Some messages from the library may still use `printf()`, and the
 intention is to convert them too to use the new error facility.
@@ -153,7 +155,7 @@ The tokenizing code is still based much on the old code and further
 work is needed to clean it up (or to replace it, e.g. by a
 regex-tokenizer). It still doesn't use the full power of the word-graph,
 and there are constructs that need to be tokenized but they are not (they
-are also not in the sentence test batches). E.g. -- between words without
+are also not in the sentence test batches). E.g. `--` between words without
 whitespace.
 
 There is still no API to get information from the word-graph. In particular,
@@ -194,6 +196,8 @@ the first path which is encountered is used. It means that a word in the
 word-graph path corresponding to a null-word, may be only one of the potential
 possibilities.
 
+Word-graph display
+------------------
 Another feature that has been implemented, mainly for debug (but it can
 also be useful for inspiration and fun), is displaying a graphical
 representation of the word graph. The graphs can be displayed in several
@@ -213,12 +217,16 @@ this feature.
 On Windows this feature is enabled when compiled with `USE_WORDGRAPH_DISPLAY`.
 See "../msvcNN/RDADME" (NN is the MSVC version) for further details.
 
+Quote handling
+--------------
 Quotes now are not discarded, but are considered to be regular dict tokens.
 In this version they have no significant linkage and always attach to the word
 before them (or to the LEFT-WALL). In order to compare detailed batch runs with
 previous versions of the library, a `!test=removeZZZ` can be used to remove the
 quote display.
 
+Handling capitalized words
+--------------------------
 Not as in previous releases, capital letters which got downcased are not
 restored for display if the affected words have a linkage.
 

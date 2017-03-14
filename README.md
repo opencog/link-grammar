@@ -1,5 +1,5 @@
 Link Grammar Parser
---------------
+===================
 ***Version 5.3.15***
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
@@ -178,6 +178,9 @@ The system is distributed using the normal tar.gz format; it can be
 extracted using the `tar -zxf link-grammar.tar.gz` command at the
 command line.
 
+A tarball of the latest version can be downloaded from:<br>
+http://www.abisource.com/downloads/link-grammar
+
 The files have been digitally signed to make sure that there was no
 corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
@@ -315,6 +318,60 @@ systems, FreeBSD, MacOSX, as well as on many Microsoft Windows
 systems, under various different Windows development environments.
 Specific OS-dependent notes follow.
 
+BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
+------------------------------------------------------------------------------
+
+End users should download the tarball (see
+[UNPACKING and signature verification](#unpacking-and-signature-verification)).
+
+The current GitHub version is intended for developers (including anyone who
+is willing to provide a fix, a new feauture or an improvment). The tip of
+the master branch is often unstable, and can sometimes have bad code in it
+as it is under developementi. It also needs installing of development tools
+that are not installed by default. Due to these reason the use of the GitHub
+version is discouraged for regular end users.
+
+### Installing from GitHub
+Clone it:
+`git clone https://github.com/opencog/link-grammar.git`<br>
+Or download it as a ZIP:<br>
+`https://github.com/opencog/link-grammar/archive/master.zip`
+
+Tools that may need installation before you can compile the system:
+
+make<br>
+gcc<br>
+gcc-c++ (for the SAT solver)<br>
+autoconf<br>
+autoconf-archive<br>
+swig (for language bindings)<br>
+graphpviz (if you like to ue the word-graph display feature)
+
+The GitHub version doesn't include a `configure` script.
+To generate it, use:
+```
+autogen.sh
+```
+
+If you get errors, make sure you have installed the above-listed
+development packages, and that your system installation is up to date.
+
+For more info about how to proceed, continue at the section
+[CREATING the system](#creating-the-system) and the relevant sections after it.
+
+### Additional notes for developers
+
+To configure **debug** mode, use:
+```
+configure --enable-debug
+```
+It adds some verification debug code and functions that can
+pretty-print several data structures.
+
+A feature that may be useful for debugging is the word-graph
+display.  Use the `configure` option `--enable-wordgraph-display` to enable
+it. For more details on this feature, see
+[Word-graph display](link-grammar/README.md#word-graph-display).
 
 BUILDING on MacOS
 -----------------
