@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.3.15],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.3.16],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=3
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=15
+LINK_MICRO_VERSION=16
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -186,6 +186,17 @@ AC_MSG_RESULT(no)
 	AC_MSG_RESULT(no)
 	)
 )
+
+# ====================================================================
+
+dnl For stdatomic.h -- missing in gcc-4.8 (Ubuntu Trusty 14.04)
+dnl Its used in the Jva bindings, to avoid an ugly server-init race.
+AC_MSG_CHECKING(for stdatomic.h)
+AC_CHECK_HEADER([stdatomic.h],
+	[AC_DEFINE([HAVE_STDATOMIC_H], 1, [Define to 1 if stdatomic.h exists])],
+	[],
+	[#include <stdatomic.h>
+	])
 
 # ====================================================================
 # TLS support (for per-thread error handling)

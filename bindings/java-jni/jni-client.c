@@ -8,9 +8,12 @@
 #include <jni.h>
 #include <langinfo.h>
 #include <locale.h>
-#include <stdatomic.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifdef HAVE_STDATOMIC_H
+#include <stdatomic.h>
+#endif /* HAVE_STDATOMIC_H */
 
 #include <link-grammar/api-structures.h>
 #include "link-grammar/corpus/corpus.h"
@@ -27,7 +30,11 @@ static const char* in_language = "en";
 
 /* Dicationary can be and should be shared by all. */
 static Dictionary dict = NULL;
+#ifdef HAVE_STDATOMIC_H
 static atomic_flag dict_is_init = ATOMIC_FLAG_INIT;
+#else /* HAVE_STDATOMIC_H */
+static bool dict_is_init = false;
+#endif /* HAVE_STDATOMIC_H */
 
 typedef struct
 {
@@ -90,7 +97,12 @@ static void throwException(JNIEnv *env, const char* message)
 // guarantee to offer).
 static void global_init(JNIEnv *env)
 {
+#ifdef HAVE_STDATOMIC_H
 	if (atomic_flag_test_and_set(&dict_is_init)) return;
+#else /* HAVE_STDATOMIC_H */
+	if (dict_is_init) return;
+	dict_is_init = true;
+#endif /* HAVE_STDATOMIC_H */
 
 	const char *codeset, *dict_version;
 
@@ -415,7 +427,11 @@ Java_org_linkgrammar_LinkGrammar_doFinalize(JNIEnv *env, jclass cls)
 	// It is up to the user to avoid this kind of mistake!
 	if (dict) dictionary_delete(dict);
 	dict = NULL;
+#ifdef HAVE_STDATOMIC_H
 	atomic_flag_clear(&dict_is_init);
+#else /* HAVE_STDATOMIC_H */
+	dict_is_init = false;
+#endif /* HAVE_STDATOMIC_H */
 }
 
 /*
