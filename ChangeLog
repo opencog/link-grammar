@@ -1,6 +1,7 @@
 Version 5.3.16 (XXX 2017)
  * Fix python3 unit tests.
  * Restore tty state after ctrl-C, ctrl-Z of the app.
+ * Check for <stdatomic.h> before use (in Java bindings).
 
 Version 5.3.15 (12 Feb 2017)
  * Fix Windows compilation; the new wcwidth files were omitted.
