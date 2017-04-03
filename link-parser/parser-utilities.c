@@ -20,6 +20,7 @@
 #ifdef __MINGW32__
 #include <malloc.h>
 #endif /* __MINGW32__ */
+#include <errno.h>
 
 #include "parser-utilities.h"
 
