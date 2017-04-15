@@ -559,8 +559,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			if (!join_alt) gwordlist_append(&n_lwg_path, *wgp);
 
 			/*
-			 * Add guess marks in [] if needed, at the end of the base word.
-			 * Convert the badly-printing ^C into a period.
+			 * Add guess marks in [] square brackets, if needed, at the
+			 * end of the base word. Convert the badly-printing
+			 * SUBSCRIPT_MARK (hex 03 or ^C) into a period.
 			 */
 			if (t)
 			{

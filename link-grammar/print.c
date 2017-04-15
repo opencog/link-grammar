@@ -606,7 +606,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 		xpicture[1][k] = '\0';
 		for (row=0; row < top_row+1; row++) {
-			strcpy(xpicture[row+2],picture[row]);
+			strcpy(xpicture[row+2], picture[row]);
 		}
 		top_row += 2;
 	} else {
