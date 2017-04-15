@@ -331,7 +331,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	memset(show_word, 0, linkage->num_words * sizeof(*show_word));
 
 	if (D_CCW <= opts->verbosity)
-		print_lwg_path(lwg_path);
+		print_lwg_path(lwg_path, "Linkage");
 
 	for (i = 0; i < linkage->num_words; i++)
 	{
@@ -726,10 +726,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	linkage->wg_path_display = n_lwg_path;
 
 	if (D_CCW <= opts->verbosity)
-	{
-		print_lwg_path(lwg_path);
-		print_lwg_path(n_lwg_path);
-	}
+		print_lwg_path(n_lwg_path, "Display");
 }
 #undef D_CCW
 

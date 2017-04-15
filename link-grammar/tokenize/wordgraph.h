@@ -26,7 +26,7 @@ size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
 void gwordlist_append_list(const Gword ***, const Gword **);
 void gword_set_print(const gword_set *);
-void print_lwg_path(Gword **);
+void print_lwg_path(Gword **, const char *);
 
 const Gword **wordgraph_hier_position(Gword *);
 void print_hier_position(const Gword *);
