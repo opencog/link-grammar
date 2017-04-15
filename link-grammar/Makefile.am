@@ -174,7 +174,7 @@ liblink_grammar_include_HEADERS =   \
 
 EXTRA_DIST=                         \
 	link-grammar.def                 \
-	README                           \
+	README.md                        \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
 	dict-sql/README
