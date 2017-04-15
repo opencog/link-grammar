@@ -452,7 +452,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageWord(JNIEnv *env, jclass cls, jint i)
 	per_thread_data *ptd = get_ptd(env, cls);
 
 	/* Does not need to be freed, points into data structures */
-	/* Returns the inflected word. */
+	/* Returns the subscripted word. */
 	const char * w = linkage_get_word(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, w);
 	return j;
