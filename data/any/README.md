@@ -27,5 +27,10 @@ Some important design notes to be kept in mind.
   to have it be pre-specified. However, this is currently impractical,
   and so the short-term hack is that punctuation is stripped, manually,
   here.
-  
 
+* Root words: The current dictionary allows the identification of
+  multiple "root" words, e.g. of words that could be interpreted as
+  root-verbs and root-nouns (subjects).  This may come as a surprise
+  to some linguists, as there is only one root in the Chomskian
+  tradition, and many dependency grammars share this tradition and
+  only link to a single root, usually the root verb.
