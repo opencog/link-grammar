@@ -1,3 +1,6 @@
+Version 5.3.17 (XXX 2017)
+ * Something ....
+
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
  * Restore tty state after ctrl-C, ctrl-Z of the app.
