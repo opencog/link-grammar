@@ -34,3 +34,5 @@ Some important design notes to be kept in mind.
   to some linguists, as there is only one root in the Chomskian
   tradition, and many dependency grammars share this tradition and
   only link to a single root, usually the root verb.
+
+  This is accomplished by having LEFT-WALL attach with `@ANY+`.
