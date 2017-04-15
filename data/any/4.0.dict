@@ -7,8 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
-<dictionary-version-number>: V5v3v15+;
+% Dictionary version number is 5.3.16 (formatted as V5v3v16+)
+<dictionary-version-number>: V5v3v16+;
 
 % Left-wal @ANY allows multiple head-words, e.g. head-nouns and also
 % head-verbs.
