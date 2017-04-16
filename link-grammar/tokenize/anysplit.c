@@ -26,7 +26,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <externs.h>
 #include <time.h>
 
 #include "api-structures.h"
@@ -35,6 +34,7 @@
 #include "print/print-util.h" // For patch_subscript_mark()
 #include "dict-common/regex-morph.h"
 #include "error.h"
+#include "externs.h"
 #include "tokenize.h"
 #include "tok-structures.h"
 
