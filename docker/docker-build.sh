@@ -22,3 +22,8 @@ docker build --tag="linkgrammar/lgserver:latest" .
 # Build the python bindings, run the unit tests.
 cd ../docker-python
 docker build --tag="linkgrammar/lgpython:latest" .
+
+
+# For developers
+cd ../development
+docker build --tag="linkgrammar/lgdev" .

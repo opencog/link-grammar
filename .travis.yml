@@ -1,0 +1,29 @@
+os:
+  - linux
+
+# Using the container infrastructure.
+sudo: false
+
+cache: apt
+
+# For installing packages
+addons:
+    apt:
+        packages:
+            - autoconf-archive
+before_script:
+    - ./autogen.sh --no-configure
+    - mkdir build
+    - cd build
+    - ../configure --with-python-bindings
+
+script:
+    - make -j$(nproc)
+    - make check
+    # The following tests have been disabled because they don't give non-zero
+    # exit code on failure.
+    #- link-parser/link-parser < ../data/en/4.0.batch
+    #- link-parser/link-parser < ../data/en/4.0.fixes.batch
+    #- link-parser/link-parser < ../data/en/4.0.biolg.batch
+    #- link-parser/link-parser < ../data/lt/4.0.batch
+    #- link-parser/link-parser < ../data/ru/4.0.batch
