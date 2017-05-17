@@ -1,5 +1,6 @@
 Version 5.3.17 (XXX 2017)
  * Fix for missing locale info in Windows XP.
+ * Empty out the post-processing tables for the any, ady, amy langauges
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
