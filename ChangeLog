@@ -1,5 +1,5 @@
 Version 5.3.17 (XXX 2017)
- * Something ....
+ * Fix for missing locale info in Windows XP.
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
