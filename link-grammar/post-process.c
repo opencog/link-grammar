@@ -355,7 +355,8 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 		linkage->pp_info[j].num_domains = k;
 		if (k > 0)
 		{
-			linkage->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
+			linkage->pp_info[j].domain_name =
+				(const char **) exalloc(k * sizeof(const char *));
 		}
 		k = 0;
 		for (d = pp->d_type_array[j]; d != NULL; d = d->next)
