@@ -112,7 +112,10 @@ void *alloca (size_t);
 #endif
 /* Note that "#define _CRT_RAND_S" is needed before "#include <stdlib.h>" */
 #define rand_r(seedp) rand_s(seedp)
+
+#ifndef _WIN32 // windows xp problem : no strtok_s in msvcrt
 #define strtok_r strtok_s
+#endif
 
 /* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.
  * However, MinGW currently doesn't have locale_t. If/when it has locale_t,

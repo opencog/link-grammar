@@ -25,6 +25,41 @@
 #include "utilities.h"
 #include "word-file.h"
 
+// WindowsXP workaround - missing GetLocaleInfoEx
+#ifdef _WIN32
+int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, int cchData)
+{
+    int rc = -1;
+
+    // Normal call
+    int (WINAPI * pfnGetLocaleInfoEx)(LPCWSTR, LCTYPE, LPWSTR, int);
+    *(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32" ), "GetLocaleInfoEx" );
+    if (pfnGetLocaleInfoEx)
+    {
+        rc = pfnGetLocaleInfoEx(lpLocaleName, LCType, lpLCData, cchData);
+    }
+    else
+    {
+        // Workaround for missing GetLocaleInfoEx
+        HMODULE module = LoadLibraryA("Mlang");
+        HRESULT (WINAPI * pfnRfc1766ToLcidW)(LCID*, LPCWSTR);
+        *(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
+        if  (pfnRfc1766ToLcidW)
+        {
+             LCID lcid;
+             if (SUCCEEDED(pfnRfc1766ToLcidW(&lcid, lpLocaleName)))
+             {
+                rc = GetLocaleInfoW(lcid, LCType, lpLCData, cchData);
+             }
+        }
+        FreeLibrary(module);
+    }
+
+    return rc;
+}
+#endif //_WIN32
+
+
 /**
  * Format the given locale for use in setlocale().
  * POSIX systems and Windows use different conventions.
@@ -63,7 +98,7 @@ static const char * format_locale(Dictionary dict,
 	}
 	wlocale[LOCALE_NAME_MAX_LENGTH-1] = L'\0';
 
-	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
+	if (0 >= callGetLocaleInfoEx(wlocale, LOCALE_SENGLISHLANGUAGENAME,
 	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
 	{
 		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHLANGUAGENAME Locale=%s: \n"
@@ -85,7 +120,7 @@ static const char * format_locale(Dictionary dict,
 	strcpy(locale_buf, tmpbuf);
 	strcat(locale_buf, "_");
 
-	if (0 >= GetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
+	if (0 >= callGetLocaleInfoEx(wlocale, LOCALE_SENGLISHCOUNTRYNAME,
 	                         wtmpbuf, LOCALE_NAME_MAX_LENGTH))
 	{
 		prt_error("Error: GetLocaleInfoEx LOCALE_SENGLISHCOUNTRYNAME Locale=%s: \n"
