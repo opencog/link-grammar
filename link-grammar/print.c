@@ -187,14 +187,14 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	for (link=0; link<N_links; link++)
 	{
 		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
-		assert (linkage_get_link_lword(linkage, link) != SIZE_MAX);
+		assert (linkage_get_link_lword(linkage, link) < SIZE_MAX);
 		if (linkage_get_link_num_domains(linkage, link) > longest)
 			longest = linkage_get_link_num_domains(linkage, link);
 	}
 	for (link=0; link<N_links; link++)
 	{
 		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
-		assert (linkage_get_link_lword(linkage, link) != SIZE_MAX);
+		assert (linkage_get_link_lword(linkage, link) < SIZE_MAX);
 		dname = linkage_get_link_domain_names(linkage, link);
 		for (j=0; j<linkage_get_link_num_domains(linkage, link); ++j) {
 			append_string(s, " (%s)", dname[j]);
