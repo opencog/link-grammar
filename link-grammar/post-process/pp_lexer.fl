@@ -21,7 +21,6 @@
 static int q_verbose = 0;
 
 /* forward references for non-exported functions */
-static void check_string(const char *str);
 static void setup(PPLexTable *lt);
 static bool set_label(PPLexTable *lt, const char *label);
 static bool add_string_to_label(PPLexTable *lt, const char *str);
@@ -114,8 +113,6 @@ void pp_lexer_close(PPLexTable *lt)
   string_set_delete(lt->string_set);
   if (lt->tokens) free(lt->tokens);
   xfree(lt, sizeof(PPLexTable));
-  yy_delete_buffer(yy_current_buffer);
-  yy_current_buffer = NULL;
   yy_c_buf_p = NULL;
 }
 
@@ -128,7 +125,6 @@ PPLexTable *pp_lexer_open(FILE *f)
 
   // initialiaze all yy static globals!! We do this here, so
   // that we can be called multiple times w/o crash.
-  yy_current_buffer = NULL;
   yy_c_buf_p = NULL;
   yy_init = 1;
   yy_start = 0;
@@ -141,8 +137,6 @@ PPLexTable *pp_lexer_open(FILE *f)
   clt = NULL;
   lt->idx_of_active_label=-1;
 
-  yy_delete_buffer(yy_current_buffer);
-  yy_current_buffer = NULL;
   if (!yylex_ok)
   {
     pp_lexer_close(lt);
@@ -224,8 +218,7 @@ const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, size_t *
   return lt->tokens;
 }
 
-
-static int yywrap(void)
+int yywrap(void)
 {
   /* must return 1 for end of input, 0 otherwise */
   return 1;
@@ -282,6 +275,16 @@ static bool set_label(PPLexTable *lt, const char *label)
 
   free(label_sans_colon);
 
+  return true;
+}
+
+static bool check_string(const char *str)
+{
+  if (strlen(str)>1 && strchr(str, ',')!=NULL)
+  {
+    prt_error("Error: pp_lexer: string %s contains a comma, which is a no-no.\n", str);
+    return false;
+  }
   return true;
 }
 
@@ -351,16 +354,6 @@ static int get_index_of_label(PPLexTable *lt, const char *label)
   for (i=0; lt->labels[i]!=NULL; i++)
     if (!strcmp(lt->labels[i], label)) return i;
   return -1;
-}
-
-static bool check_string(const char *str)
-{
-  if (strlen(str)>1 && strchr(str, ',')!=NULL)
-  {
-    prt_error("Error: pp_lexer: string %s contains a comma, which is a no-no.\n", str);
-    return false;
-  }
-  return true;
 }
 
 /********************** old rubbish, to be removed ************************/
