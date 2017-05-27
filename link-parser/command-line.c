@@ -152,7 +152,7 @@ static void clean_up_string(char * s)
  * If the width of `s` is shorter than `w`, then the remainder of
  * field is padded with blanks (on the right).
  */
-void left_print_string(FILE * fp, const char * s, int w)
+static void left_print_string(FILE * fp, const char * s, int w)
 {
 	int width = w + strlen(s) - utf8_strwidth(s);
 	fprintf(fp, "%-*s", width, s);
