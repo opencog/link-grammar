@@ -99,10 +99,10 @@ liblink_grammar_la_SOURCES =        \
 	histogram.c                      \
 	idiom.c                          \
 	linkage.c                        \
-	post-process.c                   \
-	pp_knowledge.c                   \
-	pp_lexer.c                       \
-	pp_linkset.c                     \
+	post-process/post-process.c      \
+	post-process/pp_knowledge.c      \
+	post-process/pp_lexer.l          \
+	post-process/pp_linkset.c        \
 	preparation.c                    \
 	print/print.c                    \
 	print/print-dict.c               \
@@ -145,10 +145,10 @@ liblink_grammar_la_SOURCES =        \
 	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
-	post-process.h                   \
-	pp_knowledge.h                   \
-	pp_lexer.h                       \
-	pp_linkset.h                     \
+	post-process/post-process.h      \
+	post-process/pp_knowledge.h      \
+	post-process/pp_lexer.h          \
+	post-process/pp_linkset.h        \
 	preparation.h                    \
 	print/print.h                    \
 	print/print-util.h               \

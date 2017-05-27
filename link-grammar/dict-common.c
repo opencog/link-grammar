@@ -15,7 +15,7 @@
 #include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
-#include "pp_knowledge.h"
+#include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"
 #include "spellcheck.h"
 #include "string-set.h"

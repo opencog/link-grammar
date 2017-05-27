@@ -17,7 +17,7 @@
 #include "api-structures.h"
 #include "error.h"
 #include "externs.h"
-#include "post-process.h"
+#include "post-process/post-process.h"
 #include "print/print-util.h"
 #include "string-set.h"
 
