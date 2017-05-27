@@ -30,9 +30,7 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 
 // ???
 static void copy_string_into(const char *source, char **target);
-static void show_bindings(void);
 static void push_file(char *fname);
-static void pop_file(void);
 
 %}
 
@@ -80,12 +78,6 @@ INCLUDE        ^#include
 typedef struct label_node {
   char *str;
   struct label_node *next; } LABEL_NODE; /* next=NULL: end of list */
-
-static char *labels[PP_LEXER_MAX_LABELS]; /*array of labels (NULL-terminated)*/
-static int idx_of_active_label = -1;
-static LABEL_NODE *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/
-static LABEL_NODE *last_node_of_label[PP_LEXER_MAX_LABELS];    /* efficiency */
-static LABEL_NODE *current_node_of_active_label;
 
 /* variables related to management of a stack of included info files */
 static int     file_stack_counter;
@@ -358,25 +350,6 @@ static int get_index_of_label(PPLexTable *lt, const char *label)
 
 /********************** old rubbish, to be removed ************************/
 
-static void show_bindings(void)
-{
-  /* show contents of knowledge file, as arranged internally */
-  size_t i,j;
-  char *la;
-  LABEL_NODE *p;
-  printf("The symbol table's contents: \n");
-  for (i=0; (la=labels[i])!=NULL; i++)
-    {
-      printf("\n\n%s\n", la);
-      for (j=0; j<strlen(la); j++)
-	printf("=");
-      printf("\n");
-      for (p=nodes_of_label[i]; p!=NULL; p=p->next)
-	printf(" %s ", p->str);
-    }
-  printf("\n");
-}
-
 static void copy_string_into(const char *source, char **target)
 {
   *target = (char*) xalloc ((strlen(source)+1)*sizeof(char));
@@ -403,9 +376,4 @@ Try increasing PP_LEXER_MAX_INCLUDE_FILES.");
   yyin = fopen(fname, "rt");
   if (yyin==0)
   prt_error("pp_lexer: cannot locate specified include file %s.",fname);
-}
-
-static void pop_file(void)
-{
-  yyin = file_stack[--file_stack_counter];
 }
