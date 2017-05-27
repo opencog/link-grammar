@@ -12,6 +12,7 @@
 
 #include "pp_lexer.h"
 #include "link-includes.h"
+#include "string-set.h"
 
 #undef yywrap
 
@@ -21,13 +22,17 @@ static int q_verbose = 0;
 
 /* forward references for non-exported functions */
 static void check_string(const char *str);
-static void setup(void);
-static void set_label(const char *label);
-static void add_string_to_label(const char *str);
+static void setup(PPLexTable *lt)
+static bool set_label(PPLexTable *lt, const char *label);
+static bool add_string_to_label(PPLexTable *lt, const char *str);
 static void add_set_of_strings_to_label(const char *label_of_set);
-static void show_bindings(void);
+static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
+static int  get_index_of_label(PPLexTable *lt, const char *label);
+static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
+
+// ???
 static void copy_string_into(const char *source, char **target);
-static int  get_index_of_label(const char *label);
+static void show_bindings(void);
 static void push_file(char *fname);
 static void pop_file(void);
 
