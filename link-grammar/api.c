@@ -534,8 +534,11 @@ static void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
 
+
 	/* Special-case the "amy/ady" morphology handling. */
-	if (sent->dict->affix_table->anysplit)
+	/* More generally, it there's no post-processor, do nothing. */
+	// if (sent->dict->affix_table->anysplit)
+	if (NULL == sent->postprocessor)
 	{
 		sent->num_linkages_post_processed = sent->num_valid_linkages;
 		return;

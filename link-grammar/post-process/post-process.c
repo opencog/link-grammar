@@ -237,9 +237,12 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 {
 	if (ppn->dtsz <= idx)
 	{
-		ppn->dtsz += idx + 5;
+		size_t old_size = ppn->dtsz;
+#define MOREDT 5
+		ppn->dtsz += idx + MOREDT;
 		ppn->d_type_array = realloc(ppn->d_type_array,
 			ppn->dtsz * sizeof(D_type_list*));
+		memset(&ppn->d_type_array[old_size], 0, MOREDT * sizeof(D_type_list*));
 	}
 }
 
@@ -339,6 +342,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
+	if (0 == postprocessor->pp_data.N_domains) return;
 
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
@@ -940,32 +944,33 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 	size_t d, d1, link;
 	DTreeLeaf * dtl;
 
-	if (pp_data->N_domains > 0)
+	if (0 == pp_data->N_domains) return;
+
+	pp_data->domain_array[pp_data->N_domains-1].parent = NULL;
+	for (d=0; d < pp_data->N_domains-1; d++)
 	{
-		pp_data->domain_array[pp_data->N_domains-1].parent = NULL;
-		for (d=0; d < pp_data->N_domains-1; d++)
+		for (d1 = d+1; d1 < pp_data->N_domains; d1++)
 		{
-			for (d1 = d+1; d1 < pp_data->N_domains; d1++)
+			if (contained_in(&pp_data->domain_array[d], &pp_data->domain_array[d1], sublinkage))
 			{
-				if (contained_in(&pp_data->domain_array[d], &pp_data->domain_array[d1], sublinkage))
-				{
-					pp_data->domain_array[d].parent = &pp_data->domain_array[d1];
-					break;
-				}
-			}
-			if (d1 == pp_data->N_domains)
-			{
-				/* we know this domain is a root of a new tree */
-				pp_data->domain_array[d].parent = NULL;
+				pp_data->domain_array[d].parent = &pp_data->domain_array[d1];
+				break;
 			}
 		}
+		if (d1 == pp_data->N_domains)
+		{
+			/* we know this domain is a root of a new tree */
+			pp_data->domain_array[d].parent = NULL;
+		}
 	}
+
 	/* The parent links of domain nodes have been established.
 	 * Now do the leaves. */
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
 		pp_data->domain_array[d].child = NULL;
 	}
+
 	for (link=0; link < sublinkage->num_links; link++)
 	{
 		assert (sublinkage->link_array[link].lw != SIZE_MAX);
@@ -1099,6 +1104,8 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 {
 	Postprocessor *pp;
 	PP_data *pp_data;
+
+	if (NULL == kno) return NULL;
 
 	pp = (Postprocessor *) malloc (sizeof(Postprocessor));
 	pp->knowledge = kno;
@@ -1402,19 +1409,3 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
     Modifications, 9/97 ALB:
      Deglobalization. Made code consistent with api.
    */
-
-/* ------ Deprecated functions, remove these someday ------ */
-PostProcessor * post_process_open(const char *path)
-{
-	pp_knowledge *kno = pp_knowledge_open(path);
-	if (NULL == kno) return NULL;
-	return post_process_new(kno);
-}
-
-void post_process_close(PostProcessor *pp)
-{
-	pp_knowledge_close(pp->knowledge);
-	post_process_free(pp);
-}
-
-void linkage_post_process(Linkage lkg, Postprocessor * pp) {}

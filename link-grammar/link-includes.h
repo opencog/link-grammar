@@ -420,23 +420,7 @@ link_public_api(int)
  #define MS_DEPRECATED
 #endif
 
-/**********************************************************************
- *
- * Functions that allow special-purpose post-processing of linkages
- *
- ***********************************************************************/
-
 #ifndef SWIG
-/** Do not use in new code! */
-typedef struct Postprocessor_s PostProcessor;
-
-MS_DEPRECATED link_public_api(PostProcessor *)
-     post_process_open(const char *path) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(void)
-     post_process_close(PostProcessor *) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(void)
-     linkage_post_process(Linkage, PostProcessor *) GNUC_DEPRECATED;
-
 LINK_END_DECLS
 #endif /* !SWIG */
 

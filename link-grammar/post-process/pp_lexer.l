@@ -14,7 +14,6 @@
 #include "link-includes.h"
 #include "string-set.h"
 
-#undef yywrap
 #define YY_NO_INPUT
 #define YY_NO_UNPUT
 

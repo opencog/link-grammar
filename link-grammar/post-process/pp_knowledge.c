@@ -404,6 +404,13 @@ pp_knowledge *pp_knowledge_open(const char *path)
   if (!read_link_sets(k)) goto failure;
   if (!read_rules(k)) goto failure;
   initialize_set_of_links_starting_bounded_domain(k);
+
+  /* If the knowledge file was empty, do nothing at all. */
+  if (0 == k->n_form_a_cycle_rules &&
+      0 == k->n_contains_one_rules &&
+      0 == k->n_contains_none_rules &&
+      0 == k->n_bounded_rules) return NULL;
+
   return k;
 
 failure:
