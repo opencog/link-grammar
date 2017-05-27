@@ -108,9 +108,6 @@ linkage_disjunct_cost
 linkage_corpus_cost
 linkage_link_cost
 linkage_get_violation_name
-post_process_open
-post_process_close
-linkage_post_process
 prt_error
 lg_compute_disjunct_strings
 lg_expand_disjunct_list

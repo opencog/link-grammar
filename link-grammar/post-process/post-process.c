@@ -1407,19 +1407,3 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
     Modifications, 9/97 ALB:
      Deglobalization. Made code consistent with api.
    */
-
-/* ------ Deprecated functions, remove these someday ------ */
-PostProcessor * post_process_open(const char *path)
-{
-	pp_knowledge *kno = pp_knowledge_open(path);
-	if (NULL == kno) return NULL;
-	return post_process_new(kno);
-}
-
-void post_process_close(PostProcessor *pp)
-{
-	pp_knowledge_close(pp->knowledge);
-	post_process_free(pp);
-}
-
-void linkage_post_process(Linkage lkg, Postprocessor * pp) {}
