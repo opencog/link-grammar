@@ -17,7 +17,7 @@
 #include "dict-common.h"
 #include "externs.h"
 #include "idiom.h"
-#include "pp_knowledge.h"
+#include "post-process/pp_knowledge.h"
 #include "read-dict.h"
 #include "read-regex.h"
 #include "regex-morph.h"

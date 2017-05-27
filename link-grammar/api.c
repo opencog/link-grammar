@@ -26,7 +26,7 @@
 #include "extract-links.h"
 #include "fast-match.h"
 #include "linkage.h"
-#include "post-process.h"
+#include "post-process/post-process.h"
 #include "preparation.h"
 #include "print/print.h"
 #include "prune.h"

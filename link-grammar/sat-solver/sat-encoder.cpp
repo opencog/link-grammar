@@ -34,7 +34,7 @@ extern "C" {
 #include "build-disjuncts.h"      // for build_disjuncts_for_exp()
 #include "dict-api.h"             // for print_expression()
 #include "linkage.h"
-#include "post-process.h"
+#include "post-process/post-process.h"
 #include "score.h"               // for linkage_score()
 }
 

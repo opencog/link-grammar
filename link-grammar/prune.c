@@ -16,7 +16,7 @@
 #include "dict-api.h"  /* for print_expression when debugging */
 #include "disjunct-utils.h"
 #include "externs.h"
-#include "post-process.h"
+#include "post-process/post-process.h"
 #include "print/print.h"
 
 #include "prune.h"

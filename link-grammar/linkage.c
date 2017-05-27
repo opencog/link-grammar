@@ -23,7 +23,7 @@
 #include "idiom.h"
 #include "link-includes.h"
 #include "linkage.h"
-#include "post-process.h"
+#include "post-process/post-process.h" // needed only for exfree_domain_names
 #include "print/print.h"
 #include "print/print-util.h"
 #include "sat-solver/sat-encoder.h"
