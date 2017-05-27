@@ -101,7 +101,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage.c                        \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
-	post-process/pp_lexer.c          \
+	post-process/pp_lexer.l          \
 	post-process/pp_linkset.c        \
 	preparation.c                    \
 	print/print.c                    \
