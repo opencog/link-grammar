@@ -944,32 +944,33 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 	size_t d, d1, link;
 	DTreeLeaf * dtl;
 
-	if (pp_data->N_domains > 0)
+	if (0 == pp_data->N_domains) return;
+
+	pp_data->domain_array[pp_data->N_domains-1].parent = NULL;
+	for (d=0; d < pp_data->N_domains-1; d++)
 	{
-		pp_data->domain_array[pp_data->N_domains-1].parent = NULL;
-		for (d=0; d < pp_data->N_domains-1; d++)
+		for (d1 = d+1; d1 < pp_data->N_domains; d1++)
 		{
-			for (d1 = d+1; d1 < pp_data->N_domains; d1++)
+			if (contained_in(&pp_data->domain_array[d], &pp_data->domain_array[d1], sublinkage))
 			{
-				if (contained_in(&pp_data->domain_array[d], &pp_data->domain_array[d1], sublinkage))
-				{
-					pp_data->domain_array[d].parent = &pp_data->domain_array[d1];
-					break;
-				}
-			}
-			if (d1 == pp_data->N_domains)
-			{
-				/* we know this domain is a root of a new tree */
-				pp_data->domain_array[d].parent = NULL;
+				pp_data->domain_array[d].parent = &pp_data->domain_array[d1];
+				break;
 			}
 		}
+		if (d1 == pp_data->N_domains)
+		{
+			/* we know this domain is a root of a new tree */
+			pp_data->domain_array[d].parent = NULL;
+		}
 	}
+
 	/* The parent links of domain nodes have been established.
 	 * Now do the leaves. */
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
 		pp_data->domain_array[d].child = NULL;
 	}
+
 	for (link=0; link < sublinkage->num_links; link++)
 	{
 		assert (sublinkage->link_array[link].lw != SIZE_MAX);
