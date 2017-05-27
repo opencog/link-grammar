@@ -1,0 +1,191 @@
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright 2013, 2014 Linas Vepstas                                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software.    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
+
+#include <string.h>
+
+#include "build-disjuncts.h"
+#include "dict-common.h"
+#include "print/print.h"
+#include "regex-morph.h"
+#include "dict-file/word-file.h"
+#include "dict-file/read-dict.h"
+
+/* ======================================================================= */
+
+/**
+ * Display the information about the given word.
+ * If the word can split, display the information about each part.
+ * Note that the splits may be invalid grammatically.
+ *
+ * Wild-card search is supported; the command-line user can type in !!word* or
+ * !!word*.sub and get a list of all words that match up to the wild-card.
+ * In this case no split is done.
+ *
+ * FIXME: Errors are printed twice, since display_word_split() is invoked twice
+ * per word. One way to fix it is to change display_word_split() to return false
+ * on failure. However, this is a big fix, because the failure is several
+ * functions deep, all not returning a value or returning a value for another
+ * purpose. An easy fix, which has advantages for other things, is to add (and
+ * use here) a "char *last_error" field in the Dictionary structure, serving
+ * like an "errno" of library calls.
+ */
+
+static void display_word_split(Dictionary dict,
+                               const char * word,
+                               Parse_Options opts,
+                               void (*display)(Dictionary, const char *))
+{
+	Sentence sent;
+	struct Parse_Options_s display_word_opts = *opts;
+
+	if ('\0' == word) return; /* avoid trying null strings */
+
+	parse_options_set_spell_guess(&display_word_opts, 0);
+	sent = sentence_create(word, dict);
+	if (0 == sentence_split(sent, &display_word_opts))
+	{
+		/* List the splits */
+		print_sentence_word_alternatives(sent, false, NULL, NULL);
+		/* List the disjuncts information. */
+		print_sentence_word_alternatives(sent, false, display, NULL);
+	}
+	sentence_delete(sent);
+}
+
+/**
+ * Prints string `s`, aligned to the left, in a field width `w`.
+ * If the width of `s` is shorter than `w`, then the remainder of
+ * field is padded with blanks (on the right).
+ */
+static void left_print_string(FILE * fp, const char * s, int w)
+{
+	int width = w + strlen(s) - utf8_strwidth(s);
+	fprintf(fp, "%-*s", width, s);
+}
+
+#define DJ_COL_WIDTH sizeof("                         ")
+
+/**
+ * Display the number of disjuncts associated with this dict node
+ */
+static void display_counts(const char *word, Dict_node *dn)
+{
+	printf("matches:\n");
+
+	for (; dn != NULL; dn = dn->right)
+	{
+		unsigned int len;
+		char * s;
+		char * t;
+
+		len = count_disjunct_for_dict_node(dn);
+		s = strdup(dn->string);
+		t = strrchr(s, SUBSCRIPT_MARK);
+		if (t) *t = SUBSCRIPT_DOT;
+		printf("    ");
+		left_print_string(stdout, s, DJ_COL_WIDTH);
+		free(s);
+		printf(" %8u  disjuncts ", len);
+		if (dn->file != NULL)
+		{
+			printf("<%s>", dn->file->file);
+		}
+		printf("\n");
+	}
+}
+
+/**
+ * Display the number of disjuncts associated with this dict node
+ */
+static void display_expr(const char *word, Dict_node *dn)
+{
+	printf("expressions:\n");
+	for (; dn != NULL; dn = dn->right)
+	{
+		char * s;
+		char * t;
+
+		s = strdup(dn->string);
+		t = strrchr(s, SUBSCRIPT_MARK);
+		if (t) *t = SUBSCRIPT_DOT;
+		printf("    ");
+		left_print_string(stdout, s, DJ_COL_WIDTH);
+		free(s);
+		print_expression(dn->exp);
+		if (NULL != dn->right) /* avoid extra newlines at the end */
+			printf("\n\n");
+	}
+}
+
+static void display_word_info(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	Dict_node *dn_head;
+
+	dn_head = dictionary_lookup_wild(dict, word);
+	if (dn_head)
+	{
+		display_counts(word, dn_head);
+		free_lookup(dn_head);
+		return;
+	}
+
+	/* Recurse, if it's a regex match */
+	regex_name = match_regex(dict->regex_root, word);
+	if (regex_name)
+	{
+		display_word_info(dict, regex_name);
+		return;
+	}
+	printf("matches nothing in the dictionary.");
+}
+
+static void display_word_expr(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	Dict_node *dn_head;
+
+	dn_head = dictionary_lookup_wild(dict, word);
+	if (dn_head)
+	{
+		display_expr(word, dn_head);
+		free_lookup(dn_head);
+		return;
+	}
+
+	/* Recurse, if it's a regex match */
+	regex_name = match_regex(dict->regex_root, word);
+	if (regex_name)
+	{
+		display_word_expr(dict, regex_name);
+		return;
+	}
+	printf("matches nothing in the dictionary.");
+}
+
+/**
+ *  dict_display_word_info() - display the information about the given word.
+ */
+void dict_display_word_info(Dictionary dict, const char * word,
+		Parse_Options opts)
+{
+	display_word_split(dict, word, opts, display_word_info);
+}
+
+/**
+ *  dict_display_word_expr() - display the connector info for a given word.
+ */
+void dict_display_word_expr(Dictionary dict, const char * word, Parse_Options opts)
+{
+	display_word_split(dict, word, opts, display_word_expr);
+}

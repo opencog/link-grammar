@@ -105,6 +105,7 @@ liblink_grammar_la_SOURCES =        \
 	pp_linkset.c                     \
 	preparation.c                    \
 	print/print.c                    \
+	print/print-dict.c               \
 	print/print-util.c               \
 	prune.c                          \
 	regex-morph.c                    \
