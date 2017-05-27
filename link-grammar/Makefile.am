@@ -34,6 +34,8 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
 	$(HUNSPELL_CFLAGS)
 
+post-process/pp_lexer.lo: AM_CPPFLAGS += -I$(top_srcdir)/link-grammar/post-process
+
 lib_LTLIBRARIES = liblink-grammar.la
 
 EXTRA_liblink_grammar_la_DEPENDENCIES = $(srcdir)/link-grammar.def
