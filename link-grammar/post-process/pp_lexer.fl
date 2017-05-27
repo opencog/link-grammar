@@ -15,7 +15,6 @@
 
 #undef yywrap
 
-#define PP_LEXER_MAX_LABELS   1024
 #define PP_LEXER_MAX_INCLUDES 1024
 
 static int q_verbose = 0;
@@ -69,7 +68,7 @@ INCLUDE        ^#include
 <INITIAL>{NONLABEL}       { add_string_to_label(yytext); }
 <INITIAL>{NONLABELQUOTED} { add_string_to_label(yytext); }
 
-.  { err_msg("pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
+.  { err_msg(lg_Fatal, "pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
 
 
 %%
