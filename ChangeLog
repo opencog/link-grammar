@@ -3,6 +3,7 @@ Version 5.4.0 (XXX 2017)
  * Empty out the post-processing tables for the any, ady, amy langauges
  * Remove left_print_string() from the API.
  * Recover pp_lexer.l from ancient version 2.2!
+ * Fix unusual crash in post-processing for the "any" language.
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.

@@ -342,6 +342,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
+	if (0 == postprocessor->pp_data.N_domains) return;
 
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
