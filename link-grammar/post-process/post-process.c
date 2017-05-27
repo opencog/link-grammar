@@ -237,9 +237,12 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 {
 	if (ppn->dtsz <= idx)
 	{
-		ppn->dtsz += idx + 5;
+		size_t old_size = ppn->dtsz;
+#define MOREDT 5
+		ppn->dtsz += idx + MOREDT;
 		ppn->d_type_array = realloc(ppn->d_type_array,
 			ppn->dtsz * sizeof(D_type_list*));
+		memset(&ppn->d_type_array[old_size], 0, MOREDT * sizeof(D_type_list*));
 	}
 }
 
