@@ -11,7 +11,7 @@
 **************************************************************************/
 
 #include "pp_lexer.h"
-#include "error.h"
+#include "link-includes.h"
 
 #undef yywrap
 
@@ -68,7 +68,7 @@ INCLUDE        ^#include
 <INITIAL>{NONLABEL}       { add_string_to_label(yytext); }
 <INITIAL>{NONLABELQUOTED} { add_string_to_label(yytext); }
 
-.  { err_msg(lg_Fatal, "pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
+.  { prt_error("pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
 
 
 %%
@@ -96,7 +96,7 @@ void pp_lexer_open(FILE *f)
 {
   /* open knowledge file */
   yyin = f;
-  if (yyin==NULL) error("internal error");
+  if (yyin==NULL) prt_error("internal error");
 
   /* set up data structures */
   setup();
@@ -122,7 +122,7 @@ int pp_lexer_count_tokens_of_label() {
   /* counts all tokens, indiscriminately */
   int n_tokens;
   LABEL_NODE *p;
-  if (idx_of_active_label==-1) error("pp_lexer: current label is invalid");
+  if (idx_of_active_label==-1) prt_error("pp_lexer: current label is invalid");
   for (n_tokens=0, p=nodes_of_label[idx_of_active_label];
        p!=NULL;
        p=p->next, n_tokens++);
@@ -142,7 +142,7 @@ char *pp_lexer_get_next_token_of_label() {
 int pp_lexer_count_commas_of_label() {
   int n_commas;
   LABEL_NODE *p;
-  if (idx_of_active_label==-1) error("pp_lexer: current label is invalid");
+  if (idx_of_active_label==-1) prt_error("pp_lexer: current label is invalid");
   for (n_commas=0,p=nodes_of_label[idx_of_active_label];p!=NULL;p=p->next)
     if (!strcmp(p->str, ",")) n_commas++;
   return n_commas;
@@ -204,7 +204,7 @@ int yywrap()
 static void check_string(const char *str)
 {
    if (strlen(str)>1 && strchr(str, ',')!=NULL)
-      error("pp_lexer: string %s contains a comma, which is a no-no.",str);
+      prt_error("pp_lexer: string %s contains a comma, which is a no-no.",str);
 }
 
 static void setup(void)
@@ -230,11 +230,11 @@ static void set_label(const char *label) {
   /* have we seen this label already? If so, abort */
   for (i=0; labels[i]!=NULL && strcmp(labels[i], label_sans_colon); i++);
   if (labels[i]!=NULL)
-  error("pp_lexer: label %s multiply defined!", label_sans_colon);
+  prt_error("pp_lexer: label %s multiply defined!", label_sans_colon);
 
   /* new label. Store it */
   if (i == PP_LEXER_MAX_LABELS-1)   /* keep the -1! */
-    error("pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
+    prt_error("pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
   copy_string_into(label_sans_colon, &labels[i]);
   idx_of_active_label = i;
 }
@@ -245,7 +245,7 @@ static void add_string_to_label(const char *str) {
   LABEL_NODE *new_node;
 
   if (idx_of_active_label==-1)
-  error("pp_lexer: invalid syntax (line %i)",yylineno);
+  prt_error("pp_lexer: invalid syntax (line %i)",yylineno);
 
   /* make sure string is legal */
   check_string(str);
@@ -276,9 +276,9 @@ static void add_set_of_strings_to_label(const char *label_of_set) {
   LABEL_NODE *p;
   int idx_of_label_of_set;
   if (idx_of_active_label==-1)
-  error("pp_lexer: invalid syntax (line %i)",yylineno);
+  prt_error("pp_lexer: invalid syntax (line %i)",yylineno);
   if ((idx_of_label_of_set = get_index_of_label(label_of_set))==-1)
-    error("pp_lexer: label %s must be defined before it's referred to(line %i)"
+    prt_error("pp_lexer: label %s must be defined before it's referred to(line %i)"
 	  ,label_of_set, yylineno);
   for (p=nodes_of_label[idx_of_label_of_set]; p!=NULL; p=p->next)
     add_string_to_label(p->str);
@@ -332,14 +332,14 @@ static void push_file(char *fname)
 
   /* have we exhausted our stack? */
   if (file_stack_counter == PP_LEXER_MAX_INCLUDES)
-    error("pp_lexer: exceeded maximum number of allowed include files.\n\
+    prt_error("pp_lexer: exceeded maximum number of allowed include files.\n\
 Try increasing PP_LEXER_MAX_INCLUDE_FILES.");
 
   /* Push current file onto stack of active include files; open new one */
   file_stack[file_stack_counter++] = yyin;
   yyin = fopen(fname, "rt");
   if (yyin==0)
-  error("pp_lexer: cannot locate specified include file %s.",fname);
+  prt_error("pp_lexer: cannot locate specified include file %s.",fname);
 }
 
 
