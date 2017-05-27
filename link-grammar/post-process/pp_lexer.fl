@@ -16,8 +16,6 @@
 
 #undef yywrap
 
-#define PP_LEXER_MAX_INCLUDES 1024
-
 static int q_verbose = 0;
 
 /* forward references for non-exported functions */
@@ -75,11 +73,10 @@ INCLUDE        ^#include
 %%
 
 /************************** static variables ***************************/
-typedef struct label_node {
-  char *str;
-  struct label_node *next; } LABEL_NODE; /* next=NULL: end of list */
 
+// XXX I think this is dead code ....
 /* variables related to management of a stack of included info files */
+#define PP_LEXER_MAX_INCLUDES 1024
 static int     file_stack_counter;
 static int     num_files_read = 0;
 static FILE    *file_stack[PP_LEXER_MAX_INCLUDES];
