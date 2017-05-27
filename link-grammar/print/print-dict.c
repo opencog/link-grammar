@@ -20,6 +20,172 @@
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
 
+
+/* ======================================================================== */
+
+/* INFIX_NOTATION is always defined; we simply never use the format below. */
+/* #if ! defined INFIX_NOTATION */
+#if 0
+/**
+ * print the expression, in prefix-style
+ */
+void print_expression(Exp * n)
+{
+	E_list * el;
+	int i, icost;
+
+	if (n == NULL)
+	{
+		printf("NULL expression");
+		return;
+	}
+
+	icost = (int) (n->cost);
+	if (n->type == CONNECTOR_type)
+	{
+		for (i=0; i<icost; i++) printf("[");
+		if (n->multi) printf("@");
+		printf("%s%c", n->u.string, n->dir);
+		for (i=0; i<icost; i++) printf("]");
+		if (icost > 0) printf(" ");
+	}
+	else
+	{
+		for (i=0; i<icost; i++) printf("[");
+		if (icost == 0) printf("(");
+		if (n->type == AND_type) printf("& ");
+		if (n->type == OR_type) printf("or ");
+		for (el = n->u.l; el != NULL; el = el->next)
+		{
+			print_expression(el->e);
+		}
+		for (i=0; i<icost; i++) printf("]");
+		if (icost > 0) printf(" ");
+		if (icost == 0) printf(") ");
+	}
+}
+
+#else /* INFIX_NOTATION */
+
+#define COST_FMT "%.3f"
+/**
+ * print the expression, in infix-style
+ */
+static void print_expression_parens(const Exp * n, int need_parens)
+{
+	E_list * el;
+	int i, icost;
+	double dcost;
+
+	if (n == NULL)
+	{
+		err_msg(lg_Debug, "NULL expression");
+		return;
+	}
+
+	icost = (int) (n->cost);
+	dcost = n->cost - icost;
+	if (dcost > 10E-4)
+	{
+		dcost = n->cost;
+		icost = 1;
+	}
+	else
+	{
+		dcost = 0;
+	}
+
+	/* print the connector only */
+	if (n->type == CONNECTOR_type)
+	{
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "[");
+		if (n->multi) err_msg(lg_Debug, "@");
+		err_msg(lg_Debug, "%s%c", n->u.string, n->dir);
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+		if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
+		return;
+	}
+
+	/* Look for optional, and print only that */
+	el = n->u.l;
+	if (el == NULL)
+	{
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "[");
+		prt_error ("()");
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+		if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
+		return;
+	}
+
+	for (i=0; i<icost; i++) err_msg(lg_Debug, "[");
+	if ((n->type == OR_type) &&
+	    el && el->e && (NULL == el->e->u.l))
+	{
+		prt_error ("{");
+		if (NULL == el->next) err_msg(lg_Debug, "error-no-next");
+		else print_expression_parens(el->next->e, false);
+		prt_error ("}");
+		return;
+	}
+
+	if ((icost == 0) && need_parens) err_msg(lg_Debug, "(");
+
+	/* print left side of binary expr */
+	print_expression_parens(el->e, true);
+
+	/* get a funny "and optional" when its a named expression thing. */
+	if ((n->type == AND_type) && (el->next == NULL))
+	{
+		for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+		if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
+		if ((icost == 0) && need_parens) err_msg(lg_Debug, ")");
+		return;
+	}
+
+	if (n->type == AND_type) err_msg(lg_Debug, " & ");
+	if (n->type == OR_type) err_msg(lg_Debug, " or ");
+
+	/* print right side of binary expr */
+	el = el->next;
+	if (el == NULL)
+	{
+		prt_error ("()");
+	}
+	else
+	{
+		if (el->e->type == n->type)
+		{
+			print_expression_parens(el->e, false);
+		}
+		else
+		{
+			print_expression_parens(el->e, true);
+		}
+		if (el->next != NULL)
+		{
+			// prt_error ("\nERROR! Unexpected list!\n");
+			/* The SAT parser just naively joins all X_node expressions
+			 * using "or", and this check used to give an error due to that,
+			 * preventing a convenient debugging.
+			 * Just accept it (but mark it with '!'). */
+			if (n->type == AND_type) err_msg(lg_Debug, " &! ");
+			if (n->type == OR_type) err_msg(lg_Debug, " or! ");
+			print_expression_parens(el->next->e, true);
+		}
+	}
+
+	for (i=0; i<icost; i++) err_msg(lg_Debug, "]");
+	if (0 != dcost) err_msg(lg_Debug, COST_FMT, dcost);
+	if ((icost == 0) && need_parens) err_msg(lg_Debug, ")");
+}
+
+void print_expression(const Exp * n)
+{
+	print_expression_parens(n, false);
+	err_msg(lg_Debug, "\n");
+}
+#endif /* INFIX_NOTATION */
+
 /* ======================================================================= */
 
 /**
