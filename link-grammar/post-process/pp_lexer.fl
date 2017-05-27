@@ -39,22 +39,8 @@ NONLABELQUOTED \"[^\t\"\n:]+\"
 WHITE          [ \t\n]*
 COMMENT        ^[\ \t]*;.*$
 VERBOSE        ^#verbose.*
-NONWHITE       [^ \t\n=\"]+
-INCLUDE        ^#include
 
 %%
-
-
-<INITIAL>{INCLUDE}{WHITE}  { BEGIN INCLUDE; }
-
-<INCLUDE>{NONWHITE}        {  push_file(yytext);
-                              BEGIN INITIAL; }
-
-<INCLUDE>\".*\"            {  static char fname[256];
-                              strcpy(fname, &yytext[1]);
-                              fname[strlen(fname)-1]=0;
-                              push_file(fname);
-                              BEGIN INITIAL;  }
 
 {COMMENT}                 ;
 {WHITE}                   ;
@@ -68,16 +54,6 @@ INCLUDE        ^#include
 
 
 %%
-
-/************************** static variables ***************************/
-
-// XXX I think this is dead code ....
-/* variables related to management of a stack of included info files */
-#define PP_LEXER_MAX_INCLUDES 1024
-static int     file_stack_counter;
-static int     num_files_read = 0;
-static FILE    *file_stack[PP_LEXER_MAX_INCLUDES];
-static char    *files_read[PP_LEXER_MAX_INCLUDES];
 
 /************************ exported functions ******************************/
 
@@ -340,34 +316,4 @@ static int get_index_of_label(PPLexTable *lt, const char *label)
   for (i=0; lt->labels[i]!=NULL; i++)
     if (!strcmp(lt->labels[i], label)) return i;
   return -1;
-}
-
-/********************** old rubbish, to be removed ************************/
-
-static void copy_string_into(const char *source, char **target)
-{
-  *target = (char*) xalloc ((strlen(source)+1)*sizeof(char));
-  strcpy(*target, source);
-}
-
-static void push_file(char *fname)
-{
-  /* Don't read an include file twice (could go into infinite loop) */
-  int i;
-  for (i=0; i<num_files_read; i++)
-    if (!strcmp(fname, files_read[i])) return;
-
-  /* Haven't seen this file yet. Save name to avoid re-reading it later */
-  copy_string_into(fname, &(files_read[num_files_read]));
-
-  /* have we exhausted our stack? */
-  if (file_stack_counter == PP_LEXER_MAX_INCLUDES)
-    prt_error("pp_lexer: exceeded maximum number of allowed include files.\n\
-Try increasing PP_LEXER_MAX_INCLUDE_FILES.");
-
-  /* Push current file onto stack of active include files; open new one */
-  file_stack[file_stack_counter++] = yyin;
-  yyin = fopen(fname, "rt");
-  if (yyin==0)
-  prt_error("pp_lexer: cannot locate specified include file %s.",fname);
 }
