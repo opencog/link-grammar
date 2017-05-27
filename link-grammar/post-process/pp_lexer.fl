@@ -15,6 +15,8 @@
 #include "string-set.h"
 
 #undef yywrap
+#define YY_NO_INPUT
+#define YY_NO_UNPUT
 
 /* forward references for non-exported functions */
 static void setup(PPLexTable *lt);
