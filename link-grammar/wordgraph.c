@@ -26,7 +26,7 @@
 #include "externs.h"
 #include "string-set.h"
 #include "structures.h"
-#include "print-util.h"
+#include "print/print-util.h"
 #include "wordgraph.h"
 
 #ifdef __APPLE__

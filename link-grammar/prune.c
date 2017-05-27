@@ -17,7 +17,7 @@
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "post-process.h"
-#include "print.h"
+#include "print/print.h"
 
 #include "prune.h"
 #include "resources.h"

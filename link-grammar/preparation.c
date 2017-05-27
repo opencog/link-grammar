@@ -16,7 +16,7 @@
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "preparation.h"
-#include "print.h"
+#include "print/print.h"
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"

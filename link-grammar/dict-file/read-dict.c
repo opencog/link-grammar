@@ -16,7 +16,7 @@
 #include "build-disjuncts.h"
 #include "dict-common.h"
 #include "error.h"
-#include "print.h"
+#include "print/print.h"
 #include "externs.h"
 #include "idiom.h"
 #include "read-dict.h"
