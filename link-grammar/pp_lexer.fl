@@ -1,0 +1,360 @@
+%{
+/**************************************************************************
+   Lex specification for post-process knowledge file 
+
+   6/96 ALB
+   Possible areas of improvement:
+    . allow sets to be referred to anywhere in file, not just 
+      after they are defined. (but then you need to be careful
+      about infinite loops involving recursively defined sets) 
+
+**************************************************************************/
+
+#include "pp_lexer.h"
+#include "header.h"
+
+#undef yywrap
+
+#define PP_LEXER_MAX_LABELS   1024
+#define PP_LEXER_MAX_INCLUDES 1024
+
+static int q_verbose = 0;
+
+/* forward references for non-exported functions */
+static void check_string(const char *str);
+static void setup();
+static void set_label(const char *label);
+static void add_string_to_label(const char *str);
+static void add_set_of_strings_to_label(const char *label_of_set);
+static void show_bindings();
+static void copy_string_into(const char *source, char **target);
+static int  get_index_of_label(const char *label);
+static void push_file(char *fname);
+static void pop_file();
+
+%}
+
+%s INCLUDE
+
+LABEL          [^ \t\"\n:]+:
+NONLABELSET    @[^ \t\n\":]+ 
+NONLABEL       [^ \t\"\n:]+ 
+NONLABELQUOTED \"[^\t\"\n:]+\"
+WHITE          [ \t\n]*
+COMMENT        ^[\ \t]*;.*$ 
+VERBOSE        ^#verbose.*
+NONWHITE       [^ \t\n=\"]+
+INCLUDE        ^#include
+
+%%
+
+
+<INITIAL>{INCLUDE}{WHITE}  { BEGIN INCLUDE; }
+<INITIAL>{VERBOSE}         { q_verbose = 1; }
+
+<INCLUDE>{NONWHITE}        {  push_file(yytext);
+                              BEGIN INITIAL; }
+
+<INCLUDE>\".*\"            {  static char fname[256];
+                              strcpy(fname, &yytext[1]);
+                              fname[strlen(fname)-1]=0; 
+                              push_file(fname);
+                              BEGIN INITIAL;  }    
+
+{COMMENT}                 ; 
+{WHITE}                   ; 
+
+<INITIAL>{LABEL}          { set_label(yytext); }
+<INITIAL>{NONLABELSET}    { add_set_of_strings_to_label(&(yytext[1])); }
+<INITIAL>{NONLABEL}       { add_string_to_label(yytext); }
+<INITIAL>{NONLABELQUOTED} { add_string_to_label(yytext); }
+
+.  { error("pp_lexer: unable to parse knowledge file (line %i).\n",yylineno); }
+
+
+%%
+
+/************************** static variables ***************************/
+typedef struct label_node {
+  char *str;                      
+  struct label_node *next; } LABEL_NODE; /* next=NULL: end of list */
+
+static char *labels[PP_LEXER_MAX_LABELS]; /*array of labels (NULL-terminated)*/
+static int idx_of_active_label = -1;
+static LABEL_NODE *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/
+static LABEL_NODE *last_node_of_label[PP_LEXER_MAX_LABELS];    /* efficiency */
+static LABEL_NODE *current_node_of_active_label;
+
+/* variables related to management of a stack of included info files */
+static int     file_stack_counter;
+static int     num_files_read = 0; 
+static FILE    *file_stack[PP_LEXER_MAX_INCLUDES];
+static char    *files_read[PP_LEXER_MAX_INCLUDES];
+
+/************************ exported functions ******************************/
+
+void pp_lexer_open(FILE *f)
+{
+  /* open knowledge file */
+  yyin = f;
+  if (yyin==NULL) error("internal error");
+
+  /* set up data structures */
+  setup();
+
+  /* perform the lexical analysis */
+  yylex();  
+
+  /* for debugging purposes */
+  if (q_verbose) {
+    show_bindings();
+    q_verbose = 0;
+    }      
+}
+
+int pp_lexer_set_label(const char *label) {
+  idx_of_active_label = get_index_of_label(label);
+  if (idx_of_active_label==-1) return 0;    /* label not found */
+  current_node_of_active_label = nodes_of_label[idx_of_active_label];
+  return 1;
+}
+
+int pp_lexer_count_tokens_of_label() {
+  /* counts all tokens, indiscriminately */
+  int n_tokens;
+  LABEL_NODE *p;
+  if (idx_of_active_label==-1) error("pp_lexer: current label is invalid");
+  for (n_tokens=0, p=nodes_of_label[idx_of_active_label]; 
+       p!=NULL; 
+       p=p->next, n_tokens++);
+  return n_tokens;
+}
+
+
+char *pp_lexer_get_next_token_of_label() {
+  /* retrieves next token, indiscriminately. Returns NULL if list exhausted */
+  static char *p;
+  if (current_node_of_active_label == NULL) return NULL;
+  p = current_node_of_active_label->str;
+  current_node_of_active_label = current_node_of_active_label->next;
+  return p;
+}
+
+int pp_lexer_count_commas_of_label() {
+  int n_commas;
+  LABEL_NODE *p;
+  if (idx_of_active_label==-1) error("pp_lexer: current label is invalid");
+  for (n_commas=0,p=nodes_of_label[idx_of_active_label];p!=NULL;p=p->next)
+    if (!strcmp(p->str, ",")) n_commas++;
+  return n_commas;
+}
+
+void pp_lexer_get_next_group_of_tokens_of_label(int *n_tokens,char ***tokens){ 
+  /* all tokens until next comma, null-terminated */
+  int i, n_toks;
+  LABEL_NODE *p;
+  static char **toks;
+  static int extents=-1;
+  
+  /* 1st pass: how many tokens until next comma? Reallocate if needed */
+  p=current_node_of_active_label;
+  for (n_toks=0; p!=NULL && strcmp(p->str,","); n_toks++, p=p->next);
+
+  /* re-allocate static array of tokens, if necessary */
+  if (n_toks>extents) {
+    if (extents>-1) {
+      for (i=0; i<extents; i++)
+   	xfree(toks[i], strlen(toks[i]));
+      xfree((char*) toks, extents*sizeof(char*));
+    }
+    extents=n_toks;   
+    toks=(char **) xalloc (extents*sizeof(char*));
+  }
+  else {
+    /* just free those strings which we need to realloc this time */
+    for (i=0; i<n_toks; i++)
+      xfree(toks[i],strlen(toks[i]));
+  }
+
+  /* 2nd pass: fill them in */
+  p=current_node_of_active_label;
+  for (i=0; i<n_toks; i++, p=p->next)
+    copy_string_into(p->str, &(toks[i]));
+
+  /* now update pointer to current node in linked list of strings for label */
+  current_node_of_active_label = p;
+  if (p!=NULL) current_node_of_active_label=p->next;
+
+  *n_tokens = n_toks;
+  *tokens   = toks;
+}
+
+int yywrap()
+{
+  /* must return 1 for end of input, 0 otherwise */
+  if (file_stack_counter) 
+    {
+      pop_file();
+      return 0;
+    }
+  return 1;
+}
+
+/********************** non-exported functions ************************/
+
+static void check_string(const char *str)
+{
+   if (strlen(str)>1 && strchr(str, ',')!=NULL)
+      error("pp_lexer: string %s contains a comma, which is a no-no.",str);
+}
+
+static void setup() {
+  int i;
+  for (i=0; i<PP_LEXER_MAX_LABELS; i++)
+    {
+      nodes_of_label[i]     = NULL;
+      last_node_of_label[i] = NULL;
+    }
+  labels[0]=NULL;
+}
+
+
+static void set_label(const char *label) {
+  char *label_sans_colon;
+  int i;
+
+  /* first, slice off the trailing colon */
+  copy_string_into(label, &label_sans_colon);
+  label_sans_colon[strlen(label)-1]=0;       
+
+  /* have we seen this label already? If so, abort */
+  for (i=0; labels[i]!=NULL && strcmp(labels[i], label_sans_colon); i++);
+  if (labels[i]!=NULL) 
+  error("pp_lexer: label %s multiply defined!", label_sans_colon);
+
+  /* new label. Store it */
+  if (i == PP_LEXER_MAX_LABELS-1)   /* keep the -1! */
+    error("pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
+  copy_string_into(label_sans_colon, &labels[i]);     
+  idx_of_active_label = i;
+}
+
+
+static void add_string_to_label(const char *str) {
+  /* add the single string str to the set of strings associated with label */
+  LABEL_NODE *new_node;
+
+  if (idx_of_active_label==-1)
+  error("pp_lexer: invalid syntax (line %i)",yylineno);
+
+  /* make sure string is legal */
+  check_string(str);
+
+  /* create a new node in (as yet to be determined) linked list of strings */
+  new_node = (LABEL_NODE *) xalloc (sizeof(LABEL_NODE));
+  copy_string_into(str, &(new_node->str));
+  new_node->next = NULL;
+
+  /* stick newly-created node at the *end* of the appropriate linked list */
+  if (last_node_of_label[idx_of_active_label]==NULL)
+    {
+      /* first entry on linked list */
+      nodes_of_label[idx_of_active_label] = new_node;      
+      last_node_of_label[idx_of_active_label] = new_node;
+    }
+  else
+    {
+      /* non-first entry on linked list */
+      last_node_of_label[idx_of_active_label]->next = new_node;
+      last_node_of_label[idx_of_active_label] = new_node;
+    }
+}
+
+static void add_set_of_strings_to_label(const char *label_of_set) {
+  /* add the set of strings, defined earlier by label_of_set, to the set of 
+     strings associated with the current label */
+  LABEL_NODE *p;
+  int idx_of_label_of_set;
+  if (idx_of_active_label==-1)
+  error("pp_lexer: invalid syntax (line %i)",yylineno);
+  if ((idx_of_label_of_set = get_index_of_label(label_of_set))==-1)
+    error("pp_lexer: label %s must be defined before it's referred to(line %i)"
+	  ,label_of_set, yylineno);
+  for (p=nodes_of_label[idx_of_label_of_set]; p!=NULL; p=p->next)
+    add_string_to_label(p->str);
+}
+
+
+static void show_bindings()
+{
+  /* show contents of knowledge file, as arranged internally */
+  int i,j;
+  char *la;
+  LABEL_NODE *p;
+  printf("The symbol table's contents: \n");
+  for (i=0; (la=labels[i])!=NULL; i++)
+    {
+      printf("\n\n%s\n", la);
+      for (j=0; j<strlen(la); j++)
+	printf("=");
+      printf("\n");
+      for (p=nodes_of_label[i]; p!=NULL; p=p->next)
+	printf(" %s ", p->str);
+    }
+  printf("\n");
+}
+
+static void copy_string_into(const char *source, char **target)
+{
+  *target = (char*) xalloc ((strlen(source)+1)*sizeof(char));
+  strcpy(*target, source);
+}
+
+
+static int get_index_of_label(const char *label) {
+  int i;
+  for (i=0; labels[i]!=NULL; i++) {
+    if (!strcmp(labels[i], label)) return i;
+  }
+  return -1;
+}
+    
+
+static void push_file(char *fname)
+{
+  /* Don't read an include file twice (could go into infinite loop) */
+  int i;
+  for (i=0; i<num_files_read; i++)
+    if (!strcmp(fname, files_read[i])) return;
+  
+  /* Haven't seen this file yet. Save name to avoid re-reading it later */
+  copy_string_into(fname, &(files_read[num_files_read]));
+
+  /* have we exhausted our stack? */
+  if (file_stack_counter == PP_LEXER_MAX_INCLUDES)
+    error("pp_lexer: exceeded maximum number of allowed include files.\n\
+Try increasing PP_LEXER_MAX_INCLUDE_FILES.");
+  
+  /* Push current file onto stack of active include files; open new one */
+  file_stack[file_stack_counter++] = yyin;
+  yyin = fopen(fname, "rt");
+  if (yyin==0) 
+  error("pp_lexer: cannot locate specified include file %s.",fname);
+}
+
+
+static void pop_file()
+{
+  yyin = file_stack[--file_stack_counter];
+}
+
+
+
+
+
+
+
+
+
+
+
