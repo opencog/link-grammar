@@ -23,11 +23,6 @@ static bool add_string_to_label(PPLexTable *lt, const char *str);
 static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
 static int  get_index_of_label(PPLexTable *lt, const char *label);
 static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
-
-// ???
-static void copy_string_into(const char *source, char **target);
-static void push_file(char *fname);
-
 %}
 
 %s INCLUDE
@@ -38,7 +33,6 @@ NONLABEL       [^ \t\"\n:]+
 NONLABELQUOTED \"[^\t\"\n:]+\"
 WHITE          [ \t\n]*
 COMMENT        ^[\ \t]*;.*$
-VERBOSE        ^#verbose.*
 
 %%
 
