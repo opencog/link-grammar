@@ -22,10 +22,9 @@ static int q_verbose = 0;
 
 /* forward references for non-exported functions */
 static void check_string(const char *str);
-static void setup(PPLexTable *lt)
+static void setup(PPLexTable *lt);
 static bool set_label(PPLexTable *lt, const char *label);
 static bool add_string_to_label(PPLexTable *lt, const char *str);
-static void add_set_of_strings_to_label(const char *label_of_set);
 static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
 static int  get_index_of_label(PPLexTable *lt, const char *label);
 static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
@@ -68,10 +67,10 @@ INCLUDE        ^#include
 {COMMENT}                 ;
 {WHITE}                   ;
 
-<INITIAL>{LABEL}          { set_label(yytext); }
-<INITIAL>{NONLABELSET}    { add_set_of_strings_to_label(&(yytext[1])); }
-<INITIAL>{NONLABEL}       { add_string_to_label(yytext); }
-<INITIAL>{NONLABELQUOTED} { add_string_to_label(yytext); }
+<INITIAL>{LABEL}          { set_label(clt, yytext); }
+<INITIAL>{NONLABELSET}    { add_set_of_strings_to_label(clt, &(yytext[1])); }
+<INITIAL>{NONLABEL}       { add_string_to_label(clt, yytext); }
+<INITIAL>{NONLABELQUOTED} { add_string_to_label(clt, yytext); }
 
 .  { prt_error("pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
 
