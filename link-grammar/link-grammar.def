@@ -127,3 +127,4 @@ lg_error_set_handler_data
 lg_error_formatmsg
 lg_error_printall
 lg_error_clearall
+utf8_strwidth
