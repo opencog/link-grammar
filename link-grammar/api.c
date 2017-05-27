@@ -28,7 +28,7 @@
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
-#include "print.h"
+#include "print/print.h"
 #include "prune.h"
 #include "regex-morph.h"
 #include "resources.h"

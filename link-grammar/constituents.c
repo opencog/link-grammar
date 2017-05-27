@@ -18,7 +18,7 @@
 #include "error.h"
 #include "externs.h"
 #include "post-process.h"
-#include "print-util.h"
+#include "print/print-util.h"
 #include "string-set.h"
 
 #define D_CONST 8 /* debug level for this file */

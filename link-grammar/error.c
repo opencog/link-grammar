@@ -19,7 +19,7 @@
 #include "error.h"
 #include "structures.h"
 #include "api-structures.h"
-#include "print-util.h"
+#include "print/print-util.h"
 
 static void default_error_handler(lg_errinfo *, void *);
 static TLS struct

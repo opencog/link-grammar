@@ -148,6 +148,17 @@ static void clean_up_string(char * s)
 }
 
 /**
+ * Prints string `s`, aligned to the left, in a field width `w`.
+ * If the width of `s` is shorter than `w`, then the remainder of
+ * field is padded with blanks (on the right).
+ */
+static void left_print_string(FILE * fp, const char * s, int w)
+{
+	int width = w + strlen(s) - utf8_strwidth(s);
+	fprintf(fp, "%-*s", width, s);
+}
+
+/**
  * Return TRUE if s points to a number:
  * optional + or - followed by 1 or more
  *	digits.

@@ -103,17 +103,6 @@ void safe_strcat(char *u, const char *v, size_t usize)
 	u[usize-1] = '\0';
 }
 
-/**
- * Prints string `s`, aligned to the left, in a field width `w`.
- * If the width of `s` is shorter than `w`, then the remainder of
- * field is padded with blanks (on the right).
- */
-void left_print_string(FILE * fp, const char * s, int w)
-{
-	int width = w + strlen(s) - utf8_strwidth(s);
-	fprintf(fp, "%-*s", width, s);
-}
-
 #ifndef HAVE_STRNDUP
 /* Emulates glibc's strndup() */
 char *

@@ -4,9 +4,15 @@
 
 These files implement Java language bindings for Link Grammar. They do
 not extend the parsing algorithms already present in Link-Grammar in
-any way. They do, however, allow certain types of remote/server
-operation, and, in particular, are needed for use by the RelEx
-dependency parser.
+any way. The allow users to call the standard link-grammar API from
+Java.
+
+These bindings do provide an addtional feature, though: they can be used
+in a client-server mode, so that, instead of calling the link-grammar
+library directly, the parse request can be sent to a link-grammar
+server, which then returns the result in JSON format, which the bindings
+here are able to parse, and present the same API, as if the library
+was called locally.
 
 The shell script link-grammar-server.sh demonstrates how to run the
 parser server.  Once the server is started, parses can be obtained

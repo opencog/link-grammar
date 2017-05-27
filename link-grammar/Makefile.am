@@ -104,8 +104,9 @@ liblink_grammar_la_SOURCES =        \
 	pp_lexer.c                       \
 	pp_linkset.c                     \
 	preparation.c                    \
-	print.c                          \
-	print-util.c                     \
+	print/print.c                    \
+	print/print-dict.c               \
+	print/print-util.c               \
 	prune.c                          \
 	regex-morph.c                    \
 	regex-tokenizer.c                \
@@ -149,8 +150,8 @@ liblink_grammar_la_SOURCES =        \
 	pp_lexer.h                       \
 	pp_linkset.h                     \
 	preparation.h                    \
-	print.h                          \
-	print-util.h                     \
+	print/print.h                    \
+	print/print-util.h               \
 	prune.h                          \
 	regex-morph.h                    \
 	regex-tokenizer.h                \
