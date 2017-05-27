@@ -71,7 +71,6 @@ void pp_lexer_close(PPLexTable *lt)
   string_set_delete(lt->string_set);
   if (lt->tokens) free(lt->tokens);
   xfree(lt, sizeof(PPLexTable));
-  yy_c_buf_p = NULL;
 }
 
 PPLexTable *pp_lexer_open(FILE *f)
@@ -83,7 +82,6 @@ PPLexTable *pp_lexer_open(FILE *f)
 
   // initialiaze all yy static globals!! We do this here, so
   // that we can be called multiple times w/o crash.
-  yy_c_buf_p = NULL;
   yy_init = 1;
   yy_start = 0;
 
