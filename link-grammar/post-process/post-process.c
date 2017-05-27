@@ -1105,6 +1105,8 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	Postprocessor *pp;
 	PP_data *pp_data;
 
+	if (NULL == kno) return NULL;
+
 	pp = (Postprocessor *) malloc (sizeof(Postprocessor));
 	pp->knowledge = kno;
 	pp->string_set = string_set_create();

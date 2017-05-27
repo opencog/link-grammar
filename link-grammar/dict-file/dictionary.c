@@ -587,9 +587,7 @@ dictionary_six_str(const char * lang,
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
 
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
-	if (NULL == dict->base_knowledge) goto failure;
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
-	if (NULL == dict->hpsg_knowledge) goto failure;
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
