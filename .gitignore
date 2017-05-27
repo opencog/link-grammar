@@ -45,3 +45,4 @@ svn-commit.tmp*
 *.la
 *.lo
 *.o
+ylwrap
