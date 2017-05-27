@@ -11,7 +11,7 @@
 **************************************************************************/
 
 #include "pp_lexer.h"
-#include "header.h"
+#include "error.h"
 
 #undef yywrap
 
@@ -22,15 +22,15 @@ static int q_verbose = 0;
 
 /* forward references for non-exported functions */
 static void check_string(const char *str);
-static void setup();
+static void setup(void);
 static void set_label(const char *label);
 static void add_string_to_label(const char *str);
 static void add_set_of_strings_to_label(const char *label_of_set);
-static void show_bindings();
+static void show_bindings(void);
 static void copy_string_into(const char *source, char **target);
 static int  get_index_of_label(const char *label);
 static void push_file(char *fname);
-static void pop_file();
+static void pop_file(void);
 
 %}
 
@@ -69,7 +69,7 @@ INCLUDE        ^#include
 <INITIAL>{NONLABEL}       { add_string_to_label(yytext); }
 <INITIAL>{NONLABELQUOTED} { add_string_to_label(yytext); }
 
-.  { error("pp_lexer: unable to parse knowledge file (line %i).\n",yylineno); }
+.  { err_msg("pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
 
 
 %%
@@ -208,7 +208,8 @@ static void check_string(const char *str)
       error("pp_lexer: string %s contains a comma, which is a no-no.",str);
 }
 
-static void setup() {
+static void setup(void)
+{
   int i;
   for (i=0; i<PP_LEXER_MAX_LABELS; i++)
     {
@@ -285,7 +286,7 @@ static void add_set_of_strings_to_label(const char *label_of_set) {
 }
 
 
-static void show_bindings()
+static void show_bindings(void)
 {
   /* show contents of knowledge file, as arranged internally */
   int i,j;
@@ -343,7 +344,7 @@ Try increasing PP_LEXER_MAX_INCLUDE_FILES.");
 }
 
 
-static void pop_file()
+static void pop_file(void)
 {
   yyin = file_stack[--file_stack_counter];
 }
