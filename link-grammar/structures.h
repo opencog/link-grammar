@@ -426,8 +426,6 @@ struct pp_linkset_s
 
 
 /* from pp_lexer.c */
-#define PP_LEXER_MAX_LABELS 512
-
 typedef struct pp_label_node_s
 {
 	/* linked list of strings associated with a label in the table */

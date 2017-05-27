@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include "structures.h"
 
+#define PP_LEXER_MAX_LABELS 512
 struct PPLexTable_s
 {
 	String_set *string_set;
