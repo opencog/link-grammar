@@ -16,8 +16,6 @@
 
 #undef yywrap
 
-static int q_verbose = 0;
-
 /* forward references for non-exported functions */
 static void setup(PPLexTable *lt);
 static bool set_label(PPLexTable *lt, const char *label);
@@ -48,7 +46,6 @@ INCLUDE        ^#include
 
 
 <INITIAL>{INCLUDE}{WHITE}  { BEGIN INCLUDE; }
-<INITIAL>{VERBOSE}         { q_verbose = 1; }
 
 <INCLUDE>{NONWHITE}        {  push_file(yytext);
                               BEGIN INITIAL; }
