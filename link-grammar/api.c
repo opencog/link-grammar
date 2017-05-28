@@ -39,6 +39,7 @@
 #include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
 #include "tokenize/wordgraph.h"
+#include "tokenize/tok-structures.h" // Needed for sane_linkae_morphism
 #include "utilities.h"
 #include "word-utils.h"
 

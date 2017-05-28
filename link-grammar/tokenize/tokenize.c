@@ -2780,6 +2780,26 @@ static bool same_unsplit_word(Sentence sent, const Gword *w1, const Gword *w2)
 }
 #endif
 
+#define D_WPP 8
+static void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
+{
+	size_t i = 0;
+
+	if (NULL == wp)
+	{
+		lgdebug(+D_WPP, "Empty\n");
+		return;
+	}
+	lgdebug(+D_WPP, "\n");
+	for (; NULL != wp->word; wp++)
+	{
+		lgdebug(D_WPP, "%zu: %zu:word '%s', same=%d used=%d level=%zu\n",
+		        i++, wp->word->node_num, wp->word->subword, wp->same_word,
+		        wp->used, wp->word->hier_depth);
+	}
+}
+#undef D_WPP
+
 /**
  * "Flatten" the wordgraph into a word array.
  * Return false if an error was encountered.

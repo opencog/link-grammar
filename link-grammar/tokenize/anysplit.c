@@ -34,6 +34,7 @@
 #include "error.h"
 #include "structures.h"
 #include "tokenize.h"
+#include "tok-structures.h"
 
 #include "anysplit.h"
 

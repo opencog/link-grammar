@@ -31,6 +31,7 @@
 #include "string-set.h"
 #include "structures.h"
 #include "tokenize/wordgraph.h"
+#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "word-utils.h"
 
 #define INFIX_MARK_L 1 /* INFIX_MARK is 1 character */

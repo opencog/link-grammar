@@ -20,8 +20,9 @@
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "string-set.h"
-#include "word-utils.h"
+#include "tokenize/tok-structures.h" // XXX TODO provide gword acces methods!
 #include "utilities.h" /* For Win32 compatibility features */
+#include "word-utils.h"
 
 /* Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;

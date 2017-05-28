@@ -22,6 +22,7 @@
 #include "externs.h"
 #include "read-dict.h"
 #include "string-set.h"
+#include "tokenize/tok-structures.h" // needed for MT_WALL
 #include "utilities.h"
 #include "word-file.h"
 
