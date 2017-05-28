@@ -146,40 +146,6 @@ int utf8_charlen(const char *xc)
 	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
 
-/* Implemented n wcwidth.c */
-extern int mk_wcwidth(wchar_t);
-
-/**
- * Return the width, in text-column-widths, of the utf8-encoded
- * string.  This is needed when printing formatted strings.
- * European langauges will typically have widths equal to the
- * `mblen` value below (returned by mbsrtowcs); they occupy one
- * column-width per code-point.  The CJK ideographs occupy two
- * column-widths per code-point. No clue about what happens for
- * Arabic, or others.  See wcwidth.c for details.
- */
-size_t utf8_strwidth(const char *s)
-{
-	mbstate_t mbss;
-	wchar_t ws[MAX_LINE];
-	size_t mblen, glyph_width=0, i;
-
-	memset(&mbss, 0, sizeof(mbss));
-
-#ifdef _WIN32
-	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, MAX_LINE) - 1;
-#else
-	mblen = mbsrtowcs(ws, &s, MAX_LINE, &mbss);
-#endif /* _WIN32 */
-
-	for (i=0; i<mblen; i++)
-	{
-		glyph_width += mk_wcwidth(ws[i]);
-	}
-	return glyph_width;
-}
-
-
 #ifdef _WIN32
 /**
  * (Experimental) Implementation of mbrtowc for Windows.

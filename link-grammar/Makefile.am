@@ -107,6 +107,7 @@ liblink_grammar_la_SOURCES =        \
 	print/print.c                    \
 	print/print-dict.c               \
 	print/print-util.c               \
+	print/wcwidth.c                  \
 	prune.c                          \
 	regex-morph.c                    \
 	regex-tokenizer.c                \
@@ -117,7 +118,6 @@ liblink_grammar_la_SOURCES =        \
 	string-set.c                     \
 	tokenize.c                       \
 	utilities.c                      \
-	wcwidth.c                        \
 	wordgraph.c                      \
 	word-utils.c                     \
 	anysplit.h                       \
@@ -152,6 +152,7 @@ liblink_grammar_la_SOURCES =        \
 	preparation.h                    \
 	print/print.h                    \
 	print/print-util.h               \
+	print/wcwidth.h                  \
 	prune.h                          \
 	regex-morph.h                    \
 	regex-tokenizer.h                \
@@ -162,7 +163,6 @@ liblink_grammar_la_SOURCES =        \
 	structures.h                     \
 	tokenize.h                       \
 	utilities.h                      \
-	wcwidth.h                        \
 	wordgraph.h                      \
 	word-utils.h
 

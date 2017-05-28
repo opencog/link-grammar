@@ -33,7 +33,6 @@
 
 #include "error.h"
 #include "lg_assert.h"
-#include "wcwidth.h"
 
 #ifdef HAVE_ALLOCA_H
 # include <alloca.h>
@@ -252,12 +251,6 @@ typedef int locale_t;
 #define GNUC_MALLOC
 #define GNUC_UNUSED
 #endif
-
-/**
- * Return the width, in text-column-widths, of the utf8-encoded
- * string.  This is needed when printing formatted strings.
- */
-size_t utf8_strwidth(const char *);
 
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
