@@ -106,13 +106,6 @@ struct Disjunct_struct
 	const char * string;       /* subscripted dictionary word */
 };
 
-typedef struct Match_node_struct Match_node;
-struct Match_node_struct
-{
-	Match_node * next;
-	Disjunct * d;
-};
-
 typedef struct X_node_struct X_node;
 struct X_node_struct
 {

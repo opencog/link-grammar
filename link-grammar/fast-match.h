@@ -13,8 +13,14 @@
 #ifndef _FAST_MATCH_H_
 #define _FAST_MATCH_H_
 
-#include "link-includes.h"
 #include "structures.h"
+
+typedef struct Match_node_struct Match_node;
+struct Match_node_struct
+{
+	Match_node * next;
+	Disjunct * d;
+};
 
 struct fast_matcher_s
 {
