@@ -22,6 +22,7 @@ to the caller to ensure that the pointers always point to something useful.
 
 #include "post-process.h"
 #include "pp_linkset.h"
+#include "utilities.h"
 
 #define LINKSET_SPARSENESS 2
 #define LINKSET_SEED_VALUE 37

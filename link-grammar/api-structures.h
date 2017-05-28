@@ -389,4 +389,8 @@ struct Linkage_s
 	Sentence        sent;         /* Used for common linkage data */
 };
 
+// XXX FIXME
+// This needs a home.
+bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
+
 #endif

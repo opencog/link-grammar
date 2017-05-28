@@ -188,7 +188,7 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 	}
 }
 
-void pp_free_domain_array(PP_data *ppd)
+static void pp_free_domain_array(PP_data *ppd)
 {
 	size_t d;
 	for (d = 0; d < ppd->domlen; d++)
@@ -1091,7 +1091,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 #define PP_INITLEN 60 /* just starting size, it is expanded if needed */
 
-void pp_new_domain_array(PP_data *pp_data)
+static void pp_new_domain_array(PP_data *pp_data)
 {
 	pp_data->domlen = PP_INITLEN;
 	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
@@ -1172,7 +1172,7 @@ void post_process_free(Postprocessor *pp)
  * of a sentence), call this once for every generated linkage. Here we
  * simply maintain a set of "seen" link names for rule pruning, later on.
  */
-void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
+static void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
 {
 	size_t i;
 	if (pp == NULL) return;
