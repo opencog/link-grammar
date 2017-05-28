@@ -15,7 +15,7 @@
 #include "api-structures.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-utils.h"
+#include "dict-common/file-utils.h"
 #include "externs.h"
 #include "dict-common/idiom.h"
 #include "post-process/pp_knowledge.h"

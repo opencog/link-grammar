@@ -27,7 +27,7 @@
 
 #include <link-includes.h>
 
-#include "dict-utils.h"
+#include "file-utils.h"
 #include "error.h"  // for verbosity_level
 #include "utilities.h"
 

@@ -23,7 +23,7 @@
 #include "pp_lexer.h"
 #include "pp_linkset.h"
 #include "string-set.h"
-#include "dict-common/dict-utils.h" // for dictopen
+#include "dict-common/file-utils.h" // for dictopen
 #include "utilities.h" // for xalloc
 
 #define D_PPK 10                       /* verbosity level for this file */

@@ -11,7 +11,7 @@
 #include <string.h>
 #include "link-includes.h"
 #include "api-structures.h"
-#include "dict-common/dict-utils.h"
+#include "dict-common/file-utils.h"
 #include "structures.h"
 #include "read-regex.h"
 
