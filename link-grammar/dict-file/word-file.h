@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "dict-api.h"
+#include "dict-common/dict-api.h"
 #include "structures.h"
 
 /* The structure below stores a list of dictionary word files. */

@@ -17,7 +17,7 @@
 #include "externs.h"
 #include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"
-#include "spellcheck.h"
+#include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
 #include "word-utils.h"

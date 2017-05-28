@@ -16,7 +16,7 @@
 
 #include <math.h>
 
-#include "dict-api.h"
+#include "dict-common/dict-api.h"
 #include "string-set.h"
 #include "word-utils.h"
 

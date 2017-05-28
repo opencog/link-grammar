@@ -11,7 +11,7 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "build-disjuncts.h"
+#include "dict-common/build-disjuncts.h"
 #include "count.h"
 #include "disjunct-utils.h"
 #include "externs.h"

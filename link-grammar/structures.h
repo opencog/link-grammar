@@ -18,7 +18,7 @@
 
 #include "api-types.h"
 #include "api-structures.h"
-#include "dict-structures.h"  /* For Exp, Exp_list */
+#include "dict-common/dict-structures.h"  /* For Exp, Exp_list */
 #include "histogram.h"  /* Count_bin */
 
 #define NEGATIVECOST -1000000
@@ -339,19 +339,6 @@ struct Wordgraph_pathpos_s
 	const Gword **path; /* Linkage candidate wordgraph path */
 };
 
-/* The regexes are stored as a linked list of the following nodes. */
-struct Regex_node_s
-{
-	char *name;      /* The identifying name of the regex */
-	char *pattern;   /* The regular expression pattern */
-	bool neg;        /* Negate the match */
-	void *re;        /* The compiled regex. void * to avoid
-	                    having re library details invading the
-	                    rest of the LG system; regex-morph.c
-	                    takes care of all matching.
-	                  */
-	Regex_node *next;
-};
 
 /* The parse_choice is used to extract links for a given parse */
 typedef struct Parse_choice_struct Parse_choice;

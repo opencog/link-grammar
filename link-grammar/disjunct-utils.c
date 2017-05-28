@@ -17,7 +17,7 @@
 #include "string-set.h"
 #include "structures.h"
 #include "utilities.h"
-#include "wordgraph.h"
+#include "tokenize/wordgraph.h"
 #include "word-utils.h"
 
 /* Disjunct utilities ... */
