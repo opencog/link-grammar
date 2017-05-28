@@ -17,6 +17,7 @@
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "dict-common.h"
+#include "dict-utils.h"
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "string-set.h"

@@ -33,6 +33,7 @@ extern "C" {
 #include "analyze-linkage.h"      // for compute_link_names()
 #include "dict-common/build-disjuncts.h" // for build_disjuncts_for_exp()
 #include "dict-common/dict-api.h" // for print_expression()
+#include "dict-common/dict-utils.h" // for free_Exp()
 #include "linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"

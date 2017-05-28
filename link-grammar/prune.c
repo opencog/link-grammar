@@ -13,7 +13,8 @@
 
 #include "api-structures.h"
 #include "count.h"
-#include "dict-common/dict-api.h"  /* for print_expression when debugging */
+#include "dict-common/dict-api.h"   /* for print_expression when debugging */
+#include "dict-common/dict-utils.h" /* for free_E_list */
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "post-process/post-process.h"

@@ -83,6 +83,7 @@ liblink_grammar_la_SOURCES =        \
 	count.c                          \
 	dict-common/build-disjuncts.c    \
 	dict-common/dict-common.c        \
+	dict-common/dict-utils.c         \
 	dict-common/file-utils.c         \
 	dict-common/idiom.c              \
 	dict-common/print-dict.c         \
@@ -130,6 +131,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-structures.h    \
+	dict-common/dict-utils.h         \
 	dict-common/file-utils.h         \
 	dict-common/idiom.h              \
 	dict-common/regex-morph.h        \

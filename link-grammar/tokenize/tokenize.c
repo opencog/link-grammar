@@ -21,6 +21,7 @@
 #include "dict-common/build-disjuncts.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-utils.h"
 #include "dict-common/regex-morph.h"
 #include "error.h"
 #include "externs.h"

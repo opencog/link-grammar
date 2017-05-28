@@ -18,12 +18,12 @@
 #include "externs.h"
 #include "api-structures.h"
 #include "corpus/corpus.h"
+#include "dict-common/dict-utils.h" // For size_of_expression()
 #include "print-util.h"
 #include "string-set.h"
 #include "structures.h"
 #include "print.h"      /* needs structure.h */
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
-#include "word-utils.h"
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */

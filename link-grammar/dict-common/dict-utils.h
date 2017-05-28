@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2009-2013 Linas Vepstas                                 */
+/* Copyright (c) 2009, 2013 Linas Vepstas                                */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -10,20 +10,24 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-#ifndef _DICT_FILE_UTILITIES_H_
-#define _DICT_FILE_UTILITIES_H_
 
-#include <stdbool.h>
-#include <stdio.h>
+#ifndef _DICT_UTILS_H_
+#define _DICT_UTILS_H_
 
-char * join_path(const char * prefix, const char * suffix);
+#include "structures.h"
 
-FILE * dictopen(const char *filename, const char *how);
-void * object_open(const char *filename,
-                   void * (*opencb)(const char *, const void *),
-                   const void * user_data);
+/* Exp utilities ... */
+void free_Exp(Exp *);
+void free_E_list(E_list *);
+int  size_of_expression(Exp *);
+Exp * copy_Exp(Exp *);
+bool is_exp_like_empty_word(Dictionary dict, Exp *);
+/* int exp_compare(Exp * e1, Exp * e2); */
+/* int exp_contains(Exp * super, Exp * sub); */
 
-bool file_exists(const char * dict_name);
-char * get_file_contents(const char *filename);
+/* Dictionary utilities ... */
+bool word_has_connector(Dict_node *, const char *, char);
+const char * word_only_connector(Dict_node *);
+bool word_contains(Dictionary dict, const char * word, const char * macro);
 
-#endif /* _DICT_FILE_UTILITIES_H_ */
+#endif /* _DICT_UTILS_H_ */

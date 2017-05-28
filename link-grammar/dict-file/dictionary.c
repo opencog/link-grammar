@@ -15,6 +15,7 @@
 #include "api-structures.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-utils.h"
 #include "dict-common/file-utils.h"
 #include "externs.h"
 #include "dict-common/idiom.h"
@@ -25,7 +26,7 @@
 #include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
-#include "word-utils.h"
+#include "word-utils.h"   // for connector_set_create()
 #include "dict-sql/read-sql.h"  /* Temporary hack */
 
 
