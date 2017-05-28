@@ -20,6 +20,8 @@
 #include "api-types.h" // for pp_knowledge
 #include "utilities.h" // for locale_t
 
+#define EMPTY_CONNECTOR "ZZZ"
+
 LINK_BEGIN_DECLS
 
 /* Forward decls */

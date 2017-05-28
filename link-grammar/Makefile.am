@@ -162,6 +162,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
 	tokenize/regex-tokenizer.h       \
+	tokenize/tok-structures.h        \
 	tokenize/tokenize.h              \
 	tokenize/wordgraph.h             \
 	utilities.h                      \

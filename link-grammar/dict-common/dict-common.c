@@ -26,6 +26,12 @@
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
 
+/* Stems, by definition, end with ".=x" (when x is usually an empty
+ * string, i.e. ".="). The STEMSUBSCR definition in the affix file
+ * may include endings with other x values, when x serves as a word
+ * subscript, e.g. ".=a".  */
+#define STEM_MARK '='
+
 /* ======================================================================== */
 /* Affix type finding */
 

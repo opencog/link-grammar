@@ -50,6 +50,11 @@
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
 
+/* Dictionary capitalization handling */
+#define CAP1st "1stCAP" /* Next word is capitalized */
+#define CAPnon "nonCAP" /* Next word the lc version of a capitalized word */
+
+
 /**
  * is_common_entity - Return true if word is a common noun or adjective
  * Common nouns and adjectives are typically used in corporate entity
