@@ -19,6 +19,14 @@
 #include "linkage.h"
 #include "word-utils.h"
 
+struct Parse_choice_struct
+{
+	Parse_choice * next;
+	Parse_set * set[2];
+	Link        link[2];   /* the lc fields of these is NULL if there is no link used */
+	Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
+};
+
 /**
  * The first thing we do is we build a data structure to represent the
  * result of the entire parse search.  There will be a set of nodes

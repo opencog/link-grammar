@@ -21,6 +21,7 @@
 #include "api-structures.h"
 #include "error.h"
 #include "externs.h"
+#include "linkage.h"
 #include "pp_knowledge.h"
 #include "pp_linkset.h"
 #include "pp-structures.h"

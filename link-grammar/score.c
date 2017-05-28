@@ -11,13 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-
 #include <stdarg.h>
-#include "api-structures.h"
+#include "linkage.h"
 #include "score.h"
-#include "string-set.h"
-#include "structures.h"
-#include "word-utils.h"
+#include "structures.h" // Needed for Disjunct
 
 /**
  * This function defines the cost of a link as a function of its length.

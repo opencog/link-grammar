@@ -148,14 +148,6 @@ struct Word_struct
 /* The parse_choice is used to extract links for a given parse */
 typedef struct Parse_choice_struct Parse_choice;
 
-struct Parse_choice_struct
-{
-	Parse_choice * next;
-	Parse_set * set[2];
-	Link        link[2];   /* the lc fields of these is NULL if there is no link used */
-	Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
-};
-
 struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */

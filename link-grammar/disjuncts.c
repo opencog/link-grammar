@@ -19,6 +19,7 @@
 #include <string.h>
 #include "api-structures.h"
 #include "disjuncts.h"
+#include "linkage.h"
 #include "structures.h"
 
 /**

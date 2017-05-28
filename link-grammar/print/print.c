@@ -19,6 +19,7 @@
 #include "api-structures.h"
 #include "corpus/corpus.h"
 #include "dict-common/dict-utils.h" // For size_of_expression()
+#include "linkage.h"
 #include "print-util.h"
 #include "string-set.h"
 #include "structures.h"
