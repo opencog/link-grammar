@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include "utilities.h"
+
 #define MAX_LINE 500          /* maximum width of print area */
 
 /**
@@ -30,15 +32,9 @@
  */
 size_t utf8_strwidth(const char *);
 
-typedef struct String_s String;
-
-String * string_new(void);
-void string_delete(String *);
-const char * string_value(String *);
-char * string_copy(String *);
-void append_string(String * string, const char *fmt, ...) GNUC_PRINTF(2,3);
-void vappend_string(String * string, const char *fmt, va_list args)
+void append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);
+void vappend_string(dyn_str *, const char *fmt, va_list args)
 	GNUC_PRINTF(2,0);
-size_t append_utf8_char(String * string, const char * mbs);
+size_t append_utf8_char(dyn_str *, const char * mbs);
 
 #endif

@@ -30,6 +30,6 @@ void print_chosen_disjuncts_words(const Linkage);
 void print_lwg_path(Gword **);
 
 // Used for debug/error printing
-void print_sentence_context(Sentence, String*);
+void print_sentence_context(Sentence, dyn_str*);
 
 #endif /* _PRINT_H */

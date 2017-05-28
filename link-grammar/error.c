@@ -19,7 +19,7 @@
 #include "error.h"
 #include "api-structures.h"   // For Sentence_s
 #include "print/print.h"      // For print_sentence_context()
-#include "print/print-util.h" // For string_new()
+#include "print/print-util.h" // For append_string()
 
 static void default_error_handler(lg_errinfo *, void *);
 static TLS struct
@@ -170,9 +170,7 @@ int lg_error_clearall(void)
  */
 char *lg_error_formatmsg(lg_errinfo *lge)
 {
-	char *formated_error_message;
-
-	String *s = string_new();
+	dyn_str *s = dyn_str_new();
 
 	/* Prepend libname to messages with higher severity than Debug. */
 	if (lge->severity < lg_Debug)
@@ -183,10 +181,7 @@ char *lg_error_formatmsg(lg_errinfo *lge)
 
 	append_string(s, "%s", lge->text);
 
-	formated_error_message = string_copy(s);
-	string_delete(s);
-
-	return formated_error_message;
+	return dyn_str_take(s);
 }
 /* ================================================================== */
 
@@ -244,8 +239,8 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 
 static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 {
-	static TLS String *outbuf = NULL;
-	if (NULL == outbuf) outbuf = string_new();
+	static TLS dyn_str *outbuf = NULL;
+	if (NULL == outbuf) outbuf = dyn_str_new();
 
 	/*
 	 * If the message is a complete one, it ends with a newline.  Else the
@@ -276,7 +271,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 
 	lg_errinfo current_error;
 	/* current_error.ec = *ec; */
-	const char *error_text = string_value(outbuf);
+	const char *error_text = outbuf->str;
 	lg_error_severity msg_sev = message_error_severity(error_text);
 	if (lg_None != msg_sev)
 	{
@@ -299,7 +294,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 		free((void *)current_error.severity_label);
 	}
 
-	string_delete(outbuf);
+	dyn_str_delete(outbuf);
 	outbuf = NULL;
 }
 

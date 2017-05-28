@@ -111,7 +111,7 @@ typedef struct
  * if s is longer than t, it truncates s.
  * Handles utf8 strings correctly.
  */
-static void left_append_string(String * string, const char * s, const char * t)
+static void left_append_string(dyn_str * string, const char * s, const char * t)
 {
 	size_t i;
 	size_t slen = utf8_strwidth(s);
@@ -129,7 +129,7 @@ static void left_append_string(String * string, const char * s, const char * t)
 	}
 }
 
-static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
+static void print_a_link(dyn_str * s, const Linkage linkage, LinkIdx link)
 {
 	WordIdx l, r;
 	const char *label, *llabel, *rlabel;
@@ -184,8 +184,7 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 {
 	int link, longest, j;
 	int N_links = linkage_get_num_links(linkage);
-	String * s = string_new();
-	char * links_string;
+	dyn_str * s = dyn_str_new();
 	const char ** dname;
 
 	longest = 0;
@@ -205,9 +204,9 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 			append_string(s, " (%s)", dname[j]);
 		}
 		for (; j<longest; j++) {
-			append_string(s, "    ");
+			dyn_strcat(s, "    ");
 		}
-		append_string(s, "   ");
+		dyn_strcat(s, "   ");
 		print_a_link(s, linkage, link);
 	}
 	append_string(s, "\n");
@@ -216,15 +215,12 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 		append_string(s, "        %s\n\n", linkage_get_violation_name(linkage));
 	}
 
-	links_string = string_copy(s);
-	string_delete(s);
-	return links_string;
+	return dyn_str_take(s);
 }
 
 char * linkage_print_senses(Linkage linkage)
 {
-	String * s = string_new();
-	char * sense_string;
+	dyn_str * s = dyn_str_new();
 #ifdef USE_CORPUS
 	Linkage_info *lifo = linkage->info;
 	Sense *sns;
@@ -253,9 +249,7 @@ char * linkage_print_senses(Linkage linkage)
 #else
 	append_string(s, "Corpus statistics is not enabled in this version\n");
 #endif
-	sense_string = string_copy(s);
-	string_delete(s);
-	return sense_string;
+	return dyn_str_take(s);
 }
 
 char * linkage_print_disjuncts(const Linkage linkage)
@@ -264,9 +258,9 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	double score;
 #endif
 	const char * dj;
-	char * djs, *mark;
+	char *mark;
 	int w;
-	String * s = string_new();
+	dyn_str * s = dyn_str_new();
 	int nwords = linkage->num_words;
 
 	/* Loop over each word in the sentence */
@@ -297,9 +291,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		append_string(s, "%*s    %5.3f  %s\n", pad, infword, cost, dj);
 #endif
 	}
-	djs = string_copy(s);
-	string_delete(s);
-	return djs;
+	return dyn_str_take(s);
 }
 
 /**
@@ -314,11 +306,10 @@ build_linkage_postscript_string(const Linkage linkage,
 	bool print_word_0, print_word_N;
 	int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
-	String  * string;
-	char * ps_string;
+	dyn_str * string;
 	int N_words_to_print;
 
-	string = string_new();
+	string = dyn_str_new();
 
 	if (!display_walls) {
 		int N_wall_connectors = 0;
@@ -392,9 +383,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	}
 	append_string(string,"]\n");
 
-	ps_string = string_copy(string);
-	string_delete(string);
-	return ps_string;
+	return dyn_str_take(string);
 }
 
 
@@ -425,8 +414,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int line_len, link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
-	String * string;
-	char * gr_string;
+	dyn_str * string;
 	unsigned int N_words_to_print;
 
 	char picture[MAX_HEIGHT][MAX_LINE];
@@ -436,7 +424,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	// Avoid pathological case and the resulting crash.
 	if (0 == linkage->num_words) return strdup("");
 
-	string = string_new();
+	string = dyn_str_new();
 
 	/* Do we want to print the left wall? */
 	if (!display_walls)
@@ -487,10 +475,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	if (set_centers(linkage, center, word_offset, print_word_0, N_words_to_print)
 	    + 1 > MAX_LINE)
 	{
-		append_string(string, "The diagram is too long.\n");
-		gr_string = string_copy(string);
-		string_delete(string);
-		return gr_string;
+		dyn_strcat(string, "The diagram is too long.\n");
+		return dyn_str_take(string);
 	}
 
 	line_len = center[N_words_to_print-1]+1;
@@ -529,10 +515,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			pctx->link_heights[j] = row;
 
 			if (2*row+2 > MAX_HEIGHT-1) {
-				append_string(string, "The diagram is too high.\n");
-				gr_string = string_copy(string);
-				string_delete(string);
-				return gr_string;
+				dyn_strcat(string, "The diagram is too high.\n");
+				dyn_str_take(string);
 			}
 			if (row > top_row) top_row = row;
 
@@ -691,9 +675,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 		append_string(string, "\n");
 	}
-	gr_string = string_copy(string);
-	string_delete(string);
-	return gr_string;
+	return dyn_str_take(string);
 }
 
 /**
@@ -1440,7 +1422,7 @@ void print_lwg_path(Gword **w)
 void print_chosen_disjuncts_words(const Linkage lkg)
 {
 	size_t i;
-	String *djwbuf = string_new();
+	dyn_str *djwbuf = dyn_str_new();
 
 	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
 	for (i = 0; i < lkg->num_words; i++)
@@ -1461,18 +1443,18 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 
 		append_string(djwbuf, "%s ", djw_tmp);
 	}
-	err_msg(lg_Debug, "%s\n", string_value(djwbuf));
-	string_delete(djwbuf);
+	err_msg(lg_Debug, "%s\n", djwbuf->str);
+	dyn_str_delete(djwbuf);
 }
 
 // Use for debug and error printing.
-void print_sentence_context(Sentence sent, String *outbuf)
+void print_sentence_context(Sentence sent, dyn_str *outbuf)
 {
 	size_t i, j;
 	const char **a, **b;
 
-	append_string(outbuf,
-			  "\tFailing sentence contains the following words/morphemes:\n\t");
+	dyn_strcat(outbuf,
+		"\tFailing sentence contains the following words/morphemes:\n\t");
 	for (i=0; i<sent->length; i++)
 	{
 		for (a = sent->word[i].alternatives; NULL != *a; a++)
@@ -1488,7 +1470,8 @@ void print_sentence_context(Sentence sent, String *outbuf)
 					{
 						next_word = true;
 						if (a != b) break;
-						append_string(outbuf, "%s ", *a);
+						dyn_strcat(outbuf, *a);
+						dyn_strcat(outbuf, " ");
 						break;
 					}
 				}
@@ -1496,5 +1479,5 @@ void print_sentence_context(Sentence sent, String *outbuf)
 			}
 		}
 	}
-	append_string(outbuf, "\n");
+	dyn_strcat(outbuf, "\n");
 }

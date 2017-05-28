@@ -1913,15 +1913,15 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 static const char *print_rev_word_array(Sentence sent, const char **w,
                                         size_t size)
 {
-	String *s = string_new();
+	dyn_str *s = dyn_str_new();
 	int i;
 	const char *r;
 
 	for (i = size - 1; i >= 0; i--)
 		append_string(s, "[%d]='%s'%s", i, w[i], i>0 ? "," : "");
 
-	r = string_set_add(string_value(s), sent->string_set);
-	string_delete(s);
+	r = string_set_add(s->str, sent->string_set);
+	dyn_str_delete(s);
 	return r;
 }
 
