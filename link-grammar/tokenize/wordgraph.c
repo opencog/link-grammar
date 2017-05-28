@@ -9,6 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <stdlib.h>
+
 #ifdef USE_WORDGRAPH_DISPLAY
 #include <stdio.h>
 #include <errno.h>
@@ -22,11 +24,10 @@
 #include <signal.h>    /* SIG* */
 #endif /* USE_WORDGRAPH_DISPLAY */
 
+#include "api-structures.h"
 #include "error.h"
-#include "externs.h"
 #include "string-set.h"
 #include "structures.h"
-// #include "print/print-util.h"
 #include "tok-structures.h"
 #include "wordgraph.h"
 

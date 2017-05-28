@@ -13,7 +13,9 @@
 #ifndef _FAST_MATCH_H_
 #define _FAST_MATCH_H_
 
-#include "structures.h"
+#include <stddef.h> // for size_t
+#include "api-types.h"
+#include "link-includes.h" // for Sentence
 
 typedef struct Match_node_struct Match_node;
 struct Match_node_struct

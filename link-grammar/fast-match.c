@@ -11,10 +11,11 @@
 /*                                                                        */
 /**************************************************************************/
 
-// #include "api-structures.h"
+#include "api-structures.h"  // For Sentence_s
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "string-set.h"
+#include "structures.h"  // For Word_struct
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "word-utils.h"

@@ -19,6 +19,7 @@
 #include "fast-match.h"
 #include "linkage.h"
 #include "word-utils.h"
+#include "structures.h" // for Word_Struct
 
 typedef struct Parse_choice_struct Parse_choice;
 

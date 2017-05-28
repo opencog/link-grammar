@@ -596,27 +596,12 @@ char * get_default_locale(void)
 /* ============================================================= */
 /* Alternatives utilities */
 
-static const char ** resize_alts(const char **arr, size_t len)
-{
-	arr = realloc(arr, (len+2) * sizeof(char *));
-	arr[len+1] = NULL;
-	return arr;
-}
-
 size_t altlen(const char **arr)
 {
 	size_t len = 0;
 	if (arr)
 		while (arr[len] != NULL) len++;
 	return len;
-}
-
-void altappend(Sentence sent, const char ***altp, const char *w)
-{
-	size_t n = altlen(*altp);
-
-	*altp = resize_alts(*altp, n);
-	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
 /* ============================================================= */

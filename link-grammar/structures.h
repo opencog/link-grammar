@@ -14,11 +14,7 @@
 #ifndef _STRUCTURES_H_
 #define _STRUCTURES_H_
 
-#include <stdint.h>
-
 #include "api-types.h"
-#include "api-structures.h"
-#include "histogram.h"  /* Count_bin */
 
 /* The following define the names of the special strings in the dictionary. */
 #define LEFT_WALL_WORD   ("LEFT-WALL")

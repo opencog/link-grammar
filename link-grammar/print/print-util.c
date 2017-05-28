@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 #include <stdarg.h>
-#include <stdarg.h>
+#include <stdbool.h>
 #include <errno.h>
 
 #include "print-util.h"
