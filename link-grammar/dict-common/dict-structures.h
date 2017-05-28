@@ -17,11 +17,13 @@
 #include <link-grammar/link-features.h>
 #include <link-grammar/link-includes.h>
 
+#include "api-types.h" // for pp_knowledge
 #include "utilities.h" // for locale_t
 
 LINK_BEGIN_DECLS
 
 /* Forward decls */
+typedef struct Afdict_class_struct Afdict_class;
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
 typedef struct Exp_list_s Exp_list;
@@ -106,6 +108,8 @@ struct Afdict_class_struct
 	size_t length;        /* number of strings */
 	char const ** string;
 };
+
+#define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
 
 struct Dictionary_s
 {

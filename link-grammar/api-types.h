@@ -19,7 +19,8 @@
 #ifndef _API_TYPES_H_
 #define _API_TYPES_H_
 
-#define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
+/* Links are *always* less than 10 chars long */
+#define MAX_LINK_NAME_LENGTH 10
 
 /* MAX_SENTENCE cannot be more than 65534, because word MAX_SENTENCE+1 is
  * used to indicate that nothing can connect to this connector, and this
@@ -51,7 +52,6 @@ typedef struct Link_s Link;
 typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
-typedef struct Afdict_class_struct Afdict_class;
 typedef struct Word_struct Word;
 typedef struct Gword_struct Gword;
 typedef struct X_table_connector_struct X_table_connector;

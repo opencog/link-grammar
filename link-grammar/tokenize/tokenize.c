@@ -18,14 +18,14 @@
 #include <limits.h>
 
 #include "anysplit.h"
-#include "build-disjuncts.h"
-#include "dict-api.h"
-#include "dict-common.h"
+#include "dict-common/build-disjuncts.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/regex-morph.h"
 #include "error.h"
 #include "externs.h"
 #include "print/print.h"
 #include "print/print-util.h"
-#include "regex-morph.h"
 #include "spellcheck.h"
 #include "string-set.h"
 #include "structures.h"

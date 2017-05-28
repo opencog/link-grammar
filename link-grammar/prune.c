@@ -13,7 +13,7 @@
 
 #include "api-structures.h"
 #include "count.h"
-#include "dict-api.h"  /* for print_expression when debugging */
+#include "dict-common/dict-api.h"  /* for print_expression when debugging */
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "post-process/post-process.h"
@@ -23,7 +23,7 @@
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
-#include "wordgraph.h"
+#include "tokenize/wordgraph.h"
 #include "word-utils.h"
 
 #define D_PRUNE 5

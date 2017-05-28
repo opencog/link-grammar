@@ -11,16 +11,17 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "anysplit.h"
 #include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
 #include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"
-#include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
+#include "tokenize/anysplit.h"
+#include "tokenize/spellcheck.h"
 #include "word-utils.h"
+
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"

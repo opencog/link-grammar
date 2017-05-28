@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "anysplit.h"
+#include "tokenize/anysplit.h"
 #include "api-structures.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"

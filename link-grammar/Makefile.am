@@ -79,12 +79,12 @@ liblink_grammar_la_LIBADD  += -lm
 
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
-	anysplit.c                       \
 	api.c                            \
 	count.c                          \
 	dict-common/build-disjuncts.c    \
 	dict-common/dict-common.c        \
 	dict-common/idiom.c              \
+	dict-common/print-dict.c         \
 	dict-common/regex-morph.c        \
 	dict-file/dictionary.c           \
 	dict-file/read-dict.c            \
@@ -106,13 +106,13 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.c        \
 	preparation.c                    \
 	print/print.c                    \
-	print/print-dict.c               \
 	print/print-util.c               \
 	print/wcwidth.c                  \
 	prune.c                          \
 	resources.c                      \
 	score.c                          \
 	string-set.c                     \
+	tokenize/anysplit.c              \
 	tokenize/spellcheck-aspell.c     \
 	tokenize/spellcheck-hun.c        \
 	tokenize/regex-tokenizer.c       \
@@ -120,7 +120,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/wordgraph.c             \
 	utilities.c                      \
 	word-utils.c                     \
-	anysplit.h                       \
+	                                 \
 	api-structures.h                 \
 	api-types.h                      \
 	analyze-linkage.h                \
@@ -159,6 +159,7 @@ liblink_grammar_la_SOURCES =        \
 	score.h                          \
 	string-set.h                     \
 	structures.h                     \
+	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
 	tokenize/regex-tokenizer.h       \
 	tokenize/tokenize.h              \
@@ -170,8 +171,8 @@ liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
-	dict-api.h                       \
-	dict-structures.h
+	dict-common/dict-api.h           \
+	dict-common/dict-structures.h
 
 EXTRA_DIST=                         \
 	link-grammar.def                 \

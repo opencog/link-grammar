@@ -29,9 +29,9 @@
 #include <externs.h>
 #include <time.h>
 
-#include "dict-common.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/regex-morph.h"
 #include "error.h"
-#include "regex-morph.h"
 #include "structures.h"
 #include "tokenize.h"
 

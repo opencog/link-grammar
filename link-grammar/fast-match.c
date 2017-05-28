@@ -15,7 +15,7 @@
 #include "externs.h"
 #include "fast-match.h"
 #include "string-set.h"
-#include "wordgraph.h"
+#include "tokenize/wordgraph.h"
 #include "word-utils.h"
 
 /**

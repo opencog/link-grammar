@@ -16,11 +16,11 @@
 
 #include "analyze-linkage.h"
 #include "api-structures.h"
-#include "dict-common.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/idiom.h"
 #include "disjuncts.h"
 #include "externs.h"
 #include "extract-links.h"
-#include "idiom.h"
 #include "link-includes.h"
 #include "linkage.h"
 #include "post-process/post-process.h" // needed only for exfree_domain_names
