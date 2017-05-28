@@ -30,6 +30,7 @@
 #include "string-set.h"
 #include "structures.h"
 #include "tokenize.h"
+#include "tok-structures.h"
 #include "utilities.h"
 #include "wordgraph.h"
 #include "word-utils.h"

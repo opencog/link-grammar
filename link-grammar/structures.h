@@ -51,6 +51,14 @@
 #define SHORT_LEN 6
 #define NO_WORD 255
 
+/* Word subscripts come after the subscript mark (ASCII ETX)
+ * In the dictionary, a dot is used; but that dot interferes with dots
+ * in the input stream, and so we convert dictionary dots into the
+ * subscript mark, which we don't expect to see in user input.
+ */
+#define SUBSCRIPT_MARK '\3'
+#define SUBSCRIPT_DOT '.'
+
 typedef struct gword_set gword_set;
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
@@ -127,6 +135,30 @@ struct X_node_struct
 	Exp * exp;
 	X_node *next;
 	const Gword *word;         /* originating Wordgraph word */
+};
+
+
+/**
+ * Word, as represented shortly after tokenization, but before parsing.
+ *
+ * X_node* x:
+ *    Contains a pointer to a list of expressions from the dictionary,
+ *    Computed by build_sentence_expressions().
+ *
+ * Disjunct* d:
+ *   Contains a pointer to a list of disjuncts for this word.
+ *   Computed by: prepare_to_parse(), but modified by pruning and power
+ *   pruning.
+ */
+struct Word_struct
+{
+	const char *unsplit_word;
+
+	X_node * x;          /* Sentence starts out with these, */
+	Disjunct * d;        /* eventually these get generated. */
+	bool optional;       /* Linkage is optional. */
+
+	const char **alternatives;
 };
 
 /* The parse_choice is used to extract links for a given parse */

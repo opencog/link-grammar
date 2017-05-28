@@ -36,6 +36,7 @@ extern "C" {
 #include "linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
+#include "tokenize/tok-structures.h"  // got Gword internals
 #include "score.h"               // for linkage_score()
 }
 
