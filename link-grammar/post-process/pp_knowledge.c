@@ -23,7 +23,8 @@
 #include "pp_lexer.h"
 #include "pp_linkset.h"
 #include "string-set.h"
-#include "utilities.h"
+#include "dict-common/dict-utils.h" // for dictopen
+#include "utilities.h" // for xalloc
 
 #define D_PPK 10                       /* verbosity level for this file */
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */

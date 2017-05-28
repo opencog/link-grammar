@@ -12,6 +12,7 @@
 
 #include "error.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-utils.h"
 #include "string-set.h"
 #include "structures.h"
 #include "read-dict.h"

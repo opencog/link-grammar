@@ -13,6 +13,7 @@
 
 #include "dict-api.h"
 #include "dict-common.h"
+#include "dict-utils.h"
 #include "externs.h"
 #include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"

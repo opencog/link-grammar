@@ -23,6 +23,7 @@
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-structures.h"
+#include "dict-common/dict-utils.h"
 #include "externs.h"
 #include "tokenize/spellcheck.h"
 #include "string-set.h"

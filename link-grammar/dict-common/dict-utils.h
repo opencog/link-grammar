@@ -13,6 +13,9 @@
 #ifndef _DICT_UTILITIES_H_
 #define _DICT_UTILITIES_H_
 
+#include <stdbool.h>
+#include <stdio.h>
+
 char * join_path(const char * prefix, const char * suffix);
 
 FILE * dictopen(const char *filename, const char *how);

@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <stdarg.h>
 #include <locale.h>
 #ifdef HAVE_LOCALE_T_IN_XLOCALE_H
@@ -24,12 +23,10 @@
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #ifndef _WIN32
-	#include <unistd.h>
+	// #include <unistd.h>
 	#include <langinfo.h>
 #else
 	#include <windows.h>
-	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
-	#include <direct.h>  /* For getcwd(). */
 #endif /* _WIN32 */
 
 #include "string-set.h"
@@ -37,11 +34,6 @@
 #include "utilities.h"
 
 /* This file contains certain general utilities. */
-int    verbosity;
-/* debug and test should not be NULL since they can be used before they
- * are assigned a value by parse_options_get_...() */
-char * debug = (char *)"";
-char * test = (char *)"";
 
 /* ============================================================= */
 /* String utilities */

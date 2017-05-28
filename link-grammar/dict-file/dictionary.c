@@ -15,6 +15,7 @@
 #include "api-structures.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-utils.h"
 #include "externs.h"
 #include "dict-common/idiom.h"
 #include "post-process/pp_knowledge.h"
@@ -24,7 +25,6 @@
 #include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
-#include "utilities.h"
 #include "word-utils.h"
 #include "dict-sql/read-sql.h"  /* Temporary hack */
 

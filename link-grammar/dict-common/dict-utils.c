@@ -11,7 +11,25 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <sys/types.h>
+#include <sys/stat.h>   /* for fstat() */
+
+#ifndef _WIN32
+	#include <unistd.h>
+#else
+	#include <windows.h>
+	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
+	#include <direct.h>  /* For getcwd(). */
+#endif /* _WIN32 */
+
+#include <stdlib.h>
+#include <string.h>
+
+#include <link-includes.h>
+
 #include "dict-utils.h"
+#include "error.h"  // for verbosity_level
+#include "utilities.h"
 
 #ifdef _WIN32
 	#define DIR_SEPARATOR "\\"

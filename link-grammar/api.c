@@ -46,6 +46,12 @@
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
 static unsigned int global_rand_state = 0;
 
+int verbosity;
+/* debug and test should not be NULL since they can be used before they
+ * are assigned a value by parse_options_get_...() */
+char * debug = (char *)"";
+char * test = (char *)"";
+
 /***************************************************************
 *
 * Routines for setting Parse_Options
