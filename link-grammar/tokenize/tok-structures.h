@@ -24,10 +24,6 @@
 #define INFIX_MARK(afdict) \
  ((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
 
-/* MAX_WORD is large, because Unicode entries can use a lot of space */
-#define MAX_WORD 180          /* maximum number of bytes in a word */
-#define MAX_LINE 2500         /* maximum number of chars in a sentence */
-
 /* conditional compiling flags */
 #define INFIX_NOTATION
     /* If defined, then we're using infix notation for the dictionary */

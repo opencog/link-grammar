@@ -21,35 +21,20 @@
 #include "dict-common/dict-structures.h"  /* For Exp, Exp_list */
 #include "histogram.h"  /* Count_bin */
 
-#define NEGATIVECOST -1000000
-/* This is a hack that allows one to discard disjuncts containing
-   connectors whose cost is greater than given a bound. This number plus
-   the cost of any connectors on a disjunct must remain negative, and
-   this number multiplied times the number of costly connectors on any
-   disjunct must fit into an integer. */
-
-/* Upper bound on the cost of any connector. */
-#define MAX_CONNECTOR_COST 1000.0f
-
 /* The following define the names of the special strings in the dictionary. */
 #define LEFT_WALL_WORD   ("LEFT-WALL")
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
 
-#define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
-
 #define UNKNOWN_WORD "UNKNOWN-WORD"
-
-#define MAX_PATH_NAME 200     /* file names (including paths)
-                                 should not be longer than this */
 
 /*      Some size definitions.  Reduce these for small machines */
 /* MAX_WORD is large, because Unicode entries can use a lot of space */
 #define MAX_WORD 180          /* maximum number of bytes in a word */
-#define MAX_LINE 2500         /* maximum number of chars in a sentence */
+
+#define MAX_LINE 500          /* maximum width of print area */
 
 #define UNLIMITED_LEN 255
 #define SHORT_LEN 6
-#define NO_WORD 255
 
 /* Word subscripts come after the subscript mark (ASCII ETX)
  * In the dictionary, a dot is used; but that dot interferes with dots
@@ -136,7 +121,6 @@ struct X_node_struct
 	X_node *next;
 	const Gword *word;         /* originating Wordgraph word */
 };
-
 
 /**
  * Word, as represented shortly after tokenization, but before parsing.

@@ -457,6 +457,9 @@ void dyn_strcat(dyn_str* ds, const char *str)
 /* =========================================================== */
 /* File path and dictionary open routines below */
 
+#define MAX_PATH_NAME 200     /* file names (including paths)
+                                 should not be longer than this */
+
 char * join_path(const char * prefix, const char * suffix)
 {
 	char * path;

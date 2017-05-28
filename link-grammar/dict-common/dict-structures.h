@@ -21,6 +21,7 @@
 #include "utilities.h" // for locale_t
 
 #define EMPTY_CONNECTOR "ZZZ"
+#define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 
 LINK_BEGIN_DECLS
 
