@@ -474,15 +474,6 @@ size_t get_max_space_used(void);
 
 
 char * get_default_locale(void);
-char * join_path(const char * prefix, const char * suffix);
-
-FILE * dictopen(const char *filename, const char *how);
-void * object_open(const char *filename,
-                   void * (*opencb)(const char *, const void *),
-                   const void * user_data);
-
-bool file_exists(const char * dict_name);
-char * get_file_contents(const char *filename);
 void set_utf8_program_locale(void);
 bool try_locale(const char *);
 
