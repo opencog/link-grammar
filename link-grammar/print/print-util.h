@@ -26,12 +26,6 @@
 
 #define MAX_LINE 500          /* maximum width of print area */
 
-/**
- * Return the width, in text-column-widths, of the utf8-encoded
- * string.  This is needed when printing formatted strings.
- */
-size_t utf8_strwidth(const char *);
-
 void append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);
 void vappend_string(dyn_str *, const char *fmt, va_list args)
 	GNUC_PRINTF(2,0);
