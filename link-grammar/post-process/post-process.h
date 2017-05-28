@@ -47,4 +47,6 @@ void build_type_array(Postprocessor*);
 void linkage_set_domain_names(Postprocessor*, Linkage);
 void exfree_domain_names(PP_info *);
 
+void post_process_lkgs(Sentence, Parse_Options);
+
 #endif
