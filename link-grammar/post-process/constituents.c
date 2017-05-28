@@ -15,13 +15,13 @@
 #include <string.h>
 
 #include "api-structures.h"
+#include "dict-common/dict-structures.h" // For Dictionary_s
+#include "dict-common/dict-defines.h" // For MAX_WORD
 #include "error.h"
-#include "externs.h"
+#include "linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
-#include "print/print-util.h"
 #include "string-set.h"
-#include "structures.h"
 
 #define D_CONST 8 /* debug level for this file */
 
@@ -960,9 +960,8 @@ exprint_constituent_structure(con_context_t *ctxt,
 	bool *leftdone = alloca(numcon_total * sizeof(bool));
 	bool *rightdone = alloca(numcon_total * sizeof(bool));
 	int best, bestright, bestleft;
-	char *p;
 	char s[MAX_WORD];
-	String * cs = string_new();
+	dyn_str * cs = dyn_str_new();
 
 	assert (numcon_total < ctxt->conlen, "Too many constituents (b)");
 
@@ -994,7 +993,8 @@ exprint_constituent_structure(con_context_t *ctxt,
 				break;
 
 			leftdone[best] = true;
-			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
+			dyn_strcat(cs, "[");
+			dyn_strcat(cs, ctxt->constituent[best].type);
 		}
 
 		/* Don't print out right wall */
@@ -1031,7 +1031,8 @@ exprint_constituent_structure(con_context_t *ctxt,
 			if (linkage->chosen_disjuncts[w]->word[0]->status & WS_FIRSTUPPER)
 				upcase_utf8_str(s, s, MAX_WORD);
 #endif
-			append_string(cs, "%s ", s);
+			dyn_strcat(cs, s);
+			dyn_strcat(cs, " ");
 		}
 
 		while (1)
@@ -1050,14 +1051,13 @@ exprint_constituent_structure(con_context_t *ctxt,
 			if (best == -1)
 				break;
 			rightdone[best] = true;
-			append_string(cs, "%s%c ", ctxt->constituent[best].type, CLOSE_BRACKET);
+			dyn_strcat(cs, ctxt->constituent[best].type);
+			dyn_strcat(cs, "]");
 		}
 	}
 
-	append_string(cs, "\n");
-	p = string_copy(cs);
-	string_delete(cs);
-	return p;
+	dyn_strcat(cs, "\n");
+	return dyn_str_take(cs);
 }
 
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
@@ -1168,7 +1168,7 @@ static CNode * parse_string(CNode * n, char **saveptr)
 	return NULL;
 }
 
-static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
+static void print_tree(dyn_str * cs, int indent, CNode * n, int o1, int o2)
 {
 	int i, child_offset;
 	CNode * m;
@@ -1176,9 +1176,11 @@ static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
 	if (n == NULL) return;
 
 	if (indent)
-		for (i = 0; i < o1; ++i)
-			append_string(cs, " ");
-	append_string(cs, "(%s ", n->label);
+		for (i = 0; i < o1; ++i) dyn_strcat(cs, " ");
+
+	dyn_strcat(cs, "(");
+	dyn_strcat(cs, n->label);
+	dyn_strcat(cs, " ");
 	child_offset = o2 + strlen(n->label) + 2;
 
 	for (m = n->child; m != NULL; m = m->next)
@@ -1204,16 +1206,16 @@ static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
 				p = strchr(p, ')');
 			}
 
-			append_string(cs, "%s", m->label);
+			dyn_strcat(cs, m->label);
 			if ((m->next != NULL) && (m->next->child == NULL))
-				append_string(cs, " ");
+				dyn_strcat(cs, " ");
 		}
 		else
 		{
 			if (m != n->child)
 			{
-				if (indent) append_string(cs, "\n");
-				else append_string(cs, " ");
+				if (indent) dyn_strcat(cs, "\n");
+				else dyn_strcat(cs, " ");
 				print_tree(cs, indent, m, child_offset, child_offset);
 			}
 			else
@@ -1224,15 +1226,15 @@ static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
 			{
 				if (indent)
 				{
-					append_string(cs, "\n");
+					dyn_strcat(cs, "\n");
 					for (i = 0; i < child_offset; ++i)
-						append_string(cs, " ");
+						dyn_strcat(cs, " ");
 				}
-				else append_string(cs, " ");
+				else dyn_strcat(cs, " ");
 			}
 		}
 	}
-	append_string(cs, ")");
+	dyn_strcat(cs, ")");
 }
 
 static int assign_spans(CNode * n, int start)
@@ -1297,9 +1299,7 @@ static void linkage_free_constituent_tree(CNode * n)
  */
 char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode)
 {
-	String * cs;
 	CNode * root;
-	char * p;
 
 	if (!linkage) return NULL;
 	if (mode == NO_DISPLAY)
@@ -1308,14 +1308,13 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 	}
 	else if (mode == MULTILINE || mode == SINGLE_LINE)
 	{
-		cs = string_new();
+		dyn_str * cs;
+		cs = dyn_str_new();
 		root = linkage_constituent_tree(linkage);
 		print_tree(cs, (mode==1), root, 0, 0);
 		linkage_free_constituent_tree(root);
-		append_string(cs, "\n");
-		p = string_copy(cs);
-		string_delete(cs);
-		return p;
+		dyn_strcat(cs, "\n");
+		return dyn_str_take(cs);
 	}
 	else if (mode == BRACKET_TREE)
 	{

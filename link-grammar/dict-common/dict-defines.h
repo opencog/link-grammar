@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2013 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -9,32 +10,26 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-#ifndef LG_PRINT_UTIL_H_
-#define LG_PRINT_UTIL_H_
 
-#if     __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
-#define GNUC_PRINTF( format_idx, arg_idx )    \
-  __attribute__((__format__ (__printf__, format_idx, arg_idx)))
-#else
-#define GNUC_PRINTF( format_idx, arg_idx )
-#endif
+#ifndef _DICT_DEFINES_H_
+#define _DICT_DEFINES_H_
 
-#include <stdlib.h>
-#include <stdarg.h>
+/* The following define the names of the special strings in the dictionary. */
+#define LEFT_WALL_WORD   ("LEFT-WALL")
+#define RIGHT_WALL_WORD  ("RIGHT-WALL")
 
-#include "utilities.h"
+#define UNKNOWN_WORD "UNKNOWN-WORD"
 
-#define MAX_LINE 500          /* maximum width of print area */
+/*      Some size definitions.  Reduce these for small machines */
+/* MAX_WORD is large, because Unicode entries can use a lot of space */
+#define MAX_WORD 180          /* maximum number of bytes in a word */
 
-/**
- * Return the width, in text-column-widths, of the utf8-encoded
- * string.  This is needed when printing formatted strings.
+/* Word subscripts come after the subscript mark (ASCII ETX)
+ * In the dictionary, a dot is used; but that dot interferes with dots
+ * in the input stream, and so we convert dictionary dots into the
+ * subscript mark, which we don't expect to see in user input.
  */
-size_t utf8_strwidth(const char *);
-
-void append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);
-void vappend_string(dyn_str *, const char *fmt, va_list args)
-	GNUC_PRINTF(2,0);
-size_t append_utf8_char(dyn_str *, const char * mbs);
+#define SUBSCRIPT_MARK '\3'
+#define SUBSCRIPT_DOT '.'
 
 #endif

@@ -14,7 +14,7 @@
 #ifndef _DICT_UTILS_H_
 #define _DICT_UTILS_H_
 
-#include "structures.h"
+#include "dict-structures.h"
 
 /* Exp utilities ... */
 void free_Exp(Exp *);
@@ -24,6 +24,10 @@ Exp * copy_Exp(Exp *);
 bool is_exp_like_empty_word(Dictionary dict, Exp *);
 /* int exp_compare(Exp * e1, Exp * e2); */
 /* int exp_contains(Exp * super, Exp * sub); */
+
+/* X_node utilities ... */
+X_node *    catenate_X_nodes(X_node *, X_node *);
+void free_X_nodes(X_node *);
 
 /* Dictionary utilities ... */
 bool word_has_connector(Dict_node *, const char *, char);

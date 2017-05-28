@@ -21,6 +21,7 @@
 #include "count.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/regex-morph.h"
+#include "dict-common/dict-utils.h" // for free_X_nodes
 #include "disjunct-utils.h"
 #include "error.h"
 #include "externs.h"
@@ -35,11 +36,11 @@
 #include "score.h"
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
-#include "structures.h"
 #include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // Needed for sane_linkae_morphism
+#include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
 #include "utilities.h"
 #include "word-utils.h"
 

@@ -19,15 +19,16 @@
 #include "externs.h"
 #include "disjunct-utils.h"
 #include "word-utils.h"
+#include "tokenize/word-structures.h" // For Word_struct
 #include "corpus/cluster.h"
 
 /* ========================================================= */
 
-static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
+static Disjunct * build_expansion_disjuncts(Cluster *clu, const char *xstr)
 {
 	Disjunct *dj;
-	dj = lg_cluster_get_disjuncts(clu, x->string);
-	if (dj && (verbosity > 0)) prt_error("Expanded %s \n", x->string);
+	dj = lg_cluster_get_disjuncts(clu, xstr);
+	if (dj && (verbosity > 0)) prt_error("Expanded %s \n", xstr);
 	return dj;
 }
 
@@ -49,7 +50,7 @@ bool lg_expand_disjunct_list(Sentence sent)
 		Disjunct * d = sent->word[w].d;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_expansion_disjuncts(clu, x);
+			Disjunct *dx = build_expansion_disjuncts(clu, x->string);
 			if (dx)
 			{
 				unsigned int cnt = count_disjuncts(d);

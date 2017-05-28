@@ -14,10 +14,10 @@
 #include "api-types.h"
 #include "dict-api.h"
 #include "dict-common.h"
+#include "dict-defines.h" // For MAX_WORD
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
-#include "structures.h"
 
 /**
  * Find if a string signifies an idiom.

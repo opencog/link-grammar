@@ -21,6 +21,7 @@
 #include "dict-common/build-disjuncts.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-defines.h" // for MAX_WORD
 #include "dict-common/dict-utils.h"
 #include "dict-common/regex-morph.h"
 #include "error.h"
@@ -29,11 +30,11 @@
 #include "print/print-util.h"
 #include "spellcheck.h"
 #include "string-set.h"
-#include "structures.h"
 #include "tokenize.h"
 #include "tok-structures.h"
 #include "utilities.h"
 #include "wordgraph.h"
+#include "word-structures.h"
 #include "word-utils.h"
 
 #define MAX_STRIP 10
@@ -869,6 +870,21 @@ static void tokenization_done(Dictionary dict, Gword *altp)
 			altp->tokenizing_step = TS_DONE;
 		}
 	}
+}
+
+static const char ** resize_alts(const char **arr, size_t len)
+{
+	arr = realloc(arr, (len+2) * sizeof(char *));
+	arr[len+1] = NULL;
+	return arr;
+}
+
+void altappend(Sentence sent, const char ***altp, const char *w)
+{
+	size_t n = altlen(*altp);
+
+	*altp = resize_alts(*altp, n);
+	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
 /*
@@ -1897,15 +1913,15 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 static const char *print_rev_word_array(Sentence sent, const char **w,
                                         size_t size)
 {
-	String *s = string_new();
+	dyn_str *s = dyn_str_new();
 	int i;
 	const char *r;
 
 	for (i = size - 1; i >= 0; i--)
 		append_string(s, "[%d]='%s'%s", i, w[i], i>0 ? "," : "");
 
-	r = string_set_add(string_value(s), sent->string_set);
-	string_delete(s);
+	r = string_set_add(s->str, sent->string_set);
+	dyn_str_delete(s);
 	return r;
 }
 

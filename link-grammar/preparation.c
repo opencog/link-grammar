@@ -20,7 +20,7 @@
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
-#include "structures.h"
+#include "tokenize/word-structures.h" // for Word_struct
 #include "word-utils.h"
 
 static void

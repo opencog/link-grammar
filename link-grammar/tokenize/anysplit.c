@@ -30,9 +30,9 @@
 #include <time.h>
 
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
 #include "dict-common/regex-morph.h"
 #include "error.h"
-#include "structures.h"
 #include "tokenize.h"
 #include "tok-structures.h"
 

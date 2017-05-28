@@ -19,6 +19,8 @@ bool separate_sentence(Sentence, Parse_Options);
 bool sentence_in_dictionary(Sentence);
 bool flatten_wordgraph(Sentence, Parse_Options);
 
+void altappend(Sentence, const char ***, const char *);
+
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                      const char *label,
                      int prefnum, const char * const *prefix,

@@ -13,8 +13,29 @@
 #ifndef _LINK_GRAMMAR_DISJUNCT_UTILS_H_
 #define _LINK_GRAMMAR_DISJUNCT_UTILS_H_
 
+#include <stdbool.h>
+
 #include "api-types.h"
-#include "structures.h"
+
+// Can undefine VERIFY_MATCH_LIST when done debugging...
+#define VERIFY_MATCH_LIST
+
+struct Disjunct_struct
+{
+	Disjunct *next;
+	Connector *left, *right;
+	double cost;
+	bool marked;               /* unmarked disjuncts get deleted */
+
+	/* match_left, right used only during parsing, for the match list. */
+	bool match_left, match_right;
+
+#ifdef VERIFY_MATCH_LIST
+	int match_id;              /* verify the match list integrity */
+#endif
+	gword_set *originating_gword; /* List of originating gwords */
+	const char * string;       /* subscripted dictionary word */
+};
 
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);

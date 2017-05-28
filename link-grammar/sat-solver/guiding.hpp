@@ -6,6 +6,11 @@
 #undef assert
 #include "util.hpp"
 
+extern "C"
+{
+#include "api-structures.h" // For defintion of Sentence
+}
+
 #ifndef HAVE_SETPOLARITY_BOOL // setPolarity has lbool argument, not bool
 #define setPolarity(v, b) setPolarity(v, toLbool(b))
 #endif

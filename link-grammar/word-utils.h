@@ -14,16 +14,66 @@
 #ifndef _LINK_GRAMMAR_WORD_UTILS_H_
 #define _LINK_GRAMMAR_WORD_UTILS_H_
 
-#include "structures.h"
+#include <stdint.h>  // for unit8_t
 
-/* X_node utilities ... */
-X_node *    catenate_X_nodes(X_node *, X_node *);
-void free_X_nodes(X_node *);
+#include "api-types.h"
+#include "dict-common/dict-structures.h"  /* For Exp, Exp_list */
 
+/* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
+ * Lets try to keep it that way.
+ */
+struct Connector_struct
+{
+	int16_t hash;
+	uint8_t length_limit;
+	             /* If this is a length limited connector, this
+	                gives the limit of the length of the link
+	                that can be used on this connector.  Since
+	                this is strictly a function of the connector
+	                name, efficiency is the only reason to store
+	                this.  If no limit, the value is set to 255. */
+	uint8_t nearest_word;
+	             /* The nearest word to my left (or right) that
+	                this could ever connect to.  Computed by
+	                setup_connectors() */
+	bool multi;  /* TRUE if this is a multi-connector */
+	uint8_t lc_start;     /* lc start position (or 0) - for match speedup. */
+	uint8_t uc_length;    /* uc part length - for match speedup. */
+	uint8_t uc_start;     /* uc start position - for match speedup. */
+	Connector * next;
+	const char * string; /* The connector name w/o the direction mark, e.g. AB */
+
+	/* Hash table next pointer, used only during pruning. */
+	union
+	{
+		Connector * tableNext;
+		const gword_set *originating_gword;
+	};
+};
+
+struct Connector_set_s
+{
+	Connector ** hash_table;
+	unsigned int table_size;
+};
+
+static inline void connector_set_string(Connector *c, const char *s)
+{
+	c->string = s;
+	c->hash = -1;
+}
+static inline const char * connector_get_string(Connector *c)
+{
+	return c->string;
+}
 
 /* Connector utilities ... */
 Connector * connector_new(void);
 void free_connectors(Connector *);
+
+/* Length-limits for how far connectors can reach out. */
+#define UNLIMITED_LEN 255
+#define SHORT_LEN 6
 
 static inline Connector * init_connector(Connector *c)
 {

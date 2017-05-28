@@ -12,7 +12,6 @@
 /*************************************************************************/
 
 #include "dict-common/dict-api.h"
-#include "structures.h"
 
 /* The structure below stores a list of dictionary word files. */
 struct Word_file_struct

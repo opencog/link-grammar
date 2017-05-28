@@ -17,9 +17,9 @@
 #include <stdarg.h>
 
 #include "error.h"
-#include "structures.h"
-#include "api-structures.h"
-#include "print/print-util.h"
+#include "api-structures.h"   // For Sentence_s
+#include "print/print.h"      // For print_sentence_context()
+#include "print/print-util.h" // For append_string()
 
 static void default_error_handler(lg_errinfo *, void *);
 static TLS struct
@@ -170,9 +170,7 @@ int lg_error_clearall(void)
  */
 char *lg_error_formatmsg(lg_errinfo *lge)
 {
-	char *formated_error_message;
-
-	String *s = string_new();
+	dyn_str *s = dyn_str_new();
 
 	/* Prepend libname to messages with higher severity than Debug. */
 	if (lge->severity < lg_Debug)
@@ -183,10 +181,7 @@ char *lg_error_formatmsg(lg_errinfo *lge)
 
 	append_string(s, "%s", lge->text);
 
-	formated_error_message = string_copy(s);
-	string_delete(s);
-
-	return formated_error_message;
+	return dyn_str_take(s);
 }
 /* ================================================================== */
 
@@ -239,69 +234,13 @@ static const char *error_severity_label(lg_error_severity sev)
 	return strdup(sevlabel);
 }
 
-static void print_sentence_context(String *outbuf, const err_ctxt *ec)
-{
-	size_t i, j;
-	const char **a, **b;
-
-#if 0
-	/* Previous code. Documenting its problem:
-	 * In the current library version (using Wordgraph) it may print a
-	 * nonsense sequence of morphemes if the words have been split to
-	 * morphemes in various ways, because the "alternatives" array doesn't
-	 * hold real alternatives any more (see example in the comments of
-	 * print_sentence_word_alternatives()).
-	 *
-	 * We could print the first path in the Wordgraph, analogous to what we
-	 * did here, but (same problem as printing alternatives[0] only) it may
-	 * not contain all the words, including those that failed (because they
-	 * are in another path). */
-
-	fprintf(stderr, "\tFailing sentence was:\n\t");
-	for (i=0; i<ec->sent->length; i++)
-	{
-		fprintf(stderr, "%s ", ec->sent->word[i].alternatives[0]);
-	}
-#else
-	/* The solution is just to print all the sentence tokenized subwords in
-	 * their order in the sentence, without duplications. */
-
-	append_string(outbuf,
-			  "\tFailing sentence contains the following words/morphemes:\n\t");
-	for (i=0; i<ec->sent->length; i++)
-	{
-		for (a = ec->sent->word[i].alternatives; NULL != *a; a++)
-		{
-			bool next_word = false;
-
-			for (j=0; j<ec->sent->length; j++)
-			{
-				for (b = ec->sent->word[j].alternatives; NULL != *b; b++)
-				{
-					/* print only the first occurrence. */
-					if (0 == strcmp(*a, *b))
-					{
-						next_word = true;
-						if (a != b) break;
-						append_string(outbuf, "%s ", *a);
-						break;
-					}
-				}
-				if (next_word) break;
-			}
-		}
-	}
-	append_string(outbuf, "\n");
-#endif
-}
-
 static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 	GNUC_PRINTF(3,0);
 
 static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 {
-	static TLS String *outbuf;
-	if (NULL == outbuf) outbuf = string_new();
+	static TLS dyn_str *outbuf = NULL;
+	if (NULL == outbuf) outbuf = dyn_str_new();
 
 	/*
 	 * If the message is a complete one, it ends with a newline.  Else the
@@ -328,11 +267,11 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 	if (partline) return;
 
 	if ((NULL != ec) && (NULL != ec->sent))
-		print_sentence_context(outbuf, ec);
+		print_sentence_context(ec->sent, outbuf);
 
 	lg_errinfo current_error;
 	/* current_error.ec = *ec; */
-	const char *error_text = string_value(outbuf);
+	const char *error_text = outbuf->str;
 	lg_error_severity msg_sev = message_error_severity(error_text);
 	if (lg_None != msg_sev)
 	{
@@ -355,7 +294,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 		free((void *)current_error.severity_label);
 	}
 
-	string_delete(outbuf);
+	dyn_str_delete(outbuf);
 	outbuf = NULL;
 }
 

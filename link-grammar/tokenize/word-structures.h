@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2012 Linas Vepstas                                      */
+/* Copyright (c) 2013 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -11,21 +11,34 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LINKGRAMMAR_BUILD_DISJUNCTS_H
-#define _LINKGRAMMAR_BUILD_DISJUNCTS_H
+#ifndef _STRUCTURES_H_
+#define _STRUCTURES_H_
 
 #include "api-types.h"
-#include "dict-structures.h"
 
-void build_sentence_disjuncts(Sentence sent, double cost_cutoff);
-X_node *   build_word_expressions(Sentence, const Gword *, const char *);
-Disjunct * build_disjuncts_for_exp(Exp*, const char*, double cost_cutoff);
+typedef struct X_node_struct X_node;
 
-unsigned int count_disjunct_for_dict_node(Dict_node *dn);
+/**
+ * Word, as represented shortly after tokenization, but before parsing.
+ *
+ * X_node* x:
+ *    Contains a pointer to a list of expressions from the dictionary,
+ *    Computed by build_sentence_expressions().
+ *
+ * Disjunct* d:
+ *   Contains a pointer to a list of disjuncts for this word.
+ *   Computed by: prepare_to_parse(), but modified by pruning and power
+ *   pruning.
+ */
+struct Word_struct
+{
+	const char *unsplit_word;
 
-#ifdef DEBUG
-void prt_exp(Exp *, int);
-void prt_exp_mem(Exp *, int);
-#endif /* DEBUG */
+	X_node * x;          /* Sentence starts out with these, */
+	Disjunct * d;        /* eventually these get generated. */
+	bool optional;       /* Linkage is optional. */
 
-#endif /* _LINKGRAMMAR_BUILD_DISJUNCTS_H */
+	const char **alternatives;
+};
+
+#endif

@@ -15,7 +15,7 @@
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "string-set.h"
-#include "structures.h"
+// #include "structures.h"
 #include "utilities.h"
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
@@ -368,6 +368,8 @@ static char * prt_con(Connector *c, char * p, char dir, size_t * bufsz)
 	}
 	return p+n;
 }
+
+#define MAX_LINE 500          /* maximum width of print area */
 
 char * print_one_disjunct(Disjunct *dj)
 {

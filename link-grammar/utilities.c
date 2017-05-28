@@ -29,11 +29,11 @@
 	#include <windows.h>
 #endif /* _WIN32 */
 
-#include "string-set.h"
-#include "structures.h"
 #include "utilities.h"
 
-/* This file contains certain general utilities. */
+/* This file contains general utilities that fix, enhance OS-provided
+ * API's, esp ones that the OS forgot to provide, or managed to break.
+ */
 
 /* ============================================================= */
 /* String utilities */
@@ -421,6 +421,13 @@ void dyn_str_delete(dyn_str* ds)
 	free(ds);
 }
 
+char * dyn_str_take(dyn_str* ds)
+{
+	char * rv = ds->str;
+	free(ds);
+	return rv;
+}
+
 void dyn_strcat(dyn_str* ds, const char *str)
 {
 	size_t l = strlen(str);
@@ -596,27 +603,12 @@ char * get_default_locale(void)
 /* ============================================================= */
 /* Alternatives utilities */
 
-static const char ** resize_alts(const char **arr, size_t len)
-{
-	arr = realloc(arr, (len+2) * sizeof(char *));
-	arr[len+1] = NULL;
-	return arr;
-}
-
 size_t altlen(const char **arr)
 {
 	size_t len = 0;
 	if (arr)
 		while (arr[len] != NULL) len++;
 	return len;
-}
-
-void altappend(Sentence sent, const char ***altp, const char *w)
-{
-	size_t n = altlen(*altp);
-
-	*altp = resize_alts(*altp, n);
-	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
 /* ============================================================= */
