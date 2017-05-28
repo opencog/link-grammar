@@ -5,6 +5,7 @@ Version 5.4.0 (XXX 2017)
  * Recover pp_lexer.l from ancient version 2.2!
  * Fix unusual crash in post-processing for the "any" language.
  * Remove three deprecated post-processing functions from API.
+ * Major reorganization of code base into more modular directories.
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
