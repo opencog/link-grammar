@@ -24,6 +24,7 @@
 #include "link-includes.h"
 #include "linkage.h"
 #include "post-process/post-process.h" // needed only for exfree_domain_names
+#include "post-process/pp-structures.h" // needed only for pp_info_s
 #include "print/print.h"
 #include "print/print-util.h"
 #include "sat-solver/sat-encoder.h"

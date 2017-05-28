@@ -14,9 +14,71 @@
 #ifndef _PP_STRUCTURES_H_
 #define _PP_STRUCTURES_H_
 
+#include <stdbool.h>
 #include "api-types.h"
 
-/* Post-processing-related structures */
+struct Domain_s
+{
+	const char *   string;
+	List_o_links * lol;
+	DTreeLeaf *    child;
+	Domain *       parent;
+	size_t         size;
+	size_t         start_link;  /* the link that started this domain */
+	char           type;        /* one letter name */
+};
+
+
+struct DTreeLeaf_s
+{
+	Domain *    parent;
+	DTreeLeaf * next;
+	int         link;
+};
+
+struct PP_data_s
+{
+	List_o_links ** word_links;
+	size_t wowlen;
+	size_t N_domains;
+	Domain * domain_array;          /* The domains, sorted by size */
+	size_t domlen;                  /* Allocated size of domain_array */
+	size_t num_words;               /* Number of words in linkage */
+	List_o_links * links_to_ignore;
+
+	bool *visited;                  /* For the depth-first search */
+	size_t vlength;                 /* Length of visited array */
+};
+
+/* A new Postprocessor struct is alloc'ed for each sentence. It contains
+ * sentence-specific post-processing information.
+ */
+struct Postprocessor_s
+{
+	pp_knowledge  * knowledge;           /* Internal rep'n of the actual rules */
+	int n_global_rules_firing;           /* this & the next are diagnostic     */
+	int n_local_rules_firing;
+	pp_linkset *set_of_links_of_sentence;     /* seen in *any* linkage of sent */
+	pp_linkset *set_of_links_in_an_active_rule;/*used in *some* linkage of sent*/
+	int *relevant_contains_one_rules;        /* -1-terminated list of indices  */
+	int *relevant_contains_none_rules;
+	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
+	String_set *string_set;      /* Link names seen for sentence */
+
+	/* Per-linkage state; this data must be reset prior to processing
+	 * each new linkage. */
+	PP_node *pp_node;
+	PP_data pp_data;
+};
+
+struct PP_info_s
+{
+	size_t          num_domains;
+	const char **   domain_name;
+};
+
+/* -------------------------------------------------------------- */
+/* Other. "private", internal-use-only post-processing structures */
 
 /* The following two structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
