@@ -2,16 +2,24 @@
 Directories
 ===========
 
-The minisat and sat-solver directories contain code for the Boolean-SAT
-parser.
+ * corpus - contains code to read word-sense disambiguation
+            data from an SQL file.
 
-The corpus directory contains code to read word-sense disambiguation
-data from an SQL file.
+ * dict-common - generic dictionary-handling code.
+ * dict-file   - read dictionaries from files.
+ * dict-sql    - read dictionaries from an SQL DB
+                 (unfinished, under development!).
 
-The dict-file directory contains code to read dictionaries from files.
+ * post-process - constraints added after parsing.
+                  Also, constituent-tree construction.
+ * print        - functions that convert parses into
+                  human-readable strings and printed output.
 
-The dict-sql directory contains code to read dictionaries from an SQL DB
-   (unfinished, under development!).
+ * minisat      - Copy of the mini-SAT Boolean-SAT solver.
+ * sat-solver   - Parser, implemented on top of SAT
+
+ * tokenize     - Convert sentence strings into word sequences.
+                  Actually, into a word-graph of possible words.
 
 
 Version 5.3.14 - Improved error notification facility
