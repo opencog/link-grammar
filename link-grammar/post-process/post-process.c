@@ -23,10 +23,18 @@
 #include "externs.h"
 #include "pp_knowledge.h"
 #include "pp_linkset.h"
-#include "structures.h"
+#include "pp-structures.h"
+#include "resources.h"
+#include "score.h"
 #include "string-set.h"
 
 #define PP_MAX_DOMAINS 128
+
+struct D_type_list_struct
+{
+	D_type_list * next;
+	int type;
+};
 
 /**
  * post_process_match -- compare two link-types.
@@ -186,7 +194,7 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 	}
 }
 
-void pp_free_domain_array(PP_data *ppd)
+static void pp_free_domain_array(PP_data *ppd)
 {
 	size_t d;
 	for (d = 0; d < ppd->domlen; d++)
@@ -1089,7 +1097,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 #define PP_INITLEN 60 /* just starting size, it is expanded if needed */
 
-void pp_new_domain_array(PP_data *pp_data)
+static void pp_new_domain_array(PP_data *pp_data)
 {
 	pp_data->domlen = PP_INITLEN;
 	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
@@ -1170,7 +1178,7 @@ void post_process_free(Postprocessor *pp)
  * of a sentence), call this once for every generated linkage. Here we
  * simply maintain a set of "seen" link names for rule pruning, later on.
  */
-void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
+static void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
 {
 	size_t i;
 	if (pp == NULL) return;
@@ -1308,6 +1316,117 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 
 	return pp->pp_node;
 }
+
+/**
+ * This does basic post-processing for all linkages.
+ */
+void post_process_lkgs(Sentence sent, Parse_Options opts)
+{
+	size_t in;
+	size_t N_linkages_post_processed = 0;
+	size_t N_valid_linkages = sent->num_valid_linkages;
+	size_t N_linkages_alloced = sent->num_linkages_alloced;
+	bool twopass = sent->length >= opts->twopass_length;
+
+
+	/* Special-case the "amy/ady" morphology handling. */
+	/* More generally, it there's no post-processor, do nothing. */
+	// if (sent->dict->affix_table->anysplit)
+	if (NULL == sent->postprocessor)
+	{
+		sent->num_linkages_post_processed = sent->num_valid_linkages;
+		return;
+	}
+
+	/* (optional) First pass: just visit the linkages */
+	/* The purpose of the first pass is to make the post-processing
+	 * more efficient.  Because (hopefully) by the time the real work
+	 * is done in the 2nd pass, the relevant rule set has been pruned
+	 * in the first pass.
+	 */
+	if (twopass)
+	{
+		for (in=0; in < N_linkages_alloced; in++)
+		{
+			Linkage lkg = &sent->lnkages[in];
+			Linkage_info *lifo = &lkg->lifo;
+
+			if (lifo->discarded || lifo->N_violations) continue;
+
+			post_process_scan_linkage(sent->postprocessor, lkg);
+
+			if ((49 == in%50) && resources_exhausted(opts->resources)) break;
+		}
+	}
+
+	/* Second pass: actually perform post-processing */
+	for (in=0; in < N_linkages_alloced; in++)
+	{
+		PP_node *ppn;
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info *lifo = &lkg->lifo;
+
+		if (lifo->discarded || lifo->N_violations) continue;
+
+		ppn = do_post_process(sent->postprocessor, lkg, twopass);
+
+		/* XXX There is no need to set the domain names if we are not
+		 * printing them. However, deferring this until later requires
+		 * a huge code re-org, because pp_data is needed to get the
+		 * domain type array, and pp_data is deleted immediately below.
+		 * Basically, pp_data and pp_node should be a part of the linkage,
+		 * and not part of the Postprocessor struct.
+		 * This costs about 1% performance penalty. */
+		build_type_array(sent->postprocessor);
+		linkage_set_domain_names(sent->postprocessor, lkg);
+
+	   post_process_free_data(&sent->postprocessor->pp_data);
+
+		if (NULL != ppn->violation)
+		{
+			N_valid_linkages--;
+			lifo->N_violations++;
+
+			/* Set the message, only if not set (e.g. by sane_morphism) */
+			if (NULL == lifo->pp_violation_msg)
+				lifo->pp_violation_msg = ppn->violation;
+		}
+		N_linkages_post_processed++;
+
+		linkage_score(lkg, opts);
+		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
+	}
+
+	/* If the timer expired, then we never finished post-processing.
+	 * Mark the remaining sentences as bad, as otherwise strange
+	 * results get reported. */
+	for (; in < N_linkages_alloced; in++)
+	{
+		Linkage lkg = &sent->lnkages[in];
+		Linkage_info *lifo = &lkg->lifo;
+
+		if (lifo->discarded || lifo->N_violations) continue;
+
+		N_valid_linkages--;
+		lifo->N_violations++;
+
+		/* Set the message, only if not set (e.g. by sane_morphism) */
+		if (NULL == lifo->pp_violation_msg)
+			lifo->pp_violation_msg = "Timeout during postprocessing";
+	}
+
+	print_time(opts, "Postprocessed all linkages");
+
+	if (verbosity_level(6))
+	{
+		err_msg(lg_Info, "%zu of %zu linkages with no P.P. violations\n",
+		        N_valid_linkages, N_linkages_post_processed);
+	}
+
+	sent->num_linkages_post_processed = N_linkages_post_processed;
+	sent->num_valid_linkages = N_valid_linkages;
+}
+
 
 /* OLD COMMENTS (OUT OF DATE):
   This file does the post-processing.

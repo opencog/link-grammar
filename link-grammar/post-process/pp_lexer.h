@@ -11,7 +11,14 @@
 /*************************************************************************/
 
 #include <stdio.h>
-#include "structures.h"
+#include "pp-structures.h"
+
+typedef struct pp_label_node_s
+{
+	/* linked list of strings associated with a label in the table */
+	const char *str;
+	struct pp_label_node_s *next;
+} pp_label_node;                 /* next=NULL: end of list */
 
 #define PP_LEXER_MAX_LABELS 512
 struct PPLexTable_s

@@ -18,8 +18,10 @@
 #include "error.h"
 #include "externs.h"
 #include "post-process/post-process.h"
+#include "post-process/pp-structures.h"
 #include "print/print-util.h"
 #include "string-set.h"
+#include "structures.h"
 
 #define D_CONST 8 /* debug level for this file */
 

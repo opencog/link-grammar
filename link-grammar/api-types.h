@@ -71,4 +71,3 @@ typedef struct cluster_s Cluster;
 typedef struct Wordgraph_pathpos_s Wordgraph_pathpos;
 
 #endif
-

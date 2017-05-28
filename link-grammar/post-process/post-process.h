@@ -26,25 +26,21 @@
 #define _POSTPROCESS_H_
 
 #include "api-types.h"
-#include "structures.h"
-
-void pp_new_domain_array(PP_data *);
-void pp_free_domain_array(PP_data *);
+#include "link-includes.h"
 
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
 void     post_process_free_data(PP_data * ppd);
-void     post_process_scan_linkage(Postprocessor *, Linkage);
 PP_node *do_post_process(Postprocessor *, Linkage, bool);
 bool     post_process_match(const char *, const char *);  /* utility function */
-
-bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
 
 void linkage_free_pp_info(Linkage);
 
 void build_type_array(Postprocessor*);
 void linkage_set_domain_names(Postprocessor*, Linkage);
 void exfree_domain_names(PP_info *);
+
+void post_process_lkgs(Sentence, Parse_Options);
 
 #endif
