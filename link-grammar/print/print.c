@@ -1464,3 +1464,60 @@ void print_chosen_disjuncts_words(const Linkage lkg)
 	err_msg(lg_Debug, "%s\n", string_value(djwbuf));
 	string_delete(djwbuf);
 }
+
+// Use for debug and error printing.
+void print_sentence_context(Sentence sent, String *outbuf)
+{
+	size_t i, j;
+	const char **a, **b;
+
+#if 0
+	/* Previous code. Documenting its problem:
+	 * In the current library version (using Wordgraph) it may print a
+	 * nonsense sequence of morphemes if the words have been split to
+	 * morphemes in various ways, because the "alternatives" array doesn't
+	 * hold real alternatives any more (see example in the comments of
+	 * print_sentence_word_alternatives()).
+	 *
+	 * We could print the first path in the Wordgraph, analogous to what we
+	 * did here, but (same problem as printing alternatives[0] only) it may
+	 * not contain all the words, including those that failed (because they
+	 * are in another path). */
+
+	fprintf(stderr, "\tFailing sentence was:\n\t");
+	for (i=0; i<sent->length; i++)
+	{
+		fprintf(stderr, "%s ", sent->word[i].alternatives[0]);
+	}
+#else
+	/* The solution is just to print all the sentence tokenized subwords in
+	 * their order in the sentence, without duplications. */
+
+	append_string(outbuf,
+			  "\tFailing sentence contains the following words/morphemes:\n\t");
+	for (i=0; i<sent->length; i++)
+	{
+		for (a = sent->word[i].alternatives; NULL != *a; a++)
+		{
+			bool next_word = false;
+
+			for (j=0; j<sent->length; j++)
+			{
+				for (b = sent->word[j].alternatives; NULL != *b; b++)
+				{
+					/* print only the first occurrence. */
+					if (0 == strcmp(*a, *b))
+					{
+						next_word = true;
+						if (a != b) break;
+						append_string(outbuf, "%s ", *a);
+						break;
+					}
+				}
+				if (next_word) break;
+			}
+		}
+	}
+	append_string(outbuf, "\n");
+#endif
+}

@@ -42,5 +42,3 @@ void vappend_string(String * string, const char *fmt, va_list args)
 size_t append_utf8_char(String * string, const char * mbs);
 
 #endif
-
-
