@@ -30,6 +30,12 @@
 
 #define PP_MAX_DOMAINS 128
 
+struct D_type_list_struct
+{
+	D_type_list * next;
+	int type;
+};
+
 /**
  * post_process_match -- compare two link-types.
  *

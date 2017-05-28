@@ -20,12 +20,6 @@
 
 /* The following two structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
-struct D_type_list_struct
-{
-	D_type_list * next;
-	int type;
-};
-
 struct PP_node_struct
 {
 	size_t dtsz;
@@ -55,22 +49,12 @@ struct pp_linkset_s
 	pp_linkset_node **hash_table;    /* data actually lives here */
 };
 
-
-/* from pp_lexer.c */
-typedef struct pp_label_node_s
-{
-	/* linked list of strings associated with a label in the table */
-	const char *str;
-	struct pp_label_node_s *next;
-} pp_label_node;                 /* next=NULL: end of list */
-
-
-/* from pp_knowledge.c */
-typedef struct StartingLinkAndDomain_s
+typedef struct StartingLinkAndDomain_s StartingLinkAndDomain;
+struct StartingLinkAndDomain_s
 {
 	const char *starting_link;
 	int   domain;       /* domain which the link belongs to (-1: terminator)*/
-} StartingLinkAndDomain;
+};
 
 typedef struct pp_rule_s
 {
