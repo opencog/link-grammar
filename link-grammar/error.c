@@ -244,7 +244,7 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 
 static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 {
-	static TLS String *outbuf;
+	static TLS String *outbuf = NULL;
 	if (NULL == outbuf) outbuf = string_new();
 
 	/*
