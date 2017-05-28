@@ -421,6 +421,13 @@ void dyn_str_delete(dyn_str* ds)
 	free(ds);
 }
 
+char * dyn_str_take(dyn_str* ds)
+{
+	char * rv = ds->str;
+	free(ds);
+	return rv;
+}
+
 void dyn_strcat(dyn_str* ds, const char *str)
 {
 	size_t l = strlen(str);
