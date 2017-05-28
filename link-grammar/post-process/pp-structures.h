@@ -16,6 +16,11 @@
 
 #include <stdbool.h>
 #include "api-types.h"
+#include "post-process.h"
+
+typedef struct Domain_s Domain;
+typedef struct DTreeLeaf_s DTreeLeaf;
+typedef struct List_o_links_struct List_o_links;
 
 struct Domain_s
 {

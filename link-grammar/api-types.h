@@ -32,13 +32,9 @@
 /* Widely used private typedefs */
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
-typedef struct Domain_s Domain;
-typedef struct DTreeLeaf_s DTreeLeaf;
-typedef struct Image_node_struct Image_node;
 typedef struct Linkage_info_struct Linkage_info;
 typedef struct Parse_info_struct *Parse_info;
 typedef struct Postprocessor_s Postprocessor;
-typedef struct PP_data_s PP_data;
 typedef struct PP_info_s PP_info;
 typedef struct Resources_s * Resources;
 
@@ -49,7 +45,6 @@ typedef struct fast_matcher_s fast_matcher_t;
 typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
 typedef struct Link_s Link;
-typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
