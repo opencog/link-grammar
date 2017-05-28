@@ -26,7 +26,7 @@ static const char * intersect_strings(String_set *sset, const char * s, const ch
 {
 	int i, j, d;
 	const char *w, *s0;
-	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
+	char u0[MAX_LINK_NAME_LENGTH];
 	char *u;
 
 	/* The head indicator is lower-case h, the dependent indicator is

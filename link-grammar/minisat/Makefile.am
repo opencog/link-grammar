@@ -23,3 +23,5 @@ libminisat_la_SOURCES = \
 	minisat/utils/ParseUtils.h \
 	minisat/utils/System.cc \
 	minisat/utils/System.h
+
+EXTRA_DIST= README

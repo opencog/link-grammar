@@ -60,7 +60,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_display_morphology(opts, true);
 }
 
-static inline void test(void)
+static inline void do_test(void)
 {
 #ifdef DEBUG
 	printf("%d\n", word_contains("said", PAST_TENSE_FORM_MARKER, dict));
@@ -124,7 +124,7 @@ static void global_init(JNIEnv *env)
 
 	dict = dictionary_create_lang(in_language);
 	if (!dict) throwException(env, "Error: unable to open dictionary");
-	else test();
+	else do_test();
 
 	dict_version = linkgrammar_get_dict_version(dict);
 	prt_error("Info: JNI: dictionary language '%s' version %s\n",

@@ -13,15 +13,17 @@
 
 #include <string.h>
 
-#include "build-disjuncts.h"
-#include "dict-common.h"
+#include "dict-common/build-disjuncts.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/file-utils.h"
+#include "dict-common/idiom.h"
+#include "dict-common/regex-morph.h"
 #include "error.h"
 #include "print/print.h"
 #include "externs.h"
-#include "idiom.h"
 #include "read-dict.h"
-#include "regex-morph.h"
 #include "string-set.h"
+#include "tokenize/tok-structures.h" // needed for MT_WALL
 #include "utilities.h"
 #include "word-file.h"
 

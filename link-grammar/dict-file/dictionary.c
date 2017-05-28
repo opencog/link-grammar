@@ -11,21 +11,22 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "anysplit.h"
+#include "tokenize/anysplit.h"
 #include "api-structures.h"
-#include "dict-api.h"
-#include "dict-common.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/dict-utils.h"
+#include "dict-common/file-utils.h"
 #include "externs.h"
-#include "idiom.h"
+#include "dict-common/idiom.h"
 #include "post-process/pp_knowledge.h"
 #include "read-dict.h"
 #include "read-regex.h"
-#include "regex-morph.h"
-#include "spellcheck.h"
+#include "dict-common/regex-morph.h"
+#include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
-#include "utilities.h"
-#include "word-utils.h"
+#include "word-utils.h"   // for connector_set_create()
 #include "dict-sql/read-sql.h"  /* Temporary hack */
 
 

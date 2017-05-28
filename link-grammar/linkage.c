@@ -16,11 +16,11 @@
 
 #include "analyze-linkage.h"
 #include "api-structures.h"
-#include "dict-common.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/idiom.h"
 #include "disjuncts.h"
 #include "externs.h"
 #include "extract-links.h"
-#include "idiom.h"
 #include "link-includes.h"
 #include "linkage.h"
 #include "post-process/post-process.h" // needed only for exfree_domain_names
@@ -30,7 +30,8 @@
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
 #include "structures.h"
-#include "wordgraph.h"
+#include "tokenize/wordgraph.h"
+#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "word-utils.h"
 
 #define INFIX_MARK_L 1 /* INFIX_MARK is 1 character */

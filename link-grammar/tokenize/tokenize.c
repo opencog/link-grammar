@@ -18,18 +18,20 @@
 #include <limits.h>
 
 #include "anysplit.h"
-#include "build-disjuncts.h"
-#include "dict-api.h"
-#include "dict-common.h"
+#include "dict-common/build-disjuncts.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/dict-utils.h"
+#include "dict-common/regex-morph.h"
 #include "error.h"
 #include "externs.h"
 #include "print/print.h"
 #include "print/print-util.h"
-#include "regex-morph.h"
 #include "spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
 #include "tokenize.h"
+#include "tok-structures.h"
 #include "utilities.h"
 #include "wordgraph.h"
 #include "word-utils.h"
@@ -49,6 +51,11 @@
 
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
+
+/* Dictionary capitalization handling */
+#define CAP1st "1stCAP" /* Next word is capitalized */
+#define CAPnon "nonCAP" /* Next word the lc version of a capitalized word */
+
 
 /**
  * is_common_entity - Return true if word is a common noun or adjective
@@ -2773,6 +2780,26 @@ static bool same_unsplit_word(Sentence sent, const Gword *w1, const Gword *w2)
 	        (w1->unsplit_word != sent->wordgraph));
 }
 #endif
+
+#define D_WPP 8
+static void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
+{
+	size_t i = 0;
+
+	if (NULL == wp)
+	{
+		lgdebug(+D_WPP, "Empty\n");
+		return;
+	}
+	lgdebug(+D_WPP, "\n");
+	for (; NULL != wp->word; wp++)
+	{
+		lgdebug(D_WPP, "%zu: %zu:word '%s', same=%d used=%d level=%zu\n",
+		        i++, wp->word->node_num, wp->word->subword, wp->same_word,
+		        wp->used, wp->word->hier_depth);
+	}
+}
+#undef D_WPP
 
 /**
  * "Flatten" the wordgraph into a word array.

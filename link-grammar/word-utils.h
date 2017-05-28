@@ -16,16 +16,6 @@
 
 #include "structures.h"
 
-/* Exp utilities ... */
-void free_Exp(Exp *);
-void free_E_list(E_list *);
-int  size_of_expression(Exp *);
-Exp * copy_Exp(Exp *);
-bool is_exp_like_empty_word(Dictionary dict, Exp *);
-/* int exp_compare(Exp * e1, Exp * e2); */
-/* int exp_contains(Exp * super, Exp * sub); */
-
-
 /* X_node utilities ... */
 X_node *    catenate_X_nodes(X_node *, X_node *);
 void free_X_nodes(X_node *);
@@ -45,8 +35,6 @@ static inline Connector * init_connector(Connector *c)
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
-bool word_has_connector(Dict_node *, const char *, char);
-const char * word_only_connector(Dict_node *);
 bool match_in_connector_set(Connector_set*, Connector*);
 
 
@@ -96,9 +84,6 @@ static inline bool easy_match(const char * s, const char * t)
 	return true;
 }
 
-
-/* Dictionary utilities ... */
-bool word_contains(Dictionary dict, const char * word, const char * macro);
 
 static inline int string_hash(const char *s)
 {

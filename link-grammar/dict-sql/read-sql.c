@@ -20,11 +20,12 @@
 #include <sqlite3.h>
 
 #include "api-structures.h"
-#include "dict-api.h"
-#include "dict-common.h"
-#include "dict-structures.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/dict-structures.h"
+#include "dict-common/file-utils.h"
 #include "externs.h"
-#include "spellcheck.h"
+#include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
 #include "utilities.h"

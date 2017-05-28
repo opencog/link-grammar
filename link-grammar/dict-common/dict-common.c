@@ -11,19 +11,26 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "anysplit.h"
 #include "dict-api.h"
 #include "dict-common.h"
-#include "externs.h"
+#include "file-utils.h"
 #include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"
-#include "spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
+#include "tokenize/anysplit.h"
+#include "tokenize/spellcheck.h"
 #include "word-utils.h"
+
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
+
+/* Stems, by definition, end with ".=x" (when x is usually an empty
+ * string, i.e. ".="). The STEMSUBSCR definition in the affix file
+ * may include endings with other x values, when x serves as a word
+ * subscript, e.g. ".=a".  */
+#define STEM_MARK '='
 
 /* ======================================================================== */
 /* Affix type finding */

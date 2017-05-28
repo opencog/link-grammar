@@ -33,7 +33,6 @@
 
 #include "error.h"
 #include "lg_assert.h"
-#include "wcwidth.h"
 
 #ifdef HAVE_ALLOCA_H
 # include <alloca.h>
@@ -252,12 +251,6 @@ typedef int locale_t;
 #define GNUC_MALLOC
 #define GNUC_UNUSED
 #endif
-
-/**
- * Return the width, in text-column-widths, of the utf8-encoded
- * string.  This is needed when printing formatted strings.
- */
-size_t utf8_strwidth(const char *);
 
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
@@ -481,15 +474,6 @@ size_t get_max_space_used(void);
 
 
 char * get_default_locale(void);
-char * join_path(const char * prefix, const char * suffix);
-
-FILE * dictopen(const char *filename, const char *how);
-void * object_open(const char *filename,
-                   void * (*opencb)(const char *, const void *),
-                   const void * user_data);
-
-bool file_exists(const char * dict_name);
-char * get_file_contents(const char *filename);
 void set_utf8_program_locale(void);
 bool try_locale(const char *);
 

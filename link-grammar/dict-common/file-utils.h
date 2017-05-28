@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2009-2013 Linas Vepstas                                 */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -9,23 +10,20 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+#ifndef _DICT_FILE_UTILITIES_H_
+#define _DICT_FILE_UTILITIES_H_
 
-#ifndef _LG_READ_DICT_H_
-#define  _LG_READ_DICT_H_
+#include <stdbool.h>
+#include <stdio.h>
 
-#include "dict-common/dict-structures.h"
+char * join_path(const char * prefix, const char * suffix);
 
-void print_dictionary_data(Dictionary dict);
-void print_dictionary_words(Dictionary dict);
+FILE * dictopen(const char *filename, const char *how);
+void * object_open(const char *filename,
+                   void * (*opencb)(const char *, const void *),
+                   const void * user_data);
 
-Dictionary dictionary_create_from_file(const char * lang);
-bool read_dictionary(Dictionary dict);
+bool file_exists(const char * dict_name);
+char * get_file_contents(const char *filename);
 
-Dict_node * lookup_list(const Dictionary dict, const char *s);
-bool boolean_lookup(Dictionary dict, const char *s);
-Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s);
-void free_lookup(Dict_node *llist);
-void free_insert_list(Dict_node *ilist);
-void insert_list(Dictionary dict, Dict_node * p, int l);
-
-#endif /* _LG_READ_DICT_H_ */
+#endif /* _DICT_FILE_UTILITIES_H_ */

@@ -19,7 +19,8 @@
 #include "analyze-linkage.h"
 #include "corpus/corpus.h"
 #include "count.h"
-#include "dict-common.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/regex-morph.h"
 #include "disjunct-utils.h"
 #include "error.h"
 #include "externs.h"
@@ -30,20 +31,26 @@
 #include "preparation.h"
 #include "print/print.h"
 #include "prune.h"
-#include "regex-morph.h"
 #include "resources.h"
 #include "score.h"
 #include "sat-solver/sat-encoder.h"
-#include "spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
-#include "tokenize.h"
+#include "tokenize/spellcheck.h"
+#include "tokenize/tokenize.h"
+#include "tokenize/wordgraph.h"
+#include "tokenize/tok-structures.h" // Needed for sane_linkae_morphism
 #include "utilities.h"
-#include "wordgraph.h"
 #include "word-utils.h"
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
 static unsigned int global_rand_state = 0;
+
+int verbosity;
+/* debug and test should not be NULL since they can be used before they
+ * are assigned a value by parse_options_get_...() */
+char * debug = (char *)"";
+char * test = (char *)"";
 
 /***************************************************************
 *

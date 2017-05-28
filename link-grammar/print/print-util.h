@@ -22,6 +22,12 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+/**
+ * Return the width, in text-column-widths, of the utf8-encoded
+ * string.  This is needed when printing formatted strings.
+ */
+size_t utf8_strwidth(const char *);
+
 typedef struct String_s String;
 
 String * string_new(void);

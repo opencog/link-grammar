@@ -16,6 +16,9 @@
 #include "../api-types.h"
 #include "../link-includes.h"
 
+/* Upper bound on the cost of any connector. */
+#define MAX_CONNECTOR_COST 1000.0
+
 Cluster * lg_cluster_new(void);
 void lg_cluster_delete(Cluster *);
 

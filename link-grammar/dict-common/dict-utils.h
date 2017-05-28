@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2009, 2013 Linas Vepstas                                */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -10,22 +11,23 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_READ_DICT_H_
-#define  _LG_READ_DICT_H_
+#ifndef _DICT_UTILS_H_
+#define _DICT_UTILS_H_
 
-#include "dict-common/dict-structures.h"
+#include "structures.h"
 
-void print_dictionary_data(Dictionary dict);
-void print_dictionary_words(Dictionary dict);
+/* Exp utilities ... */
+void free_Exp(Exp *);
+void free_E_list(E_list *);
+int  size_of_expression(Exp *);
+Exp * copy_Exp(Exp *);
+bool is_exp_like_empty_word(Dictionary dict, Exp *);
+/* int exp_compare(Exp * e1, Exp * e2); */
+/* int exp_contains(Exp * super, Exp * sub); */
 
-Dictionary dictionary_create_from_file(const char * lang);
-bool read_dictionary(Dictionary dict);
+/* Dictionary utilities ... */
+bool word_has_connector(Dict_node *, const char *, char);
+const char * word_only_connector(Dict_node *);
+bool word_contains(Dictionary dict, const char * word, const char * macro);
 
-Dict_node * lookup_list(const Dictionary dict, const char *s);
-bool boolean_lookup(Dictionary dict, const char *s);
-Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s);
-void free_lookup(Dict_node *llist);
-void free_insert_list(Dict_node *ilist);
-void insert_list(Dictionary dict, Dict_node * p, int l);
-
-#endif /* _LG_READ_DICT_H_ */
+#endif /* _DICT_UTILS_H_ */

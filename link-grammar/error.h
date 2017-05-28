@@ -14,6 +14,7 @@
 #define _LINK_GRAMMAR_ERROR_H_
 
 #include "link-includes.h"
+#include "externs.h" // Needed for verbosity
 
 /* User verbosity levels are 1-4, to be used for user info/debug.
  * For now hard-coded numbers are still used instead of D_USER_BASIC/TIMES. */

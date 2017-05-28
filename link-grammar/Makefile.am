@@ -79,11 +79,15 @@ liblink_grammar_la_LIBADD  += -lm
 
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
-	anysplit.c                       \
 	api.c                            \
-	build-disjuncts.c                \
 	count.c                          \
-	dict-common.c                    \
+	dict-common/build-disjuncts.c    \
+	dict-common/dict-common.c        \
+	dict-common/dict-utils.c         \
+	dict-common/file-utils.c         \
+	dict-common/idiom.c              \
+	dict-common/print-dict.c         \
+	dict-common/regex-morph.c        \
 	dict-file/dictionary.c           \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
@@ -96,7 +100,6 @@ liblink_grammar_la_SOURCES =        \
 	extract-links.c                  \
 	fast-match.c                     \
 	histogram.c                      \
-	idiom.c                          \
 	linkage.c                        \
 	post-process/constituents.c      \
 	post-process/post-process.c      \
@@ -105,34 +108,37 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.c        \
 	preparation.c                    \
 	print/print.c                    \
-	print/print-dict.c               \
 	print/print-util.c               \
+	print/wcwidth.c                  \
 	prune.c                          \
-	regex-morph.c                    \
-	regex-tokenizer.c                \
 	resources.c                      \
 	score.c                          \
-	spellcheck-aspell.c              \
-	spellcheck-hun.c                 \
 	string-set.c                     \
-	tokenize.c                       \
+	tokenize/anysplit.c              \
+	tokenize/spellcheck-aspell.c     \
+	tokenize/spellcheck-hun.c        \
+	tokenize/regex-tokenizer.c       \
+	tokenize/tokenize.c              \
+	tokenize/wordgraph.c             \
 	utilities.c                      \
-	wcwidth.c                        \
-	wordgraph.c                      \
 	word-utils.c                     \
-	anysplit.h                       \
+	                                 \
 	api-structures.h                 \
 	api-types.h                      \
 	analyze-linkage.h                \
-	build-disjuncts.h                \
 	count.h                          \
+	dict-common/build-disjuncts.h    \
+	dict-common/dict-api.h           \
+	dict-common/dict-common.h        \
+	dict-common/dict-structures.h    \
+	dict-common/dict-utils.h         \
+	dict-common/file-utils.h         \
+	dict-common/idiom.h              \
+	dict-common/regex-morph.h        \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
 	dict-sql/read-sql.h              \
-	dict-api.h                       \
-	dict-common.h                    \
-	dict-structures.h                \
 	disjunct-utils.h                 \
 	disjuncts.h                      \
 	error.h                          \
@@ -141,7 +147,6 @@ liblink_grammar_la_SOURCES =        \
 	extract-links.h                  \
 	fast-match.h                     \
 	histogram.h                      \
-	idiom.h                          \
 	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
@@ -152,33 +157,35 @@ liblink_grammar_la_SOURCES =        \
 	preparation.h                    \
 	print/print.h                    \
 	print/print-util.h               \
+	print/wcwidth.h                  \
 	prune.h                          \
-	regex-morph.h                    \
-	regex-tokenizer.h                \
 	resources.h                      \
 	score.h                          \
-	spellcheck.h                     \
 	string-set.h                     \
 	structures.h                     \
-	tokenize.h                       \
+	tokenize/anysplit.h              \
+	tokenize/spellcheck.h            \
+	tokenize/regex-tokenizer.h       \
+	tokenize/tok-structures.h        \
+	tokenize/tokenize.h              \
+	tokenize/wordgraph.h             \
 	utilities.h                      \
-	wcwidth.h                        \
-	wordgraph.h                      \
 	word-utils.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
-	dict-api.h                       \
-	dict-structures.h
+	dict-common/dict-api.h           \
+	dict-common/dict-structures.h
 
 EXTRA_DIST=                         \
 	link-grammar.def                 \
 	README.md                        \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
-	dict-sql/README
+	dict-sql/README                  \
+	tokenize/README.md
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib

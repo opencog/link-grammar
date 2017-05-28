@@ -26,5 +26,4 @@ void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
 void print_with_subscript_dot(const char *);
 void print_chosen_disjuncts_words(const Linkage);
 void print_lwg_path(Gword **);
-void print_wordgraph_pathpos(const Wordgraph_pathpos *);
 #endif /* _PRINT_H */

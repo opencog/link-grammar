@@ -18,11 +18,12 @@
 #include "externs.h"
 #include "api-structures.h"
 #include "corpus/corpus.h"
+#include "dict-common/dict-utils.h" // For size_of_expression()
 #include "print-util.h"
 #include "string-set.h"
 #include "structures.h"
 #include "print.h"      /* needs structure.h */
-#include "word-utils.h"
+#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
@@ -1427,26 +1428,6 @@ void print_lwg_path(Gword **w)
 	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
 	lgdebug(0, "\n");
 }
-
-#define D_WPP 8
-void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
-{
-	size_t i = 0;
-
-	if (NULL == wp)
-	{
-		lgdebug(+D_WPP, "Empty\n");
-		return;
-	}
-	lgdebug(+D_WPP, "\n");
-	for (; NULL != wp->word; wp++)
-	{
-		lgdebug(D_WPP, "%zu: %zu:word '%s', same=%d used=%d level=%zu\n",
-		        i++, wp->word->node_num, wp->word->subword, wp->same_word,
-		        wp->used, wp->word->hier_depth);
-	}
-}
-#undef D_WPP
 
 /**
  *  Print the chosen_disjuncts words.
