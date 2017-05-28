@@ -21,8 +21,9 @@
 #include "dict-utils.h"
 #include "disjunct-utils.h"
 #include "string-set.h"
-#include "structures.h" // for SUBSCRIPT_MARK
+#include "dict-defines.h" // for SUBSCRIPT_MARK
 #include "tokenize/tok-structures.h" // XXX TODO provide gword acces methods!
+#include "tokenize/word-structures.h" // For Word_struct
 #include "utilities.h" /* For Win32 compatibility features */
 #include "word-utils.h"
 

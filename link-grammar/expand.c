@@ -19,7 +19,7 @@
 #include "externs.h"
 #include "disjunct-utils.h"
 #include "word-utils.h"
-#include "structures.h" // For Word_struct
+#include "tokenize/word-structures.h" // For Word_struct
 #include "corpus/cluster.h"
 
 /* ========================================================= */

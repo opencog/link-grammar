@@ -20,7 +20,6 @@
 #include "dict-api.h"
 #include "link-includes.h"
 #include "regex-morph.h"
-#include "structures.h"
 
 
 /**

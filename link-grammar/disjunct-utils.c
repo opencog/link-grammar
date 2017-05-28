@@ -15,7 +15,7 @@
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "string-set.h"
-#include "structures.h"
+// #include "structures.h"
 #include "utilities.h"
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!

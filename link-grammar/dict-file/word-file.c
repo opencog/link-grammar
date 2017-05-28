@@ -12,9 +12,9 @@
 
 #include "error.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-defines.h" // for MAX_WORD
 #include "dict-common/file-utils.h"
 #include "string-set.h"
-#include "structures.h"
 #include "read-dict.h"
 #include "word-file.h"
 

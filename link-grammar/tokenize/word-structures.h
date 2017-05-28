@@ -16,24 +16,6 @@
 
 #include "api-types.h"
 
-/* The following define the names of the special strings in the dictionary. */
-#define LEFT_WALL_WORD   ("LEFT-WALL")
-#define RIGHT_WALL_WORD  ("RIGHT-WALL")
-
-#define UNKNOWN_WORD "UNKNOWN-WORD"
-
-/*      Some size definitions.  Reduce these for small machines */
-/* MAX_WORD is large, because Unicode entries can use a lot of space */
-#define MAX_WORD 180          /* maximum number of bytes in a word */
-
-/* Word subscripts come after the subscript mark (ASCII ETX)
- * In the dictionary, a dot is used; but that dot interferes with dots
- * in the input stream, and so we convert dictionary dots into the
- * subscript mark, which we don't expect to see in user input.
- */
-#define SUBSCRIPT_MARK '\3'
-#define SUBSCRIPT_DOT '.'
-
 typedef struct X_node_struct X_node;
 
 /**

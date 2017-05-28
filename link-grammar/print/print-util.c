@@ -16,7 +16,6 @@
 #include <errno.h>
 
 #include "print-util.h"
-#include "structures.h" // For MAX_LINE
 #include "utilities.h"
 #include "wcwidth.h"
 

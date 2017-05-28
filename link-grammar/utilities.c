@@ -29,11 +29,11 @@
 	#include <windows.h>
 #endif /* _WIN32 */
 
-#include "string-set.h"
-#include "structures.h"
 #include "utilities.h"
 
-/* This file contains certain general utilities. */
+/* This file contains general utilities that fix, enhance OS-provided
+ * API's, esp ones that the OS forgot to provide, or managed to break.
+ */
 
 /* ============================================================= */
 /* String utilities */

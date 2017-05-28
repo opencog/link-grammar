@@ -130,6 +130,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-common/build-disjuncts.h    \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
+	dict-common/dict-defines.h       \
 	dict-common/dict-structures.h    \
 	dict-common/dict-utils.h         \
 	dict-common/file-utils.h         \
@@ -162,12 +163,12 @@ liblink_grammar_la_SOURCES =        \
 	resources.h                      \
 	score.h                          \
 	string-set.h                     \
-	structures.h                     \
 	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
 	tokenize/regex-tokenizer.h       \
 	tokenize/tok-structures.h        \
 	tokenize/tokenize.h              \
+	tokenize/word-structures.h       \
 	tokenize/wordgraph.h             \
 	utilities.h                      \
 	word-utils.h

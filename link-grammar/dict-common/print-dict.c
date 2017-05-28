@@ -15,6 +15,7 @@
 
 #include "build-disjuncts.h"
 #include "dict-common.h"
+#include "dict-defines.h"
 #include "print/print.h"
 #include "regex-morph.h"
 #include "dict-file/word-file.h"

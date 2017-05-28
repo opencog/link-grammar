@@ -24,7 +24,7 @@
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
-#include "structures.h" // for Word_struct
+#include "tokenize/word-structures.h" // for Word_struct
 #include "tokenize/wordgraph.h"
 #include "word-utils.h"
 

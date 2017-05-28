@@ -27,7 +27,7 @@
 #include "api-structures.h"
 #include "error.h"
 #include "string-set.h"
-#include "structures.h"
+// #include "structures.h"
 #include "tok-structures.h"
 #include "wordgraph.h"
 

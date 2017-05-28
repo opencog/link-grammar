@@ -17,8 +17,7 @@
 #include <stdarg.h>
 
 #include "error.h"
-#include "structures.h"
-#include "api-structures.h"
+#include "api-structures.h"  // For Sentence_s
 #include "print/print-util.h"
 
 static void default_error_handler(lg_errinfo *, void *);

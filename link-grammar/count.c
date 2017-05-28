@@ -19,7 +19,7 @@
 #include "fast-match.h"
 #include "prune.h"
 #include "resources.h"
-#include "structures.h"
+#include "tokenize/word-structures.h" // for Word_struct
 #include "word-utils.h"
 
 /* This file contains the exhaustive search algorithm. */
