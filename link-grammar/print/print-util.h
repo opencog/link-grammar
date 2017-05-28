@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#define MAX_LINE 500          /* maximum width of print area */
+
 /**
  * Return the width, in text-column-widths, of the utf8-encoded
  * string.  This is needed when printing formatted strings.

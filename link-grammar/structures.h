@@ -26,8 +26,6 @@
 /* MAX_WORD is large, because Unicode entries can use a lot of space */
 #define MAX_WORD 180          /* maximum number of bytes in a word */
 
-#define MAX_LINE 500          /* maximum width of print area */
-
 /* Word subscripts come after the subscript mark (ASCII ETX)
  * In the dictionary, a dot is used; but that dot interferes with dots
  * in the input stream, and so we convert dictionary dots into the

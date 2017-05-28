@@ -369,6 +369,8 @@ static char * prt_con(Connector *c, char * p, char dir, size_t * bufsz)
 	return p+n;
 }
 
+#define MAX_LINE 500          /* maximum width of print area */
+
 char * print_one_disjunct(Disjunct *dj)
 {
 	char buff[MAX_LINE];
