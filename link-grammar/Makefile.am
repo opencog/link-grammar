@@ -184,7 +184,8 @@ EXTRA_DIST=                         \
 	README.md                        \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
-	dict-sql/README
+	dict-sql/README                  \
+	tokenize/README.md
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
