@@ -82,7 +82,6 @@ liblink_grammar_la_SOURCES =        \
 	anysplit.c                       \
 	api.c                            \
 	build-disjuncts.c                \
-	constituents.c                   \
 	count.c                          \
 	dict-common.c                    \
 	dict-file/dictionary.c           \
@@ -99,6 +98,7 @@ liblink_grammar_la_SOURCES =        \
 	histogram.c                      \
 	idiom.c                          \
 	linkage.c                        \
+	post-process/constituents.c      \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
 	post-process/pp_lexer.l          \
