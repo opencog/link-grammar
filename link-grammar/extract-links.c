@@ -19,12 +19,35 @@
 #include "linkage.h"
 #include "word-utils.h"
 
+typedef struct Parse_choice_struct Parse_choice;
+
+/* The parse_choice is used to extract links for a given parse */
 struct Parse_choice_struct
 {
 	Parse_choice * next;
 	Parse_set * set[2];
 	Link        link[2];   /* the lc fields of these is NULL if there is no link used */
 	Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
+};
+
+struct Parse_set_struct
+{
+	short          lw, rw; /* left and right word index */
+	unsigned short null_count; /* number of island words */
+	Connector      *le, *re; /* pending, unconnected connectors */
+
+	s64 count;      /* The number of ways to parse. */
+	/* s64 recount;  Exactly the same as above, but counted at a later stage. */
+	// s64 cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
+	// double cost_cutoff;
+	Parse_choice * first;
+	Parse_choice * tail;
+};
+
+struct X_table_connector_struct
+{
+	Parse_set         set;
+	X_table_connector *next;
 };
 
 /**
