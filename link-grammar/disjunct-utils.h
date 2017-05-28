@@ -16,7 +16,6 @@
 #include <stdbool.h>
 
 #include "api-types.h"
-typedef struct gword_set gword_set;
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST

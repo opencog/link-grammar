@@ -15,7 +15,7 @@
 #define _LINKGRAMMAR_BUILD_DISJUNCTS_H
 
 #include "api-types.h"
-#include "structures.h"
+#include "dict-structures.h"
 
 void build_sentence_disjuncts(Sentence sent, double cost_cutoff);
 X_node *   build_word_expressions(Sentence, const Gword *, const char *);

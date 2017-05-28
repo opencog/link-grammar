@@ -21,6 +21,7 @@
 #include "count.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/regex-morph.h"
+#include "dict-common/dict-utils.h" // for free_X_nodes
 #include "disjunct-utils.h"
 #include "error.h"
 #include "externs.h"

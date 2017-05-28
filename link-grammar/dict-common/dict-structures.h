@@ -76,6 +76,14 @@ struct Exp_list_s
 	Exp * exp_list;
 };
 
+typedef struct X_node_struct X_node;
+struct X_node_struct
+{
+	const char * string;       /* the word itself */
+	Exp * exp;
+	X_node *next;
+	const Gword *word;         /* originating Wordgraph word */
+};
 
 /* The regexes are stored as a linked list of the following nodes. */
 struct Regex_node_s

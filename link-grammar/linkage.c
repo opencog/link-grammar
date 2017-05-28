@@ -30,7 +30,7 @@
 #include "print/print-util.h"
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
-// #include "structures.h"
+#include "structures.h" // for SUBSCRIPT_MARK
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "word-utils.h"

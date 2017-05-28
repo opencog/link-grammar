@@ -49,6 +49,7 @@ typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
 typedef struct Gword_struct Gword;
+typedef struct gword_set gword_set;
 typedef struct X_table_connector_struct X_table_connector;
 
 

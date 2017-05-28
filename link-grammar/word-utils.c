@@ -16,44 +16,9 @@
 
 #include <math.h>
 
-#include "dict-common/dict-api.h"
-#include "dict-common/dict-utils.h"
+#include "dict-common/dict-utils.h" // for size_of_expression()
 #include "string-set.h"
 #include "word-utils.h"
-
-/* ======================================================== */
-/* X_node utilities ... */
-/**
- * frees the list of X_nodes pointed to by x, and all of the expressions
- */
-void free_X_nodes(X_node * x)
-{
-	X_node * y;
-	for (; x!= NULL; x = y) {
-		y = x->next;
-		free_Exp(x->exp);
-		xfree((char *)x, sizeof(X_node));
-	}
-}
-
-/**
- * Destructively catenates the two disjunct lists d1 followed by d2.
- * Doesn't change the contents of the disjuncts.
- * Traverses the first list, but not the second.
- */
-X_node * catenate_X_nodes(X_node *d1, X_node *d2)
-{
-	X_node * dis = d1;
-
-	if (d1 == NULL) return d2;
-	if (d2 == NULL) return d1;
-	while (dis->next != NULL) dis = dis->next;
-	dis->next = d2;
-	return d1;
-}
-
-/* ======================================================== */
-/* Connector utilities ... */
 
 /**
  * free_connectors() -- free the list of connectors pointed to by e

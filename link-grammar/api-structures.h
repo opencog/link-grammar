@@ -103,12 +103,6 @@ struct Parse_Options_s
 	bool display_morphology;/* if true, print morpho analysis of words */
 };
 
-struct Connector_set_s
-{
-	Connector ** hash_table;
-	unsigned int table_size;
-};
-
 struct Parse_info_struct
 {
 	unsigned int   x_table_size;

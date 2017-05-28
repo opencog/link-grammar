@@ -24,8 +24,9 @@
 #include "print.h"
 #include "print-util.h"
 #include "string-set.h"
-// #include "structures.h"
+#include "structures.h"  // For SUBSCRIPT_MARK
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
+#include "word-utils.h" // for Connector_s
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */

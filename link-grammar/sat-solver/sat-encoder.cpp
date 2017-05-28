@@ -38,8 +38,9 @@ extern "C" {
 #include "linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
-#include "tokenize/tok-structures.h"  // got Gword internals
 #include "score.h"               // for linkage_score()
+#include "structures.h"               // for Word_s
+#include "tokenize/tok-structures.h"  // got Gword internals
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging

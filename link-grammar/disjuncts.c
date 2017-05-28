@@ -21,7 +21,7 @@
 #include "disjunct-utils.h"
 #include "disjuncts.h"
 #include "linkage.h"
-#include "structures.h" // Needed for Connector
+#include "word-utils.h" // Needed for Connector
 
 /**
  * Print connector list to string.

@@ -15,13 +15,14 @@
 #include <string.h>
 
 #include "api-structures.h"
+#include "dict-common/dict-structures.h" // For Dictionary_s
 #include "error.h"
 #include "linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
 #include "print/print-util.h"
 #include "string-set.h"
-#include "structures.h"
+#include "structures.h" // For MAX_WORD
 
 #define D_CONST 8 /* debug level for this file */
 

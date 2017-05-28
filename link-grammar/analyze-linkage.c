@@ -16,7 +16,7 @@
 #include "analyze-linkage.h"
 #include "string-set.h"
 #include "linkage.h"
-#include "structures.h" // Needed for connector_get_string
+#include "word-utils.h" // Needed for connector_get_string
 
 /**
  * This returns a string that is the the GCD of the two given strings.
