@@ -19,6 +19,7 @@
 #include "dict-common/dict-common.h"
 #include "dict-common/idiom.h"
 #include "disjuncts.h"
+#include "disjunct-utils.h"
 #include "externs.h"
 #include "extract-links.h"
 #include "link-includes.h"
@@ -29,7 +30,7 @@
 #include "print/print-util.h"
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
-#include "structures.h"
+// #include "structures.h"
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "word-utils.h"

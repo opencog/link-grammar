@@ -1,8 +1,10 @@
 #include "util.hpp"
 
 extern "C" {
-#include "utilities.h"
+#include "api-structures.h"
+#include "disjunct-utils.h"
 #include "linkage.h"
+#include "utilities.h"
 };
 
 /**

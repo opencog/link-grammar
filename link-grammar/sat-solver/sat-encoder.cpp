@@ -34,6 +34,7 @@ extern "C" {
 #include "dict-common/build-disjuncts.h" // for build_disjuncts_for_exp()
 #include "dict-common/dict-api.h" // for print_expression()
 #include "dict-common/dict-utils.h" // for free_Exp()
+#include "disjunct-utils.h"
 #include "linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"

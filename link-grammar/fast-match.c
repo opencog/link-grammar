@@ -11,8 +11,8 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include "api-structures.h"
-#include "externs.h"
+// #include "api-structures.h"
+#include "disjunct-utils.h"
 #include "fast-match.h"
 #include "string-set.h"
 #include "tokenize/wordgraph.h"

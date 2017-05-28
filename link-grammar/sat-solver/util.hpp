@@ -1,9 +1,10 @@
 #ifndef __UTIL_HPP__
 #define __UTIL_HPP__
 
-extern "C" {
+extern "C"
+{
 #include "link-includes.h"
-#include "disjunct-utils.h"
+#include "dict-common/dict-structures.h" // For definition of Exp
 }
 
 bool isEndingInterpunction(const char* str);

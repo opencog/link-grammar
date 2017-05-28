@@ -16,6 +16,10 @@ using std::endl;
 
 #define  MAX_VARIABLE_NAME 256
 
+extern "C"
+{
+#include "api-structures.h" // for definition of Sentence
+}
 
 // #define SAT_DEBUG
 // #define _VARS

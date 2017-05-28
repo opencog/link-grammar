@@ -14,6 +14,7 @@
 #include <limits.h>  /* For UINT_MAX */
 
 #include "count.h"
+#include "disjunct-utils.h" // for Disjunct
 #include "extract-links.h"
 #include "fast-match.h"
 #include "linkage.h"

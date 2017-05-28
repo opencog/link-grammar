@@ -88,24 +88,6 @@ static inline const char * connector_get_string(Connector *c)
 	return c->string;
 }
 
-//#ifdef DEBUG
-#define VERIFY_MATCH_LIST
-//#endif
-struct Disjunct_struct
-{
-	Disjunct *next;
-	Connector *left, *right;
-	double cost;
-	bool marked;               /* unmarked disjuncts get deleted */
-	/* match_left, right used only during parsing, for the match list. */
-	bool match_left, match_right;
-#ifdef VERIFY_MATCH_LIST
-	int match_id;              /* verify the match list integrity */
-#endif
-	gword_set *originating_gword; /* List of originating gwords */
-	const char * string;       /* subscripted dictionary word */
-};
-
 typedef struct X_node_struct X_node;
 struct X_node_struct
 {
