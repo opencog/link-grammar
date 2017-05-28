@@ -35,6 +35,7 @@ extern "C" {
 #include "dict-api.h"             // for print_expression()
 #include "linkage.h"
 #include "post-process/post-process.h"
+#include "post-process/pp-structures.h"
 #include "score.h"               // for linkage_score()
 }
 

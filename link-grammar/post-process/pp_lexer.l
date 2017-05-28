@@ -11,8 +11,9 @@
 **************************************************************************/
 
 #include "pp_lexer.h"
-#include "link-includes.h"
+#include "pp-structures.h"
 #include "string-set.h"
+#include "utilities.h"
 
 #define YY_NO_INPUT
 #define YY_NO_UNPUT

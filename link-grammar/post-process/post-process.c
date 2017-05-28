@@ -23,7 +23,7 @@
 #include "externs.h"
 #include "pp_knowledge.h"
 #include "pp_linkset.h"
-#include "structures.h"
+#include "pp-structures.h"
 #include "string-set.h"
 
 #define PP_MAX_DOMAINS 128

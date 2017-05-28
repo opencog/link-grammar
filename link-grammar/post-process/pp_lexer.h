@@ -11,7 +11,7 @@
 /*************************************************************************/
 
 #include <stdio.h>
-#include "structures.h"
+#include "pp-structures.h"
 
 #define PP_LEXER_MAX_LABELS 512
 struct PPLexTable_s
