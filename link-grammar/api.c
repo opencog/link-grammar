@@ -445,7 +445,7 @@ void parse_options_reset_resources(Parse_Options opts) {
 
 /***************************************************************
 *
-* Routines for creating and destroying processing Sentences
+* Routines for creating destroying and processing Sentences
 *
 ****************************************************************/
 
