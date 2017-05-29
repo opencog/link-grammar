@@ -1406,16 +1406,6 @@ void print_with_subscript_dot(const char *s)
 }
 
 /**
- *  Print linkage wordgraph path.
- */
-void print_lwg_path(Gword **w)
-{
-	lgdebug(+0, " ");
-	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
-	lgdebug(0, "\n");
-}
-
-/**
  *  Print the chosen_disjuncts words.
  *  This is used for debug, e.g. for tracking them in the Wordgraph display.
  */
