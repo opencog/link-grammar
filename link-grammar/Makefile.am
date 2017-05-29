@@ -102,6 +102,7 @@ liblink_grammar_la_SOURCES =        \
 	parse/fast-match.c               \
 	parse/parse.c                    \
 	parse/preparation.c              \
+	parse/prune.c                    \
 	post-process/constituents.c      \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
@@ -113,7 +114,6 @@ liblink_grammar_la_SOURCES =        \
 	print/print.c                    \
 	print/print-util.c               \
 	print/wcwidth.c                  \
-	prune.c                          \
 	resources.c                      \
 	score.c                          \
 	string-set.c                     \
@@ -154,6 +154,7 @@ liblink_grammar_la_SOURCES =        \
 	parse/fast-match.h               \
 	parse/parse.h                    \
 	parse/preparation.h              \
+	parse/prune.h                    \
 	post-process/post-process.h      \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \
@@ -164,7 +165,6 @@ liblink_grammar_la_SOURCES =        \
 	print/print.h                    \
 	print/print-util.h               \
 	print/wcwidth.h                  \
-	prune.h                          \
 	resources.h                      \
 	score.h                          \
 	string-set.h                     \
