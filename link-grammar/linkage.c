@@ -21,7 +21,6 @@
 #include "dict-common/idiom.h"
 #include "disjuncts.h"
 #include "disjunct-utils.h"
-#include "extract-links.h"
 #include "link-includes.h"
 #include "linkage.h"
 #include "post-process/post-process.h" // needed only for exfree_domain_names

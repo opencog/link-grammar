@@ -11,9 +11,8 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "build-disjuncts.h"
+#include "prepare/build-disjuncts.h"
 #include "connectors.h"
-#include "count.h"
 #include "dict-common/dict-structures.h" // For Dictionary_s
 #include "disjunct-utils.h"
 #include "externs.h"
@@ -135,6 +134,28 @@ static void gword_record_in_connector(Sentence sent)
 			for (Connector *c = d->left; NULL != c; c = c->next)
 				c->originating_gword = d->originating_gword;
 		}
+	}
+}
+
+/**
+ * Turn sentence expressions into disjuncts.
+ * Sentence expressions must have been built, before calling this routine.
+ */
+static void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
+{
+	Disjunct * d;
+	X_node * x;
+	size_t w;
+	for (w = 0; w < sent->length; w++)
+	{
+		d = NULL;
+		for (x = sent->word[w].x; x != NULL; x = x->next)
+		{
+			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff);
+			word_record_in_disjunct(x->word, dx);
+			d = catenate_disjuncts(dx, d);
+		}
+		sent->word[w].d = d;
 	}
 }
 

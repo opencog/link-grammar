@@ -81,7 +81,6 @@ liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
 	api.c                            \
 	connectors.c                     \
-	count.c                          \
 	dict-common/dict-common.c        \
 	dict-common/dict-utils.c         \
 	dict-common/file-utils.c         \
@@ -96,10 +95,14 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
-	extract-links.c                  \
-	fast-match.c                     \
-	histogram.c                      \
 	linkage.c                        \
+	parse/count.c                    \
+	parse/extract-links.c            \
+	parse/fast-match.c               \
+	parse/histogram.c                \
+	parse/parse.c                    \
+	parse/preparation.c              \
+	parse/prune.c                    \
 	post-process/constituents.c      \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
@@ -107,11 +110,10 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.c        \
 	prepare/build-disjuncts.c        \
 	prepare/expand.c                 \
-	prepare/preparation.c            \
+	prepare/exprune.c                \
 	print/print.c                    \
 	print/print-util.c               \
 	print/wcwidth.c                  \
-	prune.c                          \
 	resources.c                      \
 	score.c                          \
 	string-set.c                     \
@@ -127,7 +129,6 @@ liblink_grammar_la_SOURCES =        \
 	api-types.h                      \
 	analyze-linkage.h                \
 	connectors.h                     \
-	count.h                          \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-defines.h       \
@@ -144,23 +145,26 @@ liblink_grammar_la_SOURCES =        \
 	disjuncts.h                      \
 	error.h                          \
 	externs.h                        \
-	extract-links.h                  \
-	fast-match.h                     \
-	histogram.h                      \
 	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
+	parse/count.h                    \
+	parse/extract-links.h            \
+	parse/fast-match.h               \
+	parse/histogram.h                \
+	parse/parse.h                    \
+	parse/preparation.h              \
+	parse/prune.h                    \
 	post-process/post-process.h      \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \
 	post-process/pp_linkset.h        \
 	prepare/build-disjuncts.h        \
 	prepare/expand.h                 \
-	prepare/preparation.h            \
+	prepare/exprune.h                \
 	print/print.h                    \
 	print/print-util.h               \
 	print/wcwidth.h                  \
-	prune.h                          \
 	resources.h                      \
 	score.h                          \
 	string-set.h                     \

@@ -13,8 +13,10 @@ Listed in rough processing order.
 
  * prepare      - After tokenization, prepare sentence for parsing.
 
+ * parse        - Classic Sleator/Temperley/Lafferty parser.
+
  * minisat      - Copy of the mini-SAT Boolean-SAT solver.
- * sat-solver   - Parser, implemented on top of SAT
+ * sat-solver   - Alternate parser, using boolean-SAT.
 
  * post-process - constraints added after parsing.
                   Also, constituent-tree construction.

@@ -13,10 +13,9 @@
 #ifndef _PRUNE_H
 #define _PRUNE_H
 
-#include "api-types.h"
 #include "link-includes.h"
 
 int        power_prune(Sentence, Parse_Options);
 void       pp_and_power_prune(Sentence, Parse_Options);
-void       expression_prune(Sentence);
+
 #endif /* _PRUNE_H */

@@ -1,7 +1,6 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2012 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -11,16 +10,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LINKGRAMMAR_BUILD_DISJUNCTS_H
-#define _LINKGRAMMAR_BUILD_DISJUNCTS_H
+#ifndef _EXPRESSION_PRUNE_H
+#define _EXPRESION_PRUNE_H
 
-#include "api-types.h"
+#include "link-includes.h"
 
-Disjunct * build_disjuncts_for_exp(Exp*, const char*, double cost_cutoff);
-
-#ifdef DEBUG
-void prt_exp(Exp *, int);
-void prt_exp_mem(Exp *, int);
-#endif /* DEBUG */
-
-#endif /* _LINKGRAMMAR_BUILD_DISJUNCTS_H */
+void       expression_prune(Sentence);
+#endif /* _EXPRESION_PRUNE_H */
