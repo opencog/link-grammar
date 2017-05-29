@@ -46,18 +46,18 @@ struct Parse_set_struct
 	Parse_choice * tail;
 };
 
-typedef struct Parse_set_bucket_struct Parse_set_bucket;
-struct Parse_set_bucket_struct
+typedef struct Pset_bucket_struct Pset_bucket;
+struct Pset_bucket_struct
 {
 	Parse_set         set;
-	Parse_set_bucket *next;
+	Pset_bucket *next;
 };
 
 struct extractor_s
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size;
-	Parse_set_bucket ** x_table;  /* Hash table */
+	Pset_bucket ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 
 	/* thread-safe random number state */
@@ -167,8 +167,8 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->x_table_size = (1 << log2_table_size);
 
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
-	pex->x_table = (Parse_set_bucket**) xalloc(pex->x_table_size * sizeof(Parse_set_bucket*));
-	memset(pex->x_table, 0, pex->x_table_size * sizeof(Parse_set_bucket*));
+	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
+	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
 	return pex;
 }
@@ -181,7 +181,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 void free_extractor(extractor_t * pex)
 {
 	unsigned int i;
-	Parse_set_bucket *t, *x;
+	Pset_bucket *t, *x;
 	if (!pex) return;
 
 	for (i=0; i<pex->x_table_size; i++)
@@ -190,13 +190,13 @@ void free_extractor(extractor_t * pex)
 		{
 			x = t->next;
 			free_set(&t->set);
-			xfree((void *) t, sizeof(Parse_set_bucket));
+			xfree((void *) t, sizeof(Pset_bucket));
 		}
 	}
 	pex->parse_set = NULL;
 
 	/*printf("Freeing x_table of size %d\n", x_table_size);*/
-	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Parse_set_bucket*));
+	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
 	pex->x_table_size = 0;
 	pex->x_table = NULL;
 
@@ -206,11 +206,11 @@ void free_extractor(extractor_t * pex)
 /**
  * Returns the pointer to this info, NULL if not there.
  */
-static Parse_set_bucket * x_table_pointer(int lw, int rw,
+static Pset_bucket * x_table_pointer(int lw, int rw,
                               Connector *le, Connector *re,
                               unsigned int null_count, extractor_t * pex)
 {
-	Parse_set_bucket *t;
+	Pset_bucket *t;
 	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
 		if ((t->set.lw == lw) && (t->set.rw == rw) &&
@@ -223,14 +223,14 @@ static Parse_set_bucket * x_table_pointer(int lw, int rw,
 /**
  * Stores the value in the x_table.  Assumes it's not already there.
  */
-static Parse_set_bucket * x_table_store(int lw, int rw,
+static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
                                   unsigned int null_count, extractor_t * pex)
 {
-	Parse_set_bucket *t, *n;
+	Pset_bucket *t, *n;
 	unsigned int h;
 
-	n = (Parse_set_bucket *) xalloc(sizeof(Parse_set_bucket));
+	n = (Pset_bucket *) xalloc(sizeof(Pset_bucket));
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
@@ -251,7 +251,7 @@ static Parse_set_bucket * x_table_store(int lw, int rw,
 static Parse_set* dummy_set(int lw, int rw,
                             unsigned int null_count, extractor_t * pex)
 {
-	Parse_set_bucket *dummy;
+	Pset_bucket *dummy;
 	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pex);
 	if (dummy) return &dummy->set;
 
@@ -319,7 +319,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
                  bool islands_ok, extractor_t * pex)
 {
 	int start_word, end_word, w;
-	Parse_set_bucket *xt;
+	Pset_bucket *xt;
 	Count_bin * count;
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
@@ -580,7 +580,7 @@ static bool set_overflowed(extractor_t * pex)
 	assert(pex->x_table != NULL, "called set_overflowed with x_table==NULL");
 	for (i=0; i<pex->x_table_size; i++)
 	{
-		Parse_set_bucket *t;
+		Pset_bucket *t;
 		for (t = pex->x_table[i]; t != NULL; t = t->next)
 		{
 			if (set_node_overflowed(&t->set)) return true;
