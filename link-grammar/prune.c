@@ -13,10 +13,9 @@
 
 #include "api-structures.h"
 #include "connectors.h"
-#include "dict-common/dict-api.h"   /* for print_expression when debugging */
-#include "dict-common/dict-utils.h" /* for free_E_list */
+// #include "dict-common/dict-api.h"   /* for print_expression when debugging */
+// #include "dict-common/dict-utils.h" /* for free_E_list */
 #include "disjunct-utils.h"
-#include "externs.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
 #include "print/print.h"  // For print_disjunct_counts()
