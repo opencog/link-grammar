@@ -399,15 +399,6 @@ static bool is_contraction_word(Dictionary dict, const char *s)
 	return false;
 }
 
-/* Suffixes start with it.
- * This is needed to distinguish suffixes that were stripped off from
- * ordinary words that just happen to be the same as the suffix.
- * Kind-of a weird hack, but I'm not sure what else to do...
- * Similarly, prefixes end with it.
- */
-#define INFIX_MARK(afdict) \
-	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
-
 /**
  * Issue candidate subwords for unsplit_word (an "alternative").
  * Issue prefnum elements from prefix, stemnum elements from stem, and suffnum
