@@ -100,6 +100,7 @@ liblink_grammar_la_SOURCES =        \
 	fast-match.c                     \
 	histogram.c                      \
 	linkage.c                        \
+	parse.c                          \
 	post-process/constituents.c      \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
@@ -150,6 +151,7 @@ liblink_grammar_la_SOURCES =        \
 	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
+	parse.h                          \
 	post-process/post-process.h      \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \
