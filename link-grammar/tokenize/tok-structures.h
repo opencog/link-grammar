@@ -15,15 +15,6 @@
 #ifndef _TOK_STRUCTURES_H_
 #define _TOK_STRUCTURES_H_
 
-/* Suffixes start with it.
- * This is needed to distinguish suffixes that were stripped off from
- * ordinary words that just happen to be the same as the suffix.
- * Kind-of a weird hack, but I'm not sure what else to do...
- * Similarly, prefixes end with it.
- */
-#define INFIX_MARK(afdict) \
- ((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
-
 /* conditional compiling flags */
 #define INFIX_NOTATION
     /* If defined, then we're using infix notation for the dictionary */

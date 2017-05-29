@@ -43,6 +43,9 @@
 #define NULLWORD_START '['
 #define NULLWORD_END   ']'
 
+#define INFIX_MARK(afdict) \
+	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
+
 /**
  * Append an unmarked (i.e. without INFIXMARK) morpheme to join_buff.
  * join_buff is a zeroed-out buffer which has enough room for morpheme to be
