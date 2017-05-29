@@ -608,17 +608,18 @@ static bool set_overflowed(Parse_info pi)
  * This routine returns TRUE iff an overflow occurred.
  */
 
-bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
+bool build_parse_set(Sentence sent, Parse_info pi,
+                    fast_matcher_t *mchxt,
                     count_context_t *ctxt,
                     unsigned int null_count, Parse_Options opts)
 {
-	sent->parse_info->parse_set =
+	pi->parse_set =
 		mk_parse_set(sent, mchxt, ctxt,
 		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
-		             opts->islands_ok, sent->parse_info);
+		             opts->islands_ok, pi);
 
 
-	return set_overflowed(sent->parse_info);
+	return set_overflowed(pi);
 }
 
 // Cannot be static, also called by SAT-solver.

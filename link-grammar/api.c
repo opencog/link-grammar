@@ -704,7 +704,6 @@ void sentence_delete(Sentence sent)
 	wordgraph_delete(sent);
 	word_queue_delete(sent);
 	string_set_delete(sent->string_set);
-	free_parse_info(sent->parse_info);
 	free_linkages(sent);
 	post_process_free(sent->postprocessor);
 	post_process_free(sent->constituent_pp);
@@ -1144,11 +1143,12 @@ static void free_sentence_disjuncts(Sentence sent)
 	}
 }
 
-static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
+static bool setup_linkages(Sentence sent, Parse_info pi,
+                          fast_matcher_t* mchxt,
                           count_context_t* ctxt,
                           Parse_Options opts)
 {
-	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	bool overflowed = build_parse_set(sent, pi, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
 	if (overflowed && (1 < opts->verbosity))
@@ -1188,15 +1188,14 @@ static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
  * This fills the linkage array with morphologically-acceptable
  * linakges.
  */
-static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
+static void process_linkages(Sentence sent, Parse_info pi, 
+                             bool overflowed, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
 
    /* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
 	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
-
-	parse_info_set_rand_state(sent->parse_info, sent->rand_state);
 
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
@@ -1235,7 +1234,7 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 			partial_init_linkage(sent, lkg, sent->length);
 			need_init = false;
 		}
-		extract_links(lkg, sent->parse_info);
+		extract_links(lkg, pi);
 		compute_link_names(lkg, sent->string_set);
 		remove_empty_words(lkg);
 
@@ -1318,15 +1317,6 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 			disjuncts_copy[i] = disjuncts_dup(sent->word[i].d);
 	}
 
-	/* A parse set may have been already been built for this sentence,
-	 * if it was previously parsed.  If so we free it up before
-	 * building another.  Huh ?? How could that happen? */
-#ifdef DEBUG
-	if (sent->parse_info) err_msg(lg_Debug, "XXX Freeing parse_info\n");
-#endif
-	free_parse_info(sent->parse_info);
-	sent->parse_info = parse_info_new(sent->length);
-
 	for (int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
 		Count_bin hist;
@@ -1381,8 +1371,12 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
-		process_linkages(sent, ovfl, opts);
+		Parse_info pi = parse_info_new(sent->length);
+		parse_info_set_rand_state(pi, sent->rand_state);
+		bool ovfl = setup_linkages(sent, pi, mchxt, ctxt, opts);
+		process_linkages(sent, pi, ovfl, opts);
+		free_parse_info(pi);
+
 		post_process_lkgs(sent, opts);
 
 		if (sent->num_valid_linkages > 0) break;

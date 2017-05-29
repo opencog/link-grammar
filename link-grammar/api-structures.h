@@ -140,9 +140,6 @@ struct Sentence_s
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
 
-	/* parse_info not used by SAT solver */
-	Parse_info     parse_info;  /* Set of parses for the sentence */
-
 	/* thread-safe random number state */
 	unsigned int rand_state;
 
