@@ -21,6 +21,7 @@
 #include "fast-match.h"
 #include "linkage/analyze-linkage.h"
 #include "linkage/linkage.h"
+#include "linkage/sane.h"
 #include "parse.h"
 #include "post-process/post-process.h"
 #include "preparation.h"

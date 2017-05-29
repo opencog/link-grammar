@@ -35,6 +35,7 @@ extern "C" {
 #include "disjunct-utils.h"
 #include "linkage/analyze-linkage.h" // for compute_link_names()
 #include "linkage/linkage.h"
+#include "linkage/sane.h"            // for sane_linkage_morphism()
 #include "linkage/score.h"           // for linkage_score()
 #include "prepare/build-disjuncts.h" // for build_disjuncts_for_exp()
 #include "post-process/post-process.h"

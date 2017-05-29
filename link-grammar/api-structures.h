@@ -151,10 +151,7 @@ struct Sentence_s
 
 // XXX FIXME
 // This needs a home.
-bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
 void free_linkages(Sentence);
 Linkage linkage_array_new(int num_to_alloc);
-
-
 
 #endif

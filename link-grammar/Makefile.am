@@ -96,6 +96,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage/analyze-linkage.c        \
 	linkage/linkage.c                \
 	linkage/lisjuncts.c              \
+	linkage/sane.c                   \
 	linkage/score.c                  \
 	parse/count.c                    \
 	parse/extract-links.c            \
@@ -148,6 +149,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage/analyze-linkage.h        \
 	linkage/linkage.h                \
 	linkage/lisjuncts.h              \
+	linkage/sane.h                   \
 	linkage/score.h                  \
 	parse/count.h                    \
 	parse/extract-links.h            \
