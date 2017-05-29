@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "connectors.h"  // for MAX_SENTENCE
 #include "corpus/corpus.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/regex-morph.h"
