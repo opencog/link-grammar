@@ -34,7 +34,6 @@ typedef struct Exp_struct Exp;
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
 typedef struct Linkage_info_struct Linkage_info;
-typedef struct Parse_info_struct *Parse_info;
 typedef struct Postprocessor_s Postprocessor;
 typedef struct PP_info_s PP_info;
 typedef struct Resources_s * Resources;
@@ -51,8 +50,6 @@ typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
 typedef struct Gword_struct Gword;
 typedef struct gword_set gword_set;
-typedef struct X_table_connector_struct X_table_connector;
-
 
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;

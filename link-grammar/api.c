@@ -1143,12 +1143,12 @@ static void free_sentence_disjuncts(Sentence sent)
 	}
 }
 
-static bool setup_linkages(Sentence sent, Parse_info pi,
+static bool setup_linkages(Sentence sent, extractor_t* pex,
                           fast_matcher_t* mchxt,
                           count_context_t* ctxt,
                           Parse_Options opts)
 {
-	bool overflowed = build_parse_set(sent, pi, mchxt, ctxt, sent->null_count, opts);
+	bool overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
 	if (overflowed && (1 < opts->verbosity))
@@ -1188,7 +1188,7 @@ static bool setup_linkages(Sentence sent, Parse_info pi,
  * This fills the linkage array with morphologically-acceptable
  * linakges.
  */
-static void process_linkages(Sentence sent, Parse_info pi, 
+static void process_linkages(Sentence sent, extractor_t* pex,
                              bool overflowed, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
@@ -1234,7 +1234,7 @@ static void process_linkages(Sentence sent, Parse_info pi,
 			partial_init_linkage(sent, lkg, sent->length);
 			need_init = false;
 		}
-		extract_links(lkg, pi);
+		extract_links(pex, lkg);
 		compute_link_names(lkg, sent->string_set);
 		remove_empty_words(lkg);
 
@@ -1371,10 +1371,10 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		Parse_info pi = parse_info_new(sent->length, sent->rand_state);
-		bool ovfl = setup_linkages(sent, pi, mchxt, ctxt, opts);
-		process_linkages(sent, pi, ovfl, opts);
-		free_parse_info(pi);
+		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
+		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
+		process_linkages(sent, pex, ovfl, opts);
+		free_extractor(pex);
 
 		post_process_lkgs(sent, opts);
 

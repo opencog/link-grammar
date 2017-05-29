@@ -46,17 +46,18 @@ struct Parse_set_struct
 	Parse_choice * tail;
 };
 
-struct X_table_connector_struct
+typedef struct Parse_set_bucket_struct Parse_set_bucket;
+struct Parse_set_bucket_struct
 {
 	Parse_set         set;
-	X_table_connector *next;
+	Parse_set_bucket *next;
 };
 
-struct Parse_info_struct
+struct extractor_s
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size;
-	X_table_connector ** x_table;  /* Hash table */
+	Parse_set_bucket ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 
 	/* thread-safe random number state */
@@ -145,13 +146,13 @@ static void record_choice(
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-Parse_info parse_info_new(int nwords, unsigned int ranstat)
+extractor_t * extractor_new(int nwords, unsigned int ranstat)
 {
 	int log2_table_size;
-	Parse_info pi;
+	extractor_t * pi;
 
-	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
-	memset(pi, 0, sizeof(struct Parse_info_struct));
+	pi = (extractor_t *) xalloc(sizeof(extractor_t));
+	memset(pi, 0, sizeof(extractor_t));
 	pi->rand_state = ranstat;
 
 	/* Alloc the x_table */
@@ -166,8 +167,8 @@ Parse_info parse_info_new(int nwords, unsigned int ranstat)
 	pi->x_table_size = (1 << log2_table_size);
 
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
-	pi->x_table = (X_table_connector**) xalloc(pi->x_table_size * sizeof(X_table_connector*));
-	memset(pi->x_table, 0, pi->x_table_size * sizeof(X_table_connector*));
+	pi->x_table = (Parse_set_bucket**) xalloc(pi->x_table_size * sizeof(Parse_set_bucket*));
+	memset(pi->x_table, 0, pi->x_table_size * sizeof(Parse_set_bucket*));
 
 	return pi;
 }
@@ -177,10 +178,10 @@ Parse_info parse_info_new(int nwords, unsigned int ranstat)
  * it's a dag, a recursive free function won't work.  Every time we create
  * a set element, we put it in the hash table, so this is OK.
  */
-void free_parse_info(Parse_info pi)
+void free_extractor(extractor_t * pi)
 {
 	unsigned int i;
-	X_table_connector *t, *x;
+	Parse_set_bucket *t, *x;
 	if (!pi) return;
 
 	for (i=0; i<pi->x_table_size; i++)
@@ -189,27 +190,27 @@ void free_parse_info(Parse_info pi)
 		{
 			x = t->next;
 			free_set(&t->set);
-			xfree((void *) t, sizeof(X_table_connector));
+			xfree((void *) t, sizeof(Parse_set_bucket));
 		}
 	}
 	pi->parse_set = NULL;
 
 	/*printf("Freeing x_table of size %d\n", x_table_size);*/
-	xfree((void *) pi->x_table, pi->x_table_size * sizeof(X_table_connector*));
+	xfree((void *) pi->x_table, pi->x_table_size * sizeof(Parse_set_bucket*));
 	pi->x_table_size = 0;
 	pi->x_table = NULL;
 
-	xfree((void *) pi, sizeof(struct Parse_info_struct));
+	xfree((void *) pi, sizeof(extractor_t));
 }
 
 /**
  * Returns the pointer to this info, NULL if not there.
  */
-static X_table_connector * x_table_pointer(int lw, int rw,
+static Parse_set_bucket * x_table_pointer(int lw, int rw,
                               Connector *le, Connector *re,
-                              unsigned int null_count, Parse_info pi)
+                              unsigned int null_count, extractor_t * pi)
 {
-	X_table_connector *t;
+	Parse_set_bucket *t;
 	t = pi->x_table[pair_hash(pi->x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
 		if ((t->set.lw == lw) && (t->set.rw == rw) &&
@@ -222,14 +223,14 @@ static X_table_connector * x_table_pointer(int lw, int rw,
 /**
  * Stores the value in the x_table.  Assumes it's not already there.
  */
-static X_table_connector * x_table_store(int lw, int rw,
+static Parse_set_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
-                                  unsigned int null_count, Parse_info pi)
+                                  unsigned int null_count, extractor_t * pi)
 {
-	X_table_connector *t, *n;
+	Parse_set_bucket *t, *n;
 	unsigned int h;
 
-	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
+	n = (Parse_set_bucket *) xalloc(sizeof(Parse_set_bucket));
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
@@ -248,9 +249,9 @@ static X_table_connector * x_table_store(int lw, int rw,
 
 /** Create a bogus parse set that only holds lw, rw. */
 static Parse_set* dummy_set(int lw, int rw,
-                            unsigned int null_count, Parse_info pi)
+                            unsigned int null_count, extractor_t * pi)
 {
-	X_table_connector *dummy;
+	Parse_set_bucket *dummy;
 	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pi);
 	if (dummy) return &dummy->set;
 
@@ -315,10 +316,10 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
-                 bool islands_ok, Parse_info pi)
+                 bool islands_ok, extractor_t * pi)
 {
 	int start_word, end_word, w;
-	X_table_connector *xt;
+	Parse_set_bucket *xt;
 	Count_bin * count;
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
@@ -572,14 +573,14 @@ static bool set_node_overflowed(Parse_set *set)
 	return false;
 }
 
-static bool set_overflowed(Parse_info pi)
+static bool set_overflowed(extractor_t * pi)
 {
 	unsigned int i;
 
 	assert(pi->x_table != NULL, "called set_overflowed with x_table==NULL");
 	for (i=0; i<pi->x_table_size; i++)
 	{
-		X_table_connector *t;
+		Parse_set_bucket *t;
 		for (t = pi->x_table[i]; t != NULL; t = t->next)
 		{
 			if (set_node_overflowed(&t->set)) return true;
@@ -603,7 +604,7 @@ static bool set_overflowed(Parse_info pi)
  * This routine returns TRUE iff an overflow occurred.
  */
 
-bool build_parse_set(Sentence sent, Parse_info pi,
+bool build_parse_set(extractor_t* pi, Sentence sent,
                     fast_matcher_t *mchxt,
                     count_context_t *ctxt,
                     unsigned int null_count, Parse_Options opts)
@@ -664,7 +665,7 @@ static void list_links(Linkage lkg, const Parse_set * set, int index)
 	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
-static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
+static void list_random_links(Linkage lkg, extractor_t * pi, const Parse_set * set)
 {
 	Parse_choice *pc;
 	int num_pc, new_index;
@@ -694,7 +695,7 @@ static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
  * sentence.  For this to work, you must have already called parse, and
  * already built the whole_set.
  */
-void extract_links(Linkage lkg, Parse_info pi)
+void extract_links(extractor_t * pi, Linkage lkg)
 {
 	int index = lkg->lifo.index;
 	if (index < 0)
