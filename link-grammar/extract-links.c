@@ -58,12 +58,16 @@ struct Parse_info_struct
 	unsigned int   log2_x_table_size;
 	X_table_connector ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
-	int            N_words; /* Number of words in current sentence;
-	                           Computed by separate_sentence() */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
 };
+
+// XXX can we pass rand_state in the ctor, instead?
+void parse_info_set_rand_state(Parse_info pi, unsigned int r)
+{
+	pi->rand_state = r;
+}
 
 /**
  * The first thing we do is we build a data structure to represent the
@@ -154,7 +158,6 @@ Parse_info parse_info_new(int nwords)
 
 	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
 	memset(pi, 0, sizeof(struct Parse_info_struct));
-	pi->N_words = nwords;
 
 	/* Alloc the x_table */
 	if (nwords >= 10) {

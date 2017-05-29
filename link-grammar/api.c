@@ -1196,8 +1196,8 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 	bool pick_randomly = overflowed ||
 	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
 
-	Parse_info pi = sent->parse_info;
-	pi->rand_state = sent->rand_state;
+	parse_info_set_rand_state(sent->parse_info, sent->rand_state);
+
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
 
@@ -1232,10 +1232,10 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 
 		if (need_init)
 		{
-			partial_init_linkage(sent, lkg, pi->N_words);
+			partial_init_linkage(sent, lkg, sent->length);
 			need_init = false;
 		}
-		extract_links(lkg, pi);
+		extract_links(lkg, sent->parse_info);
 		compute_link_names(lkg, sent->string_set);
 		remove_empty_words(lkg);
 
@@ -1250,9 +1250,9 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 		{
 			N_invalid_morphism ++;
 			lkg->num_links = 0;
-			lkg->num_words = pi->N_words;
+			lkg->num_words = sent->length;
 			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
-			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
+			memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
 		}
 	}
 
