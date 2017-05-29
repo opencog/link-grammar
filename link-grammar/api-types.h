@@ -30,6 +30,7 @@
 #define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
 /* Widely used private typedefs */
+typedef struct Exp_struct Exp;
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
 typedef struct Linkage_info_struct Linkage_info;

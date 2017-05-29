@@ -81,7 +81,6 @@ liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
 	api.c                            \
 	count.c                          \
-	dict-common/build-disjuncts.c    \
 	dict-common/dict-common.c        \
 	dict-common/dict-utils.c         \
 	dict-common/file-utils.c         \
@@ -96,7 +95,6 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
-	expand.c                         \
 	extract-links.c                  \
 	fast-match.c                     \
 	histogram.c                      \
@@ -106,7 +104,9 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_knowledge.c      \
 	post-process/pp_lexer.l          \
 	post-process/pp_linkset.c        \
-	preparation.c                    \
+	prepare/build-disjuncts.c        \
+	prepare/expand.c                 \
+	prepare/preparation.c            \
 	print/print.c                    \
 	print/print-util.c               \
 	print/wcwidth.c                  \
@@ -127,7 +127,6 @@ liblink_grammar_la_SOURCES =        \
 	api-types.h                      \
 	analyze-linkage.h                \
 	count.h                          \
-	dict-common/build-disjuncts.h    \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-defines.h       \
@@ -143,7 +142,6 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.h                 \
 	disjuncts.h                      \
 	error.h                          \
-	expand.h                         \
 	externs.h                        \
 	extract-links.h                  \
 	fast-match.h                     \
@@ -155,7 +153,9 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \
 	post-process/pp_linkset.h        \
-	preparation.h                    \
+	prepare/build-disjuncts.h        \
+	prepare/expand.h                 \
+	prepare/preparation.h            \
 	print/print.h                    \
 	print/print-util.h               \
 	print/wcwidth.h                  \

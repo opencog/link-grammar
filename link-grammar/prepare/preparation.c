@@ -11,8 +11,9 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "dict-common/build-disjuncts.h"
+#include "build-disjuncts.h"
 #include "count.h"
+#include "dict-common/dict-structures.h" // For Dictionary_s
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "preparation.h"

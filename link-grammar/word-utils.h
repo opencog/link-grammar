@@ -17,7 +17,6 @@
 #include <stdint.h>  // for unit8_t
 
 #include "api-types.h"
-#include "dict-common/dict-structures.h"  /* For Exp, Exp_list */
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.

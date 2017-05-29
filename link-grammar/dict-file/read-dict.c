@@ -13,7 +13,6 @@
 
 #include <string.h>
 
-#include "dict-common/build-disjuncts.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
 #include "dict-common/file-utils.h"
