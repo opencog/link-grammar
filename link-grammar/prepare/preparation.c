@@ -13,7 +13,6 @@
 #include "api-structures.h"
 #include "build-disjuncts.h"
 #include "connectors.h"
-#include "count.h"
 #include "dict-common/dict-structures.h" // For Dictionary_s
 #include "disjunct-utils.h"
 #include "externs.h"

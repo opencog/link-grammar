@@ -81,7 +81,6 @@ liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
 	api.c                            \
 	connectors.c                     \
-	count.c                          \
 	dict-common/dict-common.c        \
 	dict-common/dict-utils.c         \
 	dict-common/file-utils.c         \
@@ -96,11 +95,12 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
-	extract-links.c                  \
-	fast-match.c                     \
 	histogram.c                      \
 	linkage.c                        \
-	parse.c                          \
+	parse/count.c                    \
+	parse/extract-links.c            \
+	parse/fast-match.c               \
+	parse/parse.c                    \
 	post-process/constituents.c      \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
@@ -128,7 +128,6 @@ liblink_grammar_la_SOURCES =        \
 	api-types.h                      \
 	analyze-linkage.h                \
 	connectors.h                     \
-	count.h                          \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-defines.h       \
@@ -145,13 +144,14 @@ liblink_grammar_la_SOURCES =        \
 	disjuncts.h                      \
 	error.h                          \
 	externs.h                        \
-	extract-links.h                  \
-	fast-match.h                     \
 	histogram.h                      \
 	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
-	parse.h                          \
+	parse/count.h                    \
+	parse/extract-links.h            \
+	parse/fast-match.h               \
+	parse/parse.h                    \
 	post-process/post-process.h      \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \

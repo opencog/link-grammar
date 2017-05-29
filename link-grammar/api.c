@@ -26,7 +26,7 @@
 #include "histogram.h"
 #include "linkage.h"
 #include "print/print.h"
-#include "parse.h"
+#include "parse/parse.h"
 #include "post-process/post-process.h" // for linkage_free_pp_info
 #include "prune.h"
 #include "resources.h"
