@@ -312,7 +312,7 @@ static Match_node* sort_matchlist(Match_node* mlist)
  * parse structures.
  */
 static
-Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
+Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
@@ -366,11 +366,11 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		RECOUNT({xt->set.recount = 0;})
 
 		w = lw + 1;
-		for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
+		for (dis = words[w].d; dis != NULL; dis = dis->next)
 		{
 			if (dis->left == NULL)
 			{
-				pset = mk_parse_set(sent, mchxt, ctxt,
+				pset = mk_parse_set(words, mchxt, ctxt,
 				                    dis, NULL, w, rw, dis->right, NULL,
 				                    null_count-1, pex, islands_ok);
 				if (pset == NULL) continue;
@@ -381,7 +381,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
-		pset = mk_parse_set(sent, mchxt, ctxt,
+		pset = mk_parse_set(words, mchxt, ctxt,
 		                    NULL, NULL, w, rw, NULL, NULL,
 		                    null_count-1, pex, islands_ok);
 		if (pset != NULL)
@@ -447,44 +447,44 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				for (i=0; i<4; i++) { ls[i] = rs[i] = NULL; }
 				if (Lmatch)
 				{
-					ls[0] = mk_parse_set(sent, mchxt, ctxt,
+					ls[0] = mk_parse_set(words, mchxt, ctxt,
 					             ld, d, lw, w, le->next, d->left->next,
 					             lnull_count, pex, islands_ok);
 
 					if (le->multi)
-						ls[1] = mk_parse_set(sent, mchxt, ctxt,
+						ls[1] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left->next,
 						              lnull_count, pex, islands_ok);
 
 					if (d->left->multi)
-						ls[2] = mk_parse_set(sent, mchxt, ctxt,
+						ls[2] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le->next, d->left,
 						              lnull_count, pex, islands_ok);
 
 					if (le->multi && d->left->multi)
-						ls[3] = mk_parse_set(sent, mchxt, ctxt,
+						ls[3] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left,
 						              lnull_count, pex, islands_ok);
 				}
 
 				if (Rmatch)
 				{
-					rs[0] = mk_parse_set(sent, mchxt, ctxt,
+					rs[0] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right->next, re->next,
 					                 rnull_count, pex, islands_ok);
 
 					if (d->right->multi)
-						rs[1] = mk_parse_set(sent, mchxt, ctxt,
+						rs[1] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right, re->next,
 						              rnull_count, pex, islands_ok);
 
 					if (re->multi)
-						rs[2] = mk_parse_set(sent, mchxt, ctxt,
+						rs[2] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right->next, re,
 						              rnull_count, pex, islands_ok);
 
 					if (d->right->multi && re->multi)
-						rs[3] = mk_parse_set(sent, mchxt, ctxt,
+						rs[3] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right, re,
 						              rnull_count, pex, islands_ok);
 				}
@@ -507,7 +507,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
 				{
 					/* Evaluate using the left match, but not the right */
-					Parse_set* rset = mk_parse_set(sent, mchxt, ctxt,
+					Parse_set* rset = mk_parse_set(words, mchxt, ctxt,
 					                        d, rd, w, rw, d->right, re,
 					                        rnull_count, pex, islands_ok);
 					if (rset != NULL)
@@ -529,7 +529,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 				{
 					/* Evaluate using the right match, but not the left */
-					Parse_set* lset = mk_parse_set(sent, mchxt, ctxt,
+					Parse_set* lset = mk_parse_set(words, mchxt, ctxt,
 					                        ld, d, lw, w, le, d->left,
 					                        lnull_count, pex, islands_ok);
 
@@ -610,7 +610,7 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
                     unsigned int null_count, Parse_Options opts)
 {
 	pex->parse_set =
-		mk_parse_set(sent, mchxt, ctxt,
+		mk_parse_set(sent->word, mchxt, ctxt,
 		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
 		             pex, opts->islands_ok);
 
