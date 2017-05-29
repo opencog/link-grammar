@@ -20,6 +20,13 @@
 
 #include "api-types.h"
 
+/* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is
+ * BAD_WORD -- it is used to indicate that nothing can connect to this
+ * connector, and this should fit in one byte (because the word field
+ * of a connector is an uint8_t, see below).
+ */
+#define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
+
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.
  */

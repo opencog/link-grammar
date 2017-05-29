@@ -18,7 +18,7 @@
 #include "dict-common/dict-structures.h" // For Dictionary_s
 #include "dict-common/dict-defines.h" // For MAX_WORD
 #include "error.h"
-#include "linkage.h"
+#include "linkage/linkage.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
 #include "string-set.h"

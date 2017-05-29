@@ -46,6 +46,7 @@
 #include "error.h"
 #include "utilities.h"
 
+typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
 {
 	Cost_Model_type type;
@@ -147,13 +148,5 @@ struct Sentence_s
 	void *hook;                 /* Hook for the SAT solver */
 #endif /* USE_SAT_SOLVER */
 };
-
-// XXX FIXME
-// This needs a home.
-bool sane_linkage_morphism(Sentence, Linkage, Parse_Options);
-void free_linkages(Sentence);
-Linkage linkage_array_new(int num_to_alloc);
-
-
 
 #endif

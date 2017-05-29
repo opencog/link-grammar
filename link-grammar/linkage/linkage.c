@@ -19,10 +19,10 @@
 #include "dict-common/dict-common.h"  // for INFIX_MARK from dict.
 #include "dict-common/dict-defines.h" // for SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
-#include "disjuncts.h"
 #include "disjunct-utils.h"
 #include "link-includes.h"
 #include "linkage.h"
+#include "lisjuncts.h"
 #include "post-process/post-process.h" // needed only for exfree_domain_names
 #include "post-process/pp-structures.h" // needed only for pp_info_s
 #include "sat-solver/sat-encoder.h"

@@ -24,6 +24,7 @@ struct Match_node_struct
 	Disjunct * d;
 };
 
+typedef struct fast_matcher_s fast_matcher_t;
 struct fast_matcher_s
 {
 	size_t size;

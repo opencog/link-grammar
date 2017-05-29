@@ -9,7 +9,7 @@
 /*                                                                       */
 /*************************************************************************/
 /*
- * disjuncts.c
+ * lisjuncts.c
  *
  * Miscellaneous utilities for returning the list of disjuncts that
  * were actually used in a given parse of a sentence.
@@ -20,8 +20,12 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
-#include "disjuncts.h"
 #include "linkage.h"
+#include "lisjuncts.h"
+
+/* Links are *always* less than 10 chars long . For now. The estimate
+ * below is somewhat dangerous .... could be  fixed. */
+#define MAX_LINK_NAME_LENGTH 10
 
 /**
  * Print connector list to string.

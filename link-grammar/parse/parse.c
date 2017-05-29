@@ -13,20 +13,28 @@
 
 #include <limits.h>
 
-#include "analyze-linkage.h"
 #include "api-structures.h"
 #include "count.h"
 #include "dict-common/dict-structures.h" // for Dictionary_s
 #include "disjunct-utils.h"
 #include "extract-links.h"
 #include "fast-match.h"
-#include "linkage.h"
+#include "linkage/analyze-linkage.h"
+#include "linkage/linkage.h"
+#include "linkage/sane.h"
 #include "parse.h"
 #include "post-process/post-process.h"
 #include "preparation.h"
 #include "prune.h"
 #include "resources.h"
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
+
+static Linkage linkage_array_new(int num_to_alloc)
+{
+	Linkage lkgs = (Linkage) exalloc(num_to_alloc * sizeof(struct Linkage_s));
+	memset(lkgs, 0, num_to_alloc * sizeof(struct Linkage_s));
+	return lkgs;
+}
 
 static bool setup_linkages(Sentence sent, extractor_t* pex,
                           fast_matcher_t* mchxt,

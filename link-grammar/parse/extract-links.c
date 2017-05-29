@@ -18,12 +18,13 @@
 #include "disjunct-utils.h" // for Disjunct
 #include "extract-links.h"
 #include "fast-match.h"
-#include "linkage.h"
+#include "linkage/linkage.h"
 #include "tokenize/word-structures.h" // for Word_Struct
 
 typedef struct Parse_choice_struct Parse_choice;
 
 /* The parse_choice is used to extract links for a given parse */
+typedef struct Parse_set_struct Parse_set;
 struct Parse_choice_struct
 {
 	Parse_choice * next;

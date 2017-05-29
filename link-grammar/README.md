@@ -18,8 +18,10 @@ Listed in rough processing order.
  * minisat      - Copy of the mini-SAT Boolean-SAT solver.
  * sat-solver   - Alternate parser, using boolean-SAT.
 
- * post-process - constraints added after parsing.
-                  Also, constituent-tree construction.
+ * linkage      - Construction and analysis of linkages from parsing.
+
+ * post-process - Constraint rules applied after parsing.
+                  Also, rules for constituent-tree construction.
 
  * corpus       - word-sense disambiguation data from an SQL file.
 

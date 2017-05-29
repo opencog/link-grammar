@@ -78,7 +78,6 @@ endif
 liblink_grammar_la_LIBADD  += -lm
 
 liblink_grammar_la_SOURCES =        \
-	analyze-linkage.c                \
 	api.c                            \
 	connectors.c                     \
 	dict-common/dict-common.c        \
@@ -93,9 +92,13 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/word-file.c            \
 	dict-sql/read-sql.c              \
 	disjunct-utils.c                 \
-	disjuncts.c                      \
 	error.c                          \
-	linkage.c                        \
+	linkage/analyze-linkage.c        \
+	linkage/freeli.c                 \
+	linkage/linkage.c                \
+	linkage/lisjuncts.c              \
+	linkage/sane.c                   \
+	linkage/score.c                  \
 	parse/count.c                    \
 	parse/extract-links.c            \
 	parse/fast-match.c               \
@@ -115,7 +118,6 @@ liblink_grammar_la_SOURCES =        \
 	print/print-util.c               \
 	print/wcwidth.c                  \
 	resources.c                      \
-	score.c                          \
 	string-set.c                     \
 	tokenize/anysplit.c              \
 	tokenize/spellcheck-aspell.c     \
@@ -127,7 +129,6 @@ liblink_grammar_la_SOURCES =        \
 	                                 \
 	api-structures.h                 \
 	api-types.h                      \
-	analyze-linkage.h                \
 	connectors.h                     \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
@@ -142,12 +143,15 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/word-file.h            \
 	dict-sql/read-sql.h              \
 	disjunct-utils.h                 \
-	disjuncts.h                      \
 	error.h                          \
 	externs.h                        \
 	lg_assert.h                      \
 	link-includes.h                  \
-	linkage.h                        \
+	linkage/analyze-linkage.h        \
+	linkage/linkage.h                \
+	linkage/lisjuncts.h              \
+	linkage/sane.h                   \
+	linkage/score.h                  \
 	parse/count.h                    \
 	parse/extract-links.h            \
 	parse/fast-match.h               \
@@ -166,7 +170,6 @@ liblink_grammar_la_SOURCES =        \
 	print/print-util.h               \
 	print/wcwidth.h                  \
 	resources.h                      \
-	score.h                          \
 	string-set.h                     \
 	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
