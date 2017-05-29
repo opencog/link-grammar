@@ -995,6 +995,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 			leftdone[best] = true;
 			dyn_strcat(cs, "[");
 			dyn_strcat(cs, ctxt->constituent[best].type);
+			dyn_strcat(cs, " ");
 		}
 
 		/* Don't print out right wall */
@@ -1052,7 +1053,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 				break;
 			rightdone[best] = true;
 			dyn_strcat(cs, ctxt->constituent[best].type);
-			dyn_strcat(cs, "]");
+			dyn_strcat(cs, "] ");
 		}
 	}
 
