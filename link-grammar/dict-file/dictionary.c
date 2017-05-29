@@ -12,13 +12,12 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "connectors.h"   // for connector_set_create()
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"  // For LEFT_WORD
+#include "dict-common/dict-impl.h"
 #include "dict-common/dict-utils.h"
 #include "dict-common/file-utils.h"
-#include "externs.h"
 #include "dict-common/idiom.h"
 #include "post-process/pp_knowledge.h"
 #include "read-dict.h"
@@ -424,7 +423,6 @@ dictionary_six_str(const char * lang,
 {
 	const char * t;
 	Dictionary dict;
-	Dict_node *dict_node;
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
@@ -501,55 +499,7 @@ dictionary_six_str(const char * lang,
 		return dict;
 	}
 
-	/* Get the locale for the dictionary. The first one of the
-	 * following which exists, is used:
-	 * 1. The locale which is defined in the dictionary.
-	 * 2. The locale from the environment.
-	 * 3. On Windows - the user's default locale.
-	 * NULL is returned if the locale is not valid.
-	 * Note:
-	 * If we don't have locale_t, as a side effect of checking the locale
-	 * it is set as the program's locale (as desired).  However, in that
-	 * case if it is not valid and this is the first dictionary which is
-	 * opened, the program's locale may remain the initial one, i.e. "C"
-	 * (unless the API user changed it). */
-	dict->locale = linkgrammar_get_dict_locale(dict);
-
-	/* If the program's locale doesn't have a UTF-8 codeset (e.g. it is
-	 * "C", or because the API user has set it incorrectly) set it to one
-	 * that has it. */
-	set_utf8_program_locale();
-
-	/* If the dictionary locale couldn't be established - then set
-	 * dict->locale so that it is consistent with the current program's
-	 * locale.  It will be used as the intended locale of this
-	 * dictionary, and the locale of the compiled regexs. */
-	if (NULL == dict->locale)
-	{
-		dict->locale = setlocale(LC_CTYPE, NULL);
-		prt_error("Warning: Couldn't set dictionary locale! "
-		          "Using current program locale \"%s\"\n", dict->locale);
-	}
-
-	/* setlocale() returns a string owned by the system. Copy it. */
-	dict->locale = string_set_add(dict->locale, dict->string_set);
-
-
-#ifdef HAVE_LOCALE_T
-	/* Since linkgrammar_get_dict_locale() (which is called above)
-	 * validates the locale, the following call is guaranteed to succeed. */
-	dict->lctype = newlocale_LC_CTYPE(dict->locale);
-
-	/* If dict->locale is still not set, there is a bug.
-	 * Without this assert(), the program may SEGFAULT when it
-	 * uses the isw*() functions. */
-	assert((locale_t) 0 != dict->lctype, "Dictionary locale is not set.");
-#else
-	dict->lctype = 0;
-#endif /* HAVE_LOCALE_T */
-
-	/* setlocale() returns a string owned by the system. Copy it. */
-	dict->locale = string_set_add(dict->locale, dict->string_set);
+	dictionary_setup_locale(dict);
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
@@ -584,24 +534,14 @@ dictionary_six_str(const char * lang,
 	dict->corpus = lg_corpus_new();
 #endif
 
-	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
-	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
-
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
-	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
-	dict->use_unknown_word = true;
+	dictionary_setup_defines(dict);
 
-	dict->shuffle_linkages = false;
+	// Special-case hack.
 	if (0 == strcmp(dict->lang, "any") || NULL != dict->affix_table->anysplit)
 		dict->shuffle_linkages = true;
-
-	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
-	if (dict_node != NULL)
-		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
-
-	free_lookup(dict_node);
 
 	return dict;
 

@@ -24,6 +24,7 @@
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // for LEFT_WALL_WORD
+#include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
 #include "dict-common/file-utils.h"
 #include "externs.h"
@@ -312,7 +313,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 	char *dbname;
 	const char * t;
 	Dictionary dict;
-	Dict_node *dict_node;
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
@@ -346,18 +346,9 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup = db_lookup;
 	dict->close = db_close;
 
-	/* Misc remaining common (generic) dict setup work */
-	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
-	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
+	dictionary_setup_locale(dict);
 
-	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
-	dict->use_unknown_word = true;
-
-	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
-	if (dict_node != NULL)
-		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
-
-	free_lookup_list(dict, dict_node);
+	dictionary_setup_defines(dict);
 
 	return dict;
 }

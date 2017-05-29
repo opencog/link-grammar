@@ -13,11 +13,17 @@
 
 #include <string.h>
 
-#include "api-structures.h"
+#include "api-types.h"
+#include "connectors.h"
+#include "dict-api.h"
+#include "dict-defines.h"
+#include "dict-impl.h"
 #include "dict-structures.h"
 #include "string-set.h"
 #include "utilities.h"
 #include "dict-file/read-dict.h" // XXXX
+
+/* ======================================================================= */
 
 // WindowsXP workaround - missing GetLocaleInfoEx
 #ifdef _WIN32
@@ -53,6 +59,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 }
 #endif //_WIN32
 
+/* ======================================================================= */
 
 /**
  * Format the given locale for use in setlocale().
@@ -143,6 +150,8 @@ static const char * format_locale(Dictionary dict,
 	return string_set_add(locale, dict->string_set);
 }
 
+/* ======================================================================= */
+
 /**
  * Return a locale for the given dictionary, in the OS format.
  * - If <dictionary-locale> is defined, use it.
@@ -165,6 +174,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 	if (dict->locale) return dict->locale;
 
 	const char *locale;
+	// XXX dict->loo
 	Dict_node *dn = lookup_list(dict, "<dictionary-locale>");
 
 	if (NULL == dn)
@@ -228,11 +238,15 @@ locale_error:
 	}
 }
 
+/* ======================================================================= */
+
 const char * linkgrammar_get_version(void)
 {
 	const char *s = "link-grammar-" LINK_VERSION_STRING;
 	return s;
 }
+
+/* ======================================================================= */
 
 const char * linkgrammar_get_dict_version(Dictionary dict)
 {
@@ -267,3 +281,77 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 }
 
 /* ======================================================================= */
+
+void dictionary_setup_locale(Dictionary dict)
+{
+	/* Get the locale for the dictionary. The first one of the
+	 * following which exists, is used:
+	 * 1. The locale which is defined in the dictionary.
+	 * 2. The locale from the environment.
+	 * 3. On Windows - the user's default locale.
+	 * NULL is returned if the locale is not valid.
+	 * Note:
+	 * If we don't have locale_t, as a side effect of checking the locale
+	 * it is set as the program's locale (as desired).  However, in that
+	 * case if it is not valid and this is the first dictionary which is
+	 * opened, the program's locale may remain the initial one, i.e. "C"
+	 * (unless the API user changed it). */
+	dict->locale = linkgrammar_get_dict_locale(dict);
+
+	/* If the program's locale doesn't have a UTF-8 codeset (e.g. it is
+	 * "C", or because the API user has set it incorrectly) set it to one
+	 * that has it. */
+	set_utf8_program_locale();
+
+	/* If the dictionary locale couldn't be established - then set
+	 * dict->locale so that it is consistent with the current program's
+	 * locale.  It will be used as the intended locale of this
+	 * dictionary, and the locale of the compiled regexs. */
+	if (NULL == dict->locale)
+	{
+		dict->locale = setlocale(LC_CTYPE, NULL);
+		prt_error("Warning: Couldn't set dictionary locale! "
+		          "Using current program locale \"%s\"\n", dict->locale);
+	}
+
+	/* setlocale() returns a string owned by the system. Copy it. */
+	dict->locale = string_set_add(dict->locale, dict->string_set);
+
+#ifdef HAVE_LOCALE_T
+	/* Since linkgrammar_get_dict_locale() (which is called above)
+	 * validates the locale, the following call is guaranteed to succeed. */
+	dict->lctype = newlocale_LC_CTYPE(dict->locale);
+
+	/* If dict->locale is still not set, there is a bug.
+	 * Without this assert(), the program may SEGFAULT when it
+	 * uses the isw*() functions. */
+	assert((locale_t) 0 != dict->lctype, "Dictionary locale is not set.");
+#else
+	dict->lctype = 0;
+#endif /* HAVE_LOCALE_T */
+
+	/* setlocale() returns a string owned by the system. Copy it. */
+	dict->locale = string_set_add(dict->locale, dict->string_set);
+}
+
+void dictionary_setup_defines(Dictionary dict)
+{
+	Dict_node *dict_node;
+
+	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
+	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
+
+	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
+	dict->use_unknown_word = true;
+
+	dict->shuffle_linkages = false;
+
+	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
+	if (dict_node != NULL)
+		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
+
+	free_lookup(dict_node);
+}
+
+/* ======================================================================= */
+
