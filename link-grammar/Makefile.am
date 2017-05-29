@@ -109,6 +109,7 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.c        \
 	prepare/build-disjuncts.c        \
 	prepare/expand.c                 \
+	prepare/exprune.c                \
 	print/print.c                    \
 	print/print-util.c               \
 	print/wcwidth.c                  \
@@ -159,6 +160,7 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.h        \
 	prepare/build-disjuncts.h        \
 	prepare/expand.h                 \
+	prepare/exprune.h                \
 	print/print.h                    \
 	print/print-util.h               \
 	print/wcwidth.h                  \

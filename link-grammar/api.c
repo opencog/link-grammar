@@ -25,10 +25,10 @@
 #include "externs.h"
 #include "histogram.h"
 #include "linkage.h"
-#include "print/print.h"
 #include "parse/parse.h"
 #include "post-process/post-process.h" // for linkage_free_pp_info
-#include "prune.h"
+#include "print/print.h"
+#include "prepare/exprune.h"
 #include "resources.h"
 #include "score.h"
 #include "sat-solver/sat-encoder.h"

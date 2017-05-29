@@ -10,12 +10,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _PRUNE_H
-#define _PRUNE_H
+#ifndef _EXPRESSION_PRUNE_H
+#define _EXPRESION_PRUNE_H
 
 #include "link-includes.h"
 
-int        power_prune(Sentence, Parse_Options);
-void       pp_and_power_prune(Sentence, Parse_Options);
-
-#endif /* _PRUNE_H */
+void       expression_prune(Sentence);
+#endif /* _EXPRESION_PRUNE_H */
