@@ -95,11 +95,11 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
-	histogram.c                      \
 	linkage.c                        \
 	parse/count.c                    \
 	parse/extract-links.c            \
 	parse/fast-match.c               \
+	parse/histogram.c                \
 	parse/parse.c                    \
 	parse/preparation.c              \
 	parse/prune.c                    \
@@ -145,13 +145,13 @@ liblink_grammar_la_SOURCES =        \
 	disjuncts.h                      \
 	error.h                          \
 	externs.h                        \
-	histogram.h                      \
 	lg_assert.h                      \
 	link-includes.h                  \
 	linkage.h                        \
 	parse/count.h                    \
 	parse/extract-links.h            \
 	parse/fast-match.h               \
+	parse/histogram.h                \
 	parse/parse.h                    \
 	parse/preparation.h              \
 	parse/prune.h                    \
