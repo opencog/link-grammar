@@ -52,6 +52,19 @@ struct X_table_connector_struct
 	X_table_connector *next;
 };
 
+struct Parse_info_struct
+{
+	unsigned int   x_table_size;
+	unsigned int   log2_x_table_size;
+	X_table_connector ** x_table;  /* Hash table */
+	Parse_set *    parse_set;
+	int            N_words; /* Number of words in current sentence;
+	                           Computed by separate_sentence() */
+
+	/* thread-safe random number state */
+	unsigned int rand_state;
+};
+
 /**
  * The first thing we do is we build a data structure to represent the
  * result of the entire parse search.  There will be a set of nodes

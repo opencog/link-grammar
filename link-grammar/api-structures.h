@@ -96,26 +96,12 @@ struct Parse_Options_s
 	/* Options governing post-processing */
 	bool perform_pp_prune; /* Perform post-processing-based pruning */
 	size_t twopass_length; /* min sent length for two-pass post processing */
-	Cost_Model cost_model; /* For sorting linkages in post_processing */
+	Cost_Model cost_model; /* For sorting linkages after parsing. */
 
 	/* Options governing the generation of linkages. */
 	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
 	bool display_morphology;/* if true, print morpho analysis of words */
 };
-
-struct Parse_info_struct
-{
-	unsigned int   x_table_size;
-	unsigned int   log2_x_table_size;
-	X_table_connector ** x_table;  /* Hash table */
-	Parse_set *    parse_set;
-	int            N_words; /* Number of words in current sentence;
-	                           Computed by separate_sentence() */
-
-	/* thread-safe random number state */
-	unsigned int rand_state;
-};
-
 
 struct Sentence_s
 {
