@@ -14,7 +14,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "analyze-linkage.h"
 #include "api-structures.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // for SUBSCRIPT_MARK
