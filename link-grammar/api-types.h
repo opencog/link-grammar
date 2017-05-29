@@ -39,13 +39,9 @@ typedef struct PP_info_s PP_info;
 typedef struct Resources_s * Resources;
 
 /* Some of the more obscure typedefs */
-typedef struct count_context_s count_context_t;
-typedef struct fast_matcher_s fast_matcher_t;
-
 typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
 typedef struct Link_s Link;
-typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
 typedef struct Gword_struct Gword;
