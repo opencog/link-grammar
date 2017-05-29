@@ -16,7 +16,6 @@
 
 #include "api-types.h"
 
-void build_sentence_disjuncts(Sentence sent, double cost_cutoff);
 Disjunct * build_disjuncts_for_exp(Exp*, const char*, double cost_cutoff);
 
 #ifdef DEBUG

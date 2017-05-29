@@ -101,6 +101,7 @@ liblink_grammar_la_SOURCES =        \
 	parse/extract-links.c            \
 	parse/fast-match.c               \
 	parse/parse.c                    \
+	parse/preparation.c              \
 	post-process/constituents.c      \
 	post-process/post-process.c      \
 	post-process/pp_knowledge.c      \
@@ -108,7 +109,6 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.c        \
 	prepare/build-disjuncts.c        \
 	prepare/expand.c                 \
-	prepare/preparation.c            \
 	print/print.c                    \
 	print/print-util.c               \
 	print/wcwidth.c                  \
@@ -152,13 +152,13 @@ liblink_grammar_la_SOURCES =        \
 	parse/extract-links.h            \
 	parse/fast-match.h               \
 	parse/parse.h                    \
+	parse/preparation.h              \
 	post-process/post-process.h      \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \
 	post-process/pp_linkset.h        \
 	prepare/build-disjuncts.h        \
 	prepare/expand.h                 \
-	prepare/preparation.h            \
 	print/print.h                    \
 	print/print-util.h               \
 	print/wcwidth.h                  \

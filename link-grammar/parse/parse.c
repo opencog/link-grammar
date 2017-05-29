@@ -23,7 +23,7 @@
 #include "linkage.h"
 #include "parse.h"
 #include "post-process/post-process.h"
-#include "prepare/preparation.h"
+#include "preparation.h"
 #include "prune.h"
 #include "resources.h"
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
