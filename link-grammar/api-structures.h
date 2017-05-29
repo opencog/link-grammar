@@ -149,8 +149,4 @@ struct Sentence_s
 #endif /* USE_SAT_SOLVER */
 };
 
-// XXX FIXME
-// This needs a home.
-void free_linkages(Sentence);
-
 #endif

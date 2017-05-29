@@ -94,6 +94,7 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.c                 \
 	error.c                          \
 	linkage/analyze-linkage.c        \
+	linkage/freeli.c                 \
 	linkage/linkage.c                \
 	linkage/lisjuncts.c              \
 	linkage/sane.c                   \
