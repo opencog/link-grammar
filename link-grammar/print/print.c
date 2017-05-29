@@ -22,7 +22,7 @@
 #include "dict-common/dict-defines.h"  // For SUBSCRIPT_MARK
 #include "dict-common/dict-utils.h" // For size_of_expression()
 #include "disjunct-utils.h"
-#include "linkage.h"
+#include "linkage/linkage.h"
 #include "print.h"
 #include "print-util.h"
 #include "string-set.h"

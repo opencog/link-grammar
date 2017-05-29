@@ -13,14 +13,14 @@
 
 #include <limits.h>
 
-#include "analyze-linkage.h"
 #include "api-structures.h"
 #include "count.h"
 #include "dict-common/dict-structures.h" // for Dictionary_s
 #include "disjunct-utils.h"
 #include "extract-links.h"
 #include "fast-match.h"
-#include "linkage.h"
+#include "linkage/analyze-linkage.h"
+#include "linkage/linkage.h"
 #include "parse.h"
 #include "post-process/post-process.h"
 #include "preparation.h"

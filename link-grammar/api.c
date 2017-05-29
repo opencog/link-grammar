@@ -23,14 +23,13 @@
 #include "disjunct-utils.h"  // for free_disjuncts
 #include "error.h"
 #include "externs.h"
-#include "linkage.h"
+#include "linkage/linkage.h"
 #include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
 #include "post-process/post-process.h" // for linkage_free_pp_info
 #include "print/print.h"
 #include "prepare/exprune.h"
 #include "resources.h"
-#include "score.h"
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
 #include "tokenize/spellcheck.h"

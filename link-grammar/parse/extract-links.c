@@ -18,7 +18,7 @@
 #include "disjunct-utils.h" // for Disjunct
 #include "extract-links.h"
 #include "fast-match.h"
-#include "linkage.h"
+#include "linkage/linkage.h"
 #include "tokenize/word-structures.h" // for Word_Struct
 
 typedef struct Parse_choice_struct Parse_choice;

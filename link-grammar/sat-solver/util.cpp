@@ -3,7 +3,7 @@
 extern "C" {
 #include "api-structures.h"
 #include "disjunct-utils.h"
-#include "linkage.h"
+#include "linkage/linkage.h"
 #include "utilities.h"
 };
 
