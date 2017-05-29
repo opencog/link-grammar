@@ -42,7 +42,6 @@
 #include "tokenize/tok-structures.h" // Needed for sane_linkae_morphism
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
 #include "utilities.h"
-#include "word-utils.h"
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
 static unsigned int global_rand_state = 0;

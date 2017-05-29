@@ -11,9 +11,11 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LINK_GRAMMAR_WORD_UTILS_H_
-#define _LINK_GRAMMAR_WORD_UTILS_H_
+#ifndef _LINK_GRAMMAR_CONNECTORS_H_
+#define _LINK_GRAMMAR_CONNECTORS_H_
 
+#include <ctype.h>   // for islower()
+#include <stdbool.h>
 #include <stdint.h>  // for unit8_t
 
 #include "api-types.h"
@@ -190,4 +192,4 @@ static inline unsigned int pair_hash(unsigned int table_size,
 
 	return i & (table_size-1);
 }
-#endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */
+#endif /* _LINK_GRAMMAR_CONNECTORS_H_ */

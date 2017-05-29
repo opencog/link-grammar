@@ -13,10 +13,11 @@
 
 #include <ctype.h>
 #include <string.h>
+
 #include "analyze-linkage.h"
-#include "string-set.h"
+#include "connectors.h" // Needed for connector_get_string
 #include "linkage.h"
-#include "word-utils.h" // Needed for connector_get_string
+#include "string-set.h"
 
 /**
  * This returns a string that is the the GCD of the two given strings.

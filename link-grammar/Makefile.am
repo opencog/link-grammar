@@ -80,6 +80,7 @@ liblink_grammar_la_LIBADD  += -lm
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
 	api.c                            \
+	connectors.c                     \
 	count.c                          \
 	dict-common/dict-common.c        \
 	dict-common/dict-utils.c         \
@@ -121,11 +122,11 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/tokenize.c              \
 	tokenize/wordgraph.c             \
 	utilities.c                      \
-	word-utils.c                     \
 	                                 \
 	api-structures.h                 \
 	api-types.h                      \
 	analyze-linkage.h                \
+	connectors.h                     \
 	count.h                          \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
@@ -170,8 +171,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/tokenize.h              \
 	tokenize/word-structures.h       \
 	tokenize/wordgraph.h             \
-	utilities.h                      \
-	word-utils.h
+	utilities.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \

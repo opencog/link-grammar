@@ -20,6 +20,7 @@
 #include <sqlite3.h>
 
 #include "api-structures.h"
+#include "connectors.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // for LEFT_WALL_WORD
@@ -29,7 +30,6 @@
 #include "tokenize/spellcheck.h"
 #include "string-set.h"
 #include "utilities.h"
-#include "word-utils.h"
 
 #include "read-sql.h"
 

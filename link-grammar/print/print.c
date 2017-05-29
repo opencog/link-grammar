@@ -17,6 +17,7 @@
 
 #include "externs.h"
 #include "api-structures.h"
+#include "connectors.h"
 #include "corpus/corpus.h"
 #include "dict-common/dict-defines.h"  // For SUBSCRIPT_MARK
 #include "dict-common/dict-utils.h" // For size_of_expression()
@@ -27,7 +28,6 @@
 #include "string-set.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h" // for Word_struct
-#include "word-utils.h" // for Connector_s
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
@@ -771,21 +771,6 @@ void print_disjunct_counts(Sentence sent)
 		}
 		/* XXX alternatives[0] is not really correct, here .. */
 		printf("%s(%d) ",sent->word[i].alternatives[0], c);
-	}
-	printf("\n\n");
-}
-
-void print_expression_sizes(Sentence sent)
-{
-	X_node * x;
-	size_t w, size;
-	for (w=0; w<sent->length; w++) {
-		size = 0;
-		for (x=sent->word[w].x; x!=NULL; x = x->next) {
-			size += size_of_expression(x->exp);
-		}
-		/* XXX alternatives[0] is not really correct, here .. */
-		printf("%s[%zu] ",sent->word[w].alternatives[0], size);
 	}
 	printf("\n\n");
 }

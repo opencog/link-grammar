@@ -16,6 +16,7 @@
 #include <math.h>
 #include "api-structures.h"
 #include "build-disjuncts.h"
+#include "connectors.h"
 #include "dict-common/dict-defines.h"    // for SUBSCRIPT_MARK
 #include "dict-common/dict-structures.h" // for Exp_struct
 #include "disjunct-utils.h"
@@ -23,7 +24,6 @@
 #include "tokenize/tok-structures.h" // XXX TODO provide gword acces methods!
 #include "tokenize/word-structures.h" // For Word_struct
 #include "utilities.h" /* For Win32 compatibility features */
-#include "word-utils.h"
 
 /* Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;

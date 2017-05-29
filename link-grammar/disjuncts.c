@@ -18,10 +18,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "api-structures.h"
+#include "connectors.h"
 #include "disjunct-utils.h"
 #include "disjuncts.h"
 #include "linkage.h"
-#include "word-utils.h" // Needed for Connector
 
 /**
  * Print connector list to string.

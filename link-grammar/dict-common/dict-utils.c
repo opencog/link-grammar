@@ -16,10 +16,10 @@
 
 #include <math.h>  // for fabs()
 
+#include "connectors.h"
 #include "dict-api.h"
 #include "string-set.h"
 #include "dict-utils.h"
-#include "word-utils.h"
 
 /* ======================================================== */
 /* Exp utilities ... */

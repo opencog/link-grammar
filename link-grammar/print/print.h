@@ -21,7 +21,6 @@
 typedef struct String_s String;
 
 void   print_disjunct_counts(Sentence sent);
-void   print_expression_sizes(Sentence sent);
 struct tokenpos;
 void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
        void (*display)(Dictionary, const char *), struct tokenpos *);

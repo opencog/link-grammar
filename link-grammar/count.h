@@ -18,7 +18,6 @@
 
 Count_bin* table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
 Count_bin do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
-void delete_unmarked_disjuncts(Sentence sent);
 
 count_context_t* alloc_count_context(size_t);
 void free_count_context(count_context_t*);

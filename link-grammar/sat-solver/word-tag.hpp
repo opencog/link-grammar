@@ -6,7 +6,7 @@
 #include <set>
 
 extern "C" {
-#include "word-utils.h"
+#include "connectors.h"
 };
 
 #include "variables.hpp"
