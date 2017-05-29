@@ -408,10 +408,7 @@ pp_knowledge *pp_knowledge_open(const char *path)
   initialize_set_of_links_starting_bounded_domain(k);
 
   /* If the knowledge file was empty, do nothing at all. */
-  if (0 == k->n_form_a_cycle_rules &&
-      0 == k->n_contains_one_rules &&
-      0 == k->n_contains_none_rules &&
-      0 == k->n_bounded_rules) return NULL;
+  if (0 == k->nStartingLinks) return NULL;
 
   return k;
 
