@@ -204,6 +204,39 @@ static void remap_linkages(Linkage lkg, const int *remap)
 }
 
 /**
+ *  Print the chosen_disjuncts words.
+ *  This is used for debug, e.g. for tracking them in the Wordgraph display.
+ */
+static void print_chosen_disjuncts_words(const Linkage lkg)
+{
+	size_t i;
+	dyn_str *djwbuf = dyn_str_new();
+
+	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	for (i = 0; i < lkg->num_words; i++)
+	{
+		Disjunct *cdj = lkg->chosen_disjuncts[i];
+		const char *djw; /* disjunct word - the chosen word */
+
+		if (NULL == cdj)
+			djw = lkg->sent->word[i].optional ? "{}" : "[]";
+		else if ('\0' == cdj->string[0])
+			djw = "\\0"; /* null string - something is wrong */
+		else
+			djw = cdj->string;
+
+		char *djw_tmp = strdupa(djw);
+		char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
+		if (NULL != sm) *sm = SUBSCRIPT_DOT;
+
+		dyn_strcat(djwbuf, djw_tmp);
+		dyn_strcat(djwbuf, " ");
+	}
+	err_msg(lg_Debug, "%s\n", djwbuf->str);
+	dyn_str_delete(djwbuf);
+}
+
+/**
  * Remove unlinked optional words from a linkage.
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
