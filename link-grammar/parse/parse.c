@@ -29,6 +29,13 @@
 #include "resources.h"
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
 
+static Linkage linkage_array_new(int num_to_alloc)
+{
+	Linkage lkgs = (Linkage) exalloc(num_to_alloc * sizeof(struct Linkage_s));
+	memset(lkgs, 0, num_to_alloc * sizeof(struct Linkage_s));
+	return lkgs;
+}
+
 static bool setup_linkages(Sentence sent, extractor_t* pex,
                           fast_matcher_t* mchxt,
                           count_context_t* ctxt,

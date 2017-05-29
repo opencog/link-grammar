@@ -152,6 +152,5 @@ struct Sentence_s
 // XXX FIXME
 // This needs a home.
 void free_linkages(Sentence);
-Linkage linkage_array_new(int num_to_alloc);
 
 #endif

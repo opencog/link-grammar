@@ -449,13 +449,6 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
-Linkage linkage_array_new(int num_to_alloc)
-{
-	Linkage lkgs = (Linkage) exalloc(num_to_alloc * sizeof(struct Linkage_s));
-	memset(lkgs, 0, num_to_alloc * sizeof(struct Linkage_s));
-	return lkgs;
-}
-
 void free_linkage(Linkage linkage)
 {
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
