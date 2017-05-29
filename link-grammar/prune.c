@@ -12,21 +12,20 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "count.h"
+#include "connectors.h"
 #include "dict-common/dict-api.h"   /* for print_expression when debugging */
 #include "dict-common/dict-utils.h" /* for free_E_list */
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
-#include "print/print.h"
+#include "print/print.h"  // For print_disjunct_counts()
 
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
 #include "tokenize/word-structures.h" // for Word_struct
 #include "tokenize/wordgraph.h"
-#include "word-utils.h"
 
 #define D_PRUNE 5
 
@@ -643,6 +642,21 @@ static void clean_up_expressions(Sentence sent, int w)
 
 /* #define DBG(X) X */
 #define DBG(X)
+
+static void print_expression_sizes(Sentence sent)
+{
+	X_node * x;
+	size_t w, size;
+	for (w=0; w<sent->length; w++) {
+		size = 0;
+		for (x=sent->word[w].x; x!=NULL; x = x->next) {
+			size += size_of_expression(x->exp);
+		}
+		/* XXX alternatives[0] is not really correct, here .. */
+		printf("%s[%zu] ",sent->word[w].alternatives[0], size);
+	}
+	printf("\n\n");
+}
 
 void expression_prune(Sentence sent)
 {
@@ -1594,6 +1608,27 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 		}
 	}
 	return false;
+}
+
+static void delete_unmarked_disjuncts(Sentence sent)
+{
+	size_t w;
+	Disjunct *d_head, *d, *dx;
+
+	for (w=0; w<sent->length; w++) {
+		d_head = NULL;
+		for (d=sent->word[w].d; d != NULL; d=dx) {
+			dx = d->next;
+			if (d->marked) {
+				d->next = d_head;
+				d_head = d;
+			} else {
+				d->next = NULL;
+				free_disjuncts(d);
+			}
+		}
+		sent->word[w].d = d_head;
+	}
 }
 
 static int pp_prune(Sentence sent, Parse_Options opts)

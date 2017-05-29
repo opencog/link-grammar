@@ -9,7 +9,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api-types.h"
 #include "link-includes.h"
 
 void lg_compute_disjunct_strings(Linkage);

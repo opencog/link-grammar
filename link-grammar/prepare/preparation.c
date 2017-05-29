@@ -11,8 +11,10 @@
 /*************************************************************************/
 
 #include "api-structures.h"
-#include "dict-common/build-disjuncts.h"
+#include "build-disjuncts.h"
+#include "connectors.h"
 #include "count.h"
+#include "dict-common/dict-structures.h" // For Dictionary_s
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "preparation.h"
@@ -21,7 +23,6 @@
 #include "resources.h"
 #include "string-set.h"
 #include "tokenize/word-structures.h" // for Word_struct
-#include "word-utils.h"
 
 static void
 set_connector_list_length_limit(Connector *c,

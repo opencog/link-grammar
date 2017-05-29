@@ -81,4 +81,13 @@ typedef enum {
 #define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2 "last classname"
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
+/* Suffixes start with it.
+ * This is needed to distinguish suffixes that were stripped off from
+ * ordinary words that just happen to be the same as the suffix.
+ * Kind-of a weird hack, but I'm not sure what else to do...
+ * Similarly, prefixes end with it.
+ */
+#define INFIX_MARK(afdict) \
+	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
+
 #endif /* _LG_DICT_COMMON_H_ */

@@ -16,8 +16,15 @@
 #include "api-structures.h"
 #include "link-includes.h"
 
-Parse_info parse_info_new(int nwords);
-void free_parse_info(Parse_info);
-bool build_parse_set(Sentence, fast_matcher_t*, count_context_t*, unsigned int null_count, Parse_Options);
-void extract_links(Linkage, Parse_info);
+typedef struct extractor_s extractor_t;
+
+extractor_t* extractor_new(int nwords, unsigned int rand_state);
+void free_extractor(extractor_t*);
+
+bool build_parse_set(extractor_t*, Sentence,
+                     fast_matcher_t*, count_context_t*,
+                     unsigned int null_count, Parse_Options);
+
+void extract_links(extractor_t*, Linkage);
+
 #endif /* _EXTRACT_LINKS_H */

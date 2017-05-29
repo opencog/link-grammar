@@ -221,6 +221,16 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	return true;
 }
 
+/**
+ *  Print linkage wordgraph path.
+ */
+void print_lwg_path(Gword **w)
+{
+	lgdebug(+0, " ");
+	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
+	lgdebug(0, "\n");
+}
+
 #ifdef DEBUG
 GNUC_UNUSED static const char *debug_show_subword(const Gword *w)
 {

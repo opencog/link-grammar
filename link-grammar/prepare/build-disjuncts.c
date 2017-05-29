@@ -16,16 +16,14 @@
 #include <math.h>
 #include "api-structures.h"
 #include "build-disjuncts.h"
-#include "dict-api.h"
-#include "dict-common.h"
-#include "dict-utils.h"
+#include "connectors.h"
+#include "dict-common/dict-defines.h"    // for SUBSCRIPT_MARK
+#include "dict-common/dict-structures.h" // for Exp_struct
 #include "disjunct-utils.h"
 #include "string-set.h"
-#include "dict-defines.h" // for SUBSCRIPT_MARK
 #include "tokenize/tok-structures.h" // XXX TODO provide gword acces methods!
 #include "tokenize/word-structures.h" // For Word_struct
 #include "utilities.h" /* For Win32 compatibility features */
-#include "word-utils.h"
 
 /* Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;
@@ -393,104 +391,6 @@ void prt_exp_mem(Exp *e, int i)
 	}
 }
 #endif
-
-/**
- * Count the number of clauses (disjuncts) for the expression e.
- * Should return the number of disjuncts that would be returned
- * by build_disjunct().  This in turn should be equal to the number
- * of clauses built by build_clause().
- *
- * Only one minor cheat here: we are ignoring the cost_cutoff, so
- * this potentially over-counts if the cost_cutoff is set low.
- */
-static unsigned int count_clause(Exp *e)
-{
-	unsigned int cnt = 0;
-	E_list * e_list;
-
-	assert(e != NULL, "count_clause called with null parameter");
-	if (e->type == AND_type)
-	{
-		/* multiplicative combinatorial explosion */
-		cnt = 1;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
-			cnt *= count_clause(e_list->e);
-	}
-	else if (e->type == OR_type)
-	{
-		/* Just additive */
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
-			cnt += count_clause(e_list->e);
-	}
-	else if (e->type == CONNECTOR_type)
-	{
-		return 1;
-	}
-	else
-	{
-		assert(false, "an expression node with no type");
-	}
-
-	return cnt;
-}
-
-/**
- * Count number of disjuncts given the dict node dn.
- */
-unsigned int count_disjunct_for_dict_node(Dict_node *dn)
-{
-	return (NULL == dn) ? 0 : count_clause(dn->exp);
-}
-
-/**
- * build_word_expressions() -- build list of expressions for a word.
- *
- * Looks up a word in the dictionary, fetching from it matching words and their
- * expressions.  Returns NULL if it's not there.  If there, it builds the list
- * of expressions for the word, and returns a pointer to it.
- * The subword of Gword w is used for this lookup, unless the subword is
- * explicitly given as parameter s. The subword of Gword w is always used as
- * the base word for each expression, and its subscript is the one from the
- * dictionary word of the expression.
- */
-X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
-{
-	Dict_node * dn, *dn_head;
-	X_node * x, * y;
-	Exp_list eli;
-	const Dictionary dict = sent->dict;
-
-	eli.exp_list = NULL;
-	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
-	x = NULL;
-	dn = dn_head;
-	while (dn != NULL)
-	{
-		y = (X_node *) xalloc(sizeof(X_node));
-		y->next = x;
-		x = y;
-		x->exp = copy_Exp(dn->exp);
-		if (NULL == s)
-		{
-			x->string = dn->string;
-		}
-		else
-		{
-			dyn_str *xs = dyn_str_new();
-			const char *sm = strrchr(dn->string, SUBSCRIPT_MARK);
-
-			dyn_strcat(xs, w->subword);
-			if (NULL != sm) dyn_strcat(xs, sm);
-			x->string = string_set_add(xs->str, sent->string_set);
-			dyn_str_delete(xs);
-		}
-		x->word = w;
-		dn = dn->right;
-	}
-	free_lookup_list (dict, dn_head);
-	free_Exp_list(&eli);
-	return x;
-}
 
 /**
  * Turn sentence expressions into disjuncts.

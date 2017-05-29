@@ -11,13 +11,14 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LINK_GRAMMAR_WORD_UTILS_H_
-#define _LINK_GRAMMAR_WORD_UTILS_H_
+#ifndef _LINK_GRAMMAR_CONNECTORS_H_
+#define _LINK_GRAMMAR_CONNECTORS_H_
 
+#include <ctype.h>   // for islower()
+#include <stdbool.h>
 #include <stdint.h>  // for unit8_t
 
 #include "api-types.h"
-#include "dict-common/dict-structures.h"  /* For Exp, Exp_list */
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.
@@ -191,4 +192,4 @@ static inline unsigned int pair_hash(unsigned int table_size,
 
 	return i & (table_size-1);
 }
-#endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */
+#endif /* _LINK_GRAMMAR_CONNECTORS_H_ */

@@ -1,25 +1,28 @@
 
 Directories
 ===========
+Listed in rough processing order.
 
- * corpus - contains code to read word-sense disambiguation
-            data from an SQL file.
+ * dict-common  - generic dictionary-handling code.
+ * dict-file    - read dictionaries from files.
+ * dict-sql     - read dictionaries from an SQL DB
+                  (unfinished, under development!).
 
- * dict-common - generic dictionary-handling code.
- * dict-file   - read dictionaries from files.
- * dict-sql    - read dictionaries from an SQL DB
-                 (unfinished, under development!).
+ * tokenize     - Convert sentence strings into word sequences.
+                  Actually, into a word-graph of possible words.
 
- * post-process - constraints added after parsing.
-                  Also, constituent-tree construction.
- * print        - functions that convert parses into
-                  human-readable strings and printed output.
+ * prepare      - After tokenization, prepare sentence for parsing.
 
  * minisat      - Copy of the mini-SAT Boolean-SAT solver.
  * sat-solver   - Parser, implemented on top of SAT
 
- * tokenize     - Convert sentence strings into word sequences.
-                  Actually, into a word-graph of possible words.
+ * post-process - constraints added after parsing.
+                  Also, constituent-tree construction.
+
+ * corpus       - word-sense disambiguation data from an SQL file.
+
+ * print        - functions that convert parses into
+                  human-readable strings and printed output.
 
 
 Version 5.3.14 - Improved error notification facility

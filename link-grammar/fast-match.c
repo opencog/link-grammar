@@ -12,13 +12,13 @@
 /**************************************************************************/
 
 #include "api-structures.h"  // For Sentence_s
+#include "connectors.h"
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "string-set.h"
 #include "tokenize/word-structures.h"  // For Word_struct
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
-#include "word-utils.h"
 
 /**
  * The entire goal of this file is provide a fast lookup of all of the

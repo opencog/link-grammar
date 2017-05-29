@@ -17,6 +17,7 @@
 
 #include "externs.h"
 #include "api-structures.h"
+#include "connectors.h"
 #include "corpus/corpus.h"
 #include "dict-common/dict-defines.h"  // For SUBSCRIPT_MARK
 #include "dict-common/dict-utils.h" // For size_of_expression()
@@ -27,7 +28,6 @@
 #include "string-set.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h" // for Word_struct
-#include "word-utils.h" // for Connector_s
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
@@ -775,21 +775,6 @@ void print_disjunct_counts(Sentence sent)
 	printf("\n\n");
 }
 
-void print_expression_sizes(Sentence sent)
-{
-	X_node * x;
-	size_t w, size;
-	for (w=0; w<sent->length; w++) {
-		size = 0;
-		for (x=sent->word[w].x; x!=NULL; x = x->next) {
-			size += size_of_expression(x->exp);
-		}
-		/* XXX alternatives[0] is not really correct, here .. */
-		printf("%s[%zu] ",sent->word[w].alternatives[0], size);
-	}
-	printf("\n\n");
-}
-
 static const char * trailer(bool print_ps_header)
 {
 	static const char * trailer_string=
@@ -1403,48 +1388,6 @@ void print_with_subscript_dot(const char *s)
 
 	prt_error("%.*s%s%s ", (int)len,
 			  s, NULL != mark ? "." : "", NULL != mark ? mark+1 : "");
-}
-
-/**
- *  Print linkage wordgraph path.
- */
-void print_lwg_path(Gword **w)
-{
-	lgdebug(+0, " ");
-	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
-	lgdebug(0, "\n");
-}
-
-/**
- *  Print the chosen_disjuncts words.
- *  This is used for debug, e.g. for tracking them in the Wordgraph display.
- */
-void print_chosen_disjuncts_words(const Linkage lkg)
-{
-	size_t i;
-	dyn_str *djwbuf = dyn_str_new();
-
-	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
-	for (i = 0; i < lkg->num_words; i++)
-	{
-		Disjunct *cdj = lkg->chosen_disjuncts[i];
-		const char *djw; /* disjunct word - the chosen word */
-
-		if (NULL == cdj)
-			djw = lkg->sent->word[i].optional ? "{}" : "[]";
-		else if ('\0' == cdj->string[0])
-			djw = "\\0"; /* null string - something is wrong */
-		else
-			djw = cdj->string;
-
-		char *djw_tmp = strdupa(djw);
-		char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
-		if (NULL != sm) *sm = SUBSCRIPT_DOT;
-
-		append_string(djwbuf, "%s ", djw_tmp);
-	}
-	err_msg(lg_Debug, "%s\n", djwbuf->str);
-	dyn_str_delete(djwbuf);
 }
 
 // Use for debug and error printing.

@@ -13,12 +13,12 @@
 
 #include <limits.h>  /* For UINT_MAX */
 
+#include "connectors.h"
 #include "count.h"
 #include "disjunct-utils.h" // for Disjunct
 #include "extract-links.h"
 #include "fast-match.h"
 #include "linkage.h"
-#include "word-utils.h"
 #include "tokenize/word-structures.h" // for Word_Struct
 
 typedef struct Parse_choice_struct Parse_choice;
@@ -46,10 +46,22 @@ struct Parse_set_struct
 	Parse_choice * tail;
 };
 
-struct X_table_connector_struct
+typedef struct Pset_bucket_struct Pset_bucket;
+struct Pset_bucket_struct
 {
 	Parse_set         set;
-	X_table_connector *next;
+	Pset_bucket *next;
+};
+
+struct extractor_s
+{
+	unsigned int   x_table_size;
+	unsigned int   log2_x_table_size;
+	Pset_bucket ** x_table;  /* Hash table */
+	Parse_set *    parse_set;
+
+	/* thread-safe random number state */
+	unsigned int rand_state;
 };
 
 /**
@@ -134,14 +146,14 @@ static void record_choice(
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-Parse_info parse_info_new(int nwords)
+extractor_t * extractor_new(int nwords, unsigned int ranstat)
 {
 	int log2_table_size;
-	Parse_info pi;
+	extractor_t * pex;
 
-	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
-	memset(pi, 0, sizeof(struct Parse_info_struct));
-	pi->N_words = nwords;
+	pex = (extractor_t *) xalloc(sizeof(extractor_t));
+	memset(pex, 0, sizeof(extractor_t));
+	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
 	if (nwords >= 10) {
@@ -151,14 +163,14 @@ Parse_info parse_info_new(int nwords)
 	} else {
 		log2_table_size = 4;
 	}
-	pi->log2_x_table_size = log2_table_size;
-	pi->x_table_size = (1 << log2_table_size);
+	pex->log2_x_table_size = log2_table_size;
+	pex->x_table_size = (1 << log2_table_size);
 
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
-	pi->x_table = (X_table_connector**) xalloc(pi->x_table_size * sizeof(X_table_connector*));
-	memset(pi->x_table, 0, pi->x_table_size * sizeof(X_table_connector*));
+	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
+	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
-	return pi;
+	return pex;
 }
 
 /**
@@ -166,40 +178,40 @@ Parse_info parse_info_new(int nwords)
  * it's a dag, a recursive free function won't work.  Every time we create
  * a set element, we put it in the hash table, so this is OK.
  */
-void free_parse_info(Parse_info pi)
+void free_extractor(extractor_t * pex)
 {
 	unsigned int i;
-	X_table_connector *t, *x;
-	if (!pi) return;
+	Pset_bucket *t, *x;
+	if (!pex) return;
 
-	for (i=0; i<pi->x_table_size; i++)
+	for (i=0; i<pex->x_table_size; i++)
 	{
-		for (t = pi->x_table[i]; t!= NULL; t=x)
+		for (t = pex->x_table[i]; t!= NULL; t=x)
 		{
 			x = t->next;
 			free_set(&t->set);
-			xfree((void *) t, sizeof(X_table_connector));
+			xfree((void *) t, sizeof(Pset_bucket));
 		}
 	}
-	pi->parse_set = NULL;
+	pex->parse_set = NULL;
 
 	/*printf("Freeing x_table of size %d\n", x_table_size);*/
-	xfree((void *) pi->x_table, pi->x_table_size * sizeof(X_table_connector*));
-	pi->x_table_size = 0;
-	pi->x_table = NULL;
+	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
+	pex->x_table_size = 0;
+	pex->x_table = NULL;
 
-	xfree((void *) pi, sizeof(struct Parse_info_struct));
+	xfree((void *) pex, sizeof(extractor_t));
 }
 
 /**
  * Returns the pointer to this info, NULL if not there.
  */
-static X_table_connector * x_table_pointer(int lw, int rw,
+static Pset_bucket * x_table_pointer(int lw, int rw,
                               Connector *le, Connector *re,
-                              unsigned int null_count, Parse_info pi)
+                              unsigned int null_count, extractor_t * pex)
 {
-	X_table_connector *t;
-	t = pi->x_table[pair_hash(pi->x_table_size, lw, rw, le, re, null_count)];
+	Pset_bucket *t;
+	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
 		if ((t->set.lw == lw) && (t->set.rw == rw) &&
 		    (t->set.le == le) && (t->set.re == re) &&
@@ -211,14 +223,14 @@ static X_table_connector * x_table_pointer(int lw, int rw,
 /**
  * Stores the value in the x_table.  Assumes it's not already there.
  */
-static X_table_connector * x_table_store(int lw, int rw,
+static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
-                                  unsigned int null_count, Parse_info pi)
+                                  unsigned int null_count, extractor_t * pex)
 {
-	X_table_connector *t, *n;
+	Pset_bucket *t, *n;
 	unsigned int h;
 
-	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
+	n = (Pset_bucket *) xalloc(sizeof(Pset_bucket));
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
@@ -228,22 +240,22 @@ static X_table_connector * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = pair_hash(pi->x_table_size, lw, rw, le, re, null_count);
-	t = pi->x_table[h];
+	h = pair_hash(pex->x_table_size, lw, rw, le, re, null_count);
+	t = pex->x_table[h];
 	n->next = t;
-	pi->x_table[h] = n;
+	pex->x_table[h] = n;
 	return n;
 }
 
 /** Create a bogus parse set that only holds lw, rw. */
 static Parse_set* dummy_set(int lw, int rw,
-                            unsigned int null_count, Parse_info pi)
+                            unsigned int null_count, extractor_t * pex)
 {
-	X_table_connector *dummy;
-	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pi);
+	Pset_bucket *dummy;
+	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pex);
 	if (dummy) return &dummy->set;
 
-	dummy = x_table_store(lw, rw, NULL, NULL, null_count, pi);
+	dummy = x_table_store(lw, rw, NULL, NULL, null_count, pex);
 	dummy->set.count = 1;
 	return &dummy->set;
 }
@@ -300,14 +312,14 @@ static Match_node* sort_matchlist(Match_node* mlist)
  * parse structures.
  */
 static
-Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
+Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
-                 bool islands_ok, Parse_info pi)
+                 extractor_t * pex, bool islands_ok)
 {
 	int start_word, end_word, w;
-	X_table_connector *xt;
+	Pset_bucket *xt;
 	Count_bin * count;
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
@@ -318,14 +330,14 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	if (NULL == count) return NULL;
 	if (hist_total(count) == 0) return NULL;
 
-	xt = x_table_pointer(lw, rw, le, re, null_count, pi);
+	xt = x_table_pointer(lw, rw, le, re, null_count, pex);
 
 	/* Perhaps we've already computed it; if so, return it. */
 	if (xt != NULL) return &xt->set;
 
 	/* Start it out with the empty set of parse choices. */
 	/* This entry must be updated before we return. */
-	xt = x_table_store(lw, rw, le, re, null_count, pi);
+	xt = x_table_store(lw, rw, le, re, null_count, pex);
 
 	/* The count we previously computed; its non-zero. */
 	xt->set.count = hist_total(count);
@@ -354,27 +366,27 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		RECOUNT({xt->set.recount = 0;})
 
 		w = lw + 1;
-		for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
+		for (dis = words[w].d; dis != NULL; dis = dis->next)
 		{
 			if (dis->left == NULL)
 			{
-				pset = mk_parse_set(sent, mchxt, ctxt,
+				pset = mk_parse_set(words, mchxt, ctxt,
 				                    dis, NULL, w, rw, dis->right, NULL,
-				                    null_count-1, islands_ok, pi);
+				                    null_count-1, pex, islands_ok);
 				if (pset == NULL) continue;
-				dummy = dummy_set(lw, w, null_count-1, pi);
+				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL, NULL,
 				              pset,  NULL, NULL,
 				              NULL, NULL, NULL, &xt->set);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
-		pset = mk_parse_set(sent, mchxt, ctxt,
+		pset = mk_parse_set(words, mchxt, ctxt,
 		                    NULL, NULL, w, rw, NULL, NULL,
-		                    null_count-1, islands_ok, pi);
+		                    null_count-1, pex, islands_ok);
 		if (pset != NULL)
 		{
-			dummy = dummy_set(lw, w, null_count-1, pi);
+			dummy = dummy_set(lw, w, null_count-1, pex);
 			record_choice(dummy, NULL, NULL,
 			              pset,  NULL, NULL,
 			              NULL, NULL, NULL, &xt->set);
@@ -435,46 +447,46 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				for (i=0; i<4; i++) { ls[i] = rs[i] = NULL; }
 				if (Lmatch)
 				{
-					ls[0] = mk_parse_set(sent, mchxt, ctxt,
+					ls[0] = mk_parse_set(words, mchxt, ctxt,
 					             ld, d, lw, w, le->next, d->left->next,
-					             lnull_count, islands_ok, pi);
+					             lnull_count, pex, islands_ok);
 
 					if (le->multi)
-						ls[1] = mk_parse_set(sent, mchxt, ctxt,
+						ls[1] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left->next,
-						              lnull_count, islands_ok, pi);
+						              lnull_count, pex, islands_ok);
 
 					if (d->left->multi)
-						ls[2] = mk_parse_set(sent, mchxt, ctxt,
+						ls[2] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le->next, d->left,
-						              lnull_count, islands_ok, pi);
+						              lnull_count, pex, islands_ok);
 
 					if (le->multi && d->left->multi)
-						ls[3] = mk_parse_set(sent, mchxt, ctxt,
+						ls[3] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left,
-						              lnull_count, islands_ok, pi);
+						              lnull_count, pex, islands_ok);
 				}
 
 				if (Rmatch)
 				{
-					rs[0] = mk_parse_set(sent, mchxt, ctxt,
+					rs[0] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right->next, re->next,
-					                 rnull_count, islands_ok, pi);
+					                 rnull_count, pex, islands_ok);
 
 					if (d->right->multi)
-						rs[1] = mk_parse_set(sent, mchxt, ctxt,
+						rs[1] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right, re->next,
-						              rnull_count, islands_ok, pi);
+						              rnull_count, pex, islands_ok);
 
 					if (re->multi)
-						rs[2] = mk_parse_set(sent, mchxt, ctxt,
+						rs[2] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right->next, re,
-						              rnull_count, islands_ok, pi);
+						              rnull_count, pex, islands_ok);
 
 					if (d->right->multi && re->multi)
-						rs[3] = mk_parse_set(sent, mchxt, ctxt,
+						rs[3] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right, re,
-						              rnull_count, islands_ok, pi);
+						              rnull_count, pex, islands_ok);
 				}
 
 				for (i=0; i<4; i++)
@@ -495,9 +507,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
 				{
 					/* Evaluate using the left match, but not the right */
-					Parse_set* rset = mk_parse_set(sent, mchxt, ctxt,
+					Parse_set* rset = mk_parse_set(words, mchxt, ctxt,
 					                        d, rd, w, rw, d->right, re,
-					                        rnull_count, islands_ok, pi);
+					                        rnull_count, pex, islands_ok);
 					if (rset != NULL)
 					{
 						for (i=0; i<4; i++)
@@ -517,9 +529,9 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 				{
 					/* Evaluate using the right match, but not the left */
-					Parse_set* lset = mk_parse_set(sent, mchxt, ctxt,
+					Parse_set* lset = mk_parse_set(words, mchxt, ctxt,
 					                        ld, d, lw, w, le, d->left,
-					                        lnull_count, islands_ok, pi);
+					                        lnull_count, pex, islands_ok);
 
 					if (lset != NULL)
 					{
@@ -561,15 +573,15 @@ static bool set_node_overflowed(Parse_set *set)
 	return false;
 }
 
-static bool set_overflowed(Parse_info pi)
+static bool set_overflowed(extractor_t * pex)
 {
 	unsigned int i;
 
-	assert(pi->x_table != NULL, "called set_overflowed with x_table==NULL");
-	for (i=0; i<pi->x_table_size; i++)
+	assert(pex->x_table != NULL, "called set_overflowed with x_table==NULL");
+	for (i=0; i<pex->x_table_size; i++)
 	{
-		X_table_connector *t;
-		for (t = pi->x_table[i]; t != NULL; t = t->next)
+		Pset_bucket *t;
+		for (t = pex->x_table[i]; t != NULL; t = t->next)
 		{
 			if (set_node_overflowed(&t->set)) return true;
 		}
@@ -592,17 +604,18 @@ static bool set_overflowed(Parse_info pi)
  * This routine returns TRUE iff an overflow occurred.
  */
 
-bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
+bool build_parse_set(extractor_t* pex, Sentence sent,
+                    fast_matcher_t *mchxt,
                     count_context_t *ctxt,
                     unsigned int null_count, Parse_Options opts)
 {
-	sent->parse_info->parse_set =
-		mk_parse_set(sent, mchxt, ctxt,
+	pex->parse_set =
+		mk_parse_set(sent->word, mchxt, ctxt,
 		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
-		             opts->islands_ok, sent->parse_info);
+		             pex, opts->islands_ok);
 
 
-	return set_overflowed(sent->parse_info);
+	return set_overflowed(pex);
 }
 
 // Cannot be static, also called by SAT-solver.
@@ -652,7 +665,7 @@ static void list_links(Linkage lkg, const Parse_set * set, int index)
 	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
-static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
+static void list_random_links(Linkage lkg, extractor_t * pex, const Parse_set * set)
 {
 	Parse_choice *pc;
 	int num_pc, new_index;
@@ -663,7 +676,7 @@ static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
 		num_pc++;
 	}
 
-	new_index = rand_r(&pi->rand_state) % num_pc;
+	new_index = rand_r(&pex->rand_state) % num_pc;
 
 	num_pc = 0;
 	for (pc = set->first; pc != NULL; pc = pc->next) {
@@ -673,8 +686,8 @@ static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
 
 	assert(pc != NULL, "Couldn't get a random parse choice");
 	issue_links_for_choice(lkg, pc);
-	list_random_links(lkg, pi, pc->set[0]);
-	list_random_links(lkg, pi, pc->set[1]);
+	list_random_links(lkg, pex, pc->set[0]);
+	list_random_links(lkg, pex, pc->set[1]);
 }
 
 /**
@@ -682,18 +695,18 @@ static void list_random_links(Linkage lkg, Parse_info pi, const Parse_set * set)
  * sentence.  For this to work, you must have already called parse, and
  * already built the whole_set.
  */
-void extract_links(Linkage lkg, Parse_info pi)
+void extract_links(extractor_t * pex, Linkage lkg)
 {
 	int index = lkg->lifo.index;
 	if (index < 0)
 	{
 		bool repeatable = false;
-		if (0 == pi->rand_state) repeatable = true;
-		if (repeatable) pi->rand_state = index;
-		list_random_links(lkg, pi, pi->parse_set);
-		if (repeatable) pi->rand_state = 0;
+		if (0 == pex->rand_state) repeatable = true;
+		if (repeatable) pex->rand_state = index;
+		list_random_links(lkg, pex, pex->parse_set);
+		if (repeatable) pex->rand_state = 0;
 	}
 	else {
-		list_links(lkg, pi->parse_set, index);
+		list_links(lkg, pex->parse_set, index);
 	}
 }

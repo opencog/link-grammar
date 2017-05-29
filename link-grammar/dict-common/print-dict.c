@@ -13,7 +13,6 @@
 
 #include <string.h>
 
-#include "build-disjuncts.h"
 #include "dict-common.h"
 #include "dict-defines.h"
 #include "print/print.h"
@@ -241,6 +240,54 @@ static void left_print_string(FILE * fp, const char * s, int w)
 }
 
 #define DJ_COL_WIDTH sizeof("                         ")
+
+/**
+ * Count the number of clauses (disjuncts) for the expression e.
+ * Should return the number of disjuncts that would be returned
+ * by build_disjunct().  This in turn should be equal to the number
+ * of clauses built by build_clause().
+ *
+ * Only one minor cheat here: we are ignoring the cost_cutoff, so
+ * this potentially over-counts if the cost_cutoff is set low.
+ */
+static unsigned int count_clause(Exp *e)
+{
+	unsigned int cnt = 0;
+	E_list * e_list;
+
+	assert(e != NULL, "count_clause called with null parameter");
+	if (e->type == AND_type)
+	{
+		/* multiplicative combinatorial explosion */
+		cnt = 1;
+		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+			cnt *= count_clause(e_list->e);
+	}
+	else if (e->type == OR_type)
+	{
+		/* Just additive */
+		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+			cnt += count_clause(e_list->e);
+	}
+	else if (e->type == CONNECTOR_type)
+	{
+		return 1;
+	}
+	else
+	{
+		assert(false, "an expression node with no type");
+	}
+
+	return cnt;
+}
+
+/**
+ * Count number of disjuncts given the dict node dn.
+ */
+static unsigned int count_disjunct_for_dict_node(Dict_node *dn)
+{
+	return (NULL == dn) ? 0 : count_clause(dn->exp);
+}
 
 /**
  * Display the number of disjuncts associated with this dict node

@@ -28,7 +28,6 @@ LINK_BEGIN_DECLS
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
 typedef struct Dict_node_struct Dict_node;
-typedef struct Exp_struct Exp;
 typedef struct Exp_list_s Exp_list;
 typedef struct E_list_struct E_list;
 typedef struct Regex_node_s Regex_node;

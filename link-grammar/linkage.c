@@ -14,27 +14,23 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "analyze-linkage.h"
 #include "api-structures.h"
-#include "dict-common/dict-common.h"
+#include "connectors.h"
+#include "dict-common/dict-common.h"  // for INFIX_MARK from dict.
 #include "dict-common/dict-defines.h" // for SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
 #include "disjuncts.h"
 #include "disjunct-utils.h"
-#include "externs.h"
 #include "extract-links.h"
 #include "link-includes.h"
 #include "linkage.h"
 #include "post-process/post-process.h" // needed only for exfree_domain_names
 #include "post-process/pp-structures.h" // needed only for pp_info_s
-#include "print/print.h"
-#include "print/print-util.h"
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h" // For Word_struct
-#include "word-utils.h"
 
 #define INFIX_MARK_L 1 /* INFIX_MARK is 1 character */
 #define STEM_MARK_L  1 /* stem mark is 1 character */
@@ -205,6 +201,39 @@ static void remap_linkages(Linkage lkg, const int *remap)
 
 	lkg->num_links = j;
 	/* Unused memory not freed - all of it will be freed in free_linkages(). */
+}
+
+/**
+ *  Print the chosen_disjuncts words.
+ *  This is used for debug, e.g. for tracking them in the Wordgraph display.
+ */
+static void print_chosen_disjuncts_words(const Linkage lkg)
+{
+	size_t i;
+	dyn_str *djwbuf = dyn_str_new();
+
+	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	for (i = 0; i < lkg->num_words; i++)
+	{
+		Disjunct *cdj = lkg->chosen_disjuncts[i];
+		const char *djw; /* disjunct word - the chosen word */
+
+		if (NULL == cdj)
+			djw = lkg->sent->word[i].optional ? "{}" : "[]";
+		else if ('\0' == cdj->string[0])
+			djw = "\\0"; /* null string - something is wrong */
+		else
+			djw = cdj->string;
+
+		char *djw_tmp = strdupa(djw);
+		char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
+		if (NULL != sm) *sm = SUBSCRIPT_DOT;
+
+		dyn_strcat(djwbuf, djw_tmp);
+		dyn_strcat(djwbuf, " ");
+	}
+	err_msg(lg_Debug, "%s\n", djwbuf->str);
+	dyn_str_delete(djwbuf);
 }
 
 /**

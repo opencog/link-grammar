@@ -18,7 +18,6 @@
 #include <limits.h>
 
 #include "anysplit.h"
-#include "dict-common/build-disjuncts.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // for MAX_WORD
@@ -35,7 +34,6 @@
 #include "utilities.h"
 #include "wordgraph.h"
 #include "word-structures.h"
-#include "word-utils.h"
 
 #define MAX_STRIP 10
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
@@ -2666,6 +2664,56 @@ static Word *word_new(Sentence sent)
 		sent->length++;
 
 		return &sent->word[len];
+}
+
+/**
+ * build_word_expressions() -- build list of expressions for a word.
+ *
+ * Looks up a word in the dictionary, fetching from it matching words and their
+ * expressions.  Returns NULL if it's not there.  If there, it builds the list
+ * of expressions for the word, and returns a pointer to it.
+ * The subword of Gword w is used for this lookup, unless the subword is
+ * explicitly given as parameter s. The subword of Gword w is always used as
+ * the base word for each expression, and its subscript is the one from the
+ * dictionary word of the expression.
+ */
+static X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
+{
+	Dict_node * dn, *dn_head;
+	X_node * x, * y;
+	Exp_list eli;
+	const Dictionary dict = sent->dict;
+
+	eli.exp_list = NULL;
+	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	x = NULL;
+	dn = dn_head;
+	while (dn != NULL)
+	{
+		y = (X_node *) xalloc(sizeof(X_node));
+		y->next = x;
+		x = y;
+		x->exp = copy_Exp(dn->exp);
+		if (NULL == s)
+		{
+			x->string = dn->string;
+		}
+		else
+		{
+			dyn_str *xs = dyn_str_new();
+			const char *sm = strrchr(dn->string, SUBSCRIPT_MARK);
+
+			dyn_strcat(xs, w->subword);
+			if (NULL != sm) dyn_strcat(xs, sm);
+			x->string = string_set_add(xs->str, sent->string_set);
+			dyn_str_delete(xs);
+		}
+		x->word = w;
+		dn = dn->right;
+	}
+	free_lookup_list (dict, dn_head);
+	free_Exp_list(&eli);
+	return x;
 }
 
 /**

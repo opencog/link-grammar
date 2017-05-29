@@ -29,7 +29,7 @@
 #include "fast-match.h"
 #include "linkage.h"
 #include "post-process/post-process.h"
-#include "preparation.h"
+#include "prepare/preparation.h"
 #include "print/print.h"
 #include "prune.h"
 #include "resources.h"
@@ -42,7 +42,6 @@
 #include "tokenize/tok-structures.h" // Needed for sane_linkae_morphism
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
 #include "utilities.h"
-#include "word-utils.h"
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
 static unsigned int global_rand_state = 0;
@@ -705,7 +704,6 @@ void sentence_delete(Sentence sent)
 	wordgraph_delete(sent);
 	word_queue_delete(sent);
 	string_set_delete(sent->string_set);
-	free_parse_info(sent->parse_info);
 	free_linkages(sent);
 	post_process_free(sent->postprocessor);
 	post_process_free(sent->constituent_pp);
@@ -1145,11 +1143,12 @@ static void free_sentence_disjuncts(Sentence sent)
 	}
 }
 
-static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
+static bool setup_linkages(Sentence sent, extractor_t* pex,
+                          fast_matcher_t* mchxt,
                           count_context_t* ctxt,
                           Parse_Options opts)
 {
-	bool overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	bool overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
 	if (overflowed && (1 < opts->verbosity))
@@ -1189,7 +1188,8 @@ static bool setup_linkages(Sentence sent, fast_matcher_t* mchxt,
  * This fills the linkage array with morphologically-acceptable
  * linakges.
  */
-static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
+static void process_linkages(Sentence sent, extractor_t* pex,
+                             bool overflowed, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
 
@@ -1197,8 +1197,6 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 	bool pick_randomly = overflowed ||
 	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
 
-	Parse_info pi = sent->parse_info;
-	pi->rand_state = sent->rand_state;
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
 
@@ -1233,10 +1231,10 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 
 		if (need_init)
 		{
-			partial_init_linkage(sent, lkg, pi->N_words);
+			partial_init_linkage(sent, lkg, sent->length);
 			need_init = false;
 		}
-		extract_links(lkg, pi);
+		extract_links(pex, lkg);
 		compute_link_names(lkg, sent->string_set);
 		remove_empty_words(lkg);
 
@@ -1251,9 +1249,9 @@ static void process_linkages(Sentence sent, bool overflowed, Parse_Options opts)
 		{
 			N_invalid_morphism ++;
 			lkg->num_links = 0;
-			lkg->num_words = pi->N_words;
+			lkg->num_words = sent->length;
 			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
-			memset(lkg->chosen_disjuncts, 0, pi->N_words * sizeof(Disjunct *));
+			memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
 		}
 	}
 
@@ -1319,15 +1317,6 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 			disjuncts_copy[i] = disjuncts_dup(sent->word[i].d);
 	}
 
-	/* A parse set may have been already been built for this sentence,
-	 * if it was previously parsed.  If so we free it up before
-	 * building another.  Huh ?? How could that happen? */
-#ifdef DEBUG
-	if (sent->parse_info) err_msg(lg_Debug, "XXX Freeing parse_info\n");
-#endif
-	free_parse_info(sent->parse_info);
-	sent->parse_info = parse_info_new(sent->length);
-
 	for (int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
 		Count_bin hist;
@@ -1382,8 +1371,11 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		bool ovfl = setup_linkages(sent, mchxt, ctxt, opts);
-		process_linkages(sent, ovfl, opts);
+		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
+		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
+		process_linkages(sent, pex, ovfl, opts);
+		free_extractor(pex);
+
 		post_process_lkgs(sent, opts);
 
 		if (sent->num_valid_linkages > 0) break;

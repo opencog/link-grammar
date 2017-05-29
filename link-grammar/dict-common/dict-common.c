@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "connectors.h"  // for connector_set_delete
 #include "dict-api.h"
 #include "dict-common.h"
 #include "dict-defines.h"
@@ -20,7 +21,6 @@
 #include "string-set.h"
 #include "tokenize/anysplit.h"
 #include "tokenize/spellcheck.h"
-#include "word-utils.h"
 
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"

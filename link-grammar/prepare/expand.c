@@ -15,10 +15,10 @@
  */
 
 #include "api-structures.h"
-#include "expand.h"
-#include "externs.h"
+#include "connectors.h"
+#include "dict-common/dict-structures.h" // for X_node_struct
 #include "disjunct-utils.h"
-#include "word-utils.h"
+#include "expand.h"
 #include "tokenize/word-structures.h" // For Word_struct
 #include "corpus/cluster.h"
 

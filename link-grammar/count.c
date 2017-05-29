@@ -14,13 +14,12 @@
 #include <limits.h>
 #include "link-includes.h"
 #include "api-structures.h"
+#include "connectors.h"
 #include "count.h"
 #include "disjunct-utils.h"
 #include "fast-match.h"
-#include "prune.h"
 #include "resources.h"
 #include "tokenize/word-structures.h" // for Word_struct
-#include "word-utils.h"
 
 /* This file contains the exhaustive search algorithm. */
 
@@ -506,27 +505,6 @@ Count_bin do_parse(Sentence sent,
 	ctxt->current_resources = NULL;
 	ctxt->checktimer = 0;
 	return hist;
-}
-
-void delete_unmarked_disjuncts(Sentence sent)
-{
-	size_t w;
-	Disjunct *d_head, *d, *dx;
-
-	for (w=0; w<sent->length; w++) {
-		d_head = NULL;
-		for (d=sent->word[w].d; d != NULL; d=dx) {
-			dx = d->next;
-			if (d->marked) {
-				d->next = d_head;
-				d_head = d;
-			} else {
-				d->next = NULL;
-				free_disjuncts(d);
-			}
-		}
-		sent->word[w].d = d_head;
-	}
 }
 
 /* sent_length is used only as a hint for the hash table size ... */

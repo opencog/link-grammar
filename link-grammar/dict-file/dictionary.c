@@ -11,8 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "tokenize/anysplit.h"
 #include "api-structures.h"
+#include "connectors.h"   // for connector_set_create()
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"  // For LEFT_WORD
@@ -24,9 +24,9 @@
 #include "read-dict.h"
 #include "read-regex.h"
 #include "dict-common/regex-morph.h"
-#include "tokenize/spellcheck.h"
+#include "tokenize/anysplit.h"        // Initialize anysplit here ...
+#include "tokenize/spellcheck.h"      // Initialize spellcheck here ...
 #include "string-set.h"
-#include "word-utils.h"   // for connector_set_create()
 #include "dict-sql/read-sql.h"  /* Temporary hack */
 
 

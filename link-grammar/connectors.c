@@ -17,8 +17,7 @@
 #include <math.h>
 
 #include "dict-common/dict-utils.h" // for size_of_expression()
-#include "string-set.h"
-#include "word-utils.h"
+#include "connectors.h"
 
 /**
  * free_connectors() -- free the list of connectors pointed to by e
