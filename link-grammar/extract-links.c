@@ -63,12 +63,6 @@ struct Parse_info_struct
 	unsigned int rand_state;
 };
 
-// XXX can we pass rand_state in the ctor, instead?
-void parse_info_set_rand_state(Parse_info pi, unsigned int r)
-{
-	pi->rand_state = r;
-}
-
 /**
  * The first thing we do is we build a data structure to represent the
  * result of the entire parse search.  There will be a set of nodes
@@ -151,13 +145,14 @@ static void record_choice(
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-Parse_info parse_info_new(int nwords)
+Parse_info parse_info_new(int nwords, unsigned int ranstat)
 {
 	int log2_table_size;
 	Parse_info pi;
 
 	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
 	memset(pi, 0, sizeof(struct Parse_info_struct));
+	pi->rand_state = ranstat;
 
 	/* Alloc the x_table */
 	if (nwords >= 10) {

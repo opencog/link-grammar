@@ -1371,8 +1371,7 @@ static void classic_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		Parse_info pi = parse_info_new(sent->length);
-		parse_info_set_rand_state(pi, sent->rand_state);
+		Parse_info pi = parse_info_new(sent->length, sent->rand_state);
 		bool ovfl = setup_linkages(sent, pi, mchxt, ctxt, opts);
 		process_linkages(sent, pi, ovfl, opts);
 		free_parse_info(pi);

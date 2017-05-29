@@ -16,10 +16,8 @@
 #include "api-structures.h"
 #include "link-includes.h"
 
-Parse_info parse_info_new(int nwords);
+Parse_info parse_info_new(int nwords, unsigned int rand_state);
 void free_parse_info(Parse_info);
-
-void parse_info_set_rand_state(Parse_info, unsigned int);
 
 bool build_parse_set(Sentence, Parse_info,
                      fast_matcher_t*, count_context_t*,
