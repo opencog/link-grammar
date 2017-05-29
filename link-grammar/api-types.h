@@ -10,29 +10,18 @@
 /*                                                                       */
 /*************************************************************************/
 
-/* This file is somewhat misnamed, as everything here defines the
- * link-private, internal-use-only "api", which is subject to change
- * from revision to revision. No external code should link to this
- * stuff.
+/* This file is somewhat misnamed, as everything here is private --
+ * these are the internal-use-only API objects interfacing between
+ * different subsystems.  They are all subject to change ithout notice.
+ * No external code should attempt to access this stuff.
  */
 
 #ifndef _API_TYPES_H_
 #define _API_TYPES_H_
 
-/* Links are *always* less than 10 chars long */
-#define MAX_LINK_NAME_LENGTH 10
-
-/* MAX_SENTENCE cannot be more than 65534, because word MAX_SENTENCE+1 is
- * used to indicate that nothing can connect to this connector, and this
- * should fit in two bytes (because the word field of a connector is an
- * unsigned short).
- */
-#define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
-
-/* Widely used private typedefs */
+/* Widely used typedefs */
 typedef struct Exp_struct Exp;
 typedef struct Connector_struct Connector;
-typedef struct Cost_Model_s Cost_Model;
 typedef struct Linkage_info_struct Linkage_info;
 typedef struct Postprocessor_s Postprocessor;
 typedef struct PP_info_s PP_info;

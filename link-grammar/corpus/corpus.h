@@ -15,8 +15,7 @@
 
 #ifdef USE_CORPUS
 
-#include "../api-types.h"
-#include "../utilities.h"
+#include "api-types.h"
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);

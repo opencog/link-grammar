@@ -23,6 +23,10 @@
 #include "linkage.h"
 #include "lisjuncts.h"
 
+/* Links are *always* less than 10 chars long . For now. The estimate
+ * below is somewhat dangerous .... could be  fixed. */
+#define MAX_LINK_NAME_LENGTH 10
+
 /**
  * Print connector list to string.
  * This reverses the order of the connectors in the connector list,
