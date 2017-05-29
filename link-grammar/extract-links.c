@@ -316,7 +316,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
-                 bool islands_ok, extractor_t * pex)
+                 extractor_t * pex, bool islands_ok)
 {
 	int start_word, end_word, w;
 	Pset_bucket *xt;
@@ -372,7 +372,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 			{
 				pset = mk_parse_set(sent, mchxt, ctxt,
 				                    dis, NULL, w, rw, dis->right, NULL,
-				                    null_count-1, islands_ok, pex);
+				                    null_count-1, pex, islands_ok);
 				if (pset == NULL) continue;
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL, NULL,
@@ -383,7 +383,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		}
 		pset = mk_parse_set(sent, mchxt, ctxt,
 		                    NULL, NULL, w, rw, NULL, NULL,
-		                    null_count-1, islands_ok, pex);
+		                    null_count-1, pex, islands_ok);
 		if (pset != NULL)
 		{
 			dummy = dummy_set(lw, w, null_count-1, pex);
@@ -449,44 +449,44 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				{
 					ls[0] = mk_parse_set(sent, mchxt, ctxt,
 					             ld, d, lw, w, le->next, d->left->next,
-					             lnull_count, islands_ok, pex);
+					             lnull_count, pex, islands_ok);
 
 					if (le->multi)
 						ls[1] = mk_parse_set(sent, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left->next,
-						              lnull_count, islands_ok, pex);
+						              lnull_count, pex, islands_ok);
 
 					if (d->left->multi)
 						ls[2] = mk_parse_set(sent, mchxt, ctxt,
 						              ld, d, lw, w, le->next, d->left,
-						              lnull_count, islands_ok, pex);
+						              lnull_count, pex, islands_ok);
 
 					if (le->multi && d->left->multi)
 						ls[3] = mk_parse_set(sent, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left,
-						              lnull_count, islands_ok, pex);
+						              lnull_count, pex, islands_ok);
 				}
 
 				if (Rmatch)
 				{
 					rs[0] = mk_parse_set(sent, mchxt, ctxt,
 					                 d, rd, w, rw, d->right->next, re->next,
-					                 rnull_count, islands_ok, pex);
+					                 rnull_count, pex, islands_ok);
 
 					if (d->right->multi)
 						rs[1] = mk_parse_set(sent, mchxt, ctxt,
 					                 d, rd, w, rw, d->right, re->next,
-						              rnull_count, islands_ok, pex);
+						              rnull_count, pex, islands_ok);
 
 					if (re->multi)
 						rs[2] = mk_parse_set(sent, mchxt, ctxt,
 						              d, rd, w, rw, d->right->next, re,
-						              rnull_count, islands_ok, pex);
+						              rnull_count, pex, islands_ok);
 
 					if (d->right->multi && re->multi)
 						rs[3] = mk_parse_set(sent, mchxt, ctxt,
 						              d, rd, w, rw, d->right, re,
-						              rnull_count, islands_ok, pex);
+						              rnull_count, pex, islands_ok);
 				}
 
 				for (i=0; i<4; i++)
@@ -509,7 +509,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					/* Evaluate using the left match, but not the right */
 					Parse_set* rset = mk_parse_set(sent, mchxt, ctxt,
 					                        d, rd, w, rw, d->right, re,
-					                        rnull_count, islands_ok, pex);
+					                        rnull_count, pex, islands_ok);
 					if (rset != NULL)
 					{
 						for (i=0; i<4; i++)
@@ -531,7 +531,7 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					/* Evaluate using the right match, but not the left */
 					Parse_set* lset = mk_parse_set(sent, mchxt, ctxt,
 					                        ld, d, lw, w, le, d->left,
-					                        lnull_count, islands_ok, pex);
+					                        lnull_count, pex, islands_ok);
 
 					if (lset != NULL)
 					{
@@ -612,7 +612,7 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 	pex->parse_set =
 		mk_parse_set(sent, mchxt, ctxt,
 		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
-		             opts->islands_ok, pex);
+		             pex, opts->islands_ok);
 
 
 	return set_overflowed(pex);
