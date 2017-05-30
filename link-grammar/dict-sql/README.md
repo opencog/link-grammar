@@ -15,12 +15,24 @@ automation interface.
 The current interface remains a hybrid: some of the data will remain
 in text files, until the system is more fully developed.
 
-Demo:
-=====
-Creating a dictionary:
-----------------------
-Copy the files in `data/demo-sql` to `data/foo`.
+Existing demo:
+--------------
+Run the existing demo:
+```
+    $ link-parser demo-sql
+```
+This can parse the following sentences: "this is a test", "this is
+another test", "this is a dog", "this is a cat".
 
-foo/dict.db
-
-link-parser demo-sql
+Creating a demo dictionary:
+---------------------------
+Use the following commands, modified as desired:
+```
+mkdir data/foo
+cp data/demo-sql/4.0.* data/foo
+cat dict.sql |sqlite3 data/foo/dict.db
+cat demo.sql |sqlite3 data/foo/dict.db
+link-parser foo
+```
+The above should result in a file that can parse the same sentences
+as the demo database.
