@@ -53,6 +53,8 @@ typedef enum {
 	AFDICT_REGALTS,
 	AFDICT_REGPARTS,
 
+	/* Have to have one last entry, to get the array size corrrect */
+	AFDICT_LAST_ENTRY,
 	AFDICT_NUM_ENTRIES
 } afdict_classnum;
 
