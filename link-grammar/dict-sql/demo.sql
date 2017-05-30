@@ -13,6 +13,19 @@
 --    cat demo.sql | sqlite3 dict.db
 --
 
+-- These first few lines identify the dictionary version number,
+-- and the locale that applies. The are optional but strongly
+-- recommended.  The locale is used, among other things, to identify
+-- capitalized words during tokenization.
+--
+INSERT INTO Morphemes VALUES ('<dictionary-version-number>', '<dictionary-version-number>', '<dictionary-version-number>');
+INSERT INTO Disjuncts VALUES ('<dictionary-version-number>', 'V5v4v0+', 0.0);
+
+INSERT INTO Morphemes VALUES ('<dictionary-locale>', '<dictionary-locale>', '<dictionary-locale>');
+INSERT INTO Disjuncts VALUES ('<dictionary-locale>', 'EN4us+', 0.0);
+
+-- The following should look familier, if you already understand
+-- link-grammar basics.
 INSERT INTO Morphemes VALUES ('LEFT-WALL', 'LEFT-WALL', 'LEFT-WALL');
 INSERT INTO Disjuncts VALUES ('LEFT-WALL', 'Wd+ & WV+', 0.0);
 

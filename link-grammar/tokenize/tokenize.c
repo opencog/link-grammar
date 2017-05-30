@@ -2571,7 +2571,6 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		int nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
 
-
 		while (is_space(c, dict->lctype))
 		{
 			word_start += nb;
