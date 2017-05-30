@@ -246,7 +246,7 @@ static int cmplen(const void *a, const void *b)
  * structure.).
  */
 #define D_AI 11
-static bool afdict_init(Dictionary dict)
+bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
 	Dictionary afdict = dict->affix_table;
@@ -460,7 +460,7 @@ dictionary_six_str(const char * lang,
 		/*
 		 * Affix dictionary.
 		 */
-		dictionary_afclass_init(dict);
+		afclass_init(dict);
 		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
 	}

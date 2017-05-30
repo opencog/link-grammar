@@ -346,8 +346,13 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup = db_lookup;
 	dict->close = db_close;
 
-	dictionary_afclass_init(dict);
-	dict->affix_table = NULL;
+	/* Setup the affix table */
+	dict->affix_table = (Dictionary) xalloc(sizeof(struct Dictionary_s));
+	memset(dict->affix_table, 0, sizeof(struct Dictionary_s));
+	dict->affix_table->string_set = string_set_create();
+
+	afclass_init(dict->affix_table);
+	afdict_init(dict);
 
 	dictionary_setup_locale(dict);
 

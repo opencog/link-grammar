@@ -8,4 +8,5 @@
 
 void dictionary_setup_locale(Dictionary dict);
 void dictionary_setup_defines(Dictionary dict);
-void dictionary_afclass_init(Dictionary dict);
+void afclass_init(Dictionary dict);
+bool afdict_init(Dictionary dict);

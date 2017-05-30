@@ -357,7 +357,7 @@ void dictionary_setup_defines(Dictionary dict)
 /* ======================================================================= */
 
 /** initialize the affix class table */
-void dictionary_afclass_init(Dictionary dict)
+void afclass_init(Dictionary dict)
 {
 	size_t i;
 
