@@ -15,12 +15,13 @@
 CREATE TABLE Morphemes
 (
 	-- For English, the 'morpheme' is the 'word'. A given morpheme
-	-- may appear mutiple times in this table.  This is the field that
+	-- may appear multiple times in this table.  This is the field that
 	-- the tokenizer uses to determine if a token is in the dictionary.
 	morpheme TEXT NOT NULL,
 
 	-- The subscripted form of the above.  The subscripted forms are
-	-- always unique for the dictionary.
+	-- always unique for the dictionary. They serve as a debugging,
+	-- unique identifier for the database.
 	subscript TEXT UNIQUE NOT NULL,
 
 	-- The classname is the set that the subscripted 'word' belongs to.

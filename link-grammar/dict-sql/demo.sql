@@ -13,6 +13,12 @@
 --    cat demo.sql | sqlite3 dict.db
 --
 
+INSERT INTO Morphemes VALUES ('<dictionary-version-number>', '<dictionary-version-number>', '<dictionary-version-number>');
+INSERT INTO Disjuncts VALUES ('<dictionary-version-number>', 'V5v4v0+', 0.0);
+
+INSERT INTO Morphemes VALUES ('<dictionary-locale>', '<dictionary-locale>', '<dictionary-locale>');
+INSERT INTO Disjuncts VALUES ('<dictionary-locale>', 'EN4us+', 0.0);
+
 INSERT INTO Morphemes VALUES ('LEFT-WALL', 'LEFT-WALL', 'LEFT-WALL');
 INSERT INTO Disjuncts VALUES ('LEFT-WALL', 'Wd+ & WV+', 0.0);
 
