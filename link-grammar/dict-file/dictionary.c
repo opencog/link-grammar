@@ -460,20 +460,9 @@ dictionary_six_str(const char * lang,
 		/*
 		 * Affix dictionary.
 		 */
-		size_t i;
-
+		dictionary_afclass_init(dict);
 		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
-
-		/* initialize the class table */
-		dict->afdict_class =
-		   malloc(sizeof(*dict->afdict_class) * ARRAY_SIZE(afdict_classname));
-		for (i = 0; i < ARRAY_SIZE(afdict_classname); i++)
-		{
-			dict->afdict_class[i].mem_elems = 0;
-			dict->afdict_class[i].length = 0;
-			dict->afdict_class[i].string = NULL;
-		}
 	}
 	dict->affix_table = NULL;
 

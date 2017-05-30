@@ -16,6 +16,7 @@
 #include "api-types.h"
 #include "connectors.h"
 #include "dict-api.h"
+#include "dict-common.h"
 #include "dict-defines.h"
 #include "dict-impl.h"
 #include "dict-structures.h"
@@ -351,6 +352,23 @@ void dictionary_setup_defines(Dictionary dict)
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
 
 	free_lookup(dict_node);
+}
+
+/* ======================================================================= */
+
+/** initialize the affix class table */
+void dictionary_afclass_init(Dictionary dict)
+{
+	size_t i;
+
+	dict->afdict_class =
+		malloc(sizeof(*dict->afdict_class) * AFDICT_NUM_ENTRIES);
+	for (i = 0; i < AFDICT_NUM_ENTRIES; i++)
+	{
+		dict->afdict_class[i].mem_elems = 0;
+		dict->afdict_class[i].length = 0;
+		dict->afdict_class[i].string = NULL;
+	}
 }
 
 /* ======================================================================= */

@@ -346,6 +346,9 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup = db_lookup;
 	dict->close = db_close;
 
+	dictionary_afclass_init(dict);
+	dict->affix_table = NULL;
+
 	dictionary_setup_locale(dict);
 
 	dictionary_setup_defines(dict);
