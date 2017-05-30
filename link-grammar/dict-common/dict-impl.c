@@ -23,7 +23,6 @@
 #include "dict-structures.h"
 #include "string-set.h"
 #include "utilities.h"
-#include "dict-file/read-dict.h" // XXXX
 
 /* ======================================================================= */
 
@@ -176,8 +175,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 	if (dict->locale) return dict->locale;
 
 	const char *locale;
-	// XXX dict->loo
-	Dict_node *dn = lookup_list(dict, "<dictionary-locale>");
+	Dict_node *dn = dict->lookup_list(dict, "<dictionary-locale>");
 
 	if (NULL == dn)
 	{
@@ -216,14 +214,14 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 		}
 	}
 
-	free_lookup(dn);
+	dict->free_lookup(dict, dn);
 	lgdebug(D_USER_FILES, "Debug: Dictionary locale: \"%s\"\n", locale);
 	dict->locale = locale;
 	return locale;
 
 locale_error:
 	{
-		free_lookup(dn);
+		dict->free_lookup(dict, dn);
 
 		const char *locale = get_default_locale();
 		if (NULL == locale) return NULL;
@@ -264,7 +262,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	 * which would indicate dictionary version 4.6.6
 	 * Older dictionaries contain no version info.
 	 */
-	dn = lookup_list(dict, "<dictionary-version-number>");
+	dn = dict->lookup_list(dict, "<dictionary-version-number>");
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;
@@ -276,7 +274,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 		p = strchr(p+1, 'v');
 	}
 
-	free_lookup(dn);
+	dict->free_lookup(dict, dn);
 	dict->version = string_set_add(ver, dict->string_set);
 	free(ver);
 	return dict->version;
@@ -352,7 +350,7 @@ void dictionary_setup_defines(Dictionary dict)
 	if (dict_node != NULL)
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
 
-	free_lookup(dict_node);
+	dict->free_lookup(dict, dict_node);
 }
 
 /* ======================================================================= */
