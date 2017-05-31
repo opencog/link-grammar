@@ -14,82 +14,125 @@
 #ifndef _LG_DICT_COMMON_H_
 #define  _LG_DICT_COMMON_H_
 
+#include "api-types.h" // for pp_knowledge
 #include "dict-structures.h"
+#include "utilities.h" // for locale_t
 
-/* The functions here are for link-grammar internal use only.
- * They are not part of the public API. */
+#define EMPTY_CONNECTOR "ZZZ"
+#define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
+
+/* Forward decls */
+typedef struct Afdict_class_struct Afdict_class;
+typedef struct Exp_list_s Exp_list;
+typedef struct Regex_node_s Regex_node;
+
+/* Used for memory management */
+struct Exp_list_s
+{
+	Exp * exp_list;
+};
+
+typedef struct X_node_struct X_node;
+struct X_node_struct
+{
+	const char * string;       /* the word itself */
+	Exp * exp;
+	X_node *next;
+	const Gword *word;         /* originating Wordgraph word */
+};
+
+/* The regexes are stored as a linked list of the following nodes. */
+struct Regex_node_s
+{
+	char *name;      /* The identifying name of the regex */
+	char *pattern;   /* The regular expression pattern */
+	bool neg;        /* Negate the match */
+	void *re;        /* The compiled regex. void * to avoid
+	                    having re library details invading the
+	                    rest of the LG system; regex-morph.c
+	                    takes care of all matching.
+	                  */
+	Regex_node *next;
+};
+
+struct Afdict_class_struct
+{
+	size_t mem_elems;     /* number of memory elements allocated */
+	size_t length;        /* number of strings */
+	char const ** string;
+};
+
+#define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
+
+struct Dictionary_s
+{
+	Dict_node *  root;
+	Regex_node * regex_root;
+	const char * name;
+	const char * lang;
+	const char * version;
+	const char * locale;    /* Locale name */
+	locale_t     lctype;    /* Locale argument for the *_l() functions */
+	int          num_entries;
+
+	bool         use_unknown_word;
+	bool         unknown_word_defined;
+	bool         left_wall_defined;
+	bool         right_wall_defined;
+	bool         shuffle_linkages;
+
+	/* Affixes are used during the tokenization stage. */
+	Dictionary      affix_table;
+	Afdict_class *  afdict_class;
+
+	/* Random morphology generator */
+	struct anysplit_params * anysplit;
+
+	/* If not null, then use spelling guesser for unknown words */
+	void *          spell_checker;     /* spell checker handle */
+#if USE_CORPUS
+	Corpus *        corpus;            /* Statistics database */
+#endif
+#ifdef HAVE_SQLITE
+	void *          db_handle;         /* database handle */
+#endif
+
+	void (*insert_entry)(Dictionary, Dict_node *, int);
+	Dict_node* (*lookup_list)(Dictionary, const char*);
+	void (*free_lookup)(Dictionary, Dict_node*);
+	bool (*lookup)(Dictionary, const char*);
+	void (*close)(Dictionary);
+
+	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
+	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
+	Connector_set * unlimited_connector_set; /* NULL=everything is unlimited */
+	String_set *    string_set;        /* Set of link names in the dictionary */
+	Word_file *     word_file_header;
+
+	/* exp_list links together all the Exp structs that are allocated
+	 * in reading this dictionary.  Needed for freeing the dictionary
+	 */
+	Exp_list        exp_list;
+
+	/* Private data elements that come in play only while the
+	 * dictionary is being read, and are not otherwise used.
+	 */
+	const char    * input;
+	const char    * pin;
+	bool            recursive_error;
+	bool            is_special;
+	char            already_got_it;
+	int             line_number;
+	char            token[MAX_TOKEN_LENGTH];
+};
+/* The functions here are intended for use by the tokenizer, only,
+ * and pretty much no one else. If you are not the tokenizer, you
+ * probably dont need these. */
 
 bool find_word_in_dict(Dictionary dict, const char *);
-Afdict_class * afdict_find(Dictionary, const char *, bool);
 
 Exp * Exp_create(Exp_list *);
 void add_empty_word(Dictionary const, X_node *);
 void free_Exp_list(Exp_list *);
-
-void patch_subscript(char *);
-
-bool is_suffix(const char, const char *);
-bool is_stem(const char *);
-
-/* Connector names for the affix class lists in the affix file */
-
-typedef enum {
-	AFDICT_RPUNC=1,
-	AFDICT_LPUNC,
-	AFDICT_UNITS,
-	AFDICT_SUF,
-	AFDICT_PRE,
-	AFDICT_MPRE,
-	AFDICT_QUOTES,
-	AFDICT_BULLETS,
-	AFDICT_INFIXMARK,
-	AFDICT_STEMSUBSCR,
-	AFDICT_SANEMORPHISM,
-
-	/* The below are used only for random morphology via regex */
-	AFDICT_REGPRE,
-	AFDICT_REGMID,
-	AFDICT_REGSUF,
-	AFDICT_REGALTS,
-	AFDICT_REGPARTS,
-
-	/* Have to have one last entry, to get the array size corrrect */
-	AFDICT_LAST_ENTRY,
-	AFDICT_NUM_ENTRIES
-} afdict_classnum;
-
-#define AFDICT_CLASSNAMES1 \
-	"invalid classname", \
-	"RPUNC", \
-	"LPUNC", \
-	"UNITS", \
-	"SUF",         /* SUF is used in the Russian dict */ \
-	"PRE",         /* PRE is not used anywhere, yet... */ \
-	"MPRE",        /* Multi-prefix, currently for Hebrew */ \
-	"QUOTES", \
-	"BULLETS", \
-	"INFIXMARK",   /* Prepended to suffixes, appended to pefixes */ \
-	"STEMSUBSCR",  /* Subscripts for stems */ \
-	"SANEMORPHISM", /* Regex for sane_morphism() */
-
-/* The regexes below are used only for random morphology generation */
-#define AFDICT_CLASSNAMES2 \
-	"REGPRE",      /* Regex for prefix */ \
-	"REGMID",      /* Regex for middle parts */ \
-	"REGSUF",      /* Regex for suffix */ \
-	"REGALTS",     /* Min&max number of alternatives to issue for a word */\
-	"REGPARTS",    /* Max number of word partitions */
-
-#define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2 "last classname"
-#define AFCLASS(afdict, class) (&afdict->afdict_class[class])
-
-/* Suffixes start with it.
- * This is needed to distinguish suffixes that were stripped off from
- * ordinary words that just happen to be the same as the suffix.
- * Kind-of a weird hack, but I'm not sure what else to do...
- * Similarly, prefixes end with it.
- */
-#define INFIX_MARK(afdict) \
-	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
 
 #endif /* _LG_DICT_COMMON_H_ */

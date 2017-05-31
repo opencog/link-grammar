@@ -16,7 +16,7 @@
 
 #include "api-structures.h"
 #include "connectors.h"
-#include "dict-common/dict-common.h"  // for INFIX_MARK from dict.
+#include "dict-common/dict-affix.h"  // for INFIX_MARK from dict.
 #include "dict-common/dict-defines.h" // for SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
 #include "disjunct-utils.h"

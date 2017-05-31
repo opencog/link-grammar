@@ -16,7 +16,7 @@
 
 #include "api-structures.h"
 #include "connectors.h"
-#include "dict-common/dict-structures.h" // for X_node_struct
+#include "dict-common/dict-common.h" // for X_node_struct
 #include "disjunct-utils.h"
 #include "expand.h"
 #include "tokenize/word-structures.h" // For Word_struct

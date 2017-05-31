@@ -7,6 +7,7 @@
 
 extern "C" {
 #include "connectors.h"
+#include "dict-common/dict-common.h"
 };
 
 #include "variables.hpp"

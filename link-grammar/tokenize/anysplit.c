@@ -29,6 +29,8 @@
 #include <externs.h>
 #include <time.h>
 
+#include "api-structures.h"
+#include "dict-common/dict-affix.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
 #include "dict-common/regex-morph.h"

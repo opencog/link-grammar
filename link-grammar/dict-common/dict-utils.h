@@ -14,7 +14,7 @@
 #ifndef _DICT_UTILS_H_
 #define _DICT_UTILS_H_
 
-#include "dict-structures.h"
+#include "dict-common.h"
 
 /* Exp utilities ... */
 void free_Exp(Exp *);

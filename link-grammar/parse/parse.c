@@ -15,7 +15,7 @@
 
 #include "api-structures.h"
 #include "count.h"
-#include "dict-common/dict-structures.h" // for Dictionary_s
+#include "dict-common/dict-common.h" // for Dictionary_s
 #include "disjunct-utils.h"
 #include "extract-links.h"
 #include "fast-match.h"
