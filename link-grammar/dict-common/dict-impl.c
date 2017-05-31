@@ -15,6 +15,7 @@
 
 #include "api-types.h"
 #include "connectors.h"
+#include "dict-affix.h"
 #include "dict-api.h"
 #include "dict-common.h"
 #include "dict-defines.h"

@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include "connectors.h"  // for connector_set_delete
+#include "dict-affix.h"
 #include "dict-api.h"
 #include "dict-common.h"
 #include "dict-defines.h"
@@ -36,27 +37,6 @@
 /* Affix type finding */
 
 /**
- * Return TRUE if the word is a suffix.
- *
- * Suffixes have the form =asdf.asdf or possibly just =asdf without
- * the dot (subscript mark). The "null" suffixes have the form
- * =.asdf (always with the subscript mark, as there are several).
- * Ordinary equals signs appearing in regular text are either = or =[!].
- */
-bool is_suffix(const char infix_mark, const char* w)
-{
-	if (infix_mark != w[0]) return false;
-	if (1 >= strlen(w)) return false;
-	if (0 == strncmp("[!", w+1, 2)) return false;
-#if SUBSCRIPT_MARK == '.'
-	/* Hmmm ... equals signs look like suffixes, but they are not ... */
-	if (0 == strcmp("=.v", w)) return false;
-	if (0 == strcmp("=.eq", w)) return false;
-#endif
-	return true;
-}
-
-/**
  * Return TRUE if the word seems to be in stem form.
  * Stems are signified by including = sign which is preceded by the subscript
  * mark.  Examples (. represented the subscript mark): word.= word.=[!]
@@ -69,28 +49,6 @@ bool is_stem(const char* w)
 	if (subscrmark == w) return false;
 	if (STEM_MARK != subscrmark[1]) return false;
 	return true;
-}
-
-/* ======================================================================== */
-/* Replace the right-most dot with SUBSCRIPT_MARK */
-void patch_subscript(char * s)
-{
-	char *ds, *de;
-	int dp;
-	ds = strrchr(s, SUBSCRIPT_DOT);
-	if (!ds) return;
-
-	/* a dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	de = ds + 1;
-	if (*de == '\0') return;
-	dp = (int) *de;
-
-	/* If its followed by a UTF8 char, its NOT a subscript */
-	if (127 < dp || dp < 0) return;
-	/* assert ((0 < dp) && (dp <= 127), "Bad dictionary entry!"); */
-	if (isdigit(dp)) return;
-	*ds = SUBSCRIPT_MARK;
 }
 
 /* ======================================================================== */

@@ -131,6 +131,7 @@ liblink_grammar_la_SOURCES =        \
 	api-structures.h                 \
 	api-types.h                      \
 	connectors.h                     \
+	dict-common/dict-affix.h         \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-defines.h       \

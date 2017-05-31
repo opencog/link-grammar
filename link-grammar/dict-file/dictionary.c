@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include "api-structures.h"
+#include "dict-common/dict-affix.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"  // For LEFT_WORD

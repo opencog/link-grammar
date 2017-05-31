@@ -13,6 +13,7 @@
 
 #include <string.h>
 
+#include "dict-common/dict-affix.h"   // For is_stem()
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
 #include "dict-common/file-utils.h"
