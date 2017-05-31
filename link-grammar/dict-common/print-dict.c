@@ -13,6 +13,7 @@
 
 #include <string.h>
 
+#include "api-structures.h" // for Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
 #include "dict-defines.h"
 #include "print/print.h"

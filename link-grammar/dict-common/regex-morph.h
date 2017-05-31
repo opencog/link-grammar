@@ -12,7 +12,7 @@
 #ifndef _REGEX_MORPH_H
 #define _REGEX_MORPH_H
 
-#include "api-structures.h"
+#include "dict-common.h"
 
 int compile_regexs(Regex_node *, Dictionary);
 const char *match_regex(const Regex_node *, const char *);

@@ -18,6 +18,7 @@
 #include <limits.h>
 
 #include "anysplit.h"
+#include "api-structures.h"
 #include "dict-common/dict-affix.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"

@@ -11,13 +11,12 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _STRUCTURES_H_
-#define _STRUCTURES_H_
+#ifndef _WORD_STRUCTURE_H_
+#define _WORD_STRUCTURE_H_
 
 #include "api-types.h"
 
 typedef struct X_node_struct X_node;
-
 /**
  * Word, as represented shortly after tokenization, but before parsing.
  *

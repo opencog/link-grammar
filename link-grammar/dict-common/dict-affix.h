@@ -12,7 +12,7 @@
 #ifndef _LG_DICT_AFFIX_H_
 #define  _LG_DICT_AFFIX_H_
 
-#include "dict-structures.h"
+#include "dict-common.h"
 
 /* The functions here are intended for use by the tokenizer, only,
  * and pretty much no one else. If you are not the tokenizer, you
