@@ -7,6 +7,7 @@ Version 5.4.0 (XXX 2017)
  * Remove three deprecated post-processing functions from API.
  * Major reorganization of code base into more modular directories.
  * Revive the sqlite3 dictionary into operational form.
+ * Add double-quotes to splittable punctuation for the "any" langauge.
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
