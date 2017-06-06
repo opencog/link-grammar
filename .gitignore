@@ -46,3 +46,4 @@ svn-commit.tmp*
 *.lo
 *.o
 ylwrap
+__init__.py
