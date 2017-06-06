@@ -14,6 +14,7 @@
 #ifdef USE_WORDGRAPH_DISPLAY
 #include <stdio.h>
 #include <errno.h>
+#include <stdint.h>
 #ifdef HAVE_FORK
 #include <unistd.h>    /* fork() and execl() */
 #include <sys/wait.h>  /* waitpid() */
@@ -965,12 +966,13 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	bool generate_gvfile = test_enabled("gvfile"); /* keep it for debug */
 	char *wgds;
 	bool gvfile = false;
-	unsigned int mode = 0;
+	uint32_t mode = 0;
 	const char *mp;
 
-	/* No check is done for correct flags - at most "mode" will be nonsense. */
-	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++) mode |= 1<<(*mp-'a');
-	/* test=wg: sets the mode to ":" (0x2000000) and thus no flags are set. */
+	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++)
+	{
+		if ((*mp >= 'a') && (*mp <= 'z')) mode |= 1<<(*mp-'a');
+	}
 	if ((0 == mode) || (WGR_X11 == mode))
 		mode |= WGR_LEGEND|WGR_DBGLABEL|WGR_UNSPLIT;
 
