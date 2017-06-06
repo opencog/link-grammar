@@ -18,8 +18,6 @@
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")  /* the string to use to show the wall */
 #define RIGHT_WALL_DISPLAY ("RIGHT-WALL") /* the string to use to show the wall */
 
-typedef struct String_s String;
-
 void   print_disjunct_counts(Sentence sent);
 struct tokenpos;
 void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
