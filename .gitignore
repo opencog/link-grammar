@@ -45,3 +45,6 @@ svn-commit.tmp*
 *.la
 *.lo
 *.o
+ylwrap
+pp_lexer.c
+__init__.py

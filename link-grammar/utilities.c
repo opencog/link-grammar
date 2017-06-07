@@ -440,6 +440,11 @@ void dyn_strcat(dyn_str* ds, const char *str)
 	ds->end += l;
 }
 
+const char * dyn_str_value(dyn_str* s)
+{
+	return s->str;
+}
+
 /* ======================================================== */
 /* Locale routines */
 

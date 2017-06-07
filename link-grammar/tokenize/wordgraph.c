@@ -14,6 +14,7 @@
 #ifdef USE_WORDGRAPH_DISPLAY
 #include <stdio.h>
 #include <errno.h>
+#include <stdint.h>
 #ifdef HAVE_FORK
 #include <unistd.h>    /* fork() and execl() */
 #include <sys/wait.h>  /* waitpid() */
@@ -22,6 +23,10 @@
 #include <sys/prctl.h> /* prctl() */
 #endif
 #include <signal.h>    /* SIG* */
+
+#include <dict-common/dict-defines.h>  /* for SUBSCRIPT_MARK */
+#include <print/print-util.h> /* for append_string */
+#include <utilities.h> /* for dyn_str functions */
 #endif /* USE_WORDGRAPH_DISPLAY */
 
 #include "api-structures.h"
@@ -456,10 +461,12 @@ const char *gword_status(Sentence sent, const Gword *w)
 	if (w->status & WS_PL)
 		dyn_strcat(s, "PL|");
 
-	len = strlen(s->str);
-	if (len > 0) s->str[len-1] = '\0';
-	r = string_set_add(s->str, sent->string_set);
-	dyn_str_delete(s);
+
+	char *status_str = dyn_str_take(s);
+	len = strlen(status_str);
+	if (len > 0) status_str[len-1] = '\0'; /* ditch the last '|' */
+	r = string_set_add(status_str, sent->string_set);
+	free(status_str);
 	return r;
 }
 
@@ -529,7 +536,7 @@ GNUC_UNUSED const char *gword_morpheme(Sentence sent, const Gword *w)
 #if USE_WORDGRAPH_DISPLAY
 /* === Wordgraph graphical representation === */
 
-static void wordgraph_legend(String *wgd, unsigned int mode)
+static void wordgraph_legend(dyn_str *wgd, unsigned int mode)
 {
 	size_t i;
 	static char const *wst[] = {
@@ -609,19 +616,20 @@ static const char *wlabel(Sentence sent, const Gword *w)
 		}
 	}
 
-	s = string_set_add(l->str, sent->string_set);
-	dyn_str_delete(l);
+	char *label_str = dyn_str_take(l);
+	s = string_set_add(label_str, sent->string_set);
+	free(label_str);
 	return s;
 }
 
 /**
  *  Generate the wordgraph in dot(1) format, for debug.
  */
-static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modestr)
+static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *modestr)
 {
 	const Gword *w;
 	Gword	**wp;
-	String *wgd = string_new(); /* the wordgraph in dot representation */
+	dyn_str *wgd = dyn_str_new(); /* the wordgraph in dot representation */
 	char nn[2*sizeof(char *) + 2 + 2 + 1]; /* \"%p\" node name: "0x..."+NUL*/
 
 	append_string(wgd, "# Mode: %s\n", modestr);
@@ -748,7 +756,7 @@ static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modes
 					old_unsplit = w->unsplit_word;
 				}
 				snprintf(nn, sizeof(nn), "\"%p\"", w);
-				if (strstr(string_value(wgd), nn))
+				if (strstr(dyn_str_value(wgd), nn))
 					append_string(wgd, "\"%p\"; ", w);
 			}
 		}
@@ -765,7 +773,7 @@ static String *wordgraph2dot(Sentence sent, unsigned int mode, const char *modes
 		{
 			snprintf(nn, sizeof(nn), "\"%p\"", w);
 			if ((w->unsplit_word == sent->wordgraph) &&
-			    ((mode & WGR_UNSPLIT) || strstr(string_value(wgd), nn)))
+			    ((mode & WGR_UNSPLIT) || strstr(dyn_str_value(wgd), nn)))
 			{
 				append_string(wgd, "%s; ", nn);
 			}
@@ -953,23 +961,23 @@ static void wordgraph_unlink_xtmpfile(void)
  */
 void wordgraph_show(Sentence sent, const char *modestr)
 {
-	String *wgd;
+	dyn_str *wgd;
 	char *gvf_name = NULL;
 	bool generate_gvfile = test_enabled("gvfile"); /* keep it for debug */
 	char *wgds;
 	bool gvfile = false;
-	unsigned int mode = 0;
+	uint32_t mode = 0;
 	const char *mp;
 
-	/* No check is done for correct flags - at most "mode" will be nonsense. */
-	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++) mode |= 1<<(*mp-'a');
-	/* test=wg: sets the mode to ":" (0x2000000) and thus no flags are set. */
+	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++)
+	{
+		if ((*mp >= 'a') && (*mp <= 'z')) mode |= 1<<(*mp-'a');
+	}
 	if ((0 == mode) || (WGR_X11 == mode))
 		mode |= WGR_LEGEND|WGR_DBGLABEL|WGR_UNSPLIT;
 
 	wgd = wordgraph2dot(sent, mode, modestr);
-	wgds = string_copy(wgd);
-	string_delete(wgd);
+	wgds = dyn_str_take(wgd);
 
 #if defined(HAVE_FORK) && !defined(POPEN_DOT)
 	gvfile = true;

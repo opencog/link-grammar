@@ -452,6 +452,7 @@ dyn_str* dyn_str_new(void);
 void dyn_str_delete(dyn_str*);
 void dyn_strcat(dyn_str*, const char*);
 char * dyn_str_take(dyn_str*);
+const char * dyn_str_value(dyn_str*);
 
 size_t altlen(const char **);
 
