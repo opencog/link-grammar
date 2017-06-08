@@ -443,9 +443,9 @@ char *safe_strdup(const char *u);
 /* Simple, cheap, easy dynamic string. */
 typedef struct
 {
-  char *str;
-  size_t end;
-  size_t len;
+	char *str;
+	size_t end;
+	size_t len;
 } dyn_str;
 
 dyn_str* dyn_str_new(void);
@@ -483,9 +483,9 @@ bool try_locale(const char *);
  */
 static inline unsigned int next_power_of_two_up(unsigned int i)
 {
-   unsigned int j=1;
-   while (j<i) j <<= 1;
-   return j;
+	unsigned int j=1;
+	while (j<i) j <<= 1;
+	return j;
 }
 
 #endif /* _LINK_GRAMMAR_UTILITIES_H_ */
