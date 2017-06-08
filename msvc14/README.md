@@ -75,17 +75,16 @@ dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_r
 
 ### Definitions for Python bindings
 
-   |   |
+ Macro | Default value |
 ---|---|
-PYTHON2         | The default is: C:\Python27 |
-PYTHON2_INCLUDE | The default is: $(PYTHON2)\include |
-PYTHON2_LIB     | The default is: $(PYTHON2)\lib |
-PYTHON2_EXE     | The default is: $(PYTHON2)\python.exe |
-               |  |
-PYTHON3         | The default is: C:\Python34 |
-PYTHON3_INCLUDE | The default is: $(PYTHON3)\include |
-PYTHON3_LIB     | The default is: $(PYTHON3)\lib |
-PYTHON3_EXE     | The default is: $(PYTHON3)\python.exe |
+PYTHON2         | C:\Python27 |
+PYTHON2_INCLUDE | $(PYTHON2)\include |
+PYTHON2_LIB     | $(PYTHON2)\lib |
+PYTHON2_EXE     | $(PYTHON2)\python.exe |
+PYTHON3         | C:\Python34 |
+PYTHON3_INCLUDE | $(PYTHON3)\include |
+PYTHON3_LIB     | $(PYTHON3)\lib |
+PYTHON3_EXE     | $(PYTHON3)\python.exe |
 
 If you want to build any of the bindings, make sure it is marked for build
 in the configuration manager, or select "build" for the desired bindings in
