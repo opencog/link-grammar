@@ -12,6 +12,7 @@
     <PYTHON3_INCLUDE>$(PYTHON3)\include</PYTHON3_INCLUDE>
     <PYTHON3_LIB>$(PYTHON3)\libs\python34.lib</PYTHON3_LIB>
     <PYTHON3_EXE>$(PYTHON3)\python.exe</PYTHON3_EXE>
+    <WINFLEXBISON>C:\win_flex_bison</WINFLEXBISON>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(GNUREGEX)' != '' " />
   <ItemDefinitionGroup>
@@ -50,6 +51,9 @@
     </BuildMacro>
     <BuildMacro Include="PYTHON3_EXE">
       <Value>$(PYTHON3_EXE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="WINFLEXBISON">
+      <Value>$(WINFLEXBISON)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
