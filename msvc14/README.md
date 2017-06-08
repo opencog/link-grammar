@@ -67,6 +67,12 @@ dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_r
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
 
+- WINFLEXBISON should be the directory of the "Win flex-bison" project,
+  as downloaded from its [Web site](https://winflexbison.sourceforge.io/).
+  Tested with version 2.5.9.
+  Leave it blank if would like to use a ready **pp_lexer.c** file.
+  The default is **C:\win_flex_bison**.
+
 ### Definitions for Python bindings
 
    |   |
