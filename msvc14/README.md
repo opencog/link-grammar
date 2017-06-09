@@ -67,19 +67,24 @@ dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_r
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
 
+- WINFLEXBISON should be the directory of the "Win flex-bison" project,
+  as downloaded from its [Web site](https://winflexbison.sourceforge.io/).
+  Tested with version 2.5.9.
+  Leave it blank if would like to use a ready **pp_lexer.c** file.
+  The default is **C:\win_flex_bison**.
+
 ### Definitions for Python bindings
 
-   |   |
+ Macro | Default value |
 ---|---|
-PYTHON2         | The default is: C:\Python27 |
-PYTHON2_INCLUDE | The default is: $(PYTHON2)\include |
-PYTHON2_LIB     | The default is: $(PYTHON2)\lib |
-PYTHON2_EXE     | The default is: $(PYTHON2)\python.exe |
-               |  |
-PYTHON3         | The default is: C:\Python34 |
-PYTHON3_INCLUDE | The default is: $(PYTHON3)\include |
-PYTHON3_LIB     | The default is: $(PYTHON3)\lib |
-PYTHON3_EXE     | The default is: $(PYTHON3)\python.exe |
+PYTHON2         | C:\Python27 |
+PYTHON2_INCLUDE | $(PYTHON2)\include |
+PYTHON2_LIB     | $(PYTHON2)\lib |
+PYTHON2_EXE     | $(PYTHON2)\python.exe |
+PYTHON3         | C:\Python34 |
+PYTHON3_INCLUDE | $(PYTHON3)\include |
+PYTHON3_LIB     | $(PYTHON3)\lib |
+PYTHON3_EXE     | $(PYTHON3)\python.exe |
 
 If you want to build any of the bindings, make sure it is marked for build
 in the configuration manager, or select "build" for the desired bindings in

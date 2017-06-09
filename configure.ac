@@ -57,7 +57,7 @@ AC_LANG([C])
 
 AC_C_CONST
 
-AC_CHECK_FUNCS(strndup)
+AC_CHECK_FUNCS(strndup strtok_r)
 
 AC_FUNC_ALLOCA
 

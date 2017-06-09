@@ -42,8 +42,6 @@
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="Local.props" />
     <Import Project="LGlib-features.props" />
@@ -68,28 +66,35 @@
     <Import Project="MSVC-common.props" />
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" Condition="'$(WINFLEXBISON)'!=''">
+    <Import Project="$(WINFLEXBISON)\custom_build_rules\win_flex_only\win_flex_custom_build.props" />
+  </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>link-grammar-x86</TargetName>
     <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
     <CustomBuildBeforeTargets>ClCompile</CustomBuildBeforeTargets>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <ExecutablePath>$(WINFLEXBISON);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>link-grammar-x64</TargetName>
     <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
     <CustomBuildBeforeTargets>ClCompile</CustomBuildBeforeTargets>
+    <ExecutablePath>$(WINFLEXBISON);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>link-grammar-x86</TargetName>
     <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
     <CustomBuildBeforeTargets>ClCompile</CustomBuildBeforeTargets>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <ExecutablePath>$(WINFLEXBISON);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>link-grammar-x64</TargetName>
     <IntDir>Temp\$(ProjectName)$(Platform)$(Configuration)\</IntDir>
     <CustomBuildBeforeTargets>ClCompile</CustomBuildBeforeTargets>
+    <ExecutablePath>$(WINFLEXBISON);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,6 +125,9 @@
       <Inputs>
       </Inputs>
     </CustomBuildStep>
+    <Flex>
+      <OutputFile>%(Filename).c</OutputFile>
+    </Flex>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -151,6 +159,9 @@
       <Inputs>
       </Inputs>
     </CustomBuildStep>
+    <Flex>
+      <OutputFile>%(Filename).c</OutputFile>
+    </Flex>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -182,6 +193,9 @@
       <Inputs>
       </Inputs>
     </CustomBuildStep>
+    <Flex>
+      <OutputFile>%(Filename).c</OutputFile>
+    </Flex>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -213,93 +227,117 @@
       <Inputs>
       </Inputs>
     </CustomBuildStep>
+    <Flex>
+      <OutputFile>%(Filename).c</OutputFile>
+    </Flex>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\link-grammar\analyze-linkage.h" />
-    <ClInclude Include="..\link-grammar\anysplit.h" />
     <ClInclude Include="..\link-grammar\api-structures.h" />
     <ClInclude Include="..\link-grammar\api-types.h" />
     <ClInclude Include="..\link-grammar\build-disjuncts.h" />
-    <ClInclude Include="..\link-grammar\count.h" />
-    <ClInclude Include="..\link-grammar\dict-api.h" />
-    <ClInclude Include="..\link-grammar\dict-common.h" />
+    <ClInclude Include="..\link-grammar\connectors.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-affix.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-api.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-common.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-defines.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-impl.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-structures.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dict-utils.h" />
+    <ClInclude Include="..\link-grammar\dict-common\file-utils.h" />
+    <ClInclude Include="..\link-grammar\dict-common\idiom.h" />
+    <ClInclude Include="..\link-grammar\dict-common\regex-morph.h" />
     <ClInclude Include="..\link-grammar\dict-file\read-dict.h" />
     <ClInclude Include="..\link-grammar\dict-file\read-regex.h" />
     <ClInclude Include="..\link-grammar\dict-file\word-file.h" />
-    <ClInclude Include="..\link-grammar\dict-structures.h" />
     <ClInclude Include="..\link-grammar\disjunct-utils.h" />
     <ClInclude Include="..\link-grammar\disjuncts.h" />
     <ClInclude Include="..\link-grammar\error.h" />
     <ClInclude Include="..\link-grammar\expand.h" />
     <ClInclude Include="..\link-grammar\externs.h" />
-    <ClInclude Include="..\link-grammar\extract-links.h" />
-    <ClInclude Include="..\link-grammar\fast-match.h" />
     <ClInclude Include="..\link-grammar\idiom.h" />
     <ClInclude Include="..\link-grammar\lg_assert.h" />
     <ClInclude Include="..\link-grammar\link-features.h" />
     <ClInclude Include="..\link-grammar\link-includes.h" />
-    <ClInclude Include="..\link-grammar\linkage.h" />
-    <ClInclude Include="..\link-grammar\post-process.h" />
-    <ClInclude Include="..\link-grammar\pp_knowledge.h" />
-    <ClInclude Include="..\link-grammar\pp_lexer.h" />
-    <ClInclude Include="..\link-grammar\pp_linkset.h" />
-    <ClInclude Include="..\link-grammar\preparation.h" />
-    <ClInclude Include="..\link-grammar\print-util.h" />
-    <ClInclude Include="..\link-grammar\print.h" />
-    <ClInclude Include="..\link-grammar\prune.h" />
-    <ClInclude Include="..\link-grammar\regex-morph.h" />
-    <ClInclude Include="..\link-grammar\regex-tokenizer.h" />
+    <ClInclude Include="..\link-grammar\linkage\analyze-linkage.h" />
+    <ClInclude Include="..\link-grammar\linkage\linkage.h" />
+    <ClInclude Include="..\link-grammar\linkage\lisjuncts.h" />
+    <ClInclude Include="..\link-grammar\linkage\sane.h" />
+    <ClInclude Include="..\link-grammar\linkage\score.h" />
+    <ClInclude Include="..\link-grammar\parse\count.h" />
+    <ClInclude Include="..\link-grammar\parse\extract-links.h" />
+    <ClInclude Include="..\link-grammar\parse\fast-match.h" />
+    <ClInclude Include="..\link-grammar\parse\histogram.h" />
+    <ClInclude Include="..\link-grammar\parse\parse.h" />
+    <ClInclude Include="..\link-grammar\parse\preparation.h" />
+    <ClInclude Include="..\link-grammar\parse\prune.h" />
+    <ClInclude Include="..\link-grammar\post-process\post-process.h" />
+    <ClInclude Include="..\link-grammar\post-process\pp_knowledge.h" />
+    <ClInclude Include="..\link-grammar\post-process\pp_lexer.h" />
+    <ClInclude Include="..\link-grammar\post-process\pp_linkset.h" />
+    <ClInclude Include="..\link-grammar\print\print-util.h" />
+    <ClInclude Include="..\link-grammar\print\print.h" />
     <ClInclude Include="..\link-grammar\resources.h" />
-    <ClInclude Include="..\link-grammar\score.h" />
-    <ClInclude Include="..\link-grammar\spellcheck.h" />
     <ClInclude Include="..\link-grammar\string-set.h" />
     <ClInclude Include="..\link-grammar\structures.h" />
-    <ClInclude Include="..\link-grammar\tokenize.h" />
+    <ClInclude Include="..\link-grammar\tokenize\anysplit.h" />
+    <ClInclude Include="..\link-grammar\tokenize\regex-tokenizer.h" />
+    <ClInclude Include="..\link-grammar\tokenize\spellcheck.h" />
+    <ClInclude Include="..\link-grammar\tokenize\tok-structures.h" />
+    <ClInclude Include="..\link-grammar\tokenize\tokenize.h" />
+    <ClInclude Include="..\link-grammar\tokenize\wordgraph.h" />
     <ClInclude Include="..\link-grammar\utilities.h" />
     <ClInclude Include="..\link-grammar\wcwidth.h" />
     <ClInclude Include="..\link-grammar\word-utils.h" />
-    <ClInclude Include="..\link-grammar\wordgraph.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\link-grammar\analyze-linkage.c" />
-    <ClCompile Include="..\link-grammar\anysplit.c" />
     <ClCompile Include="..\link-grammar\api.c" />
-    <ClCompile Include="..\link-grammar\build-disjuncts.c" />
-    <ClCompile Include="..\link-grammar\constituents.c" />
-    <ClCompile Include="..\link-grammar\count.c" />
-    <ClCompile Include="..\link-grammar\dict-common.c" />
+    <ClCompile Include="..\link-grammar\connectors.c" />
+    <ClCompile Include="..\link-grammar\dict-common\dict-common.c" />
+    <ClCompile Include="..\link-grammar\dict-common\dict-impl.c" />
+    <ClCompile Include="..\link-grammar\dict-common\dict-utils.c" />
+    <ClCompile Include="..\link-grammar\dict-common\file-utils.c" />
+    <ClCompile Include="..\link-grammar\dict-common\idiom.c" />
+    <ClCompile Include="..\link-grammar\dict-common\print-dict.c" />
+    <ClCompile Include="..\link-grammar\dict-common\regex-morph.c" />
     <ClCompile Include="..\link-grammar\dict-file\dictionary.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-dict.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-regex.c" />
     <ClCompile Include="..\link-grammar\dict-file\word-file.c" />
     <ClCompile Include="..\link-grammar\disjunct-utils.c" />
-    <ClCompile Include="..\link-grammar\disjuncts.c" />
     <ClCompile Include="..\link-grammar\error.c" />
-    <ClCompile Include="..\link-grammar\expand.c" />
-    <ClCompile Include="..\link-grammar\extract-links.c" />
-    <ClCompile Include="..\link-grammar\fast-match.c" />
-    <ClCompile Include="..\link-grammar\idiom.c" />
-    <ClCompile Include="..\link-grammar\linkage.c" />
-    <ClCompile Include="..\link-grammar\post-process.c" />
-    <ClCompile Include="..\link-grammar\pp_knowledge.c" />
-    <ClCompile Include="..\link-grammar\pp_lexer.c" />
-    <ClCompile Include="..\link-grammar\pp_linkset.c" />
-    <ClCompile Include="..\link-grammar\preparation.c" />
-    <ClCompile Include="..\link-grammar\print-util.c" />
-    <ClCompile Include="..\link-grammar\print.c" />
-    <ClCompile Include="..\link-grammar\prune.c" />
-    <ClCompile Include="..\link-grammar\regex-morph.c" />
-    <ClCompile Include="..\link-grammar\regex-tokenizer.c" />
+    <ClCompile Include="..\link-grammar\linkage\analyze-linkage.c" />
+    <ClCompile Include="..\link-grammar\linkage\freeli.c" />
+    <ClCompile Include="..\link-grammar\linkage\linkage.c" />
+    <ClCompile Include="..\link-grammar\linkage\lisjuncts.c" />
+    <ClCompile Include="..\link-grammar\linkage\sane.c" />
+    <ClCompile Include="..\link-grammar\linkage\score.c" />
+    <ClCompile Include="..\link-grammar\parse\count.c" />
+    <ClCompile Include="..\link-grammar\parse\extract-links.c" />
+    <ClCompile Include="..\link-grammar\parse\fast-match.c" />
+    <ClCompile Include="..\link-grammar\parse\histogram.c" />
+    <ClCompile Include="..\link-grammar\parse\parse.c" />
+    <ClCompile Include="..\link-grammar\parse\preparation.c" />
+    <ClCompile Include="..\link-grammar\parse\prune.c" />
+    <ClCompile Include="..\link-grammar\post-process\constituents.c" />
+    <ClCompile Include="..\link-grammar\post-process\post-process.c" />
+    <ClCompile Include="..\link-grammar\post-process\pp_knowledge.c" />
+    <ClCompile Include="..\link-grammar\post-process\pp_lexer.c" />
+    <ClCompile Include="..\link-grammar\post-process\pp_linkset.c" />
+    <ClCompile Include="..\link-grammar\prepare\build-disjuncts.c" />
+    <ClCompile Include="..\link-grammar\prepare\expand.c" />
+    <ClCompile Include="..\link-grammar\prepare\exprune.c" />
+    <ClCompile Include="..\link-grammar\print\print-util.c" />
+    <ClCompile Include="..\link-grammar\print\print.c" />
+    <ClCompile Include="..\link-grammar\print\wcwidth.c" />
     <ClCompile Include="..\link-grammar\resources.c" />
-    <ClCompile Include="..\link-grammar\score.c" />
-    <ClCompile Include="..\link-grammar\spellcheck-aspell.c" />
-    <ClCompile Include="..\link-grammar\spellcheck-hun.c" />
     <ClCompile Include="..\link-grammar\string-set.c" />
-    <ClCompile Include="..\link-grammar\tokenize.c" />
+    <ClCompile Include="..\link-grammar\tokenize\anysplit.c" />
+    <ClCompile Include="..\link-grammar\tokenize\regex-tokenizer.c" />
+    <ClCompile Include="..\link-grammar\tokenize\spellcheck-aspell.c" />
+    <ClCompile Include="..\link-grammar\tokenize\spellcheck-hun.c" />
+    <ClCompile Include="..\link-grammar\tokenize\tokenize.c" />
+    <ClCompile Include="..\link-grammar\tokenize\wordgraph.c" />
     <ClCompile Include="..\link-grammar\utilities.c" />
-    <ClCompile Include="..\link-grammar\wcwidth.c" />
-    <ClCompile Include="..\link-grammar\word-utils.c" />
-    <ClCompile Include="..\link-grammar\wordgraph.c" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\link-grammar\link-features.h.in">
@@ -330,7 +368,13 @@
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <Flex Include="..\link-grammar\post-process\pp_lexer.l">
+      <FileType>Document</FileType>
+    </Flex>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
+  <ImportGroup Label="ExtensionTargets" Condition="'$(WINFLEXBISON)'!=''">
+    <Import Project="$(WINFLEXBISON)\custom_build_rules\win_flex_only\win_flex_custom_build.targets" />
   </ImportGroup>
 </Project>

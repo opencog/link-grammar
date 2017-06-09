@@ -129,7 +129,7 @@ struct Dictionary_s
  * and pretty much no one else. If you are not the tokenizer, you
  * probably dont need these. */
 
-bool find_word_in_dict(Dictionary dict, const char *);
+bool find_word_in_dict(const Dictionary dict, const char *);
 
 Exp * Exp_create(Exp_list *);
 void add_empty_word(Dictionary const, X_node *);

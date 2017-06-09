@@ -574,7 +574,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	match_cache mc;
 	gword_cache gc;
 
-	gc.same_alternative = NULL;
+	gc.same_alternative = false;
 
 #ifdef VERIFY_MATCH_LIST
 	static int id = 0;
