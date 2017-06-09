@@ -65,7 +65,10 @@ void vappend_string(dyn_str * string, const char *fmt, va_list args)
 	va_end(copy_args);
 
 	if ((int)templen < 0) goto error;
-	// if (fmt[0] == '(') { errno=2; goto error;} /* Test the error reporting. */
+	if (0)
+	{
+		if (fmt[0] == '(') { errno=2; goto error;} /* Test the error reporting. */
+	}
 
 	if (templen >= TMPLEN)
 	{
