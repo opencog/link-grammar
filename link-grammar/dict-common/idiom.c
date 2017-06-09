@@ -83,11 +83,10 @@ static bool is_number(const char *s)
  */
 static int numberfy(const char * s)
 {
-	for (; (*s != '\0') && (*s != SUBSCRIPT_MARK); s++)
-	  ;
-	if (*s++ != SUBSCRIPT_MARK) return -1;
-	if (*s++ != 'I') return -1;
-	if (!is_number(s)) return -1;
+	s = strchr(s, SUBSCRIPT_MARK);
+	if (NULL == s) return -1;
+	if (*++s != 'I') return -1;
+	if (!is_number(++s)) return -1;
 	return atoi(s);
 }
 
