@@ -14,9 +14,11 @@
 #define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
 
 #ifdef _WIN32
-#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
+	#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
+#elif defined GNUC
+	#define DEBUG_TRAP __builtin_trap()
 #else
-#define DEBUG_TRAP __builtin_trap()
+	#define DEBUG_TRAP ((void(*)())0)()
 #endif
 
 /* FIXME:
