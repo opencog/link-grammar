@@ -87,6 +87,8 @@ link_public_api(int)
      lg_error_printall(lg_error_handler, void *data);
 link_public_api(int)
      lg_error_clearall(void);
+link_public_api(bool)
+     lg_error_flush(void);
 
 /**********************************************************************
  *
