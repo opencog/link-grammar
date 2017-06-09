@@ -19,6 +19,14 @@
 #define DEBUG_TRAP __builtin_trap()
 #endif
 
+/* FIXME:
+ * 1. If the error_handler is not NULL, use prt_error() too (after calling
+ *    fprintf()), in order to allow an error_handler to log, produce trace, or
+ *    show the assert() message in a (possibly pop-up) window.
+ * 2. Don't use DEBUG_TRAP (or exit) directly, but instead call a function
+ *    pointer like lg_exit(code) to allow the LG library to be embedded in an
+ *    application like an editor. If not set, the default will still be
+ *    DEBUG_TRAP. */
 #define assert(ex, ...) {                                                   \
 	if (!(ex)) {                                                             \
 		fprintf(stderr, "Fatal error: \nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
