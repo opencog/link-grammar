@@ -47,8 +47,8 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 	if (overflowed && (1 < opts->verbosity))
 	{
 		err_ctxt ec = { sent };
-		err_msgc(&ec, lg_Warn, "Warning: Count overflow.\n"
-			"Considering a random subset of %zu of an unknown and large number of linkages",
+		err_msgc(&ec, lg_Warn, "Count overflow.\n"
+			"Considering a random subset of %zu of an unknown and large number of linkages\n",
 			opts->linkage_limit);
 	}
 
