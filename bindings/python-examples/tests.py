@@ -692,7 +692,7 @@ class ZENLangTestCase(unittest.TestCase):
         # This sentence has no complete linkage. Validate that the library
         # doesn't mangle parsing with null-count>0 due to power_prune()'s
         # connector-discard optimization at null-count==0.  Without commit
-        # "Allow calling chart_parse() with and w/o nulls", the number of
+        # "Allow calling classic_parse() with and w/o nulls", the number of
         # linkages here is 1 instead of 2 and the unused_word_cost is 5.
         self.po = ParseOptions(min_null_count=0, max_null_count=999)
         linkages = Sentence('about people attended', self.d, self.po).parse()

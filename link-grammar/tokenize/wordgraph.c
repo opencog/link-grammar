@@ -948,7 +948,7 @@ static void wordgraph_unlink_xtmpfile(void)
  * changed, displaying additional sentences in the same window.  The viewer
  * program exits on program end (see the comments in the code).  When
  * compiled with MSVC or MINGW, the system PhotoViewer is used by default,
- * unless !wg=x is used (for using X11 when available).
+ * unless !wg:x is used (for using X11 when available).
  *
  * The "dot" and the "PhotoViewer" programs must be in the PATH.
  *
