@@ -21,8 +21,8 @@
 
 #define assert(ex, ...) {                                                   \
 	if (!(ex)) {                                                             \
-		prt_error("Fatal error: \nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
-		prt_error("\n");                                                \
+		fprintf(stderr, "Fatal error: \nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
+		fprintf(stderr, "\n");                                                \
 		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
 	}                                                                        \
 }
