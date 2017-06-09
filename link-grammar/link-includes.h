@@ -363,9 +363,8 @@ link_public_api(const char *)
 /**********************************************************************
  *
  * Internal functions -- do not use these in new code!
- * These are not intended for general public use, but are required to
- * get the link-parser executable to link under MSVC6.
- * XXX FIXME we're on msvc14 now, do we still need these??
+ * They are used in the link-parser code (which needs their signature to
+ * compile), but are not intended for general public use.
  *
  ***********************************************************************/
 
