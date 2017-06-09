@@ -22,7 +22,7 @@
 /**
  * Return the width, in text-column-widths, of the utf8-encoded
  * string.  This is needed when printing formatted strings.
- * European langauges will typically have widths equal to the
+ * European languages will typically have widths equal to the
  * `mblen` value below (returned by mbsrtowcs); they occupy one
  * column-width per code-point.  The CJK ideographs occupy two
  * column-widths per code-point. No clue about what happens for

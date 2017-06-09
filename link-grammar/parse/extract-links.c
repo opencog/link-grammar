@@ -308,7 +308,7 @@ static Match_node* sort_matchlist(Match_node* mlist)
  *
  * This code is similar to do_count() in count.c -- for a good reason:
  * the do_count() function did a full parse, but didn't actually
- * allocate an memory structures to hold the parse.  This also does
+ * allocate a memory structures to hold the parse.  This also does
  * a full parse, but it also allocates and fills out the various
  * parse structures.
  */

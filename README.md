@@ -345,7 +345,7 @@ gcc-c++ (for the SAT solver)<br>
 autoconf<br>
 autoconf-archive<br>
 swig (for language bindings)<br>
-graphpviz (if you like to ue the word-graph display feature)
+graphpviz (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
 To generate it, use:

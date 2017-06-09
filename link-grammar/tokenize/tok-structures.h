@@ -37,7 +37,7 @@
  * sets that are part of each gword contains the list of alloc'ed elements -
  * to be used in gword_set_delete() called *only* in sentence_delete().
  * This ensures that the gword_set of connectors doesn't get stale when
- * their disjuncts are deleted and later restored in one-parse when
+ * their disjuncts are deleted and later restored in one-step parse when
  * min_null_count=0 and max_null count>0 (see classic_parse()).
  */
 struct gword_set

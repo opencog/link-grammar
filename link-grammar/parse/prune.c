@@ -355,7 +355,7 @@ static void clean_table(unsigned int size, C_list ** t)
 
 /**
  * Find if words w1 and w2 may become adjacent due to optional words.
- * This may happen if they only contain optional words between them.
+ * This may happen if they contain only optional words between them.
  *
  * Return true iff they may become adjacent (i.e. all the words
  * between them are optional).

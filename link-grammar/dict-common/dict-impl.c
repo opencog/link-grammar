@@ -67,7 +67,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
  * Format the given locale for use in setlocale().
  * POSIX systems and Windows use different conventions.
  * On Windows, convert to full language and territory names, because the
- * short ones doesn't work for some reason on every system (including MinGW).
+ * short ones don't work for some reason on every system (including MinGW).
  * @param dict Used for putting the returned value in a string-set.
  * @param ll Locale 2-letter language code.
  * @param cc Locale 2-letter territory code.
