@@ -285,8 +285,8 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if (verbosity_level(D_CONST))
 		{
 			if (done == false)
-				err_msg(lg_Debug, "No constituent added, because no larger %s" \
-					   " was found\n", ctype2);
+				err_msg(lg_Debug, "No constituent added, because no larger %s"
+					               " was found\n", ctype2);
 		}
 	}
 	numcon_subl = c - numcon_total;
