@@ -220,7 +220,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			continue;
 
 		if (verbosity_level(D_CONST))
-			err_msg(lg_Debug, "Generating complement constituent for c %d of type %s\n",
+			err_msg(lg_Debug, "Generating complement constituent for c %d of type %s\n\\",
 				   c1, ctype1);
 		done = false;
 		for (w2 = ctxt->constituent[c1].left; (done == false) && (w2 != (size_t)-1); w2--)
@@ -287,6 +287,8 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			if (done == false)
 				err_msg(lg_Debug, "No constituent added, because no larger %s"
 					               " was found\n", ctype2);
+			else
+				lg_error_flush();
 		}
 	}
 	numcon_subl = c - numcon_total;
