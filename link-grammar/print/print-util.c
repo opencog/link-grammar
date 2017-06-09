@@ -77,6 +77,7 @@ void vappend_string(dyn_str * string, const char *fmt, va_list args)
 	}
 	va_end(args);
 
+	patch_subscript_marks(temp_string);
 	dyn_strcat(string, temp_string);
 	return;
 
