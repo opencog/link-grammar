@@ -631,7 +631,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					/* XXX the new Turkish experimental dictionary depend on
 					 * specifying compound suffixes which are not in the dict file,
 					 * in the SUF affix class. This allows them to split farther.
-					 * However, here is a need to detail all the supported
+					 * However, there is a need to detail all the supported
 					 * combinations of compound suffixes.
 					 * FIXME: There is a need for a real multi affix splitter.
 					 * (last_split will get optimized out by the compiler.) */
