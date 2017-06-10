@@ -38,14 +38,15 @@ typedef enum
 /**
  * The E_list and Exp structures defined below comprise the expression
  * trees that are stored in the dictionary.  The expression has a type
- * (AND, OR or TERMINAL).  If it is not a terminal it has a list
- * (an E_list) of children.
+ * (OR_type, AND_type or CONNECTOR_type).  If it is not a terminal it
+ * has a list (an E_list) of children. Else "string" is the connector,
+ * and "dir" indicates its direction.
  */
 struct Exp_struct
 {
 	Exp * next;    /* Used only for mem management,for freeing */
 	Exp_type type; /* One of three types: AND, OR, or connector. */
-	char dir;      /* '-' means to the left, '+' means to right (for connector) */
+	char dir;      /* The connector connects to: '-': the left; '+': the right */
 	bool multi;    /* TRUE if a multi-connector (for connector)  */
 	union {
 		E_list * l;           /* Only needed for non-terminals */
