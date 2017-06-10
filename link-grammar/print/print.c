@@ -19,7 +19,6 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "corpus/corpus.h"
-#include "dict-common/dict-defines.h"  // For SUBSCRIPT_MARK
 #include "dict-common/dict-utils.h" // For size_of_expression()
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
@@ -1373,18 +1372,6 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 	}
 	if (debugprint) lgdebug(0, "\n");
 	else if (word_split) printf("\n\n");
-}
-
-/**
- * Print a word, converting SUBSCRIPT_MARK to SUBSCRIPT_DOT.
- */
-void print_with_subscript_dot(const char *s)
-{
-	const char *mark = strchr(s, SUBSCRIPT_MARK);
-	size_t len = NULL != mark ? (size_t)(mark - s) : strlen(s);
-
-	prt_error("%.*s%s%s ", (int)len,
-			  s, NULL != mark ? "." : "", NULL != mark ? mark+1 : "");
 }
 
 // Use for debug and error printing.
