@@ -32,7 +32,7 @@
 #include "api-structures.h"
 #include "dict-common/dict-affix.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
+#include "print/print-util.h" // For patch_subscript_mark()
 #include "dict-common/regex-morph.h"
 #include "error.h"
 #include "tokenize.h"
@@ -317,8 +317,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 		 * file. As a result, if a regex contains a dot it is patched by
 		 * SUBSCRIPT_MARK. We undo it here. */
 		s = strdup(regstring[i]);
-		sm = strrchr(s, SUBSCRIPT_MARK);
-		if (sm) *sm = SUBSCRIPT_DOT;
+		patch_subscript_mark(s);
 
 		/* Create a new Regex_node and add to the list. */
 		new_re = malloc(sizeof(*new_re));
