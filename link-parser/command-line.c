@@ -304,8 +304,29 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	if (s[0] == '!')
 	{
-		dict_display_word_info(dict, s+1, opts);
-		dict_display_word_expr(dict, s+1, opts);
+		char *out;
+
+		out = dict_display_word_info(dict, s+1, opts);
+		if (NULL != out)
+		{
+			printf("%s\n", out);
+		   free(out);
+			out = dict_display_word_expr(dict, s+1, opts);
+			if (NULL != out)
+			{
+				printf("%s", out);
+				free(out);
+			}
+			else
+			{
+				prt_error("Error: '%s': Internal Error: Missing expression.\n", s+1);
+			}
+		}
+		else
+		{
+			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
+		}
+
 		return 0;
 	}
 #ifdef USE_REGEX_TOKENIZER
