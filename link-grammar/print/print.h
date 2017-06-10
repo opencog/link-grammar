@@ -13,6 +13,7 @@
 #ifndef _PRINT_H
 #define _PRINT_H
 
+#include "print/print-util.h" // For dyn_str
 #include "link-includes.h"
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")  /* the string to use to show the wall */
@@ -20,8 +21,8 @@
 
 void   print_disjunct_counts(Sentence sent);
 struct tokenpos;
-void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
-       void (*display)(Dictionary, const char *), struct tokenpos *);
+void   print_sentence_word_alternatives(dyn_str *, Sentence, bool,
+       char * (*)(Dictionary, const char *), struct tokenpos *);
 void print_with_subscript_dot(const char *);
 
 // Used for debug/error printing

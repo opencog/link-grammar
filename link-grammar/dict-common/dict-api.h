@@ -40,6 +40,7 @@ void free_lookup_list(const Dictionary, Dict_node *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 void print_expression(const Exp *);
+char *expression_stringify(const Exp *);
 
 LINK_END_DECLS
 
