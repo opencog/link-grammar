@@ -258,7 +258,6 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	double score;
 #endif
 	const char * dj;
-	char *mark;
 	int w;
 	dyn_str * s = dyn_str_new();
 	int nwords = linkage->num_words;
@@ -268,14 +267,12 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	{
 		int pad = 21;
 		double cost;
-		char infword[MAX_WORD];
+		const char *infword;
 		Disjunct *disj = linkage->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
-		/* Cleanup the subscript mark before printing. */
-		strncpy(infword, disj->string, MAX_WORD);
-		mark = strchr(infword, SUBSCRIPT_MARK);
-		if (mark) *mark = SUBSCRIPT_DOT;
+		/* Subscript mark will be cleaned up by append_string(). */
+		infword = disj->string;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strwidth(infword);
