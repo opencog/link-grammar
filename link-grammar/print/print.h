@@ -22,7 +22,6 @@ void   print_disjunct_counts(Sentence sent);
 struct tokenpos;
 void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
        void (*display)(Dictionary, const char *), struct tokenpos *);
-void print_with_subscript_dot(const char *);
 
 // Used for debug/error printing
 void print_sentence_context(Sentence, dyn_str*);
