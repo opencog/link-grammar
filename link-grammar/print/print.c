@@ -157,19 +157,19 @@ static void print_a_link(dyn_str * s, const Linkage linkage, LinkIdx link)
 	 * on the longest link-name in the sentence! */
 	left_append_string(s, llabel, "           ");
 	if (DEPT_CHR == llabel[0])
-		append_string(s, "   <---");
+		dyn_strcat(s, "   <---");
 	else if (HEAD_CHR == llabel[0])
-		append_string(s, "   >---");
+		dyn_strcat(s, "   >---");
 	else
-		append_string(s, "   ----");
+		dyn_strcat(s, "   ----");
 
 	left_append_string(s, label, "-----");
 	if (DEPT_CHR == rlabel[0])
-		append_string(s, "->  ");
+		dyn_strcat(s, "->  ");
 	else if (HEAD_CHR == rlabel[0])
-		append_string(s, "-<  ");
+		dyn_strcat(s, "-<  ");
 	else
-		append_string(s, "--  ");
+		dyn_strcat(s, "--  ");
 	left_append_string(s, rlabel, "           ");
 	append_string(s, "     %s\n", linkage_get_word(linkage, r));
 }
@@ -209,9 +209,9 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 		dyn_strcat(s, "   ");
 		print_a_link(s, linkage, link);
 	}
-	append_string(s, "\n");
+	dyn_strcat(s, "\n");
 	if (linkage_get_violation_name(linkage) != NULL) {
-		append_string(s, "P.P. violations:\n");
+		dyn_strcat(s, "P.P. violations:\n");
 		append_string(s, "        %s\n\n", linkage_get_violation_name(linkage));
 	}
 
@@ -247,7 +247,7 @@ char * linkage_print_senses(Linkage linkage)
 	}
 
 #else
-	append_string(s, "Corpus statistics is not enabled in this version\n");
+	dyn_strcat(s, "Corpus statistics is not enabled in this version\n");
 #endif
 	return dyn_str_take(s);
 }
@@ -350,38 +350,38 @@ build_linkage_postscript_string(const Linkage linkage,
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
 
-	append_string(string, "[");
+	dyn_strcat(string, "[");
 	for (j=d; j<N_words_to_print; j++) {
-		if ((i%10 == 0) && (i>0)) append_string(string, "\n");
+		if ((i%10 == 0) && (i>0)) dyn_strcat(string, "\n");
 		i++;
 		append_string(string, "(%s)", linkage->word[j]);
 	}
-	append_string(string,"]");
-	append_string(string,"\n");
+	dyn_strcat(string,"]");
+	dyn_strcat(string,"\n");
 
-	append_string(string,"[");
+	dyn_strcat(string,"[");
 	j = 0;
 	for (link=0; link<N_links; link++) {
 		if (!print_word_0 && (ppla[link].lw == 0)) continue;
 		if (!print_word_N && (ppla[link].rw == linkage->num_words-1)) continue;
 		// if (ppla[link]->lw == SIZE_MAX) continue;
 		assert (ppla[link].lw != SIZE_MAX);
-		if ((j%7 == 0) && (j>0)) append_string(string,"\n");
+		if ((j%7 == 0) && (j>0)) dyn_strcat(string,"\n");
 		j++;
 		append_string(string,"[%zu %zu %d",
 				ppla[link].lw - d, ppla[link].rw - d,
 				pctx->link_heights[link]);
 		append_string(string," (%s)]", ppla[link].link_name);
 	}
-	append_string(string,"]");
-	append_string(string,"\n");
-	append_string(string,"[");
+	dyn_strcat(string,"]");
+	dyn_strcat(string,"\n");
+	dyn_strcat(string,"[");
 	for (j=0; j < pctx->N_rows; j++ )
 	{
 		if (j>0) append_string(string, " %d", pctx->row_starts[j]);
 		else append_string(string,"%d", pctx->row_starts[j]);
 	}
-	append_string(string,"]\n");
+	dyn_strcat(string,"]\n");
 
 	return dyn_str_take(string);
 }
@@ -641,7 +641,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
 
-		append_string(string, "\n");
+		dyn_strcat(string, "\n");
 		top_row_p1 = top_row + 1;
 		for (revrs = 0; revrs < top_row_p1; revrs++)
 		{
@@ -670,10 +670,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 					j += append_utf8_char(string, &xpicture[row][j]);
 					mbcnt ++;
 				}
-				append_string(string, "\n");
+				dyn_strcat(string, "\n");
 			}
 		}
-		append_string(string, "\n");
+		dyn_strcat(string, "\n");
 	}
 	return dyn_str_take(string);
 }
