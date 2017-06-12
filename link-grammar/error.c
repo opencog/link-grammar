@@ -319,7 +319,7 @@ void err_msgc(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
  *
  * @fmt printf()-like format.
  * @... printf()-like arguments.
- * @retrun Always 0, not to be used. This is needed so prt_error()
+ * @return Always 0, not to be used. This is needed so prt_error()
  * can be used in complex macros that have to use the comma operator.
  */
 int prt_error(const char *fmt, ...)

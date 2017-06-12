@@ -93,7 +93,7 @@ struct prune_context_s
   check works as follows:
 
   A series of passes are made through the sentence, alternating
-  left-to-right and right-to-left.  Consier the left-to-right pass (the
+  left-to-right and right-to-left.  Consider the left-to-right pass (the
   other is symmetric).  A set S of connectors is maintained (initialized
   to be empty).  Now the disjuncts of the current word are processed.
   If a given disjunct's left pointing connectors have the property that
@@ -175,7 +175,7 @@ struct prune_context_s
    The difference between RUTHLESS and GENTLE power pruning is simply
    that GENTLE uses the deletable region array, and RUTHLESS does not.
    So we can get the effect of these two different methods simply by
-   always unsuring that deletable[][] has been defined.  With nothing
+   always ensuring that deletable[][] has been defined.  With nothing
    deletable, this is equivalent to RUTHLESS.   --DS, 7/97
 */
 
@@ -288,7 +288,7 @@ static power_table * power_table_new(Sentence sent)
 		 * - variable-size tables require counting connectors.
 		 *   (and the more complex code to go with)
 		 * CPU cache-size effects ...
-		 * Strong depenence on the hashing algo!
+		 * Strong dependence on the hashing algo!
 		 */
 		len = left_connector_count(sent->word[w].d);
 		size = next_power_of_two_up(len);
@@ -762,7 +762,7 @@ int power_prune(Sentence sent, Parse_Options opts)
    must contain a bar or a baz."  Here foo, bar, and baz are connector
    types.  foo is the trigger link, bar and baz are called the criterion
    links.  If, after considering the disjuncts we find that there is is
-   a foo, but neither a bar, nor a baz, then we can eliminte the disjuct
+   a foo, but neither a bar, nor a baz, then we can eliminate the disjunct
    containing bar.
 
    Things are actually a bit more complex, because of the matching rules

@@ -1005,7 +1005,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 
 /**
  * Return true if the string is a (floating point) number.
- * Float points can be preceeded by a single plus or minus sign.
+ * Float points can be proceeded by a single plus or minus sign.
  */
 static bool is_number(const char * str)
 {

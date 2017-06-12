@@ -236,7 +236,7 @@ int main (int argc, char * argv[])
 	printf("Examined %d words, and %d disjuncts\n", wrd_cnt, dj_cnt);
 	double avg_wrd = ((double) wrd_cnt) / clu_cnt;
 	double avg_dj = ((double) dj_cnt) / rec_cnt;
-	printf("Average %f words/cluster; average %f dj's/recored-cluster\n", 
+	printf("Average %f words/cluster; average %f dj's/recored-cluster\n",
 		avg_wrd, avg_dj);
 
 	printf("Got %d mismatch warnings\n", warn_cnt);

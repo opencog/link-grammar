@@ -28,7 +28,7 @@ class Label : public Node
 {
 	public:
 		Label(const NameString& n, const TV& tv = TV())
-         : Node(LABEL, n, tv) {}
+		   : Node(LABEL, n, tv) {}
 };
 
 /// Index, ID
@@ -51,7 +51,7 @@ class Index : public Node
 		{}
 };
 
-/// Holder of one floating-poing number
+/// Holder of one floating-point number
 class Number : public Node
 {
 	public:

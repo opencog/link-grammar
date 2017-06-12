@@ -207,7 +207,7 @@ static Atom* trim_left_pointers(Atom* a)
 		return new Link(OR, new_ol);
 	}
 
-	// If we are here, then it an andlist, and all conectors are
+	// If we are here, then it an AND-list, and all connectors are
 	// mandatory, unless they are optional.  So fail, if the
 	// connectors that were trimmed were not optional.
 	OutList new_ol;

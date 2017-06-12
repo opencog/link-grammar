@@ -3,9 +3,9 @@
 # Shell script to start the link-grammar network server.
 #
 # Usage: java org.linkgrammar.LGService [-verbose] [-threads n] port [language] [dictPath]
-# Start a link-grammar parse server on tcp/ip port.  The server returns
-# JSON-formated parse results.  Socket input should be a single sentence
-# to parse, preceeded by the identifier "text:".
+# Start a link-grammar parse server on TCP/IP port.  The server returns
+# JSON-formatted parse results.  Socket input should be a single sentence
+# to parse, proceeded by the identifier "text:".
 # 
 #   'port'      The TCP port the service should listen to.
 #   -verbose    Generate verbose output.
@@ -13,9 +13,9 @@
 #   'language'  Language abbreviation (en, ru, de, lt, fr, he, tr, any).
 #   'dictPath'  Full path to the Link-Grammar dictionaries.
 # 
-# The below starts the server on port 9000. It the port is ommitted,
+# The below starts the server on port 9000. It the port is omitted,
 # help text is printed.  This server can be contacted directly via
-# tcpip; for example:
+# TCP/IP; for example:
 #
 #   telnet localhost 9000
 #
@@ -34,7 +34,7 @@
 #
 #   echo "text:this is a test" | nc localhost 9000
 #
-# returns the parse; and 
+# returns the parse; and
 #
 #   echo "storeDiagramString:true, text:this is a test" | nc localhost 9000
 #

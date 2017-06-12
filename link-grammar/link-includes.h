@@ -382,7 +382,7 @@ link_public_api(bool)
  *
  * Internal functions -- do not use these in new code!
  * These are not intended for general public use, but are required to
- * work around certain Micorsoft Windows linking oddities
+ * work around certain Microsoft Windows linking oddities
  * (specifically, to be callable from the JNI bindings library.)
  *
  ***********************************************************************/

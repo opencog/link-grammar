@@ -40,7 +40,7 @@ typedef enum {
 	AFDICT_REGALTS,
 	AFDICT_REGPARTS,
 
-	/* Have to have one last entry, to get the array size corrrect */
+	/* Have to have one last entry, to get the array size correct */
 	AFDICT_LAST_ENTRY,
 	AFDICT_NUM_ENTRIES
 } afdict_classnum;
@@ -55,7 +55,7 @@ typedef enum {
 	"MPRE",        /* Multi-prefix, currently for Hebrew */ \
 	"QUOTES", \
 	"BULLETS", \
-	"INFIXMARK",   /* Prepended to suffixes, appended to pefixes */ \
+	"INFIXMARK",   /* Prepended to suffixes, appended to prefixes */ \
 	"STEMSUBSCR",  /* Subscripts for stems */ \
 	"SANEMORPHISM", /* Regex for sane_morphism() */
 

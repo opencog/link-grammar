@@ -37,7 +37,7 @@ struct linkgrammar_aspell {
 };
 
 /**
- * create a neew spell-checker for the language 'lang'
+ * create a new spell-checker for the language 'lang'
  */
 void * spellcheck_create(const char * lang)
 {

@@ -79,7 +79,7 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 
 /**
  * This fills the linkage array with morphologically-acceptable
- * linakges.
+ * linkages.
  */
 static void process_linkages(Sentence sent, extractor_t* pex,
                              bool overflowed, Parse_Options opts)

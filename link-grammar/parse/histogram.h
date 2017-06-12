@@ -33,8 +33,8 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 /**
  * A histogram distribution of the parse counts.
  * The histogram is with respect to the cost of the parse.  Thus, each
- * bin of the historgram contains a count of the number of parses
- * acheivable with that cost.  Rather than setting the baseline cost
+ * bin of the histogram contains a count of the number of parses
+ * achievable with that cost.  Rather than setting the baseline cost
  * at zero, it is dynamically scaled, so that 'base' is the number of
  * the first bin with a non-zero count in it.  If there are counts that
  * don't fit into the available bins, then they are accumulated into

@@ -64,7 +64,7 @@ void free_linkages(Sentence sent)
 	sent->lnkages = NULL;
 }
 
-/* Partial, but not full initialization of the linakge struct ... */
+/* Partial, but not full initialization of the linkage struct ... */
 void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 {
 	lkg->num_links = 0;

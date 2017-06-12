@@ -8,7 +8,7 @@ frequency statistics from an SQL database. The SQLite database engine
 is used because it is "administration-free" for the user, and because
 its license is compatbile with the current link-grammar license.
 
-This directory also contains code for "broadening" word linakges.
+This directory also contains code for "broadening" word linkages.
 See data/sql/README for more info.
 
 This directory contains one administrative tool, "cluster-pop",

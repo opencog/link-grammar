@@ -3,7 +3,7 @@
  *
  * Data for corpus statistics, used to provide a parse ranking
  * to drive the SAT solver, as well as parse ranking with the
- * ordinary solver. 
+ * ordinary solver.
  *
  * Copyright (c) 2008, 2009 Linas Vepstas <linasvepstas@gmail.com>
  */
@@ -87,7 +87,7 @@ Corpus * lg_corpus_new(void)
 				c->errmsg);
 		}
 		else
-		{ 
+		{
 			prt_error("Warning: Can't open database: %s\n"
 			          "\tWas looking for: " DBNAME "\n",
 				c->errmsg);
@@ -96,7 +96,7 @@ Corpus * lg_corpus_new(void)
 	}
 
 	/* Now prepare the statements we plan to use */
-	rc = sqlite3_prepare_v2(c->dbconn, 	
+	rc = sqlite3_prepare_v2(c->dbconn,
 		"SELECT log_cond_probability FROM Disjuncts "
 		"WHERE inflected_word = ? AND disjunct = ?;",
 		-1, &c->rank_query, NULL);
@@ -108,7 +108,7 @@ Corpus * lg_corpus_new(void)
 
 	/* Results are returned in sorted order .. would it be faster
 	 * to sort locally? Don't know ... */
-	rc = sqlite3_prepare_v2(c->dbconn, 	
+	rc = sqlite3_prepare_v2(c->dbconn,
 		"SELECT word_sense, log_cond_probability FROM DisjunctSenses "
 		"WHERE inflected_word = ? AND disjunct = ? "
 		"ORDER BY log_cond_probability ASC;",
@@ -125,7 +125,7 @@ Corpus * lg_corpus_new(void)
 
 /**
  * lg_corpus_delete -- shut down the corpus statistics subsystem.
- */ 
+ */
 void lg_corpus_delete(Corpus *c)
 {
 	if (NULL == c) return;
@@ -168,7 +168,7 @@ void lg_corpus_delete(Corpus *c)
 /**
  * get_disjunct_score -- get log probability of observing disjunt.
  *
- * Given an "inflected" word and a disjunct, thris routine returns the
+ * Given an "inflected" word and a disjunct, this routine returns the
  * -log_2 conditional probability prob(d|w) of seeing the disjunct 'd'
  * given that the word 'w' was observed.  Here, "inflected word" means
  * the link-grammar dictionary entry, complete with its trailing period
@@ -237,7 +237,7 @@ static double get_disjunct_score(Corpus *corp,
  * lg_corpus_score -- compute parse-ranking score for sentence.
  *
  * Given a parsed sentence, this routine will compute a parse ranking
- * score, based on the probabilites of observing the indicated set of
+ * score, based on the probabilities of observing the indicated set of
  * disjuncts in the statistics database.
  *
  * The score is stored in the Linkage_info->corpus_cost struct member.
@@ -315,7 +315,7 @@ double lg_corpus_disjunct_score(Linkage linkage, int w)
  * lg_corpus_senses -- Given word and disjunct, look up senses.
  *
  * Given a particular disjunct for a word, look up its most
- * likely sense assignments from the database. 
+ * likely sense assignments from the database.
  */
 
 static Sense * lg_corpus_senses(Corpus *corp,
@@ -350,8 +350,8 @@ static Sense * lg_corpus_senses(Corpus *corp,
 	{
 		sense = sqlite3_column_text(corp->sense_query, 0);
 		log_prob = sqlite3_column_double(corp->sense_query, 1);
-		// printf ("Word=%s dj=%s sense=%s score=%f\n", 
-		// 	inflected_word, disjunct, sense, log_prob);
+		// printf ("Word=%s dj=%s sense=%s score=%f\n",
+		//    inflected_word, disjunct, sense, log_prob);
 
 		sns = (Sense *) malloc(sizeof(Sense));
 		sns->next = head;
@@ -380,8 +380,8 @@ static Sense * lg_corpus_senses(Corpus *corp,
 /**
  * lg_corpus_linkage_senses -- Given a linkage, look up senses.
  *
- * Given a particular linakge, look up the most likely sense
- * assignments from the database. 
+ * Given a particular linkage, look up the most likely sense
+ * assignments from the database.
  *
  * This function is not used to guide the parsing process; it is
  * only an informational look-up.
@@ -391,7 +391,7 @@ void lg_corpus_linkage_senses(Linkage lkg)
 {
 	const char * infword;
 	Sentence sent = lkg->sent;
-	Dictionary dict = sent->dict; 
+	Dictionary dict = sent->dict;
 	Corpus *corp = dict->corpus;
 	int nwords = lkg->num_words;
 	int w;
@@ -420,7 +420,7 @@ void lg_corpus_linkage_senses(Linkage lkg)
 		}
 		infword = disj->string;
 
-		lkg->sense_list[w] = lg_corpus_senses(corp, infword, 
+		lkg->sense_list[w] = lg_corpus_senses(corp, infword,
 		                       lkg->disjunct_list_str[w], w);
 	}
 }
