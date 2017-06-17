@@ -611,7 +611,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				{
 					size_t baselen;
 					const char *regex_name;
-					char guess_mark;
+					char guess_mark = 0;
 
 					switch (w->status & WS_GUESS)
 					{
