@@ -27,6 +27,6 @@ static inline void spellcheck_destroy(void * chk) {}
 static inline bool spellcheck_test(void * chk, const char * word) { return false; }
 static inline int spellcheck_suggest(void * chk, char ***sug, const char * word) { return 0; }
 static inline void spellcheck_free_suggest(void * chk, char **sug, int size) {}
-#endif 
+#endif
 
 #endif /* _SPELLCHECK_H */

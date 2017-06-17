@@ -34,7 +34,7 @@ Count_bin hist_one(void)
 /**
  * Accumulate counts in 'a', adding them to sum.
  * The histogram is shifted by the amount 'cost'.
- * That is, the bins are shifted over by the interger part of the cost
+ * That is, the bins are shifted over by the integer part of the cost
  * (scaled to the bin-width).
  */
 void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
@@ -136,8 +136,8 @@ void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
 }
 
 /**
- * Multiply two historams 'a' and 'b', and accumulate them into 'acc'.
- * The accumulated historgram is first shifted by 'cost'.
+ * Multiply two histograms 'a' and 'b', and accumulate them into 'acc'.
+ * The accumulated histogram is first shifted by 'cost'.
  */
 void hist_muladd(Count_bin* acc, const Count_bin* a, double cost, const Count_bin* b)
 {

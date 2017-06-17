@@ -233,7 +233,7 @@ class Link : public Atom
 };
 
 
-// An unhygenic for-each loop, to simplify iterating over
+// An unhygienic for-each loop, to simplify iterating over
 // the outgoing set.  I don't see a more elegant way to do this,
 // just right now...
 // Anyway, this implements the semantics "foreach VAR of TYPENAME in LNK"

@@ -5,7 +5,7 @@
  * Read in dictionary from an SQL DB.
  * Keeping it simple for just right now, and using SQLite.
  *
- * The goal of reading the dictioary from SQL is to enable some 
+ * The goal of reading the dictionary from SQL is to enable some
  * other process (machine-learning algo) to dynamically update
  * the dictionary.
  *

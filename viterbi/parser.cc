@@ -116,7 +116,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 /**
  * Iterate over a set of connector-sets. If there is a mixture of
  * different costs found in a connector-set, then split it up into
- * several differeent ones, each with the appropriate cost.
+ * several different ones, each with the appropriate cost.
  *
  * In principle, we could split up everything.  Right now, we don't
  * because:
@@ -124,7 +124,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
  *    would fail.
  * 2) the resulting graph would be larger, more verbose.
  * On the other hand, if we did split up everything here, then the
- * parsing algo could become simpler/smaller. Hmmm... what to do ... 
+ * parsing algo could become simpler/smaller. Hmmm... what to do ...
  */
 static Set* cost_split(Set* raw_csets)
 {
@@ -249,8 +249,8 @@ Set* Parser::word_consets(const string& word)
  *       AND :     (2)
  *         CONNECTOR : Ss-
  *         CONNECTOR : Wd-
- * 
- * Notice the cost on the second disjunt: this would completely mess
+ *
+ * Notice the cost on the second disjunct: this would completely mess
  * things up if it were placed into the atomspace, since that cost would
  * screw things up for any other expressions having this sub-expression.
  */

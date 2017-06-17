@@ -22,7 +22,7 @@
 /**
  * Return the width, in text-column-widths, of the utf8-encoded
  * string.  This is needed when printing formatted strings.
- * European langauges will typically have widths equal to the
+ * European languages will typically have widths equal to the
  * `mblen` value below (returned by mbsrtowcs); they occupy one
  * column-width per code-point.  The CJK ideographs occupy two
  * column-widths per code-point. No clue about what happens for
@@ -65,7 +65,10 @@ void vappend_string(dyn_str * string, const char *fmt, va_list args)
 	va_end(copy_args);
 
 	if ((int)templen < 0) goto error;
-	// if (fmt[0] == '(') { errno=2; goto error;} /* Test the error reporting. */
+	if (0)
+	{
+		if (fmt[0] == '(') { errno=2; goto error;} /* Test the error reporting. */
+	}
 
 	if (templen >= TMPLEN)
 	{

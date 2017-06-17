@@ -79,7 +79,7 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 
 /**
  * This fills the linkage array with morphologically-acceptable
- * linakges.
+ * linkages.
  */
 static void process_linkages(Sentence sent, extractor_t* pex,
                              bool overflowed, Parse_Options opts)
@@ -210,7 +210,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
  *
  * A note about the disjuncts save/restore that is done here:
  * To increase the parsing speed, before invoking do_parse(),
- * pp_and_power_prune() is invoked to removes connectors which have no
+ * pp_and_power_prune() is invoked to remove connectors which have no
  * possibility to connect. It includes a significant optimization when
  * null_count==0 that makes a more aggressive removal, but this
  * optimization is not appropriate when null_count>0.

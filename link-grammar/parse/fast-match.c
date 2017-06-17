@@ -497,7 +497,7 @@ typedef struct
 
 /**
  * Return true iff c1 and c2 are from the same alternative.
- * An optimization for English checks if one of the connectors belong
+ * An optimization for English checks if one of the connectors belongs
  * to an original sentence word (c2 is checked first for an inline
  * optimization opportunity).
  * If a wordgraph word of the checked connector is the same

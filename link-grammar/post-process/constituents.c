@@ -69,7 +69,7 @@ struct CNode_s
 
 /* ================================================================ */
 
-static inline bool uppercompare(const char * s, const char * t)
+static bool uppercompare(const char * s, const char * t)
 {
 #if 0  /* Non-ASCII definition are not supported.  */
 	return (false == utf8_upper_match(s,t));

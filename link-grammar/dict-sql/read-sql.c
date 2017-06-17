@@ -50,15 +50,15 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	const char * p = exp_str;
 	const char * con_start = NULL;
 
-	/* search for the start of a conector */
+	/* search for the start of a connector */
 	while (*p && (lg_isspace(*p) || '&' == *p)) p++;
 	con_start = p;
 
 	if (0 == *p) return NULL;
 
-	/* search for the end of a conector */
+	/* search for the end of a connector */
 	while (*p && (isalnum(*p) || '*' == *p)) p++;
-		
+
 	/* Connectors always end with a + or - */
 	assert (('+' == *p) || ('-' == *p),
 			"Missing direction character in connector string: %s", con_start);
@@ -105,7 +105,7 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 
 
 /* ========================================================= */
-/* Dictionary word lookup proceedures. */
+/* Dictionary word lookup procedures. */
 
 typedef struct
 {
@@ -257,7 +257,7 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 }
 
 /* ========================================================= */
-/* Dictionary creation, setup, open proceedures */
+/* Dictionary creation, setup, open procedures */
 
 bool check_db(const char *lang)
 {

@@ -528,7 +528,7 @@ static void free_sentence_words(Sentence sent)
 	sent->word = NULL;
 }
 
-// XXX FIXME ... these shoud fins a home in the tokenize directory.
+// XXX FIXME ... these should find a home in the tokenize directory.
 static void wordgraph_delete(Sentence sent)
 {
 	Gword *w = sent->wordgraph;

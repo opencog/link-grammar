@@ -12,7 +12,7 @@
 
 /* This file is somewhat misnamed, as everything here is private --
  * these are the internal-use-only API objects interfacing between
- * different subsystems.  They are all subject to change ithout notice.
+ * different subsystems.  They are all subject to change without notice.
  * No external code should attempt to access this stuff.
  */
 

@@ -1,7 +1,7 @@
 /*
  * malloc-dbg.c
  *
- * Debug memory allocation.  Hacky code, used only 
+ * Debug memory allocation.  Hacky code, used only
  * for debugging.
  *
  * Copyright (c) 2008 Linas Vepstas <linas@linas.org>
@@ -48,7 +48,7 @@ static void init_io(void)
 }
 
 // #define allprt(f, varargs...) fprintf(f, ##varargs)
-#define allprt(f, varargs...) 
+#define allprt(f, varargs...)
 
 static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 {

@@ -403,9 +403,9 @@ static bool is_contraction_word(Dictionary dict, const char *s)
 /**
  * Issue candidate subwords for unsplit_word (an "alternative").
  * Issue prefnum elements from prefix, stemnum elements from stem, and suffnum
- * elements from suffix.  Mark the prefixes and sufixes with INFIX_MARK (the
+ * elements from suffix.  Mark the prefixes and suffixes with INFIX_MARK (the
  * stems are assumed to be already marked with one of the STEMSUBSCR
- * possibilities.  Set the Morpeheme_type of the subwords.
+ * possibilities.  Set the Morpheme_type of the subwords.
  *
  * Return a pointer to the first word of the added alternative.
  *
@@ -1890,7 +1890,7 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 	/* Set the dictcap[0] word fields */
 	altp->status |= WS_INDICT;       /* already checked to be in the dict */
 	altp->morpheme_type = MT_FEATURE;
-	altp->tokenizing_step = TS_DONE; /* no further tokeniation */
+	altp->tokenizing_step = TS_DONE; /* no further tokenization */
 
 	/* Set the alternative word fields. */
 	if(is_cap && (NULL != unsplit_word->regex_name))

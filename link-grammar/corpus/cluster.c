@@ -2,7 +2,7 @@
  * cluster.c
  *
  * Data for related-word clusters. Meant to expand disjunct coverage
- * for the case where a parse cannot be completed without ommitting
+ * for the case where a parse cannot be completed without omitting
  * a word.
  *
  * Copyright (c) 2009 Linas Vepstas <linasvepstas@gmail.com>
@@ -79,7 +79,7 @@ Cluster * lg_cluster_new(void)
 			          "\tWas looking for: " DBNAME);
 		}
 		else
-		{ 
+		{
 			prt_error("Warning: Can't open database: %s\n"
 			          "\tWas looking for: " DBNAME,
 				sqlite3_errmsg(c->dbconn));
@@ -88,7 +88,7 @@ Cluster * lg_cluster_new(void)
 	}
 
 	/* Now prepare the statements we plan to use */
-	rc = sqlite3_prepare_v2(c->dbconn, 	
+	rc = sqlite3_prepare_v2(c->dbconn,
 		"SELECT cluster_name FROM ClusterMembers "
 		"WHERE inflected_word = ?;",
 		-1, &c->clu_query, NULL);
@@ -98,7 +98,7 @@ Cluster * lg_cluster_new(void)
 			sqlite3_errmsg(c->dbconn));
 	}
 
-	rc = sqlite3_prepare_v2(c->dbconn, 	
+	rc = sqlite3_prepare_v2(c->dbconn,
 		"SELECT disjunct, cost FROM ClusterDisjuncts "
 		"WHERE cluster_name = ?;",
 		-1, &c->dj_query, NULL);
@@ -114,7 +114,7 @@ Cluster * lg_cluster_new(void)
 
 /**
  * lg_cluster_delete -- shut down the cluster statistics subsystem.
- */ 
+ */
 void lg_cluster_delete(Cluster *c)
 {
 	if (NULL == c) return;
@@ -153,7 +153,7 @@ static Exp * make_exp(const char *djstr, double cost)
 	Exp *p1, *p2;
 	E_list *l, *lhead = NULL;
 	size_t len;
-	const char *sp = strchr (djstr, ' '); 
+	const char *sp = strchr (djstr, ' ');
 
 	Exp *e = (Exp *) malloc(sizeof(Exp));
 	e->multi = 0;

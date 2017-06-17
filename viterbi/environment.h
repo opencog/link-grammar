@@ -38,7 +38,7 @@ class Environment : public gc
 
 		static Environment* top();
 	protected:
-		// Distinct mutex per envirnoment; this should avoid contention.
+		// Distinct mutex per environment; this should avoid contention.
 		std::mutex _mtx;
 
 		// Set of all atoms in the environment

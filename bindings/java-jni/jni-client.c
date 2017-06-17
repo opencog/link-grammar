@@ -28,7 +28,7 @@
 /* Default to the English language. */
 static const char* in_language = "en";
 
-/* Dicationary can be and should be shared by all. */
+/* Ditionary can be and should be shared by all. */
 static Dictionary dict = NULL;
 #ifdef HAVE_STDATOMIC_H
 static atomic_flag dict_is_init = ATOMIC_FLAG_INIT;

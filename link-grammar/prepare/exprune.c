@@ -358,9 +358,9 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-/*	 printf("before perging: "); print_expression(x->exp); printf("\n"); */
+/*	 printf("before purging: "); print_expression(x->exp); printf("\n"); */
 				x->exp = purge_Exp(x->exp);
-/*	 printf("after perging: "); print_expression(x->exp); printf("\n"); */
+/*	 printf("after purging: "); print_expression(x->exp); printf("\n"); */
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
