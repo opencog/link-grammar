@@ -408,7 +408,11 @@ pp_knowledge *pp_knowledge_open(const char *path)
   initialize_set_of_links_starting_bounded_domain(k);
 
   /* If the knowledge file was empty, do nothing at all. */
-  if (0 == k->nStartingLinks) return NULL;
+  if (0 == k->nStartingLinks)
+  {
+    pp_knowledge_close(k);
+    return NULL;
+  }
 
   return k;
 
