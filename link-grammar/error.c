@@ -183,6 +183,22 @@ char *lg_error_formatmsg(lg_errinfo *lge)
 
 	return dyn_str_take(s);
 }
+
+static TLS dyn_str *outbuf = NULL;
+
+/**
+ * Flush a partial error message if exists.
+ * Return true iff a message has been actually flushed.
+ *
+ * (Just using prt_error("\n") also flushes a buffered partial error
+ * message, but if there is no such message an empty message is generated).
+ */
+bool lg_error_flush(void)
+{
+	if (outbuf == NULL) return false;
+	prt_error("\n");
+	return true;
+}
 /* ================================================================== */
 
 /**
@@ -239,7 +255,6 @@ static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_li
 
 static void verr_msg(err_ctxt *ec, lg_error_severity sev, const char *fmt, va_list args)
 {
-	static TLS dyn_str *outbuf = NULL;
 	if (NULL == outbuf) outbuf = dyn_str_new();
 
 	/*

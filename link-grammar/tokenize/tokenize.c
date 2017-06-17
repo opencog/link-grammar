@@ -631,7 +631,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					/* XXX the new Turkish experimental dictionary depend on
 					 * specifying compound suffixes which are not in the dict file,
 					 * in the SUF affix class. This allows them to split farther.
-					 * However, here is a need to detail all the supported
+					 * However, there is a need to detail all the supported
 					 * combinations of compound suffixes.
 					 * FIXME: There is a need for a real multi affix splitter.
 					 * (last_split will get optimized out by the compiler.) */
@@ -3144,7 +3144,7 @@ bool sentence_in_dictionary(Sentence sent)
 	if (!ok_so_far)
 	{
 		err_ctxt ec = { sent };
-		err_msgc(&ec, lg_Error, "Error: Sentence not in dictionary\n%s", temp);
+		err_msgc(&ec, lg_Error, "Sentence not in dictionary\n%s\n", temp);
 	}
 	return ok_so_far;
 }

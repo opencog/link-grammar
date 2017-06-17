@@ -220,7 +220,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			continue;
 
 		if (verbosity_level(D_CONST))
-			err_msg(lg_Debug, "Generating complement constituent for c %d of type %s\n",
+			err_msg(lg_Debug, "Generating complement constituent for c %d of type %s\n\\",
 				   c1, ctype1);
 		done = false;
 		for (w2 = ctxt->constituent[c1].left; (done == false) && (w2 != (size_t)-1); w2--)
@@ -285,8 +285,10 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if (verbosity_level(D_CONST))
 		{
 			if (done == false)
-				err_msg(lg_Debug, "No constituent added, because no larger %s" \
-					   " was found\n", ctype2);
+				err_msg(lg_Debug, "No constituent added, because no larger %s"
+					               " was found\n", ctype2);
+			else
+				lg_error_flush();
 		}
 	}
 	numcon_subl = c - numcon_total;
@@ -666,7 +668,7 @@ static const char * cons_of_domain(const Linkage linkage, char domain_type)
 	default:
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msgc(&ec, lg_Error, "Error: Illegal domain: %c", domain_type);
+			err_msgc(&ec, lg_Error, "Illegal domain: %c\n", domain_type);
 			return "";
 		}
 	}
@@ -823,12 +825,12 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (ctxt->constituent[c].domain_type == '\0')
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msgc(&ec, lg_Error, "Error: no domain type assigned to constituent");
+			err_msgc(&ec, lg_Error, "No domain type assigned to constituent\n");
 		}
 		if (ctxt->constituent[c].start_link == NULL)
 		{
 			err_ctxt ec = { linkage->sent };
-			err_msgc(&ec, lg_Error, "Error: no type assigned to constituent");
+			err_msgc(&ec, lg_Error, "No type assigned to constituent\n");
 		}
 	}
 

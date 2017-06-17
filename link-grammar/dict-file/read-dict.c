@@ -139,17 +139,15 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 
 	if (s2)
 	{
-		err_msg(lg_Error, "Error parsing dictionary %s.\n"
+		prt_error("Error parsing dictionary %s.\n"
 		          "%s %s\n\t line %d, tokens = %s",
-		        dict->name,
-		        s, s2, dict->line_number, tokens);
+		          dict->name, s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		err_msg(lg_Error, "Error parsing dictionary %s.\n"
+		prt_error("Error parsing dictionary %s.\n"
 		          "%s\n\t line %d, tokens = %s",
-		        dict->name,
-		        s, dict->line_number, tokens);
+		          dict->name, s, dict->line_number, tokens);
 	}
 	dict->recursive_error = false;
 }
@@ -161,7 +159,7 @@ static void dict_error(Dictionary dict, const char * s)
 
 static void warning(Dictionary dict, const char * s)
 {
-	err_msg(lg_Warn, "Warning: %s\n"
+	prt_error("Warning: %s\n"
 	        "\tline %d, current token = \"%s\"",
 	        s, dict->line_number, dict->token);
 }
@@ -1491,7 +1489,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else if (is_idiom_word(dn->string))
 	{
-		err_msg(lg_Warn, "Warning: Word \"%s\" found near line %d of %s.\n"
+		prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.",
 		        dn->string, dict->line_number, dict->name);

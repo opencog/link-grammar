@@ -114,8 +114,7 @@ void pp_linkset_clear(pp_linkset *ls)
  */
 bool pp_linkset_add(pp_linkset *ls, const char *str)
 {
-	assert(ls != NULL,
-		"Fatal Error: pp_linkset internal error: Trying to add to a null set");
+	assert(ls != NULL, "pp_linkset internal error: Trying to add to a null set");
 
 	if (add_internal(ls, str) == NULL) return false;
 	ls->population++;
