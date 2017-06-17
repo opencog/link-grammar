@@ -19,7 +19,6 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "corpus/corpus.h"
-#include "dict-common/dict-defines.h"  // For SUBSCRIPT_MARK
 #include "dict-common/dict-utils.h" // For size_of_expression()
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
@@ -258,7 +257,6 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	double score;
 #endif
 	const char * dj;
-	char *mark;
 	int w;
 	dyn_str * s = dyn_str_new();
 	int nwords = linkage->num_words;
@@ -268,14 +266,12 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	{
 		int pad = 21;
 		double cost;
-		char infword[MAX_WORD];
+		const char *infword;
 		Disjunct *disj = linkage->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
-		/* Cleanup the subscript mark before printing. */
-		strncpy(infword, disj->string, MAX_WORD);
-		mark = strchr(infword, SUBSCRIPT_MARK);
-		if (mark) *mark = SUBSCRIPT_DOT;
+		/* Subscript mark will be cleaned up by append_string(). */
+		infword = disj->string;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strwidth(infword);
@@ -1180,8 +1176,8 @@ struct tokenpos /* First position of the given token - to prevent duplicates */
 	size_t ai;
 };
 
-void print_sentence_word_alternatives(Sentence sent, bool debugprint,
-     void (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
+void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint,
+     char * (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
 {
 	size_t wi;   /* Internal sentence word index */
 	size_t ai;   /* Index of a word alternative */
@@ -1198,8 +1194,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		return;
 	}
 
-	if (debugprint) lgdebug(+0, "\n\\");
-	else if (NULL != tokenpos)
+	if (debugprint || (NULL != tokenpos))
 		; /* Do nothing */
 	else
 	{
@@ -1238,7 +1233,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 			}
 		}
 		/* "String", because it can be a word, morpheme, or (TODO) idiom */
-		if (word_split && (NULL == display)) printf("String splits to:\n");
+		if (word_split && (NULL == display)) dyn_strcat(s, "String splits to:\n");
 		/* We used to print the alternatives of the word here, one per line.
 		 * In the current (Wordgraph) version, the alternatives may look
 		 * like nonsense combination of tokens - not as the strict split
@@ -1270,7 +1265,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
 		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
 #endif
-		if (debugprint) lgdebug(0, "  word%zu: %s\n\\", wi, w.unsplit_word);
+		if (debugprint) append_string(s, "  word%zu: %s\n", wi, w.unsplit_word);
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
@@ -1292,8 +1287,8 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 		{
 			if (debugprint)
 			{
-				if (0 < ai) lgdebug(0, "\n   ");
-				lgdebug(0, "   alt%zu:", ai);
+				if (0 < ai) dyn_strcat(s, "\n   ");
+				append_string(s, "   alt%zu:", ai);
 			}
 
 			for (wi = w_start; (wi == w_start) ||
@@ -1301,8 +1296,6 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 			{
 				size_t nalts = altlen(sent->word[wi].alternatives);
 				const char *wt;
-				const char *st = NULL;
-				char *wprint = NULL;
 
 				if (ai >= nalts) continue;
 				wt = sent->word[wi].alternatives[ai];
@@ -1318,7 +1311,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 				{
 					struct tokenpos firstpos = { wt };
 
-					print_sentence_word_alternatives(sent, false, NULL, &firstpos);
+					print_sentence_word_alternatives(s, sent, false, NULL, &firstpos);
 					if (((firstpos.wi != wi) || (firstpos.ai != ai)) &&
 					  firstpos.wi >= first_sentence_word) // allow !!LEFT_WORD
 					{
@@ -1329,16 +1322,6 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					}
 				}
 
-				/* Restore SUBSCRIPT_DOT for printing */
-				st = strrchr(wt, SUBSCRIPT_MARK);
-				if (st)
-				{
-					wprint = malloc(strlen(wt)+1);
-					strcpy(wprint, wt);
-					wprint[st-wt] = SUBSCRIPT_DOT;
-					wt = wprint;
-				}
-
 				if (debugprint)
 				{
 					const char *opt_start = "", *opt_end = "";
@@ -1347,7 +1330,7 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 						opt_start = "{";
 						opt_end = "}";
 					}
-					lgdebug(0, " %s%s%s", opt_start, wt, opt_end);
+					append_string(s, " %s%s%s", opt_start, wt, opt_end);
 				}
 
 				/* Don't try to give info on the empty word. */
@@ -1359,35 +1342,23 @@ void print_sentence_word_alternatives(Sentence sent, bool debugprint,
 					 * Display the features of the token */
 					if ((NULL == tokenpos) && (NULL != display))
 					{
-						printf("Token \"%s\" ", wt);
-						display(sent->dict, wt);
-						printf("\n");
+						char *info = display(sent->dict, wt);
+
+						if (NULL == info) return;
+						append_string(s, "Token \"%s\" %s", wt, info);
+						free(info);
 					}
-					else if (word_split) printf(" %s", wt);
+					else if (word_split) append_string(s, " %s", wt);
 				}
-				free(wprint); /* wprint is NULL if not allocated */
 			}
 
 			/* Commented out - no alternatives for now - print as one line. */
-			//if (word_split && (NULL == display)) printf("\n");
+			//if (word_split && (NULL == display)) dyn_strcat(s, "\n");
 		}
 		wi--;
-		if (debugprint) lgdebug(0, "\n\\");
+		if (debugprint) dyn_strcat(s, "\n");
 	}
-	if (debugprint) lgdebug(0, "\n");
-	else if (word_split) printf("\n\n");
-}
-
-/**
- * Print a word, converting SUBSCRIPT_MARK to SUBSCRIPT_DOT.
- */
-void print_with_subscript_dot(const char *s)
-{
-	const char *mark = strchr(s, SUBSCRIPT_MARK);
-	size_t len = NULL != mark ? (size_t)(mark - s) : strlen(s);
-
-	prt_error("%.*s%s%s ", (int)len,
-			  s, NULL != mark ? "." : "", NULL != mark ? mark+1 : "");
+	if (debugprint) dyn_strcat(s, "\n");
 }
 
 // Use for debug and error printing.

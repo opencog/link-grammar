@@ -3099,7 +3099,13 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	free(wp_new);
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
 	if (verbosity_level(D_SW))
-		print_sentence_word_alternatives(sent, true, NULL, NULL);
+	{
+		dyn_str *s = dyn_str_new();
+		print_sentence_word_alternatives(s, sent, true, NULL, NULL);
+		char *out = dyn_str_take(s);
+		prt_error("Debug: Sentence words and alternatives:\n%s", out);
+		free(out);
+	}
 
 	return !error_encountered;
 }

@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include "dict-common/dict-defines.h" /* SUBSCRIPT_MARK, SUBSCRIPT_DOT */
 #include "utilities.h"
 
 #define MAX_LINE 500          /* maximum width of print area */
@@ -30,5 +31,23 @@ void append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);
 void vappend_string(dyn_str *, const char *fmt, va_list args)
 	GNUC_PRINTF(2,0);
 size_t append_utf8_char(dyn_str *, const char * mbs);
+
+static inline void patch_subscript_mark(char *s)
+{
+	s = strchr(s, SUBSCRIPT_MARK);
+	if (NULL != s)
+		*s = SUBSCRIPT_DOT;
+}
+
+static inline void patch_subscript_marks(char *s)
+{
+	while (NULL != (s = strchr(s, SUBSCRIPT_MARK)))
+		*s = SUBSCRIPT_DOT;
+}
+
+static inline int display_width(int width, const char *s)
+{
+	return width + strlen(s) - utf8_strwidth(s);
+}
 
 #endif
