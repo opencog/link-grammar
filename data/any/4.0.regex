@@ -7,8 +7,8 @@
 
 % Want to match apostrophes, for abreviations (I'm I've, etc.) since
 % these cannot be auto-split with the current splitter.
-ANY-WORD:  /^[[:alnum:]']+[:alnum:]+$/
-ANY-PUNCT:  /^[:punct:]+$/
+ANY-WORD:  /^[[:alnum:]_'-]+$/
+ANY-PUNCT:  /^[[:punct:]]`+$/
 
 % Match anything that doesn't match the above.
 % Match anything that isn't white-space.
