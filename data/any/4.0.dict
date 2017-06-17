@@ -8,7 +8,7 @@
  %***************************************************************************%
 
 % Dictionary version number is 5.4.0 (formatted as V5v4v0+)
-<dictionary-version-number>: V54v0+;
+<dictionary-version-number>: V5v4v0+;
 
 % Left-wall @ANY allows multiple head-words, e.g. head-nouns and also
 % head-verbs. See the README.md file for more.
