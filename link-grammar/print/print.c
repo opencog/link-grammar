@@ -19,7 +19,6 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "corpus/corpus.h"
-#include "dict-common/dict-defines.h"  // For SUBSCRIPT_MARK
 #include "dict-common/dict-utils.h" // For size_of_expression()
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
@@ -258,7 +257,6 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	double score;
 #endif
 	const char * dj;
-	char *mark;
 	int w;
 	dyn_str * s = dyn_str_new();
 	int nwords = linkage->num_words;
@@ -268,14 +266,12 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	{
 		int pad = 21;
 		double cost;
-		char infword[MAX_WORD];
+		const char *infword;
 		Disjunct *disj = linkage->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
-		/* Cleanup the subscript mark before printing. */
-		strncpy(infword, disj->string, MAX_WORD);
-		mark = strchr(infword, SUBSCRIPT_MARK);
-		if (mark) *mark = SUBSCRIPT_DOT;
+		/* Subscript mark will be cleaned up by append_string(). */
+		infword = disj->string;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strwidth(infword);
@@ -1363,18 +1359,6 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 		if (debugprint) dyn_strcat(s, "\n");
 	}
 	if (debugprint) dyn_strcat(s, "\n");
-}
-
-/**
- * Print a word, converting SUBSCRIPT_MARK to SUBSCRIPT_DOT.
- */
-void print_with_subscript_dot(const char *s)
-{
-	const char *mark = strchr(s, SUBSCRIPT_MARK);
-	size_t len = NULL != mark ? (size_t)(mark - s) : strlen(s);
-
-	prt_error("%.*s%s%s ", (int)len,
-			  s, NULL != mark ? "." : "", NULL != mark ? mark+1 : "");
 }
 
 // Use for debug and error printing.

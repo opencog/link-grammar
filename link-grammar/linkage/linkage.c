@@ -224,11 +224,7 @@ static void print_chosen_disjuncts_words(const Linkage lkg)
 		else
 			djw = cdj->string;
 
-		char *djw_tmp = strdupa(djw);
-		char *sm = strrchr(djw_tmp, SUBSCRIPT_MARK);
-		if (NULL != sm) *sm = SUBSCRIPT_DOT;
-
-		dyn_strcat(djwbuf, djw_tmp);
+		dyn_strcat(djwbuf, djw);
 		dyn_strcat(djwbuf, " ");
 	}
 	err_msg(lg_Debug, "%s\n", djwbuf->str);

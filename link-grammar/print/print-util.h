@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include "dict-common/dict-defines.h" /* SUBSCRIPT_MARK, SUBSCRIPT_DOT */
 #include "utilities.h"
 
 #define MAX_LINE 500          /* maximum width of print area */
