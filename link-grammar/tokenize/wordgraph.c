@@ -633,9 +633,9 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 	char nn[2*sizeof(char *) + 2 + 2 + 1]; /* \"%p\" node name: "0x..."+NUL*/
 
 	append_string(wgd, "# Mode: %s\n", modestr);
-	append_string(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
+	dyn_strcat(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
 	if ((mode & (WGR_SUB)) && !(mode & WGR_COMPACT))
-		append_string(wgd, "newrank=true;\n");
+		dyn_strcat(wgd, "newrank=true;\n");
 	if (mode & WGR_LEGEND) wordgraph_legend(wgd, mode);
 	append_string(wgd, "\"%p\" [shape=box,style=filled,color=\".7 .3 1.0\"];\n",
 	              sent->wordgraph);
@@ -707,7 +707,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 		if (mode & WGR_DOTDEBUG)
 			append_string(wgd, "\\n%p-%s", w, wlabel(sent, w));
 
-		append_string(wgd, "\"];\n");
+		dyn_strcat(wgd, "\"];\n");
 
 		if (NULL != w->next)
 		{
@@ -748,7 +748,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 			{
 				if (w->unsplit_word != old_unsplit)
 				{
-					if (NULL != old_unsplit) append_string(wgd, "}\n");
+					if (NULL != old_unsplit) dyn_strcat(wgd, "}\n");
 					append_string(wgd, "subgraph \"cluster-%p\" {", w->unsplit_word);
 					append_string(wgd, "label=\"%zu %s\"; \n",
 						w->unsplit_word->node_num, wlabel(sent, w->unsplit_word));
@@ -760,7 +760,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 					append_string(wgd, "\"%p\"; ", w);
 			}
 		}
-		append_string(wgd, "}\n");
+		dyn_strcat(wgd, "}\n");
 	}
 	else
 	{
@@ -768,7 +768,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 		const Gword *terminating_node = NULL;
 #endif
 
-		append_string(wgd, "{rank=same; ");
+		dyn_strcat(wgd, "{rank=same; ");
 		for (w = sent->wordgraph->chain_next; w; w = w->chain_next)
 		{
 			snprintf(nn, sizeof(nn), "\"%p\"", w);
@@ -782,7 +782,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 			if (NULL == w->next) terminating_node = w;
 #endif
 		}
-		append_string(wgd, "}\n");
+		dyn_strcat(wgd, "}\n");
 
 #ifdef WGR_SHOW_TERMINATOR_AT_LHS
 		if (terminating_node)
@@ -790,7 +790,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 #endif
 	}
 
-	append_string(wgd, "\n}\n");
+	dyn_strcat(wgd, "\n}\n");
 
 	return wgd;
 }
