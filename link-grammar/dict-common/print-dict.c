@@ -240,8 +240,6 @@ static char *display_word_split(Dictionary dict,
 	return NULL; /* no dict entry */
 }
 
-#define DJ_COL_WIDTH sizeof("                         ")
-
 /**
  * Count the number of clauses (disjuncts) for the expression e.
  * Should return the number of disjuncts that would be returned
@@ -289,6 +287,8 @@ static unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
 	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
+
+#define DJ_COL_WIDTH sizeof("                         ")
 
 /**
  * Display the number of disjuncts associated with this dict node
