@@ -5096,6 +5096,9 @@ vibeix here
 % on commit "Fix "Assertion (word_xnode != NULL) failed" in SAT solver".
 This is a TEST
 
+% The example for defect 28 from issue #50.
+The remarks--made off the cuff--were wrong.
+
 % The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch
 % --------------------------------------------------------------------
