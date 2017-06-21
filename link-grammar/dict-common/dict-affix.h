@@ -23,6 +23,7 @@
 typedef enum {
 	AFDICT_RPUNC=1,
 	AFDICT_LPUNC,
+	AFDICT_MPUNC,
 	AFDICT_UNITS,
 	AFDICT_SUF,
 	AFDICT_PRE,
@@ -49,6 +50,7 @@ typedef enum {
 	"invalid classname", \
 	"RPUNC", \
 	"LPUNC", \
+	"MPUNC", \
 	"UNITS", \
 	"SUF",         /* SUF is used in the Russian dict */ \
 	"PRE",         /* PRE is not used anywhere, yet... */ \
