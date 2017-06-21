@@ -624,10 +624,13 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				word_label(sent, unsplit_word, "+", label);
 				word_label(sent, unsplit_word, NULL, "R");
 				unsplit_word->status |= WS_UNSPLIT;
+
+				alternative_id = unsplit_word->alternative_id;
 #ifdef DEBUG
 				sole_alternative_of_itself = unsplit_word;
 #endif
 				lgdebug(D_IWA, " (reconnected)");
+
 			}
 			else
 			{
