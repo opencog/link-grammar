@@ -1837,7 +1837,7 @@ static bool strip_right(Sentence sent,
 
 	if (*n_r_stripped >= MAX_STRIP-1) return false;
 
-	assert(temp_wend>w, "strip_right: unexpected empty word");
+	assert(temp_wend>w, "strip_right: unexpected empty-string word");
 	if (NULL == afdict) return false;
 
 	rword_list = AFCLASS(afdict, classnum);
@@ -2140,7 +2140,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			                       0,NULL, n_r_stripped,r_stripped, 0,NULL);
 
 			/* Its possible that the token consisted entirely of
-			 * left-punctuation, in which case, wp is an empty string.
+			 * left-punctuation, in which case, wp is an empty-string.
 			 * In case this is a single token (n_r_stripped == 1), we have
 			 * to continue processing, because it may match a regex. */
 			if ('\0' == *wp && n_r_stripped != 1)
@@ -2520,8 +2520,8 @@ static Gword *issue_sentence_word(const Sentence sent, const char *const s)
 
 	assert(NULL!=last_word);
 	assert(NULL!=s, "subword must not be NULL");
-	assert('\0'!=s[0], "subword must not be empty: Last subword issued: '%s'",
-	   last_word->subword);
+	assert('\0'!=s[0], "subword must not be an empty-string: "
+	                   "Last subword issued: '%s'", last_word->subword);
 
 	new_word = gword_new(sent, s);
 	new_word->unsplit_word = sent->wordgraph;
