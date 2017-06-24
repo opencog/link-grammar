@@ -1532,13 +1532,13 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 	if (0 < AFCLASS(sent->dict->affix_table, AFDICT_MPRE)->length)
 	{
 		word_can_split = mprefix_split(sent, unsplit_word, word);
-		lgdebug(+D_MS, "Tried mprefix_split word=%s, can_split=%d\n",
+		lgdebug(+D_MS, "Tried mprefix_split word=%s can_split=%d\n",
 		        word, word_can_split);
 	}
 	else
 	{
 		word_can_split = suffix_split(sent, unsplit_word, word);
-		lgdebug(+D_MS, "Tried to split word=%s, can_split=%d\n",
+		lgdebug(+D_MS, "Tried to split word=%s can_split=%d\n",
 		        word, word_can_split);
 
 		/* XXX WS_FIRSTUPPER marking is missing here! */
@@ -1552,7 +1552,7 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 			downcase_utf8_str(downcase, word, downcase_size, sent->dict->lctype);
 			word_can_split |=
 				suffix_split(sent, unsplit_word, downcase);
-			lgdebug(+D_MS, "Tried to split lc=%s, now can_split=%d\n",
+			lgdebug(+D_MS, "Tried to split lc=%s now can_split=%d\n",
 			        downcase, word_can_split);
 		}
 	}
@@ -2361,7 +2361,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					Gword *lc;
 
 					wp = downcase;
-					lgdebug(+D_SW, "Adding lc=%s, is_capitalizable=1\n", wp);
+					lgdebug(+D_SW, "Adding lc=%s is_capitalizable=1\n", wp);
 					lc = issue_word_alternative(sent, unsplit_word, "LC",
 					                            0,NULL, 1,&wp, 0,NULL);
 					/* This is the lc version. The original word can be restored
