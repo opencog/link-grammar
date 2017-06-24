@@ -897,6 +897,18 @@ static Gword *wordgraph_getqueue_word(Sentence sent)
 	return w;
 }
 
+static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
+{
+		const char *regex_name = match_regex(dict->regex_root, word);
+		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
+		{
+			gword->status |= WS_REGEX;
+			gword->regex_name = regex_name;
+			return true;
+		}
+		return false;
+}
+
 /**
  * Prevent a further tokenization of all the subwords in the given alternative.
  * To be used if the alternative represents a final tokenization.
