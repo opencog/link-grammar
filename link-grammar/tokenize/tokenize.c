@@ -2302,13 +2302,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	 * An alternative consisting of the word has already been generated. */
 	if (!word_is_known && (!word_can_split || is_contraction_word(dict, word)))
 	{
-		const char *regex_name = match_regex(dict->regex_root, word);
-		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
-		{
-			unsplit_word->status |= WS_REGEX;
-			unsplit_word->regex_name = regex_name;
-			/* Don't set word_is_known=true yet. */
-		}
+		regex_guess(dict, word, unsplit_word);
+		/* Even if a regex matches, don't set word_is_known=true yet. */
 	}
 
 	lgdebug(+D_SW, "After split step, word=%s can_split=%d is_known=%d RE=%s\n",
