@@ -910,7 +910,7 @@ static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
 }
 
 /**
- * Prevent a further tokenization of all the subwords in the given alternative.
+ * Prevent a further tokenization of dict subwords in the given alternative.
  * To be used if the alternative represents a final tokenization.
  */
 static void tokenization_done(Dictionary dict, Gword *altp)
@@ -922,13 +922,17 @@ static void tokenization_done(Dictionary dict, Gword *altp)
 	{
 		if (NULL == altp) break; /* just in case this is a dummy word */
 
-		/* Mark only words that are in the dict file.
+		/* Mark only words that are in a dict file.
 		 * Other words need further processing. */
-		if (boolean_dictionary_lookup(dict, altp->subword))
+		if (!(altp->status & (WS_INDICT|WS_REGEX)))
 		{
-			altp->status |= WS_INDICT;
-			altp->tokenizing_step = TS_DONE;
+			if (boolean_dictionary_lookup(dict, altp->subword))
+				altp->status |= WS_INDICT;
+			else
+				regex_guess(dict, altp->subword, altp);
 		}
+		if (altp->status & (WS_INDICT|WS_REGEX))
+			altp->tokenizing_step = TS_DONE;
 	}
 }
 
