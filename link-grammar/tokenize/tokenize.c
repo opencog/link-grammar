@@ -933,6 +933,8 @@ static void tokenization_done(Dictionary dict, Gword *altp)
 		}
 		if (altp->status & (WS_INDICT|WS_REGEX))
 			altp->tokenizing_step = TS_DONE;
+
+		if (NULL == altp->next) break; /* Only one token in this alternative. */
 	}
 }
 
