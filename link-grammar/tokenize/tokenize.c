@@ -2284,7 +2284,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	word_can_split = morpheme_split(sent, unsplit_word, word);
 
 	/* If the word is unknown, then try to guess its category by regexes.
-	 * A word that can split is considered known, unless it is a contraction,
+	 * A word that cannot split is considered known, unless it is a contraction,
 	 * in which case we need a regex for things like 1960's.
 	 * The first regex which matches (if any) is used.
 	 * An alternative consisting of the word has already been generated. */
