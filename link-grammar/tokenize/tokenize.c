@@ -1695,6 +1695,59 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 }
 #endif /* HAVE_HUNSPELL */
 
+static int split_mpunc(Sentence sent, const char *word, char *w,
+                                const char *r_stripped[])
+{
+	const Dictionary afdict = sent->dict->affix_table;
+	const Afdict_class * mpunc_list;
+	const char * const * mpunc;
+	size_t l_strippable;
+	int n_r_stripped = 0;
+
+	if (NULL == afdict) return 0;
+	mpunc_list = AFCLASS(afdict, AFDICT_MPUNC);
+	l_strippable = mpunc_list->length;
+	mpunc = mpunc_list->string;
+
+	strcpy(w, word);
+
+	// +1: mpunc in start position is not allowed
+	for (char *sep = w+1; '\0' != *sep; sep++)
+	{
+		for (size_t i = 0; i < l_strippable; i++)
+		{
+			size_t sz = strlen(mpunc[i]);
+			if (0 == strncmp(sep, mpunc[i], sz))
+			{
+				if ('\0' == sep[sz]) continue; // mpunc in end position
+
+				lgdebug(D_UN, "w='%s' found mpunc '%s'\n", w, mpunc[i]);
+
+				if (sep != w)
+				{
+					*sep = '\0';
+					r_stripped[n_r_stripped++] = w;
+				}
+				r_stripped[n_r_stripped++] = mpunc[i];
+
+				w = sep + sz;
+				sep += sz - 1;
+				break;
+			}
+		}
+	}
+
+	if (n_r_stripped > 0) r_stripped[n_r_stripped++] = w;
+
+	if (n_r_stripped >= MAX_STRIP-1)
+	{
+		lgdebug(+D_SW, "%s %d >= %d tokens\n", __func__, MAX_STRIP, MAX_STRIP-1);
+		return 0;
+	}
+
+	return n_r_stripped;
+}
+
 /**
  * Strip off punctuation, etc. on the left-hand side.
  */
@@ -2043,7 +2096,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	Dictionary dict = sent->dict;
 	bool word_is_known = false;
 	bool word_can_split;
-	bool word_can_lrsplit = false;   /* This is needed to prevent spelling on
+	bool word_can_lrmsplit = false;  /* This is needed to prevent spelling on
 	                                  * compound subwords, like "Word." while
 	                                  * still allowing capitalization handling
 	                                  * and regex match. */
@@ -2156,7 +2209,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			}
 
 			n_r_stripped = 0;
-			word_can_lrsplit = true;
+			word_can_lrmsplit = true;
 		}
 
 		lgdebug(+D_SW, "1: Continue with word %s status=%s\n",
@@ -2263,7 +2316,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, units_n_r_stripped, "rR2");
-				word_can_lrsplit = true;
+				word_can_lrmsplit = true;
 			}
 		}
 
@@ -2284,15 +2337,24 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, n_r_stripped, "rR3");
-				word_can_lrsplit = true;
+				word_can_lrmsplit = true;
 			}
 		}
 	}
 
-	lgdebug(+D_SW, "2: Continue with word %s, can_lrsplit=%d status=%s\n",
-	        word, word_can_lrsplit, gword_status(sent, unsplit_word));
+	n_r_stripped = split_mpunc(sent, word, temp_word, r_stripped);
+	if (n_r_stripped > 0)
+	{
+		issue_word_alternative(sent, unsplit_word, "M", 0,NULL,
+		                       n_r_stripped,r_stripped, 0,NULL);
+		word_can_lrmsplit = true;
+	}
+
+	lgdebug(+D_SW, "2: Continue with word=%s can_lrmsplit=%d status=%s\n",
+	        word, word_can_lrmsplit, gword_status(sent, unsplit_word));
 
 	/* Generate random morphology */
+	if ((dict->affix_table && dict->affix_table->anysplit) && !word_can_lrmsplit)
 	if (dict->affix_table && dict->affix_table->anysplit)
 		anysplit(sent, unsplit_word);
 
@@ -2490,7 +2552,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	 * 1. The word if not in the main dict but matches a regex.
 	 * 2. The word an unknown capitalized word.
 	 */
-	if (!word_can_lrsplit && !word_is_known &&
+	if (!word_can_lrmsplit && !word_is_known &&
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
 	    opts->use_spell_guess && dict->spell_checker)
