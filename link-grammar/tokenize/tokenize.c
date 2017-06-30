@@ -918,9 +918,16 @@ static void tokenization_done(Sentence sent, Gword *altp)
 
 	Gword *alternative_id = altp->alternative_id;
 
+	if (NULL == altp)
+	{
+		/* Prevent a crash in such a case. */
+		prt_error("warning: Unexpected null alternative\n");
+		return;
+	}
+
 	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
 	{
-		if (NULL == altp) break; /* just in case this is a dummy word */
+		if (NULL == altp) break; /* Just in case this is a dummy word. */
 
 		/* Mark only words that are in a dict file.
 		 * Other words need further processing. */
