@@ -913,7 +913,7 @@ static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
  * Prevent a further tokenization of dict subwords in the given alternative.
  * To be used if the alternative represents a final tokenization.
  */
-static void tokenization_done(Dictionary dict, Gword *altp)
+static void tokenization_done(Sentence sent, Gword *altp)
 {
 
 	Gword *alternative_id = altp->alternative_id;
@@ -926,14 +926,16 @@ static void tokenization_done(Dictionary dict, Gword *altp)
 		 * Other words need further processing. */
 		if (!(altp->status & (WS_INDICT|WS_REGEX)))
 		{
-			if (boolean_dictionary_lookup(dict, altp->subword))
+			if (boolean_dictionary_lookup(sent->dict, altp->subword))
 				altp->status |= WS_INDICT;
 			else
-				regex_guess(dict, altp->subword, altp);
+				regex_guess(sent->dict, altp->subword, altp);
 		}
 		if (altp->status & (WS_INDICT|WS_REGEX))
 			altp->tokenizing_step = TS_DONE;
 
+		lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
+		        altp->subword, gword_status(sent, altp), altp->tokenizing_step);
 		if (NULL == altp->next) break; /* Only one token in this alternative. */
 	}
 }
@@ -1470,7 +1472,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPW",
 					          split_prefix_i+1,split_prefix, 0,NULL, 0,NULL);
-					tokenization_done(dict, altp);
+					tokenization_done(sent, altp);
 					/* If the prefix is a valid word,
 					 * It has been added in separate_word() as a word */
 					break;
@@ -1483,7 +1485,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 					if (split_check) return true;
 					altp = issue_word_alternative(sent, unsplit_word, "MPS",
 					          split_prefix_i+1,split_prefix, 1,&newword, 0,NULL);
-					tokenization_done(dict, altp);
+					tokenization_done(sent, altp);
 				}
 			}
 		}
