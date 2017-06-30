@@ -943,7 +943,16 @@ static void tokenization_done(Sentence sent, Gword *altp)
 
 		lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
 		        altp->subword, gword_status(sent, altp), altp->tokenizing_step);
-		if (NULL == altp->next) break; /* Only one token in this alternative. */
+
+		/* The alternative ends on one of these conditions:
+		 * 1. A different word alternative_id (checked in the loop conditional).
+		 * 2. No next word.
+		 * 3. The word has been issued alone as its own alternative
+		 *    (In that case its alternative_id may belong to a previous
+		 *    longer alternative).
+		 */
+		if ((NULL == altp->next) || altp->issued_unsplit)
+			break; /* Only one token in this alternative. */
 	}
 }
 
