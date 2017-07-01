@@ -459,14 +459,11 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 
 	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
 
-	if (TS_ANYSPLIT == unsplit_word->tokenizing_step)
-		return true; /* We already handled this token. */
-
 	if (lutf > MAX_WORD_TO_SPLIT)
 	{
-		Gword *w = issue_word_alternative(sent, unsplit_word, "AS>",
+		Gword *alt = issue_word_alternative(sent, unsplit_word, "AS>",
 		                       0,NULL, 1,&word, 0,NULL);
-		w->tokenizing_step = TS_ANYSPLIT;
+		tokenization_done(sent, alt);
 		return true;
 	}
 
@@ -619,8 +616,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		        (NULL == prefix_position) ? 0 : 1, prefix_position,
 		        1, stem_position,
 		        num_sufixes, suffix_position);
-		for (Gword *w = alt; w->alternative_id == alt; w = w->next[0])
-		w->tokenizing_step = TS_ANYSPLIT;
+		tokenization_done(sent, alt);
 		free(affixes);
 	}
 
