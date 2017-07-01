@@ -913,7 +913,7 @@ static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
  * Prevent a further tokenization of dict subwords in the given alternative.
  * To be used if the alternative represents a final tokenization.
  */
-static void tokenization_done(Sentence sent, Gword *altp)
+void tokenization_done(Sentence sent, Gword *altp)
 {
 
 	Gword *alternative_id = altp->alternative_id;
