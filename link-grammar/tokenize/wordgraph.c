@@ -772,7 +772,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 		for (w = sent->wordgraph->chain_next; w; w = w->chain_next)
 		{
 			snprintf(nn, sizeof(nn), "\"%p\"", w);
-			if ((w->unsplit_word == sent->wordgraph) &&
+			if (IS_SENTENCE_WORD(sent, w) &&
 			    ((mode & WGR_UNSPLIT) || strstr(dyn_str_value(wgd), nn)))
 			{
 				append_string(wgd, "%s; ", nn);

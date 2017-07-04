@@ -2924,7 +2924,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		unsplit_word  = wp_old->word;
 		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
-			while (unsplit_word->unsplit_word != sent->wordgraph)
+			while (!IS_SENTENCE_WORD(sent, unsplit_word))
 			{
 				assert(NULL != unsplit_word, "'%s': Unsplit word not found",
 						 wg_word->subword);
