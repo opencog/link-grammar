@@ -401,6 +401,33 @@ static bool is_contraction_word(Dictionary dict, const char *s)
 	return false;
 }
 
+/*
+ * Return true iff the given word is an AFDICT_xPUNC.
+ *
+ * FIXME:
+ * We cannot directly find if a word is an AFDICT_xPUNC, because
+ * we have no way to mark that in * strip_left()/strip_right()/split_mpunc(),
+ * and we don't have a direct search function in the afdict (since it
+ * doesn't have an in-memory tree structure).
+ */
+static bool is_afdict_punc(const Dictionary afdict, const char *word)
+{
+	if (NULL == afdict) return false;
+	int punc_types[] = { AFDICT_RPUNC, AFDICT_MPUNC, AFDICT_LPUNC, 0 };
+
+	for (int affix_punc = 0; punc_types[affix_punc] != 0; affix_punc++)
+	{
+		const Afdict_class * punc_list = AFCLASS(afdict, punc_types[affix_punc]);
+		size_t l_strippable = punc_list->length;
+		const char * const * punc = punc_list->string;
+
+		for (size_t i = 0; i < l_strippable; i++)
+			if (0 == strcmp(word, punc[i])) return true;
+	}
+
+	return false;
+}
+
 /**
  * Issue candidate subwords for unsplit_word (an "alternative").
  * Issue prefnum elements from prefix, stemnum elements from stem, and suffnum
@@ -519,6 +546,10 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					{
 						morpheme_type = MT_STEM;
 						last_split = true;
+					}
+					else if (is_afdict_punc(sent->dict->affix_table, token))
+					{
+						morpheme_type = MT_PUNC;
 					}
 					else
 					{
@@ -639,6 +670,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				subword->unsplit_word = unsplit_word;
 				subword->split_counter = unsplit_word->split_counter + 1;
 				subword->morpheme_type = morpheme_type;
+				subword->next = NULL;
+				if (MT_PUNC == morpheme_type) /* It's a terminal token */
+					tokenization_done(sent, subword);
 
 				if (last_split)
 				{
