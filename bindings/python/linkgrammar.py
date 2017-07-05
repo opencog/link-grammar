@@ -434,6 +434,18 @@ class Linkage(object):
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 
+    def word_byte_start(self, w):
+        return clg.linkage_get_word_byte_start(self._obj, w)
+
+    def word_byte_end(self, w):
+        return clg.linkage_get_word_byte_end(self._obj, w)
+
+    def word_char_start(self, w):
+        return clg.linkage_get_word_char_start(self._obj, w)
+
+    def word_char_end(self, w):
+        return clg.linkage_get_word_char_end(self._obj, w)
+
 
 class LG_TimerExhausted(LG_Error):
     pass
