@@ -34,19 +34,31 @@ def nsuffix(q):
 
 DISPLAY_GUESSES = True   # Display regex and POS guesses
 DEBUG_POSITION = True    # Debug word position
+DISPLAY_MORPHOLOGY = True
+
+lang = 'en'
+
+if len(sys.argv) > 1:
+    lang = sys.argv[1]
 
 po = ParseOptions(verbosity=0) # 1=more verbose; 2=trace; >5=debug
-lgdict = Dictionary('en')
+lgdict = Dictionary(lang)
 
 po.max_null_count = 999  # > allowed maximum number of words
 po.max_parse_time = 10   # actual parse timeout may be about twice bigger
-po.spell_guess = 0       # spell guesses are not handled in this demo
+po.spell_guess = True if DISPLAY_GUESSES else False
+po.display_morphology = True if DISPLAY_MORPHOLOGY else False
 
+if sys.version_info < (3, 0):
+    import codecs
+    #sys.stdout = codecs.getreader('utf-8')(sys.stdout)
+
+print("Enter sentences:");
 # iter(): avoid python2 input buffering
 for sentence_text in iter(sys.stdin.readline, ''):
     if sentence_text.strip() == '':
         continue
-    sent = Sentence(sentence_text, lgdict, po)
+    sent = Sentence(str(sentence_text), lgdict, po)
     try:
         linkages = sent.parse()
     except LG_TimerExhausted:
@@ -75,8 +87,14 @@ for sentence_text in iter(sys.stdin.readline, ''):
                 break
 
     # Show results with unlinked words or guesses
-    if not guess_found and null_count == 0:
+    if not DEBUG_POSITION and not guess_found and null_count == 0:
         continue
+
+
+    if DEBUG_POSITION:
+        for p in range (0, len(sentence_text)):
+            print(p%10, end="")
+        print()
 
     print('Sentence has {} unlinked word{}:'.format(
         null_count, nsuffix(null_count)))
@@ -88,4 +106,17 @@ for sentence_text in iter(sys.stdin.readline, ''):
             continue
         result_no += 1
         uniqe_parse[str(words)] = True
-        print("{}: {}".format(result_no, ' '.join(words)))
+
+        if DEBUG_POSITION:
+            words_char = []
+            words_byte = []
+            wi = 0
+            for w in words:
+                if sys.version_info < (3, 0):
+                    words[wi] = words[wi].decode('utf-8')
+                words_char.append(words[wi] + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
+                words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
+                wi += 1
+
+        print(u"{}: {}".format(result_no, ' '.join(words_char)))
+        print(u"{}: {}".format(result_no, ' '.join(words_byte)))
