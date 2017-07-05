@@ -89,6 +89,7 @@ linkage_get_disjunct_str
 linkage_get_disjunct_cost
 linkage_get_disjunct_corpus_score
 linkage_get_word
+linkage_get_bare_word
 linkage_print_constituent_tree
 linkage_free_constituent_tree_str
 linkage_print_diagram

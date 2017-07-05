@@ -875,6 +875,29 @@ const char * linkage_get_word(const Linkage linkage, WordIdx w)
 	return linkage->word[w];
 }
 
+// Need to free the returned value of this function later:
+// the memory pointed to by bare_word
+const char * linkage_get_bare_word(const Linkage linkage, WordIdx w)
+{
+	if (!linkage) return NULL;
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
+
+	const char delimiter = '.';
+	char *separator_ptr = strchr(linkage->word[w], delimiter);
+
+	if(separator_ptr == NULL)
+	{
+	  return linkage->word[w]; // if there is no separator in the word
+	}
+	// copy and return word without the suffix
+	int position = separator_ptr - linkage->word[w];
+	char* bare_word = (char*) malloc((position + 1) * sizeof(char));
+	memcpy(bare_word, linkage->word[w], position);
+	bare_word[position] = '\0';
+	return bare_word;
+}
+
+
 int linkage_unused_word_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */

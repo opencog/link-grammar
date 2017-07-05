@@ -322,6 +322,8 @@ link_public_api(double)
      linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx word_num);
 link_public_api(const char *)
      linkage_get_word(const Linkage linkage, WordIdx word_num);
+link_public_api(const char *)
+     linkage_get_bare_word(const Linkage linkage, WordIdx word_num);
 link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 link_public_api(void)
