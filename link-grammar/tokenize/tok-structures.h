@@ -119,6 +119,8 @@ typedef enum
 struct Gword_struct
 {
 	const char *subword;
+	const char *start;   /* subword start position. */
+	const char *end;     /* subword end position. */
 
 	Gword *unsplit_word; /* Upward-going co-tree */
 	Gword **next;        /* Right-going tree */
