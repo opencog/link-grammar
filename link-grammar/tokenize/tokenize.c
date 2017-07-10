@@ -428,6 +428,108 @@ static bool is_afdict_punc(const Dictionary afdict, const char *word)
 	return false;
 }
 
+static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
+{
+		const char *regex_name = match_regex(dict->regex_root, word);
+		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
+		{
+			gword->status |= WS_REGEX;
+			gword->regex_name = regex_name;
+			return true;
+		}
+		return false;
+}
+
+/**
+ * Perform gword_func() on each gword of the given alternative.
+ */
+static void for_word_alt(Sentence sent, Gword *altp,
+                           void(*gword_func)(Sentence sent, Gword *w, unsigned int),
+                           unsigned int arg)
+{
+	Gword *alternative_id = altp->alternative_id;
+
+	if (NULL == altp) return;
+
+	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
+	{
+		if (NULL == altp) break; /* Just in case this is a dummy word. */
+
+		gword_func(sent, altp, arg);
+
+
+		/* The alternative ends on one of these conditions:
+		 * 1. A different word alternative_id (checked in the loop conditional).
+		 * 2. No next word.
+		 * 3. The word has been issued alone as its own alternative
+		 *    (In that case its alternative_id may belong to a previous
+		 *    longer alternative).
+		 */
+		if ((NULL == altp->next) || altp->issued_unsplit)
+			break; /* Only one token in this alternative. */
+	}
+}
+
+/**
+ * Set WS_INDICT / WS_REGEX if the word is in the dict / regex files.
+ * The first one which is found is set.
+ */
+static void set_word_status(Sentence sent, Gword *w, unsigned int status)
+{
+	switch (status)
+	{
+		case WS_INDICT|WS_REGEX:
+			if (!(w->status & (WS_INDICT|WS_REGEX)))
+			{
+				if (boolean_dictionary_lookup(sent->dict, w->subword))
+				{
+					w->status |= WS_INDICT;
+				}
+				else
+				{
+					regex_guess(sent->dict, w->subword, w);
+				}
+			}
+			break;
+
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
+		case WS_RUNON:
+		case WS_SPELL:
+		/* Currently used to mark words that are a result of a spelling. */
+			if ((w->status & WS_INDICT) &&
+			    !boolean_dictionary_lookup(sent->dict, w->subword))
+			{
+				status &= ~WS_INDICT;
+			}
+			w->status |= status;
+			break;
+#endif /* HAVE_HUNSPELL */
+
+		default:
+			assert(0, "set_dict_word_status: Invalid status 0x%x\n", status);
+	}
+
+	lgdebug(+D_SW, "Word %s: status=%s\n", w->subword, gword_status(sent, w));
+}
+
+static void set_tokenization_step(Sentence sent, Gword *w, unsigned int ts)
+{
+	set_word_status(sent, w, WS_INDICT|WS_REGEX);
+	w->tokenizing_step = ts;
+
+	lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
+			  w->subword, gword_status(sent, w), w->tokenizing_step);
+}
+
+/**
+ * Prevent a further tokenization.
+ * To be used on terminal alternatives.
+ */
+void tokenization_done(Sentence sent, Gword *altp)
+{
+	for_word_alt(sent, altp, set_tokenization_step, TS_DONE);
+}
+
 /**
  * Issue candidate subwords for unsplit_word (an "alternative").
  * Issue prefnum elements from prefix, stemnum elements from stem, and suffnum
@@ -670,7 +772,6 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				subword->unsplit_word = unsplit_word;
 				subword->split_counter = unsplit_word->split_counter + 1;
 				subword->morpheme_type = morpheme_type;
-				subword->next = NULL;
 				if (MT_PUNC == morpheme_type) /* It's a terminal token */
 					tokenization_done(sent, subword);
 
@@ -929,65 +1030,6 @@ static Gword *wordgraph_getqueue_word(Sentence sent)
 	w = sent->word_queue->word;;
 
 	return w;
-}
-
-static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
-{
-		const char *regex_name = match_regex(dict->regex_root, word);
-		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
-		{
-			gword->status |= WS_REGEX;
-			gword->regex_name = regex_name;
-			return true;
-		}
-		return false;
-}
-
-/**
- * Prevent a further tokenization of dict subwords in the given alternative.
- * To be used if the alternative represents a final tokenization.
- */
-void tokenization_done(Sentence sent, Gword *altp)
-{
-
-	Gword *alternative_id = altp->alternative_id;
-
-	if (NULL == altp)
-	{
-		/* Prevent a crash in such a case. */
-		prt_error("warning: Unexpected null alternative\n");
-		return;
-	}
-
-	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
-	{
-		if (NULL == altp) break; /* Just in case this is a dummy word. */
-
-		/* Mark only words that are in a dict file.
-		 * Other words need further processing. */
-		if (!(altp->status & (WS_INDICT|WS_REGEX)))
-		{
-			if (boolean_dictionary_lookup(sent->dict, altp->subword))
-				altp->status |= WS_INDICT;
-			else
-				regex_guess(sent->dict, altp->subword, altp);
-		}
-		if (altp->status & (WS_INDICT|WS_REGEX))
-			altp->tokenizing_step = TS_DONE;
-
-		lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
-		        altp->subword, gword_status(sent, altp), altp->tokenizing_step);
-
-		/* The alternative ends on one of these conditions:
-		 * 1. A different word alternative_id (checked in the loop conditional).
-		 * 2. No next word.
-		 * 3. The word has been issued alone as its own alternative
-		 *    (In that case its alternative_id may belong to a previous
-		 *    longer alternative).
-		 */
-		if ((NULL == altp->next) || altp->issued_unsplit)
-			break; /* Only one token in this alternative. */
-	}
 }
 
 static const char ** resize_alts(const char **arr, size_t len)
@@ -1367,37 +1409,6 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 	return word_can_split;
 }
 
-#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-/**
- * Set the status of all the words in a given alternative.
- * Currently used to mark words that are a result of a spelling.
- */
-static void set_alt_word_status(Dictionary dict, Gword *altp,
-                                unsigned int status)
-{
-	Gword *alternative_id = altp->alternative_id;
-
-	for (; (NULL != altp) && (altp->alternative_id == alternative_id);
-	     altp = altp->next[0])
-	{
-		if (NULL == altp) break; /* just in case this is a dummy word */
-
-		/* WS_INDICT is to be used if we are bypassing separate_word(). */
-		if ((altp->status & WS_INDICT) &&
-			 !boolean_dictionary_lookup(dict, altp->subword))
-		{
-			 status &= ~WS_INDICT;
-		}
-
-		altp->status |= status;
-
-		/* Is this needed? */
-		if (MT_INFRASTRUCTURE == altp->unsplit_word->morpheme_type) break;
-	}
-}
-#endif /* HAVE_HUNSPELL */
-
-
 #define HEB_PRENUM_MAX 5   /* no more than 5 prefix "subwords" */
 #define HEB_UTF8_BYTES 2   /* Hebrew UTF8 characters are always 2-byte */
 #define HEB_CHAREQ(s, c) (strncmp(s, c, HEB_UTF8_BYTES) == 0)
@@ -1721,7 +1732,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			{
 				altp = issue_word_alternative(sent, unsplit_word, "RO",
 				          0,NULL, altlen(runon_word),runon_word, 0,NULL);
-				set_alt_word_status(sent->dict, altp, WS_RUNON);
+				for_word_alt(sent, altp, set_word_status, WS_RUNON);
 				runon_word_corrections++;
 			}
 			free(runon_word);
@@ -1735,7 +1746,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 				wp = alternates[j];
 				altp = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "SP",
 				                              0,NULL, 1,&wp, 0,NULL);
-				set_alt_word_status(sent->dict, altp, WS_SPELL);
+				for_word_alt(sent, altp, set_word_status, WS_SPELL);
 				num_guesses++;
 			}
 			//else prt_error("Debug: Spell guess '%s' ignored\n", alternates[j]);
