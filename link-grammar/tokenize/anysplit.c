@@ -310,19 +310,21 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 
 	for (i = 0; i < n; i++)
 	{
-		/* read_entry() (read-dict.c) invokes patch_subscript() also for the affix
-		 * file. As a result, if a regex contains a dot it is patched by
-		 * SUBSCRIPT_MARK. We undo it here. */
-		char *s = strdup(regstring[i]);
-		patch_subscript_mark(s);
+		const char *r = regstring[i];
 
 		/* Create a new Regex_node and add to the list. */
 		new_re = malloc(sizeof(*new_re));
 		new_re->name    = strdup(afdict_classname[classnum]);
-		new_re->pattern = s;
 		new_re->re      = NULL;
 		new_re->next    = NULL;
-		new_re->neg = false; /* TODO (if needed): Negative regex'es. */
+		new_re->neg     = ('!' == r[0]);
+		if (new_re->neg || (0 == strncmp(r, "\\!", 2))) r++;
+		new_re->pattern = strdup(r);
+		/* read_entry() (read-dict.c) invokes patch_subscript() also for the affix
+		 * file. As a result, if a regex contains a dot it is patched by
+		 * SUBSCRIPT_MARK. We undo it here. */
+		patch_subscript_mark(new_re->pattern);
+
 		*tail = new_re;
 		tail = &new_re->next;
 	}
