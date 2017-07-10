@@ -235,6 +235,7 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 % But something is funky about this 5'-3' business since 2' also matches ???
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
+HYPHENATED-WORDS: !/--/
 HYPHENATED-WORDS:
   /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
 
