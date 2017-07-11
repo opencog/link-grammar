@@ -15,6 +15,9 @@
 #ifndef _TOK_STRUCTURES_H_
 #define _TOK_STRUCTURES_H_
 
+#include <stddef.h>
+#include "api-types.h"
+
 /* conditional compiling flags */
 #define INFIX_NOTATION
     /* If defined, then we're using infix notation for the dictionary */
