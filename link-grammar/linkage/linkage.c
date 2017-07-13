@@ -93,7 +93,6 @@ static const char *join_null_word(Sentence sent, Gword **wgp, size_t count)
  * Used for "unifying" null morphemes that are part of a single subword,
  * when only some of its morphemes (2 or more) don't have a linkage.
  * The words "start" to "end" (including) are unified by the new node.
- * XXX Experimental.
  */
 static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 {
@@ -113,6 +112,8 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	new_word->status |= WS_PL;
 	new_word->label = "NJ";
 	new_word->null_subwords = NULL;
+	new_word->start = (*start)->start;
+	new_word->end = (*start)->end;
 
 	/* Link the null_subwords links of the added unifying node to the null
 	 * subwords it unified. */
@@ -901,4 +902,42 @@ double linkage_corpus_cost(const Linkage linkage)
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage) return 0.0;
 	return linkage->lifo.corpus_cost;
+}
+
+/* =========== Get word sentence positions ============================== */
+
+size_t linkage_get_word_byte_start(const Linkage linkage, WordIdx w)
+{
+	if (linkage->num_words <= w) return 0; /* bounds-check */
+	return linkage->wg_path_display[w]->start - linkage->sent->orig_sentence;
+}
+
+size_t linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
+{
+	if (linkage->num_words <= w) return 0; /* bounds-check */
+	return linkage->wg_path_display[w]->end - linkage->sent->orig_sentence;
+}
+
+/* The character position is computed in a straightforward way, which may
+ * not be efficient if more than one position is needed. If needed, it can
+ * be changed to use caching of already-calculated positions. */
+
+size_t linkage_get_word_char_start(const Linkage linkage, WordIdx w)
+{
+	if (linkage->num_words <= w) return 0; /* bounds-check */
+	int pos = linkage->wg_path_display[w]->start - linkage->sent->orig_sentence;
+	char *sentchunk = alloca(pos+1);
+	strncpy(sentchunk, linkage->sent->orig_sentence, pos);
+	sentchunk[pos] = '\0';
+	return utf8_strlen(sentchunk);
+}
+
+size_t linkage_get_word_char_end(const Linkage linkage, WordIdx w)
+{
+	if (linkage->num_words <= w) return 0; /* bounds-check */
+	int pos = linkage->wg_path_display[w]->end - linkage->sent->orig_sentence;
+	char *sentchunk = alloca(pos+1);
+	strncpy(sentchunk, linkage->sent->orig_sentence, pos);
+	sentchunk[pos] = '\0';
+	return utf8_strlen(sentchunk);
 }

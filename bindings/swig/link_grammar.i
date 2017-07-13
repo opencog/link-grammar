@@ -182,6 +182,10 @@ const char ** linkage_get_link_domain_names(Linkage linkage, int index);
 const char ** linkage_get_words(Linkage linkage);
 //const char *  linkage_get_disjunct(Linkage linkage, int w);
 const char *  linkage_get_word(Linkage linkage, int w);
+int linkage_get_word_byte_start(Linkage linkage, int index);
+int linkage_get_word_byte_end(Linkage linkage, int index);
+int linkage_get_word_char_start(Linkage linkage, int index);
+int linkage_get_word_char_end(Linkage linkage, int index);
 
 int linkage_unused_word_cost(Linkage linkage);
 double linkage_disjunct_cost(Linkage linkage);

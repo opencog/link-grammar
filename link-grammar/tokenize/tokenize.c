@@ -52,6 +52,7 @@
 
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
+#define REPLACEMENT_MARK "~" /* a mark for a replacement word */
 
 /* Dictionary capitalization handling */
 #define CAP1st "1stCAP" /* Next word is capitalized */
@@ -407,6 +408,12 @@ static bool is_contraction_word(Dictionary dict, const char *s)
  * stems are assumed to be already marked with one of the STEMSUBSCR
  * possibilities.  Set the Morpheme_type of the subwords.
  *
+ * The label is used in the wordgraph display, to indicate which section of
+ * tokenizing code has inserted the token. If its first character is
+ * REPLACEMENT_MARK, the token is not necessarily a substring of the word. This
+ * may happen with spell corrections and with the experimental "dictcap"
+ * feature, and is used for setting the word position.
+ *
  * Return a pointer to the first word of the added alternative.
  *
  * TODO Support also middle morphemes if needed.
@@ -427,13 +434,12 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 	Gword *subword;                 /* subword of the current token */
 	Gword *psubword = NULL;         /* subword of the previous token */
-	const size_t token_tot = prefnum + stemnum + suffnum; /* number of tokens */
-	size_t token_ord = 0;           /* ordinal number of the current token */
+	const int token_tot = prefnum + stemnum + suffnum; /* number of tokens */
 	Morpheme_type morpheme_type;
 	Gword *alternative_id = NULL;   /* to be set to the start subword */
 	bool subword_eq_unsplit_word;
-	size_t maxword = 0;
 	bool last_split = false;        /* this is a final token */
+	int *strlen_cache = alloca(token_tot); /* token length cache array */
 #ifdef DEBUG
 	Gword *sole_alternative_of_itself = NULL;
 #endif
@@ -458,14 +464,21 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	        unsplit_word->split_counter);
 
 	/* Allocate memory which is enough for the longest token. */
-	for (at = PREFIX; at < END; at++)
+	int maxword = 0;
+	for (ai = 0, at = PREFIX; at < END; at++)
 	{
 		int affixnum = numlist[at];
 		char morpheme_sym[] = "pts";
 
-		for (affix = affixlist[at]; affixnum-- > 0; affix++)
+		/* This loop computes too things:
+		 * 1. strlen_cache - Token lengths - up to a SUBSCRIPT_MARK if exists.
+		 * 2. maxword      - Maximum such token length.  */
+		const char subscript_mark_string[] = { SUBSCRIPT_MARK, '\0' };
+		for (affix = affixlist[at]; affixnum-- > 0; affix++, ai++)
 		{
-			maxword = MAX(maxword, strlen(*affix));
+			strlen_cache[ai] = (int)strcspn(*affix, subscript_mark_string);
+			//printf("'%s' strlen_cache[%d]=%d\n",*affix,ai,strlen_cache[ai]);
+			maxword = MAX(maxword, strlen_cache[ai]);
 			lgdebug(D_IWA, " %c:%s", morpheme_sym[at],
 			        ('\0' == (*affix)[0]) ? "[null]" : *affix);
 		}
@@ -474,13 +487,12 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	char * const buff = alloca(maxword + 2); /* strlen + INFIX_MARK + NUL */
 	const char *token;
 
-	for (at = PREFIX; at < END; at++)
+	for (ai = 0, at = PREFIX; at < END; at++)
 	{
 		int affixnum = numlist[at];
 
 		for (affix = affixlist[at]; affixnum-- > 0; affix++, ai++)
 		{
-			token_ord++;
 			token = *affix; /* avoid copying if possible */
 			switch (at)
 			{
@@ -488,7 +500,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				case PREFIX: /* set to word= */
 					if ('\0' != infix_mark)
 					{
-						size_t sz = strlen(*affix);
+						size_t sz = strlen_cache[ai];
 						memcpy(buff, *affix, sz);
 						buff[sz] = infix_mark;
 						buff[sz+1] = '\0';
@@ -539,7 +551,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			}
 
 			/* FIXME Use another method instead of checking the label. */
-			if (1 == token_ord && 1 < token_tot && label[0] == 'r' &&
+			if ((0 == ai) && (1 < token_tot) && (label[0] == 'r') &&
 				 word_start_another_alternative(sent->dict, unsplit_word, token))
 			{
 				/* When called due to left/right strip, the code shouldn't use the
@@ -657,8 +669,30 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				if (unsplit_word->status & (WS_SPELL|WS_RUNON))
 				    subword->status |= unsplit_word->status & (WS_SPELL|WS_RUNON);
 
-				if (1 == token_ord) /* first subword of this alternative */
+				if (0 == ai) /* first subword of this alternative */
 				{
+					subword->start = unsplit_word->start;
+					if (REPLACEMENT_MARK[0] == label[0])
+					{
+					/* This is a replacement word (a spell correction or a
+					 * "feature" word). Set its end position to the whole
+					 * unsplit_word.  For "feature" words this may not be accurate,
+					 * but it doesn't matter for now ("dictcap" is experimental). */
+						subword->end = unsplit_word->end;
+					}
+					else
+					{
+						subword->end = subword->start + strlen_cache[ai];
+						/* Account for case conversion length difference. */
+						if (subword->status & WS_FIRSTUPPER)
+						{
+							subword->end +=
+								utf8_charlen(unsplit_word->subword) -
+								utf8_charlen(token);
+						}
+						//printf(">>>SUBWORD '%s' %ld:%ld\n", subword->subword, subword->start-sent->orig_sentence, subword->end-sent->orig_sentence);
+					}
+
 					/* Arrange for subword to be the "next" word of the previous
 					 * words of unsplit_word. There are 2 cases:
 					 * - If this is not the first alternative - add the subword to
@@ -703,7 +737,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					}
 				}
 
-				if (token_tot == token_ord) /* last subword of this alternative */
+				if (token_tot-1 == ai) /* last subword of this alternative */
 				{
 
 					/* Arrange for subword to be the "prev" word of the next words of
@@ -751,8 +785,19 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					}
 				}
 
-				if (1 < token_ord)            /* not the first subword */
+				if (0 < ai)            /* not the first subword */
 				{
+					if (REPLACEMENT_MARK[0] == label[0])
+					{
+						subword->start = unsplit_word->start;
+						subword->start = unsplit_word->end;
+					}
+					else
+					{
+						subword->start = psubword->end;
+						subword->end = subword->start + strlen_cache[ai];
+					}
+
 					gwordlist_append(&psubword->next, subword);
 					gwordlist_append(&subword->prev, psubword);
 				}
@@ -796,7 +841,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					}
 					if (token_tot) continue;
 					prt_error("Error: >>>DEBUG>>>: '%s' "
-					          "(alternative start '%s', len=%zu): "
+					          "(alternative start '%s', len=%d): "
 					          "Alternative already exists!\n",
 					          curr_alt->subword, unsplit_word->subword, token_tot);
 				}
@@ -1615,7 +1660,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			if (is_known_word(sent, alternates[j]))
 			{
 				wp = alternates[j];
-				altp = issue_word_alternative(sent, unsplit_word, "SP",
+				altp = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "SP",
 				                              0,NULL, 1,&wp, 0,NULL);
 				set_alt_word_status(sent->dict, altp, WS_SPELL);
 				num_guesses++;
@@ -1884,7 +1929,7 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 	dictcap[1] = word;
 	lgdebug(+D_SW, "Adding %s word=%s RE=%s\n", dictcap[0], word,
 	        NULL == unsplit_word->regex_name ? "" : unsplit_word->regex_name);
-	altp = issue_word_alternative(sent, unsplit_word, dictcap[0],
+	altp = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "dictcap",
 											0,NULL, 2,dictcap, 0,NULL);
 
 	/* Set the dictcap[0] word fields */
@@ -2493,11 +2538,24 @@ static void add_gword(Sentence sent, const char *w, const char *wend,
 	new_word = issue_sentence_word(sent, word);
 	new_word->morpheme_type = morpheme_type;
 	new_word->alternative_id = sent->wordgraph;
+	if (NULL != wend)
+	{
+		new_word->start = w;
+		new_word->end = wend;
+	}
 	if (MT_WORD != morpheme_type)
 	{
 		/* Skip tokenizing this word */
 		new_word->tokenizing_step = TS_DONE;
-		if (MT_WALL == morpheme_type) new_word->status |= WS_INDICT;
+		if (MT_WALL == morpheme_type)
+		{
+			new_word->status |= WS_INDICT;
+			if (MT_INFRASTRUCTURE == new_word->prev[0]->morpheme_type)
+				new_word->start = sent->orig_sentence;
+			else
+				new_word->start = sent->orig_sentence + strlen(sent->orig_sentence);
+			new_word->end = new_word->start;
+		}
 	}
 }
 
@@ -2924,7 +2982,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		unsplit_word  = wp_old->word;
 		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
-			while (unsplit_word->unsplit_word != sent->wordgraph)
+			while (!IS_SENTENCE_WORD(sent, unsplit_word))
 			{
 				assert(NULL != unsplit_word, "'%s': Unsplit word not found",
 						 wg_word->subword);

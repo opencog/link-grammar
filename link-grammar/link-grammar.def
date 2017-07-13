@@ -125,3 +125,7 @@ lg_error_formatmsg
 lg_error_printall
 lg_error_clearall
 utf8_strwidth
+linkage_get_word_byte_start
+linkage_get_word_byte_end
+linkage_get_word_char_start
+linkage_get_word_char_end
