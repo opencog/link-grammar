@@ -197,7 +197,7 @@ EXTRA_DIST=                         \
 	README.md                        \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
-	dict-sql/README                  \
+	dict-sql/README.md               \
 	tokenize/README.md
 
 # -----------------------------------------------------------
