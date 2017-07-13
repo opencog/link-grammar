@@ -168,6 +168,7 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_knowledge.h      \
 	post-process/pp_lexer.h          \
 	post-process/pp_linkset.h        \
+	post-process/pp-structures.h     \
 	prepare/build-disjuncts.h        \
 	prepare/expand.h                 \
 	prepare/exprune.h                \
