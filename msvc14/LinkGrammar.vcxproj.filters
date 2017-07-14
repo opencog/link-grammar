@@ -167,9 +167,6 @@
     <ClInclude Include="..\link-grammar\api-types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\build-disjuncts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\dict-file\read-dict.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -182,19 +179,10 @@
     <ClInclude Include="..\link-grammar\disjunct-utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\disjuncts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\expand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\externs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\idiom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\link-features.h">
@@ -209,19 +197,10 @@
     <ClInclude Include="..\link-grammar\string-set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\structures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\word-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\lg_assert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\wcwidth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\post-process\post-process.h">
@@ -327,6 +306,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\dict-common\regex-morph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\post-process\pp-structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\prepare\build-disjuncts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\corpus\corpus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\prepare\expand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\prepare\exprune.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-sql\read-sql.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\print\wcwidth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\tokenize\word-structures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

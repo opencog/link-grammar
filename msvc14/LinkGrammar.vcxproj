@@ -234,8 +234,8 @@
   <ItemGroup>
     <ClInclude Include="..\link-grammar\api-structures.h" />
     <ClInclude Include="..\link-grammar\api-types.h" />
-    <ClInclude Include="..\link-grammar\build-disjuncts.h" />
     <ClInclude Include="..\link-grammar\connectors.h" />
+    <ClInclude Include="..\link-grammar\corpus\corpus.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-affix.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-api.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-common.h" />
@@ -249,12 +249,10 @@
     <ClInclude Include="..\link-grammar\dict-file\read-dict.h" />
     <ClInclude Include="..\link-grammar\dict-file\read-regex.h" />
     <ClInclude Include="..\link-grammar\dict-file\word-file.h" />
+    <ClInclude Include="..\link-grammar\dict-sql\read-sql.h" />
     <ClInclude Include="..\link-grammar\disjunct-utils.h" />
-    <ClInclude Include="..\link-grammar\disjuncts.h" />
     <ClInclude Include="..\link-grammar\error.h" />
-    <ClInclude Include="..\link-grammar\expand.h" />
     <ClInclude Include="..\link-grammar\externs.h" />
-    <ClInclude Include="..\link-grammar\idiom.h" />
     <ClInclude Include="..\link-grammar\lg_assert.h" />
     <ClInclude Include="..\link-grammar\link-features.h" />
     <ClInclude Include="..\link-grammar\link-includes.h" />
@@ -271,23 +269,26 @@
     <ClInclude Include="..\link-grammar\parse\preparation.h" />
     <ClInclude Include="..\link-grammar\parse\prune.h" />
     <ClInclude Include="..\link-grammar\post-process\post-process.h" />
+    <ClInclude Include="..\link-grammar\post-process\pp-structures.h" />
     <ClInclude Include="..\link-grammar\post-process\pp_knowledge.h" />
     <ClInclude Include="..\link-grammar\post-process\pp_lexer.h" />
     <ClInclude Include="..\link-grammar\post-process\pp_linkset.h" />
+    <ClInclude Include="..\link-grammar\prepare\build-disjuncts.h" />
+    <ClInclude Include="..\link-grammar\prepare\expand.h" />
+    <ClInclude Include="..\link-grammar\prepare\exprune.h" />
     <ClInclude Include="..\link-grammar\print\print-util.h" />
     <ClInclude Include="..\link-grammar\print\print.h" />
+    <ClInclude Include="..\link-grammar\print\wcwidth.h" />
     <ClInclude Include="..\link-grammar\resources.h" />
     <ClInclude Include="..\link-grammar\string-set.h" />
-    <ClInclude Include="..\link-grammar\structures.h" />
     <ClInclude Include="..\link-grammar\tokenize\anysplit.h" />
     <ClInclude Include="..\link-grammar\tokenize\regex-tokenizer.h" />
     <ClInclude Include="..\link-grammar\tokenize\spellcheck.h" />
     <ClInclude Include="..\link-grammar\tokenize\tok-structures.h" />
     <ClInclude Include="..\link-grammar\tokenize\tokenize.h" />
+    <ClInclude Include="..\link-grammar\tokenize\word-structures.h" />
     <ClInclude Include="..\link-grammar\tokenize\wordgraph.h" />
     <ClInclude Include="..\link-grammar\utilities.h" />
-    <ClInclude Include="..\link-grammar\wcwidth.h" />
-    <ClInclude Include="..\link-grammar\word-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\link-grammar\api.c" />
