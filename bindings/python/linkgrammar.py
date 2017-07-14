@@ -289,6 +289,10 @@ class LG_Error(Exception):
     #    return clg.lg_error_formatmsg(lgerror)
 
     @staticmethod
+    def flush():
+        return clg.lg_error_flush()
+
+    @staticmethod
     def printall(ehandler_func, ehandler_data=None):
         return clg._py_error_printall((ehandler_func, ehandler_data))
 
