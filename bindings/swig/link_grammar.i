@@ -200,6 +200,7 @@ char * lg_error_formatmsg(lg_errinfo *lge);
 int lg_error_clearall(void);
 %rename(_prt_error) prt_error;
 int prt_error(const char * , ...);
+bool lg_error_flush(void);
 /*
  * void *lg_error_set_handler_data(void *);
  * A wrapper to this function is complex and is not implemented here.  However,
