@@ -113,6 +113,11 @@ terminate the message, and ending `\n\\` is a embedded newline.
 This allows, for example, constructing a single message using a loop or
 conditionals.
 
+7)  `bool lg_error_flush(void);`
+If a partial error message is buffered, flush it by adding a "\n" to it.
+If no error message is buffered - do nothing.
+Return **true** iff there was a message to flush.
+
 See [link-includes.h](link-includes.h) for the definition of
 severity levels and the `lg_errinfo` structure.
 
