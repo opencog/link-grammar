@@ -466,6 +466,24 @@ class EErrorFacilityTestCase(unittest.TestCase):
         self.assertEqual(self.numerr, 0)
         self.assertFalse(hasattr(self, "gotit"))
 
+    def test_41_flush(self):
+        # Here the error handler is still set to None.
+        # First validate that nothing gets flushed (no error is buffered at this point).
+        self.flushed = LG_Error.flush()
+        self.assertEqual(self.flushed, False)
+        # Now generate a partial error message that is still buffered.
+        LG_Error.message("This is a partial error message.")
+        # Validate that it is still hidden.
+        self.numerr = LG_Error.printall(self.error_handler_test, self)
+        self.assertEqual(self.numerr, 0)
+        self.assertFalse(hasattr(self, "gotit"))
+        # Flush it.
+        self.flushed = LG_Error.flush()
+        self.assertEqual(self.flushed, True)
+        self.numerr = LG_Error.printall(self.error_handler_test, self)
+        self.assertEqual(self.numerr, 1)
+        self.assertRegexpMatches(self.errinfo.text, "partial")
+
     def test_50_set_orig_error_handler(self):
         # Set the error handler back to the default handler.
         # The error message is now visible (but we cannot test that).
