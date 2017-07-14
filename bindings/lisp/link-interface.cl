@@ -569,7 +569,7 @@
   :returning :foreign-address ;; StringVec
   )
 
-;;; linkage_get_words returns char**, which I dont' know how to handle.
+;;; linkage_get_words returns char**, which I don't know how to handle.
 (ff:def-foreign-call linkage_get_words ((linkage :foreign-address))
   :returning ((* (* :char)) (simple-array string (*)))) 
 

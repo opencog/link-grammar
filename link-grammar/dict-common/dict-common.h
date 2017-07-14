@@ -127,7 +127,7 @@ struct Dictionary_s
 };
 /* The functions here are intended for use by the tokenizer, only,
  * and pretty much no one else. If you are not the tokenizer, you
- * probably dont need these. */
+ * probably don't need these. */
 
 bool find_word_in_dict(const Dictionary dict, const char *);
 

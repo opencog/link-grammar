@@ -9,7 +9,7 @@
 % (w: word, t:stem, s: suffix)
 
 % Split words into 1 or 2 parts (and no more than two parts)
-% Accroding to the 4.0.dict, the first part will act as a stem,
+% According to the 4.0.dict, the first part will act as a stem,
 % and the second part as a suffix carrying syntactic inflection.
 2: REGPARTS+;
 
@@ -29,7 +29,7 @@
 % Multiple regexes per class are permitted.
 %
 % The word parts currently contain at least one character
-% (null morphems are not supported).
+% (null morphemes are not supported).
 %
 % If needed, add the same regex in more than one definition.
 
