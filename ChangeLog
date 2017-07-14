@@ -1,20 +1,20 @@
 Version 5.4.0 (XXX 2017)
  * Fix for missing locale info in Windows XP.
- * Empty out the post-processing tables for the any, ady, amy langauges
+ * Empty out the post-processing tables for the any, ady, amy languages
  * Remove left_print_string() from the API.
  * Recover pp_lexer.l from ancient version 2.2!
  * Fix unusual crash in post-processing for the "any" language.
  * Remove three deprecated post-processing functions from API.
  * Major reorganization of code base into more modular directories.
  * Revive the sqlite3 dictionary into operational form.
- * Add double-quotes to splittable punctuation for the "any" langauge.
+ * Add double-quotes to splittable punctuation for the "any" language.
  * Add API functions to get linkage word positions in the sentence.
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
  * Restore tty state after ctrl-C, ctrl-Z of the app.
  * Check for <stdatomic.h> before use (in Java bindings).
- * Fix handling of punctuation in the "any" langauge.
+ * Fix handling of punctuation in the "any" language.
 
 Version 5.3.15 (12 Feb 2017)
  * Fix Windows compilation; the new wcwidth files were omitted.

@@ -5,7 +5,7 @@
  %                                                                           %
  %***************************************************************************%
 
-% Want to match apostrophes, for abreviations (I'm I've, etc.) since
+% Want to match apostrophes, for abbreviations (I'm I've, etc.) since
 % these cannot be auto-split with the current splitter.
 ANY-WORD:  /^[[:alnum:]_'-]+$/
 ANY-PUNCT:  /^[[:punct:]]`+$/
