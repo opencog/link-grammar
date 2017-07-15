@@ -195,6 +195,7 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 
 	/* Put each word into a Dict_node. */
 	dn = (Dict_node *) xalloc(sizeof(Dict_node));
+	memset(dn, 0, sizeof(Dict_node));
 	dn->string = string_set_add(scriword, bs->dict->string_set);
 	dn->right = bs->dn;
 	bs->dn = dn;
