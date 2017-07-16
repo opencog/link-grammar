@@ -208,9 +208,8 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 	return 0;
 }
 
-
 static void
-db_lookup_common(Dictionary dict, const char *s,
+db_lookup_common(Dictionary dict, const char *s, const char *equals,
                  int (*cb)(void *, int, char **, char **),
                  cbdata* bs)
 {
@@ -219,7 +218,9 @@ db_lookup_common(Dictionary dict, const char *s,
 
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
-	dyn_strcat(qry, "SELECT subscript, classname FROM Morphemes WHERE morpheme = \'");
+	dyn_strcat(qry, "SELECT subscript, classname FROM Morphemes WHERE morpheme ");
+	dyn_strcat(qry, equals);
+	dyn_strcat(qry, " \'");
 	dyn_strcat(qry, s);
 	dyn_strcat(qry, "\';");
 
@@ -232,7 +233,7 @@ static bool db_lookup(Dictionary dict, const char *s)
 	cbdata bs;
 	bs.dict = dict;
 	bs.found = false;
-	db_lookup_common(dict, s, exists_cb, &bs);
+	db_lookup_common(dict, s, "=", exists_cb, &bs);
 	return bs.found;
 }
 
@@ -241,7 +242,7 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 	cbdata bs;
 	bs.dict = dict;
 	bs.dn = NULL;
-	db_lookup_common(dict, s, morph_cb, &bs);
+	db_lookup_common(dict, s, "=", morph_cb, &bs);
 	if (3 < verbosity)
 	{
 		if (bs.dn)
@@ -252,6 +253,27 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 		else
 		{
 			printf("No expression for word %s\n", s);
+		}
+	}
+	return bs.dn;
+}
+
+static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
+{
+	cbdata bs;
+	bs.dict = dict;
+	bs.dn = NULL;
+	db_lookup_common(dict, s, "GLOB", morph_cb, &bs);
+	if (3 < verbosity)
+	{
+		if (bs.dn)
+		{
+			printf("Found expression for glob %s: ", s);
+			print_expression(bs.dn->exp);
+		}
+		else
+		{
+			printf("No expression for glob %s\n", s);
 		}
 	}
 	return bs.dn;
@@ -343,7 +365,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->db_handle = object_open(dict->name, db_open, NULL);
 
 	dict->lookup_list = db_lookup_list;
-	dict->lookup_wild = db_lookup_list;
+	dict->lookup_wild = db_lookup_wild;
 	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;
