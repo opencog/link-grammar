@@ -738,7 +738,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
  *
  * The returned list must be freed with file_free_lookup().
  */
-Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
+static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node *llist;
 	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);

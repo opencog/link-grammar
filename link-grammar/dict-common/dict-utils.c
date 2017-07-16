@@ -326,7 +326,7 @@ static bool dn_word_contains(Dictionary dict,
  */
 bool word_contains(Dictionary dict, const char * word, const char * macro)
 {
-	Dict_node *w_dn = abridged_lookup_list(dict, word);
+	Dict_node *w_dn = dictionary_lookup_list(dict, word);
 	bool ret = dn_word_contains(dict, w_dn, macro);
 	free_lookup_list(dict, w_dn);
 	return ret;
