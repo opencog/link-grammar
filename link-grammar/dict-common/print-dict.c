@@ -343,7 +343,7 @@ static char *display_word_info(Dictionary dict, const char * word)
 	if (dn_head)
 	{
 		char *out = display_counts(word, dn_head);
-		free_lookup(dn_head);
+		free_lookup_list(dict, dn_head);
 		return out;
 	}
 
@@ -366,7 +366,7 @@ static char *display_word_expr(Dictionary dict, const char * word)
 	if (dn_head)
 	{
 		char *out = display_expr(word, dn_head);
-		free_lookup(dn_head);
+		free_lookup_list(dict, dn_head);
 		return out;
 	}
 
