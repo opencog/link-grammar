@@ -27,6 +27,9 @@
 void free_E_list(E_list *);
 void free_Exp(Exp * e)
 {
+	// Exp might be null if the user has a bad dict. e.g. badly formed
+	// SQL dict.
+	if (NULL == e) return;
 	if (e->type != CONNECTOR_type) {
 		free_E_list(e->u.l);
 	}
