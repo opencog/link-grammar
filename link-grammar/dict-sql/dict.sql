@@ -20,7 +20,7 @@ CREATE TABLE Morphemes
 	morpheme TEXT NOT NULL,
 
 	-- The subscripted form of the above.  The subscripted forms are
-	-- always unique for the dictionary. They serve as a debugging,
+	-- always unique for the dictionary. They serve as a debugging tool,
 	-- unique identifier for the database.
 	subscript TEXT UNIQUE NOT NULL,
 

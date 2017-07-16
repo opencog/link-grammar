@@ -99,7 +99,7 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 
 static void free_llist(Dictionary dict, Dict_node *llist)
 {
-	free_lookup(llist);
+	file_free_lookup(llist);
 }
 
 /**
@@ -157,9 +157,10 @@ dictionary_six_str(const char * lang,
 #endif
 		dict->insert_entry = insert_list;
 
-		dict->lookup_list = lookup_list;
+		dict->lookup_list = file_lookup_list;
+		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
-		dict->lookup = boolean_lookup;
+		dict->lookup = file_boolean_lookup;
 	}
 	else
 	{

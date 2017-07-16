@@ -24,6 +24,16 @@ INSERT INTO Disjuncts VALUES ('<dictionary-version-number>', 'V5v4v0+', 0.0);
 INSERT INTO Morphemes VALUES ('<dictionary-locale>', '<dictionary-locale>', '<dictionary-locale>');
 INSERT INTO Disjuncts VALUES ('<dictionary-locale>', 'EN4us+', 0.0);
 
+-- The UNKNOWN-WORD device is needed in order to allow the wild-card
+-- query of dictionary contents to work. That is, the user can use the
+-- command-line client to type in `!!blah*` and this will search the
+-- dictionary for all words whos first four letters are `blah`. You
+-- are free to replace `XXXBOGUS+` by something useful, for example,
+-- If you use `Ds- & Os-`, than any word will be accepted as the object!
+INSERT INTO Morphemes VALUES ('UNKNOWN-WORD', 'UNKNOWN-WORD', 'UNKNOWN-WORD');
+INSERT INTO Disjuncts VALUES ('UNKNOWN-WORD', 'XXXBOGUS+', 0.0);
+-- INSERT INTO Disjuncts VALUES ('UNKNOWN-WORD', 'Ds- & Os-', 0.0);
+
 -- The following should look familier, if you already understand
 -- link-grammar basics.
 INSERT INTO Morphemes VALUES ('LEFT-WALL', 'LEFT-WALL', 'LEFT-WALL');

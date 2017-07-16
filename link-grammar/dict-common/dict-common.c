@@ -108,8 +108,7 @@ const char * dictionary_get_lang(Dictionary dict)
  * dictionary_lookup_list() - get list of matching words in the dictionary.
  *
  * Returns a pointer to a list of dict_nodes for matching words in the
- * dictionary.  Matches include words that appear in idioms.  To exclude
- * idioms, use abridged_lookup_list() to obtain matches.
+ * dictionary.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The exp, file and string fields are copied from the dictionary.
@@ -119,6 +118,11 @@ const char * dictionary_get_lang(Dictionary dict)
 Dict_node * dictionary_lookup_list(const Dictionary dict, const char *s)
 {
 	return dict->lookup_list(dict, s);
+}
+
+Dict_node * dictionary_lookup_wild(const Dictionary dict, const char *s)
+{
+	return dict->lookup_wild(dict, s);
 }
 
 void free_lookup_list(const Dictionary dict, Dict_node *llist)

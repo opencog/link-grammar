@@ -652,7 +652,7 @@ rdictionary_lookup(Dict_node *llist,
 }
 
 /**
- * lookup_list() - return list of words in the file-backed dictionary.
+ * file_lookup_list() - return list of words in the file-backed dictionary.
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
  * Matches include words that appear in idioms.  To exclude idioms, use
@@ -661,9 +661,9 @@ rdictionary_lookup(Dict_node *llist,
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * The returned list must be freed with free_lookup().
+ * The returned list must be freed with file_free_lookup().
  */
-Dict_node * lookup_list(const Dictionary dict, const char *s)
+Dict_node * file_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node * llist =
 		rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
@@ -671,15 +671,15 @@ Dict_node * lookup_list(const Dictionary dict, const char *s)
 	return llist;
 }
 
-bool boolean_lookup(Dictionary dict, const char *s)
+bool file_boolean_lookup(Dictionary dict, const char *s)
 {
-	Dict_node *llist = lookup_list(dict, s);
+	Dict_node *llist = file_lookup_list(dict, s);
 	bool boool = (llist != NULL);
-	free_lookup(llist);
+	file_free_lookup(llist);
 	return boool;
 }
 
-void free_lookup(Dict_node *llist)
+void file_free_lookup(Dict_node *llist)
 {
 	Dict_node * n;
 	while (llist != NULL)
@@ -701,7 +701,11 @@ void free_insert_list(Dict_node *ilist)
 	}
 }
 
-Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
+/**
+ * file_lookup_wild -- allows for wildcard searches (globs)
+ * Used to support the !! command in the parser command-line tool.
+ */
+Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 {
 	bool lookup_idioms = test_enabled("lookup-idioms");
 	char * ds = strrchr(s, SUBSCRIPT_DOT); /* Only the rightmost dot is a
@@ -732,9 +736,9 @@ Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * The returned list must be freed with free_lookup().
+ * The returned list must be freed with file_free_lookup().
  */
-Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
+static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node *llist;
 	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
@@ -897,14 +901,14 @@ static Exp * make_connector(Dictionary dict)
 		}
 		if (dn == NULL)
 		{
-			free_lookup(dn_head);
+			file_free_lookup(dn_head);
 			dict_error(dict, "\nPerhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps a word is used before it is defined.\n");
 			return NULL;
 		}
 		n = make_unary_node(&dict->exp_list, dn->exp);
-		free_lookup(dn_head);
+		file_free_lookup(dn_head);
 	}
 	else
 	{
@@ -1509,7 +1513,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 			prt_error("\a\t%s", dnx->string);
 		}
 		prt_error("\a\n\tThis word will be ignored.\n");
-		free_lookup(dn_head);
+		file_free_lookup(dn_head);
 		free_dict_node(dn);
 	}
 	else
