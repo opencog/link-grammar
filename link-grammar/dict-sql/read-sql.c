@@ -28,8 +28,9 @@
 #include "dict-common/dict-structures.h"
 #include "dict-common/file-utils.h"
 #include "externs.h"
-#include "tokenize/spellcheck.h"
+#include "lg_assert.h"
 #include "string-set.h"
+#include "tokenize/spellcheck.h"
 #include "utilities.h"
 
 #include "read-sql.h"
@@ -37,6 +38,9 @@
 /* ========================================================= */
 /* Mini expression-parsing library.  This is a simplified subset of
  * what can be found in the file-backed dictionary.
+ *
+ * This does NOT support braces {} or at-sign @ and so using these
+ * in the SQL tables is NOT valid!
  */
 
 static Exp * make_expression(Dictionary dict, const char *exp_str)
@@ -58,6 +62,8 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 
 	/* search for the end of a connector */
 	while (*p && (isalnum(*p) || '*' == *p)) p++;
+
+	if (0 == *p) return NULL;
 
 	/* Connectors always end with a + or - */
 	assert (('+' == *p) || ('-' == *p),
