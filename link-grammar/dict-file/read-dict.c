@@ -701,7 +701,7 @@ void free_insert_list(Dict_node *ilist)
 	}
 }
 
-Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
+Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 {
 	bool lookup_idioms = test_enabled("lookup-idioms");
 	char * ds = strrchr(s, SUBSCRIPT_DOT); /* Only the rightmost dot is a

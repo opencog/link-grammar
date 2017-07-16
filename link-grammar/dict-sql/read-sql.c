@@ -343,6 +343,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->db_handle = object_open(dict->name, db_open, NULL);
 
 	dict->lookup_list = db_lookup_list;
+	dict->lookup_wild = db_lookup_list;
 	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;

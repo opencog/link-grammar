@@ -31,6 +31,7 @@ bool boolean_dictionary_lookup(const Dictionary, const char *);
 
 Dict_node * abridged_lookup_list(const Dictionary, const char *);
 Dict_node * dictionary_lookup_list(const Dictionary, const char *);
+Dict_node * dictionary_lookup_wild(const Dictionary, const char *);
 
 bool find_word_in_dict(const Dictionary, const char *);
 

@@ -158,6 +158,7 @@ dictionary_six_str(const char * lang,
 		dict->insert_entry = insert_list;
 
 		dict->lookup_list = lookup_list;
+		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
 		dict->lookup = boolean_lookup;
 	}

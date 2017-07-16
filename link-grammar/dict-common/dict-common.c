@@ -121,6 +121,11 @@ Dict_node * dictionary_lookup_list(const Dictionary dict, const char *s)
 	return dict->lookup_list(dict, s);
 }
 
+Dict_node * dictionary_lookup_wild(const Dictionary dict, const char *s)
+{
+	return dict->lookup_wild(dict, s);
+}
+
 void free_lookup_list(const Dictionary dict, Dict_node *llist)
 {
 	dict->free_lookup(dict, llist);

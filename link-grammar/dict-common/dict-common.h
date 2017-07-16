@@ -99,6 +99,7 @@ struct Dictionary_s
 
 	void (*insert_entry)(Dictionary, Dict_node *, int);
 	Dict_node* (*lookup_list)(Dictionary, const char*);
+	Dict_node* (*lookup_wild)(Dictionary, const char*);
 	void (*free_lookup)(Dictionary, Dict_node*);
 	bool (*lookup)(Dictionary, const char*);
 	void (*close)(Dictionary);
