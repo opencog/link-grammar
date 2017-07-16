@@ -1328,13 +1328,18 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
 
-
 	/* Special-case the "amy/ady" morphology handling. */
 	/* More generally, it there's no post-processor, do nothing. */
+	/* Well, almost nothing. We still want to assign a score. */
 	// if (sent->dict->affix_table->anysplit)
 	if (NULL == sent->postprocessor)
 	{
 		sent->num_linkages_post_processed = sent->num_valid_linkages;
+		for (in=0; in < N_linkages_alloced; in++)
+		{
+			Linkage lkg = &sent->lnkages[in];
+			linkage_score(lkg, opts);
+		}
 		return;
 	}
 
