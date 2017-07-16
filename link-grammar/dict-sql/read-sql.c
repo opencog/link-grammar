@@ -39,8 +39,12 @@
 /* Mini expression-parsing library.  This is a simplified subset of
  * what can be found in the file-backed dictionary.
  *
- * This does NOT support braces {} or at-sign @ and so using these
- * in the SQL tables is NOT valid!
+ * This does NOT support braces {} used to indicate optional connectors,
+ * nor does it support the multi-connector at-sign @ and so using these
+ * in the SQL tables is NOT valid! It also does not support cost
+ * brackets [] and it does no support 'or'. This is really really
+ * really supposed to be one unique disjunct per SQL table row!
+ * This is NOT meant to be "just like the text files, but different".
  */
 
 static Exp * make_expression(Dictionary dict, const char *exp_str)
