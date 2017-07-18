@@ -323,6 +323,8 @@ link_public_api(double)
 link_public_api(const char *)
      linkage_get_word(const Linkage linkage, WordIdx word_num);
 link_public_api(char *)
+     linkage_get_bare_word(const Linkage linkage, WordIdx word_num);
+link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 link_public_api(void)
      linkage_free_constituent_tree_str(char *str);
