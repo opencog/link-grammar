@@ -170,7 +170,7 @@ static void print_a_link(dyn_str * s, const Linkage linkage, LinkIdx link)
 	else
 		dyn_strcat(s, "--  ");
 	left_append_string(s, rlabel, "           ");
-	append_string(s, "     %s\n", linkage_get_word(linkage,r));
+	append_string(s, "     %s\n", linkage_get_word(linkage, r));
 }
 
 
