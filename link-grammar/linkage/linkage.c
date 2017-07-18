@@ -877,17 +877,26 @@ const char * linkage_get_word(const Linkage linkage, WordIdx w)
 
 // Need to free the returned value of this function later:
 // the memory pointed to by bare_word
-const char * linkage_get_bare_word(const Linkage linkage, WordIdx w)
+char * linkage_get_bare_word(const Linkage linkage, WordIdx w)
 {
 	if (!linkage) return NULL;
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
 
-	const char delimiter = '.';
-	char *separator_ptr = strchr(linkage->word[w], delimiter);
+	// first look for unknown word tag
+	char delimiter = '[';
+	char *separator_ptr = strrchr(linkage->word[w], delimiter);
 
 	if(separator_ptr == NULL)
 	{
-	  return linkage->word[w]; // if there is no separator in the word
+	    // look for beginning of word tag
+		delimiter = '.';
+	    separator_ptr = strrchr(linkage->word[w], delimiter);
+	    if(separator_ptr == NULL)
+		{
+			// if no tags are aded, point to the end of the word
+			delimiter = '\0';
+	  		separator_ptr = strrchr(linkage->word[w], delimiter); // if there is no separator in the word
+		}
 	}
 	// copy and return word without the suffix
 	int position = separator_ptr - linkage->word[w];
