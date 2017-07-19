@@ -231,7 +231,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			break;
 		}
 
-		if (verbosity_level(D_SLM)) prt_error("%s", cdj->string);
+		if (verbosity_level(D_SLM)) prt_error("%s", cdj->word_string);
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */

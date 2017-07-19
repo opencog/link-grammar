@@ -272,7 +272,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (NULL == disj) continue;
 
 		/* Subscript mark will be cleaned up by append_string(). */
-		infword = disj->string;
+		infword = disj->word_string;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strwidth(infword);
@@ -777,13 +777,13 @@ void print_disjunct_counts(Sentence sent)
 	size_t i;
 	int c;
 	Disjunct *d;
-	for (i=0; i<sent->length; i++) {
+	for (i=0; i<sent->length; i++)
+	{
 		c = 0;
-		for (d=sent->word[i].d; d != NULL; d = d->next) {
-			c++;
-		}
+		for (d=sent->word[i].d; d != NULL; d = d->next) c++;
+
 		/* XXX alternatives[0] is not really correct, here .. */
-		printf("%s(%d) ",sent->word[i].alternatives[0], c);
+		printf("%s(%d) ", sent->word[i].alternatives[0], c);
 	}
 	printf("\n\n");
 }

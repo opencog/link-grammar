@@ -127,8 +127,10 @@ static void setup_connectors(Sentence sent)
  */
 static void gword_record_in_connector(Sentence sent)
 {
-	for (size_t w = 0; w < sent->length; w++) {
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next) {
+	for (size_t w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
 			for (Connector *c = d->right; NULL != c; c = c->next)
 				c->originating_gword = d->originating_gword;
 			for (Connector *c = d->left; NULL != c; c = c->next)
@@ -167,13 +169,15 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	size_t i;
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
-	if (verbosity_level(5)) {
-		printf("After expanding expressions into disjuncts:");
+	if (verbosity_level(5))
+	{
+		printf("After expanding expressions into disjuncts:\n");
 		print_disjunct_counts(sent);
 	}
 	print_time(opts, "Built disjuncts");
 
-	for (i=0; i<sent->length; i++) {
+	for (i=0; i<sent->length; i++)
+	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d);
 
 		/* Some long Russian sentences can really blow up, here. */
@@ -182,7 +186,8 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Eliminated duplicate disjuncts");
 
-	if (verbosity_level(5)) {
+	if (verbosity_level(5))
+	{
 		printf("\nAfter expression pruning and duplicate elimination:\n");
 		print_disjunct_counts(sent);
 	}
