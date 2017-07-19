@@ -272,7 +272,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (NULL == disj) continue;
 
 		/* Subscript mark will be cleaned up by append_string(). */
-		infword = disj->string;
+		infword = disj->word_string;
 
 		/* Make sure the glyphs align during printing. */
 		pad += strlen(infword) - utf8_strwidth(infword);

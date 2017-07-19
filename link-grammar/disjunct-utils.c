@@ -90,7 +90,7 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	for (e = d->right ; e != NULL; e = e->next) {
 		i += string_hash(e->string);
 	}
-	i += string_hash(d->string);
+	i += string_hash(d->word_string);
 	i += (i>>10);
 	return (i & (dt->dup_table_size-1));
 }
@@ -131,8 +131,8 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 	/* Save CPU time by comparing this last, since this will
 	 * almost always be true. Rarely, the strings are not from
 	 * the same string_set and hence the 2-step comparison. */
-	if (d1->string == d2->string) return true;
-	return (strcmp(d1->string, d2->string) == 0);
+	if (d1->word_string == d2->word_string) return true;
+	return (strcmp(d1->word_string, d2->word_string) == 0);
 }
 
 /**
@@ -173,7 +173,7 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 	for (t = origd; t != NULL; t = t->next)
 	{
 		newd = (Disjunct *)xalloc(sizeof(Disjunct));
-		newd->string = t->string;
+		newd->word_string = t->word_string;
 		newd->cost = t->cost;
 		newd->left = connectors_dup(t->left);
 		newd->right = connectors_dup(t->right);

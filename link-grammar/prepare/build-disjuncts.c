@@ -225,7 +225,7 @@ static void print_Tconnector_list(Tconnector * e)
 {
 	for (;e != NULL; e=e->next) {
 		if (e->multi) printf("@");
-		printf("%s",e->string);
+		printf("%s", e->string);
 		printf("%c", e->dir);
 		if (e->next != NULL) printf(" ");
 	}
@@ -245,7 +245,7 @@ static void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s",e->string);
+		printf("%s", e->string);
 		if (e->next != NULL) printf(" ");
 	}
 }
@@ -303,7 +303,7 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 			ndis = (Disjunct *) xalloc(sizeof(Disjunct));
 			ndis->left = reverse(extract_connectors(cl->c, '-'));
 			ndis->right = reverse(extract_connectors(cl->c, '+'));
-			ndis->string = string;
+			ndis->word_string = string;
 			ndis->cost = cl->cost;
 			ndis->next = dis;
 			dis = ndis;

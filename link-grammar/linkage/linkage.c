@@ -220,10 +220,10 @@ static void print_chosen_disjuncts_words(const Linkage lkg)
 
 		if (NULL == cdj)
 			djw = lkg->sent->word[i].optional ? "{}" : "[]";
-		else if ('\0' == cdj->string[0])
+		else if ('\0' == cdj->word_string[0])
 			djw = "\\0"; /* null string - something is wrong */
 		else
-			djw = cdj->string;
+			djw = cdj->word_string;
 
 		dyn_strcat(djwbuf, djw);
 		dyn_strcat(djwbuf, " ");
@@ -348,7 +348,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		size_t m;
 
 		lgdebug(D_CCW, "Loop start, word%zu: cdj %s, path %s\n",
-		        i, cdj ? cdj->string : "NULL",
+		        i, cdj ? cdj->word_string : "NULL",
 		        lwg_path[i] ? lwg_path[i]->subword : "NULL");
 
 		w = lwg_path[i];
@@ -448,7 +448,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
 			char *sm;
 
-			t = cdj->string;
+			t = cdj->word_string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
 
 			if (0)
@@ -497,7 +497,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							join_alt = false;
 							break;
 						}
-						join_len += strlen(cdjp[j]->string);
+						join_len += strlen(cdjp[j]->word_string);
 						if ((*wgaltp)->morpheme_type & IS_REG_MORPHEME)
 							join_alt = true;
 					}
@@ -521,7 +521,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						/* 1. Join base words. (Could just use the unsplit_word.) */
 						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)
 						{
-							add_morpheme_unmarked(sent, join, cdjp[i+m]->string,
+							add_morpheme_unmarked(sent, join, cdjp[i+m]->word_string,
 							                      (*wgaltp)->morpheme_type);
 						}
 
@@ -533,7 +533,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							/* Cannot NULLify the word - we may have links to it. */
 							if (m != mcnt-1) chosen_words[i+m] = "";
 
-							sm =  strrchr(cdjp[i+m]->string, SUBSCRIPT_MARK);
+							sm =  strrchr(cdjp[i+m]->word_string, SUBSCRIPT_MARK);
 
 							if (NULL != sm)
 							{

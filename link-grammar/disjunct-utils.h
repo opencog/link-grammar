@@ -34,7 +34,7 @@ struct Disjunct_struct
 	int match_id;              /* verify the match list integrity */
 #endif
 	gword_set *originating_gword; /* List of originating gwords */
-	const char * string;       /* subscripted dictionary word */
+	const char * word_string;     /* subscripted dictionary word */
 };
 
 /* Disjunct utilities ... */
