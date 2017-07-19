@@ -30,15 +30,14 @@
  */
 size_t utf8_strwidth(const char *s)
 {
-	mbstate_t mbss;
 	wchar_t ws[MAX_LINE];
 	size_t mblen, glyph_width=0, i;
-
-	memset(&mbss, 0, sizeof(mbss));
 
 #ifdef _WIN32
 	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, MAX_LINE) - 1;
 #else
+	mbstate_t mbss;
+	memset(&mbss, 0, sizeof(mbss));
 	mblen = mbsrtowcs(ws, &s, MAX_LINE, &mbss);
 #endif /* _WIN32 */
 

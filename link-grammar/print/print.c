@@ -27,6 +27,7 @@
 #include "string-set.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h" // for Word_struct
+#include "wcwidth.h"
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
@@ -483,6 +484,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	}
 	top_row = 0;
 
+	// Longer links are printed above the lower links.
 	for (link_length = 1; link_length < N_words_to_print; link_length++)
 	{
 		for (j=0; j<N_links; j++)
@@ -611,8 +613,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 	/* We've built the picture, now print it out. */
 
-	if (print_word_0) i = 0; else i = 1;
-
 	/* Start locations, for each row.  These may vary, due to different
 	 * utf8 character widths. */
 	top_row_p1 = top_row + 1;
@@ -621,18 +621,21 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	pctx->N_rows = 0;
 	pctx->row_starts[pctx->N_rows] = 0;
 	pctx->N_rows++;
+
+	if (print_word_0) i = 0; else i = 1;
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
 		/* Count the column-widths of the words,
 		 * up to the max screen width. */
 		unsigned int uwidth = 0;
+		unsigned int wwid;
 		do {
-			uwidth += word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
+			wwid = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
+			if (x_screen_width <= uwidth + wwid) break;
+			uwidth += wwid;
 			i++;
-		} while ((i < N_words_to_print) &&
-			(uwidth + word_offset[i] + utf8_strwidth(linkage->word[i]) + 1 <
-			                                                      x_screen_width));
+		} while (i < N_words_to_print);
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
@@ -642,29 +645,43 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		for (revrs = 0; revrs < top_row_p1; revrs++)
 		{
 			/* print each row of the picture */
-			/* 'blank' is used solely to detect blank lines */
-			unsigned int mbcnt = 0;
+			/* `blank` is used solely to detect blank lines */
 			bool blank = true;
+			/*
+			 * The `glyph_width` is the width, in columns, of the printable
+			 * glyph. Chinese glyphs are almost always width two.
+			 */
+			unsigned int glyph_width = 0;
+
+			wchar_t  wc;
+			mbstate_t mbss;
+			memset(&mbss, 0, sizeof(mbss));
 
 			row = top_row - revrs;
 			k = start[row];
-			for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
+			for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 			{
-				size_t n = utf8_next(&xpicture[row][j]);
 				blank = blank && (xpicture[row][j] == ' ');
-				j += n;
-				mbcnt ++;
+
+				/* Update the printable column width */
+				mbrtowc(&wc, &xpicture[row][j], MB_CUR_MAX, &mbss);
+				glyph_width += mk_wcwidth(wc);
+
+				j += utf8_next(&xpicture[row][j]);
 			}
 			start[row] = j;
 
 			if (!blank)
 			{
-				mbcnt = 0;
-				for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
+				memset(&mbss, 0, sizeof(mbss));
+				glyph_width = 0;
+				for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 				{
+					mbrtowc(&wc, &xpicture[row][j], MB_CUR_MAX, &mbss);
+					glyph_width += mk_wcwidth(wc);
+
 					/* Copy exactly one multi-byte character to buf */
 					j += append_utf8_char(string, &xpicture[row][j]);
-					mbcnt ++;
 				}
 				dyn_strcat(string, "\n");
 			}

@@ -9,6 +9,7 @@ Version 5.4.0 (XXX 2017)
  * Revive the sqlite3 dictionary into operational form.
  * Add double-quotes to splittable punctuation for the "any" language.
  * Add API functions to get linkage word positions in the sentence.
+ * Fix printing of diagrams containing Chinese or other wide glyphs.
 
 Version 5.3.16 (15 April 2017)
  * Fix python3 unit tests.
