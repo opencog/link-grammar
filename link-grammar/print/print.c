@@ -483,6 +483,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	}
 	top_row = 0;
 
+	// Longer links are printed above the lower links.
 	for (link_length = 1; link_length < N_words_to_print; link_length++)
 	{
 		for (j=0; j<N_links; j++)
@@ -611,8 +612,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 	/* We've built the picture, now print it out. */
 
-	if (print_word_0) i = 0; else i = 1;
-
 	/* Start locations, for each row.  These may vary, due to different
 	 * utf8 character widths. */
 	top_row_p1 = top_row + 1;
@@ -621,18 +620,21 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	pctx->N_rows = 0;
 	pctx->row_starts[pctx->N_rows] = 0;
 	pctx->N_rows++;
+
+	if (print_word_0) i = 0; else i = 1;
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
 		/* Count the column-widths of the words,
 		 * up to the max screen width. */
 		unsigned int uwidth = 0;
+		unsigned int wwid;
 		do {
-			uwidth += word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
+			wwid = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
+			if (x_screen_width <= uwidth + wwid) break;
+			uwidth += wwid;
 			i++;
-		} while ((i < N_words_to_print) &&
-			(uwidth + word_offset[i] + utf8_strwidth(linkage->word[i]) + 1 <
-			                                                      x_screen_width));
+		} while (i < N_words_to_print);
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
