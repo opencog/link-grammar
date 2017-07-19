@@ -17,6 +17,7 @@
 #include "api-structures.h"
 #include "build-disjuncts.h"
 #include "connectors.h"
+#include "dict-common/dict-api.h"        // for print_expression
 #include "dict-common/dict-defines.h"    // for SUBSCRIPT_MARK
 #include "dict-common/dict-structures.h" // for Exp_struct
 #include "disjunct-utils.h"
@@ -216,6 +217,7 @@ static Clause * build_clause(Exp *e)
 	return c;
 }
 
+// #define DEBUG
 #ifdef DEBUG
 /* Misc printing functions, useful for debugging */
 
@@ -314,19 +316,19 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word, double cost_cutof
 {
 	Clause *c ;
 	Disjunct * dis;
-	/* print_expression(exp);  printf("\n"); */
+	// print_expression(exp);  printf("\n");
 	c = build_clause(exp);
-	/* print_clause_list(c); */
+	// print_clause_list(c);
 	dis = build_disjunct(c, word, cost_cutoff);
-	/* print_disjunct_list(dis); */
+	// print_disjunct_list(dis);
 	free_clause_list(c);
 	return dis;
 }
 
-#if DEBUG
+#ifdef DEBUG
 /* There is a much better print_expression elsewhere
  * This one is for low-level debug. */
-void prt_exp(Exp *e, int i)
+GNUC_UNUSED static void prt_exp(Exp *e, int i)
 {
 	if (e == NULL) return;
 
@@ -348,7 +350,7 @@ void prt_exp(Exp *e, int i)
 	}
 }
 
-void prt_exp_mem(Exp *e, int i)
+GNUC_UNUSED static void prt_exp_mem(Exp *e, int i)
 {
 	char unknown_type[32] = "";
 	const char *type = unknown_type;
