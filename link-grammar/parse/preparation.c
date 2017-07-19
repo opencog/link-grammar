@@ -171,7 +171,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
 	if (verbosity_level(5))
 	{
-		printf("After expanding expressions into disjuncts:");
+		printf("After expanding expressions into disjuncts:\n");
 		print_disjunct_counts(sent);
 	}
 	print_time(opts, "Built disjuncts");
