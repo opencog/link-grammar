@@ -250,14 +250,14 @@ static void print_connector_list(Connector * e)
 	}
 }
 
-GNUC_UNUSED static void print_disjunct_list(Disjunct * c)
+GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
 {
-	for (;c != NULL; c=c->next) {
-		printf("%10s: ", c->string);
-		printf("(%f) ", c->cost);
-		print_connector_list(c->left);
+	for (;dj != NULL; dj=dj->next) {
+		printf("%10s: ", dj->word_string);
+		printf("(%f) ", dj->cost);
+		print_connector_list(dj->left);
 		printf(" <--> ");
-		print_connector_list(c->right);
+		print_connector_list(dj->right);
 		printf("\n");
 	}
 }
