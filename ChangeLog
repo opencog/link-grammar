@@ -1,4 +1,4 @@
-Version 5.4.0 (XXX 2017)
+Version 5.4.0 (26 July 2017)
  * Fix for missing locale info in Windows XP.
  * Empty out the post-processing tables for the any, ady, amy languages
  * Remove left_print_string() from the API.
