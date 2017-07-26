@@ -188,6 +188,33 @@ Fat Links:
 =================================================================
 =================================================================
 
+[ANNOUNCE] Link-Grammar Version 5.4.0 is now available.
+
+I'm pleased to announce that version 5.4.0 is now available. Besides
+including various bug fixes, this release is notable for completely
+restructuring the organization of the source code, grouping files into
+directories according to the processing stage that they implement.  See
+below for the full ChangeLog.
+
+You can download link-grammar from
+http://www.abisource.com/downloads/link-grammar/current/
+
+The website is here:
+https://www.abisource.com/projects/link-grammar/
+
+WHAT IS LINK GRAMMER?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax. Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.).
+
+=================================================================
+=================================================================
+=================================================================
+
 [ANNOUNCE] Link Grammar version 5.3.0 is now available. Download from:
 
 http://www.abiword.org/downloads/link-grammar/5.3.0/link-grammar-5.3.0.tar.gz
