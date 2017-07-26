@@ -203,17 +203,26 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 	scriword = argv[0];
 	wclass = argv[1];
 
+	/* Now look up the expressions for each word */
+	bs->exp = NULL;
+	bs->dn = NULL;
+	db_lookup_exp(bs->dict, wclass, bs);
+
+	/* Well, if we found a classname for a word, then there really,
+	 * really should be able to find one or more corresponding disjuncts.
+	 * However, it is possible to have corrupted databases which do not
+	 * have any disjuncts for a word class.   We silently ignore these.
+	 * Although maybe we should throw an error here?
+	 */
+	if (NULL == bs->exp) return 0;
+
 	/* Put each word into a Dict_node. */
 	dn = (Dict_node *) xalloc(sizeof(Dict_node));
 	memset(dn, 0, sizeof(Dict_node));
 	dn->string = string_set_add(scriword, bs->dict->string_set);
 	dn->right = bs->dn;
+	dn->exp = bs->exp;
 	bs->dn = dn;
-
-	/* Now look up the expressions for each word */
-	bs->exp = NULL;
-	db_lookup_exp(bs->dict, wclass, bs);
-	bs->dn->exp = bs->exp;
 
 	return 0;
 }
