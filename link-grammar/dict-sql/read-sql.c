@@ -205,7 +205,6 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 
 	/* Now look up the expressions for each word */
 	bs->exp = NULL;
-	bs->dn = NULL;
 	db_lookup_exp(bs->dict, wclass, bs);
 
 	/* Well, if we found a classname for a word, then there really,
