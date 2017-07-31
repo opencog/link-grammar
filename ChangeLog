@@ -1,5 +1,5 @@
 Version 5.4.1 (XXX 2017)
- * Something ...
+ * Fix man page installation (broken in 5.3.8).
 
 Version 5.4.0 (26 July 2017)
  * Fix for missing locale info in Windows XP.
