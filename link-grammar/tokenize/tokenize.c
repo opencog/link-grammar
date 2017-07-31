@@ -2069,6 +2069,12 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 	altp = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "dictcap",
 											0,NULL, 2,dictcap, 0,NULL);
 
+	if (NULL == altp)
+	{
+		prt_error("Warning: Word %s: Internal error: Issuing %s failed\n",
+		          dictcap[1], dictcap[0]);
+		return;
+	}
 	/* Set the dictcap[0] word fields */
 	altp->status |= WS_INDICT;       /* already checked to be in the dict */
 	altp->morpheme_type = MT_FEATURE;
@@ -2502,6 +2508,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					lgdebug(+D_SW, "Adding lc=%s is_capitalizable=1\n", wp);
 					lc = issue_word_alternative(sent, unsplit_word, "LC",
 					                            0,NULL, 1,&wp, 0,NULL);
+					if (NULL == lc)
+					{
+						prt_error("Warning: Word %s: Internal error: Issuing lc failed\n",
+									 wp);
+						return;
+					}
 					/* This is the lc version. The original word can be restored
 					 * later, if needed, through the unsplit word. */
 					lc->status |= WS_FIRSTUPPER;
