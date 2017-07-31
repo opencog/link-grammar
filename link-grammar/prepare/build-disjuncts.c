@@ -328,7 +328,7 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word, double cost_cutof
 #ifdef DEBUG
 /* There is a much better print_expression elsewhere
  * This one is for low-level debug. */
-GNUC_UNUSED static void prt_exp(Exp *e, int i)
+GNUC_UNUSED void prt_exp(Exp *e, int i)
 {
 	if (e == NULL) return;
 
@@ -350,7 +350,7 @@ GNUC_UNUSED static void prt_exp(Exp *e, int i)
 	}
 }
 
-GNUC_UNUSED static void prt_exp_mem(Exp *e, int i)
+GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 {
 	char unknown_type[32] = "";
 	const char *type = unknown_type;
