@@ -341,13 +341,14 @@ static bool word_start_another_alternative(Dictionary dict,
 
 	for (n = unsplit_word->prev[0]->next; NULL != *n; n++)
 	{
+		if ((*n)->unsplit_word != unsplit_word) continue;
 		lgdebug(D_WSAA, "Comparing alt %s\n\\", (*n)->subword);
 		if ((0 == strcmp((*n)->subword, altword0) ||
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
 			 !find_word_in_dict(dict, altword0))))
 		{
-			lgdebug(+D_UN, "Preventing alt starts with %s due to existing %s\n",
-			        altword0, (*n)->subword);
+			lgdebug(+D_UN, "Preventing alt starts with %s due to existing %zu:%s\n",
+			        altword0, (*n)->node_num, (*n)->subword);
 			return true;
 		}
 	}
