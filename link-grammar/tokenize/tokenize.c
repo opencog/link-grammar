@@ -269,6 +269,7 @@ static void word_label(Sentence sent, Gword *w, const char *op,
 	w->label = string_set_add(new_label, sent->string_set);
 }
 
+#ifdef CHECK_DUPLICATE_ALTS // Not defined - apparently not a problem by now
 #define D_WSAA 9
 /**
  * Disallow unsplit_word alternatives with the same subword string path.
@@ -355,6 +356,7 @@ static bool word_start_another_alternative(Dictionary dict,
 	return false;
 }
 #undef D_WSAA
+#endif /* CHECK_DUPLICATE_ALTS */
 
 /**
  * Find if a suffix is of a contraction.
@@ -680,6 +682,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					assert(true, "affixtype END reached");
 			}
 
+#ifdef CHECK_DUPLICATE_ALTS
 			/* FIXME Use another method instead of checking the label. */
 			if ((0 == ai) && (1 < token_tot) && (label[0] == 'r') &&
 				 word_start_another_alternative(sent->dict, unsplit_word, token))
@@ -688,6 +691,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				 * returned value due to the possibility of this returned NULL. */
 				return NULL;
 			}
+#endif /* CHECK_DUPLICATE_ALTS */
 
 			subword_eq_unsplit_word= (0 == strcmp(unsplit_word->subword, token));
 
