@@ -962,6 +962,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				assert(prev[0]->next[0], "'%s': No next[0]",prev[0]->subword);
 				for (alts = prev[0]->next; *alts; alts++)
 				{
+					if ((*alts)->unsplit_word != unsplit_word) continue;
+
 					Gword *calt = curr_alt; /* check alternative */
 					Gword *oalt; /* old alternatives */
 					size_t token_no = token_tot;
