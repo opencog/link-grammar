@@ -580,11 +580,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		          "Run with !verbosity="STRINGIFY(D_SW)" to debug\n",
 		          unsplit_word->subword, MAX_SPLITS);
 		unsplit_word->tokenizing_step = TS_DONE;
-		/* We cannot return NULL here, because it is unexpected by the caller,
-		 * which expects the alternative_id of the split. Hence a dummy word is
-		 * returned. Since there was no actual split, the results for this
-		 * sentence are undefined. */
-		return gword_new(sent, "[MAX_SPLITS]");
+		return NULL;
 	}
 	/* The incremented split_counter will be assigned to the created subwords. */
 
