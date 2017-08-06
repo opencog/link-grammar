@@ -1,3 +1,4 @@
+#include /any/affix-punc
 
 % Mark the first morpheme by appending STEMSUBSCR.
 .=: STEMSUBSCR+;
@@ -8,7 +9,7 @@
 % Program and dictionary sanity check: Allow only these combinations.
 % (w: word, p:prefix, m:middle, t:stem, s: suffix)
 %
-% See the file api.c circa line 1100 for details
+% See the file sane.c circa line 120 for details
 % (or grep for AFFIXTYPE in the code).
 "w|ts|pts|pms|pmss|ptss|ps|ts": SANEMORPHISM+;
 
@@ -32,19 +33,16 @@
 % Multiple regexes per class are permitted.
 %
 % The word parts currently contain at least one character
-% (null morphems are not supported).
-%
-% If needed, add the same regex in more than one definition.
+% (null morphemes are not supported).
 
-% Regex to match the prefix (including the whole word)
-".*" : REGPRE+;
+% Regex to match the prefix
+"" : REGPRE+;
 
 % Regex to match the middle parts (not including the prefix or the suffix)
-".*": REGMID+;
+"": REGMID+;
 %".{2,}": REGMID+;
 
-% Regex to match the suffix (not including the whole word)
-".*": REGSUF+;
-%"[aeiouy]$" "[rst][^=]$": REGSUF+;
+% Regex to match the suffix
+"": REGSUF+;
 
 % End of Anysplit parameters
