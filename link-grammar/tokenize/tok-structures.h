@@ -95,7 +95,7 @@ typedef enum
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 
-/* XXX Only TS_ANYSPLIT and TS_DONE are actually used. */
+/*Only TS_DONE is actually used. */
 typedef enum
 {
 	TS_INITIAL,
@@ -104,7 +104,6 @@ typedef enum
 	TS_REGEX,
 	TS_RUNON,
 	TS_SPELL,
-	TS_ANYSPLIT,             /* After anysplit */
 	TS_DONE                  /* Tokenization done */
 } Tokenizing_step;
 
