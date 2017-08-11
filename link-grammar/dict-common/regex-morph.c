@@ -144,7 +144,11 @@ void free_regexs(Regex_node *re)
 	while (re != NULL)
 	{
 		Regex_node *next = re->next;
-		regfree((regex_t *)re->re);
+
+		/* Prevent a crash in regfree() in case of a regex compilation error. */
+		if (NULL != re->re)
+			regfree((regex_t *)re->re);
+
 		free(re->re);
 		free(re->name);
 		free(re->pattern);

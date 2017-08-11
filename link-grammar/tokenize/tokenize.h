@@ -14,10 +14,12 @@
 #define _TOKENIZE_H
 
 #include "api-types.h"
+#include "link-includes.h"
 
 bool separate_sentence(Sentence, Parse_Options);
 bool sentence_in_dictionary(Sentence);
 bool flatten_wordgraph(Sentence, Parse_Options);
+void tokenization_done(Sentence, Gword *);
 
 void altappend(Sentence, const char ***, const char *);
 

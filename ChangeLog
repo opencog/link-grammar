@@ -1,5 +1,6 @@
 Version 5.4.1 (XXX 2017)
  * Fix man page installation (broken in 5.3.8).
+ * Add affix-class MPUNC for splitting at intra-word punctuation.
 
 Version 5.4.0 (26 July 2017)
  * Fix for missing locale info in Windows XP.

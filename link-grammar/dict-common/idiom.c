@@ -22,16 +22,18 @@
 /**
  * Find if a string signifies an idiom.
  * Returns true if the string contains an underbar character.
- * The check of s[0] prevents inclusion of "_". In that case no check for
+ * The check of s[0] prevents inclusion of '_'. In that case no check for
  * length=1 is done because it is not going to be a valid idiom anyway.
  *
+ * If the underbar character is preceded by a backslash, it is not
+ * considered.
  */
 bool contains_underbar(const char * s)
 {
-	if (s[0] == '_') return false;
-	while (*s != '\0') {
-		if (*s == '_') return true;
-		s++;
+	if ((s[0] == '_') || (s[0] == '\0')) return false;
+	while (*++s != '\0')
+	{
+		if ((*s == '_') && (s[-1] != '\\')) return true;
 	}
 	return false;
 }

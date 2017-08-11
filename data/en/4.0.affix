@@ -37,6 +37,9 @@ _ ‐ ‑ ‒ – — ― ～ –.x ━.x ー.x -- - ‧.x
 y' w/
   : LPUNC+;
 
+% Split words at these.
+--.xy: MPUNC+;
+
 % Suffixes
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
 

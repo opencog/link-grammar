@@ -1,3 +1,4 @@
+#include /any/affix-punc
 
 % Mark the first morpheme by appending STEMSUBSCR.
 .=: STEMSUBSCR+;
@@ -30,13 +31,11 @@
 %
 % The word parts currently contain at least one character
 % (null morphemes are not supported).
-%
-% If needed, add the same regex in more than one definition.
 
-% Regex to match the prefix (including the whole word)
-".*" : REGPRE+;
+% Regex to match the prefix
+"": REGPRE+;
 
-% Regex to match the suffix (not including the whole word)
-".*": REGSUF+;
+% Regex to match the suffix
+"": REGSUF+;
 
 % End of Anysplit parameters
