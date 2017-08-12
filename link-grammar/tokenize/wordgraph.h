@@ -1,6 +1,8 @@
 #ifndef _WORDGRAPH_H
 #define _WORDGRAPH_H
 
+#include "api-structures.h"
+
 #ifdef USE_WORDGRAPH_DISPLAY
 /* Wordgraph display representation modes. */
 #define lo(l) (l-'a')
