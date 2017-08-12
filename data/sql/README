@@ -6,8 +6,8 @@
 This directory contains SQL tables that are used in computing a parse
 ranking, as well as a word-sense probability (based on WordNet 3.0) by
 looking up frequency statistics from an SQL database. The database used
-is the SQLite database; it has been choosen because it is "administration
--free" for the user, and because its license is compatbile with the
+is the SQLite database; it has been chosen because it is "administration
+-free" for the user, and because its license is compatible with the
 current link-grammar license.
 
 The data tables needed to operate this stuff can be downloaded from the
@@ -64,7 +64,7 @@ Cluster Table
 -------------
 When LG is unable to parse a sentence, one possible strategy is to 
 increase the number of disjuncts that words can participate in, and 
-hoping that the broadend collection of disjuncts will allow the parse
+hoping that the broadened collection of disjuncts will allow the parse
 to proceed.  To obtain the broadened coverage, one can look up the 
 word to see if it participates in a cluster of syntactically similar
 words, and then use a union of all of the disjuncts of words in the 
@@ -96,7 +96,7 @@ A recent version has this table at 172MBytes.
 
 To use these tables:
 1) Copy them into this directory
-2) Enable the parser to the above-desribed algo, by saing !cluster at
+2) Enable the parser to the above-described algo, by saying !cluster at
    the parser prompt.
 
 Report: At this time, the results of using the above algo are 
@@ -118,7 +118,7 @@ Notes:
 Go to http://opencog.org/ and download the source code. Then review the 
 contents of opencog/nlp/wsd-post/README. That README explains the data 
 processing pipleine used to create the word-senses table, and the
-disjunct-frequency table. To summarize, in breif:
+disjunct-frequency table. To summarize, in brief:
 
 Compute the marginal and conditional probabilities for the Disjuncts
 table by running the 

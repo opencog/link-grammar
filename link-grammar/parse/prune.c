@@ -62,7 +62,7 @@ struct cms_struct
 {
 	Cms * next;
 	const char * name;
-	int count;	  /* the number of times this is in the multiset */
+	int count; /* the number of times this is in the multiset */
 };
 
 #define CMS_SIZE (2<<10)
@@ -89,7 +89,7 @@ struct prune_context_s
 /*
 
   The algorithms in this file prune disjuncts from the disjunct list
-  of the sentence that can be elimininated by a simple checks.  The first
+  of the sentence that can be eliminated by a simple checks.  The first
   check works as follows:
 
   A series of passes are made through the sentence, alternating
@@ -399,16 +399,16 @@ static bool alt_consistency(prune_context *pc,
 
 	if (same_alternative)
 	{
-		const Connector *remote_connecor = lr ? lc : rc;
-		const Gword **gword_c = remote_connecor->word;
-		const Connector *curr_connecor = lr ? rc : lc;
+		const Connector *remote_connector = lr ? lc : rc;
+		const Gword **gword_c = remote_connector->word;
+		const Connector *curr_connector = lr ? rc : lc;
 
 #if 0
 		printf("CHECK %s F%p=%s R%p=%s:", lr ? "rc" : "lc",
 		       pc->first_connector, pc->first_connector->string,
-		       remote_connecor, remote_connecor->string);
+		       remote_connector, remote_connector->string);
 #endif
-		for (const Connector *i = pc->first_connector; curr_connecor != i; i = i->next)
+		for (const Connector *i = pc->first_connector; curr_connector != i; i = i->next)
 		{
 			printf(" I%p=%s", i, i->string);
 			bool alt_compatible = false;

@@ -19,7 +19,7 @@ the link-grammar dictionaries:
 
   time ./mkdict.pl
 
-This should take abput 25 seconds or less.  After this, the Russian
+This should take about 25 seconds or less.  After this, the Russian
 dictionaries are ready to be used!
 
 The query-morph.pl tool will examine the morphology candidates for a
@@ -46,7 +46,7 @@ A read-only version can be obtained as:
 So, for example, rgramtab.tab is in trunk/Dicts/Morph/ and the
 morphs.mrd is in trunk/Dicts/SrcMorph/RusSrc/morphs.mrd  These files
 are encoded in KOI8-R.  The iconv command can be used to convert
-KOI8-R to UTF, as folllows: 
+KOI8-R to UTF, as follows:
 
    iconv -f KOI8-R -t UTF-8  <infile>  >   <outfile>
 

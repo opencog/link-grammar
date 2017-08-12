@@ -289,7 +289,7 @@ static void word_label(Sentence sent, Gword *w, const char *op,
  *
  * - This function is invoked only for subwords that we try to split in every
  *   possible combination, i.e. LR-split. It is not invoked for morpheme
- *   splits, because then an identical first subword mat be valid due to
+ *   splits, because then an identical first subword may be valid due to
  *   a different way of performing the splits.
  *
  * - If the first subword of the checked candidate alternative is the same as an

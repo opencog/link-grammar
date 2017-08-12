@@ -8,7 +8,7 @@
 
 extern "C"
 {
-#include "api-structures.h" // For defintion of Sentence
+#include "api-structures.h" // For definition of Sentence
 }
 
 #ifndef HAVE_SETPOLARITY_BOOL // setPolarity has lbool argument, not bool

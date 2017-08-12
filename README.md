@@ -59,7 +59,7 @@ required here, is used to force phonetic agreement, distinguishing
 
 The bottom of the display is a listing of the "disjuncts" used for
 each word. The disjuncts are simply a list of the connectors that
-werre employed to form the links. They are particularly intersting
+were employed to form the links. They are particularly interesting
 because they serve as an extremely fine-grained form of a "part of
 speech".  This, for example: the disjunct `S- O+` indicates a
 transitive verb: its a verb that takes both a subject and an object.
@@ -286,7 +286,7 @@ you do not plan to use link-grammar with python.  If you like
 to disable these bindings, use one of:
 
 ```
-./configure --diable-python-bindings
+./configure --disable-python-bindings
 ./configure --enable-python-bindings=2
 ./configure --enable-python-bindings=3
 ```
@@ -325,9 +325,9 @@ End users should download the tarball (see
 [UNPACKING and signature verification](#unpacking-and-signature-verification)).
 
 The current GitHub version is intended for developers (including anyone who
-is willing to provide a fix, a new feauture or an improvment). The tip of
+is willing to provide a fix, a new feature or an improvement). The tip of
 the master branch is often unstable, and can sometimes have bad code in it
-as it is under developementi. It also needs installing of development tools
+as it is under developement. It also needs installing of development tools
 that are not installed by default. Due to these reason the use of the GitHub
 version is discouraged for regular end users.
 

@@ -75,7 +75,7 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 		}
 		if (i == mcnt)
 		{
-			fprintf(fh, "Error: realloc address %d %p not previously alloed!\n",
+			fprintf(fh, "Error: realloc address %d %p not previously allowed!\n",
 				mcnt, mem);
 		}
 	}

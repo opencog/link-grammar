@@ -280,7 +280,7 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
  * This is used to support wild-card lookup from the command-line
  * client.  That is, a user can type in `!!foo*` and look up all
  * words that begin with the three letters `foo`.  It works ...
- * but it only works if the dicationary also has UNKNOWN-WORD defined!
+ * but it only works if the dictionary also has UNKNOWN-WORD defined!
  */
 static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 {

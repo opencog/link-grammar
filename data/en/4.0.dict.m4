@@ -5877,7 +5877,7 @@ letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
 % Abbreviation for "let us"
-% Is there any reason to create a defintion such as 's.n: Ox-?
+% Is there any reason to create a definition such as 's.n: Ox-?
 let's let’s: ({Ic-} & Wi- & {N+} & I+) or ({Ic-} & Wi- & N+);
 
 <vc-watch>:

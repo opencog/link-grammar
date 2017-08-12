@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api-structures.h"    // for Sentence_s
+#include "api-structures.h"              // for Sentence_s
 #include "connectors.h"
 #include "dict-common/dict-utils.h"      // size_of_expression
 #include "dict-common/dict-structures.h" // for X_node
