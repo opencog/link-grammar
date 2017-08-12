@@ -14,13 +14,11 @@
 #include "api-structures.h"              // for Sentence_s
 #include "connectors.h"
 #include "dict-common/dict-utils.h"      // size_of_expression
-#include "dict-common/dict-structures.h" // for X_node
 #include "string-set.h"
 #include "tokenize/word-structures.h"    // for Word_struct
 #include "exprune.h"
 
 #define D_PRUNE 5
-
 #define CONTABSZ 8192
 
 /* #define DBG(X) X */
