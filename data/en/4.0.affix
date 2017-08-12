@@ -24,9 +24,6 @@ _ ‐ ‑ ‒ – — ― ….y ━.y –.y ー.y ‐.y 、.y
 % Paragraph marks
 % Assorted bullets and dingbats
 % Dashes of various sorts
-% "real" English prefixes: Y' w/
-% Y'gotta Y'gonna
-% coffe w/milk
 "(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［
 『 「 、.x `.x `` „ ‘ “ ''.x '.x ….x ....x
 ¿ ¡ "$" US$ USD C$
@@ -34,7 +31,7 @@ _ ‐ ‑ ‒ – — ― ….y ━.y –.y ー.y ‐.y 、.y
 † †† ‡ § ¶ © ® ℗ № "#"
 * • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎
 _ ‐ ‑ ‒ – — ― ～ –.x ━.x ー.x -- - ‧.x
-y' w/
+w/
   : LPUNC+;
 
 % Split words at these.
@@ -44,9 +41,10 @@ y' w/
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
 
 % Prefixes
+% "real" English prefix: y' w/
 % Y'gotta Y'gonna
-% coffe w/milk
-% y' w/: PRE+;
+% coffee w/milk
+y' w/: PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!

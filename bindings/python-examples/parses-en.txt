@@ -35,3 +35,13 @@ C   (VP jumped.v-d
 C       (PP over
 C           (NP the lazy.a dog.n))))
 C
+
+% Prefixes
+
+IY'gotta do it this way
+O
+O    +---->WV---->+       +------MVa-----+
+O    +--Wd--+-Sp*i+--I*t--+Osm+    +-Dsu-+
+O    |      |     |       |   |    |     |
+OLEFT-WALL y' gotta.v-d do.v it this.d way.n 
+O

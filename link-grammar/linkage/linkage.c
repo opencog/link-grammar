@@ -497,7 +497,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							join_alt = false;
 							break;
 						}
-						join_len += strlen(cdjp[j]->word_string);
+						join_len += strlen(cdjp[j]->word_string) + 1;
 						if ((*wgaltp)->morpheme_type & IS_REG_MORPHEME)
 							join_alt = true;
 					}
