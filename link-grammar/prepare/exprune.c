@@ -18,7 +18,7 @@
 #include "tokenize/word-structures.h"    // for Word_struct
 #include "exprune.h"
 
-#define D_PRUNE 5
+#define D_EXPRUNE 9
 #define CONTABSZ 8192
 
 /* #define DBG(X) X */
@@ -331,7 +331,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (verbosity_level(D_PRUNE))
+		if (verbosity_level(D_EXPRUNE))
 		{
 			printf("l->r pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
@@ -367,7 +367,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (verbosity_level(D_PRUNE))
+		if (verbosity_level(D_EXPRUNE))
 		{
 			printf("r->l pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
