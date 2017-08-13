@@ -13,7 +13,9 @@
 
 #include "api-structures.h"              // for Sentence_s
 #include "connectors.h"
+#include "dict-common/dict-api.h"        // expression_stringify
 #include "dict-common/dict-utils.h"      // size_of_expression
+#include "print/print-util.h"            // dyn_str functions
 #include "string-set.h"
 #include "tokenize/word-structures.h"    // for Word_struct
 #include "exprune.h"
@@ -21,8 +23,25 @@
 #define D_EXPRUNE 9
 #define CONTABSZ 8192
 
-/* #define DBG(X) X */
+#ifdef DEBUG
+#define DBG(X) \
+	if (verbosity_level(+D_EXPRUNE))\
+	{\
+		char *e = expression_stringify(x->exp);\
+		err_msg(lg_Trace, X ": %s\n", e);\
+		free(e);\
+	}
+#else /* !DEBUG */
 #define DBG(X)
+#endif /* DEBUG */
+
+#define DBG_EXPSIZES(...) \
+	if (verbosity_level(+D_EXPRUNE))\
+	{\
+		char *e = print_expression_sizes(sent);\
+		err_msg(lg_Trace, __VA_ARGS__);\
+		free(e);\
+	}
 
 typedef Connector * connector_table;
 
@@ -276,19 +295,22 @@ static void clean_up_expressions(Sentence sent, int w)
 	sent->word[w].x = head_node.next;
 }
 
-static void print_expression_sizes(Sentence sent)
+static char *print_expression_sizes(Sentence sent)
 {
 	X_node * x;
 	size_t w, size;
+	dyn_str *e = dyn_str_new();
+
 	for (w=0; w<sent->length; w++) {
 		size = 0;
 		for (x=sent->word[w].x; x!=NULL; x = x->next) {
 			size += size_of_expression(x->exp);
 		}
 		/* XXX alternatives[0] is not really correct, here .. */
-		printf("%s[%zu] ",sent->word[w].alternatives[0], size);
+		append_string(e, "%s[%zu] ", sent->word[w].alternatives[0], size);
 	}
-	printf("\n\n");
+	append_string(e, "\n\n");
+	return dyn_str_take(e);
 }
 
 void expression_prune(Sentence sent)
@@ -303,6 +325,8 @@ void expression_prune(Sentence sent)
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
+	DBG_EXPSIZES("Initial expression sizes\n%s", e);
+
 	while (1)
 	{
 		/* Left-to-right pass */
@@ -312,15 +336,15 @@ void expression_prune(Sentence sent)
 			/* For every expression in word */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-DBG(printf("before marking: "); print_expression(x->exp); printf("\n"););
+				DBG("l->r pass before marking");
 				N_deleted += mark_dead_connectors(ct, x->exp, '-');
-DBG(printf(" after marking: "); print_expression(x->exp); printf("\n"););
+				DBG("l->r pass after marking");
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-DBG(printf("before purging: "); print_expression(x->exp); printf("\n"););
+				DBG("l->r pass before purging");
 				x->exp = purge_Exp(x->exp);
-DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
+				DBG("l->r pass after purging");
 			}
 
 			/* gets rid of X_nodes with NULL exp */
@@ -331,11 +355,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (verbosity_level(D_EXPRUNE))
-		{
-			printf("l->r pass removed %d\n", N_deleted);
-			print_expression_sizes(sent);
-		}
+		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
 
 		/* Free the allocated dummy connectors */
 		free_connectors(dummy_list);
@@ -350,15 +370,15 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 		{
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-/*	 printf("before marking: "); print_expression(x->exp); printf("\n"); */
+				DBG("r->l pass before marking");
 				N_deleted += mark_dead_connectors(ct, x->exp, '+');
-/*	 printf("after marking: "); print_expression(x->exp); printf("\n"); */
+				DBG("r->l pass after marking");
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-/*	 printf("before purging: "); print_expression(x->exp); printf("\n"); */
+				DBG("r->l pass before purging");
 				x->exp = purge_Exp(x->exp);
-/*	 printf("after purging: "); print_expression(x->exp); printf("\n"); */
+				DBG("r->l pass after purging");
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
@@ -367,11 +387,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 		}
 
-		if (verbosity_level(D_EXPRUNE))
-		{
-			printf("r->l pass removed %d\n", N_deleted);
-			print_expression_sizes(sent);
-		}
+		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
 
 		/* Free the allocated dummy connectors */
 		free_connectors(dummy_list);
