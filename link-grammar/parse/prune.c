@@ -24,6 +24,15 @@
 #include "tokenize/word-structures.h" // for Word_struct
 #include "tokenize/wordgraph.h"
 
+/* This code is not too effective and is costly for the current corpus
+ * batches and also for ady/amy. So maybe it should be discarded. */
+//#define ALT_MUTUAL_CONSISTENCY
+//#define ALT_DISJUNCT_CONSISTENCY
+
+#if defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)
+#include "tokenize/tok-structures.h"
+#endif /* ALT_MUTUAL_CONSISTENCY || ALT_DISJUNCT_CONSISTENCY */
+
 #define D_PRUNE 5
 
 #define CONTABSZ 8192
@@ -62,7 +71,7 @@ struct cms_struct
 {
 	Cms * next;
 	const char * name;
-	int count;	  /* the number of times this is in the multiset */
+	int count; /* the number of times this is in the multiset */
 };
 
 #define CMS_SIZE (2<<10)
@@ -89,7 +98,7 @@ struct prune_context_s
 /*
 
   The algorithms in this file prune disjuncts from the disjunct list
-  of the sentence that can be elimininated by a simple checks.  The first
+  of the sentence that can be eliminated by a simple checks.  The first
   check works as follows:
 
   A series of passes are made through the sentence, alternating
@@ -376,13 +385,11 @@ static bool alt_consistency(prune_context *pc,
 	bool same_alternative = false;
 
 #ifdef ALT_MUTUAL_CONSISTENCY
-	/* Validate that rc and lc are from the same alternative. */
-	for (Gword **lg = (Gword **)lc->word; NULL != *lg; lg++)
-	{
-		for (Gword **rg = (Gword **)rc->word; NULL != *rg; rg++)
-		{
-			if (in_same_alternative(*lg, *rg))
-			{
+	/* Validate that rc and lc are from the same alternative.
+	 * Each of the loops is of one iteration most of the times. */
+	for (const gword_set *ga = lc->originating_gword; NULL != ga; ga = ga->next) {
+		for (const gword_set *gb = rc->originating_gword; NULL != gb; gb = gb->next) {
+			if (in_same_alternative(ga->o_gword, gb->o_gword)) {
 				same_alternative = true;
 				break;
 			}
@@ -399,24 +406,24 @@ static bool alt_consistency(prune_context *pc,
 
 	if (same_alternative)
 	{
-		const Connector *remote_connecor = lr ? lc : rc;
-		const Gword **gword_c = remote_connecor->word;
-		const Connector *curr_connecor = lr ? rc : lc;
+		const Connector *remote_connector = lr ? lc : rc;
+		const gword_set* gword_set_c = remote_connector->originating_gword;
+		const Connector *curr_connector = lr ? rc : lc;
 
 #if 0
 		printf("CHECK %s F%p=%s R%p=%s:", lr ? "rc" : "lc",
 		       pc->first_connector, pc->first_connector->string,
-		       remote_connecor, remote_connecor->string);
+		       remote_connector, remote_connector->string);
 #endif
-		for (const Connector *i = pc->first_connector; curr_connecor != i; i = i->next)
+		for (const Connector *i = pc->first_connector; curr_connector != i; i = i->next)
 		{
-			printf(" I%p=%s", i, i->string);
+			//printf(" I%p=%s", i, i->string);
 			bool alt_compatible = false;
-			for (Gword **gi = (Gword **)i->word; NULL != *gi; gi++)
+			for (const gword_set *gi = i->originating_gword; NULL != gi; gi = gi->next)
 			{
-				for (Gword **gcp = (Gword **)gword_c; NULL != *gcp; gcp++)
+				for (const gword_set *gs = gword_set_c; NULL != gs; gs = gs->next)
 				{
-					if (in_same_alternative(*gi, *gcp))
+					if (in_same_alternative(gi->o_gword, gs->o_gword))
 					{
 						alt_compatible = true;
 						break;
@@ -442,15 +449,15 @@ static bool alt_consistency(prune_context *pc,
 	if (!same_alternative)
 	{
 		lgdebug(8, "w%d=%s and w%d=%s NSA\n",
-		       lword, lc->word[0]->subword,
-		       rword, rc->word[0]->subword);
+		        lword, lc->originating_gword->o_gword->subword,
+		        rword, rc->originating_gword->o_gword->subword);
 
 		return false;
 	}
 
 	return same_alternative;
 }
-#endif /* defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)*/
+#endif /* ALT_MUTUAL_CONSISTENCY || ALT_DISJUNCT_CONSISTENCY */
 
 /**
  * This takes two connectors (and whether these are shallow or not)

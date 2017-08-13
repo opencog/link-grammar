@@ -22,7 +22,7 @@
 #include "dict-common/dict-structures.h" // for Exp_struct
 #include "disjunct-utils.h"
 #include "string-set.h"
-#include "tokenize/tok-structures.h" // XXX TODO provide gword acces methods!
+#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h" // For Word_struct
 #include "utilities.h" /* For Win32 compatibility features */
 
@@ -31,7 +31,7 @@ typedef struct Tconnector_struct Tconnector;
 struct Tconnector_struct
 {
 	char multi;   /* TRUE if this is a multi-connector */
-	char dir;	 /* '-' for left and '+' for right */
+	char dir;     /* '-' for left and '+' for right */
 	Tconnector * next;
 	const char * string;
 };
@@ -206,7 +206,7 @@ static Clause * build_clause(Exp *e)
 	for (c1 = c; c1 != NULL; c1 = c1->next)
 	{
 		c1->cost += e->cost;
-		/*	c1->maxcost = MAX(c1->maxcost,e->cost);  */
+		/* c1->maxcost = MAX(c1->maxcost,e->cost);  */
 		/* Above is how Dennis had it. Someone changed it to below.
 		 * However, this can sometimes lead to a maxcost that is less
 		 * than the cost ! -- which seems wrong to me ... seems Dennis

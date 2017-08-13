@@ -21,7 +21,7 @@ future plans and outcomes).
 
 The current design for the entries (rows) of the SQL table is that
 they should hold one disjunct only, each.  Thus, the `or` keyword
-is not supported in the the database entries. You should use multiple
+is not supported in the database entries. You should use multiple
 rows if you want to `or` them together.
 
 Also not supported: the multi-connector at-sign `@` and the optional
@@ -31,8 +31,8 @@ the point: the SQL database is NOT supposed to be "just like the text
 files, but different". Its really meant to support a different way of
 doing data management. The at-sign and the braces can be thought of as
 a form of compression, a way of making the dictionary entries more
-human-readable, more human-freindly. By contrast, the SQL backend is
-meant to be machine-readable, and machine-freindly, so that it can be
+human-readable, more human-friendly. By contrast, the SQL backend is
+meant to be machine-readable, and machine-friendly, so that it can be
 more easily updated by machine-learning algorithms.
 
 Existing demo:

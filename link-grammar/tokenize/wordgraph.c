@@ -228,9 +228,9 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 /**
  *  Print linkage wordgraph path.
  */
-void print_lwg_path(Gword **w)
+void print_lwg_path(Gword **w, const char *title)
 {
-	lgdebug(+0, " ");
+	lgdebug(+0, "%s: ", title);
 	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
 	lgdebug(0, "\n");
 }

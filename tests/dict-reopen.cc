@@ -9,7 +9,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-// This implelements a simple check, opening and closing the dictionary
+// This implements a simple check, opening and closing the dictionary
 // repeatedly.
 
 #include <locale.h>

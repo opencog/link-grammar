@@ -295,7 +295,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 		/* Construct the affix_types string. */
 #if DEBUG_morpheme_type
-		print_lwg_path(wpp->path);
+		print_lwg_path(wpp->path, "Linkage");
 #endif
 		i = 0;
 		for (w = wpp->path; *w; w++)

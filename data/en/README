@@ -12,7 +12,7 @@ that there are approx 1650 to 1700 word clusters in 4.0.dict
 since many of the semi-colons appear in lines that merely define 
 new classes.
 
-A better count of the contents of 4.0.dict yeilds 1430 distinct clusters.
+A better count of the contents of 4.0.dict yields 1430 distinct clusters.
 
 There seem to be 86863 word forms in the dicts
 

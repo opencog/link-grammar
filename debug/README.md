@@ -101,7 +101,11 @@ Or, in order to display the word array:
 
 `lg -v=9 -debug=post-process.c`
 
-6) Debug reading the affix and knowledge files:
+6) Debug expression pruning:
+
+`lg -v=9 -debug=expression_prune`
+
+7) Debug reading the affix and knowledge files:
 
 `lg -v=11`
 

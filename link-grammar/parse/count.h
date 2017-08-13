@@ -13,7 +13,6 @@
 #ifndef _COUNT_H
 #define _COUNT_H
 
-#include "api-structures.h"
 #include "fast-match.h"
 #include "histogram.h" /* for s64 */
 
