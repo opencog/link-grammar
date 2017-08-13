@@ -651,4 +651,4 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 }
 
 /* ============================================================x */
-#endif
+#endif /* VERY_DEAD_NO_GOOD_IDEA */
