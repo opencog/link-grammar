@@ -8,9 +8,8 @@ PYTHON = $(PYTHON3) # For py-compile.
 
 SWIG_SOURCES = ../swig/link_grammar.i
 SWIG_INCLUDES = ../../link-grammar/link-includes.h
-# BUILT_C_SOURCES = $(top_builddir)/bindings/python3/lg_python_wrap.cc
-BUILT_C_SOURCES = ../../bindings/python3/lg_python_wrap.cc
-BUILT_PY_SOURCES = $(top_builddir)/bindings/python3/clinkgrammar.py
+built_c_sources = ../../bindings/python3/lg_python_wrap.cc
+built_py_sources = $(top_builddir)/bindings/python3/clinkgrammar.py
 
 # Over-ride the install location, so as to remove the dash in the
 # directory "link-grammar".  Turns out python cannot tolerate dashes.
@@ -40,8 +39,8 @@ uninstall-hook:
 
 # These are packaged in the tarball; make clean should not remove them.
 maintainer-clean-local:
-	-rm -f $(BUILT_C_SOURCES)
-	-rm -f $(BUILT_PY_SOURCES)
+	-rm -f $(built_c_sources)
+	-rm -f $(built_py_sources)
 
 # Don't remove __init__.py; it is built by configure!
 DISTCLEANFILES =                                   \
@@ -49,12 +48,12 @@ DISTCLEANFILES =                                   \
 
 if HAVE_SWIG
 # Swig builds these ....
-$(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_INCLUDES)
-$(BUILT_C_SOURCES) $(BUILT_PY_SOURCES): $(SWIG_SOURCES)
+$(built_c_sources) $(built_py_sources): $(SWIG_INCLUDES)
+$(built_c_sources) $(built_py_sources): $(SWIG_SOURCES)
 	$(SWIG) -python -py3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 else
-$(BUILT_C_SOURCES) $(BUILT_PY_SOURCES):
-	touch $(BUILT_C_SOURCES) $(BUILT_PY_SOURCES)
+$(built_c_sources) $(built_py_sources):
+	touch $(built_c_sources) $(built_py_sources)
 endif
 
 # The la MUST have the same name as the pm,
@@ -63,7 +62,7 @@ endif
 # interfaces.
 pkgpyexec_LTLIBRARIES = _clinkgrammar.la
 
-_clinkgrammar_la_SOURCES = $(BUILT_C_SOURCES) $(SWIG_SOURCES)
+_clinkgrammar_la_SOURCES = $(built_c_sources) $(SWIG_SOURCES)
 
 # $(top_builddir) to pick up autogen'ed link-grammar/link-features.h
 _clinkgrammar_la_CPPFLAGS =       \
