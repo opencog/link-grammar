@@ -460,11 +460,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				/* Get rid of those ugly ".Ixx" */
 				if (is_idiom_word(t))
 				{
-					s = strdup(t);
+					s = strdupa(t);
 					sm = strrchr(s, SUBSCRIPT_MARK);
 					*sm = '\0';
 					t = string_set_add(s, sent->string_set);
-					free(s);
 				}
 				else if (HIDE_MORPHO)
 				{
@@ -594,20 +593,21 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			 */
 			if (t)
 			{
-				const char *sm = strrchr(t, SUBSCRIPT_MARK);
+
+				s = strdupa(t);
+				sm = strrchr(s, SUBSCRIPT_MARK);
+				if (sm) *sm = SUBSCRIPT_DOT;
 
 				if ((!(w->status & WS_GUESS) && (w->status & WS_INDICT))
 				    || !DISPLAY_GUESS_MARKS)
 				{
-					s = alloca(strlen(t)+1);
-					strcpy(s, t);
-					if (sm) s[sm-t] = SUBSCRIPT_DOT;
 					t = string_set_add(s, sent->string_set);
 				}
 				else
 				{
-					size_t baselen;
-					const char *regex_name;
+					const char *regex_name = w->regex_name;
+					/* 4 = 1(null) + 1(guess_mark) + 2 (sizeof "[]") */
+					int baselen = NULL == sm ? strlen(t) : (size_t)(sm-s);
 					char guess_mark = 0;
 
 					switch (w->status & WS_GUESS)
@@ -636,10 +636,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * a guess indication but the last subword doesn't have, no guess
 					 * indication would be shown at all. */
 
-					regex_name = w->regex_name;
 					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
-					/* 4 = 1(null) + 1(guess_mark) + 2 (sizeof "[]") */
-					baselen = NULL == sm ? strlen(t) : (size_t)(sm-t);
 					s = alloca(strlen(t) + strlen(regex_name) + 4);
 					strncpy(s, t, baselen);
 					s[baselen] = '[';
@@ -647,9 +644,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					strcpy(s + baselen + 2, regex_name);
 					strcat(s, "]");
 					if (NULL != sm) strcat(s, sm);
-					t = s;
-					sm = strrchr(t, SUBSCRIPT_MARK);
-					if (sm) s[sm-t] = SUBSCRIPT_DOT;
 					t = string_set_add(s, sent->string_set);
 				}
 			}
