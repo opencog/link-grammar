@@ -1053,6 +1053,8 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	change = true;
 	while (change)
 	{
+		char dir;
+
 		change = false;
 		N_deleted = 0;
 		for (w = 0; w < sent->length; w++)
@@ -1060,7 +1062,6 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			Disjunct *d;
 			for (d = sent->word[w].d; d != NULL; d = d->next)
 			{
-				char dir;
 				if (!d->marked) continue;
 				deleteme = false;
 				for (dir = 0; dir < 2; dir++)
@@ -1099,7 +1100,6 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 				if (deleteme)         /* now we delete this disjunct */
 				{
-					char dir;
 					N_deleted++;
 					total_deleted++;
 					d->marked = false; /* mark for deletion later */
