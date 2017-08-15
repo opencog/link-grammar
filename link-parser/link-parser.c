@@ -266,10 +266,10 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
  * the following can be used:
  * link-parser -limit=30000 -test=auto-next-linkage:20000 < file.batch
  */
-static int auto_next_linkage_test(const char *test)
+static int auto_next_linkage_test(const char *test_opt)
 {
 	char auto_next_linkage_str[] = ",auto-next-linkage";
-	char *auto_next_linkage_pos = strstr(test, auto_next_linkage_str);
+	char *auto_next_linkage_pos = strstr(test_opt, auto_next_linkage_str);
 	int max_display;
 
 	if (auto_next_linkage_pos == NULL) return 0;
