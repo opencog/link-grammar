@@ -99,6 +99,7 @@ void gwordlist_append(Gword ***arrp, Gword *p)
 	(*arrp)[n] = p;
 }
 
+#if 0
 /**
  * Append a Gword list to a given Gword list (w/o duplicates).
  */
@@ -119,7 +120,6 @@ void gwordlist_append_list(const Gword ***to_word, const Gword **from_word)
 	}
 }
 
-#if 0
 /**
  * Replace "count" words from the position "start" by word "wnew".
  */

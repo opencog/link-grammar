@@ -26,9 +26,11 @@ Gword *gword_new(Sentence, const char *);
 Gword *empty_word(void); /* FIXME: Remove it. */
 size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
-void gwordlist_append_list(const Gword ***, const Gword **);
 void gword_set_print(const gword_set *);
 void print_lwg_path(Gword **, const char *);
+#if 0
+void gwordlist_append_list(const Gword ***, const Gword **);
+#endif
 
 const Gword **wordgraph_hier_position(Gword *);
 void print_hier_position(const Gword *);
