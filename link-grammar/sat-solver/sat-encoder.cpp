@@ -1372,10 +1372,10 @@ void SATEncoder::pp_prune()
 
 
     vec<Lit> triggers;
-    for (size_t i = 0; i < link_variables.size(); i++) {
-      const Variables::LinkVar* var = _variables->link_variable(link_variables[i]);
+    for (size_t vi = 0; vi < link_variables.size(); vi++) {
+      const Variables::LinkVar* var = _variables->link_variable(link_variables[vi]);
       if (post_process_match(rule.selector, var->label)) {
-        triggers.push(Lit(link_variables[i]));
+        triggers.push(Lit(link_variables[vi]));
       }
     }
 
@@ -1398,8 +1398,8 @@ void SATEncoder::pp_prune()
     DEBUG_print("---pp_pruning--");
     for (int k = 0; k < triggers.size(); k++) {
       vec<Lit> clause(criterions.size() + 1);
-      for (int i = 0; i < criterions.size(); i++)
-        clause[i] = criterions[i];
+      for (int ci = 0; ci < criterions.size(); ci++)
+        clause[ci] = criterions[ci];
       clause[criterions.size()] = (~triggers[k]);
       add_clause(clause);
     }
