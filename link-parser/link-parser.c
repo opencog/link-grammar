@@ -607,12 +607,12 @@ int main(int argc, char * argv[])
 	}
 
 	copts = command_options_create();
-	opts = copts->popts;
-	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
+	if (copts == NULL || copts->panic_opts == NULL)
 	{
 		prt_error("Fatal error: unable to create parse options\n");
 		exit(-1);
 	}
+	opts = copts->popts;
 
 	setup_panic_parse_options(copts->panic_opts);
 	copts->panic_mode = true;
