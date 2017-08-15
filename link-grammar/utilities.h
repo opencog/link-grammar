@@ -434,7 +434,9 @@ static inline bool utf8_upper_match(const char * s, const char * t,
 #endif /* Not in use. */
 
 void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
+#if 0
 void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
+#endif
 int utf8_charlen(const char *);
 
 size_t lg_strlcpy(char * dest, const char *src, size_t size);

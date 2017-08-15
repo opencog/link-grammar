@@ -239,6 +239,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 	safe_strcpy(to, from, usize-nbl);
 }
 
+#if 0
 /**
  * Upcase the first letter of the word.
  * XXX FIXME This works 'most of the time', but is not technically correct.
@@ -280,6 +281,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 	to += nbl;
 	safe_strcpy(to, from, usize-nbl);
 }
+#endif
 
 /* ============================================================= */
 /* Memory alloc routines below. These routines attempt to keep
