@@ -1025,7 +1025,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		}
 	}
 
-#if _WIN32
+#ifdef _WIN32
 #define EXITKEY "ALT-F4"
 #elif __APPLE__
 #define EXITKEY "⌘-Q"
