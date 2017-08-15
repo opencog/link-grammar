@@ -131,11 +131,11 @@ bool resources_memory_exhausted(Resources r)
 #define RES_COL_WIDTH sizeof("                                     ")
 
 /** print out the cpu ticks since this was last called */
-static void resources_print_time(int verbosity, Resources r, const char * s)
+static void resources_print_time(int verbosity_opt, Resources r, const char * s)
 {
 	double now;
 	now = current_usage_time();
-	if (verbosity >= D_USER_TIMES)
+	if (verbosity_opt >= D_USER_TIMES)
 	{
 		prt_error("++++ %-36s %7.2f seconds\n", s, now - r->when_last_called);
 	}
@@ -143,12 +143,12 @@ static void resources_print_time(int verbosity, Resources r, const char * s)
 }
 
 /** print out the cpu ticks since this was last called */
-static void resources_print_total_time(int verbosity, Resources r)
+static void resources_print_total_time(int verbosity_opt, Resources r)
 {
 	double now;
 	now = current_usage_time();
 	r->cumulative_time += (now - r->time_when_parse_started) ;
-	if (verbosity >= D_USER_BASIC)
+	if (verbosity_opt >= D_USER_BASIC)
 	{
 		prt_error("++++ %-36s %7.2f seconds (%.2f total)\n", "Time",
 		          now - r->time_when_parse_started, r->cumulative_time);
@@ -156,9 +156,9 @@ static void resources_print_total_time(int verbosity, Resources r)
 	r->time_when_parse_started = now;
 }
 
-static void resources_print_total_space(int verbosity, Resources r)
+static void resources_print_total_space(int verbosity_opt, Resources r)
 {
-	if (verbosity >= D_USER_TIMES)
+	if (verbosity_opt >= D_USER_TIMES)
 	{
 		prt_error("++++ %-36s %zu bytes (%zu max)\n", "Total space",
 		          get_space_in_use(), get_max_space_used());
