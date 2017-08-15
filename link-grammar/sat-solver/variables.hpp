@@ -84,8 +84,8 @@ public:
       }
     }
 
-    for (size_t i = 0; i < _linked_variables.size(); i++)
-      delete _linked_variables[i];
+    for (size_t vi = 0; vi < _linked_variables.size(); vi++)
+      delete _linked_variables[vi];
 
     delete _guiding;
   }
