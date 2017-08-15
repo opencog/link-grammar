@@ -909,7 +909,7 @@ MAYBE_WARN_CXX="-Wall -Wextra \
 -Wsign-compare -Werror-implicit-function-declaration \
 -Wpointer-arith -Wwrite-strings -Wmissing-declarations \
 -Wpacked -Wswitch-enum -Wmissing-format-attribute \
--Wstrict-aliasing -Winit-self \
+-Wstrict-aliasing -Winit-self -Wshadow \
 -Wno-missing-field-initializers -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long -Winline"
 
