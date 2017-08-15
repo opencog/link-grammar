@@ -8,7 +8,7 @@ PYTHON = $(PYTHON3) # For py-compile.
 
 SWIG_SOURCES = ../swig/link_grammar.i
 SWIG_INCLUDES = ../../link-grammar/link-includes.h
-built_c_sources = ../../bindings/python3/lg_python_wrap.cc
+built_c_sources = lg_python_wrap.cc
 built_py_sources = $(top_builddir)/bindings/python3/clinkgrammar.py
 
 # Over-ride the install location, so as to remove the dash in the
@@ -19,8 +19,8 @@ pkgpythondir=$(python3dir)/linkgrammar
 pkgpyexecdir=$(python3dir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
-pkgpython_PYTHON =                                 \
-   ../../bindings/python/linkgrammar.py             \
+pkgpython_PYTHON =                                  \
+   ../python/linkgrammar.py                         \
    $(top_builddir)/bindings/python3/__init__.py     \
    $(top_builddir)/bindings/python3/clinkgrammar.py
 

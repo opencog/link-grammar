@@ -6,7 +6,7 @@
 
 SWIG_SOURCES = ../swig/link_grammar.i
 SWIG_INCLUDES = ../../link-grammar/link-includes.h
-built_c_sources = ../../bindings/python/lg_python_wrap.cc
+built_c_sources = lg_python_wrap.cc
 built_py_sources = $(top_builddir)/bindings/python/clinkgrammar.py
 
 # Over-ride the install location, so as to remove the dash in the
