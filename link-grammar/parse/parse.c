@@ -139,10 +139,11 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		}
 		extract_links(pex, lkg);
 		compute_link_names(lkg, sent->string_set);
-		remove_empty_words(lkg);
 
 		if (sane_linkage_morphism(sent, lkg, opts))
 		{
+			remove_empty_words(lkg);
+
 			need_init = true;
 			in++;
 			if (in >= sent->num_linkages_alloced) break;

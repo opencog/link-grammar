@@ -1428,7 +1428,6 @@ Linkage SATEncoder::create_linkage()
   partial_init_linkage(_sent, linkage, _sent->length);
   sat_extract_links(linkage);
   compute_link_names(linkage, _sent->string_set);
-  remove_empty_words(linkage);  /* Discard optional words. */
   return linkage;
 }
 
@@ -1486,6 +1485,7 @@ Linkage SATEncoder::get_next_linkage()
           free(linkage);
           continue; // skip this linkage
       }
+      remove_empty_words(linkage);  /* Discard optional words. */
     }
 
     if (!connected) {

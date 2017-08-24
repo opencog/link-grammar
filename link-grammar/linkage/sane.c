@@ -186,6 +186,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Wordgraph_pathpos *wpp;
 	Gword **next; /* next Wordgraph words of the current word */
 	size_t i;
+	size_t null_count_found = 0;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
 	Gword **lwg_path;
@@ -228,14 +229,33 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		/* Handle null words */
 		if (NULL == cdj)
 		{
-			lgdebug(D_SLM, "- Null word\n");
+			lgdebug(D_SLM, "- Null word");
 			/* A null word matches any word in the Wordgraph -
 			 * so, unconditionally proceed in all paths in parallel. */
 			match_found = false;
 			for (wpp = wp_old; NULL != wpp->word; wpp++)
 			{
-				if (NULL == wpp->word->next)
+				if (NULL == wpp->word->next) // XXX
 					continue; /* This path encountered the Wordgraph end */
+
+				if (wpp->word->sent_wordidx > i)
+				{
+					assert(sent->word[i].optional, "wordindex=%zu", i);
+					lgdebug(D_SLM, " (Optional, index=%zu)\n", i);
+					// Retain the same word in the new path queue.
+					wordgraph_path_append(&wp_new, wpp->path, wpp->word, wpp->word);
+					match_found = true;
+					continue; /* Disregard this chosen disjunct. */
+				}
+
+				null_count_found++;
+				if (null_count_found > lkg->sent->null_count)
+				{
+					lgdebug(D_SLM, " (Extra, count > %zu)\n", lkg->sent->null_count);
+					match_found = false;
+					break;
+				}
+				lgdebug(D_SLM, "\n");
 
 				/* The null words cannot be marked here because wpp->path consists
 				 * of pointers to the Wordgraph words, and these words are common to
@@ -245,10 +265,12 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				 */
 				for (next = wpp->word->next; NULL != *next; next++)
 				{
-					match_found = true;
+					if (MT_INFRASTRUCTURE != wpp->word->morpheme_type)
+						match_found = true;
 					wordgraph_path_append(&wp_new, wpp->path, wpp->word, *next);
 				}
 			}
+			if (NULL != wpp->word) break; /* Extra null count */
 			continue;
 		}
 

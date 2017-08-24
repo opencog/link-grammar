@@ -2968,6 +2968,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 
 	/* Generate an "alternatives" component. */
 	altappend(sent, &sent->word[wordpos].alternatives, s);
+	w->sent_wordidx = wordpos;
 
 	if (w->status & WS_INDICT)
 	{
@@ -3313,6 +3314,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	} while ((NULL != wp_new[1].word) ||
 	         (wp_new[0].word->morpheme_type != MT_INFRASTRUCTURE));
 
+	wp_new[0].word->sent_wordidx = sent->length;
 	free(wp_new);
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
 	if (verbosity_level(D_SW))

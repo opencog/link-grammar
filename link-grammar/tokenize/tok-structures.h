@@ -17,6 +17,7 @@
 
 #include <stddef.h>
 #include "api-types.h"
+#include "link-includes.h"
 
 /* conditional compiling flags */
 #define INFIX_NOTATION
@@ -128,6 +129,10 @@ struct Gword_struct
 
 	/* Disjuncts and connectors point back to their originating Gword(s). */
 	gword_set gword_set_head;
+
+	/* Used by sane_linkage_morphism() and remove_empty_words() for
+	 * locating optional words that should be removed. */
+	WordIdx sent_wordidx; /* Index in the 2D sentence word array. */
 
 	/* For debug and inspiration. */
 	const char *label;   /* Debug label - code locations of tokenization */

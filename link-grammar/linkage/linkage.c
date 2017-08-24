@@ -243,39 +243,32 @@ void remove_empty_words(Linkage lkg)
 	size_t i, j;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
-
-	if (verbosity_level(+D_REE))
-	{
-		err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
-		print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
-	}
+	Gword **wgp = lkg->wg_path;
 
 	for (i = 0, j = 0; i < lkg->num_words; i++)
 	{
-		if ((NULL == cdj[i]) && lkg->sent->word[i].optional)
+		/* Discard optional words that are not real null-words.  Note that
+		 * if optional words don't have non-optional words after them,
+		 * wg_path doesn't include them, and hence *wgp is NULL then. */
+		if ((NULL == *wgp) || ((*wgp)->sent_wordidx != i))
 		{
+			assert((NULL == cdj[i]) && lkg->sent->word[i].optional);
 			remap[i] = -1;
+			continue;
 		}
-		else
-		{
-			Disjunct *cdtmp = cdj[j];
-			cdj[j] = cdj[i];
-			cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
-			remap[i] = j;
-			j++;
-		}
+
+		Disjunct *cdtmp = cdj[j];
+		cdj[j] = cdj[i];
+		cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
+		remap[i] = j;
+		j++;
+		wgp++;
 	}
 	if (lkg->num_words != j)
 	{
 		/* Unused memory not freed - all of it will be freed in free_linkages(). */
 		lkg->num_words = j;
 		remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
-	}
-
-	if (verbosity_level(+D_REE))
-	{
-		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
-		print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
 	}
 }
 #undef D_REE
