@@ -12,7 +12,6 @@
 
 #include "api-structures.h"  // for Sentence_s
 #include "api-types.h"
-#include "dict-common/dict-structures.h"
 #include "dict-common/regex-morph.h" // for match_regex
 #include "disjunct-utils.h"  // for Disjunct_struct
 #include "lg_assert.h"
