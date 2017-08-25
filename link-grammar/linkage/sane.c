@@ -38,6 +38,7 @@
  * there in case morphology splits are to be hidden or there are morphemes with
  * null linkage.
  */
+#define D_WPA 7
 static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
                                   Gword *current_word, /* add to the path */
                                   Gword *p)      /* add to the path queue */
@@ -45,29 +46,55 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	size_t n = wordgraph_pathpos_len(*nwp);
 
 	assert(NULL != p, "Tried to add a NULL word to the word queue");
+	if (current_word == p)
+	{
+		lgdebug(D_WPA, "Adding the same word %s again\n", p->subword);
+		print_lwg_path((Gword **)path, "After");
+	}
 
 	/* Check if the path queue already contains the word to be added to it. */
+	const Wordgraph_pathpos *wpt = NULL;
+
 	if (NULL != *nwp)
 	{
-		const Wordgraph_pathpos *wpt;
-
 		for (wpt = *nwp; NULL != wpt->word; wpt++)
 		{
 			if (p == wpt->word)
 			{
+				lgdebug(D_WPA, "Word %s (after %zu) exists (after %zu)\n",
+				        p->subword,
+				        wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx,
+				        path[gwordlist_len(path)-1]->sent_wordidx);
 				/* If we are here, there are 2 or more paths leading to this word
 				 * (p) that end with the same number of consecutive null words that
 				 * consist an entire alternative. These null words represent
-				 * different ways to split the subword upward in the hierarchy, but
-				 * since they don't have linkage we don't care which of these
-				 * paths is used. */
-				return; /* The word is already in the queue */
+				 * different ways to split the subword upward in the hierarchy.
+				 * For a nicer result we choose the shorter path. */
+				if (wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx <=
+				    path[gwordlist_len(path)-1]->sent_wordidx)
+				{
+					lgdebug(D_WPA, "Shorter path already queued\n");
+					return; /* The shorter path is already in the queue. */
+				}
+				lgdebug(D_WPA, "Longer path is in the queue\n");
+				print_lwg_path((Gword **)wpt->path, "Freeing");
+				free(wpt->path); /* To be replaced by a shorter path. */
+				break;
 			}
 		}
 	}
 
-	/* Not already in the path queue - add it. */
-	*nwp = wordgraph_pathpos_resize(*nwp, n+1);
+	if ((NULL == wpt) || (p != wpt->word))
+	{
+		/* Not already in the path queue - add it. */
+		*nwp = wordgraph_pathpos_resize(*nwp, n+1);
+	}
+	else
+	{
+		lgdebug(D_WPA, "Path position to be replaced (len %zu): %zu\n", n,
+		                wpt - *nwp);
+		n = wpt - *nwp; /* Replace this path. */
+	}
 	(*nwp)[n].word = p;
 
 	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
@@ -77,15 +104,21 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 	else
 	{
-		/* We branch to another path. Duplicate it from the current path and add
-		 * the current word to it. */
+		/* Duplicate the path from the current one. */
+
 		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
 
 		(*nwp)[n].path = malloc(path_arr_size);
 		memcpy((*nwp)[n].path, path, path_arr_size);
 	}
-   /* FIXME (cast) but anyway gwordlist_append() doesn't modify Gword. */
-	gwordlist_append((Gword ***)&(*nwp)[n].path, current_word);
+
+	/* If we queue the same word again, its path remains the same.
+	 * Else append the current word to it. */
+	if (p != current_word)
+	{
+		/* FIXME (cast) but anyway gwordlist_append() doesn't modify Gword. */
+		gwordlist_append((Gword ***)&(*nwp)[n].path, current_word);
+	}
 }
 
 /**
