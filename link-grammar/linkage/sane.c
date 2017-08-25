@@ -17,7 +17,6 @@
 #include "disjunct-utils.h"  // for Disjunct_struct
 #include "lg_assert.h"
 #include "linkage.h"
-#include "print/print.h"  // for print_with_subscript_dot
 #include "sane.h"
 #include "tokenize/tok-structures.h" // Needed for Wordgraph_pathpos_s
 #include "tokenize/wordgraph.h"
