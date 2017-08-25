@@ -10,8 +10,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdlib.h>
-
 #include "api-structures.h"  // for Sentence_s
 #include "api-types.h"
 #include "dict-common/dict-structures.h"
