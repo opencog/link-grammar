@@ -224,7 +224,7 @@ locale_error:
 	{
 		dict->free_lookup(dict, dn);
 
-		const char *locale = get_default_locale();
+		locale = get_default_locale();
 		if (NULL == locale) return NULL;
 		const char *sslocale = string_set_add(locale, dict->string_set);
 		free((void *)locale);

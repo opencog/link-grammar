@@ -199,7 +199,9 @@ const char * linkage_get_violation_name(Linkage linkage);
 char * lg_error_formatmsg(lg_errinfo *lge);
 int lg_error_clearall(void);
 %rename(_prt_error) prt_error;
-int prt_error(const char * , ...);
+/* For security, the first argument should always contain a single "%s"
+ * (e.g. "%s\n"), and the second one should always be a C string. */
+int prt_error(const char *, const char *);
 bool lg_error_flush(void);
 /*
  * void *lg_error_set_handler_data(void *);

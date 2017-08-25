@@ -99,6 +99,7 @@ void gwordlist_append(Gword ***arrp, Gword *p)
 	(*arrp)[n] = p;
 }
 
+#if 0
 /**
  * Append a Gword list to a given Gword list (w/o duplicates).
  */
@@ -119,7 +120,6 @@ void gwordlist_append_list(const Gword ***to_word, const Gword **from_word)
 	}
 }
 
-#if 0
 /**
  * Replace "count" words from the position "start" by word "wnew".
  */
@@ -874,26 +874,26 @@ static void x_popen(const char *cmd, const char *wgds)
 	}
 }
 #else
-static void x_forkexec(const char *const argv[], pid_t *pid)
+static void x_forkexec(const char *const argv[], pid_t *vpid)
 {
 	/* Fork/exec a graph viewer, and leave it in the background until we exit.
 	 * On exit, send SIGHUP. If prctl() is not available and the program
 	 * crashes, then it is left to the user to exit the viewer. */
-	if (0 < *pid)
+	if (0 < *vpid)
 	{
-		pid_t rpid = waitpid(*pid, NULL, WNOHANG);
+		pid_t rpid = waitpid(*vpid, NULL, WNOHANG);
 
 		if (0 == rpid) return; /* viewer still active */
 		if (-1 == rpid)
 		{
-			prt_error("Error: waitpid(%d): %s\n", *pid, strerror(errno));
-			*pid = 0;
+			prt_error("Error: waitpid(%d): %s\n", *vpid, strerror(errno));
+			*vpid = 0;
 			return;
 		}
 	}
 
-	*pid = fork();
-	switch (*pid)
+	*vpid = fork();
+	switch (*vpid)
 	{
 		case -1:
 			prt_error("Error: fork(): %s\n", strerror(errno));
@@ -1025,7 +1025,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		}
 	}
 
-#if _WIN32
+#ifdef _WIN32
 #define EXITKEY "ALT-F4"
 #elif __APPLE__
 #define EXITKEY "⌘-Q"

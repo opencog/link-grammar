@@ -11,9 +11,9 @@
 /*************************************************************************/
 
 #ifndef _EXPRESSION_PRUNE_H
-#define _EXPRESION_PRUNE_H
+#define _EXPRESSION_PRUNE_H
 
 #include "link-includes.h"
 
 void       expression_prune(Sentence);
-#endif /* _EXPRESION_PRUNE_H */
+#endif /* _EXPRESSION_PRUNE_H */

@@ -266,7 +266,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		{
 			t->count = zero;
 			Disjunct * d;
-			int w = lw + 1;
+			w = lw + 1;
 			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)

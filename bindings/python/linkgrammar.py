@@ -302,7 +302,19 @@ class LG_Error(Exception):
 
     @staticmethod
     def message(msg):
-        return clg._prt_error(msg)
+        """Print a message through the LG error facility"""
+        # Propagate a possible ending "\n" into the format, from which the LG
+        # error facility determine if this is a partial or a complete message.
+        if msg[-1:] == "\n":      # a newline-ended complete message
+            _local_eol = "\n";
+            msg = msg[:-1]
+        elif msg[-2:] == "\n\\":  # a newline-ended partial message
+            _local_eol = "";
+            msg = msg[:-1]
+        else:
+            _local_eol = ""       # a partial message
+
+        return clg._prt_error('%s'+_local_eol, msg)
 
     @staticmethod
     def _default_handler(errinfo, data):

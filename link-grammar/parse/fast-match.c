@@ -557,7 +557,6 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
  * not included again when processing the mr list.
  *
  * Note that if both lc and rc match the corresponding connectors of w,
-	gc.word = NULL;
  * match_left is set to true when the ml list is processed and the
  * disjunct is then added to the result list, and match_right of the
  * same disjunct is set to true when the mr list is processed, and this
