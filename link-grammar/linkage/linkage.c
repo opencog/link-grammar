@@ -204,35 +204,6 @@ static void remap_linkages(Linkage lkg, const int *remap)
 }
 
 /**
- *  Print the chosen_disjuncts words.
- *  This is used for debug, e.g. for tracking them in the Wordgraph display.
- */
-static void print_chosen_disjuncts_words(const Linkage lkg, bool prt_optword)
-{
-	size_t i;
-	dyn_str *djwbuf = dyn_str_new();
-
-	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
-	for (i = 0; i < lkg->num_words; i++)
-	{
-		Disjunct *cdj = lkg->chosen_disjuncts[i];
-		const char *djw; /* disjunct word - the chosen word */
-
-		if (NULL == cdj)
-			djw = (prt_optword && lkg->sent->word[i].optional) ? "{}" : "[]";
-		else if ('\0' == cdj->word_string[0])
-			djw = "\\0"; /* null string - something is wrong */
-		else
-			djw = cdj->word_string;
-
-		dyn_strcat(djwbuf, djw);
-		dyn_strcat(djwbuf, " ");
-	}
-	err_msg(lg_Debug, "%s\n", djwbuf->str);
-	dyn_str_delete(djwbuf);
-}
-
-/**
  * Remove unlinked optional words from a linkage.
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
@@ -323,7 +294,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	memset(show_word, 0, linkage->num_words * sizeof(*show_word));
 
-	if (D_CCW <= opts->verbosity)
+	if (verbosity_level(D_CCW))
 		print_lwg_path(lwg_path, "Linkage");
 
 	for (i = 0; i < linkage->num_words; i++)
@@ -712,7 +683,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	linkage->wg_path_display = n_lwg_path;
 
-	if (D_CCW <= opts->verbosity)
+	if (verbosity_level(D_CCW))
 		print_lwg_path(n_lwg_path, "Display");
 }
 #undef D_CCW

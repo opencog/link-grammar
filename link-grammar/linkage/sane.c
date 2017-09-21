@@ -48,8 +48,8 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	assert(NULL != p, "Tried to add a NULL word to the word queue");
 	if (current_word == p)
 	{
-		lgdebug(D_WPA, "Adding the same word %s again\n", p->subword);
-		print_lwg_path((Gword **)path, "After");
+		lgdebug(D_WPA, "Adding the same word '%s' again\n", p->subword);
+		//print_lwg_path((Gword **)path, "After adding the same word");
 	}
 
 	/* Check if the path queue already contains the word to be added to it. */
@@ -77,7 +77,7 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 					return; /* The shorter path is already in the queue. */
 				}
 				lgdebug(D_WPA, "Longer path is in the queue\n");
-				print_lwg_path((Gword **)wpt->path, "Freeing");
+				//print_lwg_path((Gword **)wpt->path, "Freeing");
 				free(wpt->path); /* To be replaced by a shorter path. */
 				break;
 			}

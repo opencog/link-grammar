@@ -77,6 +77,36 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 }
 
 /**
+ *  Print the chosen_disjuncts words.
+ *  This is used for debug, e.g. for tracking them in the Wordgraph display.
+ */
+static void print_chosen_disjuncts_words(const Linkage lkg, bool prt_optword)
+{
+	size_t i;
+	dyn_str *djwbuf = dyn_str_new();
+
+	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
+	for (i = 0; i < lkg->num_words; i++)
+	{
+		Disjunct *cdj = lkg->chosen_disjuncts[i];
+		const char *djw; /* disjunct word - the chosen word */
+
+		if (NULL == cdj)
+			djw = (prt_optword && lkg->sent->word[i].optional) ? "{}" : "[]";
+		else if ('\0' == cdj->word_string[0])
+			djw = "\\0"; /* null string - something is wrong */
+		else
+			djw = cdj->word_string;
+
+		dyn_strcat(djwbuf, djw);
+		dyn_strcat(djwbuf, " ");
+	}
+	err_msg(lg_Debug, "%s\n", djwbuf->str);
+	dyn_str_delete(djwbuf);
+}
+
+#define D_PL 7
+/**
  * This fills the linkage array with morphologically-acceptable
  * linkages.
  */
@@ -140,9 +170,21 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		extract_links(pex, lkg);
 		compute_link_names(lkg, sent->string_set);
 
+		if (verbosity_level(+D_PL))
+		{
+			err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
+			print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
+		}
+
 		if (sane_linkage_morphism(sent, lkg, opts))
 		{
 			remove_empty_words(lkg);
+
+			if (verbosity_level(+D_PL))
+			{
+				err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
+				print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
+			}
 
 			need_init = true;
 			in++;
