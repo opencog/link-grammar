@@ -43,7 +43,7 @@
 
 #include "api-types.h"
 #include "corpus/corpus.h"
-#include "error.h"
+//#include "error.h"
 #include "utilities.h"
 
 typedef struct Cost_Model_s Cost_Model;
