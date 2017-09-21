@@ -214,10 +214,12 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	 * This count must be updated before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
+	int unparseable_len = rw-lw-1;
+
 #if 1
 	/* This check is not necessary for correctness, as it is handled in
 	 * the general case below. It looks like it should be slightly faster. */
-	if (rw == 1+lw)
+	if (unparseable_len == 0)
 	{
 		/* lw and rw are neighboring words */
 		/* You can't have a linkage here with null_count > 0 */
@@ -237,10 +239,18 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	 * NOT next to each-other. */
 	if ((le == NULL) && (re == NULL))
 	{
+		int nopt_words = num_optional_words(ctxt, lw, rw);
+
 		if ((null_count == 0) || (!ctxt->islands_ok && (lw != -1)) )
 		{
-			/* The null_count of skipping n words is just n. */
-			if (null_count == (rw-lw-1) - num_optional_words(ctxt, lw, rw))
+			/* The null_count of skipping n words is just n.
+			 * In case the unparsable range contains optional words, we
+			 * don't know here how many of them are actually skipped, because
+			 * they may belong to different alternatives and essentially just
+			 * be ignored.  Hence the inequality - sane_linkage_morphism()
+			 * will discard the linkages with extra null words. */
+			if ((null_count <= unparseable_len) &&
+			    (null_count >= unparseable_len - nopt_words))
 
 			{
 				t->count = hist_one();
@@ -253,13 +263,18 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		}
 
 		/* Here null_count != 0 and we allow islands (a set of words
-		 * linked together but separate from the rest of the sentence). */
-
+		 * linked together but separate from the rest of the sentence).
+		 * Because we don't know here if an optional word is just
+		 * skipped or is a real null-word (see the comment above) we
+		 * try both possibilities: If a real null is encountered, the
+		 * rest of the sentence should contain one less null-word. Else
+		 * the rest of the sentence still contains the required */
+		t->count = zero;
+		w = lw + 1;
+		for (int opt = 0; opt <= !!ctxt->local_sent[w].optional; opt++)
 		{
-			t->count = zero;
-			Disjunct * d;
-			w = lw + 1;
-			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next)
+			null_count += opt;
+			for (Disjunct *d = ctxt->local_sent[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)
 				{

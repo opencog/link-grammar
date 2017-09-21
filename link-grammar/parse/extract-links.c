@@ -367,31 +367,35 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 		RECOUNT({xt->set.recount = 0;})
 
 		w = lw + 1;
-		for (dis = words[w].d; dis != NULL; dis = dis->next)
+		for (int opt = 0; opt <= !!words[w].optional; opt++)
 		{
-			if (dis->left == NULL)
+			null_count += opt;
+			for (dis = words[w].d; dis != NULL; dis = dis->next)
 			{
-				pset = mk_parse_set(words, mchxt, ctxt,
-				                    dis, NULL, w, rw, dis->right, NULL,
-				                    null_count-1, pex, islands_ok);
-				if (pset == NULL) continue;
+				if (dis->left == NULL)
+				{
+					pset = mk_parse_set(words, mchxt, ctxt,
+											  dis, NULL, w, rw, dis->right, NULL,
+											  null_count-1, pex, islands_ok);
+					if (pset == NULL) continue;
+					dummy = dummy_set(lw, w, null_count-1, pex);
+					record_choice(dummy, NULL, NULL,
+									  pset,  NULL, NULL,
+									  NULL, NULL, NULL, &xt->set);
+					RECOUNT({xt->set.recount += pset->recount;})
+				}
+			}
+			pset = mk_parse_set(words, mchxt, ctxt,
+									  NULL, NULL, w, rw, NULL, NULL,
+									  null_count-1, pex, islands_ok);
+			if (pset != NULL)
+			{
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL, NULL,
-				              pset,  NULL, NULL,
-				              NULL, NULL, NULL, &xt->set);
+								  pset,  NULL, NULL,
+								  NULL, NULL, NULL, &xt->set);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
-		}
-		pset = mk_parse_set(words, mchxt, ctxt,
-		                    NULL, NULL, w, rw, NULL, NULL,
-		                    null_count-1, pex, islands_ok);
-		if (pset != NULL)
-		{
-			dummy = dummy_set(lw, w, null_count-1, pex);
-			record_choice(dummy, NULL, NULL,
-			              pset,  NULL, NULL,
-			              NULL, NULL, NULL, &xt->set);
-			RECOUNT({xt->set.recount += pset->recount;})
 		}
 		return &xt->set;
 	}
