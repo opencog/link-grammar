@@ -214,6 +214,9 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	 * This count must be updated before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
+#if 1
+	/* This check is not necessary for correctness, as it is handled in
+	 * the general case below. It looks like it should be slightly faster. */
 	if (rw == 1+lw)
 	{
 		/* lw and rw are neighboring words */
@@ -228,17 +231,17 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		}
 		return t->count;
 	}
+#endif
 
 	/* The left and right connectors are null, but the two words are
 	 * NOT next to each-other. */
 	if ((le == NULL) && (re == NULL))
 	{
-		if (!ctxt->islands_ok && (lw != -1))
+		if ((null_count == 0) || (!ctxt->islands_ok && (lw != -1)) )
 		{
-			/* If we don't allow islands (a set of words linked together
-			 * but separate from the rest of the sentence) then the
-			 * null_count of skipping n words is just n. */
+			/* The null_count of skipping n words is just n. */
 			if (null_count == (rw-lw-1) - num_optional_words(ctxt, lw, rw))
+
 			{
 				t->count = hist_one();
 			}
@@ -248,21 +251,10 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			}
 			return t->count;
 		}
-		if (null_count == 0)
-		{
-			/* There is no solution without nulls in this case. There is
-			 * a slight efficiency hack to separate this null_count==0
-			 * case out, but not necessary for correctness */
-			if ((rw-lw-1) == num_optional_words(ctxt, lw, rw))
-			{
-				t->count = hist_one();
-			}
-			else
-			{
-				t->count = zero;
-			}
-		}
-		else
+
+		/* Here null_count != 0 and we allow islands (a set of words
+		 * linked together but separate from the rest of the sentence). */
+
 		{
 			t->count = zero;
 			Disjunct * d;
