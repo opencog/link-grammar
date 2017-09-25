@@ -392,12 +392,14 @@ static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 
 int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
+	if (NULL == linkage->pp_info) return -1;
 	if (!verify_link_index(linkage, index)) return -1;
 	return linkage->pp_info[index].num_domains;
 }
 
 const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
 {
+	if (NULL == linkage->pp_info) return NULL;
 	if (!verify_link_index(linkage, index)) return NULL;
 	return linkage->pp_info[index].domain_name;
 }
