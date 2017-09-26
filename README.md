@@ -101,7 +101,7 @@ topic:
   ["Parsing English with a Link Grammar"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr91-196.pdf)
   October 1991 *CMU-CS-91-196*.
 * Daniel D. Sleator, Davy Temperley,
-  ["Parsing English with a Link Grammar"] (http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/LG-IWPT93.pdf),
+  ["Parsing English with a Link Grammar"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/LG-IWPT93.pdf),
   *Third International Workshop on Parsing Technologies* (1993).
 * Dennis Grinberg, John Lafferty, Daniel Sleator,
   ["A Robust Parsing Algorithm for Link Grammars"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr95-125.pdf),
