@@ -33,7 +33,7 @@ struct Disjunct_struct
 #ifdef VERIFY_MATCH_LIST
 	int match_id;              /* verify the match list integrity */
 #endif
-	gword_set *originating_gword; /* List of originating gwords */
+	gword_set *originating_gword; /* Set of originating gwords */
 	const char * word_string;     /* subscripted dictionary word */
 };
 
