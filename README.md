@@ -1550,8 +1550,8 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
 - Incremental sentence parsing.
    There are multiple reasons to support incremental parsing:
-   * Real-time dialog
-   * Parsing of multiple streams, e.g. from play/movie scripts
+   * Real-time dialog.
+   * Parsing of multiple streams, e.g. from play/movie scripts.
    * segmentation of exceptionally long sentences.
 
    This could be implemented by saving dangling right-going
@@ -1561,23 +1561,23 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 - UTF-8 cleanup:
    Replace the mbrtowc code with proper language support; it seems
    that the correct solution is to use ICU http://site.icu-project.org/
-   *  ICU pros: runs on windows
-   *  ICU cons: big, complex
+   *  ICU pros: runs on windows.
+   *  ICU cons: big, complex.
 
    Another alternative is libunistring (which seems to be LGPL!?)
       http://www.gnu.org/software/libunistring/
-   *  pros: smaller, simpler than ICU
+   *  pros: smaller, simpler than ICU.
    *  cons: might have problems with MS Windows.
 
 - Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,
       e.g. the max number of characters in a word, or max words
-      in a sentence
+      in a sentence.
    * Should remove compile-time constants, e.g. max words, max
       length etc.
 
 - Misc TODO:
-   * finish sqlite3 work
+   * finish sqlite3 work.
 
 Version 6.0 TODO list:
 Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
