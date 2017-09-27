@@ -371,7 +371,7 @@ pretty-print several data structures.
 A feature that may be useful for debugging is the word-graph
 display.  Use the `configure` option `--enable-wordgraph-display` to enable
 it. For more details on this feature, see
-[Word-graph display](link-grammar/README.md#word-graph-display).
+[Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
 BUILDING on MacOS
 -----------------
