@@ -229,7 +229,7 @@ link-parser | (chcp 65001 & more)
 ```
 In that case `more` will be able to read UTF-8 input. However, the
 display may still not be perfect due to additional cmd.exe limitations.
-The code page can changed manually to 65001, see below in the "Note for
+The code page can be changed manually to 65001, see below in the "Note for
 Python bindings".
 
 ### A note for the Python bindings
