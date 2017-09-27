@@ -269,7 +269,7 @@ then the java bindings will not be built.
 Python2 and Python3 Bindings
 ----------------------------
 The Python2 and Python3 bindings are built by default, providing that
-the corresponding Python developement packages are installed.
+the corresponding Python development packages are installed.
 
 These packages are:
 - Linux:
@@ -327,7 +327,7 @@ End users should download the tarball (see
 The current GitHub version is intended for developers (including anyone who
 is willing to provide a fix, a new feature or an improvement). The tip of
 the master branch is often unstable, and can sometimes have bad code in it
-as it is under developement. It also needs installing of development tools
+as it is under development. It also needs installing of development tools
 that are not installed by default. Due to these reason the use of the GitHub
 version is discouraged for regular end users.
 
@@ -345,7 +345,7 @@ gcc-c++ (for the SAT solver)<br>
 autoconf<br>
 autoconf-archive<br>
 swig (for language bindings)<br>
-graphpviz (if you like to use the word-graph display feature)
+graphviz (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
 To generate it, use:
@@ -980,7 +980,7 @@ Another, simpler example:
     |      |     |     |     |    |    |        |      |       |
 LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
 ```
-The above rally wants to have a `Js` link from 'at' to 'everything',
+The above really wants to have a `Js` link from 'at' to 'everything',
 but this `Js` link crosses (clashes with - marked by xxx) the link
 to the conjunction.  These two cases suggest that one sould/should
 allow most links to cross over the down-links to conjunctions.
@@ -1003,7 +1003,7 @@ link-grammar is completely compatible with categorial grammar, and is
 easier-to-use.
 
 The foundational LG papers make comments to this effect; however, see
-also work by Bob Coeke on category theory and grammar.  Coecke's
+also work by Bob Coecke on category theory and grammar.  Coecke's
 diagramatic approach is essentially identical to the diagrams given in
 the foundational LG papers; it becomes abundantly clear that the
 category theoretic approach is equivalent to Link Grammar. See, for
