@@ -171,7 +171,7 @@ imports.
 - PYTHON_OUTDIR: The directory to which the Python bindings got written.
 For example, `x64\Release\Python3`.
 - script.py: Path leading to the script. If only a filename is specified
-(i.e. no "\" in the path) the specified script file is taken from the
+(i.e. no `\` in the path) the specified script file is taken from the
 `bindings\python-examples\` directory.  In order to run tests.py in
 its default location you can leave it empty.
 - ARGUMENTS: Optional script arguments, for example `-v` for `tests.py`.
