@@ -28,7 +28,7 @@ separately downloaded. Also see GNUREGEX_DIR below.
 
 For Python bindings, install the desired Python distributions from
 [Python Releases for Windows](https://www.python.org/downloads/windows/).
-You also have to install SWIG from http://www.swig.org/download .
+You also have to install [SWIG](http://www.swig.org/download.html).
 
 The bindings were testes using swigwin-3.0.10 with Python 2.7.12 and 3.4.4.
 

@@ -277,7 +277,7 @@ These packages are:
  * Systems using 'deb' packages: Python2: python-dev; Python3: python3-dev
 - Windows:
  * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
-   You also have to install SWIG from http://www.swig.org/download .
+   You also have to install SWIG from http://www.swig.org/download.html .
 - MacOS:
  * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
 
