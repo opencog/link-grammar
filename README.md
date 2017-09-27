@@ -420,14 +420,12 @@ be obtained elsewhere.  One popular choice is TRE, available at:
 http://gnuwin32.sourceforge.net/packages/tre.htm
 
 Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
-available at:
-http://www.pcre.org/<br>
-Recent 32 and 64-bit binaries can be found at:
-http://www.airesoft.co.uk/pcre<br>
+available at: http://www.pcre.org/ .<br>
+For building on Windows: https://github.com/rivy/PCRE .<br>
 Older 32-bit binaries are at:
-http://gnuwin32.sourceforge.net/packages/regex.htm<br>
+http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
 See also:
-http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
+http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README .
 
 BUILDING on Windows (Cygwin)
 ----------------------------
