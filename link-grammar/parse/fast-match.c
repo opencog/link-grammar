@@ -551,7 +551,7 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
  * actually matches lc or rc or both. The lw and rw are the words from
  * which lc and rc came respectively.
  *
- * The list is returned in a linked list of Match_nodes.  This list
+ * The list is returned in an array of Match_nodes.  This list
  * contains no duplicates, because when processing the ml list, only
  * elements whose match_left is true are included, and such elements are
  * not included again when processing the mr list.
