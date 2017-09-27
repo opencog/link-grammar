@@ -416,12 +416,14 @@ Windows systems from Vista on.
 
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
-be obtained elsewhere.  One popular choice is TRE, available at:
-http://gnuwin32.sourceforge.net/packages/tre.htm
+be obtained elsewhere.  One popular choice is
+[TRE](http://gnuwin32.sourceforge.net/packages/tre.htm).
 
 Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
 available at: http://www.pcre.org/ .<br>
 For building on Windows: https://github.com/rivy/PCRE .<br>
+Another popular choice is
+[PCRE, 'Perl-Compatible Regular Expressions'](http://www.pcre.org/).<br>
 Older 32-bit binaries are at:
 http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
 See also:
@@ -432,7 +434,7 @@ BUILDING on Windows (Cygwin)
 The easiest way to have link-grammar working on MS Windows is to
 use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
-install Cygwin from http://www.cygwin.com/ .
+install [Cygwin](http://www.cygwin.com/).
 
 Unfortunately, the Cygwin system is not compatible with Java, so if
 you need the Java bindings, you must use MSVC or MinGW, below.
@@ -442,7 +444,7 @@ BUILDING on Windows (MinGW)
 Another way to build link-grammar is to use MinGW, which uses the GNU
 toolset to compile Windows programs for Windows. Using MinGW/MSYS is
 probably the easiest way to obtain workable Java bindings for Windows.
-Download and install MinGW, MSYS and MSYS-DTK from http://mingw.org.
+Download and install [MinGW, MSYS and MSYS-DTK](http://mingw.org).
 
 For more details see [mingw/README.MSYS](mingw/README.MSYS).
 You can also build with MinGW under Cygwin.
@@ -816,8 +818,8 @@ capture directional LG:
  * Directional LG graphs resemble strict partial orders, except that
    the LG arrows are usually not transitive.
 
- * Directional LG graphs resemble catena
-   http://en.wikipedia.org/wiki/Catena_(linguistics)
+ * Directional LG graphs resemble
+   [catena](http://en.wikipedia.org/wiki/Catena_(linguistics))
    except that catena are strictly anti-transitive -- the path to
    any word is unique, in a catena.
 
@@ -989,7 +991,7 @@ Type Theory
 -----------
 Link Grammar can be understood in the context of type theory.
 A simple introduction to type theory can be found in chapter 1
-of the HoTT book: https://homotopytypetheory.org/book/ .<br>
+of the [HoTT book](https://homotopytypetheory.org/book/).<br>
 This book is freely available online and strongly recommended if
 you are interested in types.
 
@@ -1361,8 +1363,8 @@ Hand-refining verb patterns:<br>
   The general problem is of supporting structures that have "holes"
   in the middle, that require "lacing" to tie them together.
 
-  For a general theory, see:
-  [Catena](http://en.wikipedia.org/wiki/Catena_(linguistics)).
+  For a general theory, see
+  [catena](http://en.wikipedia.org/wiki/Catena_(linguistics)).
 
   For example, the adposition:
 ```text
@@ -1558,12 +1560,12 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
 - UTF-8 cleanup:
    Replace the mbrtowc code with proper language support; it seems
-   that the correct solution is to use ICU http://site.icu-project.org/
+   that the correct solution is to use [ICU](http://site.icu-project.org/)
    *  ICU pros: runs on windows.
    *  ICU cons: big, complex.
 
-   Another alternative is libunistring (which seems to be LGPL!?)
-      http://www.gnu.org/software/libunistring/
+   Another alternative is [libunistring](http://www.gnu.org/software/libunistring/)
+   (which seems to be LGPL!?)
    *  Pros: smaller, simpler than ICU.
    *  Cons: might have problems with MS Windows.
 
