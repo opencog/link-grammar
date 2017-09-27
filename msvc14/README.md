@@ -45,9 +45,9 @@ sheet "Local", as follows:
    generated from the DLL if it is not included in the distribution (see
    http://stackoverflow.com/questions/9946322).
 
-   A tested library can be downloaded from [Tre for Windows]
-   (http://gnuwin32.sourceforge.net/packages/tre.htm). If your system is
-   64-bits, use the provided 64-bits library. 
+   A tested library can be downloaded from
+   [Tre for Windows](http://gnuwin32.sourceforge.net/packages/tre.htm).
+   If your system is 64-bits, use the provided 64-bits library.
 
    The corresponding lib file is missing there. If you have Cygwin
    installed, you can generate it as follows (console command):
@@ -131,7 +131,7 @@ has the "xlib" driver, it can be used to display the wordgraph when the x flag
 is set (i.e. `!test=wg:x`), for example when running under Cygwin/X. In any
 case it uses the `dot` command of Graphviz. Graphviz can be installed as part
 of Cygwin (in which case it included the "xlib" driver"), or separately from
-[Graphviz] (http://www.graphviz.org/Download_windows.php).
+[Graphviz](http://www.graphviz.org/Download_windows.php).
 Both `PhotoViewer.dll` (if used) and `dot` must be in your PATH (if needed,
 you can customized that in a copy of `link-parser.bat`, as described above).
 
@@ -142,8 +142,7 @@ somehow may continue to run in the background.  Instead, exit using `!exit` .
 NOTE: The created DLLs need the MSVC14 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
 But to be able to run Link Grammar on other computer you need to install
-[Visual C++ Redistributable for Visual Studio 2015]
-(https://www.microsoft.com/en-us/download/details.aspx?id=48145).
+[Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
