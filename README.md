@@ -1362,7 +1362,7 @@ Hand-refining verb patterns:<br>
   in the middle, that require "lacing" to tie them together.
 
   For a general theory, see:
-  [](http://en.wikipedia.org/wiki/Catena_(linguistics))
+  [Catena](http://en.wikipedia.org/wiki/Catena_(linguistics)).
 
   For example, the adposition:
 ```text
