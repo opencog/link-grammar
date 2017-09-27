@@ -1540,8 +1540,8 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    in the dict.
 
 -  Word-order flexibility (For Lithuanian, the following are desperately needed):
-   *  connectors with * direction, i.e. either left or right.
-   *  symmetric (commuting) version of &.
+   *  Connectors with * direction, i.e. either left or right.
+   *  Symmetric (commuting) version of &.
    *  DONE! The new symbols are ^ for commuting-& and $ to meaneither + or -.
 
    This still needs to be documented.
@@ -1550,7 +1550,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    There are multiple reasons to support incremental parsing:
    * Real-time dialog.
    * Parsing of multiple streams, e.g. from play/movie scripts.
-   * segmentation of exceptionally long sentences.
+   * Segmentation of exceptionally long sentences.
 
    This could be implemented by saving dangling right-going
    connectors into a parse context, and then, when another sentence
@@ -1564,8 +1564,8 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
    Another alternative is libunistring (which seems to be LGPL!?)
       http://www.gnu.org/software/libunistring/
-   *  pros: smaller, simpler than ICU.
-   *  cons: might have problems with MS Windows.
+   *  Pros: smaller, simpler than ICU.
+   *  Cons: might have problems with MS Windows.
 
 - Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,
@@ -1575,7 +1575,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
       length etc.
 
 - Misc TODO:
-   * finish sqlite3 work.
+   * Finish sqlite3 work.
 
 Version 6.0 TODO list:
 Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
