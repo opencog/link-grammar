@@ -11,22 +11,14 @@
 /*                                                                       */
 /*************************************************************************/
 
-
-#include <stdint.h>
-#include <stdlib.h>
-
-#include "externs.h"
 #include "api-structures.h"
 #include "connectors.h"
 #include "corpus/corpus.h"
-#include "dict-common/dict-utils.h" // For size_of_expression()
+#include "dict-common/dict-utils.h"   // For size_of_expression()
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
 #include "print.h"
-#include "print-util.h"
-#include "string-set.h"
-#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/word-structures.h" // For Word_struct
 #include "wcwidth.h"
 
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
