@@ -101,7 +101,7 @@ topic:
   ["Parsing English with a Link Grammar"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr91-196.pdf)
   October 1991 *CMU-CS-91-196*.
 * Daniel D. Sleator, Davy Temperley,
-  ["Parsing English with a Link Grammar"] (http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/LG-IWPT93.pdf),
+  ["Parsing English with a Link Grammar"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/LG-IWPT93.pdf),
   *Third International Workshop on Parsing Technologies* (1993).
 * Dennis Grinberg, John Lafferty, Daniel Sleator,
   ["A Robust Parsing Algorithm for Link Grammars"](http://www.cs.cmu.edu/afs/cs.cmu.edu/project/link/pub/www/papers/ps/tr95-125.pdf),
@@ -269,7 +269,7 @@ then the java bindings will not be built.
 Python2 and Python3 Bindings
 ----------------------------
 The Python2 and Python3 bindings are built by default, providing that
-the corresponding Python developement packages are installed.
+the corresponding Python development packages are installed.
 
 These packages are:
 - Linux:
@@ -277,7 +277,7 @@ These packages are:
  * Systems using 'deb' packages: Python2: python-dev; Python3: python3-dev
 - Windows:
  * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
-   You also have to install SWIG from http://www.swig.org/download .
+   You also have to install SWIG from http://www.swig.org/download.html .
 - MacOS:
  * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
 
@@ -327,7 +327,7 @@ End users should download the tarball (see
 The current GitHub version is intended for developers (including anyone who
 is willing to provide a fix, a new feature or an improvement). The tip of
 the master branch is often unstable, and can sometimes have bad code in it
-as it is under developement. It also needs installing of development tools
+as it is under development. It also needs installing of development tools
 that are not installed by default. Due to these reason the use of the GitHub
 version is discouraged for regular end users.
 
@@ -345,7 +345,7 @@ gcc-c++ (for the SAT solver)<br>
 autoconf<br>
 autoconf-archive<br>
 swig (for language bindings)<br>
-graphpviz (if you like to use the word-graph display feature)
+graphviz (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
 To generate it, use:
@@ -371,7 +371,7 @@ pretty-print several data structures.
 A feature that may be useful for debugging is the word-graph
 display.  Use the `configure` option `--enable-wordgraph-display` to enable
 it. For more details on this feature, see
-[Word-graph display](link-grammar/README.md#word-graph-display).
+[Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
 BUILDING on MacOS
 -----------------
@@ -416,25 +416,25 @@ Windows systems from Vista on.
 
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
-be obtained elsewhere.  One popular choice is TRE, available at:
-http://gnuwin32.sourceforge.net/packages/tre.htm
+be obtained elsewhere.  One popular choice is
+[TRE](http://gnuwin32.sourceforge.net/packages/tre.htm).
 
 Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
-available at:
-http://www.pcre.org/<br>
-Recent 32 and 64-bit binaries can be found at:
-http://www.airesoft.co.uk/pcre<br>
+available at: http://www.pcre.org/ .<br>
+For building on Windows: https://github.com/rivy/PCRE .<br>
+Another popular choice is
+[PCRE, 'Perl-Compatible Regular Expressions'](http://www.pcre.org/).<br>
 Older 32-bit binaries are at:
-http://gnuwin32.sourceforge.net/packages/regex.htm<br>
+http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
 See also:
-http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
+http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README .
 
 BUILDING on Windows (Cygwin)
 ----------------------------
 The easiest way to have link-grammar working on MS Windows is to
 use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
-install Cygwin from http://www.cygwin.com/ .
+install [Cygwin](http://www.cygwin.com/).
 
 Unfortunately, the Cygwin system is not compatible with Java, so if
 you need the Java bindings, you must use MSVC or MinGW, below.
@@ -444,7 +444,7 @@ BUILDING on Windows (MinGW)
 Another way to build link-grammar is to use MinGW, which uses the GNU
 toolset to compile Windows programs for Windows. Using MinGW/MSYS is
 probably the easiest way to obtain workable Java bindings for Windows.
-Download and install MinGW, MSYS and MSYS-DTK from http://mingw.org.
+Download and install [MinGW, MSYS and MSYS-DTK](http://mingw.org).
 
 For more details see [mingw/README.MSYS](mingw/README.MSYS).
 You can also build with MinGW under Cygwin.
@@ -818,8 +818,8 @@ capture directional LG:
  * Directional LG graphs resemble strict partial orders, except that
    the LG arrows are usually not transitive.
 
- * Directional LG graphs resemble catena
-   http://en.wikipedia.org/wiki/Catena_(linguistics)
+ * Directional LG graphs resemble
+   [catena](http://en.wikipedia.org/wiki/Catena_(linguistics))
    except that catena are strictly anti-transitive -- the path to
    any word is unique, in a catena.
 
@@ -980,7 +980,7 @@ Another, simpler example:
     |      |     |     |     |    |    |        |      |       |
 LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
 ```
-The above rally wants to have a `Js` link from 'at' to 'everything',
+The above really wants to have a `Js` link from 'at' to 'everything',
 but this `Js` link crosses (clashes with - marked by xxx) the link
 to the conjunction.  These two cases suggest that one sould/should
 allow most links to cross over the down-links to conjunctions.
@@ -991,7 +991,7 @@ Type Theory
 -----------
 Link Grammar can be understood in the context of type theory.
 A simple introduction to type theory can be found in chapter 1
-of the HoTT book: https://homotopytypetheory.org/book/ .<br>
+of the [HoTT book](https://homotopytypetheory.org/book/).<br>
 This book is freely available online and strongly recommended if
 you are interested in types.
 
@@ -1003,7 +1003,7 @@ link-grammar is completely compatible with categorial grammar, and is
 easier-to-use.
 
 The foundational LG papers make comments to this effect; however, see
-also work by Bob Coeke on category theory and grammar.  Coecke's
+also work by Bob Coecke on category theory and grammar.  Coecke's
 diagramatic approach is essentially identical to the diagrams given in
 the foundational LG papers; it becomes abundantly clear that the
 category theoretic approach is equivalent to Link Grammar. See, for
@@ -1363,8 +1363,8 @@ Hand-refining verb patterns:<br>
   The general problem is of supporting structures that have "holes"
   in the middle, that require "lacing" to tie them together.
 
-  For a general theory, see:
-  [](http://en.wikipedia.org/wiki/Catena_(linguistics))
+  For a general theory, see
+  [catena](http://en.wikipedia.org/wiki/Catena_(linguistics)).
 
   For example, the adposition:
 ```text
@@ -1542,17 +1542,17 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    in the dict.
 
 -  Word-order flexibility (For Lithuanian, the following are desperately needed):
-   *  connectors with * direction, i.e. either left or right.
-   *  symmetric (commuting) version of &.
+   *  Connectors with * direction, i.e. either left or right.
+   *  Symmetric (commuting) version of &.
    *  DONE! The new symbols are ^ for commuting-& and $ to meaneither + or -.
 
    This still needs to be documented.
 
 - Incremental sentence parsing.
    There are multiple reasons to support incremental parsing:
-   * Real-time dialog
-   * Parsing of multiple streams, e.g. from play/movie scripts
-   * segmentation of exceptionally long sentences.
+   * Real-time dialog.
+   * Parsing of multiple streams, e.g. from play/movie scripts.
+   * Segmentation of exceptionally long sentences.
 
    This could be implemented by saving dangling right-going
    connectors into a parse context, and then, when another sentence
@@ -1560,24 +1560,24 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
 - UTF-8 cleanup:
    Replace the mbrtowc code with proper language support; it seems
-   that the correct solution is to use ICU http://site.icu-project.org/
-   *  ICU pros: runs on windows
-   *  ICU cons: big, complex
+   that the correct solution is to use [ICU](http://site.icu-project.org/)
+   *  ICU pros: runs on windows.
+   *  ICU cons: big, complex.
 
-   Another alternative is libunistring (which seems to be LGPL!?)
-      http://www.gnu.org/software/libunistring/
-   *  pros: smaller, simpler than ICU
-   *  cons: might have problems with MS Windows.
+   Another alternative is [libunistring](http://www.gnu.org/software/libunistring/)
+   (which seems to be LGPL!?)
+   *  Pros: smaller, simpler than ICU.
+   *  Cons: might have problems with MS Windows.
 
 - Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,
       e.g. the max number of characters in a word, or max words
-      in a sentence
+      in a sentence.
    * Should remove compile-time constants, e.g. max words, max
       length etc.
 
 - Misc TODO:
-   * finish sqlite3 work
+   * Finish sqlite3 work.
 
 Version 6.0 TODO list:
 Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...

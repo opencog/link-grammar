@@ -28,7 +28,7 @@ separately downloaded. Also see GNUREGEX_DIR below.
 
 For Python bindings, install the desired Python distributions from
 [Python Releases for Windows](https://www.python.org/downloads/windows/).
-You also have to install SWIG from http://www.swig.org/download .
+You also have to install [SWIG](http://www.swig.org/download.html).
 
 The bindings were testes using swigwin-3.0.10 with Python 2.7.12 and 3.4.4.
 
@@ -45,9 +45,9 @@ sheet "Local", as follows:
    generated from the DLL if it is not included in the distribution (see
    http://stackoverflow.com/questions/9946322).
 
-   A tested library can be downloaded from [Tre for Windows]
-   (http://gnuwin32.sourceforge.net/packages/tre.htm). If your system is
-   64-bits, use the provided 64-bits library. 
+   A tested library can be downloaded from
+   [Tre for Windows](http://gnuwin32.sourceforge.net/packages/tre.htm).
+   If your system is 64-bits, use the provided 64-bits library.
 
    The corresponding lib file is missing there. If you have Cygwin
    installed, you can generate it as follows (console command):
@@ -131,7 +131,7 @@ has the "xlib" driver, it can be used to display the wordgraph when the x flag
 is set (i.e. `!test=wg:x`), for example when running under Cygwin/X. In any
 case it uses the `dot` command of Graphviz. Graphviz can be installed as part
 of Cygwin (in which case it included the "xlib" driver"), or separately from
-[Graphviz] (http://www.graphviz.org/Download_windows.php).
+[Graphviz](http://www.graphviz.org/Download_windows.php).
 Both `PhotoViewer.dll` (if used) and `dot` must be in your PATH (if needed,
 you can customized that in a copy of `link-parser.bat`, as described above).
 
@@ -142,8 +142,7 @@ somehow may continue to run in the background.  Instead, exit using `!exit` .
 NOTE: The created DLLs need the MSVC14 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
 But to be able to run Link Grammar on other computer you need to install
-[Visual C++ Redistributable for Visual Studio 2015]
-(https://www.microsoft.com/en-us/download/details.aspx?id=48145).
+[Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
@@ -172,7 +171,7 @@ imports.
 - PYTHON_OUTDIR: The directory to which the Python bindings got written.
 For example, `x64\Release\Python3`.
 - script.py: Path leading to the script. If only a filename is specified
-(i.e. no "\" in the path) the specified script file is taken from the
+(i.e. no `\` in the path) the specified script file is taken from the
 `bindings\python-examples\` directory.  In order to run tests.py in
 its default location you can leave it empty.
 - ARGUMENTS: Optional script arguments, for example `-v` for `tests.py`.
@@ -230,7 +229,7 @@ link-parser | (chcp 65001 & more)
 ```
 In that case `more` will be able to read UTF-8 input. However, the
 display may still not be perfect due to additional cmd.exe limitations.
-The code page can changed manually to 65001, see below in the "Note for
+The code page can be changed manually to 65001, see below in the "Note for
 Python bindings".
 
 ### A note for the Python bindings
