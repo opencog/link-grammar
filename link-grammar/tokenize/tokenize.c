@@ -571,7 +571,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	Gword *alternative_id = NULL;   /* to be set to the start subword */
 	bool subword_eq_unsplit_word;
 	bool last_split = false;        /* this is a final token */
-	int *strlen_cache = alloca(token_tot); /* token length cache array */
+	int *strlen_cache = alloca(token_tot * sizeof(int)); /* token length cache */
 #ifdef DEBUG
 	Gword *sole_alternative_of_itself = NULL;
 #endif
