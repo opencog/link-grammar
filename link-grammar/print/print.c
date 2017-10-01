@@ -729,7 +729,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 }
 
 /**
- * Print the indicated linkage as utf8-art intp the given string.
+ * Print the indicated linkage as utf8-art into the given string.
  * The width of the diagram is given by the terminal width, taken
  * from the parse options.
  *
