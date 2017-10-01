@@ -10,15 +10,12 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
 #include <string.h>
 #include "connectors.h"
 #include "disjunct-utils.h"
-#include "externs.h"
 #include "print/print-util.h"
 #include "string-set.h"
 #include "utilities.h"
-#include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 
 /* Disjunct utilities ... */
