@@ -30,18 +30,31 @@
  */
 size_t utf8_strwidth(const char *s)
 {
-	wchar_t ws[MAX_LINE];
-	size_t mblen, glyph_width=0, i;
+	size_t mblen;
 
 #ifdef _WIN32
-	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, MAX_LINE) - 1;
+	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0) - 1;
+#else
+	mblen = mbsrtowcs(NULL, &s, 0, NULL);
+#endif
+	if (mblen <= 0)
+	{
+		prt_error("Warning: Error in utf8_strwidth(%s)\n", s);
+		return 1 /* XXX */;
+	}
+
+	wchar_t *ws = alloca((mblen + 1) * sizeof(wchar_t));
+
+#ifdef _WIN32
+	MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, mblen) - 1;
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-	mblen = mbsrtowcs(ws, &s, MAX_LINE, &mbss);
+	mbsrtowcs(ws, &s, mblen, &mbss);
 #endif /* _WIN32 */
 
-	for (i=0; i<mblen; i++)
+	int glyph_width = 0;
+	for (size_t i = 0; i < mblen; i++)
 	{
 		glyph_width += mk_wcwidth(ws[i]);
 	}
