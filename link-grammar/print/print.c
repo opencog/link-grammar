@@ -383,8 +383,46 @@ build_linkage_postscript_string(const Linkage linkage,
 	return dyn_str_take(string);
 }
 
+#define HEIGHT_INC 10
 
-#define MAX_HEIGHT 30
+static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
+                                 size_t *cur_height, size_t max_height,
+                                 size_t max_line, size_t line_len)
+{
+	assert(line_len < max_line);
+	assert(max_height > *cur_height);
+
+	*start = realloc(*start, max_height * sizeof(size_t));
+	*pic = realloc(*pic, max_height * sizeof(char *));
+	*xpic = realloc(*xpic, max_height * sizeof(char *));
+
+
+	for (size_t i = *cur_height; i < max_height; i++)
+	{
+		/* Allocate memory for both pic and xpic. */
+		char *picmem = malloc(max_line * 2);
+
+		(*pic)[i] = picmem;
+		(*xpic)[i] = picmem + max_line;
+
+		memset((*pic)[i], ' ', line_len);
+		(*pic)[i][line_len] = '\0';
+	}
+
+	*cur_height = max_height;
+}
+
+static void diagram_free_tmpmem(size_t *start, char **pic, char **xpic,
+                                size_t cur_height)
+{
+
+	for (size_t i = 0; i < cur_height; i++)
+		free(pic[i]);
+
+	free(start);
+	free(pic);
+	free(xpic);
+}
 
 /**
  * Print the indicated linkage into a utf8-diagram.
@@ -408,15 +446,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool print_word_0 , print_word_N;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
-	unsigned int line_len, link_length;
+	unsigned int link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	dyn_str * string;
 	unsigned int N_words_to_print;
-
-	char picture[MAX_HEIGHT][MAX_LINE];
-	char xpicture[MAX_HEIGHT][MAX_LINE];
-	size_t start[MAX_HEIGHT];
 
 	// Avoid pathological case and the resulting crash.
 	if (0 == linkage->num_words) return strdup("");
@@ -469,19 +503,18 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
 
-	if (set_centers(linkage, center, word_offset, print_word_0, N_words_to_print)
-	    + 1 > MAX_LINE)
-	{
-		dyn_strcat(string, "The diagram is too long.\n");
-		return dyn_str_take(string);
-	}
+	size_t *start = NULL;
+	char **picture = NULL;
+	char **xpicture = NULL;
+	size_t max_height = 0;
+	size_t max_line = set_centers(linkage, center, word_offset,
+	                              print_word_0, N_words_to_print) +1;
+	unsigned int line_len = center[N_words_to_print-1]+1;
 
-	line_len = center[N_words_to_print-1]+1;
+	diagram_alloc_tmpmem(&start, &picture, &xpicture,
+	                     &max_height, HEIGHT_INC,
+	                     max_line, line_len);
 
-	for (k=0; k<MAX_HEIGHT; k++) {
-		for (j=0; j<line_len; j++) picture[k][j] = ' ';
-		picture[k][line_len] = '\0';
-	}
 	top_row = 0;
 
 	// Longer links are printed above the lower links.
@@ -500,7 +533,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			/* Put it into the lowest position */
 			cl = center[ppla[j].lw];
 			cr = center[ppla[j].rw];
-			for (row=0; row < MAX_HEIGHT; row++)
+			for (row=0; row < max_height; row++)
 			{
 				for (k=cl+1; k<cr; k++)
 				{
@@ -512,9 +545,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			/* We know it fits, so put it in this row */
 			pctx->link_heights[j] = row;
 
-			if (2*row+2 > MAX_HEIGHT-1) {
-				dyn_strcat(string, "The diagram is too high.\n");
-				dyn_str_take(string);
+			if (2*row+2 > max_height-1) {
+				lgdebug(+9, "Extending rows up to %d.\n", (2*row+2)+HEIGHT_INC);
+				diagram_alloc_tmpmem(&start, &picture, &xpicture,
+				                     &max_height, (2*row+2)+HEIGHT_INC,
+				                     max_line, line_len);
 			}
 			if (row > top_row) top_row = row;
 
@@ -688,6 +723,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 		dyn_strcat(string, "\n");
 	}
+
+	diagram_free_tmpmem(start, picture, xpicture, max_height);
 	return dyn_str_take(string);
 }
 
