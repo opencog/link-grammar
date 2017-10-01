@@ -25,8 +25,8 @@
 #include "dict-common/dict-defines.h" /* SUBSCRIPT_MARK, SUBSCRIPT_DOT */
 #include "utilities.h"
 
-void append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);
-void vappend_string(dyn_str *, const char *fmt, va_list args)
+int append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);
+int vappend_string(dyn_str *, const char *fmt, va_list args)
 	GNUC_PRINTF(2,0);
 size_t append_utf8_char(dyn_str *, const char * mbs);
 

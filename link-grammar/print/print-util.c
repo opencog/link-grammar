@@ -63,8 +63,14 @@ size_t utf8_strwidth(const char *s)
 
 /* ============================================================= */
 
-/* Note: As in the rest of the LG library, we assume here C99 compliance. */
-void vappend_string(dyn_str * string, const char *fmt, va_list args)
+/**
+ * Append to a dynamic string with vprintf-like formatting.
+ * @return The number of appended characters.
+ *
+ * Note: As in the rest of the LG library, we assume here C99 library
+ * compliance (without it, this code would be buggy).
+ */
+int vappend_string(dyn_str * string, const char *fmt, va_list args)
 {
 #define TMPLEN 1024 /* Big enough for a possible error message, see below */
 	char temp_buffer[TMPLEN];
@@ -94,7 +100,7 @@ void vappend_string(dyn_str * string, const char *fmt, va_list args)
 
 	patch_subscript_marks(temp_string);
 	dyn_strcat(string, temp_string);
-	return;
+	return templen;
 
 error:
 	{
@@ -104,16 +110,20 @@ error:
 		strerror_r(errno, temp_buffer+sizeof(msg)-1, TMPLEN-sizeof(msg));
 		strcat(temp_buffer, "]");
 		dyn_strcat(string, temp_string);
-		return;
+		return templen;
 	}
 }
 
-void append_string(dyn_str * string, const char *fmt, ...)
+/**
+ * Append to a dynamic string with printf-like formatting.
+ * @return The number of appended characters.
+ */
+int append_string(dyn_str * string, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
 
-	vappend_string(string, fmt, args);
+	return vappend_string(string, fmt, args);
 }
 
 size_t append_utf8_char(dyn_str * string, const char * mbs)
