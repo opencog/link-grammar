@@ -15,7 +15,7 @@
 
 #include "api-structures.h"
 #include "count.h"
-#include "dict-common/dict-common.h" // for Dictionary_s
+#include "dict-common/dict-common.h"   // For Dictionary_s
 #include "disjunct-utils.h"
 #include "extract-links.h"
 #include "fast-match.h"
@@ -27,7 +27,7 @@
 #include "preparation.h"
 #include "prune.h"
 #include "resources.h"
-#include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
+#include "tokenize/word-structures.h"  // For Word_struct
 
 static Linkage linkage_array_new(int num_to_alloc)
 {
