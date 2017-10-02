@@ -88,7 +88,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 {
 	if (0 == sent->num_linkages_found) return;
 
-   /* Pick random linkages if we get more than what was asked for. */
+	/* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
 	    (sent->num_linkages_found > (int) sent->num_linkages_alloced);
 
@@ -148,7 +148,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		}
 		else
 		{
-			N_invalid_morphism ++;
+			N_invalid_morphism++;
 			lkg->num_links = 0;
 			lkg->num_words = sent->length;
 			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
