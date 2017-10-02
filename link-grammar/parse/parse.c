@@ -88,7 +88,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
    /* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
-	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
+	    (sent->num_linkages_found > (int) sent->num_linkages_alloced);
 
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
