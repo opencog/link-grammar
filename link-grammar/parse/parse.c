@@ -95,10 +95,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 	size_t itry = 0;
 	size_t in = 0;
-	size_t maxtries = sent->num_linkages_alloced;
-
-	/* If we're picking randomly, then try as many as we are allowed. */
-	if (pick_randomly) maxtries = sent->num_linkages_found;
+	size_t maxtries;
 
 	/* In the case of overflow, which will happen for some long
 	 * sentences, but is particularly common for the amy/ady random
@@ -110,7 +107,17 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * don't over-do it.
 	 */
 #define MAX_TRIES 250000
-	if (MAX_TRIES < maxtries) maxtries = MAX_TRIES;
+
+	if (pick_randomly)
+	{
+		/* Try picking many more linkages, but not more than possible. */
+		maxtries = MIN((int) sent->num_linkages_alloced + MAX_TRIES,
+		               sent->num_linkages_found);
+	}
+	else
+	{
+		maxtries = sent->num_linkages_alloced;
+	}
 
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)

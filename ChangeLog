@@ -2,6 +2,9 @@ Version 5.4.1 (XXX 2017)
  * Fix man page installation (broken in 5.3.8).
  * Add affix-class MPUNC for splitting at intra-word punctuation.
  * Fix crash when there is no PP info.
+ * Fix a stack buffer overflow.
+ * Eliminate hard-wired linkage diagram size imitations.
+ * Fix an unintended clipping of the linkage-limit option to 250000.
 
 Version 5.4.0 (26 July 2017)
  * Fix for missing locale info in Windows XP.
