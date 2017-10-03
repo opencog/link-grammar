@@ -29,6 +29,8 @@
 #include "resources.h"
 #include "tokenize/word-structures.h"  // For Word_struct
 
+#define D_PARSE 5 /* Debug level for this file. */
+
 static Linkage linkage_array_new(int num_to_alloc)
 {
 	Linkage lkgs = (Linkage) exalloc(num_to_alloc * sizeof(struct Linkage_s));
@@ -163,7 +165,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
 
-	lgdebug(5, "Info: sane_morphism(): %zu of %zu linkages had "
+	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %zu linkages had "
 	        "invalid morphology construction\n", N_invalid_morphism, itry);
 }
 
@@ -288,7 +290,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		lgdebug(5, "Info: Total count with %zu null links:   %lld\n",
+		lgdebug(D_PARSE, "Info: Total count with %zu null links:   %lld\n",
 		        sent->null_count, total);
 
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
