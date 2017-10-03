@@ -104,6 +104,9 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * between the word-graph and the parser: valid morph linkages
 	 * can be one-in-a-thousand.. or worse.  Search for them, but
 	 * don't over-do it.
+	 * Note: This problem has recently been alleviated by an
+	 * alternatives-compatibility check in the fast matcher - see
+	 * alt_connection_possible().
 	 */
 #define MAX_TRIES 250000
 
