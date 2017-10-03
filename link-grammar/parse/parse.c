@@ -63,18 +63,15 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 		return overflowed;
 	}
 
-	size_t N_linkages_alloced = sent->num_linkages_found;
-	if (N_linkages_alloced > opts->linkage_limit)
-		N_linkages_alloced = opts->linkage_limit;
-
-	sent->num_linkages_alloced = N_linkages_alloced;
+	sent->num_linkages_alloced =
+		MIN(sent->num_linkages_found, (int) opts->linkage_limit);
 
 	/* Now actually malloc the array in which we will process linkages. */
 	/* We may have been called before, e.g. this might be a panic parse,
 	 * and the linkages array may still be there from last time.
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
-	sent->lnkages = linkage_array_new(N_linkages_alloced);
+	sent->lnkages = linkage_array_new(sent->num_linkages_alloced);
 
 	return overflowed;
 }
