@@ -166,8 +166,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	if (verbosity_level(5))
 	{
 		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
-		          "invalid morphology construction\n",
-		          N_invalid_morphism, sent->num_linkages_alloced);
+		          "invalid morphology construction\n", N_invalid_morphism, itry);
 	}
 }
 
