@@ -142,7 +142,6 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		{
 			need_init = true;
 			in++;
-			sent->num_valid_linkages ++;
 			if (in >= sent->num_linkages_alloced) break;
 		}
 		else
@@ -157,6 +156,8 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 	/* The last one was alloced, but never actually used. Free it. */
 	if (!need_init) free_linkage(&sent->lnkages[in]);
+
+	sent->num_valid_linkages = in;
 
 	/* The remainder of the array is garbage; we never filled it in.
 	 * So just pretend that it's shorter than it is */
