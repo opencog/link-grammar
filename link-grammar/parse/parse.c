@@ -15,7 +15,7 @@
 
 #include "api-structures.h"
 #include "count.h"
-#include "dict-common/dict-common.h" // for Dictionary_s
+#include "dict-common/dict-common.h"   // For Dictionary_s
 #include "disjunct-utils.h"
 #include "extract-links.h"
 #include "fast-match.h"
@@ -27,7 +27,9 @@
 #include "preparation.h"
 #include "prune.h"
 #include "resources.h"
-#include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
+#include "tokenize/word-structures.h"  // For Word_struct
+
+#define D_PARSE 5 /* Debug level for this file. */
 
 static Linkage linkage_array_new(int num_to_alloc)
 {
@@ -61,18 +63,15 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 		return overflowed;
 	}
 
-	size_t N_linkages_alloced = sent->num_linkages_found;
-	if (N_linkages_alloced > opts->linkage_limit)
-		N_linkages_alloced = opts->linkage_limit;
-
-	sent->num_linkages_alloced = N_linkages_alloced;
+	sent->num_linkages_alloced =
+		MIN(sent->num_linkages_found, (int) opts->linkage_limit);
 
 	/* Now actually malloc the array in which we will process linkages. */
 	/* We may have been called before, e.g. this might be a panic parse,
 	 * and the linkages array may still be there from last time.
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
-	sent->lnkages = linkage_array_new(N_linkages_alloced);
+	sent->lnkages = linkage_array_new(sent->num_linkages_alloced);
 
 	return overflowed;
 }
@@ -86,19 +85,16 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 {
 	if (0 == sent->num_linkages_found) return;
 
-   /* Pick random linkages if we get more than what was asked for. */
+	/* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
-	    (sent->num_linkages_found != (int) sent->num_linkages_alloced);
+	    (sent->num_linkages_found > (int) sent->num_linkages_alloced);
 
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
 
 	size_t itry = 0;
 	size_t in = 0;
-	size_t maxtries = sent->num_linkages_alloced;
-
-	/* If we're picking randomly, then try as many as we are allowed. */
-	if (pick_randomly) maxtries = sent->num_linkages_found;
+	size_t maxtries;
 
 	/* In the case of overflow, which will happen for some long
 	 * sentences, but is particularly common for the amy/ady random
@@ -108,9 +104,22 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * between the word-graph and the parser: valid morph linkages
 	 * can be one-in-a-thousand.. or worse.  Search for them, but
 	 * don't over-do it.
+	 * Note: This problem has recently been alleviated by an
+	 * alternatives-compatibility check in the fast matcher - see
+	 * alt_connection_possible().
 	 */
 #define MAX_TRIES 250000
-	if (MAX_TRIES < maxtries) maxtries = MAX_TRIES;
+
+	if (pick_randomly)
+	{
+		/* Try picking many more linkages, but not more than possible. */
+		maxtries = MIN((int) sent->num_linkages_alloced + MAX_TRIES,
+		               sent->num_linkages_found);
+	}
+	else
+	{
+		maxtries = sent->num_linkages_alloced;
+	}
 
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)
@@ -135,12 +144,11 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		{
 			need_init = true;
 			in++;
-			sent->num_valid_linkages ++;
 			if (in >= sent->num_linkages_alloced) break;
 		}
 		else
 		{
-			N_invalid_morphism ++;
+			N_invalid_morphism++;
 			lkg->num_links = 0;
 			lkg->num_words = sent->length;
 			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
@@ -151,16 +159,14 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	/* The last one was alloced, but never actually used. Free it. */
 	if (!need_init) free_linkage(&sent->lnkages[in]);
 
+	sent->num_valid_linkages = in;
+
 	/* The remainder of the array is garbage; we never filled it in.
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
 
-	if (verbosity_level(5))
-	{
-		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
-		          "invalid morphology construction\n",
-		          N_invalid_morphism, sent->num_linkages_alloced);
-	}
+	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %zu linkages had "
+	        "invalid morphology construction\n", N_invalid_morphism, itry);
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
@@ -284,11 +290,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		if (verbosity_level(5))
-		{
-			prt_error("Info: Total count with %zu null links:   %lld\n",
-			          sent->null_count, total);
-		}
+		lgdebug(D_PARSE, "Info: Total count with %zu null links:   %lld\n",
+		        sent->null_count, total);
 
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
 		total = (total > INT_MAX) ? INT_MAX : total;
