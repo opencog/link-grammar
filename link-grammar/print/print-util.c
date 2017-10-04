@@ -65,7 +65,7 @@ size_t utf8_strwidth(const char *s)
 
 /**
  * Append to a dynamic string with vprintf-like formatting.
- * @return The number of appended characters.
+ * @return The number of appended bytes, or a negative value on error.
  *
  * Note: As in the rest of the LG library, we assume here C99 library
  * compliance (without it, this code would be buggy).
@@ -116,7 +116,7 @@ error:
 
 /**
  * Append to a dynamic string with printf-like formatting.
- * @return The number of appended characters.
+ * @return The number of appended bytes, or a negative value on error.
  */
 int append_string(dyn_str * string, const char *fmt, ...)
 {
