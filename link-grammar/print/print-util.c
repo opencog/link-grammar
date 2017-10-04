@@ -30,18 +30,31 @@
  */
 size_t utf8_strwidth(const char *s)
 {
-	wchar_t ws[MAX_LINE];
-	size_t mblen, glyph_width=0, i;
+	size_t mblen;
 
 #ifdef _WIN32
-	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, MAX_LINE) - 1;
+	mblen = MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0) - 1;
+#else
+	mblen = mbsrtowcs(NULL, &s, 0, NULL);
+#endif
+	if (mblen <= 0)
+	{
+		prt_error("Warning: Error in utf8_strwidth(%s)\n", s);
+		return 1 /* XXX */;
+	}
+
+	wchar_t *ws = alloca((mblen + 1) * sizeof(wchar_t));
+
+#ifdef _WIN32
+	MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, mblen) - 1;
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-	mblen = mbsrtowcs(ws, &s, MAX_LINE, &mbss);
+	mbsrtowcs(ws, &s, mblen, &mbss);
 #endif /* _WIN32 */
 
-	for (i=0; i<mblen; i++)
+	int glyph_width = 0;
+	for (size_t i = 0; i < mblen; i++)
 	{
 		glyph_width += mk_wcwidth(ws[i]);
 	}
@@ -50,8 +63,14 @@ size_t utf8_strwidth(const char *s)
 
 /* ============================================================= */
 
-/* Note: As in the rest of the LG library, we assume here C99 compliance. */
-void vappend_string(dyn_str * string, const char *fmt, va_list args)
+/**
+ * Append to a dynamic string with vprintf-like formatting.
+ * @return The number of appended characters.
+ *
+ * Note: As in the rest of the LG library, we assume here C99 library
+ * compliance (without it, this code would be buggy).
+ */
+int vappend_string(dyn_str * string, const char *fmt, va_list args)
 {
 #define TMPLEN 1024 /* Big enough for a possible error message, see below */
 	char temp_buffer[TMPLEN];
@@ -81,7 +100,7 @@ void vappend_string(dyn_str * string, const char *fmt, va_list args)
 
 	patch_subscript_marks(temp_string);
 	dyn_strcat(string, temp_string);
-	return;
+	return templen;
 
 error:
 	{
@@ -91,16 +110,20 @@ error:
 		strerror_r(errno, temp_buffer+sizeof(msg)-1, TMPLEN-sizeof(msg));
 		strcat(temp_buffer, "]");
 		dyn_strcat(string, temp_string);
-		return;
+		return templen;
 	}
 }
 
-void append_string(dyn_str * string, const char *fmt, ...)
+/**
+ * Append to a dynamic string with printf-like formatting.
+ * @return The number of appended characters.
+ */
+int append_string(dyn_str * string, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
 
-	vappend_string(string, fmt, args);
+	return vappend_string(string, fmt, args);
 }
 
 size_t append_utf8_char(dyn_str * string, const char * mbs)

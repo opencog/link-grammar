@@ -10,14 +10,12 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdio.h>
 #include <string.h>
 #include "connectors.h"
 #include "disjunct-utils.h"
-#include "externs.h"
+#include "print/print-util.h"
 #include "string-set.h"
 #include "utilities.h"
-#include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 
 /* Disjunct utilities ... */
@@ -348,39 +346,29 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
  * Be sure to free the string upon return.
  */
 
-static char * prt_con(Connector *c, char * p, char dir, size_t * bufsz)
+static void prt_con(Connector *c, dyn_str * p, char dir)
 {
-	size_t n;
-
-	if (NULL == c) return p;
-	p = prt_con (c->next, p, dir, bufsz);
+	if (NULL == c) return;
+	prt_con (c->next, p, dir);
 
 	if (c->multi)
 	{
-		n = snprintf(p, *bufsz, "@%s%c ", c->string, dir);
-		*bufsz -= n;
+		append_string(p, "@%s%c ", c->string, dir);
 	}
 	else
 	{
-		n = snprintf(p, *bufsz, "%s%c ", c->string, dir);
-		*bufsz -= n;
+		append_string(p, "%s%c ", c->string, dir);
 	}
-	return p+n;
 }
-
-#define MAX_LINE 500          /* maximum width of print area */
 
 char * print_one_disjunct(Disjunct *dj)
 {
-	char buff[MAX_LINE];
-	char * p = buff;
-	size_t bufsz = MAX_LINE;
+	dyn_str *p = dyn_str_new();
 
-	p = prt_con(dj->left, p, '-', &bufsz);
-	p = prt_con(dj->right, p, '+', &bufsz);
-	buff[MAX_LINE-1] = 0;
+	prt_con(dj->left, p, '-');
+	prt_con(dj->right, p, '+');
 
-	return strdup(buff);
+	return dyn_str_take(p);
 }
 
 /* ============================================================= */
