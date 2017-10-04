@@ -167,7 +167,8 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	sent->num_linkages_alloced = sent->num_valid_linkages;
 
 	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %zu linkages had "
-	        "invalid morphology construction\n", N_invalid_morphism, itry);
+	        "invalid morphology construction\n", N_invalid_morphism,
+	        itry + (itry != maxtries));
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
