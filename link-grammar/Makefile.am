@@ -35,6 +35,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
 	$(HUNSPELL_CFLAGS)
 
 post-process/pp_lexer.lo: AM_CPPFLAGS += -I$(top_srcdir)/link-grammar/post-process
+MAINTAINERCLEANFILES = $(top_srcdir)/link-grammar/post-process/pp_lexer.c
 
 lib_LTLIBRARIES = liblink-grammar.la
 
