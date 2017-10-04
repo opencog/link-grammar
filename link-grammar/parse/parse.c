@@ -84,6 +84,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
                              bool overflowed, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
+	if (0 == sent->num_linkages_alloced) return; /* Avoid a later crash. */
 
 	/* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = overflowed ||
