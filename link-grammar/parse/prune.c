@@ -490,7 +490,7 @@ static bool possible_connection(prune_context *pc,
 	}
 	/* If the words are NOT next to each other, then there must be
 	 * at least one intervening connector (i.e. cannot have both
-	 * lc->next amnd rc->next being null).  But we only enforce this
+	 * lc->next and rc->next being null).  But we only enforce this
 	 * when we think its still possible to have a complete parse,
 	 * i.e. before well allow null-linked words.
 	 */
