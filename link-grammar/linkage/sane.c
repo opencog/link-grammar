@@ -10,18 +10,16 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <stdlib.h>
-
 #include "api-structures.h"  // for Sentence_s
 #include "api-types.h"
-#include "dict-common/dict-structures.h"
 #include "dict-common/regex-morph.h" // for match_regex
+#include "connectors.h" // for MAX_SENTENCE
 #include "disjunct-utils.h"  // for Disjunct_struct
 #include "lg_assert.h"
 #include "linkage.h"
-#include "print/print.h"  // for print_with_subscript_dot
 #include "sane.h"
 #include "tokenize/tok-structures.h" // Needed for Wordgraph_pathpos_s
+#include "tokenize/word-structures.h" // for Word_struct
 #include "tokenize/wordgraph.h"
 #include "utilities.h"
 
@@ -42,6 +40,7 @@
  * there in case morphology splits are to be hidden or there are morphemes with
  * null linkage.
  */
+#define D_WPA 7
 static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
                                   Gword *current_word, /* add to the path */
                                   Gword *p)      /* add to the path queue */
@@ -49,29 +48,55 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	size_t n = wordgraph_pathpos_len(*nwp);
 
 	assert(NULL != p, "Tried to add a NULL word to the word queue");
+	if (current_word == p)
+	{
+		lgdebug(D_WPA, "Adding the same word '%s' again\n", p->subword);
+		//print_lwg_path((Gword **)path, "After adding the same word");
+	}
 
 	/* Check if the path queue already contains the word to be added to it. */
+	const Wordgraph_pathpos *wpt = NULL;
+
 	if (NULL != *nwp)
 	{
-		const Wordgraph_pathpos *wpt;
-
 		for (wpt = *nwp; NULL != wpt->word; wpt++)
 		{
 			if (p == wpt->word)
 			{
+				lgdebug(D_WPA, "Word %s (after %zu) exists (after %zu)\n",
+				        p->subword,
+				        wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx,
+				        path[gwordlist_len(path)-1]->sent_wordidx);
 				/* If we are here, there are 2 or more paths leading to this word
 				 * (p) that end with the same number of consecutive null words that
 				 * consist an entire alternative. These null words represent
-				 * different ways to split the subword upward in the hierarchy, but
-				 * since they don't have linkage we don't care which of these
-				 * paths is used. */
-				return; /* The word is already in the queue */
+				 * different ways to split the subword upward in the hierarchy.
+				 * For a nicer result we choose the shorter path. */
+				if (wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx <=
+				    path[gwordlist_len(path)-1]->sent_wordidx)
+				{
+					lgdebug(D_WPA, "Shorter path already queued\n");
+					return; /* The shorter path is already in the queue. */
+				}
+				lgdebug(D_WPA, "Longer path is in the queue\n");
+				//print_lwg_path((Gword **)wpt->path, "Freeing");
+				free(wpt->path); /* To be replaced by a shorter path. */
+				break;
 			}
 		}
 	}
 
-	/* Not already in the path queue - add it. */
-	*nwp = wordgraph_pathpos_resize(*nwp, n+1);
+	if ((NULL == wpt) || (p != wpt->word))
+	{
+		/* Not already in the path queue - add it. */
+		*nwp = wordgraph_pathpos_resize(*nwp, n+1);
+	}
+	else
+	{
+		lgdebug(D_WPA, "Path position to be replaced (len %zu): %zu\n", n,
+		                wpt - *nwp);
+		n = wpt - *nwp; /* Replace this path. */
+	}
 	(*nwp)[n].word = p;
 
 	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
@@ -81,15 +106,21 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 	else
 	{
-		/* We branch to another path. Duplicate it from the current path and add
-		 * the current word to it. */
+		/* Duplicate the path from the current one. */
+
 		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
 
 		(*nwp)[n].path = malloc(path_arr_size);
 		memcpy((*nwp)[n].path, path, path_arr_size);
 	}
-   /* FIXME (cast) but anyway gwordlist_append() doesn't modify Gword. */
-	gwordlist_append((Gword ***)&(*nwp)[n].path, current_word);
+
+	/* If we queue the same word again, its path remains the same.
+	 * Else append the current word to it. */
+	if (p != current_word)
+	{
+		/* FIXME (cast) but anyway gwordlist_append() doesn't modify Gword. */
+		gwordlist_append((Gword ***)&(*nwp)[n].path, current_word);
+	}
 }
 
 /**
@@ -108,6 +139,105 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
 			free(twp->path);
 	}
 	free(wp);
+}
+
+#define NO_WORD (MAX_SENTENCE+1)
+
+/**
+ * Return the number of islands in a linkage.
+ * First, each word appears in its own linked list.
+ * Then all the links in the linkage are traversed, and the lists pointed
+ * by each of them are combined.
+ * Finally, the words are traversed and the lists are followed and
+ * numbered. The WG path is used to skip optional words which are null.
+ */
+static size_t num_islands(const Linkage lkg, const Gword **wg_path)
+{
+	struct word
+	{
+		int prev;
+		int next;
+		int inum;
+	};
+	struct word *word = alloca(lkg->sent->length * sizeof(struct word));
+
+	/* Initially, each word is in its own island. */
+	for (WordIdx w = 0; w < lkg->sent->length; w++)
+	{
+		word[w].prev = word[w].next = w;
+	}
+
+	/* Unify the potential islands pointed by each link
+	 * (if they are already unified, they remain so.) */
+	for (LinkIdx li = 0; li < lkg->num_links; li++)
+	{
+		Link *l = &lkg->link_array[li];
+
+		WordIdx iw;
+		for (iw = word[l->lw].next; (iw != l->rw) && (iw != l->lw); iw = word[iw].next)
+			;
+
+		if (iw != l->rw)
+		{
+			int nextl = word[l->lw].next;
+			int prevr = word[l->rw].prev;
+
+			word[l->lw].next = l->rw;
+			word[l->rw].prev = l->lw;
+
+			word[prevr].next = nextl;
+			word[nextl].prev = prevr;
+		}
+
+		if (verbosity_level(+8))
+		{
+			for (WordIdx w = 0; w < lkg->sent->length; w++)
+			{
+				err_msg(lg_Debug, "%d<-%zu->%d ", word[w].prev, w, word[w].next);
+			}
+			err_msg(lg_Debug, "\n");
+		}
+	}
+
+	/* Count islands. */
+	int inum = -1;
+	Disjunct **cdj = lkg->chosen_disjuncts;
+
+	for (WordIdx w = 0; w < lkg->sent->length; w++)
+	{
+		/* Skip null words which are optional words. */
+		if ((NULL == *wg_path) || ((*wg_path)->sent_wordidx != w))
+		{
+			assert(word[w].prev == word[w].next);
+			assert((NULL == cdj[w]) && lkg->sent->word[w].optional);
+
+			word[w].prev = NO_WORD;
+			word[w].inum = -1; /* not belonging to any island */
+			continue;
+		}
+
+		wg_path++;
+		if (NO_WORD == word[w].prev) continue;
+
+		inum++;
+		for (WordIdx iw = w; NO_WORD != word[iw].prev; iw = word[iw].next)
+		{
+			word[iw].prev = NO_WORD;
+			word[iw].inum = inum;
+		}
+	}
+
+	if (verbosity_level(8))
+	{
+		err_msg(lg_Debug, "Island count %d: ", inum);
+		for (WordIdx w = 0; w < lkg->sent->length; w++)
+		{
+			err_msg(lg_Debug, "%d ", word[w].inum);
+		}
+		err_msg(lg_Debug, "\n");
+	}
+
+	return inum;
 }
 
 /* ============================================================== */
@@ -149,7 +279,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  *
  * Return true if the linkage is good, else return false.
  */
-#define D_SLM 7
+#define D_SLM 8
 bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
@@ -157,6 +287,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Wordgraph_pathpos *wpp;
 	Gword **next; /* next Wordgraph words of the current word */
 	size_t i;
+	size_t null_count_found = 0;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
 	Gword **lwg_path;
@@ -199,14 +330,24 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		/* Handle null words */
 		if (NULL == cdj)
 		{
-			lgdebug(D_SLM, "- Null word\n");
+			lgdebug(D_SLM, "- Null word");
 			/* A null word matches any word in the Wordgraph -
 			 * so, unconditionally proceed in all paths in parallel. */
 			match_found = false;
+			bool optional_word_found = false;
 			for (wpp = wp_old; NULL != wpp->word; wpp++)
 			{
-				if (NULL == wpp->word->next)
-					continue; /* This path encountered the Wordgraph end */
+				if ((MT_INFRASTRUCTURE == wpp->word->morpheme_type) ||
+				    (wpp->word->sent_wordidx > i))
+				{
+					assert(sent->word[i].optional, "wordindex=%zu", i);
+					lgdebug(D_SLM, " (Optional, index=%zu)\n", i);
+					// Retain the same word in the new path queue.
+					wordgraph_path_append(&wp_new, wpp->path, wpp->word, wpp->word);
+					match_found = true;
+					optional_word_found = true;
+					continue; /* Disregard this chosen disjunct. */
+				}
 
 				/* The null words cannot be marked here because wpp->path consists
 				 * of pointers to the Wordgraph words, and these words are common to
@@ -216,10 +357,28 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				 */
 				for (next = wpp->word->next; NULL != *next; next++)
 				{
-					match_found = true;
+					if (MT_INFRASTRUCTURE != wpp->word->morpheme_type)
+						match_found = true;
 					wordgraph_path_append(&wp_new, wpp->path, wpp->word, *next);
 				}
 			}
+
+			if (!optional_word_found)
+			{
+				null_count_found++;
+				/* Note that if all the sentence words are null-words, its
+				 * null_count is only sent->length-1 so this is not a mismatch. */
+				if ((null_count_found > lkg->sent->null_count) &&
+				    (lkg->sent->null_count != sent->length-1))
+				{
+					lgdebug(D_SLM, " (Extra, count > %zu)\n", lkg->sent->null_count);
+					match_found = false;
+					break;
+				}
+				lgdebug(D_SLM, "\n");
+			}
+
+			if (NULL != wpp->word) break; /* Extra null count */
 			continue;
 		}
 
@@ -281,6 +440,23 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		}
 		if (!match_found)
 		    lgdebug(D_SLM, "%p Missing word(s) at the end of the linkage.\n", lkg);
+	}
+
+	/* Reject found null count that is not consistent with sent->null_count.
+	 * Here islands_ok=1 is handled, and also a lower-than-expected null
+	 * count when islands_ok=0. */
+	if (match_found)
+	{
+		size_t count_found =
+			opts->islands_ok ? num_islands(lkg, wpp->path) : null_count_found;
+
+		if ((count_found != lkg->sent->null_count) &&
+		    (lkg->sent->null_count != sent->length-1) && (count_found != sent->length))
+		{
+			lgdebug(D_SLM, "Null count mismatch: Found %zu != null_count %zu\n",
+					  count_found, lkg->sent->null_count);
+			match_found = false;
+		}
 	}
 
 #define DEBUG_morpheme_type 0
@@ -375,13 +551,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		{
 			lgdebug(D_SLM, "%p Morpheme type combination '%s'\n", lkg, affix_types);
 		}
-		lgdebug(+D_SLM, "%p SUCCEEDED\n", lkg);
+		lgdebug(+D_SLM-1, "%p SUCCEEDED\n", lkg);
 		lkg->wg_path = lwg_path;
 		return true;
 	}
 
 	/* Oh no ... invalid morpheme combination! */
-	lgdebug(D_SLM, "%p FAILED\n", lkg);
+	lgdebug(+D_SLM-1, "%p FAILED\n", lkg);
 	return false;
 }
 #undef D_SLM

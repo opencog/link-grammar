@@ -204,78 +204,42 @@ static void remap_linkages(Linkage lkg, const int *remap)
 }
 
 /**
- *  Print the chosen_disjuncts words.
- *  This is used for debug, e.g. for tracking them in the Wordgraph display.
- */
-static void print_chosen_disjuncts_words(const Linkage lkg)
-{
-	size_t i;
-	dyn_str *djwbuf = dyn_str_new();
-
-	err_msg(lg_Debug, "Linkage %p (%zu words): ", lkg, lkg->num_words);
-	for (i = 0; i < lkg->num_words; i++)
-	{
-		Disjunct *cdj = lkg->chosen_disjuncts[i];
-		const char *djw; /* disjunct word - the chosen word */
-
-		if (NULL == cdj)
-			djw = lkg->sent->word[i].optional ? "{}" : "[]";
-		else if ('\0' == cdj->word_string[0])
-			djw = "\\0"; /* null string - something is wrong */
-		else
-			djw = cdj->word_string;
-
-		dyn_strcat(djwbuf, djw);
-		dyn_strcat(djwbuf, " ");
-	}
-	err_msg(lg_Debug, "%s\n", djwbuf->str);
-	dyn_str_delete(djwbuf);
-}
-
-/**
  * Remove unlinked optional words from a linkage.
  * XXX Should we remove here also the dict-cap tokens? In any case, for now they
  * are left for debug.
  */
-#define D_REE 9
+#define D_REE 7
 void remove_empty_words(Linkage lkg)
 {
 	size_t i, j;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
-
-	if (verbosity_level(+D_REE))
-	{
-		err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
-		print_chosen_disjuncts_words(lkg);
-	}
+	Gword **wgp = lkg->wg_path;
 
 	for (i = 0, j = 0; i < lkg->num_words; i++)
 	{
-		if ((NULL == cdj[i]) && lkg->sent->word[i].optional)
+		/* Discard optional words that are not real null-words.  Note that
+		 * if optional words don't have non-optional words after them,
+		 * wg_path doesn't include them, and hence *wgp is NULL then. */
+		if ((NULL == *wgp) || ((*wgp)->sent_wordidx != i))
 		{
+			assert((NULL == cdj[i]) && lkg->sent->word[i].optional);
 			remap[i] = -1;
+			continue;
 		}
-		else
-		{
-			Disjunct *cdtmp = cdj[j];
-			cdj[j] = cdj[i];
-			cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
-			remap[i] = j;
-			j++;
-		}
+
+		Disjunct *cdtmp = cdj[j];
+		cdj[j] = cdj[i];
+		cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
+		remap[i] = j;
+		j++;
+		wgp++;
 	}
 	if (lkg->num_words != j)
 	{
 		/* Unused memory not freed - all of it will be freed in free_linkages(). */
 		lkg->num_words = j;
 		remap_linkages(lkg, remap); /* Update lkg->link_array and lkg->num_links. */
-	}
-
-	if (verbosity_level(+D_REE))
-	{
-		err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
-		print_chosen_disjuncts_words(lkg);
 	}
 }
 #undef D_REE
@@ -330,7 +294,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	memset(show_word, 0, linkage->num_words * sizeof(*show_word));
 
-	if (D_CCW <= opts->verbosity)
+	if (verbosity_level(D_CCW))
 		print_lwg_path(lwg_path, "Linkage");
 
 	for (i = 0; i < linkage->num_words; i++)
@@ -719,7 +683,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	linkage->wg_path_display = n_lwg_path;
 
-	if (D_CCW <= opts->verbosity)
+	if (verbosity_level(D_CCW))
 		print_lwg_path(n_lwg_path, "Display");
 }
 #undef D_CCW
