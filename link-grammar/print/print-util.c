@@ -37,7 +37,7 @@ size_t utf8_strwidth(const char *s)
 #else
 	mblen = mbsrtowcs(NULL, &s, 0, NULL);
 #endif
-	if (mblen <= 0)
+	if ((int)mblen < 0)
 	{
 		prt_error("Warning: Error in utf8_strwidth(%s)\n", s);
 		return 1 /* XXX */;
