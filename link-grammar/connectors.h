@@ -166,6 +166,52 @@ static inline bool easy_match(const char * s, const char * t)
 	return true;
 }
 
+/**
+ * Compare the lower-case and head/dependent parts of two connector descriptors.
+ * When this function is called, it is assumed that the upper-case
+ * parts are equal, and thus do not need to be checked again.
+ * FIXME: Use lc string descriptors.
+ */
+static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
+{
+
+	/* If the connectors are identical, they match. */
+	if (c1 == c2) return true;
+
+	/* If both of the connectors have a lc part, we need to compare them. */
+	if ((0 != c2->lc_start) && (0 != c1->lc_start))
+	{
+
+		/* Compare the lc parts according to the connector matching rules. */
+		const char *a = &c1->string[c1->lc_start];
+		const char *b = &c2->string[c2->lc_start];
+		do
+		{
+			if (*a != *b && (*a != '*') && (*b != '*')) return false;
+			a++;
+			b++;
+		} while (*a != '\0' && *b != '\0');
+	}
+
+	/* Compare the head/dependent parts. */
+	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
+	    (c1->string[0] == c2->string[0]))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * This function is like easy_match(), but with connector descriptors.
+ * It uses a shortcut comparison of the upper-case parts.
+ */
+static inline bool easy_match_desc(const condesc_t *c1, const condesc_t *c2)
+{
+	if (c1->uc_num != c2->uc_num) return false;
+	return lc_easy_match(c1, c2);
+}
 
 static inline int string_hash(const char *s)
 {

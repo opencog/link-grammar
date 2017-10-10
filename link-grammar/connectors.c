@@ -147,7 +147,8 @@ void set_condesc_unlimited_length(Dictionary dict, Exp *e)
 		{
 			if (econlist[en]->uc_num != sdesc[cn]->uc_num) break;
 
-			if (easy_match(econlist[en]->string, sdesc[cn]->string))
+			/* The uppercase parts are equal - match only the lowercase ones. */
+			if (lc_easy_match(econlist[en], sdesc[cn]))
 				sdesc[cn]->length_limit = UNLIMITED_LEN;
 		}
 	}

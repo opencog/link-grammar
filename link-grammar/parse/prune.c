@@ -477,7 +477,7 @@ static bool possible_connection(prune_context *pc,
 	if (!alt_consistency(pc, lc, rc, lword, rword, lr)) return false;
 #endif
 
-	return easy_match(lc->desc->string, rc->desc->string);
+	return easy_match_desc(lc->desc, rc->desc);
 }
 
 /**

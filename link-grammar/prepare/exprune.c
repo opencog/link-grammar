@@ -178,7 +178,7 @@ static inline bool matches_S(connector_table *ct, Connector * c)
 
 	for (e = ct[hash_S(c)]; e != NULL; e = e->tableNext)
 	{
-		if (easy_match(e->desc->string, c->desc->string)) return true;
+		if (easy_match_desc(e->desc, c->desc)) return true;
 	}
 	return false;
 }
