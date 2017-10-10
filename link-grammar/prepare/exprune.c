@@ -24,15 +24,16 @@
 #define CONTABSZ 8192
 
 #ifdef DEBUG
-#define DBG(X) \
+#define DBG(p, w, X) \
 	if (verbosity_level(+D_EXPRUNE))\
 	{\
 		char *e = expression_stringify(x->exp);\
+		err_msg(lg_Trace, "pass%d w%zu: ", p, w);\
 		err_msg(lg_Trace, X ": %s\n", e);\
 		free(e);\
 	}
 #else /* !DEBUG */
-#define DBG(X)
+#define DBG(p, w, X)
 #endif /* DEBUG */
 
 #define DBG_EXPSIZES(...) \
@@ -327,7 +328,8 @@ void expression_prune(Sentence sent)
 
 	DBG_EXPSIZES("Initial expression sizes\n%s", e);
 
-	while (1)
+	int pass = -1;
+	while (pass++)
 	{
 		/* Left-to-right pass */
 		/* For every word */
@@ -336,15 +338,15 @@ void expression_prune(Sentence sent)
 			/* For every expression in word */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				DBG("l->r pass before marking");
+				DBG(pass, w, "l->r pass before marking");
 				N_deleted += mark_dead_connectors(ct, x->exp, '-');
-				DBG("l->r pass after marking");
+				DBG(pass, w, "l->r pass after marking");
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				DBG("l->r pass before purging");
+				DBG(pass, w, "l->r pass before purging");
 				x->exp = purge_Exp(x->exp);
-				DBG("l->r pass after purging");
+				DBG(pass, w, "l->r pass after purging");
 			}
 
 			/* gets rid of X_nodes with NULL exp */
@@ -370,15 +372,15 @@ void expression_prune(Sentence sent)
 		{
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				DBG("r->l pass before marking");
+				DBG(pass, w, "r->l pass before marking");
 				N_deleted += mark_dead_connectors(ct, x->exp, '+');
-				DBG("r->l pass after marking");
+				DBG(pass, w, "r->l pass after marking");
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				DBG("r->l pass before purging");
+				DBG(pass, w, "r->l pass before purging");
 				x->exp = purge_Exp(x->exp);
-				DBG("r->l pass after purging");
+				DBG(pass, w, "r->l pass after purging");
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
