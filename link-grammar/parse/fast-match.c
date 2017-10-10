@@ -196,9 +196,12 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
  */
 static bool con_uc_eq(const Connector *c1, const Connector *c2)
 {
-	if (string_set_cmp(c1->string, c2->string)) return true;
-	if (c1->hash != c2->hash) return false;
-	if (c1->uc_length != c2->uc_length) return false;
+#if 0
+	return (c1->desc->uc_num == c2->desc->uc_num);
+#else
+	if (c1->desc == c2->desc) return true;
+	if (c1->desc->uc_hash != c2->desc->uc_hash) return false;
+	if (c1->desc->uc_length != c2->desc->uc_length) return false;
 
 	/* We arrive here for less than 50% of the cases for "en" and
 	 * less then 20% of the cases for "ru", and, in practice, the
@@ -207,11 +210,12 @@ static bool con_uc_eq(const Connector *c1, const Connector *c2)
 	 * we are hashing, at most, a few dozen connectors into a
 	 * 16-bit hash space (65536 slots).
 	 */
-	const char *uc1 = &c1->string[c1->uc_start];
-	const char *uc2 = &c2->string[c2->uc_start];
-	if (0 == strncmp(uc1, uc2, c1->uc_length)) return true;
+	const char *uc1 = &c1->desc->string[c1->desc->uc_start];
+	const char *uc2 = &c2->desc->string[c2->desc->uc_start];
+	if (0 == strncmp(uc1, uc2, c1->desc->uc_length)) return true;
 
 	return false;
+#endif
 }
 
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
@@ -219,7 +223,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 {
 	unsigned int h, s;
 
-	s = h = connector_hash(c) & (size-1);
+	s = h = connector_uc_hash(c) & (size-1);
 
 	if (dir == 1) {
 		while (NULL != t[h])
@@ -310,6 +314,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->left != NULL)
 			{
+				//printf("%s %d\n", d->left->desc->string, d->left->length_limit);
 				put_into_match_table(size, t, d, d->left, -1);
 			}
 		}
@@ -324,6 +329,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->right != NULL)
 			{
+				//printf("%s %d\n", d->right->desc->string, d->right->length_limit);
 				put_into_match_table(size, t, d, d->right, 1);
 			}
 		}
@@ -369,7 +375,7 @@ static void match_stats(Connector *c1, Connector *c2)
 
 #ifdef DEBUG
 #undef N
-#define N(c) (c?c->string:"")
+#define N(c) (c?c->desc->string:"")
 
 /**
  * Print the match list, including connector match indications.
@@ -421,14 +427,14 @@ static bool match_lower_case(Connector *c1, Connector *c2)
 	match_stats(c1, c2);
 
 	/* If the connectors are identical, they match. */
-	if (string_set_cmp(c1->string, c2->string)) return true;
+	if (c1 == c2) return true;
 
 	/* If any of the connectors doesn't have a lc part, they match */
-	if ((0 == c2->lc_start) || (0 == c1->lc_start)) return true;
+	if ((0 == c2->desc->lc_start) || (0 == c1->desc->lc_start)) return true;
 
 	/* Compare the lc parts according to the connector matching rules. */
-	const char *a = &c1->string[c1->lc_start];
-	const char *b = &c2->string[c2->lc_start];
+	const char *a = &c1->desc->string[c1->desc->lc_start];
+	const char *b = &c2->desc->string[c2->desc->lc_start];
 	do
 	{
 		if (*a != *b && (*a != '*') && (*b != '*')) return false;
@@ -445,8 +451,8 @@ static bool match_lower_case(Connector *c1, Connector *c2)
  */
 static bool match_hd(Connector *c1, Connector *c2)
 {
-	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
-	    (c1->string[0] == c2->string[0]))
+	if ((1 == c1->desc->uc_start) && (1 == c2->desc->uc_start) &&
+	    (c1->desc->string[0] == c2->desc->string[0]))
 	{
 		return false;
 	}
@@ -472,8 +478,8 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
-	UNREACHABLE(a->string == NULL); /* clang static analyzer suppression. */
-	if (c_con->string == a->string)
+	UNREACHABLE(a->desc->string == NULL); // clang static analyzer suppression.
+	if (c_con->string == a->desc->string)
 	{
 		/* The match_cache string field is initialized to NULL, and this is
 		 * enough for not using uninitialized c_con->match because the
@@ -486,7 +492,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 
 	/* No cache exists. Check if the connectors match and cache the result. */
 	c_con->match = match_lower_case(a, b) && match_hd(a, b);
-	c_con->string = a->string;
+	c_con->string = a->desc->string;
 
 	return c_con->match;
 }

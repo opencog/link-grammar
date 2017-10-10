@@ -92,7 +92,8 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	/* We have to use the string set, mostly because copy_Exp
 	 * in build_disjuncts fails to copy the string ...
 	 */
-	e->u.string = string_set_add(constr, dict->string_set);
+	e->u.condesc = condesc_add(&dict->contable,
+	                           string_set_add(constr, dict->string_set));
 	free(constr);
 
 	rest = make_expression(dict, ++p);

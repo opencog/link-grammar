@@ -113,7 +113,7 @@ static Exp* purge_Exp(Exp *e)
 {
 	if (e->type == CONNECTOR_type)
 	{
-		if (e->u.string == NULL)
+		if (e->u.condesc == NULL)
 		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
@@ -165,7 +165,7 @@ static Exp* purge_Exp(Exp *e)
  */
 static inline unsigned int hash_S(Connector * c)
 {
-	unsigned int h = connector_hash(c);
+	unsigned int h = connector_uc_hash(c);
 	return (h & (CONTABSZ-1));
 }
 
@@ -178,7 +178,7 @@ static inline bool matches_S(connector_table *ct, Connector * c)
 
 	for (e = ct[hash_S(c)]; e != NULL; e = e->tableNext)
 	{
-		if (easy_match(e->string, c->string)) return true;
+		if (easy_match(e->desc->string, c->desc->string)) return true;
 	}
 	return false;
 }
@@ -202,11 +202,10 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 		if (e->dir == dir)
 		{
 			Connector dummy;
-			init_connector(&dummy);
-			dummy.string = e->u.string;
+			dummy.desc = e->u.condesc;
 			if (!matches_S(ct, &dummy))
 			{
-				e->u.string = NULL;
+				e->u.condesc = NULL;
 				count++;
 			}
 		}
@@ -235,7 +234,7 @@ static void insert_connector(connector_table *ct, Connector * c)
 
 	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
-		if (string_set_cmp(c->string, e->string))
+		if (c->desc == e->desc)
 			return;
 	}
 	c->tableNext = ct[h];
@@ -253,8 +252,8 @@ static Connector * insert_connectors(connector_table *ct, Exp * e,
 	{
 		if (e->dir == dir)
 		{
-			Connector *dummy = connector_new();
-			dummy->string = e->u.string;
+			assert(NULL != e->u.condesc, "NULL connector");
+			Connector *dummy = connector_new(e->u.condesc, NULL);
 			insert_connector(ct, dummy);
 			dummy->next = alloc_list;
 			alloc_list = dummy;

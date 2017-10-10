@@ -23,6 +23,7 @@
 #include "string-set.h"
 #include "tokenize/word-structures.h" // for Word_struct
 
+#if 0
 static void
 set_connector_list_length_limit(Connector *c,
                                 Connector_set *conset,
@@ -73,6 +74,7 @@ set_connector_length_limits(Sentence sent, Parse_Options opts)
 		}
 	}
 }
+#endif
 
 
 /**
@@ -143,7 +145,8 @@ static void gword_record_in_connector(Sentence sent)
  * Turn sentence expressions into disjuncts.
  * Sentence expressions must have been built, before calling this routine.
  */
-static void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
+static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
+                                     Parse_Options opts)
 {
 	Disjunct * d;
 	X_node * x;
@@ -153,7 +156,7 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
 		d = NULL;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff);
+			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff, opts);
 			word_record_in_disjunct(x->word, dx);
 			d = catenate_disjuncts(dx, d);
 		}
@@ -168,7 +171,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
 	size_t i;
 
-	build_sentence_disjuncts(sent, opts->disjunct_cost);
+	build_sentence_disjuncts(sent, opts->disjunct_cost, opts);
 	if (verbosity_level(5))
 	{
 		printf("After expanding expressions into disjuncts:\n");
@@ -193,6 +196,5 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 
 	gword_record_in_connector(sent);
-	set_connector_length_limits(sent, opts);
 	setup_connectors(sent);
 }

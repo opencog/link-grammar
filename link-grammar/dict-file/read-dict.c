@@ -875,18 +875,24 @@ static Exp * make_optional_node(Exp_list *eli, Exp * e)
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
 	Exp* n = Exp_create(&dict->exp_list);
+	char *constring;
+
 	n->dir = dict->token[i];
 	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
-		n->u.string = string_set_add(dict->token+1, dict->string_set);
+		constring = dict->token+1;
 		n->multi = true;
 	}
 	else
 	{
-		n->u.string = string_set_add(dict->token, dict->string_set);
+		constring = dict->token;
 		n->multi = false;
 	}
+
+	n->u.condesc = condesc_add(&dict->contable,
+	                            string_set_add(constring, dict->string_set));
+	if (NULL == n->u.condesc) return NULL; /* Table ovf */
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
 	return n;
@@ -939,6 +945,7 @@ static Exp * make_connector(Dictionary dict)
 		{
 			/* A simple, unidirectional connector. Just make that. */
 			n = make_dir_connector(dict, i);
+			if (NULL == n) return NULL;
 		}
 		else if (dict->token[i] == ANY_DIR)
 		{
@@ -947,14 +954,16 @@ static Exp * make_connector(Dictionary dict)
 			 * Make both a + and a - version, and or them together.  */
 			dict->token[i] = '+';
 			plu = make_dir_connector(dict, i);
+			if (NULL == plu) return NULL;
 			dict->token[i] = '-';
 			min = make_dir_connector(dict, i);
+			if (NULL == min) return NULL;
 
 			n = make_or_node(&dict->exp_list, plu, min);
 		}
 		else
 		{
-			dict_error(dict, "Unknown connector direction type.");
+			dict_error(dict, "Unknown connector direction type '%c'.");
 			return NULL;
 		}
 	}
@@ -980,6 +989,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 	Exp *zn, *an;
 	E_list *elist, *flist;
 	Exp_list eli = { NULL };
+	const char *ZZZ = string_set_add(EMPTY_CONNECTOR, dict->string_set);
 
 	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
 	if (MT_WALL == x->word->morpheme_type) return;
@@ -995,7 +1005,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		/* zn points at {ZZZ+} */
 		zn = Exp_create(&eli);
 		zn->dir = '+';
-		zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+		zn->u.condesc = condesc_add(&dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
 		zn->cost = 0.0;

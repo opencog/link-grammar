@@ -148,6 +148,7 @@ dictionary_six_str(const char * lang,
 		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
 		dict->lookup = file_boolean_lookup;
+		dict->contable.size = 1<<13;
 	}
 	else
 	{
@@ -157,8 +158,12 @@ dictionary_six_str(const char * lang,
 		afclass_init(dict);
 		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
+		dict->contable.size = 1<<7;
 	}
 	dict->affix_table = NULL;
+
+	dict->contable.hdesc = malloc(dict->contable.size * sizeof(condesc_t *));
+	memset(dict->contable.hdesc, 0, dict->contable.size * sizeof(condesc_t *));
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
@@ -223,6 +228,10 @@ dictionary_six_str(const char * lang,
 
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
+
+	/* set_connector_unlimited_length() in dictionary_setup_defines()
+	 * depends on this sorting. */
+	sort_condesc_by_uc_constring(dict);
 
 	dictionary_setup_defines(dict);
 

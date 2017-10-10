@@ -738,13 +738,13 @@ const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link_array[index].lc->string;
+	return linkage->link_array[index].lc->desc->string;
 }
 
 const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->link_array[index].rc->string;
+	return linkage->link_array[index].rc->desc->string;
 }
 
 const char ** linkage_get_words(const Linkage linkage)

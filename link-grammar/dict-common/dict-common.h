@@ -15,6 +15,7 @@
 #define  _LG_DICT_COMMON_H_
 
 #include "api-types.h" // for pp_knowledge
+#include "connectors.h" // for condest_t
 #include "dict-structures.h"
 #include "utilities.h" // for locale_t
 
@@ -110,6 +111,7 @@ struct Dictionary_s
 	Connector_set * unlimited_connector_set; /* NULL=everything is unlimited */
 	String_set *    string_set;        /* Set of link names in the dictionary */
 	Word_file *     word_file_header;
+	ConTable        contable;
 
 	/* exp_list links together all the Exp structs that are allocated
 	 * in reading this dictionary.  Needed for freeing the dictionary

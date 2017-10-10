@@ -69,10 +69,10 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 		if ((l->lw + 1 == l->rw) && (NULL != l->link_name))
 		{
 			link_len[l->rw] = strlen(l->link_name) +
-				(DEPT_CHR == l->rc->string[0]) +
-				(HEAD_CHR == l->rc->string[0]) +
-				(DEPT_CHR == l->lc->string[0]) +
-				(HEAD_CHR == l->lc->string[0]);
+				(DEPT_CHR == l->rc->desc->string[0]) +
+				(HEAD_CHR == l->rc->desc->string[0]) +
+				(DEPT_CHR == l->lc->desc->string[0]) +
+				(HEAD_CHR == l->lc->desc->string[0]);
 		}
 	}
 
@@ -356,7 +356,7 @@ build_linkage_postscript_string(const Linkage linkage,
 			if (ppla[j].lw == 0) {
 				if (ppla[j].rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (easy_match(ppla[j].lc->string, LEFT_WALL_SUPPRESS)) {
+				if (easy_match(ppla[j].lc->desc->string, LEFT_WALL_SUPPRESS)) {
 					suppressor_used = true;
 				}
 			}
@@ -372,7 +372,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		for (j=0; j<N_links; j++) {
 			if (ppla[j].rw == linkage->num_words-1) {
 				N_wall_connectors ++;
-				if (easy_match(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)) {
+				if (easy_match(ppla[j].lc->desc->string, RIGHT_WALL_SUPPRESS)) {
 					suppressor_used = true;
 				}
 			}
@@ -515,7 +515,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			{
 				if (ppla[j].rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (easy_match(ppla[j].lc->string, LEFT_WALL_SUPPRESS))
+				if (easy_match(ppla[j].lc->desc->string, LEFT_WALL_SUPPRESS))
 				{
 					suppressor_used = true;
 				}
@@ -536,7 +536,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			if (ppla[j].rw == linkage->num_words-1)
 			{
 				N_wall_connectors ++;
-				if (easy_match(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
+				if (easy_match(ppla[j].lc->desc->string, RIGHT_WALL_SUPPRESS))
 				{
 					suppressor_used = true;
 				}
@@ -632,17 +632,17 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
-			if (DEPT_CHR == ppla[j].lc->string[0] &&
+			if (DEPT_CHR == ppla[j].lc->desc->string[0] &&
 			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
-			if (HEAD_CHR == ppla[j].lc->string[0]) { *(t-1) = '>'; }
+			if (HEAD_CHR == ppla[j].lc->desc->string[0]) { *(t-1) = '>'; }
 
 			/* Copy connector name; stop short if no room */
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
-			if (DEPT_CHR == ppla[j].rc->string[0]) { picture[row][cr-1] = '>'; }
-			if (HEAD_CHR == ppla[j].rc->string[0]) { *t = '<'; }
+			if (DEPT_CHR == ppla[j].rc->desc->string[0]) { picture[row][cr-1] = '>'; }
+			if (HEAD_CHR == ppla[j].rc->desc->string[0]) { *t = '<'; }
 
 			/* The direction indicators may have clobbered these. */
 			picture[row][cl] = '+';

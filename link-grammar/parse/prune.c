@@ -224,7 +224,7 @@ static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, 
 {
 	unsigned int h;
 	C_list * m;
-	h = connector_hash(c) & (size-1);
+	h = connector_uc_hash(c) & (size-1);
 	m = (C_list *) xalloc (sizeof(C_list));
 	m->next = t[h];
 	t[h] = m;
@@ -477,7 +477,7 @@ static bool possible_connection(prune_context *pc,
 	if (!alt_consistency(pc, lc, rc, lword, rword, lr)) return false;
 #endif
 
-	return easy_match(lc->string, rc->string);
+	return easy_match(lc->desc->string, rc->desc->string);
 }
 
 /**
@@ -493,7 +493,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	power_table *pt = pc->pt;
 
 	size = pt->r_table_size[w];
-	h = connector_hash(c) & (size-1);
+	h = connector_uc_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c, true))
@@ -515,7 +515,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	power_table *pt = pc->pt;
 
 	size = pt->l_table_size[w];
-	h = connector_hash(c) & (size-1);
+	h = connector_uc_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w, false))
@@ -1007,7 +1007,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 				Connector *c;
 				for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 				{
-					insert_in_cms_table(cmt, c->string);
+					insert_in_cms_table(cmt, c->desc->string);
 				}
 			}
 		}
@@ -1041,7 +1041,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 							if (strchr(selector, '*') != NULL) continue;  /* If it has a * forget it */
 
-							if (!post_process_match(selector, c->string)) continue;
+							if (!post_process_match(selector, c->desc->string)) continue;
 
 							/*
 							printf("pp_prune: trigger ok.  selector = %s  c->string = %s\n", selector, c->string);
@@ -1072,7 +1072,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 						Connector *c;
 						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 						{
-							change |= delete_from_cms_table(cmt, c->string);
+							change |= delete_from_cms_table(cmt, c->desc->string);
 						}
 					}
 				}

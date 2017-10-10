@@ -185,7 +185,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 		goto locale_error;
 	}
 
-	if (0 == strcmp(dn->exp->u.string, "C"))
+	if (0 == strcmp(dn->exp->u.condesc->string, "C"))
 	{
 		locale = string_set_add("C", dict->string_set);
 	}
@@ -193,7 +193,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 	{
 		char c;
 		char locale_ll[4], locale_cc[3];
-		int locale_numelement = sscanf(dn->exp->u.string, "%3[A-Z]4%2[a-z]%c",
+		int locale_numelement = sscanf(dn->exp->u.condesc->string, "%3[A-Z]4%2[a-z]%c",
 										locale_ll, locale_cc, &c);
 		if (2 != locale_numelement)
 		{
@@ -201,7 +201,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 			          "should be in the form LL4cc+\n"
 						 "\t(LL: language code; cc: territory code) "
 						 "\tor C+ for transliterated dictionaries.\n",
-						 dn->exp->u.string);
+						 dn->exp->u.condesc->string);
 			goto locale_error;
 		}
 
@@ -267,7 +267,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;
-	ver = strdup(&e->u.string[1]);
+	ver = strdup(&e->u.condesc->string[1]);
 	p = strchr(ver, 'v');
 	while (p)
 	{
@@ -348,10 +348,15 @@ void dictionary_setup_defines(Dictionary dict)
 	dict->shuffle_linkages = false;
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
-	if (dict_node != NULL)
-		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
-
-	dict->free_lookup(dict, dict_node);
+	if (dict_node == NULL)
+	{
+		set_condesc_unlimited_length(dict, NULL);
+	}
+	else
+	{
+		set_condesc_unlimited_length(dict, dict_node->exp);
+		dict->free_lookup(dict, dict_node);
+	}
 }
 
 /* ======================================================================= */
