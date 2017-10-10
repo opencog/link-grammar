@@ -192,30 +192,10 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 /**
  * Compare only the uppercase part of two connectors.
  * Return true if they are the same, else false.
- * FIXME: Use connector enumeration.
  */
 static bool con_uc_eq(const Connector *c1, const Connector *c2)
 {
-#if 0
 	return (c1->desc->uc_num == c2->desc->uc_num);
-#else
-	if (c1->desc == c2->desc) return true;
-	if (c1->desc->uc_hash != c2->desc->uc_hash) return false;
-	if (c1->desc->uc_length != c2->desc->uc_length) return false;
-
-	/* We arrive here for less than 50% of the cases for "en" and
-	 * less then 20% of the cases for "ru", and, in practice, the
-	 * two strings are always equal, because there is almost never
-	 * a hash collision that would lead to a miscompare, because
-	 * we are hashing, at most, a few dozen connectors into a
-	 * 16-bit hash space (65536 slots).
-	 */
-	const char *uc1 = &c1->desc->string[c1->desc->uc_start];
-	const char *uc2 = &c2->desc->string[c2->desc->uc_start];
-	if (0 == strncmp(uc1, uc2, c1->desc->uc_length)) return true;
-
-	return false;
-#endif
 }
 
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
