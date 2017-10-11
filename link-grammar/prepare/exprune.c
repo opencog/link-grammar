@@ -44,7 +44,7 @@
 		free(e);\
 	}
 
-typedef Connector * connector_table;
+typedef condesc_t * connector_table;
 
 /* ================================================================= */
 /**
@@ -163,29 +163,28 @@ static Exp* purge_Exp(Exp *e)
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
  */
-static inline unsigned int hash_S(Connector * c)
+static inline unsigned int hash_S(condesc_t * c)
 {
-	unsigned int h = connector_uc_hash(c);
-	return (h & (CONTABSZ-1));
+	return (c->uc_num & (CONTABSZ-1));
 }
 
 /**
  * Returns TRUE if c can match anything in the set S (err. the connector table ct).
  */
-static inline bool matches_S(connector_table *ct, Connector * c)
+static inline bool matches_S(connector_table *ct, condesc_t * c)
 {
-	Connector * e;
+	condesc_t * e;
 
-	for (e = ct[hash_S(c)]; e != NULL; e = e->tableNext)
+	for (e = ct[hash_S(c)]; e != NULL; e = e->PtableNext)
 	{
-		if (easy_match_desc(e->desc, c->desc)) return true;
+		if (easy_match_desc(e, c)) return true;
 	}
 	return false;
 }
 
 static void zero_connector_table(connector_table *ct)
 {
-	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
+	memset(ct, 0, sizeof(condesc_t *) * CONTABSZ);
 }
 
 /**
@@ -201,9 +200,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 	{
 		if (e->dir == dir)
 		{
-			Connector dummy;
-			dummy.desc = e->u.condesc;
-			if (!matches_S(ct, &dummy))
+			if (!matches_S(ct, e->u.condesc))
 			{
 				e->u.condesc = NULL;
 				count++;
@@ -225,19 +222,19 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
  * This function puts connector c into the connector table
  * if one like it isn't already there.
  */
-static void insert_connector(connector_table *ct, Connector * c)
+static void insert_connector(connector_table *ct, condesc_t * c)
 {
 	unsigned int h;
-	Connector * e;
+	condesc_t * e;
 
 	h = hash_S(c);
 
-	for (e = ct[h]; e != NULL; e = e->tableNext)
+	for (e = ct[h]; e != NULL; e = e->PtableNext)
 	{
-		if (c->desc == e->desc)
+		if (c == e)
 			return;
 	}
-	c->tableNext = ct[h];
+	c->PtableNext = ct[h];
 	ct[h] = c;
 }
 /**
@@ -253,10 +250,7 @@ static Connector * insert_connectors(connector_table *ct, Exp * e,
 		if (e->dir == dir)
 		{
 			assert(NULL != e->u.condesc, "NULL connector");
-			Connector *dummy = connector_new(e->u.condesc, NULL);
-			insert_connector(ct, dummy);
-			dummy->next = alloc_list;
-			alloc_list = dummy;
+			insert_connector(ct, e->u.condesc);
 		}
 	}
 	else
@@ -318,7 +312,7 @@ void expression_prune(Sentence sent)
 	int N_deleted;
 	X_node * x;
 	size_t w;
-	Connector *ct[CONTABSZ];
+	condesc_t *ct[CONTABSZ];
 	Connector *dummy_list = NULL;
 
 	zero_connector_table(ct);
