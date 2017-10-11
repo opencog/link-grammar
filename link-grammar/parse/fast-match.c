@@ -261,6 +261,8 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
+/* FIXME: Use connector enumeration to limit table sizes. */
+
 fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 {
 	unsigned int size;
