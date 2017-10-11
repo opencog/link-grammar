@@ -83,10 +83,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i += string_hash(e->desc->string);
+		i += e->desc->str_hash;
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i += string_hash(e->desc->string);
+		i += e->desc->str_hash;
 	}
 	i += string_hash(d->word_string);
 	i += (i>>10);
