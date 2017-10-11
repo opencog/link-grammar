@@ -182,9 +182,9 @@ static inline bool matches_S(connector_table *ct, condesc_t * c)
 	return false;
 }
 
-static void zero_connector_table(connector_table *ct)
+static void zero_connector_table(connector_table *ct, size_t contab_usage)
 {
-	memset(ct, 0, sizeof(condesc_t *) * CONTABSZ);
+	memset(ct, 0, sizeof(condesc_t *) * contab_usage);
 }
 
 /**
@@ -242,8 +242,7 @@ static void insert_connector(connector_table *ct, condesc_t * c)
  * Return a list of allocated dummy connectors; these will need to be
  * freed.
  */
-static Connector * insert_connectors(connector_table *ct, Exp * e,
-                                     Connector *alloc_list, int dir)
+static void insert_connectors(connector_table *ct, Exp * e, int dir)
 {
 	if (e->type == CONNECTOR_type)
 	{
@@ -258,10 +257,9 @@ static Connector * insert_connectors(connector_table *ct, Exp * e,
 		E_list *l;
 		for (l=e->u.l; l!=NULL; l=l->next)
 		{
-			alloc_list = insert_connectors(ct, l->e, alloc_list, dir);
+			insert_connectors(ct, l->e, dir);
 		}
 	}
-	return alloc_list;
 }
 
 /**
@@ -312,10 +310,13 @@ void expression_prune(Sentence sent)
 	int N_deleted;
 	X_node * x;
 	size_t w;
-	condesc_t *ct[CONTABSZ];
-	Connector *dummy_list = NULL;
+	size_t contab_usage = sent->dict->contable.num_con; /* tentative */
+	size_t contab_size = MIN(next_power_of_two_up(contab_usage), CONTABSZ);
+	condesc_t **ct = alloca(contab_size * sizeof(*ct));
 
-	zero_connector_table(ct);
+	contab_usage = MIN(contab_usage, contab_size); /* actual */
+
+	zero_connector_table(ct, contab_usage);
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
@@ -346,17 +347,13 @@ void expression_prune(Sentence sent)
 			clean_up_expressions(sent, w);
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				dummy_list = insert_connectors(ct, x->exp, dummy_list, '+');
+				insert_connectors(ct, x->exp, '+');
 			}
 		}
 
 		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
 
-		/* Free the allocated dummy connectors */
-		free_connectors(dummy_list);
-		dummy_list = NULL;
-		zero_connector_table(ct);
-
+		zero_connector_table(ct, contab_usage);
 		if (N_deleted == 0) break;
 
 		/* Right-to-left pass */
@@ -378,16 +375,13 @@ void expression_prune(Sentence sent)
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				dummy_list = insert_connectors(ct, x->exp, dummy_list, '-');
+				insert_connectors(ct, x->exp, '-');
 			}
 		}
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
 
-		/* Free the allocated dummy connectors */
-		free_connectors(dummy_list);
-		dummy_list = NULL;
-		zero_connector_table(ct);
+		zero_connector_table(ct, contab_usage);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
