@@ -33,11 +33,11 @@
 typedef struct ConDesc
 {
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	uint32_t str_hash;
+	uint16_t str_hash;
 	union
 	{
-		uint32_t uc_hash;
-		uint32_t uc_num;
+		uint16_t uc_hash;
+		uint16_t uc_num;
 	};
 	uint8_t length_limit;
 	                      /* If not 0, it gives the limit of the length of the
@@ -52,7 +52,7 @@ typedef struct ConDesc
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
 
-	Connector *next;
+	struct ConDesc * PtableNext; /* For expression prune hash table */
 } condesc_t;
 
 typedef struct ConTable
@@ -77,13 +77,7 @@ struct Connector_struct
 	bool multi;           /* TRUE if this is a multi-connector */
 	const condesc_t *desc;
 	Connector *next;
-
-	/* Hash table next pointer, used only during pruning. */
-	union
-	{
-		Connector * tableNext;
-		const gword_set *originating_gword;
-	};
+	const gword_set *originating_gword;
 };
 
 void sort_condesc_by_uc_constring(Dictionary);
