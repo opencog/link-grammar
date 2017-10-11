@@ -127,23 +127,6 @@ void free_connectors(Connector *);
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
 
-#if 0
-static inline Connector * init_connector(Connector *c)
-{
-	c->uc_hash = -1;
-	c->str_hash = -1;
-	c->length_limit = UNLIMITED_LEN;
-	return c;
-}
-#endif
-
-#if 0
-/* Connector-set utilities ... */
-void connector_set_create(Dictionary, Exp *e);
-#endif
-void connector_set_delete(Connector_set * conset);
-bool match_in_connector_set(Connector_set*, Connector*);
-
 void set_condesc_unlimited_length(Dictionary, Exp *);
 
 /**
