@@ -440,6 +440,7 @@ static bool possible_connection(prune_context *pc,
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
+	if (!easy_match_desc(lc->desc, rc->desc)) return false;
 
 	/* Two deep connectors can't work */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
@@ -477,7 +478,7 @@ static bool possible_connection(prune_context *pc,
 	if (!alt_consistency(pc, lc, rc, lword, rword, lr)) return false;
 #endif
 
-	return easy_match_desc(lc->desc, rc->desc);
+	return true;
 }
 
 /**
