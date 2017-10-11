@@ -195,7 +195,7 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
  */
 static bool con_uc_eq(const Connector *c1, const Connector *c2)
 {
-	return (c1->desc->uc_num == c2->desc->uc_num);
+	return (connector_uc_num(c1) == connector_uc_num(c2));
 }
 
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,

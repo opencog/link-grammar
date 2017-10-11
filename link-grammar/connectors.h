@@ -114,6 +114,11 @@ static inline int connector_uc_hash(const Connector * c)
 	return c->desc->uc_hash;
 }
 
+static inline int connector_uc_num(const Connector * c)
+{
+	return c->desc->uc_num;
+}
+
 
 /* Connector utilities ... */
 Connector * connector_new(const condesc_t *, Parse_Options);
