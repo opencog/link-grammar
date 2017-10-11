@@ -294,7 +294,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->left != NULL)
 			{
-				//printf("%s %d\n", d->left->desc->string, d->left->length_limit);
+				//printf("%s %d\n", connector_get_string(d->left), d->left->length_limit);
 				put_into_match_table(size, t, d, d->left, -1);
 			}
 		}
@@ -309,7 +309,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->right != NULL)
 			{
-				//printf("%s %d\n", d->right->desc->string, d->right->length_limit);
+				//printf("%s %d\n", connector_get_string(d->right), d->right->length_limit);
 				put_into_match_table(size, t, d, d->right, 1);
 			}
 		}
@@ -355,7 +355,7 @@ static void match_stats(Connector *c1, Connector *c2)
 
 #ifdef DEBUG
 #undef N
-#define N(c) (c?c->desc->string:"")
+#define N(c) (c?connector_get_string(c):"")
 
 /**
  * Print the match list, including connector match indications.
@@ -410,11 +410,12 @@ static bool match_lower_case(Connector *c1, Connector *c2)
 	if (c1 == c2) return true;
 
 	/* If any of the connectors doesn't have a lc part, they match */
-	if ((0 == c2->desc->lc_start) || (0 == c1->desc->lc_start)) return true;
+	if ((0 == connector_get_lc_start(c2)) || (0 == connector_get_lc_start(c1)))
+		return true;
 
 	/* Compare the lc parts according to the connector matching rules. */
-	const char *a = &c1->desc->string[c1->desc->lc_start];
-	const char *b = &c2->desc->string[c2->desc->lc_start];
+	const char *a = &connector_get_string(c1)[connector_get_lc_start(c1)];
+	const char *b = &connector_get_string(c2)[connector_get_lc_start(c2)];
 	do
 	{
 		if (*a != *b && (*a != '*') && (*b != '*')) return false;
@@ -431,8 +432,8 @@ static bool match_lower_case(Connector *c1, Connector *c2)
  */
 static bool match_hd(Connector *c1, Connector *c2)
 {
-	if ((1 == c1->desc->uc_start) && (1 == c2->desc->uc_start) &&
-	    (c1->desc->string[0] == c2->desc->string[0]))
+	if ((1 == connector_get_uc_start(c1)) && (1 ==  connector_get_uc_start(c2)) &&
+	    (connector_get_string(c1)[0] == connector_get_string(c2)[0]))
 	{
 		return false;
 	}
@@ -452,6 +453,7 @@ typedef struct
  * 3 or 4 times in a row. So if we already did that compare, just use
  * the cached result. (i.e. the caching here is almost trivial, but it
  * works well).
+ * FIXME: cache the connector descriptor, not the connector string.
  */
 static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 {
@@ -459,7 +461,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
 	UNREACHABLE(a->desc->string == NULL); // clang static analyzer suppression.
-	if (c_con->string == a->desc->string)
+	if (c_con->string == connector_get_string(a))
 	{
 		/* The match_cache string field is initialized to NULL, and this is
 		 * enough for not using uninitialized c_con->match because the
@@ -472,7 +474,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 
 	/* No cache exists. Check if the connectors match and cache the result. */
 	c_con->match = match_lower_case(a, b) && match_hd(a, b);
-	c_con->string = a->desc->string;
+	c_con->string = connector_get_string(a);
 
 	return c_con->match;
 }

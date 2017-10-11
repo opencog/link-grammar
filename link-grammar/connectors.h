@@ -83,10 +83,37 @@ struct Connector_struct
 void sort_condesc_by_uc_constring(Dictionary);
 void condesc_delete(Dictionary);
 
-static inline const char * connector_get_string(Connector *c)
+/* GET accessors for connector attributes.
+ * Can be used for experimenting with Connector_struct internals in
+ * non-trivial ways without the need to change most of the code that
+ * accesses connectors.
+ * FIXME: Maybe remove the _get part of the names, since we don't
+ * need SET accessors. */
+static inline const char * connector_get_string(const Connector *c)
 {
 	return c->desc->string;
 }
+
+static inline int connector_get_lc_start(const Connector *c)
+{
+	return c->desc->lc_start;
+}
+
+static inline int connector_get_uc_start(const Connector *c)
+{
+	return c->desc->uc_start;
+}
+
+static inline const condesc_t *connector_get_desc(const Connector *c)
+{
+	return c->desc;
+}
+
+static inline int connector_uc_hash(const Connector * c)
+{
+	return c->desc->uc_hash;
+}
+
 
 /* Connector utilities ... */
 Connector * connector_new(const condesc_t *, Parse_Options);
@@ -222,11 +249,6 @@ static inline int string_hash(const char *s)
 }
 
 void calculate_connector_info(condesc_t *);
-
-static inline int connector_uc_hash(Connector * c)
-{
-	return c->desc->uc_hash;
-}
 
 static inline uint32_t connector_str_hash(const char *s)
 {

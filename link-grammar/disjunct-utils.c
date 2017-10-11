@@ -353,11 +353,11 @@ static void prt_con(Connector *c, dyn_str * p, char dir)
 
 	if (c->multi)
 	{
-		append_string(p, "@%s%c ", c->desc->string, dir);
+		append_string(p, "@%s%c ", connector_get_string(c), dir);
 	}
 	else
 	{
-		append_string(p, "%s%c ", c->desc->string, dir);
+		append_string(p, "%s%c ", connector_get_string(c), dir);
 	}
 }
 

@@ -1008,7 +1008,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 				Connector *c;
 				for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 				{
-					insert_in_cms_table(cmt, c->desc->string);
+					insert_in_cms_table(cmt, connector_get_string(c));
 				}
 			}
 		}
@@ -1042,7 +1042,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 							if (strchr(selector, '*') != NULL) continue;  /* If it has a * forget it */
 
-							if (!post_process_match(selector, c->desc->string)) continue;
+							if (!post_process_match(selector, connector_get_string(c))) continue;
 
 							/*
 							printf("pp_prune: trigger ok.  selector = %s  c->string = %s\n", selector, c->string);
@@ -1073,7 +1073,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 						Connector *c;
 						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 						{
-							change |= delete_from_cms_table(cmt, c->desc->string);
+							change |= delete_from_cms_table(cmt, connector_get_string(c));
 						}
 					}
 				}
