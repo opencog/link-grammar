@@ -14,6 +14,7 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
+#include "dict-common/dict-common.h"     // For contable
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
 #include "print/print.h"  // For print_disjunct_counts()
@@ -243,6 +244,8 @@ static power_table * power_table_new(Sentence sent)
 	C_list ** t;
 	Disjunct * d;
 	Connector * c;
+#define TOPSZ 32768
+	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
 
 	pt = (power_table *) xalloc (sizeof(power_table));
 	pt->power_table_size = sent->length;
@@ -269,9 +272,7 @@ static power_table * power_table_new(Sentence sent)
 		 * Strong dependence on the hashing algo!
 		 */
 		len = left_connector_count(sent->word[w].d);
-		size = next_power_of_two_up(len);
-#define TOPSZ 32768
-		if (TOPSZ < size) size = TOPSZ;
+		size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->l_table_size[w] = size;
 		t = pt->l_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
@@ -287,8 +288,7 @@ static power_table * power_table_new(Sentence sent)
 		}
 
 		len = right_connector_count(sent->word[w].d);
-		size = next_power_of_two_up(len);
-		if (TOPSZ < size) size = TOPSZ;
+		size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->r_table_size[w] = size;
 		t = pt->r_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
