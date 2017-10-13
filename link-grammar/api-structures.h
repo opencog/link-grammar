@@ -150,6 +150,7 @@ struct Sentence_s
 #ifdef USE_SAT_SOLVER
 	void *hook;                 /* Hook for the SAT solver */
 #endif /* USE_SAT_SOLVER */
+	void *disjuncts_connectors_memblock;
 };
 
 #endif

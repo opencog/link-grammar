@@ -459,6 +459,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->dict = dict;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
+	sent->disjuncts_connectors_memblock = NULL;
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 
@@ -521,9 +522,13 @@ static void free_sentence_words(Sentence sent)
 	for (i = 0; i < sent->length; i++)
 	{
 		free_X_nodes(sent->word[i].x);
-		free_disjuncts(sent->word[i].d);
+
+		if (NULL == sent->disjuncts_connectors_memblock)
+			free_disjuncts(sent->word[i].d);
+
 		free(sent->word[i].alternatives);
 	}
+	free(sent->disjuncts_connectors_memblock);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
@@ -605,11 +610,16 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 static void free_sentence_disjuncts(Sentence sent)
 {
 	size_t i;
-
-	for (i = 0; i < sent->length; ++i)
+	if (NULL != sent->disjuncts_connectors_memblock)
 	{
-		free_disjuncts(sent->word[i].d);
-		sent->word[i].d = NULL;
+		free(sent->disjuncts_connectors_memblock);
+	}
+	else
+	{
+		for (i = 0; i < sent->length; ++i)
+		{
+			free_disjuncts(sent->word[i].d);
+		}
 	}
 }
 

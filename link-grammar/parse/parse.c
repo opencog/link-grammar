@@ -247,6 +247,55 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	print_time(opts, "Sorted all linkages");
 }
 
+#define SHORTEST_SENTENCE_TO_PACK 9
+
+/**
+ * Pack all disjunct and connectors into one big memory block.
+ * This facilitate a better memory caching for long sentences
+ * using the fact that now more than one connector can be packed
+ * in a cache line of 64 bytes (a performance gain of a few percents).
+ *
+ * FIXME: 1. Find the "best" value for SHORTEST_SENTENCE_TO_PACK.
+ * 2. Maybe this check should be done in too stages, the second one
+ * will use number of disjunct and connector thresholds.
+ */
+static void pack_sentence(Sentence sent)
+{
+	int dcnt = 0;
+	int ccnt = 0;
+
+	if (sent->length < SHORTEST_SENTENCE_TO_PACK) return;
+	for (size_t w = 0; w < sent->length; w++)
+	{
+		Disjunct *d;
+
+		for (d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			dcnt++;
+			for (Connector *c = d->right; c!=NULL; c = c->next) ccnt++;
+			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
+		}
+	}
+
+#define CACHELINE 64
+	size_t dsize = dcnt * sizeof(Disjunct);
+	dsize = (dsize+CACHELINE)&~(CACHELINE-1); /* Align connector block. */
+	size_t csize = ccnt * sizeof(Connector);
+	void *memblock = malloc(dsize + csize);
+	Disjunct *dblock = memblock;
+	Connector *cblock = (Connector *)((char *)memblock + dsize);
+	sent->disjuncts_connectors_memblock = memblock;
+
+	for (size_t i = 0; i < sent->length; i++)
+	{
+		Disjunct *word_disjuncts = sent->word[i].d;
+
+		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &dblock, &cblock);
+		free_disjuncts(word_disjuncts);
+	}
+}
+
+
 /**
  * classic_parse() -- parse the given sentence.
  * Perform parsing, using the original link-grammar parsing algorithm
@@ -324,6 +373,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			if (resources_exhausted(opts->resources)) break;
 
 			free_fast_matcher(mchxt);
+			pack_sentence(sent);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
 		}
