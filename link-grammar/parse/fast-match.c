@@ -391,57 +391,6 @@ static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
 #define print_match_list(...)
 #endif
 
-/**
- * Compare only the lower-case parts of two connectors. When this
- * function is called, it is assumed that the upper-case parts are
- * equal, and thus do not need to be checked again.
- *
- * We know that the uc parts of the connectors are the same,
- * because we fetch the matching lists according to the uc part or the
- * connectors to be matched. So the uc parts are not checked here. The
- * head/dependent indicators are in the caller function, and only when
- * connectors match here, to save CPU when the connectors don't match
- * otherwise. This is because h/d mismatch is rare.
- * FIXME: Use connector enumeration.
- */
-static bool match_lower_case(Connector *c1, Connector *c2)
-{
-	match_stats(c1, c2);
-
-	/* If the connectors are identical, they match. */
-	if (c1 == c2) return true;
-
-	/* If any of the connectors doesn't have a lc part, they match */
-	if ((0 == connector_get_lc_start(c2)) || (0 == connector_get_lc_start(c1)))
-		return true;
-
-	/* Compare the lc parts according to the connector matching rules. */
-	const char *a = &connector_get_string(c1)[connector_get_lc_start(c1)];
-	const char *b = &connector_get_string(c2)[connector_get_lc_start(c2)];
-	do
-	{
-		if (*a != *b && (*a != '*') && (*b != '*')) return false;
-		a++;
-		b++;
-	} while (*a != '\0' && *b != '\0');
-
-	return true;
-}
-
-/**
- * Return false if the connectors cannot match due to identical
- * head/dependent parts. Else return true.
- */
-static bool match_hd(Connector *c1, Connector *c2)
-{
-	if ((1 == connector_get_uc_start(c1)) && (1 ==  connector_get_uc_start(c2)) &&
-	    (connector_get_string(c1)[0] == connector_get_string(c2)[0]))
-	{
-		return false;
-	}
-	return true;
-}
-
 typedef struct
 {
 	const condesc_t *desc;
@@ -472,8 +421,11 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 		PRAGMA_END
 	}
 
-	/* No cache exists. Check if the connectors match and cache the result. */
-	c_con->match = match_lower_case(a, b) && match_hd(a, b);
+	/* No cache match. Check if the connectors match and cache the result.
+	 * We know that the uc parts of the connectors are the same, because
+	 * we fetch the matching lists according to the uc part or the
+	 * connectors to be matched. So the uc parts are not checked here. */
+	c_con->match = lc_easy_match(connector_get_desc(a), connector_get_desc(b));
 	c_con->desc = connector_get_desc(a);
 
 	return c_con->match;
