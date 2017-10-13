@@ -444,7 +444,7 @@ static bool match_hd(Connector *c1, Connector *c2)
 
 typedef struct
 {
-	const char *string;
+	const condesc_t *desc;
 	bool match;
 } match_cache;
 
@@ -455,20 +455,18 @@ typedef struct
  * 3 or 4 times in a row. So if we already did that compare, just use
  * the cached result. (i.e. the caching here is almost trivial, but it
  * works well).
- * FIXME: cache the connector descriptor, not the connector string.
  */
 static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 {
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
-	UNREACHABLE(a->desc->string == NULL); // clang static analyzer suppression.
-	if (c_con->string == connector_get_string(a))
+	UNREACHABLE(connector_get_desc(a) == NULL); // clang static analyzer suppression.
+	if (c_con->desc == connector_get_desc(a))
 	{
-		/* The match_cache string field is initialized to NULL, and this is
-		 * enough for not using uninitialized c_con->match because the
-		 * connector string field cannot be NULL. A "garbage" warning is
-		 * suppressed above for the clang static analyzer. */
+		/* The match_cache desc field is initialized to NULL, and this is
+		 * enough because the connector desc filed cannot be NULL, as it
+		 * actually fetched a non-empty match list. */
 		PRAGMA_MAYBE_UNINITIALIZED
 		return c_con->match;
 		PRAGMA_END
@@ -476,7 +474,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 
 	/* No cache exists. Check if the connectors match and cache the result. */
 	c_con->match = match_lower_case(a, b) && match_hd(a, b);
-	c_con->string = connector_get_string(a);
+	c_con->desc = connector_get_desc(a);
 
 	return c_con->match;
 }
@@ -595,7 +593,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	mr_end = mx;
 
 	/* Construct the list of things that could match the left. */
-	mc.string = NULL;
+	mc.desc = NULL;
 	gc.gword = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
@@ -618,7 +616,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * if we are going to skip this element here because its match_left
 	 * is true, since then it means it is already included in the match
 	 * list. */
-	mc.string = NULL;
+	mc.desc = NULL;
 	gc.gword = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
