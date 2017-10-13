@@ -47,7 +47,6 @@ set_connector_length_limit(Connector *c, Parse_Options opts)
 	int short_len = opts->short_length;
 	bool all_short = opts->all_short;
 	int length_limit = c->desc->length_limit;
-	if (short_len > UNLIMITED_LEN) short_len = UNLIMITED_LEN;
 
 	if ((all_short && (length_limit > short_len)) || (0 == length_limit))
 		c->length_limit = short_len;

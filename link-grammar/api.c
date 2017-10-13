@@ -366,7 +366,7 @@ int parse_options_get_spell_guess(Parse_Options opts) {
 }
 
 void parse_options_set_short_length(Parse_Options opts, int short_length) {
-	opts->short_length = short_length;
+	opts->short_length = MIN(short_length, UNLIMITED_LEN);
 }
 
 int parse_options_get_short_length(Parse_Options opts) {
