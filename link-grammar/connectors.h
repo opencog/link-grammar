@@ -30,8 +30,18 @@
  */
 #define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
+/* For faster comparisons, the connector lc part is encoded into a number
+ * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
+ * is possible to encode up to 9 letters in an uint64_t. */
+#define LC_BITS 7
+#define LC_MASK ((1<<LC_BITS)-1)
+typedef uint64_t lc_enc_t;
+
 typedef struct ConDesc
 {
+	lc_enc_t lc_letters;
+	lc_enc_t lc_mask;
+
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
 	uint16_t str_hash;
 	union
@@ -46,9 +56,9 @@ typedef struct ConDesc
 	                       * If 0, short_length (a Parse_Option) is used. If
 	                       * all_short==true (a Parse_Option), length_limit
 	                       * is clipped to short_length. */
+	char head_depended;   /* 'h' for head, 'd' for depended, or '\0' if none */
 
 	/* The following are used for connector match speedup */
-	uint8_t lc_start;    /* lc start position (or 0) */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
 
@@ -92,11 +102,6 @@ void condesc_delete(Dictionary);
 static inline const char * connector_get_string(const Connector *c)
 {
 	return c->desc->string;
-}
-
-static inline int connector_get_lc_start(const Connector *c)
-{
-	return c->desc->lc_start;
 }
 
 static inline int connector_get_uc_start(const Connector *c)
@@ -179,35 +184,13 @@ static inline bool easy_match(const char * s, const char * t)
  * Compare the lower-case and head/dependent parts of two connector descriptors.
  * When this function is called, it is assumed that the upper-case
  * parts are equal, and thus do not need to be checked again.
- * FIXME: Use lc string descriptors.
  */
 static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
 {
-
-	/* If the connectors are identical, they match. */
-	if (c1 == c2) return true;
-
-	/* If both of the connectors have a lc part, we need to compare them. */
-	if ((0 != c2->lc_start) && (0 != c1->lc_start))
-	{
-
-		/* Compare the lc parts according to the connector matching rules. */
-		const char *a = &c1->string[c1->lc_start];
-		const char *b = &c2->string[c2->lc_start];
-		do
-		{
-			if (*a != *b && (*a != '*') && (*b != '*')) return false;
-			a++;
-			b++;
-		} while (*a != '\0' && *b != '\0');
-	}
-
-	/* Compare the head/dependent parts. */
-	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
-	    (c1->string[0] == c2->string[0]))
-	{
+	if ((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask)
 		return false;
-	}
+	if (('\0' != c1->head_depended) && (c1->head_depended == c2->head_depended))
+		return false;
 
 	return true;
 }
@@ -236,7 +219,7 @@ static inline int string_hash(const char *s)
 	return i;
 }
 
-void calculate_connector_info(condesc_t *);
+bool calculate_connector_info(condesc_t *);
 
 static inline uint32_t connector_str_hash(const char *s)
 {
@@ -339,7 +322,8 @@ static inline condesc_t *condesc_add(ConTable *ct, const char *constring)
 		memset(ct->hdesc[i], 0, sizeof(condesc_t));
 		ct->hdesc[i]->str_hash = hash;
 		ct->hdesc[i]->string = constring;
-		calculate_connector_info(ct->hdesc[i]);
+		if (!calculate_connector_info(ct->hdesc[i]))
+			return NULL;
 	}
 
 	return ct->hdesc[i];

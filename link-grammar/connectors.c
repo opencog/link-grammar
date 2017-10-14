@@ -14,7 +14,7 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
-#include <math.h>
+#include <limits.h>                 // for CHAR_BIT
 
 #include "dict-common/dict-utils.h" // for size_of_expression()
 #include "api-structures.h"         // for Parse_Options_s
@@ -155,18 +155,51 @@ void set_condesc_unlimited_length(Dictionary dict, Exp *e)
 
 /* ======================================================== */
 
+static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
+{
+	lc_enc_t lc_mask = 0;
+	lc_enc_t lc_value = 0;
+	lc_enc_t wildcard = LC_MASK;
+	int lc_pos = 0;
+
+	if ('\0' == *lc_string) return true;
+	do
+	{
+		if (lc_pos > (int)(CHAR_BIT*sizeof(lc_value)/LC_BITS))
+		{
+			prt_error("Error: Lower-case part '%s' is too long (%d)\n",
+			          lc_string, lc_pos);
+			return false;
+		}
+		lc_value |= (lc_enc_t)(*lc_string & LC_MASK) << (lc_pos*LC_BITS);
+		if (*lc_string != '*') lc_mask |= wildcard;
+		if ('\0' == lc_string[1]) break;
+		wildcard <<= LC_BITS;
+		lc_pos++;
+	} while (lc_string++);
+
+	desc->lc_mask = lc_mask;
+	desc->lc_letters = lc_value;
+
+	return true;
+}
+
 /**
  * Calculate fixed connector information that only depend on its string.
  * This information is used to speed up the parsing stage.
  * It is calculated during the directory creation and doesn't get
  * changed afterward.
  */
-void calculate_connector_info(condesc_t * c)
+bool calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 	unsigned int i;
 
 	c->str_hash = connector_str_hash(c->string);
+
+	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
+	c->head_depended = (c->string == s)? '\0' : c->string[0];
 
 	/* For most situations, all three hashes are very nearly equal;
 	 * as to which is faster depends on the parsed text.
@@ -178,8 +211,6 @@ void calculate_connector_info(condesc_t * c)
 #ifdef USE_DJB2
 	/* djb2 hash */
 	i = 5381;
-	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i = ((i << 5) + i) + *s;
@@ -192,8 +223,6 @@ void calculate_connector_info(condesc_t * c)
 #ifdef USE_JENKINS
 	/* Jenkins one-at-a-time hash */
 	i = 0;
-	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	c->uc_start = s - c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
@@ -210,8 +239,6 @@ void calculate_connector_info(condesc_t * c)
 #ifdef USE_SDBM
 	/* sdbm hash */
 	i = 0;
-	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	c->uc_start = s - c->string;
 	while (isupper((int) *s))
 	{
@@ -220,9 +247,10 @@ void calculate_connector_info(condesc_t * c)
 	}
 #endif /* USE_SDBM */
 
-	c->lc_start = ('\0' == *s) ? 0 : s - c->string;
 	c->uc_length = s - c->string - c->uc_start;
 	c->uc_hash = i;
+
+	return connector_encode_lc(s, c);
 }
 
 /* ================= Connector descriptor table. ====================== */
