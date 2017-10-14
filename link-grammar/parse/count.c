@@ -206,7 +206,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 #endif
 
 #ifdef DO_COUNT_TRACE
-#define V(c) (!c?"(nil)":connector_get_string(c))
+#define V(c) (!c?"(nil)":connector_string(c))
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,

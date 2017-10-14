@@ -296,7 +296,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->left != NULL)
 			{
-				//printf("%s %d\n", connector_get_string(d->left), d->left->length_limit);
+				//printf("%s %d\n", connector_string(d->left), d->left->length_limit);
 				put_into_match_table(size, t, d, d->left, -1);
 			}
 		}
@@ -311,7 +311,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->right != NULL)
 			{
-				//printf("%s %d\n", connector_get_string(d->right), d->right->length_limit);
+				//printf("%s %d\n", connector_string(d->right), d->right->length_limit);
 				put_into_match_table(size, t, d, d->right, 1);
 			}
 		}
@@ -357,7 +357,7 @@ static void match_stats(Connector *c1, Connector *c2)
 
 #ifdef DEBUG
 #undef N
-#define N(c) (c?connector_get_string(c):"")
+#define N(c) (c?connector_string(c):"")
 
 /**
  * Print the match list, including connector match indications.
@@ -410,8 +410,8 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
-	UNREACHABLE(connector_get_desc(a) == NULL); // clang static analyzer suppression.
-	if (c_con->desc == connector_get_desc(a))
+	UNREACHABLE(connector_desc(a) == NULL); // clang static analyzer suppression.
+	if (c_con->desc == connector_desc(a))
 	{
 		/* The match_cache desc field is initialized to NULL, and this is
 		 * enough because the connector desc filed cannot be NULL, as it
@@ -425,8 +425,8 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	 * We know that the uc parts of the connectors are the same, because
 	 * we fetch the matching lists according to the uc part or the
 	 * connectors to be matched. So the uc parts are not checked here. */
-	c_con->match = lc_easy_match(connector_get_desc(a), connector_get_desc(b));
-	c_con->desc = connector_get_desc(a);
+	c_con->match = lc_easy_match(connector_desc(a), connector_desc(b));
+	c_con->desc = connector_desc(a);
 
 	return c_con->match;
 }

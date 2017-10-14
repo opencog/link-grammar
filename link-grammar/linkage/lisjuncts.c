@@ -46,7 +46,7 @@ static char * reversed_conlist_str(Connector* c, char dir, char* buf, size_t sz)
 	if (c->multi)
 		p[len++] = '@';
 
-	len += lg_strlcpy(p+len, connector_get_string(c), sz-len);
+	len += lg_strlcpy(p+len, connector_string(c), sz-len);
 	if (3 < sz-len)
 	{
 		p[len++] = dir;

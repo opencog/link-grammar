@@ -35,7 +35,7 @@ void free_connectors(Connector *e)
 	}
 }
 
-static void
+void
 set_connector_length_limit(Connector *c, Parse_Options opts)
 {
 	if (NULL == opts)

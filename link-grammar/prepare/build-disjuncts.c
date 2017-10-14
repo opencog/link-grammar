@@ -240,7 +240,7 @@ static void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s", connector_get_string(e));
+		printf("%s", connector_string(e));
 		if (e->next != NULL) printf(" ");
 	}
 }

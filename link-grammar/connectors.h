@@ -99,17 +99,17 @@ void condesc_delete(Dictionary);
  * accesses connectors.
  * FIXME: Maybe remove the _get part of the names, since we don't
  * need SET accessors. */
-static inline const char * connector_get_string(const Connector *c)
+static inline const char * connector_string(const Connector *c)
 {
 	return c->desc->string;
 }
 
-static inline int connector_get_uc_start(const Connector *c)
+static inline int connector_uc_start(const Connector *c)
 {
 	return c->desc->uc_start;
 }
 
-static inline const condesc_t *connector_get_desc(const Connector *c)
+static inline const condesc_t *connector_desc(const Connector *c)
 {
 	return c->desc;
 }
@@ -127,6 +127,7 @@ static inline int connector_uc_num(const Connector * c)
 
 /* Connector utilities ... */
 Connector * connector_new(const condesc_t *, Parse_Options);
+void set_connector_length_limit(Connector *, Parse_Options);
 void free_connectors(Connector *);
 
 /* Length-limits for how far connectors can reach out. */
