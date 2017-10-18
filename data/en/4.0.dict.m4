@@ -3170,8 +3170,9 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
   or <verb-si>;
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
+% Pa+: "He ad-libbed, uninterrupted."
 /en/words/words.v.1.3:
-  VERB_SPPP_I({[[O+]]} & <vc-intrans>)
+  VERB_SPPP_I(({[[O+]]} & <vc-intrans>) or ({Xc+} & Pa+))
   or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
