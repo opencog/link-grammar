@@ -1,4 +1,4 @@
-Version 5.4.1 (XXX 2017)
+Version 5.4.1 (18 October 2017)
  * Fix man page installation (broken in 5.3.8).
  * Add affix-class MPUNC for splitting at intra-word punctuation.
  * Fix crash when there is no PP info.
