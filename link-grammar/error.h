@@ -23,6 +23,7 @@
 #define D_USER_FILES 3   /* Display data file search and locale setup. */
 // #define D_USER_X  4   /* Not in use yet. */
 #define D_USER_MAX   4   /* Maximum user verbosity level. */
+#define D_DICT      10   /* Base of dictionary debug levels. */
 #define D_SPEC     100   /* Base of special stand-alone levels. */
 
 typedef struct

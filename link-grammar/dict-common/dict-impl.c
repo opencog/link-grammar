@@ -521,7 +521,7 @@ static int cmplen(const void *a, const void *b)
  * needed - especially to first free memory and initialize the affix dict
  * structure.).
  */
-#define D_AI 11
+#define D_AI (D_DICT+1)
 bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
