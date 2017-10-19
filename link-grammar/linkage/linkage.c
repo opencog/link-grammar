@@ -281,13 +281,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	Gword **lwg_path = linkage->wg_path;
 	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
 
-#if 0 /* FIXME? Not implemented. */
-	size_t len_n_lwg_path = 0;
-	/* For opts->display_morphology==0: Mapping of the chosen_words indexing to
-	 * original parse indexing. */
-	size_t *wg_path_display = alloca(linkage->num_words * sizeof(*lwg_path_display));
-#endif
-
 	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
 	size_t nbsize = 0;              /* number of word in a null block */
 	Gword *unsplit_word = NULL;
@@ -353,9 +346,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					t = join_null_word(sent, wgp, nbsize);
 
 					gwordlist_append(&n_lwg_path, w);
-#if 0 /* Not implemented */
-					lwg_path_display[len_n_lwg_path++] = i;
-#endif
 				}
 				else
 				{
@@ -369,10 +359,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						t = unsplit_word->subword;
 
 						gwordlist_append(&n_lwg_path, unsplit_word);
-#if 0 /* Not implemented */
-						for (j = 0; j < nbsize; j++)
-							lwg_path_display[len_n_lwg_path++] = i-j+1;
-#endif
 					}
 					else
 					{
