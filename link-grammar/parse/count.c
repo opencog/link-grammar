@@ -216,7 +216,7 @@ static Count_bin do_count(int lineno, fast_matcher_t *mchxt,
 		    level*2, "", lineno, lw, rw, V(le), V(re), null_count);
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 	Count_bin r = do_count1(lineno, mchxt, ctxt, lw, rw, le, re, null_count);
-	printf("%*sreturn%*s:%d=%lld\n", level*2, "", (!!t)*3, "(C)", lineno, r);
+	printf("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
 	level--;
 
 	return r;
@@ -300,8 +300,9 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		 * Because we don't know here if an optional word is just
 		 * skipped or is a real null-word (see the comment above) we
 		 * try both possibilities: If a real null is encountered, the
-		 * rest of the sentence should contain one less null-word. Else
-		 * the rest of the sentence still contains the required */
+		 * rest of the sentence must contain one less null-word. Else
+		 * the rest of the sentence still contains the required number
+		 * of null words. */
 		t->count = zero;
 		w = lw + 1;
 		for (int opt = 0; opt <= !!ctxt->local_sent[w].optional; opt++)
