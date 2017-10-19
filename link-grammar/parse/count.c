@@ -216,7 +216,7 @@ static Count_bin do_count(int lineno, fast_matcher_t *mchxt,
 		    level*2, "", lineno, lw, rw, V(le), V(re), null_count);
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 	Count_bin r = do_count1(lineno, mchxt, ctxt, lw, rw, le, re, null_count);
-	printf("%*sreturn%*s:%d=%lld\n", level*2, "", (!!t)*3, "(C)", lineno, r);
+	printf("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
 	level--;
 
 	return r;
