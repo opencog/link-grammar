@@ -113,7 +113,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	new_word->label = "NJ";
 	new_word->null_subwords = NULL;
 	new_word->start = (*start)->start;
-	new_word->end = (*start)->end;
+	new_word->end = (*end)->end;
 
 	/* Link the null_subwords links of the added unifying node to the null
 	 * subwords it unified. */
