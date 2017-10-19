@@ -38,13 +38,6 @@
 #define CONTABSZ 8192
 typedef Connector * connector_table;
 
-typedef struct disjunct_dup_table_s disjunct_dup_table;
-struct disjunct_dup_table_s
-{
-	unsigned int dup_table_size;
-	Disjunct ** dup_table;
-};
-
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
 
