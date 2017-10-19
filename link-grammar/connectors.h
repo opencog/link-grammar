@@ -16,7 +16,7 @@
 
 #include <ctype.h>   // for islower()
 #include <stdbool.h>
-#include <stdint.h>  // for unit8_t
+#include <stdint.h>  // for uint8_t
 
 #include "api-types.h"
 
@@ -177,7 +177,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	unsigned int i;
 
 #if 0
- 	/* hash function. Based on some tests, this seems to be
+	/* hash function. Based on some tests, this seems to be
 	 * an almost "perfect" hash, in that almost all hash buckets
 	 * have the same size! */
 	i = 1 << cost;

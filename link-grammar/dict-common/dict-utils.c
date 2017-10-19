@@ -112,7 +112,7 @@ static int exp_compare(Exp * e1, Exp * e2)
 		el2 = e2->u.l;
 		/* while at least 1 is non-null */
 		for (;(el1!=NULL)||(el2!=NULL);) {
-		  /*fail if 1 is null */
+		   /*fail if 1 is null */
 			if ((el1==NULL)||(el2==NULL))
 				return 0;
 			/* fail if they are not compared */
