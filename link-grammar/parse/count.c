@@ -300,8 +300,9 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 		 * Because we don't know here if an optional word is just
 		 * skipped or is a real null-word (see the comment above) we
 		 * try both possibilities: If a real null is encountered, the
-		 * rest of the sentence should contain one less null-word. Else
-		 * the rest of the sentence still contains the required */
+		 * rest of the sentence must contain one less null-word. Else
+		 * the rest of the sentence still contains the required number
+		 * of null words. */
 		t->count = zero;
 		w = lw + 1;
 		for (int opt = 0; opt <= !!ctxt->local_sent[w].optional; opt++)
