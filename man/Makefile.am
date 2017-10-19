@@ -1,7 +1,7 @@
 
 ## Process this file with automake to produce Makefile.in.
 
-dist_man_MANS = link-parser.1
+dist_man_MANS = link-parser.man1
 
 # Change the system dictionary location according the configuration options.
 # This tracks --datadir.
