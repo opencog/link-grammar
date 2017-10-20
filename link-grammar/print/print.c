@@ -804,17 +804,25 @@ void linkage_free_pp_msgs(char * s)
 void print_disjunct_counts(Sentence sent)
 {
 	size_t i;
-	int c;
-	Disjunct *d;
+	int dcnt;
+	int t = 0;
+	int lcnt = 0, rcnt = 0;
+
 	for (i=0; i<sent->length; i++)
 	{
-		c = 0;
-		for (d=sent->word[i].d; d != NULL; d = d->next) c++;
+		Disjunct *d = sent->word[i].d;
+		dcnt = count_disjuncts(d);
+		rcnt += right_connector_count(d);
+		lcnt += left_connector_count(d);
+		t += dcnt;
 
 		/* XXX alternatives[0] is not really correct, here .. */
-		printf("%s(%d) ", sent->word[i].alternatives[0], c);
+		prt_error("%s(%d) ", sent->word[i].alternatives[0], dcnt);
 	}
-	printf("\n\n");
+
+	prt_error("\n\\");
+	prt_error("Total: %d disjuncts, %d (%d+/%d-) connectors\n\n",
+	          t, rcnt+lcnt, rcnt, lcnt);
 }
 
 static const char * trailer(bool print_ps_header)
