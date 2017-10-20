@@ -374,6 +374,31 @@ char * print_one_disjunct(Disjunct *dj)
 /* ============================================================= */
 
 /**
+ * returns the number of connectors in the left lists of the disjuncts.
+ */
+int left_connector_count(Disjunct * d)
+{
+	Connector *c;
+	int i=0;
+	for (;d!=NULL; d=d->next) {
+		for (c = d->left; c!=NULL; c = c->next) i++;
+	}
+	return i;
+}
+
+int right_connector_count(Disjunct * d)
+{
+	Connector *c;
+	int i=0;
+	for (;d!=NULL; d=d->next) {
+	  for (c = d->right; c!=NULL; c = c->next) i++;
+	}
+	return i;
+}
+
+/* ============================================================= */
+
+/**
  * Record the wordgraph word to which the X-node belongs, in each of its
  * disjuncts.
  */

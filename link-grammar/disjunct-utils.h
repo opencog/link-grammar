@@ -45,5 +45,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
 char * print_one_disjunct(Disjunct *);
 void word_record_in_disjunct(const Gword *, Disjunct *);
 Disjunct * disjuncts_dup(Disjunct *origd);
+int left_connector_count(Disjunct *);
+int right_connector_count(Disjunct *);
 
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */
