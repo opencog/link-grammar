@@ -5,10 +5,10 @@ There link-grammar library has API calls to ease debugging and development.
 The `link-parser` program has corresponding options for this API.
 
 Only the `link-parser` options will be discussed here.
-Options to `link-parser` at the command-line are preceded with a '-' sign.
+Options to `link-parser` at the command-line are preceded with a `-` sign.
 You can use a unique prefix of an option name instead of its full name. At
 the **linkparser>** prompt or in batch files, options are preceded with
-a '**!**' character.
+a `!` character.
 
 For info on common options, see the "Special ! options" of the `link-grammar`
 manual. For a general help message use `link-parser -help`.
@@ -22,7 +22,7 @@ Sets the verbosity level of the library to N (a small non-negative integer).
 
 #### Verbosity levels
 0: Certain informative messages are not printed by the
-library. First`link-parser` also doesn't print its usual **linkparser>**
+library. `link-parser` also doesn't print its usual **linkparser>**
 prompt. This is the current default verbosity level for the Python
 binding.
 
@@ -35,14 +35,16 @@ this may help finding out at which step it happened.
 3: Display data file search and locale setup. It can be used to debug
 problems with the locale setup or in finding the dictionary.
 
-4: Not is use for now.
+4: Not in use for now.
 
 5-9: Show trace and debug messages regarding sentence handling. Higher
 levels include the messages of the lower ones.
 
-10-...: Show also trace and debug messages regarding reading the
-dictionary.  As with levels less than 10, higher levels include the
+10-99: Show also trace and debug messages regarding reading the
+dictionary.  As with levels greater then 4, higher levels include the
 messages of the lower ones.
+
+100-...: Show only messages exactly at the specified level.
 
 ### 2) -debug=LOCATIONS (-de=LOCATIONS)
 Show only messages from these LOCATIONS. The LOCATIONS string is a
