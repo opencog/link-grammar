@@ -665,10 +665,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 			}
 			sent->word[w].d = nd;
 		}
-		if (verbosity_level(D_PRUNE))
-		{
-			printf("l->r pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
-		}
+		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %zu\n",
+		        pc->N_changed, N_deleted);
 
 		if (pc->N_changed == 0) break;
 
@@ -703,11 +701,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 
-		if (verbosity_level(D_PRUNE))
-		{
-			printf("r->l pass changed %d and deleted %zu\n",
-				pc->N_changed, N_deleted);
-		}
+		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %zu\n",
+		        pc->N_changed, N_deleted);
 
 		if (pc->N_changed == 0) break;
 		pc->N_changed = N_deleted = 0;
@@ -717,13 +712,13 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pt = NULL;
 	pc->pt = NULL;
 
-	if (verbosity_level(D_PRUNE))
-		printf("power prune cost: %d\n", pc->power_cost);
+	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned");
 	if (verbosity_level(D_PRUNE))
 	{
-		printf("\nAfter power_pruning:\n");
+		prt_error("\n\\");
+		prt_error("Debug: After power_pruning:\n\\");
 		print_disjunct_counts(sent);
 	}
 
@@ -1085,15 +1080,15 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if (verbosity_level(D_PRUNE))
-			printf("pp_prune pass deleted %d\n", N_deleted);
+		lgdebug(D_PRUNE, "Debug: pp_prune pass deleted %d\n", N_deleted);
 	}
 	delete_unmarked_disjuncts(sent);
 	cms_table_delete(cmt);
 
-	if (verbosity_level(D_PRUNE))
+	if ((0 != N_deleted) && verbosity_level(D_PRUNE))
 	{
-		printf("\nAfter pp_pruning:\n");
+		prt_error("\n\\");
+		prt_error("Debug: After pp_pruning:\n\\");
 		print_disjunct_counts(sent);
 	}
 
