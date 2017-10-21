@@ -135,7 +135,12 @@ static void clean_up_string(char * s)
 	while(*x != '\0')
 	{
 		w = mbrtowc(&p, x, len, &state);
-		if ((0 == w) || ((size_t)-1 == w)) break;
+		if (0 == w) break;
+		if (0 > (ssize_t)w)
+		{
+			prt_error("Unable to process UTF8 command input string.\n");
+			break;
+		}
 		len -= w;
 
 		if (!iswspace(p)) {
@@ -179,7 +184,11 @@ static bool is_numerical_rhs(char *s)
 	{
 		w = mbrtowc(&p, s, len, &state);
 		if (0 == w) break;
-		if ((size_t)-1 == w) return false;
+		if (0 > (ssize_t)w)
+		{
+			prt_error("Unable to process UTF8 command input string.\n");
+			break;
+		}
 		len -= w;
 		if (!iswdigit(p)) return false;
 	}
