@@ -215,6 +215,7 @@ static bool is_number(Dictionary dict, const char * s)
 	while ((*s != 0) && (0 < nb))
 	{
 		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+		/* XXX check nb < 0 */
 		if (iswdigit_l(dict, c)) { s += nb; }
 
 		/* U+00A0 no break space */
