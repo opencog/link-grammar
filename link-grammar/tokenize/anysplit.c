@@ -350,7 +350,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
  * anysplit (its not an error to not use anysplit!).  Return false if
  * init failed.
  */
-#define D_AI 10
+#define D_AI (D_DICT+0)
 bool anysplit_init(Dictionary afdict)
 {
 	anysplit_params *as;

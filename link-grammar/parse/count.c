@@ -193,7 +193,9 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	return n;
 }
 
+#ifdef DEBUG
 //#define DO_COUNT_TRACE
+#endif
 
 #ifdef DO_COUNT_TRACE
 #define V(c) (!c?"(nil)":c->string)
@@ -211,12 +213,15 @@ static Count_bin do_count(int lineno, fast_matcher_t *mchxt,
 {
 	static int level;
 
+	if (!verbosity_level(8))
+		return do_count1(lineno, mchxt, ctxt, lw, rw, le, re, null_count);
+
 	level++;
-	printf("%*sdo_count:%d lw=%d rw=%d le=%s re=%s null_count=%d\n",
+	prt_error("%*sdo_count:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
 		    level*2, "", lineno, lw, rw, V(le), V(re), null_count);
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 	Count_bin r = do_count1(lineno, mchxt, ctxt, lw, rw, le, re, null_count);
-	printf("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
+	prt_error("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
 	level--;
 
 	return r;

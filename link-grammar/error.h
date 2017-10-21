@@ -23,6 +23,8 @@
 #define D_USER_FILES 3   /* Display data file search and locale setup. */
 // #define D_USER_X  4   /* Not in use yet. */
 #define D_USER_MAX   4   /* Maximum user verbosity level. */
+#define D_DICT      10   /* Base of dictionary debug levels. */
+#define D_SPEC     100   /* Base of special stand-alone levels. */
 
 typedef struct
 {
@@ -34,17 +36,22 @@ void err_msgc(err_ctxt *, lg_error_severity, const char *fmt, ...) GNUC_PRINTF(3
 const char *feature_enabled(const char *, ...);
 
 /**
- * Print a debug message at verbosity >= level.
- * Preceding the level number by a + (+level) adds printing of the
- * function name.
- * Level numbers 2 to D_USER_MAX are not printed on verbosity>D_USER_MAX,
- * because they are designed only for extended user information.
- * The !debug variable can be set to a comma-separated list of functions
- * in order to restrict the debug messages to these functions only.
+ * Print a debug message according to their level.
+ * Print the messages at levels <= the specified verbosity, with the
+ * following restrictions:
+ * - Level numbers 2 to D_USER_MAX are not printed on verbosity>D_USER_MAX,
+ *   because they are designed only for extended user information.
+ * - When verbosity > D_SPEC, print messages only when level==verbosity.
+ * - The !debug variable can be set to a comma-separated list of functions
+ *   in order to restrict the debug messages to these functions only.
+ *
+ * Invoking lgdebug() with a level number preceded by a + (+level) adds
+ * printing of the function name.
  */
 #define lgdebug(level, ...) \
-(((verbosity>=(level)) && (((level)<=1) || \
-	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
+	(( \
+	(((D_SPEC>=verbosity) && (verbosity>=(level))) || (verbosity==(level))) && \
+	(((level)<=1) || !(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
 	feature_enabled(debug, __func__, __FILE__, NULL))) ? \
 	( \
@@ -78,8 +85,9 @@ const char *feature_enabled(const char *, ...);
  * desired message severity.
  */
 #define verbosity_level(level) \
-(((verbosity>=(level)) && (((level)<=1) || \
-	!(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
+	(( \
+	(((D_SPEC>=verbosity) && (verbosity>=(level))) || (verbosity==(level))) && \
+	(((level)<=1) || !(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
 	feature_enabled(debug, __func__, __FILE__, NULL))) \
 	? ((STRINGIFY(level)[0] == '+' ? prt_error("%s: ", __func__) : 0), true) \
