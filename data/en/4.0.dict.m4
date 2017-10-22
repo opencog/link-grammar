@@ -278,7 +278,8 @@ nonCAP.zzz: ZZZ-;
 
 % Fronted prepositional and participle phrases, used with
 % subject-object inversion.  Wp connect to preps only.
-<fronted>: [dWp- & dPF+];
+% Why is there a cost? How big should the cost be?
+<fronted>: [dWp- & dPF+]0.1;
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 % COa+ is used to block links to COd-
@@ -6843,7 +6844,6 @@ here:
   J-
   or <prep-main-b>
   or (SFst+ & <CLAUSE>)
-  or (dWp- & dPFt+)
   or <fronted>;
 
 % Wi-:  [come] Over here!
@@ -6861,7 +6861,7 @@ there.r thither:
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
   or SFIst-
   or SFIp-
-  or (dWp- & dPFt+)
+  or <fronted>
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
