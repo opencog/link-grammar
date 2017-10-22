@@ -1691,7 +1691,7 @@ You are nearly almost there.
 % Ideally, the below would use an MVI link (MV Inverted) link to
 % the verb. However, that is not possible, because it would result in
 % link-crossings with Wd to the subject. To avoid link crossings,
-% a new kind of wall connection is needed.
+% a new kind of wall connection is needed -- the Wl link.
 Thither he now transferred St Columba's remains from Iona.
 Here the remains can be found.
 

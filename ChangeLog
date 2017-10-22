@@ -1,5 +1,6 @@
 Version 5.4.3 (XXX 2017)
-* Fix man page installation (actually broken from 5.3.0).
+ * Fix man page installation (actually broken from 5.3.0).
+ * Add "thither" to the English dictionary.
 
 Version 5.4.2 (19 October 2017)
  * Fix man page build (broken in 5.4.1)
