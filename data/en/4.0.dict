@@ -2294,16 +2294,16 @@ per "/.per": Us+ & Mp-;
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
-<verb-s>:    {@E-} & ((Ss- & {MVI-} & <verb-wall>) or (RS- & Bs-));
-<verb-pl>:   {@E-} & ((Sp- & {MVI-} & <verb-wall>) or (RS- & Bp-));
-<verb-sp>:   {@E-} & ((S- & {MVI-} & <verb-wall>) or (RS- & B-));
+<verb-s>:    {@E-} & ((Ss- & {hMVI-} & <verb-wall>) or (RS- & Bs-));
+<verb-pl>:   {@E-} & ((Sp- & {hMVI-} & <verb-wall>) or (RS- & Bp-));
+<verb-sp>:   {@E-} & ((S- & {hMVI-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
 
 % Pv- & OFj+: "knowledge was gained of the activities"
-<verb-pv>:   {@E-} & ((Pv- & {MVI-} & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
-<verb-pvk>:   {@E-} & ((Pv- & {MVI-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
-<verb-pv-b>: {@E-} & ((Pv- & {MVI-} & {<verb-wall>}) or Mv-);
+<verb-pv>:   {@E-} & ((Pv- & {hMVI-} & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
+<verb-pvk>:   {@E-} & ((Pv- & {hMVI-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
+<verb-pv-b>: {@E-} & ((Pv- & {hMVI-} & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % used only in "as <past-participle>" constructions, which behave
@@ -8889,7 +8889,7 @@ here:
   J-
   or <prep-main-b>
   or (SFst+ & <CLAUSE>)
-  or (Wl- & MVI+)
+  or (dWl- & dMVI+)
   or <fronted>;
 
 % Wi-:  [come] Over here!
@@ -8905,7 +8905,7 @@ there.r thither:
   J-
   or <prep-main-b>
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
-  or (Wl- & MVI+)
+  or (dWl- & dMVI+)
   or SFIst-
   or SFIp-
   or (Wp- & PFt+)
