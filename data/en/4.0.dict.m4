@@ -2303,16 +2303,16 @@ per "/.per": Us+ & Mp-;
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
-<verb-s>:    {@E-} & ((Ss- & {hMVI-} & <verb-wall>) or (RS- & Bs-));
-<verb-pl>:   {@E-} & ((Sp- & {hMVI-} & <verb-wall>) or (RS- & Bp-));
-<verb-sp>:   {@E-} & ((S- & {hMVI-} & <verb-wall>) or (RS- & B-));
+<verb-s>:    {@E-} & ((Ss- & {hPFt-} & <verb-wall>) or (RS- & Bs-));
+<verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-));
+<verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
 
 % Pv- & OFj+: "knowledge was gained of the activities"
-<verb-pv>:   {@E-} & ((Pv- & {hMVI-} & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
-<verb-pvk>:   {@E-} & ((Pv- & {hMVI-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
-<verb-pv-b>: {@E-} & ((Pv- & {hMVI-} & {<verb-wall>}) or Mv-);
+<verb-pv>:   {@E-} & ((Pv- & {hPFt-} & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
+<verb-pvk>:   {@E-} & ((Pv- & {hPFt-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
+<verb-pv-b>: {@E-} & ((Pv- & {hPFt-} & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % used only in "as <past-participle>" constructions, which behave
@@ -6242,7 +6242,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 %     insane?", "Are you the one?"
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: hWa+ or hWi+ or hWn+ or hWw+ or hQd+;
-<wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+ or hWt+ or hWo+ or hWl+) & <WALL>;
+<wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+ or hWt+ or hWo+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
@@ -6843,7 +6843,7 @@ here:
   J-
   or <prep-main-b>
   or (SFst+ & <CLAUSE>)
-  or (dWl- & dMVI+)
+  or (dWp- & dPFt+)
   or <fronted>;
 
 % Wi-:  [come] Over here!
@@ -6852,17 +6852,16 @@ over_here: Wi-;
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
 % Wi-: "There!"
-% Wd- & PFt+: "there lay the ball"; the PFt+ prevents connections to
+% Wp- & PFt+: "there lay the ball"; the PFt+ prevents connections to
 %             the PFb- on <vc-be>.
-% Wl- & MVI+: "there the remains can be found"
+%             "there the remains can be found"
 there.r thither:
   J-
   or <prep-main-b>
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
-  or (dWl- & dMVI+)
   or SFIst-
   or SFIp-
-  or (Wp- & PFt+)
+  or (dWp- & dPFt+)
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
