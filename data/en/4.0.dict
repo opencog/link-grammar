@@ -2857,7 +2857,7 @@ is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (<verb-rq> & (SIs*x+ or SIs*b+ or SFIs+) & {<vc-be-no-wall>})
+  or ({<verb-rq>} & (SIs*x+ or SIs*b+ or SFIs+) & {<vc-be>})
   or (Sa*a- & Pv+)
   or (Ss*w- & <verb-wall> & Pp+ & TO+ & IV+)
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
@@ -2903,7 +2903,7 @@ is.v:
 are.v:
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>)
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
+  or ({<verb-rq>} & (SIpx+ or SFIp+) & {<vc-be>});
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
