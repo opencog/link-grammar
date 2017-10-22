@@ -269,7 +269,7 @@ nonCAP.zzz: ZZZ-;
 
 % Fronted prepositional and participle phrases, used with
 % subject-object inversion.  Wp connect to preps only.
-<fronted>: [Wp- & PF+];
+<fronted>: [dWp- & dPF+];
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 % COa+ is used to block links to COd-
@@ -2336,8 +2336,8 @@ per "/.per": Us+ & Mp-;
 <verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({[CO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
-<verb-si>:   {@E-} & PF- & {<verb-wall>} & SI+;
-<verb-sip>:  {@E-} & PF- & {<verb-wall>} & SIp+;
+<verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
+<verb-sip>:  {@E-} & hPF- & {<verb-wall>} & hSIp+;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
 % many transitive verb constructions.  For quetions, we need to force
