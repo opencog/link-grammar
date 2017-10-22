@@ -2179,15 +2179,21 @@ It was hinted that our actions were inappropriate.
 % buggy coppula and copula contractions
 %
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
-% or the more questionable [Wq- & PF+].  Note that (Wd- & PF+) is barred
-% by the post-processing rules.  Maybe PF is reasonable.. but SFst seems
-% better at the moment.
+% or the fronted construction (Wp- & PF+).  Note that (Wd- & PF+) is barred
+% by the post-processing rules.  Both seem about the same.
 %
 Here is the ball.
 Here's the ball.
 There is the ball!
 Where's the ball?
 Here's Johnny!
+
+there are the books
+Here lie the remains
+Here lay the remains
+Here lies the book
+here rests the remains
+there rest the remains
 
 Nearby is another temple that honors his wife.
 Close by is another temple.

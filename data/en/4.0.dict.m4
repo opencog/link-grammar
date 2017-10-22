@@ -9681,6 +9681,12 @@ there.#their: [their.p]1.7;
 % "Neither this or that one will do"
 or.#nor-j-n: [nor.j-n];
 
+% Hmm. "there lie the books" smells like present-tense: the books are
+% there right now. "there lay the books" suggest past-continuous: they
+% are not just there now, but always have been.  So is it really a typo
+% to say "lie" instead of "lay"?
+lie.#lay-v-d: [lay.v-d]0.5;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
 % Given a particular kind of ending to a word, try to guess
