@@ -2303,9 +2303,9 @@ per "/.per": Us+ & Mp-;
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
-<verb-s>:    {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
-<verb-pl>:   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
-<verb-sp>:   {@E-} & ((S- & <verb-wall>) or (RS- & B-));
+<verb-s>:    {@E-} & ((Ss- & {MVI-} & <verb-wall>) or (RS- & Bs-));
+<verb-pl>:   {@E-} & ((Sp- & {MVI-} & <verb-wall>) or (RS- & Bp-));
+<verb-sp>:   {@E-} & ((S- & {MVI-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
 
