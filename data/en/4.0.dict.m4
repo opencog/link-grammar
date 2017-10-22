@@ -3160,12 +3160,20 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % also could be sorted out.
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v
-/en/words/words.v.1.1: VERB_PLI({[[O+]]} & <vc-intrans>);
+%
+% <verb-sip>: "here rest the remains of St. Stephen"
+% XXX Some but not all of these verbs allow inversion; basically,
+% anything that is not locative or directive won't allow inversion.
+%
+/en/words/words.v.1.1:
+  VERB_PLI({[[O+]]} & <vc-intrans>)
+  or <verb-sip>;
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
 % <verb-si>: Locative subj-obj inversion "far out in the sea lives a fish"
 % XXX Some but not all of these verbs allow inversion; basically,
 % anything that is not locative or directive won't allow inversion.
+%
 /en/words/words.v.1.2:
   VERB_S_I(<vc-intrans>)
   or <verb-si>;

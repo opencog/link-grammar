@@ -3147,10 +3147,14 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % also could be sorted out.
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v
-/en/words/words.v.1.1: 
+%
+% 
+/en/words/words.v.1.1:
+  
   ((<verb-pl,i> & ({[[O+]]} & <vc-intrans>)) or
   (<verb-and-pl-> & (({[[O+]]} & <vc-intrans>) or ())) or
-  (({[[O+]]} & <vc-intrans>) & <verb-and-pl+>));
+  (({[[O+]]} & <vc-intrans>) & <verb-and-pl+>))
+  or <verb-sip>;
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
 % <verb-si>: Locative subj-obj inversion "far out in the sea lives a fish"
