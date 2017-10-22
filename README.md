@@ -920,6 +920,13 @@ Similarly:
   "He is either here or he is there."
   "He either is here or he is there."
 ```
+
+A different example involves a crossing to the left wall.  That is, the
+links *LEFT-WALL--remains* crosses over *here--found*:
+```text
+  "Here the remains can be found."
+```
+
 Other examples, per And Rosta:
 
 The *allowed--by* link crosses *cake--that*:
