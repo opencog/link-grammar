@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.4.1 (formatted as V5v4v1+)
-<dictionary-version-number>: V5v4v1+;
+% Dictionary version number is 5.4.3 (formatted as V5v4v3+)
+<dictionary-version-number>: V5v4v3+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -6849,7 +6849,7 @@ over_here: Wi-;
 % Wi-: "There!"
 % Wd- & PFt+: "there lay the ball"; the PFt+ prevents connections to
 %             the PFb- on <vc-be>.
-there.r:
+there.r thither:
   J-
   or <prep-main-b>
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
