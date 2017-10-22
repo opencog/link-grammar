@@ -2301,8 +2301,8 @@ per "/.per": Us+ & Mp-;
 <verb-pg>:   {@E-} & (Pg- or Mg-);
 
 % Pv- & OFj+: "knowledge was gained of the activities"
-<verb-pv>:   {@E-} & ((Pv- & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
-<verb-pvk>:   {@E-} & ((Pv- & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
+<verb-pv>:   {@E-} & ((Pv- & {MVI-} & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
+<verb-pvk>:   {@E-} & ((Pv- & {MVI-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & {MVI-} & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
