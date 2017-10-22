@@ -2312,7 +2312,7 @@ per "/.per": Us+ & Mp-;
 % Pv- & OFj+: "knowledge was gained of the activities"
 <verb-pv>:   {@E-} & ((Pv- & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
 <verb-pvk>:   {@E-} & ((Pv- & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
-<verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
+<verb-pv-b>: {@E-} & ((Pv- & {MVI-} & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % used only in "as <past-participle>" constructions, which behave
@@ -6242,7 +6242,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 %     insane?", "Are you the one?"
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: Wa+ or Wi+ or Wn+ or Ww+ or Qd+;
-<wi-wall>: (Wd+ or Wp+ or Wr+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Wo+) & <WALL>;
+<wi-wall>: (Wd+ or Wp+ or Wr+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Wo+ or Wl+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()];
@@ -6839,7 +6839,12 @@ all_over all_around:
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
 % or the more questionable <fronted>.  Maybe PF is reasonable.. but
 % SFst seems better at the moment.
-here: J- or <prep-main-b> or (SFst+ & <CLAUSE>) or <fronted>;
+here:
+  J-
+  or <prep-main-b>
+  or (SFst+ & <CLAUSE>)
+  or (Wl- & MVI+)
+  or <fronted>;
 
 % Wi-:  [come] Over here!
 over_here: Wi-;
@@ -6849,10 +6854,12 @@ over_here: Wi-;
 % Wi-: "There!"
 % Wd- & PFt+: "there lay the ball"; the PFt+ prevents connections to
 %             the PFb- on <vc-be>.
+% Wl- & MVI+: "there the remains can be found"
 there.r thither:
   J-
   or <prep-main-b>
   or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
+  or (Wl- & MVI+)
   or SFIst-
   or SFIp-
   or (Wp- & PFt+)
@@ -9658,7 +9665,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 % -------------------------------------------------------------------------
 % Common typographical errors
-% Asign a cost of 1.7 for no good reason. Feel free to change this.
+% Assign a cost of 1.7 for no good reason. Feel free to change this.
 
 then.#than: [than.e]1.7;
 than.#then-r: [then.r]1.7;
