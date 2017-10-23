@@ -198,6 +198,12 @@ Alternately, the md5 check-sums can be verified. These do not provide
 cryptographic security, but they can detect simple corruption. To
 verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 
+Tags in `git` can be verified by performing the following:
+```
+gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
+git tag -v link-grammar-5.4.2
+```
+
 
 CREATING the system
 -------------------
