@@ -658,16 +658,21 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
-		/* Count the column-widths of the words,
-		 * up to the max screen width. */
-		unsigned int uwidth = 0;
+		unsigned int uwidth;
 		unsigned int wwid;
-		do {
+
+		/* Count the column-widths of the words, up to the max
+		 * screen width. Add at least one word to a line. */
+		uwidth = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
+		i++;
+
+		/* Try to add more words to the line, if they fit. */
+		while (i < N_words_to_print) {
 			wwid = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
 			if (x_screen_width <= uwidth + wwid) break;
 			uwidth += wwid;
 			i++;
-		} while (i < N_words_to_print);
+		}
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
