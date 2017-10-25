@@ -539,8 +539,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				if (k == cr) break;
 			}
 
-			/* We know it fits, so put it in this row */
-			pctx->link_heights[j] = row;
+			if (NULL != pctx->link_heights)
+			{
+				/* We know it fits, so put it in this row */
+				pctx->link_heights[j] = row;
+			}
 
 			if (2*row+2 > max_height-1) {
 				lgdebug(+9, "Extending rows up to %d.\n", (2*row+2)+HEIGHT_INC);
@@ -650,9 +653,13 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	top_row_p1 = top_row + 1;
 	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
-	pctx->N_rows = 0;
-	pctx->row_starts[pctx->N_rows] = 0;
-	pctx->N_rows++;
+
+	if (NULL != pctx->row_starts) /* PS junk */
+	{
+		pctx->N_rows = 0;
+		pctx->row_starts[pctx->N_rows] = 0;
+		pctx->N_rows++;
+	}
 
 	if (print_word_0) i = 0; else i = 1;
 	unsigned int c = 0; /* Character offset in the last word on a row. */
@@ -679,8 +686,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			c += utf8_num_char(linkage->word[i]+c, uwidth);
 		}
 
-		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
-		if (i < N_words_to_print) pctx->N_rows++;     /* same */
+		if (NULL != pctx->row_starts) /* PS junk */
+		{
+			pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
+			if (i < N_words_to_print) pctx->N_rows++;
+		}
 
 		dyn_strcat(string, "\n");
 		top_row_p1 = top_row + 1;
@@ -748,8 +758,8 @@ char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t s
 	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
 
-	ctx.link_heights = (int *) alloca(linkage->num_links * sizeof(int));
-	ctx.row_starts = (int *) alloca((linkage->num_words + 1) * sizeof(int));
+	ctx.link_heights = NULL;
+	ctx.row_starts = NULL;
 	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
 }
 
