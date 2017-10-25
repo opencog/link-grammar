@@ -289,7 +289,18 @@ char * linkage_print_disjuncts(const Linkage linkage)
 }
 
 /**
- * postscript printing ...
+ * Postscript printing ...
+ * FIXME:
+ * 1. It is invoked after a call to linkage_print_diagram_ctxt() with a
+ *    screen width of 8000. But it actually cannot handle a screen width
+ *    greater than a page-width since it doesn't know to fold without the
+ *    help of the row_starts array which tells it on which word each
+ *    folded line starts (a garbled printout results).
+ * 2. It cannot handle utf-8 (garbage is printed).
+ * 3. Due to the added ability of folding long words, the row_starts
+ *    array is not sufficient for telling where to start the next line
+ *    (but this doesn't matter for now and can be fixed along with
+ *    problem no. 1 above).
  */
 static char *
 build_linkage_postscript_string(const Linkage linkage,
