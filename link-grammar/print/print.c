@@ -655,23 +655,28 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	pctx->N_rows++;
 
 	if (print_word_0) i = 0; else i = 1;
+	unsigned int c = 0; /* Character offset in the last word on a row. */
+#define RIGHT_MARGIN 1
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
-		unsigned int uwidth;
+		/* Count the column-widths of the words, up to the max screen width.
+		 * Use word_offset only for the initial part of the word. */
+		unsigned int uwidth = 0;
 		unsigned int wwid;
-
-		/* Count the column-widths of the words, up to the max
-		 * screen width. Add at least one word to a line. */
-		uwidth = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
-		i++;
-
-		/* Try to add more words to the line, if they fit. */
-		while (i < N_words_to_print) {
-			wwid = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
-			if (x_screen_width <= uwidth + wwid) break;
+		do {
+			wwid = (c == 0)*word_offset[i] + utf8_strwidth(linkage->word[i]+c) + 1;
+			if (x_screen_width-RIGHT_MARGIN < uwidth + wwid) break;
 			uwidth += wwid;
+			c = 0;
 			i++;
+		} while (i < N_words_to_print);
+
+		/* The whole word doesn't fit - fit as much as possible from it. */
+		if (0 == uwidth)
+		{
+			uwidth = x_screen_width-RIGHT_MARGIN - (c == 0)*word_offset[i] - 1;
+			c += utf8_num_char(linkage->word[i]+c, uwidth);
 		}
 
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */

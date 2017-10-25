@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -59,6 +60,38 @@ size_t utf8_strwidth(const char *s)
 		glyph_width += mk_wcwidth(ws[i]);
 	}
 	return glyph_width;
+}
+
+/**
+ * Return the number of characters in the longest initial substring
+ * which has a text-column-width of not greater than max_width.
+ */
+size_t utf8_num_char(const char *s, size_t max_width)
+{
+	size_t total_bytes = 0;
+	size_t glyph_width = 0;
+	int n = 0;
+	wchar_t wc;
+
+	do
+	{
+		total_bytes += n;
+		n = mbrtowc(&wc, s+total_bytes, MB_LEN_MAX, NULL);
+		if (n == 0) break;
+		if (n < 0)
+		{
+			prt_error("Warning: Error in utf8_num_char(%s, %zu)\n",
+			          s, max_width);
+			return 1 /* XXX */;
+		}
+
+		glyph_width += mk_wcwidth(wc);
+		//printf("N %zu G %zu;", total_bytes, glyph_width);
+	}
+	while (glyph_width <= max_width);
+	printf("\n");
+
+	return total_bytes;
 }
 
 /* ============================================================= */
