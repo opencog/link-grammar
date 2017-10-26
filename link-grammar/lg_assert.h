@@ -18,7 +18,7 @@
 #elif defined GNUC
 	#define DEBUG_TRAP __builtin_trap()
 #else
-	#define DEBUG_TRAP ((void(*)())0)()
+	#define DEBUG_TRAP ((void(*)(void))0)()
 #endif
 
 /* FIXME:
