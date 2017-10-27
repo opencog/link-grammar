@@ -1799,8 +1799,10 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 				if (sep != w)
 				{
 					*sep = '\0';
+					if (n_r_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
 					r_stripped[n_r_stripped++] = w;
 				}
+				if (n_r_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
 				r_stripped[n_r_stripped++] = mpunc[i];
 
 				w = sep + sz;
@@ -1812,13 +1814,11 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 
 	if (n_r_stripped > 0) r_stripped[n_r_stripped++] = w;
 
-	if (n_r_stripped >= MAX_STRIP-1)
-	{
-		lgdebug(+D_SW, "%s %d >= %d tokens\n", __func__, MAX_STRIP, MAX_STRIP-1);
-		return 0;
-	}
-
 	return n_r_stripped;
+
+max_strip_ovfl:
+	lgdebug(+D_SW, "Too many tokens (>%d)\n", MAX_STRIP);
+	return 0;
 }
 
 /**
