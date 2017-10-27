@@ -22,6 +22,12 @@
 #endif
 
 #ifdef _WIN32
+#ifndef __MINGW32__
+/* There is no ssize_t definition in native Windows. */
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
 #define strcasecmp _stricmp
 #ifndef strncasecmp
 #define strncasecmp _strnicmp
