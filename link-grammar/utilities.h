@@ -119,18 +119,14 @@ void *alloca (size_t);
 #define strtok_r strtok_s
 #define HAVE_STRTOK_R
 #endif /* _WINVER != XP|2003 */
-#endif
 
-#ifndef __MINGW32__
 /* There is no ssize_t definition in native Windows. */
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
-#endif
 
 /* Native windows has locale_t, and hence HAVE_LOCALE_T is defined here.
  * However, MinGW currently doesn't have locale_t. If/when it has locale_t,
  * "configure" will define HAVE_LOCALE_T for it. */
-#ifndef __MINGW32__
 #define HAVE_LOCALE_T
 #endif
 
