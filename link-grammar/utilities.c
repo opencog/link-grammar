@@ -199,7 +199,7 @@ static int wctomb_check(char *s, wchar_t wc)
  * because the byte-counts might not match up, e.g. German ß and SS.
  * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
-void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_t)
+void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale)
 {
 	wchar_t c;
 	int i, nbl, nbh;
@@ -216,7 +216,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 		prt_error("Error: Invalid UTF-8 string!\n");
 		return;
 	}
-	c = towlower_l(c, locale_t);
+	c = towlower_l(c, locale);
 	nbl = wctomb_check(low, c);
 
 	/* Check for error on an in-place copy */
@@ -245,7 +245,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
  * because the byte-counts might not match up, e.g. German ß and SS.
  * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
-void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_t)
+void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale)
 {
 	wchar_t c;
 	int i, nbl, nbh;
@@ -259,7 +259,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale_
 		prt_error("Error: Invalid UTF-8 string!\n");
 		return;
 	}
-	c = towupper_l(c, locale_t);
+	c = towupper_l(c, locale);
 	nbl = wctomb_check(low, c);
 
 	/* Check for error on an in-place copy */
