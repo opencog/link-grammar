@@ -184,16 +184,17 @@ int lg_isatty(int fd)
 	/* Now check the name pattern.  The filename of a Cygwin pseudo tty pipe
 	   looks like this:
 
-			 \cygwin-%16llx-pty%d-{to,from}-master
+			 \{cygwin,msys}-%16llx-pty%d-{to,from}-master
 
 		%16llx is the hash of the Cygwin installation, (to support multiple
 		parallel installations), %d id the pseudo tty number, "to" or "from"
 		differs the pipe direction. "from" is a stdin, "to" a stdout-like
 		pipe. */
 	cp = pfni->FileName;
-	if (!wcsncmp(cp, L"\\cygwin-", 8) && !wcsncmp(cp + 24, L"-pty", 4))
+	if ((!wcsncmp(cp, L"\\cygwin-", 8) && !wcsncmp(cp + 24, L"-pty", 4)) ||
+	    (!wcsncmp(cp, L"\\msys-", 6)   && !wcsncmp(cp + 22, L"-pty", 4)))
 	{
-		cp = wcschr(cp + 28, '-');
+		cp = wcschr(cp + 26, '-');
 		if (!cp)
 			goto no_tty;
 		if (!wcscmp(cp, L"-from-master") || !wcscmp(cp, L"-to-master"))
