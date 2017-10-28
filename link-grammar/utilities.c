@@ -88,9 +88,7 @@ char *
 strndup (const char *str, size_t size)
 {
 	size_t len;
-	char *result = (char *) NULL;
-
-	if ((char *) NULL == str) return (char *) NULL;
+	char *result;
 
 	len = strlen (str);
 	if (!len) return strdup ("");
