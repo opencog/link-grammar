@@ -46,7 +46,7 @@ size_t utf8_strwidth(const char *s)
 	wchar_t *ws = alloca((mblen + 1) * sizeof(wchar_t));
 
 #ifdef _WIN32
-	MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, mblen) - 1;
+	MultiByteToWideChar(CP_UTF8, 0, s, -1, ws, mblen);
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
