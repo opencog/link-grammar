@@ -312,7 +312,7 @@ build_linkage_postscript_string(const Linkage linkage,
 			if (ppla[j].lw == 0) {
 				if (ppla[j].rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (strcmp(ppla[j].lc->string, LEFT_WALL_SUPPRESS)==0) {
+				if (easy_match(ppla[j].lc->string, LEFT_WALL_SUPPRESS)) {
 					suppressor_used = true;
 				}
 			}
@@ -328,7 +328,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		for (j=0; j<N_links; j++) {
 			if (ppla[j].rw == linkage->num_words-1) {
 				N_wall_connectors ++;
-				if (strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)==0){
+				if (easy_match(ppla[j].lc->string, RIGHT_WALL_SUPPRESS)) {
 					suppressor_used = true;
 				}
 			}
@@ -465,7 +465,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			{
 				if (ppla[j].rw == linkage->num_words-1) continue;
 				N_wall_connectors ++;
-				if (0 == strcmp(ppla[j].lc->string, LEFT_WALL_SUPPRESS))
+				if (easy_match(ppla[j].lc->string, LEFT_WALL_SUPPRESS))
 				{
 					suppressor_used = true;
 				}
@@ -486,7 +486,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			if (ppla[j].rw == linkage->num_words-1)
 			{
 				N_wall_connectors ++;
-				if (0 == strcmp(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
+				if (easy_match(ppla[j].lc->string, RIGHT_WALL_SUPPRESS))
 				{
 					suppressor_used = true;
 				}
