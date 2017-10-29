@@ -572,7 +572,7 @@ int main(int argc, char * argv[])
 	isatty_stdout = isatty(fileno(stdout));
 
 #ifdef _WIN32
-	/* If compiled with MSVC/MSYS, we still support running under Cygwin.
+	/* If compiled with MSVC/MinGW, we still support running under Cygwin.
 	 * This is done by checking running_under_cygwin to resolve
 	 * incompatibilities. */
 	const char *ostype = getenv("OSTYPE");
