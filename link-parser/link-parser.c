@@ -572,7 +572,7 @@ int main(int argc, char * argv[])
 	isatty_stdout = isatty(fileno(stdout));
 
 #ifdef _WIN32
-	/* If compiled with MSVC/MSYS, we still support running under Cygwin.
+	/* If compiled with MSVC/MinGW, we still support running under Cygwin.
 	 * This is done by checking running_under_cygwin to resolve
 	 * incompatibilities. */
 	const char *ostype = getenv("OSTYPE");
@@ -681,6 +681,10 @@ int main(int argc, char * argv[])
 	{
 		char *input_string;
 		Sentence sent = NULL;
+
+		/* Make sure stderr is shown even when MSVC binary runs under
+		 * Cygwin/MSYS pty (in that case it is fully buffered(!). */
+		fflush(stderr);
 
 		verbosity = parse_options_get_verbosity(opts);
 		debug = parse_options_get_debug(opts);
