@@ -535,7 +535,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.link(1),
                          Link(linkage, 1, 'LEFT-WALL','hWV','dWV','is.v'))
         self.assertEqual(linkage.link(2),
-                         Link(linkage, 2, 'LEFT-WALL','Wd','Wd','this.p'))
+                         Link(linkage, 2, 'LEFT-WALL','hWd','Wd','this.p'))
         self.assertEqual(linkage.link(3),
                          Link(linkage, 3, 'this.p','Ss*b','Ss','is.v'))
         self.assertEqual(linkage.link(4),
@@ -664,7 +664,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n    +---------------------------->WV---------------------------->+                  |"
 "\n    |           +-----------------------Sp-----------------------+                  |"
 "\n    |           |                  +------------VJlpi------------+                  |"
-"\n    +-----Wd----+          +---E---+---I---+----Op----+          +VJrpi+---Op--+    |"
+"\n    +---->Wd----+          +---E---+---I---+----Op----+          +VJrpi+---Op--+    |"
 "\n    |           |          |       |       |          |          |     |       |    |"
 "\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n . "
 "\n\n")
@@ -673,7 +673,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.diagram(),
 "\n    +-----------------Xp----------------+"
 "\n    +---->WV---->+                      |"
-"\n    +--Wd--+-Sp*i+---Pg---+---Ou---+    |"
+"\n    +->Wd--+-Sp*i+---Pg---+---Ou---+    |"
 "\n    |      |     |        |        |    |"
 "\nLEFT-WALL I.p enjoy.v eating.v bass.n-u . "
 "\n\n")
@@ -683,7 +683,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         linkage = self.parse_sent(sent)[0]
         self.assertEqual(linkage.diagram(),
 "\n    +--->WV--->+     +---------Js--------+"
-"\n    +--Wd--+Spx+--Pp-+   +--DD--+---GN---+"
+"\n    +->Wd--+Spx+--Pp-+   +--DD--+---GN---+"
 "\n    |      |   |     |   |      |        |"
 "\nLEFT-WALL we are.v from the planet.n Gorpon[!] "
 "\n\n")
