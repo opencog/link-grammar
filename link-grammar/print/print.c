@@ -289,7 +289,18 @@ char * linkage_print_disjuncts(const Linkage linkage)
 }
 
 /**
- * postscript printing ...
+ * Postscript printing ...
+ * FIXME:
+ * 1. It is invoked after a call to linkage_print_diagram_ctxt() with a
+ *    screen width of 8000. But it actually cannot handle a screen width
+ *    greater than a page-width since it doesn't know to fold without the
+ *    help of the row_starts array which tells it on which word each
+ *    folded line starts (a garbled printout results).
+ * 2. It cannot handle utf-8 (garbage is printed).
+ * 3. Due to the added ability of folding long words, the row_starts
+ *    array is not sufficient for telling where to start the next line
+ *    (but this doesn't matter for now and can be fixed along with
+ *    problem no. 1 above).
  */
 static char *
 build_linkage_postscript_string(const Linkage linkage,
@@ -539,8 +550,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				if (k == cr) break;
 			}
 
-			/* We know it fits, so put it in this row */
-			pctx->link_heights[j] = row;
+			if (NULL != pctx->link_heights)
+			{
+				/* We know it fits, so put it in this row */
+				pctx->link_heights[j] = row;
+			}
 
 			if (2*row+2 > max_height-1) {
 				lgdebug(+9, "Extending rows up to %d.\n", (2*row+2)+HEIGHT_INC);
@@ -650,32 +664,44 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	top_row_p1 = top_row + 1;
 	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
-	pctx->N_rows = 0;
-	pctx->row_starts[pctx->N_rows] = 0;
-	pctx->N_rows++;
+
+	if (NULL != pctx->row_starts) /* PS junk */
+	{
+		pctx->N_rows = 0;
+		pctx->row_starts[pctx->N_rows] = 0;
+		pctx->N_rows++;
+	}
 
 	if (print_word_0) i = 0; else i = 1;
+	unsigned int c = 0; /* Character offset in the last word on a row. */
+#define RIGHT_MARGIN 1
 	while (i < N_words_to_print)
 	{
 		unsigned int revrs;
-		unsigned int uwidth;
+		/* Count the column-widths of the words, up to the max screen width.
+		 * Use word_offset only for the initial part of the word. */
+		unsigned int uwidth = 0;
 		unsigned int wwid;
-
-		/* Count the column-widths of the words, up to the max
-		 * screen width. Add at least one word to a line. */
-		uwidth = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
-		i++;
-
-		/* Try to add more words to the line, if they fit. */
-		while (i < N_words_to_print) {
-			wwid = word_offset[i] + utf8_strwidth(linkage->word[i]) + 1;
-			if (x_screen_width <= uwidth + wwid) break;
+		do {
+			wwid = (c == 0)*word_offset[i] + utf8_strwidth(linkage->word[i]+c) + 1;
+			if (x_screen_width-RIGHT_MARGIN < uwidth + wwid) break;
 			uwidth += wwid;
+			c = 0;
 			i++;
+		} while (i < N_words_to_print);
+
+		/* The whole word doesn't fit - fit as much as possible from it. */
+		if (0 == uwidth)
+		{
+			uwidth = x_screen_width-RIGHT_MARGIN - (c == 0)*word_offset[i] - 1;
+			c += utf8_num_char(linkage->word[i]+c, uwidth);
 		}
 
-		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
-		if (i < N_words_to_print) pctx->N_rows++;     /* same */
+		if (NULL != pctx->row_starts) /* PS junk */
+		{
+			pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
+			if (i < N_words_to_print) pctx->N_rows++;
+		}
 
 		dyn_strcat(string, "\n");
 		top_row_p1 = top_row + 1;
@@ -743,8 +769,8 @@ char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t s
 	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
 
-	ctx.link_heights = (int *) alloca(linkage->num_links * sizeof(int));
-	ctx.row_starts = (int *) alloca((linkage->num_words + 1) * sizeof(int));
+	ctx.link_heights = NULL;
+	ctx.row_starts = NULL;
 	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
 }
 
