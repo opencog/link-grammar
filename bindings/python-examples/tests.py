@@ -858,16 +858,26 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
     parses = open(testfile, "rb")
     diagram = None
+    constituents = None
     sent = None
     lineno = 0
-    opcode_detected = 0 # function sanity check
+
+    # Function code and file format sanity check
+    self.opcode_detected = 0
+    def validate_opcode(ctxt=self, O=False, C=False):
+        ctxt.opcode_detected += 1
+        if O:
+            self.assertFalse(diagram, "at {}:{}: Unfinished diagram entry".format(testfile, lineno))
+        if C:
+            self.assertFalse(constituents, "at {}:{}: Unfinished constituents entry".format(testfile, lineno))
+
     for line in parses:
         lineno += 1
         if sys.version_info > (3, 0):
             line = line.decode('utf-8')
         # Lines starting with I are the input sentences
         if 'I' == line[0]:
-            opcode_detected += 1
+            validate_opcode(O=True, C=True)
             sent = line[1:]
             diagram = ""
             constituents = ""
@@ -877,7 +887,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Generate the next linkage of the last input sentence
         if 'N' == line[0]:
-            opcode_detected += 1
+            validate_opcode(O=True, C=True)
             diagram = ""
             constituents = ""
             linkage = next(linkages, None)
@@ -886,21 +896,25 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         # Lines starting with O are the parse diagram
         # It ends with an empty line
         if 'O' == line[0]:
-            opcode_detected += 1
+            validate_opcode(C=True)
             diagram += line[1:]
             if '\n' == line[1] and 1 < len(diagram):
                 self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
+                diagram = None
 
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
         if 'C' == line[0]:
-            opcode_detected += 1
+            validate_opcode(O=True)
             if '\n' == line[1] and 1 < len(constituents):
                 self.assertEqual(linkage.constituent_tree(), constituents, "at {}:{}".format(testfile, lineno))
-            constituents += line[1:]
+                constituents = None
+            else:
+                constituents += line[1:]
     parses.close()
 
-    self.assertGreaterEqual(opcode_detected, 2, "Nothing has been done for " + testfile)
+    validate_opcode(O=True, C=True)
+    self.assertGreaterEqual(self.opcode_detected, 2, "Nothing has been done for " + testfile)
 
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
