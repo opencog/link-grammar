@@ -7,7 +7,7 @@ O
 O    +------->T------>+--------Xp-------+
 O    |       +<-DV*vp<+---->DG--->+     |
 O    |       |        |           |     |
-OLEFT-WALL aš.i skaitau.tevp knygą.avg1 . 
+OLEFT-WALL aš.i skaitau.tevp knygą.avg1 .
 O
 
 ISkaitau knygą broliui.
@@ -16,6 +16,6 @@ O                +--------------Xp--------------+
 O                +---------->DN--------->+      |
 O    +---->T---->+---->DG--->+           |      |
 O    |           |           |           |      |
-OLEFT-WALL skaitau.tevp knygą.avg1 broliui.pvn1 . 
+OLEFT-WALL skaitau.tevp knygą.avg1 broliui.pvn1 .
 O
 

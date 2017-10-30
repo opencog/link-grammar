@@ -9,7 +9,7 @@ O
 O         +---Osm--+
 O   +-Ss*b+  +Ds**c+
 O   |     |  |     |
-Othis.p is.v a  test.n 
+Othis.p is.v a  test.n
 O
 C(S (NP this.p)
 C   (VP is.v

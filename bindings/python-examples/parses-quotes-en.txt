@@ -12,7 +12,7 @@ O
 O    +--------->WV-------->+     +----------Jp----------+
 O    +-->Wd--+--Sp-+---PP--+-OFj-+  +--Dmc--+--YP-+D*u*c+
 O    |       |     |       |     |  |       |     |     |
-OLEFT-WALL they have.v told.v-d of the soldiers.n '  fear.n 
+OLEFT-WALL they have.v told.v-d of the soldiers.n '  fear.n
 O
 
 Ihe said `this is a backtick test`
@@ -22,17 +22,17 @@ O                 +------>WV----->+--------Osm-------+   |
 O    +---->WV---->+--->Wd---+     |  +-----Ds**x-----+   |
 O    +->Wd--+--Ss-+-QUd+    +-Ss*b+  |      +---AN---+   |
 O    |      |     |    |    |     |  |      |        |   |
-OLEFT-WALL he said.q-d ` this.p is.v a backtick.n test.n ` 
+OLEFT-WALL he said.q-d ` this.p is.v a backtick.n test.n `
 O
 
 I“What are you doing?” she asked.
 O
-O    +---------------QUc--------------+                
-O    +--------------Xc--------------+ |                
-O    +----------->WV---------->+    | |                
-O    |         +------Bsw------+    | |                
-O    +--->Wq---+    +---Pg*b---+    | +----CP---+      
+O    +---------------QUc--------------+
+O    +--------------Xc--------------+ |
+O    +----------->WV---------->+    | |
+O    |         +------Bsw------+    | |
+O    +--->Wq---+    +---Pg*b---+    | +----CP---+
 O    +-QUd-+   +-Rw-+SIpx+     |    | |  +--Ss--+--Xp-+
 O    |     |   |    |    |     |    | |  |      |     |
-OLEFT-WALL “ what are.v you doing.v ? ” she asked.q-d . 
+OLEFT-WALL “ what are.v you doing.v ? ” she asked.q-d .
 O

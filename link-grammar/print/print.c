@@ -709,7 +709,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		{
 			/* print each row of the picture */
 			/* `blank` is used solely to detect blank lines */
-			bool blank = true;
+			unsigned int last_nonblank = (unsigned int)-1;
 			/*
 			 * The `glyph_width` is the width, in columns, of the printable
 			 * glyph. Chinese glyphs are almost always width two.
@@ -720,7 +720,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			k = start[row];
 			for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 			{
-				blank = blank && (xpicture[row][j] == ' ');
+				if (xpicture[row][j] != ' ') last_nonblank = j;
 
 				/* Update the printable column width */
 				glyph_width += utf8_charwidth(&xpicture[row][j]);
@@ -729,7 +729,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 			start[row] = j;
 
-			if (!blank)
+			if ((unsigned int)-1 != last_nonblank)
 			{
 				glyph_width = 0;
 				for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
@@ -738,6 +738,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 					/* Copy exactly one multi-byte character to buf */
 					j += append_utf8_char(string, &xpicture[row][j]);
+					if (last_nonblank < j) break; /* Trim trailing blanks */
 				}
 				dyn_strcat(string, "\n");
 			}
