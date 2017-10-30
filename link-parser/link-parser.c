@@ -524,11 +524,11 @@ static void check_winsize(Command_Options* copts)
 	/* Calculate the size of the console window. */
 	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
 
-	copts->screen_width = info.srWindow.Right - info.srWindow.Left;
+	copts->screen_width = info.srWindow.Right - info.srWindow.Left + 1;
 	return;
 
 fail:
-	copts->screen_width = 79;
+	copts->screen_width = 80;
 	return;
 #else
 	struct winsize ws;
@@ -552,7 +552,7 @@ fail:
 	 */
 	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
 	{
-		copts->screen_width = ws.ws_col - 1;
+		copts->screen_width = ws.ws_col;
 	}
 #endif /* _WIN32 */
 }

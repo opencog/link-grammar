@@ -550,7 +550,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				if (k == cr) break;
 			}
 
-			if (NULL != pctx->link_heights)
+			if (NULL != pctx) /* PS junk */
 			{
 				/* We know it fits, so put it in this row */
 				pctx->link_heights[j] = row;
@@ -665,7 +665,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
 
-	if (NULL != pctx->row_starts) /* PS junk */
+	if (NULL != pctx) /* PS junk */
 	{
 		pctx->N_rows = 0;
 		pctx->row_starts[pctx->N_rows] = 0;
@@ -697,7 +697,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			c += utf8_num_char(linkage->word[i]+c, uwidth);
 		}
 
-		if (NULL != pctx->row_starts) /* PS junk */
+		if (NULL != pctx) /* PS junk */
 		{
 			pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
 			if (i < N_words_to_print) pctx->N_rows++;
@@ -709,42 +709,36 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		{
 			/* print each row of the picture */
 			/* `blank` is used solely to detect blank lines */
-			bool blank = true;
+			unsigned int last_nonblank = (unsigned int)-1;
 			/*
 			 * The `glyph_width` is the width, in columns, of the printable
 			 * glyph. Chinese glyphs are almost always width two.
 			 */
-			unsigned int glyph_width = 0;
-
-			wchar_t  wc;
-			mbstate_t mbss;
-			memset(&mbss, 0, sizeof(mbss));
+			size_t glyph_width = 0;
 
 			row = top_row - revrs;
 			k = start[row];
 			for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 			{
-				blank = blank && (xpicture[row][j] == ' ');
+				if (xpicture[row][j] != ' ') last_nonblank = j;
 
 				/* Update the printable column width */
-				mbrtowc(&wc, &xpicture[row][j], MB_CUR_MAX, &mbss);
-				glyph_width += mk_wcwidth(wc);
+				glyph_width += utf8_charwidth(&xpicture[row][j]);
 
 				j += utf8_next(&xpicture[row][j]);
 			}
 			start[row] = j;
 
-			if (!blank)
+			if ((unsigned int)-1 != last_nonblank)
 			{
-				memset(&mbss, 0, sizeof(mbss));
 				glyph_width = 0;
 				for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 				{
-					mbrtowc(&wc, &xpicture[row][j], MB_CUR_MAX, &mbss);
-					glyph_width += mk_wcwidth(wc);
+					glyph_width += utf8_charwidth(&xpicture[row][j]);
 
 					/* Copy exactly one multi-byte character to buf */
 					j += append_utf8_char(string, &xpicture[row][j]);
+					if (last_nonblank < j) break; /* Trim trailing blanks */
 				}
 				dyn_strcat(string, "\n");
 			}
@@ -766,12 +760,9 @@ linkage_print_diagram_ctxt(const Linkage linkage,
  */
 char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t screen_width)
 {
-	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
 
-	ctx.link_heights = NULL;
-	ctx.row_starts = NULL;
-	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
+	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, NULL);
 }
 
 void linkage_free_diagram(char * s)

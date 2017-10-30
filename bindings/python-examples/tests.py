@@ -666,7 +666,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n    |           |                  +------------VJlpi------------+                  |"
 "\n    +---->Wd----+          +---E---+---I---+----Op----+          +VJrpi+---Op--+    |"
 "\n    |           |          |       |       |          |          |     |       |    |"
-"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n . "
+"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n ."
 "\n\n")
         sent = 'I enjoy eating bass.'
         linkage = self.parse_sent(sent)[0]
@@ -675,7 +675,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n    +---->WV---->+                      |"
 "\n    +->Wd--+-Sp*i+---Pg---+---Ou---+    |"
 "\n    |      |     |        |        |    |"
-"\nLEFT-WALL I.p enjoy.v eating.v bass.n-u . "
+"\nLEFT-WALL I.p enjoy.v eating.v bass.n-u ."
 "\n\n")
 
 
@@ -685,7 +685,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n    +--->WV--->+     +---------Js--------+"
 "\n    +->Wd--+Spx+--Pp-+   +--DD--+---GN---+"
 "\n    |      |   |     |   |      |        |"
-"\nLEFT-WALL we are.v from the planet.n Gorpon[!] "
+"\nLEFT-WALL we are.v from the planet.n Gorpon[!]"
 "\n\n")
 
 
