@@ -63,6 +63,29 @@ size_t utf8_strwidth(const char *s)
 }
 
 /**
+ * Return the width, in text-column-widths, of the utf8-encoded
+ * character.
+ *
+ * The mbstate_t argument is not used, since we convert only from utf-8.
+ * FIXME: This function (along with other places that use mbrtowc()) need
+ * to be fixed for Windows utf-16 wchar_t).
+ */
+size_t utf8_charwidth(const char *s)
+{
+	wchar_t wc;
+
+	int n = mbrtowc(&wc, s, MB_LEN_MAX, NULL);
+	if (n == 0) return 0;
+	if (n < 0)
+	{
+		prt_error("Error: charwidth(%s): utf-8 to wide-char failed.\n", s);
+		return 1 /* XXX */;
+	}
+
+	return mk_wcwidth(wc);
+}
+
+/**
  * Return the number of characters in the longest initial substring
  * which has a text-column-width of not greater than max_width.
  */

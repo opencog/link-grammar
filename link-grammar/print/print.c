@@ -714,11 +714,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			 * The `glyph_width` is the width, in columns, of the printable
 			 * glyph. Chinese glyphs are almost always width two.
 			 */
-			unsigned int glyph_width = 0;
-
-			wchar_t  wc;
-			mbstate_t mbss;
-			memset(&mbss, 0, sizeof(mbss));
+			size_t glyph_width = 0;
 
 			row = top_row - revrs;
 			k = start[row];
@@ -727,8 +723,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				blank = blank && (xpicture[row][j] == ' ');
 
 				/* Update the printable column width */
-				mbrtowc(&wc, &xpicture[row][j], MB_CUR_MAX, &mbss);
-				glyph_width += mk_wcwidth(wc);
+				glyph_width += utf8_charwidth(&xpicture[row][j]);
 
 				j += utf8_next(&xpicture[row][j]);
 			}
@@ -736,12 +731,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 			if (!blank)
 			{
-				memset(&mbss, 0, sizeof(mbss));
 				glyph_width = 0;
 				for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 				{
-					mbrtowc(&wc, &xpicture[row][j], MB_CUR_MAX, &mbss);
-					glyph_width += mk_wcwidth(wc);
+					glyph_width += utf8_charwidth(&xpicture[row][j]);
 
 					/* Copy exactly one multi-byte character to buf */
 					j += append_utf8_char(string, &xpicture[row][j]);

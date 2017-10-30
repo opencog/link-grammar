@@ -30,6 +30,7 @@ int vappend_string(dyn_str *, const char *fmt, va_list args)
 	GNUC_PRINTF(2,0);
 size_t append_utf8_char(dyn_str *, const char * mbs);
 size_t utf8_num_char(const char *, size_t);
+size_t utf8_charwidth(const char *);
 
 static inline void patch_subscript_mark(char *s)
 {
