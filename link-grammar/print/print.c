@@ -550,7 +550,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				if (k == cr) break;
 			}
 
-			if (NULL != pctx->link_heights)
+			if (NULL != pctx) /* PS junk */
 			{
 				/* We know it fits, so put it in this row */
 				pctx->link_heights[j] = row;
@@ -665,7 +665,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
 
-	if (NULL != pctx->row_starts) /* PS junk */
+	if (NULL != pctx) /* PS junk */
 	{
 		pctx->N_rows = 0;
 		pctx->row_starts[pctx->N_rows] = 0;
@@ -697,7 +697,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			c += utf8_num_char(linkage->word[i]+c, uwidth);
 		}
 
-		if (NULL != pctx->row_starts) /* PS junk */
+		if (NULL != pctx) /* PS junk */
 		{
 			pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
 			if (i < N_words_to_print) pctx->N_rows++;
@@ -766,12 +766,9 @@ linkage_print_diagram_ctxt(const Linkage linkage,
  */
 char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t screen_width)
 {
-	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
 
-	ctx.link_heights = NULL;
-	ctx.row_starts = NULL;
-	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
+	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, NULL);
 }
 
 void linkage_free_diagram(char * s)
