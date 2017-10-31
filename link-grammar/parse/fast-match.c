@@ -16,6 +16,7 @@
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "string-set.h"
+#include "dict-common/dict-common.h"   // For contable
 #include "tokenize/word-structures.h"  // For Word_struct
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
@@ -261,13 +262,11 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
-/* FIXME: Use connector enumeration to limit table sizes. */
-
 fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 {
 	unsigned int size;
 	size_t w;
-	int len;
+	size_t len;
 	Match_node ** t;
 	Disjunct * d;
 	fast_matcher_t *ctxt;
@@ -287,6 +286,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	for (w=0; w<sent->length; w++)
 	{
 		len = left_disjunct_list_length(sent->word[w].d);
+		len = MIN(sent->dict->contable.num_con, len);
 		size = next_power_of_two_up(len);
 		ctxt->l_table_size[w] = size;
 		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
@@ -302,6 +302,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		}
 
 		len = right_disjunct_list_length(sent->word[w].d);
+		len = MIN(sent->dict->contable.num_con, len);
 		size = next_power_of_two_up(len);
 		ctxt->r_table_size[w] = size;
 		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
