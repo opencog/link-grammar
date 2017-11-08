@@ -11241,13 +11241,19 @@ yes.e yeah.e yep.e yup.e
 ok.e okay.e OK.e fine.e sure.e whatever.e:
   ({Xc+ & {Xd-}} & CO+);
 
-someday.e sometime.e thereafter.e overall.e
-afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e
-statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
-the_world_over
-instead.e maybe.e anyhow.e anyway.e:
+thereafter.e overall.e lengthwise.e
+instead.e anyhow.e anyway.e:
   <directive-opener>
   or ({Xd- & Xc+} & (MVp- or E+));
+
+% Wa-: Single-word responses to questions.
+someday.e sometime.e maybe.e
+afterwards.e afterward.e worldwide.e nationwide.e
+statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
+the_world_over:
+  <directive-opener>
+  or ({Xd- & Xc+} & (MVp- or E+))
+  or (Wa- & {Wa+});
 
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
