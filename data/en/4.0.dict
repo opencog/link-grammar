@@ -11240,6 +11240,7 @@ ok.e okay.e OK.e fine.e sure.e whatever.e:
 someday.e sometime.e thereafter.e overall.e
 afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
+the_world_over
 instead.e maybe.e anyhow.e anyway.e:
   <directive-opener>
   or ({Xd- & Xc+} & (MVp- or E+));
