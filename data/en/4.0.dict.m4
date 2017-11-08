@@ -7171,10 +7171,10 @@ nights.n seconds.n decades.n centuries.n:
   [[AN+]]);
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n
-% create a mass of parses that are wrong & interfere with the below.
+% create a bunch of parses that are wrong & interfere with the below.
 <units-funky-plural>:
-((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) or
-(ND- & (NIfu+ or NItu- or EQt+ or EQt-));
+  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) 
+  or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
 blocks.i feet.i miles.i yards.i inches.i
@@ -7209,13 +7209,14 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 
 % Add cost to Op-, try to use any other linkage before making
 % a unit be a plain-old object.
+% A- & ND-:  "200 square ft of plywood"
 <units-suffix>:
-((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
-((ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
-((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or
-((ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
-((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
-((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
+  ((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
+  ((ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
+  ((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or
+  ({A-} & (ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
+  ((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
+  ((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
 
 % Abbreviations of scientific units that follow numbers
 % km².u mi².u in².u ft².u m².u cm².u
