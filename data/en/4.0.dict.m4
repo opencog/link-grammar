@@ -7223,6 +7223,9 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 /en/words/units.1: <units-suffix>;
 UNITS: <units-suffix>;
 
+% Hmm. Cheesey hack to allow "200 sq. ft. of plywood"
+sq.a sq..a: A+;
+
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
 /en/words/units.1.dot: {Xi+} & <units-suffix>;
