@@ -446,24 +446,6 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or Up-
     or ({Dmc-} & Wa-));
 
-% for YEAR-DATE year numbers
-% AN+ is given a cost, because <date-id> attaches incorrectly to
-% measurements of various kinds, where the number is not actually a
-% date, and ND is the preferred linkage.
-<date-id>:
-  NMd-
-  or ({EN-} & (NIfn+ or NItn-))
-  or NN+
-  or [AN+]
-  or Wa-
-  or ((Xd- & TY- & Xc+) or TY-)
-  or ({EN- or NIc-}
-    & (ND+
-      or OD-
-      or ({{@L+} & DD-}
-         & ([[Dmcn+]]
-           or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
-
 % Number abbreviations: no.x No.x
 % pp. paragraph, page   art article
 % RR roural route
@@ -1970,6 +1952,25 @@ sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti
 twenty-first.ti twenty-second.ti twenty-third.ti twenty-fourth.ti twenty-fifth.ti
 twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
 thirty-first.ti DAY-ORDINALS.ti: TM-;
+
+% For YEAR-DATE year numbers
+% AN+ is given a cost, because <date-id> attaches incorrectly to
+% measurements of various kinds, where the number is not actually a
+% date, and ND is the preferred linkage.
+% This needs cleanup, I think ...!?
+<date-id>:
+  NMd-
+  or ({EN-} & (NIfn+ or NItn-))
+  or NN+
+  or [AN+]
+  or Wa-
+  or ((Xd- & TY- & Xc+) or TY-)
+  or ({EN- or NIc-}
+    & (ND+
+      or OD-
+      or ({{@L+} & DD-}
+         & ([[Dmcn+]]
+           or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
 
 % Years w/o apostrophe: e.g. 47 Ford Fairlane or 57 Chevy
 01 02 03 04 05 06 07 08 09: <date-id> or [[G+]];
