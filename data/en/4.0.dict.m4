@@ -2639,10 +2639,11 @@ do.v:
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d- & {<verb-wall>});
 
+% Ss- & <verb-wall>: "so it does!"
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
 does.v:
   VERB_X_S(<vc-do>)
-  or ({@E-} & Ss- & <verb-wall> & @MV+)
+  or ({@E-} & Ss- & <verb-wall> & {@MV+})
   or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
@@ -6300,12 +6301,6 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.10.2:
   [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
   or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
-
-% PFb: "yes, so it does!"
-does.q:
-  [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
-  or [[{@E-} & SIsj+ & <vc-paraph-inv>]]
-  or ({@E-} & Ss- & PFb- & <verb-wall> & {Pa+});
 
 % XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
