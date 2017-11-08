@@ -9190,12 +9190,15 @@ in_fact of_course in_effect for_example for_instance e.g. i.e. :
 % by the UNKNOWN-WORD.a rule -- "Umm, I think he did it."
 no.e nope.e nah.e no_way
 yes.e yeah.e yep.e yup.e
-ok.e okay.e OK.e fine.e sure.e whatever.e
-someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
+ok.e okay.e OK.e fine.e sure.e whatever.e:
+  ({Xc+ & {Xd-}} & CO+);
+
+someday.e sometime.e thereafter.e overall.e
 afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
-instead.e maybe.e:
-  ({Xc+ & {Xd-}} & CO+);
+instead.e maybe.e anyhow.e anyway.e:
+  <directive-opener>
+  or ({Xd- & Xc+} & (MVp- or E+));
 
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
@@ -9296,9 +9299,7 @@ by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
 later_on for_now more_often_than_not
 
-anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
 on_second_thought
-
 again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
 even_so all_of_a_sudden:
