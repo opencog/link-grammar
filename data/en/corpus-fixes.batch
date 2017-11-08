@@ -851,6 +851,7 @@ plenty of others thought so too
 % Phantom "of", usually with "all", "both" - uses the AL link.
 all the world's ablaze
 all of the world is ablaze
+all the world knows it's false
 
 % ===================================================================
 % Subject verb inversion
@@ -3867,6 +3868,14 @@ So arrange it nicely.
 
 So! You thought I would fail!
 So!
+
+% Inverted subjects, with "so". These use the CPa link.
+so thinks all the world
+so thinks everyone
+yes, so thinks everyone
+everyone thinks so
+yes, everyone thinks so
+
 
 % "so" as a conjunction.
 

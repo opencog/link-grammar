@@ -6279,9 +6279,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
     & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
+% CPa- & Xc+: "So thinks everyone"
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CPx- or Eq+ or <verb-wall>))
+    or (CPa- & Xc+)
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."
@@ -6296,7 +6298,8 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.10.2:
-  [[{@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
+  [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
+  or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
 
 % XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
@@ -9431,7 +9434,7 @@ EMOTICON :
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {CP+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>) & {CPx+ or CPi+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
@@ -9439,6 +9442,7 @@ EMOTICON :
 % (Xc+ or [()]): allow missing comma, but at a price.
 LEFT-WALL:
   <sent-start>
+  or CPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
 
