@@ -2614,13 +2614,14 @@ do.v:
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d- & {<verb-wall>});
 
+% Ss- & <verb-wall>: "so it does!"
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
 does.v:
   
   ((<verb-x-s> & (<vc-do>)) or
   (<verb-and-s-> & ([<vc-do>] or ())) or
   ((<vc-do>) & <verb-and-s+>))
-  or ({@E-} & Ss- & <verb-wall> & @MV+)
+  or ({@E-} & Ss- & <verb-wall> & {@MV+})
   or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
@@ -4143,7 +4144,7 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 % N+: "It seems not"
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
+  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]};
 seem.v: 
   ((<verb-y-pl,i> & (<vc-seem>)) or
   (<verb-and-sp-i-> & ([<vc-seem>] or ())) or
@@ -8305,9 +8306,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
     & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
+% CPa- & Xc+: "So thinks everyone"
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CPx- or Eq+ or <verb-wall>))
+    or (CPa- & Xc+)
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."
@@ -8322,7 +8325,8 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.10.2:
-  [[{@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
+  [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
+  or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
 
 % XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
@@ -11234,12 +11238,16 @@ in_fact of_course in_effect for_example for_instance e.g. i.e. :
 % by the UNKNOWN-WORD.a rule -- "Umm, I think he did it."
 no.e nope.e nah.e no_way
 yes.e yeah.e yep.e yup.e
-ok.e okay.e OK.e fine.e sure.e whatever.e
-someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
+ok.e okay.e OK.e fine.e sure.e whatever.e:
+  ({Xc+ & {Xd-}} & CO+);
+
+someday.e sometime.e thereafter.e overall.e
 afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
-instead.e maybe.e:
-  ({Xc+ & {Xd-}} & CO+);
+the_world_over
+instead.e maybe.e anyhow.e anyway.e:
+  <directive-opener>
+  or ({Xd- & Xc+} & (MVp- or E+));
 
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
@@ -11340,9 +11348,7 @@ by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
 later_on for_now more_often_than_not
 
-anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
 on_second_thought
-
 again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
 even_so all_of_a_sudden:
@@ -11473,7 +11479,7 @@ EMOTICON :
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {CP+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>) & {CPx+ or CPi+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
@@ -11481,6 +11487,7 @@ EMOTICON :
 % (Xc+ or [()]): allow missing comma, but at a price.
 LEFT-WALL:
   <sent-start>
+  or CPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
 
