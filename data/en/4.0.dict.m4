@@ -3813,7 +3813,7 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 % N+: "It seems not"
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
+  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]};
 seem.v: VERB_Y_PLI(<vc-seem>);
 seems.v: VERB_Y_S(<vc-seem>);
 seemed.v-d: VERB_Y_SPPP(<vc-seem>);
