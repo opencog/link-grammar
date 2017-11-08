@@ -1510,11 +1510,13 @@ many:
 % XXX can this be tighetend up??
 % <noun-main2-x> costs no mater what, so that Ofd+ is prefered.
 % [E+]0.5: all modifying a verb probably is not right.
+% Wa-: "All the people!" as a response to a question.
 all.a:
   ({EN-} & (
     [E+]0.5
     or Dm+
     or NIc+
+    or (ALx+ & (Jp+ or Ju+) & Wa-)
     or (
       (@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+)
       & [<noun-main2-x>])
