@@ -6301,9 +6301,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
   or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
 
+% PFb: "yes, so it does!"
 does.q:
   [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
-  or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
+  or [[{@E-} & SIsj+ & <vc-paraph-inv>]]
+  or ({@E-} & Ss- & PFb- & <verb-wall> & {Pa+});
 
 % XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
