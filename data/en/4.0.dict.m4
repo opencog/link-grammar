@@ -455,12 +455,15 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or Up-
     or ({Dmc-} & Wa-));
 
-%for YEAR-DATE year numbers
+% for YEAR-DATE year numbers
+% AN+ is given a cost, because <date-id> attaches incorrectly to
+% measurements of various kinds, where the number is not actually a
+% date, and ND is the preferred linkage.
 <date-id>:
   NMd-
   or ({EN-} & (NIfn+ or NItn-))
   or NN+
-  or AN+
+  or [AN+]
   or Wa-
   or ((Xd- & TY- & Xc+) or TY-)
   or ({EN- or NIc-}
