@@ -9258,7 +9258,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % A- & ND-:  "200 square ft of plywood"
 <units-suffix>:
   ((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
-  ((ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
+  ({A-} & (ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
   ((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or
   ({A-} & (ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
   ((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
@@ -9269,8 +9269,8 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 /en/words/units.1: <units-suffix>;
 UNITS: <units-suffix>;
 
-% Hmm. Cheesey hack to allow "200 sq. ft. of plywood"
-sq.a sq..a: A+;
+% Allows "200 sq. ft. of plywood", "200 cu yds of concrete"
+sq.a sq..a cu.a cu..a: A+;
 
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
