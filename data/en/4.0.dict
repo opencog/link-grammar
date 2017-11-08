@@ -9263,7 +9263,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 <units-suffix>:
   ((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
   ({A-} & (ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
-  ((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or
+  ({A-} & (ND- or NS- or NIe-) & {DD- or EN-} & {Wd-} & {Mp+} & Sp+) or
   ({A-} & (ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
   ((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
   ((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
