@@ -455,21 +455,6 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or Up-
     or ({Dmc-} & Wa-));
 
-%for YEAR-DATE year numbers
-<date-id>:
-  NMd-
-  or ({EN-} & (NIfn+ or NItn-))
-  or NN+
-  or AN+
-  or Wa-
-  or ((Xd- & TY- & Xc+) or TY-)
-  or ({EN- or NIc-}
-    & (ND+
-      or OD-
-      or ({{@L+} & DD-}
-         & ([[Dmcn+]]
-           or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
-
 % Number abbreviations: no.x No.x
 % pp. paragraph, page   art article
 % RR roural route
@@ -1976,6 +1961,25 @@ sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti
 twenty-first.ti twenty-second.ti twenty-third.ti twenty-fourth.ti twenty-fifth.ti
 twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
 thirty-first.ti DAY-ORDINALS.ti: TM-;
+
+% For YEAR-DATE year numbers
+% AN+ is given a cost, because <date-id> attaches incorrectly to
+% measurements of various kinds, where the number is not actually a
+% date, and ND is the preferred linkage.
+% This needs cleanup, I think ...!?
+<date-id>:
+  NMd-
+  or ({EN-} & (NIfn+ or NItn-))
+  or NN+
+  or [AN+]
+  or Wa-
+  or ((Xd- & TY- & Xc+) or TY-)
+  or ({EN- or NIc-}
+    & (ND+
+      or OD-
+      or ({{@L+} & DD-}
+         & ([[Dmcn+]]
+           or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
 
 % Years w/o apostrophe: e.g. 47 Ford Fairlane or 57 Chevy
 01 02 03 04 05 06 07 08 09: <date-id> or [[G+]];
@@ -7171,10 +7175,10 @@ nights.n seconds.n decades.n centuries.n:
   [[AN+]]);
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n
-% create a mass of parses that are wrong & interfere with the below.
+% create a bunch of parses that are wrong & interfere with the below.
 <units-funky-plural>:
-((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) or
-(ND- & (NIfu+ or NItu- or EQt+ or EQt-));
+  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) 
+  or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
 blocks.i feet.i miles.i yards.i inches.i
@@ -7209,18 +7213,22 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 
 % Add cost to Op-, try to use any other linkage before making
 % a unit be a plain-old object.
+% A- & ND-:  "200 square ft of plywood"
 <units-suffix>:
-((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
-((ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
-((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or
-((ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
-((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
-((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
+  ((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
+  ({A-} & (ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
+  ({A-} & (ND- or NS- or NIe-) & {DD- or EN-} & {Wd-} & {Mp+} & Sp+) or
+  ({A-} & (ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
+  ((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
+  ((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
 
 % Abbreviations of scientific units that follow numbers
 % km².u mi².u in².u ft².u m².u cm².u
 /en/words/units.1: <units-suffix>;
 UNITS: <units-suffix>;
+
+% Allows "200 sq. ft. of plywood", "200 cu yds of concrete"
+sq.a sq..a cu.a cu..a: A+;
 
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
