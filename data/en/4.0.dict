@@ -11759,6 +11759,9 @@ or.#nor-j-n: [nor.j-n];
 % to say "lie" instead of "lay"?
 lie.#lay-v-d: [lay.v-d]0.5;
 
+% i before e unless the weighty neighbor is a German loan word.
+beleive.#believe-v: [believe.v]0.1;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
 % Given a particular kind of ending to a word, try to guess
