@@ -15,6 +15,7 @@
 #include <string.h>
 
 #include "api-structures.h"
+#include "dict-common/dict-defines.h" // For RIGHT_WALL_WORD
 #include "dict-common/dict-common.h" // For Dictionary_s
 #include "dict-common/dict-defines.h" // For MAX_WORD
 #include "error.h"
@@ -99,7 +100,7 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 	int w;
 	w = ctxt->constituent[c].right;
 	if ((strcmp(linkage->word[w], ",") == 0) ||
-	    (strcmp(linkage->word[w], "RIGHT-WALL") == 0))
+	    (strcmp(linkage->word[w], RIGHT_WALL_WORD) == 0))
 	{
 		w--;
 	}
@@ -919,7 +920,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 					if ((strcmp(linkage->word[ctxt->constituent[c2].right], ",") == 0) ||
 						(strcmp(linkage->word[ctxt->constituent[c2].right],
-								"RIGHT-WALL") == 0))
+								RIGHT_WALL_WORD) == 0))
 					{
 						if (verbosity_level(D_CONST))
 							err_msg(lg_Debug, "Adjusting %d to fix comma overlap\n", c2);
