@@ -1,5 +1,6 @@
 
 #include "link-includes.h"
+#include "dict-common/dict-common.h"        // For Afdict_class
 #include "utilities.h"
 
 // Already declared in link-includes.h
