@@ -131,14 +131,14 @@ int vappend_string(dyn_str * string, const char *fmt, va_list args)
 #define TMPLEN 1024 /* Big enough for a possible error message, see below */
 	char temp_buffer[TMPLEN];
 	char *temp_string = temp_buffer;
-	size_t templen;
+	int templen;
 	va_list copy_args;
 
 	va_copy(copy_args, args);
 	templen = vsnprintf(temp_string, TMPLEN, fmt, copy_args);
 	va_end(copy_args);
 
-	if ((int)templen < 0) goto error;
+	if (templen < 0) goto error;
 	if (0)
 	{
 		if (fmt[0] == '(') { errno=2; goto error;} /* Test the error reporting. */
@@ -150,7 +150,7 @@ int vappend_string(dyn_str * string, const char *fmt, va_list args)
 		 * find any example of entering this code with templen>=1024... */
 		temp_string = alloca(templen+1);
 		templen = vsnprintf(temp_string, templen+1, fmt, args);
-		if ((int)templen < 0) goto error;
+		if (templen < 0) goto error;
 	}
 	va_end(args);
 
