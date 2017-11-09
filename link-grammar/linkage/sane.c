@@ -478,11 +478,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		{
 			i++;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wswitch-enum"
+			PRAGMA_START(GCC diagnostic ignored "-Wswitch-enum")
 			switch ((*w)->morpheme_type)
 			{
-#pragma GCC diagnostic pop
 				default:
 					/* What to do with the rest? */
 				case MT_WORD:
@@ -501,6 +499,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 					*affix_types_p = AFFIXTYPE_SUFFIX;
 					break;
 			}
+			PRAGMA_END
 
 #if DEBUG_morpheme_type
 			lgdebug(D_SLM, "Word %zu: %s affixtype=%c\n",

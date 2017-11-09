@@ -259,6 +259,20 @@ typedef int locale_t;
 #define GNUC_UNUSED
 #endif
 
+/* Apply a pragma to a specific code section only.
+ * XXX According to the GCC docs, we cannot use here something like
+ * "#ifdef HAVE_x", so -Wunknown-pragmas is used instead. */
+#if __GNUC__ > 2
+#define PRAGMA_START(x) \
+	_Pragma("GCC diagnostic push") \
+	_Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
+	_Pragma(#x)
+#define PRAGMA_END _Pragma("GCC diagnostic pop")
+#else
+#define PRAGMA_START(x)
+#define PRAGMA_END
+#endif
+
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
  * string.  The string is assumed to be null-terminated.
