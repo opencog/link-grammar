@@ -16,5 +16,4 @@ void affix_list_add(Dictionary afdict, Afdict_class *, const char *);
 
 #ifdef __MINGW32__
 int callGetLocaleInfoEx(LPCWSTR, LCTYPE, LPWSTR, int);
-
 #endif /* __MINGW32__ */

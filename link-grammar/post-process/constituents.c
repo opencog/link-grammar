@@ -15,9 +15,9 @@
 #include <string.h>
 
 #include "api-structures.h"
-#include "dict-common/dict-defines.h" // For RIGHT_WALL_WORD
-#include "dict-common/dict-common.h" // For Dictionary_s
-#include "dict-common/dict-defines.h" // For MAX_WORD
+#include "dict-common/dict-defines.h"    // For RIGHT_WALL_WORD
+#include "dict-common/dict-common.h"     // For Dictionary_s
+#include "dict-common/dict-defines.h"    // For MAX_WORD
 #include "error.h"
 #include "linkage/linkage.h"
 #include "post-process/post-process.h"
@@ -147,7 +147,7 @@ typedef enum
  */
 static int gen_comp(con_context_t *ctxt, Linkage linkage,
                     int numcon_total, int numcon_subl,
-					     const char * ctype1, const char * ctype2,
+                    const char * ctype1, const char * ctype2,
                     const char * ctype3, case_type x)
 {
 	size_t w, w2, w3;
