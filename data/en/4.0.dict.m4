@@ -7221,12 +7221,13 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % a unit be a plain-old object.
 % A- & ND-:  "200 square ft of plywood"
 <units-suffix>:
-  ((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
+  ({A-} & (ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
   ({A-} & (ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
   ({A-} & (ND- or NS- or NIe-) & {DD- or EN-} & {Wd-} & {Mp+} & Sp+) or
   ({A-} & (ND- or NS- or NIe-) & ([{DD-} & Op-] or Jp-) & {Mp+}) or
-  ((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
-  ((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
+  ({A-} & (ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
+  ((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or
+  Us-;
 
 % Abbreviations of scientific units that follow numbers
 % km².u mi².u in².u ft².u m².u cm².u
