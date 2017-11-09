@@ -282,11 +282,11 @@ static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if _WIN32
 	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
 #else
 	return mbsrtowcs(NULL, &s, 0, &mbss);
-#endif
+#endif /* _WIN32 */
 }
 
 /**
