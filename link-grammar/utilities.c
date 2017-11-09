@@ -131,8 +131,8 @@ char* strtok_r(char *str, const char *delim, char **nextp)
 
 /** Returns length of UTF8 character.
  * Current algo is based on the first character only.
- * If pointer is not pointing at first char, no not a valid value, returns 0.
- * Returns 0 for NULL as well.
+ * If pointer is not pointing at first char, or not a valid value, returns -1.
+ * Returns 0 for NULL.
  */
 int utf8_charlen(const char *xc)
 {
