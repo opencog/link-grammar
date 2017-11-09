@@ -2281,16 +2281,16 @@ per "/.per": Us+ & Mp-;
 % IV connects infinitives to the head-verb
 % VC connects the head-word to a subsequent coordinating conjunction.
 %
-% There are some other such connectors that don't quite fit this patten:
-% AF, Z, and in many cases B (for example TOt+ & B+) for this reason, we
-% have to have a costly null [[()]] below, although we would really really
+% There are some other such connectors that don't quite fit this pattern:
+% AF, Z, and in many cases B (for example TOt+ & B+). For this reason, we
+% have to have a costly null [()] below, although we would really really
 % like to get rid of it.  But that would take a lot of Z and B and AF link
 % fiddling about, so we have to live with this for now.
 %
 % Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined
 % with <verb-wall>
 %
-<verb-wall>: ((dWV- or dCV- or dIV-) & {VC+}) or [[()]];
+<verb-wall>: ((dWV- or dCV- or dIV-) & {VC+}) or [()];
 % <verb-wall>: (dWV- or dCV- or dIV-) & {VC+};
 
 % When we are done, remove the option costly NULL below.
@@ -9698,11 +9698,14 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 % -------------------------------------------------------------------------
 % Common typographical errors
-% Assign a cost of 0.65 for no good reason. Feel free to change this.
+% Assign a cost of 1.65 for no very good reason. Feel free to change this.
+% .. well, some of this is dangerous. For example, setting the cost too
+% low causes correct "than" usages with Z link (and missing wall) to be
+% priced higher then "typos" with "then".
 
 then.#than: [than.e]0.65;
-than.#then-r: [then.r]0.65;
-than.#then-i: [then.i]0.65;
+than.#then-r: [then.r]1.65;
+than.#then-i: [then.i]1.65;
 than.#then-ij: [then.ij]0.65;
 
 % rather_then: rather_than;
