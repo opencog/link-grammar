@@ -6777,6 +6777,7 @@ now.r:
   or [[Mp-]];
 
 % Wc- & Qd+: "Then, am I right?"
+% {Xd-} & MVs- & Xs- & <subcl-verb>:  "I eat, then I sleep"
 then.r:
   ({Xd- & Xc+} & MVp-)
   or Pp-
@@ -6785,6 +6786,7 @@ then.r:
   or (Wc- & (Xc+ or [()]) & Qd+)
   or EB-
   or (S+ & Xd- & Xc+ & MVs-)
+  or ({Xd-} & MVs- & Xs- & <subcl-verb>)
   or [[Mp-]];
 
 % Wt-: "Later."  (all by itself) but also: "Later, he left"
@@ -7822,6 +7824,7 @@ but_also:
   ((VJls- & VJrs+) & [<verb-ico>]0.2);
 
 and.j-v or.j-v: <verb-conjunction>;
+then.j-v: <verb-conjunction>;
 
 % ditransitive conjunction: "I gave Bob a doll and Mary a gun"
 % Actually, optionally ditransitive, to cover more cases.
@@ -7831,6 +7834,7 @@ and.j-v or.j-v: <verb-conjunction>;
   {Xd-} & VJd- & O+ & {O*n+};
 
 and.j-o or.j-o: <ditransitive-conjunction>;
+then.j-o: <ditransitive-conjunction>;
 
 % XJn-: neither ... nor ...
 nor.j-v:
