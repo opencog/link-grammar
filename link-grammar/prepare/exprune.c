@@ -398,7 +398,7 @@ void expression_prune(Sentence sent)
 	}
 }
 
-#if VERY_DEAD_NO_GOOD_IDEA
+#if 0 // VERY_DEAD_NO_GOOD_IDEA
 
 /* ============================================================x */
 /*
