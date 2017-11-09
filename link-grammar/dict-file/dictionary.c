@@ -239,7 +239,8 @@ dictionary_six_str(const char * lang,
 	dictionary_setup_defines(dict);
 
 	// Special-case hack.
-	if (0 == strcmp(dict->lang, "any") || NULL != dict->affix_table->anysplit)
+	if ((0 == strncmp(dict->lang, "any", 3)) ||
+	    (NULL != dict->affix_table->anysplit))
 		dict->shuffle_linkages = true;
 
 	return dict;
