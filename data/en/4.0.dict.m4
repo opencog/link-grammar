@@ -9596,15 +9596,16 @@ changequote dnl
   or (TH- & <that-verb>);
 
 % Coordinating conjunctions that behave like punctuation.  These
-% connect whole clauses.  Should wee use <sent-start> here? Why not?
+% connect whole clauses.  Should we use <sent-start> here? Why or why not?
 %
+% then.ij is often used as a time-ordered conjunction: "I eat then I sleep"
 % not.ij seems to result in bad parses quite often, do we need it?
 % Xx-: provides coordination to the wall.
 %      The cost on [<coord>] is to use the Xx when possible, because
 %      the VC link often does not go leftwards far enough.
 %      (e.g. "John screamed when I arrived but Sue left")
 % Wc-: "But my efforts to win his heart have failed"
-but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
+but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
   [{Xd-} & (Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
@@ -9693,19 +9694,20 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 % -------------------------------------------------------------------------
 % Common typographical errors
-% Assign a cost of 1.7 for no good reason. Feel free to change this.
+% Assign a cost of 0.65 for no good reason. Feel free to change this.
 
-then.#than: [than.e]1.7;
-than.#then-r: [then.r]1.7;
-than.#then-i: [then.i]1.7;
+then.#than: [than.e]0.65;
+than.#then-r: [then.r]0.65;
+than.#then-i: [then.i]0.65;
+than.#then-ij: [then.ij]0.65;
 
 % rather_then: rather_than;
 
-there.#their: [their.p]1.7;
-% theres.#theirs: [theirs.p]1.7;
+there.#their: [their.p]0.65;
+% theres.#theirs: [theirs.p]0.65;
 
-% there.#they're: [they're]1.7;
-% all.#all_of: [all_of]1.7;
+% there.#they're: [they're]0.65;
+% all.#all_of: [all_of]0.65;
 
 % Using "or" instead of "nor" is a common mistake.
 % "Neither this or that one will do"
