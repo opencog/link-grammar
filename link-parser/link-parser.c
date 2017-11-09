@@ -507,7 +507,6 @@ static void print_usage(char *str)
 /**
  * On Unix, this checks for the current window size,
  * and sets the output screen width accordingly.
- * Not sure how MS Windows does this.
  */
 static void check_winsize(Command_Options* copts)
 {
