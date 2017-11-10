@@ -558,7 +558,7 @@ Command_Options* command_options_create(void)
 	co->panic_opts = parse_options_create();
 
 	/* "Unlimited" screen width when writing to a file, auto-updated
-	 * later, wen writing to a tty. */
+	 * later, when writing to a tty. */
 	co->screen_width = 16381;
 	co->allow_null = true;
 	co->batch_mode = false;

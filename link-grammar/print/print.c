@@ -268,7 +268,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 
 		/* ... except that subscript marks confuse utf8_strwidth() */
 		/* linkage->word[w] should be same as disj->word_string except
-		 * that the subscript mark hs been replaced by a dot. */
+		 * that the subscript mark has been replaced by a dot. */
 		infword = linkage->word[w];
 
 		/* Make sure the glyphs align during printing. */
