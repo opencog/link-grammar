@@ -18,7 +18,6 @@
 #include "build-disjuncts.h"
 #include "connectors.h"
 #include "dict-common/dict-api.h"        // for print_expression
-#include "dict-common/dict-defines.h"    // for SUBSCRIPT_MARK
 #include "dict-common/dict-structures.h" // for Exp_struct
 #include "disjunct-utils.h"
 #include "string-set.h"
