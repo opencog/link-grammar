@@ -88,7 +88,7 @@ typedef enum
 #define WS_FIRSTUPPER (1<<7) /* Subword is the lc version of its unsplit_word.
                                 The original word can be restored if needed
                                 through this unsplit_word. */
-/* - Post linkage stage. XXX Experimental. */
+/* - Post linkage stage. */
 #define WS_PL      (1<<14) /* Post-Linkage, not belonging to tokenization */
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)

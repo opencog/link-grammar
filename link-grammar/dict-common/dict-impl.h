@@ -1,5 +1,6 @@
 
 #include "link-includes.h"
+#include "dict-common/dict-common.h"        // For Afdict_class
 #include "utilities.h"
 
 // Already declared in link-includes.h
@@ -15,5 +16,4 @@ void affix_list_add(Dictionary afdict, Afdict_class *, const char *);
 
 #ifdef __MINGW32__
 int callGetLocaleInfoEx(LPCWSTR, LCTYPE, LPWSTR, int);
-
 #endif /* __MINGW32__ */

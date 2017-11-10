@@ -156,12 +156,15 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #endif /* _WIN32 */
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
- * when passed utf8. Thus, limit to 7 bits for windows. */
-#ifdef _WIN32
-  #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
-#else
-  #define lg_isspace isspace
-#endif
+ * when passed utf8. This is because char, which is used for our strings,
+ * is (usually) signed. On Linux it just returns junk which may be 0
+ * (and doesn't assert unless compiled with memory access check).
+ *
+ * The manual of isspace() and the other is*() functions states:
+ * "These functions check whether c, which must have the value of an
+ * unsigned char or EOF, ...").
+ * So just enforce it to a non-zero 8-bit value. */
+#define lg_isspace(c) isspace((unsigned char)c)
 
 #if __APPLE__
 /* It appears that fgetc on Mac OS 10.11.3 "El Capitan" has a weird
@@ -259,6 +262,20 @@ typedef int locale_t;
 #define GNUC_UNUSED
 #endif
 
+/* Apply a pragma to a specific code section only.
+ * XXX According to the GCC docs, we cannot use here something like
+ * "#ifdef HAVE_x", so -Wunknown-pragmas is used instead. */
+#if __GNUC__ > 2
+#define PRAGMA_START(x) \
+	_Pragma("GCC diagnostic push") \
+	_Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
+	_Pragma(#x)
+#define PRAGMA_END _Pragma("GCC diagnostic pop")
+#else
+#define PRAGMA_START(x)
+#define PRAGMA_END
+#endif
+
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
  * string.  The string is assumed to be null-terminated.
@@ -268,11 +285,11 @@ static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if _WIN32
 	return MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0)-1;
 #else
 	return mbsrtowcs(NULL, &s, 0, &mbss);
-#endif
+#endif /* _WIN32 */
 }
 
 /**

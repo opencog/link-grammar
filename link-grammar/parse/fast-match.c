@@ -470,17 +470,16 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
-#ifdef HAVE_MAYBE_UNINITIALIZED
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif /* HAVE_MAYBE_UNINITIALIZED */
-	/* The string field is initialized to NULL, and this is enough because
-	 * the connector string cannot be NULL, as it actually fetched a
-	 * non-empty match list. */
-	if (c_con->string == a->string) return c_con->match;
-#ifdef HAVE_MAYBE_UNINITIALIZED
-#pragma GCC diagnostic pop
-#endif /* HAVE_MAYBE_UNINITIALIZED */
+	if (c_con->string == a->string)
+	{
+		/* The match_cache string field is initialized to NULL, and this is
+		 * enough for not using uninitialized c_con->match because the
+		 * connector desc filed cannot be NULL, as it actually fetched a
+		 * non-empty match list. */
+		PRAGMA_START(GCC diagnostic ignored "-Wmaybe-uninitialized")
+		return c_con->match;
+		PRAGMA_END
+	}
 
 	/* No cache exists. Check if the connectors match and cache the result. */
 	c_con->match = match_lower_case(a, b) && match_hd(a, b);
