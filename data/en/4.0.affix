@@ -3,18 +3,14 @@
 % i.e. spaces are inserted between the affix and the word itself.
 %
 % Some of the funky UTF-8 parenthesis are used in Asian texts.
-% In order to allow single straight quote ' and double straight quote ''
-% to be stripped off from both the left and the right, they are
-% distinguished by the suffix .x and .y (as as Mr.x Mrs.x or Jr.y Sr.y)
-%
 % 。is an end-of-sentence marker used in Japanese texts.
 
 % Punctuation appearing on the right-side of words.
-% Note: the ellipsis ....y must appear *before* the dot ".", else the
+% Note: the ellipsis "..." must appear *before* the dot ".", else the
 % splitting won't work right.
-")" "}" "]" ">" "".y" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ” ''.y '.y `.y
-"%" "," ....y "." 。 ‧ ":" ";" "?" "!" ‽ ؟ ？ ！
-_ ‐ ‑ ‒ – — ― ….y ━.y –.y ー.y ‐.y 、.y
+")" "}" "]" ">" """ » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ” '' ' `
+"%" "," ... "." 。 ‧ ":" ";" "?" "!" ‽ ؟ ？ ！
+_ ‐ ‑ ‒ – — ― … ━ – ー ‐ 、
 ～ ¢ ₵ ™ ℠
   : RPUNC+;
 
@@ -24,18 +20,18 @@ _ ‐ ‑ ‒ – — ― ….y ━.y –.y ー.y ‐.y 、.y
 % Paragraph marks
 % Assorted bullets and dingbats
 % Dashes of various sorts
-"(" "{" "[" "<" "".x" « 〈 （ 〔 《 【 ［
-『 「 、.x `.x `` „ ‘ “ ''.x '.x ….x ....x
+"(" "{" "[" "<" """ « 〈 （ 〔 《 【 ［
+『 「 、 ` `` „ ‘ “ '' ' … ...
 ¿ ¡ "$" US$ USD C$
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#"
-* • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎
-_ ‐ ‑ ‒ – — ― ～ –.x ━.x ー.x -- - ‧.x
+* • ⁂ ❧ ☞ ◊ ※  ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎
+_ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 w/
   : LPUNC+;
 
 % Split words at these.
---.xy: MPUNC+;
+--: MPUNC+;
 
 % Suffixes
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
