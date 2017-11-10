@@ -602,10 +602,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 		/* This loop computes too things:
 		 * 1. strlen_cache - Token lengths - up to a SUBSCRIPT_MARK if exists.
 		 * 2. maxword      - Maximum such token length.  */
-		const char subscript_mark_string[] = { SUBSCRIPT_MARK, '\0' };
 		for (affix = affixlist[at]; affixnum-- > 0; affix++, ai++)
 		{
-			strlen_cache[ai] = (int)strcspn(*affix, subscript_mark_string);
+			strlen_cache[ai] = (int)strcspn(*affix, subscript_mark_str());
 			//printf("'%s' strlen_cache[%d]=%d\n",*affix,ai,strlen_cache[ai]);
 			maxword = MAX(maxword, strlen_cache[ai]);
 			lgdebug(D_IWA, " %c:%s", morpheme_sym[at],
