@@ -9284,7 +9284,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 UNITS: <units-suffix>;
 
 % Allows "200 sq. ft. of plywood", "200 cu yds of concrete"
-sq.a sq..a cu.a cu..a: A+;
+/en/words/units.a: A+;
 
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
