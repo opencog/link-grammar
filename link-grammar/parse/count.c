@@ -605,9 +605,6 @@ Count_bin do_parse(Sentence sent,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
-	ctxt->local_sent = NULL;
-	ctxt->current_resources = NULL;
-	ctxt->checktimer = 0;
 	return hist;
 }
 
