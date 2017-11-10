@@ -14,16 +14,13 @@
 /* stuff for transforming a dictionary entry into a disjunct list */
 
 #include <math.h>
-#include "api-structures.h"
 #include "build-disjuncts.h"
 #include "connectors.h"
-#include "dict-common/dict-api.h"        // for print_expression
-#include "dict-common/dict-structures.h" // for Exp_struct
+//#include "dict-common/dict-api.h"        // for print_expression
+#include "dict-common/dict-structures.h"   // for Exp_struct
 #include "disjunct-utils.h"
-#include "string-set.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
-#include "tokenize/word-structures.h" // For Word_struct
-#include "utilities.h" /* For Win32 compatibility features */
+#include "utilities.h"
 
 /* Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;
