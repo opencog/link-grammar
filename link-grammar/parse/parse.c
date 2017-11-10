@@ -12,7 +12,6 @@
 /*************************************************************************/
 
 #include <limits.h>
-
 #include "api-structures.h"
 #include "count.h"
 #include "dict-common/dict-common.h"   // For Dictionary_s
@@ -418,6 +417,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		for (size_t i = 0; i < sent->length; i++)
 			free_disjuncts(disjuncts_copy[i]);
 	}
-	free_count_context(ctxt);
+	free_count_context(ctxt, sent);
 	free_fast_matcher(mchxt);
 }
