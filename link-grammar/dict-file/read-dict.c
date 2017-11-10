@@ -139,14 +139,14 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 
 	if (s2)
 	{
-		prt_error("Error parsing dictionary %s.\n"
-		          "%s %s\n\t line %d, tokens = %s",
+		prt_error("Error: While parsing dictionary %s:\n"
+		          "%s %s\n\t line %d, tokens = %s\n\\",
 		          dict->name, s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		prt_error("Error parsing dictionary %s.\n"
-		          "%s\n\t line %d, tokens = %s",
+		prt_error("Error: While parsing dictionary %s:\n"
+		          "%s\n\t line %d, tokens = %s\n\\",
 		          dict->name, s, dict->line_number, tokens);
 	}
 	dict->recursive_error = false;
@@ -160,7 +160,7 @@ static void dict_error(Dictionary dict, const char * s)
 static void warning(Dictionary dict, const char * s)
 {
 	prt_error("Warning: %s\n"
-	        "\tline %d, current token = \"%s\"",
+	        "\tline %d, current token = \"%s\"\n",
 	        s, dict->line_number, dict->token);
 }
 
@@ -902,9 +902,9 @@ static Exp * make_connector(Dictionary dict)
 		if (dn == NULL)
 		{
 			file_free_lookup(dn_head);
-			dict_error(dict, "\nPerhaps missing + or - in a connector.\n"
+			dict_error(dict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
-			                 "Or perhaps a word is used before it is defined.\n");
+			                 "Or perhaps a word is used before it is defined.");
 			return NULL;
 		}
 		n = make_unary_node(&dict->exp_list, dn->exp);
