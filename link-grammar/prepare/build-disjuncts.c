@@ -19,7 +19,6 @@
 //#include "dict-common/dict-api.h"        // for print_expression
 #include "dict-common/dict-structures.h"   // for Exp_struct
 #include "disjunct-utils.h"
-#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "utilities.h"
 
 /* Temporary connectors used while converting expressions into disjunct lists */
