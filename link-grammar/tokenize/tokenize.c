@@ -444,22 +444,23 @@ static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
 		return false;
 }
 
+#define PER_GWORD_FUNC(f) Gword *(f)(Sentence sent, Gword *w, unsigned int *arg)
 /**
  * Perform gword_func() on each gword of the given alternative.
  */
-static void for_word_alt(Sentence sent, Gword *altp,
-                           void(*gword_func)(Sentence sent, Gword *w, unsigned int),
-                           unsigned int arg)
+static Gword *for_word_alt(Sentence sent, Gword *altp,
+                           PER_GWORD_FUNC(*gword_func), unsigned int *arg)
 {
 	Gword *alternative_id = altp->alternative_id;
 
-	if (NULL == altp) return;
+	if (NULL == altp) return NULL;
 
 	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
 	{
 		if (NULL == altp) break; /* Just in case this is a dummy word. */
 
-		gword_func(sent, altp, arg);
+		Gword *gw = gword_func(sent, altp, arg);
+		if (NULL != gw) return gw;
 
 
 		/* The alternative ends on one of these conditions:
@@ -472,14 +473,33 @@ static void for_word_alt(Sentence sent, Gword *altp,
 		if ((NULL == altp->next) || altp->issued_unsplit)
 			break; /* Only one token in this alternative. */
 	}
+
+	return NULL;
+}
+
+/**
+ * Return the Gword at the requested position in the given alternative.
+ * @w A pointer to the Gword at the start of the alternative.
+ * @arg The requested position. This parameter is destroyed.
+ * @return The Gword at position arg, or NULL if not enough Gwords in the
+ * alternative.
+ */
+static PER_GWORD_FUNC(gword_by_ordinal_position)
+                      //(Sentence sent, Gword *w, int *arg)
+{
+	if (0 == arg[0]) return w;
+	arg[0]--;
+
+	return NULL;
 }
 
 /**
  * Set WS_INDICT / WS_REGEX if the word is in the dict / regex files.
  * The first one which is found is set.
  */
-static void set_word_status(Sentence sent, Gword *w, unsigned int status)
+static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 {
+	int status = *arg;
 	switch (status)
 	{
 		case WS_INDICT|WS_REGEX:
@@ -514,15 +534,20 @@ static void set_word_status(Sentence sent, Gword *w, unsigned int status)
 	}
 
 	lgdebug(+D_SW, "Word %s: status=%s\n", w->subword, gword_status(sent, w));
+
+	return NULL;
 }
 
-static void set_tokenization_step(Sentence sent, Gword *w, unsigned int ts)
+static PER_GWORD_FUNC(set_tokenization_step)
+                      //(Sentence sent, Gword *w, int *arg)
 {
-	set_word_status(sent, w, WS_INDICT|WS_REGEX);
-	w->tokenizing_step = ts;
+	set_word_status(sent, w, (unsigned int []){WS_INDICT|WS_REGEX});
+	w->tokenizing_step = *arg;
 
 	lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
 			  w->subword, gword_status(sent, w), w->tokenizing_step);
+
+	return NULL;
 }
 
 /**
@@ -531,7 +556,7 @@ static void set_tokenization_step(Sentence sent, Gword *w, unsigned int ts)
  */
 void tokenization_done(Sentence sent, Gword *altp)
 {
-	for_word_alt(sent, altp, set_tokenization_step, TS_DONE);
+	for_word_alt(sent, altp, set_tokenization_step, (unsigned int[]){TS_DONE});
 }
 
 /**
@@ -1739,7 +1764,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 			{
 				altp = issue_word_alternative(sent, unsplit_word, "RO",
 				          0,NULL, altlen(runon_word),runon_word, 0,NULL);
-				for_word_alt(sent, altp, set_word_status, WS_RUNON);
+				for_word_alt(sent, altp, set_word_status, (unsigned int []){WS_RUNON});
 				runon_word_corrections++;
 			}
 			free(runon_word);
@@ -1753,7 +1778,7 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 				wp = alternates[j];
 				altp = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "SP",
 				                              0,NULL, 1,&wp, 0,NULL);
-				for_word_alt(sent, altp, set_word_status, WS_SPELL);
+				for_word_alt(sent, altp, set_word_status, (unsigned int[]){WS_SPELL});
 				num_guesses++;
 			}
 			//else prt_error("Debug: Spell guess '%s' ignored\n", alternates[j]);
