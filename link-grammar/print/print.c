@@ -1227,20 +1227,20 @@ static const char * header(bool print_ps_header)
 /**
  * Print elements of the 2D-word-array produced for the parsers.
  *
- * - print_sentence_word_alternatives(sent, false, NULL, tokenpos)
+ * - print_sentence_word_alternatives(s, sent, false, NULL, tokenpos)
  * If a pointer to struct "tokenpos" is given, return through it the index of
  * the first occurrence in the sentence of the given token. This is used to
  * prevent duplicate information display for repeated morphemes (if there are
  * multiples splits, each of several morphemes, otherwise some of them may
  * repeat).
  *
- * - print_sentence_word_alternatives(sent, true, NULL, NULL)
+ * - print_sentence_word_alternatives(s, sent, true, NULL, NULL)
  * If debugprint is "true", this is a debug printout of the sentence.  (The
  * debug printouts are with level 0 because this function is invoked for debug
  * on certain positive level.)
  *
  *
- * - print_sentence_word_alternatives(sent, false, display_func, NULL)
+ * - print_sentence_word_alternatives(s, sent, false, display_func, NULL)
  * Iterate over the sentence words and their alternatives.  Handle each
  * alternative using the display_func function if it is supplied, or else (if it
  * is NULL) just print them. It is used to display disjunct information when
@@ -1368,7 +1368,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 		{
 			if (debugprint)
 			{
-				if (0 < ai) dyn_strcat(s, "\n   ");
+				if (0 < ai) dyn_strcat(s, "\n");
 				append_string(s, "   alt%zu:", ai);
 			}
 
