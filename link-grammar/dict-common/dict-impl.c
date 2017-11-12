@@ -575,23 +575,6 @@ bool afdict_init(Dictionary dict)
 		affix_list_add(afdict, &afdict->afdict_class[AFDICT_INFIXMARK], "");
 	}
 
-	if (verbosity_level(+D_AI))
-	{
-		size_t l;
-
-		for (ac = afdict->afdict_class;
-		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
-		{
-				if (0 == ac->length) continue;
-				lgdebug(+0, "Class %s, %zd items:",
-				        afdict_classname[ac-afdict->afdict_class], ac->length);
-				for (l = 0; l < ac->length; l++)
-					lgdebug(0, " '%s'", ac->string[l]);
-				lgdebug(0, "\n");
-		}
-	}
-#undef D_AI
-
 	/* Store the SANEMORPHISM regex in the unused (up to now)
 	 * regex_root element of the affix dictionary, and precompile it */
 	assert(NULL == afdict->regex_root, "SM regex is already assigned");
@@ -632,7 +615,7 @@ bool afdict_init(Dictionary dict)
 			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name, rc);
 			return false;
 		}
-		lgdebug(+5, "%s regex %s\n",
+		lgdebug(+D_AI, "%s regex %s\n",
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
 	}
 
@@ -662,5 +645,23 @@ bool afdict_init(Dictionary dict)
 	concat_class(afdict, AFDICT_QUOTES);
 	concat_class(afdict, AFDICT_BULLETS);
 
+	if (verbosity_level(D_AI))
+	{
+		size_t l;
+
+		for (ac = afdict->afdict_class;
+		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
+		{
+				if (0 == ac->length) continue;
+				lgdebug(+0, "Class %s, %zd items:",
+				        afdict_classname[ac-afdict->afdict_class], ac->length);
+				for (l = 0; l < ac->length; l++)
+					lgdebug(0, " '%s'", ac->string[l]);
+				lgdebug(0, "\n\\");
+		}
+		lg_error_flush();
+	}
+
 	return true;
 }
+#undef D_AI
