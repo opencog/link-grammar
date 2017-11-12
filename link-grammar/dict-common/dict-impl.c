@@ -506,12 +506,24 @@ static void concat_class(Dictionary afdict, int classno)
 	dyn_str_delete(qs);
 }
 
-/* Compare lengths of strings, for qsort */
-static int cmplen(const void *a, const void *b)
+/**
+ * Compare lengths of strings, for affix class qsort.
+ * Sort order:
+ * 1. Longest base words first.
+ * 2. Equal base words one after the other.
+ */
+static int split_order(const void *a, const void *b)
 {
 	const char * const *sa = a;
 	const char * const *sb = b;
-	return strlen(*sb) - strlen(*sa);
+
+	size_t len_a = strcspn(*sb, subscript_mark_str());
+	size_t len_b = strcspn(*sa, subscript_mark_str());
+
+	int len_order = (int)(len_a - len_b);
+	if (0 == len_order) return strncmp(*sa, *sb, len_a);
+
+	return len_order;
 }
 
 /**
@@ -627,7 +639,7 @@ bool afdict_init(Dictionary dict)
 	ac = AFCLASS(afdict, AFDICT_UNITS);
 	if (0 < ac->length)
 	{
-		qsort(ac->string, ac->length, sizeof(char *), cmplen);
+		qsort(ac->string, ac->length, sizeof(char *), split_order);
 	}
 
 #ifdef AFDICT_ORDER_NOT_PRESERVED
