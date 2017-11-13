@@ -1372,13 +1372,21 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				append_string(s, "   alt%zu:", ai);
 			}
 
+			int missing = 0;
 			for (wi = w_start; (wi == w_start) ||
 			    ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
 			{
 				size_t nalts = altlen(sent->word[wi].alternatives);
 				const char *wt;
 
-				if (ai >= nalts) continue;
+				/* Some slots may be shorter then others. To avoid a
+				 * misleading debug display, print "[missing]" for them,
+				 * but only if there are tokens after them. */
+				if (ai >= nalts)
+				{
+					missing++;
+					continue;
+				}
 				wt = sent->word[wi].alternatives[ai];
 
 				/* Don't display information again for the same word */
@@ -1405,6 +1413,8 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 
 				if (debugprint)
 				{
+					while (missing-- > 0) append_string(s, " %s", "[missing]");
+
 					const char *opt_start = "", *opt_end = "";
 					if (sent->word[wi].optional)
 					{
@@ -1414,23 +1424,19 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 					append_string(s, " %s%s%s", opt_start, wt, opt_end);
 				}
 
-				/* Don't try to give info on the empty word. */
-				if ('\0' != wt[0])
+				/* For now each word component is called "Token".
+				 * TODO: Its type can be decoded and a more precise
+				 * term (stem, prefix, etc.) can be used.
+				 * Display the features of the token. */
+				if ((NULL == tokenpos) && (NULL != display))
 				{
-					/* For now each word component is called "Token".
-					 * TODO: Its type can be decoded and a more precise
-					 * term (stem, prefix, etc.) can be used.
-					 * Display the features of the token. */
-					if ((NULL == tokenpos) && (NULL != display))
-					{
-						char *info = display(sent->dict, wt);
+					char *info = display(sent->dict, wt);
 
-						if (NULL == info) return;
-						append_string(s, "Token \"%s\" %s", wt, info);
-						free(info);
-					}
-					else if (word_split) append_string(s, " %s", wt);
+					if (NULL == info) return;
+					append_string(s, "Token \"%s\" %s", wt, info);
+					free(info);
 				}
+				else if (word_split) append_string(s, " %s", wt);
 			}
 
 			/* Commented out - no alternatives for now - print as one line. */
