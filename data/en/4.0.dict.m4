@@ -9729,6 +9729,11 @@ lie.#lay-v-d: [lay.v-d]0.5;
 % i before e unless the weighty neighbor is a German loan word.
 beleive.#believe-v: [believe.v]0.1;
 
+% Common shorts
+thru.#through-r: [through.r]0.05;
+nite.#night: [night.r or night.u or night.i or night.n]0.05;
+tonite.#tonight: [tonight]0.05;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
 % Given a particular kind of ending to a word, try to guess
