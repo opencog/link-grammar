@@ -1439,10 +1439,12 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				else if (word_split) append_string(s, " %s", wt);
 			}
 
-			/* Commented out - no alternatives for now - print as one line. */
-			//if (word_split && (NULL == display)) dyn_strcat(s, "\n");
 		}
 		wi--;
+
+		/* Line separation after the tokens printed by "String splits to:". */
+		if (word_split && (NULL == display)) dyn_strcat(s, "\n\n");
+
 		if (debugprint) dyn_strcat(s, "\n");
 	}
 	if (debugprint) dyn_strcat(s, "\n");
