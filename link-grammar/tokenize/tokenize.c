@@ -38,9 +38,12 @@
 #include "word-structures.h"
 
 #define MAX_STRIP 10
+#define MAX_STRIP_ALT 5
 #define SYNTHETIC_SENTENCE_MARK '>' /* A marking of a synthetic sentence. */
 #define D_SW 6                      /* debug level for word splits */
 #define D_UN 6                      /* debug level for units/punct */
+
+typedef const char *stripped_t[MAX_STRIP];
 
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
