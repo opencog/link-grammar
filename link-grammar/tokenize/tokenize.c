@@ -410,7 +410,7 @@ static bool is_contraction_word(Dictionary dict, const char *s)
  *
  * FIXME:
  * We cannot directly find if a word is an AFDICT_xPUNC, because
- * we have no way to mark that in * strip_left()/strip_right()/split_mpunc(),
+ * we have no way to mark that in strip_left()/strip_right()/split_mpunc(),
  * and we don't have a direct search function in the afdict (since it
  * doesn't have an in-memory tree structure).
  */

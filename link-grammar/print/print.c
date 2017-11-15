@@ -1420,7 +1420,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 					/* For now each word component is called "Token".
 					 * TODO: Its type can be decoded and a more precise
 					 * term (stem, prefix, etc.) can be used.
-					 * Display the features of the token */
+					 * Display the features of the token. */
 					if ((NULL == tokenpos) && (NULL != display))
 					{
 						char *info = display(sent->dict, wt);
