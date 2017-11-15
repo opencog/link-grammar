@@ -631,15 +631,20 @@ bool afdict_init(Dictionary dict)
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
 	}
 
-	/* sort the UNITS list */
+	/* Sort the affix-classes of tokens to be stripped. */
 	/* Longer unit names must get split off before shorter ones.
 	 * This prevents single-letter splits from screwing things
-	 * up. e.g. split 7gram before 7am before 7m
+	 * up. e.g. split 7gram before 7am before 7m.
+	 * Another example: The ellipsis "..." must appear before the dot ".".
 	 */
-	ac = AFCLASS(afdict, AFDICT_UNITS);
-	if (0 < ac->length)
+	afdict_classnum af[] = {AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
+	for (size_t i = 0; i < ARRAY_SIZE(af); i++)
 	{
-		qsort(ac->string, ac->length, sizeof(char *), split_order);
+		ac = AFCLASS(afdict, af[i]);
+		if (0 < ac->length)
+		{
+			qsort(ac->string, ac->length, sizeof(char *), split_order);
+		}
 	}
 
 #ifdef AFDICT_ORDER_NOT_PRESERVED

@@ -6,8 +6,6 @@
 % 。is an end-of-sentence marker used in Japanese texts.
 
 % Punctuation appearing on the right-side of words.
-% Note: the ellipsis "..." must appear *before* the dot ".", else the
-% splitting won't work right.
 ")" "}" "]" ">" """ » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ” '' ' `
 "%" "," ... "." 。 ‧ ":" ";" "?" "!" ‽ ؟ ？ ！
 _ ‐ ‑ ‒ – — ― … ━ – ー ‐ 、
