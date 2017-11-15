@@ -1796,13 +1796,13 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 #endif /* HAVE_HUNSPELL */
 
 static int split_mpunc(Sentence sent, const char *word, char *w,
-                                const char *r_stripped[])
+                                stripped_t stripped)
 {
 	const Dictionary afdict = sent->dict->affix_table;
 	const Afdict_class * mpunc_list;
 	const char * const * mpunc;
 	size_t l_strippable;
-	int n_r_stripped = 0;
+	int n_stripped = 0;
 
 	if (NULL == afdict) return 0;
 	mpunc_list = AFCLASS(afdict, AFDICT_MPUNC);
@@ -1826,11 +1826,11 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 				if (sep != w)
 				{
 					*sep = '\0';
-					if (n_r_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
-					r_stripped[n_r_stripped++] = w;
+					if (n_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
+					stripped[n_stripped++] = w;
 				}
-				if (n_r_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
-				r_stripped[n_r_stripped++] = mpunc[i];
+				if (n_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
+				stripped[n_stripped++] = mpunc[i];
 
 				w = sep + sz;
 				sep += sz - 1;
@@ -1839,9 +1839,9 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 		}
 	}
 
-	if (n_r_stripped > 0) r_stripped[n_r_stripped++] = w;
+	if (n_stripped > 0) stripped[n_stripped++] = w;
 
-	return n_r_stripped;
+	return n_stripped;
 
 max_strip_ovfl:
 	lgdebug(+D_SW, "Too many tokens (>%d)\n", MAX_STRIP);
