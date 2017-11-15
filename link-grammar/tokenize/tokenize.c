@@ -1852,8 +1852,8 @@ max_strip_ovfl:
  * Strip off punctuation, etc. on the left-hand side.
  */
 static const char *strip_left(Sentence sent, const char * w,
-                       const char *r_stripped[],
-                       size_t *n_r_stripped)
+                       stripped_t stripped,
+                       size_t *n_stripped)
 {
 	const Dictionary afdict = sent->dict->affix_table;
 	const Afdict_class * lpunc_list;
@@ -1866,7 +1866,7 @@ static const char *strip_left(Sentence sent, const char * w,
 	l_strippable = lpunc_list->length;
 	lpunc = lpunc_list->string;
 
-	*n_r_stripped = 0;
+	*n_stripped = 0;
 
 	do
 	{
@@ -1877,14 +1877,14 @@ static const char *strip_left(Sentence sent, const char * w,
 			if (strncmp(w, lpunc[i], sz) == 0)
 			{
 				lgdebug(D_UN, "w='%s' found lpunc '%s'\n", w, lpunc[i]);
-				r_stripped[(*n_r_stripped)++] = lpunc[i];
+				stripped[(*n_stripped)++] = lpunc[i];
 				w += sz;
 				break;
 			}
 		}
 	/* Note: MAX_STRIP-1, in order to leave room for adding the
 	 * remaining word in separate_word(). */
-	} while ((i != l_strippable) && (*n_r_stripped < MAX_STRIP-1));
+	} while ((i != l_strippable) && (*n_stripped < MAX_STRIP-1));
 
 	return (w);
 }
@@ -1946,34 +1946,32 @@ static const char *strip_left(Sentence sent, const char * w,
  *
  * w points to the string starting just to the right of any left-stripped
  * characters.
- * n_r_stripped is the index of the r_stripped array, consisting of strings
- * stripped off; r_stripped[0] is the number of the first string stripped off,
- * etc.
  *
- * When it breaks out of this loop, n_r_stripped will be the number of strings
- * stripped off. It is returned through the parameter, after possibly adjusting
- * it so the root will not be null. A pointer to one character after the end of
- * the remaining word is returned through the parameter wend.
+ * n_stripped is the index of the stripped array, consisting of strings
+ * stripped off.
+ *
+ * The stripped[0][] elements contain the unsubscripted word parts -
+ * stripped[0][0] is the first string stripped off, etc.
+ * The stripped[1..MAX_STRIP_ALT-1][] elements are subscripted alternatives
+ * (for the case of units with multiple identical base parts but different
+ * subscripts).
+ *
+ * When it breaks out of this loop, n_stripped will be the number of strings
+ * stripped off. It is returned through the parameter. A pointer to one
+ * character after the end of the remaining word is returned through the
+ * parameter wend.
  *
  * The function returns true if an affix has been stripped (even if it
- * adjusts n_r_stripped back to 0 if the root was null), else false.
+ * adjusts n_stripped back to 0 if the root was null), else false.
  *
  * p is a mark of the invocation position, for debugging.
- *
- * FIXME: Units may get strip without a root number.
- * In the current batch examples this doesn't cause errors or extraneous
- * parsings. But it unnecessarily adds to the total number of sentence words.
- * For example "sin" is gets split to "s in" and "As" to "A s" (unless an
- * example can be provided in which it is beneficial).
- * The fix should be to reconsider the root number, or remove the code that
- * checks it.
  */
 extern const char *const afdict_classname[]; /* For debug message only */
 static bool strip_right(Sentence sent,
                         const char *w,
                         const char **wend,
-                        const char *r_stripped[],
-                        size_t *n_r_stripped,
+                        stripped_t stripped[MAX_STRIP_ALT],
+                        size_t *n_stripped,
                         afdict_classnum classnum,
                         bool rootdigit,
                         int p)
@@ -1986,13 +1984,13 @@ static bool strip_right(Sentence sent,
 	size_t i;
 	size_t nrs = 0;
 	size_t len = 0;
-	bool stripped = false;
 
 	Afdict_class *rword_list;
 	size_t rword_num;
 	const char * const * rword;
 
-	if (*n_r_stripped >= MAX_STRIP-1) return false;
+	if (*n_stripped >= MAX_STRIP-1)
+		return false;
 
 	assert(temp_wend>w, "strip_right: unexpected empty-string word");
 	if (NULL == afdict) return false;
@@ -2003,29 +2001,81 @@ static bool strip_right(Sentence sent,
 
 	do
 	{
+		size_t altn = 0;
+
 		for (i = 0; i < rword_num; i++)
 		{
 			const char *t = rword[i];
 
-			len = strlen(t);
-			/* The remaining w is too short for a possible match */
+			/* Units contain a subscript mark. Punctuation do not contain it.
+			 * Find the token length, but stop at the subscript mark if exists. */
+			len = strcspn(t, subscript_mark_str());
+
+			/* The remaining word is too short for a possible match */
 			if ((temp_wend-w) < (int)len) continue;
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(D_UN, "%d: strip_right(%s): w='%s' rword '%s'\n",
-				        p, afdict_classname[classnum], temp_wend-len, t);
-				r_stripped[*n_r_stripped+nrs] = t;
-				nrs++;
-				temp_wend -= len;
-				break;
+				if (0 == altn)
+				{
+					lgdebug(+D_UN, "%d: %s: w='%s' rword '%.*s' at stripped[0,%zu]\n",
+						p, afdict_classname[classnum], temp_wend-len, (int)len, t, nrs);
+					stripped[1][*n_stripped+nrs] = NULL;
+					if (SUBSCRIPT_MARK == t[len])
+					{
+						/* stripped[0][] are the unsubscripted word parts. */
+						stripped[0][*n_stripped+nrs] =
+							string_set_add(strndupa(t, len), sent->string_set);
+					}
+					else
+					{
+						/* This is an unsubscripted token. We are not going to
+						 * have alternatives to it.*/
+						stripped[0][*n_stripped+nrs] = t;
+						nrs++;
+						temp_wend -= len;
+						break;
+					}
+					altn = 1;
+				}
+				/* The stripped[1..MAX_STRIP_ALT-1][] elements are subscripted. */
+				lgdebug(+D_UN, "%d: %s: w='%s' rword '%s' at stripped[%zu,%zu]\n",
+					p, afdict_classname[classnum], temp_wend-len, t, altn, nrs);
+				stripped[altn][*n_stripped+nrs] = t;
+				if (altn < MAX_STRIP_ALT-1)
+					stripped[altn+1][*n_stripped+nrs] = NULL;
+
+				/* Note: rword_list is reverse-sorted by len. */
+				if ((i+1 < rword_num) && (0 == strncmp(rword[i+1], rword[i], len)))
+				{
+					/* Next rword has same base word, different subscript.
+					 * Assign it in the next loop round as an alternative.
+					 * To that end altn is incremented but not nrs. */
+					altn++;
+					if (altn >= MAX_STRIP_ALT)
+					{
+						/* It is not supposed to happen...  */
+						lgdebug(+1, "Warning: Ignoring %s: Too many %.*s units (>%d)\n",
+						          rword[i], (int)len, rword[i], MAX_STRIP_ALT);
+						break;
+					}
+				}
+				else
+				{
+					nrs++;
+					temp_wend -= len;
+					break;
+				}
 			}
 		}
 	} while ((i < rword_num) && (temp_wend > w) && rootdigit &&
-	         (*n_r_stripped+nrs < MAX_STRIP));
+	         (*n_stripped+nrs < MAX_STRIP));
 	assert(w <= temp_wend, "A word should never start after its end...");
 
 	sz = temp_wend-w;
+	if ((0 == sz) && (1 == nrs))
+		return false; /* No need to strip off anything. */
+
 	strncpy(word, w, sz);
 	word[sz] = '\0';
 
@@ -2034,60 +2084,103 @@ static bool strip_right(Sentence sent,
 	 * off "h." from "20th.".
 	 * FIXME: is_utf8_digit(temp_wend-1, dict) here can only check ASCII digits,
 	 * since it is invoked with the last byte... */
-	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1, dict->lctype))
+	if (rootdigit && (sz > 0) && !is_utf8_digit(temp_wend-1, dict->lctype))
 	{
-		lgdebug(D_UN, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
+		lgdebug(+D_UN, "%d: %s: return FALSE; root='%s' (%c is not a digit)\n",
 			 p, afdict_classname[classnum], word, temp_wend[-1]);
 		return false;
 	}
 
-	stripped = nrs > 0;
-	if (temp_wend == w)
-	{
-		/* Null root - undo the last strip */
-		nrs--;
-		temp_wend += len;
-	}
+	lgdebug(+D_UN, "%d: %s: return %s; n_stripped=%zu+%zu, "
+	              "wend='%s' temp_wend='%s'\n",
+	        p, afdict_classname[classnum], (nrs>0)?"TRUE":"FALSE",
+	        *n_stripped, nrs, *wend, temp_wend);
 
-	lgdebug(D_UN, "%d: strip_right(%s): return %s; n_r_stripped=%d+%d, wend='%s' temp_wend='%s'\n",
-p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nrs,*wend,temp_wend);
-
-	*n_r_stripped += nrs;
+	*n_stripped += nrs;
 	*wend = temp_wend;
-	return stripped;
+	return nrs > 0;
 }
 
 /**
- * Issue an alternative that starts with w and continue with r_stripped[].
+ * Issue an alternative that starts with w and continue with stripped[].
  * If wend is NULL, w is Null-terminated.
  */
 static void issue_r_stripped(Sentence sent,
                                Gword *unsplit_word,
                                const char *w,
                                const char *wend,
-                               const char *r_stripped[],
-                               size_t n_r_stripped,
-                               const char *nalt)
+                               const stripped_t r_stripped[],
+                               size_t n_stripped,
+                               const char *label)
 {
-	size_t sz = (NULL==wend) ? strlen(w) : (size_t)(wend-w);
-	char *const word = alloca(sz+1);
+	const size_t sz = (NULL==wend) ? strlen(w) : (size_t)(wend-w);
+	char *word;
 	const char **rtokens = NULL;
-	size_t ntokens = 1;
-	int i;
+	size_t ntokens = 0;
+	size_t i;
+	size_t altn = 0;
+	Gword *rstrip_alt;
 
-	strncpy(word, w, sz);
-	word[sz] = '\0';
-
-	altappend(sent, &rtokens, word);
-	lgdebug(+D_SW, "Issue stripped word w='%s' (alt %s)\n", word, nalt);
-	for (i = n_r_stripped - 1; i >= 0; i--)
+	if (0 != sz)
 	{
-		lgdebug(+D_SW, "Issue r_stripped w='%s' (alt %s)\n", r_stripped[i], nalt);
-		altappend(sent, &rtokens, r_stripped[i]);
+		/* Issue the root word as the first token. */
+		word = strndupa(w, sz);
+		altappend(sent, &rtokens, word);
+		lgdebug(+D_SW, "Issue root word w='%s' (alt %s)\n", word, label);
 		ntokens++;
 	}
-	issue_word_alternative(sent, unsplit_word, nalt,
-	                       0,NULL, ntokens,rtokens, 0,NULL);
+
+	/* Reverse r_stripped, because the tokens got stripped from right to left. */
+	for (i = n_stripped-1; (ssize_t)i >= 0; i--)
+	{
+		lgdebug(+D_SW, "Issue r_stripped w='%s' at [0,%zu] (%s)\n",
+		        r_stripped[altn][i], i, label);
+		altappend(sent, &rtokens, r_stripped[altn][i]);
+		ntokens++;
+	}
+	rstrip_alt = issue_word_alternative(sent, unsplit_word, label,
+	                                    0,NULL, ntokens,rtokens, 0,NULL);
+
+	/* Issue additional alternatives if exist.
+	 * The tokens are scanned from last to first because the original
+	 * alternative gets shortened by inserting the additional alternatives
+	 * (if scanned from first to last - for_word_alt() would not be able to
+	 * reach beyond the last insertion point). */
+	for (i = 0; i < n_stripped; i++)
+	{
+		unsigned int position = (int)(n_stripped - i - 1); /* Value destroyed. */
+
+		if (ntokens > n_stripped) position++; /* Account for a root word. */
+		Gword *add_alt = for_word_alt(sent, rstrip_alt, gword_by_ordinal_position,
+		                              &position);
+		if (NULL == add_alt)
+		{
+			lgdebug(+1, "Warning: Internal error - r_striped alt too short.\n");
+			return; /* Avoid a crash if this ever happens. */
+		}
+		add_alt->tokenizing_step = TS_DONE; /* Last tokenization step follows. */
+
+		char *replabel = NULL; /* GCC: may be used uninitialized. */
+		if (NULL != r_stripped[1][i])
+		{
+			/* We are going to issue a subscripted word which is not a
+			 * substring of it's unsplit_word. For now, the token position
+			 * computation code needs an indication for that. */
+			replabel = strdupa(label);
+			replabel[0] = REPLACEMENT_MARK[0];
+		}
+		for (size_t n = 1; n < MAX_STRIP_ALT; n++)
+		{
+			if (NULL == r_stripped[n][i]) break;
+
+			lgdebug(+D_SW, "Issue r_stripped w='%s' at [%zu,%zu] (%s)\n",
+			        r_stripped[n][i], n, i, replabel);
+			Gword *altp = issue_word_alternative(sent, add_alt, replabel,
+			                                  0,NULL, 1,&r_stripped[n][i], 0,NULL);
+			tokenization_done(sent, altp); /* ... since it is subscripted */
+		}
+	}
+
 	free(rtokens);
 }
 
@@ -2211,12 +2304,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	const char *wp;
 	const char *temp_wend;
 
-	size_t n_r_stripped = 0;
-	const char *r_stripped[MAX_STRIP];   /* these were stripped from the right */
+	size_t n_stripped = 0;
+	stripped_t x_stripped;   /* these were stripped from the left/middle */
 
 	/* For units alternative */
 	const char *units_wend = NULL;       /* end of string consisting of units */
-	size_t units_n_r_stripped = 0;
+	size_t units_n_stripped = 0;
 
 	size_t sz = strlen(unsplit_word->subword);
 	const char *word = unsplit_word->subword;
@@ -2277,10 +2370,10 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * order to simplify it.
 		 */
 
-		wp = strip_left(sent, word, r_stripped, &n_r_stripped);
+		wp = strip_left(sent, word, x_stripped, &n_stripped);
 		if (wp != word)
 		{
-			/* If n_r_stripped exceed max, the "word" is most likely includes a long
+			/* If n_stripped exceed max, the "word" is most likely includes a long
 			 * sequence of periods.  Just accept it as an unknown "word",
 			 * and move on.
 			 * FIXME: Word separation may still be needed, e.g. for a table of
@@ -2288,23 +2381,23 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * ............................something
 			 * FIXME: "return" here prevents matching a regex.
 			 */
-			if (n_r_stripped >= MAX_STRIP-1)
+			if (n_stripped >= MAX_STRIP-1)
 			{
 				lgdebug(+D_SW, "Left-strip of >= %d tokens\n", MAX_STRIP-1);
 				return; /* XXX */
 			}
 
 			if ('\0' != *wp)
-				r_stripped[n_r_stripped++] = wp;
+				x_stripped[n_stripped++] = wp;
 
 			issue_word_alternative(sent, unsplit_word, "rL",
-			                       0,NULL, n_r_stripped,r_stripped, 0,NULL);
+			                       0,NULL, n_stripped,x_stripped, 0,NULL);
 
 			/* Its possible that the token consisted entirely of
 			 * left-punctuation, in which case, wp is an empty-string.
-			 * In case this is a single token (n_r_stripped == 1), we have
+			 * In case this is a single token (n_stripped == 1), we have
 			 * to continue processing, because it may match a regex. */
-			if ('\0' == *wp && n_r_stripped != 1)
+			if ('\0' == *wp && n_stripped != 1)
 			{
 				/* Suppose no more alternatives in such a case. */
 				lgdebug(+D_SW, "1: Word '%s' all left-puncts - done\n",
@@ -2312,7 +2405,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				return;
 			}
 
-			n_r_stripped = 0;
+			n_stripped = 0;
 			word_can_lrmsplit = true;
 		}
 
@@ -2328,18 +2421,20 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * NOT able to strip off any units, then we try punctuation, and then
 		 * units. This allows commas to be removed (e.g.  7grams,). */
 
+		stripped_t r_stripped[MAX_STRIP_ALT];
+
 		seen_word[0] = '\0';
 		do
 		{
-			int temp_n_r_stripped;
+			int temp_n_stripped;
 			/* First, try to strip off a single punctuation, typically a comma or
 			 * period, and see if the resulting word is in the dict (but not the
 			 * regex). This allows "sin." and "call." to be recognized. If we don't
 			 * do this now, then the next stage will split "sin." into
 			 * seconds-inches, and "call." into calories-liters. */
-			temp_n_r_stripped = n_r_stripped;
+			temp_n_stripped = n_stripped;
 			temp_wend = wend;
-			stripped = strip_right(sent, word, &wend, r_stripped, &n_r_stripped,
+			stripped = strip_right(sent, word, &wend, r_stripped, &n_stripped,
 			                       AFDICT_RPUNC, /*rootdigit*/false, 2);
 			if (stripped)
 			{
@@ -2352,24 +2447,24 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				if (boolean_dictionary_lookup(dict, temp_word)) break;
 				/* Undo the check. */
 				wend = temp_wend;
-				n_r_stripped = temp_n_r_stripped;
+				n_stripped = temp_n_stripped;
 			}
 
 			/* Remember the results, for a potential alternative. */
 			units_wend = wend;
-			units_n_r_stripped = n_r_stripped;
+			units_n_stripped = n_stripped;
 
 			/* Strip off all units, if possible. It is not likely that we strip
 			 * here a string like "in." which is not a unit since we require a
 			 * number before it when only a single component is stripped off. */
 			temp_wend = wend;
-			stripped = strip_right(sent, word, &wend, r_stripped, &n_r_stripped,
+			stripped = strip_right(sent, word, &wend, r_stripped, &n_stripped,
 			                       AFDICT_UNITS, /*rootdigit*/true, 3);
 			if (!stripped)
 			{
 				units_wend = NULL;
 				/* Try to strip off punctuation, typically a comma or period. */
-				stripped = strip_right(sent, word, &wend, r_stripped, &n_r_stripped,
+				stripped = strip_right(sent, word, &wend, r_stripped, &n_stripped,
 				                       AFDICT_RPUNC, /*rootdigit*/false, 4);
 			}
 
@@ -2384,22 +2479,22 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			strcpy(seen_word, temp_word);
 
 		/* Any remaining dict word stops the right-punctuation stripping. */
-		} while (NULL == units_wend && stripped &&
+		} while (NULL == units_wend && stripped && (sz != 0) &&
 					!boolean_dictionary_lookup(dict, temp_word));
 
-		lgdebug(+D_SW, "After strip_right: n_r_stripped=(%s) "
+		lgdebug(+D_SW, "After strip_right: n_stripped=(%s) "
 		        "word='%s' wend='%s' units_wend='%s' temp_word='%s'\n",
-		        print_rev_word_array(sent, r_stripped, n_r_stripped),
+		        print_rev_word_array(sent, r_stripped[0], n_stripped),
 		        word, wend, units_wend, temp_word);
 
-		/* If n_r_stripped exceed max, the "word" most likely includes a long
+		/* If n_stripped exceed max, the "word" most likely includes a long
 		 * sequence of periods.  Just accept it as an unknown "word",
 		 * and move on.
 		 * FIXME: Word separation may still be needed, e.g. for a table of
 		 * contents:
 		 * 10............................
 		 */
-		if (n_r_stripped >= MAX_STRIP-1)
+		if (n_stripped >= MAX_STRIP-1)
 		{
 			lgdebug(+D_SW, "Right-strip of >= %d tokens\n", MAX_STRIP-1);
 			return; /* XXX */
@@ -2410,8 +2505,9 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * if it is a part number, like "1234-567A".
 		 */
 
-		if (units_n_r_stripped && units_wend) /* units found */
+		if (units_n_stripped && (NULL != units_wend) && (0 != units_wend-word))
 		{
+			/* units found */
 			sz = units_wend-word;
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
@@ -2419,7 +2515,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			if (find_word_in_dict(dict, temp_word))
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
-										 r_stripped, units_n_r_stripped, "rR2");
+										 r_stripped, units_n_stripped, "rR2");
 				word_can_lrmsplit = true;
 			}
 		}
@@ -2430,27 +2526,27 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * - If the root word (temp_word) is known.
 		 * - If the unsplit_word is unknown. This happens with an unknown word
 		 *   that has punctuation after it). */
-		if (n_r_stripped > 0)
+		if (n_stripped > 0)
 		{
 			sz = wend-word;
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
 
 			if (!find_word_in_dict(dict, unsplit_word->subword) ||
-			    find_word_in_dict(dict, temp_word))
+			    (0 == sz) || find_word_in_dict(dict, temp_word))
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
-										 r_stripped, n_r_stripped, "rR3");
+										 r_stripped, n_stripped, "rR3");
 				word_can_lrmsplit = true;
 			}
 		}
 	}
 
-	n_r_stripped = split_mpunc(sent, word, temp_word, r_stripped);
-	if (n_r_stripped > 0)
+	n_stripped = split_mpunc(sent, word, temp_word, x_stripped);
+	if (n_stripped > 0)
 	{
 		issue_word_alternative(sent, unsplit_word, "M", 0,NULL,
-		                       n_r_stripped,r_stripped, 0,NULL);
+		                       n_stripped,x_stripped, 0,NULL);
 		word_can_lrmsplit = true;
 	}
 
