@@ -1421,6 +1421,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 						opt_start = "{";
 						opt_end = "}";
 					}
+					if ('\0' == wt[0]) wt = "'\\0'"; /* Reveal a bogus value. */
 					append_string(s, " %s%s%s", opt_start, wt, opt_end);
 				}
 
