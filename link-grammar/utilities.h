@@ -19,9 +19,6 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#ifdef _WIN32
-#define _CRT_RAND_S
-#endif /* _WIN32 */
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -109,9 +106,7 @@ void *alloca (size_t);
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
-/* Note that "#define _CRT_RAND_S" is needed before "#include <stdlib.h>" */
-#define rand_r(seedp) rand_s(seedp)
-
+int rand_r(unsigned int *);
 #ifndef __MINGW32__
 /* No strtok_s in XP/2003 and their strtok_r is incompatible.
  * Hence HAVE_STRTOK_R will not be defined and our own one will be used. */
