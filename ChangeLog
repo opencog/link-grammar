@@ -6,6 +6,8 @@ Version 5.4.3 (XXX 2017)
  * Remove trailing blanks from the linkage diagram.
  * Fix square area and cubic volume measurements (English dict).
  * Fix assorted exclamations and responses (English dict).
+ * Fix displaying random linkages on Windows.
+
 
 Version 5.4.2 (19 October 2017)
  * Fix man page build (broken in 5.4.1)

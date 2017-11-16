@@ -13,6 +13,9 @@
 
 #include <ctype.h>
 #include <limits.h>
+#ifdef _WIN32
+#define _CRT_RAND_S
+#endif /* _WIN32 */
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -170,6 +173,22 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, pwc, nb2);
 	if (0 == nb2) return (size_t)-1;
 	return nb;
+}
+
+/**
+ * Emulate rand_r() using rand_s() in a way that is enough for our needs.
+ * Windows doesn't have rand_r(), and its rand_s() is different: It
+ * returns an error indication and not the random number like rand_r().
+ * The value its returns is through its argument.
+ *
+ * Note that "#define _CRT_RAND_S" is needed before "#include <stdlib.h>"
+ */
+int rand_r(unsigned int *s)
+{
+	rand_s(s);
+	if (*s > INT_MAX) *s -= INT_MAX;
+
+	return *s;
 }
 #endif /* _WIN32 */
 
