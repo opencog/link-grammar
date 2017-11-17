@@ -58,8 +58,15 @@ class AAALinkTestCase(unittest.TestCase):
 
 class AADictionaryTestCase(unittest.TestCase):
     def test_open_nonexistent_dictionary(self):
-        self.assertRaises(LG_DictionaryError, Dictionary, 'No such language test 1')
-        self.assertRaises(LG_Error, Dictionary, 'No such language test 2')
+        dummy_lang = "No such language test "
+
+        save_stderr = divert_start(2)
+        self.assertRaises(LG_DictionaryError, Dictionary, dummy_lang + '1')
+        self.assertIn(dummy_lang + '1', save_stderr.divert_end())
+
+        save_stderr = divert_start(2)
+        self.assertRaises(LG_Error, Dictionary, dummy_lang + '2')
+        self.assertIn(dummy_lang + '2', save_stderr.divert_end())
 
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
@@ -401,13 +408,16 @@ class EErrorFacilityTestCase(unittest.TestCase):
         #LG_Error.set_handler(self.__class__.handler["default"], "bad param")
         #with self.assertRaises(TypeError):
         #    try:
-        #        Dictionary("a visible dummy dict name (bad param test)")
+        #        Dictionary("a dummy dict name (bad param test)")
         #    except LG_Error:
         #        pass
 
         # So test it directly.
-        self.assertRaises(LG_Error, Dictionary, "a visible dummy dict name (bad param test)")
+
+        dummy_lang = "a dummy dict name (bad param test)"
+        self.assertRaises(LG_Error, Dictionary, dummy_lang)
         LG_Error.printall(self.error_handler_test, self) # grab a valid errinfo
+        #self.assertIn(dummy_lang, save_stderr.divert_end())
         self.assertRaisesRegexp(TypeError, "must be an integer",
                                 self.__class__.handler["default"],
                                 self.errinfo, "bad param")
@@ -416,9 +426,12 @@ class EErrorFacilityTestCase(unittest.TestCase):
                                 self.errinfo, clg.lg_None+1)
         self.assertRaises(ValueError, self.__class__.handler["default"],
                           self.errinfo, -1)
+
         try:
             self.param_ok = False
+            save_stdout  = divert_start(1) # Note: Handler parameter is stdout
             self.__class__.handler["default"](self.errinfo, 1)
+            self.assertIn(dummy_lang, save_stdout.divert_end())
             self.param_ok = True
         except (TypeError, ValueError):
             self.assertTrue(self.param_ok)
@@ -492,8 +505,12 @@ class EErrorFacilityTestCase(unittest.TestCase):
         for _ in range(0, 1+self.testleaks):
             self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
         self.assertEqual(self.__class__.handler["previous"].__name__, "_default_handler")
+
         self.errinfo = "dummy"
-        self.assertRaises(LG_Error, Dictionary, "a visible dummy dict name (default handler test)")
+        dummy_lang = "a dummy dict name (default handler test)"
+        save_stderr = divert_start(2)
+        self.assertRaises(LG_Error, Dictionary, dummy_lang)
+        self.assertIn(dummy_lang, save_stderr.divert_end())
         self.assertEqual(self.errinfo, "dummy")
 
 class FSATsolverTestCase(unittest.TestCase):
@@ -920,6 +937,34 @@ def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
 
+
+import tempfile
+
+class divert_start(object):
+    """ Output diversion. """
+    def __init__(self, fd):
+        """ Divert a file descriptor.
+        The created object is used for restoring the original file descriptor.
+        """
+        self.fd = fd
+        self.savedfd = os.dup(fd)
+        (newfd, self.filename) = tempfile.mkstemp(text=False)
+        os.dup2(newfd, fd)
+        os.close(newfd)
+
+    def divert_end(self):
+        """ Restore a previous diversion and return its content. """
+        if not self.filename:
+            return ""
+        os.lseek(self.fd, os.SEEK_SET, 0)
+        content = os.read(self.fd, 1024) # 1024 is more than needed
+        os.dup2(self.savedfd, self.fd)
+        os.close(self.savedfd)
+        os.unlink(self.filename)
+        self.filename = None
+        return content
+
+    __del__ = divert_end
 
 # Decorate Sentence.parse with eqcost_soretd_parse.
 lg_testutils.add_eqcost_linkage_order(Sentence)
