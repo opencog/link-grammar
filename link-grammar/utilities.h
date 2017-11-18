@@ -329,19 +329,6 @@ static inline size_t utf8_next(const char *s)
 }
 
 /**
- * Return the length, in codepoints/glyphs, of the utf8-encoded
- * string.  The string is assumed to be at least `len` code-points
- * long. This is needed when splitting words into morphemes.
- */
-static inline size_t utf8_strnlen(const char *s, size_t len)
-{
-	size_t by = 0;
-	while (0 < len) { by += utf8_next(&s[by]); }
-	return by;
-}
-
-
-/**
  * Copy `n` utf8 characters from `src` to `dest`.
  * Return the number of bytes actually copied.
  * The `dest` must have enough room to hold the copy.
