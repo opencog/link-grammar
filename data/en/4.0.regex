@@ -23,7 +23,7 @@
 % 
 % Allows at most two colons in hour-minute-second HH:MM:SS expressions
 % Allows at most two digits between colons
-HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
+HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?$/
 
 % e.g. 1950's leading number can be higher, for science fiction.
 % Must be four digits, or possible three. Must end in s, 's ’s
