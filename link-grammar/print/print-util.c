@@ -78,7 +78,7 @@ size_t utf8_charwidth(const char *s)
 	if (n == 0) return 0;
 	if (n < 0)
 	{
-		prt_error("Error: charwidth(%s): utf-8 to wide-char failed.\n", s);
+		prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
 		return 1 /* XXX */;
 	}
 
@@ -103,8 +103,8 @@ size_t utf8_num_char(const char *s, size_t max_width)
 		if (n == 0) break;
 		if (n < 0)
 		{
-			prt_error("Warning: Error in utf8_num_char(%s, %zu)\n",
-			          s, max_width);
+			prt_error("Error: utf8_num_char(%s, %zu): mbrtowc() returned %d\n",
+			          s, max_width, n);
 			return 1 /* XXX */;
 		}
 
