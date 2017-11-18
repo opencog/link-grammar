@@ -298,34 +298,23 @@ static inline size_t utf8_strlen(const char *s)
 #endif /* _WIN32 */
 }
 
-/**
- * Return the distance, in bytes, to the next character, in the
- * input utf8-encoded string.
+/** Returns length of UTF8 character.
+ * Current algo is based on the first character only.
+ * If pointer is not pointing at first char, or not a valid value, returns -1.
+ * Returns 0 for NULL.
  */
-static inline size_t utf8_next(const char *s)
+static inline int utf8_charlen(const char *xc)
 {
-#ifdef _WIN32
-	/* mbrlen does not work correctly on Windows. See issue #285 */
-	/* https://github.com/opencog/link-grammar/issues/285 */
-	size_t len = 0;
-	while (0 != *s)
-	{
-		if ((0x80 <= ((unsigned char) *s)) &&
-		(((unsigned char) *s) < 0xc0)) { s++; len++; }
-		else return len+1;
-	}
-	return len;
-#else
-	size_t len;
-	mbstate_t mbs;
-	memset(&mbs, 0, sizeof(mbs));
-	len = mbrlen(s, MB_CUR_MAX, &mbs);
-	if (len == (size_t)(-1) || len == (size_t)(-2)) {
-		/* Too long or malformed sequence, step one byte. */
-		return 1;
-	}
-	return len;
-#endif /* _WIN32 */
+	unsigned char c;
+
+	c = (unsigned char) *xc;
+
+	if (c == 0) return 0;
+	if (c < 0x80) return 1;
+	if ((c >= 0xc2) && (c < 0xe0)) return 2; /* First byte of a code point U +0080 - U +07FF */
+	if ((c >= 0xe0) && (c < 0xf0)) return 3; /* First byte of a code point U +0800 - U +FFFF */
+	if ((c >= 0xf0) && (c <= 0xf4)) return 4; /* First byte of a code point U +10000 - U +10FFFF */
+	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
 
 /**
@@ -338,7 +327,7 @@ static inline size_t utf8_strncpy(char *dest, const char *src, size_t n)
 	size_t b = 0;
 	while (0 < n)
 	{
-		size_t k = utf8_next(src);
+		size_t k = utf8_charlen(src);
 		b += k;
 		while (0 < k) { *dest = *src; dest++; src++; k--; }
 		n--;
@@ -452,7 +441,6 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 #if 0
 void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 #endif
-int utf8_charlen(const char *);
 
 size_t lg_strlcpy(char * dest, const char *src, size_t size);
 void safe_strcpy(char *u, const char * v, size_t usize);

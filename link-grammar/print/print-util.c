@@ -186,7 +186,7 @@ size_t append_utf8_char(dyn_str * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
 	char buf[10];
-	size_t n = utf8_next(mbs);
+	size_t n = utf8_charlen(mbs);
 
 	assert(n<10, "Multi-byte character is too long!");
 	strncpy(buf, mbs, n);
