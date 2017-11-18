@@ -68,7 +68,8 @@ size_t utf8_strwidth(const char *s)
  *
  * The mbstate_t argument is not used, since we convert only from utf-8.
  * FIXME: This function (along with other places that use mbrtowc()) need
- * to be fixed for Windows utf-16 wchar_t).
+ * to be fixed for Windows (utf-16 wchar_t).
+ * Use char32_t with mbrtoc32() instead of mbrtowc().
  */
 size_t utf8_charwidth(const char *s)
 {
