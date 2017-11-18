@@ -1227,20 +1227,20 @@ static const char * header(bool print_ps_header)
 /**
  * Print elements of the 2D-word-array produced for the parsers.
  *
- * - print_sentence_word_alternatives(sent, false, NULL, tokenpos)
+ * - print_sentence_word_alternatives(s, sent, false, NULL, tokenpos)
  * If a pointer to struct "tokenpos" is given, return through it the index of
  * the first occurrence in the sentence of the given token. This is used to
  * prevent duplicate information display for repeated morphemes (if there are
  * multiples splits, each of several morphemes, otherwise some of them may
  * repeat).
  *
- * - print_sentence_word_alternatives(sent, true, NULL, NULL)
+ * - print_sentence_word_alternatives(s, sent, true, NULL, NULL)
  * If debugprint is "true", this is a debug printout of the sentence.  (The
  * debug printouts are with level 0 because this function is invoked for debug
  * on certain positive level.)
  *
  *
- * - print_sentence_word_alternatives(sent, false, display_func, NULL)
+ * - print_sentence_word_alternatives(s, sent, false, display_func, NULL)
  * Iterate over the sentence words and their alternatives.  Handle each
  * alternative using the display_func function if it is supplied, or else (if it
  * is NULL) just print them. It is used to display disjunct information when
@@ -1368,17 +1368,25 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 		{
 			if (debugprint)
 			{
-				if (0 < ai) dyn_strcat(s, "\n   ");
+				if (0 < ai) dyn_strcat(s, "\n");
 				append_string(s, "   alt%zu:", ai);
 			}
 
+			int missing = 0;
 			for (wi = w_start; (wi == w_start) ||
 			    ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
 			{
 				size_t nalts = altlen(sent->word[wi].alternatives);
 				const char *wt;
 
-				if (ai >= nalts) continue;
+				/* Some slots may be shorter then others. To avoid a
+				 * misleading debug display, print "[missing]" for them,
+				 * but only if there are tokens after them. */
+				if (ai >= nalts)
+				{
+					missing++;
+					continue;
+				}
 				wt = sent->word[wi].alternatives[ai];
 
 				/* Don't display information again for the same word */
@@ -1405,38 +1413,39 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 
 				if (debugprint)
 				{
+					while (missing-- > 0) append_string(s, " %s", "[missing]");
+
 					const char *opt_start = "", *opt_end = "";
 					if (sent->word[wi].optional)
 					{
 						opt_start = "{";
 						opt_end = "}";
 					}
+					if ('\0' == wt[0]) wt = "'\\0'"; /* Reveal a bogus value. */
 					append_string(s, " %s%s%s", opt_start, wt, opt_end);
 				}
 
-				/* Don't try to give info on the empty word. */
-				if ('\0' != wt[0])
+				/* For now each word component is called "Token".
+				 * TODO: Its type can be decoded and a more precise
+				 * term (stem, prefix, etc.) can be used.
+				 * Display the features of the token. */
+				if ((NULL == tokenpos) && (NULL != display))
 				{
-					/* For now each word component is called "Token".
-					 * TODO: Its type can be decoded and a more precise
-					 * term (stem, prefix, etc.) can be used.
-					 * Display the features of the token. */
-					if ((NULL == tokenpos) && (NULL != display))
-					{
-						char *info = display(sent->dict, wt);
+					char *info = display(sent->dict, wt);
 
-						if (NULL == info) return;
-						append_string(s, "Token \"%s\" %s", wt, info);
-						free(info);
-					}
-					else if (word_split) append_string(s, " %s", wt);
+					if (NULL == info) return;
+					append_string(s, "Token \"%s\" %s", wt, info);
+					free(info);
 				}
+				else if (word_split) append_string(s, " %s", wt);
 			}
 
-			/* Commented out - no alternatives for now - print as one line. */
-			//if (word_split && (NULL == display)) dyn_strcat(s, "\n");
 		}
 		wi--;
+
+		/* Line separation after the tokens printed by "String splits to:". */
+		if (word_split && (NULL == display)) dyn_strcat(s, "\n\n");
+
 		if (debugprint) dyn_strcat(s, "\n");
 	}
 	if (debugprint) dyn_strcat(s, "\n");

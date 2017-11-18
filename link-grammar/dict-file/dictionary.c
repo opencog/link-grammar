@@ -36,28 +36,12 @@
 *
 ****************************************************************/
 
-/* Units will typically have a ".u" at the end. Get
- * rid of it, as otherwise stripping is messed up. */
-static inline char * deinflect(const char * str)
-{
-	size_t len;
-	char *s;
-	char *p = strrchr(str, SUBSCRIPT_MARK);
-	if (!p || (p == str)) return strdup(str);
-
-	len = p - str;
-	s = (char *)malloc(len + 1);
-	strncpy(s, str, len);
-	s[len] = '\0';
-	return s;
-}
-
 static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 {
 	Dict_node * dnx = NULL;
 	for (; NULL != dn; dn = dnx)
 	{
-		char *string;
+		const char *string;
 		const char *con = word_only_connector(dn);
 		if (NULL == con)
 		{
@@ -78,19 +62,19 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 		if (contains_underbar(dn->string))
 		{
 			char *p;
-			string = strdup(dn->string);
-			p = string+1;
+			char *writeable_string = strdupa(dn->string);
+			p = writeable_string+1;
 			while (*p != '_' && *p != '\0') p++;
 			*p = '\0';
+			string = writeable_string;
 		}
 		else
 		{
-			string = deinflect(dn->string);
+			string = dn->string;
 		}
 
 		affix_list_add(afdict, afdict_find(afdict, con,
 		               /*notify_err*/true), string);
-		free(string);
 
 		dnx = dn->left;
 		xfree((char *)dn, sizeof(Dict_node));

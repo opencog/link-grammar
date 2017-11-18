@@ -506,12 +506,24 @@ static void concat_class(Dictionary afdict, int classno)
 	dyn_str_delete(qs);
 }
 
-/* Compare lengths of strings, for qsort */
-static int cmplen(const void *a, const void *b)
+/**
+ * Compare lengths of strings, for affix class qsort.
+ * Sort order:
+ * 1. Longest base words first.
+ * 2. Equal base words one after the other.
+ */
+static int split_order(const void *a, const void *b)
 {
 	const char * const *sa = a;
 	const char * const *sb = b;
-	return strlen(*sb) - strlen(*sa);
+
+	size_t len_a = strcspn(*sb, subscript_mark_str());
+	size_t len_b = strcspn(*sa, subscript_mark_str());
+
+	int len_order = (int)(len_a - len_b);
+	if (0 == len_order) return strncmp(*sa, *sb, len_a);
+
+	return len_order;
 }
 
 /**
@@ -575,23 +587,6 @@ bool afdict_init(Dictionary dict)
 		affix_list_add(afdict, &afdict->afdict_class[AFDICT_INFIXMARK], "");
 	}
 
-	if (verbosity_level(+D_AI))
-	{
-		size_t l;
-
-		for (ac = afdict->afdict_class;
-		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
-		{
-				if (0 == ac->length) continue;
-				lgdebug(+0, "Class %s, %zd items:",
-				        afdict_classname[ac-afdict->afdict_class], ac->length);
-				for (l = 0; l < ac->length; l++)
-					lgdebug(0, " '%s'", ac->string[l]);
-				lgdebug(0, "\n");
-		}
-	}
-#undef D_AI
-
 	/* Store the SANEMORPHISM regex in the unused (up to now)
 	 * regex_root element of the affix dictionary, and precompile it */
 	assert(NULL == afdict->regex_root, "SM regex is already assigned");
@@ -632,19 +627,24 @@ bool afdict_init(Dictionary dict)
 			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name, rc);
 			return false;
 		}
-		lgdebug(+5, "%s regex %s\n",
+		lgdebug(+D_AI, "%s regex %s\n",
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
 	}
 
-	/* sort the UNITS list */
+	/* Sort the affix-classes of tokens to be stripped. */
 	/* Longer unit names must get split off before shorter ones.
 	 * This prevents single-letter splits from screwing things
-	 * up. e.g. split 7gram before 7am before 7m
+	 * up. e.g. split 7gram before 7am before 7m.
+	 * Another example: The ellipsis "..." must appear before the dot ".".
 	 */
-	ac = AFCLASS(afdict, AFDICT_UNITS);
-	if (0 < ac->length)
+	afdict_classnum af[] = {AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
+	for (size_t i = 0; i < ARRAY_SIZE(af); i++)
 	{
-		qsort(ac->string, ac->length, sizeof(char *), cmplen);
+		ac = AFCLASS(afdict, af[i]);
+		if (0 < ac->length)
+		{
+			qsort(ac->string, ac->length, sizeof(char *), split_order);
+		}
 	}
 
 #ifdef AFDICT_ORDER_NOT_PRESERVED
@@ -662,5 +662,23 @@ bool afdict_init(Dictionary dict)
 	concat_class(afdict, AFDICT_QUOTES);
 	concat_class(afdict, AFDICT_BULLETS);
 
+	if (verbosity_level(D_AI))
+	{
+		size_t l;
+
+		for (ac = afdict->afdict_class;
+		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
+		{
+				if (0 == ac->length) continue;
+				lgdebug(+0, "Class %s, %zd items:",
+				        afdict_classname[ac-afdict->afdict_class], ac->length);
+				for (l = 0; l < ac->length; l++)
+					lgdebug(0, " '%s'", ac->string[l]);
+				lgdebug(0, "\n\\");
+		}
+		lg_error_flush();
+	}
+
 	return true;
 }
+#undef D_AI

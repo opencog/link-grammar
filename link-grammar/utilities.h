@@ -58,11 +58,6 @@ void *alloca (size_t);
 #endif /* _MSC_VER */
 #endif /* !TLS */
 
-#ifndef strdupa
-/* In the following, the argument should not have side effects. */
-#define strdupa(s) strcpy(alloca(strlen(s)+1), s)
-#endif
-
 /* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
 #ifdef _WIN32
 #define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
@@ -222,6 +217,22 @@ typedef int locale_t;
 #endif
 #if !defined(MAX)
 #define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
+#endif
+
+/* In the following, the arguments should not have side effects.
+ * FIXME: Detect in "configure" and check HAVE_* */
+#ifndef strdupa
+#define strdupa(s) strcpy(alloca(strlen(s)+1), s)
+#endif
+#ifndef strndupa
+#define strndupa(s, n) _strndupa3(alloca(MIN(strlen(s), n)+1), s, n)
+static inline char *_strndupa3(char *new_s, const char *s, size_t n)
+{
+	strncpy(new_s, s, n);
+	new_s[MIN(strlen(s), n)] = '\0';
+
+	return new_s;
+}
 #endif
 
 /* From ccan array_size.h and build_assert.h, which are under a CC0 license */

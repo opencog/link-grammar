@@ -24,7 +24,6 @@
 #endif
 #include <signal.h>    /* SIG* */
 
-#include <dict-common/dict-defines.h>  /* for SUBSCRIPT_MARK */
 #include <print/print-util.h> /* for append_string */
 #include <utilities.h> /* for dyn_str functions */
 #endif /* USE_WORDGRAPH_DISPLAY */
@@ -581,7 +580,7 @@ static void wordgraph_legend(dyn_str *wgd, unsigned int mode)
 }
 
 /**
- * Graph node name: Add "Sentence:" for the main node; Convert SUBSCRIPT_MARK.
+ * Graph node name: Add "Sentence:" for the main node.
  * Also escape " and \ with a \.
  */
 static const char *wlabel(Sentence sent, const Gword *w)
@@ -601,9 +600,6 @@ static const char *wlabel(Sentence sent, const Gword *w)
 	{
 		switch (*s)
 		{
-			case SUBSCRIPT_MARK:
-				dyn_strcat(l, ".");
-				break;
 			case '\"':
 				dyn_strcat(l, "\\\"");
 				break;

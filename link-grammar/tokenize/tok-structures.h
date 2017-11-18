@@ -19,6 +19,8 @@
 #include "api-types.h"
 #include "link-includes.h"
 
+// TODO provide gword access methods!
+
 /* conditional compiling flags */
 #define INFIX_NOTATION
     /* If defined, then we're using infix notation for the dictionary */

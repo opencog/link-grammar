@@ -462,7 +462,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						 * words with and without subscripts. */
 
 						const char subscript_sep_str[] = { SUBSCRIPT_SEP, '\0'};
-						const char subscript_mark_str[] = { SUBSCRIPT_MARK, '\0'};
 						char *join = calloc(join_len + 1, 1); /* zeroed out */
 
 						join[0] = '\0';
@@ -474,7 +473,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							                      (*wgaltp)->morpheme_type);
 						}
 
-						strcat(join, subscript_mark_str); /* tentative */
+						strcat(join, subscript_mark_str()); /* tentative */
 
 						/* 2. Join subscripts. */
 						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)

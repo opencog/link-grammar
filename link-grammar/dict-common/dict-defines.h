@@ -32,4 +32,9 @@
 #define SUBSCRIPT_MARK '\3'
 #define SUBSCRIPT_DOT '.'
 
+static inline const char *subscript_mark_str(void)
+{
+	static const char sm[] = { SUBSCRIPT_MARK, '\0' };
+	return sm;
+}
 #endif
