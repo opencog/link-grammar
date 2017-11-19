@@ -132,25 +132,6 @@ char* strtok_r(char *str, const char *delim, char **nextp)
 /* ============================================================= */
 /* UTF8 utilities */
 
-/** Returns length of UTF8 character.
- * Current algo is based on the first character only.
- * If pointer is not pointing at first char, or not a valid value, returns -1.
- * Returns 0 for NULL.
- */
-int utf8_charlen(const char *xc)
-{
-	unsigned char c;
-
-	c = (unsigned char) *xc;
-
-	if (c == 0) return 0;
-	if (c < 0x80) return 1;
-	if ((c >= 0xc2) && (c < 0xe0)) return 2; /* First byte of a code point U +0080 - U +07FF */
-	if ((c >= 0xe0) && (c < 0xf0)) return 3; /* First byte of a code point U +0800 - U +FFFF */
-	if ((c >= 0xf0) && (c <= 0xf4)) return 4; /* First byte of a code point U +10000 - U +10FFFF */
-	return -1; /* Fallthrough -- not the first byte of a code-point. */
-}
-
 #ifdef _WIN32
 /**
  * (Experimental) Implementation of mbrtowc for Windows.

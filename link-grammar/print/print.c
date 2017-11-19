@@ -116,8 +116,8 @@ static void left_append_string(dyn_str * string, const char * s, const char * t)
 		else
 			append_utf8_char(string, t);
 
-		s += utf8_next(s);
-		t += utf8_next(t);
+		s += utf8_charlen(s);
+		t += utf8_charlen(t);
 	}
 }
 
@@ -725,7 +725,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				/* Update the printable column width */
 				glyph_width += utf8_charwidth(&xpicture[row][j]);
 
-				j += utf8_next(&xpicture[row][j]);
+				j += utf8_charlen(&xpicture[row][j]);
 			}
 			start[row] = j;
 

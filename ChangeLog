@@ -8,6 +8,7 @@ Version 5.4.3 (XXX 2017)
  * Fix assorted exclamations and responses (English dict).
  * Fix displaying random linkages on Windows.
  * Fix unit tokenization to remove ambiguity.
+ * Fix utf8-related bug on Windows that could affect printing.
 
 Version 5.4.2 (19 October 2017)
  * Fix man page build (broken in 5.4.1)

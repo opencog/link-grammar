@@ -157,11 +157,8 @@ static bool word_has_alternative(const Gword *word)
  */
 static char *utf8_str1chr(const char *s, const char *xc)
 {
-	/* FIXME use strndupa() */
 	int len = utf8_charlen(xc);
-	char *xc1 = alloca(len+1);
-	strncpy(xc1, xc, len);
-	xc1[len] = '\0';
+	char *xc1 = strndupa(xc, len);
 
 	return strstr(s, xc1);
 }

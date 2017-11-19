@@ -68,7 +68,8 @@ size_t utf8_strwidth(const char *s)
  *
  * The mbstate_t argument is not used, since we convert only from utf-8.
  * FIXME: This function (along with other places that use mbrtowc()) need
- * to be fixed for Windows utf-16 wchar_t).
+ * to be fixed for Windows (utf-16 wchar_t).
+ * Use char32_t with mbrtoc32() instead of mbrtowc().
  */
 size_t utf8_charwidth(const char *s)
 {
@@ -78,7 +79,7 @@ size_t utf8_charwidth(const char *s)
 	if (n == 0) return 0;
 	if (n < 0)
 	{
-		prt_error("Error: charwidth(%s): utf-8 to wide-char failed.\n", s);
+		prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
 		return 1 /* XXX */;
 	}
 
@@ -103,8 +104,8 @@ size_t utf8_num_char(const char *s, size_t max_width)
 		if (n == 0) break;
 		if (n < 0)
 		{
-			prt_error("Warning: Error in utf8_num_char(%s, %zu)\n",
-			          s, max_width);
+			prt_error("Error: utf8_num_char(%s, %zu): mbrtowc() returned %d\n",
+			          s, max_width, n);
 			return 1 /* XXX */;
 		}
 
@@ -186,7 +187,7 @@ size_t append_utf8_char(dyn_str * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
 	char buf[10];
-	size_t n = utf8_next(mbs);
+	size_t n = utf8_charlen(mbs);
 
 	assert(n<10, "Multi-byte character is too long!");
 	strncpy(buf, mbs, n);
