@@ -36,7 +36,7 @@ struct Table_connector_s
 {
 	Table_connector  *next;
 	int              l_id, r_id;
-	Count_bin        count;
+	count_t          count;
 	unsigned int     null_count;
 	size_t           hash;
 };
@@ -440,11 +440,11 @@ static void table_grow(count_context_t *ctxt)
 /**
  * Stores the value in the table.  Assumes it's not already there.
  */
-static Count_bin table_store(count_context_t *ctxt,
-                                     int lw, int rw,
-                                     const Connector *le, const Connector *re,
-                                     unsigned int null_count,
-                                     size_t hash, Count_bin c)
+static count_t table_store(count_context_t *ctxt,
+                           int lw, int rw,
+                           const Connector *le, const Connector *re,
+                           unsigned int null_count,
+                           size_t hash, count_t c)
 {
 	if (ctxt->table_available_count == 0) table_grow(ctxt);
 
@@ -474,10 +474,10 @@ static Count_bin table_store(count_context_t *ctxt,
  * the entry is not found).
  * @return The count for this quintuple if there, NULL otherwise.
  */
-Count_bin *
+inline count_t *
 table_lookup(count_context_t *ctxt, int lw, int rw,
-                   const Connector *le, const Connector *re,
-                   unsigned int null_count, size_t *hash)
+             const Connector *le, const Connector *re,
+             unsigned int null_count, size_t *hash)
 {
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
@@ -695,11 +695,11 @@ static bool is_panic(count_context_t *ctxt)
 
 #define NO_COUNT -1
 #ifdef PERFORM_COUNT_HISTOGRAMMING
-#define INIT_NO_COUNT (Count_bin){.total = NO_COUNT}
+#define INIT_NO_COUNT (count_t){.total = NO_COUNT}
 #else
 #define INIT_NO_COUNT NO_COUNT
 #endif
-Count_bin count_unknown = INIT_NO_COUNT;
+count_t count_unknown = INIT_NO_COUNT;
 
 /**
  * psuedocount is used to check to see if a parse is even possible,
@@ -713,11 +713,11 @@ Count_bin count_unknown = INIT_NO_COUNT;
  * worst case: that the count might be non-zero.  To indicate that case,
  * return the special sentinel value \c count_unknown.
  */
-static Count_bin pseudocount(count_context_t * ctxt,
-                       int lw, int rw, Connector *le, Connector *re,
-                       unsigned int null_count)
+static count_t pseudocount(count_context_t * ctxt,
+                           int lw, int rw, Connector *le, Connector *re,
+                           unsigned int null_count)
 {
-	Count_bin *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
+	count_t *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
 	return *count;
 }
@@ -727,7 +727,7 @@ static Count_bin pseudocount(count_context_t * ctxt,
  *  The returned value is normally unused by the callers
  *  (to be used when debugging overflows).
  */
-static bool parse_count_clamp(Count_bin *total)
+static bool parse_count_clamp(w_count_t *total)
 {
 	if (INT_MAX < hist_total(total))
 	{
@@ -769,31 +769,31 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
 #define ID(c,w) (!c?w:c->tracon_id)
-static Count_bin do_count1(int lineno, count_context_t *ctxt,
-                          int lw, int rw,
-                          Connector *le, Connector *re,
-                          unsigned int null_count);
+static count_t do_count1(int lineno, count_context_t *ctxt,
+                         int lw, int rw,
+                         Connector *le, Connector *re,
+                         unsigned int null_count);
 
-static Count_bin do_count(int lineno, count_context_t *ctxt,
-                          int lw, int rw,
-                          Connector *le, Connector *re,
-                          unsigned int null_count)
+static count_t do_count(int lineno, count_context_t *ctxt,
+                        int lw, int rw,
+                        Connector *le, Connector *re,
+                        unsigned int null_count)
 {
 	static int level;
 
 	if (!verbosity_level(D_COUNT_TRACE))
 		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 
-	Count_bin *c = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
+	count_t *c = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	char m_result[64] = "";
 	if (c != NULL)
-		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(c));
+		snprintf(m_result, sizeof(m_result), "(M=%"COUNT_FMT")", hist_total(c));
 
 	level++;
 	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%u\n\\",
 		level*2, "", m_result, lineno, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
-	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
-	prt_error("%*sreturn%.*s:%d=%lld\n",
+	count_t r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
+	prt_error("%*sreturn%.*s:%d=%"COUNT_FMT"\n",
 	          LBLSZ+level*2, "", (!!c)*3, "(M)", lineno, hist_total(&r));
 	level--;
 
@@ -804,7 +804,7 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 #else
 #define TRACE_LABEL(l, do_count) (do_count)
 #endif /* DO_COUNT TRACE */
-static Count_bin do_count(
+static count_t do_count(
 #ifdef DO_COUNT_TRACE
 #undef do_count
 #define do_count(...) do_count(__LINE__, __VA_ARGS__)
@@ -815,7 +815,7 @@ static Count_bin do_count(
                           Connector *le, Connector *re,
                           unsigned int null_count)
 {
-	Count_bin total = hist_zero();
+	w_count_t total = hist_zero();;
 	int start_word, end_word, w;
 
 	if (is_panic(ctxt)) return hist_zero();
@@ -825,7 +825,7 @@ static Count_bin do_count(
 
 	size_t h = 0; /* Initialized value only needed to prevent a warning. */
 	{
-		Count_bin* const c = table_lookup(ctxt, lw, rw, le, re, null_count, &h);
+		count_t* const c = table_lookup(ctxt, lw, rw, le, re, null_count, &h);
 		if (c != NULL) return *c;
 		/* The table entry is to be updated with the found linkage count
 		 * before we return. The hash h will be used to locate it. */
@@ -1076,16 +1076,16 @@ static Count_bin do_count(
 				bool leftpcount = false;
 				bool rightpcount = false;
 
-				Count_bin l_any = INIT_NO_COUNT;
-				Count_bin r_any = INIT_NO_COUNT;
-				Count_bin l_cmulti = INIT_NO_COUNT;
-				Count_bin l_dmulti = INIT_NO_COUNT;
-				Count_bin l_dcmulti = INIT_NO_COUNT;
-				Count_bin l_bnr = INIT_NO_COUNT;
-				Count_bin r_cmulti = INIT_NO_COUNT;
-				Count_bin r_dmulti = INIT_NO_COUNT;
-				Count_bin r_dcmulti = INIT_NO_COUNT;
-				Count_bin r_bnl = (le == NULL) ? INIT_NO_COUNT : hist_zero();
+				count_t l_any = INIT_NO_COUNT;
+				count_t r_any = INIT_NO_COUNT;
+				count_t l_cmulti = INIT_NO_COUNT;
+				count_t l_dmulti = INIT_NO_COUNT;
+				count_t l_dcmulti = INIT_NO_COUNT;
+				count_t l_bnr = INIT_NO_COUNT;
+				count_t r_cmulti = INIT_NO_COUNT;
+				count_t r_dmulti = INIT_NO_COUNT;
+				count_t r_dcmulti = INIT_NO_COUNT;
+				count_t r_bnl = (le == NULL) ? INIT_NO_COUNT : hist_zero();
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
@@ -1170,7 +1170,7 @@ static Count_bin do_count(
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
 	{ \
-		Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+		w_count_t count = (hist_total(&c) == NO_COUNT) ? \
 			TRACE_LABEL(c, do_count) : c; \
 		how_to_count; \
 	}
@@ -1178,8 +1178,8 @@ static Count_bin do_count(
 				 * in the count multiplication is zero,
 				 * we know that the true total is zero. So we don't
 				 * bother counting the other term at all, in that case. */
-				Count_bin leftcount = hist_zero();
-				Count_bin rightcount = hist_zero();
+				w_count_t leftcount = hist_zero();
+				w_count_t rightcount = hist_zero();
 				if (leftpcount &&
 				    (!lrcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
@@ -1293,7 +1293,7 @@ static Count_bin do_count(
 int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
              Parse_Options opts)
 {
-	Count_bin hist;
+	count_t hist;
 
 	ctxt->current_resources = opts->resources;
 	ctxt->exhausted = false;

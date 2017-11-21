@@ -12,8 +12,12 @@
 #ifndef _HISTOGRAM_H_
 #define _HISTOGRAM_H_
 
-typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
-#define PARSE_NUM_OVERFLOW (1LL<<24)
+#include <stdint.h>
+#include <inttypes.h>                   // Format of count_t
+
+#define PARSE_NUM_OVERFLOW (1<<24)  // We always assume sizeof(int)>=4
+
+typedef int64_t w_count_t;          // For overflow detection
 
 /*
  * Count Histogramming is currently not required for anything, and the
@@ -22,6 +26,9 @@ typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
 #define PERFORM_COUNT_HISTOGRAMMING 1
  */
 #ifdef PERFORM_COUNT_HISTOGRAMMING
+
+typedef int64_t count_t;
+#define COUNT_FMT PRId64
 
 /**
  * A histogram distribution of the parse counts.
@@ -35,52 +42,49 @@ typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
  *     total == sum_i bin[i] + overrun
  */
 #define NUM_BINS 12
-struct Count_bin_s
+struct count_t_s
 {
 	short base;
-	s64 total;
-	s64 bin[NUM_BINS];
-	s64 overrun;
+	count_t total;
+	count_t bin[NUM_BINS];
+	count_t overrun;
 };
 
-typedef struct Count_bin_s Count_bin;
+typedef struct count_t_s count_t;
 
-Count_bin hist_zero(void);
-Count_bin hist_one(void);
+count_t hist_zero(void);
+count_t hist_one(void);
 
-void hist_accum(Count_bin* sum, double, const Count_bin*);
-void hist_accumv(Count_bin* sum, double, const Count_bin);
-void hist_prod(Count_bin* prod, const Count_bin*, const Count_bin*);
-void hist_muladd(Count_bin* prod, const Count_bin*, double, const Count_bin*);
-void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
+void hist_accum(count_t* sum, double, const count_t*);
+void hist_accumv(count_t* sum, double, const count_t);
+void hist_prod(count_t* prod, const count_t*, const count_t*);
+void hist_muladd(count_t* prod, const count_t*, double, const count_t*);
+void hist_muladdv(count_t* prod, const count_t*, double, const count_t);
 
-static inline s64 hist_total(Count_bin* tot) { return tot->total; }
-s64 hist_cut_total(Count_bin* tot, int min_total);
+static inline count_t hist_total(count_t* tot) { return tot->total; }
+count_t hist_cut_total(count_t* tot, int min_total);
 
-double hist_cost_cutoff(Count_bin*, int count);
+double hist_cost_cutoff(count_t*, int count);
 
 #else
 
-typedef s64 Count_bin;
+typedef int32_t count_t;
+#define COUNT_FMT PRId32
 
-static inline Count_bin hist_zero(void) { return 0; }
-static inline Count_bin hist_one(void) { return 1; }
+typedef count_t count_t;
 
-static inline void hist_accum(Count_bin* sum, double cost, Count_bin* a)
-	{ *sum += *a; }
-static inline void hist_accumv(Count_bin* sum, double cost, Count_bin a)
-	{ *sum += a; }
-static inline void hist_prod(Count_bin* prod, Count_bin* a, Count_bin* b)
-	{ *prod = (*a) * (*b); }
-static inline void hist_muladd(Count_bin* prod, Count_bin* a, double cost, Count_bin* b)
-	{ *prod += (*a) * (*b); }
-static inline void hist_muladdv(Count_bin* prod, Count_bin* a, double cost, Count_bin b)
-	{ *prod += (*a) * b; }
+static inline count_t hist_zero(void) { return 0; }
+static inline count_t hist_one(void) { return 1; }
 
-static inline s64 hist_total(Count_bin* tot) { return *tot; }
-static inline s64 hist_cut_total(Count_bin* tot, int min_total) { return *tot; }
+#define hist_accum(sum, cost, a) (*(sum) += *(a))
+#define hist_accumv(sum, cost, a) (*(sum) += (a))
+#define hist_prod(prod, a, b) (*(prod) = (*a) * (*b))
+#define hist_muladd(prod, a, cost, b) (*(prod) += (*a) * (*b))
+#define hist_muladdv(prod, a, cost, b) (*(prod) += (*a) * (b))
+#define hist_total(tot) (*tot)
 
-static inline double hist_cost_cutoff(Count_bin* tot, int count) { return 1.0e38; }
+#define hist_cut_total(tot, min_total) (*tot)
+static inline double hist_cost_cutoff(count_t* tot, int count) { return 1.0e38; }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 
