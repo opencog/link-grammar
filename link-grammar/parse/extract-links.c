@@ -21,6 +21,8 @@
 #include "linkage/linkage.h"
 #include "tokenize/word-structures.h" // for Word_Struct
 
+//#define RECOUNT
+
 typedef struct Parse_choice_struct Parse_choice;
 
 /* The parse_choice is used to extract links for a given parse */
@@ -40,9 +42,15 @@ struct Parse_set_struct
 	Connector      *le, *re; /* pending, unconnected connectors */
 
 	s64 count;      /* The number of ways to parse. */
-	/* s64 recount;  Exactly the same as above, but counted at a later stage. */
-	// s64 cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
-	// double cost_cutoff;
+#ifdef RECOUNT
+	s64 recount;  /* Exactly the same as above, but counted at a later stage. */
+	s64 cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
+	//double cost_cutoff;
+#undef RECOUNT
+#define RECOUNT(X) X
+#else
+#define RECOUNT(X)  /* Make it disappear... */
+#endif
 	Parse_choice * first;
 	Parse_choice * tail;
 };
@@ -347,7 +355,6 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
 	// xt->set.cut_count = hist_cut_total(count, NUM_PARSES);
 
-#define RECOUNT(X)  /* Make it disappear... */
 	RECOUNT({xt->set.recount = 1;})
 
 	/* If the two words are next to each other, the count == 1 */
