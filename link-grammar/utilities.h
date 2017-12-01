@@ -191,11 +191,11 @@ typedef int locale_t;
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
 #ifndef strndupa
-#define strndupa(s, n) _strndupa3(alloca(MIN(strlen(s), n)+1), s, n)
+#define strndupa(s, n) _strndupa3(alloca((n)+1), s, n)
 static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 {
 	strncpy(new_s, s, n);
-	new_s[MIN(strlen(s), n)] = '\0';
+	new_s[n] = '\0';
 
 	return new_s;
 }
