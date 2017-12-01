@@ -476,7 +476,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 		 * enough for not using uninitialized c_con->match because the
 		 * connector desc filed cannot be NULL, as it actually fetched a
 		 * non-empty match list. */
-		PRAGMA_START(GCC diagnostic ignored "-Wmaybe-uninitialized")
+		PRAGMA_MAYBE_UNINITIALIZED
 		return c_con->match;
 		PRAGMA_END
 	}

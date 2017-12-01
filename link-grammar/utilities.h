@@ -234,10 +234,26 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define GNUC_UNUSED
 #endif
 
+#if ((__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) || __clang__)
+#define GCC_DIAGNOSTIC
+#endif
+
 /* Apply a pragma to a specific code section only.
  * XXX According to the GCC docs, we cannot use here something like
- * "#ifdef HAVE_x", so -Wunknown-pragmas is used instead. */
-#if __GNUC__ > 2
+ * "#ifdef HAVE_x". Also -Wunknown-pragmas & -Wno-unknown-warning-option
+ * don't work in this situation. So "-Wmaybe-uninitialized", which
+ * is not recognized by clang, is defined separately. */
+#ifdef GCC_DIAGNOSTIC
+
+#ifdef HAVE_MAYBE_UNINITIALIZED
+#define PRAGMA_MAYBE_UNINITIALIZED \
+	_Pragma("GCC diagnostic push") \
+	_Pragma("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+#else
+#define PRAGMA_MAYBE_UNINITIALIZED \
+	_Pragma("GCC diagnostic push")
+#endif /* HAVE_MAYBE_UNINITIALIZED */
+
 #define PRAGMA_START(x) \
 	_Pragma("GCC diagnostic push") \
 	_Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
@@ -246,7 +262,8 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #else
 #define PRAGMA_START(x)
 #define PRAGMA_END
-#endif
+
+#endif /* GCC_DIAGNOSTIC */
 
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
