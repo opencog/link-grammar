@@ -146,41 +146,10 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #endif /* _WIN32 */
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
- * when passed utf8. Thus, limit to 7 bits for windows. */
-#ifdef _WIN32
-  #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
-#else
-  #define lg_isspace isspace
-#endif
-
-#if __APPLE__
-/* It appears that fgetc on Mac OS 10.11.3 "El Capitan" has a weird
- * or broken version of fgetc() that flubs reads of utf8 chars when
- * the locale is not set to "C" -- in particular, it fails for the
- * en_US.utf8 locale; see bug report #293
- * https://github.com/opencog/link-grammar/issues/293
- */
-static inline int lg_fgetc(FILE *stream)
-{
-	char c[4];  /* general overflow paranoia */
-	size_t nr = fread(c, 1, 1, stream);
-	if (0 == nr) return EOF;
-	return (int) c[0];
-}
-
-static inline int lg_ungetc(int c, FILE *stream)
-{
-	/* This should work, because we never unget past the newline char. */
-	int rc = fseek(stream, -1, SEEK_CUR);
-	if (rc) return EOF;
-	return c;
-}
-
-#else
-#define lg_fgetc   fgetc
-#define lg_ungetc  ungetc
-#endif
-
+ * when passed utf8. OSX returns TRUE on char values 0x85 and 0xa0).
+ * Since it is defined to return TRUE only on 6 characters, all of which
+ * are in the range [0..127], just limit its arguments to 7 bits. */
+#define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 
 #if defined(__sun__)
 int strncasecmp(const char *s1, const char *s2, size_t n);
