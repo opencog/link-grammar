@@ -146,15 +146,12 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #endif /* _WIN32 */
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
- * when passed utf8. This is because char, which is used for our strings,
- * is (usually) signed. On Linux it just returns junk which may be 0
- * (and doesn't assert unless compiled with memory access check).
- *
- * The manual of isspace() and the other is*() functions states:
- * "These functions check whether c, which must have the value of an
- * unsigned char or EOF, ...").
- * So just enforce it to a non-zero 8-bit value. */
-#define lg_isspace(c) isspace((unsigned char)c)
+ * when passed utf8. Thus, limit to 7 bits for windows. */
+#ifdef _WIN32
+  #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
+#else
+  #define lg_isspace isspace
+#endif
 
 #if __APPLE__
 /* It appears that fgetc on Mac OS 10.11.3 "El Capitan" has a weird
