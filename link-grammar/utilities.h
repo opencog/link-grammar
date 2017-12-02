@@ -262,7 +262,7 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #else
 #define PRAGMA_START(x)
 #define PRAGMA_END
-
+#define PRAGMA_MAYBE_UNINITIALIZED
 #endif /* GCC_DIAGNOSTIC */
 
 /**
