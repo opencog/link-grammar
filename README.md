@@ -286,6 +286,11 @@ These packages are:
    You also have to install SWIG from http://www.swig.org/download.html .
 - MacOS:
  * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
+   Alternatively, install
+[Anaconda](https://conda.io/docs/user-guide/install/download.html).
+
+NOTE: Before issuing `configure` (see below) you have to validate that
+the required python versions can be invoked using your `PATH`.
 
 The use of the Python bindings is *OPTIONAL*; you do not need these if
 you do not plan to use link-grammar with python.  If you like
@@ -385,16 +390,6 @@ Plain-vanilla Link Grammar should compile and run on Apple MacOSX
 just fine, as described above.  At this time, there are no reported
 issues.
 
-The language bindings for python and java may require additional
-packages to be installed.  A working editline is nice, since it
-allows you to use the arrow keys in the command-line client.
-See http://www.macports.org/ to find these.
-
-You almost surely do not need a Mac portfile; but you can still
-find one here:
-http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile .<br>
-It does not currently specify any additional steps to perform.
-
 If you do NOT need the java bindings, you should almost surely
 configure with:
 ```
@@ -409,6 +404,10 @@ variable to wherever `<Headers/jni.h>` is.   Set the JAVA_HOME variable
 to the location of the java compiler.  Make sure you have ant
 installed.
 
+If you would like to build from GitHub
+(see [BUILDING from the GitHub repository](#building-from-the-github-repository))
+you can install the tools that are listed there using
+[HomeBrew](http://brew.sh/).
 
 BUILDING on Windows
 -------------------

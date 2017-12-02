@@ -66,14 +66,14 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		{
 			do
 			{
-				c = lg_fgetc(fp);
+				c = fgetc(fp);
 				if (c == '\n') { line++; }
 			}
 			while (lg_isspace(c));
 
 			if (c == '%')
 			{
-				while ((c != EOF) && (c != '\n')) { c = lg_fgetc(fp); }
+				while ((c != EOF) && (c != '\n')) { c = fgetc(fp); }
 				line++;
 			}
 		}
@@ -91,7 +91,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 				goto failure;
 			}
 			name[i++] = c;
-			c = lg_fgetc(fp);
+			c = fgetc(fp);
 		}
 		while ((!lg_isspace(c)) && (c != ':') && (c != EOF));
 		name[i] = '\0';
@@ -100,7 +100,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		while (lg_isspace(c))
 		{
 			if (c == '\n') { line++; }
-			c = lg_fgetc(fp);
+			c = fgetc(fp);
 		}
 		if (c != ':')
 		{
@@ -112,7 +112,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		do
 		{
 			if (c == '\n') { line++; }
-			c = lg_fgetc(fp);
+			c = fgetc(fp);
 		}
 		while (lg_isspace(c));
 		if (c == '!')
@@ -121,7 +121,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 			do
 			{
 				if (c == '\n') { line++; }
-				c = lg_fgetc(fp);
+				c = fgetc(fp);
 			}
 			while (lg_isspace(c));
 		}
@@ -142,7 +142,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 				goto failure;
 			}
 			prev = c;
-			c = lg_fgetc(fp);
+			c = fgetc(fp);
 			regex[i++] = c;
 		}
 		while ((c != '/' || prev == '\\') && (c != EOF));

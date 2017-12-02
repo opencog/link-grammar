@@ -146,44 +146,10 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
 #endif /* _WIN32 */
 
 /* MSVC isspace asserts in debug mode, and mingw sometime returns true,
- * when passed utf8. This is because char, which is used for our strings,
- * is (usually) signed. On Linux it just returns junk which may be 0
- * (and doesn't assert unless compiled with memory access check).
- *
- * The manual of isspace() and the other is*() functions states:
- * "These functions check whether c, which must have the value of an
- * unsigned char or EOF, ...").
- * So just enforce it to a non-zero 8-bit value. */
-#define lg_isspace(c) isspace((unsigned char)c)
-
-#if __APPLE__
-/* It appears that fgetc on Mac OS 10.11.3 "El Capitan" has a weird
- * or broken version of fgetc() that flubs reads of utf8 chars when
- * the locale is not set to "C" -- in particular, it fails for the
- * en_US.utf8 locale; see bug report #293
- * https://github.com/opencog/link-grammar/issues/293
- */
-static inline int lg_fgetc(FILE *stream)
-{
-	char c[4];  /* general overflow paranoia */
-	size_t nr = fread(c, 1, 1, stream);
-	if (0 == nr) return EOF;
-	return (int) c[0];
-}
-
-static inline int lg_ungetc(int c, FILE *stream)
-{
-	/* This should work, because we never unget past the newline char. */
-	int rc = fseek(stream, -1, SEEK_CUR);
-	if (rc) return EOF;
-	return c;
-}
-
-#else
-#define lg_fgetc   fgetc
-#define lg_ungetc  ungetc
-#endif
-
+ * when passed utf8. OSX returns TRUE on char values 0x85 and 0xa0).
+ * Since it is defined to return TRUE only on 6 characters, all of which
+ * are in the range [0..127], just limit its arguments to 7 bits. */
+#define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 
 #if defined(__sun__)
 int strncasecmp(const char *s1, const char *s2, size_t n);
@@ -225,11 +191,11 @@ typedef int locale_t;
 #define strdupa(s) strcpy(alloca(strlen(s)+1), s)
 #endif
 #ifndef strndupa
-#define strndupa(s, n) _strndupa3(alloca(MIN(strlen(s), n)+1), s, n)
+#define strndupa(s, n) _strndupa3(alloca((n)+1), s, n)
 static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 {
 	strncpy(new_s, s, n);
-	new_s[MIN(strlen(s), n)] = '\0';
+	new_s[n] = '\0';
 
 	return new_s;
 }
@@ -268,10 +234,26 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define GNUC_UNUSED
 #endif
 
+#if ((__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) || __clang__)
+#define GCC_DIAGNOSTIC
+#endif
+
 /* Apply a pragma to a specific code section only.
  * XXX According to the GCC docs, we cannot use here something like
- * "#ifdef HAVE_x", so -Wunknown-pragmas is used instead. */
-#if __GNUC__ > 2
+ * "#ifdef HAVE_x". Also -Wunknown-pragmas & -Wno-unknown-warning-option
+ * don't work in this situation. So "-Wmaybe-uninitialized", which
+ * is not recognized by clang, is defined separately. */
+#ifdef GCC_DIAGNOSTIC
+
+#ifdef HAVE_MAYBE_UNINITIALIZED
+#define PRAGMA_MAYBE_UNINITIALIZED \
+	_Pragma("GCC diagnostic push") \
+	_Pragma("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+#else
+#define PRAGMA_MAYBE_UNINITIALIZED \
+	_Pragma("GCC diagnostic push")
+#endif /* HAVE_MAYBE_UNINITIALIZED */
+
 #define PRAGMA_START(x) \
 	_Pragma("GCC diagnostic push") \
 	_Pragma("GCC diagnostic ignored \"-Wunknown-pragmas\"") \
@@ -280,7 +262,8 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #else
 #define PRAGMA_START(x)
 #define PRAGMA_END
-#endif
+#define PRAGMA_MAYBE_UNINITIALIZED
+#endif /* GCC_DIAGNOSTIC */
 
 /**
  * Return the length, in codepoints/glyphs, of the utf8-encoded
