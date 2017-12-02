@@ -41,7 +41,7 @@ struct count_context_s
 	bool    islands_ok;
 	bool    null_links;
 	bool    exhausted;
-	int     checktimer;  /* Avoid excess system calls */
+	unsigned checktimer;  /* Avoid excess system calls */
 	int     table_size;
 	int     log2_table_size;
 	Table_connector ** table;
@@ -133,11 +133,11 @@ find_table_pointer(count_context_t *ctxt,
 	/* Create a new connector only if resources are exhausted.
 	 * (???) Huh? I guess we're in panic parse mode in that case.
 	 * checktimer is a device to avoid a gazillion system calls
-	 * to get the timer value. On circa-2009 machines, it results
-	 * in maybe 5-10 timer calls per second.
+	 * to get the timer value. On circa-2017 machines, it results
+	 * in about 0.5-1 timer calls per second.
 	 */
 	ctxt->checktimer ++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%1450100) &&
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<21)) &&
 	                       (ctxt->current_resources != NULL) &&
 	                       resources_exhausted(ctxt->current_resources)))
 	{
