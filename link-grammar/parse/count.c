@@ -375,6 +375,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				bool leftpcount = false;
 				bool rightpcount = false;
 				bool pseudototal = false;
+				bool lmbnrptotal = false;
+				bool rmbnlptotal = false;
 
 				rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
@@ -400,9 +402,15 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					if (!leftpcount && le->multi && d->left->multi)
 						leftpcount =
 							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
+
+					if (leftpcount) {
+						/* Evaluate using the left match, but not the right. */
+						lmbnrptotal =
+							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
+					}
 				}
 
-				if (Rmatch)
+				if (Rmatch && (leftpcount || (le == NULL)))
 				{
 					rightpcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 					if (!rightpcount && d->right->multi)
@@ -414,21 +422,16 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 					if (!rightpcount && d->right->multi && re->multi)
 						rightpcount =
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
+
+					if ((le == NULL) && rightpcount) {
+						rmbnlptotal =
+							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
+					}
 				}
 
 				/* Total number where links are used on both sides */
-				pseudototal = leftpcount && rightpcount;
-
-				if (!pseudototal && leftpcount) {
-					/* Evaluate using the left match, but not the right. */
-					pseudototal =
-						pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
-				}
-				if (!pseudototal && (le == NULL) && rightpcount) {
-					/* Evaluate using the right match, but not the left. */
-					pseudototal =
-						pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
-				}
+				pseudototal = (leftpcount && rightpcount) ||
+				              lmbnrptotal || rmbnlptotal;
 
 				/* If pseudototal is zero (false), that implies that
 				 * we know that the true total is zero. So we don't
@@ -437,7 +440,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				{
 					Count_bin leftcount = zero;
 					Count_bin rightcount = zero;
-					if (Lmatch) {
+					if (leftpcount) {
 						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 						if (le->multi)
 							hist_accumv(&leftcount, d->cost,
@@ -448,9 +451,16 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 						if (le->multi && d->left->multi)
 							hist_accumv(&leftcount, d->cost,
 								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+
+						if (lmbnrptotal && (0 < hist_total(&leftcount)))
+						{
+							/* Evaluate using the left match, but not the right */
+							hist_muladdv(&total, &leftcount, d->cost,
+								do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
+						}
 					}
 
-					if (Rmatch) {
+					if (rightpcount) {
 						rightcount = do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 						if (d->right->multi)
 							hist_accumv(&rightcount, d->cost,
@@ -461,22 +471,16 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 						if (d->right->multi && re->multi)
 							hist_accumv(&rightcount, d->cost,
 								do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
-					}
 
-					/* Total number where links are used on both sides */
-					hist_muladd(&total, &leftcount, 0.0, &rightcount);
+						/* Total number where links are used on both sides */
+						hist_muladd(&total, &leftcount, 0.0, &rightcount);
 
-					if (0 < hist_total(&leftcount))
-					{
-						/* Evaluate using the left match, but not the right */
-						hist_muladdv(&total, &leftcount, d->cost,
-							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
-					}
-					if ((le == NULL) && (0 < hist_total(&rightcount)))
-					{
-						/* Evaluate using the right match, but not the left */
-						hist_muladdv(&total, &rightcount, d->cost,
-							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+						if (rmbnlptotal && (le == NULL) && (0 < hist_total(&rightcount)))
+						{
+							/* Evaluate using the right match, but not the left */
+							hist_muladdv(&total, &rightcount, d->cost,
+								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+						}
 					}
 
 					/* Sigh. Overflows can and do occur, esp for the ANY language. */
