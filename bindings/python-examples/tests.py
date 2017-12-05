@@ -7,6 +7,12 @@ import sys, os
 import locale
 import unittest
 
+# assertRaisesRegexp and assertRegexpMatches have been renamed in
+# unittest for python 3, but not in python 2 (at least yet).
+if hasattr(unittest.TestCase, 'assertRaisesRegex'):
+    unittest.TestCase.assertRaisesRegexp = unittest.TestCase.assertRaisesRegex
+    unittest.TestCase.assertRegexpMatches = unittest.TestCase.assertRegex
+
 import lg_testutils # Found in the same directory of this test script
 
 # Show information on this program run
@@ -962,7 +968,7 @@ class divert_start(object):
         os.close(self.savedfd)
         os.unlink(self.filename)
         self.filename = None
-        return content
+        return str(content)
 
     __del__ = divert_end
 
