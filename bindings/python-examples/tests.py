@@ -968,7 +968,7 @@ class divert_start(object):
         os.close(self.savedfd)
         os.unlink(self.filename)
         self.filename = None
-        return content
+        return str(content)
 
     __del__ = divert_end
 
