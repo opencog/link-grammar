@@ -510,14 +510,16 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 						CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
 							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 
-					/* Total number where links are used on both sides */
-					hist_muladd(&total, &leftcount, 0.0, &rightcount);
-
-					if ((le == NULL) && (0 < hist_total(&rightcount)))
+					if (0 < hist_total(&rightcount))
 					{
-						/* Evaluate using the right match, but not the left */
-						CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
-							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+						/* Total number where links are used on both sides */
+						hist_muladd(&total, &leftcount, 0.0, &rightcount);
+						if (le == NULL)
+						{
+							/* Evaluate using the right match, but not the left */
+							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
+								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+						}
 					}
 				}
 
