@@ -365,7 +365,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 #endif
 		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
-			unsigned int lnull_cnt, rnull_cnt;
+			int lnull_cnt, rnull_cnt;
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
@@ -373,10 +373,8 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 #ifdef VERIFY_MATCH_LIST
 			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
-			/* _p1 avoids a gcc warning about unsafe loop opt */
-			unsigned int null_count_p1 = null_count + 1;
 
-			for (lnull_cnt = 0; lnull_cnt < null_count_p1; lnull_cnt++)
+			for (lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
 			{
 				bool leftpcount = false;
 				bool rightpcount = false;
