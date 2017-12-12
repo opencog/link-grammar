@@ -36,6 +36,7 @@ struct Table_connector_s
 
 struct count_context_s
 {
+	fast_matcher_t *mchxt;
 	Word *  local_sent;
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
@@ -206,14 +207,12 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 
 #ifdef DO_COUNT_TRACE
 #define V(c) (!c?"(nil)":c->string)
-static Count_bin do_count1(int lineno, fast_matcher_t *mchxt,
-                          count_context_t *ctxt,
+static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
                           int null_count);
 
-static Count_bin do_count(int lineno, fast_matcher_t *mchxt,
-                          count_context_t *ctxt,
+static Count_bin do_count(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
                           int null_count)
@@ -221,24 +220,24 @@ static Count_bin do_count(int lineno, fast_matcher_t *mchxt,
 	static int level;
 
 	if (!verbosity_level(8))
-		return do_count1(lineno, mchxt, ctxt, lw, rw, le, re, null_count);
+		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
 	level++;
 	prt_error("%*sdo_count%.*s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
 		level*2, "", (!t)*3, "(R)", lineno, lw, rw, V(le), V(re), null_count);
-	Count_bin r = do_count1(lineno, mchxt, ctxt, lw, rw, le, re, null_count);
+	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
 	level--;
 
 	return r;
 }
 
-static Count_bin do_count1(int lineno, fast_matcher_t *mchxt,
+static Count_bin do_count1(int lineno,
 #define do_count(...) do_count(__LINE__, __VA_ARGS__)
 #else
-static Count_bin do_count(fast_matcher_t *mchxt,
+static Count_bin do_count(
 #endif
                           count_context_t *ctxt,
                           int lw, int rw,
@@ -326,11 +325,11 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				if (d->left == NULL)
 				{
 					hist_accumv(&t->count, d->cost,
-						do_count(mchxt, ctxt, w, rw, d->right, NULL, null_count-1));
+						do_count(ctxt, w, rw, d->right, NULL, null_count-1));
 				}
 			}
 			hist_accumv(&t->count, 0.0,
-				do_count(mchxt, ctxt, w, rw, NULL, NULL, null_count-1));
+				do_count(ctxt, w, rw, NULL, NULL, null_count-1));
 		}
 		return t->count;
 	}
@@ -354,6 +353,7 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 	}
 
 	total = zero;
+	fast_matcher_t *mchxt = ctxt->mchxt;
 
 	for (w = start_word; w < end_word; w++)
 	{
@@ -475,49 +475,47 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				if (leftpcount && (rightpcount || hist_total(&l_bnr) != 0))
 				{
 					CACHE_COUNT(l_any, leftcount = count,
-						do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt));
+						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
 					if (le->multi)
 						CACHE_COUNT(l_cmulti, hist_accumv(&leftcount, d->cost, count),
-							do_count(mchxt, ctxt, lw, w, le, d->left->next, lnull_cnt));
+							do_count(ctxt, lw, w, le, d->left->next, lnull_cnt));
 					if (d->left->multi)
 						CACHE_COUNT(l_dmulti, hist_accumv(&leftcount, d->cost, count),
-							do_count(mchxt, ctxt, lw, w, le->next, d->left, lnull_cnt));
+							do_count(ctxt, lw, w, le->next, d->left, lnull_cnt));
 					if (d->left->multi && le->multi)
 						CACHE_COUNT(l_dcmulti, hist_accumv(&leftcount, d->cost, count),
-							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+							do_count(ctxt, lw, w, le, d->left, lnull_cnt));
 
 					if (0 < hist_total(&leftcount))
 					{
 						/* Evaluate using the left match, but not the right */
 						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
-							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
+							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 				}
 
 				if (rightpcount && (leftpcount || hist_total(&r_bnl) != 0))
 				{
 					CACHE_COUNT(r_any, rightcount = count,
-						do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rnull_cnt));
+						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
 					if (re->multi)
 						CACHE_COUNT(r_cmulti, hist_accumv(&rightcount, d->cost, count),
-							do_count(mchxt, ctxt, w, rw, d->right->next, re, rnull_cnt));
+							do_count(ctxt, w, rw, d->right->next, re, rnull_cnt));
 					if (d->right->multi)
 						CACHE_COUNT(r_dmulti, hist_accumv(&rightcount, d->cost, count),
-							do_count(mchxt, ctxt, w, rw, d->right, re->next, rnull_cnt));
+							do_count(ctxt, w, rw, d->right, re->next, rnull_cnt));
 					if (d->right->multi && re->multi)
 						CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
-							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
+							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 
 					if (0 < hist_total(&rightcount))
 					{
 						/* Total number where links are used on both sides */
 						hist_muladd(&total, &leftcount, 0.0, &rightcount);
-						if (le == NULL)
-						{
-							/* Evaluate using the right match, but not the left */
-							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
-								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
-						}
+
+						/* Evaluate using the right match, but not the left */
+						CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
+							do_count(ctxt, lw, w, NULL, d->left, lnull_cnt));
 					}
 				}
 
@@ -587,8 +585,9 @@ Count_bin do_parse(Sentence sent,
 	 * one null link. */
 	/* ctxt->null_block = 1; */
 	ctxt->islands_ok = opts->islands_ok;
+	ctxt->mchxt = mchxt;
 
-	hist = do_count(mchxt, ctxt, -1, sent->length, NULL, NULL, null_count+1);
+	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
