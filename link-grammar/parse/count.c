@@ -357,13 +357,12 @@ static Count_bin do_count(
 
 	for (w = start_word; w < end_word; w++)
 	{
-		size_t mlb, mle;
-		mle = mlb = form_match_list(mchxt, w, le, lw, re, rw);
+		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
 #ifdef VERIFY_MATCH_LIST
 		int id = get_match_list_element(mchxt, mlb) ?
 		            get_match_list_element(mchxt, mlb)->match_id : 0;
 #endif
-		for (; get_match_list_element(mchxt, mle) != NULL; mle++)
+		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			int lnull_cnt, rnull_cnt;
 			Disjunct *d = get_match_list_element(mchxt, mle);
@@ -405,8 +404,9 @@ static Count_bin do_count(
 				 * the pseudocount is zero, then we know that the true
 				 * count will be zero.
 				 *
-				 * Cache the result, so a table lookup can be skipped if we
-				 * actually need  */
+				 * Cache the result in the l_* and r_* variables, so a table
+				 * lookup can be skipped in cases we cannot skip the actual
+				 * calculation and a table entry exists. */
 				if (Lmatch)
 				{
 					l_any = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
@@ -479,7 +479,7 @@ static Count_bin do_count(
 			 /* If the pseudocounting above indicates one of the terms
 			 * in the count multiplication is zero,
 			 * we know that the true total is zero. So we don't
-			 * bother counting the other terms at all, in that case. */
+			 * bother counting the other term at all, in that case. */
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
 				if (leftpcount &&
