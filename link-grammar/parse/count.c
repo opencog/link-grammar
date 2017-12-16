@@ -397,11 +397,16 @@ static Count_bin do_count(
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 
-				/* First, perform pseudocounting as an optimization. If
+				/* The result count is a sum of multiplications of
+				 * LHS and RHS counts. If one of them is zero, we can skip
+				 * calculating the other one.
+				 *
+				 * So, first perform pseudocounting as an optimization. If
 				 * the pseudocount is zero, then we know that the true
-				 * count will be zero, and so skip counting entirely,
-				 * in that case.
-				 */
+				 * count will be zero.
+				 *
+				 * Cache the result, so a table lookup can be skipped if we
+				 * actually need  */
 				if (Lmatch)
 				{
 					l_any = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
@@ -471,9 +476,10 @@ static Count_bin do_count(
 	Count_bin count = (hist_total(&c) == NO_COUNT) ? do_count : hist_total(&c); \
 	how_to_count; \
 }
-			/* If pseudototal is zero (false), that implies that
+			 /* If the pseudocounting above indicates one of the terms
+			 * in the count multiplication is zero,
 			 * we know that the true total is zero. So we don't
-			 * bother counting at all, in that case. */
+			 * bother counting the other terms at all, in that case. */
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
 				if (leftpcount &&
