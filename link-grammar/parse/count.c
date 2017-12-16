@@ -159,6 +159,13 @@ Count_bin* table_lookup(count_context_t * ctxt,
 	if (t == NULL) return NULL; else return &t->count;
 }
 
+#define NO_COUNT -1
+#ifdef PERFORM_COUNT_HISTOGRAMMING
+Count_bin count_unknown = {.total = NO_COUNT};
+#else
+Count_bin count_unknown = NO_COUNT;
+#endif
+
 /**
  * psuedocount is used to check to see if a parse is even possible,
  * so that we don't waste cpu time performing an actual count, only
@@ -171,14 +178,13 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * in the hash table, and its zero, then we know, for sure, that the
  * count is zero.
  */
-static bool pseudocount(count_context_t * ctxt,
+static Count_bin pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int null_count)
 {
 	Count_bin * count = table_lookup(ctxt, lw, rw, le, re, null_count);
-	if (NULL == count) return true;
-	if (hist_total(count) == 0) return false;
-	return true;
+	if (NULL == count) return count_unknown;
+	return *count;
 }
 
 /**
@@ -374,9 +380,17 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 			{
 				bool leftpcount = false;
 				bool rightpcount = false;
-				bool pseudototal = false;
-				bool lmbnrptotal = false;
-				bool rmbnlptotal = false;
+
+				Count_bin l_any;
+				Count_bin l_cmulti = NO_COUNT;
+				Count_bin l_dmulti = NO_COUNT;
+				Count_bin l_dcmulti = NO_COUNT;
+				Count_bin l_bnr = zero;
+				Count_bin r_any = NO_COUNT; /* gcc: may be used uninitialized */
+				Count_bin r_cmulti = NO_COUNT;
+				Count_bin r_dmulti = NO_COUNT;
+				Count_bin r_dcmulti = NO_COUNT;
+				Count_bin r_bnl = zero;
 
 				rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
@@ -392,109 +406,132 @@ static Count_bin do_count(fast_matcher_t *mchxt,
 				 */
 				if (Lmatch)
 				{
-					leftpcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
+					l_any = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
+					leftpcount = (hist_total(&l_any) != 0);
 					if (!leftpcount && le->multi)
-						leftpcount =
+					{
+						l_cmulti =
 							pseudocount(ctxt, lw, w, le, d->left->next, lnull_cnt);
+						leftpcount |= (hist_total(&l_cmulti) != 0);
+					}
 					if (!leftpcount && d->left->multi)
-						leftpcount =
+					{
+						l_dmulti =
 							pseudocount(ctxt, lw, w, le->next, d->left, lnull_cnt);
+						leftpcount |= (hist_total(&l_dmulti) != 0);
+					}
 					if (!leftpcount && le->multi && d->left->multi)
-						leftpcount =
+					{
+						l_dcmulti =
 							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
+						leftpcount |= (hist_total(&l_dcmulti) != 0);
+					}
 
 					if (leftpcount) {
 						/* Evaluate using the left match, but not the right. */
-						lmbnrptotal =
+						l_bnr =
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 					}
 				}
 
 				if (Rmatch && (leftpcount || (le == NULL)))
 				{
-					rightpcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
-					if (!rightpcount && d->right->multi)
-						rightpcount =
-							pseudocount(ctxt, w,rw, d->right, re->next, rnull_cnt);
+					r_any = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
+					rightpcount = (hist_total(&r_any) != 0);
 					if (!rightpcount && re->multi)
-						rightpcount =
+					{
+						r_cmulti =
 							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt);
+						rightpcount |= (hist_total(&r_cmulti) != 0);
+					}
+					if (!rightpcount && d->right->multi)
+					{
+						r_dmulti =
+							pseudocount(ctxt, w,rw, d->right, re->next, rnull_cnt);
+						rightpcount |= (hist_total(&r_dmulti) != 0);
+					}
 					if (!rightpcount && d->right->multi && re->multi)
-						rightpcount =
+					{
+						r_dcmulti =
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
+						rightpcount |= (hist_total(&r_dcmulti) != 0);
+					}
 
-					if ((le == NULL) && rightpcount) {
-						rmbnlptotal =
+					if (rightpcount && (le == NULL)) {
+						r_bnl =
 							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 					}
 				}
 
-				/* Total number where links are used on both sides */
-				pseudototal = (leftpcount && rightpcount) ||
-				              lmbnrptotal || rmbnlptotal;
-
-				/* If pseudototal is zero (false), that implies that
-				 * we know that the true total is zero. So we don't
-				 * bother counting at all, in that case. */
-				if (pseudototal)
+#define CACHE_COUNT(c, how_to_count, do_count) \
+{ \
+	Count_bin count; \
+	count = (hist_total(&c) == NO_COUNT) ? do_count : hist_total(&c); \
+	how_to_count; \
+}
+			/* If pseudototal is zero (false), that implies that
+			 * we know that the true total is zero. So we don't
+			 * bother counting at all, in that case. */
+				Count_bin leftcount = zero;
+				Count_bin rightcount = zero;
+				if (leftpcount && (rightpcount || hist_total(&l_bnr) != 0))
 				{
-					Count_bin leftcount = zero;
-					Count_bin rightcount = zero;
-					if (leftpcount) {
-						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt);
-						if (le->multi)
-							hist_accumv(&leftcount, d->cost,
-								do_count(mchxt, ctxt, lw, w, le, d->left->next, lnull_cnt));
-						if (d->left->multi)
-							hist_accumv(&leftcount, d->cost,
-								 do_count(mchxt, ctxt, lw, w, le->next, d->left, lnull_cnt));
-						if (le->multi && d->left->multi)
-							hist_accumv(&leftcount, d->cost,
-								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+					CACHE_COUNT(l_any, leftcount = count,
+						do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lnull_cnt));
+					if (le->multi)
+						CACHE_COUNT(l_cmulti, hist_accumv(&leftcount, d->cost, count),
+							do_count(mchxt, ctxt, lw, w, le, d->left->next, lnull_cnt));
+					if (d->left->multi)
+						CACHE_COUNT(l_dmulti, hist_accumv(&leftcount, d->cost, count),
+							do_count(mchxt, ctxt, lw, w, le->next, d->left, lnull_cnt));
+					if (d->left->multi && le->multi)
+						CACHE_COUNT(l_dcmulti, hist_accumv(&leftcount, d->cost, count),
+							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
 
-						if (lmbnrptotal && (0 < hist_total(&leftcount)))
-						{
-							/* Evaluate using the left match, but not the right */
-							hist_muladdv(&total, &leftcount, d->cost,
-								do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
-						}
-					}
-
-					if (rightpcount) {
-						rightcount = do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rnull_cnt);
-						if (d->right->multi)
-							hist_accumv(&rightcount, d->cost,
-								do_count(mchxt, ctxt, w, rw, d->right,re->next, rnull_cnt));
-						if (re->multi)
-							hist_accumv(&rightcount, d->cost,
-								do_count(mchxt, ctxt, w, rw, d->right->next, re, rnull_cnt));
-						if (d->right->multi && re->multi)
-							hist_accumv(&rightcount, d->cost,
-								do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
-
-						/* Total number where links are used on both sides */
-						hist_muladd(&total, &leftcount, 0.0, &rightcount);
-
-						if (rmbnlptotal && (le == NULL) && (0 < hist_total(&rightcount)))
-						{
-							/* Evaluate using the right match, but not the left */
-							hist_muladdv(&total, &rightcount, d->cost,
-								do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
-						}
-					}
-
-					/* Sigh. Overflows can and do occur, esp for the ANY language. */
-					if (INT_MAX < hist_total(&total))
+					if (0 < hist_total(&leftcount))
 					{
-#ifdef PERFORM_COUNT_HISTOGRAMMING
-						total.total = INT_MAX;
-#else
-						total = INT_MAX;
-#endif /* PERFORM_COUNT_HISTOGRAMMING */
-						t->count = total;
-						pop_match_list(mchxt, mlb);
-						return total;
+						/* Evaluate using the left match, but not the right */
+						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
+							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
 					}
+				}
+
+				if (rightpcount && (leftpcount || hist_total(&r_bnl) != 0))
+				{
+					CACHE_COUNT(r_any, rightcount = count,
+						do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rnull_cnt));
+					if (re->multi)
+						CACHE_COUNT(r_cmulti, hist_accumv(&rightcount, d->cost, count),
+							do_count(mchxt, ctxt, w, rw, d->right->next, re, rnull_cnt));
+					if (d->right->multi)
+						CACHE_COUNT(r_dmulti, hist_accumv(&rightcount, d->cost, count),
+							do_count(mchxt, ctxt, w, rw, d->right, re->next, rnull_cnt));
+					if (d->right->multi && re->multi)
+						CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
+							do_count(mchxt, ctxt, w, rw, d->right, re, rnull_cnt));
+
+					/* Total number where links are used on both sides */
+					hist_muladd(&total, &leftcount, 0.0, &rightcount);
+
+					if ((le == NULL) && (0 < hist_total(&rightcount)))
+					{
+						/* Evaluate using the right match, but not the left */
+						CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
+							do_count(mchxt, ctxt, lw, w, le, d->left, lnull_cnt));
+					}
+				}
+
+				/* Sigh. Overflows can and do occur, esp for the ANY language. */
+				if (INT_MAX < hist_total(&total))
+				{
+#ifdef PERFORM_COUNT_HISTOGRAMMING
+					total.total = INT_MAX;
+#else
+					total = INT_MAX;
+#endif /* PERFORM_COUNT_HISTOGRAMMING */
+					t->count = total;
+					pop_match_list(mchxt, mlb);
+					return total;
 				}
 			}
 		}
