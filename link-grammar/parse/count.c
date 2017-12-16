@@ -383,12 +383,12 @@ static Count_bin do_count(
 				Count_bin l_cmulti = NO_COUNT;
 				Count_bin l_dmulti = NO_COUNT;
 				Count_bin l_dcmulti = NO_COUNT;
-				Count_bin l_bnr = zero;
+				Count_bin l_bnr = NO_COUNT;
 				Count_bin r_any = NO_COUNT; /* gcc: may be used uninitialized */
 				Count_bin r_cmulti = NO_COUNT;
 				Count_bin r_dmulti = NO_COUNT;
 				Count_bin r_dcmulti = NO_COUNT;
-				Count_bin r_bnl = zero;
+				Count_bin r_bnl = NO_COUNT;
 
 				rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
@@ -424,12 +424,6 @@ static Count_bin do_count(
 							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 						leftpcount |= (hist_total(&l_dcmulti) != 0);
 					}
-
-					if (leftpcount) {
-						/* Evaluate using the left match, but not the right. */
-						l_bnr =
-							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
-					}
 				}
 
 				if (Rmatch && (leftpcount || (le == NULL)))
@@ -454,17 +448,27 @@ static Count_bin do_count(
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 						rightpcount |= (hist_total(&r_dcmulti) != 0);
 					}
+				}
 
-					if (rightpcount && (le == NULL)) {
-						r_bnl =
-							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
+				if (!leftpcount && !rightpcount) continue;
+
+				if (!(leftpcount && rightpcount))
+				{
+					if (leftpcount)
+					{
+						/* Evaluate using the left match, but not the right. */
+						l_bnr = do_count(ctxt, w, rw, d->right, re, rnull_cnt);
+					}
+					else if (le == NULL)
+					{
+						/* Evaluate using the right match, but not the left. */
+						r_bnl = do_count(ctxt, lw, w, le, d->left, lnull_cnt);
 					}
 				}
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
 { \
-	Count_bin count; \
-	count = (hist_total(&c) == NO_COUNT) ? do_count : hist_total(&c); \
+	Count_bin count = (hist_total(&c) == NO_COUNT) ? do_count : hist_total(&c); \
 	how_to_count; \
 }
 			/* If pseudototal is zero (false), that implies that
@@ -472,7 +476,8 @@ static Count_bin do_count(
 			 * bother counting at all, in that case. */
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
-				if (leftpcount && (rightpcount || hist_total(&l_bnr) != 0))
+				if (leftpcount &&
+				    (rightpcount || (0 != hist_total(&l_bnr))))
 				{
 					CACHE_COUNT(l_any, leftcount = count,
 						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
@@ -494,7 +499,8 @@ static Count_bin do_count(
 					}
 				}
 
-				if (rightpcount && (leftpcount || hist_total(&r_bnl) != 0))
+				if (rightpcount &&
+				    ((0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
 				{
 					CACHE_COUNT(r_any, rightcount = count,
 						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
@@ -514,8 +520,9 @@ static Count_bin do_count(
 						hist_muladd(&total, &leftcount, 0.0, &rightcount);
 
 						/* Evaluate using the right match, but not the left */
-						CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
-							do_count(ctxt, lw, w, NULL, d->left, lnull_cnt));
+						if (le == NULL)
+							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
+								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 				}
 
