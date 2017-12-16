@@ -195,7 +195,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 }
 
 #ifdef DEBUG
-//#define DO_COUNT_TRACE
+#define DO_COUNT_TRACE
 #endif
 
 #ifdef DO_COUNT_TRACE
