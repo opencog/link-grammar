@@ -71,6 +71,7 @@ void pp_lexer_close(PPLexTable *lt)
   string_set_delete(lt->string_set);
   if (lt->tokens) free(lt->tokens);
   xfree(lt, sizeof(PPLexTable));
+  yylex_destroy();
 }
 
 PPLexTable *pp_lexer_open(FILE *f)

@@ -80,9 +80,17 @@ char * join_path(const char * prefix, const char * suffix)
  */
 static char * custom_data_dir = NULL;
 
+static void free_custom_data_dir(void)
+{
+	free(custom_data_dir);
+}
+
 void dictionary_set_data_dir(const char * path)
 {
-	if (custom_data_dir) free (custom_data_dir);
+	if (custom_data_dir)
+		free(custom_data_dir);
+	else
+		atexit(free_custom_data_dir);
 	custom_data_dir = safe_strdup(path);
 }
 
