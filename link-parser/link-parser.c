@@ -723,8 +723,8 @@ int main(int argc, char * argv[])
 			if (NULL == input_fh)
 			{
 				int perr = errno;
-				fprintf(stderr, "Error: %s (%d) %s\n",
-				        filename, perr, strerror(perr));
+				fprintf(stderr, "Error: Cannot open %s: %s\n",
+				        filename, strerror(perr));
 				input_fh = stdin;
 				continue;
 			}

@@ -38,6 +38,37 @@ static wchar_t * prompt(EditLine *el)
 	return wc_prompt;
 }
 
+/**
+ * Complete file names after "!file ".
+ * Filenames with blanks are not supported well.
+ * This is partially a problem of editline, so there is no point to
+ * fix that.
+ * FIXME: The file completion knows about ~ and ~user. However, I
+ * don't know how to force their expanding, so they are not useful
+ * for now.
+ * TODO: Variable completion.
+ */
+static unsigned char lg_fn_complete(EditLine *el, int ch)
+{
+	const LineInfoW *li;
+	const wchar_t *ctemp;
+
+	/* Skip back the last word and possible spaces before it. */
+	li = el_wline(el);
+	for (ctemp = li->cursor-1; ctemp > li->buffer; ctemp--)
+		if (*ctemp == L' ') break;
+	for (; ctemp > li->buffer; ctemp--)
+		if (*ctemp != L' ') break;
+
+	/* If we don't have there "!file ", no completion is done. */
+	if (0 != wcsncmp(li->buffer, L"!file ", ctemp-li->buffer+2))
+		return CC_ERROR;
+
+	unsigned char r = _el_fn_complete(el, ch);
+	/* CC_NORM is returned if no possible completion. */
+	return (r == CC_NORM) ? CC_ERROR : r;
+}
+
 char *lg_readline(const char *mb_prompt)
 {
 	static bool is_init = false;
@@ -65,7 +96,6 @@ char *lg_readline(const char *mb_prompt)
 		el = el_init("link-parser", stdin, stdout, stderr);
 		history_w(hist, &ev, H_SETSIZE, 20);   /* Remember 20 events */
 		el_wset(el, EL_HIST, history_w, hist);
-		el_source(el, NULL);       /* Source the user's defaults file. */
 		history_w(hist, &ev, H_LOAD, HFILE);
 
 		el_set(el, EL_SIGNAL, 1); /* Restore tty setting on returning to shell */
@@ -73,8 +103,13 @@ char *lg_readline(const char *mb_prompt)
 		/* By default, it comes up in vi mode, with the editor not in
 		 * insert mode; and even when in insert mode, it drops back to
 		 * command mode at the drop of a hat. Totally confusing/lame. */
-		el_wset(el, EL_EDITOR, L"emacs");
-		el_wset(el, EL_PROMPT_ESC, prompt, '\1'); /* Set the prompt function */
+		el_set(el, EL_EDITOR, "emacs");
+		el_wset(el, EL_PROMPT, prompt); /* Set the prompt function */
+
+		el_set(el, EL_ADDFN, "fn_complete", "file completion", lg_fn_complete);
+		el_set(el, EL_BIND, "^I", "fn_complete", NULL);
+
+		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
 	wc_line = el_wgets(el, &numc);
