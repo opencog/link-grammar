@@ -103,8 +103,8 @@ char *lg_readline(const char *mb_prompt)
 		/* By default, it comes up in vi mode, with the editor not in
 		 * insert mode; and even when in insert mode, it drops back to
 		 * command mode at the drop of a hat. Totally confusing/lame. */
-		el_wset(el, EL_EDITOR, L"emacs");
-		el_wset(el, EL_PROMPT_ESC, prompt, '\1'); /* Set the prompt function */
+		el_set(el, EL_EDITOR, "emacs");
+		el_wset(el, EL_PROMPT, prompt); /* Set the prompt function */
 
 		el_set(el, EL_ADDFN, "fn_complete", "file completion", lg_fn_complete);
 		el_set(el, EL_BIND, "^I", "fn_complete", NULL);
