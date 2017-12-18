@@ -96,7 +96,6 @@ char *lg_readline(const char *mb_prompt)
 		el = el_init("link-parser", stdin, stdout, stderr);
 		history_w(hist, &ev, H_SETSIZE, 20);   /* Remember 20 events */
 		el_wset(el, EL_HIST, history_w, hist);
-		el_source(el, NULL);       /* Source the user's defaults file. */
 		history_w(hist, &ev, H_LOAD, HFILE);
 
 		el_set(el, EL_SIGNAL, 1); /* Restore tty setting on returning to shell */
@@ -109,6 +108,8 @@ char *lg_readline(const char *mb_prompt)
 
 		el_set(el, EL_ADDFN, "fn_complete", "file completion", lg_fn_complete);
 		el_set(el, EL_BIND, "^I", "fn_complete", NULL);
+
+		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
 	wc_line = el_wgets(el, &numc);
