@@ -37,6 +37,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 /* Used for terminal resizing */
 #ifndef _WIN32
@@ -723,12 +724,21 @@ int main(int argc, char * argv[])
 
 			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
 
+			struct stat statbuf;
+			stat(filename, &statbuf);
+			if (statbuf.st_mode & S_IFDIR)
+			{
+				fprintf(stderr, "Error: Cannot open %s: %s\n",
+				        filename, strerror(EISDIR));
+				continue;
+			}
+
 			input_fh = fopen(filename, "r");
+
 			if (NULL == input_fh)
 			{
-				int perr = errno;
 				fprintf(stderr, "Error: Cannot open %s: %s\n",
-				        filename, strerror(perr));
+				        filename, strerror(errno));
 				input_fh = stdin;
 				continue;
 			}
