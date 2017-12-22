@@ -152,7 +152,8 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 	{
 		if (('\0' == pline[0]) || ('\r' == pline[0]) || ('\n' == pline[0]))
 			return (char *)"\n";           /* Continue linkage display */
-		if (in == stdin) input_pending = true;
+		if ((in == stdin) || ('!' == pline[0]))
+			input_pending = true;          /* In !file mode allow commands */
 		return (char *)"x";               /* Stop linkage display */
 	}
 
