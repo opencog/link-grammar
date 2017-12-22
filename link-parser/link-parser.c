@@ -894,24 +894,21 @@ int main(int argc, char * argv[])
 
 			/* print_total_time(opts); */
 
+			const char *rc = "";
 			if (copts->batch_mode)
 			{
 				batch_process_some_linkages(label, sent, copts);
 			}
 			else
 			{
-				const char *rc = process_some_linkages(input_fh, sent, copts);
-				if (NULL == rc)
-				{
-					sentence_delete(sent);
-					sent = NULL;
-					break;
-				}
+				rc = process_some_linkages(input_fh, sent, copts);
 			}
-			fflush(stdout);
 
+			fflush(stdout);
 			sentence_delete(sent);
 			sent = NULL;
+
+			if (NULL == rc) break;
 		}
 	}
 
