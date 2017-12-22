@@ -139,7 +139,7 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 		pline = get_terminal_line(input_string, in, out);
 	}
 
-	if (NULL == pline) return NULL;      /* EOF */
+	if (NULL == pline) return NULL;      /* EOF or error */
 
 	if (('\0' != input_string[MAX_INPUT-2]) &&
 	    ('\n' != input_string[MAX_INPUT-2]))
@@ -695,6 +695,9 @@ int main(int argc, char * argv[])
 
 		if (NULL == input_string)
 		{
+			if (ferror(input_fh))
+				prt_error("Error: Read: %s\n", strerror(errno));
+
 			if (input_fh == stdin) break;
 			fclose (input_fh);
 			input_fh = stdin;
