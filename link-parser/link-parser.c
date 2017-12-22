@@ -128,7 +128,7 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 
 	input_string[MAX_INPUT-2] = '\0';
 
-	if ((in != stdin) || !isatty_stdin)
+	if (((in != stdin) && !check_return) || !isatty_stdin)
 	{
 		/* Get input from a file. */
 		pline = fgets(input_string, MAX_INPUT, in);
@@ -152,7 +152,7 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 	{
 		if (('\0' == pline[0]) || ('\r' == pline[0]) || ('\n' == pline[0]))
 			return (char *)"\n";           /* Continue linkage display */
-		input_pending = true;
+		if (in == stdin) input_pending = true;
 		return (char *)"x";               /* Stop linkage display */
 	}
 
@@ -380,11 +380,11 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 		{
 			if (!auto_next_linkage)
 			{
-				if ((verbosity > 0) && (in == stdin) && isatty_stdin && isatty_stdout)
+				if ((verbosity > 0) && (!copts->batch_mode) && isatty_stdin && isatty_stdout)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				char *rc = fget_input_string(in, stdout, /*check_return*/true);
+				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -908,7 +908,7 @@ int main(int argc, char * argv[])
 			sentence_delete(sent);
 			sent = NULL;
 
-			if (NULL == rc) break;
+			if ((NULL == rc) && (input_fh == stdin)) break;
 		}
 	}
 
