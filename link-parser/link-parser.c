@@ -725,8 +725,7 @@ int main(int argc, char * argv[])
 			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
 
 			struct stat statbuf;
-			stat(filename, &statbuf);
-			if (statbuf.st_mode & S_IFDIR)
+			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
 				fprintf(stderr, "Error: Cannot open %s: %s\n",
 				        filename, strerror(EISDIR));
