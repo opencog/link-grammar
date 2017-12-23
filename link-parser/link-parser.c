@@ -37,6 +37,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 /* Used for terminal resizing */
 #ifndef _WIN32
@@ -128,7 +129,7 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 
 	input_string[MAX_INPUT-2] = '\0';
 
-	if ((in != stdin) || !isatty_stdin)
+	if (((in != stdin) && !check_return) || !isatty_stdin)
 	{
 		/* Get input from a file. */
 		pline = fgets(input_string, MAX_INPUT, in);
@@ -139,7 +140,7 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 		pline = get_terminal_line(input_string, in, out);
 	}
 
-	if (NULL == pline) return NULL;      /* EOF */
+	if (NULL == pline) return NULL;      /* EOF or error */
 
 	if (('\0' != input_string[MAX_INPUT-2]) &&
 	    ('\n' != input_string[MAX_INPUT-2]))
@@ -152,7 +153,8 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 	{
 		if (('\0' == pline[0]) || ('\r' == pline[0]) || ('\n' == pline[0]))
 			return (char *)"\n";           /* Continue linkage display */
-		input_pending = true;
+		if ((in == stdin) || ('!' == pline[0]))
+			input_pending = true;          /* In !file mode allow commands */
 		return (char *)"x";               /* Stop linkage display */
 	}
 
@@ -380,11 +382,11 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 		{
 			if (!auto_next_linkage)
 			{
-				if ((verbosity > 0) && (in == stdin) && isatty_stdin && isatty_stdout)
+				if ((verbosity > 0) && (!copts->batch_mode) && isatty_stdin && isatty_stdout)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				char *rc = fget_input_string(in, stdout, /*check_return*/true);
+				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -694,6 +696,9 @@ int main(int argc, char * argv[])
 
 		if (NULL == input_string)
 		{
+			if (ferror(input_fh))
+				prt_error("Error: Read: %s\n", strerror(errno));
+
 			if (input_fh == stdin) break;
 			fclose (input_fh);
 			input_fh = stdin;
@@ -719,12 +724,21 @@ int main(int argc, char * argv[])
 
 			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
 
+			struct stat statbuf;
+			stat(filename, &statbuf);
+			if (statbuf.st_mode & S_IFDIR)
+			{
+				fprintf(stderr, "Error: Cannot open %s: %s\n",
+				        filename, strerror(EISDIR));
+				continue;
+			}
+
 			input_fh = fopen(filename, "r");
+
 			if (NULL == input_fh)
 			{
-				int perr = errno;
 				fprintf(stderr, "Error: Cannot open %s: %s\n",
-				        filename, strerror(perr));
+				        filename, strerror(errno));
 				input_fh = stdin;
 				continue;
 			}
@@ -894,24 +908,21 @@ int main(int argc, char * argv[])
 
 			/* print_total_time(opts); */
 
+			const char *rc = "";
 			if (copts->batch_mode)
 			{
 				batch_process_some_linkages(label, sent, copts);
 			}
 			else
 			{
-				const char *rc = process_some_linkages(input_fh, sent, copts);
-				if (NULL == rc)
-				{
-					sentence_delete(sent);
-					sent = NULL;
-					break;
-				}
+				rc = process_some_linkages(input_fh, sent, copts);
 			}
-			fflush(stdout);
 
+			fflush(stdout);
 			sentence_delete(sent);
 			sent = NULL;
+
+			if ((NULL == rc) && (input_fh == stdin)) break;
 		}
 	}
 
