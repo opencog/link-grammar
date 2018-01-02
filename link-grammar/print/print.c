@@ -447,6 +447,13 @@ linkage_print_diagram_ctxt(const Linkage linkage,
                            size_t x_screen_width,
                            ps_ctxt_t *pctx)
 {
+	if (x_screen_width <= 2)
+	{
+		prt_error("Error: Cannot print diagram: "
+		          "Screen width %zu is too narrow.\n", x_screen_width);
+		return NULL;
+	}
+
 	bool display_short = true;
 	unsigned int i, j, k, cl, cr, inc, row, top_row, top_row_p1;
 	const char *s;
@@ -767,6 +774,7 @@ char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t s
 
 void linkage_free_diagram(char * s)
 {
+	if (NULL == s) return;
 	exfree(s, strlen(s)+1);
 }
 
