@@ -1,5 +1,6 @@
 
 DICTS=                           \
+      affix-punc                 \
       4.0.affix                  \
       4.0.constituent-knowledge  \
       4.0.dict                   \
