@@ -8,3 +8,6 @@ dist_man_MANS = link-parser.man1
 # This tracks --datadir.
 link-parser.1: link-parser.man1
 	sed 's,%DATA_DIR%,$(datadir),' $< >$@
+
+clean-local:
+	-rm -f link-parser.1
