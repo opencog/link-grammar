@@ -1,4 +1,4 @@
-Version 5.4.3 (XXX 2017)
+Version 5.4.3 (4 January 2018)
  * Fix man page installation (actually broken from 5.3.0).
  * Add "thither" to the English dictionary.
  * Fix printing inf loop for very narrow screen widths.
@@ -9,6 +9,7 @@ Version 5.4.3 (XXX 2017)
  * Fix displaying random linkages on Windows.
  * Fix unit tokenization to remove ambiguity.
  * Fix utf8-related bug on Windows that could affect printing.
+ * Add missing affix file, needed for the 'any' language.
 
 Version 5.4.2 (19 October 2017)
  * Fix man page build (broken in 5.4.1)
