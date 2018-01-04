@@ -683,8 +683,8 @@ Spell guessing may be disabled at runtime, in the link-parser client
 with the `!spell=0` flag.  Enter `!help` for more details.
 
 
-MULTI-THREADED USE
-------------------
+Multi-threading
+---------------
 It is safe to use link-grammar for parsing in multiple threads, once
 the dictionaries have been loaded.  The dictionary loading itself is
 not thread-safe; it is not protected in any way.  Thus, link-grammar
@@ -692,34 +692,17 @@ should not be used from multiple threads until the dictionary has
 been loaded.  Different threads may use different dictionaries.
 Parse options can be set on a per-thread basis, with the exception
 of verbosity, which is a global, shared by all threads.  It is the
-only global, outside of the Java bindings.
-
-For multi-threaded Java use, a per-thread variable is needed.  This
-must be enabled during the configure stage:
-```
-./configure --enable-pthreads
-```
+only global.
 
 The following exceptions and special notes apply:
 
-*utilities.c* −
-> has global "verbosity". Memory usage code (disabled
-> by default) also has a global, and so requires
-> pthreads for tracking memory usage.
-
-*jni-client.c* −
-> uses per-thread struct. This should somehow be
-> attached to JNIEnv somehow.  A Java JNI expert is needed.
-
-*malloc-dbg.c* −
-> not thread safe, not normally used;
-> only for debugging.
+*api.c* −
+> has global "verbosity". Memory usage accounting code (disabled
+> by default) also has a global.
 
 *pp_lexer.c*  −
-> autogened code, original lex sources lost.
-> This is only used when reading dictionaries,
-> during initialization, and so doesn't need
-> to be thread safe.
+> autogened code. This is only used when reading dictionaries,
+> during initialization, and so doesn't need to be thread safe.
 
 
 SAT solver
