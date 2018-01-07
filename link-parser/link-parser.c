@@ -684,7 +684,7 @@ int main(int argc, char * argv[])
 		Sentence sent = NULL;
 
 		/* Make sure stderr is shown even when MSVC binary runs under
-		 * Cygwin/MSYS pty (in that case it is fully buffered(!). */
+		 * Cygwin/MSYS pty (in that case it is fully buffered(!)). */
 		fflush(stderr);
 
 		verbosity = parse_options_get_verbosity(opts);

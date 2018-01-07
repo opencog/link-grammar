@@ -60,7 +60,7 @@ typedef Connector * connector_table;
  *
  * If an OR or AND type expression node has one child, we can replace it
  * by its child.  This, of course, is not really necessary, except for
- * performance(?)
+ * performance(?).
  */
 
 static Exp* purge_Exp(Exp *);
