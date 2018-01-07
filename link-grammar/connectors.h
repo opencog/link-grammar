@@ -81,7 +81,6 @@ void free_connectors(Connector *);
 
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
-#define SHORT_LEN 6
 
 static inline Connector * init_connector(Connector *c)
 {
