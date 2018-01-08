@@ -169,10 +169,10 @@ static void warning(Dictionary dict, const char * s)
  * If we're in quote mode, it does not consider the % character for
  * comments.   Note that the returned character is a wide character!
  */
-typedef char* utf8char;
-static utf8char get_character(Dictionary dict, int quote_mode)
+#define MAXUTFLEN 7
+typedef char utf8char[MAXUTFLEN];
+static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 {
-	static char uc[7];
 	int i = 0;
 
 	while (1)
@@ -196,12 +196,12 @@ static utf8char get_character(Dictionary dict, int quote_mode)
 		{
 			uc[0] = c;
 			uc[1] = 0x0;
-			return uc;
+			return true;
 		}
 
 		uc[0] = c;
 		i = 1;
-		while (i < 6)
+		while (i < MAXUTFLEN-1)
 		{
 			c = *(dict->pin++);
 			/* If we're onto the next char, we're done. */
@@ -215,10 +215,10 @@ static utf8char get_character(Dictionary dict, int quote_mode)
 			i++;
 		}
 		dict_error(dict, "UTF8 char is too long");
-		return NULL;
+		return false;
 	}
 	uc[0] = 0x0;
-	return uc;
+	return true;
 }
 
 
@@ -273,8 +273,8 @@ static bool link_advance(Dictionary dict)
 
 	do
 	{
-		c = get_character(dict, false);
-		if (NULL == c) return false;
+		bool ok = get_character(dict, false, c);
+		if (false == ok) return false;
 	}
 	while (lg_isspace(c[0]));
 
@@ -338,8 +338,8 @@ static bool link_advance(Dictionary dict)
 				while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
 			}
 		}
-		c = get_character(dict, quote_mode);
-		if (NULL == c) return false;
+		bool ok = get_character(dict, quote_mode, c);
+		if (false == ok) return false;
 	}
 	return true;
 }
