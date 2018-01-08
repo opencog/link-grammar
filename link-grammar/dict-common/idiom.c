@@ -186,6 +186,11 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 static char current_name[] = "AAAAAAAA";
 #define CN_size (sizeof(current_name)-1)
 
+void reset_current_name(void)
+{
+	strcpy(current_name, "AAAAAAAA");
+}
+
 static void increment_current_name(void)
 {
 	int i = CN_size-1;

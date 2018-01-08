@@ -116,6 +116,7 @@ dictionary_six_str(const char * lang,
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
+	reset_current_name();
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
