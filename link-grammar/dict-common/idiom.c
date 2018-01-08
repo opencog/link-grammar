@@ -183,6 +183,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	return dn;
 }
 
+/* XXX This is not thread-safe. */
 static char current_name[] = "AAAAAAAA";
 #define CN_size (sizeof(current_name)-1)
 
