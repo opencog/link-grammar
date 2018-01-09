@@ -32,7 +32,8 @@
 
 /* For faster comparisons, the connector lc part is encoded into a number
  * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
- * is possible to encode up to 9 letters in an uint64_t. */
+ * is possible to encode up to 9 letters in an uint64_t.
+ * FIXME: Validate that lc length <= 9. */
 #define LC_BITS 7
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
