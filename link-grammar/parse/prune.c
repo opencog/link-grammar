@@ -35,7 +35,6 @@
 
 #define D_PRUNE 5
 
-#define CONTABSZ 8192
 typedef Connector * connector_table;
 
 /* Indicator that this connector cannot be used -- that its "obsolete".  */

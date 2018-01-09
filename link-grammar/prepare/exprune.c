@@ -21,7 +21,6 @@
 #include "exprune.h"
 
 #define D_EXPRUNE 9
-#define CONTABSZ 8192
 
 #ifdef DEBUG
 #define DBG(p, w, X) \
@@ -165,7 +164,7 @@ static Exp* purge_Exp(Exp *e)
  */
 static inline unsigned int hash_S(condesc_t * c)
 {
-	return (c->uc_num & (CONTABSZ-1));
+	return c->uc_num;
 }
 
 /**
@@ -182,9 +181,9 @@ static inline bool matches_S(connector_table *ct, condesc_t * c)
 	return false;
 }
 
-static void zero_connector_table(connector_table *ct, size_t contab_usage)
+static void zero_connector_table(connector_table *ct, size_t contab_size)
 {
-	memset(ct, 0, sizeof(condesc_t *) * contab_usage);
+	memset(ct, 0, sizeof(condesc_t *) * contab_size);
 }
 
 /**
@@ -310,13 +309,10 @@ void expression_prune(Sentence sent)
 	int N_deleted;
 	X_node * x;
 	size_t w;
-	size_t contab_usage = sent->dict->contable.num_con; /* tentative */
-	size_t contab_size = MIN(next_power_of_two_up(contab_usage), CONTABSZ);
+	size_t contab_size = sent->dict->contable.num_uc;
 	condesc_t **ct = alloca(contab_size * sizeof(*ct));
 
-	contab_usage = MIN(contab_usage, contab_size); /* actual */
-
-	zero_connector_table(ct, contab_usage);
+	zero_connector_table(ct, contab_size);
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
@@ -353,7 +349,7 @@ void expression_prune(Sentence sent)
 
 		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
 
-		zero_connector_table(ct, contab_usage);
+		zero_connector_table(ct, contab_size);
 		if (N_deleted == 0) break;
 
 		/* Right-to-left pass */
@@ -381,7 +377,7 @@ void expression_prune(Sentence sent)
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
 
-		zero_connector_table(ct, contab_usage);
+		zero_connector_table(ct, contab_size);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
