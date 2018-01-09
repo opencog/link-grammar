@@ -38,17 +38,19 @@
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
 
+typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
+
 typedef struct ConDesc
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	uint16_t str_hash;
+	connector_hash_size str_hash;
 	union
 	{
-		uint16_t uc_hash;
-		uint16_t uc_num;
+		connector_hash_size uc_hash;
+		connector_hash_size uc_num;
 	};
 	uint8_t length_limit;
 	                      /* If not 0, it gives the limit of the length of the
