@@ -264,7 +264,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (NULL == disj) continue;
 
 		/* Subscript mark will be cleaned up by append_string(). */
-		infword = disj->word_string;
+		// infword = disj->word_string;
 
 		/* ... except that subscript marks confuse utf8_strwidth() */
 		/* linkage->word[w] should be same as disj->word_string except

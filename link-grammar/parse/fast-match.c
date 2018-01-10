@@ -375,7 +375,7 @@ static void match_stats(Connector *c1, Connector *c2)
  * Output format:
  * MATCH_NODE list_id:  lw>lc   [=]   left<w>right   [=]    rc<rw
  *
- * Regretfully this version doesn't indicate which match shortcut have been
+ * Regretfully this version doesn't indicate which match shortcut has been
  * used, and which nodes are from mr or ml or both (the full print version
  * clutters the source code very much, as it needs to be inserted in plenty
  * of places.)

@@ -42,7 +42,7 @@ struct count_context_s
 	bool    islands_ok;
 	bool    null_links;
 	bool    exhausted;
-	unsigned checktimer;  /* Avoid excess system calls */
+	unsigned int checktimer;  /* Avoid excess system calls */
 	int     table_size;
 	int     log2_table_size;
 	Table_connector ** table;

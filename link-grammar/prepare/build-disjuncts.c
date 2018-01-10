@@ -348,7 +348,7 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 {
 	char unknown_type[32] = "";
-	const char *type = unknown_type;
+	const char *type;
 
 	if (e == NULL) return;
 
@@ -358,7 +358,7 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	}
 	else
 	{
-		snprintf(unknown_type, sizeof(type)-1, "unknown-%d", e->type);
+		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown-%d", e->type);
 		type = unknown_type;
 	}
 
