@@ -128,8 +128,13 @@ nonCAP.zzz: ZZZ-;
 % has a R+ & B+ on it. The problem here is that R+ & B+ should not
 % be used with the J- here.  This needs to be refactored to prevent
 % this, or at least, cost it in some way.
+%
+% (Js- & {Mp+}): Allows constructions involving "of" to link locally,
+%     e.g. "Got it from the Abbey of Stratford Langthorne"
+%     links "of" to "Abbey" instead of "it".
+%
 <noun-main-s>:
-  (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
+  (Ss+ & <CLAUSE>) or SIs- or (Js- & {Mp+}) or Os-
   or <post-nominal-s>
   or <costly-null>;
 
