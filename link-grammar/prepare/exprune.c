@@ -43,7 +43,84 @@
 		free(e);\
 	}
 
-typedef condesc_t * connector_table;
+typedef struct connector_table_s connector_table;
+struct connector_table_s
+{
+	condesc_t *condesc;
+	connector_table *next;
+	int farthest_word;
+};
+
+#define CT_BLKSIZE 512
+/* The connector table elements are allocated in a kind of an unrolled
+ * linked list with fixed blocks, when the first block is pre-allocated on
+ * the stack (this simplifies the handling). Additional blocks are
+ * dynamically allocated, but they are rarely needed. The existing
+ * allocation is reused on each pass, an freed only at the end of the
+ * expression pruning. */
+// connector_table_element-> ... CT_BLKSIZE-1 elements
+//                           ...
+//                           ...
+//                           block connecting element ->---+
+//                                                         |
+// (additional block)        CT_BLKSIZE-1 elements     <---+
+//                           ...
+// current_element        -> ...
+//                           ...
+// end_current_block      -> block connecting element ->---+
+//                                                         |
+// (additional block)        CT_BLKSIZE-1 elements     <---+
+//                           ...
+//                           ...
+//                           ...
+//                           block connecting element
+
+typedef struct exprune_context_s exprune_context;
+struct exprune_context_s
+{
+	connector_table **ct;
+	size_t ct_size;
+	Parse_Options opts;
+	connector_table *current_element;
+	connector_table *end_current_block;
+	connector_table connector_table_element[CT_BLKSIZE];
+};
+
+static connector_table *ct_element_new(exprune_context *ctxt)
+{
+	if (ctxt->current_element == ctxt->end_current_block)
+	{
+		if (ctxt->end_current_block->next == NULL)
+		{
+			connector_table *newblock =
+				malloc(CT_BLKSIZE * sizeof(*ctxt->current_element));
+			newblock[CT_BLKSIZE-1].next = NULL;
+			ctxt->end_current_block->next = newblock;
+		} /* else - reuse next block. */
+
+		ctxt->current_element = ctxt->end_current_block->next;
+		ctxt->end_current_block = &ctxt->current_element[CT_BLKSIZE-1];
+	}
+
+	return ctxt->current_element++;
+}
+
+static void free_connector_table(exprune_context *ctxt)
+{
+	connector_table *x;
+	connector_table *t = ctxt->connector_table_element[CT_BLKSIZE-1].next;
+
+	while (t != NULL)
+	{
+			 x = t[CT_BLKSIZE-1].next;
+			 free(t);
+			 t = x;
+	}
+
+	free(ctxt->ct);
+	ctxt->ct = NULL;
+	ctxt->ct_size = 0;
+}
 
 /* ================================================================= */
 /**
@@ -66,7 +143,7 @@ typedef condesc_t * connector_table;
 static Exp* purge_Exp(Exp *);
 
 /**
- * Get rid of the elements with null expressions
+ * Get rid of the current_elements with null expressions
  */
 static E_list * or_purge_E_list(E_list * l)
 {
@@ -170,20 +247,30 @@ static inline unsigned int hash_S(condesc_t * c)
 /**
  * Returns TRUE if c can match anything in the set S (err. the connector table ct).
  */
-static inline bool matches_S(connector_table *ct, condesc_t * c)
+static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
 {
-	condesc_t * e;
+	connector_table *e;
 
-	for (e = ct[hash_S(c)]; e != NULL; e = e->PtableNext)
+	for (e = ct[hash_S(c)]; e != NULL; e = e->next)
 	{
-		if (easy_match_desc(e, c)) return true;
+		if (e->farthest_word <= 0)
+		{
+			if (w < -e->farthest_word) continue;
+		}
+		else
+		{
+			if (w > e->farthest_word) continue;
+		}
+		if (easy_match_desc(e->condesc, c)) return true;
 	}
 	return false;
 }
 
-static void zero_connector_table(connector_table *ct, size_t contab_size)
+static void zero_connector_table(exprune_context *ctxt)
 {
-	memset(ct, 0, sizeof(condesc_t *) * contab_size);
+	memset(ctxt->ct, 0, sizeof(*ctxt->ct) * ctxt->ct_size);
+	ctxt->current_element = ctxt->connector_table_element;
+	ctxt->end_current_block = &ctxt->connector_table_element[CT_BLKSIZE-1];
 }
 
 /**
@@ -191,7 +278,7 @@ static void zero_connector_table(connector_table *ct, size_t contab_size)
  * in e that are not matched by anything in the current set.
  * Returns the number of connectors so marked.
  */
-static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
+static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
 {
 	int count;
 	count = 0;
@@ -199,7 +286,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 	{
 		if (e->dir == dir)
 		{
-			if (!matches_S(ct, e->u.condesc))
+			if (!matches_S(ct, w, e->u.condesc))
 			{
 				e->u.condesc = NULL;
 				count++;
@@ -211,7 +298,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 		E_list *l;
 		for (l = e->u.l; l != NULL; l = l->next)
 		{
-			count += mark_dead_connectors(ct, l->e, dir);
+			count += mark_dead_connectors(ct, w, l->e, dir);
 		}
 	}
 	return count;
@@ -221,34 +308,48 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
  * This function puts connector c into the connector table
  * if one like it isn't already there.
  */
-static void insert_connector(connector_table *ct, condesc_t * c)
+static void insert_connector(exprune_context *ctxt, int farthest_word, condesc_t * c)
 {
 	unsigned int h;
-	condesc_t * e;
+	connector_table *e;
 
 	h = hash_S(c);
 
-	for (e = ct[h]; e != NULL; e = e->PtableNext)
+	for (e = ctxt->ct[h]; e != NULL; e = e->next)
 	{
-		if (c == e)
+		if (c == e->condesc)
+		{
+			{
+				if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
+			}
 			return;
+		}
 	}
-	c->PtableNext = ct[h];
-	ct[h] = c;
+
+	e = ct_element_new(ctxt);
+	e->condesc = c;
+	e->farthest_word = farthest_word;
+	e->next = ctxt->ct[h];
+	ctxt->ct[h] = e;
 }
 /**
  * Put into the set S all of the dir-pointing connectors still in e.
  * Return a list of allocated dummy connectors; these will need to be
  * freed.
  */
-static void insert_connectors(connector_table *ct, Exp * e, int dir)
+static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 {
 	if (e->type == CONNECTOR_type)
 	{
 		if (e->dir == dir)
 		{
 			assert(NULL != e->u.condesc, "NULL connector");
-			insert_connector(ct, e->u.condesc);
+			Connector c = { .desc = e->u.condesc };
+
+			set_connector_length_limit(&c, ctxt->opts);
+			int farthest_word = (dir == '-') ? -MAX(0, w-c.length_limit) :
+				                              w+c.length_limit;
+			insert_connector(ctxt, farthest_word, e->u.condesc);
 		}
 	}
 	else
@@ -256,7 +357,7 @@ static void insert_connectors(connector_table *ct, Exp * e, int dir)
 		E_list *l;
 		for (l=e->u.l; l!=NULL; l=l->next)
 		{
-			insert_connectors(ct, l->e, dir);
+			insert_connectors(ctxt, w, l->e, dir);
 		}
 	}
 }
@@ -304,15 +405,18 @@ static char *print_expression_sizes(Sentence sent)
 	return dyn_str_take(e);
 }
 
-void expression_prune(Sentence sent)
+void expression_prune(Sentence sent, Parse_Options opts)
 {
 	int N_deleted;
 	X_node * x;
 	size_t w;
-	size_t contab_size = sent->dict->contable.num_uc;
-	condesc_t **ct = alloca(contab_size * sizeof(*ct));
+	exprune_context ctxt;
 
-	zero_connector_table(ct, contab_size);
+	ctxt.opts = opts;
+	ctxt.ct_size = sent->dict->contable.num_uc;
+	ctxt.ct = malloc(ctxt.ct_size * sizeof(*ctxt.ct));
+	zero_connector_table(&ctxt);
+	ctxt.end_current_block->next = NULL;
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
@@ -329,7 +433,7 @@ void expression_prune(Sentence sent)
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				DBG(pass, w, "l->r pass before marking");
-				N_deleted += mark_dead_connectors(ct, x->exp, '-');
+				N_deleted += mark_dead_connectors(ctxt.ct, w, x->exp, '-');
 				DBG(pass, w, "l->r pass after marking");
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
@@ -343,13 +447,13 @@ void expression_prune(Sentence sent)
 			clean_up_expressions(sent, w);
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				insert_connectors(ct, x->exp, '+');
+				insert_connectors(&ctxt, w, x->exp, '+');
 			}
 		}
 
 		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
 
-		zero_connector_table(ct, contab_size);
+		zero_connector_table(&ctxt);
 		if (N_deleted == 0) break;
 
 		/* Right-to-left pass */
@@ -359,7 +463,7 @@ void expression_prune(Sentence sent)
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				DBG(pass, w, "r->l pass before marking");
-				N_deleted += mark_dead_connectors(ct, x->exp, '+');
+				N_deleted += mark_dead_connectors(ctxt.ct, w, x->exp, '+');
 				DBG(pass, w, "r->l pass after marking");
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
@@ -371,16 +475,18 @@ void expression_prune(Sentence sent)
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				insert_connectors(ct, x->exp, '-');
+				insert_connectors(&ctxt, w, x->exp, '-');
 			}
 		}
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
 
-		zero_connector_table(ct, contab_size);
+		zero_connector_table(&ctxt);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
+
+	free_connector_table(&ctxt);
 }
 
 #if 0 // VERY_DEAD_NO_GOOD_IDEA

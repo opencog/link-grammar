@@ -657,7 +657,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	/* Expressions were set up during the tokenize stage.
 	 * Prune them, and then parse.
 	 */
-	expression_prune(sent);
+	expression_prune(sent, opts);
 	print_time(opts, "Finished expression pruning");
 	if (opts->use_sat_solver)
 	{

@@ -64,8 +64,6 @@ typedef struct ConDesc
 	/* The following are used for connector match speedup */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
-
-	struct ConDesc * PtableNext; /* For expression prune hash table */
 } condesc_t;
 
 typedef struct ConTable
