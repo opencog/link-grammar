@@ -12,7 +12,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(CXX_FLAGS) \
 # -----------------------------------------------------------
 # TESTS declares the tests to actually run;
 # check_PROGRAMS are the binaries to build.
-check_PROGRAMS = dict-reopen multi-thread mem-leak
+check_PROGRAMS = dict-reopen multi-dict multi-thread mem-leak
 
 if HAVE_JAVA
 check_PROGRAMS += multi-java
@@ -26,6 +26,7 @@ TESTS = $(check_PROGRAMS)
 LDFLAGS += $(LINK_CXXFLAGS)
 
 dict_reopen_SOURCES = dict-reopen.cc
+multi_dict_SOURCES = multi-dict.cc
 multi_thread_SOURCES = multi-thread.cc
 mem_leak_SOURCES = mem-leak.cc
 
@@ -34,6 +35,7 @@ if HAVE_SQLITE
 LDADD += $(SQLITE3_LIBS)
 endif
 
+multi_dict_LDADD = -lpthread $(LDADD)
 multi_thread_LDADD = -lpthread $(LDADD)
 
 if WITH_SAT_SOLVER

@@ -172,7 +172,8 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, const void *),
                    const void * user_data)
 {
-	static char *path_found; /* directory path cache */
+	/* directory path cache -- per-thread storage. */
+	static TLS char *path_found;
 	char *completename = NULL;
 	void *fp = NULL;
 	char *data_dir = NULL;
@@ -180,9 +181,10 @@ void * object_open(const char *filename,
 
 	if (NULL == filename)
 	{
-		/* Invalidate the directory path cache */
-		free(path_found);
+		/* Invalidate the directory path cache. */
+		char *pf = path_found;
 		path_found = NULL;
+		free(pf);
 		return NULL;
 	}
 
@@ -249,16 +251,15 @@ void * object_open(const char *filename,
 	}
 	else if (NULL == path_found)
 	{
-		size_t i;
-
-		path_found = strdup((NULL != completename) ? completename : filename);
+		char *pfnd = strdup((NULL != completename) ? completename : filename);
 		if (0 < verbosity)
 			prt_error("Info: Dictionary found at %s\n", path_found);
-		for (i = 0; i < 2; i++)
+		for (size_t i = 0; i < 2; i++)
 		{
-			char *root = strrchr(path_found, DIR_SEPARATOR[0]);
+			char *root = strrchr(pfnd, DIR_SEPARATOR[0]);
 			if (NULL != root) *root = '\0';
 		}
+		path_found = pfnd;
 	}
 
 	free(data_dir);
