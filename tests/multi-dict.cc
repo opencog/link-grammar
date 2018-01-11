@@ -45,23 +45,11 @@ static void parse_one_sent(const char *sent_str)
 		exit(3);
 	}
 
-	if (0 < num_linkages)
+	if (2 < num_linkages) num_linkages = 2;
+	for (int li = 0; li<num_linkages; li++)
 	{
-		if (10 < num_linkages) num_linkages = 10;
-
-		for (int li = 0; li<num_linkages; li++)
-		{
-			Linkage linkage = linkage_create(li, sent, opts);
-			char * str = linkage_print_diagram(linkage, true, 80);
-			linkage_free_diagram(str);
-			str = linkage_print_links_and_domains(linkage);
-			linkage_free_links_and_domains(str);
-			str = linkage_print_disjuncts(linkage);
-			linkage_free_disjuncts(str);
-			str = linkage_print_constituent_tree(linkage, SINGLE_LINE);
-			linkage_free_constituent_tree_str(str);
-			linkage_delete(linkage);
-		}
+		Linkage linkage = linkage_create(li, sent, opts);
+		linkage_delete(linkage);
 	}
 	sentence_delete(sent);
 
@@ -102,8 +90,8 @@ int main(int argc, char* argv[])
 	setlocale(LC_ALL, "en_US.UTF-8");
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 
-	int n_threads = 10;
-	int niter = 30;
+	int n_threads = 20;
+	int niter = 90;
 
 	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
