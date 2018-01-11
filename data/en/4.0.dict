@@ -11910,9 +11910,15 @@ UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 %    many others, the object of this sentence" requires a long O link
 %    from "puts" to "object".
 %
+% VJ+ is unlimited because some sentences have very long clauses:
+%    "He obtained the lease of the manor of Great Burstead Grange (near
+%    East Horndon) from the Abbey of Stratford Langthorne, and purchased
+%    the manor of Bayhouse in West Thurrock."
+%
 UNLIMITED-CONNECTORS:
-      S+ & O+ & CO+ & C+ & Xc+ & MV+ & TH+ & W+
-      & RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+;
+      S+ & O+ & CO+ & C+ & Xc+ & MV+ & TH+ & W+ &
+      RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+ &
+      VJ+ & SJ+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
