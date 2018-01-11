@@ -274,6 +274,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				if ((Bool == as[i].param_type) || Int == as[i].param_type)
 				{
 					printf("%5d", ival(as[i]));
+					if (-1 == ival(as[i])) printf(" (Unlimited)");
 				}
 				else
 				if (String == as[i].param_type)
