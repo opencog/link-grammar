@@ -685,24 +685,11 @@ with the `!spell=0` flag.  Enter `!help` for more details.
 
 Multi-threading
 ---------------
-It is safe to use link-grammar for parsing in multiple threads, once
-the dictionaries have been loaded.  The dictionary loading itself is
-not thread-safe; it is not protected in any way.  Thus, link-grammar
-should not be used from multiple threads until the dictionary has
-been loaded.  Different threads may use different dictionaries.
-Parse options can be set on a per-thread basis, with the exception
-of verbosity, which is a global, shared by all threads.  It is the
-only global.
-
-The following exceptions and special notes apply:
-
-*api.c* −
-> has global "verbosity". Memory usage accounting code (disabled
-> by default) also has a global.
-
-*pp_lexer.c*  −
-> autogened code. This is only used when reading dictionaries,
-> during initialization, and so doesn't need to be thread safe.
+It is safe to use link-grammar for parsing in multiple threads.
+Different threads may use different dictionaries, or the same dictionary.
+Parse options can be set on a per-thread basis, with the exception of
+verbosity, which is a global, shared by all threads.  It is the only
+global.
 
 
 SAT solver
