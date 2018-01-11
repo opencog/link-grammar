@@ -24,7 +24,6 @@
 static void parse_one_sent(const char *sent_str)
 {
 	Parse_Options opts = parse_options_create();
-	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 	// Dictionary dict = dictionary_create_lang("ru");
 	Dictionary dict = dictionary_create_lang("en");
 	if (!dict) {
