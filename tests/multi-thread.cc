@@ -18,13 +18,22 @@
 
 #include <locale.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "link-grammar/link-includes.h"
 
 static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent_str)
 {
 	Sentence sent = sentence_create(sent_str, dict);
+	if (!sent) {
+		fprintf (stderr, "Fatal error: Unable to create parser\n");
+		exit(2);
+	}
 	sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
+	if (num_linkages <= 0) {
+		fprintf (stderr, "Fatal error: Unable to parse sentence\n");
+		exit(3);
+	}
 	if (0 < num_linkages)
 	{
 		if (10 < num_linkages) num_linkages = 10;
@@ -82,8 +91,8 @@ int main(int argc, char* argv[])
 	// Dictionary dict = dictionary_create_lang("ru");
 	Dictionary dict = dictionary_create_lang("en");
 	if (!dict) {
-		printf ("Fatal error: Unable to open the dictionary\n");
-		return 1;
+		fprintf (stderr, "Fatal error: Unable to open the dictionary\n");
+		exit(1);
 	}
 
 	int n_threads = 10;
