@@ -183,24 +183,15 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	return dn;
 }
 
-/* XXX This is not thread-safe. */
-static char current_name[] = "AAAAAAAA";
-#define CN_size (sizeof(current_name)-1)
-
-void reset_current_name(void)
+static void increment_current_name(Dictionary dict)
 {
-	strcpy(current_name, "AAAAAAAA");
-}
-
-static void increment_current_name(void)
-{
-	int i = CN_size-1;
+	int i = IDIOM_LINK_SZ-1;
 
 	do
 	{
-		current_name[i]++;
-		if (current_name[i] <= 'Z') return;
-		current_name[i] = 'A';
+		dict->current_idiom[i]++;
+		if (dict->current_idiom[i] <= 'Z') return;
+		dict->current_idiom[i] = 'A';
 	} while (i-- > 0);
 	assert(0, "increment_current_name: Overflow");
 }
@@ -212,11 +203,11 @@ static void increment_current_name(void)
  */
 static const char * generate_id_connector(Dictionary dict)
 {
-	char buff[2*MAX_WORD];
+	char buff[IDIOM_LINK_SZ+4];
 	unsigned int i;
 	char * t;
 
-	for (i=0; current_name[i] == 'A'; i++)
+	for (i=0; dict->current_idiom[i] == 'A'; i++)
 	  ;
 	/* i is now the number of characters of current_name to skip */
 	t = buff;
@@ -224,9 +215,9 @@ static const char * generate_id_connector(Dictionary dict)
 	/* All idiom connector names start with the two letters "ID" */
 	*t++ = 'I';
 	*t++ = 'D';
-	for (; i < CN_size; i++ )
+	for (; i < IDIOM_LINK_SZ; i++ )
 	{
-		*t++ = current_name[i] ;
+		*t++ = dict->current_idiom[i] ;
 	}
 	*t++ = '\0';
 	return string_set_add(buff, dict->string_set);
@@ -314,7 +305,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		nc->cost = 0;
 		elr->e = nc;
 
-		increment_current_name();
+		increment_current_name(dict);
 
 		nc = Exp_create(&dict->exp_list);
 		nc->u.string = generate_id_connector(dict);
@@ -340,7 +331,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	dn_list->exp = nc;
 
-	increment_current_name();
+	increment_current_name(dict);
 
 	/* ---- end of the code alluded to above ---- */
 

@@ -16,4 +16,3 @@
 void insert_idiom(Dictionary dict, Dict_node *);
 bool  contains_underbar(const char *);
 bool  is_idiom_word(const char *);
-void reset_current_name(void);

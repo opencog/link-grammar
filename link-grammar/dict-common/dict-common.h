@@ -63,6 +63,7 @@ struct Afdict_class_struct
 };
 
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
+#define IDIOM_LINK_SZ 16
 
 struct Dictionary_s
 {
@@ -124,6 +125,7 @@ struct Dictionary_s
 	bool            is_special;
 	char            already_got_it;
 	int             line_number;
+	char            current_idiom[IDIOM_LINK_SZ];
 	char            token[MAX_TOKEN_LENGTH];
 };
 /* The functions here are intended for use by the tokenizer, only,

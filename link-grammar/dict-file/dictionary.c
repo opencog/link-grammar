@@ -116,7 +116,6 @@ dictionary_six_str(const char * lang,
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
-	reset_current_name();
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
@@ -125,6 +124,9 @@ dictionary_six_str(const char * lang,
 	dict->lang = string_set_add(t, dict->string_set);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 	dict->name = string_set_add(dict_name, dict->string_set);
+
+	memset(dict->current_idiom, 'A', IDIOM_LINK_SZ-1);
+	dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
 
 	/*
 	 * A special setup per dictionary type. The check here assumes the affix
