@@ -24,7 +24,6 @@
 static void parse_one_sent(const char *sent_str)
 {
 	Parse_Options opts = parse_options_create();
-	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 	// Dictionary dict = dictionary_create_lang("ru");
 	Dictionary dict = dictionary_create_lang("en");
 	if (!dict) {
@@ -45,23 +44,11 @@ static void parse_one_sent(const char *sent_str)
 		exit(3);
 	}
 
-	if (0 < num_linkages)
+	if (2 < num_linkages) num_linkages = 2;
+	for (int li = 0; li<num_linkages; li++)
 	{
-		if (10 < num_linkages) num_linkages = 10;
-
-		for (int li = 0; li<num_linkages; li++)
-		{
-			Linkage linkage = linkage_create(li, sent, opts);
-			char * str = linkage_print_diagram(linkage, true, 80);
-			linkage_free_diagram(str);
-			str = linkage_print_links_and_domains(linkage);
-			linkage_free_links_and_domains(str);
-			str = linkage_print_disjuncts(linkage);
-			linkage_free_disjuncts(str);
-			str = linkage_print_constituent_tree(linkage, SINGLE_LINE);
-			linkage_free_constituent_tree_str(str);
-			linkage_delete(linkage);
-		}
+		Linkage linkage = linkage_create(li, sent, opts);
+		linkage_delete(linkage);
 	}
 	sentence_delete(sent);
 
