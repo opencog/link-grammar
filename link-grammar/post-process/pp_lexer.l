@@ -24,7 +24,9 @@ static bool set_label(PPLexTable *lt, const char *label);
 static bool add_string_to_label(PPLexTable *lt, const char *str);
 static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
 static int  get_index_of_label(PPLexTable *lt, const char *label);
-static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
+
+/* ptr to lex table we're currently filling in */
+#define YY_EXTRA_TYPE PPLexTable*
 %}
 
 %option reentrant
@@ -43,10 +45,10 @@ COMMENT        ^[\ \t]*;.*$
 {COMMENT}                 ;
 {WHITE}                   ;
 
-<INITIAL>{LABEL}          { set_label(clt, yytext); }
-<INITIAL>{NONLABELSET}    { add_set_of_strings_to_label(clt, &(yytext[1])); }
-<INITIAL>{NONLABEL}       { add_string_to_label(clt, yytext); }
-<INITIAL>{NONLABELQUOTED} { add_string_to_label(clt, yytext); }
+<INITIAL>{LABEL}          { set_label(yyextra, yytext); }
+<INITIAL>{NONLABELSET}    { add_set_of_strings_to_label(yyextra, &(yytext[1])); }
+<INITIAL>{NONLABEL}       { add_string_to_label(yyextra, yytext); }
+<INITIAL>{NONLABELQUOTED} { add_string_to_label(yyextra, yytext); }
 
 .  { prt_error("pp_lexer: unable to parse knowledge file (line %i).\n", yylineno); }
 
@@ -86,13 +88,12 @@ PPLexTable *pp_lexer_open(FILE *f)
   lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
   setup(lt);
   yylex_init(&lt->scanner);
+  yyset_extra(lt, lt->scanner);
 
   struct yyguts_t * yyg = (struct yyguts_t*) lt->scanner;
   yyin = f;            /* redirect lex to look at the specified file */
 
-  clt = lt;    /* set lt to be the current table, which yylex will fill in */
   if (YY_NULL == yylex(lt->scanner)) yylex_ok = true;
-  clt = NULL;
   lt->idx_of_active_label=-1;
 
   if (!yylex_ok)
