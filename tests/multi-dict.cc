@@ -90,8 +90,8 @@ int main(int argc, char* argv[])
 	setlocale(LC_ALL, "en_US.UTF-8");
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 
-	int n_threads = 20;
-	int niter = 90;
+	int n_threads = 10;
+	int niter = 30;
 
 	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
