@@ -1,5 +1,5 @@
 Version 5.4.4 (XXX 2018)
- * Something or other.
+ * Dictionary loading now thread safe (maybe, experimental).
 
 Version 5.4.3 (4 January 2018)
  * Fix man page installation (actually broken from 5.3.0).

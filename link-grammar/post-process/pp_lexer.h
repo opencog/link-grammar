@@ -23,6 +23,7 @@ typedef struct pp_label_node_s
 #define PP_LEXER_MAX_LABELS 512
 struct PPLexTable_s
 {
+	void *scanner;  /* Reentrant lexer structure */
 	String_set *string_set;
 	const char *labels[PP_LEXER_MAX_LABELS];             /* array of labels  */
 	pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/

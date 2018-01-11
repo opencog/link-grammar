@@ -27,6 +27,8 @@ static int  get_index_of_label(PPLexTable *lt, const char *label);
 static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 %}
 
+%option reentrant
+
 %s INCLUDE
 
 LABEL          [^ \t\"\n:]+:
@@ -70,8 +72,8 @@ void pp_lexer_close(PPLexTable *lt)
     }
   string_set_delete(lt->string_set);
   if (lt->tokens) free(lt->tokens);
+  yylex_destroy(lt->scanner);
   xfree(lt, sizeof(PPLexTable));
-  yylex_destroy();
 }
 
 PPLexTable *pp_lexer_open(FILE *f)
@@ -81,11 +83,15 @@ PPLexTable *pp_lexer_open(FILE *f)
 
   assert(f, "pp_lexer_open: passed a NULL file pointer");
 
-  yyin = f;            /* redirect lex to look at the specified file */
   lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
   setup(lt);
+  yylex_init(&lt->scanner);
+
+  struct yyguts_t * yyg = (struct yyguts_t*) lt->scanner;
+  yyin = f;            /* redirect lex to look at the specified file */
+
   clt = lt;    /* set lt to be the current table, which yylex will fill in */
-  if (YY_NULL == yylex()) yylex_ok = true;
+  if (YY_NULL == yylex(lt->scanner)) yylex_ok = true;
   clt = NULL;
   lt->idx_of_active_label=-1;
 
@@ -111,7 +117,7 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
   /* counts all tokens, even the commas */
   int n;
   pp_label_node *p;
-  if (lt->idx_of_active_label==-1)
+  if (lt->idx_of_active_label == -1)
   {
     prt_error("Error: pp_lexer: current label is invalid\n");
     return -1;
@@ -170,7 +176,7 @@ const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, size_t *
   return lt->tokens;
 }
 
-int yywrap(void)
+int yywrap(void* foo)
 {
   /* must return 1 for end of input, 0 otherwise */
   return 1;
@@ -243,6 +249,8 @@ static bool check_string(const char *str)
 
 static bool add_string_to_label(PPLexTable *lt, const char *str)
 {
+  struct yyguts_t * yyg = (struct yyguts_t*) lt->scanner;
+
   /* add the single string str to the set of strings associated with label */
   pp_label_node *new_node;
 
@@ -279,6 +287,8 @@ static bool add_string_to_label(PPLexTable *lt, const char *str)
 
 static bool add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
 {
+  struct yyguts_t * yyg = (struct yyguts_t*) lt->scanner;
+
   /* add the set of strings, defined earlier by label_of_set, to the set of
      strings associated with the current label */
   pp_label_node *p;
