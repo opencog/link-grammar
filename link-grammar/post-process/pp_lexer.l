@@ -128,13 +128,12 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
 }
 
 
+/** Retrieves next token of set label, or NULL if list exhausted. */
 const char *pp_lexer_get_next_token_of_label(PPLexTable *lt)
 {
-  /* retrieves next token of set label, or NULL if list exhausted */
-  static const char *p;
-  if (lt->current_node_of_active_label==NULL) return NULL;
-  p = lt->current_node_of_active_label->str;
-  lt->current_node_of_active_label=lt->current_node_of_active_label->next;
+  if (lt->current_node_of_active_label == NULL) return NULL;
+  const char *p = lt->current_node_of_active_label->str;
+  lt->current_node_of_active_label = lt->current_node_of_active_label->next;
   return p;
 }
 
@@ -142,7 +141,7 @@ int pp_lexer_count_commas_of_label(PPLexTable *lt)
 {
   int n;
   pp_label_node *p;
-  if (lt->idx_of_active_label==-1)
+  if (lt->idx_of_active_label == -1)
   {
     prt_error("Error: pp_lexer: current label is invalid\n");
     return -1;
