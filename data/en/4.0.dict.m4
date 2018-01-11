@@ -6642,6 +6642,11 @@ unlike:
 % QI+ & CV+: "She kept an organized record of which employees took their vacations"
 %      The QI makes it interrogative, the CV links head word.
 % (Js+ or Jp+ or Ju+): we explicitly exclude Jw+ as that leads to bad parses.
+%
+% Mf-: allows "from the Abbey of Stratford Langthorne" so that "of"
+%      links to "Abbey" instead of something more distant.
+%      XXX The Mp- below should be removed, and all occurances of
+%      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
 of:
   ({JQ+}
     & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
