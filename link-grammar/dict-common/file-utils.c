@@ -76,7 +76,9 @@ char * join_path(const char * prefix, const char * suffix)
 
 /* global - but that's OK, since this is set only during initialization,
  * and is is thenceforth a read-only item. So it doesn't need to be
- * locked.
+ * locked.  XXX Assuming the user actually does set it only once,
+ * and doesn't hammer on this inside of a thread loop, in which case
+ * it will race and abort with a double-free error.
  */
 static char * custom_data_dir = NULL;
 
