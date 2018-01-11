@@ -487,7 +487,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_max_parse_time(opts, 60);
 	parse_options_set_islands_ok(opts, false);
 	parse_options_set_short_length(opts, 12);
-	parse_options_set_all_short_connectors(opts, 1);
+	parse_options_set_all_short_connectors(opts, true);
 	parse_options_set_linkage_limit(opts, 100);
 	parse_options_set_spell_guess(opts, 0);
 }
