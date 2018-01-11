@@ -255,7 +255,7 @@ void * object_open(const char *filename,
 	{
 		char *pfnd = strdup((NULL != completename) ? completename : filename);
 		if (0 < verbosity)
-			prt_error("Info: Dictionary found at %s\n", path_found);
+			prt_error("Info: Dictionary found at %s\n", pfnd);
 		for (size_t i = 0; i < 2; i++)
 		{
 			char *root = strrchr(pfnd, DIR_SEPARATOR[0]);
