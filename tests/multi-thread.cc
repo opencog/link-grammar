@@ -63,7 +63,7 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		"It was covered with bites.",
 		"I have no idea what that is.",
 		"His shout had been involuntary, something anybody might have done.",
-		"He obtained the lease of the manor of Great Burstead Grange (near East Horndon) from the Abbey of Stratford Langthorne, and purchased the manor of Bayhouse in West Thurrock.",
+		"Trump, Ryan and McConnell are using the budget process to pay for the GOP’s $1.5 trillion tax scam.",
 		"We ate popcorn and watched movies on TV for three days.",
 		"Sweat stood on his brow, fury was bright in his one good eye.",
 		"One of the things you do when you stop your bicycle is apply the brake.",
