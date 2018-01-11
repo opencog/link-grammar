@@ -172,7 +172,8 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, const void *),
                    const void * user_data)
 {
-	static char *path_found; /* directory path cache */
+	/* directory path cache -- per-thread storage. */
+	static TLS char *path_found;
 	char *completename = NULL;
 	void *fp = NULL;
 	char *data_dir = NULL;
