@@ -1105,6 +1105,7 @@ Other examples, with the phantom word in parenthesis, include:
  * I ate all (of) the cookies.
  * I taught him (how) to swim.
  * I told him (that) it was gone.
+ * It stopped me (from) flying off the cliff.
  * (It) looks good.
  * (You) go home!
  * (Are) you all right?
