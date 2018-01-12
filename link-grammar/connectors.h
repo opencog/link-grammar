@@ -40,7 +40,7 @@ typedef uint64_t lc_enc_t;
 
 typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
 
-typedef struct ConDesc
+typedef struct
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
@@ -66,7 +66,7 @@ typedef struct ConDesc
 	uint8_t uc_start;    /* uc start position */
 } condesc_t;
 
-typedef struct ConTable
+typedef struct
 {
 	condesc_t **hdesc;    /* Hashed connector descriptors table */
 	condesc_t **sdesc;    /* Alphabetically sorted descriptors */
