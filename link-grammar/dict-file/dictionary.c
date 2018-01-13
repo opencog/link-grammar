@@ -164,6 +164,8 @@ dictionary_six_str(const char * lang,
 
 	dict->contable.hdesc = malloc(dict->contable.size * sizeof(condesc_t *));
 	memset(dict->contable.hdesc, 0, dict->contable.size * sizeof(condesc_t *));
+	dict->contable.length_limit_def = NULL;
+	dict->contable.length_limit_def_next = &dict->contable.length_limit_def;
 
 	/* Read dictionary from the input string. */
 	dict->input = input;

@@ -46,6 +46,7 @@ typedef struct
 	lc_enc_t lc_mask;
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
+	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
 	connector_hash_size str_hash;
 	union
 	{
@@ -66,6 +67,14 @@ typedef struct
 	uint8_t uc_start;    /* uc start position */
 } condesc_t;
 
+typedef struct length_limit_def
+{
+	const char *defword;
+	const Exp *defexp;
+	struct length_limit_def *next;
+	int length_limit;
+} length_limit_def_t;
+
 typedef struct
 {
 	condesc_t **hdesc;    /* Hashed connector descriptors table */
@@ -73,6 +82,8 @@ typedef struct
 	size_t size;          /* Allocated size */
 	size_t num_con;       /* Number of connector types */
 	size_t num_uc;        /* Number of connector types with different UC part */
+	length_limit_def_t *length_limit_def;
+	length_limit_def_t **length_limit_def_next;
 } ConTable;
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.

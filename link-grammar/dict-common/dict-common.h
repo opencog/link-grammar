@@ -21,6 +21,7 @@
 
 #define EMPTY_CONNECTOR "ZZZ"
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
+#define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
