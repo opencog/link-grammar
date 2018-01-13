@@ -71,7 +71,7 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 /* UNLIMITED-CONNECTORS handling. */
 
 static void get_connectors_from_expression(condesc_t **conlist, size_t *cl_size,
-                                           Exp *e)
+                                           const Exp *e)
 {
 	E_list * l;
 
@@ -100,7 +100,7 @@ static int condesc_by_uc_num(const void *a, const void *b)
 	return 0;
 }
 
-void set_condesc_unlimited_length(Dictionary dict, Exp *e)
+static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_limit)
 {
 	size_t exp_num_con;
 	ConTable *ct = &dict->contable;
@@ -115,21 +115,13 @@ void set_condesc_unlimited_length(Dictionary dict, Exp *e)
 		get_connectors_from_expression(econlist, (exp_num_con = 0, &exp_num_con), e);
 	}
 
-	if ((NULL == econlist) || (NULL == econlist[0]))
-	{
-		/* No connectors are marked as UNLIMITED-CONNECTORS.
-		 * All the connectors are set as unlimited. */
-		for (size_t en = 0; en < ct->num_con; en++)
-			sdesc[en]->length_limit = UNLIMITED_LEN;
-
-		return;
-	}
+	if ((NULL == econlist) || (NULL == econlist[0])) return;
 
 	qsort(econlist, exp_num_con, sizeof(*econlist), condesc_by_uc_num);
 
-	/* Scan the expression connector list and set UNLIMITED_LEN.
+	/* Scan the expression connector list and set length_limit.
 	 * restart_cn is needed because several connectors in this list
-	 * may match a given UC sequence. */
+	 * may match a given uppercase part. */
 	size_t restart_cn = 0, cn = 0, en;
 	for (en = 0; en < exp_num_con; en++)
 	{
@@ -150,6 +142,38 @@ void set_condesc_unlimited_length(Dictionary dict, Exp *e)
 			if (lc_easy_match(econlist[en], sdesc[cn]))
 				sdesc[cn]->length_limit = UNLIMITED_LEN;
 		}
+	}
+}
+
+void set_all_condesc_length_limit(Dictionary dict)
+{
+	ConTable *ct = &dict->contable;
+	bool unlimited_len_found = false;
+
+	for (length_limit_def_t *l = ct->length_limit_def; NULL != l; l = l->next)
+	{
+		set_condesc_length_limit(dict, l->defexp, l->length_limit);
+		if (UNLIMITED_LEN == l->length_limit) unlimited_len_found = true;
+	}
+
+	if (!unlimited_len_found)
+	{
+		/* If no connectors are defined as UNLIMITED_LEN, set all the
+		 * connectors with no defined length-limit to UNLIMITED_LEN. */
+		condesc_t **sdesc = ct->sdesc;
+
+		for (size_t en = 0; en < ct->num_con; en++)
+		{
+			if (0 == sdesc[en]->length_limit)
+				sdesc[en]->length_limit = UNLIMITED_LEN;
+		}
+	}
+
+	length_limit_def_t *l_next;
+	for (length_limit_def_t *l = ct->length_limit_def; NULL != l; l = l_next)
+	{
+		l_next = l->next;
+		free(l);
 	}
 }
 
@@ -194,8 +218,6 @@ bool calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 	unsigned int i;
-
-	c->str_hash = connector_str_hash(c->string);
 
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */

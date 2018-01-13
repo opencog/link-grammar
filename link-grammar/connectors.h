@@ -145,7 +145,7 @@ void free_connectors(Connector *);
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
 
-void set_condesc_unlimited_length(Dictionary, Exp *);
+void set_all_condesc_length_limit(Dictionary);
 
 /**
  * Returns TRUE if s and t match according to the connector matching

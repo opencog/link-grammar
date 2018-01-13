@@ -17,7 +17,6 @@
 #include "connectors.h"
 #include "dict-affix.h"
 #include "dict-api.h"
-#include "dict-common.h"
 #include "dict-defines.h"
 #include "dict-impl.h"
 #include "regex-morph.h"
@@ -337,8 +336,6 @@ void dictionary_setup_locale(Dictionary dict)
 
 void dictionary_setup_defines(Dictionary dict)
 {
-	Dict_node *dict_node;
-
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
 
@@ -347,16 +344,7 @@ void dictionary_setup_defines(Dictionary dict)
 
 	dict->shuffle_linkages = false;
 
-	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
-	if (dict_node == NULL)
-	{
-		set_condesc_unlimited_length(dict, NULL);
-	}
-	else
-	{
-		set_condesc_unlimited_length(dict, dict_node->exp);
-		dict->free_lookup(dict, dict_node);
-	}
+	set_all_condesc_length_limit(dict);
 }
 
 /* ======================================================================= */
