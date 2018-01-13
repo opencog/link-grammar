@@ -100,6 +100,8 @@ static int condesc_by_uc_num(const void *a, const void *b)
 	return 0;
 }
 
+#define WILD_TYPE '*'
+
 static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_limit)
 {
 	size_t exp_num_con;
@@ -134,13 +136,26 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 		if (econlist[en]->uc_num != sdesc[cn]->uc_num) continue;
 		restart_cn = cn+1;
 
+		const char *wc_str = econlist[en]->string;
+		char *uc_wildcard = strchr(wc_str, WILD_TYPE);
+
 		for (; cn < ct->num_con; cn++)
 		{
-			if (econlist[en]->uc_num != sdesc[cn]->uc_num) break;
-
-			/* The uppercase parts are equal - match only the lowercase ones. */
-			if (lc_easy_match(econlist[en], sdesc[cn]))
-				sdesc[cn]->length_limit = UNLIMITED_LEN;
+			if (NULL == uc_wildcard)
+			{
+				if (econlist[en]->uc_num != sdesc[cn]->uc_num)
+					break;
+				/* The uppercase parts are equal - match only the lowercase ones. */
+				if (lc_easy_match(econlist[en], sdesc[cn]))
+					sdesc[cn]->length_limit = length_limit;
+			}
+			else
+			{
+				/* The uppercase part is a prefix. */
+				if (0 != strncmp(wc_str, sdesc[cn]->string, uc_wildcard - wc_str))
+					break;
+				sdesc[cn]->length_limit = length_limit;
+			}
 		}
 	}
 }
