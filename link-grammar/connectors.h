@@ -234,7 +234,7 @@ static inline int string_hash(const char *s)
 
 bool calculate_connector_info(condesc_t *);
 
-static inline uint32_t connector_str_hash(const char *s)
+static inline int connector_str_hash(const char *s)
 {
 	uint32_t i;
 
@@ -310,36 +310,91 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	return i & (table_size-1);
 }
 
-static inline condesc_t *condesc_add(ConTable *ct, const char *constring)
+static inline condesc_t **condesc_find(ConTable *ct, const char *constring, int hash)
 {
-	uint32_t i, s;
-	uint32_t hash = connector_str_hash(constring);
-
-	s = i = hash & (ct->size-1);
+	size_t i = hash & (ct->size-1);
 
 	while ((NULL != ct->hdesc[i]) &&
 	       !string_set_cmp(constring, ct->hdesc[i]->string))
 	{
 		i = (i + 1) & (ct->size-1);
-		if (i == s)
+	}
+
+	return &ct->hdesc[i];
+}
+
+static inline void condesc_table_alloc(ConTable *ct, size_t size)
+{
+	ct->hdesc = (condesc_t **)malloc(size * sizeof(condesc_t *));
+	memset(ct->hdesc, 0, size * sizeof(condesc_t *));
+	ct->size = size;
+}
+
+static inline bool condesc_insert(ConTable *ct, condesc_t **h,
+                                  const char *constring, int hash)
+{
+	*h = (condesc_t *)malloc(sizeof(condesc_t));
+	memset(*h, 0, sizeof(condesc_t));
+	(*h)->str_hash = hash;
+	(*h)->string = constring;
+	ct->num_con++;
+
+	return calculate_connector_info(*h);
+}
+
+#define CONDESC_TABLE_GROW_FACTOR 2
+
+static inline bool condesc_grow(ConTable *ct)
+{
+	size_t old_size = ct->size;
+	condesc_t **old_hdesc = ct->hdesc;
+
+	lgdebug(+11, "Growing ConTable from %zu\n", old_size);
+	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROW_FACTOR);
+
+	for (size_t i = 0; i < old_size; i++)
+	{
+		condesc_t *old_h = old_hdesc[i];
+		if (NULL == old_h) continue;
+		condesc_t **new_h = condesc_find(ct, old_h->string, old_h->str_hash);
+
+		if (NULL != *new_h)
 		{
-			prt_error("Error: condesc(): Table size (%zu) overflow\n", ct->size);
-			return NULL;
+			prt_error("Fatal Error: condesc_grow(): Internal error\n");
+			free(old_hdesc);
+			return false;
+		}
+		*new_h = old_h;
+	}
+
+	free(old_hdesc);
+	return true;
+}
+
+static inline condesc_t *condesc_add(ConTable *ct, const char *constring)
+{
+	if (0 == ct->size)
+	{
+		condesc_table_alloc(ct, ct->num_con);
+		ct->num_con = 0;
+	}
+
+	int hash = connector_str_hash(constring);
+	condesc_t **h = condesc_find(ct, constring, hash);
+
+	if (NULL == *h)
+	{
+		lgdebug(+11, "Creating connector '%s'\n", constring);
+		if (!condesc_insert(ct, h, constring, hash)) return NULL;
+
+		if ((8 * ct->num_con) > (3 * ct->size))
+		{
+			if (!condesc_grow(ct)) return NULL;
+			h = condesc_find(ct, constring, hash);
 		}
 	}
 
-	if (NULL == ct->hdesc[i])
-	{
-		lgdebug(+11, "Creating connector '%s'\n", constring);
-		ct->hdesc[i] = (condesc_t *)malloc(sizeof(condesc_t));
-		memset(ct->hdesc[i], 0, sizeof(condesc_t));
-		ct->hdesc[i]->str_hash = hash;
-		ct->hdesc[i]->string = constring;
-		if (!calculate_connector_info(ct->hdesc[i]))
-			return NULL;
-	}
-
-	return ct->hdesc[i];
+	return *h;
 }
 
 #endif /* _LINK_GRAMMAR_CONNECTORS_H_ */
