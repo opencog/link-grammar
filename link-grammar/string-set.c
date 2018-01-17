@@ -97,12 +97,16 @@ String_set * string_set_create(void)
  */
 static unsigned int find_place(const char * str, String_set *ss)
 {
-	unsigned int h, s, i;
+	unsigned int h, s;
 	h = hash_string(str, ss);
+
+	if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
 	s = stride_hash_string(str, ss);
-	for (i=h; true; i = (i + s)%(ss->size))
+	while (true)
 	{
-		if ((ss->table[i] == NULL) || (strcmp(ss->table[i], str) == 0)) return i;
+		h = h + s;
+		if (h >= ss->size) h %= ss->size;
+		if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
 	}
 }
 
