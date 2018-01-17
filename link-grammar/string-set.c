@@ -45,15 +45,16 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
-		accum = ((7 * accum) + ((unsigned char) *str)) % (ss->size);
-	return accum;
+		accum = (7 * accum) + (unsigned char)*str;
+	return accum % (ss->size);
 }
 
 static unsigned int stride_hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
-		accum = ((17 * accum) + ((unsigned char) *str)) % (ss->size);
+		accum = (17 * accum) + (unsigned char)*str;
+	accum %= ss->size;
 	/* This is the stride used, so we have to make sure that
 	 * its value is not 0 */
 	if (accum == 0) accum = 1;
