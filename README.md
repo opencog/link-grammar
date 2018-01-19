@@ -269,8 +269,26 @@ the Java bindings by disabling as follows:
 ./configure --disable-java-bindings
 ```
 
-If JAVA_HOME isn't set, if jni.h isn't found, or if ant isn't found,
+If `jni.h` isn't found, or if `ant` isn't found,
 then the java bindings will not be built.
+
+Notes about finding `jni.h`:<br>
+Some common java JVM distributions (most notably, the ones from Sun)
+place this file in unusual locations, where it cannot be
+automatically found.  To remedy this, make sure that environment variable
+JAVA_HOME is set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
+and in `$JAVA_HOME/include`; it also examines corresponding locations
+for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
+with the CPPFLAGS variable: so, for example,
+```
+export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
+```
+or
+```
+export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
+```
+Please note that the use of `/opt` is non-standard, and most system
+tools will fail to find packages installed there.
 
 Python2 and Python3 Bindings
 ----------------------------
@@ -596,36 +614,6 @@ Thus, for example, a typical makefile might include the targets:
 $(EXE): $(OBJS)
    cc -g -o $@ $^ `pkg-config --libs link-grammar`
 ```
-
-JAVA bindings
--------------
-This release includes Java bindings.  Their use is optional.
-
-The bindings will be built automatically if `jni.h` can be found.
-Some common java JVM distributions (most notably, the ones from Sun)
-place this file in unusual locations, where it cannot be
-automatically found.  To remedy this, make sure that JAVA_HOME is
-set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
-and in `$JAVA_HOME/include`; it also examines corresponding locations
-for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
-with the CPPFLAGS variable: so, for example,
-```
-export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
-```
-or
-```
-export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
-```
-
-Please note that the use of /opt is non-standard, and most system
-tools will fail to find packages installed there.
-
-The building of the Java bindings can be disabled by configuring as
-below:
-```
-./configure --disable-java-bindings
-```
-
 
 Using JAVA
 ----------
