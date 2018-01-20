@@ -3920,8 +3920,6 @@ yes, so it appears
 so it would seem
 so it would appear
 
-% "so" as a conjunction.
-
 
 % Requests, directives, commands, imperatives.
 Do not be wise in your own estimation.
@@ -4983,6 +4981,11 @@ I eat then sleep
 I eat, then sleep
 I eat then I sleep
 I eat, so I sleep
+
+% Misc conjunctions
+I like to get my knitting done whilst watching the telly.
+whilst a good worker, he's not a very good manager
+although a good worker, he's not a very good manager
 
 % XXX Misc conjunction constructions that are still broken in the current parser:
 He is flighty and given to fanciful thoughts
