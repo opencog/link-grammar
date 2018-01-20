@@ -3821,13 +3821,17 @@ appears.v: VERB_Y_S(<vc-appear>);
 appeared.v-d: VERB_Y_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
+<verb-fronted>: {@E-} & S- & hPFt- & <verb-wall>;
+
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 % N+: "It seems not"
+% <verb-fronted>: "so it seems"
+% <verb-si>: "so seems it"
 <vc-seem>:
-  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]};
+  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
 seem.v: VERB_Y_PLI(<vc-seem>);
-seems.v: VERB_Y_S(<vc-seem>);
-seemed.v-d: VERB_Y_SPPP(<vc-seem>);
+seems.v: VERB_Y_S(<vc-seem>) or <verb-fronted> or <verb-si>;
+seemed.v-d: VERB_Y_SPPP(<vc-seem>) or <verb-fronted> or <verb-si>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-care>: {@MV+} & {<to-verb> or QI+};
