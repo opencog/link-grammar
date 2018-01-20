@@ -9516,6 +9516,9 @@ so:
   or O-
   or Js-;
 
+and_so and_thus:
+  <fronted>;
+
 % Is <sent-start> ever needed here?
 % Should we be using <coord> instead of MVs- ??
 % Or maybe every use of MVs- should be converted to <coord> ???
