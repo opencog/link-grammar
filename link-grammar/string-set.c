@@ -45,15 +45,16 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
-		accum = ((7 * accum) + ((unsigned char) *str)) % (ss->size);
-	return accum;
+		accum = (7 * accum) + (unsigned char)*str;
+	return accum % (ss->size);
 }
 
 static unsigned int stride_hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
-		accum = ((17 * accum) + ((unsigned char) *str)) % (ss->size);
+		accum = (17 * accum) + (unsigned char)*str;
+	accum %= ss->size;
 	/* This is the stride used, so we have to make sure that
 	 * its value is not 0 */
 	if (accum == 0) accum = 1;
@@ -96,12 +97,16 @@ String_set * string_set_create(void)
  */
 static unsigned int find_place(const char * str, String_set *ss)
 {
-	unsigned int h, s, i;
+	unsigned int h, s;
 	h = hash_string(str, ss);
+
+	if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
 	s = stride_hash_string(str, ss);
-	for (i=h; true; i = (i + s)%(ss->size))
+	while (true)
 	{
-		if ((ss->table[i] == NULL) || (strcmp(ss->table[i], str) == 0)) return i;
+		h = h + s;
+		if (h >= ss->size) h %= ss->size;
+		if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
 	}
 }
 
