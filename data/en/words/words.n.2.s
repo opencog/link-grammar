@@ -9046,6 +9046,7 @@ satyrs.n
 saucepans.n
 saucers.n
 sauces.n
+Saudis.n
 saunas.n
 sauropods.n
 sausages.n
