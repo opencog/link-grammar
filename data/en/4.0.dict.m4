@@ -7798,6 +7798,10 @@ and.j-n but_not but_just_not and_not ,_not just_not:
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>));
 
+% A zero-copula in a conjunction:
+% "that is very nice, but not what I want"
+but_not just_not: VJrsi- & O+;
+
 % {XJo-}: "I can use either this or that".
 %
 or.j-n:
