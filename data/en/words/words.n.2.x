@@ -38,6 +38,7 @@ gunmen.p
 hyphae.p
 kin.p
 larvae.p
+latter.p
 lobstermen.p
 mailmen.p
 manga.n
