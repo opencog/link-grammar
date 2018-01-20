@@ -185,7 +185,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 
 static void increment_current_name(Dictionary dict)
 {
-	int i = IDIOM_LINK_SZ-1;
+	int i = IDIOM_LINK_SZ-2;
 
 	do
 	{
