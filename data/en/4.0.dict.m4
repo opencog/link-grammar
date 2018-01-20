@@ -7953,6 +7953,7 @@ not.e:
   or ({@E-} & N-)
   or NT+
   or EBy+
+  or <COMP-OPENER>
   or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)
     or (Mg- & Mgn+)
     or (Mv- & Mvn+)
@@ -8849,6 +8850,8 @@ very.e way.e:
   or [[EE-]]
   or [[La-]]
   or (MVl- & MVl+);
+
+not_very: EA+;
 
 real.e: [[EA+ or EE+]];
 quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
