@@ -2474,6 +2474,7 @@ per "/.per": Us+ & Mp-;
 % Almost identical to the above, except that the verb attaches to the
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
 % of sentences like  "there appears to be a problem".
+% If- blocks the Ix+ on would, be
 <verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
 <verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
@@ -3812,24 +3813,25 @@ sworn.v: VERB_PP(<vc-hope>) or <verb-adj>;
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
+<verb-fronted>: {@E-} & S- & hPFt- & <verb-wall>;
+
 % XXX Why is there a cost on Pv+ ?? "John appeared vindicated"
 % N+: "It appears not"
+% <verb-fronted>: "so it seems", "so it appears"
+% Ix- & PF- & <verb-wall>: "so it would seem"
 <vc-appear>:
   {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or N+ or [Pv+]};
-appear.v: VERB_Y_PLI(<vc-appear>);
-appears.v: VERB_Y_S(<vc-appear>);
-appeared.v-d: VERB_Y_SPPP(<vc-appear>);
+appear.v: VERB_Y_PLI(<vc-appear>) or (Ix- & PF- & <verb-wall>);
+appears.v: VERB_Y_S(<vc-appear>) or <verb-fronted>;
+appeared.v-d: VERB_Y_SPPP(<vc-appear>) or <verb-fronted>;
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
-
-<verb-fronted>: {@E-} & S- & hPFt- & <verb-wall>;
 
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 % N+: "It seems not"
-% <verb-fronted>: "so it seems"
 % <verb-si>: "so seems it"
 <vc-seem>:
   {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
-seem.v: VERB_Y_PLI(<vc-seem>);
+seem.v: VERB_Y_PLI(<vc-seem>) or (Ix- & PF- & <verb-wall>);
 seems.v: VERB_Y_S(<vc-seem>) or <verb-fronted> or <verb-si>;
 seemed.v-d: VERB_Y_SPPP(<vc-seem>) or <verb-fronted> or <verb-si>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
@@ -7914,8 +7916,14 @@ nor.r: ((Xd- & <coord>) or Wd-) & Qd+;
 for.r: [[(({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+)) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
-thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & <coord> & Wd+) or
-({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
+% <fronted>: "thus it would seem"
+thus therefore:
+  ((Xc+ & {Xd-}) & CO+) or 
+  [CO+]0.3 or 
+  ({Xd-} & <coord> & Wd+) or
+  ({Xd- & Xc+} & (E+ or EB-)) or 
+  (Xd- & Xc+ & MVa-) or
+  <fronted>;
 
 % EBy+ link is for "verbed not X but Y" "I saw not Mary, but John"
 %
