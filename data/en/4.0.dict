@@ -10007,6 +10007,10 @@ not.e:
 % We include this, though it's not one of the strippable strings
 n't n’t: N- or EB-;
 
+% "Just" is tricky...
+% COMP-OPENER: "just not a good swimmer, he fell behind"
+just_not: <COMP-OPENER>;
+
 %ADJECTIVES
 
 % Common disjuncts shared by virtually all adjectives.
