@@ -7405,7 +7405,7 @@ whence whither:
       or ({Xd- & Xc+} & MVs-)))
     or ({EW-} & Ww- & Qw+));
 
-although in_as_much_as whilst whereas whereof wherein:
+although in_as_much_as whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
   or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+));
 
@@ -7587,7 +7587,8 @@ if_so:
 no_wonder: (Wd+ or Wp+ or Wr+) & Wc-;
 
 % Pa+: "it can be pressed into shape while cold"
-while:
+% whilst: archaic form that auto-guessing fails to guess correctly.
+while whilst:
   ((<subcl-verb> or Mgp+ or Mp+ or Pa+)
     & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)));
 
