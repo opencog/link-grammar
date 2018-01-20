@@ -10121,6 +10121,7 @@ strings.n
 stripes.n
 strippers.n
 strips.n
+strivers.n
 stroboscopes.n
 strokes.n
 strollers.n
