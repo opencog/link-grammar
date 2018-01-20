@@ -1,6 +1,7 @@
 #ifndef __VARIABLES_HPP__
 #define __VARIABLES_HPP__
 
+#include <ctype.h>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -38,6 +39,11 @@ static char* construct_link_label(const char* connector1, const char* connector2
   char* result = (char*)xalloc((std::max(strlen(connector1), strlen(connector2)) + 1)*
                                sizeof(char));
   char* presult = result;
+
+  /* Skip head-dependent indicator in each connector. */
+  if (islower(*connector1)) connector1++;
+  if (islower(*connector2)) connector2++;
+
   while (*connector1 != '\0' && *connector2 != '\0') {
     if (*connector1 == '*')
       *presult++ = *connector2;
