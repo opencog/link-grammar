@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.4.3 (formatted as V5v4v3+)
-<dictionary-version-number>: V5v4v3+;
+% Dictionary version number is 5.4.4 (formatted as V5v4v4+)
+<dictionary-version-number>: V5v4v4+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -1267,8 +1267,9 @@ times.n:
 % ====================================================================
 %PRONOUNS
 
+% MXs+: "he, the shop onwer, ..."
 she he:
-  {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+);
+  {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or SJls+);
 
 % The E- is for "It's either us or them" ... not ideal, but OK
 me him:
@@ -1366,25 +1367,28 @@ it:
    or SJls+ or SJrs-;
 
 % O*c: "we will go faster than they"
+% MXp+: "they, the twins, did it"
 they:
-  ({[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-)) or
+  ({[[R+ & Bp+]]} & (({MXp+} & Sp+ & <CLAUSE>) or SIp-)) or
   Ox- or
   SJlp+ or SJrp-;
 
 % DD+: "... how we two should work together"
+% MXp+: "We, the undersigned, ..."
 we:
-  (Sp+ & <CLAUSE>)
+  ({MXp+} & Sp+ & <CLAUSE>)
   or Ox-
   or DD+
   or SIp- or SJlp+ or SJrp-;
 
-% XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
+% XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make "I've" work?
 % We use <marker-entity> here to prevent lower-case magnling by
 % the tokenizer.
 % SJrp-: allows only "...and I", disallows "I and ..."
+% MXs+: "I, Joseph, rang the bell"
 I.p:
   <marker-entity>
-  or ((Sp*i+ or SX+) & <CLAUSE>)
+  or ((({MXs+} & Sp*i+) or SX+) & <CLAUSE>)
   or SIp*i-
   or SJr-
   or SJl+
