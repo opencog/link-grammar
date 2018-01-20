@@ -7416,9 +7416,13 @@ whence whither:
       or ({Xd- & Xc+} & MVs-)))
     or ({EW-} & Ww- & Qw+));
 
+% Comparative-opener: "although a good worker, he's not a very good manager"
+<COMP-OPENER>: (O*c+ & {Xc+ & {Xd-}} & COc+);
+
 although in_as_much_as whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
-  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+));
+  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+))
+  or <COMP-OPENER>;
 
 % QI- & (): "I do not know when"
 % (Mv- & Cs+): "an examination when it happened revealed chicanery"
@@ -7599,8 +7603,11 @@ no_wonder: (Wd+ or Wp+ or Wr+) & Wc-;
 
 % Pa+: "it can be pressed into shape while cold"
 while whilst:
-  ((<subcl-verb> or Mgp+ or Mp+ or Pa+)
-    & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)));
+  ((<subcl-verb> or Mgp+ or Mp+ or Pa+) &
+    (({Xc+ & {Xd-}} & CO*s+) or
+       ({Xd- & Xc+} & MVs-) or
+       (Xd- & Xc+ & E+))) or
+  <COMP-OPENER>;
 
 <adverb-join>: RJlv+ or RJrv-;
 

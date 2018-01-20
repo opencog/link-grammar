@@ -4995,8 +4995,6 @@ I eat, so I sleep
 
 % Misc conjunctions
 I like to get my knitting done whilst watching the telly.
-whilst a good worker, he's not a very good manager
-although a good worker, he's not a very good manager
 
 % XXX Misc conjunction constructions that are still broken in the current parser:
 He is flighty and given to fanciful thoughts
@@ -5083,6 +5081,10 @@ Lady's dress was awkward.
 
 % Other capitalization issues:
 We are from the planet Gorpon.
+
+% clause opener comparatives
+whilst a good worker, he's not a very good manager
+although a good worker, he's not a very good manager
 
 % Broken comparatives:
 He is nothing less than inspired!
