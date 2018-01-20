@@ -7538,8 +7538,11 @@ on_condition:
   (TH+ or TS+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
 unless though.c even_though:
-  (<subcl-verb> or Mgp+ or Mv+)
-    & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
+  ((<subcl-verb> or Mgp+ or Mv+)
+    & (({Xc+ & {Xd-}} & CO*s+)
+      or ({Xd- & Xc+} & MVs-)
+      or (Xd- & Xc+ & E+)))
+  or <COMP-OPENER>;
 
 as_if as_though:
   ((<subcl-verb> or Mgp+ or Mv+ or Mp+)
@@ -8918,8 +8921,9 @@ wholly fully critically greatly grossly duly unduly:
   EA+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 seemingly utterly: EA+ or Em+;
+
 barely just_barely scarcely hardly merely truly practically:
-  Em+ or EBm- or EA+ or Wa-;
+  Em+ or EBm- or EA+ or Wa- or ({EBm+} & <COMP-OPENER>);
 
 partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
   Em+ or EA+ or EB- or Wa-
@@ -9370,10 +9374,10 @@ stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
 newly: E+;
 rightly: {EE-} & E+;
 necessarily no_longer: E+ or EBm-;
-ever: E+ or EBm- or EC+ or MVa-;
+ever: E+ or EBm- or EC+ or MVa- or <COMP-OPENER>;
 
-never.e always: {EN-} & (E+ or EB-);
-seldom rarely.e: {EE-} & (E+ or EB-);
+never.e always: ({EN-} & (E+ or EB-)) or <COMP-OPENER>;
+seldom rarely.e: ({EE-} & (E+ or EB-)) or <COMP-OPENER>;
 
 % MVa-: "He did just what you asked."
 % EC+: "I ate just some of the cookies"
@@ -9426,7 +9430,7 @@ even.e:
   or ((MVp+ or MVa+ or MVs+) & (MVl- or ({Xc+ & {Xd-}} & CO+)))
   or (Rnx+ & <CLAUSE-E>);
 
-not_even: Rnx+ & <CLAUSE-E>;
+not_even: (Rnx+ & <CLAUSE-E>) or <COMP-OPENER>;
 
 % {EE-} & EE+: "but not too much"
 too:
