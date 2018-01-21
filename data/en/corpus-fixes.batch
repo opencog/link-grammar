@@ -501,13 +501,17 @@ He is the man from Syndicated Features
 He represents the Undersea Exploration Company
 He represents the Equatorial Antarctic Bank
 
+% initials and abbreviations
+The J. P. Morgan company is associated with it.
+O. Cordius Candidus at Dover provided for the transport of horses.
+
 % Confusing given names
 Finn pushed at the door.
 
 % Some given names can be proper names
 The late Mr. Tom will be sorely missed.
 
-% Collistions between given names and oteh words
+% Collistions between given names and other words
 % Should be OK now; given name 'Frank' collides with frank.a, frank.v
 Frank felt vindicated when his long time friend Bill revealed that he was the winner of the competition.
 

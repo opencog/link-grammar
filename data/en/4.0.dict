@@ -1940,8 +1940,8 @@ ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
   <marker-entity>
-  or NMa-
-  or ((Wd- or NMa-) & NIa+)
+  or [NMa-]0.5
+  or [(Wd- or NMa-) & NIa+]0.5
   or Ju-;
 
 % Avoid having I.id interfere with pronoun I.
@@ -1952,6 +1952,12 @@ J.n K.n L.n M.n N.n P.n Q.n R.n S.n T.n V.n W.n X.n Y.n Z.n:
   <marker-entity>
   or <noun-main-s>
   or <noun-and-s>;
+
+% Given-name initials:
+A. B. C. D. E. F. G. H. I. J. K. L. M. N.
+O. P. Q. R. S. T. U. V. W. X. Y. Z. :
+  <marker-entity>
+  or ({G-} & G+);
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
