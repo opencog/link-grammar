@@ -10714,6 +10714,7 @@ as.e-c:
 % Cz+ & CV+: "the accused, as it shall be shown, is innocent"
 %      use Cz instead of <subcl-verb> because post-processing kills the
 %      Cs link with a "Unbounded s domain78" error.
+% AZ- & Mg+: "It described the treaty as marking a new stage"
 %
 <as-subj>: Sa*v+ or (Sa*a+ & CV+);
 as.e:
@@ -10721,6 +10722,7 @@ as.e:
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
+  or (AZ- & Mg+)
   or ((<subcl-verb> or <as-subj>) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (Cz+ & CV+)
   or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
