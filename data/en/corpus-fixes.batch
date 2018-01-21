@@ -499,7 +499,7 @@ I'll hire whoever.
 
 % Proper names (entities) in the form of noun modifiers
 % The problem is that some of these appear in entity names
-% and thus must be explicitly listed in the dictionary. 
+% and thus must be explicitly listed in the dictionary.
 My name is Gilles de la Tourette.
 I live in New York City.
 I work for the First National Bank.
@@ -829,9 +829,9 @@ I gave him a number of cookies
 
 I gave him a number of these
 I gave him a number of those
-a number of these were found 
-a number of those were found 
-a number of them were found 
+a number of these were found
+a number of those were found
+a number of them were found
 
 He has wads of cash
 He commands several companies of men
@@ -1329,7 +1329,7 @@ The telegraphed orders never arrived.
 Do you have any ruled paper?
 I gave him some ruled paper.
 
-% Pg+ links between verbs and gerunds 
+% Pg+ links between verbs and gerunds
 He imagined hitting the ball.
 She imagined photographing the couple.
 He feared hitting the wall.
@@ -1344,7 +1344,7 @@ He tried stopping the man.
 I enjoy running the show.
 
 % Here a Ce+ link is used to attach to the subject
-% i.e. the gerund, acting as a noun. e.g pushing, trusting  
+% i.e. the gerund, acting as a noun. e.g pushing, trusting
 He conceded pushing the button was a mistake.
 We concluded trusting him was a mistake.
 We concluded that trusting him was a mistake.
@@ -1362,7 +1362,7 @@ The event features a running of the bulls
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%% Predicative adjectives %%%%%%%%%%%%%%%%%%%
 %
-% sit, stand must take Pa+ link ... 
+% sit, stand must take Pa+ link ...
 The house now sits vacant
 The house now stands vacant
 The house now sits empty
@@ -1375,10 +1375,10 @@ Stay a little while.
 Stay a while.
 
 % More Pa+ links:
-He was presumed innocent 
+He was presumed innocent
 He was presumed innocent of the crime
 He was made aware of the crime
-He was declared dead 
+He was declared dead
 He was declared dead after a cursory examination.
 he was declared dead of suffocation.
 
@@ -1502,7 +1502,7 @@ He is too pathetic to make fun of
 He is too pathetic to make fun of
 He is too obnoxious to complain to
 
-% paint, color, with color names; constructions like 
+% paint, color, with color names; constructions like
 % "pale yellow" mean that the color names are nouns (O*n) and
 % not predicative adjectives (Pa**j)
 Just paint it white
@@ -1787,7 +1787,7 @@ I wonder why you said that?
 %
 % For an anaysis, and more related sentences, see
 % Paul Kay & Ivan A. Sag, "Cleaning up the Big Mess: Discontinuous
-% Dependencies and Complex Determiners" (2012) chapter 5 in 
+% Dependencies and Complex Determiners" (2012) chapter 5 in
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
@@ -1803,7 +1803,7 @@ It was that big a dog.
 It was so big a dog that it filled the cage
 How big a dog did he buy?
 *How big did he buy?
-% Actually, the above is allowed, e.g. while talking about 
+% Actually, the above is allowed, e.g. while talking about
 % house prices, the conclusion might be: "So, how big did he buy?"
 
 
@@ -1825,7 +1825,7 @@ In what way?
 To what end?
 For what reason?
 % Elipsis doesn't work, because the Qd- link can't be used without
-% the SI link, due to post-processing. Arghhh. 
+% the SI link, due to post-processing. Arghhh.
 By what means ...?
 In what way ...?
 To what end ...?
@@ -1974,7 +1974,7 @@ What he wants is the cat
 *What he wants is the cats
 What he wants are the cats
 The cats are what John wants
-The issues are that some pages will not load completely or load at all 
+The issues are that some pages will not load completely or load at all
 
 % shame commonly used as a count noun.
 He felt a deep shame.
@@ -2121,11 +2121,11 @@ I wish it was shiny.
 I want it brilliant.
 I want the review to be brilliant.
 I want the review brilliant.
-I want it done.  
+I want it done.
 I want the job done.
-I want it finished. 
+I want it finished.
 I want the job finished.
-I want it over with. 
+I want it over with.
 I want these troubles over with.
 I wish it was over with.
 I want it completed.
@@ -2133,7 +2133,7 @@ I wish it was completed.
 I want it fixed.
 I want it fixed up.
 I want it cleaned up.
-I want it gone. 
+I want it gone.
 I wish it was gone.
 I want to be rid of it.
 
@@ -2150,7 +2150,7 @@ The old system is in threat of breakdown.
 The area remains under severe threat of fire.
 He poses a threat to security.
 
-% Good sentences ... 
+% Good sentences ...
 I heard a bark in the distance.
 
 % verb modifiers for talk, consist, etc.
@@ -2182,7 +2182,7 @@ He does that all the time.
 He does that all of the time.
 He does that a lot of the time.
 He does it all of the time.
-He does it all of the day.    
+He does it all of the day.
 He does it a little of the time.
 He does it a little bit of the time.
 That happens none of the time.
@@ -2201,20 +2201,20 @@ The trains run on time part of the day
 He is a part of the problem.
 Part of the problem is his attitude.
 
-It happens every other time. 
-It happens every time. 
-It happens each time. 
-It happens each time I hit the brake. 
+It happens every other time.
+It happens every time.
+It happens each time.
+It happens each time I hit the brake.
 It happens not every time I hit the brake.
 It happens every place I go.
-Let's do it some other time.   
-Let's do it some other way.        
-Let's do it some other place.      
-That's what happens most other times. 
+Let's do it some other time.
+Let's do it some other way.
+Let's do it some other place.
+That's what happens most other times.
 I see that happen most places I go.
 
 % Filler-it and the SF link:
-It is reasoned that the vast concentration of the business information market in EMEA resides within Europe. 
+It is reasoned that the vast concentration of the business information market in EMEA resides within Europe.
 It is whispered that the vast concentration of the business information market in EMEA resides within Europe.
 it is reasoned that this statement is true.
 it is hoped that this statement is true.
@@ -2424,7 +2424,7 @@ The treasure lay below the ground.
 Below the ground lay the treasure.
 In Xanadu did Kubla Kahn a stately pleasure dome decree.
 
-% Confusion between K- and MVa- links -- 
+% Confusion between K- and MVa- links --
 % "He turned left." uses the MVa- link.
 % "He turned around", "he jumped around", "he jumped up" use "K"
 % as a particle link.
@@ -2458,7 +2458,7 @@ He looked fearfully about.
 *He looked fearfully, about.
 
 % Set phrases involving "so" -- this is an exhaustive list !
-% There are no other verbs that take "so" -- should there be 
+% There are no other verbs that take "so" -- should there be
 % a special link for this ???
 I assume so
 I believe so
@@ -2508,8 +2508,8 @@ People eat but animals feed.
 % tell taking prep
 Today, we will tell about ancient structures.
 Yesterday, we told about ancient structures.
-They have told of the soldiers' fear 
-They have talked of the soldiers' fear 
+They have told of the soldiers' fear
+They have talked of the soldiers' fear
 
 % More particles
 Your grammar should be worked on.
@@ -2739,10 +2739,10 @@ Where did they come from?
 Where did they go to?
 What has become of them now?
 How much was the leakage from the drain in the night?
-Who are those dudes in the back seat of Calvin's car? 
-What did they do when they got off the car? 
-Did they go get a sandwich? 
-Did they eat in the dark?                       
+Who are those dudes in the back seat of Calvin's car?
+What did they do when they got off the car?
+Did they go get a sandwich?
+Did they eat in the dark?
 What did they do with the waxed-paper bundles?
 
 % Sentences ending in "to", null infinitive
@@ -2775,7 +2775,7 @@ I assumed it done.
 
 % Hmm. Things following a comma, but in a different register ...
 % I think the clause needs to be its own domain ??
-% Missing/implied subject 
+% Missing/implied subject
 He stepped forward, gun raised.
 He stepped forward, hand out.
 He stepped forward, his hand out.
@@ -2831,7 +2831,7 @@ the dog, unsatisfied, barked loudly.
 Shades of Cyc, where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.
 
 % A phantom subject.
-Shades of Cyc! 
+Shades of Cyc!
 Where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.
 
 % zero-copula comparative-conjunctions
@@ -3074,11 +3074,11 @@ The IMF estimated growth at five and two-tenths percent.
 
 % XXX FIXME:
 % Note that the handling of prepositions is incorrect with regard to
-% measurements: the linkage should be to lumber, not feet.  That is, 
-% "12 feet of" is a modifier. Similarly, "hundreds of" should be a 
+% measurements: the linkage should be to lumber, not feet.  That is,
+% "12 feet of" is a modifier. Similarly, "hundreds of" should be a
 % modifier to "hours". But this can also be ambiguous: consider:
-% "The rate is 10 nm per one msec of time" -- here "of time" is 
-% indeed the modifier. Hmmm ... 
+% "The rate is 10 nm per one msec of time" -- here "of time" is
+% indeed the modifier. Hmmm ...
 %
 % Note also: parse confusion between "feet.n" and "feet.i"
 % and so "feet.n" should be removed/trimmed back from dict.
@@ -3136,7 +3136,7 @@ John, age 40, is a douchebag.
 John, aged 40, is a douchebag.
 
 
-% Can have numerical modifier *and* a determiner simultaneously: 
+% Can have numerical modifier *and* a determiner simultaneously:
 The sigma factor sigma 35 is homologous.
 
 % Nested modifiers too:
@@ -3301,14 +3301,14 @@ second is this item.
 next is this item.
 last is this item.
 
-% Other misc ordinal usage, including dates. 
+% Other misc ordinal usage, including dates.
 Today is the third of December.
 Today is the 3rd of December.
 Today is the 31st of October.
 Today is the thirty-first of October.
 He is the third to speak up.
 Of them all, he ranked third.
-Of them all, he ranked 3rd.  
+Of them all, he ranked 3rd.
 He left on the 20th.
 He left on the twentieth.
 We are leaving on December 2nd.
@@ -3475,7 +3475,7 @@ Question: How do you convince your customer that you are on the right path?
 The question is how do you convince your customer that you are on the right path?
 Answer: Very carefully!
 Answer 2: Politely.
-Question 3: Did you double-check your math? 
+Question 3: Did you double-check your math?
 Step 3: Tell him off!
 Question 3: What about tomorrow?
 What about tomorrow?
@@ -3612,7 +3612,7 @@ It's a good thing he did it.
 It's a good thing that he did it.
 
 
-% elided "to be" (phantom to be) 
+% elided "to be" (phantom to be)
 % Handled by Pa**j, O*n  (predicative adjective, object)
 She will think it an act of kindness.
 She will think it to be an act of kindness.
@@ -3822,7 +3822,7 @@ Finally, button the button.
 % and, or opening coordinating conjunctions.
 % Currently these take Wc- to the left wall, since they "coordinate"
 % with previous sentences.  This is different than a plain-old CO
-% link, since they are not 'plain-old' clause openers ... 
+% link, since they are not 'plain-old' clause openers ...
 And you can do it this way.
 Or you can do it this way.
 Or, you can do it this way.
@@ -4076,7 +4076,7 @@ John, over here!
 What did you see?
 A red car.
 Who was in it?
-John. 
+John.
 John's evil twin.
 The evil twin.
 John and his brother.
@@ -4374,7 +4374,7 @@ It was a long and narrow valley.
 I don't care if the outcome is good or bad.
 
 % conjoined adjectives with modifiers
-The river is wide       
+The river is wide
 The river is wide here
 The river is a mile wide
 The river is a mile wide here
@@ -4496,7 +4496,7 @@ The only debate centers around when and for how long.
 
 % conjoined post-nominal modifiers: MJ*a (in place of Ma and MX*a)
 Many Democrats unhappy about the economy but doubtful that Clinton can be elected probably won't vote at all
-Many Democrats, unhappy about the economy but doubtful that Clinton can be elected, probably won't vote at all  
+Many Democrats, unhappy about the economy but doubtful that Clinton can be elected, probably won't vote at all
 Many people, unaware of the deception and unfamiliar with the details, won't care.
 Many people, unaware or unfamiliar with the details, won't care.
 Many people, unaware of or unfamiliar with the details, won't care.
@@ -4535,7 +4535,7 @@ The prize is hidden in or near the playground.
 The Easter eggs are hidden in and around the house.
 
 % conjoined adverbs: RJ*v link
-She handled it quickly and gracefully 
+She handled it quickly and gracefully
 She handled it skillfully and with compassion
 She handled it quickly, quietly and gracefully
 
@@ -4741,7 +4741,7 @@ Not John, but Mary led the way
 % But for joining verbs
 She organized her work but accomplished very little
 No one but she saw the prowler.
-He would have joined the band but he couldn't spare the time  
+He would have joined the band but he couldn't spare the time
 The brothers would have resisted but that they lacked courage.
 It never rains but it pours.
 There is no doubt but right will prevail.
@@ -4899,9 +4899,9 @@ he had lain, and soon forgotten his vow
 % neither-nor constructions with verbs:
 we          ate popcorn or  watched movies
 we either   ate popcorn or  watched movies
-we neither  ate popcorn nor watched movies 
-*we either  ate popcorn nor watched movies 
-*we both    ate popcorn nor watched movies 
+we neither  ate popcorn nor watched movies
+*we either  ate popcorn nor watched movies
+*we both    ate popcorn nor watched movies
 *we         ate popcorn nor watched movies
 we both     ate popcorn and watched movies
 we not only ate popcorn but watched movies
@@ -4909,7 +4909,7 @@ we not only ate popcorn but watched movies
 We neither ate nor drank for three days
 we neither saw nor heard what happened
 
-% lots of conjunctions, commas, lists mashed up ... 
+% lots of conjunctions, commas, lists mashed up ...
 The problem is, or rather one of the problems, for there are many, a sizeable proportion of which are continually clogging up the civil, commercial, and criminal courts in all areas of the Galaxy, and especially, where possible, the more corrupt ones, this.
 The problem is, or rather one of the problems, this.
 The problem, or rather one of the problems, is this.
@@ -5013,7 +5013,7 @@ Should I attempt to call you, or you me?
 *Susan likes to work the late shift, and Sam the early shift.
 
 % Compound queries
-% Typically, the two sub-phrases parse correctly, but, 
+% Typically, the two sub-phrases parse correctly, but,
 % put together, they do not.
 What is a motor, and how does it work?
 What is a motor; how does it work?
@@ -5070,7 +5070,7 @@ Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a so
 *John saw a dog yesterday which was a Yorkshire terrier.
 
 % incorrect parses -- INCORRECT PARSES -- bad disjunct usage
-% These sentences typically parse just fine, but generate 
+% These sentences typically parse just fine, but generate
 % incorrect linkages.
 
 % Sentence used to parse incorrectly -- "of" linked to "bill", instead
@@ -5100,7 +5100,7 @@ he is fast but not a good swimmer
 he is fast but just not a good swimmer
 just not a good swimmer, he fell behind
 
-% Hmm conjunctions .. these are  tricky to get right ... 
+% Hmm conjunctions .. these are  tricky to get right ...
 Mike finished in first place, and John in third.
 Mike finished in first place, and John in last.
 
@@ -5230,7 +5230,7 @@ Although society has excluded the patients in the ward for their unique qualitie
 92 Chapter 10.............................................................................................................................................
 
 % --------------------------------------------------------------------
-% Sentence containing UTF8 chars that can lead to i/o or 
+% Sentence containing UTF8 chars that can lead to i/o or
 % word-boundary problems
 *Bitter gourdはにがうりだそうであってるのかはちょっと不安ですが翻訳ソフトでやくしてみました。
 *Синтезируется из глюкозы в тканях и органах, например в сердце, печени, почках.
