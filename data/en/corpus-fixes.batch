@@ -5214,6 +5214,7 @@ neither this or that one will do
 % --------------------------------------------------------------------
 % sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
+% Proper fixes for some of these require links that cross...
 % viz they should parse,
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
@@ -5225,6 +5226,10 @@ neither this or that one will do
 *Fuck off and have a great day, jerk!
 
 I slipped on the ice as I ran home.
+
+% This should parse with the TQ/BT link (see OT page)
+% but that requires links crossing to head-word, so its screwed.
+*How many years did it last
 
 % --------------------------------------------------------------------
 % assorted unclassified breakages, waiting for a fix:
