@@ -10044,14 +10044,20 @@ n't n’t: N- or EB-;
 % COMP-OPENER: "just not a good swimmer, he fell behind"
 just_not: <COMP-OPENER>;
 
-%ADJECTIVES
-
+% ---------------------------------------------------
+% ADJECTIVES
 % Common disjuncts shared by virtually all adjectives.
-<adj-op>:
+%
+% This one is used for openers and post-nominal modifiers.
+<adj-opener>:
   [{@E-} & {@MV+} & <fronted> & {@MV+}]
-  or (AJra- & {@MV+})
-  or ({@MV+} & AJla+)
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
+
+% Conjoined adjectives
+<adj-conjoined>:
+  (AJra- & {@MV+}) or ({@MV+} & AJla+);
+
+<adj-op>: <adj-opener> or <adj-conjoined>;
 
 % Ordinary adjectives
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a
@@ -10069,7 +10075,8 @@ just_not: <COMP-OPENER>;
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or <adj-op>))
+    or <adj-opener>))
+  or ({EF+} & <adj-conjoined>)
   or (EAh- & {Qe+});
 
 % PH-: connect, phonetically, to a/an if it is there.
