@@ -6777,11 +6777,13 @@ as_usual to_date on_average in_turn so_far
 in_particular in_response in_general thus_far in_reply:
   <prep-main-b>;
 
+% Mp- & QI+: "decisions such as when to go are taken by the instructor."
 such_as:
-  J+ & (
+  (J+ & (
     MVa-
     or Mp-
-    or (Xc+ & Xd- & (MVx- or MX*x-)));
+    or (Xc+ & Xd- & (MVx- or MX*x-))))
+  or (Mp- & QI+);
 
 lest:
   (<subcl-verb> or Mgp+ or Mv+) & (
