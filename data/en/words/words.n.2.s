@@ -1496,6 +1496,7 @@ camels.n
 cameos.n
 cameras.n
 Cameroonians.n
+camisoles.n
 campaigners.n
 campers.n
 campsites.n
