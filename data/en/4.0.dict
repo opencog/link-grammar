@@ -2754,7 +2754,12 @@ had.v-d:
   [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & COp+))]];
 
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
-’d 'd: S- & (PP+ or I+);
+
+% S- & I+: "I'd love to"
+% RS- & Bs- & PP+: "He looked at the girl who'd been knitting"
+’d 'd:
+  (S- & (PP+ or I+))
+  or (RS- & Bs- & PP+);
 
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
