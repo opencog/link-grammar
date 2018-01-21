@@ -7914,9 +7914,11 @@ and.j-o or.j-o: <ditransitive-conjunction>;
 then.j-o: <ditransitive-conjunction>;
 
 % XJn-: neither ... nor ...
+% I-: "I don't want that, nor do you"
 nor.j-v:
   (VJl*i- & XJn- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
-  (VJl*t- & XJn- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>));
+  (VJl*t- & XJn- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>)) or
+  ({Xd-} & VJl*i- & VJr*i+ & ({@MV+} & I- & <verb-wall>));
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
