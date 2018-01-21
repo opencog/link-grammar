@@ -9571,15 +9571,19 @@ how:
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
 
+% "that" as subjunctive or paraphrasing
 % EBx+: He told me that even his mother likes me
 % (perhaps this should be changed to a different EB ??)
 that.j-c:
-  ({EBx+} & <that-verb> & ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
+  ({EBx+} & <that-verb> &
+    ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
   or (TS- & (SI*j+ or SFI**j+) & I*j+);
 
+% "that" as determiner.
 % D*u+: "Give me that thing"
 that.j-d: [{AL-} & D*u+];
 
+% "that" as adverb.
 % Xd-: iffy punctuation, e.g "The man, that you saw laugh...
 that.j-r:
   ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
@@ -9587,7 +9591,7 @@ that.j-r:
   or (EA+ & {HA+})
   or DTn+;
 
-% naked Osn-: "give me that"
+% "that" as noun. naked Osn-: "give me that"
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
 % "that" as topic. Wt is a topic link to LEFT-WALL.  "That I did not know".
