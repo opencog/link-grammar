@@ -4586,20 +4586,22 @@ figuring.v: <verb-pg> & <vc-figure>;
 
 % I- & B- & <embed-verb>: "What did John say you should do?"
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
-recall.v reveal.v state.v observe.v indicate.v
+recall.v reveal.v divulge.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
 hypothesize.v hypothesise.v document.v envisage.v:
   VERB_PLI(<vc-predict>)
   or (I- & <b-minus> & <embed-verb>);
 
 predicts.v realizes.v discovers.v determines.v announces.v says.v
-mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v
+mentions.v admits.v recalls.v reveals.v divulges.v states.v observes.v
+indicates.v
 analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v
-questions.v tests.v hypothesizes.v hypothesises.v envisages.v documents.v:
+questions.v tests.v hypothesizes.v hypothesises.v envisages.v
+documents.v:
   VERB_S_T(<vc-predict>);
 
 predicted.v realized.v discovered.v determined.v announced.v mentioned.v
-admitted.v recalled.v revealed.v stated.v observed.v indicated.v
+admitted.v recalled.v revealed.v divulged.v stated.v observed.v indicated.v
 analysed.v analyzed.v assessed.v established.v evaluated.v examined.v
 questioned.v tested.v
 hypothesized.v-d hypothesised.v-d well-established.v-d documented.v-d
@@ -4619,13 +4621,13 @@ said.v-d:
 
 predicting.g realizing.g discovering.g determining.g
 announcing.g saying.g mentioning.g admitting.g recalling.g revealing.g
-stating.g observing.g indicating.g
+divulging.g stating.g observing.g indicating.g
 analysing.g analyzing.g assessing.g establishing.g evaluating.g examining.g
 questioning.g testing.g hypothesizing.g hypothesising.g documenting.g envisaging.g:
   (<vc-predict> & <verb-ge>) or <verb-ge-d>;
 predicting.v realizing.v discovering.v determining.v
 announcing.v saying.v mentioning.v admitting.v recalling.v revealing.v
-stating.v observing.v indicating.v
+divulging.v stating.v observing.v indicating.v
 analysing.v analyzing.v assessing.v establishing.v evaluating.v examining.v
 questioning.v testing.v
 hypothesizing.v hypothesising.v documenting.v envisaging.v:
@@ -4637,9 +4639,11 @@ hypothesizing.v hypothesising.v documenting.v envisaging.v:
 % esplain: basilect of explain
 guess.v estimate.v understand.v notice.v explain.v esplain.v demonstrate.v:
   VERB_PLI(<vc-guess>);
-guesses.v estimates.v understands.v notices.v explains.v demonstrates.v:
+guesses.v estimates.v understands.v notices.v explains.v esplains.v
+demonstrates.v:
   VERB_S_T(<vc-guess>);
-guessed.v-d understood.v-d noticed.v-d explained.v-d demonstrated.v-d:
+guessed.v-d understood.v-d noticed.v-d explained.v-d esplained.v-d
+demonstrated.v-d:
   VERB_SPPP_T(<vc-guess>)
   or (<verb-s-pv> & {THi+})
   or <verb-manner>
@@ -4659,7 +4663,7 @@ demonstrating.v: <verb-pg> & <vc-guess>;
 % MVb+: "He should know better"
 <vc-know>:
   {<vc-trans>}
-  or ({@MV+} & (((OF+ or QI+)& {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-))
+  or ({@MV+} & (((OF+ or QI+) & {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-))
   or ({Xc+} & MVb+);
 know.v: VERB_PLI(<vc-know>);
 knows.v: VERB_S_T(<vc-know>);
@@ -7225,7 +7229,7 @@ nights.n seconds.n decades.n centuries.n:
 % XXX A major problem here is that the dict entries for miles.n, feet.n
 % create a bunch of parses that are wrong & interfere with the below.
 <units-funky-plural>:
-  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) 
+  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-))
   or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
@@ -7951,10 +7955,10 @@ yet.r: ((({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+)) or E+ or MVa- or ({Xd-
 
 % <fronted>: "thus it would seem"
 thus therefore:
-  ((Xc+ & {Xd-}) & CO+) or 
-  [CO+]0.3 or 
+  ((Xc+ & {Xd-}) & CO+) or
+  [CO+]0.3 or
   ({Xd-} & <coord> & Wd+) or
-  ({Xd- & Xc+} & (E+ or EB-)) or 
+  ({Xd- & Xc+} & (E+ or EB-)) or
   (Xd- & Xc+ & MVa-) or
   <fronted>;
 
