@@ -5023,6 +5023,23 @@ What is a motor; how does it work?
 Who invented sliced bread, and when did they do it?
 Who invented sliced bread; when did they do it?
 
+% conjoined negatives (decision-questions)
+Who, if not I, should defend you against such slanders ?
+Who, if not Micheal, will provide for your care?
+What, if not this, is worth it?
+when, if not now, do you want to do it?
+when, if not tomorrow, do you want to do it?
+when, if not next week, do you want to do it?
+why, and not whether, is the question
+why, and not how, is the question
+when, but not how, will be decided.  << DONE
+how, but not when, was decided.  << DONE
+how, yet not when, was decided.
+the time, but not the cause, was established  <<OK
+the time, and not the cause, was established
+the time, yet not the cause, was established
+They play billiards, yet not snooker
+
 % Coordinating conjunctions
 These are the snippers and those are the cutters.
 Grant me this wish and I will die happy.
@@ -5036,8 +5053,18 @@ I eat, then sleep
 I eat then I sleep
 I eat, so I sleep
 
+% conjunctions that are comparative
+he is fast, just not a good swimmer
+he is fast, but not a good swimmer
+he is fast but not a good swimmer
+he is fast but just not a good swimmer
+just not a good swimmer, he fell behind
+
 % Misc conjunctions
 I like to get my knitting done whilst watching the telly.
+
+% conjunction used to provide a definition.
+Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a social disease.
 
 % XXX Misc conjunction constructions that are still broken in the current parser:
 He is flighty and given to fanciful thoughts
@@ -5059,13 +5086,18 @@ I cannot discern any reason, other than some sort of historical blindness, for w
 John; my advisor, Steve; and several other people are coming
 No one but she saw the prowler.
 
-% conjunction used to provide a definition.
-Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a social disease.
-
 % The two below are valid sentences, but they parse incorrectly just right now
 % so we will put a * in front of them, for now, till the parse is fixed.
 *Mike finished in first place, and John in third.
 *Mike finished in first place, and John in last
+
+% More crazy parses due to bad conjunction handling
+Whenever he comes, she goes, and v.v.
+The market fell 156.83, or 8%, a week after Black Monday.
+
+% Hmm conjunctions .. these are  tricky to get right ...
+Mike finished in first place, and John in third.
+Mike finished in first place, and John in last.
 
 % --------------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
@@ -5092,21 +5124,7 @@ It starts one or two hours later.
 *Bill went over the river and right through the woods.
 *Bill went over the river and straight through the woods.
 
-% More crazy parses due to bad conjunction handling
-Whenever he comes, she goes, and v.v.
-The market fell 156.83, or 8%, a week after Black Monday.
-
-% conjunctions that are comparative
-he is fast, just not a good swimmer
-he is fast, but not a good swimmer
-he is fast but not a good swimmer
-he is fast but just not a good swimmer
-just not a good swimmer, he fell behind
-
-% Hmm conjunctions .. these are  tricky to get right ...
-Mike finished in first place, and John in third.
-Mike finished in first place, and John in last.
-
+% -------------------------------------------------------------
 % Rules should select "shouting.g" gerund, not "shouting.v" (participle)
 % Now fixed.
 The teacher's shouting startled the student.

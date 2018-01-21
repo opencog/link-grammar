@@ -7473,6 +7473,7 @@ when:
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
   or [QI-]
+  or SJl+ or SJr-
   or ({EW-} & (QJ- or QJ+))
   or ({EW-} & Ww- & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
@@ -7487,6 +7488,7 @@ why:
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or COa+
+    or SJl+ or SJr-
     or ({EW-} & (QJ- or QJ+))
     );
 
@@ -7500,6 +7502,7 @@ where:
     & (
       ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]
+      or SJl+ or SJr-
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
       or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
@@ -7524,6 +7527,7 @@ how:
   or ({EW-} & Wq- & (({EL+} & Qw+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
+  or SJl+ or SJr-
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)))
 ;
 %%%  or ((EAh+ or EEh+) & Ww-);
