@@ -7819,7 +7819,9 @@ and.j-r or.j-r:
 % "there was enough of the beer and sandwiches"
 %
 % XJa-: "Both June and Tom are coming"
-
+%
+% Xd- & SJl- & EBb+ & SJr+ & Xc+ & Wd- & Ssx+: EB+ forces a singular subject!
+%
 and.j-n but_not but_just_not and_not ,_not just_not:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
@@ -7841,7 +7843,8 @@ and.j-n but_not but_just_not and_not ,_not just_not:
     or SIu-
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
-    or <post-nominal-u>));
+    or <post-nominal-u>))
+  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+));
 
 % A zero-copula in a conjunction:
 % "that is very nice, but not what I want"
