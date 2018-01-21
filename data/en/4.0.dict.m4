@@ -7214,23 +7214,28 @@ day.n night.n:
 
 % {Dmc- or @M+}: avoid used Dmc together with M when parsing sentences like
 % "She is two years older than me"
+% ND- & A- & D- & Jp-: "we walked for a further three hours"
 days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
 nights.n seconds.n decades.n centuries.n:
-  {NM+} & ((<noun-modifiers> &
-    (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
-      (<noun-main-p> or
-      <rel-clause-p> or
-      <noun-and-p>)) or
-    Up- or
-    (YP+ & {Dmc-}) or
-    (GN+ & (DD- or [()])))) or
-  [[AN+]]);
+  ({NM+} & ((<noun-modifiers> &
+      (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
+        (<noun-main-p> or
+        <rel-clause-p> or
+        <noun-and-p>)) or
+      Up- or
+      (YP+ & {Dmc-}) or
+      (GN+ & (DD- or [()])))) or
+    [[AN+]])) or
+  (ND- & A- & D- & Jp-);
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n
 % create a bunch of parses that are wrong & interfere with the below.
 % Jp-: "we walked for three kilometers"
+% ND- & A- & D- & Jp-: "we walked for a further three kilometers"
 <units-funky-plural>:
-  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or Jp- or OD-))
+  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-))
+  or ((ND- or [()]) & Jp-)
+  or (ND- & A- & D- & Jp-)
   or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
