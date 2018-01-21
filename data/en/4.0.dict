@@ -10121,14 +10121,15 @@ HYPHENATED-WORDS.a:
 %      "Her shoes are fire-engine red"
 % [A-]0.2: "a big green apple" want "big" to modify "apple", not "green"
 <color-adj>:
-  {EA- or EF+} & {(AN- or [A-]0.2) & {Ds-}} &
+  ({EA- or EF+} & {(AN- or [A-]0.2) & {Ds-}} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or <adj-op>);
+    or <adj-opener>))
+  or ({EF+} & {(AN- or [A-]0.2) & {Ds-}} & <adj-conjoined>);
 
 % pinkish brownish not in this list as they can't take the modifiers.
 auburn.a black.a blue.a blueberry.a
@@ -10152,14 +10153,15 @@ tawny.a ultramarine.a umber.a yellow.a:
 done.c gone.c through.c: <adj-stuff> & <wantPHc>;
 
 responsible.a accountable.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or Vh- or MJra-) & {@MV+}) or
     ({@MV+} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 long.a:
   (<ordinary-adj> & <wantPHc>)
@@ -10188,19 +10190,20 @@ ages.i: [<aged>];
 % part, the TO TH type section.  This regularity should be exploited to
 % simplify the expressions ...
 easy.a hard.a simple.a difficult.a fun.a expensive.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>));
+    or ({<tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
 
 % M-: "Do you have an example ready?"
 % Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
-  {EA- or EF+} & (
+  ({EA- or EF+} & (
     ({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <to-verb>) & {LE+}} & MJla+)
@@ -10208,39 +10211,43 @@ ready.a:
     or M-
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<to-verb> or <tot-verb>} & <adj-op>));
+    or ({<to-verb> or <tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<to-verb> or <tot-verb>} & <adj-conjoined>);
 
 silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>));
+    or ({<tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
 
 % Identical to above, but starts with vowel
 unpleasant.a illegal.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+ & <wantPHv>)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>));
+    or ({<tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
 
 <adj-good>:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>)
-    or AJr-);
+    or ({<tot-verb>} & <adj-opener>)
+    or AJr-))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
 
 good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
 tough.a:
@@ -10268,7 +10275,8 @@ important.a essential.a imperative.a:
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>)));
+    or ({<tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
 
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
@@ -10280,7 +10288,8 @@ crucial.a necessary.a vital.a:
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<tot-verb>} & <adj-op>)));
+    or ({<tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
 
 % XXX FIXME Most of the below need to be sorted into vowel/consonant groups.
 %
@@ -10298,68 +10307,76 @@ poetical.a:
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or <adj-op>));
+    or <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb> or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<to-verb>} & <adj-op>));
+    or ({<to-verb>} & <adj-opener>)))
+  or ({EF+} & {<to-verb>} & <adj-conjoined>);
 
 wise.a unwise.a smart.a intelligent.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(<to-verb> or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<to-verb>} & <adj-op>));
+    ({<to-verb>} & <adj-opener>)))
+  or ({EF+} & {<to-verb>} & <adj-conjoined>);
 
 unlikely.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}}) or
     ({@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<to-verb>} & <adj-op>));
+    ({<to-verb>} & <adj-opener>)))
+  or ({EF+} & {<to-verb>} & <adj-conjoined>);
 
 likely.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}}) or
     ({@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<to-verb>} & <adj-op>) or
-    [E+]);
+    ({<to-verb>} & <adj-opener>) or
+    [E+]))
+  or ({EF+} & {<to-verb>} & <adj-conjoined>);
 
-apparent.a false.a official.a strict.a significant.a funny.a notable.a untrue.a tragic.a
-plain.a urgent.a a_drag a_bummer definite.a evident.a impressive.a incredible.a
-inevitable.a mysterious.a pathetic.a probable.a admirable.a commendable.a conceivable.a
-insignificant.a miraculous.a self-evident.a undeniable.a plausible.a understandable.a
-demonstrable.a hilarious.a improbable.a inexcusable.a outrageous.a paradoxical.a shameful.a
-inconceivable.a unbelievable.a astonishing.a disgraceful.a debatable.a arguable.a
-lamentable.a regrettable.a
-well-known.a:
+apparent.a false.a official.a strict.a significant.a funny.a
+notable.a untrue.a tragic.a plain.a urgent.a a_drag a_bummer
+definite.a evident.a impressive.a incredible.a
+inevitable.a mysterious.a pathetic.a probable.a admirable.a
+commendable.a conceivable.a insignificant.a miraculous.a
+self-evident.a undeniable.a plausible.a understandable.a
+demonstrable.a hilarious.a improbable.a inexcusable.a outrageous.a
+paradoxical.a shameful.a inconceivable.a unbelievable.a
+astonishing.a disgraceful.a debatable.a arguable.a lamentable.a
+regrettable.a well-known.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
