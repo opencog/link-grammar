@@ -5972,6 +5972,7 @@ lifelines.n
 lifers.n
 lifestyles.s
 lifetimes.n
+lifts.n
 liftoffs.n
 ligaments.n
 ligatures.n
