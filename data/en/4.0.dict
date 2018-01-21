@@ -1947,6 +1947,12 @@ O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
 % Avoid having I.id interfere with pronoun I.
 I.id: [[<marker-entity> or NMa- or (Wd- & NIa+)]];
 
+% Variables: "suppose that X or Y is responsible."
+J.n K.n L.n M.n N.n P.n Q.n R.n S.n T.n V.n W.n X.n Y.n Z.n:
+  <marker-entity>
+  or <noun-main-s>
+  or <noun-and-s>;
+
 % Days of month
 % Note, however, this over-rides generic numbers in this range
 % and so is a superset of the generic numbers disjuncts
