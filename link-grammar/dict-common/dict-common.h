@@ -63,7 +63,7 @@ struct Afdict_class_struct
 };
 
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
-#define IDIOM_LINK_SZ 4
+#define IDIOM_LINK_SZ 5
 
 struct Dictionary_s
 {
