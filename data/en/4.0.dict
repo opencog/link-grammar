@@ -5190,6 +5190,7 @@ recollecting.v adducing.v positing.v reiterating.v inferring.v presupposing.v:
 
 undisputed.v: (<verb-s-pv> & {THi+});
 
+% MVp+: "it repeated for ..." "She provided for ..."
 <vc-repeat>: {<vc-trans>} or ({@MV+} & TH+) or MVp+;
 repeat.v reflect.v provide.v counter.v signal.v: 
   ((<verb-pl,i> & (<vc-repeat>)) or
