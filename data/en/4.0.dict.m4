@@ -5861,14 +5861,17 @@ asked.v-d:
 asking.g: (<vc-ask> & <verb-ge>) or <verb-ge-d>;
 asking.v: <verb-pg> & <vc-ask>;
 
+% TH+: "it helps that you know already"
 <vc-help>:
-  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+}) or
-  ([[@MV+ & O*n+ & {@MV+}]]);
+  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+})
+  or [[@MV+ & O*n+ & {@MV+}]];
 
 help.v: VERB_PLI(<vc-help>);
-helps.v: VERB_S_T(<vc-help>);
-helped.v-d: VERB_SPPP_T(<vc-help>) or (<verb-pv> & {<to-verb>}) or
-({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+helps.v: VERB_S_T(<vc-help> or TH+);
+helped.v-d:
+  VERB_SPPP_T(<vc-help> or TH+)
+  or (<verb-pv> & {<to-verb>})
+  or ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
 helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
 

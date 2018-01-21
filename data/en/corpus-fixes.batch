@@ -98,6 +98,15 @@ he suspects already
 he will suspect soon
 he knows already
 
+it helps that you know already
+it helped that you knew already
+It helped that you know already
+it helps that you have a clear idea of what you want.
+it helps for you to have a clear idea of what you want.
+it helps when you have a clear idea of what you want.
+it helps if you have a clear idea of what you want.
+
+
 % Parses, but not correctly!
 % Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.

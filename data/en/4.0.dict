@@ -7570,25 +7570,28 @@ asked.v-d:
 asking.g: (<vc-ask> & <verb-ge>) or <verb-ge-d>;
 asking.v: <verb-pg> & <vc-ask>;
 
+% TH+: "it helps that you know already"
 <vc-help>:
-  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+}) or
-  ([[@MV+ & O*n+ & {@MV+}]]);
+  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+})
+  or [[@MV+ & O*n+ & {@MV+}]];
 
 help.v: 
   ((<verb-pl,i> & (<vc-help>)) or
   (<verb-and-pl-> & ((<vc-help>) or ())) or
   ((<vc-help>) & <verb-and-pl+>));
 helps.v: 
-  ((<verb-s> & (<vc-help>)) or
-  (<verb-and-sp-i-> & ([<vc-help>]0.2 or ())) or
-  ((<vc-help>) & <verb-and-sp-i+>) or
+  ((<verb-s> & (<vc-help> or TH+)) or
+  (<verb-and-sp-i-> & ([<vc-help> or TH+]0.2 or ())) or
+  ((<vc-help> or TH+) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-helped.v-d: 
-  ((<verb-sp,pp> & (<vc-help>)) or
-  (<verb-and-sp-i-> & ([<vc-help>]0.2 or ())) or
-  ((<vc-help>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or (<verb-pv> & {<to-verb>}) or
-({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+helped.v-d:
+  
+  ((<verb-sp,pp> & (<vc-help> or TH+)) or
+  (<verb-and-sp-i-> & ([<vc-help> or TH+]0.2 or ())) or
+  ((<vc-help> or TH+) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>)
+  or (<verb-pv> & {<to-verb>})
+  or ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
 helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
 
