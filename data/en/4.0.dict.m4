@@ -7228,8 +7228,9 @@ nights.n seconds.n decades.n centuries.n:
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n
 % create a bunch of parses that are wrong & interfere with the below.
+% Jp-: "we walked for three kilometers"
 <units-funky-plural>:
-  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-))
+  ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or Jp- or OD-))
   or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
