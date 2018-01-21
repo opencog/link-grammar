@@ -1086,6 +1086,12 @@ Other examples, with the phantom word in parenthesis, include:
  * (It) looks good.
  * (You) go home!
  * (Are) you all right?
+ * He opened the door and (he) went in.
+
+Some complex phantom constructions:
+ * They play billiards but (they do) not (play) snooker.
+ * I know Ringo, but (I do) not (know) his brother.
+ * She likes Indian food, but (she does) not (like) Chinese (food).
 
 See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
 

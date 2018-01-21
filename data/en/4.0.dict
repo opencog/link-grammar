@@ -9270,8 +9270,8 @@ day.n night.n:
 % {Dmc- or @M+}: avoid used Dmc together with M when parsing sentences like
 % "She is two years older than me"
 % ND- & A- & D- & Jp-: "we walked for a further three hours"
-days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
-nights.n seconds.n decades.n centuries.n:
+days.n weeks.n moments.n hours.n minutes.n years.n instants.n
+periods.n months.n nights.n seconds.n decades.n centuries.n:
   ({NM+} & ((<noun-modifiers> &
       (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
         (<noun-main-p> or
