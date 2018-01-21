@@ -2111,9 +2111,10 @@ tens:
     & (ND+ or NIn+ or OD-
       or ({DD-} & ([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
 
-and_a_half: (NW- or NSn-) &
-(NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} &
-(Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
+and_a_half:
+  (NW- or NSn- or ND-) &
+    (NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} &
+    (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
 quarter.i:
 NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
