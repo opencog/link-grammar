@@ -4395,7 +4395,7 @@ recollecting.v adducing.v positing.v reiterating.v inferring.v presupposing.v:
 
 undisputed.v: (<verb-s-pv> & {THi+});
 
-<vc-repeat>: {<vc-trans>} or ({@MV+} & TH+);
+<vc-repeat>: {<vc-trans>} or ({@MV+} & TH+) or MVp+;
 repeat.v reflect.v provide.v counter.v signal.v: VERB_PLI(<vc-repeat>);
 repeats.v reflects.v provides.v counters.v signals.v: VERB_S_T(<vc-repeat>);
 repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d:

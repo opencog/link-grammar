@@ -5190,7 +5190,7 @@ recollecting.v adducing.v positing.v reiterating.v inferring.v presupposing.v:
 
 undisputed.v: (<verb-s-pv> & {THi+});
 
-<vc-repeat>: {<vc-trans>} or ({@MV+} & TH+);
+<vc-repeat>: {<vc-trans>} or ({@MV+} & TH+) or MVp+;
 repeat.v reflect.v provide.v counter.v signal.v: 
   ((<verb-pl,i> & (<vc-repeat>)) or
   (<verb-and-pl-> & ((<vc-repeat>) or ())) or
