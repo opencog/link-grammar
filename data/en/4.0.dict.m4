@@ -4500,11 +4500,13 @@ imagined.v:
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
-% Pa**j link: The doctor declared him insane.
+% Pa**j+: "The doctor declared him insane."
+% MVa+: "he will suspect soon", "he suspects already"
 <vc-declare>:
   <vc-trans>
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Pg+ or Z-))
-  or ((O+ or <b-minus>) & ({@MV+} & Pa**j+));
+  or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
+  or MVa+;
 
 declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
