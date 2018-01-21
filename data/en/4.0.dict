@@ -5343,7 +5343,8 @@ imagined.v:
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
-% Pa**j link: The doctor declared him insane.
+% Pa**j+: "The doctor declared him insane."
+% MVa+: "he will suspect soon", "he suspects already"
 <vc-declare>:
   <vc-trans>
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Pg+ or Z-))
@@ -5586,11 +5587,12 @@ guessing.v estimating.v understanding.v noticing.v explaining.v
 demonstrating.v: <verb-pg> & <vc-guess>;
 
 % (QI+ & {MV+}): "I did not know why until recently"
+% MVa+: "He knows already"
 % MVb+: "He should know better"
 <vc-know>:
   {<vc-trans>}
   or ({@MV+} & (((OF+ or QI+) & {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-))
-  or ({Xc+} & MVb+);
+  or ({Xc+} & (MVa+ or MVb+));
 know.v: 
   ((<verb-pl,i> & (<vc-know>)) or
   (<verb-and-pl-> & ((<vc-know>) or ())) or

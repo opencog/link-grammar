@@ -4663,11 +4663,12 @@ guessing.v estimating.v understanding.v noticing.v explaining.v
 demonstrating.v: <verb-pg> & <vc-guess>;
 
 % (QI+ & {MV+}): "I did not know why until recently"
+% MVa+: "He knows already"
 % MVb+: "He should know better"
 <vc-know>:
   {<vc-trans>}
   or ({@MV+} & (((OF+ or QI+) & {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-))
-  or ({Xc+} & MVb+);
+  or ({Xc+} & (MVa+ or MVb+));
 know.v: VERB_PLI(<vc-know>);
 knows.v: VERB_S_T(<vc-know>);
 knew.v-d: VERB_SP_T(<vc-know>);
