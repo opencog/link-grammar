@@ -6500,7 +6500,6 @@ mikados.n
 mikes.n
 mileages.n
 mileometers.n
-miles.n
 milestones.n
 milieus.n
 militants.n
