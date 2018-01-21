@@ -8333,24 +8333,26 @@ demonstrable.a hilarious.a improbable.a inexcusable.a outrageous.a
 paradoxical.a shameful.a inconceivable.a unbelievable.a
 astonishing.a disgraceful.a debatable.a arguable.a lamentable.a
 regrettable.a well-known.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+ or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or QIi+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 clear.i: {EA- or EF+} & Vm- & TH+;
 sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
@@ -8368,45 +8370,49 @@ inappropriate.a insufficient.a irrational.a irresponsible.a
 mandatory.a meaningless.a preferable.a senseless.a trivial.a
 wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {<toi-verb> & {LE+}} & MJla+)
     or AA+
-    or <adj-op>
     or (AJrc- & {@MV+})
     or [[DD- & <noun-main-p>]]
-    or [[{DD-} & <noun-and-p>]]);
+    or [[{DD-} & <noun-and-p>]]
+    or <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 unknown.a questionable.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {QIi+}) or
     ({@MV+} & {QIi+} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 certain.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<embed-verb> or <tof-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(<embed-verb> or <tof-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-op>));
+    ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-opener>)))
+  or ({EF+} & {<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-conjoined>);
 
 sure.a unsure.a uncertain.a careful.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<embed-verb> or <to-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(<embed-verb> or <to-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-op>));
+    ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-opener>)))
+  or ({EF+} & {<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-conjoined>);
 
 % XXX FIXME: many of the below should probably take <tot-verb> like the
 % above...
@@ -8415,36 +8421,39 @@ correct.a incorrect.a right.a excited.a
 disappointed.a upset.a sorry.a content.a determined.a
 amused.a amazed.a astonished.a astounded.a pleased.a
 disgusted.a distressed.a dismayed.a irritated.a embarrassed.a alarmed.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or TH+) & {LE+}}) or
     ({@MV+} & {(<to-verb> or TH+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<to-verb> or TH+} & <adj-op>));
+    ({<to-verb> or TH+} & <adj-opener>)))
+ or ({EF+} & {<to-verb> or TH+} & <adj-conjoined>);
 
-glad.a fortunate.a unfortunate.a lucky.a unlucky.a happy.a sad.a surprised.a
-delighted.a overjoyed.a:
-  {EA- or EF+} &
+glad.a fortunate.a unfortunate.a lucky.a unlucky.a happy.a sad.a
+surprised.a delighted.a overjoyed.a:
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<embed-verb> or <to-verb> or TH+) & {LE+}}) or
     ({@MV+} & {(<embed-verb> or <to-verb> or TH+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<embed-verb> or <to-verb> or TH+} & <adj-op>));
+    ({<embed-verb> or <to-verb> or TH+} & <adj-opener>)))
+ or ({EF+} & {<embed-verb> or <to-verb> or TH+} & <adj-conjoined>);
 
 % common adjectives, taking "to", "of", "that" e.g. "proud that"
 proud.a scared.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(<to-verb> or TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<to-verb> or TH+ or OF+} & <adj-op>));
+    ({<to-verb> or TH+ or OF+} & <adj-opener>)))
+  or ({EF+} & {<to-verb> or TH+ or OF+} & <adj-conjoined>);
 
 % common adjectives, taking "of" e.g. "tired of", "sick of" etc.
 tired.a pooped.a full.a sick.a critical.a guilty.a innocent.a
@@ -8452,76 +8461,91 @@ typical.a exemplary.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a dead.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or
     ({@MV+} & {OF+ & {@MV+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({OF+ & {@MV+}} & <adj-op>));
+    ({OF+ & {@MV+}} & <adj-opener>)))
+  or ({EF+} & {OF+ & {@MV+}} & <adj-conjoined>);
 
 fond.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & OF+ & {@MV+}) or
     (OF+ & {@MV+} & MJla+) or
-    (OF+ & <adj-op>));
+    (OF+ & <adj-opener>)))
+ or ({EF+} & OF+ & <adj-conjoined>);
+
 
 afraid.a ashamed.a unafraid.a unashamed.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((OF+ & {@MV+}) or <embed-verb> or TH+ or <to-verb>) & {LE+}}) or
     ({@MV+} & {((OF+ & {@MV+}) or <embed-verb> or TH+ or <to-verb>) & {LE+}} & MJla+) or
-    ({OF+ or <embed-verb> or TH+ or <to-verb>} & <adj-op>));
+    ({OF+ or <embed-verb> or TH+ or <to-verb>} & <adj-opener>)))
+  or ({EF+} & {OF+ or <embed-verb> or TH+ or <to-verb>} & <adj-conjoined>);
 
-apprehensive.a secure.a optimistic.a pessimistic.a annoyed.a confused.a offended.a
+apprehensive.a secure.a optimistic.a pessimistic.a
+annoyed.a confused.a offended.a
 insulted.a concerned.a depressed.a doubtful.a
 grateful.a mad.a mistaken.a hopeful.a unhappy.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or
     ({@MV+} & {TH+ & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({TH+} & <adj-op>));
+    ({TH+} & <adj-opener>)))
+  or ({EF+} & {TH+} & <adj-conjoined>);
 
 aware.a unaware.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({TH+ or OF+} & <adj-op>));
+    ({TH+ or OF+} & <adj-opener>)))
+  or ({EF+} & {TH+ or OF+} & <adj-conjoined>);
 
-true.a conscious.a confident.a skeptical.a jealous.a suspicious.a envious.a desirous.a
+true.a conscious.a confident.a skeptical.a jealous.a
+suspicious.a envious.a desirous.a
 convinced.a unconvinced.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({TH+ or OF+} & <adj-op>));
+    ({TH+ or OF+} & <adj-opener>)))
+  or ({EF+} & {TH+ or OF+} & <adj-conjoined>);
 
-eager.a reluctant.a able.a unable.a impatient.a eligible.a brave.a anxious.a apt.a desperate
+eager.a reluctant.a able.a unable.a impatient.a
+eligible.a brave.a anxious.a apt.a desperate
 keen.a prepared.a willing.a hesitant.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<to-verb> & {LE+}}) or
     ({@MV+} & {<to-verb> & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<to-verb>} & <adj-op>));
+    ({<to-verb>} & <adj-opener>)))
+ or ({EF+} & {<to-verb>} & <adj-conjoined>);
 
 former.a: A+ or G+ or (DG- & <noun-main-x>);
 latter.a: DG- & <noun-main-x>;
-overall.a onetime.a outboard.a pinstripe.a goddam.a de_facto de_jure erstwhile.a
+
+overall.a onetime.a outboard.a pinstripe.a
+goddam.a de_facto de_jure erstwhile.a
 foster.a outright.a online.a: A+;
+
 pro_forma ad_hoc bona_fide: A+ or Pa-;
+
 a_priori a_posteriori: A+ or MVa- or ({Xc+ & {Xd-}} & CO+);
 
 asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a
@@ -8547,23 +8571,30 @@ all_alone:
   E+;
 
 outstanding.a available.a:
-  {EA- or EF+} &
+  ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Max- or MJra-) & {@MV+}) or
     ({@MV+} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>);
 
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
 
-north.a south.a east.a west.a northeast.a northwest.a southeast.a southwest.a:
-<marker-common-entity> or
-A+ or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-))))
-or [[DD- & <noun-main-p>]];
-northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a
-southwestern.a: <marker-common-entity> or A+ or G+;
+north.a south.a east.a west.a northeast.a
+northwest.a southeast.a southwest.a:
+  <marker-common-entity>
+  or A+
+  or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-))))
+  or [[DD- & <noun-main-p>]];
+
+northern.a southern.a eastern.a western.a northeastern.a
+northwestern.a southeastern.a southwestern.a:
+  <marker-common-entity>
+  or A+
+  or G+;
 
 % .. is this correct?
 benumbed.a bespattered.a non_compos_mentis dead_on_arrival
@@ -8770,7 +8801,8 @@ different.a:
     ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
-    <adj-op>));
+    <adj-opener>))
+  or ({ECa- or EF+} & <adj-conjoined>);
 
 than_expected than_imagined than_proposed than_suspected than_realized
 than_intended than_supposed than_reported than_ever than_usual
