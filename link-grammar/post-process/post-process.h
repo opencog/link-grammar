@@ -39,7 +39,7 @@ bool     post_process_match(const char *, const char *);  /* utility function */
 
 void linkage_free_pp_info(Linkage);
 
-void build_type_array(Postprocessor*);
+void compute_domain_names(Linkage);
 void linkage_set_domain_names(Postprocessor*, Linkage);
 void exfree_domain_names(PP_info *);
 

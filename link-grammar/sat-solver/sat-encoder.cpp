@@ -1543,7 +1543,9 @@ Linkage SATEncoder::get_next_linkage()
     //_sent->num_valid_linkages++;
   }
 
-  build_type_array(_sent->postprocessor);
+  // XXX linkage_set_domain_names does not need to be called, unless
+  // the domain names are to be printed. However, there is no way to
+  // defer this till later, because the needed data is lost...
   linkage_set_domain_names(_sent->postprocessor, lkg);
   post_process_free_data(&_sent->postprocessor->pp_data);
   linkage_score(lkg, _opts);

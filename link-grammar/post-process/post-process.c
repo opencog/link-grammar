@@ -259,10 +259,8 @@ static void chk_d_type(PP_node* ppn, size_t idx)
  * which is needed in only one place ever: when printing the domain
  * names.  If the domain names are not being printed, then this is
  * a complete waste of CPU time.
- *
- * XXX refactor so that this is not done, unless the names are printed.
  */
-void build_type_array(Postprocessor *pp)
+static void build_type_array(Postprocessor *pp)
 {
 	D_type_list * dtl;
 	size_t d;
@@ -344,26 +342,26 @@ static void clear_pp_node(Postprocessor *pp)
  */
 void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 {
-	PP_node * pp;
-	size_t j, k;
-	D_type_list * d;
-
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
 	if (0 == postprocessor->pp_data.N_domains) return;
 
+	/* Copy the post-processing results over into the linkage */
+	PP_node * ppn = postprocessor->pp_node;
+	if (ppn->violation != NULL) return;
+
+	build_type_array(postprocessor);
+
+	assert(NULL == linkage->pp_info, "Not expecting pp_info here!");
+
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
 
-	/* Copy the post-processing results over into the linkage */
-	pp = postprocessor->pp_node;
-	if (pp->violation != NULL)
-		return;
-
-	for (j = 0; j < linkage->num_links; ++j)
+	for (int j = 0; j < linkage->num_links; ++j)
 	{
-		k = 0;
-		for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
+		D_type_list * d;
+		int k = 0;
+		for (d = ppn->d_type_array[j]; d != NULL; d = d->next) k++;
 		linkage->pp_info[j].num_domains = k;
 		if (k > 0)
 		{
@@ -371,7 +369,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 				(const char **) exalloc(k * sizeof(const char *));
 		}
 		k = 0;
-		for (d = pp->d_type_array[j]; d != NULL; d = d->next)
+		for (d = ppn->d_type_array[j]; d != NULL; d = d->next)
 		{
 			char buff[] = {d->type, '\0'};
 
@@ -1329,12 +1327,13 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
+	Postprocessor *pp = sent->postprocessor;
 
 	/* Special-case the "amy/ady" morphology handling. */
 	/* More generally, it there's no post-processor, do nothing. */
 	/* Well, almost nothing. We still want to assign a score. */
 	// if (sent->dict->affix_table->anysplit)
-	if (NULL == sent->postprocessor)
+	if (NULL == pp)
 	{
 		sent->num_linkages_post_processed = sent->num_valid_linkages;
 		for (in=0; in < N_linkages_alloced; in++)
@@ -1360,7 +1359,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 			if (lifo->discarded || lifo->N_violations) continue;
 
-			post_process_scan_linkage(sent->postprocessor, lkg);
+			post_process_scan_linkage(pp, lkg);
 
 			if ((49 == in%50) && resources_exhausted(opts->resources)) break;
 		}
@@ -1375,19 +1374,9 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 		if (lifo->discarded || lifo->N_violations) continue;
 
-		ppn = do_post_process(sent->postprocessor, lkg, twopass);
+		ppn = do_post_process(pp, lkg, twopass);
 
-		/* XXX There is no need to set the domain names if we are not
-		 * printing them. However, deferring this until later requires
-		 * a huge code re-org, because pp_data is needed to get the
-		 * domain type array, and pp_data is deleted immediately below.
-		 * Basically, pp_data and pp_node should be a part of the linkage,
-		 * and not part of the Postprocessor struct.
-		 * This costs about 1% performance penalty. */
-		build_type_array(sent->postprocessor);
-		linkage_set_domain_names(sent->postprocessor, lkg);
-
-	   post_process_free_data(&sent->postprocessor->pp_data);
+		post_process_free_data(&pp->pp_data);
 
 		if (NULL != ppn->violation)
 		{
@@ -1432,6 +1421,28 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
+}
+
+/**
+ * Compute linkage domain names.
+ *
+ * This assumes that post-processing has been done once, already;
+ * however, it re-performs post-processing a second time, because
+ * the data need to obtain the domain names has been lost.
+ */
+void compute_domain_names(Linkage lkg)
+{
+	Postprocessor *pp = lkg->sent->postprocessor;
+	if (NULL == pp) return;
+
+	Linkage_info *lifo = &lkg->lifo;
+	if (lifo->discarded || lifo->N_violations)
+		return;
+
+	post_process_scan_linkage(pp, lkg);
+	do_post_process(pp, lkg, true);
+	linkage_set_domain_names(pp, lkg);
+	post_process_free_data(&pp->pp_data);
 }
 
 
