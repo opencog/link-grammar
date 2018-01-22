@@ -595,7 +595,7 @@ fi
 
 # Tokenizing by RegEx
 AC_ARG_ENABLE( regex_tokenizer,
-  [  --enable-regex-tokenizer enable use of regex word splitter],
+  [  --enable-regex-tokenizer enable use of regex word splitter (experimental)],
   [],
   [enable_regex_tokenizer=no]
 )
