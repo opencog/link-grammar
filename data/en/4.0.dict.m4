@@ -6833,12 +6833,14 @@ now.r:
 
 % Wc- & Qd+: "Then, am I right?"
 % {Xd-} & MVs- & Xs- & <subcl-verb>:  "I eat, then I sleep"
-% JT+: "then last week, I changed my mind"
+% JT+ & CO+: "then last week, I changed my mind"
+% JT+: "if not next Tuesday, then when do you want to do it?"
 then.r:
   ({Xd- & Xc+} & MVp-)
   or Pp-
   or E+
   or ({JT+} & {Xc+ & {Xd-}} & CO+)
+  or JT+
   or (Wc- & (Xc+ or [()]) & Qd+)
   or EB-
   or (S+ & Xd- & Xc+ & MVs-)
@@ -7475,13 +7477,14 @@ although in_as_much_as whereas whereof wherein:
 % nouns to be in their own class...
 % SJ: "when, but not how, will be decided."
 % MJ: "when, if not next Tuesday, do you want to do it?
+% JT- & MJr-: "if not next Tuesday, then when do you want to do it?"
 when:
   ((WN- or BIh-) & <subcl-verb>)
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
   or [QI-]
   or SJl+ or SJr-
-  or MJl+ or MJr-
+  or MJl+ or ({JT-} & MJr-)
   or ({EW-} & (QJ- or QJ+))
   or ({EW-} & Ww- & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
