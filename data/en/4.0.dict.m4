@@ -7468,12 +7468,15 @@ although in_as_much_as whereas whereof wherein:
 % Perhaps a better solution might be some special case of WN+ on
 % examination? (would require 'examination' and all other 'operation'
 % nouns to be in their own class...
+% SJ: "when, but not how, will be decided."
+% MJ: "when, if not next Tuesday, do you want to do it?
 when:
   ((WN- or BIh-) & <subcl-verb>)
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
   or [QI-]
   or SJl+ or SJr-
+  or MJl+ or MJr-
   or ({EW-} & (QJ- or QJ+))
   or ({EW-} & Ww- & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
@@ -7893,7 +7896,7 @@ but_also:
 
 % "when, if not tomorrow, do you want to do it?"
 if.j-n:
-  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+));
+  ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+));
 
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
