@@ -17,10 +17,10 @@
 #include "api-structures.h"
 #include "error.h"          /* verbosity */
 #include "externs.h"        /* lgdebug() */
-#include "dict-api.h"
-#include "dict-common.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/regex-morph.h"
 #include "link-includes.h"
-#include "regex-morph.h"
 
 
 /**

@@ -22,14 +22,14 @@
 #include <time.h>
 
 #include "regex-tokenizer.h"
-#include "dict-api.h"
-#include "dict-common.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-common.h"
+#include "dict-common/regex-morph.h"
+#include "dict-common/dict-defines.h"
+#include "dict-common/dict-affix.h"
 #include "error.h"
-#include "regex-morph.h"
-#include "structures.h"
 #include "tokenize.h"
 #include "utilities.h"
-#include "word-utils.h"
 #include "dict-file/read-dict.h"
 
 #include "pcre.h"
@@ -53,26 +53,26 @@ typedef enum
 	CALLBACK_CONSTANT_END      /* UNUSED */
 } callback_num;
 
-typedef struct ov
+typedef struct ov_s
 {
 	int s;
 	int e;
-} ov;
+} ov_t;
 
 #ifdef REGEX_TOKENIZER_CACHE
 /* TODO */
 /* Match cache bit vector. */
-typedef struct bitvec
+typedef struct bitvec_s
 {
 	int len;  /* current vector length, in bytes */
 	char *vec;
 	int get;  /* cache get counter */
 	int set;  /* cache set counter */
-} bitvec;
+} bitvec_t;
 #endif
 
 /* info per capture group number */
-typedef struct  cgnum
+typedef struct  cgnum_s
 {
 		Dictionary dict;       /* dictionary to use */
 		const char *afclass;   /* affix class, or NULL for main dict */
@@ -83,24 +83,24 @@ typedef struct  cgnum
 		bitvec *mcache;        /* substring match cache */
 #endif
 		/* FIXME: Maybe add formatting function for SUF, PRE, STEM */
-} cgnum;
+} cgnum_t;
 
 #define MAX_SUBP 100
-typedef struct callout_data
+typedef struct callout_data_s
 {
 	int function;             /* callout function multiplexing */
 	const char *pattern;
 	int test;
-	ov subp[MAX_SUBP];        /* sub-pattern array */
+	ov_t subp[MAX_SUBP];        /* sub-pattern array */
 	int capture_level[MAX_SUBP];
 	int subp_i;             /* current sub-pattern index */
 	bool subp_ovfl;         /* subp array overflow */
 	int capture_last;			/* UNUSED */
 	const char ***wordlist;
-	cgnum **cgnum;
+	cgnum_t **cgnum;
 	// bool is_constant; /* a constant alternation - don't lookup (FIXME. UNUSED)*/
 	int alt_counter;  /* counter for number of alternatives */
-} callout_data;
+} callout_data_t;
 
 /**
  * Get a regex (of 4.0.regex) by name.
@@ -179,26 +179,27 @@ static char *get_regex_by_name(Dictionary const dict, const char * const name)
 	return result;
 }
 
-static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_pcreov)
+static void printov(const char *str, ov_t *pov, int top, callout_data_t *cd, bool is_pcreov)
 {
 	int i;
-	const cgnum *cgnump = NULL;
+	const cgnum_t *cgnump = NULL;
 
 	for (i = 0; i < top; i++)
 	{
 		printf("%2d", i);
 		if (!is_pcreov && (NULL != cd) && (NULL != cd->capture_level))
-			printf(" (%d)", (ov[i].e < 0) ? 0 : cd->capture_level[i]);
+			printf(" (%d)", (pov[i].e < 0) ? 0 : cd->capture_level[i]);
 		printf(": ");
-		if (ov[i].s < 0)
+		if (pov[i].s < 0)
 		{
 			printf(" <unset>");
 		} else
 		{
-			if (ov[i].e < 0)
-				printf(" END<0 (%d,%d)", ov[i].s, ov[i].e);
+			if (pov[i].e < 0)
+				printf(" END<0 (%d,%d)", pov[i].s, pov[i].e);
 			else
-				printf(" %.*s (%d,%d)", ov[i].e - ov[i].s, str + ov[i].s, ov[i].s, ov[i].e);
+				printf(" %.*s (%d,%d)", pov[i].e - pov[i].s, str + pov[i].s, pov[i].s, pov[i].e);
+
 		}
 
 		/* Find the tokenizer capture group info for the current OV element:
@@ -207,7 +208,7 @@ static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_
 		 *  Since the cgnum array is 0-based and the first parenthesized capture
 		 *  group is 1, subtract 1 to get the actual index. */
 		if ((NULL != cd) && (NULL != cd->capture_level) && (NULL != cd->cgnum) &&
-				(!is_pcreov || (i > 0)) && ov[i].e >= 0)
+				(!is_pcreov || (i > 0)) && pov[i].e >= 0)
 			cgnump = cd->cgnum[(is_pcreov ? i : cd->capture_level[i]) - 1];
 
 		if (NULL != cgnump)
@@ -244,7 +245,7 @@ static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_
  *
  * FIXME: Return int instead of bool, see the comment at E1 below.
  */
-static bool is_word(const char *word_start, int numchar, cgnum *cgnump)
+static bool is_word(const char *word_start, int numchar, cgnum_t *cgnump)
 {
 	Dictionary const dict = cgnump->dict;
 	const char * const afclass = cgnump->afclass;
@@ -325,26 +326,26 @@ static bool is_word(const char *word_start, int numchar, cgnum *cgnump)
 
 static int callout(pcre_callout_block *cb)
 {
-	callout_data *cd = cb->callout_data;
-	ov *cb_ov = (ov *)&cb->offset_vector[2*cb->capture_last];
+	callout_data_t *cd = cb->callout_data;
+	ov_t *cb_ov = (ov_t *)&cb->offset_vector[2*cb->capture_last];
 
 #if 0
 	const char **wordlist = NULL;
 #endif
-	cgnum *cgnum = NULL;
+	cgnum_t *pcgnum = NULL;
 	const char *openp;
 	const char *endname;
 	bool subp_updated = false;
 
 	if ((NULL != cd->cgnum) && (-1 != cb->capture_last))
 	{
-		cgnum = cd->cgnum[cb->capture_last-1];
+		pcgnum = cd->cgnum[cb->capture_last-1];
 	}
 	lgdebug(6, "Callout %d: capture_last %d cgnum %p\n",
-	        cb->callout_number, cb->capture_last, cgnum);
+	        cb->callout_number, cb->capture_last, pcgnum);
 
 	if (verbosity >= 6)
-		printov(cb->subject, (ov *)cb->offset_vector, cb->capture_top, cd, /*is_pcreov*/true);
+		printov(cb->subject, (ov_t *)cb->offset_vector, cb->capture_top, cd, /*is_pcreov*/true);
 
 	switch(cb->callout_number)
 	{
@@ -352,7 +353,7 @@ static int callout(pcre_callout_block *cb)
 		if (cb->capture_last > 0)
 		{
 			int subp_i = cd->subp_i;
-			ov *subp = &cd->subp[subp_i];
+			ov_t *subp = &cd->subp[subp_i];
 
 			lgdebug(2, "Current capture %d: s=%d, e=%d\n",
 			        cb->capture_last, cb_ov->s, cb_ov->e);
@@ -431,13 +432,13 @@ static int callout(pcre_callout_block *cb)
 			/* Make a dictionary lookup for NAME in capture groups (?<NAME>x)
 			 * (x is a constraint for the initial pattern-match comparison done by
 			 * PCRE). */
-			 // if (cgnum && * cd->is_constant) printf("is_constant\n");
+			 // if (pcgnum && * cd->is_constant) printf("is_constant\n");
 
 			/* If we have a cgnum structure with a dict, check if the string to be
 			 * matched is in the dict or belongs to the given affix class.
 			 * A NULL cgnum->dict means this is a regex from the regex file. */
 
-			if (cgnum && cgnum->dict)
+			if (pcgnum && pcgnum->dict)
 			{  /* && !cd->is_constant */
 				int numchar = cb_ov->e - cb_ov->s;
 
@@ -456,7 +457,7 @@ static int callout(pcre_callout_block *cb)
 					assert(0, "Error: Not in a named group!");
 				}
 				lgdebug(6, "GROUP NAME %.*s, cgnum %d, ptr %p, numchar %d\n",
-						  (int)(endname - openp - 3), openp+3, cb->capture_last-1, cgnum, numchar);
+						  (int)(endname - openp - 3), openp+3, cb->capture_last-1, pcgnum, numchar);
 				/* End of debug sanity check. */
 
 				lgdebug(2, "Try match '%.*s': ", numchar, cb->subject+cb_ov->s);
@@ -469,7 +470,7 @@ static int callout(pcre_callout_block *cb)
 				}
 #endif
 
-				if (!is_word(cb->subject+cb_ov->s, numchar, cgnum))
+				if (!is_word(cb->subject+cb_ov->s, numchar, pcgnum))
 				{
 						lgdebug(2, "NO MATCH\n");
 						return 1;
@@ -564,7 +565,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	int plevel;  /* paren level */
 	int cglevel; /* capture group level */
 	int nplevel;  /* paren level within named capture group */
-	int cgnum;  /* capture group number*/
+	int icgnum;  /* capture group number*/
 	int options;
 	const char *errptr;
 	int erroffset;
@@ -574,7 +575,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	pcre_extra *extra = NULL;
 #define OVCNT 15
 	int ovector[OVCNT];
-	callout_data callout_data;
+	callout_data_t callout_data;
 
 #if 0
 	const char **wordlist;
@@ -590,7 +591,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	/* FIXME: validate we use PCRE version 2 at least. */
 
 	/* Find the number of capturing groups in the input pattern. */
-	cgnum = 0;
+	icgnum = 0;
 	for (p = inpat; '\0' != *p; p++)
 	{
 		/* Count as capture groups only (string) or (?<name>). Especially, avoid
@@ -602,10 +603,10 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 		    ((p[1] != '?') || ((p[2] == '<') && (p[3] != '='))) &&
 			 ((p-inpat < 2) || (p[-2] != '(') || (p[-1] != '?')))
 		{
-			cgnum++;
+			icgnum++;
 		}
 	}
-	if (0 == cgnum)
+	if (0 == icgnum)
 	{
 		printf("%s: pattern must include at least one () group (was: %s)\n", prog, inpat);
 		return 9;
@@ -636,11 +637,12 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	{
 		int i;
 #if 0
-		callout_data.wordlist = malloc(sizeof(*callout_data.wordlist)*cgnum);
+		callout_data.wordlist = malloc(sizeof(*callout_data.wordlist)*icgnum);
 #endif
-		callout_data.cgnum = malloc(sizeof(*callout_data.cgnum)*cgnum);
-		//printf("ALLOCATED callout_data.cgnum %ld for %d groups\n", sizeof(*callout_data.wordlist)*cgnum, cgnum);
-		for (i = 0; i < cgnum; i++)
+		callout_data.cgnum = malloc(sizeof(*callout_data.cgnum)*icgnum);
+		//printf("ALLOCATED callout_data.cgnum %ld for %d groups\n",
+		//sizeof(*callout_data.wordlist)*cgnum, icgnum);
+		for (i = 0; i < icgnum; i++)
 		{
 #if 0
 			callout_data.wordlist[i] = NULL;
@@ -654,7 +656,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	pat = dyn_str_new();
 	plevel = 0;
 	cglevel = 0;
-	cgnum = -1; /* First capture group (plevel==1) is cgnum==0. */
+	icgnum = -1; /* First capture group (plevel==1) is icgnum==0. */
 
 	/* Convert the input regex to the tokenizer regex.
 	 * cglevel counts named capture groups
@@ -695,7 +697,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 				free(callout_data.cgnum);
 				return 199;
 			}
-			cgnum++;
+			icgnum++;
 			dyn_strcat(pat, "(?:");
 			group_name = NULL;
 			break;
@@ -772,13 +774,14 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 				char *t;
 				const char *lookup_mark = NULL;
 #if 0
-				callout_data.wordlist[cgnum] = wordlist;
-				printf("WORDLIST %p at cgnum %d\n", wordlist, cgnum);
+				callout_data.wordlist[icgnum] = wordlist;
+				printf("WORDLIST %p at cgnum %d\n", wordlist, icgnum);
 #endif
 				/* Allocate per group info  */
-				callout_data.cgnum[cgnum] = malloc(sizeof(*(callout_data.cgnum)[0]));
-				callout_data.cgnum[cgnum]->name = NULL;
-				//printf("ALLOCATED cgnum[%d]=%p\n", cgnum, callout_data.cgnum[cgnum]);
+				callout_data.cgnum[icgnum] = malloc(sizeof(*(callout_data.cgnum)[0]));
+				callout_data.cgnum[icgnum]->name = NULL;
+				//printf("ALLOCATED cgnum[%d]=%p\n", icgnum,
+				//callout_data.cgnum[icgnum]);
 
 				/* A hack for testing: Handle WORDpX or WORDaX.
 				 * The above a/p marks mean append/prepend X to word before making
@@ -790,7 +793,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 				{
 					Afdict_class *ac;
 
-					callout_data.cgnum[cgnum]->lookup_mark_pos = *t;
+					callout_data.cgnum[icgnum]->lookup_mark_pos = *t;
 					*t = '\0';
 					ac = afdict_find(dict->affix_table, t+1, /*notify_err*/false);
 					if (NULL == ac)
@@ -809,20 +812,20 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 					lookup_mark = ac->string[0]; /* FIXME: support more than one value. */
 				}
 
-				callout_data.cgnum[cgnum]->lookup_mark = lookup_mark;
-				callout_data.cgnum[cgnum]->name = word_classname;
+				callout_data.cgnum[icgnum]->lookup_mark = lookup_mark;
+				callout_data.cgnum[icgnum]->name = word_classname;
 
 				if (0 == strcmp(word_classname, "DICTWORD"))
 				{
 					/* Assign data for looking up a word in the main dict. */
-					callout_data.cgnum[cgnum]->dict = dict;
-					callout_data.cgnum[cgnum]->afclass = NULL;
+					callout_data.cgnum[icgnum]->dict = dict;
+					callout_data.cgnum[icgnum]->afclass = NULL;
 				}
 				else
 				if (afdict_find(dict->affix_table, word_classname, /*notify_err*/false))
 				{
-					callout_data.cgnum[cgnum]->dict = dict->affix_table;
-					callout_data.cgnum[cgnum]->afclass = word_classname;
+					callout_data.cgnum[icgnum]->dict = dict->affix_table;
+					callout_data.cgnum[icgnum]->afclass = word_classname;
 				}
 				else
 				{
@@ -831,8 +834,8 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 					if (re)
 					{
 						lgdebug(6, "Regex %s with modified groups: '%s'\n", word_classname, re);
-						callout_data.cgnum[cgnum]->dict = NULL;
-						/* FIXME: No need to allocate callout_data.cgnum[cgnum] in this
+						callout_data.cgnum[icgnum]->dict = NULL;
+						/* FIXME: No need to allocate callout_data.cgnum[icgnum] in this
 						 * case. */
 					}
 					else
@@ -888,7 +891,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 						    ((p[-1] != '(') || (p[0] != '?')))
 						{
 							printf("%s: Capture_group %d: Nested capture group is not supported\n",
-							       prog, cgnum+1);
+							       prog, icgnum+1);
 							return 250;
 						}
 						nplevel++;
@@ -972,12 +975,12 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	extra->flags |= PCRE_EXTRA_CALLOUT_DATA;
 
 #if 0
-	printf("CGNUM %d\n", cgnum);
+	printf("CGNUM %d\n", icgnum);
 	if (NULL != callout_data.cgnum)
 	{
 		int i;
 
-		for (i = 0; i <= cgnum; i++)
+		for (i = 0; i <= icgnum; i++)
 		{
 			printf("callout_data.cgnum[%d] %p\n", i, callout_data.cgnum[i]);
 		}
@@ -1007,7 +1010,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	  printf("ovector only has room for %d captured substrings\n", rc - 1);
 	}
 
-	printov(str, (ov *)ovector, rc, NULL, /*is_pcreov*/true);
+	printov(str, (ov_t *)ovector, rc, NULL, /*is_pcreov*/true);
 
 	if (verbosity > 6)
 	{
@@ -1027,7 +1030,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	{
 		int i;
 
-		for (i = 0; i <= cgnum; i++)
+		for (i = 0; i <= icgnum; i++)
 		{
 			if (callout_data.cgnum[i])
 			{
@@ -1043,7 +1046,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	{
 		int i;
 
-		for (i = 0; i < cgnum; i++)
+		for (i = 0; i < icgnum; i++)
 		{
 			free(callout_data.wordlist[i]);
 		}

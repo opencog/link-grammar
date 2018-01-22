@@ -342,6 +342,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 #ifdef USE_REGEX_TOKENIZER
 	if (s[0] == '/')
 	{
+		/* experimental code -- ignore nested extern warning for now */
+		extern int regex_tokenizer_test(Dictionary, const char *);
 		int rc = regex_tokenizer_test(dict, s+1);
 		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
 		return 0;
