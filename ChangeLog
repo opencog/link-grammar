@@ -3,6 +3,7 @@ Version 5.4.4 (XXX 2018)
  * Fix post-nominal modifiers used with pronouns.
  * Fix comparative openers.
  * Fix given-name single-letter abbreviations.
+ * Fix conjoined questions and conjoined WH-statements
 
 Version 5.4.3 (4 January 2018)
  * Fix man page installation (actually broken from 5.3.0).

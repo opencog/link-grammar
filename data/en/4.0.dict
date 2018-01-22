@@ -9942,11 +9942,14 @@ but.j-n yet.j-n:
 but_also:
   {Xd-} & SJl- & XJb- & SJr+ & Ou-;
 
-% "when, if not tomorrow, do you want to do it?"
+% SJ: "Who, if not Micheal, will provide for your care?"
+% MJ: "when, if not tomorrow, do you want to do it?"
+% MJr+ & MJR+: "if not next Tuesday, when do you want to do it?"
 if.j-n:
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ws- & S**w+)) or
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+)) or
-  ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+));
+  ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+)) or
+  ((EBb+ & MJr+ & Xc+ & MJr+) & (Ww- & Qw+));
 
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
