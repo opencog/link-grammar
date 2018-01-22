@@ -7882,12 +7882,11 @@ nor.j-n:
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
 % XJb-: "not only this but also that"
-% XXX FIXME: the EBb and EBY below should probably be replaced by XJb
+% XXX FIXME: the EBb and EBy below should probably be replaced by XJb
 but.j-n:
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
-  (({Xd-} & SJl- & EBy- & SJr+) & Ou-) or
-  (({Xd-} & SJl- & XJb- & SJr+) & Ou-);
+  (({Xd-} & SJl- & (XJb- or EBy- or EBb+) & SJr+) & Ou-);
 
 but_also:
   {Xd-} & SJl- & XJb- & SJr+ & Ou-;
