@@ -254,46 +254,23 @@ static void free_d_type(D_type_list * dtl)
 /** free the pp node from last time */
 static void free_pp_node(Postprocessor *pp)
 {
-	size_t i;
 	PP_node *ppn = pp->pp_node;
 	pp->pp_node = NULL;
 	if (ppn == NULL) return;
-
-	for (i=0; i<ppn->dtsz; i++)
-	{
-		free_d_type(ppn->d_type_array[i]);
-	}
-	free(ppn->d_type_array);
 	free((void*) ppn);
 }
 
 /** set up a fresh pp_node for later use */
-static void alloc_pp_node(Postprocessor *pp)
+static PP_node* alloc_pp_node(Postprocessor *pp)
 {
-	size_t dz;
+	assert(NULL == pp->pp_node, "Expecting empty pp_node!");
 	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
-	/* highly unlikely that the number of links will ever exceed this */
-	ppn->dtsz = 2 * pp->pp_data.num_words;
-	dz = ppn->dtsz * sizeof(D_type_list*);
-	ppn->d_type_array = (D_type_list **) malloc (dz);
-	memset(ppn->d_type_array, 0, dz);
-
+	ppn->dtsz = 0;
+	ppn->d_type_array = NULL;
 	ppn->violation = NULL;
 	pp->pp_node = ppn;
-}
-
-static void clear_pp_node(Postprocessor *pp)
-{
-	PP_node *ppn = pp->pp_node;
-	if (NULL == ppn) { alloc_pp_node(pp); return; }
-
-	ppn->violation = NULL;
-	for (size_t i=0; i<ppn->dtsz; i++)
-	{
-		free_d_type(ppn->d_type_array[i]);
-		ppn->d_type_array[i] = NULL;
-	}
+	return ppn;
 }
 
 static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
@@ -1179,10 +1156,9 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	}
 	clear_visited(pp_data);
 
-	/* In the name of responsible memory management, we retain a copy of the
-	 * returned data structure pp_node as a field in pp, so that we can clear
-	 * it out after every call, without relying on the user to do so. */
-	clear_pp_node(pp);
+	PP_node *ppn = pp->pp_node;
+	if (NULL == ppn) ppn = alloc_pp_node(pp);
+	ppn->violation = NULL;
 
 	/* For long sentences, we can save some time by pruning the rules
 	 * which can't possibly be used during postprocessing the linkages
@@ -1215,7 +1191,7 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 
 	report_pp_stats(pp);
 
-	return pp->pp_node;
+	return ppn;
 }
 
 /**
@@ -1379,6 +1355,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	PP_node * ppn = postprocessor->pp_node;
 	if (ppn->violation != NULL) return;
 
+	chk_d_type(postprocessor->pp_node, linkage->num_links);
 	build_type_array(postprocessor);
 
 	assert(NULL == linkage->pp_info, "Not expecting pp_info here!");
@@ -1408,6 +1385,13 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 			k++;
 		}
 	}
+
+	/* not needed any more */
+	for (size_t i=0; i<ppn->dtsz; i++)
+	{
+		free_d_type(ppn->d_type_array[i]);
+	}
+	free(ppn->d_type_array);
 }
 
 /**
