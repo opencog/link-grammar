@@ -87,7 +87,7 @@ struct PP_info_s
 
 /* The following two structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
-struct PP_node_struct
+struct PP_node_s
 {
 	size_t dtsz;
 	D_type_list **d_type_array;

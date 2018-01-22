@@ -28,8 +28,6 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-typedef struct PP_data_s PP_data;
-
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
