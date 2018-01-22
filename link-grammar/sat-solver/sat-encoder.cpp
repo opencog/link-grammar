@@ -1531,7 +1531,8 @@ Linkage SATEncoder::get_next_linkage()
     lkg[1].lifo.N_violations = 0;
 
   // Perform the rest of the post-processing
-  PP_node *ppn = do_post_process(_sent->postprocessor, lkg, false);
+  PP_data* pp_data = pp_data_new();
+  PP_node *ppn = do_post_process(_sent->postprocessor, pp_data, lkg, false);
   if (NULL != ppn->violation) {
     lkg->lifo.N_violations++;
     lkg->lifo.pp_violation_msg = ppn->violation;
@@ -1543,9 +1544,9 @@ Linkage SATEncoder::get_next_linkage()
     //_sent->num_valid_linkages++;
   }
 
-  build_type_array(lkg);
-  linkage_set_domain_names(_sent->postprocessor, lkg);
-  post_process_free_data(lkg->pp_data);
+  build_type_array(pp_data, lkg);
+  linkage_set_domain_names(_sent->postprocessor, pp_data, lkg);
+  post_process_free_data(pp_data);
   linkage_score(lkg, _opts);
 
   //if (NULL == ppn->violation && verbosity > 1)

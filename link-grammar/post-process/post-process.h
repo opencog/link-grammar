@@ -33,13 +33,13 @@ void post_process_free(Postprocessor *);
 
 PP_data* pp_data_new(void);
 void     post_process_free_data(PP_data *);
-PP_node *do_post_process(Postprocessor *, Linkage, bool);
+PP_node *do_post_process(Postprocessor *, PP_data*, Linkage, bool);
 bool     post_process_match(const char *, const char *);  /* utility function */
 
 void linkage_free_pp_info(Linkage);
 
-void build_type_array(Linkage);
-void linkage_set_domain_names(Postprocessor*, Linkage);
+void build_type_array(PP_data *, Linkage);
+void linkage_set_domain_names(Postprocessor*, PP_data *, Linkage);
 void exfree_domain_names(PP_info *);
 
 void post_process_lkgs(Sentence, Parse_Options);
