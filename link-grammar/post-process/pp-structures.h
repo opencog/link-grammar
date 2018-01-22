@@ -69,11 +69,6 @@ struct Postprocessor_s
 	int *relevant_contains_none_rules;
 	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
 	String_set *string_set;      /* Link names seen for sentence */
-
-	/* Per-linkage state; this data must be reset prior to processing
-	 * each new linkage. */
-	PP_node *pp_node;
-	PP_data pp_data;
 };
 
 struct PP_info_s
@@ -87,7 +82,7 @@ struct PP_info_s
 
 /* The following two structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
-struct PP_node_struct
+struct PP_node_s
 {
 	size_t dtsz;
 	D_type_list **d_type_array;

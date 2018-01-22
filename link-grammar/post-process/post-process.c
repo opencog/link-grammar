@@ -130,7 +130,8 @@ static bool link_in_domain(size_t link, const Domain * d)
 /* Although this is no longer used, I'm leaving the code here for future reference --DS 3/98 */
 
 /* Returns true if the domains actually form a properly nested structure */
-static bool check_domain_nesting(Postprocessor *pp, int num_links)
+static bool check_domain_nesting(Postprocessor *pp, PP_data* pp_data,
+                                 int num_links)
 {
 	size_t id1, id2;
 	Domain * d1, * d2;
@@ -138,7 +139,6 @@ static bool check_domain_nesting(Postprocessor *pp, int num_links)
 	char mark[MAX_NUM_LINKS];
 	List_o_links * lol;
 	int i;
-	PP_data *pp_data = &pp->pp_data;
 
 	for (id1 = 0; id1 < pp_data->N_domains; id1++)
 	{
@@ -204,6 +204,7 @@ static void pp_free_domain_array(PP_data *ppd)
 		free_D_tree_leaves(ppd->domain_array[d].child);
 		ppd->domain_array[d].child = NULL;
 	}
+	free(ppd->domain_array);
 }
 
 /**
@@ -212,17 +213,25 @@ static void pp_free_domain_array(PP_data *ppd)
 void post_process_free_data(PP_data * ppd)
 {
 	size_t w;
+	if (NULL == ppd) return;
+
 	for (w = 0; w < ppd->wowlen; w++)
 	{
 		free_List_o_links(ppd->word_links[w]);
 		ppd->word_links[w] = NULL;
 	}
+	free(ppd->word_links);
 
 	pp_free_domain_array(ppd);
+
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
 	ppd->num_words = 0;
 	ppd->N_domains = 0;
+
+	free(ppd->visited);
+
+	free(ppd);
 }
 
 #ifdef THIS_FUNCTION_IS_NOT_CURRENTLY_USED
@@ -259,25 +268,24 @@ static void chk_d_type(PP_node* ppn, size_t idx)
  * which is needed in only one place ever: when printing the domain
  * names.  If the domain names are not being printed, then this is
  * a complete waste of CPU time.
- *
- * XXX refactor so that this is not done, unless the names are printed.
  */
-void build_type_array(Postprocessor *pp)
+static void build_type_array(PP_data* pp_data, Linkage lkg)
 {
 	D_type_list * dtl;
 	size_t d;
 	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
 
+	/* Highly unlikely that the number of links will ever exceed this. */
+	chk_d_type(lkg->pp_node, 2 * pp_data->num_words);
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
 		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
-			chk_d_type(pp->pp_node, lol->link);
+			chk_d_type(lkg->pp_node, lol->link);
 			dtl = (D_type_list *) malloc(sizeof(D_type_list));
-			dtl->next = pp->pp_node->d_type_array[lol->link];
+			dtl->next = lkg->pp_node->d_type_array[lol->link];
 			dtl->type = pp_data->domain_array[d].type;
-			pp->pp_node->d_type_array[lol->link] = dtl;
+			lkg->pp_node->d_type_array[lol->link] = dtl;
 		}
 	}
 }
@@ -293,12 +301,12 @@ static void free_d_type(D_type_list * dtl)
 }
 
 /** free the pp node from last time */
-static void free_pp_node(Postprocessor *pp)
+static void free_pp_node(Linkage lkg)
 {
 	size_t i;
-	PP_node *ppn = pp->pp_node;
-	pp->pp_node = NULL;
+	PP_node *ppn = lkg->pp_node;
 	if (ppn == NULL) return;
+	lkg->pp_node = NULL;
 
 	for (i=0; i<ppn->dtsz; i++)
 	{
@@ -309,25 +317,22 @@ static void free_pp_node(Postprocessor *pp)
 }
 
 /** set up a fresh pp_node for later use */
-static void alloc_pp_node(Postprocessor *pp)
+static void alloc_pp_node(PP_data* pp_data, Linkage lkg)
 {
-	size_t dz;
+	assert(NULL == lkg->pp_node, "Expecting empty pp_node!");
 	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
 	/* highly unlikely that the number of links will ever exceed this */
-	ppn->dtsz = 2 * pp->pp_data.num_words;
-	dz = ppn->dtsz * sizeof(D_type_list*);
-	ppn->d_type_array = (D_type_list **) malloc (dz);
-	memset(ppn->d_type_array, 0, dz);
-
+	ppn->dtsz = 0;
+	ppn->d_type_array = NULL;
 	ppn->violation = NULL;
-	pp->pp_node = ppn;
+	lkg->pp_node = ppn;
 }
 
-static void clear_pp_node(Postprocessor *pp)
+static void clear_pp_node(PP_data* pp_data, Linkage lkg)
 {
-	PP_node *ppn = pp->pp_node;
-	if (NULL == ppn) { alloc_pp_node(pp); return; }
+	PP_node *ppn = lkg->pp_node;
+	if (NULL == ppn) { alloc_pp_node(pp_data, lkg); return; }
 
 	ppn->violation = NULL;
 	for (size_t i=0; i<ppn->dtsz; i++)
@@ -342,7 +347,8 @@ static void clear_pp_node(Postprocessor *pp)
  * Store the domain names in the linkage. These are not needed
  * unless the user asks the domain names to be printed!
  */
-void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
+void linkage_set_domain_names(Postprocessor *postprocessor,
+                              PP_data* pp_data, Linkage linkage)
 {
 	PP_node * pp;
 	size_t j, k;
@@ -350,13 +356,15 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;
-	if (0 == postprocessor->pp_data.N_domains) return;
+	if (0 == pp_data->N_domains) return;
+
+	build_type_array(pp_data, linkage);
 
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
 
 	/* Copy the post-processing results over into the linkage */
-	pp = postprocessor->pp_node;
+	pp = linkage->pp_node;
 	if (pp->violation != NULL)
 		return;
 
@@ -420,7 +428,12 @@ void exfree_domain_names(PP_info *ppi)
 void linkage_free_pp_info(Linkage lkg)
 {
 	size_t j;
-	if (!lkg || !lkg->pp_info) return;
+	if (!lkg) return;
+
+	free_pp_node(lkg);
+
+	post_process_free_data(lkg->pp_scratch_data);
+	if (!lkg->pp_info) return;
 
 	for (j = 0; j < lkg->num_links; ++j)
 		exfree_domain_names(&lkg->pp_info[j]);
@@ -455,14 +468,14 @@ static bool apply_rules(PP_data *pp_data,
 
 static bool
 apply_relevant_rules(Postprocessor *pp,
-                     bool (applyfn)(PP_data *, Linkage, pp_rule *),
+                     PP_data* pp_data,
                      Linkage sublinkage,
+                     bool (applyfn)(PP_data *, Linkage, pp_rule *),
                      pp_rule *rule_array,
                      int *relevant_rules,
                      const char **msg)
 {
 	int i, idx;
-	PP_data *pp_data = &pp->pp_data;
 
 	/* If we didn't accumulate link names for this sentence, we need
 	 *  to apply all rules. */
@@ -672,15 +685,14 @@ apply_bounded(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 }
 
 /**
- * fill in the pp->pp_data.word_links array with a list of words
+ * fill in the pp_data->word_links array with a list of words
  * neighboring each word (actually a list of links).  This is an
  * undirected graph.
  */
-static void build_graph(Postprocessor *pp, Linkage sublinkage)
+static void build_graph(Postprocessor *pp, PP_data* pp_data, Linkage sublinkage)
 {
 	size_t link;
 	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
 
 	/* Get more size, if needed */
 	if (pp_data->wowlen <= pp_data->num_words)
@@ -722,10 +734,9 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 	}
 }
 
-static void setup_domain_array(Postprocessor *pp,
+static void setup_domain_array(PP_data* pp_data,
                                const char *string, int start_link)
 {
-	PP_data *pp_data = &pp->pp_data;
 	size_t n = pp_data->N_domains;
 
 	/* Grab more memory if needed */
@@ -761,11 +772,11 @@ static void add_link_to_domain(PP_data *pp_data, int link)
 	lol->link = link;
 }
 
-static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
+static void depth_first_search(Postprocessor *pp, PP_data* pp_data,
+                               Linkage sublinkage,
                                size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
-	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
 	pp_data->visited[w] = true;
@@ -783,16 +794,16 @@ static void depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		       pp_linkset_match(pp->knowledge->restricted_links,
 		                sublinkage->link_array[lol->link].link_name)))
 		{
-			depth_first_search(pp, sublinkage, lol->word, root, start_link);
+			depth_first_search(pp, pp_data, sublinkage, lol->word, root, start_link);
 		}
 	}
 }
 
-static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
+static void bad_depth_first_search(Postprocessor *pp, PP_data* pp_data,
+                                   Linkage sublinkage,
                                    size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
 	pp_data->visited[w] = true;
@@ -811,16 +822,16 @@ static void bad_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		          pp_linkset_match(pp->knowledge->restricted_links,
 		                sublinkage->link_array[lol->link].link_name)))
 		{
-			bad_depth_first_search(pp, sublinkage, lol->word, root, start_link);
+			bad_depth_first_search(pp, pp_data, sublinkage, lol->word, root, start_link);
 		}
 	}
 }
 
-static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
+static void d_depth_first_search(Postprocessor *pp, PP_data* pp_data,
+                    Linkage sublinkage,
                     size_t w, size_t root, size_t right, size_t start_link)
 {
 	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
 	pp_data->visited[w] = true;
@@ -840,16 +851,17 @@ static void d_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		          pp_linkset_match(pp->knowledge->restricted_links,
 		                   sublinkage->link_array[lol->link].link_name)))
 		{
-			d_depth_first_search(pp,sublinkage,lol->word,root,right,start_link);
+			d_depth_first_search(pp, pp_data, sublinkage,
+			                     lol->word, root, right, start_link);
 		}
 	}
 }
 
-static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
+static void left_depth_first_search(Postprocessor *pp, PP_data* pp_data,
+                                    Linkage sublinkage,
                                     size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
-	PP_data *pp_data = &pp->pp_data;
 
 	assert(w < pp_data->num_words, "Bad word index");
 	pp_data->visited[w] = true;
@@ -865,7 +877,7 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 		assert(lol->word < pp_data->num_words, "Bad word index");
 		if (!pp_data->visited[lol->word] && (lol->word != right))
 		{
-			depth_first_search(pp, sublinkage, lol->word, right, start_link);
+			depth_first_search(pp, pp_data, sublinkage, lol->word, right, start_link);
 		}
 	}
 }
@@ -875,11 +887,11 @@ static int domain_compare(const Domain * d1, const Domain * d2)
 	return (d1->size - d2->size); /* for sorting the domains by size */
 }
 
-static void build_domains(Postprocessor *pp, Linkage sublinkage)
+static void build_domains(Postprocessor *pp, PP_data* pp_data,
+                          Linkage sublinkage)
 {
 	size_t link, i, d;
 	const char *s;
-	PP_data *pp_data = &pp->pp_data;
 
 	pp_data->N_domains = 0;
 
@@ -892,42 +904,46 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
 		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
 		{
-			setup_domain_array(pp, s, link);
+			setup_domain_array(pp_data, s, link);
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
 				add_link_to_domain(pp_data, link);
 
 			clear_visited(pp_data);
-			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
+			depth_first_search(pp, pp_data, sublinkage,
+			                   sublinkage->link_array[link].rw,
 			                   sublinkage->link_array[link].lw, link);
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, s))
 		{
-			setup_domain_array(pp, s, link);
+			setup_domain_array(pp_data, s, link);
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp_data, link);
 
 			clear_visited(pp_data);
-			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
+			bad_depth_first_search(pp, pp_data, sublinkage,
+			                       sublinkage->link_array[link].rw,
 			                       sublinkage->link_array[link].lw, link);
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links, s))
 		{
-			setup_domain_array(pp, s, link);
+			setup_domain_array(pp_data, s, link);
 			/* do not add the starter link to its urfl_only domain */
 			clear_visited(pp_data);
-			d_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
+			d_depth_first_search(pp, pp_data, sublinkage,
+			                     sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].rw, link);
 		}
 		else
 		if (pp_linkset_match(pp->knowledge->left_domain_starter_links, s))
 		{
-			setup_domain_array(pp, s, link);
+			setup_domain_array(pp_data, s, link);
 			/* do not add the starter link to a left domain */
 			clear_visited(pp_data);
-			left_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
+			left_depth_first_search(pp, pp_data, sublinkage,
+			                        sublinkage->link_array[link].lw,
 			                        sublinkage->link_array[link].rw, link);
 		}
 	}
@@ -949,7 +965,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 	}
 }
 
-static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
+static void build_domain_forest(PP_data* pp_data, Linkage sublinkage)
 {
 	size_t d, d1, link;
 	DTreeLeaf * dtl;
@@ -1000,14 +1016,15 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 }
 
 static int
-internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
+internal_process(Postprocessor *pp, PP_data* pp_data,
+                 Linkage sublinkage, const char **msg)
 {
 	size_t i;
-	PP_data *pp_data = &pp->pp_data;
 
 	/* quick test: try applying just the relevant global rules */
-	if (!apply_relevant_rules(pp, apply_contains_one_globally,
+	if (!apply_relevant_rules(pp, pp_data,
 	                          sublinkage,
+                             apply_contains_one_globally,
 	                          pp->knowledge->contains_one_rules,
 	                          pp->relevant_contains_one_rules, msg))
 	{
@@ -1018,9 +1035,9 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	}
 
 	/* build graph; confirm that it's legally connected */
-	build_graph(pp, sublinkage);
-	build_domains(pp, sublinkage);
-	build_domain_forest(&pp->pp_data, sublinkage);
+	build_graph(pp, pp_data, sublinkage);
+	build_domains(pp, pp_data, sublinkage);
+	build_domain_forest(pp_data, sublinkage);
 
 #if defined(CHECK_DOMAIN_NESTING)
 	/* These messages were deemed to not be useful, so
@@ -1030,10 +1047,10 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 #endif
 
 	/* The order below should be optimal for most cases */
-	if (!apply_relevant_rules(pp, apply_contains_one, sublinkage,
+	if (!apply_relevant_rules(pp, pp_data, sublinkage, apply_contains_one,
 	                          pp->knowledge->contains_one_rules,
 	                          pp->relevant_contains_one_rules, msg)) return 1;
-	if (!apply_relevant_rules(pp, apply_contains_none, sublinkage,
+	if (!apply_relevant_rules(pp, pp_data, sublinkage, apply_contains_none,
 	                          pp->knowledge->contains_none_rules,
 	                          pp->relevant_contains_none_rules, msg)) return 1;
 	if (!apply_rules(pp_data, apply_must_form_a_cycle, sublinkage,
@@ -1097,15 +1114,6 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 /***************** definitions of exported functions ***********************/
 
-#define PP_INITLEN 60 /* just starting size, it is expanded if needed */
-
-static void pp_new_domain_array(PP_data *pp_data)
-{
-	pp_data->domlen = PP_INITLEN;
-	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
-	memset(pp_data->domain_array, 0, pp_data->domlen * sizeof(Domain));
-}
-
 /**
  * read rules from path and initialize the appropriate fields in
  * a postprocessor structure, a pointer to which is returned.
@@ -1113,7 +1121,6 @@ static void pp_new_domain_array(PP_data *pp_data)
 Postprocessor * post_process_new(pp_knowledge * kno)
 {
 	Postprocessor *pp;
-	PP_data *pp_data;
 
 	if (NULL == kno) return NULL;
 
@@ -1130,13 +1137,41 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	                      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0] = -1;
 	pp->relevant_contains_none_rules[0] = -1;
-	pp->pp_node = NULL;
 	pp->n_local_rules_firing = 0;
 	pp->n_global_rules_firing = 0;
 
 	pp->q_pruned_rules = false;
 
-	pp_data = &pp->pp_data;
+	return pp;
+}
+
+void post_process_free(Postprocessor *pp)
+{
+	/* frees up memory associated with pp, previously allocated by open */
+	if (pp == NULL) return;
+	string_set_delete(pp->string_set);
+	pp_linkset_close(pp->set_of_links_of_sentence);
+	pp_linkset_close(pp->set_of_links_in_an_active_rule);
+	free(pp->relevant_contains_one_rules);
+	free(pp->relevant_contains_none_rules);
+	pp->knowledge = NULL;
+
+	free(pp);
+}
+
+#define PP_INITLEN 60 /* just starting size, it is expanded if needed */
+
+static void pp_new_domain_array(PP_data *pp_data)
+{
+	pp_data->domlen = PP_INITLEN;
+	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
+	memset(pp_data->domain_array, 0, pp_data->domlen * sizeof(Domain));
+}
+
+PP_data* pp_data_new(void)
+{
+	PP_data* pp_data = malloc (sizeof(PP_data));
+
 	pp_data->vlength = PP_INITLEN;
 	pp_data->visited = (bool*) malloc(pp_data->vlength * sizeof(bool));
 	memset(pp_data->visited, 0, pp_data->vlength * sizeof(bool));
@@ -1148,31 +1183,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	pp_data->word_links = (List_o_links **) malloc(pp_data->wowlen * sizeof(List_o_links*));
 	memset(pp_data->word_links, 0, pp_data->wowlen * sizeof(List_o_links *));
 
-	return pp;
-}
-
-void post_process_free(Postprocessor *pp)
-{
-	PP_data *pp_data;
-
-	/* frees up memory associated with pp, previously allocated by open */
-	if (pp == NULL) return;
-	string_set_delete(pp->string_set);
-	pp_linkset_close(pp->set_of_links_of_sentence);
-	pp_linkset_close(pp->set_of_links_in_an_active_rule);
-	free(pp->relevant_contains_one_rules);
-	free(pp->relevant_contains_none_rules);
-	pp->knowledge = NULL;
-	free_pp_node(pp);
-
-
-	pp_data = &pp->pp_data;
-	post_process_free_data(pp_data);
-	free(pp_data->visited);
-	free(pp_data->domain_array);
-	free(pp_data->word_links);
-
-	free(pp);
+	return pp_data;
 }
 
 /**
@@ -1257,13 +1268,13 @@ static void report_pp_stats(Postprocessor *pp)
  *  . a list of the violation strings
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
-PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
+PP_node *do_post_process(Postprocessor *pp, PP_data* pp_data,
+                         Linkage sublinkage, bool is_long)
 {
 	const char *msg;
-	PP_data *pp_data;
 
 	if (pp == NULL) return NULL;
-	pp_data = &pp->pp_data;
+	assert(pp_data, "Expecting non-null pp_data");
 
 	// XXX wtf .. why is this not leaking memory ?
 	pp_data->links_to_ignore = NULL;
@@ -1283,7 +1294,7 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
 	 * it out after every call, without relying on the user to do so. */
-	clear_pp_node(pp);
+	clear_pp_node(pp_data, sublinkage);
 
 	/* For long sentences, we can save some time by pruning the rules
 	 * which can't possibly be used during postprocessing the linkages
@@ -1294,29 +1305,29 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	}
 	pp->q_pruned_rules = true;
 
-	switch (internal_process(pp, sublinkage, &msg))
+	switch (internal_process(pp, pp_data, sublinkage, &msg))
 	{
 		case -1:
 			/* some global test failed even before we had to build the domains */
 			pp->n_global_rules_firing++;
-			pp->pp_node->violation = msg;
+			sublinkage->pp_node->violation = msg;
 			report_pp_stats(pp);
-			return pp->pp_node;
+			return sublinkage->pp_node;
 			break;
 		case 1:
 			/* one of the "normal" post processing tests failed */
 			pp->n_local_rules_firing++;
-			pp->pp_node->violation = msg;
+			sublinkage->pp_node->violation = msg;
 			break;
 		case 0:
 			/* This linkage is legal according to the post processing rules */
-			pp->pp_node->violation = NULL;
+			sublinkage->pp_node->violation = NULL;
 			break;
 	}
 
 	report_pp_stats(pp);
 
-	return pp->pp_node;
+	return sublinkage->pp_node;
 }
 
 /**
@@ -1375,19 +1386,11 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 		if (lifo->discarded || lifo->N_violations) continue;
 
-		ppn = do_post_process(sent->postprocessor, lkg, twopass);
+		assert(NULL == lkg->pp_scratch_data, "expecting empty pp_data");
+		PP_data *pp_data = pp_data_new();
+		lkg->pp_scratch_data = pp_data;
 
-		/* XXX There is no need to set the domain names if we are not
-		 * printing them. However, deferring this until later requires
-		 * a huge code re-org, because pp_data is needed to get the
-		 * domain type array, and pp_data is deleted immediately below.
-		 * Basically, pp_data and pp_node should be a part of the linkage,
-		 * and not part of the Postprocessor struct.
-		 * This costs about 1% performance penalty. */
-		build_type_array(sent->postprocessor);
-		linkage_set_domain_names(sent->postprocessor, lkg);
-
-	   post_process_free_data(&sent->postprocessor->pp_data);
+		ppn = do_post_process(sent->postprocessor, pp_data, lkg, twopass);
 
 		if (NULL != ppn->violation)
 		{

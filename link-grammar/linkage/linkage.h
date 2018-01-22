@@ -71,9 +71,11 @@ struct Linkage_s
 	Gword **wg_path_display;      /* Wordgraph path after morpheme combining */
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
-	PP_info *       pp_info;      /* PP domain info, one for each link */
-
 	Sentence        sent;         /* Used for common linkage data */
+
+	PP_data *       pp_scratch_data;
+	PP_info *       pp_info;      /* PP domain info, one for each link */
+	PP_node *       pp_node;
 };
 
 struct Link_s

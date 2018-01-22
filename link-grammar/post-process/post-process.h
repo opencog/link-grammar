@@ -28,19 +28,17 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-typedef struct PP_data_s PP_data;
-
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
-void     post_process_free_data(PP_data * ppd);
-PP_node *do_post_process(Postprocessor *, Linkage, bool);
+PP_data* pp_data_new(void);
+void     post_process_free_data(PP_data *);
+PP_node *do_post_process(Postprocessor *, PP_data*, Linkage, bool);
 bool     post_process_match(const char *, const char *);  /* utility function */
 
 void linkage_free_pp_info(Linkage);
 
-void build_type_array(Postprocessor*);
-void linkage_set_domain_names(Postprocessor*, Linkage);
+void linkage_set_domain_names(Postprocessor*, PP_data *, Linkage);
 void exfree_domain_names(PP_info *);
 
 void post_process_lkgs(Sentence, Parse_Options);

@@ -17,6 +17,7 @@
 #include "dict-common/dict-utils.h"   // For size_of_expression()
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
+#include "post-process/post-process.h" // for linkage_set_domain_names()
 #include "print.h"
 #include "tokenize/word-structures.h" // For Word_struct
 #include "wcwidth.h"
@@ -178,6 +179,14 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	int N_links = linkage_get_num_links(linkage);
 	dyn_str * s = dyn_str_new();
 	const char ** dname;
+
+	// If there's no pp_data, there was a PP violation, and
+	// so there are no dmoanin names.
+	PP_data* pp_data = linkage->pp_scratch_data;
+	if (NULL == pp_data) return s;
+
+	// Compute the link names
+	linkage_set_domain_names(linkage->sent->postprocessor, pp_data, linkage);
 
 	longest = 0;
 	for (link=0; link<N_links; link++)

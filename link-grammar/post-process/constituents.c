@@ -675,12 +675,13 @@ static const char * cons_of_domain(const Linkage linkage, char domain_type)
 	}
 }
 
-static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
+static int read_constituents_from_domains(con_context_t *ctxt,
+                                          PP_data* pp_data,
+                                          Linkage linkage,
                                           int numcon_total)
 {
 	size_t d, l, w2;
 	int c, w, c2, numcon_subl = 0;
-	PP_data *pp_data = &linkage->sent->constituent_pp->pp_data;
 
 	for (d = 0, c = numcon_total; d < pp_data->N_domains; d++, c++)
 	{
@@ -1077,13 +1078,14 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	if (NULL ==  sent->constituent_pp)         /* First time for this sentence */
 		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
 
-	do_post_process(sent->constituent_pp, linkage, linkage->is_sent_long);
+	PP_data* pp_data = pp_data_new();
+	do_post_process(sent->constituent_pp, pp_data, linkage, linkage->is_sent_long);
 
 	/** No-op. If we wanted to debug domain names, we could do this...
 	 * linkage_free_pp_info(linkage);
-	 * linkage_set_domain_names(sent->constituent_pp, linkage);
+	 * linkage_set_domain_names(sent->constituent_pp, pp_data, linkage);
 	 */
-	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
+	numcon_subl = read_constituents_from_domains(ctxt, pp_data, linkage, numcon_total);
 	numcon_total += numcon_subl;
 	assert (numcon_total < ctxt->conlen, "Too many constituents (c)");
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
@@ -1096,7 +1098,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;
 
-	post_process_free_data(&sent->constituent_pp->pp_data);
+	post_process_free_data(pp_data);
 
 	return q;
 }
