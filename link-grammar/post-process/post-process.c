@@ -250,7 +250,7 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 		ppn->dtsz += idx + MOREDT;
 		ppn->d_type_array = realloc(ppn->d_type_array,
 			ppn->dtsz * sizeof(D_type_list*));
-		memset(&ppn->d_type_array[old_size], 0, MOREDT * sizeof(D_type_list*));
+		memset(&ppn->d_type_array[old_size], 0, (idx+MOREDT) * sizeof(D_type_list*));
 	}
 }
 
@@ -326,12 +326,11 @@ static void alloc_pp_node(Postprocessor *pp)
 
 static void clear_pp_node(Postprocessor *pp)
 {
-	size_t i;
 	PP_node *ppn = pp->pp_node;
 	if (NULL == ppn) { alloc_pp_node(pp); return; }
 
 	ppn->violation = NULL;
-	for (i=0; i<ppn->dtsz; i++)
+	for (size_t i=0; i<ppn->dtsz; i++)
 	{
 		free_d_type(ppn->d_type_array[i]);
 		ppn->d_type_array[i] = NULL;
