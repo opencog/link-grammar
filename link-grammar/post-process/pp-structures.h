@@ -72,11 +72,11 @@ struct Postprocessor_s
 
 	/* Per-linkage state; this data must be reset prior to processing
 	 * each new linkage. */
-	PP_node *pp_node;
+	const char *violation;
 	PP_data pp_data;
 };
 
-struct PP_info_s
+struct PP_domains_s
 {
 	size_t          num_domains;
 	const char **   domain_name;
@@ -84,15 +84,6 @@ struct PP_info_s
 
 /* -------------------------------------------------------------- */
 /* Other. "private", internal-use-only post-processing structures */
-
-/* The following two structs comprise what is returned by post_process(). */
-typedef struct D_type_list_struct D_type_list;
-struct PP_node_struct
-{
-	size_t dtsz;
-	D_type_list **d_type_array;
-	const char *violation;
-};
 
 /* Davy added these */
 struct List_o_links_struct

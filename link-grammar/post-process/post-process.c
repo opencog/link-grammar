@@ -30,12 +30,6 @@
 
 #define PP_MAX_DOMAINS 128
 
-struct D_type_list_struct
-{
-	D_type_list * next;
-	int type;
-};
-
 /**
  * post_process_match -- compare two link-types.
  *
@@ -241,191 +235,9 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
 }
 #endif /* THIS_FUNCTION_IS_NOT_CURRENTLY_USED */
 
-static void chk_d_type(PP_node* ppn, size_t idx)
-{
-	if (ppn->dtsz <= idx)
-	{
-		size_t old_size = ppn->dtsz;
-#define MOREDT 5
-		ppn->dtsz += idx + MOREDT;
-		ppn->d_type_array = realloc(ppn->d_type_array,
-			ppn->dtsz * sizeof(D_type_list*));
-		memset(&ppn->d_type_array[old_size], 0, (idx+MOREDT) * sizeof(D_type_list*));
-	}
-}
-
-/**
- * This is used in one place only: to set up the domain type array,
- * which is needed in only one place ever: when printing the domain
- * names.  If the domain names are not being printed, then this is
- * a complete waste of CPU time.
- *
- * XXX refactor so that this is not done, unless the names are printed.
- */
-void build_type_array(Postprocessor *pp)
-{
-	D_type_list * dtl;
-	size_t d;
-	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
-
-	for (d = 0; d < pp_data->N_domains; d++)
-	{
-		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
-		{
-			chk_d_type(pp->pp_node, lol->link);
-			dtl = (D_type_list *) malloc(sizeof(D_type_list));
-			dtl->next = pp->pp_node->d_type_array[lol->link];
-			dtl->type = pp_data->domain_array[d].type;
-			pp->pp_node->d_type_array[lol->link] = dtl;
-		}
-	}
-}
-
-static void free_d_type(D_type_list * dtl)
-{
-	D_type_list * dtlx;
-	for (; dtl != NULL; dtl = dtlx)
-	{
-		dtlx = dtl->next;
-		free((void*) dtl);
-	}
-}
-
-/** free the pp node from last time */
-static void free_pp_node(Postprocessor *pp)
-{
-	size_t i;
-	PP_node *ppn = pp->pp_node;
-	pp->pp_node = NULL;
-	if (ppn == NULL) return;
-
-	for (i=0; i<ppn->dtsz; i++)
-	{
-		free_d_type(ppn->d_type_array[i]);
-	}
-	free(ppn->d_type_array);
-	free((void*) ppn);
-}
-
-/** set up a fresh pp_node for later use */
-static void alloc_pp_node(Postprocessor *pp)
-{
-	size_t dz;
-	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
-
-	/* highly unlikely that the number of links will ever exceed this */
-	ppn->dtsz = 2 * pp->pp_data.num_words;
-	dz = ppn->dtsz * sizeof(D_type_list*);
-	ppn->d_type_array = (D_type_list **) malloc (dz);
-	memset(ppn->d_type_array, 0, dz);
-
-	ppn->violation = NULL;
-	pp->pp_node = ppn;
-}
-
-static void clear_pp_node(Postprocessor *pp)
-{
-	PP_node *ppn = pp->pp_node;
-	if (NULL == ppn) { alloc_pp_node(pp); return; }
-
-	ppn->violation = NULL;
-	for (size_t i=0; i<ppn->dtsz; i++)
-	{
-		free_d_type(ppn->d_type_array[i]);
-		ppn->d_type_array[i] = NULL;
-	}
-}
-
-/* ================ compute the domain names ============= */
-/**
- * Store the domain names in the linkage. These are not needed
- * unless the user asks the domain names to be printed!
- */
-void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
-{
-	PP_node * pp;
-	size_t j, k;
-	D_type_list * d;
-
-	if (NULL == linkage) return;
-	if (NULL == postprocessor) return;
-	if (0 == postprocessor->pp_data.N_domains) return;
-
-	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
-	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
-
-	/* Copy the post-processing results over into the linkage */
-	pp = postprocessor->pp_node;
-	if (pp->violation != NULL)
-		return;
-
-	for (j = 0; j < linkage->num_links; ++j)
-	{
-		k = 0;
-		for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
-		linkage->pp_info[j].num_domains = k;
-		if (k > 0)
-		{
-			linkage->pp_info[j].domain_name =
-				(const char **) exalloc(k * sizeof(const char *));
-		}
-		k = 0;
-		for (d = pp->d_type_array[j]; d != NULL; d = d->next)
-		{
-			char buff[] = {d->type, '\0'};
-
-			linkage->pp_info[j].domain_name[k] =
-			      string_set_add (buff, postprocessor->string_set);
-
-			k++;
-		}
-	}
-}
-
-static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
-{
-	if (!linkage) return false;
-	if (index >= linkage->num_links) return false;
-	return true;
-}
-
-int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
-{
-	if (NULL == linkage->pp_info) return -1;
-	if (!verify_link_index(linkage, index)) return -1;
-	return linkage->pp_info[index].num_domains;
-}
-
-const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
-{
-	if (NULL == linkage->pp_info) return NULL;
-	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->pp_info[index].domain_name;
-}
-
 const char * linkage_get_violation_name(const Linkage linkage)
 {
 	return linkage->lifo.pp_violation_msg;
-}
-
-void exfree_domain_names(PP_info *ppi)
-{
-	if (ppi->num_domains > 0)
-		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
-	ppi->domain_name = NULL;
-	ppi->num_domains = 0;
-}
-
-void linkage_free_pp_info(Linkage lkg)
-{
-	size_t j;
-	if (!lkg || !lkg->pp_info) return;
-
-	for (j = 0; j < lkg->num_links; ++j)
-		exfree_domain_names(&lkg->pp_info[j]);
-	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
-	lkg->pp_info = NULL;
 }
 
 /************************ rule application *******************************/
@@ -1130,7 +942,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	                      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0] = -1;
 	pp->relevant_contains_none_rules[0] = -1;
-	pp->pp_node = NULL;
+	pp->violation = NULL;
 	pp->n_local_rules_firing = 0;
 	pp->n_global_rules_firing = 0;
 
@@ -1163,8 +975,7 @@ void post_process_free(Postprocessor *pp)
 	free(pp->relevant_contains_one_rules);
 	free(pp->relevant_contains_none_rules);
 	pp->knowledge = NULL;
-	free_pp_node(pp);
-
+	pp->violation = NULL;
 
 	pp_data = &pp->pp_data;
 	post_process_free_data(pp_data);
@@ -1252,17 +1063,14 @@ static void report_pp_stats(Postprocessor *pp)
 }
 
 /**
- * Takes a linkage and returns:
- *  . for each link, the domain structure of that link
- *  . a list of the violation strings
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
-PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
+void do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 {
 	const char *msg;
 	PP_data *pp_data;
 
-	if (pp == NULL) return NULL;
+	if (pp == NULL) return;
 	pp_data = &pp->pp_data;
 
 	// XXX wtf .. why is this not leaking memory ?
@@ -1280,11 +1088,6 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	}
 	clear_visited(pp_data);
 
-	/* In the name of responsible memory management, we retain a copy of the
-	 * returned data structure pp_node as a field in pp, so that we can clear
-	 * it out after every call, without relying on the user to do so. */
-	clear_pp_node(pp);
-
 	/* For long sentences, we can save some time by pruning the rules
 	 * which can't possibly be used during postprocessing the linkages
 	 * of this sentence. For short sentences, this is pointless. */
@@ -1299,24 +1102,21 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 		case -1:
 			/* some global test failed even before we had to build the domains */
 			pp->n_global_rules_firing++;
-			pp->pp_node->violation = msg;
+			pp->violation = msg;
 			report_pp_stats(pp);
-			return pp->pp_node;
-			break;
+			return;
 		case 1:
 			/* one of the "normal" post processing tests failed */
 			pp->n_local_rules_firing++;
-			pp->pp_node->violation = msg;
+			pp->violation = msg;
 			break;
 		case 0:
 			/* This linkage is legal according to the post processing rules */
-			pp->pp_node->violation = NULL;
+			pp->violation = NULL;
 			break;
 	}
 
 	report_pp_stats(pp);
-
-	return pp->pp_node;
 }
 
 /**
@@ -1329,12 +1129,13 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
+	Postprocessor *pp = sent->postprocessor;
 
 	/* Special-case the "amy/ady" morphology handling. */
 	/* More generally, it there's no post-processor, do nothing. */
 	/* Well, almost nothing. We still want to assign a score. */
 	// if (sent->dict->affix_table->anysplit)
-	if (NULL == sent->postprocessor)
+	if (NULL == pp)
 	{
 		sent->num_linkages_post_processed = sent->num_valid_linkages;
 		for (in=0; in < N_linkages_alloced; in++)
@@ -1360,7 +1161,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 			if (lifo->discarded || lifo->N_violations) continue;
 
-			post_process_scan_linkage(sent->postprocessor, lkg);
+			post_process_scan_linkage(pp, lkg);
 
 			if ((49 == in%50) && resources_exhausted(opts->resources)) break;
 		}
@@ -1369,34 +1170,22 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	/* Second pass: actually perform post-processing */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
-		PP_node *ppn;
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
 		if (lifo->discarded || lifo->N_violations) continue;
 
-		ppn = do_post_process(sent->postprocessor, lkg, twopass);
+		do_post_process(pp, lkg, twopass);
+		post_process_free_data(&pp->pp_data);
 
-		/* XXX There is no need to set the domain names if we are not
-		 * printing them. However, deferring this until later requires
-		 * a huge code re-org, because pp_data is needed to get the
-		 * domain type array, and pp_data is deleted immediately below.
-		 * Basically, pp_data and pp_node should be a part of the linkage,
-		 * and not part of the Postprocessor struct.
-		 * This costs about 1% performance penalty. */
-		build_type_array(sent->postprocessor);
-		linkage_set_domain_names(sent->postprocessor, lkg);
-
-	   post_process_free_data(&sent->postprocessor->pp_data);
-
-		if (NULL != ppn->violation)
+		if (NULL != pp->violation)
 		{
 			N_valid_linkages--;
 			lifo->N_violations++;
 
 			/* Set the message, only if not set (e.g. by sane_morphism) */
 			if (NULL == lifo->pp_violation_msg)
-				lifo->pp_violation_msg = ppn->violation;
+				lifo->pp_violation_msg = pp->violation;
 		}
 		N_linkages_post_processed++;
 
@@ -1432,6 +1221,175 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
+}
+
+/* ================ compute the domain names ============= */
+/*
+ * The code below is used in one place only: when printing the domain
+ * names.  If the domain names are not being printed, then this is a
+ * complete waste of CPU time.
+ */
+
+static void exfree_domain_names(PP_domains *ppi)
+{
+	if (ppi->num_domains > 0)
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
+}
+
+void linkage_free_pp_domains(Linkage lkg)
+{
+	size_t j;
+	if (!lkg || !lkg->pp_domains) return;
+
+	for (j = 0; j < lkg->num_links; ++j)
+		exfree_domain_names(&lkg->pp_domains[j]);
+	exfree(lkg->pp_domains, sizeof(PP_domains) * lkg->num_links);
+	lkg->pp_domains = NULL;
+}
+
+typedef struct D_type_list_s D_type_list;
+struct D_type_list_s
+{
+	D_type_list * next;
+	int type;
+};
+
+static void free_d_type(D_type_list * dtl)
+{
+	D_type_list * dtlx;
+	for (; dtl != NULL; dtl = dtlx)
+	{
+		dtlx = dtl->next;
+		free((void*) dtl);
+	}
+}
+
+static D_type_list ** build_type_array(PP_data *pp_data,
+                                       size_t numlinks)
+{
+	size_t nbytes = numlinks * sizeof(D_type_list*);
+	D_type_list** dta = malloc(nbytes);
+	memset(dta, 0, nbytes);
+
+	for (size_t d = 0; d < pp_data->N_domains; d++)
+	{
+		List_o_links * lol;
+		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
+		{
+			assert(lol->link < numlinks, "Something wrong about link numbering!");
+
+			D_type_list * dtl;
+			dtl = (D_type_list *) malloc(sizeof(D_type_list));
+			dtl->type = pp_data->domain_array[d].type;
+			dtl->next = dta[lol->link];
+			dta[lol->link] = dtl;
+		}
+	}
+	return dta;
+}
+
+/**
+ * Store the domain names in the linkage. These are not needed
+ * unless the user asks the domain names to be printed!
+ */
+static void linkage_set_domain_names(Postprocessor *postprocessor,
+                                     Linkage linkage)
+{
+	if (NULL == linkage) return;
+	if (NULL == postprocessor) return;
+	if (0 == postprocessor->pp_data.N_domains) return;
+
+	/* Copy the post-processing results over into the linkage */
+	if (postprocessor->violation != NULL) return;
+
+	D_type_list **dta = build_type_array(&postprocessor->pp_data,
+	                                     linkage->num_links);
+
+	assert(NULL == linkage->pp_domains, "Not expecting pp_domains here!");
+
+	linkage->pp_domains = exalloc(sizeof(PP_domains) * linkage->num_links);
+	memset(linkage->pp_domains, 0, sizeof(PP_domains) * linkage->num_links);
+
+	for (size_t j = 0; j < linkage->num_links; ++j)
+	{
+		D_type_list * d;
+		int k = 0;
+		for (d = dta[j]; d != NULL; d = d->next) k++;
+		linkage->pp_domains[j].num_domains = k;
+		if (k > 0)
+		{
+			linkage->pp_domains[j].domain_name =
+				(const char **) exalloc(k * sizeof(const char *));
+		}
+		k = 0;
+		for (d = dta[j]; d != NULL; d = d->next)
+		{
+			char buff[] = {d->type, '\0'};
+
+			linkage->pp_domains[j].domain_name[k] =
+			      string_set_add (buff, postprocessor->string_set);
+
+			k++;
+		}
+	}
+
+	/* Done with the d_type_array */
+	for (size_t i=0; i<linkage->num_links; i++)
+		free_d_type(dta[i]);
+	free(dta);
+}
+
+/**
+ * Compute linkage domain names.
+ *
+ * This assumes that post-processing has been done once, already;
+ * however, it re-performs post-processing a second time, because
+ * the data need to obtain the domain names has been lost.
+ */
+void compute_domain_names(Linkage lkg)
+{
+	Postprocessor *pp = lkg->sent->postprocessor;
+	if (NULL == pp) return;
+
+	Linkage_info *lifo = &lkg->lifo;
+	if (lifo->discarded || lifo->N_violations)
+		return;
+
+	// If pp_domains is set, its been computed already
+	if (NULL != lkg->pp_domains) return;
+
+	do_post_process(pp, lkg, true);
+	linkage_set_domain_names(pp, lkg);
+	post_process_free_data(&pp->pp_data);
+}
+
+static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
+{
+	if (!linkage) return false;
+	if (index >= linkage->num_links) return false;
+	return true;
+}
+
+/** XXX this will not return valid data unless compute_domain_names
+ * has been called first. FIXME? or does this matter?
+ */
+int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
+{
+	if (NULL == linkage->pp_domains) return -1;
+	if (!verify_link_index(linkage, index)) return -1;
+	return linkage->pp_domains[index].num_domains;
+}
+
+/** XXX this will not return valid data unless compute_domain_names
+ * has been called first. FIXME? or does this matter?
+ */
+const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
+{
+	if (NULL == linkage->pp_domains) return NULL;
+	if (!verify_link_index(linkage, index)) return NULL;
+	return linkage->pp_domains[index].domain_name;
 }
 
 

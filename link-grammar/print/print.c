@@ -17,6 +17,7 @@
 #include "dict-common/dict-utils.h"   // For size_of_expression()
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
+#include "post-process/post-process.h" // for compute_domain_names()
 #include "print.h"
 #include "tokenize/word-structures.h" // For Word_struct
 #include "wcwidth.h"
@@ -178,6 +179,8 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	int N_links = linkage_get_num_links(linkage);
 	dyn_str * s = dyn_str_new();
 	const char ** dname;
+
+	compute_domain_names(linkage);
 
 	longest = 0;
 	for (link=0; link<N_links; link++)
