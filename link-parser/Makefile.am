@@ -26,11 +26,6 @@ if HAVE_SQLITE
 link_parser_LDADD += $(SQLITE3_LIBS)
 endif
 
-if WITH_VITERBI
-link_parser_LDADD += $(top_builddir)/viterbi/libvitacog.la
-link_parser_LDADD += $(LIBGC_LIBS)
-endif
-
 
 # Installation checks, to be manually done after "make install".
 # link-parser checks:
