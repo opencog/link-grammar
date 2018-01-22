@@ -9778,10 +9778,11 @@ nor.j-a: AJ- & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
 % comparatives:
 % he is bigger, and badder, than the pope.
 % If one comma is there, then the other must be also.
+% SJl- & AJrc+: "She was John's height, or taller"
 and.j-c or.j-c but.j-c yet.j-c:
   ((AJlc- & AJrc+) or
   (Xd- & AJlc- & AJrc+ & Xc+) or
-  ({Xd-} & SJl- & AJrc+)) &
+  ({Xd-} & SJl- & {EB+} & AJrc+)) &
     (((Pam- or Mam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
     Am+);
@@ -10106,7 +10107,7 @@ just_not: <COMP-OPENER>;
 
 % Conjoined adjectives
 <adj-conjoined>:
-  (AJra- & {@MV+}) or ({@MV+} & AJla+);
+  ({[EA-]-0.1} & AJra- & {@MV+}) or ({@MV+} & AJla+);
 
 <adj-op>: <adj-opener> or <adj-conjoined>;
 
@@ -10819,7 +10820,7 @@ significantly substantially:
 %       "cheaper than dirt, slime is better"
 <comp-adj>:
   ({ECa-} & (
-    ((Pam- or Mam- or AFm+ or AJrc-) & {@MV+})
+    ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
     or ({[[@Ec-]]} & {Xc+} & Am+)
     or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+)
     or AJlc+))
@@ -11413,12 +11414,14 @@ though.e:
 % Nearly identical to words.adv.2, but do not force the EBm-
 % Wt-: single-word sentence: "Evidently"
 % Wt- & Pv+: "Evidently so"
-still.e presumably undoubtedly evidently apparently usually typically perhaps:
+% EB- & EA+: "... or perhaps taller"
+still.e presumably undoubtedly evidently apparently
+usually typically perhaps:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
   or (Wt- & ({Xc+} or Pv+ or N+))
   or ({Xc+ & {Xd-}} & CO+)
-  or EB-;
+  or (EB- & {[EA+]-0.1});
 
 in_fact of_course in_effect for_example for_instance e.g. i.e. :
   E+
