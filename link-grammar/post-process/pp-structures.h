@@ -86,7 +86,6 @@ struct PP_info_s
 /* Other. "private", internal-use-only post-processing structures */
 
 /* The following two structs comprise what is returned by post_process(). */
-typedef struct D_type_list_struct D_type_list;
 struct PP_node_struct
 {
 	const char *violation;

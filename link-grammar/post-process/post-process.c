@@ -30,12 +30,6 @@
 
 #define PP_MAX_DOMAINS 128
 
-struct D_type_list_struct
-{
-	D_type_list * next;
-	int type;
-};
-
 /**
  * post_process_match -- compare two link-types.
  *
@@ -240,16 +234,6 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
 	}
 }
 #endif /* THIS_FUNCTION_IS_NOT_CURRENTLY_USED */
-
-static void free_d_type(D_type_list * dtl)
-{
-	D_type_list * dtlx;
-	for (; dtl != NULL; dtl = dtlx)
-	{
-		dtlx = dtl->next;
-		free((void*) dtl);
-	}
-}
 
 /** free the pp node from last time */
 static void free_pp_node(Postprocessor *pp)
@@ -1299,13 +1283,29 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 }
 
 /* ================ compute the domain names ============= */
-
-/**
- * This is used in one place only: to set up the domain type array,
- * which is needed in only one place ever: when printing the domain
- * names.  If the domain names are not being printed, then this is
- * a complete waste of CPU time.
+/*
+ * The code below is used in one place only: when printing the domain
+ * names.  If the domain names are not being printed, then this is a
+ * complete waste of CPU time.
  */
+
+typedef struct D_type_list_s D_type_list;
+struct D_type_list_s
+{
+	D_type_list * next;
+	int type;
+};
+
+static void free_d_type(D_type_list * dtl)
+{
+	D_type_list * dtlx;
+	for (; dtl != NULL; dtl = dtlx)
+	{
+		dtlx = dtl->next;
+		free((void*) dtl);
+	}
+}
+
 static D_type_list ** build_type_array(PP_data *pp_data,
                                        size_t numlinks)
 {
