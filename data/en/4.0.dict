@@ -9927,7 +9927,7 @@ nor.j-n:
 % Not John, but Mary led the way.
 % XJb-: "not only this but also that"
 % XXX FIXME: the EBb and EBy below should probably be replaced by XJb
-but.j-n:
+but.j-n yet.j-n:
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
   (({Xd-} & SJl- & (XJb- or EBy- or EBb+) & SJr+) & Ou-);
