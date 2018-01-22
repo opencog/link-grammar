@@ -241,45 +241,6 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
 }
 #endif /* THIS_FUNCTION_IS_NOT_CURRENTLY_USED */
 
-static void chk_d_type(PP_node* ppn, size_t idx)
-{
-	if (ppn->dtsz <= idx)
-	{
-		size_t old_size = ppn->dtsz;
-#define MOREDT 5
-		ppn->dtsz += idx + MOREDT;
-		ppn->d_type_array = realloc(ppn->d_type_array,
-			ppn->dtsz * sizeof(D_type_list*));
-		memset(&ppn->d_type_array[old_size], 0, (idx+MOREDT) * sizeof(D_type_list*));
-	}
-}
-
-/**
- * This is used in one place only: to set up the domain type array,
- * which is needed in only one place ever: when printing the domain
- * names.  If the domain names are not being printed, then this is
- * a complete waste of CPU time.
- */
-static void build_type_array(Postprocessor *pp)
-{
-	D_type_list * dtl;
-	size_t d;
-	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
-
-	for (d = 0; d < pp_data->N_domains; d++)
-	{
-		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
-		{
-			chk_d_type(pp->pp_node, lol->link);
-			dtl = (D_type_list *) malloc(sizeof(D_type_list));
-			dtl->next = pp->pp_node->d_type_array[lol->link];
-			dtl->type = pp_data->domain_array[d].type;
-			pp->pp_node->d_type_array[lol->link] = dtl;
-		}
-	}
-}
-
 static void free_d_type(D_type_list * dtl)
 {
 	D_type_list * dtlx;
@@ -335,71 +296,11 @@ static void clear_pp_node(Postprocessor *pp)
 	}
 }
 
-/* ================ compute the domain names ============= */
-/**
- * Store the domain names in the linkage. These are not needed
- * unless the user asks the domain names to be printed!
- */
-void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
-{
-	if (NULL == linkage) return;
-	if (NULL == postprocessor) return;
-	if (0 == postprocessor->pp_data.N_domains) return;
-
-	/* Copy the post-processing results over into the linkage */
-	PP_node * ppn = postprocessor->pp_node;
-	if (ppn->violation != NULL) return;
-
-	build_type_array(postprocessor);
-
-	assert(NULL == linkage->pp_info, "Not expecting pp_info here!");
-
-	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
-	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
-
-	for (int j = 0; j < linkage->num_links; ++j)
-	{
-		D_type_list * d;
-		int k = 0;
-		for (d = ppn->d_type_array[j]; d != NULL; d = d->next) k++;
-		linkage->pp_info[j].num_domains = k;
-		if (k > 0)
-		{
-			linkage->pp_info[j].domain_name =
-				(const char **) exalloc(k * sizeof(const char *));
-		}
-		k = 0;
-		for (d = ppn->d_type_array[j]; d != NULL; d = d->next)
-		{
-			char buff[] = {d->type, '\0'};
-
-			linkage->pp_info[j].domain_name[k] =
-			      string_set_add (buff, postprocessor->string_set);
-
-			k++;
-		}
-	}
-}
-
 static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 {
 	if (!linkage) return false;
 	if (index >= linkage->num_links) return false;
 	return true;
-}
-
-int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
-{
-	if (NULL == linkage->pp_info) return -1;
-	if (!verify_link_index(linkage, index)) return -1;
-	return linkage->pp_info[index].num_domains;
-}
-
-const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
-{
-	if (NULL == linkage->pp_info) return NULL;
-	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->pp_info[index].domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
@@ -1423,6 +1324,92 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	sent->num_valid_linkages = N_valid_linkages;
 }
 
+/* ================ compute the domain names ============= */
+
+static void chk_d_type(PP_node* ppn, size_t idx)
+{
+	if (ppn->dtsz <= idx)
+	{
+		size_t old_size = ppn->dtsz;
+#define MOREDT 5
+		ppn->dtsz += idx + MOREDT;
+		ppn->d_type_array = realloc(ppn->d_type_array,
+			ppn->dtsz * sizeof(D_type_list*));
+		memset(&ppn->d_type_array[old_size], 0, (idx+MOREDT) * sizeof(D_type_list*));
+	}
+}
+
+/**
+ * This is used in one place only: to set up the domain type array,
+ * which is needed in only one place ever: when printing the domain
+ * names.  If the domain names are not being printed, then this is
+ * a complete waste of CPU time.
+ */
+static void build_type_array(Postprocessor *pp)
+{
+	D_type_list * dtl;
+	size_t d;
+	List_o_links * lol;
+	PP_data *pp_data = &pp->pp_data;
+
+	for (d = 0; d < pp_data->N_domains; d++)
+	{
+		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
+		{
+			chk_d_type(pp->pp_node, lol->link);
+			dtl = (D_type_list *) malloc(sizeof(D_type_list));
+			dtl->next = pp->pp_node->d_type_array[lol->link];
+			dtl->type = pp_data->domain_array[d].type;
+			pp->pp_node->d_type_array[lol->link] = dtl;
+		}
+	}
+}
+
+/**
+ * Store the domain names in the linkage. These are not needed
+ * unless the user asks the domain names to be printed!
+ */
+void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
+{
+	if (NULL == linkage) return;
+	if (NULL == postprocessor) return;
+	if (0 == postprocessor->pp_data.N_domains) return;
+
+	/* Copy the post-processing results over into the linkage */
+	PP_node * ppn = postprocessor->pp_node;
+	if (ppn->violation != NULL) return;
+
+	build_type_array(postprocessor);
+
+	assert(NULL == linkage->pp_info, "Not expecting pp_info here!");
+
+	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
+	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
+
+	for (size_t j = 0; j < linkage->num_links; ++j)
+	{
+		D_type_list * d;
+		int k = 0;
+		for (d = ppn->d_type_array[j]; d != NULL; d = d->next) k++;
+		linkage->pp_info[j].num_domains = k;
+		if (k > 0)
+		{
+			linkage->pp_info[j].domain_name =
+				(const char **) exalloc(k * sizeof(const char *));
+		}
+		k = 0;
+		for (d = ppn->d_type_array[j]; d != NULL; d = d->next)
+		{
+			char buff[] = {d->type, '\0'};
+
+			linkage->pp_info[j].domain_name[k] =
+			      string_set_add (buff, postprocessor->string_set);
+
+			k++;
+		}
+	}
+}
+
 /**
  * Compute linkage domain names.
  *
@@ -1439,10 +1426,33 @@ void compute_domain_names(Linkage lkg)
 	if (lifo->discarded || lifo->N_violations)
 		return;
 
+	// If pp_info is set, its been computed already (e.g. by SAT parser)
+	if (NULL != lkg->pp_info) return;
+
 	post_process_scan_linkage(pp, lkg);
 	do_post_process(pp, lkg, true);
 	linkage_set_domain_names(pp, lkg);
 	post_process_free_data(&pp->pp_data);
+}
+
+/** XXX this will not return valid data unless compute_domain_names
+ * has been called first. FIXME? or does this matter?
+ */
+int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
+{
+	if (NULL == linkage->pp_info) return -1;
+	if (!verify_link_index(linkage, index)) return -1;
+	return linkage->pp_info[index].num_domains;
+}
+
+/** XXX this will not return valid data unless compute_domain_names
+ * has been called first. FIXME? or does this matter?
+ */
+const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
+{
+	if (NULL == linkage->pp_info) return NULL;
+	if (!verify_link_index(linkage, index)) return NULL;
+	return linkage->pp_info[index].domain_name;
 }
 
 
