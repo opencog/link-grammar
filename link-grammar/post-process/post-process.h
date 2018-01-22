@@ -31,7 +31,8 @@
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
-void     post_process_free_data(PP_data * ppd);
+PP_data* pp_data_new(void);
+void     post_process_free_data(PP_data *);
 PP_node *do_post_process(Postprocessor *, Linkage, bool);
 bool     post_process_match(const char *, const char *);  /* utility function */
 

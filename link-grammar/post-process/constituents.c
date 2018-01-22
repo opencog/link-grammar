@@ -1077,6 +1077,9 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	if (NULL ==  sent->constituent_pp)         /* First time for this sentence */
 		sent->constituent_pp = post_process_new(sent->dict->hpsg_knowledge);
 
+	assert(NULL == linkage->constituent_pp_data,
+	      "Expecting null contituent data");
+	linkage->constituent_pp_data = pp_data_new();
 	do_post_process(sent->constituent_pp, linkage, linkage->is_sent_long);
 
 	/** No-op. If we wanted to debug domain names, we could do this...

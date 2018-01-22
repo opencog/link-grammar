@@ -346,33 +346,6 @@ static void clear_pp_node(Linkage lkg)
 	}
 }
 
-#define PP_INITLEN 60 /* just starting size, it is expanded if needed */
-
-static void pp_new_domain_array(PP_data *pp_data)
-{
-	pp_data->domlen = PP_INITLEN;
-	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
-	memset(pp_data->domain_array, 0, pp_data->domlen * sizeof(Domain));
-}
-
-static PP_data* pp_data_new(void)
-{
-	PP_data* pp_data = malloc (sizeof(PP_data));
-
-	pp_data->vlength = PP_INITLEN;
-	pp_data->visited = (bool*) malloc(pp_data->vlength * sizeof(bool));
-	memset(pp_data->visited, 0, pp_data->vlength * sizeof(bool));
-
-	pp_data->links_to_ignore = NULL;
-	pp_new_domain_array(pp_data);
-
-	pp_data->wowlen = PP_INITLEN;
-	pp_data->word_links = (List_o_links **) malloc(pp_data->wowlen * sizeof(List_o_links*));
-	memset(pp_data->word_links, 0, pp_data->wowlen * sizeof(List_o_links *));
-
-	return pp_data;
-}
-
 /* ================ compute the domain names ============= */
 /**
  * Store the domain names in the linkage. These are not needed
@@ -1180,6 +1153,33 @@ void post_process_free(Postprocessor *pp)
 	pp->knowledge = NULL;
 
 	free(pp);
+}
+
+#define PP_INITLEN 60 /* just starting size, it is expanded if needed */
+
+static void pp_new_domain_array(PP_data *pp_data)
+{
+	pp_data->domlen = PP_INITLEN;
+	pp_data->domain_array = (Domain*) malloc(pp_data->domlen * sizeof(Domain));
+	memset(pp_data->domain_array, 0, pp_data->domlen * sizeof(Domain));
+}
+
+PP_data* pp_data_new(void)
+{
+	PP_data* pp_data = malloc (sizeof(PP_data));
+
+	pp_data->vlength = PP_INITLEN;
+	pp_data->visited = (bool*) malloc(pp_data->vlength * sizeof(bool));
+	memset(pp_data->visited, 0, pp_data->vlength * sizeof(bool));
+
+	pp_data->links_to_ignore = NULL;
+	pp_new_domain_array(pp_data);
+
+	pp_data->wowlen = PP_INITLEN;
+	pp_data->word_links = (List_o_links **) malloc(pp_data->wowlen * sizeof(List_o_links*));
+	memset(pp_data->word_links, 0, pp_data->wowlen * sizeof(List_o_links *));
+
+	return pp_data;
 }
 
 /**
