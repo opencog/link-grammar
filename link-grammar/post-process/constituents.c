@@ -1083,7 +1083,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	/** No-op. If we wanted to debug domain names, we could do this...
 	 * linkage_free_pp_info(linkage);
-	 * linkage_set_domain_names(sent->constituent_pp, linkage);
+	 * linkage_set_domain_names(sent->constituent_pp, pp_data, linkage);
 	 */
 	numcon_subl = read_constituents_from_domains(ctxt, pp_data, linkage, numcon_total);
 	numcon_total += numcon_subl;

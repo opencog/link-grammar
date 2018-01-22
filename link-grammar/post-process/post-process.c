@@ -213,6 +213,8 @@ static void pp_free_domain_array(PP_data *ppd)
 void post_process_free_data(PP_data * ppd)
 {
 	size_t w;
+	if (NULL == ppd) return;
+
 	for (w = 0; w < ppd->wowlen; w++)
 	{
 		free_List_o_links(ppd->word_links[w]);
@@ -266,10 +268,8 @@ static void chk_d_type(PP_node* ppn, size_t idx)
  * which is needed in only one place ever: when printing the domain
  * names.  If the domain names are not being printed, then this is
  * a complete waste of CPU time.
- *
- * XXX refactor so that this is not done, unless the names are printed.
  */
-void build_type_array(PP_data* pp_data, Linkage lkg)
+static void build_type_array(PP_data* pp_data, Linkage lkg)
 {
 	D_type_list * dtl;
 	size_t d;
@@ -361,6 +361,8 @@ void linkage_set_domain_names(Postprocessor *postprocessor,
 	if (NULL == postprocessor) return;
 	if (0 == pp_data->N_domains) return;
 
+	build_type_array(pp_data, linkage);
+
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
 
@@ -433,6 +435,7 @@ void linkage_free_pp_info(Linkage lkg)
 
 	free_pp_node(lkg);
 
+	post_process_free_data(lkg->pp_scratch_data);
 	if (!lkg->pp_info) return;
 
 	for (j = 0; j < lkg->num_links; ++j)
@@ -1378,7 +1381,6 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	}
 
 	/* Second pass: actually perform post-processing */
-	PP_data *pp_data = pp_data_new();
 	for (in=0; in < N_linkages_alloced; in++)
 	{
 		PP_node *ppn;
@@ -1387,17 +1389,11 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 		if (lifo->discarded || lifo->N_violations) continue;
 
-		ppn = do_post_process(sent->postprocessor, pp_data, lkg, twopass);
+		assert(NULL == lkg->pp_scratch_data, "expecting empty pp_data");
+		PP_data *pp_data = pp_data_new();
+		lkg->pp_scratch_data = pp_data;
 
-		/* XXX There is no need to set the domain names if we are not
-		 * printing them. However, deferring this until later requires
-		 * a huge code re-org, because pp_data is needed to get the
-		 * domain type array, and pp_data is deleted immediately below.
-		 * Basically, pp_data and pp_node should be a part of the linkage,
-		 * and not part of the Postprocessor struct.
-		 * This costs about 1% performance penalty. */
-		build_type_array(pp_data, lkg);
-		linkage_set_domain_names(sent->postprocessor, pp_data, lkg);
+		ppn = do_post_process(sent->postprocessor, pp_data, lkg, twopass);
 
 		if (NULL != ppn->violation)
 		{
@@ -1413,7 +1409,6 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		linkage_score(lkg, opts);
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 	}
-	post_process_free_data(pp_data);
 
 	/* If the timer expired, then we never finished post-processing.
 	 * Mark the remaining sentences as bad, as otherwise strange
