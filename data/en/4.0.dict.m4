@@ -6820,6 +6820,7 @@ recently:
     or [[Mp-]]);
 
 % Wc- & Qd+: "Now, am I right?"
+% MJr-: "when, if not now, do you want to do it?"
 now.r:
   ({Xd- & Xc+} & MVp-)
   or Pp-
@@ -6827,6 +6828,7 @@ now.r:
   or ({Xc+ & {Xd-}} & CO+)
   or (Wc- & (Xc+ or [()]) & Qd+)
   or EB-
+  or MJr-
   or [[Mp-]];
 
 % Wc- & Qd+: "Then, am I right?"
