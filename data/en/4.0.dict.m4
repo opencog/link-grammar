@@ -7476,7 +7476,7 @@ although in_as_much_as whereas whereof wherein:
 % examination? (would require 'examination' and all other 'operation'
 % nouns to be in their own class...
 % SJ: "when, but not how, will be decided."
-% MJ: "when, if not next Tuesday, do you want to do it?
+% MJ: "when, if not next Tuesday, do you want to do it?"
 % JT- & MJr-: "if not next Tuesday, then when do you want to do it?"
 when:
   ((WN- or BIh-) & <subcl-verb>)
@@ -7484,7 +7484,8 @@ when:
   or (Mv- & <subcl-verb>)
   or [QI-]
   or SJl+ or SJr-
-  or MJl+ or ({JT-} & MJr-)
+  or MJl+
+  or ({JT-} & MJr- & Qw+)
   or ({EW-} & (QJ- or QJ+))
   or ({EW-} & Ww- & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
@@ -7909,7 +7910,7 @@ if.j-n:
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ws- & S**w+)) or
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+)) or
   ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+)) or
-  ((EBb+ & MJr+ & Xc+ & MJr+) & (Ww- & Qw+));
+  ((EBb+ & MJr+ & Xc+ & MJr+) & Ww-);
 
 % Conditional: if ... then ...
 if.j-c: Wd- & <subcl-verb> & XJc+;

@@ -1092,6 +1092,7 @@ Some complex phantom constructions:
  * They play billiards but (they do) not (play) snooker.
  * I know Ringo, but (I do) not (know) his brother.
  * She likes Indian food, but (she does) not (like) Chinese (food).
+ * If this is true, then (you should) do it.
 
 See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
 
