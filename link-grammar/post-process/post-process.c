@@ -275,6 +275,8 @@ static void build_type_array(PP_data* pp_data, Linkage lkg)
 	size_t d;
 	List_o_links * lol;
 
+	/* Highly unlikely that the number of links will ever exceed this. */
+	chk_d_type(lkg->pp_node, 2 * pp_data->num_words);
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
 		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
@@ -317,17 +319,12 @@ static void free_pp_node(Linkage lkg)
 /** set up a fresh pp_node for later use */
 static void alloc_pp_node(PP_data* pp_data, Linkage lkg)
 {
-	size_t dz;
-
 	assert(NULL == lkg->pp_node, "Expecting empty pp_node!");
 	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
 	/* highly unlikely that the number of links will ever exceed this */
-	ppn->dtsz = 2 * pp_data->num_words;
-	dz = ppn->dtsz * sizeof(D_type_list*);
-	ppn->d_type_array = (D_type_list **) malloc (dz);
-	memset(ppn->d_type_array, 0, dz);
-
+	ppn->dtsz = 0;
+	ppn->d_type_array = NULL;
 	ppn->violation = NULL;
 	lkg->pp_node = ppn;
 }
