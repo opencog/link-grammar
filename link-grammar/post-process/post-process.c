@@ -248,17 +248,6 @@ void exfree_domain_names(PP_info *ppi)
 	ppi->num_domains = 0;
 }
 
-void linkage_free_pp_info(Linkage lkg)
-{
-	size_t j;
-	if (!lkg || !lkg->pp_info) return;
-
-	for (j = 0; j < lkg->num_links; ++j)
-		exfree_domain_names(&lkg->pp_info[j]);
-	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
-	lkg->pp_info = NULL;
-}
-
 /************************ rule application *******************************/
 
 static void clear_visited(PP_data *pp_data)
@@ -1249,6 +1238,17 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
  * complete waste of CPU time.
  */
 
+void linkage_free_pp_info(Linkage lkg)
+{
+	size_t j;
+	if (!lkg || !lkg->pp_info) return;
+
+	for (j = 0; j < lkg->num_links; ++j)
+		exfree_domain_names(&lkg->pp_info[j]);
+	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
+	lkg->pp_info = NULL;
+}
+
 typedef struct D_type_list_s D_type_list;
 struct D_type_list_s
 {
@@ -1356,10 +1356,9 @@ void compute_domain_names(Linkage lkg)
 	if (lifo->discarded || lifo->N_violations)
 		return;
 
-	// If pp_info is set, its been computed already (e.g. by SAT parser)
+	// If pp_info is set, its been computed already
 	if (NULL != lkg->pp_info) return;
 
-	post_process_scan_linkage(pp, lkg);
 	do_post_process(pp, lkg, true);
 	linkage_set_domain_names(pp, lkg);
 	post_process_free_data(&pp->pp_data);
