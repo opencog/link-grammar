@@ -1230,7 +1230,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
  * complete waste of CPU time.
  */
 
-void exfree_domain_names(PP_domains *ppi)
+static void exfree_domain_names(PP_domains *ppi)
 {
 	if (ppi->num_domains > 0)
 		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
@@ -1294,7 +1294,8 @@ static D_type_list ** build_type_array(PP_data *pp_data,
  * Store the domain names in the linkage. These are not needed
  * unless the user asks the domain names to be printed!
  */
-void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
+static void linkage_set_domain_names(Postprocessor *postprocessor,
+                                     Linkage linkage)
 {
 	if (NULL == linkage) return;
 	if (NULL == postprocessor) return;

@@ -33,16 +33,13 @@ typedef struct PP_data_s PP_data;
 Postprocessor * post_process_new(pp_knowledge *);
 void post_process_free(Postprocessor *);
 
-void     post_process_free_data(PP_data * ppd);
+void post_process_lkgs(Sentence, Parse_Options);
+
 void     do_post_process(Postprocessor *, Linkage, bool);
+void     post_process_free_data(PP_data * ppd);
 bool     post_process_match(const char *, const char *);  /* utility function */
 
-void linkage_free_pp_domains(Linkage);
-
 void compute_domain_names(Linkage);
-void linkage_set_domain_names(Postprocessor*, Linkage);
-void exfree_domain_names(PP_domains *);
-
-void post_process_lkgs(Sentence, Parse_Options);
+void linkage_free_pp_domains(Linkage);
 
 #endif
