@@ -7900,6 +7900,7 @@ but_also:
 
 % "when, if not tomorrow, do you want to do it?"
 if.j-n:
+  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ws- & S**w+)) or
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+)) or
   ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+));
 
