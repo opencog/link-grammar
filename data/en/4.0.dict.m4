@@ -7511,6 +7511,7 @@ where:
 whether:
   ((QI- or BIq-) & (<subcl-verb> or <ton-verb>))
   or (<subcl-verb> & SFsx+ & <S-CLAUSE>)
+  or SJl+ or SJr-
   or [[(<subcl-verb> or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
 
 whether_or_not:
@@ -7822,7 +7823,8 @@ and.j-r or.j-r:
 %
 % Xd- & SJl- & EBb+ & SJr+ & Xc+ & Wd- & Ssx+: EB+ forces a singular subject!
 %
-and.j-n but_not but_just_not and_not ,_not just_not:
+% and.j-n but_not but_just_not and_not ,_not just_not:
+and.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
@@ -7844,7 +7846,8 @@ and.j-n but_not but_just_not and_not ,_not just_not:
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>))
-  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+));
+  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
+  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
 
 % A zero-copula in a conjunction:
 % "that is very nice, but not what I want"
