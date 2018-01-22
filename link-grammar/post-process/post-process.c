@@ -391,9 +391,6 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
 
-	assert(NULL == linkage->pp_data, "Expecting null pp_data!");
-	linkage->pp_data = pp_data_new();
-
 	/* Copy the post-processing results over into the linkage */
 	pp = linkage->pp_node;
 	if (pp->violation != NULL)
@@ -1273,6 +1270,8 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	PP_data *pp_data;
 
 	if (pp == NULL) return NULL;
+	assert(NULL == sublinkage->pp_data, "Expecting empty pp_data");
+	sublinkage->pp_data = pp_data_new();
 	pp_data = sublinkage->pp_data;
 
 	// XXX wtf .. why is this not leaking memory ?
