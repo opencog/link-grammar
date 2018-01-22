@@ -1543,9 +1543,9 @@ Linkage SATEncoder::get_next_linkage()
     //_sent->num_valid_linkages++;
   }
 
-  build_type_array(_sent->postprocessor, lkg);
+  build_type_array(lkg);
   linkage_set_domain_names(_sent->postprocessor, lkg);
-  post_process_free_data(&_sent->postprocessor->pp_data);
+  post_process_free_data(lkg->pp_data);
   linkage_score(lkg, _opts);
 
   //if (NULL == ppn->violation && verbosity > 1)

@@ -680,7 +680,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 {
 	size_t d, l, w2;
 	int c, w, c2, numcon_subl = 0;
-	PP_data *pp_data = &linkage->sent->constituent_pp->pp_data;
+	PP_data *pp_data = linkage->constituent_pp_data;
 
 	for (d = 0, c = numcon_total; d < pp_data->N_domains; d++, c++)
 	{
@@ -1096,7 +1096,8 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;
 
-	post_process_free_data(&sent->constituent_pp->pp_data);
+	post_process_free_data(linkage->constituent_pp_data);
+	linkage->constituent_pp_data = NULL;
 
 	return q;
 }
