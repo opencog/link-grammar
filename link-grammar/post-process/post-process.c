@@ -320,6 +320,7 @@ static void alloc_pp_node(Postprocessor *pp)
 	ppn->d_type_array = (D_type_list **) malloc (dz);
 	memset(ppn->d_type_array, 0, dz);
 
+	ppn->violation = NULL;
 	pp->pp_node = ppn;
 }
 
@@ -327,7 +328,7 @@ static void clear_pp_node(Postprocessor *pp)
 {
 	size_t i;
 	PP_node *ppn = pp->pp_node;
-	if (NULL == ppn) { alloc_pp_node(pp); ppn = pp->pp_node; }
+	if (NULL == ppn) { alloc_pp_node(pp); return; }
 
 	ppn->violation = NULL;
 	for (i=0; i<ppn->dtsz; i++)
