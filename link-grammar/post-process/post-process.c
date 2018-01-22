@@ -262,7 +262,7 @@ static void chk_d_type(PP_node* ppn, size_t idx)
  *
  * XXX refactor so that this is not done, unless the names are printed.
  */
-void build_type_array(Postprocessor *pp)
+void build_type_array(Postprocessor *pp, Linkage lkg)
 {
 	D_type_list * dtl;
 	size_t d;
@@ -273,11 +273,11 @@ void build_type_array(Postprocessor *pp)
 	{
 		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
-			chk_d_type(pp->pp_node, lol->link);
+			chk_d_type(lkg->pp_node, lol->link);
 			dtl = (D_type_list *) malloc(sizeof(D_type_list));
-			dtl->next = pp->pp_node->d_type_array[lol->link];
+			dtl->next = lkg->pp_node->d_type_array[lol->link];
 			dtl->type = pp_data->domain_array[d].type;
-			pp->pp_node->d_type_array[lol->link] = dtl;
+			lkg->pp_node->d_type_array[lol->link] = dtl;
 		}
 	}
 }
@@ -293,12 +293,12 @@ static void free_d_type(D_type_list * dtl)
 }
 
 /** free the pp node from last time */
-static void free_pp_node(Postprocessor *pp)
+static void free_pp_node(Linkage lkg)
 {
 	size_t i;
-	PP_node *ppn = pp->pp_node;
-	pp->pp_node = NULL;
+	PP_node *ppn = lkg->pp_node;
 	if (ppn == NULL) return;
+	lkg->pp_node = NULL;
 
 	for (i=0; i<ppn->dtsz; i++)
 	{
@@ -309,9 +309,11 @@ static void free_pp_node(Postprocessor *pp)
 }
 
 /** set up a fresh pp_node for later use */
-static void alloc_pp_node(Postprocessor *pp)
+static void alloc_pp_node(Postprocessor *pp, Linkage lkg)
 {
 	size_t dz;
+
+	assert(NULL == lkg->pp_node, "Expecting empty pp_node!");
 	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
 	/* highly unlikely that the number of links will ever exceed this */
@@ -321,13 +323,13 @@ static void alloc_pp_node(Postprocessor *pp)
 	memset(ppn->d_type_array, 0, dz);
 
 	ppn->violation = NULL;
-	pp->pp_node = ppn;
+	lkg->pp_node = ppn;
 }
 
-static void clear_pp_node(Postprocessor *pp)
+static void clear_pp_node(Postprocessor *pp, Linkage lkg)
 {
-	PP_node *ppn = pp->pp_node;
-	if (NULL == ppn) { alloc_pp_node(pp); return; }
+	PP_node *ppn = lkg->pp_node;
+	if (NULL == ppn) { alloc_pp_node(pp, lkg); return; }
 
 	ppn->violation = NULL;
 	for (size_t i=0; i<ppn->dtsz; i++)
@@ -356,7 +358,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
 
 	/* Copy the post-processing results over into the linkage */
-	pp = postprocessor->pp_node;
+	pp = linkage->pp_node;
 	if (pp->violation != NULL)
 		return;
 
@@ -420,7 +422,11 @@ void exfree_domain_names(PP_info *ppi)
 void linkage_free_pp_info(Linkage lkg)
 {
 	size_t j;
-	if (!lkg || !lkg->pp_info) return;
+	if (!lkg) return;
+
+	free_pp_node(lkg);
+
+	if (!lkg->pp_info) return;
 
 	for (j = 0; j < lkg->num_links; ++j)
 		exfree_domain_names(&lkg->pp_info[j]);
@@ -1130,7 +1136,6 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	                      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0] = -1;
 	pp->relevant_contains_none_rules[0] = -1;
-	pp->pp_node = NULL;
 	pp->n_local_rules_firing = 0;
 	pp->n_global_rules_firing = 0;
 
@@ -1163,8 +1168,6 @@ void post_process_free(Postprocessor *pp)
 	free(pp->relevant_contains_one_rules);
 	free(pp->relevant_contains_none_rules);
 	pp->knowledge = NULL;
-	free_pp_node(pp);
-
 
 	pp_data = &pp->pp_data;
 	post_process_free_data(pp_data);
@@ -1283,7 +1286,7 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
 	 * it out after every call, without relying on the user to do so. */
-	clear_pp_node(pp);
+	clear_pp_node(pp, sublinkage);
 
 	/* For long sentences, we can save some time by pruning the rules
 	 * which can't possibly be used during postprocessing the linkages
@@ -1299,24 +1302,24 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 		case -1:
 			/* some global test failed even before we had to build the domains */
 			pp->n_global_rules_firing++;
-			pp->pp_node->violation = msg;
+			sublinkage->pp_node->violation = msg;
 			report_pp_stats(pp);
-			return pp->pp_node;
+			return sublinkage->pp_node;
 			break;
 		case 1:
 			/* one of the "normal" post processing tests failed */
 			pp->n_local_rules_firing++;
-			pp->pp_node->violation = msg;
+			sublinkage->pp_node->violation = msg;
 			break;
 		case 0:
 			/* This linkage is legal according to the post processing rules */
-			pp->pp_node->violation = NULL;
+			sublinkage->pp_node->violation = NULL;
 			break;
 	}
 
 	report_pp_stats(pp);
 
-	return pp->pp_node;
+	return sublinkage->pp_node;
 }
 
 /**
@@ -1384,7 +1387,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		 * Basically, pp_data and pp_node should be a part of the linkage,
 		 * and not part of the Postprocessor struct.
 		 * This costs about 1% performance penalty. */
-		build_type_array(sent->postprocessor);
+		build_type_array(sent->postprocessor, lkg);
 		linkage_set_domain_names(sent->postprocessor, lkg);
 
 	   post_process_free_data(&sent->postprocessor->pp_data);

@@ -83,5 +83,6 @@ void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 #endif
 
 	lkg->pp_info = NULL;
+	lkg->pp_node = NULL;
 	lkg->sent = sent;
 }

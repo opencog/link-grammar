@@ -72,7 +72,6 @@ struct Postprocessor_s
 
 	/* Per-linkage state; this data must be reset prior to processing
 	 * each new linkage. */
-	PP_node *pp_node;
 	PP_data pp_data;
 };
 
