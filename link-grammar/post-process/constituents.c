@@ -1264,12 +1264,10 @@ static int assign_spans(CNode * n, int start)
 static CNode * linkage_constituent_tree(Linkage linkage)
 {
 	char *p, *q, *saveptr;
-	int len;
 	CNode * root;
 
 	p = print_flat_constituents(linkage);
 
-	len = strlen(p);
 	q = strtok_r(p, " ", &saveptr);
 	assert(token_type(q) == OPEN_TOK, "Illegal beginning of string");
 	root = make_CNode(q+1);
