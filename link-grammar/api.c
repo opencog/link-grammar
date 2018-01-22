@@ -105,7 +105,7 @@ Parse_Options parse_options_create(void)
 	Parse_Options po;
 
 	init_memusage();
-	po = (Parse_Options) xalloc(sizeof(struct Parse_Options_s));
+	po = (Parse_Options) malloc(sizeof(struct Parse_Options_s));
 
 	/* Here's where the values are initialized */
 
@@ -158,10 +158,10 @@ Parse_Options parse_options_create(void)
 	return po;
 }
 
-int parse_options_delete(Parse_Options  opts)
+int parse_options_delete(Parse_Options opts)
 {
 	resources_delete(opts->resources);
-	xfree(opts, sizeof(struct Parse_Options_s));
+	free(opts);
 	return 0;
 }
 
@@ -453,7 +453,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 {
 	Sentence sent;
 
-	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
+	sent = (Sentence) malloc(sizeof(struct Sentence_s));
 	memset(sent, 0, sizeof(struct Sentence_s));
 
 	sent->dict = dict;
@@ -590,7 +590,7 @@ void sentence_delete(Sentence sent)
 	post_process_free(sent->constituent_pp);
 
 	global_rand_state = sent->rand_state;
-	xfree((char *) sent, sizeof(struct Sentence_s));
+	free(sent);
 }
 
 int sentence_length(Sentence sent)
