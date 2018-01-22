@@ -7347,6 +7347,7 @@ UNITS: <units-suffix>;
 who:
   (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
+  or SJl+ or SJr-
   or Jw-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
@@ -7375,6 +7376,7 @@ what:
   or (D+ & JQ-)
   or Jw-
   or [QI-]
+  or SJl+ or SJr-
   or (Xc+ & Ic+);
 
 % QI- & (): "I do not know which"
@@ -7898,6 +7900,7 @@ but_also:
 
 % "when, if not tomorrow, do you want to do it?"
 if.j-n:
+  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+)) or
   ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+));
 
 % --------------------------------------------------------------------------
