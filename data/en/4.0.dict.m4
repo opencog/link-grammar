@@ -6833,11 +6833,12 @@ now.r:
 
 % Wc- & Qd+: "Then, am I right?"
 % {Xd-} & MVs- & Xs- & <subcl-verb>:  "I eat, then I sleep"
+% JT+: "then last week, I changed my mind"
 then.r:
   ({Xd- & Xc+} & MVp-)
   or Pp-
   or E+
-  or ({Xc+ & {Xd-}} & CO+)
+  or ({JT+} & {Xc+ & {Xd-}} & CO+)
   or (Wc- & (Xc+ or [()]) & Qd+)
   or EB-
   or (S+ & Xd- & Xc+ & MVs-)
