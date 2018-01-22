@@ -39,7 +39,6 @@ typedef struct gword_set gword_set;
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;
 typedef struct pp_linkset_s pp_linkset;
-typedef struct PP_node_struct PP_node;
 
 typedef struct corpus_s Corpus;
 typedef struct sense_s Sense;

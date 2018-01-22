@@ -72,7 +72,7 @@ struct Postprocessor_s
 
 	/* Per-linkage state; this data must be reset prior to processing
 	 * each new linkage. */
-	PP_node *pp_node;
+	const char *violation;
 	PP_data pp_data;
 };
 
@@ -84,12 +84,6 @@ struct PP_info_s
 
 /* -------------------------------------------------------------- */
 /* Other. "private", internal-use-only post-processing structures */
-
-/* The following two structs comprise what is returned by post_process(). */
-struct PP_node_struct
-{
-	const char *violation;
-};
 
 /* Davy added these */
 struct List_o_links_struct

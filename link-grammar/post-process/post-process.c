@@ -235,33 +235,6 @@ static void connectivity_dfs(Postprocessor *pp, Linkage sublinkage,
 }
 #endif /* THIS_FUNCTION_IS_NOT_CURRENTLY_USED */
 
-/** free the pp node from last time */
-static void free_pp_node(Postprocessor *pp)
-{
-	PP_node *ppn = pp->pp_node;
-	pp->pp_node = NULL;
-	if (ppn == NULL) return;
-	free((void*) ppn);
-}
-
-/** set up a fresh pp_node for later use */
-static PP_node* alloc_pp_node(Postprocessor *pp)
-{
-	assert(NULL == pp->pp_node, "Expecting empty pp_node!");
-	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
-
-	ppn->violation = NULL;
-	pp->pp_node = ppn;
-	return ppn;
-}
-
-static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
-{
-	if (!linkage) return false;
-	if (index >= linkage->num_links) return false;
-	return true;
-}
-
 const char * linkage_get_violation_name(const Linkage linkage)
 {
 	return linkage->lifo.pp_violation_msg;
@@ -988,7 +961,7 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	                      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0] = -1;
 	pp->relevant_contains_none_rules[0] = -1;
-	pp->pp_node = NULL;
+	pp->violation = NULL;
 	pp->n_local_rules_firing = 0;
 	pp->n_global_rules_firing = 0;
 
@@ -1021,7 +994,7 @@ void post_process_free(Postprocessor *pp)
 	free(pp->relevant_contains_one_rules);
 	free(pp->relevant_contains_none_rules);
 	pp->knowledge = NULL;
-	free_pp_node(pp);
+	pp->violation = NULL;
 
 
 	pp_data = &pp->pp_data;
@@ -1110,17 +1083,14 @@ static void report_pp_stats(Postprocessor *pp)
 }
 
 /**
- * Takes a linkage and returns:
- *  . for each link, the domain structure of that link
- *  . a list of the violation strings
  * NB: linkage->link[i]->l=-1 means that this connector is to be ignored.
  */
-PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
+void do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 {
 	const char *msg;
 	PP_data *pp_data;
 
-	if (pp == NULL) return NULL;
+	if (pp == NULL) return;
 	pp_data = &pp->pp_data;
 
 	// XXX wtf .. why is this not leaking memory ?
@@ -1137,10 +1107,7 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 		pp_data->visited = (bool *) realloc(pp_data->visited, newsz);
 	}
 	clear_visited(pp_data);
-
-	PP_node *ppn = pp->pp_node;
-	if (NULL == ppn) ppn = alloc_pp_node(pp);
-	ppn->violation = NULL;
+	pp->violation = NULL;
 
 	/* For long sentences, we can save some time by pruning the rules
 	 * which can't possibly be used during postprocessing the linkages
@@ -1156,24 +1123,21 @@ PP_node *do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 		case -1:
 			/* some global test failed even before we had to build the domains */
 			pp->n_global_rules_firing++;
-			pp->pp_node->violation = msg;
+			pp->violation = msg;
 			report_pp_stats(pp);
-			return pp->pp_node;
-			break;
+			return;
 		case 1:
 			/* one of the "normal" post processing tests failed */
 			pp->n_local_rules_firing++;
-			pp->pp_node->violation = msg;
+			pp->violation = msg;
 			break;
 		case 0:
 			/* This linkage is legal according to the post processing rules */
-			pp->pp_node->violation = NULL;
+			pp->violation = NULL;
 			break;
 	}
 
 	report_pp_stats(pp);
-
-	return ppn;
 }
 
 /**
@@ -1227,24 +1191,22 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	/* Second pass: actually perform post-processing */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
-		PP_node *ppn;
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
 		if (lifo->discarded || lifo->N_violations) continue;
 
-		ppn = do_post_process(pp, lkg, twopass);
-
+		do_post_process(pp, lkg, twopass);
 		post_process_free_data(&pp->pp_data);
 
-		if (NULL != ppn->violation)
+		if (NULL != pp->violation)
 		{
 			N_valid_linkages--;
 			lifo->N_violations++;
 
 			/* Set the message, only if not set (e.g. by sane_morphism) */
 			if (NULL == lifo->pp_violation_msg)
-				lifo->pp_violation_msg = ppn->violation;
+				lifo->pp_violation_msg = pp->violation;
 		}
 		N_linkages_post_processed++;
 
@@ -1341,8 +1303,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	if (0 == postprocessor->pp_data.N_domains) return;
 
 	/* Copy the post-processing results over into the linkage */
-	PP_node * ppn = postprocessor->pp_node;
-	if (ppn->violation != NULL) return;
+	if (postprocessor->violation != NULL) return;
 
 	D_type_list **dta = build_type_array(&postprocessor->pp_data,
 	                                     linkage->num_links);
@@ -1404,6 +1365,13 @@ void compute_domain_names(Linkage lkg)
 	do_post_process(pp, lkg, true);
 	linkage_set_domain_names(pp, lkg);
 	post_process_free_data(&pp->pp_data);
+}
+
+static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
+{
+	if (!linkage) return false;
+	if (index >= linkage->num_links) return false;
+	return true;
 }
 
 /** XXX this will not return valid data unless compute_domain_names
