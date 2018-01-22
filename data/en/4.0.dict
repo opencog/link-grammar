@@ -11454,6 +11454,11 @@ the_world_over:
   or ({Xd- & Xc+} & (MVp- or E+))
   or (Wa- & {Wa+});
 
+% Comparative form of maybe, similar to "perhaps"
+% EB- & EA+: "She was John's age or maybe older"
+maybe.c:
+  EB- & EA+;
+
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
 
