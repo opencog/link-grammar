@@ -467,7 +467,7 @@ Exp* SATEncoder::join_alternatives(int w)
   Exp* exp;
   E_list* or_list = NULL;;
   for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {
-    E_list* new_node = (E_list*) xalloc(sizeof(E_list));
+    E_list* new_node = (E_list*) malloc(sizeof(E_list));
     new_node->e = x->exp;
     new_node->next = NULL;
     if (or_list == NULL) {
@@ -479,7 +479,7 @@ Exp* SATEncoder::join_alternatives(int w)
       y->next = new_node;
     }
   }
-  exp = (Exp*) xalloc(sizeof(Exp));
+  exp = (Exp*) malloc(sizeof(Exp));
   exp->type = OR_type;
   exp->u.l = or_list;
   exp->cost = 0.0;
@@ -492,10 +492,10 @@ void SATEncoder::free_alternatives(Exp* exp)
   E_list *l = exp->u.l;
   while (l != NULL) {
     E_list* next = l->next;
-    xfree(l, sizeof(E_list));
+    free(l);
     l = next;
   }
-  xfree(exp, sizeof(exp));
+  free(exp);
 }
 
 
@@ -1515,7 +1515,7 @@ Linkage SATEncoder::get_next_linkage()
   {
     _sent->num_linkages_alloced = _opts->linkage_limit;
     size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-    _sent->lnkages = (Linkage)exalloc(nbytes);
+    _sent->lnkages = (Linkage) exalloc(nbytes);
     _next_linkage_index = 0;
   }
   assert(_next_linkage_index<_sent->num_linkages_alloced, "_sent->lnkages ovl");
@@ -1749,7 +1749,7 @@ void SATEncoder::generate_linked_min_max_planarity()
 
 Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {
-    Exp* e = (Exp*)xalloc(sizeof(Exp));
+    Exp* e = (Exp*) malloc(sizeof(Exp));
     e->type = CONNECTOR_type;
     e->dir = pc->dir;
     e->multi = pc->connector.multi;

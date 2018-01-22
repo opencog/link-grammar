@@ -54,19 +54,20 @@ void add_anded_exp(Exp*& orig, Exp* addit)
     if (orig == NULL)
     {
       orig = addit;
-    } else {
+    } else
+    {
       // flist is orig
-      E_list* flist = (E_list*)xalloc(sizeof(E_list));
+      E_list* flist = (E_list*) malloc(sizeof(E_list));
       flist->e = orig;
       flist->next = NULL;
 
       // elist is addit, orig
-      E_list* elist = (E_list*)xalloc(sizeof(E_list));
+      E_list* elist = (E_list*) malloc(sizeof(E_list));
       elist->next = flist;
       elist->e = addit;
 
       // The updated orig is addit & orig
-      orig = (Exp*)xalloc(sizeof(Exp));
+      orig = (Exp*) malloc(sizeof(Exp));
       orig->type = AND_type;
       orig->cost = 0.0;
       orig->u.l = elist;
