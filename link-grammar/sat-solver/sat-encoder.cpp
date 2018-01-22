@@ -1421,8 +1421,7 @@ void SATEncoder::pp_prune()
  */
 Linkage SATEncoder::create_linkage()
 {
-  /* Using exalloc since this is external to the parser itself. */
-  Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
+  Linkage linkage = (Linkage) malloc(sizeof(struct Linkage_s));
   memset(linkage, 0, sizeof(struct Linkage_s));
 
   partial_init_linkage(_sent, linkage, _sent->length);
@@ -1515,7 +1514,7 @@ Linkage SATEncoder::get_next_linkage()
   {
     _sent->num_linkages_alloced = _opts->linkage_limit;
     size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-    _sent->lnkages = (Linkage) exalloc(nbytes);
+    _sent->lnkages = (Linkage) malloc(nbytes);
     _next_linkage_index = 0;
   }
   assert(_next_linkage_index<_sent->num_linkages_alloced, "_sent->lnkages ovl");
@@ -1523,7 +1522,7 @@ Linkage SATEncoder::get_next_linkage()
   Linkage lkg = &_sent->lnkages[_next_linkage_index];
   _next_linkage_index++;
   *lkg = *linkage;  /* copy en-mass */
-  exfree(linkage, sizeof(struct Linkage_s));
+  free(linkage);
 
   /* The link-parser code checks the next linkage for num_violations
    * (to save calls to linkage_create()). Allow for that practice. */

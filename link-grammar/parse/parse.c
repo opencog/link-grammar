@@ -33,7 +33,7 @@
 
 static Linkage linkage_array_new(int num_to_alloc)
 {
-	Linkage lkgs = (Linkage) exalloc(num_to_alloc * sizeof(struct Linkage_s));
+	Linkage lkgs = (Linkage) malloc(num_to_alloc * sizeof(struct Linkage_s));
 	memset(lkgs, 0, num_to_alloc * sizeof(struct Linkage_s));
 	return lkgs;
 }
