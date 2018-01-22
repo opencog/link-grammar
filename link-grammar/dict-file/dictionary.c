@@ -77,7 +77,7 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 		               /*notify_err*/true), string);
 
 		dnx = dn->left;
-		xfree((char *)dn, sizeof(Dict_node));
+		free(dn);
 	}
 }
 
@@ -114,7 +114,7 @@ dictionary_six_str(const char * lang,
 	const char * t;
 	Dictionary dict;
 
-	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
+	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	/* Language and file-name stuff */

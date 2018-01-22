@@ -74,7 +74,7 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 			"Missing direction character in connector string: %s", con_start);
 
 	/* Create an expression to hold the connector */
-	e = (Exp *) xalloc(sizeof(Exp));
+	e = malloc(sizeof(Exp));
 	e->dir = *p;
 	e->type = CONNECTOR_type;
 	e->cost = 0.0;
@@ -100,11 +100,11 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 		return e;
 
 	/* Join it all together with an AND node */
-	and = (Exp *) xalloc(sizeof(Exp));
+	and = malloc(sizeof(Exp));
 	and->type = AND_type;
 	and->cost = 0.0;
-	and->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	and->u.l = ell = malloc(sizeof(E_list));
+	ell->next = elr = malloc(sizeof(E_list));
 	elr->next = NULL;
 
 	ell->e = e;
@@ -133,9 +133,8 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
 		Exp *e;
       dn = llist->right;
 		e = llist->exp;
-		if (e)
-			xfree((char *)e, sizeof(Exp));
-		xfree((char *)llist, sizeof(Dict_node));
+		if (e) free(e);
+		free(llist);
       llist = dn;
    }
 }
@@ -216,7 +215,7 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 	if (NULL == bs->exp) return 0;
 
 	/* Put each word into a Dict_node. */
-	dn = (Dict_node *) xalloc(sizeof(Dict_node));
+	dn = malloc(sizeof(Dict_node));
 	memset(dn, 0, sizeof(Dict_node));
 	dn->string = string_set_add(scriword, bs->dict->string_set);
 	dn->right = bs->dn;
@@ -361,7 +360,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	const char * t;
 	Dictionary dict;
 
-	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
+	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	/* Language and file-name stuff */
@@ -395,7 +394,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->close = db_close;
 
 	/* Setup the affix table */
-	dict->affix_table = (Dictionary) xalloc(sizeof(struct Dictionary_s));
+	dict->affix_table = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict->affix_table, 0, sizeof(struct Dictionary_s));
 	dict->affix_table->string_set = string_set_create();
 

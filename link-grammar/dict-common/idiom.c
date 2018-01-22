@@ -159,7 +159,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	dn = NULL;
 
 	sz = strlen(string)+1;
-	p = s = (char *) xalloc(sz);
+	p = s = (char *) malloc(sz);
 	strcpy(s, string);
 
 	while (*s != '\0') {
@@ -171,7 +171,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 		} else {
 			more = false;
 		}
-		dn_new = (Dict_node *) xalloc(sizeof (Dict_node));
+		dn_new = (Dict_node *) malloc(sizeof (Dict_node));
 		dn_new->right = dn;
 		dn = dn_new;
 		dn->string = string_set_add(t, dict->string_set);
@@ -179,7 +179,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 		if (more) s++;
 	}
 
-	xfree(p, sz);
+	free(p);
 	return dn;
 }
 
@@ -250,13 +250,13 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		          "\tThis word will be ignored\n",
 		          s, dict->line_number);
 
-		xfree((char *)dn, sizeof (Dict_node));
+		free(dn);
 		return;
 	}
 
 	dn_list = start_dn_list = make_idiom_Dict_nodes(dict, s);
 
-	xfree((char *)dn, sizeof (Dict_node));
+	free(dn);
 	dn = NULL;
 
 	assert(dn_list->right != NULL, "Idiom string with only one connector");
@@ -273,8 +273,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	nc->cost = 0;
 
 	n1 = Exp_create(&dict->exp_list);
-	n1->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	n1->u.l = ell = (E_list *) malloc(sizeof(E_list));
+	ell->next = elr = (E_list *) malloc(sizeof(E_list));
 	elr->next = NULL;
 	ell->e = nc;
 	elr->e = no;
@@ -293,8 +293,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		n1->u.string = NULL;
 		n1->type = AND_type;
 		n1->cost = 0;
-		n1->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-		ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+		n1->u.l = ell = (E_list *) malloc(sizeof(E_list));
+		ell->next = elr = (E_list *) malloc(sizeof(E_list));
 		elr->next = NULL;
 
 		nc = Exp_create(&dict->exp_list);
@@ -348,7 +348,6 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		dict->num_entries++;
 		dn_list = xdn;
 	}
-	/* xfree((char *)s, s_length+1); strings are handled by string_set */
 }
 
 /**

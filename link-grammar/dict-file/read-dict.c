@@ -553,12 +553,7 @@ static bool dict_match(const char * s, const char * t)
 
 static inline Dict_node * dict_node_new(void)
 {
-	return (Dict_node*) xalloc(sizeof(Dict_node));
-}
-
-static inline void free_dict_node(Dict_node *dn)
-{
-	xfree((char *)dn, sizeof(Dict_node));
+	return (Dict_node*) malloc(sizeof(Dict_node));
 }
 
 /**
@@ -583,7 +578,7 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 		}
 		else
 		{
-			free_dict_node(dn);
+			free(dn);
 		}
 	}
 
@@ -685,7 +680,7 @@ void file_free_lookup(Dict_node *llist)
 	while (llist != NULL)
 	{
 		n = llist->right;
-		free_dict_node(llist);
+		free(llist);
 		llist = n;
 	}
 }
@@ -696,7 +691,7 @@ void free_insert_list(Dict_node *ilist)
 	while (ilist != NULL)
 	{
 		n = ilist->left;
-		free_dict_node(ilist);
+		free(ilist);
 		ilist = n;
 	}
 }
@@ -752,16 +747,10 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  */
 Exp * Exp_create(Exp_list *eli)
 {
-	Exp * e;
-	e = (Exp *) xalloc(sizeof(Exp));
+	Exp * e = malloc(sizeof(Exp));
 	e->next = eli->exp_list;
 	eli->exp_list = e;
 	return e;
-}
-
-static inline void exp_free(Exp * e)
-{
-	xfree((char *)e, sizeof(Exp));
 }
 
 /**
@@ -770,8 +759,7 @@ static inline void exp_free(Exp * e)
  */
 static Exp * make_zeroary_node(Exp_list * eli)
 {
-	Exp * n;
-	n = Exp_create(eli);
+	Exp * n = Exp_create(eli);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->u.l = NULL;
@@ -788,7 +776,7 @@ static Exp * make_unary_node(Exp_list * eli, Exp * e)
 	n = Exp_create(eli);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = (E_list *) xalloc(sizeof(E_list));
+	n->u.l = (E_list *) malloc(sizeof(E_list));
 	n->u.l->next = NULL;
 	n->u.l->e = e;
 	return n;
@@ -807,8 +795,8 @@ static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
 	n->type = AND_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	n->u.l = ell = (E_list *) malloc(sizeof(E_list));
+	ell->next = elr = (E_list *) malloc(sizeof(E_list));
 	elr->next = NULL;
 
 	ell->e = nl;
@@ -829,8 +817,8 @@ static Exp * make_or_node(Exp_list *eli, Exp* nl, Exp* nr)
 	n->type = OR_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	n->u.l = ell = (E_list *) malloc(sizeof(E_list));
+	ell->next = elr = (E_list *) malloc(sizeof(E_list));
 	elr->next = NULL;
 
 	ell->e = nl;
@@ -943,7 +931,7 @@ static Exp * make_connector(Dictionary dict)
 
 	if (!link_advance(dict))
 	{
-		exp_free(n);
+		free(n);
 		return NULL;
 	}
 	return n;
@@ -984,12 +972,12 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		zn = make_optional_node(&eli, zn);
 
 		/* flist is plain-word-exp */
-		flist = (E_list *) xalloc(sizeof(E_list));
+		flist = (E_list *) malloc(sizeof(E_list));
 		flist->next = NULL;
 		flist->e = x->exp;
 
 		/* elist is {ZZZ+} , (plain-word-exp) */
-		elist = (E_list *) xalloc(sizeof(E_list));
+		elist = (E_list *) malloc(sizeof(E_list));
 		elist->next = flist;
 		elist->e = zn;
 
@@ -1040,7 +1028,7 @@ static Exp * operator_exp(Dictionary dict, int type)
 	n->cost = 0.0;
 	elist = &first;
 	while((!is_equal(dict, ')')) && (!is_equal(dict, ']')) && (!is_equal(dict, '}'))) {
-		elist->next = (E_list *) xalloc(sizeof(E_list));
+		elist->next = (E_list *) malloc(sizeof(E_list));
 		elist = elist->next;
 		elist->next = NULL;
 		elist->e = expression(dict);
@@ -1497,7 +1485,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.",
 		        dn->string, dict->line_number, dict->name);
-		free_dict_node(dn);
+		free(dn);
 	}
 	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
 	{
@@ -1514,7 +1502,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		}
 		prt_error("\a\n\tThis word will be ignored.\n");
 		file_free_lookup(dn_head);
-		free_dict_node(dn);
+		free(dn);
 	}
 	else
 	{

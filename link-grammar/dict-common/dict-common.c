@@ -222,7 +222,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 		}
 		if (to_be_deleted->left == NULL) {
 			set_parent_of_node(dict, parent, to_be_deleted, to_be_deleted->right);
-			free_dict_node(to_be_deleted);
+			free(to_be_deleted);
 		} else {
 			pred_parent = to_be_deleted;
 			pred = to_be_deleted->left;
@@ -234,7 +234,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 			to_be_deleted->file = pred->file;
 			to_be_deleted->exp = pred->exp;
 			set_parent_of_node(dict, pred_parent, pred, pred->left);
-			free_dict_node(pred);
+			free(pred);
 		}
 		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return true;
 	}
@@ -252,18 +252,8 @@ static void free_Elist(E_list * l)
 
 	for (; l != NULL; l = l1) {
 		l1 = l->next;
-		xfree(l, sizeof(E_list));
+		free(l);
 	}
-}
-
-static inline void exp_free(Exp * e)
-{
-	xfree((char *)e, sizeof(Exp));
-}
-
-static inline void free_dict_node(Dict_node *dn)
-{
-	xfree((char *)dn, sizeof(Dict_node));
 }
 
 void free_Exp_list(Exp_list * eli)
@@ -277,7 +267,7 @@ void free_Exp_list(Exp_list * eli)
 		{
 		   free_Elist(e->u.l);
 		}
-		exp_free(e);
+		free(e);
 	}
 }
 
@@ -286,7 +276,7 @@ static void free_dict_node_recursive(Dict_node * dn)
 	if (dn == NULL) return;
 	free_dict_node_recursive(dn->left);
 	free_dict_node_recursive(dn->right);
-	free_dict_node(dn);
+	free(dn);
 }
 
 static void free_dictionary(Dictionary dict)
@@ -339,7 +329,7 @@ void dictionary_delete(Dictionary dict)
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
 	free_dictionary(dict);
-	xfree(dict, sizeof(struct Dictionary_s));
+	free(dict);
 	object_open(NULL, NULL, NULL); /* Free the directory path cache */
 }
 

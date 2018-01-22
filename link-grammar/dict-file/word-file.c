@@ -94,7 +94,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 		return NULL;
 	}
 
-	wf = (Word_file *) xalloc(sizeof (Word_file));
+	wf = malloc(sizeof (Word_file));
 	wf->file = string_set_add(filename, dict->string_set);
 	wf->changed = false;
 	wf->next = dict->word_file_header;
@@ -107,7 +107,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 			free_insert_list(dn);
 			return NULL;
 		}
-		Dict_node * dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
+		Dict_node * dn_new = malloc(sizeof(Dict_node));
 		dn_new->left = dn;
 		dn = dn_new;
 		dn->string = s;
@@ -123,7 +123,7 @@ void free_Word_file(Word_file * wf)
 
 	for (;wf != NULL; wf = wf1) {
 		wf1 = wf->next;
-		xfree((char *) wf, sizeof(Word_file));
+		free(wf);
 	}
 }
 

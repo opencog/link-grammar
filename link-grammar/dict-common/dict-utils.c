@@ -33,7 +33,7 @@ void free_Exp(Exp * e)
 	if (e->type != CONNECTOR_type) {
 		free_E_list(e->u.l);
 	}
-	xfree((char *)e, sizeof(Exp));
+	free(e);
 }
 
 void free_E_list(E_list * l)
@@ -41,7 +41,7 @@ void free_E_list(E_list * l)
 	if (l == NULL) return;
 	free_E_list(l->next);
 	free_Exp(l->e);
-	xfree((char *)l, sizeof(E_list));
+	free(l);
 }
 
 /* Returns the number of connectors in the expression e */
@@ -65,7 +65,7 @@ Exp * copy_Exp(Exp * e)
 {
 	Exp * n;
 	if (e == NULL) return NULL;
-	n = (Exp *) xalloc(sizeof(Exp));
+	n = malloc(sizeof(Exp));
 	*n = *e;
 	if (e->type != CONNECTOR_type) {
 		n->u.l = copy_E_list(e->u.l);
@@ -77,7 +77,7 @@ static E_list * copy_E_list(E_list * l)
 {
 	E_list * nl;
 	if (l == NULL) return NULL;
-	nl = (E_list *) xalloc(sizeof(E_list));
+	nl = malloc(sizeof(E_list));
 	nl->next = copy_E_list(l->next);
 	nl->e = copy_Exp(l->e);
 	return nl;
@@ -168,7 +168,7 @@ void free_X_nodes(X_node * x)
 	for (; x!= NULL; x = y) {
 		y = x->next;
 		free_Exp(x->exp);
-		xfree((char *)x, sizeof(X_node));
+		free(x);
 	}
 }
 
