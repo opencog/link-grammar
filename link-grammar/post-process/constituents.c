@@ -1129,8 +1129,8 @@ static CType token_type (char *token)
 static CNode * make_CNode(char *q)
 {
 	CNode * cn;
-	cn = (CNode *) exalloc(sizeof(CNode));
-	cn->label = (char *) exalloc(sizeof(char)*(strlen(q)+1));
+	cn = (CNode *) malloc(sizeof(CNode));
+	cn->label = (char *) malloc(sizeof(char)*(strlen(q)+1));
 	strcpy(cn->label, q);
 	cn->child = cn->next = (CNode *) NULL;
 	cn->next = (CNode *) NULL;
@@ -1275,7 +1275,7 @@ static CNode * linkage_constituent_tree(Linkage linkage)
 	root = make_CNode(q+1);
 	root = parse_string(root, &saveptr);
 	assign_spans(root, 0);
-	exfree(p, sizeof(char)*(len+1));
+	free(p);
 	return root;
 }
 
@@ -1292,8 +1292,8 @@ static void linkage_free_constituent_tree(CNode * n)
 		x=m->next;
 		linkage_free_constituent_tree(m);
 	}
-	exfree(n->label, sizeof(char)*(strlen(n->label)+1));
-	exfree(n, sizeof(CNode));
+	free(n->label);
+	free(n);
 }
 
 /**
@@ -1332,5 +1332,5 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 
 void linkage_free_constituent_tree_str(char * s)
 {
-	exfree(s, strlen(s)+1);
+	free(s);
 }

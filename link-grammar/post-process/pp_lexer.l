@@ -68,14 +68,14 @@ void pp_lexer_close(PPLexTable *lt)
       while (node)
         {
           next = node->next;
-          xfree(node, sizeof(pp_label_node));
+          free(node);
           node=next;
         }
     }
   string_set_delete(lt->string_set);
   if (lt->tokens) free(lt->tokens);
   yylex_destroy(lt->scanner);
-  xfree(lt, sizeof(PPLexTable));
+  free(lt);
 }
 
 PPLexTable *pp_lexer_open(FILE *f)
@@ -85,7 +85,7 @@ PPLexTable *pp_lexer_open(FILE *f)
 
   assert(f, "pp_lexer_open: passed a NULL file pointer");
 
-  lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
+  lt = (PPLexTable*) malloc (sizeof(PPLexTable));
   setup(lt);
   yylex_init(&lt->scanner);
   yyset_extra(lt, lt->scanner);
@@ -264,7 +264,7 @@ static bool add_string_to_label(PPLexTable *lt, const char *str)
   if (!check_string(str)) return false;
 
   /* create a new node in (as yet to be determined) linked list of strings */
-  new_node = (pp_label_node *) xalloc (sizeof(pp_label_node));
+  new_node = (pp_label_node *) malloc (sizeof(pp_label_node));
   new_node->str = string_set_add(str, lt->string_set);
   new_node->next = NULL;
 

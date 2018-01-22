@@ -18,13 +18,14 @@
  pp_lexer.h
 ***********************************************************************/
 
+#include <stdlib.h>
+
 #include "externs.h"
 #include "pp_knowledge.h"
 #include "pp_lexer.h"
 #include "pp_linkset.h"
 #include "string-set.h"
 #include "dict-common/file-utils.h" // for dictopen
-#include "utilities.h" // for xalloc
 
 #define D_PPK 10                       /* verbosity level for this file */
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
@@ -87,7 +88,7 @@ static bool read_starting_link_table(pp_knowledge *k)
 
   k->nStartingLinks = n_tokens/2;
   k->starting_link_lookup_table = (StartingLinkAndDomain*)
-    xalloc((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain));
+    malloc((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain));
   for (i=0; i<k->nStartingLinks; i++)
   {
       /* read the starting link itself */
@@ -194,7 +195,7 @@ static bool read_form_a_cycle_rules(pp_knowledge *k, const char *label)
     k->n_form_a_cycle_rules = (n_commas + 1)/2;
   }
   k->form_a_cycle_rules=
-    (pp_rule*) xalloc ((1+k->n_form_a_cycle_rules)*sizeof(pp_rule));
+    (pp_rule*) malloc ((1+k->n_form_a_cycle_rules)*sizeof(pp_rule));
   for (r=0; r<k->n_form_a_cycle_rules; r++)
     {
       /* read link set */
@@ -242,7 +243,7 @@ static bool read_bounded_rules(pp_knowledge *k, const char *label)
     n_commas = pp_lexer_count_commas_of_label(k->lt);
     k->n_bounded_rules = (n_commas + 1)/2;
   }
-  k->bounded_rules = (pp_rule*) xalloc ((1+k->n_bounded_rules)*sizeof(pp_rule));
+  k->bounded_rules = (pp_rule*) malloc ((1+k->n_bounded_rules)*sizeof(pp_rule));
   for (r=0; r<k->n_bounded_rules; r++)
     {
       /* read domain */
@@ -293,7 +294,7 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
     if (-1 == n_commas) return false;
     *nRules = (n_commas + 1)/3;
   }
-  *rules = (pp_rule*) xalloc ((1+*nRules)*sizeof(pp_rule));
+  *rules = (pp_rule*) malloc ((1+*nRules)*sizeof(pp_rule));
   for (r=0; r<*nRules; r++)
     {
       /* first read link */
@@ -311,7 +312,7 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       (*rules)[r].link_set = pp_linkset_open(n_tokens);
       (*rules)[r].link_set_size = n_tokens;
-      (*rules)[r].link_array = (const char **) xalloc((1+n_tokens)*sizeof(const char*));
+      (*rules)[r].link_array = (const char **) malloc((1+n_tokens)*sizeof(const char*));
       for (i=0; i<n_tokens; i++)
       {
         p = string_set_add(tokens[i], k->string_set);
@@ -357,30 +358,29 @@ static bool read_rules(pp_knowledge *k)
 static void free_rules(pp_knowledge *k)
 {
   size_t r;
-  size_t rs = sizeof(pp_rule);
   pp_rule *rule;
   if (NULL != k->contains_one_rules)
   {
     for (r=0; k->contains_one_rules[r].msg!=0; r++)
     {
       rule = &(k->contains_one_rules[r]);    /* shorthand */
-      xfree((void*) rule->link_array, (1+rule->link_set_size)*sizeof(char*));
+      free(rule->link_array);
       pp_linkset_close(rule->link_set);
     }
     for (r=0; k->contains_none_rules[r].msg!=0; r++)
     {
       rule = &(k->contains_none_rules[r]);   /* shorthand */
-      xfree((void *)rule->link_array, (1+rule->link_set_size)*sizeof(char*));
+      free(rule->link_array);
       pp_linkset_close(rule->link_set);
     }
   }
 
   for (r = 0; r < k->n_form_a_cycle_rules; r++)
     pp_linkset_close(k->form_a_cycle_rules[r].link_set);
-  xfree((void*)k->bounded_rules,           rs*(1+k->n_bounded_rules));
-  xfree((void*)k->form_a_cycle_rules,      rs*(1+k->n_form_a_cycle_rules));
-  xfree((void*)k->contains_one_rules,      rs*(1+k->n_contains_one_rules));
-  xfree((void*)k->contains_none_rules,     rs*(1+k->n_contains_none_rules));
+  free(k->bounded_rules);
+  free(k->form_a_cycle_rules);
+  free(k->contains_one_rules);
+  free(k->contains_none_rules);
 }
 
 /********************* exported functions ***************************/
@@ -394,7 +394,7 @@ pp_knowledge *pp_knowledge_open(const char *path)
     prt_error("Error: Couldn't find post-process knowledge file %s\n", path);
     return NULL;
   }
-  pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
+  pp_knowledge *k = (pp_knowledge *) malloc (sizeof(pp_knowledge));
   *k = (pp_knowledge){0};
   k->lt = pp_lexer_open(f);
   fclose(f);
@@ -426,13 +426,11 @@ void pp_knowledge_close(pp_knowledge *k)
 {
   if (!k) return;
   /* clear the memory taken up by k */
-  xfree((void*)k->starting_link_lookup_table,
-        ((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain)));
+  free(k->starting_link_lookup_table);
   free_link_sets(k);
   free_rules(k);
   pp_linkset_close(k->set_of_links_starting_bounded_domain);
   string_set_delete(k->string_set);
   if (NULL != k->lt) pp_lexer_close(k->lt);
-  xfree((void*)k, sizeof(pp_knowledge));
+  free(k);
 }
-

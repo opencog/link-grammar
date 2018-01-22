@@ -1230,10 +1230,9 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
  * complete waste of CPU time.
  */
 
-static void exfree_domain_names(PP_domains *ppi)
+static void free_domain_names(PP_domains *ppi)
 {
-	if (ppi->num_domains > 0)
-		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	if (ppi->num_domains > 0) free(ppi->domain_name);
 	ppi->domain_name = NULL;
 	ppi->num_domains = 0;
 }
@@ -1244,8 +1243,8 @@ void linkage_free_pp_domains(Linkage lkg)
 	if (!lkg || !lkg->pp_domains) return;
 
 	for (j = 0; j < lkg->num_links; ++j)
-		exfree_domain_names(&lkg->pp_domains[j]);
-	exfree(lkg->pp_domains, sizeof(PP_domains) * lkg->num_links);
+		free_domain_names(&lkg->pp_domains[j]);
+	free(lkg->pp_domains);
 	lkg->pp_domains = NULL;
 }
 
@@ -1309,7 +1308,7 @@ static void linkage_set_domain_names(Postprocessor *postprocessor,
 
 	assert(NULL == linkage->pp_domains, "Not expecting pp_domains here!");
 
-	linkage->pp_domains = exalloc(sizeof(PP_domains) * linkage->num_links);
+	linkage->pp_domains = malloc(sizeof(PP_domains) * linkage->num_links);
 	memset(linkage->pp_domains, 0, sizeof(PP_domains) * linkage->num_links);
 
 	for (size_t j = 0; j < linkage->num_links; ++j)
@@ -1321,7 +1320,7 @@ static void linkage_set_domain_names(Postprocessor *postprocessor,
 		if (k > 0)
 		{
 			linkage->pp_domains[j].domain_name =
-				(const char **) exalloc(k * sizeof(const char *));
+				(const char **) malloc(k * sizeof(const char *));
 		}
 		k = 0;
 		for (d = dta[j]; d != NULL; d = d->next)

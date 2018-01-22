@@ -37,7 +37,7 @@ static void initialize(pp_linkset *ls, int size)
 	ls->hash_table_size = size*LINKSET_SPARSENESS;
 	ls->population = 0;
 	ls->hash_table =
-		(pp_linkset_node**) xalloc (ls->hash_table_size*sizeof(pp_linkset_node *));
+		(pp_linkset_node**) malloc (ls->hash_table_size*sizeof(pp_linkset_node *));
 	clear_hash_table(ls);
 }
 
@@ -65,7 +65,7 @@ static pp_linkset_node *add_internal(pp_linkset *ls, const char *str)
 		if (!strcmp(p->str,str)) return NULL;  /* already present */
 
 	/* create a new node for u; stick it at head of linked list */
-	n = (pp_linkset_node *) xalloc (sizeof(pp_linkset_node));
+	n = (pp_linkset_node *) malloc (sizeof(pp_linkset_node));
 	n->next = ls->hash_table[hashval];
 	n->str = str;
 	ls->hash_table[hashval] = n;
@@ -76,7 +76,7 @@ pp_linkset *pp_linkset_open(int size)
 {
 	pp_linkset *ls;
 	if (size==0) return NULL;
-	ls = (pp_linkset *) xalloc (sizeof(pp_linkset));
+	ls = (pp_linkset *) malloc (sizeof(pp_linkset));
 	initialize(ls, size);
 	return ls;
 }
@@ -85,8 +85,8 @@ void pp_linkset_close(pp_linkset *ls)
 {
 	if (ls == NULL) return;
 	pp_linkset_clear(ls);      /* free memory taken by linked lists */
-	xfree((void*) ls->hash_table, ls->hash_table_size*sizeof(pp_linkset_node*));
-	xfree((void*) ls, sizeof(pp_linkset));
+	free(ls->hash_table);
+	free(ls);
 }
 
 void pp_linkset_clear(pp_linkset *ls)
@@ -102,7 +102,7 @@ void pp_linkset_clear(pp_linkset *ls)
 		{
 			pp_linkset_node *q = p;
 			p = p->next;
-			xfree((void*) q, sizeof(pp_linkset_node));
+			free(q);
 		}
 	}
 	clear_hash_table(ls);
