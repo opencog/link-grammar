@@ -396,37 +396,6 @@ AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
 AM_CONDITIONAL(WITH_SAT_SOLVER, test "x$enable_sat_solver" = xyes)
 
 # ====================================================================
-# Viterbi disabled by default
-
-AC_ARG_ENABLE( viterbi,
-  [  --enable-viterbi        enable use of the Viterbi parser],
-  [],
-  [enable_viterbi=no]
-)
-
-if test "x$enable_viterbi" = "xyes"; then
-	CPPFLAGS="${CPPFLAGS} -DUSE_VITERBI"
-
-	# We want to check for C++; the easiest way to do this is to
-	# use c++ to compile stdio.h and bomb if it fails.
-	AC_LANG([C++])
-	AC_CHECK_HEADER([stdio.h],,
-		[AC_MSG_ERROR([C++ compiler not found; it is needed for the Viterbi parser])])
-	AC_LANG([C])
-
-	# The viterbi decoder is designed to leak memory like crazy.
-	# Must use garbage collection in order for it to work.
-	PKG_CHECK_MODULES([LIBGC], [bdw-gc], [gc=yes], [gc=no])
-	AC_SUBST(LIBGC_LIBS)
-	AC_SUBST(LIBGC_CFLAGS)
-	if test  "x${gc}" = "xno"; then
-		AC_MSG_ERROR([Garbage collector not found; it is needed for the Viterbi parser])
-	fi
-fi
-
-AM_CONDITIONAL(WITH_VITERBI, test x${enable_viterbi} = xyes)
-
-# ====================================================================
 # Corpus stats disabled by default
 
 AC_ARG_ENABLE( corpus-stats,

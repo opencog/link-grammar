@@ -3,7 +3,6 @@
 #
 SUBDIRS =               \
    link-grammar         \
-   viterbi              \
    bindings             \
    link-parser          \
    tests                \
