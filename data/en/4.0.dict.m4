@@ -7891,6 +7891,10 @@ but.j-n yet.j-n:
 but_also:
   {Xd-} & SJl- & XJb- & SJr+ & Ou-;
 
+% "when, if not tomorrow, do you want to do it?"
+if.j-n:
+  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+));
+
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
