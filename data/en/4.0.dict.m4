@@ -7734,9 +7734,11 @@ nor.j-a: AJ- & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
 % comparatives:
 % he is bigger, and badder, than the pope.
 % If one comma is there, then the other must be also.
+% SJl- & AJrc+: "She was John's height, or taller"
 and.j-c or.j-c but.j-c yet.j-c:
   ((AJlc- & AJrc+) or
-  (Xd- & AJlc- & AJrc+ & Xc+)) &
+  (Xd- & AJlc- & AJrc+ & Xc+) or
+  ({Xd-} & SJl- & AJrc+)) &
     (((Pam- or Mam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
     Am+);
