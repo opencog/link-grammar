@@ -23,8 +23,6 @@
 #include "link-includes.h"
 #include "linkage.h"
 #include "lisjuncts.h"
-#include "post-process/post-process.h" // needed only for exfree_domain_names
-#include "post-process/pp-structures.h" // needed only for pp_info_s
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
 #include "tokenize/wordgraph.h"
@@ -185,17 +183,7 @@ static void remap_linkages(Linkage lkg, const int *remap)
 
 			new_lnk->link_name = old_lnk->link_name;
 
-			/* Remap the pp_info, too. */
-			if (lkg->pp_info)
-				lkg->pp_info[j] = lkg->pp_info[i];
-
 			j++;
-		}
-		else
-		{
-			/* Whack this slot of pp_info. */
-			if (lkg->pp_info)
-				exfree_domain_names(&lkg->pp_info[i]);
 		}
 	}
 

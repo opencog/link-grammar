@@ -38,7 +38,7 @@ void free_linkage(Linkage linkage)
 	lg_sense_delete(linkage);
 #endif
 
-	linkage_free_pp_info(linkage);
+	linkage_free_pp_domains(linkage);
 
 	/* XXX FIXME */
 	free(linkage->wg_path);
@@ -82,6 +82,6 @@ void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 	lkg->sense_list = NULL;
 #endif
 
-	lkg->pp_info = NULL;
+	lkg->pp_domains = NULL;
 	lkg->sent = sent;
 }

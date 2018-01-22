@@ -76,7 +76,7 @@ struct Postprocessor_s
 	PP_data pp_data;
 };
 
-struct PP_info_s
+struct PP_domains_s
 {
 	size_t          num_domains;
 	const char **   domain_name;

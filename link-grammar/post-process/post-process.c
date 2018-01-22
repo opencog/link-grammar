@@ -240,14 +240,6 @@ const char * linkage_get_violation_name(const Linkage linkage)
 	return linkage->lifo.pp_violation_msg;
 }
 
-void exfree_domain_names(PP_info *ppi)
-{
-	if (ppi->num_domains > 0)
-		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
-	ppi->domain_name = NULL;
-	ppi->num_domains = 0;
-}
-
 /************************ rule application *******************************/
 
 static void clear_visited(PP_data *pp_data)
@@ -1238,15 +1230,23 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
  * complete waste of CPU time.
  */
 
-void linkage_free_pp_info(Linkage lkg)
+void exfree_domain_names(PP_domains *ppi)
+{
+	if (ppi->num_domains > 0)
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
+}
+
+void linkage_free_pp_domains(Linkage lkg)
 {
 	size_t j;
-	if (!lkg || !lkg->pp_info) return;
+	if (!lkg || !lkg->pp_domains) return;
 
 	for (j = 0; j < lkg->num_links; ++j)
-		exfree_domain_names(&lkg->pp_info[j]);
-	exfree(lkg->pp_info, sizeof(PP_info) * lkg->num_links);
-	lkg->pp_info = NULL;
+		exfree_domain_names(&lkg->pp_domains[j]);
+	exfree(lkg->pp_domains, sizeof(PP_domains) * lkg->num_links);
+	lkg->pp_domains = NULL;
 }
 
 typedef struct D_type_list_s D_type_list;
@@ -1306,20 +1306,20 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	D_type_list **dta = build_type_array(&postprocessor->pp_data,
 	                                     linkage->num_links);
 
-	assert(NULL == linkage->pp_info, "Not expecting pp_info here!");
+	assert(NULL == linkage->pp_domains, "Not expecting pp_domains here!");
 
-	linkage->pp_info = (PP_info *) exalloc(sizeof(PP_info) * linkage->num_links);
-	memset(linkage->pp_info, 0, sizeof(PP_info) * linkage->num_links);
+	linkage->pp_domains = exalloc(sizeof(PP_domains) * linkage->num_links);
+	memset(linkage->pp_domains, 0, sizeof(PP_domains) * linkage->num_links);
 
 	for (size_t j = 0; j < linkage->num_links; ++j)
 	{
 		D_type_list * d;
 		int k = 0;
 		for (d = dta[j]; d != NULL; d = d->next) k++;
-		linkage->pp_info[j].num_domains = k;
+		linkage->pp_domains[j].num_domains = k;
 		if (k > 0)
 		{
-			linkage->pp_info[j].domain_name =
+			linkage->pp_domains[j].domain_name =
 				(const char **) exalloc(k * sizeof(const char *));
 		}
 		k = 0;
@@ -1327,7 +1327,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 		{
 			char buff[] = {d->type, '\0'};
 
-			linkage->pp_info[j].domain_name[k] =
+			linkage->pp_domains[j].domain_name[k] =
 			      string_set_add (buff, postprocessor->string_set);
 
 			k++;
@@ -1356,8 +1356,8 @@ void compute_domain_names(Linkage lkg)
 	if (lifo->discarded || lifo->N_violations)
 		return;
 
-	// If pp_info is set, its been computed already
-	if (NULL != lkg->pp_info) return;
+	// If pp_domains is set, its been computed already
+	if (NULL != lkg->pp_domains) return;
 
 	do_post_process(pp, lkg, true);
 	linkage_set_domain_names(pp, lkg);
@@ -1376,9 +1376,9 @@ static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
  */
 int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
-	if (NULL == linkage->pp_info) return -1;
+	if (NULL == linkage->pp_domains) return -1;
 	if (!verify_link_index(linkage, index)) return -1;
-	return linkage->pp_info[index].num_domains;
+	return linkage->pp_domains[index].num_domains;
 }
 
 /** XXX this will not return valid data unless compute_domain_names
@@ -1386,9 +1386,9 @@ int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
  */
 const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
 {
-	if (NULL == linkage->pp_info) return NULL;
+	if (NULL == linkage->pp_domains) return NULL;
 	if (!verify_link_index(linkage, index)) return NULL;
-	return linkage->pp_info[index].domain_name;
+	return linkage->pp_domains[index].domain_name;
 }
 
 

@@ -24,7 +24,6 @@ typedef struct Exp_struct Exp;
 typedef struct Connector_struct Connector;
 typedef struct Linkage_info_struct Linkage_info;
 typedef struct Postprocessor_s Postprocessor;
-typedef struct PP_info_s PP_info;
 typedef struct Resources_s * Resources;
 
 /* Some of the more obscure typedefs */
@@ -39,6 +38,7 @@ typedef struct gword_set gword_set;
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;
 typedef struct pp_linkset_s pp_linkset;
+typedef struct PP_domains_s PP_domains;
 
 typedef struct corpus_s Corpus;
 typedef struct sense_s Sense;
