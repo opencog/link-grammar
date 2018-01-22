@@ -983,7 +983,6 @@ data/tr/Makefile
 data/vn/Makefile
 data/demo-sql/Makefile
 man/Makefile
-viterbi/Makefile
 ])
 AC_OUTPUT
 
