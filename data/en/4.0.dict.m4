@@ -7911,6 +7911,10 @@ if.j-n:
   ((Xd- & MJl- & EBb+ & MJr+ & Xc+) & (Ww- & Qw+)) or
   ((EBb+ & MJr+ & Xc+ & MJr+) & (Ww- & Qw+));
 
+% Conditional: if ... then ...
+if.j-c: Wd- & <subcl-verb> & XJc+;
+then.j-c: {Xd-} & XJc- & VJr+;
+
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
