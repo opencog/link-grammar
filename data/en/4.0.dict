@@ -8733,6 +8733,7 @@ unlike:
 %      links to "Abbey" instead of something more distant.
 %      XXX The Mp- below should be removed, and all occurances of
 %      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
+% Mf- & MVp+: "She was a girl of about John's age"
 of:
   ({JQ+}
     & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
@@ -11070,9 +11071,12 @@ particularly:
 
 notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
 
+% Mp- & Ju+: "She was a girl nearly John's age"
+% MVp- & Ju+: "She was a girl of nearly John's age"
 almost nearly:
   EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-
-  or (MVl- & (MVp+ or MVa+ or MVs+));
+  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or ((Mp- or MVp-) & Ju+);
 
 % The below is similar to "nearly" ...
 just_about: Em+ or EN+ or EZ+ or EA+;
