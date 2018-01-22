@@ -6697,6 +6697,7 @@ of:
       or (Xd- & Xc+ & MX*x-)
       or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & CO+)]]))
+  or (Mf- & MVp+)
   or (Wj- & JQ+ & J+ & Qd+)
   or (OFd- & Jd+)
   or ((OFj- or Mp-) & B-)
