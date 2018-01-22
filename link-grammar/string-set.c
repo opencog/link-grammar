@@ -81,11 +81,11 @@ static size_t next_prime_up(size_t start)
 String_set * string_set_create(void)
 {
 	String_set *ss;
-	ss = (String_set *) xalloc(sizeof(String_set));
+	ss = (String_set *) malloc(sizeof(String_set));
 	// ss->size = 1013; /* 1013 is a prime number */
 	// ss->size = 211; /* 211 is a prime number */
 	ss->size = 419; /* 419 is a prime number */
-	ss->table = (char **) xalloc(ss->size * sizeof(char *));
+	ss->table = (char **) malloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;
 	return ss;
@@ -118,7 +118,7 @@ static void grow_table(String_set *ss)
 
 	old = *ss;
 	ss->size = next_prime_up(3 * old.size);  /* at least triple the size */
-	ss->table = (char **) xalloc(ss->size * sizeof(char *));
+	ss->table = (char **) malloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;
 	for (i=0; i<old.size; i++)
@@ -132,7 +132,7 @@ static void grow_table(String_set *ss)
 	}
 	/* printf("growing from %d to %d\n", old.size, ss->size); */
 	/* fflush(stdout); */
-	xfree((char *) old.table, old.size * sizeof(char *));
+	free(old.table);
 }
 
 const char * string_set_add(const char * source_string, String_set * ss)
@@ -150,10 +150,10 @@ const char * string_set_add(const char * source_string, String_set * ss)
 #ifdef DEBUG
 	/* Store the String_set structure address for debug verifications */
 	len = ((len+1)&~(sizeof(ss)-1)) + 2*sizeof(ss);
-	str = (char *) xalloc(len);
+	str = (char *) malloc(len);
 	*(String_set **)&str[len-sizeof(ss)] = ss;
 #else
-	str = (char *) xalloc(len+1);
+	str = (char *) malloc(len+1);
 #endif
 	strcpy(str, source_string);
 	ss->table[p] = str;
@@ -182,8 +182,8 @@ void string_set_delete(String_set *ss)
 	if (ss == NULL) return;
 	for (i=0; i<ss->size; i++)
 	{
-		if (ss->table[i] != NULL) xfree(ss->table[i], strlen(ss->table[i]) + 1);
+		if (ss->table[i] != NULL) free(ss->table[i]);
 	}
-	xfree((char *) ss->table, ss->size * sizeof(char *));
-	xfree((char *) ss, sizeof(String_set));
+	free(ss->table);
+	free(ss);
 }
