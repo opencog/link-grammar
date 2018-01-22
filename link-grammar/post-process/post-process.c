@@ -996,7 +996,6 @@ void post_process_free(Postprocessor *pp)
 	pp->knowledge = NULL;
 	pp->violation = NULL;
 
-
 	pp_data = &pp->pp_data;
 	post_process_free_data(pp_data);
 	free(pp_data->visited);
@@ -1107,7 +1106,6 @@ void do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 		pp_data->visited = (bool *) realloc(pp_data->visited, newsz);
 	}
 	clear_visited(pp_data);
-	pp->violation = NULL;
 
 	/* For long sentences, we can save some time by pruning the rules
 	 * which can't possibly be used during postprocessing the linkages
