@@ -89,8 +89,6 @@ struct PP_info_s
 typedef struct D_type_list_struct D_type_list;
 struct PP_node_struct
 {
-	size_t dtsz;
-	D_type_list **d_type_array;
 	const char *violation;
 };
 

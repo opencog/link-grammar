@@ -266,8 +266,6 @@ static PP_node* alloc_pp_node(Postprocessor *pp)
 	assert(NULL == pp->pp_node, "Expecting empty pp_node!");
 	PP_node *ppn = (PP_node *) malloc(sizeof(PP_node));
 
-	ppn->dtsz = 0;
-	ppn->d_type_array = NULL;
 	ppn->violation = NULL;
 	pp->pp_node = ppn;
 	return ppn;
@@ -1302,43 +1300,34 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 /* ================ compute the domain names ============= */
 
-static void chk_d_type(PP_node* ppn, size_t idx)
-{
-	if (ppn->dtsz <= idx)
-	{
-		size_t old_size = ppn->dtsz;
-#define MOREDT 5
-		ppn->dtsz += idx + MOREDT;
-		ppn->d_type_array = realloc(ppn->d_type_array,
-			ppn->dtsz * sizeof(D_type_list*));
-		memset(&ppn->d_type_array[old_size], 0, (idx+MOREDT) * sizeof(D_type_list*));
-	}
-}
-
 /**
  * This is used in one place only: to set up the domain type array,
  * which is needed in only one place ever: when printing the domain
  * names.  If the domain names are not being printed, then this is
  * a complete waste of CPU time.
  */
-static void build_type_array(Postprocessor *pp)
+static D_type_list ** build_type_array(PP_data *pp_data,
+                                       size_t numlinks)
 {
-	D_type_list * dtl;
-	size_t d;
-	List_o_links * lol;
-	PP_data *pp_data = &pp->pp_data;
+	size_t nbytes = numlinks * sizeof(D_type_list*);
+	D_type_list** dta = malloc(nbytes);
+	memset(dta, 0, nbytes);
 
-	for (d = 0; d < pp_data->N_domains; d++)
+	for (size_t d = 0; d < pp_data->N_domains; d++)
 	{
+		List_o_links * lol;
 		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
-			chk_d_type(pp->pp_node, lol->link);
+			assert(lol->link < numlinks, "Something wrong about link numbering!");
+
+			D_type_list * dtl;
 			dtl = (D_type_list *) malloc(sizeof(D_type_list));
-			dtl->next = pp->pp_node->d_type_array[lol->link];
 			dtl->type = pp_data->domain_array[d].type;
-			pp->pp_node->d_type_array[lol->link] = dtl;
+			dtl->next = dta[lol->link];
+			dta[lol->link] = dtl;
 		}
 	}
+	return dta;
 }
 
 /**
@@ -1355,8 +1344,8 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	PP_node * ppn = postprocessor->pp_node;
 	if (ppn->violation != NULL) return;
 
-	chk_d_type(postprocessor->pp_node, linkage->num_links);
-	build_type_array(postprocessor);
+	D_type_list **dta = build_type_array(&postprocessor->pp_data,
+	                                     linkage->num_links);
 
 	assert(NULL == linkage->pp_info, "Not expecting pp_info here!");
 
@@ -1367,7 +1356,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 	{
 		D_type_list * d;
 		int k = 0;
-		for (d = ppn->d_type_array[j]; d != NULL; d = d->next) k++;
+		for (d = dta[j]; d != NULL; d = d->next) k++;
 		linkage->pp_info[j].num_domains = k;
 		if (k > 0)
 		{
@@ -1375,7 +1364,7 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 				(const char **) exalloc(k * sizeof(const char *));
 		}
 		k = 0;
-		for (d = ppn->d_type_array[j]; d != NULL; d = d->next)
+		for (d = dta[j]; d != NULL; d = d->next)
 		{
 			char buff[] = {d->type, '\0'};
 
@@ -1386,12 +1375,10 @@ void linkage_set_domain_names(Postprocessor *postprocessor, Linkage linkage)
 		}
 	}
 
-	/* not needed any more */
-	for (size_t i=0; i<ppn->dtsz; i++)
-	{
-		free_d_type(ppn->d_type_array[i]);
-	}
-	free(ppn->d_type_array);
+	/* Done with the d_type_array */
+	for (size_t i=0; i<linkage->num_links; i++)
+		free_d_type(dta[i]);
+	free(dta);
 }
 
 /**
