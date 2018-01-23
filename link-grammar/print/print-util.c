@@ -78,7 +78,7 @@ size_t utf8_strwidth(const char *s)
  * to be fixed for Windows (utf-16 wchar_t).
  * Use char32_t with mbrtoc32() instead of mbrtowc().
  */
-size_t utf8_charwidth(const char *s)
+int utf8_charwidth(const char *s)
 {
 	wchar_t wc;
 
@@ -87,7 +87,7 @@ size_t utf8_charwidth(const char *s)
 	if (n < 0)
 	{
 		prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
-		return 1 /* XXX */;
+		return -2 /* XXX */;
 	}
 
 	return mk_wcwidth(wc);
@@ -193,11 +193,16 @@ int append_string(dyn_str * string, const char *fmt, ...)
 size_t append_utf8_char(dyn_str * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
-	char buf[10];
+	char buf[12];
 	size_t n = utf8_charlen(mbs);
 
 	assert(n<10, "Multi-byte character is too long!");
 	strncpy(buf, mbs, n);
+
+	// Whitespace pad if not a value UTF-8 character.
+	// This allows the terminal to print it in a "box font"
+	// that displays the hex value inside the box.
+	if (utf8_charwidth(mbs) < 0) { buf[n] = ' '; n++; }
 	buf[n] = 0;
 	dyn_strcat(string, buf);
 	return n;
