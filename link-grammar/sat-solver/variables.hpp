@@ -74,7 +74,9 @@ public:
     ,_linked_min_variable_map(sent->length, -1)
     ,_linked_max_variable_map(sent->length, -1)
     ,_thin_link_variable_map(sent->length, -1)
-    ,_link_top_cw_variable_map(sent->length)
+#if 0
+      ,_link_top_cw_variable_map(sent->length)
+#endif
     ,_link_cw_variable_map(sent->length)
     ,_guiding(new CostDistanceGuiding(sent))
     ,_var(0)
@@ -419,6 +421,7 @@ public:
    *           link_top_cw((wi, pi), wj)
    */
 
+#if 0
   // Returns indices of all link_top_cw variables
   const std::vector<int>& link_top_cw_variables() const {
     return _link_top_cw_variables_indices;
@@ -437,7 +440,6 @@ public:
     const char* connector;
   };
 
-#if 0
   // Returns additional info about the given link_top_cw variable
   const LinkTopCWVar* link_top_cw_variable(int var) const {
     return _link_top_cw_variables[var];
@@ -543,6 +545,7 @@ private:
   // What is the number of the thin_link(i, j) variable?
   MatrixUpperTriangle<int> _thin_link_variable_map;
 
+#if 0
   /*
    * Information about the link_top_cw(w, wj, pj) variables
    */
@@ -555,6 +558,7 @@ private:
 
   // Additional info about the link_top_cw(wi, wj, pj) variable with the given number
   std::vector<LinkTopCWVar*> _link_top_cw_variables;
+#endif
 
 #if 0
   // Set this additional info
