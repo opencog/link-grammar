@@ -1108,15 +1108,15 @@ static char * print_flat_constituents(Linkage linkage)
 	size_t wts = linkage->num_words * sizeof(WType);
 	size_t cns = (linkage->num_links + linkage->num_words) * sizeof(constituent_t);
 
-	con_context_t *ctxt = (con_context_t *) alloca(sizeof(con_context_t));
-	memset(ctxt, 0, sizeof(con_context_t));
-	ctxt->wordtype = (WType *) alloca(wts);
-	memset(ctxt->wordtype, 0, wts);
-	ctxt->conlen = linkage->num_links + linkage->num_words;
-	ctxt->constituent = (constituent_t *) alloca(cns);
-	memset(ctxt->constituent, 0, cns);
+	con_context_t ctxt;
+	memset(&ctxt, 0, sizeof(con_context_t));
+	ctxt.wordtype = (WType *) alloca(wts);
+	memset(ctxt.wordtype, 0, wts);
+	ctxt.conlen = linkage->num_links + linkage->num_words;
+	ctxt.constituent = (constituent_t *) alloca(cns);
+	memset(ctxt.constituent, 0, cns);
 
-	return do_print_flat_constituents(ctxt, linkage);
+	return do_print_flat_constituents(&ctxt, linkage);
 }
 
 static CType token_type (char *token)
