@@ -125,8 +125,9 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
-	Parse_Options opts = parse_options_create();
-	parse_options_set_spell_guess(opts, 0);
+	Parse_Options optsa = parse_options_create();
+	Parse_Options optsb = parse_options_create();
+	parse_options_set_spell_guess(optsb, 0);
 
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 	// Dictionary dict = dictionary_create_lang("ru");
@@ -137,13 +138,17 @@ int main(int argc, char* argv[])
 	}
 
 	int n_threads = 10;
-	int niter = 300;
+	int niter = 500;
 
 	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
 	std::vector<std::thread> thread_pool;
-	for (int i=0; i < n_threads; i++) {
-		thread_pool.push_back(std::thread(parse_sents, dict, opts, i, niter));
+	for (int i=0; i < n_threads; i++)
+	{
+		if (0 == i%2)
+			thread_pool.push_back(std::thread(parse_sents, dict, optsa, i, niter));
+		else
+			thread_pool.push_back(std::thread(parse_sents, dict, optsb, i, niter));
 	}
 
 	// Wait for all threads to complete
@@ -151,6 +156,7 @@ int main(int argc, char* argv[])
 	printf("Done with multi-threaded parsing\n");
 
 	dictionary_delete(dict);
-	parse_options_delete(opts);
+	parse_options_delete(optsa);
+	parse_options_delete(optsb);
 	return 0;
 }
