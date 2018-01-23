@@ -451,9 +451,8 @@ static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
 static Gword *for_word_alt(Sentence sent, Gword *altp,
                            PER_GWORD_FUNC(*gword_func), unsigned int *arg)
 {
-	Gword *alternative_id = altp->alternative_id;
-
 	if (NULL == altp) return NULL;
+	Gword *alternative_id = altp->alternative_id;
 
 	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
 	{
@@ -1025,9 +1024,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 static void remqueue_gword(const Sentence sent)
 {
 	word_queue_t *const wq = sent->word_queue;
-	Gword *w = wq->word;
-
 	assert(NULL!=wq, "Trying to remove a word from an empty word queue");
+	Gword *w = wq->word;
 
 	lgdebug(+D_RWW, "Word '%s'%s%s\n", w->subword,
 	        w->issued_unsplit ? " issued_unsplit" : "",
