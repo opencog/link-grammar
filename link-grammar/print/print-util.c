@@ -86,8 +86,8 @@ int utf8_charwidth(const char *s)
 	if (n == 0) return 0;
 	if (n < 0)
 	{
-		prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
-		return -2 /* XXX */;
+		// prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
+		return -2 /* Yes, we want this! It signals the error! */;
 	}
 
 	return mk_wcwidth(wc);
@@ -190,20 +190,44 @@ int append_string(dyn_str * string, const char *fmt, ...)
 	return vappend_string(string, fmt, args);
 }
 
+/**
+ * Append exactly one UTF-8 character to the string.
+ * Return the number of bytes to advance, until the
+ * next UTF-8 character. This might NOT be the same as
+ * number of bytes actually appended. Two things might
+ * happen:
+ * a) Invalid UTF-8 values are copied, but only one byte,
+ *    followed by an addtional blank.
+ * b) Valid UTF-8 code-points that do not have a known
+ *    glyph are copied, followed by an additional blank.
+ * This additional blanks allows proper printing of these
+ * two cases, by allowing the terminal to display with
+ * "box fonts" - boxes containing hex code, usually two
+ * column-widths wide.
+ */
 size_t append_utf8_char(dyn_str * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
 	char buf[12];
-	size_t n = utf8_charlen(mbs);
+	int nb = utf8_charlen(mbs);
+	int n = nb;
+	if (n < 0) n = 1; // charlen is negative if its not a valid UTF-8
 
 	assert(n<10, "Multi-byte character is too long!");
 	strncpy(buf, mbs, n);
 
-	// Whitespace pad if not a value UTF-8 character.
-	// This allows the terminal to print it in a "box font"
-	// that displays the hex value inside the box.
-	if (utf8_charwidth(mbs) < 0) { buf[n] = ' '; n++; }
+	// Whitepsace pad if its a bad value
+	if (nb < 0) { buf[n] = ' '; n++; }
+
+	// Whitespace pad if not a known UTF-8 glyph.
+	if (0 < nb && utf8_charwidth(mbs) < 0) { buf[n] = ' '; n++; }
+
+	// Null terminate.
 	buf[n] = 0;
 	dyn_strcat(string, buf);
+
+	// How many bytes did we hoover in?
+	n = nb;
+	if (n < 0) n = 1; // advance exactly one byte, if invalid UTF-8
 	return n;
 }
