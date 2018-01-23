@@ -30,7 +30,6 @@
 //#define ALT_DISJUNCT_CONSISTENCY
 
 #if defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)
-#include "tokenize/tok-structures.h"
 #endif /* ALT_MUTUAL_CONSISTENCY || ALT_DISJUNCT_CONSISTENCY */
 
 #define D_PRUNE 5
