@@ -1132,8 +1132,7 @@ static CNode * make_CNode(char *q)
 {
 	CNode * cn;
 	cn = (CNode *) malloc(sizeof(CNode));
-	cn->label = (char *) malloc(sizeof(char)*(strlen(q)+1));
-	strcpy(cn->label, q);
+	cn->label = strdup(q);
 	cn->child = cn->next = (CNode *) NULL;
 	cn->next = (CNode *) NULL;
 	cn->start = cn->end = -1;
