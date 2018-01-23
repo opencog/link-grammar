@@ -2978,6 +2978,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			return true;
 		}
 	}
+	wordgraph_delete(sent);
 	return false; /* Something is wrong */
 
 failure:
@@ -2987,6 +2988,7 @@ failure:
 	prt_error("Unable to process UTF8 input string in current locale %s\n",
 		nl_langinfo(CODESET));
 #endif
+	wordgraph_delete(sent);
 	return false;
 }
 
