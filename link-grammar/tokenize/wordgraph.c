@@ -15,6 +15,7 @@
 #include "error.h"
 #include "string-set.h"
 #include "tok-structures.h"
+#include "tokenize.h"
 #include "wordgraph.h"
 
 /* === Gword utilities === */
@@ -458,6 +459,7 @@ static void word_queue_delete(Sentence sent)
 		free(wq_tofree);
 	};
 	sent->word_queue = NULL;
+	sent->word_queue_last = NULL;
 }
 
 /**
