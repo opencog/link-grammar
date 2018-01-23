@@ -57,21 +57,28 @@ size_t utf8_strwidth(const char *s)
 	int glyph_width = 0;
 	for (size_t i = 0; i < mblen; i++)
 	{
-		glyph_width += mk_wcwidth(ws[i]);
+		int w = mk_wcwidth(ws[i]);
+
+		// If w<0 then its not vaid UTF8, but garbage.  Many
+		// terminals will print this with a weird boxed font
+		// that is two columns wide, showing the hex value in it.
+		if (w < 0) w = 2;
+		glyph_width += w;
 	}
 	return glyph_width;
 }
 
 /**
  * Return the width, in text-column-widths, of the utf8-encoded
- * character.
+ * character. The will return a NEGATIVE VALUE if the character
+ * is not a valid UTF-8 character!
  *
  * The mbstate_t argument is not used, since we convert only from utf-8.
  * FIXME: This function (along with other places that use mbrtowc()) need
  * to be fixed for Windows (utf-16 wchar_t).
  * Use char32_t with mbrtoc32() instead of mbrtowc().
  */
-size_t utf8_charwidth(const char *s)
+int utf8_charwidth(const char *s)
 {
 	wchar_t wc;
 
@@ -79,8 +86,8 @@ size_t utf8_charwidth(const char *s)
 	if (n == 0) return 0;
 	if (n < 0)
 	{
-		prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
-		return 1 /* XXX */;
+		// prt_error("Error: charwidth(%s): mbrtowc() returned %d\n", s, n);
+		return -2 /* Yes, we want this! It signals the error! */;
 	}
 
 	return mk_wcwidth(wc);
@@ -90,7 +97,7 @@ size_t utf8_charwidth(const char *s)
  * Return the number of characters in the longest initial substring
  * which has a text-column-width of not greater than max_width.
  */
-size_t utf8_num_char(const char *s, size_t max_width)
+size_t utf8_chars_in_width(const char *s, size_t max_width)
 {
 	size_t total_bytes = 0;
 	size_t glyph_width = 0;
@@ -104,16 +111,27 @@ size_t utf8_num_char(const char *s, size_t max_width)
 		if (n == 0) break;
 		if (n < 0)
 		{
-			prt_error("Error: utf8_num_char(%s, %zu): mbrtowc() returned %d\n",
-			          s, max_width, n);
-			return 1 /* XXX */;
+			// Allow for double-column-wide box-font printing
+			// i.e. box with the hex code inside.
+			glyph_width += 2;
+			n = 1;
 		}
-
-		glyph_width += mk_wcwidth(wc);
+		else
+		{
+			// If we are here, it was a valid UTF-8 code point,
+			// but we do not know the width of the corresponding
+			// glyph. Just like above, asume a double-wide box
+			// font will be printed.
+			int gw = mk_wcwidth(wc);
+			if (0 <= gw)
+				glyph_width += gw;
+			else
+				glyph_width += 2;
+		}
 		//printf("N %zu G %zu;", total_bytes, glyph_width);
 	}
 	while (glyph_width <= max_width);
-	printf("\n");
+	// printf("\n");
 
 	return total_bytes;
 }
@@ -183,15 +201,44 @@ int append_string(dyn_str * string, const char *fmt, ...)
 	return vappend_string(string, fmt, args);
 }
 
+/**
+ * Append exactly one UTF-8 character to the string.
+ * Return the number of bytes to advance, until the
+ * next UTF-8 character. This might NOT be the same as
+ * number of bytes actually appended. Two things might
+ * happen:
+ * a) Invalid UTF-8 values are copied, but only one byte,
+ *    followed by an addtional blank.
+ * b) Valid UTF-8 code-points that do not have a known
+ *    glyph are copied, followed by an additional blank.
+ * This additional blanks allows proper printing of these
+ * two cases, by allowing the terminal to display with
+ * "box fonts" - boxes containing hex code, usually two
+ * column-widths wide.
+ */
 size_t append_utf8_char(dyn_str * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
-	char buf[10];
-	size_t n = utf8_charlen(mbs);
+	char buf[12];
+	int nb = utf8_charlen(mbs);
+	int n = nb;
+	if (n < 0) n = 1; // charlen is negative if its not a valid UTF-8
 
 	assert(n<10, "Multi-byte character is too long!");
 	strncpy(buf, mbs, n);
+
+	// Whitepsace pad if its a bad value
+	if (nb < 0) { buf[n] = ' '; n++; }
+
+	// Whitespace pad if not a known UTF-8 glyph.
+	if (0 < nb && utf8_charwidth(mbs) < 0) { buf[n] = ' '; n++; }
+
+	// Null terminate.
 	buf[n] = 0;
 	dyn_strcat(string, buf);
+
+	// How many bytes did we hoover in?
+	n = nb;
+	if (n < 0) n = 1; // advance exactly one byte, if invalid UTF-8
 	return n;
 }

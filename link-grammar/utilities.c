@@ -465,6 +465,16 @@ void dyn_strcat(dyn_str* ds, const char *str)
 	ds->end += l;
 }
 
+/// Trim away trailing whitespace.
+void dyn_trimback(dyn_str* ds)
+{
+	size_t tail = ds->end;
+	while (0 < tail && ' ' == ds->str[--tail]) {}
+
+	ds->end = ++tail;
+	ds->str[tail] = 0x0;
+}
+
 const char * dyn_str_value(dyn_str* s)
 {
 	return s->str;
