@@ -3271,9 +3271,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		wp_new = NULL;
 		print_wordgraph_pathpos(wp_old);
 
-		/* Add a new word to the sentence word array.
-		 */
-		assert(0 < max_words--, "Too many words (it may be an infinite loop)");
+		/* Add a new word to the sentence word array. */
+		assert(0 < max_words, "Too many words (it may be an infinite loop)");
+		max_words--; /* For the assert() above */
 		wa_word = word_new(sent);
 
 		/* Go upward and find the sentence word. */
