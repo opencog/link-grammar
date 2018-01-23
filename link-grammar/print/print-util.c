@@ -57,7 +57,13 @@ size_t utf8_strwidth(const char *s)
 	int glyph_width = 0;
 	for (size_t i = 0; i < mblen; i++)
 	{
-		glyph_width += mk_wcwidth(ws[i]);
+		int w = mk_wcwidth(ws[i]);
+
+		// If w<0 then its not vaid UTF8, but garbage.  Many
+		// terminals will print this with a weird boxed font
+		// that is two columns wide, showing the hex value in it.
+		if (w < 0) w = 2;
+		glyph_width += w;
 	}
 	return glyph_width;
 }
