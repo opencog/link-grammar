@@ -49,7 +49,8 @@ void * spellcheck_create(const char * lang)
 	{
 		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) continue;
 		aspell = (struct linkgrammar_aspell *)malloc(sizeof(struct linkgrammar_aspell));
-		if (!aspell) {
+		if (!aspell)
+		{
 			prt_error("Error: out of memory. Aspell not used.\n");
 			aspell = NULL;
 			break;
@@ -58,7 +59,8 @@ void * spellcheck_create(const char * lang)
 		aspell->speller = NULL;
 		aspell->config = new_aspell_config();
 		if (aspell_config_replace(aspell->config, ASPELL_LANG_KEY,
-					spellcheck_lang_mapping[i]) == 0) {
+					spellcheck_lang_mapping[i]) == 0)
+		{
 			prt_error("Error: failed to set language in aspell: %s\n", lang);
 			delete_aspell_config(aspell->config);
 			free(aspell);
@@ -66,7 +68,8 @@ void * spellcheck_create(const char * lang)
 			break;
 		}
 		spell_err = new_aspell_speller(aspell->config);
-		if (aspell_error_number(spell_err) != 0) {
+		if (aspell_error_number(spell_err) != 0)
+		{
 			prt_error("Error: Aspell: %s\n", aspell_error_message(spell_err));
 			delete_aspell_can_have_error(spell_err);
 			delete_aspell_config(aspell->config);
@@ -86,7 +89,8 @@ void * spellcheck_create(const char * lang)
 void spellcheck_destroy(void * chk)
 {
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
-	if (aspell) {
+	if (aspell)
+	{
 		delete_aspell_speller(aspell->speller);
 		delete_aspell_config(aspell->config);
 		free(aspell);
@@ -102,7 +106,8 @@ bool spellcheck_test(void * chk, const char * word)
 {
 	int val = 0;
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
-	if (aspell && aspell->speller)  {
+	if (aspell && aspell->speller)
+	{
 		/* this can return -1 on failure */
 		val = aspell_speller_check(aspell->speller, word, -1);
 	}
@@ -152,11 +157,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 
 void spellcheck_free_suggest(void *chk, char **sug, int size)
 {
-	int i = 0;
-	for (i = 0; i < size; ++i) {
-		free(sug[i]);
-		sug[i] = NULL;
-	}
+	for (int i = 0; i < size; ++i) free(sug[i]);
 	free(sug);
 }
 
