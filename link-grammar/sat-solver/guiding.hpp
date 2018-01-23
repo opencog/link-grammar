@@ -2,7 +2,7 @@
 #define __GUIDING_HPP__
 
 #include <vector>
-#include <core/Solver.h>
+#include <minisat/core/Solver.h>
 #undef assert
 #include "util.hpp"
 
