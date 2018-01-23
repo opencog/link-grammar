@@ -528,62 +528,12 @@ static void free_sentence_words(Sentence sent)
 	sent->word = NULL;
 }
 
-// XXX FIXME ... these should find a home in the tokenize directory.
-static void wordgraph_delete(Sentence sent)
-{
-	Gword *w = sent->wordgraph;
-
-	while(NULL != w)
-	{
-		Gword *w_tofree = w;
-
-		free(w->prev);
-		free(w->next);
-		free(w->hier_position);
-		free(w->null_subwords);
-		w = w->chain_next;
-		free(w_tofree);
-	}
-	sent->wordgraph = sent->last_word = NULL;
-}
-
-static void word_queue_delete(Sentence sent)
-{
-	struct word_queue *wq = sent->word_queue;
-	while (NULL != wq)
-	{
-		struct word_queue *wq_tofree = wq;
-		wq = wq->next;
-		free(wq_tofree);
-	};
-	sent->word_queue = NULL;
-}
-
-/**
- * Delete the gword_set associated with the Wordgraph.
- * @w First Wordgraph word.
- */
-static void gword_set_delete(Gword *w)
-{
-	for (w = w->chain_next; NULL != w; w = w->chain_next)
-	{
-		gword_set *n;
-		for (gword_set *f = w->gword_set_head.chain_next; NULL != f; f = n)
-		{
-			n = f->chain_next;
-			free(f);
-		}
-	}
-}
-
 void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
-	gword_set_delete(sent->wordgraph);
 	wordgraph_delete(sent);
-	word_queue_delete(sent);
 	string_set_delete(sent->string_set);
 	free_linkages(sent);
 	post_process_free(sent->postprocessor);

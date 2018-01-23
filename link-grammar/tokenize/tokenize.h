@@ -19,6 +19,7 @@
 bool separate_sentence(Sentence, Parse_Options);
 bool sentence_in_dictionary(Sentence);
 bool flatten_wordgraph(Sentence, Parse_Options);
+void wordgraph_delete(Sentence);
 void tokenization_done(Sentence, Gword *);
 
 void altappend(Sentence, const char ***, const char *);

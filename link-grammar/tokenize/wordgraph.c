@@ -447,3 +447,53 @@ const char *gword_status(Sentence sent, const Gword *w)
 	free(status_str);
 	return r;
 }
+
+static void word_queue_delete(Sentence sent)
+{
+	struct word_queue *wq = sent->word_queue;
+	while (NULL != wq)
+	{
+		struct word_queue *wq_tofree = wq;
+		wq = wq->next;
+		free(wq_tofree);
+	};
+	sent->word_queue = NULL;
+}
+
+/**
+ * Delete the gword_set associated with the Wordgraph.
+ * @w First Wordgraph word.
+ */
+static void gword_set_delete(Gword *w)
+{
+	for (w = w->chain_next; NULL != w; w = w->chain_next)
+	{
+		gword_set *n;
+		for (gword_set *f = w->gword_set_head.chain_next; NULL != f; f = n)
+		{
+			n = f->chain_next;
+			free(f);
+		}
+	}
+}
+
+void wordgraph_delete(Sentence sent)
+{
+	word_queue_delete(sent);
+
+	Gword *w = sent->wordgraph;
+	gword_set_delete(w);
+
+	while(NULL != w)
+	{
+		Gword *w_tofree = w;
+
+		free(w->prev);
+		free(w->next);
+		free(w->hier_position);
+		free(w->null_subwords);
+		w = w->chain_next;
+		free(w_tofree);
+	}
+	sent->wordgraph = sent->last_word = NULL;
+}
