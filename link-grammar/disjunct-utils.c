@@ -215,7 +215,7 @@ GNUC_UNUSED static int gword_set_len(const gword_set *gl)
 
 /**
  * Return a new gword_set element, initialized from the given element.
- * @old_e Existing element.
+ * @param old_e Existing element.
  */
 static gword_set *gword_set_element_new(gword_set *old_e)
 {
@@ -249,8 +249,8 @@ static gword_set *gword_set_add(gword_set *gset, gword_set *ge)
  * This function is used for adding the gword pointers of an eliminated
  * disjunct to the ones of the kept disjuncts, with no duplicates.
  *
- * @kept gword_set of the kept disjunct.
- * @eliminated gword_set of the eliminated disjunct.
+ * @param kept gword_set of the kept disjunct.
+ * @param eliminated gword_set of the eliminated disjunct.
  * @return Use copy-on-write semantics - the gword_set of the kept disjunct
  * just gets returned if there is nothing to add to it. Else - a new gword
  * set is returned.

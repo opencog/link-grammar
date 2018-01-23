@@ -205,8 +205,8 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define BUILD_ASSERT_OR_ZERO(cond) (sizeof(char [1 - 2*!(cond)]) - 1)
 #if !defined(ARRAY_SIZE)
 /**
- * ARRAY_SIZE - get the number of elements in a visible array
- * @arr: the array whose size you want.
+ * ARRAY_SIZE: Get the number of elements in a visible array
+ * @param arr The array whose size you want.
  *
  * This does not work on pointers, or arrays declared as [], or
  * function parameters.  With correct compiler support, such usage

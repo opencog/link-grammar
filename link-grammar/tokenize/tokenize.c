@@ -479,8 +479,8 @@ static Gword *for_word_alt(Sentence sent, Gword *altp,
 
 /**
  * Return the Gword at the requested position in the given alternative.
- * @w A pointer to the Gword at the start of the alternative.
- * @arg The requested position. This parameter is destroyed.
+ * @param w A pointer to the Gword at the start of the alternative.
+ * @param arg The requested position. This parameter is destroyed.
  * @return The Gword at position arg, or NULL if not enough Gwords in the
  * alternative.
  */
