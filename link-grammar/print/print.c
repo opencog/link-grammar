@@ -31,14 +31,24 @@
 #define DEPT_CHR ('d') /* Single char marking dependent word */
 
 /**
- * Find the position of the center of each word.
- * Also find the offset of each word, relative to the previous one,
- * needed to fully fit the names of the links between them.
+ * Find the position, measured in column-widths, of the center of
+ * each word.  Also find the offset of each word, relative to the
+ * previous one, needed to fully fit the names of the links between
+ * them. The offset is again measured in column-widths, not in bytes!
+ *
+ * By "column widths", it is meant the number of terminal columns
+ * needed to display a glyph. Almost all indoeuropean glyphs are one
+ * column wide. Almost all CJK glyphs (hanzi, kanji) are two columns
+ * wide. These widths are NOT to be confuxed with UTF-8 byte size.
+ *
  * FIXME Long link names between more distant words may still not
  * fit the space between these words.
  *
- * Return the number of characters needed for the all the words,
- * including the space needed for the link names as described above.
+ * Return the number of bytes needed for the all the words, including
+ * the space needed for the link names as described above.  Note that
+ * this byte length might be less than the glyph width! e.g. the
+ * ASCII chars in the rangel 01 to 1F usually print in two columns,
+ * but require only one byte to encode.
  */
 static size_t
 set_centers(const Linkage linkage, int center[], int word_offset[],
@@ -48,7 +58,7 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	size_t n;
 	int start_word = print_word_0 ? 0 : 1;
 	int *link_len = alloca(linkage->num_words * sizeof(*link_len));
-	size_t max_line_len = 0; /* Needed picture array line length */
+	size_t max_bytes_in_line = 0; /* Needed picture array line length */
 
 	memset(link_len, 0, linkage->num_words * sizeof(*link_len));
 
@@ -69,24 +79,28 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	tot = 0;
 	for (i = start_word; i < N_words_to_print; i++)
 	{
-		int len, center_t;
+		int len, middle;
 
 		/* Centers obtained by counting the characters column widths,
 		 * not the bytes in the string. */
 		len = utf8_strwidth(linkage->word[i]);
-		center_t = tot + (len/2);
+
+		middle = tot + (len/2);
 #if 1 /* Long labels - disable in order to compare output with old versions. */
 		if (i > start_word)
-			center[i] = MAX(center_t, center[i-1] + link_len[i] + 1);
+			center[i] = MAX(middle, center[i-1] + link_len[i] + 1);
 		else
 #endif
-			center[i] = center_t;
-		word_offset[i] = center[i] - center_t;
+			center[i] = middle;
+		word_offset[i] = center[i] - middle;
 		tot += len+1 + word_offset[i];
-		max_line_len += word_offset[i] + strlen(linkage->word[i]) + 1;
+
+		// We use 2x strlen, because invalid UTF-8 chars get padding.
+		// But we don't know how much padding, right now.
+		max_bytes_in_line += word_offset[i] + 2*strlen(linkage->word[i]) + 1;
 	}
 
-	return max_line_len;
+	return max_bytes_in_line;
 }
 
 /* The following are all for generating postscript */
@@ -101,24 +115,39 @@ typedef struct
 
 /**
  * Prints s then prints the last |t|-|s| characters of t.
- * if s is longer than t, it truncates s.
+ * If s is longer than t, it truncates s.
  * Handles utf8 strings correctly.
+ * Assumes that the characters of t are all blanks,
+ * so that column-width of t == num bytes in t == num chars in t.
  */
 static void left_append_string(dyn_str * string, const char * s, const char * t)
 {
-	size_t i;
-	size_t slen = utf8_strwidth(s);
-	size_t tlen = utf8_strwidth(t);
+	/* These are column-widths. */
+	size_t twidth = strlen(t);
+	size_t swidth = utf8_strwidth(t);
 
-	for (i = 0; i < tlen; i++)
+	for (size_t i = 0; i < twidth; )
 	{
-		if (i < slen)
-			append_utf8_char(string, s);
-		else
-			append_utf8_char(string, t);
+		if (i < swidth)
+		{
 
-		s += utf8_charlen(s);
-		t += utf8_charlen(t);
+			// The width might be negative, if the value is not a valid
+			// UTF-8 character. Assume that it will be printed with a
+			// two-column-wide "box font".
+			int sw = utf8_charwidth(s);
+			if (sw < 0) sw = 2;
+			i += sw;
+			t += sw;
+
+			// Meanwhile, s advances by bytes, and not by column widths.
+			s += append_utf8_char(string, s);
+		}
+		else
+		{
+			append_utf8_char(string, t);
+			i++;
+			t++;
+		}
 	}
 }
 
@@ -398,9 +427,9 @@ build_linkage_postscript_string(const Linkage linkage,
 
 static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
                                  size_t *cur_height, size_t max_height,
-                                 size_t max_line, size_t line_len)
+                                 size_t max_bytes, size_t num_cols)
 {
-	assert(line_len < max_line);
+	// assert(num_cols < max_bytes);
 	assert(max_height > *cur_height);
 
 	*start = realloc(*start, max_height * sizeof(size_t));
@@ -411,13 +440,13 @@ static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
 	for (size_t i = *cur_height; i < max_height; i++)
 	{
 		/* Allocate memory for both pic and xpic. */
-		char *picmem = malloc(max_line * 2);
+		char *picmem = malloc(max_bytes * 2 + 2);
 
 		(*pic)[i] = picmem;
-		(*xpic)[i] = picmem + max_line;
+		(*xpic)[i] = picmem + max_bytes;
 
-		memset((*pic)[i], ' ', line_len);
-		(*pic)[i][line_len] = '\0';
+		memset((*pic)[i], ' ', num_cols);
+		(*pic)[i][num_cols] = '\0';
 	}
 
 	*cur_height = max_height;
@@ -525,13 +554,20 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	char **picture = NULL;
 	char **xpicture = NULL;
 	size_t max_height = 0;
-	size_t max_line = set_centers(linkage, center, word_offset,
+	size_t max_bytes = set_centers(linkage, center, word_offset,
 	                              print_word_0, N_words_to_print) +1;
-	unsigned int line_len = center[N_words_to_print-1]+1;
 
+	// num_cols is the total number of columns needed to display
+	// the ascii-art diagram, not counting the glyphs. It might
+	// be less, or it might be more than the total number of
+	// bytes in the UTF-8 string! If the last word is long,
+	// then it will be less than the the total needed width.
+	unsigned int num_cols = center[N_words_to_print-1]+1;
+
+	if (max_bytes < num_cols) max_bytes = num_cols;
 	diagram_alloc_tmpmem(&start, &picture, &xpicture,
 	                     &max_height, HEIGHT_INC,
-	                     max_line, line_len);
+	                     max_bytes, num_cols);
 
 	top_row = 0;
 
@@ -549,6 +585,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			if (!print_word_N && (ppla[j].rw == linkage->num_words-1)) continue;
 
 			/* Put it into the lowest position */
+			/* Keep in mind that cl, cr are "columns" not "bytes" */
 			cl = center[ppla[j].lw];
 			cr = center[ppla[j].rw];
 			for (row=0; row < max_height; row++)
@@ -570,7 +607,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				lgdebug(+9, "Extending rows up to %d.\n", (2*row+2)+HEIGHT_INC);
 				diagram_alloc_tmpmem(&start, &picture, &xpicture,
 				                     &max_height, (2*row+2)+HEIGHT_INC,
-				                     max_line, line_len);
+				                     max_bytes, num_cols);
 			}
 			if (row > top_row) top_row = row;
 
@@ -624,13 +661,23 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	/* We have the link picture, now put in the words and extra "|"s */
 	t = xpicture[0];
 	if (print_word_0) k = 0; else k = 1;
-	for (; k<N_words_to_print; k++) {
+	for (; k<N_words_to_print; k++)
+	{
 		for (i = 0; i < (size_t)word_offset[k]; i++) *t++ = ' ';
+
+		// Copy utf8 characters, one at a time, checking validity.
 		s = linkage->word[k];
-		i = 0;
-		while (*s != '\0') {
-			*t++ = *s++;
-			i++;
+		while (*s != '\0')
+		{
+			int nby = utf8_charlen(s);
+			if (nby <= 0) s++;
+			else { strncpy(t, s, nby); t+= nby; }
+			if (0 < nby)
+			{
+				t += nby;
+				if (utf8_charwidth(s) < 0) *t++ = ' ';
+				s += nby;
+			}
 		}
 		*t++ = ' ';
 	}
@@ -670,7 +717,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	/* We've built the picture, now print it out. */
 
 	/* Start locations, for each row.  These may vary, due to different
-	 * utf8 character widths. */
+	 * column-widths of utf8 glyphs. */
 	top_row_p1 = top_row + 1;
 	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
@@ -693,8 +740,9 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		unsigned int uwidth = 0;
 		unsigned int wwid;
 		do {
-			wwid = (c == 0)*word_offset[i] + utf8_strwidth(linkage->word[i]+c) + 1;
-			if (x_screen_width-RIGHT_MARGIN < uwidth + wwid) break;
+			wwid = ((c == 0) * word_offset[i])
+			      + utf8_strwidth(linkage->word[i]+c) + 1;
+			if (x_screen_width - RIGHT_MARGIN < uwidth + wwid) break;
 			uwidth += wwid;
 			c = 0;
 			i++;
@@ -703,7 +751,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		/* The whole word doesn't fit - fit as much as possible from it. */
 		if (0 == uwidth)
 		{
-			uwidth = x_screen_width-RIGHT_MARGIN - (c == 0)*word_offset[i] - 1;
+			uwidth = x_screen_width - RIGHT_MARGIN - (c == 0)*word_offset[i] - 1;
+
+			// XXX this is incorrect, it assumes that each character
+			// is width one -- it is not.
 			c += utf8_num_char(linkage->word[i]+c, uwidth);
 		}
 
@@ -733,9 +784,21 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				if (xpicture[row][j] != ' ') last_nonblank = j;
 
 				/* Update the printable column width */
-				glyph_width += utf8_charwidth(&xpicture[row][j]);
+				int gw = utf8_charwidth(&xpicture[row][j]);
 
-				j += utf8_charlen(&xpicture[row][j]);
+				// Invalid UTF-8 chars usually print with a
+				// two-column-wide "box font" with the hex inside.
+				// We've already padded for this above, so just
+				// add one here, not two.
+				if (gw < 0) gw = 1;
+				glyph_width += gw;
+
+
+				// Here, j is measured in bytes; we advance to the
+				// next valid UTF-8 character.
+				int nby = utf8_charlen(&xpicture[row][j]);
+				if (nby < 0) nby = 1;
+				j += nby;
 			}
 			start[row] = j;
 
@@ -744,7 +807,9 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				glyph_width = 0;
 				for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 				{
-					glyph_width += utf8_charwidth(&xpicture[row][j]);
+					int gw = utf8_charwidth(&xpicture[row][j]);
+					if (gw < 0) gw = 1; /* see comment above */
+					glyph_width += gw;
 
 					/* Copy exactly one multi-byte character to buf */
 					j += append_utf8_char(string, &xpicture[row][j]);
