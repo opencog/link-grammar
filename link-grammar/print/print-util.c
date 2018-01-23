@@ -70,7 +70,8 @@ size_t utf8_strwidth(const char *s)
 
 /**
  * Return the width, in text-column-widths, of the utf8-encoded
- * character.
+ * character. The will return a NEGATIVE VALUE if the character
+ * is not a valid UTF-8 character!
  *
  * The mbstate_t argument is not used, since we convert only from utf-8.
  * FIXME: This function (along with other places that use mbrtowc()) need
