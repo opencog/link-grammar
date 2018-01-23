@@ -746,9 +746,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		{
 			uwidth = x_screen_width - RIGHT_MARGIN - (c == 0)*word_offset[i] - 1;
 
-			// XXX this is incorrect, it assumes that each character
-			// is width one -- it is not.
-			c += utf8_num_char(linkage->word[i]+c, uwidth);
+			c += utf8_chars_in_width(linkage->word[i]+c, uwidth);
 		}
 
 		if (NULL != pctx) /* PS junk */

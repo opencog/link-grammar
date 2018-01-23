@@ -97,7 +97,7 @@ int utf8_charwidth(const char *s)
  * Return the number of characters in the longest initial substring
  * which has a text-column-width of not greater than max_width.
  */
-size_t utf8_num_char(const char *s, size_t max_width)
+size_t utf8_chars_in_width(const char *s, size_t max_width)
 {
 	size_t total_bytes = 0;
 	size_t glyph_width = 0;
@@ -111,16 +111,27 @@ size_t utf8_num_char(const char *s, size_t max_width)
 		if (n == 0) break;
 		if (n < 0)
 		{
-			prt_error("Error: utf8_num_char(%s, %zu): mbrtowc() returned %d\n",
-			          s, max_width, n);
-			return 1 /* XXX */;
+			// Allow for double-column-wide box-font printing
+			// i.e. box with the hex code inside.
+			glyph_width += 2;
+			n = 1;
 		}
-
-		glyph_width += mk_wcwidth(wc);
+		else
+		{
+			// If we are here, it was a valid UTF-8 code point,
+			// but we do not know the width of the corresponding
+			// glyph. Just like above, asume a double-wide box
+			// font will be printed.
+			int gw = mk_wcwidth(wc);
+			if (0 <= gw)
+				glyph_width += gw;
+			else
+				glyph_width += 2;
+		}
 		//printf("N %zu G %zu;", total_bytes, glyph_width);
 	}
 	while (glyph_width <= max_width);
-	printf("\n");
+	// printf("\n");
 
 	return total_bytes;
 }
