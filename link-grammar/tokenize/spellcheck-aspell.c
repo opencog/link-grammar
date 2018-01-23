@@ -112,11 +112,13 @@ bool spellcheck_test(void * chk, const char * word)
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
 {
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
-	if (!sug) {
+	if (!sug)
+	{
 		prt_error("Error: Aspell. Corrupt pointer.\n");
 		return 0;
 	}
-	if (aspell && aspell->speller) {
+	if (aspell && aspell->speller)
+	{
 		const AspellWordList *list = NULL;
 		AspellStringEnumeration *elem = NULL;
 		const char *aword = NULL;
@@ -126,16 +128,19 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		list = aspell_speller_suggest(aspell->speller, word, -1);
 		elem = aspell_word_list_elements(list);
 		size = aspell_word_list_size(list);
-		/* allocate an array of char* for returning back to link-parser
-		 */
+
+		/* allocate an array of char* for returning back to link-parser */
 		array = (char **)malloc(sizeof(char *) * size);
-		if (!array) {
+		if (!array)
+		{
 			prt_error("Error: Aspell. Out of memory.\n");
 			delete_aspell_string_enumeration(elem);
 			return 0;
 		}
+
 		i = 0;
-		while ((aword = aspell_string_enumeration_next(elem)) != NULL) {
+		while ((aword = aspell_string_enumeration_next(elem)) != NULL)
+		{
 			array[i++] = strdup(aword);
 		}
 		delete_aspell_string_enumeration(elem);
