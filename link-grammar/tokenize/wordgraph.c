@@ -468,6 +468,7 @@ static void word_queue_delete(Sentence sent)
  */
 static void gword_set_delete(Gword *w)
 {
+	if (NULL == w) return;
 	for (w = w->chain_next; NULL != w; w = w->chain_next)
 	{
 		gword_set *n;
@@ -486,7 +487,7 @@ void wordgraph_delete(Sentence sent)
 	Gword *w = sent->wordgraph;
 	gword_set_delete(w);
 
-	while(NULL != w)
+	while (NULL != w)
 	{
 		Gword *w_tofree = w;
 
@@ -497,5 +498,6 @@ void wordgraph_delete(Sentence sent)
 		w = w->chain_next;
 		free(w_tofree);
 	}
-	sent->wordgraph = sent->last_word = NULL;
+	sent->last_word = NULL;
+	sent->wordgraph = NULL;
 }
