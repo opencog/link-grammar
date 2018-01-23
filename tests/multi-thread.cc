@@ -96,7 +96,7 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		{
 			// Ugly junk including stuff that should be
 			// bad/invalid UTF-8 character sequences.
-			line[w] = (5*w+1)%30 + (31*ln ^ 0x66);
+			line[w] = ((thread_id+1)*w+1)%30 + (31*ln ^ 0x66);
 			if (30<w) line[w] += 0x7f;
 			if (60<w) line[w] += 0x50;
 			if (90<w) line[w] = line[w-90] ^ line[w-30];
@@ -108,7 +108,7 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		line[WID-1] = 0x0;
 	}
 
-	for (int j=0; j<niter; j += nsents)
+	for (int j=0; j<niter; j += (nsents+LIN))
 	{
 		for (int i=0; i < nsents; ++i)
 		{
@@ -126,6 +126,8 @@ int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
 	Parse_Options opts = parse_options_create();
+	parse_options_set_spell_guess(opts, 0);
+
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 	// Dictionary dict = dictionary_create_lang("ru");
 	Dictionary dict = dictionary_create_lang("en");
@@ -135,7 +137,7 @@ int main(int argc, char* argv[])
 	}
 
 	int n_threads = 10;
-	int niter = 100;
+	int niter = 300;
 
 	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
