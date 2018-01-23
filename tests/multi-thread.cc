@@ -130,9 +130,9 @@ int main(int argc, char* argv[])
 	parse_options_set_spell_guess(optsb, 0);
 
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
-	// Dictionary dict = dictionary_create_lang("ru");
-	Dictionary dict = dictionary_create_lang("en");
-	if (!dict) {
+	Dictionary dicte = dictionary_create_lang("en");
+	Dictionary dictr = dictionary_create_lang("ru");
+	if (!dicte or !dictr) {
 		fprintf (stderr, "Fatal error: Unable to open the dictionary\n");
 		exit(1);
 	}
@@ -145,17 +145,21 @@ int main(int argc, char* argv[])
 	std::vector<std::thread> thread_pool;
 	for (int i=0; i < n_threads; i++)
 	{
-		if (0 == i%2)
-			thread_pool.push_back(std::thread(parse_sents, dict, optsa, i, niter));
-		else
-			thread_pool.push_back(std::thread(parse_sents, dict, optsb, i, niter));
+		Dictionary dict = dicte;
+		if (0 == i%3) dict = dictr;
+
+		Parse_Options opts = optsa;
+		if (0 == i%2) opts = optsb;
+
+		thread_pool.push_back(std::thread(parse_sents, dict, opts, i, niter));
 	}
 
 	// Wait for all threads to complete
 	for (std::thread& t : thread_pool) t.join();
 	printf("Done with multi-threaded parsing\n");
 
-	dictionary_delete(dict);
+	dictionary_delete(dicte);
+	dictionary_delete(dictr);
 	parse_options_delete(optsa);
 	parse_options_delete(optsb);
 	return 0;
