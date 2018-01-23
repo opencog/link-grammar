@@ -96,7 +96,9 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 		tot += len+1 + word_offset[i];
 
 		// We use 2x strlen, because invalid UTF-8 chars get padding.
-		// But we don't know how much padding, right now.
+		// But we don't know how much padding, right now.  In general,
+		// this will sharply over-count, but is needed to deal with
+		// garbage data that is attempting to crash/buffer-overflow.
 		max_bytes_in_line += word_offset[i] + 2*strlen(linkage->word[i]) + 1;
 	}
 
@@ -429,13 +431,12 @@ static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
                                  size_t *cur_height, size_t max_height,
                                  size_t max_bytes, size_t num_cols)
 {
-	// assert(num_cols < max_bytes);
+	assert(num_cols < max_bytes);
 	assert(max_height > *cur_height);
 
 	*start = realloc(*start, max_height * sizeof(size_t));
 	*pic = realloc(*pic, max_height * sizeof(char *));
 	*xpic = realloc(*xpic, max_height * sizeof(char *));
-
 
 	for (size_t i = *cur_height; i < max_height; i++)
 	{
@@ -560,8 +561,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	// num_cols is the total number of columns needed to display
 	// the ascii-art diagram, not counting the glyphs. It might
 	// be less, or it might be more than the total number of
-	// bytes in the UTF-8 string! If the last word is long,
-	// then it will be less than the the total needed width.
+	// bytes in the UTF-8 string! Which one depends on just how
+	// much garage there might be in the string. Note also that,
+	// in general, the glyphy of the last word will stick out past
+	// the num_cols here.
 	unsigned int num_cols = center[N_words_to_print-1]+1;
 
 	if (max_bytes < num_cols) max_bytes = num_cols;
@@ -663,22 +666,12 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	if (print_word_0) k = 0; else k = 1;
 	for (; k<N_words_to_print; k++)
 	{
-		for (i = 0; i < (size_t)word_offset[k]; i++) *t++ = ' ';
+		for (i = 0; i < (size_t) word_offset[k]; i++) *t++ = ' ';
 
-		// Copy utf8 characters, one at a time, checking validity.
+		// Copy raw bytes. Adjustsments for different widths,
+		// invalid utf8 characters, etc. is done later.
 		s = linkage->word[k];
-		while (*s != '\0')
-		{
-			int nby = utf8_charlen(s);
-			if (nby <= 0) s++;
-			else { strncpy(t, s, nby); t+= nby; }
-			if (0 < nby)
-			{
-				t += nby;
-				if (utf8_charwidth(s) < 0) *t++ = ' ';
-				s += nby;
-			}
-		}
+		while (*s != '\0') { *t++ = *s++; }
 		*t++ = ' ';
 	}
 	*t = '\0';
