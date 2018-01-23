@@ -384,9 +384,17 @@ const char *feature_enabled(const char * list, ...)
 		strcpy(buff+1, feature);
 		strcat(buff, ",");
 
-		if (NULL != strstr(list, buff)) return ",";
+		if (NULL != strstr(list, buff))
+		{
+			va_end(given_features);
+			return ",";
+		}
 		buff[len+1] = ':'; /* check for "feature:param" */
-		if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
+		if (NULL != strstr(list, buff))
+		{
+			va_end(given_features);
+			return strstr(list, buff) + len + 1;
+		}
 	}
 	va_end(given_features);
 

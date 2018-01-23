@@ -91,10 +91,10 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                 eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
 
 #ifdef POWER_PRUNE_CONNECTORS
-          if (leading_right && var != NULL) {
+          if (leading_right) {
             eps_right.push_back(_variables->epsilon(new_var, '+'));
           }
-          if (leading_left && var != NULL) {
+          if (leading_left) {
             eps_left.push_back(_variables->epsilon(new_var, '-'));
           }
 #endif
