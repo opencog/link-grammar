@@ -1548,7 +1548,7 @@ static bool read_entry(Dictionary dict)
 				return false;
 			}
 		}
-		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
+		else if (0 == strcmp(dict->token, "#include"))
 		{
 			bool rc;
 			char* instr;
