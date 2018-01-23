@@ -59,9 +59,10 @@ size_t utf8_strwidth(const char *s)
 	{
 		int w = mk_wcwidth(ws[i]);
 
-		// If w<0 then its not vaid UTF8, but garbage.  Many
-		// terminals will print this with a weird boxed font
-		// that is two columns wide, showing the hex value in it.
+		// If w<0 then we do not know what the correct glyph
+		// width should be for this codepoint. Many terminals
+		// will print this with a weird boxed font that is two
+		// columns wide, showing the hex value in it.
 		if (w < 0) w = 2;
 		glyph_width += w;
 	}
@@ -71,7 +72,8 @@ size_t utf8_strwidth(const char *s)
 /**
  * Return the width, in text-column-widths, of the utf8-encoded
  * character. The will return a NEGATIVE VALUE if the character
- * is not a valid UTF-8 character!
+ * width is not know (no glyph for a valid UTF-8 codepoint) or
+ * if the input is not a valid UTF-8 character!
  *
  * The mbstate_t argument is not used, since we convert only from utf-8.
  * FIXME: This function (along with other places that use mbrtowc()) need
