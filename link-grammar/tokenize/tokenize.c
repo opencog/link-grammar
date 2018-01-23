@@ -2876,6 +2876,16 @@ static void wordgraph_terminator(Sentence const sent)
 	sent->last_word->tokenizing_step = TS_DONE; /* not to be tokenized */
 }
 
+// If TOLERATE_BAD_UTF is defined, then we will attempt to parse
+// sentences containing UTF-8 garbage, treating the garbage bytes
+// as individual words.  Else, just print an error, and punt.
+#define TOLERATE_BAD_UTF
+#ifdef TOLERATE_BAD_UTF
+	#define BAD_UTF { nb = 0; word_start ++; continue; }
+#else
+	#define BAD_UTF goto failure;
+#endif
+
 /**
  * The string s has just been read in from standard input.
  * This function breaks it up into words and stores these words in
@@ -2909,14 +2919,14 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	{
 		wchar_t c;
 		int nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
-		if (0 > nb) goto failure;
+		if (0 > nb) BAD_UTF;
 
 		while (is_space(c, dict->lctype))
 		{
 			word_start += nb;
 			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 			if (0 == nb) break;
-			if (0 > nb) goto failure;
+			if (0 > nb) BAD_UTF;
 		}
 
 		if ('\0' == *word_start) break;
@@ -2924,13 +2934,14 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		/* Loop over non-blank characters until word-end is found. */
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
-		if (0 > nb) goto failure;
+		if (0 > nb) BAD_UTF;
 		while (!is_space(c, dict->lctype) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
-			if (0 > nb) goto failure;
+			if (0 > nb) break;
 		}
+		if (0 > nb) BAD_UTF;
 
 		/* FIXME: Morpheme type of initial bad-sentence word may be wrong.
 		 * E.g: He 's here. (Space before ' so 's is classified as MT_WORD). */
@@ -2983,6 +2994,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	wordgraph_delete(sent);
 	return false;
 
+#ifndef TOLERATE_BAD_UTF
 failure:
 #ifdef _WIN32
 	prt_error("Unable to process UTF8 input string.\n");
@@ -2992,6 +3004,7 @@ failure:
 #endif
 	wordgraph_delete(sent);
 	return false;
+#endif // TOLERATE_BAD_UTF
 }
 
 static Word *word_new(Sentence sent)
