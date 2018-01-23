@@ -19,7 +19,7 @@ using std::vector;
 extern "C" {
 #include "sat-encoder.h"
 }
-#include "core/Solver.h"
+#include "minisat/core/Solver.h"
 #undef assert
 
 #include "sat-encoder.hpp"
