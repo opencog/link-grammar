@@ -126,13 +126,12 @@ static void left_append_string(dyn_str * string, const char * s, const char * t)
 {
 	/* These are column-widths. */
 	size_t twidth = strlen(t);
-	size_t swidth = utf8_strwidth(t);
+	size_t swidth = utf8_strwidth(s);
 
 	for (size_t i = 0; i < twidth; )
 	{
-		if (i < swidth)
+		if (i < swidth && *s != '\0')
 		{
-
 			// The width might be negative, if the value is not a valid
 			// UTF-8 character. Assume that it will be printed with a
 			// two-column-wide "box font".
