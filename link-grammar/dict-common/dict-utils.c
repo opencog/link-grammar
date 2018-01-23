@@ -118,10 +118,8 @@ static int exp_compare(Exp * e1, Exp * e2)
 			/* fail if they are not compared */
 			if (exp_compare(el1->e, el2->e) == 0)
 				return 0;
-			if (el1!=NULL)
-				el1 = el1->next;
-			if (el2!=NULL)
-				el2 = el2->next;
+			el1 = el1->next;
+			el2 = el2->next;
 		}
 	}
 	return 1; /* if never returned 0, return 1 */
