@@ -451,13 +451,13 @@ const char *gword_status(Sentence sent, const Gword *w)
 
 static void word_queue_delete(Sentence sent)
 {
-	struct word_queue *wq = sent->word_queue;
+	word_queue_t *wq = sent->word_queue;
 	while (NULL != wq)
 	{
-		struct word_queue *wq_tofree = wq;
+		word_queue_t *wq_tofree = wq;
 		wq = wq->next;
 		free(wq_tofree);
-	};
+	}
 	sent->word_queue = NULL;
 	sent->word_queue_last = NULL;
 }

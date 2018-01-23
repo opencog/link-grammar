@@ -230,7 +230,7 @@ static bool is_number(Dictionary dict, const char * s)
 
 static void gwordqueue_add(const Sentence sent, Gword *const word)
 {
-	struct word_queue *wq_element = malloc(sizeof(*wq_element));
+	word_queue_t *wq_element = malloc(sizeof(word_queue_t));
 
 	assert((NULL == sent->word_queue) == (NULL == sent->word_queue_last));
 
@@ -1024,7 +1024,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 #define D_RWW 6
 static void remqueue_gword(const Sentence sent)
 {
-	struct word_queue *const wq = sent->word_queue;
+	word_queue_t *const wq = sent->word_queue;
 	Gword *w = wq->word;
 
 	assert(NULL!=wq, "Trying to remove a word from an empty word queue");
@@ -2978,8 +2978,10 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			return true;
 		}
 	}
+
+	/* Something is wrong */
 	wordgraph_delete(sent);
-	return false; /* Something is wrong */
+	return false;
 
 failure:
 #ifdef _WIN32
