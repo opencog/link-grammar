@@ -756,14 +756,12 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
 			if (i < N_words_to_print) pctx->N_rows++;
 		}
-
 		dyn_strcat(string, "\n");
+
+		/* print each row of the picture */
 		top_row_p1 = top_row + 1;
 		for (revrs = 0; revrs < top_row_p1; revrs++)
 		{
-			/* print each row of the picture */
-			/* `blank` is used solely to detect blank lines */
-			unsigned int last_nonblank = (unsigned int)-1;
 			/*
 			 * The `glyph_width` is the width, in columns, of the printable
 			 * glyph. Chinese glyphs are almost always width two.
@@ -771,45 +769,30 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			size_t glyph_width = 0;
 
 			row = top_row - revrs;
+
+			// k is the number of bytes into the row that we previously
+			// printed. It should normally point at a valid UTF-8 char.
 			k = start[row];
 			for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
 			{
-				if (xpicture[row][j] != ' ') last_nonblank = j;
-
-				/* Update the printable column width */
+				// If we don't have a glyph for this code-point,
+				// then assume the terminal will use a two-column-
+				// -wide "box font" with the hex code inside.
 				int gw = utf8_charwidth(&xpicture[row][j]);
-
-				// Invalid UTF-8 chars usually print with a
-				// two-column-wide "box font" with the hex inside.
-				// We've already padded for this above, so just
-				// add one here, not two.
-				if (gw < 0) gw = 1;
+				if (gw < 0) gw = 2;
 				glyph_width += gw;
 
-
-				// Here, j is measured in bytes; we advance to the
-				// next valid UTF-8 character.
-				int nby = utf8_charlen(&xpicture[row][j]);
-				if (nby < 0) nby = 1;
-				j += nby;
+				/* Copy exactly one multi-byte character to buf */
+				j += append_utf8_char(string, &xpicture[row][j]);
 			}
+
+			// Record exactly how much we printed, so we can
+			// resume here, if the diagram wraps.
 			start[row] = j;
 
-			if ((unsigned int)-1 != last_nonblank)
-			{
-				glyph_width = 0;
-				for (j = k; (glyph_width < uwidth) && (xpicture[row][j] != '\0'); )
-				{
-					int gw = utf8_charwidth(&xpicture[row][j]);
-					if (gw < 0) gw = 1; /* see comment above */
-					glyph_width += gw;
-
-					/* Copy exactly one multi-byte character to buf */
-					j += append_utf8_char(string, &xpicture[row][j]);
-					if (last_nonblank < j) break; /* Trim trailing blanks */
-				}
-				dyn_strcat(string, "\n");
-			}
+			// Hunt down and kill trailing blanks.
+			dyn_trimback(string);
+			dyn_strcat(string, "\n");
 		}
 		dyn_strcat(string, "\n");
 	}

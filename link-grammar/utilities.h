@@ -441,6 +441,7 @@ typedef struct
 dyn_str* dyn_str_new(void);
 void dyn_str_delete(dyn_str*);
 void dyn_strcat(dyn_str*, const char*);
+void dyn_trimback(dyn_str*);
 char * dyn_str_take(dyn_str*);
 const char * dyn_str_value(dyn_str*);
 

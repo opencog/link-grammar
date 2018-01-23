@@ -6,6 +6,7 @@ Version 5.4.4 (XXX 2018)
  * Fix conjoined questions and conjoined WH-statements.
  * Fix conditional sentences.
  * Fix misc comparatives.
+ * Fix crash on invalid UTF-8 input.
 
 Version 5.4.3 (4 January 2018)
  * Fix man page installation (actually broken from 5.3.0).
