@@ -70,16 +70,18 @@ struct CNode_s
 
 /* ================================================================ */
 
+/**
+ * @param s A Label
+ * @param t A Label
+ * @return True if the uppercase parts of s and t are equal, else false.
+ */
 static bool uppercompare(const char * s, const char * t)
 {
-#if 0  /* Non-ASCII definition are not supported.  */
-	return (false == utf8_upper_match(s,t));
-#endif
 	while (isupper(*s) || isupper(*t))
 	{
-		if (*s++ != *t++) return true;
+		if (*s++ != *t++) return false;
 	}
-	return false;
+	return true;
 }
 
 /**
@@ -411,17 +413,17 @@ static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 	for (l1 = 0; l1 < linkage_get_num_links(linkage); l1++) {
 		w1=linkage_get_link_rword(linkage, l1);
 		label1 = linkage_get_link_label(linkage, l1);
-		if ((uppercompare(label1, "S")==0) ||
-			(uppercompare(label1, "SX")==0) ||
-			(uppercompare(label1, "SF")==0)) {
+		if ((uppercompare(label1, "S")) ||
+			(uppercompare(label1, "SX")) ||
+			(uppercompare(label1, "SF"))) {
 			ctxt->wordtype[w1] = STYPE;
 			for (l2 = 0; l2 < linkage_get_num_links(linkage); l2++) {
 				w2=linkage_get_link_lword(linkage, l2);
 				label2 = linkage_get_link_label(linkage, l2);
 				if ((w1 == w2) &&
 					((post_process_match("Pg#b", label2)==1) ||
-					 (uppercompare(label2, "I")==0) ||
-					 (uppercompare(label2, "PP")==0) ||
+					 (uppercompare(label2, "I")) ||
+					 (uppercompare(label2, "PP")) ||
 					 (post_process_match("Pv", label2)==1))) {
 					/* Pvf, Pgf? */
 					ctxt->wordtype[w1] = PTYPE;
@@ -469,15 +471,15 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		   the paraphrasing clause doesn't get
 		   an S. (This is true in Treebank II, not Treebank I) */
 
-		if (uppercompare(ctxt->constituent[c].start_link, "CP") == 0)
+		if (uppercompare(ctxt->constituent[c].start_link, "CP"))
 		{
 			ctxt->constituent[c].valid = false;
 		}
 
 		/* If it's a possessive with an "'s", the NP on the left
 		   should be extended to include the "'s". */
-		if ((uppercompare(ctxt->constituent[c].start_link, "YS") == 0) ||
-			(uppercompare(ctxt->constituent[c].start_link, "YP") == 0))
+		if ((uppercompare(ctxt->constituent[c].start_link, "YS")) ||
+			(uppercompare(ctxt->constituent[c].start_link, "YP")))
 		{
 			ctxt->constituent[c].right++;
 		}
@@ -500,7 +502,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		}
 
 		/* If the constituent is an S started by "but" or "and" at
-		   the beginning of the sentence, it should be ignored. */
+		   the beginning of the 67411142sentence, it should be ignored. */
 
 		if ((strcmp(ctxt->constituent[c].start_link, "Wdc") == 0) &&
 			(ctxt->constituent[c].left == 2))
