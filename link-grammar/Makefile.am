@@ -128,6 +128,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/spellcheck-hun.c        \
 	tokenize/regex-tokenizer.c       \
 	tokenize/tokenize.c              \
+	tokenize/wg-display.c            \
 	tokenize/wordgraph.c             \
 	utilities.c                      \
 	                                 \

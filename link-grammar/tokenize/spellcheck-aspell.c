@@ -16,13 +16,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <aspell.h>
+#include <pthread.h>
 
 #include "link-includes.h"
 #include "spellcheck.h"
 
 #define ASPELL_LANG_KEY  "lang"
 /* FIXME: Move to a definition file (affix file?). */
-static const char *spellcheck_lang_mapping[] = {
+static const char *spellcheck_lang_mapping[] =
+{
 /* link-grammar language , Aspell language key */
 	"en", "en_US",
 	"ru", "ru_RU",
@@ -31,7 +33,8 @@ static const char *spellcheck_lang_mapping[] = {
 	"lt", "lt_LT",
 };
 
-struct linkgrammar_aspell {
+struct linkgrammar_aspell
+{
 	AspellConfig *config;
 	AspellSpeller *speller;
 };
@@ -49,7 +52,8 @@ void * spellcheck_create(const char * lang)
 	{
 		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) continue;
 		aspell = (struct linkgrammar_aspell *)malloc(sizeof(struct linkgrammar_aspell));
-		if (!aspell) {
+		if (!aspell)
+		{
 			prt_error("Error: out of memory. Aspell not used.\n");
 			aspell = NULL;
 			break;
@@ -58,7 +62,8 @@ void * spellcheck_create(const char * lang)
 		aspell->speller = NULL;
 		aspell->config = new_aspell_config();
 		if (aspell_config_replace(aspell->config, ASPELL_LANG_KEY,
-					spellcheck_lang_mapping[i]) == 0) {
+					spellcheck_lang_mapping[i]) == 0)
+		{
 			prt_error("Error: failed to set language in aspell: %s\n", lang);
 			delete_aspell_config(aspell->config);
 			free(aspell);
@@ -66,7 +71,8 @@ void * spellcheck_create(const char * lang)
 			break;
 		}
 		spell_err = new_aspell_speller(aspell->config);
-		if (aspell_error_number(spell_err) != 0) {
+		if (aspell_error_number(spell_err) != 0)
+		{
 			prt_error("Error: Aspell: %s\n", aspell_error_message(spell_err));
 			delete_aspell_can_have_error(spell_err);
 			delete_aspell_config(aspell->config);
@@ -86,7 +92,8 @@ void * spellcheck_create(const char * lang)
 void spellcheck_destroy(void * chk)
 {
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
-	if (aspell) {
+	if (aspell)
+	{
 		delete_aspell_speller(aspell->speller);
 		delete_aspell_config(aspell->config);
 		free(aspell);
@@ -102,44 +109,58 @@ bool spellcheck_test(void * chk, const char * word)
 {
 	int val = 0;
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
-	if (aspell && aspell->speller)  {
+	if (aspell && aspell->speller)
+	{
 		/* this can return -1 on failure */
 		val = aspell_speller_check(aspell->speller, word, -1);
 	}
 	return (val == 1);
 }
 
+// Despite having a thread-compatible API, it appears that apsell
+// is not actually thread-safe. Bummer.
+static pthread_mutex_t aspell_lock = PTHREAD_MUTEX_INITIALIZER;
+
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
 {
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
-	if (!sug) {
+	if (!sug)
+	{
 		prt_error("Error: Aspell. Corrupt pointer.\n");
 		return 0;
 	}
-	if (aspell && aspell->speller) {
+
+	if (aspell && aspell->speller)
+	{
 		const AspellWordList *list = NULL;
 		AspellStringEnumeration *elem = NULL;
 		const char *aword = NULL;
 		unsigned int size, i;
 		char **array = NULL;
 
+		pthread_mutex_lock(&aspell_lock);
 		list = aspell_speller_suggest(aspell->speller, word, -1);
 		elem = aspell_word_list_elements(list);
 		size = aspell_word_list_size(list);
-		/* allocate an array of char* for returning back to link-parser
-		 */
+
+		/* allocate an array of char* for returning back to link-parser */
 		array = (char **)malloc(sizeof(char *) * size);
-		if (!array) {
+		if (!array)
+		{
 			prt_error("Error: Aspell. Out of memory.\n");
 			delete_aspell_string_enumeration(elem);
+			pthread_mutex_unlock(&aspell_lock);
 			return 0;
 		}
+
 		i = 0;
-		while ((aword = aspell_string_enumeration_next(elem)) != NULL) {
+		while ((aword = aspell_string_enumeration_next(elem)) != NULL)
+		{
 			array[i++] = strdup(aword);
 		}
 		delete_aspell_string_enumeration(elem);
 		*sug = array;
+		pthread_mutex_unlock(&aspell_lock);
 		return size;
 	}
 	return 0;
@@ -147,11 +168,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 
 void spellcheck_free_suggest(void *chk, char **sug, int size)
 {
-	int i = 0;
-	for (i = 0; i < size; ++i) {
-		free(sug[i]);
-		sug[i] = NULL;
-	}
+	for (int i = 0; i < size; ++i) free(sug[i]);
 	free(sug);
 }
 

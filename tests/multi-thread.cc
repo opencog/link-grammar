@@ -96,7 +96,7 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		{
 			// Ugly junk including stuff that should be
 			// bad/invalid UTF-8 character sequences.
-			line[w] = (5*w+1)%30 + (31*ln ^ 0x66);
+			line[w] = ((thread_id+1)*w+1)%30 + (31*ln ^ 0x66);
 			if (30<w) line[w] += 0x7f;
 			if (60<w) line[w] += 0x50;
 			if (90<w) line[w] = line[w-90] ^ line[w-30];
@@ -108,7 +108,7 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		line[WID-1] = 0x0;
 	}
 
-	for (int j=0; j<niter; j += nsents)
+	for (int j=0; j<niter; j += (nsents+LIN))
 	{
 		for (int i=0; i < nsents; ++i)
 		{
@@ -125,22 +125,32 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "en_US.UTF-8");
-	Parse_Options opts = parse_options_create();
+	Parse_Options optsa = parse_options_create();
+	Parse_Options optsb = parse_options_create();
+	parse_options_set_spell_guess(optsb, 0);
+
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
-	// Dictionary dict = dictionary_create_lang("ru");
-	Dictionary dict = dictionary_create_lang("en");
-	if (!dict) {
+	Dictionary dicte = dictionary_create_lang("en");
+	Dictionary dictr = dictionary_create_lang("ru");
+	if (!dicte or !dictr) {
 		fprintf (stderr, "Fatal error: Unable to open the dictionary\n");
 		exit(1);
 	}
 
 	int n_threads = 10;
-	int niter = 100;
+	int niter = 500;
 
 	printf("Creating %d threads, each parsing %d sentences\n",
 		 n_threads, niter);
 	std::vector<std::thread> thread_pool;
-	for (int i=0; i < n_threads; i++) {
+	for (int i=0; i < n_threads; i++)
+	{
+		Dictionary dict = dicte;
+		if (0 == i%3) dict = dictr;
+
+		Parse_Options opts = optsa;
+		if (0 == i%2) opts = optsb;
+
 		thread_pool.push_back(std::thread(parse_sents, dict, opts, i, niter));
 	}
 
@@ -148,7 +158,9 @@ int main(int argc, char* argv[])
 	for (std::thread& t : thread_pool) t.join();
 	printf("Done with multi-threaded parsing\n");
 
-	dictionary_delete(dict);
-	parse_options_delete(opts);
+	dictionary_delete(dicte);
+	dictionary_delete(dictr);
+	parse_options_delete(optsa);
+	parse_options_delete(optsb);
 	return 0;
 }

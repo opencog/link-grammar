@@ -104,6 +104,13 @@ struct Parse_Options_s
 	bool display_morphology;/* if true, print morpho analysis of words */
 };
 
+typedef struct word_queue_s word_queue_t;
+struct word_queue_s
+{
+	Gword *word;
+	word_queue_t *next;
+};
+
 struct Sentence_s
 {
 	Dictionary  dict;           /* Words are defined from this dictionary */
@@ -112,15 +119,11 @@ struct Sentence_s
 	Word  *word;                /* Array of words after tokenization */
 	String_set *   string_set;  /* Used for assorted strings */
 
-	/* Wordgraph stuff. FIXME: typedef for structs. */
+	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
 	Gword *last_word;            /* FIXME Last issued word */
-	struct word_queue            /* Element in queue of words to tokenize */
-	{
-		Gword *word;
-		struct word_queue *next;
-	} *word_queue;
-	struct word_queue *word_queue_last;
+	word_queue_t *word_queue;    /* Element in queue of words to tokenize */
+	word_queue_t *word_queue_last;
 	size_t gword_node_num;       /* Debug - for differentiating between
 	                                wordgraph nodes with identical subwords. */
 
