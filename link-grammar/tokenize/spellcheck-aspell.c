@@ -16,13 +16,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <aspell.h>
+#include <pthread.h>
 
 #include "link-includes.h"
 #include "spellcheck.h"
 
 #define ASPELL_LANG_KEY  "lang"
 /* FIXME: Move to a definition file (affix file?). */
-static const char *spellcheck_lang_mapping[] = {
+static const char *spellcheck_lang_mapping[] =
+{
 /* link-grammar language , Aspell language key */
 	"en", "en_US",
 	"ru", "ru_RU",
@@ -31,7 +33,8 @@ static const char *spellcheck_lang_mapping[] = {
 	"lt", "lt_LT",
 };
 
-struct linkgrammar_aspell {
+struct linkgrammar_aspell
+{
 	AspellConfig *config;
 	AspellSpeller *speller;
 };
@@ -114,6 +117,10 @@ bool spellcheck_test(void * chk, const char * word)
 	return (val == 1);
 }
 
+// Despite having a thread-compatible API, it appears that apsell
+// is not actually thread-safe. Bummer.
+static pthread_mutex_t aspell_lock = PTHREAD_MUTEX_INITIALIZER;
+
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
 {
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
@@ -122,6 +129,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		prt_error("Error: Aspell. Corrupt pointer.\n");
 		return 0;
 	}
+
 	if (aspell && aspell->speller)
 	{
 		const AspellWordList *list = NULL;
@@ -130,6 +138,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		unsigned int size, i;
 		char **array = NULL;
 
+		pthread_mutex_lock(&aspell_lock);
 		list = aspell_speller_suggest(aspell->speller, word, -1);
 		elem = aspell_word_list_elements(list);
 		size = aspell_word_list_size(list);
@@ -140,6 +149,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		{
 			prt_error("Error: Aspell. Out of memory.\n");
 			delete_aspell_string_enumeration(elem);
+			pthread_mutex_unlock(&aspell_lock);
 			return 0;
 		}
 
@@ -150,6 +160,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		}
 		delete_aspell_string_enumeration(elem);
 		*sug = array;
+		pthread_mutex_unlock(&aspell_lock);
 		return size;
 	}
 	return 0;
