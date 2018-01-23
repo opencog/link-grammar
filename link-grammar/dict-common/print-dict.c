@@ -219,9 +219,10 @@ static char *display_word_split(Dictionary dict,
 {
 	Sentence sent;
 	struct Parse_Options_s display_word_opts = *opts;
-	dyn_str *s = dyn_str_new();
 
 	if ('\0' == *word) return NULL; /* avoid trying null strings */
+
+	dyn_str *s = dyn_str_new();
 
 	parse_options_set_spell_guess(&display_word_opts, 0);
 	sent = sentence_create(word, dict);
