@@ -10830,6 +10830,7 @@ as.e-c:
 %      Cs link with a "Unbounded s domain78" error.
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
+% BIt+: "his statements, as candidate, contradict his actions"
 <as-subj>: Sa*v+ or (Sa*a+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
@@ -10837,7 +10838,7 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or (Cz+ & CV+)    % uhhh
+  or (Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (<as-subj> & {Xc+ & {Xd-}} & CO+)
   or (<as-subj> & {Xd- & {Xc+}} & MVs-)
