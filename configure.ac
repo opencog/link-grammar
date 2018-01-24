@@ -471,7 +471,7 @@ AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
 # ====================================================================
 
 # 2015-08: The current default for speller is hunspell, since aspell is not
-# yet thread safe.
+# yet thread safe. Jan 2018 - aspell still not thread-safe...
 
 HunSpellDictDir=
 HunSpellFound=no
@@ -518,6 +518,7 @@ if test "$do_aspell" = yes ; then
 	CPPFLAGS=$save_cpp_flags
 	if test  "x${ASpellFound}" = "xyes"; then
 		AC_DEFINE(HAVE_ASPELL, 1, [Define for compilation])
+		ASPELL_LIBS="${ASPELL_LIBS} -lpthread"
 		AC_SUBST(ASPELL_LIBS)
 		AC_SUBST(ASPELL_CFLAGS)
 	fi
