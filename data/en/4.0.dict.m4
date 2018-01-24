@@ -2669,13 +2669,13 @@ do.v:
   or ({@E-} & I*t- & O+ & {@MV+} & IV-)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
-  or ({@E-} & I*d- & {<verb-wall>} & {PZ+});
+  or ({@E-} & I*d- & {<verb-wall>} & {dPZ+});
 
 % Ss- & <verb-wall>: "so it does!"
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
 does.v:
   VERB_X_S(<vc-do>)
-  or ({@E-} & Ss- & <verb-wall> & {PZ+} & {@MV+})
+  or ({@E-} & Ss- & <verb-wall> & {dPZ+} & {@MV+})
   or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
@@ -3223,7 +3223,7 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
 % Pa+: "He ad-libbed, uninterrupted."
 /en/words/words.v.1.3:
-  VERB_SPPP_I(({[[O+]]} & <vc-intrans>)
+  VERB_SPPP_I(({[[O+]]} & <vc-intrans> & {dPZ+})
     or ({Xc+} & Pa+))
   or <verb-si>;
 
@@ -4211,7 +4211,7 @@ seeking.v: <verb-pg> & <vc-seek>;
 <vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>) or @MV+;
 
 decline.v fail.v hasten.v volunteer.v aim.v:
-  VERB_PLI(<vc-decline> & {PZ+});
+  VERB_PLI(<vc-decline> & {dPZ+});
 
 declines.v fails.v hastens.v volunteers.v aims.v:
   VERB_S_T(<vc-decline>);
@@ -4222,7 +4222,7 @@ declined.v-d hastened.v-d volunteered.v-d aimed.v-d:
   <verb-phrase-opener>;
 
 failed.v-d:
-  VERB_SPPP_T(<vc-decline> & {PZ+}) or
+  VERB_SPPP_T(<vc-decline> & {dPZ+}) or
   <verb-pv> or
   <verb-adj>;
 
@@ -4397,7 +4397,7 @@ continued.v-d:
   <verb-pv> or
   <verb-phrase-opener> or
   <verb-adj>;
-began.v-d: VERB_SP_T(<vc-begin>);
+began.v-d: VERB_SP_T(<vc-begin>) & {dPZ+};
 
 begun.v: VERB_PP(<vc-begin>) or <verb-pv> or <verb-phrase-opener>;
 beginning.g ceasing.g:
@@ -8805,7 +8805,8 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or ({Xd-} & PZ- & Cz+ & CV+)
+  % or ({Xd-} & {[hVCz-]-0.05} & Cz+ & CV+)
+  or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (<as-subj> & {Xc+ & {Xd-}} & CO+)
   or (<as-subj> & {Xd- & {Xc+}} & MVs-)
@@ -9754,7 +9755,7 @@ so:
   ({EBb-} & EAxk+ & {HA+})
   or ({EZ-} & EExk+)
   or Em+
-  or ((({Xd-} & (MVs- or [<coord>]) & Xs-) or ({Xc+} & Wc-))
+  or ((({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
     & (<subcl-verb> or [<sent-start>]0.5))
   or <fronted>
   or (Wq- & CQ+)
