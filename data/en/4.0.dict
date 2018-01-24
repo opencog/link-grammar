@@ -10855,14 +10855,15 @@ as.e-c:
 % MVs- & Sa*a+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
+%         XXX Try to get rid of this...
 % Cz+ & CV+: "the accused, as it shall be shown, is innocent"
 %      use Cz instead of <subcl-verb> because post-processing kills the
 %      Cs link with a "Unbounded s domain78" error.
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % BIt+: "his statements, as candidate, contradict his actions"
-<as-subj>: Sa*v+ or ({Xd-} & VCz- & Sa*a+ & CV+);
-% <as-subj>: Sa*v+ or ({{Xd-} & VCz-} & Sa*a+ & CV+);
+% <as-subj>: Sa*v+ or ({Xd-} & VCz- & Sa*a+ & CV+);
+<as-subj>: Sa*v+ or ({{Xd-} & VCz-} & Sa*a+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
@@ -10874,6 +10875,7 @@ as.e:
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (<as-subj> & {Xc+ & {Xd-}} & CO+)
   % or (<as-subj> & {Xd- & {Xc+}} & MVs-)
+  or (Sa*a+ & CV+ & {Xd- & {Xc+}} & MVs-)
   or (Sa*v+ & {Xd- & {Xc+}} & MVs-)
   or (<as-subj> & {Xd- & {Xc+}})
   or (MVi- & TO+)
