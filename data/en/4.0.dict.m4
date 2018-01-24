@@ -3295,6 +3295,7 @@ came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
 /en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr> or ({Xc+} & Pa+)')
   or (<verb-pv> & {{Xc+} & Pa+})
+  or (<verb-manner> & O+ & Xc+)
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -3738,10 +3739,12 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
   ({K+} & <verb-phrase-opener>);
 
 cut.v-d:
-  VERB_SPPP_T(<vc-kick>) or
-  (<verb-ico> & <vc-kick>) or
-  (<verb-pv-b> & {K+} & {@MV+}) or
-  <verb-adj> or ({K+} & <verb-phrase-opener>);
+  VERB_SPPP_T(<vc-kick>)
+  or (<verb-ico> & <vc-kick>)
+  or (<verb-pv-b> & {K+} & {@MV+})
+  or (<verb-manner> & O+ & Xc+)
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 % <verb-ge-nos>: <vc-kick> has O+ in it; so must not have S+ in <verb-ge>
@@ -5733,18 +5736,24 @@ forcing.v: <verb-pg> & <vc-force>;
 
 design.v permit.v authorize.v use.v cause.v enable.v
 pressure.v train.v sentence.v prompt.v spur.v disincline.v
-invite.v reelect.v encourage.v draft.v hire.v entice.v inspire.v aid.v
-forbid.v employ.v educate.v tempt.v condemn.v commission.v counsel.v induce.v instruct.v
+invite.v reelect.v encourage.v draft.v hire.v entice.v inspire.v
+aid.v forbid.v employ.v educate.v tempt.v condemn.v commission.v
+counsel.v induce.v instruct.v
 license.v incite.v nominate.v destine.v provoke.v challenge.v exhort.v
 implore.v motivate.v impel.v:
-VERB_PLI(<vc-design>);
-designs.v permits.v pressures.v trains.v sentences.v causes.v enables.v
-authorizes.v uses.v prompts.v spurs.v disinclines.v
-invites.v reelects.v encourages.v drafts.v hires.v entices.v inspires.v aids.v
-forbids.v employs.v educates.v tempts.v condemns.v commissions.v counsels.v induces.v
+  VERB_PLI(<vc-design>)
+  or (<verb-manner> & O+ & Xc+);
+
+designs.v permits.v pressures.v trains.v sentences.v causes.v
+enables.v authorizes.v uses.v prompts.v spurs.v disinclines.v
+invites.v reelects.v encourages.v drafts.v hires.v entices.v
+inspires.v aids.v forbids.v employs.v educates.v tempts.v
+condemns.v commissions.v counsels.v induces.v
 instructs.v licenses.v incites.v nominates.v destines.v provokes.v
 challenges.v exhorts.v implores.v motivates.v impels.v:
-VERB_S_T(<vc-design>);
+  VERB_S_T(<vc-design>)
+  or (<verb-manner> & O+ & Xc+);
+
 designed.v-d permitted.v-d pressured.v-d trained.v-d
 sentenced.v-d caused.v-d enabled.v-d
 authorized.v-d prompted.v-d spurred.v-d invited.v-d disinclined.v-d
@@ -5755,10 +5764,12 @@ counseled.v-d induced.v-d instructed.v-d
 licensed.v-d incited.v-d nominated.v-d destined.v-d
 provoked.v-d challenged.v-d exhorted.v-d
 implored.v-d motivated.v-d impelled.v-d:
-  VERB_SPPP_T(<vc-design>) or
-  (<verb-pv> & {<to-verb>}) or
-  <verb-adj> or
-  ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+  VERB_SPPP_T(<vc-design>)
+  or (<verb-pv> & {<to-verb>})
+  or <verb-adj>
+  or (<verb-manner> & O+ & Xc+)
+  or ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+
 forbade.v-d: VERB_SP_T(<vc-design>);
 forbidden.v:
   VERB_PP(<vc-design>) or
@@ -5786,11 +5797,13 @@ exhorting.v imploring.v motivating.v impelling.v:
   <verb-pg> & <vc-design>;
 
 used.v-d:
-  VERB_SPPP_T(<vc-design>) or
-  (<verb-pv> & {<too-verb>}) or
-  (<verb-sp> & <to-verb>) or
-  ({@MV+} & {<too-verb>} & <verb-phrase-opener>) or
-  <verb-adj>;
+  VERB_SPPP_T(<vc-design>)
+  or (<verb-pv> & {<too-verb>})
+  or (<verb-sp> & <to-verb>)
+  or <verb-adj>
+  or (<verb-manner> & O+ & Xc+)
+  or ({@MV+} & {<too-verb>} & <verb-phrase-opener>);
+
 using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 % --------------------------------------------------
