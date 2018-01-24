@@ -5618,7 +5618,7 @@ writing.g reading.g charging.g drawing.g:
     <vc-opt-ditrans> or
     (O+ & K+) or
     (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & {@MV+});
+    ([[@MV+ & O*n+]])} & {@MV+} & {VC+});
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
 sings.v dances.v cries.v: VERB_S_T(<vc-sing>);
 sang.v-d danced.v-d cried.v-d: VERB_SP_T(<vc-sing>);
@@ -8799,6 +8799,7 @@ as.e-c:
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % BIt+: "his statements, as candidate, contradict his actions"
 <as-subj>: Sa*v+ or ({Xd-} & VCz- & Sa*a+ & CV+);
+% <as-subj>: Sa*v+ or ({{Xd-} & VCz-} & Sa*a+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
