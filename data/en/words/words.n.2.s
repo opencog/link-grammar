@@ -8898,6 +8898,7 @@ ropes.n
 rosaries.n
 rosebuds.n
 roses.n
+rosettes.n
 rosters.n
 rostrums.n
 rotaries.n

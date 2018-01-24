@@ -5424,7 +5424,12 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   <verb-adj>;
 
-% can be intransitive...
+% intransitive: "we deliver!"
+deliver.w:
+  VERB_PLI(<vc-intrans>);
+delivers.w:
+  VERB_S_I(<vc-intrans>);
+
 % <verb-pv> & Pv+: "It was delived broken"
 delivered.w-d:
   VERB_SPPP_I(<vc-intrans>)
