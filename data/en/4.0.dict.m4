@@ -3286,8 +3286,9 @@ came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
 % <verb-adj> has <verb-manner> as a part of it.
+% Pa+: "he paced, worried"
 /en/words/words.v.2.3:
-  VERB_SPPP_T(`<vc-tr,intr>')
+  VERB_SPPP_T(`<vc-tr,intr> or ({Xc+} & Pa+)')
   or <verb-pv>
   or <verb-adj>
   or <verb-phrase-opener>;
@@ -9836,13 +9837,15 @@ changequote dnl
 % "He went to Gaeta, Italy, and to Paris, France."
 %
 % SJ: "I saw John, not Mary" is handled via idiomatic ,_not construction
+% cost on [<verb-conjunction>]: allow Pa links with commas, e.g.
+% "he paced, worried"
 %
 ",":
   ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
-  or <verb-conjunction>
+  or [<verb-conjunction>]
   or (SJl- & SJr+ & SJl+);
 
 % :.j

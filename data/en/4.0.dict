@@ -3327,11 +3327,12 @@ came.v-d:
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
 % <verb-adj> has <verb-manner> as a part of it.
+% Pa+: "he paced, worried"
 /en/words/words.v.2.3:
   
-  ((<verb-sp,pp> & (<vc-tr,intr>)) or
-  (<verb-and-sp-i-> & ([<vc-tr,intr>]0.2 or ())) or
-  ((<vc-tr,intr>) & <verb-and-sp-i+>) or
+  ((<verb-sp,pp> & (<vc-tr,intr> or ({Xc+} & Pa+))) or
+  (<verb-and-sp-i-> & ([<vc-tr,intr> or ({Xc+} & Pa+)]0.2 or ())) or
+  ((<vc-tr,intr> or ({Xc+} & Pa+)) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or <verb-pv>
   or <verb-adj>
@@ -11897,13 +11898,15 @@ so_that such_that:
 % "He went to Gaeta, Italy, and to Paris, France."
 %
 % SJ: "I saw John, not Mary" is handled via idiomatic ,_not construction
+% cost on [<verb-conjunction>]: allow Pa links with commas, e.g.
+% "he paced, worried"
 %
 ",":
   ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
-  or <verb-conjunction>
+  or [<verb-conjunction>]
   or (SJl- & SJr+ & SJl+);
 
 % :.j
