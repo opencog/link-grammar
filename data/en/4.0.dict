@@ -4086,7 +4086,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % <vc-please>: a subset of <vc-paraph>, used for urges/desires
 % Allows "he does as he pleases" type constructions, using the
 % CP link in a paraphrasing-like way.
-<vc-please>: {E-} & (S- or PP-) & <verb-wall> & ({@MV+ & Xc+}  & CPu-);
+<vc-please>: {E-} & (S- or PP-) & <verb-wall> & ({@MV+ & Xc+}  & dCPu-);
 
 % ditransitve
 <vc-wish>:
@@ -11722,7 +11722,7 @@ EMOTICON :
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {CPx+ or CPi+ or CPu+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>) & {hCPx+ or hCPi+ or hCPu+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
@@ -11730,7 +11730,7 @@ EMOTICON :
 % (Xc+ or [()]): allow missing comma, but at a price.
 LEFT-WALL:
   <sent-start>
-  or CPa+
+  or hCPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
 
