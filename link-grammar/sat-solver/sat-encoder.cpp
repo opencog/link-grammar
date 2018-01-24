@@ -1765,8 +1765,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
   Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
   memset(exp_word, 0, _sent->length * sizeof(Exp));
-  const X_node **xnode_word = (const X_node **)alloca(_sent->length * sizeof(X_node));
-  memset(xnode_word, 0, _sent->length * sizeof(X_node));
+  const X_node **xnode_word = (const X_node **)alloca(_sent->length * sizeof(X_node *));
+  memset(xnode_word, 0, _sent->length * sizeof(X_node *));
 
   const std::vector<int>& link_variables = _variables->link_variables();
   std::vector<int>::const_iterator i;
