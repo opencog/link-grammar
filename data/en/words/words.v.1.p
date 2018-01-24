@@ -1,17 +1,86 @@
-done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
-clung_to complied_with coped_with depended_on disapproved_of discriminated_against
-embarked_on frowned_on gazed_upon glared_at gossiped_about interfered_with
-laughed_at lived_in longed_for monkeyed_with objected_to presided_over
-ratted_on relied_on resorted_to talked_to toyed_with trifled_with voted_on
-voted_for jumped_on lied_to listened_to screamed_at sat_on
-spoken_to stepped_on appealed_to attended_to conceived_of dealt_with
-dispensed_with entered_into improved_on improved_upon negotiated_with
-operated_on referred_to searched_for stared_at tended_to yelled_at
-counted_on pointed_to pointed_at 
-fought_with planned_for arranged_for tried_for added_to reckoned_with
-approved_of ruled_on wished_for hoped_for decided_on cared_for shouted_at
-dreamed_of dreamt_of thought_of heard_from looked_at called_for uncalled_for
-asked_for undreamed_of undreamt_of paid_for slept_in
-agreed_upon talked_about
-
-   
+accounted_for
+added_to
+adhered_to
+agreed_upon
+appealed_to
+approved_of
+arranged_for
+arrived_at
+asked_for
+attended_to
+barked_at
+belched_at
+called_for
+cared_for
+catered_to
+clung_to
+complied_with
+conceived_of
+coped_with
+counted_on
+dealt_with
+decided_on
+depended_on
+disapproved_of
+discriminated_against
+dispensed_with
+done_for
+dreamed_of
+dreamt_of
+embarked_on
+entered_into
+fought_with
+frowned_on
+gazed_upon
+glared_at
+gossiped_about
+heard_from
+hoped_for
+improved_on
+improved_upon
+interfered_with
+jumped_on
+laughed_at
+lied_to
+listened_to
+lived_in
+longed_for
+looked_at
+monkeyed_with
+negotiated_with
+objected_to
+operated_on
+paid_for
+planned_for
+pointed_at
+pointed_to
+prayed_for
+presided_over
+ratted_on
+reckoned_with
+referred_to
+relied_on
+resorted_to
+ruled_on
+sat_on
+screamed_at
+searched_for
+shouted_at
+slept_in
+spoken_to
+stared_at
+stepped_on
+talked_about
+talked_to
+tended_to
+thought_of
+toyed_with
+tried_for
+trifled_with
+uncalled_for
+undreamed_of
+undreamt_of
+voted_for
+voted_on
+wished_for
+yelled_at

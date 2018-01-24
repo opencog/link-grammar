@@ -86,9 +86,23 @@ It repeated for ten seconds
 
 he won't divulge what type it is
 
+he washed up
+he washed out
+the five seat washed out in the final sprint
+he cut out
+he cut out after fifth period
+he cut class after fifth period
+he cut out when the phone rang
+he dropped out after fifth grade
+
+we deliver!
+he really delivers, doesn't he?
+he really smells, doesn't he?
+
 He put forth an argument against sexism
 He puts forward an argument against sexism
 The Vatican declaration put forward an argument against sexism
+He poots forth a quarter-ounce green rosette near the summit of a dense but radiant muffin of his own design
 
 It has a hardness of 0.34 Brinell units.
 It has a tensile toughness of 0.34 joules per cubic metre
@@ -461,6 +475,10 @@ A length of chain was wrapped around the tree.
 He left town early next morning.
 I gave her a check for deposit.
 He moved towards the lift
+We went on a shoot
+he eats shoots
+he eats shoots and leaves
+he eats, shoots and leaves
 
 % ----------------
 % nouns not in nouns.1
@@ -1050,10 +1068,6 @@ We stayed the duration of the game.
 Mere rain will not stay the mailman.
 That dog will bite!
 
-He did as he pleased.
-He does as he pleases.
-He did as it pleased him.
-
 % resolve can be intranstive
 He resolved on a course of action
 He decided on a course of action
@@ -1330,6 +1344,32 @@ The telegraphed orders never arrived.
 Do you have any ruled paper?
 I gave him some ruled paper.
 
+% Like above, everything in v.2.3, v.4.3, v.6.3 and v.8.3,
+% but with Pa- links: so predicative adjectives
+% Should these be using the Pa**j link instead ???
+It was delivered broken
+It was delivered very broken
+it was posted unstamped
+it arrived broken
+it arrived utterly smashed
+it arrived crushed
+it emerged untarnished
+it washed up unbroken
+he finished, beaten
+it emerged untarnished
+he left unseen
+he left unwashed
+he left, unwanted
+he entered unwashed
+he looked up, unshaven
+it looked unwanted and abused
+it looked broken
+he posed undressed
+he was posed, undressed
+she was posed reclining
+he paced, worried
+he tailgated, angry
+
 % Pg+ links between verbs and gerunds
 He imagined hitting the ball.
 She imagined photographing the couple.
@@ -1375,7 +1415,7 @@ The dog looked tired.
 Stay a little while.
 Stay a while.
 
-% More Pa+ links:
+% More Pa+ links:  Should these use Pa**j instead ??
 He was presumed innocent
 He was presumed innocent of the crime
 He was made aware of the crime
@@ -1556,7 +1596,7 @@ He was struck by these words
 Was the man drunk or crazy or both?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% More predicative-style constructions
+% More predicative-style constructions - when should these use Pa**j ??
 
 He emerged, spirit unbroken
 He was set free, spirit unbroken.
@@ -2289,7 +2329,7 @@ He's out on the town.
 
 He looked at the girl who'd been knitting
 
-% Problems with "as" ....
+% Problems with "as" ....  as.e as adverb
 It is no longer portrayed as having the power to protect against sin.
 You are portrayed as having the power to make decisions.
 You are portrayed as wanting the power to make decisions.
@@ -2330,6 +2370,33 @@ as it shall be proven, the accused is innocent
 as had been agreed, the work began on Monday
 as had been agreed in advance, the low blow came in the third round
 
+He has the impunity to do as he pleases
+He did as he pleased.
+He does as he pleases.
+He did as it pleased him.
+He did just as he pleased.
+He does as he pleases.
+He did as it pleased him.
+He does as he wants.
+He does as he wishes.
+He does as he desires
+he gets as he deserves
+
+We set out to do it, as we vowed.
+It began to rain, just as he had prayed for.
+It began to rain, as he had wished for
+She smiled at him, as he had wished
+He finished at last, just as he had sworn
+He finished at last
+
+He delivered, as it was arranged for
+He delivered, as it had been arranged for
+He delivered, as it was arranged
+He delivered, as it had been arranged
+She squirmed, as she was stared at
+She kissed him, as he had long longed for
+
+
 Do as I do.
 He said it in a voice so loud as to make everyone stare.
 
@@ -2348,6 +2415,7 @@ the ground, as liquified as it was, suddenly surged downhill.
 
 % Also, lots and lots ot present-participles...
 the man, as acquiescing as he was, was ill-suited to guard the hen-house
+the man, as acquiescing as he was, set a bad precedent
 
 the cookie, as big as life itself, fixed his attention
 
@@ -2361,6 +2429,10 @@ decisions such as going are taken by the instructor.
 % idiom "as how"
 He allowed as how it was none of my business.
 I don't know as how I ought to interfere.
+
+% idiom "as yet"
+As yet, no one has thought of a solution.
+So far, no one has thought of a solution.
 
 % idiom "as is"
 We bought the table as is.
@@ -2938,6 +3010,10 @@ Let's re-examine the I/O system architecture.
 
 % care of
 It is addressed c/o the Smith family.
+
+% numbers as adjectives
+the five seat washed out in the final sprint
+the sixteen runner burnt to a crisp
 
 % Measurement units
 There is a nineteen minute gap in the tapes.

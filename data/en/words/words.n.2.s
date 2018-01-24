@@ -8898,6 +8898,7 @@ ropes.n
 rosaries.n
 rosebuds.n
 roses.n
+rosettes.n
 rosters.n
 rostrums.n
 rotaries.n
@@ -9408,6 +9409,7 @@ shoetrees.n
 shoguns.n
 shooters.n
 shootings.n
+shoots.n
 shopkeepers.n
 shoplifters.n
 shoppers.n
