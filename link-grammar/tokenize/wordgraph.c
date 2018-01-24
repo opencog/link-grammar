@@ -27,7 +27,7 @@ Gword *gword_new(Sentence sent, const char *s)
 	Gword *gword = malloc(sizeof(*gword));
 
 	memset(gword, 0, sizeof(*gword));
-	assert(NULL != gword, "Null-string subword");
+	assert(NULL != s, "Null-string subword");
 	gword->subword = string_set_add(s, sent->string_set);
 
 	if (NULL != sent->last_word) sent->last_word->chain_next = gword;

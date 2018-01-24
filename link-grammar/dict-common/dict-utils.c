@@ -84,9 +84,9 @@ static E_list * copy_E_list(E_list * l)
 }
 
 /**
- * Compare two expressions, return 1 for equal, 0 for unequal
+ * Compare two expressions, return true for equal, false for unequal
  */
-static int exp_compare(Exp * e1, Exp * e2)
+static bool exp_compare(Exp * e1, Exp * e2)
 {
 	E_list *el1, *el2;
 
@@ -116,12 +116,10 @@ static int exp_compare(Exp * e1, Exp * e2)
 			if ((el1==NULL)||(el2==NULL))
 				return 0;
 			/* fail if they are not compared */
-			if (exp_compare(el1->e, el2->e) == 0)
+			if (!exp_compare(el1->e, el2->e))
 				return 0;
-			if (el1!=NULL)
-				el1 = el1->next;
-			if (el2!=NULL)
-				el2 = el2->next;
+			el1 = el1->next;
+			el2 = el2->next;
 		}
 	}
 	return 1; /* if never returned 0, return 1 */
@@ -143,7 +141,7 @@ static int exp_contains(Exp * super, Exp * sub)
 
 	if (sub==NULL || super==NULL)
 		return 0;
-	if (exp_compare(sub,super)==1)
+	if (exp_compare(sub,super))
 		return 1;
 	if (super->type==CONNECTOR_type)
 	  return 0; /* super is a leaf */

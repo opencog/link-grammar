@@ -1498,9 +1498,9 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-			prt_error("\a\t%s", dnx->string);
+			prt_error("\t%s", dnx->string);
 		}
-		prt_error("\a\n\tThis word will be ignored.\n");
+		prt_error("\n\tThis word will be ignored.\n");
 		file_free_lookup(dn_head);
 		free(dn);
 	}
@@ -1548,7 +1548,7 @@ static bool read_entry(Dictionary dict)
 				return false;
 			}
 		}
-		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
+		else if (0 == strcmp(dict->token, "#include"))
 		{
 			bool rc;
 			char* instr;

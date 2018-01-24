@@ -283,7 +283,7 @@ static bool morpheme_match(Sentence sent,
 		if (0 == p) re = as->regpre;
 		else if (pl[p] == (int) lutf) re = as->regsuf;
 		else re = as->regmid;
-		lgdebug(D_MM, "re=%s part%d=%s: ", re->name, p, prefix_string);
+		lgdebug(D_MM, "re=%s part%d=%s: ", re?"(nil)":re->name, p, prefix_string);
 
 		/* A NULL regex always matches */
 		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))

@@ -332,8 +332,8 @@ void err_msgc(err_ctxt *ec, lg_error_severity sev, const char *fmt, ...)
  * See \link verr_msg \endlink for how the severity is handled
  * if it is not specified.
  *
- * @fmt printf()-like format.
- * @... printf()-like arguments.
+ * @param fmt printf()-like format.
+ * @param ... printf()-like arguments.
  * @return Always 0, not to be used. This is needed so prt_error()
  * can be used in complex macros that have to use the comma operator.
  */
@@ -384,9 +384,17 @@ const char *feature_enabled(const char * list, ...)
 		strcpy(buff+1, feature);
 		strcat(buff, ",");
 
-		if (NULL != strstr(list, buff)) return ",";
+		if (NULL != strstr(list, buff))
+		{
+			va_end(given_features);
+			return ",";
+		}
 		buff[len+1] = ':'; /* check for "feature:param" */
-		if (NULL != strstr(list, buff)) return strstr(list, buff) + len + 1;
+		if (NULL != strstr(list, buff))
+		{
+			va_end(given_features);
+			return strstr(list, buff) + len + 1;
+		}
 	}
 	va_end(given_features);
 

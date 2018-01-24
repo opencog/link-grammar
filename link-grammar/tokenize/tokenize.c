@@ -451,9 +451,8 @@ static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
 static Gword *for_word_alt(Sentence sent, Gword *altp,
                            PER_GWORD_FUNC(*gword_func), unsigned int *arg)
 {
-	Gword *alternative_id = altp->alternative_id;
-
 	if (NULL == altp) return NULL;
+	Gword *alternative_id = altp->alternative_id;
 
 	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
 	{
@@ -479,8 +478,8 @@ static Gword *for_word_alt(Sentence sent, Gword *altp,
 
 /**
  * Return the Gword at the requested position in the given alternative.
- * @w A pointer to the Gword at the start of the alternative.
- * @arg The requested position. This parameter is destroyed.
+ * @param w A pointer to the Gword at the start of the alternative.
+ * @param arg The requested position. This parameter is destroyed.
  * @return The Gword at position arg, or NULL if not enough Gwords in the
  * alternative.
  */
@@ -1025,9 +1024,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 static void remqueue_gword(const Sentence sent)
 {
 	word_queue_t *const wq = sent->word_queue;
-	Gword *w = wq->word;
-
 	assert(NULL!=wq, "Trying to remove a word from an empty word queue");
+	Gword *w = wq->word;
 
 	lgdebug(+D_RWW, "Word '%s'%s%s\n", w->subword,
 	        w->issued_unsplit ? " issued_unsplit" : "",
@@ -3271,9 +3269,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		wp_new = NULL;
 		print_wordgraph_pathpos(wp_old);
 
-		/* Add a new word to the sentence word array.
-		 */
-		assert(0 < max_words--, "Too many words (it may be an infinite loop)");
+		/* Add a new word to the sentence word array. */
+		assert(0 < max_words, "Too many words (it may be an infinite loop)");
+		max_words--; /* For the assert() above */
 		wa_word = word_new(sent);
 
 		/* Go upward and find the sentence word. */
