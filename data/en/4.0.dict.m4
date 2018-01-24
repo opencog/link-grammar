@@ -8769,7 +8769,7 @@ as.e-c:
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 <as-subj>: Sa*v+ or (Sa*a+ & CV+);
 as.e:
-  ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
+  ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
