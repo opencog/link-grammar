@@ -2644,7 +2644,7 @@ do.v:
   or ({@E-} & I*t- & O+ & {@MV+} & IV-)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
-  or ({@E-} & I*d- & {<verb-wall>});
+  or ({@E-} & I*d- & {<verb-wall>} & {PZ+});
 
 % Ss- & <verb-wall>: "so it does!"
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
@@ -2653,7 +2653,7 @@ does.v:
   ((<verb-x-s> & (<vc-do>)) or
   (<verb-and-s-> & ([<vc-do>] or ())) or
   ((<vc-do>) & <verb-and-s+>))
-  or ({@E-} & Ss- & <verb-wall> & {@MV+})
+  or ({@E-} & Ss- & <verb-wall> & {PZ+} & {@MV+})
   or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
@@ -4102,7 +4102,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % O+: "... as it pleases him"
 % Pv-: "... as it was hoped"  (XXX why not PP-, here ???)
 <vc-please>:
-  {E-} & (S- or PP- or Pv-) & <verb-wall> & {Xd-} & dCPu- &
+  {E-} & (S- or PP- or Pv-) & <verb-wall> & {Xd-} & [dCPu-]-0.05 &
     ({O+ & {@MV+}} or {@MV+ & Xc+});
 
 % ditransitve
@@ -4827,11 +4827,15 @@ seeking.v: <verb-pg> & <vc-seek>;
 
 % Naked @MV+: "She volunteered as a nurse."
 <vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>) or @MV+;
-decline.v fail.v hasten.v volunteer.v aim.v: 
-  ((<verb-pl,i> & (<vc-decline>)) or
-  (<verb-and-pl-> & ((<vc-decline>) or ())) or
-  ((<vc-decline>) & <verb-and-pl+>));
-declines.v fails.v hastens.v volunteers.v aims.v: 
+
+decline.v fail.v hasten.v volunteer.v aim.v:
+  
+  ((<verb-pl,i> & (<vc-decline> & {PZ+})) or
+  (<verb-and-pl-> & ((<vc-decline> & {PZ+}) or ())) or
+  ((<vc-decline> & {PZ+}) & <verb-and-pl+>));
+
+declines.v fails.v hastens.v volunteers.v aims.v:
+  
   ((<verb-s> & (<vc-decline>)) or
   (<verb-and-sp-i-> & ([<vc-decline>]0.2 or ())) or
   ((<vc-decline>) & <verb-and-sp-i+>) or
@@ -4848,9 +4852,9 @@ declined.v-d hastened.v-d volunteered.v-d aimed.v-d:
 
 failed.v-d:
   
-  ((<verb-sp,pp> & (<vc-decline>)) or
-  (<verb-and-sp-i-> & ([<vc-decline>]0.2 or ())) or
-  ((<vc-decline>) & <verb-and-sp-i+>) or
+  ((<verb-sp,pp> & (<vc-decline> & {PZ+})) or
+  (<verb-and-sp-i-> & ([<vc-decline> & {PZ+}]0.2 or ())) or
+  ((<vc-decline> & {PZ+}) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
   <verb-pv> or
   <verb-adj>;
@@ -10864,7 +10868,7 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or (Cz+ & CV+)
+  or ({Xd-} & PZ- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (<as-subj> & {Xc+ & {Xd-}} & CO+)
   or (<as-subj> & {Xd- & {Xc+}} & MVs-)

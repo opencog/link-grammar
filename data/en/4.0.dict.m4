@@ -2669,13 +2669,13 @@ do.v:
   or ({@E-} & I*t- & O+ & {@MV+} & IV-)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
-  or ({@E-} & I*d- & {<verb-wall>});
+  or ({@E-} & I*d- & {<verb-wall>} & {PZ+});
 
 % Ss- & <verb-wall>: "so it does!"
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
 does.v:
   VERB_X_S(<vc-do>)
-  or ({@E-} & Ss- & <verb-wall> & {@MV+})
+  or ({@E-} & Ss- & <verb-wall> & {PZ+} & {@MV+})
   or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
@@ -3811,7 +3811,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % O+: "... as it pleases him"
 % Pv-: "... as it was hoped"  (XXX why not PP-, here ???)
 <vc-please>:
-  {E-} & (S- or PP- or Pv-) & <verb-wall> & {Xd-} & dCPu- &
+  {E-} & (S- or PP- or Pv-) & <verb-wall> & {Xd-} & [dCPu-]-0.05 &
     ({O+ & {@MV+}} or {@MV+ & Xc+});
 
 % ditransitve
@@ -4209,8 +4209,12 @@ seeking.v: <verb-pg> & <vc-seek>;
 
 % Naked @MV+: "She volunteered as a nurse."
 <vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>) or @MV+;
-decline.v fail.v hasten.v volunteer.v aim.v: VERB_PLI(<vc-decline>);
-declines.v fails.v hastens.v volunteers.v aims.v: VERB_S_T(<vc-decline>);
+
+decline.v fail.v hasten.v volunteer.v aim.v:
+  VERB_PLI(<vc-decline> & {PZ+});
+
+declines.v fails.v hastens.v volunteers.v aims.v:
+  VERB_S_T(<vc-decline>);
 
 declined.v-d hastened.v-d volunteered.v-d aimed.v-d:
   VERB_SPPP_T(<vc-decline>) or
@@ -4218,7 +4222,7 @@ declined.v-d hastened.v-d volunteered.v-d aimed.v-d:
   <verb-phrase-opener>;
 
 failed.v-d:
-  VERB_SPPP_T(<vc-decline>) or
+  VERB_SPPP_T(<vc-decline> & {PZ+}) or
   <verb-pv> or
   <verb-adj>;
 
@@ -8801,7 +8805,7 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or (Cz+ & CV+)
+  or ({Xd-} & PZ- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (<as-subj> & {Xc+ & {Xd-}} & CO+)
   or (<as-subj> & {Xd- & {Xc+}} & MVs-)
