@@ -4244,14 +4244,16 @@ conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
   
   ((<verb-pl,i> & (<vc-assert>)) or
   (<verb-and-pl-> & ((<vc-assert>) or ())) or
-  ((<vc-assert>) & <verb-and-pl+>));
+  ((<vc-assert>) & <verb-and-pl+>)) or <verb-manner>;
+
 asserts.v contends.v remarks.v retorts.v intimates.v exclaims.v
 conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v:
   
   ((<verb-s> & (<vc-assert>)) or
   (<verb-and-sp-i-> & ([<vc-assert>]0.2 or ())) or
   ((<vc-assert>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
+
 retorted.v intimated.v exclaimed.v conjectured.v
 surmised.v-d opined.v-d insinuated.v-d: 
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -4263,7 +4265,9 @@ asserted.v-d contended.v-d remarked.v-d:
   (<verb-and-sp-i-> & ([<vc-assert>]0.2 or ())) or
   ((<vc-assert>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
-  (<verb-pv> & THi+);
+  (<verb-pv> & THi+) or
+  <verb-adj>;
+
 alleged.v-d:
   
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -4272,6 +4276,7 @@ alleged.v-d:
   <verb-and-sp-t>) or
   (<verb-pv> & THi+) or
   <verb-adj>;
+
 supposed.v-d:
   
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -5405,7 +5410,8 @@ emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
   
   ((<verb-pl,i> & (<vc-declare>)) or
   (<verb-and-pl-> & ((<vc-declare>) or ())) or
-  ((<vc-declare>) & <verb-and-pl+>));
+  ((<vc-declare>) & <verb-and-pl+>)) or <verb-manner>;
+
 declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
 confirms.v stresses.v assumes.v:
@@ -5413,7 +5419,8 @@ confirms.v stresses.v assumes.v:
   ((<verb-s> & (<vc-declare>)) or
   (<verb-and-sp-i-> & ([<vc-declare>]0.2 or ())) or
   ((<vc-declare>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
+
 declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v
 confirmed.v-d stressed.v-d assumed.v-d:
@@ -5425,11 +5432,12 @@ confirmed.v-d stressed.v-d assumed.v-d:
   or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
   or <verb-adj>
   or <verb-phrase-opener>;
+
 foresaw.v-d: 
   ((<verb-sp> & (<vc-declare>)) or
   (<verb-and-sp-i-> & ([<vc-declare>]0.2 or ())) or
   ((<vc-declare>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
 foreseen.v:
   
   ((<verb-pp> & (<vc-declare>)) or

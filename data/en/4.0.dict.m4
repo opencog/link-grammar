@@ -3890,19 +3890,24 @@ caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or <embed-verb>));
 assert.v contend.v remark.v retort.v intimate.v exclaim.v
 conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
-  VERB_PLI(<vc-assert>);
+  VERB_PLI(<vc-assert>) or <verb-manner>;
+
 asserts.v contends.v remarks.v retorts.v intimates.v exclaims.v
 conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v:
-  VERB_S_T(<vc-assert>);
+  VERB_S_T(<vc-assert>) or <verb-manner>;
+
 retorted.v intimated.v exclaimed.v conjectured.v
 surmised.v-d opined.v-d insinuated.v-d: VERB_SPPP_I(<vc-assert>);
 asserted.v-d contended.v-d remarked.v-d:
   VERB_SPPP_T(<vc-assert>) or
-  (<verb-pv> & THi+);
+  (<verb-pv> & THi+) or
+  <verb-adj>;
+
 alleged.v-d:
   VERB_SPPP_T(<vc-assert>) or
   (<verb-pv> & THi+) or
   <verb-adj>;
+
 supposed.v-d:
   VERB_SPPP_T(<vc-assert>)
   or (<verb-s-pv> & {<tof-verb> or THi+ or Z-})
@@ -4549,11 +4554,13 @@ imagining.v: <verb-pg> & <vc-imagine>;
 
 declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
-  VERB_PLI(<vc-declare>);
+  VERB_PLI(<vc-declare>) or <verb-manner>;
+
 declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
 confirms.v stresses.v assumes.v:
-  VERB_S_T(<vc-declare>);
+  VERB_S_T(<vc-declare>) or <verb-manner>;
+
 declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v
 confirmed.v-d stressed.v-d assumed.v-d:
@@ -4561,7 +4568,8 @@ confirmed.v-d stressed.v-d assumed.v-d:
   or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
   or <verb-adj>
   or <verb-phrase-opener>;
-foresaw.v-d: VERB_SP_T(<vc-declare>);
+
+foresaw.v-d: VERB_SP_T(<vc-declare>) or <verb-manner>;
 foreseen.v:
   VERB_PP(<vc-declare>) or
   (<verb-s-pv> & {@MV+ or THi+}) or
