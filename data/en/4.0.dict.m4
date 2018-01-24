@@ -8731,7 +8731,7 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or ((<subcl-verb> or <as-subj>) & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or (<as-subj> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or (Cz+ & CV+)
   or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
   or (MVi- & TO+)
