@@ -2341,7 +2341,7 @@ per "/.per": Us+ & Mp-;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
 <verb-pv>:   {@E-} & ((Pv- & {hPFt-} & {<verb-wall>} & {OFj+}) or Mv-) & {@MV+};
-<verb-pvk>:   {@E-} & ((Pv- & {hPFt-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
+<verb-pvk>:  {@E-} & ((Pv- & {hPFt-} & {<verb-wall>} & {K+}) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & {hPFt-} & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
@@ -3697,11 +3697,12 @@ buttering.g:
 %
 % B- & O+ & {K+}:
 %    what are the chances she will TRACK him down to the farm?
-%
+% Pa+: "he cut out after fifth period"
 <vc-kick>:
   ((K+ & {[[@MV+]]} & O*n+)
   or ((O+ or <b-minus>) & {K+})
   or ({@E-} & <b-minus> & O+ & {K+})
+  or Pa+
   or [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
@@ -3724,13 +3725,13 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
 /en/words/words.v.8.3:
-  VERB_SPPP_T(<vc-kick> or K+) or
+  VERB_SPPP_T(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or
   <verb-manner> or
   ({K+} & <verb-phrase-opener>);
 
-cut.v:
+cut.v-d:
   VERB_SPPP_T(<vc-kick>) or
   (<verb-ico> & <vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
