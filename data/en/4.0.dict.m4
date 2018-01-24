@@ -2357,8 +2357,10 @@ per "/.per": Us+ & Mp-;
 %        "She sang well, as planned"
 % {MVz+}: "the man, as acquiescing as he was, set a bad precedent."
 % Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
+% S- & CV- & MXsr-: "The accused, as I suspected, is innocent"
 <verb-manner>:
-  (Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+};
+  ((Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+})
+  or (S- & CV- & {Xd-} & MXsr- & {Xc+});
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
