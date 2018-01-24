@@ -3217,7 +3217,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
 % Pa+: "He ad-libbed, uninterrupted."
 /en/words/words.v.1.3:
-  VERB_SPPP_I(({[[O+]]} & <vc-intrans>) or ({Xc+} & Pa+))
+  VERB_SPPP_I(({[[O+]]} & <vc-intrans>)
+  or ({Xc+} & Pa+))
   or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
@@ -5385,24 +5386,27 @@ seeing.v: <verb-pg> & <vc-see>;
   (B- & {O+}) or
   ([[@MV+ & O*n+]])) & {@MV+};
 
-owe.v deliver.v accord.v award.v term.v grant.v begrudge.v assign.v rename.v repay.v
-dub.v entitle.v fine.v:
+owe.v deliver.v accord.v award.v term.v grant.v begrudge.v
+assign.v rename.v repay.v dub.v entitle.v fine.v:
   VERB_PLI(<vc-owe>);
 
-owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v assigns.v renames.v
-repays.v dubs.v entitles.v fines.v:
+owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v
+assigns.v renames.v repays.v dubs.v entitles.v fines.v:
   VERB_S_T(<vc-owe>);
-owed.v delivered.v accorded.v awarded.v
+
+owed.v-d delivered.v-d accorded.v-d awarded.v-d
 granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
   VERB_SPPP_T(<vc-owe>) or
   (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+
 owing.v delivering.v according.v awarding.v terming.v granting.v
 begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
-<verb-pg> & <vc-owe>;
+  <verb-pg> & <vc-owe>;
+
 owing.g delivering.g according.g awarding.g terming.g granting.g begrudging.g
 assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g:
-(<vc-owe> & <verb-ge>) or <verb-ge-d>;
+  (<vc-owe> & <verb-ge>) or <verb-ge-d>;
 
 % extended linking requirements based on the above
 termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
@@ -5410,6 +5414,12 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   <verb-adj>;
+
+% can be intransitive...
+% <verb-pv>: "It was delived broken"
+delivered.w-d:
+  VERB_SPPP_I(<vc-intrans>)
+  or <verb-pv>;
 
 % ditransitive
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.

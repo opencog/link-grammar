@@ -3211,9 +3211,12 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % Pa+: "He ad-libbed, uninterrupted."
 /en/words/words.v.1.3:
   
-  ((<verb-sp,pp> & (({[[O+]]} & <vc-intrans>) or ({Xc+} & Pa+))) or
-  (<verb-and-sp-i-> & ([({[[O+]]} & <vc-intrans>) or ({Xc+} & Pa+)] or ())) or
-  ((({[[O+]]} & <vc-intrans>) or ({Xc+} & Pa+)) & <verb-and-sp-i+>))
+  ((<verb-sp,pp> & (({[[O+]]} & <vc-intrans>)
+  or ({Xc+} & Pa+))) or
+  (<verb-and-sp-i-> & ([({[[O+]]} & <vc-intrans>)
+  or ({Xc+} & Pa+)] or ())) or
+  ((({[[O+]]} & <vc-intrans>)
+  or ({Xc+} & Pa+)) & <verb-and-sp-i+>))
   or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
@@ -6827,21 +6830,22 @@ seeing.v: <verb-pg> & <vc-see>;
   (B- & {O+}) or
   ([[@MV+ & O*n+]])) & {@MV+};
 
-owe.v deliver.v accord.v award.v term.v grant.v begrudge.v assign.v rename.v repay.v
-dub.v entitle.v fine.v:
+owe.v deliver.v accord.v award.v term.v grant.v begrudge.v
+assign.v rename.v repay.v dub.v entitle.v fine.v:
   
   ((<verb-pl,i> & (<vc-owe>)) or
   (<verb-and-pl-> & ((<vc-owe>) or ())) or
   ((<vc-owe>) & <verb-and-pl+>));
 
-owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v assigns.v renames.v
-repays.v dubs.v entitles.v fines.v:
+owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v
+assigns.v renames.v repays.v dubs.v entitles.v fines.v:
   
   ((<verb-s> & (<vc-owe>)) or
   (<verb-and-sp-i-> & ([<vc-owe>]0.2 or ())) or
   ((<vc-owe>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-owed.v delivered.v accorded.v awarded.v
+
+owed.v-d delivered.v-d accorded.v-d awarded.v-d
 granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
   
   ((<verb-sp,pp> & (<vc-owe>)) or
@@ -6850,12 +6854,14 @@ granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
   <verb-and-sp-t>) or
   (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+
 owing.v delivering.v according.v awarding.v terming.v granting.v
 begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
-<verb-pg> & <vc-owe>;
+  <verb-pg> & <vc-owe>;
+
 owing.g delivering.g according.g awarding.g terming.g granting.g begrudging.g
 assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g:
-(<vc-owe> & <verb-ge>) or <verb-ge-d>;
+  (<vc-owe> & <verb-ge>) or <verb-ge-d>;
 
 % extended linking requirements based on the above
 termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
@@ -6867,6 +6873,15 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   <verb-adj>;
+
+% can be intransitive...
+% <verb-pv>: "It was delived broken"
+delivered.w-d:
+  
+  ((<verb-sp,pp> & (<vc-intrans>)) or
+  (<verb-and-sp-i-> & ([<vc-intrans>] or ())) or
+  ((<vc-intrans>) & <verb-and-sp-i+>))
+  or <verb-pv>;
 
 % ditransitive
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
