@@ -8774,10 +8774,11 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or (<as-subj> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (Cz+ & CV+)
-  or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
+  or (<as-subj> & {Xc+ & {Xd-}} & CO+)
+  or (<as-subj> & {Xd- & {Xc+}} & MVs-)
+  or (<as-subj> & {Xd- & {Xc+}})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
