@@ -3842,7 +3842,8 @@ agreed.v-d:
   or <verb-manner>;
 
 swore.v-d: VERB_SP_T(<vc-hope>);
-sworn.v: VERB_PP(<vc-hope>) or <verb-adj>;
+sworn.v: VERB_PP(<vc-hope>) or <verb-adj> or <vc-please>;
+
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 

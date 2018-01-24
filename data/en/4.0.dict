@@ -4164,7 +4164,8 @@ swore.v-d:
 sworn.v: 
   ((<verb-pp> & (<vc-hope>)) or
   (<verb-and-had-> & ([<vc-hope>] or ())) or
-  ((<vc-hope>) & <verb-and-had+>)) or <verb-adj>;
+  ((<vc-hope>) & <verb-and-had+>)) or <verb-adj> or <vc-please>;
+
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
