@@ -2648,7 +2648,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
 <vc-do>:
   ((<b-minus>
-    or (O+ & <verb-wall>)
+    or (O+ & {@MV+} & <verb-wall>)
     or [[@MV+ & O*n+]]
     or Vd+
     or ({N+} & (CX- or [[()]]))) & {@MV+})
@@ -2665,7 +2665,7 @@ do.v:
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq-aux> & I*d+) or CQ-))
-  or ({@E-} & I*t- & O+ & {@MV+} & IV-)
+  or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d- & {<verb-wall>});
@@ -2674,7 +2674,7 @@ do.v:
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
 does.v:
   VERB_X_S(<vc-do>)
-  or ({@E-} & Ss- & <verb-wall> & {@MV+})
+  or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
@@ -2682,7 +2682,7 @@ does.v:
 did.v-d:
   (<verb-x-sp> & <vc-do>)
   or (<verb-x-sp> & <verb-wall>)
-  or ({@E-} & Ss- & <verb-wall> & @MV+)
+  or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
   or ((SI+ or SFI+) & ((<verb-rq-aux> & I*d+) or CQ-));
 %
@@ -6189,7 +6189,7 @@ proves.v: VERB_Y_S(<vc-prove>);
 proved.v-d:
   VERB_Y_SPPP(<vc-prove>)
   or (<verb-s-pv> & {THi+ or <tof-verb>})
-  or <verb-adj>
+  or (<verb-adj> & {dCPu-} & {MV+})
   or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
@@ -8812,9 +8812,8 @@ as.e:
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
   or (Sa*v+ & {Xd- & {Xc+}} & MVs-)
-  % or (Sa*a+ & CV+ & {Xd- & {Xc+}} & MVs-)
   or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05
-  or (Sa*a+ & CV+ & {Xd- & {Xc+}})
+  or (Sa*a+ & CV+ & {Xd- & {Xc+}}) % needed for MXsr constructions
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
