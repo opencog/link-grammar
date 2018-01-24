@@ -83,6 +83,9 @@ static void throwException(JNIEnv *env, const char* message)
 	exceptionClazz = (*env)->FindClass(env, "java/lang/RuntimeException");
 	if ((*env)->ThrowNew(env, exceptionClazz, msg) != 0)
 		(*env)->FatalError(env, "Fatal: link-grammar JNI: Cannot throw");
+
+	// I'm confused. Apparently Java exceptions return ??
+	free(msg);
 }
 
 // Note that we do NOT offer any kind of protection from having
