@@ -3797,7 +3797,9 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % <vc-please>: a subset of <vc-paraph>, used for urges/desires
 % Allows "he does as he pleases" type constructions, using the
 % CP link in a paraphrasing-like way.
-<vc-please>: {E-} & (S- or PP-) & <verb-wall> & ({@MV+ & Xc+}  & dCPu-);
+<vc-please>:
+  {E-} & (S- or PP-) & <verb-wall> & dCPu- &
+    ({O+ & {@MV+}} or {@MV+ & Xc+});
 
 % ditransitve
 <vc-wish>:
