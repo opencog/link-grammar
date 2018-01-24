@@ -9409,6 +9409,7 @@ shoetrees.n
 shoguns.n
 shooters.n
 shootings.n
+shoots.n
 shopkeepers.n
 shoplifters.n
 shoppers.n

@@ -11907,14 +11907,14 @@ so_that such_that:
 %
 % SJ: "I saw John, not Mary" is handled via idiomatic ,_not construction
 % cost on [<verb-conjunction>]: allow Pa links with commas, e.g.
-% "he paced, worried"
+% "he paced, worried" but lower cost than Xx links
 %
 ",":
   ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
-  or [<verb-conjunction>]
+  or [<verb-conjunction>]0.5
   or (SJl- & SJr+ & SJl+);
 
 % :.j
