@@ -88,10 +88,11 @@ IGNORE_THESE_LINKS: Xca
 ; CV: similar to WV above, must form a loop along with Ce (typically).
 ; Ce links noun of subordinate clause to the dominating phrase, while
 ; CV links the verb of the subordinate clause to the dominating phrase.
+; VC links to verb in paraphrasing and subordination situations
 ; Both the linked noun and verb must be in the same subordinate clause.
 ; Example: "I wish I could see him 100 times a day"
 
-MUST_FORM_A_CYCLE_LINKS:  R#*  TOt  EXx  HA  SFsic  Jd  Jr  JQ  OFd Xca  WV CV IV
+MUST_FORM_A_CYCLE_LINKS:  R#*  TOt  EXx  HA  SFsic  Jd  Jr  JQ  OFd Xca WV CV IV VC
 
 
 
