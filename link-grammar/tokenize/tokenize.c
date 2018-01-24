@@ -956,7 +956,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					if (REPLACEMENT_MARK[0] == label[0])
 					{
 						subword->start = unsplit_word->start;
-						subword->start = unsplit_word->end;
+						subword->end = unsplit_word->end;
 					}
 					else
 					{
