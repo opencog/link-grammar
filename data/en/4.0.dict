@@ -2356,7 +2356,7 @@ per "/.per": Us+ & Mp-;
 % From what I can tell, <verb-manner> can be used anywhere that
 % <verb-adj> can be... except forr said.v-d
 <verb-adj>:
-  ({@E-} & [A+]0.5)
+  (({@E-} or {@EA-} or {@AN-}) & [A+ or Pa-]0.5)
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
@@ -3214,11 +3214,11 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 /en/words/words.v.1.3:
   
   ((<verb-sp,pp> & (({[[O+]]} & <vc-intrans>)
-  or ({Xc+} & Pa+))) or
+    or ({Xc+} & Pa+))) or
   (<verb-and-sp-i-> & ([({[[O+]]} & <vc-intrans>)
-  or ({Xc+} & Pa+)] or ())) or
+    or ({Xc+} & Pa+)] or ())) or
   ((({[[O+]]} & <vc-intrans>)
-  or ({Xc+} & Pa+)) & <verb-and-sp-i+>))
+    or ({Xc+} & Pa+)) & <verb-and-sp-i+>))
   or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
@@ -3326,6 +3326,7 @@ came.v-d:
 % <verb-manner>: only about half of the words in words.v.2.3 should get
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
+% <verb-adj> has <verb-manner> as a part of it.
 /en/words/words.v.2.3:
   
   ((<verb-sp,pp> & (<vc-tr,intr>)) or
@@ -3334,7 +3335,6 @@ came.v-d:
   <verb-and-sp-t>)
   or <verb-pv>
   or <verb-adj>
-  or <verb-manner>
   or <verb-phrase-opener>;
 
 % Pa+: "The vase landed, unbroken"
@@ -3732,6 +3732,7 @@ running.g beating.g catching.g driving.g striking.g:
   <verb-and-sp-t>);
 
 % <verb-manner> is too broad for most of these, but is OK for many.
+% <verb-manner> is part of <word-adj>
 /en/words/words.v.4.3:
   
   ((<verb-sp,pp> & (<vc-trans>)) or
@@ -3739,8 +3740,7 @@ running.g beating.g catching.g driving.g striking.g:
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
-  or <verb-manner>
+  or <verb-adj>
   or <verb-phrase-opener>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
@@ -3752,7 +3752,7 @@ running.g beating.g catching.g driving.g striking.g:
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
+  or (({@E-} or {EA-} or {@AN-}) & [A+ or Pa-]0.5)
   or <verb-manner>
   or <verb-phrase-opener>;
 
@@ -3836,7 +3836,7 @@ intoned.v-d roped.v-d:
   ((<vc-corral>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-adj>
   or <verb-phrase-opener>;
 corralling.v crowning.v decanting.v inking.v intoning.v roping.v:
   <verb-pg> & <vc-corral>;
@@ -3869,7 +3869,7 @@ baked.v-d sliced.v-d:
   ((<vc-bake>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-adj>
   or <verb-phrase-opener>;
 dictated.v-d kissed.v-d:
   
@@ -3905,7 +3905,7 @@ buttered.v-d:
   (<verb-and-sp-i-> & ([<vc-butter>] or ())) or
   ((<vc-butter>) & <verb-and-sp-i+>))
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+);
+  or <verb-adj>;
 buttering.v:
   <verb-pg> & <vc-butter>;
 buttering.g:
@@ -3968,7 +3968,6 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
   <verb-and-sp-t>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or
-  <verb-manner> or
   ({K+} & <verb-phrase-opener>);
 
 cut.v-d:
@@ -6895,13 +6894,13 @@ delivers.w:
   (<verb-and-s-> & ([<vc-intrans>] or ())) or
   ((<vc-intrans>) & <verb-and-s+>));
 
-% <verb-pv> & Pv+: "It was delived broken"
+% <verb-pv> & Pa+: "It was delived broken"
 delivered.w-d:
   
   ((<verb-sp,pp> & (<vc-intrans>)) or
   (<verb-and-sp-i-> & ([<vc-intrans>] or ())) or
   ((<vc-intrans>) & <verb-and-sp-i+>))
-  or (<verb-pv-b> & ({Xc+} & Pv+));
+  or (<verb-pv-b> & ({Xc+} & Pa+));
 
 % ditransitive
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
@@ -6995,7 +6994,7 @@ passes.v buys.v pays.v sells.v deals.v telegraphs.v wires.v:
   <verb-and-sp-t>);
 
 % (S- & B-) : allows WV-less attach to "The dog which Chris bought is ugly"
-% (({@E-} or {@EA-} or {@AN-}) & A+): "The telegraphed orders never arrived"
+% <verb-adj>: "The telegraphed orders never arrived"
 passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
 telegraphed.v-d wired.v-d:
   
@@ -7004,7 +7003,7 @@ telegraphed.v-d wired.v-d:
   ((<vc-pass>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
   (S- & <b-minus>) or
-  (({@E-} or {@EA-} or {@AN-}) & A+) or
+  <verb-adj> or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 

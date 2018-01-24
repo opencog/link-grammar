@@ -2365,7 +2365,7 @@ per "/.per": Us+ & Mp-;
 % From what I can tell, <verb-manner> can be used anywhere that
 % <verb-adj> can be... except forr said.v-d
 <verb-adj>:
-  ({@E-} & [A+]0.5)
+  (({@E-} or {@EA-} or {@AN-}) & [A+ or Pa-]0.5)
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
@@ -3220,7 +3220,7 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % Pa+: "He ad-libbed, uninterrupted."
 /en/words/words.v.1.3:
   VERB_SPPP_I(({[[O+]]} & <vc-intrans>)
-  or ({Xc+} & Pa+))
+    or ({Xc+} & Pa+))
   or <verb-si>;
 
 % <verb-pv>: "It was rusted closed"
@@ -3285,11 +3285,11 @@ came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
 % <verb-manner>: only about half of the words in words.v.2.3 should get
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
+% <verb-adj> has <verb-manner> as a part of it.
 /en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr>')
   or <verb-pv>
   or <verb-adj>
-  or <verb-manner>
   or <verb-phrase-opener>;
 
 % Pa+: "The vase landed, unbroken"
@@ -3569,11 +3569,11 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
 
 % <verb-manner> is too broad for most of these, but is OK for many.
+% <verb-manner> is part of <word-adj>
 /en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
-  or <verb-manner>
+  or <verb-adj>
   or <verb-phrase-opener>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
@@ -3581,7 +3581,7 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words-medical.v.4.3:
   VERB_SPPP_T(<vc-trans>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & [A+]0.5)
+  or (({@E-} or {EA-} or {@AN-}) & [A+ or Pa-]0.5)
   or <verb-manner>
   or <verb-phrase-opener>;
 
@@ -3640,7 +3640,7 @@ corralled.v-d crowned.v-d decanted.v-d inked.v-d
 intoned.v-d roped.v-d:
   VERB_SPPP_T(<vc-corral>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-adj>
   or <verb-phrase-opener>;
 corralling.v crowning.v decanting.v inking.v intoning.v roping.v:
   <verb-pg> & <vc-corral>;
@@ -3662,7 +3662,7 @@ bakes.v dictates.v kisses.v slices.v:
 baked.v-d sliced.v-d:
   VERB_SPPP_T(<vc-bake>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-adj>
   or <verb-phrase-opener>;
 dictated.v-d kissed.v-d:
   VERB_SPPP_T(<vc-bake>)
@@ -3685,7 +3685,7 @@ butters.v: VERB_S_I(<vc-butter>);
 buttered.v-d:
   VERB_SPPP_I(<vc-butter>)
   or <verb-pv>
-  or (({@E-} or {@EA-} or {@AN-}) & A+);
+  or <verb-adj>;
 buttering.v:
   <verb-pg> & <vc-butter>;
 buttering.g:
@@ -3730,7 +3730,6 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
   VERB_SPPP_T(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or
-  <verb-manner> or
   ({K+} & <verb-phrase-opener>);
 
 cut.v-d:
@@ -5430,10 +5429,10 @@ deliver.w:
 delivers.w:
   VERB_S_I(<vc-intrans>);
 
-% <verb-pv> & Pv+: "It was delived broken"
+% <verb-pv> & Pa+: "It was delived broken"
 delivered.w-d:
   VERB_SPPP_I(<vc-intrans>)
-  or (<verb-pv-b> & ({Xc+} & Pv+));
+  or (<verb-pv-b> & ({Xc+} & Pa+));
 
 % ditransitive
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
@@ -5498,12 +5497,12 @@ pass.v buy.v pay.v sell.v deal.v telegraph.v wire.v: VERB_PLI(<vc-pass>);
 passes.v buys.v pays.v sells.v deals.v telegraphs.v wires.v: VERB_S_T(<vc-pass>);
 
 % (S- & B-) : allows WV-less attach to "The dog which Chris bought is ugly"
-% (({@E-} or {@EA-} or {@AN-}) & A+): "The telegraphed orders never arrived"
+% <verb-adj>: "The telegraphed orders never arrived"
 passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
 telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
   (S- & <b-minus>) or
-  (({@E-} or {@EA-} or {@AN-}) & A+) or
+  <verb-adj> or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
