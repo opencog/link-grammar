@@ -3797,6 +3797,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % <vc-please>: a subset of <vc-paraph>, used for urges/desires
 % Allows "he does as he pleases" type constructions, using the
 % CP link in a paraphrasing-like way.
+% O+: "... as it pleases him"
 <vc-please>:
   {E-} & (S- or PP-) & <verb-wall> & dCPu- &
     ({O+ & {@MV+}} or {@MV+ & Xc+});
@@ -8750,7 +8751,7 @@ as.e-c:
 %      use Cz instead of <subcl-verb> because post-processing kills the
 %      Cs link with a "Unbounded s domain78" error.
 % AZ- & Mg+: "It described the treaty as marking a new stage"
-%
+% <subcl-verb> & CO+: "As we set sail, a gale blew up"
 <as-subj>: Sa*v+ or (Sa*a+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
@@ -8759,6 +8760,7 @@ as.e:
   or (AZ- & Pa+)
   or (AZ- & Mg+)
   or (<as-subj> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (Cz+ & CV+)
   or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
   or (MVi- & TO+)
