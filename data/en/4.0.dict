@@ -2348,8 +2348,13 @@ per "/.per": Us+ & Mp-;
 %        "She sang well, as planned"
 % {MVz+}: "the man, as acquiescing as he was, set a bad precedent."
 % Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
+% S- & CV- & MXsr-: "The accused, as I suspected, is innocent"
+% I*x- & CV- & MXsr-: "The accused, as I will show, is innocent"
+%     The x on I*x blocks I*v, so that  Pv- is used.
 <verb-manner>:
-  (Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+};
+  ((Sa*v- or EAy- or ({E-} & Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+})
+  or ({E-} & S- & CV- & {Xd-} & MXsr- & {Xc+})
+  or ({E-} & I*x- & CV- & {Xd-} & MXsr- & {Xc+});
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -3335,6 +3340,7 @@ came.v-d:
   ((<vc-tr,intr> or ({Xc+} & Pa+)) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or (<verb-pv> & {{Xc+} & Pa+})
+  or (<verb-manner> & O+ & Xc+)
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -3975,10 +3981,12 @@ cut.v-d:
   ((<verb-sp,pp> & (<vc-kick>)) or
   (<verb-and-sp-i-> & ([<vc-kick>]0.2 or ())) or
   ((<vc-kick>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  (<verb-ico> & <vc-kick>) or
-  (<verb-pv-b> & {K+} & {@MV+}) or
-  <verb-adj> or ({K+} & <verb-phrase-opener>);
+  <verb-and-sp-t>)
+  or (<verb-ico> & <vc-kick>)
+  or (<verb-pv-b> & {K+} & {@MV+})
+  or (<verb-manner> & O+ & Xc+)
+  or <verb-adj>
+  or ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 % <verb-ge-nos>: <vc-kick> has O+ in it; so must not have S+ in <verb-ge>
@@ -4242,14 +4250,16 @@ conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
   
   ((<verb-pl,i> & (<vc-assert>)) or
   (<verb-and-pl-> & ((<vc-assert>) or ())) or
-  ((<vc-assert>) & <verb-and-pl+>));
+  ((<vc-assert>) & <verb-and-pl+>)) or <verb-manner>;
+
 asserts.v contends.v remarks.v retorts.v intimates.v exclaims.v
 conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v:
   
   ((<verb-s> & (<vc-assert>)) or
   (<verb-and-sp-i-> & ([<vc-assert>]0.2 or ())) or
   ((<vc-assert>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
+
 retorted.v intimated.v exclaimed.v conjectured.v
 surmised.v-d opined.v-d insinuated.v-d: 
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -4261,7 +4271,9 @@ asserted.v-d contended.v-d remarked.v-d:
   (<verb-and-sp-i-> & ([<vc-assert>]0.2 or ())) or
   ((<vc-assert>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
-  (<verb-pv> & THi+);
+  (<verb-pv> & THi+) or
+  <verb-adj>;
+
 alleged.v-d:
   
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -4270,6 +4282,7 @@ alleged.v-d:
   <verb-and-sp-t>) or
   (<verb-pv> & THi+) or
   <verb-adj>;
+
 supposed.v-d:
   
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -5403,7 +5416,8 @@ emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
   
   ((<verb-pl,i> & (<vc-declare>)) or
   (<verb-and-pl-> & ((<vc-declare>) or ())) or
-  ((<vc-declare>) & <verb-and-pl+>));
+  ((<vc-declare>) & <verb-and-pl+>)) or <verb-manner>;
+
 declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
 confirms.v stresses.v assumes.v:
@@ -5411,7 +5425,8 @@ confirms.v stresses.v assumes.v:
   ((<verb-s> & (<vc-declare>)) or
   (<verb-and-sp-i-> & ([<vc-declare>]0.2 or ())) or
   ((<vc-declare>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
+
 declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v
 confirmed.v-d stressed.v-d assumed.v-d:
@@ -5423,11 +5438,12 @@ confirmed.v-d stressed.v-d assumed.v-d:
   or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
   or <verb-adj>
   or <verb-phrase-opener>;
+
 foresaw.v-d: 
   ((<verb-sp> & (<vc-declare>)) or
   (<verb-and-sp-i-> & ([<vc-declare>]0.2 or ())) or
   ((<vc-declare>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
 foreseen.v:
   
   ((<verb-pp> & (<vc-declare>)) or
@@ -5640,12 +5656,12 @@ demonstrating.v: <verb-pg> & <vc-guess>;
 know.v: 
   ((<verb-pl,i> & (<vc-know>)) or
   (<verb-and-pl-> & ((<vc-know>) or ())) or
-  ((<vc-know>) & <verb-and-pl+>));
+  ((<vc-know>) & <verb-and-pl+>)) or <verb-manner>;
 knows.v: 
   ((<verb-s> & (<vc-know>)) or
   (<verb-and-sp-i-> & ([<vc-know>]0.2 or ())) or
   ((<vc-know>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
 knew.v-d: 
   ((<verb-sp> & (<vc-know>)) or
   (<verb-and-sp-i-> & ([<vc-know>]0.2 or ())) or
@@ -7238,12 +7254,12 @@ promising.v: <verb-pg> & <vc-promise>;
 show.v: 
   ((<verb-pl,i> & (<vc-show>)) or
   (<verb-and-pl-> & ((<vc-show>) or ())) or
-  ((<vc-show>) & <verb-and-pl+>));
+  ((<vc-show>) & <verb-and-pl+>)) or <verb-manner>;
 shows.v: 
   ((<verb-s> & (<vc-show>)) or
   (<verb-and-sp-i-> & ([<vc-show>]0.2 or ())) or
   ((<vc-show>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-manner>;
 showed.v-d: 
   ((<verb-sp> & (<vc-show>)) or
   (<verb-and-sp-i-> & ([<vc-show>]0.2 or ())) or
@@ -7349,25 +7365,31 @@ forcing.v: <verb-pg> & <vc-force>;
 
 design.v permit.v authorize.v use.v cause.v enable.v
 pressure.v train.v sentence.v prompt.v spur.v disincline.v
-invite.v reelect.v encourage.v draft.v hire.v entice.v inspire.v aid.v
-forbid.v employ.v educate.v tempt.v condemn.v commission.v counsel.v induce.v instruct.v
+invite.v reelect.v encourage.v draft.v hire.v entice.v inspire.v
+aid.v forbid.v employ.v educate.v tempt.v condemn.v commission.v
+counsel.v induce.v instruct.v
 license.v incite.v nominate.v destine.v provoke.v challenge.v exhort.v
 implore.v motivate.v impel.v:
-
+  
   ((<verb-pl,i> & (<vc-design>)) or
   (<verb-and-pl-> & ((<vc-design>) or ())) or
-  ((<vc-design>) & <verb-and-pl+>));
-designs.v permits.v pressures.v trains.v sentences.v causes.v enables.v
-authorizes.v uses.v prompts.v spurs.v disinclines.v
-invites.v reelects.v encourages.v drafts.v hires.v entices.v inspires.v aids.v
-forbids.v employs.v educates.v tempts.v condemns.v commissions.v counsels.v induces.v
+  ((<vc-design>) & <verb-and-pl+>))
+  or (<verb-manner> & O+ & Xc+);
+
+designs.v permits.v pressures.v trains.v sentences.v causes.v
+enables.v authorizes.v uses.v prompts.v spurs.v disinclines.v
+invites.v reelects.v encourages.v drafts.v hires.v entices.v
+inspires.v aids.v forbids.v employs.v educates.v tempts.v
+condemns.v commissions.v counsels.v induces.v
 instructs.v licenses.v incites.v nominates.v destines.v provokes.v
 challenges.v exhorts.v implores.v motivates.v impels.v:
-
+  
   ((<verb-s> & (<vc-design>)) or
   (<verb-and-sp-i-> & ([<vc-design>]0.2 or ())) or
   ((<vc-design>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>)
+  or (<verb-manner> & O+ & Xc+);
+
 designed.v-d permitted.v-d pressured.v-d trained.v-d
 sentenced.v-d caused.v-d enabled.v-d
 authorized.v-d prompted.v-d spurred.v-d invited.v-d disinclined.v-d
@@ -7382,10 +7404,12 @@ implored.v-d motivated.v-d impelled.v-d:
   ((<verb-sp,pp> & (<vc-design>)) or
   (<verb-and-sp-i-> & ([<vc-design>]0.2 or ())) or
   ((<vc-design>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  (<verb-pv> & {<to-verb>}) or
-  <verb-adj> or
-  ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+  <verb-and-sp-t>)
+  or (<verb-pv> & {<to-verb>})
+  or <verb-adj>
+  or (<verb-manner> & O+ & Xc+)
+  or ({{@MV+} & <to-verb>} & <verb-phrase-opener>);
+
 forbade.v-d: 
   ((<verb-sp> & (<vc-design>)) or
   (<verb-and-sp-i-> & ([<vc-design>]0.2 or ())) or
@@ -7424,11 +7448,13 @@ used.v-d:
   ((<verb-sp,pp> & (<vc-design>)) or
   (<verb-and-sp-i-> & ([<vc-design>]0.2 or ())) or
   ((<vc-design>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  (<verb-pv> & {<too-verb>}) or
-  (<verb-sp> & <to-verb>) or
-  ({@MV+} & {<too-verb>} & <verb-phrase-opener>) or
-  <verb-adj>;
+  <verb-and-sp-t>)
+  or (<verb-pv> & {<too-verb>})
+  or (<verb-sp> & <to-verb>)
+  or <verb-adj>
+  or (<verb-manner> & O+ & Xc+)
+  or ({@MV+} & {<too-verb>} & <verb-phrase-opener>);
+
 using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 % --------------------------------------------------
@@ -10830,17 +10856,19 @@ as.e-c:
 %      Cs link with a "Unbounded s domain78" error.
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
+% BIt+: "his statements, as candidate, contradict his actions"
 <as-subj>: Sa*v+ or (Sa*a+ & CV+);
 as.e:
-  ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
+  ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or (<as-subj> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or (Cz+ & CV+)
-  or ({{Xd-} & MVs-} & <as-subj> & {Xc+})
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
+  or (<as-subj> & {Xc+ & {Xd-}} & CO+)
+  or (<as-subj> & {Xd- & {Xc+}} & MVs-)
+  or (<as-subj> & {Xd- & {Xc+}})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
