@@ -3287,9 +3287,10 @@ came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
 % right now.
 % <verb-adj> has <verb-manner> as a part of it.
 % Pa+: "he paced, worried"
+% <verb-pv> & Pa+: "she was posed reclining"
 /en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr> or ({Xc+} & Pa+)')
-  or <verb-pv>
+  or (<verb-pv> & {{Xc+} & Pa+})
   or <verb-adj>
   or <verb-phrase-opener>;
 

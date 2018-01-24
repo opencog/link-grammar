@@ -3328,13 +3328,14 @@ came.v-d:
 % right now.
 % <verb-adj> has <verb-manner> as a part of it.
 % Pa+: "he paced, worried"
+% <verb-pv> & Pa+: "she was posed reclining"
 /en/words/words.v.2.3:
   
   ((<verb-sp,pp> & (<vc-tr,intr> or ({Xc+} & Pa+))) or
   (<verb-and-sp-i-> & ([<vc-tr,intr> or ({Xc+} & Pa+)]0.2 or ())) or
   ((<vc-tr,intr> or ({Xc+} & Pa+)) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or <verb-pv>
+  or (<verb-pv> & {{Xc+} & Pa+})
   or <verb-adj>
   or <verb-phrase-opener>;
 
