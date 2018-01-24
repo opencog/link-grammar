@@ -4888,7 +4888,7 @@ threatens.v means.v arranges.v pledges.v:
   ((<verb-s> & (<vc-threaten>)) or
   (<verb-and-sp-i-> & ([<vc-threaten>]0.2 or ())) or
   ((<vc-threaten>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <vc-please>;
 
 threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   
@@ -4896,6 +4896,7 @@ threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   (<verb-and-sp-i-> & ([<vc-threaten>]0.2 or ())) or
   ((<vc-threaten>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
+  <vc-please> or
   <verb-pv> or
   <verb-adj> or
   <verb-phrase-opener>;

@@ -4237,10 +4237,11 @@ fighting.v: <verb-pg> & <vc-fight>;
 threaten.v mean.v arrange.v pledge.v:
   VERB_PLI(<vc-threaten>);
 threatens.v means.v arranges.v pledges.v:
-  VERB_S_T(<vc-threaten>);
+  VERB_S_T(<vc-threaten>) or <vc-please>;
 
 threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   VERB_SPPP_T(<vc-threaten>) or
+  <vc-please> or
   <verb-pv> or
   <verb-adj> or
   <verb-phrase-opener>;
