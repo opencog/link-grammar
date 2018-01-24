@@ -1867,7 +1867,8 @@ and.j-sum 'n.j-sum: NA- & NA+;
 
 % For number, cost is added to the <noun-main-*> roles to prioritize
 % postmodifier and numeric determiner roles.
-
+% [[A+]]: "the five seat washed out"
+%
 two three four five six seven eight nine ten eleven twelve thirteen
 fourteen fifteen sixteen seventeen eighteen nineteen
 twenty twenty-one twenty-two twenty-three twenty-four
@@ -1899,7 +1900,8 @@ several:
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   (NA- & {<noun-sub-p> & <noun-main-p>}) or
   (NA- & Xd- & TY- & Xc+)
-  or Wa-;
+  or Wa-
+  or [[A+]];
 
 oh.zero: (NA- & NA+);
 zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
