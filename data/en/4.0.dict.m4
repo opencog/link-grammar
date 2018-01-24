@@ -6824,8 +6824,8 @@ due_to along_with en_route_to in_connection_with:
 regardless_of as_to irrespective_of:
   (J+ or QI+) & (MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
 
-as_usual to_date on_average in_turn so_far
-in_particular in_response in_general thus_far in_reply:
+as_yet to_date so_far thus_far as_usual on_average
+in_general in_particular in_response in_reply in_turn:
   <prep-main-b>;
 
 % Mp- & QI+: "decisions such as when to go are taken by the instructor."
