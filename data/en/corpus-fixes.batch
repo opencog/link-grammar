@@ -1345,9 +1345,11 @@ Do you have any ruled paper?
 I gave him some ruled paper.
 
 % Like above, everything in v.2.3, v.4.3, v.6.3 and v.8.3,
-% but with Pa- links:
+% but with Pa- links: so predicative adjectives
+% Should these be using the Pa**j link instead ???
 It was delivered broken
 It was delivered very broken
+it was posted unstamped
 it arrived broken
 it arrived utterly smashed
 it arrived crushed
@@ -1411,7 +1413,7 @@ The dog looked tired.
 Stay a little while.
 Stay a while.
 
-% More Pa+ links:
+% More Pa+ links:  Should these use Pa**j instead ??
 He was presumed innocent
 He was presumed innocent of the crime
 He was made aware of the crime
@@ -1592,7 +1594,7 @@ He was struck by these words
 Was the man drunk or crazy or both?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% More predicative-style constructions
+% More predicative-style constructions - when should these use Pa**j ??
 
 He emerged, spirit unbroken
 He was set free, spirit unbroken.

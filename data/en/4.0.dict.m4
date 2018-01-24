@@ -3573,7 +3573,7 @@ running.g beating.g catching.g driving.g striking.g:
 % <verb-manner> is part of <word-adj>
 /en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>)
-  or <verb-pv>
+  or (<verb-pv> & {{Xc+} & Pa+})
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -3581,9 +3581,8 @@ running.g beating.g catching.g driving.g striking.g:
 % The candle guttered. It plummeted to the bottom. Prices plummeted!
 /en/words/words-medical.v.4.3:
   VERB_SPPP_T(<vc-trans>)
-  or <verb-pv>
-  or (({@E-} or {EA-} or {@AN-}) & [A+ or Pa-]0.5)
-  or <verb-manner>
+  or (<verb-pv> & {{Xc+} & Pa+})
+  or <verb-adj>
   or <verb-phrase-opener>;
 
 /en/words/words.v.4.4

@@ -3740,7 +3740,7 @@ running.g beating.g catching.g driving.g striking.g:
   (<verb-and-sp-i-> & ([<vc-trans>]0.2 or ())) or
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or <verb-pv>
+  or (<verb-pv> & {{Xc+} & Pa+})
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -3753,8 +3753,7 @@ running.g beating.g catching.g driving.g striking.g:
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or <verb-pv>
-  or (({@E-} or {EA-} or {@AN-}) & [A+ or Pa-]0.5)
-  or <verb-manner>
+  or <verb-adj>
   or <verb-phrase-opener>;
 
 /en/words/words.v.4.4
