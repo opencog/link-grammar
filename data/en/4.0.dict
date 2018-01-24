@@ -5808,7 +5808,8 @@ entailing.v necessitating.v justifying.v risking.v avoiding.v involving.v
 favoring.v:
   <verb-pg> & <vc-oppose>;
 
-<vc-finish>: {<vc-trans>} or ({@MV+} & Pg+);
+% MVp+: "he finished at last"
+<vc-finish>: {<vc-trans>} or ({@MV+} & Pg+) or MVp+;
 finish.v practice.v resist.v: 
   ((<verb-pl,i> & (<vc-finish>)) or
   (<verb-and-pl-> & ((<vc-finish>) or ())) or
