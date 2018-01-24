@@ -268,9 +268,6 @@ nonCAP.zzz: ZZZ-;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
 
-% Connects verb to coordinating conjunction.
-<coord-verb>: VC+;
-
 <embed-verb>: Ce+ & CV+;
 <that-verb>: Cet+ & CV+;
 <subcl-verb>: Cs+ & CV+;
@@ -4200,9 +4197,12 @@ deserved.v-d desired.v-d pleased.v-d:
   <verb-phrase-opener>;
 
 % like <vc-trans> but with particle
-<vc-seek>: ({@MV+} & <to-verb>) or
-((((O+ or <b-minus>) & {K+}) or (K+ & {[[@MV+]]} & O*n+) or
-([[@MV+ & O*n+]])) & {@MV+});
+<vc-seek>:
+  ({@MV+} & <to-verb>)
+  or ((((O+ or <b-minus>) & {K+})
+    or (K+ & {[[@MV+]]} & O*n+)
+    or ([[@MV+ & O*n+]])) & <mv-coord>);
+
 seek.v: VERB_PLI(<vc-seek>);
 seeks.v: VERB_S_T(<vc-seek>);
 sought.v-d: VERB_SPPP_T(<vc-seek>) or <verb-pv> or <verb-phrase-opener>;
@@ -4210,7 +4210,7 @@ seeking.g: (<vc-seek> & <verb-ge>) or <verb-ge-d>;
 seeking.v: <verb-pg> & <vc-seek>;
 
 % Naked @MV+: "She volunteered as a nurse."
-<vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>) or @MV+;
+<vc-decline>: {<vc-trans>} or ({@MV+} & <to-verb>) or <mv-coord>;
 
 decline.v fail.v hasten.v volunteer.v aim.v:
   VERB_PLI(<vc-decline>);
@@ -5093,7 +5093,7 @@ track.i: Vk- & {OF+};
 
 <vc-set>:
   ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vs+})
-    or [[@MV+ & O*n+]]) & {@MV+} & {VC+};
+    or [[@MV+ & O*n+]]) & <mv-coord>;
 
 set.v-d:
   VERB_SPPP_T(<vc-set>) or
@@ -6193,7 +6193,7 @@ proved.v-d:
   or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
-  (<verb-s-pv> & {THi+ or <tof-verb> or Pa+}) or
+  (<verb-s-pv> & {THi+ or <tof-verb> or Pa+ or dCPu-}) or
   <verb-adj> or
   ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
@@ -8811,7 +8811,9 @@ as.e:
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
-  or ((Sa*v+ or (Sa*a+ & CV+)) & {Xd- & {Xc+}} & MVs-)
+  or (Sa*v+ & {Xd- & {Xc+}} & MVs-)
+  % or (Sa*a+ & CV+ & {Xd- & {Xc+}} & MVs-)
+  or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05
   or (Sa*a+ & CV+ & {Xd- & {Xc+}})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
