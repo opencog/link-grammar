@@ -3798,8 +3798,9 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % Allows "he does as he pleases" type constructions, using the
 % CP link in a paraphrasing-like way.
 % O+: "... as it pleases him"
+% Pv-: "... as it was hoped"  (XXX why not PP-, here ???)
 <vc-please>:
-  {E-} & (S- or PP-) & <verb-wall> & {Xd-} & dCPu- &
+  {E-} & (S- or PP- or Pv-) & <verb-wall> & {Xd-} & dCPu- &
     ({O+ & {@MV+}} or {@MV+ & Xc+});
 
 % ditransitve
@@ -6329,6 +6330,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.1.p:
   <verb-pv>
   or <verb-manner>
+  or <vc-please>
   or <verb-phrase-opener>;
 
 % -----------------------------------------------------------------
