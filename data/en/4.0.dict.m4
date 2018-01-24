@@ -2353,13 +2353,12 @@ per "/.per": Us+ & Mp-;
 %
 % Sa*v-: "He did it as expected"
 % Sa*v- & MXsr-: "the movie, as filmed, is too long"
-%      The cost on MXsr+ is to give MVs preference for
+%        The cost on MXsr+ is to give MVs preference for
 %        "She sang well, as planned"
-% {MV+}: "the man, as acquiescing as he was, set a bad precedent."
-%        I want to use MVz+ for above, but it doesn't work...
+% {MVz+}: "the man, as acquiescing as he was, set a bad precedent."
 % Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
 <verb-manner>:
-  (Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MV+}} & {Xc+};
+  (Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+};
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
