@@ -2358,11 +2358,11 @@ per "/.per": Us+ & Mp-;
 % {MVz+}: "the man, as acquiescing as he was, set a bad precedent."
 % Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
 % S- & CV- & MXsr-: "The accused, as I suspected, is innocent"
-% I*x- & CV- & MXsr-: "The accused, as I wil show, is innocent"
+% I*x- & CV- & MXsr-: "The accused, as I will show, is innocent"
 %     The x on I*x blocks I*v, so that  Pv- is used.
 <verb-manner>:
-  ((Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+})
-  or (S- & CV- & {Xd-} & MXsr- & {Xc+})
+  ((Sa*v- or EAy- or ({E-} & Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+})
+  or ({E-} & S- & CV- & {Xd-} & MXsr- & {Xc+})
   or (I*x- & CV- & {Xd-} & MXsr- & {Xc+});
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
