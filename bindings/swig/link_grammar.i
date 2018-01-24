@@ -296,7 +296,9 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
       }
 
       if (error) return NULL;
-      $1 = &arg;
+
+      $1 = (int*)malloc(sizeof(int));
+      *$1 = arg;
    }
 }
 
@@ -304,6 +306,7 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
 void _py_error_default_handler(lg_errinfo *lge, int *pedh_data)
 {
     default_error_handler(lge, (void *)pedh_data);
+    free(pedh_data);
 }
 
 /**
