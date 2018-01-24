@@ -9,7 +9,8 @@ dispensed_with entered_into improved_on improved_upon negotiated_with
 operated_on referred_to searched_for stared_at tended_to yelled_at
 counted_on pointed_to pointed_at 
 fought_with planned_for arranged_for tried_for added_to reckoned_with
-approved_of ruled_on wished_for hoped_for decided_on cared_for shouted_at
+approved_of ruled_on wished_for hoped_for prayed_for decided_on
+cared_for shouted_at
 dreamed_of dreamt_of thought_of heard_from looked_at called_for uncalled_for
 asked_for undreamed_of undreamt_of paid_for slept_in
 agreed_upon talked_about
