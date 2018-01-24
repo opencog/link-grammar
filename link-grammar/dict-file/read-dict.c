@@ -1564,7 +1564,7 @@ static bool read_entry(Dictionary dict)
 			if (!link_advance(dict)) goto syntax_error;
 
 			skip_slash          = ('/' == dict->token[0]) ? 1 : 0;
-			dict_name           = strdup(dict->token);
+			dict_name           = strdupa(dict->token);
 			save_name           = dict->name;
 			save_is_special     = dict->is_special;
 			save_input          = dict->input;
@@ -1597,7 +1597,6 @@ static bool read_entry(Dictionary dict)
 			dict->line_number    = save_line_number;
 
 			free(instr);
-			free(dict_name);
 			if (!rc) goto syntax_error;
 
 			/* when we return, point to the next entry */
