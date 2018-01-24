@@ -3700,11 +3700,12 @@ buttering.g:
 % B- & O+ & {K+}:
 %    what are the chances she will TRACK him down to the farm?
 % Pa+: "he cut out after fifth period"
+% K+ & Pa+: "it washed up, unbroken"
 <vc-kick>:
   ((K+ & {[[@MV+]]} & O*n+)
   or ((O+ or <b-minus>) & {K+})
   or ({@E-} & <b-minus> & O+ & {K+})
-  or Pa+
+  or ({K+} & {Xc+} & Pa+)
   or [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
@@ -3726,6 +3727,7 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 % <verb-manner>: only about half of the words in words.v.8.3 should get
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
+% Pa+: "it washed up unbroken"
 /en/words/words.v.8.3:
   VERB_SPPP_T(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
