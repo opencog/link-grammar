@@ -3859,7 +3859,12 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 % <verb-fronted>: "so it seems", "so it appears"
 % Ix- & PF- & <verb-wall>: "so it would seem"
 <vc-appear>:
-  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or N+ or [Pv+]};
+  {@MV+} & {(Pa+ & <verb-wall>)
+    or <tof-verb>
+    or THi+
+    or AF-
+    or N+
+    or [{Xc+} &Pv+]};
 appear.v: VERB_Y_PLI(<vc-appear>) or (Ix- & PF- & <verb-wall>);
 appears.v: VERB_Y_S(<vc-appear>) or <verb-fronted>;
 appeared.v-d: VERB_Y_SPPP(<vc-appear>) or <verb-fronted>;
@@ -5385,9 +5390,10 @@ seeing.v: <verb-pg> & <vc-see>;
 
 % ditranstive verbs -- taking direct and indirect objects
 <vc-owe>:
-  (<vc-opt-ditrans> or
-  (B- & {O+}) or
-  ([[@MV+ & O*n+]])) & {@MV+};
+  (<vc-opt-ditrans>
+    or (B- & {O+})
+    or ([[@MV+ & O*n+]])
+  ) & {@MV+};
 
 owe.v deliver.v accord.v award.v term.v grant.v begrudge.v
 assign.v rename.v repay.v dub.v entitle.v fine.v:
@@ -5399,9 +5405,9 @@ assigns.v renames.v repays.v dubs.v entitles.v fines.v:
 
 owed.v-d delivered.v-d accorded.v-d awarded.v-d
 granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
-  VERB_SPPP_T(<vc-owe>) or
-  (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  VERB_SPPP_T(<vc-owe>)
+  or (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & {@MV+})
+  or ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
 owing.v delivering.v according.v awarding.v terming.v granting.v
 begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
@@ -5419,10 +5425,10 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   <verb-adj>;
 
 % can be intransitive...
-% <verb-pv>: "It was delived broken"
+% <verb-pv> & Pv+: "It was delived broken"
 delivered.w-d:
   VERB_SPPP_I(<vc-intrans>)
-  or <verb-pv>;
+  or (<verb-pv-b> & ({Xc+} & Pv+));
 
 % ditransitive
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
