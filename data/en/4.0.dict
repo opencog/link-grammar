@@ -3959,9 +3959,9 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 % right now.
 /en/words/words.v.8.3:
   
-  ((<verb-sp,pp> & (<vc-kick>)) or
-  (<verb-and-sp-i-> & ([<vc-kick>]0.2 or ())) or
-  ((<vc-kick>) & <verb-and-sp-i+>) or
+  ((<verb-sp,pp> & (<vc-kick> or K+)) or
+  (<verb-and-sp-i-> & ([<vc-kick> or K+]0.2 or ())) or
+  ((<vc-kick> or K+) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or

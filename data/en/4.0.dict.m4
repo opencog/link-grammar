@@ -3724,7 +3724,7 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
 /en/words/words.v.8.3:
-  VERB_SPPP_T(<vc-kick>) or
+  VERB_SPPP_T(<vc-kick> or K+) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   <verb-adj> or
   <verb-manner> or
