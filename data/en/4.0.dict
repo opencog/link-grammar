@@ -3496,7 +3496,7 @@ rising.v falling.v:
 % [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
 %
 <vc-fill>:
-  ((K+ & {[[@MV+]]} & (O*n+ or Pa+ or Pv+))
+  ((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
     or ({O+ or <b-minus>} & {K+})
     or [[@MV+ & O*n+]]
   ) & {@MV+};
@@ -5835,26 +5835,32 @@ finishes.v practices.v resists.v quits.v:
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d:
   
-  ((<verb-sp,pp> & (<vc-finish>)) or
-  (<verb-and-sp-i-> & ([<vc-finish>]0.2 or ())) or
-  ((<vc-finish>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or <verb-pv> or <verb-adj> or <verb-phrase-opener>;
+  ((<verb-sp,pp> & (<vc-finish> or ({Xc+} & Pa+))) or
+  (<verb-and-sp-i-> & ([<vc-finish> or ({Xc+} & Pa+)]0.2 or ())) or
+  ((<vc-finish> or ({Xc+} & Pa+)) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
 quit.v-d:
   
   ((<verb-pl,i> & (<vc-finish>)) or
   (<verb-and-pl-> & ((<vc-finish>) or ())) or
   ((<vc-finish>) & <verb-and-pl+>)) or
   
-  ((<verb-sp,pp> & (<vc-finish>)) or
-  (<verb-and-sp-i-> & ([<vc-finish>]0.2 or ())) or
-  ((<vc-finish>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  <verb-pv> or
-  <verb-adj> or
-  <verb-phrase-opener>;
-finishing.g practicing.g resisting.g
-quitting.g: (<vc-finish> & <verb-ge>) or <verb-ge-d>;
-finishing.v practicing.v resisting.v quitting.v: <verb-pg> & <vc-finish>;
+  ((<verb-sp,pp> & (<vc-finish> or ({Xc+} & Pa+))) or
+  (<verb-and-sp-i-> & ([<vc-finish> or ({Xc+} & Pa+)]0.2 or ())) or
+  ((<vc-finish> or ({Xc+} & Pa+)) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
+
+finishing.g practicing.g resisting.g quitting.g:
+  (<vc-finish> & <verb-ge>) or <verb-ge-d>;
+
+finishing.v practicing.v resisting.v quitting.v:
+  <verb-pg> & <vc-finish>;
 
 % Pv-: "I want it over with"
 over_with: <verb-pv-b>;
