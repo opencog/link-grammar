@@ -2358,9 +2358,12 @@ per "/.per": Us+ & Mp-;
 % {MVz+}: "the man, as acquiescing as he was, set a bad precedent."
 % Pv- & CV- & MXsr-: "The accused, as shall be proven, is innocent"
 % S- & CV- & MXsr-: "The accused, as I suspected, is innocent"
+% I*x- & CV- & MXsr-: "The accused, as I wil show, is innocent"
+%     The x on I*x blocks I*v, so that  Pv- is used.
 <verb-manner>:
   ((Sa*v- or EAy- or (Pv- & CV-)) & {Xd-} & {[MXsr-]0.1 & {MVz+}} & {Xc+})
-  or (S- & CV- & {Xd-} & MXsr- & {Xc+});
+  or (S- & CV- & {Xd-} & MXsr- & {Xc+})
+  or (I*x- & CV- & {Xd-} & MXsr- & {Xc+});
 
 % Cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
@@ -4713,8 +4716,8 @@ demonstrating.v: <verb-pg> & <vc-guess>;
   {<vc-trans>}
   or ({@MV+} & (((OF+ or QI+) & {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-))
   or ({Xc+} & (MVa+ or MVb+));
-know.v: VERB_PLI(<vc-know>);
-knows.v: VERB_S_T(<vc-know>);
+know.v: VERB_PLI(<vc-know>) or <verb-manner>;
+knows.v: VERB_S_T(<vc-know>) or <verb-manner>;
 knew.v-d: VERB_SP_T(<vc-know>);
 
 known.v:
@@ -5663,8 +5666,8 @@ promising.v: <verb-pg> & <vc-promise>;
     ([[@MV+ & O*n+]]) or
     [[()]]) & {@MV+});
 
-show.v: VERB_PLI(<vc-show>);
-shows.v: VERB_S_T(<vc-show>);
+show.v: VERB_PLI(<vc-show>) or <verb-manner>;
+shows.v: VERB_S_T(<vc-show>) or <verb-manner>;
 showed.v-d: VERB_SP_T(<vc-show>);
 shown.v:
   VERB_PP(<vc-show>) or
