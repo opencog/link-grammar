@@ -1106,9 +1106,9 @@ excuses.n decisions.n proposals.n failures.n efforts.n attempts.n
 refusals.n pledges.n urges.n missions.n rights.n desires.n needs.n
 ambitions.n capacities.n mandates.n promises.n abilities.n options.n
 commitments.n intents.n opportunities.n plans.n plots.n
-responsibilities.n chances.n campaigns.n offers.n pressures.n obligations orders.n
-temptations.n vows.n permits.n impetuses.n proclivities.n propensities.n moves.n
-votes.n bills.n incentives.n:
+responsibilities.n chances.n campaigns.n offers.n pressures.n
+obligations orders.n temptations.n vows.n permits.n impetuses.n
+proclivities.n propensities.n moves.n votes.n bills.n incentives.n:
   (<noun-modifiers> &
     (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main-p> or
@@ -4126,10 +4126,11 @@ lasting.g waiting.g: (<vc-last> & <verb-ge>) or <verb-ge-d>;
 attempt.v undertake.v deserve.v manage.v plot.v prefer.v neglect.v
 afford.v commit.v profess.v desire.v:
   VERB_PLI(<vc-attempt>);
-attempts.v undertakes.v deserves.v manages.v plots.v prefers.v
+attempts.v undertakes.v manages.v plots.v prefers.v
 neglects.v affords.v commits.v professes.v desires.v:
   VERB_S_T(<vc-attempt>);
-attempted.v deserved.v managed.v plotted.v preferred.v neglected.v afforded.v committed.v
+attempted.v managed.v plotted.v preferred.v
+neglected.v afforded.v committed.v
 professed.v-d desired.v-d:
   VERB_SPPP_T(<vc-attempt>) or
   <verb-pv> or
@@ -4137,15 +4138,28 @@ professed.v-d desired.v-d:
   <verb-phrase-opener>;
 undertook.v-d: VERB_SP_T(<vc-attempt>);
 undertaken.v: VERB_PP(<vc-attempt>) or <verb-pv>;
-attempting.g undertaking.g deserving.g
-plotting.g preferring.g neglecting.g affording.g committing.g professing.g
-desiring.g:
-(<vc-attempt> & <verb-ge>) or <verb-ge-d>;
-managing.g: (<vc-attempt> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
-attempting.v undertaking.v deserving.v managing.v
-plotting.v preferring.v neglecting.v affording.v committing.v professing.v
+
+attempting.g undertaking.g deserving.g plotting.g preferring.g
+neglecting.g affording.g committing.g professing.g desiring.g:
+  (<vc-attempt> & <verb-ge>) or <verb-ge-d>;
+
+managing.g:
+  (<vc-attempt> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
+
+attempting.v undertaking.v deserving.v managing.v plotting.v
+preferring.v neglecting.v affording.v committing.v professing.v
 desiring.v:
-<verb-pg> & <vc-attempt>;
+  <verb-pg> & <vc-attempt>;
+
+deserves.v:
+  VERB_S_T(<vc-attempt>) or <vc-please>;
+
+deserved.v-d:
+  VERB_SPPP_T(<vc-attempt>) or
+  <verb-pv> or
+  <verb-adj> or
+  <vc-please> or
+  <verb-phrase-opener>;
 
 % like <vc-trans> but with particle
 <vc-seek>: ({@MV+} & <to-verb>) or
