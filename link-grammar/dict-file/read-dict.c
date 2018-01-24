@@ -264,7 +264,7 @@ static bool link_advance(Dictionary dict)
 		if (dict->already_got_it == EOF) {
 			dict->token[0] = '\0';
 		} else {
-			dict->token[0] = dict->already_got_it; /* specials are one byte */
+			dict->token[0] = (char)dict->already_got_it; /* specials are one byte */
 			dict->token[1] = '\0';
 		}
 		dict->already_got_it = '\0';
@@ -1557,7 +1557,7 @@ static bool read_entry(Dictionary dict)
 			bool save_is_special;
 			const char * save_input;
 			const char * save_pin;
-			char save_already_got_it;
+			int save_already_got_it;
 			int save_line_number;
 			size_t skip_slash;
 

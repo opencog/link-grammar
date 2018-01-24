@@ -123,7 +123,7 @@ struct Dictionary_s
 	const char    * pin;
 	bool            recursive_error;
 	bool            is_special;
-	char            already_got_it;
+	int             already_got_it; /* For char, but needs to hold EOF */
 	int             line_number;
 	char            current_idiom[IDIOM_LINK_SZ];
 	char            token[MAX_TOKEN_LENGTH];
