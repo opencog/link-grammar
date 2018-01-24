@@ -4007,7 +4007,7 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % go.w: {E-} & (Wi- or S-) & I+;
 
 % B-: "which way did it go?"
-<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+ or <b-minus>} & {@MV+};
+<vc-go>: {K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus>} & {@MV+};
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
@@ -4033,7 +4033,7 @@ gone.a:
 % XXX TODO maybe need VJ and-able links for going etc. ???
 % <tof-verb>: "there is going to be a meeting"
 going.v goin'.v:
-  ((<tof-verb> or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
+  ((<tof-verb> or ({K+ or [[{Xc+} & Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
   <verb-adj> or
   <verb-ge-d>;
 
@@ -4088,7 +4088,7 @@ reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 % K+ connects to particles.
 % [Pa+]0.1: prefer MVa to Pa whenever possible: "She look right"
 % [K+]0.2: prefer Pa+ to K+ whenever possible: "She looked up"
-<vc-look>: {({@MV+} & (LI+ or [Pa+]0.1))
+<vc-look>: {({@MV+} & (LI+ or [{Xc+} & Pa+]0.1))
   or ({[K+]0.2 or AF-} & {@MV+})
   or ((O+ & K+) & {@MV+})};
 look.v: VERB_PLI(<vc-look>);
@@ -5046,8 +5046,10 @@ getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
 % Pa+: "He left unarmed"
 <vc-leave>:
-  ((O+ or <b-minus>) & (({K+} & {@MV+}) or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+})))
-  or ({@MV+} & (Pa+ or Pv+))
+  ((O+ or <b-minus>) &
+    (({K+} & {@MV+})
+    or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+})))
+  or ({@MV+} & {Xc+} & (Pa+ or Pv+))
   or ({(K+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])} & {@MV+});
 
 leave.v: VERB_PLI(<vc-leave>);
@@ -6164,7 +6166,7 @@ dismaying.g embarrassing.g engaging.g exciting.g irritating.g:
 
 <vc-prove>:
   ((O+ or <b-minus> or [[@MV+ & O*n+]]) & {@MV+}) or
-  ((O+ or <b-minus> or OX+) & {@MV+} & (<too-verb> or [[Pa+]])) or
+  ((O+ or <b-minus> or OX+) & {@MV+} & (<too-verb> or [[{Xc+} & Pa+]])) or
   ({@MV+} & (<tof-verb> or TH+ or <embed-verb> or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: VERB_Y_PLI(<vc-prove>);
