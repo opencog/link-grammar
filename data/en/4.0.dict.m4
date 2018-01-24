@@ -3819,22 +3819,28 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
   or [[O+ & {@MV+}]];
 
-hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: VERB_PLI(<vc-hope>);
-hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: VERB_S_I(<vc-hope>);
-pretended.v-d prayed.v-d: VERB_SPPP_I(<vc-hope>);
+hope.v agree.v pretend.v swear.v pray.v vow.v vote.v:
+  VERB_PLI(<vc-hope>);
+hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v:
+  VERB_S_I(<vc-hope>) or <vc-please>;
+pretended.v-d prayed.v-d:
+  VERB_SPPP_I(<vc-hope>) or <vc-please>;
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
 % Naked Pv+: "..., as was hoped."
 hoped.v-d voted.v-d vowed.v-d:
   VERB_SPPP_T(<vc-hope>)
   or (<verb-s-pv> & {THi+})
+  or <vc-please>
   or <verb-manner>;
 
 % Naked Pv+: "..., as was agreed."
 agreed.v-d:
   VERB_SPPP_T(<vc-hope>)
   or (<verb-pv> & {TH+})
+  or <vc-please>
   or <verb-manner>;
+
 swore.v-d: VERB_SP_T(<vc-hope>);
 sworn.v: VERB_PP(<vc-hope>) or <verb-adj>;
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
