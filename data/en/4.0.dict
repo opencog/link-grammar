@@ -4088,7 +4088,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 % CP link in a paraphrasing-like way.
 % O+: "... as it pleases him"
 <vc-please>:
-  {E-} & (S- or PP-) & <verb-wall> & dCPu- &
+  {E-} & (S- or PP-) & <verb-wall> & {Xd-} & dCPu- &
     ({O+ & {@MV+}} or {@MV+ & Xc+});
 
 % ditransitve
