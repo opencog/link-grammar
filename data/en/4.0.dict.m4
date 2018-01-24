@@ -3794,13 +3794,18 @@ happens.v occurs.v: VERB_S_I(<vc-happen>);
 happened.v-d occured.v-d occurred.v-d: VERB_SPPP_I(<vc-happen>);
 happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
+% <vc-please>: a subset of <vc-paraph>, used for urges/desires
+% Allows "he does as he pleases" type constructions, using the
+% CP link in a paraphrasing-like way.
+<vc-please>: {E-} & (S- or PP-) & <verb-wall> & ({@MV+ & Xc+}  & CPu-);
+
 % ditransitve
 <vc-wish>:
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>}) or
   <vc-ditrans>;
 wish.v: VERB_PLI(<vc-wish>);
-wishes.v: VERB_S_I(<vc-wish>);
-wished.v-d: VERB_SPPP_I(<vc-wish>);
+wishes.v: VERB_S_I(<vc-wish>) or <vc-please>;
+wished.v-d: VERB_SPPP_I(<vc-wish>) or <vc-please>;
 wishing.v: <verb-pg> & <vc-wish>;
 wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 
@@ -9645,7 +9650,7 @@ EMOTICON :
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {CPx+ or CPi+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>) & {CPx+ or CPi+ or CPu+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
