@@ -8799,8 +8799,6 @@ as.e-c:
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % BIt+: "his statements, as candidate, contradict his actions"
-% <as-subj>: Sa*v+ or ({Xd-} & VCz- & Sa*a+ & CV+);
-<as-subj>: Sa*v+ or ({{Xd-} & VCz-} & Sa*a+ & CV+);
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
@@ -8810,11 +8808,10 @@ as.e:
   or ({Xd-} & {[hVCz-]-0.05} & Cz+ & CV+)
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
-  or (<as-subj> & {Xc+ & {Xd-}} & CO+)
-  % or (<as-subj> & {Xd- & {Xc+}} & MVs-)
+  or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
   or (Sa*a+ & CV+ & {Xd- & {Xc+}} & MVs-)
   or (Sa*v+ & {Xd- & {Xc+}} & MVs-)
-  or (<as-subj> & {Xd- & {Xc+}})
+  or (Sa*a+ & CV+ & {Xd- & {Xc+}})
   or (MVi- & TO+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
