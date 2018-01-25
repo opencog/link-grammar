@@ -374,6 +374,7 @@ PyObject *_py_error_printall(PyObject *func_and_data)
 }
 
 void delete_lg_errinfo(lg_errinfo *lge) {
+  if (NULL == lge) return; /* Was None - nothing to free. */
   free((void *)lge->severity_label);
   free((void *)lge->text);
   free((void *)lge);
