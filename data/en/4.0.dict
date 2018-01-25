@@ -3311,6 +3311,7 @@ came.v-d:
   (<verb-and-sp-i-> & ([<vc-come>] or ())) or
   ((<vc-come>) & <verb-and-sp-i+>)) or <verb-si>;
 
+% <b-minus>: "he got what he had coming"
 coming.v:
   (<vc-bulge> & <verb-pg,ge>)
   or 
@@ -10885,6 +10886,7 @@ as.e:
   or ({Xd-} & {[hVCz-]-0.05} & Cz+ & CV+)
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & MVs-)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
   or (Sa*v+ & {Xd- & {Xc+}} & VCz-)
   or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05
