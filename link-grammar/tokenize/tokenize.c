@@ -2455,7 +2455,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			/* Strip off all units, if possible. It is not likely that we strip
 			 * here a string like "in." which is not a unit since we require a
 			 * number before it when only a single component is stripped off. */
-			temp_wend = wend;
 			stripped = strip_right(sent, word, &wend, r_stripped, &n_stripped,
 			                       AFDICT_UNITS, /*rootdigit*/true, 3);
 			if (!stripped)
