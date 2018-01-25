@@ -6438,7 +6438,8 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   {@E-} & (
     ((S- or PP-) & <verb-wall> & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
-    or [Pvf- & <vc-it-paraph>]);
+    or [Pvf- & <vc-it-paraph>]
+    or (Pv- & CV- & dCPu-));
 
 read.q-d:
    {@E-} & (((S- or I- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));

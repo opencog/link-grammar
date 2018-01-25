@@ -247,7 +247,7 @@ CONTAINS_ONE_RULES:
  SFIst ,  O*t   Ost   Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'34"           ,
  SFIp  ,  O*t   Opt   Omt    Bp#t    B*#t    Bc#t    , "Bad use of 'there'35"           ,
  OXt   ,  O#t   B##t                     ,   "Bad use of 'there'36"           ,
- SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
+ SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi CPu
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'37"           ,
  SFIsi ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'38"           ,
