@@ -6,6 +6,7 @@
 !spell=0
 
 % Assorted hand-curated examples of things that don't work.
+the girl, unhappy, looked down
 
 He emerged, spirit unbroken
 He was set free, spirit unbroken.
@@ -14,17 +15,25 @@ He laughed, at last set free
 He cried, heart heavy
 He cried, his heart heavy
 He cried, heavy-hearted
-Heart heavy, he cried
+heart heavy, he cried
 He cried, his heart heavy with sadness
 He cried, his heart [being] heavy with sadness <-- zero copula
-He winced, pain shooting up his arm
 He reddened, angered by their words
-He reddened, embarrassed by their words  <-- works, MVg link
-He shuffled, sad in his heart
 He shuffled, aching limbs hanging heavy
-He sneezed, eyes red and itchy
+He sneezed, eyes red and itchy <--- bad parse
 He nodded, eyelids drooping with sleep
-He coughed, clearing his throat
-He stumbled, eyes blinded by the sudden light <-- works Xx
-He stumbled, blinded by the sudden light
 
+Do as we do
+
+As for staying away, I wouldn't think of it.  << parses, but incorrectly
+As to staying away, I wouldn't think of it. << parses, but incorrectly
+
+% Comparatives
+I get as much as he
+I get as much as he does
+I want as much as he gets
+
+% These are "easy" to fix, but cause a clash in the corpus-basic.batch:
+he really delivers, doesn't he?
+he really smells, doesn't he?
+Questionable as it may be, we will proceed.
