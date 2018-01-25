@@ -15,7 +15,7 @@
 
 #ifdef _WIN32
 	#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
-#elif defined GNUC
+#elif defined GNUC || defined __clang_analyzer__
 	#define DEBUG_TRAP __builtin_trap()
 #else
 	#define DEBUG_TRAP ((void(*)(void))0)()
