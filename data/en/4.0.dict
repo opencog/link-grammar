@@ -5686,12 +5686,13 @@ knew.v-d:
   ((<vc-know>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
 
+% dCPu-: "... as is well known"
 known.v:
   
   ((<verb-pp> & (<vc-know>)) or
   (<verb-and-had-> & ([<vc-know>] or ())) or
   ((<vc-know>) & <verb-and-had+>)) or
-  (<verb-s-pv> & {THi+ or <tof-verb> or QIi+}) or
+  (<verb-s-pv> & {THi+ or <tof-verb> or QIi+} & {dCPu-}) or
   <verb-phrase-opener> or
   <verb-adj>;
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;

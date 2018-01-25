@@ -4737,9 +4737,10 @@ know.v: VERB_PLI(<vc-know> & {dCPu-}) or <verb-manner>;
 knows.v: VERB_S_T(<vc-know>) or <verb-manner>;
 knew.v-d: VERB_SP_T(<vc-know>);
 
+% dCPu-: "... as is well known"
 known.v:
   VERB_PP(<vc-know>) or
-  (<verb-s-pv> & {THi+ or <tof-verb> or QIi+}) or
+  (<verb-s-pv> & {THi+ or <tof-verb> or QIi+} & {dCPu-}) or
   <verb-phrase-opener> or
   <verb-adj>;
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
