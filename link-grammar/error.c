@@ -209,11 +209,8 @@ static void default_error_handler(lg_errinfo *lge, void *data)
 {
 	FILE *outfile = stdout;
 
-	if (((NULL == data) && (lge->severity <= lg_Debug)) ||
-	    ((NULL != data) && (lge->severity <= *(lg_error_severity *)data) &&
-	     (lg_None !=  lge->severity)))
 	if (((NULL == data) && (lge->severity < lg_Debug)) ||
-	    ((NULL != data) && (lge->severity < *(lg_error_severity *)data) &&
+	    ((NULL != data) && (lge->severity < *(lg_error_severity *)(int *)data) &&
 	     (lg_None !=  lge->severity)))
 	{
 		fflush(stdout); /* Make sure that stdout has been written out first. */
