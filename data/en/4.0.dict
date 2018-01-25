@@ -8438,7 +8438,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 <wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+ or hWt+ or hWo+) & <WALL>;
 
 % Paraphrasing, quotational complements:
-<paraph-null>: [()];
+<paraph-null>: [()]0.1;
 
 % Quote with or without quotation marks.
 % "This is a test," she said.
@@ -8451,7 +8451,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % QU+ & <embed-verb> & QU+: He said, "This is it."
 % Xc+ or Xe+ or [[()]]: punctuation is commonly missing.
 <vc-paraph>:
-  ({@MV+} & (Xc+ or Xp+) & CP-)
+  ({@MV+} & (Xc+ or Xp+ or <paraph-null>) & CP-)
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
@@ -10665,7 +10665,7 @@ appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a dead.a:
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & <mv-coord> & {OF+ & <mv-coord>}) or
     ({@MV+} & {OF+ & {@MV+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
