@@ -3346,11 +3346,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
 			       "'%s'->next[0]==NULL", wg_word->subword);
-			assert((NULL != wg_word->next[0]->prev)
-					 || (NULL != wg_word->next[0]->next),  "Bad wordgraph: "
-			       "'%s'->next[0]->prev/next==NULL", wg_word->subword);
-			assert(NULL != wg_word->next[0]->prev[0], "Bad wordgraph: "
-			       "'%s'->next[0]->prev[0]==NULL", wg_word->subword);
+			assert((NULL != wg_word->next[0]->prev) &&
+			       (NULL != wg_word->next[0]->prev[0]), "Bad wordgraph: "
+			       "'%s'->next[0]: No prev", wg_word->subword);
 
 			for (next = wg_word->next; NULL != *next; next++)
 			{
