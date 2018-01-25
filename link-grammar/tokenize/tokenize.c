@@ -1587,10 +1587,13 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 			plen = strlen(mprefix[pfound]);
 			w += plen;
 		}
+#if 0
 		else
 		{
+			/* Uneeded? */
 			w = newword;
 		}
+#endif
 		split_prefix_i++;
 	/* "wlen + sz < wordlen" is true if a vav has been stripped */
 	} while ((sz > 0) && (-1 != pfound) && (split_prefix_i < HEB_PRENUM_MAX));
