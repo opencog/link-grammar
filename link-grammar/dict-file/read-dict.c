@@ -293,7 +293,6 @@ static bool link_advance(Dictionary dict)
 			    (*dict->pin == ':' || *dict->pin == ';' ||
 			    lg_isspace(*dict->pin))) {
 
-				quote_mode = false;
 				dict->token[i] = '\0';
 				return true;
 			}
