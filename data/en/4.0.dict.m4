@@ -5620,7 +5620,7 @@ writing.g reading.g charging.g drawing.g:
     <vc-opt-ditrans> or
     (O+ & K+) or
     (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & {@MV+} & {VC+});
+    ([[@MV+ & O*n+]])} & <mv-coord>);
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
 sings.v dances.v cries.v: VERB_S_T(<vc-sing>);
 sang.v-d danced.v-d cried.v-d: VERB_SP_T(<vc-sing>);
@@ -8785,13 +8785,14 @@ as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 as.e-c:
   (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or <thncl-verb>))
   or (MVzo- & Ct+ & Bc+ & {U+})
-  or (MVzp- & (CX+ or CQ+))
+  or (MVzc- & (CX+ or CQ+))
+  or (MVzp- & Pa+)
   or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
 % MVi- & TO+: "He said it in a voice so loud as to make everyone stare."
-% MVs- & Sa*v+: "he left as agreed"
-% MVs- & Sa*a+ & CV+: " ..., as shall be proven"
+% VCz- & Sa*v+: "he left as agreed"
+% VCz- & Sa*a+ & CV+: " ..., as shall be proven"
 %         The punctuation is mandatory, here.
 %         The CV is awkward, as it uses a null-subject.
 %         XXX Try to get rid of this...
@@ -8811,7 +8812,7 @@ as.e:
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
-  or (Sa*v+ & {Xd- & {Xc+}} & MVs-)
+  or (Sa*v+ & {Xd- & {Xc+}} & VCz-)
   or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05
   or (Sa*a+ & CV+ & {Xd- & {Xc+}}) % needed for MXsr constructions
   or (MVi- & TO+)
