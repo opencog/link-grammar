@@ -264,6 +264,20 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
 }
 %}
 
+%typemap(in) lg_errinfo *eh_lge
+{
+   void *argp1 = 0;
+
+   if (Py_None == $input)
+      SWIG_exception_fail(SWIG_TypeError, "in method '_py_error_default_handler', argument 1 (of type lg_errinfo *) must not be None.");
+
+   int res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lg_errinfo, 0);
+   if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '_py_error_default_handler', argument 1 of type 'lg_errinfo *'");
+   }
+   arg1 = (lg_errinfo *)(argp1);
+}
+
 /* The second argument of the default callback can be NULL or
    a severity_level integer. Validate that and convert it to C int. */
 %typemap(in) int *pedh_data (int arg)
@@ -300,7 +314,7 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
 }
 
 %inline %{
-void _py_error_default_handler(lg_errinfo *lge, int *pedh_data)
+void _py_error_default_handler(lg_errinfo *eh_lge, int *pedh_data)
 {
     default_error_handler(lge, (void *)pedh_data);
 }
