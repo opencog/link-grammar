@@ -107,6 +107,7 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	else
 	{
 		/* Duplicate the path from the current one. */
+		assert(NULL != path, "wordgraph_path_append(): Duplicating a null path");
 
 		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
 
