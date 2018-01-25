@@ -897,7 +897,7 @@ int main(int argc, char * argv[])
 					parse_options_get_use_sat_parser(opts));
 				parse_options_reset_resources(copts->panic_opts);
 				parse_options_set_verbosity(copts->panic_opts, verbosity);
-				num_linkages = sentence_parse(sent, copts->panic_opts);
+				(void)sentence_parse(sent, copts->panic_opts);
 				if (verbosity > 0)
 				{
 					if (parse_options_timer_expired(copts->panic_opts))
