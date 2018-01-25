@@ -2703,8 +2703,8 @@ don't don’t:
   or ({@E-} & {Ic-} & Wi- & {I*d+});
 
 doesn't doesn’t:
-  ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or
-  <verb-x-s>) & (I*d+ or <verb-wall> or [[()]]);
+  ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
+     & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
   ((<verb-rq-aux> & (SI+ or SFI+)) or <verb-x-sp>)
@@ -10886,7 +10886,6 @@ as.e:
   or ({Xd-} & {[hVCz-]-0.05} & Cz+ & CV+)
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & MVs-)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
   or (Sa*v+ & {Xd- & {Xc+}} & VCz-)
   or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05

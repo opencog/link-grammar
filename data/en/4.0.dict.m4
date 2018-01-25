@@ -2722,8 +2722,8 @@ don't don’t:
   or ({@E-} & {Ic-} & Wi- & {I*d+});
 
 doesn't doesn’t:
-  ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or
-  <verb-x-s>) & (I*d+ or <verb-wall> or [[()]]);
+  ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
+     & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
   ((<verb-rq-aux> & (SI+ or SFI+)) or <verb-x-sp>)
