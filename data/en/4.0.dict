@@ -5687,7 +5687,7 @@ knew.v-d:
   <verb-and-sp-t>);
 
 % dCPu-: "... as is well known"
-known.v:
+known.v well-known.v:
   
   ((<verb-pp> & (<vc-know>)) or
   (<verb-and-had-> & ([<vc-know>] or ())) or
