@@ -3257,6 +3257,7 @@ slunk.v-d: VERB_SPPP_I(<vc-bulge>) or <verb-si>;
 lay.v-d: VERB_SP_I(<vc-bulge>) or <verb-si>;
 
 lain.v: VERB_PP(<vc-bulge>);
+
 /en/words/words.v.5.4:
   (<vc-bulge> & <verb-pg,ge>) or
   <verb-adj> or
@@ -3264,7 +3265,7 @@ lain.v: VERB_PP(<vc-bulge>);
 
 % --------------------------------------------------------------
 
-% irregular -- coming is in words.v.5.4 ...
+% irregular
 <vc-come>:
   ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus>} & {@MV+})
   or ({@MV+} & Pa+);
@@ -3275,6 +3276,13 @@ come.v:
   or <verb-sip>;
 comes.v: VERB_S_I(<vc-come>) or <verb-si>;
 came.v-d: VERB_SPPP_I(<vc-come>) or <verb-si>;
+
+% <b-minus>: "he got what he had coming"
+coming.v:
+  (<vc-bulge> & <verb-pg,ge>)
+  or VERB_SPPP_T(<b-minus>)
+  or <verb-adj>
+  or <verb-ge-d>;
 
 % --------------------------------------------------------------
 % optionally transitive verbs
@@ -5033,13 +5041,13 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
 % ditranstive
 <vc-get>:
-  ((O+ or <b-minus>) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+))))
+  ((O+ or <b-minus>) & (({K+} & <mv-coord>) or ({@MV+} & (Pa+ or AF- or Pv+))))
   or ((<vc-ditrans>
     or (K+ & {[[@MV+]]} & O*n+)
     or K+
     or (<b-minus> & O+)
-    ) & {@MV+})
-  or ({@MV+} & (Pa+ or AF- or Pp+ or <to-verb>));
+    ) & <mv-coord>)
+  or ({@MV+} & (Pa+ or AF- or Pp+ or <to-verb> or VC+));
 
 get.v: VERB_PLI(<vc-get>);
 gets.v: VERB_S_T(<vc-get>);

@@ -3279,6 +3279,7 @@ lain.v:
   ((<verb-pp> & (<vc-bulge>)) or
   (<verb-and-had-> & ([<vc-bulge>] or ())) or
   ((<vc-bulge>) & <verb-and-had+>));
+
 /en/words/words.v.5.4:
   (<vc-bulge> & <verb-pg,ge>) or
   <verb-adj> or
@@ -3286,7 +3287,7 @@ lain.v:
 
 % --------------------------------------------------------------
 
-% irregular -- coming is in words.v.5.4 ...
+% irregular
 <vc-come>:
   ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus>} & {@MV+})
   or ({@MV+} & Pa+);
@@ -3309,6 +3310,16 @@ came.v-d:
   ((<verb-sp,pp> & (<vc-come>)) or
   (<verb-and-sp-i-> & ([<vc-come>] or ())) or
   ((<vc-come>) & <verb-and-sp-i+>)) or <verb-si>;
+
+coming.v:
+  (<vc-bulge> & <verb-pg,ge>)
+  or 
+  ((<verb-sp,pp> & (<b-minus>)) or
+  (<verb-and-sp-i-> & ([<b-minus>]0.2 or ())) or
+  ((<b-minus>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>)
+  or <verb-adj>
+  or <verb-ge-d>;
 
 % --------------------------------------------------------------
 % optionally transitive verbs
@@ -6218,13 +6229,13 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
 % ditranstive
 <vc-get>:
-  ((O+ or <b-minus>) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+))))
+  ((O+ or <b-minus>) & (({K+} & <mv-coord>) or ({@MV+} & (Pa+ or AF- or Pv+))))
   or ((<vc-ditrans>
     or (K+ & {[[@MV+]]} & O*n+)
     or K+
     or (<b-minus> & O+)
-    ) & {@MV+})
-  or ({@MV+} & (Pa+ or AF- or Pp+ or <to-verb>));
+    ) & <mv-coord>)
+  or ({@MV+} & (Pa+ or AF- or Pp+ or <to-verb> or VC+));
 
 get.v: 
   ((<verb-pl,i> & (<vc-get>)) or
