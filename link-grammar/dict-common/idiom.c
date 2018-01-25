@@ -149,37 +149,26 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
  * correct names (with .Ix suffixes).
  * The list is reversed from the way they occur in the string.
  * A pointer to this list is returned.
+ * This function is called after is_idiom_string() ensures the validity
+ * of the given string.
  */
 static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 {
-	Dict_node * dn, * dn_new;
-	char * t, *s, *p;
-	bool more;
-	unsigned int sz;
-	dn = NULL;
+	Dict_node * dn = NULL;
+	char * s = strdupa(string);
+	const char * t;
 
-	sz = strlen(string)+1;
-	p = s = (char *) malloc(sz);
-	strcpy(s, string);
-
-	while (*s != '\0') {
-		t = s;
-		while ((*s != '\0') && (*s != '_')) s++;
-		if (*s == '_') {
-			more = true;
-			*s = '\0';
-		} else {
-			more = false;
-		}
-		dn_new = (Dict_node *) malloc(sizeof (Dict_node));
+	for (t = s; NULL != s; t = s)
+	{
+		s = strchr(s, '_');
+		if (NULL != s) *s++ = '\0';
+		Dict_node *dn_new = (Dict_node *) malloc(sizeof (Dict_node));
 		dn_new->right = dn;
 		dn = dn_new;
 		dn->string = string_set_add(t, dict->string_set);
 		dn->file = NULL;
-		if (more) s++;
 	}
 
-	free(p);
 	return dn;
 }
 
