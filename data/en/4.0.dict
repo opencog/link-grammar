@@ -5672,9 +5672,9 @@ demonstrating.v: <verb-pg> & <vc-guess>;
   or ({@MV+} & (((OF+ or QI+) & <mv-coord>) or <embed-verb> or TH+ or RSe+ or Zs-))
   or ({Xc+} & (MVa+ or MVb+));
 know.v: 
-  ((<verb-pl,i> & (<vc-know>)) or
-  (<verb-and-pl-> & ((<vc-know>) or ())) or
-  ((<vc-know>) & <verb-and-pl+>)) or <verb-manner>;
+  ((<verb-pl,i> & (<vc-know> & {dCPu-})) or
+  (<verb-and-pl-> & ((<vc-know> & {dCPu-}) or ())) or
+  ((<vc-know> & {dCPu-}) & <verb-and-pl+>)) or <verb-manner>;
 knows.v: 
   ((<verb-s> & (<vc-know>)) or
   (<verb-and-sp-i-> & ([<vc-know>]0.2 or ())) or
@@ -10665,7 +10665,7 @@ appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a dead.a:
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma- or MJra-) & <mv-coord> & {OF+ & <mv-coord>}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or
     ({@MV+} & {OF+ & {@MV+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
