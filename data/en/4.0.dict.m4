@@ -6447,12 +6447,15 @@ read.q-d:
 wrote.q-d:
    {@E-} & ((S- & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
-written.q: {@E-} & PP- & <vc-paraph>;
+written.q:
+  {@E-} & ((PP- & <vc-paraph>) or (Pv- & CV- & dCPu-));
 
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
 
 seem.q appear.q: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
-seems.q appears.q: [[{@E-} & SFs- & <vc-it-paraph>]];
+seems.q appears.q:
+  [[{@E-} & SFs- & <vc-it-paraph>]]
+  or ({@E-} & Pv- & CV- & dCPu-);
 seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
@@ -6463,7 +6466,10 @@ says.q:
   {@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d:
-  {@E-} & (((S- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+  {@E-} & (
+    ((S- or PP-) & <verb-wall> & <vc-paraph>)
+    or (SI*j+ & <vc-paraph-inv>)
+    or (Pv- & CV- & dCPu-));
 
 saying.q:
   {@E-} & Pg- & <vc-paraph>;
