@@ -19,6 +19,7 @@
 #include "tokenize/word-structures.h"  // For Word_struct
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
+#include "utilities.h"                  // UNREACHABLE
 
 /**
  * The entire goal of this file is provide a fast lookup of all of the
@@ -471,6 +472,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
+	UNREACHABLE(a->string == NULL); /* clang static analyzer suppression. */
 	if (c_con->string == a->string)
 	{
 		/* The match_cache string field is initialized to NULL, and this is
