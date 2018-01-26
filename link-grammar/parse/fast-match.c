@@ -477,7 +477,8 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	{
 		/* The match_cache string field is initialized to NULL, and this is
 		 * enough for not using uninitialized c_con->match because the
-		 * connector string field cannot be NULL. */
+		 * connector string field cannot be NULL. A "garbage" warning is
+		 * suppressed above for the clang static analyzer. */
 		PRAGMA_MAYBE_UNINITIALIZED
 		return c_con->match;
 		PRAGMA_END
