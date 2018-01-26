@@ -225,17 +225,17 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #endif
 #endif /* !defined(ARRAY_SIZE) */
 
+/* The GCC version we need must be >= 4.7, because it has to
+ * support C11. So it already supports all the features below. */
+
 /* Optimizations etc. that only gcc understands */
-#if __GNUC__ > 2
+#if __GNUC__
+#define GCC_DIAGNOSTIC
 #define GNUC_MALLOC __attribute__ ((malloc))
 #define GNUC_UNUSED __attribute__ ((unused))
 #else
 #define GNUC_MALLOC
 #define GNUC_UNUSED
-#endif
-
-#if ((__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) || __clang__)
-#define GCC_DIAGNOSTIC
 #endif
 
 /* Apply a pragma to a specific code section only.
