@@ -740,18 +740,20 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			i++;
 		} while (i < N_words_to_print);
 
-		/* The whole word doesn't fit - fit as much as possible from it. */
-		if (0 == uwidth)
-		{
-			uwidth = x_screen_width - RIGHT_MARGIN - (c == 0)*word_offset[i] - 1;
+		if (i < N_words_to_print) {
+			/* The whole word doesn't fit - fit as much as possible from it. */
+			if (0 == uwidth)
+			{
+				uwidth = x_screen_width - RIGHT_MARGIN - (c == 0)*word_offset[i]-1;
 
-			c += utf8_chars_in_width(linkage->word[i]+c, uwidth);
-		}
+				c += utf8_chars_in_width(linkage->word[i]+c, uwidth);
+			}
 
-		if (NULL != pctx) /* PS junk */
-		{
-			pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
-			if (i < N_words_to_print) pctx->N_rows++;
+			if (NULL != pctx) /* PS junk */
+			{
+				pctx->row_starts[pctx->N_rows] = i - (!print_word_0);
+				pctx->N_rows++;
+			}
 		}
 		dyn_strcat(string, "\n");
 
