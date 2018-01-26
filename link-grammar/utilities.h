@@ -231,12 +231,15 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 /* Optimizations etc. that only gcc understands */
 #if __GNUC__
 #define GCC_DIAGNOSTIC
+#define UNREACHABLE(x) (__extension__ ({if (x) __builtin_unreachable();}))
 #define GNUC_MALLOC __attribute__ ((malloc))
 #define GNUC_UNUSED __attribute__ ((unused))
 #else
+#define UNREACHABLE(x)
 #define GNUC_MALLOC
 #define GNUC_UNUSED
 #endif
+
 
 /* Apply a pragma to a specific code section only.
  * XXX According to the GCC docs, we cannot use here something like
