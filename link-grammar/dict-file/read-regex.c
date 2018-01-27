@@ -132,7 +132,6 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		}
 
 		/* Read in the regex. */
-		prev = 0;
 		i = 0;
 		do
 		{

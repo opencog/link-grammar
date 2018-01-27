@@ -211,6 +211,7 @@ dictionary_six_str(const char * lang,
 	if (compile_regexs(dict->regex_root, dict))
 	{
 		locale = setlocale(LC_CTYPE, locale);         /* Restore the locale. */
+		assert(NULL != locale, "Cannot restore program locale");
 		goto failure;
 	}
 	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */

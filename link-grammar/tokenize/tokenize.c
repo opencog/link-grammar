@@ -1587,10 +1587,13 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 			plen = strlen(mprefix[pfound]);
 			w += plen;
 		}
+#if 0
 		else
 		{
+			/* Uneeded? */
 			w = newword;
 		}
+#endif
 		split_prefix_i++;
 	/* "wlen + sz < wordlen" is true if a vav has been stripped */
 	} while ((sz > 0) && (-1 != pfound) && (split_prefix_i < HEB_PRENUM_MAX));
@@ -2452,7 +2455,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			/* Strip off all units, if possible. It is not likely that we strip
 			 * here a string like "in." which is not a unit since we require a
 			 * number before it when only a single component is stripped off. */
-			temp_wend = wend;
 			stripped = strip_right(sent, word, &wend, r_stripped, &n_stripped,
 			                       AFDICT_UNITS, /*rootdigit*/true, 3);
 			if (!stripped)
@@ -3344,11 +3346,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
 			       "'%s'->next[0]==NULL", wg_word->subword);
-			assert((NULL != wg_word->next[0]->prev)
-					 || (NULL != wg_word->next[0]->next),  "Bad wordgraph: "
-			       "'%s'->next[0]->prev/next==NULL", wg_word->subword);
-			assert(NULL != wg_word->next[0]->prev[0], "Bad wordgraph: "
-			       "'%s'->next[0]->prev[0]==NULL", wg_word->subword);
+			assert((NULL != wg_word->next[0]->prev) &&
+			       (NULL != wg_word->next[0]->prev[0]), "Bad wordgraph: "
+			       "'%s'->next[0]: No prev", wg_word->subword);
 
 			for (next = wg_word->next; NULL != *next; next++)
 			{

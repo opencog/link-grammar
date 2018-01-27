@@ -25,7 +25,7 @@
 #include <signal.h>    /* SIG* */
 
 #include <print/print-util.h> /* for append_string */
-#include <utilities.h> /* for dyn_str functions */
+#include <utilities.h> /* for dyn_str functions and UNREACHABLE */
 #endif /* USE_WORDGRAPH_DISPLAY */
 
 #include "api-structures.h"
@@ -196,6 +196,11 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 	Gword	**wp;
 	dyn_str *wgd = dyn_str_new(); /* the wordgraph in dot representation */
 	char nn[2*sizeof(char *) + 2 + 2 + 1]; /* \"%p\" node name: "0x..."+NUL*/
+
+	/* This function is called only if we have a wordgraph, in which case
+	 * chain_next is non-NULL. So stop static analyzers to complain that
+	 * it can be possibly NULL. */
+	UNREACHABLE(NULL == sent->wordgraph->chain_next);
 
 	append_string(wgd, "# Mode: %s\n", modestr);
 	dyn_strcat(wgd, "digraph G {\nsize =\"30,20\";\nrankdir=LR;\n");
