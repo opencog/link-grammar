@@ -469,7 +469,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							/* Cannot NULLify the word - we may have links to it. */
 							if (m != mcnt-1) chosen_words[i+m] = "";
 
-							sm =  strrchr(cdjp[i+m]->word_string, SUBSCRIPT_MARK);
+							sm =  strchr(cdjp[i+m]->word_string, SUBSCRIPT_MARK);
 
 							if (NULL != sm)
 							{
