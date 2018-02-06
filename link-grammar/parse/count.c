@@ -578,13 +578,18 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&rightcount))
 					{
-						/* Total number where links are used on both sides */
-						hist_muladd(&total, &leftcount, 0.0, &rightcount);
-
-						/* Evaluate using the right match, but not the left */
 						if (le == NULL)
+						{
+							/* Evaluate using the right match, but not the left */
 							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
 								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+						}
+						else
+						{
+							/* Total number where links are used on both side.
+							 * Note that we don't have leftcount if le == NULL. */
+							hist_muladd(&total, &leftcount, 0.0, &rightcount);
+						}
 					}
 				}
 
