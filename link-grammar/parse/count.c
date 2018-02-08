@@ -439,8 +439,8 @@ static Count_bin do_count(
 			for (int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
 			{
 				int rnull_cnt = null_count - lnull_cnt;
-				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
-				 * to those parts respectively */
+				/* Now lnull_cnt and rnull_cnt are the null-counts we're
+				 * requiring in those parts respectively. */
 				bool leftpcount = false;
 				bool rightpcount = false;
 
