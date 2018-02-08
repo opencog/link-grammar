@@ -428,7 +428,6 @@ static Count_bin do_count(
 #endif
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
-			int lnull_cnt, rnull_cnt;
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
@@ -437,8 +436,11 @@ static Count_bin do_count(
 			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
 
-			for (lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
+			for (int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
 			{
+				int rnull_cnt = null_count - lnull_cnt;
+				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
+				 * to those parts respectively */
 				bool leftpcount = false;
 				bool rightpcount = false;
 
@@ -454,10 +456,6 @@ static Count_bin do_count(
 				Count_bin r_dmulti = NO_COUNT;
 				Count_bin r_dcmulti = NO_COUNT;
 				Count_bin r_bnl = NO_COUNT;
-
-				rnull_cnt = null_count - lnull_cnt;
-				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
-				 * to those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
