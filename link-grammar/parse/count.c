@@ -319,8 +319,8 @@ static Count_bin do_count(
 
 	if (t) return t->count;
 
-	/* Create the table entry with a tentative null count of 0.
-	 * This count must be updated before we return. */
+	/* Create a table entry, to be updated with the found
+	 * linkage count before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
 	int unparseable_len = rw-lw-1;
