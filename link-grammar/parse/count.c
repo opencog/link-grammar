@@ -260,6 +260,11 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 #endif
 
 #ifdef DO_COUNT_TRACE
+#define D_COUNT_TRACE 8
+#define LBLSZ 11
+#define TRACE_LABEL(l, do_count) \
+	(verbosity_level(D_COUNT_TRACE, "do_count") ? \
+	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
@@ -273,16 +278,20 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 {
 	static int level;
 
-	if (!verbosity_level(8))
+	if (!verbosity_level(D_COUNT_TRACE))
 		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
+	char m_result[64] = "";
+	if (t != NULL)
+		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
 
 	level++;
-	prt_error("%*sdo_count%.*s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
-		level*2, "", (!t)*3, "(R)", lineno, lw, rw, V(le), V(re), null_count);
+	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
+		level*2, "", m_result, lineno, lw, rw, V(le), V(re), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
-	prt_error("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
+	prt_error("%*sreturn%.*s:%d=%lld\n",
+	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, r);
 	level--;
 
 	return r;
@@ -291,6 +300,7 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 static Count_bin do_count1(int lineno,
 #define do_count(...) do_count(__LINE__, __VA_ARGS__)
 #else
+#define TRACE_LABEL(l, do_count) (do_count)
 static Count_bin do_count(
 #endif
                           count_context_t *ctxt,
@@ -513,23 +523,26 @@ static Count_bin do_count(
 
 				if (!leftpcount && !rightpcount) continue;
 
+#define COUNT(c, do_count) \
+	{ c = TRACE_LABEL(c, do_count); }
 				if (!(leftpcount && rightpcount))
 				{
 					if (leftpcount)
 					{
 						/* Evaluate using the left match, but not the right. */
-						l_bnr = do_count(ctxt, w, rw, d->right, re, rnull_cnt);
+						COUNT(l_bnr, do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 					else if (le == NULL)
 					{
 						/* Evaluate using the right match, but not the left. */
-						r_bnl = do_count(ctxt, lw, w, le, d->left, lnull_cnt);
+						COUNT(r_bnl, do_count(ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 				}
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
 { \
-	Count_bin count = (hist_total(&c) == NO_COUNT) ? do_count : hist_total(&c); \
+	Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+		TRACE_LABEL(c, do_count) : hist_total(&c); \
 	how_to_count; \
 }
 			 /* If the pseudocounting above indicates one of the terms
