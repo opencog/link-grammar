@@ -364,6 +364,7 @@ const char *feature_enabled(const char * list, ...)
 
 	while (NULL != (feature = va_arg(given_features, char *)))
 	{
+		if ('\0' == feature[0]) continue;
 		size_t len = strlen(feature);
 		char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
 
