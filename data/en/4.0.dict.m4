@@ -1316,7 +1316,7 @@ mine.p yours theirs.p hers ours:
 
 % yisser yousser ye'r: Irish English second-person possessive --
 % https://en.wikipedia.org/wiki/Irish_English
-its my.p your their.p our thy yisser.p yousser ye'r:
+its my.p your their.p our thy.p yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
@@ -9574,7 +9574,7 @@ dear_God
 sacre_bleu
 ay caramba kamoley kamoly moley moly
 holy_Moses mother_of_God Mother_of_God
-mother_of_God mama_mia mamma_mia
+mama_mia mamma_mia
 sonuvabitch son_of_a_bitch
 heck sodding_hell
 aw aww awww oh_great oh_wow
