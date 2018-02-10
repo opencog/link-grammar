@@ -1270,6 +1270,7 @@ she he:
   {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or SJls+);
 
 % The E- is for "It's either us or them" ... not ideal, but OK
+% See also me.p below.
 me him:
   J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
 
@@ -1320,6 +1321,7 @@ its my.p your their.p our thy.p yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
+% Possesive version of me
 % Cost on D, DD: avoids use as determiner on "Make me coffee"
 me.p:
   DP+
@@ -1590,7 +1592,7 @@ any:
 <PHc> : PHc+ or [()]0.2;
 <PHv> : PHv+ or [()]0.2;
 %
-% XXX why doesn't this clash with a.eq ??
+% See also a.eq below.
 a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
 
