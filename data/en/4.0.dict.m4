@@ -7736,7 +7736,7 @@ before:
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
   or (Yt- & (<advcl-verb> or Qe+));
 
-if only_if if_and_only_if iff:
+if.r only_if if_and_only_if iff:
   (<subcl-verb> & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
   or ((<subcl-verb> or [Mgp+] or [Mv+])
     & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)))
