@@ -1261,6 +1261,7 @@ she he:
   {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or SJls+);
 
 % The E- is for "It's either us or them" ... not ideal, but OK
+% See also me.p below.
 me him:
   J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
 
@@ -1307,10 +1308,11 @@ mine.p yours theirs.p hers ours:
 
 % yisser yousser ye'r: Irish English second-person possessive --
 % https://en.wikipedia.org/wiki/Irish_English
-its my.p your their.p our thy yisser.p yousser ye'r:
+its my.p your their.p our thy.p yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
+% Possesive version of me
 % Cost on D, DD: avoids use as determiner on "Make me coffee"
 me.p:
   DP+
@@ -1581,7 +1583,7 @@ any:
 <PHc> : PHc+ or [()]0.2;
 <PHv> : PHv+ or [()]0.2;
 %
-% XXX why doesn't this clash with a.eq ??
+% See also a.eq below.
 a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
 
@@ -9801,7 +9803,7 @@ before:
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
   or (Yt- & (<advcl-verb> or Qe+));
 
-if only_if if_and_only_if iff:
+if.r only_if if_and_only_if iff:
   (<subcl-verb> & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
   or ((<subcl-verb> or [Mgp+] or [Mv+])
     & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)))
@@ -11641,7 +11643,7 @@ dear_God
 sacre_bleu
 ay caramba kamoley kamoly moley moly
 holy_Moses mother_of_God Mother_of_God
-mother_of_God mama_mia mamma_mia
+mama_mia mamma_mia
 sonuvabitch son_of_a_bitch
 heck sodding_hell
 aw aww awww oh_great oh_wow
