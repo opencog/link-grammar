@@ -1418,11 +1418,19 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
  */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
-	int comp;
-
 	if (NULL == n) return newnode;
 
-	comp = dict_order_strict(newnode->string, n);
+	static Exp null_exp = { .type = AND_type, .u.l = NULL };
+	int comp = dict_order_strict(newnode->string, n);
+	if (0 == comp)
+	{
+		char t[256];
+		snprintf(t, 256, "The word \"%s\" has been multiply defined:", newnode->string);
+		dict_error(dict, t);
+		newnode->exp = &null_exp;
+		comp = -1;
+	}
+
 	if (comp < 0)
 	{
 		if (NULL == n->left)
@@ -1431,10 +1439,8 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 			return n;
 		}
 		n->left = insert_dict(dict, n->left, newnode);
-		return n;
-		/* return rebalance(n); Uncomment to get an AVL tree */
 	}
-	else if (comp > 0)
+	else
 	{
 		if (NULL == n->right)
 		{
@@ -1442,16 +1448,10 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 			return n;
 		}
 		n->right = insert_dict(dict, n->right, newnode);
-		return n;
-		/* return rebalance(n); Uncomment to get an AVL tree */
 	}
-	else
-	{
-		char t[256];
-		snprintf(t, 256, "The word \"%s\" has been multiply defined\n", newnode->string);
-		dict_error(dict, t);
-		return NULL;
-	}
+
+	return n;
+	/* return rebalance(n); Uncomment to get an AVL tree */
 }
 
 /**
