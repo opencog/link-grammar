@@ -1424,8 +1424,10 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 	int comp = dict_order_strict(newnode->string, n);
 	if (0 == comp)
 	{
-		char t[256];
-		snprintf(t, 256, "The word \"%s\" has been multiply defined:", newnode->string);
+		char t[80+MAX_TOKEN_LENGTH];
+		snprintf(t, sizeof(t),
+		         "Ignoring word \"%s\", which has been multiply defined:",
+		         newnode->string);
 		dict_error(dict, t);
 		newnode->exp = &null_exp;
 		comp = -1;
