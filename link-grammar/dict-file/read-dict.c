@@ -128,6 +128,14 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	if (dict->recursive_error) return;
 	dict->recursive_error = true;
 
+	char token[MAX_TOKEN_LENGTH];
+	strcpy(token, dict->token);
+	bool save_is_special    = dict->is_special;
+	const char * save_input = dict->input;
+	const char * save_pin   = dict->pin;
+	int save_already_got_it = dict->already_got_it;
+	int save_line_number    = dict->line_number;
+
 	tokens[0] = '\0';
 	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
 	{
@@ -136,6 +144,13 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 		link_advance(dict);
 	}
 	tokens[pos] = '\0';
+
+	strcpy(dict->token, token);
+	dict->is_special     = save_is_special;
+	dict->input          = save_input;
+	dict->pin            = save_pin;
+	dict->already_got_it = save_already_got_it;
+	dict->line_number    = save_line_number;
 
 	if (s2)
 	{
