@@ -1323,6 +1323,7 @@ its my.p your their.p our thy.p yisser.p yousser ye'r:
 
 % Possesive version of me
 % Cost on D, DD: avoids use as determiner on "Make me coffee"
+%suppress: DUP-BASE (for me.p)
 me.p:
   DP+
   or [{AL-} & {@L+} & (D+ or DD+)];
@@ -2261,6 +2262,7 @@ DAY-ORDINALS.ord ORDINALS.ord :
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
 % also remember "-->"
 
+%suppress: DUP-BASE (for a.eq)
 A.eq B.eq C.eq D.eq E.eq F.eq G.eq H.eq I.eq J.eq K.eq L.eq M.eq
 N.eq O.eq P.eq Q.eq R.eq S.eq T.eq U.eq V.eq W.eq X.eq Y.eq Z.eq
 a.eq b.eq c.eq d.eq e.eq f.eq g.eq h.eq i.eq j.eq k.eq l.eq m.eq
@@ -9517,6 +9519,7 @@ maybe.c:
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
 
+%suppress: DUP-BASE (for seriously.ij)
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections, exclamations.
 % These are semantically important, so they've got to parse!
@@ -9636,6 +9639,7 @@ necessarily no_longer: E+ or EBm-;
 ever: E+ or EBm- or EC+ or MVa- or <COMP-OPENER>;
 
 never.e always: ({EN-} & (E+ or EB-)) or <COMP-OPENER>;
+%suppress: DUP-BASE (for rarely.e)
 seldom rarely.e: ({EE-} & (E+ or EB-)) or <COMP-OPENER>;
 
 % MVa-: "He did just what you asked."
@@ -9676,6 +9680,7 @@ only:
   or (Rnx+ & <CLAUSE-E>)
   or (MVp+ & Wq- & Q+);
 
+%suppress: DUP-BASE (for rarely.i)
 never.i at_no_time not_once rarely.i since_when:
   {MVp+} & Wq- & Q+;
 
@@ -9916,6 +9921,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
   [{Xd-} & (Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
+%suppress: DUP-BASE (for ..y)
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
 ..y *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
   (Wd- & W+)
