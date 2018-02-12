@@ -122,6 +122,7 @@ struct Dictionary_s
 	const char    * input;
 	const char    * pin;
 	bool            recursive_error;
+	const char    * suppress_warning;
 	bool            is_special;
 	int             already_got_it; /* For char, but needs to hold EOF */
 	int             line_number;

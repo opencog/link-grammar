@@ -326,6 +326,7 @@ void dictionary_delete(Dictionary dict)
 	pp_knowledge_close(dict->base_knowledge);
 	pp_knowledge_close(dict->hpsg_knowledge);
 	string_set_delete(dict->string_set);
+	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
 	free_dictionary(dict);

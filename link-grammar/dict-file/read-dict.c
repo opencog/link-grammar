@@ -197,6 +197,16 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 		/* Skip over all comments */
 		if ((c == '%') && (!quote_mode))
 		{
+			if (0 == strncmp(dict->pin, SUPPRESS, sizeof(SUPPRESS)-1))
+			{
+				const char *nl = strchr(dict->pin + sizeof(SUPPRESS)-1, '\n');
+				if (NULL != nl)
+				{
+					dict->suppress_warning =
+						strndup(dict->pin + sizeof(SUPPRESS)-1,
+					           nl - dict->pin - sizeof(SUPPRESS) + 1);
+				}
+			}
 			while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
 			dict->line_number++;
 			continue;
@@ -1480,6 +1490,17 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 }
 
 /**
+ * Find if a warning symbol exists in the currently suppress list.
+ * The warning symbols are constructed in a way that disallow overlap
+ * matching.
+ */
+static bool is_warning_suppressed(Dictionary dict, const char *warning_symbol)
+{
+	if (NULL == dict->suppress_warning) return false;
+	return (NULL != strstr(dict->suppress_warning, warning_symbol));
+}
+
+/**
  * insert_list() -
  * p points to a list of dict_nodes connected by their left pointers.
  * l is the length of this list (the last ptr may not be NULL).
@@ -1531,7 +1552,8 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		dict->root = insert_dict(dict, dict->root, dn);
 		dict->num_entries++;
 
-		if (verbosity > 1)
+		if ((verbosity_level(D_DICT+0) && !is_warning_suppressed(dict, DUP_BASE)) ||
+		    verbosity_level(D_SPEC+3))
 		{
 			/* Warn if there are words with a subscript that match a bare word. */
 			const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
@@ -1706,12 +1728,6 @@ static bool read_entry(Dictionary dict)
 		goto syntax_error;
 	}
 
-	/* pass the ; */
-	if (!link_advance(dict))
-	{
-		goto syntax_error;
-	}
-
 	/* At this point, dn points to a list of Dict_nodes connected by
 	 * their left pointers. These are to be inserted into the dictionary */
 	i = 0;
@@ -1721,6 +1737,19 @@ static bool read_entry(Dictionary dict)
 		i++;
 	}
 	dict->insert_entry(dict, dn, i);
+
+	if (dict->suppress_warning)
+	{
+		free((void *)dict->suppress_warning);
+		dict->suppress_warning = NULL;
+	}
+
+	/* pass the ; */
+	if (!link_advance(dict))
+	{
+		goto syntax_error;
+	}
+
 	return true;
 
 syntax_error:
