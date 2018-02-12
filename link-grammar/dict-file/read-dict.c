@@ -1488,11 +1488,8 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
 	{
-		char *u;
 		Dict_node *dnx;
 
-		u = strchr(dn->string, SUBSCRIPT_MARK);
-		if (u) *u = SUBSCRIPT_DOT;
 		prt_error("Warning: The word \"%s\" "
 		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
