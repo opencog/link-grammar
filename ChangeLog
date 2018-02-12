@@ -7,8 +7,9 @@ Version 5.4.4 (XXX 2018)
  * Fix conditional sentences.
  * Fix misc comparatives.
  * Fix crash on invalid UTF-8 input.
- * Fix many predicative adjective uses
- * Fix many paraphrasing-type constructions
+ * Fix many predicative adjective uses.
+ * Fix many paraphrasing-type constructions.
+ * Minor cleanup of word-lists.
 
 Version 5.4.3 (4 January 2018)
  * Fix man page installation (actually broken from 5.3.0).

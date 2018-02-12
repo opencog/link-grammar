@@ -948,7 +948,7 @@ bilinguals.n
 billboards.n
 billets.n
 billfolds.n
-billies
+billies.n
 billings.n
 billionaires.n
 billionths.n
@@ -2769,7 +2769,7 @@ dalmatians.n
 damages.n
 dames.n
 damselfishs.n
-damselflies
+damselflies.n
 damsels.n
 dams.n
 dancers.n
@@ -3089,7 +3089,7 @@ disagreements.n
 disambiguations.n
 disappearances.n
 disappointments.n
-disassembblies
+disassembblies.n
 disasters.n
 disbursements.n
 discards.n
@@ -4489,7 +4489,7 @@ giraffes.n
 girders.n
 girdles.n
 girlfriends.n
-girlies
+girlies.n
 girls.n
 gists.n
 giveaways.n
@@ -4989,7 +4989,7 @@ hijackers.n
 hijacks.n
 hikers.n
 hikes.n
-hillbillies
+hillbillies.n
 hillocks.n
 hillsides.n
 hills.n
@@ -5685,7 +5685,7 @@ keels.n
 keepers.n
 keepsakes.n
 kegs.n
-kellies
+kellies.n
 kennels.n
 Kenyans.n
 kerbs.n
@@ -10164,7 +10164,7 @@ subcontractors.n
 subcontracts.n
 subdivisions.n
 subeditors.n
-subfamilies
+subfamilies.n
 subgraphs.n
 subgroups.n
 subheadings.n
@@ -10243,7 +10243,7 @@ sunspots.n
 suntans.n
 supercomputers.n
 superconductors.n
-superfamilies
+superfamilies.n
 superficialities.n
 superfluities.n
 superintendents.n
