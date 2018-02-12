@@ -316,7 +316,7 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
 %inline %{
 void _py_error_default_handler(lg_errinfo *eh_lge, int *pedh_data)
 {
-    default_error_handler(lge, (void *)pedh_data);
+    default_error_handler(eh_lge, (void *)pedh_data);
 }
 
 /**
