@@ -460,7 +460,7 @@ int dict_order_strict(char *s, char *t)
 
 /* terse version */
 /* If one word contains a dot, the other one must also! */
-static inline int dict_order_strict(const char *s, Dict_node * dn)
+static inline int dict_order_strict(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
@@ -751,6 +751,28 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node *llist;
 	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
+	llist = prune_lookup_list(llist, s);
+	return llist;
+}
+
+/**
+ * strict_lookup_list() - return exact natch in the dictionary
+ *
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * Excludes any idioms that contain the word.
+ *
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * The list normally has 0 or 1 elements, unless the given word
+ * appears more than once in the dictionary.
+ *
+ * The returned list must be freed with file_free_lookup().
+ */
+static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
+{
+	Dict_node *llist;
+	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -1426,7 +1448,8 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 	{
 		char t[80+MAX_TOKEN_LENGTH];
 		snprintf(t, sizeof(t),
-		         "Ignoring word \"%s\", which has been multiply defined:",
+		         "Ignoring word \"%s\", which has been multiply defined "
+		         "(use verbosity=2 for more details): ",
 		         newnode->string);
 		dict_error(dict, t);
 		newnode->exp = &null_exp;
@@ -1503,24 +1526,47 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		        dn->string, dict->line_number, dict->name);
 		free(dn);
 	}
-	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
-	{
-		Dict_node *dnx;
-
-		prt_error("Warning: The word \"%s\" "
-		          "found near line %d of %s matches the following words:",
-	             dn->string, dict->line_number, dict->name);
-		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-			prt_error("\t%s", dnx->string);
-		}
-		prt_error("\n\tThis word will be ignored.\n");
-		file_free_lookup(dn_head);
-		free(dn);
-	}
 	else
 	{
 		dict->root = insert_dict(dict, dict->root, dn);
 		dict->num_entries++;
+
+		if (verbosity > 1)
+		{
+			/* Warn if there are words with a subscript that match a bare word. */
+			const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
+			char *bareword;
+
+			if (NULL != sm)
+			{
+				bareword = strdupa(dn->string);
+				bareword[sm - dn->string] = '\0';
+			}
+			else
+			{
+				bareword = (char *)dn->string;
+			}
+
+			if ((dn_head = strict_lookup_list(dict, bareword)) != NULL)
+			{
+				bool match_found = false;
+				for (Dict_node *dnx = dn_head; dnx != NULL; dnx = dnx->right) {
+					if (0 != strcmp(dnx->string, dn->string))
+					{
+						if (!match_found)
+						{
+							prt_error("Warning: The word \"%s\" found near line "
+										 "%d of %s\n\t matches the following words:",
+										 dn->string, dict->line_number, dict->name);
+							match_found = true;
+						}
+						prt_error("\t%s", dnx->string);
+					}
+				}
+				if (match_found) prt_error("\n");
+				file_free_lookup(dn_head);
+			}
+		}
 	}
 
 	insert_list(dict, p, k);
