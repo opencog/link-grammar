@@ -520,7 +520,7 @@ static inline int dict_order_bare(const char *s, const Dict_node * dn)
  * you come to the end of one of them, or until you find unequal
  * characters.  A "*" matches anything before the subscript mark.
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
- * his behavior matches that of the function dict_order_bare().
+ * This behavior matches that of the function dict_order_bare().
  */
 #define D_DOW 6
 static inline int dict_order_wild(const char * s, const Dict_node * dn)
@@ -750,7 +750,7 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 }
 
 /**
- * strict_lookup_list() - return exact natch in the dictionary
+ * strict_lookup_list() - return exact match in the dictionary
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
  * Excludes any idioms that contain the word.
