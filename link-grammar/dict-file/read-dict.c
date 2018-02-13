@@ -1030,10 +1030,9 @@ void add_empty_word(Dictionary const dict, X_node *x)
 static bool is_number(const char * str)
 {
 	if ('+' == str[0] || '-' == str[0]) str++;
-	if (strspn(str, "0123456789.") == strlen(str))
-		return true;
+	size_t numlen = strspn(str, "0123456789.");
 
-	return false;
+	return str[numlen] == '\0';
 }
 
 /* ======================================================================== */
