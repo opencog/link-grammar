@@ -1424,9 +1424,9 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 /* ======================================================================== */
 /**
  * Insert the new node into the dictionary below node n.
- * Give error message if the new element's string is already there.
- * Assumes that the "n" field of new is already set, and the left
- * and right fields of it are NULL.
+ * "newnode" left and right fields are NULL, and its string is already
+ * there.  If the string is already found in the dictionary, give an error
+ * message and effectively ignore it.
  *
  * The resulting tree is highly unbalanced. It needs to be rebalanced
  * before being used.  The DSW algo below is ideal for that.
