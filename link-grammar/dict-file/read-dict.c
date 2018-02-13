@@ -299,7 +299,7 @@ static bool link_advance(Dictionary dict)
 	do
 	{
 		bool ok = get_character(dict, false, c);
-		if (false == ok) return false;
+		if (!ok) return false;
 	}
 	while (lg_isspace(c[0]));
 
@@ -363,7 +363,7 @@ static bool link_advance(Dictionary dict)
 			}
 		}
 		bool ok = get_character(dict, quote_mode, c);
-		if (false == ok) return false;
+		if (!ok) return false;
 	}
 	return true;
 }
