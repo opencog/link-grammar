@@ -541,36 +541,20 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 /**
  * dict_match --  return true if strings match, else false.
  * A "bare" string (one without a subscript) will match any corresponding
- * string with a suffix; so, for example, "make" and "make.n" are
+ * string with a subscript; so, for example, "make" and "make.n" are
  * a match.  If both strings have subscripts, then the subscripts must match.
  *
  * A subscript is the part that follows the SUBSCRIPT_MARK.
  */
 static bool dict_match(const char * s, const char * t)
 {
-	char *ds, *dt;
-	ds = strrchr(s, SUBSCRIPT_MARK);
-	dt = strrchr(t, SUBSCRIPT_MARK);
+	while ((*s != '\0') && (*s == *t)) { s++; t++; }
 
-#if SUBSCRIPT_MARK == '.'
-	/* a dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	if ((dt != NULL) && ((*(dt+1) == '\0') ||
-	    (isdigit((int)*(dt+1))))) dt = NULL;
-	if ((ds != NULL) && ((*(ds+1) == '\0') ||
-	    (isdigit((int)*(ds+1))))) ds = NULL;
-#endif
+	if (*s == *t) return true; /* both are '\0' */
+	if ((*s == 0) && (*t == SUBSCRIPT_MARK)) return true;
+	if ((*s == SUBSCRIPT_MARK) && (*t == 0)) return true;
 
-	/* dt is NULL when there's no prefix ... */
-	if (dt == NULL && ds != NULL) {
-		if (((int)strlen(t)) > (ds-s)) return false;   /* we need to do this to ensure that */
-		return (strncmp(s, t, ds-s) == 0);             /* "i.e." does not match "i.e" */
-	} else if (dt != NULL && ds == NULL) {
-		if (((int)strlen(s)) > (dt-t)) return false;
-		return (strncmp(s, t, dt-t) == 0);
-	} else {
-		return (strcmp(s, t) == 0);
-	}
+	return false;
 }
 
 /* ======================================================================== */
