@@ -1485,7 +1485,11 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 					char *info = display(sent->dict, wt);
 
 					if (NULL == info) return;
-					append_string(s, "Token \"%s\" %s", wt, info);
+					append_string(s, "Token \"%s\" ", wt);
+					/* Cannot use append_string() for "info" because it may be
+					 * a multi-MB string due to !!*
+					 * (printing all dictionary words). */
+					dyn_strcat(s, info);
 					free(info);
 				}
 				else if (word_split) append_string(s, " %s", wt);

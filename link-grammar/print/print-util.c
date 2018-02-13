@@ -167,8 +167,8 @@ int vappend_string(dyn_str * string, const char *fmt, va_list args)
 
 	if (templen >= TMPLEN)
 	{
-		/* TMPLEN is too small - use a bigger buffer. Couldn't actually
-		 * find any example of entering this code with templen>=1024... */
+		/* TMPLEN is too small - use a bigger buffer. This may happen
+		 * when printing dictionary words using !! with a wildcard. */
 		temp_string = alloca(templen+1);
 		templen = vsnprintf(temp_string, templen+1, fmt, args);
 		if (templen < 0) goto error;
