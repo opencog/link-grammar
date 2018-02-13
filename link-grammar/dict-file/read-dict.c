@@ -1445,6 +1445,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 		         "(use verbosity=2 for more details): ",
 		         newnode->string);
 		dict_error(dict, t);
+		/* Too late to skip insertion - insert it with a null expression. */
 		newnode->exp = &null_exp;
 		comp = -1;
 	}
