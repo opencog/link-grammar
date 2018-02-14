@@ -9058,16 +9058,21 @@ a_little_while:
   or (OFd+ & Dm+);
 
 %
-pretty.e extremely very_very very_very_very exceptionally
-unbelievably incurably extraordinarily
-jolly.e mighty.e damn.e bloody.e exceedingly overly downright plumb
-vitally abundantly chronically frightfully genuinely
-humanly patently
-singularly supremely unbearably unmistakably unspeakably
-awfully decidedly demonstrably fashionably frighteningly horrifyingly
-indescribably intolerably laughably predominantly
+pretty.e very_very very_very_very
+jolly.e mighty.e damn.e bloody.e downright plumb
+vitally chronically frightfully genuinely
+humanly patently singularly supremely
+decidedly demonstrably fashionably
+frighteningly horrifyingly
+laughably predominantly hugely:
+  ({EE- or <wantPHc>} & EA+) or (<wantPHc> & EE+);
+
+extremely exceptionally unbelievably incurably extraordinarily
+exceedingly overly abundantly
+unbearably unmistakably unspeakably
+awfully indescribably intolerably
 unalterably undisputedly unpardonably
-unreasonably unusually hugely infernally:
+unreasonably unusually infernally:
   ({EE-} & EA+) or EE+;
 
 notoriously.e:
