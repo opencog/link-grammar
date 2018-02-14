@@ -1,4 +1,4 @@
-WORDS=			\
+WORDS= \
 	currency \
 	currency.p \
 	entities.given-bisex.sing \
@@ -20,22 +20,23 @@ WORDS=			\
 	units.5 \
 	units.6 \
 	units.a \
-	words.adj.1-vowel	\
 	words.adj.1-const	\
+	words.adj.1-vowel	\
 	words.adj.2	\
 	words.adj.3	\
 	words.adv.1	\
 	words-medical.adv.1	\
 	words.adv.2	\
-	words.adv.3	\
+	words.adv.3-const	\
+	words.adv.3-vowel	\
 	words.adv.4	\
-	words.n.1-vowel	\
 	words.n.1-const	\
+	words.n.1-vowel	\
 	words.n.1.gerund	\
 	words.n.2.s	\
 	words.n.2.x	\
-	words.n.3-vowel	\
 	words.n.3-const	\
+	words.n.3-vowel	\
 	words.n.3.y	\
 	words.n.t	\
 	words-medical.prep.1	\

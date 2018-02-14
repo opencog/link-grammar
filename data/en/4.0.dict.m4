@@ -9229,14 +9229,21 @@ more_and_more less_and_less more_or_less: Em+ or Wa-;
 % Adverbs like "biochemically". These tend to answer the question "how?"
 % with a noun-form (as opposed to being verb-derived) A lot of these are
 % of the "-ically" form
-/en/words/words.adv.3:
-  EA+
+%
+/en/words/words.adv.3-const:
+  (<wantPHc> & EA+)
+  or ({Xd- & Xc+} & (E+ or MVa-))
+  or EBm-
+  or ({{Xd-} & Xc+} & CO+);
+
+% academically administratively aesthetically
+/en/words/words.adv.3-vowel:
+  (<wantPHv> & EA+)
   or ({Xd- & Xc+} & (E+ or MVa-))
   or EBm-
   or ({{Xd-} & Xc+} & CO+);
 
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
-% academically administratively aesthetically
 
 % ---------------------------------------------------------
 %ADVERBS WHOSE ONLY (MAIN) USE IS POST_VERBAL
