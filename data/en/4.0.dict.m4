@@ -9074,42 +9074,49 @@ unbearably unmistakably unspeakably
 awfully indescribably intolerably
 unalterably undisputedly unpardonably
 unreasonably unusually infernally:
-  ({EE-} & EA+) or EE+;
+  ({EE- or <wantPHv>} & EA+) or (<wantPHv> & EE+);
 
 notoriously.e:
-  ({EE-} & EA+) or EE+ or Em+;
+  ({EE- or <wantPHc>} & EA+) or (<wantPHc> & (EE+ or Em+));
 
 % ---------------------------------------------------------
 % Adverbs whose main use is adjectival, but can be used with
 % adverbs such as "faster", "dumber", etc.
 % "That one is marginally better". (thus EBm+)
 % "It's an inherently better method" thus EC+ link
-fabulously incomparably inherently marginally moderately
-relatively ridiculously
-unacceptably unarguably undeniably unimaginably:
-  ({EE-} &
-    (EA+
-    or EC+
-    or EBm-))
-  or EE+;
+fabulously marginally moderately relatively ridiculously:
+  ({EE- or <wantPHc>} & (EA+ or EC+))
+  or ({EE-} & EBm-)
+  or (<wantPHc> & EE+);
 
-wide.e: EE+;
+incomparably inherently unacceptably unarguably undeniably unimaginably:
+  ({EE- or <wantPHv>} & (EA+ or EC+))
+  or ({EE-} & EBm-)
+  or (<wantPHv> & EE+);
+
+wide.e: <wantPHc> & EE+;
 
 % {EE-} & EE+: "not very much"
 % [[EE-]]: "It hurts, but not very"
 % MVl- & MVl+: "we are going to arrive very nearly on time"
 very.e way.e:
-  ({EE-} & EA+)
-  or ({EE-} & EE+)
+  ({EE- or <wantPHc>} & EA+)
+  or ({EE- or <wantPHc>} & EE+)
   or [[EE-]]
   or [[La-]]
   or (MVl- & MVl+);
 
-not_very: EA+;
+not_very: <wantPHc> & EA+;
 
-real.e: [[EA+ or EE+]];
-quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
+real.e: <wantPHc> & [[EA+ or EE+]];
+quite:
+   ({EE- or <wantPHc>} & EA+)
+   or (<wantPHc> & EE+)
+   or EZ+
+   or [[Em+]];
 
+% --- XXX TODO --- need to add <wantPHc> or <wantPHv> to adverbs below.
+%
 amazingly incredibly:
   ({EE-} & EA+)
   or EE+
