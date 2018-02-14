@@ -9062,6 +9062,8 @@ a_little_while:
 % This is very simply just "({EE-} & EA+) or EE+" without the phonemes.
 <adv-adj-econst>: ({EE- or <wantPHc>} & EA+) or (<wantPHc> & EE+);
 <adv-adj-evowel>: ({EE- or <wantPHv>} & EA+) or (<wantPHv> & EE+);
+<adv-adj-const>: <wantPHc> & (EA+ or EE+);
+<adv-adj-vowel>: <wantPHv> & (EA+ or EE+);
 %
 %
 pretty.e very_very very_very_very
@@ -9113,7 +9115,7 @@ very.e way.e:
 
 not_very: <wantPHc> & EA+;
 
-real.e: <wantPHc> & [[EA+ or EE+]];
+real.e: [[<adv-adj-const>]];
 quite:
    <adv-adj-econst>
    or EZ+
@@ -9134,66 +9136,85 @@ strangely:
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & {EE-} & MVa-);
 
-rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
+rather:
+  <adv-adj-const>
+  or Vw- or ({Xc+ & {Xd-}} & CO+);
 
 particularly:
-  EA+ or EE+ or Em+ or EB-
+  <adv-adj-const>
+  or Em+ or EB-
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ({Xc+ & {Xd-}} & CO+);
 
-notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
+notably:
+  <adv-adj-const>
+  or EB- or ({Xc+ & {Xd-}} & CO+);
 
 % Mp- & Ju+: "She was a girl nearly John's age"
 % MVp- & Ju+: "She was a girl of nearly John's age"
-almost nearly:
-  EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-
+almost:
+  <adv-adj-vowel>
+  or EN+ or EZ+ or Em+ or EBm-
+  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or ((Mp- or MVp-) & Ju+);
+
+nearly:
+  <adv-adj-const>
+  or EN+ or EZ+ or Em+ or EBm-
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ((Mp- or MVp-) & Ju+);
 
 % The below is similar to "nearly" ...
 just_about: Em+ or EN+ or EZ+ or EA+;
 
-entirely reasonably highly fairly totally completely terribly:
-  EA+ or EE+
+entirely:
+  <adv-adj-vowel>
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+
+reasonably highly fairly totally completely terribly:
+  <adv-adj-const>
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 absolutely:
-  EA+ or EE+ or EBm-
+  <adv-adj-vowel>
+  or EBm-
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 % allowing as opener also
 altogether equally:
-  EA+
-  or EE+
+  <adv-adj-vowel>
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>))
   or ({Xc+ & {Xd-}} & CO+);
 
 really.e:
-  EA+ or EE+ or Em+ or EBm-;
+  <adv-adj-const> or Em+ or EBm-;
 
 surprisingly:
-  EA+ or EE+
+  <adv-adj-const>
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & E+)
   or (Xd- & Xc+ & MVa-);
 
 especially:
-  EA+ or EE+ or EB- or Em+
+  <adv-adj-vowel>
+  or EB- or Em+
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ({Xc+ & {Xd-}} & CO+);
 
-virtually: EA+ or EE+ or EN+ or EZ+ or Em+;
+virtually: <adv-adj-const> or EN+ or EZ+ or Em+;
 
 wholly fully critically greatly grossly duly unduly:
-  EA+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+  (<wantPHc> & EA+)
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
-seemingly utterly: EA+ or Em+;
+seemingly: (<wantPHc> & EA+) or Em+;
+utterly: (<wantPHv> & EA+) or Em+;
 
 barely just_barely scarcely hardly merely truly practically:
-  Em+ or EBm- or EA+ or Wa- or ({EBm+} & <COMP-OPENER>);
+  Em+ or EBm- or (<wantPHc> & EA+) or Wa- or ({EBm+} & <COMP-OPENER>);
 
 partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
-  Em+ or EA+ or EB- or Wa-
+  Em+ or (<wantPHc> & EA+) or EB- or Wa-
   or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Em+: "It sure is great"
