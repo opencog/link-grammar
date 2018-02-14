@@ -8169,7 +8169,8 @@ just_not: <COMP-OPENER>;
 %
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
-% (EAh- & {Qe+}): "How big?"  "How tall?"
+% [EAh- & {Qe+}]: "How big?"  "How tall?" -- large cost, as it otherwise
+%     causes bizarre parses for "a decidedly jolly good player"
 <ordinary-adj>:
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
@@ -8180,7 +8181,7 @@ just_not: <COMP-OPENER>;
     or [[{DD-} & <noun-and-p>]]
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or (EAh- & {Qe+});
+  or [EAh- & {Qe+}];
 
 % PH-: connect, phonetically, to a/an if it is there.
 <ordinary-vowel-adj>:
