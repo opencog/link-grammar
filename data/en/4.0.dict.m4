@@ -8169,7 +8169,8 @@ just_not: <COMP-OPENER>;
 %
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
-% (EAh- & {Qe+}): "How big?"  "How tall?"
+% [EAh- & {Qe+}]: "How big?"  "How tall?" -- large cost, as it otherwise
+%     causes bizarre parses for "a decidedly jolly good player"
 <ordinary-adj>:
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
@@ -8180,7 +8181,7 @@ just_not: <COMP-OPENER>;
     or [[{DD-} & <noun-and-p>]]
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or (EAh- & {Qe+});
+  or [EAh- & {Qe+}];
 
 % PH-: connect, phonetically, to a/an if it is there.
 <ordinary-vowel-adj>:
@@ -8858,7 +8859,7 @@ than.e:
 % ({OFd+} & Dmu+): "I drank much of the beer"
 % cost on [[<noun-main-s>]] so that the above is prefered to an O- link
 much:
-  ({EE-} & ([[MVa-]] or ECa+ or <advcl-verb> or Qe+))
+  ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
@@ -9043,70 +9044,85 @@ far_from: {EE-} & EA+;
 
 a_bit a_little_bit the_least_bit:
   ({EE-} & EA+)
-  or EC+
   or EE+
+  or EC+
   or ({Xd- & Xc+} & MVa-)
   or [[<adv-of>]];
 
 % OFd+ & Dm+: "I will wait a little while of time"
 a_little_while:
   ({EE-} & EA+)
-  or EC+
   or EE+
+  or EC+
   or ({Xd- & Xc+} & MVa-)
   or [[<adv-of>]]
   or (OFd+ & Dm+);
 
+% Basic adverbial adjectives, with phoneme markers.
+% This is very simply just "({EE-} & EA+) or EE+" without the phonemes.
+<adv-adj-econst>: ({EE- or <wantPHc>} & EA+) or (<wantPHc> & EE+);
+<adv-adj-evowel>: ({EE- or <wantPHv>} & EA+) or (<wantPHv> & EE+);
+<adv-adj-const>: <wantPHc> & (EA+ or EE+);
+<adv-adj-vowel>: <wantPHv> & (EA+ or EE+);
 %
-pretty.e extremely very_very very_very_very exceptionally
-unbelievably incurably extraordinarily
-jolly.e mighty.e damn.e bloody.e exceedingly overly downright plumb
-vitally abundantly chronically frightfully genuinely
-humanly patently
-singularly supremely unbearably unmistakably unspeakably
-awfully decidedly demonstrably fashionably frighteningly horrifyingly
-indescribably intolerably laughably predominantly
+%
+pretty.e very_very very_very_very
+jolly.e mighty.e damn.e bloody.e downright plumb
+vitally chronically frightfully genuinely
+humanly patently singularly supremely
+decidedly demonstrably fashionably
+frighteningly horrifyingly
+laughably predominantly hugely:
+  <adv-adj-econst>;
+
+extremely exceptionally unbelievably incurably extraordinarily
+exceedingly overly abundantly
+unbearably unmistakably unspeakably
+awfully indescribably intolerably
 unalterably undisputedly unpardonably
-unreasonably unusually hugely infernally:
-  ({EE-} & EA+) or EE+;
+unreasonably unusually infernally:
+  <adv-adj-evowel>;
 
 notoriously.e:
-  ({EE-} & EA+) or EE+ or Em+;
+  <adv-adj-econst> or Em+;
 
 % ---------------------------------------------------------
 % Adverbs whose main use is adjectival, but can be used with
 % adverbs such as "faster", "dumber", etc.
 % "That one is marginally better". (thus EBm+)
 % "It's an inherently better method" thus EC+ link
-fabulously incomparably inherently marginally moderately
-relatively ridiculously
-unacceptably unarguably undeniably unimaginably:
-  ({EE-} &
-    (EA+
-    or EC+
-    or EBm-))
-  or EE+;
+fabulously marginally moderately relatively ridiculously:
+  <adv-adj-econst>
+  or ({EE- or <wantPHc>} & EC+)
+  or ({EE-} & EBm-);
 
-wide.e: EE+;
+incomparably inherently unacceptably unarguably undeniably unimaginably:
+  <adv-adj-evowel>
+  or ({EE- or <wantPHv>} & EC+)
+  or ({EE-} & EBm-);
+
+wide.e: <wantPHc> & EE+;
 
 % {EE-} & EE+: "not very much"
 % [[EE-]]: "It hurts, but not very"
 % MVl- & MVl+: "we are going to arrive very nearly on time"
 very.e way.e:
-  ({EE-} & EA+)
-  or ({EE-} & EE+)
+  <adv-adj-econst>
+  or ({EE- or <wantPHc>} & EE+)
   or [[EE-]]
   or [[La-]]
   or (MVl- & MVl+);
 
-not_very: EA+;
+not_very: <wantPHc> & EA+;
 
-real.e: [[EA+ or EE+]];
-quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
+real.e: [[<adv-adj-const>]];
+quite:
+   <adv-adj-econst>
+   or EZ+
+   or [[Em+]];
 
 amazingly incredibly:
-  ({EE-} & EA+)
-  or EE+
+  <adv-adj-evowel>
   or EBm-
   or ({Xd- & Xc+} & Em+)
   or ({Xc+ & {Xd-}} & CO+)
@@ -9114,73 +9130,91 @@ amazingly incredibly:
 
 % MVa-: "He is behaving very strangely"
 strangely:
-  ({EE-} & EA+)
-  or EE+
+  <adv-adj-econst>
   or EBm-
   or ({Xd- & Xc+} & Em+)
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & {EE-} & MVa-);
 
-rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
+rather:
+  <adv-adj-const>
+  or Vw- or ({Xc+ & {Xd-}} & CO+);
 
 particularly:
-  EA+ or EE+ or Em+ or EB-
+  <adv-adj-const>
+  or Em+ or EB-
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ({Xc+ & {Xd-}} & CO+);
 
-notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
+notably:
+  <adv-adj-const>
+  or EB- or ({Xc+ & {Xd-}} & CO+);
 
 % Mp- & Ju+: "She was a girl nearly John's age"
 % MVp- & Ju+: "She was a girl of nearly John's age"
-almost nearly:
-  EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-
+almost:
+  <adv-adj-vowel>
+  or EN+ or EZ+ or Em+ or EBm-
+  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or ((Mp- or MVp-) & Ju+);
+
+nearly:
+  <adv-adj-const>
+  or EN+ or EZ+ or Em+ or EBm-
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ((Mp- or MVp-) & Ju+);
 
 % The below is similar to "nearly" ...
 just_about: Em+ or EN+ or EZ+ or EA+;
 
-entirely reasonably highly fairly totally completely terribly:
-  EA+ or EE+
+entirely:
+  <adv-adj-vowel>
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+
+reasonably highly fairly totally completely terribly:
+  <adv-adj-const>
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 absolutely:
-  EA+ or EE+ or EBm-
+  <adv-adj-vowel>
+  or EBm-
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 % allowing as opener also
 altogether equally:
-  EA+
-  or EE+
+  <adv-adj-vowel>
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>))
   or ({Xc+ & {Xd-}} & CO+);
 
 really.e:
-  EA+ or EE+ or Em+ or EBm-;
+  <adv-adj-const> or Em+ or EBm-;
 
 surprisingly:
-  EA+ or EE+
+  <adv-adj-const>
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & E+)
   or (Xd- & Xc+ & MVa-);
 
 especially:
-  EA+ or EE+ or EB- or Em+
+  <adv-adj-vowel>
+  or EB- or Em+
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ({Xc+ & {Xd-}} & CO+);
 
-virtually: EA+ or EE+ or EN+ or EZ+ or Em+;
+virtually: <adv-adj-const> or EN+ or EZ+ or Em+;
 
 wholly fully critically greatly grossly duly unduly:
-  EA+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+  (<wantPHc> & EA+)
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
-seemingly utterly: EA+ or Em+;
+seemingly: (<wantPHc> & EA+) or Em+;
+utterly: (<wantPHv> & EA+) or Em+;
 
 barely just_barely scarcely hardly merely truly practically:
-  Em+ or EBm- or EA+ or Wa- or ({EBm+} & <COMP-OPENER>);
+  Em+ or EBm- or (<wantPHc> & EA+) or Wa- or ({EBm+} & <COMP-OPENER>);
 
 partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
-  Em+ or EA+ or EB- or Wa-
+  Em+ or (<wantPHc> & EA+) or EB- or Wa-
   or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Em+: "It sure is great"
@@ -9195,14 +9229,21 @@ more_and_more less_and_less more_or_less: Em+ or Wa-;
 % Adverbs like "biochemically". These tend to answer the question "how?"
 % with a noun-form (as opposed to being verb-derived) A lot of these are
 % of the "-ically" form
-/en/words/words.adv.3:
-  EA+
+%
+/en/words/words.adv.3-const:
+  (<wantPHc> & EA+)
+  or ({Xd- & Xc+} & (E+ or MVa-))
+  or EBm-
+  or ({{Xd-} & Xc+} & CO+);
+
+% academically administratively aesthetically
+/en/words/words.adv.3-vowel:
+  (<wantPHv> & EA+)
   or ({Xd- & Xc+} & (E+ or MVa-))
   or EBm-
   or ({{Xd-} & Xc+} & CO+);
 
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
-% academically administratively aesthetically
 
 % ---------------------------------------------------------
 %ADVERBS WHOSE ONLY (MAIN) USE IS POST_VERBAL
@@ -9378,17 +9419,18 @@ occasionally.e often.e originally.e:
 % (EEh- & {Qe+}): "How quickly?"
 % <fronted>: "Onward came the cavalry"
 % ECa+: "It is vastly cheaper"
+% XXX TODO the PH- should be split into PHc- and PHv- versions.
 <ordinary-adv>:
   ({EE- or EF+} &
     (({Xd- & Xc+} & MVa-)
     or Em+
-    or ECa+
+    or ({PH-} & ECa+)
     or ({Xc+ & {Xd-}} & COa+)
     or Qe+
     or <advcl-verb>
     or <adverb-join>
     or <fronted>
-    or [[EA+]]))
+    or [[{PH-} & EA+]]))
   or (EEh- & {Qe+});
 
 % XXX fixme: there are things in there, like "tall.e" that seem not to
