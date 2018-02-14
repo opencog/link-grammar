@@ -9044,20 +9044,25 @@ far_from: {EE-} & EA+;
 
 a_bit a_little_bit the_least_bit:
   ({EE-} & EA+)
-  or EC+
   or EE+
+  or EC+
   or ({Xd- & Xc+} & MVa-)
   or [[<adv-of>]];
 
 % OFd+ & Dm+: "I will wait a little while of time"
 a_little_while:
   ({EE-} & EA+)
-  or EC+
   or EE+
+  or EC+
   or ({Xd- & Xc+} & MVa-)
   or [[<adv-of>]]
   or (OFd+ & Dm+);
 
+% Basic adverbial adjectives, with phoneme markers.
+% This is very simply just "({EE-} & EA+) or EE+" without the phonemes.
+<adv-adj-econst>: ({EE- or <wantPHc>} & EA+) or (<wantPHc> & EE+);
+<adv-adj-evowel>: ({EE- or <wantPHv>} & EA+) or (<wantPHv> & EE+);
+%
 %
 pretty.e very_very very_very_very
 jolly.e mighty.e damn.e bloody.e downright plumb
@@ -9066,7 +9071,7 @@ humanly patently singularly supremely
 decidedly demonstrably fashionably
 frighteningly horrifyingly
 laughably predominantly hugely:
-  ({EE- or <wantPHc>} & EA+) or (<wantPHc> & EE+);
+  <adv-adj-econst>;
 
 extremely exceptionally unbelievably incurably extraordinarily
 exceedingly overly abundantly
@@ -9074,10 +9079,10 @@ unbearably unmistakably unspeakably
 awfully indescribably intolerably
 unalterably undisputedly unpardonably
 unreasonably unusually infernally:
-  ({EE- or <wantPHv>} & EA+) or (<wantPHv> & EE+);
+  <adv-adj-evowel>;
 
 notoriously.e:
-  ({EE- or <wantPHc>} & EA+) or (<wantPHc> & (EE+ or Em+));
+  <adv-adj-econst> or Em+;
 
 % ---------------------------------------------------------
 % Adverbs whose main use is adjectival, but can be used with
@@ -9085,14 +9090,14 @@ notoriously.e:
 % "That one is marginally better". (thus EBm+)
 % "It's an inherently better method" thus EC+ link
 fabulously marginally moderately relatively ridiculously:
-  ({EE- or <wantPHc>} & (EA+ or EC+))
-  or ({EE-} & EBm-)
-  or (<wantPHc> & EE+);
+  <adv-adj-econst>
+  or ({EE- or <wantPHc>} & EC+)
+  or ({EE-} & EBm-);
 
 incomparably inherently unacceptably unarguably undeniably unimaginably:
-  ({EE- or <wantPHv>} & (EA+ or EC+))
-  or ({EE-} & EBm-)
-  or (<wantPHv> & EE+);
+  <adv-adj-evowel>
+  or ({EE- or <wantPHv>} & EC+)
+  or ({EE-} & EBm-);
 
 wide.e: <wantPHc> & EE+;
 
@@ -9100,7 +9105,7 @@ wide.e: <wantPHc> & EE+;
 % [[EE-]]: "It hurts, but not very"
 % MVl- & MVl+: "we are going to arrive very nearly on time"
 very.e way.e:
-  ({EE- or <wantPHc>} & EA+)
+  <adv-adj-econst>
   or ({EE- or <wantPHc>} & EE+)
   or [[EE-]]
   or [[La-]]
@@ -9110,16 +9115,12 @@ not_very: <wantPHc> & EA+;
 
 real.e: <wantPHc> & [[EA+ or EE+]];
 quite:
-   ({EE- or <wantPHc>} & EA+)
-   or (<wantPHc> & EE+)
+   <adv-adj-econst>
    or EZ+
    or [[Em+]];
 
-% --- XXX TODO --- need to add <wantPHc> or <wantPHv> to adverbs below.
-%
 amazingly incredibly:
-  ({EE-} & EA+)
-  or EE+
+  <adv-adj-evowel>
   or EBm-
   or ({Xd- & Xc+} & Em+)
   or ({Xc+ & {Xd-}} & CO+)
@@ -9127,8 +9128,7 @@ amazingly incredibly:
 
 % MVa-: "He is behaving very strangely"
 strangely:
-  ({EE-} & EA+)
-  or EE+
+  <adv-adj-econst>
   or EBm-
   or ({Xd- & Xc+} & Em+)
   or ({Xc+ & {Xd-}} & CO+)
