@@ -44,7 +44,11 @@ levels include the messages of the lower ones.
 dictionary.  As with levels greater then 4, higher levels include the
 messages of the lower ones.
 
+* 10: Basic dictionary debug.
+
 100-...: Show only messages exactly at the specified level.
+* 103: Show unsubscripted dictionary words and subscripted ones which share
+       the same base word.
 
 ### 2) -debug=LOCATIONS (-de=LOCATIONS)
 Show only messages from these LOCATIONS. The LOCATIONS string is a

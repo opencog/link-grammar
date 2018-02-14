@@ -1,4 +1,4 @@
-﻿aircraft.p
+aircraft.p
 bacteria.p
 basemen.n
 beano.p

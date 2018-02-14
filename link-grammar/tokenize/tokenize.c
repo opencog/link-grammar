@@ -1086,10 +1086,6 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 	  then the "." and everything after it is considered to be the subscript
 	  of the word.
 
-	  The dictionary reader does not allow you to have two words that
-	  match according to the criterion below.  (so you can't have
-	  "dog.n" and "dog")
-
 	  Quote marks are used to allow you to define words in the dictionary
 	  which would otherwise be considered part of the dictionary, as in
 
@@ -1113,16 +1109,11 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 
 		   If there is no strippable string, then the process terminates.
 
-	Rule for defining subscripts in input words:
-
-	   The subscript rule is followed just as when reading the dictionary.
-
 	When does a word in the sentence match a word in the dictionary?
 
-	   Matching is done as follows: Two words with subscripts must match
-	   exactly.  If neither has a subscript they must match exactly.  If one
-	   does and one doesn't then they must match when the subscript is
-	   removed.  Notice that this is symmetric.
+		The matching is done disregarding the subscript of the dictionary
+		word. This means a sentence word can match at most one dictionary word
+		that doesn't have a subscript, and many words that have a subscript.
 
 	So, under this system, the dictionary could have the words "Ill" and
 	also the word "Ill."  It could also have the word "i.e.", which could be

@@ -277,7 +277,7 @@ nonCAP.zzz: ZZZ-;
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 % COa+ is used to block links to COd-
-% Xc+ & Ic+: connect to imperatives (infinitve verbs): "Anyhow, don't"
+% Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 <directive-opener>:
   {[[Wa-]]} &
@@ -297,7 +297,7 @@ nonCAP.zzz: ZZZ-;
 % in "There they are" tagged as an entity, just because its capitalized.
 % We really do want to force the lower-case usage, because the lower case
 % is in the dict, and its the right word to use. (The only entities that
-% should be tagged as such are those that are in the dicts, in thier
+% should be tagged as such are those that are in the dicts, in their
 % capitalized form, e.g. "Sue.f" female given name as opposed to "sue.v"
 % verb in the sentence "Sue went to the store.")
 %
@@ -324,7 +324,7 @@ INITIALS <entity-singular>:
   or <directive-opener>;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
-% prefered to the regex match (i.e. for a common noun starting a
+% preferred to the regex match (i.e. for a common noun starting a
 % sentence). However, the other regex matches (e.g. MC-NOUN-WORDS)
 % should have a cost that is even higher (so that we take the
 % capitalized version before we take any other matches.)
@@ -356,7 +356,7 @@ PL-CAPITALIZED-WORDS:
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 % Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
-% <noun-and-s> is trikcy when used with [[...]] connectors.
+% <noun-and-s> is tricky when used with [[...]] connectors.
 % Careful for bad parses of
 % "This is the dog and cat Pat and I chased and ate"
 % "actress Whoopi Goldberg and singer Michael Jackson attended the ceremony"
@@ -451,7 +451,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
 % Number abbreviations: no.x No.x
 % pp. paragraph, page   art article
-% RR roural route
+% RR rural route
 No.x No..x no.x no..x Nos.x Nos..x nos.x nos..x
 Nr.x Nr..x Nrs.x Nrs..x nr.x nr..x nrs.x nrs..x
 Num.x Num..x num.x num..x pp.x pp..x
@@ -495,7 +495,7 @@ Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
 
 
 % Titles, e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D.
-% Gack. See absurdely large collection at:
+% Gack. See absurdly large collection at:
 % http://en.wikipedia.org/wiki/List_of_post-nominal_letters
 Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
 AB.y A.B..y AIA.y A.I.A..y
@@ -728,7 +728,7 @@ tawny.n ultramarine.n umber.n yellow.n:
   or Wa-;
 
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION
-% This must appear after other categories so it doesnt interfere with those.
+% This must appear after other categories so it doesn't interfere with those.
 /en/words/entities.national.sing:
 <marker-entity> or <entity-singular>;
 
@@ -1256,7 +1256,7 @@ times.n:
 % ====================================================================
 %PRONOUNS
 
-% MXs+: "he, the shop onwer, ..."
+% MXs+: "he, the shop owner, ..."
 she he:
   {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or SJls+);
 
@@ -1312,8 +1312,9 @@ its my.p your their.p our thy.p yisser.p yousser ye'r:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
-% Possesive version of me
+% Possessive version of me
 % Cost on D, DD: avoids use as determiner on "Make me coffee"
+%suppress: DUP-BASE (for me.p)
 me.p:
   DP+
   or [{AL-} & {@L+} & (D+ or DD+)];
@@ -1449,7 +1450,7 @@ this.d:
   or DTn+
   or Wa-;
 
-% [[<noun-main-p>]] costs so that ditranstive verbs don't suffer:
+% [[<noun-main-p>]] costs so that ditransitive verbs don't suffer:
 % "I taught these mice to jump", taught is ditransitive, we don't want
 % "these" to be the object.  See also "those"
 % (Jd- & Dmu- & Op-): "I gave him a number of these"
@@ -1462,7 +1463,7 @@ these:
   or <noun-and-p>
   or Wa-;
 
-% [[<noun-main-p>]] costs so that ditranstive verbs don't suffer,
+% [[<noun-main-p>]] costs so that ditransitive verbs don't suffer,
 % and get the D+ link instead of the O- link.
 % See also "these"
 those:
@@ -1507,8 +1508,8 @@ many:
 
 % A naked <noun-main2-x> costs more than one with other links,
 % so that ditransitive verbs don't get spurious links to all.a
-% XXX can this be tighetend up??
-% <noun-main2-x> costs no mater what, so that Ofd+ is prefered.
+% XXX can this be tightened up??
+% <noun-main2-x> costs no mater what, so that Ofd+ is preferred.
 % [E+]0.5: all modifying a verb probably is not right.
 % Wa-: "All the people!" as a response to a question.
 all.a:
@@ -1614,7 +1615,7 @@ a_couple:
 %  [[<noun-sub-p> & <noun-main-p>]] or
   <noun-and-p> or Wa-;
 
-% NNumeric modifier: "a couple of thousand dollars"
+% Numeric modifier: "a couple of thousand dollars"
 a_couple_of:
   NN+ or ND+ or NIn+;
 
@@ -1673,7 +1674,7 @@ the_most:
   or MVa-;
 
 % "a part.n" should cover most cases.  Perhaps [[OF+ & <noun-main-s>]] should be
-% reomved??  Anyway, its costed to give OFd+ priority. Likewise, should probably
+% removed??  Anyway, its costed to give OFd+ priority. Likewise, should probably
 % retire <adv-of> as well, right?
 part.i:
   (OFd+ & Dm+)
@@ -1696,7 +1697,7 @@ none:
   or [[<adv-of>]]
   or Wa-;
 
-% costly <adv-of> so that OFd+ is prefered.
+% costly <adv-of> so that OFd+ is preferred.
 rest.i:
   [[DD- & <adv-of>]];
 
@@ -2252,6 +2253,7 @@ DAY-ORDINALS.ord ORDINALS.ord :
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
 % also remember "-->"
 
+%suppress: DUP-BASE (for a.eq)
 A.eq B.eq C.eq D.eq E.eq F.eq G.eq H.eq I.eq J.eq K.eq L.eq M.eq
 N.eq O.eq P.eq Q.eq R.eq S.eq T.eq U.eq V.eq W.eq X.eq Y.eq Z.eq
 a.eq b.eq c.eq d.eq e.eq f.eq g.eq h.eq i.eq j.eq k.eq l.eq m.eq
@@ -2263,7 +2265,7 @@ fiscal.i: TY+ & <noun-main-s>;
 or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 % Allows parsing of "dollars per day" or "mL/sec" but is somewhat
-% inconsistent with the equation persing otherwise described below.
+% inconsistent with the equation parsing otherwise described below.
 % XXX overall, eqn parsing could be strengthened.
 per "/.per": Us+ & Mp-;
 
@@ -2282,7 +2284,7 @@ per "/.per": Us+ & Mp-;
 % <verb-wall> : links verb to wall or to controlling phrase.
 % <verb-s>    : links verbs to singular subjects
 % <verb-pl>   : links verbs to plural subjects
-% <verb-i>    : links to infinitve
+% <verb-i>    : links to infinitive
 % <verb-pl,i> : to plural subjects or infinitives
 % <verb-sp>   : to singular or plural subject
 % <verb-pp>   : to past-participles
@@ -2377,7 +2379,7 @@ per "/.per": Us+ & Mp-;
 <verb-sip>:  {@E-} & hPF- & {<verb-wall>} & hSIp+;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
-% many transitive verb constructions.  For quetions, we need to force
+% many transitive verb constructions.  For questions, we need to force
 % a verb-wall connector; this is what the (B*w- or B*m-) & <verb-wall>
 % part does. For the other B- forms, we don't need the wall.  To force
 % the wall, we just list all the others.
@@ -2442,7 +2444,7 @@ per "/.per": Us+ & Mp-;
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
 <verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
-% Just like above, but no aux, shuld always be anded with I+.
+% Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
 <verb-rq-aux>: Rw- or ({{Xd-} & Iq-} & (Qd- or Qw- or Qe-)) or [()];
@@ -2464,7 +2466,7 @@ per "/.per": Us+ & Mp-;
 % These are used almost exclusively with auxiliary verbs.
 % This is why they don't have & <verb-wall> in them: we don't want the
 % auxiliary attaching to the wall, we want only the main verb doing this.
-% The Ss- or Sp- prevent attachements to Sa- for "as.e" phrases.
+% The Ss- or Sp- prevent attachments to Sa- for "as.e" phrases.
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
@@ -2507,10 +2509,10 @@ per "/.per": Us+ & Mp-;
 % The conjunction should take an object if both verbs are transitive,
 % e.g. "I saw and greeted Sue", which should parse as
 % "I (saw and greeted) Sue".
-% VJ**i == intranstive
+% VJ**i == intransitive
 % VJ**t == transitive
 %
-% s == singluar, pl == plural, sp == singular or plural
+% s == singular, pl == plural, sp == singular or plural
 % g == gerund
 <verb-and-s->: {@E-} & VJrs-;
 <verb-and-s+>: {@E-} & VJls+;
@@ -2560,7 +2562,7 @@ per "/.per": Us+ & Mp-;
 % for example: "We neither ate nor drank for three days"
 
 
-% present tense, but allows transitive connectinos to 'and'
+% present tense, but allows transitive connections to 'and'
 
 
 % past tense macro, intransitive variation
@@ -2773,7 +2775,7 @@ having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
 % PP is disjoined with <verb-wall> because when PP is used, has/have/had
-% is an auxiliarry verb, an should not get a wall connection!
+% is an auxiliary verb, an should not get a wall connection!
 hasn't hasn’t:
   ((<verb-rq> & (SIs+ or SFIs+)) or (<verb-x-s>))
   & (PP+ or ((([[O+]] & <mv-coord>) or [[()]]) & <verb-wall>));
@@ -2858,7 +2860,7 @@ hadn't.v-d hadn’t.v-d:
 
 % O*m+ allows "If only there were more!"
 % THb+ allows "It is your fault that you're a failure."
-% The cost on @MV+ causes attachements to the object to be prefered
+% The cost on @MV+ causes attachments to the object to be preferred
 % over attachments to the copula; for example, prepositions should
 % almost surely attach via Mp+ link to the object, as opposed to
 % using an MVp+ link to the copula. Example:
@@ -2906,7 +2908,7 @@ is.v:
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
 % Similar to above, but no S-O inversion, and no equation.
-% Also, a cost, so that possesive 's is preferred.
+% Also, a cost, so that possessive 's is preferred.
 % Also, this can be a contraction for "has": "he has" -> "he's"
 % <verb-x-s,u> & PP+: "He's gone to Boston"  (viz "He has gone to Boston")
 % But also, some contractions are prohibited:
@@ -2979,7 +2981,7 @@ were.v-d:
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & COp+))]];
 
-% Ss*w-: allows Wh subjets: "Who am I?"
+% Ss*w-: allows Wh subjects: "Who am I?"
 am.v:
   ({@E-} & SX- & <vc-be>)
   or (<verb-rq> & SXI+ & {<vc-be>})
@@ -3153,8 +3155,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % the verb form: 1=plural-infinitive, 2=singular, 3=past("ed"),
 % 4=progressive("-ing"), 5=gerund("-ing".)
 
-% abbreviations for ditransitive and optionally ditranstive verbs
-% ditranstive verbs take a direct and indirect object
+% abbreviations for ditransitive and optionally ditransitive verbs
+% ditransitive verbs take a direct and indirect object
 % e.g. "I gave her a rose"
 % B- & O+ & O*n+: "What are the chances you'll give her a kiss?"
 % O+ & @MV+ & O*n+: "I gave him for his birthday a very expensive present"
@@ -3879,7 +3881,7 @@ bakes.v dictates.v kisses.v slices.v:
   ((<vc-bake>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
 
-% A+: "she gave him some slcied bread"
+% A+: "she gave him some sliced bread"
 baked.v-d sliced.v-d:
   
   ((<verb-sp,pp> & (<vc-bake>)) or
@@ -6111,7 +6113,7 @@ reeked.v-d smelled.v-d:
 reeking.g smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
 reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
-% <vc-trans> plus partcle and Vt
+% <vc-trans> plus particle and Vt
 <vc-take>:
   (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>) or
   ({O+} & (OT+ or BT-) & {@MV+} & {<tot-verb> or <toi-verb>}) or
@@ -6231,7 +6233,7 @@ found.v-d:
 finding.v: <verb-pg> & <vc-find>;
 finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
-% ditranstive
+% ditransitive
 <vc-get>:
   ((O+ or <b-minus>) & (({K+} & <mv-coord>) or ({@MV+} & (Pa+ or AF- or Pv+))))
   or ((<vc-ditrans>
@@ -6426,7 +6428,7 @@ intending.v: <verb-pg> & <vc-intend>;
 
 % O+ & TO+: "I dare you to!"
 % TO+ & Xc+: "try it if you dare to!"
-% I+: auxilliary: "no one dared say a word"
+% I+: auxiliary: "no one dared say a word"
 % N+ & TO: "I dare not to say the truth"
 <vc-dare>:
   ({N+} & <mv-coord> & {<to-verb> or (TO+ & Xc+)}) or
@@ -6481,7 +6483,7 @@ liked.v-d:
 liking.g: (<vc-like> & <verb-ge>) or <verb-ge-d>;
 liking.v: <verb-pg> & <vc-like>;
 
-% ditranstive
+% ditransitive
 <vc-offer>:
   ((<vc-opt-ditrans> or
     (<b-minus> & {O+})) & <mv-coord>) or
@@ -6857,7 +6859,7 @@ seen.v:
 seeing.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
 seeing.v: <verb-pg> & <vc-see>;
 
-% ditranstive verbs -- taking direct and indirect objects
+% ditransitive verbs -- taking direct and indirect objects
 <vc-owe>:
   (<vc-opt-ditrans>
     or (B- & {O+})
@@ -7075,7 +7077,7 @@ called.v-d shouted.v-d:
 calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v shouting.v: <verb-pg> & <vc-call>;
 
-% Minimal ditransitive extenstion of words.v.6
+% Minimal ditransitive extension of words.v.6
 % ditransitive: "Please paint it lime green"
 % (O+ & Pa+): "Please paint it green"
 <vc-color>:
@@ -7113,7 +7115,7 @@ coloring.g colouring.g painting.g:
 % ditransitive
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
-% 'he wrote me that blah happend' but '*he drew me that blah happened'
+% 'he wrote me that blah happened' but '*he drew me that blah happened'
 %
 % <vc-opt-ditrans> & TH+: "he wrote her that he loved her"
 <vc-write>:
@@ -8847,7 +8849,7 @@ unlike:
 %
 % Mf-: allows "from the Abbey of Stratford Langthorne" so that "of"
 %      links to "Abbey" instead of something more distant.
-%      XXX The Mp- below should be removed, and all occurances of
+%      XXX The Mp- below should be removed, and all occurrences of
 %      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
 % Mf- & MVp+: "She was a girl of about John's age"
 of:
@@ -8872,7 +8874,7 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
 % MX-PHRASE: The blah, to be blahed, will be blah.
 % TO- & Xc+: "I'd like to, I want to." (null infinitive)
-% give [J+] a cost, so that numeric intervals are peferred
+% give [J+] a cost, so that numeric intervals are preferred
 % I*t+ & TO-: passes on the TO constraint down the line
 % I+ & MVi-: allows "What is there to do?"
 %            but also incorrectly allows: "He is going to do"
@@ -9958,7 +9960,7 @@ and.j-r or.j-r:
 % "Where is the sickle and hammer?" (SIs-)
 % Op- has a cost, so that "they verbed X and verbed Y" gets the VJ link
 % at zero cost, and the SJ link at higher cost (since a "verbed Y" can be
-% understood as a modified noun).  Acutally, should probably have some
+% understood as a modified noun).  Actually, should probably have some
 % post-processing rule to disallow this XXX to do fix above.  Example of
 % bad SJ usage: "He bangs drums and played piano" i.e "he bangs a played piano"
 %
@@ -9992,7 +9994,7 @@ and.j-r or.j-r:
 %
 % {Jd- & Dm-}: "A number of recommendations and suggestions were made"
 %   with "number of" modifying the and.j-n
-% [[<noun-conj-head>]] costs so that above is prefered: (huh????)
+% [[<noun-conj-head>]] costs so that above is preferred: (huh????)
 % "there was enough of the beer and sandwiches"
 %
 % XJa-: "Both June and Tom are coming"
@@ -10149,7 +10151,7 @@ but.j-r: {Xd-} & XJi- & I+;
 % The costly [[<noun-main-x>]] is quite ugly and unappealing, but is
 % needed to parse "he is either in the 105th nor the 106th battalion".
 % The problem here is that "either in" seems to be order-reversed from
-% "in either", and doing it right would require link-corssing.
+% "in either", and doing it right would require link-crossing.
 either.r:
   Ds+
   or XJo+
@@ -10271,7 +10273,7 @@ frank.a:
 % Add a miniscule cost, so that the noun form is prefered...
 % An older formulation of this used Ah- as the link, but I don't see
 % why.  Generic adjective should be OK. Given a cost of 0.04, so
-% as to give a slight prefernce for the noun-form, if possible.
+% as to give a slight preference for the noun-form, if possible.
 HYPHENATED-WORDS.a:
   [<ordinary-adj>]0.04;
 
@@ -10907,7 +10909,7 @@ as_is: {Xd- & Xc+} & MVs-;
 
 as_possible: MVz-;
 
-% Cc+ & CV+: C links to the head-noun of the followig clause, and CV+
+% Cc+ & CV+: C links to the head-noun of the following clause, and CV+
 %            links to the head verb. Must form a cycle.
 %            Example: "I run more often than Ben climbs"
 than.e:
@@ -11584,6 +11586,7 @@ maybe.c:
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
 
+%suppress: DUP-BASE (for seriously.ij)
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections, exclamations.
 % These are semantically important, so they've got to parse!
@@ -11703,6 +11706,7 @@ necessarily no_longer: E+ or EBm-;
 ever: E+ or EBm- or EC+ or MVa- or <COMP-OPENER>;
 
 never.e always: ({EN-} & (E+ or EB-)) or <COMP-OPENER>;
+%suppress: DUP-BASE (for rarely.e)
 seldom rarely.e: ({EE-} & (E+ or EB-)) or <COMP-OPENER>;
 
 % MVa-: "He did just what you asked."
@@ -11743,6 +11747,7 @@ only:
   or (Rnx+ & <CLAUSE-E>)
   or (MVp+ & Wq- & Q+);
 
+%suppress: DUP-BASE (for rarely.i)
 never.i at_no_time not_once rarely.i since_when:
   {MVp+} & Wq- & Q+;
 
@@ -11981,6 +11986,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
   [{Xd-} & (Xx- or Wc-) & {Xc+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
+%suppress: DUP-BASE (for ..y)
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
 ..y *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
   (Wd- & W+)
@@ -12034,7 +12040,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 % Also -- see above, for handling of 12ft. 12in. not just 12%
 "%" ‰ ‱ : (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
 
-% See also /en/words/currency for curency names that follow a number.
+% See also /en/words/currency for currency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 £ ₤ € ¤ ₳ ฿ ¢ ₵ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#":
@@ -12172,7 +12178,7 @@ LY-WORDS.e:
 MC-NOUN-WORDS.n:
   [<noun-mass-count>]0.1;
 
-% guessed nouns that are signular countable (-on, -or)
+% guessed nouns that are singular countable (-on, -or)
 C-NOUN-WORDS.n:
   [<common-noun>]0.1;
 
@@ -12224,7 +12230,7 @@ UNKNOWN-WORD.v:
   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is prefered, when
-% availble.
+% available.
 UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
 
 % These are the link-types that are not subject to the length limit.

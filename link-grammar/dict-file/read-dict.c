@@ -128,6 +128,14 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	if (dict->recursive_error) return;
 	dict->recursive_error = true;
 
+	char token[MAX_TOKEN_LENGTH];
+	strcpy(token, dict->token);
+	bool save_is_special    = dict->is_special;
+	const char * save_input = dict->input;
+	const char * save_pin   = dict->pin;
+	int save_already_got_it = dict->already_got_it;
+	int save_line_number    = dict->line_number;
+
 	tokens[0] = '\0';
 	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
 	{
@@ -137,16 +145,23 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	}
 	tokens[pos] = '\0';
 
+	strcpy(dict->token, token);
+	dict->is_special     = save_is_special;
+	dict->input          = save_input;
+	dict->pin            = save_pin;
+	dict->already_got_it = save_already_got_it;
+	dict->line_number    = save_line_number;
+
 	if (s2)
 	{
 		prt_error("Error: While parsing dictionary %s:\n"
-		          "%s %s\n\t line %d, tokens = %s\n\\",
+		          "%s %s\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, s2, dict->line_number, tokens);
 	}
 	else
 	{
 		prt_error("Error: While parsing dictionary %s:\n"
-		          "%s\n\t line %d, tokens = %s\n\\",
+		          "%s\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, dict->line_number, tokens);
 	}
 	dict->recursive_error = false;
@@ -182,6 +197,16 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 		/* Skip over all comments */
 		if ((c == '%') && (!quote_mode))
 		{
+			if (0 == strncmp(dict->pin, SUPPRESS, sizeof(SUPPRESS)-1))
+			{
+				const char *nl = strchr(dict->pin + sizeof(SUPPRESS)-1, '\n');
+				if (NULL != nl)
+				{
+					dict->suppress_warning =
+						strndup(dict->pin + sizeof(SUPPRESS)-1,
+					           nl - dict->pin - sizeof(SUPPRESS) + 1);
+				}
+			}
 			while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
 			dict->line_number++;
 			continue;
@@ -274,7 +299,7 @@ static bool link_advance(Dictionary dict)
 	do
 	{
 		bool ok = get_character(dict, false, c);
-		if (false == ok) return false;
+		if (!ok) return false;
 	}
 	while (lg_isspace(c[0]));
 
@@ -338,7 +363,7 @@ static bool link_advance(Dictionary dict)
 			}
 		}
 		bool ok = get_character(dict, quote_mode, c);
-		if (false == ok) return false;
+		if (!ok) return false;
 	}
 	return true;
 }
@@ -445,7 +470,7 @@ int dict_order_strict(char *s, char *t)
 
 /* terse version */
 /* If one word contains a dot, the other one must also! */
-static inline int dict_order_strict(const char *s, Dict_node * dn)
+static inline int dict_order_strict(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
@@ -495,7 +520,7 @@ static inline int dict_order_bare(const char *s, const Dict_node * dn)
  * you come to the end of one of them, or until you find unequal
  * characters.  A "*" matches anything before the subscript mark.
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
- * his behavior matches that of the function dict_order_bare().
+ * This behavior matches that of the function dict_order_bare().
  */
 #define D_DOW 6
 static inline int dict_order_wild(const char * s, const Dict_node * dn)
@@ -516,36 +541,20 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 /**
  * dict_match --  return true if strings match, else false.
  * A "bare" string (one without a subscript) will match any corresponding
- * string with a suffix; so, for example, "make" and "make.n" are
+ * string with a subscript; so, for example, "make" and "make.n" are
  * a match.  If both strings have subscripts, then the subscripts must match.
  *
  * A subscript is the part that follows the SUBSCRIPT_MARK.
  */
 static bool dict_match(const char * s, const char * t)
 {
-	char *ds, *dt;
-	ds = strrchr(s, SUBSCRIPT_MARK);
-	dt = strrchr(t, SUBSCRIPT_MARK);
+	while ((*s != '\0') && (*s == *t)) { s++; t++; }
 
-#if SUBSCRIPT_MARK == '.'
-	/* a dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	if ((dt != NULL) && ((*(dt+1) == '\0') ||
-	    (isdigit((int)*(dt+1))))) dt = NULL;
-	if ((ds != NULL) && ((*(ds+1) == '\0') ||
-	    (isdigit((int)*(ds+1))))) ds = NULL;
-#endif
+	if (*s == *t) return true; /* both are '\0' */
+	if ((*s == 0) && (*t == SUBSCRIPT_MARK)) return true;
+	if ((*s == SUBSCRIPT_MARK) && (*t == 0)) return true;
 
-	/* dt is NULL when there's no prefix ... */
-	if (dt == NULL && ds != NULL) {
-		if (((int)strlen(t)) > (ds-s)) return false;   /* we need to do this to ensure that */
-		return (strncmp(s, t, ds-s) == 0);             /* "i.e." does not match "i.e" */
-	} else if (dt != NULL && ds == NULL) {
-		if (((int)strlen(s)) > (dt-t)) return false;
-		return (strncmp(s, t, dt-t) == 0);
-	} else {
-		return (strcmp(s, t) == 0);
-	}
+	return false;
 }
 
 /* ======================================================================== */
@@ -736,6 +745,28 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	Dict_node *llist;
 	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
+	llist = prune_lookup_list(llist, s);
+	return llist;
+}
+
+/**
+ * strict_lookup_list() - return exact match in the dictionary
+ *
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * Excludes any idioms that contain the word.
+ *
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * The list normally has 0 or 1 elements, unless the given word
+ * appears more than once in the dictionary.
+ *
+ * The returned list must be freed with file_free_lookup().
+ */
+static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
+{
+	Dict_node *llist;
+	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -999,10 +1030,9 @@ void add_empty_word(Dictionary const dict, X_node *x)
 static bool is_number(const char * str)
 {
 	if ('+' == str[0] || '-' == str[0]) str++;
-	if (strspn(str, "0123456789.") == strlen(str))
-		return true;
+	size_t numlen = strspn(str, "0123456789.");
 
-	return false;
+	return str[numlen] == '\0';
 }
 
 /* ======================================================================== */
@@ -1394,20 +1424,32 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 /* ======================================================================== */
 /**
  * Insert the new node into the dictionary below node n.
- * Give error message if the new element's string is already there.
- * Assumes that the "n" field of new is already set, and the left
- * and right fields of it are NULL.
+ * "newnode" left and right fields are NULL, and its string is already
+ * there.  If the string is already found in the dictionary, give an error
+ * message and effectively ignore it.
  *
  * The resulting tree is highly unbalanced. It needs to be rebalanced
  * before being used.  The DSW algo below is ideal for that.
  */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
-	int comp;
-
 	if (NULL == n) return newnode;
 
-	comp = dict_order_strict(newnode->string, n);
+	static Exp null_exp = { .type = AND_type, .u.l = NULL };
+	int comp = dict_order_strict(newnode->string, n);
+	if (0 == comp)
+	{
+		char t[80+MAX_TOKEN_LENGTH];
+		snprintf(t, sizeof(t),
+		         "Ignoring word \"%s\", which has been multiply defined "
+		         "(use verbosity=2 for more details): ",
+		         newnode->string);
+		dict_error(dict, t);
+		/* Too late to skip insertion - insert it with a null expression. */
+		newnode->exp = &null_exp;
+		comp = -1;
+	}
+
 	if (comp < 0)
 	{
 		if (NULL == n->left)
@@ -1416,10 +1458,8 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 			return n;
 		}
 		n->left = insert_dict(dict, n->left, newnode);
-		return n;
-		/* return rebalance(n); Uncomment to get an AVL tree */
 	}
-	else if (comp > 0)
+	else
 	{
 		if (NULL == n->right)
 		{
@@ -1427,16 +1467,21 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 			return n;
 		}
 		n->right = insert_dict(dict, n->right, newnode);
-		return n;
-		/* return rebalance(n); Uncomment to get an AVL tree */
 	}
-	else
-	{
-		char t[256];
-		snprintf(t, 256, "The word \"%s\" has been multiply defined\n", newnode->string);
-		dict_error(dict, t);
-		return NULL;
-	}
+
+	return n;
+	/* return rebalance(n); Uncomment to get an AVL tree */
+}
+
+/**
+ * Find if a warning symbol exists in the currently suppress list.
+ * The warning symbols are constructed in a way that disallow overlap
+ * matching.
+ */
+static bool is_warning_suppressed(Dictionary dict, const char *warning_symbol)
+{
+	if (NULL == dict->suppress_warning) return false;
+	return (NULL != strstr(dict->suppress_warning, warning_symbol));
 }
 
 /**
@@ -1486,27 +1531,48 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		        dn->string, dict->line_number, dict->name);
 		free(dn);
 	}
-	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
-	{
-		char *u;
-		Dict_node *dnx;
-
-		u = strchr(dn->string, SUBSCRIPT_MARK);
-		if (u) *u = SUBSCRIPT_DOT;
-		prt_error("Warning: The word \"%s\" "
-		          "found near line %d of %s matches the following words:",
-	             dn->string, dict->line_number, dict->name);
-		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-			prt_error("\t%s", dnx->string);
-		}
-		prt_error("\n\tThis word will be ignored.\n");
-		file_free_lookup(dn_head);
-		free(dn);
-	}
 	else
 	{
 		dict->root = insert_dict(dict, dict->root, dn);
 		dict->num_entries++;
+
+		if ((verbosity_level(D_DICT+0) && !is_warning_suppressed(dict, DUP_BASE)) ||
+		    verbosity_level(D_SPEC+3))
+		{
+			/* Warn if there are words with a subscript that match a bare word. */
+			const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
+			char *bareword;
+
+			if (NULL != sm)
+			{
+				bareword = strdupa(dn->string);
+				bareword[sm - dn->string] = '\0';
+			}
+			else
+			{
+				bareword = (char *)dn->string;
+			}
+
+			if ((dn_head = strict_lookup_list(dict, bareword)) != NULL)
+			{
+				bool match_found = false;
+				for (Dict_node *dnx = dn_head; dnx != NULL; dnx = dnx->right) {
+					if (0 != strcmp(dnx->string, dn->string))
+					{
+						if (!match_found)
+						{
+							prt_error("Warning: The word \"%s\" found near line "
+										 "%d of %s\n\t matches the following words:",
+										 dn->string, dict->line_number, dict->name);
+							match_found = true;
+						}
+						prt_error("\t%s", dnx->string);
+					}
+				}
+				if (match_found) prt_error("\n");
+				file_free_lookup(dn_head);
+			}
+		}
 	}
 
 	insert_list(dict, p, k);
@@ -1646,12 +1712,6 @@ static bool read_entry(Dictionary dict)
 		goto syntax_error;
 	}
 
-	/* pass the ; */
-	if (!link_advance(dict))
-	{
-		goto syntax_error;
-	}
-
 	/* At this point, dn points to a list of Dict_nodes connected by
 	 * their left pointers. These are to be inserted into the dictionary */
 	i = 0;
@@ -1661,6 +1721,19 @@ static bool read_entry(Dictionary dict)
 		i++;
 	}
 	dict->insert_entry(dict, dn, i);
+
+	if (dict->suppress_warning)
+	{
+		free((void *)dict->suppress_warning);
+		dict->suppress_warning = NULL;
+	}
+
+	/* pass the ; */
+	if (!link_advance(dict))
+	{
+		goto syntax_error;
+	}
+
 	return true;
 
 syntax_error:

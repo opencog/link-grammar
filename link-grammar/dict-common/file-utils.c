@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>   /* for fstat() */
 
@@ -315,9 +316,10 @@ char *get_file_contents(const char * dict_name)
 {
 	int fd;
 	size_t tot_size;
-	int left;
+	size_t read_size;
+	size_t tot_read;
 	struct stat buf;
-	char * contents, *p;
+	char * contents;
 
 	/* On Windows, 'b' (binary mode) is mandatory, otherwise fstat file length
 	 * is confused by crlf counted as one byte. POSIX systems just ignore it. */
@@ -333,29 +335,39 @@ char *get_file_contents(const char * dict_name)
 
 	contents = (char *) malloc(sizeof(char) * (tot_size+7));
 
-	/* Now, read the whole file. */
-	p = contents;
-	*p = '\0';
-	left = tot_size + 7;
+	/* Now, read the whole file.
+	 * Normally, only a single call of fread() is needed. */
 	while (1)
 	{
-		char *rv = fgets(p, left, fp);
-		if (NULL == rv || feof(fp))
+		read_size = fread(contents, 1, tot_size+7, fp);
+
+		if (0 == read_size)
+		{
+			bool err = (0 != ferror(fp));
+			fclose(fp);
+
+			if (err)
+			{
+				char errbuf[64];
+
+				strerror_r(errno, errbuf, sizeof(errbuf));
+				prt_error("Error: %s: Read error (%s)\n", dict_name, errbuf);
+				free(contents);
+				return NULL;
+			}
 			break;
-		while (*p != '\0') { p++; left--; }
-		if (left < 0)
-			 break;
+		}
+		tot_read += read_size;
 	}
 
-	fclose(fp);
-
-	if (left < 0)
+	if (tot_size > tot_size+6)
 	{
-		prt_error("Error: File size is insane!\n");
+		prt_error("Error: %s: File size is insane (%zu)!\n", dict_name, tot_size);
 		free(contents);
 		return NULL;
 	}
 
+	contents[tot_size] = '\0';
 	return contents;
 }
 
