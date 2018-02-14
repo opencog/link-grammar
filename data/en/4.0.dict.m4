@@ -8859,7 +8859,7 @@ than.e:
 % ({OFd+} & Dmu+): "I drank much of the beer"
 % cost on [[<noun-main-s>]] so that the above is prefered to an O- link
 much:
-  ({EE-} & ([[MVa-]] or ECa+ or <advcl-verb> or Qe+))
+  ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
