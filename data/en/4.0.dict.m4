@@ -9419,17 +9419,18 @@ occasionally.e often.e originally.e:
 % (EEh- & {Qe+}): "How quickly?"
 % <fronted>: "Onward came the cavalry"
 % ECa+: "It is vastly cheaper"
+% XXX TODO the PH- should be split into PHc- and PHv- versions.
 <ordinary-adv>:
   ({EE- or EF+} &
     (({Xd- & Xc+} & MVa-)
     or Em+
-    or ECa+
+    or ({PH-} & ECa+)
     or ({Xc+ & {Xd-}} & COa+)
     or Qe+
     or <advcl-verb>
     or <adverb-join>
     or <fronted>
-    or [[EA+]]))
+    or [[{PH-} & EA+]]))
   or (EEh- & {Qe+});
 
 % XXX fixme: there are things in there, like "tall.e" that seem not to
