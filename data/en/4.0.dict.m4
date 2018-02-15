@@ -10221,7 +10221,9 @@ UNLIMITED-CONNECTORS:
       RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+ &
       VJ+ & SJ+;
 
-LENGTH-LIMIT-1: YS+ & YP+ & PHv+;
+% The YS, YP, PH and ZZZ connectors can never be longer than one.
+LENGTH-LIMIT-1: YS+ & YP+ & PH*+ & ZZZ+;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
 % "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual

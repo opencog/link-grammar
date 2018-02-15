@@ -11,7 +11,7 @@ Version 5.4.4 (XXX 2018)
  * Fix many paraphrasing-type constructions.
  * Minor cleanup of word-lists.
  * New dict definition LENGTH-LIMIT-n to limit connector link length to n.
- * Improve the parser speed (especially for Russian).
+ * Speed up parsing of Russian by factor of 2x.
 
 Version 5.4.3 (4 January 2018)
  * Fix man page installation (actually broken from 5.3.0).
