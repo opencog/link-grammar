@@ -83,10 +83,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i += string_hash(e->string);
+		i += e->desc->str_hash;
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i += string_hash(e->string);
+		i += e->desc->str_hash;
 	}
 	i += string_hash(d->word_string);
 	i += (i>>10);
@@ -100,7 +100,7 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
  */
 static bool connectors_equal_prune(Connector *c1, Connector *c2)
 {
-	return string_set_cmp(c1->string, c2->string) && (c1->multi == c2->multi);
+	return c1->desc == c2->desc && (c1->multi == c2->multi);
 }
 
 /** returns TRUE if the disjuncts are exactly the same */
@@ -146,7 +146,7 @@ static Connector *connectors_dup(Connector *origc)
 
 	for (t = origc; t != NULL;  t = t->next)
 	{
-		newc = connector_new();
+		newc = connector_new(NULL, NULL);
 		*newc = *t;
 
 		prevc->next = newc;
@@ -181,6 +181,58 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 	}
 	newd->next = NULL;
 
+	return head.next;
+}
+
+static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
+{
+	Connector head;
+	Connector *prevc = &head;
+	Connector *newc = &head;
+	Connector *t;
+	Connector *lcblock = *cblock; /* Optimization. */
+
+	for (t = origc; t != NULL;  t = t->next)
+	{
+		newc = lcblock++;
+		*newc = *t;
+
+		prevc->next = newc;
+		prevc = newc;
+	}
+	newc->next = NULL;
+
+	*cblock = lcblock;
+	return head.next;
+}
+
+/**
+ * Duplicate the given disjunct chain.
+ * If the argument is NULL, return NULL.
+ */
+Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connector **cblock)
+{
+	Disjunct head;
+	Disjunct *prevd = &head;
+	Disjunct *newd = &head;
+	Disjunct *t;
+	Disjunct *ldblock = *dblock; /* Optimization. */
+
+	for (t = origd; t != NULL; t = t->next)
+	{
+		newd = ldblock++;
+		newd->word_string = t->word_string;
+		newd->cost = t->cost;
+
+		newd->left = pack_connectors_dup(t->left, cblock);
+		newd->right = pack_connectors_dup(t->right, cblock);
+		newd->originating_gword = t->originating_gword;
+		prevd->next = newd;
+		prevd = newd;
+	}
+	newd->next = NULL;
+
+	*dblock = ldblock;
 	return head.next;
 }
 
@@ -353,11 +405,11 @@ static void prt_con(Connector *c, dyn_str * p, char dir)
 
 	if (c->multi)
 	{
-		append_string(p, "@%s%c ", c->string, dir);
+		append_string(p, "@%s%c ", connector_string(c), dir);
 	}
 	else
 	{
-		append_string(p, "%s%c ", c->string, dir);
+		append_string(p, "%s%c ", connector_string(c), dir);
 	}
 }
 

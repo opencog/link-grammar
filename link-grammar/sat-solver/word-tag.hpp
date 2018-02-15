@@ -23,12 +23,12 @@ struct PositionConnector
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
     // Initialize some fields in the connector struct.
-    connector.string = c->string;
+    connector.desc = c->desc;
     connector.multi = c->multi;
     connector.length_limit = c->length_limit;
 
     if (word_xnode == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << c->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << connector_string(c) << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
 
     /*
@@ -145,26 +145,12 @@ public:
     return NULL;
   }
 
-  void set_connector_length_limit(Connector* c)
-  {
-    unsigned int len = _opts->short_length;
-    Connector_set * conset = _sent->dict->unlimited_connector_set;
-
-    if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
-
-    if (_opts->all_short ||
-        (conset != NULL && !match_in_connector_set(conset, c)))
-    {
-      c->length_limit = len;
-    }
-  }
-
   bool match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2)
   {
       int dist = w2 - w1;
       assert(0 < dist, "match() did not receive words in the natural order.");
       if (dist > cntr1.length_limit || dist > cntr2.length_limit) return false;
-      return easy_match(cntr1.string, cntr2.string);
+      return easy_match_desc(cntr1.desc, cntr2.desc);
   }
 
   void insert_connectors(Exp* exp, int& dfs_position,
@@ -182,7 +168,7 @@ public:
   void add_matches_with_word(WordTag& tag);
 
   // Find matches in this word tag with the connector (name, dir).
-  void find_matches(int w, const char* C, char dir,  std::vector<PositionConnector*>& matches);
+  void find_matches(int w, const condesc_t* C, char dir,  std::vector<PositionConnector*>& matches);
 
   // A simpler function: Can any connector in this word match a connector wi, pi?
   // It is assumed that

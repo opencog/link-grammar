@@ -41,6 +41,7 @@ static void initialize(pp_linkset *ls, int size)
 	clear_hash_table(ls);
 }
 
+/* FIXME: Use connector enumeration to save computing the hash. */
 static unsigned int compute_hash(pp_linkset *ls, const char *str)
 {
 	/* hash is computed from capitalized prefix only */

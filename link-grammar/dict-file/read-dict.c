@@ -875,18 +875,24 @@ static Exp * make_optional_node(Exp_list *eli, Exp * e)
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
 	Exp* n = Exp_create(&dict->exp_list);
+	char *constring;
+
 	n->dir = dict->token[i];
 	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
-		n->u.string = string_set_add(dict->token+1, dict->string_set);
+		constring = dict->token+1;
 		n->multi = true;
 	}
 	else
 	{
-		n->u.string = string_set_add(dict->token, dict->string_set);
+		constring = dict->token;
 		n->multi = false;
 	}
+
+	n->u.condesc = condesc_add(&dict->contable,
+	                            string_set_add(constring, dict->string_set));
+	if (NULL == n->u.condesc) return NULL; /* Table ovf */
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
 	return n;
@@ -939,6 +945,7 @@ static Exp * make_connector(Dictionary dict)
 		{
 			/* A simple, unidirectional connector. Just make that. */
 			n = make_dir_connector(dict, i);
+			if (NULL == n) return NULL;
 		}
 		else if (dict->token[i] == ANY_DIR)
 		{
@@ -947,14 +954,16 @@ static Exp * make_connector(Dictionary dict)
 			 * Make both a + and a - version, and or them together.  */
 			dict->token[i] = '+';
 			plu = make_dir_connector(dict, i);
+			if (NULL == plu) return NULL;
 			dict->token[i] = '-';
 			min = make_dir_connector(dict, i);
+			if (NULL == min) return NULL;
 
 			n = make_or_node(&dict->exp_list, plu, min);
 		}
 		else
 		{
-			dict_error(dict, "Unknown connector direction type.");
+			dict_error(dict, "Unknown connector direction type '%c'.");
 			return NULL;
 		}
 	}
@@ -980,6 +989,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 	Exp *zn, *an;
 	E_list *elist, *flist;
 	Exp_list eli = { NULL };
+	const char *ZZZ = string_set_add(EMPTY_CONNECTOR, dict->string_set);
 
 	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
 	if (MT_WALL == x->word->morpheme_type) return;
@@ -995,7 +1005,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		/* zn points at {ZZZ+} */
 		zn = Exp_create(&eli);
 		zn->dir = '+';
-		zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+		zn->u.condesc = condesc_add(&dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
 		zn->cost = 0.0;
@@ -1485,6 +1495,56 @@ static bool is_warning_suppressed(Dictionary dict, const char *warning_symbol)
 }
 
 /**
+ * Remember the length_limit definitions in a list according to their order.
+ * The order is kept to allow later more specific definitions to override
+ * already applied ones.
+ */
+static void add_condesc_length_limit(Dictionary dict, Dict_node *dn,
+                                     int length_limit)
+{
+	length_limit_def_t *lld = malloc(sizeof(*lld));
+	lld->next = NULL;
+	lld->length_limit = length_limit;
+	lld->defexp = dn->exp;
+	lld->defword = dn->string;
+	*dict->contable.length_limit_def_next = lld;
+	dict->contable.length_limit_def_next = &lld->next;
+}
+
+static void insert_length_limit(Dictionary dict, Dict_node *dn)
+{
+	int length_limit;
+
+	if (0 == strcmp(UNLIMITED_CONNECTORS_WORD, dn->string))
+	{
+		length_limit = UNLIMITED_LEN;
+	}
+	else
+	if (0 == strncmp(LIMITED_CONNECTORS_WORD, dn->string,
+	                 sizeof(LIMITED_CONNECTORS_WORD)-1))
+	{
+		char *endp;
+		length_limit =
+			(int)strtol(dn->string + sizeof(LIMITED_CONNECTORS_WORD)-1, &endp, 10);
+		if ((length_limit < 0) || (length_limit > MAX_SENTENCE) ||
+		  (('\0' != *endp) && (SUBSCRIPT_MARK != *endp)))
+		{
+			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
+					  "\tThis word should end with a number (1-%d).\n"
+					  "\tThis word will be ignored.",
+					  dn->string, dict->line_number, dict->name, MAX_SENTENCE);
+			return;
+		}
+	}
+	else return;
+
+	/* We cannot set the connectors length_limit yet because the
+	 * needed data structure is not defined yet. For now, just
+	 * remember the definitions in their order. */
+	add_condesc_length_limit(dict, dn, length_limit);
+}
+
+/**
  * insert_list() -
  * p points to a list of dict_nodes connected by their left pointers.
  * l is the length of this list (the last ptr may not be NULL).
@@ -1534,6 +1594,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	else
 	{
 		dict->root = insert_dict(dict, dict->root, dn);
+		insert_length_limit(dict, dn);
 		dict->num_entries++;
 
 		if ((verbosity_level(D_DICT+0) && !is_warning_suppressed(dict, DUP_BASE)) ||

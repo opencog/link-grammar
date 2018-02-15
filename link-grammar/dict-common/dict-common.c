@@ -319,7 +319,7 @@ void dictionary_delete(Dictionary dict)
 		freelocale(dict->lctype);
 	}
 
-	connector_set_delete(dict->unlimited_connector_set);
+	condesc_delete(dict);
 
 	if (dict->close) dict->close(dict);
 

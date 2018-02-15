@@ -87,12 +87,61 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 	/* Clamp at max 4*(1<<24) == 64 MBytes */
 	if (24 < shift) shift = 24;
+	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
 	ctxt->log2_table_size = shift;
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
+
+#ifdef DEBUG
+static int hit;
+static int miss;
+#define DEBUG_TABLE_STAT(x) x
+/**
+ * Provide data for insights on the effectively of the connector pair table.
+ * Hits, misses, chain length, number of elements with zero/nonzero counts.
+ */
+static void table_stat(count_context_t *ctxt, Sentence sent)
+{
+	int z = 0, nz = 0;
+	int c, N = 0;
+	const int sent_length = sent->length;
+	int *ww = alloca(sent_length*sent_length*sizeof(ww));
+	int *wc = alloca(sent_length*sent_length*sizeof(ww));
+
+	memset(ww, 0, sent_length*sent_length*sizeof(ww));
+	for (int i = 0; i < ctxt->table_size; i++)
+	{
+		c = 0;
+		Table_connector *t = ctxt->table[i];
+		if (t == NULL) N++;
+		for (; t != NULL; t = t->next)
+		{
+			if ((t->lw < 0) || (t->rw == sent_length)) continue;
+			c++;
+			if (t->count == 0) z++;
+			else nz++;
+			ww[t->rw + sent_length * t->lw]++;
+			if (t->count) wc[t->rw + sent_length * t->lw]++;
+		}
+		if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
+	}
+
+	int wn = 0;
+	for (int i = 0; i < sent_length; i++)
+		for (int j = 0; j < sent_length; j++)
+		{
+			if (ww[i + sent_length * j]) wn++;
+			printf("WW %d %d = %d C=%d\n", i, j, ww[i + sent_length * j], wc[i + sent_length * j]);
+		}
+
+	printf("Connector table z=%d nz=%d N=%d hit=%d miss=%d wc=%d\n", z, nz, N, hit, miss, wn);
+}
+#else
+#define DEBUG_TABLE_STAT(x)
+#endif /* DEBUG */
 
 /**
  * Stores the value in the table.  Assumes it's not already there.
@@ -128,8 +177,13 @@ find_table_pointer(count_context_t *ctxt,
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw)
 		    && (t->le == le) && (t->re == re)
-		    && (t->null_count == null_count))  return t;
+		    && (t->null_count == null_count))
+		{
+			DEBUG_TABLE_STAT(hit++);
+			return t;
+		}
 	}
+	DEBUG_TABLE_STAT(miss++);
 
 	/* Create a new connector only if resources are exhausted.
 	 * (???) Huh? I guess we're in panic parse mode in that case.
@@ -206,7 +260,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 #endif
 
 #ifdef DO_COUNT_TRACE
-#define V(c) (!c?"(nil)":c->string)
+#define V(c) (!c?"(nil)":connector_string(c))
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
@@ -604,9 +658,6 @@ Count_bin do_parse(Sentence sent,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
-	ctxt->local_sent = NULL;
-	ctxt->current_resources = NULL;
-	ctxt->checktimer = 0;
 	return hist;
 }
 
@@ -620,8 +671,9 @@ count_context_t * alloc_count_context(size_t sent_length)
 	return ctxt;
 }
 
-void free_count_context(count_context_t *ctxt)
+void free_count_context(count_context_t *ctxt, Sentence sent)
 {
+	DEBUG_TABLE_STAT(if (verbosity_level(D_SPEC+2)) table_stat(ctxt, sent));
 	free_table(ctxt);
 	xfree(ctxt, sizeof(count_context_t));
 }

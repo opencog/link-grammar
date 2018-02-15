@@ -255,7 +255,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	/* ----- this code just sets up the node fields of the dn_list ----*/
 	nc = Exp_create(&dict->exp_list);
-	nc->u.string = generate_id_connector(dict);
+	nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 	nc->dir = '-';
 	nc->multi = false;
 	nc->type = CONNECTOR_type;
@@ -279,7 +279,6 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		/* generate the expression for a middle idiom word */
 
 		n1 = Exp_create(&dict->exp_list);
-		n1->u.string = NULL;
 		n1->type = AND_type;
 		n1->cost = 0;
 		n1->u.l = ell = (E_list *) malloc(sizeof(E_list));
@@ -287,7 +286,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		elr->next = NULL;
 
 		nc = Exp_create(&dict->exp_list);
-		nc->u.string = generate_id_connector(dict);
+		nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 		nc->dir = '+';
 		nc->multi = false;
 		nc->type = CONNECTOR_type;
@@ -297,7 +296,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		increment_current_name(dict);
 
 		nc = Exp_create(&dict->exp_list);
-		nc->u.string = generate_id_connector(dict);
+		nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 		nc->dir = '-';
 		nc->multi = false;
 		nc->type = CONNECTOR_type;
@@ -312,7 +311,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	/* now generate the last one */
 
 	nc = Exp_create(&dict->exp_list);
-	nc->u.string = generate_id_connector(dict);
+	nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 	nc->dir = '+';
 	nc->multi = false;
 	nc->type = CONNECTOR_type;

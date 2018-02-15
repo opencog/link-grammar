@@ -12294,6 +12294,7 @@ UNLIMITED-CONNECTORS:
       RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+ &
       VJ+ & SJ+;
 
+LENGTH-LIMIT-1: YS+ & YP+ & PHv+;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
 % "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual

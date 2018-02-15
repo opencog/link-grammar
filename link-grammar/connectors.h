@@ -15,10 +15,13 @@
 #define _LINK_GRAMMAR_CONNECTORS_H_
 
 #include <ctype.h>   // for islower()
+#include <malloc.h>
 #include <stdbool.h>
 #include <stdint.h>  // for uint8_t
 
 #include "api-types.h"
+#include "lg_assert.h"
+#include "string-set.h"
 
 /* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is
  * BAD_WORD -- it is used to indicate that nothing can connect to this
@@ -27,73 +30,122 @@
  */
 #define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
+/* For faster comparisons, the connector lc part is encoded into a number
+ * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
+ * is possible to encode up to 9 letters in an uint64_t.
+ * FIXME: Validate that lc length <= 9. */
+#define LC_BITS 7
+#define LC_MASK ((1<<LC_BITS)-1)
+typedef uint64_t lc_enc_t;
+
+typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
+
+typedef struct
+{
+	lc_enc_t lc_letters;
+	lc_enc_t lc_mask;
+
+	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
+	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
+	connector_hash_size str_hash;
+	union
+	{
+		connector_hash_size uc_hash;
+		connector_hash_size uc_num;
+	};
+	uint8_t length_limit;
+	                      /* If not 0, it gives the limit of the length of the
+	                       * link that can be used on this connector type. The
+	                       * value UNLIMITED_LEN specifies no limit.
+	                       * If 0, short_length (a Parse_Option) is used. If
+	                       * all_short==true (a Parse_Option), length_limit
+	                       * is clipped to short_length. */
+	char head_depended;   /* 'h' for head, 'd' for depended, or '\0' if none */
+
+	/* The following are used for connector match speedup */
+	uint8_t uc_length;   /* uc part length */
+	uint8_t uc_start;    /* uc start position */
+} condesc_t;
+
+typedef struct length_limit_def
+{
+	const char *defword;
+	const Exp *defexp;
+	struct length_limit_def *next;
+	int length_limit;
+} length_limit_def_t;
+
+typedef struct
+{
+	condesc_t **hdesc;    /* Hashed connector descriptors table */
+	condesc_t **sdesc;    /* Alphabetically sorted descriptors */
+	size_t size;          /* Allocated size */
+	size_t num_con;       /* Number of connector types */
+	size_t num_uc;        /* Number of connector types with different UC part */
+	length_limit_def_t *length_limit_def;
+	length_limit_def_t **length_limit_def_next;
+} ConTable;
+
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.
  */
 struct Connector_struct
 {
-	int16_t hash;
-	uint8_t length_limit;
-	             /* If this is a length limited connector, this
-	                gives the limit of the length of the link
-	                that can be used on this connector.  Since
-	                this is strictly a function of the connector
-	                name, efficiency is the only reason to store
-	                this.  If no limit, the value is set to 255. */
+	uint8_t length_limit; /* Can be different than in the descriptor */
 	uint8_t nearest_word;
-	             /* The nearest word to my left (or right) that
-	                this could ever connect to.  Computed by
-	                setup_connectors() */
-	bool multi;  /* TRUE if this is a multi-connector */
-	uint8_t lc_start;     /* lc start position (or 0) - for match speedup. */
-	uint8_t uc_length;    /* uc part length - for match speedup. */
-	uint8_t uc_start;     /* uc start position - for match speedup. */
-	Connector * next;
-	const char * string; /* The connector name w/o the direction mark, e.g. AB */
-
-	/* Hash table next pointer, used only during pruning. */
-	union
-	{
-		Connector * tableNext;
-		const gword_set *originating_gword;
-	};
+	                      /* The nearest word to my left (or right) that
+	                         this could ever connect to.  Computed by
+	                         setup_connectors() */
+	bool multi;           /* TRUE if this is a multi-connector */
+	const condesc_t *desc;
+	Connector *next;
+	const gword_set *originating_gword;
 };
 
-struct Connector_set_s
-{
-	Connector ** hash_table;
-	unsigned int table_size;
-};
+void sort_condesc_by_uc_constring(Dictionary);
+void condesc_delete(Dictionary);
 
-static inline void connector_set_string(Connector *c, const char *s)
+/* GET accessors for connector attributes.
+ * Can be used for experimenting with Connector_struct internals in
+ * non-trivial ways without the need to change most of the code that
+ * accesses connectors.
+ * FIXME: Maybe remove the _get part of the names, since we don't
+ * need SET accessors. */
+static inline const char * connector_string(const Connector *c)
 {
-	c->string = s;
-	c->hash = -1;
+	return c->desc->string;
 }
-static inline const char * connector_get_string(Connector *c)
+
+static inline int connector_uc_start(const Connector *c)
 {
-	return c->string;
+	return c->desc->uc_start;
 }
+
+static inline const condesc_t *connector_desc(const Connector *c)
+{
+	return c->desc;
+}
+
+static inline int connector_uc_hash(const Connector * c)
+{
+	return c->desc->uc_hash;
+}
+
+static inline int connector_uc_num(const Connector * c)
+{
+	return c->desc->uc_num;
+}
+
 
 /* Connector utilities ... */
-Connector * connector_new(void);
+Connector * connector_new(const condesc_t *, Parse_Options);
+void set_connector_length_limit(Connector *, Parse_Options);
 void free_connectors(Connector *);
 
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
 
-static inline Connector * init_connector(Connector *c)
-{
-	c->hash = -1;
-	c->length_limit = UNLIMITED_LEN;
-	return c;
-}
-
-/* Connector-set utilities ... */
-Connector_set * connector_set_create(Exp *e);
-void connector_set_delete(Connector_set * conset);
-bool match_in_connector_set(Connector_set*, Connector*);
-
+void set_all_condesc_length_limit(Dictionary);
 
 /**
  * Returns TRUE if s and t match according to the connector matching
@@ -141,6 +193,30 @@ static inline bool easy_match(const char * s, const char * t)
 	return true;
 }
 
+/**
+ * Compare the lower-case and head/dependent parts of two connector descriptors.
+ * When this function is called, it is assumed that the upper-case
+ * parts are equal, and thus do not need to be checked again.
+ */
+static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
+{
+	if ((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask)
+		return false;
+	if (('\0' != c1->head_depended) && (c1->head_depended == c2->head_depended))
+		return false;
+
+	return true;
+}
+
+/**
+ * This function is like easy_match(), but with connector descriptors.
+ * It uses a shortcut comparison of the upper-case parts.
+ */
+static inline bool easy_match_desc(const condesc_t *c1, const condesc_t *c2)
+{
+	if (c1->uc_num != c2->uc_num) return false;
+	return lc_easy_match(c1, c2);
+}
 
 static inline int string_hash(const char *s)
 {
@@ -156,12 +232,47 @@ static inline int string_hash(const char *s)
 	return i;
 }
 
-int calculate_connector_hash(Connector *);
+bool calculate_connector_info(condesc_t *);
 
-static inline int connector_hash(Connector * c)
+static inline int connector_str_hash(const char *s)
 {
-	if (-1 != c->hash) return c->hash;
-	return calculate_connector_hash(c);
+	uint32_t i;
+
+	/* For most situations, all three hashes are very nearly equal;
+	 * as to which is faster depends on the parsed text.
+	 * For both English and Russian, there are about 100 pre-defined
+	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
+	 * connectors, and the LLxxx suffix connectors for Russian).
+	 * Turns out the cost of setting up the hash table dominates the
+	 * cost of collisions. */
+#ifdef USE_DJB2
+	/* djb2 hash */
+	i = 5381;
+	while (*s)
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	i += i>>14;
+#endif /* USE_DJB2 */
+
+#define USE_JENKINS
+#ifdef USE_JENKINS
+	/* Jenkins one-at-a-time hash */
+	i = 0;
+	while (*s)
+	{
+		i += *s;
+		i += (i<<10);
+		i ^= (i>>6);
+		s++;
+	}
+	i += (i << 3);
+	i ^= (i >> 11);
+	i += (i << 15);
+#endif /* USE_JENKINS */
+
+	return i;
 }
 
 /**
@@ -198,4 +309,92 @@ static inline unsigned int pair_hash(unsigned int table_size,
 
 	return i & (table_size-1);
 }
+
+static inline condesc_t **condesc_find(ConTable *ct, const char *constring, int hash)
+{
+	size_t i = hash & (ct->size-1);
+
+	while ((NULL != ct->hdesc[i]) &&
+	       !string_set_cmp(constring, ct->hdesc[i]->string))
+	{
+		i = (i + 1) & (ct->size-1);
+	}
+
+	return &ct->hdesc[i];
+}
+
+static inline void condesc_table_alloc(ConTable *ct, size_t size)
+{
+	ct->hdesc = (condesc_t **)malloc(size * sizeof(condesc_t *));
+	memset(ct->hdesc, 0, size * sizeof(condesc_t *));
+	ct->size = size;
+}
+
+static inline bool condesc_insert(ConTable *ct, condesc_t **h,
+                                  const char *constring, int hash)
+{
+	*h = (condesc_t *)malloc(sizeof(condesc_t));
+	memset(*h, 0, sizeof(condesc_t));
+	(*h)->str_hash = hash;
+	(*h)->string = constring;
+	ct->num_con++;
+
+	return calculate_connector_info(*h);
+}
+
+#define CONDESC_TABLE_GROW_FACTOR 2
+
+static inline bool condesc_grow(ConTable *ct)
+{
+	size_t old_size = ct->size;
+	condesc_t **old_hdesc = ct->hdesc;
+
+	lgdebug(+11, "Growing ConTable from %zu\n", old_size);
+	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROW_FACTOR);
+
+	for (size_t i = 0; i < old_size; i++)
+	{
+		condesc_t *old_h = old_hdesc[i];
+		if (NULL == old_h) continue;
+		condesc_t **new_h = condesc_find(ct, old_h->string, old_h->str_hash);
+
+		if (NULL != *new_h)
+		{
+			prt_error("Fatal Error: condesc_grow(): Internal error\n");
+			free(old_hdesc);
+			return false;
+		}
+		*new_h = old_h;
+	}
+
+	free(old_hdesc);
+	return true;
+}
+
+static inline condesc_t *condesc_add(ConTable *ct, const char *constring)
+{
+	if (0 == ct->size)
+	{
+		condesc_table_alloc(ct, ct->num_con);
+		ct->num_con = 0;
+	}
+
+	int hash = connector_str_hash(constring);
+	condesc_t **h = condesc_find(ct, constring, hash);
+
+	if (NULL == *h)
+	{
+		lgdebug(+11, "Creating connector '%s'\n", constring);
+		if (!condesc_insert(ct, h, constring, hash)) return NULL;
+
+		if ((8 * ct->num_con) > (3 * ct->size))
+		{
+			if (!condesc_grow(ct)) return NULL;
+			h = condesc_find(ct, constring, hash);
+		}
+	}
+
+	return *h;
+}
+
 #endif /* _LINK_GRAMMAR_CONNECTORS_H_ */

@@ -15,8 +15,9 @@
 #define _LINKGRAMMAR_BUILD_DISJUNCTS_H
 
 #include "api-types.h"
+#include "link-includes.h"
 
-Disjunct * build_disjuncts_for_exp(Exp*, const char*, double cost_cutoff);
+Disjunct * build_disjuncts_for_exp(Exp*, const char*, double cost_cutoff, Parse_Options opts);
 
 #ifdef DEBUG
 void prt_exp(Exp *, int);

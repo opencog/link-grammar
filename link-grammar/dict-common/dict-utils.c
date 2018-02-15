@@ -102,8 +102,8 @@ static bool exp_compare(Exp * e1, Exp * e2)
 	{
 		if (e1->dir != e2->dir)
 			return 0;
-		/* printf("%s %s\n",e1->u.string,e2->u.string); */
-		if (!string_set_cmp(e1->u.string, e2->u.string))
+		/* printf("%s %s\n",e1->u.condesc->string,e2->u.condesc->string); */
+		if (e1->u.condesc != e2->u.condesc)
 			return 0;
 	}
 	else
@@ -234,8 +234,8 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
-		return smart_match ? easy_match(e->u.string, cs)
-		                   : string_set_cmp(e->u.string, cs);
+		return smart_match ? easy_match(e->u.condesc->string, cs)
+		                   : string_set_cmp(e->u.condesc->string, cs);
 	}
 
 	if (depth == 0) return false;
@@ -278,7 +278,7 @@ const char * word_only_connector(Dict_node * dn)
 {
 	Exp * e = dn->exp;
 	if (CONNECTOR_type == e->type)
-		return e->u.string;
+		return e->u.condesc->string;
 	return NULL;
 }
 

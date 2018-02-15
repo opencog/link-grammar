@@ -15,6 +15,7 @@
 #define _LG_DICT_STRUCTURES_H_
 
 #include <link-grammar/link-features.h>
+#include "connectors.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
@@ -50,7 +51,7 @@ struct Exp_struct
 	bool multi;    /* TRUE if a multi-connector (for connector)  */
 	union {
 		E_list * l;           /* Only needed for non-terminals */
-		const char * string;  /* Only needed if it's a connector */
+		condesc_t * condesc;  /* Only needed if it's a connector */
 	} u;
 	double cost;   /* The cost of using this expression.
 	                  Only used for non-terminals */

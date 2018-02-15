@@ -1077,6 +1077,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 %% Слова с большой буквы
 Вам.m2sd: <мест-sub> & (Jd- or [[MVad-]] or [[MVIad+]] or Nd- or <макро-сущ-d>); % МС,2л,ед,дт
 
+LENGTH-LIMIT-1: LL*+;
+
 % morphology linkages
 #include "/ru/morph.dict";
 

@@ -15,5 +15,5 @@
 
 #include "link-includes.h"
 
-void       expression_prune(Sentence);
+void       expression_prune(Sentence, Parse_Options opts);
 #endif /* _EXPRESSION_PRUNE_H */

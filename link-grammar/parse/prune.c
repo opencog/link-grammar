@@ -14,6 +14,7 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
+#include "dict-common/dict-common.h"     // For contable
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
 #include "print/print.h"  // For print_disjunct_counts()
@@ -34,7 +35,6 @@
 
 #define D_PRUNE 5
 
-#define CONTABSZ 8192
 typedef Connector * connector_table;
 
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
@@ -224,7 +224,7 @@ static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, 
 {
 	unsigned int h;
 	C_list * m;
-	h = connector_hash(c) & (size-1);
+	h = connector_uc_num(c) & (size-1);
 	m = (C_list *) xalloc (sizeof(C_list));
 	m->next = t[h];
 	t[h] = m;
@@ -243,6 +243,8 @@ static power_table * power_table_new(Sentence sent)
 	C_list ** t;
 	Disjunct * d;
 	Connector * c;
+#define TOPSZ 32768
+	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
 
 	pt = (power_table *) xalloc (sizeof(power_table));
 	pt->power_table_size = sent->length;
@@ -269,9 +271,7 @@ static power_table * power_table_new(Sentence sent)
 		 * Strong dependence on the hashing algo!
 		 */
 		len = left_connector_count(sent->word[w].d);
-		size = next_power_of_two_up(len);
-#define TOPSZ 32768
-		if (TOPSZ < size) size = TOPSZ;
+		size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->l_table_size[w] = size;
 		t = pt->l_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
@@ -287,8 +287,7 @@ static power_table * power_table_new(Sentence sent)
 		}
 
 		len = right_connector_count(sent->word[w].d);
-		size = next_power_of_two_up(len);
-		if (TOPSZ < size) size = TOPSZ;
+		size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->r_table_size[w] = size;
 		t = pt->r_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
@@ -440,6 +439,7 @@ static bool possible_connection(prune_context *pc,
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
+	if (!easy_match_desc(lc->desc, rc->desc)) return false;
 
 	/* Two deep connectors can't work */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
@@ -477,7 +477,7 @@ static bool possible_connection(prune_context *pc,
 	if (!alt_consistency(pc, lc, rc, lword, rword, lr)) return false;
 #endif
 
-	return easy_match(lc->string, rc->string);
+	return true;
 }
 
 /**
@@ -493,7 +493,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	power_table *pt = pc->pt;
 
 	size = pt->r_table_size[w];
-	h = connector_hash(c) & (size-1);
+	h = connector_uc_num(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c, true))
@@ -515,7 +515,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	power_table *pt = pc->pt;
 
 	size = pt->l_table_size[w];
-	h = connector_hash(c) & (size-1);
+	h = connector_uc_num(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w, false))
@@ -1007,7 +1007,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 				Connector *c;
 				for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 				{
-					insert_in_cms_table(cmt, c->string);
+					insert_in_cms_table(cmt, connector_string(c));
 				}
 			}
 		}
@@ -1041,7 +1041,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 							if (strchr(selector, '*') != NULL) continue;  /* If it has a * forget it */
 
-							if (!post_process_match(selector, c->string)) continue;
+							if (!post_process_match(selector, connector_string(c))) continue;
 
 							/*
 							printf("pp_prune: trigger ok.  selector = %s  c->string = %s\n", selector, c->string);
@@ -1072,7 +1072,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 						Connector *c;
 						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 						{
-							change |= delete_from_cms_table(cmt, c->string);
+							change |= delete_from_cms_table(cmt, connector_string(c));
 						}
 					}
 				}

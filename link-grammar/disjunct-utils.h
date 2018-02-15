@@ -48,4 +48,6 @@ Disjunct * disjuncts_dup(Disjunct *origd);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
+Disjunct *pack_disjuncts_dup(Disjunct *, Disjunct **, Connector **);
+
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

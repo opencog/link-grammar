@@ -103,7 +103,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
 		if (n->multi) dyn_strcat(e, "@");
-		append_string(e, "%s%c", n->u.string, n->dir);
+		append_string(e, "%s%c", n->u.condesc?n->u.condesc->string:"(null)", n->dir);
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
 		return e;

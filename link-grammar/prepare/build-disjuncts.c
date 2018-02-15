@@ -28,7 +28,7 @@ struct Tconnector_struct
 	char multi;   /* TRUE if this is a multi-connector */
 	char dir;     /* '-' for left and '+' for right */
 	Tconnector * next;
-	const char * string;
+	const condesc_t * condesc;
 };
 
 typedef struct clause_struct Clause;
@@ -124,7 +124,7 @@ static Tconnector * build_terminal(Exp * e)
 {
 	Tconnector * c;
 	c = (Tconnector *) xalloc(sizeof(Tconnector));
-	c->string = e->u.string;
+	c->condesc = e->u.condesc;
 	c->multi = e->multi;
 	c->dir = e->dir;
 	c->next = NULL;
@@ -220,7 +220,7 @@ static void print_Tconnector_list(Tconnector * e)
 {
 	for (;e != NULL; e=e->next) {
 		if (e->multi) printf("@");
-		printf("%s", e->string);
+		printf("%s", e->condesc->string);
 		printf("%c", e->dir);
 		if (e->next != NULL) printf(" ");
 	}
@@ -240,7 +240,7 @@ static void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s", e->string);
+		printf("%s", connector_string(e));
 		if (e->next != NULL) printf(" ");
 	}
 }
@@ -263,22 +263,21 @@ GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
  * in the list pointed to by e.  Keep only those whose strings whose
  * direction has the value c.
  */
-static Connector * extract_connectors(Tconnector *e, int c)
+static Connector * extract_connectors(Tconnector *e, int c, Parse_Options opts)
 {
 	Connector *e1;
 	if (e == NULL) return NULL;
 	if (e->dir == c)
 	{
-		e1 = connector_new();
-		e1->next = extract_connectors(e->next,c);
+		e1 = connector_new(e->condesc, opts);
 		e1->multi = e->multi;
-		e1->string = e->string;
 		e1->nearest_word = 0;
+		e1->next = extract_connectors(e->next, c, opts);
 		return e1;
 	}
 	else
 	{
-		return extract_connectors(e->next,c);
+		return extract_connectors(e->next, c, opts);
 	}
 }
 
@@ -287,7 +286,8 @@ static Connector * extract_connectors(Tconnector *e, int c)
  * string is the print name of word that generated this disjunct.
  */
 static Disjunct *
-build_disjunct(Clause * cl, const char * string, double cost_cutoff)
+build_disjunct(Clause * cl, const char * string, double cost_cutoff,
+               Parse_Options opts)
 {
 	Disjunct *dis, *ndis;
 	dis = NULL;
@@ -296,8 +296,8 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 		if (cl->maxcost <= cost_cutoff)
 		{
 			ndis = (Disjunct *) xalloc(sizeof(Disjunct));
-			ndis->left = reverse(extract_connectors(cl->c, '-'));
-			ndis->right = reverse(extract_connectors(cl->c, '+'));
+			ndis->left = reverse(extract_connectors(cl->c, '-', opts));
+			ndis->right = reverse(extract_connectors(cl->c, '+', opts));
 			ndis->word_string = string;
 			ndis->cost = cl->cost;
 			ndis->next = dis;
@@ -307,14 +307,15 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 	return dis;
 }
 
-Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word, double cost_cutoff)
+Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
+                                   double cost_cutoff, Parse_Options opts)
 {
 	Clause *c ;
 	Disjunct * dis;
 	// print_expression(exp);  printf("\n");
 	c = build_clause(exp);
 	// print_clause_list(c);
-	dis = build_disjunct(c, word, cost_cutoff);
+	dis = build_disjunct(c, word, cost_cutoff, opts);
 	// print_disjunct_list(dis);
 	free_clause_list(c);
 	return dis;
@@ -341,7 +342,7 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s\n", e->u.string);
+		printf("con=%s\n", e->u.condesc->string);
 	}
 }
 
@@ -384,7 +385,7 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s dir=%c multi=%d\n", e->u.string, e->dir, e->multi);
+		printf("con=%s dir=%c multi=%d\n", e->u.condesc->string, e->dir, e->multi);
 	}
 }
 #endif

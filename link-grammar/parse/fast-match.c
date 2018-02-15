@@ -16,6 +16,7 @@
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "string-set.h"
+#include "dict-common/dict-common.h"   // For contable
 #include "tokenize/word-structures.h"  // For Word_struct
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
@@ -192,26 +193,10 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 /**
  * Compare only the uppercase part of two connectors.
  * Return true if they are the same, else false.
- * FIXME: Use connector enumeration.
  */
 static bool con_uc_eq(const Connector *c1, const Connector *c2)
 {
-	if (string_set_cmp(c1->string, c2->string)) return true;
-	if (c1->hash != c2->hash) return false;
-	if (c1->uc_length != c2->uc_length) return false;
-
-	/* We arrive here for less than 50% of the cases for "en" and
-	 * less then 20% of the cases for "ru", and, in practice, the
-	 * two strings are always equal, because there is almost never
-	 * a hash collision that would lead to a miscompare, because
-	 * we are hashing, at most, a few dozen connectors into a
-	 * 16-bit hash space (65536 slots).
-	 */
-	const char *uc1 = &c1->string[c1->uc_start];
-	const char *uc2 = &c2->string[c2->uc_start];
-	if (0 == strncmp(uc1, uc2, c1->uc_length)) return true;
-
-	return false;
+	return (connector_uc_num(c1) == connector_uc_num(c2));
 }
 
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
@@ -219,7 +204,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 {
 	unsigned int h, s;
 
-	s = h = connector_hash(c) & (size-1);
+	s = h = connector_uc_hash(c) & (size-1);
 
 	if (dir == 1) {
 		while (NULL != t[h])
@@ -281,7 +266,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 {
 	unsigned int size;
 	size_t w;
-	int len;
+	size_t len;
 	Match_node ** t;
 	Disjunct * d;
 	fast_matcher_t *ctxt;
@@ -301,6 +286,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	for (w=0; w<sent->length; w++)
 	{
 		len = left_disjunct_list_length(sent->word[w].d);
+		len = MIN(sent->dict->contable.num_con, len);
 		size = next_power_of_two_up(len);
 		ctxt->l_table_size[w] = size;
 		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
@@ -310,11 +296,13 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->left != NULL)
 			{
+				//printf("%s %d\n", connector_string(d->left), d->left->length_limit);
 				put_into_match_table(size, t, d, d->left, -1);
 			}
 		}
 
 		len = right_disjunct_list_length(sent->word[w].d);
+		len = MIN(sent->dict->contable.num_con, len);
 		size = next_power_of_two_up(len);
 		ctxt->r_table_size[w] = size;
 		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
@@ -324,6 +312,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 		{
 			if (d->right != NULL)
 			{
+				//printf("%s %d\n", connector_string(d->right), d->right->length_limit);
 				put_into_match_table(size, t, d, d->right, 1);
 			}
 		}
@@ -369,7 +358,7 @@ static void match_stats(Connector *c1, Connector *c2)
 
 #ifdef DEBUG
 #undef N
-#define N(c) (c?c->string:"")
+#define N(c) (c?connector_string(c):"")
 
 /**
  * Print the match list, including connector match indications.
@@ -403,59 +392,9 @@ static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
 #define print_match_list(...)
 #endif
 
-/**
- * Compare only the lower-case parts of two connectors. When this
- * function is called, it is assumed that the upper-case parts are
- * equal, and thus do not need to be checked again.
- *
- * We know that the uc parts of the connectors are the same,
- * because we fetch the matching lists according to the uc part or the
- * connectors to be matched. So the uc parts are not checked here. The
- * head/dependent indicators are in the caller function, and only when
- * connectors match here, to save CPU when the connectors don't match
- * otherwise. This is because h/d mismatch is rare.
- * FIXME: Use connector enumeration.
- */
-static bool match_lower_case(Connector *c1, Connector *c2)
-{
-	match_stats(c1, c2);
-
-	/* If the connectors are identical, they match. */
-	if (string_set_cmp(c1->string, c2->string)) return true;
-
-	/* If any of the connectors doesn't have a lc part, they match */
-	if ((0 == c2->lc_start) || (0 == c1->lc_start)) return true;
-
-	/* Compare the lc parts according to the connector matching rules. */
-	const char *a = &c1->string[c1->lc_start];
-	const char *b = &c2->string[c2->lc_start];
-	do
-	{
-		if (*a != *b && (*a != '*') && (*b != '*')) return false;
-		a++;
-		b++;
-	} while (*a != '\0' && *b != '\0');
-
-	return true;
-}
-
-/**
- * Return false if the connectors cannot match due to identical
- * head/dependent parts. Else return true.
- */
-static bool match_hd(Connector *c1, Connector *c2)
-{
-	if ((1 == c1->uc_start) && (1 == c2->uc_start) &&
-	    (c1->string[0] == c2->string[0]))
-	{
-		return false;
-	}
-	return true;
-}
-
 typedef struct
 {
-	const char *string;
+	const condesc_t *desc;
 	bool match;
 } match_cache;
 
@@ -472,21 +411,23 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	/* The following uses a string-set compare - string_set_cmp() cannot
 	 * be used here because c_con->string may be NULL. */
 	match_stats(c_con->string == a->string ? NULL : a, NULL);
-	UNREACHABLE(a->string == NULL); /* clang static analyzer suppression. */
-	if (c_con->string == a->string)
+	UNREACHABLE(connector_desc(a) == NULL); // clang static analyzer suppression.
+	if (c_con->desc == connector_desc(a))
 	{
-		/* The match_cache string field is initialized to NULL, and this is
-		 * enough for not using uninitialized c_con->match because the
-		 * connector string field cannot be NULL. A "garbage" warning is
-		 * suppressed above for the clang static analyzer. */
+		/* The match_cache desc field is initialized to NULL, and this is
+		 * enough because the connector desc filed cannot be NULL, as it
+		 * actually fetched a non-empty match list. */
 		PRAGMA_MAYBE_UNINITIALIZED
 		return c_con->match;
 		PRAGMA_END
 	}
 
-	/* No cache exists. Check if the connectors match and cache the result. */
-	c_con->match = match_lower_case(a, b) && match_hd(a, b);
-	c_con->string = a->string;
+	/* No cache match. Check if the connectors match and cache the result.
+	 * We know that the uc parts of the connectors are the same, because
+	 * we fetch the matching lists according to the uc part or the
+	 * connectors to be matched. So the uc parts are not checked here. */
+	c_con->match = lc_easy_match(connector_desc(a), connector_desc(b));
+	c_con->desc = connector_desc(a);
 
 	return c_con->match;
 }
@@ -605,7 +546,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	mr_end = mx;
 
 	/* Construct the list of things that could match the left. */
-	mc.string = NULL;
+	mc.desc = NULL;
 	gc.gword = NULL;
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
@@ -628,7 +569,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * if we are going to skip this element here because its match_left
 	 * is true, since then it means it is already included in the match
 	 * list. */
-	mc.string = NULL;
+	mc.desc = NULL;
 	gc.gword = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{

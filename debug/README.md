@@ -82,54 +82,67 @@ Useful examples
 
 1) See the tokens after flattening into the word array used by the parser:
 
-`echo "Let's test it" | link-parser -v=6 -debug=flatten_wordgraph,print_sentence_word_alternatives`
+```
+echo "Let's test it" | \
+link-parser -v=6 -debug=flatten_wordgraph,print_sentence_word_alternatives
+```
 
 2) Trace the work of `sane_linkage_morphism()`:
 
-`lg -v=7 -debug=sane_linkage_morphism`
+`link-parser -v=8 -debug=sane_linkage_morphism`
 
-3) Same as (2) above, but also see other messages from api.c:
+3) Same as (2) above, but also see other messages from sane.c:
 
-`lg -v=7 -debug=api.c`
+`link-parser -v=8 -debug=sane.c`
 
-(`sane_linkage_morphism()` happens to be in `api.c` so this includes its
-messages too).
+(`sane_linkage_morphism()` happens to be in `sane.c` so this includes its
+messages.)
 
 4) Debug the tokenizer:
 
-`lg -v=7 -debug=tokenizer.c`
+`link-parser -v=7 -debug=tokenizer.c`
 
 Or, in order to display the word array:
 
-`lg -v=7 -debug=tokenize.c,print_sentence_word_alternatives`
+`link-parser -v=7 -debug=tokenize.c,print_sentence_word_alternatives`
 
 5) Debug post-processing:
 
-`lg -v=9 -debug=post-process.c`
+`link-parser -v=9 -debug=post-process.c`
 
 6) Debug expression pruning:
 
-`lg -v=9 -debug=expression_prune`
+`link-parser -v=9 -debug=expression_prune`
 
 7) Debug reading the affix and knowledge files:
 
-`lg -v=11`
+`link-parser -v=11`
+
+8) Print all the connectors, along with their length limit.
+
+`link-parser -v=102`
+
+A length limit of 0 means the value of the short\_length option
+is used.
 
 ### -test=...
 
 1) Automatically show all linkages:
 
-`lg -test=auto-next-linkage`
+`link-parser -test=auto-next-linkage`
 Try to type some sentences at the **linkparser>** prompt to see its action.
 
 2) Print more that 1024 linkages in `link-parser` (this is the maximum
 `link-parser` would print by default), e.g. 20000:
 
-`lg -test=auto-next-linkage:20000`
+`link-parser -test=auto-next-linkage:20000`
 
 3) To print detailed linkages of **data/en/corpus-basic.batch**:
 
-`sed '/^*/d;/^!const/d;/^!batch/d' data/en/corpus-basic.batch | lg -test=auto-next-linkage`
+```
+sed '/^*/d;/^!const/d;/^!batch/d' data/en/corpus-basic.batch | \
+link-parser -test=auto-next-linkage
+```
 
 (If you cut&paste it to a terminal, remember to escape each of the "**!**" characters
 with a backslash.)
@@ -143,17 +156,17 @@ Note that this technique is not very effective if the order to the
 linkages got changed (or if SAT-parser linkages need to be compared to the
 classic-parser linkages). In that case the detailed linkages results need
 to be filtered through a script which sorts them according to some
-"canonical order".
+"canonical order" and also removes duplicates.
 
 4) Display the wordgraph:
 Currently, to use this feature, the library needs to be compiled with
 `--enable-wordgraph-display`.
 
-`lg -test=wg`
+`link-parser -test=wg`
 
 or
 
-`lg -test=wg:OPTIONS`
+`link-parser -test=wg:OPTIONS`
 
 For more examples of how to use the wordgraph display, see
 `link-grammar/README` and `msvc14/README`.
@@ -182,17 +195,20 @@ Use:
 
 `configure --enable-debug --enable-wordgraph-display`
 
+For SAT solver debug:
+`make -DSAT\_DEBUG`
+
 ### --enable-debug
-Its sets the `-g` compiler option, and also the DEBUG definition.
-The DEBUG definition adds various validity checks, test messages, and
-some debug functions (that can be invoked, for example, from the
-debugger).
+Its sets te DEBUG definitions and removes the optimization flags of the
+compiler. The DEBUG definition adds various validity checks, test
+messages, and some debug functions (that can be invoked, for example, from
+the debugger).
 
 ### --enable-wordgraph-display
 If something goes wrong, it is often useful to display the wordgraph.
 The wordgraph display function can be invoked from `gdb` using:
 
-`call wordgraph_show(sent, "")`
+`call wordgraph\_show(sent, "")`
 
 supposing that "sent" is available (the stack can be rolled down for
 that using the "down" or "frame" `gdb` commands).

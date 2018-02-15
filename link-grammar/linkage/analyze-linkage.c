@@ -15,7 +15,7 @@
 #include <string.h>
 
 #include "analyze-linkage.h"
-#include "connectors.h" // Needed for connector_get_string
+#include "connectors.h" // Needed for connector_string
 #include "linkage.h"
 #include "string-set.h"
 
@@ -80,7 +80,7 @@ void compute_link_names(Linkage lkg, String_set *sset)
 	for (i = 0; i < lkg->num_links; i++)
 	{
 		lkg->link_array[i].link_name = intersect_strings(sset,
-			connector_get_string(lkg->link_array[i].lc),
-			connector_get_string(lkg->link_array[i].rc));
+			connector_string(lkg->link_array[i].lc),
+			connector_string(lkg->link_array[i].rc));
 	}
 }

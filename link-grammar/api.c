@@ -366,7 +366,7 @@ int parse_options_get_spell_guess(Parse_Options opts) {
 }
 
 void parse_options_set_short_length(Parse_Options opts, int short_length) {
-	opts->short_length = short_length;
+	opts->short_length = MIN(short_length, UNLIMITED_LEN);
 }
 
 int parse_options_get_short_length(Parse_Options opts) {
@@ -459,6 +459,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->dict = dict;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
+	sent->disjuncts_connectors_memblock = NULL;
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 
@@ -521,9 +522,13 @@ static void free_sentence_words(Sentence sent)
 	for (i = 0; i < sent->length; i++)
 	{
 		free_X_nodes(sent->word[i].x);
-		free_disjuncts(sent->word[i].d);
+
+		if (NULL == sent->disjuncts_connectors_memblock)
+			free_disjuncts(sent->word[i].d);
+
 		free(sent->word[i].alternatives);
 	}
+	free(sent->disjuncts_connectors_memblock);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
@@ -605,11 +610,16 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 static void free_sentence_disjuncts(Sentence sent)
 {
 	size_t i;
-
-	for (i = 0; i < sent->length; ++i)
+	if (NULL != sent->disjuncts_connectors_memblock)
 	{
-		free_disjuncts(sent->word[i].d);
-		sent->word[i].d = NULL;
+		free(sent->disjuncts_connectors_memblock);
+	}
+	else
+	{
+		for (i = 0; i < sent->length; ++i)
+		{
+			free_disjuncts(sent->word[i].d);
+		}
 	}
 }
 
@@ -647,7 +657,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	/* Expressions were set up during the tokenize stage.
 	 * Prune them, and then parse.
 	 */
-	expression_prune(sent);
+	expression_prune(sent, opts);
 	print_time(opts, "Finished expression pruning");
 	if (opts->use_sat_solver)
 	{

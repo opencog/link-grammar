@@ -532,7 +532,7 @@ class FSATsolverTestCase(unittest.TestCase):
 class HEnglishLinkageTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.d, cls.po = Dictionary(), ParseOptions()
+        cls.d, cls.po = Dictionary(), ParseOptions(linkage_limit=300)
 
     @classmethod
     def tearDownClass(cls):
