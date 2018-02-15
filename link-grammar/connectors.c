@@ -205,6 +205,17 @@ void set_all_condesc_length_limit(Dictionary dict)
 
 /* ======================================================== */
 
+/**
+ * Pack the LC part of a connector into 64 bits, and compute a wild-card mask.
+ * Up to 9 characters can be so packed.
+ *
+ * Because we pack by shifts, we can do it using 7-bit per original
+ * character at the same overhead needed for 8-bit packing.
+ *
+ * Note: The LC part may consist of chars in the range [a-z0-9]
+ * (total 36) and there is a gap between the codes of [a-z] and [0-9].
+ * So a 6-bit packing will need a more complex algo.
+ */
 static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 {
 	lc_enc_t lc_mask = 0;
