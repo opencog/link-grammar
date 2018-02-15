@@ -10217,7 +10217,7 @@ UNLIMITED-CONNECTORS:
       VJ+ & SJ+;
 
 % The YS, YP, PH and ZZZ connectors can never be longer than one.
-LENGTH-LIMIT-1: YS+ & YP+ & PH*+ & ZZZ+;
+LENGTH-LIMIT-1: YS+ & YP+ & PH+ & ZZZ+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
