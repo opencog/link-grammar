@@ -10489,30 +10489,30 @@ absurd.a alarming.a acceptable.a unacceptable.a:
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb> or <toi-verb>) & {LE+}} & MJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
     or ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 wise.a unwise.a smart.a intelligent.a:
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(<to-verb> or <toi-verb>) & {LE+}} & MJla+) or
     ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 unlikely.a:
   ({EA- or EF+} & (
@@ -10544,21 +10544,21 @@ paradoxical.a shameful.a inconceivable.a unbelievable.a
 astonishing.a disgraceful.a debatable.a arguable.a lamentable.a
 regrettable.a well-known.a:
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
-  ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
+  ({EA- or EF+} & (
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+ or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or QIi+) & {LE+}} & MJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 clear.i: {EA- or EF+} & Vm- & TH+;
 sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
@@ -10577,22 +10577,22 @@ mandatory.a meaningless.a preferable.a senseless.a trivial.a
 wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {<toi-verb> & {LE+}} & MJla+)
     or (AJrc- & {@MV+})
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 unknown.a questionable.a:
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {QIi+}) or
     ({@MV+} & {QIi+} & MJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
-  or <adj-stuff>;
+  or <adj-stuff>
+  or <adj-phone>;
 
 certain.a:
   ({EA- or EF+} & (
@@ -10754,30 +10754,29 @@ all_alone:
   MVp- or
   E+;
 
+% XXX what the heck is Max? Its clobbers by Ma in <adj-stuff> ...
 outstanding.a available.a:
-  ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Max- or MJra-) & {@MV+}) or
-    ({@MV+} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
+  ({EA- or EF+} & (
+    ((Pa- or Max-) & {@MV+}) or
     <adj-opener>))
-  or ({EF+} & <adj-conjoined>);
+  or ({EF+} & <adj-conjoined>)
+  or <adj-stuff>
+  or <adj-vowel>;
 
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
 
 north.a south.a east.a west.a northeast.a
 northwest.a southeast.a southwest.a:
   <marker-common-entity>
-  or A+
+  or (<wantPH> & A+)
   or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-))))
-  or [[DD- & <noun-main-p>]];
+  or [[DD- & <noun-main-p>]]
+  or [[{DD-} & <noun-and-p>]];
 
 northern.a southern.a eastern.a western.a northeastern.a
 northwestern.a southeastern.a southwestern.a:
   <marker-common-entity>
-  or A+
+  or (<wantPHc> & A+)
   or G+;
 
 % .. is this correct?
