@@ -10321,7 +10321,8 @@ tawny.a ultramarine.a umber.a yellow.a:
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]]);
 
-done.c gone.c through.c: <adj-stuff> & <wantPHc>;
+done.c gone.c through.c:
+  <adj-stuff> & <wantPHc>;
 
 responsible.a accountable.a:
   ({EA- or EF+} &
@@ -10335,6 +10336,7 @@ responsible.a accountable.a:
   or ({EF+} & <adj-conjoined>);
 
 long.a:
+  <marker-common-entity> or
   (<ordinary-adj> & <wantPHc>)
   or ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+))
   or (H- & (BT+ or Yt+));
@@ -10342,6 +10344,7 @@ long.a:
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
 wide.a tall.a deep.a distant.a:
+  <marker-common-entity> or
   (<ordinary-adj> & <wantPHc>)
   or (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+})
   or (Ya- & {@MV+} & MJla+);
@@ -10357,61 +10360,76 @@ aged.i: <aged>;
 % "ages" work like aged, but with a cost.
 ages.i: [<aged>];
 
+
 % The following all have a very regular pattern, with just one variable
 % part, the TO TH type section.  This regularity should be exploited to
 % simplify the expressions ...
-easy.a hard.a simple.a difficult.a fun.a expensive.a:
+easy.a expensive.a:
+  <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
     or ({<tot-verb>} & <adj-opener>)))
-  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>)
+  or ({EA- or EF+ or <wantPHv>} & {[[@Ec-]]} & {Xc+} & A+);
+
+hard.a simple.a difficult.a fun.a:
+  <marker-common-entity> or
+  ({EA- or EF+} &
+    (((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-opener>)))
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>)
+  or ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
 
 % M-: "Do you have an example ready?"
 % Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
+  <marker-common-entity> or
   ({EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
-    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <to-verb>) & {LE+}} & MJla+)
     or AA+
     or M-
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
     or ({<to-verb> or <tot-verb>} & <adj-opener>)))
-  or ({EF+} & {<to-verb> or <tot-verb>} & <adj-conjoined>);
+  or ({EF+} & {<to-verb> or <tot-verb>} & <adj-conjoined>)
+  or ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
 
 silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
+  <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+ & <wantPHc>)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
     or ({<tot-verb>} & <adj-opener>)))
-  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>)
+  or ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
 
 % Identical to above, but starts with vowel
 unpleasant.a illegal.a:
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+ & <wantPHv>)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
     or ({<tot-verb>} & <adj-opener>)))
-  or ({EF+} & {<tot-verb>} & <adj-conjoined>);
+  or ({EF+} & {<tot-verb>} & <adj-conjoined>)
+  or ({EA- or EF+ or <wantPHv>} & {[[@Ec-]]} & {Xc+} & A+);
 
 <adj-good>:
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}})
+    (((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -10422,15 +10440,21 @@ unpleasant.a illegal.a:
 
 good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
 tough.a:
-  <adj-good> & <wantPHc>;
+  <adj-good>
+  or ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
 
 unusual.a useful.a impossible.a annoying.a unfair.a unuseful.a:
-  <adj-good> & <wantPHv>;
+  <adj-good>
+  or ({EA- or EF+ or <wantPHv>} & {[[@Ec-]]} & {Xc+} & A+);
 
 a_bitch :
-  <adj-good>;
+  <adj-good>
+  or ({EA- or EF+} & {[[@Ec-]]} & {Xc+} & A+);
 
-great.a: <marker-common-entity> or (<adj-good> & <wantPHc>);
+great.a:
+  <marker-common-entity>
+  or <adj-good>
+  or ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
 
 % Surely this is incomplete...
 one_and_only:
@@ -10448,6 +10472,7 @@ important.a essential.a imperative.a:
     or [[{DD-} & <noun-and-p>]]
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>);
+% xxxxxxxxxxxx
 
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
@@ -12294,7 +12319,8 @@ UNLIMITED-CONNECTORS:
       RW+ & Xp+ & Xx+ & CP+ & SFsx+ & WV+ & CV+ &
       VJ+ & SJ+;
 
-LENGTH-LIMIT-1: YS+ & YP+ & PH*+;
+% The YS, YP, PH and ZZZ connectors can never be longer than one.
+LENGTH-LIMIT-1: YS+ & YP+ & PH*+ & ZZZ+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
