@@ -668,6 +668,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % If PH is possible, then it is preferred. See PH below for explanation.
 <wantPHc>: [PHc-]-0.1 or ();
 <wantPHv>: [PHv-]-0.1 or ();
+<wantPH>: {PH-};
 
 <mass-vowel-noun>:
   <mass-phonetic>
@@ -10239,9 +10240,8 @@ just_not: <COMP-OPENER>;
 % [EAh- & {Qe+}]: "How big?"  "How tall?" -- large cost, as it otherwise
 %     causes bizarre parses for "a decidedly jolly good player"
 <ordinary-adj>:
-  ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
+  ({EA- or EF+} & (
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -10251,32 +10251,30 @@ just_not: <COMP-OPENER>;
   or [EAh- & {Qe+}];
 
 % PH-: connect, phonetically, to a/an if it is there.
-<ordinary-vowel-adj>:
-  <ordinary-adj> & <wantPHv>;
-
-<ordinary-const-adj>:
-  <ordinary-adj> & <wantPHc>;
+<adj-consn>: ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
+<adj-vowel>: ({EA- or EF+ or <wantPHv>} & {[[@Ec-]]} & {Xc+} & A+);
+<adj-phone>: ({EA- or EF+ or <wantPH>} & {[[@Ec-]]} & {Xc+} & A+);
 
 /en/words/words.adj.1-vowel :
   <marker-common-entity> or
-  <ordinary-vowel-adj>;
+  <ordinary-adj> or <adj-vowel>;
 
 /en/words/words.adj.1-const :
   <marker-common-entity> or
-  <ordinary-const-adj>;
+  <ordinary-adj> or <adj-consn>;
 
 % Make the given name Frank be prefered to 'frank.a'
 % e.g. "Frank felt vindicated when his long time rival Bill revealed that
 % he was the winner of the competition."
 frank.a:
-  [<marker-common-entity> or <ordinary-const-adj>]0.2;
+  [<marker-common-entity> or <ordinary-adj> or <adj-consn>]0.2;
 
 % Add a miniscule cost, so that the noun form is prefered...
 % An older formulation of this used Ah- as the link, but I don't see
 % why.  Generic adjective should be OK. Given a cost of 0.04, so
 % as to give a slight preference for the noun-form, if possible.
 HYPHENATED-WORDS.a:
-  [<ordinary-adj>]0.04;
+  [<ordinary-adj> or <adj-phone>]0.04;
 
 % Color names. Just like ordinary adjectives, except that the
 % color names themselves can be modified by other nouns, gerunds,
@@ -10311,7 +10309,6 @@ tawny.a ultramarine.a umber.a yellow.a:
   <color-adj>;
 
 
-% "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:
   <marker-common-entity> or
   ({EA- or EF+} & (
@@ -10321,23 +10318,31 @@ tawny.a ultramarine.a umber.a yellow.a:
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]]));
 
-<adj-consn>: ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
-<adj-vowel>: ({EA- or EF+ or <wantPHv>} & {[[@Ec-]]} & {Xc+} & A+);
-
+% "We caught a through flight", "its a done job" - adjective -- !?
+% probably over-broad.
 done.c gone.c through.c:
   <adj-stuff>
   or <adj-consn>;
 
-responsible.a accountable.a:
-  ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
+responsible.a:
+  ({EA- or EF+} & (
     ((Pa- or Vh-) & {@MV+}) or
     <adj-opener>))
+  or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
-  or ({EF+} & <adj-conjoined>);
+  or <adj-consn>;
+
+accountable.a:
+  ({EA- or EF+} & (
+    ((Pa- or Vh-) & {@MV+}) or
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>)
+  or <adj-stuff>
+  or <adj-vowel>;
 
 long.a:
-  (<ordinary-adj> & <wantPHc>)
+  <ordinary-adj>
+  or <adj-consn>
   or ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+))
   or (H- & (BT+ or Yt+));
 
@@ -10345,12 +10350,12 @@ long.a:
 % "The river is a mile wide here": Ya- & Pa- & MVp+
 wide.a tall.a deep.a distant.a:
   <marker-common-entity> or
-  (<ordinary-adj> & <wantPHc>)
+  <ordinary-adj> or <adj-consn>
   or (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+})
   or (Ya- & {@MV+} & MJla+);
 
 old.a:
-  (<ordinary-adj> & <wantPHv>)
+  <ordinary-adj> or <adj-vowel>
   or (Ytm- & (Pa- or Ma- or <adj-op> or MJra- or MJla+));
 
 % ??? adj-op already has MX*a- in it, why do we need a bare MX- here ?
@@ -10440,7 +10445,7 @@ one_and_only:
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
   ({EA- or EF+} & (
-    or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
+    ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -10450,7 +10455,7 @@ important.a essential.a imperative.a:
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
   ({EA- or EF+} & (
-    or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
+    ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -10472,7 +10477,7 @@ poetical.a:
 original.a illogical.a elegant.a efficient.a awful.a unjust.a
 absurd.a alarming.a acceptable.a unacceptable.a:
   ({EA- or EF+} & (
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}})
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {(THi+ or <toi-verb>) & {LE+}} & MJla+)
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -11695,6 +11700,7 @@ aw aww awww oh_great oh_wow
 er err.ij errr um.ij umm
 anyways honey.ij man.ij baby.ij hush.ij:
   <ordinary-adj>
+  or <adj-phone>
   or ({{Ic-} & Wi-} & {{Xd-} & Xc+} & Ic+)
   or <directive-opener>
   or (({A-} or {E-} or {EE-}) & Wa-);
@@ -12226,7 +12232,7 @@ C-NOUN-WORDS.n:
 
 % guessed adjectives (-ous, -ar, -ic)
 ADJ-WORDS.a:
-  [<ordinary-adj>]0.1;
+  [<ordinary-adj> or <adj-phone>]0.1;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
 FOLD-WORDS:
@@ -12273,7 +12279,7 @@ UNKNOWN-WORD.v:
 
 % Add a miniscule cost, so that the noun-form is prefered, when
 % available.
-UNKNOWN-WORD.a: [<ordinary-adj>]0.04;
+UNKNOWN-WORD.a: [<ordinary-adj> or <adj-phone>]0.04;
 
 % These are the link-types that are not subject to the length limit.
 % Always use "+" for these.  Some of these are obvious. Some deserve
