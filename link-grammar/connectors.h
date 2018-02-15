@@ -60,7 +60,7 @@ typedef struct
 	                       * If 0, short_length (a Parse_Option) is used. If
 	                       * all_short==true (a Parse_Option), length_limit
 	                       * is clipped to short_length. */
-	char head_depended;   /* 'h' for head, 'd' for depended, or '\0' if none */
+	char head_dependent;   /* 'h' for head, 'd' for dependent, or '\0' if none */
 
 	/* The following are used for connector match speedup */
 	uint8_t uc_length;   /* uc part length */
@@ -202,7 +202,7 @@ static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
 {
 	if ((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask)
 		return false;
-	if (('\0' != c1->head_depended) && (c1->head_depended == c2->head_depended))
+	if (('\0' != c1->head_dependent) && (c1->head_dependent == c2->head_dependent))
 		return false;
 
 	return true;

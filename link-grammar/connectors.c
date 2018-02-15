@@ -249,9 +249,8 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 
 /**
  * Calculate fixed connector information that only depend on its string.
- * This information is used to speed up the parsing stage.
- * It is calculated during the directory creation and doesn't get
- * changed afterward.
+ * This information is used to speed up the parsing stage. It is
+ * calculated during the directory creation and doesn't change afterward.
  */
 bool calculate_connector_info(condesc_t * c)
 {
@@ -260,7 +259,7 @@ bool calculate_connector_info(condesc_t * c)
 
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
-	c->head_depended = (c->string == s)? '\0' : c->string[0];
+	c->head_dependent = (c->string == s)? '\0' : c->string[0];
 
 	/* For most situations, all three hashes are very nearly equal;
 	 * as to which is faster depends on the parsed text.
