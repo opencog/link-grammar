@@ -32,8 +32,7 @@
 
 /* For faster comparisons, the connector lc part is encoded into a number
  * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
- * is possible to encode up to 9 letters in an uint64_t.
- * FIXME: Validate that lc length <= 9. */
+ * is possible to encode up to 9 letters in an uint64_t. */
 #define LC_BITS 7
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
@@ -108,9 +107,7 @@ void condesc_delete(Dictionary);
 /* GET accessors for connector attributes.
  * Can be used for experimenting with Connector_struct internals in
  * non-trivial ways without the need to change most of the code that
- * accesses connectors.
- * FIXME: Maybe remove the _get part of the names, since we don't
- * need SET accessors. */
+ * accesses connectors */
 static inline const char * connector_string(const Connector *c)
 {
 	return c->desc->string;
