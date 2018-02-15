@@ -70,23 +70,22 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 /* ======================================================== */
 /* UNLIMITED-CONNECTORS handling. */
 
-static void get_connectors_from_expression(condesc_t **conlist, size_t *cl_size,
-                                           const Exp *e)
+static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {
-	E_list * l;
-
 	if (e->type == CONNECTOR_type)
 	{
-		if (NULL != conlist)
-		{
-			conlist[*cl_size] = e->u.condesc;
-		}
-		(*cl_size)++;
-	} else {
-		for (l=e->u.l; l!=NULL; l=l->next) {
-			get_connectors_from_expression(conlist, cl_size, l->e);
-		}
+		if (NULL != conlist) *conlist = e->u.condesc;
+		return 1;
 	}
+
+	size_t cl_size = 0;
+	for (E_list *l = e->u.l; l != NULL; l = l->next)
+	{
+		cl_size += get_connectors_from_expression(conlist, l->e);
+		if (NULL != conlist) conlist++;
+	}
+
+	return cl_size;
 }
 
 static int condesc_by_uc_num(const void *a, const void *b)
@@ -112,9 +111,9 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 	if (e)
 	{
 		/* Create a connector list from the given expression. */
-		get_connectors_from_expression(NULL, (exp_num_con = 0, &exp_num_con), e);
+		exp_num_con = get_connectors_from_expression(NULL, e);
 		econlist = alloca(exp_num_con * sizeof(*econlist));
-		get_connectors_from_expression(econlist, (exp_num_con = 0, &exp_num_con), e);
+		get_connectors_from_expression(econlist, e);
 	}
 
 	if ((NULL == econlist) || (NULL == econlist[0])) return;
