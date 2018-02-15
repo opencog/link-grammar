@@ -10533,23 +10533,34 @@ likely.a:
   or <adj-stuff>
   or <adj-consn>;
 
-apparent.a false.a official.a strict.a significant.a funny.a
-notable.a untrue.a tragic.a plain.a urgent.a a_drag a_bummer
-definite.a evident.a impressive.a incredible.a
-inevitable.a mysterious.a pathetic.a probable.a admirable.a
-commendable.a conceivable.a insignificant.a miraculous.a
-self-evident.a undeniable.a plausible.a understandable.a
-demonstrable.a hilarious.a improbable.a inexcusable.a outrageous.a
-paradoxical.a shameful.a inconceivable.a unbelievable.a
-astonishing.a disgraceful.a debatable.a arguable.a lamentable.a
-regrettable.a well-known.a:
+% Just like below, but vowels
+apparent.a official.a untrue.a urgent.a
+evident.a impressive.a incredible.a inevitable.a admirable.a
+insignificant.a undeniable.a understandable.a
+improbable.a inexcusable.a outrageous.a
+inconceivable.a unbelievable.a astonishing.a arguable.a:
   ({EA- or EF+} & (
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
-  or <adj-phone>;
+  or <adj-vowel>;
+
+% Just like above, but consonants
+false.a strict.a significant.a funny.a notable.a tragic.a
+plain.a definite.a mysterious.a pathetic.a probable.a
+commendable.a conceivable.a miraculous.a self-evident.a
+plausible.a demonstrable.a hilarious.a paradoxical.a shameful.a
+disgraceful.a debatable.a lamentable.a regrettable.a well-known.a
+a_drag a_bummer:
+  ({EA- or EF+} & (
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
+    ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
+    <adj-opener>))
+  or ({EF+} & <adj-conjoined>)
+  or <adj-stuff>
+  or <adj-consn>;
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   ({EA- or EF+} & (
@@ -10564,18 +10575,16 @@ clear.i: {EA- or EF+} & Vm- & TH+;
 sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
 
 % (AJrc- & {@MV+}): "It is lighter and less costly"
-tactful.a conventional.a advisable.a prudent.a sensible.a tactless.a polite.a
-impolite.a arrogant.a conceited.a obnoxious.a valuable.a reasonable.a
-unreasonable.a traditional.a unnecessary.a tempting.a usual.a
-inadvisable.a lovely.a a_mistake ethical.a unethical.a immoral.a
-childish.a awkward.a appropriate.a costly.a customary.a desirable.a
-dumb.a effective.a fashionable.a energy-intensive.a
-foolish.a healthy.a hip.a okay.a OK.a ok.a
-painful.a selfish.a sufficient.a advantageous.a boring.a
-inappropriate.a insufficient.a irrational.a irresponsible.a
+% Exactly the same as below, but consonant.
+tactful.a conventional.a prudent.a sensible.a tactless.a polite.a
+conceited.a valuable.a reasonable.a traditional.a tempting.a
+lovely.a childish.a costly.a customary.a desirable.a
+dumb.a fashionable.a foolish.a healthy.a hip.a
+painful.a selfish.a sufficient.a boring.a
 mandatory.a meaningless.a preferable.a senseless.a trivial.a
 wrongheaded.a premature.a risky.a dishonest.a
-hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
+hypocritical.a pointless.a
+a_mistake:
   ({EA- or EF+} & (
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {<toi-verb> & {LE+}} & MJla+)
@@ -10583,7 +10592,24 @@ hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
-  or <adj-phone>;
+  or <adj-consn>;
+
+% Exactly the same as above, but vowel.
+advisable.a impolite.a arrogant.a obnoxious.a
+unreasonable.a unnecessary.a usual.a
+inadvisable.a ethical.a unethical.a immoral.a
+awkward.a appropriate.a effective.a energy-intensive.a
+okay.a OK.a ok.a advantageous.a
+inappropriate.a insufficient.a irrational.a irresponsible.a
+enjoyable.a idiotic.a inconvenient.a unkind.a:
+  ({EA- or EF+} & (
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
+    or ({@MV+} & {<toi-verb> & {LE+}} & MJla+)
+    or (AJrc- & {@MV+})
+    or <adj-opener>))
+  or ({EF+} & <adj-conjoined>)
+  or <adj-stuff>
+  or <adj-vowel>;
 
 unknown.a questionable.a:
   ({EA- or EF+} & (
@@ -10678,10 +10704,10 @@ afraid.a ashamed.a unafraid.a unashamed.a:
   or ({EF+} & {OF+ or <embed-verb> or TH+ or <to-verb>} & <adj-conjoined>)
   or <adj-vowel>;
 
-apprehensive.a secure.a optimistic.a pessimistic.a
-annoyed.a confused.a offended.a
-insulted.a concerned.a depressed.a doubtful.a
-grateful.a mad.a mistaken.a hopeful.a unhappy.a:
+apprehensive.a optimistic.a annoyed.a offended.a
+insulted.a unhappy.a
+secure.a pessimistic.a confused.a concerned.a depressed.a
+doubtful.a grateful.a mad.a mistaken.a hopeful.a:
   ({EA- or EF+} & (
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or
     ({@MV+} & {TH+ & {LE+}} & MJla+) or
@@ -10689,7 +10715,6 @@ grateful.a mad.a mistaken.a hopeful.a unhappy.a:
   or ({EF+} & {TH+} & <adj-conjoined>)
   or <adj-stuff>
   or <adj-phone>;
-
 
 aware.a unaware.a:
   ({EA- or EF+} &
@@ -10754,7 +10779,8 @@ all_alone:
   MVp- or
   E+;
 
-% XXX what the heck is Max? Its clobbers by Ma in <adj-stuff> ...
+% Max-: "the only apartment available"
+% Max passes through post-processing, whereas Ma- is disallowed...
 outstanding.a available.a:
   ({EA- or EF+} & (
     ((Pa- or Max-) & {@MV+}) or
