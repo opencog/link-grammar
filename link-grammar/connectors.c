@@ -21,6 +21,8 @@
 #include "connectors.h"
 #include "link-includes.h"          // for Parse_Options
 
+#define WILD_TYPE '*'
+
 /**
  * free_connectors() -- free the list of connectors pointed to by e
  * (does not free any strings)
@@ -99,7 +101,7 @@ static int condesc_by_uc_num(const void *a, const void *b)
 	return 0;
 }
 
-#define WILD_TYPE '*'
+#define LENGTH_LINIT_WILD_TYPE WILD_TYPE
 
 static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_limit)
 {
@@ -136,7 +138,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 		restart_cn = cn+1;
 
 		const char *wc_str = econlist[en]->string;
-		char *uc_wildcard = strchr(wc_str, WILD_TYPE);
+		char *uc_wildcard = strchr(wc_str, LENGTH_LINIT_WILD_TYPE);
 
 		for (; cn < ct->num_con; cn++)
 		{
@@ -233,7 +235,7 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 			return false;
 		}
 		lc_value |= (lc_enc_t)(*lc_string & LC_MASK) << (lc_pos*LC_BITS);
-		if (*lc_string != '*') lc_mask |= wildcard;
+		if (*lc_string != WILD_TYPE) lc_mask |= wildcard;
 		if ('\0' == lc_string[1]) break;
 		wildcard <<= LC_BITS;
 		lc_pos++;
