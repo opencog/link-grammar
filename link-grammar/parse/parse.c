@@ -276,9 +276,9 @@ static void pack_sentence(Sentence sent)
 		}
 	}
 
-#define CACHELINE 64
+#define CONN_ALIGNMENT sizeof(Connector)
 	size_t dsize = dcnt * sizeof(Disjunct);
-	dsize = (dsize+CACHELINE)&~(CACHELINE-1); /* Align connector block. */
+	dsize = (dsize+CONN_ALIGNMENT)&~(CONN_ALIGNMENT-1); /* Align connector block. */
 	size_t csize = ccnt * sizeof(Connector);
 	void *memblock = malloc(dsize + csize);
 	Disjunct *dblock = memblock;
