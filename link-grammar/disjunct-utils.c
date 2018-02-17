@@ -16,7 +16,6 @@
 #include "connectors.h"
 #include "disjunct-utils.h"
 #include "print/print-util.h"
-#include "string-set.h"
 #include "utilities.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
