@@ -607,22 +607,6 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 	return sent->lnkages[i].lifo.link_cost;
 }
 
-static void free_sentence_disjuncts(Sentence sent)
-{
-	size_t i;
-	if (NULL != sent->disjuncts_connectors_memblock)
-	{
-		free(sent->disjuncts_connectors_memblock);
-	}
-	else
-	{
-		for (i = 0; i < sent->length; ++i)
-		{
-			free_disjuncts(sent->word[i].d);
-		}
-	}
-}
-
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;

@@ -11,12 +11,15 @@
 /*************************************************************************/
 
 #include <string.h>
+
+#include "link-grammar/api-structures.h" // Sentence
 #include "connectors.h"
 #include "disjunct-utils.h"
 #include "print/print-util.h"
 #include "string-set.h"
 #include "utilities.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
+#include "tokenize/word-structures.h"
 
 /* Disjunct utilities ... */
 
@@ -32,6 +35,22 @@ void free_disjuncts(Disjunct *c)
 		free_connectors(c->left);
 		free_connectors(c->right);
 		xfree((char *)c, sizeof(Disjunct));
+	}
+}
+
+void free_sentence_disjuncts(Sentence sent)
+{
+	if (NULL != sent->disjuncts_connectors_memblock)
+	{
+		free(sent->disjuncts_connectors_memblock);
+		sent->disjuncts_connectors_memblock = NULL;
+	}
+	else
+	{
+		for (WordIdx i = 0; i < sent->length; i++)
+		{
+			free_disjuncts(sent->word[i].d);
+		}
 	}
 }
 
