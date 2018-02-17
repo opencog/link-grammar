@@ -517,18 +517,12 @@ int sentence_split(Sentence sent, Parse_Options opts)
 
 static void free_sentence_words(Sentence sent)
 {
-	size_t i;
-
-	for (i = 0; i < sent->length; i++)
+	for (WordIdx i = 0; i < sent->length; i++)
 	{
 		free_X_nodes(sent->word[i].x);
-
-		if (NULL == sent->disjuncts_connectors_memblock)
-			free_disjuncts(sent->word[i].d);
-
 		free(sent->word[i].alternatives);
 	}
-	free(sent->disjuncts_connectors_memblock);
+	free_sentence_disjuncts(sent);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
