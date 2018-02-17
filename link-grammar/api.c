@@ -616,6 +616,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		rc = sentence_split(sent, opts);
 		if (rc) return -1;
 	}
+	else
+	{
+		/* During a panic parse, we enter here a second time, with leftover
+		 * garbage. Free it. We really should make the code that is panicking
+		 * do this free, but right now, they have no API for it, so we do it
+		 * as a favor. XXX FIXME someday. */
+		free_sentence_disjuncts(sent);
+	}
 
 	/* Check for bad sentence length */
 	if (MAX_SENTENCE <= sent->length)
@@ -625,11 +633,6 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		return -2;
 	}
 
-	/* During a panic parse, we enter here a second time, with leftover
-	 * garbage. Free it. We really should make the code that is panicking
-	 * do this free, but right now, they have no PAI for it, so we do it
-	 * as a favor. XXX FIXME someday. */
-	free_sentence_disjuncts(sent);
 	resources_reset(opts->resources);
 
 	/* Expressions were set up during the tokenize stage.
