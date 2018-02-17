@@ -11,31 +11,22 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>
-#include <math.h>
 #include <string.h>
-#include <stdint.h>
 
 #include "api-structures.h"
-#include "connectors.h"  // for MAX_SENTENCE
 #include "corpus/corpus.h"
-#include "dict-common/dict-common.h"
 #include "dict-common/dict-utils.h" // for free_X_nodes
 #include "disjunct-utils.h"  // for free_disjuncts
-#include "error.h"
-#include "externs.h"
 #include "linkage/linkage.h"
 #include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
 #include "post-process/post-process.h" // for post_process_new()
-#include "print/print.h"
 #include "prepare/exprune.h"
+#include "string-set.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
-#include "string-set.h"
 #include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
-#include "tokenize/tok-structures.h" // Needed for Gword_struct
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
 #include "utilities.h"
 
