@@ -11,31 +11,22 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>
-#include <math.h>
 #include <string.h>
-#include <stdint.h>
 
 #include "api-structures.h"
-#include "connectors.h"  // for MAX_SENTENCE
 #include "corpus/corpus.h"
-#include "dict-common/dict-common.h"
 #include "dict-common/dict-utils.h" // for free_X_nodes
 #include "disjunct-utils.h"  // for free_disjuncts
-#include "error.h"
-#include "externs.h"
 #include "linkage/linkage.h"
 #include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
 #include "post-process/post-process.h" // for post_process_new()
-#include "print/print.h"
 #include "prepare/exprune.h"
+#include "string-set.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
-#include "string-set.h"
 #include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
-#include "tokenize/tok-structures.h" // Needed for Gword_struct
 #include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
 #include "utilities.h"
 
@@ -517,18 +508,12 @@ int sentence_split(Sentence sent, Parse_Options opts)
 
 static void free_sentence_words(Sentence sent)
 {
-	size_t i;
-
-	for (i = 0; i < sent->length; i++)
+	for (WordIdx i = 0; i < sent->length; i++)
 	{
 		free_X_nodes(sent->word[i].x);
-
-		if (NULL == sent->disjuncts_connectors_memblock)
-			free_disjuncts(sent->word[i].d);
-
 		free(sent->word[i].alternatives);
 	}
-	free(sent->disjuncts_connectors_memblock);
+	free_sentence_disjuncts(sent);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
@@ -607,22 +592,6 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 	return sent->lnkages[i].lifo.link_cost;
 }
 
-static void free_sentence_disjuncts(Sentence sent)
-{
-	size_t i;
-	if (NULL != sent->disjuncts_connectors_memblock)
-	{
-		free(sent->disjuncts_connectors_memblock);
-	}
-	else
-	{
-		for (i = 0; i < sent->length; ++i)
-		{
-			free_disjuncts(sent->word[i].d);
-		}
-	}
-}
-
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
@@ -638,6 +607,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		rc = sentence_split(sent, opts);
 		if (rc) return -1;
 	}
+	else
+	{
+		/* During a panic parse, we enter here a second time, with leftover
+		 * garbage. Free it. We really should make the code that is panicking
+		 * do this free, but right now, they have no API for it, so we do it
+		 * as a favor. XXX FIXME someday. */
+		free_sentence_disjuncts(sent);
+	}
 
 	/* Check for bad sentence length */
 	if (MAX_SENTENCE <= sent->length)
@@ -647,11 +624,6 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		return -2;
 	}
 
-	/* During a panic parse, we enter here a second time, with leftover
-	 * garbage. Free it. We really should make the code that is panicking
-	 * do this free, but right now, they have no PAI for it, so we do it
-	 * as a favor. XXX FIXME someday. */
-	free_sentence_disjuncts(sent);
 	resources_reset(opts->resources);
 
 	/* Expressions were set up during the tokenize stage.

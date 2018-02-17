@@ -16,6 +16,7 @@
 #include <stdbool.h>
 
 #include "api-types.h"
+#include "link-grammar/api-structures.h" // Sentence
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
@@ -39,6 +40,7 @@ struct Disjunct_struct
 
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
+void free_sentence_disjuncts(Sentence);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct * );

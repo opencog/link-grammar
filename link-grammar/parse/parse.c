@@ -359,11 +359,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				 * parsed with null_count==0. Restore the save disjuncts. */
 				if (NULL != disjuncts_copy)
 				{
+					free_sentence_disjuncts(sent);
 					for (size_t i = 0; i < sent->length; i++)
-					{
-						free_disjuncts(sent->word[i].d);
 						sent->word[i].d = disjuncts_copy[i];
-					}
 					disjuncts_copy = NULL;
 				}
 			}
