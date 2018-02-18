@@ -53,10 +53,10 @@ struct connector_table_s
 
 #define CT_BLKSIZE 512
 /* The connector table elements are allocated in a kind of an unrolled
- * linked list with fixed blocks, when the first block is pre-allocated on
- * the stack (this simplifies the handling). Additional blocks are
+ * linked list with fixed blocks, when the first block is pre-allocated
+ * (this simplifies the handling). Additional blocks are
  * dynamically allocated, but they are rarely needed. The existing
- * allocation is reused on each pass, an freed only at the end of the
+ * allocation is reused on each pass, and freed only at the end of the
  * expression pruning. */
 // connector_table_element-> ... CT_BLKSIZE-1 elements
 //                           ...

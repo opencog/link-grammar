@@ -251,8 +251,19 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 /**
  * Pack all disjunct and connectors into one big memory block.
  * This facilitate a better memory caching for long sentences
- * using the fact that now more than one connector can be packed
- * in a cache line of 64 bytes (a performance gain of a few percents).
+ * (a performance gain of a few percents).
+ *
+ * The current Connector struct size is 32 bit, and future ones may be
+ * smaller, but still with a power-of-2 size.
+ * The idea is to put an integral number of connectors in each cache line
+ * (assumed to be >= Connector struct size, e.g. 64 bytes),
+ * so one connector will not need 2 cache lines.
+ *
+ * The allocated memory includes 3 sections , in that order:
+ * 1. A block for disjuncts, when it start is not aligned (the disjunct size
+ * is currently 56 bytes and cannot be reduced much).
+ * 2. A small alignment gap, that ends in a 64-byte boundary.
+ * 3. A block of connectors, which is so aligned to 64-byte boundary.
  *
  * FIXME: 1. Find the "best" value for SHORTEST_SENTENCE_TO_PACK.
  * 2. Maybe this check should be done in too stages, the second one
@@ -276,9 +287,9 @@ static void pack_sentence(Sentence sent)
 		}
 	}
 
-#define CACHELINE 64
+#define CONN_ALIGNMENT sizeof(Connector)
 	size_t dsize = dcnt * sizeof(Disjunct);
-	dsize = (dsize+CACHELINE)&~(CACHELINE-1); /* Align connector block. */
+	dsize = (dsize+CONN_ALIGNMENT)&~(CONN_ALIGNMENT-1); /* Align connector block. */
 	size_t csize = ccnt * sizeof(Connector);
 	void *memblock = malloc(dsize + csize);
 	Disjunct *dblock = memblock;

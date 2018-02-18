@@ -66,8 +66,8 @@ char *get_console_line(void)
 	}
 
 	/* Make sure we don't have conversion problems, by searching for '�'. */
-	const char *invlid_char  = strstr(utf8inbuf, "\xEF\xBF\xBD");
-	if (NULL != invlid_char)
+	const char *invalid_char  = strstr(utf8inbuf, "\xEF\xBF\xBD");
+	if (NULL != invalid_char)
 		prt_error("Warning: Invalid input character encountered.\n");
 
 	/* ^Z is read as a character. Convert it to an EOF indication. */

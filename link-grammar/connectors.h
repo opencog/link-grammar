@@ -32,8 +32,7 @@
 
 /* For faster comparisons, the connector lc part is encoded into a number
  * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
- * is possible to encode up to 9 letters in an uint64_t.
- * FIXME: Validate that lc length <= 9. */
+ * is possible to encode up to 9 letters in an uint64_t. */
 #define LC_BITS 7
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
@@ -60,7 +59,7 @@ typedef struct
 	                       * If 0, short_length (a Parse_Option) is used. If
 	                       * all_short==true (a Parse_Option), length_limit
 	                       * is clipped to short_length. */
-	char head_depended;   /* 'h' for head, 'd' for depended, or '\0' if none */
+	char head_dependent;   /* 'h' for head, 'd' for dependent, or '\0' if none */
 
 	/* The following are used for connector match speedup */
 	uint8_t uc_length;   /* uc part length */
@@ -108,9 +107,7 @@ void condesc_delete(Dictionary);
 /* GET accessors for connector attributes.
  * Can be used for experimenting with Connector_struct internals in
  * non-trivial ways without the need to change most of the code that
- * accesses connectors.
- * FIXME: Maybe remove the _get part of the names, since we don't
- * need SET accessors. */
+ * accesses connectors */
 static inline const char * connector_string(const Connector *c)
 {
 	return c->desc->string;
@@ -202,7 +199,7 @@ static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
 {
 	if ((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask)
 		return false;
-	if (('\0' != c1->head_depended) && (c1->head_depended == c2->head_depended))
+	if (('\0' != c1->head_dependent) && (c1->head_dependent == c2->head_dependent))
 		return false;
 
 	return true;

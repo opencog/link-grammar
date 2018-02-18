@@ -21,6 +21,8 @@
 #include "connectors.h"
 #include "link-includes.h"          // for Parse_Options
 
+#define WILD_TYPE '*'
+
 /**
  * free_connectors() -- free the list of connectors pointed to by e
  * (does not free any strings)
@@ -70,23 +72,22 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 /* ======================================================== */
 /* UNLIMITED-CONNECTORS handling. */
 
-static void get_connectors_from_expression(condesc_t **conlist, size_t *cl_size,
-                                           const Exp *e)
+static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {
-	E_list * l;
-
 	if (e->type == CONNECTOR_type)
 	{
-		if (NULL != conlist)
-		{
-			conlist[*cl_size] = e->u.condesc;
-		}
-		(*cl_size)++;
-	} else {
-		for (l=e->u.l; l!=NULL; l=l->next) {
-			get_connectors_from_expression(conlist, cl_size, l->e);
-		}
+		if (NULL != conlist) *conlist = e->u.condesc;
+		return 1;
 	}
+
+	size_t cl_size = 0;
+	for (E_list *l = e->u.l; l != NULL; l = l->next)
+	{
+		cl_size += get_connectors_from_expression(conlist, l->e);
+		if (NULL != conlist) conlist++;
+	}
+
+	return cl_size;
 }
 
 static int condesc_by_uc_num(const void *a, const void *b)
@@ -100,7 +101,7 @@ static int condesc_by_uc_num(const void *a, const void *b)
 	return 0;
 }
 
-#define WILD_TYPE '*'
+#define LENGTH_LINIT_WILD_TYPE WILD_TYPE
 
 static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_limit)
 {
@@ -112,9 +113,9 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 	if (e)
 	{
 		/* Create a connector list from the given expression. */
-		get_connectors_from_expression(NULL, (exp_num_con = 0, &exp_num_con), e);
+		exp_num_con = get_connectors_from_expression(NULL, e);
 		econlist = alloca(exp_num_con * sizeof(*econlist));
-		get_connectors_from_expression(econlist, (exp_num_con = 0, &exp_num_con), e);
+		get_connectors_from_expression(econlist, e);
 	}
 
 	if ((NULL == econlist) || (NULL == econlist[0])) return;
@@ -137,7 +138,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 		restart_cn = cn+1;
 
 		const char *wc_str = econlist[en]->string;
-		char *uc_wildcard = strchr(wc_str, WILD_TYPE);
+		char *uc_wildcard = strchr(wc_str, LENGTH_LINIT_WILD_TYPE);
 
 		for (; cn < ct->num_con; cn++)
 		{
@@ -206,6 +207,17 @@ void set_all_condesc_length_limit(Dictionary dict)
 
 /* ======================================================== */
 
+/**
+ * Pack the LC part of a connector into 64 bits, and compute a wild-card mask.
+ * Up to 9 characters can be so packed.
+ *
+ * Because we pack by shifts, we can do it using 7-bit per original
+ * character at the same overhead needed for 8-bit packing.
+ *
+ * Note: The LC part may consist of chars in the range [a-z0-9]
+ * (total 36) and there is a gap between the codes of [a-z] and [0-9].
+ * So a 6-bit packing will need a more complex algo.
+ */
 static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 {
 	lc_enc_t lc_mask = 0;
@@ -223,7 +235,7 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 			return false;
 		}
 		lc_value |= (lc_enc_t)(*lc_string & LC_MASK) << (lc_pos*LC_BITS);
-		if (*lc_string != '*') lc_mask |= wildcard;
+		if (*lc_string != WILD_TYPE) lc_mask |= wildcard;
 		if ('\0' == lc_string[1]) break;
 		wildcard <<= LC_BITS;
 		lc_pos++;
@@ -237,9 +249,8 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 
 /**
  * Calculate fixed connector information that only depend on its string.
- * This information is used to speed up the parsing stage.
- * It is calculated during the directory creation and doesn't get
- * changed afterward.
+ * This information is used to speed up the parsing stage. It is
+ * calculated during the directory creation and doesn't change afterward.
  */
 bool calculate_connector_info(condesc_t * c)
 {
@@ -248,7 +259,7 @@ bool calculate_connector_info(condesc_t * c)
 
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
-	c->head_depended = (c->string == s)? '\0' : c->string[0];
+	c->head_dependent = (c->string == s)? '\0' : c->string[0];
 
 	/* For most situations, all three hashes are very nearly equal;
 	 * as to which is faster depends on the parsed text.
