@@ -478,9 +478,9 @@ bool try_locale(const char *);
 /**
  * Returns the smallest power of two that is at least i and at least 1
  */
-static inline unsigned int next_power_of_two_up(unsigned int i)
+static inline size_t next_power_of_two_up(size_t i)
 {
-	unsigned int j=1;
+	size_t j=1;
 	while (j<i) j <<= 1;
 	return j;
 }
