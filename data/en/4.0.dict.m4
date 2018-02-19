@@ -2880,6 +2880,7 @@ hadn't.v-d hadn’t.v-d:
 % using an MVp+ link to the copula. Example:
 % "There is neither pine nor apple in the pineapple."
 % "There is no ham in the hamburger, and neither pine nor apple in the pineapple."
+% It might be wise to remove the @MV+ entirely ....
 <vc-be-obj>:
   {@EBm+} & (O*t+ or O*m+) & {[@MV+]} & {THb+};
 
