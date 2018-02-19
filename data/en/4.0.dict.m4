@@ -4185,9 +4185,13 @@ afforded.v committed.v professed.v-d:
 undertook.v-d: VERB_SP_T(<vc-attempt>);
 undertaken.v: VERB_PP(<vc-attempt>) or <verb-pv>;
 
-attempting.g undertaking.g deserving.g plotting.g preferring.g
-neglecting.g affording.g committing.g professing.g desiring.g
+attempting.g undertaking.g deserving.g preferring.g
+neglecting.g affording.g committing.g desiring.g
 pleasing.g:
+  (<vc-attempt> & <verb-ge>);
+
+% <verb-ge-d>: "The constant plotting annoyed Jim"
+plotting.g professing.g:
   (<vc-attempt> & <verb-ge>) or <verb-ge-d>;
 
 managing.g:
