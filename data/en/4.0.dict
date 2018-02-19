@@ -10249,10 +10249,10 @@ just_not: <COMP-OPENER>;
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
-    or [[DD- & <noun-main-p>]]
-    or [[{DD-} & <noun-and-p>]]
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
+  or [[DD- & <noun-main-p>]]
+  or [[{DD-} & <noun-and-p>]]
   or [EAh- & {Qe+}];
 
 % PH-: connect, phonetically, to a/an if it is there.
