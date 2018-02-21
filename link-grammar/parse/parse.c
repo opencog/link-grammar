@@ -380,7 +380,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			if (resources_exhausted(opts->resources)) break;
 
 			free_count_context(ctxt, sent);
-			free_fast_matcher(mchxt);
+			free_fast_matcher(sent, mchxt);
 			pack_sentence(sent);
 			ctxt = alloc_count_context(sent->length);
 			mchxt = alloc_fast_matcher(sent);
@@ -428,5 +428,5 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			free_disjuncts(disjuncts_copy[i]);
 	}
 	free_count_context(ctxt, sent);
-	free_fast_matcher(mchxt);
+	free_fast_matcher(sent, mchxt);
 }

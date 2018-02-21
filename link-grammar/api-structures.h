@@ -43,6 +43,7 @@
 
 #include "api-types.h"
 #include "corpus/corpus.h"
+#include "memory-pool.h"
 //#include "error.h"
 #include "utilities.h"
 
@@ -118,6 +119,7 @@ struct Sentence_s
 	size_t length;              /* Number of words */
 	Word  *word;                /* Array of words after tokenization */
 	String_set *   string_set;  /* Used for assorted strings */
+	Pool_desc * fm_Match_node;  /* Fast-matcher Match_node memory pool */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
