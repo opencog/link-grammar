@@ -963,7 +963,7 @@ static Exp * make_connector(Dictionary dict)
 		}
 		else
 		{
-			dict_error(dict, "Unknown connector direction type '%c'.");
+			dict_error(dict, "Unknown connector direction type.");
 			return NULL;
 		}
 	}
