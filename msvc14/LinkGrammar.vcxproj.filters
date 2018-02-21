@@ -162,6 +162,9 @@
     <ClCompile Include="..\link-grammar\tokenize\wg-display.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\memory-pool.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-grammar\api-structures.h">
@@ -333,6 +336,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\tokenize\word-structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\memory-pool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
