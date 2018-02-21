@@ -79,6 +79,7 @@ Pool_desc *pool_new(const char *func, const char *name,
 	mp->alloc_next = NULL;
 	mp->chain = NULL;
 	mp->ring = NULL;
+	mp->free_list = NULL;
 	mp->curr_elements = 0;
 	mp->num_elements = num_elements;
 
@@ -130,6 +131,16 @@ void pool_delete(Pool_desc *mp)
  */
 void *pool_alloc(Pool_desc *mp)
 {
+#ifdef POOL_FREE
+	if (NULL != mp->free_list)
+	{
+		void *alloc_next = mp->free_list;
+		mp->free_list = *(char **)mp->free_list;
+		if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
+		return alloc_next;
+	}
+#endif // POOL_FREE
+
 	mp->curr_elements++; /* For stats. */
 
 	if ((NULL == mp->alloc_next) || (mp->alloc_next == mp->ring + mp->data_size))
@@ -146,7 +157,7 @@ void *pool_alloc(Pool_desc *mp)
 		if (NULL == mp->ring)
 		{
 			/* Allocate a new block and chain it. */
-			mp->ring = aligned_alloc(mp->element_size, mp->block_size);
+			mp->ring = aligned_alloc(mp->alignment, mp->block_size);
 			if (NULL == mp->ring)
 			{
 				/* aligned_alloc() has strict requirements. */
@@ -251,4 +262,11 @@ void pool_reuse(Pool_desc *mp)
 
 	mp->chain = NULL;
 }
+
+#ifdef POOL_FREE
+void pool_free(Pool_desc *mp, void *e)
+{
+	free(e);
+}
+#endif // POOL_FREE
 #endif // POOL_ALLOCATOR
