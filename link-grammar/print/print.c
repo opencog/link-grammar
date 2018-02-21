@@ -667,7 +667,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	{
 		for (i = 0; i < (size_t) word_offset[k]; i++) *t++ = ' ';
 
-		// Copy raw bytes. Adjustsments for different widths,
+		// Copy raw bytes. Adjustments for different widths,
 		// invalid utf8 characters, etc. is done later.
 		s = linkage->word[k];
 		while (*s != '\0') { *t++ = *s++; }
