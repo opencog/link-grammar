@@ -53,7 +53,7 @@ if sys.version_info < (3, 0):
     import codecs
     #sys.stdout = codecs.getreader('utf-8')(sys.stdout)
 
-print("Enter sentences:");
+print("Enter sentences:")
 # iter(): avoid python2 input buffering
 for sentence_text in iter(sys.stdin.readline, ''):
     if sentence_text.strip() == '':
