@@ -316,8 +316,7 @@ char *get_file_contents(const char * dict_name)
 {
 	int fd;
 	size_t tot_size;
-	size_t read_size;
-	size_t tot_read;
+	size_t tot_read = 0;
 	struct stat buf;
 	char * contents;
 
@@ -339,7 +338,7 @@ char *get_file_contents(const char * dict_name)
 	 * Normally, only a single call of fread() is needed. */
 	while (1)
 	{
-		read_size = fread(contents, 1, tot_size+7, fp);
+		size_t read_size = fread(contents, 1, tot_size+7, fp);
 
 		if (0 == read_size)
 		{
@@ -360,14 +359,14 @@ char *get_file_contents(const char * dict_name)
 		tot_read += read_size;
 	}
 
-	if (tot_size > tot_size+6)
+	if (tot_read > tot_size+6)
 	{
 		prt_error("Error: %s: File size is insane (%zu)!\n", dict_name, tot_size);
 		free(contents);
 		return NULL;
 	}
 
-	contents[tot_size] = '\0';
+	contents[tot_read] = '\0';
 	return contents;
 }
 
