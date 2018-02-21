@@ -159,6 +159,9 @@
     <ClCompile Include="..\link-grammar\post-process\pp_lexer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\tokenize\wg-display.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-grammar\api-structures.h">
