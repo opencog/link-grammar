@@ -171,6 +171,9 @@ typedef int locale_t;
 #define freelocale(l)
 #endif /* HAVE_LOCALE_T */
 
+
+#define ALIGN(size, alignment) (((size)+(alignment-1))&~(alignment-1))
+
 #define STR(x) #x
 #define STRINGIFY(x) STR(x)
 
