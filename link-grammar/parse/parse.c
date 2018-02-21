@@ -289,7 +289,7 @@ static void pack_sentence(Sentence sent)
 
 #define CONN_ALIGNMENT sizeof(Connector)
 	size_t dsize = dcnt * sizeof(Disjunct);
-	dsize = (dsize+CONN_ALIGNMENT)&~(CONN_ALIGNMENT-1); /* Align connector block. */
+	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
 	size_t csize = ccnt * sizeof(Connector);
 	void *memblock = malloc(dsize + csize);
 	Disjunct *dblock = memblock;
