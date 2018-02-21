@@ -21,6 +21,7 @@
 
 #include "api-types.h"
 #include "lg_assert.h"
+#include "memory-pool.h"
 #include "string-set.h"
 
 /* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is
@@ -81,6 +82,7 @@ typedef struct
 	size_t size;          /* Allocated size */
 	size_t num_con;       /* Number of connector types */
 	size_t num_uc;        /* Number of connector types with different UC part */
+	Pool_desc *mempool;
 	length_limit_def_t *length_limit_def;
 	length_limit_def_t **length_limit_def_next;
 } ConTable;

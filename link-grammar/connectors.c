@@ -424,9 +424,7 @@ void sort_condesc_by_uc_constring(Dictionary dict)
 
 void condesc_delete(Dictionary dict)
 {
-	for (size_t i = 0; i < dict->contable.size; i++)
-		free(dict->contable.hdesc[i]);
-
+	pool_delete(dict->contable.mempool);
 	free(dict->contable.hdesc);
 	free(dict->contable.sdesc);
 }
@@ -454,8 +452,7 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 static bool condesc_insert(ConTable *ct, condesc_t **h,
                                   const char *constring, int hash)
 {
-	*h = (condesc_t *)malloc(sizeof(condesc_t));
-	memset(*h, 0, sizeof(condesc_t));
+	*h = pool_alloc(ct->mempool);
 	(*h)->str_hash = hash;
 	(*h)->string = constring;
 	ct->num_con++;
@@ -498,6 +495,9 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 	{
 		condesc_table_alloc(ct, ct->num_con);
 		ct->num_con = 0;
+		ct->mempool = pool_new(__func__, "ConTable",
+		                       /*num_elements*/1024, sizeof(condesc_t),
+		                       /*zero_out*/true, /*align*/true, /*exact*/false);
 	}
 
 	int hash = connector_str_hash(constring);
