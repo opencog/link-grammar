@@ -56,6 +56,7 @@ struct power_table_s
 	unsigned int *r_table_size;
 	C_list *** l_table;
 	C_list *** r_table;
+	Pool_desc *memory_pool;
 };
 
 typedef struct cms_struct Cms;
@@ -180,35 +181,15 @@ struct prune_context_s
    deletable, this is equivalent to RUTHLESS.   --DS, 7/97
 */
 
-static void free_C_list(C_list * t)
-{
-	C_list *xt;
-	for (; t!=NULL; t=xt) {
-		xt = t->next;
-		xfree((char *)t, sizeof(C_list));
-	}
-}
-
 /**
  * free all of the hash tables and C_lists
  */
 static void power_table_delete(power_table *pt)
 {
-	unsigned int w;
-	unsigned int i;
-
-	for (w = 0; w < pt->power_table_size; w++)
+	pool_delete(pt->memory_pool);
+	for (WordIdx w = 0; w < pt->power_table_size; w++)
 	{
-		for (i = 0; i < pt->l_table_size[w]; i++)
-		{
-			free_C_list(pt->l_table[w][i]);
-		}
 		xfree((char *)pt->l_table[w], pt->l_table_size[w] * sizeof (C_list *));
-
-		for (i = 0; i < pt->r_table_size[w]; i++)
-		{
-			free_C_list(pt->r_table[w][i]);
-		}
 		xfree((char *)pt->r_table[w], pt->r_table_size[w] * sizeof (C_list *));
 	}
 	xfree(pt->l_table_size, 2 * pt->power_table_size * sizeof(unsigned int));
@@ -220,12 +201,11 @@ static void power_table_delete(power_table *pt)
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, bool shal)
+static void put_into_power_table(C_list * m, unsigned int size, C_list ** t,
+                                 Connector * c, bool shal)
 {
 	unsigned int h;
-	C_list * m;
 	h = connector_uc_num(c) & (size-1);
-	m = (C_list *) xalloc (sizeof(C_list));
 	m->next = t[h];
 	t[h] = m;
 	m->c = c;
@@ -253,6 +233,10 @@ static power_table * power_table_new(Sentence sent)
 	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
 	pt->r_table = pt->l_table + sent->length;
 
+	Pool_desc *mp = pt->memory_pool = pool_new(__func__, "C_list",
+	                   /*num_elements*/2048, sizeof(C_list),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+
 	for (w=0; w<sent->length; w++)
 	{
 		/* The below uses variable-sized hash tables. This seems to
@@ -279,9 +263,9 @@ static power_table * power_table_new(Sentence sent)
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
 			c = d->left;
 			if (c != NULL) {
-				put_into_power_table(size, t, c, true);
+				put_into_power_table(pool_alloc(mp), size, t, c, true);
 				for (c=c->next; c!=NULL; c=c->next) {
-					put_into_power_table(size, t, c, false);
+					put_into_power_table(pool_alloc(mp), size, t, c, false);
 				}
 			}
 		}
@@ -295,9 +279,9 @@ static power_table * power_table_new(Sentence sent)
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
 			c = d->right;
 			if (c != NULL) {
-				put_into_power_table(size, t, c, true);
+				put_into_power_table(pool_alloc(mp), size, t, c, true);
 				for (c=c->next; c!=NULL; c=c->next){
-					put_into_power_table(size, t, c, false);
+					put_into_power_table(pool_alloc(mp), size, t, c, false);
 				}
 			}
 		}
@@ -322,8 +306,6 @@ static void clean_table(unsigned int size, C_list ** t)
 			if (m->c->nearest_word != BAD_WORD) {
 				m->next = head;
 				head = m;
-			} else {
-				xfree((char *) m, sizeof(C_list));
 			}
 		}
 		t[i] = head;
