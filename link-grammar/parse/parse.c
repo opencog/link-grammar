@@ -334,7 +334,7 @@ static void pack_sentence(Sentence sent)
 void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
-	count_context_t * ctxt;
+	count_context_t * ctxt = NULL;
 	bool pp_and_power_prune_done = false;
 	Disjunct **disjuncts_copy = NULL;
 	bool is_null_count_0 = (0 == opts->min_null_count);
@@ -343,7 +343,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
-	ctxt = alloc_count_context(sent->length);
 
 	if (is_null_count_0 && (0 < max_null_count))
 	{
@@ -380,8 +379,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
+			free_count_context(ctxt, sent);
 			free_fast_matcher(mchxt);
 			pack_sentence(sent);
+			ctxt = alloc_count_context(sent->length);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
 		}

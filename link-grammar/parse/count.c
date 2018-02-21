@@ -673,6 +673,8 @@ count_context_t * alloc_count_context(size_t sent_length)
 
 void free_count_context(count_context_t *ctxt, Sentence sent)
 {
+	if (NULL == ctxt) return;
+
 	DEBUG_TABLE_STAT(if (verbosity_level(D_SPEC+2)) table_stat(ctxt, sent));
 	free_table(ctxt);
 	xfree(ctxt, sizeof(count_context_t));
