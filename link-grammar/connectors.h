@@ -15,7 +15,7 @@
 #define _LINK_GRAMMAR_CONNECTORS_H_
 
 #include <ctype.h>   // for islower()
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>  // for uint8_t
 
