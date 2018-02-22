@@ -7000,6 +7000,7 @@ nohkans.n
 noises.n
 nomads.n
 nomenclatures.n
+nominals.n
 nominations.n
 nominees.n
 nonces.n
