@@ -2953,6 +2953,7 @@ depths.n
 deputies.n
 derailments.n
 derbies.n
+dereferences.n
 derivations.n
 derivatives.n
 dermatologists.n

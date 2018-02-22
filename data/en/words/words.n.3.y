@@ -294,6 +294,7 @@ hostility.n-u
 humanity.n-u
 humidity.n-u
 humility.n-u
+idempotence.n-u
 identity.n-u
 idiocy.n-u
 ignorance.n-u
