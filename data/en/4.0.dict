@@ -9759,10 +9759,12 @@ that_there: Ds+;
 % "it [sc. gouache] was also popular in France"
 % MX*tn- & O+: scilicet nouns
 % MX*ta- & P+: scilicet adjectives
+% MVx- & P+: to verbs
 sc sc. scilicet:
-  Xd- & ((MX*tn- & O+) or (MX*ta- & P+)) & (Xc+ or <costly-null>);
+  Xd- & ((MX*tn- & O+) or (MX*ta- & P+) or (MVx- & P+))
+    & (Xc+ or <costly-null>);
 that_is that_is_to_say:
-  Xd- & ((MX*tn- & Xc+ & O+) or (MX*ta- & Xc+ & P+))
+  Xd- & ((MX*tn- & Xc+ & O+) or (MX*ta- & Xc+ & P+) or (MVx- & Xc+ & P+))
     & (Xc+ or <costly-null>);
 
 fxd: Pv-;
