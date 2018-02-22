@@ -483,7 +483,8 @@ Gr.y Gr..y Ln.y Ln..y Rd.y Rd..y Rt.y Rt..y
 Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y
-Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
+Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y
+et_al et_al. :
   ({[X-]} & G-) & {[[Xi+]]} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
       (({@MX+} & (JG- or <noun-main-s>)) or
