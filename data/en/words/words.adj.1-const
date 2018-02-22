@@ -116,6 +116,7 @@ biographical.a
 biologic.a
 biological.a
 bioluminescent.a
+biomedical.a
 biometric.a
 biotechnological.a
 biotic.a
@@ -328,6 +329,7 @@ catastrophic.a
 catatonic.a
 catching.a
 catchy.a
+categorial.a
 categorical.a
 catholic.a
 Catholic.a
@@ -535,6 +537,8 @@ columnar.a
 comatose.a
 combatant.a
 combative.a
+combinatorial.a
+combinatoric.a
 combustible.a
 comely.a
 comfortable.a
@@ -579,6 +583,7 @@ compulsory.a
 computable.a
 computational.a
 computerized.a
+concatenative.a
 concave.a
 concentic.a
 concentric.a
@@ -775,6 +780,7 @@ crushing.a
 crusty.a
 cryogenic.a
 cryptic.a
+cryptographic.a
 cryptologic.a
 crystalline.a
 cubic.a
@@ -969,6 +975,7 @@ diabolical.a
 diacritical.a
 diagnostic.a
 diagonal.a
+diagramatic.a
 dialectical.a
 dialogical.a
 dialup.a
@@ -1639,7 +1646,9 @@ gynecological.a
 gyroscopic.a
 habitable.a
 habitual.a
+hackish.a
 hackneyed.a
+hacky.a
 haggard.a
 haired.a
 hairless.a
@@ -2370,6 +2379,7 @@ misanthropic.a
 misbegotten.a
 miscellaneous.a
 mischievous.a
+misdiagnostic.a
 miserable.a
 miserly.a
 misguided.a
@@ -2644,6 +2654,7 @@ nondiscretionary.a
 nondistinctive.a
 nonfat.a
 nonflammable.a
+nonfunctional.a
 nonhomologous.a
 nonlinear.a
 nonprofit.a
@@ -2920,6 +2931,7 @@ pictorial.a
 picturesque.a
 piebald.a
 piecemeal.a
+piecewise.a
 pied.a
 piercing.a
 piezoelectric.a
@@ -4086,10 +4098,12 @@ strait.a
 strapping.a
 strategic.a
 strategical.a
+streamline.a
 strenuous.a
 streptococcal.a
 stressful.a
 stretchered.a
+stretchy.a
 strident.a
 stringent.a
 stringy.a
@@ -4422,6 +4436,7 @@ toothless.a
 top.a
 topical.a
 topless.a
+top-level.a
 topmost.a
 topnotch.a
 topographic.a
