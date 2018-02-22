@@ -9757,8 +9757,15 @@ that_there: Ds+;
 
 % scilicet
 % "it [sc. gouache] was also popular in France"
-sc sc.: Xd- & MX*r- & O+ & (Xc+ or <costly-null>);
-that_is that_is_to_say: Xd- & MX*r- & Xc+ & O+ & (Xc+ or <costly-null>);
+% MX*tn- & O+: scilicet nouns
+% MX*ta- & P+: scilicet adjectives
+sc sc. scilicet:
+  Xd- & ((MX*tn- & O+) or (MX*ta- & P+)) & (Xc+ or <costly-null>);
+that_is that_is_to_say:
+  Xd- & ((MX*tn- & Xc+ & O+) or (MX*ta- & Xc+ & P+))
+    & (Xc+ or <costly-null>);
+
+fxd: Pv-;
 
 % (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
@@ -10267,10 +10274,17 @@ just_not: <COMP-OPENER>;
   or [[{DD-} & <noun-and-p>]]
   or [EAh- & {Qe+}];
 
+% Macro, for all the common parts of an A+ connection, with
+% the phonetic attachement as a variable.
+
+
 % PH-: connect, phonetically, to a/an if it is there.
-<adj-consn>: ({EA- or EF+ or <wantPHc>} & {[[@Ec-]]} & {Xc+} & A+);
-<adj-vowel>: ({EA- or EF+ or <wantPHv>} & {[[@Ec-]]} & {Xc+} & A+);
-<adj-phone>: ({EA- or EF+ or <wantPH>} & {[[@Ec-]]} & {Xc+} & A+);
+<adj-consn>: 
+  ({EA- or ({(<wantPHc>)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {Xc+} & A+);
+<adj-vowel>: 
+  ({EA- or ({(<wantPHv>)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {Xc+} & A+);
+<adj-phone>: 
+  ({EA- or ({(<wantPH>)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {Xc+} & A+);
 
 /en/words/words.adj.1-vowel :
   <marker-common-entity> or
