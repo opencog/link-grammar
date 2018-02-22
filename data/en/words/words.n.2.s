@@ -23,6 +23,7 @@ abridgments.n
 abscesses.n
 absences.n
 absentees.n
+ABs.n
 absorbents.n
 abstentions.n
 abstractions.n
@@ -782,6 +783,7 @@ basilisks.n
 basins.n
 basketballs.n
 baskets.n
+BAs.n
 bas-reliefs.n
 basses.n
 bassinets.n
@@ -5621,6 +5623,7 @@ jawbreakers.n
 jaws.n
 jays.n
 jaywalkers.n
+JDs.n
 jeeps.n
 jeers.n
 jellies.n
@@ -6076,6 +6079,7 @@ lives.n
 livings.n
 lizards.n
 llamas.n
+LLDs.n
 loafers.n
 loans.n
 loaves.n
@@ -6400,6 +6404,7 @@ Mayors.n
 maypoles.n
 mazes.n
 mazurkas.n
+MBAs.n
 mbiras.n
 meadows.n
 meads.n
@@ -6504,6 +6509,7 @@ mews.p
 Mexicans.n
 mezzanines.n
 mezzo-sopranos.n
+MFAs.n
 miaous.n
 miaows.n
 miasmas.n
@@ -7646,6 +7652,7 @@ pharmacists.n
 pharmacologists.n
 pharynxes.n
 phases.n
+PhDs.n
 pheasants.n
 philanderers.n
 philanthropists.n
