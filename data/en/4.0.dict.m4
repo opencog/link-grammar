@@ -6668,6 +6668,11 @@ for.p:
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
 
+% re: "with regard to"
+% Xe+: optional colon
+re:
+  {Xe+} & J+ & <prep-main-a>;
+
 % cost on MVa- to give preference to MVl-
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
@@ -6678,6 +6683,7 @@ about:
   or (<tof-verb> & (Mp- or MVp- or Pp-))
   or [MVa-]
   or (MVl- & (MVp+ or MVa+ or MVs+));
+
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
 % XXX is this really needed ?? Seems to duplicate other stuff ..
