@@ -6089,6 +6089,7 @@ longbows.n
 longings.n
 lookouts.n
 looks.n
+lookups.n
 looms.n
 loonies.n
 loons.n

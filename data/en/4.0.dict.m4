@@ -10048,7 +10048,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 % foo: F+;
 
 % -------------------------------------------------------------------------
-% Common typographical errors
+% Common typographical (spelling) errors
 % Assign a cost of 1.65 for no very good reason. Feel free to change this.
 % .. well, some of this is dangerous. For example, setting the cost too
 % low causes correct "than" usages with Z link (and missing wall) to be
