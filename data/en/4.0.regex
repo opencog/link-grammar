@@ -64,6 +64,11 @@ ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % single-letter handling in the dict, which is different.
 INITIALS: /^[A-Z]\.([A-Z]\.)+$/
 
+% Strings of two or more upper-case letters. These might be initials,
+% but are more likely to be titles (e.g. MD LLD JD) and might also
+% be part numbers (see below, PART-NUMBER:)
+ALL-UPPER: /^[A-Z]([A-Z])+$/
+
 % Greek letters with numbers
 GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
 PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/

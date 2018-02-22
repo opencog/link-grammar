@@ -320,7 +320,7 @@ nonCAP.zzz: ZZZ-;
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-INITIALS <entity-singular>:
+INITIALS ALL-UPPER <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
         ((<noun-sub-s> & (JG- or <noun-main-s>))
@@ -506,6 +506,10 @@ Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
 % Titles, e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D.
 % Gack. See absurdly large collection at:
 % http://en.wikipedia.org/wiki/List_of_post-nominal_letters
+% The generic case of strings of all-uppercase are handled
+% by the regexes ALL-UPPER and INITIALS. The below are mixed-case
+% or other very common degrees.
+ALL-UPPER.y INITIALS.y
 Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
 AB.y A.B..y AIA.y A.I.A..y
 BA.y B.A..y BFA.y B.F.A..y BS.y B.S..y BSc.y B.Sc..y
@@ -531,6 +535,7 @@ USMC.y USN.y:
 
 % The generic category for strings containing a hyphen
 PART-NUMBER.n
+ALL-UPPER.n
 HYPHENATED-WORDS.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &
