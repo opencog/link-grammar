@@ -6616,6 +6616,7 @@ miscreants.n
 misdeals.n
 misdeeds.n
 misdemeanours.n
+misdiagnoses.n
 misdoings.n
 misers.n
 misfires.n
