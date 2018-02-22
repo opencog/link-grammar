@@ -3547,6 +3547,10 @@ I know I ought to tell her.
 % punctuation: sometimes commas are used as if they were semicolons:
 Sweat stood on his brow, fury was bright in his one good eye.
 
+% Crazy UTF8 dashes
+we are dealing with androcentric—that is to say, male-dominated—concepts
+we are dealing with androcentric--that is to say, male-dominated--concepts
+
 % Automatic sentence splitting.  A period or question mark, mid-text,
 % will split the sentence into two. Note capitalization is handled.
 who is Obama? where was he born?
