@@ -967,7 +967,7 @@ awareness.n opinion.n explanation.n expectation.n insistence.n:
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
 fear.n principle.n concern.n philosophy.n risk.n threat.n conviction.n
 theory.n speculation.n news.n belief.n contention.n thought.n myth.n
-discovery.n rumor.n probability.n fact.n feeling.n comment.n
+discovery.n rumor.n probability.n fact.n feeling.n comment.n process.n
 perception.n sense.n realization.n view.n consensus.n notification.n
 rule.n danger.n warning.n suggestion.n:
   (<noun-modifiers> & (
@@ -5133,6 +5133,7 @@ setting.g: (<vc-set> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 
 free.i straight.i loose.i: Vs- & {MV+};
 
+% TH+: "The court held that ..."
 <vc-hold>:
   ((K+ & {[[@MV+]]} & O*n+)
     or TH+
