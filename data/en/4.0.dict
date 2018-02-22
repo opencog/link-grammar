@@ -8851,6 +8851,7 @@ unlike:
      or [({Xc+ & {Xd-}} & CO+)]
      or (Xd- & Xc+ & (E+ or MVx-)));
 
+% o': silent, un-pronouned f.
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
 %      The Jd+ forces a link to the object as well.
 % Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
@@ -8863,7 +8864,7 @@ unlike:
 %      XXX The Mp- below should be removed, and all occurrences of
 %      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
 % Mf- & MVp+: "She was a girl of about John's age"
-of:
+of o':
   ({JQ+}
     & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
@@ -11838,7 +11839,7 @@ please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
 % ==========================================================
 % MISCELLANEOUS WORDS AND PUNCTUATION
 
-etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
+etc etc.: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
 so_on the_like vice_versa v.v.:
   (<noun-sub-x> & <noun-main-x>) or
   <noun-and-x> or
