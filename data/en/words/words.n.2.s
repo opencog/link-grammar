@@ -1,3 +1,4 @@
+
 abacuses.n
 abbes.n
 abbesses.n
@@ -283,6 +284,7 @@ amoebas.n
 amortizations.n
 amours.n
 amperes.n
+ampersands.n
 amphetamines.n
 amphibians.n
 amphitheatres.n
@@ -648,6 +650,7 @@ backboards.n
 backbones.n
 backdoors.n
 backdrops.n
+backends.n
 backers.n
 backgrounds.n
 backings.n
@@ -1151,6 +1154,8 @@ bookshops.n
 books.n
 bookstalls.n
 bookworms.n
+booleans.n
+Booleans.n
 boomerangs.n
 boomers.n
 booms.n
@@ -1550,6 +1555,7 @@ capacitors.n
 capers.n
 capes.n
 capillaries.n
+capitalisations.n
 capitalists.n
 capitals.n
 capons.n
@@ -2410,6 +2416,7 @@ copartners.n
 copes.n
 copies.n
 coppersmiths.n
+coprocessors.n
 copses.n
 cops.n
 copulas.n
@@ -3540,6 +3547,7 @@ emirates.n
 emirs.n
 emissaries.n
 emissions.n
+emoticons.n
 emotions.n
 emperors.n
 empires.n
@@ -5335,6 +5343,7 @@ incitements.n
 incivilities.n
 inclinations.n
 inclines.n
+includes.n
 incomes.n
 incongruities.n
 inconsistencies.n
@@ -5412,6 +5421,7 @@ inhibitors.n
 iniquities.n
 initialisations.n
 initializations.n
+initializers.n
 initials.n
 initiates.n
 initiatives.n
@@ -5424,6 +5434,7 @@ inkstands.n
 inkwells.n
 inlays.n
 inlets.n
+inlinings.n
 inmates.n
 innings.n
 innkeepers.n
@@ -6126,6 +6137,7 @@ lollipops.n
 longboats.n
 longbows.n
 longings.n
+look-alikes.n
 lookouts.n
 looks.n
 look-ups.n
@@ -6618,6 +6630,7 @@ miscalculations.n
 miscarriages.n
 miscellanies.n
 misconceptions.n
+misconfigurations.n
 miscounts.n
 miscreants.n
 misdeals.n
@@ -7988,6 +8001,7 @@ postmarks.n
 postmasters.n
 postmodifiers.n
 postponements.n
+postprocessors.n
 postscripts.n
 posts.n
 postulates.n
@@ -9531,6 +9545,7 @@ sickles.n
 sicknesses.n
 sideboards.n
 sidecars.n
+side-effects.n
 sidekicks.n
 sidelights.n
 sidelines.n
@@ -9698,6 +9713,7 @@ smackers.n
 smacks.n
 smallholders.n
 smallholdings.n
+smartphones.n
 smashes.n
 smatterings.n
 smears.n
@@ -10261,6 +10277,7 @@ substantives.n
 substitutes.n
 substitutions.n
 substrates.n
+substrings.n
 subterfuges.n
 subtitles.n
 subtleties.n
@@ -10269,6 +10286,7 @@ subtrees.n
 suburbs.n
 subversives.n
 subways.n
+subwords.n
 successes.n
 successors.n
 suckers.n
@@ -11167,6 +11185,7 @@ unions.n
 units.n
 universes.n
 universities.n
+unlinks.n
 untouchables.n
 untruths.n
 upbraidings.n
@@ -11565,6 +11584,7 @@ whisks.n
 whispers.n
 whistles.n
 whites.n
+whitespaces.n
 whiting.p
 whizzes.n
 whodunits.n
@@ -11639,6 +11659,7 @@ woodwinds.n
 woofers.n
 woofs.n
 words.n
+workarounds.n
 workbenches.n
 workbooks.n
 workdays.n
@@ -11671,6 +11692,8 @@ wrinkles.n
 wristbands.n
 wrists.n
 wristwatches.n
+write-offs.n
+writeoffs.n
 writers.n
 writings.n
 writs.n
