@@ -7691,14 +7691,14 @@ that_there: Ds+;
 % MX*tn- & O+: scilicet nouns
 % MX*ta- & P+: scilicet adjectives
 % MVx- & P+: to verbs
-sc sc. scilicet:
+sc sc. scilicet viz.r viz..r videlicet e.g..r eg..r ie..r i.e..r id_est :
   Xd- & ((MX*tn- & O+) or (MX*ta- & P+) or (MVx- & P+))
     & (Xc+ or <costly-null>);
-that_is that_is_to_say:
+
+% Just like above, comma required.
+that_is that_is_to_say to_wit namely.r:
   Xd- & ((MX*tn- & Xc+ & O+) or (MX*ta- & Xc+ & P+) or (MVx- & Xc+ & P+))
     & (Xc+ or <costly-null>);
-
-fxd: Pv-;
 
 % (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
@@ -9549,13 +9549,14 @@ usually typically perhaps:
   or ({Xc+ & {Xd-}} & CO+)
   or (EB- & {[EA+]-0.1});
 
-in_fact of_course in_effect for_example for_instance e.g. i.e. :
+in_fact of_course in_effect for_example for_instance
+ e.g..e i.e..e id_est:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
-  or (EB- & {Xc+})
-  or (Xd- & EB- & Xc+)
-  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+));
+  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+))
+  or [EB- & {Xc+}]
+  or [Xd- & EB- & Xc+];
 
 % -----------------------------------------------------------
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
