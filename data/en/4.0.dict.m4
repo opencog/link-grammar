@@ -7952,7 +7952,7 @@ and.j-r or.j-r:
 % Xd- & SJl- & EBb+ & SJr+ & Xc+ & Wd- & Ssx+: EB+ forces a singular subject!
 %
 % and.j-n but_not but_just_not and_not ,_not just_not:
-and.j-n:
+and.j-n 'n':
   (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
