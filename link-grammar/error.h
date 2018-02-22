@@ -81,15 +81,17 @@ const char *feature_enabled(const char *, ...);
  * and not err_msg(), in order to not specify the message severity.
  * Also note there is no trailing newline in that case. These things
  * ensured the message severity will be taken from a following message
- * which includes a newline. So verbosity_level()V) can be used for any
+ * which includes a newline. So verbosity_level(V) can be used for any
  * desired message severity.
+ * The optional argument is used for additional names that can be used
+ * in the "debug" option (in addition to the current function and file names).
  */
-#define verbosity_level(level) \
+#define verbosity_level(level, ...) \
 	(( \
 	(((D_SPEC>=verbosity) && (verbosity>=(level))) || (verbosity==(level))) && \
 	(((level)<=1) || !(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
 	(('\0' == debug[0]) || \
-	feature_enabled(debug, __func__, __FILE__, NULL))) \
+	feature_enabled(debug, __func__, __FILE__, (__VA_ARGS__ ""), NULL))) \
 	? ((STRINGIFY(level)[0] == '+' ? prt_error("%s: ", __func__) : 0), true) \
 	: false)
 

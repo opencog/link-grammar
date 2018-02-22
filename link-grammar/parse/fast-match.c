@@ -382,7 +382,7 @@ static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
 	{
 		Disjunct *d = *m;
 
-		printf("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
+		prt_error("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
 		       id, lw , N(lc), d->match_left ? '=': ' ',
 		       N(d->left), w, N(d->right),
 		       d->match_right? '=' : ' ', N(rc), rw);

@@ -260,6 +260,11 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 #endif
 
 #ifdef DO_COUNT_TRACE
+#define D_COUNT_TRACE 8
+#define LBLSZ 11
+#define TRACE_LABEL(l, do_count) \
+	(verbosity_level(D_COUNT_TRACE, "do_count") ? \
+	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
@@ -273,16 +278,20 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 {
 	static int level;
 
-	if (!verbosity_level(8))
+	if (!verbosity_level(D_COUNT_TRACE))
 		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
+	char m_result[64] = "";
+	if (t != NULL)
+		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
 
 	level++;
-	prt_error("%*sdo_count%.*s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
-		level*2, "", (!t)*3, "(R)", lineno, lw, rw, V(le), V(re), null_count);
+	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
+		level*2, "", m_result, lineno, lw, rw, V(le), V(re), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
-	prt_error("%*sreturn%.*s:%d=%lld\n", level*2, "", (!!t)*3, "(M)", lineno, r);
+	prt_error("%*sreturn%.*s:%d=%lld\n",
+	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, r);
 	level--;
 
 	return r;
@@ -291,6 +300,7 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 static Count_bin do_count1(int lineno,
 #define do_count(...) do_count(__LINE__, __VA_ARGS__)
 #else
+#define TRACE_LABEL(l, do_count) (do_count)
 static Count_bin do_count(
 #endif
                           count_context_t *ctxt,
@@ -309,8 +319,8 @@ static Count_bin do_count(
 
 	if (t) return t->count;
 
-	/* Create the table entry with a tentative null count of 0.
-	 * This count must be updated before we return. */
+	/* Create a table entry, to be updated with the found
+	 * linkage count before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
 	int unparseable_len = rw-lw-1;
@@ -418,7 +428,6 @@ static Count_bin do_count(
 #endif
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
-			int lnull_cnt, rnull_cnt;
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
@@ -427,8 +436,11 @@ static Count_bin do_count(
 			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
 
-			for (lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
+			for (int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
 			{
+				int rnull_cnt = null_count - lnull_cnt;
+				/* Now lnull_cnt and rnull_cnt are the null-counts we're
+				 * requiring in those parts respectively. */
 				bool leftpcount = false;
 				bool rightpcount = false;
 
@@ -444,10 +456,6 @@ static Count_bin do_count(
 				Count_bin r_dmulti = NO_COUNT;
 				Count_bin r_dcmulti = NO_COUNT;
 				Count_bin r_bnl = NO_COUNT;
-
-				rnull_cnt = null_count - lnull_cnt;
-				/* Now lnull_cnt and rnull_cnt are the costs we're assigning
-				 * to those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
@@ -513,23 +521,26 @@ static Count_bin do_count(
 
 				if (!leftpcount && !rightpcount) continue;
 
+#define COUNT(c, do_count) \
+	{ c = TRACE_LABEL(c, do_count); }
 				if (!(leftpcount && rightpcount))
 				{
 					if (leftpcount)
 					{
 						/* Evaluate using the left match, but not the right. */
-						l_bnr = do_count(ctxt, w, rw, d->right, re, rnull_cnt);
+						COUNT(l_bnr, do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 					else if (le == NULL)
 					{
 						/* Evaluate using the right match, but not the left. */
-						r_bnl = do_count(ctxt, lw, w, le, d->left, lnull_cnt);
+						COUNT(r_bnl, do_count(ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 				}
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
 { \
-	Count_bin count = (hist_total(&c) == NO_COUNT) ? do_count : hist_total(&c); \
+	Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+		TRACE_LABEL(c, do_count) : hist_total(&c); \
 	how_to_count; \
 }
 			 /* If the pseudocounting above indicates one of the terms
@@ -578,13 +589,18 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&rightcount))
 					{
-						/* Total number where links are used on both sides */
-						hist_muladd(&total, &leftcount, 0.0, &rightcount);
-
-						/* Evaluate using the right match, but not the left */
 						if (le == NULL)
+						{
+							/* Evaluate using the right match, but not the left */
 							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
 								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+						}
+						else
+						{
+							/* Total number where links are used on both side.
+							 * Note that we don't have leftcount if le == NULL. */
+							hist_muladd(&total, &leftcount, 0.0, &rightcount);
+						}
 					}
 				}
 
