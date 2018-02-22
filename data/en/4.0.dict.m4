@@ -7686,6 +7686,11 @@ that.j-t: Wt- & {Xc+} & Rn+ & B+;
 % "No one is sitting at that there table"
 that_there: Ds+;
 
+% scilicet
+% "it [sc. gouache] was also popular in France"
+sc sc.: Xd- & MX*r- & O+ & (Xc+ or <costly-null>);
+that_is that_is_to_say: Xd- & MX*r- & Xc+ & O+ & (Xc+ or <costly-null>);
+
 % (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
 because b/c bc cuz cos coz cause.j 'cause b'cause b'cuz bec bcoz:
