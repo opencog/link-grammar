@@ -480,6 +480,11 @@ he eats shoots
 he eats shoots and leaves
 he eats, shoots and leaves
 
+That script is missing several server-side includes.
+The unlinks are detected by the Khovanov homology over Z.
+The inlining of that subroutine blows up the object.
+equivariant cohomology is a cohomology theory from algebraic topology.
+
 % ----------------
 % nouns not in nouns.1
 *an majority agree

@@ -2080,6 +2080,7 @@ coffins.n
 cognates.n
 cogs.n
 cogwheels.n
+cohomologies.n
 cohorts.n
 coiffeurs.n
 coiffures.n
@@ -5089,12 +5090,14 @@ hometowns.n
 homeworlds.n
 homicides.n
 homilies.n
+homologies.n
 homologs.n
 homomorphisms.n
 homonyms.n
 homophones.n
 homosexuals.n
 homos.n
+homotopies.n
 Hondurans.n
 hones.n
 honeybees.n
@@ -10263,6 +10266,7 @@ submarines.n
 submissions.n
 subordinates.n
 subpoenas.n
+subroutines.n
 subscribers.n
 subscriptions.n
 subscripts.n
