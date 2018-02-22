@@ -4603,6 +4603,7 @@ gorillas.n
 goslings.n
 gospels.n
 gossips.n
+gouaches.n
 goulashes.n
 gourds.n
 gourmands.n
