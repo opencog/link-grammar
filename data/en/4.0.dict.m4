@@ -7011,7 +7011,7 @@ near.p:
 % SFpp+: "nearby are more ruins"
 % {EE-} & {Xc+} & COp+: "{somewhere} nearby, a mouse scratched"
 % {EE-} & FM-: "The ticking came from {somewhere} nearby."
-nearby close_by:
+nearby close_by handy.r:
   A+
   or MVp-
   or Pp-
