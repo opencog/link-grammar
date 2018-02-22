@@ -9544,7 +9544,7 @@ usually typically perhaps:
 in_fact of_course in_effect for_example for_instance
 e.g. eg. i.e. ie. id_est
 sc sc. scilicet viz.r viz..r videlicet
-that_is that_is_to_say to_wit namely.r:
+that_is that_is_to_say to_wit namely.r in_other_words:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
