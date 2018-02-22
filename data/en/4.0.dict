@@ -1355,12 +1355,13 @@ youse yous yis ye ya yo:
 % (Osm- & {@M+}): "is this it?" "Do you have it ready?"
 %    "leave it alone" "make it rain"
 %   (the m prevents links as indirect object)
+% MX+ & Ss+: "it -- fried rice -- is very popular"
 it:
    [J-]
    or (Osm- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
-   or ((Ss+ or SFsi+) & <CLAUSE>)
+   or ({MX+} & (Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
    or SJls+ or SJrs-;
 
