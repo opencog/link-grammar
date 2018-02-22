@@ -5133,7 +5133,6 @@ hostels.n
 hostesses.n
 hostilities.n
 hosts.n
-hostspots.n
 hotbeds.n
 hotdogs.n
 hoteliers.n
@@ -5141,6 +5140,7 @@ hotels.n
 hotheads.n
 hothouses.n
 hotplates.n
+hotspots.n
 hounds.n
 hourglasses.n
 houseboats.n
@@ -6842,7 +6842,7 @@ musters.n
 mutants.n
 mutations.n
 mutes.n
-mutexs.n
+mutexes.n
 mutilations.n
 mutineers.n
 mutinies.n
@@ -10219,7 +10219,7 @@ subcommittees.n
 subcontinents.n
 subcontractors.n
 subcontracts.n
-subdirectorys.n
+subdirectories.n
 subdivisions.n
 subeditors.n
 subfamilies.n
