@@ -5134,7 +5134,10 @@ setting.g: (<vc-set> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 free.i straight.i loose.i: Vs- & {MV+};
 
 <vc-hold>:
-  ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vh+}) or [[@MV+ & O*n+]]) & <mv-coord>;
+  ((K+ & {[[@MV+]]} & O*n+)
+    or TH+
+    or ({O+ or <b-minus>} & {K+ or Vh+})
+    or [[@MV+ & O*n+]]) & <mv-coord>;
 
 hold.v: VERB_PLI(<vc-hold>);
 holds.v: VERB_S_T(<vc-hold>);
