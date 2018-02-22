@@ -889,12 +889,13 @@ kinds_of types_of sorts_of breeds_of species_of:
     or ({Dmc-} & <noun-and-p>)
     or Up-)];
 
-percent.u:
+percent.u parts.u:
   (<noun-modifiers> &
     ((ND- & {DD-} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+    <noun-main-p> or
     (ND- & {DD-} & <noun-and-x>) or
-    U-)) or
-  (ND- & (OD- or AN+ or YS+));
+    U-))
+  or (ND- & (OD- or AN+ or YS+));
 
 % This set of disjuncts should probably be split up and refined.
 % "shame.n", "crux.n" are here because they need the Ss*t connector
