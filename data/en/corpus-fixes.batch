@@ -3551,11 +3551,19 @@ Sweat stood on his brow, fury was bright in his one good eye.
 we are dealing with androcentric—that is to say, male-dominated—concepts
 we are dealing with androcentric--that is to say, male-dominated--concepts
 
-% post-nominal paranthetical clarifiers ...
+% post-nominal paranthetical clarifiers ... (scilicet)
 it [sc. gouache] was also popular in France
 it -- that is, gouache -- was also popular in France
 it (gouache) was also popular in France
 it -- fried rice -- is very popular
+
+% Are commas legal, like the below?
+% that thing, that was mentioned yesterday, is called off
+% that thing, that we talked about yesterday, is off
+% that equation, that he drew on the board, was wrong
+% Here's howto add the commas, if we wanted to:
+%%%that.j-s:
+%%% ((S**w+ or (R+ & B*w+) & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % Automatic sentence splitting.  A period or question mark, mid-text,
 % will split the sentence into two. Note capitalization is handled.
