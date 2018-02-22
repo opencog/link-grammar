@@ -36,6 +36,7 @@ ambivalence.n-u
 amiability.n-u
 amicability.n-u
 amity.n-u
+amorality.n-u
 animosity.n-u
 annoyance.n-u
 anonymity.n-u
@@ -81,8 +82,8 @@ brilliance.n-u
 brutality.n-u
 buoyancy.n-u
 bureaucracy.n-u
-calm.n-u
 calmness.n-u
+calm.n-u
 capability.n-u
 captivity.n-u
 catholicity.n-u
@@ -178,6 +179,7 @@ diffidence.n-u
 dignity.n-u
 diligence.n-u
 diplomacy.n-u
+directionality.n-u
 disability.n-u
 discontinuity.n-u
 discrepancy.n-u
@@ -292,6 +294,7 @@ hostility.n-u
 humanity.n-u
 humidity.n-u
 humility.n-u
+idempotence.n-u
 identity.n-u
 idiocy.n-u
 ignorance.n-u
@@ -402,6 +405,7 @@ intelligence.n-u
 intelligibility.n-u
 intemperance.n-u
 interference.n-u
+interoperability.n-u
 intimacy.n-u
 intolerance.n-u
 intractability.n-u
@@ -513,6 +517,7 @@ parity.n-u
 passivity.n-u
 paternity.n-u
 patience.n-u
+patternicity.n-u
 paucity.n-u
 peculiarity.n-u
 pederasty.n-u
@@ -541,6 +546,7 @@ piquancy.n-u
 piracy.n-u
 pity.n-u
 placidity.n-u
+planarity.n-u
 plasticity.n-u
 plausibility.n-u
 pliancy.n-u
@@ -626,6 +632,7 @@ remembrance.n-u
 reminiscence.n-u
 remittance.n-u
 remonstrance.n-u
+repeatability.n-u
 repentance.n-u
 repugnance.n-u
 resemblance.n-u
@@ -651,6 +658,7 @@ salinity.n-u
 sanctity.n-u
 sanity.n-u
 satiety.n-u
+satisfiability.n-u
 scarcity.n-u
 science.n-u
 secrecy.n-u

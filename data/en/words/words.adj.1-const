@@ -116,6 +116,7 @@ biographical.a
 biologic.a
 biological.a
 bioluminescent.a
+biomedical.a
 biometric.a
 biotechnological.a
 biotic.a
@@ -246,6 +247,7 @@ Buddhist.a
 budgetary.a
 bulbous.a
 bulky.a
+bulleted.a
 bulletproof.a
 bullish.a
 bully.a
@@ -328,6 +330,7 @@ catastrophic.a
 catatonic.a
 catching.a
 catchy.a
+categorial.a
 categorical.a
 catholic.a
 Catholic.a
@@ -483,6 +486,7 @@ climatic.a
 clinical.a
 cliquish.a
 clitic.a
+clonable.a
 clonal.a
 close.a
 cloudless.a
@@ -534,6 +538,8 @@ columnar.a
 comatose.a
 combatant.a
 combative.a
+combinatorial.a
+combinatoric.a
 combustible.a
 comely.a
 comfortable.a
@@ -578,6 +584,7 @@ compulsory.a
 computable.a
 computational.a
 computerized.a
+concatenative.a
 concave.a
 concentic.a
 concentric.a
@@ -774,6 +781,7 @@ crushing.a
 crusty.a
 cryogenic.a
 cryptic.a
+cryptographic.a
 cryptologic.a
 crystalline.a
 cubic.a
@@ -968,6 +976,7 @@ diabolical.a
 diacritical.a
 diagnostic.a
 diagonal.a
+diagramatic.a
 dialectical.a
 dialogical.a
 dialup.a
@@ -1638,7 +1647,9 @@ gynecological.a
 gyroscopic.a
 habitable.a
 habitual.a
+hackish.a
 hackneyed.a
+hacky.a
 haggard.a
 haired.a
 hairless.a
@@ -2369,6 +2380,7 @@ misanthropic.a
 misbegotten.a
 miscellaneous.a
 mischievous.a
+misdiagnostic.a
 miserable.a
 miserly.a
 misguided.a
@@ -2643,6 +2655,7 @@ nondiscretionary.a
 nondistinctive.a
 nonfat.a
 nonflammable.a
+nonfunctional.a
 nonhomologous.a
 nonlinear.a
 nonprofit.a
@@ -2856,6 +2869,7 @@ permanent.a
 permeable.a
 permissible.a
 permissive.a
+permittable.a
 pernicious.a
 pernickety.a
 perpendicular.a
@@ -2918,6 +2932,7 @@ pictorial.a
 picturesque.a
 piebald.a
 piecemeal.a
+piecewise.a
 pied.a
 piercing.a
 piezoelectric.a
@@ -3288,11 +3303,8 @@ quirky.a
 quixotic.a
 quizzical.a
 quotable.a
+quotational.a
 quotidian.a
-r/c.a
-R/C.a
-rc.a
-RC.a
 rabbinic.a
 Rabbinic.a
 rabbinical.a
@@ -3344,6 +3356,10 @@ raving.a
 raw.a
 rawhide.a
 razorbacked.a
+r/c.a
+rc.a
+R/C.a
+RC.a
 readable.a
 ready-made.a
 real.a
@@ -3437,6 +3453,7 @@ rentable.a
 reparable.a
 reparative.a
 repayable.a
+repeatable.a
 repellent.a
 repentant.a
 repetitious.a
@@ -3469,6 +3486,7 @@ resilient.a
 resinous.a
 resistant.a
 resistive.a
+resizable.a
 resolute.a
 resolvable.a
 resolved.a
@@ -3630,6 +3648,7 @@ satin.a
 satiric.a
 satirical.a
 satisfactory.a
+satisfiable.a
 satisfied.a
 satisfying.a
 saucy.a
@@ -3637,6 +3656,7 @@ Saudi_Arabian
 savage.a
 savoury.a
 savvy.a
+scalable.a
 scalar.a
 scaly.a
 scandalous.a
@@ -4080,10 +4100,12 @@ strait.a
 strapping.a
 strategic.a
 strategical.a
+streamline.a
 strenuous.a
 streptococcal.a
 stressful.a
 stretchered.a
+stretchy.a
 strident.a
 stringent.a
 stringy.a
@@ -4416,6 +4438,7 @@ toothless.a
 top.a
 topical.a
 topless.a
+top-level.a
 topmost.a
 topnotch.a
 topographic.a

@@ -72,6 +72,7 @@ ballroom.n
 ball.s
 balustrade.n
 bambino.n
+BA.n
 banality.s
 banana.s
 bandage.n
@@ -325,6 +326,7 @@ bigwig.n
 bike.n
 bikini.s
 bilabial.n
+bilateralism.n
 bilingual.n
 billboard.n
 billet.n
@@ -867,6 +869,7 @@ caller.n
 calliope.s
 call.n
 call-out.n
+callout.n
 calorie.n
 calumny.s
 calypso.n
@@ -1290,6 +1293,7 @@ circulation.s
 circumference.n
 circumflex.n
 circumlocution.s
+circumposition.n
 circumstance.n
 circus.n
 cissy.n
@@ -1430,6 +1434,7 @@ coconut.s
 cocoon.n
 coda.n
 codename.n
+codepoint.n
 code.s
 codeshare.n
 codfish.s
@@ -1520,6 +1525,7 @@ commissary.n
 commissionaire.n
 commissioner.n
 commission.s
+commit.n
 committee.n
 commode.n
 commodity.n
@@ -1536,11 +1542,13 @@ communist.n
 Communist.n
 community.n
 commutation.s
+commutator.n
 commuter.n
 compact.n
 companion.n
 company.s
 comparative.n
+comparator.n
 comparison.s
 compartment.n
 compass.n
@@ -1819,6 +1827,7 @@ corporation.n
 corpse.n
 corps.s
 corpuscle.n
+corpus.n
 corral.n
 correction.s
 corrective.n
@@ -2162,6 +2171,7 @@ darn.n
 dart.n
 dashboard.n
 dash.s
+dataset.n
 dateline.n
 date.n
 daughter.n
@@ -2319,6 +2329,7 @@ depth.s
 deputy.n
 derailment.s
 derby.n
+dereference.n
 derivation.s
 derivative.n
 dermatologist.n
@@ -2329,6 +2340,7 @@ descendant.n
 descender.n
 descent.s
 description.n
+descriptor.n
 deserter.n
 desertification.n
 desertion.s
@@ -2348,6 +2360,7 @@ dessertspoon.n
 destination.n
 destiny.s
 destroyer.n
+destructor.n
 detachment.s
 detail.s
 detainee.n
@@ -2826,6 +2839,7 @@ fake.n
 fakir.n
 falcon.n
 fall.s
+fallthrough.n
 falsehood.s
 falsetto.s
 falsification.s
@@ -2914,6 +2928,7 @@ fen.n
 ferment.n
 fern.n
 ferret.n
+ferrite.n
 ferryboat.s
 ferry.n
 fertilizer.s
@@ -2955,6 +2970,8 @@ Fijian.s
 filament.n
 filbert.s
 file.n
+filename.n
+filesystem.n
 filibuster.n
 Filipino.s
 fillet.n
@@ -3422,6 +3439,7 @@ geisha.n
 gelding.n
 gell.n
 gel.s
+gemination.n
 gem.n
 gemshorn.s
 gendarme.n
@@ -3513,6 +3531,7 @@ glimpse.n
 glint.n
 glissade.n
 glitch.n
+global.n
 globe.n
 globetrotter.n
 globule.n
@@ -3528,6 +3547,7 @@ glue.s
 gluten.n
 glut.n
 glutton.n
+glyph.n
 gnat.n
 gnome.n
 gnu.n
@@ -3564,6 +3584,7 @@ goodbye.n
 goodnight.n
 goody.n
 goof.n
+google.n
 goolash.s
 goon.n
 gooseberry.n
@@ -3574,6 +3595,7 @@ gorilla.n
 gosling.n
 gospel.s
 gossip.s
+gouache.n
 goulash.s
 gourd.n
 gourmand.n
@@ -4005,6 +4027,7 @@ hippodrome.n
 hippo.n
 hippopotamus.n
 hiss.n
+histogramme.n
 histogram.n
 historian.n
 history.s
@@ -4235,6 +4258,7 @@ jawbreaker.n
 jaw.n
 jay.n
 jaywalker.n
+JD.n
 jeep.n
 jeer.n
 jellyfish.s
@@ -4578,6 +4602,7 @@ level.n
 lever.n
 levitation.s
 levy.n
+lexeme.n
 lexicographer.n
 lexicon.n
 liability.s
@@ -4685,6 +4710,7 @@ liver.s
 livery.n
 lizard.n
 llama.n
+LLD.n
 loafer.n
 loaf.n
 loan.s
@@ -4695,6 +4721,7 @@ lob.n
 lobsterman.n
 lobster.s
 locale.n
+localhost.n
 locality.s
 localization.s
 local.n
@@ -4733,6 +4760,7 @@ longing.s
 look-alike.n
 look.n
 lookout.n
+look-up.n
 lookup.n
 loom.n
 loo.n
@@ -4759,6 +4787,7 @@ lovebird.n
 lover.n
 love.s
 lowbrow.n
+lowercase.n
 lowlander.n
 low.n
 loyalist.n
@@ -4841,6 +4870,7 @@ mainstay.n
 mainstream.n
 maisonnette.n
 major.n
+makefile.n
 maker.n
 makeshift.n
 make-up.s
@@ -5007,6 +5037,7 @@ Mayor.n
 maypole.n
 maze.n
 mazurka.n
+MBA.n
 mbira.s
 meadow.s
 mead.s
@@ -5112,6 +5143,7 @@ mews.s
 Mexican.s
 mezzanine.n
 mezzo-soprano.s
+MFA.n
 miaou.n
 miaow.n
 miasma.n
@@ -5223,6 +5255,7 @@ miscreant.n
 misdeal.n
 misdeed.n
 misdemeanour.n
+misdiagnosis.n
 misdoing.n
 miser.n
 misfire.n
@@ -5289,6 +5322,7 @@ molehill.n
 mole.s
 mollusc.n
 mollusk.n
+monad.n
 monarchist.n
 monarch.n
 monarchy.s
@@ -5420,6 +5454,7 @@ multinational.n
 multiple.n
 multiplexer.n
 multiplex.s
+multiset.n
 mummy.n
 municipality.n
 munition.n
@@ -5447,6 +5482,7 @@ muster.n
 mutant.n
 mutation.s
 mute.n
+mutex.n
 mutilation.s
 mutineer.n
 mutiny.s
@@ -5598,6 +5634,7 @@ nohkan.s
 noise.s
 nomad.n
 nomenclature.n
+nominal.n
 nomination.n
 nominee.n
 nonce.n
@@ -6029,6 +6066,7 @@ pharmacologist.n
 pharmacy.n
 pharynx.n
 phase.n
+PhD.n
 pheasant.s
 phenomenon.n
 phenotype.n
@@ -6292,6 +6330,7 @@ polygamist.n
 polyglot.n
 polygon.n
 polymerase.n
+polymorphism.n
 polynomial.n
 polyp.n
 polysaccharide.n
@@ -6359,6 +6398,7 @@ poster.n
 postgraduate.n
 postmark.n
 postmaster.n
+postmodifier.n
 postponement.s
 postprocessor.n
 post.s
@@ -6634,6 +6674,8 @@ psalm.n
 psalter.n
 psaltery.s
 pseud.n
+pseudocount.n
+pseudo.n
 pseudonym.n
 psi.s
 psyche.n
@@ -6670,6 +6712,7 @@ pump.n
 punchball.n
 punchbowl.n
 punch.s
+punctuation.n
 puncture.n
 pundit.n
 punishment.s
@@ -6961,6 +7004,7 @@ recycler.n
 redbreast.n
 redcap.n
 redcoat.s
+redeclaration.n
 redeemer.n
 redevelopment.s
 redhead.n
@@ -7056,6 +7100,7 @@ relic.n
 religion.s
 relleno.n
 remainder.n
+remainer.n
 remake.n
 remarriage.s
 remedy.n
@@ -7294,6 +7339,7 @@ roller.n
 roll.n
 romance.s
 Romanian.s
+romanization.n
 romantic.n
 romp.n
 rondeau.n
@@ -7579,6 +7625,7 @@ screenwriter.n
 screwball.n
 screwdriver.n
 screw.n
+screwup.n
 scribble.n
 scribbler.n
 scribe.n
@@ -7823,8 +7870,8 @@ shoe.n
 shoestring.n
 shoetree.n
 shogun.n
-shoot.n
 shooter.n
+shoot.n
 shopkeeper.n
 shoplifter.n
 shop.n
@@ -8112,6 +8159,7 @@ socialist.n
 socialite.n
 social.n
 society.s
+sociolect.n
 sociologist.n
 socket.n
 sock.n
@@ -8234,6 +8282,7 @@ speech.s
 speedboat.s
 speedometer.n
 speed.s
+speedup.n
 speedway.n
 speller.n
 spelling.s
@@ -8524,6 +8573,7 @@ stray.n
 streak.n
 streamer.n
 streamlet.n
+streamline.n
 stream.n
 streetcar.n
 street.n
@@ -8538,6 +8588,7 @@ strikebreaker.n
 strike.n
 strikeout.n
 striker.n
+stringification.n
 string.s
 stripe.n
 strip.n
@@ -8580,6 +8631,7 @@ subcommittee.n
 subcontinent.n
 subcontract.n
 subcontractor.n
+subdirectory.n
 subdivision.s
 subdomain.n
 subeditor.n
@@ -8617,6 +8669,7 @@ subterfuge.s
 subtitle.n
 subtlety.s
 subtraction.s
+subtree.n
 suburb.n
 subversive.n
 subway.n
@@ -8674,6 +8727,7 @@ supermarket.n
 super.n
 supernumerary.n
 superpower.n
+superset.n
 superstar.n
 superstition.s
 superstructure.n
@@ -8768,6 +8822,7 @@ syllogism.n
 symbolism.s
 symbolization.s
 symbol.n
+symlink.n
 sympathizer.n
 symphony.n
 symposium.n
@@ -9041,6 +9096,7 @@ thump.n
 thunderbolt.n
 thunderclap.s
 thunderstorm.n
+thunk.n
 thwart.n
 thyroid.n
 tiara.n
@@ -9065,6 +9121,7 @@ timber.s
 timbre.s
 timekeeper.n
 timeline.n
+timeout.n
 timepiece.n
 timer.n
 timetable.n
@@ -9099,6 +9156,7 @@ tobacconist.n
 toboggan.n
 toccata.n
 toddler.n
+todo.n
 toehold.n
 toe.n
 toenail.n
@@ -9140,6 +9198,7 @@ toothpick.n
 toot.n
 topcoat.s
 topic.n
+top-level.n
 topmast.n
 top.n
 topper.n
@@ -9446,6 +9505,7 @@ typewriter.n
 typhoon.n
 typist.n
 typographer.n
+typo.n
 tyranny.s
 tyrant.n
 tyre.n
@@ -9614,6 +9674,7 @@ vocation.s
 vocative.n
 vodka.s
 vogue.n
+voicemail.n
 voice.n
 void.n
 volcano.n
@@ -9637,7 +9698,6 @@ vulgarity.s
 vulnerability.s
 vulture.n
 vulva.n
-w/o.n
 wafer.n
 waffle.n
 wage.n
@@ -9873,6 +9933,7 @@ womanizer.n-m
 woman.n
 wombat.n
 womb.n
+w/o.n
 wonderland.n
 wonder.s
 woodcut.n

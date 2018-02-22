@@ -9,6 +9,7 @@ abdomen.n
 abduction.n
 aberration.s
 ablaut.n
+AB.n
 abnormality.s
 abode.n
 abolitionist.n
@@ -39,6 +40,7 @@ academy.n
 accelerando.n
 accelerator.n
 accent.n
+accessor.n
 accessory.n
 accident.n
 accolade.n
@@ -96,6 +98,8 @@ addiction.s
 addict.n
 addition.s
 additive.n
+add-on.n
+addon.n
 addressee.n
 address.n
 adherence.n
@@ -121,6 +125,7 @@ ad.n
 adolescent.n
 adoption.s
 adornment.s
+adposition.n
 adulteration.s
 adulterer.n
 adulteress.n
@@ -238,6 +243,7 @@ alleyway.n
 alliance.s
 alligator.n
 allocation.s
+allocator.n
 allotment.s
 allowance.n
 alloy.s
@@ -721,6 +727,7 @@ elitist.n
 elixir.s
 elk.n
 ellipse.n
+ellipsis.n
 elm.s
 el.n
 elocutionist.n
@@ -772,6 +779,7 @@ enchilada_ranchero
 enchilada_verde
 enclave.n
 enclosure.s
+encoding.n
 encomium.n
 encounter.n
 encouragement.s
@@ -787,6 +795,7 @@ endgame.n
 endive.s
 end.n
 endorsement.s
+endoscope.n
 endowment.s
 enema.n
 enemy.n
@@ -946,6 +955,7 @@ excerpt.n
 excess.s
 exchange.s
 exchequer.n
+exciter.n
 exclamation.s
 excommunication.s
 excrescence.n
@@ -1014,6 +1024,7 @@ extinguisher.n
 extract.s
 extradition.s
 extra.n
+extraposition.n
 extravagance.s
 extravaganza.n
 extreme.n
@@ -1351,6 +1362,7 @@ investor.n
 invitation.n
 invocation.s
 invoice.n
+invoker.n
 involution.n
 involvement.s
 ion.n
@@ -1385,13 +1397,15 @@ item.n
 iteration.n
 itinerary.n
 Ivorian.s
+MBA.s
+MFA.s
 oaf.n
 oak.s
 oar.n
 oatcake.s
 oath.n
-oats.n
 oat.s
+oats.n
 obbligato.n
 obelisk.n
 obituary.n
@@ -1444,6 +1458,7 @@ officer.n
 official.n
 offload.n
 offprint.n
+offset.n
 offshoot.n
 offspring.s
 ogre.n
@@ -1472,6 +1487,7 @@ onrush.n
 onset.n
 onslaught.n
 opal.s
+opcode.n
 opener.n
 opera.s
 operation.s
@@ -1660,6 +1676,7 @@ upgrade.n
 upheaval.s
 upholsterer.n
 upland.n
+uppercase.n
 uppercut.n
 upper.n
 upright.n

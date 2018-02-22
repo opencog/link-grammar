@@ -23,6 +23,7 @@ abridgments.n
 abscesses.n
 absences.n
 absentees.n
+ABs.n
 absorbents.n
 abstentions.n
 abstractions.n
@@ -39,6 +40,7 @@ accelerandos.n
 accelerators.n
 accents.n
 accessories.n
+accessors.n
 accidents.n
 accolades.n
 accommodations.n
@@ -92,6 +94,8 @@ addictions.n
 addicts.n
 additions.n
 additives.n
+add-ons.n
+addons.n
 addressees.n
 addresses.n
 adherences.n
@@ -115,6 +119,7 @@ admonitions.n
 adolescents.n
 adoptions.n
 adornments.n
+adpositions.n
 ads.n
 adulterers.n
 adulteresses.n
@@ -237,6 +242,7 @@ alliances.n
 allies.n
 alligators.n
 allocations.n
+allocators.n
 allotments.n
 allowances.n
 alloys.n
@@ -777,6 +783,7 @@ basilisks.n
 basins.n
 basketballs.n
 baskets.n
+BAs.n
 bas-reliefs.n
 basses.n
 bassinets.n
@@ -944,6 +951,7 @@ bigwigs.n
 bikes.n
 bikinis.n
 bilabials.n
+bilateralisms.n
 bilinguals.n
 billboards.n
 billets.n
@@ -1486,6 +1494,7 @@ callers.n
 callings.n
 calliopes.n
 call-outs.n
+callouts.n
 calls.n
 calories.n
 calumnies.n
@@ -1907,6 +1916,7 @@ circulations.n
 circumferences.n
 circumflexes.n
 circumlocutions.n
+circumpositions.n
 circumstances.n
 circuses.n
 cissies.n
@@ -2048,6 +2058,7 @@ cocoons.n
 cocos.n
 codas.n
 codenames.n
+codepoints.n
 codeshares.n
 codes.n
 codfish.p
@@ -2139,6 +2150,7 @@ commissars.n
 commissionaires.n
 commissioners.n
 commissions.n
+commits.n
 committees.n
 commodes.n
 commodities.n
@@ -2155,10 +2167,12 @@ communists.n
 Communists.n
 communities.n
 commutations.n
+commutators.n
 commuters.n
 compacts.n
 companions.n
 comparatives.n
+comparators.n
 compares.n
 comparisons.n
 compartments.n
@@ -2438,6 +2452,7 @@ corporations.n
 corpses.n
 corps.p
 corpuscles.n
+corpuses.n
 corrals.n
 corrections.n
 correctives.n
@@ -2785,6 +2800,7 @@ darns.n
 darts.n
 dashboards.n
 dashes.n
+datasets.n
 datelines.n
 dates.n
 daughters.n
@@ -2939,6 +2955,7 @@ depths.n
 deputies.n
 derailments.n
 derbies.n
+dereferences.n
 derivations.n
 derivatives.n
 dermatologists.n
@@ -2949,6 +2966,7 @@ descendants.n
 descenders.n
 descents.n
 descriptions.n
+descriptors.n
 deserters.n
 desertifications.n
 desertions.n
@@ -2968,6 +2986,7 @@ dessertspoons.n
 destinations.n
 destinies.n
 destroyers.n
+destructors.n
 detachments.n
 details.n
 detainees.n
@@ -3542,6 +3561,7 @@ enchiladas_rancheros
 enchiladas_verdes
 enclaves.n
 enclosures.n
+encodings.n
 encomiums.n
 encounters.n
 encouragements.n
@@ -3557,6 +3577,7 @@ endgames.n
 endings.n
 endives.n
 endorsements.n
+endoscopes.n
 endowments.n
 ends.n
 enemas.n
@@ -3722,6 +3743,7 @@ excesses.n
 exchanges.n
 exchequers.n
 excitements.n
+exciters.n
 exclamations.n
 excommunications.n
 excrescences.n
@@ -3788,6 +3810,7 @@ externs.n
 extinguishers.n
 extracts.n
 extraditions.n
+extrapositions.n
 extras.n
 extravagances.n
 extravaganzas.n
@@ -3840,6 +3863,7 @@ fajitas.n
 fakes.n
 fakirs.n
 falcons.n
+fallthroughs.n
 falsehoods.n
 falsettos.n
 falsifications.n
@@ -3930,6 +3954,7 @@ ferments.n
 ferns.n
 ferrets.n
 ferries.n
+ferrites.n
 ferryboats.n
 fertilizers.n
 festivals.n
@@ -3968,7 +3993,9 @@ figures.n
 Fijians.n
 filaments.n
 filberts.n
+filenames.n
 files.n
+filesystems.n
 filibusters.n
 filings.n
 Filipinos.n
@@ -4429,6 +4456,7 @@ geezers.n
 geishas.n
 geldings.n
 gels.n
+geminations.n
 gemshorns.n
 gems.n
 gendarmeries.n
@@ -4516,6 +4544,7 @@ glimpses.n
 glints.n
 glissades.n
 glitches.n
+globals.n
 globes.n
 globetrotters.n
 globules.n
@@ -4530,6 +4559,7 @@ glues.n
 glutens.n
 gluts.n
 gluttons.n
+glyphs.n
 gnats.n
 gnomes.n
 gnus.n
@@ -4564,6 +4594,7 @@ gongs.n
 goodies.n
 goods.n
 goofs.n
+googles.n
 goons.n
 gooseberries.n
 gophers.n
@@ -4572,6 +4603,7 @@ gorillas.n
 goslings.n
 gospels.n
 gossips.n
+gouaches.n
 goulashes.n
 gourds.n
 gourmands.n
@@ -5006,6 +5038,7 @@ hippopotamuses.n
 hippos.n
 hips.n
 hisses.n
+histogrammes.n
 histograms.n
 historians.n
 histories.n
@@ -5111,6 +5144,7 @@ hotels.n
 hotheads.n
 hothouses.n
 hotplates.n
+hotspots.n
 hounds.n
 hourglasses.n
 houseboats.n
@@ -5524,6 +5558,7 @@ investors.n
 invitations.n
 invocations.n
 invoices.n
+invokers.n
 involutions.n
 involvements.n
 ionospheres.n
@@ -5589,6 +5624,7 @@ jawbreakers.n
 jaws.n
 jays.n
 jaywalkers.n
+JDs.n
 jeeps.n
 jeers.n
 jellies.n
@@ -5933,6 +5969,7 @@ levels.n
 levers.n
 levies.n
 levitations.n
+lexemes.n
 lexicographers.n
 lexicons.n
 liabilities.n
@@ -5972,8 +6009,8 @@ lifelines.n
 lifers.n
 lifestyles.s
 lifetimes.n
-lifts.n
 liftoffs.n
+lifts.n
 ligaments.n
 ligatures.n
 lighters.n
@@ -6043,6 +6080,7 @@ lives.n
 livings.n
 lizards.n
 llamas.n
+LLDs.n
 loafers.n
 loans.n
 loaves.n
@@ -6052,6 +6090,7 @@ lobes.n
 lobs.n
 lobsters.n
 locales.n
+localhosts.n
 localities.n
 localizations.n
 locals.n
@@ -6089,6 +6128,7 @@ longbows.n
 longings.n
 lookouts.n
 looks.n
+look-ups.n
 lookups.n
 looms.n
 loonies.n
@@ -6115,6 +6155,7 @@ louvres.n
 lovebirds.n
 lovers.n
 lowbrows.n
+lowercases.n
 lowlanders.n
 lows.n
 loyalists.n
@@ -6196,6 +6237,7 @@ mainstays.n
 maisonnettes.n
 majorities.n
 majors.n
+makefiles.n
 makers.n
 makeshifts.n
 make-ups.n
@@ -6363,6 +6405,7 @@ Mayors.n
 maypoles.n
 mazes.n
 mazurkas.n
+MBAs.n
 mbiras.n
 meadows.n
 meads.n
@@ -6467,6 +6510,7 @@ mews.p
 Mexicans.n
 mezzanines.n
 mezzo-sopranos.n
+MFAs.n
 miaous.n
 miaows.n
 miasmas.n
@@ -6579,6 +6623,7 @@ miscreants.n
 misdeals.n
 misdeeds.n
 misdemeanours.n
+misdiagnoses.n
 misdoings.n
 misers.n
 misfires.n
@@ -6647,6 +6692,7 @@ molehills.n
 moles.n
 molluscs.n
 mollusks.n
+monads.n
 monarchies.n
 monarchists.n
 monarchs.n
@@ -6777,6 +6823,7 @@ multinationals.n
 multiples.n
 multiplexers.n
 multiplexes.s
+multisets.n
 multitudes.n
 mummies.n
 municipalities.n
@@ -6804,6 +6851,7 @@ musters.n
 mutants.n
 mutations.n
 mutes.n
+mutexes.n
 mutilations.n
 mutineers.n
 mutinies.n
@@ -6952,6 +7000,7 @@ nohkans.n
 noises.n
 nomads.n
 nomenclatures.n
+nominals.n
 nominations.n
 nominees.n
 nonces.n
@@ -7083,6 +7132,7 @@ offices.n
 officials.n
 offloads.n
 offprints.n
+offsets.n
 offshoots.n
 offspring.p
 ogres.n
@@ -7109,6 +7159,7 @@ onrushes.n
 onsets.n
 onslaughts.n
 opals.n
+opcodes.n
 openers.n
 openings.n
 operas.n
@@ -7603,6 +7654,7 @@ pharmacists.n
 pharmacologists.n
 pharynxes.n
 phases.n
+PhDs.n
 pheasants.n
 philanderers.n
 philanthropists.n
@@ -7866,6 +7918,7 @@ polygamists.n
 polyglots.n
 polygons.n
 polymerases.n
+polymorphisms.n
 polynomials.n
 polyps.n
 polysaccharides.n
@@ -7933,6 +7986,7 @@ posters.n
 postgraduates.n
 postmarks.n
 postmasters.n
+postmodifiers.n
 postponements.n
 postscripts.n
 posts.n
@@ -7966,6 +8020,7 @@ practicalities.n
 practices.n
 practitioners.n
 praesidiums.n
+pragmas.n
 pragmatists.n
 prairies.n
 praises.n
@@ -8214,7 +8269,9 @@ psalms.n
 psalteries.n
 psalters.n
 psalterys.n
+pseudocounts.n
 pseudonyms.n
+pseudos.n
 pseuds.n
 psis.n
 psyches.n
@@ -8249,6 +8306,7 @@ pumps.n
 punchballs.n
 punchbowls.n
 punches.n
+punctuations.n
 punctures.n
 pundits.n
 punishments.n
@@ -8545,6 +8603,7 @@ recyclers.n
 redbreasts.n
 redcaps.n
 redcoats.n
+redeclarations.n
 redeemers.n
 redevelopments.n
 redheads.n
@@ -8639,6 +8698,7 @@ relics.n
 religions.n
 rellenos.n
 remainders.n
+remainers.n
 remains.n
 remakes.n
 remarriages.n
@@ -8882,6 +8942,7 @@ rollers.n
 rolls.n
 romances.n
 Romanians.n
+romanizations.n
 romantics.n
 romps.n
 rondeaus.n
@@ -9168,6 +9229,7 @@ screenwriters.n
 screwballs.n
 screwdrivers.n
 screws.n
+screwups.n
 scribblers.n
 scribbles.n
 scribes.n
@@ -9315,6 +9377,7 @@ settings.n
 settlements.n
 settlers.n
 setups.n
+severities.n
 sewers.n
 sexagenarians.n
 sexes.n
@@ -9696,6 +9759,7 @@ socialists.n
 socialites.n
 socials.n
 societies.n
+sociolects.n
 sociologists.n
 sockets.n
 socks.n
@@ -9818,6 +9882,7 @@ speeches.n
 speedboats.n
 speedometers.n
 speeds.n
+speedups.n
 speedways.n
 spellers.n
 spellings.n
@@ -10109,6 +10174,7 @@ strays.n
 streaks.n
 streamers.n
 streamlets.n
+streamlines.n
 streams.n
 streetcars.n
 streets.n
@@ -10123,6 +10189,7 @@ strikebreakers.n
 strikeouts.n
 strikers.n
 strikes.n
+stringifications.n
 strings.n
 stripes.n
 strippers.n
@@ -10163,6 +10230,7 @@ subcommittees.n
 subcontinents.n
 subcontractors.n
 subcontracts.n
+subdirectories.n
 subdivisions.n
 subeditors.n
 subfamilies.n
@@ -10197,6 +10265,7 @@ subterfuges.n
 subtitles.n
 subtleties.n
 subtractions.n
+subtrees.n
 suburbs.n
 subversives.n
 subways.n
@@ -10253,6 +10322,7 @@ superlatives.n
 supermarkets.n
 supernumeraries.n
 superpowers.n
+supersets.n
 supers.n
 superstars.n
 superstitions.n
@@ -10348,6 +10418,7 @@ syllogisms.n
 symbolisms.n
 symbolizations.n
 symbols.n
+symlinks.n
 sympathies.n
 sympathizers.n
 symphonies.n
@@ -10627,6 +10698,7 @@ thumps.n
 thunderbolts.n
 thunderclaps.n
 thunderstorms.n
+thunks.n
 thwarts.n
 thyroids.n
 tiaras.n
@@ -10650,6 +10722,7 @@ timbers.n
 timbres.n
 timekeepers.n
 timelines.n
+timeouts.n
 timepieces.n
 timers.n
 timetables.n
@@ -10683,6 +10756,7 @@ tobacconists.n
 toboggans.n
 toccatas.n
 toddlers.n
+todos.n
 toeholds.n
 toenails.n
 toes.n
@@ -10723,6 +10797,7 @@ toothpicks.n
 toots.n
 topcoats.n
 topics.n
+top-levels.n
 topmasts.n
 topologies.n
 toppers.n
@@ -11036,6 +11111,7 @@ typewriters.n
 typhoons.n
 typists.n
 typographers.n
+typos.n
 tyrannies.n
 tyrants.n
 tyres.n
@@ -11055,6 +11131,7 @@ umpires.n
 unbelievers.n
 uncertainties.n
 uncles.n
+underbars.n
 underbellies.n
 undercarriages.n
 underclasses.n
@@ -11098,6 +11175,7 @@ upgrades.n
 upheavals.n
 upholsterers.n
 uplands.n
+uppercases.n
 uppercuts.n
 uppers.n
 uprights.n
@@ -11295,6 +11373,7 @@ vocations.n
 vocatives.n
 vodkas.n
 vogues.n
+voicemails.n
 voices.n
 voids.n
 volcanos.n
@@ -11502,6 +11581,7 @@ wiggles.n
 wigs.n
 wigwams.n
 wikis.n
+wildcards.n
 wildebeests.n
 willows.n
 wills.n

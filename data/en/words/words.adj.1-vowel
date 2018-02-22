@@ -383,6 +383,7 @@ autochthonous.a
 autocratic.a
 autofocus.a
 autologous.a
+automagical.a
 automatic.a
 automotive.a
 autonomic.a
@@ -691,7 +692,6 @@ extrusive.a
 exuberant.a
 exultant.a
 eyecatching.a
-i/o.a I/O.a io.a IO.a input/output.a
 iambic.a
 iatrogenic.a
 icebound.a
@@ -700,8 +700,10 @@ iconic.a
 icy.a
 ideal.a
 idealistic.a
+idempotent.a
 identical.a
 identifiable.a
+ideographic.a
 ideological.a
 idiomatic.a
 idiopathic.a
@@ -712,6 +714,7 @@ idyllic.a
 igneous.a
 ignoble.a
 ignominious.a
+ignorable.a
 ignorant.a
 ill.a
 illegible.a
@@ -1058,6 +1061,7 @@ interested.a
 interfaith.a
 intergalactic.a
 interior.a
+interjective.a
 interleague.a
 interlibrary.a
 intermediate.a
@@ -1126,6 +1130,7 @@ invitational.a
 inviting.a
 involuntary.a
 invulnerable.a
+i/o.a I/O.a io.a IO.a input/output.a
 ionic.a
 ionospheric.a
 irascible.a
@@ -1476,6 +1481,7 @@ uncommon.a
 uncommunicative.a
 uncompleted.a
 uncompromising.a
+uncomputed.a
 unconcealed.a
 unconcerned.a
 unconditional.a
@@ -1494,12 +1500,15 @@ uncontrollable.a
 uncontrolled.a
 uncontroversial.a
 unconventional.a
+unconvertable.a
 unconverted.a
+unconvertible.a
 unconvincing.a
 uncooked.a
 uncoordinated.a
 uncorrected.a
 uncorroborated.a
+uncorrrupted.a
 uncounted.a
 uncountered.a
 uncouth.a
@@ -1867,6 +1876,7 @@ unrepaired.a
 unrepentant.a
 unreported.a
 unrepresentative.a
+unreproducible.a
 unrequited.a
 unreserved.a
 unresolved.a
@@ -1884,6 +1894,7 @@ unsaid.a
 unsalted.a
 unsanctioned.a
 unsatisfactory.a
+unsatisfiable.a
 unsatisfied.a
 unsatisfying.a
 unsaturated.a
@@ -1910,6 +1921,7 @@ unshaven.a
 unsightly.a
 unsigned.a
 unsinkable.a
+unsized.a
 unskilled.a
 unsmiling.a
 unsociable.a
@@ -1922,6 +1934,7 @@ unsparing.a
 unspeakable.a
 unspecified.a
 unsplit.a
+unsplittable.a
 unspoiled.a
 unspoilt.a
 unspoken.a
@@ -1942,6 +1955,7 @@ unstructured.a
 unstrung.a
 unstuck.a
 unstudied.a
+unsubscripted.a
 unsubstantiated.a
 unsubtle.a
 unsuccessful.a
@@ -1978,6 +1992,7 @@ untold.a
 untouchable.a
 untouched.a
 untoward.a
+untracked.a
 untraditional.a
 untrained.a
 untranslatable.a
@@ -1998,6 +2013,7 @@ unvarnished.a
 unvarying.a
 unverified.a
 unversed.a
+unversioned.a
 unvoiced.a
 unwalled.a
 unwanted.a
@@ -2016,6 +2032,7 @@ unworkable.a
 unworn.a
 unworried.a
 unwounded.a
+unwriteable.a
 unwritten.a
 unyielding.a
 up.a

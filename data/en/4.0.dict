@@ -311,7 +311,7 @@ nonCAP.zzz: ZZZ-;
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-INITIALS <entity-singular>:
+INITIALS ALL-UPPER <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
         ((<noun-sub-s> & (JG- or <noun-main-s>))
@@ -497,6 +497,10 @@ Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
 % Titles, e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D.
 % Gack. See absurdly large collection at:
 % http://en.wikipedia.org/wiki/List_of_post-nominal_letters
+% The generic case of strings of all-uppercase are handled
+% by the regexes ALL-UPPER and INITIALS. The below are mixed-case
+% or other very common degrees.
+ALL-UPPER.y INITIALS.y
 Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
 AB.y A.B..y AIA.y A.I.A..y
 BA.y B.A..y BFA.y B.F.A..y BS.y B.S..y BSc.y B.Sc..y
@@ -522,6 +526,7 @@ USMC.y USN.y:
 
 % The generic category for strings containing a hyphen
 PART-NUMBER.n
+ALL-UPPER.n
 HYPHENATED-WORDS.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &
@@ -1350,12 +1355,13 @@ youse yous yis ye ya yo:
 % (Osm- & {@M+}): "is this it?" "Do you have it ready?"
 %    "leave it alone" "make it rain"
 %   (the m prevents links as indirect object)
+% MX+ & Ss+: "it -- fried rice -- is very popular"
 it:
    [J-]
    or (Osm- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
-   or ((Ss+ or SFsi+) & <CLAUSE>)
+   or ({MX+} & (Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
    or SJls+ or SJrs-;
 
@@ -3794,7 +3800,7 @@ overran.v-d mistook.v-d underwrote.v-d:
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
 
-hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d
+hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
   
   ((<verb-sp,pp> & (<vc-trans>)) or
@@ -8846,6 +8852,7 @@ unlike:
      or [({Xc+ & {Xd-}} & CO+)]
      or (Xd- & Xc+ & (E+ or MVx-)));
 
+% o': silent, un-pronouned f.
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
 %      The Jd+ forces a link to the object as well.
 % Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
@@ -8858,7 +8865,7 @@ unlike:
 %      XXX The Mp- below should be removed, and all occurrences of
 %      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
 % Mf- & MVp+: "She was a girl of about John's age"
-of:
+of o':
   ({JQ+}
     & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
@@ -8913,8 +8920,7 @@ care_of c/o:
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or <fronted>);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or <fronted>);
 
-versus: (J+ & Mp-) or (G- & G+);
-vs: {Xi+} & G- & G+;
+versus v. vs. vs: (J+ & Mp-) or (G- & G+);
 
 worth.p: (Mp- & (J+ or OF+)) or (Paf- & Mgp+) or (Pa- & (J+ or B-));
 opposite.p: J+ & <prep-main-b>;
@@ -9075,7 +9081,7 @@ near.p:
 % SFpp+: "nearby are more ruins"
 % {EE-} & {Xc+} & COp+: "{somewhere} nearby, a mouse scratched"
 % {EE-} & FM-: "The ticking came from {somewhere} nearby."
-nearby close_by:
+nearby close_by handy.r:
   A+
   or MVp-
   or Pp-
@@ -9138,8 +9144,8 @@ inside_of atop:
   <alter-preps> or
   (J+ & (<prep-main-b> or FM- or <fronted>));
 
-ahead_of by_way_of akin_to betwixt vis-a-vis in_lieu_of on_account_of
-in_place_of in_search_of:
+ahead_of by_way_of akin_to betwixt vis-a-vis vis-à-vis cf.
+in_lieu_of on_account_of in_place_of in_search_of:
   <alter-preps> or
   (J+ & (<prep-main-b> or <fronted>));
 
@@ -9749,6 +9755,11 @@ that.j-t: Wt- & {Xc+} & Rn+ & B+;
 % "No one is sitting at that there table"
 that_there: Ds+;
 
+% scilicet
+% "it [sc. gouache] was also popular in France"
+sc sc.: Xd- & MX*r- & O+ & (Xc+ or <costly-null>);
+that_is that_is_to_say: Xd- & MX*r- & Xc+ & O+ & (Xc+ or <costly-null>);
+
 % (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
 because b/c bc cuz cos coz cause.j 'cause b'cause b'cuz bec bcoz:
@@ -10008,7 +10019,7 @@ and.j-r or.j-r:
 % Xd- & SJl- & EBb+ & SJr+ & Xc+ & Wd- & Ssx+: EB+ forces a singular subject!
 %
 % and.j-n but_not but_just_not and_not ,_not just_not:
-and.j-n:
+and.j-n 'n':
   (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
@@ -10180,8 +10191,9 @@ nor.r: ((Xd- & <coord>) or Wd-) & Qd+;
 for.r: [[(({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+)) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
+% therefor is a common mis-spelling, unlikely the archic therefor ...
 % <fronted>: "thus it would seem"
-thus therefore:
+thus therefore therefor:
   ((Xc+ & {Xd-}) & CO+) or
   [CO+]0.3 or
   ({Xd-} & <coord> & Wd+) or
@@ -10755,12 +10767,13 @@ former.a: (<wantPHc> & A+) or G+ or (DG- & <noun-main-x>);
 latter.a: DG- & <noun-main-x>;
 
 overall.a onetime.a outboard.a pinstripe.a
-goddam.a de_facto de_jure erstwhile.a
+goddam.a defacto de_facto de_jure erstwhile.a
 foster.a outright.a online.a: <wantPH> & A+;
 
 pro_forma ad_hoc bona_fide: (<wantPH> & A+) or Pa-;
 
-a_priori a_posteriori: (<wantPHv> & A+) or MVa- or ({Xc+ & {Xd-}} & CO+);
+a_priori a_posteriori apriori aposteriori:
+  (<wantPHv> & A+) or MVa- or ({Xc+ & {Xd-}} & CO+);
 
 asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a
 afloat.a afoot.a aghast.a aglow.a agog.a ajar.a amiss.a askew.a
@@ -11319,7 +11332,8 @@ anymore.e aloud.e upwards.e downwards.e upward.e downward.e
 inward.e outward.e inwards.e outwards.e anytime.e live.e
 wholesale.e anew.e forever.e awhile.e aback.e afoul.e afresh.e aloft.e
 amok.e amuck.e onstage.e
-apiece.e askance.e astern.e asunder.e inter_alia mutatis_mutandis par_excellence
+apiece.e askance.e astern.e asunder.e
+inter_alia mutatis_mutandis par_excellence
 upside-down.e ab_initio ad_infinitum ad_lib
 ad_libitum ad_nauseum aground.e astray.e into_account into_effect
 to_market to_bid from_scratch to_office for_office for_good
@@ -11833,7 +11847,7 @@ please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
 % ==========================================================
 % MISCELLANEOUS WORDS AND PUNCTUATION
 
-etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
+etc etc.: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
 so_on the_like vice_versa v.v.:
   (<noun-sub-x> & <noun-main-x>) or
   <noun-and-x> or
@@ -12036,7 +12050,8 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-– ━ ー --.r -.r 、 ～.r ~.r ‧.r :
+% The four dashes are e28092 e28093 e28094 e28095
+‒ – — ― ━ ー --.r -.r 、 ～.r ~.r ‧.r :
   [[<colon>]]
   or ({@Xca-} & (({EBx+} & Xd+) or Xc-))
   or (Wd- & W+)
@@ -12305,7 +12320,7 @@ LENGTH-LIMIT-1: YS+ & YP+ & PH+ & ZZZ+;
 %
 
 subject_to status_post in_conjunction_with sensu
- in_relation_to neath amidst across_from circa astride
+ in_relation_to neath amidst across_from circa ca. c. astride
  previous_to together_with as_regards s/p aka amongst unto
  apropos_of w.i W.i:
  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);

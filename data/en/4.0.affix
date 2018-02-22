@@ -29,7 +29,7 @@ w/
   : LPUNC+;
 
 % Split words at these.
---: MPUNC+;
+-- ‒ – — ―: MPUNC+;
 
 % Suffixes
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
@@ -46,7 +46,7 @@ y' w/: PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various symbols!!
-"()¿¡†‡§¶©®℗№#*•⁂❧☞◊※○。゜✿☆＊◕●∇□◇＠◎–━ー---‧": BULLETS+;
+"()¿¡†‡§¶©®℗№#*•⁂❧☞◊※○。゜✿☆＊◕●∇□◇＠◎–━ー—---‧": BULLETS+;
 
 /en/words/units.1: UNITS+;
 /en/words/units.1.dot: UNITS+;
