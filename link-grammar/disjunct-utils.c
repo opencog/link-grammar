@@ -112,9 +112,7 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 }
 
 /**
- * The connectors must be exactly equal.  A similar function
- * is connectors_equal_AND(), but that ignores priorities,
- * this does not.
+ * The connectors must be exactly equal.
  */
 static bool connectors_equal_prune(Connector *c1, Connector *c2)
 {

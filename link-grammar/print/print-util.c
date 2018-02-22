@@ -122,7 +122,7 @@ size_t utf8_chars_in_width(const char *s, size_t max_width)
 		{
 			// If we are here, it was a valid UTF-8 code point,
 			// but we do not know the width of the corresponding
-			// glyph. Just like above, asume a double-wide box
+			// glyph. Just like above, assume a double-wide box
 			// font will be printed.
 			int gw = mk_wcwidth(wc);
 			if (0 <= gw)
@@ -211,7 +211,7 @@ int append_string(dyn_str * string, const char *fmt, ...)
  * number of bytes actually appended. Two things might
  * happen:
  * a) Invalid UTF-8 values are copied, but only one byte,
- *    followed by an addtional blank.
+ *    followed by an additional blank.
  * b) Valid UTF-8 code-points that do not have a known
  *    glyph are copied, followed by an additional blank.
  * This additional blanks allows proper printing of these

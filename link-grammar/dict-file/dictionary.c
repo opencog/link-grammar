@@ -230,10 +230,7 @@ dictionary_six_str(const char * lang,
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
-	/* set_connector_unlimited_length() in dictionary_setup_defines()
-	 * depends on this sorting. */
 	sort_condesc_by_uc_constring(dict);
-
 	dictionary_setup_defines(dict);
 
 	// Special-case hack.
