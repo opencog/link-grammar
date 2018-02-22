@@ -828,6 +828,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or Us-
     or ({Ds-} & Wa-));
 
+% -----------------------------------------------------------------
 % determiner constructions, with a dangling of: "a number of", "a lot of"
 % "I have a number of cookies"
 % "a pride of lions" "a litter of kittens" all take determiners
@@ -888,6 +889,16 @@ percent.u parts.u:
     U-))
   or (ND- & (OD- or AN+ or YS+));
 
+% Weight and voume in chemistry
+% "An example would be a 5% weight per volume NaCl solution."
+weight.u volume.u:
+  AN- & Mp+ & AN+;
+
+v/v vol/vol volume/volume w/v weight/vol weight/volume:
+  {Xd- & Xc+} & AN- & AN+;
+
+
+% -----------------------------------------------------------------
 % This set of disjuncts should probably be split up and refined.
 % "shame.n", "crux.n" are here because they need the Ss*t connector
 % to pick up "that" in "The crux of it is that we must act first."
