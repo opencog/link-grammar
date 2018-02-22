@@ -12,6 +12,7 @@ children.p
 chum.p
 clergymen.p
 congressmen.p
+corpora.p
 criteria.p
 data.p
 deer.p

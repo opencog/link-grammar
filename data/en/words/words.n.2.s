@@ -1907,6 +1907,7 @@ circulations.n
 circumferences.n
 circumflexes.n
 circumlocutions.n
+circumpositions.n
 circumstances.n
 circuses.n
 cissies.n
@@ -2438,6 +2439,7 @@ corporations.n
 corpses.n
 corps.p
 corpuscles.n
+corpuses.n
 corrals.n
 corrections.n
 correctives.n
@@ -9315,6 +9317,7 @@ settings.n
 settlements.n
 settlers.n
 setups.n
+severities.n
 sewers.n
 sexagenarians.n
 sexes.n
