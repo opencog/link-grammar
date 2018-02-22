@@ -7686,18 +7686,6 @@ that.j-t: Wt- & {Xc+} & Rn+ & B+;
 % "No one is sitting at that there table"
 that_there: Ds+;
 
-% scilicet
-% "it [sc. gouache] was also popular in France"
-% MX*tn- & O+: scilicet nouns
-% MX*ta- & P+: scilicet adjectives
-sc sc. scilicet:
-  Xd- & ((MX*tn- & O+) or (MX*ta- & P+)) & (Xc+ or <costly-null>);
-that_is that_is_to_say:
-  Xd- & ((MX*tn- & Xc+ & O+) or (MX*ta- & Xc+ & P+))
-    & (Xc+ or <costly-null>);
-
-fxd: Pv-;
-
 % (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
 because b/c bc cuz cos coz cause.j 'cause b'cause b'cuz bec bcoz:
@@ -9547,13 +9535,28 @@ usually typically perhaps:
   or ({Xc+ & {Xd-}} & CO+)
   or (EB- & {[EA+]-0.1});
 
-in_fact of_course in_effect for_example for_instance e.g. i.e. :
+% scilicet
+% "it [sc. gouache] was also popular in France"
+% MX*tn- & O+: scilicet nouns
+% MX*ta- & P+: scilicet adjectives
+% MVx- & P+: to verbs "While walking [scilicet in the evening] ..."
+% Some of these sc. constructions should forecefully require a comma.
+in_fact of_course in_effect for_example for_instance
+e.g. eg. i.e. ie. id_est
+sc sc. scilicet viz.r viz..r videlicet
+that_is that_is_to_say to_wit namely.r in_other_words:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
-  or (EB- & {Xc+})
-  or (Xd- & EB- & Xc+)
-  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+));
+  or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+))
+  or [EB- & {Xc+}]
+  or [Xd- & EB- & Xc+]
+  or (Xd- &
+     ((MX*tn- & {Xc+} & O+) or
+      (MX*ta- & {Xc+} & P+) or
+      (MVx- & {Xc+} & P+))
+    & (Xc+ or <costly-null>));
+
 
 % -----------------------------------------------------------
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
