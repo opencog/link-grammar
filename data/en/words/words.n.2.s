@@ -39,6 +39,7 @@ accelerandos.n
 accelerators.n
 accents.n
 accessories.n
+accessors.n
 accidents.n
 accolades.n
 accommodations.n
@@ -92,6 +93,8 @@ addictions.n
 addicts.n
 additions.n
 additives.n
+add-ons.n
+addons.n
 addressees.n
 addresses.n
 adherences.n
@@ -115,6 +118,7 @@ admonitions.n
 adolescents.n
 adoptions.n
 adornments.n
+adpositions.n
 ads.n
 adulterers.n
 adulteresses.n
@@ -237,6 +241,7 @@ alliances.n
 allies.n
 alligators.n
 allocations.n
+allocators.n
 allotments.n
 allowances.n
 alloys.n
@@ -3544,6 +3549,7 @@ enchiladas_rancheros
 enchiladas_verdes
 enclaves.n
 enclosures.n
+encodings.n
 encomiums.n
 encounters.n
 encouragements.n
@@ -3559,6 +3565,7 @@ endgames.n
 endings.n
 endives.n
 endorsements.n
+endoscopes.n
 endowments.n
 ends.n
 enemas.n
@@ -3724,6 +3731,7 @@ excesses.n
 exchanges.n
 exchequers.n
 excitements.n
+exciters.n
 exclamations.n
 excommunications.n
 excrescences.n
@@ -3790,6 +3798,7 @@ externs.n
 extinguishers.n
 extracts.n
 extraditions.n
+extrapositions.n
 extras.n
 extravagances.n
 extravaganzas.n
@@ -5526,6 +5535,7 @@ investors.n
 invitations.n
 invocations.n
 invoices.n
+invokers.n
 involutions.n
 involvements.n
 ionospheres.n
@@ -5974,8 +5984,8 @@ lifelines.n
 lifers.n
 lifestyles.s
 lifetimes.n
-lifts.n
 liftoffs.n
+lifts.n
 ligaments.n
 ligatures.n
 lighters.n
@@ -7085,6 +7095,7 @@ offices.n
 officials.n
 offloads.n
 offprints.n
+offsets.n
 offshoots.n
 offspring.p
 ogres.n
@@ -7111,6 +7122,7 @@ onrushes.n
 onsets.n
 onslaughts.n
 opals.n
+opcodes.n
 openers.n
 openings.n
 operas.n
@@ -11058,6 +11070,7 @@ umpires.n
 unbelievers.n
 uncertainties.n
 uncles.n
+underbars.n
 underbellies.n
 undercarriages.n
 underclasses.n
@@ -11101,6 +11114,7 @@ upgrades.n
 upheavals.n
 upholsterers.n
 uplands.n
+uppercases.n
 uppercuts.n
 uppers.n
 uprights.n
