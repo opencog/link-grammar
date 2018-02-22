@@ -3620,7 +3620,7 @@ forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
 overran.v-d mistook.v-d underwrote.v-d:
   VERB_SP_T(<vc-trans>);
 
-hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d
+hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
   VERB_SPPP_T(<vc-trans>) or
   (<verb-ico> & <vc-trans>) or
