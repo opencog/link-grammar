@@ -890,22 +890,26 @@ kinds_of types_of sorts_of breeds_of species_of:
     or ({Dmc-} & <noun-and-p>)
     or Up-)];
 
+% A+: "It has twice the percent value"
 percent.u parts.u:
   (<noun-modifiers> &
     ((ND- & {DD-} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
     <noun-main-p> or
     (ND- & {DD-} & <noun-and-x>) or
     U-))
-  or (ND- & (OD- or AN+ or YS+));
+  or (ND- & (OD- or AN+ or YS+))
+  or ({E- or EA-} & A+);
 
 % Weight and voume in chemistry
 % "An example would be a 5% weight per volume NaCl solution."
 weight.u volume.u:
   AN- & Mp+ & AN+;
 
+% "It is a a 5%(w/v) NaCl solution."
+% "We measure the concentration in v/v %"
 v/v vol/vol volume/volume w/v weight/vol weight/volume:
-  {Xd- & Xc+} & AN- & AN+;
-
+  ({{Xd- & Xc+} & AN-} & AN+)
+  or EA+;
 
 % -----------------------------------------------------------------
 % This set of disjuncts should probably be split up and refined.
@@ -10068,7 +10072,12 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
-"%" ‰ ‱ : (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
+% AN- & Jp-: "... the concentration in v/v %"
+"%" ‰ ‱ :
+  (ND- & {DD-} & <noun-sub-x> & <noun-main-x>)
+  or (ND- & (OD- or AN+))
+  or ({E- or EA-} & A+)
+  or (AN- & Jp-);
 
 % See also /en/words/currency for currency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
