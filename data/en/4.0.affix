@@ -29,7 +29,7 @@ w/
   : LPUNC+;
 
 % Split words at these.
--- ‒ – — ― "(": MPUNC+;
+-- ‒ – — ― "(" "[": MPUNC+;
 
 % Suffixes
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
