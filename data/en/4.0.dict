@@ -483,7 +483,8 @@ Gr.y Gr..y Ln.y Ln..y Rd.y Rd..y Rt.y Rt..y
 Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y
-Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
+Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y
+et_al et_al. :
   ({[X-]} & G-) & {[[Xi+]]} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
       (({@MX+} & (JG- or <noun-main-s>)) or
@@ -827,6 +828,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or Us-
     or ({Ds-} & Wa-));
 
+% -----------------------------------------------------------------
 % determiner constructions, with a dangling of: "a number of", "a lot of"
 % "I have a number of cookies"
 % "a pride of lions" "a litter of kittens" all take determiners
@@ -879,13 +881,28 @@ kinds_of types_of sorts_of breeds_of species_of:
     or ({Dmc-} & <noun-and-p>)
     or Up-)];
 
-percent.u:
+% A+: "It has twice the percent value"
+percent.u parts.u:
   (<noun-modifiers> &
     ((ND- & {DD-} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+    <noun-main-p> or
     (ND- & {DD-} & <noun-and-x>) or
-    U-)) or
-  (ND- & (OD- or AN+ or YS+));
+    U-))
+  or (ND- & (OD- or AN+ or YS+))
+  or ({E- or EA-} & A+);
 
+% Weight and voume in chemistry
+% "An example would be a 5% weight per volume NaCl solution."
+weight.u volume.u:
+  AN- & Mp+ & AN+;
+
+% "It is a a 5%(w/v) NaCl solution."
+% "We measure the concentration in v/v %"
+v/v vol/vol volume/volume w/v weight/vol weight/volume:
+  ({{Xd- & Xc+} & AN-} & AN+)
+  or EA+;
+
+% -----------------------------------------------------------------
 % This set of disjuncts should probably be split up and refined.
 % "shame.n", "crux.n" are here because they need the Ss*t connector
 % to pick up "that" in "The crux of it is that we must act first."
@@ -957,7 +974,7 @@ awareness.n opinion.n explanation.n expectation.n insistence.n:
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
 fear.n principle.n concern.n philosophy.n risk.n threat.n conviction.n
 theory.n speculation.n news.n belief.n contention.n thought.n myth.n
-discovery.n rumor.n probability.n fact.n feeling.n comment.n
+discovery.n rumor.n probability.n fact.n feeling.n comment.n process.n
 perception.n sense.n realization.n view.n consensus.n notification.n
 rule.n danger.n warning.n suggestion.n:
   (<noun-modifiers> & (
@@ -6365,8 +6382,12 @@ setting.g: (<vc-set> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 
 free.i straight.i loose.i: Vs- & {MV+};
 
+% TH+: "The court held that ..."
 <vc-hold>:
-  ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vh+}) or [[@MV+ & O*n+]]) & <mv-coord>;
+  ((K+ & {[[@MV+]]} & O*n+)
+    or TH+
+    or ({O+ or <b-minus>} & {K+ or Vh+})
+    or [[@MV+ & O*n+]]) & <mv-coord>;
 
 hold.v: 
   ((<verb-pl,i> & (<vc-hold>)) or
@@ -8736,6 +8757,11 @@ for.p:
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
 
+% re: "with regard to"
+% Xe+: optional colon
+re:
+  {Xe+} & J+ & <prep-main-a>;
+
 % cost on MVa- to give preference to MVl-
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
@@ -8746,6 +8772,7 @@ about:
   or (<tof-verb> & (Mp- or MVp- or Pp-))
   or [MVa-]
   or (MVl- & (MVp+ or MVa+ or MVs+));
+
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
 % XXX is this really needed ?? Seems to duplicate other stuff ..
@@ -12112,7 +12139,12 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
-"%" ‰ ‱ : (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
+% AN- & Jp-: "... the concentration in v/v %"
+"%" ‰ ‱ :
+  (ND- & {DD-} & <noun-sub-x> & <noun-main-x>)
+  or (ND- & (OD- or AN+))
+  or ({E- or EA-} & A+)
+  or (AN- & Jp-);
 
 % See also /en/words/currency for currency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
