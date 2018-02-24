@@ -382,7 +382,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			free_count_context(ctxt, sent);
 			free_fast_matcher(sent, mchxt);
 			pack_sentence(sent);
-			ctxt = alloc_count_context(sent->length);
+			ctxt = alloc_count_context(sent);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
 		}

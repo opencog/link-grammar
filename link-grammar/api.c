@@ -532,6 +532,7 @@ void sentence_delete(Sentence sent)
 
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->fm_Match_node);
+	pool_delete(sent->Table_connector_pool);
 	free(sent);
 }
 

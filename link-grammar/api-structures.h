@@ -120,6 +120,7 @@ struct Sentence_s
 	Word  *word;                /* Array of words after tokenization */
 	String_set *   string_set;  /* Used for assorted strings */
 	Pool_desc * fm_Match_node;  /* Fast-matcher Match_node memory pool */
+	Pool_desc * Table_connector_pool; /* Count memoizing memory pool */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
