@@ -369,10 +369,12 @@ Or download it as a ZIP:<br>
 Tools that may need installation before you can compile the system:
 
 make<br>
+m4<br>
 gcc<br>
 gcc-c++ (for the SAT solver)<br>
 autoconf<br>
 autoconf-archive<br>
+pkg-config<br>
 swig (for language bindings)<br>
 flex<br>
 Apache Ant (for Java bindings)<br>
