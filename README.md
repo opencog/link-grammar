@@ -255,9 +255,6 @@ Use of editline in the link-parser can be disabled by saying:
 ```
 ./configure --disable-editline
 ```
-**Note**: utf8 support for libedit is still missing in Ubuntu 1404 and
-Mint 17 Qiana See https://bugs.launchpad.net/linuxmint/+bug/1389438
-https://bugs.launchpad.net/ubuntu/+source/libedit/+bug/1375921
 
 Java Bindings
 -------------
