@@ -73,7 +73,7 @@ int compile_regexs(Regex_node *re, Dictionary dict)
 #ifndef REG_ENHANCED
 #define REG_ENHANCED 0
 #endif
-			rc = regcomp(preg, re->pattern, REG_EXTENDED|REG_ENHANCED);
+			rc = regcomp(preg, re->pattern, REG_NOSUB|REG_EXTENDED|REG_ENHANCED);
 			if (rc)
 			{
 				prt_regerror("Failed to compile regex", re, rc);
