@@ -563,12 +563,21 @@ then
 fi
 
 # ====================================================================
+# Find a regex library that supports regexec().
+# Check in this order: libtre, libc, libregex.
 
-AC_CHECK_HEADER([regex.h],,[AC_MSG_ERROR([No regex.h header found])])
+AC_CHECK_HEADER([tre/regex.h], [AC_CHECK_LIB(tre, regexec, [REGEX_LIBS=-ltre])])
 
-AC_CHECK_FUNCS(regexec,,[AC_CHECK_LIB(regex,regexec,
-               [REGEX_LIBS=-lregex],
-               [AC_MSG_ERROR([No regex library found])])])
+if test -z "$REGEX_LIBS"; then
+	AC_CHECK_HEADER([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
+	AC_CHECK_FUNCS(regexec, ,
+					[AC_CHECK_LIB(regex, regexec, REGEX_LIBS=-lregex,
+	                             [AC_MSG_ERROR([No regex library found])])])
+fi
+
+if test "x$REGEX_LIBS" = "x-ltre"; then
+	AC_DEFINE(HAVE_TRE_TRE_H, 1)
+fi
 AC_SUBST(REGEX_LIBS)
 
 # =====================================================================
@@ -981,6 +990,7 @@ $PACKAGE-$VERSION  build configuration settings
 	prefix:                         ${prefix}
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
+	Regex library:                  ${REGEX_LIBS}
 	Error handler per-thread:       ${error_handler_per_thread}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}
