@@ -75,8 +75,8 @@ dnl Check for specific OSs
 # ====================================================================
 
 AC_MSG_CHECKING([for native Win32])
-case "$host" in
-  *-*-mingw*)
+case "$host_os" in
+  *cygwin* | *msys* | *mingw* | *pw32 | *cegcc*)
     native_win32=yes
     ;;
   *)
@@ -86,21 +86,9 @@ esac
 AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
-AC_MSG_CHECKING([for Cygwin])
-case "$host" in
-  *-*-cygwin*)
-    cygwin=yes
-    ;;
-  *)
-    cygwin=no
-    ;;
-esac
-AC_MSG_RESULT([$cygwin])
-AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
-
 AC_MSG_CHECKING([for 64-bit Apple OSX])
-case "$host" in
-  x86_64-*-darwin*)
+case "$host_os" in
+  darwin*)
     apple_osx=yes
     ;;
   *)
