@@ -34,8 +34,8 @@ pkgpypath_PYTHON =                                 \
 
 # The make uninstall target should remove directories we created.
 uninstall-hook:
-	-rmdir $(pkgpypathdir)/__pycache__
-	-rmdir $(pkgpypathdir)
+	-rmdir $(pkgpythondir)/__pycache__
+	-rmdir $(pkgpythondir)
 
 # These are packaged in the tarball; make clean should not remove them.
 maintainer-clean-local:
