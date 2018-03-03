@@ -375,7 +375,7 @@ autoconf<br>
 autoconf-archive<br>
 swig (for language bindings)<br>
 flex<br>
-ant (for Java bindings)<br>
+Apache Ant (for Java bindings)<br>
 graphviz (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
