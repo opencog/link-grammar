@@ -605,16 +605,6 @@ if test "x$enable_java_bindings" = "xyes"; then
 		CFLAGS="${CFLAGS} -arch x86_64"
 	fi
 
-   AC_MSG_CHECKING(for jni.h)
-
-   # Try looking for jni in the standard locations first.
-   AC_TRY_CPP(
-      [#include <jni.h>],
-      [AC_MSG_RESULT([yes, will build java libs])
-         JNIfound=yes],
-      [AC_MSG_WARN([cannot find jni.h in standard location.])
-         JNIfound=no])
-
 	JAVA_SRCDIR=$srcdir/bindings/java
 	if test "$native_win32" = yes; then
 		# javac needs a Windows path
@@ -631,83 +621,20 @@ if test "x$enable_java_bindings" = "xyes"; then
 	fi
 	AC_SUBST(JAVA_SRCDIR)
 
-   # Didn't find it yet. Try looking in user-specified locations.
-   if test $JNIfound = "no"; then
-      JNI_GUESS=" \
-         -I $JAVA_HOME/include \
-         -I $JAVA_HOME/include/freebsd \
-         -I $JAVA_HOME/include/linux \
-         -I $JAVA_HOME/include/win32 \
-         -I $JAVA_HOME/Headers \
-         -I $JDK_HOME/include \
-         -I $JDK_HOME/include/freebsd \
-         -I $JDK_HOME/include/linux \
-         -I $JDK_HOME/include/win32 \
-         -I $JDK_HOME/Headers"
+	AC_MSG_CHECKING(for jni.h)
+	AX_JNI_INCLUDE_DIR
+	if test -n "$JNI_INCLUDE_DIRS"; then
+		JNIfound=yes
+	fi
 
-      AC_MSG_CHECKING(for jni.h in user-specified location)
-      SAVE_CPPFLAGS=${CPPFLAGS}
-      CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
-      AC_TRY_CPP(
-         [#include <jni.h>],
-         [AC_MSG_RESULT([yes, will build java libs])
-            JNIfound=yes],
-         [AC_MSG_WARN([cannot find jni.h in user-specified location.])
-            CPPFLAGS=${SAVE_CPPFLAGS}
-            JNIfound=no])
-   fi
-
-   # Still didn't find it. Try looking in some non-standard locations.
-   if test $JNIfound = "no"; then
-      JNI_GUESS=" \
-         -I/usr/include/classpath/ \
-         -I/usr/lib/jvm/default-java/include \
-         -I/usr/lib/jvm/default-java/include/freebsd \
-         -I/usr/lib/jvm/default-java/include/linux \
-         -I/usr/lib/jvm/java-gcj/include \
-         -I/usr/lib/jvm/java-gcj/include/freebsd \
-         -I/usr/lib/jvm/java-gcj/include/linux \
-         -I/usr/local/jdk1.6.0/include/\
-         -I/usr/local/jdk1.6.0/include/freebsd \
-         -I/usr/local/jdk1.6.0/include/linux \
-         -I/usr/lib/jvm/java-6-sun/include/ \
-         -I/usr/lib/jvm/java-6-sun/include/freebsd \
-         -I/usr/lib/jvm/java-6-sun/include/linux \
-         -I/usr/lib/j2sdk1.6-ibm/include \
-         -I/usr/lib/j2sdk1.6-ibm/include/freebsd \
-         -I/usr/lib/j2sdk1.6-ibm/include/linux \
-         -I/usr/lib/jvm/java-7-openjdk-amd64/include \
-         -I/usr/lib/jvm/java-7-openjdk-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-7-openjdk-amd64/include/linux \
-         -I/usr/lib/jvm/java-8-openjdk-amd64/include \
-         -I/usr/lib/jvm/java-8-openjdk-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-8-openjdk-amd64/include/linux \
-         -I/usr/lib/jvm/java-9-openjdk-amd64/include \
-         -I/usr/lib/jvm/java-9-openjdk-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-9-openjdk-amd64/include/linux \
-         -I/c/java/jdk1.6.0/include/ \
-         -I/c/java/jdk1.6.0/include/win32/ \
-         -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-         -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-         -I /System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers"
-
-      AC_MSG_CHECKING(for jni.h in non-standard location)
-      SAVE_CPPFLAGS=${CPPFLAGS}
-      CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
-      AC_TRY_CPP(
-         [#include <jni.h>],
-         [AC_MSG_RESULT([yes, will build java libs])
-            JAVA_CPPFLAGS=${JNI_GUESS}
-            JNIfound=yes],
-         [AC_MSG_WARN([cannot find jni.h in anywhere.])
-            JNIfound=no])
-      CPPFLAGS=${SAVE_CPPFLAGS}
-   fi
+	for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+	do
+		JAVA_CPPFLAGS="$JAVA_CPPFLAGS -I$JNI_INCLUDE_DIR"
+	done
+	AC_SUBST(JAVA_CPPFLAGS)
 
 	# This allows jni-client.c to be built
 	AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
-
-	AC_SUBST(JAVA_CPPFLAGS)
 
 	# For now, we assume that if the ant tool is there, then the javac and
 	# jar compiler/packager are installed as well. These are needed to build
