@@ -17,7 +17,6 @@ SUBDIRS += corpus
 endif
 
 if OS_WIN32
-
 install-libtool-import-lib:
 	$(INSTALL) .libs/liblink-grammar.dll.a $(DESTDIR)$(libdir)
 
@@ -45,10 +44,6 @@ liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
 	-export-dynamic -no-undefined \
 	-export-symbols $(srcdir)/link-grammar.def \
 	$(LINK_CFLAGS)
-
-if OS_WIN32
-liblink_grammar_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
-endif
 
 liblink_grammar_la_LIBADD  =  ${REGEX_LIBS}
 

@@ -7,14 +7,14 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(JAVA_CPPFLAGS) \
-	$(WARN_CFLAGS)
+	-D_JNI_IMPLEMENTATION_ $(WARN_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar-java.la
 
 liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
 
 if OS_WIN32
-liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
+liblink_grammar_java_la_LDFLAGS += -Wl,--kill-at
 endif
 
 liblink_grammar_java_la_LIBADD  = $(top_builddir)/link-grammar/liblink-grammar.la  ${REGEX_LIBS}

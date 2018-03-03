@@ -615,6 +615,22 @@ if test "x$enable_java_bindings" = "xyes"; then
       [AC_MSG_WARN([cannot find jni.h in standard location.])
          JNIfound=no])
 
+	JAVA_SRCDIR=$srcdir/bindings/java
+	if test "$native_win32" = yes; then
+		# javac needs a Windows path
+		JAVA_SRCDIR=`cygpath -w "$JAVA_SRCDIR"`
+
+		# The standard location of Windows Java is under "\Program Files".
+		# However, automake is unable to handle spaces in a filename even
+		# when quoted (e.g. "-I '$JAVA_HOME/include'"). As a workaround,
+		# convert $JAVA_HOME to a short DOS path.
+		JAVA_HOME=`cygpath --dos --mixed "$JAVA_HOME"`
+
+		# win32/jni_md.h:34:9: error: ‘__int64’ does not name a type
+		JAVA_CPPFLAGS=-D__int64=int64_t
+	fi
+	AC_SUBST(JAVA_SRCDIR)
+
    # Didn't find it yet. Try looking in user-specified locations.
    if test $JNIfound = "no"; then
       JNI_GUESS=" \
