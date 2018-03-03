@@ -26,7 +26,6 @@ if HAVE_SQLITE
 link_parser_LDADD += $(SQLITE3_LIBS)
 endif
 
-
 # Installation checks, to be manually done after "make install".
 # link-parser checks:
 # 1. Show the location of its binary.

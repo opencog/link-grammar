@@ -466,11 +466,11 @@ you need the Java bindings, you must use MSVC or MinGW, below.
 BUILDING on Windows (MinGW)
 ---------------------------
 Another way to build link-grammar is to use MinGW, which uses the GNU
-toolset to compile Windows programs for Windows. Using MinGW/MSYS is
+toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
-Download and install [MinGW, MSYS and MSYS-DTK](http://mingw.org).
+Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
 
-For more details see [mingw/README.MSYS](mingw/README.MSYS).
+For more details see [mingw/README.MSYS](mingw/README.MSYS2).
 You can also build with MinGW under Cygwin.
 See [mingw/README.Cygwin](mingw/README.Cygwin).
 
