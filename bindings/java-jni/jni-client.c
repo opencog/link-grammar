@@ -62,7 +62,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 
 static inline void do_test(void)
 {
-#ifdef DEBUG
+#if 0
 	printf("%d\n", word_contains("said", PAST_TENSE_FORM_MARKER, dict));
 	printf("%d\n", word_contains("gave.v", PAST_TENSE_FORM_MARKER, dict));
 	printf("%d\n", word_contains("have", PAST_TENSE_FORM_MARKER, dict));
