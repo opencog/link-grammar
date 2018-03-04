@@ -215,8 +215,8 @@ void set_all_condesc_length_limit(Dictionary dict)
  * character at the same overhead needed for 8-bit packing.
  *
  * Note: The LC part may consist of chars in the range [a-z0-9]
- * (total 36) and there is a gap between the codes of [a-z] and [0-9].
- * So a 6-bit packing will need a more complex algo.
+ * (total 36) so a 6-bit packing is possible (by abs(value-60) on each
+ * character value).
  */
 static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 {
