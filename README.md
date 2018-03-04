@@ -953,7 +953,7 @@ LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
 ```
 The above really wants to have a `Js` link from 'at' to 'everything',
 but this `Js` link crosses (clashes with - marked by xxx) the link
-to the conjunction.  These two cases suggest that one sould/should
+to the conjunction.  These two cases suggest that one should
 allow most links to cross over the down-links to conjunctions.
 
 
@@ -1096,10 +1096,10 @@ Some complex phantom constructions:
 See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
 
 One possible solution is to perform a one-point compactification.
-The dictionary contains the phantom words, and thier connectors.
+The dictionary contains the phantom words, and their connectors.
 Ordinary disjuncts can link to these, but should do so using
 a special initial lower-case letter (say, 'z', in addition to
-'h' and 't' as is currently implemented).  The parser, as it
+'h' and 'd' as is currently implemented).  The parser, as it
 works, examines the initial letter of each connector: if it is
 'z', then the usual pruning rules no longer apply, and one or
 more phantom words are selected out of the bucket of phantom words.
@@ -1522,7 +1522,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 -  Word-order flexibility (For Lithuanian, the following are desperately needed):
    *  Connectors with * direction, i.e. either left or right.
    *  Symmetric (commuting) version of &.
-   *  DONE! The new symbols are ^ for commuting-& and $ to meaneither + or -.
+   *  DONE! The new symbols are ^ for commuting-& and $ to mean either + or -.
 
    This still needs to be documented.
 
