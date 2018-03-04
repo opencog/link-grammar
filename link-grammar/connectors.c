@@ -223,23 +223,21 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 	lc_enc_t lc_mask = 0;
 	lc_enc_t lc_value = 0;
 	lc_enc_t wildcard = LC_MASK;
-	int lc_pos = 0;
+	const char *s;
 
-	if ('\0' == *lc_string) return true;
-	do
+	for (s = lc_string; '\0' != *s; s++)
 	{
-		if (lc_pos > (int)(CHAR_BIT*sizeof(lc_value)/LC_BITS))
-		{
-			prt_error("Error: Lower-case part '%s' is too long (%d)\n",
-			          lc_string, lc_pos);
-			return false;
-		}
-		lc_value |= (lc_enc_t)(*lc_string & LC_MASK) << (lc_pos*LC_BITS);
-		if (*lc_string != WILD_TYPE) lc_mask |= wildcard;
-		if ('\0' == lc_string[1]) break;
+		lc_value |= (lc_enc_t)(*s & LC_MASK) << ((s-lc_string)*LC_BITS);
+		if (*s != WILD_TYPE) lc_mask |= wildcard;
 		wildcard <<= LC_BITS;
-		lc_pos++;
-	} while (lc_string++);
+	};
+
+	if ((unsigned long)(s-lc_string) > (CHAR_BIT*sizeof(lc_value)/LC_BITS))
+	{
+		prt_error("Error: Lower-case part '%s' is too long (%ld)\n",
+					 lc_string, s-lc_string);
+		return false;
+	}
 
 	desc->lc_mask = lc_mask;
 	desc->lc_letters = lc_value;
