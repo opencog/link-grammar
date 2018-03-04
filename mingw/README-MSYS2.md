@@ -13,7 +13,7 @@ In order to prepare this document, MSYS2 version 20161025 was installed.
 
 A note for new MSYS2 users
 --------------------------
-Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
+Download and install MinGW/MSYS2 from http://msys2.org.
 
 MSYS2 uses the `pacman`package management. If you are not familiar
 with it, consult the
@@ -28,7 +28,7 @@ virtual filesystem).
 
 First install `mingw-w64-x86_64-toolchain`. Also install the rest of the
 prerequisite tools from the list in the main
-[README](../README.md#BUILDING_from_the_GitHub_repository).
+[README](/README.md#building-from-the-github-repository).
 
 You may find that the system is extremely slow. In that case, consult the
 Web for how to make tweaks that considerably speed it up. In addition, to
@@ -117,4 +117,4 @@ Running
 -------
 On MINGW64, just invoke `link-parser`.<br>
 In Windows, put `C:\msys64\mingw64\bin` in your PATH (or cd to it), then invoke `link-parser`.
-For more details see [RUNNING the program](../README.md#RUNNING_the_program).
+For more details see [RUNNING the program](/README.md#running-the-program).

@@ -167,7 +167,8 @@ or
 `link-parser -test=wg:OPTIONS`
 
 For more examples of how to use the wordgraph display, see
-`link-grammar/README` and `msvc14/README`.
+[link-grammar/README.md](/link-grammar/README.md)
+and [msvc14/READMEmd](/msvc14/README.md).
 
 Debugging and STDIO streams
 ---------------------------
@@ -181,7 +182,8 @@ stand out when `link-parser`s `stdout` is redirected to a file.
 
 The C API includes the ability to set the severity level threshold above
 which messages are printed to `stderr` (see
-"Improved error notification facility"->"C API" in `link-grammar/README`).
+"Improved error notification facility"->"C API" in
+[link-grammar/README.md](/link-grammar/README.md)).
 
 Note that when debugging errors during a sentence batch run, it may be useful to
 redirect also `stderr` to the same file (the error facility of the library

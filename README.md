@@ -470,9 +470,9 @@ toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
 Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
 
-For more details see [mingw/README.MSYS](mingw/README.MSYS2).
+For more details see [mingw/README-MSYS2.md](mingw/README-MSYS2.md).
 You can also build with MinGW under Cygwin.
-See [mingw/README.Cygwin](mingw/README.Cygwin).
+See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
 
 BUILDING and RUNNING on Windows (MSVC)
@@ -1511,9 +1511,8 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    for the Russian dicts, but really, they are a way of hierarchically
    arranging choices for words...
 
-   Status: DONE! Implemented from version 5.3.0. See the section
-   titled "Introduction of a word-graph for tokenizing" in
-   [link-grammar/README](link-grammar/README).
+   Status: DONE! Implemented from version 5.3.0.
+	See [Introduction of a word-graph for tokenizing](link-grammar/tokenize/README.md).
 
 - Morphology printing:
 

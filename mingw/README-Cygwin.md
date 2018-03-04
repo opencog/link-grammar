@@ -36,7 +36,7 @@ Configuring
   Cygwin Python system. More development work is needed on these.
 
   (The Java bindings has not been tested in this version. Most probably the
-  way described in README.MSYS can be used.)
+  way described in [README-MSYS.md](README-MSYS.md) can be used.)
 
   $ make
 
@@ -68,7 +68,8 @@ Running
   To run the executable from other location, liblink-grammar-5.dll needs to be
   in a directory in PATH (e.g. in the directory of the executable).
 
-  For more details, see "RUNNING the program" in the main README.
+  For more details, see "RUNNING the program" in the main
+  [README](/README.md#running-the-program).
 
 Limitations
 -----------

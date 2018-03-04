@@ -1,5 +1,5 @@
 Note: This document is obsolete.
-Instead, see [BUILDING on Windows (MinGW/MSYS2)](README.MSYS2).
+Instead, see [BUILDING on Windows (MinGW/MSYS2)](README-MSYS2.md).
 
 BUILDING on Windows (MinGW/MSYS)
 --------------------------------

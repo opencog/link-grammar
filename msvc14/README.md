@@ -1,6 +1,7 @@
 Building and Running on Windows
 ===============================
-Note: See also "BUILDING on Windows" in `../README.md`.
+Note: See also [BUILDING on Windows](/README.md#building-on-windows)
+in the main README.
 
 This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
@@ -124,7 +125,9 @@ in your PATH.
 
 If USE_WORDGRAPH_DISPLAY has been used when compiling (the default), then
 typing `!test=w`g at the `linkparser>` prompt can be used in order to display
-the wordgraph of the next sentences to be parsed. See `../linkgrammar/README`
+the wordgraph of the next sentences to be parsed. See
+[Word-graph display](/linkgrammar/tokenize/README.md#word-graph-display)
+in `/linkgrammar/tokenize/README.md`.
 for how to use optional display flags.  By default, `PhotoViewer.dll` is
 invoked to display the graph.  If X11 is available and your `dot.exe` command
 has the "xlib" driver, it can be used to display the wordgraph when the x flag
