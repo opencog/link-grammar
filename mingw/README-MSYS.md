@@ -1,3 +1,6 @@
+Note: This document is obsolete.
+Instead, see [BUILDING on Windows (MinGW/MSYS2)](README-MSYS2.md).
+
 BUILDING on Windows (MinGW/MSYS)
 --------------------------------
    MinGW/MSYS uses the Gnu toolset to compile Windows programs for

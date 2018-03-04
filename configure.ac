@@ -43,7 +43,7 @@ AC_PROG_CXX
 AC_PROG_CPP
 AM_PROG_LEX
 AC_PROG_INSTALL
-AC_PROG_LIBTOOL
+#AC_PROG_LIBTOOL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_HEADER_STDC
@@ -58,6 +58,7 @@ AC_LANG([C])
 AC_C_CONST
 
 AC_CHECK_FUNCS(strndup strtok_r)
+AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
 
 AC_FUNC_ALLOCA
 
@@ -74,8 +75,8 @@ dnl Check for specific OSs
 # ====================================================================
 
 AC_MSG_CHECKING([for native Win32])
-case "$host" in
-  *-*-mingw*)
+case "$host_os" in
+  *cygwin* | *msys* | *mingw* | *pw32 | *cegcc*)
     native_win32=yes
     ;;
   *)
@@ -85,21 +86,9 @@ esac
 AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
-AC_MSG_CHECKING([for Cygwin])
-case "$host" in
-  *-*-cygwin*)
-    cygwin=yes
-    ;;
-  *)
-    cygwin=no
-    ;;
-esac
-AC_MSG_RESULT([$cygwin])
-AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
-
 AC_MSG_CHECKING([for 64-bit Apple OSX])
-case "$host" in
-  x86_64-*-darwin*)
+case "$host_os" in
+  darwin*)
     apple_osx=yes
     ;;
   *)
@@ -114,21 +103,20 @@ AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
 CFLAGS="${CFLAGS} -O3"
 CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
-# The std=c99/c11 flag provides the proper float-pt math decls working,
+# The std=c11 flag provides the proper float-pt math decls working,
 # e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
 # needed to get fileno, strdup, etc. and so it needs to be manually
 # enabled again.
 
 # Setting -D_POSIX_SOURCE messes up compilation on FreeBSD by
 # hiding strdup, etc. again.
-# CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_POSIX_C_SOURCE -D_GNU_SOURCE"
 
-# Final solution: enable std=c11, explitictly turn on BSD and SVID and
+# Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
 #
 if test x${native_win32} = xyes; then
-	# Vikas says that -std=gnu99 is needed on cygwin/mingw
-	CFLAGS="-std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE ${CFLAGS}"
+	SPAWNV_WORKAROUND=-D_spawnv=spawnv # Fix MSYS2 wrapper compilation problem
+	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${SPAWNV_WORKAROUND}"
 	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
@@ -159,7 +147,7 @@ if test x${apple_osx} = xyes; then
 	LDFLAGS="-stdlib=libc++ -lc++ ${LDFLAGS}"
 else
 	# Else standard Linux/*BSD environment.
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE ${CFLAGS}"
+	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
 	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 fi
 fi
@@ -576,12 +564,21 @@ then
 fi
 
 # ====================================================================
+# Find a regex library that supports regexec().
+# Check in this order: libtre, libc, libregex.
 
-AC_CHECK_HEADER([regex.h],,[AC_MSG_ERROR([No regex.h header found])])
+AC_CHECK_HEADER([tre/regex.h], [AC_CHECK_LIB(tre, regexec, [REGEX_LIBS=-ltre])])
 
-AC_CHECK_FUNCS(regexec,,[AC_CHECK_LIB(regex,regexec,
-               [REGEX_LIBS=-lregex],
-               [AC_MSG_ERROR([No regex library found])])])
+if test -z "$REGEX_LIBS"; then
+	AC_CHECK_HEADER([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
+	AC_CHECK_FUNCS(regexec, ,
+					[AC_CHECK_LIB(regex, regexec, REGEX_LIBS=-lregex,
+	                             [AC_MSG_ERROR([No regex library found])])])
+fi
+
+if test "x$REGEX_LIBS" = "x-ltre"; then
+	AC_DEFINE(HAVE_TRE_TRE_H, 1)
+fi
 AC_SUBST(REGEX_LIBS)
 
 # =====================================================================
@@ -609,93 +606,36 @@ if test "x$enable_java_bindings" = "xyes"; then
 		CFLAGS="${CFLAGS} -arch x86_64"
 	fi
 
-   AC_MSG_CHECKING(for jni.h)
+	JAVA_SRCDIR=$srcdir/bindings/java
+	if test "$native_win32" = yes; then
+		# javac needs a Windows path
+		JAVA_SRCDIR=`cygpath -w "$JAVA_SRCDIR"`
 
-   # Try looking for jni in the standard locations first.
-   AC_TRY_CPP(
-      [#include <jni.h>],
-      [AC_MSG_RESULT([yes, will build java libs])
-         JNIfound=yes],
-      [AC_MSG_WARN([cannot find jni.h in standard location.])
-         JNIfound=no])
+		# The standard location of Windows Java is under "\Program Files".
+		# However, automake is unable to handle spaces in a filename even
+		# when quoted (e.g. "-I '$JAVA_HOME/include'"). As a workaround,
+		# convert $JAVA_HOME to a short DOS path.
+		JAVA_HOME=`cygpath --dos --mixed "$JAVA_HOME"`
 
-   # Didn't find it yet. Try looking in user-specified locations.
-   if test $JNIfound = "no"; then
-      JNI_GUESS=" \
-         -I $JAVA_HOME/include \
-         -I $JAVA_HOME/include/freebsd \
-         -I $JAVA_HOME/include/linux \
-         -I $JAVA_HOME/include/win32 \
-         -I $JAVA_HOME/Headers \
-         -I $JDK_HOME/include \
-         -I $JDK_HOME/include/freebsd \
-         -I $JDK_HOME/include/linux \
-         -I $JDK_HOME/include/win32 \
-         -I $JDK_HOME/Headers"
+		# win32/jni_md.h:34:9: error: ‘__int64’ does not name a type
+		JAVA_CPPFLAGS=-D__int64=int64_t
+	fi
+	AC_SUBST(JAVA_SRCDIR)
 
-      AC_MSG_CHECKING(for jni.h in user-specified location)
-      SAVE_CPPFLAGS=${CPPFLAGS}
-      CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
-      AC_TRY_CPP(
-         [#include <jni.h>],
-         [AC_MSG_RESULT([yes, will build java libs])
-            JNIfound=yes],
-         [AC_MSG_WARN([cannot find jni.h in user-specified location.])
-            CPPFLAGS=${SAVE_CPPFLAGS}
-            JNIfound=no])
-   fi
+	AC_MSG_CHECKING(for jni.h)
+	AX_JNI_INCLUDE_DIR
+	if test -n "$JNI_INCLUDE_DIRS"; then
+		JNIfound=yes
+	fi
 
-   # Still didn't find it. Try looking in some non-standard locations.
-   if test $JNIfound = "no"; then
-      JNI_GUESS=" \
-         -I/usr/include/classpath/ \
-         -I/usr/lib/jvm/default-java/include \
-         -I/usr/lib/jvm/default-java/include/freebsd \
-         -I/usr/lib/jvm/default-java/include/linux \
-         -I/usr/lib/jvm/java-gcj/include \
-         -I/usr/lib/jvm/java-gcj/include/freebsd \
-         -I/usr/lib/jvm/java-gcj/include/linux \
-         -I/usr/local/jdk1.6.0/include/\
-         -I/usr/local/jdk1.6.0/include/freebsd \
-         -I/usr/local/jdk1.6.0/include/linux \
-         -I/usr/lib/jvm/java-6-sun/include/ \
-         -I/usr/lib/jvm/java-6-sun/include/freebsd \
-         -I/usr/lib/jvm/java-6-sun/include/linux \
-         -I/usr/lib/j2sdk1.6-ibm/include \
-         -I/usr/lib/j2sdk1.6-ibm/include/freebsd \
-         -I/usr/lib/j2sdk1.6-ibm/include/linux \
-         -I/usr/lib/jvm/java-7-openjdk-amd64/include \
-         -I/usr/lib/jvm/java-7-openjdk-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-7-openjdk-amd64/include/linux \
-         -I/usr/lib/jvm/java-8-openjdk-amd64/include \
-         -I/usr/lib/jvm/java-8-openjdk-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-8-openjdk-amd64/include/linux \
-         -I/usr/lib/jvm/java-9-openjdk-amd64/include \
-         -I/usr/lib/jvm/java-9-openjdk-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-9-openjdk-amd64/include/linux \
-         -I/c/java/jdk1.6.0/include/ \
-         -I/c/java/jdk1.6.0/include/win32/ \
-         -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-         -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-         -I /System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers"
-
-      AC_MSG_CHECKING(for jni.h in non-standard location)
-      SAVE_CPPFLAGS=${CPPFLAGS}
-      CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
-      AC_TRY_CPP(
-         [#include <jni.h>],
-         [AC_MSG_RESULT([yes, will build java libs])
-            JAVA_CPPFLAGS=${JNI_GUESS}
-            JNIfound=yes],
-         [AC_MSG_WARN([cannot find jni.h in anywhere.])
-            JNIfound=no])
-      CPPFLAGS=${SAVE_CPPFLAGS}
-   fi
+	for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+	do
+		JAVA_CPPFLAGS="$JAVA_CPPFLAGS -I$JNI_INCLUDE_DIR"
+	done
+	AC_SUBST(JAVA_CPPFLAGS)
 
 	# This allows jni-client.c to be built
 	AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
-
-	AC_SUBST(JAVA_CPPFLAGS)
 
 	# For now, we assume that if the ant tool is there, then the javac and
 	# jar compiler/packager are installed as well. These are needed to build
@@ -994,6 +934,7 @@ $PACKAGE-$VERSION  build configuration settings
 	prefix:                         ${prefix}
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
+	Regex library:                  ${REGEX_LIBS}
 	Error handler per-thread:       ${error_handler_per_thread}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}

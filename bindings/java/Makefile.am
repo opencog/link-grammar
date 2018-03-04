@@ -40,10 +40,10 @@ LN_SF = ln -sf
 endif
 
 install-data-hook:
-	${LN_SF} ${javadir}/${java_DATA} ${DESTDIR}/${javadir}/linkgrammar.jar
+	${LN_SF} ${javadir}/${java_DATA} ${DESTDIR}${javadir}/linkgrammar.jar
 
 uninstall-hook:
-	-rm ${DESTDIR}/${javadir}/linkgrammar.jar
+	-rm ${DESTDIR}${javadir}/linkgrammar.jar
 
 
 EXTRA_DIST =                         \

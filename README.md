@@ -255,9 +255,6 @@ Use of editline in the link-parser can be disabled by saying:
 ```
 ./configure --disable-editline
 ```
-**Note**: utf8 support for libedit is still missing in Ubuntu 1404 and
-Mint 17 Qiana See https://bugs.launchpad.net/linuxmint/+bug/1389438
-https://bugs.launchpad.net/ubuntu/+source/libedit/+bug/1375921
 
 Java Bindings
 -------------
@@ -369,13 +366,15 @@ Or download it as a ZIP:<br>
 Tools that may need installation before you can compile the system:
 
 make<br>
+m4<br>
 gcc<br>
 gcc-c++ (for the SAT solver)<br>
 autoconf<br>
 autoconf-archive<br>
+pkg-config<br>
 swig (for language bindings)<br>
 flex<br>
-ant (for Java bindings)<br>
+Apache Ant (for Java bindings)<br>
 graphviz (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
@@ -467,13 +466,13 @@ you need the Java bindings, you must use MSVC or MinGW, below.
 BUILDING on Windows (MinGW)
 ---------------------------
 Another way to build link-grammar is to use MinGW, which uses the GNU
-toolset to compile Windows programs for Windows. Using MinGW/MSYS is
+toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
-Download and install [MinGW, MSYS and MSYS-DTK](http://mingw.org).
+Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
 
-For more details see [mingw/README.MSYS](mingw/README.MSYS).
+For more details see [mingw/README-MSYS2.md](mingw/README-MSYS2.md).
 You can also build with MinGW under Cygwin.
-See [mingw/README.Cygwin](mingw/README.Cygwin).
+See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
 
 BUILDING and RUNNING on Windows (MSVC)
@@ -954,7 +953,7 @@ LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
 ```
 The above really wants to have a `Js` link from 'at' to 'everything',
 but this `Js` link crosses (clashes with - marked by xxx) the link
-to the conjunction.  These two cases suggest that one sould/should
+to the conjunction.  These two cases suggest that one should
 allow most links to cross over the down-links to conjunctions.
 
 
@@ -1097,10 +1096,10 @@ Some complex phantom constructions:
 See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
 
 One possible solution is to perform a one-point compactification.
-The dictionary contains the phantom words, and thier connectors.
+The dictionary contains the phantom words, and their connectors.
 Ordinary disjuncts can link to these, but should do so using
 a special initial lower-case letter (say, 'z', in addition to
-'h' and 't' as is currently implemented).  The parser, as it
+'h' and 'd' as is currently implemented).  The parser, as it
 works, examines the initial letter of each connector: if it is
 'z', then the usual pruning rules no longer apply, and one or
 more phantom words are selected out of the bucket of phantom words.
@@ -1512,9 +1511,8 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    for the Russian dicts, but really, they are a way of hierarchically
    arranging choices for words...
 
-   Status: DONE! Implemented from version 5.3.0. See the section
-   titled "Introduction of a word-graph for tokenizing" in
-   [link-grammar/README](link-grammar/README).
+   Status: DONE! Implemented from version 5.3.0.
+	See [Introduction of a word-graph for tokenizing](link-grammar/tokenize/README.md).
 
 - Morphology printing:
 
@@ -1524,7 +1522,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 -  Word-order flexibility (For Lithuanian, the following are desperately needed):
    *  Connectors with * direction, i.e. either left or right.
    *  Symmetric (commuting) version of &.
-   *  DONE! The new symbols are ^ for commuting-& and $ to meaneither + or -.
+   *  DONE! The new symbols are ^ for commuting-& and $ to mean either + or -.
 
    This still needs to be documented.
 
@@ -1561,74 +1559,3 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
 
 Version 6.0 TODO list:
 Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
-
-
-A performance diary
--------------------
-Time to parse some long sentences:
-The original results below were for version 5.0.8 (April 2014)
-The June 2014 results are for version 5.1.0
-The Feb 2017 results are on version 5.3.15
-Times are user-times, with dict loading subtracted.
-
-These are very highly dependent on the aggressiveness of the token
-splitter, on the short length, on the cost-max and the spell checker.
-Suggest using flags: -spell=0 -short=10 -cost-max=2.1
-
-25 words + 2 punct, 0.2 seconds  (0.7 seconds June 2014)
-(0.2 secs SAT, June 2014):
-```text
-Hot runners usually make the mold more expensive to manufacture and run,
-but allow savings by reducing plastic waste and by reducing the cycle time.
-```
-
-38 words + 4 punct: 2.4 seconds (2.6 secs, June 2014)
-(0.32 secs, SAT, June 2014) (3.2 sec Feb 2017):
-```text
-The strongest rain ever recorded in India shut down the financial hub
-of Mumbai, snapped communication lines, closed airports and forced
-thousands of people to sleep in their offices or walk home during the
-night, officials said today.
-```
-
-50 words + 9 punct: 14 seconds (3.9 secs June 2014)
-(0.64 secs, SAT June 2014) (2.1 secs Feb 2017):
-```text
-In vivo studies of the activity of four of the kinases, KinA, KinC,
-KinD (ykvD) and KinE (ykrQ), using abrB transcription as an indicator
-of Spo0A~P level,revealed that KinC and KinD were responsible for
-Spo0A~P production during the exponential phase of growth in the absence
-of KinA and KinB.
-```
-
-56 words + 8 punct: 4.5 seconds (1.45 secs June 2014)
-(0.38 secs, SAT June 2014) (broken, Feb 2017):
-```text
-New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...
-is nearly very good indeed - but it is not the The Producers ...
-this story ... does not lend itself to stage adaptation in the way of
-the earlier movie ...  Now for the good news ... Brooks and Stroman
-pull out every stop.
-```
-
-57 words + 10 punct: 7.5 seconds (6.8 seconds June 2014)
-(0.68 secs, SAT June 2014) (4.5 seconds 4.3.15 Feb 2017):
-```text
-However, the few tracts, the poetry, and the novels that embodied the
-social vision of Young England were directed to a New Generation of
-educated, religious, and socially conscious conservatives, who, like
-Young Englanders, were appalled at the despiritualizing effects of
-industrialization and the perceived amorality of Benthamite philosophy,
-which they blamed equally for Victorian social injustices.
-```
-
-73 words + 8 punct: 145 seconds:
-```text
-Cortes in his various letters again and again claims the Emperor's
-patronage of his bold defiance of the Emperor's officers on the ground
-that the latter in their action were moved solely by considerations of
-their personal gain, whereas he, Cortes, was striving to endow his
-sovereign with a rich new empire and boundless treasure whilst carrying
-into the dark pagan land, at the sword's point, the gentle creed of the
-Christian God.
-```

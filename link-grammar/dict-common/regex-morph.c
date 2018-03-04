@@ -13,7 +13,11 @@
 /* On MS Windows, regex.h fails to pull in size_t, so work around this by
  * including <stddef.h> before <regex.h> (<sys/types.h> is not enough) */
 #include <stddef.h>
+#if HAVE_TRE_TRE_H
+#include <tre/regex.h>
+#else
 #include <regex.h>
+#endif
 #include "api-structures.h"
 #include "error.h"          /* verbosity */
 #include "externs.h"        /* lgdebug() */
@@ -69,7 +73,7 @@ int compile_regexs(Regex_node *re, Dictionary dict)
 #ifndef REG_ENHANCED
 #define REG_ENHANCED 0
 #endif
-			rc = regcomp(preg, re->pattern, REG_EXTENDED|REG_ENHANCED);
+			rc = regcomp(preg, re->pattern, REG_NOSUB|REG_EXTENDED|REG_ENHANCED);
 			if (rc)
 			{
 				prt_regerror("Failed to compile regex", re, rc);

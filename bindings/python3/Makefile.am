@@ -34,8 +34,8 @@ pkgpypath_PYTHON =                                 \
 
 # The make uninstall target should remove directories we created.
 uninstall-hook:
-	-rmdir $(pkgpypathdir)/__pycache__
-	-rmdir $(pkgpypathdir)
+	-rmdir $(pkgpythondir)/__pycache__
+	-rmdir $(pkgpythondir)
 
 # These are packaged in the tarball; make clean should not remove them.
 maintainer-clean-local:
@@ -71,10 +71,11 @@ _clinkgrammar_la_CPPFLAGS =       \
    -I$(top_srcdir)                \
    -I$(top_builddir)
 
-# On Cygwin, a DLL with version is named name-major.dll with no symlink to
-# it of an unversioned name (at least up and including libtool 2.4.6).
-# This is bad for Python modules, as they must have an identifier name.
-if OS_CYGWIN
+# On Cygwin and MinGW, a DLL with version is named name-major.dll with no
+# symlink to it of an unversioned name (at least up and including libtool
+# 2.4.6).  This is bad for Python modules, as they must have an identifier
+# name.
+if OS_WIN32
 AVOID_VERSION = -avoid-version
 endif
 _clinkgrammar_la_LDFLAGS =                        \

@@ -51,7 +51,8 @@ the SAT solver (this is the status for now on native Windows).
 
 The following shows how to issue the tests on systems other then natives
 Windows/MinGW (for testing on native Windows see msvc14/README under
-"Running Python programs").
+[Running Python programs](/msvc14/README.md#running-python-programs)
+in `msvc14/README.md`).
 
 Note: For less verbosity of the `make` command output you can use the `-s`
 flag of make.
