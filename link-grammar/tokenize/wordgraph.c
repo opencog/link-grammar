@@ -415,17 +415,17 @@ Gword *find_real_unsplit_word(Gword *word, bool is_leaf)
  * This is done by going upward in the wordgraph along the unsplit_word
  * path until finding a word that is an original sentence word.
  */
-Gword *find_sentence_word(const Sentence sent, Gword *word)
+Gword *wg_get_sentence_word(const Sentence sent, Gword *word)
 {
 		if (MT_INFRASTRUCTURE == word->morpheme_type) return NULL;
 
 		while (!IS_SENTENCE_WORD(sent, word))
 		{
 			word = word->unsplit_word;
-			assert(NULL != word, "find_sentence_word(): NULL unsplit word");
+			assert(NULL != word, "wg_get_sentence_word(): NULL unsplit word");
 		}
 
-		assert(NULL != word->subword, "find_sentence_word(): NULL subword");
+		assert(NULL != word->subword, "wg_get_sentence_word(): NULL subword");
 		return word;
 }
 

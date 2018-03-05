@@ -3270,7 +3270,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		unsplit_word  = wp_old->word;
 		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
-			unsplit_word = find_sentence_word(sent, (Gword *)unsplit_word);
+			unsplit_word = wg_get_sentence_word(sent, (Gword *)unsplit_word);
 			if (unsplit_word != last_unsplit_word)
 			{
 				/* This is a new sentence word - use it as the unsplit word. */
