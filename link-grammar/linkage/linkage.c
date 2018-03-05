@@ -286,7 +286,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		Gword **wgp;           /* wordgraph_path traversing pointer */
 
 		const char *t = NULL;  /* current word string */
-		bool nb_end;           /* current word is at end of a nullblock */
+		bool at_nullblock_end; /* current word is at end of a nullblock */
 		bool join_alt = false; /* morpheme-join this alternative */
 		char *s;
 		size_t l;
@@ -310,11 +310,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			if (NULL == nullblock_start) /* it starts a new null block */
 				nullblock_start = wgp;
 
-			nb_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
+			at_nullblock_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
 				(MT_INFRASTRUCTURE == w->unsplit_word->morpheme_type);
 
 			/* Accumulate null words in this alternative */
-			if (!nb_end && (NULL == cdjp[i+1]))
+			if (!at_nullblock_end && (NULL == cdjp[i+1]))
 			{
 				lgdebug(D_CCW, "Skipping word%zu cdjp=NULL#%zu, path %s\n",
 				         i, nbsize, lwg_path[i]->subword);
@@ -340,7 +340,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					lgdebug(D_CCW, "Combining null subwords");
 					/* Use alternative_id to check for start of alternative. */
 					if (((*nullblock_start)->alternative_id == *nullblock_start)
-					    && nb_end)
+					    && at_nullblock_end)
 					{
 						/* Case 2: A null unsplit_word (all-nulls alternative).*/
 						lgdebug(D_CCW, " (null alternative)\n");
