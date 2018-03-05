@@ -3266,19 +3266,11 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		max_words--; /* For the assert() above */
 		wa_word = word_new(sent);
 
-		/* Go upward and find the sentence word. */
+		/* Find the sentence word. */
 		unsplit_word  = wp_old->word;
 		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
-			while (!IS_SENTENCE_WORD(sent, unsplit_word))
-			{
-				assert(NULL != unsplit_word, "'%s': Unsplit word not found",
-						 wg_word->subword);
-				unsplit_word = unsplit_word->unsplit_word;
-			}
-
-			assert(NULL != unsplit_word->subword, "Unsplit word not found");
-
+			unsplit_word = find_sentence_word(sent, (Gword *)unsplit_word);
 			if (unsplit_word != last_unsplit_word)
 			{
 				/* This is a new sentence word - use it as the unsplit word. */
