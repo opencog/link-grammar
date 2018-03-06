@@ -4704,12 +4704,12 @@ questions.v tests.v hypothesizes.v hypothesises.v envisages.v
 documents.v:
   VERB_S_T(<vc-predict>);
 
-predicted.v realized.v discovered.v determined.v announced.v mentioned.v
-admitted.v recalled.v revealed.v divulged.v stated.v observed.v indicated.v
-analysed.v analyzed.v assessed.v established.v evaluated.v examined.v
-questioned.v tested.v
-hypothesized.v-d hypothesised.v-d well-established.v-d documented.v-d
-envisaged.v-d:
+predicted.v-d realized.v-d discovered.v-d determined.v-d announced.v-d
+mentioned.v-d admitted.v-d recalled.v-d revealed.v-d divulged.v-d
+stated.v-d observed.v-d indicated.v-d analysed.v-d analyzed.v-d
+assessed.v-d established.v-d evaluated.v-d examined.v-d questioned.v-d
+tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
+envisaged.v-d documented.v-d:
   VERB_SPPP_T(<vc-predict>)
   or (<verb-s-pv> & {THi+})
   or <verb-adj>
@@ -5033,12 +5033,13 @@ for_granted: Vtg-;
 
 
 % I- & WR- & <verb-wall> & O+: "where did you put it?"
+% bare <verb-phrase-opener>: "The problem, put simply, is money."
 put.v-d:
   VERB_SPPP_T(<vc-put>) or
   (<verb-ico> & <vc-put>) or
   ({@E-} & I- & WR- & <verb-wall> & O+) or
   (<verb-pv-b> & (K+ or Pp+ or WR-) & <mv-coord>) or
-  ((K+ or Pp+) & <verb-phrase-opener>);
+  ({K+ or Pp+} & <verb-phrase-opener>);
 puts.v: VERB_S_T(<vc-put>);
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
