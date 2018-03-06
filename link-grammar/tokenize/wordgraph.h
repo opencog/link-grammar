@@ -28,6 +28,7 @@ size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
 void gword_set_print(const gword_set *);
 void print_lwg_path(Gword **, const char *);
+Gword *wg_get_sentence_word(const Sentence, Gword *);
 #if 0
 void gwordlist_append_list(const Gword ***, const Gword **);
 #endif

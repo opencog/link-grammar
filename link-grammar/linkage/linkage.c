@@ -271,7 +271,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
 	size_t nbsize = 0;              /* number of word in a null block */
-	Gword *unsplit_word = NULL;
+	Gword *sentence_word;
 
 	memset(show_word, 0, linkage->num_words * sizeof(*show_word));
 
@@ -286,7 +286,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		Gword **wgp;           /* wordgraph_path traversing pointer */
 
 		const char *t = NULL;  /* current word string */
-		bool nb_end;           /* current word is at end of a nullblock */
+		bool at_nullblock_end; /* current word is at end of a nullblock */
 		bool join_alt = false; /* morpheme-join this alternative */
 		char *s;
 		size_t l;
@@ -299,25 +299,27 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		w = lwg_path[i];
 		nw = lwg_path[i+1];
 		wgp = &lwg_path[i];
-		unsplit_word = w->unsplit_word;
+		sentence_word = wg_get_sentence_word(sent, w);
 
 		/* FIXME If the original word was capitalized in a capitalizable
 		 * position, the displayed null word may be its downcase version. */
 
 		if (NULL == cdj) /* a null word (the chosen disjunct was NULL) */
 		{
+			chosen_words[i] = NULL;
 			nbsize++;
 			if (NULL == nullblock_start) /* it starts a new null block */
 				nullblock_start = wgp;
 
-			nb_end = (NULL == nw) || (nw->unsplit_word != unsplit_word) ||
-				(MT_INFRASTRUCTURE == w->unsplit_word->morpheme_type);
+			at_nullblock_end = (NULL == nw) ||
+				(wg_get_sentence_word(sent, nw->unsplit_word) != sentence_word);
 
 			/* Accumulate null words in this alternative */
-			if (!nb_end && (NULL == cdjp[i+1]))
+			if (!at_nullblock_end && (NULL == cdjp[i+1]) &&
+			    ((w->morpheme_type == MT_PUNC) == (nw->morpheme_type == MT_PUNC)))
 			{
 				lgdebug(D_CCW, "Skipping word%zu cdjp=NULL#%zu, path %s\n",
-				         i, nbsize, lwg_path[i]->subword);
+				        i, nbsize, w->subword);
 				chosen_words[i] = NULL;
 				continue;
 			}
@@ -340,13 +342,13 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					lgdebug(D_CCW, "Combining null subwords");
 					/* Use alternative_id to check for start of alternative. */
 					if (((*nullblock_start)->alternative_id == *nullblock_start)
-					    && nb_end)
+					    && at_nullblock_end)
 					{
 						/* Case 2: A null unsplit_word (all-nulls alternative).*/
 						lgdebug(D_CCW, " (null alternative)\n");
-						t = unsplit_word->subword;
+						t = sentence_word->subword;
 
-						gwordlist_append(&n_lwg_path, unsplit_word);
+						gwordlist_append(&n_lwg_path, sentence_word);
 					}
 					else
 					{
@@ -419,6 +421,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 					/* If the alternative contains morpheme subwords, mark it
 					 * for joining... */
+
+					const Gword *unsplit_word = w->unsplit_word;
 					for (wgaltp = wgp, j = i; NULL != *wgaltp; wgaltp++, j++)
 					{
 
@@ -512,7 +516,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							 (SUBSCRIPT_MARK == join[join_len-1]))
 							join[join_len-1] = '\0';
 
-						gwordlist_append(&n_lwg_path, unsplit_word);
+						gwordlist_append(&n_lwg_path, sentence_word);
 						t = string_set_add(join, sent->string_set);
 						free(join);
 
