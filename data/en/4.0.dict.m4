@@ -9376,9 +9376,10 @@ well.e:
   or [{EA- or EF+} & (Pa- or AF+)]
   or Yd+;
 
+% EE- & EB-: "..., or more exactly, ..."
 exactly.e:
   E+
-  or EB-
+  or ({EE-} & {Xc+ & {Xd-}} & EB-)
   or EN+
   or EW+
   or EZ+
@@ -9416,12 +9417,12 @@ otherwise formerly lately:
   ({Xd- & Xc+} & MVa-)
   or E+
   or ({Xc+ & {Xd-}} & CO+)
-  or EB-;
+  or ({Xc+ & {Xd-}} & EB-);
 
 also.e:
   ({Xd- & Xc+} & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
-  or EB-;
+  or ({Xc+ & {Xd-}} & EB-);
 
 gradually.e sadly.e broadly.e clearly.e
 annually.e characteristically.e comparatively.e
@@ -9435,26 +9436,27 @@ mysteriously.e naturally.e oddly.e plainly.e truthfully.e
 appropriately.e simply.ee:
   {EE- or EF+} & (
     ({Xd- & Xc+} & (MVa- or E+))
-     or ({Xc+ & {Xd-}} & CO+)
-     or EB-
-     or Qe+
-     or <advcl-verb>
-     or [[EA+]]);
+    or ({Xc+ & {Xd-}} & CO+)
+    or ({Xc+ & {Xd-}} & EB-)
+    or Qe+
+    or <advcl-verb>
+    or [[EA+]]);
 
+% ({Xc+ & {Xd-}} & EB-)): "..., or more precisely, ..."
 precisely.e specifically.e generally.e:
   {EE- or EF+} & (
     ({Xd- & Xc+} & (MVa- or E+))
-     or ({Xc+ & {Xd-}} & CO+)
-     or EB-
-     or Qe+
-     or <advcl-verb>
-     or EW+);
+    or ({Xc+ & {Xd-}} & CO+)
+    or ({Xc+ & {Xd-}} & EB-)
+    or Qe+
+    or <advcl-verb>
+    or EW+);
 
 occasionally.e often.e originally.e:
   {EE- or EF+} & (
     ({Xd- & Xc+} & (MVa- or E+))
     or ({Xc+ & {Xd-}} & CO+)
-    or EB-
+    or ({Xc+ & {Xd-}} & EB-)
     or Qe+
     or <advcl-verb>);
 
