@@ -11673,10 +11673,11 @@ yes.e yeah.e yep.e yup.e
 ok.e okay.e OK.e fine.e sure.e whatever.e:
   ({Xc+ & {Xd-}} & CO+);
 
+% EB-: "Would they have accepted this or, instead, would they have...?"
 thereafter.e overall.e lengthwise.e
 instead.e anyhow.e anyway.e:
   <directive-opener>
-  or ({Xd- & Xc+} & (MVp- or E+));
+  or ({Xd- & Xc+} & (MVp- or E+ or EB-));
 
 % Wa-: Single-word responses to questions.
 someday.e sometime.e maybe.e
@@ -12055,7 +12056,7 @@ so_that such_that:
 % "he paced, worried" but lower cost than Xx links
 %
 ",":
-  ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
+  ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
@@ -12092,8 +12093,9 @@ so_that such_that:
 %      the VC link often does not go leftwards far enough.
 %      (e.g. "John screamed when I arrived but Sue left")
 % Wc-: "But my efforts to win his heart have failed"
+% EB+: "would they have accepted this or, instead, would they have ..."
 but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
-  [{Xd-} & (Xx- or Wc-) & {Xc+}
+  [{Xd-} & (Xx- or Wc-) & {Xc+} & {EB+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
 %suppress: DUP-BASE (for ..y)
