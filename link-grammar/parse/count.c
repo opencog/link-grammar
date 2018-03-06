@@ -37,7 +37,7 @@ struct Table_connector_s
 struct count_context_s
 {
 	fast_matcher_t *mchxt;
-	Word *  local_sent;
+	Sentence sent;
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
 	bool    null_links;
@@ -51,17 +51,6 @@ struct count_context_s
 
 static void free_table(count_context_t *ctxt)
 {
-	int i;
-	Table_connector *t, *x;
-
-	for (i=0; i<ctxt->table_size; i++)
-	{
-		for(t = ctxt->table[i]; t!= NULL; t=x)
-		{
-			x = t->next;
-			xfree((void *) t, sizeof(Table_connector));
-		}
-	}
 	xfree(ctxt->table, ctxt->table_size * sizeof(Table_connector*));
 	ctxt->table = NULL;
 	ctxt->table_size = 0;
@@ -93,6 +82,8 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
+
+
 }
 
 #ifdef DEBUG
@@ -154,7 +145,7 @@ static Table_connector * table_store(count_context_t *ctxt,
 	Table_connector *t, *n;
 	unsigned int h;
 
-	n = (Table_connector *) xalloc(sizeof(Table_connector));
+	n = pool_alloc(ctxt->sent->Table_connector_pool);
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
 	h = pair_hash(ctxt->table_size, lw, rw, le, re, null_count);
 	t = ctxt->table[h];
@@ -250,7 +241,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	int n = 0;
 
 	for (int w = w1+1; w < w2; w++)
-		if (ctxt->local_sent[w].optional) n++;
+		if (ctxt->sent->word[w].optional) n++;
 
 	return n;
 }
@@ -381,10 +372,10 @@ static Count_bin do_count(
 		 * of null words. */
 		t->count = zero;
 		w = lw + 1;
-		for (int opt = 0; opt <= !!ctxt->local_sent[w].optional; opt++)
+		for (int opt = 0; opt <= !!ctxt->sent->word[w].optional; opt++)
 		{
 			null_count += opt;
-			for (Disjunct *d = ctxt->local_sent[w].d; d != NULL; d = d->next)
+			for (Disjunct *d = ctxt->sent->word[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)
 				{
@@ -664,7 +655,7 @@ Count_bin do_parse(Sentence sent,
 	ctxt->current_resources = opts->resources;
 	ctxt->exhausted = false;
 	ctxt->checktimer = 0;
-	ctxt->local_sent = sent->word;
+	ctxt->sent = sent;
 
 	/* consecutive blocks of this many words are considered as
 	 * one null link. */
@@ -678,12 +669,24 @@ Count_bin do_parse(Sentence sent,
 }
 
 /* sent_length is used only as a hint for the hash table size ... */
-count_context_t * alloc_count_context(size_t sent_length)
+count_context_t * alloc_count_context(Sentence sent)
 {
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
 
-	init_table(ctxt, sent_length);
+	if (NULL != sent->Table_connector_pool)
+	{
+		pool_reuse(sent->Table_connector_pool);
+	}
+	else
+	{
+		sent->Table_connector_pool =
+			pool_new(__func__, "Table_connector",
+			         /*num_elements*/10240, sizeof(Table_connector),
+			         /*zero_out*/false, /*align*/false, /*exact*/false);
+	}
+
+	init_table(ctxt, sent->length);
 	return ctxt;
 }
 

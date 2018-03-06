@@ -83,35 +83,16 @@ static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 	ctxt->match_list[ctxt->match_list_end++] = d;
 }
 
-static void free_match_list(Match_node * t)
-{
-	Match_node *xt;
-	for (; t!=NULL; t=xt) {
-		xt = t->next;
-		xfree((char *)t, sizeof(Match_node));
-	}
-}
-
 /**
  * Free all of the hash tables and Match_nodes
  */
-void free_fast_matcher(fast_matcher_t *mchxt)
+void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 {
-	size_t w;
-	unsigned int i;
-
 	if (NULL == mchxt) return;
-	for (w = 0; w < mchxt->size; w++)
+
+	for (WordIdx w = 0; w < mchxt->size; w++)
 	{
-		for (i = 0; i < mchxt->l_table_size[w]; i++)
-		{
-			free_match_list(mchxt->l_table[w][i]);
-		}
 		xfree((char *)mchxt->l_table[w], mchxt->l_table_size[w] * sizeof (Match_node *));
-		for (i = 0; i < mchxt->r_table_size[w]; i++)
-		{
-			free_match_list(mchxt->r_table[w][i]);
-		}
 		xfree((char *)mchxt->r_table[w], mchxt->r_table_size[w] * sizeof (Match_node *));
 	}
 
@@ -242,12 +223,13 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
  * dir =  1, we're putting this into a right table.
  * dir = -1, we're putting this into a left table.
  */
-static void put_into_match_table(unsigned int size, Match_node ** t,
-                                 Disjunct * d, Connector * c, int dir )
+static void put_into_match_table(Sentence sent, unsigned int size,
+                                 Match_node ** t, Disjunct * d,
+                                 Connector * c, int dir)
 {
 	Match_node *m, **xl;
 
-	m = (Match_node *) xalloc (sizeof(Match_node));
+	m = pool_alloc(sent->fm_Match_node);
 	m->next = NULL;
 	m->d = d;
 
@@ -283,6 +265,18 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 	ctxt->match_list = xalloc(ctxt->match_list_size * sizeof(*ctxt->match_list));
 	ctxt->match_list_end = 0;
 
+	if (NULL != sent->fm_Match_node)
+	{
+		pool_reuse(sent->fm_Match_node);
+	}
+	else
+	{
+		sent->fm_Match_node =
+			pool_new(__func__, "Match_node",
+			         /*num_elements*/2048, sizeof(Match_node),
+			         /*zero_out*/false, /*align*/true, /*exact*/false);
+	}
+
 	for (w=0; w<sent->length; w++)
 	{
 		len = left_disjunct_list_length(sent->word[w].d);
@@ -297,7 +291,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 			if (d->left != NULL)
 			{
 				//printf("%s %d\n", connector_string(d->left), d->left->length_limit);
-				put_into_match_table(size, t, d, d->left, -1);
+				put_into_match_table(sent, size, t, d, d->left, -1);
 			}
 		}
 
@@ -313,7 +307,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 			if (d->right != NULL)
 			{
 				//printf("%s %d\n", connector_string(d->right), d->right->length_limit);
-				put_into_match_table(size, t, d, d->right, 1);
+				put_into_match_table(sent, size, t, d, d->right, 1);
 			}
 		}
 	}

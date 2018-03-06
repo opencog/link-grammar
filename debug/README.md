@@ -54,6 +54,7 @@ messages of the lower ones.
 
 * 103: Show unsubscripted dictionary words and subscripted ones which share
        the same base word.
+* 104: Memory pool statistics.
 
 ### 2) -debug=LOCATIONS (-de=LOCATIONS)
 Show only messages from these LOCATIONS. The LOCATIONS string is a

@@ -261,6 +261,7 @@
     <ClInclude Include="..\link-grammar\linkage\lisjuncts.h" />
     <ClInclude Include="..\link-grammar\linkage\sane.h" />
     <ClInclude Include="..\link-grammar\linkage\score.h" />
+    <ClInclude Include="..\link-grammar\memory-pool.h" />
     <ClInclude Include="..\link-grammar\parse\count.h" />
     <ClInclude Include="..\link-grammar\parse\extract-links.h" />
     <ClInclude Include="..\link-grammar\parse\fast-match.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="..\link-grammar\linkage\lisjuncts.c" />
     <ClCompile Include="..\link-grammar\linkage\sane.c" />
     <ClCompile Include="..\link-grammar\linkage\score.c" />
+    <ClCompile Include="..\link-grammar\memory-pool.c" />
     <ClCompile Include="..\link-grammar\parse\count.c" />
     <ClCompile Include="..\link-grammar\parse\extract-links.c" />
     <ClCompile Include="..\link-grammar\parse\fast-match.c" />

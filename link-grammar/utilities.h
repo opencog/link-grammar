@@ -81,6 +81,8 @@ void *alloca (size_t);
 #define vsnprintf _vsnprintf
 #endif
 
+#define HAVE__ALIGNED_MALLOC 1
+
 /* Avoid plenty of: warning C4090: 'function': different 'const' qualifiers.
  * This happens, for example, when the argument is "const void **". */
 #define free(x) free((void *)x)
@@ -171,6 +173,26 @@ typedef int locale_t;
 #define freelocale(l)
 #endif /* HAVE_LOCALE_T */
 
+#if HAVE__ALIGNED_MALLOC
+#define aligned_alloc(alignment, size) _aligned_malloc (size, alignment)
+#define aligned_free(p) _aligned_free(p)
+#undef HAVE_POSIX_MEMALIGN
+
+#elif HAVE_ALIGNED_ALLOC
+#define aligned_free(p) free(p)
+#undef HAVE_POSIX_MEMALIGN
+
+#elif HAVE_POSIX_MEMALIGN
+/* aligned_alloc() emulation will be defined in utilities.c. */
+void *aligned_alloc(size_t alignment, size_t size);
+#define aligned_free(p) free(p)
+
+#else
+/* Fallback to just malloc(), as alignment is not critical here. */
+#define NO_ALIGNED_MALLOC /* For generating a warning in utilities.c. */
+#define aligned_alloc(alignment, size) malloc(size)
+#define aligned_free(p) free(p)
+#endif /* HAVE__ALIGNED_MALLOC */
 
 #define ALIGN(size, alignment) (((size)+(alignment-1))&~(alignment-1))
 

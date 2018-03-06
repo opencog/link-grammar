@@ -18,6 +18,7 @@
 #include "dict-common/dict-utils.h" // for free_X_nodes
 #include "disjunct-utils.h"  // for free_disjuncts
 #include "linkage/linkage.h"
+#include "memory-pool.h"
 #include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
 #include "post-process/post-process.h" // for post_process_new()
@@ -530,6 +531,8 @@ void sentence_delete(Sentence sent)
 	post_process_free(sent->constituent_pp);
 
 	global_rand_state = sent->rand_state;
+	pool_delete(sent->fm_Match_node);
+	pool_delete(sent->Table_connector_pool);
 	free(sent);
 }
 

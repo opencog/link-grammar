@@ -16,6 +16,7 @@
 #include <stddef.h> // for size_t
 #include "api-types.h"
 #include "link-includes.h" // for Sentence
+#include "memory-pool.h"
 
 typedef struct Match_node_struct Match_node;
 struct Match_node_struct
@@ -43,7 +44,7 @@ struct fast_matcher_s
 
 /* See the source file for documentation. */
 fast_matcher_t* alloc_fast_matcher(const Sentence);
-void free_fast_matcher(fast_matcher_t*);
+void free_fast_matcher(Sentence sent, fast_matcher_t*);
 
 size_t form_match_list(fast_matcher_t *, int, Connector *, int, Connector *, int);
 

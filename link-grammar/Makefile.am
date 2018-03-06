@@ -98,6 +98,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage/lisjuncts.c              \
 	linkage/sane.c                   \
 	linkage/score.c                  \
+	memory-pool.c                    \
 	parse/count.c                    \
 	parse/extract-links.c            \
 	parse/fast-match.c               \
@@ -154,6 +155,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage/lisjuncts.h              \
 	linkage/sane.h                   \
 	linkage/score.h                  \
+	memory-pool.h                    \
 	parse/count.h                    \
 	parse/extract-links.h            \
 	parse/fast-match.h               \

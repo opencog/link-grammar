@@ -12,6 +12,9 @@
 /*************************************************************************/
 
 #include <ctype.h>
+#ifdef HAVE_POSIX_MEMALIGN
+#include <errno.h>
+#endif
 #include <limits.h>
 #ifdef _WIN32
 #define _CRT_RAND_S
@@ -280,6 +283,21 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale)
 	safe_strcpy(to, from, usize-nbl);
 }
 #endif
+
+#ifdef NO_ALIGNED_MALLOC
+#if __GNUC__
+#warning No aligned alloc found (using malloc() instead).
+#endif
+#endif /* NO_ALIGNED_MALLOC */
+
+#ifdef HAVE_POSIX_MEMALIGN
+void *aligned_alloc(size_t alignment, size_t size)
+{
+	void *ptr;
+	errno = posix_memalign(&ptr, alignment, size);
+	return ptr;
+}
+#endif /* HAVE_POSIX_MEMALIGN */
 
 /* ============================================================= */
 /* Memory alloc routines below. These routines attempt to keep
