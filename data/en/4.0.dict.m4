@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.4.4 (formatted as V5v4v4+)
-<dictionary-version-number>: V5v4v4+;
+% Dictionary version number is 5.5.0 (formatted as V5v5v0+)
+<dictionary-version-number>: V5v5v0+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -2404,8 +2404,9 @@ per "/.per": Us+ & Mp-;
 %        allows a really weird subject-object inversion to proceed:
 %        e.g. "In the corner lay it" with it as object. That's just
 %        wrong... but this requires lots of places to fix.
-<verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({[CO-]} & Wi- & {NM+}));
+% VJrpi-: "I aim to do something and also to help."
+<verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
+<verb-ico>:  {@E-} & ((I- & {<verb-wall> or VJrpi-} & {@E-}) or ({[CO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -2688,13 +2689,14 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % Naked I*d-: "How do you do?", "what is there to do?"
 % I*t- & O+: forces use of object in to-do expressions.
 %            "Are you really going to do it to them?"
+% {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq-aux> & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
-  or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) & {<verb-wall>})
+  or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) & {<verb-wall> or VJrpi-})
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d- & {<verb-wall>});
 
@@ -4702,12 +4704,12 @@ questions.v tests.v hypothesizes.v hypothesises.v envisages.v
 documents.v:
   VERB_S_T(<vc-predict>);
 
-predicted.v realized.v discovered.v determined.v announced.v mentioned.v
-admitted.v recalled.v revealed.v divulged.v stated.v observed.v indicated.v
-analysed.v analyzed.v assessed.v established.v evaluated.v examined.v
-questioned.v tested.v
-hypothesized.v-d hypothesised.v-d well-established.v-d documented.v-d
-envisaged.v-d:
+predicted.v-d realized.v-d discovered.v-d determined.v-d announced.v-d
+mentioned.v-d admitted.v-d recalled.v-d revealed.v-d divulged.v-d
+stated.v-d observed.v-d indicated.v-d analysed.v-d analyzed.v-d
+assessed.v-d established.v-d evaluated.v-d examined.v-d questioned.v-d
+tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
+envisaged.v-d documented.v-d:
   VERB_SPPP_T(<vc-predict>)
   or (<verb-s-pv> & {THi+})
   or <verb-adj>
@@ -5031,12 +5033,13 @@ for_granted: Vtg-;
 
 
 % I- & WR- & <verb-wall> & O+: "where did you put it?"
+% bare <verb-phrase-opener>: "The problem, put simply, is money."
 put.v-d:
   VERB_SPPP_T(<vc-put>) or
   (<verb-ico> & <vc-put>) or
   ({@E-} & I- & WR- & <verb-wall> & O+) or
   (<verb-pv-b> & (K+ or Pp+ or WR-) & <mv-coord>) or
-  ((K+ or Pp+) & <verb-phrase-opener>);
+  ({K+ or Pp+} & <verb-phrase-opener>);
 puts.v: VERB_S_T(<vc-put>);
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
@@ -8004,12 +8007,15 @@ and.j-n 'n':
 but_not just_not: VJrsi- & O+;
 
 % {XJo-}: "I can use either this or that".
+% EB+: "the problem, or rather, one of the problems, ..."
 %
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
     (<noun-conj-head> or (S*x+ & <CLAUSE>) or SIs- or [Os-] or Wa- or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
+    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>))
+  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
+  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
 
 % XJn- "neither this nor that"
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
@@ -8063,11 +8069,27 @@ then.j-c: {Xd-} & XJc- & VJr+;
 % [I-]0.2, [<verb-ico>]0.2: avoid I links to conjoined non-infinitives.
 % XXX This is hacky, we should just prevent such infinitive links from
 % occuring at all.
+% {TO+}: "I aim to do something and to help."
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (RS- & Bs-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (RS- & Bp-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
-  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
+  (({Xd-} & VJlsi- & VJrsi+) &
+    (({@MV+} & Ss- & <verb-wall>) or
+    (RS- & Bs-) or
+    ([I-]0.2 & {@MV+} & <verb-wall>) or
+    ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & {TO+} & VJrpi+) &
+    (({@MV+} & Sp- & <verb-wall>) or
+    (RS- & Bp-) or
+    ([I-]0.2 & {@MV+} & <verb-wall>) or
+    ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) &
+    ((({@MV+} & Ss- & <verb-wall>) or
+    ([I-]0.2 & {@MV+} & <verb-wall>)) &
+      (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) &
+    ((({@MV+} & Sp- & <verb-wall>) or
+    ([I-]0.2 & {@MV+} & <verb-wall>)) &
+      (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
   ((VJlg- & VJrg+) & (J-)) or
   ((VJlp- & VJrp+) & [<verb-ico>]0.2) or
   ((VJls- & VJrs+) & [<verb-ico>]0.2);
@@ -9175,9 +9197,12 @@ strangely:
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & {EE-} & MVa-);
 
+% EB-: "The problem, or rather, one of the problems, ..."
 rather:
   <adv-adj-const>
-  or Vw- or ({Xc+ & {Xd-}} & CO+);
+  or Vw-
+  or ({Xc+ & {Xd-}} & CO+)
+  or ({Xc+ & {Xd-}} & EB-);
 
 particularly:
   <adv-adj-const>
@@ -9370,9 +9395,10 @@ well.e:
   or [{EA- or EF+} & (Pa- or AF+)]
   or Yd+;
 
+% EE- & EB-: "..., or more exactly, ..."
 exactly.e:
   E+
-  or EB-
+  or ({EE-} & {Xc+ & {Xd-}} & EB-)
   or EN+
   or EW+
   or EZ+
@@ -9410,12 +9436,12 @@ otherwise formerly lately:
   ({Xd- & Xc+} & MVa-)
   or E+
   or ({Xc+ & {Xd-}} & CO+)
-  or EB-;
+  or ({Xc+ & {Xd-}} & EB-);
 
 also.e:
   ({Xd- & Xc+} & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
-  or EB-;
+  or ({Xc+ & {Xd-}} & EB-);
 
 gradually.e sadly.e broadly.e clearly.e
 annually.e characteristically.e comparatively.e
@@ -9429,26 +9455,27 @@ mysteriously.e naturally.e oddly.e plainly.e truthfully.e
 appropriately.e simply.ee:
   {EE- or EF+} & (
     ({Xd- & Xc+} & (MVa- or E+))
-     or ({Xc+ & {Xd-}} & CO+)
-     or EB-
-     or Qe+
-     or <advcl-verb>
-     or [[EA+]]);
+    or ({Xc+ & {Xd-}} & CO+)
+    or ({Xc+ & {Xd-}} & EB-)
+    or Qe+
+    or <advcl-verb>
+    or [[EA+]]);
 
+% ({Xc+ & {Xd-}} & EB-)): "..., or more precisely, ..."
 precisely.e specifically.e generally.e:
   {EE- or EF+} & (
     ({Xd- & Xc+} & (MVa- or E+))
-     or ({Xc+ & {Xd-}} & CO+)
-     or EB-
-     or Qe+
-     or <advcl-verb>
-     or EW+);
+    or ({Xc+ & {Xd-}} & CO+)
+    or ({Xc+ & {Xd-}} & EB-)
+    or Qe+
+    or <advcl-verb>
+    or EW+);
 
 occasionally.e often.e originally.e:
   {EE- or EF+} & (
     ({Xd- & Xc+} & (MVa- or E+))
     or ({Xc+ & {Xd-}} & CO+)
-    or EB-
+    or ({Xc+ & {Xd-}} & EB-)
     or Qe+
     or <advcl-verb>);
 
@@ -9510,8 +9537,10 @@ soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or EB- or Qe+ or <advcl-verb>)) or ({EA- or EF+} & (Pa- or AF+));
 
 certainly possibly probably importantly remarkably interestingly:
-{EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
-({Xc+ & {Xd-}} & EB-));
+  {EE-} & (E+
+    or (Xd- & Xc+ & (E+ or MVa-))
+    or ({Xc+ & {Xd-}} & CO+)
+    or ({Xc+ & {Xd-}} & EB-));
 
 % ---------------------------------------------------------
 % ordinary clausal adverbs
@@ -9594,10 +9623,11 @@ yes.e yeah.e yep.e yup.e
 ok.e okay.e OK.e fine.e sure.e whatever.e:
   ({Xc+ & {Xd-}} & CO+);
 
+% EB-: "Would they have accepted this or, instead, would they have...?"
 thereafter.e overall.e lengthwise.e
 instead.e anyhow.e anyway.e:
   <directive-opener>
-  or ({Xd- & Xc+} & (MVp- or E+));
+  or ({Xd- & Xc+} & (MVp- or E+ or EB-));
 
 % Wa-: Single-word responses to questions.
 someday.e sometime.e maybe.e
@@ -9978,7 +10008,7 @@ changequote dnl
 % "he paced, worried" but lower cost than Xx links
 %
 ",":
-  ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
+  ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
@@ -10015,8 +10045,9 @@ changequote dnl
 %      the VC link often does not go leftwards far enough.
 %      (e.g. "John screamed when I arrived but Sue left")
 % Wc-: "But my efforts to win his heart have failed"
+% EB+: "would they have accepted this or, instead, would they have ..."
 but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
-  [{Xd-} & (Xx- or Wc-) & {Xc+}
+  [{Xd-} & (Xx- or Wc-) & {Xc+} & {EB+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
 %suppress: DUP-BASE (for ..y)
