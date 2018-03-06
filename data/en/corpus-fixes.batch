@@ -5031,9 +5031,13 @@ He was sent abroad and resided on the continent, chiefly in France, for more tha
 John describes and analyzes literature.
 Chief describes and analyzes the character of the families in a village, remarking that they all act completely the same.
 
-% conjoined infinitives are still broken...
+% conjoined infinitives
 They advised us to avoid sunlight and to limit the consumption of fish.
 I am expecting this sentence to parse correctly, and to yield a very wide diagram.
+
+I aim to do something and also to help.
+I aim to do something and to help.
+I aim to help and also to do something.
 
 % conjoined verbs with modifiers, negation
 He cannot change the beliefs of popular society as a whole.
@@ -5139,10 +5143,6 @@ Would these critics have accepted this or would they have condemned the US?
 Would they have accepted this or, instead, would they have ...?
 
 It is thus imperative that assistance be provided through a variety of channels, in addition to, or instead of, the IMF, including ...
-
-I aim to do something and also to help.
-I aim to do something and to help.
-
 
 % lists:
 % List of gerunds:

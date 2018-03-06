@@ -2689,13 +2689,14 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % Naked I*d-: "How do you do?", "what is there to do?"
 % I*t- & O+: forces use of object in to-do expressions.
 %            "Are you really going to do it to them?"
+% {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq-aux> & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
-  or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) & {<verb-wall>})
+  or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) & {<verb-wall> or VJrpi-})
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d- & {<verb-wall>});
 
