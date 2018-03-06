@@ -306,6 +306,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 		if (NULL == cdj) /* a null word (the chosen disjunct was NULL) */
 		{
+			chosen_words[i] = NULL;
 			nbsize++;
 			if (NULL == nullblock_start) /* it starts a new null block */
 				nullblock_start = wgp;
@@ -314,10 +315,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				(wg_get_sentence_word(sent, nw->unsplit_word) != sentence_word);
 
 			/* Accumulate null words in this alternative */
-			if (!at_nullblock_end && (NULL == cdjp[i+1]))
+			if (!at_nullblock_end && (NULL == cdjp[i+1]) &&
+			    ((w->morpheme_type == MT_PUNC) == (nw->morpheme_type == MT_PUNC)))
 			{
 				lgdebug(D_CCW, "Skipping word%zu cdjp=NULL#%zu, path %s\n",
-				         i, nbsize, lwg_path[i]->subword);
+				        i, nbsize, w->subword);
 				chosen_words[i] = NULL;
 				continue;
 			}
