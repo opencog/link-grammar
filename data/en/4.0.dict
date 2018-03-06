@@ -2395,8 +2395,9 @@ per "/.per": Us+ & Mp-;
 %        allows a really weird subject-object inversion to proceed:
 %        e.g. "In the corner lay it" with it as object. That's just
 %        wrong... but this requires lots of places to fix.
-<verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({[CO-]} & Wi- & {NM+}));
+% VJrpi-: "I aim to do something and also to help."
+<verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
+<verb-ico>:  {@E-} & ((I- & {<verb-wall> or VJrpi-} & {@E-}) or ({[CO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -10133,11 +10134,27 @@ then.j-c: {Xd-} & XJc- & VJr+;
 % [I-]0.2, [<verb-ico>]0.2: avoid I links to conjoined non-infinitives.
 % XXX This is hacky, we should just prevent such infinitive links from
 % occuring at all.
+% {TO+}: "I aim to do something and to help."
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (RS- & Bs-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (RS- & Bp-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
-  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
+  (({Xd-} & VJlsi- & VJrsi+) &
+    (({@MV+} & Ss- & <verb-wall>) or
+    (RS- & Bs-) or
+    ([I-]0.2 & {@MV+} & <verb-wall>) or
+    ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & {TO+} & VJrpi+) &
+    (({@MV+} & Sp- & <verb-wall>) or
+    (RS- & Bp-) or
+    ([I-]0.2 & {@MV+} & <verb-wall>) or
+    ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) &
+    ((({@MV+} & Ss- & <verb-wall>) or
+    ([I-]0.2 & {@MV+} & <verb-wall>)) &
+      (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) &
+    ((({@MV+} & Sp- & <verb-wall>) or
+    ([I-]0.2 & {@MV+} & <verb-wall>)) &
+      (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
   ((VJlg- & VJrg+) & (J-)) or
   ((VJlp- & VJrp+) & [<verb-ico>]0.2) or
   ((VJls- & VJrs+) & [<verb-ico>]0.2);
