@@ -8004,12 +8004,15 @@ and.j-n 'n':
 but_not just_not: VJrsi- & O+;
 
 % {XJo-}: "I can use either this or that".
+% EB+: "the problem, or rather, one of the problems, ..."
 %
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
     (<noun-conj-head> or (S*x+ & <CLAUSE>) or SIs- or [Os-] or Wa- or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
+    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>))
+  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
+  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
 
 % XJn- "neither this nor that"
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
@@ -9175,9 +9178,12 @@ strangely:
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & {EE-} & MVa-);
 
+% EB-: "The problem, or rather, one of the problems, ..."
 rather:
   <adv-adj-const>
-  or Vw- or ({Xc+ & {Xd-}} & CO+);
+  or Vw-
+  or ({Xc+ & {Xd-}} & CO+)
+  or ({Xc+ & {Xd-}} & EB-);
 
 particularly:
   <adv-adj-const>
@@ -9510,8 +9516,10 @@ soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or EB- or Qe+ or <advcl-verb>)) or ({EA- or EF+} & (Pa- or AF+));
 
 certainly possibly probably importantly remarkably interestingly:
-{EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
-({Xc+ & {Xd-}} & EB-));
+  {EE-} & (E+
+    or (Xd- & Xc+ & (E+ or MVa-))
+    or ({Xc+ & {Xd-}} & CO+)
+    or ({Xc+ & {Xd-}} & EB-));
 
 % ---------------------------------------------------------
 % ordinary clausal adverbs
