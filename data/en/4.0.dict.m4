@@ -133,8 +133,11 @@ nonCAP.zzz: ZZZ-;
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
 %     links "of" to "Abbey" instead of "it".
 %
+% Ss*s+: blocks links to Ss*t- which accepts singular subject, but
+%        requires plural object.  See "are.v" for examples.
+%
 <noun-main-s>:
-  (Ss+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
   or <post-nominal-s>
   or <costly-null>;
 
@@ -697,9 +700,9 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
-/en/words/words.n.3-vowel:
+/en/words/words.n.3-vowel /en/words/words.lang.3-vowel:
   <marker-common-entity> or <mass-vowel-noun>;
-/en/words/words.n.3-const:
+/en/words/words.n.3-const /en/words/words.lang.3-const:
   <marker-common-entity> or <mass-const-noun>;
 
 % Gonna treat these as mass nouns, not sure if this is correct.
