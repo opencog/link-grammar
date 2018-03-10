@@ -65,7 +65,7 @@ char *get_console_line(void)
 		return NULL;
 	}
 
-	/* Make sure we don't have conversion problems, by searching for '�'. */
+	/* Make sure we don't have conversion problems, by searching for U+FFFD. */
 	const char *invalid_char  = strstr(utf8inbuf, "\xEF\xBF\xBD");
 	if (NULL != invalid_char)
 		prt_error("Warning: Invalid input character encountered.\n");
