@@ -700,7 +700,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
-/en/words/words.n.3-vowel:
+/en/words/words.n.3-vowel /en/words/words.lang.3-vowel:
   <marker-common-entity> or <mass-vowel-noun>;
 /en/words/words.n.3-const:
   <marker-common-entity> or <mass-const-noun>;
