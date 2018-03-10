@@ -362,30 +362,24 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  */
 void sort_condesc_by_uc_constring(Dictionary dict)
 {
-	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
-	memcpy(sdesc, dict->contable.hdesc, dict->contable.size * sizeof(*dict->contable.hdesc));
-	qsort(sdesc, dict->contable.size, sizeof(*dict->contable.hdesc),
-	      condesc_by_uc_constring);
-
-	/* Find the number of connectors. */
-	size_t n;
-	for (n = 0; n < dict->contable.size; n++)
-		if (NULL == sdesc[n]) break;
-	dict->contable.num_con = n;
-
-	if (0 == n)
+	if (0 == dict->contable.num_con)
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
 		/* FIXME: Generate a dictionary open error. */
 		return;
 	}
 
+	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
+	memcpy(sdesc, dict->contable.hdesc, dict->contable.size * sizeof(*dict->contable.hdesc));
+	qsort(sdesc, dict->contable.size, sizeof(*dict->contable.hdesc),
+	      condesc_by_uc_constring);
+
 	/* Enumerate the connectors according to their UC part. */
 	int uc_num = 0;
 	uint32_t uc_hash = sdesc[0]->uc_hash; /* Will be recomputed */
 
 	sdesc[0]->uc_num = uc_num;
-	for (n = 1; n < dict->contable.num_con; n++)
+	for (size_t n = 1; n < dict->contable.num_con; n++)
 	{
 		condesc_t **condesc = &sdesc[n];
 
