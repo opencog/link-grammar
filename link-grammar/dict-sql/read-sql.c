@@ -329,11 +329,9 @@ static void* db_open(const char * fullname, const void * user_data)
 	/* SQLite has a habit of leaving zero-length DB's lying around */
 	fd = fileno(fh);
 	fstat(fd, &buf);
+	fclose(fh);
 	if (0 == buf.st_size)
-	{
-		fclose(fh);
 		return NULL;
-	}
 
 	/* Found a file, of non-zero length. See if that works. */
 	if (sqlite3_open(fullname, &db))
