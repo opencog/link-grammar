@@ -693,7 +693,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
 /en/words/words.n.3-vowel /en/words/words.lang.3-vowel:
   <marker-common-entity> or <mass-vowel-noun>;
-/en/words/words.n.3-const:
+/en/words/words.n.3-const /en/words/words.lang.3-const:
   <marker-common-entity> or <mass-const-noun>;
 
 % Gonna treat these as mass nouns, not sure if this is correct.
