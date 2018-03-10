@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.4.4 (formatted as V5v4v4+)
-<dictionary-version-number>: V5v4v4+;
+% Dictionary version number is 5.5.0 (formatted as V5v5v0+)
+<dictionary-version-number>: V5v5v0+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -124,8 +124,11 @@ nonCAP.zzz: ZZZ-;
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
 %     links "of" to "Abbey" instead of "it".
 %
+% Ss*s+: blocks links to Ss*t- which accepts singular subject, but
+%        requires plural object.  See "are.v" for examples.
+%
 <noun-main-s>:
-  (Ss+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
   or <post-nominal-s>
   or <costly-null>;
 

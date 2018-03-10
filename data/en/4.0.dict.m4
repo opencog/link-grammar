@@ -133,8 +133,11 @@ nonCAP.zzz: ZZZ-;
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
 %     links "of" to "Abbey" instead of "it".
 %
+% Ss*s+: blocks links to Ss*t- which accepts singular subject, but
+%        requires plural object.  See "are.v" for examples.
+%
 <noun-main-s>:
-  (Ss+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
   or <post-nominal-s>
   or <costly-null>;
 
