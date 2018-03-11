@@ -112,10 +112,10 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		{
 			if ((t->lw < 0) || (t->rw == sent_length)) continue;
 			c++;
-			if (t->count == 0) z++;
+			if (hist_total(&t->count) == 0) z++;
 			else nz++;
 			ww[t->rw + sent_length * t->lw]++;
-			if (t->count) wc[t->rw + sent_length * t->lw]++;
+			if (hist_total(&t->count)) wc[t->rw + sent_length * t->lw]++;
 		}
 		if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
 	}
@@ -207,10 +207,11 @@ Count_bin* table_lookup(count_context_t * ctxt,
 
 #define NO_COUNT -1
 #ifdef PERFORM_COUNT_HISTOGRAMMING
-Count_bin count_unknown = {.total = NO_COUNT};
+#define INIT_NO_COUNT {.total = NO_COUNT}
 #else
-Count_bin count_unknown = NO_COUNT;
+#define INIT_NO_COUNT NO_COUNT
 #endif
+Count_bin count_unknown = INIT_NO_COUNT;
 
 /**
  * psuedocount is used to check to see if a parse is even possible,
@@ -282,7 +283,7 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 		level*2, "", m_result, lineno, lw, rw, V(le), V(re), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%lld\n",
-	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, r);
+	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, hist_total(&r));
 	level--;
 
 	return r;
@@ -439,14 +440,14 @@ static Count_bin do_count(
 				Count_bin l_any;           /* Used only when leftpcount==true */
 				Count_bin r_any;           /* Used only when rightpcount==true */
 				PRAGMA_END
-				Count_bin l_cmulti = NO_COUNT;
-				Count_bin l_dmulti = NO_COUNT;
-				Count_bin l_dcmulti = NO_COUNT;
-				Count_bin l_bnr = NO_COUNT;
-				Count_bin r_cmulti = NO_COUNT;
-				Count_bin r_dmulti = NO_COUNT;
-				Count_bin r_dcmulti = NO_COUNT;
-				Count_bin r_bnl = NO_COUNT;
+				Count_bin l_cmulti = INIT_NO_COUNT;
+				Count_bin l_dmulti = INIT_NO_COUNT;
+				Count_bin l_dcmulti = INIT_NO_COUNT;
+				Count_bin l_bnr = INIT_NO_COUNT;
+				Count_bin r_cmulti = INIT_NO_COUNT;
+				Count_bin r_dmulti = INIT_NO_COUNT;
+				Count_bin r_dcmulti = INIT_NO_COUNT;
+				Count_bin r_bnl = INIT_NO_COUNT;
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
@@ -531,7 +532,7 @@ static Count_bin do_count(
 #define CACHE_COUNT(c, how_to_count, do_count) \
 { \
 	Count_bin count = (hist_total(&c) == NO_COUNT) ? \
-		TRACE_LABEL(c, do_count) : hist_total(&c); \
+		TRACE_LABEL(c, do_count) : c; \
 	how_to_count; \
 }
 			 /* If the pseudocounting above indicates one of the terms
