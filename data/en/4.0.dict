@@ -2523,6 +2523,9 @@ per "/.per": Us+ & Mp-;
 <verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-y-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
 
+% Almost like above, but without the RS- & B-
+<verb-z-s,u>: {@E-} & (Ss- or SFs- or SFu-) & <verb-wall>;
+
 % conjoined verbs.
 % VJr == left
 % VJl == right
@@ -2945,7 +2948,7 @@ is.v:
 % *That's just the kind of person he's -- so: Ss- & PF- not allowed
 % SIs+ & PFb-: "Where's the ball?"
 's.v ’s.v:
-  [(<verb-x-s,u> &
+  [(<verb-z-s,u> &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
         or [K+ & <verb-wall>]
