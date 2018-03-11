@@ -1039,7 +1039,7 @@ phenomenon!
 
 See also [issue 690](https://github.com/opencog/link-grammar/issues/690)
 
-### #Capitalization-mark tokens:
+#### Capitalization-mark tokens:
 The proximal issue is to add a cost, so that Bill gets a lower
 cost than bill.n when parsing "Bill went on a walk".  The best
 solution would be to add a 'capitalization-mark token' during
@@ -1074,12 +1074,13 @@ The one without the comma currently fails to parse.  How can we
 deal with this in a simple, fast, elegant way?  Similar questions
 for zero-copula and zero-that sentences.
 
-### Zero/phantom words:  Expressions such as "Looks good" have an implicit
-"it" (also called a zero-it or phantom-it) in them; that is, the
-sentence should really parse as "(it) looks good".  The dictionary
-could be simplified by admitting such phantom words explicitly,
-rather than modifying the grammar rules to allow such constructions.
-Other examples, with the phantom word in parenthesis, include:
+### Zero/phantom words:
+Expressions such as "Looks good" have an implicit "it" (also called
+a zero-it or phantom-it) in them; that is, the sentence should really
+parse as "(it) looks good".  The dictionary could be simplified by
+admitting such phantom words explicitly, rather than modifying the
+grammar rules to allow such constructions.  Other examples, with the
+phantom word in parenthesis, include:
  * I ate all (of) the cookies.
  * I taught him (how) to swim.
  * I told him (that) it was gone.
@@ -1095,7 +1096,7 @@ Some complex phantom constructions:
  * She likes Indian food, but (she does) not (like) Chinese (food).
  * If this is true, then (you should) do it.
 
-See also [issue #224](https://github.com/opencog/link-grammar/issues/224).
+See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
 
 One possible solution is to perform a one-point compactification.
 The dictionary contains the phantom words, and their connectors.
@@ -1131,7 +1132,8 @@ at all apparant, and it reads just as incorrectly as would
 ```
 The zero/phantom-word solution, described above, should help with this.
 
-### Bad grammar: When a sentence fails to parse, look for:
+### Bad grammar:
+When a sentence fails to parse, look for:
  * confused words: its/it's, there/their/they're, to/too, your/you're ...
    These could be added at high cost to the dicts.
  * missing apostrophes in possessives: "the peoples desires"
@@ -1294,12 +1296,11 @@ thus causing the costs for that dialect to be employed during
 parse ranking.
 
 ### Hand-refining verb patterns:
-   A good reference for refining verb usage patterns is:<br>
-   COBUILD GRAMMAR PATTERNS 1: VERBS<br>
-   from THE COBUILD SERIES /from/ THE BANK OF ENGLISH<br>
-   HARPER COLLINS<br>
-   online at https://arts-ccr-002.bham.ac.uk/ccr/patgram/<br>
-   http://www.corpus.bham.ac.uk/publications/index.shtml
+A good reference for refining verb usage patterns is:
+"COBUILD GRAMMAR PATTERNS 1: VERBS from THE COBUILD SERIES",
+from THE BANK OF ENGLISH, HARPER COLLINS.  Online at
+https://arts-ccr-002.bham.ac.uk/ccr/patgram/ and
+http://www.corpus.bham.ac.uk/publications/index.shtml
 
 
 ### Quotations:
@@ -1321,7 +1322,7 @@ parse ranking.
    only... but also ...) which have a long-range structure similar to
    quoted text (he said ...).
 
-   See also [issue #42](https://github.com/opencog/link-grammar/issues/42).
+   See also [github issue #42](https://github.com/opencog/link-grammar/issues/42).
 
 ### Semantification of the dictionary:
   "to be fishing": Link grammar offers four parses of "I was fishing for

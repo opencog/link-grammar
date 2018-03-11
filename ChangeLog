@@ -1,4 +1,4 @@
-Version 5.5.0 (XXX 2018)
+Version 5.5.0 (11 March 2018)
  * Dictionary loading now thread safe.
  * Fix post-nominal modifiers used with pronouns.
  * Fix comparative openers.
