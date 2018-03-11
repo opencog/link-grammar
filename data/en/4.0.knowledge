@@ -296,7 +296,7 @@ CONTAINS_ONE_RULES:
 ; The below blocks the singular "I want a gift inexpensive", while
 ; allowing Pa**j to be used with other kinds of objects.
 ;
- Pa##j ,  Osm  Op  Ox OXi ,                   "Bad predicative adj 62" ,
+ Pa##j ,  Osm  Op  Ox Os*e OXi ,              "Bad predicative adj 62" ,
 ;
 ; The rule below sounds nice, in principle, in preventing some
 ; nasty constructions ... however, it also prevents some good
