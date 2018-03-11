@@ -2742,7 +2742,7 @@ did.v-d:
 done.v:
   VERB_PP(<vc-done>)
   or <verb-phrase-opener>
-  or (<verb-pv-b> & <vc-done>)
+  or (<verb-pv-b> & {<vc-done>})
   or (S- & <verb-wall>);
 
 % Pa- & Pg+: "I am done working", "I am through being mad"
