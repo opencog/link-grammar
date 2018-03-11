@@ -1025,10 +1025,10 @@ TODO -- Working Notes
 Some working notes.
 
 Easy to fix: provide a more uniform API to the constituent tree.
-i.e provide word index.   Also .. provide a clear word API,
-showing word extent, suffix, etc.
+i.e provide word index.   Also, provide a better word API,
+showing word extent, subscript, etc.
 
-Capitalized first words:
+###Capitalized first words:
 There are subtle technical issues for handling capitalized first
 words. This needs to be fixed. In addition, for now these words are
 shown uncapitalized in the result linkages. This can be fixed.
@@ -1037,7 +1037,9 @@ Maybe capitalization could be handled in the same way that a/an
 could be handled!  After all, it's essentially a nearest-neighbor
 phenomenon!
 
-Capitalization-mark tokens:
+See also [issue 690](https://github.com/opencog/link-grammar/issues/690)
+
+####Capitalization-mark tokens:
 The proximal issue is to add a cost, so that Bill gets a lower
 cost than bill.n when parsing "Bill went on a walk".  The best
 solution would be to add a 'capitalization-mark token' during
@@ -1048,7 +1050,7 @@ moves capitalization out of ad-hoc C code and into the dictionary,
 where it can be handled like any other language feature.
 The tokenizer includes experimental code for that.
 
-Corpus-statistics-based parse ranking:
+###Corpus-statistics-based parse ranking:
 The old for parse ranking via corpus statistics needs to be revived.
 The issue can be illustrated with these example sentences:
 ```text
@@ -1062,7 +1064,7 @@ and come to the conclusion that one should please some unstated
 object, and then turn off the lights. (Perhaps one is pleasing
 by turning off the lights?)
 
-Punctuation, zero-copula, zero-that:
+###Punctuation, zero-copula, zero-that:
 Poorly punctuated sentences cause problems:  for example:
 ```text
 "Mike was not first, nor was he last."
@@ -1072,7 +1074,7 @@ The one without the comma currently fails to parse.  How can we
 deal with this in a simple, fast, elegant way?  Similar questions
 for zero-copula and zero-that sentences.
 
-Zero/phantom words:  Expressions such as "Looks good" have an implicit
+###Zero/phantom words:  Expressions such as "Looks good" have an implicit
 "it" (also called a zero-it or phantom-it) in them; that is, the
 sentence should really parse as "(it) looks good".  The dictionary
 could be simplified by admitting such phantom words explicitly,
@@ -1093,7 +1095,7 @@ Some complex phantom constructions:
  * She likes Indian food, but (she does) not (like) Chinese (food).
  * If this is true, then (you should) do it.
 
-See [this issue on GitHub](https://github.com/opencog/link-grammar/issues/224).
+See also [issue #224](https://github.com/opencog/link-grammar/issues/224).
 
 One possible solution is to perform a one-point compactification.
 The dictionary contains the phantom words, and their connectors.
@@ -1112,7 +1114,24 @@ else the linkage is invalid. After parsing, the phantom words can
 be inserted into the sentence, with the location deduced from link
 lengths.
 
-Bad grammar: When a sentence fails to parse, look for:
+###Context-dependent zero phrases.
+Consider an argument between a professor and a dean, and the dean
+wants the professor to write a brilliant review. At the end of the
+argument, the dean exclaims: "I want the review brilliant!"  This
+is a predicative adjective; clearly it means "I want the reveiw
+[that you write to be] brilliant."  However, taken out of context,
+such a construction is ungrammatical, as the predicativeness is not
+at all apparant, and it reads just as incorrectly as would
+"*Hey Joe, can you hand me that review brilliant?"
+
+###Imperatives:
+```text
+"Push button"
+"Push button firmly"
+```
+The zero/phantom-word solution, described above, should help with this.
+
+###Bad grammar: When a sentence fails to parse, look for:
  * confused words: its/it's, there/their/they're, to/too, your/you're ...
    These could be added at high cost to the dicts.
  * missing apostrophes in possessives: "the peoples desires"
@@ -1122,7 +1141,7 @@ Bad grammar: When a sentence fails to parse, look for:
 Poor agreement might be handled by giving a cost to mismatched
 lower-case connector letters.
 
-Poor linkage choices:
+###Poor linkage choices:
 Compare "she will be happier than before" to "she will be more happy
 than before." Current parser makes "happy" the head word, and "more"
 a modifier w/EA link.  I believe the correct solution would be to
@@ -1133,7 +1152,7 @@ would eliminate/simplify rules for less,more.
 However, this idea needs to be double-checked against, e.g. Hudson's
 word grammar.  I'm confused on this issue ...
 
-Stretchy links:
+###Stretchy links:
 Currently, some links can act at "unlimited" length, while others
 can only be finite-length.  e.g. determiners should be near the
 noun that they apply to.  A better solution might be to employ
@@ -1141,7 +1160,8 @@ a 'stretchiness' cost to some connectors: the longer they are, the
 higher the cost. (This eliminates the "unlimited_connector_set"
 in the dictionary).
 
-Repulsive parses: Sometimes, the existence of one parse should suggest
+###Opposing (repulsing) parses:
+Sometimes, the existence of one parse should suggest
 that another parse must surely be wrong: if one parse is possible,
 then the other parses must surely be unlikely. For example: the
 conjunction and.j-g allows the "The Great Southern and Western
@@ -1162,27 +1182,41 @@ and AN joining high.n; these two should either be collapsed into
 one, or one should be eliminated.
 
 
-WordNet hinting:
+###WordNet hinting:
 Use WordNet to reduce the number for parses for sentences containing
 compound verb phrases, such as "give up", "give off", etc.
 
-Incremental parsing: to avoid a combinatorial explosion of parses,
-it would be nice to have an incremental parsing, phrase by phrase,
-using a Viterbi-like algorithm to obtain the parse. Thus, for example,
-the parse of the last half of a long, run-on sentence should not be
-sensitive to the parse of the beginning of the sentence.
+###Sliding-window (Incremental) parsing:
+To avoid a combinatorial explosion of parses, it would be nice to
+have an incremental parsing, phrase by phrase, using a sliding window
+algorithm to obtain the parse. Thus, for example, the parse of the
+last half of a long, run-on sentence should not be sensitive to the
+parse of the beginning of the sentence.
 
 Doing so would help with combinatorial explosion. So, for example,
 if the first half of a sentence has 4 plausible parses, and the
-last half has 4 more, then link-grammar reports 16 parses total.
-It would be much, much more useful to instead be given the
-factored results: i.e. the four plausible parses for the
-first half, and the four plausible parses for the last half.
-The lower combinatoric stress would ease the burden on
-downstream users of link-grammar.
+last half has 4 more, then currently, the parser reports 16 parses
+total.  It would be much more useful if it could instead report the
+factored results: i.e. the four plausible parses for the first half,
+and the four plausible parses for the last half.  This would ease
+the burden on downstream users of link-grammar.
 
-(This somewhat resembles the application of construction grammar
-ideas to the link-grammar dictionary).
+This approach has at psychological supprt. Humans take long sentences
+and split them into smaller chunks that "hang together" as phrase-
+structures, viz compounded sentences. The most likely parse is the
+one where each of the quasi sub-sentences is parsed correctly.
+
+This could be implemented by saving dangling right-going connectors
+into a parse context, and then, when another sentence fragment
+arrives, use that context in place of the left-wall.
+
+This somewhat resembles the application of construction grammar
+ideas to the link-grammar dictionary. It also somewhat resembles
+Viterbi parsing to some fixed depth. Viz. do a full backward-foreward
+parse for a phrase, and then, once this is done, take a Viterbi-step.
+That is, once the phrase is done, keep only the dangling connectors
+to the phrase, place a wall, and then step to the next part of the
+sentence.
 
 Caution: watch out for garden-path sentences:
 ```text
@@ -1196,8 +1230,10 @@ Other benefits of a Viterbi decoder:
 * Less sensitive to sentence boundaries: this would allow longer,
   run-on sentences to be parsed far more quickly.
 * Could do better with slang, hip-speak.
-* Would enable co-reference resolution across sentences (resolve
-  pronouns, etc.)
+* Support for real-time dialog (parsing of half-uttered sentences).
+* Parsing of multiple streams, e.g. from play/movie scripts.
+* Would enable (or simplify) co-reference resolution across sentences
+  (resolve referents of pronouns, etc.)
 * Would allow richer state to be passed up to higher layers:
   specifically, alternate parses for fractions of a sentence,
   alternate reference resolutions.
@@ -1219,7 +1255,7 @@ http://www.sciencedaily.com/releases/2012/09/120925143555.htm
 per Morten Christiansen, Cornell professor of psychology.
 
 
-Registers, sociolects, dialects (cost vectors):
+###Registers, sociolects, dialects (cost vectors):
 Consider the sentence "Thieves rob bank" -- a typical newspaper
 headline. LG currently fails to parse this, because the determiner
 is missing ("bank" is a count noun, not a mass noun, and thus
@@ -1257,14 +1293,7 @@ various links.  A dialect would be specified during the parse,
 thus causing the costs for that dialect to be employed during
 parse ranking.
 
-Imperatives:
-```text
-"Push button"
-"Push button firmly"
-```
-The zero/phantom-word solution, described above, should help with this.
-
-Hand-refining verb patterns:<br>
+###Hand-refining verb patterns:
    A good reference for refining verb usage patterns is:<br>
    COBUILD GRAMMAR PATTERNS 1: VERBS<br>
    from THE COBUILD SERIES /from/ THE BANK OF ENGLISH<br>
@@ -1273,7 +1302,8 @@ Hand-refining verb patterns:<br>
    http://www.corpus.bham.ac.uk/publications/index.shtml
 
 
-*Quotations*: tokenize.c tokenizes Double-quotes and some UTF8 quotes
+###Quotations:
+   Currently tokenize.c tokenizes double-quotes and some UTF8 quotes
    (see the RPUNC/LPUNC class in en/4.0.affix - the QUOTES class is
    not used for that, but for capitalization support), with some very
    basic support in the English dictionary (see "% Quotation marks."
@@ -1281,6 +1311,7 @@ Hand-refining verb patterns:<br>
    quotes, such as ‘these’ and “these”.  This results is some ugly
    parsing for sentences containing such quotes. (Note that these are
    in 4.0.affix).
+
    A mechanism is needed to disentangle the quoting from the quoted
    text, so that each can be parsed appropriately.  It's somewhat
    unclear how to handle this within link-grammar. This is somewhat
@@ -1290,6 +1321,9 @@ Hand-refining verb patterns:<br>
    only... but also ...) which have a long-range structure similar to
    quoted text (he said ...).
 
+   See also [issue #42](https://github.com/opencog/link-grammar/issues/42).
+
+###Semantification of the dictionary:
   "to be fishing": Link grammar offers four parses of "I was fishing for
   evidence", two of which are given low scores, and two are given
   high scores. Of the two with high scores, one parse is clearly bad.
@@ -1332,7 +1366,7 @@ Hand-refining verb patterns:<br>
   edited by Elena Tognini-Bonelli, volume 4), 2000<br>
   [Book review](http://www.aclweb.org/anthology/J01-2013).
 
-  "holes" in collocations (aka "set phrases" of "phrasemes"):
+###"holes" in collocations (aka "set phrases" of "phrasemes"):
   The link-grammar provides several mechanisms to support
   circumpositions or even more complicated multi-word structures.
   One mechanism is by ordinary links; see the V, XJ and RJ links.
@@ -1459,6 +1493,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
  mutual information content, they can dominate the syntactic
  structure of a sentence.
 
+###Lexical functions:
  MTT suggests that perhaps the correct way to understand the contents
  of the post-processing rules is as an implementation of 'lexical
  functions' projected onto syntax.  That is, the post-processing
@@ -1470,7 +1505,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
  of possible parses of a given sentence. It would seem that lexical
  functions could be used to rule out many of these parses.  On the
  other hand, the results are likely to be similar to that of
- statistical pare ranking (which presumably captures such
+ statistical parse ranking (which presumably captures such
  quasi-idiomatic collocations at least weakly).
 
  Ref. I. Mel'cuk: "Collocations and Lexical Functions", in ''Phraseology:
@@ -1480,8 +1515,9 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
  More generally, all of link-grammar could benefit from a MTT-izing
  of infrastructure.
 
- Compare the above problem to Hebrew morphological analysis. To quote
-   Wikipedia:
+###Morphology:
+Compare the above commentary on lexical functions to Hebrew morphological
+analysis. To quote Wikipedia:
 
    > This distinction between the word as a unit of speech and the
    > root as a unit of meaning is even more important in the case of
@@ -1496,47 +1532,12 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    > along with many other words such as godel "size" and migdal
    > "tower".
 
-- Dealing with long, ambiguous sentences:
-
-   These are busted up by humans into smaller sentences that "hang
-   together" as phrase-structures, viz compounded sentences. The most
-   likely parse is then when each of the quasi sub-sentences is
-   parsed correctly.
-
-- Alternatives:
-
-   A partial solution to the morphology problem and the idiom problem
-   in link-grammar is to elevate the use of "alternatives" in the
-   Word struct.  Originally, these were morphological split alternatives
-   for the Russian dicts, but really, they are a way of hierarchically
-   arranging choices for words...
-
-   Status: DONE! Implemented from version 5.3.0.
-	See [Introduction of a word-graph for tokenizing](link-grammar/tokenize/README.md).
-
-- Morphology printing:
+###Morphology printing:
 
    Instead of hard-coding LL, declare which links are morpho links
    in the dict.
 
--  Word-order flexibility (For Lithuanian, the following are desperately needed):
-   *  Connectors with * direction, i.e. either left or right.
-   *  Symmetric (commuting) version of &.
-   *  DONE! The new symbols are ^ for commuting-& and $ to mean either + or -.
-
-   This still needs to be documented.
-
-- Incremental sentence parsing.
-   There are multiple reasons to support incremental parsing:
-   * Real-time dialog.
-   * Parsing of multiple streams, e.g. from play/movie scripts.
-   * Segmentation of exceptionally long sentences.
-
-   This could be implemented by saving dangling right-going
-   connectors into a parse context, and then, when another sentence
-   fragment arrives, use that context in place of the left-wall.
-
-- UTF-8 cleanup:
+###UTF-8 cleanup:
    Replace the mbrtowc code with proper language support; it seems
    that the correct solution is to use [ICU](http://site.icu-project.org/)
    *  ICU pros: runs on windows.
@@ -1547,15 +1548,13 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
    *  Pros: smaller, simpler than ICU.
    *  Cons: might have problems with MS Windows.
 
-- Assorted minor cleanup:
+###Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,
       e.g. the max number of characters in a word, or max words
       in a sentence.
    * Should remove compile-time constants, e.g. max words, max
       length etc.
 
-- Misc TODO:
-   * Finish sqlite3 work.
-
-Version 6.0 TODO list:
-Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to `Linkage*` in the API.  Perhaps this is a bad idea...
+###Version 6.0 TODO list:
+Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to
+`Linkage*` in the API.  But perhaps this is a bad idea...
