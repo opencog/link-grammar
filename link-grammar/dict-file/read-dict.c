@@ -365,7 +365,7 @@ static bool link_advance(Dictionary dict)
 		bool ok = get_character(dict, quote_mode, c);
 		if (!ok) return false;
 	}
-	return true;
+	/* unreachable */
 }
 
 /**

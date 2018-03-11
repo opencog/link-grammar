@@ -215,31 +215,29 @@ void set_all_condesc_length_limit(Dictionary dict)
  * character at the same overhead needed for 8-bit packing.
  *
  * Note: The LC part may consist of chars in the range [a-z0-9]
- * (total 36) and there is a gap between the codes of [a-z] and [0-9].
- * So a 6-bit packing will need a more complex algo.
+ * (total 36) so a 6-bit packing is possible (by abs(value-60) on each
+ * character value).
  */
 static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 {
 	lc_enc_t lc_mask = 0;
 	lc_enc_t lc_value = 0;
 	lc_enc_t wildcard = LC_MASK;
-	int lc_pos = 0;
+	const char *s;
 
-	if ('\0' == *lc_string) return true;
-	do
+	for (s = lc_string; '\0' != *s; s++)
 	{
-		if (lc_pos > (int)(CHAR_BIT*sizeof(lc_value)/LC_BITS))
-		{
-			prt_error("Error: Lower-case part '%s' is too long (%d)\n",
-			          lc_string, lc_pos);
-			return false;
-		}
-		lc_value |= (lc_enc_t)(*lc_string & LC_MASK) << (lc_pos*LC_BITS);
-		if (*lc_string != WILD_TYPE) lc_mask |= wildcard;
-		if ('\0' == lc_string[1]) break;
+		lc_value |= (lc_enc_t)(*s & LC_MASK) << ((s-lc_string)*LC_BITS);
+		if (*s != WILD_TYPE) lc_mask |= wildcard;
 		wildcard <<= LC_BITS;
-		lc_pos++;
-	} while (lc_string++);
+	};
+
+	if ((unsigned long)(s-lc_string) > (CHAR_BIT*sizeof(lc_value)/LC_BITS))
+	{
+		prt_error("Error: Lower-case part '%s' is too long (%ld)\n",
+					 lc_string, s-lc_string);
+		return false;
+	}
 
 	desc->lc_mask = lc_mask;
 	desc->lc_letters = lc_value;
@@ -362,30 +360,24 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  */
 void sort_condesc_by_uc_constring(Dictionary dict)
 {
-	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
-	memcpy(sdesc, dict->contable.hdesc, dict->contable.size * sizeof(*dict->contable.hdesc));
-	qsort(sdesc, dict->contable.size, sizeof(*dict->contable.hdesc),
-	      condesc_by_uc_constring);
-
-	/* Find the number of connectors. */
-	size_t n;
-	for (n = 0; n < dict->contable.size; n++)
-		if (NULL == sdesc[n]) break;
-	dict->contable.num_con = n;
-
-	if (0 == n)
+	if (0 == dict->contable.num_con)
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
 		/* FIXME: Generate a dictionary open error. */
 		return;
 	}
 
+	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
+	memcpy(sdesc, dict->contable.hdesc, dict->contable.size * sizeof(*dict->contable.hdesc));
+	qsort(sdesc, dict->contable.size, sizeof(*dict->contable.hdesc),
+	      condesc_by_uc_constring);
+
 	/* Enumerate the connectors according to their UC part. */
 	int uc_num = 0;
 	uint32_t uc_hash = sdesc[0]->uc_hash; /* Will be recomputed */
 
 	sdesc[0]->uc_num = uc_num;
-	for (n = 1; n < dict->contable.num_con; n++)
+	for (size_t n = 1; n < dict->contable.num_con; n++)
 	{
 		condesc_t **condesc = &sdesc[n];
 

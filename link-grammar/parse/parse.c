@@ -122,9 +122,9 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
 
-	size_t itry = 0;
+	int itry = 0;
 	size_t in = 0;
-	size_t maxtries;
+	int maxtries;
 
 	/* In the case of overflow, which will happen for some long
 	 * sentences, but is particularly common for the amy/ady random
@@ -208,7 +208,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
 
-	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %zu linkages had "
+	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %d linkages had "
 	        "invalid morphology construction\n", N_invalid_morphism,
 	        itry + (itry != maxtries));
 }

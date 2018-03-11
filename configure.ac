@@ -376,7 +376,8 @@ if test "x$enable_sat_solver" = xyes; then
 	fi
 
 	AC_LANG([C])
-	CPPFLAGS="$CPPFLAGS_SAVE -DUSE_SAT_SOLVER=1"
+	CPPFLAGS="$CPPFLAGS_SAVE"
+	AC_DEFINE(USE_SAT_SOLVER, 1, [Define for compilation])
 	AC_SUBST(ZLIB_CPPFLAGS)
 fi
 
@@ -393,7 +394,7 @@ AC_ARG_ENABLE( corpus-stats,
 )
 if test "x$enable_corpus_stats" = "xyes"
 then
-	CPPFLAGS="${CPPFLAGS} -DUSE_CORPUS=1"
+	AC_DEFINE(USE_CORPUS, 1, [Define for compilation])
 fi
 
 AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
@@ -407,7 +408,7 @@ AC_ARG_ENABLE( wordgraph_display,
 )
 if test "x$enable_wordgraph_display" = "xyes"
 then
-	CPPFLAGS="${CPPFLAGS} -DUSE_WORDGRAPH_DISPLAY=1"
+	AC_DEFINE(USE_WORDGRAPH_DISPLAY, 1, [Define for compilation])
 fi
 
 AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_wordgraph_display} = xyes)
@@ -426,7 +427,7 @@ fi
 # Which is insane, of course, except that some Apple OSX systems
 # appear to be borken... have header files but no libs ...
 if test "x${SQLiteFound}" = "xyes"; then
-	CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1"
+	AC_DEFINE(HAVE_SQLITE, 1, [Define for compilation])
 fi
 AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 AC_SUBST(SQLITE3_LIBS)
@@ -559,7 +560,7 @@ AC_ARG_ENABLE( regex_tokenizer,
 )
 if test "x$enable_regex_tokenizer" = "xyes"
 then
-	CPPFLAGS="${CPPFLAGS} -DUSE_REGEX_TOKENIZER=1"
+	AC_DEFINE(USE_REGEX_TOKENIZER, 1, [Define for compilation])
 	AX_PATH_LIB_PCRE
 fi
 

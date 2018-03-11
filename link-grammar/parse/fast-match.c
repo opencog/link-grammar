@@ -107,7 +107,6 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 
 /**
  * Adds the match node m to the sorted list of match nodes l.
- * The parameter dir determines the order of the sorting to be used.
  * Makes the list sorted from smallest to largest.
  */
 static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
@@ -140,7 +139,6 @@ static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
 
 /**
  * Adds the match node m to the sorted list of match nodes l.
- * The parameter dir determines the order of the sorting to be used.
  * Makes the list sorted from largest to smallest
  */
 static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
