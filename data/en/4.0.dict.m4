@@ -126,8 +126,8 @@ nonCAP.zzz: ZZZ-;
 % noun-main-s -- singular
 % XXX FIXME: <noun-main-?> is often used with <noun-sub-?> and sub
 % has a R+ & B+ on it. The problem here is that R+ & B+ should not
-% be used with the J- here.  This needs to be refactored to prevent
-% this, or at least, cost it in some way.
+% be used with either the J- or the O-.  This needs to be refactored
+% to prevent this.
 %
 % (Js- & {Mf+}): Allows constructions involving "of" to link locally,
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
