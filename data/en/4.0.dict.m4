@@ -141,6 +141,13 @@ nonCAP.zzz: ZZZ-;
   or <post-nominal-s>
   or <costly-null>;
 
+% noun-main-e: used for proper names (named entities)
+% Os*e- is used to allow certain adjectival uses.
+<noun-main-e>:
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os*e-
+  or <post-nominal-s>
+  or <costly-null>;
+
 % noun-main-p -- plural
 <noun-main-p>:
   (Sp+ & <CLAUSE>) or SIp- or Jp-
@@ -378,7 +385,7 @@ PL-CAPITALIZED-WORDS:
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [GN-]2.1 or [[{@A-} & {D-}]]} &
-      (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>))
+      (({@MX+} & {NMr+} & (JG- or <noun-main-e> or <noun-and-s>))
         or YS+
         or YP+))
     or AN+
@@ -2735,7 +2742,7 @@ did.v-d:
 done.v:
   VERB_PP(<vc-done>)
   or <verb-phrase-opener>
-  or (<verb-pv-b> & <vc-done>)
+  or (<verb-pv-b> & {<vc-done>})
   or (S- & <verb-wall>);
 
 % Pa- & Pg+: "I am done working", "I am through being mad"

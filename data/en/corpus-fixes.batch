@@ -2185,11 +2185,15 @@ I want a shed green in color
 I want my coffee fresh
 *I want coffee fresh
 
+% "I want the review brilliant." is very awkward, unless context
+% suggests that there should have been a "that you write to be".
+% Viz: "I want the review [that you will write to be] brilliant."
+% which does not mean "I want the brilliant review"
 I want it shiny.
 I wish it was shiny.
 I want it brilliant.
 I want the review to be brilliant.
-I want the review brilliant.
+*I want the review brilliant.
 I want it done.
 I want the job done.
 I want it finished.
