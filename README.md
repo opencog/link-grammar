@@ -1028,7 +1028,7 @@ Easy to fix: provide a more uniform API to the constituent tree.
 i.e provide word index.   Also, provide a better word API,
 showing word extent, subscript, etc.
 
-###Capitalized first words:
+### Capitalized first words:
 There are subtle technical issues for handling capitalized first
 words. This needs to be fixed. In addition, for now these words are
 shown uncapitalized in the result linkages. This can be fixed.
@@ -1039,7 +1039,7 @@ phenomenon!
 
 See also [issue 690](https://github.com/opencog/link-grammar/issues/690)
 
-####Capitalization-mark tokens:
+### #Capitalization-mark tokens:
 The proximal issue is to add a cost, so that Bill gets a lower
 cost than bill.n when parsing "Bill went on a walk".  The best
 solution would be to add a 'capitalization-mark token' during
@@ -1050,7 +1050,7 @@ moves capitalization out of ad-hoc C code and into the dictionary,
 where it can be handled like any other language feature.
 The tokenizer includes experimental code for that.
 
-###Corpus-statistics-based parse ranking:
+### Corpus-statistics-based parse ranking:
 The old for parse ranking via corpus statistics needs to be revived.
 The issue can be illustrated with these example sentences:
 ```text
@@ -1064,7 +1064,7 @@ and come to the conclusion that one should please some unstated
 object, and then turn off the lights. (Perhaps one is pleasing
 by turning off the lights?)
 
-###Punctuation, zero-copula, zero-that:
+### Punctuation, zero-copula, zero-that:
 Poorly punctuated sentences cause problems:  for example:
 ```text
 "Mike was not first, nor was he last."
@@ -1074,7 +1074,7 @@ The one without the comma currently fails to parse.  How can we
 deal with this in a simple, fast, elegant way?  Similar questions
 for zero-copula and zero-that sentences.
 
-###Zero/phantom words:  Expressions such as "Looks good" have an implicit
+### Zero/phantom words:  Expressions such as "Looks good" have an implicit
 "it" (also called a zero-it or phantom-it) in them; that is, the
 sentence should really parse as "(it) looks good".  The dictionary
 could be simplified by admitting such phantom words explicitly,
@@ -1114,7 +1114,7 @@ else the linkage is invalid. After parsing, the phantom words can
 be inserted into the sentence, with the location deduced from link
 lengths.
 
-###Context-dependent zero phrases.
+### Context-dependent zero phrases.
 Consider an argument between a professor and a dean, and the dean
 wants the professor to write a brilliant review. At the end of the
 argument, the dean exclaims: "I want the review brilliant!"  This
@@ -1124,14 +1124,14 @@ such a construction is ungrammatical, as the predicativeness is not
 at all apparant, and it reads just as incorrectly as would
 "*Hey Joe, can you hand me that review brilliant?"
 
-###Imperatives:
+### Imperatives:
 ```text
 "Push button"
 "Push button firmly"
 ```
 The zero/phantom-word solution, described above, should help with this.
 
-###Bad grammar: When a sentence fails to parse, look for:
+### Bad grammar: When a sentence fails to parse, look for:
  * confused words: its/it's, there/their/they're, to/too, your/you're ...
    These could be added at high cost to the dicts.
  * missing apostrophes in possessives: "the peoples desires"
@@ -1141,7 +1141,7 @@ The zero/phantom-word solution, described above, should help with this.
 Poor agreement might be handled by giving a cost to mismatched
 lower-case connector letters.
 
-###Poor linkage choices:
+### Poor linkage choices:
 Compare "she will be happier than before" to "she will be more happy
 than before." Current parser makes "happy" the head word, and "more"
 a modifier w/EA link.  I believe the correct solution would be to
@@ -1152,7 +1152,7 @@ would eliminate/simplify rules for less,more.
 However, this idea needs to be double-checked against, e.g. Hudson's
 word grammar.  I'm confused on this issue ...
 
-###Stretchy links:
+### Stretchy links:
 Currently, some links can act at "unlimited" length, while others
 can only be finite-length.  e.g. determiners should be near the
 noun that they apply to.  A better solution might be to employ
@@ -1160,7 +1160,7 @@ a 'stretchiness' cost to some connectors: the longer they are, the
 higher the cost. (This eliminates the "unlimited_connector_set"
 in the dictionary).
 
-###Opposing (repulsing) parses:
+### Opposing (repulsing) parses:
 Sometimes, the existence of one parse should suggest
 that another parse must surely be wrong: if one parse is possible,
 then the other parses must surely be unlikely. For example: the
@@ -1182,11 +1182,11 @@ and AN joining high.n; these two should either be collapsed into
 one, or one should be eliminated.
 
 
-###WordNet hinting:
+### WordNet hinting:
 Use WordNet to reduce the number for parses for sentences containing
 compound verb phrases, such as "give up", "give off", etc.
 
-###Sliding-window (Incremental) parsing:
+### Sliding-window (Incremental) parsing:
 To avoid a combinatorial explosion of parses, it would be nice to
 have an incremental parsing, phrase by phrase, using a sliding window
 algorithm to obtain the parse. Thus, for example, the parse of the
@@ -1255,7 +1255,7 @@ http://www.sciencedaily.com/releases/2012/09/120925143555.htm
 per Morten Christiansen, Cornell professor of psychology.
 
 
-###Registers, sociolects, dialects (cost vectors):
+### Registers, sociolects, dialects (cost vectors):
 Consider the sentence "Thieves rob bank" -- a typical newspaper
 headline. LG currently fails to parse this, because the determiner
 is missing ("bank" is a count noun, not a mass noun, and thus
@@ -1293,7 +1293,7 @@ various links.  A dialect would be specified during the parse,
 thus causing the costs for that dialect to be employed during
 parse ranking.
 
-###Hand-refining verb patterns:
+### Hand-refining verb patterns:
    A good reference for refining verb usage patterns is:<br>
    COBUILD GRAMMAR PATTERNS 1: VERBS<br>
    from THE COBUILD SERIES /from/ THE BANK OF ENGLISH<br>
@@ -1302,7 +1302,7 @@ parse ranking.
    http://www.corpus.bham.ac.uk/publications/index.shtml
 
 
-###Quotations:
+### Quotations:
    Currently tokenize.c tokenizes double-quotes and some UTF8 quotes
    (see the RPUNC/LPUNC class in en/4.0.affix - the QUOTES class is
    not used for that, but for capitalization support), with some very
@@ -1323,7 +1323,7 @@ parse ranking.
 
    See also [issue #42](https://github.com/opencog/link-grammar/issues/42).
 
-###Semantification of the dictionary:
+### Semantification of the dictionary:
   "to be fishing": Link grammar offers four parses of "I was fishing for
   evidence", two of which are given low scores, and two are given
   high scores. Of the two with high scores, one parse is clearly bad.
@@ -1366,7 +1366,7 @@ parse ranking.
   edited by Elena Tognini-Bonelli, volume 4), 2000<br>
   [Book review](http://www.aclweb.org/anthology/J01-2013).
 
-###"holes" in collocations (aka "set phrases" of "phrasemes"):
+### "holes" in collocations (aka "set phrases" of "phrasemes"):
   The link-grammar provides several mechanisms to support
   circumpositions or even more complicated multi-word structures.
   One mechanism is by ordinary links; see the V, XJ and RJ links.
@@ -1493,7 +1493,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
  mutual information content, they can dominate the syntactic
  structure of a sentence.
 
-###Lexical functions:
+### Lexical functions:
  MTT suggests that perhaps the correct way to understand the contents
  of the post-processing rules is as an implementation of 'lexical
  functions' projected onto syntax.  That is, the post-processing
@@ -1515,7 +1515,7 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
  More generally, all of link-grammar could benefit from a MTT-izing
  of infrastructure.
 
-###Morphology:
+### Morphology:
 Compare the above commentary on lexical functions to Hebrew morphological
 analysis. To quote Wikipedia:
 
@@ -1532,12 +1532,12 @@ analysis. To quote Wikipedia:
    > along with many other words such as godel "size" and migdal
    > "tower".
 
-###Morphology printing:
+### Morphology printing:
 
    Instead of hard-coding LL, declare which links are morpho links
    in the dict.
 
-###UTF-8 cleanup:
+### UTF-8 cleanup:
    Replace the mbrtowc code with proper language support; it seems
    that the correct solution is to use [ICU](http://site.icu-project.org/)
    *  ICU pros: runs on windows.
@@ -1548,13 +1548,13 @@ analysis. To quote Wikipedia:
    *  Pros: smaller, simpler than ICU.
    *  Cons: might have problems with MS Windows.
 
-###Assorted minor cleanup:
+### Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,
       e.g. the max number of characters in a word, or max words
       in a sentence.
    * Should remove compile-time constants, e.g. max words, max
       length etc.
 
-###Version 6.0 TODO list:
+### Version 6.0 TODO list:
 Version 6.0 will change `Sentence` to `Sentence*,` `Linkage` to
 `Linkage*` in the API.  But perhaps this is a bad idea...
