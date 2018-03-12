@@ -1,3 +1,27 @@
+[ANNOUNCE] Link-Grammar Version 5.4.4 is now available.
+
+I'm pleased to announce that version 5.4.4 is now available. I don't
+normally announce minor versions, but this one was almost named 5.5.0.
+Which suggests that there were some important changes. Dictionary
+loading is now thread safe. Security vulnerabilities are fixed. Parsing
+of Russian is now 2x faster than before. Connectors can be individually
+given length limits - handy for morphology and phonetic agreement - and
+the root reason for the Russian speedup.  An assortment of fixes to the
+English dictionary, including a reversal of some back-sliding in the
+test corpus.
+
+You can download link-grammar from
+http://www.abisource.com/downloads/link-grammar/current/
+
+The website is here:
+https://www.abisource.com/projects/link-grammar/
+
+WHAT IS LINK GRAMMER?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on Link Grammar, an original theory of English
+syntax. Given a sentence, the system assigns to it a syntactic structure,
+which consists of a set of labelled links connecting pairs of words.
+
 
 =================================================================
 =================================================================
