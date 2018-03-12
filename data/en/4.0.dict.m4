@@ -126,8 +126,11 @@ nonCAP.zzz: ZZZ-;
 % noun-main-s -- singular
 % XXX FIXME: <noun-main-?> is often used with <noun-sub-?> and sub
 % has a R+ & B+ on it. The problem here is that R+ & B+ should not
-% be used with either the J- or the O-.  This needs to be refactored
-% to prevent this.
+% be used with the J- and sometimes not with the O-.  So, for example,
+% "I still remember the room I kissed him" - room is the object, and
+% the "I" should not be relative.
+% This needs to be refactored to prevent this, at least for J. How to
+% handle the R+ & B+ on inappropriate O- is less clear.
 %
 % (Js- & {Mf+}): Allows constructions involving "of" to link locally,
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
