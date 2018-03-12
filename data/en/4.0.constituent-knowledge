@@ -1,8 +1,11 @@
-DOMAIN_STARTER_LINKS: S###* S##i SF SX Ce* Cet RS O OX Js Jp J* MVp Mp R* Rn Pa TH Pg Pv I PP Cr
-Cs MX#* Wc Wd Wi Wa
-TI BIt MVs TO Mv Mg* MVa OF ON IN QI Ma CP* CPi CPx MVt S##w MX#r Pp MVi MVg Mgp MVx SI MX#p Cc
-S##t S##h S##b S##q L MX#a MG JG MX#x U S##d JT MVh Mr B#w B#d MVb COq Mj OD CX S##g PF Zc MX#d Bc
-K NIax
+DOMAIN_STARTER_LINKS: S##* S##b S##d S##g S##h S##i S##q S##s S##t S##w
+SF SX Ce* Cet RS O OX Js Jp J* R* Rn Pa Pg Pp Pv TH I PP Cc Cr Cs
+MX#* MX#a MX#d MX#p MX#r MX#x
+MVa MVb MVg MVh MVi MVp MVs MVt MVx
+Wc Wd Wi Wa
+Ma Mg* Mgp Mj Mp Mr Mv
+TI BIt TO OF ON IN QI CP* CPi CPx SI
+L MG JG U JT B#w B#d COq OD CX PF Zc Bc K NIax
 
 DOMAIN_CONTAINS_LINKS:
 
@@ -23,14 +26,15 @@ LEFT_DOMAIN_STARTER_LINKS: A EA E CO#s CO* COd* YS YP Yt Yd GN DTie CO#n COp D##
 ;
 STARTING_LINK_TYPE_TABLE:
 S##*  v
-S##i  v
-S##t  v
-S##h  v
 S##b  v
-S##q  v
 S##d  z
 S##g  v
+S##h  v
+S##i  v
+S##q  v
 S##s  v
+S##t  v
+S##w  z
 SF v
 SX v
 Wd  s
@@ -43,8 +47,8 @@ TH  b
 RS z
 O  n
 OX  n
-Js  n
 Jp  n
+Js  n
 J*  n
 MVp p
 Mp  p
@@ -86,7 +90,6 @@ CPi s
 CPx q
 MVt p
 MX#r b
-S##w z
 Pp p
 MVg z
 Mgp z
