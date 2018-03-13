@@ -162,6 +162,18 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 	}
 }
 
+static void condesc_length_limit_def_delete(ConTable *ct)
+{
+	length_limit_def_t *l_next;
+
+	for (length_limit_def_t *l = ct->length_limit_def; NULL != l; l = l_next)
+	{
+		l_next = l->next;
+		free(l);
+	}
+	ct->length_limit_def = NULL;
+}
+
 void set_all_condesc_length_limit(Dictionary dict)
 {
 	ConTable *ct = &dict->contable;
@@ -186,12 +198,7 @@ void set_all_condesc_length_limit(Dictionary dict)
 		}
 	}
 
-	length_limit_def_t *l_next;
-	for (length_limit_def_t *l = ct->length_limit_def; NULL != l; l = l_next)
-	{
-		l_next = l->next;
-		free(l);
-	}
+	condesc_length_limit_def_delete(&dict->contable);
 
 	if (verbosity_level(D_SPEC+1))
 	{
@@ -202,7 +209,6 @@ void set_all_condesc_length_limit(Dictionary dict)
 			       ct->sdesc[n]->length_limit, ct->sdesc[n]->string);
 		}
 	}
-
 }
 
 /* ======================================================== */
@@ -419,6 +425,7 @@ void condesc_delete(Dictionary dict)
 	pool_delete(dict->contable.mempool);
 	free(dict->contable.hdesc);
 	free(dict->contable.sdesc);
+	condesc_length_limit_def_delete(&dict->contable);
 }
 
 static condesc_t **condesc_find(ConTable *ct, const char *constring, int hash)
