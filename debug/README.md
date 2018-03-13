@@ -47,10 +47,10 @@ messages of the lower ones.
 * 10: Basic dictionary debug.
 
 100-...: Show only messages exactly at the specified level.
-* 101: do_count() memoizing table statistics (in DEBUG mode only).
-
-* 102: Print all the connectors, along with their length limit.
+* 101: Print all the connectors, along with their length limit.
        A length limit of 0 means the value of the short\_length option is used.
+
+* 102: do_count() memoizing table statistics (in DEBUG mode only).
 
 * 103: Show unsubscripted dictionary words and subscripted ones which share
        the same base word.
