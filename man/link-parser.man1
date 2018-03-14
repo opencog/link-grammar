@@ -260,7 +260,7 @@ Disabled
 .IP 1
 Treebank-style constituent tree
 .PP
-.IP 1
+.IP 2
 Flat, bracketed tree [A like [B this B] A]
 .IP 3
 Flat, treebank-style tree (A like (B this))
