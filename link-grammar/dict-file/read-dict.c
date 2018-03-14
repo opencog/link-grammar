@@ -397,16 +397,16 @@ static bool check_connector(Dictionary dict, const char * s)
 		return false;
 	}
 	if (*s == '@') s++;
-	if (!isupper((int)*s) && ('h' != *s) && ('d' != *s)) {
+	if (!isupper((unsigned char)*s) && ('h' != *s) && ('d' != *s)) {
 		dict_error(dict, "The first letter of a connector must be h,d or uppercase.");
 		return false;
 	}
-	if ((*s == 'I') && (*(s+1) == 'D')) {
+	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
 		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
 		return false;
 	}
 	while (*(s+1)) {
-		if ((!isalnum((int)*s)) && (*s != WILD_TYPE)) {
+		if ((!isalnum((unsigned char)*s)) && (*s != WILD_TYPE)) {
 			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
 			return false;
 		}
