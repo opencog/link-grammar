@@ -86,9 +86,10 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 }
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
 static int hit;
 static int miss;
+#undef DEBUG_TABLE_STAT
 #define DEBUG_TABLE_STAT(x) x
 /**
  * Provide data for insights on the effectively of the connector pair table.
@@ -103,6 +104,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	int *wc = alloca(sent_length*sent_length*sizeof(ww));
 
 	memset(ww, 0, sent_length*sent_length*sizeof(ww));
+	memset(wc, 0, sent_length*sent_length*sizeof(ww));
 	for (int i = 0; i < ctxt->table_size; i++)
 	{
 		c = 0;
