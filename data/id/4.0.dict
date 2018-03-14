@@ -14,7 +14,7 @@
 anjing kucing wanita cewek pria cowok lelaki laki-laki taman lapangan tulang
 tetangga toko jalan burung palu hidung pesta teman rumah film sinetron kakak adik
 saudara saudari warung murid tes ujian:
- {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
+ {@A-} & Ds- & {@M+ or (R+ & Bs+)} &
  (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 anjing-anjing kucing-kucing cewek-cewek wanita-wanita pria-pria cowok-cowok
@@ -24,100 +24,100 @@ teman-teman rumah-rumah film-film sinetron-sinetron kakak-kakak adik-adik
 saudara-saudara saudari-saudari saudara-saudari warung-warung murid-murid
 tes-tes ujian-ujian perang-perang "musim-dingin-musim-dingin" aksi-aksi
 hukum-hukum kesuksesan-kesuksesan:
-{@A-} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+{@A-} & {Dmc-} & {@M+ or (R+ & Bp+)} &
  (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
 
 air kemarahan uang politik masalah:
-{@A-} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+{@A-} & {Dmu-} & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 hukum "musim-dingin" aksi perang sukses:
-{@A-} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+{@A-} & {D*u-} & {@M+ or (R+ & Bs+)} &
 (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
 
 CAPITALIZED-WORDS: J- or O- or (S+ & (({@CO-} & {C-}) or R-)) or SI-;
 
-dia ia: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
-aku saya dia mereka kami kita: J- or O-;
-dia ia: D+ or J- or O-;
-saya aku kamu mereka kami kita: D+;
-dia ia: D+;
+dia.1 ia.1: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
+aku.1 saya.1 dia.2 mereka.1 kami.1 kita.1: J- or O-;
+dia.3 ia.2: D+ or J- or O-;
+saya.2 aku.2 kamu.3 mereka.2 kami.2 kita.2: D+;
+dia.4 ia.3: D+;
 
-kamu mereka kami kita saya aku: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
-dia ia: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
+kamu.4 mereka.3 kami.3 kita.3 saya.3 aku.3: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
+dia.5 ia: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
 
-ini: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
-ini: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
-itu: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+ini.1: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
+ini.2: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
+itu.2: (Dmc+) or (({P+} or {{C+} & Bp+}) &
 (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
-sebuah si sang: D+;
-sebuah: Ds+;
+sebuah.1 si sang: D+;
+sebuah.2: Ds+;
 
-melakukan berbuat: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
+melakukan.1 berbuat.1: ({Q-} & SI+ & I+) or ({@E-} & (S- or
 (RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
-melakukan berbuat: (SIp+ & I+) or ({@E-} & (Sp- or 
+melakukan.2 berbuat.2: (SIp+ & I+) or ({@E-} & (Sp- or
 (RS- & Bp-) or I-) &
 (((B- or O+) & {@MV+}) or I+));
-melakukan berbuat: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
+melakukan.3 berbuat.3: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
 (((B- or O+) & {@MV+}) or I+));
-"telah-melakukan": {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
-"sedang-melakukan": {@E-} & (Pg- or Mg-) & (O+ or B-) & {@MV+};
+"telah-melakukan.1": {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
+"sedang-melakukan.2": {@E-} & (Pg- or Mg-) & (O+ or B-) & {@MV+};
 
-telah sudah: ({Q-} & SIs+ & PP+) or ({@E-} & (Ss- or (RS- & B-)) &
+telah.1 sudah.1: ({Q-} & SIs+ & PP+) or ({@E-} & (Ss- or (RS- & B-)) &
 (TO+ or ((B- or O+) & {@MV+}) or PP+));
-telah sudah: ({Q-} & SIp+ & PP+) or ({@E-} & (Sp- or
+telah.2 sudah.2: ({Q-} & SIp+ & PP+) or ({@E-} & (Sp- or
 (RS- & Bp-) or I-) &
 (TO+ or ((B- or O+) & {@MV+})));
-telah sudah: ({Q-} & SI+ & PP+) or ({@E-} & (S- or (RS- & B-) or PP-) &
+telah.3 sudah.3: ({Q-} & SI+ & PP+) or ({@E-} & (S- or (RS- & B-) or PP-) &
 (TO+ or ((B- or O+) & {@MV+}) or PP+));
-telah sudah: {@E-} & (M- or Pg-) & (TO+ or ((B- or O+) & {@MV+}) or PP+);
+telah.4 sudah.4: {@E-} & (M- or Pg-) & (TO+ or ((B- or O+) & {@MV+}) or PP+);
 
-adalah ialah yaitu: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
+adalah.1 ialah.1 yaitu.1: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
  & (((O+ or B-) & {@MV+}) or P+ or AF-));
-adalah ialah yaitu: ((Sp- or (RS- & Bp-) or ({Q-} &
+adalah.2 ialah.2 yaitu.2: ((Sp- or (RS- & Bp-) or ({Q-} &
 SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
-adalah ialah yaitu: I- & (((O+ or B-) & {@MV+}) or P+ or AF-);
-adalah ialah yaitu: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
-adalah ialah yaitu: {@E-} & (M- or Pg-) & (((O+ or B-) & {@MV+}) or P+ or AF-);
+adalah.3 ialah.3 yaitu.3: I- & (((O+ or B-) & {@MV+}) or P+ or AF-);
+adalah.4 ialah.4 yaitu.4: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
+adalah.5 ialah.5 yaitu.5: {@E-} & (M- or Pg-) & (((O+ or B-) & {@MV+}) or P+ or AF-);
 
 akan dapat.v bisa.v harus seharusnya sebaiknya mungkin: (({Q-} & 
 SI+) or S- or (RS- & B-)) & I+;
 
-lari datang: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
-lari datang pergi: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-lari datang pergi: {@E-} & (S- or (RS- & B-)) & {@MV+};
-pergi: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
-pergi: {@E-} & PP- & {@MV+};
-pergi: {@E-} & (Pg- or M-) & {TO+} & {@MV+};
-lari datang: {@E-} & (Pg- or M-) & {@MV+};
+lari.1 datang.1: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+lari.2 datang.2 pergi.1: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+lari.3 datang.3 pergi.2: {@E-} & (S- or (RS- & B-)) & {@MV+};
+pergi.3: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
+pergi.4: {@E-} & PP- & {@MV+};
+pergi.5: {@E-} & (Pg- or M-) & {TO+} & {@MV+};
+lari.4 datang.4: {@E-} & (Pg- or M-) & {@MV+};
 
-bicara.v berbicara.v ngomong.v datang mati meninggal "meninggal-dunia" wafat tewas:
+bicara.1.v.1 berbicara.1.v.1 ngomong.1.v.1 datang.5 mati.1 meninggal.1 "meninggal-dunia.1" wafat.1 tewas.1:
    {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
-bicara.v berbicara.v ngomong.v datang mati meninggal "meninggal-dunia" wafat tewas:
+bicara.2v berbicara.2v ngomong.2v datang.6 mati.2 meninggal.2 "meninggal-dunia.2" wafat.2 tewas.2:
    {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
-bicara.v berbicara.v ngomong.v datang mati meninggal "meninggal-dunia" wafat tewas:
+bicara.3v berbicara.4v ngomong.3v datang.7 mati.3 meninggal.3 "meninggal-dunia.3" wafat.3 tewas.3:
    {@E-} & (S- or (RS- & B-) or PP-) & {@MV+};
-bicara.v berbicara.v ngomong.v datang berdatangan mati meninggal "meninggal-dunia" wafat tewas:
+bicara.4v berbicara.4. ngomong.4v datang.8 berdatangan mati.4 meninggal.4 "meninggal-dunia.4" wafat.4 tewas.4:
    {@E-} & (Pg- or M-) & {@MV+};
 
-lihat melihat ketemu bertemu menemui kejar mengejar undang mengundang menangkap:
+lihat.1 melihat.1 ketemu.1 bertemu.1 menemui.1 kejar.1 mengejar.1 undang.1 mengundang.1 menangkap.1:
    {@E-} & (Sp- or (RS- & Bp-) or I-) & (O+ or B-) & {@MV+};
-lihat melihat ketemu bertemu menemui kejar mengejar undang mengundang menangkap:
+lihat.2 melihat.2 ketemu.2 bertemu.2 menemui.2 kejar.2 mengejar.2 undang.2 mengundang.2 menangkap.2:
    {@E-} & (Ss- or (RS- & Bs-)) & (O+ or B-) & {@MV+};
-lihat melihat ketemu bertemu menemui kejar mengejar undang mengundang menangkap:
+lihat.3 melihat.3 ketemu.3 bertemu.3 menemui.3 kejar.3 mengejar.3 undang.3 mengundang.3 menangkap.3:
 {@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (B- or O+))) & {@MV+};
-lihat melihat: {@E-} & (S- or (RS- & B-)) & (B- or O+) & {@MV+};
-lihat melihat: {@E-} & (Pv- or M- or (PP- & (B- or O+))) & {@MV+};
-lihat melihat ketemu bertemu menemui kejar mengejar undang mengundang menangkap:
+lihat.4 melihat.4: {@E-} & (S- or (RS- & B-)) & (B- or O+) & {@MV+};
+lihat.5 melihat.5: {@E-} & (Pv- or M- or (PP- & (B- or O+))) & {@MV+};
+lihat.6 melihat.6 ketemu.4 bertemu.4 menemui.4 kejar.4 mengejar.4 undang.4 mengundang.4 menangkap.4:
 {@E-} & (Pg- or M-) & (O+ or B-) & {@MV+};
 
-bilang memberitahu menyampaikan: {@E-} & (Sp- or (RS- & Bp-) or I-) & ((O+ or B-) &
+bilang.1 memberitahu.1 menyampaikan.1: {@E-} & (Sp- or (RS- & Bp-) or I-) & ((O+ or B-) &
 {TH+ or C+ or QI+ or @MV+});
-bilang memberitahu menyampaikan: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+bilang.2 memberitahu.2 menyampaikan.2: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+
 or QI+ or @MV+});
-bilang memberitahu menyampaikan: {@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (O+ or B-))) &
+bilang.3 memberitahu.3 menyampaikan.3: {@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (O+ or B-))) &
 {TH+ or C+ or QI+ or @MV+};
-bilang memberitahu menyampaikan: {@E-} & (Pg- or M-) & ((O+ or B-) & {TH+ or C+ or QI+ or
+bilang.4 memberitahu.4 menyampaikan.4: {@E-} & (Pg- or M-) & ((O+ or B-) & {TH+ or C+ or QI+ or
 @MV+});
 
 "akhir-akhir-ini" "barusan" "baru-saja" kadang-kadang "sebentar-lagi" "sesaat-lagi"
@@ -125,30 +125,30 @@ bertahap "secara-spesifik" "secara-umum" "awalnya" "nantinya" "akhirnya" "sudah"
 sekarang "sedihnya" umumnya:
 E+ or MV-;
 
-dari sambil di ke "di-belakang" antara "di-antara" "di-bawah" "di-atas"
+dari sambil di ke.1 "di-belakang" antara "di-antara" "di-bawah" "di-atas"
 tanpa untuk "di-seberang" "ke-atas" "ke-bawah" sembari sekitar
-"ke-dalam" "di-dalam" sekira oleh:
+"ke-dalam" "di-dalam" sekira oleh.1:
 J+ & (Mp- or MV- or Pp-);
 
-oleh: J+ & Mp-;
+oleh.2: J+ & Mp-;
 
 "di-sini" "di-sana": MV- or Mp- or Pp-;
 
-yang: (C+ & TH-) or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ & {{@CO-} & {C-}}) or J- or O-;
+yang.1: (C+ & TH-) or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ & {{@CO-} & {C-}}) or J- or O-;
 
-ke: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
+ke.2: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
 
 siapa: (R- & (C+ or RS+)) or S+ or B+;
 apa: S+ or B+;
-yang "di-mana": (R- & (C+ or RS+)) or S+ or B-;
+yang.2 "di-mana.1": (R- & (C+ or RS+)) or S+ or B-;
 
-karena kecuali meski tapi tetapi namun meskipun "meski-pun" walau walaupun "walau-pun":
+karena kecuali meski.1 tapi.1 tetapi.1 namun.1 meskipun.1 "meski-pun.1" walau.1 walaupun.1 "walau-pun.1":
   (C+ & (({Xc+} & CO+) or MV-));
 setelah sebelum sesudah sejak sampai: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
 jika bila andai: C+ & (({Xc+} & CO+) or MV-);
 
 kapan: (QI- & C+) or Q+ or (C+ & (({Xc+} & CO+) or MV-));
-"di-mana":(QI- & C+) or Q+;
+"di-mana.2":(QI- & C+) or Q+;
 bagaimana gimana:  (QI- & (C+ or EA+)) or Q+ or EA+;
 
 cepat lambat tangkas pendek panjang hitam putih besar kecil cantik tampan rupawan
@@ -161,7 +161,7 @@ lega takut ketakutan.a beruntung untung mujur sial yakin:
 sangat amat: EA+;
 sekali banget bingit: EA-;
 
-tapi tetapi namun meski meskipun "meski-pun" walau walaupun "walau-pun" dan: MV- & C+;
+tapi.2 tetapi.2 namun.2 meski.2 meskipun.2 "meski-pun.2" walau.2 walaupun.2 "walau-pun.2" dan: MV- & C+;
 
 ",": Xc-;
 
