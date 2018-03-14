@@ -1,17 +1,17 @@
-﻿% Vietnamese Dictionary
+% Vietnamese Dictionary
 
-% Dictionary version number is 5.3.3 (formatted as V5v3v3+)
-<dictionary-version-number>: V5v3v3+;
+% Dictionary version number is 5.4.5 (formatted as V5v4v5+)
+<dictionary-version-number>: V5v4v5+;
 <dictionary-locale>: VI4vn+;
 
 % See https://bitbucket.org/ngocminh/lienkate for the master
-% project; this includes a version of the link-grammar perser
+% project; this includes a version of the link-grammar parser
 % written in Java.
 
 % Guide to links:
 % VT = động từ = verb
 % DT = danh từ = noun
-% TVT=trước động từ=preceding verb
+% TVT=trước động từ=preceeding verb
 
 % Due clashes with the conventions of the library, the following
 % link characters are replaced:
