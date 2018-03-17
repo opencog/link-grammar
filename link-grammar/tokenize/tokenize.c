@@ -158,6 +158,7 @@ static bool word_has_alternative(const Gword *word)
 static char *utf8_str1chr(const char *s, const char *xc)
 {
 	int len = utf8_charlen(xc);
+	if (len < 0) return NULL; /* Invalid UTF-8 */
 	char *xc1 = strndupa(xc, len);
 
 	return strstr(s, xc1);
@@ -849,9 +850,10 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 						/* Account for case conversion length difference. */
 						if (subword->status & WS_FIRSTUPPER)
 						{
-							subword->end +=
-								utf8_charlen(unsplit_word->subword) -
-								utf8_charlen(token);
+							int uclen = utf8_charlen(unsplit_word->subword);
+							int lclen = utf8_charlen(token);
+							if ((uclen > 0) && (lclen > 0))
+								subword->end += uclen - lclen;
 						}
 						//printf(">>>SUBWORD '%s' %ld:%ld\n", subword->subword, subword->start-sent->orig_sentence, subword->end-sent->orig_sentence);
 					}

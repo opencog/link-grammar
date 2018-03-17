@@ -339,6 +339,7 @@ static inline size_t utf8_strncpy(char *dest, const char *src, size_t n)
 	while (0 < n)
 	{
 		size_t k = utf8_charlen(src);
+		if (0 > (ssize_t)k) return 0; /* XXX Maybe print error. */
 		b += k;
 		while (0 < k) { *dest = *src; dest++; src++; k--; }
 		n--;
