@@ -234,7 +234,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 			{
 				dict->pin--;
 				uc[i] = 0x0;
-				return uc;
+				return true;
 			}
 			uc[i] = c;
 			i++;
