@@ -141,7 +141,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	{
 		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", dict->token);
 		strncat(tokens, t, ERRBUFLEN-1-pos);
-		link_advance(dict);
+		if (!link_advance(dict)) break;
 	}
 	tokens[pos] = '\0';
 
