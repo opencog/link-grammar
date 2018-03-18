@@ -163,7 +163,7 @@ void *pool_alloc(Pool_desc *mp)
 				/* aligned_alloc() has strict requirements. */
 				char errbuf[64];
 				strerror_r(errno, errbuf, sizeof(errbuf));
-				assert(NULL == mp->ring, "Block/element sizes %zu/%zu: %s",
+				assert(NULL != mp->ring, "Block/element sizes %zu/%zu: %s",
 				       mp->block_size, mp->element_size, errbuf);
 			}
 			if (NULL == mp->alloc_next)
