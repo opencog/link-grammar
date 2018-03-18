@@ -751,6 +751,16 @@ class ZENLangTestCase(unittest.TestCase):
         #            |          |
         #[about] people.p attended.v-d
 
+    def test_2_step_parsing_with_null_links(self):
+        self.po = ParseOptions(min_null_count=0, max_null_count=0)
+
+        sent = Sentence('about people attended', self.d, self.po)
+        linkages = sent.parse()
+        self.assertEqual(len(linkages), 0)
+        self.po = ParseOptions(min_null_count=1, max_null_count=999)
+        linkages = sent.parse(self.po)
+        self.assertEqual(len(linkages), 2)
+        self.assertEqual(linkages.next().unused_word_cost(), 1)
 
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
