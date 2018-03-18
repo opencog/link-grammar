@@ -205,7 +205,7 @@ static bool set_label(PPLexTable *lt, const char *label)
   char *label_sans_colon;
 
   /* check for and then slice off the trailing colon */
-  label_sans_colon = strdup(label);
+  label_sans_colon = strdupa(label);
   c=&(label_sans_colon[strlen(label_sans_colon)-1]);
   if (*c != ':')
   {
@@ -230,8 +230,6 @@ static bool set_label(PPLexTable *lt, const char *label)
   }
   lt->labels[i] = string_set_add(label_sans_colon, lt->string_set);
   lt->idx_of_active_label = i;
-
-  free(label_sans_colon);
 
   return true;
 }

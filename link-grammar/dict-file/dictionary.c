@@ -307,10 +307,15 @@ Dictionary dictionary_create_from_file(const char * lang)
 }
 
 
+#ifdef USE_VITERBI
 /**
  * Use "string" as the input dictionary. All of the other parts,
  * including post-processing, affix table, etc, are NULL.
  * This routine is intended for unit-testing ONLY.
+ *
+ * FIXME? (Used only by code that is in use for now.)
+ * 1. get_default_locale() returns locale, not language.
+ * 2. "lang" memory leak on success.
  */
 Dictionary dictionary_create_from_utf8(const char * input)
 {
@@ -332,4 +337,5 @@ Dictionary dictionary_create_from_utf8(const char * input)
 
 	return dictionary;
 }
+#endif // USE_VITERBI
 

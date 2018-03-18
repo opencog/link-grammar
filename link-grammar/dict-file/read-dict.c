@@ -141,7 +141,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	{
 		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", dict->token);
 		strncat(tokens, t, ERRBUFLEN-1-pos);
-		link_advance(dict);
+		if (!link_advance(dict)) break;
 	}
 	tokens[pos] = '\0';
 
@@ -234,7 +234,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 			{
 				dict->pin--;
 				uc[i] = 0x0;
-				return uc;
+				return true;
 			}
 			uc[i] = c;
 			i++;
