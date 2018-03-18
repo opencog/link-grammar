@@ -505,11 +505,12 @@ class Sentence(object):
         return clg.sentence_null_count(self._obj)
 
     class sentence_parse(object):
-        def __init__(self, sent):
+        def __init__(self, sent, parse_options):
             self.sent = sent
             self.num = 0
-            self.rc = clg.sentence_parse(sent._obj, sent.parse_options._obj)
-            if clg.parse_options_timer_expired(sent.parse_options._obj):
+            self.parse_options = sent.parse_options if parse_options is None else parse_options
+            self.rc = clg.sentence_parse(sent._obj, self.parse_options._obj)
+            if clg.parse_options_timer_expired(self.parse_options._obj):
                 raise LG_TimerExhausted()
 
         def __nonzero__(self):
@@ -529,7 +530,7 @@ class Sentence(object):
         def next(self):
             if self.num == clg.sentence_num_valid_linkages(self.sent._obj):
                 raise StopIteration()
-            linkage = Linkage(self.num, self.sent, self.sent.parse_options._obj)
+            linkage = Linkage(self.num, self.sent, self.parse_options._obj)
             if not linkage:  # SAT sentinel value
                 raise StopIteration()
             self.num += 1
@@ -537,5 +538,5 @@ class Sentence(object):
 
         __next__ = next             # Account python3
 
-    def parse(self):
-        return self.sentence_parse(self)
+    def parse(self, parse_options=None):
+        return self.sentence_parse(self, parse_options)
