@@ -123,10 +123,10 @@ void pool_delete(Pool_desc *mp)
  * Allocate an element from the requested pool.
  * This function uses the feature that pointers to void and char are
  * interchangeable.
- * 1. If no current block of current block exhausted - obtain another one
+ * 1. If no current block or current block exhausted - obtain another one
  *    and chain it the block chain. Else reuse an LRU unused block;
  *    The element pointer is aligned to the required alignment.
- * 2. zero the block if required;
+ * 2. Zero the block if required;
  * 3. Return element pointer.
  */
 void *pool_alloc(Pool_desc *mp)
@@ -150,9 +150,12 @@ void *pool_alloc(Pool_desc *mp)
 				 mp->curr_elements, mp->num_elements, mp->name, mp->func);
 
 		/* No current block or current block exhausted - obtain another one. */
-		char *prev = mp->ring;
+		char *prev = mp->ring; /* Remember current block for possible chaining. */
 		if (NULL != mp->ring)
+		{
+			/* Next block already exists. */
 			mp->ring = POOL_NEXT_BLOCK(mp->ring, mp->data_size);
+		}
 
 		if (NULL == mp->ring)
 		{
@@ -167,7 +170,7 @@ void *pool_alloc(Pool_desc *mp)
 				       mp->block_size, mp->element_size, errbuf);
 			}
 			if (NULL == mp->alloc_next)
-				mp->chain = mp->ring;
+				mp->chain = mp->ring; /* This is the start of the chain. */
 			else
 				POOL_NEXT_BLOCK(prev, mp->data_size) = mp->ring;
 			POOL_NEXT_BLOCK(mp->ring, mp->data_size) = NULL;
