@@ -108,17 +108,13 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 	size_t exp_num_con;
 	ConTable *ct = &dict->contable;
 	condesc_t **sdesc = ct->sdesc;
-	condesc_t **econlist = NULL;
+	condesc_t **econlist;
 
-	if (e)
-	{
-		/* Create a connector list from the given expression. */
-		exp_num_con = get_connectors_from_expression(NULL, e);
-		econlist = alloca(exp_num_con * sizeof(*econlist));
-		get_connectors_from_expression(econlist, e);
-	}
-
-	if ((NULL == econlist) || (NULL == econlist[0])) return;
+	/* Create a connector list from the given expression. */
+	exp_num_con = get_connectors_from_expression(NULL, e);
+	if (0 == exp_num_con) return; /* Empty connector list. */
+	econlist = alloca(exp_num_con * sizeof(*econlist));
+	get_connectors_from_expression(econlist, e);
 
 	qsort(econlist, exp_num_con, sizeof(*econlist), condesc_by_uc_num);
 
