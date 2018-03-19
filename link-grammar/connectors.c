@@ -129,6 +129,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 
 		for (; en < exp_num_con; en++)
 			if (econlist[en]->uc_num >= sdesc[cn]->uc_num) break;
+		if (en == exp_num_con) break;
 
 		if (econlist[en]->uc_num != sdesc[cn]->uc_num) continue;
 		restart_cn = cn+1;
