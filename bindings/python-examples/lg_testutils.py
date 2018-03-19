@@ -68,9 +68,11 @@ def add_eqcost_linkage_order(original_class):
 
     original_class.original_parse = original_class.parse
 
-    def parse(self):
+    def parse(self, parse_options=None):
         """A decoration for the original Sentence.parse"""
-        linkages = self.original_parse()
+        # parse() has an optional single argument for parse options. If it is not given,
+        # call original_parse() also without arguments in order to test it that way.
+        linkages = self.original_parse() if parse_options is None else self.original_parse(parse_options)
         return eqcost_soretd_parse(linkages)
 
     original_class.parse = parse
