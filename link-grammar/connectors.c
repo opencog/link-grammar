@@ -103,6 +103,12 @@ static int condesc_by_uc_num(const void *a, const void *b)
 
 #define LENGTH_LINIT_WILD_TYPE WILD_TYPE
 
+/**
+ * Set the length limit of all the connectors that match those in e.
+ * XXX A connector in e that doesn't match any other connector cannot
+ * be detected, because it has been inserted into the connector table and
+ * hence matches at least itself.
+ */
 static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_limit)
 {
 	size_t exp_num_con;
@@ -129,6 +135,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 
 		for (; en < exp_num_con; en++)
 			if (econlist[en]->uc_num >= sdesc[cn]->uc_num) break;
+		if (en == exp_num_con) break;
 
 		if (econlist[en]->uc_num != sdesc[cn]->uc_num) continue;
 		restart_cn = cn+1;

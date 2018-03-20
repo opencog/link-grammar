@@ -1763,8 +1763,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   Disjunct *d;
   int current_link = 0;
 
-  Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp));
-  memset(exp_word, 0, _sent->length * sizeof(Exp));
+  Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp *));
+  memset(exp_word, 0, _sent->length * sizeof(Exp *));
   const X_node **xnode_word = (const X_node **)alloca(_sent->length * sizeof(X_node *));
   memset(xnode_word, 0, _sent->length * sizeof(X_node *));
 
