@@ -69,10 +69,10 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 		if ((l->lw + 1 == l->rw) && (NULL != l->link_name))
 		{
 			link_len[l->rw] = strlen(l->link_name) +
-				(DEPT_CHR == connector_string(l->rc)[0]) +
-				(HEAD_CHR == connector_string(l->rc)[0]) +
-				(DEPT_CHR == connector_string(l->lc)[0]) +
-				(HEAD_CHR == connector_string(l->lc)[0]);
+				(DEPT_CHR == connector_head(l->rc)) +
+				(HEAD_CHR == connector_head(l->rc)) +
+				(DEPT_CHR == connector_head(l->lc)) +
+				(HEAD_CHR == connector_head(l->lc));
 		}
 	}
 
@@ -632,17 +632,17 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
-			if (DEPT_CHR == connector_string(ppla[j].lc)[0] &&
+			if (DEPT_CHR == connector_head(ppla[j].lc) &&
 			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
-			if (HEAD_CHR == connector_string(ppla[j].lc)[0]) { *(t-1) = '>'; }
+			if (HEAD_CHR == connector_head(ppla[j].lc)) { *(t-1) = '>'; }
 
 			/* Copy connector name; stop short if no room */
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
-			if (DEPT_CHR == connector_string(ppla[j].rc)[0]) { picture[row][cr-1] = '>'; }
-			if (HEAD_CHR == connector_string(ppla[j].rc)[0]) { *t = '<'; }
+			if (DEPT_CHR == connector_head(ppla[j].rc)) { picture[row][cr-1] = '>'; }
+			if (HEAD_CHR == connector_head(ppla[j].rc)) { *t = '<'; }
 
 			/* The direction indicators may have clobbered these. */
 			picture[row][cl] = '+';
