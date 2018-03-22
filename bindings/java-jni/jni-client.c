@@ -15,7 +15,7 @@
 #include <stdatomic.h>
 #endif /* HAVE_STDATOMIC_H */
 
-#include <link-grammar/api-structures.h>
+#include "link-grammar/api-structures.h"
 #include "link-grammar/corpus/corpus.h"
 #include "link-grammar/error.h"
 #include "jni-client.h"

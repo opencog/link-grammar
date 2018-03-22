@@ -18,7 +18,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <externs.h>
 #include <time.h>
 
 #include "regex-tokenizer.h"
@@ -28,6 +27,7 @@
 #include "dict-common/dict-defines.h"
 #include "dict-common/dict-affix.h"
 #include "error.h"
+#include "externs.h"
 #include "tokenize.h"
 #include "utilities.h"
 #include "dict-file/read-dict.h"

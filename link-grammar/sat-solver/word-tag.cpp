@@ -3,8 +3,8 @@
 
 extern "C" {
 #ifdef DEBUG
-#include <prepare/build-disjuncts.h>      // for prt_exp_mem()
-#include <dict-common/dict-api.h>             // for print_expression()
+#include "prepare/build-disjuncts.h"    // prt_exp_mem()
+#include "dict-common/dict-api.h"       // print_expression()
 #endif
 #include "error.h"
 #include "tokenize/tok-structures.h"
