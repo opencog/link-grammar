@@ -149,9 +149,9 @@ class Clause {
     friend class ClauseAllocator;
 
     // NOTE: This constructor cannot be used directly (doesn't allocate enough memory).
-    Clause(const vec<Lit>& ps, bool use_extra, bool learnt) {
+    Clause(const vec<Lit>& ps, bool use_extra, bool learnt_) {
         header.mark      = 0;
-        header.learnt    = learnt;
+        header.learnt    = learnt_;
         header.has_extra = use_extra;
         header.reloced   = 0;
         header.size      = ps.size();
@@ -186,10 +186,10 @@ class Clause {
 public:
     void calcAbstraction() {
         assert(header.has_extra);
-        uint32_t abstraction = 0;
+        uint32_t abstracton = 0;
         for (int i = 0; i < size(); i++)
-            abstraction |= 1 << (var(data[i].lit) & 31);
-        data[header.size].abs = abstraction;  }
+            abstracton |= 1 << (var(data[i].lit) & 31);
+        data[header.size].abs = abstracton;  }
 
 
     int          size        ()      const   { return header.size; }

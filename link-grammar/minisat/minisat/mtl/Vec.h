@@ -53,8 +53,8 @@ private:
 public:
     // Constructors:
     vec()                        : data(NULL), sz(0), cap(0)    { }
-    explicit vec(Size size)      : data(NULL), sz(0), cap(0)    { growTo(size); }
-    vec(Size size, const T& pad) : data(NULL), sz(0), cap(0)    { growTo(size, pad); }
+    explicit vec(Size size_)      : data(NULL), sz(0), cap(0)    { growTo(size_); }
+    vec(Size size_, const T& pad) : data(NULL), sz(0), cap(0)    { growTo(size_, pad); }
    ~vec()                                                       { clear(true); }
 
     // Pointer to first element:
@@ -106,19 +106,19 @@ void vec<T,_Size>::capacity(Size min_cap) {
 
 
 template<class T, class _Size>
-void vec<T,_Size>::growTo(Size size, const T& pad) {
-    if (sz >= size) return;
-    capacity(size);
-    for (Size i = sz; i < size; i++) data[i] = pad;
-    sz = size; }
+void vec<T,_Size>::growTo(Size size_, const T& pad) {
+    if (sz >= size_) return;
+    capacity(size_);
+    for (Size i = sz; i < size_; i++) data[i] = pad;
+    sz = size_; }
 
 
 template<class T, class _Size>
-void vec<T,_Size>::growTo(Size size) {
-    if (sz >= size) return;
-    capacity(size);
-    for (Size i = sz; i < size; i++) new (&data[i]) T();
-    sz = size; }
+void vec<T,_Size>::growTo(Size size_) {
+    if (sz >= size_) return;
+    capacity(size_);
+    for (Size i = sz; i < size_; i++) new (&data[i]) T();
+    sz = size_; }
 
 
 template<class T, class _Size>
