@@ -246,12 +246,10 @@ class DBasicParsingTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = Dictionary()
-        cls.po = None
 
     @classmethod
     def tearDownClass(cls):
         del cls.d
-        del cls.po
         del cls.parse_sent
 
     def parse_sent(self, text, po=ParseOptions()):
@@ -334,11 +332,10 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual(linkage.word(4), '_regex_ive[!].a')
 
     def test_timer_exhausted_exception(self):
-        self.po = ParseOptions(max_parse_time=1)
         self.assertRaises(LG_TimerExhausted,
                           self.parse_sent,
                           "This should take more than one second to parse! " * 20,
-                          self.po)
+                          ParseOptions(max_parse_time=1))
 
 # The tests here are are numbered since their order is important.
 # They depend on the result and state of the previous ones as follows:
