@@ -252,6 +252,7 @@ class DBasicParsingTestCase(unittest.TestCase):
     def tearDownClass(cls):
         del cls.d
         del cls.po
+        del cls.parse_sent
 
     def parse_sent(self, text, po=ParseOptions()):
         return list(Sentence(text, self.d, po).parse())
