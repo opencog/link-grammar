@@ -15,16 +15,17 @@
 #define _LG_DICT_STRUCTURES_H_
 
 #include <link-grammar/link-features.h>
-#include "connectors.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
 
 /* Forward decls */
 typedef struct Dict_node_struct Dict_node;
+typedef struct Conn_struct Conn;
 typedef struct Exp_struct Exp;
 typedef struct E_list_struct E_list;
 typedef struct Word_file_struct Word_file;
+typedef struct condesc_struct condesc_t;
 
 /**
  * Types of Exp_struct structures
@@ -37,6 +38,19 @@ typedef enum
 } Exp_type;
 
 /**
+ * A basic connector. The `string` is the (encoded) connector name,
+ * `dir` indicates the connector direction, and `multi` is true if it
+ * is a ulti-connector.
+ */
+struct Conn_struct
+{
+	char dir;      /* The connector connects to: '-': the left; '+': the right */
+	bool multi;    /* TRUE if a multi-connector (for connector)  */
+	const char * string;
+	condesc_t * desc;  /* Compiled description of connector */
+};
+
+/**
  * The E_list and Exp structures defined below comprise the expression
  * trees that are stored in the dictionary.  The expression has a type
  * (OR_type, AND_type or CONNECTOR_type).  If it is not a terminal it
@@ -45,16 +59,14 @@ typedef enum
  */
 struct Exp_struct
 {
-	Exp * next;    /* Used only for mem management,for freeing */
 	Exp_type type; /* One of three types: AND, OR, or connector. */
-	char dir;      /* The connector connects to: '-': the left; '+': the right */
-	bool multi;    /* TRUE if a multi-connector (for connector)  */
 	union {
+		Conn c;
 		E_list * l;           /* Only needed for non-terminals */
-		condesc_t * condesc;  /* Only needed if it's a connector */
 	} u;
 	double cost;   /* The cost of using this expression.
 	                  Only used for non-terminals */
+	Exp * next;    /* Used only for mem management,for freeing */
 };
 
 struct E_list_struct

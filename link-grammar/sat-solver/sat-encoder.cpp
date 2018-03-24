@@ -502,8 +502,8 @@ void SATEncoder::free_alternatives(Exp* exp)
 void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
                                                       Exp* e, size_t wj)
 {
-  const char* Ci = e->u.condesc->string;
-  char dir = e->dir;
+  const char* Ci = e->u.c.string;
+  char dir = e->u.c.dir;
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
   vec<Lit> rhs;
@@ -556,7 +556,7 @@ int SATEncoder::num_connectors(Exp* e)
 int SATEncoder::empty_connectors(Exp* e, char dir)
 {
   if (e->type == CONNECTOR_type) {
-    return e->dir != dir;
+    return e->u.c.dir != dir;
   } else if (e->type == OR_type) {
     for (E_list* l = e->u.l; l != NULL; l = l->next) {
       if (empty_connectors(l->e, dir))
@@ -615,7 +615,7 @@ void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_positio
 {
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
-    if (exp->dir == dir) {
+    if (exp->u.c.dir == dir) {
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
@@ -663,7 +663,7 @@ void SATEncoder::certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_posi
 void SATEncoder::leading_connectors(int w, Exp* exp, char dir, int& dfs_position, vector<PositionConnector*>& connectors) {
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
-    if (exp->dir == dir) {
+    if (exp->u.c.dir == dir) {
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
@@ -1133,7 +1133,7 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
   if (e->type == CONNECTOR_type) {
     dfs_position++;
     if (var != NULL) {
-      if (e->dir == dir) {
+      if (e->u.c.dir == dir) {
         // generate_literal(-_variables->epsilon(name, var, e->dir));
         return false;
       } else {
@@ -1571,9 +1571,9 @@ void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* nam
 void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
     int wi, int pi, Exp *e, char* var)
 {
-  const char* Ci = e->u.condesc->string;
-  char dir = e->dir;
-  bool multi = e->multi;
+  const char* Ci = e->u.c.string;
+  char dir = e->u.c.dir;
+  bool multi = e->u.c.multi;
   double cost = e->cost;
 
   Lit lhs = Lit(_variables->string_cost(var, cost));
@@ -1750,9 +1750,9 @@ Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionCon
 {
     Exp* e = (Exp*) malloc(sizeof(Exp));
     e->type = CONNECTOR_type;
-    e->dir = pc->dir;
-    e->multi = pc->connector.multi;
-    e->u.condesc = (condesc_t *)pc->connector.desc; // FIXME - const
+    e->u.c.dir = pc->dir;
+    e->u.c.multi = pc->connector.conn.multi;
+    e->u.c.desc = (condesc_t *)pc->connector.conn.desc; // FIXME - const
     e->cost = pc->cost;
 
     return e;
