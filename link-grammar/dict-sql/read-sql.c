@@ -94,6 +94,7 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	 */
 	e->u.c.desc = condesc_add(&dict->contable,
 	                          string_set_add(constr, dict->string_set));
+	e->u.c.string = e->u.c.desc->string; /* XXX Ugly */
 	free(constr);
 
 	rest = make_expression(dict, ++p);

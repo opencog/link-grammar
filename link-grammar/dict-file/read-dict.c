@@ -892,6 +892,7 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 
 	n->u.c.desc = condesc_add(&dict->contable,
 	                          string_set_add(constring, dict->string_set));
+	n->u.c.string = n->u.c.desc->string; /* XXX ugly */
 	if (NULL == n->u.c.desc) return NULL; /* Table ovf */
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
@@ -1005,6 +1006,7 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		/* zn points at {ZZZ+} */
 		zn = Exp_create(&eli);
 		zn->u.c.desc = condesc_add(&dict->contable, ZZZ);
+		zn->u.c.string = zn->u.c.desc->string;
 		zn->u.c.dir = '+';
 		zn->u.c.multi = false;
 		zn->type = CONNECTOR_type;

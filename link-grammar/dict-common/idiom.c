@@ -256,6 +256,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	/* ----- this code just sets up the node fields of the dn_list ----*/
 	nc = Exp_create(&dict->exp_list);
 	nc->u.c.desc = condesc_add(&dict->contable, generate_id_connector(dict));
+	nc->u.c.string = nc->u.c.desc->string;
 	nc->u.c.dir = '-';
 	nc->u.c.multi = false;
 	nc->type = CONNECTOR_type;
@@ -287,6 +288,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 		nc = Exp_create(&dict->exp_list);
 		nc->u.c.desc = condesc_add(&dict->contable, generate_id_connector(dict));
+		nc->u.c.string = nc->u.c.desc->string;
 		nc->u.c.dir = '+';
 		nc->u.c.multi = false;
 		nc->type = CONNECTOR_type;
@@ -297,6 +299,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 		nc = Exp_create(&dict->exp_list);
 		nc->u.c.desc = condesc_add(&dict->contable, generate_id_connector(dict));
+		nc->u.c.string = nc->u.c.desc->string;
 		nc->u.c.dir = '-';
 		nc->u.c.multi = false;
 		nc->type = CONNECTOR_type;
@@ -312,6 +315,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	nc = Exp_create(&dict->exp_list);
 	nc->u.c.desc = condesc_add(&dict->contable, generate_id_connector(dict));
+	nc->u.c.string = nc->u.c.desc->string;
 	nc->u.c.dir = '+';
 	nc->u.c.multi = false;
 	nc->type = CONNECTOR_type;

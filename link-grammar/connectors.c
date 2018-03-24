@@ -452,7 +452,7 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 }
 
 static bool condesc_insert(ConTable *ct, condesc_t **h,
-                                  const char *constring, int hash)
+                           const char *constring, int hash)
 {
 	*h = pool_alloc(ct->mempool);
 	(*h)->str_hash = hash;
