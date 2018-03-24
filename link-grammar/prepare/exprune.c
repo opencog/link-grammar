@@ -189,7 +189,7 @@ static Exp* purge_Exp(Exp *e)
 {
 	if (e->type == CONNECTOR_type)
 	{
-		if (e->u.condesc == NULL)
+		if (e->u.c.desc == NULL)
 		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
@@ -284,11 +284,11 @@ static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
 	count = 0;
 	if (e->type == CONNECTOR_type)
 	{
-		if (e->dir == dir)
+		if (e->u.c.dir == dir)
 		{
-			if (!matches_S(ct, w, e->u.condesc))
+			if (!matches_S(ct, w, e->u.c.desc))
 			{
-				e->u.condesc = NULL;
+				e->u.c.desc = NULL;
 				count++;
 			}
 		}
@@ -341,21 +341,22 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 {
 	if (e->type == CONNECTOR_type)
 	{
-		if (e->dir == dir)
+		if (e->u.c.dir == dir)
 		{
-			assert(NULL != e->u.condesc, "NULL connector");
-			Connector c = { .desc = e->u.condesc };
+			assert(NULL != e->u.c.desc, "NULL connector");
+			Connector c;
+			c.conn.desc = e->u.c.desc;
 
 			set_connector_length_limit(&c, ctxt->opts);
 			int farthest_word = (dir == '-') ? -MAX(0, w-c.length_limit) :
 				                              w+c.length_limit;
-			insert_connector(ctxt, farthest_word, e->u.condesc);
+			insert_connector(ctxt, farthest_word, e->u.c.desc);
 		}
 	}
 	else
 	{
 		E_list *l;
-		for (l=e->u.l; l!=NULL; l=l->next)
+		for (l = e->u.l; l != NULL; l = l->next)
 		{
 			insert_connectors(ctxt, w, l->e, dir);
 		}
