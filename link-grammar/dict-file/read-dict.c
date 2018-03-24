@@ -892,8 +892,8 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 
 	n->u.c.desc = condesc_add(&dict->contable,
 	                          string_set_add(constring, dict->string_set));
-	n->u.c.string = n->u.c.desc->string; /* XXX ugly */
 	if (NULL == n->u.c.desc) return NULL; /* Table ovf */
+	n->u.c.string = n->u.c.desc->string; /* XXX ugly */
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
 	return n;

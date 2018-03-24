@@ -117,7 +117,7 @@ void condesc_delete(Dictionary);
  * accesses connectors */
 static inline const char * connector_string(const Connector *c)
 {
-	return c->conn.string;
+	return c->conn.desc->string;
 }
 
 static inline char connector_head(const Connector *c)
