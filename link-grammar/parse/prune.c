@@ -421,7 +421,7 @@ static bool possible_connection(prune_context *pc,
 {
 	int dist;
 	if ((!lshallow) && (!rshallow)) return false;
-	if (!easy_match_desc(lc->desc, rc->desc)) return false;
+	if (!easy_match_desc(lc->conn.desc, rc->conn.desc)) return false;
 
 	/* Two deep connectors can't work */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
@@ -449,7 +449,7 @@ static bool possible_connection(prune_context *pc,
 	if (!pc->null_links &&
 	    (lc->next == NULL) &&
 	    (rc->next == NULL) &&
-	    (!lc->multi) && (!rc->multi) &&
+	    (!lc->conn.multi) && (!rc->conn.multi) &&
 	    !optional_gap_collapse(pc->sent, lword, rword))
 	{
 		return false;

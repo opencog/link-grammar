@@ -101,10 +101,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i += e->desc->str_hash;
+		i += e->conn.desc->str_hash;
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i += e->desc->str_hash;
+		i += e->conn.desc->str_hash;
 	}
 	i += string_hash(d->word_string);
 	i += (i>>10);
@@ -116,7 +116,7 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
  */
 static bool connectors_equal_prune(Connector *c1, Connector *c2)
 {
-	return c1->desc == c2->desc && (c1->multi == c2->multi);
+	return c1->conn.desc == c2->conn.desc && (c1->conn.multi == c2->conn.multi);
 }
 
 /** returns TRUE if the disjuncts are exactly the same */
@@ -419,7 +419,7 @@ static void prt_con(Connector *c, dyn_str * p, char dir)
 	if (NULL == c) return;
 	prt_con (c->next, p, dir);
 
-	if (c->multi)
+	if (c->conn.multi)
 	{
 		append_string(p, "@%s%c ", connector_string(c), dir);
 	}

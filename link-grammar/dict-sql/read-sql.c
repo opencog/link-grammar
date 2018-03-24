@@ -75,25 +75,25 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 
 	/* Create an expression to hold the connector */
 	e = malloc(sizeof(Exp));
-	e->dir = *p;
+	e->u.c.dir = *p;
 	e->type = CONNECTOR_type;
 	e->cost = 0.0;
 	if ('@' == *con_start)
 	{
 		constr = strndup(con_start+1, p-con_start-1);
-		e->multi = true;
+		e->u.c.multi = true;
 	}
 	else
 	{
 		constr = strndup(con_start, p-con_start);
-		e->multi = false;
+		e->u.c.multi = false;
 	}
 
 	/* We have to use the string set, mostly because copy_Exp
 	 * in build_disjuncts fails to copy the string ...
 	 */
-	e->u.condesc = condesc_add(&dict->contable,
-	                           string_set_add(constr, dict->string_set));
+	e->u.c.desc = condesc_add(&dict->contable,
+	                          string_set_add(constr, dict->string_set));
 	free(constr);
 
 	rest = make_expression(dict, ++p);

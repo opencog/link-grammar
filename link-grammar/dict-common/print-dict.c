@@ -102,8 +102,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if (n->type == CONNECTOR_type)
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
-		if (n->multi) dyn_strcat(e, "@");
-		append_string(e, "%s%c", n->u.condesc?n->u.condesc->string:"(null)", n->dir);
+		if (n->u.c.multi) dyn_strcat(e, "@");
+		append_string(e, "%s%c", n->u.c.desc?n->u.c.string:"(null)", n->u.c.dir);
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
 		return e;
