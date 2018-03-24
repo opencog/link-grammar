@@ -14,8 +14,8 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define _LG_DICT_STRUCTURES_H_
 
+#include <stdint.h>
 #include <link-grammar/link-features.h>
-#include "connectors.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
@@ -25,6 +25,47 @@ typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
 typedef struct E_list_struct E_list;
 typedef struct Word_file_struct Word_file;
+
+
+/* For faster comparisons, the connector lc part is encoded into a number
+ * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
+ * is possible to encode up to 9 letters in an uint64_t. */
+#define LC_BITS 7
+#define LC_MASK ((1<<LC_BITS)-1)
+typedef uint64_t lc_enc_t;
+
+typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
+
+/* When connector_hash_size is uint16_t, the size of the following
+ * struct on a 64-bit machine is 32 bytes.
+ * FIXME: Make it 16 bytes by separating the info that is not needed
+ * by do_count() into another structure (and some other minor changes). */
+typedef struct
+{
+	lc_enc_t lc_letters;
+	lc_enc_t lc_mask;
+
+	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
+	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
+	connector_hash_size str_hash;
+	union
+	{
+		connector_hash_size uc_hash;
+		connector_hash_size uc_num;
+	};
+	uint8_t length_limit;
+	                      /* If not 0, it gives the limit of the length of the
+	                       * link that can be used on this connector type. The
+	                       * value UNLIMITED_LEN specifies no limit.
+	                       * If 0, short_length (a Parse_Option) is used. If
+	                       * all_short==true (a Parse_Option), length_limit
+	                       * is clipped to short_length. */
+	char head_dependent;   /* 'h' for head, 'd' for dependent, or '\0' if none */
+
+	/* For connector match speedup when sorting the connector table. */
+	uint8_t uc_length;   /* uc part length */
+	uint8_t uc_start;    /* uc start position */
+} condesc_t;
 
 /**
  * Types of Exp_struct structures
