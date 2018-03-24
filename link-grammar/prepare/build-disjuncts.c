@@ -25,8 +25,8 @@
 typedef struct Tconnector_struct Tconnector;
 struct Tconnector_struct
 {
-	char multi;   /* TRUE if this is a multi-connector */
 	char dir;     /* '-' for left and '+' for right */
+	bool multi;   /* TRUE if this is a multi-connector */
 	Tconnector * next;
 	const condesc_t * condesc;
 };
@@ -124,9 +124,9 @@ static Tconnector * build_terminal(Exp * e)
 {
 	Tconnector * c;
 	c = (Tconnector *) xalloc(sizeof(Tconnector));
-	c->condesc = e->u.condesc;
-	c->multi = e->multi;
-	c->dir = e->dir;
+	c->condesc = e->u.c.desc;
+	c->multi = e->u.c.multi;
+	c->dir = e->u.c.dir;
 	c->next = NULL;
 	return c;
 }
@@ -270,7 +270,7 @@ static Connector * extract_connectors(Tconnector *e, int c, Parse_Options opts)
 	if (e->dir == c)
 	{
 		e1 = connector_new(e->condesc, opts);
-		e1->multi = e->multi;
+		e1->conn.multi = e->multi;
 		e1->nearest_word = 0;
 		e1->next = extract_connectors(e->next, c, opts);
 		return e1;

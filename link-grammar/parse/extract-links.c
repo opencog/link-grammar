@@ -463,17 +463,17 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 					             ld, d, lw, w, le->next, d->left->next,
 					             lnull_count, pex, islands_ok);
 
-					if (le->multi)
+					if (le->conn.multi)
 						ls[1] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left->next,
 						              lnull_count, pex, islands_ok);
 
-					if (d->left->multi)
+					if (d->left->conn.multi)
 						ls[2] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le->next, d->left,
 						              lnull_count, pex, islands_ok);
 
-					if (le->multi && d->left->multi)
+					if (le->conn.multi && d->left->conn.multi)
 						ls[3] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left,
 						              lnull_count, pex, islands_ok);
@@ -485,17 +485,17 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 					                 d, rd, w, rw, d->right->next, re->next,
 					                 rnull_count, pex, islands_ok);
 
-					if (d->right->multi)
+					if (d->right->conn.multi)
 						rs[1] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right, re->next,
 						              rnull_count, pex, islands_ok);
 
-					if (re->multi)
+					if (re->conn.multi)
 						rs[2] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right->next, re,
 						              rnull_count, pex, islands_ok);
 
-					if (d->right->multi && re->multi)
+					if (d->right->conn.multi && re->conn.multi)
 						rs[3] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right, re,
 						              rnull_count, pex, islands_ok);

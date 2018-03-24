@@ -23,8 +23,8 @@ struct PositionConnector
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
     // Initialize some fields in the connector struct.
-    connector.desc = c->desc;
-    connector.multi = c->multi;
+    connector.conn.desc = c->conn.desc;
+    connector.conn.multi = c->conn.multi;
     connector.length_limit = c->length_limit;
 
     if (word_xnode == NULL) {
@@ -150,7 +150,7 @@ public:
       int dist = w2 - w1;
       assert(0 < dist, "match() did not receive words in the natural order.");
       if (dist > cntr1.length_limit || dist > cntr2.length_limit) return false;
-      return easy_match_desc(cntr1.desc, cntr2.desc);
+      return easy_match_desc(cntr1.conn.desc, cntr2.conn.desc);
   }
 
   void insert_connectors(Exp* exp, int& dfs_position,

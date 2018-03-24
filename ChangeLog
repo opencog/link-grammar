@@ -1,6 +1,7 @@
 Version 5.4.5 (XXX 2018)
  * Fix memory leak when parsing with null links.
  * Python bindings: Add an optional parse-option argument to parse().
+ * Fix broken public API to the dictionary.
 
 Version 5.4.4 (11 March 2018)
  * Dictionary loading now thread safe.

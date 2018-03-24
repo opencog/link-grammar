@@ -877,22 +877,23 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 	Exp* n = Exp_create(&dict->exp_list);
 	char *constring;
 
-	n->dir = dict->token[i];
+	n->u.c.dir = dict->token[i];
 	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
 		constring = dict->token+1;
-		n->multi = true;
+		n->u.c.multi = true;
 	}
 	else
 	{
 		constring = dict->token;
-		n->multi = false;
+		n->u.c.multi = false;
 	}
 
-	n->u.condesc = condesc_add(&dict->contable,
-	                            string_set_add(constring, dict->string_set));
-	if (NULL == n->u.condesc) return NULL; /* Table ovf */
+	n->u.c.desc = condesc_add(&dict->contable,
+	                          string_set_add(constring, dict->string_set));
+	if (NULL == n->u.c.desc) return NULL; /* Table ovf */
+	n->u.c.string = n->u.c.desc->string; /* XXX ugly */
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
 	return n;
@@ -1004,9 +1005,10 @@ void add_empty_word(Dictionary const dict, X_node *x)
 
 		/* zn points at {ZZZ+} */
 		zn = Exp_create(&eli);
-		zn->dir = '+';
-		zn->u.condesc = condesc_add(&dict->contable, ZZZ);
-		zn->multi = false;
+		zn->u.c.desc = condesc_add(&dict->contable, ZZZ);
+		zn->u.c.string = zn->u.c.desc->string;
+		zn->u.c.dir = '+';
+		zn->u.c.multi = false;
 		zn->type = CONNECTOR_type;
 		zn->cost = 0.0;
 		zn = make_optional_node(&eli, zn);

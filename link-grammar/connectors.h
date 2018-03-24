@@ -23,6 +23,7 @@
 #include "lg_assert.h"
 #include "memory-pool.h"
 #include "string-set.h"
+#include "dict-common/dict-structures.h"
 
 /* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is
  * BAD_WORD -- it is used to indicate that nothing can connect to this
@@ -44,7 +45,7 @@ typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
  * struct on a 64-bit machine is 32 bytes.
  * FIXME: Make it 16 bytes by separating the info that is not needed
  * by do_count() into another structure (and some other minor changes). */
-typedef struct
+struct condesc_struct
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
@@ -69,7 +70,7 @@ typedef struct
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
-} condesc_t;
+};
 
 typedef struct length_limit_def
 {
@@ -96,13 +97,12 @@ typedef struct
  */
 struct Connector_struct
 {
+	Conn conn;
 	uint8_t length_limit; /* Can be different than in the descriptor */
 	uint8_t nearest_word;
 	                      /* The nearest word to my left (or right) that
 	                         this could ever connect to.  Computed by
 	                         setup_connectors() */
-	bool multi;           /* TRUE if this is a multi-connector */
-	const condesc_t *desc;
 	Connector *next;
 	const gword_set *originating_gword;
 };
@@ -117,27 +117,34 @@ void condesc_delete(Dictionary);
  * accesses connectors */
 static inline const char * connector_string(const Connector *c)
 {
-	return c->desc->string;
+	return c->conn.desc->string;
 }
 
+static inline char connector_head(const Connector *c)
+{
+	return c->conn.desc->head_dependent;
+}
+
+/*
 static inline int connector_uc_start(const Connector *c)
 {
-	return c->desc->uc_start;
+	return c->conn.desc->uc_start;
 }
+*/
 
 static inline const condesc_t *connector_desc(const Connector *c)
 {
-	return c->desc;
+	return c->conn.desc;
 }
 
 static inline int connector_uc_hash(const Connector * c)
 {
-	return c->desc->uc_hash;
+	return c->conn.desc->uc_hash;
 }
 
 static inline int connector_uc_num(const Connector * c)
 {
-	return c->desc->uc_num;
+	return c->conn.desc->uc_num;
 }
 
 

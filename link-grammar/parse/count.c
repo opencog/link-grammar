@@ -469,19 +469,19 @@ static Count_bin do_count(
 				{
 					l_any = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 					leftpcount = (hist_total(&l_any) != 0);
-					if (!leftpcount && le->multi)
+					if (!leftpcount && le->conn.multi)
 					{
 						l_cmulti =
 							pseudocount(ctxt, lw, w, le, d->left->next, lnull_cnt);
 						leftpcount |= (hist_total(&l_cmulti) != 0);
 					}
-					if (!leftpcount && d->left->multi)
+					if (!leftpcount && d->left->conn.multi)
 					{
 						l_dmulti =
 							pseudocount(ctxt, lw, w, le->next, d->left, lnull_cnt);
 						leftpcount |= (hist_total(&l_dmulti) != 0);
 					}
-					if (!leftpcount && le->multi && d->left->multi)
+					if (!leftpcount && le->conn.multi && d->left->conn.multi)
 					{
 						l_dcmulti =
 							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
@@ -493,19 +493,19 @@ static Count_bin do_count(
 				{
 					r_any = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 					rightpcount = (hist_total(&r_any) != 0);
-					if (!rightpcount && re->multi)
+					if (!rightpcount && re->conn.multi)
 					{
 						r_cmulti =
 							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt);
 						rightpcount |= (hist_total(&r_cmulti) != 0);
 					}
-					if (!rightpcount && d->right->multi)
+					if (!rightpcount && d->right->conn.multi)
 					{
 						r_dmulti =
 							pseudocount(ctxt, w,rw, d->right, re->next, rnull_cnt);
 						rightpcount |= (hist_total(&r_dmulti) != 0);
 					}
-					if (!rightpcount && d->right->multi && re->multi)
+					if (!rightpcount && d->right->conn.multi && re->conn.multi)
 					{
 						r_dcmulti =
 							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
@@ -548,13 +548,13 @@ static Count_bin do_count(
 				{
 					CACHE_COUNT(l_any, leftcount = count,
 						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
-					if (le->multi)
+					if (le->conn.multi)
 						CACHE_COUNT(l_cmulti, hist_accumv(&leftcount, d->cost, count),
 							do_count(ctxt, lw, w, le, d->left->next, lnull_cnt));
-					if (d->left->multi)
+					if (d->left->conn.multi)
 						CACHE_COUNT(l_dmulti, hist_accumv(&leftcount, d->cost, count),
 							do_count(ctxt, lw, w, le->next, d->left, lnull_cnt));
-					if (d->left->multi && le->multi)
+					if (d->left->conn.multi && le->conn.multi)
 						CACHE_COUNT(l_dcmulti, hist_accumv(&leftcount, d->cost, count),
 							do_count(ctxt, lw, w, le, d->left, lnull_cnt));
 
@@ -571,13 +571,13 @@ static Count_bin do_count(
 				{
 					CACHE_COUNT(r_any, rightcount = count,
 						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
-					if (re->multi)
+					if (re->conn.multi)
 						CACHE_COUNT(r_cmulti, hist_accumv(&rightcount, d->cost, count),
 							do_count(ctxt, w, rw, d->right->next, re, rnull_cnt));
-					if (d->right->multi)
+					if (d->right->conn.multi)
 						CACHE_COUNT(r_dmulti, hist_accumv(&rightcount, d->cost, count),
 							do_count(ctxt, w, rw, d->right, re->next, rnull_cnt));
-					if (d->right->multi && re->multi)
+					if (d->right->conn.multi && re->conn.multi)
 						CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
 							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 

@@ -48,7 +48,7 @@ set_connector_length_limit(Connector *c, Parse_Options opts)
 
 	int short_len = opts->short_length;
 	bool all_short = opts->all_short;
-	int length_limit = c->desc->length_limit;
+	int length_limit = c->conn.desc->length_limit;
 
 	if ((all_short && (length_limit > short_len)) || (0 == length_limit))
 		c->length_limit = short_len;
@@ -60,9 +60,9 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 {
 	Connector *c = (Connector *) xalloc(sizeof(Connector));
 
-	c->desc = desc;
+	c->conn.desc = (condesc_t*) desc;
+	c->conn.multi = false;
 	c->nearest_word = 0;
-	c->multi = false;
 	set_connector_length_limit(c, opts);
 	//assert(0 != c->length_limit, "Connector_new(): Zero length_limit");
 
@@ -76,7 +76,7 @@ static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {
 	if (e->type == CONNECTOR_type)
 	{
-		if (NULL != conlist) *conlist = e->u.condesc;
+		if (NULL != conlist) *conlist = e->u.c.desc;
 		return 1;
 	}
 
@@ -452,7 +452,7 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 }
 
 static bool condesc_insert(ConTable *ct, condesc_t **h,
-                                  const char *constring, int hash)
+                           const char *constring, int hash)
 {
 	*h = pool_alloc(ct->mempool);
 	(*h)->str_hash = hash;

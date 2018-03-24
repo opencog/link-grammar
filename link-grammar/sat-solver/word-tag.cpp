@@ -33,11 +33,11 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     dfs_position++;
 
     Connector connector;
-    connector.multi = exp->multi;
-    connector.desc = exp->u.condesc;
+    connector.conn.multi = exp->u.c.multi;
+    connector.conn.desc = exp->u.c.desc;
     set_connector_length_limit(&connector, _opts);
 
-    switch (exp->dir) {
+    switch (exp->u.c.dir) {
     case '+':
       _position.push_back(_right_connectors.size());
       _dir.push_back('+');
@@ -57,7 +57,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       leading_left = false;
       break;
     default:
-      throw std::string("Unknown connector direction: ") + exp->dir;
+      throw std::string("Unknown connector direction: ") + exp->u.c.dir;
     }
   } else if (exp->type == AND_type) {
     if (exp->u.l == NULL) {
@@ -166,7 +166,7 @@ void WordTag::find_matches(int w, const condesc_t* C, char dir, std::vector<Posi
 {
   //  cout << "Look connection on: ." << _word << ". ." << w << ". " << C << dir << endl;
   Connector search_cntr;
-  search_cntr.desc = C;
+  search_cntr.conn.desc = (condesc_t*) C;
   set_connector_length_limit(&search_cntr, _opts);
 
   std::vector<PositionConnector>* connectors;
@@ -194,7 +194,7 @@ void WordTag::add_matches_with_word(WordTag& tag)
   std::vector<PositionConnector>::iterator i;
   for (i = _right_connectors.begin(); i != _right_connectors.end(); i++) {
     std::vector<PositionConnector*> connector_matches;
-    tag.find_matches(_word, (*i).connector.desc, '+', connector_matches);
+    tag.find_matches(_word, (*i).connector.conn.desc, '+', connector_matches);
     std::vector<PositionConnector*>::iterator j;
     for (j = connector_matches.begin(); j != connector_matches.end(); j++) {
       i->matches.push_back(*j);
