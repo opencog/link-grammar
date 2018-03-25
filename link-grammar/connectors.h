@@ -44,7 +44,7 @@ typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
  * struct on a 64-bit machine is 32 bytes.
  * FIXME: Make it 16 bytes by separating the info that is not needed
  * by do_count() into another structure (and some other minor changes). */
-typedef struct
+struct condesc_struct
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
@@ -69,7 +69,8 @@ typedef struct
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
-} condesc_t;
+};
+typedef struct condesc_struct condesc_t;
 
 typedef struct length_limit_def
 {

@@ -22,6 +22,14 @@
 #include "dict-utils.h"
 
 /* ======================================================== */
+/* Public API ... */
+
+const char * lg_exp_get_string(const Exp* exp)
+{
+	return exp->u.condesc->string;
+}
+
+/* ======================================================== */
 /* Exp utilities ... */
 
 void free_E_list(E_list *);

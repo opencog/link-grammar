@@ -15,7 +15,6 @@
 #define _LG_DICT_STRUCTURES_H_
 
 #include <link-grammar/link-features.h>
-#include "connectors.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
@@ -25,6 +24,7 @@ typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
 typedef struct E_list_struct E_list;
 typedef struct Word_file_struct Word_file;
+typedef struct condesc_struct condesc_t;
 
 /**
  * Types of Exp_struct structures
@@ -62,6 +62,13 @@ struct E_list_struct
 	E_list * next;
 	Exp * e;
 };
+
+/* API to access the above structure. */
+static inline Exp_type lg_exp_get_type(const Exp* exp) { return exp->type; }
+static inline char lg_exp_get_dir(const Exp* exp) { return exp->dir; }
+static inline bool lg_exp_get_multi(const Exp* exp) { return exp->multi; }
+const char* lg_exp_get_string(const Exp*);
+static inline double lg_exp_get_cost(const Exp* exp) { return exp->cost; }
 
 /**
  * The dictionary is stored as a binary tree comprised of the following
