@@ -352,7 +352,7 @@ void SATEncoder::generate_satisfaction_conditions()
 void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e,
                                                       char* var, double parent_cost)
 {
-  E_list *l;
+  Exp *l;
   double total_cost = parent_cost + e->cost;
 
   if (e->type == CONNECTOR_type) {
@@ -366,17 +366,17 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
     }
   } else {
     if (e->type == AND_type) {
-      if (e->u.l == NULL) {
+      if (e->u.vtx.left == NULL) {
         /* zeroary and */
         _variables->string_cost(var, e->cost);
         if (total_cost > _cost_cutoff) {
           generate_literal(~Lit(_variables->string_cost(var, e->cost)));
         }
-      } else if (e->u.l != NULL && e->u.l->next == NULL) {
+      } else if (e->u.vtx.right == NULL) {
         /* unary and - skip */
-        generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
+        generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.left, var, total_cost);
       } else {
-        /* n-ary and */
+        /* 2-ary and */
         int i;
 
         char new_var[MAX_VARIABLE_NAME];
@@ -388,43 +388,48 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         }
 
         vec<Lit> rhs;
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
-          rhs.push(Lit(_variables->string(new_var)));
-        }
+
+        char* s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 0);
+        rhs.push(Lit(_variables->string(new_var)));
+
+        s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 1);
+        rhs.push(Lit(_variables->string(new_var)));
 
         Lit lhs = Lit(_variables->string_cost(var, e->cost));
         generate_and_definition(lhs, rhs);
 
         /* Precedes */
         int dfs_position_tmp = dfs_position;
-        for (l = e->u.l; l->next != NULL; l = l->next) {
-          generate_conjunct_order_constraints(w, l->e, l->next->e, dfs_position_tmp);
-        }
+        generate_conjunct_order_constraints(w, e->u.vtx.left, e->u.vtx.right, dfs_position_tmp);
 
         /* Recurse */
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
+        s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 0);
 
-          generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
+        generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.left, new_var, total_cost);
+
+        s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 1);
+
+        generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.right, new_var, total_cost);
         }
       }
     } else if (e->type == OR_type) {
-      if (e->u.l == NULL) {
+      if (e->u.vtx.left == NULL) {
         /* zeroary or */
         cerr << "Zeroary OR" << endl;
         exit(EXIT_FAILURE);
-      } else if (e->u.l != NULL && e->u.l->next == NULL) {
+      } else if (e->u.vtx.right == NULL) {
         /* unary or */
-        generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
+        generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.left, var, total_cost);
       } else {
-        /* n-ary or */
+        /* 2-ary or */
         int i;
 
         char new_var[MAX_VARIABLE_NAME];
@@ -436,25 +441,32 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         }
 
         vec<Lit> rhs;
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'd';
-          fast_sprintf(s, i);
-          rhs.push(Lit(_variables->string(new_var)));
-        }
+        char* s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, 0);
+        rhs.push(Lit(_variables->string(new_var)));
+
+        s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, 1);
+        rhs.push(Lit(_variables->string(new_var)));
 
         Lit lhs = Lit(_variables->string_cost(var, e->cost));
         generate_or_definition(lhs, rhs);
         generate_xor_conditions(rhs);
 
         /* Recurse */
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          char* s = last_new_var;
-          *s++ = 'd';
-          fast_sprintf(s, i);
+        s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, 0);
 
-          generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
+        generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.left, new_var, total_cost);
+
+        s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, 1);
+
+        generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.right, new_var, total_cost);
         }
       }
     }
@@ -463,7 +475,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
 
 Exp* SATEncoder::join_alternatives(int w)
 {
-  // join all alternatives using and OR_type node
+  // join all alternatives using an OR_type node
   Exp* exp;
   E_list* or_list = NULL;;
   for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {
