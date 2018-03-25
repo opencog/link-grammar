@@ -377,8 +377,6 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.left, var, total_cost);
       } else {
         /* 2-ary and */
-        int i;
-
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
@@ -418,7 +416,6 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         fast_sprintf(s, 1);
 
         generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.right, new_var, total_cost);
-        }
       }
     } else if (e->type == OR_type) {
       if (e->u.vtx.left == NULL) {
@@ -430,8 +427,6 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.left, var, total_cost);
       } else {
         /* 2-ary or */
-        int i;
-
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
@@ -467,7 +462,6 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         fast_sprintf(s, 1);
 
         generate_satisfaction_for_expression(w, dfs_position, e->u.vtx.right, new_var, total_cost);
-        }
       }
     }
   }
@@ -476,24 +470,11 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
 Exp* SATEncoder::join_alternatives(int w)
 {
   // join all alternatives using an OR_type node
-  Exp* exp;
-  E_list* or_list = NULL;;
-  for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {
-    E_list* new_node = (E_list*) malloc(sizeof(E_list));
-    new_node->e = x->exp;
-    new_node->next = NULL;
-    if (or_list == NULL) {
-      or_list = new_node;
-    } else {
-      E_list *y;
-      for (y = or_list; y->next != NULL; y = y->next)
-        ;
-      y->next = new_node;
-    }
-  }
-  exp = (Exp*) malloc(sizeof(Exp));
+  X_node* x = _sent->word[w].x;
+  Exp* exp = (Exp*) malloc(sizeof(Exp));
   exp->type = OR_type;
-  exp->u.l = or_list;
+  exp->u.vtx.left = x->exp;
+  exp->u.vtx.right = x->next->exp;
   exp->cost = 0.0;
 
   return exp;
@@ -501,12 +482,8 @@ Exp* SATEncoder::join_alternatives(int w)
 
 void SATEncoder::free_alternatives(Exp* exp)
 {
-  E_list *l = exp->u.l;
-  while (l != NULL) {
-    E_list* next = l->next;
-    free(l);
-    l = next;
-  }
+  if (exp->u.vtx.left) free (exp->u.vtx.left);
+  if (exp->u.vtx.right) free (exp->u.vtx.right);
   free(exp);
 }
 
@@ -558,9 +535,8 @@ int SATEncoder::num_connectors(Exp* e)
     return 1;
   else {
     int num = 0;
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
-      num += num_connectors(l->e);
-    }
+    num += num_connectors(e->u.vtx.left);
+    num += num_connectors(e->u.vtx.right);
     return num;
   }
 }
@@ -570,16 +546,16 @@ int SATEncoder::empty_connectors(Exp* e, char dir)
   if (e->type == CONNECTOR_type) {
     return e->dir != dir;
   } else if (e->type == OR_type) {
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
-      if (empty_connectors(l->e, dir))
+    if (empty_connectors(e->u.vtx.left, dir))
         return true;
-    }
+    if (e->u.vtx.right and empty_connectors(e->u.vtx.right, dir))
+        return true;
     return false;
   } else if (e->type == AND_type) {
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
-      if (!empty_connectors(l->e, dir))
-        return false;
-    }
+    if (!empty_connectors(e->u.vtx.left, dir))
+      return false;
+    if (e->u.vtx.right and !empty_connectors(e->u.vtx.right, dir))
+      return false;
     return true;
   } else
     throw std::string("Unknown connector type");
@@ -607,9 +583,10 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
 }
 #endif
 
-bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
+bool SATEncoder::trailing_connectors_and_aux(int w, Exp *e, char dir, int& dfs_position,
                                              std::vector<PositionConnector*>& connectors)
 {
+#ifdef OLD_CODE
   if (l == NULL) {
     return true;
   } else {
@@ -620,6 +597,16 @@ bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& df
     }
     return empty_connectors(l->e, dir);
   }
+#endif
+
+  // I think the below is equivalent to above, but I am not sure.
+  dfs_position += num_connectors(e->u.vtx.left);
+  trailing_connectors(w, e->u.vtx.left, dir, dfs_position, connectors);
+  if (NULL == e->u.vtx.right)
+    return;
+
+  dfs_position += num_connectors(e->u.vtx.right);
+  trailing_connectors(w, e->u.vtx.right, dir, dfs_position, connectors);
 }
 
 void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_position,
@@ -631,11 +618,10 @@ void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_positio
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
-    for (E_list* l = exp->u.l; l != NULL; l = l->next) {
-      trailing_connectors(w, l->e, dir, dfs_position, connectors);
-    }
+    trailing_connectors(w, exp->u.vtx.left, dir, dfs_position, connectors);
+    trailing_connectors(w, exp->u.vtx.right, dir, dfs_position, connectors);
   } else if (exp->type == AND_type) {
-    trailing_connectors_and_aux(w, exp->u.l, dir, dfs_position, connectors);
+    trailing_connectors_and_aux(w, exp, dir, dfs_position, connectors);
   }
 }
 
@@ -679,21 +665,15 @@ void SATEncoder::leading_connectors(int w, Exp* exp, char dir, int& dfs_position
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
-    for (E_list* l = exp->u.l; l != NULL; l = l->next) {
-      leading_connectors(w, l->e, dir, dfs_position, connectors);
-    }
+    leading_connectors(w, exp->u.vtx.left, dir, dfs_position, connectors);
+    leading_connectors(w, exp->u.vtx.right, dir, dfs_position, connectors);
   } else if (exp->type == AND_type) {
-    E_list* l;
-    for (l = exp->u.l; l != NULL; l = l->next) {
-      leading_connectors(w, l->e, dir, dfs_position, connectors);
-      if (!empty_connectors(l->e, dir))
-        break;
-    }
+    leading_connectors(w, exp->u.vtx.left, dir, dfs_position, connectors);
+    if (empty_connectors(exp->u.vtx.left, dir))
+      leading_connectors(w, exp->u.vtx.right, dir, dfs_position, connectors);
 
-    if (l != NULL) {
-      for (l = l->next; l != NULL; l = l->next)
-        dfs_position += num_connectors(l->e);
-    }
+    if (exp->u.vtx.right)
+      dfs_position += num_connectors(exp->u.vtx.right);
   }
 }
 
