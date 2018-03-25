@@ -50,17 +50,14 @@ struct Exp_struct
 	char dir;      /* The connector connects to: '-': the left; '+': the right */
 	bool multi;    /* TRUE if a multi-connector (for connector)  */
 	union {
-		E_list * l;           /* Only needed for non-terminals */
+		struct {
+			Exp * left;
+			Exp * right;
+		} vtx;
 		condesc_t * condesc;  /* Only needed if it's a connector */
 	} u;
 	double cost;   /* The cost of using this expression.
 	                  Only used for non-terminals */
-};
-
-struct E_list_struct
-{
-	E_list * next;
-	Exp * e;
 };
 
 /* API to access the above structure. */
