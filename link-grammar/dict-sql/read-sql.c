@@ -52,7 +52,6 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	Exp* e;
 	Exp* and;
 	Exp* rest;
-	E_list *ell, *elr;
 
 	char *constr = NULL;
 	const char * p = exp_str;
@@ -104,13 +103,8 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	and = malloc(sizeof(Exp));
 	and->type = AND_type;
 	and->cost = 0.0;
-	and->u.l = ell = malloc(sizeof(E_list));
-	ell->next = elr = malloc(sizeof(E_list));
-	elr->next = NULL;
-
-	ell->e = e;
-	elr->e = rest;
-
+	and->u.vtx.left = e;
+	and->u.vtx.right = rest;
 	return and;
 }
 
