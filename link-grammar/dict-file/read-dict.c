@@ -792,7 +792,8 @@ static Exp * make_zeroary_node(Exp_list * eli)
 	Exp * n = Exp_create(eli);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = NULL;
+	n->u.vtx.left = NULL;
+	n->u.vtx.right = NULL;
 	return n;
 }
 
@@ -802,13 +803,11 @@ static Exp * make_zeroary_node(Exp_list * eli)
  */
 static Exp * make_unary_node(Exp_list * eli, Exp * e)
 {
-	Exp * n;
-	n = Exp_create(eli);
+	Exp * n = Exp_create(eli);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = (E_list *) malloc(sizeof(E_list));
-	n->u.l->next = NULL;
-	n->u.l->e = e;
+	n->u.vtx.left = e;
+	n->u.vtx.right = NULL;
 	return n;
 }
 
@@ -818,19 +817,11 @@ static Exp * make_unary_node(Exp_list * eli, Exp * e)
  */
 static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
 {
-	E_list *ell, *elr;
-	Exp* n;
-
-	n = Exp_create(eli);
+	Exp* n = Exp_create(eli);
 	n->type = AND_type;
 	n->cost = 0.0;
-
-	n->u.l = ell = (E_list *) malloc(sizeof(E_list));
-	ell->next = elr = (E_list *) malloc(sizeof(E_list));
-	elr->next = NULL;
-
-	ell->e = nl;
-	elr->e = nr;
+	n->u.vtx.left = nl;
+	n->u.vtx.right = nr;
 	return n;
 }
 
@@ -840,19 +831,11 @@ static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
  */
 static Exp * make_or_node(Exp_list *eli, Exp* nl, Exp* nr)
 {
-	E_list *ell, *elr;
-	Exp* n;
-
-	n = Exp_create(eli);
+	Exp* n = Exp_create(eli);
 	n->type = OR_type;
 	n->cost = 0.0;
-
-	n->u.l = ell = (E_list *) malloc(sizeof(E_list));
-	ell->next = elr = (E_list *) malloc(sizeof(E_list));
-	elr->next = NULL;
-
-	ell->e = nl;
-	elr->e = nr;
+	n->u.vtx.left = nl;
+	n->u.vtx.right = nr;
 	return n;
 }
 
@@ -987,7 +970,6 @@ static Exp * make_connector(Dictionary dict)
 void add_empty_word(Dictionary const dict, X_node *x)
 {
 	Exp *zn, *an;
-	E_list *elist, *flist;
 	Exp_list eli = { NULL };
 	const char *ZZZ = string_set_add(EMPTY_CONNECTOR, dict->string_set);
 
@@ -1011,21 +993,12 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		zn->cost = 0.0;
 		zn = make_optional_node(&eli, zn);
 
-		/* flist is plain-word-exp */
-		flist = (E_list *) malloc(sizeof(E_list));
-		flist->next = NULL;
-		flist->e = x->exp;
-
-		/* elist is {ZZZ+} , (plain-word-exp) */
-		elist = (E_list *) malloc(sizeof(E_list));
-		elist->next = flist;
-		elist->e = zn;
-
 		/* an will be {ZZZ+} & (plain-word-exp) */
 		an = Exp_create(&eli);
 		an->type = AND_type;
 		an->cost = 0.0;
-		an->u.l = elist;
+		an->u.vtx.left = zn;
+		an->u.vtx.right = x->exp;
 
 		x->exp = an;
 	}
@@ -1445,7 +1418,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
 	if (NULL == n) return newnode;
 
-	static Exp null_exp = { .type = AND_type, .u.l = NULL };
+	static Exp null_exp = { .type = AND_type, .u.vtx.left = NULL, .u.vtx.right = NULL };
 	int comp = dict_order_strict(newnode->string, n);
 	if (0 == comp)
 	{
