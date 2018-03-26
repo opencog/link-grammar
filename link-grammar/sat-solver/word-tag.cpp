@@ -60,17 +60,14 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       throw std::string("Unknown connector direction: ") + exp->dir;
     }
   } else if (exp->type == AND_type) {
-    if (exp->u.l == NULL) {
+    if (exp->u.vtx.left == NULL) {
       /* zeroary and */
     } else
-      if (exp->u.l != NULL && exp->u.l->next == NULL) {
+      if (exp->u.vtx.right == NULL) {
         /* unary and - skip */
-        insert_connectors(exp->u.l->e, dfs_position, leading_right,
+        insert_connectors(exp->u.vtx.left, dfs_position, leading_right,
              leading_left, eps_right, eps_left, var, root, cost, parent_exp, word_xnode);
       } else {
-        int i;
-        E_list* l;
-
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
@@ -79,32 +76,44 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           last_var++;
         }
 
-        for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
+        char* s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 0);
 
-          insert_connectors(l->e, dfs_position, leading_right, leading_left,
-                eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
+        insert_connectors(exp->u.vtx.left, dfs_position, leading_right, leading_left,
+              eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
 
 #ifdef POWER_PRUNE_CONNECTORS
-          if (leading_right) {
-            eps_right.push_back(_variables->epsilon(new_var, '+'));
-          }
-          if (leading_left) {
-            eps_left.push_back(_variables->epsilon(new_var, '-'));
-          }
-#endif
+        if (leading_right) {
+          eps_right.push_back(_variables->epsilon(new_var, '+'));
         }
+        if (leading_left) {
+          eps_left.push_back(_variables->epsilon(new_var, '-'));
+        }
+#endif
+
+        s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 1);
+
+        insert_connectors(exp->u.vtx.right, dfs_position, leading_right, leading_left,
+              eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
+
+#ifdef POWER_PRUNE_CONNECTORS
+        if (leading_right) {
+          eps_right.push_back(_variables->epsilon(new_var, '+'));
+        }
+        if (leading_left) {
+          eps_left.push_back(_variables->epsilon(new_var, '-'));
+        }
+#endif
       }
   } else if (exp->type == OR_type) {
-    if (exp->u.l != NULL && exp->u.l->next == NULL) {
+    if (exp->u.vtx.right == NULL) {
       /* unary or - skip */
-      insert_connectors(exp->u.l->e, dfs_position, leading_right, leading_left,
-          eps_right, eps_left, var, root, cost, exp->u.l->e, word_xnode);
+      insert_connectors(exp->u.vtx.left, dfs_position, leading_right, leading_left,
+          eps_right, eps_left, var, root, cost, exp->u.vtx.left, word_xnode);
     } else {
-      int i;
-      E_list* l;
       bool ll_true = false;
       bool lr_true = false;
 
@@ -123,38 +132,68 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       }
 #endif
 
-      for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
-        bool lr = leading_right, ll = leading_left;
-        std::vector<int> er = eps_right, el = eps_left;
+      bool lr = leading_right, ll = leading_left;
+      std::vector<int> er = eps_right, el = eps_left;
 
-        char* s = last_new_var;
-        *s++ = 'd';
-        fast_sprintf(s, i);
+      char* s = last_new_var;
+      *s++ = 'd';
+      fast_sprintf(s, 0);
 
-        lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
-                _word, var, i, l, word_xnode ? word_xnode->word->subword : "NULL X_node");
-        assert(word_xnode != NULL, "NULL X_node for var %s", new_var);
-        if (root && parent_exp == NULL && l->e != word_xnode->exp) {
-          E_list *we = NULL;
+      lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
+              _word, var, 0, exp->u.vtx.left, word_xnode ? word_xnode->word->subword : "NULL X_node");
+      assert(word_xnode != NULL, "NULL X_node for var %s", new_var);
+      if (root && parent_exp == NULL && exp->u.vtx.left != word_xnode->exp) {
+        Exp *we = NULL;
 
-          if (word_xnode->exp->type == OR_type) {
-            for (we = word_xnode->exp->u.l; we != NULL; we = we-> next) {
-              if (l->e == we->e)
-                break;
-            }
-          }
-          if (we == NULL && word_xnode->next != NULL) {
-            lgdebug(+D_IC, "Next word_xnode for word %d is needed\n", _word);
-            word_xnode = word_xnode->next;
-          }
+        if (word_xnode->exp->type == OR_type) {
+          we = word_xnode->exp->u.vtx.left;
+          if (exp->u.vtx.left != we)
+             we = word_xnode->exp->u.vtx.right;
         }
-        insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost, l->e, word_xnode);
-
-        if (lr)
-          lr_true = true;
-        if (ll)
-          ll_true = true;
+        if (we == NULL && word_xnode->next != NULL) {
+          lgdebug(+D_IC, "Next word_xnode for word %d is needed\n", _word);
+          word_xnode = word_xnode->next;
+        }
       }
+      insert_connectors(exp->u.vtx.left, dfs_position, lr, ll, er, el, new_var, false, cost, exp->u.vtx.left, word_xnode);
+
+      if (lr)
+        lr_true = true;
+      if (ll)
+        ll_true = true;
+
+      lr = leading_right;
+      ll = leading_left;
+      er = eps_right;
+      el = eps_left;
+
+      s = last_new_var;
+      *s++ = 'd';
+      fast_sprintf(s, 1);
+
+      lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
+              _word, var, 1, exp->u.vtx.right, word_xnode ? word_xnode->word->subword : "NULL X_node");
+      assert(word_xnode != NULL, "NULL X_node for var %s", new_var);
+      if (root && parent_exp == NULL && exp->u.vtx.right != word_xnode->exp) {
+        Exp *we = NULL;
+
+        if (word_xnode->exp->type == OR_type) {
+          we = word_xnode->exp->u.vtx.left;
+          if (exp->u.vtx.left != we)
+            we = word_xnode->exp->u.vtx.right;
+        }
+        if (we == NULL && word_xnode->next != NULL) {
+          lgdebug(+D_IC, "Next word_xnode for word %d is needed\n", _word);
+          word_xnode = word_xnode->next;
+        }
+      }
+      insert_connectors(exp->u.vtx.right, dfs_position, lr, ll, er, el, new_var, false, cost, exp->u.vtx.right, word_xnode);
+
+      if (lr)
+        lr_true = true;
+      if (ll)
+        ll_true = true;
+
       leading_right = lr_true;
       leading_left = ll_true;
     }
