@@ -76,7 +76,6 @@ void print_expression(Exp * n)
 static dyn_str *print_expression_parens(dyn_str *e,
                                         const Exp * n, int need_parens)
 {
-	E_list * el;
 	int i, icost;
 	double dcost;
 
@@ -110,8 +109,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	}
 
 	/* Look for optional, and print only that */
-	el = n->u.l;
-	if (el == NULL)
+	if (n->u.vtx.left == NULL)
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
 		append_string(e, "()");
@@ -121,11 +119,11 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	}
 
 	for (i=0; i<icost; i++) dyn_strcat(e, "[");
-	if ((n->type == OR_type) && el->e && (NULL == el->e->u.l))
+	if ((n->type == OR_type) && (NULL == n->u.vtx.left->u.vtx.left))
 	{
 		dyn_strcat(e, "{");
-		if (NULL == el->next) dyn_strcat(e, "error-no-next");
-		else print_expression_parens(e, el->next->e, false);
+		if (NULL == n->u.vtx.right) dyn_strcat(e, "error-no-next");
+		else print_expression_parens(e, n->u.vtx.right, false);
 		append_string(e, "}");
 		return e;
 	}
@@ -133,10 +131,10 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if ((icost == 0) && need_parens) dyn_strcat(e, "(");
 
 	/* print left side of binary expr */
-	print_expression_parens(e, el->e, true);
+	print_expression_parens(e, n->u.vtx.left, true);
 
 	/* get a funny "and optional" when its a named expression thing. */
-	if ((n->type == AND_type) && (el->next == NULL))
+	if ((n->type == AND_type) && (n->u.vtx.right == NULL))
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
@@ -148,31 +146,19 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if (n->type == OR_type) dyn_strcat(e, " or ");
 
 	/* print right side of binary expr */
-	el = el->next;
-	if (el == NULL)
+	if (n->u.vtx.right == NULL)
 	{
 		dyn_strcat(e, "()");
 	}
 	else
 	{
-		if (el->e->type == n->type)
+		if (n->u.vtx.right->type == n->type)
 		{
-			print_expression_parens(e, el->e, false);
+			print_expression_parens(e, n->u.vtx.right, false);
 		}
 		else
 		{
-			print_expression_parens(e, el->e, true);
-		}
-		if (el->next != NULL)
-		{
-			// dyn_strcat(e, "\nERROR! Unexpected list!\n");
-			/* The SAT parser just naively joins all X_node expressions
-			 * using "or", and this check used to give an error due to that,
-			 * preventing a convenient debugging.
-			 * Just accept it (but mark it with '!'). */
-			if (n->type == AND_type) dyn_strcat(e, " &! ");
-			if (n->type == OR_type) dyn_strcat(e, " or! ");
-			print_expression_parens(e, el->next->e, true);
+			print_expression_parens(e, n->u.vtx.right, true);
 		}
 	}
 
@@ -251,33 +237,27 @@ static char *display_word_split(Dictionary dict,
  */
 static unsigned int count_clause(Exp *e)
 {
-	unsigned int cnt = 0;
-	E_list * e_list;
-
 	assert(e != NULL, "count_clause called with null parameter");
 	if (e->type == AND_type)
 	{
 		/* multiplicative combinatorial explosion */
-		cnt = 1;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
-			cnt *= count_clause(e_list->e);
+		unsigned int cnt = count_clause(e->u.vtx.left);
+		if (e->u.vtx.right) cnt *= count_clause(e->u.vtx.right);
+		return cnt;
 	}
 	else if (e->type == OR_type)
 	{
 		/* Just additive */
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
-			cnt += count_clause(e_list->e);
+		unsigned int cnt = count_clause(e->u.vtx.left);
+		if (e->u.vtx.right) cnt += count_clause(e->u.vtx.right);
+		return cnt;
 	}
 	else if (e->type == CONNECTOR_type)
 	{
 		return 1;
 	}
-	else
-	{
-		assert(false, "an expression node with no type");
-	}
-
-	return cnt;
+	assert(false, "an expression node with unknown type");
+	return 0;
 }
 
 /**

@@ -225,7 +225,6 @@ static const char * generate_id_connector(Dictionary dict)
 void insert_idiom(Dictionary dict, Dict_node * dn)
 {
 	Exp * nc, * no, * n1;
-	E_list *ell, *elr;
 	const char * s;
 	Dict_node * dn_list, * xdn, * start_dn_list;
 
@@ -262,11 +261,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	nc->cost = 0;
 
 	n1 = Exp_create(&dict->exp_list);
-	n1->u.l = ell = (E_list *) malloc(sizeof(E_list));
-	ell->next = elr = (E_list *) malloc(sizeof(E_list));
-	elr->next = NULL;
-	ell->e = nc;
-	elr->e = no;
+	n1->u.vtx.left = nc;
+	n1->u.vtx.right = no;
 	n1->type = AND_type;
 	n1->cost = 0;
 
@@ -274,16 +270,15 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	dn_list = dn_list->right;
 
-	while(dn_list->right != NULL)
+	while (dn_list->right != NULL)
 	{
 		/* generate the expression for a middle idiom word */
 
 		n1 = Exp_create(&dict->exp_list);
 		n1->type = AND_type;
 		n1->cost = 0;
-		n1->u.l = ell = (E_list *) malloc(sizeof(E_list));
-		ell->next = elr = (E_list *) malloc(sizeof(E_list));
-		elr->next = NULL;
+		n1->u.vtx.left = NULL;
+		n1->u.vtx.right = NULL;
 
 		nc = Exp_create(&dict->exp_list);
 		nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
@@ -291,7 +286,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		nc->multi = false;
 		nc->type = CONNECTOR_type;
 		nc->cost = 0;
-		elr->e = nc;
+		n1->u.vtx.right = nc;
 
 		increment_current_name(dict);
 
@@ -302,7 +297,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		nc->type = CONNECTOR_type;
 		nc->cost = 0;
 
-		ell->e = nc;
+		n1->u.vtx.left = nc;
 
 		dn_list->exp = n1;
 
