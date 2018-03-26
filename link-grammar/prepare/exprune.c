@@ -273,9 +273,12 @@ static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
 	}
 	else
 	{
-		count += mark_dead_connectors(ct, w, e->u.vtx.left, dir);
-		if (e->u.vtx.right)
-			count += mark_dead_connectors(ct, w, e->u.vtx.right, dir);
+		if (e->u.vtx.left)
+		{
+			count += mark_dead_connectors(ct, w, e->u.vtx.left, dir);
+			if (e->u.vtx.right)
+				count += mark_dead_connectors(ct, w, e->u.vtx.right, dir);
+		}
 	}
 	return count;
 }
