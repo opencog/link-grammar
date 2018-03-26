@@ -32,43 +32,34 @@ const char * lg_exp_get_string(const Exp* exp)
 /* ======================================================== */
 /* Exp utilities ... */
 
-void free_E_list(E_list *);
 void free_Exp(Exp * e)
 {
 	// Exp might be null if the user has a bad dict. e.g. badly formed
 	// SQL dict.
 	if (NULL == e) return;
 	if (e->type != CONNECTOR_type) {
-		free_E_list(e->u.l);
+		free_Exp(e->u.vtx.left);
+		free_Exp(e->u.vtx.right);
 	}
 	free(e);
-}
-
-void free_E_list(E_list * l)
-{
-	if (l == NULL) return;
-	free_E_list(l->next);
-	free_Exp(l->e);
-	free(l);
 }
 
 /* Returns the number of connectors in the expression e */
 int size_of_expression(Exp * e)
 {
-	int size;
-	E_list * l;
+	if (NULL == e) return 0;
+
 	if (e->type == CONNECTOR_type) return 1;
-	size = 0;
-	for (l=e->u.l; l!=NULL; l=l->next) {
-		size += size_of_expression(l->e);
-	}
+
+	int size = 0;
+	size += size_of_expression(e->u.vtx.left);
+	size += size_of_expression(e->u.vtx.right);
 	return size;
 }
 
 /**
  * Build a copy of the given expression (don't copy strings, of course)
  */
-static E_list * copy_E_list(E_list * l);
 Exp * copy_Exp(Exp * e)
 {
 	Exp * n;
@@ -76,19 +67,10 @@ Exp * copy_Exp(Exp * e)
 	n = malloc(sizeof(Exp));
 	*n = *e;
 	if (e->type != CONNECTOR_type) {
-		n->u.l = copy_E_list(e->u.l);
+		n->u.vtx.left = copy_Exp(e->u.vtx.left);
+		n->u.vtx.right = copy_Exp(e->u.vtx.right);
 	}
 	return n;
-}
-
-static E_list * copy_E_list(E_list * l)
-{
-	E_list * nl;
-	if (l == NULL) return NULL;
-	nl = malloc(sizeof(E_list));
-	nl->next = copy_E_list(l->next);
-	nl->e = copy_Exp(l->e);
-	return nl;
 }
 
 /**
@@ -96,50 +78,36 @@ static E_list * copy_E_list(E_list * l)
  */
 static bool exp_compare(Exp * e1, Exp * e2)
 {
-	E_list *el1, *el2;
-
 	if ((e1 == NULL) && (e2 == NULL))
-	  return 1; /* they are equal */
+	  return true; /* they are equal */
 	if ((e1 == NULL) || (e2 == NULL))
-	  return 0; /* they are not equal */
+	  return false; /* they are not equal */
 	if (e1->type != e2->type)
-		return 0;
+		return false;
 	if (fabs (e1->cost - e2->cost) > 0.001)
-		return 0;
+		return true;
 	if (e1->type == CONNECTOR_type)
 	{
 		if (e1->dir != e2->dir)
-			return 0;
+			return false;
 		/* printf("%s %s\n",e1->u.condesc->string,e2->u.condesc->string); */
-		if (e1->u.condesc != e2->u.condesc)
-			return 0;
+		return (e1->u.condesc == e2->u.condesc);
 	}
 	else
 	{
-		el1 = e1->u.l;
-		el2 = e2->u.l;
-		/* while at least 1 is non-null */
-		for (;(el1!=NULL)||(el2!=NULL);) {
-		   /*fail if 1 is null */
-			if ((el1==NULL)||(el2==NULL))
-				return 0;
-			/* fail if they are not compared */
-			if (!exp_compare(el1->e, el2->e))
-				return 0;
-			el1 = el1->next;
-			el2 = el2->next;
-		}
+		if (false == exp_compare(e1->u.vtx.left, e2->u.vtx.left))
+			return false;
+		return exp_compare(e1->u.vtx.right, e2->u.vtx.right);
 	}
-	return 1; /* if never returned 0, return 1 */
+	return true; // unreachable
 }
 
 /**
- * Sub-expression matcher -- return 1 if sub is non-NULL and
- * contained in super, 0 otherwise.
+ * Sub-expression matcher -- return true if sub is non-NULL and
+ * contained in super, false otherwise.
  */
-static int exp_contains(Exp * super, Exp * sub)
+static bool exp_contains(Exp * super, Exp * sub)
 {
-	E_list * el;
 
 #if 0 /* DEBUG */
 	printf("SUP: ");
@@ -148,19 +116,19 @@ static int exp_contains(Exp * super, Exp * sub)
 #endif
 
 	if (sub==NULL || super==NULL)
-		return 0;
+		return false;
 	if (exp_compare(sub,super))
-		return 1;
+		return true;
 	if (super->type==CONNECTOR_type)
-	  return 0; /* super is a leaf */
+	  return false; /* super is a leaf */
 
-	/* proceed through supers children and return 1 if sub
-	   is contained in any of them */
-	for(el = super->u.l; el!=NULL; el=el->next) {
-		if (exp_contains(el->e, sub)==1)
-			return 1;
-	}
-	return 0;
+	/* Proceed through children of super and return true
+	 * if sub is contained in any of them.
+	 */
+	if (exp_contains(super->u.vtx.left, sub))
+		return true;
+
+	return exp_contains(super->u.vtx.right, sub);
 }
 
 /* ======================================================== */
@@ -314,7 +282,7 @@ static bool dn_word_contains(Dictionary dict,
 
 	for (;w_dn != NULL; w_dn = w_dn->right)
 	{
-		if (1 == exp_contains(w_dn->exp, m_exp))
+		if (exp_contains(w_dn->exp, m_exp))
 		{
 			free_lookup_list(dict, m_dn);
 			return true;
