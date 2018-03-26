@@ -238,7 +238,6 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 static bool exp_has_connector(const Exp * e, int depth, const char * cs,
                               char direction, bool smart_match)
 {
-	E_list * el;
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
@@ -249,11 +248,10 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 	if (depth == 0) return false;
 	if (depth > 0) depth--;
 
-	for (el = e->u.l; el != NULL; el = el->next)
-	{
-		if (exp_has_connector(el->e, depth, cs, direction, smart_match))
-			return true;
-	}
+	if (exp_has_connector(e->u.vtx.left, depth, cs, direction, smart_match))
+		return true;
+	if (exp_has_connector(e->u.vtx.right, depth, cs, direction, smart_match))
+		return true;
 	return false;
 }
 

@@ -81,11 +81,9 @@ static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 	}
 
 	size_t cl_size = 0;
-	for (E_list *l = e->u.l; l != NULL; l = l->next)
-	{
-		cl_size += get_connectors_from_expression(conlist, l->e);
-		if (NULL != conlist) conlist++;
-	}
+	cl_size += get_connectors_from_expression(conlist, e->u.vtx.left);
+	if (NULL != conlist) conlist++;
+	cl_size += get_connectors_from_expression(conlist, e->u.vtx.right);
 
 	return cl_size;
 }

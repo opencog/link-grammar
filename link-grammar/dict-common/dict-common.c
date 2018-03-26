@@ -246,16 +246,6 @@ int delete_dictionary_words(Dictionary dict, const char * s)
  * E_lists of the dictionary.  Not to be confused with
  * free_E_list in word-utils.c.
  */
-static void free_Elist(E_list * l)
-{
-	E_list * l1;
-
-	for (; l != NULL; l = l1) {
-		l1 = l->next;
-		free(l);
-	}
-}
-
 void free_Exp_list(Exp_list * eli)
 {
 	Exp * e1;
@@ -265,7 +255,8 @@ void free_Exp_list(Exp_list * eli)
 		e1 = e->next;
 		if (e->type != CONNECTOR_type)
 		{
-		   free_Elist(e->u.l);
+		   free(e->u.vtx.left);
+		   free(e->u.vtx.right);
 		}
 		free(e);
 	}
