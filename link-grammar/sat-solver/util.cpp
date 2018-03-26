@@ -44,7 +44,8 @@ Exp* null_exp()
   static Exp e;
 
   if (e.type) return &e;
-  e.u.l = NULL;
+  e.u.vtx.left = NULL;
+  e.u.vtx.right = NULL;
   e.type = AND_type;
   return &e;
 }
@@ -56,21 +57,14 @@ void add_anded_exp(Exp*& orig, Exp* addit)
       orig = addit;
     } else
     {
-      // flist is orig
-      E_list* flist = (E_list*) malloc(sizeof(E_list));
-      flist->e = orig;
-      flist->next = NULL;
-
-      // elist is addit, orig
-      E_list* elist = (E_list*) malloc(sizeof(E_list));
-      elist->next = flist;
-      elist->e = addit;
+      Exp* oo = orig;
 
       // The updated orig is addit & orig
       orig = (Exp*) malloc(sizeof(Exp));
       orig->type = AND_type;
       orig->cost = 0.0;
-      orig->u.l = elist;
+      orig->u.vtx.left = addit;
+      orig->u.vtx.right = oo;
     }
 }
 
