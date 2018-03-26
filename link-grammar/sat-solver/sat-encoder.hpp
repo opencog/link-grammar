@@ -100,7 +100,7 @@ protected:
   // Trailing connectors of a given direction in the given expression
   void trailing_connectors(int w, Exp* exp, char dir, int& dfs_position,
                            std::vector<PositionConnector*>& connectors);
-  bool trailing_connectors_and_aux(int w, Exp*, char dir, int& dfs_position,
+  void trailing_connectors_and_aux(int w, Exp*, char dir, int& dfs_position,
                                    std::vector<PositionConnector*>& connectors);
 
   // Connectors of the given direction that cannot be trailing

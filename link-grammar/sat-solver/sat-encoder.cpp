@@ -352,7 +352,6 @@ void SATEncoder::generate_satisfaction_conditions()
 void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e,
                                                       char* var, double parent_cost)
 {
-  Exp *l;
   double total_cost = parent_cost + e->cost;
 
   if (e->type == CONNECTOR_type) {
@@ -583,7 +582,7 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
 }
 #endif
 
-bool SATEncoder::trailing_connectors_and_aux(int w, Exp *e, char dir, int& dfs_position,
+void SATEncoder::trailing_connectors_and_aux(int w, Exp *e, char dir, int& dfs_position,
                                              std::vector<PositionConnector*>& connectors)
 {
 #ifdef OLD_CODE
@@ -600,13 +599,19 @@ bool SATEncoder::trailing_connectors_and_aux(int w, Exp *e, char dir, int& dfs_p
 #endif
 
   // I think the below is equivalent to above, but I am not sure.
-  dfs_position += num_connectors(e->u.vtx.left);
-  trailing_connectors(w, e->u.vtx.left, dir, dfs_position, connectors);
-  if (NULL == e->u.vtx.right)
+  if (NULL == e->u.vtx.right) {
+    trailing_connectors(w, e->u.vtx.left, dir, dfs_position, connectors);
+    dfs_position += num_connectors(e->u.vtx.left);
     return;
+  }
 
-  dfs_position += num_connectors(e->u.vtx.right);
+  int old_dfs = dfs_position;
+  dfs_position += num_connectors(e->u.vtx.left);
   trailing_connectors(w, e->u.vtx.right, dir, dfs_position, connectors);
+  dfs_position += num_connectors(e->u.vtx.right);
+  if (empty_connectors(e->u.vtx.left, dir)) { // XXX is this always true!?
+    trailing_connectors(w, e->u.vtx.left, dir, old_dfs, connectors);
+  }
 }
 
 void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_position,
@@ -1135,19 +1140,17 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
       }
     }
   } else if (e->type == AND_type) {
-    if (e->u.l == NULL) {
+    if (e->u.vtx.left == NULL) {
       /* zeroary and */
       generate_equivalence_definition(Lit(_variables->string(var)),
                                       Lit(_variables->epsilon(var, dir)));
       return true;
     } else
-      if (e->u.l != NULL && e->u.l->next == NULL) {
+      if (e->u.vtx.right == NULL) {
         /* unary and - skip */
-        return generate_epsilon_for_expression(w, dfs_position, e->u.l->e, var, root, dir);
+        return generate_epsilon_for_expression(w, dfs_position, e->u.vtx.left, var, root, dir);
       } else {
         /* Recurse */
-        E_list* l;
-        int i;
         bool eps = true;
 
         char new_var[MAX_VARIABLE_NAME];
@@ -1159,45 +1162,49 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
         }
 
 
-        for (i = 0, l = e->u.l; l != NULL; l = l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
+        char* s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 0);
 
-          if (!generate_epsilon_for_expression(w, dfs_position, l->e, new_var, false, dir)) {
+        bool more = false;
+        if (!generate_epsilon_for_expression(w, dfs_position, e->u.vtx.left, new_var, false, dir)) {
+          eps = false;
+          more = true;
+        } else {
+          s = last_new_var;
+          *s++ = 'c';
+          fast_sprintf(s, 1);
+          if (!generate_epsilon_for_expression(w, dfs_position, e->u.vtx.right, new_var, false, dir))
             eps = false;
-            break;
-          }
         }
 
-        if (l != NULL) {
-          for (l = l->next; l != NULL; l = l->next)
-            dfs_position += num_connectors(l->e);
+        if (more) {
+            dfs_position += num_connectors(e->u.vtx.right);
         }
 
         if (!root && eps) {
           Lit lhs = Lit(_variables->epsilon(var, dir));
           vec<Lit> rhs;
-          for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-            // sprintf(new_var, "%sc%d", var, i)
-            char* s = last_new_var;
-            *s++ = 'c';
-            fast_sprintf(s, i);
-            rhs.push(Lit(_variables->epsilon(new_var, dir)));
-          }
+          s = last_new_var;
+          *s++ = 'c';
+          fast_sprintf(s, 0);
+          rhs.push(Lit(_variables->epsilon(new_var, dir)));
+
+          s = last_new_var;
+          *s++ = 'c';
+          fast_sprintf(s, 1);
+          rhs.push(Lit(_variables->epsilon(new_var, dir)));
+
           generate_classical_and_definition(lhs, rhs);
         }
         return eps;
       }
   } else if (e->type == OR_type) {
-    if (e->u.l != NULL && e->u.l->next == NULL) {
+    if (e->u.vtx.right == NULL) {
       /* unary or - skip */
-      return generate_epsilon_for_expression(w, dfs_position, e->u.l->e, var, root, dir);
+      return generate_epsilon_for_expression(w, dfs_position, e->u.vtx.left, var, root, dir);
     } else {
       /* Recurse */
-      E_list* l;
-      int i;
       bool eps = false;
 
       char new_var[MAX_VARIABLE_NAME];
@@ -1209,16 +1216,22 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
       }
 
       vec<Lit> rhs;
-      for (i = 0, l = e->u.l; l != NULL; l = l->next, i++) {
-        // sprintf(new_var, "%sc%d", var, i)
-        char* s = last_new_var;
-        *s++ = 'd';
-        fast_sprintf(s, i);
+      char * s = last_new_var;
+      *s++ = 'd';
+      fast_sprintf(s, 0);
 
-        if (generate_epsilon_for_expression(w, dfs_position, l->e, new_var, false, dir) && !root) {
-          rhs.push(Lit(_variables->epsilon(new_var, dir)));
-          eps = true;
-        }
+      if (generate_epsilon_for_expression(w, dfs_position, e->u.vtx.left, new_var, false, dir) && !root) {
+        rhs.push(Lit(_variables->epsilon(new_var, dir)));
+        eps = true;
+      }
+
+      s = last_new_var;
+      *s++ = 'd';
+      fast_sprintf(s, 1);
+
+      if (generate_epsilon_for_expression(w, dfs_position, e->u.vtx.right, new_var, false, dir) && !root) {
+        rhs.push(Lit(_variables->epsilon(new_var, dir)));
+        eps = true;
       }
 
       if (!root && eps) {
