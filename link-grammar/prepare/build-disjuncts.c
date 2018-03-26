@@ -137,7 +137,6 @@ static Tconnector * build_terminal(Exp * e)
 static Clause * build_clause(Exp *e)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
-	E_list * e_list;
 
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
@@ -147,9 +146,30 @@ static Clause * build_clause(Exp *e)
 		c1->next = NULL;
 		c1->cost = 0.0;
 		c1->maxcost = 0.0;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+
+		// First, the left
+		c2 = build_clause(e->u.vtx.left);
+		c_head = NULL;
+		for (c3 = c1; c3 != NULL; c3 = c3->next)
 		{
-			c2 = build_clause(e_list->e);
+			for (c4 = c2; c4 != NULL; c4 = c4->next)
+			{
+				c = (Clause *) xalloc(sizeof (Clause));
+				c->cost = c3->cost + c4->cost;
+				c->maxcost = fmaxf(c3->maxcost,c4->maxcost);
+				c->c = catenate(c3->c, c4->c);
+				c->next = c_head;
+				c_head = c;
+			}
+		}
+		free_clause_list(c1);
+		free_clause_list(c2);
+		c1 = c_head;
+
+		// Next, the right
+		if (e->u.vtx.right)
+		{
+			c2 = build_clause(e->u.vtx.right);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
@@ -167,16 +187,23 @@ static Clause * build_clause(Exp *e)
 			free_clause_list(c2);
 			c1 = c_head;
 		}
-		c = c1;
 	}
 	else if (e->type == OR_type)
 	{
 		/* we'll catenate the lists of clauses */
 		c = NULL;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		c1 = build_clause(e->u.vtx.left);
+		while (c1 != NULL) {
+			c3 = c1->next;
+			c1->next = c;
+			c = c1;
+			c1 = c3;
+		}
+
+		if (e->u.vtx.right)
 		{
-			c1 = build_clause(e_list->e);
-			while(c1 != NULL) {
+			c1 = build_clause(e->u.vtx.right);
+			while (c1 != NULL) {
 				c3 = c1->next;
 				c1->next = c;
 				c = c1;
@@ -194,7 +221,7 @@ static Clause * build_clause(Exp *e)
 	}
 	else
 	{
-		assert(false, "an expression node with no type");
+		assert(false, "an expression node with unknown type");
 	}
 
 	/* c now points to the list of clauses */

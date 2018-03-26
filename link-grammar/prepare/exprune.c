@@ -139,46 +139,42 @@ static void free_connector_table(exprune_context *ctxt)
  * by its child.  This, of course, is not really necessary, except for
  * performance(?).
  */
-
 static Exp* purge_Exp(Exp *);
 
 /**
  * Get rid of the current_elements with null expressions
  */
-static E_list * or_purge_E_list(E_list * l)
+static Exp* or_purge_E_list(Exp * l)
 {
-	E_list * el;
 	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(l->e)) == NULL)
+	l->u.vtx.left = purge_Exp(l);
+	if (l->u.vtx.left == NULL)
 	{
-		el = or_purge_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
-		return el;
+		return or_purge_E_list(l->u.vtx.right);
 	}
-	l->next = or_purge_E_list(l->next);
+	l->u.vtx.right = or_purge_E_list(l->u.vtx.right);
 	return l;
 }
 
 /**
- * Returns 0 iff the length of the disjunct list is 0.
+ * Returns false iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
  */
-static int and_purge_E_list(E_list * l)
+static bool and_purge_E_list(Exp * l)
 {
-	if (l == NULL) return 1;
-	if ((l->e = purge_Exp(l->e)) == NULL)
+	if (l == NULL) return true;
+	l->u.vtx.left = purge_Exp(l->u.vtx.left);
+	if (l->u.vtx.left == NULL)
 	{
-		free_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
-		return 0;
+		xfree((char *)l->u.vtx.right, sizeof(Exp));
+		return false;
 	}
-	if (and_purge_E_list(l->next) == 0)
+	if (and_purge_E_list(l->u.vtx.right) == false)
 	{
-		free_Exp(l->e);
-		xfree((char *)l, sizeof(E_list));
-		return 0;
+		xfree((char *)l->u.vtx.left, sizeof(Exp));
+		return false;
 	}
-	return 1;
+	return true;
 }
 
 /**
@@ -194,43 +190,25 @@ static Exp* purge_Exp(Exp *e)
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
-		else
-		{
-			return e;
-		}
+		return e;
 	}
 	if (e->type == AND_type)
 	{
-		if (and_purge_E_list(e->u.l) == 0)
+		if (false == and_purge_E_list(e))
 		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
-	}
-	else /* if we are here, its OR_type */
-	{
-		e->u.l = or_purge_E_list(e->u.l);
-		if (e->u.l == NULL)
-		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
-		}
+		return e;
 	}
 
-/* This code makes it kill off nodes that have just one child
-   (1) It's going to give an insignificant speed-up
-   (2) Costs have not been handled correctly here.
-   The code is excised for these reasons.
-*/
-/*
-	if ((e->u.l != NULL) && (e->u.l->next == NULL))
+	/* If we are here, its OR_type */
+	e->u.vtx.left = or_purge_E_list(e->u.vtx.left);
+	if (e->u.vtx.left == NULL)
 	{
-		ne = e->u.l->e;
-		xfree((char *) e->u.l, sizeof(E_list));
-		xfree((char *) e, sizeof(Exp));
-		return ne;
+		xfree((char *)e, sizeof(Exp));
+		return NULL;
 	}
-*/
 	return e;
 }
 
@@ -295,11 +273,9 @@ static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
 	}
 	else
 	{
-		E_list *l;
-		for (l = e->u.l; l != NULL; l = l->next)
-		{
-			count += mark_dead_connectors(ct, w, l->e, dir);
-		}
+		count += mark_dead_connectors(ct, w, e->u.vtx.left, dir);
+		if (e->u.vtx.right)
+			count += mark_dead_connectors(ct, w, e->u.vtx.right, dir);
 	}
 	return count;
 }
@@ -354,11 +330,9 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 	}
 	else
 	{
-		E_list *l;
-		for (l=e->u.l; l!=NULL; l=l->next)
-		{
-			insert_connectors(ctxt, w, l->e, dir);
-		}
+		insert_connectors(ctxt, w, e->u.vtx.left, dir);
+		if (e->u.vtx.right)
+			insert_connectors(ctxt, w, e->u.vtx.right, dir);
 	}
 }
 
