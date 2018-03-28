@@ -337,7 +337,8 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 	}
 	else
 	{
-		insert_connectors(ctxt, w, e->u.vtx.left, dir);
+		if (e->u.vtx.left)
+			insert_connectors(ctxt, w, e->u.vtx.left, dir);
 		if (e->u.vtx.right)
 			insert_connectors(ctxt, w, e->u.vtx.right, dir);
 	}
