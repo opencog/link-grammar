@@ -207,7 +207,7 @@ static Exp* purge_Exp(Exp *e)
 	}
 
 	/* If we are here, its OR_type */
-	e->u.vtx.left = or_purge_E_list(e);
+	e = or_purge_E_list(e);
 	if (e->u.vtx.left == NULL)
 	{
 		xfree((char *)e, sizeof(Exp));
