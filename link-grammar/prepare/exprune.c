@@ -172,7 +172,7 @@ static bool and_purge_E_list(Exp * l)
 		l->u.vtx.right = NULL;
 		return false;
 	}
-	if (purge_Exp(l->u.vtx.right) == NULL)
+	if (l->u.vtx.right && purge_Exp(l->u.vtx.right) == NULL)
 	{
 		free_Exp(l->u.vtx.left);
 		l->u.vtx.left = NULL;
