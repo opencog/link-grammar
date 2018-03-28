@@ -146,10 +146,11 @@ static Exp* purge_Exp(Exp *);
  */
 static Exp* or_purge_E_list(Exp * l)
 {
-	if (l == NULL) return NULL;
+	if (NULL == l) return NULL;
 	l->u.vtx.left = purge_Exp(l->u.vtx.left);
-	if (l->u.vtx.left == NULL)
+	if (NULL == l->u.vtx.left)
 	{
+		if (NULL == l->u.vtx.right) return NULL;
 		return purge_Exp(l->u.vtx.right);
 	}
 	l->u.vtx.right = purge_Exp(l->u.vtx.right);
@@ -208,7 +209,7 @@ static Exp* purge_Exp(Exp *e)
 
 	/* If we are here, its OR_type */
 	e = or_purge_E_list(e);
-	if (e->u.vtx.left == NULL)
+	if (NULL == e || NULL == e->u.vtx.left)
 	{
 		xfree((char *)e, sizeof(Exp));
 		return NULL;
