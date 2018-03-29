@@ -34,8 +34,6 @@ const char * lg_exp_get_string(const Exp* exp)
 
 void free_Exp(Exp * e)
 {
-	// Exp might be null if the user has a bad dict. e.g. badly formed
-	// SQL dict.
 	if (NULL == e) return;
 	if (e->type != CONNECTOR_type) {
 		free_Exp(e->u.vtx.left);

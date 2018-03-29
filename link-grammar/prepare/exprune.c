@@ -139,8 +139,14 @@ static void free_connector_table(exprune_context *ctxt)
  * by its child.  This, of course, is not really necessary, except for
  * performance(?).
  */
-static Exp* purge_Exp(Exp *);
 
+/* Return true if this is an optional */
+static bool is_opt(const Exp* e)
+{
+	return e->u.vtx.left == NULL && e->u.vtx.right == NULL;
+}
+
+static Exp* purge_Exp(Exp *);
 /**
  * Get rid of the current_elements with null expressions
  */
@@ -158,68 +164,85 @@ static Exp* or_purge_E_list(Exp * l)
 		}
 		Exp * s = purge_Exp(l->u.vtx.right);
 		s->cost += l->cost; // propagate the cost!
+		xfree((char *)l, sizeof(Exp));
 		return s;
 	}
 	if (NULL == l->u.vtx.right)
 	{
 		Exp * s = purge_Exp(l->u.vtx.left);
 		s->cost += l->cost; // propagate the cost!
+		xfree((char *)l, sizeof(Exp));
 		return s;
+	}
+
+	if (is_opt(l->u.vtx.left) && is_opt(l->u.vtx.right))
+	{
+		Exp * o = l->u.vtx.right;
+		xfree((char *)l->u.vtx.left, sizeof(Exp));
+		xfree((char *)l, sizeof(Exp));
+		return o;
 	}
 	return l;
 }
 
-/* Return true if this is an optional */
-static bool is_opt(const Exp* e)
-{
-	return e->u.vtx.left == NULL && e->u.vtx.right == NULL;
-}
-
 /**
- * Returns false iff the length of the disjunct list is 0.
- * If this is the case, it frees the structure rooted at l.
- * (so, `true` means "keep this".)
+ * Returns NULL if the the expression contains non-optional
+ * dead connectors.
  */
-static bool and_purge_E_list(Exp * l)
+static Exp* and_purge_E_list(Exp * l)
 {
-	if (l == NULL) return true;
+	if (l == NULL) return NULL;
 
 	/* If both sides are null, that denotes "optional". Keep it. */
-	if (is_opt(l)) return false;
+	if (is_opt(l)) return l;
 
-	if (NULL == l->u.vtx.left || NULL == l->u.vtx.right)
+	if (l->u.vtx.left) l->u.vtx.left = purge_Exp(l->u.vtx.left);
+	if (l->u.vtx.right) l->u.vtx.right = purge_Exp(l->u.vtx.right);
+
+	if (NULL == l->u.vtx.left)
 	{
-		if (l->u.vtx.left) free_Exp(l->u.vtx.left);
-		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
-		return false;
+		if (NULL == l->u.vtx.right)
+		{
+			free_Exp(l);
+			return NULL;
+		}
+		if (is_opt(l->u.vtx.right))
+		{
+			Exp * o = l->u.vtx.right;
+			xfree((char *)l, sizeof(Exp));
+			return o;
+		}
+		free_Exp(l);
+		return NULL;
 	}
 
-	l->u.vtx.left = purge_Exp(l->u.vtx.left);
-	if (l->u.vtx.left == NULL || is_opt(l->u.vtx.left))
+	if (NULL == l->u.vtx.right)
 	{
-		if (l->u.vtx.left) free_Exp(l->u.vtx.left);
-		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
-		return false;
+		if (is_opt(l->u.vtx.left))
+		{
+			Exp * o = l->u.vtx.left;
+			xfree((char *)l, sizeof(Exp));
+			return o;
+		}
+		free_Exp(l);
+		return NULL;
 	}
 
-#if 1
-	l->u.vtx.right = purge_Exp(l->u.vtx.right);
-	if (l->u.vtx.right == NULL || is_opt(l->u.vtx.right))
+	if (is_opt(l->u.vtx.left))
 	{
-		if (l->u.vtx.left) free_Exp(l->u.vtx.left);
-		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
-		return false;
+		Exp * o = l->u.vtx.right;
+		xfree((char *)l, sizeof(Exp));
+		return o;
 	}
-#endif
-#if 0
-	if (l->u.vtx.right && (is_opt(l->u.vtx.right) ||
-	                       purge_Exp(l->u.vtx.right) == NULL))
+
+	if (is_opt(l->u.vtx.right))
 	{
-		free_Exp(l->u.vtx.left);
-		return false;
+		Exp * o = l->u.vtx.left;
+		xfree((char *)l, sizeof(Exp));
+		return o;
 	}
-#endif
-	return true;
+
+	return l;
 }
 
 /**
@@ -239,12 +262,7 @@ static Exp* purge_Exp(Exp *e)
 	}
 	if (e->type == AND_type)
 	{
-		if (false == and_purge_E_list(e))
-		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
-		}
-		return e;
+		return and_purge_E_list(e);
 	}
 
 	/* If we are here, its OR_type */
