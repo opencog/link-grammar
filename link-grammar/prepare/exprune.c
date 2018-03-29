@@ -157,6 +157,12 @@ static Exp* or_purge_E_list(Exp * l)
 	return l;
 }
 
+/* Return true if this is an optional */
+static bool is_opt(const Exp* e)
+{
+	return e->u.vtx.left == NULL && e->u.vtx.right == NULL;
+}
+
 /**
  * Returns false iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
@@ -167,15 +173,17 @@ static bool and_purge_E_list(Exp * l)
 	if (l == NULL) return true;
 
 	/* If both sides are null, that denotes "optional". Keep it. */
-	if (l->u.vtx.left == NULL && l->u.vtx.right == NULL) return true;
+	if (is_opt(l)) return true;
 
 	l->u.vtx.left = purge_Exp(l->u.vtx.left);
-	if (l->u.vtx.left == NULL)
+	if (l->u.vtx.left == NULL || is_opt(l->u.vtx.left))
 	{
 		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
 		return false;
 	}
-	if (l->u.vtx.right && purge_Exp(l->u.vtx.right) == NULL)
+
+	if (l->u.vtx.right && (is_opt(l->u.vtx.right) ||
+	                       purge_Exp(l->u.vtx.right) == NULL))
 	{
 		free_Exp(l->u.vtx.left);
 		l->u.vtx.left = NULL;
