@@ -160,11 +160,14 @@ static Exp* or_purge_E_list(Exp * l)
 /**
  * Returns false iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
+ * (so, `true` means "keep this".)
  */
 static bool and_purge_E_list(Exp * l)
 {
 	if (l == NULL) return true;
-	if (l->u.vtx.left == NULL && l->u.vtx.right == NULL) return false;
+
+	/* If both sides are null, that denotes "optional". Keep it. */
+	if (l->u.vtx.left == NULL && l->u.vtx.right == NULL) return true;
 
 	l->u.vtx.left = purge_Exp(l->u.vtx.left);
 	if (l->u.vtx.left == NULL)
