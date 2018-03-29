@@ -147,13 +147,25 @@ static Exp* purge_Exp(Exp *);
 static Exp* or_purge_E_list(Exp * l)
 {
 	if (NULL == l) return NULL;
-	l->u.vtx.left = purge_Exp(l->u.vtx.left);
+	if (l->u.vtx.left) l->u.vtx.left = purge_Exp(l->u.vtx.left);
+	if (l->u.vtx.right) l->u.vtx.right = purge_Exp(l->u.vtx.right);
 	if (NULL == l->u.vtx.left)
 	{
-		if (NULL == l->u.vtx.right) return NULL;
-		return purge_Exp(l->u.vtx.right);
+		if (NULL == l->u.vtx.right)
+		{
+			xfree((char *)l, sizeof(Exp));
+			return NULL;
+		}
+		Exp * s = purge_Exp(l->u.vtx.right);
+		s->cost += l->cost; // propagate the cost!
+		return s;
 	}
-	l->u.vtx.right = purge_Exp(l->u.vtx.right);
+	if (NULL == l->u.vtx.right)
+	{
+		Exp * s = purge_Exp(l->u.vtx.left);
+		s->cost += l->cost; // propagate the cost!
+		return s;
+	}
 	return l;
 }
 
@@ -173,22 +185,40 @@ static bool and_purge_E_list(Exp * l)
 	if (l == NULL) return true;
 
 	/* If both sides are null, that denotes "optional". Keep it. */
-	if (is_opt(l)) return true;
+	if (is_opt(l)) return false;
 
-	l->u.vtx.left = purge_Exp(l->u.vtx.left);
-	if (l->u.vtx.left == NULL || is_opt(l->u.vtx.left))
+	if (NULL == l->u.vtx.left || NULL == l->u.vtx.right)
 	{
+		if (l->u.vtx.left) free_Exp(l->u.vtx.left);
 		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
 		return false;
 	}
 
+	l->u.vtx.left = purge_Exp(l->u.vtx.left);
+	if (l->u.vtx.left == NULL || is_opt(l->u.vtx.left))
+	{
+		if (l->u.vtx.left) free_Exp(l->u.vtx.left);
+		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
+		return false;
+	}
+
+#if 1
+	l->u.vtx.right = purge_Exp(l->u.vtx.right);
+	if (l->u.vtx.right == NULL || is_opt(l->u.vtx.right))
+	{
+		if (l->u.vtx.left) free_Exp(l->u.vtx.left);
+		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
+		return false;
+	}
+#endif
+#if 0
 	if (l->u.vtx.right && (is_opt(l->u.vtx.right) ||
 	                       purge_Exp(l->u.vtx.right) == NULL))
 	{
 		free_Exp(l->u.vtx.left);
-		l->u.vtx.left = NULL;
 		return false;
 	}
+#endif
 	return true;
 }
 
@@ -218,21 +248,7 @@ static Exp* purge_Exp(Exp *e)
 	}
 
 	/* If we are here, its OR_type */
-	e = or_purge_E_list(e);
-	if (NULL == e) return NULL;
-	if (NULL == e->u.vtx.left)
-	{
-		xfree((char *)e, sizeof(Exp));
-		return NULL;
-	}
-	if (NULL == e->u.vtx.right)
-	{
-		Exp * l = e->u.vtx.left;
-		l->cost += e->cost; // propagate the cost!
-		xfree((char *)e, sizeof(Exp));
-		return l;
-	}
-	return e;
+	return or_purge_E_list(e);
 }
 
 /**
