@@ -139,6 +139,7 @@ static void free_connector_table(exprune_context *ctxt)
  * by its child.  This, of course, is not really necessary, except for
  * performance(?).
  */
+static void lprt(Exp* e);
 
 /* Return true if this is an optional */
 static bool is_opt(const Exp* e)
@@ -440,6 +441,32 @@ static char *print_expression_sizes(Sentence sent)
 	return dyn_str_take(e);
 }
 
+
+int dent=0;
+
+static void lprt(Exp* e)
+{
+if (NULL == e) return;
+if(20 < dent) exit(1);
+dent++;
+if(e->type == CONNECTOR_type) {
+for (int i=0; i< dent; i++) printf("  ");
+if(e->u.condesc) printf("conn= %s %c\n", e->u.condesc->string, e->dir);
+else printf("dead connector\n");
+} else if(e->type == AND_type) {
+for (int i=0; i< dent; i++) printf("  ");
+printf("(AND= %p %p)\n", e->u.vtx.left, e->u.vtx.right);
+lprt(e->u.vtx.left);
+lprt(e->u.vtx.right);
+} else if(e->type == OR_type) {
+for (int i=0; i< dent; i++) printf("  ");
+printf("(OR= %p %p)\n", e->u.vtx.left, e->u.vtx.right);
+lprt(e->u.vtx.left);
+lprt(e->u.vtx.right);
+}
+fflush (stdout);
+dent--;
+}
 void expression_prune(Sentence sent, Parse_Options opts)
 {
 	int N_deleted;
@@ -474,8 +501,18 @@ void expression_prune(Sentence sent, Parse_Options opts)
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				DBG(pass, w, "l->r pass before purging");
+printf("duuuuude l--r before purge:\n");
+lprt(x->exp);
+printf("duuude before l--r %s\n", expression_stringify(x->exp));
+printf("-----------------------------------------------------\n");
+fflush (stdout);
 				x->exp = purge_Exp(x->exp);
 				DBG(pass, w, "l->r pass after purging");
+printf("duuuuude l--r after purge:\n");
+lprt(x->exp);
+printf("duuude after l--r %s\n", expression_stringify(x->exp));
+printf("-----------------------------------------------------\n");
+fflush (stdout);
 			}
 
 			/* gets rid of X_nodes with NULL exp */
@@ -504,8 +541,18 @@ void expression_prune(Sentence sent, Parse_Options opts)
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				DBG(pass, w, "r->l pass before purging");
+printf("duuude before r->l purge\n");
+lprt(x->exp);
+printf("duuude before r--l %s\n", expression_stringify(x->exp));
+printf("-----------------------------------------------------\n");
+fflush (stdout);
 				x->exp = purge_Exp(x->exp);
 				DBG(pass, w, "r->l pass after purging");
+printf("duuude after r->l purge\n");
+lprt(x->exp);
+printf("duuude after r-s>-l %s\n", expression_stringify(x->exp));
+printf("-----------------------------------------------------\n");
+fflush (stdout);
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)

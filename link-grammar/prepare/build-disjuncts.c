@@ -16,7 +16,7 @@
 #include <math.h>
 #include "build-disjuncts.h"
 #include "connectors.h"
-//#include "dict-common/dict-api.h"        // for print_expression
+#include "dict-common/dict-api.h"        // for print_expression
 #include "dict-common/dict-structures.h"   // for Exp_struct
 #include "disjunct-utils.h"
 #include "utilities.h"
@@ -239,7 +239,7 @@ static Clause * build_clause(const Exp *e)
 	return c;
 }
 
-// #define DEBUG
+#define DEBUG
 #ifdef DEBUG
 /* Misc printing functions, useful for debugging */
 
@@ -334,16 +334,18 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff,
 	return dis;
 }
 
+void prt_exp_mem(Exp *e, int i);
 Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
                                    double cost_cutoff, Parse_Options opts)
 {
 	Clause *c ;
 	Disjunct * dis;
-	// print_expression(exp);  printf("\n");
+	print_expression(exp);  printf("\n");
+	prt_exp_mem(exp, 0);  printf("\n");
 	c = build_clause(exp);
-	// print_clause_list(c);
+	print_clause_list(c);
 	dis = build_disjunct(c, word, cost_cutoff, opts);
-	// print_disjunct_list(dis);
+	print_disjunct_list(dis);
 	free_clause_list(c);
 	return dis;
 }
@@ -388,11 +390,11 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 		type = unknown_type;
 	}
 
-	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: %s cost=%f\n", e, type, e->cost);
+	for (int j =0; j<i; j++) printf(" ");
+	printf ("e=%p: %s cost=%f ", e, type, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
-		printf("%p %p", e->u.vtx.left, e->u.vtx.right);
+		printf("(l=%p r=%p)\n", e->u.vtx.left, e->u.vtx.right);
 		prt_exp_mem(e->u.vtx.left, i+2);
 		prt_exp_mem(e->u.vtx.right, i+2);
 	}
