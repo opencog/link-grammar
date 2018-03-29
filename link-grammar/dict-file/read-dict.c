@@ -798,16 +798,14 @@ static Exp * make_zeroary_node(Exp_list * eli)
 }
 
 /**
- * This creates a node with one child (namely e).  Initializes
- * the cost to zero.
+ * This creates a copy of the expression.
  */
 static Exp * make_unary_node(Exp_list * eli, Exp * e)
 {
 	Exp * n = Exp_create(eli);
-	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0.0;
-	n->u.vtx.left = e;
-	n->u.vtx.right = NULL;
+	n->type = e->type;
+	n->cost = e->cost;
+	n->u = e->u;
 	return n;
 }
 
@@ -1302,7 +1300,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		na = make_and_node(&dict->exp_list, nl, nr);
 		nb = make_and_node(&dict->exp_list, nr, nl);
 		or = make_or_node(&dict->exp_list, na, nb);
-		return make_unary_node(&dict->exp_list, or);
+		return or;
 	}
 
 	return nl;
