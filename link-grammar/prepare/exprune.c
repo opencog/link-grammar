@@ -164,13 +164,12 @@ static Exp* or_purge_E_list(Exp * l)
 static bool and_purge_E_list(Exp * l)
 {
 	if (l == NULL) return true;
-	if (l->u.vtx.left == NULL) return true;
+	if (l->u.vtx.left == NULL && l->u.vtx.right == NULL) return false;
 
 	l->u.vtx.left = purge_Exp(l->u.vtx.left);
 	if (l->u.vtx.left == NULL)
 	{
-		free_Exp(l->u.vtx.right);
-		l->u.vtx.right = NULL;
+		if (l->u.vtx.right) free_Exp(l->u.vtx.right);
 		return false;
 	}
 	if (l->u.vtx.right && purge_Exp(l->u.vtx.right) == NULL)
@@ -218,6 +217,7 @@ static Exp* purge_Exp(Exp *e)
 	if (NULL == e->u.vtx.right)
 	{
 		Exp * l = e->u.vtx.left;
+		l->cost += e->cost; // propagate the cost!
 		xfree((char *)e, sizeof(Exp));
 		return l;
 	}
