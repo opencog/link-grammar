@@ -120,7 +120,7 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
 /**
  * build the connector for the terminal node n
  */
-static Tconnector * build_terminal(Exp * e)
+static Tconnector * build_terminal(const Exp * e)
 {
 	Tconnector * c;
 	c = (Tconnector *) xalloc(sizeof(Tconnector));
@@ -134,7 +134,7 @@ static Tconnector * build_terminal(Exp * e)
 /**
  * Build the clause for the expression e.  Does not change e
  */
-static Clause * build_clause(Exp *e)
+static Clause * build_clause(const Exp *e)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 
@@ -351,6 +351,7 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
 #ifdef DEBUG
 /* There is a much better print_expression elsewhere
  * This one is for low-level debug. */
+void prt_exp(Exp *e, int i);
 GNUC_UNUSED void prt_exp(Exp *e, int i)
 {
 	if (e == NULL) return;
@@ -359,12 +360,8 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	printf ("type=%d dir=%c multi=%d cost=%f\n", e->type, e->dir, e->multi, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
-		E_list *l = e->u.l;
-		while(l)
-		{
-			prt_exp(l->e, i+2);
-			l = l->next;
-		}
+		prt_exp(e->u.vtx.left, i+2);
+		prt_exp(e->u.vtx.right, i+2);
 	}
 	else
 	{
@@ -373,6 +370,7 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	}
 }
 
+void prt_exp_mem(Exp *e, int i);
 GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 {
 	char unknown_type[32] = "";
@@ -394,20 +392,9 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	printf ("e=%p: %s cost=%f\n", e, type, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
-		E_list *l;
-		for(int j =0; j<i+2; j++) printf(" ");
-		printf("E_list=%p (", e->u.l);
-		for (l = e->u.l; NULL != l; l = l->next)
-		{
-			printf("%p", l->e);
-			if (NULL != l->next) printf(" ");
-		}
-		printf(")\n");
-
-		for (l = e->u.l; NULL != l; l = l->next)
-		{
-			prt_exp_mem(l->e, i+2);
-		}
+		printf("%p %p", e->u.vtx.left, e->u.vtx.right);
+		prt_exp_mem(e->u.vtx.left, i+2);
+		prt_exp_mem(e->u.vtx.right, i+2);
 	}
 	else
 	{
