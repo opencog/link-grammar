@@ -16,7 +16,7 @@
 #include <stdbool.h>
 
 #include "api-types.h"
-#include "link-grammar/api-structures.h" // Sentence
+#include "api-structures.h"             // Sentence
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
