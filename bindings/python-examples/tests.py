@@ -29,7 +29,7 @@ from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
 
 
 # Show the location and version of the bindings modules
-for imported_module in 'linkgrammar$', '_clinkgrammar', 'lg_testutils':
+for imported_module in 'linkgrammar$', 'clinkgrammar', '_clinkgrammar', 'lg_testutils':
     module_found = False
     for module in sys.modules:
         if re.search(r'^(linkgrammar\.)?'+imported_module, module):
