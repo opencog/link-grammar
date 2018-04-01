@@ -71,7 +71,7 @@ bool post_process_match(const char *s, const char *t)
  * Returns false if the string s does not match anything in
  * the array. The array elements are post-processing symbols.
  */
-static int string_in_list(const char * s, const char * a[])
+static bool string_in_list(const char * s, const char * a[])
 {
 	int i;
 	for (i=0; a[i] != NULL; i++)
@@ -96,7 +96,7 @@ static size_t find_domain_name(Postprocessor *pp, const char *link)
 }
 
 /** Returns true if domain d1 is contained in domain d2 */
-static int contained_in(const Domain * d1, const Domain * d2,
+static bool contained_in(const Domain * d1, const Domain * d2,
                         const Linkage sublinkage)
 {
 	bool *mark = alloca(sublinkage->num_links*sizeof(bool));
