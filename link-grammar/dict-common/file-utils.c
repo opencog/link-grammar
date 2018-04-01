@@ -26,10 +26,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <link-includes.h>
-
 #include "file-utils.h"
 #include "error.h"  // for verbosity_level
+#include "link-includes.h"
 #include "utilities.h"
 
 #ifdef _WIN32
