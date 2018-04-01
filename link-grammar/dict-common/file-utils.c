@@ -13,21 +13,21 @@
 
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/stat.h>   /* for fstat() */
+#include <sys/stat.h>                   // fstat()
 
 #ifndef _WIN32
 	#include <unistd.h>
 #else
 	#include <windows.h>
-	#include <Shlwapi.h> /* For PathRemoveFileSpecA(). */
-	#include <direct.h>  /* For getcwd(). */
+	#include <Shlwapi.h>                 // PathRemoveFileSpecA()
+	#include <direct.h>                  // getcwd()
 #endif /* _WIN32 */
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "file-utils.h"
-#include "error.h"  // for verbosity_level
+#include "error.h"                      // verbosity_level()
 #include "link-includes.h"
 #include "utilities.h"
 
