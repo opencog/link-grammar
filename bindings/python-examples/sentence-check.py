@@ -49,10 +49,6 @@ po.max_parse_time = 10   # actual parse timeout may be about twice bigger
 po.spell_guess = True if DISPLAY_GUESSES else False
 po.display_morphology = True if DISPLAY_MORPHOLOGY else False
 
-if sys.version_info < (3, 0):
-    import codecs
-    #sys.stdout = codecs.getreader('utf-8')(sys.stdout)
-
 print("Enter sentences:")
 # iter(): avoid python2 input buffering
 for sentence_text in iter(sys.stdin.readline, ''):
