@@ -160,25 +160,25 @@ static E_list * or_purge_E_list(E_list * l)
 }
 
 /**
- * Returns 0 iff the length of the disjunct list is 0.
+ * Returns true iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
  */
-static int and_purge_E_list(E_list * l)
+static bool and_purge_E_list(E_list * l)
 {
-	if (l == NULL) return 1;
+	if (l == NULL) return true;
 	if ((l->e = purge_Exp(l->e)) == NULL)
 	{
 		free_E_list(l->next);
 		xfree((char *)l, sizeof(E_list));
-		return 0;
+		return false;
 	}
 	if (and_purge_E_list(l->next) == 0)
 	{
 		free_Exp(l->e);
 		xfree((char *)l, sizeof(E_list));
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }
 
 /**
