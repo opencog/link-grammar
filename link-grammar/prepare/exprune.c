@@ -172,7 +172,7 @@ static bool and_purge_E_list(E_list * l)
 		xfree((char *)l, sizeof(E_list));
 		return false;
 	}
-	if (and_purge_E_list(l->next) == 0)
+	if (!and_purge_E_list(l->next))
 	{
 		free_Exp(l->e);
 		xfree((char *)l, sizeof(E_list));
@@ -201,7 +201,7 @@ static Exp* purge_Exp(Exp *e)
 	}
 	if (e->type == AND_type)
 	{
-		if (and_purge_E_list(e->u.l) == 0)
+		if (!and_purge_E_list(e->u.l))
 		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
