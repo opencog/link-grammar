@@ -25,7 +25,7 @@ import itertools
 import argparse
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
-                         LG_TimerExhausted, Clinkgrammar as clg)
+                         LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
 
 def nsuffix(q):
     return '' if q == 1 else 's'
@@ -53,7 +53,13 @@ args.add_argument("-nm", "--no-morphology", dest='morphology', action='store_fal
 
 arg = args.parse_args()
 
-lgdict = Dictionary(arg.lang)
+try:
+    lgdict = Dictionary(arg.lang)
+except LG_Error:
+    # The default error handler will print the error message
+    args.print_usage()
+    sys.exit(2)
+
 po = ParseOptions(verbosity=arg.verbosity)
 
 po.max_null_count = 999  # > allowed maximum number of words
