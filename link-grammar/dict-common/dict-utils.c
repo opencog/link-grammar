@@ -104,17 +104,26 @@ static bool exp_compare(Exp * e1, Exp * e2)
 	{
 		el1 = e1->u.l;
 		el2 = e2->u.l;
-		/* while at least 1 is non-null */
-		for (;(el1!=NULL)||(el2!=NULL);) {
-		   /*fail if 1 is null */
-			if ((el1==NULL)||(el2==NULL))
-				return 0;
-			/* fail if they are not compared */
-			if (!exp_compare(el1->e, el2->e))
-				return 0;
-			el1 = el1->next;
-			el2 = el2->next;
-		}
+
+		/* Fail if either one is null. */
+		if ((el1 == NULL) || (el2 == NULL))
+			return 0;
+
+		/* Fail if they are not equal. */
+		if (!exp_compare(el1->e, el2->e))
+			return 0;
+
+		el1 = el1->next;
+		el2 = el2->next;
+
+		/* Fail if either one is null. */
+		if ((el1 == NULL) || (el2 == NULL))
+			return 0;
+
+		/* Fail if they are not equal. */
+		if (!exp_compare(el1->e, el2->e))
+			return 0;
+
 	}
 	return 1; /* if never returned 0, return 1 */
 }
@@ -133,7 +142,7 @@ static int exp_contains(Exp * super, Exp * sub)
 	printf("\n");
 #endif
 
-	if (sub==NULL || super==NULL)
+	if (sub == NULL || super == NULL)
 		return 0;
 	if (exp_compare(sub,super))
 		return 1;
