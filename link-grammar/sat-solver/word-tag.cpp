@@ -68,8 +68,6 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         insert_connectors(exp->u.l->e, dfs_position, leading_right,
              leading_left, eps_right, eps_left, var, root, cost, parent_exp, word_xnode);
       } else {
-        int i;
-        E_list* l;
 
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
@@ -79,23 +77,36 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           last_var++;
         }
 
-        for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
+        char* s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 0);
 
-          insert_connectors(l->e, dfs_position, leading_right, leading_left,
+        insert_connectors(exp->u.l->e, dfs_position, leading_right, leading_left,
                 eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
 
 #ifdef POWER_PRUNE_CONNECTORS
-          if (leading_right) {
-            eps_right.push_back(_variables->epsilon(new_var, '+'));
-          }
-          if (leading_left) {
-            eps_left.push_back(_variables->epsilon(new_var, '-'));
-          }
-#endif
+        if (leading_right) {
+          eps_right.push_back(_variables->epsilon(new_var, '+'));
         }
+        if (leading_left) {
+          eps_left.push_back(_variables->epsilon(new_var, '-'));
+        }
+#endif
+        s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, 1);
+
+        insert_connectors(exp->u.l->next->e, dfs_position, leading_right, leading_left,
+                eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
+
+#ifdef POWER_PRUNE_CONNECTORS
+        if (leading_right) {
+          eps_right.push_back(_variables->epsilon(new_var, '+'));
+        }
+        if (leading_left) {
+          eps_left.push_back(_variables->epsilon(new_var, '-'));
+        }
+#endif
       }
   } else if (exp->type == OR_type) {
     if (exp->u.l != NULL && exp->u.l->next == NULL) {
