@@ -147,12 +147,12 @@ static Exp* purge_Exp(Exp *);
  */
 static E_list * or_purge_E_list(E_list * l)
 {
-	E_list * el;
 	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(l->e)) == NULL)
+	l->e = purge_Exp(l->e);
+	if (NULL == l->e)
 	{
-		el = or_purge_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
+		E_list * el = or_purge_E_list(l->next);
+		free(l);
 		return el;
 	}
 	l->next = or_purge_E_list(l->next);
@@ -166,7 +166,8 @@ static E_list * or_purge_E_list(E_list * l)
 static int and_purge_E_list(E_list * l)
 {
 	if (l == NULL) return 1;
-	if ((l->e = purge_Exp(l->e)) == NULL)
+	l->e = purge_Exp(l->e);
+	if (NULL == l->e)
 	{
 		if (l->next)
 		{
@@ -284,10 +285,9 @@ static void zero_connector_table(exprune_context *ctxt)
  */
 static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
 {
-	int count;
-	count = 0;
 	if (e->type == CONNECTOR_type)
 	{
+		int count = 0;
 		if (e->dir == dir)
 		{
 			if (!matches_S(ct, w, e->u.condesc))
@@ -296,14 +296,15 @@ static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
 				count++;
 			}
 		}
+		return count;
 	}
-	else
+
+	int count = 0;
+	if (e->u.l)
 	{
-		E_list *l;
-		for (l = e->u.l; l != NULL; l = l->next)
-		{
-			count += mark_dead_connectors(ct, w, l->e, dir);
-		}
+		count = mark_dead_connectors(ct, w, e->u.l->e, dir);
+		if (e->u.l->next)
+			count += mark_dead_connectors(ct, w, e->u.l->next->e, dir);
 	}
 	return count;
 }
@@ -355,14 +356,14 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 				                              w+c.length_limit;
 			insert_connector(ctxt, farthest_word, e->u.condesc);
 		}
+		return;
 	}
-	else
+
+	if (e->u.l)
 	{
-		E_list *l;
-		for (l=e->u.l; l!=NULL; l=l->next)
-		{
-			insert_connectors(ctxt, w, l->e, dir);
-		}
+		insert_connectors(ctxt, w, e->u.l->e, dir);
+		if (e->u.l->next)
+			insert_connectors(ctxt, w, e->u.l->next->e, dir);
 	}
 }
 
