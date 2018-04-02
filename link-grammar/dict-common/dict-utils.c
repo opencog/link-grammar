@@ -32,24 +32,16 @@ const char * lg_exp_get_string(const Exp* exp)
 /* ======================================================== */
 /* Exp utilities ... */
 
-void free_E_list(E_list *);
 void free_Exp(Exp * e)
 {
-	// Exp might be null if the user has a bad dict. e.g. badly formed
-	// SQL dict.
 	if (NULL == e) return;
-	if (e->type != CONNECTOR_type) {
-		free_E_list(e->u.l);
+	if (e->type != CONNECTOR_type && NULL != e->u.l)
+	{
+		free_Exp(e->u.l->e);
+		if (e->u.l->next) free_Exp(e->u.l->next->e);
+		free(e->u.l);
 	}
 	free(e);
-}
-
-void free_E_list(E_list * l)
-{
-	if (l == NULL) return;
-	free_Exp(l->e);
-	if (l->next) free_Exp(l->next->e);
-	free(l);
 }
 
 /* Returns the number of connectors in the expression e */

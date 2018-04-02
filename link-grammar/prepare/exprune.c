@@ -168,14 +168,18 @@ static int and_purge_E_list(E_list * l)
 	if (l == NULL) return 1;
 	if ((l->e = purge_Exp(l->e)) == NULL)
 	{
-		free_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
+		if (l->next)
+		{
+			free_Exp(l->next->e);
+			free(l->next);
+		}
+		free(l);
 		return 0;
 	}
 	if (and_purge_E_list(l->next) == 0)
 	{
 		free_Exp(l->e);
-		xfree((char *)l, sizeof(E_list));
+		free(l);
 		return 0;
 	}
 	return 1;
