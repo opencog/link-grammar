@@ -3,7 +3,7 @@
 """Python link-grammar test script"""
 
 from __future__ import print_function
-import sys, os
+import sys, os, re
 import locale
 import unittest
 
@@ -29,14 +29,17 @@ from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
 
 
 # Show the location and version of the bindings modules
-for module in 'linkgrammar', '_clinkgrammar', 'lg_testutils':
-    if module in sys.modules:
-        print("Using", sys.modules[module], end='')
-        if hasattr(sys.modules[module], '__version__'):
-            print(' version', sys.modules[module].__version__, end='')
-        print()
-    else:
-        print("Warning: Module", module,  "not loaded.")
+for imported_module in 'linkgrammar$', 'clinkgrammar', '_clinkgrammar', 'lg_testutils':
+    module_found = False
+    for module in sys.modules:
+        if re.search(r'^(linkgrammar\.)?'+imported_module, module):
+            print("Using", sys.modules[module], end='')
+            if hasattr(sys.modules[module], '__version__'):
+                print(' version', sys.modules[module].__version__, end='')
+            print()
+            module_found = True
+    if not module_found:
+        print("Warning: Module", imported_module,  "not loaded.")
 
 sys.stdout.flush()
 #===
