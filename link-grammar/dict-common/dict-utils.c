@@ -134,8 +134,6 @@ static bool exp_compare(Exp * e1, Exp * e2)
  */
 static int exp_contains(Exp * super, Exp * sub)
 {
-	E_list * el;
-
 #if 0 /* DEBUG */
 	printf("SUP: ");
 	if (super) print_expression(super);
@@ -144,17 +142,17 @@ static int exp_contains(Exp * super, Exp * sub)
 
 	if (sub == NULL || super == NULL)
 		return 0;
-	if (exp_compare(sub,super))
+	if (exp_compare(sub, super))
 		return 1;
-	if (super->type==CONNECTOR_type)
+	if (super->type == CONNECTOR_type)
 	  return 0; /* super is a leaf */
 
 	/* proceed through supers children and return 1 if sub
 	   is contained in any of them */
-	for(el = super->u.l; el!=NULL; el=el->next) {
-		if (exp_contains(el->e, sub)==1)
-			return 1;
-	}
+	if (exp_contains(super->u.l->e, sub)==1)
+		return 1;
+	if (super->u.l->next && exp_contains(super->u.l->next->e, sub)==1)
+		return 1;
 	return 0;
 }
 
@@ -233,7 +231,6 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 static bool exp_has_connector(const Exp * e, int depth, const char * cs,
                               char direction, bool smart_match)
 {
-	E_list * el;
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
@@ -244,11 +241,12 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 	if (depth == 0) return false;
 	if (depth > 0) depth--;
 
-	for (el = e->u.l; el != NULL; el = el->next)
-	{
-		if (exp_has_connector(el->e, depth, cs, direction, smart_match))
+	if (exp_has_connector(e->u.l->e, depth, cs, direction, smart_match))
 			return true;
-	}
+	if (e->u.l->next &&
+	    exp_has_connector(e->u.l->next->e, depth, cs, direction, smart_match))
+			return true;
+
 	return false;
 }
 
