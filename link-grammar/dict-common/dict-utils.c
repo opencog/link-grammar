@@ -47,21 +47,18 @@ void free_Exp(Exp * e)
 void free_E_list(E_list * l)
 {
 	if (l == NULL) return;
-	free_E_list(l->next);
 	free_Exp(l->e);
+	if (l->next) free_Exp(l->next->e);
 	free(l);
 }
 
 /* Returns the number of connectors in the expression e */
 int size_of_expression(Exp * e)
 {
-	int size;
-	E_list * l;
 	if (e->type == CONNECTOR_type) return 1;
-	size = 0;
-	for (l=e->u.l; l!=NULL; l=l->next) {
-		size += size_of_expression(l->e);
-	}
+	int size = size_of_expression(e->u.l->e);
+	if (e->u.l->next)
+		size += size_of_expression(e->u.l->next->e);
 	return size;
 }
 
