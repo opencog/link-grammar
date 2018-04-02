@@ -163,9 +163,9 @@ static E_list * or_purge_E_list(E_list * l)
  * Returns 0 iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
  */
-static int and_purge_E_list(E_list * l)
+static bool and_purge_E_list(E_list * l)
 {
-	if (l == NULL) return 1;
+	if (l == NULL) return true;
 	l->e = purge_Exp(l->e);
 	if (NULL == l->e)
 	{
@@ -175,15 +175,15 @@ static int and_purge_E_list(E_list * l)
 			free(l->next);
 		}
 		free(l);
-		return 0;
+		return false;
 	}
-	if (and_purge_E_list(l->next) == 0)
+	if (and_purge_E_list(l->next) == false)
 	{
 		free_Exp(l->e);
 		free(l);
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }
 
 /**
@@ -199,27 +199,24 @@ static Exp* purge_Exp(Exp *e)
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
-		else
-		{
-			return e;
-		}
+		return e;
 	}
 	if (e->type == AND_type)
 	{
-		if (and_purge_E_list(e->u.l) == 0)
+		if (and_purge_E_list(e->u.l) == false)
 		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
+		return e;
 	}
-	else /* if we are here, its OR_type */
+
+	/* If we are here, its OR_type */
+	e->u.l = or_purge_E_list(e->u.l);
+	if (e->u.l == NULL)
 	{
-		e->u.l = or_purge_E_list(e->u.l);
-		if (e->u.l == NULL)
-		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
-		}
+		xfree((char *)e, sizeof(Exp));
+		return NULL;
 	}
 
 /* This code makes it kill off nodes that have just one child
