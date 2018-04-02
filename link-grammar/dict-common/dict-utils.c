@@ -149,9 +149,10 @@ static int exp_contains(Exp * super, Exp * sub)
 
 	/* proceed through supers children and return 1 if sub
 	   is contained in any of them */
-	if (exp_contains(super->u.l->e, sub)==1)
+	if (super->u.l && exp_contains(super->u.l->e, sub)==1)
 		return 1;
-	if (super->u.l->next && exp_contains(super->u.l->next->e, sub)==1)
+	if (super->u.l && super->u.l->next &&
+	    exp_contains(super->u.l->next->e, sub)==1)
 		return 1;
 	return 0;
 }

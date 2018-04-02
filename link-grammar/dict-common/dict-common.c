@@ -251,7 +251,7 @@ void free_Exp_list(Exp_list * eli)
 	for (; e != NULL; e = e1)
 	{
 		e1 = e->next;
-		if (e->type != CONNECTOR_type)
+		if (e->type != CONNECTOR_type && e->u.l)
 		{
 		   if (e->u.l->next) free(e->u.l->next);
 		   free(e->u.l);

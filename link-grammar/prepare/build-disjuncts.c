@@ -173,9 +173,16 @@ static Clause * build_clause(Exp *e)
 	{
 		/* we'll catenate the lists of clauses */
 		c = NULL;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		c1 = build_clause(e->u.l->e);
+		while(c1 != NULL) {
+			c3 = c1->next;
+			c1->next = c;
+			c = c1;
+			c1 = c3;
+		}
+		if (e->u.l->next)
 		{
-			c1 = build_clause(e_list->e);
+			c1 = build_clause(e->u.l->next->e);
 			while(c1 != NULL) {
 				c3 = c1->next;
 				c1->next = c;
