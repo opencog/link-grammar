@@ -137,7 +137,6 @@ static Tconnector * build_terminal(Exp * e)
 static Clause * build_clause(Exp *e)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
-	E_list * e_list;
 
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
@@ -147,9 +146,9 @@ static Clause * build_clause(Exp *e)
 		c1->next = NULL;
 		c1->cost = 0.0;
 		c1->maxcost = 0.0;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		if (e->u.l)
 		{
-			c2 = build_clause(e_list->e);
+			c2 = build_clause(e->u.l->e);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
@@ -157,7 +156,7 @@ static Clause * build_clause(Exp *e)
 				{
 					c = (Clause *) xalloc(sizeof (Clause));
 					c->cost = c3->cost + c4->cost;
-					c->maxcost = fmaxf(c3->maxcost,c4->maxcost);
+					c->maxcost = fmaxf(c3->maxcost, c4->maxcost);
 					c->c = catenate(c3->c, c4->c);
 					c->next = c_head;
 					c_head = c;
@@ -166,6 +165,26 @@ static Clause * build_clause(Exp *e)
 			free_clause_list(c1);
 			free_clause_list(c2);
 			c1 = c_head;
+			if (e->u.l->next)
+			{
+				c2 = build_clause(e->u.l->next->e);
+				c_head = NULL;
+				for (c3 = c1; c3 != NULL; c3 = c3->next)
+				{
+					for (c4 = c2; c4 != NULL; c4 = c4->next)
+					{
+						c = (Clause *) xalloc(sizeof (Clause));
+						c->cost = c3->cost + c4->cost;
+						c->maxcost = fmaxf(c3->maxcost,c4->maxcost);
+						c->c = catenate(c3->c, c4->c);
+						c->next = c_head;
+						c_head = c;
+					}
+				}
+				free_clause_list(c1);
+				free_clause_list(c2);
+				c1 = c_head;
+			}
 		}
 		c = c1;
 	}
@@ -335,21 +354,21 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 {
 	if (e == NULL) return;
 
-	for(int j =0; j<i; j++) printf(" ");
-	printf ("type=%d dir=%c multi=%d cost=%f\n", e->type, e->dir, e->multi, e->cost);
-	if (e->type != CONNECTOR_type)
+	for (int j =0; j<i; j++) printf(" ");
+	printf("type=%d dir=%c multi=%d cost=%f\n",
+	       e->type, e->dir, e->multi, e->cost);
+
+	if (CONNECTOR_type == e->type)
 	{
-		E_list *l = e->u.l;
-		while(l)
-		{
-			prt_exp(l->e, i+2);
-			l = l->next;
-		}
-	}
-	else
-	{
-		for(int j =0; j<i; j++) printf(" ");
+		for (int j =0; j<i; j++) printf(" ");
 		printf("con=%s\n", e->u.condesc->string);
+		return;
+	}
+	if (e->u.l)
+	{
+		prt_exp(e->u.l->e, i+2);
+		if (e->u.l->next)
+			prt_exp(e->u.l->next->e, i+2);
 	}
 }
 
@@ -372,27 +391,25 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 
 	for(int j =0; j<i; j++) printf(" ");
 	printf ("e=%p: %s cost=%f\n", e, type, e->cost);
-	if (e->type != CONNECTOR_type)
+	if (CONNECTOR_type == e->type)
 	{
-		E_list *l;
-		for(int j =0; j<i+2; j++) printf(" ");
+		for (int j=0; j<i; j++) printf(" ");
+		printf("con=%s dir=%c multi=%d\n",
+		       e->u.condesc->string, e->dir, e->multi);
+		return;
+	}
+	if (e->u.l)
+	{
+		for (int j=0; j<i+2; j++) printf(" ");
 		printf("E_list=%p (", e->u.l);
-		for (l = e->u.l; NULL != l; l = l->next)
-		{
-			printf("%p", l->e);
-			if (NULL != l->next) printf(" ");
-		}
+		printf("%p", e->u.l->e);
+		if (NULL != e->u.l->next)
+			printf(" %p", e->u.l->next->e);
 		printf(")\n");
 
-		for (l = e->u.l; NULL != l; l = l->next)
-		{
-			prt_exp_mem(l->e, i+2);
-		}
-	}
-	else
-	{
-		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s dir=%c multi=%d\n", e->u.condesc->string, e->dir, e->multi);
+		prt_exp_mem(e->u.l->e, i+2);
+		if (NULL != e->u.l->next)
+			prt_exp_mem(e->u.l->next->e, i+2);
 	}
 }
 #endif
