@@ -634,6 +634,11 @@ int main(int argc, char * argv[])
 			if ((var[0] != '!') && issue_special_command(var, copts, NULL))
 				print_usage(argv[0]);
 		}
+		else if (i != 1)
+		{
+			prt_error("Fatal error: Unknown argument '%s'.\n", argv[i]);
+			print_usage(argv[0]);
+		}
 	}
 
 #ifdef _WIN32
