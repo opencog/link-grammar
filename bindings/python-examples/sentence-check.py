@@ -118,5 +118,7 @@ for sentence_text in iter(sys.stdin.readline, ''):
                 words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
                 wi += 1
 
-        print(u"{}: {}".format(result_no, ' '.join(words_char)))
-        print(u"{}: {}".format(result_no, ' '.join(words_byte)))
+            print(u"{}: {}".format(result_no, ' '.join(words_char)))
+            print(u"{}: {}".format(result_no, ' '.join(words_byte)))
+        else:
+            print("{}: {}".format(result_no, ' '.join(words)))
