@@ -364,98 +364,99 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
       Lit lhs = Lit(_variables->string_cost(var, e->cost));
       generate_literal(~lhs);
     }
-  } else {
-    if (e->type == AND_type) {
-      if (e->u.l == NULL) {
-        /* zeroary and */
-        _variables->string_cost(var, e->cost);
-        if (total_cost > _cost_cutoff) {
-          generate_literal(~Lit(_variables->string_cost(var, e->cost)));
-        }
-      } else if (e->u.l != NULL && e->u.l->next == NULL) {
-        /* unary and - skip */
-        generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
-      } else {
-        /* n-ary and */
-        int i;
+    return;
+  }
 
-        char new_var[MAX_VARIABLE_NAME];
-        char* last_new_var = new_var;
-        char* last_var = var;
-        while((*last_new_var = *last_var)) {
-          last_new_var++;
-          last_var++;
-        }
-
-        vec<Lit> rhs;
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
-          rhs.push(Lit(_variables->string(new_var)));
-        }
-
-        Lit lhs = Lit(_variables->string_cost(var, e->cost));
-        generate_and_definition(lhs, rhs);
-
-        /* Precedes */
-        int dfs_position_tmp = dfs_position;
-        for (l = e->u.l; l->next != NULL; l = l->next) {
-          generate_conjunct_order_constraints(w, l->e, l->next->e, dfs_position_tmp);
-        }
-
-        /* Recurse */
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'c';
-          fast_sprintf(s, i);
-
-          generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
-        }
+  if (e->type == AND_type) {
+    if (e->u.l == NULL) {
+      /* zeroary and */
+      _variables->string_cost(var, e->cost);
+      if (total_cost > _cost_cutoff) {
+        generate_literal(~Lit(_variables->string_cost(var, e->cost)));
       }
-    } else if (e->type == OR_type) {
-      if (e->u.l == NULL) {
-        /* zeroary or */
-        cerr << "Zeroary OR" << endl;
-        exit(EXIT_FAILURE);
-      } else if (e->u.l != NULL && e->u.l->next == NULL) {
-        /* unary or */
-        generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
-      } else {
-        /* n-ary or */
-        int i;
+    } else if (e->u.l != NULL && e->u.l->next == NULL) {
+      /* unary and - skip */
+      generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
+    } else {
+      /* n-ary and */
+      int i;
 
-        char new_var[MAX_VARIABLE_NAME];
-        char* last_new_var = new_var;
-        char* last_var = var;
-        while ((*last_new_var = *last_var)) {
-          last_new_var++;
-          last_var++;
-        }
+      char new_var[MAX_VARIABLE_NAME];
+      char* last_new_var = new_var;
+      char* last_var = var;
+      while((*last_new_var = *last_var)) {
+        last_new_var++;
+        last_var++;
+      }
 
-        vec<Lit> rhs;
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          // sprintf(new_var, "%sc%d", var, i)
-          char* s = last_new_var;
-          *s++ = 'd';
-          fast_sprintf(s, i);
-          rhs.push(Lit(_variables->string(new_var)));
-        }
+      vec<Lit> rhs;
+      for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        // sprintf(new_var, "%sc%d", var, i)
+        char* s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, i);
+        rhs.push(Lit(_variables->string(new_var)));
+      }
 
-        Lit lhs = Lit(_variables->string_cost(var, e->cost));
-        generate_or_definition(lhs, rhs);
-        generate_xor_conditions(rhs);
+      Lit lhs = Lit(_variables->string_cost(var, e->cost));
+      generate_and_definition(lhs, rhs);
 
-        /* Recurse */
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
-          char* s = last_new_var;
-          *s++ = 'd';
-          fast_sprintf(s, i);
+      /* Precedes */
+      int dfs_position_tmp = dfs_position;
+      for (l = e->u.l; l->next != NULL; l = l->next) {
+        generate_conjunct_order_constraints(w, l->e, l->next->e, dfs_position_tmp);
+      }
 
-          generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
-        }
+      /* Recurse */
+      for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        // sprintf(new_var, "%sc%d", var, i)
+        char* s = last_new_var;
+        *s++ = 'c';
+        fast_sprintf(s, i);
+
+        generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
+      }
+    }
+  } else if (e->type == OR_type) {
+    if (e->u.l == NULL) {
+      /* zeroary or */
+      cerr << "Zeroary OR" << endl;
+      exit(EXIT_FAILURE);
+    } else if (e->u.l != NULL && e->u.l->next == NULL) {
+      /* unary or */
+      generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
+    } else {
+      /* n-ary or */
+      int i;
+
+      char new_var[MAX_VARIABLE_NAME];
+      char* last_new_var = new_var;
+      char* last_var = var;
+      while ((*last_new_var = *last_var)) {
+        last_new_var++;
+        last_var++;
+      }
+
+      vec<Lit> rhs;
+      for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        // sprintf(new_var, "%sc%d", var, i)
+        char* s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, i);
+        rhs.push(Lit(_variables->string(new_var)));
+      }
+
+      Lit lhs = Lit(_variables->string_cost(var, e->cost));
+      generate_or_definition(lhs, rhs);
+      generate_xor_conditions(rhs);
+
+      /* Recurse */
+      for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        char* s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, i);
+
+        generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
       }
     }
   }
