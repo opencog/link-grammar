@@ -12,8 +12,8 @@
 #ifndef _MEMORY_POOL_H
 #define _MEMORY_POOL_H
 
-#include "link-grammar/link-includes.h"
-#include "link-grammar/utilities.h"     // GNUC_MALLOC (XXX separate include?)
+#include "link-includes.h"
+#include "utilities.h"                  // GNUC_MALLOC (XXX separate include?)
 
 #define D_MEMPOOL (D_SPEC+4)
 #define MIN_ALIGNMENT sizeof(void *)    // Minimum element alignment.

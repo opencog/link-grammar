@@ -12,12 +12,12 @@
 
 #include <string.h>
 
-#include "link-grammar/api-structures.h" // Sentence
+#include "api-structures.h"             // Sentence
 #include "connectors.h"
 #include "disjunct-utils.h"
 #include "print/print-util.h"
 #include "utilities.h"
-#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
+#include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
 
 /* Disjunct utilities ... */
