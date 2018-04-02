@@ -205,12 +205,13 @@ void set_all_condesc_length_limit(Dictionary dict)
 
 	if (verbosity_level(D_SPEC+1))
 	{
-		printf("%5s %-6s %3s\n", "num", "uc_num", "ll");
+		prt_error("Debug:\n%5s %-6s %3s\n\\", "num", "uc_num", "ll");
 		for (size_t n = 0; n < ct->num_con; n++)
 		{
-			printf("%5zu %6d %3d %s\n", n, ct->sdesc[n]->uc_num,
+			prt_error("%5zu %6d %3d %s\n\\", n, ct->sdesc[n]->uc_num,
 			       ct->sdesc[n]->length_limit, ct->sdesc[n]->string);
 		}
+		prt_error("\n");
 	}
 }
 
