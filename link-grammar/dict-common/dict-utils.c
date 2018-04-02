@@ -45,7 +45,7 @@ void free_Exp(Exp * e)
 }
 
 /* Returns the number of connectors in the expression e */
-int size_of_expression(Exp * e)
+int size_of_expression(const Exp * e)
 {
 	if (e->type == CONNECTOR_type) return 1;
 	int size = size_of_expression(e->u.l->e);
@@ -57,27 +57,24 @@ int size_of_expression(Exp * e)
 /**
  * Build a copy of the given expression (don't copy strings, of course)
  */
-static E_list * copy_E_list(E_list * l);
-Exp * copy_Exp(Exp * e)
+Exp * copy_Exp(const Exp * e)
 {
-	Exp * n;
 	if (e == NULL) return NULL;
-	n = malloc(sizeof(Exp));
+	Exp * n = malloc(sizeof(Exp));
 	*n = *e;
-	if (e->type != CONNECTOR_type) {
-		n->u.l = copy_E_list(e->u.l);
+	if (e->type != CONNECTOR_type && NULL != e->u.l)
+	{
+		n->u.l = malloc(sizeof(E_list));
+		n->u.l->e = copy_Exp(e->u.l->e);
+		n->u.l->next = NULL;
+		if (e->u.l->next)
+		{
+			n->u.l->next = malloc(sizeof(E_list));
+			n->u.l->next->e = copy_Exp(e->u.l->next->e);
+			n->u.l->next->next = NULL;
+		}
 	}
 	return n;
-}
-
-static E_list * copy_E_list(E_list * l)
-{
-	E_list * nl;
-	if (l == NULL) return NULL;
-	nl = malloc(sizeof(E_list));
-	nl->next = copy_E_list(l->next);
-	nl->e = copy_Exp(l->e);
-	return nl;
 }
 
 /**
