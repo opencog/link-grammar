@@ -192,6 +192,9 @@ liblink_grammar_include_HEADERS =   \
 	dict-common/dict-api.h           \
 	dict-common/dict-structures.h
 
+uninstall-hook:
+	-rmdir $(liblink_grammar_includedir)
+
 EXTRA_DIST=                         \
 	link-grammar.def                 \
 	README.md                        \
