@@ -987,7 +987,6 @@ static Exp * make_connector(Dictionary dict)
 void add_empty_word(Dictionary const dict, X_node *x)
 {
 	Exp *zn, *an;
-	E_list *elist, *flist;
 	Exp_list eli = { NULL };
 	const char *ZZZ = string_set_add(EMPTY_CONNECTOR, dict->string_set);
 
@@ -1012,20 +1011,20 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		zn = make_optional_node(&eli, zn);
 
 		/* flist is plain-word-exp */
-		flist = (E_list *) malloc(sizeof(E_list));
-		flist->next = NULL;
-		flist->e = x->exp;
+		E_list* elright = (E_list *) malloc(sizeof(E_list));
+		elright->next = NULL;
+		elright->e = x->exp;
 
 		/* elist is {ZZZ+} , (plain-word-exp) */
-		elist = (E_list *) malloc(sizeof(E_list));
-		elist->next = flist;
-		elist->e = zn;
+		E_list* eleft = (E_list *) malloc(sizeof(E_list));
+		eleft->next = elright;
+		eleft->e = zn;
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
 		an = Exp_create(&eli);
 		an->type = AND_type;
 		an->cost = 0.0;
-		an->u.l = elist;
+		an->u.l = eleft;
 
 		x->exp = an;
 	}
