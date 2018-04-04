@@ -98,6 +98,8 @@ esac
 AC_MSG_RESULT([$apple_osx])
 AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
 
+HOST_OS="$host_os"
+AC_SUBST(HOST_OS)
 # ====================================================================
 
 CFLAGS="${CFLAGS} -O3"
