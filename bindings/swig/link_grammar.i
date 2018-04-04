@@ -26,6 +26,7 @@
 
 
 const char * linkgrammar_get_version(void);
+const char * linkgrammar_get_configuration(void);
 const char * linkgrammar_get_dict_version(Dictionary dict);
 const char * linkgrammar_get_dict_locale(Dictionary dict);
 
