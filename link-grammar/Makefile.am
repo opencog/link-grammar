@@ -203,6 +203,10 @@ EXTRA_DIST=                         \
 	dict-sql/README.md               \
 	tokenize/README.md
 
+clean-local:
+# Clean up a possible left out generated file of a Windows MSVC compilation
+	rm -f $(srcdir)/link-features.h
+
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
 
