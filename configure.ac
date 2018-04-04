@@ -881,6 +881,11 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(CXXFLAGS)
 
+dnl Save the compilation definitions for an extended version printout
+AC_OUTPUT_MAKE_DEFS()
+LG_DEFS=`$ECHO "$DEFS" | $SED 's/\\\\//g'`
+AC_SUBST(LG_DEFS)
+
 AC_CONFIG_FILES([
 Makefile
 link-grammar.pc
