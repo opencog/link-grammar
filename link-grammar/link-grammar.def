@@ -130,3 +130,4 @@ linkage_get_word_byte_start
 linkage_get_word_byte_end
 linkage_get_word_char_start
 linkage_get_word_char_end
+linkgrammar_get_configuration
