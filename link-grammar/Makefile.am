@@ -30,7 +30,7 @@ endif
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\" -DCC=\"$(CC)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir) $(WARN_CFLAGS) \
 	$(HUNSPELL_CFLAGS)
 
 post-process/pp_lexer.lo: AM_CPPFLAGS += -I$(top_srcdir)/link-grammar/post-process
