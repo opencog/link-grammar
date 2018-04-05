@@ -1,7 +1,6 @@
 linkgrammar_get_version
 linkgrammar_get_dict_version
 linkgrammar_get_dict_locale
-dictionary_create_from_utf8
 dictionary_create_lang
 dictionary_create_default_lang
 dictionary_get_lang
