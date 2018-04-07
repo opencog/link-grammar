@@ -3,19 +3,30 @@ Python bindings for Link Grammar
 
 Description
 -----------
-The example program `example.py` illustrates how the to use the
-Link Grammar python bindings.
+The example programs `example.py` and `sentence-check.py` illustrates
+how the to use the Link Grammar Python bindings.
 
-A unit test for the Link Grammar python bindings can be found in
+A unit test for the Link Grammar Python bindings can be found in
 in `tests.py`.
 
 Configuring (if needed)
 -----------------------
-### For Python2
-   $ configure --enable-python-bindings
-### For Python3
-   $ configure --enable-python3-bindings
 
+You will need the development package(s) of the desired Python version(s)
+installed in your system.
+
+### For Python2 and Python3
+   `$ ./configure --enable-python-bindings`
+(This is the default if the these versions are installed.)
+
+### For Python2 or Python3 only
+   `$ ./configure --enable-python-bindings=2`
+Or:<br>
+   `$ ./configure --enable-python-bindings=3`
+
+### To disable the Python bindings
+   `$ ./configure --disable-python-bindings`
+(This is the default if no Python is installed.)
 
 How to use
 ----------
@@ -26,7 +37,7 @@ this.)
 Parsing simple sentences:
 
 ```
-$ python
+`$ python`
 
 >>> from linkgrammar import Sentence, ParseOptions, Dictionary
 >>> sent = Sentence("This is a simple sentence.", Dictionary(), ParseOptions())
@@ -44,17 +55,17 @@ $ python
       |        |     |  |     |         |     |
   LEFT-WALL this.p is.v a simple.a sentence.n .
 ```
-Additional examples can be found in `examples.py`.
+Additional examples can be found in `examples.py` and `sentence-cehck.py`.
 
 Testing
 -------
-The test collection `tests.py` should run 56 tests; none of them should
+The test collection `tests.py` should run 76 tests; none of them should
 fail.  However, 3 tests will be skipped, if the library is not configured
 with a spell guesser, and one test will be skipped if the library is not
 configured with the SAT solver (this is currently the case for native
 Windows builds).
 
-The test proceedure is outlined below.  For native Windows/MinGW, see
+The test procedure is outlined below.  For native Windows/MinGW, see
 the `msvc14/README.md` file:
 [Running Python programs in Windows](/msvc14/README.md#running-python-programs).
 
