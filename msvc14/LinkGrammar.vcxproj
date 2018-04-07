@@ -362,10 +362,10 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\link-grammar\link-features.h</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">confvar &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>

@@ -22,11 +22,11 @@ for v in 'PYTHONPATH', 'srcdir', 'LINK_GRAMMAR_DATA':
     print('{}={}'.format(v, os.environ.get(v)))
 #===
 
-
 from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
                          LG_Error, LG_DictionaryError, LG_TimerExhausted,
                          Clinkgrammar as clg)
 
+print(clg.linkgrammar_get_configuration())
 
 # Show the location and version of the bindings modules
 for imported_module in 'linkgrammar$', 'clinkgrammar', '_clinkgrammar', 'lg_testutils':
