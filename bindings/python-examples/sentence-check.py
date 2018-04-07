@@ -22,36 +22,50 @@ from __future__ import print_function
 import sys
 import re
 import itertools
+import argparse
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
-                         LG_TimerExhausted, Clinkgrammar as clg)
-print("Version:", clg.linkgrammar_get_version())
+                         LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
 
 def nsuffix(q):
     return '' if q == 1 else 's'
 
+class Formatter(argparse.HelpFormatter):
+    """ Display the "lang" argument as a first one, as in link-parser. """
+    def _format_usage(self, usage, actions, groups, prefix):
+        usage_message = super(Formatter, self)._format_usage(usage, actions, groups, prefix)
+        return re.sub(r'(usage: \S+) (.*) \[lang]', r'\1 [lang] \2', str(usage_message))
+
 #-----------------------------------------------------------------------------#
 
 DISPLAY_GUESSES = True   # Display regex and POS guesses
-DEBUG_POSITION = True    # Debug word position
-DISPLAY_MORPHOLOGY = True
 
-lang = 'en'
+args = argparse.ArgumentParser(formatter_class=Formatter)
+args.add_argument('lang', nargs='?', default='en',
+                  help="language or dictionary location")
+args.add_argument("-v", "--verbosity", type=int,default=0,
+                  choices=range(0,199), metavar='[0-199]',
+                  help= "1: Basic verbosity; 2-4: Trace; >5: Debug")
+args.add_argument("-p", "--position", action="store_true",
+                  help="show word sentence position")
+args.add_argument("-nm", "--no-morphology", dest='morphology', action='store_false',
+                  help="do not display morphology")
 
-if len(sys.argv) > 1:
-    lang = sys.argv[1]
+arg = args.parse_args()
 
-po = ParseOptions(verbosity=0) # 1=more verbose; 2=trace; >5=debug
-lgdict = Dictionary(lang)
+try:
+    lgdict = Dictionary(arg.lang)
+except LG_Error:
+    # The default error handler will print the error message
+    args.print_usage()
+    sys.exit(2)
+
+po = ParseOptions(verbosity=arg.verbosity)
 
 po.max_null_count = 999  # > allowed maximum number of words
 po.max_parse_time = 10   # actual parse timeout may be about twice bigger
 po.spell_guess = True if DISPLAY_GUESSES else False
-po.display_morphology = True if DISPLAY_MORPHOLOGY else False
-
-if sys.version_info < (3, 0):
-    import codecs
-    #sys.stdout = codecs.getreader('utf-8')(sys.stdout)
+po.display_morphology = arg.morphology
 
 print("Enter sentences:")
 # iter(): avoid python2 input buffering
@@ -87,11 +101,11 @@ for sentence_text in iter(sys.stdin.readline, ''):
                 break
 
     # Show results with unlinked words or guesses
-    if not DEBUG_POSITION and not guess_found and null_count == 0:
+    if not arg.position and not guess_found and null_count == 0:
         continue
 
 
-    if DEBUG_POSITION:
+    if arg.position:
         for p in range (0, len(sentence_text)):
             print(p%10, end="")
         print()
@@ -107,7 +121,7 @@ for sentence_text in iter(sys.stdin.readline, ''):
         result_no += 1
         uniqe_parse[str(words)] = True
 
-        if DEBUG_POSITION:
+        if arg.position:
             words_char = []
             words_byte = []
             wi = 0
@@ -118,5 +132,7 @@ for sentence_text in iter(sys.stdin.readline, ''):
                 words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
                 wi += 1
 
-        print(u"{}: {}".format(result_no, ' '.join(words_char)))
-        print(u"{}: {}".format(result_no, ' '.join(words_byte)))
+            print(u"{}: {}".format(result_no, ' '.join(words_char)))
+            print(u"{}: {}".format(result_no, ' '.join(words_byte)))
+        else:
+            print("{}: {}".format(result_no, ' '.join(words)))
