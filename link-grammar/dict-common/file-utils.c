@@ -174,7 +174,7 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, const void *),
                    const void * user_data)
 {
-	/* directory path cache -- per-thread storage. */
+	/* Dictionary data directory path cache -- per-thread storage. */
 	static TLS char *path_found;
 	char *completename = NULL;
 	void *fp = NULL;
@@ -183,7 +183,7 @@ void * object_open(const char *filename,
 
 	if (NULL == filename)
 	{
-		/* Invalidate the directory path cache. */
+		/* Invalidate the dictionary data directory path cache. */
 		char *pf = path_found;
 		path_found = NULL;
 		free(pf);
