@@ -113,6 +113,8 @@ link_public_api(void)
      dictionary_set_data_dir(const char * path);
 link_public_api(char *)
      dictionary_get_data_dir(void);
+link_public_api(char *)
+     linkgrammar_get_data_dir(void);
 
 /**********************************************************************
  *

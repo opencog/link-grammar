@@ -280,6 +280,31 @@ FILE *dictopen(const char *filename, const char *how)
 	return object_open(filename, dict_file_open, how);
 }
 
+static void *data_path_location(const char *dirname, const void *dummy)
+{
+	struct stat buf;
+	if ((NULL == dirname) || ('\0' == *dirname)) return NULL;
+	if ((stat(dirname, &buf) == 0) && (buf.st_mode & S_IFDIR))
+	{
+		const int len = strlen(dirname) - 2; /* strip off trailing "/." */
+		char *found_dir = strndup(dirname, len);
+		return found_dir;
+	}
+	return NULL;
+}
+
+/**
+ * Return the data directory path according to its search order.
+ * Experimental API (may be unstable).
+ * Note: dictionary_create_*() must be called first in order to
+ * cache the data directory which it uses.
+ * @return Data directory path (needs to be freed)
+ */
+char *linkgrammar_get_data_dir(void)
+{
+	return object_open(".", data_path_location, NULL);
+}
+
 /* ======================================================== */
 
 /**
