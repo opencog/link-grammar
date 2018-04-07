@@ -16,6 +16,14 @@
 
 LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
 
+#define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
+#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
+#define FIELD_WIDTH(str, width) (int)((width)+strlen(str)-utf8_strwidth(str))
+
+#if !defined(MIN)
+#define MIN(X,Y)  (((X) < (Y)) ? (X) : (Y))
+#endif
+
 typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;

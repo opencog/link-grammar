@@ -17,10 +17,6 @@
 
 #define MAX_INPUT 1024
 
-#if !defined(MIN)
-#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
-#endif
-
 #ifdef _WIN32
 #ifndef __MINGW32__
 /* There is no ssize_t definition in native Windows. */

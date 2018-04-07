@@ -69,8 +69,6 @@
 #endif /* USE_VITERBI */
 
 #define DISPLAY_MAX 1024
-#define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
-#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
 
 static int batch_errors = 0;
 static int verbosity = 0;
