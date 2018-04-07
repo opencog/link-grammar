@@ -3,8 +3,11 @@ Python bindings for Link Grammar
 
 Description
 -----------
-A Link Grammar library test is implemented in `tests.py`.
-An example program `example.py` is provided.
+The example program `example.py` illustrates how the to use the
+Link Grammar python bindings.
+
+A unit test for the Link Grammar python bindings can be found in
+in `tests.py`.
 
 Configuring (if needed)
 -----------------------
@@ -16,8 +19,9 @@ Configuring (if needed)
 
 How to use
 ----------
-(See below under **Testing the installation** for directions on how to set
-`PYTHONPATH` in case it is needed.)
+(In some cases, the `PYTHONPATH` must be set manually. See below, in
+the section **Testing the installation** for directions on how to do
+this.)
 
 Parsing simple sentences:
 
@@ -44,37 +48,36 @@ Additional examples can be found in `examples.py`.
 
 Testing
 -------
-The test collection `tests.py` should run 56 tests, none of them should fail.
-However, 3 tests will get skipped if the library is not configured with a
-speller, and one test will get skipped if the library is not configured with
-the SAT solver (this is the status for now on native Windows).
+The test collection `tests.py` should run 56 tests; none of them should
+fail.  However, 3 tests will be skipped, if the library is not configured
+with a spell guesser, and one test will be skipped if the library is not
+configured with the SAT solver (this is currently the case for native
+Windows builds).
 
-The following shows how to issue the tests on systems other then natives
-Windows/MinGW (for testing on native Windows see msvc14/README under
-[Running Python programs](/msvc14/README.md#running-python-programs)
-in `msvc14/README.md`).
-
-Note: For less verbosity of the `make` command output you can use the `-s`
-flag of make.
+The test proceedure is outlined below.  For native Windows/MinGW, see
+the `msvc14/README.md` file:
+[Running Python programs in Windows](/msvc14/README.md#running-python-programs).
 
 ### Testing the build directory
 The following is assumed:
 **$SRC_DIR** - Link Grammar source directory.
 **$BUILD_DIR** - Link Grammar build directory.
 
-#### By `make`
+The `make` command can be made less verbose by using the `-s` flag.
+
+#### Using `make`
 ```
 $ cd $BUILD_DIR/bindings/python-examples
 $ make [-s] check
 ```
-The results of tests.py are in the current directory under in the file
+The result of running testing saved in the current directory, in the file
 `tests.log`.
 
-Note: To run also the tests in the **$SRC_DIR/tests/** directory, issue
-`make check` directly from **$BUILD_DIR**.
+To run the tests in the **$SRC_DIR/tests/** directory, issue `make check`
+directly from **$BUILD_DIR**.
 
 #### Manually
-To run tests.py manually, or to run `example.py`, you have to set the
+To run `tests.py` manually, or to run `example.py`, you have to set the
 `PYTHONPATH` environment variable as follows:
 ```
 PYTHONPATH=$SRC_DIR/bindings/python:$BUILD_DIR/bindings/python:$BUILD_DIR/bindings/python/.libs
@@ -88,7 +91,7 @@ $ python tests.py [-v]
 ### Testing the installation
 This can be done only after `make install`.
 
-#### By `make`
+#### Using `make`
 ```
 $ cd $BUILD_DIR/bindings/python-examples
 $ make [-s] installcheck
@@ -101,17 +104,18 @@ Set the `PYTHONPATH` environment variable to the location of the installed
 Python's **linkgrammar** module, e.g.:
 
 ```
-PYTHONPATH=/usr/local/lib/python2.7/site-packages
+PYTHONPATH=/usr/local/lib/python2.7/dist-packages
 ```
 (Export it, or prepend it to the `python` command.)
-<br>
-Note: This is not needed if the package has been configured to install to the
-OS standard system locations.
 
-**NOTE:** Make sure you invoke `tests.py` from a directory from which it cannot
-find the `data` directory in **$SRCDIR/.** ! This will enforce it to use the
-system-installed data directory. Two directory levels under **$SRCDIR**, as
-shown below, is fine for that purpose.
+Setting the `PYTHONPATH` is not needed if the default package
+configuration is used.  The default configuration installs the python
+bindings into the standard operating system locations.
+
+To correctly test the system installation, make sure that `tests.py` is
+invoked from a directory from which the **$SRCDIR/data.** directory
+cannot be found. This is needed to ensure that the system-installed data
+directory is used. For example:
 
 ```
 $ cd $SRCDIR/binding/python-examples
