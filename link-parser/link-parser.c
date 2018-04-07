@@ -490,7 +490,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_spell_guess(opts, 0);
 }
 
-static void print_usage(char *str)
+static void print_usage(char *str, int exit_value)
 {
 	Command_Options *copts;
 	fprintf(stderr,
@@ -501,7 +501,7 @@ static void print_usage(char *str)
 	fprintf(stderr, "\nSpecial commands are:\n");
 	copts = command_options_create();
 	issue_special_command("var", copts, NULL);
-	exit(-1);
+	exit(exit_value);
 }
 
 /**
@@ -596,6 +596,11 @@ int main(int argc, char * argv[])
 		i++;
 	}
 
+	if ((i < argc) && strcmp("--help", argv[i]) == 0)
+	{
+		print_usage(argv[0], 0);
+	}
+
 	for (; i<argc; i++)
 	{
 		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
@@ -631,12 +636,12 @@ int main(int argc, char * argv[])
 		{
 			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
 			if ((var[0] != '!') && issue_special_command(var, copts, NULL))
-				print_usage(argv[0]);
+				print_usage(argv[0], -1);
 		}
 		else if (i != 1)
 		{
 			prt_error("Fatal error: Unknown argument '%s'.\n", argv[i]);
-			print_usage(argv[0]);
+			print_usage(argv[0], -1);
 		}
 	}
 
@@ -669,7 +674,7 @@ int main(int argc, char * argv[])
 		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{
 			if (issue_special_command(argv[i]+1, copts, dict))
-				print_usage(argv[0]);
+				print_usage(argv[0], -1);
 		}
 	}
 
