@@ -60,7 +60,13 @@ typedef enum
 	Bool,
 	Float,
 	String,
+	Cmd,
 } ParamType;
+
+static const char *value_type[] =
+{
+	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) "
+};
 
 typedef struct
 {
