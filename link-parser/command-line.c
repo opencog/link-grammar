@@ -52,7 +52,7 @@ static struct
 	int display_disjuncts;
 	int display_senses;
 	int display_morphology;
-} local;
+} local, local_saved;
 
 typedef enum
 {
@@ -119,8 +119,21 @@ struct {const char * s; const char * str;} user_command[] =
 	{NULL,		   NULL}
 };
 
+static void put_opts_in_local_vars(Command_Options *);
+
+void save_default_opts(Command_Options *copts)
+{
+	put_opts_in_local_vars(copts);
+	local_saved = local;
+}
+
+static void restore_default_local_vars(void)
+{
+	local = local_saved;
+}
+
 /**
- *  Gets rid of all the white space in the string s.  Changes s
+ *  Gets rid of all the white space in the string s.
  */
 static void clean_up_string(char * s)
 {
