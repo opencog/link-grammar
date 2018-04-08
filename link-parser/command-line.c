@@ -117,12 +117,12 @@ static Switch default_switches[] =
 	{NULL,         Bool,  NULL,                             NULL}
 };
 
-struct {const char * s; const char * str;} user_command[] =
+static Switch user_commands[] =
 {
-	{"variables",	"List user-settable variables and their functions"},
-	{"help",	      "List the commands and what they do"},
-	{"file",       "Read input from the specified filename"},
-	{NULL,		   NULL}
+	{"variables",  Cmd,  "List user-settable variables and their functions", NULL},
+	{"help",       Cmd,  "List the commands and what they do", NULL},
+	{"file",       Cmd,  "Read input from the specified filename", NULL},
+	{NULL,         Cmd,  NULL,                             NULL}
 };
 
 static void put_opts_in_local_vars(Command_Options *);
@@ -227,7 +227,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 {
 	char *s, *x, *y;
 	int count, j, k;
-	Switch * as = default_switches;
+	const Switch *as = default_switches;
+	const Switch *uc = user_commands;
 
 	clean_up_string(line);
 	s = line;
@@ -246,9 +247,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	}
 
 	/* Look for abbreviations */
-	for (int i = 0; user_command[i].s != NULL; i++)
+	for (int i = 0; uc[i].string != NULL; i++)
 	{
-		if (strncasecmp(s, user_command[i].s, strlen(s)) == 0)
+		if (strncasecmp(s, uc[i].string, strlen(s)) == 0)
 		{
 			count++;
 			k = i;
@@ -273,7 +274,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		/* Found an abbreviated command, but it wasn't a boolean.
 		 * It means it is a user command, to be handled below. */
 
-		if (strcmp(user_command[k].s, "variables") == 0)
+		if (strcmp(uc[k].string, "variables") == 0)
 		{
 			printf(" Variable     Controls                                          Value\n");
 			printf(" --------     --------                                          -----\n");
@@ -310,16 +311,17 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			return 0;
 		}
 
-		if (strcmp(user_command[k].s, "help") == 0)
+		if (strcmp(uc[k].string, "help") == 0)
 		{
 			printf("Special commands always begin with \"!\".  Command and variable names\n");
 			printf("can be abbreviated.  Here is a list of the commands:\n\n");
-			for (int i = 0; user_command[i].s != NULL; i++) {
-				printf(" !");
-				left_print_string(stdout, user_command[i].s, 15);
-				left_print_string(stdout, user_command[i].str, 52);
-				printf("\n");
+			for (int i = 0; uc[i].string != NULL; i++)
+			{
+				printf(" %-14s !", uc[i].string);
+				printf("%s\n", uc[i].description);
 			}
+
+			printf("\n");
 			printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
 			printf("                 A wildcard * may be used to find multiple matches.\n");
 			printf("\n");
