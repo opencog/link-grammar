@@ -226,7 +226,7 @@ static void setival(Switch s, int val)
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
-	int i, count, j, k;
+	int count, j, k;
 	Switch * as = default_switches;
 
 	clean_up_string(line);
@@ -235,7 +235,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	count = 0;
 
 	/* Look for boolean flippers */
-	for (i=0; as[i].string != NULL; i++)
+	for (int i = 0; as[i].string != NULL; i++)
 	{
 		if ((Bool == as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
@@ -246,7 +246,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	}
 
 	/* Look for abbreviations */
-	for (i=0; user_command[i].s != NULL; i++)
+	for (int i = 0; user_command[i].s != NULL; i++)
 	{
 		if (strncasecmp(s, user_command[i].s, strlen(s)) == 0)
 		{
@@ -277,7 +277,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		{
 			printf(" Variable     Controls                                          Value\n");
 			printf(" --------     --------                                          -----\n");
-			for (i = 0; as[i].string != NULL; i++)
+			for (int i = 0; as[i].string != NULL; i++)
 			{
 				printf(" ");
 				left_print_string(stdout, as[i].string, 13);
@@ -314,7 +314,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		{
 			printf("Special commands always begin with \"!\".  Command and variable names\n");
 			printf("can be abbreviated.  Here is a list of the commands:\n\n");
-			for (i=0; user_command[i].s != NULL; i++) {
+			for (int i = 0; user_command[i].s != NULL; i++) {
 				printf(" !");
 				left_print_string(stdout, user_command[i].s, 15);
 				left_print_string(stdout, user_command[i].str, 52);
@@ -380,7 +380,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		/* Figure out which command it is .. it'll be the j'th one */
 		j = -1;
-		for (i=0; as[i].string != NULL; i++)
+		for (int i = 0; as[i].string != NULL; i++)
 		{
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
@@ -452,7 +452,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	/* Look for valid commands, but ones that needed an argument */
 	j = -1;
 	count = 0;
-	for (i = 0; as[i].string != NULL; i++)
+	for (int i = 0; as[i].string != NULL; i++)
 	{
 		if ((Bool != as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
