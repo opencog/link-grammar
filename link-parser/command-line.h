@@ -14,8 +14,6 @@
 #include <link-grammar/link-features.h>
 #include <link-grammar/link-includes.h>
 
-LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
-
 #define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
 #define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
 #define FIELD_WIDTH(str, width) (int)((width)+strlen(str)-utf8_strwidth(str))
@@ -48,8 +46,6 @@ typedef struct {
 	bool display_links;     /* if true, a list o' links is printed out */
 	bool display_senses;    /* if true, sense candidates are printed out */
 } Command_Options;
-
-LINK_END_DECLS
 
 int issue_special_command(const char*, Command_Options*, Dictionary);
 Command_Options* command_options_create(void);
