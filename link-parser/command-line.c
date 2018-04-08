@@ -229,7 +229,6 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	char *s, *x, *y;
 	int i, count, j, k;
 	Switch * as = default_switches;
-	Parse_Options opts = copts->popts;
 
 	clean_up_string(line);
 	s = line;
@@ -333,6 +332,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	if (s[0] == '!')
 	{
+		Parse_Options opts = copts->popts;
 		char *out;
 
 		out = dict_display_word_info(dict, s+1, opts);
