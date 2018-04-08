@@ -178,8 +178,7 @@ static void clean_up_string(char * s)
  */
 static void left_print_string(FILE * fp, const char * s, int w)
 {
-	int width = w + strlen(s) - utf8_strwidth(s);
-	fprintf(fp, "%-*s", width, s);
+	fprintf(fp, "%-*s", FIELD_WIDTH(s, w), s);
 }
 
 /**
