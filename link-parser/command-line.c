@@ -172,16 +172,6 @@ static void clean_up_string(char * s)
 }
 
 /**
- * Prints string `s`, aligned to the left, in a field width `w`.
- * If the width of `s` is shorter than `w`, then the remainder of
- * field is padded with blanks (on the right).
- */
-static void left_print_string(FILE * fp, const char * s, int w)
-{
-	fprintf(fp, "%-*s", FIELD_WIDTH(s, w), s);
-}
-
-/**
  * Return TRUE if s points to a number:
  * optional + or - followed by 1 or more
  *	digits.
@@ -221,6 +211,46 @@ static int ival(Switch s)
 static void setival(Switch s, int val)
 {
 	*((int *) s.ptr) = val;
+}
+
+/**
+ * Return a static buffer with a string value of the given switch.
+ *
+ * Since the static buffer is overwritten on each call, this function
+ * should not use more than once as an argument of the same function.
+ */
+static const char *switch_value_string(const Switch *as)
+{
+	static char buf[128]; /* Size of buf is much more than we need */
+	const char *value_description = "";
+	int n;
+
+	switch (as->param_type)
+	{
+		case Float: /* Float point print! */
+			snprintf(buf, sizeof(buf), "%5.2f", *((double *)as->ptr));
+			break;
+		case Bool:
+			value_description = ival(*as) ? " (On)" : " (Off)";
+			/* FALLTHRU */
+		case Int:
+			/* FALLTHRU (why another one is needed?) */
+			n = snprintf(buf, sizeof(buf), "%5d", ival(*as));
+			if (n < 0) n = 0; /* Shouldn't happen, but just in case */
+			if (-1 == ival(*as)) value_description = " (Unlimited)";
+			snprintf(buf+n, sizeof(buf)-n, "%s", value_description);
+			break;
+		case String:
+			snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
+			break;
+		case Cmd:
+			buf[0] = '\0'; /* No value to print. */
+			break;
+		default:
+			snprintf(buf, sizeof(buf), "Unknown type %d\n", as->param_type);
+	}
+
+	return buf;
 }
 
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
@@ -280,31 +310,11 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			printf(" --------     --------                                          -----\n");
 			for (int i = 0; as[i].string != NULL; i++)
 			{
-				printf(" ");
-				left_print_string(stdout, as[i].string, 13);
-				left_print_string(stdout, as[i].description, 46);
-				if (Float == as[i].param_type)
-				{
-					/* Float point print! */
-					printf("%5.2f", *((double *)as[i].ptr));
-				}
-				else
-				if ((Bool == as[i].param_type) || Int == as[i].param_type)
-				{
-					printf("%5d", ival(as[i]));
-					if (-1 == ival(as[i])) printf(" (Unlimited)");
-				}
-				else
-				if (String == as[i].param_type)
-				{
-					printf("%s", *(char **)as[i].ptr);
-				}
-				if (Bool == as[i].param_type)
-				{
-					if (ival(as[i])) printf(" (On)"); else printf(" (Off)");
-				}
-				printf("\n");
+				printf(" %-13s", as[i].string);
+				printf("%-*s", FIELD_WIDTH(as[i].description, 46), as[i].description);
+				printf("%s\n", switch_value_string(&as[i]));
 			}
+
 			printf("\n");
 			printf("Toggle a boolean variable as in \"!batch\"; ");
 			printf("set a variable as in \"!width=100\".\n");

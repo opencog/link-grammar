@@ -51,5 +51,3 @@ void save_default_opts(Command_Options*);
 int issue_special_command(const char*, Command_Options*, Dictionary);
 Command_Options* command_options_create(void);
 void command_options_delete(Command_Options*);
-
-
