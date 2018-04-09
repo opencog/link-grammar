@@ -47,6 +47,9 @@ link_public_api(const char *)
 	linkgrammar_get_dict_version(Dictionary);
 
 link_public_api(const char *)
+	linkgrammar_get_configuration(void);
+
+link_public_api(const char *)
 	linkgrammar_get_dict_locale(Dictionary);
 
 /**********************************************************************

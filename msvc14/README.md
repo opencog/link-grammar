@@ -18,7 +18,7 @@ functions which are used are not supported in earlier versions.)
 
 The system compatibility definitions:
 In each project file - Target Platform version: 8.1
-In the MSVC-common property sheet - **C/C++->Preprocessor**:
+In the `MSVC-common` property sheet - **Common properties->User Macros/CFLAGS**:
 
 `NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;`
 
@@ -104,8 +104,8 @@ Compiling
   You can do this at **Build Menu->Configuration Manager**.
 
 - The wordgraph-display feature is enabled when compiled with
-  USE_WORDGRAPH_DISPLAY (already defined in the LGfeatures property sheet
-  **Common properties->C/C++->Preprocessor/Preprocessor Definitions**).
+  USE_WORDGRAPH_DISPLAY (already defined in the `LGlib-features` property sheet
+  - **Common properties->C/User Macros/DEFS**).
 
 - By default, the library is configured to create a DLL. If you want
   to instead build a static library, the macro LINK_GRAMMAR_STATIC must

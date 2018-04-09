@@ -603,6 +603,7 @@ int main(int argc, char * argv[])
 		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
 		{
 			printf("Version: %s\n", linkgrammar_get_version());
+			printf("%s\n", linkgrammar_get_configuration());
 			exit(0);
 		}
 	}

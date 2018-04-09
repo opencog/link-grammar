@@ -1,8 +1,8 @@
 Python bindings for Link Grammar
 ================================
+This directory contains an example program, and a unit test for the
+python bindings to Link Grammar.
 
-Description
------------
 The example programs `example.py` and `sentence-check.py` illustrates
 how the to use the Link Grammar Python bindings.
 
@@ -11,13 +11,14 @@ in `tests.py`.
 
 Configuring (if needed)
 -----------------------
-
-You will need the development package(s) of the desired Python version(s)
-installed in your system.
+The python bindings will be built by default, if the required python
+system libraries are detected on the build system.  Thus, no special
+configuration should be needed. However, configure can be forced with
+the following commands.
 
 ### For Python2 and Python3
    `$ ./configure --enable-python-bindings`
-(This is the default if the these versions are installed.)
+(This is the default if Python development packages are installed.)
 
 ### For Python2 or Python3 only
    `$ ./configure --enable-python-bindings=2`
@@ -30,9 +31,11 @@ Or:<br>
 
 How to use
 ----------
-(In some cases, the `PYTHONPATH` must be set manually. See below, in
-the section **Testing the installation** for directions on how to do
-this.)
+The python bindings will be installed automatically into default system
+locations, and no additional steps should be needed to use python.
+However, in some cases, therere might be a need to manually set the
+`PYTHONPATH` environment variable.  See the discussion below, in
+the section **Testing the installation** .
 
 Parsing simple sentences:
 
@@ -71,25 +74,28 @@ the `msvc14/README.md` file:
 
 ### Testing the build directory
 The following is assumed:
+
 **$SRC_DIR** - Link Grammar source directory.
+
 **$BUILD_DIR** - Link Grammar build directory.
 
-The `make` command can be made less verbose by using the `-s` flag.
-
 #### Using `make`
+The tests can be run using the `make` command, as follows:
 ```
 $ cd $BUILD_DIR/bindings/python-examples
 $ make [-s] check
 ```
-The result of running testing saved in the current directory, in the file
+The `make` command can be made less verbose by using the `-s` flag.
+
+The test results are saved in the current directory, in the file
 `tests.log`.
 
 To run the tests in the **$SRC_DIR/tests/** directory, issue `make check`
 directly from **$BUILD_DIR**.
 
 #### Manually
-To run `tests.py` manually, or to run `example.py`, you have to set the
-`PYTHONPATH` environment variable as follows:
+To run `tests.py` manually, or to run `example.py`, without installing
+the bindings, the `PYTHONPATH` environment variable must be set:
 ```
 PYTHONPATH=$SRC_DIR/bindings/python:$BUILD_DIR/bindings/python:$BUILD_DIR/bindings/python/.libs
 ```

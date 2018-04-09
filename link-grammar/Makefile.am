@@ -27,10 +27,10 @@ install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
+DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\" -DCC=\"$(CC)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir) $(WARN_CFLAGS) \
 	$(HUNSPELL_CFLAGS)
 
 post-process/pp_lexer.lo: AM_CPPFLAGS += -I$(top_srcdir)/link-grammar/post-process
@@ -202,6 +202,10 @@ EXTRA_DIST=                         \
 	dict-sql/demo.sql                \
 	dict-sql/README.md               \
 	tokenize/README.md
+
+clean-local:
+# Clean up a possible left out generated file of a Windows MSVC compilation
+	rm -f $(srcdir)/link-features.h
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
