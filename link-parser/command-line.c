@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -65,7 +66,7 @@ typedef enum
 
 static const char *value_type[] =
 {
-	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) "
+	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) ", ""
 };
 
 typedef struct
@@ -127,6 +128,9 @@ static Switch user_commands[] =
 
 static void put_opts_in_local_vars(Command_Options *);
 
+/*
+ * A way to record the options default values.
+ */
 void save_default_opts(Command_Options *copts)
 {
 	put_opts_in_local_vars(copts);
@@ -253,12 +257,334 @@ static const char *switch_value_string(const Switch *as)
 	return buf;
 }
 
+#define HELPFILE_BASE "/command-help-"
+#define HELPFILE_EXT ".txt"
+#define HELPFILE_LANG_TEMPLATE "LL" /* we use only the 2-letter language code */
+#define HELPFILE_LANG_TEMPLATE_SIZE (sizeof(HELPFILE_LANG_TEMPLATE)-1)
+#define HELPFILE_TEMPLATE_SIZE \
+	(sizeof(HELPFILE_BASE HELPFILE_EXT)+HELPFILE_LANG_TEMPLATE_SIZE)
+#define D_USER_FILES 3 /* Debug level for files */
+#define DEFAULT_HELP_LANG "en"
+
+static char *help_filename;
+/* Used in atexit() below. */
+static void free_help_filename(void)
+{
+	free(help_filename);
+}
+
+/**
+ * On each call, return the next locale to try for constructing the help
+ * file name (NULL if no more).
+ *
+ * @param nextlang true on calls to get the next language.
+ * @return Locale to try, NULL if no more.
+ *
+ * This function should be called until it returns NULL (it order to
+ * free memory that it may allocate).
+ * After it returns NULL, the code that uses it below doesn't call it again.
+ *
+ * See "Specifying a Priority List of Languages":
+ * www.gnu.org/software/gettext/manual/html_node/The-LANGUAGE-variable.html
+ */
+static const char *get_next_locale(void)
+{
+	enum state
+		{Initial_s, Language_s, Next_language_s, Default_language_s, Final_s};
+	static int state = Initial_s;
+	static char *language;
+	char *lc_all;
+	const char *lang = NULL;
+
+	while (1)
+	{
+		switch (state)
+		{
+			case Initial_s:
+				lc_all = getenv("LC_ALL");
+				if ((NULL != lc_all) && (0 == strcmp(lc_all, "C")))
+				{
+					/* LC_ALL=C */
+					state = Default_language_s;
+					continue;
+				}
+
+				if ((NULL == lc_all) || ('\0' == *lc_all))
+				{
+					/* LC_ALL= */
+					lang = getenv("LANG");
+					if ((NULL != lang) && (0 == strcmp(lang, "C")))
+					{
+						/* LANG=C */
+						state = Default_language_s;
+						continue;
+					}
+				}
+				/* LC_ALL=x */
+				state = Language_s;
+				continue;
+
+			case Language_s:
+				language = getenv("LANGUAGE");
+				if ((language == NULL) || ('\0' == *language))
+				{
+					/* LANGUAGE= */
+					language = NULL; /* so it doesn't get freed at Finals_s */
+					state = Default_language_s;
+					if ((NULL != lang) && ('\0' != *lang))
+					{
+						/* LANG=x */
+						return lang;
+					}
+					/* LANG= */
+					continue;
+				}
+
+				/* LANGUAGE=x:y:z */
+				state = Next_language_s;
+				language = strdup(language); /* strdup() for strtok() */
+				return strtok(language, ":");
+				break;
+
+			case Next_language_s:
+				{
+					char *next_language = strtok(NULL, ":");
+					if (NULL == next_language)
+					{
+						/* LANGUAGE tokens exhausted */
+						state = Default_language_s;
+						continue;
+					}
+					/* Unchanged state. */
+					return next_language;
+				}
+				break;
+
+			case Default_language_s:
+				state = Final_s;
+				return DEFAULT_HELP_LANG;
+
+			case Final_s:
+				free(language);
+				state = Initial_s;
+				break;
+				/* NULL is returned below. */
+		}
+		break;
+	}
+
+	return NULL;
+}
+
+static FILE *open_help_file(int verbosity)
+{
+	if (NULL != help_filename)
+		return fopen(help_filename, "r");
+	atexit(free_help_filename);
+
+	/* Construct the help filename template. */
+	char *datadir = linkgrammar_get_data_dir();
+	if (NULL == datadir)
+	{
+		prt_error("Error: Cannot find data directory\n");
+		return NULL;
+	}
+	help_filename = malloc(strlen(datadir) + HELPFILE_TEMPLATE_SIZE);
+	strcpy(help_filename, datadir);
+	free(datadir);
+	strcat(help_filename, HELPFILE_BASE);
+	char *ll_pos = &help_filename[strlen(help_filename)];
+	strcpy(ll_pos, HELPFILE_LANG_TEMPLATE  HELPFILE_EXT);
+
+	FILE *hf = NULL;
+	const char *ll;
+	while ((ll = get_next_locale()))
+	{
+		if (NULL != hf) continue; /* until get_next_locale() returns NULL */
+		strncpy(ll_pos, ll, HELPFILE_LANG_TEMPLATE_SIZE);
+		hf = fopen(help_filename, "r");
+		if (verbosity >= D_USER_FILES)
+		{
+			prt_error("Debug: Open help file %s%s\n",
+						 help_filename, (NULL==hf) ? " (Not found)" : "");
+		}
+	}
+
+	if (NULL == hf)
+	{
+		prt_error("Error: Cannot open help file '%s': %s\n",
+		          help_filename, strerror(errno));
+	}
+
+	return hf;
+}
+
+static void display_help(const Switch *sp, Command_Options *copts)
+{
+	char line[MAX_INPUT]; /* Maximum number of character in a help file line */
+
+	/* Print basic info: name, description, type, current and default values. */
+	printf("%s %s- %s\n",
+	       sp->string, value_type[sp->param_type], sp->description);
+	if (Cmd != sp->param_type)
+	{
+		printf("Current value: %s\n",switch_value_string(sp));
+		restore_default_local_vars();
+		printf("Default value: %s\n", switch_value_string(sp));
+		put_opts_in_local_vars(copts);
+	}
+
+	FILE *hf = open_help_file(local.verbosity);
+	if (NULL == hf) goto cleanup;
+
+	bool help_found = false;
+	while (!help_found && (NULL != fgets(line, sizeof(line), hf)))
+	{
+		if ('[' != line[0]) continue;
+		{
+#define CMDTAG_SEP ", \t]"
+			/* Allow for several names to map to the same help text,
+			 * in a hope that the same help text can be used for the
+			 * language bindings too (which have different option names
+			 * from historical reasons).
+			 * Note: We suppose the lines are not longer than MAX_INPUT.
+			 * Longer lines may render the help text incorrectly.
+			 * FIXME: Add command reference notation in the help text if
+			 * needed.
+			 * Help file format:
+			 * % comment
+			 * [cmd1 cmd2 ...]
+			 * text ...
+			 * [nextcmd ...]
+			 * text ...
+			 */
+			char *t = strtok(line+1, CMDTAG_SEP);
+			if (NULL == t) continue;
+			do {
+				if (0 == strcasecmp(t, sp->string))
+				{
+					help_found = true;
+					break;
+				}
+				t = strtok(NULL, CMDTAG_SEP);
+			} while (NULL != t);
+		}
+	}
+
+	if (ferror(hf))
+	{
+		prt_error("Error: Reading help file '%s': %s\n",
+		          help_filename, strerror(errno));
+		goto cleanup;
+	}
+
+	if (feof(hf))
+	{
+		if (local.verbosity >= D_USER_FILES)
+			prt_error("Error: Cannot find command \"%s\" in help file \"%s\"\n",
+			          sp->string, help_filename);
+	}
+	else
+	{
+		help_found = false;
+		bool issue_blank_line = false;
+		while (NULL != fgets(line, sizeof(line), hf))
+		{
+			const size_t len = strlen(line);
+			if ((MAX_INPUT == len-1) && '\n' != line[MAX_INPUT-2])
+			{
+				prt_error("Warning: Help-file text line too long at offset %ld\n",
+							 ftell(hf));
+			}
+			if (COMMENT_CHAR == line[0]) continue;
+			if ('[' == line[0]) break;
+
+			/* Suppress the ending blank lines of the help text. */
+			if (strspn(line, WHITESPACE) == len) /* we encountered a blank line */
+			{
+				issue_blank_line = true;
+				continue;
+			}
+
+			if (!help_found)
+			{
+				printf("\n"); /* issue a blank line separator after basic info */
+				help_found = true;
+			}
+
+			/* We have a line to print. Print a blank line before it if needed. */
+			if (issue_blank_line)
+			{
+				issue_blank_line = false;
+				printf("\n");
+			}
+			printf("%s", line);
+		}
+		if (!help_found) /* the command tag has no help text */
+			prt_error("Info: No help text found for command \"%s\"\n", sp->string);
+	}
+
+cleanup:
+	if (NULL != hf) fclose(hf);
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
 	int count, j, k;
 	const Switch *as = default_switches;
 	const Switch *uc = user_commands;
+
+	/* Handle a request for a particular command help. */
+	if (NULL != dict)
+	{
+		/* If we are here, it is not a command-line parameter. */
+		s = strtok(line, " \t\n");
+		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
+		{
+			s = strtok(NULL, " \t\n");
+			if (s != NULL)
+			{
+				/* This is a help request for the command name at s. */
+				j = k = -1; /* command index */
+				count = 0;  /* number of matching commands */
+
+				/* Is it a variable setting command? */
+				for (int i = 0; as[i].string != NULL; i++)
+				{
+					if (strncasecmp(s, as[i].string, strlen(s)) == 0)
+					{
+						count++;
+						j = i;
+					}
+				}
+
+				/* Is it another command? */
+				for (int i = 0; uc[i].string != NULL; i++)
+				{
+					if (strncasecmp(s, uc[i].string, strlen(s)) == 0)
+					{
+						count++;
+						k = i;
+					}
+				}
+
+				if (count == 1)
+				{
+					display_help((j > 0) ? &as[j] : &uc[k], copts);
+					return 0;
+				}
+
+				if (count > 1)
+					prt_error("Ambiguous command: \"%s\".  ", s);
+				else
+					prt_error("Undefined command: \"%s\".  ", s);
+
+				prt_error("Type \"!help\" or \"!variables\"\n");
+				return -1;
+			}
+		}
+	}
 
 	clean_up_string(line);
 	s = line;
@@ -327,7 +653,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			printf("can be abbreviated.  Here is a list of the commands:\n\n");
 			for (int i = 0; uc[i].string != NULL; i++)
 			{
-				printf(" %-14s !", uc[i].string);
+				printf(" !%-14s ", uc[i].string);
 				printf("%s\n", uc[i].description);
 			}
 
