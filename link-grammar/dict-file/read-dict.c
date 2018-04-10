@@ -1798,7 +1798,8 @@ static bool read_entry(Dictionary dict)
 	/* pass the ; */
 	if (!link_advance(dict))
 	{
-		goto syntax_error;
+		/* Avoid freeing dn, since it is already inserted into the dict. */
+		return false;
 	}
 
 	return true;
