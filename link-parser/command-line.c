@@ -77,6 +77,9 @@ typedef struct
 	void *ptr;
 } Switch;
 
+static int variables_cmd(const Switch*, int);
+static int help_cmd(const Switch*, int);
+
 static Switch default_switches[] =
 {
 	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
@@ -115,15 +118,10 @@ static Switch default_switches[] =
 #endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
-	{NULL,         Bool,  NULL,                             NULL}
-};
-
-static Switch user_commands[] =
-{
-	{"variables",  Cmd,  "List user-settable variables and their functions", NULL},
-	{"help",       Cmd,  "List the commands and what they do", NULL},
+	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
+	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", NULL},
-	{NULL,         Cmd,  NULL,                             NULL}
+	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
 static void put_opts_in_local_vars(Command_Options *);
@@ -528,12 +526,50 @@ cleanup:
 	if (NULL != hf) fclose(hf);
 }
 
+static int help_cmd(const Switch *uc, int n)
+{
+	printf("Special commands always begin with \"!\".  Command and variable names\n");
+	printf("can be abbreviated.  Here is a list of the commands:\n\n");
+	for (int i = 0; uc[i].string != NULL; i++)
+	{
+		if (Cmd != uc[i].param_type) continue;
+		printf(" !%-14s ", uc[i].string);
+		printf("%s\n", uc[i].description);
+	}
+
+	printf("\n");
+	printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
+	printf("                 A wildcard * may be used to find multiple matches.\n");
+	printf("\n");
+	printf(" !<var>          Toggle the specified Boolean variable.\n");
+	printf(" !<var>=<val>    Assign that value to that variable.\n");
+
+	return 0;
+}
+
+static int variables_cmd(const Switch *uc, int n)
+{
+	printf(" Variable     Controls                                          Value\n");
+	printf(" --------     --------                                          -----\n");
+	for (int i = 0; uc[i].string != NULL; i++)
+	{
+		if (Cmd == uc[i].param_type) continue;
+		printf(" %-13s", uc[i].string);
+		printf("%-*s", FIELD_WIDTH(uc[i].description, 46), uc[i].description);
+		printf("%s\n", switch_value_string(&uc[i]));
+	}
+
+	printf("\n");
+	printf("Toggle a Boolean variable as in \"!batch\"; ");
+	printf("Set a variable as in \"!width=100\".\n");
+	return 0;
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
-	int count, j, k;
+	int count, j;
 	const Switch *as = default_switches;
-	const Switch *uc = user_commands;
 
 	/* Handle a request for a particular command help. */
 	if (NULL != dict)
@@ -546,10 +582,10 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (s != NULL)
 			{
 				/* This is a help request for the command name at s. */
-				j = k = -1; /* command index */
+				j = -1; /* command index */
 				count = 0;  /* number of matching commands */
 
-				/* Is it a variable setting command? */
+				/* Is it a unique abbreviation? */
 				for (int i = 0; as[i].string != NULL; i++)
 				{
 					if (strncasecmp(s, as[i].string, strlen(s)) == 0)
@@ -559,19 +595,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 					}
 				}
 
-				/* Is it another command? */
-				for (int i = 0; uc[i].string != NULL; i++)
-				{
-					if (strncasecmp(s, uc[i].string, strlen(s)) == 0)
-					{
-						count++;
-						k = i;
-					}
-				}
-
 				if (count == 1)
 				{
-					display_help((j > 0) ? &as[j] : &uc[k], copts);
+					display_help(&as[j], copts);
 					return 0;
 				}
 
@@ -588,27 +614,17 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	clean_up_string(line);
 	s = line;
-	j = k = -1;
+	j = -1;
 	count = 0;
 
-	/* Look for boolean flippers */
+	/* Look for Boolean flippers or command abbreviations. */
 	for (int i = 0; as[i].string != NULL; i++)
 	{
-		if ((Bool == as[i].param_type) &&
+		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			count++;
 			j = i;
-		}
-	}
-
-	/* Look for abbreviations */
-	for (int i = 0; uc[i].string != NULL; i++)
-	{
-		if (strncasecmp(s, uc[i].string, strlen(s)) == 0)
-		{
-			count++;
-			k = i;
 		}
 	}
 
@@ -619,52 +635,17 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	}
 	else if (count == 1)
 	{
-		/* flip boolean value */
-		if (j >= 0)
+		/* Flip Boolean value. */
+		if (Bool == as[j].param_type)
 		{
 			setival(as[j], (0 == ival(as[j])));
 			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
 			return 0;
 		}
 
-		/* Found an abbreviated command, but it wasn't a boolean.
+		/* Found an abbreviated, but it wasn't a Boolean.
 		 * It means it is a user command, to be handled below. */
-
-		if (strcmp(uc[k].string, "variables") == 0)
-		{
-			printf(" Variable     Controls                                          Value\n");
-			printf(" --------     --------                                          -----\n");
-			for (int i = 0; as[i].string != NULL; i++)
-			{
-				printf(" %-13s", as[i].string);
-				printf("%-*s", FIELD_WIDTH(as[i].description, 46), as[i].description);
-				printf("%s\n", switch_value_string(&as[i]));
-			}
-
-			printf("\n");
-			printf("Toggle a boolean variable as in \"!batch\"; ");
-			printf("set a variable as in \"!width=100\".\n");
-			return 0;
-		}
-
-		if (strcmp(uc[k].string, "help") == 0)
-		{
-			printf("Special commands always begin with \"!\".  Command and variable names\n");
-			printf("can be abbreviated.  Here is a list of the commands:\n\n");
-			for (int i = 0; uc[i].string != NULL; i++)
-			{
-				printf(" !%-14s ", uc[i].string);
-				printf("%s\n", uc[i].description);
-			}
-
-			printf("\n");
-			printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
-			printf("                 A wildcard * may be used to find multiple matches.\n");
-			printf("\n");
-			printf(" !<var>          Toggle the specified boolean variable.\n");
-			printf(" !<var>=<val>    Assign that value to that variable.\n");
-			return 0;
-		}
+		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
 	}
 
 	if (s[0] == '!')
@@ -720,6 +701,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		j = -1;
 		for (int i = 0; as[i].string != NULL; i++)
 		{
+			if (Cmd == as[i].param_type) continue;
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
 				j = i;
@@ -792,7 +774,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	count = 0;
 	for (int i = 0; as[i].string != NULL; i++)
 	{
-		if ((Bool != as[i].param_type) &&
+		if ((Bool != as[i].param_type) && (Cmd != as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			j = i;
