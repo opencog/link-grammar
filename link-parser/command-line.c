@@ -79,6 +79,7 @@ typedef struct
 
 static int variables_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
+#define UNDOC "\1" /* Undocumented command */
 
 static Switch default_switches[] =
 {
@@ -121,6 +122,8 @@ static Switch default_switches[] =
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", NULL},
+	{"exit",       Cmd,  "Exit the program",                       NULL},
+	{"quit",       Cmd,  UNDOC "Exit the program",                 NULL},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
@@ -422,8 +425,9 @@ static void display_help(const Switch *sp, Command_Options *copts)
 	char line[MAX_INPUT]; /* Maximum number of character in a help file line */
 
 	/* Print basic info: name, description, type, current and default values. */
+	int undoc = !!(UNDOC[0] == sp->description[0]);
 	printf("%s %s- %s\n",
-	       sp->string, value_type[sp->param_type], sp->description);
+	       sp->string, value_type[sp->param_type], sp->description + undoc);
 	if (Cmd != sp->param_type)
 	{
 		printf("Current value: %s\n",switch_value_string(sp));
@@ -533,6 +537,7 @@ static int help_cmd(const Switch *uc, int n)
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
+		if (UNDOC[0] == uc[i].description[0]) continue;
 		printf(" !%-14s ", uc[i].string);
 		printf("%s\n", uc[i].description);
 	}
@@ -554,6 +559,7 @@ static int variables_cmd(const Switch *uc, int n)
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd == uc[i].param_type) continue;
+		if (UNDOC[0] == uc[i].description[0]) continue;
 		printf(" %-13s", uc[i].string);
 		printf("%-*s", FIELD_WIDTH(uc[i].description, 46), uc[i].description);
 		printf("%s\n", switch_value_string(&uc[i]));
