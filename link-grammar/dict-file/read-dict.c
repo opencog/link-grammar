@@ -208,6 +208,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 				}
 			}
 			while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
+			if (c == 0x0) break;
 			dict->line_number++;
 			continue;
 		}
