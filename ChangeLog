@@ -2,6 +2,9 @@ Version 5.4.5 (XXX 2018)
  * Fix memory leak when parsing with null links.
  * Python bindings: Add an optional parse-option argument to parse().
  * Add an extended version API and use it in "link-parser --version".
+ * Fix random errors if the last dict line is a comment.
+ * Fix random garbage report if EOF encountered in a quoted dict word.
+ * Fix random garbage report if whitespace encountered in a quoted dict word.
 
 Version 5.4.4 (11 March 2018)
  * Dictionary loading now thread safe.
