@@ -326,6 +326,11 @@ static bool link_advance(Dictionary dict)
 				dict_error(dict, "White space inside of token");
 				return false;
 			}
+			if (c[0] == '\0')
+			{
+				dict_error(dict, "EOF while reading quoted token");
+				return false;
+			}
 
 			nr = 0;
 			while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
