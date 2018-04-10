@@ -451,14 +451,23 @@ static void batch_process_some_linkages(Label label,
 	}
 }
 
-static bool special_command(char *input_string, Command_Options* copts, Dictionary dict)
+/**
+ * If input_string is !command, try to issue it.
+ * Return:
+ * - 'n': It is not a command.
+ * - 'e': It is an "exit" command.
+ *   'c': It is a command (even if no such command) or a comment.
+ */
+
+static char special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
-	if (input_string[0] == COMMENT_CHAR) return true;
+	if (input_string[0] == COMMENT_CHAR) return 'c';
 	if (input_string[0] == '!') {
-		issue_special_command(input_string+1, copts, dict);
-		return true;
+		if (1 == issue_special_command(input_string+1, copts, dict))
+			return 'e';
+		return 'c';
 	}
-	return false;
+	return 'n';
 }
 
 static Label strip_off_label(char * input_string)
@@ -723,9 +732,6 @@ int main(int argc, char * argv[])
 			*p = '\0';
 		}
 
-		if ((strcmp(input_string, "!quit") == 0) ||
-		    (strcmp(input_string, "!exit") == 0)) break;
-
 		/* We have to handle the !file command inline; its too hairy
 		 * otherwise ... */
 		if (strncmp(input_string, "!file", 5) == 0)
@@ -759,7 +765,9 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, WHITESPACE) == strlen(input_string))
 			continue;
 
-		if (special_command(input_string, copts, dict)) continue;
+		char linetype = special_command(input_string, copts, dict);
+		if ('e' == linetype) break;    /* It was an exit command */
+		if ('c' == linetype) continue; /* It was another command */
 
 		if (!copts->batch_mode) batch_in_progress = false;
 		if ('\0' != test[0])

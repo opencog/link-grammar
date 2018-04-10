@@ -79,6 +79,8 @@ typedef struct
 
 static int variables_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
+static int exit_cmd(const Switch*, int);
+
 #define UNDOC "\1" /* Undocumented command */
 
 static Switch default_switches[] =
@@ -122,8 +124,8 @@ static Switch default_switches[] =
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", NULL},
-	{"exit",       Cmd,  "Exit the program",                       NULL},
-	{"quit",       Cmd,  UNDOC "Exit the program",                 NULL},
+	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
+	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
@@ -569,6 +571,11 @@ static int variables_cmd(const Switch *uc, int n)
 	printf("Toggle a Boolean variable as in \"!batch\"; ");
 	printf("Set a variable as in \"!width=100\".\n");
 	return 0;
+}
+
+static int exit_cmd(const Switch *uc, int n)
+{
+	return 1;
 }
 
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
