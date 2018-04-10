@@ -121,8 +121,8 @@ static Switch default_switches[] =
 #endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
-	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
+	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", NULL},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
@@ -536,6 +536,8 @@ static int help_cmd(const Switch *uc, int n)
 {
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
 	printf("can be abbreviated.  Here is a list of the commands:\n\n");
+
+	printf(" !help command   Show detailed help for the given command\n");
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
