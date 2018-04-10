@@ -97,7 +97,7 @@ static Switch default_switches[] =
 	{"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
 	{"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
 	{"links",      Bool, "Display of complete link data",   &local.display_links},
-	{"memory",     Int,  "Max memory allowed",              &local.memory},
+	{"memory",     Int,  UNDOC "Max memory allowed",        &local.memory},
 	{"morphology", Bool, "Display word morphology",         &local.display_morphology},
 	{"null",       Bool, "Allow null links",                &local.allow_null},
 	{"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
@@ -537,7 +537,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
 	printf("can be abbreviated.  Here is a list of the commands:\n\n");
 
-	printf(" !help command   Show detailed help for the given command\n");
+	printf(" !help command   Show a detailed help for the given command\n");
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
