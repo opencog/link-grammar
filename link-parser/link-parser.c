@@ -741,6 +741,12 @@ int main(int argc, char * argv[])
 			char * filename = &input_string[strcspn(input_string, WHITESPACE)] + 1;
 			int fnlen = strlen(filename);
 
+			if (0 == fnlen)
+			{
+				prt_error("Error: Missing file name argument\n");
+				continue;
+			}
+
 			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
 
 			struct stat statbuf;
