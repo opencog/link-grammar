@@ -78,6 +78,7 @@ typedef struct
 } Switch;
 
 static int variables_cmd(const Switch*, int);
+static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
 static int exit_cmd(const Switch*, int);
 
@@ -123,7 +124,7 @@ static Switch default_switches[] =
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
-	{"file",       Cmd,  "Read input from the specified filename", NULL},
+	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
@@ -553,7 +554,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf(" !<var>          Toggle the specified Boolean variable.\n");
 	printf(" !<var>=<val>    Assign that value to that variable.\n");
 
-	return 0;
+	return 'c';
 }
 
 static int variables_cmd(const Switch *uc, int n)
@@ -573,12 +574,17 @@ static int variables_cmd(const Switch *uc, int n)
 	printf("Toggle a Boolean variable as in \"!batch\"; ");
 	printf("Set a variable as in \"!width=100\".\n");
 	printf("Get a more detailed help on a variable as in \"!help var\".\n");
-	return 0;
+	return 'c';
 }
 
 static int exit_cmd(const Switch *uc, int n)
 {
-	return 1;
+	return 'e';
+}
+
+static int file_cmd(const Switch *uc, int n)
+{
+	return 'f';
 }
 
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
@@ -614,7 +620,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				if (count == 1)
 				{
 					display_help(&as[j], copts);
-					return 0;
+					return 'c';
 				}
 
 				if (count > 1)
@@ -656,7 +662,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		{
 			setival(as[j], (0 == ival(as[j])));
 			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
-			return 0;
+			return 'c';
 		}
 
 		/* Found an abbreviated, but it wasn't a Boolean.
@@ -690,7 +696,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
 		}
 
-		return 0;
+		return 'c';
 	}
 #ifdef USE_REGEX_TOKENIZER
 	if (s[0] == '/')
@@ -699,7 +705,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		extern int regex_tokenizer_test(Dictionary, const char *);
 		int rc = regex_tokenizer_test(dict, s+1);
 		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
-		return 0;
+		return 'c';
 	}
 #endif
 
@@ -753,7 +759,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			setival(as[j], val);
 			printf("%s set to %d\n", as[j].string, val);
-			return 0;
+			return 'c';
 		}
 		else
 		if (as[j].param_type == Float)
@@ -768,14 +774,14 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			*((double *) as[j].ptr) = val;
 			printf("%s set to %5.2f\n", as[j].string, val);
-			return 0;
+			return 'c';
 		}
 		else
 		if (as[j].param_type == String)
 		{
 			*((char **) as[j].ptr) = y;
 			printf("%s set to %s\n", (char *)as[j].string, y);
-			return 0;
+			return 'c';
 		}
 		else
 		{

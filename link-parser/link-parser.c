@@ -453,20 +453,13 @@ static void batch_process_some_linkages(Label label,
 
 /**
  * If input_string is !command, try to issue it.
- * Return:
- * - 'n': It is not a command.
- * - 'e': It is an "exit" command.
- *   'c': It is a command (even if no such command) or a comment.
  */
 
 static char special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
 	if (input_string[0] == COMMENT_CHAR) return 'c';
-	if (input_string[0] == '!') {
-		if (1 == issue_special_command(input_string+1, copts, dict))
-			return 'e';
-		return 'c';
-	}
+	if (input_string[0] == '!')
+		return issue_special_command(input_string+1, copts, dict);
 	return 'n';
 }
 
@@ -646,7 +639,7 @@ int main(int argc, char * argv[])
 		if (argv[i][0] == '-')
 		{
 			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
-			if ((var[0] != '!') && issue_special_command(var, copts, NULL))
+			if ((var[0] != '!') && (0 > issue_special_command(var, copts, NULL)))
 				print_usage(argv[0], -1);
 		}
 		else if (i != 1)
@@ -732,11 +725,20 @@ int main(int argc, char * argv[])
 			*p = '\0';
 		}
 
+		/* If the input string is just whitespace, then ignore it. */
+		if (strspn(input_string, WHITESPACE) == strlen(input_string))
+			continue;
+
+		char command = special_command(input_string, copts, dict);
+		if ('e' == command) break;    /* It was an exit command */
+		if ('c' == command) continue; /* It was another command */
+		if (-1 == command) continue;  /* It was a bad command */
+
 		/* We have to handle the !file command inline; its too hairy
 		 * otherwise ... */
-		if (strncmp(input_string, "!file", 5) == 0)
+		if ('f' == command)
 		{
-			char * filename = &input_string[6];
+			char * filename = &input_string[strcspn(input_string, WHITESPACE)] + 1;
 			int fnlen = strlen(filename);
 
 			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
@@ -761,13 +763,6 @@ int main(int argc, char * argv[])
 			continue;
 		}
 
-		/* If the input string is just whitespace, then ignore it. */
-		if (strspn(input_string, WHITESPACE) == strlen(input_string))
-			continue;
-
-		char linetype = special_command(input_string, copts, dict);
-		if ('e' == linetype) break;    /* It was an exit command */
-		if ('c' == linetype) continue; /* It was another command */
 
 		if (!copts->batch_mode) batch_in_progress = false;
 		if ('\0' != test[0])
