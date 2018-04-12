@@ -47,6 +47,23 @@ typedef struct {
 	bool display_senses;    /* if true, sense candidates are printed out */
 } Command_Options;
 
+typedef enum
+{
+	Int,
+	Bool,
+	Float,
+	String,
+	Cmd,
+} ParamType;
+
+typedef struct
+{
+	const char *string;
+	ParamType param_type;
+	const char *description;
+	void *ptr;
+} Switch;
+
 void save_default_opts(Command_Options*);
 int issue_special_command(const char*, Command_Options*, Dictionary);
 Command_Options* command_options_create(void);

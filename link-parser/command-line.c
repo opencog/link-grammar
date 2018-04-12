@@ -55,27 +55,10 @@ static struct
 	int display_morphology;
 } local, local_saved;
 
-typedef enum
-{
-	Int,
-	Bool,
-	Float,
-	String,
-	Cmd,
-} ParamType;
-
 static const char *value_type[] =
 {
 	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) ", ""
 };
-
-typedef struct
-{
-	const char *string;
-	ParamType param_type;
-	const char *description;
-	void *ptr;
-} Switch;
 
 static int variables_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
