@@ -88,9 +88,9 @@ static Switch default_switches[] =
 {
 	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
 	{"batch",      Bool, "Batch mode",                      &local.batch_mode},
-	{"cluster",    Bool, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
+	{"cluster",    Bool, UNDOC "Use clusters to loosen parsing", &local.use_cluster_disjuncts},
 	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
-	{"cost-model", Int,  "Cost model used for ranking",     &local.cost_model},
+	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
 	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
 	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
@@ -105,7 +105,7 @@ static Switch default_switches[] =
 	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
 	{"ps-header",  Bool, "Generate postscript header",      &local.display_ps_header},
 	{"rand",       Bool, "Use repeatable random numbers",   &local.repeatable_rand},
-	{"senses",     Bool, "Display of word senses",          &local.display_senses},
+	{"senses",     Bool, UNDOC "Display of word senses",    &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
