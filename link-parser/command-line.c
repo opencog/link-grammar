@@ -65,8 +65,6 @@ static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
 static int exit_cmd(const Switch*, int);
 
-#define UNDOC "\1" /* Undocumented command */
-
 static Switch default_switches[] =
 {
 	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
