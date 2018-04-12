@@ -642,7 +642,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		if (Bool == as[j].param_type)
 		{
 			setival(as[j], (0 == ival(as[j])));
-			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
+			int undoc = !!(UNDOC[0] == as[j].description[0]);
+			printf("%s turned %s.\n",
+			       as[j].description+undoc, (ival(as[j]))? "on" : "off");
 			return 'c';
 		}
 
