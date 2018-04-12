@@ -95,6 +95,7 @@ char *lg_readline(const char *mb_prompt)
 		hist = history_winit();    /* Init built-in history */
 		el = el_init("link-parser", stdin, stdout, stderr);
 		history_w(hist, &ev, H_SETSIZE, 20);   /* Remember 20 events */
+		history_w(hist, &ev, H_SETUNIQUE, 1);
 		el_wset(el, EL_HIST, history_w, hist);
 		history_w(hist, &ev, H_LOAD, HFILE);
 
