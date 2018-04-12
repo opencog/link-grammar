@@ -65,7 +65,7 @@ static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
 static int exit_cmd(const Switch*, int);
 
-static Switch default_switches[] =
+Switch default_switches[] =
 {
 	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
 	{"batch",      Bool, "Batch mode",                      &local.batch_mode},

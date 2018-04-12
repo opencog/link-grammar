@@ -32,10 +32,42 @@
 #ifdef HAVE_WIDECHAR_EDITLINE
 #include <stdbool.h>
 
+#include "command-line.h"
+
+extern Switch default_switches[];
+static const Switch **sorted_names; /* sorted command names */
 static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
 {
 	return wc_prompt;
+}
+
+static int by_byteorder(const void *a, const void *b)
+{
+	const Switch * const *sa = a;
+	const Switch * const *sb = b;
+
+	return strcmp((*sa)->string, (*sb)->string);
+}
+
+static void build_command_list(const Switch ds[])
+{
+
+	size_t cl_num = 0;
+
+	for (size_t i = 0; NULL != ds[i].string; i++)
+	{
+		cl_num++;
+	}
+	sorted_names = malloc((cl_num+1) * sizeof(*sorted_names));
+
+	for (size_t i = 0; i < cl_num; i++)
+	{
+		if (UNDOC[0] == ds[i].string[0]) continue;
+		sorted_names[i] = &ds[i];
+	}
+	sorted_names[cl_num] = NULL;
+	qsort(sorted_names, cl_num, sizeof(*sorted_names), by_byteorder);
 }
 
 /**
@@ -109,6 +141,8 @@ char *lg_readline(const char *mb_prompt)
 
 		el_set(el, EL_ADDFN, "fn_complete", "file completion", lg_fn_complete);
 		el_set(el, EL_BIND, "^I", "fn_complete", NULL);
+
+		build_command_list(default_switches);
 
 		el_source(el, NULL); /* Source the user's defaults file. */
 	}
