@@ -29,6 +29,10 @@
 #include <histedit.h>
 #include <stdlib.h>
 
+#if !defined(MAX)
+#define MAX(x,y)  (((x) > (y)) ? (x) : (y))
+#endif
+
 #ifdef HAVE_WIDECHAR_EDITLINE
 #include <stdbool.h>
 
@@ -42,6 +46,136 @@ static wchar_t * prompt(EditLine *el)
 	return wc_prompt;
 }
 
+/**
+ * Try to complete the wide string in \p input, whose length is \p len.
+ *
+ * @param input Non-NUL-terminated wide string with length \p len.
+ * @param len Number of wide characters in \p input.
+ * @param is_help \p input is the argument of an !help command.
+ * @return 3 types of values:
+ *  <code>""</code> There are no completions.
+ *  <code>NULL</code> Choices help have been printed.
+ *  A NUL-terminated byte string (to be used as a completion).
+ */
+static char *complete_command(const wchar_t *input, size_t len, bool is_help)
+{
+	const Switch **start = NULL;
+	const Switch **end;
+	const Switch **match;
+	const char *prev;
+	size_t addlen;
+
+	/* Marking for the help facility. */
+	bool is_assignment = false;
+
+	if ((1 < len) && L'=' == input[len-1] && !is_help)
+	{
+		/* This is a variable assinment without a value.
+		 * Arrange for displaying an help line (only - no completion). */
+		is_assignment = true;
+		len--; /* disregard the ending '=' to enable command search. */
+	}
+
+	/* Our commands are ASCII strings.
+	 * So for simplicity, convert the input to an ASCII string. */
+	char *astr = malloc(len+1);
+	for (size_t i = 0; i < len; i++)
+	{
+		if (input[i] < 0 || input[i] > 127)
+		{
+			free(astr);
+			return NULL; /* unsupported input */
+		}
+		astr[i] = (char)input[i];
+	}
+	astr[len] = '\0';
+
+	/* Find the possible completions. */
+	for (match = sorted_names; NULL != *match; match++)
+	{
+		if (UNDOC[0] == (*match)->description[0]) continue;
+		if (0 == strncmp(astr, (*match)->string, len))
+		{
+			if (NULL == start)
+			{
+				start = match;
+				addlen = strlen((*match)->string) - len;
+			}
+			else
+			{
+				/* There is more than one match. Find the maximal common
+				 * additional substring that we can append. */
+				for (; addlen  > 0; addlen--)
+				{
+					if (0 == strncmp((*match)->string+len, prev+len, addlen))
+					    break;
+				}
+			}
+			prev = (*match)->string;
+		}
+		else if (NULL != start) break;
+	}
+	free(astr);
+	end = match;
+
+	if (NULL == start) return strdup(""); /* nothing found - no completions */
+	int cnum = end - start;
+
+	/* Show a possible completion list in a form of 1-line command help,
+	 * for these cases:
+	 * 1. Multiple completions with no common substring to add.
+	 * 2. An assignment command.
+	 */
+	if (((cnum > 1) && (0 == addlen)) || is_assignment)
+	{
+		bool all_commands = true;
+
+		printf("\n");
+		if (is_assignment)
+		{
+			for (size_t i = 0; &start[i] < end; i++)
+				if ((Cmd != start[i]->param_type)) all_commands = false;
+		}
+		do
+		{
+			if (UNDOC[0] == (*start)->description[0]) continue;
+			if (is_assignment && all_commands)
+			{
+				printf("\"%s\" is not a user variable\n", (*start)->string);
+			}
+			else
+			{
+				if (!is_assignment || (Cmd != (*start)->param_type))
+					display_1line_help(*start, /*is_completion*/true);
+			}
+		}
+		while (++start < end);
+
+		return NULL;
+	}
+
+	/* Here addlen>0, so we have 1 or more possible completions. */
+	char *addstr = malloc(addlen + 2); /* + '=' + '\0' */
+	strncpy(addstr, (*start)->string + len, addlen);
+
+	if ((1 == cnum) && !is_help)
+	{
+		/* A single completion.  Indicate a success:
+		 * - For a non-Boolean user variable appending '='.
+		 * - For a command or a Boolean append ' '. */
+		addstr[addlen++] =
+			((Cmd != (*start)->param_type) && (Bool != (*start)->param_type))
+			? '=' : ' ';
+	}
+	else
+	{
+		/* Multiple completions. The maximal common substring will be returned. */
+	}
+
+	addstr[addlen] = '\0';
+	return addstr;
+}
+
 static int by_byteorder(const void *a, const void *b)
 {
 	const Switch * const *sa = a;
@@ -52,53 +186,124 @@ static int by_byteorder(const void *a, const void *b)
 
 static void build_command_list(const Switch ds[])
 {
-
 	size_t cl_num = 0;
-
 	for (size_t i = 0; NULL != ds[i].string; i++)
 	{
+		if (UNDOC[0] == ds[i].description[0]) continue;
 		cl_num++;
 	}
 	sorted_names = malloc((cl_num+1) * sizeof(*sorted_names));
 
-	for (size_t i = 0; i < cl_num; i++)
+	int j = 0;
+	for (size_t i = 0; NULL != ds[i].string; i++)
 	{
-		if (UNDOC[0] == ds[i].string[0]) continue;
-		sorted_names[i] = &ds[i];
+		if (UNDOC[0] == ds[i].description[0]) continue;
+		sorted_names[j++] = &ds[i];
 	}
 	sorted_names[cl_num] = NULL;
 	qsort(sorted_names, cl_num, sizeof(*sorted_names), by_byteorder);
 }
 
 /**
- * Complete file names after "!file ".
+ * Complete variables / commands and also file name after "!file ".
  * Filenames with blanks are not supported well.
  * This is partially a problem of editline, so there is no point to
  * fix that.
+ *
+ * There is a special treatment of the !help command since it can be
+ * abbreviated up to one character and its argument position also
+ * needs a command completion (which is slightly different - no '=' is
+ * appended to variables).
+ *
  * FIXME: The file completion knows about ~ and ~user. However, I
  * don't know how to force their expanding, so they are not useful
  * for now.
- * TODO: Variable completion.
  */
-static unsigned char lg_fn_complete(EditLine *el, int ch)
+static unsigned char lg_complete(EditLine *el, int ch)
 {
-	const LineInfoW *li;
+	const LineInfoW *li = el_wline(el);
+	const wchar_t *word_start; /* the word to be completed */
+	const wchar_t *word_end;
+	size_t word_len;
 	const wchar_t *ctemp;
+	unsigned char rc;
+	bool is_file_command = false;
+	bool is_help_command = false;
 
-	/* Skip back the last word and possible spaces before it. */
-	li = el_wline(el);
-	for (ctemp = li->cursor-1; ctemp > li->buffer; ctemp--)
-		if (*ctemp == L' ') break;
-	for (; ctemp > li->buffer; ctemp--)
-		if (*ctemp != L' ') break;
-
-	/* If we don't have there "!file ", no completion is done. */
-	if (0 != wcsncmp(li->buffer, L"!file ", ctemp-li->buffer+2))
+	/* A command must start with '!' on column 0. */
+	if (L'!' != li->buffer[0])
 		return CC_ERROR;
 
-	unsigned char r = _el_fn_complete(el, ch);
-	/* CC_NORM is returned if no possible completion. */
-	return (r == CC_NORM) ? CC_ERROR : r;
+	/* Allow for whitespace after the initial "!" */
+	for (ctemp = li->buffer+1; ctemp < li->lastchar; ctemp++)
+		if (!iswspace(*ctemp)) break;
+
+	word_start = ctemp;
+
+	/* Find the word (if any) end. */
+	for (ctemp = word_start; ctemp < li->lastchar; ctemp++)
+		if (iswspace(*ctemp)) break;
+
+	word_end = ctemp;
+	word_len = word_end - word_start;
+
+	if (0 < word_len)
+	{
+		/* Don't try to complete in a middle of word. */
+		if ((li->cursor >= word_start) && ((li->cursor < word_end)))
+			return CC_ERROR;
+
+		/* Now check if it is !help or !file (or their abbreviation), as
+		 * these commands need an argument completion. Whitespace is
+		 * needed after these commands as else this is a command completion. */
+		if (iswspace(*word_end))
+		{
+			if (0 == wcsncmp(word_start, L"help", word_len))
+				is_help_command = true;
+			else if (0 == wcsncmp(word_start, L"file", word_len))
+				is_file_command = true;
+
+			if (is_file_command || is_help_command)
+			{
+				/* Check if the command has an argument. */
+				for (ctemp = word_end + 1; ctemp < li->lastchar; ctemp++)
+					if (!iswspace(*ctemp)) break;
+				word_start = ctemp;
+				for (ctemp = word_start; ctemp < li->lastchar; ctemp++)
+					if (iswspace(*ctemp)) break;
+				word_end = ctemp;
+				word_len = word_end - word_start;
+			}
+		}
+	}
+
+	/* Cannot complete if the cursor is not directly after the word. */
+	if ((0 < word_len) && li->cursor != word_end) return CC_ERROR;
+
+	/* Cannot complete if there is non-whitespace after the cursor. */
+	for (ctemp = word_end; ctemp < li->lastchar; ctemp++)
+		if (!iswspace(*ctemp)) return CC_ERROR;
+
+	/* Cannot complete if there is non-whitespace after the cursor. */
+	if (is_file_command)
+	{
+		rc = _el_fn_complete(el, ch);
+		/* CC_NORM is returned if there is no possible completion. */
+		return (rc == CC_NORM) ? CC_ERROR : rc;
+	}
+
+	char *completion = complete_command(word_start, word_len, is_help_command);
+	if (NULL == completion)
+		rc = CC_REDISPLAY; /* completions got printed - redraw the input line */
+	else if ('\0' == completion[0])
+		rc =  CC_NORM;     /* nothing to complete */
+	else if (el_insertstr(el, completion) == -1)
+		rc = CC_ERROR;     /* no more space in the line buffer */
+	else
+		rc = CC_REFRESH;   /* there is a completion */
+
+	free(completion);
+	return (rc == CC_NORM) ? CC_ERROR : rc;
 }
 
 char *lg_readline(const char *mb_prompt)
@@ -139,8 +344,8 @@ char *lg_readline(const char *mb_prompt)
 		el_set(el, EL_EDITOR, "emacs");
 		el_wset(el, EL_PROMPT, prompt); /* Set the prompt function */
 
-		el_set(el, EL_ADDFN, "fn_complete", "file completion", lg_fn_complete);
-		el_set(el, EL_BIND, "^I", "fn_complete", NULL);
+		el_set(el, EL_ADDFN, "lg_complete", "command completion", lg_complete);
+		el_set(el, EL_BIND, "^I", "lg_complete", NULL);
 
 		build_command_list(default_switches);
 
