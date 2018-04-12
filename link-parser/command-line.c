@@ -203,6 +203,19 @@ static void setival(Switch s, int val)
 }
 
 /**
+ * Return the value description for the given switch.
+ */
+static const char *switch_value_description(const Switch *as)
+{
+	if (Bool == as->param_type)
+		return ival(*as) ? " (On)" : " (Off)";
+	if (Int == as->param_type)
+		return (-1 == ival(*as)) ? " (Unlimited)" : "";
+
+	return "";
+}
+
+/**
  * Return a static buffer with a string value of the given switch.
  *
  * Since the static buffer is overwritten on each call, this function
@@ -211,23 +224,17 @@ static void setival(Switch s, int val)
 static const char *switch_value_string(const Switch *as)
 {
 	static char buf[128]; /* Size of buf is much more than we need */
-	const char *value_description = "";
-	int n;
 
 	switch (as->param_type)
 	{
 		case Float: /* Float point print! */
-			snprintf(buf, sizeof(buf), "%5.2f", *((double *)as->ptr));
+			snprintf(buf, sizeof(buf), "%.2f", *((double *)as->ptr));
 			break;
 		case Bool:
-			value_description = ival(*as) ? " (On)" : " (Off)";
 			/* FALLTHRU */
 		case Int:
 			/* FALLTHRU (why another one is needed?) */
-			n = snprintf(buf, sizeof(buf), "%5d", ival(*as));
-			if (n < 0) n = 0; /* Shouldn't happen, but just in case */
-			if (-1 == ival(*as)) value_description = " (Unlimited)";
-			snprintf(buf+n, sizeof(buf)-n, "%s", value_description);
+			snprintf(buf, sizeof(buf), "%d", ival(*as));
 			break;
 		case String:
 			snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
@@ -236,6 +243,7 @@ static const char *switch_value_string(const Switch *as)
 			buf[0] = '\0'; /* No value to print. */
 			break;
 		default:
+			/* Internal error. */
 			snprintf(buf, sizeof(buf), "Unknown type %d\n", as->param_type);
 	}
 
@@ -404,14 +412,42 @@ static FILE *open_help_file(int verbosity)
 	return hf;
 }
 
+/**
+ * Print basic info: name, description, current value and type.
+ * Iff is_completion is true, display also the variable value, and use
+ * fixed fields for the value related info and the description.
+ * This is intended for use from the command completion code.
+ *
+ * The display format is ([] denotes optional - if is_completion is true):
+ * varname[=varvalue] (vartype) - description
+ */
+void display_1line_help(const Switch *sp, bool is_completion)
+{
+	int undoc = !!(UNDOC[0] == sp->description[0]);
+	int vtw = 0; /* value_type field width */
+	int vnw = 0; /* varname field width */
+	bool display_eq = is_completion && (Cmd != sp->param_type);
+	const char *value = "";
+
+	if (is_completion)
+	{
+		vtw = 10;
+		vnw = 18;
+		if (Cmd != sp->param_type)
+			value = switch_value_string(sp);
+	}
+
+	int n; /* actual varname and optional varvalue print length */
+	printf("%s%s%s%n", sp->string, display_eq ? "=" : " ", value, &n);
+	if (is_completion) printf("%*s", MAX(0, vnw - n), "");
+	printf("%*s- %s\n", vtw, value_type[sp->param_type], sp->description+undoc);
+}
+
 static void display_help(const Switch *sp, Command_Options *copts)
 {
 	char line[MAX_INPUT]; /* Maximum number of character in a help file line */
 
-	/* Print basic info: name, description, type, current and default values. */
-	int undoc = !!(UNDOC[0] == sp->description[0]);
-	printf("%s %s- %s\n",
-	       sp->string, value_type[sp->param_type], sp->description + undoc);
+	display_1line_help(sp, /*is_completion*/false);
 	if (Cmd != sp->param_type)
 	{
 		printf("Current value: %s\n",switch_value_string(sp));
@@ -548,7 +584,8 @@ static int variables_cmd(const Switch *uc, int n)
 		if (UNDOC[0] == uc[i].description[0]) continue;
 		printf(" %-13s", uc[i].string);
 		printf("%-*s", FIELD_WIDTH(uc[i].description, 46), uc[i].description);
-		printf("%s\n", switch_value_string(&uc[i]));
+		printf("%5s", switch_value_string(&uc[i]));
+		printf("%s\n", switch_value_description(&uc[i]));
 	}
 
 	printf("\n");
