@@ -404,9 +404,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		else
 		if (as[j].param_type == Float)
 		{
-			double val = -1.0;
-			val = atof(y);
-			if (val < 0.0)
+			char *err;
+			double val = strtod(y, &err);
+			if (NULL != err)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
