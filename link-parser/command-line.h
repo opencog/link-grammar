@@ -24,6 +24,10 @@ LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
 #define MIN(X,Y)  (((X) < (Y)) ? (X) : (Y))
 #endif
 
+#if !defined(MAX)
+#define MAX(X,Y)  (((X) > (Y)) ? (X) : (Y))
+#endif
+
 typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;
