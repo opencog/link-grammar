@@ -208,6 +208,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 				}
 			}
 			while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
+			if (c == 0x0) break;
 			dict->line_number++;
 			continue;
 		}
@@ -323,6 +324,11 @@ static bool link_advance(Dictionary dict)
 			}
 			if (lg_isspace(c[0])) {
 				dict_error(dict, "White space inside of token");
+				return false;
+			}
+			if (c[0] == '\0')
+			{
+				dict_error(dict, "EOF while reading quoted token");
 				return false;
 			}
 
@@ -1792,7 +1798,8 @@ static bool read_entry(Dictionary dict)
 	/* pass the ; */
 	if (!link_advance(dict))
 	{
-		goto syntax_error;
+		/* Avoid freeing dn, since it is already inserted into the dict. */
+		return false;
 	}
 
 	return true;
