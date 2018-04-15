@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -52,31 +53,25 @@ static struct
 	int display_disjuncts;
 	int display_senses;
 	int display_morphology;
-} local;
+} local, local_saved;
 
-typedef enum
+static const char *value_type[] =
 {
-	Int,
-	Bool,
-	Float,
-	String,
-} ParamType;
+	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) ", ""
+};
 
-typedef struct
-{
-	const char *string;
-	ParamType param_type;
-	const char *description;
-	void *ptr;
-} Switch;
+static int variables_cmd(const Switch*, int);
+static int file_cmd(const Switch*, int);
+static int help_cmd(const Switch*, int);
+static int exit_cmd(const Switch*, int);
 
-static Switch default_switches[] =
+Switch default_switches[] =
 {
 	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
 	{"batch",      Bool, "Batch mode",                      &local.batch_mode},
-	{"cluster",    Bool, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
+	{"cluster",    Bool, UNDOC "Use clusters to loosen parsing", &local.use_cluster_disjuncts},
 	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
-	{"cost-model", Int,  "Cost model used for ranking",     &local.cost_model},
+	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
 	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
 	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
@@ -84,14 +79,14 @@ static Switch default_switches[] =
 	{"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
 	{"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
 	{"links",      Bool, "Display of complete link data",   &local.display_links},
-	{"memory",     Int,  "Max memory allowed",              &local.memory},
+	{"memory",     Int,  UNDOC "Max memory allowed",        &local.memory},
 	{"morphology", Bool, "Display word morphology",         &local.display_morphology},
 	{"null",       Bool, "Allow null links",                &local.allow_null},
 	{"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
 	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
 	{"ps-header",  Bool, "Generate postscript header",      &local.display_ps_header},
 	{"rand",       Bool, "Use repeatable random numbers",   &local.repeatable_rand},
-	{"senses",     Bool, "Display of word senses",          &local.display_senses},
+	{"senses",     Bool, UNDOC "Display of word senses",    &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
@@ -108,19 +103,32 @@ static Switch default_switches[] =
 #endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
-	{NULL,         Bool,  NULL,                             NULL}
+	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
+	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
+	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
+	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
+	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
+	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
-struct {const char * s; const char * str;} user_command[] =
+static void put_opts_in_local_vars(Command_Options *);
+
+/*
+ * A way to record the options default values.
+ */
+void save_default_opts(Command_Options *copts)
 {
-	{"variables",	"List user-settable variables and their functions"},
-	{"help",	      "List the commands and what they do"},
-	{"file",       "Read input from the specified filename"},
-	{NULL,		   NULL}
-};
+	put_opts_in_local_vars(copts);
+	local_saved = local;
+}
+
+static void restore_default_local_vars(void)
+{
+	local = local_saved;
+}
 
 /**
- *  Gets rid of all the white space in the string s.  Changes s
+ *  Gets rid of all the white space in the string s.
  */
 static void clean_up_string(char * s)
 {
@@ -150,17 +158,6 @@ static void clean_up_string(char * s)
 		}
 	}
 	*y = '\0';
-}
-
-/**
- * Prints string `s`, aligned to the left, in a field width `w`.
- * If the width of `s` is shorter than `w`, then the remainder of
- * field is padded with blanks (on the right).
- */
-static void left_print_string(FILE * fp, const char * s, int w)
-{
-	int width = w + strlen(s) - utf8_strwidth(s);
-	fprintf(fp, "%-*s", width, s);
 }
 
 /**
@@ -205,36 +202,469 @@ static void setival(Switch s, int val)
 	*((int *) s.ptr) = val;
 }
 
+/**
+ * Return the value description for the given switch.
+ */
+static const char *switch_value_description(const Switch *as)
+{
+	if (Bool == as->param_type)
+		return ival(*as) ? " (On)" : " (Off)";
+	if (Int == as->param_type)
+		return (-1 == ival(*as)) ? " (Unlimited)" : "";
+
+	return "";
+}
+
+/**
+ * Return a static buffer with a string value of the given switch.
+ *
+ * Since the static buffer is overwritten on each call, this function
+ * should not use more than once as an argument of the same function.
+ */
+static const char *switch_value_string(const Switch *as)
+{
+	static char buf[128]; /* Size of buf is much more than we need */
+
+	switch (as->param_type)
+	{
+		case Float: /* Float point print! */
+			snprintf(buf, sizeof(buf), "%.2f", *((double *)as->ptr));
+			break;
+		case Bool:
+			/* FALLTHRU */
+		case Int:
+			/* FALLTHRU (why another one is needed?) */
+			snprintf(buf, sizeof(buf), "%d", ival(*as));
+			break;
+		case String:
+			snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
+			break;
+		case Cmd:
+			buf[0] = '\0'; /* No value to print. */
+			break;
+		default:
+			/* Internal error. */
+			snprintf(buf, sizeof(buf), "Unknown type %d\n", as->param_type);
+	}
+
+	return buf;
+}
+
+#define HELPFILE_BASE "/command-help-"
+#define HELPFILE_EXT ".txt"
+#define HELPFILE_LANG_TEMPLATE "LL" /* we use only the 2-letter language code */
+#define HELPFILE_LANG_TEMPLATE_SIZE (sizeof(HELPFILE_LANG_TEMPLATE)-1)
+#define HELPFILE_TEMPLATE_SIZE \
+	(sizeof(HELPFILE_BASE HELPFILE_EXT)+HELPFILE_LANG_TEMPLATE_SIZE)
+#define D_USER_FILES 3 /* Debug level for files */
+#define DEFAULT_HELP_LANG "en"
+
+static char *help_filename;
+/* Used in atexit() below. */
+static void free_help_filename(void)
+{
+	free(help_filename);
+}
+
+/**
+ * On each call, return the next locale to try for constructing the help
+ * file name (NULL if no more).
+ *
+ * @param nextlang true on calls to get the next language.
+ * @return Locale to try, NULL if no more.
+ *
+ * This function should be called until it returns NULL (it order to
+ * free memory that it may allocate).
+ * After it returns NULL, the code that uses it below doesn't call it again.
+ *
+ * See "Specifying a Priority List of Languages":
+ * www.gnu.org/software/gettext/manual/html_node/The-LANGUAGE-variable.html
+ */
+static const char *get_next_locale(void)
+{
+	enum state
+		{Initial_s, Language_s, Next_language_s, Default_language_s, Final_s};
+	static int state = Initial_s;
+	static char *language;
+	char *lc_all;
+	const char *lang = NULL;
+
+	while (1)
+	{
+		switch (state)
+		{
+			case Initial_s:
+				lc_all = getenv("LC_ALL");
+				if ((NULL != lc_all) && (0 == strcmp(lc_all, "C")))
+				{
+					/* LC_ALL=C */
+					state = Default_language_s;
+					continue;
+				}
+
+				if ((NULL == lc_all) || ('\0' == *lc_all))
+				{
+					/* LC_ALL= */
+					lang = getenv("LANG");
+					if ((NULL != lang) && (0 == strcmp(lang, "C")))
+					{
+						/* LANG=C */
+						state = Default_language_s;
+						continue;
+					}
+				}
+				/* LC_ALL=x */
+				state = Language_s;
+				continue;
+
+			case Language_s:
+				language = getenv("LANGUAGE");
+				if ((language == NULL) || ('\0' == *language))
+				{
+					/* LANGUAGE= */
+					language = NULL; /* so it doesn't get freed at Finals_s */
+					state = Default_language_s;
+					if ((NULL != lang) && ('\0' != *lang))
+					{
+						/* LANG=x */
+						return lang;
+					}
+					/* LANG= */
+					continue;
+				}
+
+				/* LANGUAGE=x:y:z */
+				state = Next_language_s;
+				language = strdup(language); /* strdup() for strtok() */
+				return strtok(language, ":");
+				break;
+
+			case Next_language_s:
+				{
+					char *next_language = strtok(NULL, ":");
+					if (NULL == next_language)
+					{
+						/* LANGUAGE tokens exhausted */
+						state = Default_language_s;
+						continue;
+					}
+					/* Unchanged state. */
+					return next_language;
+				}
+				break;
+
+			case Default_language_s:
+				state = Final_s;
+				return DEFAULT_HELP_LANG;
+
+			case Final_s:
+				free(language);
+				state = Initial_s;
+				break;
+				/* NULL is returned below. */
+		}
+		break;
+	}
+
+	return NULL;
+}
+
+static FILE *open_help_file(int verbosity)
+{
+	if (NULL != help_filename)
+		return fopen(help_filename, "r");
+	atexit(free_help_filename);
+
+	/* Construct the help filename template. */
+	char *datadir = linkgrammar_get_data_dir();
+	if (NULL == datadir)
+	{
+		prt_error("Error: Cannot find data directory\n");
+		return NULL;
+	}
+	help_filename = malloc(strlen(datadir) + HELPFILE_TEMPLATE_SIZE);
+	strcpy(help_filename, datadir);
+	free(datadir);
+	strcat(help_filename, HELPFILE_BASE);
+	char *ll_pos = &help_filename[strlen(help_filename)];
+	strcpy(ll_pos, HELPFILE_LANG_TEMPLATE  HELPFILE_EXT);
+
+	FILE *hf = NULL;
+	const char *ll;
+	while ((ll = get_next_locale()))
+	{
+		if (NULL != hf) continue; /* until get_next_locale() returns NULL */
+		strncpy(ll_pos, ll, HELPFILE_LANG_TEMPLATE_SIZE);
+		hf = fopen(help_filename, "r");
+		if (verbosity >= D_USER_FILES)
+		{
+			prt_error("Debug: Open help file %s%s\n",
+						 help_filename, (NULL==hf) ? " (Not found)" : "");
+		}
+	}
+
+	if (NULL == hf)
+	{
+		prt_error("Error: Cannot open help file '%s': %s\n",
+		          help_filename, strerror(errno));
+	}
+
+	return hf;
+}
+
+/**
+ * Print basic info: name, description, current value and type.
+ * Iff is_completion is true, display also the variable value, and use
+ * fixed fields for the value related info and the description.
+ * This is intended for use from the command completion code.
+ *
+ * The display format is ([] denotes optional - if is_completion is true):
+ * varname[=varvalue] (vartype) - description
+ */
+void display_1line_help(const Switch *sp, bool is_completion)
+{
+	int undoc = !!(UNDOC[0] == sp->description[0]);
+	int vtw = 0; /* value_type field width */
+	int vnw = 0; /* varname field width */
+	bool display_eq = is_completion && (Cmd != sp->param_type);
+	const char *value = "";
+
+	if (is_completion)
+	{
+		vtw = 10;
+		vnw = 18;
+		if (Cmd != sp->param_type)
+			value = switch_value_string(sp);
+	}
+
+	int n; /* actual varname and optional varvalue print length */
+	printf("%s%s%s%n", sp->string, display_eq ? "=" : " ", value, &n);
+	if (is_completion) printf("%*s", MAX(0, vnw - n), "");
+	printf("%*s- %s\n", vtw, value_type[sp->param_type], sp->description+undoc);
+}
+
+static void display_help(const Switch *sp, Command_Options *copts)
+{
+	char line[MAX_INPUT]; /* Maximum number of character in a help file line */
+
+	display_1line_help(sp, /*is_completion*/false);
+	if (Cmd != sp->param_type)
+	{
+		printf("Current value: %s\n",switch_value_string(sp));
+		restore_default_local_vars();
+		printf("Default value: %s\n", switch_value_string(sp));
+		put_opts_in_local_vars(copts);
+	}
+
+	FILE *hf = open_help_file(local.verbosity);
+	if (NULL == hf) goto cleanup;
+
+	bool help_found = false;
+	while (!help_found && (NULL != fgets(line, sizeof(line), hf)))
+	{
+		if ('[' != line[0]) continue;
+		{
+#define CMDTAG_SEP ", \t]"
+			/* Allow for several names to map to the same help text,
+			 * in a hope that the same help text can be used for the
+			 * language bindings too (which have different option names
+			 * from historical reasons).
+			 * Note: We suppose the lines are not longer than MAX_INPUT.
+			 * Longer lines may render the help text incorrectly.
+			 * FIXME: Add command reference notation in the help text if
+			 * needed.
+			 * Help file format:
+			 * % comment
+			 * [cmd1 cmd2 ...]
+			 * text ...
+			 * [nextcmd ...]
+			 * text ...
+			 */
+			char *t = strtok(line+1, CMDTAG_SEP);
+			if (NULL == t) continue;
+			do {
+				if (0 == strcasecmp(t, sp->string))
+				{
+					help_found = true;
+					break;
+				}
+				t = strtok(NULL, CMDTAG_SEP);
+			} while (NULL != t);
+		}
+	}
+
+	if (ferror(hf))
+	{
+		prt_error("Error: Reading help file '%s': %s\n",
+		          help_filename, strerror(errno));
+		goto cleanup;
+	}
+
+	if (feof(hf))
+	{
+		if (local.verbosity >= D_USER_FILES)
+			prt_error("Error: Cannot find command \"%s\" in help file \"%s\"\n",
+			          sp->string, help_filename);
+	}
+	else
+	{
+		help_found = false;
+		bool issue_blank_line = false;
+		while (NULL != fgets(line, sizeof(line), hf))
+		{
+			const size_t len = strlen(line);
+			if ((MAX_INPUT == len-1) && '\n' != line[MAX_INPUT-2])
+			{
+				prt_error("Warning: Help-file text line too long at offset %ld\n",
+							 ftell(hf));
+			}
+			if (COMMENT_CHAR == line[0]) continue;
+			if ('[' == line[0]) break;
+
+			/* Suppress the ending blank lines of the help text. */
+			if (strspn(line, WHITESPACE) == len) /* we encountered a blank line */
+			{
+				issue_blank_line = true;
+				continue;
+			}
+
+			if (!help_found)
+			{
+				printf("\n"); /* issue a blank line separator after basic info */
+				help_found = true;
+			}
+
+			/* We have a line to print. Print a blank line before it if needed. */
+			if (issue_blank_line)
+			{
+				issue_blank_line = false;
+				printf("\n");
+			}
+			printf("%s", line);
+		}
+		if (!help_found) /* the command tag has no help text */
+			prt_error("Info: No help text found for command \"%s\"\n", sp->string);
+	}
+
+cleanup:
+	if (NULL != hf) fclose(hf);
+}
+
+static int help_cmd(const Switch *uc, int n)
+{
+	printf("Special commands always begin with \"!\".  Command and variable names\n");
+	printf("can be abbreviated.  Here is a list of the commands:\n\n");
+
+	printf(" !help command   Show a detailed help for the given command\n");
+	for (int i = 0; uc[i].string != NULL; i++)
+	{
+		if (Cmd != uc[i].param_type) continue;
+		if (UNDOC[0] == uc[i].description[0]) continue;
+		printf(" !%-14s ", uc[i].string);
+		printf("%s\n", uc[i].description);
+	}
+
+	printf("\n");
+	printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
+	printf("                 A wildcard * may be used to find multiple matches.\n");
+	printf("\n");
+	printf(" !<var>          Toggle the specified Boolean variable.\n");
+	printf(" !<var>=<val>    Assign that value to that variable.\n");
+
+	return 'c';
+}
+
+static int variables_cmd(const Switch *uc, int n)
+{
+	printf(" Variable     Controls                                          Value\n");
+	printf(" --------     --------                                          -----\n");
+	for (int i = 0; uc[i].string != NULL; i++)
+	{
+		if (Cmd == uc[i].param_type) continue;
+		if (UNDOC[0] == uc[i].description[0]) continue;
+		printf(" %-13s", uc[i].string);
+		printf("%-*s", FIELD_WIDTH(uc[i].description, 46), uc[i].description);
+		printf("%5s", switch_value_string(&uc[i]));
+		printf("%s\n", switch_value_description(&uc[i]));
+	}
+
+	printf("\n");
+	printf("Toggle a Boolean variable as in \"!batch\"; ");
+	printf("Set a variable as in \"!width=100\".\n");
+	printf("Get a more detailed help on a variable as in \"!help var\".\n");
+	return 'c';
+}
+
+static int exit_cmd(const Switch *uc, int n)
+{
+	return 'e';
+}
+
+static int file_cmd(const Switch *uc, int n)
+{
+	return 'f';
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
-	int i, count, j, k;
-	Switch * as = default_switches;
-	Parse_Options opts = copts->popts;
+	int count, j;
+	const Switch *as = default_switches;
+
+	/* Handle a request for a particular command help. */
+	if (NULL != dict)
+	{
+		/* If we are here, it is not a command-line parameter. */
+		s = strtok(line, " \t\n");
+		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
+		{
+			s = strtok(NULL, " \t\n");
+			if (s != NULL)
+			{
+				/* This is a help request for the command name at s. */
+				j = -1; /* command index */
+				count = 0;  /* number of matching commands */
+
+				/* Is it a unique abbreviation? */
+				for (int i = 0; as[i].string != NULL; i++)
+				{
+					if (strncasecmp(s, as[i].string, strlen(s)) == 0)
+					{
+						count++;
+						j = i;
+					}
+				}
+
+				if (count == 1)
+				{
+					display_help(&as[j], copts);
+					return 'c';
+				}
+
+				if (count > 1)
+					prt_error("Ambiguous command: \"%s\".  ", s);
+				else
+					prt_error("Undefined command: \"%s\".  ", s);
+
+				prt_error("Type \"!help\" or \"!variables\"\n");
+				return -1;
+			}
+		}
+	}
 
 	clean_up_string(line);
 	s = line;
-	j = k = -1;
+	j = -1;
 	count = 0;
 
-	/* Look for boolean flippers */
-	for (i=0; as[i].string != NULL; i++)
+	/* Look for Boolean flippers or command abbreviations. */
+	for (int i = 0; as[i].string != NULL; i++)
 	{
-		if ((Bool == as[i].param_type) &&
+		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			count++;
 			j = i;
-		}
-	}
-
-	/* Look for abbreviations */
-	for (i=0; user_command[i].s != NULL; i++)
-	{
-		if (strncasecmp(s, user_command[i].s, strlen(s)) == 0)
-		{
-			count++;
-			k = i;
 		}
 	}
 
@@ -245,75 +675,24 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	}
 	else if (count == 1)
 	{
-		/* flip boolean value */
-		if (j >= 0)
+		/* Flip Boolean value. */
+		if (Bool == as[j].param_type)
 		{
 			setival(as[j], (0 == ival(as[j])));
-			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
-			return 0;
+			int undoc = !!(UNDOC[0] == as[j].description[0]);
+			printf("%s turned %s.\n",
+			       as[j].description+undoc, (ival(as[j]))? "on" : "off");
+			return 'c';
 		}
 
-		/* Found an abbreviated command, but it wasn't a boolean.
+		/* Found an abbreviated, but it wasn't a Boolean.
 		 * It means it is a user command, to be handled below. */
-
-		if (strcmp(user_command[k].s, "variables") == 0)
-		{
-			printf(" Variable     Controls                                          Value\n");
-			printf(" --------     --------                                          -----\n");
-			for (i = 0; as[i].string != NULL; i++)
-			{
-				printf(" ");
-				left_print_string(stdout, as[i].string, 13);
-				left_print_string(stdout, as[i].description, 46);
-				if (Float == as[i].param_type)
-				{
-					/* Float point print! */
-					printf("%5.2f", *((double *)as[i].ptr));
-				}
-				else
-				if ((Bool == as[i].param_type) || Int == as[i].param_type)
-				{
-					printf("%5d", ival(as[i]));
-					if (-1 == ival(as[i])) printf(" (Unlimited)");
-				}
-				else
-				if (String == as[i].param_type)
-				{
-					printf("%s", *(char **)as[i].ptr);
-				}
-				if (Bool == as[i].param_type)
-				{
-					if (ival(as[i])) printf(" (On)"); else printf(" (Off)");
-				}
-				printf("\n");
-			}
-			printf("\n");
-			printf("Toggle a boolean variable as in \"!batch\"; ");
-			printf("set a variable as in \"!width=100\".\n");
-			return 0;
-		}
-
-		if (strcmp(user_command[k].s, "help") == 0)
-		{
-			printf("Special commands always begin with \"!\".  Command and variable names\n");
-			printf("can be abbreviated.  Here is a list of the commands:\n\n");
-			for (i=0; user_command[i].s != NULL; i++) {
-				printf(" !");
-				left_print_string(stdout, user_command[i].s, 15);
-				left_print_string(stdout, user_command[i].str, 52);
-				printf("\n");
-			}
-			printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
-			printf("                 A wildcard * may be used to find multiple matches.\n");
-			printf("\n");
-			printf(" !<var>          Toggle the specified boolean variable.\n");
-			printf(" !<var>=<val>    Assign that value to that variable.\n");
-			return 0;
-		}
+		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
 	}
 
 	if (s[0] == '!')
 	{
+		Parse_Options opts = copts->popts;
 		char *out;
 
 		out = dict_display_word_info(dict, s+1, opts);
@@ -337,7 +716,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
 		}
 
-		return 0;
+		return 'c';
 	}
 #ifdef USE_REGEX_TOKENIZER
 	if (s[0] == '/')
@@ -346,7 +725,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		extern int regex_tokenizer_test(Dictionary, const char *);
 		int rc = regex_tokenizer_test(dict, s+1);
 		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
-		return 0;
+		return 'c';
 	}
 #endif
 
@@ -362,8 +741,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		/* Figure out which command it is .. it'll be the j'th one */
 		j = -1;
-		for (i=0; as[i].string != NULL; i++)
+		for (int i = 0; as[i].string != NULL; i++)
 		{
+			if (Cmd == as[i].param_type) continue;
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
 				j = i;
@@ -399,14 +779,14 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			setival(as[j], val);
 			printf("%s set to %d\n", as[j].string, val);
-			return 0;
+			return 'c';
 		}
 		else
 		if (as[j].param_type == Float)
 		{
-			double val = -1.0;
-			val = atof(y);
-			if (val < 0.0)
+			char *err;
+			double val = strtod(y, &err);
+			if (NULL != err)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
@@ -414,14 +794,14 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			*((double *) as[j].ptr) = val;
 			printf("%s set to %5.2f\n", as[j].string, val);
-			return 0;
+			return 'c';
 		}
 		else
 		if (as[j].param_type == String)
 		{
 			*((char **) as[j].ptr) = y;
 			printf("%s set to %s\n", (char *)as[j].string, y);
-			return 0;
+			return 'c';
 		}
 		else
 		{
@@ -434,9 +814,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	/* Look for valid commands, but ones that needed an argument */
 	j = -1;
 	count = 0;
-	for (i = 0; as[i].string != NULL; i++)
+	for (int i = 0; as[i].string != NULL; i++)
 	{
-		if ((Bool != as[i].param_type) &&
+		if ((Bool != as[i].param_type) && (Cmd != as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			j = i;
@@ -547,6 +927,10 @@ int issue_special_command(const char * line, Command_Options* opts, Dictionary d
 	char *cline = strdup(line);
 	rc = x_issue_special_command(cline, opts, dict);
 	put_local_vars_in_opts(opts);
+	/* Read back:
+	 * - So we can see if the option has actually got changed.
+	 * - We need non-stale addresses for the test and debug variables. */
+	put_opts_in_local_vars(opts);
 	free(cline);
 
 	if (save) opts->popts = save;

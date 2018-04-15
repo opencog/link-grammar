@@ -20,6 +20,7 @@ EXTRA_DIST =            \
 	link-grammar.pc.in   \
 	link-grammar.spec.in \
 	link-grammar.spec    \
+	command-help-en.txt \
 	AUTHORS              \
 	ChangeLog            \
 	FindLinkGrammar.cmake\

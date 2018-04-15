@@ -14,7 +14,17 @@
 #include <link-grammar/link-features.h>
 #include <link-grammar/link-includes.h>
 
-LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
+#define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
+#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
+#define FIELD_WIDTH(str, width) (int)((width)+strlen(str)-utf8_strwidth(str))
+
+#if !defined(MIN)
+#define MIN(X,Y)  (((X) < (Y)) ? (X) : (Y))
+#endif
+
+#if !defined(MAX)
+#define MAX(X,Y)  (((X) > (Y)) ? (X) : (Y))
+#endif
 
 typedef struct {
 	Parse_Options popts;
@@ -37,10 +47,27 @@ typedef struct {
 	bool display_senses;    /* if true, sense candidates are printed out */
 } Command_Options;
 
-LINK_END_DECLS
+typedef enum
+{
+	Int,
+	Bool,
+	Float,
+	String,
+	Cmd,
+} ParamType;
 
+typedef struct
+{
+	const char *string;
+	ParamType param_type;
+	const char *description;
+	void *ptr;
+} Switch;
+
+void save_default_opts(Command_Options*);
 int issue_special_command(const char*, Command_Options*, Dictionary);
 Command_Options* command_options_create(void);
 void command_options_delete(Command_Options*);
+void display_1line_help(const Switch *, bool);
 
-
+#define UNDOC "\1" /* Undocumented command */
