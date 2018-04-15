@@ -301,10 +301,11 @@ nonCAP.zzz: ZZZ-;
 % COa+ is used to block links to COd-
 % Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
+%       This gets a fairly stiff cost if the comma is missing.
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    (Wc- & (Xc+ or [()]) & Qd+) or
+    (Wc- & (Xc+ or [()]1.2) & Qd+) or
     ({Xd-} & (Xc+ or [[()]]) & [COa+]));
 
 % Just pure singular entities, no mass nouns
