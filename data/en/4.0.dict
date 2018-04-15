@@ -8683,11 +8683,12 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % to allow modifiers on conjoined nouns to work well.
 % e.g. "...went to hell yesterday and heaven on Tuesday"
 %
-% [Mp- & MVp-]-0.09 prefers a connection to both the noun and the
-%    verb, helping disambiguate.
+% [Mp- & MVp-]-0.61 prefers a connection to both the noun and the
+%    verb, helping disambiguate.  The weight 0.61 plus 0.4 is greater
+%    than one, to overcome cost on @MV+.
 <prep-main-b>:
   <conjoin-preps>
-  or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.09
+  or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.61
   or [({Xc+ & {Xd-}} & CO+)]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
@@ -9088,7 +9089,7 @@ later earlier:
     (E+ or
     [Mp-]0.4 or
     Pp- or
-    MVb- or
+    ({[Mp-]-0.09} & MVb-) or
     (Wt- & {Xc+}) or
     [({Xc+ & {Xd-}} & CO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
