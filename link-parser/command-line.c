@@ -786,7 +786,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		{
 			char *err;
 			double val = strtod(y, &err);
-			if (NULL != err)
+			if ('\0' != *err)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
