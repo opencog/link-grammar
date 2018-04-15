@@ -6613,9 +6613,12 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % (using MVp-) is generally preferred.  The cost is small, though,
 % to allow modifiers on conjoined nouns to work well.
 % e.g. "...went to hell yesterday and heaven on Tuesday"
+%
+% [Mp- & MVp-]-0.09 prefers a connection to both the noun and the
+%    verb, helping disambiguate.
 <prep-main-b>:
   <conjoin-preps>
-  or [Mp-]0.4 or Pp- or MVp-
+  or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.09
   or [({Xc+ & {Xd-}} & CO+)]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
@@ -6962,10 +6965,16 @@ no_matter:
 
 % --------------------------------------------------------
 % Preps that specify time-like relations
+%
+% ({[Mp-]-0.09} & MVp-): If we can identify both the head verb,
+% and the head noun, then do so. It is tempting to think that these
+% should modify the verb, only, but conjunctions prove otherwise:
+% "... went to hell recently, and heaven before that." shows that
+% "recently" has to modify "hell", and not "went".
 
 recently:
   {EE- or EF+} & (
-    ({Xd- & Xc+} & MVp-)
+    ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
     or Pp-
     or E+
     or ({Xc+ & {Xd-}} & CO+)
@@ -6978,7 +6987,7 @@ recently:
 % Wc- & Qd+: "Now, am I right?"
 % MJr-: "when, if not now, do you want to do it?"
 now.r:
-  ({Xd- & Xc+} & MVp-)
+  ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
   or Pp-
   or E+
   or ({Xc+ & {Xd-}} & CO+)
@@ -6992,7 +7001,7 @@ now.r:
 % JT+ & CO+: "then last week, I changed my mind"
 % JT+: "if not next Tuesday, then when do you want to do it?"
 then.r:
-  ({Xd- & Xc+} & MVp-)
+  ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
   or Pp-
   or E+
   or ({JT+} & {Xc+ & {Xd-}} & CO+)
