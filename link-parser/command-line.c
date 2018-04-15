@@ -577,6 +577,10 @@ int issue_special_command(const char * line, Command_Options* opts, Dictionary d
 	char *cline = strdup(line);
 	rc = x_issue_special_command(cline, opts, dict);
 	put_local_vars_in_opts(opts);
+	/* Read back:
+	 * - So we can see if the option has actually got changed.
+	 * - We need non-stale addresses for the test and debug variables. */
+	put_opts_in_local_vars(opts);
 	free(cline);
 
 	if (save) opts->popts = save;
