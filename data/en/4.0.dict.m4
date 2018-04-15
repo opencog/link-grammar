@@ -301,10 +301,11 @@ nonCAP.zzz: ZZZ-;
 % COa+ is used to block links to COd-
 % Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
+%       This gets a fairly stiff cost if the comma is missing.
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    (Wc- & (Xc+ or [()]) & Qd+) or
+    (Wc- & (Xc+ or [()]1.2) & Qd+) or
     ({Xd-} & (Xc+ or [[()]]) & [COa+]));
 
 % Just pure singular entities, no mass nouns
@@ -6612,9 +6613,13 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % (using MVp-) is generally preferred.  The cost is small, though,
 % to allow modifiers on conjoined nouns to work well.
 % e.g. "...went to hell yesterday and heaven on Tuesday"
+%
+% [Mp- & MVp-]-0.61 prefers a connection to both the noun and the
+%    verb, helping disambiguate.  The weight 0.61 plus 0.4 is greater
+%    than one, to overcome cost on @MV+.
 <prep-main-b>:
   <conjoin-preps>
-  or [Mp-]0.4 or Pp- or MVp-
+  or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.61
   or [({Xc+ & {Xd-}} & CO+)]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
@@ -6961,10 +6966,16 @@ no_matter:
 
 % --------------------------------------------------------
 % Preps that specify time-like relations
+%
+% ({[Mp-]-0.09} & MVp-): If we can identify both the head verb,
+% and the head noun, then do so. It is tempting to think that these
+% should modify the verb, only, but conjunctions prove otherwise:
+% "... went to hell recently, and heaven before that." shows that
+% "recently" has to modify "hell", and not "went".
 
 recently:
   {EE- or EF+} & (
-    ({Xd- & Xc+} & MVp-)
+    ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
     or Pp-
     or E+
     or ({Xc+ & {Xd-}} & CO+)
@@ -6977,7 +6988,7 @@ recently:
 % Wc- & Qd+: "Now, am I right?"
 % MJr-: "when, if not now, do you want to do it?"
 now.r:
-  ({Xd- & Xc+} & MVp-)
+  ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
   or Pp-
   or E+
   or ({Xc+ & {Xd-}} & CO+)
@@ -6991,7 +7002,7 @@ now.r:
 % JT+ & CO+: "then last week, I changed my mind"
 % JT+: "if not next Tuesday, then when do you want to do it?"
 then.r:
-  ({Xd- & Xc+} & MVp-)
+  ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
   or Pp-
   or E+
   or ({JT+} & {Xc+ & {Xd-}} & CO+)
@@ -7003,12 +7014,13 @@ then.r:
   or [[Mp-]];
 
 % Wt-: "Later."  (all by itself) but also: "Later, he left"
+% [Mp-]0.4:  see notes above <prep-main-b>; prefer MVb- when possible.
 later earlier:
   ({ECa- or Yt-} &
     (E+ or
-    Mp- or
+    [Mp-]0.4 or
     Pp- or
-    MVb- or
+    ({[Mp-]-0.09} & MVb-) or
     (Wt- & {Xc+}) or
     [({Xc+ & {Xd-}} & CO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
