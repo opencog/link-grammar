@@ -5,6 +5,8 @@ Version 5.4.5 (XXX 2018)
  * Fix random errors if the last dict line is a comment.
  * Fix random garbage report if EOF encountered in a quoted dict word.
  * Fix random garbage report if whitespace encountered in a quoted dict word.
+ * Add a per-command help in link-parser.
+ * Add a command line completion in link-parser.
 
 Version 5.4.4 (11 March 2018)
  * Dictionary loading now thread safe.
