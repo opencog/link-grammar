@@ -9073,10 +9073,11 @@ then.r:
   or [[Mp-]];
 
 % Wt-: "Later."  (all by itself) but also: "Later, he left"
+% [Mp-]0.4:  see notes above <prep-main-b>; prefer MVb- when possible.
 later earlier:
   ({ECa- or Yt-} &
     (E+ or
-    Mp- or
+    [Mp-]0.4 or
     Pp- or
     MVb- or
     (Wt- & {Xc+}) or
