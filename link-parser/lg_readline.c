@@ -64,9 +64,7 @@ static char *complete_command(const wchar_t *input, size_t len, bool is_help)
 	const Switch **match;
 	const char *prev;
 	size_t addlen;
-
-	/* Marking for the help facility. */
-	bool is_assignment = false;
+	bool is_assignment = false; /* marking for the help facility */
 
 	if ((1 < len) && L'=' == input[len-1] && !is_help)
 	{
