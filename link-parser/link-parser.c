@@ -343,16 +343,16 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 			if ((sentence_num_valid_linkages(sent) == 1) &&
 				!copts->display_bad)
 			{
-				fprintf(stdout, "	Unique linkage, ");
+				fprintf(stdout, "\tUnique linkage, ");
 			}
 			else if (copts->display_bad &&
 			         (sentence_num_violations(sent, i) > 0))
 			{
-				fprintf(stdout, "	Linkage %d (bad), ", num_displayed+1);
+				fprintf(stdout, "\tLinkage %d (bad), ", num_displayed+1);
 			}
 			else
 			{
-				fprintf(stdout, "	Linkage %d, ", num_displayed+1);
+				fprintf(stdout, "\tLinkage %d, ", num_displayed+1);
 			}
 
 			corpus_cost = linkage_corpus_cost(linkage);
