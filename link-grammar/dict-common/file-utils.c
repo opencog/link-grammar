@@ -359,7 +359,7 @@ char *get_file_contents(const char * dict_name)
 	contents = (char *) malloc(sizeof(char) * (tot_size+7));
 
 	/* Now, read the whole file.
-	 * Normally, only a single call of fread() is needed. */
+	 * Normally, a single fread() call below reads the whole file. */
 	while (1)
 	{
 		size_t read_size = fread(contents, 1, tot_size+7, fp);
