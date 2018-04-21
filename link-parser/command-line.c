@@ -615,10 +615,10 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	if (NULL != dict)
 	{
 		/* If we are here, it is not a command-line parameter. */
-		s = strtok(line, " \t\n");
+		s = strtok(line, WHITESPACE);
 		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
 		{
-			s = strtok(NULL, " \t\n");
+			s = strtok(NULL, WHITESPACE);
 			if (s != NULL)
 			{
 				/* This is a help request for the command name at s. */
