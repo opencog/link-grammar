@@ -367,17 +367,18 @@ char *get_file_contents(const char * dict_name)
 		if (0 == read_size)
 		{
 			bool err = (0 != ferror(fp));
-			fclose(fp);
 
 			if (err)
 			{
 				char errbuf[64];
 
 				strerror_r(errno, errbuf, sizeof(errbuf));
+				fclose(fp);
 				prt_error("Error: %s: Read error (%s)\n", dict_name, errbuf);
 				free(contents);
 				return NULL;
 			}
+			fclose(fp);
 			break;
 		}
 		tot_read += read_size;
