@@ -525,7 +525,7 @@ static void check_winsize(Command_Options* copts)
 	/* Calculate the size of the console window. */
 	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
 
-	copts->screen_width = info.srWindow.Right - info.srWindow.Left + 1;
+	copts->screen_width = (size_t)(info.srWindow.Right - info.srWindow.Left + 1);
 	return;
 
 fail:
