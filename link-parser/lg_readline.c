@@ -29,10 +29,6 @@
 #include <histedit.h>
 #include <stdlib.h>
 
-#if !defined(MAX)
-#define MAX(x,y)  (((x) > (y)) ? (x) : (y))
-#endif
-
 #ifdef HAVE_WIDECHAR_EDITLINE
 #include <stdbool.h>
 
@@ -282,7 +278,6 @@ static unsigned char lg_complete(EditLine *el, int ch)
 	for (ctemp = word_end; ctemp < li->lastchar; ctemp++)
 		if (!iswspace(*ctemp)) return CC_ERROR;
 
-	/* Cannot complete if there is non-whitespace after the cursor. */
 	if (is_file_command)
 	{
 		rc = _el_fn_complete(el, ch);
