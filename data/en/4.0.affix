@@ -28,8 +28,9 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 w/
   : LPUNC+;
 
-% Split words at these.
--- ‒ – — ― "(" "[": MPUNC+;
+% Split words that contain these in the middle of them.
+% TODO: this list should be expanded ...
+-- ‒ – — ― "(" "[" ... "," ";": MPUNC+;
 
 % Suffixes
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
