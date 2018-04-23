@@ -27,6 +27,9 @@
  *
  * If the underbar character is preceded by a backslash, it is not
  * considered. The subscript, if exists, is not checked.
+ *
+ * FIXME: Words with '\' escaped underbars that contain also unescaped
+ * ones are not supported.
  */
 bool contains_underbar(const char * s)
 {
