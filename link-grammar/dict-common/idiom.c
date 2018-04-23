@@ -26,13 +26,14 @@
  * length=1 is done because it is not going to be a valid idiom anyway.
  *
  * If the underbar character is preceded by a backslash, it is not
- * considered.
+ * considered. The subscript, if exists, is not checked.
  */
 bool contains_underbar(const char * s)
 {
 	if ((s[0] == '_') || (s[0] == '\0')) return false;
 	while (*++s != '\0')
 	{
+		if (*s == SUBSCRIPT_MARK) return false;
 		if ((*s == '_') && (s[-1] != '\\')) return true;
 	}
 	return false;
@@ -56,6 +57,7 @@ static bool is_idiom_string(const char * s)
 
 	for (t = s; *t != '\0'; t++)
 	{
+		if (*s == SUBSCRIPT_MARK) return true;
 		if ((*t == '_') && (*(t+1) == '_')) return false;
 	}
 	return true;
@@ -143,10 +145,12 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	Dict_node * dn = NULL;
 	char * s = strdupa(string);
 	const char * t;
+	const char *sm = strchr(s, SUBSCRIPT_MARK);
 
 	for (t = s; NULL != s; t = s)
 	{
 		s = strchr(s, '_');
+		if ((NULL != sm) && (s > sm)) s = NULL;
 		if (NULL != s) *s++ = '\0';
 		Dict_node *dn_new = (Dict_node *) malloc(sizeof (Dict_node));
 		dn_new->right = dn;
