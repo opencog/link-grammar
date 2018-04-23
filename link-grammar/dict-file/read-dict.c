@@ -1453,7 +1453,9 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 
 	static Exp null_exp = { .type = AND_type, .u.l = NULL };
 	int comp = dict_order_strict(newnode->string, n);
-	if (0 == comp)
+	if (0 == comp &&
+	    /* Suppress reporting duplicate idioms until they are fixed. */
+	    (!contains_underbar(newnode->string) || test_enabled("dup-idioms")))
 	{
 		char t[80+MAX_TOKEN_LENGTH];
 		snprintf(t, sizeof(t),
