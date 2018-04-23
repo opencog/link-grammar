@@ -225,14 +225,10 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		          "\tThis word will be ignored\n",
 		          s, dict->line_number);
 
-		free(dn);
 		return;
 	}
 
 	dn_list = start_dn_list = make_idiom_Dict_nodes(dict, s);
-
-	free(dn);
-	dn = NULL;
 
 	assert(dn_list->right != NULL, "Idiom string with only one connector");
 

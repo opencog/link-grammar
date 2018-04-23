@@ -1588,6 +1588,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	if (contains_underbar(dn->string))
 	{
 		insert_idiom(dict, dn);
+		free(dn);
 	}
 	else if (is_idiom_word(dn->string))
 	{
