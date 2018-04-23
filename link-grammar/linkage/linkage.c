@@ -401,7 +401,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				if (is_idiom_word(t))
 				{
 					s = strdupa(t);
-					sm = strchr(s, SUBSCRIPT_MARK);
+					sm = strrchr(s, SUBSCRIPT_MARK); /* Possible double subscript. */
 					UNREACHABLE(NULL == sm); /* We know it has a subscript. */
 					*sm = '\0';
 					t = string_set_add(s, sent->string_set);

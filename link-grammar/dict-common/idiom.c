@@ -40,19 +40,13 @@ bool contains_underbar(const char * s)
 
 /**
  * Returns false if it is not a correctly formed idiom string.
- * Such a string is correct if it:
- *   () contains no SUBSCRIPT_MARK
- *   () non-empty strings separated by _
+ * Such a string is correct if it consists of non-empty strings
+ * separated by '_'.
  */
 static bool is_idiom_string(const char * s)
 {
 	size_t len;
 	const char * t;
-
-	for (t = s; *t != '\0'; t++)
-	{
-		if (*t == SUBSCRIPT_MARK) return false;
-	}
 
 	len = strlen(s);
 	if ((s[0] == '_') || (s[len-1] == '_'))
@@ -85,7 +79,7 @@ static bool is_number(const char *s)
  */
 static int numberfy(const char * s)
 {
-	s = strchr(s, SUBSCRIPT_MARK);
+	s = strrchr(s, SUBSCRIPT_MARK);
 	if (NULL == s) return -1;
 	if (*++s != 'I') return -1;
 	if (!is_number(++s)) return -1;
@@ -121,22 +115,14 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
 	char buff[2*MAX_WORD];
 	size_t bufsz = 2*MAX_WORD;
-	char *x;
 	int count;
 
 	Dict_node *dn = dictionary_lookup_list(dict, s);
 	count = max_postfix_found(dn) + 1;
 	free_lookup_list(dict, dn);
 
-	x = buff;
-	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (0 < bufsz))
-	{
-		*x = *s;
-		x++;
-		s++;
-		bufsz--;
-	}
-	snprintf(x, bufsz, "%cI%d", SUBSCRIPT_MARK, count);
+	size_t l = lg_strlcpy(buff, s, bufsz);
+	snprintf(buff+l, bufsz-l, "%cI%d", SUBSCRIPT_MARK, count);
 
 	return string_set_add(buff, dict->string_set);
 }
