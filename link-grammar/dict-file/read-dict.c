@@ -1584,12 +1584,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
 
-	if (contains_underbar(dn->string))
-	{
-		insert_idiom(dict, dn);
-		free(dn);
-	}
-	else if (is_idiom_word(dn->string))
+	if (is_idiom_word(dn->string))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
@@ -1599,6 +1594,11 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else
 	{
+		if (contains_underbar(dn->string))
+		{
+			insert_idiom(dict, dn);
+		}
+
 		dict->root = insert_dict(dict, dict->root, dn);
 		insert_length_limit(dict, dn);
 		dict->num_entries++;
