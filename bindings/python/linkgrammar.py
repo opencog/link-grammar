@@ -80,8 +80,8 @@ class ParseOptions(object):
     def verbosity(self, value):
         if not isinstance(value, int):
             raise TypeError("Verbosity must be set to an integer")
-        if value not in range(0,15):
-            raise ValueError("Verbosity levels can be any integer between 0 and 15 inclusive")
+        if value not in range(0,120):
+            raise ValueError("Verbosity levels can be any integer between 0 and 120 inclusive")
         clg.parse_options_set_verbosity(self._obj, value)
 
     @property

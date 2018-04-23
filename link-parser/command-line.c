@@ -615,10 +615,10 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	if (NULL != dict)
 	{
 		/* If we are here, it is not a command-line parameter. */
-		s = strtok(line, " \t\n");
+		s = strtok(line, WHITESPACE);
 		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
 		{
-			s = strtok(NULL, " \t\n");
+			s = strtok(NULL, WHITESPACE);
 			if (s != NULL)
 			{
 				/* This is a help request for the command name at s. */
@@ -853,7 +853,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.use_viterbi = parse_options_get_use_viterbi(opts);
 
-	local.screen_width = copts->screen_width;
+	local.screen_width = (int)copts->screen_width;
 	local.echo_on = copts->echo_on;
 	local.batch_mode = copts->batch_mode;
 	local.panic_mode = copts->panic_mode;
@@ -894,7 +894,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_use_viterbi(opts, local.use_viterbi);
 	parse_options_set_display_morphology(opts, local.display_morphology);
 
-	copts->screen_width = local.screen_width;
+	copts->screen_width = (size_t)local.screen_width;
 	copts->echo_on = local.echo_on;
 	copts->batch_mode = local.batch_mode;
 	copts->panic_mode = local.panic_mode;

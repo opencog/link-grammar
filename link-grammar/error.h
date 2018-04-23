@@ -43,7 +43,8 @@ const char *feature_enabled(const char *, ...);
  *   because they are designed only for extended user information.
  * - When verbosity > D_SPEC, print messages only when level==verbosity.
  * - The !debug variable can be set to a comma-separated list of functions
- *   in order to restrict the debug messages to these functions only.
+ *   or source filenames in order to restrict the debug messages to these
+ *   functions or filenames only.
  *
  * Invoking lgdebug() with a level number preceded by a + (+level) adds
  * printing of the function name.

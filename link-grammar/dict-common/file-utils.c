@@ -359,7 +359,7 @@ char *get_file_contents(const char * dict_name)
 	contents = (char *) malloc(sizeof(char) * (tot_size+7));
 
 	/* Now, read the whole file.
-	 * Normally, only a single call of fread() is needed. */
+	 * Normally, a single fread() call below reads the whole file. */
 	while (1)
 	{
 		size_t read_size = fread(contents, 1, tot_size+7, fp);
@@ -367,17 +367,18 @@ char *get_file_contents(const char * dict_name)
 		if (0 == read_size)
 		{
 			bool err = (0 != ferror(fp));
-			fclose(fp);
 
 			if (err)
 			{
 				char errbuf[64];
 
 				strerror_r(errno, errbuf, sizeof(errbuf));
+				fclose(fp);
 				prt_error("Error: %s: Read error (%s)\n", dict_name, errbuf);
 				free(contents);
 				return NULL;
 			}
+			fclose(fp);
 			break;
 		}
 		tot_read += read_size;

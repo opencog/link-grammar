@@ -62,7 +62,7 @@ comma-separated list of source file names (without specifying their
 directory) and function names (fully qualified for C++) from which to
 show the messages.
 
-For example, to only show messages from `flatten_wordgraph()` function
+For example, to only show messages from the `flatten_wordgraph()` function
 or the print.c file:
 
 `link-parser -v=6 -debug=flatten_wordgraph,print.c`
