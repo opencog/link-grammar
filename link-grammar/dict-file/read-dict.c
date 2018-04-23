@@ -1457,8 +1457,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 	{
 		char t[80+MAX_TOKEN_LENGTH];
 		snprintf(t, sizeof(t),
-		         "Ignoring word \"%s\", which has been multiply defined "
-		         "(use verbosity=2 for more details): ",
+		         "Ignoring word \"%s\", which has been multiply defined:",
 		         newnode->string);
 		dict_error(dict, t);
 		/* Too late to skip insertion - insert it with a null expression. */
