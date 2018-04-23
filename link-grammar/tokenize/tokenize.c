@@ -1598,6 +1598,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
  * -- if its the first word of a sentence
  * -- if its the first word following a colon, a period, a question mark,
  *    or any bullet (For example:  VII. Ancient Rome)
+ * -- if its the first word following an elipsis
  * -- if its the first word of a quote
  *
  * XXX FIXME: These rules are rather English-centric.  Someone should
@@ -1613,6 +1614,8 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 	/* Mid-text periods and question marks are sentence-splitters. */
 	if (strcmp(":", word->prev[0]->subword) == 0 ||
 		 strcmp(".", word->prev[0]->subword) == 0 ||
+		 strcmp("...", word->prev[0]->subword) == 0 ||
+		 strcmp("…", word->prev[0]->subword) == 0 ||
 		 strcmp("?", word->prev[0]->subword) == 0 ||
 		 strcmp("!", word->prev[0]->subword) == 0 ||
 		 strcmp("？", word->prev[0]->subword) == 0 ||
