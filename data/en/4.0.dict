@@ -12245,7 +12245,7 @@ than.#then-r: [then.r]1.65;
 than.#then-i: [then.i]1.65;
 than.#then-ij: [then.ij]0.65;
 
-% rather_then: rather_than;
+rather_then.#rather_than: rather_than;
 
 there.#their: [their.p]0.65;
 % theres.#theirs: [theirs.p]0.65;
