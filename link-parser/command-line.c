@@ -250,7 +250,7 @@ static const char *switch_value_string(const Switch *as)
 	return buf;
 }
 
-#define HELPFILE_BASE "/command-help-"
+#define HELPFILE_BASE "command-help-"
 #define HELPFILE_EXT ".txt"
 #define HELPFILE_LANG_TEMPLATE "LL" /* we use only the 2-letter language code */
 #define HELPFILE_LANG_TEMPLATE_SIZE (sizeof(HELPFILE_LANG_TEMPLATE)-1)
@@ -259,11 +259,11 @@ static const char *switch_value_string(const Switch *as)
 #define D_USER_FILES 3 /* Debug level for files */
 #define DEFAULT_HELP_LANG "en"
 
-static char *help_filename;
+static FILE *help_file;
 /* Used in atexit() below. */
-static void free_help_filename(void)
+static void close_help_file(void)
 {
-	free(help_filename);
+	fclose(help_file);
 }
 
 /**
@@ -371,45 +371,38 @@ static const char *get_next_locale(void)
 
 static FILE *open_help_file(int verbosity)
 {
-	if (NULL != help_filename)
-		return fopen(help_filename, "r");
-	atexit(free_help_filename);
+	char *help_filename;
 
-	/* Construct the help filename template. */
-	char *datadir = linkgrammar_get_data_dir();
-	if (NULL == datadir)
+	if (NULL != help_file)
 	{
-		prt_error("Error: Cannot find data directory\n");
-		return NULL;
+		rewind(help_file);
+		return help_file;
 	}
-	help_filename = malloc(strlen(datadir) + HELPFILE_TEMPLATE_SIZE);
-	strcpy(help_filename, datadir);
-	free(datadir);
-	strcat(help_filename, HELPFILE_BASE);
+	atexit(close_help_file);
+
+	/* Construct the help filename from its template. */
+	help_filename = malloc(HELPFILE_TEMPLATE_SIZE);
+	strcpy(help_filename, HELPFILE_BASE);
 	char *ll_pos = &help_filename[strlen(help_filename)];
 	strcpy(ll_pos, HELPFILE_LANG_TEMPLATE  HELPFILE_EXT);
 
-	FILE *hf = NULL;
 	const char *ll;
 	while ((ll = get_next_locale()))
 	{
-		if (NULL != hf) continue; /* until get_next_locale() returns NULL */
+		if (NULL != help_file)
+			continue; /* until get_next_locale() returns NULL */
 		strncpy(ll_pos, ll, HELPFILE_LANG_TEMPLATE_SIZE);
-		hf = fopen(help_filename, "r");
-		if (verbosity >= D_USER_FILES)
-		{
-			prt_error("Debug: Open help file %s%s\n",
-						 help_filename, (NULL==hf) ? " (Not found)" : "");
-		}
+		help_file = linkgrammar_open_data_file(help_filename);
 	}
 
-	if (NULL == hf)
+	if ((NULL == help_file) && (verbosity > D_USER_FILES))
 	{
 		prt_error("Error: Cannot open help file '%s': %s\n",
 		          help_filename, strerror(errno));
 	}
 
-	return hf;
+	free(help_filename);
+	return help_file;
 }
 
 /**
@@ -457,7 +450,11 @@ static void display_help(const Switch *sp, Command_Options *copts)
 	}
 
 	FILE *hf = open_help_file(local.verbosity);
-	if (NULL == hf) goto cleanup;
+	if (NULL == hf)
+	{
+		prt_error("Warning: Help file not found\n");
+		return;
+	}
 
 	bool help_found = false;
 	while (!help_found && (NULL != fgets(line, sizeof(line), hf)))
@@ -495,16 +492,15 @@ static void display_help(const Switch *sp, Command_Options *copts)
 
 	if (ferror(hf))
 	{
-		prt_error("Error: Reading help file '%s': %s\n",
-		          help_filename, strerror(errno));
-		goto cleanup;
+		prt_error("Error: Reading help file: %s\n", strerror(errno));
+		return;
 	}
 
 	if (feof(hf))
 	{
 		if (local.verbosity >= D_USER_FILES)
-			prt_error("Error: Cannot find command \"%s\" in help file \"%s\"\n",
-			          sp->string, help_filename);
+			prt_error("Error: Cannot find command \"%s\" in help file\n",
+			          sp->string);
 	}
 	else
 	{
@@ -545,9 +541,6 @@ static void display_help(const Switch *sp, Command_Options *copts)
 		if (!help_found) /* the command tag has no help text */
 			prt_error("Info: No help text found for command \"%s\"\n", sp->string);
 	}
-
-cleanup:
-	if (NULL != hf) fclose(hf);
 }
 
 static int help_cmd(const Switch *uc, int n)
