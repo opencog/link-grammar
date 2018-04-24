@@ -145,6 +145,11 @@ char * dictionary_get_data_dir(void)
 	return data_dir;
 }
 
+static void *dict_file_open(const char *fullname, const void *how)
+{
+	return fopen(fullname, how);
+}
+
 /**
  * Locate a data file and open it.
  *
@@ -254,7 +259,7 @@ void * object_open(const char *filename,
 	else if (NULL == path_found)
 	{
 		char *pfnd = strdup((NULL != completename) ? completename : filename);
-		if (0 < verbosity)
+		if ((0 < verbosity) && (dict_file_open == opencb))
 			prt_error("Info: Dictionary found at %s\n", pfnd);
 		for (size_t i = 0; i < 2; i++)
 		{
@@ -270,39 +275,30 @@ void * object_open(const char *filename,
 }
 #undef NOTFOUND
 
-static void *dict_file_open(const char *fullname, const void *how)
-{
-	return fopen(fullname, how);
-}
-
 FILE *dictopen(const char *filename, const char *how)
 {
 	return object_open(filename, dict_file_open, how);
 }
 
-static void *data_path_location(const char *dirname, const void *dummy)
+/*
+ * XXX - dict_file_open() cannot be used due to the Info printout
+ * of opening a dictionary.
+ */
+static void *data_file_open(const char *fullname, const void *how)
 {
-	struct stat buf;
-	if ((NULL == dirname) || ('\0' == *dirname)) return NULL;
-	if ((stat(dirname, &buf) == 0) && (buf.st_mode & S_IFDIR))
-	{
-		const int len = strlen(dirname) - 2; /* strip off trailing "/." */
-		char *found_dir = strndup(dirname, len);
-		return found_dir;
-	}
-	return NULL;
+	return fopen(fullname, how);
 }
 
 /**
- * Return the data directory path according to its search order.
+ * Open a file in the dictionary search path.
  * Experimental API (may be unstable).
- * Note: dictionary_create_*() must be called first in order to
- * cache the data directory which it uses.
- * @return Data directory path (needs to be freed)
+ * @param filename Filename to be opened.
+ * @return FILE pointer, or NULL if the file was no found.
  */
-char *linkgrammar_get_data_dir(void)
+FILE *linkgrammar_open_data_file(const char *filename)
 {
-	return object_open(".", data_path_location, NULL);
+	object_open(NULL, NULL, NULL); /* Invalidate the directory path cache */
+	return object_open(filename, data_file_open, "r");
 }
 
 /* ======================================================== */

@@ -1,6 +1,6 @@
 linkgrammar_get_version
 linkgrammar_get_configuration
-linkgrammar_get_data_dir
+linkgrammar_open_data_file
 linkgrammar_get_dict_version
 linkgrammar_get_dict_locale
 dictionary_create_lang
