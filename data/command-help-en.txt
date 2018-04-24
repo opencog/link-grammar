@@ -234,3 +234,26 @@ Variables can be set as follows:
 
  !<var>          Toggle the specified Boolean variable.
  !<var>=<val>    Assign that value to that variable.
+
+[wordgraph]
+This variable controls displaying the word-graph of the sentence.
+The word-graph is a representation of the relations between the sentence
+tokens, as set by the library tokenizer before the parsing step.
+
+Its value may be:
+ 0      Disabled
+ 1      Default display
+ 2      Display parent tokens as subgraphs
+ 3      Use esoteric display flags as appear in !test=wg:FLAGS
+
+% Below, unsplit-word means a token before getting split.
+% These flags are defined in wordgraph.h.
+%
+% c                 Compact display
+% d             (*) Display debug labels
+% h                 Display hex node numbers (for "dot" commands debug)
+% l             (*) Add a legend
+% p                 Display back-pointing word-graph links
+% s                 Display unsplit-words as subgraphs
+% u             (*) Display unsplit-word links
+% x                 Display using X11 even on Windows (if supported)
