@@ -11,7 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/link-features.h>
 #include <link-grammar/link-includes.h>
 
 #define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
