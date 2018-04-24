@@ -26,13 +26,17 @@
  * length=1 is done because it is not going to be a valid idiom anyway.
  *
  * If the underbar character is preceded by a backslash, it is not
- * considered.
+ * considered. The subscript, if exists, is not checked.
+ *
+ * FIXME: Words with '\' escaped underbars that contain also unescaped
+ * ones are not supported.
  */
 bool contains_underbar(const char * s)
 {
 	if ((s[0] == '_') || (s[0] == '\0')) return false;
 	while (*++s != '\0')
 	{
+		if (*s == SUBSCRIPT_MARK) return false;
 		if ((*s == '_') && (s[-1] != '\\')) return true;
 	}
 	return false;
@@ -40,19 +44,13 @@ bool contains_underbar(const char * s)
 
 /**
  * Returns false if it is not a correctly formed idiom string.
- * Such a string is correct if it:
- *   () contains no SUBSCRIPT_MARK
- *   () non-empty strings separated by _
+ * Such a string is correct if it consists of non-empty strings
+ * separated by '_'.
  */
 static bool is_idiom_string(const char * s)
 {
 	size_t len;
 	const char * t;
-
-	for (t = s; *t != '\0'; t++)
-	{
-		if (*t == SUBSCRIPT_MARK) return false;
-	}
 
 	len = strlen(s);
 	if ((s[0] == '_') || (s[len-1] == '_'))
@@ -62,6 +60,7 @@ static bool is_idiom_string(const char * s)
 
 	for (t = s; *t != '\0'; t++)
 	{
+		if (*s == SUBSCRIPT_MARK) return true;
 		if ((*t == '_') && (*(t+1) == '_')) return false;
 	}
 	return true;
@@ -85,7 +84,7 @@ static bool is_number(const char *s)
  */
 static int numberfy(const char * s)
 {
-	s = strchr(s, SUBSCRIPT_MARK);
+	s = strrchr(s, SUBSCRIPT_MARK);
 	if (NULL == s) return -1;
 	if (*++s != 'I') return -1;
 	if (!is_number(++s)) return -1;
@@ -121,22 +120,14 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
 	char buff[2*MAX_WORD];
 	size_t bufsz = 2*MAX_WORD;
-	char *x;
 	int count;
 
 	Dict_node *dn = dictionary_lookup_list(dict, s);
 	count = max_postfix_found(dn) + 1;
 	free_lookup_list(dict, dn);
 
-	x = buff;
-	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (0 < bufsz))
-	{
-		*x = *s;
-		x++;
-		s++;
-		bufsz--;
-	}
-	snprintf(x, bufsz, "%cI%d", SUBSCRIPT_MARK, count);
+	size_t l = lg_strlcpy(buff, s, bufsz);
+	snprintf(buff+l, bufsz-l, "%cI%d", SUBSCRIPT_MARK, count);
 
 	return string_set_add(buff, dict->string_set);
 }
@@ -157,10 +148,12 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	Dict_node * dn = NULL;
 	char * s = strdupa(string);
 	const char * t;
+	const char *sm = strchr(s, SUBSCRIPT_MARK);
 
 	for (t = s; NULL != s; t = s)
 	{
 		s = strchr(s, '_');
+		if ((NULL != sm) && (s > sm)) s = NULL;
 		if (NULL != s) *s++ = '\0';
 		Dict_node *dn_new = (Dict_node *) malloc(sizeof (Dict_node));
 		dn_new->right = dn;
@@ -239,14 +232,10 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		          "\tThis word will be ignored\n",
 		          s, dict->line_number);
 
-		free(dn);
 		return;
 	}
 
 	dn_list = start_dn_list = make_idiom_Dict_nodes(dict, s);
-
-	free(dn);
-	dn = NULL;
 
 	assert(dn_list->right != NULL, "Idiom string with only one connector");
 

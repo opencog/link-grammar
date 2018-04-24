@@ -1453,12 +1453,13 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 
 	static Exp null_exp = { .type = AND_type, .u.l = NULL };
 	int comp = dict_order_strict(newnode->string, n);
-	if (0 == comp)
+	if (0 == comp &&
+	    /* Suppress reporting duplicate idioms until they are fixed. */
+	    (!contains_underbar(newnode->string) || test_enabled("dup-idioms")))
 	{
 		char t[80+MAX_TOKEN_LENGTH];
 		snprintf(t, sizeof(t),
-		         "Ignoring word \"%s\", which has been multiply defined "
-		         "(use verbosity=2 for more details): ",
+		         "Ignoring word \"%s\", which has been multiply defined:",
 		         newnode->string);
 		dict_error(dict, t);
 		/* Too late to skip insertion - insert it with a null expression. */
@@ -1585,11 +1586,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
 
-	if (contains_underbar(dn->string))
-	{
-		insert_idiom(dict, dn);
-	}
-	else if (is_idiom_word(dn->string))
+	if (is_idiom_word(dn->string))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
@@ -1599,6 +1596,11 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else
 	{
+		if (contains_underbar(dn->string))
+		{
+			insert_idiom(dict, dn);
+		}
+
 		dict->root = insert_dict(dict, dict->root, dn);
 		insert_length_limit(dict, dn);
 		dict->num_entries++;
