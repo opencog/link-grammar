@@ -18,7 +18,7 @@
 /* #include <link-grammar/link-includes.h> */
 
 #define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
-#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here. */
+#define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here */
 #define FIELD_WIDTH(str, width) (int)((width)+strlen(str)-utf8_strwidth(str))
 
 #if !defined(MIN)
@@ -73,4 +73,4 @@ Command_Options* command_options_create(void);
 void command_options_delete(Command_Options*);
 void display_1line_help(const Switch *, bool);
 
-#define UNDOC "\1" /* Undocumented command */
+#define UNDOC "\1" /* undocumented command */
