@@ -25,4 +25,5 @@ bool      resources_memory_exhausted(Resources r);
 bool      resources_exhausted(Resources r);
 Resources resources_create(void);
 void      resources_delete(Resources ti);
+double    current_usage_time(void);
 #endif /* _RESOURCES_H */
