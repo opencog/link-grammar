@@ -237,7 +237,10 @@ static const char *switch_value_string(const Switch *as)
 			snprintf(buf, sizeof(buf), "%d", ival(*as));
 			break;
 		case String:
-			snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
+			if ((NULL == *(char **)as->ptr) || ('\0' == **(char **)as->ptr))
+				strcpy(buf, "    (not set)");
+			else
+				snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
 			break;
 		case Cmd:
 			buf[0] = '\0'; /* No value to print. */
