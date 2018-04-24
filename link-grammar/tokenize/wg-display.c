@@ -427,24 +427,34 @@ static void wordgraph_show_cancel(void)
  * when new sentences are entered. With popen(), the program blocks at
  * pclose() and the user needs to close the window after each sentence.
  */
-static void x_popen(const char *cmd, const char *wgds)
+static bool x_popen(const char *cmd, const char *wgds)
 {
 	FILE *const cmdf = popen(cmd, "w");
+	bool rc = true;
 
 	if (NULL == cmdf)
 	{
 		prt_error("Error: popen of '%s' failed: %s\n", cmd, strerror(errno));
+		rc = false;
 	}
 	else
 	{
 		if (fprintf(cmdf, "%s", wgds) == -1)
+		{
 			prt_error("Error: print to display command: %s\n", strerror(errno));
+			rc = false;
+		}
 		if (pclose(cmdf) == -1)
+		{
 			prt_error("Error: pclose of display command: %s\n", strerror(errno));
+			rc = false;
+		}
 	}
+
+	return rc;
 }
 #else
-static void x_forkexec(const char *const argv[], pid_t *vpid)
+static bool x_forkexec(const char *const argv[], pid_t *vpid)
 {
 	/* Fork/exec a graph viewer, and leave it in the background until we exit.
 	 * On exit, send SIGHUP. If prctl() is not available and the program
@@ -453,12 +463,12 @@ static void x_forkexec(const char *const argv[], pid_t *vpid)
 	{
 		pid_t rpid = waitpid(*vpid, NULL, WNOHANG);
 
-		if (0 == rpid) return; /* viewer still active */
+		if (0 == rpid) return true; /* viewer still active */
 		if (-1 == rpid)
 		{
 			prt_error("Error: waitpid(%d): %s\n", *vpid, strerror(errno));
 			*vpid = 0;
-			return;
+			return false;
 		}
 	}
 
@@ -467,11 +477,14 @@ static void x_forkexec(const char *const argv[], pid_t *vpid)
 	{
 		case -1:
 			prt_error("Error: fork(): %s\n", strerror(errno));
-			break;
+			return false;
 		case 0:
 #ifdef HAVE_PRCTL
 			if (-1 == prctl(PR_SET_PDEATHSIG, SIGHUP))
+			{
 					prt_error("Error: prctl: %s\n", strerror(errno));
+					/* Non-fatal error - continue. */
+			}
 #endif
 			/* Not closing fd 0/1/2, to allow interaction with the program */
 			execvp(argv[0], (char **)argv);
@@ -480,10 +493,15 @@ static void x_forkexec(const char *const argv[], pid_t *vpid)
 		default:
 #ifndef HAVE_PRCTL
 			if (0 != atexit(wordgraph_show_cancel))
+			{
 				 prt_error("Warning: atexit(wordgraph_show_cancel) failed.\n");
+				/* Non-fatal error - continue. */
+			}
 #endif
 			break;
 	}
+
+	return true;
 }
 #endif /* !defined HAVE_FORK || defined POPEN_DOT */
 
@@ -529,7 +547,7 @@ static void wordgraph_unlink_xtmpfile(void)
  *
  * modestr: a graph display mode as defined in wordgraph.h (default "ldu").
  */
-void wordgraph_show(Sentence sent, const char *modestr)
+bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 {
 	dyn_str *wgd;
 	char *gvf_name = NULL;
@@ -538,6 +556,7 @@ void wordgraph_show(Sentence sent, const char *modestr)
 	bool gvfile = false;
 	uint32_t mode = 0;
 	const char *mp;
+	bool rc = true;
 
 	for (mp = modestr; '\0' != *mp && ',' != *mp; mp++)
 	{
@@ -563,28 +582,29 @@ void wordgraph_show(Sentence sent, const char *modestr)
 		gvf = fopen(gvf_name, "w");
 		if (NULL == gvf)
 		{
-			prt_error("Error: wordgraph_show: open %s failed: %s\n",
-						 gvf_name, strerror(errno));
+			prt_error("Error: %s(): open %s failed: %s\n",
+						 __func__, gvf_name, strerror(errno));
+			gvf_error = true;
 		}
 		else
 		{
 			if (fprintf(gvf, "%s", wgds) == -1)
 			{
 				gvf_error = true;
-				prt_error("Error: wordgraph_show: print to %s failed: %s\n",
-							 gvf_name, strerror(errno));
+				prt_error("Error: %s(): print to %s failed: %s\n",
+							 __func__, gvf_name, strerror(errno));
 			}
 			if (fclose(gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: wordgraph_show: close %s failed: %s\n",
-							  gvf_name, strerror(errno));
+				prt_error("Error: %s(): close %s failed: %s\n",
+							  __func__, gvf_name, strerror(errno));
 			}
 		}
 		if (gvf_error && gvfile) /* we need it - cannot continue */
 		{
-			free(wgds);
-			return;
+			rc = false;
+			goto finish;
 		}
 
 		if (wordgraph_unlink_xtmpfile_needed)
@@ -606,19 +626,23 @@ void wordgraph_show(Sentence sent, const char *modestr)
 #endif
 
 #if !defined HAVE_FORK || defined POPEN_DOT
-	x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_NATIVE, wgds);
+	rc = x_popen((mode & WGR_X11)? POPEN_DOT_CMD : POPEN_DOT_CMD_NATIVE, wgds);
 #else
 	{
 		assert(NULL != gvf_name, "DOT filename not initialized (#define mess?)");
 		const char *const args[] = { DOT_COMMAND, DOT_DRIVER, gvf_name, NULL };
-		x_forkexec(args, &pid);
+		rc = x_forkexec(args, &pid);
 	}
 #endif
+
+finish:
 	free(wgds);
+	return rc;
 }
 #else
-void wordgraph_show(Sentence sent, const char *modestr)
+bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 {
-		prt_error("Error: Not configured with --enable-wordgraph-display\n");
+		prt_error("Error: Library not configured with wordgraph-display\n");
+		return false;
 }
 #endif /* USE_WORDGRAPH_DISPLAY */
