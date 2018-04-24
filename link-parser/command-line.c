@@ -53,6 +53,7 @@ static struct
 	int display_disjuncts;
 	int display_senses;
 	int display_morphology;
+	int display_wordgraph;
 } local, local_saved;
 
 static const char *value_type[] =
@@ -103,6 +104,7 @@ Switch default_switches[] =
 #endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
+	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
@@ -866,6 +868,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_postscript = copts->display_postscript;
 	local.display_ps_header = copts->display_ps_header;
 	local.display_constituents = copts->display_constituents;
+	local.display_wordgraph = copts->display_wordgraph;
 
 	local.display_bad = copts->display_bad;
 	local.display_disjuncts = copts->display_disjuncts;
@@ -907,6 +910,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_postscript = local.display_postscript;
 	copts->display_ps_header = local.display_ps_header;
 	copts->display_constituents = local.display_constituents;
+	copts->display_wordgraph = local.display_wordgraph;
 
 	copts->display_bad = local.display_bad;
 	copts->display_disjuncts = local.display_disjuncts;
@@ -964,6 +968,7 @@ Command_Options* command_options_create(void)
 	co->display_disjuncts = false;
 	co->display_links = false;
 	co->display_senses = false;
+	co->display_wordgraph = 0;
 	return co;
 }
 

@@ -45,6 +45,7 @@ typedef struct {
 	bool display_disjuncts; /* if true, print disjuncts that were used */
 	bool display_links;     /* if true, a list o' links is printed out */
 	bool display_senses;    /* if true, sense candidates are printed out */
+	int  display_wordgraph; /* if true, the word-graph is displayed */
 } Command_Options;
 
 typedef enum
