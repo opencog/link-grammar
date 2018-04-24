@@ -96,8 +96,8 @@ Switch default_switches[] =
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
 	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-	{"debug",      String, "comma-separated function list to debug", &local.debug},
-	{"test",       String, "comma-separated features to test", &local.test},
+	{"debug",      String, "Comma-separated function names to debug", &local.debug},
+	{"test",       String, "Comma-separated test features", &local.test},
 #ifdef USE_VITERBI
 	{"viterbi",    Bool, "Use Viterbi-based parser",        &local.use_viterbi},
 #endif
