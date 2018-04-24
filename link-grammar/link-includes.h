@@ -278,6 +278,8 @@ link_public_api(double)
      sentence_disjunct_cost(Sentence sent, LinkageIdx linkage_num);
 link_public_api(int)
      sentence_link_cost(Sentence sent, LinkageIdx linkage_num);
+link_public_api(bool)
+     sentence_display_wordgraph(Sentence sent, const char *modestr);
 
 /**********************************************************************
  *

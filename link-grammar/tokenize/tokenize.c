@@ -2978,9 +2978,6 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		if ((word->morpheme_type != MT_INFRASTRUCTURE) &&
 		    (word->morpheme_type != MT_WALL))
 		{
-			/* !test=wg or !test=wg:flags (for flags see wordgraph.h) */
-			if (test_enabled("wg"))
-				wordgraph_show(sent, test_enabled("wg"));
 			return true;
 		}
 	}

@@ -53,6 +53,7 @@ static struct
 	int display_disjuncts;
 	int display_senses;
 	int display_morphology;
+	int display_wordgraph;
 } local, local_saved;
 
 static const char *value_type[] =
@@ -96,13 +97,14 @@ Switch default_switches[] =
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
 	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-	{"debug",      String, "comma-separated function list to debug", &local.debug},
-	{"test",       String, "comma-separated features to test", &local.test},
+	{"debug",      String, "Comma-separated function names to debug", &local.debug},
+	{"test",       String, "Comma-separated test features", &local.test},
 #ifdef USE_VITERBI
 	{"viterbi",    Bool, "Use Viterbi-based parser",        &local.use_viterbi},
 #endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
+	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
@@ -237,7 +239,10 @@ static const char *switch_value_string(const Switch *as)
 			snprintf(buf, sizeof(buf), "%d", ival(*as));
 			break;
 		case String:
-			snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
+			if ((NULL == *(char **)as->ptr) || ('\0' == **(char **)as->ptr))
+				strcpy(buf, "    (not set)");
+			else
+				snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
 			break;
 		case Cmd:
 			buf[0] = '\0'; /* No value to print. */
@@ -856,6 +861,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_postscript = copts->display_postscript;
 	local.display_ps_header = copts->display_ps_header;
 	local.display_constituents = copts->display_constituents;
+	local.display_wordgraph = copts->display_wordgraph;
 
 	local.display_bad = copts->display_bad;
 	local.display_disjuncts = copts->display_disjuncts;
@@ -897,6 +903,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_postscript = local.display_postscript;
 	copts->display_ps_header = local.display_ps_header;
 	copts->display_constituents = local.display_constituents;
+	copts->display_wordgraph = local.display_wordgraph;
 
 	copts->display_bad = local.display_bad;
 	copts->display_disjuncts = local.display_disjuncts;
@@ -954,6 +961,7 @@ Command_Options* command_options_create(void)
 	co->display_disjuncts = false;
 	co->display_links = false;
 	co->display_senses = false;
+	co->display_wordgraph = 0;
 	return co;
 }
 

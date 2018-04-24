@@ -73,6 +73,7 @@ sentence_num_linkages_post_processed
 sentence_num_violations
 sentence_disjunct_cost
 sentence_link_cost
+sentence_display_wordgraph
 linkage_create
 linkage_delete
 linkage_get_num_words

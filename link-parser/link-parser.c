@@ -829,6 +829,32 @@ int main(int argc, char * argv[])
 				sent = NULL;
 				continue;
 			}
+
+			if (0 != copts->display_wordgraph)
+			{
+				const char *wg_display_flags = ""; /* default flags */
+				switch (copts->display_wordgraph)
+				{
+					case 1:     /* default flags */
+						break;
+					case 2:     /* subgraphs with a legend */
+						wg_display_flags = "sl";
+						break;
+					case 3:
+						{
+							/* Use esoteric flags from the test user variable. */
+							const char wg[] = ",wg";
+							const char *s = strstr(test, wg);
+							if (NULL != s) wg_display_flags = s+2;
+						}
+						break;
+					default:
+						prt_error("Warning: wordgraph=%d: Unknown value, using 1\n",
+						          copts->display_wordgraph);
+						copts->display_wordgraph = 1;
+				}
+				sentence_display_wordgraph(sent, wg_display_flags);
+			}
 #if 0
 			/* Try again, this time omitting the requirement for
 			 * definite articles, etc. This should allow for the parsing

@@ -1,3 +1,11 @@
+Version 5.5.0 - Official wordgraph support
+==========================================
+
+As of version 5.5.0, the default configuration includes the word-graph
+display. A new API function
+`bool sentence_display_wordgraph(Sentence sent, const char *modestr);`
+has been added, and `link-parser` can use it (controlled by the
+`!wordgraph` user variable).
 
 Version 5.3.0 - Introduction of a word-graph for tokenizing
 ===========================================================

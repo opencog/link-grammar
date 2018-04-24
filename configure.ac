@@ -406,7 +406,7 @@ AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
 AC_ARG_ENABLE( wordgraph_display,
   [  --enable-wordgraph-display       enable graphical display of the Wordgraph],
   [],
-  [enable_wordgraph_display=no]
+  [enable_wordgraph_display=yes]
 )
 if test "x$enable_wordgraph_display" = "xyes"
 then

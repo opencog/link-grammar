@@ -20,8 +20,6 @@
  * start. See issue_sentence_word. */
 #define IS_SENTENCE_WORD(sent, gword) (gword->unsplit_word == sent->wordgraph)
 
-void wordgraph_show(Sentence, const char *);
-
 Gword *gword_new(Sentence, const char *);
 Gword *empty_word(void); /* FIXME: Remove it. */
 size_t gwordlist_len(const Gword **);
