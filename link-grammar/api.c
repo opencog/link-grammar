@@ -450,7 +450,16 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent->dict = dict;
 	sent->string_set = string_set_create();
-	sent->rand_state = global_rand_state;
+
+	if (0 == global_rand_state)
+	{
+		sent->rand_state = 0;
+	}
+	else
+	{
+		sent->rand_state = (unsigned int)current_usage_time()*1000000;
+	}
+
 	sent->disjuncts_connectors_memblock = NULL;
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
