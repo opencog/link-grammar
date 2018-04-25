@@ -17,9 +17,8 @@
 #include <wchar.h>
 #include <wctype.h>
 
-#include "parser-utilities.h"
 #include "command-line.h"
-#include <link-grammar/link-includes.h>
+#include "parser-utilities.h"
 
 static struct
 {
