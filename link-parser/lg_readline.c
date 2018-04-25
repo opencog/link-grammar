@@ -64,7 +64,7 @@ static char *complete_command(const wchar_t *input, size_t len, bool is_help)
 
 	if ((1 < len) && L'=' == input[len-1] && !is_help)
 	{
-		/* This is a variable assinment without a value.
+		/* This is a variable assignment without a value.
 		 * Arrange for displaying an help line (only - no completion). */
 		is_assignment = true;
 		len--; /* disregard the ending '=' to enable command search. */

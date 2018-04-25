@@ -563,7 +563,7 @@ static int help_cmd(const Switch *uc, int n)
 	}
 
 	printf("\n");
-	printf(" !!<string>      Print all the dictionary words that matches <string>.\n");
+	printf(" !!<string>      Print all the dictionary words that match <string>.\n");
 	printf("                 A wildcard * may be used to find multiple matches.\n");
 	printf("\n");
 	printf(" !<var>          Toggle the specified Boolean variable.\n");
