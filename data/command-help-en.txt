@@ -168,7 +168,7 @@ cost.
 
 [batch]
 When True, the program process sentences in batch-mode, in which null-links
-are not allowed (as if the !null=False got issued).
+are not allowed (as if !null=False got issued).
 
 It is normally used with:
 link-parser [dictionary name] [arguments] < input-file
@@ -186,8 +186,8 @@ processing a batch file, the parser will then print the number of errors in the
 file: i.e., the number of sentences on which its judgments differ with the
 judgments indicated by the symbols.
 
-Our github directory contains several large batch-files; For English, the three
-most important ones are "corpus-basic.batch", "corpus-fixes.batch" and
+Our GitHub repository contains several large batch-files; For English, the
+three most important ones are "corpus-basic.batch", "corpus-fixes.batch" and
 "corpus-fix-long.batch".
 See: https://github.com/opencog/link-grammar/tree/master/data/en
 
@@ -223,7 +223,7 @@ press RETURN after each one:
 !test=auto-next-linkages
 
 For more details, see debug/README.md and link-grammar/README.md
-in the LG library source code directory.
+in our GitHub repository https://github.com/opencog/link-grammar .
 
 [file]
 This command gets as an argument a file name to run in batch-mode.
@@ -244,10 +244,12 @@ Its value may be:
  0      Disabled
  1      Default display
  2      Display parent tokens as subgraphs
- 3      Use esoteric display flags as appear in !test=wg:FLAGS
+ 3      Use esoteric display flags as set by !test=wg:FLAGS
 
-% Below, unsplit-word means a token before getting split.
+% FLAGS documentation:
 % These flags are defined in wordgraph.h.
+% Below, unsplit-word means a token before getting split.
+% (*) marks the flags that are enabled for the default display.
 %
 % c                 Compact display
 % d             (*) Display debug labels
