@@ -9,6 +9,7 @@ Version 5.5.0 (XXX 2018)
  * Add a per-command help in link-parser.
  * Add a command line completion in link-parser.
  * Default configuration word-graph support + API + link-parser user variable.
+ * Add idiom lookup in link-parser's dict lookup command (!!idiom_here).
 
 Version 5.4.4 (11 March 2018)
  * Dictionary loading now thread safe.

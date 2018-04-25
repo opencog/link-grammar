@@ -1119,10 +1119,10 @@ lengths.
 Consider an argument between a professor and a dean, and the dean
 wants the professor to write a brilliant review. At the end of the
 argument, the dean exclaims: "I want the review brilliant!"  This
-is a predicative adjective; clearly it means "I want the reveiw
+is a predicative adjective; clearly it means "I want the review
 [that you write to be] brilliant."  However, taken out of context,
 such a construction is ungrammatical, as the predicativeness is not
-at all apparant, and it reads just as incorrectly as would
+at all apparent, and it reads just as incorrectly as would
 "*Hey Joe, can you hand me that review brilliant?"
 
 ### Imperatives:
@@ -1203,7 +1203,7 @@ factored results: i.e. the four plausible parses for the first half,
 and the four plausible parses for the last half.  This would ease
 the burden on downstream users of link-grammar.
 
-This approach has at psychological supprt. Humans take long sentences
+This approach has at psychological support. Humans take long sentences
 and split them into smaller chunks that "hang together" as phrase-
 structures, viz compounded sentences. The most likely parse is the
 one where each of the quasi sub-sentences is parsed correctly.
@@ -1214,7 +1214,7 @@ arrives, use that context in place of the left-wall.
 
 This somewhat resembles the application of construction grammar
 ideas to the link-grammar dictionary. It also somewhat resembles
-Viterbi parsing to some fixed depth. Viz. do a full backward-foreward
+Viterbi parsing to some fixed depth. Viz. do a full backward-forward
 parse for a phrase, and then, once this is done, take a Viterbi-step.
 That is, once the phrase is done, keep only the dangling connectors
 to the phrase, place a wall, and then step to the next part of the

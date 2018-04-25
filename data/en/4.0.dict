@@ -308,9 +308,9 @@ nonCAP.zzz: ZZZ-;
 %
 % We do NOT tag these with <marker-entity>, a this messes up first-word
 % processing in tokenize.c.  So for example, we do *not* want "There"
-% in "There they are" tagged as an entity, just because its capitalized.
+% in "There they are" tagged as an entity, just because it's capitalized.
 % We really do want to force the lower-case usage, because the lower case
-% is in the dict, and its the right word to use. (The only entities that
+% is in the dict, and it's the right word to use. (The only entities that
 % should be tagged as such are those that are in the dicts, in their
 % capitalized form, e.g. "Sue.f" female given name as opposed to "sue.v"
 % verb in the sentence "Sue went to the store.")
@@ -566,7 +566,7 @@ HYPHENATED-WORDS.n:
 %
 % ({NMa+} & AN+): He takes vitamin D supplements.
 %
-% XXX TODO fixme: there are many gerund-like nouns in here (e.g. "reading")
+% XXX TODO FIXME: there are many gerund-like nouns in here (e.g. "reading")
 % which screw things up when linking to "be" (e.g. "I have to be reading now")
 % by appearing as objects (O-) connector when really the verb form (Pg-)
 % is what should be happening. So rip these words out... (similar remarks for
@@ -1712,7 +1712,7 @@ the_most:
   or MVa-;
 
 % "a part.n" should cover most cases.  Perhaps [[OF+ & <noun-main-s>]] should be
-% removed??  Anyway, its costed to give OFd+ priority. Likewise, should probably
+% removed??  Anyway, it's costed to give OFd+ priority. Likewise, should probably
 % retire <adv-of> as well, right?
 part.i:
   (OFd+ & Dm+)
@@ -8730,7 +8730,7 @@ at toward towards without w/o.p:
    or [MVp- & B-];
 
 %
-% XXX fixme: MVp- & J+ is wrong: "*I saw John except Fred"
+% XXX FIXME: MVp- & J+ is wrong: "*I saw John except Fred"
 % XXX (The MVp- coming from prep-main-a)
 % So give J+ a cost, to minimize this, for now ...
 % Could this be fixable in postprocessing?
@@ -10058,7 +10058,7 @@ and.j-r or.j-r:
 %
 % and_not ,_not: "I saw John, not Mary"
 % We treat this here as an idiom, even though it's explicitly handled for
-% AJ nd RJ conjunctions.  Kind-of wrong, its just easier, for now.
+% AJ nd RJ conjunctions.  Kind-of wrong, it's just easier, for now.
 %
 % {Jd- & Dm-}: "A number of recommendations and suggestions were made"
 %   with "number of" modifying the and.j-n
@@ -10112,7 +10112,7 @@ or.j-n:
 
 % XJn- "neither this nor that"
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
-%     a cost only because its a kind of a strange construction ...
+%     a cost only because it's a kind of a strange construction ...
 % SJl- & SJr+ & SJl+: cascading nor's: "Neither snow nor rain nor heat..."
 % SI- can be singular or plural: for example:
 % "There is neither a dog nor a cat here"
@@ -10412,7 +10412,7 @@ tawny.a ultramarine.a umber.a yellow.a:
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]]));
 
-% "We caught a through flight", "its a done job" - adjective -- !?
+% "We caught a through flight", "it's a done job" - adjective -- !?
 % probably over-broad.
 done.c gone.c through.c:
   <adj-stuff>
@@ -11595,9 +11595,9 @@ occasionally.e often.e originally.e:
     or [[{PH-} & EA+]]))
   or (EEh- & {Qe+});
 
-% XXX fixme: there are things in there, like "tall.e" that seem not to
+% XXX FIXME: there are things in there, like "tall.e" that seem not to
 % belong??
-% XXX fixme: the Qe construction is weird:
+% XXX FIXME: the Qe construction is weird:
 %    "How slickly did he talk?"
 %    "*How slickly did you say it was?"
 /en/words/words.adv.1: <ordinary-adv>;
@@ -11691,7 +11691,7 @@ usually typically perhaps:
 % MX*tn- & O+: scilicet nouns
 % MX*ta- & P+: scilicet adjectives
 % MVx- & P+: to verbs "While walking [scilicet in the evening] ..."
-% Some of these sc. constructions should forecefully require a comma.
+% Some of these sc. constructions should forcefully require a comma.
 in_fact of_course in_effect for_example for_instance
 e.g. eg. i.e. ie. id_est
 sc sc. scilicet viz.r viz..r videlicet
@@ -11814,7 +11814,7 @@ anyways honey.ij man.ij baby.ij hush.ij:
   or (({A-} or {E-} or {EE-}) & Wa-);
 
 % A single plain hello all by itself.  Costly, because these days,
-% its not normally a sentence opener.
+% it's not normally a sentence opener.
 % Vv-:  "I said, hello!"
 % Ds- & Jv-: "He greeted me with a loud hello"
 % Perhaps these should also appear as nouns? hello.n does ...
