@@ -10192,8 +10192,10 @@ rather_then.#rather_than: rather_than;
 there.#their: [their.p]0.65;
 % theres.#theirs: [theirs.p]0.65;
 
+% The apostrophes prevent the dictionary from being read in.
 % there.#they're: [they're]0.65;
 % all.#all_of: [all_of]0.65;
+% its.#it's: [it's]0.65;
 
 % Using "or" instead of "nor" is a common mistake.
 % "Neither this or that one will do"
