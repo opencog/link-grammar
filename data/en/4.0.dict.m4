@@ -351,13 +351,13 @@ nonCAP.zzz: ZZZ-;
 % sentence). However, the other regex matches (e.g. MC-NOUN-WORDS)
 % should have a cost that is even higher (so that we take the
 % capitalized version before we take any other matches.)
-CAPITALIZED-WORDS: [<entity-singular>]0.06;
+<CAPITALIZED-WORDS>: [<entity-singular>]0.06;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:
 % e.g. Cornwallis ... and some of these can take a singular determiner:
 % "a Starbucks"
-PL-CAPITALIZED-WORDS:
+<PL-CAPITALIZED-WORDS>:
   ({NM+} & {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] or ({@A-} & Jd- & Dmc-) } &
         ([<noun-sub-x> & (JG- or <noun-main-x>)]
@@ -449,7 +449,7 @@ An.f In.f So.f: [[<given-names>]];
     or Us-
 	 or ({D*u-} & Wa-));
 
-GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
+<GREEK-LETTER-AND-NUMBER> pH.i x.n: <noun-mass-count>;
 
 % Same as pattern used in words.n.4 -- mass nouns or countable nouns
 <generic-singular-id>: <noun-mass-count>;
@@ -641,7 +641,7 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.2.s :
   <marker-common-entity> or <generic-plural-id>;
 
-PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
+<PL-GREEK-LETTER-AND-NUMBER>: <generic-plural-id>;
 
 % plural nouns not ending in "s"
 % almost exactly identical to <generic-plural-id> except that there is
@@ -10275,7 +10275,7 @@ ADJ-WORDS.a:
   [<ordinary-adj> or <adj-phone>]0.1;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
-FOLD-WORDS:
+<FOLD-WORDS>:
   [({EN-} & (MVp- or EC+ or A+)) or Em+]0.1;
 
 % latin (postposed) adjectives considered as mass nouns

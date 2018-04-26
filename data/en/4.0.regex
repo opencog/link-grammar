@@ -70,8 +70,8 @@
 <ALL-UPPER>: /^[A-Z]([A-Z])+$/
 
 % Greek letters with numbers
-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
-PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
+<GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
+<PL-GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
 
 % Some "safe" derived units. Simple units are in dictionary.
 % The idea here is for the regex to match something that is almost
@@ -120,12 +120,12 @@ PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iot
 % spelled-out numbers, anything is allowed between the "initial" number
 % and "fold" to catch e.g. "two-to-three fold" ("fourteen" etc. are absent
 % as the prefix "four" is sufficient to match).
-FOLD-WORDS: /^[0-9.,:-]*[0-9]([0-9.,:-]|\([0-9.,:-]*[0-9][0-9.,:-]*\)|\+\/-)*-?fold$/
-FOLD-WORDS: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|fifty|hundred|thousand|million).*fold$/
+<FOLD-WORDS>: /^[0-9.,:-]*[0-9]([0-9.,:-]|\([0-9.,:-]*[0-9][0-9.,:-]*\)|\+\/-)*-?fold$/
+<FOLD-WORDS>: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|fifty|hundred|thousand|million).*fold$/
 
 % Plural proper nouns.
 % Make sure that apostrophe-s is split out correctly.
-PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
+<PL-CAPITALIZED-WORDS>:  /^[[:upper:]].*[^iuoys'’]s$/
 
 % Other proper nouns.
 % We demand that these end with an alphanumeric, i.e. explicitly
@@ -133,7 +133,7 @@ PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
 % commas, colons, or periods/question-marks at the end of sentences.
 % In addition, this must not swallow words ending in 's 'll etc.
 % (... any affix, for that matter ...) and so no embedded apostrophe
-CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
+<CAPITALIZED-WORDS>:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 
 % SUFFIX GUESSING
 % For all suffix-guessing patterns, we insist that the pattern start
