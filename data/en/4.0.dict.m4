@@ -551,7 +551,7 @@ USMC.y USN.y:
 % The generic category for strings containing a hyphen
 <PART-NUMBER>.n
 <ALL-UPPER>.n
-HYPHENATED-WORDS.n:
+<HYPHENATED-WORDS>.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &
       ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>))
@@ -8298,7 +8298,7 @@ frank.a:
 % An older formulation of this used Ah- as the link, but I don't see
 % why.  Generic adjective should be OK. Given a cost of 0.04, so
 % as to give a slight preference for the noun-form, if possible.
-HYPHENATED-WORDS.a:
+<HYPHENATED-WORDS>.a:
   [<ordinary-adj> or <adj-phone>]0.04;
 
 % Color names. Just like ordinary adjectives, except that the
@@ -10216,7 +10216,7 @@ tonite.#tonight: [tonight]0.05;
 % ING-WORDS.g: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 % or <verb-adj> or <verb-ge>;
 
-ING-WORDS.g:
+<ING-WORDS>.g:
   [[(<verb-pg> & <vc-tr,intr>)] or
   [(<vc-tr,intr> & <verb-ge>)] or
   [({@E- or EA-}  & A+)] or
@@ -10230,13 +10230,13 @@ ING-WORDS.g:
   AN+ or
   {AN-})]0.1;
 
-ED-WORDS.v-d:
+<ED-WORDS>.v-d:
   [ VERB_SPPP_T(`<vc-tr,intr>')
     or <verb-pv> or <verb-adj>]0.1;
 
-S-WORDS.v: [ VERB_S_T(`<vc-tr,intr>') ]0.1;
+<S-WORDS>.v: [ VERB_S_T(`<vc-tr,intr>') ]0.1;
 
-S-WORDS.n:
+<S-WORDS>.n:
   [(<noun-modifiers> &
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
@@ -10245,7 +10245,7 @@ S-WORDS.n:
     Up-)) or
   [[AN+]]]0.1;
 
-LY-WORDS.e:
+<LY-WORDS>.e:
   [{EE- or EF+} & (
     ({Xd- & Xc+} & MVa-)
     or Em+
@@ -10271,7 +10271,7 @@ C-NOUN-WORDS.n:
   [<common-noun>]0.1;
 
 % guessed adjectives (-ous, -ar, -ic)
-ADJ-WORDS.a:
+<ADJ-WORDS>.a:
   [<ordinary-adj> or <adj-phone>]0.1;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
@@ -10280,19 +10280,19 @@ ADJ-WORDS.a:
 
 % latin (postposed) adjectives considered as mass nouns
 % in the current version (is this right???)
-LATIN-ADJ-WORDS.a:
+<LATIN-ADJ-WORDS>.a:
   [<noun-mass-count>]0.1;
 
 % latin (postposed) adjectives or latin plural noun
 % always considered as nouns in the current version
 % XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
-LATIN-ADJ-P-NOUN-WORDS:
+<LATIN-ADJ-P-NOUN-WORDS>:
   [<generic-plural-id>]0.1;
 
 % latin (postposed) adjectives or latin singular noun
 % always considered as nouns in the current version
 % XXX this is <common-noun> with weird plural-like stuff ?? is this right?
-LATIN-ADJ-S-NOUN-WORDS:
+<LATIN-ADJ-S-NOUN-WORDS>:
   [<noun-modifiers> &
    (AN+
    or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>))
@@ -10304,7 +10304,7 @@ LATIN-ADJ-S-NOUN-WORDS:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
-UNKNOWN-WORD.n:
+<UNKNOWN-WORD>.n:
   <noun-modifiers> &
     (AN+
     or ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or <rel-clause-x>))
@@ -10314,12 +10314,12 @@ UNKNOWN-WORD.n:
     or (GN+ & (DD- or [()]))
     or U-);
 
-UNKNOWN-WORD.v:
+<UNKNOWN-WORD>.v:
   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is prefered, when
 % available.
-UNKNOWN-WORD.a: [<ordinary-adj> or <adj-phone>]0.04;
+<UNKNOWN-WORD>.a: [<ordinary-adj> or <adj-phone>]0.04;
 
 % These are the link-types that are not subject to the length limit.
 % Always use "+" for these.  Some of these are obvious. Some deserve

@@ -143,20 +143,20 @@
 % Fred followed."  Since "(carrying" is not in the dict, we need to be
 % sure to not match the leading paren so that it will get tripped.
 %
-ING-WORDS:        /^\w.+ing$/
+<ING-WORDS>:        /^\w.+ing$/
 
 % Plurals or verb-s. Make sure that apostrophe-s is split out correctly.
 % e.g. "The subject's name is John Doe."  should be
 %     +--Ds--+---YS--+--Ds-+
 %     |      |       |     |
 %    the subject.n 's.p name.n 
-S-WORDS:          /^\w.+[^iuoys'’]s$/
+<S-WORDS>:          /^\w.+[^iuoys'’]s$/
 
 % Verbs ending -ed.
-ED-WORDS:         /^\w.+ed$/
+<ED-WORDS>:         /^\w.+ed$/
 
 % Advebs ending -ly.
-LY-WORDS:         /^\w.+ly$/
+<LY-WORDS>:         /^\w.+ly$/
 
 % Nouns ending in -ism, -asm (chiliasm .. ) Usually mass nouns
 % Stubbed out for now; I'm not convinced this improves accuracy.
@@ -168,8 +168,8 @@ LY-WORDS:         /^\w.+ly$/
 % AST-WORDS:        /^\w.+ist$/
 
 % Corresponding adjectival form of above
-ADJ-WORDS: /^\w.+astic$/
-ADJ-WORDS: /^\w.+istic$/
+<ADJ-WORDS>: /^\w.+astic$/
+<ADJ-WORDS>: /^\w.+istic$/
 
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /^\w.+ation$/
@@ -209,24 +209,24 @@ C-NOUN-WORDS: /^\w.+o[rn]$/
 % ribosomal, ribsosomal
 % nonpermissive, thermosensitive
 % inducible, metastable
-ADJ-WORDS: /^\w.+ous$/
-ADJ-WORDS: /^\w.+ar$/
-ADJ-WORDS: /^\w.+ic$/
-ADJ-WORDS: /^\w.+al$/
-ADJ-WORDS: /^\w.+ive$/
-ADJ-WORDS: /^\w.+ble$/
+<ADJ-WORDS>: /^\w.+ous$/
+<ADJ-WORDS>: /^\w.+ar$/
+<ADJ-WORDS>: /^\w.+ic$/
+<ADJ-WORDS>: /^\w.+al$/
+<ADJ-WORDS>: /^\w.+ive$/
+<ADJ-WORDS>: /^\w.+ble$/
 
 % latin (postposed) adjectives
 % influenzae, tarentolae
 % pentosaceus, luteus, carnosus
-LATIN-ADJ-WORDS: /^\w.+ae$/
-LATIN-ADJ-WORDS: /^\w.+us$/ % must appear after -ous in this file
+<LATIN-ADJ-WORDS>: /^\w.+ae$/
+<LATIN-ADJ-WORDS>: /^\w.+us$/ % must appear after -ous in this file
 
 % latin (postposed) adjectives  or latin plural noun
 % brevis, israelensis
 % japonicum, tabacum, xylinum
-LATIN-ADJ-P-NOUN-WORDS: /^\w.+is?$/
-LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
+<LATIN-ADJ-P-NOUN-WORDS>: /^\w.+is?$/
+<LATIN-ADJ-S-NOUN-WORDS>: /^\w.+um$/
 
 
 % Hyphenated words. In the original LG morpho-guessing system that
@@ -240,8 +240,8 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 % But something is funky about this 5'-3' business since 2' also matches ???
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
-HYPHENATED-WORDS: !/--/
-HYPHENATED-WORDS:
+<HYPHENATED-WORDS>: !/--/
+<HYPHENATED-WORDS>:
   /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
 
 % Emoticon checks must come *after* the above, so that the above take precedence.
@@ -283,4 +283,4 @@ HYPHENATED-WORDS:
 % tokenizer explicitly mangles based on these punctuation marks.
 % 
 % Look for at least four in a row.
-UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
+<UNKNOWN-WORD>: /^[.,-]{4}[.,-]*$/
