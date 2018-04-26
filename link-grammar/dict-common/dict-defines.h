@@ -18,7 +18,7 @@
 #define LEFT_WALL_WORD   ("LEFT-WALL")
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
 
-#define UNKNOWN_WORD "UNKNOWN-WORD"
+#define UNKNOWN_WORD "<UNKNOWN-WORD>"
 
 /*      Some size definitions.  Reduce these for small machines */
 /* MAX_WORD is large, because Unicode entries can use a lot of space */
