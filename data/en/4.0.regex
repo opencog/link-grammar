@@ -55,19 +55,19 @@
 % The first expr has the problem that it matches an empty string.  The
 % cure for this is to use look-ahead, but neither the Gnu nor the BSD
 % regex libs support look-ahead. I can't think of a better solution.
-ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
+<ROMAN-NUMERAL-WORDS>: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=(M|C|D|L|X|V|I)+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=.+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 
 % Strings of initials. e.g "Dr. J.G.D. Smith lives on Main St."
 % Make it at least two letters long, as otherwise it clobbers
 % single-letter handling in the dict, which is different.
-INITIALS: /^[A-Z]\.([A-Z]\.)+$/
+<INITIALS>: /^[A-Z]\.([A-Z]\.)+$/
 
 % Strings of two or more upper-case letters. These might be initials,
 % but are more likely to be titles (e.g. MD LLD JD) and might also
 % be part numbers (see below, PART-NUMBER:)
-ALL-UPPER: /^[A-Z]([A-Z])+$/
+<ALL-UPPER>: /^[A-Z]([A-Z])+$/
 
 % Greek letters with numbers
 GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
@@ -260,8 +260,8 @@ HYPHENATED-WORDS:
 %
 % EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 % EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
-EMOTICON: !/^"|[[:alnum:]]+"$/
-EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+<EMOTICON>: !/^"|[[:alnum:]]+"$/
+<EMOTICON>: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 
 % Part numbers should not match words with punctuation at their end.
 % Else sentences like "I saw him on January 21, 1990" have problems.
@@ -273,7 +273,7 @@ EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdD
 % separate_word() will generate an alternative anyway.
 % The second part of this regex is for NNN-NNN in sentences like
 % "The plane is a 747-400".  However, such words currently match NUMBERS.
-PART-NUMBER:
+<PART-NUMBER>:
   /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9+]$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table

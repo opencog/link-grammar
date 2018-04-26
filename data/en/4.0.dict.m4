@@ -334,7 +334,7 @@ nonCAP.zzz: ZZZ-;
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-INITIALS ALL-UPPER <entity-singular>:
+<INITIALS> <ALL-UPPER> <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
         ((<noun-sub-s> & (JG- or <noun-main-s>))
@@ -524,7 +524,7 @@ et_al et_al. :
 % The generic case of strings of all-uppercase are handled
 % by the regexes ALL-UPPER and INITIALS. The below are mixed-case
 % or other very common degrees.
-ALL-UPPER.y INITIALS.y
+<ALL-UPPER>.y <INITIALS>.y
 Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
 AB.y A.B..y AIA.y A.I.A..y
 BA.y B.A..y BFA.y B.F.A..y BS.y B.S..y BSc.y B.Sc..y
@@ -549,8 +549,8 @@ USMC.y USN.y:
     G+);
 
 % The generic category for strings containing a hyphen
-PART-NUMBER.n
-ALL-UPPER.n
+<PART-NUMBER>.n
+<ALL-UPPER>.n
 HYPHENATED-WORDS.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &
@@ -1973,13 +1973,13 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
-ROMAN-NUMERAL-WORDS.rn:
+<ROMAN-NUMERAL-WORDS>.rn:
   NMr-
   or ((Wd- or NMr-) & NIa+);
 
 % nouns that look like roman numerals. Limited requirements to avoid
 % excessive ambiguity.
-ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
+<ROMAN-NUMERAL-WORDS>.n: {@MX+} & (<noun-main-s>);
 
 % NMa-: Allow post-posed letter modifiers: e.g. "Vitamin A"
 % Wd- & NIa+: Allow numbered, bulleted lists: "B: Press button firmly"
@@ -9886,7 +9886,7 @@ so_on the_like vice_versa v.v.:
   M- or MV-;
 
 % Emoticons ... at start or end of sentences ...
-EMOTICON :
+<EMOTICON> :
   CO+
   or (Wd- & NIa+)
   or Wa-
