@@ -342,7 +342,7 @@ INITIALS ALL-UPPER <entity-singular>:
 % sentence). However, the other regex matches (e.g. MC-NOUN-WORDS)
 % should have a cost that is even higher (so that we take the
 % capitalized version before we take any other matches.)
-CAPITALIZED-WORDS: [<entity-singular>]0.06;
+CAPITALIZED-WORDS WORD-IN-GTLT: [<entity-singular>]0.06;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:
