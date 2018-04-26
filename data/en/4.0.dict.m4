@@ -1124,7 +1124,7 @@ incentive.n panache.n balls.n-u cojones.n-u:
   <noun-to>;
 
 % Regex-based guessing of unknown words, ending in -ity -acy -ance
-NOUN-TO-WORDS.n:
+<NOUN-TO-WORDS>.n:
   <noun-to>;
 
 % Nouns formerly classified as mass nouns (words.n.3) but can take "to"
@@ -10263,11 +10263,11 @@ tonite.#tonight: [tonight]0.05;
 
 % guessed nouns that can be mass or countable
 % (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
-MC-NOUN-WORDS.n:
+<MC-NOUN-WORDS>.n:
   [<noun-mass-count>]0.1;
 
 % guessed nouns that are singular countable (-on, -or)
-C-NOUN-WORDS.n:
+<C-NOUN-WORDS>.n:
   [<common-noun>]0.1;
 
 % guessed adjectives (-ous, -ar, -ic)
