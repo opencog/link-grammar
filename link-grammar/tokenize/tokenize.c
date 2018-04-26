@@ -3111,18 +3111,28 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	{
 		we = build_word_expressions(sent, w, w->regex_name);
 	}
-	else if (dict->unknown_word_defined && dict->use_unknown_word)
-	{
-		we = build_word_expressions(sent, w, UNKNOWN_WORD);
-		assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-		w->status |= WS_UNKNOWN;
-	}
 	else
 	{
-		/* The word is unknown, but UNKNOWN_WORD cannot be used.
-		 * An error message will eventually be printed. */
-		prt_error("Error: Word '%s': word is unknown\n", w->subword);
-		return false;
+#ifdef DEBUG
+		if (boolean_dictionary_lookup(dict, w->subword))
+		{
+			prt_error("Error: Word '%s': Internal error: Known word is unknown\n",
+			          w->subword);
+		}
+#endif /* DEBUG */
+		if (dict->unknown_word_defined && dict->use_unknown_word)
+		{
+			we = build_word_expressions(sent, w, UNKNOWN_WORD);
+			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+			w->status |= WS_UNKNOWN;
+		}
+		else
+		{
+			/* The word is unknown, but UNKNOWN_WORD cannot be used.
+			 * An error message will eventually be printed. */
+			prt_error("Error: Word '%s': word is unknown\n", w->subword);
+			return false;
+		}
 	}
 
 #ifdef DEBUG
