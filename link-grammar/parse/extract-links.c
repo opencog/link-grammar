@@ -716,7 +716,10 @@ void extract_links(extractor_t * pex, Linkage lkg)
 		if (0 == pex->rand_state) repeatable = true;
 		if (repeatable) pex->rand_state = index;
 		list_random_links(lkg, pex, pex->parse_set);
-		if (repeatable) pex->rand_state = 0;
+		if (repeatable)
+			pex->rand_state = 0;
+		else
+			lkg->sent->rand_state = pex->rand_state;
 	}
 	else {
 		list_links(lkg, pex->parse_set, index);
