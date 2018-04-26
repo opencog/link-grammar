@@ -213,7 +213,7 @@ nonCAP.zzz: ZZZ-;
 % [@AN-].1: add a tiny cost so that A- is preferred to AN- when there
 % is a choice. The is because some nouns are also listed as adjectives,
 % and we want to use the adjective version A- link in such cases.
-% [@AN- & @A-] has cost so that G links are prefered.
+% [@AN- & @A-] has cost so that G links are preferred.
 % {[@AN-].1} & {@A- & {[[@AN-]]}};
 <noun-modifiers>:
   (@A- & {[[@AN-]]})
@@ -721,7 +721,7 @@ tom.n-u: [<marker-common-entity> or <mass-noun>];
 % allow these to take AN+ links (we want to have red.a get used instead).
 % But we do need these as nouns, so as to parse 'she prefers red'.
 % However, assign a cost, so that 'her shoes are red' gets red.a (with
-% the Pa link) perfered over red.n (with the O link).
+% the Pa link) preferred over red.n (with the O link).
 %
 % Doesn't seem to need a noun-and-x to make this work ...
 % In other respects, these are kind-of-like mass nouns...
@@ -875,20 +875,20 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or ({Ds**c-} & <noun-and-s>)
     or Us-));
 
-% This gets a cost, so that the {Jd-} link for measures.1 is prefered.
+% This gets a cost, so that the {Jd-} link for measures.1 is preferred.
 kind_of:
   [<kind-of>]
   or EA+
   or EE+
   or Wa-;
 
-% This gets a cost, so that the {Jd-} link for measures.1 is prefered.
+% This gets a cost, so that the {Jd-} link for measures.1 is preferred.
 type_of sort_of breed_of species_of:
   [<kind-of>]
   or [Us-]
   or [Wa-];
 
-% This gets a cost, so that the {Jd-} link for measures.2 is prefered.
+% This gets a cost, so that the {Jd-} link for measures.2 is preferred.
 kinds_of types_of sorts_of breeds_of species_of:
   [{{@AN-} & @A-} & U+ &
     (({Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
@@ -2009,7 +2009,7 @@ O. P. Q. R. S. T. U. V. W. X. Y. Z. :
 NUMBERS or TM- or [[G+]];
 
 % Ordinals - day-of-month expressions.
-% Used only in espressions such as "December 2nd"
+% Used only in expressions such as "December 2nd"
 % Must use regex here as well, to avoid conflict with other regexes
 first.ti second.ti third.ti fourth.ti fifth.ti sixth.ti seventh.ti eighth.ti
 ninth.ti tenth.ti eleventh.ti twelfth.ti thirteenth.ti fourteenth.ti fifteenth.ti
@@ -2359,7 +2359,7 @@ per "/.per": Us+ & Mp-;
 % Pv- & no wall: "John felt vindicated"
 % The problem here is that for passives (i.e. to-be), The Pv should get the wall
 % but in the other cases it should not. We could/should tighten this up by using
-% Pvp+ on to-be, using Pvv for the others, and demaninds the wall only for Pvp.
+% Pvp+ on to-be, using Pvv for the others, and demand the wall only for Pvp.
 % XXX FIXME, the above needs fixing.
 %
 % <verb-pp>: PP- & WV-: "I have seen it".
@@ -9363,7 +9363,7 @@ July August.i September.i October November December:
   or AN+
   or Wa-;
 
-% The naked ND- can occur with tiem intervals:
+% The naked ND- can occur with time intervals:
 % "I can't decide between 7:30AM and 9:30AM"
 % AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock:
 /en/words/units.5:
@@ -10161,7 +10161,7 @@ then.j-c: {Xd-} & XJc- & VJr+;
 % "This is a problem Moscow created and failed to solve."
 % [I-]0.2, [<verb-ico>]0.2: avoid I links to conjoined non-infinitives.
 % XXX This is hacky, we should just prevent such infinitive links from
-% occuring at all.
+% occurring at all.
 % {TO+}: "I aim to do something and to help."
 <verb-conjunction>:
   (({Xd-} & VJlsi- & VJrsi+) &
@@ -10261,7 +10261,7 @@ nor.r: ((Xd- & <coord>) or Wd-) & Qd+;
 for.r: [[(({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & <coord>) or Wc-) & (Wd+ or Wp+ or Wr+)) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
-% therefor is a common mis-spelling, unlikely the archic therefor ...
+% therefor is a common mis-spelling, unlikely the archaic therefor ...
 % <fronted>: "thus it would seem"
 thus therefore therefor:
   ((Xc+ & {Xd-}) & CO+) or
@@ -10357,13 +10357,13 @@ just_not: <COMP-OPENER>;
   <marker-common-entity> or
   <ordinary-adj> or <adj-consn>;
 
-% Make the given name Frank be prefered to 'frank.a'
+% Make the given name Frank be preferred to 'frank.a'
 % e.g. "Frank felt vindicated when his long time rival Bill revealed that
 % he was the winner of the competition."
 frank.a:
   [<marker-common-entity> or <ordinary-adj> or <adj-consn>]0.2;
 
-% Add a miniscule cost, so that the noun form is prefered...
+% Add a minuscule cost, so that the noun form is preferred...
 % An older formulation of this used Ah- as the link, but I don't see
 % why.  Generic adjective should be OK. Given a cost of 0.04, so
 % as to give a slight preference for the noun-form, if possible.
@@ -10914,8 +10914,8 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 %COMPARATIVES AND SUPERLATIVES
 
 % Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
-% Non-zero cost on Omm- so that EA+ is prefered.
-% Cost of >1.0 on Omm- so that MVm- is prefered for "He runs more".
+% Non-zero cost on Omm- so that EA+ is preferred.
+% Cost of >1.0 on Omm- so that MVm- is preferred for "He runs more".
 more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or AJrc- or AJlc+))
   or ({OF+} & (
@@ -10928,7 +10928,7 @@ more_of_a:  Ds*mc+ or (<PHc> & Ds*mx+);
 more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 
 % XXX TODO: shouldn't less be a lot more like 'more', above?
-% Cost of >1.0 on Om- so that MVm- is prefered for "He runs less".
+% Cost of >1.0 on Om- so that MVm- is preferred for "He runs less".
 less:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or AJrc- or AJlc+))
   or ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
@@ -11013,7 +11013,7 @@ than.e:
 
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
 % ({OFd+} & Dmu+): "I drank much of the beer"
-% cost on [[<noun-main-s>]] so that the above is prefered to an O- link
+% cost on [[<noun-main-s>]] so that the above is preferred to an O- link
 much:
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
@@ -11664,7 +11664,7 @@ similarly.e:
   or ({MVp+} & {Xc+ & {Xd-}} & CO+)
   or ({Xc+ & {Xd-}} & EBm-);
 
-not_suprisingly if_nothing_else:
+not_surprisingly if_nothing_else:
   E+
   or (Xd- & Xc+ & (E+ or MVa-))
   or ({Xc+ & {Xd-}} & CO+)
@@ -11968,7 +11968,7 @@ EMOTICON :
 % Xp+ is for new sentences. "Who is Obama? Where was he born?"
 % Xs+ is for dependent clauses starting with "so".
 %       "I stayed so I could see you."
-% XXX TODO: afer all WV's work, the WV link should no longer be optional...
+% XXX TODO: after all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
@@ -12093,7 +12093,7 @@ so_that such_that:
 %
 % Comma can conjoin nouns only if used in a list of 3 or more items:
 % "This, that and the other thing"
-% However, this is given a cost, so that geographic names are prefered:
+% However, this is given a cost, so that geographic names are preferred:
 % "He went to Gaeta, Italy, and to Paris, France."
 %
 % SJ: "I saw John, not Mary" is handled via idiomatic ,_not construction
@@ -12392,7 +12392,7 @@ UNKNOWN-WORD.n:
 UNKNOWN-WORD.v:
   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
 
-% Add a miniscule cost, so that the noun-form is prefered, when
+% Add a miniscule cost, so that the noun-form is preferred, when
 % available.
 UNKNOWN-WORD.a: [<ordinary-adj> or <adj-phone>]0.04;
 
