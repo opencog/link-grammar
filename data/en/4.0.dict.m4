@@ -1969,7 +1969,7 @@ NUMBERS FRACTION:
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
 % and should probably have a narrower set of parse patterns than numbers in
 % general.  e.g. should not have EQ links XXX todo -- fix this.
-HMS-TIME: NUMBERS & {TZ+};
+<HMS-TIME>: NUMBERS & {TZ+};
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
@@ -7464,7 +7464,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % km².u mi².u in².u ft².u m².u cm².u
 /en/words/units.1: <units-suffix>;
 /en/words/units.3: <units-suffix>;
-UNITS: <units-suffix>;
+<UNITS>: <units-suffix>;
 
 % Allows "200 sq. ft. of plywood", "200 cu yds of concrete"
 /en/words/units.a: A+;

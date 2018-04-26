@@ -23,7 +23,7 @@
 % 
 % Allows at most two colons in hour-minute-second HH:MM:SS expressions
 % Allows at most two digits between colons
-HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?$/
+<HMS-TIME>: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?$/
 
 % e.g. 1950's leading number can be higher, for science fiction.
 % Must be four digits, or possible three. Must end in s, 's ’s
@@ -92,16 +92,16 @@ PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iot
 % remember "mm"!
 
 % grams/anything
-UNITS: /^([npmk]|milli|micro|nano|pico|femto|atto|kilo|mega|tera)?(g|grams?)\//
+<UNITS>: /^([npmk]|milli|micro|nano|pico|femto|atto|kilo|mega|tera)?(g|grams?)\//
 
 % mol/anything
-UNITS: /^([fnmp]|milli|micro|nano|pico|femto|atto|mu)?mol(es)?\//
+<UNITS>: /^([fnmp]|milli|micro|nano|pico|femto|atto|mu)?mol(es)?\//
 
 % common endings
-UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)$/
+<UNITS>: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)$/
 
 % common endings, except in the style "mg.kg-1" instead of "mg/kg".
-UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
+<UNITS>: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
 
 % combinations of numbers and units, e.g. "50-kDa", "1-2h"
 % TODO: Clean up and check that these are up-to-date wrt the 
