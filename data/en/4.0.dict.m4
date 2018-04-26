@@ -1953,7 +1953,7 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
 % as effectively Dmcn and ND are the "same thing" more or less.
 %
 % ({ND+} & NIfn+) or (NItn- & {ND+}): "between 7:30AM and 9:30AM"
-NUMBERS FRACTION:
+<NUMBERS> <FRACTION>:
   NMn-
   or ({EN-} & (({ND+} & NIfn+) or (NItn- & {ND+})))
   or NN+
@@ -1969,7 +1969,7 @@ NUMBERS FRACTION:
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
 % and should probably have a narrower set of parse patterns than numbers in
 % general.  e.g. should not have EQ links XXX todo -- fix this.
-<HMS-TIME>: NUMBERS & {TZ+};
+<HMS-TIME>: <NUMBERS> & {TZ+};
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
@@ -2015,7 +2015,7 @@ O. P. Q. R. S. T. U. V. W. X. Y. Z. :
 % The following should match NUMBERS with the addition of "or TM-".
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28
 29 30 31:
-NUMBERS or TM- or [[G+]];
+<NUMBERS> or TM- or [[G+]];
 
 % Ordinals - day-of-month expressions.
 % Used only in espressions such as "December 2nd"
@@ -2056,7 +2056,7 @@ thirty-first.ti <DAY-ORDINALS>.ti: TM-;
 70 71 72 73 74 75 76 77 78 79
 80 81 82 83 84 85 86 87 88 89
 90 91 92 93 94 95 96 97 98 99:
-  NUMBERS or <date-id> or [[G+]];
+  <NUMBERS> or <date-id> or [[G+]];
 
 % the DECADE-DATE regex matches 1950s 1950's 1950’s etc.
 % A+: It's an old 50's love song
@@ -2069,7 +2069,7 @@ thirty-first.ti <DAY-ORDINALS>.ti: TM-;
 
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
-<YEAR-DATE>: NUMBERS or <date-id> or [[G+]];
+<YEAR-DATE>: <NUMBERS> or <date-id> or [[G+]];
 
 % Years: e.g. '47 Ford Fairlane or '57 Chevy
 '00 '01 '02 '03 '04 '05 '06 '07 '08 '09
