@@ -23,55 +23,55 @@
 % 
 % Allows at most two colons in hour-minute-second HH:MM:SS expressions
 % Allows at most two digits between colons
-HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?$/
+<HMS-TIME>: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?$/
 
 % e.g. 1950's leading number can be higher, for science fiction.
 % Must be four digits, or possible three. Must end in s, 's ’s
-DECADE-DATE: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
+<DECADE-DATE>: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
 
 % Similar to above, but does not end in s. Only allows four digits.
 % We process this before NUMBERS below, so that this is matched first.
-YEAR-DATE: /^([1-4][0-9]{3}|[1-9][0-9]{0,2})$/
+<YEAR-DATE>: /^([1-4][0-9]{3}|[1-9][0-9]{0,2})$/
 
 % Day-of-month names; this regex will match before the one below.
-DAY-ORDINALS: /^(1st|2nd|3rd|[4-9]th|1[0-9]th|2(0th|1st|2nd|3rd|[4-9]th)|30th|31st)$/
+<DAY-ORDINALS>: /^(1st|2nd|3rd|[4-9]th|1[0-9]th|2(0th|1st|2nd|3rd|[4-9]th)|30th|31st)$/
 
 % Ordinal numbers; everything except 1st through 13th
 % is handled by regex.
-ORDINALS: /^[1-9][0-9]*(0th|1st|2nd|3rd|[4-9]th)$/
+<ORDINALS>: /^[1-9][0-9]*(0th|1st|2nd|3rd|[4-9]th)$/
 
 % Allows any number of commas or periods
 % Be careful not match the period at the end of a sentence; 
 % for example: "It happened in 1942."
-NUMBERS: /^[0-9,.]*[0-9]$/
+<NUMBERS>: /^[0-9,.]*[0-9]$/
 % This parses signed numbers and ranges, e.g. "-5" and "5-10" and "9+/-6.5"
-NUMBERS: /^[0-9.,-]*[0-9](\+\/-[0-9.,-]*[0-9])?$/
+<NUMBERS>: /^[0-9.,-]*[0-9](\+\/-[0-9.,-]*[0-9])?$/
 % Parses simple fractions e.g. "1/60" with no decimal points or anything fancy
-FRACTION: /^[0-9]+\/[0-9]+$/
+<FRACTION>: /^[0-9]+\/[0-9]+$/
 % "10(3)" exponent (used in PubMed)
-NUMBERS: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
+<NUMBERS>: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
 
 % Roman numerals
 % The first expr has the problem that it matches an empty string.  The
 % cure for this is to use look-ahead, but neither the Gnu nor the BSD
 % regex libs support look-ahead. I can't think of a better solution.
-ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
+<ROMAN-NUMERAL-WORDS>: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=(M|C|D|L|X|V|I)+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=.+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 
 % Strings of initials. e.g "Dr. J.G.D. Smith lives on Main St."
 % Make it at least two letters long, as otherwise it clobbers
 % single-letter handling in the dict, which is different.
-INITIALS: /^[A-Z]\.([A-Z]\.)+$/
+<INITIALS>: /^[A-Z]\.([A-Z]\.)+$/
 
 % Strings of two or more upper-case letters. These might be initials,
 % but are more likely to be titles (e.g. MD LLD JD) and might also
 % be part numbers (see below, PART-NUMBER:)
-ALL-UPPER: /^[A-Z]([A-Z])+$/
+<ALL-UPPER>: /^[A-Z]([A-Z])+$/
 
 % Greek letters with numbers
-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
-PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
+<GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
+<PL-GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
 
 % Some "safe" derived units. Simple units are in dictionary.
 % The idea here is for the regex to match something that is almost
@@ -92,16 +92,16 @@ PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iot
 % remember "mm"!
 
 % grams/anything
-UNITS: /^([npmk]|milli|micro|nano|pico|femto|atto|kilo|mega|tera)?(g|grams?)\//
+<UNITS>: /^([npmk]|milli|micro|nano|pico|femto|atto|kilo|mega|tera)?(g|grams?)\//
 
 % mol/anything
-UNITS: /^([fnmp]|milli|micro|nano|pico|femto|atto|mu)?mol(es)?\//
+<UNITS>: /^([fnmp]|milli|micro|nano|pico|femto|atto|mu)?mol(es)?\//
 
 % common endings
-UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)$/
+<UNITS>: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)$/
 
 % common endings, except in the style "mg.kg-1" instead of "mg/kg".
-UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
+<UNITS>: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
 
 % combinations of numbers and units, e.g. "50-kDa", "1-2h"
 % TODO: Clean up and check that these are up-to-date wrt the 
@@ -120,12 +120,12 @@ UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
 % spelled-out numbers, anything is allowed between the "initial" number
 % and "fold" to catch e.g. "two-to-three fold" ("fourteen" etc. are absent
 % as the prefix "four" is sufficient to match).
-FOLD-WORDS: /^[0-9.,:-]*[0-9]([0-9.,:-]|\([0-9.,:-]*[0-9][0-9.,:-]*\)|\+\/-)*-?fold$/
-FOLD-WORDS: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|fifty|hundred|thousand|million).*fold$/
+<FOLD-WORDS>: /^[0-9.,:-]*[0-9]([0-9.,:-]|\([0-9.,:-]*[0-9][0-9.,:-]*\)|\+\/-)*-?fold$/
+<FOLD-WORDS>: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|fifty|hundred|thousand|million).*fold$/
 
 % Plural proper nouns.
 % Make sure that apostrophe-s is split out correctly.
-PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
+<PL-CAPITALIZED-WORDS>:  /^[[:upper:]].*[^iuoys'’]s$/
 
 % Other proper nouns.
 % We demand that these end with an alphanumeric, i.e. explicitly
@@ -133,7 +133,7 @@ PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
 % commas, colons, or periods/question-marks at the end of sentences.
 % In addition, this must not swallow words ending in 's 'll etc.
 % (... any affix, for that matter ...) and so no embedded apostrophe
-CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
+<CAPITALIZED-WORDS>:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 
 % SUFFIX GUESSING
 % For all suffix-guessing patterns, we insist that the pattern start
@@ -143,20 +143,20 @@ CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 % Fred followed."  Since "(carrying" is not in the dict, we need to be
 % sure to not match the leading paren so that it will get tripped.
 %
-ING-WORDS:        /^\w.+ing$/
+<ING-WORDS>:        /^\w.+ing$/
 
 % Plurals or verb-s. Make sure that apostrophe-s is split out correctly.
 % e.g. "The subject's name is John Doe."  should be
 %     +--Ds--+---YS--+--Ds-+
 %     |      |       |     |
 %    the subject.n 's.p name.n 
-S-WORDS:          /^\w.+[^iuoys'’]s$/
+<S-WORDS>:          /^\w.+[^iuoys'’]s$/
 
 % Verbs ending -ed.
-ED-WORDS:         /^\w.+ed$/
+<ED-WORDS>:         /^\w.+ed$/
 
 % Advebs ending -ly.
-LY-WORDS:         /^\w.+ly$/
+<LY-WORDS>:         /^\w.+ly$/
 
 % Nouns ending in -ism, -asm (chiliasm .. ) Usually mass nouns
 % Stubbed out for now; I'm not convinced this improves accuracy.
@@ -168,8 +168,8 @@ LY-WORDS:         /^\w.+ly$/
 % AST-WORDS:        /^\w.+ist$/
 
 % Corresponding adjectival form of above
-ADJ-WORDS: /^\w.+astic$/
-ADJ-WORDS: /^\w.+istic$/
+<ADJ-WORDS>: /^\w.+astic$/
+<ADJ-WORDS>: /^\w.+istic$/
 
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /^\w.+ation$/
@@ -184,23 +184,23 @@ ADJ-WORDS: /^\w.+istic$/
 % glycosylphosphatidylinositol
 % iodide, oligodeoxynucleotide
 % chronicity, hypochromicity
-MC-NOUN-WORDS: /^\w.+ase$/
-MC-NOUN-WORDS: /^\w.+ene$/
-MC-NOUN-WORDS: /^\w.+ine?$/
-MC-NOUN-WORDS: /^\w.+yl$/
-MC-NOUN-WORDS: /^\w.+ion$/
-MC-NOUN-WORDS: /^\w.+ose$/
-MC-NOUN-WORDS: /^\w.+ol$/
-MC-NOUN-WORDS: /^\w.+ide$/
-MC-NOUN-WORDS: /^\w.+ity$/
+<MC-NOUN-WORDS>: /^\w.+ase$/
+<MC-NOUN-WORDS>: /^\w.+ene$/
+<MC-NOUN-WORDS>: /^\w.+ine?$/
+<MC-NOUN-WORDS>: /^\w.+yl$/
+<MC-NOUN-WORDS>: /^\w.+ion$/
+<MC-NOUN-WORDS>: /^\w.+ose$/
+<MC-NOUN-WORDS>: /^\w.+ol$/
+<MC-NOUN-WORDS>: /^\w.+ide$/
+<MC-NOUN-WORDS>: /^\w.+ity$/
 
 % Can take TOn+.  Must appear after above, to avoid clash with +ity
-NOUN-TO-WORDS: /^\w.+ty$/
-NOUN-TO-WORDS: /^\w.+cy$/
-NOUN-TO-WORDS: /^\w.+nce$/
+<NOUN-TO-WORDS>: /^\w.+ty$/
+<NOUN-TO-WORDS>: /^\w.+cy$/
+<NOUN-TO-WORDS>: /^\w.+nce$/
 
 % replicon, intron
-C-NOUN-WORDS: /^\w.+o[rn]$/
+<C-NOUN-WORDS>: /^\w.+o[rn]$/
 
 % adjectives
 % exogenous, heterologous
@@ -209,24 +209,24 @@ C-NOUN-WORDS: /^\w.+o[rn]$/
 % ribosomal, ribsosomal
 % nonpermissive, thermosensitive
 % inducible, metastable
-ADJ-WORDS: /^\w.+ous$/
-ADJ-WORDS: /^\w.+ar$/
-ADJ-WORDS: /^\w.+ic$/
-ADJ-WORDS: /^\w.+al$/
-ADJ-WORDS: /^\w.+ive$/
-ADJ-WORDS: /^\w.+ble$/
+<ADJ-WORDS>: /^\w.+ous$/
+<ADJ-WORDS>: /^\w.+ar$/
+<ADJ-WORDS>: /^\w.+ic$/
+<ADJ-WORDS>: /^\w.+al$/
+<ADJ-WORDS>: /^\w.+ive$/
+<ADJ-WORDS>: /^\w.+ble$/
 
 % latin (postposed) adjectives
 % influenzae, tarentolae
 % pentosaceus, luteus, carnosus
-LATIN-ADJ-WORDS: /^\w.+ae$/
-LATIN-ADJ-WORDS: /^\w.+us$/ % must appear after -ous in this file
+<LATIN-ADJ-WORDS>: /^\w.+ae$/
+<LATIN-ADJ-WORDS>: /^\w.+us$/ % must appear after -ous in this file
 
 % latin (postposed) adjectives  or latin plural noun
 % brevis, israelensis
 % japonicum, tabacum, xylinum
-LATIN-ADJ-P-NOUN-WORDS: /^\w.+is?$/
-LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
+<LATIN-ADJ-P-NOUN-WORDS>: /^\w.+is?$/
+<LATIN-ADJ-S-NOUN-WORDS>: /^\w.+um$/
 
 
 % Hyphenated words. In the original LG morpho-guessing system that
@@ -240,8 +240,8 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 % But something is funky about this 5'-3' business since 2' also matches ???
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
-HYPHENATED-WORDS: !/--/
-HYPHENATED-WORDS:
+<HYPHENATED-WORDS>: !/--/
+<HYPHENATED-WORDS>:
   /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
 
 % Emoticon checks must come *after* the above, so that the above take precedence.
@@ -260,8 +260,8 @@ HYPHENATED-WORDS:
 %
 % EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 % EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
-EMOTICON: !/^"|[[:alnum:]]+"$/
-EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+<EMOTICON>: !/^"|[[:alnum:]]+"$/
+<EMOTICON>: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 
 % Part numbers should not match words with punctuation at their end.
 % Else sentences like "I saw him on January 21, 1990" have problems.
@@ -273,7 +273,7 @@ EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdD
 % separate_word() will generate an alternative anyway.
 % The second part of this regex is for NNN-NNN in sentences like
 % "The plane is a 747-400".  However, such words currently match NUMBERS.
-PART-NUMBER:
+<PART-NUMBER>:
   /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9+]$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table
@@ -283,4 +283,4 @@ PART-NUMBER:
 % tokenizer explicitly mangles based on these punctuation marks.
 % 
 % Look for at least four in a row.
-UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
+<UNKNOWN-WORD>: /^[.,-]{4}[.,-]*$/

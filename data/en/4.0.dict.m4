@@ -334,7 +334,7 @@ nonCAP.zzz: ZZZ-;
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-INITIALS ALL-UPPER <entity-singular>:
+<INITIALS> <ALL-UPPER> <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
         ((<noun-sub-s> & (JG- or <noun-main-s>))
@@ -351,13 +351,13 @@ INITIALS ALL-UPPER <entity-singular>:
 % sentence). However, the other regex matches (e.g. MC-NOUN-WORDS)
 % should have a cost that is even higher (so that we take the
 % capitalized version before we take any other matches.)
-CAPITALIZED-WORDS: [<entity-singular>]0.06;
+<CAPITALIZED-WORDS>: [<entity-singular>]0.06;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:
 % e.g. Cornwallis ... and some of these can take a singular determiner:
 % "a Starbucks"
-PL-CAPITALIZED-WORDS:
+<PL-CAPITALIZED-WORDS>:
   ({NM+} & {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] or ({@A-} & Jd- & Dmc-) } &
         ([<noun-sub-x> & (JG- or <noun-main-x>)]
@@ -449,7 +449,7 @@ An.f In.f So.f: [[<given-names>]];
     or Us-
 	 or ({D*u-} & Wa-));
 
-GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
+<GREEK-LETTER-AND-NUMBER> pH.i x.n: <noun-mass-count>;
 
 % Same as pattern used in words.n.4 -- mass nouns or countable nouns
 <generic-singular-id>: <noun-mass-count>;
@@ -524,7 +524,7 @@ et_al et_al. :
 % The generic case of strings of all-uppercase are handled
 % by the regexes ALL-UPPER and INITIALS. The below are mixed-case
 % or other very common degrees.
-ALL-UPPER.y INITIALS.y
+<ALL-UPPER>.y <INITIALS>.y
 Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
 AB.y A.B..y AIA.y A.I.A..y
 BA.y B.A..y BFA.y B.F.A..y BS.y B.S..y BSc.y B.Sc..y
@@ -549,9 +549,9 @@ USMC.y USN.y:
     G+);
 
 % The generic category for strings containing a hyphen
-PART-NUMBER.n
-ALL-UPPER.n
-HYPHENATED-WORDS.n:
+<PART-NUMBER>.n
+<ALL-UPPER>.n
+<HYPHENATED-WORDS>.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &
       ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>))
@@ -641,7 +641,7 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.2.s :
   <marker-common-entity> or <generic-plural-id>;
 
-PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
+<PL-GREEK-LETTER-AND-NUMBER>: <generic-plural-id>;
 
 % plural nouns not ending in "s"
 % almost exactly identical to <generic-plural-id> except that there is
@@ -1124,7 +1124,7 @@ incentive.n panache.n balls.n-u cojones.n-u:
   <noun-to>;
 
 % Regex-based guessing of unknown words, ending in -ity -acy -ance
-NOUN-TO-WORDS.n:
+<NOUN-TO-WORDS>.n:
   <noun-to>;
 
 % Nouns formerly classified as mass nouns (words.n.3) but can take "to"
@@ -1953,7 +1953,7 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
 % as effectively Dmcn and ND are the "same thing" more or less.
 %
 % ({ND+} & NIfn+) or (NItn- & {ND+}): "between 7:30AM and 9:30AM"
-NUMBERS FRACTION:
+<NUMBERS> <FRACTION>:
   NMn-
   or ({EN-} & (({ND+} & NIfn+) or (NItn- & {ND+})))
   or NN+
@@ -1969,17 +1969,17 @@ NUMBERS FRACTION:
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
 % and should probably have a narrower set of parse patterns than numbers in
 % general.  e.g. should not have EQ links XXX todo -- fix this.
-HMS-TIME: NUMBERS & {TZ+};
+<HMS-TIME>: <NUMBERS> & {TZ+};
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
-ROMAN-NUMERAL-WORDS.rn:
+<ROMAN-NUMERAL-WORDS>.rn:
   NMr-
   or ((Wd- or NMr-) & NIa+);
 
 % nouns that look like roman numerals. Limited requirements to avoid
 % excessive ambiguity.
-ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
+<ROMAN-NUMERAL-WORDS>.n: {@MX+} & (<noun-main-s>);
 
 % NMa-: Allow post-posed letter modifiers: e.g. "Vitamin A"
 % Wd- & NIa+: Allow numbered, bulleted lists: "B: Press button firmly"
@@ -2015,7 +2015,7 @@ O. P. Q. R. S. T. U. V. W. X. Y. Z. :
 % The following should match NUMBERS with the addition of "or TM-".
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28
 29 30 31:
-NUMBERS or TM- or [[G+]];
+<NUMBERS> or TM- or [[G+]];
 
 % Ordinals - day-of-month expressions.
 % Used only in espressions such as "December 2nd"
@@ -2025,7 +2025,7 @@ ninth.ti tenth.ti eleventh.ti twelfth.ti thirteenth.ti fourteenth.ti fifteenth.t
 sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti
 twenty-first.ti twenty-second.ti twenty-third.ti twenty-fourth.ti twenty-fifth.ti
 twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
-thirty-first.ti DAY-ORDINALS.ti: TM-;
+thirty-first.ti <DAY-ORDINALS>.ti: TM-;
 
 % For YEAR-DATE year numbers
 % AN+ is given a cost, because <date-id> attaches incorrectly to
@@ -2056,11 +2056,11 @@ thirty-first.ti DAY-ORDINALS.ti: TM-;
 70 71 72 73 74 75 76 77 78 79
 80 81 82 83 84 85 86 87 88 89
 90 91 92 93 94 95 96 97 98 99:
-  NUMBERS or <date-id> or [[G+]];
+  <NUMBERS> or <date-id> or [[G+]];
 
 % the DECADE-DATE regex matches 1950s 1950's 1950’s etc.
 % A+: It's an old 50's love song
-DECADE-DATE
+<DECADE-DATE>
 '00s '10s '20s '30s '40s '50s '60s '70s '80s '90s
 ‘00s ‘10s ‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s
 00's 10's 20's 30's 40's 50's 60's 70's 80's 90's:
@@ -2069,7 +2069,7 @@ DECADE-DATE
 
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
-YEAR-DATE: NUMBERS or <date-id> or [[G+]];
+<YEAR-DATE>: <NUMBERS> or <date-id> or [[G+]];
 
 % Years: e.g. '47 Ford Fairlane or '57 Chevy
 '00 '01 '02 '03 '04 '05 '06 '07 '08 '09
@@ -2243,7 +2243,7 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 % prefer G+ over A+ in general, as these are typically parts of names.
 % ({Ds-} & AJla+): "he is in either the X or the Y battalion"
 1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
-DAY-ORDINALS.a ORDINALS.a:
+<DAY-ORDINALS>.a <ORDINALS>.a:
   Pa- or
   MVa- or
   ({Xc+ & {Xd-}} & CO+) or
@@ -2293,7 +2293,7 @@ ninetieth.ord
 ninety-first.ord ninety-second.ord ninety-third.ord
 ninety-fourth.ord ninety-fifth.ord ninety-sixth.ord
 ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
-DAY-ORDINALS.ord ORDINALS.ord :
+<DAY-ORDINALS>.ord <ORDINALS>.ord :
   (Wd- & {M+} & Ss*o+);
 
 % TODO: un-parenthesized cases, e.g.
@@ -7464,7 +7464,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % km².u mi².u in².u ft².u m².u cm².u
 /en/words/units.1: <units-suffix>;
 /en/words/units.3: <units-suffix>;
-UNITS: <units-suffix>;
+<UNITS>: <units-suffix>;
 
 % Allows "200 sq. ft. of plywood", "200 cu yds of concrete"
 /en/words/units.a: A+;
@@ -8298,7 +8298,7 @@ frank.a:
 % An older formulation of this used Ah- as the link, but I don't see
 % why.  Generic adjective should be OK. Given a cost of 0.04, so
 % as to give a slight preference for the noun-form, if possible.
-HYPHENATED-WORDS.a:
+<HYPHENATED-WORDS>.a:
   [<ordinary-adj> or <adj-phone>]0.04;
 
 % Color names. Just like ordinary adjectives, except that the
@@ -9886,7 +9886,7 @@ so_on the_like vice_versa v.v.:
   M- or MV-;
 
 % Emoticons ... at start or end of sentences ...
-EMOTICON :
+<EMOTICON> :
   CO+
   or (Wd- & NIa+)
   or Wa-
@@ -10216,7 +10216,7 @@ tonite.#tonight: [tonight]0.05;
 % ING-WORDS.g: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 % or <verb-adj> or <verb-ge>;
 
-ING-WORDS.g:
+<ING-WORDS>.g:
   [[(<verb-pg> & <vc-tr,intr>)] or
   [(<vc-tr,intr> & <verb-ge>)] or
   [({@E- or EA-}  & A+)] or
@@ -10230,13 +10230,13 @@ ING-WORDS.g:
   AN+ or
   {AN-})]0.1;
 
-ED-WORDS.v-d:
+<ED-WORDS>.v-d:
   [ VERB_SPPP_T(`<vc-tr,intr>')
     or <verb-pv> or <verb-adj>]0.1;
 
-S-WORDS.v: [ VERB_S_T(`<vc-tr,intr>') ]0.1;
+<S-WORDS>.v: [ VERB_S_T(`<vc-tr,intr>') ]0.1;
 
-S-WORDS.n:
+<S-WORDS>.n:
   [(<noun-modifiers> &
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
@@ -10245,7 +10245,7 @@ S-WORDS.n:
     Up-)) or
   [[AN+]]]0.1;
 
-LY-WORDS.e:
+<LY-WORDS>.e:
   [{EE- or EF+} & (
     ({Xd- & Xc+} & MVa-)
     or Em+
@@ -10263,36 +10263,36 @@ LY-WORDS.e:
 
 % guessed nouns that can be mass or countable
 % (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
-MC-NOUN-WORDS.n:
+<MC-NOUN-WORDS>.n:
   [<noun-mass-count>]0.1;
 
 % guessed nouns that are singular countable (-on, -or)
-C-NOUN-WORDS.n:
+<C-NOUN-WORDS>.n:
   [<common-noun>]0.1;
 
 % guessed adjectives (-ous, -ar, -ic)
-ADJ-WORDS.a:
+<ADJ-WORDS>.a:
   [<ordinary-adj> or <adj-phone>]0.1;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
-FOLD-WORDS:
+<FOLD-WORDS>:
   [({EN-} & (MVp- or EC+ or A+)) or Em+]0.1;
 
 % latin (postposed) adjectives considered as mass nouns
 % in the current version (is this right???)
-LATIN-ADJ-WORDS.a:
+<LATIN-ADJ-WORDS>.a:
   [<noun-mass-count>]0.1;
 
 % latin (postposed) adjectives or latin plural noun
 % always considered as nouns in the current version
 % XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
-LATIN-ADJ-P-NOUN-WORDS:
+<LATIN-ADJ-P-NOUN-WORDS>:
   [<generic-plural-id>]0.1;
 
 % latin (postposed) adjectives or latin singular noun
 % always considered as nouns in the current version
 % XXX this is <common-noun> with weird plural-like stuff ?? is this right?
-LATIN-ADJ-S-NOUN-WORDS:
+<LATIN-ADJ-S-NOUN-WORDS>:
   [<noun-modifiers> &
    (AN+
    or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>))
@@ -10304,7 +10304,7 @@ LATIN-ADJ-S-NOUN-WORDS:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
-UNKNOWN-WORD.n:
+<UNKNOWN-WORD>.n:
   <noun-modifiers> &
     (AN+
     or ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or <rel-clause-x>))
@@ -10314,12 +10314,12 @@ UNKNOWN-WORD.n:
     or (GN+ & (DD- or [()]))
     or U-);
 
-UNKNOWN-WORD.v:
+<UNKNOWN-WORD>.v:
   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is prefered, when
 % available.
-UNKNOWN-WORD.a: [<ordinary-adj> or <adj-phone>]0.04;
+<UNKNOWN-WORD>.a: [<ordinary-adj> or <adj-phone>]0.04;
 
 % These are the link-types that are not subject to the length limit.
 % Always use "+" for these.  Some of these are obvious. Some deserve
