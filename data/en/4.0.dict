@@ -2016,7 +2016,7 @@ ninth.ti tenth.ti eleventh.ti twelfth.ti thirteenth.ti fourteenth.ti fifteenth.t
 sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti
 twenty-first.ti twenty-second.ti twenty-third.ti twenty-fourth.ti twenty-fifth.ti
 twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
-thirty-first.ti DAY-ORDINALS.ti: TM-;
+thirty-first.ti <DAY-ORDINALS>.ti: TM-;
 
 % For YEAR-DATE year numbers
 % AN+ is given a cost, because <date-id> attaches incorrectly to
@@ -2051,7 +2051,7 @@ thirty-first.ti DAY-ORDINALS.ti: TM-;
 
 % the DECADE-DATE regex matches 1950s 1950's 1950’s etc.
 % A+: It's an old 50's love song
-DECADE-DATE
+<DECADE-DATE>
 '00s '10s '20s '30s '40s '50s '60s '70s '80s '90s
 ‘00s ‘10s ‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s
 00's 10's 20's 30's 40's 50's 60's 70's 80's 90's:
@@ -2060,7 +2060,7 @@ DECADE-DATE
 
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
-YEAR-DATE: NUMBERS or <date-id> or [[G+]];
+<YEAR-DATE>: NUMBERS or <date-id> or [[G+]];
 
 % Years: e.g. '47 Ford Fairlane or '57 Chevy
 '00 '01 '02 '03 '04 '05 '06 '07 '08 '09
@@ -2234,7 +2234,7 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 % prefer G+ over A+ in general, as these are typically parts of names.
 % ({Ds-} & AJla+): "he is in either the X or the Y battalion"
 1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
-DAY-ORDINALS.a ORDINALS.a:
+<DAY-ORDINALS>.a <ORDINALS>.a:
   Pa- or
   MVa- or
   ({Xc+ & {Xd-}} & CO+) or
@@ -2284,7 +2284,7 @@ ninetieth.ord
 ninety-first.ord ninety-second.ord ninety-third.ord
 ninety-fourth.ord ninety-fifth.ord ninety-sixth.ord
 ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
-DAY-ORDINALS.ord ORDINALS.ord :
+<DAY-ORDINALS>.ord <ORDINALS>.ord :
   (Wd- & {M+} & Ss*o+);
 
 % TODO: un-parenthesized cases, e.g.
