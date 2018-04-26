@@ -2167,13 +2167,14 @@ and_a_half:
     (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
 quarter.i:
-NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
+  NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 thirds.m fourths.m quarters.m fifths.m sixths.m sevenths.m eighths.m
 ninths.m tenths.m:
-NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
+  NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 
-first.a: L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or A+ or [Jp-] or
-TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+first.a:
+  L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or A+ or [Jp-] or
+  TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
 
 last.a dead_last dead_fucking_last DFL:
   L-
@@ -2186,8 +2187,9 @@ last.a dead_last dead_fucking_last DFL:
   or A+
   or [Jp-];
 
-second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
-(DD- & <noun-sub-x> & {<ton-verb>} & <noun-main-x>) or NR+ or A+;
+second.a:
+  L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
+  (DD- & <noun-sub-x> & {<ton-verb>} & <noun-main-x>) or NR+ or A+;
 
 % This uses the L link for superlatives, but leads to strange parses:
 % "We celebrated their eleventh anniversary" parses differently
@@ -8596,8 +8598,15 @@ clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   or <adj-stuff>
   or <adj-phone>;
 
-clear.i: {EA- or EF+} & Vm- & TH+;
-sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
+% Implement a zero-that; viz.
+%   "We have to make sure [that] everyone is here."
+<phantom-that>: Cet+ & CV+;
+
+clear.i:
+  {EA- or EF+} & Vm- & (TH+ or <phantom-that>);
+
+sure.i certain.i:
+  {EA- or EF+} & Vm- & (TH+ or <phantom-that> or <to-verb> or (OF+ & {@MV+}));
 
 % (AJrc- & {@MV+}): "It is lighter and less costly"
 % Exactly the same as below, but consonant.
