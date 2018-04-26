@@ -2135,6 +2135,9 @@ static void issue_r_stripped(Sentence sent,
 	rstrip_alt = issue_word_alternative(sent, unsplit_word, label,
 	                                    0,NULL, ntokens,rtokens, 0,NULL);
 
+	for_word_alt(sent, rstrip_alt, set_word_status,
+	             (unsigned int []){WS_INDICT|WS_REGEX});
+
 	/* Issue additional alternatives if exist.
 	 * The tokens are scanned from last to first because the original
 	 * alternative gets shortened by inserting the additional alternatives
