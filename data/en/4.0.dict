@@ -10667,8 +10667,15 @@ clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   or <adj-stuff>
   or <adj-phone>;
 
-clear.i: {EA- or EF+} & Vm- & TH+;
-sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or <to-verb> or (OF+ & {@MV+}));
+% Implement a zero-that; viz.
+%   "We have to make sure [that] everyone is here."
+<phantom-that>: Cet+ & CV+;
+
+clear.i:
+  {EA- or EF+} & Vm- & (TH+ or <phantom-that>);
+
+sure.i certain.i:
+  {EA- or EF+} & Vm- & (TH+ or <phantom-that> or <to-verb> or (OF+ & {@MV+}));
 
 % (AJrc- & {@MV+}): "It is lighter and less costly"
 % Exactly the same as below, but consonant.
