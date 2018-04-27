@@ -47,6 +47,8 @@ class Formatter(argparse.HelpFormatter):
 
 DISPLAY_GUESSES = True   # Display regex and POS guesses
 
+print ("Version:", clg.linkgrammar_get_version())
+
 args = argparse.ArgumentParser(formatter_class=Formatter)
 args.add_argument('lang', nargs='?', default='en',
                   help="language or dictionary location")
