@@ -249,13 +249,13 @@ Its value may be:
 % FLAGS documentation:
 % These flags are defined in wordgraph.h.
 % Below, unsplit-word means a token before getting split.
-% (*) marks the flags that are enabled for the default display.
+% 1 and 2 mark the flags that are enabled in that modes.
 %
 % c                 Compact display
-% d             (*) Display debug labels
-% h                 Display hex node numbers (for "dot" commands debug)
-% l             (*) Add a legend
-% p                 Display back-pointing word-graph links
-% s                 Display unsplit-words as subgraphs
-% u             (*) Display unsplit-word links
+% d             1   Display debug labels
+% h                 Display hex node numbers (for "dot" command debug)
+% l             1,2 Add a legend
+% p                 Display back-pointing links
+% s             2   Display unsplit-words as subgraphs
+% u             1   Display unsplit-word links
 % x                 Display using X11 even on Windows (if supported)
