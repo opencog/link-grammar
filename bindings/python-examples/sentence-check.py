@@ -18,14 +18,21 @@ Sentence has 1 unlinked word:
 3: LEFT-WALL this.p is.v [a] the test.n of bfgiuing[!].g and.j-n xxxvfrg[?].a RIGHT-WALL
 4: LEFT-WALL this.p is.v a [the] test.n of bfgiuing[!].g and.j-n xxxvfrg[?].a RIGHT-WALL
 """
+
 from __future__ import print_function
 import sys
 import re
 import itertools
 import argparse
+import readline
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
                          LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
+
+get_input = input
+# If this is Python 2, use raw_input()
+if sys.version_info[:2] <= (2, 7):
+    get_input = raw_input
 
 def nsuffix(q):
     return '' if q == 1 else 's'
@@ -67,9 +74,10 @@ po.max_parse_time = 10   # actual parse timeout may be about twice bigger
 po.spell_guess = True if DISPLAY_GUESSES else False
 po.display_morphology = arg.morphology
 
-print("Enter sentences:")
 # iter(): avoid python2 input buffering
-for sentence_text in iter(sys.stdin.readline, ''):
+while True:
+    sentence_text = get_input("sentence-check: ")
+
     if sentence_text.strip() == '':
         continue
     sent = Sentence(str(sentence_text), lgdict, po)
