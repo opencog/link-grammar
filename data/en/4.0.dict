@@ -12396,7 +12396,7 @@ tonite.#tonight: [tonight]0.05;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
-<UNKNOWN-WORD>.n:
+<UNKNOWN-WORD>.n <QUOTED-WORD>.n:
   <noun-modifiers> &
     (AN+
     or ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or <rel-clause-x>))
@@ -12406,12 +12406,13 @@ tonite.#tonight: [tonight]0.05;
     or (GN+ & (DD- or [()]))
     or U-);
 
-<UNKNOWN-WORD>.v:
+<UNKNOWN-WORD>.v <QUOTED-WORD>.v:
   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is preferred, when
 % available.
-<UNKNOWN-WORD>.a: [<ordinary-adj> or <adj-phone>]0.04;
+<UNKNOWN-WORD>.a <QUOTED-WORD>.a:
+  [<ordinary-adj> or <adj-phone>]0.04;
 
 % These are the link-types that are not subject to the length limit.
 % Always use "+" for these.  Some of these are obvious. Some deserve
