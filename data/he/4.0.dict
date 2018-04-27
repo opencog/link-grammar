@@ -562,4 +562,4 @@ or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 % With the following line in the dictionary, the parser will simply
 % skip over (null-link) unknown words. If you remove it, the parser
 % will output an error for any unknown words.
-UNKNOWN-WORD: XXX+;
+<UNKNOWN-WORD>: XXX+;

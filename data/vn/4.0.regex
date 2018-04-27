@@ -129,4 +129,4 @@ PART-NUMBER:
 % tokenizer explicitly mangles based on these punctuation marks.
 % 
 % Look for at least four in a row.
-UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
+<UNKNOWN-WORD>: /^[.,-]{4}[.,-]*$/

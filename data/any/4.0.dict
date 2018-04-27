@@ -15,6 +15,6 @@
 LEFT-WALL: @ANY+;
 ANY-WORD: {@ANY-} & {@ANY+};
 ANY-PUNCT: {@ANY-} & {@ANY+};
-UNKNOWN-WORD: {@ANY-} & {@ANY+};
+<UNKNOWN-WORD>: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};

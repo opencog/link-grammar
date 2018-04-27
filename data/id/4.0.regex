@@ -14,4 +14,4 @@
 CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 
 % Look for at least four in a row.
-%UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
+%<UNKNOWN-WORD>: /^[.,-]{4}[.,-]*$/
