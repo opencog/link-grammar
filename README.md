@@ -1172,6 +1172,16 @@ be performed "during" parsing, so that parsing can both guide the
 insertion of the phantom words, and, simultanously guide the deep
 syntactic rewrites.
 
+Another interesting possibility arises with regards to tokenization.
+The current tokenizer is clever, in that it splits not only on
+whitespace, but can also strip off prefixes, suffixes, and perform
+certain limited kinds of morphological splitting. That is, it currently
+has the ability to re-write single-words into sequences of words. It
+currently does so in a conservative manner; the letters that compose
+a word are preserved, with a few exceptions, such as making spelling
+correction suggestions. The above considerations suggest that the
+boundary between tokenization and parsing needs to become both more
+fluid, and more tightly coupled.
 
 ### Poor linkage choices:
 Compare "she will be happier than before" to "she will be more happy
