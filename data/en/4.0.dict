@@ -12244,10 +12244,15 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 % -------------------------------------------------------------------------
 % Common typographical (spelling) errors
+%
 % Assign a cost of 1.65 for no very good reason. Feel free to change this.
 % .. well, some of this is dangerous. For example, setting the cost too
 % low causes correct "than" usages with Z link (and missing wall) to be
 % priced higher then "typos" with "then".
+%
+% These perform a kind-of poor-man's rewriting. A more principled,
+% elevated design would define and use an "operator grammar" type
+% approach. See https://en.wikipedia.org/wiki/Operator_grammar
 
 then.#than: [than.e]0.65;
 than.#then-r: [then.r]1.65;
@@ -12263,6 +12268,7 @@ there.#their: [their.p]0.65;
 % there.#they're: [they're]0.65;
 % all.#all_of: [all_of]0.65;
 % its.#it's: [it's]0.65;
+% lets.#let's: [let's]0.65;
 
 % Using "or" instead of "nor" is a common mistake.
 % "Neither this or that one will do"

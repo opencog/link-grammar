@@ -1064,17 +1064,22 @@ and come to the conclusion that one should please some unstated
 object, and then turn off the lights. (Perhaps one is pleasing
 by turning off the lights?)
 
-### Punctuation, zero-copula, zero-that:
-Poorly punctuated sentences cause problems:  for example:
-```text
-"Mike was not first, nor was he last."
-"Mike was not first nor was he last."
-```
-The one without the comma currently fails to parse.  How can we
-deal with this in a simple, fast, elegant way?  Similar questions
-for zero-copula and zero-that sentences.
+### Bad grammar:
+When a sentence fails to parse, look for:
+ * confused words: its/it's, there/their/they're, to/too, your/you're ...
+   These could be added at high cost to the dicts.
+ * missing apostrophes in possessives: "the peoples desires"
+ * determiner agreement errors: "a books"
+ * aux verb agreement errors: "to be hooks up"
+
+Poor agreement might be handled by giving a cost to mismatched
+lower-case connector letters.
 
 ### Zero/phantom words:
+An common phenomenon in English is that some words that one might
+expect to "properly" be present can disappear under various conditions.
+Below is a sampling of these. Some possible solutions are given below.
+
 Expressions such as "Looks good" have an implicit "it" (also called
 a zero-it or phantom-it) in them; that is, the sentence should really
 parse as "(it) looks good".  The dictionary could be simplified by
@@ -1098,6 +1103,34 @@ Some complex phantom constructions:
 
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
 
+#### Punctuation, zero-copula, zero-that:
+Poorly punctuated sentences cause problems:  for example:
+```text
+"Mike was not first, nor was he last."
+"Mike was not first nor was he last."
+```
+The one without the comma currently fails to parse.  How can we
+deal with this in a simple, fast, elegant way?  Similar questions
+for zero-copula and zero-that sentences.
+
+#### Context-dependent zero phrases.
+Consider an argument between a professor and a dean, and the dean
+wants the professor to write a brilliant review. At the end of the
+argument, the dean exclaims: "I want the review brilliant!"  This
+is a predicative adjective; clearly it means "I want the review
+[that you write to be] brilliant."  However, taken out of context,
+such a construction is ungrammatical, as the predicativeness is not
+at all apparent, and it reads just as incorrectly as would
+"*Hey Joe, can you hand me that review brilliant?"
+
+#### Imperatives as phantoms:
+```text
+"Push button"
+"Push button firmly"
+```
+The subject is a phantom; the subject is "you".
+
+#### Handling zero/phantom words by explicitly inserting them:
 One possible solution is to perform a one-point compactification.
 The dictionary contains the phantom words, and their connectors.
 Ordinary disjuncts can link to these, but should do so using
@@ -1115,33 +1148,30 @@ else the linkage is invalid. After parsing, the phantom words can
 be inserted into the sentence, with the location deduced from link
 lengths.
 
-### Context-dependent zero phrases.
-Consider an argument between a professor and a dean, and the dean
-wants the professor to write a brilliant review. At the end of the
-argument, the dean exclaims: "I want the review brilliant!"  This
-is a predicative adjective; clearly it means "I want the review
-[that you write to be] brilliant."  However, taken out of context,
-such a construction is ungrammatical, as the predicativeness is not
-at all apparent, and it reads just as incorrectly as would
-"*Hey Joe, can you hand me that review brilliant?"
+#### Handling zero/phantom words as re-write rules.
+A more principled approach to fixing the phantom-word issue is to
+borrow the diea of re-writing from the theory of
+[operator grammar](https://en.wikipedia.org/wiki/Operator_grammar).
+That is, certain phrases and constructions can be (should be)
+re-written into thier "proper form", prior to parsing. The re-writing
+step would insert the missing words, then the parsing proceeds. One
+appeal of such an approach is that re-writing can also handle other
+"annoying" phenomena, such as typos (missing apostrophes, e.g. "lets"
+vs. "let's", "its" vs. "its") as well as multi-word rewrites (e.g.
+"let's" vs. "let us", or "it's" vs. "it is").
 
-### Imperatives:
-```text
-"Push button"
-"Push button firmly"
-```
-The zero/phantom-word solution, described above, should help with this.
+Exactly how to implement this is unclear.  However, it seems to open
+the door to more abstract, semantic analysis. Thus, for example, in
+Meaning-Text Theory (MTT), one must move betweeen SSynt to DSynt
+structures.  Such changes require a graph re-write from the surface
+syntax parse (e.g. provided by link-grammar) to the deep-syntactic
+structure.  By contrast, handling phantom words by graph re-writing
+prior to parsing inverts the order of processing. This suggests that
+a more holistic approach is needed to graph rewriting: it must somehow
+be performed "during" parsing, so that parsing can both guide the
+insertion of the phantom words, and, simultanously guide the deep
+syntactic rewrites.
 
-### Bad grammar:
-When a sentence fails to parse, look for:
- * confused words: its/it's, there/their/they're, to/too, your/you're ...
-   These could be added at high cost to the dicts.
- * missing apostrophes in possessives: "the peoples desires"
- * determiner agreement errors: "a books"
- * aux verb agreement errors: "to be hooks up"
-
-Poor agreement might be handled by giving a cost to mismatched
-lower-case connector letters.
 
 ### Poor linkage choices:
 Compare "she will be happier than before" to "she will be more happy
