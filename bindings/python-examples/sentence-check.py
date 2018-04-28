@@ -59,6 +59,8 @@ args.add_argument("-p", "--position", action="store_true",
                   help="show word sentence position")
 args.add_argument("-nm", "--no-morphology", dest='morphology', action='store_false',
                   help="do not display morphology")
+args.add_argument("-i", "--interactive", action="store_true",
+                  help="interactive mode after each result")
 
 arg = args.parse_args()
 
@@ -111,38 +113,40 @@ while True:
                 break
 
     # Show results with unlinked words or guesses
-    if not arg.position and not guess_found and null_count == 0:
-        continue
-
-
-    if arg.position:
-        for p in range (0, len(sentence_text)):
-            print(p%10, end="")
-        print()
-
-    print('Sentence has {} unlinked word{}:'.format(
-        null_count, nsuffix(null_count)))
-    result_no = 0
-    uniqe_parse = {}
-    for linkage in linkages:
-        words = list(linkage.words())
-        if str(words) in uniqe_parse:
-            continue
-        result_no += 1
-        uniqe_parse[str(words)] = True
-
+    if arg.position or guess_found or null_count != 0:
         if arg.position:
-            words_char = []
-            words_byte = []
-            wi = 0
-            for w in words:
-                if sys.version_info < (3, 0):
-                    words[wi] = words[wi].decode('utf-8')
-                words_char.append(words[wi] + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
-                words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
-                wi += 1
+            for p in range (0, len(sentence_text)):
+                print(p%10, end="")
+            print()
 
-            print(u"{}: {}".format(result_no, ' '.join(words_char)))
-            print(u"{}: {}".format(result_no, ' '.join(words_byte)))
-        else:
-            print("{}: {}".format(result_no, ' '.join(words)))
+        print('Sentence has {} unlinked word{}:'.format(
+            null_count, nsuffix(null_count)))
+        result_no = 0
+        uniqe_parse = {}
+        for linkage in linkages:
+            words = list(linkage.words())
+            if str(words) in uniqe_parse:
+                continue
+            result_no += 1
+            uniqe_parse[str(words)] = True
+
+            if arg.position:
+                words_char = []
+                words_byte = []
+                wi = 0
+                for w in words:
+                    if sys.version_info < (3, 0):
+                        words[wi] = words[wi].decode('utf-8')
+                    words_char.append(words[wi] + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
+                    words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
+                    wi += 1
+
+                print(u"{}: {}".format(result_no, ' '.join(words_char)))
+                print(u"{}: {}".format(result_no, ' '.join(words_byte)))
+            else:
+                print("{}: {}".format(result_no, ' '.join(words)))
+
+    if arg.interactive:
+        print("Interactive session (^D to end):")
+        import code
+        code.interact(local=locals())
