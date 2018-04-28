@@ -99,21 +99,35 @@ while True:
         continue
     null_count = sent.null_count()
     if null_count == 0:
-        print("Sentence parsed OK")
+        print("Sentence parsed OK", end='')
+
+    linkages = list(linkages)
+
+    correction_found = False
+    # search for correction suggestions
+    for l in linkages:
+        for word in l.words():
+                if word.find(r'.#') > 0:
+                    correction_found = True
+                    break;
+        if correction_found:
+            break
+
+    if correction_found:
+        print(" - with correction", end='')
+    print(".")
 
     guess_found = False
     if DISPLAY_GUESSES:
-        linkages, check_first = itertools.tee(linkages)
         # Check the first linkage for regexed/unknown words
-        linkage = next(check_first)
-        for word in list(linkage.words()):
+        for word in linkages[0].words():
             # search for something[x]
             if re.search(r'\S+\[[^]]+]', word):
                 guess_found = True
                 break
 
     # Show results with unlinked words or guesses
-    if arg.position or guess_found or null_count != 0:
+    if arg.position or guess_found or correction_found or null_count != 0:
         if arg.position:
             for p in range (0, len(sentence_text)):
                 print(p%10, end="")
