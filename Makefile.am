@@ -20,7 +20,6 @@ EXTRA_DIST =            \
 	link-grammar.pc.in   \
 	link-grammar.spec.in \
 	link-grammar.spec    \
-	command-help-en.txt \
 	AUTHORS              \
 	ChangeLog            \
 	FindLinkGrammar.cmake\
@@ -33,7 +32,7 @@ EXTRA_DIST =            \
 	docker/docker-parser/Dockerfile        \
 	docker/docker-python/Dockerfile        \
 	docker/docker-server/Dockerfile        \
-	m4/varcheckpoint.m4
+	m4/varcheckpoint.m4                    \
 	msvc14/LGlib-features.props            \
 	msvc14/LinkGrammarExe.vcxproj          \
 	msvc14/LinkGrammarExe.vcxproj.filters  \
