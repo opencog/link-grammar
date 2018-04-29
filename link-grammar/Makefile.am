@@ -203,9 +203,9 @@ EXTRA_DIST=                         \
 	dict-sql/README.md               \
 	tokenize/README.md
 
+# Clean up generated file that Windows MSVC compilation leaves behind.
 clean-local:
-# Clean up a possible left out generated file of a Windows MSVC compilation
-	rm -f $(srcdir)/link-features.h
+	rm -f $(top_builddir)/link-grammar/link-features.h
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib

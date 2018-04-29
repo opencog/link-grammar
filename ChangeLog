@@ -1,4 +1,4 @@
-Version 5.5.0 (XXX 2018)
+Version 5.5.0 (29 April 2018)
  * Fix accidental API breakage that impacts OpenCog.
  * Fix memory leak when parsing with null links.
  * Python bindings: Add an optional parse-option argument to parse().
