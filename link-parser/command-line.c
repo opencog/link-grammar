@@ -558,7 +558,7 @@ static int help_cmd(const Switch *uc, int n)
 		if (Cmd != uc[i].param_type) continue;
 		if (UNDOC[0] == uc[i].description[0]) continue;
 		printf(" !%-14s ", uc[i].string);
-		printf("%s\n", uc[i].description);
+		printf("%s.\n", uc[i].description);
 	}
 
 	printf("\n");
