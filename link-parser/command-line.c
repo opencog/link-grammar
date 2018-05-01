@@ -238,9 +238,11 @@ static const char *switch_value_string(const Switch *as)
 			snprintf(buf, sizeof(buf), "%d", ival(*as));
 			break;
 		case String:
+#if 0 /* It seems it is not a good idea. */
 			if ((NULL == *(char **)as->ptr) || ('\0' == **(char **)as->ptr))
-				strcpy(buf, "    (not set)");
+				strcpy(buf, "(not set)");
 			else
+#endif
 				snprintf(buf, sizeof(buf), "%s", *(char **)as->ptr);
 			break;
 		case Cmd:
