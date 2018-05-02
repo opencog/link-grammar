@@ -24,4 +24,4 @@ libminisat_la_SOURCES = \
 	minisat/utils/System.cc \
 	minisat/utils/System.h
 
-EXTRA_DIST= README
+EXTRA_DIST= README LICENSE
