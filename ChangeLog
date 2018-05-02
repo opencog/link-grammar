@@ -1,5 +1,5 @@
 Version 5.5.1 (XXX 2018)
- * TBD.
+ * Fix broken Java bindings build.
 
 Version 5.5.0 (29 April 2018)
  * Fix accidental API breakage that impacts OpenCog.
