@@ -27,6 +27,7 @@ EXTRA_DIST =            \
 	MAINTAINERS          \
 	NEWS                 \
 	README.md            \
+	debug/README.md                        \
 	docker/docker-build.sh                 \
 	docker/docker-base/Dockerfile          \
 	docker/docker-parser/Dockerfile        \
@@ -46,6 +47,7 @@ EXTRA_DIST =            \
 	msvc14/MSVC-common.props               \
 	msvc14/post-build.bat                  \
 	msvc14/Python2.vcxproj                 \
+	msvc14/Python3.vcxproj                 \
 	msvc14/Python2.vcxproj.filters         \
 	msvc14/Python3.vcxproj.filters         \
 	msvc14/README.md                       \
