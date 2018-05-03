@@ -609,7 +609,7 @@ if test "x$enable_java_bindings" = "xyes"; then
 		CFLAGS="${CFLAGS} -arch x86_64"
 	fi
 
-	absolute_srcdir=`(cd "./$srcdir"; pwd)`
+	absolute_srcdir=`(cd "$srcdir"; pwd)`
 	JAVA_SRCDIR=$absolute_srcdir/bindings/java
 	if test "$native_win32" = yes; then
 		# javac needs a Windows path
