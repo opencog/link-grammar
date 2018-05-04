@@ -45,6 +45,11 @@ install-data-hook:
 uninstall-hook:
 	-rm ${DESTDIR}${javadir}/linkgrammar.jar
 
+dist-hook:
+if HAVE_ANT
+	: # Validate that the bindings can actually be created
+	zipinfo $(java_DATA) org/linkgrammar/LinkGrammar.class >/dev/null
+endif
 
 EXTRA_DIST =                         \
    README                            \
