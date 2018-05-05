@@ -1,4 +1,3 @@
-
 abacuses.n
 abbes.n
 abbesses.n
@@ -4911,6 +4910,7 @@ havens.n
 haversacks.n
 hawkers.n
 hawks.n
+hawsers.n
 hayforks.n
 haymakers.n
 haystacks.n
