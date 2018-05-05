@@ -43,3 +43,6 @@ example usage is:
 or, equivalently:
 
    echo -e 'man midAnam keh tu rafti.\n' | ./stemmer.pl -u | link-parser fa
+
+See also:
+https://github.com/jonsafari/perstem
