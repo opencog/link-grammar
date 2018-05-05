@@ -15,7 +15,7 @@ The displayed words are marked as follows:
  word.POS          word found in the dictionary as word.POS
  word.#CORRECTION  word is probably a typo - got linked as CORRECTION
 
-For dictionaries that support morphology (turn on by !morphology=1):
+For dictionaries that support morphology (enable with !morphology=1):
  word=             A prefix morpheme
  =word             A suffix morpheme
  word.=            A stem
@@ -24,25 +24,27 @@ For more details see:
  https://www.abisource.com/projects/link-grammar/dict/
 
 [constituents]
-Its value may be:
- 0      Disabled
+Accepted values are:
+ 0      Disabled (no constituent tree display)
  1      Treebank-style constituent tree
  2      Flat, bracketed tree [A like [B this B] A]
  3      Flat, treebank-style tree (A like (B this))
 
 [spell]
-If zero, no spell and run-on corrections of unknown words are performed.
-Else, use up to this many spell-guesses per unknown word. In that case,
-the number of run-on corrections (word split) of unknown words is not
-limited.
+If zero, spell-guessing corrections and run-on corrections of unknown
+words are not performed.  Otherwise, this indicates the number of
+spelling-correction guesses per unknown word. The number of run-on
+corrections (word splits) of unknown words is not limited when
+spell-guessing is enabled.
 
 [width]
-When writing to a terminal, this value is set from its width.
+The terminal width, used for wrapping the printing of long sentence
+diagrams.
 
 [verbosity]
-This is the level of description printed about the internal program working.
-Values 1-4 are appropriate for use by the program user.
-Higher values intended for LG dictionary writers and library developers.
+The level of descriptive debug messages that will be printed.
+Values 1-4 are appropriate for use by the program user.  Higher
+values are intended for LG dictionary authors and library developers.
 
 Some useful values:
  0      No prompt, minimal library messages
@@ -60,46 +62,55 @@ Also, when a word matches a RegEx, the matching dictionary entry
 is shown.
 
 [limit]
-The maximum number of linkages that are considered in post-processing. If
-more than this number of linkages found by the parser, then a random
-sample of linkages is chosen.
+The maximum number of linkages that are considered for post-processing.
+Up to this many linkages are generated; if there are fewer parses than
+thhis limit, then they will all be printed, in deterministic,
+cost-ranked order. If there are more parses than this limit, then a
+random subset will be printed. The !random option is used to control
+whether this sampling will use a repeatable (deterministic) random
+sequence, or not.
 
 [cost-max]
-Determines the maximum disjunct cost used during parsing, where the cost
-of a disjunct is equal to the maximum cost of all of its connectors.
+Determines the largest disjunct cost considered during parsing. That is,
+only disjuncts with a cost less than this are used during the parse;
+higher-cost disjuncts are ignored.  Raising the max allowed cost will
+typically produce more parses, although these will less likely be
+correct.
 
 [bad]
-When True, display also linkages that fail post-processing, along with the
-post-processing error that was found.
+When True, display also linkages that are rejected by post-processing,
+along with the name of the rule that resulted in the rejection.
 
-This mode is useful for people editing the dictionary or post-processing.
-The invalid linkages will be outputted after the valid ones.
+This mode is useful when editing the dictionary or the post-processing
+rule-set.  The invalid linkages will be printed after the valid ones.
 
-The parser will only output the linkages it finds at whatever stage it had
-gotten to when it found a valid linkage. For example, if it had gotten to
-null-link stage 2 before finding its first valid linkage, it will also output
-invalid linkages found at null-link stage 2. There is no way of seeing invalid
-linkages found at earlier stages.
+The parser will only output the linkages it finds at whatever stage it
+had gotten to when it found a valid linkage. For example, if it had
+gotten to null-link stage 2 before finding its first valid linkage,
+it will also output invalid linkages found at null-link stage 2.
+There is no way of seeing invalid linkages found at earlier stages.
 
 [short]
-Determines how long the links are allowed to be. The intended use of this
-is to speed up parsing by not considering very long links for most
-connectors, since they are rarely used in a correct parse. An entry for
-UNLIMITED-CONNECTORS in the dictionary will specify which connectors
-(according to the connector matching rules) are exempt from this length
-limit.
+Determines the maximum allowed length for certain connectors. The
+intended use is to speed up parsing by not considering very long links
+for most connectors, since they are rarely used in a correct parse.
+Setting this too low will prevent valid parses; setting this too high
+will slow the system, and occasionaly generate unlikely parses.
+The limit applies only to those connectors not exempted by the
+UNLIMITED-CONNECTORS dictionary entry.
 
 [timeout]
 Determines the approximate maximum time (in seconds) that parsing is
-allowed to take. After this time has expired, the parsing process is
-artificially forced to complete quickly by pretending that no further
-solutions can be constructed. The actual parsing time might be slightly
-longer.
+allowed to take. If a parse is not found before this time, normal parsing
+is halted, and a "panic parse" mode is entered. During the panic parse,
+a looser, less restricitive set of parameters is used (primarily, a
+larger !cost-max), in an effort to find some, any parse.  Panic mode
+can be enabled and disabled with the !panic option.
 
 For the SAT parser (see "!help use-sat") this option has no effect (yet).
 
 [memory]
-The value of this variable has no effect for now.
+The value of this variable has no effect at this time.
 
 [null]
 When False, only linkages with no null links are considered.
@@ -107,19 +118,20 @@ When True, if the parser tries to find linkages with the minimal
 possible number of null links.
 
 [panic]
-Use "panic-mode" if a parse cannot be found within the time set
-by !timeout. In that mode, various parse options are adjusted so
-a less accurate parse can be found quickly.
+If enabled, then a "panic-mode" will be entered if a parse cannot be
+found within the time limit set by !timeout. Wehn in panic mode, various
+parse options are loosened so a less accurate parse can be found quickly.
 
 [use-sat]
-Note: This parser cannot find yet linkages with null-links.
-Also, the !timeout setup doesn't affect it.
-It is supposed to be much faster than the standard parser on very long
-sentences (that have a full parse - without null links).
+Use the Boolean-SAT parser instead of the traditional parser. The SAT
+parser can be much faster on long sentences, but is usually a little
+bit slower for most "normal" sentences.
+
+This parser is not able to find linkages with null-links.  It does not
+honor the !timeout option.
 
 [walls]
-The setup of this variable affects the display of the Graphics-mode
-(see "!help graphics").
+Alters the display of parsed sentences (see "!help graphics").
 When True, the RIGHT-WALL and LEFT_WALL are always displayed.
 When False, they are not displayed if their links are not considered
 "interesting" (by a hard-coded criterion in the LG library).
@@ -140,14 +152,16 @@ Found 16 linkages (8 had no P.P. violations) at null count 1
 LEFT-WALL this.d sentence.n is.v false.a this.d sentence.n is.v true.a
 
 [postscript]
-For actual use, this postscript output needs a header that is printed when
-!ps-header=True is set.
-Note: The postscript output currently malfunctions for sentences longer
+Generate postscript output. The generated postscript requires a header
+in order  to be properly displayed; the header is printed by setting
+!ps-header=True.
+
+The postscript output currently malfunctions for sentences longer
 than a page width.
 
 [ps-header]
-When True, print also an appropriate postscript header when
-!postscript=True is set.
+When set, and when !postscript=True is set, then the postscript header
+will be printed.
 
 %[cluster]
 %This modes is not active for now (the source code may need fixes).
@@ -159,54 +173,61 @@ When True, print also an appropriate postscript header when
 %The only allowed value is 1 for now (the source code may need fixes).
 
 [links]
-When True, display complete link data, including post-processing domains.
+When enabled, this will display each link, one per line, with the
+words and connectors at each end of the link. The post-processing
+domains are also displayed.
+
 This mode is set to True when the standard input is not a terminal.
 
 [disjuncts]
-When True, display the disjuncts that used for each word, including their
-cost.
+When True, display the disjuncts that used for each word, together
+with their cost.
 
 [batch]
-When True, the program process sentences in batch-mode, in which null-links
-are not allowed (as if !null=False got issued).
+When True, the program process sentences in batch-mode. During batch
+mode, the usual parse printing is suppressed; only errors are reported.
+In batch mode, a leading * in the first column can be used to indicate
+a non-grammatical sentence. If such a sentence parses, an error is
+printed. Conversely, an error is reported if no parses are found for
+a a valid sentence.
 
-It is normally used with:
-link-parser [dictionary name] [arguments] < input-file
+Batch testing is typically performed by piping a file to the parser;
+for example
+   link-parser [dictionary name] [arguments] < input-file
+or
+   cat input-file | link-parser [dictionary name] [arguments]
 
-The user indicates in the input file which sentences should be rejected, and
-which should be accepted; the parser then notifies the user when its judgments
-differ. To say that the parser "rejects" a sentence means that it does not find
-any linkages without null-links.
+This flag is then usually placed at the begining of the input-file
+(other options may be specified, as well). Setting the !echo flag
+can be useful, as it will echo the input sentence.
 
-To prepare a file for use in batch-mode, put "!batch" at the top of the file
-in order to toggle it to True.
-Then, for each sentence that should be rejected, precede the sentence with "*"
-in the file. If it should be accepted, precede it with nothing. After
-processing a batch file, the parser will then print the number of errors in the
-file: i.e., the number of sentences on which its judgments differ with the
-judgments indicated by the symbols.
-
-Our GitHub repository contains several large batch-files; For English, the
-three most important ones are "corpus-basic.batch", "corpus-fixes.batch" and
-"corpus-fix-long.batch".
+Our GitHub repository contains several large batch-files used during
+testing and development; for English, the three most important ones
+are "corpus-basic.batch", "corpus-fixes.batch" and "corpus-fix-long.batch".
 See: https://github.com/opencog/link-grammar/tree/master/data/en
 
 For more details see BATCH-MODE in:
 https://www.abisource.com/projects/link-grammar/dict/introduction.html
 
 [echo]
+Print the original input sentence. This is primarily useful when working
+in !batch mode, which otherwise suppresses output.
+
 This mode is set to True when the standard input is not a terminal.
 
 [rand]
-Random numbers are used for sampling linkages if needed
-(see "!help limit").
+If set to true, then a repeatable random sequence will be used, whenever
+a random number is required.  The parser almost never uses random
+numbers; currently they are ony used in one place: to sample a subset
+of linkages, if there are more parses than the linkage limit.
+See "!help limit" for info on the linkage limit.
 
 [debug]
 This variable is for LG library development.
 Its purpose is to limit debug output, which may have a big volume
 otherwise, to certain functions or files. For example:
 
-$ link-parser -verbosity=6 -debug=flatten_wordgraph,print.c
+  $ link-parser -verbosity=6 -debug=flatten_wordgraph,print.c
 
 will only show messages from the `flatten_wordgraph()` function or the
 print.c file.
@@ -216,18 +237,19 @@ directory.
 
 [test]
 This variable is used to enable features that are for debug or have yet
-no other variable to control them.
-For example, this setting will show all the linkages without a need to
-press RETURN after each one:
+no other variable to control them.  For example, to show all the
+linkages without a need to press RETURN, use:
 
-!test=auto-next-linkages
+  !test=auto-next-linkages
 
 For more details, see debug/README.md and link-grammar/README.md
 in our GitHub repository https://github.com/opencog/link-grammar .
 
 [file]
-This command gets as an argument a file name to run in batch-mode.
-See "!help batch".
+Read text from this file. The file is assumed to contain sentences
+and/or option settings.  It is typically used for reading in batch-mode
+files (see "!help batch") but can also be usefil in other scripting
+situations.
 
 [variables]
 Variables can be set as follows:
