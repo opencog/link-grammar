@@ -7512,6 +7512,10 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % ======================================================================
 % QUESTION WORDS
 
+% Allow a question to be preceeded by a clause opener.
+% "By the way, how was it?"
+<clause-q>: {CO-} & Wq-;
+
 % QI- & (): "I do not know who"
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
 % {EL+ & {N+}} & Wd-: "Who?" "Who else?" "Who else not?"
@@ -7524,7 +7528,7 @@ who:
   or Jw-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
-  or (Wq- & Qw+)
+  or (<clause-q> & Qw+)
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
@@ -7541,7 +7545,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {EW-} & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+    & {CO-} & {EW-} & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Ww-)
   or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
@@ -7612,7 +7616,7 @@ whenever wherever however.c:
 
 whyever:
   ({EL+} & (
-     (Ww- & Qw+)
+     ({CO-} & Ww- & Qw+)
      or (QI- & (<subcl-verb> or <ton-verb>))
      or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-))))
   or [[{@CO-} & Wc- & Wi+]];
@@ -7628,7 +7632,7 @@ whichever:
 whence whither:
   {EL+} & ((<subcl-verb> & (({Xc+ & {Xd-}} & CO+)
       or ({Xd- & Xc+} & MVs-)))
-    or ({EW-} & Ww- & Qw+));
+    or ({CO-} & {EW-} & Ww- & Qw+));
 
 % Comparative-opener: "although a good worker, he's not a very good manager"
 <COMP-OPENER>: (O*c+ & {Xc+ & {Xd-}} & COc+);
@@ -7657,7 +7661,7 @@ when:
   or MJl+
   or ({JT-} & MJr- & Qw+)
   or ({EW-} & (QJ- or QJ+))
-  or ({EW-} & Ww- & {Qw+})
+  or ({CO-} & {EW-} & Ww- & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
@@ -7666,7 +7670,7 @@ when:
 % N+: "why not?"  "Why the hell not?"
 why:
   {EL+} & (
-    ({EW-} & (Ww- or Wq-) & {Qw+ or N+})
+    ({CO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or COa+
@@ -7682,7 +7686,7 @@ why:
 where:
   {EL+}
     & (
-      ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
+      ({CO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]
       or SJl+ or SJr-
       or ({EW-} & (QJ- or QJ+))
@@ -7703,12 +7707,11 @@ whether_or_not:
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
 % (EAh+ or EEh+) & Ww-: "How big?" "How quickly?"
-% {CO-} & Wq-: "since ..., how was it?"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or ({EW-} & Ww- & [[()]])
-  or ({EW-} & {CO-} & Wq- & (({EL+} & Qw+) or AF+))
+  or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or SJl+ or SJr-
