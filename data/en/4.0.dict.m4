@@ -8942,6 +8942,7 @@ as.e-c:
 %      use Cz instead of <subcl-verb> because post-processing kills the
 %      Cs link with a "Unbounded s domain78" error.
 % {EZ-} & Cz+ & CV+: "Just as I suspected!"
+%    cost on EZ-: prefer just.e over just.a
 %
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
@@ -8952,7 +8953,7 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or (({EZ-} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+)
+  or (({[EZ-]-0.5} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+)
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
@@ -9644,7 +9645,8 @@ certainly possibly probably importantly remarkably interestingly:
 % absurdly actually additionally admittedly allegedly alternatively
 /en/words/words.adv.2:
   E+
-  or (Xd- & Xc+ & (E+ or MVa-))
+  or (Xd- & Xc+ & E+)
+  or ({Xd- & Xc+} & MVa-)
   or ({Xc+ & {Xd-}} & CO+)
   or EBm-;
 
