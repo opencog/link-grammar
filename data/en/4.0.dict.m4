@@ -2502,7 +2502,7 @@ per "/.per": Us+ & Mp-;
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
-<verb-rq-aux>: Rw- or (({{Xd-} & Iq-} or {COq-}) & (Qd- or Qw- or Qe-)) or [()];
+<verb-rq-aux>: Rw- or (({{Xd-} & Iq-} or {COw-}) & (Qd- or Qw- or Qe-)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -6624,8 +6624,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <prep-main-b>:
   <conjoin-preps>
   or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.61
-  or (Xc+ & {Xd-} & COq+)
-  or [({Xc+ & {Xd-}} & COa+)]
+  or (Xc+ & {Xd-} & COw+)
+  or [({Xc+ & {Xd-}} & (COa+ or COd+))]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
 % Wj- & Qd+: questions: By what means will you arrive?
@@ -6644,7 +6644,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <prep-main-e>:
   <conjoin-preps> or
   [Mp-] or Pp- or MVa- or
-  [({Xc+ & {Xd-}} & CO+)] or
+  (Xc+ & {Xd-} & COw+) or
+  [({Xc+ & {Xd-}} & (COa+ or COd+))] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
 under beneath:
@@ -7363,7 +7364,7 @@ ago:
 
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i x.i:
-  (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or <advcl-verb> or Qe+)) or
+  (ND- & (({Xc+ & {Xd-}} & COa+) or MVp- or EC+ or EZ+ or <advcl-verb> or Qe+)) or
   (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
     (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
