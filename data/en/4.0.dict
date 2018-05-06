@@ -1639,7 +1639,8 @@ such_an: Ds*kv+ or (<PHv> & Ds*kx+);
 
 % "all of the time". These are all temporal modifiers: use MVw ("when")
 % and use OFw to force linkage only to time exprs.
-<adv-of>: MVw- & OFw+;
+% OFw+ & Xc+ CO+: "Some of the time, I really  hate it."
+<adv-of>: (MVw- & OFw+) or (OFw+ & Xc+ & CO+);
 
 a_lot:
   [[<noun-and-p>]]
@@ -1676,6 +1677,7 @@ a_few:
 % OFd+ & Dm+: "I ate some of the cookies"; cost to <nou>, <adv-of> so
 % that this comes first.
 % <adv-of>: "I saw him some of the time"
+% {COw+} & <adv-of>:
 some:
   D+
   or (OFd+ & Dm+ & {EC-})
