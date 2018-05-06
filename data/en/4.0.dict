@@ -11033,6 +11033,35 @@ as_is: {Xd- & Xc+} & MVs-;
 
 as_possible: MVz-;
 
+% Em+: "That is so not going to happen"
+% EExk+: "That is so very beautiful"
+% EBb- & EAxk+: "It tastes bitter and so good"
+% MVp- & Xc+: "Hold the brush so"
+% Pv-: "It seems so"
+% MVs-: "she insisted, so we will do it"
+% Cz+ & CV+: "the accused, so it shall be shown, is innocent"
+so.e:
+  ({EBb-} & EAxk+ & {HA+})
+  or ({EZ-} & EExk+)
+  or Em+
+  or <fronted>
+  or (Wq- & CQ+)
+  or Wa-
+  or (MVp- & Xc+)
+  or ({Xd-} & {[hVCz-]-0.05} & Cz+ & CV+)
+  or Pv-
+  or O-
+  or Js-;
+
+and_so and_thus:
+  <fronted>;
+
+% Is <sent-start> ever needed here?
+% Should we be using <coord> instead of MVs- ??
+% Or maybe every use of MVs- should be converted to <coord> ???
+so_that such_that:
+  <subcl-verb> & {Xd- & Xc+} & MVs-;
+
 % Cc+ & CV+: C links to the head-noun of the following clause, and CV+
 %            links to the head verb. Must form a cycle.
 %            Example: "I run more often than Ben climbs"
@@ -12008,6 +12037,13 @@ so_on the_like vice_versa v.v.:
 <sent-start>:
   (<wo-wall> or <wi-wall>) & {hCPx+ or hCPi+ or hCPu+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
 
+% <sent-start>: "So, don't do it!"
+%    The cost on sent-start is to force preference for CV over WV,
+%    whenever possible.
+so.ij:
+  (({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
+     & (<subcl-verb> or [<sent-start>]0.5);
+
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
 % virtual CAPs morphemes. (??)
@@ -12024,39 +12060,6 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % mid-text period, question mark. Splits into two sentences.
 <sent-split>: Xp- & <sent-start>;
-
-% In many ways, "so" acts as a synonym for a semicolon...
-% <sent-start>: "So, don't do it!"
-%    The cost on sent-start is to force preference for CV over WV,
-%    whenever possible.
-% Em+: "That is so not going to happen"
-% EExk+: "That is so very beautiful"
-% EBb- & EAxk+: "It tastes bitter and so good"
-% MVp- & Xc+: "Hold the brush so"
-% Pv-: "It seems so"
-% MVs-: "she insisted, so we will do it"
-so:
-  ({EBb-} & EAxk+ & {HA+})
-  or ({EZ-} & EExk+)
-  or Em+
-  or ((({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
-    & (<subcl-verb> or [<sent-start>]0.5))
-  or <fronted>
-  or (Wq- & CQ+)
-  or Wa-
-  or (MVp- & Xc+)
-  or Pv-
-  or O-
-  or Js-;
-
-and_so and_thus:
-  <fronted>;
-
-% Is <sent-start> ever needed here?
-% Should we be using <coord> instead of MVs- ??
-% Or maybe every use of MVs- should be converted to <coord> ???
-so_that such_that:
-  <subcl-verb> & {Xd- & Xc+} & MVs-;
 
 % Quotation marks.
 % TODO: Add ' as quotation mark.
