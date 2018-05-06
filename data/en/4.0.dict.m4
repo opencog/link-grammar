@@ -4631,16 +4631,16 @@ imagining.v: <verb-pg> & <vc-imagine>;
   or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
   or MVa+;
 
-declare.v fear.v conclude.v concede.v presume.v foresee.v
+declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
   VERB_PLI(<vc-declare>) or <verb-manner>;
 
-declares.v fears.v concludes.v concedes.v presumes.v foresees.v
+declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
 confirms.v stresses.v assumes.v:
   VERB_S_T(<vc-declare>) or <verb-manner>;
 
-declared.v feared.v concluded.v conceded.v presumed.v
+declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v
 confirmed.v-d stressed.v-d assumed.v-d:
   VERB_SPPP_T(<vc-declare>)
@@ -4655,34 +4655,14 @@ foreseen.v:
   <verb-adj> or
   <verb-phrase-opener>;
 
-declaring.g fearing.g concluding.g conceding.g
+declaring.g fearing.g concluding.g suspecting.g conceding.g
 presuming.g foreseeing.g emphasizing.g maintaining.g acknowledging.g
 noting.g confirming.g stressing.g assuming.g:
   (<vc-declare> & <verb-ge>) or <verb-ge-d>;
-declaring.v fearing.v concluding.v conceding.v
+declaring.v fearing.v concluding.v suspecting.v conceding.v
 presuming.v foreseeing.v emphasizing.v maintaining.v acknowledging.v
 noting.v confirming.v stressing.v assuming.v:
   <verb-pg> & <vc-declare>;
-
-% ---------------------------------------------------------------
-% Just like above, but optionally transitive.
-<vc-suspect>: {<vc-declare>};
-suspect.v:
-  VERB_PLI(<vc-suspect>) or <verb-manner>;
-
-suspects.v:
-  VERB_S_T(<vc-suspect>) or <verb-manner>;
-
-suspected.v-d:
-  VERB_SPPP_T(<vc-suspect>)
-  or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
-  or <verb-adj>
-  or <verb-phrase-opener>;
-
-suspecting.g:
-  (<vc-suspect> & <verb-ge>) or <verb-ge-d>;
-suspecting.v:
-  <verb-pg> & <vc-suspect>;
 
 % ---------------------------------------------------------------
 
