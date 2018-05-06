@@ -5063,6 +5063,8 @@ I am expecting this sentence to parse correctly, and to yield a very wide diagra
 I aim to do something and also to help.
 I aim to do something and to help.
 I aim to help and also to do something.
+I aim to do something and not to complain
+I aim to do something and not complain
 
 % conjoined verbs with modifiers, negation
 He cannot change the beliefs of popular society as a whole.

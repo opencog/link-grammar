@@ -8106,6 +8106,8 @@ then.j-c: {Xd-} & XJc- & VJr+;
 % XXX This is hacky, we should just prevent such infinitive links from
 % occurring at all.
 % {TO+}: "I aim to do something and to help."
+% {N+} & {TO+}: "I aim to do something and not to complain."
+% {N+}: "John wants to pay for the beer, not steal it."
 % Jj- & Jk+: "... to look at and listen to everything."
 %    This is a link-crossing hack; see the link-crossing
 %    discussion in the README; see section-J.html in the docs.
@@ -8115,7 +8117,7 @@ then.j-c: {Xd-} & XJc- & VJr+;
     (RS- & Bs-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
     ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & {TO+} & VJrpi+) &
+  (({Xd-} & VJlpi- & {N+} & {TO+} & VJrpi+) &
     (({@MV+} & Sp- & <verb-wall>) or
     (RS- & Bp-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
