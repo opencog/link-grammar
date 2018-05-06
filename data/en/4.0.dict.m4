@@ -300,7 +300,8 @@ nonCAP.zzz: ZZZ-;
 % PFd+: prevent links to PFt-
 <fronted>: [dWp- & (dPFb+ or dPFd+)]0.1;
 
-% The use of COa here needs to be carefully re-examined; it is used much too freely.
+% The use of COa here needs to be carefully re-examined;
+%   it is used much too freely.
 % COa+ is used to block links to COd-
 % Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
@@ -5094,7 +5095,7 @@ costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 find.v: VERB_PLI(<vc-find>);
 finds.v: VERB_S_T(<vc-find>);
 found.v-d: VERB_SPPP_T(<vc-find>) or
-  (<verb-pv-b> & (({K+ or AF-} & <mv-coord>) or Pa+ or Pg+)) or
+  (<verb-pv> & (({K+ or AF-} & <mv-coord>) or Pa+ or Pg+)) or
   ({K+ or Pa+ or Pg+} & <verb-phrase-opener>);
 finding.v: <verb-pg> & <vc-find>;
 finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
