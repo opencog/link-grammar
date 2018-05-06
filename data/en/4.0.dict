@@ -9776,7 +9776,7 @@ how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or ({EW-} & Ww- & [[()]])
-  or ({EW-} & Wq- & (({EL+} & Qw+) or AF+))
+  or ({EW-} & {CO-} & Wq- & (({EL+} & Qw+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or SJl+ or SJr-
