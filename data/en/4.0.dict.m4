@@ -8229,13 +8229,14 @@ thus therefore therefor:
 %   it tastes bitter, not sweet   % "not" is modifying comma
 %   it tastes bitter and not sweet
 % EB- & EE+: "but not very much"
-% optional {EA+} to make "he is not a good programmer"
-% FIXME: it would be nice to have some + link for this case, also.
+% {EA+}: "he is not a good programmer"
+%     FIXME: it would be nice to have some + link for this case, also.
+% N- & En+: "he does not want to steal it"
 not.e:
   (EBm- & {EA+ or EE+})
   or (EBb- & {EA+})
   or (EBx- & {EA+})
-  or ({@E-} & N-)
+  or ({@E-} & N- & En+)
   or NT+
   or EBy+
   or <COMP-OPENER>
