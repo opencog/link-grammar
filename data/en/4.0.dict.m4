@@ -2498,11 +2498,11 @@ per "/.per": Us+ & Mp-;
 % {CO-} & Qd-: "By the way, does he drink?"
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
-<verb-rq>: Rw- or (({{Xd-} & Iq-} or {CO-}) & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
-<verb-rq-aux>: Rw- or (({{Xd-} & Iq-} or {CO-}) & (Qd- or Qw- or Qe-)) or [()];
+<verb-rq-aux>: Rw- or (({{Xd-} & Iq-} or {COq-}) & (Qd- or Qw- or Qe-)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -6624,7 +6624,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <prep-main-b>:
   <conjoin-preps>
   or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.61
-  or [({Xc+ & {Xd-}} & CO+)]
+  or (Xc+ & {Xd-} & COq+)
+  or [({Xc+ & {Xd-}} & COa+)]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
 % Wj- & Qd+: questions: By what means will you arrive?
@@ -8237,6 +8238,7 @@ not.e:
   or (EBb- & {EA+})
   or (EBx- & {EA+})
   or ({@E-} & N- & En+)
+  or [{@E-} & N-]
   or NT+
   or EBy+
   or <COMP-OPENER>
