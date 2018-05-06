@@ -6660,7 +6660,7 @@ from:
 
 at toward towards without w/o.p:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
-   or [MVp- & B-];
+  or [MVp- & B-];
 
 %
 % XXX FIXME: MVp- & J+ is wrong: "*I saw John except Fred"
@@ -8098,13 +8098,14 @@ then.j-c: {Xd-} & XJc- & VJr+;
 % XXX This is hacky, we should just prevent such infinitive links from
 % occurring at all.
 % {TO+}: "I aim to do something and to help."
+% {Jj-}: "... to look at and listen to everything."
 <verb-conjunction>:
   (({Xd-} & VJlsi- & VJrsi+) &
     (({@MV+} & Ss- & <verb-wall>) or
     (RS- & Bs-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
     ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & {TO+} & VJrpi+) &
+  (({Xd-} & {Jj-} & VJlpi- & {TO+} & VJrpi+) &
     (({@MV+} & Sp- & <verb-wall>) or
     (RS- & Bp-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or

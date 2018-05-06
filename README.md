@@ -1407,6 +1407,10 @@ http://www.corpus.bham.ac.uk/publications/index.shtml
   edited by Elena Tognini-Bonelli, volume 4), 2000<br>
   [Book review](http://www.aclweb.org/anthology/J01-2013).
 
+  “The Molecular Level of Lexical Semantics”, EA Nida, (1997)
+  International Journal of Lexicography, 10(4): 265–274.
+  [Online](https://www.academia.edu/36534355/The_Molecular_Level_of_Lexical_Semantics_by_EA_Nida)
+
 ### "holes" in collocations (aka "set phrases" of "phrasemes"):
   The link-grammar provides several mechanisms to support
   circumpositions or even more complicated multi-word structures.
@@ -1534,6 +1538,11 @@ http://www.phon.ucl.ac.uk/home/dick/enc2010/articles/relative-clause.htm
  mutual information content, they can dominate the syntactic
  structure of a sentence.
 
+### Preposition linking:
+ The current parse of "he wanted to look at and listen to everything."
+ is inadequate: the link to "everything" needs to connect to "and", so
+ that "listen to" and "look at" are treated as atomic verb phrases.
+
 ### Lexical functions:
  MTT suggests that perhaps the correct way to understand the contents
  of the post-processing rules is as an implementation of 'lexical
@@ -1574,11 +1583,13 @@ analysis. To quote Wikipedia:
    > "tower".
 
 ### Morphology printing:
-
    Instead of hard-coding LL, declare which links are morpho links
    in the dict.
 
 ### UTF-8 cleanup:
+   Hmm. Is this really needed? UTF-8 seems to work well, now. So maybe
+   leave it alone.
+
    Replace the mbrtowc code with proper language support; it seems
    that the correct solution is to use [ICU](http://site.icu-project.org/)
    *  ICU pros: runs on windows.
