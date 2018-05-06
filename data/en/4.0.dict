@@ -11010,6 +11010,8 @@ as.e-c:
 % Cz+ & CV+: "the accused, as it shall be shown, is innocent"
 %      use Cz instead of <subcl-verb> because post-processing kills the
 %      Cs link with a "Unbounded s domain78" error.
+% {EZ-} & Cz+ & CV+: "Just as I suspected!"
+%
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % BIt+: "his statements, as candidate, contradict his actions"
@@ -11019,7 +11021,7 @@ as.e:
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or (AZ- & Mg+)
-  or ({Xd-} & {[hVCz-]-0.05} & Cz+ & CV+)
+  or (({EZ-} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+)
   % or ({Xd-} & hVCz- & Cz+ & CV+)
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
@@ -11077,13 +11079,15 @@ than.e:
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
 % ({OFd+} & Dmu+): "I drank much of the beer"
 % cost on [[<noun-main-s>]] so that the above is preferred to an O- link
+% EZ+: "Much as I expected!"
 much:
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
     or (<noun-sub-s> & ([[<noun-main-s>]] or Bsm+))))
-  or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-));
+  or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-))
+  or EZ+;
 
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;
