@@ -2486,13 +2486,14 @@ per "/.per": Us+ & Mp-;
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
 % Qe-: "How many times did you do it?"
 % Qd-: "Does he drink?" -- Qd connects directly to wall.
+% {CO-} & Qd-: "By the way, does he drink?"
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
-<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+<verb-rq>: Rw- or (({{Xd-} & Iq-} or {CO-}) & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
-<verb-rq-aux>: Rw- or ({{Xd-} & Iq-} & (Qd- or Qw- or Qe-)) or [()];
+<verb-rq-aux>: Rw- or (({{Xd-} & Iq-} or {CO-}) & (Qd- or Qw- or Qe-)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
