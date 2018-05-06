@@ -956,6 +956,9 @@ but this `Js` link crosses (clashes with - marked by xxx) the link
 to the conjunction.  These two cases suggest that one should
 allow most links to cross over the down-links to conjunctions.
 
+This is currently worked-around by splitting the Js link into two:
+a Jj part and a Jk part; the two are used together to cross over
+the conjunction.
 
 
 Type Theory

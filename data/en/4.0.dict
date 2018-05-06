@@ -127,11 +127,14 @@ nonCAP.zzz: ZZZ-;
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
 %     links "of" to "Abbey" instead of "it".
 %
+% (Js- & {Jk-}): Allows back-link to conjunction:
+%     e.g. "... to look at and listen to everything"
+%
 % Ss*s+: blocks links to Ss*t- which accepts singular subject, but
 %        requires plural object.  See "are.v" for examples.
 %
 <noun-main-s>:
-  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os-
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & ({Jk-} or {Mf+})) or Os-
   or <post-nominal-s>
   or <costly-null>;
 
@@ -10165,18 +10168,22 @@ then.j-c: {Xd-} & XJc- & VJr+;
 % XXX This is hacky, we should just prevent such infinitive links from
 % occurring at all.
 % {TO+}: "I aim to do something and to help."
-% {Jj-}: "... to look at and listen to everything."
+% Jj- & Jk+: "... to look at and listen to everything."
+%    This is a link-crossing hack; see the link-crossing
+%    discussion in the README; see section-J.html in the docs.
 <verb-conjunction>:
   (({Xd-} & VJlsi- & VJrsi+) &
     (({@MV+} & Ss- & <verb-wall>) or
     (RS- & Bs-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
     ({Xd-} & VJrsi-))) or
-  (({Xd-} & {Jj-} & VJlpi- & {TO+} & VJrpi+) &
+  (({Xd-} & VJlpi- & {TO+} & VJrpi+) &
     (({@MV+} & Sp- & <verb-wall>) or
     (RS- & Bp-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
     ({Xd-} & VJrpi-))) or
+  (({Xd-} & Jj- & VJlpi- & VJrpi+ & Jk+) &
+    ([I-]0.2 & {@MV+} & <verb-wall>)) or
   (({Xd-} & VJlst- & VJrst+) &
     ((({@MV+} & Ss- & <verb-wall>) or
     ([I-]0.2 & {@MV+} & <verb-wall>)) &
