@@ -8966,6 +8966,10 @@ as_is: {Xd- & Xc+} & MVs-;
 
 as_possible: MVz-;
 
+% "It is just like I suspected."
+like.e:
+  ({EZ-} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+;
+
 % Em+: "That is so not going to happen"
 % EExk+: "That is so very beautiful"
 % EBb- & EAxk+: "It tastes bitter and so good"
