@@ -1734,7 +1734,8 @@ all.e:
   or [[<adv-of>]];
 
 % "he likes you least of all" has no determiner, just uses MVa-.
-least.a: EA+;
+% A+: "I shall retain every least word"
+least.a: EA+ or [A+];
 least.e: {DD-} & MVa- & {Mp+};
 
 none:
