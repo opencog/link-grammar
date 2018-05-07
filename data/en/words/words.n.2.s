@@ -9788,6 +9788,7 @@ sofas.n
 softeners.n
 softies.n
 soirees.n
+sojourns.n
 sojourners.n
 solaces.n
 soldiers.n
