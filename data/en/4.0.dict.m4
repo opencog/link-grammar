@@ -7914,17 +7914,17 @@ and.j-g: [G- & G+]0.05;
 % AJ*s: superlative adjectives
 %
 and.j-a but.j-a yet.j-a and_yet:
-  ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-) & {<tot-verb>};
+  ({Xd-} & AJla- & {Xd-} & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-) & {<tot-verb>};
 
 % XJo-: either ... or ...
 or.j-a:
-  ({Xd-} & AJla- & {XJo-} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
+  ({Xd-} & AJla- & {Xd-} & {XJo-} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
 % XJn-: neither ... nor ...
 % Its marked optional only to solve the ugly case of
 % "he is in neither the 105th nor the 106th battalion"
 % At issue is that nouns really really want to get a determiner, so we give it one.
-nor.j-a: AJ- & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
+nor.j-a: AJ- & {Xd-} & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
 
 % comparatives:
 % he is bigger, and badder, than the pope.
@@ -8302,11 +8302,12 @@ just_not: <COMP-OPENER>;
 %
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
+% {Xd-} & Pa-: "she stood there, naked"
 % [EAh- & {Qe+}]: "How big?"  "How tall?" -- large cost, as it otherwise
 %     causes bizarre parses for "a decidedly jolly good player"
 <ordinary-adj>:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
+    ({Xd-} & (Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or <adj-opener>))
