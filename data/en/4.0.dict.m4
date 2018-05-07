@@ -888,17 +888,20 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or ({Ds**c-} & <noun-and-s>)
     or Us-));
 
-% This gets a cost, so that the {Jd-} link for measures.1 is preferred.
+% [<kind-of>]: costly, so that the {Jd-} link for measures.1 is preferred.
 kind_of:
   [<kind-of>]
   or EA+
   or EE+
+  or Em+
   or Wa-;
 
-% This gets a cost, so that the {Jd-} link for measures.1 is preferred.
+% [<kind-of>]: costly, so that the {Jd-} link for measures.1 is preferred.
+% Em+: "she sort of hangs from his neck"
 type_of sort_of breed_of species_of:
   [<kind-of>]
   or [Us-]
+  or Em+
   or [Wa-];
 
 % This gets a cost, so that the {Jd-} link for measures.2 is preferred.
