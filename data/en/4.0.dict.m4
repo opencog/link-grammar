@@ -7133,7 +7133,7 @@ inside.r outside.r underneath alongside:
   <alter-preps>
   or ({J+} & (<prep-main-b> or FM-));
 
-amid plus.p minus.p via onto:
+amid plus.p minus.p via onto on_to:
   J+ & (<prep-main-b> or <fronted>);
 
 % Bare-naked MVp-: "I want it back"
