@@ -7191,6 +7191,7 @@ sideways ashore abreast aft
 half-way.r halfway.r
 two-fold downhill southward underfoot westward eastward
 northward overnight.r on_hold on_track in_situ in_toto off_balance
+on_tiptoe
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
 behind_schedule ahead_of_schedule for_good for_keeps
