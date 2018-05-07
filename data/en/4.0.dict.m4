@@ -2809,7 +2809,8 @@ have.v:
   or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
 
 %I've they've you've we've: PP+ & <CLAUSE>;
-’ve 've: Sp- & PP+;
+’ve 've:
+	Sp- & <verb-wall> & (PP+ or O+);
 
 has.v:
   VERB_X_S(<vc-have>)
