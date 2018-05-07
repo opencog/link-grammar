@@ -4169,7 +4169,8 @@ reigned.v-d ruled.w-d: VERB_SPPP_I(<vc-reign>);
 reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: "She looked him over."
-% O+: "I'll look her in the eye"
+% O+ & MV+: "I'll look her in the eye"
+%   Must have at least one copy of MV+, to block "she looked him"
 % MVa+ connects to adverbs.
 % Pa+ connects to common adjectives (predicative adjectives)
 % K+ connects to particles.
@@ -4177,7 +4178,8 @@ reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 % [K+]0.2: prefer Pa+ to K+ whenever possible: "She looked up"
 <vc-look>: {({@MV+} & (LI+ or [{Xc+} & Pa+]0.1))
   or ({[K+]0.2 or AF-} & <mv-coord>)
-  or (O+ & {K+} & <mv-coord>)};
+  or (O+ & K+ & <mv-coord>)
+  or (O+ & MV+ & <mv-coord>)};
 look.v: VERB_PLI(<vc-look>);
 looks.v: VERB_S_T(<vc-look>);
 looked.v-d: VERB_SPPP_T(<vc-look>);
