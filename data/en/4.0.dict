@@ -2848,6 +2848,8 @@ hadn't.v-d hadn’t.v-d:
      or ({@E-} & (S- or SFs- or SFp- or (RS- & B-))))
   & (PP+ or ((([[O+]] & <mv-coord>) or [[()]]) & <verb-wall>));
 
+% -----------------------------------------------------------
+% "to be"
 % Give [K+] a cost so as to prefer Pp+ in general
 %<vc-be>:
 %  ({@EBm+} & (((O*t+ or [B**t-] or [K+] or BI+ or OF+ or PF- or
@@ -2860,6 +2862,10 @@ hadn't.v-d hadn’t.v-d:
 %    Pa+)) or
 %  ({N+} & (AF- or Pv+ or I*v+)) or
 %  (({N+} or {Pp+}) & Pg*b+);
+
+% But first, some wack idiomatic phrases that behave like "to be"
+% Ix- & Pv+: "You may rest assured"
+rest.w: Ix- & Pv+;
 
 % no-obj is costly but allows "if it weren't for Sally"
 % [Cet+]: elided (silent "that"): "my guess is the door on the left hides the prize."
@@ -3157,6 +3163,7 @@ wouldn't wouldn’t:
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
 
+% ===================================================================
 % EQUATIONS ETC.
 %
 % The below is just barely enough to parse just very simple equations
