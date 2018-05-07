@@ -3861,10 +3861,10 @@ endeavoured.v-d condescended.v-d deigned.v-d: VERB_SPPP_I(<vc-deign>);
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
-<vc-happen>: {@MV+} & {<to-verb> or THi+};
-happen.v occur.v: VERB_PLI(<vc-happen>);
-happens.v occurs.v: VERB_S_I(<vc-happen>);
-happened.v-d occured.v-d occurred.v-d: VERB_SPPP_I(<vc-happen>);
+<vc-happen>: {@MV+} & {<to-verb> or THi+} & {VC+};
+happen.v occur.v: VERB_Y_PLI(<vc-happen>);
+happens.v occurs.v: VERB_Y_S(<vc-happen>);
+happened.v-d occured.v-d occurred.v-d: VERB_Y_SPPP(<vc-happen>);
 happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
 % <vc-please>: a subset of <vc-paraph>, used for urges/desires
