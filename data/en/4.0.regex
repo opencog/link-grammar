@@ -216,6 +216,9 @@
 <ADJ-WORDS>: /^\w.+ive$/
 <ADJ-WORDS>: /^\w.+ble$/
 
+% Usually capitalized place names: Georgian, Norwegian
+<ADJ-WORDS>: /^\w.+ian$/
+
 % latin (postposed) adjectives
 % influenzae, tarentolae
 % pentosaceus, luteus, carnosus
