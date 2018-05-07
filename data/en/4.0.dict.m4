@@ -2900,7 +2900,7 @@ hadn't.v-d hadn’t.v-d:
       or (<verb-wall> & OF+)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
-      or ([[()]] & <verb-wall>)) & <mv-coord>)
+      or ([()]0.666 & <verb-wall>)) & <mv-coord>)
     or (<verb-wall> & Pp+ & {THi+ or @MV+})
     or THb+
     or <to-verb>
