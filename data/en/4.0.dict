@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.5.0 (formatted as V5v5v0+)
-<dictionary-version-number>: V5v5v0+;
+% Dictionary version number is 5.5.1 (formatted as V5v5v1+)
+<dictionary-version-number>: V5v5v1+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -2577,13 +2577,13 @@ per "/.per": Us+ & Mp-;
 <verb-and-sp->: {@E-} & VJr-;
 <verb-and-sp+>: {@E-} & VJl+;
 <verb-and-sp-i->: {@E-} & VJr*i-;
-<verb-and-sp-i+>: ({@E-} & VJl*i+);
+<verb-and-sp-i+>: {@E-} & VJl*i+;
 <verb-and-sp-t->: {@E-} & VJr*t-;
 <verb-and-sp-t+>: {@E-} & VJl*t+;
 <verb-and-pg->: {@E-} & VJrg-;
 <verb-and-pg+>: {@E-} & VJlg+;
-<verb-and-had->: {@E-} & VJrh-;
-<verb-and-had+>: {@E-} & VJlh+;
+<verb-and-had->: {@E-} & (VJrh- or MJrv-);
+<verb-and-had+>: {@E-} & (VJlh+ or MJlv+);
 
 <verb-and-sp-t>:
   <verb-and-sp-t-> or
@@ -10016,25 +10016,29 @@ and.j-s:
 <post-nom-a>: [Ma-] or (Xd- & Xc+ & MX*a-);
 <post-nom-p>: Mp- or MVp- or (Xc+ & CO+);
 <post-nom-j>: J+ & ([Mp-] or Pp- or MVp-);
+<post-nom-v>: Xd- & Mv-;
 
 % [Ma-]: it  is more grammatically correct to have commas ...
 % {EBb+}: "blah but not blah", "blah and not blah"
 but.j-m and.j-m:
   ({Xd-} & MJla- & {EBb+} & MJra+ & <post-nom-a>) or
   ({Xd-} & MJlp- & {EBb+} & MJrp+ & <post-nom-p>) or
-  ({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>);
+  ({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
+  ({Xd-} & MJlv- & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
 % {XJo-}: Either .. or ...
 or.j-m:
   ({Xd-} & MJla- & {XJo-} & {EBb+} & MJra+ & <post-nom-a>) or
   ({Xd-} & MJlp- & {XJo-} & {EBb+} & MJrp+ & <post-nom-p>) or
-  ({Xd-} & MJlj- & {XJo-} & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>);
+  ({Xd-} & MJlj- & {XJo-} & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
+  ({Xd-} & MJlv- & {XJo-} & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
 % XJn-: Neither .. nor ...
 nor.j-m:
   ({Xd-} & MJla- & XJn- & {EBb+} & MJra+ & <post-nom-a>) or
   ({Xd-} & MJlp- & XJn- & {EBb+} & MJrp+ & <post-nom-p>) or
-  ({Xd-} & MJlj- & XJn- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>);
+  ({Xd-} & MJlj- & XJn- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
+  ({Xd-} & MJlv- & XJn- & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
 % Conjoined question words.
 % When and where is the party?
