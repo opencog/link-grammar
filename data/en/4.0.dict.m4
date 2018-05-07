@@ -4338,7 +4338,7 @@ meaning.v arranging.v threatening.v pledging.v:
 
 <vc-plan>:
   <vc-trans> or
-  ({@MV+} & {<to-verb> or TH+ or Zs- or <embed-verb>});
+  ({@MV+} & {<to-verb> or TH+ or Zs- or <embed-verb> or VC+});
 plan.v confess.v: VERB_PLI(<vc-plan>);
 plans.v confesses.v: VERB_S_T(<vc-plan>);
 planned.v-d confessed.v-d:
@@ -4712,7 +4712,7 @@ figuring.v: <verb-pg> & <vc-figure>;
 % (QI+ & {MV+}): "I did not say why until recently"
 <vc-predict>:
   <vc-trans>
-  or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs-))
+  or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
   or ({@MV+} & (QI+ & {MV+}));
 
 % I- & B- & <embed-verb>: "What did John say you should do?"
