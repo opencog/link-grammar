@@ -31,6 +31,7 @@ embarked_on
 entered_into
 fought_with
 frowned_on
+frowned_upon
 gazed_upon
 glared_at
 gossiped_about
@@ -46,6 +47,7 @@ listened_to
 lived_in
 longed_for
 looked_at
+looked_down_on
 monkeyed_with
 negotiated_with
 objected_to
