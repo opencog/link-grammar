@@ -323,6 +323,47 @@ bool calculate_connector_info(condesc_t * c)
 
 /* ================= Connector descriptor table. ====================== */
 
+static uint32_t connector_str_hash(const char *s)
+{
+	uint32_t i;
+
+	/* For most situations, all three hashes are very nearly equal;
+	 * as to which is faster depends on the parsed text.
+	 * For both English and Russian, there are about 100 pre-defined
+	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
+	 * connectors, and the LLxxx suffix connectors for Russian).
+	 * Turns out the cost of setting up the hash table dominates the
+	 * cost of collisions. */
+#ifdef USE_DJB2
+	/* djb2 hash */
+	i = 5381;
+	while (*s)
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	i += i>>14;
+#endif /* USE_DJB2 */
+
+#define USE_JENKINS
+#ifdef USE_JENKINS
+	/* Jenkins one-at-a-time hash */
+	i = 0;
+	while (*s)
+	{
+		i += *s;
+		i += (i<<10);
+		i ^= (i>>6);
+		s++;
+	}
+	i += (i << 3);
+	i ^= (i >> 11);
+	i += (i << 15);
+#endif /* USE_JENKINS */
+
+	return i;
+}
+
 /**
  * Compare connector UC parts, for qsort.
  */
