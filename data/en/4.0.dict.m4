@@ -260,7 +260,7 @@ nonCAP.zzz: ZZZ-;
 % "of" gets priority in modifying the and.j-n instead of "recommendations".
 % However, this cost then causes the following to parse incorrectly:
 % "...went to hell yesterday and heaven on Tuesday."
-% Arghh...
+% Arghh... only semantic disambiguation will work here.
 <noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
 <noun-and-p>: ({[@M+]0.4 or Mp+} & SJlp+) or ({[@M+]1.4 or [Mp+]} & SJrp-);
 <noun-and-u>: ({[@M+]0.4 or Mp+} & SJlu+) or ({[@M+]1.4 or [Mp+]} & SJru-);
