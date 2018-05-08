@@ -263,7 +263,7 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 bool calculate_connector_info(condesc_t * c)
 {
 	const char *s;
-	unsigned int i;
+	uint32_t i;
 
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
@@ -445,9 +445,9 @@ void condesc_delete(Dictionary dict)
 	condesc_length_limit_def_delete(&dict->contable);
 }
 
-static condesc_t **condesc_find(ConTable *ct, const char *constring, int hash)
+static condesc_t **condesc_find(ConTable *ct, const char *constring, uint32_t hash)
 {
-	size_t i = hash & (ct->size-1);
+	uint32_t i = hash & (ct->size-1);
 
 	while ((NULL != ct->hdesc[i]) &&
 	       !string_set_cmp(constring, ct->hdesc[i]->string))
@@ -466,7 +466,7 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 }
 
 static void condesc_insert(ConTable *ct, condesc_t **h,
-                                  const char *constring, int hash)
+                                  const char *constring, uint32_t hash)
 {
 	*h = pool_alloc(ct->mempool);
 	(*h)->str_hash = hash;

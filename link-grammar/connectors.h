@@ -223,7 +223,7 @@ static inline bool easy_match_desc(const condesc_t *c1, const condesc_t *c2)
 	return lc_easy_match(c1, c2);
 }
 
-static inline int string_hash(const char *s)
+static inline uint32_t string_hash(const char *s)
 {
 	unsigned int i;
 
@@ -239,7 +239,7 @@ static inline int string_hash(const char *s)
 
 bool calculate_connector_info(condesc_t *);
 
-static inline int connector_str_hash(const char *s)
+static inline uint32_t connector_str_hash(const char *s)
 {
 	uint32_t i;
 
