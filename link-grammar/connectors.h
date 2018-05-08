@@ -237,7 +237,6 @@ static inline uint32_t string_hash(const char *s)
 	return i;
 }
 
-bool calculate_connector_info(condesc_t *);
 /**
  * hash function. Based on some tests, this seems to be an almost
  * "perfect" hash, in that almost all hash buckets have the same size!

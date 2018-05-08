@@ -260,7 +260,7 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
  * This information is used to speed up the parsing stage. It is
  * calculated during the directory creation and doesn't change afterward.
  */
-bool calculate_connector_info(condesc_t * c)
+static bool calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 	uint32_t i;
