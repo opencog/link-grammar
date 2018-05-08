@@ -432,6 +432,8 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 	dict->contable.sdesc = sdesc;
 	dict->contable.num_uc = uc_num + 1;
 
+	/* hdesc is not freed here because it is needed for finding ZZZ.
+	 * It could be freed here if we have ZZZ cached in the dict structure. */
 	return true;
 }
 
