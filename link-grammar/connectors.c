@@ -503,7 +503,7 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 		                       /*zero_out*/true, /*align*/true, /*exact*/false);
 	}
 
-	int hash = connector_str_hash(constring);
+	uint32_t hash = (connector_hash_size)connector_str_hash(constring);
 	condesc_t **h = condesc_find(ct, constring, hash);
 
 	if (NULL == *h)
