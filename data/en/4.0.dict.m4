@@ -6474,10 +6474,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % wall connectors
 % The naked Wi+, without a WV+, links to imperatives: "put it on the table".
 % The naked Wn+, without a WV+, links to nominals: "what a shame!".
+% The naked Wx+, without a WV+, links to opinions: "ruined!".
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
-<wo-wall>: hWa+ or hWi+ or hWn+ or hWw+ or hQd+;
+<wo-wall>: hWa+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
 <wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+ or hWt+ or hWo+) & <WALL>;
 
 % Paraphrasing, quotational complements:
@@ -8396,12 +8397,14 @@ tawny.a ultramarine.a umber.a yellow.a:
   <color-adj>;
 
 
+% Wx-: single-word opinion expression
 <adj-stuff>:
   <marker-common-entity> or
   ({EA- or EF+} & (
     ((AF+ or Ma- or MJra-) & {@MV+}) or
     ({@MV+} & MJla+) or
     AA+ or
+    Wx- or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]]));
 
