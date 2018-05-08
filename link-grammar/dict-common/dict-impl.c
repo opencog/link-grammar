@@ -342,6 +342,14 @@ void dictionary_setup_defines(Dictionary dict)
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
 
+	/* In version 5.5.0 UNKNOWN_WORD has been replaced by <UNKNOWN-WORD>. */
+	if (!dict->unknown_word_defined &&
+	    boolean_dictionary_lookup(dict, "UNKNOWN-WORD"))
+	{
+		prt_error("Warning: Old name \"UNKNOWN-WORD\" is defined in the "
+		          "dictionary. Please use \"<UNKNOWN-WORD>\" instead.\n");
+	}
+
 	dict->shuffle_linkages = false;
 
 	set_all_condesc_length_limit(dict);
