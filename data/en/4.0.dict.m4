@@ -5480,16 +5480,16 @@ hearing.v: <verb-pg> & <vc-hear>;
   or (<mv-coord> & {TH+ or Zs- or QI+ or <embed-verb>})
   or ([[@MV+ & O*n+]]);
 
-see.v: VERB_PLI(<vc-see>);
-sees.v: VERB_S_T(<vc-see>);
-saw.v-d: VERB_SP_T(<vc-see>);
+see.v spot.v: VERB_PLI(<vc-see>);
+sees.v spots.v: VERB_S_T(<vc-see>);
+saw.v-d spotted.v-d: VERB_SP_T(<vc-see>);
 
 seen.v:
   VERB_PP(<vc-see>) or
   (<verb-pv> & {Pg+ or AZ+}) or
   (<mv-coord> & {Pg+ or AZ+} & <verb-phrase-opener>);
-seeing.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
-seeing.v: <verb-pg> & <vc-see>;
+seeing.g spotting.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
+seeing.v spotting.v: <verb-pg> & <vc-see>;
 
 % ditransitive verbs -- taking direct and indirect objects
 <vc-owe>:
