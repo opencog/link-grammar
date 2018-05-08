@@ -6652,7 +6652,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 %    than one, to overcome cost on @MV+.
 <prep-main-b>:
   <conjoin-preps>
-  or [Mp-]0.4 or Pp- or MVp- or [Mp- & MVp-]-0.61
+  or [Mp-]0.4 or MVp- or [Mp- & MVp-]-0.61
+  or ({EA-} & Pp-)
   or (Xc+ & {Xd-} & COw+)
   or [({Xc+ & {Xd-}} & (COa+ or COd+))]
   or (Xd- & Xc+ & (MX*x- or MVx-));
@@ -8271,7 +8272,8 @@ thus therefore therefor:
 %     FIXME: it would be nice to have some + link for this case, also.
 % N- & En+: "he does not want to steal it"
 not.e:
-  (EBm- & {EA+ or EE+})
+  [EBm-]0.1
+  or (EBm- & (EA+ or EE+))
   or (EBb- & {EA+})
   or (EBx- & {EA+})
   or ({@E-} & N- & En+)
@@ -9345,15 +9347,21 @@ notably:
 
 % Mp- & Ju+: "She was a girl nearly John's age"
 % MVp- & Ju+: "She was a girl of nearly John's age"
+% [EBm- & EA+]-0.1: proiritize above naked EA+
+%
 almost:
   <adv-adj-vowel>
-  or EN+ or EZ+ or Em+ or EBm-
+  or EN+ or EZ+ or Em+
+  or EBm-
+  or [EBm- & EA+]-0.1
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ((Mp- or MVp-) & Ju+);
 
 nearly:
   <adv-adj-const>
-  or EN+ or EZ+ or Em+ or EBm-
+  or EN+ or EZ+ or Em+
+  or EBm-
+  or [{EE-} & EBm- & EA+]-0.1
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ((Mp- or MVp-) & Ju+);
 
