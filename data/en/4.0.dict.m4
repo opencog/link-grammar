@@ -6656,7 +6656,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or ({EA-} & Pp-)
   or (Xc+ & {Xd-} & COw+)
   or [({Xc+ & {Xd-}} & (COa+ or COd+))]
-  or (Xd- & Xc+ & (MX*x- or MVx-));
+  or ({EA-} & Xd- & Xc+ & (MX*x- or MVx-));
 
 % Wj- & Qd+: questions: By what means will you arrive?
 <prep-main-a>:
@@ -7088,7 +7088,8 @@ somewhere someplace:
   or ({EL+} & (MVp- or Pp-))
   or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
   or ({EL+} & {Xc+ & {Xd-}} & [[CO+]])
-  or EE+;
+  or EE+
+  or EA+;
 
 nowhere:
   {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
@@ -9366,7 +9367,7 @@ almost:
   or ((Mp- or MVp-) & Ju+);
 
 nearly:
-  <adv-adj-const>
+  <adv-adj-econst>
   or EN+ or EZ+ or Em+
   or [EBm-]
   or [{EE-} & EBm- & (EC+ or EA+)]-0.5
@@ -9923,6 +9924,7 @@ seldom rarely.e: ({EE-} & (E+ or EB-)) or <COMP-OPENER>;
 % MVl- & MVl+: " we are going to arrive just about on time"
 just.e:
   E+
+  or (EB- & EA+)
   or [EB-]
   or EC+
   or EN+
