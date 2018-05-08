@@ -1376,8 +1376,7 @@ you:
 
 thou: Sp+ & <CLAUSE>;
 
-% Y'gotta, Y'gonna
-Y' y' y'all: (Sp+ & <CLAUSE>) or SIp-;
+y'all: (Sp+ & <CLAUSE>) or SIp-;
 
 % basilect you
 % Pg+: "yo leavin' already?" verb "are" is missing.
@@ -12353,6 +12352,11 @@ beleive.#believe-v: [believe.v]0.1;
 thru.#through-r: [through.r]0.05;
 nite.#night: [night.r or night.u or night.i or night.n]0.05;
 tonite.#tonight: [tonight]0.05;
+
+% Y'gotta, Y'gonna
+%   "keep y'mouth shut"
+y'.#you: [you]0.05;
+y'.#your: [your]0.05;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
