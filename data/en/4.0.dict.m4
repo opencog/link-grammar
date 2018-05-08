@@ -10101,12 +10101,16 @@ changequote dnl
 % cost on [<verb-conjunction>]: allow Pa links with commas, e.g.
 % "he paced, worried" but lower cost than Xx links
 %
+% SJl- & J- & SJr+: "by the A, the B..."
+%   This is a tiny part of and.j-n, but we do not want the full
+%   complexity of and.j-n here, since the commas force this.
 ",":
   ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
+  or (SJl- & J- & SJr+)
   or (SJl- & SJr+ & SJl+);
 
 % :.j
