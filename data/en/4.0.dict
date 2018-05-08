@@ -5646,7 +5646,7 @@ figuring.v: <verb-pg> & <vc-figure>;
 
 % I- & B- & <embed-verb>: "What did John say you should do?"
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
-recall.v reveal.v divulge.v state.v observe.v indicate.v stammer.v
+recall.v reveal.v divulge.v state.v observe.v indicate.v stammer.v bawl.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
 hypothesize.v hypothesise.v document.v envisage.v:
   
@@ -5657,7 +5657,7 @@ hypothesize.v hypothesise.v document.v envisage.v:
 
 predicts.v realizes.v discovers.v determines.v announces.v says.v
 mentions.v admits.v recalls.v reveals.v divulges.v states.v observes.v
-indicates.v stammers.v
+indicates.v stammers.v bawls.v
 analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v
 questions.v tests.v hypothesizes.v hypothesises.v envisages.v
 documents.v:
@@ -5669,7 +5669,8 @@ documents.v:
 
 predicted.v-d realized.v-d discovered.v-d determined.v-d announced.v-d
 mentioned.v-d admitted.v-d recalled.v-d revealed.v-d divulged.v-d
-stated.v-d observed.v-d indicated.v-d stammered.v-d analysed.v-d analyzed.v-d
+stated.v-d observed.v-d indicated.v-d stammered.v-d bawled.v-d
+analysed.v-d analyzed.v-d
 assessed.v-d established.v-d evaluated.v-d examined.v-d questioned.v-d
 tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
 envisaged.v-d documented.v-d:
@@ -5695,13 +5696,13 @@ said.v-d:
 
 predicting.g realizing.g discovering.g determining.g
 announcing.g saying.g mentioning.g admitting.g recalling.g revealing.g
-divulging.g stating.g observing.g indicating.g stammering.g
+divulging.g stating.g observing.g indicating.g stammering.g bawling.g
 analysing.g analyzing.g assessing.g establishing.g evaluating.g examining.g
 questioning.g testing.g hypothesizing.g hypothesising.g documenting.g envisaging.g:
   (<vc-predict> & <verb-ge>) or <verb-ge-d>;
 predicting.v realizing.v discovering.v determining.v
 announcing.v saying.v mentioning.v admitting.v recalling.v revealing.v
-divulging.v stating.v observing.v indicating.v stammering.v
+divulging.v stating.v observing.v indicating.v stammering.v bawling.v
 analysing.v analyzing.v assessing.v establishing.v evaluating.v examining.v
 questioning.v testing.v
 hypothesizing.v hypothesising.v documenting.v envisaging.v:
