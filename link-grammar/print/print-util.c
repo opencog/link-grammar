@@ -192,7 +192,7 @@ error:
 		strcpy(temp_buffer, msg);
 		strerror_r(errno, temp_buffer+sizeof(msg)-1, TMPLEN-sizeof(msg));
 		strcat(temp_buffer, "]");
-		dyn_strcat(string, temp_string);
+		dyn_strcat(string, temp_buffer);
 		va_end(args);
 		return templen;
 	}
