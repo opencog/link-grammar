@@ -108,7 +108,7 @@ struct Connector_struct
 	const gword_set *originating_gword;
 };
 
-void sort_condesc_by_uc_constring(Dictionary);
+bool sort_condesc_by_uc_constring(Dictionary);
 condesc_t *condesc_add(ConTable *ct, const char *);
 void condesc_delete(Dictionary);
 

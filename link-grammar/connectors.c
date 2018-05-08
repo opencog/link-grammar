@@ -368,13 +368,12 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  * It replaces the existing connector UC-part hash, and can later serve
  * as table index as if it was a perfect hash.
  */
-void sort_condesc_by_uc_constring(Dictionary dict)
+bool sort_condesc_by_uc_constring(Dictionary dict)
 {
 	if (0 == dict->contable.num_con)
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
-		/* FIXME: Generate a dictionary open error. */
-		return;
+		return false;
 	}
 
 	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
@@ -422,6 +421,8 @@ void sort_condesc_by_uc_constring(Dictionary dict)
 
 	dict->contable.sdesc = sdesc;
 	dict->contable.num_uc = uc_num + 1;
+
+	return true;
 }
 
 void condesc_delete(Dictionary dict)
