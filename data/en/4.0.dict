@@ -11354,13 +11354,15 @@ notoriously.e:
 % "It's an inherently better method" thus EC+ link
 fabulously marginally moderately relatively ridiculously:
   <adv-adj-econst>
-  or ({EE- or <wantPHc>} & EC+)
-  or ({EE-} & EBm-);
+  or ({EE-} & EBm- & EC+)
+  or [{EE- or <wantPHc>} & EC+]
+  or [{EE-} & EBm-];
 
 incomparably inherently unacceptably unarguably undeniably unimaginably:
   <adv-adj-evowel>
-  or ({EE- or <wantPHv>} & EC+)
-  or ({EE-} & EBm-);
+  or ({EE-} & EBm- & EC+)
+  or [{EE- or <wantPHv>} & EC+]
+  or [{EE-} & EBm-];
 
 wide.e: <wantPHc> & EE+;
 
@@ -11384,7 +11386,8 @@ quite:
 
 amazingly incredibly:
   <adv-adj-evowel>
-  or EBm-
+  or [EBm- & (EC+ or EA+)]-0.5
+  or [EBm-]
   or ({Xd- & Xc+} & Em+)
   or ({Xc+ & {Xd-}} & CO+)
   or (Xd- & Xc+ & MVa-);
@@ -11392,7 +11395,8 @@ amazingly incredibly:
 % MVa-: "He is behaving very strangely"
 strangely:
   <adv-adj-econst>
-  or EBm-
+  or [EBm- & (EC+ or EA+)]-0.5
+  or [EBm-]
   or ({Xd- & Xc+} & Em+)
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xd- & Xc+} & {EE-} & MVa-);
@@ -11406,13 +11410,17 @@ rather:
 
 particularly:
   <adv-adj-const>
-  or Em+ or EB-
+  or Em+
+  or [EB- & (EC+ or EA+)]-0.5
+  or [EB-]
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ({Xc+ & {Xd-}} & CO+);
 
 notably:
   <adv-adj-const>
-  or EB- or ({Xc+ & {Xd-}} & CO+);
+  or [EB- & (EC+ or EA+)]-0.5
+  or [EB-]
+  or ({Xc+ & {Xd-}} & CO+);
 
 % Mp- & Ju+: "She was a girl nearly John's age"
 % MVp- & Ju+: "She was a girl of nearly John's age"
@@ -11421,21 +11429,23 @@ notably:
 almost:
   <adv-adj-vowel>
   or EN+ or EZ+ or Em+
-  or EBm-
-  or [EBm- & EA+]-0.1
+  or [EBm- & (EC+ or EA+)]-0.5
+  or [EBm-]
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ((Mp- or MVp-) & Ju+);
 
 nearly:
   <adv-adj-const>
   or EN+ or EZ+ or Em+
-  or EBm-
-  or [{EE-} & EBm- & EA+]-0.1
+  or [EBm-]
+  or [{EE-} & EBm- & (EC+ or EA+)]-0.5
   or (MVl- & (MVp+ or MVa+ or MVs+))
   or ((Mp- or MVp-) & Ju+);
 
 % The below is similar to "nearly" ...
-just_about: Em+ or EN+ or EZ+ or EA+;
+just_about:
+  Em+ or EN+ or EZ+
+  or EA+;
 
 entirely:
   <adv-adj-vowel>
