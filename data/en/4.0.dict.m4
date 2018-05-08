@@ -3489,10 +3489,14 @@ rising.v falling.v:
   VERB_PLI(<vc-fill>);
 
 /en/words/words.v.6.2: VERB_S_T(<vc-fill>);
+
+% <verb-si>: "Above him hung a lamp"
+%  However, not every verb listed would be used like that.
 /en/words/words.v.6.3:
   VERB_SPPP_T(<vc-fill>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
   <verb-adj> or
+  <verb-si> or
   ({K+} & <verb-phrase-opener>);
 
 split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
