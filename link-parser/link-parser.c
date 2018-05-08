@@ -677,7 +677,7 @@ int main(int argc, char * argv[])
 	{
 		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{
-			if (issue_special_command(argv[i]+1, copts, dict))
+			if (0 > issue_special_command(argv[i]+1, copts, dict))
 				print_usage(argv[0], -1);
 		}
 	}
