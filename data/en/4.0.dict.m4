@@ -9158,7 +9158,10 @@ than_intended than_supposed than_reported than_ever than_usual
 than_normal than_suggested than_anticipated than_recommended: MVt-;
 
 more_than no_more_than fewer_than less_than as_many_as an_estimated
-an_additional up_to as_much_as no_fewer_than no_less_than greater_than: EN+;
+an_additional up_to as_much_as no_fewer_than no_less_than greater_than
+upwards_of:
+  EN+;
+
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 
 % This is not quite right, since there may be other words in between
