@@ -168,15 +168,21 @@ int vappend_string(dyn_str * string, const char *fmt, va_list args)
 	if (templen >= TMPLEN)
 	{
 		/* TMPLEN is too small - use a bigger buffer. This may happen
-		 * when printing dictionary words using !! with a wildcard. */
-		temp_string = alloca(templen+1);
+		 * when printing dictionary words using !! with a wildcard
+		 * or when debug-printing all the connectors. */
+		temp_string = malloc(templen+1);
 		templen = vsnprintf(temp_string, templen+1, fmt, args);
-		if (templen < 0) goto error;
+		if (templen < 0)
+		{
+			free(temp_string);
+			goto error;
+		}
 	}
 	va_end(args);
 
 	patch_subscript_marks(temp_string);
 	dyn_strcat(string, temp_string);
+	if (templen >= TMPLEN) free(temp_string);
 	return templen;
 
 error:
