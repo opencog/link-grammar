@@ -260,10 +260,10 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
  * This information is used to speed up the parsing stage. It is
  * calculated during the directory creation and doesn't change afterward.
  */
-bool calculate_connector_info(condesc_t * c)
+static bool calculate_connector_info(condesc_t * c)
 {
 	const char *s;
-	unsigned int i;
+	uint32_t i;
 
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
@@ -323,6 +323,47 @@ bool calculate_connector_info(condesc_t * c)
 
 /* ================= Connector descriptor table. ====================== */
 
+static uint32_t connector_str_hash(const char *s)
+{
+	uint32_t i;
+
+	/* For most situations, all three hashes are very nearly equal;
+	 * as to which is faster depends on the parsed text.
+	 * For both English and Russian, there are about 100 pre-defined
+	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
+	 * connectors, and the LLxxx suffix connectors for Russian).
+	 * Turns out the cost of setting up the hash table dominates the
+	 * cost of collisions. */
+#ifdef USE_DJB2
+	/* djb2 hash */
+	i = 5381;
+	while (*s)
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	i += i>>14;
+#endif /* USE_DJB2 */
+
+#define USE_JENKINS
+#ifdef USE_JENKINS
+	/* Jenkins one-at-a-time hash */
+	i = 0;
+	while (*s)
+	{
+		i += *s;
+		i += (i<<10);
+		i ^= (i>>6);
+		s++;
+	}
+	i += (i << 3);
+	i ^= (i >> 11);
+	i += (i << 15);
+#endif /* USE_JENKINS */
+
+	return i;
+}
+
 /**
  * Compare connector UC parts, for qsort.
  */
@@ -368,13 +409,22 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  * It replaces the existing connector UC-part hash, and can later serve
  * as table index as if it was a perfect hash.
  */
-void sort_condesc_by_uc_constring(Dictionary dict)
+bool sort_condesc_by_uc_constring(Dictionary dict)
 {
 	if (0 == dict->contable.num_con)
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
-		/* FIXME: Generate a dictionary open error. */
-		return;
+		return false;
+	}
+
+	/* contable.str_hash is invalidated here. */
+	for (size_t n = 0; n < dict->contable.size; n++)
+	{
+		condesc_t *condesc = dict->contable.hdesc[n];
+
+		if (NULL == condesc) continue;
+		if (!calculate_connector_info(condesc))
+			return false;
 	}
 
 	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
@@ -422,6 +472,10 @@ void sort_condesc_by_uc_constring(Dictionary dict)
 
 	dict->contable.sdesc = sdesc;
 	dict->contable.num_uc = uc_num + 1;
+
+	/* hdesc is not freed here because it is needed for finding ZZZ.
+	 * It could be freed here if we have ZZZ cached in the dict structure. */
+	return true;
 }
 
 void condesc_delete(Dictionary dict)
@@ -432,9 +486,9 @@ void condesc_delete(Dictionary dict)
 	condesc_length_limit_def_delete(&dict->contable);
 }
 
-static condesc_t **condesc_find(ConTable *ct, const char *constring, int hash)
+static condesc_t **condesc_find(ConTable *ct, const char *constring, uint32_t hash)
 {
-	size_t i = hash & (ct->size-1);
+	uint32_t i = hash & (ct->size-1);
 
 	while ((NULL != ct->hdesc[i]) &&
 	       !string_set_cmp(constring, ct->hdesc[i]->string))
@@ -452,15 +506,13 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 	ct->size = size;
 }
 
-static bool condesc_insert(ConTable *ct, condesc_t **h,
-                                  const char *constring, int hash)
+static void condesc_insert(ConTable *ct, condesc_t **h,
+                                  const char *constring, uint32_t hash)
 {
 	*h = pool_alloc(ct->mempool);
 	(*h)->str_hash = hash;
 	(*h)->string = constring;
 	ct->num_con++;
-
-	return calculate_connector_info(*h);
 }
 
 #define CONDESC_TABLE_GROW_FACTOR 2
@@ -503,13 +555,15 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 		                       /*zero_out*/true, /*align*/true, /*exact*/false);
 	}
 
-	int hash = connector_str_hash(constring);
+	uint32_t hash = (connector_hash_size)connector_str_hash(constring);
 	condesc_t **h = condesc_find(ct, constring, hash);
 
 	if (NULL == *h)
 	{
-		lgdebug(+11, "Creating connector '%s'\n", constring);
-		if (!condesc_insert(ct, h, constring, hash)) return NULL;
+		assert(0 == ct->num_uc, "Trying to add a connector (%s) "
+		                        "after reading the dict.\n", constring);
+		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
+		condesc_insert(ct, h, constring, hash);
 
 		if ((8 * ct->num_con) > (3 * ct->size))
 		{

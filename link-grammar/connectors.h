@@ -38,7 +38,7 @@
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
 
-typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
+typedef uint32_t connector_hash_size;
 
 /* When connector_hash_size is uint16_t, the size of the following
  * struct on a 64-bit machine is 32 bytes.
@@ -51,9 +51,9 @@ struct condesc_struct
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
 	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
-	connector_hash_size str_hash;
 	union
 	{
+		connector_hash_size str_hash;
 		connector_hash_size uc_hash;
 		connector_hash_size uc_num;
 	};
@@ -108,7 +108,7 @@ struct Connector_struct
 	const gword_set *originating_gword;
 };
 
-void sort_condesc_by_uc_constring(Dictionary);
+bool sort_condesc_by_uc_constring(Dictionary);
 condesc_t *condesc_add(ConTable *ct, const char *);
 void condesc_delete(Dictionary);
 
@@ -223,7 +223,7 @@ static inline bool easy_match_desc(const condesc_t *c1, const condesc_t *c2)
 	return lc_easy_match(c1, c2);
 }
 
-static inline int string_hash(const char *s)
+static inline uint32_t string_hash(const char *s)
 {
 	unsigned int i;
 
@@ -234,49 +234,6 @@ static inline int string_hash(const char *s)
 		i = ((i << 5) + i) + *s;
 		s++;
 	}
-	return i;
-}
-
-bool calculate_connector_info(condesc_t *);
-
-static inline int connector_str_hash(const char *s)
-{
-	uint32_t i;
-
-	/* For most situations, all three hashes are very nearly equal;
-	 * as to which is faster depends on the parsed text.
-	 * For both English and Russian, there are about 100 pre-defined
-	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
-	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of setting up the hash table dominates the
-	 * cost of collisions. */
-#ifdef USE_DJB2
-	/* djb2 hash */
-	i = 5381;
-	while (*s)
-	{
-		i = ((i << 5) + i) + *s;
-		s++;
-	}
-	i += i>>14;
-#endif /* USE_DJB2 */
-
-#define USE_JENKINS
-#ifdef USE_JENKINS
-	/* Jenkins one-at-a-time hash */
-	i = 0;
-	while (*s)
-	{
-		i += *s;
-		i += (i<<10);
-		i ^= (i>>6);
-		s++;
-	}
-	i += (i << 3);
-	i ^= (i >> 11);
-	i += (i << 15);
-#endif /* USE_JENKINS */
-
 	return i;
 }
 
