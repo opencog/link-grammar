@@ -7585,13 +7585,15 @@ what:
   or SJl+ or SJr-
   or (Xc+ & Ic+);
 
-% QI- & (): "I do not know which"
+% [QI-]: "I do not know which"
+% (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
 which:
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
   or [QI-]
+  or (R+ & B*w+ & (QJ+ or QJ-))
   or Jw-;
 
 % <directive-opener> or Wi-: "Which way, left or right?"
