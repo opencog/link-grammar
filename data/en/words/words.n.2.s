@@ -9263,6 +9263,7 @@ scrubs.n
 scruffs.n
 scrunches.n
 scruples.n
+scubas.n
 scuds.n
 sculleries.n
 sculptors.n
