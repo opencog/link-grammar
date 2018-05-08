@@ -2113,12 +2113,15 @@ thirty-first.ti <DAY-ORDINALS>.ti: TM-;
 % connector, although e.g. "point 1/2" would appear reasonable. Go through
 % these and add NM- analogously to other numbers as applicable.
 
-twenties thirties, forties fifties sixties seventies eighties nineties
+twenties thirties forties fifties sixties seventies eighties nineties
 hundreds.cnt:
-  {NA-} & {TA-} & DG- & (IN- or [[<noun-main-x>]]);
+  ({NA-} & {TA-} & DG- & (IN- or [[<noun-main-x>]])) or
+  <mass-noun>;
 
 % teens could be above or teenagers (words.n.2)
-teens: ({TA-} & DG- & (IN- or <noun-main-x>)) or <generic-plural-id>;
+teens:
+  ({TA-} & DG- & (IN- or <noun-main-x>)) or
+  <mass-noun>;
 
 hundred thousand half-thousand million half-million quarter-million
 billion half-billion quarter-billion trillion half-trillion
