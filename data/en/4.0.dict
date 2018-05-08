@@ -12391,6 +12391,8 @@ y'.#your: [your]0.05;
 
 o'.#of: [of]0.05;
 
+e.#he: [he]0.05;
+
 runnin'.#running-v: [running.v]0.05;
 runnin'.#running-g: [running.g]0.05;
 kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
