@@ -376,6 +376,16 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 		return false;
 	}
 
+	/* contable.str_hash is invalidated here. */
+	for (size_t n = 0; n < dict->contable.size; n++)
+	{
+		condesc_t *condesc = dict->contable.hdesc[n];
+
+		if (NULL == condesc) continue;
+		if (!calculate_connector_info(condesc))
+			return false;
+	}
+
 	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
 	memcpy(sdesc, dict->contable.hdesc, dict->contable.size * sizeof(*dict->contable.hdesc));
 	qsort(sdesc, dict->contable.size, sizeof(*dict->contable.hdesc),
@@ -453,15 +463,13 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 	ct->size = size;
 }
 
-static bool condesc_insert(ConTable *ct, condesc_t **h,
+static void condesc_insert(ConTable *ct, condesc_t **h,
                                   const char *constring, int hash)
 {
 	*h = pool_alloc(ct->mempool);
 	(*h)->str_hash = hash;
 	(*h)->string = constring;
 	ct->num_con++;
-
-	return calculate_connector_info(*h);
 }
 
 #define CONDESC_TABLE_GROW_FACTOR 2
@@ -509,8 +517,10 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 
 	if (NULL == *h)
 	{
-		lgdebug(+11, "Creating connector '%s'\n", constring);
-		if (!condesc_insert(ct, h, constring, hash)) return NULL;
+		assert(0 == ct->num_uc, "Trying to add a connector (%s) "
+		                        "after reading the dict.\n", constring);
+		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
+		condesc_insert(ct, h, constring, hash);
 
 		if ((8 * ct->num_con) > (3 * ct->size))
 		{

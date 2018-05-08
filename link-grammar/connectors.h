@@ -38,7 +38,7 @@
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
 
-typedef uint16_t connector_hash_size; /* Change to uint32_t if needed. */
+typedef uint32_t connector_hash_size;
 
 /* When connector_hash_size is uint16_t, the size of the following
  * struct on a 64-bit machine is 32 bytes.
@@ -51,9 +51,9 @@ struct condesc_struct
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
 	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
-	connector_hash_size str_hash;
 	union
 	{
+		connector_hash_size str_hash;
 		connector_hash_size uc_hash;
 		connector_hash_size uc_num;
 	};
