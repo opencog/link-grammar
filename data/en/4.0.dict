@@ -8945,7 +8945,7 @@ unlike:
 %      XXX The Mp- below should be removed, and all occurrences of
 %      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
 % Mf- & MVp+: "She was a girl of about John's age"
-of o':
+of:
   ({JQ+}
     & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
@@ -12357,6 +12357,18 @@ tonite.#tonight: [tonight]0.05;
 %   "keep y'mouth shut"
 y'.#you: [you]0.05;
 y'.#your: [your]0.05;
+
+o'.#of: [of]0.05;
+
+runnin'.#running-v: [running.v]0.05;
+runnin'.#running-g: [running.g]0.05;
+kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
+
+an'.#and-j-n: [and.j-n]0.05;
+an'.#and-j-v: [and.j-v]0.05;
+
+an.#and-j-n: [and.j-n]0.05;
+an.#and-j-v: [and.j-v]0.05;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
