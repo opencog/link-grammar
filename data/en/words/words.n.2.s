@@ -1099,6 +1099,7 @@ boaters.n
 boathouses.n
 boats.n
 boatswains.n
+bobs.n
 bobbies.n
 bobsleds.n
 bobsleighs.n
