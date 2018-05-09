@@ -10332,7 +10332,6 @@ o'.#of: [of]0.05;
 e.#he: [he]0.05;
 
 runnin'.#running-v: [running.v]0.05;
-runnin'.#running-g: [running.g]0.05;
 kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
 
 an'.#and-j-n: [and.j-n]0.05;
@@ -10340,6 +10339,12 @@ an'.#and-j-v: [and.j-v]0.05;
 
 an.#and-j-n: [and.j-n]0.05;
 an.#and-j-v: [and.j-v]0.05;
+
+% Bad German accent
+vas.#was-v-d: [was.v-d]0.05;
+vas.#what: [what]0.05;
+das.#this-p: [this.p]0.05;
+das.#this-d: [this.d]0.05;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
