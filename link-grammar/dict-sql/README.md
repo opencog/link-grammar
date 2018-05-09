@@ -57,3 +57,8 @@ link-parser foo
 ```
 The above should result in a dictionary that can parse the same sentences
 as the demo database.
+
+TODO
+----
+* Rename tabvle "Morphemes" to table "tokens".  Want consistent naming
+  with the token flow-graph name.
