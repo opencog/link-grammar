@@ -7746,11 +7746,11 @@ whether_or_not:
 
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
-% (EAh+ or EEh+) & Ww-: "How big?" "How quickly?"
+% (EAh+ or EEh+) & Wq-: "How big?" "How quickly?"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
-  or ({EW-} & Ww- & [[()]])
+  or ({EW-} & Ww- & (EAh+ or EEh+ or [[()]]))
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
