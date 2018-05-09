@@ -1307,7 +1307,7 @@ she he:
 % The E- is for "It's either us or them" ... not ideal, but OK
 % See also me.p below.
 me him:
-  J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
+  J- or Ox- or ({[[E-]]} & SJl+) or SJr- or Wa-;
 
 % DD+: "... how us two should work together"
 us:
@@ -7745,6 +7745,7 @@ telling.v: <verb-pg> & <vc-tell>;
 % basilect telling
 tellin': <verb-pg> & <vc-tell>;
 
+% Many other paraphrasing question words are in words.v.10
 % (QI+ & {MV+}): "I did not ask why until recently"
 <vc-ask>:
   ({(O+ & {O*n+}) or <b-minus>} & <mv-coord>
