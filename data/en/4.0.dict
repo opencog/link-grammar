@@ -5644,6 +5644,7 @@ figuring.v: <verb-pg> & <vc-figure>;
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
   or ({@MV+} & (QI+ & {MV+}));
 
+% See also: words.v.10 for paraphrasing verbs
 % I- & B- & <embed-verb>: "What did John say you should do?"
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
 recall.v reveal.v divulge.v state.v observe.v indicate.v stammer.v bawl.v
