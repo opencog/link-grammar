@@ -4424,21 +4424,29 @@ proposed.v-d:
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
-<vc-demand>: <vc-trans> or
-({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
+<vc-demand>:
+  <vc-trans>
+  or (OF+ & <mv-coord>)
+  or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
-demanded.v-d: VERB_SPPP_T(<vc-demand>) or <verb-pv> or
-<verb-phrase-opener>;
+demanded.v-d:
+  VERB_SPPP_T(<vc-demand>)
+  or <verb-pv>
+  or <verb-phrase-opener>;
 demanding.v: <verb-pg> & <vc-demand>;
 demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 
-<vc-beg>: {<vc-trans>} or
-({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
+<vc-beg>:
+  {<vc-trans>}
+  or (OF+ & <mv-coord>)
+  or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 beg.v plead.v: VERB_PLI(<vc-beg>);
 begs.v pleads.v: VERB_S_T(<vc-beg>);
-begged.v-d pleaded.v-d: VERB_SPPP_T(<vc-beg>) or <verb-pv> or
-<verb-phrase-opener>;
+begged.v-d pleaded.v-d:
+  VERB_SPPP_T(<vc-beg>)
+  or <verb-pv>
+  or <verb-phrase-opener>;
 begging.v pleading.v: <verb-pg> & <vc-beg>;
 begging.g pleading.g: (<vc-beg> & <verb-ge>) or <verb-ge-d>;
 
@@ -6026,9 +6034,11 @@ tellin': <verb-pg> & <vc-tell>;
 
 % Many other paraphrasing question words are in words.v.10
 % (QI+ & {MV+}): "I did not ask why until recently"
+% OF+ & <mv-coord>: "Joseph asked of her : Who is this ?"
 <vc-ask>:
   ({(O+ & {O*n+}) or <b-minus>} & <mv-coord>
     & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-})
+  or (OF+ & <mv-coord>)
   or ([[@MV+ & O*n+ & <mv-coord>]]);
 
 ask.v: VERB_PLI(<vc-ask>);
@@ -10334,6 +10344,11 @@ o'.#of: [of]0.05;
 
 e.#he: [he]0.05;
 
+be.#by: [by]0.05;
+de.#the: [the]0.05;
+
+drinkin.#drinking-v: [drinking.v]0.05;
+drinkin'.#drinking-v: [drinking.v]0.05;
 runnin'.#running-v: [running.v]0.05;
 kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
 

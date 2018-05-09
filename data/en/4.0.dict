@@ -5145,8 +5145,10 @@ proposed.v-d:
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
-<vc-demand>: <vc-trans> or
-({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
+<vc-demand>:
+  <vc-trans>
+  or (OF+ & <mv-coord>)
+  or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: 
   ((<verb-pl,i> & (<vc-demand>)) or
   (<verb-and-pl-> & ((<vc-demand>) or ())) or
@@ -5156,17 +5158,21 @@ demands.v:
   (<verb-and-sp-i-> & ([<vc-demand>]0.2 or ())) or
   ((<vc-demand>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-demanded.v-d: 
+demanded.v-d:
+  
   ((<verb-sp,pp> & (<vc-demand>)) or
   (<verb-and-sp-i-> & ([<vc-demand>]0.2 or ())) or
   ((<vc-demand>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or <verb-pv> or
-<verb-phrase-opener>;
+  <verb-and-sp-t>)
+  or <verb-pv>
+  or <verb-phrase-opener>;
 demanding.v: <verb-pg> & <vc-demand>;
 demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 
-<vc-beg>: {<vc-trans>} or
-({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
+<vc-beg>:
+  {<vc-trans>}
+  or (OF+ & <mv-coord>)
+  or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 beg.v plead.v: 
   ((<verb-pl,i> & (<vc-beg>)) or
   (<verb-and-pl-> & ((<vc-beg>) or ())) or
@@ -5176,12 +5182,14 @@ begs.v pleads.v:
   (<verb-and-sp-i-> & ([<vc-beg>]0.2 or ())) or
   ((<vc-beg>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-begged.v-d pleaded.v-d: 
+begged.v-d pleaded.v-d:
+  
   ((<verb-sp,pp> & (<vc-beg>)) or
   (<verb-and-sp-i-> & ([<vc-beg>]0.2 or ())) or
   ((<vc-beg>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or <verb-pv> or
-<verb-phrase-opener>;
+  <verb-and-sp-t>)
+  or <verb-pv>
+  or <verb-phrase-opener>;
 begging.v pleading.v: <verb-pg> & <vc-beg>;
 begging.g pleading.g: (<vc-beg> & <verb-ge>) or <verb-ge-d>;
 
@@ -7747,9 +7755,11 @@ tellin': <verb-pg> & <vc-tell>;
 
 % Many other paraphrasing question words are in words.v.10
 % (QI+ & {MV+}): "I did not ask why until recently"
+% OF+ & <mv-coord>: "Joseph asked of her : Who is this ?"
 <vc-ask>:
   ({(O+ & {O*n+}) or <b-minus>} & <mv-coord>
     & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-})
+  or (OF+ & <mv-coord>)
   or ([[@MV+ & O*n+ & <mv-coord>]]);
 
 ask.v: 
@@ -12401,6 +12411,11 @@ o'.#of: [of]0.05;
 
 e.#he: [he]0.05;
 
+be.#by: [by]0.05;
+de.#the: [the]0.05;
+
+drinkin.#drinking-v: [drinking.v]0.05;
+drinkin'.#drinking-v: [drinking.v]0.05;
 runnin'.#running-v: [running.v]0.05;
 kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
 
