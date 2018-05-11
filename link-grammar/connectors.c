@@ -546,15 +546,6 @@ static bool condesc_grow(ConTable *ct)
 
 condesc_t *condesc_add(ConTable *ct, const char *constring)
 {
-	if (0 == ct->size)
-	{
-		condesc_table_alloc(ct, ct->num_con);
-		ct->num_con = 0;
-		ct->mempool = pool_new(__func__, "ConTable",
-		                       /*num_elements*/1024, sizeof(condesc_t),
-		                       /*zero_out*/true, /*align*/true, /*exact*/false);
-	}
-
 	uint32_t hash = (connector_hash_size)connector_str_hash(constring);
 	condesc_t **h = condesc_find(ct, constring, hash);
 
@@ -573,5 +564,18 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 	}
 
 	return *h;
+}
+
+void condesc_init(Dictionary dict, size_t num_con)
+{
+	ConTable *ct = &dict->contable;
+
+	condesc_table_alloc(ct, num_con);
+	ct->mempool = pool_new(__func__, "ConTable",
+								  /*num_elements*/1024, sizeof(condesc_t),
+								  /*zero_out*/true, /*align*/true, /*exact*/false);
+
+	ct->length_limit_def = NULL;
+	ct->length_limit_def_next = &ct->length_limit_def;
 }
 /* ========================= END OF FILE ============================== */

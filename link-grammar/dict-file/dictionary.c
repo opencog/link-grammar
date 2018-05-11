@@ -145,7 +145,7 @@ dictionary_six_str(const char * lang,
 		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
 		dict->lookup = file_boolean_lookup;
-		dict->contable.num_con = 1<<13;
+		condesc_init(dict, 1<<13);
 	}
 	else
 	{
@@ -155,25 +155,16 @@ dictionary_six_str(const char * lang,
 		afclass_init(dict);
 		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
-		dict->contable.num_con = 1<<9;
+		condesc_init(dict, 1<<9);
 	}
-	dict->affix_table = NULL;
-
-	dict->contable.size = 0;
-	dict->contable.length_limit_def = NULL;
-	dict->contable.length_limit_def_next = &dict->contable.length_limit_def;
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
 	dict->pin = dict->input;
 	if (!read_dictionary(dict))
 	{
-		dict->pin = NULL;
-		dict->input = NULL;
 		goto failure;
 	}
-	dict->pin = NULL;
-	dict->input = NULL;
 
 	if (NULL == affix_name)
 	{
