@@ -392,6 +392,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;
+	condesc_init(dict, 1<<8);
 
 	/* Setup the affix table */
 	dict->affix_table = (Dictionary) malloc(sizeof(struct Dictionary_s));

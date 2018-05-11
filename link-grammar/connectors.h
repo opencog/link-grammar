@@ -114,10 +114,12 @@ struct Connector_struct
 };
 
 void condesc_init(Dictionary, size_t);
+void condesc_reset(Dictionary);
 void condesc_setup(Dictionary);
 bool sort_condesc_by_uc_constring(Dictionary);
 condesc_t *condesc_add(ConTable *ct, const char *);
 void condesc_delete(Dictionary);
+void condesc_reuse(Dictionary);
 
 /* GET accessors for connector attributes.
  * Can be used for experimenting with Connector_struct internals in

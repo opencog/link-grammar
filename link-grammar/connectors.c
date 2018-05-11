@@ -490,9 +490,21 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 
 void condesc_delete(Dictionary dict)
 {
-	pool_delete(dict->contable.mempool);
-	free(dict->contable.hdesc);
-	condesc_length_limit_def_delete(&dict->contable);
+	ConTable *ct = &dict->contable;
+
+	free(ct->hdesc);
+	pool_delete(ct->mempool);
+	condesc_length_limit_def_delete(ct);
+}
+
+void condesc_reuse(Dictionary dict)
+{
+	ConTable *ct = &dict->contable;
+
+	ct->num_con = 0;
+	ct->num_uc = 0;
+	memset(ct->hdesc, 0, ct->size * sizeof(hdesc_t));
+	pool_reuse(ct->mempool);
 }
 
 static hdesc_t *condesc_find(ConTable *ct, const char *constring, uint32_t hash)
@@ -552,7 +564,7 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 	if (NULL == h->desc)
 	{
 		assert(0 == ct->num_uc, "Trying to add a connector (%s) "
-		                        "after reading the dict.\n", constring);
+				 "after reading the dict.\n", constring);
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
 		h->desc = pool_alloc(ct->mempool);
 		h->desc->string = constring;
