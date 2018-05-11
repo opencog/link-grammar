@@ -54,7 +54,6 @@ struct condesc_struct
 	union
 	{
 		connector_hash_t str_hash;
-		connector_hash_t uc_hash;
 		connector_hash_t uc_num;
 	};
 	uint8_t length_limit;
@@ -134,7 +133,7 @@ static inline const condesc_t *connector_desc(const Connector *c)
 
 static inline int connector_uc_hash(const Connector * c)
 {
-	return c->desc->uc_hash;
+	return c->desc->uc_num;
 }
 
 static inline int connector_uc_num(const Connector * c)

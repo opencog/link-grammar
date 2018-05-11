@@ -263,12 +263,15 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 static bool calculate_connector_info(condesc_t * c)
 {
 	const char *s;
-	uint32_t i;
 
 	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
-	c->head_dependent = (c->string == s)? '\0' : c->string[0];
+	if (islower(*s)) s++; /* ignore head-dependent indicator */
+	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
+		c->flags |= CD_HEAD_DEPENDET;
+	if ((c->flags & CD_HEAD_DEPENDET) && (c->string[0] == 'h'))
+		c->flags |= CD_HEAD;
 
+#if 0
 	/* For most situations, all three hashes are very nearly equal;
 	 * as to which is faster depends on the parsed text.
 	 * For both English and Russian, there are about 100 pre-defined
@@ -278,7 +281,7 @@ static bool calculate_connector_info(condesc_t * c)
 	 * cost of collisions. */
 #ifdef USE_DJB2
 	/* djb2 hash */
-	i = 5381;
+	uint32_t i = 5381;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i = ((i << 5) + i) + *s;
@@ -290,7 +293,7 @@ static bool calculate_connector_info(condesc_t * c)
 #define USE_JENKINS
 #ifdef USE_JENKINS
 	/* Jenkins one-at-a-time hash */
-	i = 0;
+	uint32_t i = 0;
 	c->uc_start = s - c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
@@ -306,7 +309,7 @@ static bool calculate_connector_info(condesc_t * c)
 
 #ifdef USE_SDBM
 	/* sdbm hash */
-	i = 0;
+	uint32_t i = 0;
 	c->uc_start = s - c->string;
 	while (isupper((int) *s))
 	{
@@ -315,8 +318,15 @@ static bool calculate_connector_info(condesc_t * c)
 	}
 #endif /* USE_SDBM */
 
+	//c->uc_hash = i;
+#else
+
+
+	c->uc_start = s - c->string;
+	while (isupper(*++s)) /* The first letter must be an uppercase one. */
+		;
+#endif
 	c->uc_length = s - c->string - c->uc_start;
-	c->uc_hash = i;
 
 	return connector_encode_lc(s, c);
 }
@@ -406,8 +416,7 @@ static int condesc_by_uc_constring(const void * a, const void * b)
 
 /**
  * Enumerate the connectors by their UC parts - equal parts get the same number.
- * It replaces the existing connector UC-part hash, and can later serve
- * as table index as if it was a perfect hash.
+ * It can later serve as a table index, as if it was a perfect hash.
  */
 bool sort_condesc_by_uc_constring(Dictionary dict)
 {
@@ -434,7 +443,6 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 
 	/* Enumerate the connectors according to their UC part. */
 	int uc_num = 0;
-	uint32_t uc_hash = sdesc[0]->uc_hash; /* Will be recomputed */
 
 	sdesc[0]->uc_num = uc_num;
 	for (size_t n = 1; n < dict->contable.num_con; n++)
@@ -443,8 +451,7 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 
 //#define DEBUG_UC_HASH_CHANGE
 #ifndef DEBUG_UC_HASH_CHANGE /* Use a shortcut - not needed for correctness. */
-		if ((condesc[0]->uc_hash != uc_hash) ||
-		   (condesc[0]->uc_length != condesc[-1]->uc_length))
+		if (condesc[0]->uc_length != condesc[-1]->uc_length)
 
 		{
 			/* We know that the UC part has been changed. */
@@ -461,9 +468,8 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 			}
 		}
 
-		uc_hash = condesc[0]->uc_hash;
 		//printf("%5d constring=%s\n", uc_num, condesc[0]->string);
-		condesc[0]->uc_hash = uc_num;
+		condesc[0]->uc_num = uc_num;
 	}
 
 	lgdebug(+11, "Dictionary %s: %zu different connectors "
