@@ -38,9 +38,9 @@
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
 
-typedef uint32_t connector_hash_size;
+typedef uint32_t connector_hash_t;
 
-/* When connector_hash_size is uint16_t, the size of the following
+/* When connector_hash_t is uint16_t, the size of the following
  * struct on a 64-bit machine is 32 bytes.
  * FIXME: Make it 16 bytes by separating the info that is not needed
  * by do_count() into another structure (and some other minor changes). */
@@ -53,9 +53,9 @@ struct condesc_struct
 	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
 	union
 	{
-		connector_hash_size str_hash;
-		connector_hash_size uc_hash;
-		connector_hash_size uc_num;
+		connector_hash_t str_hash;
+		connector_hash_t uc_hash;
+		connector_hash_t uc_num;
 	};
 	uint8_t length_limit;
 	                      /* If not 0, it gives the limit of the length of the
