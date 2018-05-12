@@ -420,7 +420,7 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  */
 bool sort_condesc_by_uc_constring(Dictionary dict)
 {
-	if (0 == dict->contable.num_con)
+	if ((0 == dict->contable.num_con) && !IS_DB_DICT(dict))
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
 		return false;
@@ -492,7 +492,6 @@ void condesc_delete(Dictionary dict)
 {
 	pool_delete(dict->contable.mempool);
 	free(dict->contable.hdesc);
-	free(dict->contable.sdesc);
 	condesc_length_limit_def_delete(&dict->contable);
 }
 
@@ -581,5 +580,12 @@ void condesc_init(Dictionary dict, size_t num_con)
 
 	ct->length_limit_def = NULL;
 	ct->length_limit_def_next = &ct->length_limit_def;
+}
+
+void condesc_setup(Dictionary dict)
+{
+	sort_condesc_by_uc_constring(dict);
+	set_all_condesc_length_limit(dict);
+	free(dict->contable.sdesc);
 }
 /* ========================= END OF FILE ============================== */

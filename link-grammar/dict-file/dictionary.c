@@ -218,8 +218,8 @@ dictionary_six_str(const char * lang,
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
-	if (!sort_condesc_by_uc_constring(dict)) goto failure;
 	dictionary_setup_defines(dict);
+	condesc_setup(dict);
 
 	// Special-case hack.
 	if ((0 == strncmp(dict->lang, "any", 3)) ||
