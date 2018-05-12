@@ -40,20 +40,20 @@ typedef uint64_t lc_enc_t;
 
 typedef uint32_t connector_hash_t;
 
-/* When connector_hash_t is uint16_t, the size of the following
- * struct on a 64-bit machine is 32 bytes.
- * FIXME: Make it 16 bytes by separating the info that is not needed
- * by do_count() into another structure (and some other minor changes). */
+/* The size of the following struct on a 64-bit machine is 32 bytes.
+ * It should be kept at this size. If needed, head_dependent, uc_length
+ * and uc_start can be eliminate or moved out. Also, there not enough
+ * space here to implement cost per connector length - an index to a
+ * cost table should be used instead.*/
 struct condesc_struct
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
+	// double *cost; /* Array of cost by connector length (cost[0]: default) */
 	connector_hash_t uc_num; /* uc part enumeration. */
-	uint8_t length_limit;
-	                      /* If not 0, it gives the limit of the length of the
+	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
 	                       * value UNLIMITED_LEN specifies no limit.
 	                       * If 0, short_length (a Parse_Option) is used. If
