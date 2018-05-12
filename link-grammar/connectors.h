@@ -40,6 +40,10 @@ typedef uint64_t lc_enc_t;
 
 typedef uint32_t connector_hash_t;
 
+#define CD_HEAD_DEPENDET     (1<<0) /* Has a leading 'h' or 'd'. */
+#define CD_HEAD              (1<<1) /* 0: dependent; 1: head; */
+#define CD_PERMANENT         (1<<2) /* For SQL dict: Do not clear (future). */
+
 /* The size of the following struct on a 64-bit machine is 32 bytes.
  * It should be kept at this size. If needed, head_dependent, uc_length
  * and uc_start can be eliminate or moved out. Also, there not enough
@@ -59,7 +63,7 @@ struct condesc_struct
 	                       * If 0, short_length (a Parse_Option) is used. If
 	                       * all_short==true (a Parse_Option), length_limit
 	                       * is clipped to short_length. */
-	char head_dependent;   /* 'h' for head, 'd' for dependent, or '\0' if none */
+	uint8_t flags;        /* CD_* */
 
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
@@ -207,12 +211,8 @@ static inline bool easy_match(const char * s, const char * t)
  */
 static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
 {
-	if ((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask)
-		return false;
-	if (('\0' != c1->head_dependent) && (c1->head_dependent == c2->head_dependent))
-		return false;
-
-	return true;
+	return (((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask) ==
+	        (c1->lc_mask & c2->lc_mask & 1));
 }
 
 /**

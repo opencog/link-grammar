@@ -249,8 +249,8 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 		return false;
 	}
 
-	desc->lc_mask = lc_mask;
-	desc->lc_letters = lc_value;
+	desc->lc_mask = (lc_mask << 1) + !!(desc->flags & CD_HEAD_DEPENDET);
+	desc->lc_letters = (lc_value << 1) + !!(desc->flags & CD_HEAD);
 
 	return true;
 }
