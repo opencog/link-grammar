@@ -23,7 +23,6 @@
 #include "connectors.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // for LEFT_WALL_WORD
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
 #include "dict-common/dict-utils.h"
