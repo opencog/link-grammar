@@ -51,11 +51,7 @@ struct condesc_struct
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
 	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
-	union
-	{
-		connector_hash_t str_hash;
-		connector_hash_t uc_num;
-	};
+	connector_hash_t uc_num; /* uc part enumeration. */
 	uint8_t length_limit;
 	                      /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
@@ -79,9 +75,15 @@ typedef struct length_limit_def
 	int length_limit;
 } length_limit_def_t;
 
+typedef struct hdesc
+{
+	condesc_t *desc;
+	connector_hash_t str_hash;
+} hdesc_t;
+
 typedef struct
 {
-	condesc_t **hdesc;    /* Hashed connector descriptors table */
+	hdesc_t *hdesc;       /* Hashed connector descriptors table */
 	condesc_t **sdesc;    /* Alphabetically sorted descriptors */
 	size_t size;          /* Allocated size */
 	size_t num_con;       /* Number of connector types */

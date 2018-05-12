@@ -101,10 +101,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i += e->desc->str_hash;
+		i += ((uintptr_t)e->desc) + e->desc->uc_num;
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i += e->desc->str_hash;
+		i += ((uintptr_t)e->desc) + e->desc->uc_num;
 	}
 	i += string_hash(d->word_string);
 	i += (i>>10);
@@ -148,6 +148,26 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 	if (d1->word_string == d2->word_string) return true;
 	return (strcmp(d1->word_string, d2->word_string) == 0);
 }
+
+#if 0
+int de_fp = 0;
+int de_total = 0;
+static void disjuncts_equal_stat(void)
+{
+		fprintf(stderr, "disjuncts_equal FP %d/%d\n", de_fp, de_total);
+}
+
+static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
+{
+	if (de_total == 0) atexit(disjuncts_equal_stat);
+	de_total++;
+
+	bool rc = disjuncts_equal1(d1, d2);
+	if (!rc) de_fp++;
+
+	return rc;
+}
+#endif
 
 /**
  * Duplicate the given connector chain.

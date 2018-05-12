@@ -426,19 +426,23 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 		return false;
 	}
 
-	/* contable.str_hash is invalidated here. */
+	/* An SQL dict without <UNKNOWN-WORD> may have 0 connectors here. */
+	if (0 == dict->contable.num_con)
+		return true;
+
+	condesc_t **sdesc = malloc(dict->contable.num_con * sizeof(condesc_t *));
+	size_t i = 0;
 	for (size_t n = 0; n < dict->contable.size; n++)
 	{
-		condesc_t *condesc = dict->contable.hdesc[n];
+		condesc_t *condesc = dict->contable.hdesc[n].desc;
 
 		if (NULL == condesc) continue;
 		if (!calculate_connector_info(condesc))
 			return false;
+		sdesc[i++] = dict->contable.hdesc[n].desc;
 	}
 
-	condesc_t **sdesc = malloc(dict->contable.size * sizeof(*dict->contable.hdesc));
-	memcpy(sdesc, dict->contable.hdesc, dict->contable.size * sizeof(*dict->contable.hdesc));
-	qsort(sdesc, dict->contable.size, sizeof(*dict->contable.hdesc),
+	qsort(sdesc, dict->contable.num_con, sizeof(*dict->contable.sdesc),
 	      condesc_by_uc_constring);
 
 	/* Enumerate the connectors according to their UC part. */
@@ -492,12 +496,12 @@ void condesc_delete(Dictionary dict)
 	condesc_length_limit_def_delete(&dict->contable);
 }
 
-static condesc_t **condesc_find(ConTable *ct, const char *constring, uint32_t hash)
+static hdesc_t *condesc_find(ConTable *ct, const char *constring, uint32_t hash)
 {
 	uint32_t i = hash & (ct->size-1);
 
-	while ((NULL != ct->hdesc[i]) &&
-	       !string_set_cmp(constring, ct->hdesc[i]->string))
+	while ((NULL != ct->hdesc[i].desc) &&
+	       !string_set_cmp(constring, ct->hdesc[i].desc->string))
 	{
 		i = (i + 1) & (ct->size-1);
 	}
@@ -507,18 +511,9 @@ static condesc_t **condesc_find(ConTable *ct, const char *constring, uint32_t ha
 
 static void condesc_table_alloc(ConTable *ct, size_t size)
 {
-	ct->hdesc = (condesc_t **)malloc(size * sizeof(condesc_t *));
-	memset(ct->hdesc, 0, size * sizeof(condesc_t *));
+	ct->hdesc = malloc(size * sizeof(hdesc_t));
+	memset(ct->hdesc, 0, size * sizeof(hdesc_t));
 	ct->size = size;
-}
-
-static void condesc_insert(ConTable *ct, condesc_t **h,
-                                  const char *constring, uint32_t hash)
-{
-	*h = pool_alloc(ct->mempool);
-	(*h)->str_hash = hash;
-	(*h)->string = constring;
-	ct->num_con++;
 }
 
 #define CONDESC_TABLE_GROW_FACTOR 2
@@ -526,24 +521,24 @@ static void condesc_insert(ConTable *ct, condesc_t **h,
 static bool condesc_grow(ConTable *ct)
 {
 	size_t old_size = ct->size;
-	condesc_t **old_hdesc = ct->hdesc;
+	hdesc_t *old_hdesc = ct->hdesc;
 
 	lgdebug(+11, "Growing ConTable from %zu\n", old_size);
 	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROW_FACTOR);
 
 	for (size_t i = 0; i < old_size; i++)
 	{
-		condesc_t *old_h = old_hdesc[i];
-		if (NULL == old_h) continue;
-		condesc_t **new_h = condesc_find(ct, old_h->string, old_h->str_hash);
+		hdesc_t *old_h = &old_hdesc[i];
+		if (NULL == old_h->desc) continue;
+		hdesc_t *new_h = condesc_find(ct, old_h->desc->string, old_h->str_hash);
 
-		if (NULL != *new_h)
+		if (NULL != new_h->desc)
 		{
 			prt_error("Fatal Error: condesc_grow(): Internal error\n");
 			free(old_hdesc);
 			return false;
 		}
-		*new_h = old_h;
+		*new_h = *old_h;
 	}
 
 	free(old_hdesc);
@@ -553,14 +548,17 @@ static bool condesc_grow(ConTable *ct)
 condesc_t *condesc_add(ConTable *ct, const char *constring)
 {
 	uint32_t hash = (connector_hash_t)connector_str_hash(constring);
-	condesc_t **h = condesc_find(ct, constring, hash);
+	hdesc_t *h = condesc_find(ct, constring, hash);
 
-	if (NULL == *h)
+	if (NULL == h->desc)
 	{
 		assert(0 == ct->num_uc, "Trying to add a connector (%s) "
 		                        "after reading the dict.\n", constring);
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
-		condesc_insert(ct, h, constring, hash);
+		h->desc = pool_alloc(ct->mempool);
+		h->desc->string = constring;
+		h->str_hash = hash;
+		ct->num_con++;
 
 		if ((8 * ct->num_con) > (3 * ct->size))
 		{
@@ -569,7 +567,7 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 		}
 	}
 
-	return *h;
+	return h->desc;
 }
 
 void condesc_init(Dictionary dict, size_t num_con)
