@@ -129,17 +129,17 @@ typedef struct
 
 static void db_free_llist(Dictionary dict, Dict_node *llist)
 {
-   Dict_node * dn;
-   while (llist != NULL)
-   {
+	Dict_node * dn;
+	while (llist != NULL)
+	{
 		Exp *e;
-      dn = llist->right;
+		dn = llist->right;
 		e = llist->exp;
 		// if (e) free_Exp(e);
 		if (e) free(e);
 		free(llist);
-      llist = dn;
-   }
+		llist = dn;
+	}
 }
 
 /* callback -- set bs->exp to the expressions for a class in the dict */
