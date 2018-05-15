@@ -5313,6 +5313,8 @@ starts.v stops.v tries.v:
   (<verb-and-sp-i-> & ([<vc-start>]0.2 or ())) or
   ((<vc-start>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
+
+% <verb-sp> & Xc+ & Pa+: "he stopped, unable to continue"
 started.v-d stopped.v-d tried.v-d:
   
   ((<verb-sp,pp> & (<vc-start>)) or
@@ -5320,6 +5322,7 @@ started.v-d stopped.v-d tried.v-d:
   ((<vc-start>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
+  (<verb-sp> & Xc+ & Pa+) or
   ({K+} & <verb-phrase-opener>);
 
 starting.g stopping.g trying.g

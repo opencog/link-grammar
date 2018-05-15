@@ -4519,9 +4519,12 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v: VERB_S_T(<vc-start>);
+
+% <verb-sp> & Xc+ & Pa+: "he stopped, unable to continue"
 started.v-d stopped.v-d tried.v-d:
   VERB_SPPP_T(<vc-start>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
+  (<verb-sp> & Xc+ & Pa+) or
   ({K+} & <verb-phrase-opener>);
 
 starting.g stopping.g trying.g
