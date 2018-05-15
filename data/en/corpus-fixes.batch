@@ -5659,6 +5659,9 @@ neither this or that one will do
 % The new link would connect "same--as"
 %
 % Replace Z links by CV links....
+%
+% Get rid of AM link: so that "as much as" works like
+% "as big as" or "as smart as", etc.
 
 The coffee tastes the same as it did last year.
 *The coffee tastes as it did last year.
@@ -5670,10 +5673,12 @@ He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
 *the hotel is quite comfortable as such establishments go
 
+% "as" as synonym for "while"
+I slipped on the ice as I ran home.
+*I am as intelligent as John does
+
 % "as" as a colloquial form of "that"
 I don't know as I can answer your question.
-
-I slipped on the ice as I ran home.
 
 % --------------------------------------------------------------------
 % This should parse with the TQ/BT link (see OT page)

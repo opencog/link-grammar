@@ -9002,7 +9002,6 @@ as.e-c:
 %    cost on EZ-: prefer just.e over just.a
 %
 % AZ- & Mg+: "It described the treaty as marking a new stage"
-% <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % BIt+: "his statements, as candidate, contradict his actions"
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
@@ -9012,13 +9011,20 @@ as.e:
   or (AZ- & Mg+)
   or (({[EZ-]-0.5} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+)
   % or ({Xd-} & hVCz- & Cz+ & CV+)
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
   or ((Sa*v+ or (Sa*a+ & CV+)) & {Xc+ & {Xd-}} & CO+)
   or (Sa*v+ & {Xd- & {Xc+}} & VCz-)
   or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05
   or (Sa*a+ & CV+ & {Xd- & {Xc+}}) % needed for MXsr constructions
   or (MVi- & TO+ & IV+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
+
+% "as" as synonym for "while"
+% <subcl-verb> & CO+: "As we set sail, a gale blew up"
+% MVs- & Cs+ & CV+: "I slipped as I ran"
+as.#while:
+  (<subcl-verb> & (({Xc+ & {Xd-}} & CO+)))
+  or (MVs- & Cs+ & CV+);
+
 
 as_is: {Xd- & Xc+} & MVs-;
 
@@ -10372,7 +10378,6 @@ das.#this-d: [this.d]0.05;
 % Colloquial usages of "as":
 % "I don't know as I can answer your question."
 as.#that: [that.j-c]0.05;
-as.#while: [while]0.05;
 
 % Desirable multi-word substitutions:
 % "as" -> "the same as"

@@ -317,7 +317,7 @@ B#m  ,   D##w   H   HA                     , "Bad use of gerund68"
 
 CONTAINS_NONE_RULES:
  S     ,  Spxi                             , "Bad n-v agreement69" ,
- SI     , SIpxi                            , "Bad n-v agreement70" ,
+ SI    ,  SIpxi                            , "Bad n-v agreement70" ,
  Ws    ,  B#m   Ca   BT                    , "Question inversion violated71" ,
  SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject72" ,
@@ -327,7 +327,9 @@ CONTAINS_NONE_RULES:
                                            , "Bad use of 'filler' subject74" ,
  MXsr  ,  Sp#w                             , "Bad n-v agreement75" ,
  MXpr  ,  Ss#w   S#iw                      , "Bad n-v agreement76" ,
- Mr    ,  B#*                              , "Bad use of 'whose'77"
+ Mr    ,  B#*                              , "Bad use of 'whose'77",
+ EAy   ,  MVs                              , "Bad comparative78",
+ VCz   ,  EAy                              , "Bad comparative79",
 
 
 ; ----------------------------------------------------------------------
