@@ -5045,7 +5045,8 @@ spoken.v:
 speaking.v: <verb-pg> & <vc-speak>;
 speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 
-% @MV+: "The coffee tastes (the same) as it did last year." (do not want O for "the same")
+% @MV+: "The coffee tastes (the same) as it did last year."
+%      (do not want O for "the same")
 <vc-taste>:
   <vc-trans>
   or ({@MV+} & ((LI+ & <mv-coord>) or AF- or Pa+ or OF+))
@@ -10367,6 +10368,10 @@ vas.#was-v-d: [was.v-d]0.05;
 vas.#what: [what]0.05;
 das.#this-p: [this.p]0.05;
 das.#this-d: [this.d]0.05;
+
+% Desirable multi-word substitutions:
+% "as" -> "the same as"
+% because of this: "The coffee tastes [the same] as it did last week"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.

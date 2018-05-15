@@ -5615,9 +5615,6 @@ It's the same as the other one.
 Amen’s hair is same as Ben’s.
 Amen’s hair is the same as Ben’s.
 
-% XXX parses, but not correctly.
-The coffee tastes as it did last year.
-
 % problems with anticipated/suggested/expected, etc.
 The defenses have proved more formidable than was anticipated.
 The defenses have proven more formidable than was expected.
@@ -5649,11 +5646,25 @@ I beleive you are right
 neither this or that one will do
 
 % --------------------------------------------------------------------
-% XXX sentences that parse, but not correctly:
+% Assorted usages of "as". Some are comparatives, some are
+% colloquialisms.
+%
+% XXX Some of these sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
 % Proper fixes for some of these require links that cross...
-% These are various usages of "as"
-*You are as sweet as sugar.
+%
+% Needed dict changes:
+% must-form-a-cycle when MVy, MVz cycles with a new link:
+% "The coffee tastes the same as it did last year."
+% The new link would connect "same--as"
+%
+% Replace Z links by CV links....
+
+The coffee tastes the same as it did last year.
+*The coffee tastes as it did last year.
+he earns as much as was expected
+
+You are as sweet as sugar.
 *The situation is not so bad as you suggest.
 He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
