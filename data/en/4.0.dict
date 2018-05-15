@@ -8745,6 +8745,9 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % [Mp- & MVp-]-0.61 prefers a connection to both the noun and the
 %    verb, helping disambiguate.  The weight 0.61 plus 0.4 is greater
 %    than one, to overcome cost on @MV+.
+%
+% The EA- & MX- needs to be tightened; it allows oddball constructions
+% that prevent putting an EA+ on words.adv.2 (which should have EA+)
 <prep-main-b>:
   <conjoin-preps>
   or [Mp-]0.4 or MVp- or [Mp- & MVp-]-0.61
@@ -11144,6 +11147,7 @@ so_that such_that:
 % Cc+ & CV+: C links to the head-noun of the following clause, and CV+
 %            links to the head verb. Must form a cycle.
 %            Example: "I run more often than Ben climbs"
+% MVp- & J+: "... other traditions than my own"
 than.e:
   (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+})
            or Mpc+ or S**c+ or MVat+ or MVpt+ or (Cc+ & CV+) or Pafc+))
@@ -12444,8 +12448,10 @@ kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
 an'.#and-j-n: [and.j-n]0.05;
 an'.#and-j-v: [and.j-v]0.05;
 
-an.#and-j-n: [and.j-n]0.05;
-an.#and-j-v: [and.j-v]0.05;
+% A bit too loose. These should only become enabled if the context
+% is correct.
+% an.#and-j-n: [and.j-n];
+% an.#and-j-v: [and.j-v];
 
 % Bad German accent
 vas.#was-v-d: [was.v-d]0.05;
