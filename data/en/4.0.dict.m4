@@ -3665,6 +3665,7 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>)
   or (<verb-pv> & {{Xc+} & Pa+})
+  or (<verb-sp> & Xc+ & Pa+)
   or <verb-adj>
   or <verb-phrase-opener>;
 

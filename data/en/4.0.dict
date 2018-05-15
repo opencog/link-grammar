@@ -3836,6 +3836,7 @@ running.g beating.g catching.g driving.g striking.g:
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
   or (<verb-pv> & {{Xc+} & Pa+})
+  or (<verb-sp> & Xc+ & Pa+)
   or <verb-adj>
   or <verb-phrase-opener>;
 
