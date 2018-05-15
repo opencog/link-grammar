@@ -26,6 +26,7 @@
 #include "dict-common/dict-defines.h" // for LEFT_WALL_WORD
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
+#include "dict-common/dict-utils.h"
 #include "dict-common/file-utils.h"
 #include "externs.h"
 #include "lg_assert.h"
@@ -134,6 +135,7 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
 		Exp *e;
       dn = llist->right;
 		e = llist->exp;
+		// if (e) free_Exp(e);
 		if (e) free(e);
 		free(llist);
       llist = dn;

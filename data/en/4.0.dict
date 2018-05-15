@@ -11085,7 +11085,7 @@ as.e:
   or (Sa*v+ & {Xd- & {Xc+}} & VCz-)
   or [Sa*a+ & CV+ & {Xd- & {Xc+}} & VCz-]-0.05
   or (Sa*a+ & CV+ & {Xd- & {Xc+}}) % needed for MXsr constructions
-  or (MVi- & TO+)
+  or (MVi- & TO+ & IV+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
 as_is: {Xd- & Xc+} & MVs-;

@@ -4945,6 +4945,7 @@ He wrote for piano and flute.
 grip it between thumb and forefinger
 
 % conjoined gerunds
+% XXX this parses, but not correctly.
 He enjoyed many rewards, such as free board and lodging at court.
 
 
@@ -5481,6 +5482,7 @@ I cannot discern any reason, other than some sort of historical blindness, for w
 John; my advisor, Steve; and several other people are coming
 No one but she saw the prowler.
 
+% XXX
 % The two below are valid sentences, but they parse incorrectly just right now
 % so we will put a * in front of them, for now, till the parse is fixed.
 *Mike finished in first place, and John in third.
@@ -5493,6 +5495,11 @@ The market fell 156.83, or 8%, a week after Black Monday.
 % Hmm conjunctions .. these are  tricky to get right ...
 Mike finished in first place, and John in third.
 Mike finished in first place, and John in last.
+
+% XXX Conjunctions that parse, but not quite correctly
+% We mark them wrong (with a star), for now, until they are fixed.
+*Fuck off and have a great day, twit!
+*Fuck off and have a great day, jerk!
 
 % --------------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
@@ -5608,6 +5615,7 @@ It's the same as the other one.
 Amen’s hair is same as Ben’s.
 Amen’s hair is the same as Ben’s.
 
+% XXX parses, but not correctly.
 The coffee tastes as it did last year.
 
 % problems with anticipated/suggested/expected, etc.
@@ -5641,18 +5649,16 @@ I beleive you are right
 neither this or that one will do
 
 % --------------------------------------------------------------------
-% sentences that parse, but not correctly:
+% XXX sentences that parse, but not correctly:
 % We are going to put *'s in front of them, until they are fixed...
 % Proper fixes for some of these require links that cross...
-% viz they should parse,
+% These are various usages of "as"
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
-*He was so foolish as to lie.
+He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
 *the hotel is quite comfortable as such establishments go
 *I don't know as I can answer your question.
-*Fuck off and have a great day, twit!
-*Fuck off and have a great day, jerk!
 
 I slipped on the ice as I ran home.
 
