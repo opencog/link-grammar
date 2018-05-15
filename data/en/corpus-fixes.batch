@@ -5669,10 +5669,13 @@ You are as sweet as sugar.
 He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
 *the hotel is quite comfortable as such establishments go
-*I don't know as I can answer your question.
+
+% "as" as a colloquial form of "that"
+I don't know as I can answer your question.
 
 I slipped on the ice as I ran home.
 
+% --------------------------------------------------------------------
 % This should parse with the TQ/BT link (see OT page)
 % but that requires links crossing to head-word, so its screwed.
 *How many years did it last

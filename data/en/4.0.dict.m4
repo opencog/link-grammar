@@ -10369,6 +10369,11 @@ vas.#what: [what]0.05;
 das.#this-p: [this.p]0.05;
 das.#this-d: [this.d]0.05;
 
+% Colloquial usages of "as":
+% "I don't know as I can answer your question."
+as.#that: [that.j-c]0.05;
+as.#while: [while]0.05;
+
 % Desirable multi-word substitutions:
 % "as" -> "the same as"
 % because of this: "The coffee tastes [the same] as it did last week"
