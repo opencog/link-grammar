@@ -6941,7 +6941,7 @@ to.r:
     or [{Xd- & Xc+} & MVi-]
     or [<OPENER>]
     or [[R-]] ))
-  or (TO- & Xc+)
+  or ({NT-} & TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
   or [MVp- & B-]
