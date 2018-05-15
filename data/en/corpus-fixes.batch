@@ -5662,6 +5662,7 @@ neither this or that one will do
 %
 % Get rid of AM link: so that "as much as" works like
 % "as big as" or "as smart as", etc.
+% The AFd usage with comparatives is awkward as well.
 
 The coffee tastes the same as it did last year.
 *The coffee tastes as it did last year.

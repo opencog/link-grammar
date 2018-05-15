@@ -7836,7 +7836,9 @@ unless though.c even_though:
 
 as_if as_though:
   ((<subcl-verb> or Mgp+ or Mv+ or Mp+)
-    & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)))
+    & (({Xc+ & {Xd-}} & CO*s+) or
+       ({Xd- & Xc+} & MVs-) or
+        (Xd- & Xc+ & E+)))
   or ((BIh- or LI-) & <subcl-verb>);
 
 as_soon_as:
