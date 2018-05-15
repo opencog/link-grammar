@@ -9075,6 +9075,7 @@ so_that such_that:
 % Cc+ & CV+: C links to the head-noun of the following clause, and CV+
 %            links to the head verb. Must form a cycle.
 %            Example: "I run more often than Ben climbs"
+% MVp- & J+: "... other traditions than my own"
 than.e:
   (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+})
            or Mpc+ or S**c+ or MVat+ or MVpt+ or (Cc+ & CV+) or Pafc+))
@@ -9082,7 +9083,8 @@ than.e:
   or ((MVti- or LEi-) & AFdi+ & {Pa+})
   or (((LE- & {AFd+}) or (LEi- & {AFdi+}))
     & (THc+ or (TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
-  or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
+  or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+})
+  or (MVp- & J+);
 
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
 % ({OFd+} & Dmu+): "I drank much of the beer"
@@ -10390,7 +10392,7 @@ das.#this-d: [this.d]0.05;
 as.#that: [that.j-c]0.05;
 
 % Desirable multi-word substitutions:
-% "as" -> "the same as"
+% as.#same-as: [the_same_as]0.05;
 % because of this: "The coffee tastes [the same] as it did last week"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
