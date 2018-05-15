@@ -3482,6 +3482,7 @@ rising.v falling.v:
 %   "What are the chances she will DRIVE him up to the farm?"
 %
 % No Pa links here: *they're building a skyscraper tall
+%                   *ours works more elegant than yours
 %
 % [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
 %
