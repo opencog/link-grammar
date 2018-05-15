@@ -9472,6 +9472,7 @@ partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
 
 % Em+: "It sure is great"
 sure.ee: Em+;
+very_much: Em+;
 
 % Em+: "It sure the fuck is great to see you, man!"
 % "It sure the hell is!"
