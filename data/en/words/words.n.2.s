@@ -4918,6 +4918,8 @@ haystacks.n
 hazards.n
 hazels.n
 hazes.n
+head_boys
+head_girls
 headaches.n
 headbands.n
 headdresses.n
