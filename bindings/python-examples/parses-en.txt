@@ -40,8 +40,8 @@ C
 
 IY'gotta do it this way
 O
-O    +---->WV---->+       +------MVa-----+
-O    +->Wd--+-Sp*i+--I*t--+Osm+    +-Dsu-+
-O    |      |     |       |   |    |     |
-OLEFT-WALL y' gotta.v-d do.v it this.d way.n
+O    +------->WV------>+       +------MVa-----+
+O    +-->Wd---+--Sp*i--+--I*t--+Osm+    +-Dsu-+
+O    |        |        |       |   |    |     |
+OLEFT-WALL y'.#you gotta.v-d do.v it this.d way.n
 O
