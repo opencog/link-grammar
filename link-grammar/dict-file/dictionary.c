@@ -118,9 +118,6 @@ dictionary_six_str(const char * lang,
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 	dict->name = string_set_add(dict_name, dict->string_set);
 
-	memset(dict->current_idiom, 'A', IDIOM_LINK_SZ-1);
-	dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
-
 	/*
 	 * A special setup per dictionary type. The check here assumes the affix
 	 * dictionary name contains "affix". FIXME: For not using this
@@ -135,8 +132,10 @@ dictionary_six_str(const char * lang,
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
 			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
-		dict->insert_entry = insert_list;
+		memset(dict->current_idiom, 'A', IDIOM_LINK_SZ-1);
+		dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
 
+		dict->insert_entry = insert_list;
 		dict->lookup_list = file_lookup_list;
 		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
