@@ -370,8 +370,10 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lang = string_set_add(t, dict->string_set);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
+#if 0 /* FIXME: Spell checking should be done according to the dict locale. */
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
+#endif
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
