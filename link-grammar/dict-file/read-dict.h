@@ -18,7 +18,10 @@
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
 
-Dictionary dictionary_create_from_file(const char * lang);
+Dictionary dictionary_six(const char *lang, const char *dict_name,
+                          const char *pp_name, const char *cons_name,
+                          const char *affix_name, const char *regex_name);
+Dictionary dictionary_create_from_file(const char *lang);
 bool read_dictionary(Dictionary dict);
 
 Dict_node * file_lookup_list(const Dictionary dict, const char *s);

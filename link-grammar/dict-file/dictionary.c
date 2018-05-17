@@ -92,10 +92,6 @@ static bool return_true(Dictionary dict, const char *name)
 	return true;
 }
 
-static Dictionary
-dictionary_six(const char * lang, const char * dict_name,
-               const char * pp_name, const char * cons_name,
-               const char * affix_name, const char * regex_name);
 /**
  * Read dictionary entries from a wide-character string "input".
  * All other parts are read from files.
@@ -236,7 +232,7 @@ failure:
 /**
  * Use filenames of six different files to put together the dictionary.
  */
-static Dictionary
+Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                const char * pp_name, const char * cons_name,
                const char * affix_name, const char * regex_name)

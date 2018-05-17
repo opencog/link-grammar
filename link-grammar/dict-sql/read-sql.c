@@ -27,6 +27,7 @@
 #include "dict-common/dict-structures.h"
 #include "dict-common/dict-utils.h"      // free_Exp()
 #include "dict-common/file-utils.h"
+#include "dict-file/read-dict.h"         // dictionary_six()
 #include "externs.h"
 #include "lg_assert.h"
 #include "string-set.h"
@@ -394,18 +395,27 @@ Dictionary dictionary_create_from_db(const char *lang)
 	condesc_init(dict, 1<<8);
 
 	/* Setup the affix table */
-	dict->affix_table = (Dictionary) malloc(sizeof(struct Dictionary_s));
-	memset(dict->affix_table, 0, sizeof(struct Dictionary_s));
-	dict->affix_table->string_set = string_set_create();
-
-	afclass_init(dict->affix_table);
-	afdict_init(dict);
+	char *affix_name = join_path (lang, "4.0.affix");
+	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
+	if (dict->affix_table == NULL)
+	{
+		prt_error("Error: Could not open affix file %s\n", affix_name);
+		free(affix_name);
+		goto failure;
+	}
+	free(affix_name);
+	if (!afdict_init(dict))
+		goto failure;
 
 	dictionary_setup_locale(dict);
 
 	dictionary_setup_defines(dict);
 
 	return dict;
+
+failure:
+	dictionary_delete(dict);
+	return NULL;
 }
 
 #endif /* HAVE_SQLITE */
