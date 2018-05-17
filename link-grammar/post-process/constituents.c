@@ -1306,6 +1306,7 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 	CNode * root;
 
 	if (!linkage) return NULL;
+	if (!linkage->sent->dict->hpsg_knowledge) return NULL;
 	if (mode == NO_DISPLAY)
 	{
 		return NULL;
