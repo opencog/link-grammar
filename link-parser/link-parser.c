@@ -197,8 +197,8 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		else
 		{
 			copts->display_constituents = 0;
-			fprintf(stderr, "Can't generate constituents.\n");
-			fprintf(stderr, "Constituent processing has been turned off.\n");
+			prt_error("Error: Can't generate constituents.\n"
+			          "Constituent processing has been turned off.\n");
 		}
 	}
 	if (copts->display_links)
@@ -766,7 +766,7 @@ int main(int argc, char * argv[])
 			struct stat statbuf;
 			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
-				fprintf(stderr, "Error: Cannot open %s: %s\n",
+				prt_error("Error: Cannot open %s: %s\n",
 				        filename, strerror(EISDIR));
 				continue;
 			}
@@ -775,8 +775,7 @@ int main(int argc, char * argv[])
 
 			if (NULL == input_fh)
 			{
-				fprintf(stderr, "Error: Cannot open %s: %s\n",
-				        filename, strerror(errno));
+				prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
 				input_fh = stdin;
 				continue;
 			}
@@ -793,7 +792,7 @@ int main(int argc, char * argv[])
 			{
 				fflush(stdout);
 				/* Remind the developer this is a test mode. */
-				fprintf(stderr, "Warning: Tests enabled: %s\n", test);
+				prt_error("Warning: Tests enabled: %s\n", test);
 				if (copts->batch_mode) batch_in_progress = true;
 			}
 		}
