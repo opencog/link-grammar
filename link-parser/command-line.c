@@ -662,6 +662,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
+			if ((UNDOC[0] == as[i].description[0]) &&
+			    (strlen(as[i].string) != strlen(s))) continue;
 			count++;
 			j = i;
 		}
@@ -669,7 +671,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	if (count > 1)
 	{
-		printf("Ambiguous command.  Type \"!help\" or \"!variables\"\n");
+		prt_error("Ambiguous command \"%s\".  Type \"!help\" or \"!variables\"\n", s);
 		return -1;
 	}
 	else if (count == 1)
@@ -745,6 +747,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (Cmd == as[i].param_type) continue;
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
+				if ((UNDOC[0] == as[i].description[0]) &&
+				    (strlen(as[i].string) != strlen(x))) continue;
 				j = i;
 				count ++;
 			}
@@ -752,13 +756,13 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (j<0)
 		{
-			printf("There is no user variable called \"%s\".\n", x);
+			prt_error("Error: There is no user variable called \"%s\".\n", x);
 			return -1;
 		}
 
 		if (count > 1)
 		{
-			printf("Ambiguous variable.  Type \"!help\" or \"!variables\"\n");
+			prt_error("Error: Ambiguous variable \"%s\".  Type \"!help\" or \"!variables\"\n", x);
 			return -1;
 		}
 
@@ -772,7 +776,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			if (val < 0)
 			{
-				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
@@ -787,7 +791,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			double val = strtod(y, &err);
 			if ('\0' != *err)
 			{
-				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
@@ -818,6 +822,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		if ((Bool != as[i].param_type) && (Cmd != as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
+			if ((UNDOC[0] == as[i].description[0]) &&
+			    (strlen(as[i].string) != strlen(s))) continue;
 			j = i;
 			count++;
 		}
@@ -825,11 +831,11 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	if (0 < count)
 	{
-		printf("Variable \"%s\" requires a value.  Try \"!help\".\n", as[j].string);
+		prt_error("Error: Variable \"%s\" requires a value.  Try \"!help\".\n", as[j].string);
 		return -1;
 	}
 
-	printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", line);
+	prt_error("Error: I can't interpret \"%s\" as a command.  Try \"!help\".\n", line);
 	return -1;
 }
 

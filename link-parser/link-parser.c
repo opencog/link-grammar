@@ -197,8 +197,8 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		else
 		{
 			copts->display_constituents = 0;
-			fprintf(stderr, "Can't generate constituents.\n");
-			fprintf(stderr, "Constituent processing has been turned off.\n");
+			prt_error("Error: Can't generate constituents.\n"
+			          "Constituent processing has been turned off.\n");
 		}
 	}
 	if (copts->display_links)
@@ -492,16 +492,30 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_spell_guess(opts, 0);
 }
 
-static void print_usage(char *str, int exit_value)
+static int divert_stdio(FILE *from, FILE *to)
+{
+	const int origfd = dup(fileno(from));
+	dup2(fileno(to), fileno(from));
+	return origfd;
+}
+
+#if 0 // Unused for now
+static void restore_stdio(FILE *from, int origfd)
+{
+	dup2(fileno(from), origfd);
+}
+#endif
+
+static void print_usage(FILE *out, char *str, int exit_value)
 {
 	Command_Options *copts;
-	fprintf(stderr,
-			"Usage: %s [language|dictionary location]\n"
-			"                   [-<special \"!\" command>]\n"
-			"                   [--version]\n", str);
+	fprintf(out, "Usage: %s [language|dictionary location]\n"
+			 "                   [-<special \"!\" command>]\n"
+			 "                   [--version]\n", str);
 
-	fprintf(stderr, "\nSpecial commands are:\n");
+	fprintf(out, "\nSpecial commands are:\n");
 	copts = command_options_create();
+	divert_stdio(stdout, stderr);
 	issue_special_command("var", copts, NULL);
 	exit(exit_value);
 }
@@ -600,7 +614,7 @@ int main(int argc, char * argv[])
 
 	if ((i < argc) && strcmp("--help", argv[i]) == 0)
 	{
-		print_usage(argv[0], 0);
+		print_usage(stdout, argv[0], 0);
 	}
 
 	for (; i<argc; i++)
@@ -633,19 +647,19 @@ int main(int argc, char * argv[])
 
 	save_default_opts(copts); /* Options so far are the defaults */
 
-	/* Process command line variable-setting commands (only) */
+	/* Process command line variable-setting commands (only). */
 	for (i = 1; i < argc; i++)
 	{
 		if (argv[i][0] == '-')
 		{
 			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
 			if ((var[0] != '!') && (0 > issue_special_command(var, copts, NULL)))
-				print_usage(argv[0], -1);
+				print_usage(stderr, argv[0], -1);
 		}
 		else if (i != 1)
 		{
 			prt_error("Fatal error: Unknown argument '%s'.\n", argv[i]);
-			print_usage(argv[0], -1);
+			print_usage(stderr, argv[0], -1);
 		}
 	}
 
@@ -677,8 +691,8 @@ int main(int argc, char * argv[])
 	{
 		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{
-			if (issue_special_command(argv[i]+1, copts, dict))
-				print_usage(argv[0], -1);
+			if (0 > issue_special_command(argv[i]+1, copts, dict))
+				print_usage(stderr, argv[0], -1);
 		}
 	}
 
@@ -752,7 +766,7 @@ int main(int argc, char * argv[])
 			struct stat statbuf;
 			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
-				fprintf(stderr, "Error: Cannot open %s: %s\n",
+				prt_error("Error: Cannot open %s: %s\n",
 				        filename, strerror(EISDIR));
 				continue;
 			}
@@ -761,8 +775,7 @@ int main(int argc, char * argv[])
 
 			if (NULL == input_fh)
 			{
-				fprintf(stderr, "Error: Cannot open %s: %s\n",
-				        filename, strerror(errno));
+				prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
 				input_fh = stdin;
 				continue;
 			}
@@ -779,7 +792,7 @@ int main(int argc, char * argv[])
 			{
 				fflush(stdout);
 				/* Remind the developer this is a test mode. */
-				fprintf(stderr, "Warning: Tests enabled: %s\n", test);
+				prt_error("Warning: Tests enabled: %s\n", test);
 				if (copts->batch_mode) batch_in_progress = true;
 			}
 		}
