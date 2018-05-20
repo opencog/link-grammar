@@ -662,6 +662,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
+			if ((UNDOC[0] == as[i].description[0]) &&
+			    (strlen(as[i].string) != strlen(s))) continue;
 			count++;
 			j = i;
 		}
@@ -745,6 +747,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (Cmd == as[i].param_type) continue;
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
+				if ((UNDOC[0] == as[i].description[0]) &&
+				    (strlen(as[i].string) != strlen(x))) continue;
 				j = i;
 				count ++;
 			}
@@ -818,6 +822,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		if ((Bool != as[i].param_type) && (Cmd != as[i].param_type) &&
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
+			if ((UNDOC[0] == as[i].description[0]) &&
+			    (strlen(as[i].string) != strlen(s))) continue;
 			j = i;
 			count++;
 		}
