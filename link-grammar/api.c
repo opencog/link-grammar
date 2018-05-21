@@ -533,6 +533,9 @@ void sentence_delete(Sentence sent)
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->fm_Match_node);
 	pool_delete(sent->Table_connector_pool);
+	if (IS_DB_DICT(sent->dict))
+		condesc_reuse(sent->dict);
+
 	free(sent);
 }
 
@@ -628,6 +631,11 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 
 	resources_reset(opts->resources);
+
+	/* When the SQL dict is used, expressions are read on demand, so
+	 * the connector descriptor table is not yet ready at this point. */
+	if (IS_DB_DICT(sent->dict))
+		condesc_setup(sent->dict);
 
 	/* Expressions were set up during the tokenize stage.
 	 * Prune them, and then parse.

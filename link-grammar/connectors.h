@@ -38,33 +38,32 @@
 #define LC_MASK ((1<<LC_BITS)-1)
 typedef uint64_t lc_enc_t;
 
-typedef uint32_t connector_hash_size;
+typedef uint32_t connector_hash_t;
 
-/* When connector_hash_size is uint16_t, the size of the following
- * struct on a 64-bit machine is 32 bytes.
- * FIXME: Make it 16 bytes by separating the info that is not needed
- * by do_count() into another structure (and some other minor changes). */
+#define CD_HEAD_DEPENDET     (1<<0) /* Has a leading 'h' or 'd'. */
+#define CD_HEAD              (1<<1) /* 0: dependent; 1: head; */
+#define CD_PERMANENT         (1<<2) /* For SQL dict: Do not clear (future). */
+
+/* The size of the following struct on a 64-bit machine is 32 bytes.
+ * It should be kept at this size. If needed, head_dependent, uc_length
+ * and uc_start can be eliminate or moved out. Also, there not enough
+ * space here to implement cost per connector length - an index to a
+ * cost table should be used instead.*/
 struct condesc_struct
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	// double *cost; /* Array of cost by length_limit (cost[0]: default) */
-	union
-	{
-		connector_hash_size str_hash;
-		connector_hash_size uc_hash;
-		connector_hash_size uc_num;
-	};
-	uint8_t length_limit;
-	                      /* If not 0, it gives the limit of the length of the
+	// double *cost; /* Array of cost by connector length (cost[0]: default) */
+	connector_hash_t uc_num; /* uc part enumeration. */
+	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
 	                       * value UNLIMITED_LEN specifies no limit.
 	                       * If 0, short_length (a Parse_Option) is used. If
 	                       * all_short==true (a Parse_Option), length_limit
 	                       * is clipped to short_length. */
-	char head_dependent;   /* 'h' for head, 'd' for dependent, or '\0' if none */
+	uint8_t flags;        /* CD_* */
 
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
@@ -80,9 +79,15 @@ typedef struct length_limit_def
 	int length_limit;
 } length_limit_def_t;
 
+typedef struct hdesc
+{
+	condesc_t *desc;
+	connector_hash_t str_hash;
+} hdesc_t;
+
 typedef struct
 {
-	condesc_t **hdesc;    /* Hashed connector descriptors table */
+	hdesc_t *hdesc;       /* Hashed connector descriptors table */
 	condesc_t **sdesc;    /* Alphabetically sorted descriptors */
 	size_t size;          /* Allocated size */
 	size_t num_con;       /* Number of connector types */
@@ -108,9 +113,13 @@ struct Connector_struct
 	const gword_set *originating_gword;
 };
 
+void condesc_init(Dictionary, size_t);
+void condesc_reset(Dictionary);
+void condesc_setup(Dictionary);
 bool sort_condesc_by_uc_constring(Dictionary);
 condesc_t *condesc_add(ConTable *ct, const char *);
 void condesc_delete(Dictionary);
+void condesc_reuse(Dictionary);
 
 /* GET accessors for connector attributes.
  * Can be used for experimenting with Connector_struct internals in
@@ -133,7 +142,7 @@ static inline const condesc_t *connector_desc(const Connector *c)
 
 static inline int connector_uc_hash(const Connector * c)
 {
-	return c->desc->uc_hash;
+	return c->desc->uc_num;
 }
 
 static inline int connector_uc_num(const Connector * c)
@@ -205,12 +214,8 @@ static inline bool easy_match(const char * s, const char * t)
  */
 static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
 {
-	if ((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask)
-		return false;
-	if (('\0' != c1->head_dependent) && (c1->head_dependent == c2->head_dependent))
-		return false;
-
-	return true;
+	return (((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask) ==
+	        (c1->lc_mask & c2->lc_mask & 1));
 }
 
 /**

@@ -67,6 +67,12 @@ struct Afdict_class_struct
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
 #define IDIOM_LINK_SZ 5
 
+#ifdef HAVE_SQLITE
+#define IS_DB_DICT(dict) (NULL != dict->db_handle)
+#else
+#define IS_DB_DICT(dict) false
+#endif /* HAVE_SQLITE */
+
 struct Dictionary_s
 {
 	Dict_node *  root;

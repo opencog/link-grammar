@@ -712,6 +712,19 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\nLEFT-WALL we are.v from the planet.n Gorpon[!]"
 "\n\n")
 
+class GSQLDictTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        #clg.parse_options_set_verbosity(clg.parse_options_create(), 3)
+        cls.d, cls.po = Dictionary(lang='demo-sql'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+        del cls.po
+
+    def test_getting_links(self):
+        linkage_testfile(self, self.d, self.po)
 
 class ZENLangTestCase(unittest.TestCase):
     @classmethod

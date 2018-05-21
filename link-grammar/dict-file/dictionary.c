@@ -92,10 +92,6 @@ static bool return_true(Dictionary dict, const char *name)
 	return true;
 }
 
-static Dictionary
-dictionary_six(const char * lang, const char * dict_name,
-               const char * pp_name, const char * cons_name,
-               const char * affix_name, const char * regex_name);
 /**
  * Read dictionary entries from a wide-character string "input".
  * All other parts are read from files.
@@ -122,9 +118,6 @@ dictionary_six_str(const char * lang,
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 	dict->name = string_set_add(dict_name, dict->string_set);
 
-	memset(dict->current_idiom, 'A', IDIOM_LINK_SZ-1);
-	dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
-
 	/*
 	 * A special setup per dictionary type. The check here assumes the affix
 	 * dictionary name contains "affix". FIXME: For not using this
@@ -139,13 +132,15 @@ dictionary_six_str(const char * lang,
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
 			prt_error("Info: %s: Spell checker disabled.\n", dict->lang);
 #endif
-		dict->insert_entry = insert_list;
+		memset(dict->current_idiom, 'A', IDIOM_LINK_SZ-1);
+		dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
 
+		dict->insert_entry = insert_list;
 		dict->lookup_list = file_lookup_list;
 		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
 		dict->lookup = file_boolean_lookup;
-		dict->contable.num_con = 1<<13;
+		condesc_init(dict, 1<<13);
 	}
 	else
 	{
@@ -155,25 +150,16 @@ dictionary_six_str(const char * lang,
 		afclass_init(dict);
 		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
-		dict->contable.num_con = 1<<9;
+		condesc_init(dict, 1<<9);
 	}
-	dict->affix_table = NULL;
-
-	dict->contable.size = 0;
-	dict->contable.length_limit_def = NULL;
-	dict->contable.length_limit_def_next = &dict->contable.length_limit_def;
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
 	dict->pin = dict->input;
 	if (!read_dictionary(dict))
 	{
-		dict->pin = NULL;
-		dict->input = NULL;
 		goto failure;
 	}
-	dict->pin = NULL;
-	dict->input = NULL;
 
 	if (NULL == affix_name)
 	{
@@ -227,8 +213,8 @@ dictionary_six_str(const char * lang,
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
-	if (!sort_condesc_by_uc_constring(dict)) goto failure;
 	dictionary_setup_defines(dict);
+	condesc_setup(dict);
 
 	// Special-case hack.
 	if ((0 == strncmp(dict->lang, "any", 3)) ||
@@ -245,7 +231,7 @@ failure:
 /**
  * Use filenames of six different files to put together the dictionary.
  */
-static Dictionary
+Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                const char * pp_name, const char * cons_name,
                const char * affix_name, const char * regex_name)

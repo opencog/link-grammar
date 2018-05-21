@@ -23,11 +23,11 @@
 #include "connectors.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // for LEFT_WALL_WORD
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
-#include "dict-common/dict-utils.h"
+#include "dict-common/dict-utils.h"      // free_Exp()
 #include "dict-common/file-utils.h"
+#include "dict-file/read-dict.h"         // dictionary_six()
 #include "externs.h"
 #include "lg_assert.h"
 #include "string-set.h"
@@ -129,17 +129,16 @@ typedef struct
 
 static void db_free_llist(Dictionary dict, Dict_node *llist)
 {
-   Dict_node * dn;
-   while (llist != NULL)
-   {
+	Dict_node * dn;
+	while (llist != NULL)
+	{
 		Exp *e;
-      dn = llist->right;
+		dn = llist->right;
 		e = llist->exp;
-		// if (e) free_Exp(e);
-		if (e) free(e);
+		if (e) free_Exp(e);
 		free(llist);
-      llist = dn;
-   }
+		llist = dn;
+	}
 }
 
 /* callback -- set bs->exp to the expressions for a class in the dict */
@@ -371,8 +370,10 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lang = string_set_add(t, dict->string_set);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
+#if 0 /* FIXME: Spell checking should be done according to the dict locale. */
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
+#endif
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
@@ -393,20 +394,30 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;
+	condesc_init(dict, 1<<8);
 
 	/* Setup the affix table */
-	dict->affix_table = (Dictionary) malloc(sizeof(struct Dictionary_s));
-	memset(dict->affix_table, 0, sizeof(struct Dictionary_s));
-	dict->affix_table->string_set = string_set_create();
-
-	afclass_init(dict->affix_table);
-	afdict_init(dict);
+	char *affix_name = join_path (lang, "4.0.affix");
+	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
+	if (dict->affix_table == NULL)
+	{
+		prt_error("Error: Could not open affix file %s\n", affix_name);
+		free(affix_name);
+		goto failure;
+	}
+	free(affix_name);
+	if (!afdict_init(dict))
+		goto failure;
 
 	dictionary_setup_locale(dict);
 
 	dictionary_setup_defines(dict);
 
 	return dict;
+
+failure:
+	dictionary_delete(dict);
+	return NULL;
 }
 
 #endif /* HAVE_SQLITE */

@@ -351,8 +351,6 @@ void dictionary_setup_defines(Dictionary dict)
 	}
 
 	dict->shuffle_linkages = false;
-
-	set_all_condesc_length_limit(dict);
 }
 
 /* ======================================================================= */
