@@ -726,6 +726,8 @@ class GSQLDictTestCase(unittest.TestCase):
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
 
+# Tests are run in alphabetical order; do the language tests last.
+
 class ZENLangTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -795,7 +797,6 @@ class ZENConstituentsCase(unittest.TestCase):
         self.assertEqual(linkages[0].constituent_tree(),
                 "(S (NP this.p)\n   (VP is.v\n       (NP a test.n))\n   .)\n")
 
-# Tests are run in alphabetical order; do the language tests last.
 class ZDELangTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

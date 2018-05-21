@@ -1,7 +1,7 @@
 % This file contains test cases for the SAT solver,
 % to validate that it works.
 % Since the SAT solver doesn't order (for now) its solutions
-% according to cost, this is just the solution it omits first
+% according to cost, this is just the solution it emits first
 % for the given sentence.
 
 Ithis is a test
