@@ -135,6 +135,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		if (NULL == el->next) dyn_strcat(e, "error-no-next");
 		else print_expression_parens(e, el->next->e, false);
 		append_string(e, "}");
+		for (i=0; i<icost; i++) dyn_strcat(e, "]");
+		if (0 != dcost) append_string(e, COST_FMT, dcost);
 		return e;
 	}
 
