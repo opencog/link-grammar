@@ -86,16 +86,24 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		return e;
 	}
 
-	icost = (int) (n->cost);
-	dcost = n->cost - icost;
-	if (dcost > 10E-4)
+	if (n->cost < -10E-4)
 	{
-		dcost = n->cost;
 		icost = 1;
+		dcost = n->cost;
 	}
 	else
 	{
-		dcost = 0;
+		icost = (int) (n->cost);
+		dcost = n->cost - icost;
+		if (dcost > 10E-4)
+		{
+			dcost = n->cost;
+			icost = 1;
+		}
+		else
+		{
+			dcost = 0;
+		}
 	}
 
 	/* print the connector only */
