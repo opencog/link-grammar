@@ -176,34 +176,6 @@ public:
     return var;
   }
 
-  // If guiding params are unknown, they are set do default
-  int linked_max(int wi, int wj) {
-    int var;
-    if (!get_linked_max_variable(wi, wj, var)) {
-#ifdef _VARS
-      var_defs_stream << "linked_max_" << wi << "_" << wj << "\t" << var << endl;
-#endif
-      _guiding->setLinkedMinMaxParameters(var, wi, wj);
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-
-#if 0
-  // If guiding params are unknown, they are set do default
-  int linked_min(int wi, int wj) {
-    int var;
-    if (!get_linked_min_variable(wi, wj, var)) {
-#ifdef _VARS
-      var_defs_stream << "linked_min_" << wi << "_" << wj << "\t" << var << endl;
-#endif
-      _guiding->setLinkedMinMaxParameters(var, wi, wj);
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-#endif
-
   /*
    *                  link(wi, pi, wj, pj)
    * Variables that specify that a direct link has been established
@@ -446,12 +418,6 @@ private:
     _linked_variables[var] = new LinkedVar(i, j);
     _linked_variables_indices.push_back(var);
   }
-
-  // What is the number of the linked_min(i, j) variable?
-  Matrix<int> _linked_min_variable_map;
-
-  // What is the number of the linked_max(i, j) variable?
-  Matrix<int> _linked_max_variable_map;
 
   /*
    *   Information about the link_cw(w, wj, pj) variables
