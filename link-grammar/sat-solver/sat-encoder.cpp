@@ -1091,8 +1091,6 @@ void SATEncoder::generate_planarity_conditions()
       }
     }
   }
-
-  //  generate_linked_min_max_planarity();
 }
 
 /*--------------------------------------------------------------------------*
@@ -1654,88 +1652,6 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
   }
   DEBUG_print("------- end linked definitions");
 }
-
-#if 0
-void SATEncoder::generate_linked_min_max_planarity()
-{
-  DEBUG_print("---- linked_max");
-  for (size_t w1 = 0; w1 < _sent->length; w1++) {
-    for (size_t w2 = 0; w2 < _sent->length; w2++) {
-      Lit lhs = Lit(_variables->linked_max(w1, w2));
-      vec<Lit> rhs;
-      if (w2 < _sent->length - 1) {
-        rhs.push(Lit(_variables->linked_max(w1, w2 + 1)));
-        if (w1 != w2 + 1 && _linked_possible(std::min(w1, w2+1), std::max(w1, w2+1)))
-          rhs.push(~Lit(_variables->linked(std::min(w1, w2+1), std::max(w1, w2+1))));
-      }
-      generate_classical_and_definition(lhs, rhs);
-    }
-  }
-  DEBUG_print("---- end linked_max");
-
-
-  DEBUG_print("---- linked_min");
-  for (size_t w1 = 0; w1 < _sent->length; w1++) {
-    for (size_t w2 = 0; w2 < _sent->length; w2++) {
-      Lit lhs = Lit(_variables->linked_min(w1, w2));
-      vec<Lit> rhs;
-      if (w2 > 0) {
-        rhs.push(Lit(_variables->linked_min(w1, w2 - 1)));
-        if (w1 != w2-1 && _linked_possible(std::min(w1, w2 - 1), std::max(w1, w2 - 1)))
-          rhs.push(~Lit(_variables->linked(std::min(w1, w2 - 1), std::max(w1, w2 - 1))));
-      }
-      generate_classical_and_definition(lhs, rhs);
-    }
-  }
-  DEBUG_print("---- end linked_min");
-
-
-  vec<Lit> clause;
-  for (size_t wi = 3; wi < _sent->length; wi++) {
-    for (size_t wj = 1; wj < wi - 1; wj++) {
-      for (size_t wl = wj + 1; wl < wi; wl++) {
-        clause.growTo(3);
-        clause[0] = ~Lit(_variables->linked_min(wi, wj));
-        clause[1] = ~Lit(_variables->linked_max(wi, wl - 1));
-        clause[2] = Lit(_variables->linked_min(wl, wj));
-        add_clause(clause);
-      }
-    }
-  }
-
-  DEBUG_print("------------");
-
-  for (size_t wi = 0; wi < _sent->length - 1; wi++) {
-    for (size_t wj = wi + 1; wj < _sent->length - 1; wj++) {
-      for (size_t wl = wi+1; wl < wj; wl++) {
-        clause.growTo(3);
-        clause[0] = ~Lit(_variables->linked_max(wi, wj));
-        clause[1] = ~Lit(_variables->linked_min(wi, wl + 1));
-        clause[2] = Lit(_variables->linked_max(wl, wj));
-        add_clause(clause);
-      }
-    }
-  }
-
-  DEBUG_print("------------");
-  clause.clear();
-  for (size_t wi = 1; wi < _sent->length; wi++) {
-    for (size_t wj = wi + 2; wj < _sent->length - 1; wj++) {
-      for (size_t wl = wi + 1; wl < wj; wl++) {
-        clause.growTo(2);
-        clause[0] = ~Lit(_variables->linked_min(wi, wj));
-        clause[1] = Lit(_variables->linked_min(wl, wi));
-        add_clause(clause);
-
-        clause.growTo(2);
-        clause[0] = ~Lit(_variables->linked_max(wj, wi));
-        clause[1] = Lit(_variables->linked_max(wl, wj));
-        add_clause(clause);
-      }
-    }
-  }
-}
-#endif
 
 Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {
