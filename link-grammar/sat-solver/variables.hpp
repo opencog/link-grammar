@@ -74,9 +74,6 @@ public:
     ,_linked_min_variable_map(sent->length, -1)
     ,_linked_max_variable_map(sent->length, -1)
     ,_thin_link_variable_map(sent->length, -1)
-#if 0
-      ,_link_top_cw_variable_map(sent->length)
-#endif
     ,_link_cw_variable_map(sent->length)
     ,_guiding(new CostDistanceGuiding(sent))
     ,_var(0)
@@ -293,34 +290,6 @@ public:
     return var;
   }
 
-
-  /*
-   *                 link_top_cw(wi, wj, pj)
-   * Variables that specify that a connective word has been directly
-   * linked to a connector
-   */
-
-#if 0
-  // If guiding params for this variable are not set earlier, they are
-  // now set to default
-  int link_top_cw(int wi, int wj, int pj, const char* cj) {
-    int var;
-    if (!get_link_top_cw_variable(wi, wj, pj, var)) {
-      add_link_top_cw_variable(wi, wj, pj, cj, var);
-      _guiding->setLinkTopCWParameters(var, wi, wj, cj);
-#ifdef _VARS
-      var_defs_stream << "link_top_cw_"
-                      << "(" << wj << "_" << pj << "_" << cj  << ")_"
-                      << wi
-                      << "\t" << var << endl;
-#endif
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-#endif
-
-
 #ifdef _CONNECTIVITY_
   /* The following variables are deprecated */
 
@@ -414,37 +383,6 @@ public:
   const LinkedVar* linked_variable(int var) const {
     return _linked_variables[var];
   }
-
-
-
-  /*
-   *           link_top_cw((wi, pi), wj)
-   */
-
-#if 0
-  // Returns indices of all link_top_cw variables
-  const std::vector<int>& link_top_cw_variables() const {
-    return _link_top_cw_variables_indices;
-  }
-
-  // Additional info about the link_top_cw(wi, wj, pj) variable
-  struct LinkTopCWVar {
-    LinkTopCWVar(const std::string& _name, int _tw, int _cw, const char* _c)
-      : name(_name), connector_word(_cw), top_word(_tw), connector(_c) {
-    }
-
-    std::string name;
-    int connector_word;
-    int top_word;
-    char* label;
-    const char* connector;
-  };
-
-  // Returns additional info about the given link_top_cw variable
-  const LinkTopCWVar* link_top_cw_variable(int var) const {
-    return _link_top_cw_variables[var];
-  }
-#endif
 
   /* Pass SAT search parameters to the MiniSAT solver */
   void setVariableParameters(Solver* solver) {
@@ -544,46 +482,6 @@ private:
    */
   // What is the number of the thin_link(i, j) variable?
   MatrixUpperTriangle<int> _thin_link_variable_map;
-
-#if 0
-  /*
-   * Information about the link_top_cw(w, wj, pj) variables
-   */
-
-  // What is the number of the link_top_cw(wi, wj, pj) variable?
-  Matrix< std::map<int, int> > _link_top_cw_variable_map;
-
-  // What are the numbers of all link_top_cw(wi, wj, pj) variables?
-  std::vector<int>  _link_top_cw_variables_indices;
-
-  // Additional info about the link_top_cw(wi, wj, pj) variable with the given number
-  std::vector<LinkTopCWVar*> _link_top_cw_variables;
-#endif
-
-#if 0
-  // Set this additional info
-  void add_link_top_cw_variable(int i, int j, int pj, const char* cj, size_t var) {
-    char name[MAX_VARIABLE_NAME];
-    char* s = name;
-    *s++ = 'l';    *s++ = 'i';     *s++ = 'n';     *s++ = 'k'; *s++ = '_'; *s++ = 't'; *s++ = 'o'; *s++ = 'p';
-    *s++ = '_';
-    s = fast_sprintf(s, i);
-    *s++ = '_'; *s++ = '(';
-    s = fast_sprintf(s, j);
-    *s++ = '_';
-    s = fast_sprintf(s, pj);
-    *s++ = '_';
-    s = fast_sprintf(s, cj);
-    *s++ = ')';
-    *s = '\0';
-
-    if (var >= _link_top_cw_variables.size()) {
-      _link_top_cw_variables.resize(var + 1, 0);
-    }
-    _link_top_cw_variables[var] = new LinkTopCWVar(name, i, j, cj);
-    _link_top_cw_variables_indices.push_back(var);
-  }
-#endif
 
   /*
    *   Information about the link_cw(w, wj, pj) variables
@@ -700,13 +598,6 @@ private:
   bool get_link_cw_variable(int i, int j, int pj, int& var) {
     return get_3int_variable(i, j, pj, var, _link_cw_variable_map);
   }
-
-#if 0
-  bool get_link_top_cw_variable(int i, int j, int pj, int& var) {
-    return get_3int_variable(i, j, pj, var, _link_top_cw_variable_map);
-  }
-#endif
-
 
 #ifdef _CONNECTIVITY_
   bool get_lcon_variable(int i, int j, int k, int& var) {
