@@ -1260,8 +1260,8 @@ void SATEncoder::power_prune()
         if (!(*lci)->leading_left || (*lci)->connector.multi || (*lci)->word <= wl + 2)
           continue;
 
-        //        printf("LR: .%d. .%d. %s\n", wl, rci->position, rci->connector.string);
-        //        printf("LL: .%d. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector.string);
+        //        printf("LR: .%zu. .%d. %s\n", wl, rci->position, rci->connector.desc->string);
+        //        printf("LL: .%zu. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector.desc->string);
 
         vec<Lit> clause;
         for (std::vector<int>::const_iterator i = rci->eps_right.begin(); i != rci->eps_right.end(); i++) {
