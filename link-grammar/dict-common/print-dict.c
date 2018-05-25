@@ -102,7 +102,16 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		}
 		else
 		{
-			dcost = 0;
+			if (icost > 4)
+			{
+				/* don't print too many [] levels */
+				dcost = icost;
+				icost = 1;
+			}
+			else
+			{
+				dcost = 0;
+			}
 		}
 	}
 
