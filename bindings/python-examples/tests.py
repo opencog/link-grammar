@@ -285,7 +285,7 @@ class DBasicParsingTestCase(unittest.TestCase):
 
     def test_utf8_encoded_string(self):
         result = self.parse_sent("I love going to the café.")
-        self.assertTrue(1 < len(result))
+        self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
@@ -294,25 +294,25 @@ class DBasicParsingTestCase(unittest.TestCase):
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         else:
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
-        self.assertTrue(1 < len(result))
+        self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unknown_word(self):
         result = self.parse_sent("I love going to the qertfdwedadt.")
-        self.assertTrue(1 < len(result))
+        self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unknown_euro_utf8_word(self):
         result = self.parse_sent("I love going to the qéáéğíóşúüñ.")
-        self.assertTrue(1 < len(result))
+        self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unknown_cyrillic_utf8_word(self):
         result = self.parse_sent("I love going to the доктором.")
-        self.assertTrue(1 < len(result))
+        self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
@@ -391,9 +391,9 @@ class EErrorFacilityTestCase(unittest.TestCase):
         self.gotit = None
         for i in range(0, 2+self.testleaks):
             self.numerr = LG_Error.printall(self.error_handler_test, self)
-            if 0 == i:
+            if i == 0:
                 self.assertEqual(self.numerr, 1)
-            if 1 == i:
+            if i == 1:
                 self.assertEqual(self.numerr, 0)
         self.assertEqual((self.errinfo.severity, self.errinfo.severity_label), (clg.lg_Error, "Error"))
         self.assertEqual(self.gotit, "testit")
@@ -904,7 +904,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     linkage diagrams / constituent printings.
     """
     self.__class__.longMessage = True
-    if '' != desc:
+    if desc != '':
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
     parses = open(testfile, "rb")
@@ -927,7 +927,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         if sys.version_info > (3, 0):
             line = line.decode('utf-8')
         # Lines starting with I are the input sentences
-        if 'I' == line[0]:
+        if line[0] == 'I':
             validate_opcode(O=True, C=True)
             sent = line[1:]
             diagram = ""
@@ -937,7 +937,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
-        if 'N' == line[0]:
+        if line[0] == 'N' :
             validate_opcode(O=True, C=True)
             diagram = ""
             constituents = ""
@@ -946,18 +946,18 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
-        if 'O' == line[0]:
+        if line[0] == 'O' :
             validate_opcode(C=True)
             diagram += line[1:]
-            if '\n' == line[1] and 1 < len(diagram):
+            if line[1] == '\n' and len(diagram) > 1:
                 self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
                 diagram = None
 
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
-        if 'C' == line[0]:
+        if line[0] == 'C':
             validate_opcode(O=True)
-            if '\n' == line[1] and 1 < len(constituents):
+            if line[1] == '\n' and len(constituents) > 1:
                 self.assertEqual(linkage.constituent_tree(), constituents, "at {}:{}".format(testfile, lineno))
                 constituents = None
             else:
