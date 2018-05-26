@@ -352,9 +352,11 @@ class EErrorFacilityTestCase(unittest.TestCase):
         "previous": lambda x, y=None: None
     }
 
-    def setUp(self): # pylint: disable=attribute-defined-outside-init,no-member
+    def setUp(self):
         self.testit = "testit"
         self.testleaks = 0  # A repeat count for validating no memory leaks
+        self.numerr = 0
+        self.errinfo = clg.lg_None
 
     @staticmethod
     def error_handler_test(errinfo, data):
