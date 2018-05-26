@@ -132,7 +132,6 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		return e;
 	}
 
-	/* Look for optional, and print only that */
 	el = n->u.l;
 	if (el == NULL)
 	{
@@ -144,6 +143,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	}
 
 	for (i=0; i<icost; i++) dyn_strcat(e, "[");
+
+	/* look for optional, and print only that */
 	if ((n->type == OR_type) && el->e && el->e->cost == 0 && (NULL == el->e->u.l))
 	{
 		dyn_strcat(e, "{");
