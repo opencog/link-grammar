@@ -726,6 +726,12 @@ class GSQLDictTestCase(unittest.TestCase):
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
 
+    def test_getting_links_sat(self):
+        sat_po = ParseOptions(use_sat=True)
+        if sat_po.use_sat != True:
+            raise unittest.SkipTest("Library not configured with SAT parser")
+        linkage_testfile(self, self.d, sat_po)
+
 # Tests are run in alphabetical order; do the language tests last.
 
 class ZENLangTestCase(unittest.TestCase):
