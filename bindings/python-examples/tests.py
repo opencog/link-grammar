@@ -248,13 +248,11 @@ class CParseOptionsTestCase(unittest.TestCase):
 class DBasicParsingTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.d = Dictionary()
-        cls.po = None
+        cls.d, cls.po = Dictionary(), None
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def parse_sent(self, text, po=None):
         if po is None:
@@ -540,8 +538,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
@@ -723,8 +720,7 @@ class GSQLDictTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
@@ -744,8 +740,7 @@ class ZENLangTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def test_getting_links(self):
         linkage_testfile(self, self.d, self.po)
@@ -794,8 +789,7 @@ class ZENConstituentsCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def test_a_constiuents_after_parse_list(self):
         """
@@ -813,8 +807,7 @@ class ZDELangTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
@@ -861,8 +854,7 @@ class ZRULangTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d
-        del cls.po
+        del cls.d, cls.po
 
     def parse_sent(self, text):
         return list(Sentence(text, self.d, self.po).parse())
