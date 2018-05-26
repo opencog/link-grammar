@@ -1530,18 +1530,20 @@ Linkage SATEncoder::get_next_linkage()
     lkg[1].lifo.N_violations = 0;
 
   // Perform the rest of the post-processing
-  do_post_process(_sent->postprocessor, lkg, false);
-  if (NULL != _sent->postprocessor->violation) {
-    lkg->lifo.N_violations++;
-    lkg->lifo.pp_violation_msg = _sent->postprocessor->violation;
-    lgdebug(+D_SAT, "Postprocessing error: %s\n", lkg->lifo.pp_violation_msg);
-  } else {
-    // XXX We cannot maintain num_valid_linkages, because it starts from
-    // a high number. If we start it from 0, then on value 1 link-parser
-    // would report "Unique linkage".
-    //_sent->num_valid_linkages++;
+  if (NULL != _sent->postprocessor) {
+    do_post_process(_sent->postprocessor, lkg, false);
+    if (NULL != _sent->postprocessor->violation) {
+      lkg->lifo.N_violations++;
+      lkg->lifo.pp_violation_msg = _sent->postprocessor->violation;
+      lgdebug(+D_SAT, "Postprocessing error: %s\n", lkg->lifo.pp_violation_msg);
+    } else {
+      // XXX We cannot maintain num_valid_linkages, because it starts from
+      // a high number. If we start it from 0, then on value 1 link-parser
+      // would report "Unique linkage".
+      //_sent->num_valid_linkages++;
+    }
+    post_process_free_data(&_sent->postprocessor->pp_data);
   }
-  post_process_free_data(&_sent->postprocessor->pp_data);
   linkage_score(lkg, _opts);
 
   // if (NULL == _sent->postprocessor->violation && verbosity > 1)
