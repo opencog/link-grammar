@@ -249,13 +249,16 @@ class DBasicParsingTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d = Dictionary()
+        cls.po = None
 
     @classmethod
     def tearDownClass(cls):
         del cls.d
-        del cls.parse_sent
+        del cls.po
 
-    def parse_sent(self, text, po=ParseOptions()):
+    def parse_sent(self, text, po=None):
+        if po is None:
+            po = ParseOptions()
         return list(Sentence(text, self.d, po).parse())
 
     def test_that_parse_returns_empty_iterator_on_no_linkage(self):
