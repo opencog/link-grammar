@@ -91,6 +91,12 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		icost = 1;
 		dcost = n->cost;
 	}
+	else if ((n->cost > -10E-4) && (n->cost < 0))
+	{
+		/* avoid [X+]-0.00 */
+		icost = 0;
+		dcost = 0;
+	}
 	else
 	{
 		icost = (int) (n->cost);
