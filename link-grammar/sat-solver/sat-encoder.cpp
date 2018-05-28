@@ -375,7 +375,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         if (total_cost > _cost_cutoff) {
           generate_literal(~Lit(_variables->string_cost(var, e->cost)));
         }
-      } else if (e->u.l != NULL && e->u.l->next == NULL) {
+      } else if (e->u.l->next == NULL) {
         /* unary and - skip */
         generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
       } else {
@@ -423,7 +423,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         /* zeroary or */
         cerr << "Zeroary OR" << endl;
         exit(EXIT_FAILURE);
-      } else if (e->u.l != NULL && e->u.l->next == NULL) {
+      } else if (e->u.l->next == NULL) {
         /* unary or */
         generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
       } else {

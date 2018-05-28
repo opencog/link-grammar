@@ -58,7 +58,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     if (exp->u.l == NULL) {
       /* zeroary and */
     } else
-      if (exp->u.l != NULL && exp->u.l->next == NULL) {
+      if (exp->u.l->next == NULL) {
         /* unary and - skip */
         insert_connectors(exp->u.l->e, dfs_position, leading_right,
              leading_left, eps_right, eps_left, var, root, cost, parent_exp, word_xnode);
