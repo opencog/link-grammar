@@ -82,20 +82,43 @@ static dyn_str *print_expression_parens(dyn_str *e,
 
 	if (n == NULL)
 	{
-		append_string(e, "NULL expression");
+		dyn_strcat(e, "NULL expression");
 		return e;
 	}
 
-	icost = (int) (n->cost);
-	dcost = n->cost - icost;
-	if (dcost > 10E-4)
+	if (n->cost < -10E-4)
 	{
-		dcost = n->cost;
 		icost = 1;
+		dcost = n->cost;
+	}
+	else if ((n->cost > -10E-4) && (n->cost < 0))
+	{
+		/* avoid [X+]-0.00 */
+		icost = 0;
+		dcost = 0;
 	}
 	else
 	{
-		dcost = 0;
+		icost = (int) (n->cost);
+		dcost = n->cost - icost;
+		if (dcost > 10E-4)
+		{
+			dcost = n->cost;
+			icost = 1;
+		}
+		else
+		{
+			if (icost > 4)
+			{
+				/* don't print too many [] levels */
+				dcost = icost;
+				icost = 1;
+			}
+			else
+			{
+				dcost = 0;
+			}
+		}
 	}
 
 	/* print the connector only */
@@ -109,24 +132,27 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		return e;
 	}
 
-	/* Look for optional, and print only that */
 	el = n->u.l;
 	if (el == NULL)
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
-		append_string(e, "()");
+		dyn_strcat(e, "()");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
 		return e;
 	}
 
 	for (i=0; i<icost; i++) dyn_strcat(e, "[");
-	if ((n->type == OR_type) && el->e && (NULL == el->e->u.l))
+
+	/* look for optional, and print only that */
+	if ((n->type == OR_type) && el->e && el->e->cost == 0 && (NULL == el->e->u.l))
 	{
 		dyn_strcat(e, "{");
 		if (NULL == el->next) dyn_strcat(e, "error-no-next");
 		else print_expression_parens(e, el->next->e, false);
-		append_string(e, "}");
+		dyn_strcat(e, "}");
+		for (i=0; i<icost; i++) dyn_strcat(e, "]");
+		if (0 != dcost) append_string(e, COST_FMT, dcost);
 		return e;
 	}
 
