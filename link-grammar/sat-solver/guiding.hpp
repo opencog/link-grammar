@@ -91,11 +91,6 @@ public:
     setParameters(var, isDecision, 0.0, 0.0);
   }
 
-#if 0
-  /* thin_link variables */
-  virtual void setThinLinkParameters (int var, int wi, int wj) = 0;
-#endif
-
   /* Pass SAT search parameters to the MiniSAT solver */
   void passParametersToSolver(Solver* solver) {
     for (size_t v = 0; v < _parameters.size(); v++) {

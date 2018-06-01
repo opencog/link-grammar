@@ -71,9 +71,6 @@ public:
   Variables(Sentence sent)
     : _link_variable_map(sent->length)
     ,_linked_variable_map(sent->length, -1)
-    ,_linked_min_variable_map(sent->length, -1)
-    ,_linked_max_variable_map(sent->length, -1)
-    ,_thin_link_variable_map(sent->length, -1)
     ,_link_cw_variable_map(sent->length)
     ,_guiding(new CostDistanceGuiding(sent))
     ,_var(0)
@@ -244,27 +241,6 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
-
-#if 0
-  /*
-   *             thin_link(wi, wj)
-   * Variables that specify that two words are linked by a thin link
-   */
-
-  // If guiding params are unknown, they are set do default
-  int thin_link(int wi, int wj) {
-    assert(wi < wj, "Variables: thin link should be ordered");
-    int var;
-    if (!get_thin_link_variable(wi, wj, var)) {
-#ifdef _VARS
-      var_defs_stream << "thin_link_" << wi << "_" << wj << "\t" << var << endl;
-#endif
-      _guiding->setThinLinkParameters(var, wi, wj);
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-#endif
 
   /*
    *                   link_cw(wi, wj, pj)
@@ -478,12 +454,6 @@ private:
   Matrix<int> _linked_max_variable_map;
 
   /*
-   * Information about the thin_link(i, j) variables
-   */
-  // What is the number of the thin_link(i, j) variable?
-  MatrixUpperTriangle<int> _thin_link_variable_map;
-
-  /*
    *   Information about the link_cw(w, wj, pj) variables
    */
   // What is the number of the link_cw(wi, wj, pj) variable?
@@ -581,18 +551,6 @@ private:
 
   bool get_linked_variable(int i, int j, int& var) {
     return get_2int_variable(i, j, var, _linked_variable_map);
-  }
-
-  bool get_linked_min_variable(int i, int j, int& var) {
-    return get_2int_variable(i, j, var, _linked_min_variable_map);
-  }
-
-  bool get_linked_max_variable(int i, int j, int& var) {
-    return get_2int_variable(i, j, var, _linked_max_variable_map);
-  }
-
-  bool get_thin_link_variable(int i, int j, int& var) {
-    return get_2int_variable(i, j, var, _thin_link_variable_map);
   }
 
   bool get_link_cw_variable(int i, int j, int pj, int& var) {
