@@ -243,9 +243,14 @@ void SATEncoder::build_word_tags()
   name[0] = 'w';
 
   for (size_t w = 0; w < _sent->length; w++) {
-    // sprintf(name, "w%zu", w);
-    fast_sprintf(name+1, w);
-    _word_tags.push_back(WordTag(w, name, _variables, _sent, _opts));
+    fast_sprintf(name+1, (int)w);
+    // The SAT word variables are set to be equal to the word numbers.
+    Var var = _variables->string(name);
+    assert((Var)w == var);
+  }
+
+  for (size_t w = 0; w < _sent->length; w++) {
+    _word_tags.push_back(WordTag(w, _variables, _sent, _opts));
     int dfs_position = 0;
 
     if (_sent->word[w].x == NULL) continue;
@@ -260,6 +265,7 @@ void SATEncoder::build_word_tags()
     cout << endl;
 #endif
 
+    fast_sprintf(name+1, (int)w);
     bool leading_right = true;
     bool leading_left = true;
     std::vector<int> eps_right, eps_left;

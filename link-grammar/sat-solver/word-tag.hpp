@@ -110,13 +110,9 @@ private:
   }
 
 public:
-  WordTag(int word, const char* name, Variables* variables, Sentence sent, Parse_Options opts)
+  WordTag(int word, Variables* variables, Sentence sent, Parse_Options opts)
     : _word(word), _variables(variables), _sent(sent), _opts(opts) {
     _match_possible.resize(_sent->length);
-
-    // The SAT word variables are set to be equal to the word numbers.
-    Var var = _variables->string(name);
-    assert(word == var);
 
     verbosity = opts->verbosity;
     debug = opts->debug;
