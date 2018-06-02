@@ -1782,6 +1782,7 @@ Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionCon
     return e;
 }
 
+#define D_SEL 8
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
   Disjunct *d;
@@ -1875,6 +1876,17 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #endif
     d = build_disjuncts_for_exp(de, xnode_word[wi]->string, MAX_CONNECTOR_COST, _opts);
     word_record_in_disjunct(xnode_word[wi]->word, d);
+
+    /* Recover cost of costly-nulls. */
+    const vector<EmptyConnector>& ec = _word_tags[wi].get_empty_connectors();
+    for (vector<EmptyConnector>::const_iterator j = ec.begin(); j < ec.end(); j++)
+    {
+      lgdebug(+D_SEL, "Word %zu: Costly-null var=%d, found=%d cost=%.2f\n",
+              wi, j->ec_var, _solver->model[j->ec_var] == l_True, j->ec_cost);
+      if (_solver->model[j->ec_var] == l_True)
+        d->cost += j->ec_cost;
+    }
+
     lkg->chosen_disjuncts[wi] = d;
     free_Exp(de);
   }
@@ -1884,6 +1896,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
   return false;
 }
+#undef D_SEL
 
 /**
  * Main entry point into the SAT parser.

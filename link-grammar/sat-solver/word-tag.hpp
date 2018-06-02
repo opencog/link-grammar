@@ -84,6 +84,11 @@ struct PositionConnector
 
 };
 
+/*
+ * Record the SAT variable and cost of costly-null expressions.
+ * Their cost is recovered (in sat_extract_links()) if
+ * they happen to reside on a participating disjunct.
+ */
 struct EmptyConnector {
   EmptyConnector(int var, double cst)
     : ec_var(var), ec_cost(cst)
