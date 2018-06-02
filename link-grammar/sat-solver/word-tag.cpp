@@ -44,7 +44,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _dir.push_back('+');
       _right_connectors.push_back(
            PositionConnector(parent_exp, exp, '+', _word, dfs_position,
-                             cost, leading_right, false,
+                             cost, parent_cost, leading_right, false,
                              eps_right, eps_left, word_xnode, _opts));
       leading_right = false;
       break;
@@ -53,7 +53,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _dir.push_back('-');
       _left_connectors.push_back(
            PositionConnector(parent_exp, exp, '-', _word, dfs_position,
-                             cost, false, leading_left,
+                             cost, parent_cost, false, leading_left,
                              eps_right, eps_left, word_xnode, _opts));
       leading_left = false;
       break;
@@ -85,8 +85,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           *s++ = 'c';
           fast_sprintf(s, i);
 
+          double and_cost = (i == 0) ? cost : 0;
           insert_connectors(l->e, dfs_position, leading_right, leading_left,
-                eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
+                eps_right, eps_left, new_var, false, and_cost, parent_exp, word_xnode);
 
           if (leading_right) {
             eps_right.push_back(_variables->epsilon(new_var, '+'));

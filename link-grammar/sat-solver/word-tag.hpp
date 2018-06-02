@@ -17,10 +17,10 @@ extern "C" {
 struct PositionConnector
 {
   PositionConnector(Exp* pe, Exp* e, char d, int w, int p,
-                    double pcst, bool lr, bool ll,
+                    double cst, double pcst, bool lr, bool ll,
                     const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode, Parse_Options opts)
     : exp(pe), dir(d), word(w), position(p),
-      cost(e->cost), parent_cost(pcst),
+      cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {

@@ -416,6 +416,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
           *s++ = 'c';
           fast_sprintf(s, i);
 
+          /* if (i != 0) total_cost = 0; */ // This interferes with the cost cutoff
           generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
         }
       }
