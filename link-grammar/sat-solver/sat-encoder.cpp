@@ -1851,6 +1851,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     xnode_word[var->right_word] = right_xnode;
   }
 
+  lkg->num_links = current_link;
+
   // Now build the disjuncts.
   // This is needed so that compute_chosen_word works correctly.
   // Just in case there is no expression for a disjunct, a null one is used.
@@ -1873,27 +1875,51 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
       prt_error("Error: Internal error: No expression for word %zu\n", wi);
     }
 
-#ifndef MAX_CONNECTOR_COST
-#define MAX_CONNECTOR_COST 1000.0f
+    double cost_cutoff;
+#if LIMIT_TOTAL_LINKAGE_COST // Undefined - incompatible to the classic parser.
+    cost_cutoff = _opts->disjunct_cost;
+#else
+    cost_cutoff = 1000.0;
+#endif // LIMIT_TOTAL_LINKAGE_COST
+    d = build_disjuncts_for_exp(de, xnode_word[wi]->string, cost_cutoff, _opts);
+    free_Exp(de);
+
+    if (d == NULL)
+    {
+      lgdebug(+D_SEL, "Debug: Word %zu: Disjunct cost > cost_cutoff %.2f\n",
+              wi, cost_cutoff);
+#ifdef DEBUG
+      if (!test_enabled("SAT-cost"))
 #endif
-    d = build_disjuncts_for_exp(de, xnode_word[wi]->string, MAX_CONNECTOR_COST, _opts);
+      return false;
+    }
+
     word_record_in_disjunct(xnode_word[wi]->word, d);
 
     /* Recover cost of costly-nulls. */
     const vector<EmptyConnector>& ec = _word_tags[wi].get_empty_connectors();
     for (vector<EmptyConnector>::const_iterator j = ec.begin(); j < ec.end(); j++)
     {
-      lgdebug(+D_SEL, "Word %zu: Costly-null var=%d, found=%d cost=%.2f\n",
+      lgdebug(+D_SEL, "Debug: Word %zu: Costly-null var=%d, found=%d cost=%.2f\n",
               wi, j->ec_var, _solver->model[j->ec_var] == l_True, j->ec_cost);
       if (_solver->model[j->ec_var] == l_True)
         d->cost += j->ec_cost;
     }
 
     lkg->chosen_disjuncts[wi] = d;
-    free_Exp(de);
-  }
 
-  lkg->num_links = current_link;
+#if LIMIT_TOTAL_LINKAGE_COST
+    if (d->cost > cost_cutoff)
+    {
+      lgdebug(+D_SEL, "Word %zu: Disjunct cost  %.2f > cost_cutoff %.2f\n",
+              wi, d->cost, cost_cutoff);
+#ifdef DEBUG
+      if (!test_enabled("SAT-cost"))
+#endif
+      return false;
+    }
+#endif // LIMIT_TOTAL_LINKAGE_COST
+  }
 
   DEBUG_print("Total links: ." <<  lkg->num_links << "." << endl);
   return true;
