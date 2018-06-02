@@ -1862,13 +1862,16 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     if (xnode_word[wi] == NULL)
     {
       if (!_sent->word[wi].optional)
-        prt_error("Warning: Non-optional word %zu has no linkage\n", wi);
+      {
+        de = null_exp();
+        prt_error("Error: Internal error: Non-optional word %zu has no linkage\n", wi);
+      }
       continue;
     }
 
     if (de == NULL) {
       de = null_exp();
-      lgdebug(+0, "Warning: No expression for word %zu\n", wi);
+      prt_error("Error: Internal error: No expression for word %zu\n", wi);
     }
 
 #ifndef MAX_CONNECTOR_COST
@@ -1893,7 +1896,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
   lkg->num_links = current_link;
 
-  DEBUG_print("Total: ." <<  lkg->num_links << "." << endl);
+  DEBUG_print("Total links: ." <<  lkg->num_links << "." << endl);
   return false;
 }
 #undef D_SEL
