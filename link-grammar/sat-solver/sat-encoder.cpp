@@ -1529,21 +1529,14 @@ void SATEncoder::pp_prune()
 
 /**
  * Create the next linkage.
- * This is very similar to compute_chosen_disjuncts(), except that
- * sat_extract_links() is called, instead of normal extract_links().
- * It would be good to refactor this and the other to make them even
- * more similar, because else, its confusing ...
- * FIXME? Use a shared function for the code here.
+ * Return true iff the linkage can be created.
  */
-Linkage SATEncoder::create_linkage()
+bool SATEncoder::create_linkage(Linkage linkage)
 {
-  Linkage linkage = (Linkage) malloc(sizeof(struct Linkage_s));
-  memset(linkage, 0, sizeof(struct Linkage_s));
-
   partial_init_linkage(_sent, linkage, _sent->length);
-  sat_extract_links(linkage);
+  if (!sat_extract_links(linkage)) return false;
   compute_link_names(linkage, _sent->string_set);
-  return linkage;
+  return true;
 }
 
 void SATEncoder::generate_linkage_prohibiting()
@@ -1563,15 +1556,16 @@ void SATEncoder::generate_linkage_prohibiting()
 
 Linkage SATEncoder::get_next_linkage()
 {
-  Linkage linkage = NULL;
+  Linkage_s linkage;
   bool connected;
-  bool sane = true;
   bool display_linkage_disconnected = false;
+
 
   /* Loop until a good linkage is found.
    * Insane (mixed alternatives) linkages are always ignored.
    * Disconnected linkages are normally ignored, unless
    * !test=linkage-disconnected is used (and they are sane) */
+  bool linkage_ok;
   do {
     if (!_solver->solve()) return NULL;
 
@@ -1587,16 +1581,24 @@ Linkage SATEncoder::get_next_linkage()
       generate_linkage_prohibiting();
     }
 
+    linkage_ok = false;
     if (connected || display_linkage_disconnected) {
-      linkage = create_linkage();
-      sane = sane_linkage_morphism(_sent, linkage, _opts);
-      if (!sane) {
-          free_linkage_connectors_and_disjuncts(linkage);
-          free_linkage(linkage);
-          free(linkage);
+      memset(&linkage, 0, sizeof(struct Linkage_s));
+
+      linkage_ok = create_linkage(&linkage);
+      if (linkage_ok)
+        linkage_ok = sane_linkage_morphism(_sent, &linkage, _opts);
+      if (!linkage_ok) {
+          /* We cannot elegantly add this linkage to sent->linkges[] -
+           * to be freed in sentence_delete(), since insane linkages
+           * must be there with index > num_linkages_post_processed - so
+           * they remain hidden, but num_linkages_post_processed is an
+           * arbitrary number.  So we must free it here. */
+          free_linkage_connectors_and_disjuncts(&linkage);
+          free_linkage(&linkage);
           continue; // skip this linkage
       }
-      remove_empty_words(linkage);  /* Discard optional words. */
+      remove_empty_words(&linkage);  /* Discard optional words. */
     }
 
     if (!connected) {
@@ -1606,9 +1608,7 @@ Linkage SATEncoder::get_next_linkage()
         lgdebug(+D_SAT, "Linkage DISCONNECTED (skipped)\n");
       }
     }
-  } while (!sane || !(connected || display_linkage_disconnected));
-
-  assert(linkage, "No linkage");
+  } while (!linkage_ok);
 
   /* We cannot expand the linkage array on demand, since the API uses
    * linkage pointers, and they would become invalid if realloc() changes
@@ -1624,8 +1624,7 @@ Linkage SATEncoder::get_next_linkage()
 
   Linkage lkg = &_sent->lnkages[_next_linkage_index];
   _next_linkage_index++;
-  *lkg = *linkage;  /* copy en-mass */
-  free(linkage);
+  *lkg = linkage;  /* copy en-mass */
 
   /* The link-parser code checks the next linkage for num_violations
    * (to save calls to linkage_create()). Allow for that practice. */
@@ -1897,7 +1896,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
   lkg->num_links = current_link;
 
   DEBUG_print("Total links: ." <<  lkg->num_links << "." << endl);
-  return false;
+  return true;
 }
 #undef D_SEL
 

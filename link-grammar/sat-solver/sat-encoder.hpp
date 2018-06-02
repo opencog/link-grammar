@@ -278,7 +278,7 @@ protected:
   virtual bool sat_extract_links(Linkage) = 0;
 
   // Create linkage from a propositional model
-  Linkage create_linkage();
+  bool create_linkage(Linkage);
 
   // Generate clause that prohibits the current model
   void generate_linkage_prohibiting();
