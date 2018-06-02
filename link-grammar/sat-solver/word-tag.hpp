@@ -84,6 +84,14 @@ struct PositionConnector
 
 };
 
+struct EmptyConnector {
+  EmptyConnector(int var, double cst)
+    : ec_var(var), ec_cost(cst)
+  {
+  }
+  int ec_var;
+  double ec_cost;
+};
 
 // XXX TODO: Hash connectors for faster matching
 
@@ -92,6 +100,7 @@ class WordTag
 private:
   std::vector<PositionConnector> _left_connectors;
   std::vector<PositionConnector> _right_connectors;
+  std::vector<EmptyConnector> _empty_connectors;
 
   std::vector<char> _dir;
   std::vector<int> _position;
@@ -131,6 +140,10 @@ public:
 
   const std::vector<PositionConnector>& get_right_connectors() const {
     return _right_connectors;
+  }
+
+  const std::vector<EmptyConnector>& get_empty_connectors() const {
+    return _empty_connectors;
   }
 
   PositionConnector* get(int dfs_position)

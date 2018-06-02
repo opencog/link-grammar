@@ -11,7 +11,7 @@ extern "C" {
 #include "utilities.h"
 }
 
-#define D_IC 6
+#define D_IC 8
 void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 bool& leading_right, bool& leading_left,
                                 std::vector<int>& eps_right,
@@ -63,6 +63,12 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
   } else if (exp->type == AND_type) {
     if (exp->u.l == NULL) {
       /* zeroary and */
+      if (cost != 0)
+      {
+        lgdebug(+D_IC, "EmptyConnector var=%s(%d) cost %.2f pcost %.2f\n",
+                var, _variables->string(var), cost, parent_cost);
+        _empty_connectors.push_back(EmptyConnector(_variables->string(var),cost));
+      }
     } else
       if (exp->u.l->next == NULL) {
         /* unary and - skip */
