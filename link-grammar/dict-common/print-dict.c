@@ -247,10 +247,17 @@ static char *display_word_split(Dictionary dict,
 
 	if ('\0' == *word) return NULL; /* avoid trying null strings */
 
+	/* SUBSCRIPT_DOT in a sentence word is not interpreted as SUBSCRIPT_MARK,
+	 * and hence a subscripted word that is found in the dict will not
+	 * get found in the dict if it can split. E.g: 's.v (the info for s.v
+	 * will not be shown). Fix it by replacing it to SUBSCRIPT_MARK. */
+	char *pword = strdupa(word);
+	patch_subscript(pword);
+
 	dyn_str *s = dyn_str_new();
 
 	parse_options_set_spell_guess(&display_word_opts, 0);
-	sent = sentence_create(word, dict);
+	sent = sentence_create(pword, dict);
 	if (0 == sentence_split(sent, &display_word_opts))
 	{
 		/* List the splits */
