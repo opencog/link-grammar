@@ -776,7 +776,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			if (val < 0)
 			{
-				prt_error("Error: Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
@@ -791,7 +791,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			double val = strtod(y, &err);
 			if (('\0' == *y) ||('\0' != *err))
 			{
-				prt_error("Error: Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
