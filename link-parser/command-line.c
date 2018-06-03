@@ -554,7 +554,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
 	printf("can be abbreviated.  Here is a list of the commands:\n\n");
 
-	printf(" !help command   Show a detailed help for the given command\n");
+	printf(" !help command   Show a detailed help for the given command.\n");
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
