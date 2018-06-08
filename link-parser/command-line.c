@@ -554,7 +554,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
 	printf("can be abbreviated.  Here is a list of the commands:\n\n");
 
-	printf(" !help command   Show a detailed help for the given command\n");
+	printf(" !help command   Show a detailed help for the given command.\n");
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
@@ -776,7 +776,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 			if (val < 0)
 			{
-				prt_error("Error: Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
@@ -789,9 +789,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		{
 			char *err;
 			double val = strtod(y, &err);
-			if ('\0' != *err)
+			if (('\0' == *y) ||('\0' != *err))
 			{
-				prt_error("Error: Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
