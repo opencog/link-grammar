@@ -197,7 +197,6 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 			 * unused hash bucket.
 			 */
 			h = (h + 1) & (size-1);
-			if (NULL == t[h]) break;
 			if (h == s) return NULL;
 		}
 	}
@@ -207,7 +206,6 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 		{
 			if (con_uc_eq(t[h]->d->left, c)) break;
 			h = (h + 1) & (size-1);
-			if (NULL == t[h]) break;
 			if (h == s) return NULL;
 		}
 	}
