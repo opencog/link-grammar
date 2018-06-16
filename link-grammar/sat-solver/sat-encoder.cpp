@@ -1910,6 +1910,7 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   if (lkg == NULL || k == linkage_limit) {
     // We don't have a valid linkages among the first linkage_limit ones
     sent->num_valid_linkages = 0;
+    sent->num_linkages_found = k;
     sent->num_linkages_post_processed = k;
     if (opts->max_null_count > 0) {
       // The sat solver doesn't support (yet) parsing with nulls.
@@ -1943,8 +1944,8 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
 
-                                                 // linkage index k is:
-  if (k >= encoder->_sent->num_valid_linkages)   // > allocated memory
+                                               // linkage index k is:
+  if (k >= opts->linkage_limit)                  // > allocated memory
     return NULL;
   if(k > encoder->_next_linkage_index)           // skips unproduced linkages
   {
