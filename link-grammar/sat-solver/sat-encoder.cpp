@@ -1493,18 +1493,9 @@ Linkage SATEncoder::get_next_linkage()
 
   assert(linkage, "No linkage");
 
-  /*
-   * We cannot expand the linkage array on demand, since the API uses
-   * linkage pointers, and they would become invalid if realloc()
-   * changes the address of the memory block. */
-#if 0
-  // Expand the linkage array.
-  int index = _sent->num_linkages_alloced;
-  _sent->num_linkages_alloced++;
-  size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-  _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
-#endif /* 0 */
-
+  /* We cannot expand the linkage array on demand, since the API uses
+   * linkage pointers, and they would become invalid if realloc() changes
+   * the address of the memory block. So it is allocated in advance. */
   if (NULL == _sent->lnkages)
   {
     _sent->num_linkages_alloced = _opts->linkage_limit;
