@@ -168,7 +168,7 @@ public:
   void add_matches_with_word(WordTag& tag);
 
   // Find matches in this word tag with the connector (name, dir).
-  void find_matches(int w, const condesc_t* C, char dir,  std::vector<PositionConnector*>& matches);
+  void find_matches(int w, Connector* C, char dir,  std::vector<PositionConnector*>& matches);
 
   // A simpler function: Can any connector in this word match a connector wi, pi?
   // It is assumed that
