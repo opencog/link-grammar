@@ -1474,11 +1474,6 @@ Linkage SATEncoder::get_next_linkage()
       linkage = create_linkage();
       sane = sane_linkage_morphism(_sent, linkage, _opts);
       if (!sane) {
-          /* We cannot elegantly add this linkage to sent->linkges[] -
-           * to be freed in sentence_delete(), since insane linkages
-           * must be there with index > num_linkages_post_processed - so
-           * they remain hidden, but num_linkages_post_processed is an
-           * arbitrary number.  So we must free it here. */
           free_linkage_connectors_and_disjuncts(linkage);
           free_linkage(linkage);
           free(linkage);
