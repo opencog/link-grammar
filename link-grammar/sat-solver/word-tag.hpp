@@ -16,22 +16,22 @@ extern "C" {
 
 struct PositionConnector
 {
-  PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
-                    double cst, double pcst, bool lr, bool ll,
-                    const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode)
-    : exp(e), dir(d), word(w), position(p),
-      cost(cst), parent_cost(pcst),
+  PositionConnector(Exp* pe, Exp* e, char d, int w, int p,
+                    double pcst, bool lr, bool ll,
+                    const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode, Parse_Options opts)
+    : exp(pe), dir(d), word(w), position(p),
+      cost(e->cost), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
     if (word_xnode == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << connector_string(c) << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << e->u.condesc->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
 
     // Initialize some fields in the connector struct.
-    connector.desc = c->desc;
-    connector.multi = c->multi;
-    connector.length_limit = c->length_limit;
+    connector.desc = e->u.condesc;
+    connector.multi = e->multi;
+    set_connector_length_limit(&connector, opts);
     connector.originating_gword = &w_xnode->word->gword_set_head;
 
     /*

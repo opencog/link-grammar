@@ -32,28 +32,23 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
 
-    Connector connector;
-    connector.multi = exp->multi;
-    connector.desc = exp->u.condesc;
-    set_connector_length_limit(&connector, _opts);
-
     switch (exp->dir) {
     case '+':
       _position.push_back(_right_connectors.size());
       _dir.push_back('+');
       _right_connectors.push_back(
-           PositionConnector(parent_exp, &connector, '+', _word, dfs_position,
-                             exp->cost, cost, leading_right, false,
-                             eps_right, eps_left, word_xnode));
+           PositionConnector(parent_exp, exp, '+', _word, dfs_position,
+                             cost, leading_right, false,
+                             eps_right, eps_left, word_xnode, _opts));
       leading_right = false;
       break;
     case '-':
       _position.push_back(_left_connectors.size());
       _dir.push_back('-');
       _left_connectors.push_back(
-           PositionConnector(parent_exp, &connector, '-', _word, dfs_position,
-                             exp->cost, cost, false, leading_left,
-                             eps_right, eps_left, word_xnode));
+           PositionConnector(parent_exp, exp, '-', _word, dfs_position,
+                             cost, false, leading_left,
+                             eps_right, eps_left, word_xnode, _opts));
       leading_left = false;
       break;
     default:
