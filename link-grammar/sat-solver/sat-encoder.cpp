@@ -1880,7 +1880,6 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     delete encoder;
   }
 
-  // Prepare for parsing - extracted for "preparation.c"
   encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   sent->hook = encoder;
   encoder->encode();
