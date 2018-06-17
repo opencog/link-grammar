@@ -1361,6 +1361,9 @@ void SATEncoder::pp_prune()
   if (_sent->dict->base_knowledge == NULL)
     return;
 
+  if (!_opts->perform_pp_prune)
+    return;
+
   pp_knowledge * knowledge;
   knowledge = _sent->dict->base_knowledge;
 
