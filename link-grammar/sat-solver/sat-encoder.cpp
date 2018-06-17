@@ -1919,12 +1919,13 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
                 "parsing with null links.\n");
     }
   } else {
-    /* We found a valid linkage.
-     * XXX However, the following setting is wrong, as we actually don't
-     * know yet the number of linkages...
-     * If we don't return some large number here, then the
-     * Command-line client will fail to print all of the possible
-     * linkages. Work around this by lying... */
+    /* We found a valid linkage. However, we actually don't know yet the
+     * number of linkages, and if we set them too low, the command-line
+     * client will fail to display all of the possible linkages.  Work
+     * around this by lying... return the maximum number of linkages we
+     * are going to produce.
+     * A NULL linkage will be returned by linkage_create() after the last
+     * linkage is produced to signify that there are no more linkages. */
     sent->num_valid_linkages = linkage_limit;
     sent->num_linkages_post_processed = linkage_limit;
   }
