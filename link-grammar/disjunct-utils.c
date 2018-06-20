@@ -101,10 +101,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i += ((uintptr_t)e->desc) + e->desc->uc_num;
+		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i += ((uintptr_t)e->desc) + e->desc->uc_num;
+		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 	i += string_hash(d->word_string);
 	i += (i>>10);
