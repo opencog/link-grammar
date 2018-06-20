@@ -106,7 +106,9 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	for (e = d->right ; e != NULL; e = e->next) {
 		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
+#if 0 /* Redundant - the connector hashing has enough entropy. */
 	i += string_hash(d->word_string);
+#endif
 	i += (i>>10);
 
 	d->dup_hash = i;
