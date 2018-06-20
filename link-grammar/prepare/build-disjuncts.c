@@ -212,52 +212,6 @@ static Clause * build_clause(Exp *e)
 	return c;
 }
 
-// #define DEBUG
-#ifdef DEBUG
-/* Misc printing functions, useful for debugging */
-
-static void print_Tconnector_list(Tconnector * e)
-{
-	for (;e != NULL; e=e->next) {
-		if (e->multi) printf("@");
-		printf("%s", e->condesc->string);
-		printf("%c", e->dir);
-		if (e->next != NULL) printf(" ");
-	}
-}
-
-GNUC_UNUSED static void print_clause_list(Clause * c)
-{
-	for (;c != NULL; c=c->next) {
-		printf("  Clause: ");
-		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
-		print_Tconnector_list(c->c);
-		printf("\n");
-	}
-}
-
-static void print_connector_list(Connector * e)
-{
-	for (;e != NULL; e=e->next)
-	{
-		printf("%s", connector_string(e));
-		if (e->next != NULL) printf(" ");
-	}
-}
-
-GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
-{
-	for (;dj != NULL; dj=dj->next) {
-		printf("%10s: ", dj->word_string);
-		printf("(%f) ", dj->cost);
-		print_connector_list(dj->left);
-		printf(" <--> ");
-		print_connector_list(dj->right);
-		printf("\n");
-	}
-}
-#endif /* DEBUG */
-
 /**
  * Build a new list of connectors starting from the Tconnectors
  * in the list pointed to by e.  Keep only those whose strings whose
@@ -322,6 +276,49 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
 }
 
 #ifdef DEBUG
+/* Misc printing functions, useful for debugging */
+
+static void print_Tconnector_list(Tconnector * e)
+{
+	for (;e != NULL; e=e->next) {
+		if (e->multi) printf("@");
+		printf("%s", e->condesc->string);
+		printf("%c", e->dir);
+		if (e->next != NULL) printf(" ");
+	}
+}
+
+GNUC_UNUSED static void print_clause_list(Clause * c)
+{
+	for (;c != NULL; c=c->next) {
+		printf("  Clause: ");
+		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
+		print_Tconnector_list(c->c);
+		printf("\n");
+	}
+}
+
+static void print_connector_list(Connector * e)
+{
+	for (;e != NULL; e=e->next)
+	{
+		printf("%s", connector_string(e));
+		if (e->next != NULL) printf(" ");
+	}
+}
+
+GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
+{
+	for (;dj != NULL; dj=dj->next) {
+		printf("%10s: ", dj->word_string);
+		printf("(%f) ", dj->cost);
+		print_connector_list(dj->left);
+		printf(" <--> ");
+		print_connector_list(dj->right);
+		printf("\n");
+	}
+}
+
 /* There is a much better print_expression elsewhere
  * This one is for low-level debug. */
 GNUC_UNUSED void prt_exp(Exp *e, int i)
@@ -388,4 +385,4 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 		printf("con=%s dir=%c multi=%d\n", e->u.condesc->string, e->dir, e->multi);
 	}
 }
-#endif
+#endif /* DEBUG */
