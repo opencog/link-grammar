@@ -108,6 +108,8 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	}
 	i += string_hash(d->word_string);
 	i += (i>>10);
+
+	d->dup_hash = i;
 	return (i & (dt->dup_table_size-1));
 }
 
@@ -391,6 +393,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->next)
 		{
+			if (d->dup_hash != dx->dup_hash) continue;
 			if (disjuncts_equal(dx, d)) break;
 		}
 		if (dx == NULL)

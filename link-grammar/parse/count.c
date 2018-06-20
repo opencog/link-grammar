@@ -417,8 +417,8 @@ static Count_bin do_count(
 	{
 		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
 #ifdef VERIFY_MATCH_LIST
-		int id = get_match_list_element(mchxt, mlb) ?
-		            get_match_list_element(mchxt, mlb)->match_id : 0;
+		unsigned int id = get_match_list_element(mchxt, mlb) ?
+		                  get_match_list_element(mchxt, mlb)->match_id : 0;
 #endif
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
