@@ -40,7 +40,7 @@ typedef uint64_t lc_enc_t;
 
 typedef uint32_t connector_hash_t;
 
-#define CD_HEAD_DEPENDET     (1<<0) /* Has a leading 'h' or 'd'. */
+#define CD_HEAD_DEPENDENT    (1<<0) /* Has a leading 'h' or 'd'. */
 #define CD_HEAD              (1<<1) /* 0: dependent; 1: head; */
 #define CD_PERMANENT         (1<<2) /* For SQL dict: Do not clear (future). */
 
