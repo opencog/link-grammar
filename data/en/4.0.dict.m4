@@ -10119,7 +10119,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % For now, using ".x and ".y in the above definitions multiplies the number
 % of linkages by 2^(number of "). So it is separated below.
 
-% [[ZZZ-]]: link to "random" quotion marks that show up "for no reason".
+% [[ZZZ-]]: link to "random" quotation marks that show up "for no reason".
 % Cannot use a blanket W+ here to pick up all W connectors, because ... ??
 """: QUd- or <post-quote> or [[ZZZ-]];
 

@@ -39,7 +39,7 @@
  * By "column widths", it is meant the number of terminal columns
  * needed to display a glyph. Almost all indoeuropean glyphs are one
  * column wide. Almost all CJK glyphs (hanzi, kanji) are two columns
- * wide. These widths are NOT to be confuxed with UTF-8 byte size.
+ * wide. These widths are NOT to be confused with UTF-8 byte size.
  *
  * FIXME Long link names between more distant words may still not
  * fit the space between these words.
@@ -47,7 +47,7 @@
  * Return the number of bytes needed for the all the words, including
  * the space needed for the link names as described above.  Note that
  * this byte length might be less than the glyph width! e.g. the
- * ASCII chars in the rangel 01 to 1F usually print in two columns,
+ * ASCII chars in the range 01 to 1F usually print in two columns,
  * but require only one byte to encode.
  */
 static size_t
@@ -562,7 +562,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	// be less, or it might be more than the total number of
 	// bytes in the UTF-8 string! Which one depends on just how
 	// much garage there might be in the string. Note also that,
-	// in general, the glyphy of the last word will stick out past
+	// in general, the glyph of the last word will stick out past
 	// the num_cols here.
 	unsigned int num_cols = center[N_words_to_print-1]+1;
 
