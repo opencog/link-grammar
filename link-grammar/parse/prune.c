@@ -1010,18 +1010,19 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			{
 				if (!d->marked) continue;
 				deleteme = false;
-				for (dir = 0; dir < 2; dir++)
+				for (i = 0; i < knowledge->n_contains_one_rules; i++)
 				{
-					Connector *c;
-					for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
-					{
-						for (i = 0; i < knowledge->n_contains_one_rules; i++)
-						{
-							pp_rule* rule = &knowledge->contains_one_rules[i]; /* the ith rule */
-							const char * selector = rule->selector;  /* selector string for this rule */
-							pp_linkset * link_set = rule->link_set;  /* the set of criterion links */
+					pp_rule* rule = &knowledge->contains_one_rules[i]; /* the ith rule */
+					const char * selector = rule->selector;  /* selector string for this rule */
+					pp_linkset * link_set = rule->link_set;  /* the set of criterion links */
 
-							if (rule->selector_has_wildcard) continue;  /* If it has a * forget it */
+					if (rule->selector_has_wildcard) continue;  /* If it has a * forget it */
+
+					for (dir = 0; dir < 2; dir++)
+					{
+						Connector *c;
+						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
+						{
 
 							if (!post_process_match(selector, connector_string(c))) continue;
 
