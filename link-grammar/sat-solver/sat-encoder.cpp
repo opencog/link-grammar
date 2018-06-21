@@ -1866,13 +1866,10 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 /**
  * Main entry point into the SAT parser.
  * A note about panic mode:
- * The current version of Minisat we use doesn't support timeouts.
- * (Minisat >= 2.2 supports timeout.) In addition, currently parsing
- * with null words is not supported here.
+ * - The MiniSAT support for timeout is not yet used (FIXME).
+ * - Parsing with null links is not supported (FIXME).
  * So nothing particularly useful happens in a panic mode, and it is
  * left for the user to disable it.
- * Observation: Apparently the panic options somehow may cause an
- * immediate failure to find a solution (not checked why).
  */
 extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 {
