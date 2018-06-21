@@ -443,7 +443,7 @@ static bool possible_connection(prune_context *pc,
 	 * at least one intervening connector (i.e. cannot have both
 	 * lc->next and rc->next being null).  But we only enforce this
 	 * when we think its still possible to have a complete parse,
-	 * i.e. before well allow null-linked words.
+	 * i.e. before we allow null-linked words.
 	 */
 	else
 	if (!pc->null_links &&
@@ -486,7 +486,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 
 /**
  * This returns TRUE if the right table of word w contains
- * a connector that can match to c.  shallows tells if c is shallow
+ * a connector that can match to c.  shallow tells if c is shallow
  */
 static bool
 left_table_search(prune_context *pc, int w, Connector *c,
