@@ -70,7 +70,7 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 }
 
 /* ======================================================== */
-/* UNLIMITED-CONNECTORS handling. */
+/* Connector length limit handling. */
 
 static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {

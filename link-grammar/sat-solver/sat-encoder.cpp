@@ -463,7 +463,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
 
 Exp* SATEncoder::join_alternatives(int w)
 {
-  // join all alternatives using and OR_type node
+  // join all alternatives using an OR_type node
   Exp* exp;
   E_list* or_list = NULL;;
   for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {

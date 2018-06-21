@@ -530,7 +530,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		if (('\0' != affix_types[0]) &&
 		    (NULL == match_regex(afdict->regex_root, affix_types)))
 		{
-			/* Morpheme type combination is invalid */
+			/* Morpheme type combination is invalid. */
 			match_found = false;
 			/* Notify to stdout, so it will be shown along with the result.
 			 * XXX We should have a better way to notify. */
