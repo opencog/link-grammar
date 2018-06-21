@@ -307,6 +307,7 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
       }
 
       (*rules)[r].selector = string_set_add(tokens[0], k->string_set);
+      (*rules)[r].selector_has_wildcard = (strchr(tokens[0], '*') != NULL);
 
       /* read link set */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);

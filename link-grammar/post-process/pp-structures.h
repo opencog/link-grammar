@@ -119,6 +119,7 @@ typedef struct pp_rule_s
 	/* Holds a single post-processing rule. Since rules come in many
 	   flavors, not all fields of the following are always relevant  */
 	const char *selector; /* name of link to which rule applies      */
+	bool selector_has_wildcard; /* selector contains '*' */
 	pp_linkset *link_set; /* handle to set of links relevant to rule */
 	int   link_set_size;  /* size of this set                        */
 	int   domain;         /* type of domain to which rule applies    */

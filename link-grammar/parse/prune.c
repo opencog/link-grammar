@@ -1021,7 +1021,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 							const char * selector = rule->selector;  /* selector string for this rule */
 							pp_linkset * link_set = rule->link_set;  /* the set of criterion links */
 
-							if (strchr(selector, '*') != NULL) continue;  /* If it has a * forget it */
+							if (rule->selector_has_wildcard) continue;  /* If it has a * forget it */
 
 							if (!post_process_match(selector, connector_string(c))) continue;
 
