@@ -70,16 +70,18 @@ struct Parse_Options_s
 {
 	/* General options */
 	short verbosity;       /* Level of detail to give about the computation 0 */
-	char * debug;          /* comma-separated function names to debug "" */
-	char * test;           /* comma-separated features to test "" */
+	char * debug;          /* Comma-separated function names to debug "" */
+	char * test;           /* Comma-separated features to test "" */
 	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Options governing the tokenizer (sentence-splitter) */
-	short use_spell_guess;  /* Perform spell-guessing of unknown words. */
+	short use_spell_guess; /* Up to this many spell-guesses per unknown word 7 */
 
 	/* Choice of the parser to use */
-	bool use_sat_solver;   /* Use the Boolean SAT based parser */
+	bool use_sat_solver;   /* Use the Boolean SAT based parser FALSE */
+#if USE_VITERBI
 	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
+#endif
 
 	/* Options governing the parser internals operation */
 	double disjunct_cost;  /* Max disjunct cost to allow */
@@ -90,18 +92,18 @@ struct Parse_Options_s
 	                          will be generated (default=FALSE) */
 	bool use_cluster_disjuncts; /* Attempt using a broader list of disjuncts */
 	size_t short_length;   /* Links that are limited in length can be
-	                          no longer than this.  Default = 6 */
+	                          no longer than this.  Default = 16 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 
 	/* Options governing post-processing */
-	bool perform_pp_prune; /* Perform post-processing-based pruning */
-	size_t twopass_length; /* min sent length for two-pass post processing */
+	bool perform_pp_prune; /* Perform post-processing-based pruning TRUE */
+	size_t twopass_length; /* Min sent length for two-pass post processing */
 	Cost_Model cost_model; /* For sorting linkages after parsing. */
 
 	/* Options governing the generation of linkages. */
 	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
-	bool display_morphology;/* if true, print morpho analysis of words */
+	bool display_morphology;/* If true, print morpho analysis of words FALSE */
 };
 
 typedef struct word_queue_s word_queue_t;

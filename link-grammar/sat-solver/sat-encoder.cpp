@@ -463,7 +463,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
 
 Exp* SATEncoder::join_alternatives(int w)
 {
-  // join all alternatives using and OR_type node
+  // join all alternatives using an OR_type node
   Exp* exp;
   E_list* or_list = NULL;;
   for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {
@@ -1866,13 +1866,10 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 /**
  * Main entry point into the SAT parser.
  * A note about panic mode:
- * The current version of Minisat we use doesn't support timeouts.
- * (Minisat >= 2.2 supports timeout.) In addition, currently parsing
- * with null words is not supported here.
+ * - The MiniSAT support for timeout is not yet used (FIXME).
+ * - Parsing with null links is not supported (FIXME).
  * So nothing particularly useful happens in a panic mode, and it is
  * left for the user to disable it.
- * Observation: Apparently the panic options somehow may cause an
- * immediate failure to find a solution (not checked why).
  */
 extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 {

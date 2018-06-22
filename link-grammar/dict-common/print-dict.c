@@ -161,7 +161,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	/* print left side of binary expr */
 	print_expression_parens(e, el->e, true);
 
-	/* get a funny "and optional" when its a named expression thing. */
+	/* get a funny "and optional" when it's a named expression thing. */
 	if ((n->type == AND_type) && (el->next == NULL))
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");

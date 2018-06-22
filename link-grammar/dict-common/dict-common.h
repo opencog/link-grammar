@@ -14,10 +14,10 @@
 #ifndef _LG_DICT_COMMON_H_
 #define  _LG_DICT_COMMON_H_
 
-#include "api-types.h" // for pp_knowledge
-#include "connectors.h" // for condest_t
+#include "api-types.h"                  // pp_knowledge
+#include "connectors.h"                 // ConTable
 #include "dict-structures.h"
-#include "utilities.h" // for locale_t
+#include "utilities.h"                  // locale_t
 
 #define EMPTY_CONNECTOR "ZZZ"
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")

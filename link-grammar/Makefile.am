@@ -205,7 +205,7 @@ EXTRA_DIST=                         \
 
 # Clean up generated file that Windows MSVC compilation leaves behind.
 clean-local:
-	rm -f $(top_builddir)/link-grammar/link-features.h
+	rm -f $(top_srcdir)/link-grammar/link-features.h
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib

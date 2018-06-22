@@ -119,7 +119,9 @@ Parse_Options parse_options_create(void)
 	po->max_null_count = 0;
 	po->islands_ok = false;
 	po->use_sat_solver = false;
+#if USE_VITERBI
 	po->use_viterbi = false;
+#endif
 	po->linkage_limit = 100;
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	po->use_spell_guess = 7;
@@ -293,11 +295,17 @@ bool parse_options_get_use_sat_parser(Parse_Options opts) {
 }
 
 void parse_options_set_use_viterbi(Parse_Options opts, bool dummy) {
+#if USE_VITERBI
 	opts->use_viterbi = dummy;
+#endif
 }
 
 bool parse_options_get_use_viterbi(Parse_Options opts) {
+#if USE_VITERBI
 	return opts->use_viterbi;
+#else
+	return false;
+#endif
 }
 
 void parse_options_set_linkage_limit(Parse_Options opts, int dummy)

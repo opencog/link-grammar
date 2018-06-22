@@ -70,7 +70,7 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 }
 
 /* ======================================================== */
-/* UNLIMITED-CONNECTORS handling. */
+/* Connector length limit handling. */
 
 static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {
@@ -249,7 +249,7 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 		return false;
 	}
 
-	desc->lc_mask = (lc_mask << 1) + !!(desc->flags & CD_HEAD_DEPENDET);
+	desc->lc_mask = (lc_mask << 1) + !!(desc->flags & CD_HEAD_DEPENDENT);
 	desc->lc_letters = (lc_value << 1) + !!(desc->flags & CD_HEAD);
 
 	return true;
@@ -267,8 +267,8 @@ static bool calculate_connector_info(condesc_t * c)
 	s = c->string;
 	if (islower(*s)) s++; /* ignore head-dependent indicator */
 	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
-		c->flags |= CD_HEAD_DEPENDET;
-	if ((c->flags & CD_HEAD_DEPENDET) && (c->string[0] == 'h'))
+		c->flags |= CD_HEAD_DEPENDENT;
+	if ((c->flags & CD_HEAD_DEPENDENT) && (c->string[0] == 'h'))
 		c->flags |= CD_HEAD;
 
 #if 0
