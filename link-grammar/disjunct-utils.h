@@ -31,9 +31,11 @@ struct Disjunct_struct
 	/* match_left, right used only during parsing, for the match list. */
 	bool match_left, match_right;
 
-#ifdef VERIFY_MATCH_LIST
-	int match_id;              /* verify the match list integrity */
-#endif
+	union
+	{
+		unsigned int match_id;     /* verify the match list integrity */
+		unsigned int dup_hash;     /* hash value for duplicate elimination */
+	};
 	gword_set *originating_gword; /* Set of originating gwords */
 	const char * word_string;     /* subscripted dictionary word */
 };

@@ -101,13 +101,17 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i += ((uintptr_t)e->desc) + e->desc->uc_num;
+		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i += ((uintptr_t)e->desc) + e->desc->uc_num;
+		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
+#if 0 /* Redundant - the connector hashing has enough entropy. */
 	i += string_hash(d->word_string);
+#endif
 	i += (i>>10);
+
+	d->dup_hash = i;
 	return (i & (dt->dup_table_size-1));
 }
 
@@ -391,6 +395,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->next)
 		{
+			if (d->dup_hash != dx->dup_hash) continue;
 			if (disjuncts_equal(dx, d)) break;
 		}
 		if (dx == NULL)
