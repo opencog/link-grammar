@@ -422,8 +422,7 @@ void expression_prune(Sentence sent, Parse_Options opts)
 
 	DBG_EXPSIZES("Initial expression sizes\n%s", e);
 
-	int pass = -1;
-	while (pass++)
+	for (int pass = 0; ; pass++)
 	{
 		/* Left-to-right pass */
 		/* For every word */
