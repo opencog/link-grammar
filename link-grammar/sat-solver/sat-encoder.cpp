@@ -1284,10 +1284,10 @@ void SATEncoder::power_prune()
     }
   }
 
-  /*
+#if 0
   // on two adjacent words, a pair of connectors can be used only if
   // they're the deepest ones on their disjuncts
-  for (int wl = 0; wl < _sent->length - 2; wl++) {
+  for (size_t wl = 0; wl < _sent->length - 2; wl++) {
     const std::vector<PositionConnector>& rc = _word_tags[wl].get_right_connectors();
     std::vector<PositionConnector>::const_iterator rci;
     for (rci = rc.begin(); rci != rc.end(); rci++) {
@@ -1298,28 +1298,30 @@ void SATEncoder::power_prune()
       for (std::vector<PositionConnector*>::const_iterator lci = matches.begin(); lci != matches.end(); lci++) {
         if (!(*lci)->leading_left || (*lci)->word != wl + 1)
           continue;
-        int link = _variables->link(wl, rci->position, rci->connector.string,
-                                    (*lci)->word, (*lci)->position, (*lci)->connector.string);
-        std::vector<int> clause(2);
-        clause[0] = -link;
+        int link = _variables->link(wl, rci->position, rci->connector.desc->string, rci->exp,
+                                    (*lci)->word, (*lci)->position, (*lci)->connector.desc->string, (*lci)->exp);
+        vec<Lit> clause(2);
+        clause.push(~Lit(link));
 
         for (std::vector<int>::const_iterator i = rci->eps_right.begin(); i != rci->eps_right.end(); i++) {
-          clause[1] = *i;
+          clause.push(Lit(*i));
         }
 
         for (std::vector<int>::const_iterator i = (*lci)->eps_left.begin(); i != (*lci)->eps_left.end(); i++) {
-          clause[1] = *i;
+          clause.push(Lit(*i));
         }
 
         add_clause(clause);
       }
     }
   }
+#endif
 
 
+#if 0
   // Two deep connectors cannot match (deep means notlast)
   std::vector<std::vector<PositionConnector*> > certainly_deep_left(_sent->length), certainly_deep_right(_sent->length);
-  for (int w = 0; w < _sent->length; w++) {
+  for (size_t w = 0; w < _sent->length - 2; w++) {
     if (_sent->word[w].x == NULL)
       continue;
 
@@ -1335,7 +1337,7 @@ void SATEncoder::power_prune()
       free_alternatives(exp);
   }
 
-  for (int w = 0; w < _sent->length; w++) {
+  for (size_t w = 0; w < _sent->length; w++) {
     std::vector<PositionConnector*>::const_iterator i;
     for (i = certainly_deep_right[w].begin(); i != certainly_deep_right[w].end(); i++) {
       const std::vector<PositionConnector*>& matches = (*i)->matches;
@@ -1343,13 +1345,13 @@ void SATEncoder::power_prune()
       for (j = matches.begin(); j != matches.end(); j++) {
         if (std::find(certainly_deep_left[(*j)->word].begin(), certainly_deep_left[(*j)->word].end(),
                       *j) != certainly_deep_left[(*j)->word].end()) {
-          generate_literal(-_variables->link((*i)->word, (*i)->position, (*i)->connector.string,
-                                             (*j)->word, (*j)->position, (*j)->connector.string));
+          generate_literal(~Lit(_variables->link((*i)->word, (*i)->position, (*i)->connector.desc->string, (*i)->exp,
+                                             (*j)->word, (*j)->position, (*j)->connector.desc->string, (*j)->exp)));
         }
       }
     }
   }
-  */
+#endif
 }
 
 /*--------------------------------------------------------------------------*
