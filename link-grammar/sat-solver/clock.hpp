@@ -2,8 +2,8 @@
 #define __CLOCK_H__
 
 /**
-*   Time measurment functions
-*/
+ *   Time measurement functions
+ */
 
 #include <iostream>
 #include <ctime>
@@ -15,19 +15,17 @@ public:
 	Clock() {
 		reset();
 	}
-	
+
 	void reset()
 	{
 		start = clock();
 	}
 
-public:	
+public:
 	double elapsed()
 	{
 		clock_t stop = clock();
 		return ((double)stop-(double)start)/CLOCKS_PER_SEC;
-	
 	}
 };
-
 #endif
