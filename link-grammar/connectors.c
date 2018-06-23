@@ -71,7 +71,7 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 }
 
 /* ======================================================== */
-/* Connector length limit handling. */
+/* Connector length limit handling - UNLIMITED-CONNECTORS and LENGTH-LIMIT-n. */
 
 static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {

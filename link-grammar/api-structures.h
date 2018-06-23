@@ -78,8 +78,8 @@ struct Parse_Options_s
 	short use_spell_guess; /* Up to this many spell-guesses per unknown word 7 */
 
 	/* Choice of the parser to use */
-	bool use_sat_solver;   /* Use the Boolean SAT based parser FALSE */
-#if USE_VITERBI
+	bool use_sat_solver;   /* Use the Boolean SAT based parser */
+#ifdef USE_VITERBI
 	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
 #endif
 
