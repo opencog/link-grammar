@@ -208,23 +208,24 @@ void SATEncoder::generate_equivalence_definition(Lit l1, Lit l2) {
 void SATEncoder::encode() {
     Clock clock;
     generate_satisfaction_conditions();
-    DEBUG_print(clock.elapsed());
+    clock.print_time(verbosity, "Generated satisfaction conditions");
     generate_linked_definitions();
-    DEBUG_print(clock.elapsed());
+    clock.print_time(verbosity, "Generated linked definitions");
     generate_planarity_conditions();
-    DEBUG_print(clock.elapsed());
+    clock.print_time(verbosity, "Generated planarity conditions");
 
 #ifdef _CONNECTIVITY_
     generate_connectivity();
-    DEBUG_print(clock.elapsed());
+    clock.print_time(verbosity, "Generated connectivity");
 #endif
 
     generate_encoding_specific_clauses();
-    DEBUG_print(clock.elapsed());
+    //clock.print_time(verbosity, "Generated encoding specific clauses");
 
     pp_prune();
+    clock.print_time(verbosity, "PP pruned");
     power_prune();
-    DEBUG_print(clock.elapsed());
+    clock.print_time(verbosity, "Power pruned");
 
     _variables->setVariableParameters(_solver);
 }
