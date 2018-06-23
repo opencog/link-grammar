@@ -8,28 +8,31 @@
 extern "C" {
 #include "connectors.h"
 #include "dict-common/dict-common.h"
+#include "tokenize/tok-structures.h"    // gword_set
+#include "tokenize/wordgraph.h"         // in_same_alternative()
 };
 
 #include "variables.hpp"
 
 struct PositionConnector
 {
-  PositionConnector(Exp* e, Connector* c, char d, int w, int p, 
-                    double cst, double pcst, bool lr, bool ll,
-                    const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode)
-    : exp(e), dir(d), word(w), position(p),
-      cost(cst), parent_cost(pcst),
+  PositionConnector(Exp* pe, Exp* e, char d, int w, int p,
+                    double pcst, bool lr, bool ll,
+                    const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode, Parse_Options opts)
+    : exp(pe), dir(d), word(w), position(p),
+      cost(e->cost), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
-    // Initialize some fields in the connector struct.
-    connector.desc = c->desc;
-    connector.multi = c->multi;
-    connector.length_limit = c->length_limit;
-
     if (word_xnode == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << connector_string(c) << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << e->u.condesc->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
+
+    // Initialize some fields in the connector struct.
+    connector.desc = e->u.condesc;
+    connector.multi = e->multi;
+    set_connector_length_limit(&connector, opts);
+    connector.originating_gword = &w_xnode->word->gword_set_head;
 
     /*
     cout << c->string << " : ." << w << ". : ." << p << ". ";
@@ -145,11 +148,24 @@ public:
     return NULL;
   }
 
+#define OPTIMIZE_EN
+  static bool alt_connectivity_possible(Connector& c1, Connector & c2)
+  {
+#ifdef OPTIMIZE_EN
+  /* Try a shortcut first. */
+  if ((c2.originating_gword->o_gword->hier_depth == 0) ||
+     (c1.originating_gword->o_gword->hier_depth == 0)) return true;
+#endif // OPTIMIZE_EN
+
+    return in_same_alternative(c1.originating_gword->o_gword, c2.originating_gword->o_gword);
+  }
+
   bool match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2)
   {
       int dist = w2 - w1;
       assert(0 < dist, "match() did not receive words in the natural order.");
       if (dist > cntr1.length_limit || dist > cntr2.length_limit) return false;
+      if (!alt_connectivity_possible(cntr1, cntr2)) return false;
       return easy_match_desc(cntr1.desc, cntr2.desc);
   }
 
@@ -168,7 +184,7 @@ public:
   void add_matches_with_word(WordTag& tag);
 
   // Find matches in this word tag with the connector (name, dir).
-  void find_matches(int w, const condesc_t* C, char dir,  std::vector<PositionConnector*>& matches);
+  void find_matches(int w, Connector* C, char dir,  std::vector<PositionConnector*>& matches);
 
   // A simpler function: Can any connector in this word match a connector wi, pi?
   // It is assumed that

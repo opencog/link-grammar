@@ -63,6 +63,7 @@ Connector * connector_new(const condesc_t *desc, Parse_Options opts)
 	c->desc = desc;
 	c->nearest_word = 0;
 	c->multi = false;
+	c->originating_gword = NULL;
 	set_connector_length_limit(c, opts);
 	//assert(0 != c->length_limit, "Connector_new(): Zero length_limit");
 

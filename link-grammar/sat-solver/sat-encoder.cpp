@@ -1361,6 +1361,9 @@ void SATEncoder::pp_prune()
   if (_sent->dict->base_knowledge == NULL)
     return;
 
+  if (!_opts->perform_pp_prune)
+    return;
+
   pp_knowledge * knowledge;
   knowledge = _sent->dict->base_knowledge;
 
@@ -1474,11 +1477,6 @@ Linkage SATEncoder::get_next_linkage()
       linkage = create_linkage();
       sane = sane_linkage_morphism(_sent, linkage, _opts);
       if (!sane) {
-          /* We cannot elegantly add this linkage to sent->linkges[] -
-           * to be freed in sentence_delete(), since insane linkages
-           * must be there with index > num_linkages_post_processed - so
-           * they remain hidden, but num_linkages_post_processed is an
-           * arbitrary number.  So we must free it here. */
           free_linkage_connectors_and_disjuncts(linkage);
           free_linkage(linkage);
           free(linkage);
@@ -1498,18 +1496,9 @@ Linkage SATEncoder::get_next_linkage()
 
   assert(linkage, "No linkage");
 
-  /*
-   * We cannot expand the linkage array on demand, since the API uses
-   * linkage pointers, and they would become invalid if realloc()
-   * changes the address of the memory block. */
-#if 0
-  // Expand the linkage array.
-  int index = _sent->num_linkages_alloced;
-  _sent->num_linkages_alloced++;
-  size_t nbytes = _sent->num_linkages_alloced * sizeof(struct Linkage_s);
-  _sent->lnkages = (Linkage) realloc(_sent->lnkages, nbytes);
-#endif /* 0 */
-
+  /* We cannot expand the linkage array on demand, since the API uses
+   * linkage pointers, and they would become invalid if realloc() changes
+   * the address of the memory block. So it is allocated in advance. */
   if (NULL == _sent->lnkages)
   {
     _sent->num_linkages_alloced = _opts->linkage_limit;
@@ -1891,7 +1880,6 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     delete encoder;
   }
 
-  // Prepare for parsing - extracted for "preparation.c"
   encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   sent->hook = encoder;
   encoder->encode();
@@ -1921,6 +1909,7 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   if (lkg == NULL || k == linkage_limit) {
     // We don't have a valid linkages among the first linkage_limit ones
     sent->num_valid_linkages = 0;
+    sent->num_linkages_found = k;
     sent->num_linkages_post_processed = k;
     if (opts->max_null_count > 0) {
       // The sat solver doesn't support (yet) parsing with nulls.
@@ -1930,12 +1919,13 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
                 "parsing with null links.\n");
     }
   } else {
-    /* We found a valid linkage.
-     * XXX However, the following setting is wrong, as we actually don't
-     * know yet the number of linkages...
-     * If we don't return some large number here, then the
-     * Command-line client will fail to print all of the possible
-     * linkages. Work around this by lying... */
+    /* We found a valid linkage. However, we actually don't know yet the
+     * number of linkages, and if we set them too low, the command-line
+     * client will fail to display all of the possible linkages.  Work
+     * around this by lying... return the maximum number of linkages we
+     * are going to produce.
+     * A NULL linkage will be returned by linkage_create() after the last
+     * linkage is produced to signify that there are no more linkages. */
     sent->num_valid_linkages = linkage_limit;
     sent->num_linkages_post_processed = linkage_limit;
   }
@@ -1954,8 +1944,8 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
 
-                                                 // linkage index k is:
-  if (k >= encoder->_sent->num_valid_linkages)   // > allocated memory
+                                               // linkage index k is:
+  if (k >= opts->linkage_limit)                  // > allocated memory
     return NULL;
   if(k > encoder->_next_linkage_index)           // skips unproduced linkages
   {

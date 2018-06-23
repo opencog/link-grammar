@@ -228,7 +228,8 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 	}
 }
 
-static void print_parse_statistics(Sentence sent, Parse_Options opts)
+static void print_parse_statistics(Sentence sent, Parse_Options opts,
+                                   Command_Options* copts)
 {
 	if (sentence_num_linkages_found(sent) > 0)
 	{
@@ -244,10 +245,13 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 		}
 		else
 		{
-			fprintf(stdout, "Found %d linkage%s (%d had no P.P. violations)",
-					sentence_num_linkages_post_processed(sent),
-					sentence_num_linkages_post_processed(sent) == 1 ? "" : "s",
-					sentence_num_valid_linkages(sent));
+			if ((sentence_num_valid_linkages(sent) > 0) || copts->display_bad)
+			{
+				fprintf(stdout, "Found %d linkage%s (%d had no P.P. violations)",
+				        sentence_num_linkages_post_processed(sent),
+				        sentence_num_linkages_post_processed(sent) == 1 ? "" : "s",
+				        sentence_num_valid_linkages(sent));
+			}
 		}
 		if (sentence_null_count(sent) > 0)
 		{
@@ -295,7 +299,7 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 		auto_next_linkage = true;
 	}
 
-	if (verbosity > 0) print_parse_statistics(sent, opts);
+	if (verbosity > 0) print_parse_statistics(sent, opts, copts);
 	num_to_query = sentence_num_linkages_post_processed(sent);
 	if (!copts->display_bad)
 	{
@@ -446,7 +450,7 @@ static void batch_process_some_linkages(Label label,
 	{
 		if (strstr(test, ",batch_print_parse_statistics,"))
 		{
-			print_parse_statistics(sent, opts);
+			print_parse_statistics(sent, opts, copts);
 		}
 	}
 }
