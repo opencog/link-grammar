@@ -12,10 +12,6 @@ using std::cerr;
 using std::endl;
 using std::vector;
 
-/* Most of the power pruning is ifdef'ed out intentionally, because The
- * encoding totally malfunctions when this code is defined. */
-//#define POWER_PRUNE_CONNECTORS
-
 extern "C" {
 #include "sat-encoder.h"
 }
@@ -37,6 +33,7 @@ extern "C" {
 #include "linkage/linkage.h"
 #include "linkage/sane.h"            // for sane_linkage_morphism()
 #include "linkage/score.h"           // for linkage_score()
+#include "parse/prune.h"             // for optional_gap_collapse()
 #include "prepare/build-disjuncts.h" // for build_disjuncts_for_exp()
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
@@ -1248,7 +1245,6 @@ void SATEncoder::power_prune()
 {
   generate_epsilon_definitions();
 
-#ifdef POWER_PRUNE_CONNECTORS
   // on two non-adjacent words, a pair of connectors can be used only
   // if not [both of them are the deepest].
 
@@ -1263,6 +1259,8 @@ void SATEncoder::power_prune()
       for (std::vector<PositionConnector*>::const_iterator lci = matches.begin(); lci != matches.end(); lci++) {
         if (!(*lci)->leading_left || (*lci)->connector.multi || (*lci)->word <= wl + 2)
           continue;
+        if (_opts->min_null_count == 0)
+          if (optional_gap_collapse(_sent, wl, (*lci)->word)) continue;
 
         //        printf("LR: .%zu. .%d. %s\n", wl, rci->position, rci->connector.desc->string);
         //        printf("LL: .%zu. .%d. %s\n", (*lci)->word, (*lci)->position, (*lci)->connector.desc->string);
@@ -1279,13 +1277,12 @@ void SATEncoder::power_prune()
         add_additional_power_pruning_conditions(clause, wl, (*lci)->word);
 
         clause.push(~Lit(_variables->link(
-               wl, rci->position, rci->connector.string, rci->exp,
-               (*lci)->word, (*lci)->position, (*lci)->connector.string, (*lci)->exp)));
+               wl, rci->position, connector_string(&rci->connector), rci->exp,
+               (*lci)->word, (*lci)->position, connector_string(&(*lci)->connector), (*lci)->exp)));
         add_clause(clause);
       }
     }
   }
-#endif
 
   /*
   // on two adjacent words, a pair of connectors can be used only if

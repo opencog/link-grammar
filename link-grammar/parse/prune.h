@@ -17,5 +17,6 @@
 
 int        power_prune(Sentence, Parse_Options);
 void       pp_and_power_prune(Sentence, Parse_Options);
+bool       optional_gap_collapse(Sentence, int, int);
 
 #endif /* _PRUNE_H */

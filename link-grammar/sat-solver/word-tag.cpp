@@ -82,14 +82,12 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           insert_connectors(l->e, dfs_position, leading_right, leading_left,
                 eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
 
-#ifdef POWER_PRUNE_CONNECTORS
           if (leading_right) {
             eps_right.push_back(_variables->epsilon(new_var, '+'));
           }
           if (leading_left) {
             eps_left.push_back(_variables->epsilon(new_var, '-'));
           }
-#endif
         }
       }
   } else if (exp->type == OR_type) {
