@@ -1471,6 +1471,7 @@ Linkage SATEncoder::get_next_linkage()
 
     // Prohibit this solution so the next ones can be found
     if (!connected) {
+      _num_lkg_disconnected++;
       generate_disconnectivity_prohibiting(components);
       display_linkage_disconnected = test_enabled("linkage-disconnected");
     } else {
@@ -1526,6 +1527,7 @@ Linkage SATEncoder::get_next_linkage()
   if (NULL != _sent->postprocessor) {
     do_post_process(_sent->postprocessor, lkg, false);
     if (NULL != _sent->postprocessor->violation) {
+      _num_pp_violations++;
       lkg->lifo.N_violations++;
       lkg->lifo.pp_violation_msg = _sent->postprocessor->violation;
       lgdebug(+D_SAT, "Postprocessing error: %s\n", lkg->lifo.pp_violation_msg);
@@ -1827,6 +1829,7 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     lkg = encoder->get_next_linkage();
     if (lkg == NULL || lkg->lifo.N_violations == 0) break;
   }
+  encoder->print_stats();
 
   if (lkg == NULL || k == linkage_limit) {
     // We don't have a valid linkages among the first linkage_limit ones
@@ -1866,9 +1869,12 @@ extern "C" Linkage sat_create_linkage(LinkageIdx k, Sentence sent, Parse_Options
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return NULL;
 
-                                               // linkage index k is:
   if (k >= opts->linkage_limit)                  // > allocated memory
+  {
+    encoder->print_stats();
     return NULL;
+  }
+
   if(k > encoder->_next_linkage_index)           // skips unproduced linkages
   {
     prt_error("Error: Linkage index %zu is greater than the "
@@ -1885,6 +1891,8 @@ extern "C" void sat_sentence_delete(Sentence sent)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return;
+
+  encoder->print_stats();
 
   sat_free_linkages(sent, encoder->_next_linkage_index);
   delete encoder;

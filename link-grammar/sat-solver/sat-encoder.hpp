@@ -296,7 +296,26 @@ protected:
 public:
   // Sentence that is being parsed.
   Sentence _sent;
-};
+
+  /**
+   * Statistics.
+   */
+
+  // Counters of main bottlenecks.
+  int _num_pp_violations = 0;    // PP failures
+  int _num_lkg_disconnected = 0; // A disconnected linkage
+
+  // Print stats on solutions that have a performance impact.
+  void print_stats(void)
+  {
+    if (verbosity_level(D_USER_TIMES) || test_enabled("sat-stats"))
+    {
+      prt_error("Info: %d pp_violations, %d disconnected linkages.\n",
+                _num_pp_violations,_num_lkg_disconnected);
+    }
+  }
+}
+;
 
 
 /*******************************************************************************
