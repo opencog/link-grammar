@@ -1358,6 +1358,31 @@ void SATEncoder::power_prune()
 /*--------------------------------------------------------------------------*
  *        P O S T P R O C E S S I N G   &  P P     P R U N I N G            *
  *--------------------------------------------------------------------------*/
+
+/**
+ * Returns false if the string s does not match anything in
+ * the array. The array elements are post-processing symbols.
+ */
+static bool string_in_list(const char * s, const char * a[])
+{
+  for (size_t i = 0; a[i] != NULL; i++)
+    if (post_process_match(a[i], s)) return true;
+  return false;
+}
+
+/* For debugging. */
+/*
+GNUC_UNUSED static void print_link_array(const char **s)
+{
+  printf("|");
+  do
+  {
+    printf("%s ", *s);
+  } while (*++s);
+  printf("|\n");
+}
+*/
+
 void SATEncoder::pp_prune()
 {
   const std::vector<int>& link_variables = _variables->link_variables();
@@ -1411,6 +1436,88 @@ void SATEncoder::pp_prune()
       add_clause(clause);
     }
     DEBUG_print("---end pp_pruning--");
+  }
+
+  /* Additional PP pruning.
+   * Since the SAT parser defines constrains on links, it is possible
+   * to encode all the postprocessing rules, in order to prune all the
+   * solutions that violate the postprocessing rules.
+   *
+   * This may save much SAT-solver overhead, because solutions which are
+   * not going to pass postprocessing will get eliminated, saving a very
+   * high number of calls to the SAT-solver that are not yielding a valid
+   * linkage.
+   *
+   * However, the encoding code has a non-negligible overhead, and also
+   * it may add clauses that increase the overhead of the SAT-solver.
+   *
+   * FIXME:
+   * A large part of the encoding overhead is because the need to
+   * iterate a very large number of items in order to find the small
+   * number of items that are needed. Hashing in advance can solve this
+   * and similar problems.
+   *
+   * For now only a very limited pruning is tried.
+   * For the CONTAINS_NONE_RULES, only the nearest link to the root-link
+   * is checked.
+   *
+   * TODO:
+   * BOUNDED_RULES pruning.
+   * Domain encoding.
+   */
+
+  /*
+   * CONTAINS_NONE_RULES
+   * 1. Suppose no one of them refers to a URFL domain.
+   * 2. Only the links of words accessible through a right link of
+   * the root word are checked here. Even such a limited check saves CPU.
+   *
+   * Below, var_i and var_j are link variables, when var_i is the root link.
+   * root_word---var_i---wr---var_j
+   */
+
+  //printf("n_contains_none_rules %zu\n", knowledge->n_contains_none_rules);
+  //printf("link_variables.size() %zu\n", link_variables.size());
+  for (size_t i=0; i<knowledge->n_contains_none_rules; i++)
+  {
+    pp_rule rule = knowledge->contains_none_rules[i];
+    //printf("rule[%2zu]selector = %s; ", i, rule.selector);
+    //print_link_array(rule.link_array);
+
+    int root_link;
+    int wr; // A word at the end of a right-link of the root word.
+    for (size_t vi = 0; vi < link_variables.size(); vi++)
+    {
+      const Variables::LinkVar* var_i = _variables->link_variable(link_variables[vi]);
+      if (!post_process_match(rule.selector, var_i->label)) continue;
+
+      root_link = link_variables[vi];
+      wr = var_i->right_word;
+
+      //printf("Found rule[%zu].selector %s: %s %d\n", i, rule.selector, var_i->label, wr);
+
+      vector<int> must_not_exist;
+      for (size_t vj = 0; vj < link_variables.size(); vj++)
+      {
+        const Variables::LinkVar* var_j = _variables->link_variable(link_variables[vj]);
+        if ((wr != var_j->left_word) && (wr != var_j->right_word)) continue;
+        if (var_i == var_j) continue; // It points back to the root word.
+
+        //printf("var_j->label %s %d %d\n", var_j->label, var_j->right_word, var_j->left_word);
+        if (string_in_list(var_j->label, rule.link_array))
+          must_not_exist.push_back(link_variables[vj]);
+      }
+
+      DEBUG_print("---pp_pruning 1--");
+      for (auto c: must_not_exist)
+      {
+        vec<Lit> clause(2);
+        clause[0] = ~Lit(root_link);
+        clause[1] = ~Lit(c);
+        add_clause(clause);
+      }
+      DEBUG_print("---end pp_pruning 1--");
+    }
   }
 }
 
