@@ -107,9 +107,9 @@ while True:
     # search for correction suggestions
     for l in linkages:
         for word in l.words():
-                if word.find(r'.#') > 0:
-                    correction_found = True
-                    break;
+            if word.find(r'.#') > 0:
+                correction_found = True
+                break
         if correction_found:
             break
 
