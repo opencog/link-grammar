@@ -577,7 +577,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							 (SUBSCRIPT_MARK == join[join_len-1]))
 							join[join_len-1] = '\0';
 
-						gwordlist_append(&n_lwg_path, sentence_word);
+						gwordlist_append(&n_lwg_path, w->unsplit_word);
 						t = string_set_add(join, sent->string_set);
 						free(join);
 
