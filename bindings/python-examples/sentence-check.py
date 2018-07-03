@@ -49,6 +49,7 @@ is_stdin_atty = sys.stdin.isatty()
 
 PROMPT = "sentence-check: " if is_stdin_atty else ""
 DISPLAY_GUESSES = True   # Display regex and POS guesses
+BATCH_LABELS = '*: '
 
 print ("Version:", clg.linkgrammar_get_version())
 
@@ -84,6 +85,14 @@ po.display_morphology = arg.morphology
 # iter(): avoid python2 input buffering
 while True:
     sentence_text = get_input(PROMPT)
+
+    if not is_stdin_atty and sentence_text:
+        if sentence_text[0] == '%':
+            continue
+        if sentence_text[0] == '!': # ignore user-settings for now
+            continue
+        if sentence_text[0] in BATCH_LABELS:
+            sentence_text = sentence_text[1:]
     if sentence_text.strip() == '':
         continue
     if not is_stdin_atty:
