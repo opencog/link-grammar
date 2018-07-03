@@ -84,7 +84,11 @@ po.display_morphology = arg.morphology
 
 # iter(): avoid python2 input buffering
 while True:
-    sentence_text = get_input(PROMPT)
+    try:
+        sentence_text = get_input(PROMPT)
+    except EOFError:
+        print("EOF")
+        exit(0)
 
     if not is_stdin_atty and sentence_text:
         if sentence_text[0] == '%':
