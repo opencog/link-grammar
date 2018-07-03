@@ -122,7 +122,8 @@ while True:
 
     if correction_found:
         print(" - with correction", end='')
-    print(".")
+    if null_count == 0:
+        print(".")
 
     guess_found = False
     if DISPLAY_GUESSES:
