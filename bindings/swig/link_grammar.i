@@ -380,5 +380,20 @@ void delete_lg_errinfo(lg_errinfo *lge) {
   free((void *)lge->text);
   free((void *)lge);
 }
+
+/**
+ * incref/decref a Python object.
+ * Currently used on the Dictionary object when a Sentence object is created/deleted,
+ * because the Sentence object includes a reference to the Dictionary structure.
+ */
+void _py_incref(PyObject *x)
+{
+  Py_INCREF(x);
+}
+
+void _py_decref(PyObject *x)
+{
+  Py_DECREF(x);
+}
 %}
 #endif /* SWIGPYTHON */
