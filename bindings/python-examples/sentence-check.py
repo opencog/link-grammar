@@ -45,6 +45,7 @@ class Formatter(argparse.HelpFormatter):
 
 #-----------------------------------------------------------------------------#
 
+PROMPT = "sentence-check: "
 DISPLAY_GUESSES = True   # Display regex and POS guesses
 
 print ("Version:", clg.linkgrammar_get_version())
@@ -80,8 +81,7 @@ po.display_morphology = arg.morphology
 
 # iter(): avoid python2 input buffering
 while True:
-    sentence_text = get_input("sentence-check: ")
-
+    sentence_text = get_input(PROMPT)
     if sentence_text.strip() == '':
         continue
     sent = Sentence(str(sentence_text), lgdict, po)
@@ -98,6 +98,13 @@ while True:
         print('Cannot parse the input sentence')
         continue
     null_count = sent.null_count()
+
+    if arg.position:
+        print(' ' * len(PROMPT), end='')
+        for p in range (0, len(sentence_text)):
+            print(p%10, end="")
+        print()
+
     if null_count == 0:
         print("Sentence parsed OK", end='')
 
@@ -128,11 +135,6 @@ while True:
 
     # Show results with unlinked words or guesses
     if arg.position or guess_found or correction_found or null_count != 0:
-        if arg.position:
-            for p in range (0, len(sentence_text)):
-                print(p%10, end="")
-            print()
-
         print('Sentence has {} unlinked word{}:'.format(
             null_count, nsuffix(null_count)))
         result_no = 0
