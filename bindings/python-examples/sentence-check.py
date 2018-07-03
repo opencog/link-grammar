@@ -21,6 +21,7 @@ Sentence has 1 unlinked word:
 
 from __future__ import print_function
 import sys
+from sys import stdin
 import re
 import argparse
 import readline
@@ -44,7 +45,9 @@ class Formatter(argparse.HelpFormatter):
 
 #-----------------------------------------------------------------------------#
 
-PROMPT = "sentence-check: "
+is_stdin_atty = sys.stdin.isatty()
+
+PROMPT = "sentence-check: " if is_stdin_atty else ""
 DISPLAY_GUESSES = True   # Display regex and POS guesses
 
 print ("Version:", clg.linkgrammar_get_version())
@@ -83,6 +86,9 @@ while True:
     sentence_text = get_input(PROMPT)
     if sentence_text.strip() == '':
         continue
+    if not is_stdin_atty:
+        print("\n" + sentence_text)
+
     sent = Sentence(str(sentence_text), lgdict, po)
     try:
         linkages = sent.parse()
