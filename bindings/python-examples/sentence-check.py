@@ -22,7 +22,6 @@ Sentence has 1 unlinked word:
 from __future__ import print_function
 import sys
 import re
-import itertools
 import argparse
 import readline
 
