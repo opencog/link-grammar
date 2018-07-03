@@ -147,13 +147,11 @@ while True:
             if arg.position:
                 words_char = []
                 words_byte = []
-                wi = 0
-                for w in words:
+                for wi, w in enumerate(words):
                     if is_python2():
-                        words[wi] = words[wi].decode('utf-8')
-                    words_char.append(words[wi] + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
-                    words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
-                    wi += 1
+                        w = w.decode('utf-8')
+                    words_char.append(w + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
+                    words_byte.append(w + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
 
                 print(u"{}: {}".format(result_no, ' '.join(words_char)))
                 print(u"{}: {}".format(result_no, ' '.join(words_byte)))
