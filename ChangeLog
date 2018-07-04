@@ -4,6 +4,7 @@ Version 5.5.1 (XXX 2018)
  * English dict: Various misc fixes.
  * English dict: Various paraphrasing verbs
  * Bring the SQL-backed dict to production state.
+ * Restore the repeatability of the produced linkages.
 
 Version 5.5.0 (29 April 2018)
  * Fix accidental API breakage that impacts OpenCog.
