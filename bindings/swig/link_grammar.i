@@ -208,7 +208,7 @@ bool lg_error_flush(void);
  * void *lg_error_set_handler_data(void *);
  * A wrapper to this function is complex and is not implemented here.  However,
  * such a wrapper may not be needed anyway since this function is provided
- * mainly for the low-level implementation the error callback, so bound
+ * mainly for the low-level implementation of the error callback, so bound
  * languages can free the memory of the callback data.
  */
 
