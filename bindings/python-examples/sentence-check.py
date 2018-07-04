@@ -29,10 +29,10 @@ import readline
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
                          LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
 
-get_input = input
-# If this is Python 2, use raw_input()
-if sys.version_info[:2] <= (2, 7):
-    get_input = raw_input
+def is_python2():
+    return sys.version_info[:1] == (2,)
+
+get_input = raw_input if is_python2() else input
 
 def nsuffix(q):
     return '' if q == 1 else 's'
@@ -149,7 +149,7 @@ while True:
                 words_byte = []
                 wi = 0
                 for w in words:
-                    if sys.version_info < (3, 0):
+                    if is_python2():
                         words[wi] = words[wi].decode('utf-8')
                     words_char.append(words[wi] + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
                     words_byte.append(words[wi] + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
