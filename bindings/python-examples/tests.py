@@ -290,10 +290,10 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        if sys.version_info > (3, 0):
-            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
-        else:
+        if is_python2():
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
+        else:
+            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
@@ -924,7 +924,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
     for line in parses:
         lineno += 1
-        if sys.version_info > (3, 0):
+        if not is_python2():
             line = line.decode('utf-8')
         # Lines starting with I are the input sentences
         if line[0] == 'I':
@@ -970,6 +970,9 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
+
+def is_python2():
+    return sys.version_info[:1] == (2,)
 
 
 import tempfile
