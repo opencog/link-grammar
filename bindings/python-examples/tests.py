@@ -323,27 +323,27 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
     def test_dictionary_locale_definition(self):
-        #if is_python2(): # Locale stuff seems to be broken
-        #    raise unittest.SkipTest("Test not supported with Python2")
+        if is_python2(): # Locale stuff seems to be broken
+            raise unittest.SkipTest("Test not supported with Python2")
 
         # python2: Gets system locale (getlocale() is not better)
         oldlocale = locale.setlocale(locale.LC_CTYPE, None)
-        print('Current locale:', oldlocale)
-        print('toupper hij:', 'hij'.upper())
+        #print('Current locale:', oldlocale)
+        #print('toupper hij:', 'hij'.upper())
 
         tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
         locale.setlocale(locale.LC_CTYPE, tr_locale)
-        print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
+        #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
 
         # python2: prints HiJ (lowercase small i in the middle)
-        print('toupper hij:', 'hij'.upper())
+        #print('toupper hij:', 'hij'.upper())
 
         self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
                          ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
 
-        #locale.setlocale(locale.LC_CTYPE, oldlocale)
-        print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
-        print('toupper hij:', 'hij'.upper())
+        locale.setlocale(locale.LC_CTYPE, oldlocale)
+        #print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
+        #print('toupper hij:', 'hij'.upper())
 
     # If \w is supported, other \ shortcuts are hopefully supported too.
     def test_regex_class_shortcut_support(self):
@@ -755,6 +755,9 @@ class IWordPositionTestCase(unittest.TestCase):
 
     def test_ru_word_positions(self):
         linkage_testfile(self, Dictionary(lang='ru'), ParseOptions(), 'pos')
+
+    def test_he_word_positions(self):
+        linkage_testfile(self, Dictionary(lang='he'), ParseOptions(), 'pos')
 
 # Tests are run in alphabetical order; do the language tests last.
 
