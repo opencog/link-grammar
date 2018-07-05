@@ -4,3 +4,9 @@ Iэто тести
 PLEFT-WALL(0, 0) это.msi(0, 3) тести.nlmpi(4, 9) RIGHT-WALL(9, 9)
 PLEFT-WALL(0, 0) это.msi(0, 6) тести.nlmpi(7, 17) RIGHT-WALL(17, 17)
 P
+
+-display_morphology = True
+Iэто тести
+PLEFT-WALL(0, 0) это.msi(0, 3) тест.=(4, 8) =и.nlmpi(8, 9) RIGHT-WALL(9, 9)
+PLEFT-WALL(0, 0) это.msi(0, 6) тест.=(7, 15) =и.nlmpi(15, 17) RIGHT-WALL(17, 17)
+P
