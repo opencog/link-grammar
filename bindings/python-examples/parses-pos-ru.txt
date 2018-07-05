@@ -1,0 +1,6 @@
+% For the file purpose and format see parses-pos-en.txt.
+
+Iэто тести
+PLEFT-WALL(0, 0) это.msi(0, 3) тести.nlmpi(4, 9) RIGHT-WALL(9, 9)
+PLEFT-WALL(0, 0) это.msi(0, 6) тести.nlmpi(7, 17) RIGHT-WALL(17, 17)
+P

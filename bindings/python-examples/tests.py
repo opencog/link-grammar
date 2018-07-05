@@ -734,16 +734,11 @@ class GSQLDictTestCase(unittest.TestCase):
         linkage_testfile(self, self.d, sat_po)
 
 class IWordPositionTestCase(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.d, cls.po = Dictionary(lang='en'), ParseOptions(spell_guess=10)
-
-    @classmethod
-    def tearDownClass(cls):
-        del cls.d, cls.po
-
     def test_en_word_positions(self):
-        linkage_testfile(self, self.d, self.po, 'pos')
+        linkage_testfile(self, Dictionary(lang='en'), ParseOptions(spell_guess=10), 'pos')
+
+    def test_ru_word_positions(self):
+        linkage_testfile(self, Dictionary(lang='ru'), ParseOptions(), 'pos')
 
 # Tests are run in alphabetical order; do the language tests last.
 
