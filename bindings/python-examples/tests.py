@@ -992,6 +992,10 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             else:
                 wordpos += line[1:]
 
+        # Lines starting with "-" contain a Parse Option
+        if line[0] == '-':
+            exec('popt.' + line[1:], None, locals())
+
     parses.close()
 
     validate_opcode('')
