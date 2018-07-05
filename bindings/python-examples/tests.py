@@ -733,6 +733,18 @@ class GSQLDictTestCase(unittest.TestCase):
             raise unittest.SkipTest("Library not configured with SAT parser")
         linkage_testfile(self, self.d, sat_po)
 
+class IWordPositionTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions(spell_guess=10)
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d, cls.po
+
+    def test_en_word_positions(self):
+        linkage_testfile(self, self.d, self.po, 'pos')
+
 # Tests are run in alphabetical order; do the language tests last.
 
 class ZENLangTestCase(unittest.TestCase):
@@ -904,50 +916,62 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     linkage diagrams / constituent printings.
     """
     self.__class__.longMessage = True
+    self.maxDiff = None
     if desc != '':
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
     parses = open(testfile, "rb")
     diagram = None
     constituents = None
+    wordpos = None
     sent = None
     lineno = 0
 
+    def getwordpos(lkg):
+        words_char = []
+        words_byte = []
+        for wi, w in enumerate(lkg.words()):
+            words_char.append(w + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
+            words_byte.append(w + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
+        return ' '.join(words_char) + '\n' + ' '.join(words_byte) + '\n'
+
     # Function code and file format sanity check
     self.opcode_detected = 0
-    def validate_opcode(ctxt=self, O=False, C=False):
-        ctxt.opcode_detected += 1
-        if O:
+    def validate_opcode(opcode):
+        self.opcode_detected += 1
+        if opcode != ord('O'):
             self.assertFalse(diagram, "at {}:{}: Unfinished diagram entry".format(testfile, lineno))
-        if C:
+        if opcode != ord('C'):
             self.assertFalse(constituents, "at {}:{}: Unfinished constituents entry".format(testfile, lineno))
+        if opcode != ord('P'):
+            self.assertFalse(wordpos, "at {}:{}: Unfinished word-position entry".format(testfile, lineno))
 
     for line in parses:
         lineno += 1
         if not is_python2():
             line = line.decode('utf-8')
+        validate_opcode(ord(line[0])) # Use ord() for python2/3 compatibility
         # Lines starting with I are the input sentences
         if line[0] == 'I':
-            validate_opcode(O=True, C=True)
-            sent = line[1:]
+            sent = line[1:].rstrip('\r\n') # Strip whitespace before RIGHT-WALL (for P)
             diagram = ""
             constituents = ""
+            wordpos = ""
             linkages = Sentence(sent, lgdict, popt).parse()
             linkage = next(linkages, None)
             self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
         if line[0] == 'N' :
-            validate_opcode(O=True, C=True)
             diagram = ""
             constituents = ""
+            wordpos = ""
             linkage = next(linkages, None)
             self.assertTrue(linkage, "at {}:{}: Sentence has too few linkages".format(testfile, lineno))
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
         if line[0] == 'O' :
-            validate_opcode(C=True)
             diagram += line[1:]
             if line[1] == '\n' and len(diagram) > 1:
                 self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
@@ -956,15 +980,26 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
         if line[0] == 'C':
-            validate_opcode(O=True)
             if line[1] == '\n' and len(constituents) > 1:
                 self.assertEqual(linkage.constituent_tree(), constituents, "at {}:{}".format(testfile, lineno))
                 constituents = None
             else:
                 constituents += line[1:]
+
+        # Lines starting with P contain word positions "word(start, end) ... "
+        # The first P line contains character positions
+        # The second P line contains byte positions
+        # It ends with an empty line
+        if line[0] == 'P':
+            if line[1] == '\n' and len(wordpos) > 1:
+                self.assertEqual(getwordpos(linkage), wordpos, "at {}:{}".format(testfile, lineno))
+                wordpos = None
+            else:
+                wordpos += line[1:]
+
     parses.close()
 
-    validate_opcode(O=True, C=True)
+    validate_opcode('')
     self.assertGreaterEqual(self.opcode_detected, 2, "Nothing has been done for " + testfile)
 
 def warning(*msg):
