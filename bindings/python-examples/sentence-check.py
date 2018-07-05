@@ -82,7 +82,6 @@ po.max_parse_time = 10   # actual parse timeout may be about twice bigger
 po.spell_guess = True if DISPLAY_GUESSES else False
 po.display_morphology = arg.morphology
 
-# iter(): avoid python2 input buffering
 while True:
     try:
         sentence_text = get_input(PROMPT)
