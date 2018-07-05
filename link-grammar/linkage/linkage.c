@@ -156,7 +156,7 @@ static Gword *wordgraph_link_placeholder(Sentence sent, Gword *w)
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
-#define HIDE_MORPHO   (!display_morphology)
+#define HIDE_MORPHO   (('\0' != infix_mark) && !display_morphology)
 /* TODO? !display_guess_marks is not implemented. */
 #define DISPLAY_GUESS_MARKS true // (opts->display_guess_marks)
 
@@ -287,6 +287,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	int *remap = alloca(linkage->num_words * sizeof(*remap));
 	bool *show_word = alloca(linkage->num_words * sizeof(*show_word));
 	bool display_morphology = opts->display_morphology;
+	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 
 	Gword **lwg_path = linkage->wg_path;
 	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
@@ -638,7 +639,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * a guess indication but the last subword doesn't have, no guess
 					 * indication would be shown at all. */
 
-					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
+					if ((NULL == regex_name) || !display_morphology) regex_name = "";
 					s = alloca(strlen(t) + strlen(regex_name) + 4);
 					strncpy(s, t, baselen);
 					s[baselen] = '[';
