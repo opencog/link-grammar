@@ -750,8 +750,22 @@ class GSQLDictTestCase(unittest.TestCase):
         linkage_testfile(self, self.d, sat_po)
 
 class IWordPositionTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d_en = Dictionary(lang='en')
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d_en
+
     def test_en_word_positions(self):
-        linkage_testfile(self, Dictionary(lang='en'), ParseOptions(spell_guess=10), 'pos')
+        linkage_testfile(self, self.d_en, ParseOptions(), 'pos')
+
+    def test_en_spell_word_positions(self):
+        po = ParseOptions(spell_guess=10)
+        if po.spell_guess == 0:
+            raise unittest.SkipTest("Library is not configured with spell guess")
+        linkage_testfile(self, self.d_en, po, 'pos-spell')
 
     def test_ru_word_positions(self):
         linkage_testfile(self, Dictionary(lang='ru'), ParseOptions(), 'pos')

@@ -1,0 +1,23 @@
+% This file contains test sentences, and the expected positions (start, end)
+% of their words. The first P line is char position, and the second one is
+% byte position.
+
+% Validate that the linkage words that are a result of a spell guess have
+% the position of the original sentence words.
+
+% The word "seasand" gets broken in 2 possibilities.
+Ithe seasand lakes are hot
+PLEFT-WALL(0, 0) the(0, 3) seas[&].n(4, 8) and[&].j-n(8, 11) lakes.n(12, 17) are.v(18, 21) hot.a(22, 25) RIGHT-WALL(25, 25)
+PLEFT-WALL(0, 0) the(0, 3) seas[&].n(4, 8) and[&].j-n(8, 11) lakes.n(12, 17) are.v(18, 21) hot.a(22, 25) RIGHT-WALL(25, 25)
+P
+N
+PLEFT-WALL(0, 0) the(0, 3) sea[&].n-u(4, 7) sand[&].n-u(7, 11) lakes.n(12, 17) are.v(18, 21) hot.a(22, 25) RIGHT-WALL(25, 25)
+PLEFT-WALL(0, 0) the(0, 3) sea[&].n-u(4, 7) sand[&].n-u(7, 11) lakes.n(12, 17) are.v(18, 21) hot.a(22, 25) RIGHT-WALL(25, 25)
+P
+
+% The following misspelled word has only one possible spell guess.
+% (This is needed because we check here only the first linkage.)
+II love going to a zooo.
+PLEFT-WALL(0, 0) I.p(0, 1) love.v(2, 6) going.v(7, 12) to.r(13, 15) a(16, 17) zoo[~].n(18, 22) .(22, 23) RIGHT-WALL(23, 23)
+PLEFT-WALL(0, 0) I.p(0, 1) love.v(2, 6) going.v(7, 12) to.r(13, 15) a(16, 17) zoo[~].n(18, 22) .(22, 23) RIGHT-WALL(23, 23)
+P
