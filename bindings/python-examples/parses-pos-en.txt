@@ -33,3 +33,24 @@ II love going to the café.
 PLEFT-WALL(0, 0) I.p(0, 1) love.v(2, 6) going.v(7, 12) to.r(13, 15) the(16, 19) café.n(20, 24) .(24, 25) RIGHT-WALL(25, 25)
 PLEFT-WALL(0, 0) I.p(0, 1) love.v(2, 6) going.v(7, 12) to.r(13, 15) the(16, 19) café.n(20, 25) .(25, 26) RIGHT-WALL(26, 26)
 P
+
+% Test linkages w/null-linked words
+-max_null_count=1
+
+IThis is a the test
+PLEFT-WALL(0, 0) this.p(0, 4) is.v(5, 7) [a](8, 9) the(10, 13) test.n(14, 18) RIGHT-WALL(18, 18)
+PLEFT-WALL(0, 0) this.p(0, 4) is.v(5, 7) [a](8, 9) the(10, 13) test.n(14, 18) RIGHT-WALL(18, 18)
+P
+
+% Here "As" gets split by the tokenizer into 2 alternatives:
+% 1: As
+% 2: A.u s.u
+% There is no full linkage, and in order to show the result in a reasonable
+% way (this is most beneficial if there are more then two such alternatives)
+% the library combines back the failed splits and should recalculate
+% the word position of these combined splits correctly.
+
+IAs no linkage
+PLEFT-WALL(0, 0) [as](0, 2) no.ij(3, 5) linkage.n-u(6, 13) RIGHT-WALL(13, 13)
+PLEFT-WALL(0, 0) [as](0, 2) no.ij(3, 5) linkage.n-u(6, 13) RIGHT-WALL(13, 13)
+P
