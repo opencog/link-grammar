@@ -106,7 +106,7 @@ CFLAGS="${CFLAGS} -O3"
 CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
 # The std=c11 flag provides the proper float-pt math decls working,
-# e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
+# e.g. fmax  However, it also undefined _BSD_SOURCE, etc. which is
 # needed to get fileno, strdup, etc. and so it needs to be manually
 # enabled again.
 

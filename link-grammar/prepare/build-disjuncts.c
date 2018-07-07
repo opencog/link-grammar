@@ -157,7 +157,7 @@ static Clause * build_clause(Exp *e)
 				{
 					c = (Clause *) xalloc(sizeof (Clause));
 					c->cost = c3->cost + c4->cost;
-					c->maxcost = fmaxf(c3->maxcost,c4->maxcost);
+					c->maxcost = MAX(c3->maxcost,c4->maxcost);
 					c->c = catenate(c3->c, c4->c);
 					c->next = c_head;
 					c_head = c;
