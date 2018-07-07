@@ -169,7 +169,7 @@ or
 
 For more examples of how to use the wordgraph display, see
 [link-grammar/README.md](/link-grammar/README.md)
-and [msvc14/README.md](/msvc14/README.md).
+and [msvc/README.md](/msvc/README.md).
 
 Debugging and STDIO streams
 ---------------------------

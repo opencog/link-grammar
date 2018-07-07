@@ -69,8 +69,8 @@ configured with the SAT solver (this is currently the case for native
 Windows builds).
 
 The test procedure is outlined below.  For native Windows/MinGW, see
-the `msvc14/README.md` file:
-[Running Python programs in Windows](/msvc14/README.md#running-python-programs).
+the `msvc/README.md` file:
+[Running Python programs in Windows](/msvc/README.md#running-python-programs).
 
 ### Testing the build directory
 The following is assumed:
