@@ -859,9 +859,7 @@ size_t linkage_get_word_char_start(const Linkage linkage, WordIdx w)
 {
 	if (linkage->num_words <= w) return 0; /* bounds-check */
 	int pos = (int)(linkage->wg_path_display[w]->start - linkage->sent->orig_sentence);
-	char *sentchunk = alloca(pos+1);
-	strncpy(sentchunk, linkage->sent->orig_sentence, pos);
-	sentchunk[pos] = '\0';
+	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
 }
 
@@ -869,8 +867,6 @@ size_t linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 {
 	if (linkage->num_words <= w) return 0; /* bounds-check */
 	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
-	char *sentchunk = alloca(pos+1);
-	strncpy(sentchunk, linkage->sent->orig_sentence, pos);
-	sentchunk[pos] = '\0';
+	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
 }
