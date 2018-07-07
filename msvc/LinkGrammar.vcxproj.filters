@@ -191,9 +191,6 @@
     <ClInclude Include="..\link-grammar\externs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\link-features.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\link-includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -339,6 +336,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\memory-pool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="link-grammar\link-features.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
