@@ -64,9 +64,6 @@ swig.exe -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar 
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\link-grammar\link-includes.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="LinkGrammar.vcxproj">
       <Project>{0a6c539a-3140-48bd-865c-05f45637b93b}</Project>
     </ProjectReference>
