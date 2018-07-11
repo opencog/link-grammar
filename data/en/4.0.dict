@@ -12467,6 +12467,15 @@ as.#that: [that.j-c]0.05;
 % as.#same-as: [the_same_as]0.05;
 % because of this: "The coffee tastes [the same] as it did last week"
 
+% Multi-word punctuation error: writing "its" when "it's" was meant.
+% its.#it-is: [it_is]0.2;
+
+% Archaic, poetic 'tis
+% 'tis.#it-is: [it_is];
+
+'tis: Wn- & O+;
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
 % Given a particular kind of ending to a word, try to guess
