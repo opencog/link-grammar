@@ -166,6 +166,9 @@ sargent.t
 seaman.t
 secretary.t
 Seigneur.t
+seigneur.t
+Seignior.t
+seignior.t
 senator.t
 Senator.t
 Shah.t
@@ -176,7 +179,9 @@ Sister.t
 sister.t
 Skipper.t
 skipper.t
+Solicitor.t
 solicitor.t
+Speaker.t
 speaker.t
 spokesman.t
 spokesperson.t
@@ -188,7 +193,10 @@ Treasurer.t
 treasurer.t
 undersecretary.t
 underwriter.t
+Vice-Admiral.t
 Vice-admiral.t
 vice-admiral.t
+Viceroy.t
+viceroy.t
 Warden.t
 warden.t
