@@ -293,6 +293,7 @@ berry.n
 berth.n
 beryl.s
 bestiary.n
+best_man
 bestowal.s
 bestseller.n
 beta.s
@@ -685,6 +686,8 @@ broom.n
 broomstick.n
 brothel.n
 brotherhood.s
+brother.n
+Brother.n
 brother.n-m
 brouhaha.n
 brow.n
@@ -932,6 +935,7 @@ cappuccino.s
 caprice.n
 capsule.n
 captain.n
+Captain.n
 caption.n
 captive.n
 captor.n
@@ -1512,6 +1516,7 @@ comic.n
 comma.n
 commandant.n
 commander.n
+Commander.n
 commandment.n
 command.n
 commando.n
@@ -1525,6 +1530,7 @@ commissar.n
 commissary.n
 commissionaire.n
 commissioner.n
+Commissioner.n
 commission.s
 commit.n
 committee.n
@@ -1577,6 +1583,7 @@ compound.s
 compressor.n
 compromise.s
 comptroller.n
+Comptroller.n
 computation.s
 computer.n
 comrade.n
@@ -1647,6 +1654,7 @@ conglomeration.n
 congratulation.n
 congregation.s
 congressman.n
+Congressman.n
 congress.n
 conifer.n
 conjecture.s
@@ -2199,6 +2207,7 @@ dealer.n
 deal.n
 deanery.n
 dean.n
+Dean.n
 dear.n
 deathbed.n
 deathblow.n
@@ -2330,6 +2339,7 @@ deprival.s
 deprivation.s
 depth.s
 deputy.n
+Deputy.n
 derailment.s
 derby.n
 dereference.n
@@ -2598,6 +2608,7 @@ dockyard.n
 docodont.n
 doctorate.n
 doctor.n
+Doctor.n
 doctrinaire.n
 doctrine.s
 document.n
@@ -2753,6 +2764,8 @@ drunkard.n
 drunk.n
 dryer.n
 ducat.n
+duchess.n
+Duchess.n
 duchess.n-f
 duchy.n
 duckling.n
@@ -2768,6 +2781,8 @@ duet.n
 duffer.n
 dugout.n
 dukedom.n
+duke.n
+Duke.n
 duke.n-m
 dulcian.s
 dulcimer.n
@@ -2885,6 +2900,8 @@ fatality.n
 fate.s
 fathead.n
 fatherland.n
+father.n
+Father.n
 father.n-m
 fathom.n
 faucet.n
@@ -3003,6 +3020,7 @@ fink.n
 fin.n
 Finn.n
 fiord.n
+fire.n
 firearm.n
 fireball.n
 firebird.n
@@ -3017,7 +3035,6 @@ firefly.n
 firelight.n
 fireman.n
 fireplace.n
-fire.n
 fireside.n
 firework.n
 firmament.n
@@ -3911,7 +3928,9 @@ headlight.n
 headline.n
 headlock.n
 headmaster.n
+Headmaster.n
 headmistress.n
+Headmistress.n
 head.n
 headquarters.s
 headrest.n
@@ -4338,6 +4357,7 @@ junta.n
 jurist.n
 juror.n
 jury.n
+justice.n
 Justice.n
 justice.s
 justification.s
@@ -4400,6 +4420,7 @@ kindergarten.n
 kingdom.n
 kingfisher.n
 king.n
+King.n
 kingpin.n
 kink.n
 kiosk.n
@@ -4426,6 +4447,7 @@ knee.n
 knife.n
 knighthood.s
 knight.n
+Knight.n
 knob.n
 knocker.n
 knock.n
@@ -4601,6 +4623,7 @@ letterhead.n
 letter.n
 lettuce.s
 leukemia.s
+leutenant.n
 levee.n
 leveller.n
 level.n
@@ -4863,6 +4886,7 @@ mahogany.s
 maidenhood.n
 maiden.n-f
 maid.n-f
+maid_of_honor
 maidservant.n-f
 mailbag.n
 mailboat.s
@@ -4876,6 +4900,7 @@ mainstay.n
 mainstream.n
 maisonnette.n
 major.n
+Major.n
 makefile.n
 maker.n
 makeshift.n
@@ -4972,9 +4997,13 @@ mark.n
 maroon.n
 marquee.n
 marquess.n
+marquise.n
+Marquise.n
 marquis.n
 marriage.s
 marrowbone.n
+marshall.n
+Marshall.n
 marshal.n
 marshmallow.s
 marsh.s
@@ -4998,8 +5027,12 @@ massacre.n
 massage.n
 masseur.n
 masseuse.n
+master-at-arms.n
+Master-at-arms.n
+Master-at-Arms.n
 mastermind.n
 master.n
+Master.n
 masterpiece.n
 masterstroke.n
 mastery.s
@@ -5400,6 +5433,8 @@ mosquito.n
 motel.n
 mothball.n
 motherland.n
+mother.n
+Mother.n
 mother.n-f
 moth.n
 motif.n
@@ -5883,6 +5918,7 @@ pastime.n
 past.n
 pastoral.n
 pastor.n
+Pastor.n
 pastry.s
 pasture.s
 pasty.n
@@ -6404,6 +6440,7 @@ poster.n
 postgraduate.n
 postmark.n
 postmaster.n
+Postmaster.n
 postmodifier.n
 postponement.s
 postprocessor.n
@@ -6487,6 +6524,7 @@ prelim.n
 prelude.n
 premiere.n
 premier.n
+Premier.n
 premiership.n
 premise.n
 premiss.n
@@ -6536,6 +6574,8 @@ prig.n
 primacy.s
 primary.n
 primate.n
+prime_minister
+Prime_Minister
 Prime.n
 primer.n
 prime.s
@@ -6584,6 +6624,7 @@ professional.n
 profession.n
 professoriate.n
 professor.n
+Professor.n
 professorship.n
 profile.s
 profiteer.n
@@ -6785,6 +6826,8 @@ quarrel.n
 quarry.n
 quarterback.n
 quarterfinal.n
+quarter-master.n
+Quarter-master.n
 quarter.n
 quartet.n
 quarto.n
@@ -6887,6 +6930,7 @@ rancher.n
 ranch.s
 rangefinder.n
 ranger.n
+Ranger.n
 range.s
 ranking.n
 rank.s
@@ -7148,9 +7192,9 @@ replication.n
 reply.n
 reporter.n
 repository.n
-Represenative.n
 representation.s
 representative.n
+Representative.n
 reprieve.n
 reprimand.n
 reprint.n
@@ -7451,7 +7495,9 @@ sag.n
 sahib.n
 sail.n
 sailor.n
+Sainte.n
 saint.n
+Saint.n
 sake.s
 salaam.n
 salad.s
@@ -7499,6 +7545,8 @@ sapphire.s
 sap.s
 saraband.n
 sardine.s
+sargent.n
+Sargent.n
 sari.n
 sarong.n
 sarrusophone.s
@@ -7659,6 +7707,7 @@ seafarer.n
 seafront.n
 seagull.n
 seal.n
+seaman.n
 seam.n
 seamstress.n
 seance.n
@@ -7703,6 +7752,9 @@ segfault.n
 segmentation.s
 segment.n
 segue.n
+Seigneur.n
+seigneur.n
+Seignior.n
 seignior.n
 seismograph.n
 seismologist.n
@@ -7840,6 +7892,7 @@ shepherdess.n-f
 shepherd.n
 sherbet.s
 sheriff.n
+Sheriff.n
 sherry.s
 shibboleth.n
 shield.n
@@ -7999,6 +8052,8 @@ sirloin.s
 sir.n
 sirup.s
 sissy.n-f
+sister.n
+Sister.n
 sister.n-f
 sitar.s
 sitcom.n
@@ -8027,6 +8082,7 @@ skinhead.n
 skin.s
 skip.n
 skipper.n
+Skipper.n
 skirmish.n
 skirt.n
 skit.n
@@ -8181,6 +8237,7 @@ solace.s
 soldier.n
 sole.n
 solicitation.n
+Solicitor.n
 solicitor.n
 solid.n
 soliloquy.n
@@ -8260,6 +8317,7 @@ spasm.n
 spastic.n
 spate.n
 spatula.n
+Speaker.n
 speaker.n
 speakerphone.n
 spear.n
@@ -8729,6 +8787,7 @@ superfamily.n
 superficiality.s
 superfluity.s
 superintendent.n
+Superintendent.n
 superior.n
 superlative.n
 supermarket.n
@@ -9334,6 +9393,7 @@ treadle.n
 treadmill.n
 tread.n
 treasurer.n
+Treasurer.n
 treasure.s
 treasury.n
 treatise.n
@@ -9616,7 +9676,11 @@ vibrator.n
 vibrato.s
 vicarage.n
 vicar.n
+vice-admiral.n
+Vice-admiral.n
+Vice-Admiral.n
 viceroy.n
+Viceroy.n
 vice.s
 vicinity.s
 vicissitude.n
@@ -9748,6 +9812,7 @@ wanton.n
 warble.n
 warbler.n
 warden.n
+Warden.n
 warder.n
 ward.n
 wardrobe.n

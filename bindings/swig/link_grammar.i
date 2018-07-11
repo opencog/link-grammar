@@ -208,7 +208,7 @@ bool lg_error_flush(void);
  * void *lg_error_set_handler_data(void *);
  * A wrapper to this function is complex and is not implemented here.  However,
  * such a wrapper may not be needed anyway since this function is provided
- * mainly for the low-level implementation the error callback, so bound
+ * mainly for the low-level implementation of the error callback, so bound
  * languages can free the memory of the callback data.
  */
 
@@ -379,6 +379,21 @@ void delete_lg_errinfo(lg_errinfo *lge) {
   free((void *)lge->severity_label);
   free((void *)lge->text);
   free((void *)lge);
+}
+
+/**
+ * incref/decref a Python object.
+ * Currently used on the Dictionary object when a Sentence object is created/deleted,
+ * because the Sentence object includes a reference to the Dictionary structure.
+ */
+void _py_incref(PyObject *x)
+{
+  Py_INCREF(x);
+}
+
+void _py_decref(PyObject *x)
+{
+  Py_DECREF(x);
 }
 %}
 #endif /* SWIGPYTHON */

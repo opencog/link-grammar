@@ -5041,7 +5041,7 @@ disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
     or OF+) & <mv-coord>;
 speak.v: VERB_PLI(<vc-speak>);
 speaks.v: VERB_S_T(<vc-speak>);
-spoke.v-d: VERB_SP_T(<vc-speak>);
+spoke.v-d spake.v-d: VERB_SP_T(<vc-speak>);
 spoken.v:
   VERB_PP(<vc-speak>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
@@ -6508,6 +6508,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Paraphrasing, quotational complements:
 <paraph-null>: [()]0.1;
 
+% An entire quoted sentence. Costly, if the quotes are missing.
+<quote-sent>:
+  ((Xc+ or Xe+ or [()]) & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+)
+  or [(Xc+ or Xe+) & (<wi-wall> or <wo-wall>) & {X+}];
+
 % Quote with or without quotation marks.
 % "This is a test," she said.
 % We should go, I agreed.
@@ -6523,15 +6528,17 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+ or [[()]])
-    & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
+  or ({@MV+} & <quote-sent>);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 % CPa- & Xc+: "So thinks everyone"
+% CPa- & <quote-sent>: "Spoke the king: Off with his head!"
+% PF- & <quote-sent>: "And thus spoke the king: Off with his head!"
+% PF- (by itself): "And thus spoke the king"
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CPx- or Eq+ or <verb-wall>))
-    or (CPa- & Xc+)
+    or ((PF- or CPa-) & {<quote-sent> & {RW+}})
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."
@@ -10399,6 +10406,15 @@ as.#that: [that.j-c]0.05;
 % Desirable multi-word substitutions:
 % as.#same-as: [the_same_as]0.05;
 % because of this: "The coffee tastes [the same] as it did last week"
+
+% Multi-word punctuation error: writing "its" when "it's" was meant.
+% its.#it-is: [it_is]0.2;
+
+% Archaic, poetic 'tis
+% 'tis.#it-is: [it_is];
+
+'tis: Wn- & O+;
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.

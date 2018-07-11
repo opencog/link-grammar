@@ -115,6 +115,9 @@ only an experienced eye can spot which to pick
 only an experienced eye can spot which to pick and which to leave behind.
 ... which to pick and which to leave behind.
 
+Off with his head!
+They're gonna off him at midnight
+
 % paraphrasing verbs
 he stammered that he did not mean it
 Not again, snorted Ken
@@ -124,6 +127,19 @@ Who are you ? she questioned abruptly.
 Joseph asked of her : Who is this ?
 Joseph begged of her : Who is this ?
 Joseph demanded of her : Who is this ?
+
+% Subject-inverted paraphrasing
+Said the King: "Off with his head!"
+spoke the King: "Off with his head!"
+Pronounced the King: "Off with his head!"
+Uttered the knave: "Don't do that!"
+Muttered the knave: "Oh no!"
+
+"I don't like that", spoke the king.
+thus spake the king: "go forth!"
+and thus spoke the king: "go forth and multiply!"
+and thus spoke the king: go forth and multiply!
+and so spoke the king.
 
 % verb "suspect" was buggy.
 I beleive he suspects
@@ -4590,6 +4606,8 @@ Christmas Day, well, everybody be so choked up over gifts and everything, they d
 He does be singing.
 He does be always drinkin layarge bohhels down be de park boy
 
+% Archaic, poetic British
+oh, 'tis love, 'tis love that makes the world go round!
 
 % WH-words
 I do not know why

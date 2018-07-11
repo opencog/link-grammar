@@ -123,6 +123,28 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 }
 
 /**
+ * Add a display wordgraph placeholder for a combined morpheme with links
+ * that are not discardable.
+ * This is needed only when hiding morphology. This is a kind of a hack.
+ * It it is not deemed nice, the "hide morphology" mode should just not be
+ * used for languages with morphemes which have links that cannot be
+ * discarded on that mode (like Hebrew).
+ * Possible FIXME: Currently it is also used by w/ in English.
+ */
+static Gword *wordgraph_link_placeholder(Sentence sent, Gword *w)
+{
+	Gword *new_word;
+
+	new_word = gword_new(sent, "");
+	new_word->status |= WS_PL;
+	new_word->label = "PH";
+	new_word->start = w->start;
+	new_word->end = w->end;
+
+	return new_word;
+}
+
+/**
  * The functions defined in this file are primarily a part of the user API
  * for working with linkages.
  */
@@ -134,7 +156,7 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
-#define HIDE_MORPHO   (!display_morphology)
+#define HIDE_MORPHO   (('\0' != infix_mark) && !display_morphology)
 /* TODO? !display_guess_marks is not implemented. */
 #define DISPLAY_GUESS_MARKS true // (opts->display_guess_marks)
 
@@ -265,6 +287,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	int *remap = alloca(linkage->num_words * sizeof(*remap));
 	bool *show_word = alloca(linkage->num_words * sizeof(*show_word));
 	bool display_morphology = opts->display_morphology;
+	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 
 	Gword **lwg_path = linkage->wg_path;
 	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
@@ -277,6 +300,29 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 	if (verbosity_level(D_CCW))
 		print_lwg_path(lwg_path, "Linkage");
+
+	/* If morphology printing is being suppressed, then all links
+	 * connecting morphemes will be discarded. */
+	if (HIDE_MORPHO)
+	{
+		/* Discard morphology links. */
+		for (i=0; i<linkage->num_links; i++)
+		{
+			Link * lnk = &linkage->link_array[i];
+
+			if (is_morphology_link(lnk->link_name))
+			{
+				/* Mark link for discarding. */
+				lnk->link_name = NULL;
+			}
+			else
+			{
+				/* Mark word for not discarding. */
+				show_word[lnk->rw] = true;
+				show_word[lnk->lw] = true;
+			}
+		}
+	}
 
 	for (i = 0; i < linkage->num_words; i++)
 	{
@@ -471,8 +517,23 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 						/* 2. Join subscripts. */
 						for (wgaltp = wgp, m = 0; m < mcnt; wgaltp++, m++)
 						{
+							Gword *wg_placeholder;
+
 							/* Cannot NULLify the word - we may have links to it. */
-							if (m != mcnt-1) chosen_words[i+m] = "";
+							if (m != mcnt-1)
+							{
+								chosen_words[i+m] = "";
+
+								if (show_word[i+m])
+								{
+									/* We have undiscardable links to this word.
+									 * Add a display wordgraph placeholder so
+									 * get_word_*() will work and return the original
+									 * morpheme positions. */
+									wg_placeholder = wordgraph_link_placeholder(sent, *wgaltp);
+									gwordlist_append(&n_lwg_path, wg_placeholder);
+								}
+							}
 
 							sm =  strchr(cdjp[i+m]->word_string, SUBSCRIPT_MARK);
 
@@ -517,7 +578,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							 (SUBSCRIPT_MARK == join[join_len-1]))
 							join[join_len-1] = '\0';
 
-						gwordlist_append(&n_lwg_path, sentence_word);
+						gwordlist_append(&n_lwg_path, w->unsplit_word);
 						t = string_set_add(join, sent->string_set);
 						free(join);
 
@@ -578,7 +639,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * a guess indication but the last subword doesn't have, no guess
 					 * indication would be shown at all. */
 
-					if ((NULL == regex_name) || HIDE_MORPHO) regex_name = "";
+					if ((NULL == regex_name) || !display_morphology) regex_name = "";
 					s = alloca(strlen(t) + strlen(regex_name) + 4);
 					strncpy(s, t, baselen);
 					s[baselen] = '[';
@@ -605,29 +666,6 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 			if (0 == strcmp("ZZZ", lnk->link_name))
 				chosen_words[lnk->rw] = NULL;
-		}
-	}
-
-	/* If morphology printing is being suppressed, then all links
-	 * connecting morphemes will be discarded. */
-	if (HIDE_MORPHO)
-	{
-		/* Discard morphology links. */
-		for (i=0; i<linkage->num_links; i++)
-		{
-			Link * lnk = &linkage->link_array[i];
-
-			if (is_morphology_link(lnk->link_name))
-			{
-				/* Mark link for discarding. */
-				lnk->link_name = NULL;
-			}
-			else
-			{
-				/* Mark word for not discarding. */
-				show_word[lnk->rw] = true;
-				show_word[lnk->lw] = true;
-			}
 		}
 	}
 

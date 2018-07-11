@@ -290,10 +290,10 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        if sys.version_info > (3, 0):
-            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
-        else:
+        if is_python2():
             result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
+        else:
+            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
@@ -323,11 +323,27 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
     def test_dictionary_locale_definition(self):
+        if is_python2(): # Locale stuff seems to be broken
+            raise unittest.SkipTest("Test not supported with Python2")
+
+        # python2: Gets system locale (getlocale() is not better)
+        oldlocale = locale.setlocale(locale.LC_CTYPE, None)
+        #print('Current locale:', oldlocale)
+        #print('toupper hij:', 'hij'.upper())
+
         tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
-        oldlocale = locale.setlocale(locale.LC_CTYPE, tr_locale)
+        locale.setlocale(locale.LC_CTYPE, tr_locale)
+        #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
+
+        # python2: prints HiJ (lowercase small i in the middle)
+        #print('toupper hij:', 'hij'.upper())
+
         self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
-             ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
+                         ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
+
         locale.setlocale(locale.LC_CTYPE, oldlocale)
+        #print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
+        #print('toupper hij:', 'hij'.upper())
 
     # If \w is supported, other \ shortcuts are hopefully supported too.
     def test_regex_class_shortcut_support(self):
@@ -733,6 +749,30 @@ class GSQLDictTestCase(unittest.TestCase):
             raise unittest.SkipTest("Library not configured with SAT parser")
         linkage_testfile(self, self.d, sat_po)
 
+class IWordPositionTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d_en = Dictionary(lang='en')
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d_en
+
+    def test_en_word_positions(self):
+        linkage_testfile(self, self.d_en, ParseOptions(), 'pos')
+
+    def test_en_spell_word_positions(self):
+        po = ParseOptions(spell_guess=10)
+        if po.spell_guess == 0:
+            raise unittest.SkipTest("Library is not configured with spell guess")
+        linkage_testfile(self, self.d_en, po, 'pos-spell')
+
+    def test_ru_word_positions(self):
+        linkage_testfile(self, Dictionary(lang='ru'), ParseOptions(), 'pos')
+
+    def test_he_word_positions(self):
+        linkage_testfile(self, Dictionary(lang='he'), ParseOptions(), 'pos')
+
 # Tests are run in alphabetical order; do the language tests last.
 
 class ZENLangTestCase(unittest.TestCase):
@@ -904,50 +944,62 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     linkage diagrams / constituent printings.
     """
     self.__class__.longMessage = True
+    self.maxDiff = None
     if desc != '':
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
     parses = open(testfile, "rb")
     diagram = None
     constituents = None
+    wordpos = None
     sent = None
     lineno = 0
 
+    def getwordpos(lkg):
+        words_char = []
+        words_byte = []
+        for wi, w in enumerate(lkg.words()):
+            words_char.append(w + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
+            words_byte.append(w + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
+        return ' '.join(words_char) + '\n' + ' '.join(words_byte) + '\n'
+
     # Function code and file format sanity check
     self.opcode_detected = 0
-    def validate_opcode(ctxt=self, O=False, C=False):
-        ctxt.opcode_detected += 1
-        if O:
+    def validate_opcode(opcode):
+        self.opcode_detected += 1
+        if opcode != ord('O'):
             self.assertFalse(diagram, "at {}:{}: Unfinished diagram entry".format(testfile, lineno))
-        if C:
+        if opcode != ord('C'):
             self.assertFalse(constituents, "at {}:{}: Unfinished constituents entry".format(testfile, lineno))
+        if opcode != ord('P'):
+            self.assertFalse(wordpos, "at {}:{}: Unfinished word-position entry".format(testfile, lineno))
 
     for line in parses:
         lineno += 1
-        if sys.version_info > (3, 0):
+        if not is_python2():
             line = line.decode('utf-8')
+        validate_opcode(ord(line[0])) # Use ord() for python2/3 compatibility
         # Lines starting with I are the input sentences
         if line[0] == 'I':
-            validate_opcode(O=True, C=True)
-            sent = line[1:]
+            sent = line[1:].rstrip('\r\n') # Strip whitespace before RIGHT-WALL (for P)
             diagram = ""
             constituents = ""
+            wordpos = ""
             linkages = Sentence(sent, lgdict, popt).parse()
             linkage = next(linkages, None)
             self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
         if line[0] == 'N' :
-            validate_opcode(O=True, C=True)
             diagram = ""
             constituents = ""
+            wordpos = ""
             linkage = next(linkages, None)
             self.assertTrue(linkage, "at {}:{}: Sentence has too few linkages".format(testfile, lineno))
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
         if line[0] == 'O' :
-            validate_opcode(C=True)
             diagram += line[1:]
             if line[1] == '\n' and len(diagram) > 1:
                 self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
@@ -956,20 +1008,38 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
         if line[0] == 'C':
-            validate_opcode(O=True)
             if line[1] == '\n' and len(constituents) > 1:
                 self.assertEqual(linkage.constituent_tree(), constituents, "at {}:{}".format(testfile, lineno))
                 constituents = None
             else:
                 constituents += line[1:]
+
+        # Lines starting with P contain word positions "word(start, end) ... "
+        # The first P line contains character positions
+        # The second P line contains byte positions
+        # It ends with an empty line
+        if line[0] == 'P':
+            if line[1] == '\n' and len(wordpos) > 1:
+                self.assertEqual(getwordpos(linkage), wordpos, "at {}:{}".format(testfile, lineno))
+                wordpos = None
+            else:
+                wordpos += line[1:]
+
+        # Lines starting with "-" contain a Parse Option
+        if line[0] == '-':
+            exec('popt.' + line[1:], None, locals())
+
     parses.close()
 
-    validate_opcode(O=True, C=True)
+    validate_opcode('')
     self.assertGreaterEqual(self.opcode_detected, 2, "Nothing has been done for " + testfile)
 
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
+
+def is_python2():
+    return sys.version_info[:1] == (2,)
 
 
 import tempfile
