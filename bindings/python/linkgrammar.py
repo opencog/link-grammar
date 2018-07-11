@@ -483,11 +483,13 @@ class Sentence(object):
     def __init__(self, text, lgdict, parse_options):
         # Keep all args passed into clg.* functions.
         self.text, self.dict, self.parse_options = text, lgdict, parse_options
+        clg._py_incref(self.dict) # The Sentence struct refers to the Dictionary struct
         self._obj = clg.sentence_create(self.text, self.dict._obj)
 
     def __del__(self):
         if hasattr(self, '_obj'):
             clg.sentence_delete(self._obj)
+            clg._py_decref(self.dict)
             del self._obj
 
     def split(self, parse_options=None):
