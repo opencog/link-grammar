@@ -1,5 +1,9 @@
+Abbe.t
+abbe.t
 Abbé.t
 abbé.t
+Abbess.t
+abbess.t
 Abbot.t
 abbot.t
 accompanist.t
@@ -80,6 +84,8 @@ Duke.t
 duke.t
 economist.t
 editor.t
+emir.t
+Emir.t
 emissary.t
 emperor.t
 empress.t
