@@ -130,8 +130,13 @@ Joseph demanded of her : Who is this ?
 
 % Subject-inverted paraphrasing
 Said the King: "Off with his head!"
+spoke the King: "Off with his head!"
+Pronounced the King: "Off with his head!"
 Uttered the knave: "Don't do that!"
 Muttered the knave: "Oh no!"
+
+"I don't like that", spoke the king.
+thus spake the king: "go forth!"
 
 % verb "suspect" was buggy.
 I beleive he suspects
