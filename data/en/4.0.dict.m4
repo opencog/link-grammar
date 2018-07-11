@@ -5041,7 +5041,7 @@ disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
     or OF+) & <mv-coord>;
 speak.v: VERB_PLI(<vc-speak>);
 speaks.v: VERB_S_T(<vc-speak>);
-spoke.v-d: VERB_SP_T(<vc-speak>);
+spoke.v-d spake.v-d: VERB_SP_T(<vc-speak>);
 spoken.v:
   VERB_PP(<vc-speak>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
@@ -6508,6 +6508,10 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Paraphrasing, quotational complements:
 <paraph-null>: [()]0.1;
 
+<quote-sent>:
+  (Xc+ or Xe+ or [[()]])
+     & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+;
+
 % Quote with or without quotation marks.
 % "This is a test," she said.
 % We should go, I agreed.
@@ -6523,15 +6527,14 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+ or [[()]])
-    & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
+  or ({@MV+} & <quote-sent>);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 % CPa- & Xc+: "So thinks everyone"
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CPx- or Eq+ or <verb-wall>))
-    or (CPa- & Xc+)
+    or (CPa- & <quote-sent>)
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."

@@ -6154,7 +6154,7 @@ speaks.v:
   (<verb-and-sp-i-> & ([<vc-speak>]0.2 or ())) or
   ((<vc-speak>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-spoke.v-d: 
+spoke.v-d spake.v-d: 
   ((<verb-sp> & (<vc-speak>)) or
   (<verb-and-sp-i-> & ([<vc-speak>]0.2 or ())) or
   ((<vc-speak>) & <verb-and-sp-i+>) or
@@ -8557,6 +8557,10 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Paraphrasing, quotational complements:
 <paraph-null>: [()]0.1;
 
+<quote-sent>:
+  (Xc+ or Xe+ or [[()]])
+     & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+;
+
 % Quote with or without quotation marks.
 % "This is a test," she said.
 % We should go, I agreed.
@@ -8572,15 +8576,14 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & (Xc+ or Xe+ or [[()]])
-    & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+);
+  or ({@MV+} & <quote-sent>);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 % CPa- & Xc+: "So thinks everyone"
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CPx- or Eq+ or <verb-wall>))
-    or (CPa- & Xc+)
+    or (CPa- & <quote-sent>)
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."
