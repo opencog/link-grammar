@@ -6531,10 +6531,12 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 % CPa- & Xc+: "So thinks everyone"
+% CPa- & <quote-sent>: "Spoke the king: Off with his head!"
+% PF- & <quote-sent>: "And thus spoke the king: Off with his head!"
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CPx- or Eq+ or <verb-wall>))
-    or (CPa- & <quote-sent> & {RW+})
+    or ((PF- or CPa-) & <quote-sent> & {RW+})
     or [(Xc+ or Xe+) & <embed-verb>]);
 
 % filler-it: "The President is busy, it seems."
