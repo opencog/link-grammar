@@ -199,10 +199,6 @@ void *aligned_alloc(size_t alignment, size_t size);
 #define STR(x) #x
 #define STRINGIFY(x) STR(x)
 
-#if defined(__UCLIBC__)
-#define fmaxf(a,b) ((a) > (b) ? (a) : (b))
-#endif
-
 #if !defined(MIN)
 #define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
 #endif

@@ -323,11 +323,11 @@ static bool calculate_connector_info(condesc_t * c)
 #else
 
 
-	c->uc_start = s - c->string;
+	c->uc_start = (uint8_t)(s - c->string);
 	while (isupper(*++s)) /* The first letter must be an uppercase one. */
 		;
 #endif
-	c->uc_length = s - c->string - c->uc_start;
+	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
 
 	return connector_encode_lc(s, c);
 }

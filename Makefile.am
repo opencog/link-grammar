@@ -34,24 +34,24 @@ EXTRA_DIST =            \
 	docker/docker-python/Dockerfile        \
 	docker/docker-server/Dockerfile        \
 	m4/varcheckpoint.m4                    \
-	msvc14/LGlib-features.props            \
-	msvc14/LinkGrammarExe.vcxproj          \
-	msvc14/LinkGrammarExe.vcxproj.filters  \
-	msvc14/LinkGrammarJava.vcxproj         \
-	msvc14/LinkGrammarJava.vcxproj.filters \
-	msvc14/LinkGrammar.sln                 \
-	msvc14/LinkGrammar.vcxproj             \
-	msvc14/LinkGrammar.vcxproj.filters     \
-	msvc14/Local.props                     \
-	msvc14/confvar.bat                     \
-	msvc14/MSVC-common.props               \
-	msvc14/post-build.bat                  \
-	msvc14/Python2.vcxproj                 \
-	msvc14/Python3.vcxproj                 \
-	msvc14/Python2.vcxproj.filters         \
-	msvc14/Python3.vcxproj.filters         \
-	msvc14/README.md                       \
-	msvc14/make-check.py                   \
+	msvc/LGlib-features.props            \
+	msvc/LinkGrammarExe.vcxproj          \
+	msvc/LinkGrammarExe.vcxproj.filters  \
+	msvc/LinkGrammarJava.vcxproj         \
+	msvc/LinkGrammarJava.vcxproj.filters \
+	msvc/LinkGrammar.sln                 \
+	msvc/LinkGrammar.vcxproj             \
+	msvc/LinkGrammar.vcxproj.filters     \
+	msvc/Local.props                     \
+	msvc/confvar.bat                     \
+	msvc/MSVC-common.props               \
+	msvc/post-build.bat                  \
+	msvc/Python2.vcxproj                 \
+	msvc/Python3.vcxproj                 \
+	msvc/Python2.vcxproj.filters         \
+	msvc/Python3.vcxproj.filters         \
+	msvc/README.md                       \
+	msvc/make-check.py                   \
 	mingw/README-Cygwin.md                 \
 	mingw/README-MSYS.md                   \
 	mingw/README-MSYS2.md                  \

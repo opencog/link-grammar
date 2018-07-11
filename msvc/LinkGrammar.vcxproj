@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,24 +22,24 @@
     <ProjectGuid>{0A6C539A-3140-48BD-865C-05F45637B93B}</ProjectGuid>
     <RootNamespace>LinkGrammar</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
@@ -98,7 +98,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;..;..\link-grammar;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -132,7 +132,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;..;..\link-grammar;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -165,7 +165,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;..;..\link-grammar;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader />
       <CompileAs>CompileAsC</CompileAs>
@@ -199,7 +199,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;..;..\link-grammar;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -254,7 +254,6 @@
     <ClInclude Include="..\link-grammar\error.h" />
     <ClInclude Include="..\link-grammar\externs.h" />
     <ClInclude Include="..\link-grammar\lg_assert.h" />
-    <ClInclude Include="..\link-grammar\link-features.h" />
     <ClInclude Include="..\link-grammar\link-includes.h" />
     <ClInclude Include="..\link-grammar\linkage\analyze-linkage.h" />
     <ClInclude Include="..\link-grammar\linkage\linkage.h" />
@@ -290,6 +289,7 @@
     <ClInclude Include="..\link-grammar\tokenize\word-structures.h" />
     <ClInclude Include="..\link-grammar\tokenize\wordgraph.h" />
     <ClInclude Include="..\link-grammar\utilities.h" />
+    <ClInclude Include="link-grammar\link-features.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\link-grammar\api.c" />
@@ -346,30 +346,30 @@
   <ItemGroup>
     <CustomBuild Include="..\link-grammar\link-features.h.in">
       <FileType>Document</FileType>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating ..\link-grammar\link-features.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\link-grammar\link-features.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating link-granmmar\link-features.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">link-grammar\link-features.h</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating ..\link-grammar\link-features.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\link-grammar\link-features.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating link-granmmar\link-features.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">link-grammar\link-features.h</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating ..\link-grammar\link-features.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\link-grammar\link-features.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating link-granmmar\link-features.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">link-grammar\link-features.h</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating ..\link-grammar\link-features.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\link-grammar\link-features.h</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating link-granmmar\link-features.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">link-grammar\link-features.h</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Identity);..\configure.ac;confvar.bat</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> confvar $(Configuration) &lt;%(Identity) &gt;%(Outputs)</Command>
-      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
-      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
-      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
-      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</TreatOutputAsContent>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,20 @@
+Output-Build.txt
+Temp
+x64
+Win32
+Debug
+~AutoRecover.*
+.vs
+
+# This file is created by post-build.bat as part of the MSVC build,
+# to be used by the user for invoking the link-parser binary with the
+# required environment variables.
+link-parser.bat
+
+# The *.user project files are for the sole use of the user and should not
+# be included in the distribution.
+*.user
+
+# The link-grammar directory is created automatically by the MSVC build
+# for outputting link-features.h.
+link-grammar

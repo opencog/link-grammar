@@ -1,9 +1,0 @@
-Output-Build.txt
-Temp
-link-parser.bat
-x64
-Win32
-Debug
-~AutoRecover.*
-.vs
-*.user

@@ -169,7 +169,7 @@ Contents
 | configure | The GNU configuration script |
 | autogen.sh | Developer's configure maintenance tool |
 | debug/ | Information for debugging the library |
-| msvc14/ | Microsoft Visual-C project files |
+| msvc/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
 
 UNPACKING and signature verification
@@ -477,8 +477,8 @@ See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------
-Microsoft Visual C/C++ project files can be found in the msvc14 directory.
-For directions see the [README.md](msvc14/README.md) file there.
+Microsoft Visual C/C++ project files can be found in the `msvc` directory.
+For directions see the [README.md](msvc/README.md) file there.
 
 RUNNING the program
 -------------------

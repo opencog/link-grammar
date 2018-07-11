@@ -21,11 +21,6 @@
     <CustomBuild Include="..\bindings\python\__init__.py.in" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\link-grammar\link-includes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Temp\Python3\lg_python_wrap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

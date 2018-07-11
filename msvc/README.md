@@ -4,7 +4,7 @@ Note: See also [BUILDING on Windows](/README.md#building-on-windows)
 in the main README.
 
 This directory contains project files for building Link Grammar with the
-Microsoft Visual Studio 2015 IDE (MSVC14). They were created and tested with
+Microsoft Visual Studio 2017 IDE (MSVC15). They were created and tested with
 the Community Edition of that product.
 
 **!!!WARNING!!!**
@@ -142,10 +142,10 @@ BTW, when running and MSVC-compiled binary under Cygwin, don't exit
 link-parser by using `^Z` - the shell may get stuck because the program
 somehow may continue to run in the background.  Instead, exit using `!exit` .
 
-NOTE: The created DLLs need the MSVC14 runtime environment to run. This is
+NOTE: The created DLLs need the MSVC15 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
 But to be able to run Link Grammar on other computer you need to install
-[Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
+[Visual C++ Redistributable for Visual Studio 2017](https://visualstudio.microsoft.com/downloads/).
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 

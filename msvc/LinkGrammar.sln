@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarJava", "LinkGrammarJava.vcxproj", "{D74DF531-C18E-4988-8A8C-4F23556DEC1B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -28,15 +28,13 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|x64.ActiveCfg = Release|x64
+		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|x64.ActiveCfg = Debug|x64
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|Win32.ActiveCfg = Release|Win32
-		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|Win32.Build.0 = Release|Win32
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|x64.ActiveCfg = Release|x64
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|Win32.Build.0 = Debug|Win32
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|x64.ActiveCfg = Debug|x64
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|x64.Build.0 = Debug|x64
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|x64.Deploy.0 = Debug|x64
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|Win32.ActiveCfg = Release|Win32
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|Win32.Build.0 = Release|Win32
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|x64.ActiveCfg = Release|x64
@@ -45,7 +43,6 @@ Global
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|Win32.Build.0 = Debug|Win32
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|x64.ActiveCfg = Debug|x64
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|x64.Build.0 = Debug|x64
-		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|x64.Deploy.0 = Debug|x64
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|Win32.ActiveCfg = Release|Win32
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|Win32.Build.0 = Release|Win32
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|x64.ActiveCfg = Release|x64
@@ -69,5 +66,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B2D634D-D376-4321-9515-3428ADBD4140}
 	EndGlobalSection
 EndGlobal

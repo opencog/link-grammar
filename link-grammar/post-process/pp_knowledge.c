@@ -26,6 +26,7 @@
 #include "pp_linkset.h"
 #include "string-set.h"
 #include "dict-common/file-utils.h" // for dictopen
+#include "utilities.h"              // for free()
 
 #define D_PPK 10                       /* verbosity level for this file */
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
