@@ -303,3 +303,19 @@ mklink /D src src-link
 ```
 The second one needs administrator privileges.
 Then use the repository through "src".
+
+Debugging hints
+--------------
+If, when starting the program under the debugger (by "Local Windows Debugger",
+"Debug->Start Debugging" (F5), etc.), `regex.dll` is not found, it can be
+added to the search `PATH` as follows:<br>
+Enter to LinkGrammarExe's Property Pages:<br>
+ `Solution Explorer->LinkGrammarExe->Properties`<br>
+Click on the writable location of:<br>
+ `Debugging->Environment`<br>
+Put there (LG_DLLPATH is defined in the `Local` Property pages):<br>
+`PATH=$(LG_DLLPATH)`<br>
+Make sure "Merge Environment" there is `Yes`.
+
+(The result is kept in `.user` Property Pages that are not part of the
+LG repository).
