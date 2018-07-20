@@ -8014,9 +8014,11 @@ but.j-m and.j-m:
   ({Xd-} & MJlv- & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
 % {XJo-}: Either .. or ...
+% VJrg+: "either by chemicals or hammering" as a stand-in for
+%    "by chemicals or by hammering" because the second "by" is a zero.
 or.j-m:
   ({Xd-} & MJla- & {XJo-} & {EBb+} & MJra+ & <post-nom-a>) or
-  ({Xd-} & MJlp- & {XJo-} & {EBb+} & MJrp+ & <post-nom-p>) or
+  ({Xd-} & MJlp- & {XJo-} & {EBb+} & (MJrp+ or VJrg+) & <post-nom-p>) or
   ({Xd-} & MJlj- & {XJo-} & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
   ({Xd-} & MJlv- & {XJo-} & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
