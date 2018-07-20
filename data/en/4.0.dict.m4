@@ -2481,8 +2481,7 @@ per "/.per": Us+ & Mp-;
 % <noun-and-u>: allows use of gerunds as nouns.
 <verb-ge-d>:
   (<noun-modifiers> &
-    (Dmu- or [[()]]) &
-    (({[[Ds-]]} & OF+) or [[()]]) &
+    (Dmu- or ((Dmu- or [[Ds-]]) & OF+) or ()) &
     ((<noun-sub-s> & {@MXs+} &
       ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
       AJra- or AJla+ or
