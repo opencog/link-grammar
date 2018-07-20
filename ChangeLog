@@ -1,4 +1,4 @@
-Version 5.5.1 (XXX 2018)
+Version 5.5.1 (19 July 2018)
  * Fix broken Java bindings build.
  * English dict: Fix clause openers with questions.
  * English dict: Various misc fixes.
