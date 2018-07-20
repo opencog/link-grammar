@@ -954,6 +954,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     wordpos = None
     sent = None
     lineno = 0
+    last_opcode = None
 
     def getwordpos(lkg):
         words_char = []
@@ -964,9 +965,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         return ' '.join(words_char) + '\n' + ' '.join(words_byte) + '\n'
 
     # Function code and file format sanity check
-    self.opcode_detected = 0
     def validate_opcode(opcode):
-        self.opcode_detected += 1
         if opcode != ord('O'):
             self.assertFalse(diagram, "at {}:{}: Unfinished diagram entry".format(testfile, lineno))
         if opcode != ord('C'):
@@ -978,7 +977,12 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         lineno += 1
         if not is_python2():
             line = line.decode('utf-8')
+
         validate_opcode(ord(line[0])) # Use ord() for python2/3 compatibility
+        prev_opcode = last_opcode
+        if line[0] in 'INOCP':
+            last_opcode = line[0]
+
         # Lines starting with I are the input sentences
         if line[0] == 'I':
             sent = line[1:].rstrip('\r\n') # Strip whitespace before RIGHT-WALL (for P)
@@ -990,7 +994,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
-        if line[0] == 'N':
+        elif line[0] == 'N':
             diagram = ""
             constituents = ""
             wordpos = ""
@@ -999,7 +1003,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
-        if line[0] == 'O':
+        elif line[0] == 'O':
             diagram += line[1:]
             if line[1] == '\n' and len(diagram) > 1:
                 self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
@@ -1007,7 +1011,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
-        if line[0] == 'C':
+        elif line[0] == 'C':
             if line[1] == '\n' and len(constituents) > 1:
                 self.assertEqual(linkage.constituent_tree(), constituents, "at {}:{}".format(testfile, lineno))
                 constituents = None
@@ -1018,7 +1022,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         # The first P line contains character positions
         # The second P line contains byte positions
         # It ends with an empty line
-        if line[0] == 'P':
+        elif line[0] == 'P':
             if line[1] == '\n' and len(wordpos) > 1:
                 self.assertEqual(getwordpos(linkage), wordpos, "at {}:{}".format(testfile, lineno))
                 wordpos = None
@@ -1026,13 +1030,17 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
                 wordpos += line[1:]
 
         # Lines starting with "-" contain a Parse Option
-        if line[0] == '-':
+        elif line[0] == '-':
             exec('popt.' + line[1:], None, locals())
+
+        elif line[0] in '%\r\n':
+            pass
+        else:
+            self.fail('\nTest file "{}": Invalid opcode "{}" (ord={})'.format(testfile, line[0], ord(line[0])))
 
     parses.close()
 
-    validate_opcode('')
-    self.assertGreaterEqual(self.opcode_detected, 2, "Nothing has been done for " + testfile)
+    self.assertIn(last_opcode , 'OCP', "Missing result comparison in " + testfile)
 
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
