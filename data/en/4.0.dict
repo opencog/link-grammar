@@ -12573,7 +12573,9 @@ as.#that: [that.j-c]0.05;
 % latin (postposed) adjectives or latin plural noun
 % always considered as nouns in the current version
 % XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
+% e.g. blahblahgenesis is not plural.
 <LATIN-ADJ-P-NOUN-WORDS>:
+  [<noun-mass-count>]0.1 or
   [<generic-plural-id>]0.1;
 
 % latin (postposed) adjectives or latin singular noun
