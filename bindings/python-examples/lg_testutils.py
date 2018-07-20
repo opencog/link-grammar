@@ -7,7 +7,7 @@ def add_eqcost_linkage_order(original_class):
     be in a deterministic order.
     Usage: lg_testutils.add_eqcost_linkage_order(Sentence)
     """
-    class eqcost_soretd_parse(original_class.sentence_parse):
+    class eqcost_sorted_parse(original_class.sentence_parse):
         """
         Sort equal-cost linkages according to the alphabetic order of their
         diagram string, on demand.  We need it because the order of linkages
@@ -73,6 +73,6 @@ def add_eqcost_linkage_order(original_class):
         # parse() has an optional single argument for parse options. If it is not given,
         # call original_parse() also without arguments in order to test it that way.
         linkages = self.original_parse() if parse_options is None else self.original_parse(parse_options)
-        return eqcost_soretd_parse(linkages)
+        return eqcost_sorted_parse(linkages)
 
     original_class.parse = parse

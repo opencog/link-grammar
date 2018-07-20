@@ -357,7 +357,7 @@ class DBasicParsingTestCase(unittest.TestCase):
                           "This should take more than one second to parse! " * 20,
                           ParseOptions(max_parse_time=1))
 
-# The tests here are are numbered since their order is important.
+# The tests here are numbered since their order is important.
 # They depend on the result and state of the previous ones as follows:
 # - set_handler() returned a value that depend on it previous invocation.
 # - A class variable "handler" to record its previous results.
@@ -833,7 +833,7 @@ class ZENConstituentsCase(unittest.TestCase):
     def tearDownClass(cls):
         del cls.d, cls.po
 
-    def test_a_constiuents_after_parse_list(self):
+    def test_a_constituents_after_parse_list(self):
         """
         Validate that the post-processing data of the first linkage is not
         getting clobbered by later linkages.
@@ -990,7 +990,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
-        if line[0] == 'N' :
+        if line[0] == 'N':
             diagram = ""
             constituents = ""
             wordpos = ""
@@ -999,7 +999,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Lines starting with O are the parse diagram
         # It ends with an empty line
-        if line[0] == 'O' :
+        if line[0] == 'O':
             diagram += line[1:]
             if line[1] == '\n' and len(diagram) > 1:
                 self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
@@ -1070,7 +1070,7 @@ class divert_start(object):
 
     __del__ = divert_end
 
-# Decorate Sentence.parse with eqcost_soretd_parse.
+# Decorate Sentence.parse with eqcost_sorted_parse.
 lg_testutils.add_eqcost_linkage_order(Sentence)
 
 unittest.main()
