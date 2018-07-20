@@ -2464,6 +2464,7 @@ corpuses.n
 corrals.n
 corrections.n
 correctives.n
+correlates.n
 correlations.n
 correlatives.n
 correspondences.n
