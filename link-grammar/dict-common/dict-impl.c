@@ -30,33 +30,33 @@
 #ifdef _WIN32
 int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, int cchData)
 {
-    int rc = -1;
+	int rc = -1;
 
-    // Normal call
-    int (WINAPI * pfnGetLocaleInfoEx)(LPCWSTR, LCTYPE, LPWSTR, int);
-    *(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32" ), "GetLocaleInfoEx" );
-    if (pfnGetLocaleInfoEx)
-    {
-        rc = pfnGetLocaleInfoEx(lpLocaleName, LCType, lpLCData, cchData);
-    }
-    else
-    {
-        // Workaround for missing GetLocaleInfoEx
-        HMODULE module = LoadLibraryA("Mlang");
-        HRESULT (WINAPI * pfnRfc1766ToLcidW)(LCID*, LPCWSTR);
-        *(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
-        if  (pfnRfc1766ToLcidW)
-        {
-             LCID lcid;
-             if (SUCCEEDED(pfnRfc1766ToLcidW(&lcid, lpLocaleName)))
-             {
-                rc = GetLocaleInfoW(lcid, LCType, lpLCData, cchData);
-             }
-        }
-        FreeLibrary(module);
-    }
+	// Normal call
+	int (WINAPI * pfnGetLocaleInfoEx)(LPCWSTR, LCTYPE, LPWSTR, int);
+	*(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32" ), "GetLocaleInfoEx" );
+	if (pfnGetLocaleInfoEx)
+	{
+		rc = pfnGetLocaleInfoEx(lpLocaleName, LCType, lpLCData, cchData);
+	}
+	else
+	{
+		// Workaround for missing GetLocaleInfoEx
+		HMODULE module = LoadLibraryA("Mlang");
+		HRESULT (WINAPI * pfnRfc1766ToLcidW)(LCID*, LPCWSTR);
+		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
+		if (pfnRfc1766ToLcidW)
+		{
+			 LCID lcid;
+			 if (SUCCEEDED(pfnRfc1766ToLcidW(&lcid, lpLocaleName)))
+			 {
+				rc = GetLocaleInfoW(lcid, LCType, lpLCData, cchData);
+			 }
+		}
+		FreeLibrary(module);
+	}
 
-    return rc;
+	return rc;
 }
 #endif //_WIN32
 
