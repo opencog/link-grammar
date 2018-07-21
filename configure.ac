@@ -117,8 +117,7 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 # GNU, but do NOT turn on POSIX.
 #
 if test x${native_win32} = xyes; then
-	SPAWNV_WORKAROUND=-D_spawnv=spawnv # Fix MSYS2 wrapper compilation problem
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${SPAWNV_WORKAROUND}"
+	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
 	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
