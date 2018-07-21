@@ -103,6 +103,7 @@ void *alloca (size_t);
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
+#undef rand_r  /* Avoid (a bad) definition on MinGW */
 int rand_r(unsigned int *);
 #ifndef __MINGW32__
 /* No strtok_s in XP/2003 and their strtok_r is incompatible.
