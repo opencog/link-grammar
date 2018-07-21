@@ -15,7 +15,7 @@ A note for new MSYS2 users
 --------------------------
 Download and install MinGW/MSYS2 from http://msys2.org.
 
-MSYS2 uses the `pacman`package management. If you are not familiar
+MSYS2 uses the `pacman` package management. If you are not familiar
 with it, consult the
 [Pacman Rosetta](https://wiki.archlinux.org/index.php/Pacman/Rosetta).
 
@@ -56,9 +56,9 @@ Then build and install link-grammar with
 
      mkdir build
      cd build
-	 ../configure
-	 make
-	 make install
+     ../configure
+     make
+     make install
 
 In MINGW64, the default install prefix is `/mingw64` which is mapped to
 `C:\msys64\mingw64`, so after 'make install', the libraries and executable
@@ -66,7 +66,9 @@ will be found at `C:\msys64\mingw64\bin` and the dictionary files at
 `C:\msys64\mingw64\share\link-grammar`.
 
 In case you would like to build with hunspell, invoke `configure` as follows:<br>
-`--with-hunspell-dictdir=`cygpath -m /mingw64/share/myspell/dicts`
+```
+configure --with-hunspell-dictdir=`cygpath -m /mingw64/share/myspell/dicts`
+```
 
 
 Python bindings
@@ -110,7 +112,7 @@ Test results
 All the `tests.py` tests pass, along with all the tests in the `tests`
 directory (including the `multi-java` test) and `make installcheck`.
 
-Here is how to run the `java-multi` directly:<br>
+Here is how to run the `java-multi` test directly:<br>
 `cd tests; make TEST_LOGS=multi-java check-TESTS`
 
 Running
