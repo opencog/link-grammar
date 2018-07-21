@@ -292,8 +292,8 @@ Samba), and still be able to use the custom build steps in the Project files,
 there is a need to "convince" Windows it is a local filesystem.  Else you will
 get "UNC path are not supported." on the batch runs, with bad results. This
 method will also allow the `link-parser.bat` file to run.  (For other solutions
-see tackoverflow.com/questions/9013941). You will need to find out by yourself
-if this makes a security or another problem in your case.
+see https:/stackoverflow.com/questions/9013941). You will need to find out by
+yourself if this makes a security or another problem in your case.
 
 Here is what worked for me:<br>
 Suppose you use `host:/usr/local/src` remotely as share `src`:
