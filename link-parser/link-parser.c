@@ -597,6 +597,14 @@ int main(int argc, char * argv[])
 	const char *ostype = getenv("OSTYPE");
 	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
 		running_under_cygwin = true;
+
+	/* argv encoding is in the current locale. */
+	argv = argv2utf8(argc);
+	if (NULL == argv)
+	{
+		prt_error("Fatal error: Unable to parse command line\n");
+		exit(-1);
+	}
 #endif /* _WIN32 */
 
 #if LATER
