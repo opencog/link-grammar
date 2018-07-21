@@ -44,7 +44,6 @@ mingw-w64-x86_64-sqlite3<br>
 mingw-w64-x86_64-libtre-git<br>
 mingw-w64-x86_64-gettext<br>
 mingw-w64-x86_64-hunspell, mingw-w64-x86_64-hunspell-en (optional)<br>
-libedit-devel (optional but recommended)<br>
 zlib-devel (optional - for the SAT parser)<br>
 
 Java bindings
