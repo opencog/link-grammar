@@ -27,7 +27,7 @@
 /* ======================================================================= */
 
 // WindowsXP workaround - missing GetLocaleInfoEx
-#ifdef _WIN32
+#if _WINVER == 0x501 // XP
 int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, int cchData)
 {
 	int rc = -1;
@@ -47,7 +47,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
 		if (pfnRfc1766ToLcidW)
 		{
-			 LCID lcid;
+			 LCID lcidlink-parser/parser-utilities.c;
 			 if (SUCCEEDED(pfnRfc1766ToLcidW(&lcid, lpLocaleName)))
 			 {
 				rc = GetLocaleInfoW(lcid, LCType, lpLCData, cchData);
@@ -58,7 +58,9 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 
 	return rc;
 }
-#endif //_WIN32
+#else
+#define callGetLocaleInfoEx GetLocaleInfoEx
+#endif // _WINVER == 0x501
 
 /* ======================================================================= */
 
