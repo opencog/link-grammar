@@ -245,8 +245,8 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 
 	if ((unsigned long)(s-lc_string) > (CHAR_BIT*sizeof(lc_value)/LC_BITS))
 	{
-		prt_error("Error: Lower-case part '%s' is too long (%ld)\n",
-					 lc_string, s-lc_string);
+		prt_error("Error: Lower-case part '%s' is too long (%d)\n",
+					 lc_string, (int)(s-lc_string));
 		return false;
 	}
 
