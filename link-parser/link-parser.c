@@ -92,10 +92,6 @@ static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
 
 #ifdef HAVE_EDITLINE
-	#ifdef _WIN32
-		#error __FILE__ ": Cannot use HAVE_EDITLINE "
-		                "(the console already has line editing and history)."
-	#endif /* _WIN32 */
 	pline = lg_readline(prompt);
 #else
 	fprintf(out, "%s", prompt);
