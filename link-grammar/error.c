@@ -218,7 +218,16 @@ static void default_error_handler(lg_errinfo *lge, void *data)
 	}
 
 	char *msgtext = lg_error_formatmsg(lge);
+
+	/* On MINGW64, fprintf() somehow doesn't follow fd redirection in Python
+	 * (see divert_start() in tests.py), but there is no such a problem with
+	 * fputs(). */
+#if 0
 	fprintf(outfile, "%s", msgtext);
+#else
+	fputs(msgtext, outfile);
+#endif
+
 	free(msgtext);
 
 	fflush(outfile); /* Also stderr, in case some OS does some strange thing */
