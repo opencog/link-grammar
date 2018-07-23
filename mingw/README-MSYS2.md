@@ -71,39 +71,25 @@ will be found at `C:\msys64\mingw64\bin` and the dictionary files at
 
 Python bindings
 ---------------
-The bindings for Python2 (package `python2 2.7.13-1` for MSYS) work fine.<br>
+The bindings for Python2 (2.7.15) and Python3 (3.7.0) work fine.<br>
 All the tests pass (when configured with `hunspell` and the SAT parser).
 
-Here is a way to work with it from Windows:
+Here is a way to work with python3 from Windows:
 ```
-C:\>cd msys64\mingw64\bin
-C:\msys64\mingw64\bin>C:\msys64\usr\bin\python2.exe
-Python 2.7.13 (default, Feb 14 2017, 14:46:01)
-[GCC 6.3.0] on msys
+C:\>cd \msys64\mingw64\bin
+C:\msys64\mingw64\bin>.\python3
+Python 3.7.0 (default, Jul 14 2018, 09:27:14)  [GCC 7.3.0 64 bit (AMD64)] on win32
 Type "help", "copyright", "credits" or "license" for more information.
->>> import sys
->>> sys.path.insert(0, 'C:\msys64\mingw64\lib\python2.7\site-packages')
->>> import linkgrammar
+>>> from linkgrammar import *
+>>> print(Sentence("This is a test",Dictionary(),ParseOptions()).parse().next().diagram())
+
+    +----->WV----->+---Ost--+
+    +-->Wd---+-Ss*b+  +Ds**c+
+    |        |     |  |     |
+LEFT-WALL this.p is.v a  test.n
+
 >>>
 ```
-(Alternatively, you can add `C:\>cd msys64\mingw64;C:\msys64\usr\bin` to the PATH
-and set `PYTHONPATH=C:\msys64\mingw64\lib\python2.7\site-packages`).
-
-However the bindings for the MINGW64 Python2 and Python3 don't work. For the MINGW64 version
-`mingw-w64-x86_64-python3-3.6.4-2` (and similarly for mingw-w64-x86_64-python2-2.7.14-5`)
-it even doesn't compile due to problems in its `pyconfig.h`:
-```
-/mingw64/include/python3.6m/pyconfig.h:1546:15: error: two or more data types in declaration specifiers
- #define uid_t int
-/mingw64/include/python3.6m/pyport.h:705:2: error: #error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
- #error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
-```
-
-The binding for the MSYS Python3 (named just `python`) compile, but
-importing `link-grammar` causes the infamous problem of
-`Fatal Python error: PyThreadState_Get: no current thread`.
-(This version also insists that the _clinkparser module name will end with
-`.pyd` and not `dll`.)
 
 Test results
 ------------
