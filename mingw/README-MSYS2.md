@@ -68,11 +68,6 @@ In MINGW64, the default install prefix is `/mingw64` which is mapped to
 will be found at `C:\msys64\mingw64\bin` and the dictionary files at
 `C:\msys64\mingw64\share\link-grammar`.
 
-In case you would like to build with hunspell, invoke `configure` as follows:<br>
-```
-configure --with-hunspell-dictdir=`cygpath -m /mingw64/share/myspell/dicts`
-```
-
 
 Python bindings
 ---------------
