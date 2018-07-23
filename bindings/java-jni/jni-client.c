@@ -6,7 +6,9 @@
  */
 
 #include <jni.h>
+#ifndef _WIN32
 #include <langinfo.h>
+#endif // _WIN32
 #include <locale.h>
 #include <stdio.h>
 #include <string.h>
@@ -107,7 +109,8 @@ static void global_init(JNIEnv *env)
 	dict_is_init = true;
 #endif /* HAVE_STDATOMIC_H */
 
-	const char *codeset, *dict_version;
+#ifndef _WIN32
+	const char *codeset;
 
 	/* Get the locale from the environment...
 	 * perhaps we should someday get it from the dictionary ??
@@ -124,12 +127,13 @@ static void global_init(JNIEnv *env)
 			codeset);
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
+#endif // _WIN32
 
 	dict = dictionary_create_lang(in_language);
 	if (!dict) throwException(env, "Error: unable to open dictionary");
 	else do_test();
 
-	dict_version = linkgrammar_get_dict_version(dict);
+	const char *dict_version = linkgrammar_get_dict_version(dict);
 	prt_error("Info: JNI: dictionary language '%s' version %s\n",
 		in_language, dict_version);
 }
