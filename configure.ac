@@ -975,6 +975,7 @@ echo "
 $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
+	datadir:                        $(eval "echo ${datadir}")
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Regex library:                  ${REGEX_LIBS}
