@@ -93,10 +93,12 @@ LEFT-WALL this.p is.v a  test.n
 
 Test results
 ------------
-All the `tests.py` tests pass, along with all the tests in the `tests`
-directory (including the `multi-java` test) and `make installcheck`.
+All the `tests.py` tests pass, and also `make installcheck` is fine.
+From the tests in the `tests/`directory, the `multi-thread` test fails due to segfault
+at the hunspell library (a fix for that is being investigated). Regretfully, using
+Aspell for now is not an option, as it is not available yet for MinGW.
 
-Here is how to run the `java-multi` test directly:<br>
+BTW, here is how to run the `java-multi` test directly:<br>
 `cd tests; make TEST_LOGS=multi-java check-TESTS`
 
 Running
