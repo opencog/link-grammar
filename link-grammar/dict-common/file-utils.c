@@ -15,13 +15,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>                   // fstat()
 
-#ifndef _WIN32
+#ifndef _MSC_VER
 	#include <unistd.h>
 #else
 	#include <windows.h>
 	#include <Shlwapi.h>                 // PathRemoveFileSpecA()
 	#include <direct.h>                  // getcwd()
-#endif /* _WIN32 */
+#endif /* _MSC_VER */
 
 #include <stdlib.h>
 #include <string.h>
@@ -37,11 +37,8 @@
 	#define DIR_SEPARATOR "/"
 #endif /*_WIN32 */
 
-#define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR[0] == (ch))
-#if !defined(DICTIONARY_DIR)
-	#define DEFAULTPATH NULL
-#else
-	#define DEFAULTPATH DICTIONARY_DIR
+#ifndef DICTIONARY_DIR
+#define DICTIONARY_DIR NULL
 #endif
 
 /* =========================================================== */
@@ -82,8 +79,7 @@ char * join_path(const char * prefix, const char * suffix)
  */
 static char * custom_data_dir = NULL;
 
-static void free_custom_data_dir(void)
-{
+static void free_custom_data_dir(void) {
 	free(custom_data_dir);
 }
 
@@ -105,10 +101,58 @@ char * dictionary_get_data_dir(void)
 		return data_dir;
 	}
 
-#ifdef _WIN32
-	/* Dynamically locate invocation directory of our program.
-	 * Non-ASCII characters are not supported (files will not be found). */
-	char prog_path[MAX_PATH_NAME];
+	return NULL;
+}
+
+#ifdef _MSC_VER
+static const char *get_dictionary_dir(bool);
+static void free_dictionary_dir(void)
+{
+	get_dictionary_dir(false);
+}
+#endif // _MSC_VER
+
+/**
+ * Return the path of the system dictionary directory.
+ * If DICTIONARY_DIR is an absolute path (must be so on POSIX systems)
+ * then it is directly used.
+ * On Windows, a relative DICTIONARY_DIR is combined with the location
+ * of the invocation directory of our program.
+ * Note: The directory separators in the path are always supposed to be
+ * forward slashes.
+ * @param find If true, find the system dictionary directory; else free it.
+ */
+static const char *get_dictionary_dir(bool find)
+{
+#ifndef _MSC_VER
+		return DICTIONARY_DIR;
+#else
+
+	/* DICTIONARY_DIR, if defined, can be relative or absolute.  An
+	 * absolute path must start with a drive letter or be a UNC path , and
+	 * a relative path should not start with a drive letter.
+	 * In case it is not so, the result is undefined.
+	 * If it is a relative path, it is concatenated to the program
+	 * location. */
+	static char *dictionary_dir;
+	if (!find)
+	{
+		free((void *)dictionary_dir);
+		return NULL;
+	}
+
+	if (NULL != dictionary_dir) return dictionary_dir;
+	dictionary_dir = (char *)((NULL == DICTIONARY_DIR) ? "" : DICTIONARY_DIR);
+	if (0 == strncmp(dictionary_dir, "\\\\", 2)) return DICTIONARY_DIR;
+	if ((strlen(dictionary_dir) > 2) && (0 == strncmp(dictionary_dir+1, ":\\", 2)))
+		return DICTIONARY_DIR;
+
+	/* Here DICTIONARY_DIR is a relative path (to be concatenated to the
+	 * location of our program), or an absolute path w/o a drive letter (to
+	 * be prepended with the drive letter of our program).
+	 * Non-ASCII characters in the program location are not supported
+	 * (files will not be found). */
+	char prog_path[MAX_PATH_NAME] = "";
 
 	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
 	{
@@ -116,10 +160,10 @@ char * dictionary_get_data_dir(void)
 	}
 	else
 	{
-		if (NULL == prog_path)
+		if ('\0' == prog_path[0])
 		{
 			/* Can it happen? */
-			prt_error("Warning: GetModuleFileName returned a NULL program path!\n");
+			prt_error("Warning: GetModuleFileName didn't return program path!\n");
 		}
 		else
 		{
@@ -135,14 +179,57 @@ char * dictionary_get_data_dir(void)
 					" (containing unsupported character)" : "";
 
 				lgdebug(D_USER_FILES, "Debug: Directory of executable: %s%s\n",
-				        unsupported, prog_path);
-				data_dir = safe_strdup(prog_path);
+				        prog_path, unsupported);
+
+				if (('\0' == unsupported[0]) && (strlen(prog_path) > 3))
+				{
+					if ((NULL == DICTIONARY_DIR) || ('\0' == dictionary_dir[0]))
+					{
+						dictionary_dir = prog_path;
+					}
+					else if (DIR_SEPARATOR[0] == dictionary_dir[0])
+					{
+						/* DICTIONARY_DIR is an absolute path without a drive.
+						 * Prepend the drive or the host of our program location. */
+						size_t prefix_len = 0;
+
+						if (prog_path[1] == ':')
+						{
+							/* "X:path" */
+							prefix_len = 2;
+						}
+						else
+						{
+							/* \\host\path */
+							const char *hostend = strchr(prog_path+3, '\\');
+							if (NULL != hostend)
+								prefix_len = (size_t)(hostend - prog_path + 1);
+						}
+						size_t len = prefix_len + +strlen(dictionary_dir) + 1;
+						dictionary_dir = malloc(len);
+						strncpy(dictionary_dir, prog_path, prefix_len);
+						strcpy(dictionary_dir + prefix_len, DICTIONARY_DIR);
+
+						atexit(free_dictionary_dir);
+					}
+					else
+					{
+						size_t len = strlen(prog_path)+1+strlen(dictionary_dir)+1;
+						dictionary_dir = malloc(len);
+						strcpy(dictionary_dir, prog_path);
+						strcat(dictionary_dir, "\\");
+						strcat(dictionary_dir, DICTIONARY_DIR);
+
+						atexit(free_dictionary_dir);
+					}
+
+				}
 			}
 		}
 	}
-#endif /* _WIN32 */
 
-	return data_dir;
+	return dictionary_dir;
+#endif /* _MSC_VER */
 }
 
 static void *dict_file_open(const char *fullname, const void *how)
@@ -184,6 +271,7 @@ void * object_open(const char *filename,
 	char *completename = NULL;
 	void *fp = NULL;
 	char *data_dir = NULL;
+	const char *dictionary_dir = NULL;
 	const char **path = NULL;
 
 	if (NULL == filename)
@@ -197,14 +285,17 @@ void * object_open(const char *filename,
 
 	if (NULL == path_found)
 	{
+		dictionary_dir = get_dictionary_dir(true);
 		data_dir = dictionary_get_data_dir();
 		if (verbosity_level(D_USER_FILES))
 		{
 			char cwd[MAX_PATH_NAME];
 			char *cwdp = getcwd(cwd, sizeof(cwd));
 			prt_error("Debug: Current directory: %s\n", NULL == cwdp ? "NULL": cwdp);
-			prt_error("Debug: Last-resort data directory: %s\n",
+			prt_error("Debug: Data directory: %s\n",
 					  data_dir ? data_dir : "NULL");
+			prt_error("Debug: System data directory: %s\n",
+					  dictionary_dir ? dictionary_dir : "NULL");
 		}
 	}
 
@@ -235,7 +326,7 @@ void * object_open(const char *filename,
 			"..",
 			".." DIR_SEPARATOR "data",
 			data_dir,
-			DEFAULTPATH,
+			dictionary_dir,
 		};
 		size_t i = sizeof(dictpath)/sizeof(dictpath[0]);
 
