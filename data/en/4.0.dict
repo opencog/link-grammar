@@ -3188,7 +3188,7 @@ wouldn't wouldn’t:
 % e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
 % The parenthetical remarks must be offset by parenthesis, and
 % must link back to main clause with MV or MX.
-=.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
+=.v <.v >.v =<.v >=.v ==.v ":.eq" eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
 equiv.v sim.v simeq.v approx.v ~.v ～.v
 equals.eq
 is_less_than is_greater_than is_equal_to
@@ -3223,6 +3223,9 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % "adverb" use, e.g. "< 10" for "less than 10"
 =.eq <.e =<.e <=.e >.e >=.e +.e -.e <<.e >>.e x.e:
    EN+;
+
+mean.eq avg.eq avg..eq average.eq sum.eq difference.eq total.eq:
+  EQt+;
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates
