@@ -6979,7 +6979,7 @@ care_of c/o:
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or <fronted>);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or <fronted>);
 
-versus v. vs. vs: (J+ & Mp-) or (G- & G+);
+versus.r v..r v.r vs..r vs.r: (J+ & Mp-) or (G- & G+);
 
 worth.p: (Mp- & (J+ or OF+)) or (Paf- & Mgp+) or (Pa- & (J+ or B-));
 opposite.p: J+ & <prep-main-b>;
@@ -8010,7 +8010,8 @@ and.j-s:
 
 % [Ma-]: it  is more grammatically correct to have commas ...
 % {EBb+}: "blah but not blah", "blah and not blah"
-but.j-m and.j-m:
+% vs.: "We examined the setting (urban vs rural)"
+but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
   ({Xd-} & MJla- & {EBb+} & MJra+ & <post-nom-a>) or
   ({Xd-} & MJlp- & {EBb+} & MJrp+ & <post-nom-p>) or
   ({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
