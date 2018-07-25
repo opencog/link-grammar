@@ -3624,7 +3624,9 @@ I say that X plus Y equals Z
 2 + 2 = 4
 539 + 22 = 561
 
-
+survivors differ from comparisons (5 ± 1 vs. 12 ± 2)
+survivors differ from comparisons (mean: 5 ± 1 vs. 12 ± 2 respectively)
+survivors differ from comparisons (mean: 5 ± 1 vs. 12 ± 2, respectively)
 
 % Ordinals as clause openers
 first on our list is this item.

@@ -1893,7 +1893,7 @@ not_enough:
     or MVp- or Pp- or FM-
     or (Xc+ & Xd- & (MVx- or MX-))));
 
-and.j-ru:
+and.j-ru vs.j-ru vs..j-ru versus.j-ru v.j-ru v..j-ru:
   (NIfn- & {NIr-} & NItn+ & (NM- or Jp- or
   (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
   ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
@@ -3211,8 +3211,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % By contrast, EQrr can only attach to relations (=, < > etc.)
 +.eq -.eq *.eq "/.eq" x.eqn plus.eq minus.eq times.eq divided_by
 ±.eq "+/-.eq":
-  (EQt+ & EQt- & (EQrr- or EQrr+ or AN+))
-  or (EQt+ & Xc+ & EQt- & Xd- & (EQrr- or EQrr+ or AN+))
+  (EQt+ & EQt- & (EQrr- or EQrr+ or AN+ or NIfn+ or NItn-))
+  or (EQt+ & Xc+ & EQt- & Xd- & (EQrr- or EQrr+ or AN+ or NIfns+ or NItn-))
   or (EQt- & Xd- & EQt+ & EQt- & Xc+)
   or (Xd- & EQt+ & EQt- & Xc+ & EQt+);
 
