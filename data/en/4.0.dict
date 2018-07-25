@@ -3209,7 +3209,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % Binary operators, strict:
 % Here EQt attaches only to terms, which may be numbers or letters.
 % By contrast, EQrr can only attach to relations (=, < > etc.)
-+.eq -.eq *.eq "/.eq" x.eqn plus.eq minus.eq times.eq divided_by:
++.eq -.eq *.eq "/.eq" x.eqn plus.eq minus.eq times.eq divided_by
+±.eq "+/-.eq":
   (EQt+ & EQt- & (EQrr- or EQrr+ or AN+))
   or (EQt+ & Xc+ & EQt- & Xd- & (EQrr- or EQrr+ or AN+))
   or (EQt- & Xd- & EQt+ & EQt- & Xc+)

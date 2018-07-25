@@ -27,7 +27,7 @@ _ ‐ ‑ ‒ – — ― … ━ – ー ‐ 、
 _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
   : LPUNC+;
 
-% Split words that contain the following toekns in the middle of them.
+% Split words that contain the following tokens in the middle of them.
 % We don't want comma's in this list; it tends to mess up numbers. e.g.
 % "The enzyme has a weight of 125,000 to 130,000"
 % We don't want colon's in this list, it tends to mess up time
@@ -36,7 +36,7 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 %
 % TODO: this list should be expanded with other "typical"(?) junk
 % that is commonly (?) in broken texts.
--- ‒ – — ― "(" ")" "[" "]" ... ";": MPUNC+;
+-- ‒ – — ― "(" ")" "[" "]" ... ";" ±: MPUNC+;
 
 % Suffixes
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
