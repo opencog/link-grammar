@@ -10,12 +10,12 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef HAVE_HUNSPELL
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "link-includes.h"
 #include "spellcheck.h"
-
-#ifdef HAVE_HUNSPELL
 
 #ifndef HUNSPELL_DICT_DIR
 #define HUNSPELL_DICT_DIR (char *)0
