@@ -30,7 +30,7 @@ echo %~f0: Info: Creating %lgcmd%.bat in %cd%
 	echo REM Copy it to a directory in your PATH and modify it if needed.
 	echo.
 
-	echo REM The following prepends LG_DDLPATH from msvc14\Local.props
+	echo REM The following prepends LG_DDLPATH from msvc\Local.props
 	echo set "PATH=%LG_DLLPATH%;%%PATH%%"
 	echo.
 	echo REM For USE_WORDGRAPH_DISPLAY
