@@ -2615,12 +2615,15 @@ per "/.per": Us+ & Mp-;
 % XXX TODO: do the above, as they show up...
 %
 % plural-or-infinitive macro;
-% "Scientists sometimes may repeat experiments or use groups."
+%   "Scientists sometimes may repeat experiments or use groups."
 %   Want "groups" to connect to "use", not "and".
+% (($1) or [()]) & <verb-and-pl+>):
+%    "they might supplement or replace anticoagulants"
+%    The first verb is expecting an object, but there isn't one.
 define(`VERB_PLI',`'
   ((<verb-pl,i> & ($1)) or
   (<verb-and-pl-> & (($1) or ())) or
-  (($1) & <verb-and-pl+>)))
+  ((($1) or [()]) & <verb-and-pl+>)))
 
 % Generic singular intransitive form
 define(`VERB_x_S',`'
