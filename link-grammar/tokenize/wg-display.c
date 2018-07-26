@@ -588,10 +588,10 @@ bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 		}
 		else
 		{
-			if (fprintf(gvf, "%s", wgds) == -1)
+			if (fputs(wgds, gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: %s(): print to %s failed: %s\n",
+				prt_error("Error: %s(): fputs() to %s failed: %s\n",
 							 __func__, gvf_name, strerror(errno));
 			}
 			if (fclose(gvf) == EOF)
