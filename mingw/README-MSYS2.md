@@ -104,5 +104,7 @@ BTW, here is how to run the `java-multi` test directly:<br>
 Running
 -------
 On MINGW64, just invoke `link-parser`.<br>
-In Windows, put `C:\msys64\mingw64\bin` in your PATH (or cd to it), then invoke `link-parser`.
+In Windows, put `C:\msys64\mingw64\bin` in your PATH (or `cd` to it), then invoke `link-parser`.
+On both MINGW64 and Windows console, you can invoke `mingw/link-parser.bat`, which also
+sets PATH for the `dot` and `PhotoViewer` commands (needed for the wordgraph display feature).
 For more details see [RUNNING the program](/README.md#running-the-program).
