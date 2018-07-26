@@ -429,6 +429,7 @@ static void wordgraph_show_cancel(void)
  */
 static bool x_popen(const char *cmd, const char *wgds)
 {
+	lgdebug(+3, "Invoking: %s\n", cmd);
 	FILE *const cmdf = popen(cmd, "w");
 	bool rc = true;
 
@@ -439,9 +440,9 @@ static bool x_popen(const char *cmd, const char *wgds)
 	}
 	else
 	{
-		if (fprintf(cmdf, "%s", wgds) == -1)
+		if (fputs(wgds, cmdf) == EOF) /* see default_error_handler() */
 		{
-			prt_error("Error: print to display command: %s\n", strerror(errno));
+			prt_error("Error: x_popen(): fputs() error: %s\n", strerror(errno));
 			rc = false;
 		}
 		if (pclose(cmdf) == -1)
