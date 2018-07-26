@@ -447,7 +447,7 @@ static bool x_popen(const char *cmd, const char *wgds)
 		}
 		if (pclose(cmdf) == -1)
 		{
-			prt_error("Error: pclose of display command: %s\n", strerror(errno));
+			prt_error("Error: x_popen(): pclose() error: %s\n", strerror(errno));
 			rc = false;
 		}
 	}
@@ -583,7 +583,7 @@ bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 		gvf = fopen(gvf_name, "w");
 		if (NULL == gvf)
 		{
-			prt_error("Error: %s(): open %s failed: %s\n",
+			prt_error("Error: %s(): fopen() of %s failed: %s\n",
 						 __func__, gvf_name, strerror(errno));
 			gvf_error = true;
 		}
@@ -598,7 +598,7 @@ bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 			if (fclose(gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: %s(): close %s failed: %s\n",
+				prt_error("Error: %s(): fclose() of %s failed: %s\n",
 							  __func__, gvf_name, strerror(errno));
 			}
 		}
