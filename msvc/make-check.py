@@ -25,7 +25,7 @@ import re
 local_prop_file = 'Local.props' # In this directory
 scriptdir = r'..\bindings\python-examples'
 pyscript = 'tests.py'
-os.environ["LINK_GRAMMAR_DATA"] = r'..' # "data" in the parent directory
+#os.environ["LINK_GRAMMAR_DATA"] = r'../data'
 
 def error(msg):
     if msg:
