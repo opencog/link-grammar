@@ -23,6 +23,10 @@ EXTRA_DIST =         \
    sentence-check.py \
    parses-en.txt     \
    parses-lt.txt     \
+   parses-pos-en.txt \
+   parses-pos-he.txt \
+   parses-pos-ru.txt \
+   parses-pos-spell-en.txt \
    parses-quotes-en.txt \
    parses-sat-en.txt \
    lg_testutils.py   \
