@@ -80,7 +80,7 @@ char * join_path(const char * prefix, const char * suffix)
 	prel = strlen(path);
 	if (0 < prel && (path[prel-1] != '/') && (path[prel-1] != '\\'))
 	{
-		path[prel] = DIR_SEPARATOR[0];
+		path[prel] = '/';
 		path[prel+1] = '\0';
 	}
 	strcat(path, suffix);
@@ -339,9 +339,9 @@ void * object_open(const char *filename,
 		{
 			path_found,
 			".",
-			"." DIR_SEPARATOR "data",
+			"./data",
 			"..",
-			".." DIR_SEPARATOR "data",
+			"../data",
 			data_dir,
 			dictionary_dir,
 		};
