@@ -866,9 +866,9 @@ int main(int argc, char * argv[])
 					case 3:
 						{
 							/* Use esoteric flags from the test user variable. */
-							const char wg[] = ",wg";
+							const char wg[] = ",wg:";
 							const char *s = strstr(test, wg);
-							if (NULL != s) wg_display_flags = s+2;
+							if (NULL != s) wg_display_flags = s+4;
 						}
 						break;
 					default:
