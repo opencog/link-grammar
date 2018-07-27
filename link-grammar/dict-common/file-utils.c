@@ -47,6 +47,23 @@
 #define MAX_PATH_NAME 200     /* file names (including paths)
                                  should not be longer than this */
 
+/**
+ * Find the location of the last directory separator (Windows/POSIX).
+ * Return NULL if none found.
+ * It doesn't modify its argument, but const is not used because
+ * it is to be called also with non-const argument.
+ */
+char *find_last_dir_separator(char *path)
+{
+	char *dirsep = NULL;
+	size_t pathlen = strlen(path);
+
+	for (size_t p = pathlen; p > 0; p--)
+		if (('/' == path[p]) || ('\\' == path[p])) return &path[p];
+
+	return dirsep;
+}
+
 char * join_path(const char * prefix, const char * suffix)
 {
 	char * path;
@@ -61,7 +78,7 @@ char * join_path(const char * prefix, const char * suffix)
 	 * only if the prefix isn't already terminated by a path sep.
 	 */
 	prel = strlen(path);
-	if (0 < prel && path[prel-1] != DIR_SEPARATOR[0])
+	if (0 < prel && (path[prel-1] != '/') && (path[prel-1] != '\\'))
 	{
 		path[prel] = DIR_SEPARATOR[0];
 		path[prel+1] = '\0';
@@ -354,10 +371,11 @@ void * object_open(const char *filename,
 			prt_error("Info: Dictionary found at %s\n", pfnd);
 		for (size_t i = 0; i < 2; i++)
 		{
-			char *root = strrchr(pfnd, DIR_SEPARATOR[0]);
+			char *root = find_last_dir_separator(pfnd);
 			if (NULL != root) *root = '\0';
 		}
 		path_found = pfnd;
+		lgdebug(D_USER_FILES, "Debug: Using dictionary path \"%s\"\n", path_found);
 	}
 
 	free(data_dir);

@@ -112,7 +112,7 @@ dictionary_six_str(const char * lang,
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
-	t = strrchr (lang, '/');
+	t = find_last_dir_separator((char *)lang);
 	t = (NULL == t) ? lang : t+1;
 	dict->lang = string_set_add(t, dict->string_set);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
