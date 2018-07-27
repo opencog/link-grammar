@@ -10206,11 +10206,13 @@ changequote dnl
 %  SJl- & EB+ & SJr+ & Ou-: "Make love, not war"
 ",":
   ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
-  or [<semicol>]
-  or <comma-adj-conjunction>
+  or [<semicol>];
+
+",.j":
+  <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
-  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & Ou-)
+  or (SJl- & EBb+ & SJr+ & Ou-)
   or (SJl- & J- & SJr+)
   or (SJl- & SJr+ & SJl+);
 
