@@ -601,6 +601,10 @@ int main(int argc, char * argv[])
 		prt_error("Fatal error: Unable to parse command line\n");
 		exit(-1);
 	}
+
+#ifdef _MSC_VER
+	_set_printf_count_output(1); /* enable %n support for display_1line_help()*/
+#endif /* _MSC_VER */
 #endif /* _WIN32 */
 
 #if LATER
