@@ -733,6 +733,10 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 class GSQLDictTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        if os.name == 'nt' and \
+                -1 == clg.linkgrammar_get_configuration().lower().find('mingw'):
+            raise unittest.SkipTest("No SQL dict support yet on the MSVC build")
+
         #clg.parse_options_set_verbosity(clg.parse_options_create(), 3)
         cls.d, cls.po = Dictionary(lang='demo-sql'), ParseOptions()
 
