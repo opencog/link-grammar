@@ -10185,10 +10185,17 @@ changequote dnl
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
-% because the modifier my be long to a following phrase.
+% because the modifier may belong to a following phrase.
 % e.g. "The blah, soon to be blah, will be blah." should not
 % get an EBx link to "soon".
 % XXX the correct solution to this is to add a new domain rule ! XXX
+
+",":
+  ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
+  or [<semicol>];
+
+% ,.j
+% Comma as a form of a conjunction (thus the .j subscript).
 %
 % Comma can conjoin nouns only if used in a list of 3 or more items:
 % "This, that and the other thing"
@@ -10204,9 +10211,6 @@ changequote dnl
 %   complexity of and.j-n here, since the commas force this.
 %
 %  SJl- & EB+ & SJr+ & Ou-: "Make love, not war"
-",":
-  ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
-  or [<semicol>];
 
 ",.j":
   <comma-adj-conjunction>
