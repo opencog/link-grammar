@@ -12275,6 +12275,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
+  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & Ou-)
   or (SJl- & J- & SJr+)
   or (SJl- & SJr+ & SJl+);
 

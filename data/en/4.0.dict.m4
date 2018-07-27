@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.5.1 (formatted as V5v5v1+)
-<dictionary-version-number>: V5v5v1+;
+% Dictionary version number is 5.5.2 (formatted as V5v5v2+)
+<dictionary-version-number>: V5v5v2+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -10202,12 +10202,15 @@ changequote dnl
 % SJl- & J- & SJr+: "by the A, the B..."
 %   This is a tiny part of and.j-n, but we do not want the full
 %   complexity of and.j-n here, since the commas force this.
+%
+%  SJl- & EB+ & SJr+ & Ou-: "Make love, not war"
 ",":
   ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>]
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
+  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & Ou-)
   or (SJl- & J- & SJr+)
   or (SJl- & SJr+ & SJl+);
 
