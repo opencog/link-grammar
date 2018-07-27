@@ -21,6 +21,7 @@ EXTRA_DIST =         \
    README.md         \
    example.py        \
    sentence-check.py \
+   parses-demo-sql.txt \
    parses-en.txt     \
    parses-lt.txt     \
    parses-pos-en.txt \
