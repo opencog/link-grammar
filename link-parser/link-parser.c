@@ -836,17 +836,7 @@ int main(int argc, char * argv[])
 		{
 			sent = sentence_create(input_string, dict);
 
-			/* First parse with cost 0 or 1 and no null links */
-			// parse_options_set_disjunct_cost(opts, 2.7);
-			parse_options_set_min_null_count(opts, 0);
-			parse_options_set_max_null_count(opts, 0);
-			parse_options_reset_resources(opts);
-
-			num_linkages = sentence_parse(sent, opts);
-
-			/* num_linkages is negative only on a hard-error;
-			 * typically, due to a zero-length sentence.  */
-			if (num_linkages < 0)
+			if (sentence_split(sent, opts) < 0)
 			{
 				sentence_delete(sent);
 				sent = NULL;
@@ -878,6 +868,24 @@ int main(int argc, char * argv[])
 				}
 				sentence_display_wordgraph(sent, wg_display_flags);
 			}
+
+			/* First parse with cost 0 or 1 and no null links */
+			// parse_options_set_disjunct_cost(opts, 2.7);
+			parse_options_set_min_null_count(opts, 0);
+			parse_options_set_max_null_count(opts, 0);
+			parse_options_reset_resources(opts);
+
+			num_linkages = sentence_parse(sent, opts);
+
+			/* num_linkages is negative only on a hard-error;
+			 * typically, due to a zero-length sentence.  */
+			if (num_linkages < 0)
+			{
+				sentence_delete(sent);
+				sent = NULL;
+				continue;
+			}
+
 #if 0
 			/* Try again, this time omitting the requirement for
 			 * definite articles, etc. This should allow for the parsing
