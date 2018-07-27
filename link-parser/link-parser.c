@@ -605,6 +605,8 @@ int main(int argc, char * argv[])
 #ifdef _MSC_VER
 	_set_printf_count_output(1); /* enable %n support for display_1line_help()*/
 #endif /* _MSC_VER */
+
+	win32_set_utf8_output();
 #endif /* _WIN32 */
 
 #if LATER
@@ -674,10 +676,6 @@ int main(int argc, char * argv[])
 			print_usage(stderr, argv[0], -1);
 		}
 	}
-
-#ifdef _WIN32
-	win32_set_utf8_output();
-#endif /* _WIN32 */
 
 	if (language && *language)
 	{
