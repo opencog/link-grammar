@@ -77,6 +77,87 @@ class AADictionaryTestCase(unittest.TestCase):
         self.assertRaises(LG_Error, Dictionary, dummy_lang + '2')
         self.assertIn(dummy_lang + '2', save_stderr.divert_end())
 
+# Check absolute and relative dictionary access.
+# Check also that the dictionary language is set correctly.
+#
+# We suppose here that this test program is located somewhere in the source
+# directory, 1 to 4 levels under it, that the data directory is named 'data',
+# and that it has a parallel directory called 'link-grammar'.
+DATA_DIR = 'data'
+PARALLEL_DIR = 'link-grammar'
+class ABDictionaryLocationTestCase(unittest.TestCase):
+    abs_datadir = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.po = ParseOptions(verbosity=0)
+        cls.original_directory = os.getcwd()
+
+        # Find the 'data' directory in the source directory.
+        os.chdir(clg.test_data_srcdir)
+        up = ''
+        for _ in range(1, 4):
+            up = '../' + up
+            datadir = up + DATA_DIR
+            if os.path.isdir(datadir):
+                break
+            datadir = ''
+
+        if not datadir:
+            assert False, 'Cannot find source directory dictionary data'
+        cls.abs_datadir = os.path.abspath(datadir)
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.po
+        os.chdir(cls.original_directory)
+
+    def test_open_absolute_path(self):
+        d = Dictionary(self.abs_datadir + '/en')
+        self.assertEqual(str(d), 'en')
+        if os.name == 'nt':
+            d = Dictionary(self.abs_datadir + r'\en')
+            self.assertEqual(str(d), 'en')
+
+    def test_open_relative_path_from_data_directory(self):
+        os.chdir(self.abs_datadir)
+        d = Dictionary('./en')
+        self.assertEqual(str(d), 'en')
+        if os.name == 'nt':
+            d = Dictionary(r'.\en')
+            self.assertEqual(str(d), 'en')
+
+    def test_open_lang_from_data_directory(self):
+        os.chdir(self.abs_datadir)
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
+    # Test use of the internal '..' path
+    def test_open_from_a_language_directory(self):
+        os.chdir(self.abs_datadir + '/ru')
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
+    def test_open_relative_path_from_data_parent_directory(self):
+        os.chdir(self.abs_datadir + '/..')
+        d = Dictionary('data/en')
+        self.assertEqual(str(d), 'en')
+        if os.name == 'nt':
+            d = Dictionary(r'data\en')
+            self.assertEqual(str(d), 'en')
+
+    # Test use of the internal './data' path.
+    def test_open_from_data_parent_directory(self):
+        os.chdir(self.abs_datadir + '/..')
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
+    # Test use of the internal '../data' path.
+    def test_open_from_a_parallel_directory(self):
+        os.chdir(self.abs_datadir + '/../' + PARALLEL_DIR)
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
         po = ParseOptions()
