@@ -86,6 +86,18 @@ esac
 AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
+AC_MSG_CHECKING([for Cygwin])
+case "$host_os" in
+  *cygwin*)
+    cygwin=yes
+    ;;
+  *)
+    cygwin=no
+    ;;
+esac
+AC_MSG_RESULT([$cygwin])
+AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
+
 AC_MSG_CHECKING([for 64-bit Apple OSX])
 case "$host_os" in
   darwin*)

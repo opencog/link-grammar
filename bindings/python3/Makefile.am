@@ -75,9 +75,12 @@ _clinkgrammar_la_CPPFLAGS =       \
 # symlink to it of an unversioned name (at least up and including libtool
 # 2.4.6).  This is bad for Python modules, as they must have an identifier
 # name.
+# On MinGW, Python DLLs end with ".pyd". But Cygwin needs them with ".dll".
 if OS_WIN32
 AVOID_VERSION = -avoid-version
+if !OS_CYGWIN
 PYMODULE_EXT = -shrext .pyd
+endif
 endif
 _clinkgrammar_la_LDFLAGS =                        \
     -version-info @VERSION_INFO@ $(AVOID_VERSION) \
