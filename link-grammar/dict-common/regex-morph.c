@@ -77,6 +77,7 @@ int compile_regexs(Regex_node *re, Dictionary dict)
 			if (rc)
 			{
 				prt_regerror("Failed to compile regex", re, rc);
+				re->re = NULL;
 				return rc;
 			}
 
