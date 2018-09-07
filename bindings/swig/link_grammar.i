@@ -24,6 +24,10 @@
 %mutable;
 %rename("%s") "";                    /* Grab everything for the rest of file. */
 
+// Set a default newfree typemap.
+%typemap(newfree) char * {
+   free($1);
+}
 
 const char * linkgrammar_get_version(void);
 const char * linkgrammar_get_configuration(void);
