@@ -1251,7 +1251,16 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		 */
 		if (is_number(dict->token))
 		{
-			nl->cost += atof(dict->token);
+			double cost;
+			if (strtodC(dict->token, &cost))
+			{
+				nl->cost += cost;
+			}
+			else
+			{
+				warning(dict, "Invalid cost (using 1.0)\n");
+				nl->cost += 1.0;
+			}
 			if (!link_advance(dict)) {
 				return NULL;
 			}

@@ -658,6 +658,43 @@ char * get_default_locale(void)
 	return safe_strdup(locale);
 }
 
+static locale_t get_C_LC_NUMERIC(void)
+{
+	static locale_t locobj;
+
+	if ((locale_t)0 != locobj) return locobj;
+
+#ifdef _WIN32
+	locobj = _create_locale(LC_NUMERIC, "C");
+#else
+	locobj = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
+#endif /* _WIN32 */
+
+	return locobj;
+}
+
+bool strtodC(const char *s, double *r)
+{
+	char *err;
+
+#ifdef HAVE_LOCALE_T
+	double val = strtod_l(s, &err, get_C_LC_NUMERIC());
+#else
+	static bool is_lc_numeric_c;
+	if (!is_lc_numeric_c)
+	{
+		is_lc_numeric_c = true;
+		setlocal(LC_NUMERIC, "C");
+	}
+	double val = strtod(s, &err);
+#endif /* HAVE_LOCALE_T */
+
+	if ('\0' != *err) return false; /* *r unaffected */
+
+	*r = val;
+	return true;
+}
+
 /* ============================================================= */
 /* Alternatives utilities */
 
