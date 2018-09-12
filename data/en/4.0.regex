@@ -70,8 +70,8 @@
 <ALL-UPPER>: /^[A-Z]([A-Z])+$/
 
 % Greek letters with numbers
-<GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
-<PL-GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
+<GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)-?[0-9]+$/
+<PL-GREEK-LETTER-AND-NUMBER>: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s-?[0-9]+$/
 
 % Some "safe" derived units. Simple units are in dictionary.
 % The idea here is for the regex to match something that is almost
