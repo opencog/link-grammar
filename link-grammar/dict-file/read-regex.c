@@ -141,7 +141,10 @@ int read_regex_file(Dictionary dict, const char *file_name)
 			}
 			prev = c;
 			c = fgetc(fp);
-			regex[i++] = c;
+			if ((c == '/') && (prev == '\\'))
+				regex[i-1] = '/'; /* \/ is undefined */
+			else
+				regex[i++] = c;
 		}
 		while ((c != '/' || prev == '\\') && (c != EOF));
 		regex[i-1] = '\0';
