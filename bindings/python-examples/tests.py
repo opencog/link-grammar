@@ -322,6 +322,8 @@ class DBasicParsingTestCase(unittest.TestCase):
         linkage = self.parse_sent("This is a silly sentence.")[0]
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
+    # The following test is using the locale "tr_TR.UTF-8".
+    # It is skipped if it is not installed in the system.
     def test_dictionary_locale_definition(self):
         if is_python2(): # Locale stuff seems to be broken
             raise unittest.SkipTest("Test not supported with Python2")
@@ -332,7 +334,11 @@ class DBasicParsingTestCase(unittest.TestCase):
         #print('toupper hij:', 'hij'.upper())
 
         tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
-        locale.setlocale(locale.LC_CTYPE, tr_locale)
+        try:
+            locale.setlocale(locale.LC_CTYPE, tr_locale)
+        except locale.Error as e:
+            raise unittest.SkipTest("Locale {}: {}".format(tr_locale, e))
+
         #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
 
         # python2: prints HiJ (lowercase small i in the middle)
