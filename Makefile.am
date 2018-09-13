@@ -55,4 +55,5 @@ EXTRA_DIST =            \
 	mingw/README-Cygwin.md                 \
 	mingw/README-MSYS.md                   \
 	mingw/README-MSYS2.md                  \
+	mingw/link-parser.bat                  \
 	TODO
