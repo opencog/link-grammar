@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
+    <PKGDATADIR>"..\\data"</PKGDATADIR>
     <DEFS>USE_WORDGRAPH_DISPLAY;</DEFS>
   </PropertyGroup>
   <PropertyGroup>
@@ -9,10 +10,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>$(DEFS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(DEFS);DICTIONARY_DIR=$(PKGDATADIR);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <BuildMacro Include="PKGDATADIR">
+      <Value>$(PKGDATADIR)</Value>
+    </BuildMacro>
     <BuildMacro Include="DEFS">
       <Value>$(DEFS)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>

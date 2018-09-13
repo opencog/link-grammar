@@ -25,7 +25,7 @@ import re
 local_prop_file = 'Local.props' # In this directory
 scriptdir = r'..\bindings\python-examples'
 pyscript = 'tests.py'
-os.environ["LINK_GRAMMAR_DATA"] = r'..' # "data" in the parent directory
+#os.environ["LINK_GRAMMAR_DATA"] = r'../data'
 
 def error(msg):
     if msg:
@@ -42,9 +42,9 @@ def read_props(vsfile):
     macdef_re = re.compile(r'<(\w+)>([^<]*)<')
     for line in vs_f:
         read_m = re.search(macdef_re, line)
-        if None == read_m:
+        if read_m is None:
             continue
-        if 2 != len(read_m.groups()):
+        if len(read_m.groups()) != 2:
             error('Bad line in "{}": {}'.format(vsfile, line))
         local_prop[read_m.group(1)] = read_m.group(2)
     if not local_prop:
@@ -57,20 +57,20 @@ def get_prop(prop, default=NODEFAULT):
     Resolve a macro definition.
     """
     prop_val = local_prop.get(prop, None)
-    if None == prop_val:
+    if prop_val is None:
         if default is NODEFAULT:
             error('Property "{}" not found in {}' .format(prop, local_prop_file))
         return default
 
     while True:
         prop_m = re.search(prop_re, prop_val)
-        if None == prop_m:
+        if prop_m is None:
             break
         prop_rep = prop_m.group(1)
         prop_repval = local_prop.get(prop_rep, None)
-        if None == prop_repval:
+        if prop_repval is None:
             prop_repval = os.getenv(prop_rep)
-            if None == prop_repval:
+            if prop_repval is None:
                 error('Property "{}" not found in "{}" and also not in the environment'. \
                       format(prop_rep, local_prop_file))
         prop_val = str.replace(prop_val, '$('+prop_rep+')', prop_repval)
@@ -89,7 +89,7 @@ if len(sys.argv) < 2:
     error('Missing argument')
 
 pyargs = ''
-if len(sys.argv[1]) > 0 and sys.argv[1][0] == '-':
+if sys.argv[1] and sys.argv[1][0] == '-':
     pyargs = sys.argv.pop(1)
 
 if len(sys.argv) < 2:

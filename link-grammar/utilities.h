@@ -103,6 +103,7 @@ void *alloca (size_t);
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
+#undef rand_r  /* Avoid (a bad) definition on MinGW */
 int rand_r(unsigned int *);
 #ifndef __MINGW32__
 /* No strtok_s in XP/2003 and their strtok_r is incompatible.
@@ -130,6 +131,7 @@ typedef SSIZE_T ssize_t;
 #define iswspace_l  _iswspace_l
 #define towlower_l  _towlower_l
 #define towupper_l  _towupper_l
+#define strtod_l    _strtod_l
 #define freelocale _free_locale
 #endif /* HAVE_LOCALE_T */
 

@@ -92,10 +92,6 @@ static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
 
 #ifdef HAVE_EDITLINE
-	#ifdef _WIN32
-		#error __FILE__ ": Cannot use HAVE_EDITLINE "
-		                "(the console already has line editing and history)."
-	#endif /* _WIN32 */
 	pline = lg_readline(prompt);
 #else
 	fprintf(out, "%s", prompt);
@@ -597,6 +593,20 @@ int main(int argc, char * argv[])
 	const char *ostype = getenv("OSTYPE");
 	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
 		running_under_cygwin = true;
+
+	/* argv encoding is in the current locale. */
+	argv = argv2utf8(argc);
+	if (NULL == argv)
+	{
+		prt_error("Fatal error: Unable to parse command line\n");
+		exit(-1);
+	}
+
+#ifdef _MSC_VER
+	_set_printf_count_output(1); /* enable %n support for display_1line_help()*/
+#endif /* _MSC_VER */
+
+	win32_set_utf8_output();
 #endif /* _WIN32 */
 
 #if LATER
@@ -666,10 +676,6 @@ int main(int argc, char * argv[])
 			print_usage(stderr, argv[0], -1);
 		}
 	}
-
-#ifdef _WIN32
-	win32_set_utf8_output();
-#endif /* _WIN32 */
 
 	if (language && *language)
 	{

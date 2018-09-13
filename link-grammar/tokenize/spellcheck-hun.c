@@ -10,12 +10,25 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef HAVE_HUNSPELL
+
+#ifdef __MINGW32__
+#define LGPTHREAD(x) x
+#else
+#define LGPTHREAD(x)
+#endif // __MINGW32__
+
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef __MINGW32__
+#include <pthread.h>
+#define LGPTHREAD(x) x
+#else
+#define LGPTHREAD(x)
+#endif // __MINGW32__
+
 #include "link-includes.h"
 #include "spellcheck.h"
-
-#ifdef HAVE_HUNSPELL
 
 #ifndef HUNSPELL_DICT_DIR
 #define HUNSPELL_DICT_DIR (char *)0
@@ -119,6 +132,8 @@ bool spellcheck_test(void * chk, const char * word)
 	return (bool) Hunspell_spell((Hunhandle *)chk, word);
 }
 
+LGPTHREAD(static pthread_mutex_t hunspell_lock = PTHREAD_MUTEX_INITIALIZER;)
+
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
 {
 	if (NULL == chk)
@@ -127,7 +142,10 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		return 0;
 	}
 
-	return Hunspell_suggest((Hunhandle *)chk, sug, word);
+	LGPTHREAD(pthread_mutex_lock(&hunspell_lock);)
+	int rc = Hunspell_suggest((Hunhandle *)chk, sug, word);
+	LGPTHREAD(pthread_mutex_unlock(&hunspell_lock);)
+	return rc;
 }
 
 void spellcheck_free_suggest(void *chk, char **sug, int size)

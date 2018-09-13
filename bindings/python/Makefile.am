@@ -60,16 +60,20 @@ _clinkgrammar_la_CPPFLAGS =       \
    -I$(top_srcdir)                \
    -I$(top_builddir)
 
-# On Cygwin and MinGW, a DLL with version is named name-major.dll with no
+# On Cygwin and MinGW, a DLL with version is named name-major.EXT with no
 # symlink to it of an unversioned name (at least up and including libtool
 # 2.4.6).  This is bad for Python modules, as they must have an identifier
 # name.
+# On MinGW, Python DLLs end with ".pyd". But Cygwin needs them with ".dll".
 if OS_WIN32
 AVOID_VERSION = -avoid-version
+if !OS_CYGWIN
+PYMODULE_EXT = -shrext .pyd
+endif
 endif
 _clinkgrammar_la_LDFLAGS =                        \
     -version-info @VERSION_INFO@ $(AVOID_VERSION) \
-    $(PYTHON2_LDFLAGS) -module -no-undefined
+    $(PYTHON2_LDFLAGS) -module -no-undefined $(PYMODULE_EXT)
 _clinkgrammar_la_LIBADD =                         \
     $(top_builddir)/link-grammar/liblink-grammar.la $(PYTHON2_LIBS)
 

@@ -27,7 +27,14 @@ install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\" -DCC=\"$(CC)\"
+if OS_WIN32
+   fileformat = $(if $(filter 1,$(words [$(pkgdatadir)])),windows,dos) # dos if whitespace
+   pkgdatadir_realpath := $(shell cygpath --${fileformat} --mixed "$(pkgdatadir)")
+else
+   pkgdatadir_realpath := $(pkgdatadir)
+endif
+
+DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir_realpath)\" -DCC=\"$(CC)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir) $(WARN_CFLAGS) \

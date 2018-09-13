@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <io.h>
+#include <shellapi.h>                    /* CommandLineToArgvW() */
 #ifdef __MINGW32__
 #include <malloc.h>
 #endif /* __MINGW32__ */
@@ -203,6 +204,52 @@ int lg_isatty(int fd)
 no_tty:
 	errno = EINVAL;
 	return 0;
+}
+
+/*
+ * Clean up Windows argv initialization.
+ * Needed for MSVC and MinGW.
+ */
+static char **utf8_argv;
+static int utf8_argc;
+static void argv2utf8_free(void)
+{
+	for (int i = 0; i < utf8_argc; i++)
+		free(utf8_argv[i]);
+	free(utf8_argv);
+}
+
+/**
+ * Convert argv from the startup locale to UTF-8.
+ */
+char **argv2utf8(int argc)
+{
+	char **nargv = malloc(argc * sizeof(char *));
+	LPWSTR *warglist = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+	if (NULL == warglist) return NULL;
+
+	for (int i = 0; i < argc; i++)
+	{
+		int n = WideCharToMultiByte(CP_UTF8, 0, warglist[i], -1, NULL, 0, NULL, NULL);
+
+		nargv[i] = malloc(n);
+		n = WideCharToMultiByte(CP_UTF8, 0, warglist[i], -1, nargv[i], n, NULL, NULL);
+		if (0 == n)
+		{
+			prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d.\n",
+			         (int)GetLastError());
+			return NULL;
+		}
+	}
+	LocalFree(warglist);
+
+
+	utf8_argv = nargv;
+	utf8_argc = argc;
+	atexit(argv2utf8_free);
+
+	return nargv;
 }
 #endif /* _WIN32 */
 

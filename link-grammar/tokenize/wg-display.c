@@ -429,6 +429,7 @@ static void wordgraph_show_cancel(void)
  */
 static bool x_popen(const char *cmd, const char *wgds)
 {
+	lgdebug(+3, "Invoking: %s\n", cmd);
 	FILE *const cmdf = popen(cmd, "w");
 	bool rc = true;
 
@@ -439,14 +440,14 @@ static bool x_popen(const char *cmd, const char *wgds)
 	}
 	else
 	{
-		if (fprintf(cmdf, "%s", wgds) == -1)
+		if (fputs(wgds, cmdf) == EOF) /* see default_error_handler() */
 		{
-			prt_error("Error: print to display command: %s\n", strerror(errno));
+			prt_error("Error: x_popen(): fputs() error: %s\n", strerror(errno));
 			rc = false;
 		}
 		if (pclose(cmdf) == -1)
 		{
-			prt_error("Error: pclose of display command: %s\n", strerror(errno));
+			prt_error("Error: x_popen(): pclose() error: %s\n", strerror(errno));
 			rc = false;
 		}
 	}
@@ -582,22 +583,22 @@ bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 		gvf = fopen(gvf_name, "w");
 		if (NULL == gvf)
 		{
-			prt_error("Error: %s(): open %s failed: %s\n",
+			prt_error("Error: %s(): fopen() of %s failed: %s\n",
 						 __func__, gvf_name, strerror(errno));
 			gvf_error = true;
 		}
 		else
 		{
-			if (fprintf(gvf, "%s", wgds) == -1)
+			if (fputs(wgds, gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: %s(): print to %s failed: %s\n",
+				prt_error("Error: %s(): fputs() to %s failed: %s\n",
 							 __func__, gvf_name, strerror(errno));
 			}
 			if (fclose(gvf) == EOF)
 			{
 				gvf_error = true;
-				prt_error("Error: %s(): close %s failed: %s\n",
+				prt_error("Error: %s(): fclose() of %s failed: %s\n",
 							  __func__, gvf_name, strerror(errno));
 			}
 		}

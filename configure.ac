@@ -86,6 +86,18 @@ esac
 AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
+AC_MSG_CHECKING([for Cygwin])
+case "$host_os" in
+  *cygwin*)
+    cygwin=yes
+    ;;
+  *)
+    cygwin=no
+    ;;
+esac
+AC_MSG_RESULT([$cygwin])
+AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
+
 AC_MSG_CHECKING([for 64-bit Apple OSX])
 case "$host_os" in
   darwin*)
@@ -117,8 +129,7 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 # GNU, but do NOT turn on POSIX.
 #
 if test x${native_win32} = xyes; then
-	SPAWNV_WORKAROUND=-D_spawnv=spawnv # Fix MSYS2 wrapper compilation problem
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${SPAWNV_WORKAROUND}"
+	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
 	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
@@ -455,8 +466,20 @@ AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
 
 AM_CONDITIONAL(WITH_HUNSPELL, test x${do_hunspell} = xyes)
 
+case "$host_os$host_cpu" in
+	*mingw*64)
+		default_hunspell_dictdir=/mingw64/share/myspell/dicts
+		;;
+	*mingw*32)
+		# Not checked
+		default_hunspell_dictdir=/mingw32/share/myspell/dicts
+		;;
+	*)
+		default_hunspell_dictdir=/usr/share/myspell/dicts
+		;;
+esac
 AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
-	[Use DIR to find HunSpell files (default=/usr/share/myspell/dicts])],
+	[Use DIR to find HunSpell files (default=$default_hunspell_dictdir])],
 	[], with_hunspell_dictdir=)
 
 # ====================================================================
@@ -481,9 +504,23 @@ if test x"$do_hunspell" = xyes; then
 		AC_SUBST(HUNSPELL_CFLAGS)
 
 		# Now, look for the dictionaries.
-		HunSpellDictDir=/usr/share/myspell/dicts
+		HunSpellDictDir=$default_hunspell_dictdir
 		if test -n "$with_hunspell_dictdir"; then
 			HunSpellDictDir=$with_hunspell_dictdir
+		fi
+
+		if test "$native_win32" = yes; then
+			# Convert to native format with forward slashes
+			# (allow spaces in DIR when using --with-hunspell-dictdir="DIR").
+			case $HunSpellDictDir in
+				*\ *)
+					file_format=dos
+					;;
+				*)
+					file_format=windows
+					;;
+			esac
+			HunSpellDictDir=`cygpath --$file_format --mixed "$HunSpellDictDir"`
 		fi
 
 		if ! test -d "$HunSpellDictDir" ; then
@@ -950,6 +987,7 @@ echo "
 $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
+	datadir:                        $(eval "echo ${datadir}")
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Regex library:                  ${REGEX_LIBS}

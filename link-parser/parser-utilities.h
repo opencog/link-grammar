@@ -31,6 +31,7 @@ typedef SSIZE_T ssize_t;
 
 char *get_console_line(void);
 void win32_set_utf8_output(void);
+char **argv2utf8(int);
 int lg_isatty(int);
 #define isatty lg_isatty
 #endif /* _WIN32 */

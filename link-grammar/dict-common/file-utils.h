@@ -25,5 +25,6 @@ void * object_open(const char *filename,
 
 bool file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
+char *find_last_dir_separator(char *path);
 
 #endif /* _DICT_FILE_UTILITIES_H_ */

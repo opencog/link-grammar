@@ -7,7 +7,7 @@ This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2017 IDE (MSVC15). They were created and tested with
 the Community Edition of that product.
 
-**!!!WARNING!!!**
+**!!!WARNING!!!**<br>
 In the examples below, "console-prompt>" at start of line means the console
 prompt.  Don't type it because the result could be destructive!
 
@@ -171,7 +171,7 @@ console-prompt>make-check [PYTHON_FLAG] PYTHON_OUTDIR [script.py] [ARGUMENTS]
 
 - PYTHON_FLAG: Optional flag for the Python program, e.g. `-vv` to debug
 imports.
-- PYTHON_OUTDIR: The directory to which the Python bindings got written.
+- PYTHON_OUTDIR: The directory to which the Python bindings got written.<br>
 For example, `x64\Release\Python3`.
 - script.py: Path leading to the script. If only a filename is specified
 (i.e. no `\` in the path) the specified script file is taken from the
@@ -263,11 +263,11 @@ For using the library independently of the build directory:
 
 1) If Python bindings were generated, copy the following modules to a
    directory `linkgrammar` in a fixed location: `linkgrammar.py`,
-   `clinkgrammar.py`, `__init__.py`, `_clinkgrammar.pyd`.
+   `clinkgrammar.py`, `__init__.py`, `_clinkgrammar.pyd`.<br>
    Set the PYTHONPATH environment variable to point to the said
    "linkgrammar" directory.
 
-2) Copy the link-grammar DLL to a fixed location.
+2) Copy the link-grammar DLL to a fixed location.<br>
    Add the DLL location permanently to PATH.
 
 3) Copy the `data` directory to the location of the DLL so it will get found.
@@ -291,15 +291,31 @@ In order to use a link-grammar source repository from a network share (e.g. via
 Samba), and still be able to use the custom build steps in the Project files,
 there is a need to "convince" Windows it is a local filesystem.  Else you will
 get "UNC path are not supported." on the batch runs, with bad results. This
-method will also allow the "link-parser.bat" file to run.  (For other solutions
-see tackoverflow.com/questions/9013941). You will need to find out by yourself
-if this makes a security or another problem in your case.
+method will also allow the `link-parser.bat` file to run.  (For other solutions
+see https:/stackoverflow.com/questions/9013941). You will need to find out by
+yourself if this makes a security or another problem in your case.
 
-Here is what worked for me:
-Suppose you use host:/usr/local/src remotely as share "src":
+Here is what worked for me:<br>
+Suppose you use `host:/usr/local/src` remotely as share `src`:
 ```
 mklink /J src-j \\host\src
 mklink /D src src-link
 ```
-The second one needs administrator privileges.
-Then use the repository through "src".
+The second one needs administrator privileges.<br>
+Then use the repository through `src`.
+
+Debugging hints
+--------------
+If, when starting the program under the debugger (by "Local Windows Debugger",
+"Debug->Start Debugging" (F5), etc.), `regex.dll` is not found, it can be
+added to the search `PATH` as follows:<br>
+Enter to LinkGrammarExe's Property Pages:<br>
+ `Solution Explorer->LinkGrammarExe->Properties`<br>
+Click on the writable location of:<br>
+ `Debugging->Environment`<br>
+Put there (LG_DLLPATH is defined in the `Local` Property pages):<br>
+`PATH=$(LG_DLLPATH)`<br>
+Make sure "Merge Environment" there is `Yes`.
+
+(The result is kept in `.user` Property Pages that are not part of the
+LG repository).

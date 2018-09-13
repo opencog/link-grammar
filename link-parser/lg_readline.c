@@ -50,7 +50,7 @@ static wchar_t * prompt(EditLine *el)
  * @param is_help \p input is the argument of an !help command.
  * @return 3 types of values:
  *  <code>""</code> There are no completions.
- *  <code>NULL</code> Choices help have been printed.
+ *  <code>NULL</code> Input not supported, or choices help has been printed.
  *  A NUL-terminated byte string (to be used as a completion).
  */
 static char *complete_command(const wchar_t *input, size_t len, bool is_help)
@@ -75,7 +75,7 @@ static char *complete_command(const wchar_t *input, size_t len, bool is_help)
 	char *astr = malloc(len+1);
 	for (size_t i = 0; i < len; i++)
 	{
-		if (input[i] < 0 || input[i] > 127)
+		if (input[i] <= 0 || input[i] > 127)
 		{
 			free(astr);
 			return NULL; /* unsupported input */
