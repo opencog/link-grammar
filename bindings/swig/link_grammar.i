@@ -24,6 +24,10 @@
 %mutable;
 %rename("%s") "";                    /* Grab everything for the rest of file. */
 
+// Set a default newfree typemap.
+%typemap(newfree) char * {
+   free($1);
+}
 
 const char * linkgrammar_get_version(void);
 const char * linkgrammar_get_configuration(void);
@@ -126,7 +130,7 @@ int  sentence_link_cost(Sentence sent, int i);
 %newobject linkage_print_diagram;
 %newobject linkage_print_postscript;
 %newobject linkage_print_constituent_tree;
-
+%newobject linkage_print_disjuncts;
 
 Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);

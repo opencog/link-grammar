@@ -834,6 +834,9 @@ fi
 if test -n "$swig_required"; then
 	AX_PKG_SWIG(2.0.0,, [AC_MSG_ERROR(['swig' is required to create bindings for: $swig_required])])
 	AX_SWIG_ENABLE_CXX
+	SWIGfound="$SWIG"
+else
+	SWIGfound=no
 fi
 AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG")
 
