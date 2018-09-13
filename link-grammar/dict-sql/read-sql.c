@@ -152,7 +152,12 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	bs->exp = make_expression(bs->dict, argv[0]);
 
 	if (bs->exp)
-		bs->exp->cost = atof(argv[1]);
+		if (!strtodC(argv[1], &bs->exp->cost))
+		{
+			prt_error("Warning: Invalid cost \"%s\" in expression \"%s\" "
+			          "(using 1.0)\n", argv[1], argv[0]);
+			bs->exp->cost = 1.0;
+		}
 
 	return 0;
 }
