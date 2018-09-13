@@ -1035,7 +1035,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Lines starting with "-" contain a Parse Option
         elif line[0] == '-':
-            exec('popt.' + line[1:], None, locals())
+                exec('popt.' + line[1:]) in {}, locals()
 
         elif line[0] in '%\r\n':
             pass
