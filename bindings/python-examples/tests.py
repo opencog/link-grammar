@@ -828,6 +828,34 @@ class ZENLangTestCase(unittest.TestCase):
         self.assertEqual(len(linkages), 2)
         self.assertEqual(linkages.next().unused_word_cost(), 1)
 
+# FIXME: Use a special testing dictionary for checks like that.
+class JDictCostReadingTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if is_python2(): # Locale stuff seems to be broken
+            raise unittest.SkipTest("Test not supported with Python2")
+
+        cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
+        ru_locale = 'ru_RU.UTF-8' if os.name != 'nt' else 'Russian'
+        try:
+            locale.setlocale(locale.LC_NUMERIC, ru_locale)
+        except locale.Error as e: # Most probably ru_RU.UTF-8 is not installed
+            del cls.oldlocale
+            raise unittest.SkipTest("Locale {}: {}".format(ru_locale, e))
+        # The dict read must be performed after the locale change.
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        locale.setlocale(locale.LC_CTYPE, cls.oldlocale)
+        del cls.d, cls.po, cls.oldlocale
+
+    # When a comma-separator LC_NUMERIC affects the dict cost conversion,
+    # the 4th word is 'white.v'.
+    def test_cost_sensitive_parse(self):
+        linkage = Sentence('Is the bed white?', self.d, self.po).parse().next()
+        self.assertEqual(list(linkage.words())[4], 'white.a')
+
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
