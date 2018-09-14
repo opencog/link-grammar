@@ -403,35 +403,6 @@ class DBasicParsingTestCase(unittest.TestCase):
         linkage = self.parse_sent("This is a silly sentence.")[0]
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
 
-    # The following test is using the locale "tr_TR.UTF-8".
-    # It is skipped if it is not installed in the system.
-    def test_dictionary_locale_definition(self):
-        if is_python2(): # Locale stuff seems to be broken
-            raise unittest.SkipTest("Test not supported with Python2")
-
-        # python2: Gets system locale (getlocale() is not better)
-        oldlocale = locale.setlocale(locale.LC_CTYPE, None)
-        #print('Current locale:', oldlocale)
-        #print('toupper hij:', 'hij'.upper())
-
-        tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
-        try:
-            locale.setlocale(locale.LC_CTYPE, tr_locale)
-        except locale.Error as e:
-            raise unittest.SkipTest("Locale {}: {}".format(tr_locale, e))
-
-        #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
-
-        # python2: prints HiJ (lowercase small i in the middle)
-        #print('toupper hij:', 'hij'.upper())
-
-        self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
-                         ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
-
-        locale.setlocale(locale.LC_CTYPE, oldlocale)
-        #print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
-        #print('toupper hij:', 'hij'.upper())
-
     # If \w is supported, other \ shortcuts are hopefully supported too.
     def test_regex_class_shortcut_support(self):
         r"""Test that regexes support \w"""
@@ -915,8 +886,42 @@ class ZENLangTestCase(unittest.TestCase):
         self.assertEqual(len(linkages), 2)
         self.assertEqual(linkages.next().unused_word_cost(), 1)
 
+class JADictionaryLocaleTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if is_python2(): # Locale stuff seems to be broken
+            raise unittest.SkipTest("Test not supported with Python2")
+
+        # python2: Gets system locale (getlocale() is not better)
+        cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
+        #print('Current locale:', oldlocale)
+        #print('toupper hij:', 'hij'.upper())
+
+        tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
+        try:
+            locale.setlocale(locale.LC_CTYPE, tr_locale)
+        except locale.Error as e: # Most probably tr_TR.UTF-8 is not installed
+            raise unittest.SkipTest("Locale {}: {}".format(tr_locale, e))
+
+        #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
+        # python2: prints HiJ (lowercase small i in the middle)
+        #print('toupper hij:', 'hij'.upper())
+
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        locale.setlocale(locale.LC_CTYPE, cls.oldlocale)
+        #print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
+        #print('toupper hij:', 'hij'.upper())
+        del cls.d, cls.po, cls.oldlocale
+
+    def test_dictionary_locale_definition(self):
+        linkage = Sentence('Is it fine?', self.d, self.po).parse().next()
+        self.assertEqual(list(linkage.words())[1], 'is.v')
+
 # FIXME: Use a special testing dictionary for checks like that.
-class JDictCostReadingTestCase(unittest.TestCase):
+class JBDictCostReadingTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         if is_python2(): # Locale stuff seems to be broken
