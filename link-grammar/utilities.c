@@ -658,6 +658,7 @@ char * get_default_locale(void)
 	return safe_strdup(locale);
 }
 
+#ifdef HAVE_LOCALE_T
 static locale_t get_C_LC_NUMERIC(void)
 {
 	static locale_t locobj;
@@ -672,6 +673,7 @@ static locale_t get_C_LC_NUMERIC(void)
 
 	return locobj;
 }
+#endif /* HAVE_LOCALE_T */
 
 bool strtodC(const char *s, double *r)
 {
@@ -680,12 +682,7 @@ bool strtodC(const char *s, double *r)
 #ifdef HAVE_LOCALE_T
 	double val = strtod_l(s, &err, get_C_LC_NUMERIC());
 #else
-	static bool is_lc_numeric_c;
-	if (!is_lc_numeric_c)
-	{
-		is_lc_numeric_c = true;
-		setlocal(LC_NUMERIC, "C");
-	}
+	/* dictionary_setup_locale() invokes setlocale(LC_NUMERIC, "C") */
 	double val = strtod(s, &err);
 #endif /* HAVE_LOCALE_T */
 
