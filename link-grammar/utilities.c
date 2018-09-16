@@ -659,6 +659,8 @@ char * get_default_locale(void)
 }
 
 #ifdef HAVE_LOCALE_T
+static void free_C_LC_NUMERIC(void);
+
 static locale_t get_C_LC_NUMERIC(void)
 {
 	static locale_t locobj;
@@ -671,7 +673,14 @@ static locale_t get_C_LC_NUMERIC(void)
 	locobj = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
 #endif /* _WIN32 */
 
+	atexit(free_C_LC_NUMERIC);
+
 	return locobj;
+}
+
+static void free_C_LC_NUMERIC(void)
+{
+	freelocale(get_C_LC_NUMERIC());
 }
 #endif /* HAVE_LOCALE_T */
 
