@@ -1048,6 +1048,8 @@ man/Makefile
 AC_OUTPUT
 
 # ====================================================================
+lglibs=`${ECHO} "$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
+
 echo "
 $PACKAGE-$VERSION  build configuration settings
 
@@ -1075,4 +1077,5 @@ $PACKAGE-$VERSION  build configuration settings
 	Corpus statistics database:     ${enable_corpus_stats}
 	RegEx tokenizer:                ${enable_regex_tokenizer}
 	Definitions:                    ${DEFS}
+	Libraries:                      ${lglibs}
 "
