@@ -77,6 +77,87 @@ class AADictionaryTestCase(unittest.TestCase):
         self.assertRaises(LG_Error, Dictionary, dummy_lang + '2')
         self.assertIn(dummy_lang + '2', save_stderr.divert_end())
 
+# Check absolute and relative dictionary access.
+# Check also that the dictionary language is set correctly.
+#
+# We suppose here that this test program is located somewhere in the source
+# directory, 1 to 4 levels under it, that the data directory is named 'data',
+# and that it has a parallel directory called 'link-grammar'.
+DATA_DIR = 'data'
+PARALLEL_DIR = 'link-grammar'
+class ABDictionaryLocationTestCase(unittest.TestCase):
+    abs_datadir = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.po = ParseOptions(verbosity=0)
+        cls.original_directory = os.getcwd()
+
+        # Find the 'data' directory in the source directory.
+        os.chdir(clg.test_data_srcdir)
+        up = ''
+        for _ in range(1, 4):
+            up = '../' + up
+            datadir = up + DATA_DIR
+            if os.path.isdir(datadir):
+                break
+            datadir = ''
+
+        if not datadir:
+            assert False, 'Cannot find source directory dictionary data'
+        cls.abs_datadir = os.path.abspath(datadir)
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.po
+        os.chdir(cls.original_directory)
+
+    def test_open_absolute_path(self):
+        d = Dictionary(self.abs_datadir + '/en')
+        self.assertEqual(str(d), 'en')
+        if os.name == 'nt':
+            d = Dictionary(self.abs_datadir + r'\en')
+            self.assertEqual(str(d), 'en')
+
+    def test_open_relative_path_from_data_directory(self):
+        os.chdir(self.abs_datadir)
+        d = Dictionary('./en')
+        self.assertEqual(str(d), 'en')
+        if os.name == 'nt':
+            d = Dictionary(r'.\en')
+            self.assertEqual(str(d), 'en')
+
+    def test_open_lang_from_data_directory(self):
+        os.chdir(self.abs_datadir)
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
+    # Test use of the internal '..' path
+    def test_open_from_a_language_directory(self):
+        os.chdir(self.abs_datadir + '/ru')
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
+    def test_open_relative_path_from_data_parent_directory(self):
+        os.chdir(self.abs_datadir + '/..')
+        d = Dictionary('data/en')
+        self.assertEqual(str(d), 'en')
+        if os.name == 'nt':
+            d = Dictionary(r'data\en')
+            self.assertEqual(str(d), 'en')
+
+    # Test use of the internal './data' path.
+    def test_open_from_data_parent_directory(self):
+        os.chdir(self.abs_datadir + '/..')
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
+    # Test use of the internal '../data' path.
+    def test_open_from_a_parallel_directory(self):
+        os.chdir(self.abs_datadir + '/../' + PARALLEL_DIR)
+        d = Dictionary('en')
+        self.assertEqual(str(d), 'en')
+
 class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
         po = ParseOptions()
@@ -321,29 +402,6 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertEqual([len(l) for l in linkage.links()], [5,2,1,1,2,1,1])
         linkage = self.parse_sent("This is a silly sentence.")[0]
         self.assertEqual([len(l) for l in linkage.links()], [6,2,1,1,3,2,1,1,1])
-
-    def test_dictionary_locale_definition(self):
-        if is_python2(): # Locale stuff seems to be broken
-            raise unittest.SkipTest("Test not supported with Python2")
-
-        # python2: Gets system locale (getlocale() is not better)
-        oldlocale = locale.setlocale(locale.LC_CTYPE, None)
-        #print('Current locale:', oldlocale)
-        #print('toupper hij:', 'hij'.upper())
-
-        tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
-        locale.setlocale(locale.LC_CTYPE, tr_locale)
-        #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
-
-        # python2: prints HiJ (lowercase small i in the middle)
-        #print('toupper hij:', 'hij'.upper())
-
-        self.assertEqual(list(self.parse_sent('Is it fine?')[0].words()),
-                         ['LEFT-WALL', 'is.v', 'it', 'fine.a', '?', 'RIGHT-WALL'])
-
-        locale.setlocale(locale.LC_CTYPE, oldlocale)
-        #print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
-        #print('toupper hij:', 'hij'.upper())
 
     # If \w is supported, other \ shortcuts are hopefully supported too.
     def test_regex_class_shortcut_support(self):
@@ -828,6 +886,68 @@ class ZENLangTestCase(unittest.TestCase):
         self.assertEqual(len(linkages), 2)
         self.assertEqual(linkages.next().unused_word_cost(), 1)
 
+class JADictionaryLocaleTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if is_python2(): # Locale stuff seems to be broken
+            raise unittest.SkipTest("Test not supported with Python2")
+
+        # python2: Gets system locale (getlocale() is not better)
+        cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
+        #print('Current locale:', oldlocale)
+        #print('toupper hij:', 'hij'.upper())
+
+        tr_locale = 'tr_TR.UTF-8' if os.name != 'nt' else 'Turkish'
+        try:
+            locale.setlocale(locale.LC_CTYPE, tr_locale)
+        except locale.Error as e: # Most probably tr_TR.UTF-8 is not installed
+            raise unittest.SkipTest("Locale {}: {}".format(tr_locale, e))
+
+        #print('Turkish locale:', locale.setlocale(locale.LC_CTYPE, None))
+        # python2: prints HiJ (lowercase small i in the middle)
+        #print('toupper hij:', 'hij'.upper())
+
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        locale.setlocale(locale.LC_CTYPE, cls.oldlocale)
+        #print("Restored locale:", locale.setlocale(locale.LC_CTYPE))
+        #print('toupper hij:', 'hij'.upper())
+        del cls.d, cls.po, cls.oldlocale
+
+    def test_dictionary_locale_definition(self):
+        linkage = Sentence('Is it fine?', self.d, self.po).parse().next()
+        self.assertEqual(list(linkage.words())[1], 'is.v')
+
+# FIXME: Use a special testing dictionary for checks like that.
+class JBDictCostReadingTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if is_python2(): # Locale stuff seems to be broken
+            raise unittest.SkipTest("Test not supported with Python2")
+
+        cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
+        ru_locale = 'ru_RU.UTF-8' if os.name != 'nt' else 'Russian'
+        try:
+            locale.setlocale(locale.LC_NUMERIC, ru_locale)
+        except locale.Error as e: # Most probably ru_RU.UTF-8 is not installed
+            del cls.oldlocale
+            raise unittest.SkipTest("Locale {}: {}".format(ru_locale, e))
+        # The dict read must be performed after the locale change.
+        cls.d, cls.po = Dictionary(lang='en'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        locale.setlocale(locale.LC_CTYPE, cls.oldlocale)
+        del cls.d, cls.po, cls.oldlocale
+
+    # When a comma-separator LC_NUMERIC affects the dict cost conversion,
+    # the 4th word is 'white.v'.
+    def test_cost_sensitive_parse(self):
+        linkage = Sentence('Is the bed white?', self.d, self.po).parse().next()
+        self.assertEqual(list(linkage.words())[4], 'white.a')
+
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -1035,7 +1155,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
         # Lines starting with "-" contain a Parse Option
         elif line[0] == '-':
-            exec('popt.' + line[1:], None, locals())
+                exec('popt.' + line[1:]) in {}, locals()
 
         elif line[0] in '%\r\n':
             pass
