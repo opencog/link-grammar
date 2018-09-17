@@ -1074,4 +1074,5 @@ $PACKAGE-$VERSION  build configuration settings
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
 	RegEx tokenizer:                ${enable_regex_tokenizer}
+	Definitions:                    ${DEFS}
 "
