@@ -1,5 +1,5 @@
-Version 5.5.0 - Official wordgraph support
-==========================================
+Version 5.5.0 - Official wordgraph display support
+==================================================
 
 As of version 5.5.0, the default configuration includes the word-graph
 display. A new API function
