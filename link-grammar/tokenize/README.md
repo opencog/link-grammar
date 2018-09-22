@@ -7,8 +7,8 @@ display. A new API function
 has been added, and `link-parser` can use it (controlled by the
 `!wordgraph` user variable).
 
-Version 5.3.0 - Introduction of a word-graph for tokenizing
-===========================================================
+Version 5.3.0 - Introduction of a tokenizer word-split graph - AKA "wordgraph"
+==============================================================================
 
 In this version the tokenizer code has been heavily modified once again.
 Instead of tokenizing all the words in one pass directly into the
