@@ -61,6 +61,7 @@ AC_CHECK_FUNCS(strndup strtok_r)
 AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
 
 AC_FUNC_ALLOCA
+AC_FUNC_STRERROR_R
 
 # For the Wordgraph display code
 AC_FUNC_FORK
