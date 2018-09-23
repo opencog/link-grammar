@@ -718,7 +718,7 @@ if test "x$enable_java_bindings" = "xyes"; then
 		# However, automake is unable to handle spaces in a filename even
 		# when quoted (e.g. "-I '$JAVA_HOME/include'"). As a workaround,
 		# convert $JAVA_HOME to a short DOS path.
-		JAVA_HOME=`cygpath --dos --mixed "$JAVA_HOME"`
+		test -n "${JAVA_HOME}" && JAVA_HOME=`cygpath --dos --mixed "$JAVA_HOME"`
 
 		# win32/jni_md.h:34:9: error: ‘__int64’ does not name a type
 		JAVA_CPPFLAGS=-D__int64=int64_t
@@ -726,7 +726,15 @@ if test "x$enable_java_bindings" = "xyes"; then
 	AC_SUBST(JAVA_SRCDIR)
 
 	AC_MSG_CHECKING(for jni.h)
+
+	pushdef([AC_MSG_ERROR])
+	define([AC_MSG_ERROR],
+		[AC_MSG_NOTICE([$1])])
+
 	AX_JNI_INCLUDE_DIR
+
+	popdef([AC_MSG_ERROR])
+
 	if test -n "$JNI_INCLUDE_DIRS"; then
 		JNIfound=yes
 	fi
