@@ -592,34 +592,96 @@ fi
 # ====================================================================
 
 # Tokenizing by RegEx
-AC_ARG_ENABLE( regex_tokenizer,
-  [  --enable-regex-tokenizer enable use of regex word splitter (experimental)],
-  [],
-  [enable_regex_tokenizer=no]
-)
-if test "x$enable_regex_tokenizer" = "xyes"
-then
-	AC_DEFINE(USE_REGEX_TOKENIZER, 1, [Define for compilation])
-	AX_PATH_LIB_PCRE
-fi
+#AC_ARG_ENABLE( regex_tokenizer,
+#  [  --enable-regex-tokenizer enable use of regex word splitter (experimental)],
+#  [],
+#  [enable_regex_tokenizer=no]
+#)
+#if test "x$enable_regex_tokenizer" = "xyes"
+#then
+#	AC_DEFINE(USE_REGEX_TOKENIZER, 1, [Define for compilation])
+#	AX_PATH_LIB_PCRE
+#fi
 
 # ====================================================================
-# Find a regex library that supports regexec().
-# Check in this order: libtre, libc, libregex.
+# Configure a regex library that supports UTF-8 and a POSIX interface.
+dnl AC_CHECK_HEADERS defines HAVE_FILENAME_H if found.
 
-AC_CHECK_HEADER([tre/regex.h], [AC_CHECK_LIB(tre, regexec, [REGEX_LIBS=-ltre])])
+AC_ARG_WITH([regexlib],
+	[AS_HELP_STRING([--with-regexlib=pcre2|tre|regex|c],
+	[Use the pecified regex library (default=first found)])],
+	[], with_regexlib=)
+
+lgregexlib=--with-regexlib="$with_regexlib"
+
+case $with_regexlib in
+	'')
+		break
+		;;
+	pcre2)
+		AC_CHECK_HEADERS([pcre2.h], ,
+		                 [AC_MSG_ERROR([$lgregexlib: pcre2.h not found])],
+							  [#define PCRE2_CODE_UNIT_WIDTH 8])
+		PKG_CHECK_MODULES([REGEX], [libpcre2-8])
+		;;
+	tre)
+		AC_CHECK_HEADERS([tre/regex.h], ,
+		                 [AC_MSG_ERROR([$lgregexlib: tre/regex.h not found])])
+		PKG_CHECK_MODULES([REGEX], [tre])
+		;;
+	regex)
+		AC_CHECK_HEADERS([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
+		AC_CHECK_LIB([regex], [regexec], [REGEX_LIBS=-lregex],
+		             [AC_MSG_ERROR([$lgregexlib: regexec() not found])])
+		;;
+	c)
+		AC_CHECK_HEADERS([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
+		AC_CHECK_FUNCS(regexec, [REGEX_LIBS=-lc],
+		               [AC_MSG_ERROR([$lgregexlib: regexec() not found])])
+		;;
+	*)
+		AC_MSG_ERROR([$lgregexlib: Library not configurable (see configure --help)])
+		;;
+esac
 
 if test -z "$REGEX_LIBS"; then
-	AC_CHECK_HEADER([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
-	AC_CHECK_FUNCS(regexec, ,
-					[AC_CHECK_LIB(regex, regexec, REGEX_LIBS=-lregex,
-	                             [AC_MSG_ERROR([No regex library found])])])
+	AC_MSG_NOTICE([Checking for REGEX implementation:])
+fi
+dnl Find the first regex library according to this order:
+dnl libpcre2-8, libtre, libregex, libc.
+
+if test -z "$REGEX_LIBS"; then
+	AC_CHECK_HEADER([pcre2.h],
+		[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
+								 [AC_DEFINE([HAVE_PCRE2_H], 1)],
+								 [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
+							    , , [#define PCRE2_CODE_UNIT_WIDTH 8])
+
+fi
+if test -z "$REGEX_LIBS"; then
+	AC_CHECK_HEADER([tre/regex.h],
+		[PKG_CHECK_MODULES([REGEX], [tre],
+								 [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
+								 [AC_MSG_RESULT([... missing libtre, continuing])])])
+fi
+if test -z "$REGEX_LIBS"; then
+	AC_CHECK_HEADERS([regex.h],
+		[AC_CHECK_LIB([regex], [regex], [REGEX_LIBS=-lregex],
+		              [AC_MSG_RESULT([... libregex not found, continuing])]
+		              [AC_CHECK_FUNCS([regexec], [REGEX_LIBS=-lc])])],
+		[AC_MSG_ERROR([No regex.h header found])])
 fi
 
-if test "x$REGEX_LIBS" = "x-ltre"; then
-	AC_DEFINE(HAVE_TRE_TRE_H, 1)
+if test -n "$REGEX_LIBS"; then
+	AC_MSG_RESULT([... found REGEX implementation: $REGEX_LIBS])
+	test "x$REGEX_LIBS" = x-lc && REGEX_LIBS=
+	test -n "$REGEX_CFLAGS" && CFLAGS="$CFLAGS $REGEX_CFLAGS"
+else
+	AC_MSG_ERROR([No REGEX implementation found])
 fi
+
 AC_SUBST(REGEX_LIBS)
+AC_SUBST(REGEX_CFLAGS)
 
 # =====================================================================
 # Try to guess location of the jni.h file.
@@ -986,6 +1048,8 @@ man/Makefile
 AC_OUTPUT
 
 # ====================================================================
+lglibs=`${ECHO} "$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
+
 echo "
 $PACKAGE-$VERSION  build configuration settings
 
@@ -1012,4 +1076,6 @@ $PACKAGE-$VERSION  build configuration settings
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
 	RegEx tokenizer:                ${enable_regex_tokenizer}
+	Definitions:                    ${DEFS}
+	Libraries:                      ${lglibs}
 "

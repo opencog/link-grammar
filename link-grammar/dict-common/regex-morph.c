@@ -10,13 +10,28 @@
 /*                                                                       */
 /*************************************************************************/
 
+/**
+ * Support for the regular-expression based token matching system
+ * using standard POSIX regex or PCRE2.
+ * (Cannot use pcre2posix.h at this time because pcre2posix <= 10.32
+ * don't have pcre2_regcomp() etc., and then regcomp() etc.
+ * may bind to libc., e.g. when the Python bindings are used.)
+ */
+
+/* The regex include definitions must be checked here in reverse order
+ * of their check in "configure.ac". */
+#if HAVE_REGEX_H
 /* On MS Windows, regex.h fails to pull in size_t, so work around this by
  * including <stddef.h> before <regex.h> (<sys/types.h> is not enough) */
 #include <stddef.h>
-#if HAVE_TRE_TRE_H
+#include <regex.h>
+#elif HAVE_PCRE2_H
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
+#elif HAVE_TRE_REGEX_H
 #include <tre/regex.h>
 #else
-#include <regex.h>
+#error No regex header file.
 #endif
 #include "api-structures.h"
 #include "error.h"          /* verbosity */
@@ -26,115 +41,136 @@
 #include "dict-common/regex-morph.h"
 #include "link-includes.h"
 
-
-/**
- * Support for the regular-expression based token matching system
- * using standard POSIX regex.
- */
+#if HAVE_PCRE2_H
+typedef struct {
+	pcre2_code *re_code;
+	pcre2_match_data* re_md;
+} regex_t;
+#endif
 
 /**
  * Notify an error message according to the error code.
  */
-static void prt_regerror(const char *msg, const Regex_node *re, int rc)
+#define ERRBUFFLEN 120
+static void prt_regerror(const char *msg, const Regex_node *re, int rc,
+                         int erroffset)
 {
-	const size_t errbuf_size = regerror(rc, re->re, NULL, 0);
-	char * const errbuf = malloc(errbuf_size);
+#if HAVE_PCRE2_H
+	PCRE2_UCHAR errbuf[ERRBUFFLEN];
+	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
+#else
+	char errbuf[ERRBUFFLEN];
+	regerror(rc, re->re, errbuf, ERRBUFFLEN);
+#endif /* HAVE_PCRE2_H */
 
-	/*
-	prt_error("Error: Failed to compile regex '%s' (%s) at %d: %s\n",
-					re->pattern, re->name, erroroffset, error);
-	*/
-	regerror(rc, re->re, errbuf, errbuf_size);
-	prt_error("Error: %s: \"%s\" (%s): %s\n", msg, re->pattern, re->name, errbuf);
-	free(errbuf);
+	prt_error("Error: %s: \"%s\" (%s", msg, re->pattern, re->name);
+	if (-1 != erroffset) prt_error(" at %d", erroffset);
+	prt_error("): %s (%d)\n", errbuf, rc);
 }
 
 /**
- * Compiles all the given regexs. Returns 0 on success,
- * else an error code.
+ * Compile all the given regexs.
+ * Return 0 on success, else an error code.
  */
-int compile_regexs(Regex_node *re, Dictionary dict)
+int compile_regexs(Regex_node *rn, Dictionary dict)
 {
-	regex_t *preg;
-	int rc;
-
-	while (re != NULL)
+	while (rn != NULL)
 	{
-		/* If re->re non-null, assume compiled already. */
-		if(re->re == NULL)
+		/* If rn->re non-null, assume compiled already. */
+		if(rn->re == NULL)
 		{
-			/* Compile with default options (0) and default character
-			 * tables (NULL). */
-			/* re->re = pcre_compile(re->pattern, 0, &error, &erroroffset, NULL); */
-			preg = (regex_t *) malloc (sizeof(regex_t));
-			re->re = preg;
+			int rc;
+			regex_t *re = rn->re = malloc(sizeof(regex_t));
 
-			/* REG_ENHANCED is needed for OS X to support \w etc. */
+#if HAVE_PCRE2_H
+			PCRE2_SIZE erroffset;
+			re->re_code =
+				pcre2_compile((PCRE2_SPTR)rn->pattern, PCRE2_ZERO_TERMINATED,
+				              PCRE2_UTF|PCRE2_UCP, &rc, &erroffset, NULL);
+			if (NULL != re->re_code)
+			{
+				rc = 0;
+				re->re_md = pcre2_match_data_create(0, NULL);
+				if (NULL == re->re_md) return -1; /* Unhandled for now. */
+			}
+#else
+			const int erroffset = -1;
+
+			/* REG_ENHANCED is needed for macOS to support \w etc. */
 #ifndef REG_ENHANCED
 #define REG_ENHANCED 0
 #endif
-			rc = regcomp(preg, re->pattern, REG_NOSUB|REG_EXTENDED|REG_ENHANCED);
+			rc = regcomp(re, rn->pattern, REG_NOSUB|REG_EXTENDED|REG_ENHANCED);
+#endif
+
 			if (rc)
 			{
-				prt_regerror("Failed to compile regex", re, rc);
+				prt_regerror("Failed to compile regex", rn, rc ,erroffset);
+				rn->re = NULL;
 				return rc;
 			}
 
 			/* Check that the regex name is defined in the dictionary. */
-			if ((NULL != dict) && !boolean_dictionary_lookup(dict, re->name))
+			if ((NULL != dict) && !boolean_dictionary_lookup(dict, rn->name))
 			{
 				/* TODO: better error handing. Maybe remove the regex? */
 				prt_error("Error: Regex name %s not found in dictionary!\n",
-				       re->name);
+				       rn->name);
 			}
 		}
-		re = re->next;
+		rn = rn->next;
 	}
 	return 0;
 }
 
 /**
- * Tries to match each regex in turn to word s.
- * On match, returns the name of the first matching regex.
- * If no match is found, returns NULL.
+ * Try to match each regex in turn to word s.
+ * On match, return the name of the first matching regex.
+ * If no match is found, return NULL.
  */
 #define D_MRE 6
-const char *match_regex(const Regex_node *re, const char *s)
+const char *match_regex(const Regex_node *rn, const char *s)
 {
-	int rc;
-	const char *nre_name;
-
-	while (re != NULL)
+	while (rn != NULL)
 	{
+		int rc;
+		bool nomatch;
+		bool match;
+		regex_t *re = rn->re;
+
 		/* Make sure the regex has been compiled. */
-		assert(re->re);
+		assert(re);
 
-#if 0
-		/* Try to match with no extra data (NULL), whole str
-		 * (0 to strlen(s)), and default options (second 0). */
-		int rc = pcre_exec(re->re, NULL, s, strlen(s), 0,
-		                   0, ovector, PCRE_OVEC_SIZE);
+#if HAVE_PCRE2_H
+		rc = pcre2_match(re->re_code, (PCRE2_SPTR)s,
+		                 PCRE2_ZERO_TERMINATED, /*startoffset*/0,
+		                 PCRE2_NO_UTF_CHECK, re->re_md, NULL);
+		match = (rc >= 0);
+		nomatch = (rc == PCRE2_ERROR_NOMATCH);
+#else
+		rc = regexec(rn->re, s, 0, NULL, /*eflags*/0);
+		match = (rc == 0);
+		nomatch = (rc == REG_NOMATCH);
 #endif
-
-		rc = regexec((regex_t*) re->re, s, 0, NULL, 0);
-		if (0 == rc)
+		if (match)
 		{
-			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!re->neg], re->name, s);
-			if (!re->neg)
-				return re->name; /* Match found - return--no multiple matches. */
+			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
+			if (!rn->neg)
+				return rn->name; /* Match found - return--no multiple matches. */
 
 			/* Negative match - skip this regex name. */
-			for (nre_name = re->name; re->next != NULL; re = re->next)
+			for (const char *nre_name = rn->name; rn->next != NULL; rn = rn->next)
 			{
-				if (strcmp(nre_name, re->next->name) != 0) break;
+				if (strcmp(nre_name, rn->next->name) != 0) break;
 			}
 		}
-		else if (rc != REG_NOMATCH)
+		else if (!nomatch)
 		{
 			/* We have an error. */
-			prt_regerror("Regex matching error", re, rc);
+			prt_regerror("Regex matching error", rn, rc, -1);
 		}
-		re = re->next;
+
+		rn = rn->next;
 	}
 	return NULL; /* No matches. */
 }
@@ -143,20 +179,27 @@ const char *match_regex(const Regex_node *re, const char *s)
 /**
  * Delete associated storage
  */
-void free_regexs(Regex_node *re)
+void free_regexs(Regex_node *rn)
 {
-	while (re != NULL)
+	while (rn != NULL)
 	{
-		Regex_node *next = re->next;
+		Regex_node *next = rn->next;
+		regex_t *re = rn->re;
 
 		/* Prevent a crash in regfree() in case of a regex compilation error. */
-		if (NULL != re->re)
-			regfree((regex_t *)re->re);
-
-		free(re->re);
-		free(re->name);
-		free(re->pattern);
+		if (NULL != re)
+		{
+#if HAVE_PCRE2_H
+			pcre2_match_data_free(re->re_md);
+			pcre2_code_free(re->re_code);
+#else
+			regfree(re);
+#endif
+		}
 		free(re);
-		re = next;
+		free(rn->name);
+		free(rn->pattern);
+		free(rn);
+		rn = next;
 	}
 }

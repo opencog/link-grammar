@@ -45,6 +45,8 @@ MAINTAINERCLEANFILES = $(top_srcdir)/link-grammar/post-process/pp_lexer.c
 
 lib_LTLIBRARIES = liblink-grammar.la
 
+LINK_CFLAGS += ${REGEX_CFLAGS}
+
 EXTRA_liblink_grammar_la_DEPENDENCIES = $(srcdir)/link-grammar.def
 
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
@@ -53,6 +55,8 @@ liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
 	$(LINK_CFLAGS)
 
 liblink_grammar_la_LIBADD  =  ${REGEX_LIBS}
+
+liblink_grammar_la_LIBADD  +=  ${REGEX_LIBS}
 
 if HAVE_HUNSPELL
 liblink_grammar_la_LIBADD  +=  ${HUNSPELL_LIBS}
@@ -203,6 +207,7 @@ uninstall-hook:
 	-rmdir $(liblink_grammar_includedir)
 
 EXTRA_DIST=                         \
+	dict-common/pcre2posix.c         \
 	link-grammar.def                 \
 	README.md                        \
 	dict-sql/dict.sql                \
