@@ -190,6 +190,10 @@ AC_MSG_RESULT(no)
 	)
 )
 
+# We will try to include it for a possible prototype of strtod_l()
+# (like in BSD).
+AC_CHECK_HEADERS([xlocale.h])
+
 # ====================================================================
 
 dnl For stdatomic.h -- missing in gcc-4.8 (Ubuntu Trusty 14.04)
