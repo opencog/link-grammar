@@ -129,19 +129,13 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
 # Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
-#
+
+CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}" #"
+CXXFLAGS="-std=c++11 ${CXXFLAGS}" #"
+
 if test x${native_win32} = xyes; then
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
-	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
-	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
-	# I'm unclear as to why these are not being set automatically,
-	# by mingw itself .. but what the hey ... this can't hurt, right?
-	# Oh yes it can hurt, do not set these at all.
-	# Setting these screws up the remainder of the configure script.
-	# CFLAGS="${CFLAGS} -I/usr/include/mingw -D__MINGW32__"
-	# LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
 
 	# By default, MinGW doesn't know about %zu, which we use a lot, even
 	# on systems which have MSVC14, which has c99 stdio (printf prints
@@ -152,19 +146,6 @@ if test x${native_win32} = xyes; then
 	# Only running on Vista and on is supported.
 	AC_DEFINE(NTDDI_VERSION, NTDDI_VISTA)
 	AC_DEFINE(_WIN32_WINNT, _WIN32_WINNT_VISTA)
-
-
-else
-if test x${apple_osx} = xyes; then
-	# I'm confused, but it seems both gcc and clang on mac need
-	# to link to -stdlib=libc++
-	CXXFLAGS="-std=c++11 -stdlib=libc++ ${CXXFLAGS}"
-	LDFLAGS="-stdlib=libc++ -lc++ ${LDFLAGS}"
-else
-	# Else standard Linux/*BSD environment.
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
-	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
-fi
 fi
 
 # _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
