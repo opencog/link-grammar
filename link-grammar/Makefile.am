@@ -71,6 +71,9 @@ liblink_grammar_la_LIBADD  +=  ${SQLITE3_LIBS}
 endif
 
 if WITH_SAT_SOLVER
+# Dummy C++ source to cause C++ linking.
+nodist_EXTRA_liblink_grammar_la_SOURCES = dummy.cxx
+
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 if LIBMINISAT_BUNDLED
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
