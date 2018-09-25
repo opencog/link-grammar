@@ -793,6 +793,7 @@ define([AC_MSG_ERROR],
 
 Python2Found=no # This and the next variables should persist the Python2 check
 PYTHON2= PYTHON2_CPPFLAGS= PYTHON2_LIBS= PYTHON2_LDFLAGS= python2dir=
+lg_display_PYTHON2=
 AC_VARNAMES_CHECKPOINT # Remember the current variable names
 
 if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; then
@@ -808,6 +809,7 @@ if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; th
 	if test x$Python2Found = xyes; then
 		Python2Found=$PYTHON_VERSION
 		PYTHON2=$PYTHON
+		lg_display_PYTHON2=" ($PYTHON)"
 		PYTHON2_CPPFLAGS=$PYTHON_CPPFLAGS
 		PYTHON2_LIBS=$PYTHON_LIBS
 		PYTHON2_LDFLAGS=$PYTHON_LDFLAGS
@@ -830,6 +832,7 @@ if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x3; th
 	if test x$Python3Found = xyes; then
 		Python3Found=$PYTHON_VERSION
 		PYTHON3=$PYTHON
+		lg_display_PYTHON3=" ($PYTHON)"
 		PYTHON3_CPPFLAGS=$PYTHON_CPPFLAGS
 		PYTHON3_LIBS=$PYTHON_LIBS
 		PYTHON3_LDFLAGS=$PYTHON_LDFLAGS
@@ -1064,8 +1067,8 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python2 interfaces:             ${Python2Found}
-	Python3 interfaces:             ${Python3Found}
+	Python2 interfaces:             ${Python2Found}${lg_display_PYTHON2}
+	Python3 interfaces:             ${Python3Found}${lg_display_PYTHON3}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
