@@ -524,7 +524,7 @@ Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
 Note that the installation of the `pcre2` package is required because the libc
 REGEX implementation is not capable enough.
 
-For more details see [mingw/README-MSYS2.md](mingw/README-MSYS2.md).
+For more details see [mingw/README-MinGW64.md](mingw/README-MinGW64.md).
 
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------
