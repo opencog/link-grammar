@@ -400,21 +400,21 @@ Use esoteric display flags as set by !test=wg:FLAGS
 The following files are per-language, when \fILL\fP is the 2-letter
 ISO language code.
 .TP
-.I \fILL\fP/4.0.dict
+.IR LL /4.0.dict
 The Link Grammar dictionary.
 .TP
-.I \fILL\fP/4.0.affix
+.IR LL /4.0.affix
 Values of entities used in tokenization.
 .TP
-.I \fILL\fP/4.0.regex
+.IR LL /4.0.regex
 Regular expressions (see
 .BR regex (7))
 that are used to match tokens not found in the dictionary.
 .TP
-.I \fILL\fP/4.0.knowledge
+.IR LL /4.0.knowledge
 Post-processing definitions.
 .TP
-.I \fILL\fP/4.0.constituent\-knowledge
+.IR LL /4.0.constituent\-knowledge
 Definitions for producing a constituent tree.
 .TP
 .RI command-help- LL .txt \ \fBor \ command-help- LL-CC .txt
