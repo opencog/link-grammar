@@ -358,8 +358,7 @@ Additional config options are printed by
 ```
 
 The system has been tested and works well on 32 and 64-bit Linux
-systems, FreeBSD, macOS, as well as on many Microsoft Windows
-systems, under various different Windows development environments.
+systems, FreeBSD, macOS, as well as on Microsoft Windows systems.
 Specific OS-dependent notes follow.
 
 BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
@@ -477,11 +476,16 @@ BUILDING on Windows
 -------------------
 There are three different ways in which link-grammar can be compiled
 on Windows.  One way is to use Cygwin, which provides a Linux
-compatibility layer for Windows.  Unfortunately, the Cygwin system
-is not compatible with Java for Windows.  Another way is use the
-MSVC system.  A third way is to use the MinGW system, which uses the
+compatibility layer for Windows. Another way is use the
+MSVC system. A third way is to use the MinGW system, which uses the
 Gnu toolset to compile windows programs. The source code supports
 Windows systems from Vista on.
+
+The Cygwin way currently produces the best result, as it supports line editing
+with command completion and history and also supports word-graph displaying on
+X-windows. (MinGW currently doesn't  have `libedit`, and the MSVC port
+currently doesn't support command completion and history, spelling and
+X-Windows word-graph display, and the SAT-solver is untested on it).
 
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
@@ -505,8 +509,10 @@ use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
 install [Cygwin](http://www.cygwin.com/).
 
-Unfortunately, the Cygwin system is not compatible with Java, so if
-you need the Java bindings, you must use MSVC or MinGW, below.
+Note that the installation of the `pcre2` package is required because the libc
+REGEX implementation is not capable enough.
+
+For more details See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
 BUILDING on Windows (MinGW)
 ---------------------------
@@ -515,10 +521,10 @@ toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
 Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
 
-For more details see [mingw/README-MSYS2.md](mingw/README-MSYS2.md).
-You can also build with MinGW under Cygwin.
-See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
+Note that the installation of the `pcre2` package is required because the libc
+REGEX implementation is not capable enough.
 
+For more details see [mingw/README-MSYS2.md](mingw/README-MSYS2.md).
 
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------
