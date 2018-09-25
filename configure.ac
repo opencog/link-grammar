@@ -515,6 +515,7 @@ if test x"$do_hunspell" = xyes; then
 
 		if ! test -d "$HunSpellDictDir" ; then
 			AC_MSG_WARN([HunSpell dictionary directory \"$HunSpellDictDir\" not found.])
+			HunSpellDictDir_status=' (not found)'
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
 
@@ -1071,7 +1072,7 @@ $PACKAGE-$VERSION  build configuration settings
 	Python3 interfaces:             ${Python3Found}${lg_display_PYTHON3}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
-	HunSpell dictionary location:   ${HunSpellDictDir}
+	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}
