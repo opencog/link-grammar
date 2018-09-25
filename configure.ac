@@ -514,7 +514,7 @@ if test x"$do_hunspell" = xyes; then
 		fi
 
 		if ! test -d "$HunSpellDictDir" ; then
-			echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
+			AC_MSG_WARN([HunSpell dictionary directory \"$HunSpellDictDir\" not found.])
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
 
