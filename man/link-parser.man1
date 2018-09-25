@@ -192,10 +192,9 @@ either an absolute or a relative file path; so, for example:
 will run \%\fBlink\-parser\fP using the English dictionary located in the
 typical install directory.
 .PP
-\fBlink\-parser\fP can also be used non\-interactively, either through
-its API, or via the \%\fB\-batch\fP option.  When used with the
-\%\fB\-batch\fP option, \fBlink\-parser\fP reads from standard input,
-generating output to standard out. So, for example:
+\fBlink\-parser\fP can also be used in a non-interactive mode ("batch mode")
+via the \%\fB\-batch\fP option (a special command, see below):
+So, for example:
 .PP
 .RS 4
 .EX
@@ -203,12 +202,27 @@ generating output to standard out. So, for example:
 .EE
 .RE
 .PP
-Note that using the \%\fB\-batch\fP option disables the usual
-ASCII-graphics linkage printing.  This may be re-enabled via a special
-command; special commands may be interspersed with the input.
+will read lines from the file \%\fBthesis.txt\fP,
+processing each one as a complete sentence. For sentences that don't have a
+full parse, it will print
+.br
+.B +++++ error N
+.br
+(\fBN\fP is a number) to the standard output.
 .PP
-Alternately, an input file may be specified with the \%\fB!file\fP
+Alternately, an input file may be specified with the \%\fB!file \fIfilename\fP
 special command, described below.
+.PP
+Note that using "batch mode" disables the usual
+ASCII-graphics linkage printing. The input sentences also don't appear by
+default on stdout.  These features may be re-enabled via special
+commands; special commands may be interspersed with the input.
+.PP
+Instead of specifying \fB-batch\fP in the command-line, \fB!batch\fP can
+be specified in the said input file.
+.PP
+For more details, use \fB!help batch\fP in \%\fBlink\-parser\fP's
+interactive shell.
 
 .SH OPTIONS
 .TP
