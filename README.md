@@ -230,6 +230,24 @@ successful, run (as a non-root user)
 make installcheck
 ```
 
+Optional system libraries
+-------------------------
+The link-grammar library has optional features that are enabled automatically
+if `configure` detects certain libraries. These libraries are optional on most
+of the systems and if the feature they add is desired, corresponding libraries
+need to be installed before running `configure`.
+
+The library package names may vary on various systems (consult Google if
+needed...).  For example, the names may include `-devel` instead of `-dev`, or
+be without it altogether. The library names may be without the prefix `lib`.
+
+`libsqlite3-dev` (for SQLite-backed dictionary)<br>
+`minisat2` (for the SAT solver)<br>
+`libedit-dev` (see [Editline](#Editline))<br>
+`hunspell-devel` or `aspell-devel` (and the corresponding English dictionary).<br>
+`libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
+implementation, but needed for correctness on FreeBSD and Cygwin)
+
 Editline
 --------
 If libedit-dev is installed, then the arrow keys can be used to edit
