@@ -405,6 +405,8 @@ autogen.sh
 
 If you get errors, make sure you have installed the above-listed
 development packages, and that your system installation is up to date.
+Especially, missing `autoconf` or `autoconf-archive` may
+cause strange and misleading errors.
 
 For more info about how to proceed, continue at the section
 [CREATING the system](#creating-the-system) and the relevant sections after it.
