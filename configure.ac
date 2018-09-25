@@ -188,11 +188,13 @@ AC_CHECK_HEADER([stdatomic.h],
 	])
 
 # ====================================================================
-# TLS support (for per-thread error handling)
+# TLS support
+# Supports per-thread error handling and multi-thread dict reading.
+# Normally it shouldn't be disabled.
 
-error_handler_per_thread=no
+lg_tls=no
 AC_ARG_ENABLE([TLS],
-  [AS_HELP_STRING([--disable-TLS], [Do not use TLS (disable per-thread error handling)])],
+  [AS_HELP_STRING([--disable-TLS], [Do not use TLS])],
   [],
   [enable_TLS=yes])
 
@@ -201,7 +203,7 @@ then
 	dnl Check for a keyword for Thread Local Storage declaration.
 	dnl If found - define TLS to it.
 	AX_TLS(,:)
-	test "$ac_cv_tls" != "none" && error_handler_per_thread=yes
+	test "$ac_cv_tls" != "none" && lg_tls=yes
 fi
 
 # ====================================================================
@@ -1060,7 +1062,7 @@ $PACKAGE-$VERSION  build configuration settings
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Regex library:                  ${REGEX_LIBS}
-	Error handler per-thread:       ${error_handler_per_thread}
+	TLS:                            ${lg_tls}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}
 	Java libraries:                 ${JNIfound}
