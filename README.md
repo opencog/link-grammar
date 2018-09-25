@@ -424,6 +424,30 @@ display.  Use the `configure` option `--enable-wordgraph-display` to enable
 it. For more details on this feature, see
 [Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
+
+BUILDING on FreeBSD
+-------------------
+
+The current configuration has an apparent standard C++ library mixing problem
+when `gcc` is used (a fix is welcome). However, the common practice on FreeBSD
+is to compile with `clang`, and it doesn't have this problem. In addition,
+the add-on packages are installed under `/usr/local`.
+
+So here is how `configure` should be invoked:
+```
+env LDFLAGS=-L/usr/local/lib CPPFLAGS=-I/usr/local/include \
+CC=clang CXX=clang++ configure
+```
+
+Note that `pcre2` is a required package as the existing `libc`
+regex implementation doesn't have the needed level of regex support.
+
+Some packages have different names than the ones mentioned in the previous
+sections:
+
+`minisat` (minisat2)
+`pkgconf` (pkg-config)
+
 BUILDING on MacOS
 -----------------
 Plain-vanilla Link Grammar should compile and run on Apple MacOSX
