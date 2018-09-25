@@ -1,6 +1,6 @@
 #
 # Copyright (c) 2016 Amir Plivatsky <amirpli@gmail.com>
-#
+# License: Autoconf Macro General Public License
 
 # In configure.in, use as:
 #
@@ -30,7 +30,7 @@
 #   For example, x='ab\ncd=\n' (when \n is a real newline) may cause troubles.
 #   For a general use, this has to be fixed. A fix is welcome.
 
-#serial 1
+#serial 2
 
 AC_DEFUN([AC_VARNAMES_CHECKPOINT],
 [
@@ -53,7 +53,6 @@ AC_DEFUN([AC_VARNAMES_RESTORE],
 [
 	if test -z "$am_varnames_checkpoint"; then
 		AC_MSG_ERROR([No prior variable checkpoint (already restored?)])
-
 	fi
 
 	am_varnames_curr=`set | sed '/^[[a-zA-Z_]][[a-zA-Z0-9_]]*=/!d;s/=.*/\
@@ -65,13 +64,17 @@ AC_DEFUN([AC_VARNAMES_RESTORE],
 	am_varnames_tounset=`echo "$am_varnames_combined" | sort | uniq -u`
 	for am_varname_tmp in $am_varnames_tounset
 	do
-		unset $am_varname_tmp
+		AS_UNSET([$am_varname_tmp])
 	done
 	# Unset all the variables created between the calls to AC_VARNAMES_CHECKPOINT
 	# and AC_VARNAMES_RESTORE.
 	# Especially be careful to unset am_varnames_checkpoint in order to detect
 	# unmatched AC_VARNAMES_RESTORE calls.
-	unset am_varnames_checkpoint am_varnames_curr am_varnames_combined
-	unset am_varnames_tounset am_varname_tmp NL
+	AS_UNSET([am_varnames_checkpoint])
+	AS_UNSET([am_varnames_curr])
+	AS_UNSET([am_varnames_combined])
+	AS_UNSET([am_varnames_tounset])
+	AS_UNSET([am_varname_tmp])
+	AS_UNSET([NL])
 ]
 )
