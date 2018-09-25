@@ -322,6 +322,10 @@ dictionary.
 .IP word[&]
 This word is a part of an unknown word which has been found to consist
 of two or more words that are in the \%link\-grammar dictionary.
+.IP word.POS
+This word found in the dictionary as word.POS.
+.IP word.#CORRECTION
+This word is probably a typo - got linked as an alternative word CORRECTION.
 .RE
 .TP
 .BR !islands-ok \ (on)
