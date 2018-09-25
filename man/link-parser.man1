@@ -230,7 +230,7 @@ interactive shell.
 Print usage and exit.
 .TP
 .B \-\-version
-Print version number and exit.
+Print program version and configuration details, and exit.
 
 .SS Special "!" options
 The special "!" options can be specified either on the command-line, on
