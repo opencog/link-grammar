@@ -272,9 +272,11 @@ Enable display of bad linkages.
 .TP
 .BR !batch \ (off)
 Enable batch mode.
+.ig HIDDEN
 .TP
 .BR !cluster \ (off)
 Use clusters to loosen parsing.
+.HIDDEN
 .TP
 .BR !constituents \ (0)
 Generate constituent output. Its value may be:
@@ -344,9 +346,11 @@ Use "panic mode" if a parse cannot be quickly found.
 .TP
 .BR !postscript \ (off)
 Generate postscript output.
+.ig HIDDEN
 .TP
 .BR !senses \ (off)
 Display word senses.
+.HIDDEN
 .TP
 .BR !short \ (16)
 Maximum length of short links.
