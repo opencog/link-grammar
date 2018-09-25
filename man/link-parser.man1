@@ -416,6 +416,13 @@ Post-processing definitions.
 .TP
 .I \fILL\fP/4.0.constituent\-knowledge
 Definitions for producing a constituent tree.
+.TP
+.RI command-help- LL .txt \ \fBor \ command-help- LL-CC .txt
+Help text for the \%\fB!help \fItopic\fP special "!" command.
+If several such files are provided, the desired one can be selected
+by e.g. the LANGUAGE environment variable if it is set to \fILL\fP or
+\fILL-CC\fP (default is \fBen\fP). Currently only \fBcommand-help-en.txt\fP
+is provided.
 .sp 2
 .TP
 The directory search order for these files is:
