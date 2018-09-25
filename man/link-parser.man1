@@ -253,7 +253,7 @@ command prints all of the current variable settings.  The
 command is \fInot\fP a variable; it cannot be set.  It can be used
 repeatedly.
 .PP
-The \%\fB!exit\fP command will cause \%\fBlink\-parser\fP to exit.
+The \%\fB!exit\fP command instructs \%\fBlink\-parser\fP to exit.
 .PP
 The exclamation mark "!" is also a special command by itself, used to inspect
 the dictionary entry for any given word (optionally terminated by a subscript).
