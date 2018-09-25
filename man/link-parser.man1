@@ -436,7 +436,13 @@ The directory search order for these files is:
 .br
 \[bu]\  A custom data directory, as set by the API call \%\fBdictionary_set_data_dir()\fP.
 .br
-.I "%DATA_DIR%/link\-grammar/"
+\[bu]\  Installation-depended system data directory (*)
+.sp 2
+* This location is displayed as DICTIONARY_DIR when the \%\fB\-\-version\fP
+argument is provided to \%\fBlink\-parser\fP on the command line.
+On windows it may be relative to the location of the \%link\-grammar library DLL;
+in that case the actual location is displayed as "System data directory" when
+\%\fBlink\-parser\fP is invoked with -verbosity=3.
 
 .SH SEE ALSO
 .nh
