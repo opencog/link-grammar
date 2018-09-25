@@ -232,43 +232,51 @@ Print usage and exit.
 .B \-\-version
 Print program version and configuration details, and exit.
 
-.SS Special "!" options
-The special "!" options can be specified either on the command-line, on
-startup, or set and toggled within the interactive shell itself.  The
-full option name does not need to be used; only enough letters to make
-the option unique must be specified.
+.SS Special "!" commands
+The special "!" commands can be specified as command-line options in the
+command-line, or within the interactive shell itself by prefixing them with
+"!" on line start.  The full option name does not need to be used; only enough
+letters to make the option unique must be specified.
+.PP
+When specifying as a command-line option, a special command is proceeded
+by "-" instead of "!".
 .PP
 Boolean variables may be toggled simply by giving the \%\fB!\fP\fIvarname\fP,
 for example, \%\fB!batch\fP.  Setting other variables require using an
 equals sign: \%\fI!varname=value\fP, for example, \%\fB!width=100\fP.
 .PP
-The \%\fB!help\fP command will print general help, and the \%\fB!variables\fP
-command will print all of the current variable settings.  The
-\%\fB!file\fP command will read input from a file.  The \%\fB!file\fP
+The \%\fB!help\fP command prints general help. When issued from
+the interactive shell, it can get an argument, usually a special command.
+The \%\fB!variables\fP
+command prints all of the current variable settings.  The
+\%\fB!file\fP command reads input from its argument file.  The \%\fB!file\fP
 command is \fInot\fP a variable; it cannot be set.  It can be used
 repeatedly.
 .PP
 The \%\fB!exit\fP command will cause \%\fBlink\-parser\fP to exit.
 .PP
-The dictionary entry for any given word (optionally terminated by a
-subscript) may be examined by preceding it with two exclamation marks. A
-wildcard character '*' can be specified as the last character of the
-word in order to find multiple matches.
+The exclamation mark "!" is also a special command by itself, used to inspect
+the dictionary entry for any given word (optionally terminated by a subscript).
+Thus two exclamation marks are needed before such a word when doing so from the
+interactive shell. The wildcard character "*" can be specified as the last
+character of the word in order to find multiple matches.
 
-Default values of the options below are shown in parenthesis. Most of
+Default values of the special commands below are shown in parenthesis. Most of
 them are the default ones of the \%link\-grammar library.
+.br
 Boolean default values are shown as \fBon\fP (1) or \fBoff\fP (0).
+
 .TP
-.BR \-bad \ (off)
+.BR !bad \ (off)
 Enable display of bad linkages.
 .TP
-.BR \-batch \ (off)
+.BR !batch \ (off)
 Enable batch mode.
 .TP
-.BR \-cluster \ (off)
+.BR !cluster \ (off)
 Use clusters to loosen parsing.
 .TP
-.BR \-constituents \ (0)
+.BR !constituents \ (0)
 Generate constituent output. Its value may be:
 .RS
 .IP 0
@@ -282,16 +290,16 @@ Flat, bracketed tree [A like [B this B] A]
 Flat, treebank-style tree (A like (B this))
 .RE
 .TP
-.BR \-cost-max \ (2.7)
+.BR !cost-max \ (2.7)
 Largest cost to be considered.
 .TP
-.BR \-disjuncts \ (off)
+.BR !disjuncts \ (off)
 Display of disjuncts used.
 .TP
-.BR \-echo \ (off)
+.BR !echo \ (off)
 Echo input sentence.
 .TP
-.BR \-graphics \ (on)
+.BR !graphics \ (on)
 Enable graphical display of linkage.
 For each linkage, the sentence is printed along with a graphical
 representation of its linkage above it.
@@ -315,54 +323,54 @@ This word is a part of an unknown word which has been found to consist
 of two or more words that are in the \%link\-grammar dictionary.
 .RE
 .TP
-.BR \-islands-ok \ (on)
+.BR !islands-ok \ (on)
 Use null-linked islands.
 .TP
-.BR \-limit \ (1000)
+.BR !limit \ (1000)
 Limit the maximum linkages processed.
 .TP
-.BR \-links \ (off)
+.BR !links \ (off)
 Enable display of complete link data.
 .TP
-.BR \-null \ (on)
+.BR !null \ (on)
 Allow null links.
 .TP
-.BR \-morphology \ (off)
+.BR !morphology \ (off)
 Display word morphology.
 When a word matches a RegEx, show the matching dictionary entry.
 .TP
-.BR \-panic \ (on)
+.BR !panic \ (on)
 Use "panic mode" if a parse cannot be quickly found.
 .TP
-.BR \-postscript \ (off)
+.BR !postscript \ (off)
 Generate postscript output.
 .TP
-.BR \-senses \ (off)
+.BR !senses \ (off)
 Display word senses.
 .TP
-.BR \-short \ (16)
+.BR !short \ (16)
 Maximum length of short links.
 .TP
-.BR \-spell \ (7)
+.BR !spell \ (7)
 If zero, no spell and run-on corrections of unknown words are performed.
 .br
 Else, use up to this many spell-guesses per unknown word. In that
 case, the number of run-on corrections (word split) of unknown
 words is not limited.
 .TP
-.BR \-timeout \ (30)
+.BR !timeout \ (30)
 Abort parsing after this many seconds.
 .TP
-.BR \-use-sat \ (off)
+.BR !use-sat \ (off)
 Use Boolean SAT-based parser.
 .TP
-.BR \-verbosity \ (1)
+.BR !verbosity \ (1)
 Level of detail in output.
 .TP
-.BR \-walls \ (off)
+.BR !walls \ (off)
 Display wall words.
 .TP
-.BR \-width \ (16381)(*)
+.BR !width \ (16381)(*)
 The width of the display.
 .br
 * When writing to a terminal, this value is set from its width.
