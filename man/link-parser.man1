@@ -377,6 +377,20 @@ Display wall words.
 The width of the display.
 .br
 * When writing to a terminal, this value is set from its width.
+.br
+.TP
+.BR !wordgraph \ (0)
+Display the wordgraph (word-split graph).
+.RS
+.IP 0
+Disabled
+.IP 1
+Default display
+.IP 2
+Display parent tokens as subgraphs
+.IP 3
+Use esoteric display flags as set by !test=wg:FLAGS
+.RE
 
 .SH FILES
 The following files are per-language, when \fILL\fP is the 2-letter
