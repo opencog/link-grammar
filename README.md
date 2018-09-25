@@ -317,7 +317,7 @@ These packages are:
 - Windows:
  * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
    You also have to install SWIG from http://www.swig.org/download.html .
-- MacOS:
+- macOS:
  * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
    Alternatively, install
 [Anaconda](https://conda.io/docs/user-guide/install/download.html).
@@ -358,7 +358,7 @@ Additional config options are printed by
 ```
 
 The system has been tested and works well on 32 and 64-bit Linux
-systems, FreeBSD, MacOSX, as well as on many Microsoft Windows
+systems, FreeBSD, macOS, as well as on many Microsoft Windows
 systems, under various different Windows development environments.
 Specific OS-dependent notes follow.
 
@@ -448,9 +448,9 @@ sections:
 `minisat` (minisat2)
 `pkgconf` (pkg-config)
 
-BUILDING on MacOS
+BUILDING on macOS
 -----------------
-Plain-vanilla Link Grammar should compile and run on Apple MacOSX
+Plain-vanilla Link Grammar should compile and run on Apple macOS
 just fine, as described above.  At this time, there are no reported
 issues.
 
@@ -460,7 +460,7 @@ configure with:
 ./configure --disable-java-bindings
 ```
 
-By default, java requires a 64-bit binary, and not all MacOS systems
+By default, java requires a 64-bit binary, and not all macOS systems
 have a 64-bit devel environment installed.
 
 If you do want Java bindings, be sure to set the JDK_HOME environment
