@@ -381,19 +381,22 @@ Clone it:
 Or download it as a ZIP:<br>
 `https://github.com/opencog/link-grammar/archive/master.zip`
 
-Tools that may need installation before you can compile the system:
+#### Prerequisite tools
+Tools that may need installation before you can build link-grammar:
 
-make<br>
-m4<br>
-gcc<br>
-gcc-c++ (for the SAT solver)<br>
-autoconf<br>
-autoconf-archive<br>
-pkg-config<br>
-swig (for language bindings)<br>
-flex<br>
+`make` (the `gmake` variant may be needed)<br>
+`m4`<br>
+`gcc` or `clang`<br>
+`gcc-c++` or `clang++` (for the SAT solver)<br>
+`autoconf`<br>
+`autoconf-archive`<br>
+`pkg-config`<br>
+
+Optional:<br>
+`swig` (for language bindings)<br>
+`flex`<br>
 Apache Ant (for Java bindings)<br>
-graphviz (if you like to use the word-graph display feature)
+`graphviz` (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
 To generate it, use:
