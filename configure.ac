@@ -461,6 +461,9 @@ case "$host_os$host_cpu" in
 		# Not checked
 		default_hunspell_dictdir=/mingw32/share/myspell/dicts
 		;;
+	darwin*)
+		default_hunspell_dictdir=/Library/Spelling
+		;;
 	*)
 		default_hunspell_dictdir=/usr/share/myspell/dicts
 		;;
