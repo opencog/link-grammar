@@ -1,5 +1,10 @@
 Version 5.5.2 (XXX 2018)
- * Something ...
+ * Improve Windows support.
+ * Fix dict cost reading under user locales with comma decimal separator.
+ * Support using the pcre2 regex package (configured by default if available).
+ * Add "-with-regexlib=pcre2|tre|regex|c" to "configure".
+ * Fix and document building on FreeBSD.
+ * Major documentation update for building with Cygwin.
 
 Version 5.5.1 (27 July 2018)
  * Fix broken Java bindings build.
