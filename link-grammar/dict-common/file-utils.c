@@ -131,120 +131,149 @@ static void free_dictionary_dir(void)
 
 /**
  * Return the path of the system dictionary directory.
- * If DICTIONARY_DIR is an absolute path (must be so on POSIX systems)
- * then it is directly used.
- * On Windows, a relative DICTIONARY_DIR is combined with the location
- * of the invocation directory of our program.
- * Note: The directory separators in the path are always supposed to be
- * forward slashes.
- * @param find If true, find the system dictionary directory; else free it.
+ * If DICTIONARY_DIR is an absolute path (must be so on systems other than
+ * Windows) then it is directly used.
+ * On Windows (currently implemented on MSVC only), a relative
+ * DICTIONARY_DIR is combined with the location of this library DLL, and
+ * if it includes a drive letter or is a UNC path then it must be
+ * absolute. It shouldn't end with a directory separator.
+ * @param find If true, find the system dictionary directory; else free it
+ * if needed.
+ * @return The actual dictionary directory.
  */
 static const char *get_dictionary_dir(bool find)
 {
 #ifndef _MSC_VER
 		return DICTIONARY_DIR;
 #else
+	/* We are on Windows. DICTIONARY_DIR, if defined, can be relative or
+	 * absolute. An absolute path must start with a drive letter or be a
+	 * UNC path, and a relative path should not start with a drive letter
+	 * or be a UNC path.
+	 * In case it is not so, the result is undefined.  If it is a relative
+	 * path, it is concatenated to the program location. */
+	static const char *dictionary_dir;
 
-	/* DICTIONARY_DIR, if defined, can be relative or absolute.  An
-	 * absolute path must start with a drive letter or be a UNC path , and
-	 * a relative path should not start with a drive letter.
-	 * In case it is not so, the result is undefined.
-	 * If it is a relative path, it is concatenated to the program
-	 * location. */
-	static char *dictionary_dir;
-	if (!find)
-	{
+	if (!find) {
 		free((void *)dictionary_dir);
 		return NULL;
 	}
 
+	/* If we already found it, just return it. */
 	if (NULL != dictionary_dir) return dictionary_dir;
-	dictionary_dir = (char *)((NULL == DICTIONARY_DIR) ? "" : DICTIONARY_DIR);
+
+	dictionary_dir = DICTIONARY_DIR;
+	/* If it is NULL or "", assume it is relative to the current directory. */
+	if ((NULL == dictionary_dir) || ('\0' == dictionary_dir[1]))
+		dictionary_dir = ".";
+
+	/* DICTIONARY_DIR is already an absolute path - return it.
+	 * Note: UNC paths are supposed to be absolute. */
 	if (0 == strncmp(dictionary_dir, "\\\\", 2)) return DICTIONARY_DIR;
-	if ((strlen(dictionary_dir) > 2) && (0 == strncmp(dictionary_dir+1, ":\\", 2)))
+	if (0 == strncmp(dictionary_dir, "//", 2)) return DICTIONARY_DIR;
+
+	/* It includes a drive letter - suppose it's absolute so just return it. */
+	if ((strlen(dictionary_dir) > 2) && (':' == dictionary_dir[1]))
 		return DICTIONARY_DIR;
 
 	/* Here DICTIONARY_DIR is a relative path (to be concatenated to the
-	 * location of our program), or an absolute path w/o a drive letter (to
-	 * be prepended with the drive letter of our program).
-	 * Non-ASCII characters in the program location are not supported
-	 * (files will not be found). */
-	char prog_path[MAX_PATH_NAME] = "";
+	 * location of this library DLL), or an absolute path w/o a drive
+	 * letter (to be prepended with the drive letter of our program).
+	 * Non-ASCII characters in the DLL location are not supported (files
+	 * will not be found).
+	 * Note: In case of an error, we return dictionary_dir.
+	 * Is there anything better to do? */
+	char dll_path[MAX_PATH_NAME] = "";
+	HMODULE dll_hm = NULL;
 
-	if (!GetModuleFileNameA(NULL, prog_path, sizeof(prog_path)))
+	/* First find the module handle of this library DLL. */
+	if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+	                       GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+	                       (LPCSTR) &get_dictionary_dir, &dll_hm))
 	{
-		prt_error("Warning: GetModuleFileName error %d\n", (int)GetLastError());
+		prt_error("Warning: GetModuleHandleEx error %d\n", (int)GetLastError());
+		return dictionary_dir; /* Is there anything better to do? */
 	}
-	else
+
+	/* Then use it to find the DLL path. */
+	if (!GetModuleFileNameA(dll_hm, dll_path, sizeof(dll_path)))
 	{
-		if ('\0' == prog_path[0])
+		prt_error("Warning: GetModuleFileNameA error %d\n", (int)GetLastError());
+		return dictionary_dir;
+	}
+
+	if ('\0' == dll_path[0])
+	{
+		/* Can it happen? */
+		prt_error("Warning: GetModuleFileNameA didn't return a path!\n");
+		return dictionary_dir;
+	}
+
+	if (!PathRemoveFileSpecA(dll_path))
+	{
+		prt_error("Warning: Cannot get directory from LG DLL path '%s'!\n",
+					 dll_path);
+		return dictionary_dir;
+	}
+
+	/* Unconvertible characters are marked as '?' */
+	if (NULL != strchr(dll_path, '?'))
+	{
+		prt_error("Warning: Directory of LG DLL (%s) "
+		          "contains unsupported characters\n", dll_path);
+		return dictionary_dir;
+	}
+
+	/* Just a sanity check of the directory length. */
+	if (strlen(dll_path) < 3)
+	{
+		prt_error("Warning: DLL directory name '%s' too short!\n", dll_path);
+		return dictionary_dir;
+	}
+
+	lgdebug(D_USER_FILES, "Debug: Directory of LG DLL: %s\n", dll_path);
+
+	char *combined_dictionary_dir;
+
+	if (('\\' == dictionary_dir[0]) || ('/' == dictionary_dir[0]))
+	{
+		/* DICTIONARY_DIR is an absolute path without a drive
+		 * (UNC paths already returned unmodified, above).
+		 * Prepend the drive or the host of our program location. */
+		size_t prefix_len = 0;
+
+		if (dll_path[1] == ':')
 		{
-			/* Can it happen? */
-			prt_error("Warning: GetModuleFileName didn't return program path!\n");
+			/* "X:path" */
+			prefix_len = 2;
 		}
 		else
 		{
-			if (!PathRemoveFileSpecA(prog_path))
-			{
-				prt_error("Warning: Cannot get directory from program path '%s'!\n",
-				          prog_path);
-			}
-			else
-			{
-				/* Unconvertible characters are marked as '?' */
-				const char *unsupported = (NULL != strchr(prog_path, '?')) ?
-					" (containing unsupported character)" : "";
-
-				lgdebug(D_USER_FILES, "Debug: Directory of executable: %s%s\n",
-				        prog_path, unsupported);
-
-				if (('\0' == unsupported[0]) && (strlen(prog_path) > 3))
-				{
-					if ((NULL == DICTIONARY_DIR) || ('\0' == dictionary_dir[0]))
-					{
-						dictionary_dir = prog_path;
-					}
-					else if (DIR_SEPARATOR[0] == dictionary_dir[0])
-					{
-						/* DICTIONARY_DIR is an absolute path without a drive.
-						 * Prepend the drive or the host of our program location. */
-						size_t prefix_len = 0;
-
-						if (prog_path[1] == ':')
-						{
-							/* "X:path" */
-							prefix_len = 2;
-						}
-						else
-						{
-							/* \\host\path */
-							const char *hostend = strchr(prog_path+3, '\\');
-							if (NULL != hostend)
-								prefix_len = (size_t)(hostend - prog_path + 1);
-						}
-						size_t len = prefix_len + +strlen(dictionary_dir) + 1;
-						dictionary_dir = malloc(len);
-						strncpy(dictionary_dir, prog_path, prefix_len);
-						strcpy(dictionary_dir + prefix_len, DICTIONARY_DIR);
-
-						atexit(free_dictionary_dir);
-					}
-					else
-					{
-						size_t len = strlen(prog_path)+1+strlen(dictionary_dir)+1;
-						dictionary_dir = malloc(len);
-						strcpy(dictionary_dir, prog_path);
-						strcat(dictionary_dir, "\\");
-						strcat(dictionary_dir, DICTIONARY_DIR);
-
-						atexit(free_dictionary_dir);
-					}
-
-				}
-			}
+			/* \\host\path */
+			const char *hostend = strchr(dll_path+3, '\\');
+			if (NULL == hostend)
+				hostend = strchr(dll_path+3, '/');
+			if (NULL != hostend)
+				prefix_len = (size_t)(hostend - dll_path);
 		}
+		size_t len = prefix_len + strlen(dictionary_dir) + 1;
+		combined_dictionary_dir = malloc(len);
+		strncpy(combined_dictionary_dir, dll_path, prefix_len);
+		strcpy(combined_dictionary_dir + prefix_len, dictionary_dir);
+	}
+	else
+	{
+		size_t len = strlen(dll_path)+1+strlen(dictionary_dir)+1;
+		combined_dictionary_dir = malloc(len);
+		strcpy(combined_dictionary_dir, dll_path);
+		strcat(combined_dictionary_dir, "\\"); /* Mixing / and \ is allowed. */
+		strcat(combined_dictionary_dir, dictionary_dir);
 	}
 
+	dictionary_dir = combined_dictionary_dir;
+	atexit(free_dictionary_dir);
+	lgdebug(D_USER_FILES, "Debug: Using dictionary directory '%s'\n",
+	        dictionary_dir);
 	return dictionary_dir;
 #endif /* _MSC_VER */
 }
