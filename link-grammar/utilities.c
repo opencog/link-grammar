@@ -24,9 +24,9 @@
 #include <sys/types.h>
 #include <stdarg.h>
 #include <locale.h>
-#ifdef HAVE_LOCALE_T_IN_XLOCALE_H
+#ifdef HAVE_XLOCALE_H
 #include <xlocale.h>
-#endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
+#endif /* HAVE_XLOCALE_H */
 
 #ifndef _WIN32
 	// #include <unistd.h>

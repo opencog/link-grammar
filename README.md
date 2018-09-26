@@ -230,6 +230,24 @@ successful, run (as a non-root user)
 make installcheck
 ```
 
+Optional system libraries
+-------------------------
+The link-grammar library has optional features that are enabled automatically
+if `configure` detects certain libraries. These libraries are optional on most
+of the systems and if the feature they add is desired, corresponding libraries
+need to be installed before running `configure`.
+
+The library package names may vary on various systems (consult Google if
+needed...).  For example, the names may include `-devel` instead of `-dev`, or
+be without it altogether. The library names may be without the prefix `lib`.
+
+`libsqlite3-dev` (for SQLite-backed dictionary)<br>
+`minisat2` (for the SAT solver)<br>
+`libedit-dev` (see [Editline](#Editline))<br>
+`hunspell-devel` or `aspell-devel` (and the corresponding English dictionary).<br>
+`libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
+implementation, but needed for correctness on FreeBSD and Cygwin)
+
 Editline
 --------
 If libedit-dev is installed, then the arrow keys can be used to edit
@@ -299,7 +317,7 @@ These packages are:
 - Windows:
  * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
    You also have to install SWIG from http://www.swig.org/download.html .
-- MacOS:
+- macOS:
  * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
    Alternatively, install
 [Anaconda](https://conda.io/docs/user-guide/install/download.html).
@@ -340,8 +358,7 @@ Additional config options are printed by
 ```
 
 The system has been tested and works well on 32 and 64-bit Linux
-systems, FreeBSD, MacOSX, as well as on many Microsoft Windows
-systems, under various different Windows development environments.
+systems, FreeBSD, macOS, as well as on Microsoft Windows systems.
 Specific OS-dependent notes follow.
 
 BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
@@ -363,19 +380,22 @@ Clone it:
 Or download it as a ZIP:<br>
 `https://github.com/opencog/link-grammar/archive/master.zip`
 
-Tools that may need installation before you can compile the system:
+#### Prerequisite tools
+Tools that may need installation before you can build link-grammar:
 
-make<br>
-m4<br>
-gcc<br>
-gcc-c++ (for the SAT solver)<br>
-autoconf<br>
-autoconf-archive<br>
-pkg-config<br>
-swig (for language bindings)<br>
-flex<br>
+`make` (the `gmake` variant may be needed)<br>
+`m4`<br>
+`gcc` or `clang`<br>
+`gcc-c++` or `clang++` (for the SAT solver)<br>
+`autoconf`<br>
+`autoconf-archive`<br>
+`pkg-config`<br>
+
+Optional:<br>
+`swig` (for language bindings)<br>
+`flex`<br>
 Apache Ant (for Java bindings)<br>
-graphviz (if you like to use the word-graph display feature)
+`graphviz` (if you like to use the word-graph display feature)
 
 The GitHub version doesn't include a `configure` script.
 To generate it, use:
@@ -385,6 +405,8 @@ autogen.sh
 
 If you get errors, make sure you have installed the above-listed
 development packages, and that your system installation is up to date.
+Especially, missing `autoconf` or `autoconf-archive` may
+cause strange and misleading errors.
 
 For more info about how to proceed, continue at the section
 [CREATING the system](#creating-the-system) and the relevant sections after it.
@@ -403,9 +425,33 @@ display.  Use the `configure` option `--enable-wordgraph-display` to enable
 it. For more details on this feature, see
 [Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
-BUILDING on MacOS
+
+BUILDING on FreeBSD
+-------------------
+
+The current configuration has an apparent standard C++ library mixing problem
+when `gcc` is used (a fix is welcome). However, the common practice on FreeBSD
+is to compile with `clang`, and it doesn't have this problem. In addition,
+the add-on packages are installed under `/usr/local`.
+
+So here is how `configure` should be invoked:
+```
+env LDFLAGS=-L/usr/local/lib CPPFLAGS=-I/usr/local/include \
+CC=clang CXX=clang++ configure
+```
+
+Note that `pcre2` is a required package as the existing `libc`
+regex implementation doesn't have the needed level of regex support.
+
+Some packages have different names than the ones mentioned in the previous
+sections:
+
+`minisat` (minisat2)
+`pkgconf` (pkg-config)
+
+BUILDING on macOS
 -----------------
-Plain-vanilla Link Grammar should compile and run on Apple MacOSX
+Plain-vanilla Link Grammar should compile and run on Apple macOS
 just fine, as described above.  At this time, there are no reported
 issues.
 
@@ -415,7 +461,7 @@ configure with:
 ./configure --disable-java-bindings
 ```
 
-By default, java requires a 64-bit binary, and not all MacOS systems
+By default, java requires a 64-bit binary, and not all macOS systems
 have a 64-bit devel environment installed.
 
 If you do want Java bindings, be sure to set the JDK_HOME environment
@@ -432,11 +478,16 @@ BUILDING on Windows
 -------------------
 There are three different ways in which link-grammar can be compiled
 on Windows.  One way is to use Cygwin, which provides a Linux
-compatibility layer for Windows.  Unfortunately, the Cygwin system
-is not compatible with Java for Windows.  Another way is use the
-MSVC system.  A third way is to use the MinGW system, which uses the
+compatibility layer for Windows. Another way is use the
+MSVC system. A third way is to use the MinGW system, which uses the
 Gnu toolset to compile windows programs. The source code supports
 Windows systems from Vista on.
+
+The Cygwin way currently produces the best result, as it supports line editing
+with command completion and history and also supports word-graph displaying on
+X-windows. (MinGW currently doesn't  have `libedit`, and the MSVC port
+currently doesn't support command completion and history, spelling and
+X-Windows word-graph display, and the SAT-solver is untested on it).
 
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
@@ -460,8 +511,10 @@ use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
 install [Cygwin](http://www.cygwin.com/).
 
-Unfortunately, the Cygwin system is not compatible with Java, so if
-you need the Java bindings, you must use MSVC or MinGW, below.
+Note that the installation of the `pcre2` package is required because the libc
+REGEX implementation is not capable enough.
+
+For more details See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
 BUILDING on Windows (MinGW)
 ---------------------------
@@ -470,10 +523,10 @@ toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
 Download and install MinGW/MSYS2 from [msys2.org](msys2.org).
 
-For more details see [mingw/README-MSYS2.md](mingw/README-MSYS2.md).
-You can also build with MinGW under Cygwin.
-See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
+Note that the installation of the `pcre2` package is required because the libc
+REGEX implementation is not capable enough.
 
+For more details see [mingw/README-MinGW64.md](mingw/README-MinGW64.md).
 
 BUILDING and RUNNING on Windows (MSVC)
 --------------------------------------

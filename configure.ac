@@ -40,6 +40,7 @@ AC_CANONICAL_HOST
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
+AX_COMPILER_VENDOR
 AC_PROG_CPP
 AM_PROG_LEX
 AC_PROG_INSTALL
@@ -61,6 +62,7 @@ AC_CHECK_FUNCS(strndup strtok_r)
 AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
 
 AC_FUNC_ALLOCA
+AC_FUNC_STRERROR_R
 
 # For the Wordgraph display code
 AC_FUNC_FORK
@@ -127,19 +129,13 @@ CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
 # Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
-#
+
+CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}" #"
+CXXFLAGS="-std=c++11 ${CXXFLAGS}" #"
+
 if test x${native_win32} = xyes; then
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
-	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"
-	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
-	# I'm unclear as to why these are not being set automatically,
-	# by mingw itself .. but what the hey ... this can't hurt, right?
-	# Oh yes it can hurt, do not set these at all.
-	# Setting these screws up the remainder of the configure script.
-	# CFLAGS="${CFLAGS} -I/usr/include/mingw -D__MINGW32__"
-	# LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
 
 	# By default, MinGW doesn't know about %zu, which we use a lot, even
 	# on systems which have MSVC14, which has c99 stdio (printf prints
@@ -150,19 +146,6 @@ if test x${native_win32} = xyes; then
 	# Only running on Vista and on is supported.
 	AC_DEFINE(NTDDI_VERSION, NTDDI_VISTA)
 	AC_DEFINE(_WIN32_WINNT, _WIN32_WINNT_VISTA)
-
-
-else
-if test x${apple_osx} = xyes; then
-	# I'm confused, but it seems both gcc and clang on mac need
-	# to link to -stdlib=libc++
-	CXXFLAGS="-std=c++11 -stdlib=libc++ ${CXXFLAGS}"
-	LDFLAGS="-stdlib=libc++ -lc++ ${LDFLAGS}"
-else
-	# Else standard Linux/*BSD environment.
-	CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}"
-	CXXFLAGS="-std=c++11 ${CXXFLAGS}"
-fi
 fi
 
 # _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
@@ -189,6 +172,10 @@ AC_MSG_RESULT(no)
 	)
 )
 
+# We will try to include it for a possible prototype of strtod_l()
+# (like in BSD).
+AC_CHECK_HEADERS([xlocale.h])
+
 # ====================================================================
 
 dnl For stdatomic.h -- missing in gcc-4.8 (Ubuntu Trusty 14.04)
@@ -201,11 +188,13 @@ AC_CHECK_HEADER([stdatomic.h],
 	])
 
 # ====================================================================
-# TLS support (for per-thread error handling)
+# TLS support
+# Supports per-thread error handling and multi-thread dict reading.
+# Normally it shouldn't be disabled.
 
-error_handler_per_thread=no
+lg_tls=no
 AC_ARG_ENABLE([TLS],
-  [AS_HELP_STRING([--disable-TLS], [Do not use TLS (disable per-thread error handling)])],
+  [AS_HELP_STRING([--disable-TLS], [Do not use TLS])],
   [],
   [enable_TLS=yes])
 
@@ -214,7 +203,7 @@ then
 	dnl Check for a keyword for Thread Local Storage declaration.
 	dnl If found - define TLS to it.
 	AX_TLS(,:)
-	test "$ac_cv_tls" != "none" && error_handler_per_thread=yes
+	test "$ac_cv_tls" != "none" && lg_tls=yes
 fi
 
 # ====================================================================
@@ -317,7 +306,7 @@ if test "x$enable_sat_solver" = xyes; then
 	# The sat-solver code is in C++; so the link-grammar library should now
 	# directly require libstdc++ instead of indirectly depend on its
 	# availability via the minisat2 library.
-	test x${apple_osx} = xyes || AC_CHECK_LIB(stdc++, main)
+	#test x${apple_osx} = xyes || AC_CHECK_LIB(stdc++, main)
 
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
@@ -474,6 +463,9 @@ case "$host_os$host_cpu" in
 		# Not checked
 		default_hunspell_dictdir=/mingw32/share/myspell/dicts
 		;;
+	darwin*)
+		default_hunspell_dictdir=/Library/Spelling
+		;;
 	*)
 		default_hunspell_dictdir=/usr/share/myspell/dicts
 		;;
@@ -524,7 +516,8 @@ if test x"$do_hunspell" = xyes; then
 		fi
 
 		if ! test -d "$HunSpellDictDir" ; then
-			echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
+			AC_MSG_WARN([HunSpell dictionary directory \"$HunSpellDictDir\" not found.])
+			HunSpellDictDir_status=' (not found)'
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
 
@@ -718,7 +711,7 @@ if test "x$enable_java_bindings" = "xyes"; then
 		# However, automake is unable to handle spaces in a filename even
 		# when quoted (e.g. "-I '$JAVA_HOME/include'"). As a workaround,
 		# convert $JAVA_HOME to a short DOS path.
-		JAVA_HOME=`cygpath --dos --mixed "$JAVA_HOME"`
+		test -n "${JAVA_HOME}" && JAVA_HOME=`cygpath --dos --mixed "$JAVA_HOME"`
 
 		# win32/jni_md.h:34:9: error: ‘__int64’ does not name a type
 		JAVA_CPPFLAGS=-D__int64=int64_t
@@ -726,7 +719,15 @@ if test "x$enable_java_bindings" = "xyes"; then
 	AC_SUBST(JAVA_SRCDIR)
 
 	AC_MSG_CHECKING(for jni.h)
+
+	pushdef([AC_MSG_ERROR])
+	define([AC_MSG_ERROR],
+		[AC_MSG_NOTICE([$1])])
+
 	AX_JNI_INCLUDE_DIR
+
+	popdef([AC_MSG_ERROR])
+
 	if test -n "$JNI_INCLUDE_DIRS"; then
 		JNIfound=yes
 	fi
@@ -795,6 +796,7 @@ define([AC_MSG_ERROR],
 
 Python2Found=no # This and the next variables should persist the Python2 check
 PYTHON2= PYTHON2_CPPFLAGS= PYTHON2_LIBS= PYTHON2_LDFLAGS= python2dir=
+lg_display_PYTHON2=
 AC_VARNAMES_CHECKPOINT # Remember the current variable names
 
 if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; then
@@ -810,6 +812,7 @@ if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; th
 	if test x$Python2Found = xyes; then
 		Python2Found=$PYTHON_VERSION
 		PYTHON2=$PYTHON
+		lg_display_PYTHON2=" ($PYTHON)"
 		PYTHON2_CPPFLAGS=$PYTHON_CPPFLAGS
 		PYTHON2_LIBS=$PYTHON_LIBS
 		PYTHON2_LDFLAGS=$PYTHON_LDFLAGS
@@ -832,6 +835,7 @@ if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x3; th
 	if test x$Python3Found = xyes; then
 		Python3Found=$PYTHON_VERSION
 		PYTHON3=$PYTHON
+		lg_display_PYTHON3=" ($PYTHON)"
 		PYTHON3_CPPFLAGS=$PYTHON_CPPFLAGS
 		PYTHON3_LIBS=$PYTHON_LIBS
 		PYTHON3_LDFLAGS=$PYTHON_LDFLAGS
@@ -1058,7 +1062,7 @@ $PACKAGE-$VERSION  build configuration settings
 	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Regex library:                  ${REGEX_LIBS}
-	Error handler per-thread:       ${error_handler_per_thread}
+	TLS:                            ${lg_tls}
 	Editline command-line history:  ${edlin}
 	UTF8 editline support:          ${wedlin}
 	Java libraries:                 ${JNIfound}
@@ -1066,11 +1070,11 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python2 interfaces:             ${Python2Found}
-	Python3 interfaces:             ${Python3Found}
+	Python2 interfaces:             ${Python2Found}${lg_display_PYTHON2}
+	Python3 interfaces:             ${Python3Found}${lg_display_PYTHON3}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
-	HunSpell dictionary location:   ${HunSpellDictDir}
+	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}

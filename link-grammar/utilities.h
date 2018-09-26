@@ -62,10 +62,11 @@ void *alloca (size_t);
 #ifdef _WIN32
 #define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
 #else
-#ifdef _GNU_SOURCE
+#if STRERROR_R_CHAR_P
 /* Emulate the POSIX version; assuming len>0 and a successful call. */
-#define strerror_r(errno, buf, len) abs((strcpy(buf, strerror_r (errno, buf, len)), 0))
-#endif /* _GNU_SOURCE */
+#define strerror_r(errno, buf, len) \
+	abs((strncpy(buf, strerror_r (errno, buf, len), len), buf[len-1] = '\0', 0))
+#endif /* STRERROR_R_CHAR_P */
 #endif /* _WIN32 */
 
 #ifdef _MSC_VER
