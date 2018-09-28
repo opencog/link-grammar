@@ -25,10 +25,6 @@ LINK_BEGIN_DECLS
  * the public API to the link-parser system.
  */
 
-#ifdef USE_VITERBI
-Dictionary dictionary_create_from_utf8(const char * input);
-#endif
-
 bool boolean_dictionary_lookup(const Dictionary, const char *);
 
 Dict_node * dictionary_lookup_list(const Dictionary, const char *);
