@@ -64,9 +64,6 @@
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
-#ifdef USE_VITERBI
-#include "../viterbi/viterbi.h"
-#endif /* USE_VITERBI */
 
 #define DISPLAY_MAX 1024
 
@@ -825,181 +822,171 @@ int main(int argc, char * argv[])
 		else
 			parse_options_set_perform_pp_prune(opts, true);
 
-#ifdef USE_VITERBI
-		/* Compile-time optional, for now, since it don't work yet. */
-		if (parse_options_get_use_viterbi(opts))
+		sent = sentence_create(input_string, dict);
+
+		if (sentence_split(sent, opts) < 0)
 		{
-			viterbi_parse(input_string, dict);
-		}
-		else
-#endif /* USE_VITERBI */
-		{
-			sent = sentence_create(input_string, dict);
-
-			if (sentence_split(sent, opts) < 0)
-			{
-				sentence_delete(sent);
-				sent = NULL;
-				continue;
-			}
-
-			if (0 != copts->display_wordgraph)
-			{
-				const char *wg_display_flags = ""; /* default flags */
-				switch (copts->display_wordgraph)
-				{
-					case 1:     /* default flags */
-						break;
-					case 2:     /* subgraphs with a legend */
-						wg_display_flags = "sl";
-						break;
-					case 3:
-						{
-							/* Use esoteric flags from the test user variable. */
-							const char wg[] = ",wg:";
-							const char *s = strstr(test, wg);
-							if (NULL != s) wg_display_flags = s+4;
-						}
-						break;
-					default:
-						prt_error("Warning: wordgraph=%d: Unknown value, using 1\n",
-						          copts->display_wordgraph);
-						copts->display_wordgraph = 1;
-				}
-				sentence_display_wordgraph(sent, wg_display_flags);
-			}
-
-			/* First parse with cost 0 or 1 and no null links */
-			// parse_options_set_disjunct_cost(opts, 2.7);
-			parse_options_set_min_null_count(opts, 0);
-			parse_options_set_max_null_count(opts, 0);
-			parse_options_reset_resources(opts);
-
-			num_linkages = sentence_parse(sent, opts);
-
-			/* num_linkages is negative only on a hard-error;
-			 * typically, due to a zero-length sentence.  */
-			if (num_linkages < 0)
-			{
-				sentence_delete(sent);
-				sent = NULL;
-				continue;
-			}
-
-#if 0
-			/* Try again, this time omitting the requirement for
-			 * definite articles, etc. This should allow for the parsing
-			 * of newspaper headlines and other clipped speech.
-			 *
-			 * XXX Unfortunately, this also allows for the parsing of
-			 * all sorts of ungrammatical sentences which should not
-			 * parse, and leads to bad parses of many other unparsable
-			 * but otherwise grammatical sentences.  Thus, this trick
-			 * pretty much fails; we leave it here to document the
-			 * experiment.
-			 */
-			if (num_linkages == 0)
-			{
-				parse_options_set_disjunct_cost(opts, 4.5);
-				num_linkages = sentence_parse(sent, opts);
-				if (num_linkages < 0) continue;
-			}
-#endif /* 0 */
-
-			/* Try using a larger list of disjuncts */
-			/* XXX FIXME: the lg_expand_disjunct_list() routine is not
-			 * currently a part of the public API; it should be made so,
-			 * or this expansion idea should be abandoned... not sure which.
-			 */
-			if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
-			{
-				int expanded;
-				if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
-				parse_options_set_disjunct_cost(opts, 3.9);
-				expanded = lg_expand_disjunct_list(sent);
-				if (expanded)
-				{
-					num_linkages = sentence_parse(sent, opts);
-				}
-				if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
-			}
-
-			/* If asked to show bad linkages, then show them. */
-			if ((num_linkages == 0) && (!copts->batch_mode))
-			{
-				if (copts->display_bad)
-				{
-					num_linkages = sentence_num_linkages_found(sent);
-				}
-			}
-
-			/* Now parse with null links */
-			if (num_linkages == 0 && !copts->batch_mode)
-			{
-				if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
-
-				if (copts->allow_null)
-				{
-					/* XXX should use expanded disjunct list here too */
-					parse_options_set_min_null_count(opts, 1);
-					parse_options_set_max_null_count(opts, sentence_length(sent));
-					num_linkages = sentence_parse(sent, opts);
-				}
-			}
-
-			if (verbosity > 0)
-			{
-				if (parse_options_timer_expired(opts))
-					fprintf(stdout, "Timer is expired!\n");
-
-				if (parse_options_memory_exhausted(opts))
-					fprintf(stdout, "Memory is exhausted!\n");
-			}
-
-			if ((num_linkages == 0) &&
-				copts->panic_mode &&
-				parse_options_resources_exhausted(opts))
-			{
-				/* print_total_time(opts); */
-				batch_errors++;
-				if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
-				/* If the parser used was the SAT solver, set the panic parser to
-				 * it too.
-				 * FIXME? Currently, the SAT solver code is not too useful in
-				 * panic mode since it doesn't handle parsing with null words, so
-				 * using the regular parser in that case could be beneficial.
-				 * However, this currently causes a crash due to a memory
-				 * management mess. */
-				parse_options_set_use_sat_parser(copts->panic_opts,
-					parse_options_get_use_sat_parser(opts));
-				parse_options_reset_resources(copts->panic_opts);
-				parse_options_set_verbosity(copts->panic_opts, verbosity);
-				(void)sentence_parse(sent, copts->panic_opts);
-				if (verbosity > 0)
-				{
-					if (parse_options_timer_expired(copts->panic_opts))
-						fprintf(stdout, "Panic timer is expired!\n");
-				}
-			}
-
-			/* print_total_time(opts); */
-
-			const char *rc = "";
-			if (copts->batch_mode)
-			{
-				batch_process_some_linkages(label, sent, copts);
-			}
-			else
-			{
-				rc = process_some_linkages(input_fh, sent, copts);
-			}
-
-			fflush(stdout);
 			sentence_delete(sent);
 			sent = NULL;
-
-			if ((NULL == rc) && (input_fh == stdin)) break;
+			continue;
 		}
+
+		if (0 != copts->display_wordgraph)
+		{
+			const char *wg_display_flags = ""; /* default flags */
+			switch (copts->display_wordgraph)
+			{
+				case 1:     /* default flags */
+					break;
+				case 2:     /* subgraphs with a legend */
+					wg_display_flags = "sl";
+					break;
+				case 3:
+					{
+						/* Use esoteric flags from the test user variable. */
+						const char wg[] = ",wg:";
+						const char *s = strstr(test, wg);
+						if (NULL != s) wg_display_flags = s+4;
+					}
+					break;
+				default:
+					prt_error("Warning: wordgraph=%d: Unknown value, using 1\n",
+								 copts->display_wordgraph);
+					copts->display_wordgraph = 1;
+			}
+			sentence_display_wordgraph(sent, wg_display_flags);
+		}
+
+		/* First parse with cost 0 or 1 and no null links */
+		// parse_options_set_disjunct_cost(opts, 2.7);
+		parse_options_set_min_null_count(opts, 0);
+		parse_options_set_max_null_count(opts, 0);
+		parse_options_reset_resources(opts);
+
+		num_linkages = sentence_parse(sent, opts);
+
+		/* num_linkages is negative only on a hard-error;
+		 * typically, due to a zero-length sentence.  */
+		if (num_linkages < 0)
+		{
+			sentence_delete(sent);
+			sent = NULL;
+			continue;
+		}
+
+#if 0
+		/* Try again, this time omitting the requirement for
+		 * definite articles, etc. This should allow for the parsing
+		 * of newspaper headlines and other clipped speech.
+		 *
+		 * XXX Unfortunately, this also allows for the parsing of
+		 * all sorts of ungrammatical sentences which should not
+		 * parse, and leads to bad parses of many other unparsable
+		 * but otherwise grammatical sentences.  Thus, this trick
+		 * pretty much fails; we leave it here to document the
+		 * experiment.
+		 */
+		if (num_linkages == 0)
+		{
+			parse_options_set_disjunct_cost(opts, 4.5);
+			num_linkages = sentence_parse(sent, opts);
+			if (num_linkages < 0) continue;
+		}
+#endif /* 0 */
+
+		/* Try using a larger list of disjuncts */
+		/* XXX FIXME: the lg_expand_disjunct_list() routine is not
+		 * currently a part of the public API; it should be made so,
+		 * or this expansion idea should be abandoned... not sure which.
+		 */
+		if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
+		{
+			int expanded;
+			if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
+			parse_options_set_disjunct_cost(opts, 3.9);
+			expanded = lg_expand_disjunct_list(sent);
+			if (expanded)
+			{
+				num_linkages = sentence_parse(sent, opts);
+			}
+			if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
+		}
+
+		/* If asked to show bad linkages, then show them. */
+		if ((num_linkages == 0) && (!copts->batch_mode))
+		{
+			if (copts->display_bad)
+			{
+				num_linkages = sentence_num_linkages_found(sent);
+			}
+		}
+
+		/* Now parse with null links */
+		if (num_linkages == 0 && !copts->batch_mode)
+		{
+			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+
+			if (copts->allow_null)
+			{
+				/* XXX should use expanded disjunct list here too */
+				parse_options_set_min_null_count(opts, 1);
+				parse_options_set_max_null_count(opts, sentence_length(sent));
+				num_linkages = sentence_parse(sent, opts);
+			}
+		}
+
+		if (verbosity > 0)
+		{
+			if (parse_options_timer_expired(opts))
+				fprintf(stdout, "Timer is expired!\n");
+
+			if (parse_options_memory_exhausted(opts))
+				fprintf(stdout, "Memory is exhausted!\n");
+		}
+
+		if ((num_linkages == 0) &&
+			copts->panic_mode &&
+			parse_options_resources_exhausted(opts))
+		{
+			/* print_total_time(opts); */
+			batch_errors++;
+			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
+			/* If the parser used was the SAT solver, set the panic parser to
+			 * it too.
+			 * FIXME? Currently, the SAT solver code is not too useful in
+			 * panic mode since it doesn't handle parsing with null words, so
+			 * using the regular parser in that case could be beneficial.
+			 * However, this currently causes a crash due to a memory
+			 * management mess. */
+			parse_options_set_use_sat_parser(copts->panic_opts,
+				parse_options_get_use_sat_parser(opts));
+			parse_options_reset_resources(copts->panic_opts);
+			parse_options_set_verbosity(copts->panic_opts, verbosity);
+			(void)sentence_parse(sent, copts->panic_opts);
+			if (verbosity > 0)
+			{
+				if (parse_options_timer_expired(copts->panic_opts))
+					fprintf(stdout, "Panic timer is expired!\n");
+			}
+		}
+
+		/* print_total_time(opts); */
+
+		const char *rc = "";
+		if (copts->batch_mode)
+		{
+			batch_process_some_linkages(label, sent, copts);
+		}
+		else
+		{
+			rc = process_some_linkages(input_fh, sent, copts);
+		}
+
+		fflush(stdout);
+		sentence_delete(sent);
+		sent = NULL;
+
+		if ((NULL == rc) && (input_fh == stdin)) break;
 	}
 
 	if (copts->batch_mode)
