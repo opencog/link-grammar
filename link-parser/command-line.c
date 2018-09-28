@@ -37,7 +37,6 @@ static struct
 	int allow_null;
 	int use_cluster_disjuncts;
 	int use_sat_solver;
-	int use_viterbi;
 	int echo_on;
 	Cost_Model_type cost_model;
 	double max_cost;
@@ -98,9 +97,6 @@ Switch default_switches[] =
 	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
 	{"debug",      String, "Comma-separated function names to debug", &local.debug},
 	{"test",       String, "Comma-separated test features", &local.test},
-#ifdef USE_VITERBI
-	{"viterbi",    Bool, "Use Viterbi-based parser",        &local.use_viterbi},
-#endif
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
@@ -856,9 +852,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.max_cost = parse_options_get_disjunct_cost(opts);
 	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
-#ifdef USE_VITERBI
-	local.use_viterbi = parse_options_get_use_viterbi(opts);
-#endif
 
 	local.screen_width = (int)copts->screen_width;
 	local.echo_on = copts->echo_on;
@@ -898,9 +891,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
-#endif
-#ifdef USE_VITERBI
-	parse_options_set_use_viterbi(opts, local.use_viterbi);
 #endif
 	parse_options_set_display_morphology(opts, local.display_morphology);
 
