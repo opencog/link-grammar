@@ -372,7 +372,24 @@ Abort parsing after this many seconds.
 Use Boolean SAT-based parser.
 .TP
 .BR !verbosity \ (1)
-Level of detail in output.
+Level of detail in output. Some useful values:
+.RS
+.IP 0
+No prompt, minimal library messages
+.IP 1
+Normal verbosity
+.IP 2
+Show times of the parsing steps
+.IP 3
+Display data file search and locale setup
+.IP  5-9
+Tokenizer and parser debugging
+.IP  10-19
+Dictionary debugging
+.IP  101
+Print all the dictionary connectors, along with their length limit
+.RE
+
 .TP
 .BR !walls \ (off)
 Display wall words.
