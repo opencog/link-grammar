@@ -1077,7 +1077,6 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
-	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
 	RegEx tokenizer:                ${enable_regex_tokenizer}
 	Definitions:                    ${DEFS}

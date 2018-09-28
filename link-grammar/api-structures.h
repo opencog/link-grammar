@@ -79,9 +79,6 @@ struct Parse_Options_s
 
 	/* Choice of the parser to use */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
-#ifdef USE_VITERBI
-	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
-#endif
 
 	/* Options governing the parser internals operation */
 	double disjunct_cost;  /* Max disjunct cost to allow */

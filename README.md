@@ -129,7 +129,6 @@ Contents
 | link-grammar/corpus/*.c | Optional corpus statistics database. |
 | link-grammar/minisat/ | Optional SAT Solver. (Written in C++) |
 | link-grammar/sat-solver/ | Optional SAT Solver. (Written in C++) |
-| link-grammar/viterbi/ | Experimental Viterbi algorithm parser. |
 |  |  |
 | bindings/autoit/  | Optional AutoIt language bindings. |
 | bindings/java/ | Optional Java language bindings. |
