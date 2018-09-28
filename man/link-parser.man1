@@ -434,7 +434,7 @@ The directory search order for these files is:
 .br
 .RI \[bu]\  "../data/"
 .br
-A custom path, as set by the API call \%\fBdictionary_set_data_dir()\fP.
+\[bu]\  A custom data directory, as set by the API call \%\fBdictionary_set_data_dir()\fP.
 .br
 .I "%DATA_DIR%/link\-grammar/"
 
