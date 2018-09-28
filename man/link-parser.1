@@ -62,7 +62,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH LINK-PARSER 1 "2016-06-29" "Version 5.3.8"
+.TH LINK-PARSER 1 "2018-09-28" "Version 5.5.2"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -109,15 +109,15 @@ Starts the parser interactive shell.  Enter any sentence to parse:
 .EX
 linkparser> \fBReading a man page is informative.\fP
 
-Found 12 linkages (12 had no P.P. violations)
-	Linkage 1, cost vector = (UNUSED=0 DIS= 0.20 LEN=16)
+Found 18 linkages (18 had no P.P. violations)
+        Linkage 1, cost vector = (UNUSED=0 DIS= 0.00 LEN=16)
 
     +------------------------Xp------------------------+
     +--------------->WV-------------->+                |
     |         +----------Ss*g---------+                |
     |         +--------Os-------+     |                |
     |         |     +---Ds**x---+     |                |
-    +----Wd---+     |    +---A--+     +---Pa---+       |
+    +--->Wd---+     +-PHc+---A--+     +---Pa---+       |
     |         |     |    |      |     |        |       |
 LEFT\-WALL reading.g a man.ij page.n is.v informative.a .
 .EE
@@ -192,10 +192,9 @@ either an absolute or a relative file path; so, for example:
 will run \%\fBlink\-parser\fP using the English dictionary located in the
 typical install directory.
 .PP
-\fBlink\-parser\fP can also be used non\-interactively, either through
-its API, or via the \%\fB\-batch\fP option.  When used with the
-\%\fB\-batch\fP option, \fBlink\-parser\fP reads from standard input,
-generating output to standard out. So, for example:
+\fBlink\-parser\fP can also be used in a non-interactive mode ("batch mode")
+via the \%\fB\-batch\fP option (a special command, see below):
+So, for example:
 .PP
 .RS 4
 .EX
@@ -203,12 +202,27 @@ generating output to standard out. So, for example:
 .EE
 .RE
 .PP
-Note that using the \%\fB\-batch\fP option disables the usual
-ASCII-graphics linkage printing.  This may be re-enabled via a special
-command; special commands may be interspersed with the input.
+will read lines from the file \%\fBthesis.txt\fP,
+processing each one as a complete sentence. For sentences that don't have a
+full parse, it will print
+.br
+.B +++++ error N
+.br
+(\fBN\fP is a number) to the standard output.
 .PP
-Alternately, an input file may be specified with the \%\fB!file\fP
+Alternately, an input file may be specified with the \%\fB!file \fIfilename\fP
 special command, described below.
+.PP
+Note that using "batch mode" disables the usual
+ASCII-graphics linkage printing. The input sentences also don't appear by
+default on stdout.  These features may be re-enabled via special
+commands; special commands may be interspersed with the input.
+.PP
+Instead of specifying \fB-batch\fP in the command-line, \fB!batch\fP can
+be specified in the said input file.
+.PP
+For more details, use \fB!help batch\fP in \%\fBlink\-parser\fP's
+interactive shell.
 
 .SH OPTIONS
 .TP
@@ -216,68 +230,77 @@ special command, described below.
 Print usage and exit.
 .TP
 .B \-\-version
-Print version number and exit.
+Print program version and configuration details, and exit.
 
-.SS Special "!" options
-The special "!" options can be specified either on the command-line, on
-startup, or set and toggled within the interactive shell itself.  The
-full option name does not need to be used; only enough letters to make
-the option unique must be specified.
+.SS Special "!" commands
+The special "!" commands can be specified as command-line options in the
+command-line, or within the interactive shell itself by prefixing them with
+"!" on line start.  The full option name does not need to be used; only enough
+letters to make the option unique must be specified.
+.PP
+When specifying as a command-line option, a special command is proceeded
+by "-" instead of "!".
 .PP
 Boolean variables may be toggled simply by giving the \%\fB!\fP\fIvarname\fP,
 for example, \%\fB!batch\fP.  Setting other variables require using an
 equals sign: \%\fI!varname=value\fP, for example, \%\fB!width=100\fP.
 .PP
-The \%\fB!help\fP command will print general help, and the \%\fB!variables\fP
-command will print all of the current variable settings.  The
-\%\fB!file\fP command will read input from a file.  The \%\fB!file\fP
+The \%\fB!help\fP command prints general help. When issued from
+the interactive shell, it can get an argument, usually a special command.
+The \%\fB!variables\fP
+command prints all of the current variable settings.  The
+\%\fB!file\fP command reads input from its argument file.  The \%\fB!file\fP
 command is \fInot\fP a variable; it cannot be set.  It can be used
 repeatedly.
 .PP
-The \%\fB!exit\fP command will cause \%\fBlink\-parser\fP to exit.
+The \%\fB!exit\fP command instructs \%\fBlink\-parser\fP to exit.
 .PP
-The dictionary entry for any given word (optionally terminated by a
-subscript) may be examined by preceding it with two exclamation marks. A
-wildcard character '*' can be specified as the last character of the
-word in order to find multiple matches.
+The exclamation mark "!" is also a special command by itself, used to inspect
+the dictionary entry for any given word (optionally terminated by a subscript).
+Thus two exclamation marks are needed before such a word when doing so from the
+interactive shell. The wildcard character "*" can be specified as the last
+character of the word in order to find multiple matches.
 
-Default values of the options below are shown in parenthesis. Most of
+Default values of the special commands below are shown in parenthesis. Most of
 them are the default ones of the \%link\-grammar library.
+.br
 Boolean default values are shown as \fBon\fP (1) or \fBoff\fP (0).
+
 .TP
-.BR \-bad \ (off)
+.BR !bad \ (off)
 Enable display of bad linkages.
 .TP
-.BR \-batch \ (off)
+.BR !batch \ (off)
 Enable batch mode.
+.ig HIDDEN
 .TP
-.BR \-cluster \ (off)
+.BR !cluster \ (off)
 Use clusters to loosen parsing.
+.HIDDEN
 .TP
-.BR \-constituents \ (0)
+.BR !constituents \ (0)
 Generate constituent output. Its value may be:
 .RS
 .IP 0
 Disabled
 .IP 1
 Treebank-style constituent tree
-.PP
 .IP 2
 Flat, bracketed tree [A like [B this B] A]
 .IP 3
 Flat, treebank-style tree (A like (B this))
 .RE
 .TP
-.BR \-cost-max \ (2.7)
+.BR !cost-max \ (2.7)
 Largest cost to be considered.
 .TP
-.BR \-disjuncts \ (off)
+.BR !disjuncts \ (off)
 Display of disjuncts used.
 .TP
-.BR \-echo \ (off)
+.BR !echo \ (off)
 Echo input sentence.
 .TP
-.BR \-graphics \ (on)
+.BR !graphics \ (on)
 Enable graphical display of linkage.
 For each linkage, the sentence is printed along with a graphical
 representation of its linkage above it.
@@ -299,94 +322,144 @@ dictionary.
 .IP word[&]
 This word is a part of an unknown word which has been found to consist
 of two or more words that are in the \%link\-grammar dictionary.
+.IP word.POS
+This word found in the dictionary as word.POS.
+.IP word.#CORRECTION
+This word is probably a typo - got linked as an alternative word CORRECTION.
 .RE
 .TP
-.BR \-islands-ok \ (on)
+.BR !islands-ok \ (on)
 Use null-linked islands.
 .TP
-.BR \-limit \ (1000)
+.BR !limit \ (1000)
 Limit the maximum linkages processed.
 .TP
-.BR \-links \ (off)
+.BR !links \ (off)
 Enable display of complete link data.
 .TP
-.BR \-null \ (on)
+.BR !null \ (on)
 Allow null links.
 .TP
-.BR \-morphology \ (off)
+.BR !morphology \ (off)
 Display word morphology.
 When a word matches a RegEx, show the matching dictionary entry.
 .TP
-.BR \-panic \ (on)
+.BR !panic \ (on)
 Use "panic mode" if a parse cannot be quickly found.
 .TP
-.BR \-postscript \ (off)
+.BR !postscript \ (off)
 Generate postscript output.
+.ig HIDDEN
 .TP
-.BR \-senses \ (off)
+.BR !senses \ (off)
 Display word senses.
+.HIDDEN
 .TP
-.BR \-short \ (16)
+.BR !short \ (16)
 Maximum length of short links.
 .TP
-.BR \-spell \ (7)
+.BR !spell \ (7)
 If zero, no spell and run-on corrections of unknown words are performed.
 .br
 Else, use up to this many spell-guesses per unknown word. In that
 case, the number of run-on corrections (word split) of unknown
 words is not limited.
 .TP
-.BR \-timeout \ (30)
+.BR !timeout \ (30)
 Abort parsing after this many seconds.
 .TP
-.BR \-use-sat \ (off)
+.BR !use-sat \ (off)
 Use Boolean SAT-based parser.
 .TP
-.BR \-verbosity \ (1)
-Level of detail in output.
+.BR !verbosity \ (1)
+Level of detail in output. Some useful values:
+.RS
+.IP 0
+No prompt, minimal library messages
+.IP 1
+Normal verbosity
+.IP 2
+Show times of the parsing steps
+.IP 3
+Display data file search and locale setup
+.IP  5-9
+Tokenizer and parser debugging
+.IP  10-19
+Dictionary debugging
+.IP  101
+Print all the dictionary connectors, along with their length limit
+.RE
+
 .TP
-.BR \-walls \ (off)
+.BR !walls \ (off)
 Display wall words.
 .TP
-.BR \-width \ (16381)(*)
+.BR !width \ (16381)(*)
 The width of the display.
 .br
 * When writing to a terminal, this value is set from its width.
+.br
+.TP
+.BR !wordgraph \ (0)
+Display the wordgraph (word-split graph).
+.RS
+.IP 0
+Disabled
+.IP 1
+Default display
+.IP 2
+Display parent tokens as subgraphs
+.IP 3
+Use esoteric display flags as set by !test=wg:FLAGS
+.RE
 
 .SH FILES
 The following files are per-language, when \fILL\fP is the 2-letter
 ISO language code.
 .TP
-.I \fILL\fP/4.0.dict
+.IR LL /4.0.dict
 The Link Grammar dictionary.
 .TP
-.I \fILL\fP/4.0.affix
+.IR LL /4.0.affix
 Values of entities used in tokenization.
 .TP
-.I \fILL\fP/4.0.regex
+.IR LL /4.0.regex
 Regular expressions (see
 .BR regex (7))
 that are used to match tokens not found in the dictionary.
 .TP
-.I \fILL\fP/4.0.knowledge
+.IR LL /4.0.knowledge
 Post-processing definitions.
 .TP
-.I \fILL\fP/4.0.constituent\-knowledge
+.IR LL /4.0.constituent\-knowledge
 Definitions for producing a constituent tree.
+.TP
+.RI command-help- LL .txt \ \fBor \ command-help- LL-CC .txt
+Help text for the \%\fB!help \fItopic\fP special "!" command.
+If several such files are provided, the desired one can be selected
+by e.g. the LANGUAGE environment variable if it is set to \fILL\fP or
+\fILL-CC\fP (default is \fBen\fP). Currently only \fBcommand-help-en.txt\fP
+is provided.
 .sp 2
 .TP
 The directory search order for these files is:
-.I "./"
+.RI \[bu]\  "./"
 .br
-.I "data/"
+.RI \[bu]\  "data/"
 .br
-.I "../"
+.RI \[bu]\  "../"
 .br
-.I "../data/"
+.RI \[bu]\  "../data/"
 .br
-A custom path, as set by the API call \%\fBdictionary_set_data_dir()\fP.
+\[bu]\  A custom data directory, as set by the API call \%\fBdictionary_set_data_dir()\fP.
 .br
-.I "%DATA_DIR%/link\-grammar/"
+\[bu]\  Installation-depended system data directory (*)
+.sp 2
+* This location is displayed as DICTIONARY_DIR when the \%\fB\-\-version\fP
+argument is provided to \%\fBlink\-parser\fP on the command line.
+On windows it may be relative to the location of the \%link\-grammar library DLL;
+in that case the actual location is displayed as "System data directory" when
+\%\fBlink\-parser\fP is invoked with -verbosity=3.
 
 .SH SEE ALSO
 .nh
