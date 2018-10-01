@@ -157,18 +157,16 @@ classic-parser linkages). In that case the detailed linkages results need
 to be filtered through a script which sorts them according to some
 "canonical order" and also removes duplicates.
 
-4) Display the wordgraph:
-Currently, to use this feature, the library needs to be compiled with
-`--enable-wordgraph-display`.
+4) Display the wordgraph (`!wordgraph=N`) using additional wordgraph-display
+flags:
 
-`link-parser -test=wg`
+To use this feature, the library needs to be compiled with
+`--enable-wordgraph-display` (this is done by default).
 
-or
+`link-parser -test=wg:FLAGS`
 
-`link-parser -test=wg:OPTIONS`
-
-For more examples of how to use the wordgraph display, see
-[link-grammar/README.md](/link-grammar/README.md)
+For more examples of how to use the wordgraph-display, see
+[link-grammar/tokenize/README.md](/link-grammar/tokenize/README.md#word-graph-display)
 and [msvc/README.md](/msvc/README.md).
 
 Debugging and STDIO streams
