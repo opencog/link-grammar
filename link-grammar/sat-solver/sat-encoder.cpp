@@ -1438,6 +1438,7 @@ void SATEncoder::pp_prune()
     DEBUG_print("---end pp_pruning--");
   }
 
+  if (test_enabled("no-pp_pruning_1")) return; // For result comparison.
   /* Additional PP pruning.
    * Since the SAT parser defines constrains on links, it is possible
    * to encode all the postprocessing rules, in order to prune all the
