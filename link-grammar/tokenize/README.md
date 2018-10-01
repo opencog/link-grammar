@@ -80,21 +80,21 @@ Word-graph display
 Another feature that has been implemented, mainly for debug (but it can
 also be useful for inspiration and fun), is displaying a graphical
 representation of the word graph. The graphs can be displayed in several
-ways, controlled by one-letter flags. The command `!test=wg` enables the
+ways, controlled by one-letter flags. The command `!wordgraph=1` enables the
 display of a graphs which includes no "prev" links for clarity, but
 includes "unsplit word" links.  Other graphical representation modes can be
-enabled by `!test=wg:FLAGS`, when FLAGS are lowercase letters as defined in
-wordgraph.h.  For example, `!test=wg:sl` displays unsplit words as subgraphs,
-with a legend, and adding the `p` flag (i.e. `!test=wg:slp`) adds "prev" links.
-The graphical display still needs improvements in order to be able to
-display complex word-graph situations in a simple manner.  The graphical
-display code is not compiled by default because it involves invocation of
-an external program (`dot`) and in addition, files are created, both things
-may not be desired by some users. Use `--enable-wordgraph-display` to enable
-this feature.
+enabled by `!wordgraph=2` (display unsplit words as subgraphs) and
+`!wordgraph=3` together with `!test=wg:FLAGS` (when FLAGS are lowercase letters
+as defined in wordgraph.h) to use display modes according to FLAGS.
+For example, the `p` flag (i.e. `!test=wg:p`) adds "prev" links.
+
+The graphical display code is compiled by default; if it is not desired
+(e.g. because it involves an invocation of an external program (`dot`)
+and in addition, temporary files are created), use
+`--disable-wordgraph-display` to disable this feature.
 
 On Windows this feature is enabled when compiled with `USE_WORDGRAPH_DISPLAY`.
-See "../msvcNN/RDADME" (NN is the MSVC version) for further details.
+See "[msvc/RDADME.md](/msvc/README.md)" for further details.
 
 Quote handling
 --------------
