@@ -11,7 +11,7 @@ extern "C" {
 #include "utilities.h"
 }
 
-#define D_IC 6
+#define D_IC 8
 void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 bool& leading_right, bool& leading_left,
                                 std::vector<int>& eps_right,
@@ -22,10 +22,16 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
   double cost = parent_cost + exp->cost;
 
 #ifdef DEBUG
-  if (0 && verbosity_level(+D_IC)) { // Extreme debug
-    printf("Expression type %d for Word%d, var %s:\n", exp->type, _word, var);
-    printf("parent_exp: "); print_expression(parent_exp);
-    printf("exp: "); print_expression(exp);
+  if (0 && verbosity_level(+D_IC)) // Extreme debug
+  //if (_word == 2)
+  {
+    const char*type =
+      ((const char *[]) {"OR_type", "AND_type", "CONNECTOR_type"}) [exp->type-1];
+    printf("Expression type %s for Word%d, var %s:\n", type, _word, var);
+    //printf("parent_exp: "); print_expression(parent_exp);
+    printf("exp(%s) e=%.2f pc=%.2f ", word_xnode->string,exp->cost, parent_cost);
+    print_expression(exp);
+    if (exp->cost > 0 || root) prt_exp_mem(exp, 0);
   }
 #endif
 
@@ -38,7 +44,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _dir.push_back('+');
       _right_connectors.push_back(
            PositionConnector(parent_exp, exp, '+', _word, dfs_position,
-                             cost, leading_right, false,
+                             cost, parent_cost, leading_right, false,
                              eps_right, eps_left, word_xnode, _opts));
       leading_right = false;
       break;
@@ -47,7 +53,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       _dir.push_back('-');
       _left_connectors.push_back(
            PositionConnector(parent_exp, exp, '-', _word, dfs_position,
-                             cost, false, leading_left,
+                             cost, parent_cost, false, leading_left,
                              eps_right, eps_left, word_xnode, _opts));
       leading_left = false;
       break;
@@ -57,6 +63,12 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
   } else if (exp->type == AND_type) {
     if (exp->u.l == NULL) {
       /* zeroary and */
+      if (cost != 0)
+      {
+        lgdebug(+D_IC, "EmptyConnector var=%s(%d) cost %.2f pcost %.2f\n",
+                var, _variables->string(var), cost, parent_cost);
+        _empty_connectors.push_back(EmptyConnector(_variables->string(var),cost));
+      }
     } else
       if (exp->u.l->next == NULL) {
         /* unary and - skip */
@@ -79,8 +91,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           *s++ = 'c';
           fast_sprintf(s, i);
 
+          double and_cost = (i == 0) ? cost : 0;
           insert_connectors(l->e, dfs_position, leading_right, leading_left,
-                eps_right, eps_left, new_var, false, cost, parent_exp, word_xnode);
+                eps_right, eps_left, new_var, false, and_cost, parent_exp, word_xnode);
 
           if (leading_right) {
             eps_right.push_back(_variables->epsilon(new_var, '+'));

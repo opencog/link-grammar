@@ -17,10 +17,10 @@ extern "C" {
 struct PositionConnector
 {
   PositionConnector(Exp* pe, Exp* e, char d, int w, int p,
-                    double pcst, bool lr, bool ll,
+                    double cst, double pcst, bool lr, bool ll,
                     const std::vector<int>& er, const std::vector<int>& el, const X_node *w_xnode, Parse_Options opts)
     : exp(pe), dir(d), word(w), position(p),
-      cost(e->cost), parent_cost(pcst),
+      cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
@@ -84,6 +84,19 @@ struct PositionConnector
 
 };
 
+/*
+ * Record the SAT variable and cost of costly-null expressions.
+ * Their cost is recovered (in sat_extract_links()) if
+ * they happen to reside on a participating disjunct.
+ */
+struct EmptyConnector {
+  EmptyConnector(int var, double cst)
+    : ec_var(var), ec_cost(cst)
+  {
+  }
+  int ec_var;
+  double ec_cost;
+};
 
 // XXX TODO: Hash connectors for faster matching
 
@@ -92,6 +105,7 @@ class WordTag
 private:
   std::vector<PositionConnector> _left_connectors;
   std::vector<PositionConnector> _right_connectors;
+  std::vector<EmptyConnector> _empty_connectors;
 
   std::vector<char> _dir;
   std::vector<int> _position;
@@ -131,6 +145,10 @@ public:
 
   const std::vector<PositionConnector>& get_right_connectors() const {
     return _right_connectors;
+  }
+
+  const std::vector<EmptyConnector>& get_empty_connectors() const {
+    return _empty_connectors;
   }
 
   PositionConnector* get(int dfs_position)

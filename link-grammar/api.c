@@ -573,7 +573,6 @@ double sentence_disjunct_cost(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0.0;
 
-	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->lnkages) return 0.0;
 	if (sent->num_linkages_alloced <= i) return 0.0; /* bounds check */
 	return sent->lnkages[i].lifo.disjunct_cost;
@@ -583,7 +582,6 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0;
 
-	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->lnkages) return 0;
 	if (sent->num_linkages_alloced <= i) return 0; /* bounds check */
 	return sent->lnkages[i].lifo.link_cost;
