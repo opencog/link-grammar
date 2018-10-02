@@ -1704,7 +1704,7 @@ static bool read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				prt_error("Error opening word file \"%s\".\n", dict->token);
+				prt_error("Error: Cannot open word file \"%s\".\n", dict->token);
 				return false;
 			}
 		}
