@@ -1564,7 +1564,7 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
 		{
 			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 					  "\tThis word should end with a number (1-%d).\n"
-					  "\tThis word will be ignored.",
+					  "\tThis word will be ignored.\n",
 					  dn->string, dict->line_number, dict->name, MAX_SENTENCE);
 			return;
 		}
@@ -1616,7 +1616,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
-		        "\tThis word will be ignored.",
+		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number, dict->name);
 		free(dn);
 	}
@@ -1704,7 +1704,7 @@ static bool read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				prt_error("Error opening word file %s\n", dict->token);
+				prt_error("Error opening word file %s.\n", dict->token);
 				return false;
 			}
 		}
