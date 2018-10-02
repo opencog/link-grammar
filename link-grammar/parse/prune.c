@@ -319,7 +319,7 @@ static void clean_table(unsigned int size, C_list ** t)
  * Return true iff they may become adjacent (i.e. all the words
  * between them are optional).
  */
-static bool optional_gap_collapse(Sentence sent, int w1, int w2)
+bool optional_gap_collapse(Sentence sent, int w1, int w2)
 {
 	for (int w = w1+1; w < w2; w++)
 		if (!sent->word[w].optional) return false;

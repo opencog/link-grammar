@@ -169,6 +169,11 @@ For more examples of how to use the wordgraph-display, see
 [link-grammar/tokenize/README.md](/link-grammar/tokenize/README.md#word-graph-display)
 and [msvc/README.md](/msvc/README.md).
 
+5) -test=<values> for SAT parser debugging:
+linkage-disconnected - Display also solutions which don't have a full linkage.
+sat-stats - Display the number of PP-violations and disconected linkages.
+no-pp_pruning_1 - Disable a partial CONTAINS_NONE_RULES pruning
+
 Debugging and STDIO streams
 ---------------------------
 Messages at severity Info and higher (i.e. also Warning, Error and
