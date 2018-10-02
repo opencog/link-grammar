@@ -8,6 +8,7 @@ Version 5.5.2 (XXX 2018)
  * Revise the manpage.
  * Remove the experimental Viterbi code.
  * Revise the SAT parser cost model to align it with the classic parser.
+ * Implement a strict check on connector name.
 
 Version 5.5.1 (27 July 2018)
  * Fix broken Java bindings build.
