@@ -403,18 +403,35 @@ static bool check_connector(Dictionary dict, const char * s)
 		return false;
 	}
 	if (*s == '@') s++;
-	if (!isupper((unsigned char)*s) && ('h' != *s) && ('d' != *s)) {
-		dict_error(dict, "The first letter of a connector must be h,d or uppercase.");
+	if (('h' == *s) || ('d' == *s)) s++;
+	if (!isupper((unsigned char)*s)) {
+		dict_error(dict, "Connectors must start with uppercase after an optional h or d.");
 		return false;
 	}
+	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
 	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
 		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
 		return false;
 	}
+
+	bool connector_base = true;
+	s++; /* The first uppercase has been validated above. */
 	while (*(s+1)) {
 		if ((!isalnum((unsigned char)*s)) && (*s != WILD_TYPE)) {
 			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
 			return false;
+		}
+		if (isupper((unsigned char)*s))
+		{
+			if (!connector_base)
+			{
+				dict_error(dict, "Connector subscript contains uppercase.");
+				return false;
+			}
+		}
+		else
+		{
+			connector_base = false;
 		}
 		s++;
 	}

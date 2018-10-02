@@ -7,7 +7,8 @@ Version 5.5.2 (XXX 2018)
  * Major documentation update for building with Cygwin.
  * Revise the manpage.
  * Remove the experimental Viterbi code.
- * Modify the SAT parser disjunct cost metric to be like in the classic parser.
+ * Revise the SAT parser cost model to align it with the classic parser.
+ * Implement a strict check on connector name.
 
 Version 5.5.1 (27 July 2018)
  * Fix broken Java bindings build.
