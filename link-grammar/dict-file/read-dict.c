@@ -403,8 +403,9 @@ static bool check_connector(Dictionary dict, const char * s)
 		return false;
 	}
 	if (*s == '@') s++;
-	if (!isupper((unsigned char)*s) && ('h' != *s) && ('d' != *s)) {
-		dict_error(dict, "The first letter of a connector must be h,d or uppercase.");
+	if (('h' == *s) || ('d' == *s)) s++;
+	if (!isupper((unsigned char)*s)) {
+		dict_error(dict, "Connectors must start with uppercase after an optional h or d.");
 		return false;
 	}
 	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
