@@ -154,13 +154,13 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 
 	if (s2)
 	{
-		prt_error("Error: While parsing dictionary %s:\n"
+		prt_error("Error: While parsing dictionary \"%s\":\n"
 		          "%s %s\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		prt_error("Error: While parsing dictionary %s:\n"
+		prt_error("Error: While parsing dictionary \"%s\":\n"
 		          "%s\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, dict->line_number, tokens);
 	}
@@ -1562,7 +1562,7 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
 		if ((length_limit < 0) || (length_limit > MAX_SENTENCE) ||
 		  (('\0' != *endp) && (SUBSCRIPT_MARK != *endp)))
 		{
-			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
+			prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
 					  "\tThis word should end with a number (1-%d).\n"
 					  "\tThis word will be ignored.\n",
 					  dn->string, dict->line_number, dict->name, MAX_SENTENCE);
@@ -1614,7 +1614,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 
 	if (is_idiom_word(dn->string))
 	{
-		prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
+		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number, dict->name);
@@ -1657,7 +1657,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 						if (!match_found)
 						{
 							prt_error("Warning: The word \"%s\" found near line "
-										 "%d of %s\n\t matches the following words:",
+										 "%d of \"%s\"\n\t matches the following words:",
 										 dn->string, dict->line_number, dict->name);
 							match_found = true;
 						}
@@ -1704,7 +1704,7 @@ static bool read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				prt_error("Error opening word file %s.\n", dict->token);
+				prt_error("Error opening word file \"%s\".\n", dict->token);
 				return false;
 			}
 		}
