@@ -393,7 +393,7 @@ static FILE *open_help_file(int verbosity)
 	{
 		if (NULL != help_file)
 			continue; /* until get_next_locale() returns NULL */
-		strncpy(ll_pos, ll, HELPFILE_LANG_TEMPLATE_SIZE);
+		memcpy(ll_pos, ll, HELPFILE_LANG_TEMPLATE_SIZE);
 		help_file = linkgrammar_open_data_file(help_filename);
 	}
 
