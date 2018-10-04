@@ -5,6 +5,8 @@
 #include <map>
 #include <set>
 
+#undef assert
+
 extern "C" {
 #include "connectors.h"
 #include "dict-common/dict-common.h"
