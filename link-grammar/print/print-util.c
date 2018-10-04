@@ -229,12 +229,13 @@ size_t append_utf8_char(dyn_str * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
 	char buf[12];
+	assert('\0' != *mbs);
 	int nb = utf8_charlen(mbs);
 	int n = nb;
 	if (n < 0) n = 1; // charlen is negative if its not a valid UTF-8
 
 	assert(n<10, "Multi-byte character is too long!");
-	strncpy(buf, mbs, n);
+	memcpy(buf, mbs, n);
 
 	// Whitepsace pad if its a bad value
 	if (nb < 0) { buf[n] = ' '; n++; }
