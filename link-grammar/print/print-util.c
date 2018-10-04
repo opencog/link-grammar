@@ -234,7 +234,7 @@ size_t append_utf8_char(dyn_str * string, const char * mbs)
 	int n = nb;
 	if (n < 0) n = 1; // charlen is negative if its not a valid UTF-8
 
-	assert(n<10, "Multi-byte character is too long!");
+	assert((size_t)n<sizeof(buf), "Multi-byte character is too long!");
 	memcpy(buf, mbs, n);
 
 	// Whitepsace pad if its a bad value
