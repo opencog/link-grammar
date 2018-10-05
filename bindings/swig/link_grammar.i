@@ -92,12 +92,12 @@ char * linkage_print_pp_msgs(Linkage linkage);
 int prt_error(const char *, const char *);
 
 /*
- * void *lg_error_set_handler_data(void *);
  * A wrapper to this function is complex and is not implemented here.  However,
  * such a wrapper may not be needed anyway since this function is provided
  * mainly for the low-level implementation of the error callback, so bound
  * languages can free the memory of the callback data.
  */
+%ignore lg_error_set_handler_data;
 
 // Set a default newfree typemap.
 %typemap(newfree) char * {
