@@ -127,17 +127,17 @@ void linkage_delete(Linkage linkage);
 %typemap(newfree) char * {
    linkage_free_diagram($1);
 }
-char * linkage_print_diagram(Linkage linkage, bool display_walls, size_t screen_width);
+char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t screen_width);
 
 %typemap(newfree) char * {
    linkage_free_postscript($1);
 }
-char * linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header);
+char * linkage_print_postscript(const Linkage linkage, bool display_walls, bool print_ps_header);
 
 %typemap(newfree) char * {
    linkage_free_links_and_domains($1);
 }
-char * linkage_print_links_and_domains(Linkage linkage);
+char * linkage_print_links_and_domains(const Linkage linkage);
 
 %typemap(newfree) char * {
    linkage_free_senses($1);
