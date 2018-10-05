@@ -9,6 +9,7 @@ Version 5.5.2 (XXX 2018)
  * Remove the experimental Viterbi code.
  * Revise the SAT parser cost model to align it with the classic parser.
  * Implement a strict check on connector name.
+ * Major revision of the SWIG interface file; Wrap all the library functions.
 
 Version 5.5.1 (27 July 2018)
  * Fix broken Java bindings build.
