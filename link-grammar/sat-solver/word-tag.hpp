@@ -5,6 +5,8 @@
 #include <map>
 #include <set>
 
+#include "variables.hpp"
+
 #undef assert
 #include "lg_assert.h"
 
@@ -14,8 +16,6 @@ extern "C" {
 #include "tokenize/tok-structures.h"    // gword_set
 #include "tokenize/wordgraph.h"         // in_same_alternative()
 };
-
-#include "variables.hpp"
 
 struct PositionConnector
 {
