@@ -36,38 +36,38 @@
 * newobject'd to avoid memory leaks
 *
 ***********************************************************************/
-%newobject linkage_print_senses;
-%newobject linkage_print_links_and_domains;
-%newobject linkage_print_diagram;
-%newobject linkage_print_postscript;
-%newobject linkage_print_constituent_tree;
-%newobject linkage_print_disjuncts;
 
+%newobject linkage_print_diagram;
 %typemap(newfree) char * {
    linkage_free_diagram($1);
 }
 %rename("%s") linkage_print_diagram;
 
+%newobject linkage_print_postscript;
 %typemap(newfree) char * {
    linkage_free_postscript($1);
 }
 %rename("%s")  linkage_print_postscript;
 
+%newobject linkage_print_links_and_domains;
 %typemap(newfree) char * {
    linkage_free_links_and_domains($1);
 }
 %rename("%s")  linkage_print_links_and_domains;
 
+%newobject linkage_print_senses;
 %typemap(newfree) char * {
    linkage_free_senses($1);
 }
 %rename("%s")  linkage_print_senses;
 
+%newobject linkage_print_constituent_tree;
 %typemap(newfree) char * {
    linkage_free_constituent_tree_str($1);
 }
 %rename("%s")  linkage_print_constituent_tree;
 
+%newobject linkage_print_disjuncts;
 %typemap(newfree) char * {
    linkage_free_disjuncts($1);
 }
