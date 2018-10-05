@@ -6,6 +6,7 @@
 #include <set>
 
 #undef assert
+#include "lg_assert.h"
 
 extern "C" {
 #include "connectors.h"
