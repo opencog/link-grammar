@@ -13,21 +13,10 @@
 
 %nodefaultdtor lg_errinfo;
 
-/* Grab non-function definitions so we do not need to repeat them here. */
-%rename("$ignore", %$isfunction) "";
 #define link_public_api(x) x
 #ifndef bool                         /* Prevent syntax errors if no bool. */
 #define bool int
 #endif /* bool */
-%immutable;                          /* Future-proof for const definitions. */
-%include ../link-grammar/link-includes.h
-%mutable;
-%rename("%s") "";                    /* Grab everything for the rest of file. */
-
-// Set a default newfree typemap.
-%typemap(newfree) char * {
-   free($1);
-}
 
 const char * linkgrammar_get_version(void);
 const char * linkgrammar_get_configuration(void);
@@ -216,6 +205,14 @@ bool lg_error_flush(void);
  * languages can free the memory of the callback data.
  */
 
+// Set a default newfree typemap.
+%typemap(newfree) char * {
+   free($1);
+}
+
+%immutable;                          /* Future-proof for const definitions. */
+%include ../link-grammar/link-includes.h
+%mutable;
 
 #ifdef SWIGPYTHON
 %extend lg_errinfo
