@@ -40,7 +40,8 @@ class ParseOptions(object):
                  spell_guess=False,
                  use_sat=False,
                  max_parse_time=-1,
-                 disjunct_cost=2.7):
+                 disjunct_cost=2.7,
+                 repeatable_rand=True,):
 
         self._obj = clg.parse_options_create()
         self.verbosity = verbosity
@@ -55,13 +56,14 @@ class ParseOptions(object):
         self.use_sat = use_sat
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
+        self.repeatable_rand = repeatable_rand
 
     # Allow only the attribute names listed below.
     def __setattr__(self, name, value):
         if not hasattr(self, name) and name != "_obj":
             # TypeError for consistency. It maybe should have been NameError.
             raise TypeError('Unknown parse option "{}".'.format(name))
-        super(self.__class__, self).__setattr__(name, value)
+        super(ParseOptions, self).__setattr__(name, value)
 
     def __del__(self):
         if hasattr(self, '_obj'):
@@ -273,6 +275,22 @@ class ParseOptions(object):
         if not isinstance(value, bool):
             raise TypeError("all_short_connectors must be set to a bool")
         clg.parse_options_set_all_short_connectors(self._obj, 1 if value else 0)
+
+    @property
+    def repeatable_rand(self):
+        """
+        If set to True, then a repeatable random sequence will be used, whenever
+        a random number is required.  The parser almost never uses random
+        numbers; currently they are only used in one place: to sample a subset
+        of linkages, if there are more parses than linkage_limit.
+        """
+        return clg.parse_options_get_repeatable_rand(self._obj) == 1
+
+    @repeatable_rand.setter
+    def repeatable_rand(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("repeatable_rand must be set to a bool")
+        clg.parse_options_set_repeatable_rand(self._obj, 1 if value else 0)
 
 
 class LG_Error(Exception):
