@@ -677,6 +677,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 * Note that if a word only has morphology links and is not combined with
 	 * another word, then it will get displayed with no links at all (e.g.
 	 * when explicitly specifying root and suffix for debug: root.= =suf */
+	Disjunct **cdj = linkage->chosen_disjuncts;
 	for (i=0, j=0; i<linkage->num_words; ++i)
 	{
 		if (chosen_words[i] &&
@@ -685,6 +686,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 			//const char *cwtmp = linkage->word[j];
 			linkage->word[j] = chosen_words[i];
 			//chosen_words[i] = cwtmp;
+
+			Disjunct *cdtmp = cdj[j];
+			cdj[j] = cdj[i];
+			cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
+
 			remap[i] = j;
 			j++;
 		}
