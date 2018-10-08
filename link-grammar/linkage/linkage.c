@@ -682,9 +682,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 		if (chosen_words[i] &&
 		    (chosen_words[i][0] || (!HIDE_MORPHO || show_word[i])))
 		{
-			const char *cwtmp = linkage->word[j];
+			//const char *cwtmp = linkage->word[j];
 			linkage->word[j] = chosen_words[i];
-			chosen_words[i] = cwtmp;
+			//chosen_words[i] = cwtmp;
 			remap[i] = j;
 			j++;
 		}
