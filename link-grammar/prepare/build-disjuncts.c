@@ -13,7 +13,6 @@
 
 /* stuff for transforming a dictionary entry into a disjunct list */
 
-#include <math.h>
 #include "build-disjuncts.h"
 #include "connectors.h"
 //#include "dict-common/print-dict.h"      // for print_expression
