@@ -39,6 +39,12 @@ struct clause_struct
 	Tconnector * c;
 };
 
+#ifdef DEBUG
+static void print_Tconnector_list(Tconnector * e);
+static void print_clause_list(Clause * c);
+static void print_connector_list(Connector * e);
+#endif
+
 static void free_Tconnectors(Tconnector *e)
 {
 	Tconnector * n;
