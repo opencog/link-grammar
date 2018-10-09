@@ -169,7 +169,7 @@ static Clause * build_clause(Exp *e, double cost_cutoff)
 				for (c4 = c2; c4 != NULL; c4 = c4->next)
 				{
 					double maxcost = MAX(c3->maxcost,c4->maxcost);
-					if (maxcost > cost_cutoff) continue;
+					if (maxcost + e->cost > cost_cutoff) continue;
 
 					c = (Clause *) xalloc(sizeof (Clause));
 					c->cost = c3->cost + c4->cost;
@@ -224,6 +224,9 @@ static Clause * build_clause(Exp *e, double cost_cutoff)
 		 * had it right!?
 		 */
 		c1->maxcost += e->cost;
+		/* Note: The above computation is used as a saving shortcut in
+		 * build_clause(). If it is changed here, it needs to be changed
+		 * there too. */
 	}
 	return c;
 }
