@@ -226,29 +226,6 @@ static Clause * build_clause(Exp *e)
 }
 
 /**
- * Build a new list of connectors starting from the Tconnectors
- * in the list pointed to by e.  Keep only those whose strings whose
- * direction has the value c.
- */
-static Connector * extract_connectors(Tconnector *e, int c, Parse_Options opts)
-{
-	Connector *e1;
-	if (e == NULL) return NULL;
-	if (e->dir == c)
-	{
-		e1 = connector_new(e->condesc, opts);
-		e1->multi = e->multi;
-		e1->nearest_word = 0;
-		e1->next = extract_connectors(e->next, c, opts);
-		return e1;
-	}
-	else
-	{
-		return extract_connectors(e->next, c, opts);
-	}
-}
-
-/**
  * Build a disjunct list out of the clause list c.
  * string is the print name of word that generated this disjunct.
  */
@@ -263,8 +240,19 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff,
 		if (cl->maxcost <= cost_cutoff)
 		{
 			ndis = (Disjunct *) xalloc(sizeof(Disjunct));
-			ndis->left = reverse(extract_connectors(cl->c, '-', opts));
-			ndis->right = reverse(extract_connectors(cl->c, '+', opts));
+			ndis->left = ndis->right = NULL;
+
+			/* Build a list of connectors from the Tconnectors. */
+			for (Tconnector *e = cl->c; e != NULL; e = e->next)
+			{
+				Connector *n = connector_new(e->condesc, opts);
+				Connector **loc = ('-' == e->dir) ? &ndis->left : &ndis->right;
+
+				n->multi = e->multi;
+				n->next = *loc;   /* prepend the connector to the current list */
+				*loc = n;         /* update the connector list */
+			}
+
 			ndis->word_string = string;
 			ndis->cost = cl->cost;
 			ndis->next = dis;
