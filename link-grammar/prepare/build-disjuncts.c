@@ -105,21 +105,29 @@ static Connector * reverse(Connector *e)
  */
 static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
 {
-	Tconnector * e, * head;
-	head = NULL;
-	for (;e1 != NULL; e1 = e1->next) {
-		e = (Tconnector *) xalloc(sizeof(Tconnector));
-		*e = *e1;
-		e->next = head;
-		head = e;
+	Tconnector head;
+	Tconnector *preve = &head;
+	Tconnector *newe = &head;
+
+	for (;e1 != NULL; e1 = e1->next)
+	{
+		newe = (Tconnector *) xalloc(sizeof(Tconnector));
+		*newe = *e1;
+
+		preve->next = newe;
+		preve = newe;
 	}
-	for (;e2 != NULL; e2 = e2->next) {
-		e = (Tconnector *) xalloc(sizeof(Tconnector));
-		*e = *e2;
-		e->next = head;
-		head = e;
+	for (;e2 != NULL; e2 = e2->next)
+	{
+		newe = (Tconnector *) xalloc(sizeof(Tconnector));
+		*newe = *e2;
+
+		preve->next = newe;
+		preve = newe;
 	}
-	return Treverse(head);
+
+	newe->next = NULL;
+	return head.next;
 }
 
 /**
