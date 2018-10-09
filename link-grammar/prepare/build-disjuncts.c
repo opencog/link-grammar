@@ -147,7 +147,7 @@ static Tconnector * build_terminal(Exp * e)
 /**
  * Build the clause for the expression e.  Does not change e
  */
-static Clause * build_clause(Exp *e)
+static Clause * build_clause(Exp *e, double cost_cutoff)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 	E_list * e_list;
@@ -162,15 +162,18 @@ static Clause * build_clause(Exp *e)
 		c1->maxcost = 0.0;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 		{
-			c2 = build_clause(e_list->e);
+			c2 = build_clause(e_list->e, cost_cutoff);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
 				for (c4 = c2; c4 != NULL; c4 = c4->next)
 				{
+					double maxcost = MAX(c3->maxcost,c4->maxcost);
+					if (maxcost > cost_cutoff) continue;
+
 					c = (Clause *) xalloc(sizeof (Clause));
 					c->cost = c3->cost + c4->cost;
-					c->maxcost = MAX(c3->maxcost,c4->maxcost);
+					c->maxcost = maxcost;
 					c->c = catenate(c3->c, c4->c);
 					c->next = c_head;
 					c_head = c;
@@ -188,7 +191,7 @@ static Clause * build_clause(Exp *e)
 		c = NULL;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 		{
-			c1 = build_clause(e_list->e);
+			c1 = build_clause(e_list->e, cost_cutoff);
 			while(c1 != NULL) {
 				c3 = c1->next;
 				c1->next = c;
@@ -268,7 +271,7 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
 	Clause *c ;
 	Disjunct * dis;
 	// print_expression(exp);  printf("\n");
-	c = build_clause(exp);
+	c = build_clause(exp, cost_cutoff);
 	// print_clause_list(c);
 	dis = build_disjunct(c, word, cost_cutoff, opts);
 	// print_disjunct_list(dis);
