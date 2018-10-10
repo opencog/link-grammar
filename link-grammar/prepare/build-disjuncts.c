@@ -67,6 +67,7 @@ static void free_clause_list(Clause *c)
 	}
 }
 
+#if 0 /* old stuff */
 /**
  * reverse the order of the list e.  destructive
  */
@@ -98,6 +99,7 @@ static Connector * reverse(Connector *e)
 	}
 	return head;
 }
+#endif
 
 /**
  * Builds a new list of connectors that is the catenation of e1 with e2.
