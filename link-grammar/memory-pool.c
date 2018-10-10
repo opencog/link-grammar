@@ -133,6 +133,8 @@ void pool_delete(Pool_desc *mp)
  */
 void *pool_alloc(Pool_desc *mp)
 {
+	mp->curr_elements++; /* For stats. */
+
 #ifdef POOL_FREE
 	if (NULL != mp->free_list)
 	{
@@ -142,8 +144,6 @@ void *pool_alloc(Pool_desc *mp)
 		return alloc_next;
 	}
 #endif // POOL_FREE
-
-	mp->curr_elements++; /* For stats. */
 
 	if ((NULL == mp->alloc_next) || (mp->alloc_next == mp->ring + mp->data_size))
 	{
@@ -204,6 +204,7 @@ void pool_reuse(Pool_desc *mp)
 	        mp->curr_elements, mp->name, mp->func);
 	mp->ring = mp->chain;
 	mp->alloc_next = mp->ring;
+	mp->curr_elements = 0;
 }
 
 #ifdef POOL_FREE
@@ -216,6 +217,7 @@ void pool_free(Pool_desc *mp, void *e)
 {
 	assert(mp->element_size >= FLDSIZE_NEXT);
 	if (NULL == e) return;
+	mp->curr_elements--;
 
 	char *next = mp->free_list;
 	mp->free_list = e;
@@ -270,12 +272,14 @@ void pool_reuse(Pool_desc *mp)
 	}
 
 	mp->chain = NULL;
+	mp->curr_elements = 0;
 }
 
 #ifdef POOL_FREE
 void pool_free(Pool_desc *mp, void *e)
 {
 	free(e);
+	mp->curr_elements--;
 }
 #endif // POOL_FREE
 #endif // POOL_ALLOCATOR
