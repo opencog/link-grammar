@@ -18,6 +18,7 @@
 #define D_MEMPOOL (D_SPEC+4)
 #define MIN_ALIGNMENT sizeof(void *)    // Minimum element alignment.
 #define MAX_ALIGNMENT 64                // Maximum element alignment.
+/*#define POOL_EXACT // Not used for now and hence left undefined. */
 
 typedef struct Pool_desc_s Pool_desc;
 
@@ -63,6 +64,8 @@ struct  Pool_desc_s
 
 	/* Flags that are used by pool_alloc(). */
 	bool zero_out;              // Zero out allocated elements.
+#ifdef POOL_EXACT
 	bool exact;                 // Abort if more than num_elements are needed.
+#endif /* POOL_EXACT */
 };
 #endif // _MEMORY_POOL_H

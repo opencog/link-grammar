@@ -75,7 +75,9 @@ Pool_desc *pool_new(const char *func, const char *name,
 	}
 
 	mp->zero_out = zero_out;
+#ifdef POOL_EXACT
 	mp->exact = exact;
+#endif /* POOL_EXACT */
 	mp->alloc_next = NULL;
 	mp->chain = NULL;
 	mp->ring = NULL;
@@ -145,9 +147,11 @@ void *pool_alloc(Pool_desc *mp)
 
 	if ((NULL == mp->alloc_next) || (mp->alloc_next == mp->ring + mp->data_size))
 	{
+#ifdef POOL_EXACT
 		assert(!mp->exact || (NULL == mp->alloc_next),
 				 "Too many elements %zu>%zu (pool '%s' created in %s())",
 				 mp->curr_elements, mp->num_elements, mp->name, mp->func);
+#endif /* POOL_EXACT */
 
 		/* No current block or current block exhausted - obtain another one. */
 		char *prev = mp->ring; /* Remember current block for possible chaining. */
@@ -231,9 +235,11 @@ void pool_free(Pool_desc *mp, void *e)
 void *pool_alloc(Pool_desc *mp)
 {
 	mp->curr_elements++;
+#ifdef POOL_EXACT
 	assert(!mp->exact || mp->curr_elements <= mp->num_elements,
 	       "Too many elements (%zu>%zu) (pool '%s' created in %s())",
 	       mp->curr_elements, mp->num_elements, mp->name, mp->func);
+#endif /* POOL_EXACT */
 
 	/* Allocate a new element and chain it. */
 	char *next = mp->chain;
