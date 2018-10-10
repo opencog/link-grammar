@@ -68,4 +68,27 @@ struct  Pool_desc_s
 	bool exact;                 // Abort if more than num_elements are needed.
 #endif /* POOL_EXACT */
 };
+
+// Macros for our memory-pool usage debugging.
+// https://github.com/google/sanitizers/wiki/AddressSanitizerManualPoisoning
+#if !defined(__has_feature)
+#define __has_feature(x) 0
+#endif
+#if __has_feature(address_sanitizer) || defined(__SANITIZE_ADDRESS__)
+#include <sanitizer/asan_interface.h>
+#define ASAN_POISON_MEMORY_REGION(addr, size) \
+	__asan_poison_memory_region((addr), (size))
+#define ASAN_UNPOISON_MEMORY_REGION(addr, size) \
+	__asan_unpoison_memory_region((addr), (size))
+#define ASAN_ADDRESS_IS_POISONED(addr) \
+	__asan_address_is_poisoned(addr)
+#else
+#define ASAN_POISON_MEMORY_REGION(addr, size) \
+	((void)(addr), (void)(size))
+#define ASAN_UNPOISON_MEMORY_REGION(addr, size) \
+	((void)(addr), (void)(size))
+#define ASAN_ADDRESS_IS_POISONED(addr) \
+	((void)(addr), false)
+#endif // __SANITIZE_ADDRESS__
+
 #endif // _MEMORY_POOL_H
