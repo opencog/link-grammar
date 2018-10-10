@@ -81,7 +81,9 @@ Pool_desc *pool_new(const char *func, const char *name,
 	mp->alloc_next = NULL;
 	mp->chain = NULL;
 	mp->ring = NULL;
+#ifdef POOL_FREE
 	mp->free_list = NULL;
+#endif // POOL_FREE
 	mp->curr_elements = 0;
 	mp->num_elements = num_elements;
 

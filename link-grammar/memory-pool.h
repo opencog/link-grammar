@@ -27,7 +27,9 @@ Pool_desc *pool_new(const char *, const char *, size_t, size_t, bool, bool, bool
 void *pool_alloc(Pool_desc *) GNUC_MALLOC;
 void pool_reuse(Pool_desc *);
 void pool_delete(Pool_desc *);
+#ifdef POOL_FREE
 void pool_free(Pool_desc *, void *e);
+#endif // POOL_FREE
 
 /* Pool allocator debug facility:
  * If configured with "CFLAGS=-DPOOL_ALLOCATOR=0", a fake pool allocator
@@ -48,7 +50,9 @@ struct  Pool_desc_s
 	char *chain;                // Allocated blocks. */
 	char *ring;                 // Current area for allocation.
 	char *alloc_next;           // Next element to be allocated.
+#ifdef POOL_FREE
 	char *free_list;            // Allocations that got freed.
+#endif // POOL_FREE
 	size_t block_size;          // Block size for pool extension.
 	size_t data_size;           // Size of data inside block_size.
 	size_t alignment;           // Alignment of element allocation.
