@@ -39,6 +39,13 @@ struct clause_struct
 	Tconnector * c;
 };
 
+typedef struct
+{
+	double cost_cutoff;
+	Pool_desc *Tconnector_pool;
+	Pool_desc *Clause_pool;
+} clause_context;
+
 #ifdef DEBUG
 static void print_Tconnector_list(Tconnector * e);
 static void print_clause_list(Clause * c);
@@ -105,7 +112,7 @@ static Connector * reverse(Connector *e)
  * Builds a new list of connectors that is the catenation of e1 with e2.
  * does not effect lists e1 or e2.   Order is maintained.
  */
-static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
+static Tconnector * catenate(Tconnector * e1, Tconnector * e2, Pool_desc *tp)
 {
 	Tconnector head;
 	Tconnector *preve = &head;
@@ -113,7 +120,7 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
 
 	for (;e1 != NULL; e1 = e1->next)
 	{
-		newe = (Tconnector *) xalloc(sizeof(Tconnector));
+		newe = pool_alloc(tp);
 		*newe = *e1;
 
 		preve->next = newe;
@@ -121,7 +128,7 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
 	}
 	for (;e2 != NULL; e2 = e2->next)
 	{
-		newe = (Tconnector *) xalloc(sizeof(Tconnector));
+		newe = pool_alloc(tp);
 		*newe = *e2;
 
 		preve->next = newe;
@@ -135,10 +142,10 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
 /**
  * build the connector for the terminal node n
  */
-static Tconnector * build_terminal(Exp * e)
+static Tconnector * build_terminal(Exp *e, Pool_desc *tp)
 {
 	Tconnector * c;
-	c = (Tconnector *) xalloc(sizeof(Tconnector));
+	c = pool_alloc(tp);
 	c->condesc = e->u.condesc;
 	c->multi = e->multi;
 	c->dir = e->dir;
@@ -149,7 +156,7 @@ static Tconnector * build_terminal(Exp * e)
 /**
  * Build the clause for the expression e.  Does not change e
  */
-static Clause * build_clause(Exp *e, double cost_cutoff)
+static Clause * build_clause(Exp *e, clause_context *ct)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 	E_list * e_list;
@@ -157,43 +164,43 @@ static Clause * build_clause(Exp *e, double cost_cutoff)
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
 	{
-		c1 = (Clause *) xalloc(sizeof (Clause));
+		c1 = pool_alloc(ct->Clause_pool);
 		c1->c = NULL;
 		c1->next = NULL;
 		c1->cost = 0.0;
 		c1->maxcost = 0.0;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 		{
-			c2 = build_clause(e_list->e, cost_cutoff);
+			c2 = build_clause(e_list->e, ct);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
 				for (c4 = c2; c4 != NULL; c4 = c4->next)
 				{
 					double maxcost = MAX(c3->maxcost,c4->maxcost);
-					if (maxcost + e->cost > cost_cutoff) continue;
+					if (maxcost + e->cost > ct->cost_cutoff) continue;
 
-					c = (Clause *) xalloc(sizeof (Clause));
+					c = pool_alloc(ct->Clause_pool);
 					c->cost = c3->cost + c4->cost;
 					c->maxcost = maxcost;
-					c->c = catenate(c3->c, c4->c);
+					c->c = catenate(c3->c, c4->c, ct->Tconnector_pool);
 					c->next = c_head;
 					c_head = c;
 				}
 			}
-			free_clause_list(c1);
-			free_clause_list(c2);
+			//free_clause_list(c1);
+			//free_clause_list(c2);
 			c1 = c_head;
 		}
 		c = c1;
 	}
 	else if (e->type == OR_type)
 	{
-		c = build_clause(e->u.l->e, cost_cutoff);
+		c = build_clause(e->u.l->e, ct);
 		/* we'll catenate the lists of clauses */
 		for (e_list = e->u.l->next; e_list != NULL; e_list = e_list->next)
 		{
-			c1 = build_clause(e_list->e, cost_cutoff);
+			c1 = build_clause(e_list->e, ct);
 			if (c1 == NULL) continue;
 			if (c == NULL)
 			{
@@ -214,8 +221,8 @@ static Clause * build_clause(Exp *e, double cost_cutoff)
 	}
 	else if (e->type == CONNECTOR_type)
 	{
-		c = (Clause *) xalloc(sizeof(Clause));
-		c->c = build_terminal(e);
+		c = pool_alloc(ct->Clause_pool);
+		c->c = build_terminal(e, ct->Tconnector_pool);
 		c->cost = 0.0;
 		c->maxcost = 0.0;
 		c->next = NULL;
@@ -285,12 +292,23 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
 {
 	Clause *c ;
 	Disjunct * dis;
+	clause_context ct = { 0 };
+
+	ct.cost_cutoff = cost_cutoff;
+	ct.Clause_pool = pool_new(__func__, "Clause",
+	                   /*num_elements*/4096, sizeof(Clause),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	ct.Tconnector_pool = pool_new(__func__, "Tconnector",
+	                   /*num_elements*/32768, sizeof(Tconnector),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+
 	// print_expression(exp);  printf("\n");
-	c = build_clause(exp, cost_cutoff);
+	c = build_clause(exp, &ct);
 	// print_clause_list(c);
 	dis = build_disjunct(c, word, cost_cutoff, opts);
 	// print_disjunct_list(dis);
-	free_clause_list(c);
+	pool_delete(ct.Tconnector_pool);
+	pool_delete(ct.Clause_pool);
 	return dis;
 }
 
