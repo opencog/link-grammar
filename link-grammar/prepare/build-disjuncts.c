@@ -187,16 +187,26 @@ static Clause * build_clause(Exp *e, double cost_cutoff)
 	}
 	else if (e->type == OR_type)
 	{
+		c = build_clause(e->u.l->e, cost_cutoff);
 		/* we'll catenate the lists of clauses */
-		c = NULL;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		for (e_list = e->u.l->next; e_list != NULL; e_list = e_list->next)
 		{
 			c1 = build_clause(e_list->e, cost_cutoff);
-			while(c1 != NULL) {
-				c3 = c1->next;
-				c1->next = c;
+			if (c1 == NULL) continue;
+			if (c == NULL)
+			{
 				c = c1;
-				c1 = c3;
+			}
+			else
+			{
+				for (c2 = c; ; c2 = c2->next)
+				{
+					if (NULL == c2->next)
+					{
+						c2->next = c1;
+						break;
+					}
+				}
 			}
 		}
 	}
