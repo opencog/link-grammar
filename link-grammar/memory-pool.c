@@ -200,7 +200,7 @@ void *pool_alloc(Pool_desc *mp)
  */
 void pool_reuse(Pool_desc *mp)
 {
-	lgdebug(+D_MEMPOOL, "Used %zu elements (pool '%s' created in %s())\n",
+	lgdebug(+D_MEMPOOL, "Reuse %zu elements (pool '%s' created in %s())\n",
 	        mp->curr_elements, mp->name, mp->func);
 	mp->ring = mp->chain;
 	mp->alloc_next = mp->ring;
@@ -260,7 +260,7 @@ void *pool_alloc(Pool_desc *mp)
 void pool_reuse(Pool_desc *mp)
 {
 	if (NULL == mp) return;
-	lgdebug(+D_MEMPOOL, "Used %zu elements (pool '%s' created in %s())\n",
+	lgdebug(+D_MEMPOOL, "Reuse %zu elements (pool '%s' created in %s())\n",
 	        mp->curr_elements, mp->name, mp->func);
 
 	/* Free its chained memory blocks. */
