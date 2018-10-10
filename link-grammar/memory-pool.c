@@ -207,13 +207,15 @@ void pool_reuse(Pool_desc *mp)
 	mp->ring = mp->chain;
 	mp->alloc_next = mp->ring;
 	mp->curr_elements = 0;
+#ifdef POOL_FREE
+	mp->free_list = NULL;
+#endif // POOL_FREE
 }
 
 #ifdef POOL_FREE
 /**
- * Free elements. They are added to a free list that is used by
- * pool_alloc() before it allocates from memory blocks.
- * XXX Unchecked.
+ * Allow to reuse individual elements. They are added to a free list that is
+ * used by pool_alloc() before it allocates from memory blocks.
  */
 void pool_free(Pool_desc *mp, void *e)
 {
