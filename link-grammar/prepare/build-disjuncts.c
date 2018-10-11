@@ -52,27 +52,29 @@ static void print_clause_list(Clause * c);
 static void print_connector_list(Connector * e);
 #endif
 
-static void free_Tconnectors(Tconnector *e)
+#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMOEY /* Undefined - CPU overhead. */
+static void free_Tconnectors(Tconnector *e, Pool_desc *mp)
 {
 	Tconnector * n;
 	for(;e != NULL; e=n)
 	{
 		n = e->next;
-		xfree((char *)e, sizeof(Tconnector));
+		pool_free(mp, e);
 	}
 }
 
-static void free_clause_list(Clause *c)
+static void free_clause_list(Clause *c, clause_context *ct)
 {
 	Clause *c1;
 	while (c != NULL)
 	{
 		c1 = c->next;
-		free_Tconnectors(c->c);
-		xfree((char *)c, sizeof(Clause));
+		free_Tconnectors(c->c, ct->Tconnector_pool);
+		pool_free(ct->Clause_pool, c);
 		c = c1;
 	}
 }
+#endif
 
 #if 0 /* old stuff */
 /**
@@ -188,8 +190,10 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 					c_head = c;
 				}
 			}
-			//free_clause_list(c1);
-			//free_clause_list(c2);
+#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMOEY /* Undefined - CPU overhead. */
+			free_clause_list(c1, ct);
+			free_clause_list(c2, ct);
+#endif
 			c1 = c_head;
 		}
 		c = c1;
