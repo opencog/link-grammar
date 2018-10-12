@@ -40,8 +40,8 @@ typedef enum
  * The E_list and Exp structures defined below comprise the expression
  * trees that are stored in the dictionary.  The expression has a type
  * (OR_type, AND_type or CONNECTOR_type).  If it is not a terminal it
- * has a list (an E_list) of children. Else "string" is the connector,
- * and "dir" indicates its direction.
+ * has a list (an E_list) of children. Else "condesc" is the connector
+ * descriptor, when "dir" indicates the connector direction.
  */
 struct Exp_struct
 {
