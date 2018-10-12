@@ -24,10 +24,8 @@
 typedef struct Tconnector_struct Tconnector;
 struct Tconnector_struct
 {
-	char multi;   /* TRUE if this is a multi-connector */
-	char dir;     /* '-' for left and '+' for right */
 	Tconnector * next;
-	const condesc_t * condesc;
+	const Exp *e;
 };
 
 typedef struct clause_struct Clause;
@@ -146,11 +144,8 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2, Pool_desc *tp)
  */
 static Tconnector * build_terminal(Exp *e, Pool_desc *tp)
 {
-	Tconnector * c;
-	c = pool_alloc(tp);
-	c->condesc = e->u.condesc;
-	c->multi = e->multi;
-	c->dir = e->dir;
+	Tconnector *c = pool_alloc(tp);
+	c->e = e;
 	c->next = NULL;
 	return c;
 }
@@ -272,12 +267,12 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff,
 			ndis->left = ndis->right = NULL;
 
 			/* Build a list of connectors from the Tconnectors. */
-			for (Tconnector *e = cl->c; e != NULL; e = e->next)
+			for (Tconnector *t = cl->c; t != NULL; t = t->next)
 			{
-				Connector *n = connector_new(e->condesc, opts);
-				Connector **loc = ('-' == e->dir) ? &ndis->left : &ndis->right;
+				Connector *n = connector_new(t->e->u.condesc, opts);
+				Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
-				n->multi = e->multi;
+				n->multi = t->e->multi;
 				n->next = *loc;   /* prepend the connector to the current list */
 				*loc = n;         /* update the connector list */
 			}
@@ -319,13 +314,14 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
 #ifdef DEBUG
 /* Misc printing functions, useful for debugging */
 
-static void print_Tconnector_list(Tconnector * e)
+static void print_Tconnector_list(Tconnector *t)
 {
-	for (;e != NULL; e=e->next) {
-		if (e->multi) printf("@");
-		printf("%s", e->condesc->string);
-		printf("%c", e->dir);
-		if (e->next != NULL) printf(" ");
+	for (; t != NULL; t = t->next)
+	{
+		if (t->e->multi) printf("@");
+		printf("%s", t->e->u.condesc->string);
+		printf("%c", t->e->dir);
+		if (t->next != NULL) printf(" ");
 	}
 }
 
