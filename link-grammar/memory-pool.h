@@ -18,6 +18,8 @@
 #define D_MEMPOOL (D_SPEC+4)
 #define MIN_ALIGNMENT sizeof(void *)    // Minimum element alignment.
 #define MAX_ALIGNMENT 64                // Maximum element alignment.
+//#define POOL_FREE                       // Allow to reuse individual elements.
+/*#define POOL_EXACT // Not used for now and hence left undefined. */
 
 typedef struct Pool_desc_s Pool_desc;
 
@@ -26,7 +28,9 @@ Pool_desc *pool_new(const char *, const char *, size_t, size_t, bool, bool, bool
 void *pool_alloc(Pool_desc *) GNUC_MALLOC;
 void pool_reuse(Pool_desc *);
 void pool_delete(Pool_desc *);
+#ifdef POOL_FREE
 void pool_free(Pool_desc *, void *e);
+#endif // POOL_FREE
 
 /* Pool allocator debug facility:
  * If configured with "CFLAGS=-DPOOL_ALLOCATOR=0", a fake pool allocator
@@ -47,7 +51,9 @@ struct  Pool_desc_s
 	char *chain;                // Allocated blocks. */
 	char *ring;                 // Current area for allocation.
 	char *alloc_next;           // Next element to be allocated.
+#ifdef POOL_FREE
 	char *free_list;            // Allocations that got freed.
+#endif // POOL_FREE
 	size_t block_size;          // Block size for pool extension.
 	size_t data_size;           // Size of data inside block_size.
 	size_t alignment;           // Alignment of element allocation.
@@ -63,6 +69,31 @@ struct  Pool_desc_s
 
 	/* Flags that are used by pool_alloc(). */
 	bool zero_out;              // Zero out allocated elements.
+#ifdef POOL_EXACT
 	bool exact;                 // Abort if more than num_elements are needed.
+#endif /* POOL_EXACT */
 };
+
+// Macros for our memory-pool usage debugging.
+// https://github.com/google/sanitizers/wiki/AddressSanitizerManualPoisoning
+#if !defined(__has_feature)
+#define __has_feature(x) 0
+#endif
+#if __has_feature(address_sanitizer) || defined(__SANITIZE_ADDRESS__)
+#include <sanitizer/asan_interface.h>
+#define ASAN_POISON_MEMORY_REGION(addr, size) \
+	__asan_poison_memory_region((addr), (size))
+#define ASAN_UNPOISON_MEMORY_REGION(addr, size) \
+	__asan_unpoison_memory_region((addr), (size))
+#define ASAN_ADDRESS_IS_POISONED(addr) \
+	__asan_address_is_poisoned(addr)
+#else
+#define ASAN_POISON_MEMORY_REGION(addr, size) \
+	((void)(addr), (void)(size))
+#define ASAN_UNPOISON_MEMORY_REGION(addr, size) \
+	((void)(addr), (void)(size))
+#define ASAN_ADDRESS_IS_POISONED(addr) \
+	((void)(addr), false)
+#endif // __SANITIZE_ADDRESS__
+
 #endif // _MEMORY_POOL_H

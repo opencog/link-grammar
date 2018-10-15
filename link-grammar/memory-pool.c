@@ -75,11 +75,15 @@ Pool_desc *pool_new(const char *func, const char *name,
 	}
 
 	mp->zero_out = zero_out;
+#ifdef POOL_EXACT
 	mp->exact = exact;
+#endif /* POOL_EXACT */
 	mp->alloc_next = NULL;
 	mp->chain = NULL;
 	mp->ring = NULL;
+#ifdef POOL_FREE
 	mp->free_list = NULL;
+#endif // POOL_FREE
 	mp->curr_elements = 0;
 	mp->num_elements = num_elements;
 
@@ -108,6 +112,9 @@ void pool_delete(Pool_desc *mp)
 #endif
 	for (char *c = mp->chain; c != NULL; c = c_next)
 	{
+#if !POOL_ALLOCATOR
+		ASAN_UNPOISON_MEMORY_REGION(c, mp->element_size + FLDSIZE_NEXT);
+#endif
 		c_next = POOL_NEXT_BLOCK(c, alloc_size);
 #if POOL_ALLOCATOR
 		aligned_free(c);
@@ -131,23 +138,26 @@ void pool_delete(Pool_desc *mp)
  */
 void *pool_alloc(Pool_desc *mp)
 {
+	mp->curr_elements++; /* For stats. */
+
 #ifdef POOL_FREE
 	if (NULL != mp->free_list)
 	{
 		void *alloc_next = mp->free_list;
+		ASAN_UNPOISON_MEMORY_REGION(alloc_next, mp->element_size);
 		mp->free_list = *(char **)mp->free_list;
 		if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
 		return alloc_next;
 	}
 #endif // POOL_FREE
 
-	mp->curr_elements++; /* For stats. */
-
 	if ((NULL == mp->alloc_next) || (mp->alloc_next == mp->ring + mp->data_size))
 	{
+#ifdef POOL_EXACT
 		assert(!mp->exact || (NULL == mp->alloc_next),
 				 "Too many elements %zu>%zu (pool '%s' created in %s())",
 				 mp->curr_elements, mp->num_elements, mp->name, mp->func);
+#endif /* POOL_EXACT */
 
 		/* No current block or current block exhausted - obtain another one. */
 		char *prev = mp->ring; /* Remember current block for possible chaining. */
@@ -196,26 +206,31 @@ void *pool_alloc(Pool_desc *mp)
  */
 void pool_reuse(Pool_desc *mp)
 {
-	lgdebug(+D_MEMPOOL, "Used %zu elements (pool '%s' created in %s())\n",
+	lgdebug(+D_MEMPOOL, "Reuse %zu elements (pool '%s' created in %s())\n",
 	        mp->curr_elements, mp->name, mp->func);
 	mp->ring = mp->chain;
 	mp->alloc_next = mp->ring;
+	mp->curr_elements = 0;
+#ifdef POOL_FREE
+	mp->free_list = NULL;
+#endif // POOL_FREE
 }
 
 #ifdef POOL_FREE
 /**
- * Free elements. They are added to a free list that is used by
- * pool_alloc() before it allocates from memory blocks.
- * XXX Unchecked.
+ * Allow to reuse individual elements. They are added to a free list that is
+ * used by pool_alloc() before it allocates from memory blocks.
  */
 void pool_free(Pool_desc *mp, void *e)
 {
 	assert(mp->element_size >= FLDSIZE_NEXT);
 	if (NULL == e) return;
+	mp->curr_elements--;
 
 	char *next = mp->free_list;
 	mp->free_list = e;
 	*(char **)e = next;
+	ASAN_POISON_MEMORY_REGION(e, mp->element_size);
 }
 #endif // POOL_FREE
 
@@ -231,9 +246,11 @@ void pool_free(Pool_desc *mp, void *e)
 void *pool_alloc(Pool_desc *mp)
 {
 	mp->curr_elements++;
+#ifdef POOL_EXACT
 	assert(!mp->exact || mp->curr_elements <= mp->num_elements,
 	       "Too many elements (%zu>%zu) (pool '%s' created in %s())",
 	       mp->curr_elements, mp->num_elements, mp->name, mp->func);
+#endif /* POOL_EXACT */
 
 	/* Allocate a new element and chain it. */
 	char *next = mp->chain;
@@ -252,24 +269,32 @@ void *pool_alloc(Pool_desc *mp)
 void pool_reuse(Pool_desc *mp)
 {
 	if (NULL == mp) return;
-	lgdebug(+D_MEMPOOL, "Used %zu elements (pool '%s' created in %s())\n",
+	lgdebug(+D_MEMPOOL, "Reuse %zu elements (pool '%s' created in %s())\n",
 	        mp->curr_elements, mp->name, mp->func);
 
 	/* Free its chained memory blocks. */
 	char *c_next;
 	for (char *c = mp->chain; c != NULL; c = c_next)
 	{
+		ASAN_UNPOISON_MEMORY_REGION(c, mp->element_size + FLDSIZE_NEXT);
 		c_next = POOL_NEXT_BLOCK(c, mp->element_size);
 		free(c);
 	}
 
 	mp->chain = NULL;
+	mp->curr_elements = 0;
 }
 
 #ifdef POOL_FREE
 void pool_free(Pool_desc *mp, void *e)
 {
-	free(e);
+	if (ASAN_ADDRESS_IS_POISONED(e))
+	{
+		prt_error("Fatal error: Double pool free of %p\n", e);
+		exit(1);
+	}
+	mp->curr_elements--;
+	ASAN_POISON_MEMORY_REGION(e, mp->element_size + FLDSIZE_NEXT);
 }
 #endif // POOL_FREE
 #endif // POOL_ALLOCATOR
