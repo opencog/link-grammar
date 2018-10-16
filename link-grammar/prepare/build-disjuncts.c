@@ -25,7 +25,7 @@ typedef struct Tconnector_struct Tconnector;
 struct Tconnector_struct
 {
 	Tconnector * next;
-	const Exp *e;
+	const Exp *e; /* a CONNECTOR_type element from which to get the connector  */
 };
 
 typedef struct clause_struct Clause;
