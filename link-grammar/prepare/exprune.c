@@ -480,8 +480,8 @@ void expression_prune(Sentence sent, Parse_Options opts)
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
 
-		zero_connector_table(&ctxt);
 		if (N_deleted == 0) break;
+		zero_connector_table(&ctxt);
 		N_deleted = 0;
 	}
 
