@@ -1067,10 +1067,10 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	delete_unmarked_disjuncts(sent);
 	cms_table_delete(cmt);
 
-	if ((0 != N_deleted) && verbosity_level(D_PRUNE))
+	if ((0 != total_deleted) && verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
-		prt_error("Debug: After pp_pruning:\n\\");
+		prt_error("Debug: After pp_prune:\n\\");
 		print_disjunct_counts(sent);
 	}
 
