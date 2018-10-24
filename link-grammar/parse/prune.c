@@ -1064,7 +1064,8 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 		lgdebug(D_PRUNE, "Debug: pp_prune pass deleted %d\n", N_deleted);
 	}
-	delete_unmarked_disjuncts(sent);
+	if (total_deleted > 0)
+		delete_unmarked_disjuncts(sent);
 	cms_table_delete(cmt);
 
 	if ((0 != total_deleted) && verbosity_level(D_PRUNE))
