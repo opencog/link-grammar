@@ -396,6 +396,23 @@ pp_knowledge *pp_knowledge_open(const char *path)
     prt_error("Error: Couldn't find post-process knowledge file %s\n", path);
     return NULL;
   }
+
+  /* Ignore the file if it starts with "DISABLE". */
+  char buf[16];
+  if ((NULL == fgets(buf, sizeof(buf), f)) && ferror(f))
+  {
+      prt_error("Error: File %s: Read error\n", path);
+      return NULL;
+  }
+  if (0 == strncmp("DISABLE", buf, sizeof("DISABLE")-1))
+  {
+    if (verbosity_level(D_PPK))
+      prt_error("Warning: File %s disabled\n", path);
+    fclose(f);
+    return NULL;
+  }
+  rewind(f);
+
   pp_knowledge *k = (pp_knowledge *) malloc (sizeof(pp_knowledge));
   *k = (pp_knowledge){0};
   k->lt = pp_lexer_open(f);
