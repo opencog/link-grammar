@@ -419,7 +419,9 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s dir=%c multi=%d\n", e->u.condesc->string, e->dir, e->multi);
+		printf("con=%s dir=%c multi=%d\n",
+		       e->u.condesc ? e->u.condesc->string : "(condesc=(null))",
+		       e->dir, e->multi);
 	}
 }
 #endif /* DEBUG */
