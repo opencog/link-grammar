@@ -78,6 +78,14 @@ static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
  * statistics functions: this string, together with the subscripted
  * word, is used as a key to index the statistics information in the
  * database.
+ *
+ * The connectors are extracted from link_array (and not chosen_disjuncts)
+ * so the lexical links remain hidden when HIDE_MORPHO is true (see
+ * compute_chosen_disjuncts()).
+ *
+ * In order that multi-connectors will not be extracted several times
+ * for each disjunct (if they connect to multiple words) their address
+ * is checked for duplication.
  */
 void lg_compute_disjunct_strings(Linkage lkg)
 {
