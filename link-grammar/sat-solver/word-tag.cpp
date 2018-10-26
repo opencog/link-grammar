@@ -140,20 +140,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
                 _word, var, i, l, word_xnode ? word_xnode->word->subword : "NULL X_node");
         assert(word_xnode != NULL, "NULL X_node for var %s", new_var);
-        if (root && parent_exp == NULL && l->e != word_xnode->exp) {
-          E_list *we = NULL;
+        if ((NULL != word_xnode->next) && (l->e == word_xnode->next->exp))
+          word_xnode = word_xnode->next;
 
-          if (word_xnode->exp->type == OR_type) {
-            for (we = word_xnode->exp->u.l; we != NULL; we = we-> next) {
-              if (l->e == we->e)
-                break;
-            }
-          }
-          if (we == NULL && word_xnode->next != NULL) {
-            lgdebug(+D_IC, "Next word_xnode for word %d is needed\n", _word);
-            word_xnode = word_xnode->next;
-          }
-        }
         insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost, l->e, word_xnode);
 
         if (lr)
