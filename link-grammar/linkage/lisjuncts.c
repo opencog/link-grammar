@@ -29,47 +29,6 @@
 #define MAX_LINK_NAME_LENGTH 10
 
 /**
- * Print connector list to string.
- * This reverses the order of the connectors in the connector list,
- * so that the resulting list is in the same order as it would appear
- * in the dictionary. The character 'dir' is appended to each connector.
- */
-static char * reversed_conlist_str(Connector* c, char dir, char* buf, size_t sz)
-{
-	char* p;
-	size_t len = 0;
-
-	if (NULL == c) return buf;
-	p = reversed_conlist_str(c->next, dir, buf, sz);
-
-	sz -= (p-buf);
-
-	if (c->multi)
-		p[len++] = '@';
-
-	len += lg_strlcpy(p+len, connector_string(c), sz-len);
-	if (3 < sz-len)
-	{
-		p[len++] = dir;
-		p[len++] = ' ';
-		p[len] = 0x0;
-	}
-	return p+len;
-}
-
-/**
- * Print disjunct to string.  The resulting list is in the same order
- * as it would appear in the dictionary.
- */
-static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
-{
-	char* p;
-	if (NULL == dj) { *buf = 0; return; }
-	p = reversed_conlist_str(dj->left, '-', buf, sz);
-	reversed_conlist_str(dj->right, '+', p, sz - (p-buf));
-}
-
-/**
  * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
  *
  * This routine will compute the string representation of the disjunct
