@@ -22,6 +22,7 @@
 #include "disjunct-utils.h"
 #include "linkage.h"
 #include "lisjuncts.h"
+#include "string-set.h"
 
 /* Links are *always* less than 10 chars long . For now. The estimate
  * below is somewhat dangerous .... could be  fixed. */
@@ -87,10 +88,48 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	lkg->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
 	memset(lkg->disjunct_list_str, 0, nwords * sizeof(char *));
 
-	for (WordIdx w=0; w< nwords; w++)
+	for (WordIdx w = 0; w < nwords; w++)
 	{
-		Disjunct* dj = lkg->chosen_disjuncts[w];
-		disjunct_str(dj, djstr, sizeof(djstr));
+		size_t len = 0;
+
+		for (int dir = 0; dir < 2; dir++)
+		{
+			Connector *last_ms = NULL; /* last multi-connector */
+
+			for (LinkIdx i = lkg->num_links-1; i < lkg->num_links; i--)
+			{
+				Link *lnk = &lkg->link_array[i];
+				Connector *c;
+
+				if (0 == dir)
+				{
+					if (lnk->rw != w) continue;
+					c = lnk->rc;
+				}
+				else
+				{
+					if (lnk->lw != w) continue;
+					c = lnk->lc;
+				}
+
+				if (c->multi)
+				{
+					if (last_ms == c) continue; /* already included */
+					last_ms = c;
+					djstr[len++] = '@';
+				}
+				len += lg_strlcpy(djstr+len, connector_string(c), sizeof(djstr)-len);
+
+				if (len >= sizeof(djstr) - 3)
+				{
+					len = sizeof(djstr) - 1;
+					break;
+				}
+				djstr[len++] = (dir == 0) ? '-' : '+';
+				djstr[len++] = ' ';
+			}
+		}
+		djstr[len++] = '\0';
 
 		lkg->disjunct_list_str[w] = strdup(djstr);
 	}
