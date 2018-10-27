@@ -943,7 +943,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 							err_ctxt ec = { linkage->sent };
 							err_msgc(&ec, lg_Warn,
 							      "Warning: the constituents aren't nested! "
-							      "Adjusting them. (%d, %d)", c, c2);
+							      "Adjusting them. (%d, %d)\n", c, c2);
 					  }
 					  ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}
