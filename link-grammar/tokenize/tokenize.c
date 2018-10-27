@@ -1059,7 +1059,7 @@ static Gword *wordgraph_getqueue_word(Sentence sent)
 	Gword *w;
 
 	if (NULL == sent->word_queue) return NULL;
-	w = sent->word_queue->word;;
+	w = sent->word_queue->word;
 
 	return w;
 }

@@ -45,7 +45,7 @@ void free_disjuncts(Disjunct *);
 void free_sentence_disjuncts(Sentence);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
-Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
+Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
 char * print_one_disjunct(Disjunct *);
 void word_record_in_disjunct(const Gword *, Disjunct *);
 Disjunct * disjuncts_dup(Disjunct *origd);
