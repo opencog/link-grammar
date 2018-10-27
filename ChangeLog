@@ -10,6 +10,8 @@ Version 5.5.2 (XXX 2018)
  * Revise the SAT parser cost model to align it with the classic parser.
  * Implement a strict check on connector name.
  * Major revision of the SWIG interface file; wrap all the library functions.
+ * Fix linkage_get_disjunct_*() when parse-option display_morphology is true.
+ * Change library and python-bindings default for display_morphology to true.
 
 Version 5.5.1 (27 July 2018)
  * Fix broken Java bindings build.
