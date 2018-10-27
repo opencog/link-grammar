@@ -64,7 +64,7 @@ is shown.
 [limit]
 The maximum number of linkages that are considered for post-processing.
 Up to this many linkages are generated; if there are fewer parses than
-thhis limit, then they will all be printed, in deterministic,
+this limit, then they will all be printed, in deterministic,
 cost-ranked order. If there are more parses than this limit, then a
 random subset will be printed. The !random option is used to control
 whether this sampling will use a repeatable (deterministic) random
@@ -95,7 +95,7 @@ Determines the maximum allowed length for certain connectors. The
 intended use is to speed up parsing by not considering very long links
 for most connectors, since they are rarely used in a correct parse.
 Setting this too low will prevent valid parses; setting this too high
-will slow the system, and occasionaly generate unlikely parses.
+will slow the system, and occasionally generate unlikely parses.
 The limit applies only to those connectors not exempted by the
 UNLIMITED-CONNECTORS dictionary entry.
 
@@ -103,7 +103,7 @@ UNLIMITED-CONNECTORS dictionary entry.
 Determines the approximate maximum time (in seconds) that parsing is
 allowed to take. If a parse is not found before this time, normal parsing
 is halted, and a "panic parse" mode is entered. During the panic parse,
-a looser, less restricitive set of parameters is used (primarily, a
+a looser, less restrictive set of parameters is used (primarily, a
 larger !cost-max), in an effort to find some, any parse.  Panic mode
 can be enabled and disabled with the !panic option.
 
@@ -119,7 +119,7 @@ possible number of null links.
 
 [panic]
 If enabled, then a "panic-mode" will be entered if a parse cannot be
-found within the time limit set by !timeout. Wehn in panic mode, various
+found within the time limit set by !timeout. When in panic mode, various
 parse options are loosened so a less accurate parse can be found quickly.
 
 [use-sat]
@@ -189,7 +189,7 @@ mode, the usual parse printing is suppressed; only errors are reported.
 In batch mode, a leading * in the first column can be used to indicate
 a non-grammatical sentence. If such a sentence parses, an error is
 printed. Conversely, an error is reported if no parses are found for
-a a valid sentence.
+a valid sentence.
 
 Batch testing is typically performed by piping a file to the parser;
 for example
@@ -197,7 +197,7 @@ for example
 or
    cat input-file | link-parser [dictionary name] [arguments]
 
-This flag is then usually placed at the begining of the input-file
+This flag is then usually placed at the beginning of the input-file
 (other options may be specified, as well). Setting the !echo flag
 can be useful, as it will echo the input sentence.
 
@@ -218,7 +218,7 @@ This mode is set to True when the standard input is not a terminal.
 [rand]
 If set to true, then a repeatable random sequence will be used, whenever
 a random number is required.  The parser almost never uses random
-numbers; currently they are ony used in one place: to sample a subset
+numbers; currently they are only used in one place: to sample a subset
 of linkages, if there are more parses than the linkage limit.
 See "!help limit" for info on the linkage limit.
 
@@ -248,7 +248,7 @@ in our GitHub repository https://github.com/opencog/link-grammar .
 [file]
 Read text from this file. The file is assumed to contain sentences
 and/or option settings.  It is typically used for reading in batch-mode
-files (see "!help batch") but can also be usefil in other scripting
+files (see "!help batch") but can also be useful in other scripting
 situations.
 
 [variables]

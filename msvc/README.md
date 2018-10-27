@@ -138,7 +138,7 @@ of Cygwin (in which case it included the "xlib" driver"), or separately from
 Both `PhotoViewer.dll` (if used) and `dot` must be in your PATH (if needed,
 you can customized that in a copy of `link-parser.bat`, as described above).
 
-BTW, when running and MSVC-compiled binary under Cygwin, don't exit
+BTW, when running an MSVC-compiled binary under Cygwin, don't exit
 link-parser by using `^Z` - the shell may get stuck because the program
 somehow may continue to run in the background.  Instead, exit using `!exit` .
 

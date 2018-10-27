@@ -560,7 +560,7 @@ fail:
 	/* printf("cols %i\n", ws.ws_col); */
 
 	/* Set the screen width only if the returned value seems
-	 * rational: its positive and not insanely tiny.
+	 * rational: it's positive and not insanely tiny.
 	 */
 	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
 	{
@@ -755,7 +755,7 @@ int main(int argc, char * argv[])
 		if ('c' == command) continue; /* It was another command */
 		if (-1 == command) continue;  /* It was a bad command */
 
-		/* We have to handle the !file command inline; its too hairy
+		/* We have to handle the !file command inline; it's too hairy
 		 * otherwise ... */
 		if ('f' == command)
 		{

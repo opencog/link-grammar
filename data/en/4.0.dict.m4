@@ -10128,7 +10128,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % After a closing quote, the sentence may continue...
 % You were asking, "How might this work?" so I answered.
-% should thes be a <sent-start> ??? why not?
+% should these be a <sent-start> ??? why not?
 <post-quote>:
   QUc- & {<wo-wall> or <wi-wall> or CP+};
 
