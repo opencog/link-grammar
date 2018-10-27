@@ -179,7 +179,7 @@ AC_CHECK_HEADERS([xlocale.h])
 # ====================================================================
 
 dnl For stdatomic.h -- missing in gcc-4.8 (Ubuntu Trusty 14.04)
-dnl Its used in the Jva bindings, to avoid an ugly server-init race.
+dnl Its used in the Java bindings, to avoid an ugly server-init race.
 AC_MSG_CHECKING(for stdatomic.h)
 AC_CHECK_HEADER([stdatomic.h],
 	[AC_DEFINE([HAVE_STDATOMIC_H], 1, [Define to 1 if stdatomic.h exists])],

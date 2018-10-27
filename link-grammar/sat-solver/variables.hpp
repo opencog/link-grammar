@@ -107,7 +107,7 @@ public:
         }
   }
 
-  // If guiding params are unknown, they are set do default
+  // If guiding params are unknown, they are set to default
   int string(const char* name)
   {
     int var;
@@ -137,7 +137,7 @@ public:
    * without making any connections of the given direction.
    */
 
-  // If guiding params are unknown, they are set do default
+  // If guiding params are unknown, they are set to default
   int epsilon(char* v, char dir) {
     char name[MAX_VARIABLE_NAME];
     dir = (dir == '+') ? 'r' : 'l';
@@ -161,7 +161,7 @@ public:
    * Variables that specify that two words are linked
    */
 
-  // If guiding params are unknown, they are set do default
+  // If guiding params are unknown, they are set to default
   int linked(int wi, int wj) {
     assert(wi < wj, "Variables: linked should be ordered");
     int var;
@@ -183,7 +183,7 @@ public:
    * cj of the word_j at position j
    */
 
-  // If guiding params are unknown, they are set do default
+  // If guiding params are unknown, they are set to default
   int link(int wi, int pi, const char* ci, Exp* ei,
            int wj, int pj, const char* cj, Exp* ej)
   {
