@@ -145,7 +145,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	for (i=0; i<icost; i++) dyn_strcat(e, "[");
 
 	/* look for optional, and print only that */
-	if ((n->type == OR_type) && el->e && el->e->cost == 0 && (NULL == el->e->u.l))
+	if ((n->type == OR_type) && el->e &&
+	    (el->e->type == AND_type) && el->e->cost == 0 && (NULL == el->e->u.l))
 	{
 		dyn_strcat(e, "{");
 		if (NULL == el->next) dyn_strcat(e, "error-no-next");
