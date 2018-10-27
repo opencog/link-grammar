@@ -69,7 +69,7 @@ typedef enum
 	/* Experimental - for display purposes.
 	 * MT_CONTR is now used in the tokenization step, see the comments there. */
 	MT_CONTR,              /* Contracted part of a contraction (e.g. y', 's) */
-	MT_PUNC,               /* Punctuation (yet unused) */
+	MT_PUNC,               /* Punctuation */
 	/* We are not going to have >63 types up to here. */
 	MT_STEM    = 1<<6,     /* Stem */
 	MT_PREFIX  = 1<<7,     /* Prefix */
