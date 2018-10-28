@@ -510,7 +510,7 @@ static void print_usage(FILE *out, char *str, Command_Options *copts, int exit_v
 			 "                   [--version]\n", str);
 
 	fprintf(out, "\nSpecial commands are:\n");
-	divert_stdio(stdout, stderr);
+	if (stdout != out) divert_stdio(stdout, out);
 	issue_special_command("var", copts, NULL);
 	exit(exit_value);
 }
