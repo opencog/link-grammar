@@ -1,5 +1,6 @@
 % For the file purpose and format see parses-pos-en.txt.
 
+-display_morphology = False
 Iהכלב רץ מהחצר
 PLEFT-WALL(0, 0) (0, 1) הכלב(0, 4) רץ(5, 7) (8, 9) (9, 10) מהחצר(8, 13)
 PLEFT-WALL(0, 0) (0, 2) הכלב(0, 8) רץ(9, 13) (14, 16) (16, 18) מהחצר(14, 24)
