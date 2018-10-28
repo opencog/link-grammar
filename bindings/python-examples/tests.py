@@ -406,7 +406,8 @@ class DBasicParsingTestCase(unittest.TestCase):
     # If \w is supported, other \ shortcuts are hopefully supported too.
     def test_regex_class_shortcut_support(self):
         r"""Test that regexes support \w"""
-        linkage = self.parse_sent("This is a _regex_ive regex test")[0]
+        po = ParseOptions(display_morphology=False)
+        linkage = self.parse_sent("This is a _regex_ive regex test", po)[0]
         self.assertEqual(linkage.word(4), '_regex_ive[!].a')
 
     def test_timer_exhausted_exception(self):
@@ -610,7 +611,7 @@ class FSATsolverTestCase(unittest.TestCase):
 class HEnglishLinkageTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.d, cls.po = Dictionary(), ParseOptions(linkage_limit=300)
+        cls.d, cls.po = Dictionary(), ParseOptions(linkage_limit=300, display_morphology=False)
 
     @classmethod
     def tearDownClass(cls):
@@ -1026,16 +1027,19 @@ class ZRULangTestCase(unittest.TestCase):
         return list(Sentence(text, self.d, self.po).parse())
 
     def test_a_getting_num_of_words(self):
+        self.po.display_morphology = False
         #Words include punctuation and a 'LEFT-WALL' and 'RIGHT_WALL'
         self.assertEqual(self.parse_sent('это тести.')[0].num_of_words(), 5)
         self.assertEqual(self.parse_sent('вверху плыли редкие облачка.')[0].num_of_words(), 7)
 
     def test_b_getting_words(self):
+        self.po.display_morphology = False
         self.assertEqual(list(self.parse_sent('вверху плыли редкие облачка.')[0].words()),
             ['LEFT-WALL', 'вверху.e', 'плыли.vnndpp', 'редкие.api',
                 'облачка.ndnpi', '.', 'RIGHT-WALL'])
 
     def test_c_getting_links(self):
+        self.po.display_morphology = False
         sent = 'вверху плыли редкие облачка.'
         linkage = self.parse_sent(sent)[0]
         self.assertEqual(linkage.link(0),

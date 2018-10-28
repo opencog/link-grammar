@@ -36,7 +36,7 @@ class ParseOptions(object):
                  islands_ok=False,
                  short_length=16,
                  all_short_connectors=False,
-                 display_morphology=False,
+                 display_morphology=True,
                  spell_guess=False,
                  use_sat=False,
                  max_parse_time=-1,

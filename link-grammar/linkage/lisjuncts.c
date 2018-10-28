@@ -22,51 +22,11 @@
 #include "disjunct-utils.h"
 #include "linkage.h"
 #include "lisjuncts.h"
+#include "string-set.h"
 
 /* Links are *always* less than 10 chars long . For now. The estimate
  * below is somewhat dangerous .... could be  fixed. */
 #define MAX_LINK_NAME_LENGTH 10
-
-/**
- * Print connector list to string.
- * This reverses the order of the connectors in the connector list,
- * so that the resulting list is in the same order as it would appear
- * in the dictionary. The character 'dir' is appended to each connector.
- */
-static char * reversed_conlist_str(Connector* c, char dir, char* buf, size_t sz)
-{
-	char* p;
-	size_t len = 0;
-
-	if (NULL == c) return buf;
-	p = reversed_conlist_str(c->next, dir, buf, sz);
-
-	sz -= (p-buf);
-
-	if (c->multi)
-		p[len++] = '@';
-
-	len += lg_strlcpy(p+len, connector_string(c), sz-len);
-	if (3 < sz-len)
-	{
-		p[len++] = dir;
-		p[len++] = ' ';
-		p[len] = 0x0;
-	}
-	return p+len;
-}
-
-/**
- * Print disjunct to string.  The resulting list is in the same order
- * as it would appear in the dictionary.
- */
-static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
-{
-	char* p;
-	if (NULL == dj) { *buf = 0; return; }
-	p = reversed_conlist_str(dj->left, '-', buf, sz);
-	reversed_conlist_str(dj->right, '+', p, sz - (p-buf));
-}
 
 /**
  * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
@@ -77,6 +37,14 @@ static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
  * statistics functions: this string, together with the subscripted
  * word, is used as a key to index the statistics information in the
  * database.
+ *
+ * The connectors are extracted from link_array (and not chosen_disjuncts)
+ * so the lexical links remain hidden when HIDE_MORPHO is true (see
+ * compute_chosen_disjuncts()).
+ *
+ * In order that multi-connectors will not be extracted several times
+ * for each disjunct (if they connect to multiple words) their address
+ * is checked for duplication.
  */
 void lg_compute_disjunct_strings(Linkage lkg)
 {
@@ -87,10 +55,48 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	lkg->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
 	memset(lkg->disjunct_list_str, 0, nwords * sizeof(char *));
 
-	for (WordIdx w=0; w< nwords; w++)
+	for (WordIdx w = 0; w < nwords; w++)
 	{
-		Disjunct* dj = lkg->chosen_disjuncts[w];
-		disjunct_str(dj, djstr, sizeof(djstr));
+		size_t len = 0;
+
+		for (int dir = 0; dir < 2; dir++)
+		{
+			Connector *last_ms = NULL; /* last multi-connector */
+
+			for (LinkIdx i = lkg->num_links-1; i < lkg->num_links; i--)
+			{
+				Link *lnk = &lkg->link_array[i];
+				Connector *c;
+
+				if (0 == dir)
+				{
+					if (lnk->rw != w) continue;
+					c = lnk->rc;
+				}
+				else
+				{
+					if (lnk->lw != w) continue;
+					c = lnk->lc;
+				}
+
+				if (c->multi)
+				{
+					if (last_ms == c) continue; /* already included */
+					last_ms = c;
+					djstr[len++] = '@';
+				}
+				len += lg_strlcpy(djstr+len, connector_string(c), sizeof(djstr)-len);
+
+				if (len >= sizeof(djstr) - 3)
+				{
+					len = sizeof(djstr) - 1;
+					break;
+				}
+				djstr[len++] = (dir == 0) ? '-' : '+';
+				djstr[len++] = ' ';
+			}
+		}
+		djstr[len++] = '\0';
 
 		lkg->disjunct_list_str[w] = strdup(djstr);
 	}

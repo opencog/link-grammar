@@ -144,7 +144,7 @@ Parse_Options parse_options_create(void)
 	po->repeatable_rand = true;
 	po->resources = resources_create();
 	po->use_cluster_disjuncts = false;
-	po->display_morphology = false;
+	po->display_morphology = true;
 
 	return po;
 }

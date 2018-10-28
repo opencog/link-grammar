@@ -258,24 +258,53 @@ void remove_empty_words(Linkage lkg)
  * This takes the Wordgraph path array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.
  *
- * chosen_words
- *    A pointer to an array of pointers to strings.  These are the words to be
- *    displayed when printing the solution, the links, etc.  Computed as a
- *    function of chosen_disjuncts[] by compute_chosen_words().  This differs
- *    from sentence.word[].alternatives because it contains the subscripts.  It
- *    differs from chosen_disjunct[].string in that the idiom symbols have been
- *    removed.  Furthermore, several chosen_disjuncts[].string elements may be
- *    combined into one chosen_words[] element if opts->display_morphology==0 or
- *    that they where linkage null-words that are morphemes of the same original
- *    word (i.e. subwords of an unsplit_word which are marked as morphemes).
+ * Input:
  *
- * wg_path
+ * chosen_disjuncts[]
+ *   This is an array pointers to disjuncts, one for each word, that is
+ *   computed by extract_links().  It represents the chosen disjuncts
+ *   for the current linkage. It is used here to compute the chosen_words[].
+ *
+ *
+ * wg_path[]
  *    A pointer to a NULL-terminated array of pointers to Wordgraph words.
  *    It corresponds 1-1 to the chosen_disjuncts array in Linkage structure.
- *    A new one is constructed below to correspond 1-1 to chosen_words.
  *
  *    FIXME Sometimes the word strings are taken from chosen_disjuncts,
  *    and sometimes from wordgraph subwords.
+ *
+ * ---
+ *
+ * Output:
+ *
+ * chosen_words[]
+ *    A pointer to an array of pointers to strings.  These are the words
+ *    to be displayed when printing the solution, the links, etc.
+ *    Computed as a function of chosen_disjuncts[]. This differs from
+ *    sentence.word[].alternatives because it contains the subscripts.  It
+ *    differs from chosen_disjunct[].string in that the idiom symbols have
+ *    been removed.  Furthermore, several chosen_disjuncts[].string
+ *    elements may be combined into one chosen_words[] element if
+ *    opts->display_morphology==0 or that they where linkage null-words
+ *    that are morphemes of the same original word (i.e. subwords of an
+ *    unsplit_word which are marked as morphemes).
+ *
+ * wg_path_display[]
+ *    It is constructed to correspond 1-1 to chosen_words.
+ *
+ * chosen_disjuncts
+ *    Elements are discarded to match it to chosen_words, so functions like
+ *    linkage_get_disjunct_str(linkage, w) will be able to return info that is
+ *    attributed to chosen_words[w].
+ *
+ * link_array[]
+ *   This is an array of links.  These links define the current linkage.
+ *   It is computed by extract_links().  It is used by analyze_linkage().
+ *   It is indirectly modified here as follows:
+ *     1. To correspond to chosen_words[].
+ *     2. Morphology links are removed if opts->display_morphology==0.
+ *
+ * Note: For historical reasons there is some overlap between the results.
  */
 #define D_CCW 8
 void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
@@ -677,14 +706,20 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 * Note that if a word only has morphology links and is not combined with
 	 * another word, then it will get displayed with no links at all (e.g.
 	 * when explicitly specifying root and suffix for debug: root.= =suf */
+	Disjunct **cdj = linkage->chosen_disjuncts;
 	for (i=0, j=0; i<linkage->num_words; ++i)
 	{
 		if (chosen_words[i] &&
 		    (chosen_words[i][0] || (!HIDE_MORPHO || show_word[i])))
 		{
-			const char *cwtmp = linkage->word[j];
+			//const char *cwtmp = linkage->word[j];
 			linkage->word[j] = chosen_words[i];
-			chosen_words[i] = cwtmp;
+			//chosen_words[i] = cwtmp;
+
+			Disjunct *cdtmp = cdj[j];
+			cdj[j] = cdj[i];
+			cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
+
 			remap[i] = j;
 			j++;
 		}

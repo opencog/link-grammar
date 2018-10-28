@@ -503,16 +503,14 @@ static void restore_stdio(FILE *from, int origfd)
 }
 #endif
 
-static void print_usage(FILE *out, char *str, int exit_value)
+static void print_usage(FILE *out, char *str, Command_Options *copts, int exit_value)
 {
-	Command_Options *copts;
 	fprintf(out, "Usage: %s [language|dictionary location]\n"
 			 "                   [-<special \"!\" command>]\n"
 			 "                   [--version]\n", str);
 
 	fprintf(out, "\nSpecial commands are:\n");
-	copts = command_options_create();
-	divert_stdio(stdout, stderr);
+	if (stdout != out) divert_stdio(stdout, out);
 	issue_special_command("var", copts, NULL);
 	exit(exit_value);
 }
@@ -616,28 +614,6 @@ int main(int argc, char * argv[])
 	sigaction (SIGWINCH, &winch_act, NULL);
 #endif
 
-	i = 1;
-	if ((argc > 1) && (argv[1][0] != '-')) {
-		/* the dictionary is the first argument if it doesn't begin with "-" */
-		language = argv[1];
-		i++;
-	}
-
-	if ((i < argc) && strcmp("--help", argv[i]) == 0)
-	{
-		print_usage(stdout, argv[0], 0);
-	}
-
-	for (; i<argc; i++)
-	{
-		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
-		{
-			printf("Version: %s\n", linkgrammar_get_version());
-			printf("%s\n", linkgrammar_get_configuration());
-			exit(0);
-		}
-	}
-
 	copts = command_options_create();
 	if (copts == NULL || copts->panic_opts == NULL)
 	{
@@ -655,8 +631,31 @@ int main(int argc, char * argv[])
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_set_short_length(opts, 16);
 	parse_options_set_islands_ok(opts, false);
+	parse_options_set_display_morphology(opts, false);
 
 	save_default_opts(copts); /* Options so far are the defaults */
+
+	i = 1;
+	if ((argc > 1) && (argv[1][0] != '-')) {
+		/* the dictionary is the first argument if it doesn't begin with "-" */
+		language = argv[1];
+		i++;
+	}
+
+	if ((i < argc) && strcmp("--help", argv[i]) == 0)
+	{
+		print_usage(stdout, argv[0], copts, 0);
+	}
+
+	for (; i<argc; i++)
+	{
+		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
+		{
+			printf("Version: %s\n", linkgrammar_get_version());
+			printf("%s\n", linkgrammar_get_configuration());
+			exit(0);
+		}
+	}
 
 	/* Process command line variable-setting commands (only). */
 	for (i = 1; i < argc; i++)
@@ -665,12 +664,12 @@ int main(int argc, char * argv[])
 		{
 			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
 			if ((var[0] != '!') && (0 > issue_special_command(var, copts, NULL)))
-				print_usage(stderr, argv[0], -1);
+				print_usage(stderr, argv[0], copts, -1);
 		}
 		else if (i != 1)
 		{
 			prt_error("Fatal error: Unknown argument '%s'.\n", argv[i]);
-			print_usage(stderr, argv[0], -1);
+			print_usage(stderr, argv[0], copts, -1);
 		}
 	}
 
@@ -699,7 +698,7 @@ int main(int argc, char * argv[])
 		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{
 			if (0 > issue_special_command(argv[i]+1, copts, dict))
-				print_usage(stderr, argv[0], -1);
+				print_usage(stderr, argv[0], copts, -1);
 		}
 	}
 
