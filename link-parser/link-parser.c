@@ -631,6 +631,7 @@ int main(int argc, char * argv[])
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_set_short_length(opts, 16);
 	parse_options_set_islands_ok(opts, false);
+	parse_options_set_display_morphology(opts, false);
 
 	save_default_opts(copts); /* Options so far are the defaults */
 
