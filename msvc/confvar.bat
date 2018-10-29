@@ -14,10 +14,58 @@ set tmp=Temp\version.txt
 
 echo 1>&2 %~f0: Info: Replacing configuration variables
 
-findstr "^LINK_.*_VERSION=" %conf% >  %tmp%
-findstr "^VERSION="         %conf% >> %tmp%
+findstr "^LINK_.*_VERSION="     %conf% >  %tmp%
+findstr "^VERSION="             %conf% >> %tmp%
+findstr "^DISCUSSION_GROUP="    %conf% >> %tmp%
+findstr "^OVERVIEW="            %conf% >> %tmp%
+
+set count=0
+
+if "%Configuration%"=="" GOTO endconf
+
+REM Input format:
+REM # Optional comments
+REM AC_INIT([link-grammar],[5.5.1],[https://github.com/opencog/link-grammar], ,
+REM         [https://www.abisource.com/projects/link-grammar/])
+REM <BLANK LINE>
+REM
+REM findstr: Generate line numbers (/n) to detect empty line,
+REM and skip comments. Use tokens and delims to skip line number field.
+REM Use "$" to preserve empty comma-delimited fields. Remove "[])".
+REM XXX "!" is not preserved so it should not appear in the input!
+for /f "tokens=1* delims=:" %%i in ('findstr /n  /v "^\s*#" %conf%') do (
+	if "%%j"=="" GOTO endconf
+	set "_line=%%j"
+	setlocal EnableDelayedExpansion
+	set "_line=!_line:,=$,!"
+	set "_line=!_line:)=$)!"
+	for %%y in (!_line!) do (
+		for %%x in (%%y) do (
+			set "_t=%%x"
+			set "_t=!_t:)=!"
+			set "_t=!_t:~0,-1!"
+			set "_t=!_t:[=!"
+			set "_t=!_t:]=!"
+			set "x!count!=!_t!"
+			set /a count+=1
+		)
+	)
+)
+set "PACKAGE_BUGREPORT=%x2%"
+set "PACKAGE_URL=%x4%"
+REM set PACKAGE_BUGREPORT 1>&2
+REM set PACKAGE_URL 1>&2
+:endconf
+
+setlocal DisableDelayedExpansion
 for /F "tokens=*" %%i in (%tmp%) do set %%i
 del %tmp%
+
+REM set DISCUSSION_GROUP 1>&2
+REM set OVERVIEW 1>&2
+REM set LINK_ 1>&2
+REM set VERSION 1>&2
+REM echo END configuration variables 1>&2
 
 	if "%Configuration%"=="" GOTO skipos
 	%= Get OS name                                                         =%
@@ -50,9 +98,16 @@ for /f "tokens=1* delims=]" %%i in ('find /v /n ""') do (
 			set "line=!line:@LG_DEFS@=%DEFS%!"
 			set "line=!line:@CPPFLAGS@=%Debug%!"
 			set "line=!line:@CFLAGS@=%CFLAGS%!"
+
+			set "line=!line:@DISCUSSION_GROUP@=%DISCUSSION_GROUP%!"
+			set "line=!line:@OVERVIEW@=%OVERVIEW%!"
+			set "line=!line:@PACKAGE_BUGREPORT@=%PACKAGE_BUGREPORT%!"
+			set "line=!line:@PACKAGE_URL@=%PACKAGE_URL%!"
+			set "line=!line:'=!"
 		)
 
 		echo(!line!
 		endlocal
 	)
 )
+:end
