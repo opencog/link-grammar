@@ -503,11 +503,36 @@ static void restore_stdio(FILE *from, int origfd)
 }
 #endif
 
-static void print_usage(FILE *out, char *str, Command_Options *copts, int exit_value)
+/**
+ * Find the basename of the given file name.
+ * The last component that starts with '\\' or '\'
+ * (whichever is last) is returned.
+ * On POSIX systems it can be confused if the program name
+ * contains '\\' characters, but we don't care.
+ */
+static const char *fbasename(const char *fpath)
 {
+	const char *progf, *progb;
+
+	if ((NULL == fpath) || ('\0' == fpath[0])) return "(null)";
+
+	progf = strrchr(fpath, '/');
+	if (NULL == progf)
+		progb = strrchr(fpath, '\\');
+	else
+		progb = strchr(progf, '\\');
+
+	if (NULL != progb) return progb + 1;
+	if (NULL == progf) return fpath;
+	return progf + 1;
+}
+
+static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit_value)
+{
+
 	fprintf(out, "Usage: %s [language|dictionary location]\n"
 			 "                   [-<special \"!\" command>]\n"
-			 "                   [--version]\n", str);
+			 "                   [--version]\n", fbasename(argv0));
 
 	fprintf(out, "\nSpecial commands are:\n");
 	if (stdout != out) divert_stdio(stdout, out);
