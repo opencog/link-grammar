@@ -643,13 +643,13 @@ int main(int argc, char * argv[])
 		i++;
 	}
 
-	if ((i < argc) && strcmp("--help", argv[i]) == 0)
-	{
-		print_usage(stdout, argv[0], copts, 0);
-	}
-
 	for (; i<argc; i++)
 	{
+		if (strcmp("--help", argv[i]) == 0)
+		{
+			print_usage(stdout, argv[0], copts, 0);
+		}
+
 		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
 		{
 			printf("Version: %s\n", linkgrammar_get_version());
