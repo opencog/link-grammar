@@ -573,7 +573,7 @@ int main(int argc, char * argv[])
 	FILE            *input_fh = stdin;
 	Dictionary      dict;
 	const char     *language = NULL;
-	int             num_linkages, i;
+	int             num_linkages;
 	Label           label = NO_LABEL;
 	Command_Options *copts;
 	Parse_Options   opts;
@@ -641,7 +641,7 @@ int main(int argc, char * argv[])
 		language = argv[1];
 	}
 
-	for (i = 1; i<argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if (strcmp("--help", argv[i]) == 0)
 		{
@@ -657,7 +657,7 @@ int main(int argc, char * argv[])
 	}
 
 	/* Process command line variable-setting commands (only). */
-	for (i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if (argv[i][0] == '-')
 		{
@@ -692,7 +692,7 @@ int main(int argc, char * argv[])
 	}
 
 	/* Process the command line '!' commands */
-	for (i = 1; i<argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{
