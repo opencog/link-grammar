@@ -636,14 +636,12 @@ int main(int argc, char * argv[])
 
 	save_default_opts(copts); /* Options so far are the defaults */
 
-	i = 1;
 	if ((argc > 1) && (argv[1][0] != '-')) {
 		/* the dictionary is the first argument if it doesn't begin with "-" */
 		language = argv[1];
-		i++;
 	}
 
-	for (; i<argc; i++)
+	for (i = 1; i<argc; i++)
 	{
 		if (strcmp("--help", argv[i]) == 0)
 		{
