@@ -1,4 +1,16 @@
-AC_INIT([link-grammar],[5.5.1],[link-grammar@googlegroups.com])
+# This file is processed by the Windows build system using confvar.bat. It
+# assumes AC_INIT is the first command, with no blank lines before it and with
+# a blank line after it. If this things are changed, change confvar.bat
+# accordingly.
+# Don't end the URLs with a slash even if it appears in the official address,
+# because we may append a component. Also, they cannot include "!".
+AC_INIT([link-grammar],[5.5.1],[https://github.com/opencog/link-grammar],,
+		  [https://www.abisource.com/projects/link-grammar])
+
+DISCUSSION_GROUP=https://groups.google.com/d/forum/link-grammar
+AC_SUBST(DISCUSSION_GROUP)
+OVERVIEW=https://en.wikipedia.org/wiki/Link_grammar
+AC_SUBST(OVERVIEW)
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
