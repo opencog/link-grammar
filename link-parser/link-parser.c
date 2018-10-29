@@ -650,7 +650,7 @@ int main(int argc, char * argv[])
 			print_usage(stdout, argv[0], copts, 0);
 		}
 
-		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
+		if (strcmp("--version", argv[i]) == 0)
 		{
 			printf("Version: %s\n", linkgrammar_get_version());
 			printf("%s\n", linkgrammar_get_configuration());
