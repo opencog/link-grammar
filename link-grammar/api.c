@@ -656,10 +656,6 @@ int sentence_parse(Sentence sent, Parse_Options opts)
  * Definitions for linkgrammar_get_configuration().
  */
 
-/* __VA_ARGS__ must be used because arguments may contain commas. */
-#define lg_xstr(...) lg_str(__VA_ARGS__)
-#define lg_str(...) #__VA_ARGS__
-
 #ifdef __STDC_VERSION__
 #define LG_S1 "__STDC_VERSION__=" lg_xstr(__STDC_VERSION__)
 #else
