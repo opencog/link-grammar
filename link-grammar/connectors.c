@@ -454,8 +454,6 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 	{
 		condesc_t **condesc = &sdesc[n];
 
-//#define DEBUG_UC_HASH_CHANGE
-#ifndef DEBUG_UC_HASH_CHANGE /* Use a shortcut - not needed for correctness. */
 		if (condesc[0]->uc_length != condesc[-1]->uc_length)
 
 		{
@@ -463,7 +461,6 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 			uc_num++;
 		}
 		else
-#endif
 		{
 			const char *uc1 = &condesc[0]->string[condesc[0]->uc_start];
 			const char *uc2 = &condesc[-1]->string[condesc[-1]->uc_start];
