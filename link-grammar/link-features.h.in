@@ -43,4 +43,12 @@
 #define LG_CFLAGS "CFLAGS=" lg_str(@CFLAGS@)
 #define LG_DEFS lg_str(@LG_DEFS@)
 
+#define DISCUSSION_GROUP "@DISCUSSION_GROUP@"
+#define OVERVIEW "@OVERVIEW@"
+/* Must appear here to support Windows. */
+#undef PACKAGE_BUGREPORT
+#define PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
+#undef PACKAGE_URL
+#define PACKAGE_URL "@PACKAGE_URL@"
+
 #endif
