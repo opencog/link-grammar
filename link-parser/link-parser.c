@@ -512,6 +512,7 @@ static void print_usage(FILE *out, char *str, Command_Options *copts, int exit_v
 	fprintf(out, "\nSpecial commands are:\n");
 	if (stdout != out) divert_stdio(stdout, out);
 	issue_special_command("var", copts, NULL);
+	if (out == stdout) print_url_info(); /* don't print it for errors */
 	exit(exit_value);
 }
 

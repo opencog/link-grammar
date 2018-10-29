@@ -545,6 +545,25 @@ static void display_help(const Switch *sp, Command_Options *copts)
 	}
 }
 
+#define URL_LINE "%-20s %s\n"
+void print_url_info(void)
+{
+	printf("\n");
+#ifdef OVERVIEW
+	printf(URL_LINE, "Overview:", OVERVIEW);
+#endif /* OVERVIEW */
+#ifdef PACKAGE_URL
+	printf(URL_LINE, "Home page:", PACKAGE_URL);
+	printf(URL_LINE, "Documentation:", PACKAGE_URL"/dict/");
+#endif /* PACKAGE_URL */
+#ifdef DISCUSSION_GROUP
+	printf(URL_LINE, "Discussion group:", DISCUSSION_GROUP);
+#endif /* DISCUSSION_GROUP */
+#ifdef PACKAGE_BUGREPORT
+	printf(URL_LINE, "Report bugs to:" , PACKAGE_BUGREPORT"/issues");
+#endif /* PACKAGE_BUGREPORT */
+}
+
 static int help_cmd(const Switch *uc, int n)
 {
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
@@ -565,6 +584,8 @@ static int help_cmd(const Switch *uc, int n)
 	printf("\n");
 	printf(" !<var>          Toggle the specified Boolean variable.\n");
 	printf(" !<var>=<val>    Assign that value to that variable.\n");
+
+	print_url_info();
 
 	return 'c';
 }
