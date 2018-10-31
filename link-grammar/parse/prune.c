@@ -593,21 +593,20 @@ right_connector_list_update(prune_context *pc, Connector *c,
 int power_prune(Sentence sent, Parse_Options opts)
 {
 	power_table *pt;
-	prune_context *pc;
+	prune_context pc;
 	Disjunct *d, *free_later, *dx, *nd;
 	Connector *c;
 	size_t N_deleted, total_deleted;
 	size_t w;
 
-	pc = (prune_context *) xalloc (sizeof(prune_context));
-	pc->power_cost = 0;
-	pc->null_links = (opts->min_null_count > 0);
-	pc->N_changed = 1;  /* forces it always to make at least two passes */
+	pc.power_cost = 0;
+	pc.null_links = (opts->min_null_count > 0);
+	pc.N_changed = 1;  /* forces it always to make at least two passes */
 
-	pc->sent = sent;
+	pc.sent = sent;
 
 	pt = power_table_new(sent);
-	pc->pt = pt;
+	pc.pt = pt;
 
 	free_later = NULL;
 	N_deleted = 0;
@@ -621,9 +620,9 @@ int power_prune(Sentence sent, Parse_Options opts)
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
 #ifdef ALT_DISJUNCT_CONSISTENCY
-				pc->first_connector = d->left;
+				pc.first_connector = d->left;
 #endif
-				if (left_connector_list_update(pc, d->left, w, true) < 0) {
+				if (left_connector_list_update(&pc, d->left, w, true) < 0) {
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
@@ -646,20 +645,20 @@ int power_prune(Sentence sent, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %zu\n",
-		        pc->N_changed, N_deleted);
+		        pc.N_changed, N_deleted);
 
-		if (pc->N_changed == 0) break;
+		if (pc.N_changed == 0) break;
 
-		pc->N_changed = N_deleted = 0;
+		pc.N_changed = N_deleted = 0;
 		/* right-to-left pass */
 
 		for (w = sent->length-1; w != (size_t) -1; w--) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
 #ifdef ALT_DISJUNCT_CONSISTENCY
-				pc->first_connector = d->right;
+				pc.first_connector = d->right;
 #endif
-				if (right_connector_list_update(pc, d->right, w, true) >= sent->length) {
+				if (right_connector_list_update(&pc, d->right, w, true) >= sent->length) {
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
@@ -682,17 +681,15 @@ int power_prune(Sentence sent, Parse_Options opts)
 		}
 
 		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %zu\n",
-		        pc->N_changed, N_deleted);
+		        pc.N_changed, N_deleted);
 
-		if (pc->N_changed == 0) break;
-		pc->N_changed = N_deleted = 0;
+		if (pc.N_changed == 0) break;
+		pc.N_changed = N_deleted = 0;
 	}
 	free_disjuncts(free_later);
 	power_table_delete(pt);
-	pt = NULL;
-	pc->pt = NULL;
 
-	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc->power_cost);
+	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
 
 	print_time(opts, "power pruned");
 	if (verbosity_level(D_PRUNE))
@@ -702,7 +699,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
-	xfree(pc, sizeof(prune_context));
 	return total_deleted;
 }
 
