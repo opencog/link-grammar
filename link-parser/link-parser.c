@@ -503,15 +503,41 @@ static void restore_stdio(FILE *from, int origfd)
 }
 #endif
 
-static void print_usage(FILE *out, char *str, Command_Options *copts, int exit_value)
+/**
+ * Find the basename of the given file name.
+ * The last component that starts with '\\' or '\'
+ * (whichever is last) is returned.
+ * On POSIX systems it can be confused if the program name
+ * contains '\\' characters, but we don't care.
+ */
+static const char *fbasename(const char *fpath)
 {
+	const char *progf, *progb;
+
+	if ((NULL == fpath) || ('\0' == fpath[0])) return "(null)";
+
+	progf = strrchr(fpath, '/');
+	if (NULL == progf)
+		progb = strrchr(fpath, '\\');
+	else
+		progb = strchr(progf, '\\');
+
+	if (NULL != progb) return progb + 1;
+	if (NULL == progf) return fpath;
+	return progf + 1;
+}
+
+static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit_value)
+{
+
 	fprintf(out, "Usage: %s [language|dictionary location]\n"
 			 "                   [-<special \"!\" command>]\n"
-			 "                   [--version]\n", str);
+			 "                   [--version]\n", fbasename(argv0));
 
 	fprintf(out, "\nSpecial commands are:\n");
 	if (stdout != out) divert_stdio(stdout, out);
 	issue_special_command("var", copts, NULL);
+	if (out == stdout) print_url_info(); /* don't print it for errors */
 	exit(exit_value);
 }
 
@@ -572,7 +598,7 @@ int main(int argc, char * argv[])
 	FILE            *input_fh = stdin;
 	Dictionary      dict;
 	const char     *language = NULL;
-	int             num_linkages, i;
+	int             num_linkages;
 	Label           label = NO_LABEL;
 	Command_Options *copts;
 	Parse_Options   opts;
@@ -635,21 +661,19 @@ int main(int argc, char * argv[])
 
 	save_default_opts(copts); /* Options so far are the defaults */
 
-	i = 1;
 	if ((argc > 1) && (argv[1][0] != '-')) {
 		/* the dictionary is the first argument if it doesn't begin with "-" */
 		language = argv[1];
-		i++;
 	}
 
-	if ((i < argc) && strcmp("--help", argv[i]) == 0)
+	for (int i = 1; i < argc; i++)
 	{
-		print_usage(stdout, argv[0], copts, 0);
-	}
+		if (strcmp("--help", argv[i]) == 0)
+		{
+			print_usage(stdout, argv[0], copts, 0);
+		}
 
-	for (; i<argc; i++)
-	{
-		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
+		if (strcmp("--version", argv[i]) == 0)
 		{
 			printf("Version: %s\n", linkgrammar_get_version());
 			printf("%s\n", linkgrammar_get_configuration());
@@ -658,7 +682,7 @@ int main(int argc, char * argv[])
 	}
 
 	/* Process command line variable-setting commands (only). */
-	for (i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if (argv[i][0] == '-')
 		{
@@ -693,7 +717,7 @@ int main(int argc, char * argv[])
 	}
 
 	/* Process the command line '!' commands */
-	for (i = 1; i<argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if ((argv[i][0] == '-') && (argv[i][1] == '!'))
 		{

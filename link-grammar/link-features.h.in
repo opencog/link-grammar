@@ -34,9 +34,21 @@
 
 #define LINK_VERSION_STRING "@LINK_MAJOR_VERSION@.@LINK_MINOR_VERSION@.@LINK_MICRO_VERSION@"
 
+/* __VA_ARGS__ must be used because arguments may contain commas. */
+#define lg_xstr(...) lg_str(__VA_ARGS__)
+#define lg_str(...) #__VA_ARGS__
+
 #define LG_HOST_OS lg_str(@HOST_OS@)
 #define LG_CPPFLAGS "CPPFLAGS=" lg_str(@CPPFLAGS@)
 #define LG_CFLAGS "CFLAGS=" lg_str(@CFLAGS@)
 #define LG_DEFS lg_str(@LG_DEFS@)
+
+#define DISCUSSION_GROUP "@DISCUSSION_GROUP@"
+#define OVERVIEW "@OVERVIEW@"
+/* Must appear here to support Windows. */
+#undef PACKAGE_BUGREPORT
+#define PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
+#undef PACKAGE_URL
+#define PACKAGE_URL "@PACKAGE_URL@"
 
 #endif

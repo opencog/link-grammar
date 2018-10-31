@@ -73,5 +73,7 @@ int issue_special_command(const char*, Command_Options*, Dictionary);
 Command_Options* command_options_create(void);
 void command_options_delete(Command_Options*);
 void display_1line_help(const Switch *, bool);
+void print_url_info(void);
+
 
 #define UNDOC "\1" /* undocumented command */
