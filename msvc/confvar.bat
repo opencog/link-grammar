@@ -51,11 +51,11 @@ for /f "tokens=1* delims=:" %%i in ('findstr /n  /v "^\s*#" %conf%') do (
 		)
 	)
 )
+:endconf
 set "PACKAGE_BUGREPORT=%x2%"
 set "PACKAGE_URL=%x4%"
 REM set PACKAGE_BUGREPORT 1>&2
 REM set PACKAGE_URL 1>&2
-:endconf
 
 setlocal DisableDelayedExpansion
 for /F "tokens=*" %%i in (%tmp%) do set %%i
