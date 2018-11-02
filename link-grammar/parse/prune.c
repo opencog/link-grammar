@@ -295,20 +295,19 @@ static power_table * power_table_new(Sentence sent)
  * who are obsolete.  The word fields of an obsolete one has been set to
  * BAD_WORD.
  */
-static void clean_table(unsigned int size, C_list ** t)
+static void clean_table(unsigned int size, C_list **t)
 {
-	unsigned int i;
-	C_list * m, * xm, * head;
-	for (i = 0; i < size; i++) {
-		head = NULL;
-		for (m = t[i]; m != NULL; m = xm) {
-			xm = m->next;
-			if (m->c->nearest_word != BAD_WORD) {
-				m->next = head;
-				head = m;
-			}
-		}
-		t[i] = head;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		C_list **m = &t[i];
+
+		while (NULL != *m)
+		{
+			if ((*m)->c->nearest_word == BAD_WORD)
+				*m = (*m)->next;
+			else
+				m = &(*m)->next;
+		};
 	}
 }
 
