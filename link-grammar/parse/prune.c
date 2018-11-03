@@ -263,10 +263,15 @@ static power_table * power_table_new(Sentence sent)
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
 			c = d->left;
 			if (c != NULL) {
-				put_into_power_table(pool_alloc(mp), size, t, c, true);
 				for (c=c->next; c!=NULL; c=c->next) {
 					put_into_power_table(pool_alloc(mp), size, t, c, false);
 				}
+			}
+		}
+		for (d=sent->word[w].d; d!=NULL; d=d->next) {
+			c = d->left;
+			if (c != NULL) {
+				put_into_power_table(pool_alloc(mp), size, t, c, true);
 			}
 		}
 
@@ -279,10 +284,15 @@ static power_table * power_table_new(Sentence sent)
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
 			c = d->right;
 			if (c != NULL) {
-				put_into_power_table(pool_alloc(mp), size, t, c, true);
 				for (c=c->next; c!=NULL; c=c->next){
 					put_into_power_table(pool_alloc(mp), size, t, c, false);
 				}
+			}
+		}
+		for (d=sent->word[w].d; d!=NULL; d=d->next) {
+			c = d->right;
+			if (c != NULL) {
+				put_into_power_table(pool_alloc(mp), size, t, c, true);
 			}
 		}
 	}
@@ -415,14 +425,11 @@ static bool alt_consistency(prune_context *pc,
  */
 static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
-                                bool lshallow, bool rshallow,
                                 int lword, int rword, bool lr)
 {
 	int dist;
-	if ((!lshallow) && (!rshallow)) return false;
 	if (!easy_match_desc(lc->desc, rc->desc)) return false;
 
-	/* Two deep connectors can't work */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
 	dist = rword - lword;
@@ -475,9 +482,13 @@ right_table_search(prune_context *pc, int w, Connector *c,
 
 	size = pt->r_table_size[w];
 	h = connector_uc_num(c) & (size-1);
+
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c, true))
+		/* Two deep connectors can't work */
+		if (!shallow && !cl->shallow) return false;
+
+		if (possible_connection(pc, cl->c, c, w, word_c, true))
 			return true;
 	}
 	return false;
@@ -499,7 +510,10 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	h = connector_uc_num(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w, false))
+		/* Two deep connectors can't work */
+		if (!shallow && !cl->shallow) return false;
+
+		if (possible_connection(pc, c, cl->c, word_c, w, false))
 			return true;
 	}
 	return false;
