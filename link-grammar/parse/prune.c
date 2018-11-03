@@ -32,6 +32,7 @@
 
 #if defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)
 #include <tokenize/tok-structures.h>
+#define OPTIMIZE_EN
 #endif /* ALT_MUTUAL_CONSISTENCY || ALT_DISJUNCT_CONSISTENCY */
 
 #define D_PRUNE 5
@@ -354,6 +355,16 @@ static bool alt_consistency(prune_context *pc,
 #ifdef ALT_MUTUAL_CONSISTENCY
 	/* Validate that rc and lc are from the same alternative.
 	 * Each of the loops is of one iteration most of the times. */
+
+#ifdef OPTIMIZE_EN
+	/* Try a shortcut first. */
+	if ((lc->originating_gword->o_gword->hier_depth == 0) ||
+	    (rc->originating_gword->o_gword->hier_depth == 0))
+	{
+			return true;
+	}
+#endif /* OPTIMIZE_EN */
+
 	for (const gword_set *ga = lc->originating_gword; NULL != ga; ga = ga->next) {
 		for (const gword_set *gb = rc->originating_gword; NULL != gb; gb = gb->next) {
 			if (in_same_alternative(ga->o_gword, gb->o_gword)) {
