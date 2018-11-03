@@ -213,7 +213,14 @@ static void put_into_power_table(C_list * m, unsigned int size, C_list ** t,
 }
 
 /**
- * Allocates and builds the initial power hash tables
+ * Allocates and builds the initial power hash tables.
+ * Each word has 2 tables - for its left and right connectors.
+ * In these tables, the connectors are hashed according to their
+ * uppercase part.
+ * In each hash slot, the shallow connectors appear first, so when
+ * matching deep connectors to the connectors in a slot, the
+ * match loop can stop when there are no more shallow connectors in that
+ * slot (since if both are deep there cannot be matched).
  */
 static power_table * power_table_new(Sentence sent)
 {
