@@ -627,7 +627,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 }
 
 /** The return value is the number of disjuncts deleted */
-int power_prune(Sentence sent, Parse_Options opts)
+static int power_prune(Sentence sent, Parse_Options opts)
 {
 	power_table *pt;
 	prune_context pc;
