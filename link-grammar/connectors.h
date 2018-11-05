@@ -212,7 +212,7 @@ static inline bool easy_match(const char * s, const char * t)
  * When this function is called, it is assumed that the upper-case
  * parts are equal, and thus do not need to be checked again.
  */
-static bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
+static inline bool lc_easy_match(const condesc_t *c1, const condesc_t *c2)
 {
 	return (((c1->lc_letters ^ c2->lc_letters) & c1->lc_mask & c2->lc_mask) ==
 	        (c1->lc_mask & c2->lc_mask & 1));
