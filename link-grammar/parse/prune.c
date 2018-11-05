@@ -627,9 +627,10 @@ int power_prune(Sentence sent, Parse_Options opts)
 {
 	power_table *pt;
 	prune_context pc;
-	Disjunct *free_later;
+	Disjunct *free_later = NULL;
 	Connector *c;
-	size_t N_deleted, total_deleted;
+	size_t N_deleted = 0;
+	size_t total_deleted = 0;
 
 	pc.power_cost = 0;
 	pc.null_links = (opts->min_null_count > 0);
@@ -639,11 +640,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 
 	pt = power_table_new(sent);
 	pc.pt = pt;
-
-	free_later = NULL;
-	N_deleted = 0;
-
-	total_deleted = 0;
 
 	while (1)
 	{
