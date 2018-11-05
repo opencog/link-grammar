@@ -228,11 +228,7 @@ static void put_into_power_table(C_list * m, unsigned int size, C_list ** t,
 static power_table * power_table_new(Sentence sent)
 {
 	power_table *pt;
-	size_t w, len;
-	unsigned int i, size;
-	C_list ** t;
-	Disjunct * d;
-	Connector * c;
+	unsigned int i;
 #define TOPSZ 32768
 	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
 
@@ -247,8 +243,12 @@ static power_table * power_table_new(Sentence sent)
 	                   /*num_elements*/2048, sizeof(C_list),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 
-	for (w=0; w<sent->length; w++)
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
+		size_t l_size, r_size;
+		C_list **l_t, **r_t;
+		size_t len;
+
 		/* The below uses variable-sized hash tables. This seems to
 		 * provide performance that is equal or better than the best
 		 * fixed-size performance.
@@ -265,44 +265,54 @@ static power_table * power_table_new(Sentence sent)
 		 * Strong dependence on the hashing algo!
 		 */
 		len = left_connector_count(sent->word[w].d);
-		size = next_power_of_two_up(MIN(len, lr_table_max_usage));
-		pt->l_table_size[w] = size;
-		t = pt->l_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
-		for (i=0; i<size; i++) t[i] = NULL;
-
-		for (d=sent->word[w].d; d!=NULL; d=d->next) {
-			c = d->left;
-			if (c != NULL) {
-				for (c=c->next; c!=NULL; c=c->next) {
-					put_into_power_table(pool_alloc(mp), size, t, c, false);
-				}
-			}
-		}
-		for (d=sent->word[w].d; d!=NULL; d=d->next) {
-			c = d->left;
-			if (c != NULL) {
-				put_into_power_table(pool_alloc(mp), size, t, c, true);
-			}
-		}
+		l_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
+		pt->l_table_size[w] = l_size;
+		l_t = pt->l_table[w] = (C_list **) xalloc(l_size * sizeof(C_list *));
+		for (i=0; i<l_size; i++) l_t[i] = NULL;
 
 		len = right_connector_count(sent->word[w].d);
-		size = next_power_of_two_up(MIN(len, lr_table_max_usage));
-		pt->r_table_size[w] = size;
-		t = pt->r_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
-		for (i=0; i<size; i++) t[i] = NULL;
+		r_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
+		pt->r_table_size[w] = r_size;
+		r_t = pt->r_table[w] = (C_list **) xalloc(r_size * sizeof(C_list *));
+		for (i=0; i<r_size; i++) r_t[i] = NULL;
 
-		for (d=sent->word[w].d; d!=NULL; d=d->next) {
+		/* Insert the deep connectors. */
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			Connector *c;
+
 			c = d->right;
-			if (c != NULL) {
-				for (c=c->next; c!=NULL; c=c->next){
-					put_into_power_table(pool_alloc(mp), size, t, c, false);
+			if (c != NULL)
+			{
+				for (c = c->next; c != NULL; c = c->next)
+				{
+					put_into_power_table(pool_alloc(mp), r_size, r_t, c, false);
+				}
+			}
+			c = d->left;
+			if (c != NULL)
+			{
+				for (c = c->next; c != NULL; c = c->next)
+				{
+					put_into_power_table(pool_alloc(mp), l_size, l_t, c, false);
 				}
 			}
 		}
-		for (d=sent->word[w].d; d!=NULL; d=d->next) {
+
+		/* Insert the shallow connectors. */
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			Connector *c;
+
 			c = d->right;
-			if (c != NULL) {
-				put_into_power_table(pool_alloc(mp), size, t, c, true);
+			if (c != NULL)
+			{
+				put_into_power_table(pool_alloc(mp), r_size, r_t, c, true);
+			}
+			c = d->left;
+			if (c != NULL)
+			{
+				put_into_power_table(pool_alloc(mp), l_size, l_t, c, true);
 			}
 		}
 	}
