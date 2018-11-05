@@ -627,7 +627,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 {
 	power_table *pt;
 	prune_context pc;
-	Disjunct *d, *free_later, *dx, *nd;
+	Disjunct *free_later;
 	Connector *c;
 	size_t N_deleted, total_deleted;
 	size_t w;
@@ -649,30 +649,37 @@ int power_prune(Sentence sent, Parse_Options opts)
 	while (1)
 	{
 		/* left-to-right pass */
-		for (w = 0; w < sent->length; w++) {
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
-				if (d->left == NULL) continue;
+		for (w = 0; w < sent->length; w++)
+		{
+			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
+			{
+				Disjunct *d = *dd; /* just for convenience */
+				if (d->left == NULL)
+				{
+					dd = &d->next;  /* NEXT */
+					continue;
+				}
 #ifdef ALT_DISJUNCT_CONSISTENCY
 				pc.first_connector = d->left;
 #endif
-				if (left_connector_list_update(&pc, d->left, w, true) < 0) {
+				if (left_connector_list_update(&pc, d->left, w, true) < 0)
+				{
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
 
-			clean_table(pt->r_table_size[w], pt->r_table[w]);
-			nd = NULL;
-			for (d = sent->word[w].d; d != NULL; d = dx) {
-				dx = d->next;
-				if ((d->left != NULL) && (d->left->nearest_word == BAD_WORD)) {
+					/* discard the current disjunct */
+					*dd = d->next; /* NEXT - set current disjunct to the next one */
 					d->next = free_later;
 					free_later = d;
-				} else {
-					d->next = nd;
-					nd = d;
+				}
+				else
+				{
+					dd = &d->next; /* NEXT */
 				}
 			}
-			sent->word[w].d = nd;
+
+			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
 		total_deleted += N_deleted;
@@ -683,32 +690,37 @@ int power_prune(Sentence sent, Parse_Options opts)
 
 		pc.N_changed = N_deleted = 0;
 		/* right-to-left pass */
-
-		for (w = sent->length-1; w != (size_t) -1; w--) {
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
-				if (d->right == NULL) continue;
+		for (w = sent->length-1; w != (size_t) -1; w--)
+		{
+			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
+			{
+				Disjunct *d = *dd; /* just for convenience */
+				if (d->right == NULL)
+				{
+					dd = &d->next;  /* NEXT */
+					continue;
+				}
 #ifdef ALT_DISJUNCT_CONSISTENCY
 				pc.first_connector = d->right;
 #endif
-				if (right_connector_list_update(&pc, d->right, w, true) >= sent->length) {
+				if (right_connector_list_update(&pc, d->right, w, true) >= sent->length)
+				{
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
-				}
-			}
-			clean_table(pt->l_table_size[w], pt->l_table[w]);
-			nd = NULL;
-			for (d = sent->word[w].d; d != NULL; d = dx) {
-				dx = d->next;
-				if ((d->right != NULL) && (d->right->nearest_word == BAD_WORD)) {
+
+					/* Discard the current disjunct. */
+					*dd = d->next; /* NEXT - set current disjunct to the next one */
 					d->next = free_later;
 					free_later = d;
-				} else {
-					d->next = nd;
-					nd = d;
+				}
+				else
+				{
+					dd = &d->next; /* NEXT */
 				}
 			}
-			sent->word[w].d = nd;
+
+			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
 		total_deleted += N_deleted;
