@@ -24,6 +24,7 @@
 #include "string-set.h"
 #include "tokenize/word-structures.h" // for Word_struct
 #include "tokenize/wordgraph.h"
+#include "utilities.h"                // strdupa()
 
 /* This code is not too effective and is costly for the current corpus
  * batches and also for ady/amy. So maybe it should be discarded. */
@@ -924,7 +925,7 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
 	unsigned int hashval;
 	const char * t;
-	char name[20], *s;
+	char *name, *s;
 	pp_linkset_node *p;
 	int bad, n_subscripts;
 
@@ -933,9 +934,9 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 		for (p = ls->hash_table[hashval]; p!=NULL; p=p->next)
 		{
 			/* ok, we've got our hands on one of the criterion links */
-			strncpy(name, p->str, sizeof(name)-1);
+			name = strdupa(p->str);
 			/* could actually use the string in place because we change it back */
-			name[sizeof(name)-1] = '\0';
+
 			/* now we want to see if we can satisfy this criterion link */
 			/* with a collection of the links in the cms table */
 
