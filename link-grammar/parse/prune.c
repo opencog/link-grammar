@@ -630,7 +630,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 	Disjunct *free_later;
 	Connector *c;
 	size_t N_deleted, total_deleted;
-	size_t w;
 
 	pc.power_cost = 0;
 	pc.null_links = (opts->min_null_count > 0);
@@ -649,7 +648,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 	while (1)
 	{
 		/* left-to-right pass */
-		for (w = 0; w < sent->length; w++)
+		for (WordIdx w = 0; w < sent->length; w++)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
@@ -690,7 +689,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 
 		pc.N_changed = N_deleted = 0;
 		/* right-to-left pass */
-		for (w = sent->length-1; w != (size_t) -1; w--)
+		for (WordIdx w = sent->length-1; w != (size_t) -1; w--)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
