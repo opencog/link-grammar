@@ -449,6 +449,9 @@ static bool possible_connection(prune_context *pc,
 	int dist;
 	if (!easy_match_desc(lc->desc, rc->desc)) return false;
 
+#ifdef DEBUG
+	assert((lc->nearest_word != BAD_WORD) && (rc->nearest_word != BAD_WORD));
+#endif
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
 	dist = rword - lword;
