@@ -632,14 +632,13 @@ int power_prune(Sentence sent, Parse_Options opts)
 	size_t N_deleted = 0;
 	size_t total_deleted = 0;
 
+	pt = power_table_new(sent);
+
+	pc.pt = pt;
 	pc.power_cost = 0;
 	pc.null_links = (opts->min_null_count > 0);
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
-
 	pc.sent = sent;
-
-	pt = power_table_new(sent);
-	pc.pt = pt;
 
 	while (1)
 	{
