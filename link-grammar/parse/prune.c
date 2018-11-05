@@ -659,9 +659,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
-					total_deleted++;
-				}
-			}
 
 			clean_table(pt->r_table_size[w], pt->r_table[w]);
 			nd = NULL;
@@ -677,6 +674,8 @@ int power_prune(Sentence sent, Parse_Options opts)
 			}
 			sent->word[w].d = nd;
 		}
+
+		total_deleted += N_deleted;
 		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %zu\n",
 		        pc.N_changed, N_deleted);
 
@@ -695,7 +694,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
 					N_deleted++;
-					total_deleted++;
 				}
 			}
 			clean_table(pt->l_table_size[w], pt->l_table[w]);
@@ -713,6 +711,7 @@ int power_prune(Sentence sent, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 
+		total_deleted += N_deleted;
 		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %zu\n",
 		        pc.N_changed, N_deleted);
 
