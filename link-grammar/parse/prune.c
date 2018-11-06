@@ -223,7 +223,7 @@ static void put_into_power_table(C_list * m, unsigned int size, C_list ** t,
  * In each hash slot, the shallow connectors appear first, so when
  * matching deep connectors to the connectors in a slot, the
  * match loop can stop when there are no more shallow connectors in that
- * slot (since if both are deep there cannot be matched).
+ * slot (since if both are deep, they cannot be matched).
  */
 static power_table * power_table_new(Sentence sent)
 {
