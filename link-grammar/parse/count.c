@@ -427,7 +427,7 @@ static Count_bin do_count(
 
 	if (le == NULL)
 	{
-		start_word = lw+1;
+		start_word = MAX(lw+1, rw-re->length_limit);
 	}
 	else
 	{
@@ -436,7 +436,7 @@ static Count_bin do_count(
 
 	if (re == NULL)
 	{
-		end_word = rw;
+		end_word = MIN(rw, lw+le->length_limit+1);
 	}
 	else
 	{
