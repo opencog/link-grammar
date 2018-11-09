@@ -430,7 +430,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 	if (le == NULL)
 	{
-		start_word = lw + 1;
+		start_word = MAX(lw+1, re->farthest_word);
 	}
 	else
 	{
@@ -439,7 +439,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 	if (re == NULL)
 	{
-		end_word = rw;
+		end_word = MIN(rw, le->farthest_word+1);
 	}
 	else
 	{

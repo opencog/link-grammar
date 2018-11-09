@@ -681,7 +681,8 @@ static Count_bin do_count(
 
 	if (le == NULL)
 	{
-		start_word = lw+1;
+		/* No leftcount, and no rightcount for (w < re->farthest_word). */
+		start_word = MAX(lw+1, re->farthest_word);
 	}
 	else
 	{
@@ -691,7 +692,8 @@ static Count_bin do_count(
 
 	if (re == NULL)
 	{
-		end_word = rw;
+		/* No rightcount, and no leftcount for (w > le->farthest_word). */
+		end_word = MIN(rw, le->farthest_word+1);
 	}
 	else
 	{
