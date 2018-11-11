@@ -44,7 +44,7 @@ struct count_context_s
 	bool    exhausted;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	int     table_size;
-	int     log2_table_size;
+	/* int     log2_table_size; */ /* not unused */
 	Table_connector ** table;
 	Resources current_resources;
 };
@@ -78,7 +78,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	if (24 < shift) shift = 24;
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
-	ctxt->log2_table_size = shift;
+	/* ctxt->log2_table_size = shift; */
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
