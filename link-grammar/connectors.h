@@ -108,6 +108,7 @@ struct Connector_struct
 	                         this could ever connect to.  Computed by
 	                         setup_connectors() */
 	bool multi;           /* TRUE if this is a multi-connector */
+	int suffix_id;        /* Suffix sequence identifier (see preparations.c) */
 	const condesc_t *desc;
 	Connector *next;
 	const gword_set *originating_gword;
