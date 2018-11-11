@@ -27,11 +27,10 @@
 typedef struct Table_connector_s Table_connector;
 struct Table_connector_s
 {
-	Table_connector  *next;
-	Connector        *le, *re;
+	Table_connector  *next;      /* FIXME: eliminate */
+	int              l_id, r_id;
 	Count_bin        count;
-	short            lw, rw;
-	unsigned short   null_count;
+	unsigned short   null_count; /* FIXME: eliminate */
 };
 
 struct count_context_s
@@ -44,7 +43,7 @@ struct count_context_s
 	bool    exhausted;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	int     table_size;
-	int     log2_table_size;
+	/* int     log2_table_size; */ /* not unused */
 	Table_connector ** table;
 	Resources current_resources;
 };
@@ -78,13 +77,14 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	if (24 < shift) shift = 24;
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
-	ctxt->log2_table_size = shift;
+	/* ctxt->log2_table_size = shift; */
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 
 
 }
+
 
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
 static int hit;
@@ -99,12 +99,8 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 {
 	int z = 0, nz = 0;
 	int c, N = 0;
-	const int sent_length = sent->length;
-	int *ww = alloca(sent_length*sent_length*sizeof(ww));
-	int *wc = alloca(sent_length*sent_length*sizeof(ww));
+	unsigned int null_count[256] = { 0 };
 
-	memset(ww, 0, sent_length*sent_length*sizeof(ww));
-	memset(wc, 0, sent_length*sent_length*sizeof(ww));
 	for (int i = 0; i < ctxt->table_size; i++)
 	{
 		c = 0;
@@ -112,25 +108,23 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		if (t == NULL) N++;
 		for (; t != NULL; t = t->next)
 		{
-			if ((t->lw < 0) || (t->rw == sent_length)) continue;
+			if ((t->l_id < 0) || (t->r_id == (int)sent->length)) continue;
 			c++;
 			if (hist_total(&t->count) == 0) z++;
 			else nz++;
-			ww[t->rw + sent_length * t->lw]++;
-			if (hist_total(&t->count)) wc[t->rw + sent_length * t->lw]++;
+			null_count[t->null_count]++;
 		}
 		if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
 	}
 
-	int wn = 0;
-	for (int i = 0; i < sent_length; i++)
-		for (int j = 0; j < sent_length; j++)
-		{
-			if (ww[i + sent_length * j]) wn++;
-			printf("WW %d %d = %d C=%d\n", i, j, ww[i + sent_length * j], wc[i + sent_length * j]);
-		}
-
-	printf("Connector table z=%d nz=%d N=%d hit=%d miss=%d wc=%d\n", z, nz, N, hit, miss, wn);
+	printf("Connector table z=%d nz=%d N=%d hit=%d miss=%d\n",
+	       z, nz, N, hit, miss);
+	printf("Null count:\n");
+	for (unsigned int i = 0; i < sizeof(null_count)/sizeof(null_count[0]); i++)
+	{
+		if (0 != null_count[i])
+			printf("null_count %d: %d\n", i, null_count[i]);
+	}
 }
 #else
 #define DEBUG_TABLE_STAT(x)
@@ -144,13 +138,18 @@ static Table_connector * table_store(count_context_t *ctxt,
                                      Connector *le, Connector *re,
                                      unsigned int null_count)
 {
-	Table_connector *t, *n;
-	unsigned int h;
+	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
+	int l_id = lw, r_id = rw;
 
-	n = pool_alloc(ctxt->sent->Table_connector_pool);
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
-	h = pair_hash(ctxt->table_size, lw, rw, le, re, null_count);
-	t = ctxt->table[h];
+	if (NULL != le) l_id = le->suffix_id;
+	if (NULL != re) r_id = re->suffix_id;
+
+	unsigned int h = pair_hash(ctxt->table_size, lw, rw, le, re, null_count);
+	Table_connector *t = ctxt->table[h];
+
+	n->l_id = l_id;
+	n->r_id = r_id;
+	n->null_count = null_count;
 	n->next = t;
 	ctxt->table[h] = n;
 
@@ -164,13 +163,17 @@ find_table_pointer(count_context_t *ctxt,
                    Connector *le, Connector *re,
                    unsigned int null_count)
 {
-	Table_connector *t;
 	unsigned int h = pair_hash(ctxt->table_size,lw, rw, le, re, null_count);
-	t = ctxt->table[h];
-	for (; t != NULL; t = t->next) {
-		if ((t->lw == lw) && (t->rw == rw)
-		    && (t->le == le) && (t->re == re)
-		    && (t->null_count == null_count))
+	Table_connector *t = ctxt->table[h];
+	int l_id = lw, r_id = rw;
+
+	if (NULL != le) l_id = le->suffix_id;
+	if (NULL != re) r_id = re->suffix_id;
+
+	for (; t != NULL; t = t->next)
+	{
+		if ((t->l_id == l_id) && (t->r_id == r_id) &&
+		    (t->null_count == null_count))
 		{
 			DEBUG_TABLE_STAT(hit++);
 			return t;
@@ -260,6 +263,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	(verbosity_level(D_COUNT_TRACE, "do_count") ? \
 	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
+#define ID(c,w) (!c?w:c->suffix_id)
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
@@ -281,8 +285,8 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
 
 	level++;
-	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
-		level*2, "", m_result, lineno, lw, rw, V(le), V(re), null_count);
+	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%d\n\\",
+		level*2, "", m_result, lineno, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%lld\n",
 	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, hist_total(&r));

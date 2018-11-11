@@ -99,6 +99,11 @@ typedef struct
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
  * Lets try to keep it that way.
+ * FIXME: The addition of suffix_id made it > 32 bytes. Fix possibilities:
+ * 1. bool multi:1; int suffix_id:15; However, very long sentences may have
+ * suffix_id > 32K.
+ * 2. Make originating_gword an "int" index.
+ * 3. Always pack the connectors, and eliminate the "next" field.
  */
 struct Connector_struct
 {
@@ -108,6 +113,7 @@ struct Connector_struct
 	                         this could ever connect to.  Computed by
 	                         setup_connectors() */
 	bool multi;           /* TRUE if this is a multi-connector */
+	int suffix_id;        /* Suffix sequence identifier (see preparations.c) */
 	const condesc_t *desc;
 	Connector *next;
 	const gword_set *originating_gword;
@@ -243,8 +249,9 @@ static inline uint32_t string_hash(const char *s)
 }
 
 /**
- * hash function. Based on some tests, this seems to be an almost
- * "perfect" hash, in that almost all hash buckets have the same size!
+ * Hash function for the classic parser linkage memoization.
+ * FIXME: Now that it is based on small-integer connector IDs, it may
+ * be far from optimal. To be fixed.
  */
 static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
@@ -252,6 +259,15 @@ static inline unsigned int pair_hash(unsigned int table_size,
                             unsigned int cost)
 {
 	unsigned int i;
+	int l_id = 0, r_id = 0;
+
+	if (NULL != le) l_id = le->suffix_id;
+	if (NULL != re) r_id = re->suffix_id;
+
+#ifdef DEBUG
+	assert(((NULL == le) || le->suffix_id) &&
+	       ((NULL == re) || re->suffix_id));
+#endif
 
 #if 0
 	/* hash function. Based on some tests, this seems to be
@@ -270,8 +286,8 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	i = cost;
 	i = lw + (i << 6) + (i << 16) - i;
 	i = rw + (i << 6) + (i << 16) - i;
-	i = ((int)(intptr_t)le) + (i << 6) + (i << 16) - i;
-	i = ((int)(intptr_t)re) + (i << 6) + (i << 16) - i;
+	i = l_id + (i << 6) + (i << 16) - i;
+	i = r_id + (i << 6) + (i << 16) - i;
 #endif
 
 	return i & (table_size-1);

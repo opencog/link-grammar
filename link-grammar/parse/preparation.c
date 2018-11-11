@@ -21,7 +21,11 @@
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
+#include "string-id.h"
+#include "utilities.h"
 #include "tokenize/word-structures.h" // for Word_struct
+
+#define D_PREP 5 // Debug level for this module
 
 /**
  * Set c->nearest_word to the nearest word that this connector could
@@ -110,6 +114,157 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	}
 }
 
+#if 0
+static void print_connector_list(const char *s, const char *t, Connector * e)
+{
+	printf("%s %s: ", s, t);
+	for (;e != NULL; e=e->next)
+	{
+		printf("%s", connector_string(e));
+		if (e->next != NULL) printf(" ");
+	}
+	printf("\n");
+}
+#endif
+
+/**
+ * Set a unique identifier per connector, to be used in the memoizing
+ * table of the classic parser.
+ *
+ * Originally, the classic parser memoized the number of possible linkages
+ * per a given connector-pair using the connector addresses. Since an
+ * exhaustive search is done, such an approach has two main problems for
+ * long sentences:
+ * 1. A very big hash table (Table_connector in count.c) is used due to
+ * the huge number of connectors (100Ks) in long sentences, a thing that
+ * causes a severe memory cache trash (to the degree that absolutely most
+ * of the memory accesses are L3 misses).
+ * 2. Repeated linkage detailed calculation for what seemed identical
+ * connectors. A hint for this solution was the use of 0 hash values for
+ * NULL connectors.
+ *
+ * The idea that is implemented here is based of the fact that the number
+ * of linkages using a connector-pair is governed only by these connectors
+ * and the connectors after them (since cross links are not permitted).
+ * This allows us to share the memoizing table hash value between
+ * connectors that have the same "connector sequence suffix" on their
+ * disjuncts. As a result, long sentences have relatively few different
+ * connector hash values relative to their total number of connectors.
+ *
+ * Algorithm:
+ * The string-set code has been adapted (see string-id.c) to generate
+ * a unique identifier per string.
+ * All the connector sequence suffixes of each disjunct are generated here
+ * as strings, which are used for getting a unique identifier for the
+ * starting connector of each such sequence.
+ * In order to save the need to cache the endpoint word numbers the
+ * connector identifiers are not shared between words. To that end the
+ * word number is prepended to the said strings. It is done using 2 bytes
+ * for convenient (mainly to easily avoid the CONSEP value).
+ */
+#define WORD_OFFSET 256
+static void set_connector_hash(Sentence sent)
+{
+	/* FIXME: For short sentences, setting the optimized connector hashing
+	 * has a slight overhead. If this overhead is improved, maybe this
+	 * limit can be set lower. */
+	if (sent->length < 36)
+	{
+		int id = WORD_OFFSET; /* Reserved for null connectors. */
+		for (size_t w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (Connector *c = d->left; NULL != c; c = c->next)
+				{
+						c->suffix_id = id++;
+				}
+				for (Connector *c = d->right; NULL != c; c = c->next)
+				{
+						c->suffix_id = id++;
+				}
+			}
+		}
+	}
+	else
+	{
+#define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
+#define WORDENC_ADD 'A'
+#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
+		char cstr[MAX_LINK_NAME_LENGTH * 20];
+
+		String_id *ssid = string_id_create();
+		int lcnum = 0;
+		int rcnum = 0;
+
+		for (size_t w = 0; w < sent->length; w++)
+		{
+			//printf("WORD %zu\n", w);
+			cstr[0] = (char)(w & 0xFF) + WORDENC_ADD;
+			cstr[1] = (char)((w>>4) & 0xFF) + WORDENC_ADD;
+			const int wpreflen = 2;
+
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				int l;
+				char *s;
+
+				l = wpreflen;
+				for (Connector *c = d->left; NULL != c; c = c->next)
+				{
+					lcnum++; /* stat */
+					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
+					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
+					cstr[l++] = CONSEP;
+				}
+				/* XXX Check overflow. */
+				cstr[l] = '\0';
+
+				s = cstr;
+				//print_connector_list(d->word_string, "LEFT", d->left);
+				for (Connector *c = d->left; NULL != c; c = c->next)
+				{
+					s++;
+					int id = string_id_add(s, ssid) + WORD_OFFSET;
+					c->suffix_id = id;
+					//printf("ID %d pref=%s\n", id, s);
+					s = memchr(s, CONSEP, sizeof(cstr));
+				}
+
+				l = wpreflen;
+				for (Connector *c = d->right; NULL != c; c = c->next)
+				{
+					rcnum++; /* stat */
+					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
+					cstr[l++] = CONSEP;
+				}
+				/* XXX Check overflow. */
+				cstr[l] = '\0';
+
+				s = cstr;
+				//print_connector_list(d->word_string, "RIGHT", d->right);
+				for (Connector *c = d->right; NULL != c; c = c->next)
+				{
+					s++;
+					int id = string_id_add(s, ssid) + WORD_OFFSET;
+					c->suffix_id = id;
+					//printf("ID %d pref=%s\n", id, s);
+					s = memchr(s, CONSEP, sizeof(cstr));
+				}
+			}
+		}
+
+		if (verbosity_level(D_PREP))
+		{
+			int maxid = string_id_add("MAXID", ssid) - 1;
+			prt_error("Debug: lcnum %d rcnum %d suffix_id %d\n",
+			          lcnum, rcnum, maxid);
+		}
+
+		string_id_delete(ssid);
+	}
+}
+
 /**
  * Assumes that the sentence expression lists have been generated.
  */
@@ -143,4 +298,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	gword_record_in_connector(sent);
 	setup_connectors(sent);
+
+	set_connector_hash(sent);
 }
