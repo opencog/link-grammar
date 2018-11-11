@@ -162,6 +162,11 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * In order to save the need to cache the endpoint word numbers the
  * connector identifiers are not shared between words. To that end the
  * word number is prepended to the said strings.
+ *
+ * FIXME: We can assume that shallow connectors start a unique trailing
+ * connector sequence (since disjunct duplicates has been discarded), and
+ * hence they don't need the use of the string_id mechanism - just an
+ * incremented suffix_id is enough. This can save some overhead here.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
