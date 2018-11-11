@@ -85,6 +85,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 }
 
+
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
 static int hit;
 static int miss;
@@ -98,12 +99,8 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 {
 	int z = 0, nz = 0;
 	int c, N = 0;
-	const int sent_length = sent->length;
-	int *ww = alloca(sent_length*sent_length*sizeof(ww));
-	int *wc = alloca(sent_length*sent_length*sizeof(ww));
+	unsigned int null_count[256] = { 0 };
 
-	memset(ww, 0, sent_length*sent_length*sizeof(ww));
-	memset(wc, 0, sent_length*sent_length*sizeof(ww));
 	for (int i = 0; i < ctxt->table_size; i++)
 	{
 		c = 0;
@@ -122,6 +119,12 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 
 	printf("Connector table z=%d nz=%d N=%d hit=%d miss=%d\n",
 	       z, nz, N, hit, miss);
+	printf("Null count:\n");
+	for (unsigned int i = 0; i < sizeof(null_count)/sizeof(null_count[0]); i++)
+	{
+		if (0 != null_count[i])
+			printf("null_count %d: %d\n", i, null_count[i]);
+	}
 }
 #else
 #define DEBUG_TABLE_STAT(x)
@@ -260,6 +263,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	(verbosity_level(D_COUNT_TRACE, "do_count") ? \
 	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
+#define ID(c,w) (!c?w:c->suffix_id)
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
@@ -281,8 +285,8 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
 
 	level++;
-	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s re=%s null_count=%d\n\\",
-		level*2, "", m_result, lineno, lw, rw, V(le), V(re), null_count);
+	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%d\n\\",
+		level*2, "", m_result, lineno, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%lld\n",
 	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, hist_total(&r));

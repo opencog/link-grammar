@@ -250,8 +250,8 @@ static inline uint32_t string_hash(const char *s)
 
 /**
  * Hash function for the classic parser linkage memoization.
- * FIXME: Now that it is based on small-integer connector IDs, it is far
- * than optimal. To be fixed.
+ * FIXME: Now that it is based on small-integer connector IDs, it may
+ * be far from optimal. To be fixed.
  */
 static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
@@ -263,6 +263,11 @@ static inline unsigned int pair_hash(unsigned int table_size,
 
 	if (NULL != le) l_id = le->suffix_id;
 	if (NULL != re) r_id = re->suffix_id;
+
+#ifdef DEBUG
+	assert(((NULL == le) || le->suffix_id) &&
+	       ((NULL == re) || re->suffix_id));
+#endif
 
 #if 0
 	/* hash function. Based on some tests, this seems to be
