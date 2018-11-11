@@ -164,7 +164,7 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * word number is prepended to the said strings. It is done using 2 bytes
  * for convenient (mainly to easily avoid the CONSEP value).
  */
-#define WORD_OFFSET 256
+#define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
 {
 	/* FIXME: For short sentences, setting the optimized connector hashing
@@ -172,7 +172,7 @@ static void set_connector_hash(Sentence sent)
 	 * limit can be set lower. */
 	if (sent->length < 36)
 	{
-		int id = WORD_OFFSET; /* Reserved for null connectors. */
+		int id = WORD_OFFSET;
 		for (size_t w = 0; w < sent->length; w++)
 		{
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
