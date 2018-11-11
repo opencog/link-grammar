@@ -148,9 +148,10 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * of linkages using a connector-pair is governed only by these connectors
  * and the connectors after them (since cross links are not permitted).
  * This allows us to share the memoizing table hash value between
- * connectors that have the same "connector sequence suffix" on their
- * disjuncts. As a result, long sentences have relatively few different
- * connector hash values relative to their total number of connectors.
+ * connectors that have the same "connector sequence suffix" (trailing
+ * connectors) on their disjuncts. As a result, long sentences have
+ * relatively few different connector hash values relative to their total
+ * number of connectors.
  *
  * Algorithm:
  * The string-set code has been adapted (see string-id.c) to generate
