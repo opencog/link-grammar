@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright 2018 Amir Plivatsky                                         */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -147,9 +148,10 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * of linkages using a connector-pair is governed only by these connectors
  * and the connectors after them (since cross links are not permitted).
  * This allows us to share the memoizing table hash value between
- * connectors that have the same "connector sequence suffix" on their
- * disjuncts. As a result, long sentences have relatively few different
- * connector hash values relative to their total number of connectors.
+ * connectors that have the same "connector sequence suffix" (trailing
+ * connectors) on their disjuncts. As a result, long sentences have
+ * relatively few different connector hash values relative to their total
+ * number of connectors.
  *
  * Algorithm:
  * The string-set code has been adapted (see string-id.c) to generate
@@ -159,10 +161,14 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * starting connector of each such sequence.
  * In order to save the need to cache the endpoint word numbers the
  * connector identifiers are not shared between words. To that end the
- * word number is prepended to the said strings. It is done using 2 bytes
- * for convenient (mainly to easily avoid the CONSEP value).
+ * word number is prepended to the said strings.
+ *
+ * FIXME: We can assume that shallow connectors start a unique trailing
+ * connector sequence (since disjunct duplicates has been discarded), and
+ * hence they don't need the use of the string_id mechanism - just an
+ * incremented suffix_id is enough. This can save some overhead here.
  */
-#define WORD_OFFSET 256
+#define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
 {
 	/* FIXME: For short sentences, setting the optimized connector hashing
@@ -170,7 +176,7 @@ static void set_connector_hash(Sentence sent)
 	 * limit can be set lower. */
 	if (sent->length < 36)
 	{
-		int id = WORD_OFFSET; /* Reserved for null connectors. */
+		int id = WORD_OFFSET;
 		for (size_t w = 0; w < sent->length; w++)
 		{
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
@@ -200,9 +206,8 @@ static void set_connector_hash(Sentence sent)
 		for (size_t w = 0; w < sent->length; w++)
 		{
 			//printf("WORD %zu\n", w);
-			cstr[0] = (char)(w & 0xFF) + WORDENC_ADD;
-			cstr[1] = (char)((w>>4) & 0xFF) + WORDENC_ADD;
-			const int wpreflen = 2;
+			cstr[0] = (char)(w +1); /* Avoid '\0' by adding 1. */
+			const int wpreflen = 1;
 
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
@@ -224,7 +229,7 @@ static void set_connector_hash(Sentence sent)
 				//print_connector_list(d->word_string, "LEFT", d->left);
 				for (Connector *c = d->left; NULL != c; c = c->next)
 				{
-					s++;
+					s++; /* Skip word number encoding or CONSEP. */
 					int id = string_id_add(s, ssid) + WORD_OFFSET;
 					c->suffix_id = id;
 					//printf("ID %d pref=%s\n", id, s);
@@ -245,7 +250,7 @@ static void set_connector_hash(Sentence sent)
 				//print_connector_list(d->word_string, "RIGHT", d->right);
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
-					s++;
+					s++; /* Skip word number encoding or CONSEP. */
 					int id = string_id_add(s, ssid) + WORD_OFFSET;
 					c->suffix_id = id;
 					//printf("ID %d pref=%s\n", id, s);
