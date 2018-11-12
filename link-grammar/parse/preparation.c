@@ -14,7 +14,7 @@
 #include "api-structures.h"
 #include "prepare/build-disjuncts.h"
 #include "connectors.h"
-#include "dict-common/dict-common.h" // For Dictionary_s
+#include "dict-common/dict-common.h"    // Dictionary_s
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "preparation.h"
@@ -24,9 +24,9 @@
 #include "string-set.h"
 #include "string-id.h"
 #include "utilities.h"
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/word-structures.h"   // Word_struct
 
-#define D_PREP 5 // Debug level for this module
+#define D_PREP 5 // Debug level for this module.
 
 /**
  * Set c->nearest_word to the nearest word that this connector could
@@ -183,11 +183,11 @@ static void set_connector_hash(Sentence sent)
 			{
 				for (Connector *c = d->left; NULL != c; c = c->next)
 				{
-						c->suffix_id = id++;
+					c->suffix_id = id++;
 				}
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
-						c->suffix_id = id++;
+					c->suffix_id = id++;
 				}
 			}
 		}
@@ -200,13 +200,14 @@ static void set_connector_hash(Sentence sent)
 		char cstr[MAX_LINK_NAME_LENGTH * 20];
 
 		String_id *ssid = string_id_create();
+		/* Debug stats. */
 		int lcnum = 0;
 		int rcnum = 0;
 
 		for (size_t w = 0; w < sent->length; w++)
 		{
 			//printf("WORD %zu\n", w);
-			cstr[0] = (char)(w +1); /* Avoid '\0' by adding 1. */
+			cstr[0] = (char)(w + 1); /* Avoid '\0' by adding 1. */
 			const int wpreflen = 1;
 
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
@@ -217,7 +218,7 @@ static void set_connector_hash(Sentence sent)
 				l = wpreflen;
 				for (Connector *c = d->left; NULL != c; c = c->next)
 				{
-					lcnum++; /* stat */
+					lcnum++;
 					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
 					cstr[l++] = CONSEP;
@@ -239,7 +240,7 @@ static void set_connector_hash(Sentence sent)
 				l = wpreflen;
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
-					rcnum++; /* stat */
+					rcnum++;
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
 					cstr[l++] = CONSEP;
 				}
