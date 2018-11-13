@@ -232,9 +232,7 @@ static void set_connector_hash(Sentence sent)
 		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
 
 		String_id *ssid = string_id_create();
-		/* Debug stats. */
-		int lcnum = 0;
-		int rcnum = 0;
+		int cnum[2] = { 0 }; /* Connector counts stats for debug. */
 
 		for (size_t w = 0; w < sent->length; w++)
 		{
@@ -275,52 +273,33 @@ static void set_connector_hash(Sentence sent)
 				//printf("w=%zu, token=%s: GWORD_NUMS: %s\n",
 				//       w, d->word_string, gword_nums);
 
-				l = 0;
-				for (Connector *c = d->left; NULL != c; c = c->next)
+				for (int dir = 0; dir < 2; dir ++)
 				{
-					lcnum++;
-					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
-					cstr[l++] = ',';
-					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
-					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					cstr[l++] = CONSEP;
-				}
-				/* XXX Check overflow. */
-				cstr[l] = '\0';
+					Connector *first_c = (0 == dir) ? d->left : d->right;
 
-				s = cstr;
-				//print_connector_list(d->word_string, "LEFT", d->left);
-				for (Connector *c = d->left; NULL != c; c = c->next)
-				{
-					int id = string_id_add(s, ssid) + WORD_OFFSET;
-					c->suffix_id = id;
-					//printf("ID %d trail=%s\n", id, s);
-					s = memchr(s, CONSEP, sizeof(cstr));
-					s++;
-				}
+					l = 0;
+					for (Connector *c = first_c; NULL != c; c = c->next)
+					{
+						cnum[dir]++;
+						l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
+						cstr[l++] = ',';
+						if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
+						l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
+						cstr[l++] = CONSEP;
+					}
+					/* XXX Check overflow. */
+					cstr[l] = '\0';
 
-				l = 0;
-				for (Connector *c = d->right; NULL != c; c = c->next)
-				{
-					rcnum++;
-					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
-					cstr[l++] = ',';
-					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
-					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					cstr[l++] = CONSEP;
-				}
-				/* XXX Check overflow. */
-				cstr[l] = '\0';
-
-				s = cstr;
-				//print_connector_list(d->word_string, "RIGHT", d->right);
-				for (Connector *c = d->right; NULL != c; c = c->next)
-				{
-					int id = string_id_add(s, ssid) + WORD_OFFSET;
-					c->suffix_id = id;
-					//printf("ID %d trail=%s\n", id, s);
-					s = memchr(s, CONSEP, sizeof(cstr));
-					s++;
+					s = cstr;
+					//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
+					for (Connector *c = first_c; NULL != c; c = c->next)
+					{
+						int id = string_id_add(s, ssid) + WORD_OFFSET;
+						c->suffix_id = id;
+						//printf("ID %d trail=%s\n", id, s);
+						s = memchr(s, CONSEP, sizeof(cstr));
+						s++;
+					}
 				}
 			}
 		}
@@ -329,7 +308,7 @@ static void set_connector_hash(Sentence sent)
 		{
 			int maxid = string_id_add("MAXID", ssid) - 1;
 			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
-			          maxid, lcnum+rcnum, rcnum, lcnum);
+			          maxid, cnum[0]+cnum[0], cnum[0], cnum[0]);
 		}
 
 		string_id_delete(ssid);
