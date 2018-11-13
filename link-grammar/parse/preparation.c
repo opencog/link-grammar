@@ -242,7 +242,7 @@ static void set_connector_hash(Sentence sent)
 					s++; /* Skip word number encoding or CONSEP. */
 					int id = string_id_add(s, ssid) + WORD_OFFSET;
 					c->suffix_id = id;
-					//printf("ID %d pref=%s\n", id, s);
+					//printf("ID %d trail=%s\n", id, s);
 					s = memchr(s, CONSEP, sizeof(cstr));
 				}
 
@@ -264,7 +264,7 @@ static void set_connector_hash(Sentence sent)
 					s++; /* Skip word number encoding or CONSEP. */
 					int id = string_id_add(s, ssid) + WORD_OFFSET;
 					c->suffix_id = id;
-					//printf("ID %d pref=%s\n", id, s);
+					//printf("ID %d trail=%s\n", id, s);
 					s = memchr(s, CONSEP, sizeof(cstr));
 				}
 			}
