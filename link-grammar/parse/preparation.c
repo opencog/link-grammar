@@ -272,8 +272,8 @@ static void set_connector_hash(Sentence sent)
 		if (verbosity_level(D_PREP))
 		{
 			int maxid = string_id_add("MAXID", ssid) - 1;
-			prt_error("Debug: lcnum %d rcnum %d suffix_id %d\n",
-			          lcnum, rcnum, maxid);
+			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
+			          maxid, lcnum+rcnum, rcnum, lcnum);
 		}
 
 		string_id_delete(ssid);
