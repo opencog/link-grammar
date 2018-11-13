@@ -169,7 +169,13 @@ For more examples of how to use the wordgraph-display, see
 [link-grammar/tokenize/README.md](/link-grammar/tokenize/README.md#word-graph-display)
 and [msvc/README.md](/msvc/README.md).
 
-5) -test=<values> for SAT parser debugging:
+5) Test the "trailing connector" hashing for short sentences too (e.g. for
+all sentences with more than 10 tokens):
+`link-parser test=len_trailing_hash:10`
+Or optionally (in order to see relevant debug messages from `preparation.c`):
+`link-parser test=len_trailing_hash:10 -v=5 -debug=preparation.c`
+
+6) -test=<values> for SAT parser debugging:
 linkage-disconnected - Display also solutions which don't have a full linkage.
 sat-stats - Display the number of PP-violations and disconected linkages.
 no-pp_pruning_1 - Disable a partial CONTAINS_NONE_RULES pruning

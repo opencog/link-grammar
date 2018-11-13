@@ -176,7 +176,12 @@ static void set_connector_hash(Sentence sent)
 	/* FIXME: For short sentences, setting the optimized connector hashing
 	 * has a slight overhead. If this overhead is improved, maybe this
 	 * limit can be set lower. */
-	if (sent->length < 36)
+	size_t min_sent_len_trailing_hash = 36;
+	const char *len_trailing_hash = test_enabled("len_trailing_hash");
+	if (NULL != len_trailing_hash)
+		min_sent_len_trailing_hash = atoi(len_trailing_hash+1);
+
+	if (sent->length < min_sent_len_trailing_hash)
 	{
 		int id = WORD_OFFSET;
 		for (size_t w = 0; w < sent->length; w++)
@@ -196,6 +201,8 @@ static void set_connector_hash(Sentence sent)
 	}
 	else
 	{
+		lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
+		    sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
 #define WORDENC_ADD 'A'
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
