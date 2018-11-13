@@ -250,6 +250,7 @@ static void set_connector_hash(Sentence sent)
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
 					rcnum++;
+					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
 					cstr[l++] = CONSEP;
 				}
