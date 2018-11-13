@@ -128,6 +128,19 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 }
 #endif
 
+#define ITOA_BASE 64
+static char* itoa_compact(char* buffer, int num)
+{
+	 do {
+		*buffer++ = '0' + num % ITOA_BASE;
+		num /= ITOA_BASE;
+	 } while (num > 0);
+
+	*buffer = '\0';
+
+	return buffer;
+}
+
 /**
  * Set a unique identifier per connector, to be used in the memoizing
  * table of the classic parser.
