@@ -121,7 +121,7 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 	printf("%s %s: ", s, t);
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s", connector_string(e));
+		printf("%s%s", e->multi?"@":"", connector_string(e));
 		if (e->next != NULL) printf(" ");
 	}
 	printf("\n");
