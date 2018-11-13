@@ -167,6 +167,8 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * connector sequence (since disjunct duplicates has been discarded), and
  * hence they don't need the use of the string_id mechanism - just an
  * incremented suffix_id is enough. This can save some overhead here.
+ * Update: Tested, but for some (yet unknown) reason it increases the
+ * hashing overhead by tens of percents.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
