@@ -25,6 +25,7 @@
 #include "string-id.h"
 #include "utilities.h"
 #include "tokenize/word-structures.h"   // Word_struct
+#include "tokenize/tok-structures.h"    // gword_set
 
 #define D_PREP 5 // Debug level for this module.
 
@@ -173,8 +174,17 @@ static char* itoa_compact(char* buffer, int num)
  * as strings, which are used for getting a unique identifier for the
  * starting connector of each such sequence.
  * In order to save the need to cache the endpoint word numbers the
- * connector identifiers are not shared between words. To that end the
- * word number is prepended to the said strings.
+ * connector identifiers should not be shared between words. The initial
+ * implementation tried to do that by prepending the word number to the
+ * connector list. However, this is buggy, because trailing sequences
+ * should be unique per word. But this is fixed anyway by the alternatives
+ * check described below. (This bug left undetected because the hash
+ * tables are now relatively empty and also we still hash with word
+ * numbers - for added entropy).
+ *
+ * We also should consider the case of alternatives - trailing connector
+ * sequences that belong to disjuncts of different alternatives may have
+ * different linkage counts.
  *
  * FIXME: We can assume that shallow connectors start a unique trailing
  * connector sequence (since disjunct duplicates has been discarded), and
@@ -217,9 +227,9 @@ static void set_connector_hash(Sentence sent)
 		lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
 		    sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
-#define WORDENC_ADD 'A'
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
-		char cstr[MAX_LINK_NAME_LENGTH * 20];
+#define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
+		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
 
 		String_id *ssid = string_id_create();
 		/* Debug stats. */
@@ -229,18 +239,48 @@ static void set_connector_hash(Sentence sent)
 		for (size_t w = 0; w < sent->length; w++)
 		{
 			//printf("WORD %zu\n", w);
-			cstr[0] = (char)(w + 1); /* Avoid '\0' by adding 1. */
-			const int wpreflen = 1;
 
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
 				int l;
 				char *s;
 
-				l = wpreflen;
+				/* Generate a string with the disjunct Gword number(s). It is
+				 * use make unique trailing connector sequences of different
+				 * alternatives, so they will get their own suffix_id. The
+				 * apparent need to do that is unfortunate, as it adds some
+				 * hashing overhead due to the increased number of
+				 * suffix_id's. */
+				l = 0;
+				char gword_num[MAX_GWORD_ENCODING];
+#define MAX_DIFFERENT_GWORDS 6 /* More than 3 have not been seen yet. */
+				char gword_nums[MAX_GWORD_ENCODING * MAX_DIFFERENT_GWORDS];
+				for (const gword_set *g = d->originating_gword; NULL != g; g = g->next)
+				{
+					itoa_compact(gword_num, g->o_gword->node_num);
+					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
+					cstr[l++] = ',';
+				}
+				if (l > (int)sizeof(gword_nums)-2)
+				{
+					/* Overflow. Never observed, maybe cannot happen. Tag it with
+					 * a unique identifier so it will get its own suffix_id. */
+#ifdef DEBUG
+					prt_error("Warning: set_connector_hash(): "
+					          "Token %s: Gword overflow: %s\n",
+					          d->word_string, gword_nums);
+#endif
+					sprintf(gword_nums, "Gword overflow(%p)\n", d);
+				}
+				//printf("w=%zu, token=%s: GWORD_NUMS: %s\n",
+				//       w, d->word_string, gword_nums);
+
+				l = 0;
 				for (Connector *c = d->left; NULL != c; c = c->next)
 				{
 					lcnum++;
+					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
+					cstr[l++] = ',';
 					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
 					cstr[l++] = CONSEP;
@@ -252,17 +292,19 @@ static void set_connector_hash(Sentence sent)
 				//print_connector_list(d->word_string, "LEFT", d->left);
 				for (Connector *c = d->left; NULL != c; c = c->next)
 				{
-					s++; /* Skip word number encoding or CONSEP. */
 					int id = string_id_add(s, ssid) + WORD_OFFSET;
 					c->suffix_id = id;
 					//printf("ID %d trail=%s\n", id, s);
 					s = memchr(s, CONSEP, sizeof(cstr));
+					s++;
 				}
 
-				l = wpreflen;
+				l = 0;
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
 					rcnum++;
+					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
+					cstr[l++] = ',';
 					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
 					cstr[l++] = CONSEP;
@@ -274,11 +316,11 @@ static void set_connector_hash(Sentence sent)
 				//print_connector_list(d->word_string, "RIGHT", d->right);
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
-					s++; /* Skip word number encoding or CONSEP. */
 					int id = string_id_add(s, ssid) + WORD_OFFSET;
 					c->suffix_id = id;
 					//printf("ID %d trail=%s\n", id, s);
 					s = memchr(s, CONSEP, sizeof(cstr));
+					s++;
 				}
 			}
 		}

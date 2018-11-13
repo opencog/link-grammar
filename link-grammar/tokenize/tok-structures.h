@@ -138,12 +138,15 @@ struct Gword_struct
 
 	/* For debug and inspiration. */
 	const char *label;   /* Debug label - code locations of tokenization */
-	size_t node_num;     /* For differentiating words with identical subwords,
-	                        and for indicating the order in which word splits
-                           have been done. Shown in the Wordgraph display and in
-                           debug messages. Not used otherwise. Could have been
-                           used for hier_position instead of pointers in order
-                           to optimize its generation and comparison. */
+	size_t node_num;     /* A sequential number, assigned in the order in
+	                        which word splits are done. Shown in the
+	                        Wordgraph display and in debug messages for
+	                        easier differentiating words with identical
+	                        subwords, and for indicating their split order.
+	                        Also used in set_connector_hash().  Could have
+	                        been used for hier_position instead of pointers
+	                        in order to optimize its generation and
+	                        comparison. */
 
 	/* Tokenizer state */
 	Tokenizing_step tokenizing_step;
