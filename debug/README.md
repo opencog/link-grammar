@@ -149,7 +149,7 @@ with a backslash.)
 This, along with "diff", "grep" etc., can be used in order to validate
 that a change didn't cause undesired effects. Special care should be taken
 if sentences with more than 1024 linkages are to be verified too (use a
-larger `-limit=N` and -test=auto-next-linkage:M`, when N>>M).
+larger `-limit=N` and `-test=auto-next-linkage:M`, when N>>M).
 
 Note that this technique is not very effective if the order to the
 linkages got changed (or if SAT-parser linkages need to be compared to the
