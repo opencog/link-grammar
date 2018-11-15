@@ -6520,7 +6520,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % An entire quoted sentence. Costly, if the quotes are missing.
 <quote-sent>:
-  ((Xc+ or Xe+ or [()]) & QUd+ & (<wi-wall> or <wo-wall>) & {X+} & QUc+)
+  ((Xc+ or Xe+ or [()]) & QUd+ & (<wi-wall> or <wo-wall> or hWl+) & {X+} & QUc+)
   or [(Xc+ or Xe+) & (<wi-wall> or <wo-wall>) & {X+}];
 
 % Quote with or without quotation marks.
