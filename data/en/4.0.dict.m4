@@ -6685,6 +6685,10 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % XXX TODO: most preps below need this rule.
 <alter-preps>: MJrj- or MJlj+;
 
+% Statements begining with a locative.
+% "Under the tree." "On the right." "During the show."
+<locative>: {EP-} & dWl- & J+;
+
 % Mp- (which modifies nouns) has a cost, so that modifying verbs
 % (using MVp-) is generally preferred.  The cost is small, though,
 % to allow modifiers on conjoined nouns to work well.
@@ -6725,23 +6729,35 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   (Xd- & Xc+ & (MX*x- or MVx-));
 
 under beneath:
-  ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or [MVp- & B-] or (Yd- & Pp-);
+  ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
+  or <locative>
+  or [MVp- & B-]
+  or (Yd- & Pp-);
 below above behind.p:
-  ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or [MVp- & B-];
+  ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-))
+  or <locative>
+  or [MVp- & B-];
 within w/i:
-           ({JQ+} & J+ & <prep-main-a>)           or [MVp- & B-];
+  ({JQ+} & J+ & <prep-main-a>)
+  or <locative>
+  or [MVp- & B-];
 during:
-           ({JQ+} & J+ & (<prep-main-a> or UN-))  or [MVp- & B-];
+  ({JQ+} & J+ & (<prep-main-a> or UN-))
+  or <locative>
+  or [MVp- & B-];
 
-% EW+ "From where did it come?"
+% EW+: "From where did it come?"
+% {EP-} & dWl-: "Just from down below"
 from:
   ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
+  or ({EP-} & dWl- & FM+)
   or [MVp- & B-]
   or EW+
   or NIr+;
 
 at toward towards without w/o.p:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-];
 
 %
@@ -6758,10 +6774,12 @@ except but.misc-ex:
 
 against beyond beside:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-];
 
 between:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-]
   or NIr+;
 
@@ -6770,6 +6788,7 @@ with w/:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-))
   or (Jw+ & (RJrj- or RJlj+))
   or [MVp- & B-]
+  or <locative>
   or (J+ & {EBm+} & ([P+] or [[O*n+]]) & (
     MVp-
     or [({Xc+ & {Xd-}} & CO+)]
@@ -6777,6 +6796,7 @@ with w/:
 
 among:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
+  or <locative>
   or [MVp- & B-];
 
 % (Wj- & JQ+ & J+): "By what means?"  kind of a hack, for null-verb question.
@@ -6787,12 +6807,16 @@ among:
 for.p:
   ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-))
   or (J+ & (RJrj- or RJlj+))
+  or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
   or (MVp- & FL+)
   or <null-prep-qu>;
 
-into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
+into:
+  ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
+  or <locative>
+  or [MVp- & B-];
 
 % re: "with regard to"
 % Xe+: optional colon
@@ -6800,6 +6824,7 @@ re:
   {Xe+} & J+ & <prep-main-a>;
 
 % cost on MVa- to give preference to MVl-
+% {EP-} & dWl-: "Just about now."
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EN+
@@ -6808,6 +6833,7 @@ about:
   or [MVp- & B-]
   or (<tof-verb> & (Mp- or MVp- or Pp-))
   or [MVa-]
+  or ({EP-} & dWl- & (MVp+ or MVa+ or MVs+))
   or (MVl- & (MVp+ or MVa+ or MVs+));
 
 
@@ -6826,6 +6852,7 @@ through.r right_through straight_through:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
   or (EN- & (Pp- or J-))
   or K-
+  or <locative>
   or [MVp- & B-];
 
 <prep-across>:
@@ -6833,22 +6860,26 @@ through.r right_through straight_through:
   or K-
   or [MVp- & B-];
 
-across along: <prep-across> or <fronted>;
+across along: <prep-across> or <fronted> or <locative>;
 
 % <fronted>: "off went the cavalry"
+% EP+: "off to the side"
 off:
   <prep-across>
   or (MVp+ & {Xc+ & {Xd-}} & COp+)
-  or <fronted>;
+  or <fronted>
+  or EP+;
 
 past.p:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
   or K-
+  or <locative>
   or [MVp- & B-];
 
 around:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
+  or <locative>
   or K-
   or MVa-
   or <fronted>
@@ -6868,6 +6899,7 @@ out.r up.r down.r:
   or ({Yd-} & Pp-)
   or (EN- & (Pp- or J-))
   or ({J+} & <fronted>)
+  or <locative>
   or [MVp- & B-];
 
 
@@ -6875,6 +6907,7 @@ by:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-))
   or K-
+  or <locative>
   or [MVp- & B-]
   or <null-prep-qu>;
 
@@ -6885,6 +6918,7 @@ in.r:
   or ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
   or K-
   or (EN- & (Pp- or J-))
+  or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
   or <null-prep-qu>;
@@ -6893,12 +6927,14 @@ on upon:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>)
   or K-
+  or <locative>
   or [MVp- & B-];
 
 over:
   ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
   or K-
   or EN+
+  or <locative>
   or [MVp- & B-]
   or (Yd- & Pp-);
 
@@ -6910,7 +6946,8 @@ like.p:
   ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
      or (Vf- & Mgp+)
      or (LI- & (J+ or <subcl-verb>))))
-   or [MVp- & B-];
+  or <locative>
+  or [MVp- & B-];
 
 unlike:
    J+ & (MVp-
@@ -6971,6 +7008,7 @@ to.r:
   or ({NT-} & TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-]
   or <null-prep-qu>;
 
@@ -7136,18 +7174,23 @@ somewhere someplace:
   or ({EL+} & (MVp- or Pp-))
   or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
   or ({EL+} & {Xc+ & {Xd-}} & [[CO+]])
+  or EA+
   or EE+
-  or EA+;
+  or EP+;
 
 nowhere:
-  {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
+  ({EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)))
+  or EP+;
 
 % EE- & COp+: "somewhere near, a mouse scratched."
 % EE- & FM-: "The ticking came from somewhere near."
+% The EE- above should be replaced by ... EP- ??? XXX TODO
+% dWl-: "somewhere near"
 near.p:
   ({EE- or EF+} & (
     <alter-preps>
     or (J+ & (<prep-main-b> or FM- or <fronted>))))
+  or ({EP-} & dWl- & {J+})
   or (EE- & {Xc+} & COp+)
   or (EE- & FM-);
 
@@ -7160,12 +7203,13 @@ nearby close_by handy.r:
   or MVp-
   or Pp-
   or (SF*p+ & <CLAUSE>)
+  or (EP- & dWl- & {J+})
   or ({EE-} & FM-)
   or ({EE-} & {Xc+} & COp+);
 
 % similar to <prep-main-b> but not quite ...
 all_over all_around:
-  {J+} & (Mp- or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-);
+  {J+} & (Mp- or Pp- or MVp- or dWl- or [({Xc+ & {Xd-}} & CO+)] or FM-);
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
 % or <fronted> with subject-verb inversion.  Both seem reasonable.
@@ -7180,7 +7224,7 @@ over_here: Wi-;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
-% Wi-: "There!"
+% Wl-: "There!"
 % Wp- & PFt+: "there lay the ball"; the PFt+ prevents connections to
 %             the PFb- on <vc-be>.
 %             "there the remains can be found"
@@ -7193,17 +7237,18 @@ there.r thither:
   or <fronted>
   or OXt-
   or (EN- & (Pp- or J-))
-  or Wi-;
+  or dWl-;
 
 % This seems to be the simplest way to make "Go home!" parse correctly...
 home.r: MVp-;
 
-away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
-aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
+away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K- or dWl-;
+aboard: ((MVp- or Mp- or Pp-) & {J+}) or K- or dWl-;
 apart: {Yd-} & K-;
 
 inside.r outside.r underneath alongside:
   <alter-preps>
+  or ({EP-} & dWl-)
   or ({J+} & (<prep-main-b> or FM-));
 
 amid plus.p minus.p via onto on_to:
@@ -7216,6 +7261,7 @@ forth aside.p: K- or MVa-;
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
   <alter-preps> or
+  <locative> or
   (J+ & (<prep-main-b> or FM- or <fronted>));
 
 ahead_of by_way_of akin_to betwixt vis-a-vis vis-à-vis cf.
@@ -7229,8 +7275,9 @@ in_lieu_of on_account_of in_place_of in_search_of:
 overhead.r midway in_public in_private en_route
 a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
 
+% {EP-} & dWl-: "Just upstairs"
 abroad upstairs.r downstairs.r overseas.r next_door:
-  <prep-main-b> or FM-;
+  <prep-main-b> or ({EP-} & dWl-) or FM-;
 
 elsewhere:
   <prep-main-b> or FM- or [[J-]];
@@ -7246,7 +7293,7 @@ on_deck on_disk on_file on_foot on_location on_line online.r:
   MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-));
 
 uptown downtown.r offshore.r underground.r out_of_town:
-  MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+  MVp- or Mp- or Pp- or FM- or ({EP-} & dWl-) or (Xc+ & Xd- & MVx-);
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
 
@@ -7255,11 +7302,14 @@ herewith hereinafter therefrom therein thereon thereupon: <common-prep>;
 /en/words/words-medical.prep.1: <common-prep>;
 
 backward backwards forwards.r
-leftward leftwards rightward rightwards
 sideways ashore abreast aft
+leftward leftwards rightward rightwards
+downhill southward underfoot westward eastward northward:
+  <common-prep> or <locative>;
+
 half-way.r halfway.r
-two-fold downhill southward underfoot westward eastward
-northward overnight.r on_hold on_track in_situ in_toto off_balance
+two-fold
+overnight.r on_hold on_track in_situ in_toto off_balance
 on_tiptoe
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
@@ -7292,7 +7342,7 @@ upstream downstream 5' 3':
 %(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
 
 indoors outdoors underwater.r:
-  MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+  MVp- or Pp- or FM- or ({EP-} & dWl-) or (Xc+ & Xd- & MVx-);
 
 % --------------------------------------------------------
 % Patronymics and misc french/spanish/german connectives
@@ -8244,6 +8294,9 @@ then.j-v: <verb-conjunction>;
 and.j-o or.j-o: <ditransitive-conjunction>;
 then.j-o: <ditransitive-conjunction>;
 
+% Xj-: "on the table and just to the left of the lamp."
+and.j-l or.j-l: Xj- & hWl+ & {Xj+};
+
 % XJn-: neither ... nor ...
 % I-: "I don't want that, nor do you"
 nor.j-v:
@@ -8275,7 +8328,7 @@ but.j-r: {Xd-} & XJi- & I+;
 
 % (Wa- & {OF+}): "Either of them."
 % XJo+: "... either X or Y"
-% [MVa] has a cost because we want Xjo to get priority.
+% [MVa] has a cost because we want XJo to get priority.
 % MVa-: "He is either here or he is there."  which is fucked up...
 % but hey ...  it would need a crossing-link to fix ...
 %
@@ -9860,6 +9913,10 @@ the_world_over:
 maybe.c:
   EB- & EA+;
 
+% EP+: "Maybe under the bed"
+maybe.r:
+  EP+;
+
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
 
@@ -9996,6 +10053,7 @@ just.e:
   or [EB-]
   or EC+
   or EN+
+  or EP+
   or EW+
   or EZ+
   or (MVl- & (MVa+ or MVp+ or MVs+ or MVl+))
@@ -10108,8 +10166,10 @@ so.ij:
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
 % virtual CAPs morphemes. (??)
 % (Xc+ or [()]): allow missing comma, but at a price.
+% hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
+  or (hWl+ & {Xj+} & (RW+ or Xp+))
   or hCPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
@@ -10218,7 +10278,8 @@ changequote dnl
   or [<verb-conjunction>]0.5
   or (SJl- & EBb+ & SJr+ & Ou-)
   or (SJl- & J- & SJr+)
-  or (SJl- & SJr+ & SJl+);
+  or (SJl- & SJr+ & SJl+)
+  or (Xj- & hWl+ & {Xj+});
 
 % :.j
 % <sent-start> is needed for a wall-connection to the subsequent verb.
