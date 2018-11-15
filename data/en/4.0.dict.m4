@@ -7224,7 +7224,7 @@ over_here: Wi-;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
-% Wi-: "There!"
+% Wl-: "There!"
 % Wp- & PFt+: "there lay the ball"; the PFt+ prevents connections to
 %             the PFb- on <vc-be>.
 %             "there the remains can be found"
@@ -7237,13 +7237,13 @@ there.r thither:
   or <fronted>
   or OXt-
   or (EN- & (Pp- or J-))
-  or Wi-;
+  or dWl-;
 
 % This seems to be the simplest way to make "Go home!" parse correctly...
 home.r: MVp-;
 
-away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
-aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
+away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K- or dWl-;
+aboard: ((MVp- or Mp- or Pp-) & {J+}) or K- or dWl-;
 apart: {Yd-} & K-;
 
 inside.r outside.r underneath alongside:
@@ -7293,7 +7293,7 @@ on_deck on_disk on_file on_foot on_location on_line online.r:
   MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-));
 
 uptown downtown.r offshore.r underground.r out_of_town:
-  MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+  MVp- or Mp- or Pp- or FM- or ({EP-} & dWl-) or (Xc+ & Xd- & MVx-);
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
 
