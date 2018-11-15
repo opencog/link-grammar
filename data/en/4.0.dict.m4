@@ -9910,6 +9910,10 @@ the_world_over:
 maybe.c:
   EB- & EA+;
 
+% EP+: "Maybe under the bed"
+maybe.r:
+  EP+;
+
 % Argumentatives (children gain-saying).
 not.intj is_too is_not is_so unh_unh: Wa-;
 
