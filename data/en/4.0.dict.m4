@@ -6724,14 +6724,27 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   [({Xc+ & {Xd-}} & (COa+ or COd+))] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
+% Statements begining with a prepostion.
+% "Under the tree." "On the right." "During the show."
+<prep-state>: dWl- & J+;
+
 under beneath:
-  ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or [MVp- & B-] or (Yd- & Pp-);
+  ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
+  or <prep-state>
+  or [MVp- & B-]
+  or (Yd- & Pp-);
 below above behind.p:
-  ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or [MVp- & B-];
+  ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-))
+  or <prep-state>
+  or [MVp- & B-];
 within w/i:
-           ({JQ+} & J+ & <prep-main-a>)           or [MVp- & B-];
+  ({JQ+} & J+ & <prep-main-a>)
+  or <prep-state>
+  or [MVp- & B-];
 during:
-           ({JQ+} & J+ & (<prep-main-a> or UN-))  or [MVp- & B-];
+  ({JQ+} & J+ & (<prep-main-a> or UN-))
+  or <prep-state>
+  or [MVp- & B-];
 
 % EW+ "From where did it come?"
 from:
@@ -10108,8 +10121,10 @@ so.ij:
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
 % virtual CAPs morphemes. (??)
 % (Xc+ or [()]): allow missing comma, but at a price.
+% hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
+  or (hWl+ & (RW+ or Xp+))
   or hCPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
