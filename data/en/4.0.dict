@@ -9015,7 +9015,8 @@ like.p:
   ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
      or (Vf- & Mgp+)
      or (LI- & (J+ or <subcl-verb>))))
-   or [MVp- & B-];
+  or <locative>
+  or [MVp- & B-];
 
 unlike:
    J+ & (MVp-

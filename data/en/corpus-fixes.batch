@@ -1119,7 +1119,7 @@ Cheaper than dirt, slime is greener
 radically cheaper than regular steel, Flash Bainite is stronger than titanium
 radically cheaper to produce than regular steel, Flash Bainite is stronger than titanium
 
-% Locative declarations
+% Locative declarations, replies
 % These are all replies to questions such as "Where is it?",
 % "Where did you put it?", "Where did it go?"
 under the tree
@@ -1162,6 +1162,10 @@ for the children
 
 % Reply to "When will it happen?"
 just about now
+
+% Reply to "What does it look like?"
+just like the other one
+
 
 
 % ===================================================================
