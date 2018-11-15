@@ -14,7 +14,7 @@
 #include "api-structures.h"
 #include "prepare/build-disjuncts.h"
 #include "connectors.h"
-#include "dict-common/dict-common.h" // For Dictionary_s
+#include "dict-common/dict-common.h"    // Dictionary_s
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "preparation.h"
@@ -24,9 +24,10 @@
 #include "string-set.h"
 #include "string-id.h"
 #include "utilities.h"
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/word-structures.h"   // Word_struct
+#include "tokenize/tok-structures.h"    // gword_set
 
-#define D_PREP 5 // Debug level for this module
+#define D_PREP 5 // Debug level for this module.
 
 /**
  * Set c->nearest_word to the nearest word that this connector could
@@ -121,12 +122,25 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 	printf("%s %s: ", s, t);
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s", connector_string(e));
+		printf("%s%s", e->multi?"@":"", connector_string(e));
 		if (e->next != NULL) printf(" ");
 	}
 	printf("\n");
 }
 #endif
+
+#define ITOA_BASE 64
+static char* itoa_compact(char* buffer, int num)
+{
+	 do {
+		*buffer++ = '0' + num % ITOA_BASE;
+		num /= ITOA_BASE;
+	 } while (num > 0);
+
+	*buffer = '\0';
+
+	return buffer;
+}
 
 /**
  * Set a unique identifier per connector, to be used in the memoizing
@@ -160,13 +174,24 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
  * as strings, which are used for getting a unique identifier for the
  * starting connector of each such sequence.
  * In order to save the need to cache the endpoint word numbers the
- * connector identifiers are not shared between words. To that end the
- * word number is prepended to the said strings.
+ * connector identifiers should not be shared between words. The initial
+ * implementation tried to do that by prepending the word number to the
+ * connector list. However, this is buggy, because trailing sequences
+ * should be unique per word. But this is fixed anyway by the alternatives
+ * check described below. (This bug left undetected because the hash
+ * tables are now relatively empty and also we still hash with word
+ * numbers - for added entropy).
+ *
+ * We also should consider the case of alternatives - trailing connector
+ * sequences that belong to disjuncts of different alternatives may have
+ * different linkage counts.
  *
  * FIXME: We can assume that shallow connectors start a unique trailing
  * connector sequence (since disjunct duplicates has been discarded), and
  * hence they don't need the use of the string_id mechanism - just an
  * incremented suffix_id is enough. This can save some overhead here.
+ * Update: Tested, but for some (yet unknown) reason it increases the
+ * hashing overhead by tens of percents.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
@@ -174,7 +199,12 @@ static void set_connector_hash(Sentence sent)
 	/* FIXME: For short sentences, setting the optimized connector hashing
 	 * has a slight overhead. If this overhead is improved, maybe this
 	 * limit can be set lower. */
-	if (sent->length < 36)
+	size_t min_sent_len_trailing_hash = 36;
+	const char *len_trailing_hash = test_enabled("len_trailing_hash");
+	if (NULL != len_trailing_hash)
+		min_sent_len_trailing_hash = atoi(len_trailing_hash+1);
+
+	if (sent->length < min_sent_len_trailing_hash)
 	{
 		int id = WORD_OFFSET;
 		for (size_t w = 0; w < sent->length; w++)
@@ -183,78 +213,93 @@ static void set_connector_hash(Sentence sent)
 			{
 				for (Connector *c = d->left; NULL != c; c = c->next)
 				{
-						c->suffix_id = id++;
+					c->suffix_id = id++;
 				}
 				for (Connector *c = d->right; NULL != c; c = c->next)
 				{
-						c->suffix_id = id++;
+					c->suffix_id = id++;
 				}
 			}
 		}
 	}
 	else
 	{
+		lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
+		    sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
-#define WORDENC_ADD 'A'
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
-		char cstr[MAX_LINK_NAME_LENGTH * 20];
+#define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
+		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
 
 		String_id *ssid = string_id_create();
-		int lcnum = 0;
-		int rcnum = 0;
+		int cnum[2] = { 0 }; /* Connector counts stats for debug. */
 
 		for (size_t w = 0; w < sent->length; w++)
 		{
 			//printf("WORD %zu\n", w);
-			cstr[0] = (char)(w +1); /* Avoid '\0' by adding 1. */
-			const int wpreflen = 1;
 
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
 				int l;
 				char *s;
 
-				l = wpreflen;
-				for (Connector *c = d->left; NULL != c; c = c->next)
+				/* Generate a string with the disjunct Gword number(s). It is
+				 * use make unique trailing connector sequences of different
+				 * alternatives, so they will get their own suffix_id. The
+				 * apparent need to do that is unfortunate, as it adds some
+				 * hashing overhead due to the increased number of
+				 * suffix_id's. */
+				l = 0;
+				char gword_num[MAX_GWORD_ENCODING];
+#define MAX_DIFFERENT_GWORDS 6 /* More than 3 have not been seen yet. */
+				char gword_nums[MAX_GWORD_ENCODING * MAX_DIFFERENT_GWORDS];
+				for (const gword_set *g = d->originating_gword; NULL != g; g = g->next)
 				{
-					lcnum++; /* stat */
-					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
-					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					cstr[l++] = CONSEP;
+					itoa_compact(gword_num, g->o_gword->node_num);
+					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
+					cstr[l++] = ',';
 				}
-				/* XXX Check overflow. */
-				cstr[l] = '\0';
-
-				s = cstr;
-				//print_connector_list(d->word_string, "LEFT", d->left);
-				for (Connector *c = d->left; NULL != c; c = c->next)
+				if (l > (int)sizeof(gword_nums)-2)
 				{
-					s++; /* Skip word number encoding or CONSEP. */
-					int id = string_id_add(s, ssid) + WORD_OFFSET;
-					c->suffix_id = id;
-					//printf("ID %d pref=%s\n", id, s);
-					s = memchr(s, CONSEP, sizeof(cstr));
+					/* Overflow. Never observed, maybe cannot happen. Tag it with
+					 * a unique identifier so it will get its own suffix_id. */
+#ifdef DEBUG
+					prt_error("Warning: set_connector_hash(): "
+					          "Token %s: Gword overflow: %s\n",
+					          d->word_string, gword_nums);
+#endif
+					sprintf(gword_nums, "Gword overflow(%p)\n", d);
 				}
+				//printf("w=%zu, token=%s: GWORD_NUMS: %s\n",
+				//       w, d->word_string, gword_nums);
 
-				l = wpreflen;
-				for (Connector *c = d->right; NULL != c; c = c->next)
+				for (int dir = 0; dir < 2; dir ++)
 				{
-					rcnum++; /* stat */
-					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					cstr[l++] = CONSEP;
-				}
-				/* XXX Check overflow. */
-				cstr[l] = '\0';
+					Connector *first_c = (0 == dir) ? d->left : d->right;
 
-				s = cstr;
-				//print_connector_list(d->word_string, "RIGHT", d->right);
-				for (Connector *c = d->right; NULL != c; c = c->next)
-				{
-					s++; /* Skip word number encoding or CONSEP. */
-					int id = string_id_add(s, ssid) + WORD_OFFSET;
-					c->suffix_id = id;
-					//printf("ID %d pref=%s\n", id, s);
-					s = memchr(s, CONSEP, sizeof(cstr));
+					l = 0;
+					for (Connector *c = first_c; NULL != c; c = c->next)
+					{
+						cnum[dir]++;
+						l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
+						cstr[l++] = ',';
+						if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
+						l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
+						cstr[l++] = CONSEP;
+					}
+					/* XXX Check overflow. */
+					cstr[l] = '\0';
+
+					s = cstr;
+					//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
+					for (Connector *c = first_c; NULL != c; c = c->next)
+					{
+						int id = string_id_add(s, ssid) + WORD_OFFSET;
+						c->suffix_id = id;
+						//printf("ID %d trail=%s\n", id, s);
+						s = memchr(s, CONSEP, sizeof(cstr));
+						s++;
+					}
 				}
 			}
 		}
@@ -262,8 +307,8 @@ static void set_connector_hash(Sentence sent)
 		if (verbosity_level(D_PREP))
 		{
 			int maxid = string_id_add("MAXID", ssid) - 1;
-			prt_error("Debug: lcnum %d rcnum %d suffix_id %d\n",
-			          lcnum, rcnum, maxid);
+			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
+			          maxid, cnum[0]+cnum[0], cnum[0], cnum[0]);
 		}
 
 		string_id_delete(ssid);
@@ -278,7 +323,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	size_t i;
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost, opts);
-	if (verbosity_level(5))
+	if (verbosity_level(D_PREP))
 	{
 		prt_error("Debug: After expanding expressions into disjuncts:\n");
 		print_disjunct_counts(sent);
@@ -295,7 +340,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Eliminated duplicate disjuncts");
 
-	if (verbosity_level(5))
+	if (verbosity_level(D_PREP))
 	{
 		prt_error("Debug: After expression pruning and duplicate elimination:\n");
 		print_disjunct_counts(sent);
