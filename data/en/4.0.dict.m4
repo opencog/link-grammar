@@ -6863,10 +6863,12 @@ through.r right_through straight_through:
 across along: <prep-across> or <fronted> or <locative>;
 
 % <fronted>: "off went the cavalry"
+% EP+: "off to the side"
 off:
   <prep-across>
   or (MVp+ & {Xc+ & {Xd-}} & COp+)
-  or <fronted>;
+  or <fronted>
+  or EP+;
 
 past.p:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
@@ -7251,6 +7253,7 @@ forth aside.p: K- or MVa-;
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
   <alter-preps> or
+  <locative> or
   (J+ & (<prep-main-b> or FM- or <fronted>));
 
 ahead_of by_way_of akin_to betwixt vis-a-vis vis-à-vis cf.
@@ -7264,8 +7267,9 @@ in_lieu_of on_account_of in_place_of in_search_of:
 overhead.r midway in_public in_private en_route
 a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
 
+% {EP-} & dWl-: "Just upstairs"
 abroad upstairs.r downstairs.r overseas.r next_door:
-  <prep-main-b> or FM-;
+  <prep-main-b> or ({EP-} & dWl-) or FM-;
 
 elsewhere:
   <prep-main-b> or FM- or [[J-]];
@@ -7290,11 +7294,14 @@ herewith hereinafter therefrom therein thereon thereupon: <common-prep>;
 /en/words/words-medical.prep.1: <common-prep>;
 
 backward backwards forwards.r
-leftward leftwards rightward rightwards
 sideways ashore abreast aft
+leftward leftwards rightward rightwards
+downhill southward underfoot westward eastward northward:
+  <common-prep> or <locative>;
+
 half-way.r halfway.r
-two-fold downhill southward underfoot westward eastward
-northward overnight.r on_hold on_track in_situ in_toto off_balance
+two-fold
+overnight.r on_hold on_track in_situ in_toto off_balance
 on_tiptoe
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
