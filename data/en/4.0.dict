@@ -8815,9 +8815,11 @@ during:
   or <locative>
   or [MVp- & B-];
 
-% EW+ "From where did it come?"
+% EW+: "From where did it come?"
+% {EP-} & dWl-: "Just from down below"
 from:
   ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
+  or ({EP-} & dWl- & FM+)
   or [MVp- & B-]
   or EW+
   or NIr+;
@@ -8891,6 +8893,7 @@ re:
   {Xe+} & J+ & <prep-main-a>;
 
 % cost on MVa- to give preference to MVl-
+% {EP-} & dWl-: "Just about now."
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EN+
@@ -8899,6 +8902,7 @@ about:
   or [MVp- & B-]
   or (<tof-verb> & (Mp- or MVp- or Pp-))
   or [MVa-]
+  or ({EP-} & dWl- & (MVp+ or MVa+ or MVs+))
   or (MVl- & (MVp+ or MVa+ or MVs+));
 
 
@@ -8917,6 +8921,7 @@ through.r right_through straight_through:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
   or (EN- & (Pp- or J-))
   or K-
+  or <locative>
   or [MVp- & B-];
 
 <prep-across>:
@@ -8924,7 +8929,7 @@ through.r right_through straight_through:
   or K-
   or [MVp- & B-];
 
-across along: <prep-across> or <fronted>;
+across along: <prep-across> or <fronted> or <locative>;
 
 % <fronted>: "off went the cavalry"
 off:
@@ -8935,11 +8940,13 @@ off:
 past.p:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
   or K-
+  or <locative>
   or [MVp- & B-];
 
 around:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
+  or <locative>
   or K-
   or MVa-
   or <fronted>
@@ -8959,6 +8966,7 @@ out.r up.r down.r:
   or ({Yd-} & Pp-)
   or (EN- & (Pp- or J-))
   or ({J+} & <fronted>)
+  or <locative>
   or [MVp- & B-];
 
 
@@ -8966,6 +8974,7 @@ by:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-))
   or K-
+  or <locative>
   or [MVp- & B-]
   or <null-prep-qu>;
 
@@ -8976,22 +8985,23 @@ in.r:
   or ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
   or K-
   or (EN- & (Pp- or J-))
+  or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
   or <null-prep-qu>;
 
 on upon:
   <alter-preps>
-  or <locative>
   or ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>)
   or K-
+  or <locative>
   or [MVp- & B-];
 
 over:
-  <locative>
-  or ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
+  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
   or K-
   or EN+
+  or <locative>
   or [MVp- & B-]
   or (Yd- & Pp-);
 
@@ -9064,6 +9074,7 @@ to.r:
   or ({NT-} & TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-]
   or <null-prep-qu>;
 
