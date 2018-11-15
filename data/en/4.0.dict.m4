@@ -7919,7 +7919,8 @@ as_if as_though:
   or ((BIh- or LI-) & <subcl-verb>);
 
 as_soon_as:
-  <subcl-verb> & {Xc+ & {Xd-}} & CO*s+;
+  (<subcl-verb> & {Xc+ & {Xd-}} & CO*s+)
+  or ({EP-} & dWl- & (J+ or Paf+));
 
 % J+ & CO+: "Until yesterday, ..." XXX this is wrong, should be JT+???
 changequote(\,/)dnl
@@ -7934,7 +7935,7 @@ since:
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
-  or (E- & <locative>)
+  or ({E-} & <locative>)
   or [[MVa-]] or [[E+]];
 
 ever_since:
