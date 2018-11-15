@@ -8754,6 +8754,10 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % XXX TODO: most preps below need this rule.
 <alter-preps>: MJrj- or MJlj+;
 
+% Statements begining with a locative.
+% "Under the tree." "On the right." "During the show."
+<locative>: dWl- & J+;
+
 % Mp- (which modifies nouns) has a cost, so that modifying verbs
 % (using MVp-) is generally preferred.  The cost is small, though,
 % to allow modifiers on conjoined nouns to work well.
@@ -8793,26 +8797,22 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   [({Xc+ & {Xd-}} & (COa+ or COd+))] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
-% Statements begining with a prepostion.
-% "Under the tree." "On the right." "During the show."
-<prep-state>: dWl- & J+;
-
 under beneath:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
-  or <prep-state>
+  or <locative>
   or [MVp- & B-]
   or (Yd- & Pp-);
 below above behind.p:
   ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-))
-  or <prep-state>
+  or <locative>
   or [MVp- & B-];
 within w/i:
   ({JQ+} & J+ & <prep-main-a>)
-  or <prep-state>
+  or <locative>
   or [MVp- & B-];
 during:
   ({JQ+} & J+ & (<prep-main-a> or UN-))
-  or <prep-state>
+  or <locative>
   or [MVp- & B-];
 
 % EW+ "From where did it come?"
