@@ -7173,18 +7173,23 @@ somewhere someplace:
   or ({EL+} & (MVp- or Pp-))
   or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
   or ({EL+} & {Xc+ & {Xd-}} & [[CO+]])
+  or EA+
   or EE+
-  or EA+;
+  or EP+;
 
 nowhere:
-  {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
+  ({EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)))
+  or EP+;
 
 % EE- & COp+: "somewhere near, a mouse scratched."
 % EE- & FM-: "The ticking came from somewhere near."
+% The EE- above should be replaced by ... EP- ??? XXX TODO
+% dWl-: "somewhere near"
 near.p:
   ({EE- or EF+} & (
     <alter-preps>
     or (J+ & (<prep-main-b> or FM- or <fronted>))))
+  or ({EP-} & dWl- & {J+})
   or (EE- & {Xc+} & COp+)
   or (EE- & FM-);
 
@@ -7197,12 +7202,13 @@ nearby close_by handy.r:
   or MVp-
   or Pp-
   or (SF*p+ & <CLAUSE>)
+  or (EP- & dWl- & {J+})
   or ({EE-} & FM-)
   or ({EE-} & {Xc+} & COp+);
 
 % similar to <prep-main-b> but not quite ...
 all_over all_around:
-  {J+} & (Mp- or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-);
+  {J+} & (Mp- or Pp- or MVp- or dWl- or [({Xc+ & {Xd-}} & CO+)] or FM-);
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
 % or <fronted> with subject-verb inversion.  Both seem reasonable.
@@ -7241,6 +7247,7 @@ apart: {Yd-} & K-;
 
 inside.r outside.r underneath alongside:
   <alter-preps>
+  or ({EP-} & dWl-)
   or ({J+} & (<prep-main-b> or FM-));
 
 amid plus.p minus.p via onto on_to:
@@ -7334,7 +7341,7 @@ upstream downstream 5' 3':
 %(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
 
 indoors outdoors underwater.r:
-  MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+  MVp- or Pp- or FM- or ({EP-} & dWl-) or (Xc+ & Xd- & MVx-);
 
 % --------------------------------------------------------
 % Patronymics and misc french/spanish/german connectives
