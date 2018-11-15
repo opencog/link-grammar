@@ -6562,8 +6562,15 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.10.1:
   [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
+/en/words/words.v.11.1:
+  [[{@E-} & (((Sp- or I-) & <verb-wall> & {K+} & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+
 /en/words/words.v.10.2:
   [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
+  or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
+
+/en/words/words.v.11.2:
+  [[{@E-} & Ss- & <verb-wall> & {K+} & <vc-paraph>]]
   or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
 
 % XXX Why is there a cost on Pvf- ???
@@ -6574,16 +6581,24 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
     or [Pvf- & <vc-it-paraph>]
     or (Pv- & CV- & dCPu-));
 
+/en/words/words.v.11.3:
+  {@E-} & (
+    ((S- or PP-) & <verb-wall> & {K+} & <vc-paraph>)
+    or (SI*j+ & <vc-paraph-inv>)
+    or [Pvf- & <vc-it-paraph>]
+    or (Pv- & CV- & dCPu-));
+
 read.q-d:
-   {@E-} & (((S- or I- or PP-) & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & (((S- or I- or PP-) & <verb-wall> & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 wrote.q-d:
-   {@E-} & ((S- & <verb-wall> & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & ((S- & <verb-wall> & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 written.q:
   {@E-} & ((PP- & <vc-paraph>) or (Pv- & CV- & dCPu-));
 
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
+/en/words/words.v.11.4: [[{@E-} & Pg- & {K+} & <vc-paraph>]];
 
 seem.q appear.q: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
 seems.q appears.q:

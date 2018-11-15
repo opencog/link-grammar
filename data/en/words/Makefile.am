@@ -42,10 +42,6 @@ WORDS= \
 	words.n.3.y	\
 	words.n.t	\
 	words-medical.prep.1	\
-	words.v.10.1	\
-	words.v.10.2	\
-	words.v.10.3	\
-	words.v.10.4	\
 	words.v.1.1	\
 	words.v.1.2	\
 	words.v.1.3	\
@@ -79,7 +75,15 @@ WORDS= \
 	words.v.8.2	\
 	words.v.8.3	\
 	words.v.8.4	\
-	words.v.8.5
+	words.v.8.5 \
+	words.v.10.1 \
+	words.v.10.2 \
+	words.v.10.3 \
+	words.v.10.4 \
+	words.v.11.1 \
+	words.v.11.2 \
+	words.v.11.3 \
+	words.v.11.4
 
 
 wordsdir=$(pkgdatadir)/en/words
