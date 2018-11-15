@@ -6687,7 +6687,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 
 % Statements begining with a locative.
 % "Under the tree." "On the right." "During the show."
-<locative>: dWl- & J+;
+<locative>: {EP-} & dWl- & J+;
 
 % Mp- (which modifies nouns) has a cost, so that modifying verbs
 % (using MVp-) is generally preferred.  The cost is small, though,
@@ -6755,6 +6755,7 @@ from:
 
 at toward towards without w/o.p:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-];
 
 %
@@ -6771,10 +6772,12 @@ except but.misc-ex:
 
 against beyond beside:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-];
 
 between:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or <locative>
   or [MVp- & B-]
   or NIr+;
 
@@ -6783,6 +6786,7 @@ with w/:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-))
   or (Jw+ & (RJrj- or RJlj+))
   or [MVp- & B-]
+  or <locative>
   or (J+ & {EBm+} & ([P+] or [[O*n+]]) & (
     MVp-
     or [({Xc+ & {Xd-}} & CO+)]
@@ -6790,6 +6794,7 @@ with w/:
 
 among:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
+  or <locative>
   or [MVp- & B-];
 
 % (Wj- & JQ+ & J+): "By what means?"  kind of a hack, for null-verb question.
@@ -6800,12 +6805,16 @@ among:
 for.p:
   ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-))
   or (J+ & (RJrj- or RJlj+))
+  or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
   or (MVp- & FL+)
   or <null-prep-qu>;
 
-into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
+into:
+  ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
+  or <locative>
+  or [MVp- & B-];
 
 % re: "with regard to"
 % Xe+: optional colon
@@ -6904,12 +6913,14 @@ in.r:
 
 on upon:
   <alter-preps>
+  or <locative>
   or ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>)
   or K-
   or [MVp- & B-];
 
 over:
-  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
+  <locative>
+  or ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
   or K-
   or EN+
   or [MVp- & B-]
@@ -10009,6 +10020,7 @@ just.e:
   or [EB-]
   or EC+
   or EN+
+  or EP+
   or EW+
   or EZ+
   or (MVl- & (MVa+ or MVp+ or MVs+ or MVl+))

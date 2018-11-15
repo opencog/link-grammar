@@ -1120,11 +1120,24 @@ radically cheaper than regular steel, Flash Bainite is stronger than titanium
 radically cheaper to produce than regular steel, Flash Bainite is stronger than titanium
 
 % Locative declarations
+% These are all replies to questions such as "Where is it?",
+% "Where did you put it?", "Where did it go?"
 under the tree
 within the room
 during the opera
+over the wall
+just over the wall
+towards the door
+against the tree
+between the goal posts
+among the lillies
+into the wild
 
+% Reply to "How should I do it?" Treated like the locatives above.
+with the hammer
 
+% Reply to "Who is it for?"
+for the children
 
 % ===================================================================
 % assorted mis-classified verbs.
