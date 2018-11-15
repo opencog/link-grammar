@@ -7927,12 +7927,14 @@ until 'til ’til ‘til `til til till.r:
 changequote dnl
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
-  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
+  or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
+  or <locative>;
 
 since:
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
+  or (E- & <locative>)
   or [[MVa-]] or [[E+]];
 
 ever_since:
@@ -7943,12 +7945,14 @@ after:
   {EI- or Yt-}
     & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or <advcl-verb> or Qe+))
       or (J+ & <fronted>)
+      or <locative>
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))));
 
 before:
   ({EI- or Yt-}
     & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
       or (J+ & <fronted>)
+      or <locative>
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
   or (Yt- & (<advcl-verb> or Qe+));
 
@@ -7974,12 +7978,14 @@ if_so:
 no_wonder: (Wd+ or Wp+ or Wr+) & Wc-;
 
 % Pa+: "it can be pressed into shape while cold"
+% dWl- & Mp+: "while in transit"
 while whilst:
   ((<subcl-verb> or Mgp+ or Mp+ or Pa+) &
     (({Xc+ & {Xd-}} & CO*s+) or
        ({Xd- & Xc+} & MVs-) or
-       (Xd- & Xc+ & E+))) or
-  <COMP-OPENER>;
+       (Xd- & Xc+ & E+)))
+  or ({EP-} & dWl- & (J+ or Mp+))
+  or <COMP-OPENER>;
 
 <adverb-join>: RJlv+ or RJrv-;
 
