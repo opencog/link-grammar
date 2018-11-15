@@ -10176,9 +10176,10 @@ so.ij:
 % hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
-  or (hWl+ & {Xj+} & (RW+ or Xp+))
-  or hCPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
+  or (hWl+ & {Xj+} & (RW+ or Xp+))
+  or (QUd+ & hWl+ & {Xj+} & (Xc+ or [()]) & QUc+)
+  or hCPa+
   or [[ZZZ+ & <sent-start>]];
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
