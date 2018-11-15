@@ -10162,7 +10162,7 @@ so.ij:
 % hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
-  or (hWl+ & (RW+ or Xp+))
+  or (hWl+ & (RW+ or Xp+ or (Xc+ & hWl+)))
   or hCPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
