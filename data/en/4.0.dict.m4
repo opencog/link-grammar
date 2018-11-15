@@ -8294,6 +8294,9 @@ then.j-v: <verb-conjunction>;
 and.j-o or.j-o: <ditransitive-conjunction>;
 then.j-o: <ditransitive-conjunction>;
 
+% Xj-: "on the table and just to the left of the lamp."
+and.j-l or.j-l: Xj- & hWl+ & {Xj+};
+
 % XJn-: neither ... nor ...
 % I-: "I don't want that, nor do you"
 nor.j-v:
@@ -8325,7 +8328,7 @@ but.j-r: {Xd-} & XJi- & I+;
 
 % (Wa- & {OF+}): "Either of them."
 % XJo+: "... either X or Y"
-% [MVa] has a cost because we want Xjo to get priority.
+% [MVa] has a cost because we want XJo to get priority.
 % MVa-: "He is either here or he is there."  which is fucked up...
 % but hey ...  it would need a crossing-link to fix ...
 %
@@ -10166,7 +10169,7 @@ so.ij:
 % hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
-  or (hWl+ & (RW+ or Xp+ or (Xc+ & hWl+)))
+  or (hWl+ & {Xj+} & (RW+ or Xp+))
   or hCPa+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or [[ZZZ+ & <sent-start>]];
@@ -10275,7 +10278,8 @@ changequote dnl
   or [<verb-conjunction>]0.5
   or (SJl- & EBb+ & SJr+ & Ou-)
   or (SJl- & J- & SJr+)
-  or (SJl- & SJr+ & SJl+);
+  or (SJl- & SJr+ & SJl+)
+  or (Xj- & hWl+ & {Xj+});
 
 % :.j
 % <sent-start> is needed for a wall-connection to the subsequent verb.
