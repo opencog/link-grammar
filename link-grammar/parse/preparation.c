@@ -306,9 +306,9 @@ static void set_connector_hash(Sentence sent)
 
 		if (verbosity_level(D_PREP))
 		{
-			int maxid = string_id_add("MAXID", ssid) - 1;
+			int maxid = string_id_add("MAXID", ssid) + WORD_OFFSET - 1;
 			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
-			          maxid, cnum[0]+cnum[0], cnum[0], cnum[0]);
+			          maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
 		}
 
 		string_id_delete(ssid);
