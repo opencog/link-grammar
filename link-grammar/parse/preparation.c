@@ -129,6 +129,10 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 }
 #endif
 
+/**
+ * Convert integer to ASCII. Use base 64 for compactness.
+ * Note that the CONSEP character is avoided here.
+ */
 #define ITOA_BASE 64
 static char* itoa_compact(char* buffer, size_t num)
 {
