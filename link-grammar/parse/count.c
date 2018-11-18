@@ -21,6 +21,7 @@
 #include "fast-match.h"
 #include "resources.h"
 #include "tokenize/word-structures.h" // for Word_struct
+#include "utilities.h"
 
 /* This file contains the exhaustive search algorithm. */
 
@@ -42,7 +43,7 @@ struct count_context_s
 	bool    null_links;
 	bool    exhausted;
 	unsigned int checktimer;  /* Avoid excess system calls */
-	int     table_size;
+	unsigned int table_size;
 	/* int     log2_table_size; */ /* not unused */
 	Table_connector ** table;
 	Resources current_resources;
@@ -85,10 +86,9 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 }
 
-
+//#define DEBUG_TABLE_STAT
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
-static int hit;
-static int miss;
+static int hit, miss;  /* Table value found/not found */
 #undef DEBUG_TABLE_STAT
 #define DEBUG_TABLE_STAT(x) x
 /**
@@ -97,34 +97,69 @@ static int miss;
  */
 static void table_stat(count_context_t *ctxt, Sentence sent)
 {
-	int z = 0, nz = 0;
-	int c, N = 0;
-	unsigned int null_count[256] = { 0 };
+	int z = 0, nz = 0;  /* Number of entries with zero and non-zero counts */
+	int c, total_c = 0; /* Chain length */
+	int N = 0;          /* NULL table slots */
+	int null_count[256] = { 0 };   /* null_count histogram */
+	int chain_length[64] = { 0 };  /* Chain length histogram */
+	int max_chain_length = 0;
 
-	for (int i = 0; i < ctxt->table_size; i++)
+	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
 		c = 0;
 		Table_connector *t = ctxt->table[i];
 		if (t == NULL) N++;
 		for (; t != NULL; t = t->next)
 		{
-			if ((t->l_id < 0) || (t->r_id == (int)sent->length)) continue;
 			c++;
-			if (hist_total(&t->count) == 0) z++;
-			else nz++;
-			null_count[t->null_count]++;
+			if (hist_total(&t->count) == 0)
+				z++;
+			else
+				nz++;
+			if (ctxt->null_links > 0)
+				null_count[t->null_count]++;
 		}
-		if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
+		if (c > 0) /* Slot 0 used for length overflow. */
+		{
+			chain_length[c >= (int)ARRAY_SIZE(chain_length) ? 0 : c]++;
+			if (c > max_chain_length) max_chain_length = c;
+			total_c += c;
+		}
+		//if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
 	}
 
-	printf("Connector table z=%d nz=%d N=%d hit=%d miss=%d\n",
-	       z, nz, N, hit, miss);
-	printf("Null count:\n");
-	for (unsigned int i = 0; i < sizeof(null_count)/sizeof(null_count[0]); i++)
+#if __GNUC__
+#define msb(x) (31-__builtin_clz(x))
+#else
+#define msb(x) 0
+#endif
+	int used_slots = ctxt->table_size-N;
+	/* The used= value is TotalValues/TableSize (not UsedSlots/TableSize). */
+	printf("Connector table: msb=%d slots=%6d/%6d (%5.2f%%) avg-chain=%4.2f "
+	       "values=%6d (z=%5d nz=%5d N=%5d) used=%5.2f%% "
+	       "acc=%d (hit=%d miss=%d) (sent_len=%zu)\n",
+	       msb(ctxt->table_size), used_slots, ctxt->table_size,
+			 100.0f*used_slots/ctxt->table_size, 1.0f*total_c/used_slots,
+	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
+	       hit+miss, hit, miss, sent->length);
+
+	printf("Chain length histogram:\n");
+	for (int i = 1; i <= max_chain_length; i++)
+		printf("%d: %d\n", i, chain_length[i]);
+	if (chain_length[0] > 0)
+		printf("Chain length > 63: %d\n", chain_length[0]);
+
+	if (ctxt->null_links > 0)
 	{
-		if (0 != null_count[i])
-			printf("null_count %d: %d\n", i, null_count[i]);
+		printf("Null count:\n");
+		for (unsigned int i = 0; i < ARRAY_SIZE(null_count); i++)
+		{
+			if (0 != null_count[i])
+				printf("null_count %d: %d\n", i, null_count[i]);
+		}
 	}
+
+	hit = miss = 0;
 }
 #else
 #define DEBUG_TABLE_STAT(x)
@@ -701,7 +736,7 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 {
 	if (NULL == ctxt) return;
 
-	DEBUG_TABLE_STAT(if (verbosity_level(D_SPEC+2)) table_stat(ctxt, sent));
+	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
 	free_table(ctxt);
 	xfree(ctxt, sizeof(count_context_t));
 }
