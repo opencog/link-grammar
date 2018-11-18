@@ -191,13 +191,6 @@ static char* itoa_compact(char* buffer, size_t num)
  * We also should consider the case of alternatives - trailing connector
  * sequences that belong to disjuncts of different alternatives may have
  * different linkage counts.
- *
- * FIXME: We can assume that shallow connectors start a unique trailing
- * connector sequence (since disjunct duplicates has been discarded), and
- * hence they don't need the use of the string_id mechanism - just an
- * incremented suffix_id is enough. This can save some overhead here.
- * Update: Tested, but for some (yet unknown) reason it increases the
- * hashing overhead by tens of percents.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
