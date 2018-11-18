@@ -243,12 +243,9 @@ static void set_connector_hash(Sentence sent)
 				int l;
 				char *s;
 
-				/* Generate a string with the disjunct Gword number(s). It is
-				 * use make unique trailing connector sequences of different
-				 * alternatives, so they will get their own suffix_id. The
-				 * apparent need to do that is unfortunate, as it adds some
-				 * hashing overhead due to the increased number of
-				 * suffix_id's. */
+				/* Generate a string with the disjunct Gword number(s). It
+				 * makes unique trailing connector sequences of different
+				 * alternatives, so they will get their own suffix_id. */
 				l = 0;
 				char gword_num[MAX_GWORD_ENCODING];
 #define MAX_DIFFERENT_GWORDS 6 /* More than 3 have not been seen yet. */
