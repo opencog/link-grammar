@@ -132,10 +132,12 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 #define ITOA_BASE 64
 static char* itoa_compact(char* buffer, int num)
 {
-	 do {
-		*buffer++ = '0' + num % ITOA_BASE;
+	 do
+	 {
+		*buffer++ = '0' + (num % ITOA_BASE);
 		num /= ITOA_BASE;
-	 } while (num > 0);
+	 }
+	 while (num > 0);
 
 	*buffer = '\0';
 
