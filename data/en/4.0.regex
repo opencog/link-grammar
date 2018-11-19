@@ -266,7 +266,10 @@
 % EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 % EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 <EMOTICON>: !/^"|[[:alnum:]]+"$/
-<EMOTICON>: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+% "◠" is matched by [:punct:] using "libc" or "tre", but not using PCRE.
+% Hence it been added to the leading character subexpression. (Maybe
+% there are additional such characters.)
+<EMOTICON>: /^[[:punct:];BＣ☆ಠ●＠◎～◠][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 
 % Part numbers should not match words with punctuation at their end.
 % Else sentences like "I saw him on January 21, 1990" have problems.
