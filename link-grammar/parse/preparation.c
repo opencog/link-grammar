@@ -129,13 +129,19 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 }
 #endif
 
+/**
+ * Convert integer to ASCII. Use base 64 for compactness.
+ * Note that the CONSEP character is avoided here.
+ */
 #define ITOA_BASE 64
-static char* itoa_compact(char* buffer, int num)
+static char* itoa_compact(char* buffer, size_t num)
 {
-	 do {
-		*buffer++ = '0' + num % ITOA_BASE;
+	 do
+	 {
+		*buffer++ = '0' + (num % ITOA_BASE);
 		num /= ITOA_BASE;
-	 } while (num > 0);
+	 }
+	 while (num > 0);
 
 	*buffer = '\0';
 
@@ -185,13 +191,6 @@ static char* itoa_compact(char* buffer, int num)
  * We also should consider the case of alternatives - trailing connector
  * sequences that belong to disjuncts of different alternatives may have
  * different linkage counts.
- *
- * FIXME: We can assume that shallow connectors start a unique trailing
- * connector sequence (since disjunct duplicates has been discarded), and
- * hence they don't need the use of the string_id mechanism - just an
- * incremented suffix_id is enough. This can save some overhead here.
- * Update: Tested, but for some (yet unknown) reason it increases the
- * hashing overhead by tens of percents.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
@@ -243,12 +242,9 @@ static void set_connector_hash(Sentence sent)
 				int l;
 				char *s;
 
-				/* Generate a string with the disjunct Gword number(s). It is
-				 * use make unique trailing connector sequences of different
-				 * alternatives, so they will get their own suffix_id. The
-				 * apparent need to do that is unfortunate, as it adds some
-				 * hashing overhead due to the increased number of
-				 * suffix_id's. */
+				/* Generate a string with the disjunct Gword number(s). It
+				 * makes unique trailing connector sequences of different
+				 * alternatives, so they will get their own suffix_id. */
 				l = 0;
 				char gword_num[MAX_GWORD_ENCODING];
 #define MAX_DIFFERENT_GWORDS 6 /* More than 3 have not been seen yet. */
@@ -306,9 +302,9 @@ static void set_connector_hash(Sentence sent)
 
 		if (verbosity_level(D_PREP))
 		{
-			int maxid = string_id_add("MAXID", ssid) - 1;
+			int maxid = string_id_add("MAXID", ssid) + WORD_OFFSET - 1;
 			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
-			          maxid, cnum[0]+cnum[0], cnum[0], cnum[0]);
+			          maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
 		}
 
 		string_id_delete(ssid);
