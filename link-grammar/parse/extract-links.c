@@ -542,7 +542,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 						}
 					}
 				}
-				if ((le == NULL) && (rs[0] != NULL ||
+				else if ((le == NULL) && (rs[0] != NULL ||
 				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 				{
 					/* Evaluate using the right match, but not the left */
