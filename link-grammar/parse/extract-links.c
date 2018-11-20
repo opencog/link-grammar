@@ -438,20 +438,19 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 		// if (mlist) mlist = sort_matchlist(mlist);
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
-			unsigned int lnull_count, rnull_count;
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
 			bool ls_exists = false;
 
-			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
+			for (unsigned int lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
 				int i, j;
 				Parse_set *ls[4], *rs[4];
 
 				/* Here, lnull_count and rnull_count are the null_counts
 				 * we're assigning to those parts respectively. */
-				rnull_count = null_count - lnull_count;
+				unsigned int rnull_count = null_count - lnull_count;
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
