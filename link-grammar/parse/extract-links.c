@@ -443,6 +443,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
+			bool ls_exists = false;
 
 			for (lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
@@ -477,9 +478,13 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 						ls[3] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left,
 						              lnull_count, pex, islands_ok);
+
+					ls_exists =
+						ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL;
 				}
 
-				if (Rmatch)
+
+				if (Rmatch && (ls_exists || le == NULL))
 				{
 					rs[0] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right->next, re->next,
@@ -516,7 +521,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 					}
 				}
 
-				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
+				if (ls_exists)
 				{
 					/* Evaluate using the left match, but not the right */
 					Parse_set* rset = mk_parse_set(words, mchxt, ctxt,
