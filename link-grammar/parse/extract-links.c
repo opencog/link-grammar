@@ -68,6 +68,7 @@ struct extractor_s
 	unsigned int   log2_x_table_size;
 	Pset_bucket ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
+	bool           islands_ok;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -325,7 +326,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
-                 extractor_t * pex, bool islands_ok)
+                 extractor_t * pex)
 {
 	int start_word, end_word, w;
 	Pset_bucket *xt;
@@ -368,7 +369,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 		Parse_set* dummy;
 		Disjunct* dis;
 
-		if (!islands_ok && (lw != -1)) return &xt->set;
+		if (!pex->islands_ok && (lw != -1)) return &xt->set;
 		if (null_count == 0) return &xt->set;
 
 		RECOUNT({xt->set.recount = 0;})
@@ -383,7 +384,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 				{
 					pset = mk_parse_set(words, mchxt, ctxt,
 											  dis, NULL, w, rw, dis->right, NULL,
-											  null_count-1, pex, islands_ok);
+											  null_count-1, pex);
 					if (pset == NULL) continue;
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL, NULL,
@@ -394,7 +395,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 			}
 			pset = mk_parse_set(words, mchxt, ctxt,
 									  NULL, NULL, w, rw, NULL, NULL,
-									  null_count-1, pex, islands_ok);
+									  null_count-1, pex);
 			if (pset != NULL)
 			{
 				dummy = dummy_set(lw, w, null_count-1, pex);
@@ -460,22 +461,22 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 				{
 					ls[0] = mk_parse_set(words, mchxt, ctxt,
 					             ld, d, lw, w, le->next, d->left->next,
-					             lnull_count, pex, islands_ok);
+					             lnull_count, pex);
 
 					if (le->multi)
 						ls[1] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left->next,
-						              lnull_count, pex, islands_ok);
+						              lnull_count, pex);
 
 					if (d->left->multi)
 						ls[2] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le->next, d->left,
-						              lnull_count, pex, islands_ok);
+						              lnull_count, pex);
 
 					if (le->multi && d->left->multi)
 						ls[3] = mk_parse_set(words, mchxt, ctxt,
 						              ld, d, lw, w, le, d->left,
-						              lnull_count, pex, islands_ok);
+						              lnull_count, pex);
 
 					ls_exists =
 						ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL;
@@ -486,22 +487,22 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 				{
 					rs[0] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right->next, re->next,
-					                 rnull_count, pex, islands_ok);
+					                 rnull_count, pex);
 
 					if (d->right->multi)
 						rs[1] = mk_parse_set(words, mchxt, ctxt,
 					                 d, rd, w, rw, d->right, re->next,
-						              rnull_count, pex, islands_ok);
+						              rnull_count, pex);
 
 					if (re->multi)
 						rs[2] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right->next, re,
-						              rnull_count, pex, islands_ok);
+						              rnull_count, pex);
 
 					if (d->right->multi && re->multi)
 						rs[3] = mk_parse_set(words, mchxt, ctxt,
 						              d, rd, w, rw, d->right, re,
-						              rnull_count, pex, islands_ok);
+						              rnull_count, pex);
 				}
 
 				for (i=0; i<4; i++)
@@ -524,7 +525,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 					/* Evaluate using the left match, but not the right */
 					Parse_set* rset = mk_parse_set(words, mchxt, ctxt,
 					                        d, rd, w, rw, d->right, re,
-					                        rnull_count, pex, islands_ok);
+					                        rnull_count, pex);
 					if (rset != NULL)
 					{
 						for (i=0; i<4; i++)
@@ -546,7 +547,7 @@ Parse_set * mk_parse_set(Word* words, fast_matcher_t *mchxt,
 					/* Evaluate using the right match, but not the left */
 					Parse_set* lset = mk_parse_set(words, mchxt, ctxt,
 					                        ld, d, lw, w, le, d->left,
-					                        lnull_count, pex, islands_ok);
+					                        lnull_count, pex);
 
 					if (lset != NULL)
 					{
@@ -624,10 +625,12 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
                     count_context_t *ctxt,
                     unsigned int null_count, Parse_Options opts)
 {
+	pex->islands_ok = opts->islands_ok;
+
 	pex->parse_set =
 		mk_parse_set(sent->word, mchxt, ctxt,
 		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
-		             pex, opts->islands_ok);
+		             pex);
 
 
 	return set_overflowed(pex);
