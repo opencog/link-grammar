@@ -10373,8 +10373,9 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 % Elipsis as verb: "Lud, son of Shem, ..."
 % Arghh. I really want to have Qd- here too, to handle: "In what way...?"
 % but currently, the post-processing "S-V inversion required8" rule halts this.
+% O+: "I did not ... what you said"
 ....v ….v:
-  (S- or I-) & <verb-wall>;
+  (S- or I-) & {O+} & <verb-wall>;
 
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."
