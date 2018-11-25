@@ -46,7 +46,7 @@ struct Parse_choice_struct
 struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */
-	unsigned short null_count; /* number of island words */
+	unsigned int   null_count; /* number of island words */
 	Connector      *le, *re; /* pending, unconnected connectors */
 
 	s64 count;      /* The number of ways to parse. */
