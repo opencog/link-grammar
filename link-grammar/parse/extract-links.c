@@ -23,6 +23,14 @@
 
 //#define RECOUNT
 
+//#define DEBUG_X_TABLE
+#ifdef DEBUG_X_TABLE
+#undef DEBUG_X_TABLE
+#define DEBUG_X_TABLE(...) __VA_ARGS__
+#else
+#define DEBUG_X_TABLE(...)
+#endif
+
 typedef struct Parse_choice_struct Parse_choice;
 
 /* The parse_choice is used to extract links for a given parse */
@@ -195,15 +203,29 @@ void free_extractor(extractor_t * pex)
 	Pset_bucket *t, *x;
 	if (!pex) return;
 
+	DEBUG_X_TABLE(int N = 0;)
 	for (i=0; i<pex->x_table_size; i++)
 	{
+		DEBUG_X_TABLE(int c = 0;)
 		for (t = pex->x_table[i]; t!= NULL; t=x)
 		{
+			DEBUG_X_TABLE(c++;)
 			x = t->next;
 			free_set(&t->set);
 			xfree((void *) t, sizeof(Pset_bucket));
 		}
+		DEBUG_X_TABLE(
+			if (c > 0)
+				printf("I %d: chain %d\n", i, c);
+			else
+				N++;
+		)
 	}
+	DEBUG_X_TABLE(
+		printf("Used x_table %d/%d %.2f%%\n",
+				 pex->x_table_size-N, pex->x_table_size,
+				 100.0f*(pex->x_table_size-N)/pex->x_table_size);
+	)
 	pex->parse_set = NULL;
 
 	//printf("Freeing x_table of size %d\n", pex->x_table_size);
