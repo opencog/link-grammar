@@ -177,7 +177,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
-	/*printf("Allocating x_table of size %d\n", x_table_size);*/
+	//printf("Allocating x_table of size %d (nwords %d)\n", pex->x_table_size, nwords);
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
@@ -206,7 +206,7 @@ void free_extractor(extractor_t * pex)
 	}
 	pex->parse_set = NULL;
 
-	/*printf("Freeing x_table of size %d\n", x_table_size);*/
+	//printf("Freeing x_table of size %d\n", pex->x_table_size);
 	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
 	pex->x_table_size = 0;
 	pex->x_table = NULL;
