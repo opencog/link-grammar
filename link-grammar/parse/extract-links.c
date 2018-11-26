@@ -236,6 +236,39 @@ void free_extractor(extractor_t * pex)
 	xfree((void *) pex, sizeof(extractor_t));
 }
 
+static inline unsigned int el_pair_hash(extractor_t * pex,
+                            int lw, int rw,
+                            const Connector *le, const Connector *re,
+                            unsigned int cost)
+{
+	unsigned int i;
+	int table_size = pex->x_table_size;
+
+#if 0
+	int log2_table_size = pex->log2_x_table_size;
+
+	/* hash function. Based on some tests, this seems to be
+	 * an almost "perfect" hash, in that almost all hash buckets
+	 * have the same size! */
+	i = 1 << cost;
+	i += 1 << (lw % (log2_table_size-1));
+	i += 1 << (rw % (log2_table_size-1));
+	i += ((unsigned int) le) >> 2;
+	i += ((unsigned int) le) >> log2_table_size;
+	i += ((unsigned int) re) >> 2;
+	i += ((unsigned int) re) >> log2_table_size;
+	i += i >> log2_table_size;
+#else
+	/* sdbm-based hash */
+	i = cost;
+	i = lw + (i << 6) + (i << 16) - i;
+	i = rw + (i << 6) + (i << 16) - i;
+	i = ((int)(intptr_t)le) + (i << 6) + (i << 16) - i;
+	i = ((int)(intptr_t)re) + (i << 6) + (i << 16) - i;
+#endif
+
+	return i & (table_size-1);
+}
 /**
  * Returns the pointer to this info, NULL if not there.
  */
@@ -244,7 +277,7 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, le, re, null_count)];
+	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
 		if ((t->set.lw == lw) && (t->set.rw == rw) &&
 		    (t->set.le == le) && (t->set.re == re) &&
@@ -273,7 +306,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = pair_hash(pex->x_table_size, lw, rw, le, re, null_count);
+	h = el_pair_hash(pex, lw, rw, le, re, null_count);
 	t = pex->x_table[h];
 	n->next = t;
 	pex->x_table[h] = n;
