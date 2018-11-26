@@ -12542,6 +12542,9 @@ thru.#through-r: [through.r]0.05;
 nite.#night: [night.r or night.u or night.i or night.n]0.05;
 tonite.#tonight: [tonight]0.05;
 
+% Cowboy accents
+git.#get: [get.v]0.05;
+
 % Y'gotta, Y'gonna
 %   "keep y'mouth shut"
 y'.#you: [you]0.05;
@@ -12554,6 +12557,7 @@ e.#he: [he]0.05;
 be.#by: [by]0.05;
 de.#the: [the]0.05;
 
+% slurred speech
 drinkin.#drinking-v: [drinking.v]0.05;
 drinkin'.#drinking-v: [drinking.v]0.05;
 runnin'.#running-v: [running.v]0.05;
