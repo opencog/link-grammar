@@ -10024,11 +10024,11 @@ ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
   [<directive-opener>]
   or Vv-
   or ({A-} & Ds- & Jv-)
-  or Wa-;
+  or (Wa- & {Wa+});
 
 % Single plain word by itself.  "OK, Bye!"
 bye.ij goodbye.ij:
-  Wa-;
+  Wa- & {Wa+};
 
 % Openers to directives, commands
 % Ic+: connection to infinitive imperatives: "on arrival, do it!"
@@ -10039,7 +10039,6 @@ by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
 later_on for_now more_often_than_not
-
 on_second_thought
 again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
