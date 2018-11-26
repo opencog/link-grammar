@@ -222,10 +222,9 @@ static void set_connector_hash(Sentence sent)
 		lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
 		    sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
-#define MAX_LINK_NAME_LEN 10 // XXX Use a global definition.
+#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
 #define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
-#define MAX_COST_LEN 10 /* Up to 9999.9999f. */
-		char cstr[(MAX_LINK_NAME_LEN + MAX_GWORD_ENCODING + MAX_COST_LEN) * 20];
+		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
 
 		String_id *ssid = string_id_create();
 		int cnum[2] = { 0 }; /* Connector counts stats for debug. */
@@ -252,24 +251,6 @@ static void set_connector_hash(Sentence sent)
 					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
 					cstr[l++] = ',';
 				}
-
-				if (d->cost != 0)
-				{
-					char costbuffer[MAX_COST_LEN];
-					int n;
-					/* The cost string includes a dot, so it cannot be confused
-					 * with anything that itoa_compact() may generate. */
-					n = snprintf(costbuffer, sizeof(costbuffer), "%.4f,", d->cost);
-					if ((n < 0) || (n >= MAX_COST_LEN))
-					{
-						prt_error("Warning: set_connector_hash(): "
-						          "Token %s with cost %.4f: snprintf()==%d\n",
-						          d->word_string, d->cost, n);
-					}
-					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
-					//printf("w=%zu, token=%s: COST %s\n", w, d->word_string, costbuffer);
-				}
-
 				if (l > (int)sizeof(gword_nums)-2)
 				{
 					/* Overflow. Never observed, maybe cannot happen. Tag it with
