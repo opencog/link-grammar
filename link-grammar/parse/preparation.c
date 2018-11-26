@@ -131,7 +131,8 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 
 /**
  * Convert integer to ASCII. Use base 64 for compactness.
- * Note that the CONSEP character is avoided here.
+ * The following characters shouldn't appear in the result:
+ * CONSEP, ",", and ".", because they are reserved for separators.
  */
 #define ITOA_BASE 64
 static char* itoa_compact(char* buffer, size_t num)
@@ -149,8 +150,8 @@ static char* itoa_compact(char* buffer, size_t num)
 }
 
 /**
- * Set a unique identifier per connector, to be used in the memoizing
- * table of the classic parser.
+ * Set a hash identifier per connector according to the trailing sequence
+ * it starts. Ensure it is unique per word, alternative and disjunct cost.
  *
  * Originally, the classic parser memoized the number of possible linkages
  * per a given connector-pair using the connector addresses. Since an
@@ -164,13 +165,13 @@ static char* itoa_compact(char* buffer, size_t num)
  * connectors. A hint for this solution was the use of 0 hash values for
  * NULL connectors.
  *
- * The idea that is implemented here is based of the fact that the number
+ * The idea that is implemented here is based on the fact that the number
  * of linkages using a connector-pair is governed only by these connectors
  * and the connectors after them (since cross links are not permitted).
  * This allows us to share the memoizing table hash value between
  * connectors that have the same "connector sequence suffix" (trailing
  * connectors) on their disjuncts. As a result, long sentences have
- * relatively few different connector hash values relative to their total
+ * significantly less different connector hash values than their total
  * number of connectors.
  *
  * Algorithm:
@@ -180,17 +181,12 @@ static char* itoa_compact(char* buffer, size_t num)
  * as strings, which are used for getting a unique identifier for the
  * starting connector of each such sequence.
  * In order to save the need to cache the endpoint word numbers the
- * connector identifiers should not be shared between words. The initial
- * implementation tried to do that by prepending the word number to the
- * connector list. However, this is buggy, because trailing sequences
- * should be unique per word. But this is fixed anyway by the alternatives
- * check described below. (This bug left undetected because the hash
- * tables are now relatively empty and also we still hash with word
- * numbers - for added entropy).
- *
+ * connector identifiers should not be shared between words.
  * We also should consider the case of alternatives - trailing connector
  * sequences that belong to disjuncts of different alternatives may have
- * different linkage counts.
+ * different linkage counts because some alternatives-connectivity checks
+ * are done in the fast-matcher.
+ * Prepending the gword numbers solve both of these requirements.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 static void set_connector_hash(Sentence sent)
@@ -226,9 +222,10 @@ static void set_connector_hash(Sentence sent)
 		lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
 		    sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
-#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
+#define MAX_LINK_NAME_LEN 10 // XXX Use a global definition.
 #define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
-		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
+#define MAX_COST_LEN 10 /* Up to 9999.9999f. */
+		char cstr[(MAX_LINK_NAME_LEN + MAX_GWORD_ENCODING + MAX_COST_LEN) * 20];
 
 		String_id *ssid = string_id_create();
 		int cnum[2] = { 0 }; /* Connector counts stats for debug. */
@@ -255,6 +252,24 @@ static void set_connector_hash(Sentence sent)
 					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
 					cstr[l++] = ',';
 				}
+
+				if (d->cost != 0)
+				{
+					char costbuffer[MAX_COST_LEN];
+					int n;
+					/* The cost string includes a dot, so it cannot be confused
+					 * with anything that itoa_compact() may generate. */
+					n = snprintf(costbuffer, sizeof(costbuffer), "%.4f,", d->cost);
+					if ((n < 0) || (n >= MAX_COST_LEN))
+					{
+						prt_error("Warning: set_connector_hash(): "
+						          "Token %s with cost %.4f: snprintf()==%d\n",
+						          d->word_string, d->cost, n);
+					}
+					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
+					//printf("w=%zu, token=%s: COST %s\n", w, d->word_string, costbuffer);
+				}
+
 				if (l > (int)sizeof(gword_nums)-2)
 				{
 					/* Overflow. Never observed, maybe cannot happen. Tag it with

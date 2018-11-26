@@ -23,6 +23,14 @@
 
 //#define RECOUNT
 
+//#define DEBUG_X_TABLE
+#ifdef DEBUG_X_TABLE
+#undef DEBUG_X_TABLE
+#define DEBUG_X_TABLE(...) __VA_ARGS__
+#else
+#define DEBUG_X_TABLE(...)
+#endif
+
 typedef struct Parse_choice_struct Parse_choice;
 
 /* The parse_choice is used to extract links for a given parse */
@@ -38,7 +46,7 @@ struct Parse_choice_struct
 struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */
-	unsigned short null_count; /* number of island words */
+	unsigned int   null_count; /* number of island words */
 	Connector      *le, *re; /* pending, unconnected connectors */
 
 	s64 count;      /* The number of ways to parse. */
@@ -167,17 +175,20 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords >= 10) {
+	if (nwords >= 24) {
+		log2_table_size = 14 + nwords / 24;
+	} else if (nwords >= 10) {
 		log2_table_size = 14;
 	} else if (nwords >= 4) {
-		log2_table_size = nwords;
+		log2_table_size = nwords + 1;
 	} else {
 		log2_table_size = 4;
 	}
+	if (log2_table_size > 21) log2_table_size = 21;
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
-	/*printf("Allocating x_table of size %d\n", x_table_size);*/
+	//printf("Allocating x_table of size %d (nwords %d)\n", pex->x_table_size, nwords);
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
@@ -195,18 +206,32 @@ void free_extractor(extractor_t * pex)
 	Pset_bucket *t, *x;
 	if (!pex) return;
 
+	DEBUG_X_TABLE(int N = 0;)
 	for (i=0; i<pex->x_table_size; i++)
 	{
+		DEBUG_X_TABLE(int c = 0;)
 		for (t = pex->x_table[i]; t!= NULL; t=x)
 		{
+			DEBUG_X_TABLE(c++;)
 			x = t->next;
 			free_set(&t->set);
 			xfree((void *) t, sizeof(Pset_bucket));
 		}
+		DEBUG_X_TABLE(
+			if (c > 0)
+				printf("I %d: chain %d\n", i, c);
+			else
+				N++;
+		)
 	}
+	DEBUG_X_TABLE(
+		printf("Used x_table %d/%d %.2f%%\n",
+				 pex->x_table_size-N, pex->x_table_size,
+				 100.0f*(pex->x_table_size-N)/pex->x_table_size);
+	)
 	pex->parse_set = NULL;
 
-	/*printf("Freeing x_table of size %d\n", x_table_size);*/
+	//printf("Freeing x_table of size %d\n", pex->x_table_size);
 	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
 	pex->x_table_size = 0;
 	pex->x_table = NULL;
@@ -214,6 +239,39 @@ void free_extractor(extractor_t * pex)
 	xfree((void *) pex, sizeof(extractor_t));
 }
 
+static inline unsigned int el_pair_hash(extractor_t * pex,
+                            int lw, int rw,
+                            const Connector *le, const Connector *re,
+                            unsigned int cost)
+{
+	unsigned int i;
+	int table_size = pex->x_table_size;
+
+#if 0
+	int log2_table_size = pex->log2_x_table_size;
+
+	/* hash function. Based on some tests, this seems to be
+	 * an almost "perfect" hash, in that almost all hash buckets
+	 * have the same size! */
+	i = 1 << cost;
+	i += 1 << (lw % (log2_table_size-1));
+	i += 1 << (rw % (log2_table_size-1));
+	i += ((unsigned int) le) >> 2;
+	i += ((unsigned int) le) >> log2_table_size;
+	i += ((unsigned int) re) >> 2;
+	i += ((unsigned int) re) >> log2_table_size;
+	i += i >> log2_table_size;
+#else
+	/* sdbm-based hash */
+	i = cost;
+	i = lw + (i << 6) + (i << 16) - i;
+	i = rw + (i << 6) + (i << 16) - i;
+	i = ((int)(intptr_t)le) + (i << 6) + (i << 16) - i;
+	i = ((int)(intptr_t)re) + (i << 6) + (i << 16) - i;
+#endif
+
+	return i & (table_size-1);
+}
 /**
  * Returns the pointer to this info, NULL if not there.
  */
@@ -222,7 +280,7 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, le, re, null_count)];
+	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
 		if ((t->set.lw == lw) && (t->set.rw == rw) &&
 		    (t->set.le == le) && (t->set.re == re) &&
@@ -251,7 +309,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = pair_hash(pex->x_table_size, lw, rw, le, re, null_count);
+	h = el_pair_hash(pex, lw, rw, le, re, null_count);
 	t = pex->x_table[h];
 	n->next = t;
 	pex->x_table[h] = n;

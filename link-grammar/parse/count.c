@@ -174,16 +174,12 @@ static Table_connector * table_store(count_context_t *ctxt,
                                      unsigned int null_count)
 {
 	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
-	int l_id = lw, r_id = rw;
-
-	if (NULL != le) l_id = le->suffix_id;
-	if (NULL != re) r_id = re->suffix_id;
 
 	unsigned int h = pair_hash(ctxt->table_size, lw, rw, le, re, null_count);
 	Table_connector *t = ctxt->table[h];
 
-	n->l_id = l_id;
-	n->r_id = r_id;
+	n->l_id = (NULL != le) ? le->suffix_id : lw;
+	n->r_id = (NULL != re) ? re->suffix_id : rw;
 	n->null_count = null_count;
 	n->next = t;
 	ctxt->table[h] = n;
@@ -200,10 +196,8 @@ find_table_pointer(count_context_t *ctxt,
 {
 	unsigned int h = pair_hash(ctxt->table_size,lw, rw, le, re, null_count);
 	Table_connector *t = ctxt->table[h];
-	int l_id = lw, r_id = rw;
-
-	if (NULL != le) l_id = le->suffix_id;
-	if (NULL != re) r_id = re->suffix_id;
+	int l_id = (NULL != le) ? le->suffix_id : lw;
+	int r_id = (NULL != re) ? re->suffix_id : rw;
 
 	for (; t != NULL; t = t->next)
 	{
