@@ -1439,6 +1439,10 @@ void SATEncoder::pp_prune()
     DEBUG_print("---end pp_pruning--");
   }
 
+  /* The following code has a bug that causes it to be too restrictive.
+   * Instead of fixing it, it is disabled here, as it is to be replaced
+   * soon by the pp-pruning code of the classic parser. */
+#if 0
   if (test_enabled("no-pp_pruning_1")) return; // For result comparison.
   /* Additional PP pruning.
    * Since the SAT parser defines constrains on links, it is possible
@@ -1521,6 +1525,7 @@ void SATEncoder::pp_prune()
       DEBUG_print("---end pp_pruning 1--");
     }
   }
+#endif // 0
 }
 
 /*--------------------------------------------------------------------------*
