@@ -662,7 +662,7 @@ int main(int argc, char * argv[])
 	save_default_opts(copts); /* Options so far are the defaults */
 
 	if ((argc > 1) && (argv[1][0] != '-')) {
-		/* the dictionary is the first argument if it doesn't begin with "-" */
+		/* The dictionary is the first argument if it doesn't begin with "-" */
 		language = argv[1];
 	}
 

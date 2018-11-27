@@ -442,7 +442,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->dict = dict;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
-	sent->disjuncts_connectors_memblock = NULL;
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 

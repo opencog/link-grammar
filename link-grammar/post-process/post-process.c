@@ -1163,7 +1163,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 			post_process_scan_linkage(pp, lkg);
 
-			if ((49 == in%50) && resources_exhausted(opts->resources)) break;
+			if ((63 == in%64) && resources_exhausted(opts->resources)) break;
 		}
 	}
 
@@ -1190,7 +1190,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		N_linkages_post_processed++;
 
 		linkage_score(lkg, opts);
-		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
+		if ((15 == in%16) && resources_exhausted(opts->resources)) break;
 	}
 
 	/* If the timer expired, then we never finished post-processing.

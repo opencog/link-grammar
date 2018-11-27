@@ -195,7 +195,7 @@ static void set_connector_hash(Sentence sent)
 	 * has a slight overhead. If this overhead is improved, maybe this
 	 * limit can be set lower. */
 	size_t min_sent_len_trailing_hash = 36;
-	const char *len_trailing_hash = test_enabled("len_trailing_hash");
+	const char *len_trailing_hash = test_enabled("len-trailing-hash");
 	if (NULL != len_trailing_hash)
 		min_sent_len_trailing_hash = atoi(len_trailing_hash+1);
 

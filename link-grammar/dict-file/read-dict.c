@@ -349,12 +349,8 @@ static bool link_advance(Dictionary dict)
 				return true;
 			}
 			if (c[0] == 0x0) {
-				if (i == 0) {
-					dict->token[0] = '\0';
-					return true;
-				}
-				dict->token[i] = '\0';
-				dict->already_got_it = '\0';
+				if (i != 0) dict->already_got_it = '\0';
+				dict->token[0] = '\0';
 				return true;
 			}
 			if (lg_isspace(c[0])) {
