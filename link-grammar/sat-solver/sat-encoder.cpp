@@ -242,7 +242,7 @@ void SATEncoder::build_word_tags()
 
   for (size_t w = 0; w < _sent->length; w++) {
     fast_sprintf(name+1, (int)w);
-    // The SAT word variables are set to be equal to the word numbers.
+    // The SAT encoding word variables are set to be equal to the word numbers.
     Var var = _variables->string(name);
     assert((Var)w == var);
   }
@@ -1876,7 +1876,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     }
 
     double cost_cutoff;
-#if LIMIT_TOTAL_LINKAGE_COST // Undefined - incompatible with the classic parser
+#if LIMIT_TOTAL_LINKAGE_COST // Undefined - incompatible to the classic parser.
     cost_cutoff = _opts->disjunct_cost;
 #else
     cost_cutoff = 1000.0;
@@ -1884,7 +1884,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     d = build_disjuncts_for_exp(de, xnode_word[wi]->string, cost_cutoff, _opts);
     free_Exp(de);
 
-#if LIMIT_TOTAL_LINKAGE_COST
     if (d == NULL)
     {
       lgdebug(+D_SEL, "Debug: Word %zu: Disjunct cost > cost_cutoff %.2f\n",
@@ -1894,7 +1893,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #endif
       return false;
     }
-#endif // LIMIT_TOTAL_LINKAGE_COST
 
     word_record_in_disjunct(xnode_word[wi]->word, d);
 
