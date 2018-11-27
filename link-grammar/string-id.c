@@ -70,7 +70,7 @@ String_id *string_id_create(void)
 }
 
 /**
- * lookup the given string in the table.  Return a pointer
+ * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
 static unsigned int find_place(const char * str, String_id *ss)

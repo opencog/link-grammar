@@ -530,8 +530,8 @@ static void wordgraph_unlink_xtmpfile(void)
 
 /**
  * Display the word-graph in the indicated mode.
- * This is for debug. It is not reentrant due to the static pid and the
- * possibly created fixed filenames.
+ * This is for debug and inspiration. It is not reentrant due to the
+ * static pid and the possibly created fixed filenames.
  * When Using X11, a "dot -Txlib" program is launched on the graph
  * description file.  The xlib driver refreshes the graph when the file is
  * changed, displaying additional sentences in the same window.  The viewer
