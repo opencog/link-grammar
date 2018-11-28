@@ -1061,6 +1061,16 @@ data/vn/Makefile
 data/demo-sql/Makefile
 man/Makefile
 ])
+# Copy the demo-sql files into the build directory; this is needed in
+# order to make the python unit tests to pass, when the build dir is
+# not near the source dir.
+AC_CONFIG_LINKS([
+data/demo-sql/4.0.affix:data/demo-sql/4.0.affix
+data/demo-sql/4.0.constituent-knowledge:data/demo-sql/4.0.constituent-knowledge
+data/demo-sql/4.0.knowledge:data/demo-sql/4.0.knowledge
+data/demo-sql/4.0.regex:data/demo-sql/4.0.regex
+data/demo-sql/dict.db:data/demo-sql/dict.db
+])
 AC_OUTPUT
 
 # ====================================================================
