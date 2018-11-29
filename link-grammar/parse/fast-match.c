@@ -349,6 +349,7 @@ static void match_stats(Connector *c1, Connector *c2)
 #ifdef DEBUG
 #undef N
 #define N(c) (c?connector_string(c):"")
+#define S(c) (c?c->suffix_id:0)
 
 /**
  * Print the match list, including connector match indications.
@@ -372,10 +373,10 @@ static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
 	{
 		Disjunct *d = *m;
 
-		prt_error("MATCH_NODE %5d: %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d\n",
-		       id, lw , N(lc), d->match_left ? '=': ' ',
+		prt_error("MATCH_NODE %5d: (%5d) %02d>%-9s %c %9s<%02d>%-9s %c %9s<%02d (%5d)\n",
+		       id, S(lc), lw ,N(lc), d->match_left ? '=': ' ',
 		       N(d->left), w, N(d->right),
-		       d->match_right? '=' : ' ', N(rc), rw);
+		       d->match_right? '=' : ' ', N(rc), rw, S(rc));
 	}
 }
 #else
