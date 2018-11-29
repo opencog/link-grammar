@@ -268,6 +268,54 @@ static Count_bin pseudocount(count_context_t * ctxt,
 	return *count;
 }
 
+#define FM_ID_OFFSET (1<<23)
+
+static int is_lcount(count_context_t *ctxt, int lw, int w,
+                              Connector *e)
+{
+	Connector wc;
+	Table_connector *r;
+
+	wc.suffix_id = w+FM_ID_OFFSET;
+	r = find_table_pointer(ctxt, lw, w, e, &wc, 0);
+
+	if (NULL == r) return -1;
+	return r->count == 1;
+}
+
+static int is_rcount(count_context_t *ctxt, int w, int rw,
+                              Connector *e)
+{
+	Connector wc;
+	Table_connector *r;
+
+	wc.suffix_id = w+FM_ID_OFFSET;
+	r = find_table_pointer(ctxt, w, rw, &wc, e, 0);
+
+	if (NULL == r) return -1;
+	return r->count == 1;
+}
+
+static void store_le_w_count(count_context_t *ctxt, int lw, int w,
+                               Connector *e, int le_w_count)
+{
+	Connector wc;
+	//assert(le_w_count == 0 || le_w_count == 1);
+
+	wc.suffix_id = w+FM_ID_OFFSET;
+	table_store(ctxt, lw, w, e, &wc, 0)->count = le_w_count;
+}
+
+static void store_re_w_count(count_context_t *ctxt, int w, int rw,
+                               Connector *e, int re_w_count)
+{
+	Connector wc;
+	//assert(re_w_count == 0 || re_w_count == 1);
+
+	wc.suffix_id = w+FM_ID_OFFSET;
+	table_store(ctxt, w, rw, &wc, e, 0)->count = re_w_count;
+}
+
 /**
  * Return the number of optional words strictly between w1 and w2.
  */
@@ -446,13 +494,70 @@ static Count_bin do_count(
 	total = zero;
 	fast_matcher_t *mchxt = ctxt->mchxt;
 
+#define LCOUNT_CACHE 1
+#define RCOUNT_CACHE 1
+
 	for (w = start_word; w < end_word; w++)
 	{
-		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
+		int le_w_count = 1;
+		Connector *le_match = le;
+		bool need_le_w_count = false;
+		bool lcount_found = false;
+
+		int re_w_count = 1;
+		Connector *re_match = re;
+		bool need_re_w_count = false;
+		bool rcount_found = false;
+
+		if ((null_count == 0) && (ctxt->sent->length > 36))
+		{
+#if LCOUNT_CACHE
+			if (le != NULL)
+			{
+				le_w_count = is_lcount(ctxt, lw, w, le);
+				if (le_w_count == 0)
+				{
+					if (re == NULL) continue;
+					le_match = NULL;
+				}
+				else if (le_w_count == -1 && re == NULL) need_le_w_count = true;
+			}
+#endif /* LCOUNT_CACHE */
+
+#if RCOUNT_CACHE
+			if (re != NULL)
+			{
+				re_w_count = is_rcount(ctxt, w, rw, re);
+				if (re_w_count == 0)
+				{
+					if (le == NULL) continue;
+					re_match = NULL;
+				}
+				else if (re_w_count == -1 && le == NULL) need_re_w_count = true;
+			}
+#endif /* RCOUNT_CACHE */
+		}
+
+		size_t mlb = form_match_list(mchxt, w, le_match, lw, re_match, rw);
 #ifdef VERIFY_MATCH_LIST
 		unsigned int id = get_match_list_element(mchxt, mlb) ?
 		                  get_match_list_element(mchxt, mlb)->match_id : 0;
 #endif
+#if LCOUNT_CACHE
+		if (need_le_w_count)
+		{
+			size_t mle;
+			for (mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
+				if (get_match_list_element(mchxt, mle)->match_left) break;
+			if (get_match_list_element(mchxt, mle) == NULL)
+			{
+				store_le_w_count(ctxt, lw, w, le, 0);
+				pop_match_list(mchxt, mlb);
+				continue;
+			}
+		}
+#endif /* LCOUNT_CACHE */
+
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			Disjunct *d = get_match_list_element(mchxt, mle);
@@ -546,7 +651,8 @@ static Count_bin do_count(
 					}
 				}
 
-				if (!leftpcount && !rightpcount) continue;
+				if (!leftpcount && !rightpcount && !(need_re_w_count && !rcount_found))
+					continue;
 
 #define COUNT(c, do_count) \
 	{ c = TRACE_LABEL(c, do_count); }
@@ -576,8 +682,8 @@ static Count_bin do_count(
 			 * bother counting the other term at all, in that case. */
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
-				if (leftpcount &&
-				    (rightpcount || (0 != hist_total(&l_bnr))))
+				if (leftpcount && ((need_le_w_count && !lcount_found) ||
+				                   rightpcount || (0 != hist_total(&l_bnr))))
 				{
 					CACHE_COUNT(l_any, leftcount = count,
 						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
@@ -593,15 +699,18 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&leftcount))
 					{
+						lcount_found = true;
 						/* Evaluate using the left match, but not the right */
 						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
 							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 				}
 
-				if (rightpcount &&
-				    ((0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
+				//fprintf(stderr, "ID %d: need_re_w_count %d Rmatch %d\n", id, need_re_w_count, Rmatch);
+				if (rightpcount && ((need_re_w_count && !rcount_found) ||
+				         ((0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl)))))
 				{
+					//fprintf(stderr, "ID %d: ENTER rnull_cnt %d\n", id, rnull_cnt);
 					CACHE_COUNT(r_any, rightcount = count,
 						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
 					if (re->multi)
@@ -616,6 +725,7 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&rightcount))
 					{
+						rcount_found = true;
 						if (le == NULL)
 						{
 							/* Evaluate using the right match, but not the left */
@@ -630,6 +740,15 @@ static Count_bin do_count(
 						}
 					}
 				}
+				if (need_re_w_count && !rcount_found && (0 != hist_total(&l_bnr)))
+				{
+					Count_bin t;
+					CACHE_COUNT(l_bnr, if (count) rcount_found = true,
+						t = do_count(ctxt, w, rw, d->right, re, rnull_cnt));
+					//fprintf(stderr, "ID %d: Call l_bnr: %lld\n", id, t);
+				}
+				//fprintf(stderr, "ID %d: rightcount %lld l_bnr %lld rcount_found %d\n",
+				//        id, rightcount, l_bnr, rcount_found);
 
 				/* Sigh. Overflows can and do occur, esp for the ANY language. */
 				if (INT_MAX < hist_total(&total))
@@ -645,6 +764,19 @@ static Count_bin do_count(
 				}
 			}
 		}
+
+		//assert(!((le_w_count == 0) && lcount_found), "ID %d: %d & %d\n", id, le_w_count==0, lcount_found);
+		if (need_le_w_count)
+		{
+			store_le_w_count(ctxt, lw, w, le, lcount_found);
+		}
+
+		//assert(!((re_w_count == 0) && rcount_found), "ID %d: %d & %d\n", id, re_w_count==0, rcount_found);
+		if (need_re_w_count)
+		{
+			store_re_w_count(ctxt, w, rw, re, rcount_found);
+		}
+
 		pop_match_list(mchxt, mlb);
 	}
 	t->count = total;
