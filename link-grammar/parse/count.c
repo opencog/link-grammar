@@ -515,6 +515,10 @@ static Count_bin do_count(
 			if (le != NULL)
 			{
 				le_w_count = is_lcount(ctxt, lw, w, le);
+#if 00
+				fprintf(stderr, "CHECK IS_LCOUNT: suffix_id %d w %d: %d (SKIP %d)\n",
+					 le->suffix_id, w, le_w_count, 0 == le_w_count && NULL == re);
+#endif
 				if (le_w_count == 0)
 				{
 					if (re == NULL) continue;
@@ -528,6 +532,10 @@ static Count_bin do_count(
 			if (re != NULL)
 			{
 				re_w_count = is_rcount(ctxt, w, rw, re);
+#if 00
+				fprintf(stderr, "CHECK IS_RCOUNT: suffix_id %d w %d: %d (SKIP %d)\n",
+					 re->suffix_id, w, re_w_count, 0 == re_w_count && NULL == le);
+#endif
 				if (re_w_count == 0)
 				{
 					if (le == NULL) continue;
@@ -549,14 +557,30 @@ static Count_bin do_count(
 			size_t mle;
 			for (mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 				if (get_match_list_element(mchxt, mle)->match_left) break;
+#if 00
+			fprintf(stderr, "ID %d: le->suffix_id %d w %d: %d\n",
+					  id, le->suffix_id, w, le_w_count);
+#endif
 			if (get_match_list_element(mchxt, mle) == NULL)
 			{
 				store_le_w_count(ctxt, lw, w, le, 0);
+#if 00
+				fprintf(stderr, "ID %d: le->suffix_id %d w %d: STORE1 %d\n",
+			        id, le->suffix_id, w, lcount_found);
+#endif
 				pop_match_list(mchxt, mlb);
 				continue;
 			}
 		}
 #endif /* LCOUNT_CACHE */
+#if 00
+		else
+		{
+			if (le != NULL)
+			fprintf(stderr, "ID %d: suffix_id %d w %d: %d\n",
+						  id, le->suffix_id, w, le_w_count);
+		}
+#endif
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
@@ -631,17 +655,20 @@ static Count_bin do_count(
 				{
 					r_any = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 					rightpcount = (hist_total(&r_any) != 0);
+//if (rightpcount) fprintf(stderr, "leftpcount r_any\n");
 					if (!rightpcount && re->multi)
 					{
 						r_cmulti =
 							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt);
 						rightpcount |= (hist_total(&r_cmulti) != 0);
+//if (rightpcount) fprintf(stderr, "leftpcount r_cmulti\n");
 					}
 					if (!rightpcount && d->right->multi)
 					{
 						r_dmulti =
 							pseudocount(ctxt, w,rw, d->right, re->next, rnull_cnt);
 						rightpcount |= (hist_total(&r_dmulti) != 0);
+//if (rightpcount) fprintf(stderr, "leftpcount r_dmulti\n");
 					}
 					if (!rightpcount && d->right->multi && re->multi)
 					{
@@ -726,6 +753,14 @@ static Count_bin do_count(
 					if (0 < hist_total(&rightcount))
 					{
 						rcount_found = true;
+#if 00
+						if (hist_total(&r_any)>0)
+							fprintf(stderr, "ID %d: rightcount r_any\n", id);
+						else if (hist_total(&r_cmulti)>0)
+							fprintf(stderr, "ID %d: rightcount r_cmulti\n", id);
+						else if (hist_total(&r_dmulti)>0)
+							fprintf(stderr, "ID %d: rightcount r_dmulti\n", id);
+#endif
 						if (le == NULL)
 						{
 							/* Evaluate using the right match, but not the left */
@@ -769,12 +804,20 @@ static Count_bin do_count(
 		if (need_le_w_count)
 		{
 			store_le_w_count(ctxt, lw, w, le, lcount_found);
+#if 00
+			fprintf(stderr, "ID %d: le->suffix_id %d w %d: STORE2 %d\n",
+			        id, le->suffix_id, w, lcount_found);
+#endif
 		}
 
 		//assert(!((re_w_count == 0) && rcount_found), "ID %d: %d & %d\n", id, re_w_count==0, rcount_found);
 		if (need_re_w_count)
 		{
 			store_re_w_count(ctxt, w, rw, re, rcount_found);
+#if 00
+			fprintf(stderr, "ID %d: re->suffix_id %d w %d: STORE2 %d\n",
+			        id, re->suffix_id, w, rcount_found);
+#endif
 		}
 
 		pop_match_list(mchxt, mlb);
