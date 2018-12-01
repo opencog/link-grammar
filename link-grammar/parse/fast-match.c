@@ -530,11 +530,6 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	gc.same_alternative = false;
 
-#ifdef VERIFY_MATCH_LIST
-	static int id = 0;
-	int lid = ++id; /* A local copy, for multi-threading support. */
-#endif
-
 	/* Get the lists of candidate matching disjuncts of word w for lc and
 	 * rc.  Consider each of these lists only if the length_limit of lc
 	 * rc and also w, is not greater then the distance between their word
@@ -555,6 +550,11 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	if ((ml == NULL) && (mr == NULL))
 		return terminate_match_list(ctxt, -2, front, w, lc, lw, rc, rw);
+
+#ifdef VERIFY_MATCH_LIST
+	static int id = 0;
+	int lid = ++id; /* A local copy, for multi-threading support. */
+#endif
 
 	for (mx = mr; mx != NULL; mx = mx->next)
 	{
