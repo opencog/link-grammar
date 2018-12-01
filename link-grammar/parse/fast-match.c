@@ -480,6 +480,21 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 }
 
 /**
+ * Add match-list termination element (NULL).
+ * Optionally print it (for debug).
+ * Return the match list start.
+ */
+static size_t terminate_match_list(fast_matcher_t *ctxt, int id,
+                             size_t ml_start, int w,
+                             Connector *lc, int lw,
+                             Connector *rc, int rw)
+{
+	push_match_list_element(ctxt, NULL);
+	print_match_list(ctxt, id, ml_start, w, lc, lw, rc, rw);
+	return ml_start;
+}
+
+/**
  * Forms and returns a list of disjuncts coming from word w, that
  * actually matches lc or rc or both. The lw and rw are the words from
  * which lc and rc came respectively.
@@ -494,6 +509,13 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
  * disjunct is then added to the result list, and match_right of the
  * same disjunct is set to true when the mr list is processed, and this
  * disjunct is not added again.
+ *
+ * "lc optimization" (see below) marks here a special optimization for the
+ * left connector (lc): If it is non-NULL and doesn't match a disjunct,
+ * there is no need to try to match the right connector (rc), since the
+ * linkage count would be 0 in any case. See do_count() for details. In
+ * that case we can skip the corresponding match list element, or even
+ * immediately return an empty match list if there are no matches for lc.
  */
 size_t
 form_match_list(fast_matcher_t *ctxt, int w,
@@ -522,6 +544,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
 		if (NULL != mxp) ml = *mxp;
 	}
+	if ((lc != NULL) && (ml == NULL)) /* lc optimization */
+		return terminate_match_list(ctxt, -1, front, w, lc, lw, rc, rw);
+
 	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
 	{
 		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
@@ -554,6 +579,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		push_match_list_element(ctxt, mx->d);
 	}
 
+	if ((lc != NULL) && is_no_match_list(ctxt, front)) /* lc optimization */
+		return terminate_match_list(ctxt, -3, front, w, lc, lw, rc, rw);
+
 	/* Append the list of things that could match the right.
 	 * Note that it is important to set here match_right correctly even
 	 * if we are going to skip this element here because its match_left
@@ -565,6 +593,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	{
 		if ((rw - w) > mx->d->right->length_limit) continue;
 
+		if ((lc != NULL) && !mx->d->match_left) continue; /* lc optimization */
 		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc) &&
 			                  alt_connection_possible(mx->d->right, rc, &gc);
 		if (!mx->d->match_right || mx->d->match_left) continue;
@@ -575,7 +604,5 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		push_match_list_element(ctxt, mx->d);
 	}
 
-	push_match_list_element(ctxt, NULL);
-	print_match_list(ctxt, lid, front, w, lc, lw, rc, rw);
-	return front;
+	return terminate_match_list(ctxt, lid, front, w, lc, lw, rc, rw);
 }
