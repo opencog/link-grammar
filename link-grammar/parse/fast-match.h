@@ -72,4 +72,11 @@ static inline bool is_no_match_list(fast_matcher_t *ctxt, size_t match_list_star
 	return ctxt->match_list_end == match_list_start;
 }
 
+/**
+ * Return true iff there is no match list (not even en empty one).
+ */
+static inline size_t get_match_list_position(fast_matcher_t *ctxt)
+{
+	return ctxt->match_list_end;
+}
 #endif

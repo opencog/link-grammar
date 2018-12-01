@@ -523,7 +523,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *rc, int rw)
 {
 	Match_node *mx, *mr_end, **mxp;
-	size_t front = ctxt->match_list_end;
+	size_t front = get_match_list_position(ctxt);
 	Match_node *ml = NULL, *mr = NULL;
 	match_cache mc;
 	gword_cache gc;
