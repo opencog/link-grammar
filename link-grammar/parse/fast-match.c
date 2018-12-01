@@ -553,6 +553,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		if (NULL != mxp) mr = *mxp;
 	}
 
+	if ((ml == NULL) && (mr == NULL))
+		return terminate_match_list(ctxt, -2, front, w, lc, lw, rc, rw);
+
 	for (mx = mr; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->right->nearest_word > rw) break;
