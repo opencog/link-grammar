@@ -9532,9 +9532,11 @@ reasonably highly fairly totally completely terribly:
   <adv-adj-const>
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
+% EA+: "he is miserable, absolutely miserable."
+% negative cost encourages forming a cycle, if possible.
 absolutely:
   <adv-adj-vowel>
-  or EBm-
+  or (EBm- & {[EA+]-0.1})
   or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 % allowing as opener also
@@ -10262,7 +10264,7 @@ changequote dnl
 % AJ: "They taste bitter, not sweet"
 % Give MVa a cost, so that Pa is used preferentially, if possible.
 <comma-adj-conjunction>:
-  ((AJla- & EBx+ & AJra+) & (Pa- or [[MVa-]])) or
+  ((AJla- & (EBx+ or EBm+) & AJra+) & (Pa- or [[MVa-]])) or
   (AJla- & AJra+ & AJla+);
 
 <comma-adv-conjunction>:
