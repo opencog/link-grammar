@@ -2584,7 +2584,10 @@ per "/.per": Us+ & Mp-;
 <verb-and-pl+>: {@E-} & VJlp+;
 <verb-and-sp->: {@E-} & VJr-;
 <verb-and-sp+>: {@E-} & VJl+;
-<verb-and-sp-i->: {@E-} & VJr*i-;
+% <verb-and-sp-i-> is use only with auxilliaries, and thus it needs the
+% Ift- connector for predicative adjectives:
+% "he is known to get frustrated and to become miserable"
+<verb-and-sp-i->: {@E-} & {Ift-} & VJr*i-;
 <verb-and-sp-i+>: {@E-} & VJl*i+;
 <verb-and-sp-t->: {@E-} & VJr*t-;
 <verb-and-sp-t+>: {@E-} & VJl*t+;
