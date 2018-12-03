@@ -1360,6 +1360,7 @@ void SATEncoder::power_prune()
  *        P O S T P R O C E S S I N G   &  P P     P R U N I N G            *
  *--------------------------------------------------------------------------*/
 
+#if 0 // Needed only for the additional PP pruning (pp_pruning_1)
 /**
  * Returns false if the string s does not match anything in
  * the array. The array elements are post-processing symbols.
@@ -1370,6 +1371,7 @@ static bool string_in_list(const char * s, const char * a[])
     if (post_process_match(a[i], s)) return true;
   return false;
 }
+#endif
 
 /* For debugging. */
 /*
