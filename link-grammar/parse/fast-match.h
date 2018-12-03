@@ -64,4 +64,19 @@ static inline void pop_match_list(fast_matcher_t *ctxt, size_t match_list_last)
 	ctxt->match_list_end = match_list_last;
 }
 
+/**
+ * Return true iff there is no match list (not even en empty one).
+ */
+static inline bool is_no_match_list(fast_matcher_t *ctxt, size_t match_list_start)
+{
+	return ctxt->match_list_end == match_list_start;
+}
+
+/**
+ * Return true iff there is no match list (not even en empty one).
+ */
+static inline size_t get_match_list_position(fast_matcher_t *ctxt)
+{
+	return ctxt->match_list_end;
+}
 #endif
