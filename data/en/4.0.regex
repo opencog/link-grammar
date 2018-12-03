@@ -246,6 +246,7 @@
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
 <HYPHENATED-WORDS>: !/--/
+<HYPHENATED-WORDS>: !/[[:punct:]]$/
 <HYPHENATED-WORDS>:
   /^([[:alnum:]]|5'|3'|2'|N')([][:alnum:],:.()[-]|5'|3'|2'|N')*-[][:alnum:],:.()[-]*[[:alnum:]]*$/
 
