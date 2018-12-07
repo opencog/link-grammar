@@ -189,7 +189,7 @@ static char* itoa_compact(char* buffer, size_t num)
  * Prepending the gword numbers solve both of these requirements.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
-static void set_connector_hash(Sentence sent)
+void set_connector_hash(Sentence sent)
 {
 	/* FIXME: For short sentences, setting the optimized connector hashing
 	 * has a slight overhead. If this overhead is improved, maybe this
@@ -225,8 +225,12 @@ static void set_connector_hash(Sentence sent)
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
 #define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
 		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
+		String_id *csid;
 
-		String_id *ssid = string_id_create();
+		if (NULL == sent->connector_suffix_id)
+			sent->connector_suffix_id = string_id_create();
+		csid = sent->connector_suffix_id;
+
 		int cnum[2] = { 0 }; /* Connector counts stats for debug. */
 
 		for (size_t w = 0; w < sent->length; w++)
@@ -286,7 +290,7 @@ static void set_connector_hash(Sentence sent)
 					//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
 					for (Connector *c = first_c; NULL != c; c = c->next)
 					{
-						int id = string_id_add(s, ssid) + WORD_OFFSET;
+						int id = string_id_add(s, csid) + WORD_OFFSET;
 						c->suffix_id = id;
 						//printf("ID %d trail=%s\n", id, s);
 						s = memchr(s, CONSEP, sizeof(cstr));
@@ -298,12 +302,10 @@ static void set_connector_hash(Sentence sent)
 
 		if (verbosity_level(D_PREP))
 		{
-			int maxid = string_id_add("MAXID", ssid) + WORD_OFFSET - 1;
+			int maxid = string_id_add("MAXID", csid) + WORD_OFFSET - 1;
 			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
 			          maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
 		}
-
-		string_id_delete(ssid);
 	}
 }
 
@@ -340,6 +342,4 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	gword_record_in_connector(sent);
 	setup_connectors(sent);
-
-	set_connector_hash(sent);
 }

@@ -376,6 +376,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				}
 			}
 			pp_and_power_prune(sent, opts);
+			set_connector_hash(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
