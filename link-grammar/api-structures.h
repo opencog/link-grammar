@@ -45,7 +45,6 @@
 #include "corpus/corpus.h"
 #include "memory-pool.h"
 #include "string-set.h"
-#include "utilities.h"
 
 typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
