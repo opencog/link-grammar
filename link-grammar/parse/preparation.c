@@ -189,7 +189,7 @@ static char* itoa_compact(char* buffer, size_t num)
  * Prepending the gword numbers solve both of these requirements.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
-void set_connector_hash(Sentence sent)
+bool set_connector_hash(Sentence sent)
 {
 	/* FIXME: For short sentences, setting the optimized connector hashing
 	 * has a slight overhead. If this overhead is improved, maybe this
@@ -218,7 +218,7 @@ void set_connector_hash(Sentence sent)
 			}
 		}
 
-		return;
+		return false;
 	}
 
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
@@ -303,6 +303,8 @@ void set_connector_hash(Sentence sent)
 		prt_error("Debug: Using trailing hash (length %zu): suffix_id %d\n",
 					 sent->length, maxid);
 	}
+
+	return true;
 }
 
 /**
