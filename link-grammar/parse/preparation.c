@@ -201,6 +201,7 @@ void set_connector_hash(Sentence sent)
 
 	if (sent->length < min_sent_len_trailing_hash)
 	{
+		/* Set dummy suffix_id's and return. */
 		int id = WORD_OFFSET;
 		for (size_t w = 0; w < sent->length; w++)
 		{
@@ -216,96 +217,96 @@ void set_connector_hash(Sentence sent)
 				}
 			}
 		}
+
+		return;
 	}
-	else
-	{
-		lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
-		    sent->length);
+
+	lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
+		 sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
 #define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
-		char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
-		String_id *csid;
+	char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
+	String_id *csid;
 
-		if (NULL == sent->connector_suffix_id)
-			sent->connector_suffix_id = string_id_create();
-		csid = sent->connector_suffix_id;
+	if (NULL == sent->connector_suffix_id)
+		sent->connector_suffix_id = string_id_create();
+	csid = sent->connector_suffix_id;
 
-		int cnum[2] = { 0 }; /* Connector counts stats for debug. */
+	int cnum[2] = { 0 }; /* Connector counts stats for debug. */
 
-		for (size_t w = 0; w < sent->length; w++)
+	for (size_t w = 0; w < sent->length; w++)
+	{
+		//printf("WORD %zu\n", w);
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
-			//printf("WORD %zu\n", w);
+			int l;
+			char *s;
 
-			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-			{
-				int l;
-				char *s;
-
-				/* Generate a string with the disjunct Gword number(s). It
-				 * makes unique trailing connector sequences of different
-				 * alternatives, so they will get their own suffix_id. */
-				l = 0;
-				char gword_num[MAX_GWORD_ENCODING];
+			/* Generate a string with the disjunct Gword number(s). It
+			 * makes unique trailing connector sequences of different
+			 * alternatives, so they will get their own suffix_id. */
+			l = 0;
+			char gword_num[MAX_GWORD_ENCODING];
 #define MAX_DIFFERENT_GWORDS 6 /* More than 3 have not been seen yet. */
-				char gword_nums[MAX_GWORD_ENCODING * MAX_DIFFERENT_GWORDS];
-				for (const gword_set *g = d->originating_gword; NULL != g; g = g->next)
-				{
-					itoa_compact(gword_num, g->o_gword->node_num);
-					l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
-					cstr[l++] = ',';
-				}
-				if (l > (int)sizeof(gword_nums)-2)
-				{
-					/* Overflow. Never observed, maybe cannot happen. Tag it with
-					 * a unique identifier so it will get its own suffix_id. */
+			char gword_nums[MAX_GWORD_ENCODING * MAX_DIFFERENT_GWORDS];
+			for (const gword_set *g = d->originating_gword; NULL != g; g = g->next)
+			{
+				itoa_compact(gword_num, g->o_gword->node_num);
+				l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
+				cstr[l++] = ',';
+			}
+			if (l > (int)sizeof(gword_nums)-2)
+			{
+				/* Overflow. Never observed, maybe cannot happen. Tag it with
+				 * a unique identifier so it will get its own suffix_id. */
 #ifdef DEBUG
-					prt_error("Warning: set_connector_hash(): "
-					          "Token %s: Gword overflow: %s\n",
-					          d->word_string, gword_nums);
+				prt_error("Warning: set_connector_hash(): "
+							 "Token %s: Gword overflow: %s\n",
+							 d->word_string, gword_nums);
 #endif
-					sprintf(gword_nums, "Gword overflow(%p)\n", d);
-				}
-				//printf("w=%zu, token=%s: GWORD_NUMS: %s\n",
-				//       w, d->word_string, gword_nums);
+				sprintf(gword_nums, "Gword overflow(%p)\n", d);
+			}
+			//printf("w=%zu, token=%s: GWORD_NUMS: %s\n",
+			//       w, d->word_string, gword_nums);
 
-				for (int dir = 0; dir < 2; dir ++)
+			for (int dir = 0; dir < 2; dir ++)
+			{
+				Connector *first_c = (0 == dir) ? d->left : d->right;
+
+				l = 0;
+				for (Connector *c = first_c; NULL != c; c = c->next)
 				{
-					Connector *first_c = (0 == dir) ? d->left : d->right;
+					cnum[dir]++;
+					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
+					cstr[l++] = ',';
+					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
+					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
+					cstr[l++] = CONSEP;
+				}
+				/* XXX Check overflow. */
+				cstr[l] = '\0';
 
-					l = 0;
-					for (Connector *c = first_c; NULL != c; c = c->next)
-					{
-						cnum[dir]++;
-						l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
-						cstr[l++] = ',';
-						if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
-						l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-						cstr[l++] = CONSEP;
-					}
-					/* XXX Check overflow. */
-					cstr[l] = '\0';
-
-					s = cstr;
-					//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
-					for (Connector *c = first_c; NULL != c; c = c->next)
-					{
-						int id = string_id_add(s, csid) + WORD_OFFSET;
-						c->suffix_id = id;
-						//printf("ID %d trail=%s\n", id, s);
-						s = memchr(s, CONSEP, sizeof(cstr));
-						s++;
-					}
+				s = cstr;
+				//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
+				for (Connector *c = first_c; NULL != c; c = c->next)
+				{
+					int id = string_id_add(s, csid) + WORD_OFFSET;
+					c->suffix_id = id;
+					//printf("ID %d trail=%s\n", id, s);
+					s = memchr(s, CONSEP, sizeof(cstr));
+					s++;
 				}
 			}
 		}
+	}
 
-		if (verbosity_level(D_PREP))
-		{
-			int maxid = string_id_add("MAXID", csid) + WORD_OFFSET - 1;
-			prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
-			          maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
-		}
+	if (verbosity_level(D_PREP))
+	{
+		int maxid = string_id_add("MAXID", csid) + WORD_OFFSET - 1;
+		prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
+					 maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
 	}
 }
 
