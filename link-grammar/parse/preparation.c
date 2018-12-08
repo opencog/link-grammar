@@ -221,8 +221,6 @@ void set_connector_hash(Sentence sent)
 		return;
 	}
 
-	lgdebug(D_PREP, "Debug: Using trailing hash (Sentence length %zu)\n",
-		 sent->length);
 #define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
 #define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
@@ -305,8 +303,8 @@ void set_connector_hash(Sentence sent)
 	if (verbosity_level(D_PREP))
 	{
 		int maxid = string_id_add("MAXID", csid) + WORD_OFFSET - 1;
-		prt_error("Debug: suffix_id %d, %d (%d+,%d-) connectors\n",
-					 maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
+		prt_error("Debug: Using trailing hash (len %zu): suffix_id %d, %d (%d+,%d-) connectors\n",
+					 sent->length, maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
 	}
 }
 
