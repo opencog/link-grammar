@@ -908,10 +908,14 @@ int main(int argc, char * argv[])
 			sentence_display_wordgraph(sent, wg_display_flags);
 		}
 
+		bool one_step_parse = !copts->batch_mode && copts->allow_null &&
+		                    test_enabled(test, "one-step-parse");
+		int max_null_count = one_step_parse ? sentence_length(sent) : 0;
+
 		/* First parse with cost 0 or 1 and no null links */
 		// parse_options_set_disjunct_cost(opts, 2.7);
 		parse_options_set_min_null_count(opts, 0);
-		parse_options_set_max_null_count(opts, 0);
+		parse_options_set_max_null_count(opts, max_null_count);
 		parse_options_reset_resources(opts);
 
 		num_linkages = sentence_parse(sent, opts);
@@ -973,7 +977,7 @@ int main(int argc, char * argv[])
 		}
 
 		/* Now parse with null links */
-		if (num_linkages == 0 && !copts->batch_mode)
+		if (!one_step_parse && num_linkages == 0 && !copts->batch_mode)
 		{
 			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 
