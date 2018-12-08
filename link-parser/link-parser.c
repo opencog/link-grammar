@@ -470,7 +470,7 @@ static void batch_process_some_linkages(Label label,
 	}
 	else
 	{
-		if (test_enabled(test, "batch_print_parse_statistics"))
+		if (test_enabled(test, "batch-print-parse-statistics"))
 		{
 			print_parse_statistics(sent, opts, copts);
 		}
