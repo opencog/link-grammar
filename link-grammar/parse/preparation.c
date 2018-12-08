@@ -231,8 +231,6 @@ void set_connector_hash(Sentence sent)
 		sent->connector_suffix_id = string_id_create();
 	csid = sent->connector_suffix_id;
 
-	int cnum[2] = { 0 }; /* Connector counts stats for debug. */
-
 	for (size_t w = 0; w < sent->length; w++)
 	{
 		//printf("WORD %zu\n", w);
@@ -276,7 +274,6 @@ void set_connector_hash(Sentence sent)
 				l = 0;
 				for (Connector *c = first_c; NULL != c; c = c->next)
 				{
-					cnum[dir]++;
 					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
 					cstr[l++] = ',';
 					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
@@ -303,8 +300,8 @@ void set_connector_hash(Sentence sent)
 	if (verbosity_level(D_PREP))
 	{
 		int maxid = string_id_add("MAXID", csid) + WORD_OFFSET - 1;
-		prt_error("Debug: Using trailing hash (len %zu): suffix_id %d, %d (%d+,%d-) connectors\n",
-					 sent->length, maxid, cnum[1]+cnum[0], cnum[1], cnum[0]);
+		prt_error("Debug: Using trailing hash (length %zu): suffix_id %d\n",
+					 sent->length, maxid);
 	}
 }
 
