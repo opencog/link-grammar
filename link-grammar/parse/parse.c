@@ -375,13 +375,13 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				}
 			}
 			pp_and_power_prune(sent, opts);
+			pack_sentence(sent);
 			set_connector_hash(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
 			free_count_context(ctxt, sent);
 			free_fast_matcher(sent, mchxt);
-			pack_sentence(sent);
 			ctxt = alloc_count_context(sent);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
