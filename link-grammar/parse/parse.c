@@ -363,12 +363,11 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			{
 				pp_and_power_prune_done = true;
 				if (is_null_count_0)
+				{
 					opts->min_null_count = 1; /* Don't optimize for null_count==0. */
 
-				/* We are parsing now with null_count>0, when previously we
-				 * parsed with null_count==0. Restore the save disjuncts. */
-				if (NULL != disjuncts_copy)
-				{
+					/* We are parsing now with null_count>0, when previously we
+					 * parsed with null_count==0. Restore the save disjuncts. */
 					free_sentence_disjuncts(sent);
 					for (size_t i = 0; i < sent->length; i++)
 						sent->word[i].d = disjuncts_copy[i];
