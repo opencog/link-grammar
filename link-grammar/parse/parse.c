@@ -376,13 +376,23 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 			pp_and_power_prune(sent, opts);
 			pack_sentence(sent);
-			set_connector_hash(sent);
+			bool real_suffix_ids = set_connector_hash(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
-			free_count_context(ctxt, sent);
+			/* If parsing with no nulls or we are using fake suffix_id's
+			 * (because it is a short sentence) always allocate the count
+			 * connector table. Else allocate it only if this is a parse with
+			 * nulls only. So in case of one-step parse (min_null_count==0 &&
+			 * max_null_count>0) the table is shared and the null_count==0
+			 * parsing will be inferred from the table. */
+			if (!real_suffix_ids || (nl == 0) || !is_null_count_0)
+			{
+				free_count_context(ctxt, sent);
+				ctxt = alloc_count_context(sent);
+			}
+
 			free_fast_matcher(sent, mchxt);
-			ctxt = alloc_count_context(sent);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
 		}
