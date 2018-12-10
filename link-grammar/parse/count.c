@@ -659,6 +659,26 @@ static Count_bin do_count(
 		return t->count;
 	}
 
+	/* The word range (lw, rw) gets split in all tentatively possible ways
+	 * to LHS term and RHS term.
+	 * There can be a total count > 0 only if one of the following
+	 * multiplications results in a value > 0. This in turn is possible
+	 * only if both multiplication terms > 0:
+	 *    LHS term    RHS term
+	 * 1. leftcount x rightcount
+	 * 2. leftcount x l_bnr
+	 * 3. r_bnl     x rightcount
+	 *
+	 * In addition:
+	 * - leftcount > 0   is possible only if there is match_left.
+	 * - rightcount > 0  is possible only if there is match_right.
+	 * - r_bnl > 0       is possible only if le==NULL.
+	 *
+	 * Since the result count is a sum of multiplications of the LHS and
+	 * RHS counts, if one of them is zero, we can skip calculating the
+	 * other one.
+	 */
+
 	if (le == NULL)
 	{
 		start_word = lw+1;
