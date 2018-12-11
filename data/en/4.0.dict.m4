@@ -7868,8 +7868,7 @@ how:
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or SJl+ or SJr-
-  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)))
-;
+  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 %%%  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
