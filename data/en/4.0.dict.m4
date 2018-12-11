@@ -239,7 +239,6 @@ nonCAP.zzz: ZZZ-;
   or ([[@AN-].1 & @A-] & {[[@AN-]]});
 
 
-
 % conjoined nouns or noun-phrases.
 % The l and r prevent two nouns from hooking up directly, they
 % must hook up to a conjunction (and, or) in the middle.
@@ -592,7 +591,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
-    or SJrs-
+    or <noun-and-s>
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
@@ -603,7 +602,7 @@ USMC.y USN.y:
 % XXX not yet fully tested; seems over-complicated.
 <common-phonetic>:
   (<noun-modifiers> &
-    (SJrs-
+    (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
     or ({Ds-} & [Wa-]0.05)))
