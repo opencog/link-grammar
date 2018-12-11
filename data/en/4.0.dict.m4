@@ -239,7 +239,6 @@ nonCAP.zzz: ZZZ-;
   or ([[@AN-].1 & @A-] & {[[@AN-]]});
 
 
-
 % conjoined nouns or noun-phrases.
 % The l and r prevent two nouns from hooking up directly, they
 % must hook up to a conjunction (and, or) in the middle.
@@ -592,7 +591,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
-    or SJrs-
+    or <noun-and-s>
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
@@ -603,7 +602,7 @@ USMC.y USN.y:
 % XXX not yet fully tested; seems over-complicated.
 <common-phonetic>:
   (<noun-modifiers> &
-    (SJrs-
+    (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
     or ({Ds-} & [Wa-]0.05)))
@@ -796,11 +795,12 @@ kung_fu joie_de_vivre op_art noblesse_oblige force_majeure
 lese_majesty lese_majeste lèse_majesty lèse_majesté lèse-majesté leze_majesty
 a_must time_of_day time_of_year top_dollar year_end
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
-carte_blanche:
+reason_of_selection carte_blanche:
   (<noun-modifiers> &
     (({Dmu-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
     ({Dmu-} & <noun-and-u>) or
     Um- or
+    Wa- or
     (YS+ & {Dmu-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
@@ -2625,8 +2625,13 @@ per "/.per": Us+ & Mp-;
 % (($1) or [()]) & <verb-and-pl+>):
 %    "they might supplement or replace anticoagulants"
 %    The first verb is expecting an object, but there isn't one.
+% ({@E-} & hXd- & dWi- & ($1) & hXc+):
+%    Parenthetical phrases: "(please refer to the list below)"
+%    Getting the parenthesis cannot be come by hacking <verb-ico>
+%    or <verb-pl,i> and must be done here.
 define(`VERB_PLI',`'
   ((<verb-pl,i> & ($1)) or
+  ({@E-} & hXd- & dWi- & ($1) & hXc+) or
   (<verb-and-pl-> & (($1) or ())) or
   ((($1) or [()]) & <verb-and-pl+>)))
 
@@ -7868,8 +7873,7 @@ how:
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or SJl+ or SJr-
-  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)))
-;
+  or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 %%%  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
@@ -10428,9 +10432,9 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
   YS- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 % Wd-: allows "(1 + 1) = 2"
-"(" "[": {Wd-} & {EBx+} & Xd+;
+"(" "[": {Wd-} & {EBx+} & dXdp+;
 
-")" "]": {@Xca-} & Xc-;
+")" "]": {@Xca-} & dXcp-;
 
 % foo: F+;
 
