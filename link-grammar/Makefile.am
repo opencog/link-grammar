@@ -212,7 +212,6 @@ uninstall-hook:
 	-rmdir $(liblink_grammar_includedir)
 
 EXTRA_DIST=                         \
-	dict-common/pcre2posix.c         \
 	link-grammar.def                 \
 	README.md                        \
 	dict-sql/dict.sql                \
