@@ -27,13 +27,13 @@ EXTRA_DIST =            \
 	MAINTAINERS          \
 	NEWS                 \
 	README.md            \
-	debug/README.md                        \
-	docker/docker-build.sh                 \
-	docker/docker-base/Dockerfile          \
-	docker/docker-parser/Dockerfile        \
-	docker/docker-python/Dockerfile        \
-	docker/docker-server/Dockerfile        \
-	m4/varcheckpoint.m4                    \
+	debug/README.md                      \
+	docker/docker-build.sh               \
+	docker/docker-base/Dockerfile        \
+	docker/docker-parser/Dockerfile      \
+	docker/docker-python/Dockerfile      \
+	docker/docker-server/Dockerfile      \
+	m4/varcheckpoint.m4                  \
 	msvc/LGlib-features.props            \
 	msvc/LinkGrammarExe.vcxproj          \
 	msvc/LinkGrammarExe.vcxproj.filters  \
@@ -52,9 +52,8 @@ EXTRA_DIST =            \
 	msvc/Python3.vcxproj.filters         \
 	msvc/README.md                       \
 	msvc/make-check.py                   \
-	mingw/README-Cygwin.md                 \
-	mingw/README-MSYS.md                   \
-	mingw/README-MSYS2.md                  \
-	mingw/link-parser.bat                  \
-	mingw/link-parser-cygwin.bat           \
+	mingw/README-Cygwin.md               \
+	mingw/README-MinGW64.md              \
+	mingw/link-parser.bat                \
+	mingw/link-parser-cygwin.bat         \
 	TODO
