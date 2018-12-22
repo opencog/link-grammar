@@ -10319,10 +10319,11 @@ and.j-s:
 % [Ma-]: it  is more grammatically correct to have commas ...
 % {EBb+}: "blah but not blah", "blah and not blah"
 % vs.: "We examined the setting (urban vs rural)"
+% cost on MJ*j: allow but.misc-ex take the first shot.
 but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
   ({Xd-} & MJla- & {EBb+} & MJra+ & <post-nom-a>) or
   ({Xd-} & MJlp- & {EBb+} & MJrp+ & <post-nom-p>) or
-  ({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
+  [{Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>]0.5 or
   ({Xd-} & MJlv- & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
 % {XJo-}: Either .. or ...
