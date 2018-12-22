@@ -213,6 +213,7 @@ CONTAINS_ONE_RULES:
  Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
  I#a   ,  B#m   B#w                         , "incorrect use of 'to'6"  ,
  Wq    ,  SI    SFI   SXI                   , "S-V inversion required7" ,
+ Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
  Qd    ,  SI    SFI   SXI                   , "S-V inversion required8" ,
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
  Mj    ,  Jw    JQ                          , "Incorrect relative10" ,
