@@ -6847,11 +6847,13 @@ re:
   {Xe+} & J+ & <prep-main-a>;
 
 % comparative-like links to prepositions.
-% <comp-prep>: Don't want a comma, but will accept one.
 %    "He did it largely in his spare time"
-% EZ+:  "Jane was soaked almost as thoroughly"
-<comp-prep>: {[Xd-]0.2} & MVl- & (EZ+ or [MVp+ or MVa+ or MVs+]0.4);
-<comp-pause-prep>: (Xd- or [()]) & MVl- & (EZ+ or [MVp+ or MVa+ or MVs+]0.4);
+% EZ+: "Jane was soaked almost as thoroughly"
+% EC+: "Jane replied even more quietly"
+<comp-prep>:
+  {Xd-} & MVl- & (EZ+ or EC+ or [MVp+ or MVa+ or MVs+]0.5);
+<comp-pause-prep>:
+  (Xd- or [()]) & MVl- & (EZ+ or EC+ or [MVp+ or MVa+ or MVs+]0.5);
 
 % <comp-pause-prep>: really really want to follow a comma.
 % "Jane was gratified, though in a quieter way"
@@ -10135,13 +10137,12 @@ never.i at_no_time not_once rarely.i since_when:
 not_since:
   (J+ or <subcl-verb>) & Wq- & Q+;
 
-% Cost on [<comp-prep>]: prefer comparatives, instead:
-% "Jane replied, even more quietly"
+% cost on [EC+]: try to use <comp-prep> instead.
 even.e:
   E+
-  or EC+
   or EB-
-  or [<comp-prep>]0.5
+  or <comp-prep>
+  or [EC+]0.5
   or ((MVp+ or MVa+ or MVs+) & ({Xc+ & {Xd-}} & CO+))
   or (Rnx+ & <CLAUSE-E>);
 
