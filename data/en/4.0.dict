@@ -4498,22 +4498,39 @@ reasoning.v bragging.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
 
+<vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
+complain.v: 
+  ((<verb-pl,i> & (<vc-brag>)) or
+  ({@E-} & hXd- & dWi- & (<vc-brag>) & hXc+) or
+  (<verb-and-pl-> & ((<vc-brag>) or ())) or
+  (((<vc-brag>) or [()]) & <verb-and-pl+>));
+complains.v: 
+  ((<verb-s> & (<vc-brag>)) or
+  (<verb-and-s-> & ([<vc-brag>] or ())) or
+  ((<vc-brag>) & <verb-and-s+>));
+complained.v-d: 
+  ((<verb-sp,pp> & (<vc-brag>)) or
+  (<verb-and-sp-i-> & ([<vc-brag>] or ())) or
+  ((<vc-brag>) & <verb-and-sp-i+>));
+complaining.g: (<vc-brag> & <verb-ge>) or <verb-ge-d>;
+complaining.v: <verb-pg> & <vc-brag>;
+
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
-dream.v complain.v: 
+dream.v: 
   ((<verb-pl,i> & (<vc-dream>)) or
   ({@E-} & hXd- & dWi- & (<vc-dream>) & hXc+) or
   (<verb-and-pl-> & ((<vc-dream>) or ())) or
   (((<vc-dream>) or [()]) & <verb-and-pl+>));
-dreams.v complains.v: 
+dreams.v: 
   ((<verb-s> & (<vc-dream>)) or
   (<verb-and-s-> & ([<vc-dream>] or ())) or
   ((<vc-dream>) & <verb-and-s+>));
-dreamt.v-d dreamed.v-d complained.v-d: 
+dreamt.v-d dreamed.v-d: 
   ((<verb-sp,pp> & (<vc-dream>)) or
   (<verb-and-sp-i-> & ([<vc-dream>] or ())) or
   ((<vc-dream>) & <verb-and-sp-i+>));
-dreaming.g complaining.g: (<vc-dream> & <verb-ge>) or <verb-ge-d>;
-dreaming.v complaining.v: <verb-pg> & <vc-dream>;
+dreaming.g: (<vc-dream> & <verb-ge>) or <verb-ge-d>;
+dreaming.v: <verb-pg> & <vc-dream>;
 
 % The O+ is to handle "do you think so, too?", however, a special
 % target for objects like "so" or "it" would be better...

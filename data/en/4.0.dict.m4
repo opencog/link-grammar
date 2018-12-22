@@ -4067,12 +4067,19 @@ reasoning.v bragging.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
 
+<vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
+complain.v: VERB_PLI(<vc-brag>);
+complains.v: VERB_S_I(<vc-brag>);
+complained.v-d: VERB_SPPP_I(<vc-brag>);
+complaining.g: (<vc-brag> & <verb-ge>) or <verb-ge-d>;
+complaining.v: <verb-pg> & <vc-brag>;
+
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
-dream.v complain.v: VERB_PLI(<vc-dream>);
-dreams.v complains.v: VERB_S_I(<vc-dream>);
-dreamt.v-d dreamed.v-d complained.v-d: VERB_SPPP_I(<vc-dream>);
-dreaming.g complaining.g: (<vc-dream> & <verb-ge>) or <verb-ge-d>;
-dreaming.v complaining.v: <verb-pg> & <vc-dream>;
+dream.v: VERB_PLI(<vc-dream>);
+dreams.v: VERB_S_I(<vc-dream>);
+dreamt.v-d dreamed.v-d: VERB_SPPP_I(<vc-dream>);
+dreaming.g: (<vc-dream> & <verb-ge>) or <verb-ge-d>;
+dreaming.v: <verb-pg> & <vc-dream>;
 
 % The O+ is to handle "do you think so, too?", however, a special
 % target for objects like "so" or "it" would be better...
