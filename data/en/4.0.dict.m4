@@ -5759,6 +5759,7 @@ writing.g reading.g charging.g drawing.g:
   ({(B- & {O+ or K+}) or
     <vc-opt-ditrans> or
     (O+ & K+) or
+    (OF+ & <mv-coord>) or
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & <mv-coord>);
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
