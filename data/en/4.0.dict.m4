@@ -6846,6 +6846,10 @@ into:
 re:
   {Xe+} & J+ & <prep-main-a>;
 
+% comparative-like links to prepositions
+% "He did it largely in his spare time"
+<comp-prep>: {Xd-} & MVl- & (MVp+ or MVa+ or MVs+);
+
 % cost on MVa- to give preference to MVl-
 % {EP-} & dWl-: "Just about now."
 about:
@@ -6857,7 +6861,7 @@ about:
   or (<tof-verb> & (Mp- or MVp- or Pp-))
   or [MVa-]
   or ({EP-} & dWl- & (MVp+ or MVa+ or MVs+))
-  or (MVl- & (MVp+ or MVa+ or MVs+));
+  or <comp-prep>;
 
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
@@ -9495,7 +9499,7 @@ particularly:
   or Em+
   or [EB- & (EC+ or EA+)]-0.5
   or [EB-]
-  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or <comp-prep>
   or ({Xc+ & {Xd-}} & CO+);
 
 notably:
@@ -9513,7 +9517,7 @@ almost:
   or EN+ or EZ+ or Em+
   or [EBm- & (EC+ or EA+)]-0.5
   or [EBm-]
-  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or <comp-prep>
   or ((Mp- or MVp-) & Ju+);
 
 nearly:
@@ -9521,7 +9525,7 @@ nearly:
   or EN+ or EZ+ or Em+
   or [EBm-]
   or [{EE-} & EBm- & (EC+ or EA+)]-0.5
-  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or <comp-prep>
   or ((Mp- or MVp-) & Ju+);
 
 % The below is similar to "nearly" ...
@@ -9562,7 +9566,7 @@ surprisingly:
 especially:
   <adv-adj-vowel>
   or EB- or Em+
-  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or <comp-prep>
   or ({Xc+ & {Xd-}} & CO+);
 
 virtually: <adv-adj-const> or EN+ or EZ+ or Em+;
@@ -9579,7 +9583,7 @@ barely just_barely scarcely hardly merely truly practically:
 
 partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
   Em+ or (<wantPHc> & EA+) or EB- or Wa-
-  or (MVl- & (MVp+ or MVa+ or MVs+));
+  or <comp-prep>;
 
 % Em+: "It sure is great"
 sure.ee: Em+;
@@ -9608,7 +9612,7 @@ more_and_more less_and_less more_or_less: Em+ or Wa-;
   or EBm-
   or ({{Xd-} & Xc+} & CO+);
 
-in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
+in_part: EB- or <comp-prep>;
 
 % ---------------------------------------------------------
 %ADVERBS WHOSE ONLY (MAIN) USE IS POST_VERBAL
@@ -9704,7 +9708,7 @@ exactly.e:
   or EW+
   or EZ+
   or [{Xd- & Xc+} & MVa-]
-  or (MVl- & (MVp+ or MVa+ or MVs+));
+  or <comp-prep>;
 
 roughly approximately:
   EA+
@@ -10087,7 +10091,8 @@ just.e:
   or EP+
   or EW+
   or EZ+
-  or (MVl- & (MVa+ or MVp+ or MVs+ or MVl+))
+  or (MVl- & MVl+)
+  or <comp-prep>
   or MVa-;
 
 meantime.e secondly thirdly
@@ -10098,7 +10103,7 @@ mainly primarily:
   E+
   or ({Xc+ & {Xd-}} & CO+)
   or EB-
-  or (MVl- & (MVa+ or MVp+ or MVs+));
+  or <comp-prep>;
 
 % The MV- links seem to really confuse the issue... kill them.
 % Except they are really needed:
@@ -10110,7 +10115,7 @@ only:
   or EN+
   or EB-
   or (MVl- & MVp+)
-% or (MVl- & (MVa+ or MVs+))
+% or <comp-prep>
   or MVa-
   or (Rnx+ & <CLAUSE-E>)
   or (MVp+ & Wq- & Q+);
@@ -10126,7 +10131,8 @@ even.e:
   E+
   or EC+
   or EB-
-  or ((MVp+ or MVa+ or MVs+) & (MVl- or ({Xc+ & {Xd-}} & CO+)))
+  or <comp-prep>
+  or ((MVp+ or MVa+ or MVs+) & ({Xc+ & {Xd-}} & CO+))
   or (Rnx+ & <CLAUSE-E>);
 
 not_even: (Rnx+ & <CLAUSE-E>) or <COMP-OPENER>;
