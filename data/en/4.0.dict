@@ -9070,9 +9070,16 @@ into:
 re:
   {Xe+} & J+ & <prep-main-a>;
 
-% comparative-like links to prepositions
+% comparative-like links to prepositions.
+% <comp-prep>: Don't want a comma, but will accept one.
 % "He did it largely in his spare time"
-<comp-prep>: {Xd-} & MVl- & (MVp+ or MVa+ or MVs+);
+<comp-prep>: {[Xd-]0.2} & MVl- & (MVp+ or MVa+ or MVs+);
+<comp-pause-prep>: (Xd- or [()]) & MVl- & (MVp+ or MVa+ or MVs+);
+
+% <comp-pause-prep>: really really want to follow a comma.
+% "Jane was gratified, though in a quieter way"
+although.c though.c but.c yet.c:
+  <comp-pause-prep>;
 
 % cost on MVa- to give preference to MVl-
 % {EP-} & dWl-: "Just about now."
@@ -10023,7 +10030,7 @@ whence whither:
 % Comparative-opener: "although a good worker, he's not a very good manager"
 <COMP-OPENER>: (O*c+ & {Xc+ & {Xd-}} & COc+);
 
-although in_as_much_as whereas whereof wherein:
+although.e in_as_much_as whereas whereof wherein:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
   or ({Xd-} & <coord> & (Wd+ or Wp+ or Wr+))
   or <COMP-OPENER>;
@@ -10154,7 +10161,7 @@ if_only:
 on_condition:
   (TH+ or TS+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
-unless though.c even_though:
+unless though.r even_though:
   ((<subcl-verb> or Mgp+ or Mv+)
     & (({Xc+ & {Xd-}} & CO*s+)
       or ({Xd- & Xc+} & MVs-)
