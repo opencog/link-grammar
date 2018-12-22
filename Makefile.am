@@ -34,6 +34,11 @@ EXTRA_DIST =            \
 	docker/docker-python/Dockerfile      \
 	docker/docker-server/Dockerfile      \
 	m4/varcheckpoint.m4                  \
+	man/link-parser.1                    \
+	mingw/README-Cygwin.md               \
+	mingw/README-MinGW64.md              \
+	mingw/link-parser.bat                \
+	mingw/link-parser-cygwin.bat         \
 	msvc/LGlib-features.props            \
 	msvc/LinkGrammarExe.vcxproj          \
 	msvc/LinkGrammarExe.vcxproj.filters  \
@@ -52,8 +57,4 @@ EXTRA_DIST =            \
 	msvc/Python3.vcxproj.filters         \
 	msvc/README.md                       \
 	msvc/make-check.py                   \
-	mingw/README-Cygwin.md               \
-	mingw/README-MinGW64.md              \
-	mingw/link-parser.bat                \
-	mingw/link-parser-cygwin.bat         \
 	TODO
