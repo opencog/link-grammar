@@ -4511,7 +4511,7 @@ boasted.v-d bragged.v-d complained.v-d hinted.v-d muttered.v-d whispered.v-d:
   
   ((<verb-sp,pp> & (<vc-brag>)) or
   (<verb-and-sp-i-> & ([<vc-brag>] or ())) or
-  ((<vc-brag>) & <verb-and-sp-i+>));
+  ((<vc-brag>) & <verb-and-sp-i+>)) or (<verb-s-pv> & THi+);
 boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
   (<vc-brag> & <verb-ge>) or <verb-ge-d>;
 boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:

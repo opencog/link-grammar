@@ -4070,7 +4070,7 @@ boast.v brag.v complain.v hint.v mutter.v whisper.v:
 boasts.v brags.v complains.v hints.v mutters.v whispers.v:
   VERB_S_I(<vc-brag>);
 boasted.v-d bragged.v-d complained.v-d hinted.v-d muttered.v-d whispered.v-d:
-  VERB_SPPP_I(<vc-brag>);
+  VERB_SPPP_I(<vc-brag>) or (<verb-s-pv> & THi+);
 boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
   (<vc-brag> & <verb-ge>) or <verb-ge-d>;
 boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
