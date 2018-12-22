@@ -190,7 +190,10 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
-	//printf("Allocating x_table of size %d (nwords %d)\n", pex->x_table_size, nwords);
+	DEBUG_X_TABLE(
+		printf("Allocating x_table of size %d (nwords %d)\n",
+		       pex->x_table_size, nwords);
+	)
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
