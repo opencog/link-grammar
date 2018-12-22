@@ -9072,9 +9072,10 @@ re:
 
 % comparative-like links to prepositions.
 % <comp-prep>: Don't want a comma, but will accept one.
-% "He did it largely in his spare time"
-<comp-prep>: {[Xd-]0.2} & MVl- & (MVp+ or MVa+ or MVs+);
-<comp-pause-prep>: (Xd- or [()]) & MVl- & (MVp+ or MVa+ or MVs+);
+%    "He did it largely in his spare time"
+% EZ+:  "Jane was soaked almost as thoroughly"
+<comp-prep>: {[Xd-]0.2} & MVl- & (EZ+ or [MVp+ or MVa+ or MVs+]0.4);
+<comp-pause-prep>: (Xd- or [()]) & MVl- & (EZ+ or [MVp+ or MVa+ or MVs+]0.4);
 
 % <comp-pause-prep>: really really want to follow a comma.
 % "Jane was gratified, though in a quieter way"
