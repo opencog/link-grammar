@@ -8769,7 +8769,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Xc+ or Xe+ or [[()]]: punctuation is commonly missing.
 <vc-paraph>:
   (<verb-wall> & {@MV+} & (Xc+ or Xp+ or <paraph-null>) & CP-)
-  or (<verb-wall> & {@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+  or ({<verb-wall>} & {@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
   or (<verb-wall> & {@MV+} & <quote-sent>);
