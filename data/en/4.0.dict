@@ -4498,21 +4498,21 @@ reasoning.v:
   <verb-ge-d>;
 
 <vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
-brag.v complain.v: 
+boast.v brag.v complain.v: 
   ((<verb-pl,i> & (<vc-brag>)) or
   ({@E-} & hXd- & dWi- & (<vc-brag>) & hXc+) or
   (<verb-and-pl-> & ((<vc-brag>) or ())) or
   (((<vc-brag>) or [()]) & <verb-and-pl+>));
-brags.v complains.v: 
+boasts.v brags.v complains.v: 
   ((<verb-s> & (<vc-brag>)) or
   (<verb-and-s-> & ([<vc-brag>] or ())) or
   ((<vc-brag>) & <verb-and-s+>));
-bragged.v-d complained.v-d: 
+boasted.v-d bragged.v-d complained.v-d: 
   ((<verb-sp,pp> & (<vc-brag>)) or
   (<verb-and-sp-i-> & ([<vc-brag>] or ())) or
   ((<vc-brag>) & <verb-and-sp-i+>));
-bragging.g complaining.g: (<vc-brag> & <verb-ge>) or <verb-ge-d>;
-bragging.v complaining.v: <verb-pg> & <vc-brag>;
+boasting.g bragging.g complaining.g: (<vc-brag> & <verb-ge>) or <verb-ge-d>;
+boasting.v bragging.v complaining.v: <verb-pg> & <vc-brag>;
 
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
 dream.v: 
@@ -5521,7 +5521,7 @@ providing.g:
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Pg+));
 
 sense.v doubt.v reaffirm.v reckon.v regret.v ascertain.v discern.v
-stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boast.v:
+stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v:
   
   ((<verb-pl,i> & (<vc-sense>)) or
   ({@E-} & hXd- & dWi- & (<vc-sense>) & hXc+) or
@@ -5529,7 +5529,7 @@ stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boa
   (((<vc-sense>) or [()]) & <verb-and-pl+>));
 senses.v reaffirms.v doubts.v reckons.v regrets.v
 stipulates.v ascertains.v discerns.v affirms.v certifies.v trusts.v
-postulates.v ensures.v implies.v verifies.v boasts.v:
+postulates.v ensures.v implies.v verifies.v:
   
   ((<verb-s> & (<vc-sense>)) or
   (<verb-and-sp-i-> & ([<vc-sense>]0.2 or ())) or
@@ -5537,7 +5537,7 @@ postulates.v ensures.v implies.v verifies.v boasts.v:
   <verb-and-sp-t>);
 doubted.v-d reaffirmed.v-d sensed.v-d reckoned.v-d regretted.v-d stipulated.v-d
 ascertained.v-d discerned.v-d affirmed.v-d certified.v-d
-trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
+trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d:
   
   ((<verb-sp,pp> & (<vc-sense>)) or
   (<verb-and-sp-i-> & ([<vc-sense>]0.2 or ())) or
@@ -5550,13 +5550,13 @@ trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
 sensing.v doubting.v reckoning.v reaffirming.v stipulating.v
 regretting.v ascertaining.v discerning.v
 affirming.v certifying.v trusting.v postulating.v ensuring.v
-implying.v verifying.v boasting.v:
+implying.v verifying.v:
   <verb-pg> & <vc-sense>;
 
 reaffirming.g sensing.g doubting.g stipulating.g
 reckoning.g regretting.g ascertaining.g
 discerning.g affirming.g certifying.g trusting.g
-postulating.g ensuring.g implying.g verifying.g boasting.g:
+postulating.g ensuring.g implying.g verifying.g:
   (<vc-sense> & <verb-ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------

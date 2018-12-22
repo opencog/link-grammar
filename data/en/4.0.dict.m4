@@ -4067,11 +4067,11 @@ reasoning.v:
   <verb-ge-d>;
 
 <vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
-brag.v complain.v: VERB_PLI(<vc-brag>);
-brags.v complains.v: VERB_S_I(<vc-brag>);
-bragged.v-d complained.v-d: VERB_SPPP_I(<vc-brag>);
-bragging.g complaining.g: (<vc-brag> & <verb-ge>) or <verb-ge-d>;
-bragging.v complaining.v: <verb-pg> & <vc-brag>;
+boast.v brag.v complain.v: VERB_PLI(<vc-brag>);
+boasts.v brags.v complains.v: VERB_S_I(<vc-brag>);
+boasted.v-d bragged.v-d complained.v-d: VERB_SPPP_I(<vc-brag>);
+boasting.g bragging.g complaining.g: (<vc-brag> & <verb-ge>) or <verb-ge-d>;
+boasting.v bragging.v complaining.v: <verb-pg> & <vc-brag>;
 
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
 dream.v: VERB_PLI(<vc-dream>);
@@ -4624,15 +4624,15 @@ providing.g:
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Pg+));
 
 sense.v doubt.v reaffirm.v reckon.v regret.v ascertain.v discern.v
-stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boast.v:
+stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v:
   VERB_PLI(<vc-sense>);
 senses.v reaffirms.v doubts.v reckons.v regrets.v
 stipulates.v ascertains.v discerns.v affirms.v certifies.v trusts.v
-postulates.v ensures.v implies.v verifies.v boasts.v:
+postulates.v ensures.v implies.v verifies.v:
   VERB_S_T(<vc-sense>);
 doubted.v-d reaffirmed.v-d sensed.v-d reckoned.v-d regretted.v-d stipulated.v-d
 ascertained.v-d discerned.v-d affirmed.v-d certified.v-d
-trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
+trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d:
   VERB_SPPP_T(<vc-sense>)
   or (<verb-s-pv> & {THi+})
   or <verb-adj>
@@ -4641,13 +4641,13 @@ trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
 sensing.v doubting.v reckoning.v reaffirming.v stipulating.v
 regretting.v ascertaining.v discerning.v
 affirming.v certifying.v trusting.v postulating.v ensuring.v
-implying.v verifying.v boasting.v:
+implying.v verifying.v:
   <verb-pg> & <vc-sense>;
 
 reaffirming.g sensing.g doubting.g stipulating.g
 reckoning.g regretting.g ascertaining.g
 discerning.g affirming.g certifying.g trusting.g
-postulating.g ensuring.g implying.g verifying.g boasting.g:
+postulating.g ensuring.g implying.g verifying.g:
   (<vc-sense> & <verb-ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------
