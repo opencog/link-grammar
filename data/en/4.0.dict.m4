@@ -6729,7 +6729,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or ({EA-} & Pp-)
   or (Xc+ & {Xd-} & COw+)
   or [({Xc+ & {Xd-}} & (COa+ or COd+))]
-  or ({EA-} & Xd- & Xc+ & (MX*x- or MVx-));
+  or ({EA-} & Xd- & {Xc+} & MVx-)
+  or ({EA-} & Xd- & Xc+ & MX*x-);
 
 % Wj- & Qd+: questions: By what means will you arrive?
 <prep-main-a>:
