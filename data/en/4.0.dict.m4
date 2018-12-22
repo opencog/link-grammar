@@ -6556,11 +6556,11 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % QU+ & <embed-verb> & QU+: He said, "This is it."
 % Xc+ or Xe+ or [[()]]: punctuation is commonly missing.
 <vc-paraph>:
-  ({@MV+} & (Xc+ or Xp+ or <paraph-null>) & CP-)
-  or ({@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+  (<verb-wall> & {@MV+} & (Xc+ or Xp+ or <paraph-null>) & CP-)
+  or (<verb-wall> & {@MV+} & ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
       & (COq+ or CP- or Eq+ or <verb-wall>)))
   or [{@MV+} & (Xc+ or Xe+ or [[()]]) & <embed-verb>]
-  or ({@MV+} & <quote-sent>);
+  or (<verb-wall> & {@MV+} & <quote-sent>);
 
 % Xd- & Xc+: "If I'm right, he thought, this will work."
 % CPa- & Xc+: "So thinks everyone"
@@ -6582,39 +6582,39 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
 /en/words/words.v.10.1:
-  [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+  [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.11.1:
-  [[{@E-} & (((Sp- or I-) & <verb-wall> & {K+} & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+  [[{@E-} & (((Sp- or I-) & {K+} & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.10.2:
-  [[{@E-} & Ss- & <verb-wall> & <vc-paraph>]]
+  [[{@E-} & Ss- & <vc-paraph>]]
   or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
 
 /en/words/words.v.11.2:
-  [[{@E-} & Ss- & <verb-wall> & {K+} & <vc-paraph>]]
+  [[{@E-} & Ss- & {K+} & <vc-paraph>]]
   or [[{@E-} & SIsj+ & <vc-paraph-inv>]];
 
 % XXX Why is there a cost on Pvf- ???
 /en/words/words.v.10.3:
   {@E-} & (
-    ((S- or PP-) & <verb-wall> & <vc-paraph>)
+    ((S- or PP-) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or [Pvf- & <vc-it-paraph>]
     or (Pv- & CV- & dCPu-));
 
 /en/words/words.v.11.3:
   {@E-} & (
-    ((S- or PP-) & <verb-wall> & {K+} & <vc-paraph>)
+    ((S- or PP-) & {K+} & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or [Pvf- & <vc-it-paraph>]
     or (Pv- & CV- & dCPu-));
 
 read.q-d:
-   {@E-} & (((S- or I- or PP-) & <verb-wall> & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & (((S- or I- or PP-) & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 wrote.q-d:
-   {@E-} & ((S- & <verb-wall> & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & ((S- & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 written.q:
   {@E-} & ((PP- & <vc-paraph>) or (Pv- & CV- & dCPu-));
@@ -6630,14 +6630,14 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q:
-  {@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
+  {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 
 says.q:
-  {@E-} & ((Ss- & <verb-wall> & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
+  {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d:
   {@E-} & (
-    ((S- or PP-) & <verb-wall> & <vc-paraph>)
+    ((S- or PP-) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or (Pv- & CV- & dCPu-));
 
@@ -6645,23 +6645,23 @@ saying.q:
   {@E-} & Pg- & <vc-paraph>;
 
 avow.q:
- [[{@E-} & (((Sp- or I-) & <verb-wall> & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+ [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 tell.q:
-  [[{@E-} & (Sp- or I- or SIpj+) & O+ & <verb-wall> & <vc-paraph>]];
+  [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
 tells.q:
-  [[{@E-} & (Ss- or SIsj+) & O+ & <verb-wall> & <vc-paraph>]];
+  [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
 told.q-d:
-  {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <verb-wall> & <vc-paraph>;
+  {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>;
 telling.q:
   [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
 ask.q:
-  [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <verb-wall> & <vc-paraph>]];
+  [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
 asks.q:
-  [[{@E-} & ((Ss- & {O+}) or SIsj+) & <verb-wall> & <vc-paraph>]];
+  [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
 asked.q-d:
-  {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <verb-wall> & <vc-paraph>;
+  {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>;
 asking.q:
   {@E-} & Pg- & {O+} & <vc-paraph>;
 
