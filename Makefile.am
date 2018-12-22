@@ -15,18 +15,18 @@ pkgconfig_DATA = link-grammar.pc
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST =            \
-	autogen.sh           \
-	link-grammar.pc.in   \
-	link-grammar.spec.in \
-	link-grammar.spec    \
-	AUTHORS              \
-	ChangeLog            \
-	FindLinkGrammar.cmake\
-	LICENSE              \
-	MAINTAINERS          \
-	NEWS                 \
-	README.md            \
+EXTRA_DIST =                            \
+	autogen.sh                           \
+	link-grammar.pc.in                   \
+	link-grammar.spec.in                 \
+	link-grammar.spec                    \
+	AUTHORS                              \
+	ChangeLog                            \
+	FindLinkGrammar.cmake                \
+	LICENSE                              \
+	MAINTAINERS                          \
+	NEWS                                 \
+	README.md                            \
 	debug/README.md                      \
 	docker/docker-build.sh               \
 	docker/docker-base/Dockerfile        \
