@@ -177,16 +177,16 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords >= 24) {
-		log2_table_size = 14 + nwords / 24;
+	if (nwords > 96) {
+		log2_table_size = 15 + nwords / 48;
 	} else if (nwords >= 10) {
-		log2_table_size = 14;
+		log2_table_size = 14 + nwords / 24;
 	} else if (nwords >= 4) {
-		log2_table_size = nwords + 1;
+		log2_table_size = 1 + 1.5 * nwords;
 	} else {
-		log2_table_size = 4;
+		log2_table_size = 5;
 	}
-	if (log2_table_size > 21) log2_table_size = 21;
+	/* if (log2_table_size > 21) log2_table_size = 21; */
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
