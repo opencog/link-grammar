@@ -9801,7 +9801,7 @@ occasionally.e often.e originally.e:
 % XXX TODO the PH- should be split into PHc- and PHv- versions.
 <ordinary-adv>:
   ({EE- or EF+} &
-    (({Xd- & Xc+} & MVa-)
+    (({Xd- & {Xc+}} & MVa-)
     or Em+
     or ({PH-} & ECa+)
     or ({Xc+ & {Xd-}} & COa+)
@@ -10134,11 +10134,13 @@ never.i at_no_time not_once rarely.i since_when:
 not_since:
   (J+ or <subcl-verb>) & Wq- & Q+;
 
+% Cost on [<comp-prep>]: prefer comparatives, instead:
+% "Jane replied, even more quietly"
 even.e:
   E+
   or EC+
   or EB-
-  or <comp-prep>
+  or [<comp-prep>]0.5
   or ((MVp+ or MVa+ or MVs+) & ({Xc+ & {Xd-}} & CO+))
   or (Rnx+ & <CLAUSE-E>);
 
