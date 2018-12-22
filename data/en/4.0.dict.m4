@@ -8431,6 +8431,7 @@ thus therefore therefor:
 % {EA+}: "he is not a good programmer"
 %     FIXME: it would be nice to have some + link for this case, also.
 % N- & En+: "he does not want to steal it"
+% O-: "I should imagine not!"
 not.e:
   [EBm-]0.1
   or (EBm- & (EA+ or EE+))
@@ -8440,6 +8441,7 @@ not.e:
   or [{@E-} & N-]
   or NT+
   or EBy+
+  or O-
   or <COMP-OPENER>
   or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)
     or (Mg- & Mgn+)
