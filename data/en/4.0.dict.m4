@@ -1331,9 +1331,11 @@ them:
   or ({[[E-]]} & SJl+)
   or SJr-;
 
+% Ox-: "John made himself familiar with the drawings"
+%    The Ox is needed for post-processing
 myself yourself himself herself itself themselves
 ourselves yourselves thyself oneself one's one’s:
-  J- or O- or E+ or MVa-;
+  J- or Ox- or E+ or MVa-;
 
 each_other: J- or O- or YS+;
 
