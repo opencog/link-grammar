@@ -221,7 +221,7 @@ void free_extractor(extractor_t * pex)
 		}
 		DEBUG_X_TABLE(
 			if (c > 0)
-				printf("I %d: chain %d\n", i, c);
+				;//printf("I %d: chain %d\n", i, c);
 			else
 				N++;
 		)
