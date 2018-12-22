@@ -10165,6 +10165,9 @@ in_the_event_that in_the_event:
 if_only:
   ((MVp+ or MVa+ or MVs+) & ({Xd- & Xc+} & MVp-)) or (Wd+ & Wc-);
 
+o_that:
+  Wd+ & Wc-;
+
 on_condition:
   (TH+ or TS+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
