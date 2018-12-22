@@ -1142,6 +1142,7 @@ admitting such phantom words explicitly, rather than modifying the
 grammar rules to allow such constructions.  Other examples, with the
 phantom word in parenthesis, include:
  * I ate all (of) the cookies.
+ * I've known him only (for) a week.
  * I taught him (how) to swim.
  * I told him (that) it was gone.
  * It stopped me (from) flying off the cliff.
