@@ -11725,9 +11725,11 @@ strangely:
   or ({Xd- & Xc+} & {EE-} & MVa-);
 
 % EB-: "The problem, or rather, one of the problems, ..."
+% Em+: "He had rather hoped that his wife's views..."
 rather:
   <adv-adj-const>
   or Vw-
+  or Em+
   or ({Xc+ & {Xd-}} & CO+)
   or ({Xc+ & {Xd-}} & EB-);
 
