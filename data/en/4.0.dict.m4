@@ -3939,16 +3939,16 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
   or [[O+ & {@MV+}]];
 
-hope.v agree.v pretend.v swear.v pray.v vow.v vote.v:
+hope.v agree.v pretend.v swear.v pray.v protest.v vow.v vote.v:
   VERB_PLI(<vc-hope>);
-hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v:
+hopes.v agrees.v pretends.v swears.v prays.v protests.v vows.v votes.v :
   VERB_S_I(<vc-hope>) or <vc-please>;
 pretended.v-d prayed.v-d:
   VERB_SPPP_I(<vc-hope>) or <vc-please>;
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
 % Naked Pv+: "..., as was hoped."
-hoped.v-d voted.v-d vowed.v-d:
+hoped.v-d protested.v-d voted.v-d vowed.v-d:
   VERB_SPPP_T(<vc-hope>)
   or (<verb-s-pv> & {THi+})
   or <vc-please>
@@ -3964,7 +3964,8 @@ agreed.v-d:
 swore.v-d: VERB_SP_T(<vc-hope>);
 sworn.v: VERB_PP(<vc-hope>) or <verb-adj> or <vc-please>;
 
-hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
+hoping.v agreeing.v pretending.v swearing.v praying.v
+protesting.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 <verb-fronted>: {@E-} & S- & hPFt- & <verb-wall>;
@@ -4728,15 +4729,15 @@ noting.v confirming.v stressing.v assuming.v:
 
 <vc-believe>: {<vc-trans>} or
   ({@MV+} & (<embed-verb> or TH+ or RSe+));
-believe.v answer.v worry.v protest.v: VERB_PLI(<vc-believe>);
-believes.v answers.v worries.v protests.v: VERB_S_T(<vc-believe>);
-believed.v-d answered.v-d worried.v-d protested.v-d:
+believe.v answer.v worry.v: VERB_PLI(<vc-believe>);
+believes.v answers.v worries.v: VERB_S_T(<vc-believe>);
+believed.v-d answered.v-d worried.v-d:
   VERB_SPPP_T(<vc-believe>) or
   (<verb-s-pv> & {THi+ or <tof-verb>}) or
   <verb-phrase-opener>;
-believing.g answering.g worrying.g protesting.g:
+believing.g answering.g worrying.g:
   (<vc-believe> & <verb-ge>) or <verb-ge-d>;
-believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
+believing.v answering.v worrying.v: <verb-pg> & <vc-believe>;
 
 
 % resembles <vc-trans> with particle

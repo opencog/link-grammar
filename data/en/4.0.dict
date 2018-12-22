@@ -4266,13 +4266,13 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
   or [[O+ & {@MV+}]];
 
-hope.v agree.v pretend.v swear.v pray.v vow.v vote.v:
+hope.v agree.v pretend.v swear.v pray.v protest.v vow.v vote.v:
   
   ((<verb-pl,i> & (<vc-hope>)) or
   ({@E-} & hXd- & dWi- & (<vc-hope>) & hXc+) or
   (<verb-and-pl-> & ((<vc-hope>) or ())) or
   (((<vc-hope>) or [()]) & <verb-and-pl+>));
-hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v:
+hopes.v agrees.v pretends.v swears.v prays.v protests.v vows.v votes.v :
   
   ((<verb-s> & (<vc-hope>)) or
   (<verb-and-s-> & ([<vc-hope>] or ())) or
@@ -4285,7 +4285,7 @@ pretended.v-d prayed.v-d:
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
 % Naked Pv+: "..., as was hoped."
-hoped.v-d voted.v-d vowed.v-d:
+hoped.v-d protested.v-d voted.v-d vowed.v-d:
   
   ((<verb-sp,pp> & (<vc-hope>)) or
   (<verb-and-sp-i-> & ([<vc-hope>]0.2 or ())) or
@@ -4316,7 +4316,8 @@ sworn.v:
   (<verb-and-had-> & ([<vc-hope>] or ())) or
   ((<vc-hope>) & <verb-and-had+>)) or <verb-adj> or <vc-please>;
 
-hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
+hoping.v agreeing.v pretending.v swearing.v praying.v
+protesting.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 <verb-fronted>: {@E-} & S- & hPFt- & <verb-wall>;
@@ -5670,17 +5671,17 @@ noting.v confirming.v stressing.v assuming.v:
 
 <vc-believe>: {<vc-trans>} or
   ({@MV+} & (<embed-verb> or TH+ or RSe+));
-believe.v answer.v worry.v protest.v: 
+believe.v answer.v worry.v: 
   ((<verb-pl,i> & (<vc-believe>)) or
   ({@E-} & hXd- & dWi- & (<vc-believe>) & hXc+) or
   (<verb-and-pl-> & ((<vc-believe>) or ())) or
   (((<vc-believe>) or [()]) & <verb-and-pl+>));
-believes.v answers.v worries.v protests.v: 
+believes.v answers.v worries.v: 
   ((<verb-s> & (<vc-believe>)) or
   (<verb-and-sp-i-> & ([<vc-believe>]0.2 or ())) or
   ((<vc-believe>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-believed.v-d answered.v-d worried.v-d protested.v-d:
+believed.v-d answered.v-d worried.v-d:
   
   ((<verb-sp,pp> & (<vc-believe>)) or
   (<verb-and-sp-i-> & ([<vc-believe>]0.2 or ())) or
@@ -5688,9 +5689,9 @@ believed.v-d answered.v-d worried.v-d protested.v-d:
   <verb-and-sp-t>) or
   (<verb-s-pv> & {THi+ or <tof-verb>}) or
   <verb-phrase-opener>;
-believing.g answering.g worrying.g protesting.g:
+believing.g answering.g worrying.g:
   (<vc-believe> & <verb-ge>) or <verb-ge-d>;
-believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
+believing.v answering.v worrying.v: <verb-pg> & <vc-believe>;
 
 
 % resembles <vc-trans> with particle
