@@ -4046,36 +4046,34 @@ theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
   <verb-ge-d>;
 
 <vc-reply>: ({@MV+} & {TH+ or <embed-verb>});
-reply.v argue.v sigh.v
-testify.v comment.v respond.v hint.v reason.v:
+reply.v argue.v sigh.v testify.v comment.v respond.v reason.v:
   VERB_PLI(<vc-reply>);
 replies.v argues.v sighs.v
-testifies.v comments.v responds.v hints.v reasons.v:
+testifies.v comments.v responds.v reasons.v:
   VERB_S_T(<vc-reply>);
 replied.v-d sighed.v-d commented.v-d responded.v-d:
   VERB_SPPP_I(<vc-reply>);
 
 % The (<verb-s-pv> & THi+) allows "it is reasoned that ..." to parse.
-argued.v-d hinted.v-d reasoned.v-d testified.v-d:
+argued.v-d reasoned.v-d testified.v-d:
   VERB_SPPP_T(<vc-reply>) or
   (<verb-s-pv> & THi+);
 
-replying.v arguing.v sighing.v
-testifying.v commenting.v responding.v hinting.v
+replying.v arguing.v sighing.v testifying.v commenting.v responding.v
 reasoning.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
 
 <vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
-boast.v brag.v complain.v mutter.v whisper.v:
+boast.v brag.v complain.v hint.v mutter.v whisper.v:
   VERB_PLI(<vc-brag>);
-boasts.v brags.v complains.v mutters.v whispers.v:
+boasts.v brags.v complains.v hints.v mutters.v whispers.v:
   VERB_S_I(<vc-brag>);
-boasted.v-d bragged.v-d complained.v-d muttered.v-d whispered.v-d:
+boasted.v-d bragged.v-d complained.v-d hinted.v-d muttered.v-d whispered.v-d:
   VERB_SPPP_I(<vc-brag>);
-boasting.g bragging.g complaining.g muttering.g whispering.g:
+boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
   (<vc-brag> & <verb-ge>) or <verb-ge-d>;
-boasting.v bragging.v complaining.v muttering.v whispering.v:
+boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
   <verb-pg> & <vc-brag>;
 
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};

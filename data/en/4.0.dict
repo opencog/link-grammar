@@ -4462,15 +4462,14 @@ theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
   <verb-ge-d>;
 
 <vc-reply>: ({@MV+} & {TH+ or <embed-verb>});
-reply.v argue.v sigh.v
-testify.v comment.v respond.v hint.v reason.v:
+reply.v argue.v sigh.v testify.v comment.v respond.v reason.v:
   
   ((<verb-pl,i> & (<vc-reply>)) or
   ({@E-} & hXd- & dWi- & (<vc-reply>) & hXc+) or
   (<verb-and-pl-> & ((<vc-reply>) or ())) or
   (((<vc-reply>) or [()]) & <verb-and-pl+>));
 replies.v argues.v sighs.v
-testifies.v comments.v responds.v hints.v reasons.v:
+testifies.v comments.v responds.v reasons.v:
   
   ((<verb-s> & (<vc-reply>)) or
   (<verb-and-sp-i-> & ([<vc-reply>]0.2 or ())) or
@@ -4483,7 +4482,7 @@ replied.v-d sighed.v-d commented.v-d responded.v-d:
   ((<vc-reply>) & <verb-and-sp-i+>));
 
 % The (<verb-s-pv> & THi+) allows "it is reasoned that ..." to parse.
-argued.v-d hinted.v-d reasoned.v-d testified.v-d:
+argued.v-d reasoned.v-d testified.v-d:
   
   ((<verb-sp,pp> & (<vc-reply>)) or
   (<verb-and-sp-i-> & ([<vc-reply>]0.2 or ())) or
@@ -4491,32 +4490,31 @@ argued.v-d hinted.v-d reasoned.v-d testified.v-d:
   <verb-and-sp-t>) or
   (<verb-s-pv> & THi+);
 
-replying.v arguing.v sighing.v
-testifying.v commenting.v responding.v hinting.v
+replying.v arguing.v sighing.v testifying.v commenting.v responding.v
 reasoning.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
 
 <vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
-boast.v brag.v complain.v mutter.v whisper.v:
+boast.v brag.v complain.v hint.v mutter.v whisper.v:
   
   ((<verb-pl,i> & (<vc-brag>)) or
   ({@E-} & hXd- & dWi- & (<vc-brag>) & hXc+) or
   (<verb-and-pl-> & ((<vc-brag>) or ())) or
   (((<vc-brag>) or [()]) & <verb-and-pl+>));
-boasts.v brags.v complains.v mutters.v whispers.v:
+boasts.v brags.v complains.v hints.v mutters.v whispers.v:
   
   ((<verb-s> & (<vc-brag>)) or
   (<verb-and-s-> & ([<vc-brag>] or ())) or
   ((<vc-brag>) & <verb-and-s+>));
-boasted.v-d bragged.v-d complained.v-d muttered.v-d whispered.v-d:
+boasted.v-d bragged.v-d complained.v-d hinted.v-d muttered.v-d whispered.v-d:
   
   ((<verb-sp,pp> & (<vc-brag>)) or
   (<verb-and-sp-i-> & ([<vc-brag>] or ())) or
   ((<vc-brag>) & <verb-and-sp-i+>));
-boasting.g bragging.g complaining.g muttering.g whispering.g:
+boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
   (<vc-brag> & <verb-ge>) or <verb-ge-d>;
-boasting.v bragging.v complaining.v muttering.v whispering.v:
+boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
   <verb-pg> & <vc-brag>;
 
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
