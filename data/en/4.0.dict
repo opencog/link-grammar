@@ -10359,10 +10359,10 @@ or.j-m:
 
 % XJn-: Neither .. nor ...
 nor.j-m:
-  ({Xd-} & MJla- & XJn- & {EBb+} & MJra+ & <post-nom-a>) or
-  ({Xd-} & MJlp- & XJn- & {EBb+} & MJrp+ & <post-nom-p>) or
-  ({Xd-} & MJlj- & XJn- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
-  ({Xd-} & MJlv- & XJn- & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
+  ({Xd-} & MJla- & {XJn-} & {EBb+} & MJra+ & <post-nom-a>) or
+  ({Xd-} & MJlp- & {XJn-} & {EBb+} & MJrp+ & <post-nom-p>) or
+  ({Xd-} & MJlj- & {XJn-} & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>) or
+  ({Xd-} & MJlv- & {XJn-} & {EBb+} & MJrv+ & {Xc+} & <post-nom-v>);
 
 % Conjoined question words.
 % When and where is the party?
@@ -10575,6 +10575,7 @@ and.j-l or.j-l: Xj- & hWl+ & {Xj+};
 nor.j-v:
   (VJl*i- & XJn- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
   (VJl*t- & XJn- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>)) or
+  (Xd- & VJl*i- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
   ({Xd-} & VJl*i- & VJr*i+ & ({@MV+} & I- & <verb-wall>));
 
 % Similar to and, but allows optional comma before "but"
@@ -12511,7 +12512,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <semicol>:
   {@Xca-} & Xx- & (<wo-wall> or <wi-wall>) & {Xx+};
 
-";" ；: <semicol>;
+";" ；: <semicol> or (EBx+ & Xd+);
 
 % comma, as a conjunction
 % AJ: "They taste bitter, not sweet"
