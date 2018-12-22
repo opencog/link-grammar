@@ -10290,7 +10290,7 @@ changequote dnl
 <semicol>:
   {@Xca-} & Xx- & (<wo-wall> or <wi-wall>) & {Xx+};
 
-";" ；: <semicol> or (EBx+ & Xd+);
+";" ；: <semicol> or ({EBx+} & Xd+);
 
 % comma, as a conjunction
 % AJ: "They taste bitter, not sweet"
