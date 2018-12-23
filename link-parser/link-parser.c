@@ -1027,7 +1027,7 @@ int main(int argc, char * argv[])
 			}
 		}
 
-		/* print_total_time(opts); */
+		if (verbosity > 1) parse_options_print_total_time(opts);
 
 		const char *rc = "";
 		if (copts->batch_mode)
