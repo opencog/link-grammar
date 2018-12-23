@@ -861,7 +861,7 @@ int main(int argc, char * argv[])
 			printf("%s\n", input_string);
 		}
 
-		if (copts->batch_mode)
+		if (copts->batch_mode || auto_next_linkage_test(test))
 		{
 			label = strip_off_label(input_string);
 		}
