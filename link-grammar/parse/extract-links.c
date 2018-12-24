@@ -47,7 +47,9 @@ struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */
 	unsigned int   null_count; /* number of island words */
-	Connector      *le, *re; /* pending, unconnected connectors */
+	int            l_id, r_id; /* pending, unconnected connectors */
+	double         l_cost, r_cost;                 /* disjunct costs */
+	const char     *l_word_string, *r_word_string; /* disjunct word strings */
 
 	s64 count;      /* The number of ways to parse. */
 #ifdef RECOUNT
@@ -175,20 +177,23 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords >= 24) {
-		log2_table_size = 14 + nwords / 24;
+	if (nwords > 96) {
+		log2_table_size = 15 + nwords / 48;
 	} else if (nwords >= 10) {
-		log2_table_size = 14;
+		log2_table_size = 14 + nwords / 24;
 	} else if (nwords >= 4) {
-		log2_table_size = nwords + 1;
+		log2_table_size = 1 + 1.5 * nwords;
 	} else {
-		log2_table_size = 4;
+		log2_table_size = 5;
 	}
-	if (log2_table_size > 21) log2_table_size = 21;
+	/* if (log2_table_size > 21) log2_table_size = 21; */
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
-	//printf("Allocating x_table of size %d (nwords %d)\n", pex->x_table_size, nwords);
+	DEBUG_X_TABLE(
+		printf("Allocating x_table of size %d (nwords %d)\n",
+		       pex->x_table_size, nwords);
+	)
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
@@ -219,7 +224,7 @@ void free_extractor(extractor_t * pex)
 		}
 		DEBUG_X_TABLE(
 			if (c > 0)
-				printf("I %d: chain %d\n", i, c);
+				;//printf("I %d: chain %d\n", i, c);
 			else
 				N++;
 		)
@@ -242,58 +247,79 @@ void free_extractor(extractor_t * pex)
 static inline unsigned int el_pair_hash(extractor_t * pex,
                             int lw, int rw,
                             const Connector *le, const Connector *re,
-                            unsigned int cost)
+                            Disjunct *ld, Disjunct *rd,
+                            unsigned int null_count)
 {
 	unsigned int i;
-	int table_size = pex->x_table_size;
+	size_t table_size = pex->x_table_size;
+	int l_id = 0, r_id = 0;
 
-#if 0
-	int log2_table_size = pex->log2_x_table_size;
+	if (NULL != le) l_id = le->suffix_id;
+	if (NULL != re) r_id = re->suffix_id;
 
-	/* hash function. Based on some tests, this seems to be
-	 * an almost "perfect" hash, in that almost all hash buckets
-	 * have the same size! */
-	i = 1 << cost;
-	i += 1 << (lw % (log2_table_size-1));
-	i += 1 << (rw % (log2_table_size-1));
-	i += ((unsigned int) le) >> 2;
-	i += ((unsigned int) le) >> log2_table_size;
-	i += ((unsigned int) re) >> 2;
-	i += ((unsigned int) re) >> log2_table_size;
-	i += i >> log2_table_size;
-#else
-	/* sdbm-based hash */
-	i = cost;
+#ifdef DEBUG
+	assert(((NULL == le) || le->suffix_id) &&
+	       ((NULL == re) || re->suffix_id));
+#endif
+
+   /* sdbm-based hash */
+	i = null_count;
 	i = lw + (i << 6) + (i << 16) - i;
 	i = rw + (i << 6) + (i << 16) - i;
-	i = ((int)(intptr_t)le) + (i << 6) + (i << 16) - i;
-	i = ((int)(intptr_t)re) + (i << 6) + (i << 16) - i;
-#endif
+	i = l_id + (i << 6) + (i << 16) - i;
+	i = r_id + (i << 6) + (i << 16) - i;
+	if (NULL != ld)
+	{
+		i = (unsigned int)(ld->cost * 1024) + (i << 6) + (i << 16) - i;
+		i = ((int)(intptr_t)ld->word_string) + (i << 6) + (i << 16) - i;
+	}
+	if (NULL != rd)
+	{
+		i = (unsigned int)(rd->cost * 1024) + (i << 6) + (i << 16) - i;
+		i = ((int)(intptr_t)rd->word_string) + (i << 6) + (i << 16) - i;
+	}
 
 	return i & (table_size-1);
 }
 /**
  * Returns the pointer to this info, NULL if not there.
+ * Note that there is no need to use (lw, rw) as keys because suffix_id
+ * is also encoded by the word number.
  */
 static Pset_bucket * x_table_pointer(int lw, int rw,
                               Connector *le, Connector *re,
+										Disjunct *ld, Disjunct *rd,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, null_count)];
+	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, ld, rd, null_count)];
+	int l_id = (NULL != le) ? le->suffix_id : lw;
+	int r_id = (NULL != re) ? re->suffix_id : rw;
+	double l_cost = (NULL != ld) ? ld->cost : 0;
+	double r_cost = (NULL != rd) ? rd->cost : 0;
+	const char* l_word_string = ld ? ld->word_string : 0;
+	const char* r_word_string = rd ? rd->word_string : 0;
+
 	for (; t != NULL; t = t->next) {
-		if ((t->set.lw == lw) && (t->set.rw == rw) &&
-		    (t->set.le == le) && (t->set.re == re) &&
-		    (t->set.null_count == null_count))  return t;
+		if ((t->set.l_id == l_id) && (t->set.r_id == r_id) &&
+		    (t->set.l_cost == l_cost) && (t->set.r_cost == r_cost) &&
+		    (t->set.l_word_string == l_word_string) &&
+		    (t->set.r_word_string == r_word_string) &&
+		    (t->set.null_count == null_count)) return t;
 	}
 	return NULL;
 }
 
 /**
  * Stores the value in the x_table.  Assumes it's not already there.
+ * Since disjuncts of connectors with the same suffix_id may have
+ * different costs and may belong to different words, the disjunct cost
+ * and word_string are saved, to be used as retrieval keys in
+ * x_table_pointer().
  */
 static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
+                                  Disjunct *ld, Disjunct *rd,
                                   unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t, *n;
@@ -303,13 +329,17 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
-	n->set.le = le;
-	n->set.re = re;
+	n->set.l_id = (NULL != le) ? le->suffix_id : lw;
+	n->set.r_id = (NULL != re) ? re->suffix_id : rw;
+	n->set.l_cost = (NULL != ld) ? ld->cost : 0;
+	n->set.r_cost = (NULL != rd) ? rd->cost : 0;
+	n->set.l_word_string = (NULL != ld) ? ld->word_string : NULL;
+	n->set.r_word_string = (NULL != rd) ? rd->word_string : NULL;
 	n->set.count = 0;
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = el_pair_hash(pex, lw, rw, le, re, null_count);
+	h = el_pair_hash(pex, lw, rw, le, re, ld, rd, null_count);
 	t = pex->x_table[h];
 	n->next = t;
 	pex->x_table[h] = n;
@@ -321,10 +351,10 @@ static Parse_set* dummy_set(int lw, int rw,
                             unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *dummy;
-	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pex);
+	dummy = x_table_pointer(lw, rw, NULL, NULL, NULL, NULL, null_count, pex);
 	if (dummy) return &dummy->set;
 
-	dummy = x_table_store(lw, rw, NULL, NULL, null_count, pex);
+	dummy = x_table_store(lw, rw, NULL, NULL, NULL, NULL, null_count, pex);
 	dummy->set.count = 1;
 	return &dummy->set;
 }
@@ -399,14 +429,14 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	if (NULL == count) return NULL;
 	if (hist_total(count) == 0) return NULL;
 
-	xt = x_table_pointer(lw, rw, le, re, null_count, pex);
+	xt = x_table_pointer(lw, rw, le, re, ld, rd, null_count, pex);
 
 	/* Perhaps we've already computed it; if so, return it. */
 	if (xt != NULL) return &xt->set;
 
 	/* Start it out with the empty set of parse choices. */
 	/* This entry must be updated before we return. */
-	xt = x_table_store(lw, rw, le, re, null_count, pex);
+	xt = x_table_store(lw, rw, le, re, ld, rd, null_count, pex);
 
 	/* The count we previously computed; its non-zero. */
 	xt->set.count = hist_total(count);
