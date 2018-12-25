@@ -853,7 +853,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		return -1;
 	}
 
-	prt_error("Error: I can't interpret \"%s\" as a command.  Try \"!help\".\n", line);
+	prt_error("Error: I can't interpret \"%s\" as a command.  Try \"!help\" or \"!variables\".\n", line);
 	return -1;
 }
 
