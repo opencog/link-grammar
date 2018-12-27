@@ -2,6 +2,7 @@
 !verbosity=1
 !echo
 !limit=1000
+!timeout=1000
 !short=20
 % !constituents=1
 !spell=0
