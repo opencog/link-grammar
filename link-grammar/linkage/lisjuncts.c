@@ -43,7 +43,7 @@
  * compute_chosen_disjuncts()).
  *
  * In order that multi-connectors will not be extracted several times
- * for each disjunct (if they connect to multiple words) their address
+ * for each disjunct (if they connect to multiple words) their suffix_id
  * is checked for duplication.
  */
 void lg_compute_disjunct_strings(Linkage lkg)
@@ -61,7 +61,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 		for (int dir = 0; dir < 2; dir++)
 		{
-			Connector *last_ms = NULL; /* last multi-connector */
+			int last_multi_suffix_id = 0; /* last multi-connector */
 
 			for (LinkIdx i = lkg->num_links-1; i < lkg->num_links; i--)
 			{
@@ -81,8 +81,8 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 				if (c->multi)
 				{
-					if (last_ms == c) continue; /* already included */
-					last_ms = c;
+					if (last_multi_suffix_id == c->suffix_id) continue; /* already included */
+					last_multi_suffix_id = c->suffix_id;
 					djstr[len++] = '@';
 				}
 				len += lg_strlcpy(djstr+len, connector_string(c), sizeof(djstr)-len);
