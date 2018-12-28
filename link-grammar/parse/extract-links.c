@@ -40,7 +40,7 @@ struct Parse_choice_struct
 	Parse_choice * next;
 	Parse_set * set[2];
 	Link        link[2];   /* the lc fields of these is NULL if there is no link used */
-	Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
+	Disjunct    *md;     /* the chosen disjunct for the middle word */
 };
 
 struct Parse_set_struct
@@ -126,9 +126,7 @@ make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
 	pc->link[1].rw = rset->rw;
 	pc->link[1].lc = rlc;
 	pc->link[1].rc = rrc;
-	pc->ld = ld;
 	pc->md = md;
-	pc->rd = rd;
 	return pc;
 }
 
@@ -477,8 +475,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 					if (pset == NULL) continue;
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL, NULL,
-									  pset,  NULL, NULL,
-									  NULL, NULL, NULL, &xt->set);
+									  pset, dis->right, NULL,
+									  ld, dis, rd, &xt->set);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
@@ -736,23 +734,28 @@ void check_link_size(Linkage lkg)
 	}
 }
 
-static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link * link)
+/**
+ * Assemble the link array and the chosen_disjuncts of a linkage.
+ */
+static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 {
-	check_link_size(lkg);
-	lkg->link_array[lkg->num_links] = *link;
-	lkg->num_links++;
+	if (link->rc != NULL)
+	{
+		check_link_size(lkg);
+		lkg->link_array[lkg->num_links] = *link;
+		lkg->num_links++;
+	}
 
-	lkg->chosen_disjuncts[link->lw] = ld;
-	lkg->chosen_disjuncts[link->rw] = rd;
+	lkg->chosen_disjuncts[lr ? link->lw : link->rw] = md;
 }
 
 static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 {
 	if (pc->link[0].lc != NULL) { /* there is a link to generate */
-		issue_link(lkg, pc->ld, pc->md, &pc->link[0]);
+		issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
 	}
 	if (pc->link[1].lc != NULL) {
-		issue_link(lkg, pc->md, pc->rd, &pc->link[1]);
+		issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
 	}
 }
 
