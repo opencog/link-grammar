@@ -62,7 +62,7 @@ struct Linkage_s
 
 	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 	size_t          cdsz;         /* Alloc'ed length of chosen_disjuncts */
-	char **         disjunct_list_str; /* Stringified version of above */
+	const char **   disjunct_list_str; /* Stringified version of above */
 #ifdef USE_CORPUS
 	Sense **        sense_list;   /* Word senses, inferred from disjuncts */
 #endif

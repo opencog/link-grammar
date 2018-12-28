@@ -57,7 +57,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	size_t nwords = lkg->num_words;
 
 	if (lkg->disjunct_list_str) return;
-	lkg->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
+	lkg->disjunct_list_str = malloc(nwords * sizeof(char *));
 	memset(lkg->disjunct_list_str, 0, nwords * sizeof(char *));
 
 	for (WordIdx w = 0; w < nwords; w++)
@@ -108,7 +108,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 		assert_same_disjunct(lkg, w, djstr);
 #endif
 
-		lkg->disjunct_list_str[w] = strdup(djstr);
+		lkg->disjunct_list_str[w] = string_set_add(djstr, lkg->sent->string_set);
 	}
 }
 
