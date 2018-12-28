@@ -1547,9 +1547,12 @@ both.a: Paf- or AJra-;
 
 % half: prefer NJ+ over noun-main-x, because half is almost surely
 % modifying something, instead of being a direct object, subject, etc.
-half: {EN-} &
-  (NJ+ or
-    [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
+% EZ+: "If you love Mr. Darcy half as well as I do"
+half:
+  {EN-} &
+    (NJ+
+    or EZ+
+    or [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
 
 % "How many years" -- prefer TQ+ over Dmc+
 % OFd+ & Dmc+: "I drank many of the beers"

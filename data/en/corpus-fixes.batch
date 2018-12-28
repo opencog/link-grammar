@@ -5858,6 +5858,8 @@ You are as sweet as sugar.
 *The situation is not so bad as you suggest.
 He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
+If you love Mr. Darcy half as well as I do my dear Wickham, you must be very happy.
+% This parses, but incorectly ...
 *the hotel is quite comfortable as such establishments go
 
 % "as" as synonym for "while"
