@@ -96,6 +96,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 				djstr[len++] = ' ';
 			}
 		}
+		if ((len > 0) && (djstr[len-1] == ' ')) len--;
 		djstr[len++] = '\0';
 
 		lkg->disjunct_list_str[w] = strdup(djstr);
