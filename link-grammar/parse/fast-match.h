@@ -79,4 +79,12 @@ static inline size_t get_match_list_position(fast_matcher_t *ctxt)
 {
 	return ctxt->match_list_end;
 }
+
+/**
+ * Return the match-list at a given position.
+ */
+static inline Disjunct **get_match_list(fast_matcher_t *ctxt, size_t pos)
+{
+	return &ctxt->match_list[pos];
+}
 #endif

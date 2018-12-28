@@ -78,6 +78,7 @@ struct extractor_s
 	Parse_set *    parse_set;
 	Word           *words;
 	bool           islands_ok;
+	bool           sort_match_list;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -331,46 +332,33 @@ static Parse_set* dummy_set(int lw, int rw,
 	return &dummy->set;
 }
 
-#ifdef FINISH_THIS_IDEA_MAYBE_LATER
 static int cost_compare(const void *a, const void *b)
 {
-	const Match_node* const * ma = a;
-	const Match_node* const * mb = b;
-	if ((*ma)->d->cost < (*mb)->d->cost) return -1;
-	if ((*ma)->d->cost > (*mb)->d->cost) return 1;
+	const Disjunct * const * da = a;
+	const Disjunct * const * db = b;
+	if ((*da)->cost < (*db)->cost) return -1;
+	if ((*da)->cost > (*db)->cost) return 1;
 	return 0;
 }
 
 /**
- * Sort the matchlist into ascending disjunct cost. The goal here
+ * Sort the match-list into ascending disjunct cost. The goal here
  * is to issue the lowest-cost disjuncts first, so that the parse
  * set ends up quasi-sorted. This is not enough to get us a totally
  * sorted parse set, but it does guarantee that at least the very
  * first parse really will be the lowest cost.
  */
-static Match_node* sort_matchlist(Match_node* mlist)
+static void sort_match_list(fast_matcher_t *mchxt, size_t mlb)
 {
-	Match_node* mx;
-	Match_node** marr;
-	size_t len = 1;
-	size_t i;
+	size_t i = mlb;
 
-	for (mx = mlist; mx->next != NULL; mx = mx->next) len++;
-	if (1 == len) return mlist;
+	while (get_match_list_element(mchxt, i) != NULL)
+		i++;
 
-	/* Avoid blowing out the stack. Its hopeless. */
-	if (100000 < len) return mlist;
+	if (i - mlb < 2) return;
 
-	marr = alloca(len * sizeof(Match_node*));
-	i = 0;
-	for (mx = mlist; mx != NULL; mx = mx->next) marr[i++] = mx;
-
-	qsort((void *) marr, len, sizeof(Match_node*), cost_compare);
-	for (i=0; i<len-1; i++) marr[i]->next = marr[i+1];
-	marr[len-1]->next = NULL;
-	return marr[0];
+	qsort(get_match_list(mchxt, mlb), i - mlb, sizeof(Disjunct *), cost_compare);
 }
-#endif /* FINISH_THIS_IDEA_MAYBE_LATER */
 
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
@@ -497,7 +485,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	for (w = start_word; w < end_word; w++)
 	{
 		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
-		// if (mlist) mlist = sort_matchlist(mlist);
+		if (pex->sort_match_list) sort_match_list(mchxt, mlb);
+
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			Disjunct *d = get_match_list_element(mchxt, mle);
@@ -688,6 +677,7 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 {
 	pex->words = sent->word;
 	pex->islands_ok = opts->islands_ok;
+	pex->sort_match_list = test_enabled("sort-match-list");
 
 	pex->parse_set =
 		mk_parse_set(mchxt, ctxt,
