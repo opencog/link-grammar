@@ -68,7 +68,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 		{
 			int last_multi_suffix_id = 0; /* last multi-connector */
 
-			for (LinkIdx i = lkg->num_links-1; i < lkg->num_links; i--)
+			for (LinkIdx i = lkg->num_links-1; i != (WordIdx)-1; i--)
 			{
 				Link *lnk = &lkg->link_array[i];
 				Connector *c;
