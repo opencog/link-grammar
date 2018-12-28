@@ -11,15 +11,15 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>  /* For UINT_MAX */
+#include <limits.h>                     // INT_MAX
 
 #include "connectors.h"
 #include "count.h"
-#include "disjunct-utils.h" // for Disjunct
+#include "disjunct-utils.h"             // Disjunct
 #include "extract-links.h"
-#include "utilities.h"                // for Windows rand_r()
+#include "utilities.h"                  // Windows rand_r()
 #include "linkage/linkage.h"
-#include "tokenize/word-structures.h" // for Word_Struct
+#include "tokenize/word-structures.h"   // Word_Struct
 
 //#define RECOUNT
 
@@ -39,7 +39,7 @@ struct Parse_choice_struct
 {
 	Parse_choice * next;
 	Parse_set * set[2];
-	Link        link[2];   /* the lc fields of these is NULL if there is no link used */
+	Link        link[2]; /* the lc fields of these is NULL if there is no link used */
 	Disjunct    *md;     /* the chosen disjunct for the middle word */
 };
 
@@ -66,7 +66,7 @@ struct Parse_set_struct
 typedef struct Pset_bucket_struct Pset_bucket;
 struct Pset_bucket_struct
 {
-	Parse_set         set;
+	Parse_set set;
 	Pset_bucket *next;
 };
 
