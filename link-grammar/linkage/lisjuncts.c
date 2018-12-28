@@ -24,6 +24,11 @@
 #include "lisjuncts.h"
 #include "string-set.h"
 
+#ifdef DEBUG
+#include "print/print-util.h"
+static void assert_same_disjunct(Linkage, WordIdx, const char *);
+#endif /* DEBUG */
+
 /* Links are *always* less than 10 chars long . For now. The estimate
  * below is somewhat dangerous .... could be  fixed. */
 #define MAX_LINK_NAME_LENGTH 10
@@ -99,6 +104,32 @@ void lg_compute_disjunct_strings(Linkage lkg)
 		if ((len > 0) && (djstr[len-1] == ' ')) len--;
 		djstr[len++] = '\0';
 
+#ifdef DEBUG
+		assert_same_disjunct(lkg, w, djstr);
+#endif
+
 		lkg->disjunct_list_str[w] = strdup(djstr);
 	}
 }
+
+#ifdef DEBUG
+static void assert_same_disjunct(Linkage lkg, WordIdx w, const char *djstr)
+{
+	char *cs;
+	if (lkg->chosen_disjuncts[w])
+	{
+		cs = print_one_disjunct(lkg->chosen_disjuncts[w]);
+		char *cs_lastchar = &cs[strlen(cs)-1];
+		if (*cs_lastchar == ' ') *cs_lastchar = '\0';
+	}
+	else
+		cs = (char *)"";
+
+	assert(strcmp(cs, djstr) == 0,
+			 "Word %zu: Inconsistent disjunct string %s (link_array %s)",
+	       w, cs, djstr);
+
+	if (lkg->chosen_disjuncts[w])
+		free(cs);
+}
+#endif /* DEBUG */
