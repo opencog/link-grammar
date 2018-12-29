@@ -398,7 +398,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	/* This entry must be updated before we return. */
 	xt = x_table_store(lw, rw, le, re, null_count, pex);
 
-	/* The count we previously computed; its non-zero. */
+	/* The count we previously computed; it's non-zero. */
 	xt->set.count = hist_total(count);
 
 #define NUM_PARSES 4

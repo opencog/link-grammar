@@ -283,7 +283,7 @@ void remove_empty_words(Linkage lkg)
  *    Computed as a function of chosen_disjuncts[]. This differs from
  *    sentence.word[].alternatives because it contains the subscripts.  It
  *    differs from chosen_disjunct[].string in that the idiom symbols have
- *    been removed.  Furthermore, several chosen_disjuncts[].string
+ *    been removed.  Furthermore, several chosen_disjuncts[].word_string
  *    elements may be combined into one chosen_words[] element if
  *    opts->display_morphology==0 or that they where linkage null-words
  *    that are morphemes of the same original word (i.e. subwords of an
