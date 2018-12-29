@@ -15,6 +15,7 @@ Version 5.6.0 (XXX 2018)
  * Drastic speedup for long sentences (hash encoding of trailing connectors).
  * English dict: Support locative replies/declarations.
  * English dict: broaden support for misc paraphrasing verbs.
+ * English dict: fix relativized paraphrasing.
  * English dict: fix comparative-style conjunctions.
 
 Version 5.5.1 (27 July 2018)
