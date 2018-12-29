@@ -4429,9 +4429,11 @@ decided.v-d resolved.v-d:
 deciding.v resolving.v: <verb-pg> & <vc-decide>;
 deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 
+% TO+ & Xc+: allows null-infinitive: "Oh gosh, I forgot to"
 <vc-forget>:
-  {<vc-trans>} or
-  ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+  {<vc-trans>}
+  or (<mv-coord> & TO+ & Xc+)
+  or ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
@@ -4454,8 +4456,11 @@ learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-ope
 learning.g: (<vc-learn> & <verb-ge>) or <verb-ge-d>;
 learning.v: <verb-pg> & <vc-learn>;
 
-<vc-propose>: <vc-trans> or
-({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
+% TO+ & Xc+: allows null-infinitive: "I did not propose to"
+<vc-propose>:
+  <vc-trans>
+  or (<mv-coord> & TO+ & Xc+)
+  or ({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
 proposed.v-d:
@@ -4466,9 +4471,11 @@ proposed.v-d:
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
+% TO+ & Xc+: allows null-infinitive: "I did not demand to"
 <vc-demand>:
   <vc-trans>
   or (OF+ & <mv-coord>)
+  or (<mv-coord> & TO+ & Xc+)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
