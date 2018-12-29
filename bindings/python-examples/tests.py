@@ -748,7 +748,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
     # Some parses are fractionally preferred over others...
     def test_g_fractions(self):
         self.assertEqual(list(self.parse_sent('A player who is injured has to leave the field')[0].words()),
-             ['LEFT-WALL', 'a', 'player.n', 'who', 'is.v', 'injured.a', 'has.v', 'to.r', 'leave.v', 'the', 'field.n', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'a', 'player.n', 'who', 'is.v', 'injured.v-d', 'has.v', 'to.r', 'leave.v', 'the', 'field.n', 'RIGHT-WALL'])
 
         self.assertEqual(list(self.parse_sent('They ate a special curry which was recommended by the restaurant\'s owner')[0].words()),
              ['LEFT-WALL', 'they', 'ate.v-d', 'a', 'special.a', 'curry.s',
