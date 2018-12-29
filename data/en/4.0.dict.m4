@@ -275,6 +275,7 @@ nonCAP.zzz: ZZZ-;
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
 % TOt+ & B+: this is one where B makes the link
+% TO+ & Xc+: allows null-infinitive: "Because I want to."
 <inf-verb>: IV+;
 <to-verb>:  TO+ & IV+;
 <tof-verb>: TOf+ & IV+;
@@ -282,6 +283,7 @@ nonCAP.zzz: ZZZ-;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
+<null-verb>: TO+ & Xc+;
 
 <embed-verb>: Ce+ & CV+;
 <that-verb>: Cet+ & CV+;
@@ -3883,7 +3885,7 @@ raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 % TO+ & Xc+: allows null-infinitive: "Yes, it sometimes tends to"
 <vc-tend>:
   (<vc-tr,intr> & {<to-verb>})
-  or (<mv-coord> & TO+ & Xc+);
+  or (<mv-coord> & <null-verb>);
 tend.v: VERB_PLI(<vc-tend>);
 tends.v: VERB_S_T(<vc-tend>);
 tended.v-d:
@@ -3898,7 +3900,7 @@ tending.v: <verb-pg> & <vc-tend>;
 % TO+ & Xc+: allows null-infinitive: "I would never hesitate to"
 <vc-consent>:
   ({@MV+} & {<to-verb>})
-  or (<mv-coord> & TO+ & Xc+);
+  or (<mv-coord> & <null-verb>);
 consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
   VERB_PLI(<vc-consent>);
 consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
@@ -3948,7 +3950,7 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 % TO+ & Xc+: allows null-infinitive: "Yes, I would hope to"
 <vc-hope>:
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or [[O+ & {@MV+}]];
 
 hope.v agree.v pretend.v swear.v pray.v protest.v vow.v vote.v:
@@ -3990,7 +3992,7 @@ protesting.v vowing.v voting.v:
 <vc-appear>:
   {@MV+} & {(Pa+ & <verb-wall>)
     or <tof-verb>
-    or (TO+ & Xc+)
+    or <null-verb>
     or THi+
     or AF-
     or N+
@@ -4008,7 +4010,7 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
   {@MV+} & 
     ((Pa+ & <verb-wall>)
     or <tof-verb>
-    or (TO+ & Xc+)
+    or <null-verb>
     or LI+
     or THi+
     or AF-
@@ -4114,7 +4116,7 @@ dreaming.v: <verb-pg> & <vc-dream>;
 % TO+ & Xc+: allows null-infinitive: "No, I did not think to"
 <vc-think>:
   ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or (OF+ & <mv-coord>) or BW-})
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or (O+ & {@MV+} & {O*n+ or Pa**j+});
 
 think.v: VERB_PLI(<vc-think>);
@@ -4402,7 +4404,7 @@ fighting.v: <verb-pg> & <vc-fight>;
 % TO+ & Xc+: allows null-infinitive: "I did not mean to".
 <vc-threaten>:
   {<vc-trans>}
-  or (<mv-coord> & (TO+ & Xc+))
+  or (<mv-coord> & <null-verb>)
   or ({@MV+} & (<to-verb> or TH+ or Zs- or <embed-verb>));
 
 threaten.v mean.v arrange.v pledge.v:
@@ -4453,7 +4455,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 % TO+ & Xc+: allows null-infinitive: "Oh gosh, I forgot to"
 <vc-forget>:
   {<vc-trans>}
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
@@ -4480,7 +4482,7 @@ learning.v: <verb-pg> & <vc-learn>;
 % TO+ & Xc+: allows null-infinitive: "I did not propose to"
 <vc-propose>:
   <vc-trans>
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or ({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
@@ -4496,7 +4498,7 @@ proposing.v: <verb-pg> & <vc-propose>;
 <vc-demand>:
   <vc-trans>
   or (OF+ & <mv-coord>)
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
@@ -4771,7 +4773,7 @@ noting.v confirming.v stressing.v:
 % ------------------------------
 % Almost like the above, except:
 % TO+ & Xc+: allows null-infinitive: "I could not assume to"
-<vc-assume>: <vc-declare> or (<mv-coord> & TO+ & Xc+);
+<vc-assume>: <vc-declare> or (<mv-coord> & <null-verb>);
 
 fear.v presume.v assume.v waver.v:
   VERB_PLI(<vc-assume>) or <verb-manner>;
@@ -5328,7 +5330,7 @@ hostage.i captive.i: Vh- or Vth-;
 <vc-expect>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb>})
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or ([[@MV+ & O*n+]]);
 
 expect.v claim.v: VERB_PLI(<vc-expect>);
@@ -5359,9 +5361,9 @@ intending.v: <verb-pg> & <vc-intend>;
 % I+: auxiliary: "no one dared say a word"
 % N+ & TO: "I dare not to say the truth"
 <vc-dare>:
-  ({N+} & <mv-coord> & {<to-verb> or (TO+ & Xc+)}) or
+  ({N+} & <mv-coord> & {<to-verb> or <null-verb>}) or
   ({N+} & I+) or
-  ((O+ or <b-minus>) & <mv-coord> & {<too-verb> or (TO+ & Xc+)});
+  ((O+ or <b-minus>) & <mv-coord> & {<too-verb> or <null-verb>});
 
 % SI+ & <verb-rq-aux> & I+: "How dare you disobey orders"
 % <verb-s> & N+ & I+: "He dare not lie to me!" (singular subject)
@@ -5422,7 +5424,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % TO+ & Xc+: allows null-infinitive: "Because I want to."
 % intransitive: "Try it if you want"
 <vc-want>:
-  (<mv-coord> & ({<to-verb>} or (TO+ & Xc+))) or
+  (<mv-coord> & ({<to-verb>} or <null-verb>)) or
   ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & <mv-coord>]];
@@ -6415,7 +6417,7 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 % TO+ & Xc+: allows null-infinitive: "Yes, I would strongly suggest to!"
 <vc-suggest>:
   ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>)
-  or (<mv-coord> & TO+ & Xc+)
+  or (<mv-coord> & <null-verb>)
   or ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 
 suggest.v anticipate.v recommend.v: VERB_PLI(<vc-suggest>);
