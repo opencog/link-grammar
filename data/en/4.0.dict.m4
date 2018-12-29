@@ -4401,7 +4401,7 @@ fighting.v: <verb-pg> & <vc-fight>;
 
 % TO+ & Xc+: allows null-infinitive: "I did not mean to".
 <vc-threaten>:
-  <vc-trans>
+  {<vc-trans>}
   or (<mv-coord> & (TO+ & Xc+))
   or ({@MV+} & (<to-verb> or TH+ or Zs- or <embed-verb>));
 

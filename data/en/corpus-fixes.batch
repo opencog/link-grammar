@@ -149,7 +149,15 @@ Sex should be between any man or woman who says "Okay, let's have sex"
 Sex should be between any men or women who say "Okay, let's have sex"
 Sex should be between men and women who say `Okay, let's have sex'
 Sex should be between men and women who say `Okay, let's have sex' (with each other)
+Sex should be between men and women who say `Okay, let's have sex' (with each other, I mean)
+
+% XXX FIXME periods inside of parens are broken.
 Sex should be between men and women who say `Okay, let's have sex' (with each other.)
+Sex should be between men and women who say `Okay, let's have sex' (with each other, I mean.)
+
+I want to, I mean.
+Yes, I want to, I mean.
+with each other, I mean
 
 Are there men?
 Are there men who say "Let's have sex"?
