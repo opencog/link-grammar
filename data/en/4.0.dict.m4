@@ -2433,11 +2433,11 @@ per "/.per": Us+ & Mp-;
   or ({E-} & S- & CV- & {Xd-} & MXsr- & {Xc+})
   or ({E-} & I*x- & CV- & {Xd-} & MXsr- & {Xc+});
 
-% Cost: "He was driven home" should NOT use driven.v as adjective!
+% [A+]0.5 cost: "He was driven home" should NOT use driven.v as adjective!
 % From what I can tell, <verb-manner> can be used anywhere that
-% <verb-adj> can be... except forr said.v-d
+% <verb-adj> can be... except for said.v-d
 <verb-adj>:
-  (({@E-} or {@EA-} or {@AN-}) & [A+ or Pa-]0.5)
+  (({@E-} or {@EA-} or {@AN-}) & ([A+]0.5 or Pa-))
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
