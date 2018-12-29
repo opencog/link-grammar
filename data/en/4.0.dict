@@ -6622,9 +6622,11 @@ holding.g: (<vc-hold> & <verb-ge>) or <verb-ge-d>;
 
 hostage.i captive.i: Vh- or Vth-;
 
+% TO+ & Xc+: allows null-infinitive: "I never expected to"
 <vc-expect>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb>})
+  or (<mv-coord> & TO+ & Xc+)
   or ([[@MV+ & O*n+]]);
 
 expect.v claim.v: 
