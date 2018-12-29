@@ -405,7 +405,7 @@ static bool do_match_with_cache(Connector *a, Connector *b, match_cache *c_con)
 	if (c_con->desc == connector_desc(a))
 	{
 		/* The match_cache desc field is initialized to NULL, and this is
-		 * enough because the connector desc filed cannot be NULL, as it
+		 * enough because the connector desc field cannot be NULL, as it
 		 * actually fetched a non-empty match list. */
 		PRAGMA_MAYBE_UNINITIALIZED
 		return c_con->match;

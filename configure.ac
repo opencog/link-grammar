@@ -439,7 +439,7 @@ fi
 
 # Don't set the CPPFLAGS unless we can find the library too.
 # Which is insane, of course, except that some Apple OSX systems
-# appear to be borken... have header files but no libs ...
+# appear to be broken... have header files but no libs ...
 if test "x${SQLiteFound}" = "xyes"; then
 	AC_DEFINE(HAVE_SQLITE, 1, [Define for compilation])
 fi

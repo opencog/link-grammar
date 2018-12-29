@@ -269,17 +269,26 @@ static const char *test_enabled(const char *feature, const char *test_name)
 
 	if ('\0' == feature[0]) return NULL;
 	size_t len = strlen(test_name);
-	char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
+	char *buff = malloc(len + 2 + 1); /* leading comma + comma/colon + NUL */
+	const char *r = NULL;
 
 	buff[0] = ',';
 	strcpy(buff+1, test_name);
 	strcat(buff, ",");
 
-	if (NULL != strstr(feature, buff)) return ",";
-	buff[len+1] = ':'; /* check for "feature:param" */
-	if (NULL == strstr(feature, buff)) return NULL;
+	if (NULL != strstr(feature, buff))
+	{
+		r = ",";
+	}
+	else
+	{
+		buff[len+1] = ':'; /* check for "feature:param" */
+		if (NULL != strstr(feature, buff))
+			r = strstr(feature, buff) + len + 1;
+	}
 
-	return strstr(feature, buff) + len + 1;
+	free(buff);
+	return r;
 }
 
 /**
