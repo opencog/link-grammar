@@ -130,23 +130,26 @@ static void print_connector_list(const char *s, const char *t, Connector * e)
 #endif
 
 /**
- * Convert integer to ASCII. Use base 64 for compactness.
+ * Convert integer to ASCII into the given buffer.
+ * Use base 64 for compactness.
  * The following characters shouldn't appear in the result:
  * CONSEP, ",", and ".", because they are reserved for separators.
+ * Return the number of characters in the buffer (not including the '\0').
  */
-#define ITOA_BASE 64
-static char* itoa_compact(char* buffer, size_t num)
+#define PTOA_BASE 64
+static unsigned int ptoa_compact(char* buffer, uintptr_t ptr)
 {
-	 do
-	 {
-		*buffer++ = '0' + (num % ITOA_BASE);
-		num /= ITOA_BASE;
-	 }
-	 while (num > 0);
+	char *p = buffer;
+	do
+	{
+	  *p++ = '0' + (ptr % PTOA_BASE);
+	  ptr /= PTOA_BASE;
+	}
+	 while (ptr > 0);
 
-	*buffer = '\0';
+	*p = '\0';
 
-	return buffer;
+	return (unsigned int)(p - buffer);
 }
 
 /**
@@ -186,7 +189,7 @@ static char* itoa_compact(char* buffer, size_t num)
  * sequences that belong to disjuncts of different alternatives may have
  * different linkage counts because some alternatives-connectivity checks
  * are done in the fast-matcher.
- * Prepending the gword numbers solve both of these requirements.
+ * Prepending the gword_set encoding solve both of these requirements.
  */
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 bool set_connector_hash(Sentence sent)
@@ -194,7 +197,7 @@ bool set_connector_hash(Sentence sent)
 	/* FIXME: For short sentences, setting the optimized connector hashing
 	 * has a slight overhead. If this overhead is improved, maybe this
 	 * limit can be set lower. */
-	size_t min_sent_len_trailing_hash = 31;
+	size_t min_sent_len_trailing_hash = 20;
 	const char *len_trailing_hash = test_enabled("len-trailing-hash");
 	if (NULL != len_trailing_hash)
 		min_sent_len_trailing_hash = atoi(len_trailing_hash+1);
@@ -221,10 +224,11 @@ bool set_connector_hash(Sentence sent)
 		return false;
 	}
 
-#define CONSEP '&'      /* Connector string separator in the suffix sequence .*/
-#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition.
-#define MAX_GWORD_ENCODING 16 /* Up to 64^15 ... */
-	char cstr[(MAX_LINK_NAME_LENGTH + MAX_GWORD_ENCODING) * 20];
+#define CONSEP "&"      /* Connector string separator in the suffix sequence. */
+#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
+#define MAX_LINKS 20            // XXX Use a global definition
+#define MAX_GWORD_ENCODING 32   /* Actually up to 12 characters. */
+	char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS) + MAX_GWORD_ENCODING];
 	String_id *csid;
 
 	if (NULL == sent->connector_suffix_id)
@@ -233,65 +237,48 @@ bool set_connector_hash(Sentence sent)
 
 	for (size_t w = 0; w < sent->length; w++)
 	{
-		//printf("WORD %zu\n", w);
-
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
-			int l;
-			char *s;
-
-			/* Generate a string with the disjunct Gword number(s). It
-			 * makes unique trailing connector sequences of different
-			 * alternatives, so they will get their own suffix_id. */
-			l = 0;
-			char gword_num[MAX_GWORD_ENCODING];
-#define MAX_DIFFERENT_GWORDS 6 /* More than 3 have not been seen yet. */
-			char gword_nums[MAX_GWORD_ENCODING * MAX_DIFFERENT_GWORDS];
-			for (const gword_set *g = d->originating_gword; NULL != g; g = g->next)
-			{
-				itoa_compact(gword_num, g->o_gword->node_num);
-				l += lg_strlcpy(gword_nums+l, gword_num, sizeof(gword_nums)-l);
-				cstr[l++] = ',';
-			}
-			if (l > (int)sizeof(gword_nums)-2)
-			{
-				/* Overflow. Never observed, maybe cannot happen. Tag it with
-				 * a unique identifier so it will get its own suffix_id. */
-#ifdef DEBUG
-				prt_error("Warning: set_connector_hash(): "
-							 "Token %s: Gword overflow: %s\n",
-							 d->word_string, gword_nums);
-#endif
-				sprintf(gword_nums, "Gword overflow(%p)\n", d);
-			}
-			//printf("w=%zu, token=%s: GWORD_NUMS: %s\n",
-			//       w, d->word_string, gword_nums);
+			/* Generate a string with a disjunct Gword encoding. It makes
+			 * unique trailing connector sequences of different words and
+			 * alternatives of a word, so they will get their own suffix_id.
+			 */
+			size_t lg = ptoa_compact(cstr, (uintptr_t)d->originating_gword);
+			cstr[lg++] = ',';
 
 			for (int dir = 0; dir < 2; dir ++)
 			{
+				//printf("Word %zu d=%p dir %s\n", w, d, dir?"RIGHT":"LEFT");
+
 				Connector *first_c = (0 == dir) ? d->left : d->right;
+				if (NULL == first_c) continue;
 
-				l = 0;
-				for (Connector *c = first_c; NULL != c; c = c->next)
-				{
-					l += lg_strlcpy(cstr+l, gword_num, sizeof(cstr)-l);
-					cstr[l++] = ',';
-					if (c->multi) cstr[l++] = '@'; /* May have different linkages. */
-					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					cstr[l++] = CONSEP;
-				}
-				/* XXX Check overflow. */
-				cstr[l] = '\0';
+				Connector *cstack[MAX_LINKS];
+				size_t ci = 0;
+				size_t l = lg;
 
-				s = cstr;
 				//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
 				for (Connector *c = first_c; NULL != c; c = c->next)
+					cstack[ci++] = c;
+
+				for (Connector **cp = &cstack[--ci]; cp >= &cstack[0]; cp--)
 				{
-					int id = string_id_add(s, csid) + WORD_OFFSET;
-					c->suffix_id = id;
-					//printf("ID %d trail=%s\n", id, s);
-					s = memchr(s, CONSEP, sizeof(cstr));
-					s++;
+					if ((*cp)->multi)
+						cstr[l++] = '@'; /* May have different linkages. */
+					l += lg_strlcpy(cstr+l, connector_string((*cp)), sizeof(cstr)-l);
+
+					if (l > sizeof(cstr)-2)
+					{
+						/* This is improbable, given the big cstr buffer. */
+						prt_error("Warning: set_connector_hash(): Buffer overflow.\n"
+						          "Parsing may be wrong.\n");
+					}
+
+					int id = string_id_add(cstr, csid) + WORD_OFFSET;
+					(*cp)->suffix_id = id;
+					//printf("ID %d trail=%s\n", id, cstr);
+
+					l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
 				}
 			}
 		}
