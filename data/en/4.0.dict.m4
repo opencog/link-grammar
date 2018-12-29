@@ -3879,8 +3879,11 @@ raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 
 % much like words.v.2.1, except can have "TO" link.
 % tending.g remains in words.v.2.5
-% I tended for years to believe that shepherds tend sheep.
-<vc-tend>: <vc-tr,intr> & {<to-verb>};
+%   "I tended for years to believe that shepherds tend sheep."
+% TO+ & Xc+: allows null-infinitive: "Yes, it sometimes tends to"
+<vc-tend>:
+  (<vc-tr,intr> & {<to-verb>})
+  or (<mv-coord> & TO+ & Xc+);
 tend.v: VERB_PLI(<vc-tend>);
 tends.v: VERB_S_T(<vc-tend>);
 tended.v-d:
@@ -3892,7 +3895,10 @@ tending.v: <verb-pg> & <vc-tend>;
 
 % INTRANSITIVE COMPLEX VERBS (those that do not take O+)
 
-<vc-consent>: {@MV+} & {<to-verb>};
+% TO+ & Xc+: allows null-infinitive: "I would never hesitate to"
+<vc-consent>:
+  ({@MV+} & {<to-verb>})
+  or (<mv-coord> & TO+ & Xc+);
 consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
   VERB_PLI(<vc-consent>);
 consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
@@ -3939,8 +3945,10 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
 % See also <vc-think> for the same problem.
+% TO+ & Xc+: allows null-infinitive: "Yes, I would hope to"
 <vc-hope>:
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
+  or (<mv-coord> & TO+ & Xc+)
   or [[O+ & {@MV+}]];
 
 hope.v agree.v pretend.v swear.v pray.v protest.v vow.v vote.v:
@@ -3978,9 +3986,11 @@ protesting.v vowing.v voting.v:
 % N+: "It appears not"
 % <verb-fronted>: "so it seems", "so it appears"
 % Ix- & PF- & <verb-wall>: "so it would seem"
+% TO+ & Xc+: allows null-infinitive: "yes, it appears to"
 <vc-appear>:
   {@MV+} & {(Pa+ & <verb-wall>)
     or <tof-verb>
+    or (TO+ & Xc+)
     or THi+
     or AF-
     or N+
@@ -3993,8 +4003,17 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 % N+: "It seems not"
 % <verb-si>: "so seems it"
+% TO+ & Xc+: allows null-infinitive: "yes, it would seem to"
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
+  {@MV+} & 
+    ((Pa+ & <verb-wall>)
+    or <tof-verb>
+    or (TO+ & Xc+)
+    or LI+
+    or THi+
+    or AF-
+    or N+
+    or [Pv+]);
 seem.v: VERB_Y_PLI(<vc-seem>) or (Ix- & PF- & <verb-wall>);
 seems.v: VERB_Y_S(<vc-seem>) or <verb-fronted> or <verb-si>;
 seemed.v-d: VERB_Y_SPPP(<vc-seem>) or <verb-fronted> or <verb-si>;
@@ -4092,8 +4111,10 @@ dreaming.v: <verb-pg> & <vc-dream>;
 % "hope.v" has the same problem.
 % O+ & O*n: "She will think it an act of kindness."
 % O+ & Pa**j: "She will think it true."
+% TO+ & Xc+: allows null-infinitive: "No, I did not think to"
 <vc-think>:
   ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or (OF+ & <mv-coord>) or BW-})
+  or (<mv-coord> & TO+ & Xc+)
   or (O+ & {@MV+} & {O*n+ or Pa**j+});
 
 think.v: VERB_PLI(<vc-think>);
@@ -6369,9 +6390,11 @@ proven.v:
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
 proving.v: <verb-x-pg> &  <vc-prove>;
 
+% TO+ & Xc+: allows null-infinitive: "Yes, I would strongly suggest to!"
 <vc-suggest>:
-  ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
+  ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>)
+  or (<mv-coord> & TO+ & Xc+)
+  or ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 
 suggest.v anticipate.v recommend.v: VERB_PLI(<vc-suggest>);
 suggests.v anticipates.v recommends.v: VERB_S_T(<vc-suggest>);
