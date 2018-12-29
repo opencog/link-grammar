@@ -10307,11 +10307,12 @@ so_on the_like vice_versa v.v.:
 % Xp+ is for new sentences. "Who is Obama? Where was he born?"
 % Xs+ is for dependent clauses starting with "so".
 %       "I stayed so I could see you."
+% Xx+ has mild cost so that other uses of commas can take precedence.
 % XXX TODO: after all WV's work, the WV link should no longer be optional...
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {hCPx+ or hCPi+ or hCPu+} & {(Xx+ or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>) & {hCPx+ or hCPi+ or hCPu+} & {([Xx+]0.06 or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
 
 % <sent-start>: "So, don't do it!"
 %    The cost on sent-start is to force preference for CV over WV,
