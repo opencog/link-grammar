@@ -2473,7 +2473,10 @@ per "/.per": Us+ & Mp-;
 %      so the wall on B*w- is optional.
 % XXX FIXME -- most of the naked B- below should probably be <b-minus>
 
-<b-minus>: B*d- or B*j- or (B*w- & {<verb-wall>}) or (B*m- & <verb-wall>);
+<b-minus>:
+  B*d- or B*j-
+  or (B*w- & (<verb-wall> or [()]0.5))
+  or (B*m- & <verb-wall>);
 
 <verb-ge-nos>:
   {@E-} & (
