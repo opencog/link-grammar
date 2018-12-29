@@ -135,6 +135,39 @@ he boasted of lying
 he complained of a sore ankle
 he bragged of having swum three miles
 
+% Relativized paraphrasing
+There is a man who once said "Let's have sex"
+There are men who once said "Let's have sex"
+There is a woman who says "Let's have sex"
+There are men who say "Let's have sex"
+There are men and women who say "Let's have sex"
+Sex should be between men who say "Let's have sex"
+Sex should be between men who say "Okay, let's have sex"
+Sex should be between men and women who say "Okay, let's have sex"
+Sex should be between men or women who say "Okay, let's have sex"
+Sex should be between any man or woman who says "Okay, let's have sex"
+Sex should be between any men or women who say "Okay, let's have sex"
+Sex should be between men and women who say `Okay, let's have sex'
+Sex should be between men and women who say `Okay, let's have sex' (with each other)
+Sex should be between men and women who say `Okay, let's have sex' (with each other, I mean)
+
+% XXX FIXME periods inside of parens are broken.
+Sex should be between men and women who say `Okay, let's have sex' (with each other.)
+Sex should be between men and women who say `Okay, let's have sex' (with each other, I mean.)
+
+I want to, I mean.
+Yes, I want to, I mean.
+with each other, I mean
+
+Are there men?
+Are there men who say "Let's have sex"?
+Are there some men who say "Let's have sex"?
+Are there men or women who say "Let's have sex"?
+Are there any men or women who say "Let's have sex"?
+
+There are men who say "I hope to."
+There are men who say "I hope to!"
+
 % Subject-inverted paraphrasing
 Said the King: "Off with his head!"
 spoke the King: "Off with his head!"
@@ -3160,6 +3193,31 @@ I'd like to, I want to.
 *I like to pliers.
 *I like to purple.
 *I like to many.
+
+I did not mean to
+I did not claim to
+I never expected to
+I never claimed to
+I did not demand to
+No, I did not propose to
+No, I did not remember to
+Oh gosh, I forgot to.
+I would never hesitate to
+Yes, it sometimes tends to
+Yes, I would strongly suggest to!
+Yes, I would hope to
+No, I did not swear to
+No, I did not think to
+it did not appear to
+yes, it appears to
+it did not seem to
+yes, it would seem to
+I could not assume to
+No, I did not presume to
+No, I did not fear to
+I certainly wasn't presuming to!
+He's a hero, he never wavered to!
+He was never meaning to, but he always did
 
 % Clausal complements, fairly idiomatic in form ...
 The emperor ordered it made

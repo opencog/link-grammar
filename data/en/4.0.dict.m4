@@ -275,6 +275,7 @@ nonCAP.zzz: ZZZ-;
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
 % TOt+ & B+: this is one where B makes the link
+% TO+ & Xc+: allows null-infinitive: "Because I want to."
 <inf-verb>: IV+;
 <to-verb>:  TO+ & IV+;
 <tof-verb>: TOf+ & IV+;
@@ -282,6 +283,7 @@ nonCAP.zzz: ZZZ-;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
+<null-verb>: TO+ & Xc+;
 
 <embed-verb>: Ce+ & CV+;
 <that-verb>: Cet+ & CV+;
@@ -3048,7 +3050,8 @@ is.v:
 are.v:
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>)
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
-  or ({<verb-rq>} & (SIpx+ or SFIp+) & {<vc-be>});
+  or ({<verb-rq>} & SIpx+ & {<vc-be>})
+  or ({<verb-rq>} & SFIp+ & {<vc-be-obj>});
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
@@ -3878,8 +3881,11 @@ raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 
 % much like words.v.2.1, except can have "TO" link.
 % tending.g remains in words.v.2.5
-% I tended for years to believe that shepherds tend sheep.
-<vc-tend>: <vc-tr,intr> & {<to-verb>};
+%   "I tended for years to believe that shepherds tend sheep."
+% TO+ & Xc+: allows null-infinitive: "Yes, it sometimes tends to"
+<vc-tend>:
+  (<vc-tr,intr> & {<to-verb>})
+  or (<mv-coord> & <null-verb>);
 tend.v: VERB_PLI(<vc-tend>);
 tends.v: VERB_S_T(<vc-tend>);
 tended.v-d:
@@ -3891,7 +3897,10 @@ tending.v: <verb-pg> & <vc-tend>;
 
 % INTRANSITIVE COMPLEX VERBS (those that do not take O+)
 
-<vc-consent>: {@MV+} & {<to-verb>};
+% TO+ & Xc+: allows null-infinitive: "I would never hesitate to"
+<vc-consent>:
+  ({@MV+} & {<to-verb>})
+  or (<mv-coord> & <null-verb>);
 consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
   VERB_PLI(<vc-consent>);
 consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
@@ -3938,8 +3947,10 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
 % See also <vc-think> for the same problem.
+% TO+ & Xc+: allows null-infinitive: "Yes, I would hope to"
 <vc-hope>:
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>})
+  or (<mv-coord> & <null-verb>)
   or [[O+ & {@MV+}]];
 
 hope.v agree.v pretend.v swear.v pray.v protest.v vow.v vote.v:
@@ -3977,9 +3988,11 @@ protesting.v vowing.v voting.v:
 % N+: "It appears not"
 % <verb-fronted>: "so it seems", "so it appears"
 % Ix- & PF- & <verb-wall>: "so it would seem"
+% TO+ & Xc+: allows null-infinitive: "yes, it appears to"
 <vc-appear>:
   {@MV+} & {(Pa+ & <verb-wall>)
     or <tof-verb>
+    or <null-verb>
     or THi+
     or AF-
     or N+
@@ -3992,8 +4005,17 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 % XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 % N+: "It seems not"
 % <verb-si>: "so seems it"
+% TO+ & Xc+: allows null-infinitive: "yes, it would seem to"
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or N+ or [Pv+]);
+  {@MV+} & 
+    ((Pa+ & <verb-wall>)
+    or <tof-verb>
+    or <null-verb>
+    or LI+
+    or THi+
+    or AF-
+    or N+
+    or [Pv+]);
 seem.v: VERB_Y_PLI(<vc-seem>) or (Ix- & PF- & <verb-wall>);
 seems.v: VERB_Y_S(<vc-seem>) or <verb-fronted> or <verb-si>;
 seemed.v-d: VERB_Y_SPPP(<vc-seem>) or <verb-fronted> or <verb-si>;
@@ -4091,8 +4113,10 @@ dreaming.v: <verb-pg> & <vc-dream>;
 % "hope.v" has the same problem.
 % O+ & O*n: "She will think it an act of kindness."
 % O+ & Pa**j: "She will think it true."
+% TO+ & Xc+: allows null-infinitive: "No, I did not think to"
 <vc-think>:
   ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or (OF+ & <mv-coord>) or BW-})
+  or (<mv-coord> & <null-verb>)
   or (O+ & {@MV+} & {O*n+ or Pa**j+});
 
 think.v: VERB_PLI(<vc-think>);
@@ -4377,9 +4401,11 @@ fought.v-d: VERB_SPPP_T(<vc-fight>) or (<verb-pv-b> & {K+} & <mv-coord>) or
 fighting.g: (<vc-fight> & <verb-ge>) or <verb-ge-d>;
 fighting.v: <verb-pg> & <vc-fight>;
 
+% TO+ & Xc+: allows null-infinitive: "I did not mean to".
 <vc-threaten>:
-  <vc-trans> or
-  ({@MV+} & (<to-verb> or TH+ or Zs- or <embed-verb>));
+  {<vc-trans>}
+  or (<mv-coord> & <null-verb>)
+  or ({@MV+} & (<to-verb> or TH+ or Zs- or <embed-verb>));
 
 threaten.v mean.v arrange.v pledge.v:
   VERB_PLI(<vc-threaten>);
@@ -4426,9 +4452,11 @@ decided.v-d resolved.v-d:
 deciding.v resolving.v: <verb-pg> & <vc-decide>;
 deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 
+% TO+ & Xc+: allows null-infinitive: "Oh gosh, I forgot to"
 <vc-forget>:
-  {<vc-trans>} or
-  ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+  {<vc-trans>}
+  or (<mv-coord> & <null-verb>)
+  or ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
@@ -4451,8 +4479,11 @@ learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-ope
 learning.g: (<vc-learn> & <verb-ge>) or <verb-ge-d>;
 learning.v: <verb-pg> & <vc-learn>;
 
-<vc-propose>: <vc-trans> or
-({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
+% TO+ & Xc+: allows null-infinitive: "I did not propose to"
+<vc-propose>:
+  <vc-trans>
+  or (<mv-coord> & <null-verb>)
+  or ({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
 proposed.v-d:
@@ -4463,9 +4494,11 @@ proposed.v-d:
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
+% TO+ & Xc+: allows null-infinitive: "I did not demand to"
 <vc-demand>:
   <vc-trans>
   or (OF+ & <mv-coord>)
+  or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
@@ -4704,18 +4737,18 @@ imagining.v: <verb-pg> & <vc-imagine>;
   or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
   or MVa+;
 
-declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
-emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
+declare.v conclude.v suspect.v concede.v foresee.v
+emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v:
   VERB_PLI(<vc-declare>) or <verb-manner>;
 
-declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
+declares.v concludes.v suspects.v concedes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
-confirms.v stresses.v assumes.v:
+confirms.v stresses.v:
   VERB_S_T(<vc-declare>) or <verb-manner>;
 
-declared.v feared.v concluded.v suspected.v conceded.v presumed.v
+declared.v concluded.v suspected.v conceded.v
 emphasized.v maintained.v acknowledged.v noted.v
-confirmed.v-d stressed.v-d assumed.v-d:
+confirmed.v-d stressed.v-d:
   VERB_SPPP_T(<vc-declare>)
   or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
   or <verb-adj>
@@ -4728,14 +4761,36 @@ foreseen.v:
   <verb-adj> or
   <verb-phrase-opener>;
 
-declaring.g fearing.g concluding.g suspecting.g conceding.g
-presuming.g foreseeing.g emphasizing.g maintaining.g acknowledging.g
-noting.g confirming.g stressing.g assuming.g:
+declaring.g concluding.g suspecting.g conceding.g
+foreseeing.g emphasizing.g maintaining.g acknowledging.g
+noting.g confirming.g stressing.g:
   (<vc-declare> & <verb-ge>) or <verb-ge-d>;
-declaring.v fearing.v concluding.v suspecting.v conceding.v
-presuming.v foreseeing.v emphasizing.v maintaining.v acknowledging.v
-noting.v confirming.v stressing.v assuming.v:
+declaring.v concluding.v suspecting.v conceding.v
+foreseeing.v emphasizing.v maintaining.v acknowledging.v
+noting.v confirming.v stressing.v:
   <verb-pg> & <vc-declare>;
+
+% ------------------------------
+% Almost like the above, except:
+% TO+ & Xc+: allows null-infinitive: "I could not assume to"
+<vc-assume>: <vc-declare> or (<mv-coord> & <null-verb>);
+
+fear.v presume.v assume.v waver.v:
+  VERB_PLI(<vc-assume>) or <verb-manner>;
+
+fears.v presumes.v assumes.v wavers.v:
+  VERB_S_T(<vc-assume>) or <verb-manner>;
+
+feared.v presumed.v assumed.v-d wavered.v-d:
+  VERB_SPPP_T(<vc-assume>)
+  or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
+  or <verb-adj>
+  or <verb-phrase-opener>;
+
+fearing.g presuming.g assuming.g wavering.g:
+  (<vc-assume> & <verb-ge>) or <verb-ge-d>;
+fearing.v presuming.v assuming.v wavering.v:
+  <verb-pg> & <vc-assume>;
 
 % ---------------------------------------------------------------
 
@@ -5271,9 +5326,11 @@ holding.g: (<vc-hold> & <verb-ge>) or <verb-ge-d>;
 
 hostage.i captive.i: Vh- or Vth-;
 
+% TO+ & Xc+: allows null-infinitive: "I never expected to"
 <vc-expect>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb>})
+  or (<mv-coord> & <null-verb>)
   or ([[@MV+ & O*n+]]);
 
 expect.v claim.v: VERB_PLI(<vc-expect>);
@@ -5304,9 +5361,9 @@ intending.v: <verb-pg> & <vc-intend>;
 % I+: auxiliary: "no one dared say a word"
 % N+ & TO: "I dare not to say the truth"
 <vc-dare>:
-  ({N+} & <mv-coord> & {<to-verb> or (TO+ & Xc+)}) or
+  ({N+} & <mv-coord> & {<to-verb> or <null-verb>}) or
   ({N+} & I+) or
-  ((O+ or <b-minus>) & <mv-coord> & {<too-verb> or (TO+ & Xc+)});
+  ((O+ or <b-minus>) & <mv-coord> & {<too-verb> or <null-verb>});
 
 % SI+ & <verb-rq-aux> & I+: "How dare you disobey orders"
 % <verb-s> & N+ & I+: "He dare not lie to me!" (singular subject)
@@ -5367,7 +5424,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % TO+ & Xc+: allows null-infinitive: "Because I want to."
 % intransitive: "Try it if you want"
 <vc-want>:
-  (<mv-coord> & ({<to-verb>} or (TO+ & Xc+))) or
+  (<mv-coord> & ({<to-verb>} or <null-verb>)) or
   ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & <mv-coord>]];
@@ -6357,9 +6414,11 @@ proven.v:
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
 proving.v: <verb-x-pg> &  <vc-prove>;
 
+% TO+ & Xc+: allows null-infinitive: "Yes, I would strongly suggest to!"
 <vc-suggest>:
-  ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
+  ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>)
+  or (<mv-coord> & <null-verb>)
+  or ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 
 suggest.v anticipate.v recommend.v: VERB_PLI(<vc-suggest>);
 suggests.v anticipates.v recommends.v: VERB_S_T(<vc-suggest>);
@@ -6633,14 +6692,16 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q:
-  {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
+  {@E-} & 
+    (((Sp- or I- or (RS- & Bp-)) & <vc-paraph>)
+    or (SIpj+ & <vc-paraph-inv>));
 
 says.q:
-  {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
+  {@E-} & (((Ss- or (RS- & Bs-)) & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d:
   {@E-} & (
-    ((S- or PP-) & <vc-paraph>)
+    ((S- or PP- or (RS- & B-)) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or (Pv- & CV- & dCPu-));
 
@@ -8227,6 +8288,7 @@ and.j-n 'n':
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
     or SIp-
+    or ((SIp- or ({Dm-} & Op-) or Jp-) & Rw+ & B+)
     or Wa-
     or [{Ds-} & Os-]
     or <post-nominal-s>))
@@ -8234,13 +8296,16 @@ and.j-n 'n':
     <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
     or SIp-
+    or ((SIp- or ({Dm-} & Op-) or Jp-) & Rw+ & B+)
     or Wa-
     or [{{Jd-} & Dmc-} & Op-]
+    or ({Dmc-} & Op- & Rw+ & B+)
     or <post-nominal-p>))
   or (<noun-conj-dep-u> & <noun-sub-x> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
     or SIu-
+    or ((SIu- or Ou- or Jp-) & Rw+ & B+)
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>))
@@ -8256,9 +8321,21 @@ but_not just_not: VJrsi- & O+;
 %
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
-    (<noun-conj-head> or (S*x+ & <CLAUSE>) or SIs- or [Os-] or Wa- or <post-nominal-s>)) or
+    (<noun-conj-head>
+    or (S*x+ & <CLAUSE>)
+    or SIs-
+    or ((SIs- or ({Ds-} & O-) or J-) & Rw+ & B+)
+    or [Os-]
+    or Wa-
+    or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>))
+    (<noun-conj-head>
+    or (Spx+ & <CLAUSE>)
+    or SIp-
+    or ((SIp- or ({Ds-} & Op-) or Jp-) & Rw+ & B+)
+    or [Op-]
+    or Wa-
+    or <post-nominal-p>))
   or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
   or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
 
@@ -10293,6 +10370,7 @@ changequote dnl
 % get linked incorrectly with the MX link.
 ".":
   ((Xp- or ({@Xca-} & [[Xc-]])) & RW+)
+  or (Xca- & Xc-)
   or Xi-
   or <sent-split>;
 
@@ -10471,7 +10549,14 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 "&": G- & {Xd- & G-} & G+;
 
-"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+% Possessive
+"’":
+  YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+
+% Possesive or quote
+"'":
+  (YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+))
+  or QUc- or QUd+;
 
 % Possessives
 "'s.p" "’s.p":
