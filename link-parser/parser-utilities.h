@@ -15,7 +15,7 @@
 
 #include "../link-grammar/link-includes.h"
 
-#define MAX_INPUT 1024
+#define MAX_INPUT 2048
 
 #ifdef _WIN32
 #ifndef __MINGW32__
