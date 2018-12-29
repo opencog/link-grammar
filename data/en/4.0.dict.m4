@@ -4378,9 +4378,11 @@ fought.v-d: VERB_SPPP_T(<vc-fight>) or (<verb-pv-b> & {K+} & <mv-coord>) or
 fighting.g: (<vc-fight> & <verb-ge>) or <verb-ge-d>;
 fighting.v: <verb-pg> & <vc-fight>;
 
+% TO+ & Xc+: allows null-infinitive: "I did not mean to".
 <vc-threaten>:
-  <vc-trans> or
-  ({@MV+} & (<to-verb> or TH+ or Zs- or <embed-verb>));
+  <vc-trans>
+  or (<mv-coord> & (TO+ & Xc+))
+  or ({@MV+} & (<to-verb> or TH+ or Zs- or <embed-verb>));
 
 threaten.v mean.v arrange.v pledge.v:
   VERB_PLI(<vc-threaten>);
