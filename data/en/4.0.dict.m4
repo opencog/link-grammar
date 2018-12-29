@@ -6633,14 +6633,16 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q:
-  {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
+  {@E-} & 
+    (((Sp- or I- or (RS- & Bp-)) & <vc-paraph>)
+    or (SIpj+ & <vc-paraph-inv>));
 
 says.q:
-  {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
+  {@E-} & (((Ss- or (RS- & Bs-)) & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
 said.q-d:
   {@E-} & (
-    ((S- or PP-) & <vc-paraph>)
+    ((S- or PP- or (RS- & B-)) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or (Pv- & CV- & dCPu-));
 
