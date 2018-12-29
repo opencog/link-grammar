@@ -29,9 +29,8 @@ I“What are you doing?” she asked.
 O
 O    +---------------QUc--------------+
 O    +--------------Xc--------------+ |
-O    +----------->WV---------->+    | |
 O    |         +------Bsw------+    | |
-O    +--->Wq---+    +---Pg*b---+    | +----CP---+
+O    +--->Wb---+    +---Pg*b---+    | +----CP---+
 O    +-QUd-+   +-Rw-+SIpx+     |    | |  +--Ss--+--Xp-+
 O    |     |   |    |    |     |    | |  |      |     |
 OLEFT-WALL “ what are.v you doing.v ? ” she asked.q-d .
