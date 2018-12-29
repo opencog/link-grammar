@@ -330,7 +330,7 @@ nonCAP.zzz: ZZZ-;
 %
 <INITIALS> <ALL-UPPER> <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
-    (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
+    (({DG- or [GN-]0.5 or [@A- & @AN-]0.5 or [{@A-} & {D-}] or ({@A-} & Jd- & Dmc-)} &
         ((<noun-sub-s> & (JG- or <noun-main-s>))
         or <noun-and-s>
         or YS+
@@ -338,7 +338,7 @@ nonCAP.zzz: ZZZ-;
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({@A- or G-} & {D-} & Wa-)
-  or <directive-opener>;
+  or [<directive-opener>]0.2;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % preferred to the regex match (i.e. for a common noun starting a
