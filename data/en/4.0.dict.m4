@@ -4773,21 +4773,21 @@ noting.v confirming.v stressing.v:
 % TO+ & Xc+: allows null-infinitive: "I could not assume to"
 <vc-assume>: <vc-declare> or (<mv-coord> & TO+ & Xc+);
 
-fear.v presume.v assume.v:
+fear.v presume.v assume.v waver.v:
   VERB_PLI(<vc-assume>) or <verb-manner>;
 
-fears.v presumes.v assumes.v:
+fears.v presumes.v assumes.v wavers.v:
   VERB_S_T(<vc-assume>) or <verb-manner>;
 
-feared.v presumed.v assumed.v-d:
+feared.v presumed.v assumed.v-d wavered.v-d:
   VERB_SPPP_T(<vc-assume>)
   or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
   or <verb-adj>
   or <verb-phrase-opener>;
 
-fearing.g presuming.g assuming.g:
+fearing.g presuming.g assuming.g wavering.g:
   (<vc-assume> & <verb-ge>) or <verb-ge-d>;
-fearing.v presuming.v assuming.v:
+fearing.v presuming.v assuming.v wavering.v:
   <verb-pg> & <vc-assume>;
 
 % ---------------------------------------------------------------

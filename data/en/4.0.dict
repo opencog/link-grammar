@@ -5725,21 +5725,21 @@ noting.v confirming.v stressing.v:
 % TO+ & Xc+: allows null-infinitive: "I could not assume to"
 <vc-assume>: <vc-declare> or (<mv-coord> & TO+ & Xc+);
 
-fear.v presume.v assume.v:
+fear.v presume.v assume.v waver.v:
   
   ((<verb-pl,i> & (<vc-assume>)) or
   ({@E-} & hXd- & dWi- & (<vc-assume>) & hXc+) or
   (<verb-and-pl-> & ((<vc-assume>) or ())) or
   (((<vc-assume>) or [()]) & <verb-and-pl+>)) or <verb-manner>;
 
-fears.v presumes.v assumes.v:
+fears.v presumes.v assumes.v wavers.v:
   
   ((<verb-s> & (<vc-assume>)) or
   (<verb-and-sp-i-> & ([<vc-assume>]0.2 or ())) or
   ((<vc-assume>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or <verb-manner>;
 
-feared.v presumed.v assumed.v-d:
+feared.v presumed.v assumed.v-d wavered.v-d:
   
   ((<verb-sp,pp> & (<vc-assume>)) or
   (<verb-and-sp-i-> & ([<vc-assume>]0.2 or ())) or
@@ -5749,9 +5749,9 @@ feared.v presumed.v assumed.v-d:
   or <verb-adj>
   or <verb-phrase-opener>;
 
-fearing.g presuming.g assuming.g:
+fearing.g presuming.g assuming.g wavering.g:
   (<vc-assume> & <verb-ge>) or <verb-ge-d>;
-fearing.v presuming.v assuming.v:
+fearing.v presuming.v assuming.v wavering.v:
   <verb-pg> & <vc-assume>;
 
 % ---------------------------------------------------------------
