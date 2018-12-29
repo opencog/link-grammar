@@ -8228,21 +8228,21 @@ and.j-n 'n':
   (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
-    or SIp-
+    or (SIp- & {Rw+ & B+})
     or Wa-
     or [{Ds-} & Os-]
     or <post-nominal-s>))
   or (<noun-conj-dep-p> & <noun-sub-p> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
-    or SIp-
+    or (SIp- & {Rw+ & B+})
     or Wa-
     or [{{Jd-} & Dmc-} & Op-]
     or <post-nominal-p>))
   or (<noun-conj-dep-u> & <noun-sub-x> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
-    or SIu-
+    or (SIu- & {Rw+ & B+})
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>))
