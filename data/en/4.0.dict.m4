@@ -8265,16 +8265,16 @@ or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
     (<noun-conj-head>
     or (S*x+ & <CLAUSE>)
-    or (SIs- & {Rw+ & B+})
-    or ({Ds-} & O- & Rw+ & B+)
+    or SIs-
+    or ((SIs- or ({Ds-} & O-) or J-) & Rw+ & B+)
     or [Os-]
     or Wa-
     or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
     (<noun-conj-head>
     or (Spx+ & <CLAUSE>)
-    or (SIp- & {Rw+ & B+})
-    or ({D-} & Op- & Rw+ & B+)
+    or SIp-
+    or ((SIp- or ({Ds-} & Op-) or Jp-) & Rw+ & B+)
     or [Op-]
     or Wa-
     or <post-nominal-p>))
