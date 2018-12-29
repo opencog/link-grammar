@@ -115,13 +115,15 @@ nonCAP.zzz: ZZZ-;
   or <costly-null>;
 
 % noun-main-s -- singular
-% XXX FIXME: <noun-main-?> is often used with <noun-rel-?> and sub
+% XXX FIXME: <noun-main-?> is often used with <noun-rel-?> and noun-rel
 % has a R+ & B+ on it. The problem here is that R+ & B+ should not
 % be used with the J- and sometimes not with the O-.  So, for example,
-% "I still remember the room I kissed him" - room is the object, and
-% the "I" should not be relative.
-% This needs to be refactored to prevent this, at least for J. How to
-% handle the R+ & B+ on inappropriate O- is less clear.
+%   "*I still remember the room I kissed him"
+% "room" is the object, and the "I" should not be relative. But then
+%   "I still remember the girl I  kissed"
+% ... But the correct fix is confusing. Even relative-with- can be OK:
+%   "there are men with ties that sparkle" -- this has a J link.
+% Is the man sparkling, or is the tie sparkling?
 %
 % (Js- & {Mf+}): Allows constructions involving "of" to link locally,
 %     e.g. "Got it from the Abbey of Stratford Langthorne"
@@ -311,7 +313,7 @@ nonCAP.zzz: ZZZ-;
 % ({[[@MX+]]} & AN+) comes from postposed modifiers:
 % "Codon 311 (Cys --> Ser) polymorphism"
 %
-% We do NOT tag these with <marker-entity>, a this messes up first-word
+% We do NOT tag these with <marker-entity>, as this messes up first-word
 % processing in tokenize.c.  So for example, we do *not* want "There"
 % in "There they are" tagged as an entity, just because it's capitalized.
 % We really do want to force the lower-case usage, because the lower case
