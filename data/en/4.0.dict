@@ -11410,8 +11410,8 @@ as.e:
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % MVs- & Cs+ & CV+: "I slipped as I ran"
 as.#while:
-  (<subcl-verb> & (({Xc+ & {Xd-}} & dCO+)))
-  or (MVs- & Cs+ & CV+);
+  [<subcl-verb> & (({Xc+ & {Xd-}} & dCO+))]0.2
+  or [MVs- & Cs+ & CV+]0.1;
 
 
 as_is: {Xd- & Xc+} & MVs-;
