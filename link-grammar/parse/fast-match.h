@@ -65,7 +65,7 @@ static inline void pop_match_list(fast_matcher_t *ctxt, size_t match_list_last)
 }
 
 /**
- * Return true iff there is no match list (not even en empty one).
+ * Return true iff there is no match-list (not even en empty one).
  */
 static inline bool is_no_match_list(fast_matcher_t *ctxt, size_t match_list_start)
 {
@@ -73,10 +73,18 @@ static inline bool is_no_match_list(fast_matcher_t *ctxt, size_t match_list_star
 }
 
 /**
- * Return true iff there is no match list (not even en empty one).
+ * Return Get the match-list current position.
  */
 static inline size_t get_match_list_position(fast_matcher_t *ctxt)
 {
 	return ctxt->match_list_end;
+}
+
+/**
+ * Return the match-list at a given position.
+ */
+static inline Disjunct **get_match_list(fast_matcher_t *ctxt, size_t pos)
+{
+	return &ctxt->match_list[pos];
 }
 #endif

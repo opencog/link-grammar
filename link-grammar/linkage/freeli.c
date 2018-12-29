@@ -22,18 +22,7 @@ void free_linkage(Linkage linkage)
 	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 	free(linkage->link_array);
 
-	/* Q: Why isn't this in a string set ?? A: Because there is no
-	 * string-set handy when we compute this. */
-	if (linkage->disjunct_list_str)
-	{
-		size_t j;
-		for (j=0; j<linkage->num_words; j++)
-		{
-			if (linkage->disjunct_list_str[j])
-				free(linkage->disjunct_list_str[j]);
-		}
-		free(linkage->disjunct_list_str);
-	}
+	free(linkage->disjunct_list_str);
 #ifdef USE_CORPUS
 	lg_sense_delete(linkage);
 #endif

@@ -24,6 +24,11 @@
 #include "lisjuncts.h"
 #include "string-set.h"
 
+#ifdef DEBUG
+#include "print/print-util.h"
+static void assert_same_disjunct(Linkage, WordIdx, const char *);
+#endif /* DEBUG */
+
 /* Links are *always* less than 10 chars long . For now. The estimate
  * below is somewhat dangerous .... could be  fixed. */
 #define MAX_LINK_NAME_LENGTH 10
@@ -43,7 +48,7 @@
  * compute_chosen_disjuncts()).
  *
  * In order that multi-connectors will not be extracted several times
- * for each disjunct (if they connect to multiple words) their address
+ * for each disjunct (if they connect to multiple words) their suffix_id
  * is checked for duplication.
  */
 void lg_compute_disjunct_strings(Linkage lkg)
@@ -52,7 +57,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	size_t nwords = lkg->num_words;
 
 	if (lkg->disjunct_list_str) return;
-	lkg->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
+	lkg->disjunct_list_str = malloc(nwords * sizeof(char *));
 	memset(lkg->disjunct_list_str, 0, nwords * sizeof(char *));
 
 	for (WordIdx w = 0; w < nwords; w++)
@@ -61,9 +66,9 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 		for (int dir = 0; dir < 2; dir++)
 		{
-			Connector *last_ms = NULL; /* last multi-connector */
+			int last_multi_suffix_id = 0; /* last multi-connector */
 
-			for (LinkIdx i = lkg->num_links-1; i < lkg->num_links; i--)
+			for (LinkIdx i = lkg->num_links-1; i != (WordIdx)-1; i--)
 			{
 				Link *lnk = &lkg->link_array[i];
 				Connector *c;
@@ -81,8 +86,8 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 				if (c->multi)
 				{
-					if (last_ms == c) continue; /* already included */
-					last_ms = c;
+					if (last_multi_suffix_id == c->suffix_id) continue; /* already included */
+					last_multi_suffix_id = c->suffix_id;
 					djstr[len++] = '@';
 				}
 				len += lg_strlcpy(djstr+len, connector_string(c), sizeof(djstr)-len);
@@ -96,8 +101,35 @@ void lg_compute_disjunct_strings(Linkage lkg)
 				djstr[len++] = ' ';
 			}
 		}
+		if ((len > 0) && (djstr[len-1] == ' ')) len--;
 		djstr[len++] = '\0';
 
-		lkg->disjunct_list_str[w] = strdup(djstr);
+#ifdef DEBUG
+		assert_same_disjunct(lkg, w, djstr);
+#endif
+
+		lkg->disjunct_list_str[w] = string_set_add(djstr, lkg->sent->string_set);
 	}
 }
+
+#ifdef DEBUG
+static void assert_same_disjunct(Linkage lkg, WordIdx w, const char *djstr)
+{
+	char *cs;
+	if (lkg->chosen_disjuncts[w])
+	{
+		cs = print_one_disjunct(lkg->chosen_disjuncts[w]);
+		char *cs_lastchar = &cs[strlen(cs)-1];
+		if (*cs_lastchar == ' ') *cs_lastchar = '\0';
+	}
+	else
+		cs = (char *)"";
+
+	assert(strcmp(cs, djstr) == 0,
+			 "Word %zu: Inconsistent disjunct string %s (link_array %s)",
+	       w, cs, djstr);
+
+	if (lkg->chosen_disjuncts[w])
+		free(cs);
+}
+#endif /* DEBUG */

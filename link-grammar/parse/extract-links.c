@@ -11,15 +11,15 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>  /* For UINT_MAX */
+#include <limits.h>                     // INT_MAX
 
 #include "connectors.h"
 #include "count.h"
-#include "disjunct-utils.h" // for Disjunct
+#include "disjunct-utils.h"             // Disjunct
 #include "extract-links.h"
-#include "utilities.h"                // for Windows rand_r()
+#include "utilities.h"                  // Windows rand_r()
 #include "linkage/linkage.h"
-#include "tokenize/word-structures.h" // for Word_Struct
+#include "tokenize/word-structures.h"   // Word_Struct
 
 //#define RECOUNT
 
@@ -39,8 +39,8 @@ struct Parse_choice_struct
 {
 	Parse_choice * next;
 	Parse_set * set[2];
-	Link        link[2];   /* the lc fields of these is NULL if there is no link used */
-	Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
+	Link        link[2]; /* the lc fields of these is NULL if there is no link used */
+	Disjunct    *md;     /* the chosen disjunct for the middle word */
 };
 
 struct Parse_set_struct
@@ -48,8 +48,6 @@ struct Parse_set_struct
 	short          lw, rw; /* left and right word index */
 	unsigned int   null_count; /* number of island words */
 	int            l_id, r_id; /* pending, unconnected connectors */
-	double         l_cost, r_cost;                 /* disjunct costs */
-	const char     *l_word_string, *r_word_string; /* disjunct word strings */
 
 	s64 count;      /* The number of ways to parse. */
 #ifdef RECOUNT
@@ -68,7 +66,7 @@ struct Parse_set_struct
 typedef struct Pset_bucket_struct Pset_bucket;
 struct Pset_bucket_struct
 {
-	Parse_set         set;
+	Parse_set set;
 	Pset_bucket *next;
 };
 
@@ -80,6 +78,7 @@ struct extractor_s
 	Parse_set *    parse_set;
 	Word           *words;
 	bool           islands_ok;
+	bool           sort_match_list;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -126,9 +125,7 @@ make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
 	pc->link[1].rw = rset->rw;
 	pc->link[1].lc = rlc;
 	pc->link[1].rc = rrc;
-	pc->ld = ld;
 	pc->md = md;
-	pc->rd = rd;
 	return pc;
 }
 
@@ -247,7 +244,6 @@ void free_extractor(extractor_t * pex)
 static inline unsigned int el_pair_hash(extractor_t * pex,
                             int lw, int rw,
                             const Connector *le, const Connector *re,
-                            Disjunct *ld, Disjunct *rd,
                             unsigned int null_count)
 {
 	unsigned int i;
@@ -268,16 +264,6 @@ static inline unsigned int el_pair_hash(extractor_t * pex,
 	i = rw + (i << 6) + (i << 16) - i;
 	i = l_id + (i << 6) + (i << 16) - i;
 	i = r_id + (i << 6) + (i << 16) - i;
-	if (NULL != ld)
-	{
-		i = (unsigned int)(ld->cost * 1024) + (i << 6) + (i << 16) - i;
-		i = ((int)(intptr_t)ld->word_string) + (i << 6) + (i << 16) - i;
-	}
-	if (NULL != rd)
-	{
-		i = (unsigned int)(rd->cost * 1024) + (i << 6) + (i << 16) - i;
-		i = ((int)(intptr_t)rd->word_string) + (i << 6) + (i << 16) - i;
-	}
 
 	return i & (table_size-1);
 }
@@ -288,23 +274,15 @@ static inline unsigned int el_pair_hash(extractor_t * pex,
  */
 static Pset_bucket * x_table_pointer(int lw, int rw,
                               Connector *le, Connector *re,
-										Disjunct *ld, Disjunct *rd,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, ld, rd, null_count)];
+	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, null_count)];
 	int l_id = (NULL != le) ? le->suffix_id : lw;
 	int r_id = (NULL != re) ? re->suffix_id : rw;
-	double l_cost = (NULL != ld) ? ld->cost : 0;
-	double r_cost = (NULL != rd) ? rd->cost : 0;
-	const char* l_word_string = ld ? ld->word_string : 0;
-	const char* r_word_string = rd ? rd->word_string : 0;
 
 	for (; t != NULL; t = t->next) {
 		if ((t->set.l_id == l_id) && (t->set.r_id == r_id) &&
-		    (t->set.l_cost == l_cost) && (t->set.r_cost == r_cost) &&
-		    (t->set.l_word_string == l_word_string) &&
-		    (t->set.r_word_string == r_word_string) &&
 		    (t->set.null_count == null_count)) return t;
 	}
 	return NULL;
@@ -319,7 +297,6 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
  */
 static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
-                                  Disjunct *ld, Disjunct *rd,
                                   unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t, *n;
@@ -331,15 +308,11 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.null_count = null_count;
 	n->set.l_id = (NULL != le) ? le->suffix_id : lw;
 	n->set.r_id = (NULL != re) ? re->suffix_id : rw;
-	n->set.l_cost = (NULL != ld) ? ld->cost : 0;
-	n->set.r_cost = (NULL != rd) ? rd->cost : 0;
-	n->set.l_word_string = (NULL != ld) ? ld->word_string : NULL;
-	n->set.r_word_string = (NULL != rd) ? rd->word_string : NULL;
 	n->set.count = 0;
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = el_pair_hash(pex, lw, rw, le, re, ld, rd, null_count);
+	h = el_pair_hash(pex, lw, rw, le, re, null_count);
 	t = pex->x_table[h];
 	n->next = t;
 	pex->x_table[h] = n;
@@ -351,54 +324,41 @@ static Parse_set* dummy_set(int lw, int rw,
                             unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *dummy;
-	dummy = x_table_pointer(lw, rw, NULL, NULL, NULL, NULL, null_count, pex);
+	dummy = x_table_pointer(lw, rw, NULL, NULL, null_count, pex);
 	if (dummy) return &dummy->set;
 
-	dummy = x_table_store(lw, rw, NULL, NULL, NULL, NULL, null_count, pex);
+	dummy = x_table_store(lw, rw, NULL, NULL, null_count, pex);
 	dummy->set.count = 1;
 	return &dummy->set;
 }
 
-#ifdef FINISH_THIS_IDEA_MAYBE_LATER
 static int cost_compare(const void *a, const void *b)
 {
-	const Match_node* const * ma = a;
-	const Match_node* const * mb = b;
-	if ((*ma)->d->cost < (*mb)->d->cost) return -1;
-	if ((*ma)->d->cost > (*mb)->d->cost) return 1;
+	const Disjunct * const * da = a;
+	const Disjunct * const * db = b;
+	if ((*da)->cost < (*db)->cost) return -1;
+	if ((*da)->cost > (*db)->cost) return 1;
 	return 0;
 }
 
 /**
- * Sort the matchlist into ascending disjunct cost. The goal here
+ * Sort the match-list into ascending disjunct cost. The goal here
  * is to issue the lowest-cost disjuncts first, so that the parse
  * set ends up quasi-sorted. This is not enough to get us a totally
  * sorted parse set, but it does guarantee that at least the very
  * first parse really will be the lowest cost.
  */
-static Match_node* sort_matchlist(Match_node* mlist)
+static void sort_match_list(fast_matcher_t *mchxt, size_t mlb)
 {
-	Match_node* mx;
-	Match_node** marr;
-	size_t len = 1;
-	size_t i;
+	size_t i = mlb;
 
-	for (mx = mlist; mx->next != NULL; mx = mx->next) len++;
-	if (1 == len) return mlist;
+	while (get_match_list_element(mchxt, i) != NULL)
+		i++;
 
-	/* Avoid blowing out the stack. Its hopeless. */
-	if (100000 < len) return mlist;
+	if (i - mlb < 2) return;
 
-	marr = alloca(len * sizeof(Match_node*));
-	i = 0;
-	for (mx = mlist; mx != NULL; mx = mx->next) marr[i++] = mx;
-
-	qsort((void *) marr, len, sizeof(Match_node*), cost_compare);
-	for (i=0; i<len-1; i++) marr[i]->next = marr[i+1];
-	marr[len-1]->next = NULL;
-	return marr[0];
+	qsort(get_match_list(mchxt, mlb), i - mlb, sizeof(Disjunct *), cost_compare);
 }
-#endif /* FINISH_THIS_IDEA_MAYBE_LATER */
 
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
@@ -429,14 +389,14 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	if (NULL == count) return NULL;
 	if (hist_total(count) == 0) return NULL;
 
-	xt = x_table_pointer(lw, rw, le, re, ld, rd, null_count, pex);
+	xt = x_table_pointer(lw, rw, le, re, null_count, pex);
 
 	/* Perhaps we've already computed it; if so, return it. */
 	if (xt != NULL) return &xt->set;
 
 	/* Start it out with the empty set of parse choices. */
 	/* This entry must be updated before we return. */
-	xt = x_table_store(lw, rw, le, re, ld, rd, null_count, pex);
+	xt = x_table_store(lw, rw, le, re, null_count, pex);
 
 	/* The count we previously computed; its non-zero. */
 	xt->set.count = hist_total(count);
@@ -477,8 +437,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 					if (pset == NULL) continue;
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL, NULL,
-									  pset,  NULL, NULL,
-									  NULL, NULL, NULL, &xt->set);
+									  pset, dis->right, NULL,
+									  ld, dis, rd, &xt->set);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
@@ -525,7 +485,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	for (w = start_word; w < end_word; w++)
 	{
 		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
-		// if (mlist) mlist = sort_matchlist(mlist);
+		if (pex->sort_match_list) sort_match_list(mchxt, mlb);
+
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			Disjunct *d = get_match_list_element(mchxt, mle);
@@ -646,7 +607,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
 							record_choice(lset, NULL /* le */,
-							                    d->left,  /* NULL indicates no link */
+							              d->left,  /* NULL indicates no link */
 							              rs[j], d->right, re,
 							              ld, d, rd, &xt->set);
 							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
@@ -716,6 +677,7 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 {
 	pex->words = sent->word;
 	pex->islands_ok = opts->islands_ok;
+	pex->sort_match_list = test_enabled("sort-match-list");
 
 	pex->parse_set =
 		mk_parse_set(mchxt, ctxt,
@@ -736,23 +698,28 @@ void check_link_size(Linkage lkg)
 	}
 }
 
-static void issue_link(Linkage lkg, Disjunct * ld, Disjunct * rd, Link * link)
+/**
+ * Assemble the link array and the chosen_disjuncts of a linkage.
+ */
+static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 {
-	check_link_size(lkg);
-	lkg->link_array[lkg->num_links] = *link;
-	lkg->num_links++;
+	if (link->rc != NULL)
+	{
+		check_link_size(lkg);
+		lkg->link_array[lkg->num_links] = *link;
+		lkg->num_links++;
+	}
 
-	lkg->chosen_disjuncts[link->lw] = ld;
-	lkg->chosen_disjuncts[link->rw] = rd;
+	lkg->chosen_disjuncts[lr ? link->lw : link->rw] = md;
 }
 
 static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 {
 	if (pc->link[0].lc != NULL) { /* there is a link to generate */
-		issue_link(lkg, pc->ld, pc->md, &pc->link[0]);
+		issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
 	}
 	if (pc->link[1].lc != NULL) {
-		issue_link(lkg, pc->md, pc->rd, &pc->link[1]);
+		issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
 	}
 }
 
