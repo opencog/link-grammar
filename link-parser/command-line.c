@@ -848,11 +848,12 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	if (0 < count)
 	{
-		prt_error("Error: Variable \"%s\" requires a value.  Try \"!help\".\n", as[j].string);
+		prt_error("Error: Variable \"%s\" requires a value.  Try \"!help %s\".\n",
+		          as[j].string, as[j].string);
 		return -1;
 	}
 
-	prt_error("Error: I can't interpret \"%s\" as a command.  Try \"!help\".\n", line);
+	prt_error("Error: I can't interpret \"%s\" as a command.  Try \"!help\" or \"!variables\".\n", line);
 	return -1;
 }
 

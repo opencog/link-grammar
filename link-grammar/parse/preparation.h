@@ -16,4 +16,5 @@
 #include "link-includes.h"
 
 void prepare_to_parse(Sentence, Parse_Options);
+bool set_connector_hash(Sentence);
 #endif /* _PREPARATION_H */

@@ -255,6 +255,34 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts,
 }
 
 /**
+ * Check whether the given feature is enabled. It is considered
+ * enabled if it is found in the comma delimited list of features.
+ * This list, if not empty, has a leading and a trailing commas.
+ * Return NULL if not enabled, else ",". If the feature appears
+ * as "feature:param", return a pointer to the ":".
+ *
+ * This function is similar to feature_enabled() of the library (which
+ * is not exported) besides not including filename matching.
+ */
+static const char *test_enabled(const char *feature, const char *test_name)
+{
+
+	if ('\0' == feature[0]) return NULL;
+	size_t len = strlen(test_name);
+	char *buff = alloca(len + 2 + 1); /* leading comma + comma/colon + NUL */
+
+	buff[0] = ',';
+	strcpy(buff+1, test_name);
+	strcat(buff, ",");
+
+	if (NULL != strstr(feature, buff)) return ",";
+	buff[len+1] = ':'; /* check for "feature:param" */
+	if (NULL == strstr(feature, buff)) return NULL;
+
+	return strstr(feature, buff) + len + 1;
+}
+
+/**
  * Check for the auto-next-linkage test request (for LG code development).
  * It is given using the special command: test=auto-next-linkage[:display_max]
  * when :display_max is an optional indication of the maximum number of
@@ -265,12 +293,13 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts,
  */
 static int auto_next_linkage_test(const char *test_opt)
 {
-	char auto_next_linkage_str[] = ",auto-next-linkage";
-	char *auto_next_linkage_pos = strstr(test_opt, auto_next_linkage_str);
-	int max_display;
+	const char *auto_next_linkage_pos =
+		test_enabled(test_opt, "auto-next-linkage");
+	int max_display = 0;
 
 	if (auto_next_linkage_pos == NULL) return 0;
-	max_display = atoi(auto_next_linkage_pos + sizeof(auto_next_linkage_str));
+	if (':' == auto_next_linkage_pos[0])
+		max_display = atoi(auto_next_linkage_pos + 1);
 	if (max_display != 0) return max_display;
 	return DISPLAY_MAX;
 }
@@ -441,7 +470,7 @@ static void batch_process_some_linkages(Label label,
 	}
 	else
 	{
-		if (strstr(test, ",batch_print_parse_statistics,"))
+		if (test_enabled(test, "batch-print-parse-statistics"))
 		{
 			print_parse_statistics(sent, opts, copts);
 		}
@@ -832,7 +861,7 @@ int main(int argc, char * argv[])
 			printf("%s\n", input_string);
 		}
 
-		if (copts->batch_mode)
+		if (copts->batch_mode || auto_next_linkage_test(test))
 		{
 			label = strip_off_label(input_string);
 		}
@@ -867,9 +896,8 @@ int main(int argc, char * argv[])
 				case 3:
 					{
 						/* Use esoteric flags from the test user variable. */
-						const char wg[] = ",wg:";
-						const char *s = strstr(test, wg);
-						if (NULL != s) wg_display_flags = s+4;
+						const char *s = test_enabled(test, "wg");
+						if ((NULL != s) && (':' == s[0])) wg_display_flags = s;
 					}
 					break;
 				default:
@@ -880,10 +908,16 @@ int main(int argc, char * argv[])
 			sentence_display_wordgraph(sent, wg_display_flags);
 		}
 
-		/* First parse with cost 0 or 1 and no null links */
-		// parse_options_set_disjunct_cost(opts, 2.7);
+		/* First parse with the default disjunct_cost as set by the library
+		 * (currently 2.7). Usually parse here with no null links.
+		 * However, if "-test=one-step-parse" is used and we are said to
+		 * parse with null links, allow parsing here with null links too. */
+		bool one_step_parse = !copts->batch_mode && copts->allow_null &&
+		                    test_enabled(test, "one-step-parse");
+		int max_null_count = one_step_parse ? sentence_length(sent) : 0;
+
 		parse_options_set_min_null_count(opts, 0);
-		parse_options_set_max_null_count(opts, 0);
+		parse_options_set_max_null_count(opts, max_null_count);
 		parse_options_reset_resources(opts);
 
 		num_linkages = sentence_parse(sent, opts);
@@ -945,7 +979,7 @@ int main(int argc, char * argv[])
 		}
 
 		/* Now parse with null links */
-		if (num_linkages == 0 && !copts->batch_mode)
+		if (!one_step_parse && num_linkages == 0 && !copts->batch_mode)
 		{
 			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 
@@ -993,7 +1027,7 @@ int main(int argc, char * argv[])
 			}
 		}
 
-		/* print_total_time(opts); */
+		if (verbosity > 1) parse_options_print_total_time(opts);
 
 		const char *rc = "";
 		if (copts->batch_mode)

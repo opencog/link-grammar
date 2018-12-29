@@ -78,6 +78,7 @@ except LG_Error:
 po = ParseOptions(verbosity=arg.verbosity)
 
 po.max_null_count = 999  # > allowed maximum number of words
+po.linkage_limit = 10000 # maximum number of linkages to generate
 po.max_parse_time = 10   # actual parse timeout may be about twice bigger
 po.spell_guess = True if DISPLAY_GUESSES else False
 po.display_morphology = arg.morphology

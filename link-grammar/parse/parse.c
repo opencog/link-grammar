@@ -363,12 +363,11 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			{
 				pp_and_power_prune_done = true;
 				if (is_null_count_0)
+				{
 					opts->min_null_count = 1; /* Don't optimize for null_count==0. */
 
-				/* We are parsing now with null_count>0, when previously we
-				 * parsed with null_count==0. Restore the save disjuncts. */
-				if (NULL != disjuncts_copy)
-				{
+					/* We are parsing now with null_count>0, when previously we
+					 * parsed with null_count==0. Restore the save disjuncts. */
 					free_sentence_disjuncts(sent);
 					for (size_t i = 0; i < sent->length; i++)
 						sent->word[i].d = disjuncts_copy[i];
@@ -376,13 +375,24 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				}
 			}
 			pp_and_power_prune(sent, opts);
+			pack_sentence(sent);
+			bool real_suffix_ids = set_connector_hash(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
-			free_count_context(ctxt, sent);
+			/* If parsing with no nulls or we are using fake suffix_id's
+			 * (because it is a short sentence) always allocate the count
+			 * connector table. Else allocate it only if this is a parse with
+			 * nulls only. So in case of one-step parse (min_null_count==0 &&
+			 * max_null_count>0) the table is shared and the null_count==0
+			 * parsing will be inferred from the table. */
+			if (!real_suffix_ids || (nl == 0) || !is_null_count_0)
+			{
+				free_count_context(ctxt, sent);
+				ctxt = alloc_count_context(sent);
+			}
+
 			free_fast_matcher(sent, mchxt);
-			pack_sentence(sent);
-			ctxt = alloc_count_context(sent);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
 		}
@@ -415,9 +425,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
 
-		/* If we are here, then no valid linkages were found.
-		 * If there was a parse overflow, give up now. */
-		if (PARSE_NUM_OVERFLOW < total) break;
 		//if (sent->num_linkages_found > 0 && nl>0) printf("NUM_LINKAGES_FOUND %d\n", sent->num_linkages_found);
 	}
 	sort_linkages(sent, opts);

@@ -44,7 +44,8 @@
 #include "api-types.h"
 #include "corpus/corpus.h"
 #include "memory-pool.h"
-#include "utilities.h"
+#include "string-set.h"
+#include "string-id.h"
 
 typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
@@ -116,6 +117,7 @@ struct Sentence_s
 	const char *orig_sentence;  /* Copy of original sentence */
 	size_t length;              /* Number of words */
 	Word  *word;                /* Array of words after tokenization */
+	String_id *connector_suffix_id; /* Used for connector trailing sequence ID */
 	String_set *   string_set;  /* Used for assorted strings */
 	Pool_desc * fm_Match_node;  /* Fast-matcher Match_node memory pool */
 	Pool_desc * Table_connector_pool; /* Count memoizing memory pool */
