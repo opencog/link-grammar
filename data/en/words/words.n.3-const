@@ -94,6 +94,8 @@ benzine.n-u
 benzol.n-u
 bequest.n-u
 bereavement.n-u
+berkelium.n-u
+beryllium.n-u
 beryl.n-u
 bestowal.n-u
 beta.n-u
@@ -158,10 +160,12 @@ bluster.n-u
 board.n-u
 boarding.n-u
 bodywork.n-u
+bohrium.n-u
 boldness.n-u
 bombarde.n-u
 bombardment.n-u
 bombast.n-u
+bombastium.n-u
 bond.n-u
 bondage.n-u
 bonhomie.n-u
@@ -272,6 +276,7 @@ calculus.n-u
 calibration.n-u
 calibre.n-u
 calico.n-u
+californium.n-u
 calligraphy.n-u
 calliope.n-u
 callousness.n-u
@@ -370,9 +375,11 @@ cereal.n-u
 ceremonial.n-u
 ceremony.n-u
 cerise.n-u
+cerium.n-u
 certification.n-u
 certitude.n-u
 cerulean.n-u
+cesium.n-u
 cessation.n-u
 chaff.n-u
 chagrin.n-u
@@ -767,6 +774,7 @@ cuprophone.n-u
 curd.n-u
 cure.n-u
 cure-all.n-u
+curium.n-u
 curling.n-u
 curry.n-u
 curtailment.n-u
@@ -965,6 +973,7 @@ diffusion.n-u
 digestion.n-u
 dilapidation.n-u
 dilation.n-u
+dilithium.n-u
 dill.n-u
 dilution.n-u
 diminution.n-u
@@ -1121,6 +1130,7 @@ drudgery.n-u
 drum.n-u
 drunkenness.n-u
 dryness.n-u
+dubnium.n-u
 duck.n-u
 dudgeon.n-u
 duffel.n-u
@@ -1139,6 +1149,7 @@ dynamite.n-u
 dysentery.n-u
 dyslexia.n-u
 dyspepsia.n-u
+dysprosium.n-u
 fable.n-u
 fabric.n-u
 fabrication.n-u
@@ -1187,6 +1198,7 @@ feminism.n-u
 fencing.n-u
 fennel.n-u
 fermentation.n-u
+fermium.n-u
 fertilization.n-u
 fertilizer.n-u
 fervour.n-u
@@ -1310,6 +1322,7 @@ fossilization.n-u
 foul.n-u
 fowl.n-u
 fragmentation.n-u
+francium.n-u
 frankincense.n-u
 frankness.n-u
 fraternization.n-u
@@ -1354,6 +1367,8 @@ futurism.n-u
 fuzz.n-u
 gab.n-u
 gadgetry.n-u
+gadolinium.n-u
+gallium.n-u
 gall.n-u
 gallantry.n-u
 gambling.n-u
@@ -1393,6 +1408,7 @@ genus.n-u
 geography.n-u
 geology.n-u
 geometry.n-u
+germanium.n-u
 germination.n-u
 gerontology.n-u
 gestation.n-u
@@ -1519,6 +1535,7 @@ haddock.n-u
 haemoglobin.n-u
 haemophilia.n-u
 haemorrhage.n-u
+hafnium.n-u
 hail.n-u
 hair.n-u
 hairdressing.n-u
@@ -1553,6 +1570,7 @@ harrassment.n-u
 harshness.n-u
 hash.n-u
 hashish.n-u
+hassium.n-u
 hatching.n-u
 hate.n-u
 hatred.n-u
@@ -1622,6 +1640,7 @@ hogwash.n-u
 hold.n-u
 holiness.n-u
 holly.n-u
+holmium.n-u
 homage.n-u
 home.n-u
 homesickness.n-u
@@ -1755,6 +1774,8 @@ know-how.n-u
 kora.n-u
 koto.n-u
 kouxian.n-u
+krypton.n-u
+kryptonite.n-u
 kudos.n-u
 labor.n-u
 labour.n-u
@@ -1774,6 +1795,7 @@ land.n-u
 landscape.n-u
 language.n-u
 languor.n-u
+lanthanum.n-u
 lap.n-u
 larceny.n-u
 larch.n-u
@@ -1791,8 +1813,10 @@ laughter.n-u
 lava.n-u
 lavender.n-u
 law.n-u
+lawrencium.n-u
 laziness.n-u
 leadership.n-u
+lead.n-u
 leakage.n-u
 lean.n-u
 leapfrog.n-u
@@ -1858,6 +1882,7 @@ liquor.n-u
 liquorice.n-u
 lirone.n-u
 literature.n-u
+lithium.n-u
 lithography.n-u
 litigation.n-u
 litmus.n-u
@@ -1905,6 +1930,7 @@ lust.n-u
 luster.n-u
 lustre.n-u
 lute.n-u
+lutetium.n-u
 luxury.n-u
 lye.n-u
 lymph.n-u
@@ -2024,6 +2050,7 @@ medicine.n-u
 meditation.n-u
 megalomania.n-u
 meiosis.n-u
+meitnerium.n-u
 melancholia.n-u
 melancholy.n-u
 mellophone.n-u
@@ -2036,6 +2063,7 @@ membership.n-u
 membrane.n-u
 memory.n-u
 menace.n-u
+mendelevium.n-u
 mending.n-u
 meningitis.n-u
 menstruation.n-u
@@ -2218,9 +2246,11 @@ negation.n-u
 neglect.n-u
 negotiation.n-u
 neocolonialism.n-u
+neodymium.n-u
 neon.n-u
 nephritis.n-u
 nepotism.n-u
+neptunium.n-u
 nerve.n-u
 net.n-u
 netball.n-u
@@ -2236,12 +2266,14 @@ nicotine.n-u
 nightfall.n-u
 nihilism.n-u
 nil.n-u
+niobium.n-u
 nirvana.n-u
 nitrate.n-u
 nitrogen.n-u
 nitroglycerin.n-u
 nitroglycerine.n-u
 nix.n-u
+nobelium.n-u
 nohkan.n-u
 noise.n-u
 nominative.n-u
@@ -2288,6 +2320,7 @@ palaeontology.n-u
 palendag.n-u
 paleness.n-u
 paleontology.n-u
+palladium.n-u
 pallor.n-u
 palsy.n-u
 pancake.n-u
@@ -2409,6 +2442,7 @@ phi.n-u
 philanthropy.n-u
 philology.n-u
 phlegm.n-u
+phlogiston.n-u
 phonology.n-u
 phosphate.n-u
 phosphorus.n-u
@@ -2500,6 +2534,7 @@ pollo_con_oregano
 pollo_con_queso
 pollo_frito
 pollution.n-u
+polonium.n-u
 polo.n-u
 polska_kielbasa
 polygamy.n-u
@@ -2541,6 +2576,7 @@ practice.n-u
 pragmatics.n-u
 pragmatism.n-u
 praise.n-u
+praseodymium.n-u
 prattle.n-u
 prawn.n-u
 prayer.n-u
@@ -2598,6 +2634,7 @@ progress.n-u
 progression.n-u
 prohibition.n-u
 prolongation.n-u
+promethium.n-u
 promptness.n-u
 promulgation.n-u
 pronunciation.n-u
@@ -2615,6 +2652,7 @@ prosecution.n-u
 prosody.n-u
 prostitution.n-u
 prostration.n-u
+protactinium.n-u
 protection.n-u
 protectionism.n-u
 protein.n-u
@@ -2688,6 +2726,7 @@ radiology.n-u
 radiotherapy.n-u
 radium.n-u
 radius.n-u
+radon.n-u
 rage.n-u
 ragtime.n-u
 rain.n-u
@@ -2901,8 +2940,10 @@ revolt.n-u
 revolution.n-u
 revulsion.n-u
 reward.n-u
+rhenium.n-u
 rhetoric.n-u
 rheumatism.n-u
+rhodium.n-u
 rho.n-u
 rhubarb.n-u
 rhyme.n-u
@@ -2945,6 +2986,7 @@ routine.n-u
 rubber.n-u
 rubbish.n-u
 rubble.n-u
+rubidium.n-u
 rudeness.n-u
 rue.n-u
 rugby.n-u
@@ -2960,6 +3002,8 @@ rush.n-u
 russet.n-u
 rust.n-u
 rustle.n-u
+ruthenium.n-u
+rutherfordium.n-u
 rye.n-u
 ryuteki.n-u
 sable.n-u
@@ -2997,6 +3041,7 @@ saltwater.n-u
 salvage.n-u
 salvation.n-u
 salve.n-u
+samarium.n-u
 sameness.n-u
 samponia.n-u
 sanction.n-u
@@ -3030,6 +3075,7 @@ saxonette.n-u
 saxophone.n-u
 scaffolding.n-u
 scandal.n-u
+scandium.n-u
 scansion.n-u
 scarlet.n-u
 scenery.n-u
@@ -3062,6 +3108,7 @@ scud.n-u
 sculpture.n-u
 scum.n-u
 scurvy.n-u
+seaborgium.n-u
 sea.n-u
 seafood.n-u
 seamanship.n-u
@@ -3084,6 +3131,7 @@ segregation.n-u
 seismology.n-u
 seizure.n-u
 selection.n-u
+selenium.n-u
 self-consciousness.n-u
 self-control.n-u
 self-determination.n-u
@@ -3234,9 +3282,9 @@ soccer.n-u
 socialism.n-u
 socialization.n-u
 sociology.n-u
+sodium.n-u
 sod.n-u
 soda.n-u
-sodium.n-u
 sodomy.n-u
 softness.n-u
 software.n-u
@@ -3404,6 +3452,7 @@ suffocation.n-u
 suffrage.n-u
 sugar.n-u
 suicide.n-u
+sulfur.n-u
 sulphate.n-u
 sulphide.n-u
 sulphur.n-u
@@ -3487,6 +3536,7 @@ tambourine.n-u
 tamburitza.n-u
 tandem.n-u
 tangerine.n-u
+tantalum.n-u
 tape.n-u
 tapestry.n-u
 tapioca.n-u
@@ -3508,6 +3558,7 @@ teak.n-u
 teal.n-u
 teamwork.n-u
 teatime.n-u
+technetium.n-u
 technique.n-u
 technology.n-u
 tedium.n-u
@@ -3518,6 +3569,7 @@ teleology.n-u
 telepathy.n-u
 teletype.n-u
 television.n-u
+tellurium.n-u
 temper.n-u
 temperament.n-u
 temperature.n-u
@@ -3529,6 +3581,7 @@ tenor.n-u
 tenoroon.n-u
 tension.n-u
 tenure.n-u
+terbium.n-u
 termination.n-u
 terminology.n-u
 terra_cotta
@@ -3541,6 +3594,7 @@ testing.n-u
 tetanus.n-u
 text.n-u
 texture.n-u
+thallium.n-u
 thankfulness.n-u
 thanksgiving.n-u
 theater.n-u
@@ -3553,12 +3607,14 @@ theta.n-u
 thickness.n-u
 thinking.n-u
 thirst.n-u
+thorium.n-u
 thoughtfulness.n-u
 thread.n-u
 thrift.n-u
 thrombosis.n-u
 throttle.n-u
 thrust.n-u
+thulium.n-u
 thumb.n-u
 thunder.n-u
 thunderclap.n-u
@@ -3577,6 +3633,7 @@ tinfoil.n-u
 tinsel.n-u
 tiredness.n-u
 tissue.n-u
+titanium.n-u
 titillation.n-u
 toast.n-u
 tobacco.n-u
@@ -3660,6 +3717,7 @@ trigonometry.n-u
 trim.n-u
 tripe.n-u
 triplicate.n-u
+tritanium.n-u
 triumph.n-u
 trombone.n-u
 tromboon.n-u
@@ -3712,6 +3770,7 @@ vainglory.n-u
 valour.n-u
 valuation.n-u
 value.n-u
+vanadium.n-u
 vandalism.n-u
 vanilla.n-u
 vantage.n-u
@@ -3877,6 +3936,7 @@ wrestling.n-u
 writing.n-u
 wrongdoing.n-u
 xalam.n-u
+xenon.n-u
 xenophobia.n-u
 xi.n-u
 xylophone.n-u
@@ -3895,10 +3955,13 @@ yolk.n-u
 yore.n-u
 youth.n-u
 youthfulness.n-u
+ytterbium.n-u
+yttrium.n-u
 yuletide.n-u
 zeal.n-u
 zealotry.n-u
 zest.n-u
 zeta.n-u
 zinc.n-u
+zirconium.n-u
 zoology.n-u
