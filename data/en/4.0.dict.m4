@@ -9377,10 +9377,12 @@ sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 % e.g. "Amen’s hair is (the) same as Ben’s" which is not terribly
 % grammatical, but is not uncommon.
 % [<noun-main-x>]0.1: prefer MVy for comparatives (see the_same, below).
-% "The coffee tastes the same as it did last year."
+%     "The coffee tastes the same as it did last year."
+% D- & SJr-: "... her sisters' beauty and her own"
 same.a own.a:
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-  ((DD- or [[()]]) & <noun-sub-x> & {<ton-verb>} & [<noun-main-x>]0.1);
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-)
+  or ((DD- or [[()]]) & <noun-sub-x> & {<ton-verb>} & [<noun-main-x>]0.1)
+  or (D- & SJr-);
 
 % [Oy-]0.1: see immediately above.
 the_same:
