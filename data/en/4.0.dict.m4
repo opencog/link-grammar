@@ -4735,18 +4735,18 @@ imagining.v: <verb-pg> & <vc-imagine>;
   or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
   or MVa+;
 
-declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
-emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
+declare.v conclude.v suspect.v concede.v foresee.v
+emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v:
   VERB_PLI(<vc-declare>) or <verb-manner>;
 
-declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
+declares.v concludes.v suspects.v concedes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
-confirms.v stresses.v assumes.v:
+confirms.v stresses.v:
   VERB_S_T(<vc-declare>) or <verb-manner>;
 
-declared.v feared.v concluded.v suspected.v conceded.v presumed.v
+declared.v concluded.v suspected.v conceded.v
 emphasized.v maintained.v acknowledged.v noted.v
-confirmed.v-d stressed.v-d assumed.v-d:
+confirmed.v-d stressed.v-d:
   VERB_SPPP_T(<vc-declare>)
   or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
   or <verb-adj>
@@ -4759,14 +4759,36 @@ foreseen.v:
   <verb-adj> or
   <verb-phrase-opener>;
 
-declaring.g fearing.g concluding.g suspecting.g conceding.g
-presuming.g foreseeing.g emphasizing.g maintaining.g acknowledging.g
-noting.g confirming.g stressing.g assuming.g:
+declaring.g concluding.g suspecting.g conceding.g
+foreseeing.g emphasizing.g maintaining.g acknowledging.g
+noting.g confirming.g stressing.g:
   (<vc-declare> & <verb-ge>) or <verb-ge-d>;
-declaring.v fearing.v concluding.v suspecting.v conceding.v
-presuming.v foreseeing.v emphasizing.v maintaining.v acknowledging.v
-noting.v confirming.v stressing.v assuming.v:
+declaring.v concluding.v suspecting.v conceding.v
+foreseeing.v emphasizing.v maintaining.v acknowledging.v
+noting.v confirming.v stressing.v:
   <verb-pg> & <vc-declare>;
+
+% ------------------------------
+% Almost like the above, except:
+% TO+ & Xc+: allows null-infinitive: "I could not assume to"
+<vc-assume>: <vc-declare> or (<mv-coord> & TO+ & Xc+);
+
+fear.v presume.v assume.v:
+  VERB_PLI(<vc-assume>) or <verb-manner>;
+
+fears.v presumes.v assumes.v:
+  VERB_S_T(<vc-assume>) or <verb-manner>;
+
+feared.v presumed.v assumed.v-d:
+  VERB_SPPP_T(<vc-assume>)
+  or (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) })
+  or <verb-adj>
+  or <verb-phrase-opener>;
+
+fearing.g presuming.g assuming.g:
+  (<vc-assume> & <verb-ge>) or <verb-ge-d>;
+fearing.v presuming.v assuming.v:
+  <verb-pg> & <vc-assume>;
 
 % ---------------------------------------------------------------
 
