@@ -8229,16 +8229,16 @@ and.j-n 'n':
   (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
-    or (SIp- & {Rw+ & B+})
-    or ({Dm-} & Op- & Rw+ & B+)
+    or SIp-
+    or ((SIp- or ({Dm-} & Op-) or Jp-) & Rw+ & B+)
     or Wa-
     or [{Ds-} & Os-]
     or <post-nominal-s>))
   or (<noun-conj-dep-p> & <noun-sub-p> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
-    or (SIp- & {Rw+ & B+})
-    or ({Dm-} & Op- & Rw+ & B+)
+    or SIp-
+    or ((SIp- or ({Dm-} & Op-) or Jp-) & Rw+ & B+)
     or Wa-
     or [{{Jd-} & Dmc-} & Op-]
     or ({Dmc-} & Op- & Rw+ & B+)
@@ -8246,8 +8246,8 @@ and.j-n 'n':
   or (<noun-conj-dep-u> & <noun-sub-x> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
-    or (SIu- & {Rw+ & B+})
-    or (Ou- & Rw+ & B+)
+    or SIu-
+    or ((SIu- or Ou- or Jp-) & Rw+ & B+)
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>))
