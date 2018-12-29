@@ -3034,7 +3034,8 @@ is.v:
 are.v:
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>)
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
-  or ({<verb-rq>} & (SIpx+ or SFIp+) & {<vc-be>});
+  or ({<verb-rq>} & SIpx+ & {<vc-be>})
+  or ({<verb-rq>} & SFIp+ & {<vc-be-obj>});
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
