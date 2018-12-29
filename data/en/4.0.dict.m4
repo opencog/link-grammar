@@ -10368,6 +10368,7 @@ changequote dnl
 % get linked incorrectly with the MX link.
 ".":
   ((Xp- or ({@Xca-} & [[Xc-]])) & RW+)
+  or (Xca- & Xc-)
   or Xi-
   or <sent-split>;
 
