@@ -8230,6 +8230,7 @@ and.j-n 'n':
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
     or (SIp- & {Rw+ & B+})
+    or ({Dm-} & Op- & Rw+ & B+)
     or Wa-
     or [{Ds-} & Os-]
     or <post-nominal-s>))
@@ -8237,13 +8238,16 @@ and.j-n 'n':
     <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
     or (SIp- & {Rw+ & B+})
+    or ({Dm-} & Op- & Rw+ & B+)
     or Wa-
     or [{{Jd-} & Dmc-} & Op-]
+    or ({Dmc-} & Op- & Rw+ & B+)
     or <post-nominal-p>))
   or (<noun-conj-dep-u> & <noun-sub-x> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
     or (SIu- & {Rw+ & B+})
+    or (Ou- & Rw+ & B+)
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>))
@@ -8259,9 +8263,21 @@ but_not just_not: VJrsi- & O+;
 %
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
-    (<noun-conj-head> or (S*x+ & <CLAUSE>) or SIs- or [Os-] or Wa- or <post-nominal-s>)) or
+    (<noun-conj-head>
+    or (S*x+ & <CLAUSE>)
+    or (SIs- & {Rw+ & B+})
+    or ({Ds-} & O- & Rw+ & B+)
+    or [Os-]
+    or Wa-
+    or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>))
+    (<noun-conj-head>
+    or (Spx+ & <CLAUSE>)
+    or (SIp- & {Rw+ & B+})
+    or ({D-} & Op- & Rw+ & B+)
+    or [Op-]
+    or Wa-
+    or <post-nominal-p>))
   or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
   or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
 
