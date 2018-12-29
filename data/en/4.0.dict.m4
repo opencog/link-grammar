@@ -10490,7 +10490,14 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 "&": G- & {Xd- & G-} & G+;
 
-"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+% Possessive
+"’":
+  YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+
+% Possesive or quote
+"'":
+  (YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+))
+  or QUc- or QUd+;
 
 % Possessives
 "'s.p" "’s.p":
