@@ -8563,12 +8563,12 @@ just_not: <COMP-OPENER>;
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Conjoined adjectives
-% Conjoined comparative adjectives, if EAm- or EC- is present.
+% Conjoined comparative adjectives, if EAm- is present.
 <adj-conjoined>:
   ({[EA-]-0.1} & AJra- & {@MV+})
-  or ([EAm- or EC-]-0.1 & AJrc- & {@MV+})
+  or ([EAm-]-0.1 & AJrc- & {@MV+})
   or ({@MV+} & AJla+)
-  or ({@MV+} & [EAm- or EC-]-0.1 & AJlc+);
+  or ({@MV+} & [EAm-]-0.1 & AJlc+);
 
 <adj-op>: <adj-opener> or <adj-conjoined>;
 
@@ -9346,7 +9346,7 @@ significantly substantially:
     ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
     or ({[[@Ec-]]} & {Xc+} & Am+)
     or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+)
-    or AJlc+))
+    or ({EA-} & AJlc+)))
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
