@@ -8563,12 +8563,12 @@ just_not: <COMP-OPENER>;
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Conjoined adjectives
-% Conjoined comparative adjectives, if EAm- is present.
+% Conjoined comparative adjectives, if EAm- or EC- is present.
 <adj-conjoined>:
   ({[EA-]-0.1} & AJra- & {@MV+})
-  or (EAm- & AJrc- & {@MV+})
+  or ([EAm- or EC-]-0.1 & AJrc- & {@MV+})
   or ({@MV+} & AJla+)
-  or ({@MV+} & EAm- & AJlc+);
+  or ({@MV+} & [EAm- or EC-]-0.1 & AJlc+);
 
 <adj-op>: <adj-opener> or <adj-conjoined>;
 
