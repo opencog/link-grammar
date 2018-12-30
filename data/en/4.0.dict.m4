@@ -8174,13 +8174,14 @@ nor.j-a: AJ- & {Xd-} & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
 % he is bigger, and badder, than the pope.
 % If one comma is there, then the other must be also.
 % SJl- & AJrc+: "She was John's height, or taller"
+% Xc+ & Am+: "faster and stronger, Gracie is expected to win"
 and.j-c or.j-c but.j-c yet.j-c:
   ((AJlc- & AJrc+) or
   (Xd- & AJlc- & AJrc+ & Xc+) or
   ({Xd-} & SJl- & {EB+} & AJrc+)) &
     (((Pam- or Mam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
-    Am+);
+    ({Xc+} & Am+));
 
 % [MVa-] : "he ran the fastest and the farthest"
 and.j-s:
@@ -8562,8 +8563,12 @@ just_not: <COMP-OPENER>;
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Conjoined adjectives
+% Conjoined comparative adjectives, if EAm- is present.
 <adj-conjoined>:
-  ({[EA-]-0.1} & AJra- & {@MV+}) or ({@MV+} & AJla+);
+  ({[EA-]-0.1} & AJra- & {@MV+})
+  or (EAm- & AJrc- & {@MV+})
+  or ({@MV+} & AJla+)
+  or ({@MV+} & EAm- & AJlc+);
 
 <adj-op>: <adj-opener> or <adj-conjoined>;
 
