@@ -108,7 +108,7 @@ static void free_set(Parse_set *s)
 static Parse_choice *
 make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
             Parse_set *rset, Connector * rlc, Connector * rrc,
-            Disjunct *ld, Disjunct *md, Disjunct *rd)
+            Disjunct *md)
 {
 	Parse_choice *pc;
 	pc = (Parse_choice *) xalloc(sizeof(*pc));
@@ -150,11 +150,11 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 static void record_choice(
     Parse_set *lset, Connector * llc, Connector * lrc,
     Parse_set *rset, Connector * rlc, Connector * rrc,
-    Disjunct *ld, Disjunct *md, Disjunct *rd, Parse_set *s)
+    Disjunct *md, Parse_set *s)
 {
 	put_choice_in_set(s, make_choice(lset, llc, lrc,
 	                                 rset, rlc, rrc,
-	                                 ld, md, rd));
+	                                 md));
 }
 
 /**
@@ -438,7 +438,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL, NULL,
 									  pset, dis->right, NULL,
-									  ld, dis, rd, &xt->set);
+									  dis, &xt->set);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
@@ -450,7 +450,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL, NULL,
 								  pset,  NULL, NULL,
-								  NULL, NULL, NULL, &xt->set);
+								  NULL, &xt->set);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
@@ -565,7 +565,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						if (rs[j] == NULL) continue;
 						record_choice(ls[i], le, d->left,
 						              rs[j], d->right, re,
-						              ld, d, rd, &xt->set);
+						              d, &xt->set);
 						RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
 					}
 				}
@@ -586,7 +586,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 							record_choice(ls[i], le, d->left,
 							              rset,  NULL /* d->right */,
 							              re,  /* the NULL indicates no link*/
-							              ld, d, rd, &xt->set);
+							              d, &xt->set);
 							RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
 						}
 					}
@@ -609,7 +609,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 							record_choice(lset, NULL /* le */,
 							              d->left,  /* NULL indicates no link */
 							              rs[j], d->right, re,
-							              ld, d, rd, &xt->set);
+							              d, &xt->set);
 							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
 						}
 					}
