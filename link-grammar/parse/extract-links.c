@@ -749,7 +749,6 @@ static void list_random_links(Linkage lkg, extractor_t * pex, const Parse_set * 
 	for (pc = set->first; pc != NULL; pc = pc->next) {
 		num_pc++;
 	}
-	assert(num_pc != 0, "Couldn't get a random parse choice");
 
 	new_index = rand_r(&pex->rand_state) % num_pc;
 
