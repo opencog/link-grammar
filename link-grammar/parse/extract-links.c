@@ -492,12 +492,12 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
-			bool ls_exists = false;
 
 			for (unsigned int lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
 				int i, j;
 				Parse_set *ls[4], *rs[4];
+				bool ls_exists = false;
 
 				/* Here, lnull_count and rnull_count are the null_counts
 				 * we're assigning to those parts respectively. */
