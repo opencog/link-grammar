@@ -1216,11 +1216,6 @@ static Exp * expression(Dictionary dict)
  */
 static Exp * make_expression(Dictionary dict)
 {
-	return restricted_expression(dict, true, true);
-}
-
-static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
-{
 	Exp *nl = NULL;
 	Exp *e_head = NULL;
 	E_list *el_tail = NULL; /* last part of the expression */
