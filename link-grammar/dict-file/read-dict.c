@@ -853,6 +853,26 @@ static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
 	return n;
 }
 
+static Exp *make_op_Exp(Exp_list *eli, Exp_type t)
+{
+	Exp * n = Exp_create(eli);
+	n->type = t;
+	n->cost = 0.0;
+	n->u.l = NULL;
+
+	return n;
+}
+
+static E_list *make_E_list_val(Exp* nr)
+{
+	E_list *elr = (E_list *) malloc(sizeof(E_list));
+
+	elr->e = nr;
+	elr->next = NULL;
+
+	return elr;
+}
+
 /**
  * Create an OR_type expression. The expressions nl, nr will be
  * OR-ed together.
@@ -1189,8 +1209,6 @@ static Exp * expression(Dictionary dict)
 /* ======================================================================== */
 #else /* This is for infix notation */
 
-static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok);
-
 /**
  * Build (and return the root of) the tree for the expression beginning
  * with the current token.  At the end, the token is the first one not
@@ -1204,163 +1222,187 @@ static Exp * make_expression(Dictionary dict)
 static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 {
 	Exp *nl = NULL;
+	Exp *e_head = NULL;
+	E_list *el_tail = NULL; /* last part of the expression */
+	bool is_sym_and = false;
 
-	if (is_equal(dict, '('))
+	while (true)
 	{
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		nl = make_expression(dict);
-		if (nl == NULL) {
-			return NULL;
-		}
-		if (!is_equal(dict, ')')) {
-			dict_error(dict, "Expecting a \")\".");
-			return NULL;
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-	}
-	else if (is_equal(dict, '{'))
-	{
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		nl = make_expression(dict);
-		if (nl == NULL) {
-			return NULL;
-		}
-		if (!is_equal(dict, '}')) {
-			dict_error(dict, "Expecting a \"}\".");
-			return NULL;
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		nl = make_optional_node(&dict->exp_list, nl);
-	}
-	else if (is_equal(dict, '['))
-	{
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		nl = make_expression(dict);
-		if (nl == NULL) {
-			return NULL;
-		}
-		if (!is_equal(dict, ']')) {
-			dict_error(dict, "Expecting a \"]\".");
-			return NULL;
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-
-		/* A square bracket can have a number after it.
-		 * If it is present, then that number is interpreted
-		 * as the cost of the bracket. Else, the cost of a
-		 * square bracket is 1.0.
-		 */
-		if (is_number(dict->token))
+		if (is_equal(dict, '('))
 		{
-			double cost;
-			if (strtodC(dict->token, &cost))
-			{
-				nl->cost += cost;
+			if (!link_advance(dict)) {
+				return NULL;
 			}
-			else
-			{
-				warning(dict, "Invalid cost (using 1.0)\n");
-				nl->cost += 1.0;
+			nl = make_expression(dict);
+			if (nl == NULL) {
+				return NULL;
+			}
+			if (!is_equal(dict, ')')) {
+				dict_error(dict, "Expecting a \")\".");
+				return NULL;
 			}
 			if (!link_advance(dict)) {
 				return NULL;
 			}
 		}
+		else if (is_equal(dict, '{'))
+		{
+			if (!link_advance(dict)) {
+				return NULL;
+			}
+			nl = make_expression(dict);
+			if (nl == NULL) {
+				return NULL;
+			}
+			if (!is_equal(dict, '}')) {
+				dict_error(dict, "Expecting a \"}\".");
+				return NULL;
+			}
+			if (!link_advance(dict)) {
+				return NULL;
+			}
+			nl = make_optional_node(&dict->exp_list, nl);
+		}
+		else if (is_equal(dict, '['))
+		{
+			if (!link_advance(dict)) {
+				return NULL;
+			}
+			nl = make_expression(dict);
+			if (nl == NULL) {
+				return NULL;
+			}
+			if (!is_equal(dict, ']')) {
+				dict_error(dict, "Expecting a \"]\".");
+				return NULL;
+			}
+			if (!link_advance(dict)) {
+				return NULL;
+			}
+
+			/* A square bracket can have a number after it.
+			 * If it is present, then that number is interpreted
+			 * as the cost of the bracket. Else, the cost of a
+			 * square bracket is 1.0.
+			 */
+			if (is_number(dict->token))
+			{
+				double cost;
+
+				if (strtodC(dict->token, &cost))
+				{
+					nl->cost += cost;
+				}
+				else
+				{
+					warning(dict, "Invalid cost (using 1.0)\n");
+					nl->cost += 1.0;
+				}
+				if (!link_advance(dict)) {
+					return NULL;
+				}
+			}
+			else
+			{
+				nl->cost += 1.0;
+			}
+		}
+		else if (!dict->is_special)
+		{
+			nl = make_connector(dict);
+			if (nl == NULL) {
+				return NULL;
+			}
+		}
+		else if (is_equal(dict, ')') || is_equal(dict, ']'))
+		{
+			/* allows "()" or "[]" */
+			nl = make_zeroary_node(&dict->exp_list);
+		}
 		else
 		{
-			nl->cost += 1.0;
-		}
-	}
-	else if (!dict->is_special)
-	{
-		nl = make_connector(dict);
-		if (nl == NULL) {
+			dict_error(dict, "Connector, \"(\", \"[\", or \"{\" expected.");
 			return NULL;
 		}
-	}
-	else if (is_equal(dict, ')') || is_equal(dict, ']'))
-	{
-		/* allows "()" or "[]" */
-		nl = make_zeroary_node(&dict->exp_list);
-	}
-	else
-	{
-		dict_error(dict, "Connector, \"(\", \"[\", or \"{\" expected.");
-		return NULL;
-	}
 
-	/* Non-commuting AND */
-	if (is_equal(dict, '&') || (strcmp(dict->token, "and") == 0))
-	{
-		Exp *nr;
+		if (is_sym_and)
+		{
+			/* Part 2/2 of SYM_AND processing */
+			E_list **elp; /* LHS argument and the SYM_AND result placeholder */
+			Exp *nr, *na, *nb, *or;
 
-		if (!and_ok) {
-			warning(dict, "\"and\" and \"or\" at the same level in an expression");
+			elp = (el_tail == NULL) ? &e_head->u.l : &el_tail;
+			nr = nl; /* last expression is actually the RHS */
+			nl = (*elp)->e;
+
+			/* Expand A ^ B into the expr ((A & B) or (B & A)).
+			 * It can be mixed with ordinary ands at the same level. */
+			na = make_and_node(&dict->exp_list, nl, nr);
+			nb = make_and_node(&dict->exp_list, nr, nl);
+			or = make_or_node(&dict->exp_list, na, nb);
+
+			(*elp)->e = or;
+			is_sym_and = false;
 		}
+		else if (el_tail != NULL)
+		{
+			/* This is Non-commuting AND or Commuting OR.
+			 * Append the just read expression (nl) to its E_list chain. */
+			el_tail->next = make_E_list_val(nl);
+			el_tail = el_tail->next;
+		}
+
+		/* If (el_tail == NULL), handle_basic_op() below will create an
+		 * E_list element with nl. Else it will just validate that the
+		 * current operation is consistent with the current expression level. */
+
+		Exp_type op;
+
+		/* Non-commuting AND */
+		if (is_equal(dict, '&') || (strcmp(dict->token, "and") == 0))
+		{
+			op = AND_type;
+		}
+		/* Commuting OR */
+		else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
+		{
+			op =  OR_type;
+		}
+		/* Commuting AND */
+		else if (is_equal(dict, SYM_AND) || (strcmp(dict->token, "sym") == 0))
+		{
+			/* Part 1/2 of SYM_AND processing */
+			op = AND_type;
+			is_sym_and = true; /* processing to be completed after next argument */
+		}
+		else
+		{
+			if (e_head != NULL) return e_head;
+			return nl;
+		}
+
+		if (e_head != NULL)
+		{
+			if (e_head->type != op)
+			{
+				dict_error(dict, "\"and\" and \"or\" at the same level in an expression");
+				return NULL;
+			}
+		}
+		else
+		{
+			e_head = make_op_Exp(&dict->exp_list, op);
+			e_head->u.l = make_E_list_val(nl);
+		}
+
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nr = restricted_expression(dict, true, false);
-		if (nr == NULL) {
-			return NULL;
-		}
-		return make_and_node(&dict->exp_list, nl, nr);
+
+		if (el_tail == NULL)
+			el_tail = e_head->u.l;
 	}
-	/* Commuting OR */
-	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
-	{
-		Exp *nr;
-
-		if (!or_ok) {
-			warning(dict, "\"and\" and \"or\" at the same level in an expression");
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		nr = restricted_expression(dict, false, true);
-		if (nr == NULL) {
-			return NULL;
-		}
-		return make_or_node(&dict->exp_list, nl, nr);
-	}
-	/* Commuting AND */
-	else if (is_equal(dict, SYM_AND) || (strcmp(dict->token, "sym") == 0))
-	{
-		Exp *nr, *na, *nb, *or;
-
-		if (!and_ok) {
-			warning(dict, "\"and\" and \"or\" at the same level in an expression");
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		nr = restricted_expression(dict, true, false);
-		if (nr == NULL) {
-			return NULL;
-		}
-
-		/* Expand A ^ B into the expr ((A & B) or (B & A)).
-		 * Must be wrapped in unary node so that it can be
-		 * mixed with ordinary ands at the same level. */
-		na = make_and_node(&dict->exp_list, nl, nr);
-		nb = make_and_node(&dict->exp_list, nr, nl);
-		or = make_or_node(&dict->exp_list, na, nb);
-		return make_unary_node(&dict->exp_list, or);
-	}
-
-	return nl;
+		/* unreachable */
 }
 
 #endif
