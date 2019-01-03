@@ -949,7 +949,7 @@ static Exp * make_connector(Dictionary dict)
 	Dict_node *dn, *dn_head;
 	int i;
 
-	i = strlen(dict->token) - 1;  /* this must be +, - or * if a connector */
+	i = strlen(dict->token) - 1;  /* this must be +, - or $ if a connector */
 	if ((dict->token[i] != '+') &&
 	    (dict->token[i] != '-') &&
 	    (dict->token[i] != ANY_DIR))
