@@ -397,14 +397,14 @@ pp_knowledge *pp_knowledge_open(const char *path)
     return NULL;
   }
 
-  /* Ignore the file if it starts with "DISABLE". */
+  /* Ignore the file if it starts with ";DISABLE". */
   char buf[16];
   if ((NULL == fgets(buf, sizeof(buf), f)) && ferror(f))
   {
       prt_error("Error: File %s: Read error\n", path);
       return NULL;
   }
-  if (0 == strncmp("DISABLE", buf, sizeof("DISABLE")-1))
+  if (0 == strncmp(";DISABLE", buf, sizeof(";DISABLE")-1))
   {
     if (verbosity_level(D_PPK))
       prt_error("Warning: File %s disabled\n", path);
