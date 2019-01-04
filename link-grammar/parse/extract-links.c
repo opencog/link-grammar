@@ -108,7 +108,7 @@ static void free_set(Parse_set *s)
 static Parse_choice *
 make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
             Parse_set *rset, Connector * rlc, Connector * rrc,
-            Disjunct *ld, Disjunct *md, Disjunct *rd)
+            Disjunct *md)
 {
 	Parse_choice *pc;
 	pc = (Parse_choice *) xalloc(sizeof(*pc));
@@ -150,11 +150,11 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 static void record_choice(
     Parse_set *lset, Connector * llc, Connector * lrc,
     Parse_set *rset, Connector * rlc, Connector * rrc,
-    Disjunct *ld, Disjunct *md, Disjunct *rd, Parse_set *s)
+    Disjunct *md, Parse_set *s)
 {
 	put_choice_in_set(s, make_choice(lset, llc, lrc,
 	                                 rset, rlc, rrc,
-	                                 ld, md, rd));
+	                                 md));
 }
 
 /**
@@ -373,7 +373,7 @@ static void sort_match_list(fast_matcher_t *mchxt, size_t mlb)
 static
 Parse_set * mk_parse_set(fast_matcher_t *mchxt,
                  count_context_t * ctxt,
-                 Disjunct *ld, Disjunct *rd, int lw, int rw,
+                 int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
                  extractor_t * pex)
 {
@@ -432,25 +432,25 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				if (dis->left == NULL)
 				{
 					pset = mk_parse_set(mchxt, ctxt,
-											  dis, NULL, w, rw, dis->right, NULL,
+											  w, rw, dis->right, NULL,
 											  null_count-1, pex);
 					if (pset == NULL) continue;
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL, NULL,
 									  pset, dis->right, NULL,
-									  ld, dis, rd, &xt->set);
+									  dis, &xt->set);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
 			pset = mk_parse_set(mchxt, ctxt,
-									  NULL, NULL, w, rw, NULL, NULL,
+									  w, rw, NULL, NULL,
 									  null_count-1, pex);
 			if (pset != NULL)
 			{
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL, NULL,
 								  pset,  NULL, NULL,
-								  NULL, NULL, NULL, &xt->set);
+								  NULL, &xt->set);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
@@ -492,12 +492,12 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
-			bool ls_exists = false;
 
 			for (unsigned int lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
 				int i, j;
 				Parse_set *ls[4], *rs[4];
+				bool ls_exists = false;
 
 				/* Here, lnull_count and rnull_count are the null_counts
 				 * we're assigning to those parts respectively. */
@@ -510,22 +510,22 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				if (Lmatch)
 				{
 					ls[0] = mk_parse_set(mchxt, ctxt,
-					             ld, d, lw, w, le->next, d->left->next,
+					             lw, w, le->next, d->left->next,
 					             lnull_count, pex);
 
 					if (le->multi)
 						ls[1] = mk_parse_set(mchxt, ctxt,
-						              ld, d, lw, w, le, d->left->next,
+						              lw, w, le, d->left->next,
 						              lnull_count, pex);
 
 					if (d->left->multi)
 						ls[2] = mk_parse_set(mchxt, ctxt,
-						              ld, d, lw, w, le->next, d->left,
+						              lw, w, le->next, d->left,
 						              lnull_count, pex);
 
 					if (le->multi && d->left->multi)
 						ls[3] = mk_parse_set(mchxt, ctxt,
-						              ld, d, lw, w, le, d->left,
+						              lw, w, le, d->left,
 						              lnull_count, pex);
 
 					ls_exists =
@@ -536,22 +536,22 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				if (Rmatch && (ls_exists || le == NULL))
 				{
 					rs[0] = mk_parse_set(mchxt, ctxt,
-					                 d, rd, w, rw, d->right->next, re->next,
+					                 w, rw, d->right->next, re->next,
 					                 rnull_count, pex);
 
 					if (d->right->multi)
 						rs[1] = mk_parse_set(mchxt, ctxt,
-					                 d, rd, w, rw, d->right, re->next,
+					                 w, rw, d->right, re->next,
 						              rnull_count, pex);
 
 					if (re->multi)
 						rs[2] = mk_parse_set(mchxt, ctxt,
-						              d, rd, w, rw, d->right->next, re,
+						              w, rw, d->right->next, re,
 						              rnull_count, pex);
 
 					if (d->right->multi && re->multi)
 						rs[3] = mk_parse_set(mchxt, ctxt,
-						              d, rd, w, rw, d->right, re,
+						              w, rw, d->right, re,
 						              rnull_count, pex);
 				}
 
@@ -565,7 +565,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						if (rs[j] == NULL) continue;
 						record_choice(ls[i], le, d->left,
 						              rs[j], d->right, re,
-						              ld, d, rd, &xt->set);
+						              d, &xt->set);
 						RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
 					}
 				}
@@ -574,7 +574,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				{
 					/* Evaluate using the left match, but not the right */
 					Parse_set* rset = mk_parse_set(mchxt, ctxt,
-					                        d, rd, w, rw, d->right, re,
+					                        w, rw, d->right, re,
 					                        rnull_count, pex);
 					if (rset != NULL)
 					{
@@ -586,7 +586,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 							record_choice(ls[i], le, d->left,
 							              rset,  NULL /* d->right */,
 							              re,  /* the NULL indicates no link*/
-							              ld, d, rd, &xt->set);
+							              d, &xt->set);
 							RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
 						}
 					}
@@ -596,7 +596,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				{
 					/* Evaluate using the right match, but not the left */
 					Parse_set* lset = mk_parse_set(mchxt, ctxt,
-					                        ld, d, lw, w, le, d->left,
+					                        lw, w, le, d->left,
 					                        lnull_count, pex);
 
 					if (lset != NULL)
@@ -609,7 +609,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 							record_choice(lset, NULL /* le */,
 							              d->left,  /* NULL indicates no link */
 							              rs[j], d->right, re,
-							              ld, d, rd, &xt->set);
+							              d, &xt->set);
 							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
 						}
 					}
@@ -681,8 +681,7 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 
 	pex->parse_set =
 		mk_parse_set(mchxt, ctxt,
-		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
-		             pex);
+		             -1, sent->length, NULL, NULL, null_count+1, pex);
 
 
 	return set_overflowed(pex);
@@ -750,7 +749,6 @@ static void list_random_links(Linkage lkg, extractor_t * pex, const Parse_set * 
 	for (pc = set->first; pc != NULL; pc = pc->next) {
 		num_pc++;
 	}
-	assert(num_pc != 0, "Couldn't get a random parse choice");
 
 	new_index = rand_r(&pex->rand_state) % num_pc;
 
