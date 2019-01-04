@@ -1,3 +1,6 @@
+Version 5.6.1 (XXX 2019)
+ * Something ...
+
 Version 5.6.0 (4 January 2019)
  * Improve Windows support.
  * Fix dict cost reading under user locales with comma decimal separator.
