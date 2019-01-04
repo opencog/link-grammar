@@ -1,4 +1,4 @@
-Version 5.6.0 (XXX 2018)
+Version 5.6.0 (4 January 2019)
  * Improve Windows support.
  * Fix dict cost reading under user locales with comma decimal separator.
  * Support using the pcre2 regex package (configured by default if available).
