@@ -182,25 +182,24 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	}
 	else
 	{
-		if (el->e->type == n->type)
+		do
 		{
-			print_expression_parens(e, el->e, false);
-		}
-		else
-		{
-			print_expression_parens(e, el->e, true);
-		}
-		if (el->next != NULL)
-		{
-			// dyn_strcat(e, "\nERROR! Unexpected list!\n");
-			/* The SAT parser just naively joins all X_node expressions
-			 * using "or", and this check used to give an error due to that,
-			 * preventing a convenient debugging.
-			 * Just accept it (but mark it with '!'). */
-			if (n->type == AND_type) dyn_strcat(e, " &! ");
-			if (n->type == OR_type) dyn_strcat(e, " or! ");
-			print_expression_parens(e, el->next->e, true);
-		}
+			if (el->e->type == n->type)
+			{
+				print_expression_parens(e, el->e, false);
+			}
+			else
+			{
+				print_expression_parens(e, el->e, true);
+			}
+
+			el = el->next;
+			if (el != NULL)
+			{
+				if (n->type == AND_type) dyn_strcat(e, " & ");
+				if (n->type == OR_type) dyn_strcat(e, " or ");
+			}
+		} while (el != NULL);
 	}
 
 	for (i=0; i<icost; i++) dyn_strcat(e, "]");
