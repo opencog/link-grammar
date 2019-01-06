@@ -18,7 +18,6 @@
 #include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
-#include "dict-common/regex-morph.h"
 #include "error.h"
 #include "print/print.h"
 #include "externs.h"
@@ -949,7 +948,7 @@ static Exp * make_connector(Dictionary dict)
 	Dict_node *dn, *dn_head;
 	int i;
 
-	i = strlen(dict->token) - 1;  /* this must be +, - or * if a connector */
+	i = strlen(dict->token) - 1;  /* this must be +, - or $ if a connector */
 	if ((dict->token[i] != '+') &&
 	    (dict->token[i] != '-') &&
 	    (dict->token[i] != ANY_DIR))
@@ -1769,14 +1768,16 @@ static bool read_entry(Dictionary dict)
 			instr = get_file_contents(dict_name + skip_slash);
 			if (NULL == instr)
 			{
-				prt_error("Error: Could not open subdictionary \"%s\"\n", dict_name);
+				prt_error("Error: While parsing dictionary \"%s\":\n"
+				          "\t Line %d: Could not open subdictionary \"%s\"\n",
+				          dict->name, dict->line_number-1, dict_name);
 				goto syntax_error;
 			}
 			dict->input = instr;
 			dict->pin = dict->input;
 
 			/* The line number and dict name are used for error reporting */
-			dict->line_number = 0;
+			dict->line_number = 1;
 			dict->name = dict_name;
 
 			/* Now read the thing in. */
