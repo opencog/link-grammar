@@ -1775,7 +1775,7 @@ static bool read_entry(Dictionary dict)
 			dict->pin = dict->input;
 
 			/* The line number and dict name are used for error reporting */
-			dict->line_number = 0;
+			dict->line_number = 1;
 			dict->name = dict_name;
 
 			/* Now read the thing in. */
