@@ -122,6 +122,38 @@ static void free_connector_table(exprune_context *ctxt)
 	ctxt->ct_size = 0;
 }
 
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ */
+static inline unsigned int hash_S(condesc_t * c)
+{
+	return c->uc_num;
+}
+
+/**
+ * Returns TRUE if c can match anything in the set S (err. the connector table ct).
+ */
+static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
+{
+	connector_table *e;
+
+	for (e = ct[hash_S(c)]; e != NULL; e = e->next)
+	{
+		if (e->farthest_word <= 0)
+		{
+			if (w < -e->farthest_word) continue;
+		}
+		else
+		{
+			if (w > e->farthest_word) continue;
+		}
+		if (easy_match_desc(e->condesc, c)) return true;
+	}
+	return false;
+}
+
 /* ================================================================= */
 /**
  * Here is expression pruning.  This is done even before the expressions
@@ -232,38 +264,6 @@ static Exp* purge_Exp(Exp *e)
 	}
 */
 	return e;
-}
-
-/**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
- */
-static inline unsigned int hash_S(condesc_t * c)
-{
-	return c->uc_num;
-}
-
-/**
- * Returns TRUE if c can match anything in the set S (err. the connector table ct).
- */
-static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
-{
-	connector_table *e;
-
-	for (e = ct[hash_S(c)]; e != NULL; e = e->next)
-	{
-		if (e->farthest_word <= 0)
-		{
-			if (w < -e->farthest_word) continue;
-		}
-		else
-		{
-			if (w > e->farthest_word) continue;
-		}
-		if (easy_match_desc(e->condesc, c)) return true;
-	}
-	return false;
 }
 
 static void zero_connector_table(exprune_context *ctxt)
