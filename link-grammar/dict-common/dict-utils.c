@@ -194,6 +194,17 @@ X_node * catenate_X_nodes(X_node *d1, X_node *d2)
 	return d1;
 }
 
+#ifdef DEBUG
+static void print_x_node(X_node *x)
+{
+	if (x == NULL) printf("NULL X_node\n");
+	for (; x != NULL; x = x->next)
+	{
+		printf("%p: exp=%p next=%p\n", x, x->exp, x->next);
+	}
+}
+#endif
+
 /* ======================================================== */
 /* More connector utilities ... */
 
