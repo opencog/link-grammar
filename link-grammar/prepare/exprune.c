@@ -381,7 +381,6 @@ static char *print_expression_sizes(Sentence sent)
 void expression_prune(Sentence sent, Parse_Options opts)
 {
 	int N_deleted;
-	X_node * x;
 	size_t w;
 	exprune_context ctxt;
 
@@ -402,16 +401,27 @@ void expression_prune(Sentence sent, Parse_Options opts)
 		for (w = 0; w < sent->length; w++)
 		{
 			/* For every expression in word */
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+			for (X_node **xp = &sent->word[w].x; *xp != NULL; /* See: NEXT */)
 			{
+				X_node *x = *xp;
+
 				DBG(pass, w, "l->r pass before purging");
 				x->exp = purge_Exp(ctxt.ct, w, x->exp, '-', &N_deleted);
 				DBG(pass, w, "l->r pass after purging");
+
+				/* Get rid of X_nodes with NULL exp */
+				if (x->exp == NULL)
+				{
+					*xp = x->next; /* NEXT - set current X_node to the next one */
+					free(x);
+				}
+				else
+				{
+					xp = &x->next; /* NEXT */
+				}
 			}
 
-			/* gets rid of X_nodes with NULL exp */
-			clean_up_expressions(sent, w);
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '+');
 			}
@@ -427,14 +437,28 @@ void expression_prune(Sentence sent, Parse_Options opts)
 
 		for (w = sent->length-1; w != (size_t) -1; w--)
 		{
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+			/* For every expression in word */
+			for (X_node **xp = &sent->word[w].x; *xp != NULL; /* See: NEXT */)
 			{
+				X_node *x = *xp;
+
 				DBG(pass, w, "r->l pass before purging");
 				x->exp = purge_Exp(ctxt.ct, w, x->exp, '+', &N_deleted);
 				DBG(pass, w, "r->l pass after purging");
+
+				/* Get rid of X_nodes with NULL exp */
+				if (x->exp == NULL)
+				{
+					*xp = x->next; /* NEXT - set current X_node to the next one */
+					free(x);
+				}
+				else
+				{
+					xp = &x->next; /* NEXT */
+				}
 			}
-			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+
+			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '-');
 			}
