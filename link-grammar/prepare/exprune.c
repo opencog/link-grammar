@@ -172,22 +172,22 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
  * performance(?).
  */
 
-static Exp* purge_Exp(Exp *);
+static Exp* purge_Exp(connector_table **, int, Exp *, char, int *);
 
 /**
  * Get rid of the current_elements with null expressions
  */
-static E_list * or_purge_E_list(E_list * l)
+static E_list * or_purge_E_list(connector_table **ct, int w, E_list *l, char dir, int *N_deleted)
 {
 	E_list * el;
 	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(l->e)) == NULL)
+	if ((l->e = purge_Exp(ct, w, l->e, dir, N_deleted)) == NULL)
 	{
-		el = or_purge_E_list(l->next);
+		el = or_purge_E_list(ct, w, l->next, dir, N_deleted);
 		xfree((char *)l, sizeof(E_list));
 		return el;
 	}
-	l->next = or_purge_E_list(l->next);
+	l->next = or_purge_E_list(ct, w, l->next, dir, N_deleted);
 	return l;
 }
 
@@ -195,16 +195,16 @@ static E_list * or_purge_E_list(E_list * l)
  * Returns true iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
  */
-static bool and_purge_E_list(E_list * l)
+static bool and_purge_E_list(connector_table **ct, int w, E_list *l, char dir, int *N_deleted)
 {
 	if (l == NULL) return true;
-	if ((l->e = purge_Exp(l->e)) == NULL)
+	if ((l->e = purge_Exp(ct, w, l->e, dir, N_deleted)) == NULL)
 	{
 		free_E_list(l->next);
 		xfree((char *)l, sizeof(E_list));
 		return false;
 	}
-	if (!and_purge_E_list(l->next))
+	if (!and_purge_E_list(ct, w, l->next, dir, N_deleted))
 	{
 		free_Exp(l->e);
 		xfree((char *)l, sizeof(E_list));
@@ -216,24 +216,28 @@ static bool and_purge_E_list(E_list * l)
 /**
  * Must be called with a non-null expression.
  * Return NULL iff the expression has no disjuncts.
+ * After returning, N_deleted contains the number of deleted connectors.
  */
-static Exp* purge_Exp(Exp *e)
+static Exp* purge_Exp(connector_table **ct, int w, Exp *e, char dir, int *N_deleted)
 {
 	if (e->type == CONNECTOR_type)
 	{
-		if (e->u.condesc == NULL)
+		if (e->dir == dir)
 		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
+			if (!matches_S(ct, w, e->u.condesc))
+			{
+				xfree((char *)e, sizeof(Exp));
+				(*N_deleted)++;
+				return NULL;
+			}
 		}
-		else
-		{
-			return e;
-		}
+
+		return e;
 	}
+
 	if (e->type == AND_type)
 	{
-		if (!and_purge_E_list(e->u.l))
+		if (!and_purge_E_list(ct, w, e->u.l, dir, N_deleted))
 		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
@@ -241,7 +245,7 @@ static Exp* purge_Exp(Exp *e)
 	}
 	else /* if we are here, its OR_type */
 	{
-		e->u.l = or_purge_E_list(e->u.l);
+		e->u.l = or_purge_E_list(ct, w, e->u.l, dir, N_deleted);
 		if (e->u.l == NULL)
 		{
 			xfree((char *)e, sizeof(Exp));
@@ -431,14 +435,8 @@ void expression_prune(Sentence sent, Parse_Options opts)
 			/* For every expression in word */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				DBG(pass, w, "l->r pass before marking");
-				N_deleted += mark_dead_connectors(ctxt.ct, w, x->exp, '-');
-				DBG(pass, w, "l->r pass after marking");
-			}
-			for (x = sent->word[w].x; x != NULL; x = x->next)
-			{
 				DBG(pass, w, "l->r pass before purging");
-				x->exp = purge_Exp(x->exp);
+				x->exp = purge_Exp(ctxt.ct, w, x->exp, '-', &N_deleted);
 				DBG(pass, w, "l->r pass after purging");
 			}
 
@@ -457,18 +455,13 @@ void expression_prune(Sentence sent, Parse_Options opts)
 
 		/* Right-to-left pass */
 		N_deleted = 0;
+
 		for (w = sent->length-1; w != (size_t) -1; w--)
 		{
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				DBG(pass, w, "r->l pass before marking");
-				N_deleted += mark_dead_connectors(ctxt.ct, w, x->exp, '+');
-				DBG(pass, w, "r->l pass after marking");
-			}
-			for (x = sent->word[w].x; x != NULL; x = x->next)
-			{
 				DBG(pass, w, "r->l pass before purging");
-				x->exp = purge_Exp(x->exp);
+				x->exp = purge_Exp(ctxt.ct, w, x->exp, '+', &N_deleted);
 				DBG(pass, w, "r->l pass after purging");
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
