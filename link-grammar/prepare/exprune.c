@@ -278,37 +278,6 @@ static void zero_connector_table(exprune_context *ctxt)
 }
 
 /**
- * Mark as dead all of the dir-pointing connectors
- * in e that are not matched by anything in the current set.
- * Returns the number of connectors so marked.
- */
-static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
-{
-	int count;
-	count = 0;
-	if (e->type == CONNECTOR_type)
-	{
-		if (e->dir == dir)
-		{
-			if (!matches_S(ct, w, e->u.condesc))
-			{
-				e->u.condesc = NULL;
-				count++;
-			}
-		}
-	}
-	else
-	{
-		E_list *l;
-		for (l = e->u.l; l != NULL; l = l->next)
-		{
-			count += mark_dead_connectors(ct, w, l->e, dir);
-		}
-	}
-	return count;
-}
-
-/**
  * This function puts connector c into the connector table
  * if one like it isn't already there.
  */
