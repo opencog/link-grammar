@@ -335,31 +335,6 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 	}
 }
 
-/**
- * This removes the expressions that are empty from the list corresponding
- * to word w of the sentence.
- */
-static void clean_up_expressions(Sentence sent, int w)
-{
-	X_node head_node, *d, *d1;
-	d = &head_node;
-	d->next = sent->word[w].x;
-	while (d->next != NULL)
-	{
-		if (d->next->exp == NULL)
-		{
-			d1 = d->next;
-			d->next = d1->next;
-			xfree((char *)d1, sizeof(X_node));
-		}
-		else
-		{
-			d = d->next;
-		}
-	}
-	sent->word[w].x = head_node.next;
-}
-
 static char *print_expression_sizes(Sentence sent)
 {
 	X_node * x;
@@ -383,6 +358,7 @@ void expression_prune(Sentence sent, Parse_Options opts)
 	int N_deleted;
 	size_t w;
 	exprune_context ctxt;
+	X_node *free_later = NULL;
 
 	ctxt.opts = opts;
 	ctxt.ct_size = sent->dict->contable.num_uc;
@@ -413,7 +389,8 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				if (x->exp == NULL)
 				{
 					*xp = x->next; /* NEXT - set current X_node to the next one */
-					free(x);
+					x->next = free_later;
+					free_later = x;
 				}
 				else
 				{
@@ -421,10 +398,12 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				}
 			}
 
+#if 1
 			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '+');
 			}
+#endif
 		}
 
 		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
@@ -450,7 +429,8 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				if (x->exp == NULL)
 				{
 					*xp = x->next; /* NEXT - set current X_node to the next one */
-					free(x);
+					x->next = free_later;
+					free_later = x;
 				}
 				else
 				{
@@ -458,10 +438,12 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				}
 			}
 
+#if 1
 			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '-');
 			}
+#endif
 		}
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
@@ -471,6 +453,7 @@ void expression_prune(Sentence sent, Parse_Options opts)
 		N_deleted = 0;
 	}
 
+	free_X_nodes(free_later);
 	free_connector_table(&ctxt);
 }
 
