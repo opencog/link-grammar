@@ -122,118 +122,6 @@ static void free_connector_table(exprune_context *ctxt)
 	ctxt->ct_size = 0;
 }
 
-/* ================================================================= */
-/**
- * Here is expression pruning.  This is done even before the expressions
- * are turned into lists of disjuncts.
- *
- * This uses many of the same data structures and functions that are used
- * by prune.
- *
- * The purge operations remove all irrelevant stuff from the expression,
- * and free the purged stuff.  A connector is deemed irrelevant if its
- * string pointer has been set to NULL.  The passes through the sentence
- * have the job of doing this.
- *
- * If an OR or AND type expression node has one child, we can replace it
- * by its child.  This, of course, is not really necessary, except for
- * performance(?).
- */
-
-static Exp* purge_Exp(Exp *);
-
-/**
- * Get rid of the current_elements with null expressions
- */
-static E_list * or_purge_E_list(E_list * l)
-{
-	E_list * el;
-	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(l->e)) == NULL)
-	{
-		el = or_purge_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
-		return el;
-	}
-	l->next = or_purge_E_list(l->next);
-	return l;
-}
-
-/**
- * Returns true iff the length of the disjunct list is 0.
- * If this is the case, it frees the structure rooted at l.
- */
-static bool and_purge_E_list(E_list * l)
-{
-	if (l == NULL) return true;
-	if ((l->e = purge_Exp(l->e)) == NULL)
-	{
-		free_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
-		return false;
-	}
-	if (!and_purge_E_list(l->next))
-	{
-		free_Exp(l->e);
-		xfree((char *)l, sizeof(E_list));
-		return false;
-	}
-	return true;
-}
-
-/**
- * Must be called with a non-null expression.
- * Return NULL iff the expression has no disjuncts.
- */
-static Exp* purge_Exp(Exp *e)
-{
-	if (e->type == CONNECTOR_type)
-	{
-		if (e->u.condesc == NULL)
-		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
-		}
-		else
-		{
-			return e;
-		}
-	}
-	if (e->type == AND_type)
-	{
-		if (!and_purge_E_list(e->u.l))
-		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
-		}
-	}
-	else /* if we are here, its OR_type */
-	{
-		e->u.l = or_purge_E_list(e->u.l);
-		if (e->u.l == NULL)
-		{
-			xfree((char *)e, sizeof(Exp));
-			return NULL;
-		}
-	}
-
-/* This code makes it kill off nodes that have just one child
-   (1) It's going to give an insignificant speed-up
-   (2) Costs have not been handled correctly here.
-   The code is excised for these reasons.
-*/
-/*
-	if ((e->u.l != NULL) && (e->u.l->next == NULL))
-	{
-		ne = e->u.l->e;
-		xfree((char *) e->u.l, sizeof(E_list));
-		xfree((char *) e, sizeof(Exp));
-		return ne;
-	}
-*/
-	return e;
-}
-
 /**
  * This hash function only looks at the leading upper case letters of
  * the connector string, and the label fields.  This ensures that if two
@@ -266,42 +154,127 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
 	return false;
 }
 
-static void zero_connector_table(exprune_context *ctxt)
+/* ================================================================= */
+/**
+ * Here is expression pruning.  This is done even before the expressions
+ * are turned into lists of disjuncts.
+ *
+ * This uses many of the same data structures and functions that are used
+ * by prune.
+ *
+ * The purge operations remove all irrelevant stuff from the expression,
+ * and free the purged stuff.  A connector is deemed irrelevant if its
+ * string pointer has been set to NULL.  The passes through the sentence
+ * have the job of doing this.
+ *
+ * If an OR or AND type expression node has one child, we can replace it
+ * by its child.  This, of course, is not really necessary, except for
+ * performance(?).
+ */
+
+static Exp* purge_Exp(connector_table **, int, Exp *, char, int *);
+
+/**
+ * Get rid of the current_elements with null expressions
+ */
+static E_list * or_purge_E_list(connector_table **ct, int w, E_list *l, char dir, int *N_deleted)
 {
-	memset(ctxt->ct, 0, sizeof(*ctxt->ct) * ctxt->ct_size);
-	ctxt->current_element = ctxt->connector_table_element;
-	ctxt->end_current_block = &ctxt->connector_table_element[CT_BLKSIZE-1];
+	E_list * el;
+	if (l == NULL) return NULL;
+	if ((l->e = purge_Exp(ct, w, l->e, dir, N_deleted)) == NULL)
+	{
+		el = or_purge_E_list(ct, w, l->next, dir, N_deleted);
+		xfree((char *)l, sizeof(E_list));
+		return el;
+	}
+	l->next = or_purge_E_list(ct, w, l->next, dir, N_deleted);
+	return l;
 }
 
 /**
- * Mark as dead all of the dir-pointing connectors
- * in e that are not matched by anything in the current set.
- * Returns the number of connectors so marked.
+ * Returns true iff the length of the disjunct list is 0.
+ * If this is the case, it frees the structure rooted at l.
  */
-static int mark_dead_connectors(connector_table **ct, int w, Exp * e, char dir)
+static bool and_purge_E_list(connector_table **ct, int w, E_list *l, char dir, int *N_deleted)
 {
-	int count;
-	count = 0;
+	if (l == NULL) return true;
+	if ((l->e = purge_Exp(ct, w, l->e, dir, N_deleted)) == NULL)
+	{
+		free_E_list(l->next);
+		xfree((char *)l, sizeof(E_list));
+		return false;
+	}
+	if (!and_purge_E_list(ct, w, l->next, dir, N_deleted))
+	{
+		free_Exp(l->e);
+		xfree((char *)l, sizeof(E_list));
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Must be called with a non-null expression.
+ * Return NULL iff the expression has no disjuncts.
+ * After returning, N_deleted contains the number of deleted connectors.
+ */
+static Exp* purge_Exp(connector_table **ct, int w, Exp *e, char dir, int *N_deleted)
+{
 	if (e->type == CONNECTOR_type)
 	{
 		if (e->dir == dir)
 		{
 			if (!matches_S(ct, w, e->u.condesc))
 			{
-				e->u.condesc = NULL;
-				count++;
+				xfree((char *)e, sizeof(Exp));
+				(*N_deleted)++;
+				return NULL;
 			}
 		}
+
+		return e;
 	}
-	else
+
+	if (e->type == AND_type)
 	{
-		E_list *l;
-		for (l = e->u.l; l != NULL; l = l->next)
+		if (!and_purge_E_list(ct, w, e->u.l, dir, N_deleted))
 		{
-			count += mark_dead_connectors(ct, w, l->e, dir);
+			xfree((char *)e, sizeof(Exp));
+			return NULL;
 		}
 	}
-	return count;
+	else /* if we are here, its OR_type */
+	{
+		e->u.l = or_purge_E_list(ct, w, e->u.l, dir, N_deleted);
+		if (e->u.l == NULL)
+		{
+			xfree((char *)e, sizeof(Exp));
+			return NULL;
+		}
+	}
+
+/* This code makes it kill off nodes that have just one child
+   (1) It's going to give an insignificant speed-up
+   (2) Costs have not been handled correctly here.
+   The code is excised for these reasons.
+*/
+/*
+	if ((e->u.l != NULL) && (e->u.l->next == NULL))
+	{
+		ne = e->u.l->e;
+		xfree((char *) e->u.l, sizeof(E_list));
+		xfree((char *) e, sizeof(Exp));
+		return ne;
+	}
+*/
+	return e;
+}
+
+static void zero_connector_table(exprune_context *ctxt)
+{
+	memset(ctxt->ct, 0, sizeof(*ctxt->ct) * ctxt->ct_size);
+	ctxt->current_element = ctxt->connector_table_element;
+	ctxt->end_current_block = &ctxt->connector_table_element[CT_BLKSIZE-1];
 }
 
 /**
@@ -362,31 +335,6 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 	}
 }
 
-/**
- * This removes the expressions that are empty from the list corresponding
- * to word w of the sentence.
- */
-static void clean_up_expressions(Sentence sent, int w)
-{
-	X_node head_node, *d, *d1;
-	d = &head_node;
-	d->next = sent->word[w].x;
-	while (d->next != NULL)
-	{
-		if (d->next->exp == NULL)
-		{
-			d1 = d->next;
-			d->next = d1->next;
-			xfree((char *)d1, sizeof(X_node));
-		}
-		else
-		{
-			d = d->next;
-		}
-	}
-	sent->word[w].x = head_node.next;
-}
-
 static char *print_expression_sizes(Sentence sent)
 {
 	X_node * x;
@@ -408,9 +356,9 @@ static char *print_expression_sizes(Sentence sent)
 void expression_prune(Sentence sent, Parse_Options opts)
 {
 	int N_deleted;
-	X_node * x;
 	size_t w;
 	exprune_context ctxt;
+	X_node *free_later = NULL;
 
 	ctxt.opts = opts;
 	ctxt.ct_size = sent->dict->contable.num_uc;
@@ -429,25 +377,33 @@ void expression_prune(Sentence sent, Parse_Options opts)
 		for (w = 0; w < sent->length; w++)
 		{
 			/* For every expression in word */
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+			for (X_node **xp = &sent->word[w].x; *xp != NULL; /* See: NEXT */)
 			{
-				DBG(pass, w, "l->r pass before marking");
-				N_deleted += mark_dead_connectors(ctxt.ct, w, x->exp, '-');
-				DBG(pass, w, "l->r pass after marking");
-			}
-			for (x = sent->word[w].x; x != NULL; x = x->next)
-			{
+				X_node *x = *xp;
+
 				DBG(pass, w, "l->r pass before purging");
-				x->exp = purge_Exp(x->exp);
+				x->exp = purge_Exp(ctxt.ct, w, x->exp, '-', &N_deleted);
 				DBG(pass, w, "l->r pass after purging");
+
+				/* Get rid of X_nodes with NULL exp */
+				if (x->exp == NULL)
+				{
+					*xp = x->next; /* NEXT - set current X_node to the next one */
+					x->next = free_later;
+					free_later = x;
+				}
+				else
+				{
+					xp = &x->next; /* NEXT */
+				}
 			}
 
-			/* gets rid of X_nodes with NULL exp */
-			clean_up_expressions(sent, w);
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+#if 1
+			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '+');
 			}
+#endif
 		}
 
 		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
@@ -457,25 +413,37 @@ void expression_prune(Sentence sent, Parse_Options opts)
 
 		/* Right-to-left pass */
 		N_deleted = 0;
+
 		for (w = sent->length-1; w != (size_t) -1; w--)
 		{
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+			/* For every expression in word */
+			for (X_node **xp = &sent->word[w].x; *xp != NULL; /* See: NEXT */)
 			{
-				DBG(pass, w, "r->l pass before marking");
-				N_deleted += mark_dead_connectors(ctxt.ct, w, x->exp, '+');
-				DBG(pass, w, "r->l pass after marking");
-			}
-			for (x = sent->word[w].x; x != NULL; x = x->next)
-			{
+				X_node *x = *xp;
+
 				DBG(pass, w, "r->l pass before purging");
-				x->exp = purge_Exp(x->exp);
+				x->exp = purge_Exp(ctxt.ct, w, x->exp, '+', &N_deleted);
 				DBG(pass, w, "r->l pass after purging");
+
+				/* Get rid of X_nodes with NULL exp */
+				if (x->exp == NULL)
+				{
+					*xp = x->next; /* NEXT - set current X_node to the next one */
+					x->next = free_later;
+					free_later = x;
+				}
+				else
+				{
+					xp = &x->next; /* NEXT */
+				}
 			}
-			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
-			for (x = sent->word[w].x; x != NULL; x = x->next)
+
+#if 1
+			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '-');
 			}
+#endif
 		}
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
@@ -485,6 +453,7 @@ void expression_prune(Sentence sent, Parse_Options opts)
 		N_deleted = 0;
 	}
 
+	free_X_nodes(free_later);
 	free_connector_table(&ctxt);
 }
 
