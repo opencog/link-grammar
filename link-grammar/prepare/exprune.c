@@ -163,9 +163,8 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
  * by prune.
  *
  * The purge operations remove all irrelevant stuff from the expression,
- * and free the purged stuff.  A connector is deemed irrelevant if its
- * string pointer has been set to NULL.  The passes through the sentence
- * have the job of doing this.
+ * and free the purged stuff.  A connector is deemed irrelevant if it
+ * doesn't match anything in the set S.
  *
  * If an OR or AND type expression node has one child, we can replace it
  * by its child.  This, of course, is not really necessary, except for
