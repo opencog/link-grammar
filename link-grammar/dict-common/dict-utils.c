@@ -195,7 +195,7 @@ X_node * catenate_X_nodes(X_node *d1, X_node *d2)
 }
 
 #ifdef DEBUG
-static void print_x_node(X_node *x)
+GNUC_UNUSED static void print_x_node(X_node *x)
 {
 	if (x == NULL) printf("NULL X_node\n");
 	for (; x != NULL; x = x->next)
