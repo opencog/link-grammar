@@ -68,27 +68,38 @@ int size_of_expression(Exp * e)
 /**
  * Build a copy of the given expression (don't copy strings, of course)
  */
-static E_list * copy_E_list(E_list * l);
-Exp * copy_Exp(Exp * e)
+static E_list *copy_E_list(E_list *l)
 {
-	Exp * n;
-	if (e == NULL) return NULL;
-	n = malloc(sizeof(Exp));
-	*n = *e;
-	if (e->type != CONNECTOR_type) {
-		n->u.l = copy_E_list(e->u.l);
+
+	E_list el_head;
+	E_list *el = &el_head;
+
+	for (; l != NULL; l = l->next)
+	{
+		E_list *nl = malloc(sizeof(E_list));
+
+		nl->e = malloc(sizeof(Exp));
+		*nl->e = *l->e;
+		el->next = nl;
+		el = nl;
+		if (l->e->type != CONNECTOR_type)
+			nl->e->u.l = copy_E_list(l->e->u.l);
 	}
-	return n;
+	el->next = NULL;
+
+	return el_head.next;
 }
 
-static E_list * copy_E_list(E_list * l)
+Exp *copy_Exp(Exp *e)
 {
-	E_list * nl;
-	if (l == NULL) return NULL;
-	nl = malloc(sizeof(E_list));
-	nl->next = copy_E_list(l->next);
-	nl->e = copy_Exp(l->e);
-	return nl;
+	if (e == NULL) return NULL;
+	Exp *ne = malloc(sizeof(Exp));
+
+	*ne = *e;
+	if (CONNECTOR_type == e->type) return ne;
+
+	ne->u.l = copy_E_list(ne->u.l);
+	return ne;
 }
 
 /**
