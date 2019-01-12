@@ -398,12 +398,10 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				}
 			}
 
-#if 1
 			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '+');
 			}
-#endif
 		}
 
 		DBG_EXPSIZES("l->r pass removed %d\n%s", N_deleted, e);
@@ -438,12 +436,10 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				}
 			}
 
-#if 1
 			for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
 			{
 				insert_connectors(&ctxt, w, x->exp, '-');
 			}
-#endif
 		}
 
 		DBG_EXPSIZES("r->l pass removed %d\n%s", N_deleted, e);
