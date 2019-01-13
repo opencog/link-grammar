@@ -169,7 +169,7 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
  *
  * If an OR or AND type expression node has one child, we can replace it
  * by its child.  This, of course, is not really necessary, except for
- * performance(?).
+ * performance.
  */
 
 static Exp* purge_Exp(connector_table **, int, Exp *, char, int *);
@@ -245,20 +245,14 @@ static Exp* purge_Exp(connector_table **ct, int w, Exp *e, char dir, int *N_dele
 		}
 	}
 
-/* This code makes it kill off nodes that have just one child
-   (1) It's going to give an insignificant speed-up
-   (2) Costs have not been handled correctly here.
-   The code is excised for these reasons.
-*/
-/*
+	/* Unary node elimination (for a slight performance improvement). */
 	if ((e->u.l != NULL) && (e->u.l->next == NULL))
 	{
-		ne = e->u.l->e;
-		xfree((char *) e->u.l, sizeof(E_list));
-		xfree((char *) e, sizeof(Exp));
+		Exp *ne = e->u.l->e;
+		ne->cost += e->cost;
 		return ne;
 	}
-*/
+
 	return e;
 }
 
