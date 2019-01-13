@@ -3041,10 +3041,10 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 	dn = dn_head;
 	while (dn != NULL)
 	{
-		y = (X_node *) xalloc(sizeof(X_node));
+		y = (X_node *) pool_alloc(sent->X_node_pool);
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(dn->exp);
+		x->exp = copy_Exp(dn->exp, sent->E_list_pool, sent->Exp_pool);
 		if (NULL == s)
 		{
 			x->string = dn->string;
@@ -3157,7 +3157,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	if ((wordpos != *ZZZ_added) && is_exp_like_empty_word(dict, we->exp))
 	{
 		lgdebug(D_DWE, " (has ZZZ-)");
-		add_empty_word(dict, sent->word[wordpos-1].x);
+		add_empty_word(sent, sent->word[wordpos-1].x);
 		*ZZZ_added = wordpos; /* Remember it for not doing it again */
 	}
 	lgdebug(D_DWE, "\n");

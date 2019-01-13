@@ -68,7 +68,7 @@ int size_of_expression(Exp * e)
 /**
  * Build a copy of the given expression (don't copy strings, of course)
  */
-static E_list *copy_E_list(E_list *l)
+static E_list *copy_E_list(E_list *l, Pool_desc* mp[])
 {
 
 	E_list el_head;
@@ -76,29 +76,29 @@ static E_list *copy_E_list(E_list *l)
 
 	for (; l != NULL; l = l->next)
 	{
-		E_list *nl = malloc(sizeof(E_list));
+		E_list *nl = pool_alloc(mp[0]);
 
-		nl->e = malloc(sizeof(Exp));
+		nl->e = pool_alloc(mp[1]);
 		*nl->e = *l->e;
 		el->next = nl;
 		el = nl;
 		if (l->e->type != CONNECTOR_type)
-			nl->e->u.l = copy_E_list(l->e->u.l);
+			nl->e->u.l = copy_E_list(l->e->u.l, mp);
 	}
 	el->next = NULL;
 
 	return el_head.next;
 }
 
-Exp *copy_Exp(Exp *e)
+Exp *copy_Exp(Exp *e, Pool_desc *E_list_pool, Pool_desc *Exp_pool)
 {
 	if (e == NULL) return NULL;
-	Exp *ne = malloc(sizeof(Exp));
+	Exp *ne = pool_alloc(Exp_pool);
 
 	*ne = *e;
 	if (CONNECTOR_type == e->type) return ne;
 
-	ne->u.l = copy_E_list(ne->u.l);
+	ne->u.l = copy_E_list(ne->u.l, (Pool_desc*[]){E_list_pool, Exp_pool});
 	return ne;
 }
 
@@ -176,18 +176,6 @@ static int exp_contains(Exp * super, Exp * sub)
 
 /* ======================================================== */
 /* X_node utilities ... */
-/**
- * frees the list of X_nodes pointed to by x, and all of the expressions
- */
-void free_X_nodes(X_node * x)
-{
-	X_node * y;
-	for (; x!= NULL; x = y) {
-		y = x->next;
-		free_Exp(x->exp);
-		free(x);
-	}
-}
 
 /**
  * Destructively catenates the two disjunct lists d1 followed by d2.

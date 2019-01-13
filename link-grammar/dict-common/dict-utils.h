@@ -20,12 +20,11 @@
 void free_Exp(Exp *);
 void free_E_list(E_list *);
 int  size_of_expression(Exp *);
-Exp * copy_Exp(Exp *);
+Exp * copy_Exp(Exp *, Pool_desc *, Pool_desc *);
 bool is_exp_like_empty_word(Dictionary dict, Exp *);
 
 /* X_node utilities ... */
 X_node *    catenate_X_nodes(X_node *, X_node *);
-void free_X_nodes(X_node *);
 
 /* Dictionary utilities ... */
 bool word_has_connector(Dict_node *, const char *, char);
