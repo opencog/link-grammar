@@ -178,15 +178,18 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	el = el->next;
 	if (el == NULL)
 	{
-		dyn_strcat(e, "()");
+		if (n->type == OR_type)
+			dyn_strcat(e, "error-no-next");
+		else
+			dyn_strcat(e, "()");
 	}
 	else
 	{
 		do
 		{
 			if (el->e->type == n->type)
-			{
-				print_expression_parens(e, el->e, false);
+				{
+					print_expression_parens(e, el->e, false);
 			}
 			else
 			{
