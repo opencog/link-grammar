@@ -969,7 +969,10 @@ static Exp * make_connector(Dictionary dict)
 			                 "Or perhaps a word is used before it is defined.");
 			return NULL;
 		}
+
+		/* Wrap it in a unary node as a placeholder for a cost if needed. */
 		n = make_unary_node(&dict->exp_list, dn->exp);
+
 		file_free_lookup(dn_head);
 	}
 	else
