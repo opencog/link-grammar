@@ -3032,10 +3032,8 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
-	Exp_list eli;
 	const Dictionary dict = sent->dict;
 
-	eli.exp_list = NULL;
 	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
 	x = NULL;
 	dn = dn_head;
@@ -3063,7 +3061,6 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 		dn = dn->right;
 	}
 	free_lookup_list (dict, dn_head);
-	free_Exp_list(&eli);
 	return x;
 }
 
