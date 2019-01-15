@@ -145,7 +145,7 @@ struct Dictionary_s
 bool find_word_in_dict(const Dictionary dict, const char *);
 
 Exp * Exp_create(Exp_list *);
-void add_empty_word(Dictionary const, X_node *);
+void add_empty_word(Sentence, X_node *);
 void free_Exp_list(Exp_list *);
 
 #endif /* _LG_DICT_COMMON_H_ */

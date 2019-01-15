@@ -168,7 +168,7 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
  *
  * If an OR or AND type expression node has one child, we can replace it
  * by its child.  This, of course, is not really necessary, except for
- * performance(?).
+ * performance.
  */
 
 static Exp* purge_Exp(connector_table **, int, Exp *, char, int *);
@@ -183,7 +183,6 @@ static E_list * or_purge_E_list(connector_table **ct, int w, E_list *l, char dir
 	if ((l->e = purge_Exp(ct, w, l->e, dir, N_deleted)) == NULL)
 	{
 		el = or_purge_E_list(ct, w, l->next, dir, N_deleted);
-		xfree((char *)l, sizeof(E_list));
 		return el;
 	}
 	l->next = or_purge_E_list(ct, w, l->next, dir, N_deleted);
@@ -199,14 +198,10 @@ static bool and_purge_E_list(connector_table **ct, int w, E_list *l, char dir, i
 	if (l == NULL) return true;
 	if ((l->e = purge_Exp(ct, w, l->e, dir, N_deleted)) == NULL)
 	{
-		free_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
 		return false;
 	}
 	if (!and_purge_E_list(ct, w, l->next, dir, N_deleted))
 	{
-		free_Exp(l->e);
-		xfree((char *)l, sizeof(E_list));
 		return false;
 	}
 	return true;
@@ -225,7 +220,6 @@ static Exp* purge_Exp(connector_table **ct, int w, Exp *e, char dir, int *N_dele
 		{
 			if (!matches_S(ct, w, e->u.condesc))
 			{
-				xfree((char *)e, sizeof(Exp));
 				(*N_deleted)++;
 				return NULL;
 			}
@@ -238,7 +232,6 @@ static Exp* purge_Exp(connector_table **ct, int w, Exp *e, char dir, int *N_dele
 	{
 		if (!and_purge_E_list(ct, w, e->u.l, dir, N_deleted))
 		{
-			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
 	}
@@ -247,25 +240,18 @@ static Exp* purge_Exp(connector_table **ct, int w, Exp *e, char dir, int *N_dele
 		e->u.l = or_purge_E_list(ct, w, e->u.l, dir, N_deleted);
 		if (e->u.l == NULL)
 		{
-			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
 	}
 
-/* This code makes it kill off nodes that have just one child
-   (1) It's going to give an insignificant speed-up
-   (2) Costs have not been handled correctly here.
-   The code is excised for these reasons.
-*/
-/*
+	/* Unary node elimination (for a slight performance improvement). */
 	if ((e->u.l != NULL) && (e->u.l->next == NULL))
 	{
-		ne = e->u.l->e;
-		xfree((char *) e->u.l, sizeof(E_list));
-		xfree((char *) e, sizeof(Exp));
+		Exp *ne = e->u.l->e;
+		ne->cost += e->cost;
 		return ne;
 	}
-*/
+
 	return e;
 }
 
@@ -357,7 +343,6 @@ void expression_prune(Sentence sent, Parse_Options opts)
 	int N_deleted;
 	size_t w;
 	exprune_context ctxt;
-	X_node *free_later = NULL;
 
 	ctxt.opts = opts;
 	ctxt.ct_size = sent->dict->contable.num_uc;
@@ -388,8 +373,6 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				if (x->exp == NULL)
 				{
 					*xp = x->next; /* NEXT - set current X_node to the next one */
-					x->next = free_later;
-					free_later = x;
 				}
 				else
 				{
@@ -426,8 +409,6 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				if (x->exp == NULL)
 				{
 					*xp = x->next; /* NEXT - set current X_node to the next one */
-					x->next = free_later;
-					free_later = x;
 				}
 				else
 				{
@@ -448,7 +429,6 @@ void expression_prune(Sentence sent, Parse_Options opts)
 		N_deleted = 0;
 	}
 
-	free_X_nodes(free_later);
 	free_connector_table(&ctxt);
 }
 

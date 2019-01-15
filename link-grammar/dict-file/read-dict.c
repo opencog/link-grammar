@@ -13,6 +13,7 @@
 
 #include <string.h>
 
+#include "api-structures.h"           // For Sentence_s (add_empty_word())
 #include "dict-common/dict-affix.h"   // For is_stem()
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
@@ -1020,17 +1021,53 @@ static Exp * make_connector(Dictionary dict)
 /* ======================================================================== */
 /* Empty-word handling. */
 
+/** Expression-creating function versions that use the Sentence
+ *  expression memory pools.
+ *  (See the description of the similar functions above.)
+ */
+static Exp *make_or_node_from_pool(Sentence sent, Exp *nl, Exp *nr)
+{
+	E_list *ell, *elr;
+	Exp* n;
+
+	n = pool_alloc(sent->Exp_pool);
+	n->type = OR_type;
+	n->cost = 0.0;
+
+	n->u.l = ell = (E_list *) pool_alloc(sent->E_list_pool);
+	ell->next = elr = (E_list *) pool_alloc(sent->E_list_pool);
+	elr->next = NULL;
+
+	ell->e = nl;
+	elr->e = nr;
+	return n;
+}
+
+static Exp *make_zeroary_node_from_pool(Sentence sent)
+{
+	Exp * n = pool_alloc(sent->Exp_pool);
+	n->type = AND_type;  /* these must be AND types */
+	n->cost = 0.0;
+	n->u.l = NULL;
+	return n;
+}
+
+static Exp *make_optional_node_from_pool(Sentence sent, Exp *e)
+{
+	return make_or_node_from_pool(sent, make_zeroary_node_from_pool(sent), e);
+}
+
 /** Insert ZZZ+ connectors.
  *  This function was mainly used to support using empty-words, a concept
  *  that has been eliminated. However, it is still used to support linking of
  *  quotes that don't get the QUc/QUd links.
  */
-void add_empty_word(Dictionary const dict, X_node *x)
+void add_empty_word(Sentence sent, X_node *x)
 {
 	Exp *zn, *an;
 	E_list *elist, *flist;
-	Exp_list eli = { NULL };
-	const char *ZZZ = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+	const char *ZZZ = string_set_lookup(EMPTY_CONNECTOR, sent->dict->string_set);
+	/* This function is called only if ZZZ is in the dictionary. */
 
 	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
 	if (MT_WALL == x->word->morpheme_type) return;
@@ -1044,26 +1081,26 @@ void add_empty_word(Dictionary const dict, X_node *x)
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		zn = Exp_create(&eli);
+		zn = pool_alloc(sent->Exp_pool);
 		zn->dir = '+';
-		zn->u.condesc = condesc_add(&dict->contable, ZZZ);
+		zn->u.condesc = condesc_add(&sent->dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
 		zn->cost = 0.0;
-		zn = make_optional_node(&eli, zn);
+		zn = make_optional_node_from_pool(sent, zn);
 
 		/* flist is plain-word-exp */
-		flist = (E_list *) malloc(sizeof(E_list));
+		flist = (E_list *) pool_alloc(sent->E_list_pool);
 		flist->next = NULL;
 		flist->e = x->exp;
 
 		/* elist is {ZZZ+} , (plain-word-exp) */
-		elist = (E_list *) malloc(sizeof(E_list));
+		elist = (E_list *) pool_alloc(sent->E_list_pool);
 		elist->next = flist;
 		elist->e = zn;
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
-		an = Exp_create(&eli);
+		an = pool_alloc(sent->Exp_pool);
 		an->type = AND_type;
 		an->cost = 0.0;
 		an->u.l = elist;

@@ -15,7 +15,7 @@
 
 #include "api-structures.h"
 #include "corpus/corpus.h"
-#include "dict-common/dict-utils.h" // for free_X_nodes
+#include "dict-common/dict-utils.h"
 #include "disjunct-utils.h"  // for free_disjuncts
 #include "linkage/linkage.h"
 #include "memory-pool.h"
@@ -28,7 +28,7 @@
 #include "sat-solver/sat-encoder.h"
 #include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
-#include "tokenize/word-structures.h" // Needed for Word_struct/free_X_node
+#include "tokenize/word-structures.h" // Needed for Word_struct
 #include "utilities.h"
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
@@ -442,6 +442,15 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->dict = dict;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
+	sent->E_list_pool = pool_new(__func__, "E_list", /*num_elements*/4096,
+	                             sizeof(E_list), /*zero_out*/false,
+	                             /*align*/false, /*exact*/false);
+	sent->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
+	                             sizeof(Exp), /*zero_out*/false,
+	                             /*align*/false, /*exact*/false);
+	sent->X_node_pool = pool_new(__func__, "X_node", /*num_elements*/256,
+	                             sizeof(X_node), /*zero_out*/false,
+	                             /*align*/false, /*exact*/false);
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 
@@ -501,7 +510,6 @@ static void free_sentence_words(Sentence sent)
 {
 	for (WordIdx i = 0; i < sent->length; i++)
 	{
-		free_X_nodes(sent->word[i].x);
 		free(sent->word[i].alternatives);
 	}
 	free_sentence_disjuncts(sent);
@@ -524,6 +532,9 @@ void sentence_delete(Sentence sent)
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->fm_Match_node);
 	pool_delete(sent->Table_connector_pool);
+	pool_delete(sent->E_list_pool);
+	pool_delete(sent->Exp_pool);
+	pool_delete(sent->X_node_pool);
 	if (IS_DB_DICT(sent->dict))
 		condesc_reuse(sent->dict);
 
