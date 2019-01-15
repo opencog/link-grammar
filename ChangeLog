@@ -1,5 +1,5 @@
 Version 5.6.1 (XXX 2019)
- * Something ...
+ * Performance improvement (approx 20%) in expressions #882
 
 Version 5.6.0 (4 January 2019)
  * Improve Windows support.
