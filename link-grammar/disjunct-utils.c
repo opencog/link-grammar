@@ -224,58 +224,6 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 	return head.next;
 }
 
-static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
-{
-	Connector head;
-	Connector *prevc = &head;
-	Connector *newc = &head;
-	Connector *t;
-	Connector *lcblock = *cblock; /* Optimization. */
-
-	for (t = origc; t != NULL;  t = t->next)
-	{
-		newc = lcblock++;
-		*newc = *t;
-
-		prevc->next = newc;
-		prevc = newc;
-	}
-	newc->next = NULL;
-
-	*cblock = lcblock;
-	return head.next;
-}
-
-/**
- * Duplicate the given disjunct chain.
- * If the argument is NULL, return NULL.
- */
-static Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connector **cblock)
-{
-	Disjunct head;
-	Disjunct *prevd = &head;
-	Disjunct *newd = &head;
-	Disjunct *t;
-	Disjunct *ldblock = *dblock; /* Optimization. */
-
-	for (t = origd; t != NULL; t = t->next)
-	{
-		newd = ldblock++;
-		newd->word_string = t->word_string;
-		newd->cost = t->cost;
-
-		newd->left = pack_connectors_dup(t->left, cblock);
-		newd->right = pack_connectors_dup(t->right, cblock);
-		newd->originating_gword = t->originating_gword;
-		prevd->next = newd;
-		prevd = newd;
-	}
-	newd->next = NULL;
-
-	*dblock = ldblock;
-	return head.next;
-}
-
 static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
 	size_t i;
@@ -504,6 +452,58 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 
 
 /* ================ Pack disjuncts and connectors ============== */
+static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
+{
+	Connector head;
+	Connector *prevc = &head;
+	Connector *newc = &head;
+	Connector *t;
+	Connector *lcblock = *cblock; /* Optimization. */
+
+	for (t = origc; t != NULL;  t = t->next)
+	{
+		newc = lcblock++;
+		*newc = *t;
+
+		prevc->next = newc;
+		prevc = newc;
+	}
+	newc->next = NULL;
+
+	*cblock = lcblock;
+	return head.next;
+}
+
+/**
+ * Duplicate the given disjunct chain.
+ * If the argument is NULL, return NULL.
+ */
+static Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connector **cblock)
+{
+	Disjunct head;
+	Disjunct *prevd = &head;
+	Disjunct *newd = &head;
+	Disjunct *t;
+	Disjunct *ldblock = *dblock; /* Optimization. */
+
+	for (t = origd; t != NULL; t = t->next)
+	{
+		newd = ldblock++;
+		newd->word_string = t->word_string;
+		newd->cost = t->cost;
+
+		newd->left = pack_connectors_dup(t->left, cblock);
+		newd->right = pack_connectors_dup(t->right, cblock);
+		newd->originating_gword = t->originating_gword;
+		prevd->next = newd;
+		prevd = newd;
+	}
+	newd->next = NULL;
+
+	*dblock = ldblock;
+	return head.next;
+}
+
 #define SHORTEST_SENTENCE_TO_PACK 9
 
 /**
