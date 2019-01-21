@@ -250,7 +250,7 @@ static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
  * Duplicate the given disjunct chain.
  * If the argument is NULL, return NULL.
  */
-Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connector **cblock)
+static Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connector **cblock)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
@@ -501,4 +501,65 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 		d->originating_gword = (gword_set *)&gw->gword_set_head;
 	}
 }
-/* ========================= END OF FILE ============================== */
+
+
+/* ================ Pack disjuncts and connectors ============== */
+#define SHORTEST_SENTENCE_TO_PACK 9
+
+/**
+ * Pack all disjunct and connectors into one big memory block.
+ * This facilitate a better memory caching for long sentences
+ * (a performance gain of a few percents).
+ *
+ * The current Connector struct size is 32 bit, and future ones may be
+ * smaller, but still with a power-of-2 size.
+ * The idea is to put an integral number of connectors in each cache line
+ * (assumed to be >= Connector struct size, e.g. 64 bytes),
+ * so one connector will not need 2 cache lines.
+ *
+ * The allocated memory includes 3 sections , in that order:
+ * 1. A block for disjuncts, when it start is not aligned (the disjunct size
+ * is currently 56 bytes and cannot be reduced much).
+ * 2. A small alignment gap, that ends in a 64-byte boundary.
+ * 3. A block of connectors, which is so aligned to 64-byte boundary.
+ *
+ * FIXME: 1. Find the "best" value for SHORTEST_SENTENCE_TO_PACK.
+ * 2. Maybe this check should be done in too stages, the second one
+ * will use number of disjunct and connector thresholds.
+ */
+void pack_sentence(Sentence sent)
+{
+	int dcnt = 0;
+	int ccnt = 0;
+
+	if (sent->length < SHORTEST_SENTENCE_TO_PACK) return;
+	for (size_t w = 0; w < sent->length; w++)
+	{
+		Disjunct *d;
+
+		for (d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			dcnt++;
+			for (Connector *c = d->right; c!=NULL; c = c->next) ccnt++;
+			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
+		}
+	}
+
+#define CONN_ALIGNMENT sizeof(Connector)
+	size_t dsize = dcnt * sizeof(Disjunct);
+	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
+	size_t csize = ccnt * sizeof(Connector);
+	void *memblock = malloc(dsize + csize);
+	Disjunct *dblock = memblock;
+	Connector *cblock = (Connector *)((char *)memblock + dsize);
+	sent->disjuncts_connectors_memblock = memblock;
+
+	for (size_t i = 0; i < sent->length; i++)
+	{
+		Disjunct *word_disjuncts = sent->word[i].d;
+
+		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &dblock, &cblock);
+		free_disjuncts(word_disjuncts);
+	}
+}
+/* ========================= END OF FILE ========================*/
