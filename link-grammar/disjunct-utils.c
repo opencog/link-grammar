@@ -452,13 +452,20 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 
 
 /* ================ Pack disjuncts and connectors ============== */
-static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
+
+typedef struct
+{
+	Connector *cblock;
+	Disjunct *dblock;
+} pack_context;
+
+static Connector *pack_connectors_dup(Connector *origc, pack_context *pc)
 {
 	Connector head;
 	Connector *prevc = &head;
 	Connector *newc = &head;
 	Connector *t;
-	Connector *lcblock = *cblock; /* Optimization. */
+	Connector *lcblock = pc->cblock; /* Optimization. */
 
 	for (t = origc; t != NULL;  t = t->next)
 	{
@@ -470,7 +477,7 @@ static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
 	}
 	newc->next = NULL;
 
-	*cblock = lcblock;
+	pc->cblock = lcblock;
 	return head.next;
 }
 
@@ -478,13 +485,13 @@ static Connector *pack_connectors_dup(Connector *origc, Connector **cblock)
  * Duplicate the given disjunct chain.
  * If the argument is NULL, return NULL.
  */
-static Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connector **cblock)
+static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
 	Disjunct *newd = &head;
 	Disjunct *t;
-	Disjunct *ldblock = *dblock; /* Optimization. */
+	Disjunct *ldblock = pc->dblock; /* Optimization. */
 
 	for (t = origd; t != NULL; t = t->next)
 	{
@@ -492,15 +499,15 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, Disjunct **dblock, Connecto
 		newd->word_string = t->word_string;
 		newd->cost = t->cost;
 
-		newd->left = pack_connectors_dup(t->left, cblock);
-		newd->right = pack_connectors_dup(t->right, cblock);
+		newd->left = pack_connectors_dup(t->left, pc);
+		newd->right = pack_connectors_dup(t->right, pc);
 		newd->originating_gword = t->originating_gword;
 		prevd->next = newd;
 		prevd = newd;
 	}
 	newd->next = NULL;
 
-	*dblock = ldblock;
+	pc->dblock = ldblock;
 	return head.next;
 }
 
@@ -553,12 +560,13 @@ void pack_sentence(Sentence sent)
 	Disjunct *dblock = memblock;
 	Connector *cblock = (Connector *)((char *)memblock + dsize);
 	sent->disjuncts_connectors_memblock = memblock;
+	pack_context pc = { .cblock = cblock, .dblock = dblock };
 
 	for (size_t i = 0; i < sent->length; i++)
 	{
 		Disjunct *word_disjuncts = sent->word[i].d;
 
-		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &dblock, &cblock);
+		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &pc);
 		free_disjuncts(word_disjuncts);
 	}
 }
