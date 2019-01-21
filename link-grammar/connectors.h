@@ -98,13 +98,7 @@ typedef struct
 } ConTable;
 
 /* On a 64-bit machine, this struct should be exactly 4*8=32 bytes long.
- * Lets try to keep it that way.
- * FIXME: The addition of suffix_id made it > 32 bytes. Fix possibilities:
- * 1. bool multi:1; int suffix_id:15; However, very long sentences may have
- * suffix_id > 32K.
- * 2. Make originating_gword an "int" index.
- * 3. Always pack the connectors, and eliminate the "next" field.
- */
+ * Lets try to keep it that way. */
 struct Connector_struct
 {
 	uint8_t length_limit; /* Can be different than in the descriptor */
