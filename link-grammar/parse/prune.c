@@ -606,9 +606,9 @@ static size_t
 right_connector_list_update(prune_context *pc, Connector *c,
                             size_t w, bool shallow)
 {
-	size_t n, ub;
+	int n, ub;
 	bool foundmatch;
-	Sentence sent = pc->sent;
+	int sent_length = (int)pc->sent->length;
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
@@ -616,7 +616,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 	/* ub is now the rightmost word we need to check */
 	ub = w + c->length_limit;
-	if (ub > sent->length) ub = sent->length - 1;
+	if (ub > sent_length) ub = sent_length - 1;
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = false;
@@ -633,7 +633,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 		c->nearest_word = n;
 		pc->N_changed++;
 	}
-	return (foundmatch ? n : sent->length);
+	return (foundmatch ? n : sent_length);
 }
 
 /** The return value is the number of disjuncts deleted */
