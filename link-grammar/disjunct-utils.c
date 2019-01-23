@@ -475,11 +475,23 @@ GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
 
 typedef struct
 {
+	Connector *cblock_base;
 	Connector *cblock;
 	Disjunct *dblock;
+	/* Table of seen sequences. A 32bit index (instead of Connector *) is
+	 * used for better use of the CPU cache. */
+	uint32_t *suffix_id_table;
 } pack_context;
 
-static Connector *pack_connectors_dup(Connector *origc, pack_context *pc)
+/**
+ * Pack the connectors in consecutive memory locations.
+ * Use trailing sequence sharing if trailing connector encoding is used
+ * (indicated by the existence of suffix_id_table). Same sequences
+ * with different directions are not shared, to enable latter modifications
+ * in sequences of one direction without affecting the other direction.
+ */
+static Connector *pack_connectors_dup(Connector *origc, pack_context *pc,
+                                      int dir)
 {
 	Connector head;
 	Connector *prevc = &head;
@@ -489,8 +501,81 @@ static Connector *pack_connectors_dup(Connector *origc, pack_context *pc)
 
 	for (t = origc; t != NULL;  t = t->next)
 	{
-		newc = lcblock++;
-		*newc = *t;
+		newc = NULL;
+
+		if (pc->suffix_id_table != NULL)
+		{
+			uint32_t cblock_index = pc->suffix_id_table[(2 * t->suffix_id) + dir];
+			if (cblock_index == 0)
+			{
+				/* The first time we encounter this connector sequence.
+				 * It will be copied to this cached location (below). */
+				cblock_index = lcblock - pc->cblock_base;
+				pc->suffix_id_table[(2 * t->suffix_id) + dir] = cblock_index;
+			}
+			else
+			{
+				newc = &pc->cblock_base[cblock_index];
+				if (t->nearest_word != newc->nearest_word)
+				{
+					/* This is a rare case in which it is not the same, and
+					 * hence we cannot use it. The simple "caching" that is used
+					 * cannot memoize more than one sequence per suffix_id.
+					 * Notes:
+					 * 1. Maybe such different connectors should be just assigned
+					 * a different suffix_id.
+					 * 2. In case the parsing will ever depend on other
+					 * Connector fields, their check should be added here. */
+					newc = NULL; /* Don't share it. */
+
+					/* Slightly increase cache hit (MRU). */
+					cblock_index = lcblock - pc->cblock_base;
+					pc->suffix_id_table[(2 * t->suffix_id) + dir] = cblock_index;
+				}
+#if 1 /* Extra validation - validate the next connectors in the sequence. */
+				else
+				{
+					/* Here we know that the first connector in the current
+					 * sequence have the same nearest_word as the cached one.
+					 * In that case it doesn't seem possible that the rest will
+					 * not have consistent values too.
+					 * However, if they don't, then don't share this sequence.
+					 * Else the linkages will not be the same. */
+					Connector *n = newc;
+					for (Connector *c = t->next; c != NULL; c = c->next)
+					{
+						n = n->next;
+						if (t->nearest_word != newc->nearest_word)
+						{
+							lgdebug(+0, "Warning: Different nearest_word.\n");
+							newc = NULL; /* Don't share it. */
+							break;
+						}
+					}
+				}
+#endif
+			}
+		}
+
+		if (newc == NULL)
+		{
+			/* No sharing is done. */
+			newc = lcblock++;
+			*newc = *t;
+		}
+		else
+		{
+#ifdef DEBUG
+			/* Connectors of disjuncts with the same suffix_id must
+			 * originate from the same Gwords. */
+			assert(t->originating_gword == newc->originating_gword);
+#endif
+			prevc->next = newc;
+
+			/* Just shared a trailing connector sequence, nothing more to do. */
+			pc->cblock = lcblock;
+			return head.next;
+		}
 
 		prevc->next = newc;
 		prevc = newc;
@@ -519,8 +604,8 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 		newd->cost = t->cost;
 		newd->originating_gword = t->originating_gword;
 
-		newd->left = pack_connectors_dup(t->left, pc);
-		newd->right = pack_connectors_dup(t->right, pc);
+		newd->left = pack_connectors_dup(t->left, pc, 0);
+		newd->right = pack_connectors_dup(t->right, pc, 1);
 
 		prevd->next = newd;
 		prevd = newd;
@@ -532,6 +617,7 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 }
 
 #define SHORTEST_SENTENCE_TO_PACK 9
+#define SHORTEST_SENTENCE_TO_SHARE 25
 
 /**
  * Pack all disjunct and connectors into one big memory block.
@@ -554,12 +640,15 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
  * 2. Maybe this check should be done in too stages, the second one
  * will use number of disjunct and connector thresholds.
  */
-void pack_sentence(Sentence sent)
+void pack_sentence(Sentence sent, bool real_suffix_ids)
 {
 	int dcnt = 0;
 	int ccnt = 0;
+	bool do_share;
 
-	if (sent->length < SHORTEST_SENTENCE_TO_PACK) return;
+	if (!real_suffix_ids && (sent->length < SHORTEST_SENTENCE_TO_PACK)) return;
+	do_share = (real_suffix_ids && (sent->length >= SHORTEST_SENTENCE_TO_SHARE));
+
 	for (size_t w = 0; w < sent->length; w++)
 	{
 		Disjunct *d;
@@ -580,7 +669,17 @@ void pack_sentence(Sentence sent)
 	Disjunct *dblock = memblock;
 	Connector *cblock = (Connector *)((char *)memblock + dsize);
 	sent->disjuncts_connectors_memblock = memblock;
-	pack_context pc = { .cblock = cblock, .dblock = dblock };
+	pack_context pc = {
+		.cblock_base = cblock,
+		.cblock = cblock,
+		.dblock = dblock
+	};
+
+	if (do_share)
+	{
+		pc.suffix_id_table = malloc(2 * sent->num_suffix_id * sizeof(uint32_t *));
+		memset(pc.suffix_id_table,0, 2 * sent->num_suffix_id * sizeof(uint32_t *));
+	}
 
 	for (size_t i = 0; i < sent->length; i++)
 	{
@@ -589,5 +688,16 @@ void pack_sentence(Sentence sent)
 		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &pc);
 		free_disjuncts(word_disjuncts);
 	}
+
+	if (do_share)
+	{
+		free(pc.suffix_id_table);
+		lgdebug(+5, "Info: %zu connectors shared\n", &cblock[ccnt] - pc.cblock);
+		/* On long sentences, many MB of connector-space are saved, but we
+		 * cannot use a realloc() here without the overhead of relocating
+		 * the pointers in the used part of memblock (if realloc() returns a
+		 * different address). */
+	}
+
 }
 /* ========================= END OF FILE ========================*/

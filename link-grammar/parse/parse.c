@@ -296,8 +296,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				}
 			}
 			pp_and_power_prune(sent, opts);
-			pack_sentence(sent);
 			bool real_suffix_ids = set_connector_hash(sent);
+			pack_sentence(sent, real_suffix_ids);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
