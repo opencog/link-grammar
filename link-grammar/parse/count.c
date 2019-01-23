@@ -88,7 +88,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 //#define DEBUG_TABLE_STAT
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
-static int hit, miss;  /* Table value found/not found */
+static size_t hit, miss;  /* Table value found/not found */
 #undef DEBUG_TABLE_STAT
 #define DEBUG_TABLE_STAT(x) x
 /**
@@ -102,7 +102,6 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	int N = 0;          /* NULL table slots */
 	int null_count[256] = { 0 };   /* null_count histogram */
 	int chain_length[64] = { 0 };  /* Chain length histogram */
-	int max_chain_length = 0;
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
@@ -122,14 +121,13 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		if (c > 0) /* Slot 0 used for length overflow. */
 		{
 			chain_length[c >= (int)ARRAY_SIZE(chain_length) ? 0 : c]++;
-			if (c > max_chain_length) max_chain_length = c;
 			total_c += c;
 		}
 		//if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
 	}
 
 #if __GNUC__
-#define msb(x) (31-__builtin_clz(x))
+#define msb(x) ((int)(CHAR_BIT*sizeof(int)-1)-__builtin_clz(x))
 #else
 #define msb(x) 0
 #endif
@@ -137,15 +135,15 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	/* The used= value is TotalValues/TableSize (not UsedSlots/TableSize). */
 	printf("Connector table: msb=%d slots=%6d/%6d (%5.2f%%) avg-chain=%4.2f "
 	       "values=%6d (z=%5d nz=%5d N=%5d) used=%5.2f%% "
-	       "acc=%d (hit=%d miss=%d) (sent_len=%zu)\n",
+	       "acc=%zu (hit=%zu miss=%zu) (sent_len=%zu)\n",
 	       msb(ctxt->table_size), used_slots, ctxt->table_size,
 			 100.0f*used_slots/ctxt->table_size, 1.0f*total_c/used_slots,
 	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
 	       hit+miss, hit, miss, sent->length);
 
 	printf("Chain length histogram:\n");
-	for (int i = 1; i <= max_chain_length; i++)
-		printf("%d: %d\n", i, chain_length[i]);
+	for (size_t i = 1; i < ARRAY_SIZE(chain_length); i++)
+		if (chain_length[i] > 0) printf("%zu: %d\n", i, chain_length[i]);
 	if (chain_length[0] > 0)
 		printf("Chain length > 63: %d\n", chain_length[0]);
 

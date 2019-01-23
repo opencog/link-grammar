@@ -3319,7 +3319,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				if (!determine_word_expressions(sent, wg_word, &ZZZ_added))
 					error_encountered = true;
 				if ((MT_WALL == wg_word->morpheme_type) &&
-				    0== strcmp(wg_word->subword, RIGHT_WALL_WORD))
+				    (0 == strcmp(wg_word->subword, RIGHT_WALL_WORD)))
 					right_wall_encountered = true;
 				wpp_old->used = true;
 			}

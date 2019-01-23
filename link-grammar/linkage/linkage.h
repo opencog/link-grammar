@@ -24,7 +24,6 @@
 struct Linkage_info_struct
 {
 	int index;            /* Index into the parse_set */
-	bool discarded;
 	short N_violations;
 	short unused_word_cost;
 	short link_cost;

@@ -286,7 +286,11 @@ bool set_connector_hash(Sentence sent)
 
 	if (verbosity_level(D_PREP))
 	{
-		int maxid = string_id_add("MAXID", csid) + WORD_OFFSET - 1;
+		/* Support incremental suffix_id generation (only one time is needed). */
+		const char *smaxid[] = { "MAXID", "MAXID1" };
+
+		int t = string_id_lookup(smaxid[0], csid);
+		int maxid = string_id_add(smaxid[(int)(t > 0)], csid) + WORD_OFFSET-1;
 		prt_error("Debug: Using trailing hash (length %zu): suffix_id %d\n",
 					 sent->length, maxid);
 	}
