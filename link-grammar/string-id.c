@@ -131,12 +131,14 @@ int string_id_add(const char *source_string, String_id *ss)
 	ss->table[p].id = ss->count;
 	ss->count++;
 
+	int keep_id = ss->table[p].id;
+
 	/* We just added it to the table.  If the table got too big,
 	 * we grow it.  Too big is defined as being more than 3/8 full.
 	 * There's a huge boost from keeping this sparse. */
 	if ((8 * ss->count) > (3 * ss->size)) grow_table(ss);
 
-	return ss->table[p].id;
+	return keep_id;
 }
 
 int string_id_lookup(const char *source_string, String_id *ss)
