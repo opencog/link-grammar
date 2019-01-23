@@ -55,9 +55,6 @@ static int VDAL_compare_parse(Linkage l1, Linkage l2)
 	Linkage_info * p1 = &l1->lifo;
 	Linkage_info * p2 = &l2->lifo;
 
-	/* Move the discarded entries to the end of the list */
-	if (p1->discarded || p2->discarded) return (p1->discarded - p2->discarded);
-
 	if (p1->N_violations != p2->N_violations) {
 		return (p1->N_violations - p2->N_violations);
 	}
@@ -78,9 +75,6 @@ static int CORP_compare_parse(Linkage l1, Linkage l2)
 	Linkage_info * p2 = &l2->lifo;
 
 	double diff = p1->corpus_cost - p2->corpus_cost;
-
-	/* Move the discarded entries to the end of the list */
-	if (p1->discarded || p2->discarded) return (p1->discarded - p2->discarded);
 
 	if (fabs(diff) < 1.0e-5)
 		return VDAL_compare_parse(p1, p2);

@@ -1159,7 +1159,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 			Linkage lkg = &sent->lnkages[in];
 			Linkage_info *lifo = &lkg->lifo;
 
-			if (lifo->discarded || lifo->N_violations) continue;
+			if (lifo->N_violations) continue;
 
 			post_process_scan_linkage(pp, lkg);
 
@@ -1173,7 +1173,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded || lifo->N_violations) continue;
+		if (lifo->N_violations) continue;
 
 		do_post_process(pp, lkg, twopass);
 		post_process_free_data(&pp->pp_data);
@@ -1201,7 +1201,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		Linkage lkg = &sent->lnkages[in];
 		Linkage_info *lifo = &lkg->lifo;
 
-		if (lifo->discarded || lifo->N_violations) continue;
+		if (lifo->N_violations) continue;
 
 		N_valid_linkages--;
 		lifo->N_violations++;
@@ -1353,8 +1353,7 @@ void compute_domain_names(Linkage lkg)
 	if (NULL == pp) return;
 
 	Linkage_info *lifo = &lkg->lifo;
-	if (lifo->discarded || lifo->N_violations)
-		return;
+	if (lifo->N_violations) return;
 
 	// If pp_domains is set, its been computed already
 	if (NULL != lkg->pp_domains) return;
