@@ -452,6 +452,26 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 
 
 /* ================ Pack disjuncts and connectors ============== */
+GNUC_UNUSED static void print_connector_list(Connector * e)
+{
+	for (;e != NULL; e=e->next)
+	{
+		printf("%s<%d>(%d,%d)",
+		       connector_string(e), e->suffix_id, e->nearest_word, e->length_limit);
+		if (e->next != NULL) printf(" ");
+	}
+}
+GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
+{
+	for (;dj != NULL; dj=dj->next) {
+		printf("%10s: ", dj->word_string);
+		printf("(%f) ", dj->cost);
+		print_connector_list(dj->left);
+		printf(" <--> ");
+		print_connector_list(dj->right);
+		printf("\n");
+	}
+}
 
 typedef struct
 {
@@ -480,7 +500,6 @@ static Connector *pack_connectors_dup(Connector *origc, pack_context *pc)
 	pc->cblock = lcblock;
 	return head.next;
 }
-
 /**
  * Duplicate the given disjunct chain.
  * If the disjunct is NULL, return NULL.
