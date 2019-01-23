@@ -1,5 +1,6 @@
 Version 5.6.1 (XXX 2019)
  * Performance improvement (approx 20%) in expressions #882
+ * Fix a bug in trailing connectors encoding (may cause bad linkages).
 
 Version 5.6.0 (4 January 2019)
  * Improve Windows support.
