@@ -1183,7 +1183,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 			N_valid_linkages--;
 			lifo->N_violations++;
 
-			/* Set the message, only if not set (e.g. by sane_morphism) */
+			/* Set the message, only if not set */
 			if (NULL == lifo->pp_violation_msg)
 				lifo->pp_violation_msg = pp->violation;
 		}
@@ -1206,7 +1206,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		N_valid_linkages--;
 		lifo->N_violations++;
 
-		/* Set the message, only if not set (e.g. by sane_morphism) */
+		/* Set the message, only if not set */
 		if (NULL == lifo->pp_violation_msg)
 			lifo->pp_violation_msg = "Timeout during postprocessing";
 	}
