@@ -465,7 +465,7 @@ static Connector *pack_connectors_dup(Connector *origc, pack_context *pc)
 	Connector *prevc = &head;
 	Connector *newc = &head;
 	Connector *t;
-	Connector *lcblock = pc->cblock; /* Optimization. */
+	Connector *lcblock = pc->cblock; /* For convenience. */
 
 	for (t = origc; t != NULL;  t = t->next)
 	{
@@ -483,7 +483,7 @@ static Connector *pack_connectors_dup(Connector *origc, pack_context *pc)
 
 /**
  * Duplicate the given disjunct chain.
- * If the argument is NULL, return NULL.
+ * If the disjunct is NULL, return NULL.
  */
 static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 {
@@ -491,17 +491,18 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 	Disjunct *prevd = &head;
 	Disjunct *newd = &head;
 	Disjunct *t;
-	Disjunct *ldblock = pc->dblock; /* Optimization. */
+	Disjunct *ldblock = pc->dblock; /* For convenience. */
 
 	for (t = origd; t != NULL; t = t->next)
 	{
 		newd = ldblock++;
 		newd->word_string = t->word_string;
 		newd->cost = t->cost;
+		newd->originating_gword = t->originating_gword;
 
 		newd->left = pack_connectors_dup(t->left, pc);
 		newd->right = pack_connectors_dup(t->right, pc);
-		newd->originating_gword = t->originating_gword;
+
 		prevd->next = newd;
 		prevd = newd;
 	}
