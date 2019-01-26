@@ -97,13 +97,12 @@ struct disjunct_dup_table_s
  */
 static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 {
-	Connector *e;
 	unsigned int i;
 	i = 0;
-	for (e = d->left ; e != NULL; e = e->next) {
+	for (Connector *e = d->left ; e != NULL; e = e->next) {
 		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
-	for (e = d->right ; e != NULL; e = e->next) {
+	for (Connector *e = d->right ; e != NULL; e = e->next) {
 		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 #if 0 /* Redundant - the connector hashing has enough entropy. */
@@ -182,9 +181,8 @@ static Connector *connectors_dup(Connector *origc)
 	Connector head;
 	Connector *prevc = &head;
 	Connector *newc = &head;
-	Connector *t;
 
-	for (t = origc; t != NULL;  t = t->next)
+	for (Connector *t = origc; t != NULL;  t = t->next)
 	{
 		newc = connector_new(NULL, NULL);
 		*newc = *t;
@@ -206,9 +204,8 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 	Disjunct head;
 	Disjunct *prevd = &head;
 	Disjunct *newd = &head;
-	Disjunct *t;
 
-	for (t = origd; t != NULL; t = t->next)
+	for (Disjunct *t = origd; t != NULL; t = t->next)
 	{
 		newd = (Disjunct *)xalloc(sizeof(Disjunct));
 		newd->word_string = t->word_string;
@@ -419,20 +416,18 @@ char * print_one_disjunct(Disjunct *dj)
  */
 int left_connector_count(Disjunct * d)
 {
-	Connector *c;
 	int i=0;
 	for (;d!=NULL; d=d->next) {
-		for (c = d->left; c!=NULL; c = c->next) i++;
+		for (Connector *c = d->left; c!=NULL; c = c->next) i++;
 	}
 	return i;
 }
 
 int right_connector_count(Disjunct * d)
 {
-	Connector *c;
 	int i=0;
 	for (;d!=NULL; d=d->next) {
-	  for (c = d->right; c!=NULL; c = c->next) i++;
+	  for (Connector *c = d->right; c!=NULL; c = c->next) i++;
 	}
 	return i;
 }
@@ -496,10 +491,9 @@ static Connector *pack_connectors_dup(Connector *origc, pack_context *pc,
 	Connector head;
 	Connector *prevc = &head;
 	Connector *newc = &head;
-	Connector *t;
 	Connector *lcblock = pc->cblock; /* For convenience. */
 
-	for (t = origc; t != NULL;  t = t->next)
+	for (Connector *t = origc; t != NULL;  t = t->next)
 	{
 		newc = NULL;
 
@@ -594,10 +588,9 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 	Disjunct head;
 	Disjunct *prevd = &head;
 	Disjunct *newd = &head;
-	Disjunct *t;
 	Disjunct *ldblock = pc->dblock; /* For convenience. */
 
-	for (t = origd; t != NULL; t = t->next)
+	for (Disjunct *t = origd; t != NULL; t = t->next)
 	{
 		newd = ldblock++;
 		newd->word_string = t->word_string;
@@ -649,11 +642,9 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 	if (!real_suffix_ids && (sent->length < SHORTEST_SENTENCE_TO_PACK)) return;
 	do_share = (real_suffix_ids && (sent->length >= SHORTEST_SENTENCE_TO_SHARE));
 
-	for (size_t w = 0; w < sent->length; w++)
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		Disjunct *d;
-
-		for (d = sent->word[w].d; NULL != d; d = d->next)
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
 		{
 			dcnt++;
 			for (Connector *c = d->right; c!=NULL; c = c->next) ccnt++;
@@ -681,7 +672,7 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 		memset(pc.suffix_id_table,0, 2 * sent->num_suffix_id * sizeof(uint32_t *));
 	}
 
-	for (size_t i = 0; i < sent->length; i++)
+	for (WordIdx i = 0; i < sent->length; i++)
 	{
 		Disjunct *word_disjuncts = sent->word[i].d;
 
