@@ -117,13 +117,17 @@ struct Sentence_s
 	const char *orig_sentence;  /* Copy of original sentence */
 	size_t length;              /* Number of words */
 	Word  *word;                /* Array of words after tokenization */
-	String_id *connector_suffix_id; /* Used for connector trailing sequence ID */
 	String_set *   string_set;  /* Used for assorted strings */
 	Pool_desc * fm_Match_node;  /* Fast-matcher Match_node memory pool */
 	Pool_desc * Table_connector_pool; /* Count memoizing memory pool */
 	Pool_desc * E_list_pool;
 	Pool_desc * Exp_pool;
 	Pool_desc * X_node_pool;
+
+	/* Trailing connector encoding stuff (suffix_id), used for speeding up
+	 * parsing (the classic one for now) of long sentences. */
+	String_id *connector_suffix_id; /* For connector trailing sequence IDs */
+	unsigned int num_suffix_id;
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
