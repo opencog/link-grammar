@@ -447,7 +447,7 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 
 
 /* ================ Pack disjuncts and connectors ============== */
-GNUC_UNUSED static void print_connector_list(Connector * e)
+void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
 	{
@@ -456,7 +456,7 @@ GNUC_UNUSED static void print_connector_list(Connector * e)
 		if (e->next != NULL) printf(" ");
 	}
 }
-GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
+void print_disjunct_list(Disjunct * dj)
 {
 	for (;dj != NULL; dj=dj->next) {
 		printf("%10s: ", dj->word_string);
