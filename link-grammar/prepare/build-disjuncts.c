@@ -47,7 +47,6 @@ typedef struct
 #ifdef DEBUG
 static void print_Tconnector_list(Tconnector * e);
 static void print_clause_list(Clause * c);
-static void print_connector_list(Connector * e);
 #endif
 
 #if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMOEY /* Undefined - CPU overhead. */
@@ -331,27 +330,6 @@ GNUC_UNUSED static void print_clause_list(Clause * c)
 		printf("  Clause: ");
 		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
 		print_Tconnector_list(c->c);
-		printf("\n");
-	}
-}
-
-static void print_connector_list(Connector * e)
-{
-	for (;e != NULL; e=e->next)
-	{
-		printf("%s", connector_string(e));
-		if (e->next != NULL) printf(" ");
-	}
-}
-
-GNUC_UNUSED static void print_disjunct_list(Disjunct * dj)
-{
-	for (;dj != NULL; dj=dj->next) {
-		printf("%10s: ", dj->word_string);
-		printf("(%f) ", dj->cost);
-		print_connector_list(dj->left);
-		printf(" <--> ");
-		print_connector_list(dj->right);
 		printf("\n");
 	}
 }
