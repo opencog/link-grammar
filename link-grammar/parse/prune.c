@@ -1129,16 +1129,168 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	return total_deleted;
 }
 
+/**
+ * Discard disjuncts that cannot connect due to cross links.
+ * This is performed only for null_count==0, because any word can then
+ * may not have links.
+ * Optional words are totally ignored because they don't have to link.
+ * FIXME: Only the first connector on each side is checked.
+ *
+ * Algo:
+ * 1. For each word (w) find the nearest words (according to the shallow
+ * connectors of its disjuncts) to its left (nl) and right (nr) to * which
+ * a link must exist. I.e., a link from w must exist to nr or a word after
+ * it, or to nl or a word before it.
+ * 2. Using these info, discard disjuncts of words between w and nr, that
+ * must connect to words before w (similarly for nl).
+ */
+static int cross_links_prune(Sentence sent, Parse_Options opts)
+{
+	if (opts->min_null_count > 0) return 0;
+
+	unsigned int *l_nearest_word = alloca(sent->length * sizeof(int));
+	unsigned int *r_nearest_word = alloca(sent->length * sizeof(int));;
+
+	for (unsigned int w = 0; w < sent->length; w++)
+	{
+		l_nearest_word[w] = 0;
+		r_nearest_word[w] = UNLIMITED_LEN;
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			if (sent->word[w].optional) continue;
+
+			if (NULL == d->left)
+				l_nearest_word[w] = w;
+			else if (d->left->nearest_word > l_nearest_word[w])
+				l_nearest_word[w] = d->left->nearest_word;
+
+			if (NULL == d->right)
+				r_nearest_word[w] = w;
+			else if (d->right->nearest_word < r_nearest_word[w])
+				r_nearest_word[w] = d->right->nearest_word;
+		}
+
+		if (l_nearest_word[w] == 0)
+			l_nearest_word[w] = w;
+		if (r_nearest_word[w] == UNLIMITED_LEN)
+			r_nearest_word[w] = w;
+	}
+
+	Disjunct *free_later = NULL;
+	int total_deleted = 0;
+
+	for (unsigned int w = 0; w < sent->length; w++)
+	{
+		/* Verification-only checks. Maybe they are redundant. */
+		if ((r_nearest_word[w] > sent->length-1) ||
+			 (r_nearest_word[w] < w))
+		{
+			prt_error("Warning: w[%d].nearest_word_right %d\n",
+			          w, r_nearest_word[w]);
+			continue;
+		}
+		if (l_nearest_word[w] > w)
+		{
+			prt_error("Warning: w[%d].nearest_word_left %d\n",
+			          w, l_nearest_word[w]);
+			continue;
+		}
+
+		if (sent->word[w].optional) continue;
+
+		/* Remove disjuncts that are blocked by l->r links. */
+		for (WordIdx rw = w+1; rw < r_nearest_word[w]; rw++)
+		{
+			if (sent->word[rw].optional) continue;
+
+			for (Disjunct **dd = &sent->word[rw].d; *dd != NULL; /* See: NEXT */)
+			{
+				Disjunct *d = *dd; /* just for convenience */
+
+				if ((NULL != d->left) && d->left->nearest_word < w)
+				{
+#if 0
+					printf("w %d nw_right %d rw %d nw_left %d dl %p:",
+					       w, r_nearest_word[w], rw, d->left->nearest_word, d);
+					print_connector_list(d->left);
+					printf("\n");
+#endif
+
+					/* Discard the current disjunct. */
+					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					d->next = free_later;
+					free_later = d;
+					total_deleted++;
+				}
+				else
+				{
+					dd = &d->next; /* NEXT */
+				}
+			}
+		}
+
+		/* Remove disjuncts that are blocked by mandatory r->l links. */
+		for (WordIdx lw = l_nearest_word[w]+1; lw < w; lw++)
+		{
+			if (sent->word[lw].optional) continue;
+
+			for (Disjunct **dd = &sent->word[lw].d; *dd != NULL; /* See: NEXT */)
+
+			{
+				Disjunct *d = *dd; /* just for convenience */
+
+				if ((NULL != d->right) && d->right->nearest_word > w)
+				{
+#if 0
+					printf("w %zu nw_left %d rw %zu nw_right %d dl %p:",
+					       w, l_nearest_word[w], lw, d->right->nearest_word, d);
+					print_connector_list(d->right);
+					printf("\n");
+#endif
+
+					/* Discard the current disjunct. */
+					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					d->next = free_later;
+					free_later = d;
+					total_deleted++;
+				}
+				else
+				{
+					dd = &d->next; /* NEXT */
+				}
+			}
+		}
+	}
+
+	free_disjuncts(free_later);
+	lgdebug(D_PRUNE, "Debug: cross_links_prune removed %d\n", total_deleted);
+	return total_deleted;
+}
 
 /**
- * Do the following pruning steps until nothing happens:
- * power pp power pp power pp....
- * Make sure you do them both at least once.
+ * Performs the 3 pruning steps.
+ * Notes:
+ * - No benefit was found to perform pp_prune after cross_links_prune.
+ * - If cross_links_prune deleted even few disjuncts, power_prune will
+ *   most probably may delete many more.
+ * - Empirically it was found that if power_prune deleted a few tens of
+ *   disjuncts, than cross_links_prune has a good chance to delete again a
+ *   significant number.
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
 	power_prune(sent, opts);
 	pp_prune(sent, opts);
+
+	int i;
+	do
+	{
+		i = cross_links_prune(sent, opts);
+		if (i == 0) break;
+		i = power_prune(sent, opts);
+	}
+	while (i > 25);
 
 	return;
 
