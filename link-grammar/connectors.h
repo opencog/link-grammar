@@ -104,8 +104,9 @@ struct Connector_struct
 	uint8_t length_limit; /* Can be different than in the descriptor */
 	uint8_t nearest_word;
 	                      /* The nearest word to my left (or right) that
-	                         this could ever connect to.  Computed by
-	                         setup_connectors() */
+	                         this could ever connect to.  Initialized by
+	                         setup_connectors(). Final value is found in
+	                         the power pruning. */
 	bool multi;           /* TRUE if this is a multi-connector */
 	int tracon_id;        /* Tracon identifier (see disjunct-utils.c) */
 	const condesc_t *desc;
