@@ -8820,6 +8820,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   ((Xc+ or Xe+ or [()]) & QUd+ & (<wi-wall> or <wo-wall> or hWl+) & {X+} & QUc+)
   or [(Xc+ or Xe+) & (<wi-wall> or <wo-wall>) & {X+}];
 
+% ---------------------------------------------------------------
 % Quote with or without quotation marks.
 % "This is a test," she said.
 % We should go, I agreed.
@@ -8844,8 +8845,9 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % PF- (by itself): "And thus spoke the king"
 <vc-paraph-inv>:
   {@MV+} & (
-    ({Xd- or Xq-} & (Xc+ or Xp+ or <paraph-null>)
-      & (dCOq+ or CP- or Eq+ or <verb-wall>))
+    ((Xc+ or Xp+ or <paraph-null>) & CP-)
+    or ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+      & (dCOq+ or CPx- or Eq+ or <verb-wall>))
     or ((PF- or CPa-) & {<quote-sent> & {RW+}})
     or [(Xc+ or Xe+) & <embed-verb>]);
 
