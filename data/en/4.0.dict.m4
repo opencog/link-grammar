@@ -589,6 +589,7 @@ USMC.y USN.y:
 % words.n.3)
 % [Wa-]0.02: give a very mild preference to words that could be verbs
 %            (and thus imperatives) e.g. Smile!
+% Ds- & Wa- & Mf+: "A single man of large fortune"
 <common-noun>:
   <noun-modifiers> &
     (({NMa+} & AN+)
@@ -599,7 +600,7 @@ USMC.y USN.y:
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & [Wa-]0.02));
+    or ({Ds-} & [Wa-]0.02 & {Mf+}));
 
 % Preliminary experimental split for supporting a/an phonetic change
 % for common nouns starting with vowels or consonant's.
@@ -609,7 +610,7 @@ USMC.y USN.y:
     (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & [Wa-]0.05)))
+    or ({Ds-} & [Wa-]0.05 & {Mf+})))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
