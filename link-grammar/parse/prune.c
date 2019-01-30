@@ -462,6 +462,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
+	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
 	/* lb is now the leftmost word we need to check */
@@ -505,6 +506,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
+	if (sent_length <= n) return sent_length;
 	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
