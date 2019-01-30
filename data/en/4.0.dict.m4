@@ -9327,6 +9327,7 @@ significantly substantially:
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
 %
 % DD- & O- & Mp+: "Emma was the younger of two daughters"
+%         (zero/ellipsis: "Emma was the younger [daughter] of two daughters"
 % Wr- & MVt+ & Xc+ & PFb+: subject-verb inversion:
 %       "cheaper than dirt, slime is better"
 

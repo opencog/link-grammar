@@ -1130,7 +1130,7 @@ When a sentence fails to parse, look for:
 Poor agreement might be handled by giving a cost to mismatched
 lower-case connector letters.
 
-### Zero/phantom words:
+### Ellipsis/zero/phantom words:
 An common phenomenon in English is that some words that one might
 expect to "properly" be present can disappear under various conditions.
 Below is a sampling of these. Some possible solutions are given below.
@@ -1150,6 +1150,7 @@ phantom word in parenthesis, include:
  * (You) go home!
  * (Are) you all right?
  * He opened the door and (he) went in.
+ * Emma was the younger (daughter) of two daughters.
 
 Some complex phantom constructions:
  * They play billiards but (they do) not (play) snooker.
