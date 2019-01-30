@@ -601,7 +601,8 @@ USMC.y USN.y:
     (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & [Wa-]0.05 & {Mf+})))
+    or ({Ds-} & [Wa-]0.05)))
+    % or ({Ds-} & [Wa-]0.05 & {Mf+})))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
