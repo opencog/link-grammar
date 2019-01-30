@@ -9342,63 +9342,73 @@ significantly substantially:
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
 % Wr- & MVt+ & Xc+ & PFb+: subject-verb inversion:
 %       "cheaper than dirt, slime is better"
+% DD- & O- & Mp+: "Emma was the younger of two daughters"
+<comp-adj-core>:
+  ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+  ;
+
 <comp-adj>:
   ({ECa-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+    <comp-adj-core>
     or ({[[@Ec-]]} & {Xc+} & Am+)
+    or (DD- & O- & Mp+)
     or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+)
     or ({EA-} & AJlc+)))
-  or (DD- & O- & Mp+)
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
 
 easier.a-c:
   ({ECa-} &
-    (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
-    AJlc+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
+    (((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+}
+      & {(<tot-verb> or <toi-verb>) & {LE+}})
+    or ({[[@Ec-]]} & {Xc+} & Am+)
+    or ({EA-} & AJlc+)))
+  or (DG- & (TR+ or AF+) & {@MV+}
+    & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
 
 harder.a-c:
   ({ECa-} &
-    (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
-    MVb- or
-    AJlc+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
+    (({[[@Ec-]]} & {Xc+} & Am+)
+    or ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+}
+      & {(<tot-verb> or <toi-verb>) & {LE+}})
+    or MVb-
+    or AJlc+))
+  or (DG- & (TR+ or AF+) & {@MV+}
+    & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
-  ({ECa-} &
-    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
-    ({[[@Ec-]]} & {Xc+} & Am+) or
-    MVb- or
-    Qe+ or
-    <advcl-verb> or
-    AJlc+)) or
+  ({ECa-} & (
+    <comp-adj-core>
+    or ({[[@Ec-]]} & {Xc+} & Am+)
+    or MVb-
+    or Qe+
+    or <advcl-verb>
+    or AJlc+)) or
   (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 sooner.a-c:
   ({ECa- or Yt-} &
-    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
-    ({[[@Ec-]]} & {Xc+} & Am+) or
-    MVb- or
-    Qe+ or
-    <advcl-verb> or
-    AJlc+)) or
+    (<comp-adj-core>
+    or ({[[@Ec-]]} & {Xc+} & Am+)
+    or MVb-
+    or Qe+
+    or <advcl-verb>
+    or AJlc+)) or
   (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer.a-c:
-  ({ECa- or Yt-} &
-    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
-    ({[[@Ec-]]} & {Xc+} & Am+) or
-    MVb- or
-    Qe+ or
-    <advcl-verb> or
-    OT- or
-    FL- or
-    AJlc+)) or
-  (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa- or Yt-} & (
+    <comp-adj-core>
+    or ({[[@Ec-]]} & {Xc+} & Am+)
+    or MVb-
+    or Qe+
+    or <advcl-verb>
+    or OT-
+    or FL-
+    or
+    AJlc+))
+  or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} &
