@@ -9348,13 +9348,12 @@ significantly substantially:
   ({[[@Ec-]]} & {Xc+} & Am+)
   or (DD- & O- & Mp+)
   or ({EA-} & AJlc+)
-  ;
+  or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+);
 
 <comp-adj>:
   ({ECa-} & (
     ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
     or <comp-adj-misc>
-    or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+)
   ))
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
