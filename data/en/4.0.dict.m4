@@ -8529,7 +8529,7 @@ thus therefore therefor:
 % {EA+}: "he is not a good programmer"
 %     FIXME: it would be nice to have some + link for this case, also.
 % N- & En+: "he does not want to steal it"
-% O-: "I should imagine not!"
+% O*x-: "I should imagine not!" The x blocks ditransitive-verb links.
 not.e:
   [EBm-]0.1
   or (EBm- & (EA+ or EE+))
@@ -8539,7 +8539,7 @@ not.e:
   or [{@E-} & N-]
   or NT+
   or EBy+
-  or O-
+  or O*x-
   or <COMP-OPENER>
   or [[((Ma+ or Mg+ or Mv+ or Mp+) & dCO+)
     or (Mg- & Mgn+)
