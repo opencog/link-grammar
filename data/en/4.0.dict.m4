@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.6.0 (formatted as V5v6v0+)
-<dictionary-version-number>: V5v6v0+;
+% Dictionary version number is 5.6.1 (formatted as V5v6v1+)
+<dictionary-version-number>: V5v6v1+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -9348,6 +9348,7 @@ significantly substantially:
     or ({[[@Ec-]]} & {Xc+} & Am+)
     or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+)
     or ({EA-} & AJlc+)))
+  or (DD- & O- & Mp+)
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
