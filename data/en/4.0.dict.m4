@@ -6617,8 +6617,9 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % PF- & <quote-sent>: "And thus spoke the king: Off with his head!"
 % PF- (by itself): "And thus spoke the king"
 <vc-paraph-inv>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-      & (dCOq+ or CPx- or Eq+ or <verb-wall>))
+  {@MV+} & (
+    ({Xd- or Xq-} & (Xc+ or Xp+ or <paraph-null>)
+      & (dCOq+ or CP- or Eq+ or <verb-wall>))
     or ((PF- or CPa-) & {<quote-sent> & {RW+}})
     or [(Xc+ or Xe+) & <embed-verb>]);
 
@@ -6628,11 +6629,13 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   {@MV+} & (Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
     & (dCOqi+ or CPi- or Eqi+ or <verb-wall>);
 
-% paraphrasing verbs like "say", "reply"
+% ---------------------------------------------------------------
+% Paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
 /en/words/words.v.10.1:
   [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
+% Paraphrasing verbs that can take a particle.
 /en/words/words.v.11.1:
   [[{@E-} & (((Sp- or I-) & {K+} & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
