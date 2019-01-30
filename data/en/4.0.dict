@@ -2691,26 +2691,6 @@ per "/.per": Us+ & Mp-;
 
 % AUXILIARY VERBS
 
-%<vc-do>: (((O+ or B- or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
-%or ({N+} & I*d+));
-%do.v: ({@E-} & (Sp- or SFp- or (RS- & Bp-) or Wi-) & <vc-do>)
-%or ((SIp+ or SFIp+) & (({Q-} & I*d+) or CQ-)) or
-%({@E-} & I- & ((O+ or B- or [[@MV+ & O*n+]] or CX-) & {@MV+}));
-%does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & (({Q-} & I*d+) or CQ-));
-%did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & (({Q-} & I*d+) or CQ-));
-%done.v: (<verb-pp> & (O+ or B- or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-phrase-opener>;
-%doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
-%doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
-%
-%don't: (({Q-} & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- or
-%(RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
-%doesn't: (({Q-} & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) &
-%(I*d+ or [[()]]);
-%didn't: ((({Q-} & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
-%(RS- & B-)))) & (I*d+ or [[()]]));
-
-%Mike replaced "{Q-}" with "(Rw- or Q- or [()])"
-
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
 <vc-do>:
   ((<b-minus>
@@ -2727,11 +2707,12 @@ per "/.per": Us+ & Mp-;
 % I*t- & O+: forces use of object in to-do expressions.
 %            "Are you really going to do it to them?"
 % {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
+% SIp+ & N+: "Do you not want to know?"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & ((<verb-rq-aux> & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) & {<verb-wall> or VJrpi-})
   or ({@E-} & I- & CV-)
