@@ -2410,6 +2410,7 @@ per "/.per": Us+ & Mp-;
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
+<verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
 <verb-pv>:
@@ -2419,7 +2420,6 @@ per "/.per": Us+ & Mp-;
   ({@E-} & ((Pv- & {hPFt-} & {<verb-wall>} & {K+}) or Mv-) & <mv-coord>)
   or ({EA-} & Wx-);
 <verb-pv-b>: {@E-} & ((Pv- & {hPFt-} & {<verb-wall>}) or Mv- or ({EA-} & Wx-));
-<verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % used only in "as <past-participle>" constructions, which behave
 % kind of like manner adverbial phrases.  Only certain verbs have
