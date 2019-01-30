@@ -9338,11 +9338,13 @@ significantly substantially:
   ({EE- or EF+} & (EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & dCO+)))
   or ({EE-} & EB-);
 
+% ---------------------------------------------------------------
 % comparative adjectives
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
+%
+% DD- & O- & Mp+: "Emma was the younger of two daughters"
 % Wr- & MVt+ & Xc+ & PFb+: subject-verb inversion:
 %       "cheaper than dirt, slime is better"
-% DD- & O- & Mp+: "Emma was the younger of two daughters"
 
 <comp-adj-misc>:
   ({[[@Ec-]]} & {Xc+} & Am+)
@@ -9361,7 +9363,7 @@ significantly substantially:
 
 easier.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+}
+    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+}
       & {(<tot-verb> or <toi-verb>) & {LE+}})
     or <comp-adj-misc>
   ))
@@ -9370,7 +9372,7 @@ easier.a-c:
 
 harder.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+}
+    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-))  & {@MV+}
       & {(<tot-verb> or <toi-verb>) & {LE+}})
     or <comp-adj-misc>
     or MVb-
@@ -9412,14 +9414,14 @@ longer.a-c:
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
+    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
     or <comp-adj-misc>
   ))
   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 better.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
+    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9430,7 +9432,7 @@ better.a-c:
 
 different.a:
   ({ECa- or EA- or EF+} & (
-    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+})
+    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+})
     or <comp-adj-misc>
     or AA+
     or [[DD- & <noun-main-p>]]
