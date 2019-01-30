@@ -4052,7 +4052,7 @@ buttering.g:
 <vc-kick>:
   ((K+ & {[[@MV+]]} & O*n+)
   or ((O+ or <b-minus>) & {K+})
-  or ({@E-} & <b-minus> & O+ & {K+})
+  or (<b-minus> & O+ & {K+})
   or ({K+} & {Xc+} & Pa+)
   or [[@MV+ & O*n+]]) & <mv-coord>;
 
