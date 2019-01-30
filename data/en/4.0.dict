@@ -11591,15 +11591,16 @@ significantly substantially:
 % DD- & O- & Mp+: "Emma was the younger of two daughters"
 <comp-adj-core>:
   ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+  or ({[[@Ec-]]} & {Xc+} & Am+)
+  or (DD- & O- & Mp+)
+  or ({EA-} & AJlc+)
   ;
 
 <comp-adj>:
   ({ECa-} & (
     <comp-adj-core>
-    or ({[[@Ec-]]} & {Xc+} & Am+)
-    or (DD- & O- & Mp+)
     or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+)
-    or ({EA-} & AJlc+)))
+  ))
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
@@ -11626,34 +11627,30 @@ harder.a-c:
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
   ({ECa-} & (
     <comp-adj-core>
-    or ({[[@Ec-]]} & {Xc+} & Am+)
     or MVb-
     or Qe+
     or <advcl-verb>
-    or AJlc+)) or
-  (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ))
+  or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 sooner.a-c:
   ({ECa- or Yt-} &
     (<comp-adj-core>
-    or ({[[@Ec-]]} & {Xc+} & Am+)
     or MVb-
     or Qe+
     or <advcl-verb>
-    or AJlc+)) or
-  (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ))
+  or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer.a-c:
   ({ECa- or Yt-} & (
     <comp-adj-core>
-    or ({[[@Ec-]]} & {Xc+} & Am+)
     or MVb-
     or Qe+
     or <advcl-verb>
     or OT-
     or FL-
-    or
-    AJlc+))
+  ))
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
