@@ -536,8 +536,8 @@ static int power_prune(Sentence sent, Parse_Options opts)
 	prune_context pc;
 	Disjunct *free_later = NULL;
 	Connector *c;
-	size_t N_deleted = 0;
-	size_t total_deleted = 0;
+	int N_deleted = 0;
+	int total_deleted = 0;
 
 	pt = power_table_new(sent);
 
@@ -581,7 +581,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		}
 
 		total_deleted += N_deleted;
-		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %zu\n",
+		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d\n",
 		        pc.N_changed, N_deleted);
 
 		if (pc.N_changed == 0) break;
@@ -619,7 +619,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		}
 
 		total_deleted += N_deleted;
-		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %zu\n",
+		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d\n",
 		        pc.N_changed, N_deleted);
 
 		if (pc.N_changed == 0) break;
