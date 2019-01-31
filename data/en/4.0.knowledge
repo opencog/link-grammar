@@ -330,8 +330,9 @@ CONTAINS_NONE_RULES:
  EAy   ,  MVs                              , "Bad comparative78",
  VCz   ,  EAy                              , "Bad comparative79",
 
-; Post-processing seems broken, see issue #888
-;  Rn    ,  Js   Ju   Jp                     , "Bad relative question80",
+; I don't understand domains, this doesn't do what I expected.
+; (It fails to block J- & Rn+ which is what I want it to do.)
+; Rn    ,  Js   Ju   Jp J#                   , "Bad relative question80",
 
 
 ; ----------------------------------------------------------------------
