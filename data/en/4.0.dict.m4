@@ -8393,7 +8393,7 @@ then.j-c: {Xd-} & XJc- & VJr+;
 %    discussion in the README; see section-J.html in the docs.
 <verb-conjunction>:
   (({Xd-} & VJlsi- & VJrsi+) &
-    (({@MV+} & Ss- & <verb-wall>) or
+    (({@MV+} & {Xc+ & @MV+} & Ss- & <verb-wall>) or
     (RS- & Bs-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
     ({Xd-} & VJrsi-))) or
