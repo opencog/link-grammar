@@ -329,7 +329,9 @@ CONTAINS_NONE_RULES:
  Mr    ,  B#*                              , "Bad use of 'whose'77",
  EAy   ,  MVs                              , "Bad comparative78",
  VCz   ,  EAy                              , "Bad comparative79",
- Rn    ,  Js   Ju   Jp                     , "Bad relative question80",
+
+; Post-processing seems broken, see issue #888
+;  Rn    ,  Js   Ju   Jp                     , "Bad relative question80",
 
 
 ; ----------------------------------------------------------------------

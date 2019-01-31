@@ -610,8 +610,7 @@ USMC.y USN.y:
     (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & [Wa-]0.05)))
-    % or ({Ds-} & [Wa-]0.05 & {Mf+})))
+    or ({Ds-} & [Wa-]0.05 & {Mf+})))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
@@ -10599,9 +10598,11 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 % approach. See https://en.wikipedia.org/wiki/Operator_grammar
 
 then.#than: [than.e]0.65;
-than.#then-r: [then.r]1.65;
 than.#then-i: [then.i]1.65;
 than.#then-ij: [then.ij]0.65;
+
+% This breaks too many sentences in the basic corpus
+% than.#then-r: [then.r]1.65;
 
 rather_then.#rather_than: rather_than;
 
