@@ -2816,9 +2816,10 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 %
 % <to-verb> & <verb-wall>: "I have to verb-inf" allows "have" to connect to wall.
 % [TO+]: allows null-infinitive: "Because I have to."
+% N+ & O+: "I have not an instant to lose."
 <vc-have>:
   ({@MV+} & (<to-verb> or [TO+]) & <verb-wall>)
-  or ((B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
+  or ({N+} & (B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
   or (([[@MV+ & O*n+]] or CX- or [[()]]) & <mv-coord>)
   or ({N+} & PP+);
 
