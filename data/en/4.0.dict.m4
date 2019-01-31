@@ -350,7 +350,7 @@ nonCAP.zzz: ZZZ-;
         ))
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
-  or ({@A- or G-} & {D-} & Wa-)
+  or ({@A- or G-} & {D-} & Wa- & {NM+})
   or [<directive-opener>]0.2;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
@@ -374,7 +374,7 @@ nonCAP.zzz: ZZZ-;
         ))
       or AN+
       or G+))
-  or ({@A- or G-} & {D-} & Wa-)
+  or ({@A- or G-} & {D-} & Wa- & {NM+})
   or <directive-opener>;
 
 % capitalized words ending in s
@@ -610,7 +610,7 @@ USMC.y USN.y:
     (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
-    or ({Ds-} & [Wa-]0.05 & {Mf+})))
+    or ({Ds-} & [Wa-]0.05 & ({Mf+} or {NM+}))))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
