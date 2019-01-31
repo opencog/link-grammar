@@ -1012,6 +1012,11 @@ This is currently worked-around by splitting the Js link into two:
 a Jj part and a Jk part; the two are used together to cross over
 the conjunction.
 
+This work-around is in fact completely generic, and can be extended
+to any kind of link crossing. For this to work, a better notation would
+be convenient; perhaps `xJs-` instead of `Jj-` and `cJs-` instead of
+`Jk-`, or something like that ...
+
 
 Type Theory
 -----------
