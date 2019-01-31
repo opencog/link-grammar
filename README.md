@@ -864,6 +864,58 @@ ftp://ftp.phon.ucl.ac.uk/pub/Word-Grammar/ell2-wg.pdf<br>
 http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm<br>
 http://goertzel.org/ProwlGrammar.pdf
 
+Planarity: Theory vs. Practice
+------------------------------
+In practice, the planarity constraint allows very efficient algorithms
+to be used in the implementation of the parser. Thus, from the point of
+view of the implementation, we want to keep planarity. Fortunately,
+there is a convenient and unambiguous way to have our cake and eat it,
+too. A non-planar diagram can be drawn on a sheet of paper using
+standard electrical-engineering notation: a funny symbol, wherever
+wires cross. This notation is very easily adapted to LG connectors;
+below is an actual working example, already implemented in the current
+LG English dictionary. *All* link crossings can be implemented in this
+way!  So we do not have to actually abandon the current parsing
+algorithms to get non-planar diagrams. We don't even have to modify them!
+Hurrahh!
+
+Here is a working example: "I want to look at and listen to everything."
+This wants two `J` links pointing to 'everything'.  The desired diagram
+would need to look like this:
+
+```text
+    +---->WV---->+
+    |            +--------IV---------->+
+    |            |           +<-VJlpi--+
+    |            |           |    +---xxx------------Js------->+
+    +--Wd--+-Sp*i+--TO-+-I*t-+-MVp+    +--VJrpi>+--MVp-+---Js->+
+    |      |     |     |     |    |    |        |      |       |
+LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
+```
+The above really wants to have a `Js` link from 'at' to 'everything',
+but this `Js` link crosses (clashes with - marked by xxx) the link
+to the conjunction.  Other examples suggest that one should
+allow most links to cross over the down-links to conjunctions.
+
+The planarity-maintaining worked-around is to split the `Js` link into
+two: a `Jj` part and a `Jk` part; the two are used together to cross
+over the conjunction. This is currently implemented in the English
+doctionary, and it works.
+
+This work-around is in fact completely generic, and can be extended
+to any kind of link crossing. For this to work, a better notation would
+be convenient; perhaps `uJs-` instead of `Jj-` and `vJs-` instead of
+`Jk-`, or something like that ... (TODO: invent better notation.)
+(NB: This is a kind of re-invention of "fat links", but in the
+dictionary, not in the code.)
+
+Landmark Transitivity: Theory
+-----------------------------
+Given that non-planar parses can be enabled without any changes to the
+parser algrithm, all that is required is to understand what sort of
+theory describes link-crossing in a coherent grounding. That theory is
+Dick Hudson's Landmark Transitivity, explained here.
+
 This mechanism works as follows:
 
  * First, every link must be directional, with a head and a dependent.
@@ -922,6 +974,11 @@ The fix would be to force "do" to take an object; however, a link
 from "do" to "what" is not allowed, because link-crossing would
 prevent it.
 
+Fixing this requires only a fix to the dictionary, and not to the
+parser itself.
+
+Link-crossing Examples
+----------------------
 Examples where the no-links-cross constraint seems to be violated,
 in English:
 ```text
@@ -991,31 +1048,6 @@ but the desired MV links from the verb to the time-prepositions
 when the individual sentences "I was in hell yesterday" and
 "I was in heaven on Tuesday" are parsed.  Using a conjunction should
 not wreck the relations that get used; but this requires link-crossing.
-
-Another, simpler example:
-
-```text
-    +---->WV---->+
-    |            +--------IV---------->+
-    |            |           +<-VJlpi--+
-    |            |           |    +---xxx------------Js------->+
-    +--Wd--+-Sp*i+--TO-+-I*t-+-MVp+    +--VJrpi>+--MVp-+---Js->+
-    |      |     |     |     |    |    |        |      |       |
-LEFT-WALL I.p want.v to.r look.v at and.j-v listen.v to.r everything
-```
-The above really wants to have a `Js` link from 'at' to 'everything',
-but this `Js` link crosses (clashes with - marked by xxx) the link
-to the conjunction.  These two cases suggest that one should
-allow most links to cross over the down-links to conjunctions.
-
-This is currently worked-around by splitting the Js link into two:
-a Jj part and a Jk part; the two are used together to cross over
-the conjunction.
-
-This work-around is in fact completely generic, and can be extended
-to any kind of link crossing. For this to work, a better notation would
-be convenient; perhaps `xJs-` instead of `Jj-` and `cJs-` instead of
-`Jk-`, or something like that ...
 
 
 Type Theory
