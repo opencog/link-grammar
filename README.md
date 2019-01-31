@@ -1157,6 +1157,7 @@ Some complex phantom constructions:
  * I know Ringo, but (I do) not (know) his brother.
  * She likes Indian food, but (she does) not (like) Chinese (food).
  * If this is true, then (you should) do it.
+ * Perhaps he will (do it), if he sees enough of her.
 
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
 
