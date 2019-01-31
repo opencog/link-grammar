@@ -586,7 +586,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 
 		pc.N_changed = N_deleted = 0;
 		/* right-to-left pass */
-		for (WordIdx w = sent->length-1; w != (size_t) -1; w--)
+		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
