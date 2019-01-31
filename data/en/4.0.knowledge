@@ -129,12 +129,11 @@ RESTRICTED_LINKS:
 ; starting link. It contains pairs: the first of each pair is a link
 ; type, and the second is the domain to which that link type belongs.
 ;
-; Rn commented out, as per above.
+; Rn    r  ; Rn is no longer a domain starter; see above.
 
 STARTING_LINK_TYPE_TABLE:
  Ce    e
  R*    r
-; Rn    r  ; Rn is no longer a domain starter.
  Re    r
  W     m
  RSe   e
@@ -330,6 +329,7 @@ CONTAINS_NONE_RULES:
  Mr    ,  B#*                              , "Bad use of 'whose'77",
  EAy   ,  MVs                              , "Bad comparative78",
  VCz   ,  EAy                              , "Bad comparative79",
+ Rn    ,  Js   Ju   Jp                     , "Bad relative question80",
 
 
 ; ----------------------------------------------------------------------
