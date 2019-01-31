@@ -5747,8 +5747,11 @@ fearing.v presuming.v assuming.v wavering.v:
 
 % ---------------------------------------------------------------
 
-<vc-believe>: {<vc-trans>} or
-  ({@MV+} & (<embed-verb> or TH+ or RSe+));
+<vc-believe>:
+  {<vc-trans>}
+  or (O+ & {@MV+} & (O*n+ or Pa**j+))
+  or (<mv-coord> & (<embed-verb> or TH+ or RSe+));
+
 believe.v answer.v worry.v: 
   ((<verb-pl,i> & (<vc-believe>)) or
   ({@E-} & hXd- & dWi- & (<vc-believe>) & hXc+) or

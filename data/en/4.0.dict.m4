@@ -4783,8 +4783,12 @@ fearing.v presuming.v assuming.v wavering.v:
 
 % ---------------------------------------------------------------
 
-<vc-believe>: {<vc-trans>} or
-  ({@MV+} & (<embed-verb> or TH+ or RSe+));
+% O+ & Pa**j+: "I believed it possible."
+<vc-believe>:
+  {<vc-trans>}
+  or (O+ & {@MV+} & (O*n+ or Pa**j+))
+  or (<mv-coord> & (<embed-verb> or TH+ or RSe+));
+
 believe.v answer.v worry.v: VERB_PLI(<vc-believe>);
 believes.v answers.v worries.v: VERB_S_T(<vc-believe>);
 believed.v-d answered.v-d worried.v-d:
