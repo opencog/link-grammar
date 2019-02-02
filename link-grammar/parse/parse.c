@@ -349,6 +349,14 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		post_process_lkgs(sent, opts);
 
 		if (sent->num_valid_linkages > 0) break;
+		if (verbosity >= D_USER_INFO)
+		{
+			if (sent->num_linkages_post_processed > 0)
+				prt_error("Info: All linkages had P.P. violations.\n"
+				        "Consider to increase the linkage limit.\n"
+				        "At the command line, use !limit\n");
+		}
+
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
 
