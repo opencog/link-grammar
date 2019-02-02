@@ -16,7 +16,7 @@
 #include "api-structures.h"
 #include "corpus/corpus.h"
 #include "dict-common/dict-utils.h"
-#include "disjunct-utils.h"  // for free_disjuncts
+#include "disjunct-utils.h"   // for free_sentence_disjuncts()
 #include "linkage/linkage.h"
 #include "memory-pool.h"
 #include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
