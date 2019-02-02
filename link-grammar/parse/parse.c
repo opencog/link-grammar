@@ -328,18 +328,18 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		if (verbosity >= D_USER_INFO)
-		{
-			prt_error("Info: Total count with %zu null links: %lld\n",
-			        sent->null_count, total);
-		}
-
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
 		total = (total > INT_MAX) ? INT_MAX : total;
 		total = (total < 0) ? INT_MAX : total;
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
+
+		if (verbosity >= D_USER_INFO)
+		{
+			prt_error("Info: Total count with %zu null links: %lld\n",
+			        sent->null_count, total);
+		}
 
 		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
 		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
