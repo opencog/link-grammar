@@ -208,9 +208,12 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
 
-	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %d linkages had "
-	        "invalid morphology construction\n", N_invalid_morphism,
-	        itry + (itry != maxtries));
+	if (verbosity >= D_USER_INFO)
+	{
+		prt_error("Info: sane_morphism(): %zu of %d linkages had "
+		        "invalid morphology construction\n", N_invalid_morphism,
+		        itry + (itry != maxtries));
+	}
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
@@ -325,8 +328,11 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		lgdebug(D_PARSE, "Info: Total count with %zu null links:   %lld\n",
-		        sent->null_count, total);
+		if (verbosity >= D_USER_INFO)
+		{
+			prt_error("Info: Total count with %zu null links: %lld\n",
+			        sent->null_count, total);
+		}
 
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
 		total = (total > INT_MAX) ? INT_MAX : total;
