@@ -123,6 +123,8 @@ struct Sentence_s
 	Pool_desc * E_list_pool;
 	Pool_desc * Exp_pool;
 	Pool_desc * X_node_pool;
+	Pool_desc * Disjunct_pool;
+	Pool_desc * Connector_pool;
 
 	/* Trailing connector encoding stuff (suffix_id), used for speeding up
 	 * parsing (the classic one for now) of long sentences. */
