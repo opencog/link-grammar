@@ -451,21 +451,41 @@ void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s<%d>(%d,%d)",
-		       connector_string(e), e->suffix_id, e->nearest_word, e->length_limit);
+		printf("%s%s", e->multi ? "@" : "", connector_string(e));
+		if (e->suffix_id)
+			printf("<%d>", e->suffix_id);
+		if ((0 != e->nearest_word) || (0 != e->length_limit))
+			printf("(%d,%d)", e->nearest_word, e->length_limit);
+
 		if (e->next != NULL) printf(" ");
 	}
 }
+
 void print_disjunct_list(Disjunct * dj)
 {
-	for (;dj != NULL; dj=dj->next) {
-		printf("%10s: ", dj->word_string);
-		printf("(%f) ", dj->cost);
+	int i = 0;
+	char word[MAX_WORD + 32];
+
+	for (;dj != NULL; dj=dj->next)
+	{
+		lg_strlcpy(word, dj->word_string, sizeof(word));
+		patch_subscript_mark(word);
+		printf("%16s: ", word);
+		printf("[%d](%4.2f) ", i++, dj->cost);
 		print_connector_list(dj->left);
 		printf(" <--> ");
 		print_connector_list(dj->right);
 		printf("\n");
 	}
+}
+
+void print_all_disjuncts(Sentence sent)
+{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			printf("Word %zu:\n", w);
+			print_disjunct_list(sent->word[w].d);
+		}
 }
 
 typedef struct

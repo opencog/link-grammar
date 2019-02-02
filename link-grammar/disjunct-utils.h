@@ -56,4 +56,5 @@ void pack_sentence(Sentence, bool);
 
 void print_connector_list(Connector *);
 void print_disjunct_list(Disjunct *);
+void print_all_disjuncts(Sentence);
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */
