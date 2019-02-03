@@ -302,7 +302,7 @@ void dictionary_delete(Dictionary dict)
 {
 	if (!dict) return;
 
-	if (verbosity > 0) {
+	if (verbosity >= D_USER_INFO) {
 		prt_error("Info: Freeing dictionary %s\n", dict->name);
 	}
 

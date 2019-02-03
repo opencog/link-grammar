@@ -208,9 +208,12 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
 
-	lgdebug(D_PARSE, "Info: sane_morphism(): %zu of %d linkages had "
-	        "invalid morphology construction\n", N_invalid_morphism,
-	        itry + (itry != maxtries));
+	if (verbosity >= D_USER_INFO)
+	{
+		prt_error("Info: sane_morphism(): %zu of %d linkages had "
+		        "invalid morphology construction\n", N_invalid_morphism,
+		        itry + (itry != maxtries));
+	}
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
@@ -325,15 +328,18 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 		total = hist_total(&hist);
 
-		lgdebug(D_PARSE, "Info: Total count with %zu null links:   %lld\n",
-		        sent->null_count, total);
-
 		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
 		total = (total > INT_MAX) ? INT_MAX : total;
 		total = (total < 0) ? INT_MAX : total;
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
+
+		if (verbosity >= D_USER_INFO)
+		{
+			prt_error("Info: Total count with %zu null links: %lld\n",
+			        sent->null_count, total);
+		}
 
 		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
 		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
@@ -343,6 +349,14 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		post_process_lkgs(sent, opts);
 
 		if (sent->num_valid_linkages > 0) break;
+		if (verbosity >= D_USER_INFO)
+		{
+			if (sent->num_linkages_post_processed > 0)
+				prt_error("Info: All linkages had P.P. violations.\n"
+				        "Consider to increase the linkage limit.\n"
+				        "At the command line, use !limit\n");
+		}
+
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
 

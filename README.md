@@ -557,7 +557,7 @@ directory in that order, directly or under a directory names `data`:
 If link-parser cannot find the desired dictionary, use verbosity
 level 3 to debug the problem; for example:
 ```
-link-parser ru -verbosity=3
+link-parser ru -verbosity=4
 ```
 
 Other locations can be specified on the command line; for example:

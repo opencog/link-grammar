@@ -20,8 +20,8 @@
  * For now hard-coded numbers are still used instead of D_USER_BASIC/TIMES. */
 #define D_USER_BASIC 1   /* Basic verbosity level. */
 #define D_USER_TIMES 2   /* Display step times. */
-#define D_USER_FILES 3   /* Display data file search and locale setup. */
-// #define D_USER_X  4   /* Not in use yet. */
+#define D_USER_INFO  3   /* Display some Info messages. */
+#define D_USER_FILES 4   /* Display data file search and locale setup. */
 #define D_USER_MAX   4   /* Maximum user verbosity level. */
 #define D_DICT      10   /* Base of dictionary debug levels. */
 #define D_SPEC     100   /* Base of special stand-alone levels. */
