@@ -191,11 +191,13 @@ static void power_table_delete(power_table *pt)
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(C_list * m, unsigned int size, C_list ** t,
+static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
                                  Connector * c, bool shal)
 {
 	unsigned int h;
 	h = connector_uc_num(c) & (size-1);
+
+	C_list *m = pool_alloc(mp);
 	m->next = t[h];
 	t[h] = m;
 	m->c = c;
@@ -273,7 +275,7 @@ static power_table * power_table_new(Sentence sent)
 			{
 				for (c = c->next; c != NULL; c = c->next)
 				{
-					put_into_power_table(pool_alloc(mp), r_size, r_t, c, false);
+					put_into_power_table(mp, r_size, r_t, c, false);
 				}
 			}
 			c = d->left;
@@ -281,7 +283,7 @@ static power_table * power_table_new(Sentence sent)
 			{
 				for (c = c->next; c != NULL; c = c->next)
 				{
-					put_into_power_table(pool_alloc(mp), l_size, l_t, c, false);
+					put_into_power_table(mp, l_size, l_t, c, false);
 				}
 			}
 		}
@@ -294,12 +296,12 @@ static power_table * power_table_new(Sentence sent)
 			c = d->right;
 			if (c != NULL)
 			{
-				put_into_power_table(pool_alloc(mp), r_size, r_t, c, true);
+				put_into_power_table(mp, r_size, r_t, c, true);
 			}
 			c = d->left;
 			if (c != NULL)
 			{
-				put_into_power_table(pool_alloc(mp), l_size, l_t, c, true);
+				put_into_power_table(mp, l_size, l_t, c, true);
 			}
 		}
 	}
