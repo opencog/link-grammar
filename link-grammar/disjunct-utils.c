@@ -491,6 +491,7 @@ typedef struct
 	Connector *cblock_base;
 	Connector *cblock;
 	Disjunct *dblock;
+	String_id *csid;             /* Connector suffix encoding. */
 	/* Table of seen sequences. A 32bit index (instead of Connector *) is
 	 * used for better use of the CPU cache. */
 	uint32_t *suffix_id_table;
