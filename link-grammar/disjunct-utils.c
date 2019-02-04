@@ -503,7 +503,7 @@ typedef struct
  * with different directions are not shared, to enable latter modifications
  * in sequences of one direction without affecting the other direction.
  */
-static Connector *pack_connectors_dup(Connector *origc, pack_context *pc,
+static Connector *pack_connectors(Connector *origc, pack_context *pc,
                                       int dir)
 {
 	Connector head;
@@ -601,7 +601,7 @@ static Connector *pack_connectors_dup(Connector *origc, pack_context *pc,
  * Duplicate the given disjunct chain.
  * If the disjunct is NULL, return NULL.
  */
-static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
+static Disjunct *pack_disjuncts(Disjunct *origd, pack_context *pc)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
@@ -615,8 +615,8 @@ static Disjunct *pack_disjuncts_dup(Disjunct *origd, pack_context *pc)
 		newd->cost = t->cost;
 		newd->originating_gword = t->originating_gword;
 
-		newd->left = pack_connectors_dup(t->left, pc, 0);
-		newd->right = pack_connectors_dup(t->right, pc, 1);
+		newd->left = pack_connectors(t->left, pc, 0);
+		newd->right = pack_connectors(t->right, pc, 1);
 
 		prevd->next = newd;
 		prevd = newd;
@@ -691,7 +691,7 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 	}
 
 	for (WordIdx i = 0; i < sent->length; i++)
-		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &pc);
+		sent->word[i].d = pack_disjuncts(sent->word[i].d, &pc);
 
 	pool_delete(sent->Disjunct_pool);
 	pool_delete(sent->Connector_pool);
