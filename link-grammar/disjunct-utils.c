@@ -16,6 +16,7 @@
 #include "connectors.h"
 #include "disjunct-utils.h"
 #include "print/print-util.h"
+#include "memory-pool.h"
 #include "utilities.h"
 #include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
@@ -81,6 +82,24 @@ unsigned int count_disjuncts(Disjunct * d)
 	return count;
 }
 
+/** Returns the number of disjuncts and connectors in the sentence. */
+static void count_disjuncts_and_connectors(Sentence sent, int *dca, int *cca)
+{
+	int ccnt = 0, dcnt = 0;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			dcnt++;
+			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
+			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
+		}
+	}
+
+	*cca = ccnt;
+	*dca = dcnt;
+}
 /* ============================================================= */
 
 typedef struct disjunct_dup_table_s disjunct_dup_table;
@@ -496,15 +515,34 @@ typedef struct
 	String_id *csid;             /* Connector suffix encoding. */
 	/* Table of seen sequences. A 32bit index (instead of Connector *) is
 	 * used for better use of the CPU cache. */
-	uint32_t *suffix_id_table;
+	uint32_t *id_table;
+	size_t id_table_size;
+	size_t num_id;
 } pack_context;
+
+static void id_table_check(pack_context *pc, unsigned int id_index)
+{
+
+	if (id_index >= pc->id_table_size)
+	{
+		size_t new_id_table_size = (0 == pc->id_table_size) ?
+			id_index : pc->id_table_size * 2;
+		size_t old_bytes = pc->id_table_size * sizeof(uint32_t *);
+		size_t new_bytes = new_id_table_size * sizeof(uint32_t *);
+
+		pc->id_table = realloc(pc->id_table, new_bytes);
+		memset((char *)pc->id_table + old_bytes, 0, new_bytes - old_bytes);
+		pc->id_table_size = new_id_table_size;
+	}
+}
 
 /**
  * Pack the connectors in consecutive memory locations.
  * Use trailing sequence sharing if trailing connector encoding is used
- * (indicated by the existence of suffix_id_table). Same sequences
+ * (indicated by the existence of its String_id). Same sequences
  * with different directions are not shared, to enable latter modifications
- * in sequences of one direction without affecting the other direction.
+ * in sequences of one direction without affecting the other direction
+ * (not implemented yet in published stuff).
  */
 static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 {
@@ -513,19 +551,23 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 	Connector *newc = &head;
 	Connector *lcblock = pc->cblock; /* For convenience. */
 
-	for (Connector *t = origc; t != NULL;  t = t->next)
+	for (Connector *t = origc; NULL != t;  t = t->next)
 	{
 		newc = NULL;
 
-		if (pc->suffix_id_table != NULL)
+		if (NULL != pc->csid)
 		{
-			uint32_t cblock_index = pc->suffix_id_table[(2 * t->suffix_id) + dir];
-			if (cblock_index == 0)
+			/* Encoding is used - share trailing connector sequences. */
+			unsigned int id_index = (2 * t->suffix_id) + dir;
+			id_table_check(pc, id_index);
+			uint32_t cblock_index = pc->id_table[id_index];
+
+			if (0 == cblock_index)
 			{
 				/* The first time we encounter this connector sequence.
 				 * It will be copied to this cached location (below). */
 				cblock_index = lcblock - pc->cblock_base;
-				pc->suffix_id_table[(2 * t->suffix_id) + dir] = cblock_index;
+				pc->id_table[id_index] = cblock_index;
 			}
 			else
 			{
@@ -544,7 +586,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 
 					/* Slightly increase cache hit (MRU). */
 					cblock_index = lcblock - pc->cblock_base;
-					pc->suffix_id_table[(2 * t->suffix_id) + dir] = cblock_index;
+					pc->id_table[id_index] = cblock_index;
 				}
 #if 1 /* Extra validation - validate the next connectors in the sequence. */
 				else
@@ -556,7 +598,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 					 * However, if they don't, then don't share this sequence.
 					 * Else the linkages will not be the same. */
 					Connector *n = newc;
-					for (Connector *c = t->next; c != NULL; c = c->next)
+					for (Connector *c = t->next; NULL != c; c = c->next)
 					{
 						n = n->next;
 						if (t->nearest_word != newc->nearest_word)
@@ -599,8 +641,154 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 	pc->cblock = lcblock;
 	return head.next;
 }
+
 /**
- * Duplicate the given disjunct chain.
+ * Convert integer to ASCII into the given buffer.
+ * Use base 64 for compactness.
+ * The following characters shouldn't appear in the result:
+ * CONSEP, ",", and ".", because they are reserved for separators.
+ * Return the number of characters in the buffer (not including the '\0').
+ */
+#define PTOA_BASE 64
+static unsigned int ptoa_compact(char* buffer, uintptr_t ptr)
+{
+	char *p = buffer;
+	do
+	{
+	  *p++ = '0' + (ptr % PTOA_BASE);
+	  ptr /= PTOA_BASE;
+	}
+	 while (ptr > 0);
+
+	*p = '\0';
+
+	return (unsigned int)(p - buffer);
+}
+
+#define WORD_OFFSET 256 /* Reserved for null connectors. */
+
+/**
+ *  Set dummy suffix_id's.
+ *  To be used for short sentences.
+ */
+static int enumerate_connectors_sequentially(Sentence sent)
+{
+	int id = WORD_OFFSET;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			for (Connector *c = d->left; NULL != c; c = c->next)
+			{
+				c->suffix_id = id++;
+			}
+			for (Connector *c = d->right; NULL != c; c = c->next)
+			{
+				c->suffix_id = id++;
+			}
+		}
+	}
+
+	return id + 1;
+}
+
+#define ID_TABLE_SZ 8192 /* Initial size of the suffix_id table */
+/**
+ * Set a hash identifier per connector according to the trailing sequence
+ * it starts. Ensure it is unique per word and alternative.
+ *
+ * Originally, the classic parser memoized the number of possible linkages
+ * per a given connector-pair using connector addresses. Since an
+ * exhaustive search is done, such an approach has two main problems for
+ * long sentences:
+ * 1. A very big hash table (Table_connector in count.c) is used due to
+ * the huge number of connectors (100Ks) in long sentences, a thing that
+ * causes a severe memory cache trash (to the degree that absolutely most
+ * of the memory accesses are L3 misses).
+ * 2. Repeated linkage detailed calculation for what seemed identical
+ * connectors. A hint for this solution was the use of 0 hash values for
+ * NULL connectors.
+ *
+ * The idea that is implemented here is based on the fact that the number
+ * of linkages between the same words using any of their connector-pair
+ * endpoints is governed only by these connectors and the connectors after
+ * them (since cross links are not permitted). This allows us to share
+ * the memoizing table hash value between connectors that have the same
+ * "connector sequence suffix" (trailing connectors) on their disjuncts.
+ * As a result, long sentences have significantly less different connector
+ * hash values than their total number of connectors.
+ *
+ * Algorithm:
+ * The string-set code has been adapted (see string-id.c) to generate
+ * a unique identifier per string.
+ * All the connector sequence suffixes of each disjunct are generated here
+ * as strings, which are used for getting a unique identifier for the
+ * starting connector of each such sequence.
+ * In order to save the need to cache and check the endpoint word numbers
+ * the connector identifiers should not be shared between words. We also
+ * should consider the case of alternatives - trailing connector sequences
+ * that belong to disjuncts of different alternatives may have different
+ * linkage counts because some alternatives-connectivity checks (to the
+ * middle disjunct) are done in the fast-matcher.
+ * Prepending the gword_set encoding solves both of these requirements.
+ */
+static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
+{
+	if (pc->csid == NULL) return;
+
+#define CONSEP "&"      /* Connector string separator in the suffix sequence. */
+#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
+#define MAX_LINKS 20            // XXX Use a global definition
+#define MAX_GWORD_ENCODING 32   /* Actually up to 12 characters. */
+	char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS) + MAX_GWORD_ENCODING];
+
+	/* Generate a string with a disjunct Gword encoding. It makes
+	 * unique trailing connector sequences of different words and
+	 * alternatives of a word, so they will get their own suffix_id.
+	 */
+	size_t lg = ptoa_compact(cstr, (uintptr_t)d->originating_gword);
+	cstr[lg++] = ',';
+
+	for (int dir = 0; dir < 2; dir ++)
+	{
+		//printf("Word %zu d=%p dir %s\n", w, d, dir?"RIGHT":"LEFT");
+
+		Connector *first_c = (0 == dir) ? d->left : d->right;
+		if (first_c == NULL) continue;
+
+		Connector *cstack[MAX_LINKS];
+		size_t ci = 0;
+		size_t l = lg;
+
+		//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
+		for (Connector *c = first_c; NULL != c; c = c->next)
+			cstack[ci++] = c;
+
+		for (Connector **cp = &cstack[--ci]; cp >= &cstack[0]; cp--)
+		{
+			if ((*cp)->multi)
+				cstr[l++] = '@'; /* May have different linkages. */
+			l += lg_strlcpy(cstr+l, connector_string((*cp)), sizeof(cstr)-l);
+
+			if (l > sizeof(cstr)-2)
+			{
+				/* This is improbable, given the big cstr buffer. */
+				prt_error("Warning: set_connector_hash(): Buffer overflow.\n"
+							 "Parsing may be wrong.\n");
+			}
+
+			int id = string_id_add(cstr, pc->csid) + WORD_OFFSET;
+			(*cp)->suffix_id = id;
+			//printf("ID %d trail=%s\n", id, cstr);
+
+			l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+		}
+	}
+}
+
+/**
+ * Pack the given disjunct chain in a continuous memory block.
  * If the disjunct is NULL, return NULL.
  */
 static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
@@ -610,13 +798,14 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
 	Disjunct *newd = &head;
 	Disjunct *ldblock = pc->dblock; /* For convenience. */
 
-	for (Disjunct *t = origd; t != NULL; t = t->next)
+	for (Disjunct *t = origd; NULL != t; t = t->next)
 	{
 		newd = ldblock++;
 		newd->word_string = t->word_string;
 		newd->cost = t->cost;
 		newd->originating_gword = t->originating_gword;
 
+		enumerate_connector_suffixes(pc, t);
 		newd->left = pack_connectors(pc, t->left, 0);
 		newd->right = pack_connectors(pc, t->right, 1);
 
@@ -629,11 +818,8 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
 	return head.next;
 }
 
-#define SHORTEST_SENTENCE_TO_PACK 9
-#define SHORTEST_SENTENCE_TO_SHARE 25
-
 /**
- * Pack all disjunct and connectors into one big memory block.
+ * Pack all disjunct and connectors into a one big memory block.
  * This facilitate a better memory caching for long sentences
  * (a performance gain of a few percents).
  *
@@ -649,28 +835,23 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
  * 2. A small alignment gap, that ends in a 64-byte boundary.
  * 3. A block of connectors, which is so aligned to 64-byte boundary.
  *
- * FIXME: 1. Find the "best" value for SHORTEST_SENTENCE_TO_PACK.
- * 2. Maybe this check should be done in too stages, the second one
- * will use number of disjunct and connector thresholds.
+ * Optionally, a trailing sequence encoding and sharing is done too.
  */
-void pack_sentence(Sentence sent, bool real_suffix_ids)
+/* Note: Connector sharing and trailing hash always go together. */
+bool pack_sentence(Sentence sent)
 {
 	int dcnt = 0;
 	int ccnt = 0;
-	bool do_share;
+	bool do_share = sent->length >= sent->min_len_sharing;
 
-	if (!real_suffix_ids && (sent->length < SHORTEST_SENTENCE_TO_PACK)) return;
-	do_share = (real_suffix_ids && (sent->length >= SHORTEST_SENTENCE_TO_SHARE));
-
-	for (WordIdx w = 0; w < sent->length; w++)
+	if (!do_share)
 	{
-		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
-		{
-			dcnt++;
-			for (Connector *c = d->right; c!=NULL; c = c->next) ccnt++;
-			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
-		}
+		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
+		enumerate_connectors_sequentially(sent);
+		return false;
 	}
+
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
 
 #define CONN_ALIGNMENT sizeof(Connector)
 	size_t dsize = dcnt * sizeof(Disjunct);
@@ -680,16 +861,21 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 	Disjunct *dblock = memblock;
 	Connector *cblock = (Connector *)((char *)memblock + dsize);
 	sent->disjuncts_connectors_memblock = memblock;
-	pack_context pc = {
+	pack_context pc =
+	{
 		.cblock_base = cblock,
 		.cblock = cblock,
-		.dblock = dblock
+		.dblock = dblock,
+		.csid = NULL,
 	};
 
 	if (do_share)
 	{
-		pc.suffix_id_table = malloc(2 * sent->num_suffix_id * sizeof(uint32_t *));
-		memset(pc.suffix_id_table,0, 2 * sent->num_suffix_id * sizeof(uint32_t *));
+		if (sent->connector_suffix_id == NULL)
+			sent->connector_suffix_id = string_id_create();
+		pc.csid = sent->connector_suffix_id;
+		id_table_check(&pc, ID_TABLE_SZ); /* Allocate initial table. */
+		pc.num_id = 0;
 	}
 
 	for (WordIdx i = 0; i < sent->length; i++)
@@ -701,14 +887,23 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 
 	if (do_share)
 	{
-		free(pc.suffix_id_table);
+		free(pc.id_table);
 		lgdebug(+D_DISJ, "Info: %zu connectors shared\n", &cblock[ccnt] - pc.cblock);
 		/* On long sentences, many MB of connector-space are saved, but we
 		 * cannot use a realloc() here without the overhead of relocating
 		 * the pointers in the used part of memblock (if realloc() returns a
 		 * different address). */
+
+		/* Support incremental suffix_id generation (only one time is needed). */
+		const char *snumid[] = { "NUMID", "NUMID1" };
+
+		int t = string_id_lookup(snumid[0], pc.csid);
+		int numid = string_id_add(snumid[(int)(t > 0)], pc.csid) + WORD_OFFSET;
+		lgdebug(D_DISJ, "Debug: Using trailing hash (length %zu): suffix_id %d\n",
+				  sent->length, numid);
 	}
 
+	return do_share;
 }
 
 /* ============ Save and restore sentence disjuncts ============ */
