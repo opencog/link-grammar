@@ -22,6 +22,8 @@
 
 /* Disjunct utilities ... */
 
+#define D_DISJ 5                        /* Verbosity level for this file. */
+
 /**
  * free_disjuncts() -- free the list of disjuncts pointed to by c
  * (does not free any strings)
@@ -370,7 +372,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		}
 	}
 
-	lgdebug(+5+(0==count)*1000, "Killed %u duplicates\n", count);
+	lgdebug(+D_DISJ+(0==count)*1000, "Killed %u duplicates\n", count);
 
 	disjunct_dup_table_delete(dt);
 	return d;
@@ -700,7 +702,7 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 	if (do_share)
 	{
 		free(pc.suffix_id_table);
-		lgdebug(+5, "Info: %zu connectors shared\n", &cblock[ccnt] - pc.cblock);
+		lgdebug(+D_DISJ, "Info: %zu connectors shared\n", &cblock[ccnt] - pc.cblock);
 		/* On long sentences, many MB of connector-space are saved, but we
 		 * cannot use a realloc() here without the overhead of relocating
 		 * the pointers in the used part of memblock (if realloc() returns a
