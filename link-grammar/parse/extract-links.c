@@ -418,7 +418,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 		Parse_set* dummy;
 		Disjunct* dis;
 
-		if (!pex->islands_ok && (lw != -1)) return &xt->set;
+		if (!pex->islands_ok && (lw != -1) && (pex->words[lw].d != NULL))
+			return &xt->set;
 		if (null_count == 0) return &xt->set;
 
 		RECOUNT({xt->set.recount = 0;})
