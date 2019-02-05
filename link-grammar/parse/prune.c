@@ -26,16 +26,6 @@
 #include "tokenize/wordgraph.h"
 #include "utilities.h"                // strdupa()
 
-/* This code is not too effective and is costly for the current corpus
- * batches and also for ady/amy. So maybe it should be discarded. */
-//#define ALT_MUTUAL_CONSISTENCY
-//#define ALT_DISJUNCT_CONSISTENCY
-
-#if defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)
-#include <tokenize/tok-structures.h>
-#define OPTIMIZE_EN
-#endif /* ALT_MUTUAL_CONSISTENCY || ALT_DISJUNCT_CONSISTENCY */
-
 #define D_PRUNE 5
 
 typedef Connector * connector_table;
@@ -85,9 +75,6 @@ struct prune_context_s
 	int N_changed;   /* counts the number of changes
 						   of c->nearest_word fields in a pass */
 	power_table *pt;
-#ifdef ALT_DISJUNCT_CONSISTENCY
-	const Connector *first_connector; /* for alt disjunct consistency */
-#endif
 	Sentence sent;
 };
 
@@ -204,11 +191,13 @@ static void power_table_delete(power_table *pt)
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(C_list * m, unsigned int size, C_list ** t,
+static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
                                  Connector * c, bool shal)
 {
 	unsigned int h;
 	h = connector_uc_num(c) & (size-1);
+
+	C_list *m = pool_alloc(mp);
 	m->next = t[h];
 	t[h] = m;
 	m->c = c;
@@ -286,7 +275,7 @@ static power_table * power_table_new(Sentence sent)
 			{
 				for (c = c->next; c != NULL; c = c->next)
 				{
-					put_into_power_table(pool_alloc(mp), r_size, r_t, c, false);
+					put_into_power_table(mp, r_size, r_t, c, false);
 				}
 			}
 			c = d->left;
@@ -294,7 +283,7 @@ static power_table * power_table_new(Sentence sent)
 			{
 				for (c = c->next; c != NULL; c = c->next)
 				{
-					put_into_power_table(pool_alloc(mp), l_size, l_t, c, false);
+					put_into_power_table(mp, l_size, l_t, c, false);
 				}
 			}
 		}
@@ -307,12 +296,12 @@ static power_table * power_table_new(Sentence sent)
 			c = d->right;
 			if (c != NULL)
 			{
-				put_into_power_table(pool_alloc(mp), r_size, r_t, c, true);
+				put_into_power_table(mp, r_size, r_t, c, true);
 			}
 			c = d->left;
 			if (c != NULL)
 			{
-				put_into_power_table(pool_alloc(mp), l_size, l_t, c, true);
+				put_into_power_table(mp, l_size, l_t, c, true);
 			}
 		}
 	}
@@ -355,98 +344,6 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 
 	return true;
 }
-
-#if defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)
-static bool alt_consistency(prune_context *pc,
-                                Connector *lc, Connector *rc,
-                                int lword, int rword, bool lr)
-{
-	bool same_alternative = false;
-
-#ifdef ALT_MUTUAL_CONSISTENCY
-	/* Validate that rc and lc are from the same alternative.
-	 * Each of the loops is of one iteration most of the times. */
-
-#ifdef OPTIMIZE_EN
-	/* Try a shortcut first. */
-	if ((lc->originating_gword->o_gword->hier_depth == 0) ||
-	    (rc->originating_gword->o_gword->hier_depth == 0))
-	{
-			return true;
-	}
-#endif /* OPTIMIZE_EN */
-
-	for (const gword_set *ga = lc->originating_gword; NULL != ga; ga = ga->next) {
-		for (const gword_set *gb = rc->originating_gword; NULL != gb; gb = gb->next) {
-			if (in_same_alternative(ga->o_gword, gb->o_gword)) {
-				same_alternative = true;
-				break;
-			}
-		}
-		if (same_alternative) break;
-	}
-#endif /* ALT_MUTUAL_CONSISTENCY */
-
-#ifdef ALT_DISJUNCT_CONSISTENCY
-	/* Validate that the candidate connector is not from a different
-	 * alternative than any of the already existing connectors of the
-	 * checked disjunct (XXX at the same side).
-	 */
-
-	if (same_alternative)
-	{
-		const Connector *remote_connector = lr ? lc : rc;
-		const gword_set* gword_set_c = remote_connector->originating_gword;
-		const Connector *curr_connector = lr ? rc : lc;
-
-#if 0
-		printf("CHECK %s F%p=%s R%p=%s:", lr ? "rc" : "lc",
-		       pc->first_connector, pc->first_connector->string,
-		       remote_connector, remote_connector->string);
-#endif
-		for (const Connector *i = pc->first_connector; curr_connector != i; i = i->next)
-		{
-			//printf(" I%p=%s", i, i->string);
-			bool alt_compatible = false;
-			for (const gword_set *gi = i->originating_gword; NULL != gi; gi = gi->next)
-			{
-				for (const gword_set *gs = gword_set_c; NULL != gs; gs = gs->next)
-				{
-					if (in_same_alternative(gi->o_gword, gs->o_gword))
-					{
-						alt_compatible = true;
-						break;
-					}
-				}
-				if (alt_compatible) break;
-			}
-			if (!alt_compatible)
-			{
-				same_alternative = false;
-#if 0
-				printf(" FALSE\n");
-#endif
-				break;
-			}
-		}
-#if 0
-		printf("\n");
-#endif
-	}
-#endif /* ALT_DISJUNCT_CONSISTENCY */
-
-	if (!same_alternative)
-	{
-		lgdebug(8, "w%d=%s and w%d=%s NSA\n",
-		        lword, lc->originating_gword->o_gword->subword,
-		        rword, rc->originating_gword->o_gword->subword);
-
-		return false;
-	}
-
-	return same_alternative;
-}
-#endif /* ALT_MUTUAL_CONSISTENCY || ALT_DISJUNCT_CONSISTENCY */
 
 /**
  * This takes two connectors (and whether these are shallow or not)
@@ -493,10 +390,6 @@ static bool possible_connection(prune_context *pc,
 	{
 		return false;
 	}
-
-#if defined(ALT_MUTUAL_CONSISTENCY) || defined(ALT_DISJUNCT_CONSISTENCY)
-	if (!alt_consistency(pc, lc, rc, lword, rword, lr)) return false;
-#endif
 
 	return true;
 }
@@ -569,6 +462,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
+	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
 	/* lb is now the leftmost word we need to check */
@@ -612,6 +506,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
+	if (sent_length <= n) return sent_length;
 	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
@@ -643,8 +538,8 @@ static int power_prune(Sentence sent, Parse_Options opts)
 	prune_context pc;
 	Disjunct *free_later = NULL;
 	Connector *c;
-	size_t N_deleted = 0;
-	size_t total_deleted = 0;
+	int N_deleted = 0;
+	int total_deleted = 0;
 
 	pt = power_table_new(sent);
 
@@ -667,9 +562,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 					dd = &d->next;  /* NEXT */
 					continue;
 				}
-#ifdef ALT_DISJUNCT_CONSISTENCY
-				pc.first_connector = d->left;
-#endif
 				if (left_connector_list_update(&pc, d->left, w, true) < 0)
 				{
 					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
@@ -691,14 +583,14 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		}
 
 		total_deleted += N_deleted;
-		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %zu\n",
+		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d\n",
 		        pc.N_changed, N_deleted);
 
 		if (pc.N_changed == 0) break;
 
 		pc.N_changed = N_deleted = 0;
 		/* right-to-left pass */
-		for (WordIdx w = sent->length-1; w != (size_t) -1; w--)
+		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
@@ -708,9 +600,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 					dd = &d->next;  /* NEXT */
 					continue;
 				}
-#ifdef ALT_DISJUNCT_CONSISTENCY
-				pc.first_connector = d->right;
-#endif
 				if (right_connector_list_update(&pc, d->right, w, true) >= sent->length)
 				{
 					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
@@ -732,7 +621,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		}
 
 		total_deleted += N_deleted;
-		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %zu\n",
+		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d\n",
 		        pc.N_changed, N_deleted);
 
 		if (pc.N_changed == 0) break;
