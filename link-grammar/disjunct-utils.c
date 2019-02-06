@@ -783,7 +783,8 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 			(*cp)->suffix_id = id;
 			//printf("ID %d trail=%s\n", id, cstr);
 
-			l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+			if (cp != &cstack[0])
+				l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
 		}
 	}
 }
