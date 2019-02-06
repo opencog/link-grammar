@@ -47,6 +47,12 @@
 #include "string-set.h"
 #include "string-id.h"
 
+/* Performance tuning.
+ * For short sentences, setting suffix IDs and packing takes more
+ * resources than it saves. If this overhead is improved, these
+ * limit can be set lower. */
+#define SENTENCE_MIN_LENGTH_TRAILING_HASH 10
+
 typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
 {
@@ -111,6 +117,13 @@ struct word_queue_s
 	word_queue_t *next;
 };
 
+typedef struct
+{
+	Connector **table[2];
+	unsigned int entries[2];
+	unsigned int *num_connectors[2];
+} jet_sharing_t;
+
 struct Sentence_s
 {
 	Dictionary  dict;           /* Words are defined from this dictionary */
@@ -130,6 +143,11 @@ struct Sentence_s
 	 * parsing (the classic one for now) of long sentences. */
 	String_id *connector_suffix_id; /* For connector trailing sequence IDs */
 	unsigned int num_suffix_id;
+
+	jet_sharing_t jet_sharing; /* Disjunct l/r duplication sharing */
+	size_t min_len_sharing;      /* Do trailing encoding + jet-sharing.
+	                                Disjunct/connector packing is also done
+	                                in that case (only). */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
