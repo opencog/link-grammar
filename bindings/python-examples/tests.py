@@ -45,6 +45,8 @@ sys.stdout.flush()
 #===
 
 def setUpModule():
+    unittest.TestCase.maxDiff = None
+
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
         clg.dictionary_set_data_dir(datadir)
@@ -1072,7 +1074,6 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     linkage diagrams / constituent printings.
     """
     self.__class__.longMessage = True
-    self.maxDiff = None
     if desc != '':
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
