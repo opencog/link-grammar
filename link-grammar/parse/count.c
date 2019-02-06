@@ -375,7 +375,8 @@ static Count_bin do_count(
 	{
 		int nopt_words = num_optional_words(ctxt, lw, rw);
 
-		if ((null_count == 0) || (!ctxt->islands_ok && (lw != -1)) )
+		if ((null_count == 0) ||
+		    (!ctxt->islands_ok && (lw != -1) && (ctxt->sent->word[lw].d != NULL)))
 		{
 			/* The null_count of skipping n words is just n.
 			 * In case the unparsable range contains optional words, we
@@ -409,6 +410,7 @@ static Count_bin do_count(
 		for (int opt = 0; opt <= !!ctxt->sent->word[w].optional; opt++)
 		{
 			null_count += opt;
+
 			for (Disjunct *d = ctxt->sent->word[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)
@@ -417,6 +419,7 @@ static Count_bin do_count(
 						do_count(ctxt, w, rw, d->right, NULL, null_count-1));
 				}
 			}
+
 			hist_accumv(&t->count, 0.0,
 				do_count(ctxt, w, rw, NULL, NULL, null_count-1));
 		}
