@@ -76,3 +76,15 @@ def add_eqcost_linkage_order(original_class):
         return eqcost_sorted_parse(linkages)
 
     original_class.parse = parse
+
+def add_test_option(original_class, test='', debug='', verbosity=0):
+    class ParseOptions_testing(original_class):
+        def __init__(self, *args, **kwargs):
+            super(ParseOptions_testing, self).__init__(*args, **kwargs)
+            if test:
+                self.test=test
+            if debug:
+                self.debug=debug
+            if verbosity:
+                self.verbosity=verbosity
+    return ParseOptions_testing
