@@ -41,7 +41,10 @@ class ParseOptions(object):
                  use_sat=False,
                  max_parse_time=-1,
                  disjunct_cost=2.7,
-                 repeatable_rand=True,):
+                 repeatable_rand=True,
+                 test='',
+                 debug='',
+                 ):
 
         self._obj = clg.parse_options_create()
         self.verbosity = verbosity
@@ -57,6 +60,8 @@ class ParseOptions(object):
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
         self.repeatable_rand = repeatable_rand
+        self.test = test
+        self.debug = debug
 
     # Allow only the attribute names listed below.
     def __setattr__(self, name, value):
@@ -69,6 +74,26 @@ class ParseOptions(object):
         if hasattr(self, '_obj'):
             clg.parse_options_delete(self._obj)
             del self._obj
+
+    @property
+    def test(self):
+        return clg.parse_options_get_test(self._obj)
+
+    @test.setter
+    def test(self, value):
+        if not isinstance(value, str):
+            raise TypeError("islands_ok must be set to a string")
+        return clg.parse_options_set_test(self._obj, value)
+
+    @property
+    def debug(self):
+        return clg.parse_options_get_debug(self._obj)
+
+    @debug.setter
+    def debug(self, value):
+        if not isinstance(value, str):
+            raise TypeError("islands_ok must be set to a string")
+        return clg.parse_options_set_debug(self._obj, value)
 
     @property
     def verbosity(self):
