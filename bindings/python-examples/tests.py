@@ -45,6 +45,8 @@ sys.stdout.flush()
 #===
 
 def setUpModule():
+    unittest.TestCase.maxDiff = None
+
     datadir = os.getenv("LINK_GRAMMAR_DATA", "")
     if datadir:
         clg.dictionary_set_data_dir(datadir)
@@ -1072,7 +1074,6 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     linkage diagrams / constituent printings.
     """
     self.__class__.longMessage = True
-    self.maxDiff = None
     if desc != '':
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
@@ -1206,7 +1207,22 @@ class divert_start(object):
 
     __del__ = divert_end
 
+
 # Decorate Sentence.parse with eqcost_sorted_parse.
 lg_testutils.add_eqcost_linkage_order(Sentence)
+
+# For testing development branches, it may be sometimes useful to use the
+# "test", "debug" and "verbosity" options. The following allows specify them
+# as "tests.py" arguments, interleaved with standard "unittest" arguments.
+
+for i,arg in enumerate(sys.argv):
+    # "-something=" confuses vim's syntax highlight, so add the '=' separately
+    debug = sys.argv.pop(i)[7:] if arg.startswith('-debug' + '=') else ''
+for i,arg in enumerate(sys.argv):
+    test = sys.argv.pop(i)[6:] if arg.startswith('-test' + '=')  else ''
+for i,arg in enumerate(sys.argv):
+    verbosity = int(sys.argv.pop(i)[11:]) if arg.startswith('-verbosity' + '=')  else ''
+if (test or debug or verbosity):
+    ParseOptions = lg_testutils.add_test_option(ParseOptions, test, debug, verbosity)
 
 unittest.main()
