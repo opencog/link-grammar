@@ -77,7 +77,7 @@ static void setup_connectors(Sentence sent)
  * Record the wordgraph word in each of its connectors.
  * It is used for checking alternatives consistency.
  */
-static void gword_record_in_connector(Sentence sent)
+void gword_record_in_connector(Sentence sent)
 {
 	for (size_t w = 0; w < sent->length; w++)
 	{
@@ -166,6 +166,5 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
-	gword_record_in_connector(sent);
 	setup_connectors(sent);
 }

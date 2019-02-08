@@ -17,4 +17,5 @@
 
 void prepare_to_parse(Sentence, Parse_Options);
 bool set_connector_hash(Sentence);
+void gword_record_in_connector(Sentence);
 #endif /* _PREPARATION_H */
