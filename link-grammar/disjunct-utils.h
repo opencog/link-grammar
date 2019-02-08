@@ -48,7 +48,6 @@ Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
 char * print_one_disjunct(Disjunct *);
 void word_record_in_disjunct(const Gword *, Disjunct *);
-Disjunct * disjuncts_dup(Disjunct *origd);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
@@ -57,4 +56,16 @@ void pack_sentence(Sentence, bool);
 void print_connector_list(Connector *);
 void print_disjunct_list(Disjunct *);
 void print_all_disjuncts(Sentence);
+
+/* Save and restore sentence disjuncts */
+typedef struct
+{
+	Pool_desc *Disjunct_pool;
+	Pool_desc *Connector_pool;
+	Disjunct **disjuncts;
+} Disjuncts_desc_t;
+
+void save_disjuncts(Sentence, Disjuncts_desc_t *);
+void restore_disjuncts(Sentence, Disjuncts_desc_t *);
+void free_saved_disjuncts(Disjuncts_desc_t *ddesc);
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

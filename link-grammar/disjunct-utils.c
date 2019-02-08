@@ -44,12 +44,11 @@ void free_sentence_disjuncts(Sentence sent)
 		free(sent->disjuncts_connectors_memblock);
 		sent->disjuncts_connectors_memblock = NULL;
 	}
-	else
+	else if (NULL != sent->Disjunct_pool)
 	{
-		for (WordIdx i = 0; i < sent->length; i++)
-		{
-			free_disjuncts(sent->word[i].d);
-		}
+		pool_delete(sent->Disjunct_pool);
+		pool_delete(sent->Connector_pool);
+		sent->Disjunct_pool = NULL;
 	}
 }
 
@@ -176,7 +175,7 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
  * Duplicate the given connector chain.
  * If the argument is NULL, return NULL.
  */
-static Connector *connectors_dup(Connector *origc)
+static Connector *connectors_dup(Pool_desc *connector_pool, Connector *origc)
 {
 	Connector head;
 	Connector *prevc = &head;
@@ -184,7 +183,7 @@ static Connector *connectors_dup(Connector *origc)
 
 	for (Connector *t = origc; t != NULL;  t = t->next)
 	{
-		newc = connector_new(NULL, NULL);
+		newc = connector_new(connector_pool, NULL, NULL);
 		*newc = *t;
 
 		prevc->next = newc;
@@ -199,7 +198,8 @@ static Connector *connectors_dup(Connector *origc)
  * Duplicate the given disjunct chain.
  * If the argument is NULL, return NULL.
  */
-Disjunct *disjuncts_dup(Disjunct *origd)
+static Disjunct *disjuncts_dup(Pool_desc *Disjunct_pool, Pool_desc *Connector_pool,
+                        Disjunct *origd)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
@@ -207,11 +207,11 @@ Disjunct *disjuncts_dup(Disjunct *origd)
 
 	for (Disjunct *t = origd; t != NULL; t = t->next)
 	{
-		newd = (Disjunct *)xalloc(sizeof(Disjunct));
+		newd = pool_alloc(Disjunct_pool);
 		newd->word_string = t->word_string;
 		newd->cost = t->cost;
-		newd->left = connectors_dup(t->left);
-		newd->right = connectors_dup(t->right);
+		newd->left = connectors_dup(Connector_pool, t->left);
+		newd->right = connectors_dup(Connector_pool, t->right);
 		newd->originating_gword = t->originating_gword;
 		prevd->next = newd;
 		prevd = newd;
@@ -350,13 +350,11 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		}
 		else
 		{
-			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
 
 			dx->originating_gword =
 				gword_set_union(dx->originating_gword, d->originating_gword);
 
-			free_disjuncts(d);
 			count++;
 		}
 		d = dn;
@@ -693,12 +691,10 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 	}
 
 	for (WordIdx i = 0; i < sent->length; i++)
-	{
-		Disjunct *word_disjuncts = sent->word[i].d;
-
 		sent->word[i].d = pack_disjuncts_dup(sent->word[i].d, &pc);
-		free_disjuncts(word_disjuncts);
-	}
+
+	pool_delete(sent->Disjunct_pool);
+	pool_delete(sent->Connector_pool);
 
 	if (do_share)
 	{
@@ -710,5 +706,48 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 		 * different address). */
 	}
 
+}
+
+/* ============ Save and restore sentence disjuncts ============ */
+void save_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
+{
+	ddesc->disjuncts = malloc(sent->length * sizeof(Disjunct *));
+
+	ddesc->Disjunct_pool = pool_new(__func__, "Disjunct",
+	                   /*num_elements*/2048, sizeof(Disjunct),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	ddesc->Connector_pool = pool_new(__func__, "Connector",
+	                   /*num_elements*/8192, sizeof(Connector),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+
+	for (size_t i = 0; i < sent->length; i++)
+	{
+		ddesc->disjuncts[i] =
+			disjuncts_dup(ddesc->Disjunct_pool, ddesc->Connector_pool,
+			              sent->word[i].d);
+	}
+}
+
+void restore_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
+{
+	pool_delete(sent->Disjunct_pool);
+	sent->Disjunct_pool = ddesc->Disjunct_pool;
+	ddesc->Disjunct_pool = NULL;
+
+	pool_delete(sent->Connector_pool);
+	sent->Connector_pool = ddesc->Connector_pool;
+	ddesc->Connector_pool = NULL;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+		sent->word[w].d = ddesc->disjuncts[w];
+}
+
+void free_saved_disjuncts(Disjuncts_desc_t *ddesc)
+{
+	if (NULL != ddesc->Disjunct_pool)
+		pool_delete(ddesc->Disjunct_pool);
+	if (NULL != ddesc->Connector_pool)
+		pool_delete(ddesc->Connector_pool);
+	free(ddesc->disjuncts);
 }
 /* ========================= END OF FILE ========================*/
