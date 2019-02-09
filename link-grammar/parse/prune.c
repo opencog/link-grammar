@@ -441,9 +441,6 @@ static bool possible_connection(prune_context *pc,
 	int dist;
 	if (!easy_match_desc(lc->desc, rc->desc)) return false;
 
-#ifdef DEBUG
-	assert((lc->nearest_word != BAD_WORD) && (rc->nearest_word != BAD_WORD));
-#endif
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
 	dist = rword - lword;
@@ -744,6 +741,19 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		prt_error("Debug: After power_pruning:\n\\");
 		print_disjunct_counts(sent);
 	}
+
+#ifdef DEBUG
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			for (Connector *c = d->left; NULL != c; c = c->next)
+				assert(c->nearest_word != BAD_WORD);
+			for (Connector *c = d->right; NULL != c; c = c->next)
+				assert(c->nearest_word != BAD_WORD);
+		}
+	}
+#endif
 
 	return total_deleted;
 }
