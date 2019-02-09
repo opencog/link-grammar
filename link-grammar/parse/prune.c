@@ -184,7 +184,6 @@ static void power_table_delete(power_table *pt)
 	}
 	xfree(pt->l_table_size, 2 * pt->power_table_size * sizeof(unsigned int));
 	xfree(pt->l_table, 2 * pt->power_table_size * sizeof(C_list **));
-	xfree(pt, sizeof(power_table));
 }
 
 /**
@@ -194,14 +193,23 @@ static void power_table_delete(power_table *pt)
 static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
                                  Connector * c, bool shal)
 {
-	unsigned int h;
-	h = connector_uc_num(c) & (size-1);
+	unsigned int h = connector_uc_num(c) & (size-1);
+	assert(c->suffix_id>0, "suffix_id %d", c->suffix_id);
 
 	C_list *m = pool_alloc(mp);
 	m->next = t[h];
 	t[h] = m;
 	m->c = c;
 	m->shallow = shal;
+}
+
+static void power_table_alloc(Sentence sent, power_table *pt)
+{
+	pt->power_table_size = sent->length;
+	pt->l_table_size = xalloc (2 * sent->length * sizeof(unsigned int));
+	pt->r_table_size = pt->l_table_size + sent->length;
+	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
+	pt->r_table = pt->l_table + sent->length;
 }
 
 /**
@@ -213,20 +221,27 @@ static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
  * matching deep connectors to the connectors in a slot, the
  * match loop can stop when there are no more shallow connectors in that
  * slot (since if both are deep, they cannot be matched).
+ *
+ * The suffix_id of each connector serves as its reference count.
+ * Hence, it should always be > 0.
+ *
+ * There are two code paths for initializing the power tables:
+ * 1. When disjunct-halves sharing is not done. The words then are
+ * directly scanned for their disjuncts and connectors. Each ones
+ * is inserted with a reference count (as suffix_id) set to 1.
+ * 2. Using the disjunct-halves tables (left and right). Each slot
+ * contains only a pointer to a disjunct half. The word number is
+ * extracted from the deepest connector (that has been assigned to it by
+ * setup_connectors()).
+ *
+ * FIXME: Find a way to not use a reference count (to increase
+ * efficiency).
  */
-static power_table * power_table_new(Sentence sent)
+static void power_table_init(Sentence sent, power_table *pt)
 {
-	power_table *pt;
 	unsigned int i;
 #define TOPSZ 32768
 	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
-
-	pt = (power_table *) xalloc (sizeof(power_table));
-	pt->power_table_size = sent->length;
-	pt->l_table_size = xalloc (2 * sent->length * sizeof(unsigned int));
-	pt->r_table_size = pt->l_table_size + sent->length;
-	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
-	pt->r_table = pt->l_table + sent->length;
 
 	Pool_desc *mp = pt->memory_pool = pool_new(__func__, "C_list",
 	                   /*num_elements*/2048, sizeof(C_list),
@@ -251,68 +266,137 @@ static power_table * power_table_new(Sentence sent)
 		 * - variable-size tables require counting connectors.
 		 *   (and the more complex code to go with)
 		 * CPU cache-size effects ...
-		 * Strong dependence on the hashing algo!
 		 */
-		len = left_connector_count(sent->word[w].d);
+		if (sent->jet_sharing.num_cnctrs_per_word[0])
+			len = sent->jet_sharing.num_cnctrs_per_word[0][w];
+		else
+			len = left_connector_count(sent->word[w].d);
 		l_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->l_table_size[w] = l_size;
 		l_t = pt->l_table[w] = (C_list **) xalloc(l_size * sizeof(C_list *));
 		for (i=0; i<l_size; i++) l_t[i] = NULL;
 
-		len = right_connector_count(sent->word[w].d);
+		if (sent->jet_sharing.num_cnctrs_per_word[1])
+			len = sent->jet_sharing.num_cnctrs_per_word[1][w];
+		else
+			len = right_connector_count(sent->word[w].d);
 		r_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->r_table_size[w] = r_size;
 		r_t = pt->r_table[w] = (C_list **) xalloc(r_size * sizeof(C_list *));
 		for (i=0; i<r_size; i++) r_t[i] = NULL;
 
-		/* Insert the deep connectors. */
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		if (!sent->jet_sharing.num_cnctrs_per_word[0])
 		{
-			Connector *c;
-
-			c = d->right;
-			if (c != NULL)
+			/* Insert the deep connectors. */
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
-				for (c = c->next; c != NULL; c = c->next)
+				Connector *c;
+
+				c = d->right;
+				if (c != NULL)
 				{
-					put_into_power_table(mp, r_size, r_t, c, false);
+					c->suffix_id = 1;
+					for (c = c->next; c != NULL; c = c->next)
+					{
+						c->suffix_id = 1;
+						put_into_power_table(mp, r_size, r_t, c, false);
+					}
+				}
+
+				c = d->left;
+				if (c != NULL)
+				{
+					c->suffix_id = 1;
+					for (c = c->next; c != NULL; c = c->next)
+					{
+						c->suffix_id = 1;
+						put_into_power_table(mp, l_size, l_t, c, false);
+					}
 				}
 			}
-			c = d->left;
-			if (c != NULL)
+
+			/* Insert the shallow connectors. */
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
-				for (c = c->next; c != NULL; c = c->next)
+				Connector *c;
+
+				c = d->right;
+				if (c != NULL)
 				{
-					put_into_power_table(mp, l_size, l_t, c, false);
+					put_into_power_table(mp, r_size, r_t, c, true);
 				}
-			}
-		}
-
-		/* Insert the shallow connectors. */
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-		{
-			Connector *c;
-
-			c = d->right;
-			if (c != NULL)
-			{
-				put_into_power_table(mp, r_size, r_t, c, true);
-			}
-			c = d->left;
-			if (c != NULL)
-			{
-				put_into_power_table(mp, l_size, l_t, c, true);
+				c = d->left;
+				if (c != NULL)
+				{
+					put_into_power_table(mp, l_size, l_t, c, true);
+				}
 			}
 		}
 	}
 
-	return pt;
+	if (sent->jet_sharing.num_cnctrs_per_word[0])
+	{
+		/* Bulk insertion with reference count. Note: IDs start from 1. */
+
+		/* Insert the deep connectors. */
+		for (int dir = 0; dir < 2; dir++)
+		{
+			C_list ***tp;
+			unsigned int *sizep;
+
+			if (dir== 0)
+			{
+				tp = pt->l_table;
+				sizep = pt->l_table_size;
+			}
+			else
+			{
+				tp = pt->r_table;
+				sizep = pt->r_table_size;
+			}
+
+			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
+			{
+				Connector *htc = sent->jet_sharing.table[dir][id];
+				Connector *deepest;
+
+				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
+					;
+				int w = deepest->nearest_word + ((dir== 0) ? 1 : -1);
+
+				unsigned int size = sizep[w];
+				C_list **t = tp[w];
+				int suffix_id = htc->suffix_id;
+
+				for (Connector *c = htc->next; NULL != c; c = c->next)
+				{
+					c->suffix_id = suffix_id;
+					put_into_power_table(mp, size, t, c, false);
+				}
+			}
+
+			/* Insert the shallow connectors. */
+			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
+			{
+				Connector *htc = sent->jet_sharing.table[dir][id];
+				Connector *deepest;
+
+				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
+					;
+				int w = deepest->nearest_word + ((dir == 0) ? 1 : -1);
+
+				unsigned int size = sizep[w];
+				C_list **t = tp[w];
+
+				put_into_power_table(mp, size, t, htc, true);
+			}
+		}
+	}
 }
 
 /**
  * This runs through all the connectors in this table, and eliminates those
- * who are obsolete.  The word fields of an obsolete one has been set to
- * BAD_WORD.
+ * with a zero reference count.
  */
 static void clean_table(unsigned int size, C_list **t)
 {
@@ -322,11 +406,11 @@ static void clean_table(unsigned int size, C_list **t)
 
 		while (NULL != *m)
 		{
-			if ((*m)->c->nearest_word == BAD_WORD)
+			if (0 == (*m)->c->suffix_id)
 				*m = (*m)->next;
 			else
 				m = &(*m)->next;
-		};
+		}
 	}
 }
 
@@ -531,18 +615,36 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	return (foundmatch ? n : sent_length);
 }
 
-/** The return value is the number of disjuncts deleted */
+static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word)
+{
+	for (; NULL != c; c = c->next)
+	{
+		if (mark_bad_word) c->nearest_word = BAD_WORD;
+		c->suffix_id--; /* Reference count. */
+	}
+}
+
+/** The return value is the number of disjuncts deleted.
+ *  Implementation notes:
+ *  Normally all the identical disjunct-jets are memory shared.
+ *  The suffix_id of each connector serves as its reference count
+ *  in the power table. Each time when a connector that cannot match
+ *  is discovered, its reference count is decreased, and its
+ *  nearest_word field is assigned BAD_WORD. Due to the memory sharing,
+ *  each such an assignment affects immediately all the identical
+ *  disjunct-jets.
+ *  */
 static int power_prune(Sentence sent, Parse_Options opts)
 {
-	power_table *pt;
+	power_table pt;
 	prune_context pc;
-	Connector *c;
-	int N_deleted = 0;
+	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
 
-	pt = power_table_new(sent);
+	power_table_alloc(sent, &pt);
+	power_table_init(sent, &pt);
 
-	pc.pt = pt;
+	pc.pt = &pt;
 	pc.power_cost = 0;
 	pc.null_links = (opts->min_null_count > 0);
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
@@ -561,31 +663,33 @@ static int power_prune(Sentence sent, Parse_Options opts)
 					dd = &d->next;  /* NEXT */
 					continue;
 				}
-				if (left_connector_list_update(&pc, d->left, w, true) < 0)
+
+				bool is_bad = d->left->nearest_word == BAD_WORD;
+
+				if (is_bad || left_connector_list_update(&pc, d->left, w, true) < 0)
 				{
-					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
-					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
-					N_deleted++;
+					mark_connector_sequence_for_dequeue(d->left, true);
+					mark_connector_sequence_for_dequeue(d->right, false);
 
 					/* discard the current disjunct */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					N_deleted[(int)is_bad]++;
+					continue;
 				}
-				else
-				{
-					dd = &d->next; /* NEXT */
-				}
+
+				dd = &d->next; /* NEXT */
 			}
 
-			clean_table(pt->r_table_size[w], pt->r_table[w]);
+			clean_table(pt.r_table_size[w], pt.r_table[w]);
 		}
 
-		total_deleted += N_deleted;
-		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d\n",
-		        pc.N_changed, N_deleted);
+		total_deleted += N_deleted[0] + N_deleted[1];
+		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n",
+		        pc.N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
 
-		if (pc.N_changed == 0) break;
+		if (pc.N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
+		pc.N_changed = N_deleted[0] = N_deleted[1] = 0;
 
-		pc.N_changed = N_deleted = 0;
 		/* right-to-left pass */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
 		{
@@ -597,32 +701,34 @@ static int power_prune(Sentence sent, Parse_Options opts)
 					dd = &d->next;  /* NEXT */
 					continue;
 				}
-				if (right_connector_list_update(&pc, d->right, w, true) >= sent->length)
+
+				bool is_bad = d->right->nearest_word == BAD_WORD;
+
+				if (is_bad || right_connector_list_update(&pc, d->right, w, true) >= sent->length)
 				{
-					for (c=d->right; c != NULL; c = c->next) c->nearest_word = BAD_WORD;
-					for (c=d->left;  c != NULL; c = c->next) c->nearest_word = BAD_WORD;
-					N_deleted++;
+					mark_connector_sequence_for_dequeue(d->right, true);
+					mark_connector_sequence_for_dequeue(d->left, false);
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					N_deleted[(int)is_bad]++;
+					continue;
 				}
-				else
-				{
-					dd = &d->next; /* NEXT */
-				}
+
+				dd = &d->next; /* NEXT */
 			}
 
-			clean_table(pt->l_table_size[w], pt->l_table[w]);
+			clean_table(pt.l_table_size[w], pt.l_table[w]);
 		}
 
-		total_deleted += N_deleted;
-		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d\n",
-		        pc.N_changed, N_deleted);
+		total_deleted += N_deleted[0] + N_deleted[1];
+		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n",
+		        pc.N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
 
-		if (pc.N_changed == 0) break;
-		pc.N_changed = N_deleted = 0;
+		if (pc.N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
+		pc.N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
-	power_table_delete(pt);
+	power_table_delete(&pt);
 
 	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
 

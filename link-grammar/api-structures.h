@@ -117,11 +117,26 @@ struct word_queue_s
 	word_queue_t *next;
 };
 
+/* Jet sharing: [0] - left side; [1] - right side.
+ * A jet is an ordered set of connectors all pointing in the same
+ * direction (left, or right). Every disjunct can be split into two jets;
+ * that is, a disjunct is a pair of jets, and so each word consists of a
+ * collection of pairs of jets. The array num_connectors holds the number
+ * of the jets on each word; it is used for sizing the power table in
+ * power_prune().
+ * On one-step-parse (automatic parsing with null words if the is no
+ * solution without 0 nulls) the table is preserved, but currently its
+ * jet pointers are recalculated. This is the reason the table is here and
+ * not private to power_prune().
+ * Possible FIXME: merge with the power table, and allocate it in
+ * do_parse (like allocate_count_context()).
+ */
 typedef struct
 {
-	Connector **table[2];
-	unsigned int entries[2];
-	unsigned int *num_connectors[2];
+	Connector **table[2];                 /* Index by jet ID. */
+	unsigned int entries[2];              /* number of table entries */
+	unsigned int *num_cnctrs_per_word[2]; /* Indexed by word number. */
+	String_id *csid[2];                   /* For generating unique jet IDs. */
 } jet_sharing_t;
 
 struct Sentence_s
@@ -144,7 +159,7 @@ struct Sentence_s
 	String_id *connector_suffix_id; /* For connector trailing sequence IDs */
 	unsigned int num_suffix_id;     /* Currently unused. */
 
-	jet_sharing_t jet_sharing; /* Disjunct l/r duplication sharing */
+	jet_sharing_t jet_sharing;   /* Disjunct l/r duplication sharing */
 	size_t min_len_sharing;      /* Do trailing encoding + jet-sharing.
 	                                Disjunct/connector packing is also done
 	                                in that case (only). */

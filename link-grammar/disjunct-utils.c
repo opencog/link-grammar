@@ -694,7 +694,10 @@ static int enumerate_connectors_sequentially(Sentence sent)
 	return id + 1;
 }
 
-#define ID_TABLE_SZ 8192 /* Initial size of the suffix_id table */
+#define CONSEP "&"      /* Connector string separator in the suffix sequence. */
+#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
+#define MAX_LINKS 20            // XXX Use a global definition
+
 /**
  * Set a hash identifier per connector according to the trailing sequence
  * it starts. Ensure it is unique per word and alternative.
@@ -738,9 +741,6 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 {
 	if (pc->csid == NULL) return;
 
-#define CONSEP "&"      /* Connector string separator in the suffix sequence. */
-#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
-#define MAX_LINKS 20            // XXX Use a global definition
 #define MAX_GWORD_ENCODING 32   /* Actually up to 12 characters. */
 	char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS) + MAX_GWORD_ENCODING];
 
@@ -783,7 +783,7 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 			(*cp)->suffix_id = id;
 			//printf("ID %d trail=%s\n", id, cstr);
 
-			if (cp != &cstack[0])
+			if (cp != &cstack[0]) /* Efficiency. */
 				l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
 		}
 	}
@@ -820,6 +820,7 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
 	return head.next;
 }
 
+#define ID_TABLE_SZ 8192 /* Initial size of the suffix_id table */
 /**
  * Pack all disjunct and connectors into a one big memory block.
  * This facilitate a better memory caching for long sentences
@@ -837,9 +838,9 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
  * 2. A small alignment gap, that ends in a 64-byte boundary.
  * 3. A block of connectors, which is so aligned to 64-byte boundary.
  *
- * Optionally, a trailing sequence encoding and sharing is done too.
+ * A trailing sequence encoding and sharing is done too.
+ * Note: Connector sharing, trailing hash and packing always go together.
  */
-/* Note: Connector sharing and trailing hash always go together. */
 bool pack_sentence(Sentence sent)
 {
 	int dcnt = 0;
@@ -948,5 +949,185 @@ void free_saved_disjuncts(Disjuncts_desc_t *ddesc)
 	}
 	ddesc->Disjunct_pool = NULL;
 	free(ddesc->disjuncts);
+}
+
+/* =================== Disjunct jet sharing ================= */
+static void jet_sharing_init(Sentence sent)
+{
+	unsigned int **ccnt = sent->jet_sharing.num_cnctrs_per_word;
+
+	for (int dir = 0; dir < 2; dir++)
+		ccnt[dir] = malloc(sent->length * sizeof(**ccnt));
+}
+
+void free_jet_sharing(Sentence sent)
+{
+	jet_sharing_t *js = &sent->jet_sharing;
+	if (NULL == js->table[0]) return;
+
+	for (int dir = 0; dir < 2; dir++)
+	{
+		free(js->table[dir]);
+		js->table[dir] = NULL;
+		free(js->num_cnctrs_per_word[dir]);
+		string_id_delete(js->csid[dir]);
+		js->csid[dir] = NULL;
+	}
+}
+
+/** Create a copy of the given connector chain and return it;
+ *  Put the number of copied connectors in numc.
+ */
+static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
+                                  unsigned int *numc)
+{
+	Connector head;
+	Connector *prev = &head;
+
+	for (; NULL != c; c = c->next)
+	{
+		Connector *n = pool_alloc(connector_pool);
+		*n = *c;
+		prev->next = n;
+		prev = n;
+		(*numc)++;
+	}
+
+	prev->next = NULL;
+	return head.next;
+}
+
+#define JET_TABLE_SIZE 256 /* Auto-extended. */
+
+/** * Enumerate the left and right sides of each disjunct.
+ * The suffix_id field is used for this enumeration, but it is done only
+ * according to the whole connector sequence starting from the shallow
+ * connector (and not connector sequence suffixes). The IDs start from 1,
+ * and are shared by of all words.
+ */
+void share_disjunct_jets(Sentence sent)
+{
+	jet_sharing_t *js = &sent->jet_sharing;
+
+	lgdebug(+D_DISJ, "skip=%d table=%d\n",
+	        sent->length < sent->min_len_sharing, NULL != js->table[0]);
+
+	if (sent->length < sent->min_len_sharing) return;
+
+	size_t jet_table_size[2] = {JET_TABLE_SIZE, JET_TABLE_SIZE};
+	size_t jet_table_entries[2] = {0};
+	String_id *csid[2];
+	Connector ***jet_table = js->table;
+
+	free_jet_sharing(sent);
+	jet_sharing_init(sent);
+
+	for (int dir = 0; dir < 2; dir++)
+	{
+		csid[dir] = string_id_create();
+		(void)string_id_add("dummy", csid[dir]); /* IDs start from 1. */
+		jet_table[dir] = calloc(jet_table_size[dir], sizeof(Connector *));
+	}
+
+	Pool_desc *old_Disjunct_pool = sent->Disjunct_pool;
+	sent->Disjunct_pool = pool_new(__func__, "Disjunct",
+	                   /*num_elements*/2048, sizeof(Disjunct),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	Pool_desc *old_Connector_pool = sent->Connector_pool;
+	sent->Connector_pool = pool_new(__func__, "Connector",
+	                   /*num_elements*/8192, sizeof(Connector),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		Disjunct head;
+		Disjunct *prev = &head;
+		unsigned int numc[2] = {0}; /* Current word different connectors. */
+
+		char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS)];
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			Disjunct *n = pool_alloc(sent->Disjunct_pool);
+			*n = *d; /* Also initial left/right to NULL ("continue" below). */
+			prev->next = n;
+			prev = n;
+
+			for (int dir = 0; dir < 2; dir ++)
+			{
+				cstr[0] = "-+"[dir];
+				cstr[1] = (char)(w + 1); /* Avoid '\0'. */
+				size_t l = 2;
+
+				Connector *first_c = (0 == dir) ? d->left : d->right;
+				if (NULL == first_c) continue;
+
+				for (Connector *c = first_c; NULL != c; c = c->next)
+				{
+					if (c->multi)
+						cstr[l++] = '@'; /* Why does this matter for power pruning? */
+					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
+					if (NULL != c->next) /* Efficiency. */
+						l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+				}
+				if (l > sizeof(cstr)-2)
+				{
+					/* This is improbable, given the big cstr buffer. */
+					prt_error("Warning: share_disjunct_jets(): Buffer overflow.\n"
+								 "Parsing may be wrong.\n");
+				}
+
+				if (jet_table_entries[dir] + 1 >= jet_table_size[dir])
+				{
+					size_t old_bytes = jet_table_size[dir] * sizeof(Connector *);
+					jet_table[dir] = realloc(jet_table[dir], old_bytes * 2);
+					memset(jet_table[dir]+jet_table_size[dir], 0, old_bytes);
+					jet_table_size[dir] *= 2;
+				}
+
+				int id = string_id_add(cstr, csid[dir]);
+#if 0
+				printf("%zu%c %d: %s\n", w, dir?'+':'-', id, cstr);
+#endif
+
+				if (NULL == jet_table[dir][id])
+				{
+					jet_table_entries[dir]++;
+					jet_table[dir][id] =
+						connectors_copy(sent->Connector_pool, first_c, &numc[dir]);
+					/* Very subtle - for potential disjunct save
+					 * (one-step-parse) that is done after the previous
+					 * jet-sharing since it has set non-0 suffix_id. */
+					jet_table[dir][id]->suffix_id = 0;
+				}
+				*((0 == dir) ? &n->left : &n->right) = jet_table[dir][id];
+				jet_table[dir][id]->suffix_id++;
+#if 0
+				printf("w%zu%c: ", w, dir?'+':'-');
+				print_connector_list(first_c);
+				printf("\n");
+#endif
+			}
+		}
+
+		prev->next = NULL;
+		sent->word[w].d = head.next;
+
+		/* Keep power-prune hash table sizes. */
+		js->num_cnctrs_per_word[0][w] = numc[0] * 2;
+		js->num_cnctrs_per_word[1][w] = numc[1] * 2;
+	}
+
+	pool_delete(old_Disjunct_pool);
+	pool_delete(old_Connector_pool);
+
+	for (int dir = 0; dir < 2; dir++)
+	{
+		string_id_delete(csid[dir]);
+		js->table[dir] = jet_table[dir];
+		js->entries[dir] = (unsigned int)jet_table_entries[dir];
+	}
+	lgdebug(+D_DISJ, "Total NUMID %d (%d+,%d-)\n",
+	        js->entries[0]+js->entries[1], js->entries[0], js->entries[1]);
 }
 /* ========================= END OF FILE ========================*/
