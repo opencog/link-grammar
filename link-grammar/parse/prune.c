@@ -226,11 +226,11 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  * Hence, it should always be > 0.
  *
  * There are two code paths for initializing the power tables:
- * 1. When disjunct-halves sharing is not done. The words then are
+ * 1. When disjunct-jets sharing is not done. The words then are
  * directly scanned for their disjuncts and connectors. Each ones
  * is inserted with a reference count (as suffix_id) set to 1.
- * 2. Using the disjunct-halves tables (left and right). Each slot
- * contains only a pointer to a disjunct half. The word number is
+ * 2. Using the disjunct-jet tables (left and right). Each slot
+ * contains only a pointer to a disjunct-jet. The word number is
  * extracted from the deepest connector (that has been assigned to it by
  * setup_connectors()).
  *
@@ -535,7 +535,11 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * the list could possibly be matched.  If c is NULL, returns w.  If
  * there is no way to match this list, it returns a negative number.
  * If it does find a way to match it, it updates the c->nearest_word fields
- * correctly.
+ * correctly. When disjunct-jets are shared, this update is done
+ * simultaneously on all of them, and the next time the same disjunct-jet
+ * is encountered (in the same word disjunct loop at least), the work here is
+ * trivial. FIXME: Mark such jets for the duration of this loop so
+ * they will be skipped.
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
@@ -578,7 +582,8 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * the list could possibly be matched.  If c is NULL, returns w.  If
  * there is no way to match this list, it returns a number greater than
  * N_words - 1.   If it does find a way to match it, it updates the
- * c->nearest_word fields correctly.
+ * c->nearest_word fields correctly. See the comment on that in
+ * left_connector_list_update().
  */
 static size_t
 right_connector_list_update(prune_context *pc, Connector *c,
