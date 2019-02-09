@@ -536,7 +536,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 {
 	power_table *pt;
 	prune_context pc;
-	Disjunct *free_later = NULL;
 	Connector *c;
 	int N_deleted = 0;
 	int total_deleted = 0;
@@ -570,8 +569,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 
 					/* discard the current disjunct */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					d->next = free_later;
-					free_later = d;
 				}
 				else
 				{
@@ -608,8 +605,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					d->next = free_later;
-					free_later = d;
 				}
 				else
 				{
@@ -627,7 +622,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		if (pc.N_changed == 0) break;
 		pc.N_changed = N_deleted = 0;
 	}
-	free_disjuncts(free_later);
 	power_table_delete(pt);
 
 	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
@@ -889,9 +883,6 @@ static void delete_unmarked_disjuncts(Sentence sent)
 			if (d->marked) {
 				d->next = d_head;
 				d_head = d;
-			} else {
-				d->next = NULL;
-				free_disjuncts(d);
 			}
 		}
 		sent->word[w].d = d_head;

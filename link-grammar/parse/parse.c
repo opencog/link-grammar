@@ -260,7 +260,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt = NULL;
 	bool pp_and_power_prune_done = false;
-	Disjunct **disjuncts_copy = NULL;
 	bool is_null_count_0 = (0 == opts->min_null_count);
 	int max_null_count = MIN((int)sent->length, opts->max_null_count);
 
@@ -268,12 +267,11 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
 
+	Disjuncts_desc_t disjuncts_copy = { NULL };
 	if (is_null_count_0 && (0 < max_null_count))
 	{
 		/* Save the disjuncts in case we need to parse with null_count>0. */
-		disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
-		for (size_t i = 0; i < sent->length; i++)
-			disjuncts_copy[i] = disjuncts_dup(sent->word[i].d);
+		save_disjuncts(sent, &disjuncts_copy);
 	}
 
 	for (int nl = opts->min_null_count; nl <= max_null_count; nl++)
@@ -292,10 +290,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 					/* We are parsing now with null_count>0, when previously we
 					 * parsed with null_count==0. Restore the save disjuncts. */
-					free_sentence_disjuncts(sent);
-					for (size_t i = 0; i < sent->length; i++)
-						sent->word[i].d = disjuncts_copy[i];
-					disjuncts_copy = NULL;
+					restore_disjuncts(sent, &disjuncts_copy);
 				}
 			}
 			pp_and_power_prune(sent, opts);
@@ -364,11 +359,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	}
 	sort_linkages(sent, opts);
 
-	if (NULL != disjuncts_copy)
-	{
-		for (size_t i = 0; i < sent->length; i++)
-			free_disjuncts(disjuncts_copy[i]);
-	}
+	free_saved_disjuncts(&disjuncts_copy);
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
 }

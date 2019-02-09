@@ -1823,8 +1823,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     // Allocate memory for the connectors, because they should persist
     // beyond the lifetime of the sat-solver data structures.
-    clink.lc = connector_new(NULL, NULL);
-    clink.rc = connector_new(NULL, NULL);
+    clink.lc = connector_new(NULL, NULL, NULL);
+    clink.rc = connector_new(NULL, NULL, NULL);
 
     *clink.lc = lpc->connector;
     *clink.rc = rpc->connector;
@@ -1888,7 +1888,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #else
     cost_cutoff = 1000.0;
 #endif // LIMIT_TOTAL_LINKAGE_COST
-    d = build_disjuncts_for_exp(de, xnode_word[wi]->string, cost_cutoff, _opts);
+    d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string, cost_cutoff, _opts);
     free_Exp(de);
 
     if (d == NULL)

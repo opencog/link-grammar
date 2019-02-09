@@ -63,7 +63,6 @@ static void setup_connectors(Sentence sent)
 			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
 			{
 				d->next = NULL;
-				free_disjuncts(d);
 			}
 			else
 			{
@@ -103,12 +102,20 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	Disjunct * d;
 	X_node * x;
 	size_t w;
+
+	sent->Disjunct_pool = pool_new(__func__, "Disjunct",
+	                   /*num_elements*/2048, sizeof(Disjunct),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	sent->Connector_pool = pool_new(__func__, "Connector",
+	                   /*num_elements*/8192, sizeof(Connector),
+	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+
 	for (w = 0; w < sent->length; w++)
 	{
 		d = NULL;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_disjuncts_for_exp(x->exp, x->string, cost_cutoff, opts);
+			Disjunct *dx = build_disjuncts_for_exp(sent, x->exp, x->string, cost_cutoff, opts);
 			word_record_in_disjunct(x->word, dx);
 			d = catenate_disjuncts(dx, d);
 		}

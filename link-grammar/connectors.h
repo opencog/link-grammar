@@ -152,7 +152,7 @@ static inline int connector_uc_num(const Connector * c)
 
 
 /* Connector utilities ... */
-Connector * connector_new(const condesc_t *, Parse_Options);
+Connector * connector_new(Pool_desc *, const condesc_t *, Parse_Options);
 void set_connector_length_limit(Connector *, Parse_Options);
 void free_connectors(Connector *);
 

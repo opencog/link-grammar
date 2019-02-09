@@ -253,22 +253,32 @@ static Clause * build_clause(Exp *e, clause_context *ct)
  * string is the print name of word that generated this disjunct.
  */
 static Disjunct *
-build_disjunct(Clause * cl, const char * string, double cost_cutoff,
-               Parse_Options opts)
+build_disjunct(Sentence sent, Clause * cl, const char * string,
+               double cost_cutoff, Parse_Options opts)
 {
 	Disjunct *dis, *ndis;
+	Pool_desc *connector_pool = NULL;
+
 	dis = NULL;
 	for (; cl != NULL; cl = cl->next)
 	{
 		if (cl->maxcost <= cost_cutoff)
 		{
-			ndis = (Disjunct *) xalloc(sizeof(Disjunct));
+			if (NULL == sent) /* For the SAT-parser, until fixed. */
+			{
+				ndis = xalloc(sizeof(Disjunct));
+			}
+			else
+			{
+				ndis = pool_alloc(sent->Disjunct_pool);
+				connector_pool = sent->Connector_pool;
+			}
 			ndis->left = ndis->right = NULL;
 
 			/* Build a list of connectors from the Tconnectors. */
 			for (Tconnector *t = cl->c; t != NULL; t = t->next)
 			{
-				Connector *n = connector_new(t->e->u.condesc, opts);
+				Connector *n = connector_new(connector_pool, t->e->u.condesc, opts);
 				Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
 				n->multi = t->e->multi;
@@ -285,7 +295,7 @@ build_disjunct(Clause * cl, const char * string, double cost_cutoff,
 	return dis;
 }
 
-Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
+Disjunct * build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
                                    double cost_cutoff, Parse_Options opts)
 {
 	Clause *c ;
@@ -303,7 +313,7 @@ Disjunct * build_disjuncts_for_exp(Exp* exp, const char *word,
 	// print_expression(exp);  printf("\n");
 	c = build_clause(exp, &ct);
 	// print_clause_list(c);
-	dis = build_disjunct(c, word, cost_cutoff, opts);
+	dis = build_disjunct(sent, c, word, cost_cutoff, opts);
 	// print_disjunct_list(dis);
 	pool_delete(ct.Tconnector_pool);
 	pool_delete(ct.Clause_pool);

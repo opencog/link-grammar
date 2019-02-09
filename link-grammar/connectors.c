@@ -56,9 +56,15 @@ set_connector_length_limit(Connector *c, Parse_Options opts)
 		c->length_limit = length_limit;
 }
 
-Connector * connector_new(const condesc_t *desc, Parse_Options opts)
+Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
+                          Parse_Options opts)
 {
-	Connector *c = (Connector *) xalloc(sizeof(Connector));
+	Connector *c;
+
+	if (NULL == connector_pool) /* For the SAT-parser, until fixed. */
+		c = xalloc(sizeof(Connector));
+	else
+		c = pool_alloc(connector_pool);
 
 	c->desc = desc;
 	c->nearest_word = 0;
