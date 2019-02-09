@@ -142,7 +142,7 @@ struct Sentence_s
 	/* Trailing connector encoding stuff (suffix_id), used for speeding up
 	 * parsing (the classic one for now) of long sentences. */
 	String_id *connector_suffix_id; /* For connector trailing sequence IDs */
-	unsigned int num_suffix_id;
+	unsigned int num_suffix_id;     /* Currently unused. */
 
 	jet_sharing_t jet_sharing; /* Disjunct l/r duplication sharing */
 	size_t min_len_sharing;      /* Do trailing encoding + jet-sharing.
