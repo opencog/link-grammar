@@ -27,7 +27,12 @@ typedef struct Pool_desc_s Pool_desc;
 Pool_desc *pool_new(const char *, const char *, size_t, size_t, bool, bool, bool);
 void *pool_alloc(Pool_desc *) GNUC_MALLOC;
 void pool_reuse(Pool_desc *);
+#ifndef DEBUG
 void pool_delete(Pool_desc *);
+#else
+void pool_delete(const char *func, Pool_desc *);
+#define pool_delete(...) pool_delete (__func__, __VA_ARGS__)
+#endif
 #ifdef POOL_FREE
 void pool_free(Pool_desc *, void *e);
 #endif // POOL_FREE

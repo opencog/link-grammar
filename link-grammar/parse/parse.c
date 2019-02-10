@@ -290,6 +290,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 					/* We are parsing now with null_count>0, when previously we
 					 * parsed with null_count==0. Restore the save disjuncts. */
+					free_sentence_disjuncts(sent); /* They are to be replaced. */
 					restore_disjuncts(sent, &disjuncts_copy);
 				}
 			}

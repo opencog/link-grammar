@@ -889,6 +889,13 @@ class ZENLangTestCase(unittest.TestCase):
         self.assertEqual(len(linkages), 2)
         self.assertEqual(linkages.next().unused_word_cost(), 1)
 
+    def test_1_step_parsing_with_long_sentence_with_nulls(self):
+        self.po = ParseOptions(min_null_count=0, max_null_count=999, short_length=1)
+
+        text = 12 * 'This is a the test '
+        sent = Sentence(text, self.d, self.po)
+        self.assertTrue(len(sent.parse()) > 0) # Just check no crashes or leaks
+
 class JADictionaryLocaleTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

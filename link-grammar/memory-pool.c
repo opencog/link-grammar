@@ -96,11 +96,20 @@ Pool_desc *pool_new(const char *func, const char *name,
 /**
  * Delete the given memory pool.
  */
-void pool_delete(Pool_desc *mp)
+#undef pool_delete
+#ifndef DEBUG
+void pool_delete (Pool_desc *mp)
+#else
+void pool_delete (const char *func, Pool_desc *mp)
+#endif
 {
 	if (NULL == mp) return;
-	lgdebug(+D_MEMPOOL, "Used %zu elements (pool '%s' created in %s())\n",
-	        mp->curr_elements, mp->name, mp->func);
+	const char *from_func = "";
+#ifdef DEBUG /* Macro-added first argument. */
+	from_func = func;
+#endif
+	lgdebug(+D_MEMPOOL, "Used %zu elements (%s deleted pool '%s' created in %s())\n",
+	        mp->curr_elements, from_func, mp->name, mp->func);
 
 	/* Free its chained memory blocks. */
 	char *c_next;

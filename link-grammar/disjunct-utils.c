@@ -695,6 +695,7 @@ void pack_sentence(Sentence sent, bool real_suffix_ids)
 
 	pool_delete(sent->Disjunct_pool);
 	pool_delete(sent->Connector_pool);
+	sent->Disjunct_pool = NULL;
 
 	if (do_share)
 	{
@@ -730,11 +731,9 @@ void save_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
 
 void restore_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
 {
-	pool_delete(sent->Disjunct_pool);
 	sent->Disjunct_pool = ddesc->Disjunct_pool;
 	ddesc->Disjunct_pool = NULL;
 
-	pool_delete(sent->Connector_pool);
 	sent->Connector_pool = ddesc->Connector_pool;
 	ddesc->Connector_pool = NULL;
 
