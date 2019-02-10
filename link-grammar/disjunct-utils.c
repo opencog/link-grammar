@@ -1005,28 +1005,40 @@ static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
  * connector (and not connector sequence suffixes). The IDs start from 1,
  * and are shared by of all words.
  */
-void share_disjunct_jets(Sentence sent)
+void share_disjunct_jets(Sentence sent, bool rebuild)
 {
 	jet_sharing_t *js = &sent->jet_sharing;
 
-	lgdebug(+D_DISJ, "skip=%d table=%d\n",
-	        sent->length < sent->min_len_sharing, NULL != js->table[0]);
+	lgdebug(+D_DISJ, "skip=%d rebuild=%d table=%d\n",
+	        sent->length < sent->min_len_sharing, rebuild, NULL != js->table[0]);
 
 	if (sent->length < sent->min_len_sharing) return;
 
-	size_t jet_table_size[2] = {JET_TABLE_SIZE, JET_TABLE_SIZE};
+	size_t jet_table_size[2];
 	size_t jet_table_entries[2] = {0};
-	String_id *csid[2];
 	Connector ***jet_table = js->table;
 
-	free_jet_sharing(sent);
-	jet_sharing_init(sent);
+	if (!rebuild)
+		jet_sharing_init(sent);
 
+	/* FIXME? Add to jet_sharing_init. */
 	for (int dir = 0; dir < 2; dir++)
 	{
-		csid[dir] = string_id_create();
-		(void)string_id_add("dummy", csid[dir]); /* IDs start from 1. */
-		jet_table[dir] = calloc(jet_table_size[dir], sizeof(Connector *));
+		if (NULL == js->csid[dir])
+		{
+			js->csid[dir] = string_id_create();
+			(void)string_id_add("dummy", js->csid[dir]); /* IDs start from 1. */
+		}
+		if (rebuild)
+		{
+			jet_table_size[dir] = js->entries[dir] + 1;
+			memset(jet_table[dir], 0, jet_table_size[dir] * sizeof(Connector *));
+		}
+		else
+		{
+			jet_table_size[dir] = JET_TABLE_SIZE;
+			jet_table[dir] = calloc(jet_table_size[dir], sizeof(Connector *));
+		}
 	}
 
 	int ccnt, dcnt;
@@ -1092,7 +1104,7 @@ void share_disjunct_jets(Sentence sent)
 					jet_table_size[dir] *= 2;
 				}
 
-				int id = string_id_add(cstr, csid[dir]);
+				int id = string_id_add(cstr, js->csid[dir]);
 #if 0
 				printf("%zu%c %d: %s\n", w, dir?'+':'-', id, cstr);
 #endif
@@ -1130,7 +1142,6 @@ void share_disjunct_jets(Sentence sent)
 
 	for (int dir = 0; dir < 2; dir++)
 	{
-		string_id_delete(csid[dir]);
 		js->table[dir] = jet_table[dir];
 		js->entries[dir] = (unsigned int)jet_table_entries[dir];
 	}

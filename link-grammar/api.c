@@ -525,6 +525,7 @@ void sentence_delete(Sentence sent)
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
 	wordgraph_delete(sent);
+	free_jet_sharing(sent);
 	string_set_delete(sent->string_set);
 	string_id_delete(sent->connector_suffix_id);
 	free_linkages(sent);
