@@ -1029,14 +1029,21 @@ void share_disjunct_jets(Sentence sent)
 		jet_table[dir] = calloc(jet_table_size[dir], sizeof(Connector *));
 	}
 
+	int ccnt, dcnt;
+	count_disjuncts_and_connectors(sent, &ccnt, &dcnt);
+
+	/* +1: Avoid allocating 0 elements. */
+	ccnt = MAX(ccnt, 1);
+	dcnt = MAX(dcnt, 1);
+
 	Pool_desc *old_Disjunct_pool = sent->Disjunct_pool;
 	sent->Disjunct_pool = pool_new(__func__, "Disjunct",
-	                   /*num_elements*/2048, sizeof(Disjunct),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	                   /*num_elements*/dcnt, sizeof(Disjunct),
+	                   /*zero_out*/false, /*align*/false, /*exact*/true);
 	Pool_desc *old_Connector_pool = sent->Connector_pool;
 	sent->Connector_pool = pool_new(__func__, "Connector",
-	                   /*num_elements*/8192, sizeof(Connector),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	                   /*num_elements*/ccnt, sizeof(Connector),
+	                   /*zero_out*/false, /*align*/false, /*exact*/true);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
