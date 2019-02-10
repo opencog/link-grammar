@@ -735,7 +735,6 @@ void restore_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
 	ddesc->Disjunct_pool = NULL;
 
 	sent->Connector_pool = ddesc->Connector_pool;
-	ddesc->Connector_pool = NULL;
 
 	for (WordIdx w = 0; w < sent->length; w++)
 		sent->word[w].d = ddesc->disjuncts[w];
@@ -744,9 +743,11 @@ void restore_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
 void free_saved_disjuncts(Disjuncts_desc_t *ddesc)
 {
 	if (NULL != ddesc->Disjunct_pool)
+	{
 		pool_delete(ddesc->Disjunct_pool);
-	if (NULL != ddesc->Connector_pool)
 		pool_delete(ddesc->Connector_pool);
+	}
+	ddesc->Disjunct_pool = NULL;
 	free(ddesc->disjuncts);
 }
 /* ========================= END OF FILE ========================*/
