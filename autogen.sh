@@ -85,8 +85,14 @@ if $run_configure; then
     mkdir -p build
     cd build
     ../configure --enable-maintainer-mode "$@"
-    echo
-    echo "Now type 'make' to compile link-grammar."
+    if [ $? -eq 0 ]; then
+      echo
+      echo "Now type 'make' to compile link-grammar (in the 'build' directory)."
+    else
+      echo
+      echo "A syntax error may mean you need to install 'autoconf-archive'."
+      echo "After you fix the problem then run '$0' again."
+    fi
 else
     echo
     echo "Now run 'configure' and 'make' to compile link-grammar."
