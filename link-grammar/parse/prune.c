@@ -436,7 +436,7 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
  */
 static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
-                                int lword, int rword, bool lr)
+                                int lword, int rword)
 {
 	int dist;
 	if (!easy_match_desc(lc->desc, rc->desc)) return false;
@@ -495,7 +495,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 		/* Two deep connectors can't work */
 		if (!shallow && !cl->shallow) return false;
 
-		if (possible_connection(pc, cl->c, c, w, word_c, true))
+		if (possible_connection(pc, cl->c, c, w, word_c))
 			return true;
 	}
 	return false;
@@ -512,6 +512,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	unsigned int size, h;
 	C_list *cl;
 	power_table *pt = pc->pt;
+	if (c->nearest_word == BAD_WORD) printf("left_table_search BAD_WORD\n");
 
 	size = pt->l_table_size[w];
 	h = connector_uc_num(c) & (size-1);
@@ -520,7 +521,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 		/* Two deep connectors can't work */
 		if (!shallow && !cl->shallow) return false;
 
-		if (possible_connection(pc, c, cl->c, word_c, w, false))
+		if (possible_connection(pc, c, cl->c, word_c, w))
 			return true;
 	}
 	return false;
