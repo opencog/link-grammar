@@ -543,7 +543,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
                            int w, bool shallow)
 {
 	int n, lb;
-	bool foundmatch;
+	int foundmatch = -1;
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
@@ -555,22 +555,21 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	if (0 > lb) lb = 0;
 
 	/* n is now the rightmost word we need to check */
-	foundmatch = false;
 	for (; n >= lb ; n--)
 	{
 		pc->power_cost++;
 		if (right_table_search(pc, n, c, shallow, w))
 		{
-			foundmatch = true;
+			foundmatch = n;
 			break;
 		}
 	}
-	if (n < ((int) c->nearest_word))
+	if (foundmatch < ((int) c->nearest_word))
 	{
-		c->nearest_word = n;
+		c->nearest_word = foundmatch;
 		pc->N_changed++;
 	}
-	return (foundmatch ? n : -1);
+	return foundmatch;
 }
 
 /**
@@ -587,8 +586,8 @@ right_connector_list_update(prune_context *pc, Connector *c,
                             size_t w, bool shallow)
 {
 	int n, ub;
-	bool foundmatch;
 	int sent_length = (int)pc->sent->length;
+	int foundmatch = sent_length;
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
@@ -600,21 +599,20 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	if (ub > sent_length) ub = sent_length - 1;
 
 	/* n is now the leftmost word we need to check */
-	foundmatch = false;
 	for (; n <= ub ; n++)
 	{
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, w))
 		{
-			foundmatch = true;
+			foundmatch = n;
 			break;
 		}
 	}
-	if (n > c->nearest_word) {
-		c->nearest_word = n;
+	if (foundmatch > c->nearest_word) {
+		c->nearest_word = foundmatch;
 		pc->N_changed++;
 	}
-	return (foundmatch ? n : sent_length);
+	return foundmatch;
 }
 
 static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word)
