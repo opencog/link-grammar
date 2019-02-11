@@ -306,7 +306,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			 * nulls only. So in case of one-step parse (min_null_count==0 &&
 			 * max_null_count>0) the table is shared and the null_count==0
 			 * parsing will be inferred from the table. */
+			// There are a few cases in the "fixes" corpus in which the number
+			// of parses is different. The missing linkages are all with P.P.
+			// violation, but nevertheless this is not expected and thus this
+			// idea is disabled until a fix is found. See "#if 0" below.
+			// Test sentence: He was too far gone to come back from such a loss
+			// (117 vs 111 linkages.)
+#if 0
 			if (!real_suffix_ids || (nl == 0) || !is_null_count_0)
+#endif
 			{
 				free_count_context(ctxt, sent);
 				ctxt = alloc_count_context(sent);
