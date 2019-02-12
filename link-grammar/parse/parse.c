@@ -267,6 +267,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
 
+	/* Share before the potential saving (instead of after) for CPU cache hit. */
+	share_disjunct_jets(sent, /*rebuild*/false);
+
 	Disjuncts_desc_t disjuncts_copy = { NULL };
 	if (is_null_count_0 && (0 < max_null_count))
 	{
@@ -292,11 +295,24 @@ void classic_parse(Sentence sent, Parse_Options opts)
 					 * parsed with null_count==0. Restore the save disjuncts. */
 					free_sentence_disjuncts(sent); /* They are to be replaced. */
 					restore_disjuncts(sent, &disjuncts_copy);
+
+					/* The jet-table jet pointers are incompatible with
+					 * saving/restoring the disjuncts, which change their
+					 * jet addresses. So the jet-sharing must be redone. */
+					share_disjunct_jets(sent, /*rebuild*/true);
 				}
 			}
 			pp_and_power_prune(sent, opts);
-			bool real_suffix_ids = set_connector_hash(sent);
-			pack_sentence(sent, real_suffix_ids);
+			/* Currently the jet-sharing is for power_prune() only.
+			 * For testing using it during do_count(), move it to be
+			 * after do_parse() below. */
+			if ((nl > 0) || !is_null_count_0) /* If not needed for rebuild. */
+				free_jet_sharing(sent);
+#if 0 // See below
+			bool real_suffix_ids =
+#endif
+				pack_sentence(sent);
+			gword_record_in_connector(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 

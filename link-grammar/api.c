@@ -451,6 +451,14 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
+	/* Set the minimum length for trailing connectors encoding.
+	 * In that case disjunct jet-sharing (for power prune())
+	 * and disjunct/connector packing is done too. */
+	sent->min_len_sharing = SENTENCE_MIN_LENGTH_TRAILING_HASH;
+	const char *min_len_sharing = test_enabled("len-trailing-hash");
+	if (NULL != min_len_sharing)
+		sent->min_len_sharing = atoi(min_len_sharing+1);
+
 	return sent;
 }
 
@@ -517,6 +525,7 @@ void sentence_delete(Sentence sent)
 	sat_sentence_delete(sent);
 	free_sentence_words(sent);
 	wordgraph_delete(sent);
+	free_jet_sharing(sent);
 	string_set_delete(sent->string_set);
 	string_id_delete(sent->connector_suffix_id);
 	free_linkages(sent);

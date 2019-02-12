@@ -51,7 +51,9 @@ void word_record_in_disjunct(const Gword *, Disjunct *);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
-void pack_sentence(Sentence, bool);
+bool pack_sentence(Sentence);
+void share_disjunct_jets(Sentence, bool);
+void free_jet_sharing(Sentence);
 
 void print_connector_list(Connector *);
 void print_disjunct_list(Disjunct *);
