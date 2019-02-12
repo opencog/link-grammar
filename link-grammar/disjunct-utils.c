@@ -999,11 +999,38 @@ static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
 
 #define JET_TABLE_SIZE 256 /* Auto-extended. */
 
-/** * Enumerate the left and right sides of each disjunct.
- * The suffix_id field is used for this enumeration, but it is done only
- * according to the whole connector sequence starting from the shallow
- * connector (and not connector sequence suffixes). The IDs start from 1,
- * and are shared by of all words.
+/** Memory-share identical disjunct jets.
+ * Two jets are considered identical if they are on the same side of the
+ * disjunct and their entire connector sequence is identical. A basic
+ * assumption, which is not asserted here, is that the nearest_word and
+ * length limit fields in the identical jets are also the same.
+ *
+ * For each disjunct side separately, a unique ID per jet (which starts
+ * from 1 so 0 is an invalid ID) is used to identify it. The IDs are
+ * shared by all the words for efficiency. The suffix_id field of the
+ * shallow connector is used as a counter of the number of shared jets
+ * in a particular table slot.
+ *
+ * Possible FIXME: The shared jets uses a new memory pool that is
+ * allocated here.  The intention was to increase the memory locality for
+ * power_prune() (which come next) by avoiding memory "holes" that would
+ * otherwise be created by the sharing. A later test proves this doesn't
+ * matter much for sentences as big as 170 tokens. So this can be
+ * simplified, or be used to prevent the need to save/restore actual
+ * memory for one-step-parse (with the cost of a more complex memory
+ * management logic).
+ *
+ * The 'rebuild' flag is for use in the optional second stage of a
+ * one-step-parse, to save CPU on creating the jet tables. This is done by
+ * reusing the String_id descriptors and the jet tables memory allocation.
+ * (Creating the jet tables again is currently needed because the jet
+ * addresses are currently getting changed when they are restored in this
+ * second stage. See the above FIXME.)
+ *
+ * Note: The number of different jets per word is kept in
+ * num_cnctrs_per_word[dir][w], for the use of power_prune()
+ * (resizing its per-word tables aka power_table).
+ * See also the comments in api-structures.h.
  */
 void share_disjunct_jets(Sentence sent, bool rebuild)
 {
