@@ -1,5 +1,7 @@
 Version 5.6.1 (XXX 2019)
- * Performance improvement (approx 20%) in expressions #882
+ * Performance improvement (approx 20%) in expressions #882.
+ * Performance improvement (approx 10%) by disjunct/connectors pools #896.
+ * Performance improvement (4-10% for English) by faster power-pruning #903.
  * Fix a bug in trailing connectors encoding (may cause bad linkages).
  * Fix inability to form linkage when first word is disconnected.
  * English dict: fix use of quotations with paraphrasing verbs.
