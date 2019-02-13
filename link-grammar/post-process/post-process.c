@@ -39,6 +39,14 @@
  * arg is padded with an infinite sequence of "#" and that the 2nd one
  * is padded with "*". "#" matches anything, but "*" is just like an
  * ordinary char for matching purposes.
+ *
+ * For efficiency, the algo is not straightforward:
+ * 1. In the first "while", there is no check for (*t != \0').
+ * Instead, this condition is detected by (*s != *t) when the uppercase
+ * part of "s" is longer than that of "t".
+ * 2. "t" is not checked for uppercase in the loop.
+ * Instead, if its uppercase part is longer then that of "s", the check
+ * after the loop detects that.
  */
 
 bool post_process_match(const char *s, const char *t)
