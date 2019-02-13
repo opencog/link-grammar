@@ -118,12 +118,7 @@ dictionary_six_str(const char * lang,
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 	dict->name = string_set_add(dict_name, dict->string_set);
 
-	/*
-	 * A special setup per dictionary type. The check here assumes the affix
-	 * dictionary name contains "affix". FIXME: For not using this
-	 * assumption, the dictionary creating stuff needs a rearrangement.
-	 */
-	if (0 == strstr(dict->name, "affix"))
+	if (NULL != affix_name)
 	{
 		/* To disable spell-checking, just set the checker to NULL */
 		dict->spell_checker = spellcheck_create(dict->lang);
