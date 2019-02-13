@@ -93,6 +93,7 @@ struct Dictionary_s
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
 	Afdict_class *  afdict_class;
+	bool pre_suf_class_exists;         /* True iff PRE or SUF exists */
 
 	/* Random morphology generator */
 	struct anysplit_params * anysplit;

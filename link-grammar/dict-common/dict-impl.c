@@ -581,6 +581,10 @@ bool afdict_init(Dictionary dict)
 			char last_entry[MAX_WORD+1] = "";
 			get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
 		}
+		else
+		{
+			afdict->pre_suf_class_exists = true;
+		}
 	}
 	else
 	{
