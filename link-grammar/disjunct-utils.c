@@ -1045,6 +1045,9 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 	size_t jet_table_entries[2] = {0};
 	Connector ***jet_table = js->table;
 
+	assert(!rebuild || (js->table[0] && js->csid[0]), "jet rebuild with no info");
+	assert(rebuild || (!js->table[0] && !js->csid[0]), "jet !rebuild with info");
+
 	if (!rebuild)
 		jet_sharing_init(sent);
 

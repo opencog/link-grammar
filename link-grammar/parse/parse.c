@@ -306,8 +306,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			/* Currently the jet-sharing is for power_prune() only.
 			 * For testing using it during do_count(), move it to be
 			 * after do_parse() below. */
-			if ((nl > 0) || !is_null_count_0) /* If not needed for rebuild. */
-				free_jet_sharing(sent);
+			if ((0 < nl) || (0 == max_null_count) )
+				free_jet_sharing(sent); /* Not needed for rebuild. */
 #if 0 // See below
 			bool real_suffix_ids =
 #endif
