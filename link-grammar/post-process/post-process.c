@@ -44,8 +44,8 @@
 bool post_process_match(const char *s, const char *t)
 {
 	if (NULL == t) return false;
-	if (islower((int)*t)) t++; /* Skip head-dependent indicator */
-	while (isupper((int)*s) || isupper((int)*t))
+	if (islower(*t)) t++; /* Skip head-dependent indicator */
+	while (isupper(*s) || isupper(*t))
 	{
 		if (*s != *t) return false;
 		s++;
