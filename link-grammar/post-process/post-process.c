@@ -44,23 +44,25 @@
 bool post_process_match(const char *s, const char *t)
 {
 	if (NULL == t) return false;
-	if (islower((int)*t)) t++; /* Skip head-dependent indicator */
-	while (isupper((int)*s) || isupper((int)*t))
+	if (islower(*t)) t++; /* Skip head-dependent indicator */
+	while (isupper(*s))
 	{
 		if (*s != *t) return false;
 		s++;
 		t++;
 	}
+	if (isupper(*t)) return false;
+	while (*t != '\0')
+	{
+		if (*s == '\0') return true;
+		if (*s != *t && *s != '#') return false;
+		s++;
+		t++;
+	}
 	while (*s != '\0')
 	{
-		if (*s != '#')
-		{
-			char c;
-			if (*t == '\0') c = '*'; else c = *t;
-			if (*s != c) return false;
-		}
+		if (*s != '*' && *s != '#') return false;
 		s++;
-		if (*t != '\0') t++;
 	}
 	return true;
 }
