@@ -1138,7 +1138,8 @@ void pp_and_power_prune(Sentence sent, Parse_Options opts)
 	power_table_init(sent, &pt);
 
 	power_prune(sent, opts, &pt);
-	pp_prune(sent, opts);
+	if (pp_prune(sent, opts) > 0)
+		power_prune(sent, opts, &pt);
 
 	power_table_delete(&pt);
 	return;
