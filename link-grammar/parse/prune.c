@@ -636,17 +636,13 @@ static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word
  *  each such an assignment affects immediately all the identical
  *  disjunct-jets.
  *  */
-static int power_prune(Sentence sent, Parse_Options opts)
+static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 {
-	power_table pt;
 	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
 
-	power_table_alloc(sent, &pt);
-	power_table_init(sent, &pt);
-
-	pc.pt = &pt;
+	pc.pt = pt;
 	pc.power_cost = 0;
 	pc.null_links = (opts->min_null_count > 0);
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
@@ -682,7 +678,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 				dd = &d->next; /* NEXT */
 			}
 
-			clean_table(pt.r_table_size[w], pt.r_table[w]);
+			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
 		total_deleted += N_deleted[0] + N_deleted[1];
@@ -720,7 +716,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 				dd = &d->next; /* NEXT */
 			}
 
-			clean_table(pt.l_table_size[w], pt.l_table[w]);
+			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
 		total_deleted += N_deleted[0] + N_deleted[1];
@@ -730,7 +726,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		if (pc.N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
 		pc.N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
-	power_table_delete(&pt);
 
 	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
 
@@ -1138,9 +1133,14 @@ static int pp_prune(Sentence sent, Parse_Options opts)
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
-	power_prune(sent, opts);
+	power_table pt;
+	power_table_alloc(sent, &pt);
+	power_table_init(sent, &pt);
+
+	power_prune(sent, opts, &pt);
 	pp_prune(sent, opts);
 
+	power_table_delete(&pt);
 	return;
 
 	// Not reached. We can actually gain a few percent of
