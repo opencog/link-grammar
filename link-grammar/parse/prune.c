@@ -1142,16 +1142,6 @@ void pp_and_power_prune(Sentence sent, Parse_Options opts)
 		power_prune(sent, opts, &pt);
 
 	power_table_delete(&pt);
-	return;
 
-	// Not reached. We can actually gain a few percent of
-	// performance be skipping the loop below. Mostly, it just
-	// does a lot of work, and pretty much finds nothing.
-	// And so we skip it.
-#ifdef ONLY_IF_YOU_THINK_THIS_IS_WORTH_IT
-	for (;;) {
-		if (pp_prune(sent, opts) == 0) break;
-		if (power_prune(sent, opts) == 0) break;
-	}
-#endif
+	return;
 }
