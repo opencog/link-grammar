@@ -7248,6 +7248,7 @@ now.r:
 % {Xd-} & MVs- & Xs- & <subcl-verb>:  "I eat, then I sleep"
 % JT+ & CO+: "then last week, I changed my mind"
 % JT+: "if not next Tuesday, then when do you want to do it?"
+% EB- & EZ+: "... worked first as a teacher and then as a photographer."
 then.r:
   ({Xd- & Xc+} & {[Mp-]-0.09} & MVp-)
   or Pp-
@@ -7255,7 +7256,7 @@ then.r:
   or ({JT+} & {Xc+ & {Xd-}} & dCO+)
   or JT+
   or (Wc- & (Xc+ or [()]) & Qd+)
-  or EB-
+  or (EB- & {[EZ+]-0.1})
   or (S+ & Xd- & Xc+ & MVs-)
   or ({Xd-} & MVs- & Xs- & <subcl-verb>)
   or [[Mp-]];
@@ -9253,7 +9254,7 @@ as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & dCO+) or ({Xd- & Xc+} & MVp-) or (EZ- & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
-  or (J+ & <conjoin-preps>)
+  or ({[EZ-]-0.1} & J+ & <conjoin-preps>)
   or (AZ- & Pa+)
   or (AZ- & Mg+)
   or (({[EZ-]-0.5} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+)
@@ -10553,7 +10554,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
   RS- & B-;
 
 % Conjoined: "either ... or  ..."
-....n:
+....n ….n:
   ({D+} & SJl+)
   or ({D+} & SJr-);
 
