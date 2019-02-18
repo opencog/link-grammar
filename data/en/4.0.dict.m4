@@ -9237,10 +9237,12 @@ as.e-c:
 %
 % AZ- & Mg+: "It described the treaty as marking a new stage"
 % BIt+: "his statements, as candidate, contradict his actions"
+% J+ & <conjoin-preps>: "Gallagher worked as a teacher and as a photographer."
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
     (({Xc+ & {Xd-}} & dCO+) or ({Xd- & Xc+} & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
+  or (J+ & <conjoin-preps>)
   or (AZ- & Pa+)
   or (AZ- & Mg+)
   or (({[EZ-]-0.5} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+)
