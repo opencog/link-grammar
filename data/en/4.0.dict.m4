@@ -2199,8 +2199,10 @@ ninths.m tenths.m:
   NW- & {EN-} & (NF+ or (<noun-rel-x> & <noun-main-x>));
 
 first.a:
-  L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & dCO+) or A+ or [Jp-] or
-  TT+ or ((DD- or [[NSa-]]) & <noun-rel-x> & {<ton-verb>} & <noun-main-x>);
+  L- or Pa- or E+ or TT+ or A+ or [Jp-]
+  or (MVa- & {EZ+})
+  or ({Xc+ & {Xd-}} & dCO+)
+  or ((DD- or [[NSa-]]) & <noun-rel-x> & {<ton-verb>} & <noun-main-x>);
 
 last.a dead_last dead_fucking_last DFL:
   L-
@@ -9240,7 +9242,7 @@ as.e-c:
 % J+ & <conjoin-preps>: "Gallagher worked as a teacher and as a photographer."
 as.e:
   ((J+ or Mp+ or TI+ or Zs+) &
-    (({Xc+ & {Xd-}} & dCO+) or ({Xd- & Xc+} & MVp-)))
+    (({Xc+ & {Xd-}} & dCO+) or ({Xd- & Xc+} & MVp-) or (EZ- & MVp-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (J+ & <conjoin-preps>)
   or (AZ- & Pa+)
