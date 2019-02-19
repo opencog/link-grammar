@@ -641,8 +641,6 @@ static Count_bin do_count(
 					total = INT_MAX;
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 					t->count = total;
-					pop_match_list(mchxt, mlb);
-					return total;
 				}
 			}
 		}
