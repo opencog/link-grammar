@@ -801,16 +801,19 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				if (MT_PUNC == morpheme_type) /* It's a terminal token */
 					tokenization_done(sent, subword);
 
-				if (last_split)
+				if (!sent->dict->affix_table->pre_suf_class_exists && last_split)
 				{
-#if 0
-					/* XXX the new Turkish experimental dictionary depend on
-					 * specifying compound suffixes which are not in the dict file,
-					 * in the SUF affix class. This allows them to split farther.
+					/* XXX The "tr" and "kz" dictionaries depend on specifying
+					 * compound suffixes which are not in the dict file, in the
+					 * SUF affix class. This allows them to split farther.
 					 * However, there is a need to detail all the supported
 					 * combinations of compound suffixes.
 					 * FIXME: There is a need for a real multi affix splitter.
-					 * (last_split will get optimized out by the compiler.) */
+					 *
+					 * This way of allowing suffixes to split further is very
+					 * much not * efficient, as suffixes need to be reexamined.
+					 * To solve that, pre_suf_class_exists indicates whether
+					 * SUF and/or PRE are used in the affix file.*/
 
 					/* This is a stem, or an affix which is marked by INFIX_MARK.
 					 * Hence it must be a dict word - regex/spell are not done
@@ -818,7 +821,6 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					 * Save resources by marking it accordingly. */
 					subword->status |= WS_INDICT;
 					subword->tokenizing_step = TS_DONE;
-#endif
 				}
 				word_label(sent, subword, "+", label);
 
