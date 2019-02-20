@@ -1118,14 +1118,16 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 				{
 					if (c->nearest_word == BAD_WORD)
 					{
+						/* Already marked w/BAD_WORD, mainly through jet sharing. */
 						D_deleted++;
-						continue; /* Already marked, mainly through jet sharing */
+						break; /* no need to further check the same jet */
 					}
 					Cms *cms = lookup_in_cms_table(cmt, connector_string(c));
 					if (cms->c->nearest_word == BAD_WORD)
 					{
 						c->nearest_word = BAD_WORD;
 						D_deleted++;
+						break;
 					}
 				}
 			}
@@ -1133,7 +1135,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		}
 	}
 
-	lgdebug(+D_PRUNE, "Deleted %d disjuncts (%d connector names)\n",
+	lgdebug(+D_PRUNE, "Deleted %d (%d connector names)\n",
 	        D_deleted, Cname_deleted);
 
 	cms_table_delete(cmt);
