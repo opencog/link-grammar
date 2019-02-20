@@ -41,7 +41,7 @@
  * ordinary char for matching purposes.
  *
  * For efficiency, the algo is not straightforward:
- * 1. In the first "while", there is no check for (*t != \0').
+ * 1. In the first "while", there is no check for (*t != '\0').
  * Instead, this condition is detected by (*s != *t) when the uppercase
  * part of "s" is longer than that of "t".
  * 2. "t" is not checked for uppercase in the loop.

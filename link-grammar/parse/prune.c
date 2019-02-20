@@ -512,7 +512,6 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	unsigned int size, h;
 	C_list *cl;
 	power_table *pt = pc->pt;
-	if (c->nearest_word == BAD_WORD) printf("left_table_search BAD_WORD\n");
 
 	size = pt->l_table_size[w];
 	h = connector_uc_num(c) & (size-1);
