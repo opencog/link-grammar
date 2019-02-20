@@ -632,9 +632,9 @@ static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word
 	}
 }
 
-static bool is_bad(Disjunct *d)
+static bool is_bad(Connector *c)
 {
-	for (Connector *c = d->left; c != NULL; c = c->next)
+	for (; c != NULL; c = c->next)
 		if (c->nearest_word == BAD_WORD) return true;
 
 	return false;
@@ -676,7 +676,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 					continue;
 				}
 
-				bool bad = is_bad(d);
+				bool bad = is_bad(d->left);
 				if (bad || left_connector_list_update(&pc, d->left, w, true) < 0)
 				{
 					mark_connector_sequence_for_dequeue(d->left, true);
@@ -713,7 +713,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 					continue;
 				}
 
-				bool bad = is_bad(d);
+				bool bad = is_bad(d->right);
 				if (bad || right_connector_list_update(&pc, d->right, w, true) >= sent->length)
 				{
 					mark_connector_sequence_for_dequeue(d->right, true);
@@ -1042,7 +1042,6 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	{
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
-			d->marked = true;
 			for (int dir = 0; dir < 2; dir++)
 			{
 				Connector *first_c = (dir) ? (d->left) : (d->right);
@@ -1057,14 +1056,26 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	int D_deleted = 0;       /* Number of deleted disjuncts */
 	int Cname_deleted = 0;   /* Number of deleted connector names */
 
+	/* Since the cms table is unchanged, after applying a rule once we
+	 * know if it will be TRUE or FALSE if we need to apply it again.
+	 * Values: -1: Undecided yet; 0: Rule unsatisfiable; 1 Rule satisfiable. */
+	uint8_t *rule_ok = alloca(knowledge->n_contains_one_rules * sizeof(bool));
+	memset(rule_ok, -1, knowledge->n_contains_one_rules * sizeof(bool));
+
 	for (size_t i = 0; i < knowledge->n_contains_one_rules; i++)
 	{
+		if (rule_ok[i] == 1) continue;
+
 		pp_rule* rule = &knowledge->contains_one_rules[i]; /* The ith rule */
 		const char *selector = rule->selector;  /* Selector string for this rule */
 		pp_linkset *link_set = rule->link_set;  /* The set of criterion links */
 		unsigned int hash = cms_hash(selector);
 
-		if (rule->selector_has_wildcard) continue;  /* If it has a * forget it */
+		if (rule->selector_has_wildcard)
+		{
+			rule_ok[i] = 1;
+			continue;  /* If it has a * forget it */
+		}
 
 		for (Cms *cms = cmt->cms_table[hash]; cms != NULL; cms = cms->next)
 		{
@@ -1075,12 +1086,18 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			        i, selector, connector_string(c));
 			/* We know c matches the trigger link of the rule. */
 			/* Now check the criterion links */
-			if (!rule_satisfiable(cmt, link_set))
+			if ((rule_ok[i] == 0) || !rule_satisfiable(cmt, link_set))
 			{
+				rule_ok[i] = 0;
 				ppdebug("DELETE %s\n", connector_string(c));
 				c->nearest_word = BAD_WORD;
 				Cname_deleted++;
 				rule->use_count++;
+			}
+			else
+			{
+				rule_ok[i] = 1;
+				break;
 			}
 		}
 	}
