@@ -754,7 +754,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 }
 
 /* ===================================================================
-   PP Pruning
+   PP Pruning (original comments from version 3 - some not up to date).
 
    The "contains one" post-processing constraints give us a new way to
    prune.  Suppose there's a rule that says "a group that contains foo
