@@ -250,7 +250,7 @@ static inline uint32_t string_hash(const char *s)
 static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
                             int l_id, const int r_id,
-                            unsigned int cost)
+                            unsigned int null_count)
 {
 	unsigned int i;
 
@@ -268,7 +268,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	i += i >> log2_table_size;
 #else
 	/* sdbm-based hash */
-	i = cost;
+	i = null_count;
 	i = lw + (i << 6) + (i << 16) - i;
 	i = rw + (i << 6) + (i << 16) - i;
 	i = l_id + (i << 6) + (i << 16) - i;
