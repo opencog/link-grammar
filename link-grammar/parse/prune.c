@@ -24,9 +24,16 @@
 #include "string-set.h"
 #include "tokenize/word-structures.h" // for Word_struct
 #include "tokenize/wordgraph.h"
-#include "utilities.h"                // strdupa()
 
-#define D_PRUNE 5
+#define D_PRUNE 5 /* Debug level for this file. */
+
+/* To debug pp_prune(), touch this file, run "make CPPFLAGS=-DDEBUG_PP_PRUNE",
+ * and the run: link-parser -v=5 -debug=prune.c . */
+#if defined DEBUG || defined DEBUG_PP_PRUNE
+#define ppdebug(...) lgdebug(+D_PRUNE, __VA_ARGS__)
+#else
+#define ppdebug(...)
+#endif
 
 typedef Connector * connector_table;
 
@@ -56,8 +63,7 @@ typedef struct cms_struct Cms;
 struct cms_struct
 {
 	Cms * next;
-	const char * name;
-	int count; /* the number of times this is in the multiset */
+	Connector *c;
 };
 
 #define CMS_SIZE (2<<10)
@@ -406,6 +412,8 @@ static void clean_table(unsigned int size, C_list **t)
 
 		while (NULL != *m)
 		{
+			assert(0 <= (*m)->c->suffix_id, "clean_table: suffix_id < 0 (%d)",
+			       (*m)->c->suffix_id);
 			if (0 == (*m)->c->suffix_id)
 				*m = (*m)->next;
 			else
@@ -624,6 +632,14 @@ static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word
 	}
 }
 
+static bool is_bad(Connector *c)
+{
+	for (; c != NULL; c = c->next)
+		if (c->nearest_word == BAD_WORD) return true;
+
+	return false;
+}
+
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
  *  Normally all the identical disjunct-jets are memory shared.
@@ -634,17 +650,13 @@ static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word
  *  each such an assignment affects immediately all the identical
  *  disjunct-jets.
  *  */
-static int power_prune(Sentence sent, Parse_Options opts)
+static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 {
-	power_table pt;
 	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
 
-	power_table_alloc(sent, &pt);
-	power_table_init(sent, &pt);
-
-	pc.pt = &pt;
+	pc.pt = pt;
 	pc.power_cost = 0;
 	pc.null_links = (opts->min_null_count > 0);
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
@@ -664,23 +676,22 @@ static int power_prune(Sentence sent, Parse_Options opts)
 					continue;
 				}
 
-				bool is_bad = d->left->nearest_word == BAD_WORD;
-
-				if (is_bad || left_connector_list_update(&pc, d->left, w, true) < 0)
+				bool bad = is_bad(d->left);
+				if (bad || left_connector_list_update(&pc, d->left, w, true) < 0)
 				{
 					mark_connector_sequence_for_dequeue(d->left, true);
 					mark_connector_sequence_for_dequeue(d->right, false);
 
 					/* discard the current disjunct */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					N_deleted[(int)is_bad]++;
+					N_deleted[(int)bad]++;
 					continue;
 				}
 
 				dd = &d->next; /* NEXT */
 			}
 
-			clean_table(pt.r_table_size[w], pt.r_table[w]);
+			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
 		total_deleted += N_deleted[0] + N_deleted[1];
@@ -702,23 +713,22 @@ static int power_prune(Sentence sent, Parse_Options opts)
 					continue;
 				}
 
-				bool is_bad = d->right->nearest_word == BAD_WORD;
-
-				if (is_bad || right_connector_list_update(&pc, d->right, w, true) >= sent->length)
+				bool bad = is_bad(d->right);
+				if (bad || right_connector_list_update(&pc, d->right, w, true) >= sent->length)
 				{
 					mark_connector_sequence_for_dequeue(d->right, true);
 					mark_connector_sequence_for_dequeue(d->left, false);
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					N_deleted[(int)is_bad]++;
+					N_deleted[(int)bad]++;
 					continue;
 				}
 
 				dd = &d->next; /* NEXT */
 			}
 
-			clean_table(pt.l_table_size[w], pt.l_table[w]);
+			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
 		total_deleted += N_deleted[0] + N_deleted[1];
@@ -728,7 +738,6 @@ static int power_prune(Sentence sent, Parse_Options opts)
 		if (pc.N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
 		pc.N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
-	power_table_delete(&pt);
 
 	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
 
@@ -757,7 +766,7 @@ static int power_prune(Sentence sent, Parse_Options opts)
 }
 
 /* ===================================================================
-   PP Pruning
+   PP Pruning (original comments from version 3 - some not up to date).
 
    The "contains one" post-processing constraints give us a new way to
    prune.  Suppose there's a rule that says "a group that contains foo
@@ -838,14 +847,9 @@ static int power_prune(Sentence sent, Parse_Options opts)
 
 static multiset_table * cms_table_new(void)
 {
-	multiset_table *mt;
-	int i;
+	multiset_table *mt = (multiset_table *) xalloc(sizeof(multiset_table));
+	memset(mt, 0, sizeof(multiset_table));
 
-	mt = (multiset_table *) xalloc(sizeof(multiset_table));
-
-	for (i=0; i<CMS_SIZE; i++) {
-		mt->cms_table[i] = NULL;
-	}
 	return mt;
 }
 
@@ -876,256 +880,332 @@ static unsigned int cms_hash(const char * s)
 	return (i & (CMS_SIZE-1));
 }
 
-/**
- * This returns TRUE if there is a connector name C in the table
- * such that post_process_match(pp_match_name, C) is TRUE
+/** Find if a connector t can form link x so post_process_match(s, x)==true.
+ *  Only t may have a head-dependent indicator, which is skipped if found.
+ *  The leading uppercase characters must exactly match.
+ *  The rest (the subscript) should be able to from the subscript of x.
+ *  (*e) is a character that exists in x at the same position as in s
+ *  (e indicates both the character and its position in s); t is ok
+ *  iff this character post-process-matches the corresponding one at s,
+ *  and the rest post-process-match or are '*'.
+ *  Examples:
+ *     s="Xabc"; t="Xa*c"; e=s[3]; // *e == 'c'; // Returns true;
+ *     s="Xabc"; t="Xa*c"; e=s[2]; // *e == '*'; // Returns true;
+ *     s="Xabc"; t="Xa*d"; e=s[1]; // *e == 'a'; // Returns false;
+ *     s="X*ab"; t="Xcab"; e=s[1]; // *e == '*'; // Returns false;
+ *     s="Xa*b"; t="Xacb"; e=s[1]; // *e == 'a'; // Returns false;
+ *     s="Xa*b"; t="Xa";   e=s[1]; // *e == 'a'; // Returns true;
+ *     s="Xa*#"; t="Xa*d"; e=s[1]; // *e == 'a'; // Returns true;
+ *     s="Xa*#"; t="Xa";   e=s[2]; // *e == '*'; // Returns true;
+ *     s="X";    t="Xab";  e=s[1]; // *e = '\0'; // Returns true;
  */
-static bool match_in_cms_table(multiset_table *cmt, const char * pp_match_name)
+static bool can_form_link(const char *s, const char *t, const char *e)
 {
-	Cms * cms;
-	for (cms = cmt->cms_table[cms_hash(pp_match_name)]; cms != NULL; cms = cms->next)
+	if (islower(*t)) t++; /* Skip head-dependent indicator */
+	while (isupper(*s))
 	{
-		if (post_process_match(pp_match_name, cms->name)) return true;
+		if (*s != *t) return false;
+		s++;
+		t++;
 	}
+	if (isupper(*t)) return false;
+	while (*t != '\0')
+	{
+		if (*s == '\0') return true;
+		if (*s != *t && *s != '#' && (s == e || *t != '*')) return false;
+		s++;
+		t++;
+	}
+	while (*s != '\0')
+	{
+		if (*s != '*' && *s != '#') return false;
+		s++;
+	}
+	return true;
+}
+
+/**
+ * Returns TRUE iff there is a connector name c in the table
+ * that can create a link x such that post_process_match(pp_link, x) is TRUE.
+ */
+static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
+                               const char *c)
+{
+	unsigned int h = cms_hash(pp_link);
+
+	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
+	{
+			if (can_form_link(pp_link, connector_string(cms->c), c))
+			{
+				ppdebug("MATCHED %s\n", connector_string(cms->c));
+				return true;
+			}
+			ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
+	}
+
 	return false;
 }
 
-static Cms * lookup_in_cms_table(multiset_table *cmt, const char * str)
+/* FIXME? There is some code duplication here and in insert_in_cms_table()
+ * but it seems cumbersome to fix it. */
+static Cms *lookup_in_cms_table(multiset_table *cmt, Connector *c)
 {
-	Cms * cms;
-	for (cms = cmt->cms_table[cms_hash(str)]; cms != NULL; cms = cms->next)
+	unsigned int h = cms_hash(connector_string(c));
+
+	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
-		if (string_set_cmp(str, cms->name)) return cms;
+		if (c->desc == cms->c->desc) return cms;
 	}
+
 	return NULL;
 }
 
-static void insert_in_cms_table(multiset_table *cmt, const char * str)
+static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 {
-	Cms * cms;
-	unsigned int h;
-	cms = lookup_in_cms_table(cmt, str);
-	if (cms != NULL) {
-		cms->count++;
-	} else {
+	Cms *cms, *prev = NULL;
+	unsigned int h = cms_hash(connector_string(c));
+
+	for (cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
+	{
+		if (c->desc == cms->c->desc) break;
+		prev = cms;
+	}
+
+	if (cms == NULL)
+	{
 		cms = (Cms *) xalloc(sizeof(Cms));
-		cms->name = str;  /* don't copy the string...just keep a pointer to it.
-							 we won't free these later */
-		cms->count = 1;
-		h = cms_hash(str);
+		cms->c = c;
 		cms->next = cmt->cms_table[h];
 		cmt->cms_table[h] = cms;
 	}
+	else
+	{
+		/* MRU order */
+		if (prev != NULL)
+		{
+			Cms *t = cms->next;
+			cms->next = cmt->cms_table[h];
+			cmt->cms_table[h] = cms;
+			prev->next = t;
+		}
+	}
 }
 
-/**
- * Delete the given string from the table.  Return TRUE if
- * this caused a count to go to 0, return FALSE otherwise.
+#ifdef ppdebug
+const char *AtoZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+#endif
+/** Validate that the connectors needed in order to create a
+ *  link that matches pp_link, are all found in the sentence.
+ *  The sentence's connectors are in the cms table.
  */
-static bool delete_from_cms_table(multiset_table *cmt, const char * str)
+
+static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 {
-	Cms * cms = lookup_in_cms_table(cmt, str);
-	if (cms != NULL && cms->count > 0)
+	ppdebug("check PP-link=%s\n", pp_link);
+
+	const char *s;
+	for (s = pp_link; isupper(*s); s++) {}
+
+	/* The first iteration of the next loop handles the special case
+	 * which occurs if there were 0 subscripts. */
+	do
 	{
-		cms->count--;
-		return (cms->count == 0);
+		ppdebug("subscript at %d\n", (int)(s-pp_link-strspn(pp_link, AtoZ)));
+		if (*s == '#') continue;
+		if (!match_in_cms_table(cmt, pp_link, s)) return false;
 	}
-	return false;
+	while (*s++ != '\0' && *s != '\0'); /* while characters still exist */
+
+	return true;
 }
 
 static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
-	unsigned int hashval;
-	const char * t;
-	char *name, *s;
-	pp_linkset_node *p;
-	int bad, n_subscripts;
-
-	for (hashval = 0; hashval < ls->hash_table_size; hashval++)
+	for (unsigned int hashval = 0; hashval < ls->hash_table_size; hashval++)
 	{
-		for (p = ls->hash_table[hashval]; p!=NULL; p=p->next)
+		for (pp_linkset_node *p = ls->hash_table[hashval]; p != NULL; p = p->next)
 		{
-			/* ok, we've got our hands on one of the criterion links */
-			name = strdupa(p->str);
-			/* could actually use the string in place because we change it back */
-
-			/* now we want to see if we can satisfy this criterion link */
-			/* with a collection of the links in the cms table */
-
-			s = name;
-			if (islower((int)*s)) s++; /* skip head-dependent indicator */
-			for (; isupper((int)*s); s++) {}
-			for (;*s != '\0'; s++) if (*s != '*') *s = '#';
-
-			s = name;
-			t = p->str;
-			if (islower((int)*s)) s++; /* skip head-dependent indicator */
-			if (islower((int)*t)) t++; /* skip head-dependent indicator */
-			for (; isupper((int) *s); s++, t++) {}
-
-			/* s and t remain in lockstep */
-			bad = 0;
-			n_subscripts = 0;
-			for (;*s != '\0' && bad==0; s++, t++) {
-				if (*s == '*') continue;
-				n_subscripts++;
-				/* after the upper case part, and is not a * so must be a regular subscript */
-				*s = *t;
-				if (!match_in_cms_table(cmt, name)) bad++;
-				*s = '#';
+			/* OK, we've got our hands on one of the criterion links.
+			 * Now we want to see if we can satisfy this criterion link
+			 * with a collection of the links in the cms table. */
+			if (all_connectors_exist(cmt, p->str))
+			{
+				ppdebug("TRUE\n");
+				return true;
 			}
-
-			if (n_subscripts == 0) {
-				/* now we handle the special case which occurs if there
-				   were 0 subscripts */
-				if (!match_in_cms_table(cmt, name)) bad++;
-			}
-
-			/* now if bad==0 this criterion link does the job
-			   to satisfy the needs of the trigger link */
-
-			if (bad == 0) return true;
 		}
 	}
+
+	ppdebug("FALSE\n");
 	return false;
 }
 
-static void delete_unmarked_disjuncts(Sentence sent)
+/** Mark bad trigger connectors for later deletion by power_prune().
+ */
+static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 {
-	size_t w;
-	Disjunct *d_head, *d, *dx;
+	if (c->nearest_word == BAD_WORD)
+		return true; /* Already marked (mainly by jet sharing). */
 
-	for (w=0; w<sent->length; w++) {
-		d_head = NULL;
-		for (d=sent->word[w].d; d != NULL; d=dx) {
-			dx = d->next;
-			if (d->marked) {
-				d->next = d_head;
-				d_head = d;
-			}
-		}
-		sent->word[w].d = d_head;
+	Cms *cms = lookup_in_cms_table(cmt, c);
+	if (cms->c->nearest_word == BAD_WORD)
+	{
+		c->nearest_word = BAD_WORD;
+		return true;;
 	}
+
+	return false;
 }
+
 
 static int pp_prune(Sentence sent, Parse_Options opts)
 {
-	pp_knowledge * knowledge;
-	size_t i, w;
-	int total_deleted, N_deleted;
-	bool change, deleteme;
+	pp_knowledge *knowledge;
 	multiset_table *cmt;
 
 	if (sent->postprocessor == NULL) return 0;
 	if (!opts->perform_pp_prune) return 0;
 
 	knowledge = sent->postprocessor->knowledge;
-
 	cmt = cms_table_new();
 
-	for (w = 0; w < sent->length; w++)
+	jet_sharing_t *js = &sent->jet_sharing;
+	if (js->table[0] != NULL)
 	{
-		Disjunct *d;
-		for (d = sent->word[w].d; d != NULL; d = d->next)
+		for (int dir = 0; dir < 2; dir++)
 		{
-			char dir;
-			d->marked = true;
-			for (dir=0; dir < 2; dir++)
+			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				Connector *c;
-				for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
+				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
 				{
-					insert_in_cms_table(cmt, connector_string(c));
+					if (0 == c->suffix_id) continue;
+					insert_in_cms_table(cmt, c);
+				}
+			}
+		}
+	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (int dir = 0; dir < 2; dir++)
+				{
+					Connector *first_c = (dir) ? (d->left) : (d->right);
+					for (Connector *c = first_c; c != NULL; c = c->next)
+					{
+						insert_in_cms_table(cmt, c);
+					}
 				}
 			}
 		}
 	}
 
-	total_deleted = 0;
-	change = true;
-	while (change)
+	int D_deleted = 0;       /* Number of deleted disjuncts */
+	int Cname_deleted = 0;   /* Number of deleted connector names */
+
+	/* Since the cms table is unchanged, after applying a rule once we
+	 * know if it will be TRUE or FALSE if we need to apply it again.
+	 * Values: -1: Undecided yet; 0: Rule unsatisfiable; 1 Rule satisfiable. */
+	uint8_t *rule_ok = alloca(knowledge->n_contains_one_rules * sizeof(bool));
+	memset(rule_ok, -1, knowledge->n_contains_one_rules * sizeof(bool));
+
+	for (size_t i = 0; i < knowledge->n_contains_one_rules; i++)
 	{
-		char dir;
+		if (rule_ok[i] == 1) continue;
 
-		change = false;
-		N_deleted = 0;
-		for (w = 0; w < sent->length; w++)
+		pp_rule* rule = &knowledge->contains_one_rules[i]; /* The ith rule */
+		const char *selector = rule->selector;  /* Selector string for this rule */
+		pp_linkset *link_set = rule->link_set;  /* The set of criterion links */
+		unsigned int hash = cms_hash(selector);
+
+		if (rule->selector_has_wildcard)
 		{
-			Disjunct *d;
-			for (d = sent->word[w].d; d != NULL; d = d->next)
+			rule_ok[i] = 1;
+			continue;  /* If it has a * forget it */
+		}
+
+		for (Cms *cms = cmt->cms_table[hash]; cms != NULL; cms = cms->next)
+		{
+			Connector *c = cms->c;
+			if (!post_process_match(selector, connector_string(c))) continue;
+
+			ppdebug("Rule %zu: Selector %s, Connector %s\n",
+			        i, selector, connector_string(c));
+			/* We know c matches the trigger link of the rule. */
+			/* Now check the criterion links */
+			if ((rule_ok[i] == 0) || !rule_satisfiable(cmt, link_set))
 			{
-				if (!d->marked) continue;
-				deleteme = false;
-				for (i = 0; i < knowledge->n_contains_one_rules; i++)
+				rule_ok[i] = 0;
+				ppdebug("DELETE %s\n", connector_string(c));
+				c->nearest_word = BAD_WORD;
+				Cname_deleted++;
+				rule->use_count++;
+			}
+			else
+			{
+				rule_ok[i] = 1;
+				break;
+			}
+		}
+	}
+
+	/* Iterate over all connectors and mark the bad trigger connectors.
+	 * If the marked connector is not the shallow one, note that the
+	 * shallow one on the same disjunct cannot be marked too (this could
+	 * facilitate faster detection by power_prune()) because this would be
+	 * wrongly reflected through the cms table. */
+
+	if (js->table[0] != NULL)
+	{
+		for (int dir = 0; dir < 2; dir++)
+		{
+			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
+			{
+				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
 				{
-					pp_rule* rule = &knowledge->contains_one_rules[i]; /* the ith rule */
-					const char * selector = rule->selector;  /* selector string for this rule */
-					pp_linkset * link_set = rule->link_set;  /* the set of criterion links */
-
-					if (rule->selector_has_wildcard) continue;  /* If it has a * forget it */
-
-					for (dir = 0; dir < 2; dir++)
+					if (0 == c->suffix_id) continue;
+					if (mark_bad_connectors(cmt, c))
 					{
-						Connector *c;
-						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
-						{
-
-							if (!post_process_match(selector, connector_string(c))) continue;
-
-							/*
-							printf("pp_prune: trigger ok.  selector = %s  c->string = %s\n", selector, c->string);
-							*/
-
-							/* We know c matches the trigger link of the rule. */
-							/* Now check the criterion links */
-
-							if (!rule_satisfiable(cmt, link_set))
-							{
-								deleteme = true;
-								rule->use_count++;
-							}
-							if (deleteme) break;
-						}
-						if (deleteme) break;
-					}
-					if (deleteme) break;
-				}
-
-				if (deleteme)         /* now we delete this disjunct */
-				{
-					N_deleted++;
-					total_deleted++;
-					d->marked = false; /* mark for deletion later */
-					for (dir=0; dir < 2; dir++)
-					{
-						Connector *c;
-						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
-						{
-							change |= delete_from_cms_table(cmt, connector_string(c));
-						}
+						D_deleted++;
+						break;
 					}
 				}
 			}
 		}
-
-		lgdebug(D_PRUNE, "Debug: pp_prune pass deleted %d\n", N_deleted);
 	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (int dir = 0; dir < 2; dir++)
+				{
+					Connector *first_c = (dir) ? (d->left) : (d->right);
+					for (Connector *c = first_c; c != NULL; c = c->next)
+					{
+						if (mark_bad_connectors(cmt, c))
+						{
+							D_deleted++;
+							break;
+						}
+					}
+				}
+
+			}
+		}
+	}
+
+	lgdebug(+D_PRUNE, "Deleted %d (%d connector names)\n",
+	        D_deleted, Cname_deleted);
+
 	cms_table_delete(cmt);
-
-	if (total_deleted > 0)
-	{
-		delete_unmarked_disjuncts(sent);
-		if (verbosity_level(D_PRUNE))
-		{
-			prt_error("\n\\");
-			prt_error("Debug: After pp_prune:\n\\");
-			print_disjunct_counts(sent);
-		}
-	}
 
 	print_time(opts, "pp pruning");
 
-	return total_deleted;
+	return D_deleted;
 }
 
 
@@ -1136,19 +1216,19 @@ static int pp_prune(Sentence sent, Parse_Options opts)
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
-	power_prune(sent, opts);
-	pp_prune(sent, opts);
+	power_table pt;
+	power_table_alloc(sent, &pt);
+	power_table_init(sent, &pt);
+
+	power_prune(sent, opts, &pt);
+	if (pp_prune(sent, opts) > 0)
+		power_prune(sent, opts, &pt);
+
+	/* No benefit for now to make additional pp_prune() & power_prune() -
+	 * additional deletions are very rare and even then most of the
+	 * times only one disjunct is deleted. */
+
+	power_table_delete(&pt);
 
 	return;
-
-	// Not reached. We can actually gain a few percent of
-	// performance be skipping the loop below. Mostly, it just
-	// does a lot of work, and pretty much finds nothing.
-	// And so we skip it.
-#ifdef ONLY_IF_YOU_THINK_THIS_IS_WORTH_IT
-	for (;;) {
-		if (pp_prune(sent, opts) == 0) break;
-		if (power_prune(sent, opts) == 0) break;
-	}
-#endif
 }
