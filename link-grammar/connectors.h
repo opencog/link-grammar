@@ -244,8 +244,6 @@ static inline uint32_t string_hash(const char *s)
 
 /**
  * Hash function for the classic parser linkage memoization.
- * FIXME: Now that it is based on small-integer connector IDs, it may
- * be far from optimal. To be fixed.
  */
 static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
