@@ -1043,6 +1043,24 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 	return false;
 }
 
+/** Mark bad trigger connectors for later deletion by power_prune().
+ */
+static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
+{
+	if (c->nearest_word == BAD_WORD)
+		return true; /* Already marked (mainly by jet sharing). */
+
+	Cms *cms = lookup_in_cms_table(cmt, connector_string(c));
+	if (cms->c->nearest_word == BAD_WORD)
+	{
+		c->nearest_word = BAD_WORD;
+		return true;;
+	}
+
+	return false;
+}
+
+
 static int pp_prune(Sentence sent, Parse_Options opts)
 {
 	pp_knowledge *knowledge;
@@ -1054,16 +1072,34 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	knowledge = sent->postprocessor->knowledge;
 	cmt = cms_table_new();
 
-	for (WordIdx w = 0; w < sent->length; w++)
+	jet_sharing_t *js = &sent->jet_sharing;
+	if (js->table[0] != NULL)
 	{
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		for (int dir = 0; dir < 2; dir++)
 		{
-			for (int dir = 0; dir < 2; dir++)
+			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				Connector *first_c = (dir) ? (d->left) : (d->right);
-				for (Connector *c = first_c; c != NULL; c = c->next)
+				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
 				{
+					if (0 == c->suffix_id) continue;
 					insert_in_cms_table(cmt, c);
+				}
+			}
+		}
+	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (int dir = 0; dir < 2; dir++)
+				{
+					Connector *first_c = (dir) ? (d->left) : (d->right);
+					for (Connector *c = first_c; c != NULL; c = c->next)
+					{
+						insert_in_cms_table(cmt, c);
+					}
 				}
 			}
 		}
@@ -1123,31 +1159,45 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	 * shallow one on the same disjunct cannot be marked too (this could
 	 * facilitate faster detection by power_prune()) because this would be
 	 * wrongly reflected through the cms table. */
-	for (WordIdx w = 0; w < sent->length; w++)
+
+	if (js->table[0] != NULL)
 	{
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		for (int dir = 0; dir < 2; dir++)
 		{
-			for (int dir = 0; dir < 2; dir++)
+			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				Connector *first_c = (dir) ? (d->left) : (d->right);
-				for (Connector *c = first_c; c != NULL; c = c->next)
+				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
 				{
-					if (c->nearest_word == BAD_WORD)
+					if (0 == c->suffix_id) continue;
+					if (mark_bad_connectors(cmt, c))
 					{
-						/* Already marked w/BAD_WORD, mainly through jet sharing. */
-						D_deleted++;
-						break; /* no need to further check the same jet */
-					}
-					Cms *cms = lookup_in_cms_table(cmt, connector_string(c));
-					if (cms->c->nearest_word == BAD_WORD)
-					{
-						c->nearest_word = BAD_WORD;
 						D_deleted++;
 						break;
 					}
 				}
 			}
+		}
+	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (int dir = 0; dir < 2; dir++)
+				{
+					Connector *first_c = (dir) ? (d->left) : (d->right);
+					for (Connector *c = first_c; c != NULL; c = c->next)
+					{
+						if (mark_bad_connectors(cmt, c))
+						{
+							D_deleted++;
+							break;
+						}
+					}
+				}
 
+			}
 		}
 	}
 
