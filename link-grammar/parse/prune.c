@@ -951,13 +951,15 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 	return false;
 }
 
-static Cms *lookup_in_cms_table(multiset_table *cmt, const char *pp_link)
+/* FIXME? There is some code duplication here and in insert_in_cms_table()
+ * but it seems cumbersome to fix it. */
+static Cms *lookup_in_cms_table(multiset_table *cmt, Connector *c)
 {
-	unsigned int h = cms_hash(pp_link);
+	unsigned int h = cms_hash(connector_string(c));
 
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
-		if (string_set_cmp(pp_link, connector_string(cms->c))) return cms;
+		if (c->desc == cms->c->desc) return cms;
 	}
 
 	return NULL;
@@ -1050,7 +1052,7 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 	if (c->nearest_word == BAD_WORD)
 		return true; /* Already marked (mainly by jet sharing). */
 
-	Cms *cms = lookup_in_cms_table(cmt, connector_string(c));
+	Cms *cms = lookup_in_cms_table(cmt, c);
 	if (cms->c->nearest_word == BAD_WORD)
 	{
 		c->nearest_word = BAD_WORD;
