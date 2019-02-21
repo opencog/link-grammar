@@ -251,9 +251,9 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, le, re, null_count)];
 	int l_id = (NULL != le) ? le->suffix_id : lw;
 	int r_id = (NULL != re) ? re->suffix_id : rw;
+	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, l_id, r_id, null_count)];
 
 	for (; t != NULL; t = t->next) {
 		if ((t->set.l_id == l_id) && (t->set.r_id == r_id) &&
@@ -286,7 +286,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = pair_hash(pex->x_table_size, lw, rw, le, re, null_count);
+	h = pair_hash(pex->x_table_size, lw, rw, n->set.l_id, n->set.r_id, null_count);
 	t = pex->x_table[h];
 	n->next = t;
 	pex->x_table[h] = n;

@@ -249,19 +249,10 @@ static inline uint32_t string_hash(const char *s)
  */
 static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
-                            const Connector *le, const Connector *re,
+                            int l_id, const int r_id,
                             unsigned int cost)
 {
 	unsigned int i;
-	int l_id = 0, r_id = 0;
-
-	if (NULL != le) l_id = le->suffix_id;
-	if (NULL != re) r_id = re->suffix_id;
-
-#ifdef DEBUG
-	assert(((NULL == le) || le->suffix_id) &&
-	       ((NULL == re) || re->suffix_id));
-#endif
 
 #if 0
 	/* hash function. Based on some tests, this seems to be
