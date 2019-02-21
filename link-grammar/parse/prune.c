@@ -1102,6 +1102,11 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		}
 	}
 
+	/* Iterate over all connectors and mark the bad trigger connectors.
+	 * If the marked connector is not the shallow one, note that the
+	 * shallow one on the same disjunct cannot be marked too (this could
+	 * facilitate faster detection by power_prune()) because this would be
+	 * wrongly reflected through the cms table. */
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
