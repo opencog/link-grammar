@@ -740,7 +740,8 @@ static void list_links(Linkage lkg, const Parse_set * set, int index)
 	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
-static void list_random_links(Linkage lkg, extractor_t * pex, const Parse_set * set)
+static void list_random_links(Linkage lkg, unsigned int *rand_state,
+                              const Parse_set * set)
 {
 	Parse_choice *pc;
 	int num_pc, new_index;
@@ -751,7 +752,7 @@ static void list_random_links(Linkage lkg, extractor_t * pex, const Parse_set * 
 		num_pc++;
 	}
 
-	new_index = rand_r(&pex->rand_state) % num_pc;
+	new_index = rand_r(rand_state) % num_pc;
 
 	num_pc = 0;
 	for (pc = set->first; pc != NULL; pc = pc->next) {
@@ -760,8 +761,8 @@ static void list_random_links(Linkage lkg, extractor_t * pex, const Parse_set * 
 	}
 
 	issue_links_for_choice(lkg, pc);
-	list_random_links(lkg, pex, pc->set[0]);
-	list_random_links(lkg, pex, pc->set[1]);
+	list_random_links(lkg, rand_state, pc->set[0]);
+	list_random_links(lkg, rand_state, pc->set[1]);
 }
 
 /**
@@ -777,7 +778,7 @@ void extract_links(extractor_t * pex, Linkage lkg)
 		bool repeatable = false;
 		if (0 == pex->rand_state) repeatable = true;
 		if (repeatable) pex->rand_state = index;
-		list_random_links(lkg, pex, pex->parse_set);
+		list_random_links(lkg, &pex->rand_state, pex->parse_set);
 		if (repeatable)
 			pex->rand_state = 0;
 		else
