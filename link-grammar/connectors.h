@@ -244,24 +244,13 @@ static inline uint32_t string_hash(const char *s)
 
 /**
  * Hash function for the classic parser linkage memoization.
- * FIXME: Now that it is based on small-integer connector IDs, it may
- * be far from optimal. To be fixed.
  */
 static inline unsigned int pair_hash(unsigned int table_size,
                             int lw, int rw,
-                            const Connector *le, const Connector *re,
-                            unsigned int cost)
+                            int l_id, const int r_id,
+                            unsigned int null_count)
 {
 	unsigned int i;
-	int l_id = 0, r_id = 0;
-
-	if (NULL != le) l_id = le->suffix_id;
-	if (NULL != re) r_id = re->suffix_id;
-
-#ifdef DEBUG
-	assert(((NULL == le) || le->suffix_id) &&
-	       ((NULL == re) || re->suffix_id));
-#endif
 
 #if 0
 	/* hash function. Based on some tests, this seems to be
@@ -277,7 +266,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	i += i >> log2_table_size;
 #else
 	/* sdbm-based hash */
-	i = cost;
+	i = null_count;
 	i = lw + (i << 6) + (i << 16) - i;
 	i = rw + (i << 6) + (i << 16) - i;
 	i = l_id + (i << 6) + (i << 16) - i;
