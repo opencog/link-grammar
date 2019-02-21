@@ -747,17 +747,26 @@ static void list_random_links(Linkage lkg, unsigned int *rand_state,
 	int num_pc, new_index;
 
 	if (set == NULL || set->first == NULL) return;
-	num_pc = 0;
-	for (pc = set->first; pc != NULL; pc = pc->next) {
-		num_pc++;
+
+	/* Most of the times there is only one list element. */
+	if (set->first->next == NULL)
+	{
+		pc = set->first;
 	}
+	else
+	{
+		num_pc = 0;
+		for (pc = set->first; pc != NULL; pc = pc->next) {
+			num_pc++;
+		}
 
-	new_index = rand_r(rand_state) % num_pc;
+		new_index = rand_r(rand_state) % num_pc;
 
-	num_pc = 0;
-	for (pc = set->first; pc != NULL; pc = pc->next) {
-		if (new_index == num_pc) break;
-		num_pc++;
+		num_pc = 0;
+		for (pc = set->first; pc != NULL; pc = pc->next) {
+			if (new_index == num_pc) break;
+			num_pc++;
+		}
 	}
 
 	issue_links_for_choice(lkg, pc);
