@@ -847,14 +847,9 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 
 static multiset_table * cms_table_new(void)
 {
-	multiset_table *mt;
-	int i;
+	multiset_table *mt = (multiset_table *) xalloc(sizeof(multiset_table));
+	memset(mt, 0, sizeof(multiset_table));
 
-	mt = (multiset_table *) xalloc(sizeof(multiset_table));
-
-	for (i=0; i<CMS_SIZE; i++) {
-		mt->cms_table[i] = NULL;
-	}
 	return mt;
 }
 
