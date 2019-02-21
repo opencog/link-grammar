@@ -406,6 +406,8 @@ static void clean_table(unsigned int size, C_list **t)
 
 		while (NULL != *m)
 		{
+			assert(0 <= (*m)->c->suffix_id, "clean_table: suffix_id < 0 (%d)",
+			       (*m)->c->suffix_id);
 			if (0 == (*m)->c->suffix_id)
 				*m = (*m)->next;
 			else
