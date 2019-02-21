@@ -965,16 +965,32 @@ static Cms *lookup_in_cms_table(multiset_table *cmt, const char *pp_link)
 
 static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 {
-	Cms * cms;
-	unsigned int h;
-	cms = lookup_in_cms_table(cmt, connector_string(c));
+	Cms *cms, *prev = NULL;
+	unsigned int h = cms_hash(connector_string(c));
+
+	for (cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
+	{
+		if (c->desc == cms->c->desc) break;
+		prev = cms;
+	}
+
 	if (cms == NULL)
 	{
 		cms = (Cms *) xalloc(sizeof(Cms));
 		cms->c = c;
-		h = cms_hash(connector_string(c));
 		cms->next = cmt->cms_table[h];
 		cmt->cms_table[h] = cms;
+	}
+	else
+	{
+		/* MRU order */
+		if (prev != NULL)
+		{
+			Cms *t = cms->next;
+			cms->next = cmt->cms_table[h];
+			cmt->cms_table[h] = cms;
+			prev->next = t;
+		}
 	}
 }
 
