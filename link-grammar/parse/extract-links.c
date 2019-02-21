@@ -241,13 +241,12 @@ void free_extractor(extractor_t * pex)
 	xfree((void *) pex, sizeof(extractor_t));
 }
 
-static inline unsigned int el_pair_hash(extractor_t * pex,
+static inline unsigned int el_pair_hash(unsigned int table_size,
                             int lw, int rw,
                             const Connector *le, const Connector *re,
                             unsigned int null_count)
 {
 	unsigned int i;
-	size_t table_size = pex->x_table_size;
 	int l_id = 0, r_id = 0;
 
 	if (NULL != le) l_id = le->suffix_id;
@@ -277,7 +276,7 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	t = pex->x_table[el_pair_hash(pex, lw, rw, le, re, null_count)];
+	t = pex->x_table[el_pair_hash(pex->x_table_size, lw, rw, le, re, null_count)];
 	int l_id = (NULL != le) ? le->suffix_id : lw;
 	int r_id = (NULL != re) ? re->suffix_id : rw;
 
@@ -312,7 +311,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = el_pair_hash(pex, lw, rw, le, re, null_count);
+	h = el_pair_hash(pex->x_table_size, lw, rw, le, re, null_count);
 	t = pex->x_table[h];
 	n->next = t;
 	pex->x_table[h] = n;
