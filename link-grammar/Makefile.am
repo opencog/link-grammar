@@ -142,6 +142,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/wg-display.c            \
 	tokenize/wordgraph.c             \
 	utilities.c                      \
+	vc_vector/vc_vector.c            \
 	                                 \
 	api-structures.h                 \
 	api-types.h                      \
@@ -199,7 +200,8 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/tokenize.h              \
 	tokenize/word-structures.h       \
 	tokenize/wordgraph.h             \
-	utilities.h
+	utilities.h                      \
+	vc_vector/vc_vector.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
@@ -217,7 +219,10 @@ EXTRA_DIST=                         \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
 	dict-sql/README.md               \
-	tokenize/README.md
+	tokenize/README.md               \
+	vc_vector/LICENSE.md
+
+
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
