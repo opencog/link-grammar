@@ -21,7 +21,6 @@
 #define IS_SENTENCE_WORD(sent, gword) (gword->unsplit_word == sent->wordgraph)
 
 Gword *gword_new(Sentence, const char *);
-Gword *empty_word(void); /* FIXME: Remove it. */
 size_t gwordlist_len(const Gword **);
 void gwordlist_append(Gword ***, Gword *);
 void gword_set_print(const gword_set *);

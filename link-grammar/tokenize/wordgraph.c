@@ -40,21 +40,6 @@ Gword *gword_new(Sentence sent, const char *s)
 	return gword;
 }
 
-/* FIXME: Remove it. */
-Gword *empty_word(void)
-{
-	/*
-	static Gword e = {
-		.subword = EMPTY_WORD_MARK,
-		.unsplit_word = &e,
-		.morpheme_type = MT_EMPTY,
-		.alternative_id = &e,
-		.status = WS_INDICT,
-	};
-	*/
-	return NULL;
-}
-
 static Gword **gwordlist_resize(Gword **arr, size_t len)
 {
 	arr = realloc(arr, (len+2) * sizeof(Gword *));
