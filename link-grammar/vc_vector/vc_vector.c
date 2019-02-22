@@ -22,7 +22,7 @@ struct vc_vector {
 
 // Auxiliary methods
 
-bool vc_vector_realloc(vc_vector* vector, size_t new_count) {
+static bool vc_vector_realloc(vc_vector* vector, size_t new_count) {
   const size_t new_size = new_count * vector->element_size;
   char* new_data = (char*)realloc(vector->data, new_size);
   if (!new_data) {
@@ -35,13 +35,13 @@ bool vc_vector_realloc(vc_vector* vector, size_t new_count) {
 }
 
 // [first_index, last_index)
-void vc_vector_call_deleter(vc_vector* vector, size_t first_index, size_t last_index) {
+static void vc_vector_call_deleter(vc_vector* vector, size_t first_index, size_t last_index) {
   for (size_t i = first_index; i < last_index; ++i) {
     vector->deleter(vc_vector_at(vector, i));
   }
 }
 
-void vc_vector_call_deleter_all(vc_vector* vector) {
+static void vc_vector_call_deleter_all(vc_vector* vector) {
   vc_vector_call_deleter(vector, 0, vc_vector_count(vector));
 }
 
@@ -112,15 +112,15 @@ bool vc_vector_is_equals(vc_vector* vector1, vc_vector* vector2) {
   return memcmp(vector1->data, vector2->data, size_vector1) == 0;
 }
 
-float vc_vector_get_growth_factor() {
+float vc_vector_get_growth_factor(void) {
   return GROWTH_FACTOR;
 }
 
-size_t vc_vector_get_default_count_of_elements() {
+size_t vc_vector_get_default_count_of_elements(void) {
   return DEFAULT_COUNT_OF_ELEMENTS;
 }
 
-size_t vc_vector_struct_size() {
+size_t vc_vector_struct_size(void) {
   return sizeof(vc_vector);
 }
 
