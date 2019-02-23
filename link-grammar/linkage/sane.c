@@ -378,7 +378,6 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				lgdebug(D_SLM, "\n");
 			}
 
-			//if (NULL != wpp->word) break; /* Extra null count; XXX always false*/
 			continue;
 		}
 
