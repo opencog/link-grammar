@@ -623,7 +623,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	return foundmatch;
 }
 
-static void mark_connector_sequence_for_dequeue(Connector *c, bool mark_bad_word)
+static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 {
 	for (; NULL != c; c = c->next)
 	{
@@ -679,8 +679,8 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 				bool bad = is_bad(d->left);
 				if (bad || left_connector_list_update(&pc, d->left, w, true) < 0)
 				{
-					mark_connector_sequence_for_dequeue(d->left, true);
-					mark_connector_sequence_for_dequeue(d->right, false);
+					mark_jet_for_dequeue(d->left, true);
+					mark_jet_for_dequeue(d->right, false);
 
 					/* discard the current disjunct */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
@@ -716,8 +716,8 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 				bool bad = is_bad(d->right);
 				if (bad || right_connector_list_update(&pc, d->right, w, true) >= sent->length)
 				{
-					mark_connector_sequence_for_dequeue(d->right, true);
-					mark_connector_sequence_for_dequeue(d->left, false);
+					mark_jet_for_dequeue(d->right, true);
+					mark_jet_for_dequeue(d->left, false);
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */

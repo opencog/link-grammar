@@ -10,16 +10,16 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api-structures.h"  // for Sentence_s
+#include "api-structures.h"             // Sentence_s
 #include "api-types.h"
-#include "dict-common/regex-morph.h" // for match_regex
-#include "connectors.h" // for MAX_SENTENCE
-#include "disjunct-utils.h"  // for Disjunct_struct
+#include "dict-common/regex-morph.h"    // match_regex
+#include "connectors.h"                 // MAX_SENTENCE
+#include "disjunct-utils.h"             // Disjunct_struct
 #include "lg_assert.h"
 #include "linkage.h"
 #include "sane.h"
-#include "tokenize/tok-structures.h" // Needed for Wordgraph_pathpos_s
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/tok-structures.h"    // Wordgraph_pathpos_s
+#include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
 #include "utilities.h"
 
@@ -35,8 +35,8 @@
  * is constructed when the Wordgraph termination word is encountered.
  *
  * Note: The final path doesn't match the linkage word indexing if the linkage
- * contains empty words, at least until empty words are eliminated from the
- * linkage (in compute_chosen_words()). Further processing of the path is done
+ * contains optional words which are null, until the are eliminated from the
+ * linkage (in remove_empty_words()). Further processing of the path is done
  * there in case morphology splits are to be hidden or there are morphemes with
  * null linkage.
  */
@@ -99,21 +99,20 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 	(*nwp)[n].word = p;
 
-	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
+	if (NULL == path)
 	{
-			/* Previous word is the Wordgraph dummy word. Initialize the path. */
 			(*nwp)[n].path = NULL;
 	}
 	else
 	{
 		/* Duplicate the path from the current one. */
-		assert(NULL != path, "wordgraph_path_append(): Duplicating a null path");
-
 		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
 
 		(*nwp)[n].path = malloc(path_arr_size);
 		memcpy((*nwp)[n].path, path, path_arr_size);
 	}
+
+	if (NULL == current_word) return;
 
 	/* If we queue the same word again, its path remains the same.
 	 * Else append the current word to it. */
@@ -379,7 +378,6 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				lgdebug(D_SLM, "\n");
 			}
 
-			//if (NULL != wpp->word) break; /* Extra null count; XXX always false*/
 			continue;
 		}
 

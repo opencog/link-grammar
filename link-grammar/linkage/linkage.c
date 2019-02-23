@@ -16,8 +16,8 @@
 
 #include "api-structures.h"
 #include "connectors.h"
-#include "dict-common/dict-affix.h"  // for INFIX_MARK from dict.
-#include "dict-common/dict-defines.h" // for SUBSCRIPT_MARK
+#include "dict-common/dict-affix.h"     // INFIX_MARK
+#include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
 #include "disjunct-utils.h"
 #include "link-includes.h"
@@ -27,7 +27,7 @@
 #include "string-set.h"
 #include "tokenize/wordgraph.h"
 #include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
-#include "tokenize/word-structures.h" // For Word_struct
+#include "tokenize/word-structures.h"    // Word_struct
 
 #define INFIX_MARK_L 1 /* INFIX_MARK is 1 character */
 #define STEM_MARK_L  1 /* stem mark is 1 character */

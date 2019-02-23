@@ -119,28 +119,6 @@ static bool contains_digits(const char * s, locale_t dict_locale)
 	}
 	return false;
 }
-
-#if 0
-/**
- * Return true if an alternative has been issued for the given word.
- * If there is an alternative, the previous word points to it.
- * Its unsplit_word is the given word.
- *
- * Return true if an alternative is found, else false.
- * XXX need to check correctness.
- * XXX It seems this function is not needed any more. Remove if so.
- */
-static bool word_has_alternative(const Gword *word)
-{
-	const Gword **n;
-
-	for (n = word->prev[0]->next; *n; n++)
-	{
-		if ((*n)->unsplit_word == word) return true;
-	}
-	return false;
-}
-#endif
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 /**
@@ -367,32 +345,6 @@ static bool word_start_another_alternative(Dictionary dict,
  * FIXME? Try to work-around the current need of this functions.
  */
 static char const *contraction_char[] = { "'", "’" };
-
-#if 0
-static bool is_contraction_suffix(const char *s)
-{
-	size_t len = strlen(s);
-
-	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
-	{
-		size_t cclen = strlen(contraction_char[i]);
-		if (len < cclen) continue;
-		if (0 == strncmp(s+len-cclen, contraction_char[i], cclen)) return true;
-	}
-
-	return false;
-}
-
-static bool is_contraction_prefix(const char *s)
-{
-	for (size_t i = 0; i < ARRAY_SIZE(contraction_char); i++)
-	{
-		size_t cclen = strlen(contraction_char[i]);
-		if (0 == strncmp(s, contraction_char[i], cclen)) return true;
-	}
-	return false;
-}
-#endif
 
 static bool is_contraction_word(Dictionary dict, const char *s)
 {
@@ -3182,21 +3134,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 }
 #undef D_DWE
 
-#if 0 /* unused */
-/**
- * Find whether w1 and w2 have been generated together in the same alternative.
- */
-static bool is_alternative_next_word(const Gword *w1, const Gword *w2)
-{
-	assert(NULL != w1->alternative_id, "Word '%s' NULL alternative_id",
-	       w1->subword);
-	lgdebug(+6, "w1='%s' (%p=%s) w2='%s' (%p=%s) \n",
-	        w1->subword, w1->alternative_id, w1->alternative_id->subword,
-	        w2->subword, w2->alternative_id, w2->alternative_id->subword);
-	return (w1->alternative_id == w2->alternative_id);
-}
-#endif
-
 #ifdef FIXIT /* unused */
 /* XXX WS_UNSPLIT */
 static bool same_unsplit_word(Sentence sent, const Gword *w1, const Gword *w2)
@@ -3297,7 +3234,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
-			if (NULL == wg_word->next) continue; /* XXX avoid termination */
+			if (MT_INFRASTRUCTURE == wg_word->morpheme_type)
+				continue; /* XXX avoid termination word */
 
 			if (wpp_old->same_word)
 			{
@@ -3338,7 +3276,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
-			if (NULL == wg_word->next) continue; /* XXX avoid termination word */
+			if (MT_INFRASTRUCTURE == wg_word->morpheme_type)
+				continue; /* XXX avoid termination word */
 
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
@@ -3381,7 +3320,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			{
 				bool same_alternative = false;
 
-				if (NULL == wg_word->next) continue; /* termination word */
+				if (MT_INFRASTRUCTURE == wg_word->morpheme_type)
+					continue; /* termination word */
 
 				if (NULL != wp_new)
 				{
