@@ -508,4 +508,9 @@ static inline size_t next_power_of_two_up(size_t i)
 	return j;
 }
 
+/* "strict type" definition. E.g: STYPEDEF(vc_vector, g1); */
+#define STYPEDEF(type, name) \
+	struct name##_stypedef { int x; }; \
+	typedef struct name##_stypedef name
+
 #endif /* _LINK_GRAMMAR_UTILITIES_H_ */
