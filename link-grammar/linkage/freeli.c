@@ -29,9 +29,10 @@ void free_linkage(Linkage linkage)
 
 	linkage_free_pp_domains(linkage);
 
-	/* XXX FIXME */
-	free(linkage->wg_path);
-	free(linkage->wg_path_display);
+	if (NULL != linkage->wg_path)
+		gwordlist_delete(linkage->wg_path);
+	if (NULL != linkage->wg_path_display)
+		gwordlist_delete(linkage->wg_path_display);
 }
 
 void free_linkages(Sentence sent)

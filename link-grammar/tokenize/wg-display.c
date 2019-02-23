@@ -193,7 +193,6 @@ static const char *wlabel(Sentence sent, const Gword *w)
 static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *modestr)
 {
 	const Gword *w;
-	Gword	**wp;
 	dyn_str *wgd = dyn_str_new(); /* the wordgraph in dot representation */
 	char nn[2*sizeof(char *) + 2 + 2 + 1]; /* \"%p\" node name: "0x..."+NUL*/
 
@@ -222,15 +221,14 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 			/* In this mode nodes that are only unsplit_word are not shown. */
 			for (wu = sent->wordgraph; wu; wu = wu->chain_next)
 			{
-				if (NULL != wu->next)
+				for (Gword **wp = gwordlist_begin(wu->next);
+								 wp != gwordlist_end(wu->next);
+								 wp = gwordlist_next(wu->next, wp))
 				{
-					for (wp = wu->next; *wp; wp++)
+					if (w == *wp)
 					{
-						if (w == *wp)
-						{
-							show_node = true;
-							break;
-						}
+						show_node = true;
+						break;
 					}
 				}
 			}
@@ -279,23 +277,21 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 
 		dyn_strcat(wgd, "\"];\n");
 
-		if (NULL != w->next)
+		for (Gword **wp = gwordlist_begin(w->next);
+						 wp != gwordlist_end(w->next);
+						 wp = gwordlist_next(w->next, wp))
 		{
-			for (wp = w->next; *wp; wp++)
-			{
-				append_string(wgd, "%s->\"%p\" [label=next color=red];\n",
-				              nn, *wp);
-			}
+			append_string(wgd, "%s->\"%p\" [label=next color=red];\n",
+							  nn, *wp);
 		}
 		if (mode & WGR_PREV)
 		{
-			if (NULL != w->prev)
+			for (Gword **wp = gwordlist_begin(w->prev);
+							 wp != gwordlist_end(w->prev);
+							 wp = gwordlist_next(w->prev, wp))
 			{
-				for (wp = w->prev; *wp; wp++)
-				{
-					append_string(wgd, "%s->\"%p\" [label=prev color=blue];\n",
-					              nn, *wp);
-				}
+				append_string(wgd, "%s->\"%p\" [label=prev color=blue];\n",
+								  nn, *wp);
 			}
 		}
 		if (mode & WGR_UNSPLIT)
@@ -349,7 +345,7 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 			}
 
 #ifdef WGR_SHOW_TERMINATOR_AT_LHS
-			if (NULL == w->next) terminating_node = w;
+			if (gwordlist_empty(w->next)) terminating_node = w;
 #endif
 		}
 		dyn_strcat(wgd, "}\n");

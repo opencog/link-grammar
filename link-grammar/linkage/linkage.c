@@ -109,15 +109,14 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	free(usubword);
 	new_word->status |= WS_PL;
 	new_word->label = "NJ";
-	new_word->null_subwords = NULL;
+	new_word->null_subwords = gwordlist_new(2);
 	new_word->start = (*start)->start;
 	new_word->end = (*end)->end;
 
 	/* Link the null_subwords links of the added unifying node to the null
 	 * subwords it unified. */
 	for (w = start; w <= end; w++)
-		gwordlist_append(&new_word->null_subwords, (Gword *)(*w));
-	/* Removing const qualifier, but gwordlist_append doesn't change w->... .  */
+			gwordlist_append(new_word->null_subwords, w);
 
 	return new_word;
 }
@@ -224,14 +223,14 @@ void remove_empty_words(Linkage lkg)
 	size_t i, j;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
-	Gword **wgp = lkg->wg_path;
+	Gword **wgp = gwordlist_begin(lkg->wg_path);
 
 	for (i = 0, j = 0; i < lkg->num_words; i++)
 	{
 		/* Discard optional words that are not real null-words.  Note that
 		 * if optional words don't have non-optional words after them,
-		 * wg_path doesn't include them, and hence *wgp is NULL then. */
-		if ((NULL == *wgp) || ((*wgp)->sent_wordidx != i))
+		 * wg_path doesn't include them. */
+		if ((gwordlist_end(lkg->wg_path) == wgp) || ((*wgp)->sent_wordidx != i))
 		{
 			assert((NULL == cdj[i]) && lkg->sent->word[i].optional);
 			remap[i] = -1;
@@ -243,7 +242,8 @@ void remove_empty_words(Linkage lkg)
 		cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
 		remap[i] = j;
 		j++;
-		wgp++;
+		if (gwordlist_end(lkg->wg_path) != wgp)
+			wgp = gwordlist_next(lkg->wg_path, wgp);
 	}
 	if (lkg->num_words != j)
 	{
@@ -318,10 +318,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	bool display_morphology = opts->display_morphology;
 	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
 
-	Gword **lwg_path = linkage->wg_path;
-	Gword **n_lwg_path = NULL; /* new Wordgraph path, to match chosen_words */
+	Gwordlist *lwg_path = linkage->wg_path;    /* from sane_linkage_morphism() */
+	Gwordlist *n_lwg_path =         /* constructed here, to match chosen_words */
+		gwordlist_new(gwordlist_len(lwg_path));
 
-	Gword **nullblock_start = NULL; /* start of a null block, to be put in [] */
+	Gword **nullblock_start = NULL; /* null block start, to be displayed in [] */
 	size_t nbsize = 0;              /* number of word in a null block */
 	Gword *sentence_word;
 
@@ -369,11 +370,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 		lgdebug(D_CCW, "Loop start, word%zu: cdj %s, path %s\n",
 		        i, cdj ? cdj->word_string : "NULL",
-		        lwg_path[i] ? lwg_path[i]->subword : "NULL");
+		        (i < gwordlist_len(lwg_path)) ?
+		           (*gwordlist_at(lwg_path, i))->subword : "NULL");
 
-		w = lwg_path[i];
-		nw = lwg_path[i+1];
-		wgp = &lwg_path[i];
+		w = *gwordlist_at(lwg_path, i);
+		nw = *gwordlist_at(lwg_path, i+1);
+		wgp = gwordlist_at(lwg_path, i);
 		sentence_word = wg_get_sentence_word(sent, w);
 
 		/* FIXME If the original word was capitalized in a capitalizable
@@ -410,20 +412,20 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					lgdebug(D_CCW, "A single null subword.\n");
 					t = join_null_word(sent, wgp, nbsize);
 
-					gwordlist_append(&n_lwg_path, w);
+					gwordlist_append(n_lwg_path, &w);
 				}
 				else
 				{
 					lgdebug(D_CCW, "Combining null subwords");
 					/* Use alternative_id to check for start of alternative. */
-					if (((*nullblock_start)->alternative_id == *nullblock_start)
-					    && at_nullblock_end)
+					if (((*nullblock_start)->alternative_id == *nullblock_start) &&
+					    at_nullblock_end)
 					{
 						/* Case 2: A null unsplit_word (all-nulls alternative).*/
 						lgdebug(D_CCW, " (null alternative)\n");
 						t = sentence_word->subword;
 
-						gwordlist_append(&n_lwg_path, sentence_word);
+						gwordlist_append(n_lwg_path, &sentence_word);
 					}
 					else
 					{
@@ -432,7 +434,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 
 						lgdebug(D_CCW, " (null partial word)\n");
 						wgnull = wordgraph_null_join(sent, wgp-nbsize+1, wgp);
-						gwordlist_append(&n_lwg_path, wgnull);
+						gwordlist_append(n_lwg_path, &wgnull);
 						t = wgnull->subword;
 					}
 				}
@@ -499,7 +501,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * for joining... */
 
 					const Gword *unsplit_word = w->unsplit_word;
-					for (wgaltp = wgp, j = i; NULL != *wgaltp; wgaltp++, j++)
+					for (wgaltp = wgp, j = i; wgaltp != gwordlist_end(lwg_path); wgaltp++, j++)
 					{
 
 						if ((*wgaltp)->unsplit_word != unsplit_word) break;
@@ -560,7 +562,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 									 * get_word_*() will work and return the original
 									 * morpheme positions. */
 									wg_placeholder = wordgraph_link_placeholder(sent, *wgaltp);
-									gwordlist_append(&n_lwg_path, wg_placeholder);
+									gwordlist_append(n_lwg_path, &wg_placeholder);
 								}
 							}
 
@@ -607,7 +609,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 							 (SUBSCRIPT_MARK == join[join_len-1]))
 							join[join_len-1] = '\0';
 
-						gwordlist_append(&n_lwg_path, w->unsplit_word);
+						gwordlist_append(n_lwg_path, &w->unsplit_word);
 						t = string_set_add(join, sent->string_set);
 						free(join);
 
@@ -616,7 +618,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 				}
 			}
 
-			if (!join_alt) gwordlist_append(&n_lwg_path, *wgp);
+			if (!join_alt) gwordlist_append(n_lwg_path, wgp);
 
 			/*
 			 * Add guess marks in [] square brackets, if needed, at the
@@ -915,13 +917,13 @@ double linkage_corpus_cost(const Linkage linkage)
 size_t linkage_get_word_byte_start(const Linkage linkage, WordIdx w)
 {
 	if (linkage->num_words <= w) return 0; /* bounds-check */
-	return linkage->wg_path_display[w]->start - linkage->sent->orig_sentence;
+	return (*gwordlist_at(linkage->wg_path_display, w))->start - linkage->sent->orig_sentence;
 }
 
 size_t linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
 {
 	if (linkage->num_words <= w) return 0; /* bounds-check */
-	return linkage->wg_path_display[w]->end - linkage->sent->orig_sentence;
+	return (*gwordlist_at(linkage->wg_path_display, w))->end - linkage->sent->orig_sentence;
 }
 
 /* The character position is computed in a straightforward way, which may
@@ -931,7 +933,7 @@ size_t linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
 size_t linkage_get_word_char_start(const Linkage linkage, WordIdx w)
 {
 	if (linkage->num_words <= w) return 0; /* bounds-check */
-	int pos = (int)(linkage->wg_path_display[w]->start - linkage->sent->orig_sentence);
+	int pos = (int)((*gwordlist_at(linkage->wg_path_display, w))->start - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
 }
@@ -939,7 +941,7 @@ size_t linkage_get_word_char_start(const Linkage linkage, WordIdx w)
 size_t linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 {
 	if (linkage->num_words <= w) return 0; /* bounds-check */
-	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
+	int pos = (int)((*gwordlist_at(linkage->wg_path_display, w))->end - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
 }

@@ -41,7 +41,7 @@
  * null linkage.
  */
 #define D_WPA 7
-static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
+static void wordgraph_path_append(Wordgraph_pathpos **nwp, Gwordlist *path,
                                   Gword *current_word, /* add to the path */
                                   Gword *p)      /* add to the path queue */
 {
@@ -65,22 +65,22 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 			{
 				lgdebug(D_WPA, "Word %s (after %zu) exists (after %zu)\n",
 				        p->subword,
-				        wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx,
-				        path[gwordlist_len(path)-1]->sent_wordidx);
+				        (*gwordlist_at(wpt->path, gwordlist_len(wpt->path)-1))->sent_wordidx,
+				        (*gwordlist_at(path, gwordlist_len(path)-1))->sent_wordidx);
 				/* If we are here, there are 2 or more paths leading to this word
 				 * (p) that end with the same number of consecutive null words that
 				 * consist an entire alternative. These null words represent
 				 * different ways to split the subword upward in the hierarchy.
 				 * For a nicer result we choose the shorter path. */
-				if (wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx <=
-				    path[gwordlist_len(path)-1]->sent_wordidx)
+				if ((*gwordlist_at(wpt->path, gwordlist_len(wpt->path)-1))->sent_wordidx <=
+				    (*gwordlist_at(path, gwordlist_len(path)-1))->sent_wordidx)
 				{
 					lgdebug(D_WPA, "Shorter path already queued\n");
 					return; /* The shorter path is already in the queue. */
 				}
 				lgdebug(D_WPA, "Longer path is in the queue\n");
 				//print_lwg_path((Gword **)wpt->path, "Freeing");
-				free(wpt->path); /* To be replaced by a shorter path. */
+				gwordlist_delete(wpt->path); /* To be replaced by a shorter path.*/
 				break;
 			}
 		}
@@ -100,27 +100,16 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	(*nwp)[n].word = p;
 
 	if (NULL == path)
-	{
-			(*nwp)[n].path = NULL;
-	}
+		(*nwp)[n].path = gwordlist_new(30);
 	else
-	{
-		/* Duplicate the path from the current one. */
-		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
-
-		(*nwp)[n].path = malloc(path_arr_size);
-		memcpy((*nwp)[n].path, path, path_arr_size);
-	}
+		(*nwp)[n].path = gwordlist_copy(path); /* Duplicate the current path. */
 
 	if (NULL == current_word) return;
 
 	/* If we queue the same word again, its path remains the same.
 	 * Else append the current word to it. */
 	if (p != current_word)
-	{
-		/* FIXME (cast) but anyway gwordlist_append() doesn't modify Gword. */
-		gwordlist_append((Gword ***)&(*nwp)[n].path, current_word);
-	}
+		gwordlist_append((*nwp)[n].path, &current_word);
 }
 
 /**
@@ -136,7 +125,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
 	for (twp = wp; NULL != twp->word; twp++)
 	{
 		if (free_final_path || (MT_INFRASTRUCTURE != twp->word->morpheme_type))
-			free(twp->path);
+			gwordlist_delete(twp->path);
 	}
 	free(wp);
 }
@@ -151,7 +140,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
  * Finally, the words are traversed and the lists are followed and
  * numbered. The WG path is used to skip optional words which are null.
  */
-static size_t num_islands(const Linkage lkg, const Gword **wg_path)
+static size_t num_islands(const Linkage lkg, const Gwordlist *wg_path)
 {
 	struct word
 	{
@@ -202,11 +191,13 @@ static size_t num_islands(const Linkage lkg, const Gword **wg_path)
 	/* Count islands. */
 	int inum = -1;
 	Disjunct **cdj = lkg->chosen_disjuncts;
+	Gword **wg_path_p = gwordlist_begin(wg_path);
 
 	for (WordIdx w = 0; w < lkg->sent->length; w++)
 	{
 		/* Skip null words which are optional words. */
-		if ((NULL == *wg_path) || ((*wg_path)->sent_wordidx != w))
+		if ((gwordlist_end(wg_path) == wg_path_p) ||
+		    ((*wg_path_p)->sent_wordidx != w))
 		{
 			assert(word[w].prev == word[w].next);
 			assert((NULL == cdj[w]) && lkg->sent->word[w].optional);
@@ -216,7 +207,8 @@ static size_t num_islands(const Linkage lkg, const Gword **wg_path)
 			continue;
 		}
 
-		wg_path++;
+		if (gwordlist_end(wg_path) != wg_path_p)
+			wg_path_p = gwordlist_next(wg_path, wg_path_p);
 		if (NO_WORD == word[w].prev) continue;
 
 		inum++;
@@ -285,12 +277,11 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Wordgraph_pathpos *wp_new = NULL;
 	Wordgraph_pathpos *wp_old = NULL;
 	Wordgraph_pathpos *wpp;
-	Gword **next; /* next Wordgraph words of the current word */
 	size_t i;
 	size_t null_count_found = 0;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
-	Gword **lwg_path;
+	Gwordlist *lwg_path;
 
 	Dictionary afdict = sent->dict->affix_table;       /* for SANEMORPHISM */
 	char *const affix_types = alloca(sent->length*2 + 1);   /* affix types */
@@ -299,9 +290,12 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	lkg->wg_path = NULL;
 
 	/* Populate the path word queue, initializing the path to NULL. */
-	for (next = sent->wordgraph->next; *next; next++)
+	Gwordlist *glsent = sent->wordgraph->next;
+	for (Gword **gw = gwordlist_begin(glsent);
+	             gw != gwordlist_end(glsent);
+	             gw = gwordlist_next(glsent, gw))
 	{
-		wordgraph_path_append(&wp_new, /*path*/NULL, /*add_word*/NULL, *next);
+		wordgraph_path_append(&wp_new, /*path*/NULL, /*add_word*/NULL, *gw);
 	}
 	assert(NULL != wp_new, "Path word queue is empty");
 
@@ -355,11 +349,14 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				 * of them. However, the position of the null words can be inferred
 				 * from the null words in the word array of the Linkage structure.
 				 */
-				for (next = wpp->word->next; NULL != *next; next++)
+				Gwordlist *wn = wpp->word->next;
+				for (Gword **gw = gwordlist_begin(wn);
+				             gw != gwordlist_end(wn);
+				             gw = gwordlist_next(wn, gw))
 				{
 					if (MT_INFRASTRUCTURE != wpp->word->morpheme_type)
 						match_found = true;
-					wordgraph_path_append(&wp_new, wpp->path, wpp->word, *next);
+					wordgraph_path_append(&wp_new, wpp->path, wpp->word, *gw);
 				}
 			}
 
@@ -400,9 +397,12 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				if (gl->o_gword == wpp->word)
 				{
 					match_found = true;
-					for (next = wpp->word->next; NULL != *next; next++)
+					Gwordlist *wn = wpp->word->next;
+					for (Gword **gw = gwordlist_begin(wn);
+		                      gw != gwordlist_end(wn);
+		                      gw = gwordlist_next(wn, gw))
 					{
-						wordgraph_path_append(&wp_new, wpp->path, wpp->word, *next);
+						wordgraph_path_append(&wp_new, wpp->path, wpp->word, *gw);
 					}
 					break;
 				}
@@ -465,7 +465,6 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	if (match_found && (0 == sent->null_count) &&
 		(NULL != afdict) && (NULL != afdict->regex_root))
 	{
-		const Gword **w;
 		char *affix_types_p = affix_types;
 
 		/* Construct the affix_types string. */
@@ -473,7 +472,10 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		print_lwg_path(wpp->path, "Linkage");
 #endif
 		i = 0;
-		for (w = wpp->path; *w; w++)
+		for (Gword **w = gwordlist_begin(wpp->path);
+		             w != gwordlist_end(wpp->path);
+		             w = gwordlist_next(wpp->path, w))
+
 		{
 			i++;
 
@@ -539,7 +541,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		}
 	}
 
-	if (match_found) lwg_path = (Gword **)wpp->path; /* OK to modify */
+	if (match_found) lwg_path = wpp->path;
 	wordgraph_path_free(wp_old, true);
 	wordgraph_path_free(wp_new, !match_found);
 

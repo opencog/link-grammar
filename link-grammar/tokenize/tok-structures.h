@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include "api-types.h"
 #include "link-includes.h"
+#include "wordgraph.h"
 
 // TODO provide gword access methods!
 
@@ -125,8 +126,8 @@ struct Gword_struct
 	const char *end;     /* subword end position. */
 
 	Gword *unsplit_word; /* Upward-going co-tree */
-	Gword **next;        /* Right-going tree */
-	Gword **prev;        /* Left-going tree */
+	Gwordlist *next;     /* Right-going tree */
+	Gwordlist *prev;     /* Left-going tree */
 	Gword *chain_next;   /* Next word in the chain of all words */
 
 	/* Disjuncts and connectors point back to their originating Gword(s). */
@@ -162,17 +163,17 @@ struct Gword_struct
 	Gword *alternative_id;       /* Alternative start - a unique identifier of
 	                                the alternative to which the word belongs. */
 	const char *regex_name;      /* Subword matches this regex.
-                                   FIXME? Extend for multiple regexes. */
+	                                FIXME? Extend for multiple regexes. */
 
 	/* Only used by wordgraph_flatten() */
 	const Gword **hier_position; /* Unsplit_word/alternative_id pointer list, up
-                                   to the original sentence word. */
+	                                to the original sentence word. */
 	size_t hier_depth;           /* Number of pointer pairs in hier_position */
 
 	/* XXX Experimental. Only used after the linkage (by compute_chosen_words())
 	 * for an element in the linkage display wordgraph path that represents
 	 * a block of null words that are morphemes of the same word. */
-	Gword **null_subwords;       /* Null subwords represented by this word */
+	Gwordlist *null_subwords;    /* Null subwords represented by this word */
 };
 
 /* Wordgraph path word-positions,
@@ -186,7 +187,7 @@ struct Wordgraph_pathpos_s
 	bool next_ok;     /* OK to proceed to the next Wordgraph word */
 	bool used;        /* Debug - the word has been issued */
 	/* Only for sane_morphism(). */
-	const Gword **path; /* Linkage candidate wordgraph path */
+	Gwordlist *path;  /* Linkage candidate wordgraph path */
 };
 
 #endif

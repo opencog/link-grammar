@@ -250,6 +250,7 @@ static void word_label(Sentence sent, Gword *w, const char *op,
 }
 
 #ifdef CHECK_DUPLICATE_ALTS // Not defined - apparently not a problem by now
+/* XXX Not converted to use the gwordlist_*() access methods! */
 #define D_WSAA 9
 /**
  * Disallow unsplit_word alternatives with the same subword string path.
@@ -407,7 +408,7 @@ static Gword *for_word_alt(Sentence sent, Gword *altp,
 	if (NULL == altp) return NULL;
 	Gword *alternative_id = altp->alternative_id;
 
-	for (; altp->alternative_id == alternative_id; altp = altp->next[0])
+	for (; altp->alternative_id == alternative_id; altp = *gwordlist_at(altp->next, 0))
 	{
 		if (NULL == altp) break; /* Just in case this is a dummy word. */
 
@@ -422,7 +423,7 @@ static Gword *for_word_alt(Sentence sent, Gword *altp,
 		 *    (In that case its alternative_id may belong to a previous
 		 *    longer alternative).
 		 */
-		if ((NULL == altp->next) || altp->issued_unsplit)
+		if (gwordlist_empty(altp->next) || altp->issued_unsplit)
 			break; /* Only one token in this alternative. */
 	}
 
@@ -675,8 +676,6 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			if ((1 == token_tot) && subword_eq_unsplit_word)
 			{
 				/* Prevent adding a subword as a sole alternative to itself. */
-				Gword **q;
-
 				unsplit_word->issued_unsplit = true;
 
 				/*
@@ -727,11 +726,21 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				 * prev/next words so it will serve as an alternative too. */
 
 				/* Scan its "prev" words and add it as their "next" word */
-				for (q = unsplit_word->prev; *q; q++)
-					gwordlist_append(&(*q)->next, unsplit_word);
+				Gwordlist *gprev = unsplit_word->prev;
+				for (Gword **q = gwordlist_begin(gprev);
+				             q != gwordlist_end(gprev);
+				             q = gwordlist_next(gprev, q))
+				{
+					gwordlist_append((*q)->next, &unsplit_word);
+				}
 				/* Scan its "next" words and add it as their "prev" word */
-				for (q = unsplit_word->next; *q; q++)
-					gwordlist_append(&(*q)->prev, unsplit_word);
+				Gwordlist *gnext = unsplit_word->next;
+				for (Gword **q = gwordlist_begin(gnext);
+				             q != gwordlist_end(gnext);
+				             q = gwordlist_next(gnext, q))
+				{
+					gwordlist_append((*q)->prev, &unsplit_word);
+				}
 				word_label(sent, unsplit_word, "+", label);
 				word_label(sent, unsplit_word, NULL, "R");
 				unsplit_word->status |= WS_UNSPLIT;
@@ -822,36 +831,37 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					 * - If this is the first alternative - replace the "next" link
 					 *   pointing to unsplit_word with a link to subword,
 					 *   disconnecting unsplit_word from its RHS. */
-					Gword **p;
-
 					alternative_id = subword;
 
 					//previous_wordgraph_nextalts(sent, unsplit_word, subword);
 					/* Scan the said previous words. */
-					for (p = unsplit_word->prev; NULL != *p; p++)
+					Gwordlist *gnext = unsplit_word->prev;
+					for (Gword **p = gwordlist_begin(gnext);
+					             p != gwordlist_end(gnext);
+					             p = gwordlist_next(gnext, p))
 					{
-						Gword **n;
-
 						/* Create the "prev" link for subword */
-						gwordlist_append(&subword->prev, *p);
+						gwordlist_append(subword->prev, p);
 
 						if (unsplit_word->status & WS_HASALT)
 						{
-							gwordlist_append(&(*p)->next, subword);
+							gwordlist_append((*p)->next, &subword);
 						}
 						else
 						{
 							/* Scan the said "next" links */
-							for(n = (*p)->next; NULL != *n; n++)
+							size_t n;
+							Gwordlist *pnext = (*p)->next;
+							for (n = 0; n < gwordlist_len(pnext); n++)
 							{
-								if (*n == unsplit_word)
+								if (*gwordlist_at(pnext, n) == unsplit_word)
 								{
 									/* Now finally replace the "next" link */
-									*n = subword;
+									gwordlist_replace(pnext, n, &subword);
 									break;
 								}
 							}
-							assert(NULL != *n, "Adding subword '%s': "
+							assert(n < gwordlist_len(pnext), "Adding subword '%s': "
 							       "No corresponding next link for a prev link: "
 							       "prevword='%s' word='%s'",
 							       subword->subword, (*p)->subword, unsplit_word->subword);
@@ -870,34 +880,35 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					 *   pointing to unsplit_word with a link to subword,
 					 *   disconnecting unsplit_word from its LHS.
 					 */
-					Gword **n;
-
 					//next_wordgraph_prevalts(sent, unsplit_word, subword);
 					/* Scan the said next words. */
-					for (n = unsplit_word->next; NULL != *n; n++)
+					Gwordlist *nnext = unsplit_word->next;
+					for (Gword **n = gwordlist_begin(nnext);
+					             n != gwordlist_end(nnext);
+					             n = gwordlist_next(nnext, n))
 					{
-						Gword **p;
-
 						/* Create the "next" link for subword */
-						gwordlist_append(&subword->next, *n);
+						gwordlist_append(subword->next, n);
 
 						if (unsplit_word->status & WS_HASALT)
 						{
-							gwordlist_append(&(*n)->prev, subword);
+							gwordlist_append((*n)->prev, &subword);
 						}
 						else
 						{
 							/* Scan the said "prev" links */
-							for(p = (*n)->prev; NULL != *p; p++)
+							Gwordlist *nprev = (*n)->prev;
+							size_t p;
+							for(p = 0; p < gwordlist_len(nprev); p++)
 							{
-								if (*p == unsplit_word)
+								if (*gwordlist_at(nprev, p) == unsplit_word)
 								{
 									/* Now finally replace the "prev" link */
-									*p = subword;
+									gwordlist_replace(nprev, p, &subword);
 									break;
 								}
 							}
-							assert(NULL!=*p,
+							assert(p < gwordlist_len(nprev),
 								"Adding subword '%s': "
 								"No corresponding prev link for a next link"
 								"nextword='%s' word='%s'",
@@ -920,8 +931,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 						subword->end = subword->start + strlen_cache[ai];
 					}
 
-					gwordlist_append(&psubword->next, subword);
-					gwordlist_append(&subword->prev, psubword);
+					gwordlist_append(psubword->next, &subword);
+					gwordlist_append(subword->prev, &psubword);
 				}
 
 				subword->alternative_id = alternative_id;
@@ -937,30 +948,33 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 			/* Check if the alternative that has just been added already exists.
 			 * If it exists - just warn. */
 			{
-				Gword **prev = unsplit_word->prev;
+				Gwordlist *prev = unsplit_word->prev;
 				Gword *curr_alt = sole_alternative_of_itself ?
 					sole_alternative_of_itself : alternative_id;
-				Gword **alts;
 
 				assert(curr_alt, "'%s': No alt mark", unsplit_word->subword);
-				assert(prev, "'%s': No prev", unsplit_word->subword);
-				assert(prev[0], "'%s': No prev[0]", unsplit_word->subword);
-				assert(prev[0]->next, "%s': No next",prev[0]->subword);
-				assert(prev[0]->next[0], "'%s': No next[0]",prev[0]->subword);
-				for (alts = prev[0]->next; *alts; alts++)
+				assert(!gwordlist_empty(prev), "'%s': No prev[0]",
+				       unsplit_word->subword);
+				assert(!gwordlist_empty((*gwordlist_at(prev, 0))->next),
+				       "'%s': No next[0]",(*gwordlist_at(prev, 0))->subword);
+
+				Gwordlist *p0_next = (*gwordlist_at(prev, 0))->next;
+				for (Gword **alt = gwordlist_begin(p0_next);
+				             alt != gwordlist_end(p0_next);
+					          alt = gwordlist_next(p0_next, alt))
 				{
-					if ((*alts)->unsplit_word != unsplit_word) continue;
+					if ((*alt)->unsplit_word != unsplit_word) continue;
 
 					Gword *calt = curr_alt; /* check alternative */
 					Gword *oalt; /* old alternatives */
 					size_t token_no = token_tot;
 
-					if (*alts == curr_alt) break;
-					for (oalt = *alts; token_no > 0; oalt = oalt->next[0])
+					if (*alt == curr_alt) break;
+					for (oalt = *alt; token_no > 0; oalt = *gwordlist_at(oalt->next, 0))
 					{
 						if (0 != (strcmp(oalt->subword, calt->subword)))
 							break;
-						calt = calt->next[0];
+						calt = *gwordlist_at(calt->next, 0);
 						token_no--;
 					}
 					if (token_tot) continue;
@@ -1561,23 +1575,25 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 static bool is_capitalizable(const Dictionary dict, const Gword *word)
 {
 	/* Words at the start of sentences are capitalizable */
-	if (MT_WALL == word->prev[0]->morpheme_type) return true;
-	if (MT_INFRASTRUCTURE == word->prev[0]->morpheme_type) return true;
+	if (MT_WALL == (*gwordlist_at(word->prev, 0))->morpheme_type)
+		return true;
+	if (MT_INFRASTRUCTURE == (*gwordlist_at(word->prev, 0))->morpheme_type)
+		return true;
 
 	/* Words following colons are capitalizable. */
 	/* Mid-text periods and question marks are sentence-splitters. */
-	if (strcmp(":", word->prev[0]->subword) == 0 ||
-		 strcmp(".", word->prev[0]->subword) == 0 ||
-		 strcmp("...", word->prev[0]->subword) == 0 ||
-		 strcmp("…", word->prev[0]->subword) == 0 ||
-		 strcmp("?", word->prev[0]->subword) == 0 ||
-		 strcmp("!", word->prev[0]->subword) == 0 ||
-		 strcmp("？", word->prev[0]->subword) == 0 ||
-		 strcmp("！", word->prev[0]->subword) == 0 )
+	if (strcmp(":", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp(".", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp("...", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp("…", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp("?", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp("!", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp("？", (*gwordlist_at(word->prev, 0))->subword) == 0 ||
+		 strcmp("！",(*gwordlist_at(word->prev, 0))->subword) == 0)
 		return true;
-	if (in_afdict_class(dict, AFDICT_BULLETS, word->prev[0]->subword))
+	if (in_afdict_class(dict, AFDICT_BULLETS, (*gwordlist_at(word->prev, 0))->subword))
 		return true;
-	if (in_afdict_class(dict, AFDICT_QUOTES, word->prev[0]->subword))
+	if (in_afdict_class(dict, AFDICT_QUOTES, (*gwordlist_at(word->prev, 0))->subword))
 		return true;
 
 	return false;
@@ -2163,8 +2179,8 @@ static void issue_dictcap(Sentence sent, bool is_cap,
 	if(is_cap && (NULL != unsplit_word->regex_name))
 	{
 		/* This is the uc word. */
-		altp->next[0]->status |= WS_REGEX;
-		altp->next[0]->regex_name = unsplit_word->regex_name;
+		(*gwordlist_at(altp->next, 0))->status |= WS_REGEX;
+		(*gwordlist_at(altp->next, 0))->regex_name = unsplit_word->regex_name;
 		/* issue_word_alternative() will mark it as TS_DONE because it appears in
 		 * an alternative of itself. */
 	}
@@ -2721,11 +2737,6 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	lgdebug(+D_SW, "END: Word '%s' in_dict=%d is_known=%d status=%s\n",
 	        unsplit_word->subword, !!(unsplit_word->status & WS_INDICT),
 	        word_is_known, gword_status(sent, unsplit_word));
-#if 0
-	if (!word_is_known &&
-	    !(unsplit_word->status & (WS_INDICT|WS_REGEX)))
-		unsplit_word->status |= WS_UNKNOWN;
-#endif
 }
 
 /**
@@ -2749,8 +2760,8 @@ static Gword *issue_sentence_word(const Sentence sent, const char *const s)
 	new_word->unsplit_word = sent->wordgraph;
 	new_word->label = "S"; /* a sentence word */
 
-	gwordlist_append(&last_word->next, new_word);
-	gwordlist_append(&new_word->prev, last_word);
+	gwordlist_append(last_word->next, &new_word);
+	gwordlist_append(new_word->prev, &last_word);
 
 	gwordqueue_add(sent, new_word);
 
@@ -2782,7 +2793,7 @@ static void add_gword(Sentence sent, const char *w, const char *wend,
 		if (MT_WALL == morpheme_type)
 		{
 			new_word->status |= WS_INDICT;
-			if (MT_INFRASTRUCTURE == new_word->prev[0]->morpheme_type)
+			if (MT_INFRASTRUCTURE == (*gwordlist_at(new_word->prev, 0))->morpheme_type)
 				new_word->start = sent->orig_sentence;
 			else
 				new_word->start = sent->orig_sentence + strlen(sent->orig_sentence);
@@ -2930,7 +2941,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	}
 
 	/* Return true if at least one sentence word has been issued */
-	for (word = sent->wordgraph; NULL != word->next; word = word->next[0])
+	for (word = sent->wordgraph; NULL != word; word = *gwordlist_at(word->next, 0))
 	{
 		if ((word->morpheme_type != MT_INFRASTRUCTURE) &&
 		    (word->morpheme_type != MT_WALL))
@@ -3174,7 +3185,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	Wordgraph_pathpos *wp_old = NULL;
 	Wordgraph_pathpos *wpp_new, *wpp_old;
 	Gword *wg_word;               /* A wordgraph word */
-	Gword **next;                 /* The next words */
 	const Gword *last_unsplit_word = NULL;
 	size_t max_words = 0;
 	bool error_encountered = false;
@@ -3194,9 +3204,12 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	}
 
 	/* Populate the pathpos word queue */
-	for (next = sent->wordgraph->next; *next; next++)
+	Gwordlist *gwsent = sent->wordgraph->next;
+	for (Gword **gw = gwordlist_begin(gwsent);
+	             gw != gwordlist_end(gwsent);
+	             gw = gwordlist_next(gwsent, gw))
 	{
-		wordgraph_pathpos_add(&wp_new, *next,
+		wordgraph_pathpos_add(&wp_new, *gw,
 		                      false/* used */, false/* same_word */,
 		                      true/* diff_alternative */);
 	}
@@ -3280,16 +3293,18 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				continue; /* XXX avoid termination word */
 
 			/* Here wg_word->next cannot be NULL. */
-			assert(NULL != wg_word->next[0], "Bad wordgraph: "
+			assert(!gwordlist_empty(wg_word->next), "Bad wordgraph: "
 			       "'%s'->next[0]==NULL", wg_word->subword);
-			assert((NULL != wg_word->next[0]->prev) &&
-			       (NULL != wg_word->next[0]->prev[0]), "Bad wordgraph: "
+			assert((*gwordlist_at(wg_word->next, 0))->prev &&
+			       !gwordlist_empty((*gwordlist_at(wg_word->next, 0))->prev), "Bad wordgraph: "
 			       "'%s'->next[0]: No prev", wg_word->subword);
 
-			for (next = wg_word->next; NULL != *next; next++)
+			for (Gword **next = gwordlist_begin(wg_word->next);
+			             next != gwordlist_end(wg_word->next);
+			             next = gwordlist_next(wg_word->next, next))
 			{
 				if (wg_word->hier_depth <= (*next)->hier_depth &&
-				    (NULL == (*next)->prev[1]))
+				    (gwordlist_len((*next)->prev) == 1))
 				{
 					lgdebug(+D_FW, "Word %zu:%s(%zu) next %zu:%s(%zu) next_ok\n",
 					        wg_word->node_num, wg_word->subword, wg_word->hier_depth,
@@ -3303,7 +3318,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			{
 				lgdebug(+D_FW, "Advancing %zu:%s next_ok\n", wg_word->node_num,
 				        wg_word->subword);
-				for (next = wg_word->next; NULL != *next; next++)
+				for (Gword **next = gwordlist_begin(wg_word->next);
+				             next != gwordlist_end(wg_word->next);
+				             next = gwordlist_next(wg_word->next, next))
 				{
 					wordgraph_pathpos_add(&wp_new, *next,
 					                      false/* used */, false/* same_word */,
@@ -3325,7 +3342,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 				if (NULL != wp_new)
 				{
-					for (next = wg_word->next; NULL != *next; next++)
+					for (Gword **next = gwordlist_begin(wg_word->next);
+					             next != gwordlist_end(wg_word->next);
+				                next = gwordlist_next(wg_word->next, next))
 					{
 						for (wpp_new = wp_new; NULL != wpp_new->word; wpp_new++)
 						{
@@ -3365,7 +3384,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				{
 					bool added = false;
 
-					for (next = wg_word->next; NULL != *next; next++)
+						for (Gword **next = gwordlist_begin(wg_word->next);
+						             next != gwordlist_end(wg_word->next);
+					                next = gwordlist_next(wg_word->next, next))
 						added |= wordgraph_pathpos_add(&wp_new, *next,
 						                               false/* used */,
 						                               false/* same_word */,

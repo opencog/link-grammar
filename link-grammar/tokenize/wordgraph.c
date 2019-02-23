@@ -16,6 +16,7 @@
 #include "string-set.h"
 #include "tok-structures.h"
 #include "tokenize.h"
+#include "vc_vector/vc_vector.h"
 #include "wordgraph.h"
 
 /* === Gword utilities === */
@@ -37,9 +38,13 @@ Gword *gword_new(Sentence sent, const char *s)
 	gword->gword_set_head = (gword_set){0};
 	gword->gword_set_head.o_gword = gword;
 
+	gword->prev = gwordlist_new(2);
+	gword->next = gwordlist_new(2);
+
 	return gword;
 }
 
+#if 0
 static Gword **gwordlist_resize(Gword **arr, size_t len)
 {
 	arr = realloc(arr, (len+2) * sizeof(Gword *));
@@ -62,6 +67,7 @@ void gwordlist_append(Gword ***arrp, Gword *p)
 	*arrp = gwordlist_resize(*arrp, n);
 	(*arrp)[n] = p;
 }
+#endif
 
 #if 0
 /**
@@ -192,10 +198,15 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 /**
  *  Print linkage wordgraph path.
  */
-void print_lwg_path(Gword **w, const char *title)
+void print_lwg_path(Gwordlist *gl, const char *title)
 {
 	lgdebug(+0, "%s: ", title);
-	for (; *w; w++) lgdebug(0, "%s ", (*w)->subword);
+	for (Gword **w = gwordlist_begin(gl);
+	             w != gwordlist_end(gl);
+	             w = gwordlist_next(gl, w))
+	{
+		lgdebug(0, "%s ", (*w)->subword);
+	}
 	lgdebug(0, "\n");
 }
 
@@ -211,7 +222,8 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 
 	err_msg(lg_Debug, "[Word %zu:%s hier_position(hier_depth=%zu): ",
 	        word->node_num, word->subword, word->hier_depth);
-	assert(2*word->hier_depth==gwordlist_len(word->hier_position), "word '%s'",
+	for (p = word->hier_position; *p; p++) {}
+	assert(2*word->hier_depth == (size_t)(p-word->hier_position), "word '%s'",
 	       word->subword);
 
 	for (p = word->hier_position; NULL != *p; p += 2)
@@ -223,10 +235,10 @@ GNUC_UNUSED void print_hier_position(const Gword *word)
 	err_msg(lg_Debug, "]\n");
 }
 
-/* Debug printout of a wordgraph Gword list. */
+/* Debug printout of a Gword set. */
 GNUC_UNUSED void gword_set_print(const gword_set *gs)
 {
-	printf("Gword list: ");
+	printf("Gword set: ");
 
 	if (NULL == gs)
 	{
@@ -495,8 +507,8 @@ void wordgraph_delete(Sentence sent)
 	{
 		Gword *w_tofree = w;
 
-		free(w->prev);
-		free(w->next);
+		gwordlist_delete(w->prev);
+		gwordlist_delete(w->next);
 		free(w->hier_position);
 		free(w->null_subwords);
 		w = w->chain_next;

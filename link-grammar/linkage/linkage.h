@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include "api-types.h"
 #include "link-includes.h" // Needed for typedef WordIdx
+#include "tokenize/wordgraph.h"
 
 /**
  * This summarizes the linkage status.
@@ -66,8 +67,8 @@ struct Linkage_s
 	Sense **        sense_list;   /* Word senses, inferred from disjuncts */
 #endif
 
-	Gword **wg_path;              /* Linkage Wordgraph path */
-	Gword **wg_path_display;      /* Wordgraph path after morpheme combining */
+	Gwordlist *wg_path;              /* Linkage Wordgraph path */
+	Gwordlist *wg_path_display;      /* Wordgraph path after morpheme combining */
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	PP_domains *    pp_domains;   /* PP domain info, one for each link */
