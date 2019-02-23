@@ -201,8 +201,9 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 void print_lwg_path(Gwordlist *gl, const char *title)
 {
 	lgdebug(+0, "%s: ", title);
+	Gword **w_end = gwordlist_end(gl);
 	for (Gword **w = gwordlist_begin(gl);
-	             w != gwordlist_end(gl);
+	             w != w_end;
 	             w = gwordlist_next(gl, w))
 	{
 		lgdebug(0, "%s ", (*w)->subword);

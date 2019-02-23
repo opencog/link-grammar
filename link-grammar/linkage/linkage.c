@@ -502,7 +502,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 					 * for joining... */
 
 					const Gword *unsplit_word = w->unsplit_word;
-					for (wgaltp = wgp, j = i; wgaltp != gwordlist_end(lwg_path); wgaltp++, j++)
+					Gword **wgaltp_end = gwordlist_end(lwg_path);
+					for (wgaltp = wgp, j = i; wgaltp != wgaltp_end; wgaltp++, j++)
 					{
 
 						if ((*wgaltp)->unsplit_word != unsplit_word) break;

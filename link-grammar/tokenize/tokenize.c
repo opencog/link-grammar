@@ -551,6 +551,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	bool subword_eq_unsplit_word;
 	bool last_split = false;        /* this is a final token */
 	int *strlen_cache = alloca(token_tot * sizeof(int)); /* token length cache */
+	Gword **loop_end;               /* for gwordlist_end() optimization */
 #ifdef DEBUG
 	Gword *sole_alternative_of_itself = NULL;
 #endif
@@ -727,16 +728,18 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 
 				/* Scan its "prev" words and add it as their "next" word */
 				Gwordlist *gprev = unsplit_word->prev;
+				loop_end = gwordlist_end(gprev);
 				for (Gword **q = gwordlist_begin(gprev);
-				             q != gwordlist_end(gprev);
+				             q != loop_end;
 				             q = gwordlist_next(gprev, q))
 				{
 					gwordlist_append((*q)->next, &unsplit_word);
 				}
 				/* Scan its "next" words and add it as their "prev" word */
 				Gwordlist *gnext = unsplit_word->next;
+				loop_end = gwordlist_end(gnext);
 				for (Gword **q = gwordlist_begin(gnext);
-				             q != gwordlist_end(gnext);
+				             q != loop_end;
 				             q = gwordlist_next(gnext, q))
 				{
 					gwordlist_append((*q)->prev, &unsplit_word);
@@ -836,8 +839,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					//previous_wordgraph_nextalts(sent, unsplit_word, subword);
 					/* Scan the said previous words. */
 					Gwordlist *gnext = unsplit_word->prev;
+					loop_end = gwordlist_end(gnext);
 					for (Gword **p = gwordlist_begin(gnext);
-					             p != gwordlist_end(gnext);
+					             p != loop_end;
 					             p = gwordlist_next(gnext, p))
 					{
 						/* Create the "prev" link for subword */
@@ -883,8 +887,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 					//next_wordgraph_prevalts(sent, unsplit_word, subword);
 					/* Scan the said next words. */
 					Gwordlist *nnext = unsplit_word->next;
+					loop_end = gwordlist_end(nnext);
 					for (Gword **n = gwordlist_begin(nnext);
-					             n != gwordlist_end(nnext);
+					             n != loop_end;
 					             n = gwordlist_next(nnext, n))
 					{
 						/* Create the "next" link for subword */
@@ -959,8 +964,9 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				       "'%s': No next[0]",(*gwordlist_at(prev, 0))->subword);
 
 				Gwordlist *p0_next = (*gwordlist_at(prev, 0))->next;
+				loop_end = gwordlist_end(p0_next);
 				for (Gword **alt = gwordlist_begin(p0_next);
-				             alt != gwordlist_end(p0_next);
+				             alt != loop_end;
 					          alt = gwordlist_next(p0_next, alt))
 				{
 					if ((*alt)->unsplit_word != unsplit_word) continue;
@@ -3205,8 +3211,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	/* Populate the pathpos word queue */
 	Gwordlist *gwsent = sent->wordgraph->next;
+	Gword **gwsent_end = gwordlist_end(gwsent);
 	for (Gword **gw = gwordlist_begin(gwsent);
-	             gw != gwordlist_end(gwsent);
+	             gw != gwsent_end;
 	             gw = gwordlist_next(gwsent, gw))
 	{
 		wordgraph_pathpos_add(&wp_new, *gw,
@@ -3299,8 +3306,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			       !gwordlist_empty((*gwordlist_at(wg_word->next, 0))->prev), "Bad wordgraph: "
 			       "'%s'->next[0]: No prev", wg_word->subword);
 
+			Gword **word_next_end = gwordlist_end(wg_word->next);
 			for (Gword **next = gwordlist_begin(wg_word->next);
-			             next != gwordlist_end(wg_word->next);
+			             next != word_next_end;
 			             next = gwordlist_next(wg_word->next, next))
 			{
 				if (wg_word->hier_depth <= (*next)->hier_depth &&
@@ -3318,8 +3326,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			{
 				lgdebug(+D_FW, "Advancing %zu:%s next_ok\n", wg_word->node_num,
 				        wg_word->subword);
+				Gword **word_next_end = gwordlist_end(wg_word->next);
 				for (Gword **next = gwordlist_begin(wg_word->next);
-				             next != gwordlist_end(wg_word->next);
+				             next != word_next_end;
 				             next = gwordlist_next(wg_word->next, next))
 				{
 					wordgraph_pathpos_add(&wp_new, *next,
@@ -3342,8 +3351,9 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 				if (NULL != wp_new)
 				{
+					Gword **word_next_end = gwordlist_end(wg_word->next);
 					for (Gword **next = gwordlist_begin(wg_word->next);
-					             next != gwordlist_end(wg_word->next);
+					             next != word_next_end;
 				                next = gwordlist_next(wg_word->next, next))
 					{
 						for (wpp_new = wp_new; NULL != wpp_new->word; wpp_new++)
@@ -3383,14 +3393,14 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				else
 				{
 					bool added = false;
-
-						for (Gword **next = gwordlist_begin(wg_word->next);
-						             next != gwordlist_end(wg_word->next);
-					                next = gwordlist_next(wg_word->next, next))
-						added |= wordgraph_pathpos_add(&wp_new, *next,
-						                               false/* used */,
-						                               false/* same_word */,
-						                               true/* diff_alternative */);
+					Gword **word_next_end = gwordlist_end(wg_word->next);
+					for (Gword **next = gwordlist_begin(wg_word->next);
+					             next != word_next_end;
+					             next = gwordlist_next(wg_word->next, next))
+					added |= wordgraph_pathpos_add(&wp_new, *next,
+					                               false/* used */,
+					                               false/* same_word */,
+					                               true/* diff_alternative */);
 					if (added)
 					{
 						lgdebug(D_FW, "Yes\n");

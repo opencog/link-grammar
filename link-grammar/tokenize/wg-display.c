@@ -221,8 +221,9 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 			/* In this mode nodes that are only unsplit_word are not shown. */
 			for (wu = sent->wordgraph; wu; wu = wu->chain_next)
 			{
+				Gword **wu_next_end = gwordlist_end(wu->next);
 				for (Gword **wp = gwordlist_begin(wu->next);
-								 wp != gwordlist_end(wu->next);
+								 wp != wu_next_end;
 								 wp = gwordlist_next(wu->next, wp))
 				{
 					if (w == *wp)
@@ -277,8 +278,9 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 
 		dyn_strcat(wgd, "\"];\n");
 
+		Gword **w_next_end = gwordlist_end(w->next);
 		for (Gword **wp = gwordlist_begin(w->next);
-						 wp != gwordlist_end(w->next);
+						 wp != w_next_end;
 						 wp = gwordlist_next(w->next, wp))
 		{
 			append_string(wgd, "%s->\"%p\" [label=next color=red];\n",
@@ -286,8 +288,9 @@ static dyn_str *wordgraph2dot(Sentence sent, unsigned int mode, const char *mode
 		}
 		if (mode & WGR_PREV)
 		{
+			Gword **w_prev_end = gwordlist_end(w->prev);
 			for (Gword **wp = gwordlist_begin(w->prev);
-							 wp != gwordlist_end(w->prev);
+							 wp != w_prev_end;
 							 wp = gwordlist_next(w->prev, wp))
 			{
 				append_string(wgd, "%s->\"%p\" [label=prev color=blue];\n",

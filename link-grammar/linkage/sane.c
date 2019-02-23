@@ -192,12 +192,12 @@ static size_t num_islands(const Linkage lkg, const Gwordlist *wg_path)
 	int inum = -1;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	Gword **wg_path_p = gwordlist_begin(wg_path);
+	Gword **wg_path_p_end = gwordlist_end(wg_path);
 
 	for (WordIdx w = 0; w < lkg->sent->length; w++)
 	{
 		/* Skip null words which are optional words. */
-		if ((gwordlist_end(wg_path) == wg_path_p) ||
-		    ((*wg_path_p)->sent_wordidx != w))
+		if ((wg_path_p_end == wg_path_p) || ((*wg_path_p)->sent_wordidx != w))
 		{
 			assert(word[w].prev == word[w].next);
 			assert((NULL == cdj[w]) && lkg->sent->word[w].optional);
@@ -207,7 +207,7 @@ static size_t num_islands(const Linkage lkg, const Gwordlist *wg_path)
 			continue;
 		}
 
-		if (gwordlist_end(wg_path) != wg_path_p)
+		if (wg_path_p_end != wg_path_p)
 			wg_path_p = gwordlist_next(wg_path, wg_path_p);
 		if (NO_WORD == word[w].prev) continue;
 
@@ -291,8 +291,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 
 	/* Populate the path word queue, initializing the path to NULL. */
 	Gwordlist *glsent = sent->wordgraph->next;
+	Gword **sent_end = gwordlist_end(glsent);
 	for (Gword **gw = gwordlist_begin(glsent);
-	             gw != gwordlist_end(glsent);
+	             gw != sent_end;
 	             gw = gwordlist_next(glsent, gw))
 	{
 		wordgraph_path_append(&wp_new, /*path*/NULL, /*add_word*/NULL, *gw);
@@ -350,8 +351,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				 * from the null words in the word array of the Linkage structure.
 				 */
 				Gwordlist *wn = wpp->word->next;
+				Gword **gw_end = gwordlist_end(wn);
 				for (Gword **gw = gwordlist_begin(wn);
-				             gw != gwordlist_end(wn);
+				             gw != gw_end;
 				             gw = gwordlist_next(wn, gw))
 				{
 					if (MT_INFRASTRUCTURE != wpp->word->morpheme_type)
@@ -398,8 +400,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				{
 					match_found = true;
 					Gwordlist *wn = wpp->word->next;
+					Gword **gw_end = gwordlist_end(wn);
 					for (Gword **gw = gwordlist_begin(wn);
-		                      gw != gwordlist_end(wn);
+		                      gw != gw_end;
 		                      gw = gwordlist_next(wn, gw))
 					{
 						wordgraph_path_append(&wp_new, wpp->path, wpp->word, *gw);
@@ -472,8 +475,9 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 		print_lwg_path(wpp->path, "Linkage");
 #endif
 		i = 0;
+		Gword **w_end = gwordlist_end(wpp->path);
 		for (Gword **w = gwordlist_begin(wpp->path);
-		             w != gwordlist_end(wpp->path);
+		             w != w_end;
 		             w = gwordlist_next(wpp->path, w))
 
 		{
