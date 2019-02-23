@@ -3297,7 +3297,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
-			if (NULL == wg_word->next) continue; /* XXX avoid termination */
+			if (MT_INFRASTRUCTURE == wg_word->morpheme_type)
+				continue; /* XXX avoid termination word */
 
 			if (wpp_old->same_word)
 			{
@@ -3338,7 +3339,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
-			if (NULL == wg_word->next) continue; /* XXX avoid termination word */
+			if (MT_INFRASTRUCTURE == wg_word->morpheme_type)
+				continue; /* XXX avoid termination word */
 
 			/* Here wg_word->next cannot be NULL. */
 			assert(NULL != wg_word->next[0], "Bad wordgraph: "
@@ -3381,7 +3383,8 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			{
 				bool same_alternative = false;
 
-				if (NULL == wg_word->next) continue; /* termination word */
+				if (MT_INFRASTRUCTURE == wg_word->morpheme_type)
+					continue; /* termination word */
 
 				if (NULL != wp_new)
 				{
