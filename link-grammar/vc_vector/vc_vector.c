@@ -266,22 +266,17 @@ bool vc_vector_erase_range(vc_vector* vector, size_t first_index, size_t last_in
 bool vc_vector_append(vc_vector* vector, const void* values, size_t count) {
   const size_t count_new = count + vc_vector_count(vector);
 
-  if (vc_vector_max_count(vector) < count_new) {
-    size_t max_count_to_reserved = vc_vector_max_count(vector) * GROWTH_FACTOR;
-    while (count_new > max_count_to_reserved) {
-      max_count_to_reserved *= GROWTH_FACTOR;
-    }
-
+  size_t new_size = count_new * vector->element_size;
+  if (new_size > vector->reserved_size) {
+    size_t max_count_to_reserved = new_size * GROWTH_FACTOR;
     if (!vc_vector_realloc(vector, max_count_to_reserved)) {
       return false;
     }
   }
 
-  if (memcpy(vector->data + vector->count * vector->element_size,
-                      values,
-                      vector->element_size * count) == NULL) {
-    return false;
-  }
+  memcpy(vector->data + vector->count * vector->element_size,
+         values,
+         vector->element_size * count);
 
   vector->count = count_new;
   return true;
