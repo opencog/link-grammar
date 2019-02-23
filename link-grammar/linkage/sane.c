@@ -35,8 +35,8 @@
  * is constructed when the Wordgraph termination word is encountered.
  *
  * Note: The final path doesn't match the linkage word indexing if the linkage
- * contains empty words, at least until empty words are eliminated from the
- * linkage (in compute_chosen_words()). Further processing of the path is done
+ * contains optional words which are null, until the are eliminated from the
+ * linkage (in remove_empty_words()). Further processing of the path is done
  * there in case morphology splits are to be hidden or there are morphemes with
  * null linkage.
  */
