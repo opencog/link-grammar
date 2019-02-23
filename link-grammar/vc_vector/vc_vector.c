@@ -72,20 +72,16 @@ vc_vector* vc_vector_create(size_t count_elements, size_t size_of_element, vc_ve
 }
 
 vc_vector* vc_vector_create_copy(const vc_vector* vector) {
-  vc_vector* new_vector = vc_vector_create(vector->reserved_size / vector->count,
+  vc_vector* new_vector = vc_vector_create(vector->reserved_size / vector->element_size,
                                            vector->element_size,
                                            vector->deleter);
   if (!new_vector) {
     return new_vector;
   }
 
-  if (memcpy(vector->data,
-                      new_vector->data,
-                      new_vector->element_size * vector->count) == NULL) {
-    vc_vector_release(new_vector);
-    new_vector = NULL;
-    return new_vector;
-  }
+  memcpy(new_vector->data,
+                      vector->data,
+                      vector->element_size * vector->count);
 
   new_vector->count = vector->count;
   return new_vector;
