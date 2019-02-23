@@ -223,14 +223,16 @@ void remove_empty_words(Linkage lkg)
 	size_t i, j;
 	Disjunct **cdj = lkg->chosen_disjuncts;
 	int *remap = alloca(lkg->num_words * sizeof(*remap));
+
 	Gword **wgp = gwordlist_begin(lkg->wg_path);
+	Gword **wgp_end = gwordlist_end(lkg->wg_path);
 
 	for (i = 0, j = 0; i < lkg->num_words; i++)
 	{
 		/* Discard optional words that are not real null-words.  Note that
 		 * if optional words don't have non-optional words after them,
 		 * wg_path doesn't include them. */
-		if ((gwordlist_end(lkg->wg_path) == wgp) || ((*wgp)->sent_wordidx != i))
+		if ((wgp_end == wgp) || ((*wgp)->sent_wordidx != i))
 		{
 			assert((NULL == cdj[i]) && lkg->sent->word[i].optional);
 			remap[i] = -1;
@@ -242,8 +244,7 @@ void remove_empty_words(Linkage lkg)
 		cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
 		remap[i] = j;
 		j++;
-		if (gwordlist_end(lkg->wg_path) != wgp)
-			wgp = gwordlist_next(lkg->wg_path, wgp);
+		if (wgp_end != wgp) wgp = gwordlist_next(lkg->wg_path, wgp);
 	}
 	if (lkg->num_words != j)
 	{
