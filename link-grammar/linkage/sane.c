@@ -10,16 +10,16 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api-structures.h"  // for Sentence_s
+#include "api-structures.h"             // Sentence_s
 #include "api-types.h"
-#include "dict-common/regex-morph.h" // for match_regex
-#include "connectors.h" // for MAX_SENTENCE
-#include "disjunct-utils.h"  // for Disjunct_struct
+#include "dict-common/regex-morph.h"    // match_regex
+#include "connectors.h"                 // MAX_SENTENCE
+#include "disjunct-utils.h"             // Disjunct_struct
 #include "lg_assert.h"
 #include "linkage.h"
 #include "sane.h"
-#include "tokenize/tok-structures.h" // Needed for Wordgraph_pathpos_s
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/tok-structures.h"    // Wordgraph_pathpos_s
+#include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
 #include "utilities.h"
 
