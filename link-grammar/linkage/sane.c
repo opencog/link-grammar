@@ -99,21 +99,20 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 	(*nwp)[n].word = p;
 
-	if (MT_INFRASTRUCTURE == p->prev[0]->morpheme_type)
+	if (NULL == path)
 	{
-			/* Previous word is the Wordgraph dummy word. Initialize the path. */
 			(*nwp)[n].path = NULL;
 	}
 	else
 	{
 		/* Duplicate the path from the current one. */
-		assert(NULL != path, "wordgraph_path_append(): Duplicating a null path");
-
 		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
 
 		(*nwp)[n].path = malloc(path_arr_size);
 		memcpy((*nwp)[n].path, path, path_arr_size);
 	}
+
+	if (NULL == current_word) return;
 
 	/* If we queue the same word again, its path remains the same.
 	 * Else append the current word to it. */
