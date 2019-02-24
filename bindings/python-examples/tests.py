@@ -1084,7 +1084,6 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
     if desc != '':
         desc = desc + '-'
     testfile = clg.test_data_srcdir + "parses-" + desc + clg.dictionary_get_lang(lgdict._obj) + ".txt"
-    parses = open(testfile, "rb")
     diagram = None
     constituents = None
     wordpos = None
@@ -1109,13 +1108,15 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         if opcode != ord('P'):
             self.assertFalse(wordpos, "at {}:{}: Unfinished word-position entry".format(testfile, lineno))
 
+    with open(testfile, 'rb') as _:
+        parses = _.readlines()
+
     for line in parses:
         lineno += 1
         if not is_python2():
             line = line.decode('utf-8')
 
         validate_opcode(ord(line[0])) # Use ord() for python2/3 compatibility
-        prev_opcode = last_opcode
         if line[0] in 'INOCP':
             last_opcode = line[0]
 
@@ -1173,8 +1174,6 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             pass
         else:
             self.fail('\nTest file "{}": Invalid opcode "{}" (ord={})'.format(testfile, line[0], ord(line[0])))
-
-    parses.close()
 
     self.assertIn(last_opcode , 'OCP', "Missing result comparison in " + testfile)
 
