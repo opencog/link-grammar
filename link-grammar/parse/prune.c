@@ -613,9 +613,9 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 {
+	if (mark_bad_word) c->nearest_word = BAD_WORD;
 	for (; NULL != c; c = c->next)
 	{
-		if (mark_bad_word) c->nearest_word = BAD_WORD;
 		c->suffix_id--; /* Reference count. */
 	}
 }
