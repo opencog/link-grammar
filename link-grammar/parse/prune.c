@@ -1213,9 +1213,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 
 /**
- * Do the following pruning steps until nothing happens:
- * power pp power pp power pp....
- * Make sure you do them both at least once.
+ * Prune useless disjuncts.
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
