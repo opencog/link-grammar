@@ -373,14 +373,10 @@ static void power_table_init(Sentence sent, power_table *pt)
 					;
 				int w = deepest->nearest_word + ((dir== 0) ? 1 : -1);
 
-				unsigned int size = sizep[w];
-				C_list **t = tp[w];
-				int suffix_id = htc->suffix_id;
-
 				for (Connector *c = htc->next; NULL != c; c = c->next)
 				{
-					c->suffix_id = suffix_id;
-					put_into_power_table(mp, size, t, c, false);
+					c->suffix_id = htc->suffix_id;
+					put_into_power_table(mp, sizep[w], tp[w], c, false);
 				}
 			}
 
@@ -394,10 +390,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 					;
 				int w = deepest->nearest_word + ((dir == 0) ? 1 : -1);
 
-				unsigned int size = sizep[w];
-				C_list **t = tp[w];
-
-				put_into_power_table(mp, size, t, htc, true);
+				put_into_power_table(mp, sizep[w], tp[w], jst[id].c, true);
 			}
 		}
 	}
