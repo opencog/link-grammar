@@ -344,7 +344,6 @@ static void power_table_init(Sentence sent, power_table *pt)
 	{
 		/* Bulk insertion with reference count. Note: IDs start from 1. */
 
-		/* Insert the deep connectors. */
 		for (int dir = 0; dir < 2; dir++)
 		{
 			C_list ***tp;
@@ -364,6 +363,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 				sizep = pt->r_table_size;
 			}
 
+			/* Insert the deep connectors. */
 			for (unsigned int id = 1; id < jse + 1; id++)
 			{
 				Connector *htc = jst[id].c;
