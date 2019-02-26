@@ -1175,7 +1175,7 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 		js->table[dir] = jet_table[dir];
 		js->entries[dir] = (unsigned int)jet_table_entries[dir];
 	}
-	lgdebug(+D_DISJ, "Total NUMID %d (%d+,%d-)\n",
+	lgdebug(+D_DISJ, "Total number of jets %d (%d+,%d-)\n",
 	        js->entries[0]+js->entries[1], js->entries[0], js->entries[1]);
 }
 /* ========================= END OF FILE ========================*/
