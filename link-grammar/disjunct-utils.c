@@ -1028,9 +1028,10 @@ static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
  * second stage. See the above FIXME.)
  *
  * Note: The number of different jets per word is kept in
- * num_cnctrs_per_word[dir][w], for the use of power_prune()
- * (resizing its per-word tables aka power_table).
- * See also the comments in api-structures.h.
+ * num_cnctrs_per_word[dir][w], for the use of power_prune() (sizing its
+ * per-word tables aka power_table). It is used as an approximation to the
+ * number of different connectors. Because this may not be accurate, it is
+ * multiplied by 2 to be more on the safe side.
  */
 void share_disjunct_jets(Sentence sent, bool rebuild)
 {
