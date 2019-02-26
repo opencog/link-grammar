@@ -349,6 +349,9 @@ static void power_table_init(Sentence sent, power_table *pt)
 		{
 			C_list ***tp;
 			unsigned int *sizep;
+			jet_sharing_t *js = &sent->jet_sharing;
+			JT_entry *jst = js->table[dir];
+			unsigned int jse = js->entries[dir];
 
 			if (dir== 0)
 			{
@@ -361,9 +364,9 @@ static void power_table_init(Sentence sent, power_table *pt)
 				sizep = pt->r_table_size;
 			}
 
-			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
+			for (unsigned int id = 1; id < jse + 1; id++)
 			{
-				Connector *htc = sent->jet_sharing.table[dir][id].c;
+				Connector *htc = jst[id].c;
 				Connector *deepest;
 
 				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
@@ -382,9 +385,9 @@ static void power_table_init(Sentence sent, power_table *pt)
 			}
 
 			/* Insert the shallow connectors. */
-			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
+			for (unsigned int id = 1; id < jse + 1; id++)
 			{
-				Connector *htc = sent->jet_sharing.table[dir][id].c;
+				Connector *htc = jst[id].c;
 				Connector *deepest;
 
 				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
