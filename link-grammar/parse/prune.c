@@ -363,7 +363,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 
 			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
 			{
-				Connector *htc = sent->jet_sharing.table[dir][id];
+				Connector *htc = sent->jet_sharing.table[dir][id].c;
 				Connector *deepest;
 
 				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
@@ -384,7 +384,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 			/* Insert the shallow connectors. */
 			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
 			{
-				Connector *htc = sent->jet_sharing.table[dir][id];
+				Connector *htc = sent->jet_sharing.table[dir][id].c;
 				Connector *deepest;
 
 				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
@@ -1076,7 +1076,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		{
 			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
+				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
 					if (0 == c->suffix_id) continue;
 					insert_in_cms_table(cmt, c);
@@ -1163,7 +1163,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		{
 			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
+				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
 					if (0 == c->suffix_id) continue;
 					if (mark_bad_connectors(cmt, c))

@@ -117,8 +117,7 @@ struct word_queue_s
 	word_queue_t *next;
 };
 
-/* Jet sharing: [0] - left side; [1] - right side.
- * A jet is an ordered set of connectors all pointing in the same
+/* A jet is an ordered set of connectors all pointing in the same
  * direction (left, or right). Every disjunct can be split into two jets;
  * that is, a disjunct is a pair of jets, and so each word consists of a
  * collection of pairs of jets. The array num_cnctrs_per_word holds the
@@ -133,10 +132,16 @@ struct word_queue_s
  */
 typedef struct
 {
-	Connector **table[2];                 /* Index by jet ID */
-	unsigned int entries[2];              /* number of table entries */
+Connector *c;
+} JT_entry;
+
+/* Jet sharing: [0] - left side; [1] - right side. */
+typedef struct
+{
+	JT_entry *table[2];           /* Indexed by jet ID */
+	unsigned int entries[2];      /* Number of table entries */
 	unsigned int *num_cnctrs_per_word[2]; /* Indexed by word number */
-	String_id *csid[2];                   /* For generating unique jet IDs */
+	String_id *csid[2];           /* For generating unique jet IDs */
 } jet_sharing_t;
 
 struct Sentence_s
