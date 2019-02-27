@@ -275,4 +275,24 @@ static inline unsigned int pair_hash(unsigned int table_size,
 
 	return i & (table_size-1);
 }
+
+/**
+ * Get the word number of the given jet.
+ * c is the shallow connector.  The word number is extracted from the
+ * nearest_word of the deepest connector.
+ * This function should be called only after setup_connectors() (which
+ * initializes nearest_word) and power_prune() (which changes them).
+ *
+ * Note: An alternate for getting the word number of jets is to keep them
+ * in the shared jet table or in a separate array. Both ways add
+ * noticeable overhead, maybe due to the added CPU cache footprint.
+ * However, if the word number will be needed after power_prune() there
+ * will be a need to keep it in an alternative way.
+ */
+static inline int get_jet_word_number(Connector *c, int dir)
+{
+	for (; NULL != c->next; c = c->next)
+		;
+	return c->nearest_word + ((dir == 0) ? 1 : -1);
+}
 #endif /* _LINK_GRAMMAR_CONNECTORS_H_ */

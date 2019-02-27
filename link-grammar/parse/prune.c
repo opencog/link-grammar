@@ -367,11 +367,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 			for (unsigned int id = 1; id < jse + 1; id++)
 			{
 				Connector *htc = jst[id].c;
-				Connector *deepest;
-
-				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
-					;
-				int w = deepest->nearest_word + ((dir== 0) ? 1 : -1);
+				int w = get_jet_word_number(htc, dir);
 
 				for (Connector *c = htc->next; NULL != c; c = c->next)
 				{
@@ -384,11 +380,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 			for (unsigned int id = 1; id < jse + 1; id++)
 			{
 				Connector *htc = jst[id].c;
-				Connector *deepest;
-
-				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
-					;
-				int w = deepest->nearest_word + ((dir == 0) ? 1 : -1);
+				int w = get_jet_word_number(htc, dir);
 
 				put_into_power_table(mp, sizep[w], tp[w], jst[id].c, true);
 			}
