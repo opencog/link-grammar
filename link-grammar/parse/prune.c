@@ -604,7 +604,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 	/* ub is now the rightmost word we need to check */
 	ub = w + c->length_limit;
-	if (ub > sent_length) ub = sent_length - 1;
+	if (ub >= sent_length) ub = sent_length - 1;
 
 	/* n is now the leftmost word we need to check */
 	for (; n <= ub ; n++)
