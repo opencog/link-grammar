@@ -1028,9 +1028,10 @@ static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
  * second stage. See the above FIXME.)
  *
  * Note: The number of different jets per word is kept in
- * num_cnctrs_per_word[dir][w], for the use of power_prune()
- * (resizing its per-word tables aka power_table).
- * See also the comments in api-structures.h.
+ * num_cnctrs_per_word[dir][w], for the use of power_prune() (sizing its
+ * per-word tables aka power_table). It is used as an approximation to the
+ * number of different connectors. Because this may not be accurate, it is
+ * multiplied by 2 to be more on the safe side.
  */
 void share_disjunct_jets(Sentence sent, bool rebuild)
 {
@@ -1043,7 +1044,7 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 
 	size_t jet_table_size[2];
 	size_t jet_table_entries[2] = {0};
-	Connector ***jet_table = js->table;
+	JT_entry **jet_table = js->table;
 
 	assert(!rebuild || (js->table[0] && js->csid[0]), "jet rebuild with no info");
 	assert(rebuild || (!js->table[0] && !js->csid[0]), "jet !rebuild with info");
@@ -1062,12 +1063,12 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 		if (rebuild)
 		{
 			jet_table_size[dir] = js->entries[dir] + 1;
-			memset(jet_table[dir], 0, jet_table_size[dir] * sizeof(Connector *));
+			memset(jet_table[dir], 0, jet_table_size[dir] * sizeof(*jet_table[0]));
 		}
 		else
 		{
 			jet_table_size[dir] = JET_TABLE_SIZE;
-			jet_table[dir] = calloc(jet_table_size[dir], sizeof(Connector *));
+			jet_table[dir] = calloc(jet_table_size[dir], sizeof(*jet_table[0]));
 		}
 	}
 
@@ -1128,7 +1129,7 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 
 				if (jet_table_entries[dir] + 1 >= jet_table_size[dir])
 				{
-					size_t old_bytes = jet_table_size[dir] * sizeof(Connector *);
+					size_t old_bytes = jet_table_size[dir] * sizeof(*jet_table[0]);
 					jet_table[dir] = realloc(jet_table[dir], old_bytes * 2);
 					memset(jet_table[dir]+jet_table_size[dir], 0, old_bytes);
 					jet_table_size[dir] *= 2;
@@ -1139,18 +1140,18 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 				printf("%zu%c %d: %s\n", w, dir?'+':'-', id, cstr);
 #endif
 
-				if (NULL == jet_table[dir][id])
+				if (NULL == jet_table[dir][id].c)
 				{
 					jet_table_entries[dir]++;
-					jet_table[dir][id] =
+					jet_table[dir][id].c =
 						connectors_copy(sent->Connector_pool, first_c, &numc[dir]);
 					/* Very subtle - for potential disjunct save
 					 * (one-step-parse) that is done after the previous
 					 * jet-sharing since it has set non-0 suffix_id. */
-					jet_table[dir][id]->suffix_id = 0;
+					jet_table[dir][id].c->suffix_id = 0;
 				}
-				*((0 == dir) ? &n->left : &n->right) = jet_table[dir][id];
-				jet_table[dir][id]->suffix_id++;
+				*((0 == dir) ? &n->left : &n->right) = jet_table[dir][id].c;
+				jet_table[dir][id].c->suffix_id++;
 #if 0
 				printf("w%zu%c: ", w, dir?'+':'-');
 				print_connector_list(first_c);
@@ -1175,7 +1176,7 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 		js->table[dir] = jet_table[dir];
 		js->entries[dir] = (unsigned int)jet_table_entries[dir];
 	}
-	lgdebug(+D_DISJ, "Total NUMID %d (%d+,%d-)\n",
+	lgdebug(+D_DISJ, "Total number of jets %d (%d+,%d-)\n",
 	        js->entries[0]+js->entries[1], js->entries[0], js->entries[1]);
 }
 /* ========================= END OF FILE ========================*/

@@ -344,11 +344,13 @@ static void power_table_init(Sentence sent, power_table *pt)
 	{
 		/* Bulk insertion with reference count. Note: IDs start from 1. */
 
-		/* Insert the deep connectors. */
 		for (int dir = 0; dir < 2; dir++)
 		{
 			C_list ***tp;
 			unsigned int *sizep;
+			jet_sharing_t *js = &sent->jet_sharing;
+			JT_entry *jst = js->table[dir];
+			unsigned int jse = js->entries[dir];
 
 			if (dir== 0)
 			{
@@ -361,40 +363,26 @@ static void power_table_init(Sentence sent, power_table *pt)
 				sizep = pt->r_table_size;
 			}
 
-			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
+			/* Insert the deep connectors. */
+			for (unsigned int id = 1; id < jse + 1; id++)
 			{
-				Connector *htc = sent->jet_sharing.table[dir][id];
-				Connector *deepest;
-
-				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
-					;
-				int w = deepest->nearest_word + ((dir== 0) ? 1 : -1);
-
-				unsigned int size = sizep[w];
-				C_list **t = tp[w];
-				int suffix_id = htc->suffix_id;
+				Connector *htc = jst[id].c;
+				int w = get_jet_word_number(htc, dir);
 
 				for (Connector *c = htc->next; NULL != c; c = c->next)
 				{
-					c->suffix_id = suffix_id;
-					put_into_power_table(mp, size, t, c, false);
+					c->suffix_id = htc->suffix_id;
+					put_into_power_table(mp, sizep[w], tp[w], c, false);
 				}
 			}
 
 			/* Insert the shallow connectors. */
-			for (unsigned int id = 1; id < sent->jet_sharing.entries[dir] + 1; id++)
+			for (unsigned int id = 1; id < jse + 1; id++)
 			{
-				Connector *htc = sent->jet_sharing.table[dir][id];
-				Connector *deepest;
+				Connector *htc = jst[id].c;
+				int w = get_jet_word_number(htc, dir);
 
-				for (deepest = htc; NULL != deepest->next; deepest = deepest->next)
-					;
-				int w = deepest->nearest_word + ((dir == 0) ? 1 : -1);
-
-				unsigned int size = sizep[w];
-				C_list **t = tp[w];
-
-				put_into_power_table(mp, size, t, htc, true);
+				put_into_power_table(mp, sizep[w], tp[w], jst[id].c, true);
 			}
 		}
 	}
@@ -625,9 +613,9 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 {
+	if (mark_bad_word) c->nearest_word = BAD_WORD;
 	for (; NULL != c; c = c->next)
 	{
-		if (mark_bad_word) c->nearest_word = BAD_WORD;
 		c->suffix_id--; /* Reference count. */
 	}
 }
@@ -1076,7 +1064,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		{
 			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
+				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
 					if (0 == c->suffix_id) continue;
 					insert_in_cms_table(cmt, c);
@@ -1163,7 +1151,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		{
 			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
 			{
-				for (Connector *c = js->table[dir][id]; NULL != c; c = c->next)
+				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
 					if (0 == c->suffix_id) continue;
 					if (mark_bad_connectors(cmt, c))
@@ -1210,9 +1198,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 
 /**
- * Do the following pruning steps until nothing happens:
- * power pp power pp power pp....
- * Make sure you do them both at least once.
+ * Prune useless disjuncts.
  */
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
