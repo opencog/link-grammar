@@ -276,6 +276,7 @@ static bool char_is_special(char c)
  * This reads the next token from the input into 'token'.
  * Return 1 if a character was read, else return 0 (and print a warning).
  */
+NO_SAN_DICT
 static bool link_advance(Dictionary dict)
 {
 	utf8char c;
@@ -489,6 +490,7 @@ int dict_order_strict(char *s, char *t)
 
 /* terse version */
 /* If one word contains a dot, the other one must also! */
+NO_SAN_DICT
 static inline int dict_order_strict(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
@@ -511,7 +513,7 @@ static inline int dict_order_strict(const char *s, const Dict_node * dn)
  * If the dictionary string contains a SUBSCRIPT_MARK, then replace the
  * mark by "\0", and take the difference.
  */
-
+NO_SAN_DICT
 static inline int dict_order_bare(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
@@ -1495,6 +1497,7 @@ static Dict_node * dsw_tree_to_vine (Dict_node *root)
 	return vh.right;
 }
 
+NO_SAN_DICT
 static void dsw_compression (Dict_node *root, unsigned int count)
 {
 	unsigned int j;
@@ -1545,6 +1548,7 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
  * The resulting tree is highly unbalanced. It needs to be rebalanced
  * before being used.  The DSW algo below is ideal for that.
  */
+NO_SAN_DICT
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
 	if (NULL == n) return newnode;
