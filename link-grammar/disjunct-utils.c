@@ -467,16 +467,32 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 
 
 /* ================ Pack disjuncts and connectors ============== */
+/* Print one connector with all the details.
+ * mCnameD<suffix_id>(nearest_word, length_limit)x
+ * optional m: "@" for multi (else nothing)
+ * Cname: Connector name
+ * Optional D: "-" / "+" (if dir != -1)
+ * Optional <suffix>: suffix_id (if not 0)
+ * Optional (nearest_word, length_limit): if both are not 0
+ * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
+ */
+void print_one_connector(Connector * e, int dir, int shallow)
+{
+	printf("%s%s", e->multi ? "@" : "", connector_string(e));
+	if (-1 != dir) printf("%c", "-+"[dir]);
+	if (e->suffix_id)
+		printf("<%d>", e->suffix_id);
+	if ((0 != e->nearest_word) || (0 != e->length_limit))
+		printf("(%d,%d)", e->nearest_word, e->length_limit);
+	if (-1 != shallow)
+		printf("%c", (0 == shallow) ? 'd' : 's');
+}
+
 void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
 	{
-		printf("%s%s", e->multi ? "@" : "", connector_string(e));
-		if (e->suffix_id)
-			printf("<%d>", e->suffix_id);
-		if ((0 != e->nearest_word) || (0 != e->length_limit))
-			printf("(%d,%d)", e->nearest_word, e->length_limit);
-
+		print_one_connector(e, /*dir*/-1, /*shallow*/-1);
 		if (e->next != NULL) printf(" ");
 	}
 }
