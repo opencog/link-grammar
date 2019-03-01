@@ -122,19 +122,6 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	}
 }
 
-#if 0
-static void print_connector_list(const char *s, const char *t, Connector * e)
-{
-	printf("%s %s: ", s, t);
-	for (;e != NULL; e=e->next)
-	{
-		printf("%s%s", e->multi?"@":"", connector_string(e));
-		if (e->next != NULL) printf(" ");
-	}
-	printf("\n");
-}
-#endif
-
 /**
  * Assumes that the sentence expression lists have been generated.
  */
