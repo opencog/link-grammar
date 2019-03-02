@@ -258,10 +258,22 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define UNREACHABLE(x) (__extension__ ({if (x) __builtin_unreachable();}))
 #define GNUC_MALLOC __attribute__ ((malloc))
 #define GNUC_UNUSED __attribute__ ((unused))
+#define NO_SAN __attribute__ ((no_sanitize_address, no_sanitize_undefined))
+
+/* Define when configuring with ASAN/UBSAN - for fast dict load (of course
+ * only when not debugging dict code.) */
+#ifdef NO_SAN_DICT
+#undef NO_SAN_DICT
+#define NO_SAN_DICT NO_SAN
+#else
+#define NO_SAN_DICT
+#endif
+
 #else
 #define UNREACHABLE(x)
 #define GNUC_MALLOC
 #define GNUC_UNUSED
+#define NO_SAN_DICT
 #endif
 
 

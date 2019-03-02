@@ -55,6 +55,7 @@ bool pack_sentence(Sentence);
 void share_disjunct_jets(Sentence, bool);
 void free_jet_sharing(Sentence);
 
+void print_one_connector(Connector *, int, int);
 void print_connector_list(Connector *);
 void print_disjunct_list(Disjunct *);
 void print_all_disjuncts(Sentence);
