@@ -713,7 +713,8 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 				newc = *tracon;
 				if (!ts->is_pruning)
 				{
-					if (o->nearest_word != newc->nearest_word)
+					if ((o->nearest_word != newc->nearest_word) ||
+					    (o->farthest_word != newc->farthest_word))
 					{
 						/* This is a rare case in which a shallow and deep
 						 * connectors don't have the same nearest_word, because
@@ -725,7 +726,8 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 						 * Note:
 						 * In case the parsing ever depends on other Connector
 						 * fields, their will be a need to add a check for them
-						 * here. */
+						 * here.
+						 * Update: farthest_word added. */
 						newc = NULL; /* Don't share it. */
 					}
 				}

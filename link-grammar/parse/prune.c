@@ -12,6 +12,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>                      // INT_MAX
+
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
@@ -747,9 +749,10 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * there is no way to match this list, it returns -1 (which is also
  * BAD_WORD in unsigned 8-bit representation).
  * If it does find a way to match it, it updates the c->nearest_word
- * fields correctly. When tracons are shared, this update is done
- * simultaneously on all of them. The main loop of power_prune() then
- * marks them with the pass number that is checked here.
+ * and c->farthest_word fields correctly. When tracons are shared, this
+ * update is done simultaneously on all of them. The main loop of
+ * power_prune() then marks them with the pass number that is checked
+ * here.
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
@@ -782,6 +785,27 @@ left_connector_list_update(prune_context *pc, Connector *c,
 		c->nearest_word = foundmatch;
 		pc->N_changed++;
 	}
+
+	if (foundmatch != -1)
+	{
+		int farthest_word = n;
+		for (int l = lb; l < n; l++)
+		{
+			pc->power_cost++;
+			if (right_table_search(pc, l, c, shallow, w))
+			{
+				farthest_word = l;
+				break;
+			}
+		}
+
+		if (farthest_word > (int)c->farthest_word)
+		{
+			c->farthest_word = farthest_word;
+			pc->N_changed++;
+		}
+	}
+
 	return foundmatch;
 }
 
@@ -790,9 +814,10 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * w+1, w+2, w+3...  Returns the word to which the first connector of
  * the list could possibly be matched.  If c is NULL, returns w.
  * If there is no way to match this list, it returns BAD_WORD, which is
- * always greater than N_words - 1.   If it does find a way to match it,
- * it updates the c->nearest_word fields correctly.
- * Regarding pass_number, see the comment in left_connector_list_update().
+ * always greater than N_words - 1.
+ * If it does find a way to match it, it updates the c->nearest_word and
+ * c->farthest_word fields correctly.  Regarding pass_number, see the
+ * comment in left_connector_list_update().
  */
 static size_t
 right_connector_list_update(prune_context *pc, Connector *c,
@@ -825,6 +850,27 @@ right_connector_list_update(prune_context *pc, Connector *c,
 		c->nearest_word = foundmatch;
 		pc->N_changed++;
 	}
+
+	if (n <= ub)
+	{
+		int farthest_word = n;
+		for (int l = ub; l > n ; l--)
+		{
+			pc->power_cost++;
+			if (left_table_search(pc, l, c, shallow, w))
+			{
+				farthest_word = l;
+				break;
+			}
+		}
+
+		if (farthest_word < (int)c->farthest_word)
+		{
+			c->farthest_word = farthest_word;
+			pc->N_changed++;
+		}
+	}
+
 	return foundmatch;
 }
 
