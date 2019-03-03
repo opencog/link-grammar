@@ -36,3 +36,9 @@
 		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
 	}                                                                        \
 }
+
+#ifdef DEBUG
+#define dassert assert
+#else
+#define dassert(...)
+#endif
