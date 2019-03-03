@@ -268,6 +268,22 @@ static Count_bin pseudocount(count_context_t * ctxt,
 }
 
 /**
+ *  Clamp the given count to INT_MAX.
+ */
+static void parse_count_clamp(Count_bin *total)
+{
+	if (INT_MAX < hist_total(total))
+	{
+		/*  Sigh. Overflows can and do occur, esp for the ANY language. */
+#ifdef PERFORM_COUNT_HISTOGRAMMING
+		total->total = INT_MAX;
+#else
+		*total = INT_MAX;
+#endif /* PERFORM_COUNT_HISTOGRAMMING */
+	}
+}
+
+/**
  * Return the number of optional words strictly between w1 and w2.
  */
 static int num_optional_words(count_context_t *ctxt, int w1, int w2)
@@ -419,10 +435,12 @@ static Count_bin do_count(
 					hist_accumv(&t->count, d->cost,
 						do_count(ctxt, w, rw, d->right, NULL, null_count-1));
 				}
+				parse_count_clamp(&total);
 			}
 
 			hist_accumv(&t->count, 0.0,
 				do_count(ctxt, w, rw, NULL, NULL, null_count-1));
+			parse_count_clamp(&total);
 		}
 		return t->count;
 	}
@@ -633,17 +651,7 @@ static Count_bin do_count(
 					}
 				}
 
-				/* Sigh. Overflows can and do occur, esp for the ANY language. */
-				if (INT_MAX < hist_total(&total))
-				{
-#ifdef PERFORM_COUNT_HISTOGRAMMING
-					total.total = INT_MAX;
-#else
-					total = INT_MAX;
-#endif /* PERFORM_COUNT_HISTOGRAMMING */
-					t->count = total;
-				}
-			}
+				parse_count_clamp(&total);
 		}
 		pop_match_list(mchxt, mlb);
 	}
