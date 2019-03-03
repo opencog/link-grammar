@@ -52,16 +52,6 @@ char *safe_strdup(const char *u)
 }
 
 /**
- * Copies as much of v into u as it can assuming u is of size usize
- * guaranteed to terminate u with a '\0'.
- */
-void safe_strcpy(char *u, const char * v, size_t usize)
-{
-	strncpy(u, v, usize-1);
-	u[usize-1] = '\0';
-}
-
-/**
  * A version of strlcpy, for those systems that don't have it.
  */
 /*	$OpenBSD: strlcpy.c,v 1.12 2015/01/15 03:54:12 millert Exp $	*/
@@ -270,7 +260,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t local
 
 	from += nbh;
 	to += nbl;
-	safe_strcpy(to, from, usize-nbl);
+	lg_strlcpy(to, from, usize-nbl);
 }
 
 #if 0
@@ -313,7 +303,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t locale)
 
 	from += nbh;
 	to += nbl;
-	safe_strcpy(to, from, usize-nbl);
+	lg_strlcpy(to, from, usize-nbl);
 }
 #endif
 

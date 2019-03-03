@@ -221,7 +221,7 @@ static void printov(const char *str, ov_t *pov, int top, callout_data_t *cd, boo
 			{
 				if ('a' == cgnump->lookup_mark_pos)
 				{
-					safe_strcpy(lookup_mark, cgnump->lookup_mark, sizeof(lookup_mark));
+					lg_strlcpy(lookup_mark, cgnump->lookup_mark, sizeof(lookup_mark));
 					sm = strrchr(lookup_mark, SUBSCRIPT_MARK);
 					if (NULL != sm) *sm = '.';
 					a = lookup_mark;

@@ -466,7 +466,6 @@ void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 #endif
 
 size_t lg_strlcpy(char * dest, const char *src, size_t size);
-void safe_strcpy(char *u, const char * v, size_t usize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
 

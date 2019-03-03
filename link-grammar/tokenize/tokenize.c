@@ -3429,7 +3429,7 @@ bool sentence_in_dictionary(Sentence sent)
 			{
 				if (ok_so_far)
 				{
-					safe_strcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
+					lg_strlcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
 					ok_so_far = false;
 				}
 				safe_strcat(temp, " \"", sizeof(temp));
