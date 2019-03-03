@@ -583,7 +583,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 			{
 				/* The first time we encounter this connector sequence.
 				 * It will be copied to this cached location (below). */
-				cblock_index = lcblock - pc->cblock_base;
+				cblock_index = (int)(lcblock - pc->cblock_base);
 				pc->id_table[id_index] = cblock_index;
 			}
 			else
@@ -602,7 +602,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 					newc = NULL; /* Don't share it. */
 
 					/* Slightly increase cache hit (MRU). */
-					cblock_index = lcblock - pc->cblock_base;
+					cblock_index = (int)(lcblock - pc->cblock_base);
 					pc->id_table[id_index] = cblock_index;
 				}
 #if 1 /* Extra validation - validate the next connectors in the sequence. */
