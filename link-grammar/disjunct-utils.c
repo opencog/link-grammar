@@ -786,13 +786,13 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 		{
 			if ((*cp)->multi)
 				cstr[l++] = '@'; /* May have different linkages. */
-			l += lg_strlcpy(cstr+l, connector_string((*cp)), sizeof(cstr)-l);
+			l += lg_strlcpy(cstr+l, connector_string(*cp), sizeof(cstr)-l);
 
 			if (l > sizeof(cstr)-2)
 			{
 				/* This is improbable, given the big cstr buffer. */
-				prt_error("Warning: set_connector_hash(): Buffer overflow.\n"
-							 "Parsing may be wrong.\n");
+				prt_error("Warning: enumerate_connector_suffixes(): "
+				          "Buffer overflow.\nParsing may be wrong.\n");
 			}
 
 			int id = string_id_add(cstr, pc->csid) + WORD_OFFSET;
@@ -1138,8 +1138,8 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 				if (l > sizeof(cstr)-2)
 				{
 					/* This is improbable, given the big cstr buffer. */
-					prt_error("Warning: share_disjunct_jets(): Buffer overflow.\n"
-								 "Parsing may be wrong.\n");
+					prt_error("Warning: share_disjunct_jets(): "
+					          "Buffer overflow.\nParsing may be wrong.\n");
 				}
 
 				if (jet_table_entries[dir] + 1 >= jet_table_size[dir])
