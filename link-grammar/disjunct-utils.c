@@ -1110,8 +1110,6 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 		Disjunct *prev = &head;
 		unsigned int numc[2] = {0}; /* Current word different connectors. */
 
-		char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS)];
-
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			Disjunct *n = pool_alloc(sent->Disjunct_pool);
@@ -1119,11 +1117,12 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 			prev->next = n;
 			prev = n;
 
+			char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS)];
+			cstr[0] = (char)(w + 1); /* Avoid '\0'. */
+
 			for (int dir = 0; dir < 2; dir ++)
 			{
-				cstr[0] = "-+"[dir];
-				cstr[1] = (char)(w + 1); /* Avoid '\0'. */
-				size_t l = 2;
+				size_t l = 1;
 
 				Connector *first_c = (0 == dir) ? d->left : d->right;
 				if (NULL == first_c) continue;
