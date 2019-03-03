@@ -710,7 +710,7 @@ static int enumerate_connectors_sequentially(Sentence sent)
 	return id + 1;
 }
 
-#define CONSEP "&"      /* Connector string separator in the suffix sequence. */
+#define CONSEP '&'      /* Connector string separator in the suffix sequence. */
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
 #define MAX_LINKS 20            // XXX Use a global definition
 
@@ -788,7 +788,7 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 				cstr[l++] = '@'; /* May have different linkages. */
 			l += lg_strlcpy(cstr+l, connector_string(*cp), sizeof(cstr)-l);
 
-			if (l > sizeof(cstr)-2)
+			if (l > sizeof(cstr)-2) /* Leave room for CONSEP */
 			{
 				/* This is improbable, given the big cstr buffer. */
 				prt_error("Warning: enumerate_connector_suffixes(): "
@@ -799,8 +799,8 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 			(*cp)->suffix_id = id;
 			//printf("ID %d trail=%s\n", id, cstr);
 
-			if (cp != &cstack[0]) /* Efficiency. */
-				l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+			if (cp != &cstack[0]) /* string_id_add() efficiency. */
+				cstr[l++] = CONSEP;
 		}
 	}
 }
@@ -1132,8 +1132,9 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 					if (c->multi)
 						cstr[l++] = '@'; /* Why does this matter for power pruning? */
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					if (NULL != c->next) /* Efficiency. */
-						l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+					if (l > sizeof(cstr)-3) break;  /* Leave room for CONSEP + '@' */
+					if (NULL != c->next) /* string_id_add() efficiency. */
+						cstr[l++] = CONSEP;
 				}
 				if (l > sizeof(cstr)-2)
 				{
