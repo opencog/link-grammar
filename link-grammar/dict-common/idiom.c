@@ -119,15 +119,13 @@ static int max_postfix_found(Dict_node * d)
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
 	char buff[2*MAX_WORD];
-	size_t bufsz = 2*MAX_WORD;
 	int count;
 
 	Dict_node *dn = dictionary_lookup_list(dict, s);
 	count = max_postfix_found(dn) + 1;
 	free_lookup_list(dict, dn);
 
-	size_t l = lg_strlcpy(buff, s, bufsz);
-	snprintf(buff+l, bufsz-l, "%cI%d", SUBSCRIPT_MARK, count);
+	snprintf(buff, sizeof(buff), "%s%cI%d", s, SUBSCRIPT_MARK, count);
 
 	return string_set_add(buff, dict->string_set);
 }

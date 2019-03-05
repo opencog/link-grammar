@@ -583,7 +583,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 			{
 				/* The first time we encounter this connector sequence.
 				 * It will be copied to this cached location (below). */
-				cblock_index = lcblock - pc->cblock_base;
+				cblock_index = (int)(lcblock - pc->cblock_base);
 				pc->id_table[id_index] = cblock_index;
 			}
 			else
@@ -602,7 +602,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 					newc = NULL; /* Don't share it. */
 
 					/* Slightly increase cache hit (MRU). */
-					cblock_index = lcblock - pc->cblock_base;
+					cblock_index = (int)(lcblock - pc->cblock_base);
 					pc->id_table[id_index] = cblock_index;
 				}
 #if 1 /* Extra validation - validate the next connectors in the sequence. */
@@ -710,7 +710,7 @@ static int enumerate_connectors_sequentially(Sentence sent)
 	return id + 1;
 }
 
-#define CONSEP "&"      /* Connector string separator in the suffix sequence. */
+#define CONSEP '&'      /* Connector string separator in the suffix sequence. */
 #define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
 #define MAX_LINKS 20            // XXX Use a global definition
 
@@ -786,21 +786,21 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 		{
 			if ((*cp)->multi)
 				cstr[l++] = '@'; /* May have different linkages. */
-			l += lg_strlcpy(cstr+l, connector_string((*cp)), sizeof(cstr)-l);
+			l += lg_strlcpy(cstr+l, connector_string(*cp), sizeof(cstr)-l);
 
-			if (l > sizeof(cstr)-2)
+			if (l > sizeof(cstr)-2) /* Leave room for CONSEP */
 			{
 				/* This is improbable, given the big cstr buffer. */
-				prt_error("Warning: set_connector_hash(): Buffer overflow.\n"
-							 "Parsing may be wrong.\n");
+				prt_error("Warning: enumerate_connector_suffixes(): "
+				          "Buffer overflow.\nParsing may be wrong.\n");
 			}
 
 			int id = string_id_add(cstr, pc->csid) + WORD_OFFSET;
 			(*cp)->suffix_id = id;
 			//printf("ID %d trail=%s\n", id, cstr);
 
-			if (cp != &cstack[0]) /* Efficiency. */
-				l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+			if (cp != &cstack[0]) /* string_id_add() efficiency. */
+				cstr[l++] = CONSEP;
 		}
 	}
 }
@@ -1110,8 +1110,6 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 		Disjunct *prev = &head;
 		unsigned int numc[2] = {0}; /* Current word different connectors. */
 
-		char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS)];
-
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			Disjunct *n = pool_alloc(sent->Disjunct_pool);
@@ -1119,11 +1117,12 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 			prev->next = n;
 			prev = n;
 
+			char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS)];
+			cstr[0] = (char)(w + 1); /* Avoid '\0'. */
+
 			for (int dir = 0; dir < 2; dir ++)
 			{
-				cstr[0] = "-+"[dir];
-				cstr[1] = (char)(w + 1); /* Avoid '\0'. */
-				size_t l = 2;
+				size_t l = 1;
 
 				Connector *first_c = (0 == dir) ? d->left : d->right;
 				if (NULL == first_c) continue;
@@ -1133,14 +1132,15 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 					if (c->multi)
 						cstr[l++] = '@'; /* Why does this matter for power pruning? */
 					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					if (NULL != c->next) /* Efficiency. */
-						l += lg_strlcpy(cstr+l, CONSEP, sizeof(cstr)-l);
+					if (l > sizeof(cstr)-3) break;  /* Leave room for CONSEP + '@' */
+					if (NULL != c->next) /* string_id_add() efficiency. */
+						cstr[l++] = CONSEP;
 				}
 				if (l > sizeof(cstr)-2)
 				{
 					/* This is improbable, given the big cstr buffer. */
-					prt_error("Warning: share_disjunct_jets(): Buffer overflow.\n"
-								 "Parsing may be wrong.\n");
+					prt_error("Warning: share_disjunct_jets(): "
+					          "Buffer overflow.\nParsing may be wrong.\n");
 				}
 
 				if (jet_table_entries[dir] + 1 >= jet_table_size[dir])

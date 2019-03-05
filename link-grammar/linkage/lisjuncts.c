@@ -58,7 +58,6 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 	if (lkg->disjunct_list_str) return;
 	lkg->disjunct_list_str = malloc(nwords * sizeof(char *));
-	memset(lkg->disjunct_list_str, 0, nwords * sizeof(char *));
 
 	for (WordIdx w = 0; w < nwords; w++)
 	{

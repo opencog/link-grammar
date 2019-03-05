@@ -591,7 +591,7 @@ static inline Dict_node * dict_node_new(void)
  * not match the dictionary string s. The matching is dictionary matching:
  * subscripted entries will match "bare" entries.
  */
-static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
+static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * restrict s)
 {
 	Dict_node *dn, *dnx, *list_new;
 
@@ -643,9 +643,9 @@ static bool subscr_match(const char *s, const Dict_node * dn)
  * make a copy of that node, and append it to llist.
  */
 static Dict_node *
-rdictionary_lookup(Dict_node *llist,
-                   const Dict_node * dn,
-                   const char * s,
+rdictionary_lookup(Dict_node * restrict llist,
+                   const Dict_node * restrict dn,
+                   const char * restrict s,
                    bool match_idiom,
                    int (*dict_order)(const char *, const Dict_node *))
 {

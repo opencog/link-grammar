@@ -971,10 +971,9 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 		/* MRU order */
 		if (prev != NULL)
 		{
-			Cms *t = cms->next;
+			prev->next = cms->next;
 			cms->next = cmt->cms_table[h];
 			cmt->cms_table[h] = cms;
-			prev->next = t;
 		}
 	}
 }
