@@ -652,13 +652,13 @@ static Count_bin do_count(
 				}
 
 				parse_count_clamp(&total);
+			}
 		}
 		pop_match_list(mchxt, mlb);
 	}
 	t->count = total;
 	return total;
 }
-
 
 /**
  * Returns the number of ways the sentence can be parsed with the
