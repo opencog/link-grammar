@@ -10,7 +10,6 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-
 #include <limits.h>
 #include "api-structures.h"
 #include "count.h"
@@ -254,93 +253,106 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
  * disjuncts which are not appropriate to continue do_parse() tries with
  * null_count>0. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
+ * Note:
+ * The original sentence disjuncts are saved only when disjunct packing
+ * is done by pack_sentence_for_pruning(), and it is not done for
+ * sentences shorter than a certain limit. In that case the pruning is
+ * done with no null_count==0 optimization so restoring the disjuncts is
+ * no needed.
  */
 void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt = NULL;
-	bool pp_and_power_prune_done = false;
-	bool is_null_count_0 = (0 == opts->min_null_count);
+	Disjunct **disjuncts_copy = NULL;
+	void *saved_memblock = NULL;
 	int max_null_count = MIN((int)sent->length, opts->max_null_count);
+	int min_null_count = opts->min_null_count;
+	bool one_step_parse = (0 == opts->min_null_count) && (0 < max_null_count);
+	int current_prune_level = -1;
+	int needed_prune_level = opts->min_null_count;
+	const int max_prune_level = 1;
 
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
 
-	/* Share before the potential saving (instead of after) for CPU cache hit. */
-	share_disjunct_jets(sent, /*rebuild*/false);
+	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
 	print_time(opts, "Encode connectors for pruning");
-
-	Disjuncts_desc_t disjuncts_copy = { NULL };
-	if (is_null_count_0 && (0 < max_null_count))
+	if (NULL == ts_pruning)
 	{
-		/* Save the disjuncts in case we need to parse with null_count>0. */
-		save_disjuncts(sent, &disjuncts_copy);
+		/* The sentence is considered too short for packing. */
+		if (one_step_parse)
+		{
+			/* Since no disjunct packing has been done, we will not be able
+			 * to restore them in case a parsing with null_count>0 is
+			 * needed.  Hence we must not optimize for null_count==0. */
+			needed_prune_level = 1;
+		}
+	}
+	else
+	{
+		free_sentence_disjuncts(sent);
+
+		if (one_step_parse)
+		{
+			/* Save the disjuncts in case we need to parse with null_count>0. */
+			disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
+			saved_memblock = save_disjuncts(sent, ts_pruning, disjuncts_copy);
+		}
 	}
 
-	for (int nl = opts->min_null_count; nl <= max_null_count; nl++)
+	for (int nl = min_null_count; nl <= max_null_count; nl++)
 	{
 		Count_bin hist;
 		s64 total;
 
-		if (!pp_and_power_prune_done)
+		if ((needed_prune_level <= max_prune_level) &&
+		    (needed_prune_level > current_prune_level))
 		{
-			if (0 != nl)
+			if (one_step_parse &&
+			   (needed_prune_level > 0) && (-1 != current_prune_level))
 			{
-				pp_and_power_prune_done = true;
-				if (is_null_count_0)
+				/* We need to prune *again*. Restore the original disjuncts. */
+				restore_disjuncts(sent, disjuncts_copy, saved_memblock, ts_pruning);
+				/* Free the memory of the previous pack_sentence_for_parsing(). */
+				free(sent->dc_memblock);
+				sent->dc_memblock = NULL;
+			}
+
+			current_prune_level = needed_prune_level;
+			opts->min_null_count = needed_prune_level;
+
+			pp_and_power_prune(sent, ts_pruning, opts);
+			if (one_step_parse)
+				needed_prune_level++; /* In case we need to prune again. */
+
+			Tracon_sharing *ts_parsing = pack_sentence_for_parsing(sent);
+			print_time(opts, "Encode connectors for parsing");
+			if (NULL != ts_parsing)
+			{
+				sent->dc_memblock = ts_parsing->memblock;
+				free_tracon_sharing(ts_parsing);
+			}
+
+			if (!one_step_parse || (max_prune_level == opts->min_null_count))
+			{
+				/* At this point no further pruning will be done. Free the
+				 * pruning tracon stuff here instead of at the end. */
+				if (NULL != ts_pruning)
 				{
-					opts->min_null_count = 1; /* Don't optimize for null_count==0. */
-
-					/* We are parsing now with null_count>0, when previously we
-					 * parsed with null_count==0. Restore the save disjuncts. */
-					free_sentence_disjuncts(sent); /* They are to be replaced. */
-					restore_disjuncts(sent, &disjuncts_copy);
-
-					/* The jet-table jet pointers are incompatible with
-					 * saving/restoring the disjuncts, which change their
-					 * jet addresses. So the jet-sharing must be redone. */
-					share_disjunct_jets(sent, /*rebuild*/true);
-					print_time(opts, "Encode connectors for parsing (rebuild)");
+					free(ts_pruning->memblock);
+					free_tracon_sharing(ts_pruning);
+					ts_pruning = NULL;
+					free(saved_memblock);
 				}
 			}
-			pp_and_power_prune(sent, opts);
-			/* Currently the jet-sharing is for power_prune() only.
-			 * For testing using it during do_count(), move it to be
-			 * after do_parse() below. */
-			if ((0 < nl) || (0 == max_null_count) )
-				free_jet_sharing(sent); /* Not needed for rebuild. */
-#if 0 // See below
-			bool real_tracon_ids =
-#endif
-			{
-				pack_sentence(sent);
-				print_time(opts, "Encode connectors for parsing");
-			}
+
 			gword_record_in_connector(sent);
-			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
-			/* If parsing with no nulls or we are using fake tracon_id's
-			 * (because it is a short sentence) always allocate the count
-			 * connector table. Else allocate it only if this is a parse with
-			 * nulls only. So in case of one-step parse (min_null_count==0 &&
-			 * max_null_count>0) the table is shared and the null_count==0
-			 * parsing will be inferred from the table. */
-			// There are a few cases in the "fixes" corpus in which the number
-			// of parses is different. The missing linkages are all with P.P.
-			// violation, but nevertheless this is not expected and thus this
-			// idea is disabled until a fix is found. See "#if 0" below.
-			// Test sentence: He was too far gone to come back from such a loss
-			// (117 vs 111 linkages.)
-#if 0
-			if (!real_tracon_ids || (nl == 0) || !is_null_count_0)
-#endif
-			{
-				free_count_context(ctxt, sent);
-				ctxt = alloc_count_context(sent);
-			}
-
+			free_count_context(ctxt, sent);
+			ctxt = alloc_count_context(sent);
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
@@ -385,9 +397,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
 	}
+	opts->min_null_count = min_null_count;
 	sort_linkages(sent, opts);
 
-	free_saved_disjuncts(&disjuncts_copy);
+	if (NULL != ts_pruning)
+	{
+		free(ts_pruning->memblock);
+		free_tracon_sharing(ts_pruning);
+		free(saved_memblock);
+	}
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
 }

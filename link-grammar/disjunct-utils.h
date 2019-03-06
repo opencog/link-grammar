@@ -15,8 +15,10 @@
 
 #include <stdbool.h>
 
+#include "tracon-set.h"
+#include "connectors.h"                 // Connector
 #include "api-types.h"
-#include "api-structures.h"             // Sentence
+#include "api-structures.h"             // Sentence, jet_sharing_t
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
@@ -51,9 +53,9 @@ void word_record_in_disjunct(const Gword *, Disjunct *);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
-bool pack_sentence(Sentence);
-void share_disjunct_jets(Sentence, bool);
-void free_jet_sharing(Sentence);
+Tracon_sharing *pack_sentence_for_pruning(Sentence);
+Tracon_sharing *pack_sentence_for_parsing(Sentence);
+void free_tracon_sharing(Tracon_sharing *);
 
 void print_one_connector(Connector *, int, int);
 void print_connector_list(Connector *);
@@ -68,7 +70,61 @@ typedef struct
 	Disjunct **disjuncts;
 } Disjuncts_desc_t;
 
-void save_disjuncts(Sentence, Disjuncts_desc_t *);
-void restore_disjuncts(Sentence, Disjuncts_desc_t *);
-void free_saved_disjuncts(Disjuncts_desc_t *ddesc);
+/* Trailing connector sequences (aka tracons) are memory-shared for the
+ * benefit of the pruning and parsing stages. Basically each unique
+ * tracon gets its own tracon_id.
+ * For the parsing stage, on each pass the tracon_id of "good"
+ * connectors is assigned the pass number so they will not be checked
+ * again on the same pass. The pruning stage also uses the connector
+ * refcount field as a reference count - the number of times this
+ * connector is memory-shared.
+ * The details of what considered a unique tracon is slightly different
+ * for the pruning stage and the parsing stage - see the comment block
+ * "Connector encoding, sharing and packing" in disjunct-utils.c.
+ *
+ * The dimension of the 2-element arrays below is used as follows:
+ * [0] - left side; [1] - right side.
+ *
+ * The array num_cnctrs_per_word holds the number of different tracon
+ * IDs of each word; it is used only for sizing the power table in
+ * power_prune() since the first connector (only) of each tracon is
+ * inserted into the power table.
+ */
+
+typedef struct
+{
+	unsigned int *num_cnctrs_per_word[2]; /* Indexed by word number */
+	/* Table of tracons. A 32bit index into the connector array in
+	 * memblock (instead of (Connector*)) is used for better use of the
+	 * CPU cache on 64-bit CPUs. */
+	uint32_t *table[2];         /* Indexed by tracon_id */
+	size_t entries[2];          /* Actual number of entries */
+	size_t table_size[2];       /* Allocated number of entries */
+	size_t memblock_sz;         /* Pruning memblock size  */
+} Tracon_list;
+
+struct tracon_sharing_s
+{
+	void *memblock;             /* Memory block for disjuncts & connectors */
+	Connector *cblock_base;     /* Start of connector block */
+	Connector *cblock;          /* Next available memory for connector */
+	unsigned int num_connectors;
+	Disjunct *dblock;           /* Next available memory for disjunct */
+	unsigned int num_disjuncts;
+	int word_offset;            /* Start number for connector tracon_id */
+	Tracon_set *csid[2];        /* For generating unique IDs */
+	int next_id[2];
+	uintptr_t last_token;
+	Tracon_list *tracon_list;
+};
+
+void *save_disjuncts(Sentence, Tracon_sharing *, Disjunct **);
+void restore_disjuncts(Sentence, Disjunct **, void *, Tracon_sharing *);
+void free_saved_disjuncts(Sentence);
+
+/** Get tracon by (dir, tracon_id). */
+static inline Connector *get_tracon(Tracon_sharing *ts, int dir, int id)
+{
+	return &ts->cblock_base[ts->tracon_list->table[dir][id]];
+}
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

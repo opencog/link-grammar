@@ -34,6 +34,7 @@ typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
 typedef struct Gword_struct Gword;
 typedef struct gword_set gword_set;
+typedef struct tracon_sharing_s Tracon_sharing;
 
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;
