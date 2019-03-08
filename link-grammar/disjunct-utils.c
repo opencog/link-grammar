@@ -463,7 +463,7 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
  * optional m: "@" for multi (else nothing)
  * Cname: Connector name
  * Optional D: "-" / "+" (if dir != -1)
- * Optional <suffix>: tracon_id (if not 0)
+ * Optional <tracon_id>: tracon_id (if not 0)
  * Optional (nearest_word, length_limit): if both are not 0
  * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
  */
