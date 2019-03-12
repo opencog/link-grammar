@@ -627,11 +627,6 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 		}
 		else
 		{
-#ifdef DEBUG
-			/* Connectors of disjuncts with the same suffix_id must
-			 * originate from the same Gwords. */
-			assert(t->originating_gword == newc->originating_gword);
-#endif
 			prevc->next = newc;
 
 			/* Just shared a trailing connector sequence, nothing more to do. */
