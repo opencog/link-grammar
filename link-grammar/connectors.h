@@ -110,7 +110,12 @@ struct Connector_struct
 	int suffix_id;        /* Suffix sequence identifier (see preparations.c) */
 	const condesc_t *desc;
 	Connector *next;
-	const gword_set *originating_gword;
+	union
+	{
+		const gword_set *originating_gword; /* Used while and after parsing */
+		/* For pruning use only */
+		bool shallow;      /* TRUE if this is a shallow connector */
+	};
 };
 
 void condesc_init(Dictionary, size_t);
