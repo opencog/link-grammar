@@ -146,16 +146,16 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	p = find_place(source_string, ss);
 	if (ss->table[p] != NULL) return ss->table[p];
 
-	len = strlen(source_string);
+	len = strlen(source_string) + 1;
 #ifdef DEBUG
 	/* Store the String_set structure address for debug verifications */
-	len = ((len+1)&~(sizeof(ss)-1)) + 2*sizeof(ss);
-	str = (char *) malloc(len);
-	*(String_set **)&str[len-sizeof(ss)] = ss;
+	size_t mlen = (len&~(sizeof(ss)-1)) + 2*sizeof(ss);
+	str = (char *) malloc(mlen);
+	*(String_set **)&str[mlen-sizeof(ss)] = ss;
 #else
-	str = (char *) malloc(len+1);
+	str = (char *) malloc(len);
 #endif
-	strcpy(str, source_string);
+	memcpy(str, source_string, len);
 	ss->table[p] = str;
 	ss->count++;
 
