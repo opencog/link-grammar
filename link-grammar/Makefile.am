@@ -141,6 +141,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/tokenize.c              \
 	tokenize/wg-display.c            \
 	tokenize/wordgraph.c             \
+	tracon-set.c                     \
 	utilities.c                      \
 	                                 \
 	api-structures.h                 \
@@ -200,6 +201,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/tokenize.h              \
 	tokenize/word-structures.h       \
 	tokenize/wordgraph.h             \
+	tracon-set.h                     \
 	utilities.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
