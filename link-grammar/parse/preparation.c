@@ -21,7 +21,6 @@
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
-#include "string-id.h"
 #include "utilities.h"
 #include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/tok-structures.h"    // gword_set
