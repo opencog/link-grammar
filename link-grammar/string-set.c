@@ -10,6 +10,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "const-prime.h"
+#include "memory-pool.h"
 #include "string-set.h"
 #include "utilities.h"
 
@@ -46,7 +48,7 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
 		accum = (7 * accum) + (unsigned char)*str;
-	return accum % (ss->size);
+	return ss->mod_func(accum);
 }
 
 static unsigned int stride_hash_string(const char *str, const String_set *ss)
@@ -54,37 +56,20 @@ static unsigned int stride_hash_string(const char *str, const String_set *ss)
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
 		accum = (17 * accum) + (unsigned char)*str;
-	accum %= ss->size;
+	accum = ss->mod_func(accum);
 	/* This is the stride used, so we have to make sure that
 	 * its value is not 0 */
 	if (accum == 0) accum = 1;
 	return accum;
 }
 
-/** Return the next prime up from start. */
-static size_t next_prime_up(size_t start)
-{
-	size_t i;
-	start |= 1; /* make it odd */
-	for (;;) {
-		for (i=3; (i <= (start/i)); i += 2) {
-			if (start % i == 0) break;
-		}
-		if (start % i == 0) {
-			start += 2;
-		} else {
-			return start;
-		}
-	}
-}
-
 String_set * string_set_create(void)
 {
 	String_set *ss;
 	ss = (String_set *) malloc(sizeof(String_set));
-	// ss->size = 1013; /* 1013 is a prime number */
-	// ss->size = 211; /* 211 is a prime number */
-	ss->size = 419; /* 419 is a prime number */
+	ss->prime_idx = 0;
+	ss->size = s_prime[ss->prime_idx];
+	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (char **) malloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;
@@ -117,7 +102,9 @@ static void grow_table(String_set *ss)
 	unsigned int p;
 
 	old = *ss;
-	ss->size = next_prime_up(3 * old.size);  /* at least triple the size */
+	ss->prime_idx++;
+	ss->size = s_prime[ss->prime_idx];
+	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (char **) malloc(ss->size * sizeof(char *));
 	memset(ss->table, 0, ss->size*sizeof(char *));
 	ss->count = 0;

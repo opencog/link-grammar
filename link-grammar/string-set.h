@@ -16,13 +16,16 @@
 #include <stddef.h>
 
 #include "api-types.h"
+#include "const-prime.h"
 #include "lg_assert.h"
 
 struct String_set_s
 {
-   size_t size;       /* the current size of the table */
-   size_t count;      /* number of things currently in the table */
-   char ** table;     /* the table itself */
+	size_t size;                /* the current size of the table */
+	size_t count;               /* number of things currently in the table */
+	char ** table;              /* the table itself */
+	unsigned int prime_idx;     /* current prime number table index */
+	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
 };
 
 String_set * string_set_create(void);
