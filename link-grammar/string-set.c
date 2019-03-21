@@ -76,6 +76,7 @@ static void ss_pool_alloc(size_t pool_size_add, String_set *ss)
 	ss->alloc_next = ss->string_pool->block;
 
 	ss->pool_free_count = pool_size_add - sizeof(str_mem_pool);
+	ASAN_POISON_MEMORY_REGION(ss->string_pool+sizeof(str_mem_pool), ss->pool_free_count);
 }
 
 static void ss_pool_delete(String_set *ss)
@@ -84,6 +85,7 @@ static void ss_pool_delete(String_set *ss)
 
 	for (m = ss->string_pool; m != NULL; m = m_prev)
 	{
+		ASAN_UNPOISON_MEMORY_REGION(m, m->size);
 		m_prev = m->prev;
 		free(m);
 	}
@@ -98,6 +100,7 @@ static char *ss_stralloc(size_t str_size, String_set *ss)
 		ss_pool_alloc((str_size&MEM_POOL_INCR) + MEM_POOL_INCR, ss);
 
 	char *str_address = ss->alloc_next;
+	ASAN_UNPOISON_MEMORY_REGION(str_address, str_size);
 	ss->alloc_next += str_size;
 	ss->alloc_next = (char *)ALIGN((uintptr_t)ss->alloc_next, STR_ALIGNMENT);
 	size_t total_size = str_size + (ss->alloc_next - str_address);
