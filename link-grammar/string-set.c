@@ -48,7 +48,7 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
 		accum = (7 * accum) + (unsigned char)*str;
-	return ss->mod_func(accum);
+	return accum;
 }
 
 static unsigned int stride_hash_string(const char *str, const String_set *ss)
@@ -70,28 +70,37 @@ String_set * string_set_create(void)
 	ss->prime_idx = 0;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
-	ss->table = (char **) malloc(ss->size * sizeof(char *));
-	memset(ss->table, 0, ss->size*sizeof(char *));
+	ss->table = malloc(ss->size * sizeof(ss_slot));
+	memset(ss->table, 0, ss->size*sizeof(ss_slot));
 	ss->count = 0;
 	return ss;
+}
+
+static bool place_found(const char *str, const ss_slot *slot, unsigned int hash,
+                         String_set *ss)
+{
+	if (slot->str == NULL) return true;
+	if (hash != slot->hash) return false;
+	return (strcmp(slot->str, str) == 0);
 }
 
 /**
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const char * str, String_set *ss)
+static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
 {
-	unsigned int h, s;
-	h = hash_string(str, ss);
+	unsigned int s;
+	unsigned int key = ss->mod_func(h);
 
-	if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
+	if (place_found(str, &ss->table[key], h, ss)) return key;
+
 	s = stride_hash_string(str, ss);
 	while (true)
 	{
-		h = h + s;
-		if (h >= ss->size) h %= ss->size;
-		if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
+		key = key + s;
+		if (key >= ss->size) key = ss->mod_func(key);
+		if (place_found(str, &ss->table[key], h, ss)) return key;
 	}
 }
 
@@ -105,14 +114,14 @@ static void grow_table(String_set *ss)
 	ss->prime_idx++;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
-	ss->table = (char **) malloc(ss->size * sizeof(char *));
-	memset(ss->table, 0, ss->size*sizeof(char *));
+	ss->table = malloc(ss->size * sizeof(ss_slot));
+	memset(ss->table, 0, ss->size*sizeof(ss_slot));
 	ss->count = 0;
 	for (i=0; i<old.size; i++)
 	{
-		if (old.table[i] != NULL)
+		if (old.table[i].str != NULL)
 		{
-			p = find_place(old.table[i], ss);
+			p = find_place(old.table[i].str, old.table[i].hash, ss);
 			ss->table[p] = old.table[i];
 			ss->count++;
 		}
@@ -124,16 +133,16 @@ static void grow_table(String_set *ss)
 
 const char * string_set_add(const char * source_string, String_set * ss)
 {
-	char * str;
-	size_t len;
-	unsigned int p;
-
 	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
 
-	p = find_place(source_string, ss);
-	if (ss->table[p] != NULL) return ss->table[p];
+	unsigned int h = hash_string(source_string, ss);
+	unsigned int p = find_place(source_string, h, ss);
 
-	len = strlen(source_string) + 1;
+	if (ss->table[p].str != NULL) return ss->table[p].str;
+
+	size_t len = strlen(source_string) + 1;
+	char *str;
+
 #ifdef DEBUG
 	/* Store the String_set structure address for debug verifications */
 	size_t mlen = (len&~(sizeof(ss)-1)) + 2*sizeof(ss);
@@ -143,7 +152,8 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	str = (char *) malloc(len);
 #endif
 	memcpy(str, source_string, len);
-	ss->table[p] = str;
+	ss->table[p].str = str;
+	ss->table[p].hash = h;
 	ss->count++;
 
 	/* We just added it to the table.  If the table got too big,
@@ -156,10 +166,10 @@ const char * string_set_add(const char * source_string, String_set * ss)
 
 const char * string_set_lookup(const char * source_string, String_set * ss)
 {
-	unsigned int p;
+	unsigned int h = hash_string(source_string, ss);
+	unsigned int p = find_place(source_string, h, ss);
 
-	p = find_place(source_string, ss);
-	return ss->table[p];
+	return ss->table[p].str;
 }
 
 void string_set_delete(String_set *ss)
@@ -169,7 +179,7 @@ void string_set_delete(String_set *ss)
 	if (ss == NULL) return;
 	for (i=0; i<ss->size; i++)
 	{
-		if (ss->table[i] != NULL) free(ss->table[i]);
+		if (ss->table[i].str != NULL) free((void *)ss->table[i].str);
 	}
 	free(ss->table);
 	free(ss);
