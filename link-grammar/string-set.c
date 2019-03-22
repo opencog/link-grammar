@@ -169,14 +169,12 @@ static void grow_table(String_set *ss)
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = malloc(ss->size * sizeof(ss_slot));
 	memset(ss->table, 0, ss->size*sizeof(ss_slot));
-	ss->count = 0;
 	for (i=0; i<old.size; i++)
 	{
 		if (old.table[i].str != NULL)
 		{
 			p = find_place(old.table[i].str, old.table[i].hash, ss);
 			ss->table[p] = old.table[i];
-			ss->count++;
 		}
 	}
 	/* printf("growing from %d to %d\n", old.size, ss->size); */
