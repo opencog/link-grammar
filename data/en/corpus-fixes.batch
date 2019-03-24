@@ -3315,6 +3315,15 @@ Shades of Cyc, where apples were fruit, but oranges weren't, Kennedy was a presi
 Shades of Cyc!
 Where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.
 
+% zero-verbs. The dict uses the comma to be the zero-verb.
+% For example: "I stood there, [resting] my hand on the knob"
+% the verb "resting" is implicit but missing.
+I just stood there, my hand on the knob, trembling like a leaf.
+I stood there, my hand on the knob, trembling
+I stood there, resting my hand on the knob
+I stood there, trembling
+she waited, her thoughts elsewhere
+
 % zero-copula comparative-conjunctions
 that is very nice, just not what I want
 that is very nice, but not what I want

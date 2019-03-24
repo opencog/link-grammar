@@ -12715,6 +12715,16 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   or (SJl- & SJr+ & SJl+)
   or (Xj- & hWl+ & {Xj+})]0.05;
 
+% zero-verbs. The dict uses the comma to be the zero-verb.
+% For example: "I stood there, [resting] my hand on the knob"
+% The verb "resting" is implicit, but missing. The simplest solution
+% seems to be to use the comma as if it were a verb.  High cost, because
+% commas are very common, while this usage is rare. Also: MVp+ instead
+% of @MV+ because we don't want chaining of MVg to other commas.
+% This is squonky, kind of, but I can't think of a better fix.
+",.v":
+  [[MVg- & O+ & {MVp+} & Xc+]];
+
 % :.j
 % <sent-start> is needed for a wall-connection to the subsequent verb.
 % Should we also use a VC link here, similar to "so" ??
