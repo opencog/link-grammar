@@ -116,6 +116,19 @@ static bool connector_list_equal(const Connector *c1, const Connector *c2)
 	return (c1 == NULL) && (c2 == NULL);
 }
 
+#if defined DEBUG || defined TRACON_SET_DEBUG
+uint64_t fp_count;
+uint64_t coll_count;
+static void prt_stat(void)
+{
+	lgdebug(+5, "%ld accesses, chain %.4f\n",
+	        fp_count, 1.*(fp_count+coll_count)/fp_count);
+}
+#define PRT_STAT(...) __VA_ARGS__
+#else
+#define PRT_STAT(...)
+#endif
+
 static bool place_found(const Connector *c, const clist_slot *slot, unsigned int hash,
                          Tracon_set *ss)
 {
@@ -132,12 +145,15 @@ static bool place_found(const Connector *c, const clist_slot *slot, unsigned int
  */
 static unsigned int find_place(const Connector *c, unsigned int h, Tracon_set *ss)
 {
+	PRT_STAT(if (fp_count == 0) atexit(prt_stat); fp_count++;)
 	unsigned int key = ss->mod_func(h);
+
 	if (place_found(c, &ss->table[key], h, ss)) return key;
 
 	unsigned int s = stride_hash_connectors(c, ss);
 	while (true)
 	{
+		PRT_STAT(coll_count++;)
 		key += s;
 		if (key >= ss->size) key = ss->mod_func(key);
 		if (place_found(c, &ss->table[key], h, ss)) return key;
@@ -148,6 +164,7 @@ static void grow_table(Tracon_set *ss)
 {
 	Tracon_set old = *ss;
 
+	PRT_STAT(uint64_t fp_count_save = fp_count;)
 	ss->prime_idx++;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
@@ -162,6 +179,7 @@ static void grow_table(Tracon_set *ss)
 		}
 	}
 	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
+	PRT_STAT(fp_count = fp_count_save);
 	free(old.table);
 }
 
