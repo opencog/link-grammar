@@ -759,9 +759,14 @@ if test "x$enable_java_bindings" = "xyes"; then
 	AC_CHECK_PROG(ANTfound, ant, yes, no)
 	AM_CONDITIONAL(HAVE_ANT, test x${ANTfound} = xyes)
 
+	# If Maven is found then use it to install the jar library
+	# into the local maven repository
+	AC_CHECK_PROG(MVNfound, mvn, yes, no)
+	AM_CONDITIONAL(HAVE_MVN, test x${MVNfound} = xyes)
 else
    AM_CONDITIONAL(HAVE_JAVA, false)
    AM_CONDITIONAL(HAVE_ANT, false)
+   AM_CONDITIONAL(HAVE_MVN, false)
 fi
 
 # ===================================================================
