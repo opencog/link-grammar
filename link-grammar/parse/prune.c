@@ -733,7 +733,8 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
-		prt_error("Debug: After power_pruning:\n\\");
+		prt_error("Debug: After power_pruning (null_count=%d):\n\\",
+		          opts->min_null_count);
 		print_disjunct_counts(sent);
 	}
 
