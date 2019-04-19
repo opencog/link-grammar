@@ -79,6 +79,7 @@ struct prune_context_s
 	int power_cost;
 	int N_changed;   /* counts the number of changes
 						   of c->nearest_word fields in a pass */
+	int pass_number;
 	power_table *pt;
 	Sentence sent;
 };
@@ -527,10 +528,8 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * there is no way to match this list, it returns a negative number.
  * If it does find a way to match it, it updates the c->nearest_word fields
  * correctly. When disjunct-jets are shared, this update is done
- * simultaneously on all of them, and the next time the same disjunct-jet
- * is encountered (in the same word disjunct loop at least), the work here is
- * trivial. FIXME: Mark such jets for the duration of this loop so
- * they will be skipped.
+ * simultaneously on all of them. The main loop of power_prune() then
+ * marks them with the pass number that is checked here.
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
@@ -541,6 +540,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
+	if (c->tracon_id == pc->pass_number) return c->nearest_word;
 	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
@@ -574,6 +574,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * N_words - 1.   If it does find a way to match it, it updates the
  * c->nearest_word fields correctly. See the comment on that in
  * left_connector_list_update().
+ * Regarding pass_number, see the comment in left_connector_list_update().
  */
 static size_t
 right_connector_list_update(prune_context *pc, Connector *c,
@@ -584,6 +585,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	int foundmatch = BAD_WORD;
 
 	if (c == NULL) return w;
+	if (c->tracon_id == pc->pass_number) return c->nearest_word;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
 	if (sent_length <= n) return BAD_WORD;
 	if (c->nearest_word > n) n = c->nearest_word;
@@ -607,6 +609,11 @@ right_connector_list_update(prune_context *pc, Connector *c,
 		pc->N_changed++;
 	}
 	return foundmatch;
+}
+
+static void mark_jet_as_good(Connector *c, int pass_number)
+{
+	c->tracon_id = pass_number;
 }
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
@@ -651,12 +658,16 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 	pc.null_links = (opts->min_null_count > 0);
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
 	pc.sent = sent;
+	pc.pass_number = 0;
 
 	while (1)
 	{
+		pc.pass_number++;
+
 		/* left-to-right pass */
 		for (WordIdx w = 0; w < sent->length; w++)
 		{
+
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
 				Disjunct *d = *dd; /* just for convenience */
@@ -678,6 +689,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 					continue;
 				}
 
+				mark_jet_as_good(d->left, pc.pass_number);
 				dd = &d->next; /* NEXT */
 			}
 
@@ -715,6 +727,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 					continue;
 				}
 
+				mark_jet_as_good(d->right, pc.pass_number);
 				dd = &d->next; /* NEXT */
 			}
 
