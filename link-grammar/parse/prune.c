@@ -45,7 +45,6 @@ struct c_list_s
 {
 	C_list * next;
 	Connector * c;
-	bool shallow;
 };
 
 typedef struct power_table_s power_table;
@@ -206,7 +205,6 @@ static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
 	m->next = t[h];
 	t[h] = m;
 	m->c = c;
-	m->shallow = shal;
 }
 
 static void power_table_alloc(Sentence sent, power_table *pt)
@@ -489,7 +487,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		/* Two deep connectors can't work */
-		if (!shallow && !cl->shallow) return false;
+		if (!shallow && !cl->c->shallow) return false;
 
 		if (possible_connection(pc, cl->c, c, w, word_c))
 			return true;
@@ -514,7 +512,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		/* Two deep connectors can't work */
-		if (!shallow && !cl->shallow) return false;
+		if (!shallow && !cl->c->shallow) return false;
 
 		if (possible_connection(pc, c, cl->c, word_c, w))
 			return true;
