@@ -108,7 +108,7 @@ typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
 {
 	size_t dup_table_size;
-	Disjunct ** dup_table;
+	Disjunct *dup_table[];
 };
 
 /**
@@ -246,22 +246,19 @@ static Disjunct *disjuncts_dup(Pool_desc *Disjunct_pool, Pool_desc *Connector_po
 
 static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
-	size_t i;
 	disjunct_dup_table *dt;
-	dt = (disjunct_dup_table *) xalloc(sizeof(disjunct_dup_table));
 
+	dt = malloc(sz * sizeof(Disjunct *) + sizeof(disjunct_dup_table));
 	dt->dup_table_size = sz;
-	dt->dup_table = (Disjunct **) xalloc(sz * sizeof(Disjunct *));
 
-	for (i=0; i<sz; i++) dt->dup_table[i] = NULL;
+	memset(dt->dup_table, 0, sz * sizeof(Disjunct *));
 
 	return dt;
 }
 
 static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 {
-	xfree(dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
-	xfree(dt, sizeof(disjunct_dup_table));
+	free(dt);
 }
 
 #ifdef DEBUG
