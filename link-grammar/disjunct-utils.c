@@ -342,7 +342,6 @@ static gword_set *gword_set_union(gword_set *kept, gword_set *eliminated)
 /**
  * Takes the list of disjuncts pointed to by d, eliminates all
  * duplicates, and returns a pointer to a new list.
- * It frees the disjuncts that are eliminated.
  */
 Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
