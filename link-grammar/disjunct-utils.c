@@ -346,17 +346,16 @@ static gword_set *gword_set_union(gword_set *kept, gword_set *eliminated)
  */
 Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
-	unsigned int h, count;
-	Disjunct *dx;
+	unsigned int count = 0;
 	disjunct_dup_table *dt;
 
-	count = 0;
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
 	for (Disjunct **dd = &dw; *dd != NULL; /* See: NEXT */)
 	{
+		Disjunct *dx;
 		Disjunct *d = *dd;
-		h = old_hash_disjunct(dt, d);
+		unsigned int h = old_hash_disjunct(dt, d);
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
 		{
