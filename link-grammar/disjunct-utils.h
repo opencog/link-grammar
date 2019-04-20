@@ -18,7 +18,7 @@
 #include "tracon-set.h"
 #include "connectors.h"                 // Connector
 #include "api-types.h"
-#include "api-structures.h"             // Sentence, jet_sharing_t
+#include "api-structures.h"             // Sentence
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
