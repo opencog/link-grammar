@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <string.h>
+#include <limits.h>                     // UINT_MAX
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
@@ -346,56 +347,49 @@ static gword_set *gword_set_union(gword_set *kept, gword_set *eliminated)
  * duplicates, and returns a pointer to a new list.
  * It frees the disjuncts that are eliminated.
  */
-Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
+Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
-	unsigned int i, h, count;
-	Disjunct *dn, *dx;
+	unsigned int h, count;
+	Disjunct *dx;
 	disjunct_dup_table *dt;
 
 	count = 0;
-	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(d)));
+	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
-	while (d != NULL)
+	for (Disjunct **dd = &dw; *dd != NULL; /* See: NEXT */)
 	{
-		dn = d->next;
+		Disjunct *d = *dd;
 		h = old_hash_disjunct(dt, d);
 
-		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->next)
+		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
 		{
 			if (d->dup_hash != dx->dup_hash) continue;
 			if (disjuncts_equal(dx, d)) break;
 		}
 		if (dx == NULL)
 		{
-			d->next = dt->dup_table[h];
+			d->dup_table_next = dt->dup_table[h];
 			dt->dup_table[h] = d;
 		}
 		else
 		{
+			/* Discard the current disjunct. */
 			if (d->cost < dx->cost) dx->cost = d->cost;
 
 			dx->originating_gword =
 				gword_set_union(dx->originating_gword, d->originating_gword);
 
 			count++;
+			*dd = d->next; /* NEXT - set current disjunct to the next one. */
+			continue;
 		}
-		d = dn;
-	}
-
-	/* d is already null */
-	for (i=0; i < dt->dup_table_size; i++)
-	{
-		for (dn = dt->dup_table[i]; dn != NULL; dn = dx) {
-			dx = dn->next;
-			dn->next = d;
-			d = dn;
-		}
+		dd = &d->next; /* NEXT */
 	}
 
 	lgdebug(+D_DISJ+(0==count)*1000, "Killed %u duplicates\n", count);
 
 	disjunct_dup_table_delete(dt);
-	return d;
+	return dw;
 }
 
 /* ============================================================= */
