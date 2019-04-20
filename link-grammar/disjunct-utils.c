@@ -549,7 +549,8 @@ void print_all_disjuncts(Sentence sent)
  * connectors also have tracon IDs, which belong to tracons starting
  * with that connectors.
  *
- * For the pruning step, all the tracon IDs are set to 1.
+ * For the pruning step, all the tracon IDs are set to 0 (see below for
+ * how tracon_id is used during the power pruning).
  *
  * For the pruning step, more things are done:
  * Additional data structure - a tracon list - is constructed, which
