@@ -526,7 +526,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * there is no way to match this list, it returns -1 (which is also
  * BAD_WORD in unsigned 8-bit representation).
  * If it does find a way to match it, it updates the c->nearest_word
- * fields correctly. When Tracons are shared, this update is done
+ * fields correctly. When tracons are shared, this update is done
  * simultaneously on all of them. The main loop of power_prune() then
  * marks them with the pass number that is checked here.
  */
@@ -638,14 +638,24 @@ static bool is_bad(Connector *c)
 
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
- *  Normally all the identical disjunct-jets are memory shared.
- *  The refcount of each connector serves as its reference count
- *  in the power table. Each time when a connector that cannot match
- *  is discovered, its reference count is decreased, and its
- *  nearest_word field is assigned BAD_WORD. Due to the memory sharing,
- *  each such an assignment affects immediately all the identical
- *  disjunct-jets.
- *  */
+ *  Normally tracons are memory shared (with the exception that
+ *  tracons that start with a shallow connectors are not shared with
+ *  ones starting with a deep connector). For further details on tracon
+ *  sharing, see the comment on them in disjunct-utils.c.
+ *
+ *  The refcount of each connector serves as its reference count in the
+ *  power table. Each time when a connector that cannot match is
+ *  discovered, its reference count is decreased, and the nearest_word
+ *  field of its Jet is assigned BAD_WORD. Due to the tracon memory
+ *  sharing, each change of the reference count and the assignment of
+ *  BAD_WORD affects simultaneously all the identical tracons (and the
+ *  corresponding connectors in the power table). The corresponding
+ *  disjuncts are discarded on the fly, and additional disjuncts with Jets
+ *  so marked with BAD_WORD are discarded when encountered without a
+ *  further check. Each tracon is handled only once in the same main loop
+ *  pass by marking their connectors with the pass number in their
+ *  tracon_id field.
+ */
 static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 {
 	prune_context pc;
