@@ -368,7 +368,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 					Connector *c = get_tracon(ts, dir, id);
 					if (!!shallow != c->shallow) continue;
 
-					int w = get_jet_word_number(c, dir);
+					int w = get_tracon_word_number(c, dir);
 
 					put_into_power_table(mp, sizep[w], tp[w], c, c->shallow);
 				}
