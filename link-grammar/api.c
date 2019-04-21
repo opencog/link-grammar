@@ -451,8 +451,8 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
-	/* Set the minimum length for trailing connectors encoding.
-	 * In that case disjunct jet-sharing (for power prune())
+	/* Set the minimum length for tracon sharing.
+	 * In that case a tracon list is produced for the pruning step,
 	 * and disjunct/connector packing is done too. */
 	sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
 	const char *min_len_encoding = test_enabled("len-trailing-hash");
