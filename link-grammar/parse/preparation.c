@@ -51,12 +51,12 @@ static int set_dist_fields(Connector * c, size_t w, int delta)
  */
 static void setup_connectors(Sentence sent)
 {
-	size_t w;
-	Disjunct * d, * xd, * head;
-	for (w=0; w<sent->length; w++)
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		head = NULL;
-		for (d=sent->word[w].d; d!=NULL; d=xd)
+		Disjunct *head = NULL;
+		Disjunct *xd;
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = xd)
 		{
 			xd = d->next;
 			if ((set_dist_fields(d->left, w, -1) < 0) ||
