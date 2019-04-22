@@ -24,9 +24,9 @@
 struct Disjunct_struct
 {
 	Disjunct *next;
+	Disjunct *dup_table_next;
 	Connector *left, *right;
 	double cost;
-	bool marked;               /* unmarked disjuncts get deleted */
 
 	/* match_left, right used only during parsing, for the match list. */
 	bool match_left, match_right;
