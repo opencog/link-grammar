@@ -264,10 +264,6 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
 
 /**
  * Stores the value in the x_table.  Assumes it's not already there.
- * Since disjuncts of connectors with the same suffix_id may have
- * different costs and may belong to different words, the disjunct cost
- * and word_string are saved, to be used as retrieval keys in
- * x_table_pointer().
  */
 static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
