@@ -889,10 +889,31 @@ class ZENLangTestCase(unittest.TestCase):
         self.assertEqual(len(linkages), 2)
         self.assertEqual(linkages.next().unused_word_cost(), 1)
 
-    def test_1_step_parsing_with_long_sentence_with_nulls(self):
+    def test_1_step_parsing_with_no_null_links_short(self):
+        self.po = ParseOptions(min_null_count=0, max_null_count=999)
+
+        text = 'This is a test.'
+        sent = Sentence(text, self.d, self.po)
+        self.assertTrue(len(sent.parse()) > 0) # Just check no crashes or leaks
+
+    def test_1_step_parsing_with_no_null_links_long(self):
+        self.po = ParseOptions(min_null_count=0, max_null_count=999)
+
+        text = 12 * 'This is a test. ' # The final blank is essential
+        sent = Sentence(text, self.d, self.po)
+        self.assertTrue(len(sent.parse()) > 0) # Just check no crashes or leaks
+
+    def test_1_step_parsing_with_nulls_short(self):
         self.po = ParseOptions(min_null_count=0, max_null_count=999, short_length=1)
 
-        text = 12 * 'This is a the test '
+        text = 'This a'
+        sent = Sentence(text, self.d, self.po)
+        self.assertTrue(len(sent.parse()) > 0) # Just check no crashes or leaks
+
+    def test_1_step_parsing_with_nulls_long(self):
+        self.po = ParseOptions(min_null_count=0, max_null_count=999, short_length=1)
+
+        text = 12 * 'This is a the test ' # The final blank is essential
         sent = Sentence(text, self.d, self.po)
         self.assertTrue(len(sent.parse()) > 0) # Just check no crashes or leaks
 
