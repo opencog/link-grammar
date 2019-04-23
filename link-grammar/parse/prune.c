@@ -731,7 +731,8 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
-		prt_error("Debug: After power_pruning:\n\\");
+		prt_error("Debug: After power_pruning (null_count=%d):\n\\",
+		          opts->min_null_count);
 		print_disjunct_counts(sent);
 	}
 
@@ -1030,7 +1031,7 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 {
 	if (c->nearest_word == BAD_WORD)
-		return true; /* Already marked (mainly by jet sharing). */
+		return true; /* Already marked (mainly by connector memory-sharing). */
 
 	Cms *cms = lookup_in_cms_table(cmt, c);
 	if (cms->c->nearest_word == BAD_WORD)
