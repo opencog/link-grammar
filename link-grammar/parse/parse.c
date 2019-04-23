@@ -379,8 +379,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
-
-		//if (sent->num_linkages_found > 0 && nl>0) printf("NUM_LINKAGES_FOUND %d\n", sent->num_linkages_found);
 	}
 	sort_linkages(sent, opts);
 
