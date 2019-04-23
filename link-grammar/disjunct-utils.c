@@ -594,28 +594,6 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 					cblock_index = (int)(lcblock - pc->cblock_base);
 					pc->id_table[id_index] = cblock_index;
 				}
-#if 1 /* Extra validation - validate the next connectors in the sequence. */
-				else
-				{
-					/* Here we know that the first connector in the current
-					 * sequence have the same nearest_word as the cached one.
-					 * In that case it doesn't seem possible that the rest will
-					 * not have consistent values too.
-					 * However, if they don't, then don't share this sequence.
-					 * Else the linkages will not be the same. */
-					Connector *n = newc;
-					for (Connector *c = o->next; NULL != c; c = c->next)
-					{
-						n = n->next;
-						if (o->nearest_word != newc->nearest_word)
-						{
-							lgdebug(+0, "Warning: Different nearest_word.\n");
-							newc = NULL; /* Don't share it. */
-							break;
-						}
-					}
-				}
-#endif
 			}
 		}
 
