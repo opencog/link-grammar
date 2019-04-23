@@ -44,29 +44,33 @@ static int set_dist_fields(Connector * c, size_t w, int delta)
 }
 
 /**
- * Initialize the word fields of the connectors, and
+ * Initialize the word fields of the connectors,
  * eliminate those disjuncts that are so long, that they
- * would need to connect past the end of the sentence.
+ * would need to connect past the end of the sentence,
+ * and mark the shallow connectors.
  */
 static void setup_connectors(Sentence sent)
 {
-	size_t w;
-	Disjunct * d, * xd, * head;
-	for (w=0; w<sent->length; w++)
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		head = NULL;
-		for (d=sent->word[w].d; d!=NULL; d=xd)
+		Disjunct *head = NULL;
+		Disjunct *xd;
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = xd)
 		{
 			xd = d->next;
 			if ((set_dist_fields(d->left, w, -1) < 0) ||
 			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
 			{
-				d->next = NULL;
+				; /* Skip this disjunct. */
 			}
 			else
 			{
 				d->next = head;
 				head = d;
+				if (NULL != d->left) d->left->shallow = true;
+				if (NULL != d->right) d->right->shallow = true;
+
 			}
 		}
 		sent->word[w].d = head;
