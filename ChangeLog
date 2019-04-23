@@ -6,6 +6,7 @@ Version 5.6.1 (XXX 2019)
  * Fix inability to form linkage when first word is disconnected.
  * English dict: fix use of quotations with paraphrasing verbs.
  * English dict: fix broken usage of "have not".
+ * Performance improvement (approx 16%) for long sentences. #931
 
 Version 5.6.0 (4 January 2019)
  * Improve Windows support.
