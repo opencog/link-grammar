@@ -1033,7 +1033,7 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 {
 	if (c->nearest_word == BAD_WORD)
-		return true; /* Already marked (mainly by jet sharing). */
+		return true; /* Already marked (mainly by connector memory-sharing). */
 
 	Cms *cms = lookup_in_cms_table(cmt, c);
 	if (cms->c->nearest_word == BAD_WORD)
