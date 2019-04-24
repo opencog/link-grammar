@@ -177,8 +177,7 @@ static void grow_table(String_set *ss)
 			ss->table[p] = old.table[i];
 		}
 	}
-	/* printf("growing from %d to %d\n", old.size, ss->size); */
-	/* fflush(stdout); */
+	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
 	free(old.table);
 }
 
