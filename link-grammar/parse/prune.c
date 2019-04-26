@@ -450,20 +450,28 @@ static bool possible_connection(prune_context *pc,
 	{
 		return false;
 	}
-	/* If the words are NOT next to each other, then there must be
-	 * at least one intervening connector (i.e. cannot have both
-	 * lc->next and rc->next being null).  But we only enforce this
-	 * when we think its still possible to have a complete parse,
-	 * i.e. before we allow null-linked words.
-	 */
 	else
-	if (!pc->null_links &&
-	    (lc->next == NULL) &&
-	    (rc->next == NULL) &&
-	    (!lc->multi) && (!rc->multi) &&
-	    !optional_gap_collapse(pc->sent, lword, rword))
 	{
-		return false;
+		/* If the words are NOT next to each other, then there must be
+		 * at least one intervening connector (i.e. cannot have both
+		 * lc->next and rc->next being null).  But we only enforce this
+		 * when we think its still possible to have a complete parse,
+		 * i.e. before we allow null-linked words.
+		 */
+		if (!pc->null_links &&
+			 (lc->next == NULL) &&
+			 (rc->next == NULL) &&
+			 (!lc->multi) && (!rc->multi) &&
+			 !optional_gap_collapse(pc->sent, lword, rword))
+		{
+			return false;
+		}
+
+		if ((lc->next != NULL) && (rc->next != NULL))
+		{
+			if (lc->next->nearest_word > rc->next->nearest_word)
+				return false; /* Cross link. */
+		}
 	}
 
 	return true;
