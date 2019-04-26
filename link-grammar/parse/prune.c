@@ -425,9 +425,9 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 }
 
 /**
- * This takes two connectors (and whether these are shallow or not)
- * (and the two words that these came from) and returns TRUE if it is
- * possible for these two to match based on local considerations.
+ * This takes two connectors (and the two words that these came from) and
+ * returns TRUE if it is possible for these two to match based on local
+ * considerations.
  */
 static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
