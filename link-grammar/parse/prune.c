@@ -1141,7 +1141,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			if ((rule_ok[i] == 0) || !rule_satisfiable(cmt, link_set))
 			{
 				rule_ok[i] = 0;
-				ppdebug("DELETE %s\n", connector_string(c));
+				ppdebug("DELETE %s refcount %d\n", connector_string(c), c->refcount);
 				c->nearest_word = BAD_WORD;
 				Cname_deleted++;
 				rule->use_count++;
