@@ -114,7 +114,11 @@ struct Connector_struct
 	{
 		const gword_set *originating_gword; /* Used while and after parsing */
 		/* For pruning use only */
-		bool shallow;      /* TRUE if this is a shallow connector */
+		struct
+		{
+			int refcount;      /* Memory-sharing reference count */
+			bool shallow;      /* TRUE if this is a shallow connector */
+		};
 	};
 };
 
