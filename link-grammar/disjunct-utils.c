@@ -472,7 +472,12 @@ void print_one_connector(Connector * e, int dir, int shallow)
 	printf("%s%s", e->multi ? "@" : "", connector_string(e));
 	if (-1 != dir) printf("%c", "-+"[dir]);
 	if (e->tracon_id)
-		printf("<%d>", e->tracon_id);
+	{
+		if (e->refcount)
+			printf("<%d,%d>", e->tracon_id, e->refcount);
+		else
+			printf("<%d>", e->tracon_id);
+	}
 	if ((0 != e->nearest_word) || (0 != e->length_limit))
 		printf("(%d,%d)", e->nearest_word, e->length_limit);
 	if (-1 != shallow)
