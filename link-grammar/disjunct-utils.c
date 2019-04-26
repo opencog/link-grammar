@@ -987,7 +987,7 @@ static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
  *
  * For each disjunct side separately, a unique ID per jet (which starts
  * from 1 so 0 is an invalid ID) is used to identify it. The IDs are
- * shared by all the words for efficiency. The tracon_id field of the
+ * shared by all the words for efficiency. The refcount field of the
  * shallow connector is used as a counter of the number of shared jets
  * in a particular table slot.
  *
@@ -1127,11 +1127,11 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 						connectors_copy(sent->Connector_pool, first_c, &numc[dir]);
 					/* Very subtle - for potential disjunct save
 					 * (one-step-parse) that is done after the previous
-					 * jet-sharing since it has set non-0 tracon_id. */
-					jet_table[dir][id].c->tracon_id = 0;
+					 * jet-sharing since it has set non-0 refcount. */
+					jet_table[dir][id].c->refcount = 0;
 				}
 				*((0 == dir) ? &n->left : &n->right) = jet_table[dir][id].c;
-				jet_table[dir][id].c->tracon_id++;
+				jet_table[dir][id].c->refcount++;
 #if 0
 				printf("w%zu%c: ", w, dir?'+':'-');
 				print_connector_list(first_c);

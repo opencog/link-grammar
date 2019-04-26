@@ -199,7 +199,7 @@ static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
                                  Connector * c, bool shal)
 {
 	unsigned int h = connector_uc_num(c) & (size-1);
-	assert(c->tracon_id>0, "tracon_id %d", c->tracon_id);
+	assert(c->refcount>0, "refcount %d", c->refcount);
 
 	C_list *m = pool_alloc(mp);
 	m->next = t[h];
@@ -226,13 +226,13 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  * match loop can stop when there are no more shallow connectors in that
  * slot (since if both are deep, they cannot be matched).
  *
- * The tracon_id of each connector serves as its reference count.
+ * The refcount of each connector serves as its reference count.
  * Hence, it should always be > 0.
  *
  * There are two code paths for initializing the power tables:
  * 1. When disjunct-jets sharing is not done. The words then are
  * directly scanned for their disjuncts and connectors. Each ones
- * is inserted with a reference count (as tracon_id) set to 1.
+ * is inserted with a reference count (as refcount) set to 1.
  * 2. Using the disjunct-jet tables (left and right). Each slot
  * contains only a pointer to a disjunct-jet. The word number is
  * extracted from the deepest connector (that has been assigned to it by
@@ -299,10 +299,10 @@ static void power_table_init(Sentence sent, power_table *pt)
 				c = d->right;
 				if (c != NULL)
 				{
-					c->tracon_id = 1;
+					c->refcount = 1;
 					for (c = c->next; c != NULL; c = c->next)
 					{
-						c->tracon_id = 1;
+						c->refcount = 1;
 						put_into_power_table(mp, r_size, r_t, c, false);
 					}
 				}
@@ -310,10 +310,10 @@ static void power_table_init(Sentence sent, power_table *pt)
 				c = d->left;
 				if (c != NULL)
 				{
-					c->tracon_id = 1;
+					c->refcount = 1;
 					for (c = c->next; c != NULL; c = c->next)
 					{
-						c->tracon_id = 1;
+						c->refcount = 1;
 						put_into_power_table(mp, l_size, l_t, c, false);
 					}
 				}
@@ -369,7 +369,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 
 				for (Connector *c = htc->next; NULL != c; c = c->next)
 				{
-					c->tracon_id = htc->tracon_id;
+					c->refcount = htc->refcount;
 					put_into_power_table(mp, sizep[w], tp[w], c, false);
 				}
 			}
@@ -398,9 +398,9 @@ static void clean_table(unsigned int size, C_list **t)
 
 		while (NULL != *m)
 		{
-			assert(0 <= (*m)->c->tracon_id, "clean_table: tracon_id < 0 (%d)",
-			       (*m)->c->tracon_id);
-			if (0 == (*m)->c->tracon_id)
+			assert(0 <= (*m)->c->refcount, "clean_table: refcount < 0 (%d)",
+			       (*m)->c->refcount);
+			if (0 == (*m)->c->refcount)
 				*m = (*m)->next;
 			else
 				m = &(*m)->next;
@@ -618,7 +618,7 @@ static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 
 	for (; NULL != c; c = c->next)
 	{
-		c->tracon_id--; /* Reference count. */
+		c->refcount--; /* Reference count. */
 	}
 }
 
@@ -633,7 +633,7 @@ static bool is_bad(Connector *c)
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
  *  Normally all the identical disjunct-jets are memory shared.
- *  The tracon_id of each connector serves as its reference count
+ *  The refcount of each connector serves as its reference count
  *  in the power table. Each time when a connector that cannot match
  *  is discovered, its reference count is decreased, and its
  *  nearest_word field is assigned BAD_WORD. Due to the memory sharing,
@@ -1068,7 +1068,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			{
 				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
-					if (0 == c->tracon_id) continue;
+					if (0 == c->refcount) continue;
 					insert_in_cms_table(cmt, c);
 				}
 			}
@@ -1155,7 +1155,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			{
 				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
-					if (0 == c->tracon_id) continue;
+					if (0 == c->refcount) continue;
 					if (mark_bad_connectors(cmt, c))
 					{
 						D_deleted++;
