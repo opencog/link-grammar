@@ -69,7 +69,7 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 	c->desc = desc;
 	c->nearest_word = 0;
 	c->multi = false;
-	c->suffix_id = 0;
+	c->tracon_id = 0;
 	c->originating_gword = NULL;
 	set_connector_length_limit(c, opts);
 	//assert(0 != c->length_limit, "Connector_new(): Zero length_limit");

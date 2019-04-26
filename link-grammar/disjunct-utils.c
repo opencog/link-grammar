@@ -459,11 +459,11 @@ void word_record_in_disjunct(const Gword * gw, Disjunct * d)
 
 /* ================ Pack disjuncts and connectors ============== */
 /* Print one connector with all the details.
- * mCnameD<suffix_id>(nearest_word, length_limit)x
+ * mCnameD<tracon_id>(nearest_word, length_limit)x
  * optional m: "@" for multi (else nothing)
  * Cname: Connector name
  * Optional D: "-" / "+" (if dir != -1)
- * Optional <suffix>: suffix_id (if not 0)
+ * Optional <suffix>: tracon_id (if not 0)
  * Optional (nearest_word, length_limit): if both are not 0
  * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
  */
@@ -471,8 +471,8 @@ void print_one_connector(Connector * e, int dir, int shallow)
 {
 	printf("%s%s", e->multi ? "@" : "", connector_string(e));
 	if (-1 != dir) printf("%c", "-+"[dir]);
-	if (e->suffix_id)
-		printf("<%d>", e->suffix_id);
+	if (e->tracon_id)
+		printf("<%d>", e->tracon_id);
 	if ((0 != e->nearest_word) || (0 != e->length_limit))
 		printf("(%d,%d)", e->nearest_word, e->length_limit);
 	if (-1 != shallow)
@@ -566,7 +566,7 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 		if (NULL != pc->csid)
 		{
 			/* Encoding is used - share trailing connector sequences. */
-			unsigned int id_index = (2 * o->suffix_id) + dir;
+			unsigned int id_index = (2 * o->tracon_id) + dir;
 			id_table_check(pc, id_index);
 			uint32_t cblock_index = pc->id_table[id_index];
 
@@ -584,10 +584,10 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 				{
 					/* This is a rare case in which it is not the same, and
 					 * hence we cannot use it. The simple "caching" that is used
-					 * cannot memoize more than one sequence per suffix_id.
+					 * cannot memoize more than one sequence per tracon_id.
 					 * Notes:
 					 * 1. Maybe such different connectors should be just assigned
-					 * a different suffix_id.
+					 * a different tracon_id.
 					 * 2. In case the parsing will ever depend on other
 					 * Connector fields, their check should be added here. */
 					newc = NULL; /* Don't share it. */
@@ -649,7 +649,7 @@ static unsigned int ptoa_compact(char* buffer, uintptr_t ptr)
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 
 /**
- *  Set dummy suffix_id's.
+ *  Set dummy tracon_id's.
  *  To be used for short sentences.
  */
 static int enumerate_connectors_sequentially(Sentence sent)
@@ -662,11 +662,11 @@ static int enumerate_connectors_sequentially(Sentence sent)
 		{
 			for (Connector *c = d->left; NULL != c; c = c->next)
 			{
-				c->suffix_id = id++;
+				c->tracon_id = id++;
 			}
 			for (Connector *c = d->right; NULL != c; c = c->next)
 			{
-				c->suffix_id = id++;
+				c->tracon_id = id++;
 			}
 		}
 	}
@@ -726,7 +726,7 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 
 	/* Generate a string with a disjunct Gword encoding. It makes
 	 * unique trailing connector sequences of different words and
-	 * alternatives of a word, so they will get their own suffix_id.
+	 * alternatives of a word, so they will get their own tracon_id.
 	 */
 	size_t lg = ptoa_compact(cstr, (uintptr_t)d->originating_gword);
 	cstr[lg++] = ',';
@@ -760,7 +760,7 @@ static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
 			}
 
 			int id = string_id_add(cstr, pc->csid) + WORD_OFFSET;
-			(*cp)->suffix_id = id;
+			(*cp)->tracon_id = id;
 			//printf("ID %d trail=%s\n", id, cstr);
 
 			if (cp != &cstack[0]) /* string_id_add() efficiency. */
@@ -800,7 +800,7 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
 	return head.next;
 }
 
-#define ID_TABLE_SZ 8192 /* Initial size of the suffix_id table */
+#define ID_TABLE_SZ 8192 /* Initial size of the tracon_id table */
 /**
  * Pack all disjunct and connectors into a one big memory block.
  * This facilitate a better memory caching for long sentences
@@ -854,9 +854,9 @@ bool pack_sentence(Sentence sent)
 
 	if (do_share)
 	{
-		if (sent->connector_suffix_id == NULL)
-			sent->connector_suffix_id = string_id_create();
-		pc.csid = sent->connector_suffix_id;
+		if (sent->connector_tracon_id == NULL)
+			sent->connector_tracon_id = string_id_create();
+		pc.csid = sent->connector_tracon_id;
 		id_table_check(&pc, ID_TABLE_SZ); /* Allocate initial table. */
 		pc.num_id = 0;
 	}
@@ -877,12 +877,12 @@ bool pack_sentence(Sentence sent)
 		 * the pointers in the used part of memblock (if realloc() returns a
 		 * different address). */
 
-		/* Support incremental suffix_id generation (only one time is needed). */
+		/* Support incremental tracon_id generation (only one time is needed). */
 		const char *snumid[] = { "NUMID", "NUMID1" };
 
 		int t = string_id_lookup(snumid[0], pc.csid);
 		int numid = string_id_add(snumid[(int)(t > 0)], pc.csid) + WORD_OFFSET;
-		lgdebug(D_DISJ, "Debug: Using trailing hash (length %zu): suffix_id %d\n",
+		lgdebug(D_DISJ, "Debug: Using trailing hash (length %zu): tracon_id %d\n",
 				  sent->length, numid);
 	}
 
@@ -987,7 +987,7 @@ static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
  *
  * For each disjunct side separately, a unique ID per jet (which starts
  * from 1 so 0 is an invalid ID) is used to identify it. The IDs are
- * shared by all the words for efficiency. The suffix_id field of the
+ * shared by all the words for efficiency. The tracon_id field of the
  * shallow connector is used as a counter of the number of shared jets
  * in a particular table slot.
  *
@@ -1127,11 +1127,11 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 						connectors_copy(sent->Connector_pool, first_c, &numc[dir]);
 					/* Very subtle - for potential disjunct save
 					 * (one-step-parse) that is done after the previous
-					 * jet-sharing since it has set non-0 suffix_id. */
-					jet_table[dir][id].c->suffix_id = 0;
+					 * jet-sharing since it has set non-0 tracon_id. */
+					jet_table[dir][id].c->tracon_id = 0;
 				}
 				*((0 == dir) ? &n->left : &n->right) = jet_table[dir][id].c;
-				jet_table[dir][id].c->suffix_id++;
+				jet_table[dir][id].c->tracon_id++;
 #if 0
 				printf("w%zu%c: ", w, dir?'+':'-');
 				print_connector_list(first_c);

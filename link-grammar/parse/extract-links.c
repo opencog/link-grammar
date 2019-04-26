@@ -243,7 +243,7 @@ void free_extractor(extractor_t * pex)
 
 /**
  * Returns the pointer to this info, NULL if not there.
- * Note that there is no need to use (lw, rw) as keys because suffix_id
+ * Note that there is no need to use (lw, rw) as keys because tracon_id
  * is also encoded by the word number.
  */
 static Pset_bucket * x_table_pointer(int lw, int rw,
@@ -251,8 +251,8 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
                               unsigned int null_count, extractor_t * pex)
 {
 	Pset_bucket *t;
-	int l_id = (NULL != le) ? le->suffix_id : lw;
-	int r_id = (NULL != re) ? re->suffix_id : rw;
+	int l_id = (NULL != le) ? le->tracon_id : lw;
+	int r_id = (NULL != re) ? re->tracon_id : rw;
 	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, l_id, r_id, null_count)];
 
 	for (; t != NULL; t = t->next) {
@@ -276,8 +276,8 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
-	n->set.l_id = (NULL != le) ? le->suffix_id : lw;
-	n->set.r_id = (NULL != re) ? re->suffix_id : rw;
+	n->set.l_id = (NULL != le) ? le->tracon_id : lw;
+	n->set.r_id = (NULL != re) ? re->tracon_id : rw;
 	n->set.count = 0;
 	n->set.first = NULL;
 	n->set.tail = NULL;

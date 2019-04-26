@@ -309,14 +309,14 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			if ((0 < nl) || (0 == max_null_count) )
 				free_jet_sharing(sent); /* Not needed for rebuild. */
 #if 0 // See below
-			bool real_suffix_ids =
+			bool real_tracon_ids =
 #endif
 				pack_sentence(sent);
 			gword_record_in_connector(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
 
-			/* If parsing with no nulls or we are using fake suffix_id's
+			/* If parsing with no nulls or we are using fake tracon_id's
 			 * (because it is a short sentence) always allocate the count
 			 * connector table. Else allocate it only if this is a parse with
 			 * nulls only. So in case of one-step parse (min_null_count==0 &&
@@ -329,7 +329,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			// Test sentence: He was too far gone to come back from such a loss
 			// (117 vs 111 linkages.)
 #if 0
-			if (!real_suffix_ids || (nl == 0) || !is_null_count_0)
+			if (!real_tracon_ids || (nl == 0) || !is_null_count_0)
 #endif
 			{
 				free_count_context(ctxt, sent);
