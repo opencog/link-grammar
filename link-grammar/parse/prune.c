@@ -581,11 +581,11 @@ right_connector_list_update(prune_context *pc, Connector *c,
 {
 	int n, ub;
 	int sent_length = (int)pc->sent->length;
-	int foundmatch = sent_length;
+	int foundmatch = BAD_WORD;
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
-	if (sent_length <= n) return sent_length;
+	if (sent_length <= n) return BAD_WORD;
 	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
@@ -611,7 +611,11 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 {
+	/* The following can actually be omitted as long as (unsigned char)-1
+	 * is equal to BAD_WORD. However, The question is how to define
+	 * BAD_WORD cleanly so it will be immune to increasing MAX_SENTENCE. */
 	if (mark_bad_word) c->nearest_word = BAD_WORD;
+
 	for (; NULL != c; c = c->next)
 	{
 		c->suffix_id--; /* Reference count. */
