@@ -14,15 +14,38 @@
 
 #include <string.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "api-types.h"
+#include "const-prime.h"
 #include "lg_assert.h"
+
+#define STR_POOL
+#define MEM_POOL_INIT (8*1024)
+#define MEM_POOL_INCR (16*1024)
+typedef struct str_mem_pool
+{
+	struct str_mem_pool *prev;
+	size_t size;
+	char block[0];
+} str_mem_pool;
+
+typedef struct
+{
+	const char *str;
+	unsigned int hash;
+} ss_slot;
 
 struct String_set_s
 {
-   size_t size;       /* the current size of the table */
-   size_t count;      /* number of things currently in the table */
-   char ** table;     /* the table itself */
+	size_t size;                /* the current size of the table */
+	size_t count;               /* number of things currently in the table */
+	ss_slot *table;             /* the table itself */
+	unsigned int prime_idx;     /* current prime number table index */
+	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
+	ssize_t pool_free_count;    /* string pool free space */
+	char *alloc_next;           /* next string address */
+	str_mem_pool *string_pool;  /* string memory pool */
 };
 
 String_set * string_set_create(void);

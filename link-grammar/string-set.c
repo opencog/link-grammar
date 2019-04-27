@@ -10,6 +10,10 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <stdint.h>                     // uintptr_t
+
+#include "const-prime.h"
+#include "memory-pool.h"
 #include "string-set.h"
 #include "utilities.h"
 
@@ -46,7 +50,7 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
 		accum = (7 * accum) + (unsigned char)*str;
-	return accum % (ss->size);
+	return accum;
 }
 
 static unsigned int stride_hash_string(const char *str, const String_set *ss)
@@ -54,59 +58,102 @@ static unsigned int stride_hash_string(const char *str, const String_set *ss)
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
 		accum = (17 * accum) + (unsigned char)*str;
-	accum %= ss->size;
+	accum = ss->mod_func(accum);
 	/* This is the stride used, so we have to make sure that
 	 * its value is not 0 */
 	if (accum == 0) accum = 1;
 	return accum;
 }
 
-/** Return the next prime up from start. */
-static size_t next_prime_up(size_t start)
+#ifdef STR_POOL
+static void ss_pool_alloc(size_t pool_size_add, String_set *ss)
 {
-	size_t i;
-	start |= 1; /* make it odd */
-	for (;;) {
-		for (i=3; (i <= (start/i)); i += 2) {
-			if (start % i == 0) break;
-		}
-		if (start % i == 0) {
-			start += 2;
-		} else {
-			return start;
-		}
+	str_mem_pool *new_mem_pool = malloc(pool_size_add);
+	new_mem_pool->size = pool_size_add;
+
+	new_mem_pool->prev = ss->string_pool;
+	ss->string_pool = new_mem_pool;
+	ss->alloc_next = ss->string_pool->block;
+
+	ss->pool_free_count = pool_size_add - sizeof(str_mem_pool);
+	ASAN_POISON_MEMORY_REGION(ss->string_pool+sizeof(str_mem_pool), ss->pool_free_count);
+}
+
+static void ss_pool_delete(String_set *ss)
+{
+	str_mem_pool *m, *m_prev;
+
+	for (m = ss->string_pool; m != NULL; m = m_prev)
+	{
+		ASAN_UNPOISON_MEMORY_REGION(m, m->size);
+		m_prev = m->prev;
+		free(m);
 	}
 }
+
+#define STR_ALIGNMENT 16
+
+static char *ss_stralloc(size_t str_size, String_set *ss)
+{
+	ss->pool_free_count -= str_size;
+	if (ss->pool_free_count < 0)
+		ss_pool_alloc((str_size&MEM_POOL_INCR) + MEM_POOL_INCR, ss);
+
+	char *str_address = ss->alloc_next;
+	ASAN_UNPOISON_MEMORY_REGION(str_address, str_size);
+	ss->alloc_next += str_size;
+	ss->alloc_next = (char *)ALIGN((uintptr_t)ss->alloc_next, STR_ALIGNMENT);
+	size_t total_size = str_size + (ss->alloc_next - str_address);
+
+	ss->pool_free_count -= total_size;
+	return str_address;
+}
+#else
+#define ss_stralloc(x, ss) malloc(x)
+#define ss_pool_alloc(a, b)
+#endif
 
 String_set * string_set_create(void)
 {
 	String_set *ss;
 	ss = (String_set *) malloc(sizeof(String_set));
-	// ss->size = 1013; /* 1013 is a prime number */
-	// ss->size = 211; /* 211 is a prime number */
-	ss->size = 419; /* 419 is a prime number */
-	ss->table = (char **) malloc(ss->size * sizeof(char *));
-	memset(ss->table, 0, ss->size*sizeof(char *));
+	ss->prime_idx = 0;
+	ss->size = s_prime[ss->prime_idx];
+	ss->mod_func = prime_mod_func[ss->prime_idx];
+	ss->table = malloc(ss->size * sizeof(ss_slot));
+	memset(ss->table, 0, ss->size*sizeof(ss_slot));
 	ss->count = 0;
+	ss->string_pool = NULL;
+	ss_pool_alloc(MEM_POOL_INIT, ss);
+
 	return ss;
+}
+
+static bool place_found(const char *str, const ss_slot *slot, unsigned int hash,
+                         String_set *ss)
+{
+	if (slot->str == NULL) return true;
+	if (hash != slot->hash) return false;
+	return (strcmp(slot->str, str) == 0);
 }
 
 /**
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const char * str, String_set *ss)
+static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
 {
-	unsigned int h, s;
-	h = hash_string(str, ss);
+	unsigned int s;
+	unsigned int key = ss->mod_func(h);
 
-	if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
+	if (place_found(str, &ss->table[key], h, ss)) return key;
+
 	s = stride_hash_string(str, ss);
 	while (true)
 	{
-		h = h + s;
-		if (h >= ss->size) h %= ss->size;
-		if ((ss->table[h] == NULL) || (strcmp(ss->table[h], str) == 0)) return h;
+		key = key + s;
+		if (key >= ss->size) key = ss->mod_func(key);
+		if (place_found(str, &ss->table[key], h, ss)) return key;
 	}
 }
 
@@ -117,46 +164,46 @@ static void grow_table(String_set *ss)
 	unsigned int p;
 
 	old = *ss;
-	ss->size = next_prime_up(3 * old.size);  /* at least triple the size */
-	ss->table = (char **) malloc(ss->size * sizeof(char *));
-	memset(ss->table, 0, ss->size*sizeof(char *));
-	ss->count = 0;
+	ss->prime_idx++;
+	ss->size = s_prime[ss->prime_idx];
+	ss->mod_func = prime_mod_func[ss->prime_idx];
+	ss->table = malloc(ss->size * sizeof(ss_slot));
+	memset(ss->table, 0, ss->size*sizeof(ss_slot));
 	for (i=0; i<old.size; i++)
 	{
-		if (old.table[i] != NULL)
+		if (old.table[i].str != NULL)
 		{
-			p = find_place(old.table[i], ss);
+			p = find_place(old.table[i].str, old.table[i].hash, ss);
 			ss->table[p] = old.table[i];
-			ss->count++;
 		}
 	}
-	/* printf("growing from %d to %d\n", old.size, ss->size); */
-	/* fflush(stdout); */
+	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
 	free(old.table);
 }
 
 const char * string_set_add(const char * source_string, String_set * ss)
 {
-	char * str;
-	size_t len;
-	unsigned int p;
-
 	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
 
-	p = find_place(source_string, ss);
-	if (ss->table[p] != NULL) return ss->table[p];
+	unsigned int h = hash_string(source_string, ss);
+	unsigned int p = find_place(source_string, h, ss);
 
-	len = strlen(source_string);
+	if (ss->table[p].str != NULL) return ss->table[p].str;
+
+	size_t len = strlen(source_string) + 1;
+	char *str;
+
 #ifdef DEBUG
 	/* Store the String_set structure address for debug verifications */
-	len = ((len+1)&~(sizeof(ss)-1)) + 2*sizeof(ss);
-	str = (char *) malloc(len);
-	*(String_set **)&str[len-sizeof(ss)] = ss;
-#else
-	str = (char *) malloc(len+1);
-#endif
-	strcpy(str, source_string);
-	ss->table[p] = str;
+	size_t mlen = (len&~(sizeof(ss)-1)) + 2*sizeof(ss);
+	str = ss_stralloc(mlen, ss);
+	*(String_set **)&str[mlen-sizeof(ss)] = ss;
+#else /* !DEBUG */
+	str = ss_stralloc(len, ss);
+#endif /* DEBUG */
+	memcpy(str, source_string, len);
+	ss->table[p].str = str;
+	ss->table[p].hash = h;
 	ss->count++;
 
 	/* We just added it to the table.  If the table got too big,
@@ -169,21 +216,27 @@ const char * string_set_add(const char * source_string, String_set * ss)
 
 const char * string_set_lookup(const char * source_string, String_set * ss)
 {
-	unsigned int p;
+	unsigned int h = hash_string(source_string, ss);
+	unsigned int p = find_place(source_string, h, ss);
 
-	p = find_place(source_string, ss);
-	return ss->table[p];
+	return ss->table[p].str;
 }
 
 void string_set_delete(String_set *ss)
 {
+	if (ss == NULL) return;
+
+#ifdef STR_POOL
+	ss_pool_delete(ss);
+#else
 	size_t i;
 
-	if (ss == NULL) return;
 	for (i=0; i<ss->size; i++)
 	{
-		if (ss->table[i] != NULL) free(ss->table[i]);
+		if (ss->table[i].str != NULL) free((void *)ss->table[i].str);
 	}
+#endif /* STR_POOL */
+
 	free(ss->table);
 	free(ss);
 }
