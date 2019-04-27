@@ -79,6 +79,7 @@ struct prune_context_s
 	int power_cost;
 	int N_changed;   /* counts the number of changes
 						   of c->nearest_word fields in a pass */
+	int pass_number;
 	power_table *pt;
 	Sentence sent;
 };
@@ -199,7 +200,7 @@ static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
                                  Connector * c, bool shal)
 {
 	unsigned int h = connector_uc_num(c) & (size-1);
-	assert(c->suffix_id>0, "suffix_id %d", c->suffix_id);
+	assert(c->refcount>0, "refcount %d", c->refcount);
 
 	C_list *m = pool_alloc(mp);
 	m->next = t[h];
@@ -226,13 +227,13 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  * match loop can stop when there are no more shallow connectors in that
  * slot (since if both are deep, they cannot be matched).
  *
- * The suffix_id of each connector serves as its reference count.
+ * The refcount of each connector serves as its reference count.
  * Hence, it should always be > 0.
  *
  * There are two code paths for initializing the power tables:
  * 1. When disjunct-jets sharing is not done. The words then are
  * directly scanned for their disjuncts and connectors. Each ones
- * is inserted with a reference count (as suffix_id) set to 1.
+ * is inserted with a reference count (as refcount) set to 1.
  * 2. Using the disjunct-jet tables (left and right). Each slot
  * contains only a pointer to a disjunct-jet. The word number is
  * extracted from the deepest connector (that has been assigned to it by
@@ -299,10 +300,10 @@ static void power_table_init(Sentence sent, power_table *pt)
 				c = d->right;
 				if (c != NULL)
 				{
-					c->suffix_id = 1;
+					c->refcount = 1;
 					for (c = c->next; c != NULL; c = c->next)
 					{
-						c->suffix_id = 1;
+						c->refcount = 1;
 						put_into_power_table(mp, r_size, r_t, c, false);
 					}
 				}
@@ -310,10 +311,10 @@ static void power_table_init(Sentence sent, power_table *pt)
 				c = d->left;
 				if (c != NULL)
 				{
-					c->suffix_id = 1;
+					c->refcount = 1;
 					for (c = c->next; c != NULL; c = c->next)
 					{
-						c->suffix_id = 1;
+						c->refcount = 1;
 						put_into_power_table(mp, l_size, l_t, c, false);
 					}
 				}
@@ -369,7 +370,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 
 				for (Connector *c = htc->next; NULL != c; c = c->next)
 				{
-					c->suffix_id = htc->suffix_id;
+					c->refcount = htc->refcount;
 					put_into_power_table(mp, sizep[w], tp[w], c, false);
 				}
 			}
@@ -398,9 +399,9 @@ static void clean_table(unsigned int size, C_list **t)
 
 		while (NULL != *m)
 		{
-			assert(0 <= (*m)->c->suffix_id, "clean_table: suffix_id < 0 (%d)",
-			       (*m)->c->suffix_id);
-			if (0 == (*m)->c->suffix_id)
+			assert(0 <= (*m)->c->refcount, "clean_table: refcount < 0 (%d)",
+			       (*m)->c->refcount);
+			if (0 == (*m)->c->refcount)
 				*m = (*m)->next;
 			else
 				m = &(*m)->next;
@@ -424,9 +425,9 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 }
 
 /**
- * This takes two connectors (and whether these are shallow or not)
- * (and the two words that these came from) and returns TRUE if it is
- * possible for these two to match based on local considerations.
+ * This takes two connectors (and the two words that these came from) and
+ * returns TRUE if it is possible for these two to match based on local
+ * considerations.
  */
 static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
@@ -527,10 +528,8 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * there is no way to match this list, it returns a negative number.
  * If it does find a way to match it, it updates the c->nearest_word fields
  * correctly. When disjunct-jets are shared, this update is done
- * simultaneously on all of them, and the next time the same disjunct-jet
- * is encountered (in the same word disjunct loop at least), the work here is
- * trivial. FIXME: Mark such jets for the duration of this loop so
- * they will be skipped.
+ * simultaneously on all of them. The main loop of power_prune() then
+ * marks them with the pass number that is checked here.
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
@@ -541,6 +540,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
+	if (c->tracon_id == pc->pass_number) return c->nearest_word;
 	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
@@ -574,6 +574,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * N_words - 1.   If it does find a way to match it, it updates the
  * c->nearest_word fields correctly. See the comment on that in
  * left_connector_list_update().
+ * Regarding pass_number, see the comment in left_connector_list_update().
  */
 static size_t
 right_connector_list_update(prune_context *pc, Connector *c,
@@ -581,11 +582,12 @@ right_connector_list_update(prune_context *pc, Connector *c,
 {
 	int n, ub;
 	int sent_length = (int)pc->sent->length;
-	int foundmatch = sent_length;
+	int foundmatch = BAD_WORD;
 
 	if (c == NULL) return w;
+	if (c->tracon_id == pc->pass_number) return c->nearest_word;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
-	if (sent_length <= n) return sent_length;
+	if (sent_length <= n) return BAD_WORD;
 	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
@@ -609,12 +611,21 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	return foundmatch;
 }
 
+static void mark_jet_as_good(Connector *c, int pass_number)
+{
+	c->tracon_id = pass_number;
+}
+
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 {
+	/* The following can actually be omitted as long as (unsigned char)-1
+	 * is equal to BAD_WORD. However, The question is how to define
+	 * BAD_WORD cleanly so it will be immune to increasing MAX_SENTENCE. */
 	if (mark_bad_word) c->nearest_word = BAD_WORD;
+
 	for (; NULL != c; c = c->next)
 	{
-		c->suffix_id--; /* Reference count. */
+		c->refcount--; /* Reference count. */
 	}
 }
 
@@ -629,7 +640,7 @@ static bool is_bad(Connector *c)
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
  *  Normally all the identical disjunct-jets are memory shared.
- *  The suffix_id of each connector serves as its reference count
+ *  The refcount of each connector serves as its reference count
  *  in the power table. Each time when a connector that cannot match
  *  is discovered, its reference count is decreased, and its
  *  nearest_word field is assigned BAD_WORD. Due to the memory sharing,
@@ -647,12 +658,16 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 	pc.null_links = (opts->min_null_count > 0);
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
 	pc.sent = sent;
+	pc.pass_number = 0;
 
 	while (1)
 	{
+		pc.pass_number++;
+
 		/* left-to-right pass */
 		for (WordIdx w = 0; w < sent->length; w++)
 		{
+
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
 				Disjunct *d = *dd; /* just for convenience */
@@ -674,6 +689,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 					continue;
 				}
 
+				mark_jet_as_good(d->left, pc.pass_number);
 				dd = &d->next; /* NEXT */
 			}
 
@@ -711,6 +727,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 					continue;
 				}
 
+				mark_jet_as_good(d->right, pc.pass_number);
 				dd = &d->next; /* NEXT */
 			}
 
@@ -1064,7 +1081,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			{
 				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
-					if (0 == c->suffix_id) continue;
+					if (0 == c->refcount) continue;
 					insert_in_cms_table(cmt, c);
 				}
 			}
@@ -1124,7 +1141,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			if ((rule_ok[i] == 0) || !rule_satisfiable(cmt, link_set))
 			{
 				rule_ok[i] = 0;
-				ppdebug("DELETE %s\n", connector_string(c));
+				ppdebug("DELETE %s refcount %d\n", connector_string(c), c->refcount);
 				c->nearest_word = BAD_WORD;
 				Cname_deleted++;
 				rule->use_count++;
@@ -1151,7 +1168,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			{
 				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
 				{
-					if (0 == c->suffix_id) continue;
+					if (0 == c->refcount) continue;
 					if (mark_bad_connectors(cmt, c))
 					{
 						D_deleted++;

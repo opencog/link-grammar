@@ -107,14 +107,18 @@ struct Connector_struct
 	                         this could ever connect to.  Computed by
 	                         setup_connectors() */
 	bool multi;           /* TRUE if this is a multi-connector */
-	int suffix_id;        /* Suffix sequence identifier (see disjunct-utils.c) */
+	int tracon_id;        /* Tracon identifier (see disjunct-utils.c) */
 	const condesc_t *desc;
 	Connector *next;
 	union
 	{
 		const gword_set *originating_gword; /* Used while and after parsing */
 		/* For pruning use only */
-		bool shallow;      /* TRUE if this is a shallow connector */
+		struct
+		{
+			int refcount;      /* Memory-sharing reference count */
+			bool shallow;      /* TRUE if this is a shallow connector */
+		};
 	};
 };
 

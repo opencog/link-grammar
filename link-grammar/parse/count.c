@@ -171,8 +171,8 @@ static Table_connector * table_store(count_context_t *ctxt,
                                      Connector *le, Connector *re,
                                      unsigned int null_count)
 {
-	int l_id = (NULL != le) ? le->suffix_id : lw;
-	int r_id = (NULL != re) ? re->suffix_id : rw;
+	int l_id = (NULL != le) ? le->tracon_id : lw;
+	int r_id = (NULL != re) ? re->tracon_id : rw;
 	unsigned int h = pair_hash(ctxt->table_size, lw, rw, l_id, r_id, null_count);
 	Table_connector *t = ctxt->table[h];
 	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
@@ -193,8 +193,8 @@ find_table_pointer(count_context_t *ctxt,
                    Connector *le, Connector *re,
                    unsigned int null_count)
 {
-	int l_id = (NULL != le) ? le->suffix_id : lw;
-	int r_id = (NULL != re) ? re->suffix_id : rw;
+	int l_id = (NULL != le) ? le->tracon_id : lw;
+	int r_id = (NULL != re) ? re->tracon_id : rw;
 	unsigned int h = pair_hash(ctxt->table_size, lw, rw, l_id, r_id, null_count);
 	Table_connector *t = ctxt->table[h];
 
@@ -307,7 +307,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	(verbosity_level(D_COUNT_TRACE, "do_count") ? \
 	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
-#define ID(c,w) (!c?w:c->suffix_id)
+#define ID(c,w) (!c?w:c->tracon_id)
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,

@@ -48,7 +48,7 @@ static void assert_same_disjunct(Linkage, WordIdx, const char *);
  * compute_chosen_disjuncts()).
  *
  * In order that multi-connectors will not be extracted several times
- * for each disjunct (if they connect to multiple words) their suffix_id
+ * for each disjunct (if they connect to multiple words) their tracon_id
  * is checked for duplication.
  */
 void lg_compute_disjunct_strings(Linkage lkg)
@@ -65,7 +65,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 		for (int dir = 0; dir < 2; dir++)
 		{
-			int last_multi_suffix_id = 0; /* last multi-connector */
+			int last_multi_tracon_id = 0; /* last multi-connector */
 
 			for (LinkIdx i = lkg->num_links-1; i != (WordIdx)-1; i--)
 			{
@@ -85,8 +85,8 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 				if (c->multi)
 				{
-					if (last_multi_suffix_id == c->suffix_id) continue; /* already included */
-					last_multi_suffix_id = c->suffix_id;
+					if (last_multi_tracon_id == c->tracon_id) continue; /* already included */
+					last_multi_tracon_id = c->tracon_id;
 					djstr[len++] = '@';
 				}
 				len += lg_strlcpy(djstr+len, connector_string(c), sizeof(djstr)-len);
