@@ -269,6 +269,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	/* Share before the potential saving (instead of after) for CPU cache hit. */
 	share_disjunct_jets(sent, /*rebuild*/false);
+	print_time(opts, "Encode connectors for pruning");
 
 	Disjuncts_desc_t disjuncts_copy = { NULL };
 	if (is_null_count_0 && (0 < max_null_count))
@@ -300,6 +301,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 					 * saving/restoring the disjuncts, which change their
 					 * jet addresses. So the jet-sharing must be redone. */
 					share_disjunct_jets(sent, /*rebuild*/true);
+					print_time(opts, "Encode connectors for parsing (rebuild)");
 				}
 			}
 			pp_and_power_prune(sent, opts);
@@ -311,7 +313,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 #if 0 // See below
 			bool real_suffix_ids =
 #endif
+			{
 				pack_sentence(sent);
+				print_time(opts, "Encode connectors for parsing");
+			}
 			gword_record_in_connector(sent);
 			if (is_null_count_0) opts->min_null_count = 0;
 			if (resources_exhausted(opts->resources)) break;
