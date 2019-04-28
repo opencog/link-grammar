@@ -44,16 +44,16 @@
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "api-types.h"
+#include "tracon-set.h"
 #include "corpus/corpus.h"
 #include "memory-pool.h"
 #include "string-set.h"
-#include "string-id.h"
 
 /* Performance tuning.
  * For short sentences, setting suffix IDs and packing takes more
  * resources than it saves. If this overhead is improved, these
  * limit can be set lower. */
-#define SENTENCE_MIN_LENGTH_TRAILING_HASH 10
+#define SENTENCE_MIN_LENGTH_TRAILING_HASH 6
 
 typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
