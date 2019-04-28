@@ -94,9 +94,7 @@ static void count_disjuncts_and_connectors(Sentence sent, int *dca, int *cca)
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			dcnt++;
-			if (NULL != d->left) d->left->shallow = true;
 			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
-			if (NULL != d->right) d->right->shallow = true;
 			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
 		}
 	}
