@@ -244,7 +244,7 @@ void free_extractor(extractor_t * pex)
 /**
  * Returns the pointer to this info, NULL if not there.
  * Note that there is no need to use (lw, rw) as keys because tracon_id
- * is also encoded by the word number.
+ * values are not shared between words.
  */
 static Pset_bucket * x_table_pointer(int lw, int rw,
                               Connector *le, Connector *re,
