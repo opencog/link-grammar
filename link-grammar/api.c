@@ -454,10 +454,10 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* Set the minimum length for trailing connectors encoding.
 	 * In that case disjunct jet-sharing (for power prune())
 	 * and disjunct/connector packing is done too. */
-	sent->min_len_sharing = SENTENCE_MIN_LENGTH_TRAILING_HASH;
-	const char *min_len_sharing = test_enabled("len-trailing-hash");
-	if (NULL != min_len_sharing)
-		sent->min_len_sharing = atoi(min_len_sharing+1);
+	sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
+	const char *min_len_encoding = test_enabled("len-trailing-hash");
+	if (NULL != min_len_encoding)
+		sent->min_len_encoding = atoi(min_len_encoding+1);
 
 	return sent;
 }

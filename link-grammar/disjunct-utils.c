@@ -44,10 +44,10 @@ void free_disjuncts(Disjunct *c)
 
 void free_sentence_disjuncts(Sentence sent)
 {
-	if (NULL != sent->disjuncts_connectors_memblock)
+	if (NULL != sent->dc_memblock)
 	{
-		free(sent->disjuncts_connectors_memblock);
-		sent->disjuncts_connectors_memblock = NULL;
+		free(sent->dc_memblock);
+		sent->dc_memblock = NULL;
 	}
 	else if (NULL != sent->Disjunct_pool)
 	{
@@ -94,9 +94,7 @@ static void count_disjuncts_and_connectors(Sentence sent, int *dca, int *cca)
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			dcnt++;
-			if (NULL != d->left) d->left->shallow = true;
 			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
-			if (NULL != d->right) d->right->shallow = true;
 			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
 		}
 	}
@@ -830,7 +828,7 @@ bool pack_sentence(Sentence sent)
 {
 	int dcnt = 0;
 	int ccnt = 0;
-	bool do_share = sent->length >= sent->min_len_sharing;
+	bool do_share = sent->length >= sent->min_len_encoding;
 
 	if (!do_share)
 	{
@@ -848,7 +846,7 @@ bool pack_sentence(Sentence sent)
 	void *memblock = malloc(dsize + csize);
 	Disjunct *dblock = memblock;
 	Connector *cblock = (Connector *)((char *)memblock + dsize);
-	sent->disjuncts_connectors_memblock = memblock;
+	sent->dc_memblock = memblock;
 	pack_context pc =
 	{
 		.cblock_base = cblock,
@@ -1023,9 +1021,9 @@ void share_disjunct_jets(Sentence sent, bool rebuild)
 	jet_sharing_t *js = &sent->jet_sharing;
 
 	lgdebug(+D_DISJ, "skip=%d rebuild=%d table=%d\n",
-	        sent->length < sent->min_len_sharing, rebuild, NULL != js->table[0]);
+	        sent->length < sent->min_len_encoding, rebuild, NULL != js->table[0]);
 
-	if (sent->length < sent->min_len_sharing) return;
+	if (sent->length < sent->min_len_encoding) return;
 
 	size_t jet_table_size[2];
 	size_t jet_table_entries[2] = {0};

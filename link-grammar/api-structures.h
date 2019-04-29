@@ -164,10 +164,11 @@ struct Sentence_s
 	String_id *connector_tracon_id; /* For connector trailing sequence IDs */
 	unsigned int num_tracon_id;     /* Currently unused. */
 
+	/* Connector encoding, packing & sharing. */
+	size_t min_len_encoding;     /* Do it from this sentence length. */
+	void *dc_memblock;           /* For packed disjuncts & connectors. */
+
 	jet_sharing_t jet_sharing;   /* Disjunct l/r duplication sharing */
-	size_t min_len_sharing;      /* Do trailing encoding + jet-sharing.
-	                                Disjunct/connector packing is also done
-	                                in that case (only). */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
@@ -200,7 +201,6 @@ struct Sentence_s
 #ifdef USE_SAT_SOLVER
 	void *hook;                 /* Hook for the SAT solver */
 #endif /* USE_SAT_SOLVER */
-	void *disjuncts_connectors_memblock;
 };
 
 #endif
