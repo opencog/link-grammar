@@ -973,13 +973,6 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 		sent->word[w].d = pack_disjuncts(ts, sent->word[w].d, w);
 	}
 
-	lgdebug(D_DISJ, "Debug: Trailing hash for %s (len %zu): "
-	        "tracon_id %d (%d+,%d-) shared %ld\n",
-	        is_pruning ? "pruning" : "parsing", sent->length,
-	        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
-	        ts->next_id[0]-ts->word_offset, ts->next_id[1]-ts->word_offset,
-	        &ts->cblock_base[ts->num_connectors] - ts->cblock);
-
 	/* On long sentences, many MB of connector-space are saved, but we
 	 * cannot use a realloc() here without the overhead of relocating
 	 * the pointers in the used part of memblock (if realloc() returns a
@@ -990,12 +983,28 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 
 Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 {
-	return pack_sentence(sent, true);
+	Tracon_sharing *ts = pack_sentence(sent, true);
+
+	lgdebug(D_DISJ, "Debug: Trailing hash for pruning (len %zu): "
+	        "tracon_id %zu (%zu+,%zu-), shared connectors %ld\n", sent->length,
+	        ts->tracon_list->entries[0]+ts->tracon_list->entries[1],
+	        ts->tracon_list->entries[0], ts->tracon_list->entries[1],
+	        &ts->cblock_base[ts->num_connectors] - ts->cblock);
+
+	return ts;
 }
 
 Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 {
-	return pack_sentence(sent, false);
+	Tracon_sharing *ts = pack_sentence(sent, false);
+
+	lgdebug(D_DISJ, "Debug: Trailing hash for parsing (len %zu): "
+	        "tracon_id %d (%d+,%d-), shared connectors %ld\n", sent->length,
+	        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
+	        ts->next_id[0]-ts->word_offset, ts->next_id[1]-ts->word_offset,
+	        &ts->cblock_base[ts->num_connectors] - ts->cblock);
+
+	return ts;
 }
 
 /* ============ Save and restore sentence disjuncts ============ */
