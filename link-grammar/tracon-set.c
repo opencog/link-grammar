@@ -74,12 +74,31 @@ static unsigned int stride_hash_connectors(const Connector *c,
 	return accum;
 }
 
+static unsigned int find_prime_for(size_t count)
+{
+	size_t i;
+	for (i = 0; i < MAX_S_PRIME; i ++)
+		if ((8 * count) < (3 * s_prime[i])) return i;
+
+	assert(0, "find_prime_for(%zu): Absurdly big count", count);
+	return 0;
+}
+
 void tracon_set_reset(Tracon_set *ss)
 {
-	ss->prime_idx = 0;
+	size_t ncount = MAX(ss->count, ss->ocount);
+
+	if (ss->count > ss->ocount)
+		ncount = ncount * 3 / 4;
+	else
+		ncount = ncount * 4 / 3;
+	unsigned int prime_idx = find_prime_for(ncount);
+	if (prime_idx < ss->prime_idx) ss->prime_idx = prime_idx;
+
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	memset(ss->table, 0, ss->size*sizeof(clist_slot));
+	ss->ocount = ss->count;
 	ss->count = 0;
 }
 
@@ -92,7 +111,7 @@ Tracon_set *tracon_set_create(void)
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
 	memset(ss->table, 0, ss->size*sizeof(clist_slot));
-	ss->count = 0;
+	ss->count = ss->ocount = 0;
 	ss->shallow = false;
 	return ss;
 }
