@@ -53,18 +53,6 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 	return accum;
 }
 
-static unsigned int stride_hash_string(const char *str, const String_set *ss)
-{
-	unsigned int accum = 0;
-	for (;*str != '\0'; str++)
-		accum = (17 * accum) + (unsigned char)*str;
-	accum = ss->mod_func(accum);
-	/* This is the stride used, so we have to make sure that
-	 * its value is not 0 */
-	if (accum == 0) accum = 1;
-	return accum;
-}
-
 #ifdef STR_POOL
 static void ss_pool_alloc(size_t pool_size_add, String_set *ss)
 {
@@ -143,18 +131,17 @@ static bool place_found(const char *str, const ss_slot *slot, unsigned int hash,
  */
 static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
 {
-	unsigned int s;
+	unsigned int coll_num = 0;
 	unsigned int key = ss->mod_func(h);
 
-	if (place_found(str, &ss->table[key], h, ss)) return key;
-
-	s = stride_hash_string(str, ss);
-	while (true)
+	/* Quadratic probing. */
+	while (!place_found(str, &ss->table[key], h, ss))
 	{
-		key = key + s;
-		if (key >= ss->size) key = ss->mod_func(key);
-		if (place_found(str, &ss->table[key], h, ss)) return key;
+		key += 2 * ++coll_num - 1;
+		if (key >= ss->size) key -= ss->size;
 	}
+
+	return key;
 }
 
 static void grow_table(String_set *ss)
