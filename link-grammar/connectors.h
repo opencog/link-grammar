@@ -293,8 +293,8 @@ static inline unsigned int pair_hash(unsigned int table_size,
  * nearest_word). It should not be called after power_prune() (which
  * changes nearest_word).
  *
- * Note: An alternate for getting the word number of tracons is to keep it
- * in the tracon list table or in a separate array. Both ways add
+ * Note: An alternative for getting the word number of a tracon is to keep
+ * it in the tracon list table or in a separate array. Both ways add
  * noticeable overhead, maybe due to the added CPU cache footprint.
  * However, if the word number will be needed after power_prune() there
  * will be a need to keep it in an alternative way.

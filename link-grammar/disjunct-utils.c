@@ -847,11 +847,15 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
  *   struct size, e.g. 64 bytes), so one connector will not need 2 cache
  *   lines.
  *
- *    The allocated memory block includes 3 sections , in that order:
- *    1. A block for disjuncts, when it start is not aligned (the
- *    disjunct size is currently 56 bytes and cannot be reduced much).
- *    2. A small alignment gap, that ends in a 64-byte boundary.
- *    3. A block of connectors, which is so aligned to 64-byte boundary.
+ *   The allocated memory block includes 3 sections , in that order:
+ *   1. A block for disjuncts, when it start is not aligned (the
+ *   disjunct size is currently 56 bytes and cannot be reduced much).
+ *   2. A small alignment gap, that ends in a 64-byte boundary.
+ *   3. A block of connectors, which is so aligned to 64-byte boundary.
+ *
+ *   NOTE: Recently the disjunct size got increases to 64 bytes and
+ *   the intention is to keep it at this size. So the alignment code
+ *   that implements the above is now a kind of no-op.
  *
  * - If the packing is done for the pruning step, allocate Tracon list
  *   stuff too. In that case also call tracon_set_shallow() so Tracons
