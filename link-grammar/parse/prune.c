@@ -248,6 +248,8 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 #define TOPSZ 32768
 	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
 
+	power_table_alloc(sent, pt);
+
 	Pool_desc *mp = pt->memory_pool = pool_new(__func__, "C_list",
 	                   /*num_elements*/2048, sizeof(C_list),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
@@ -1217,7 +1219,6 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 void pp_and_power_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 {
 	power_table pt;
-	power_table_alloc(sent, &pt);
 	power_table_init(sent, ts, &pt);
 
 	power_prune(sent, opts, &pt);
