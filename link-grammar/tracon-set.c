@@ -42,35 +42,18 @@
  * (only, their value remains intact).
  */
 
-static unsigned int hash_connectors(int k, const Connector *c, unsigned int shallow)
+static unsigned int hash_connectors(const Connector *c, unsigned int shallow)
 {
 	unsigned int accum = shallow && c->shallow;
 
 	for (; c != NULL; c = c->next)
 	{
-		accum = (k * accum) +
+		accum = (7 * accum) +
 		((c->desc->uc_num)<<18) +
 		(((unsigned int)c->multi)<<31) +
 		(unsigned int)c->desc->lc_letters;
 	}
 
-	return accum;
-}
-
-static unsigned int primary_hash_connectors(const Connector *c,
-                                            const Tracon_set *ss)
-{
-	return hash_connectors(7, c, ss->shallow);
-}
-
-static unsigned int stride_hash_connectors(const Connector *c,
-                                           const Tracon_set *ss)
-{
-	unsigned int accum = hash_connectors(17, c, ss->shallow);
-	accum = ss->mod_func(accum);
-	/* This is the stride used, so we have to make sure that
-	 * its value is not 0 */
-	if (accum == 0) accum = 1;
 	return accum;
 }
 
@@ -165,18 +148,18 @@ static bool place_found(const Connector *c, const clist_slot *slot, unsigned int
 static unsigned int find_place(const Connector *c, unsigned int h, Tracon_set *ss)
 {
 	PRT_STAT(if (fp_count == 0) atexit(prt_stat); fp_count++;)
+	unsigned int coll_num = 0;
 	unsigned int key = ss->mod_func(h);
 
-	if (place_found(c, &ss->table[key], h, ss)) return key;
-
-	unsigned int s = stride_hash_connectors(c, ss);
-	while (true)
+	/* Quadratic probing. */
+	while (!place_found(c, &ss->table[key], h, ss))
 	{
 		PRT_STAT(coll_count++;)
-		key += s;
-		if (key >= ss->size) key = ss->mod_func(key);
-		if (place_found(c, &ss->table[key], h, ss)) return key;
+		key += 2 * ++coll_num - 1;
+		if (key >= ss->size) key -= ss->size;
 	}
+
+	return key;
 }
 
 static void grow_table(Tracon_set *ss)
@@ -216,7 +199,7 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 	 * There's a huge boost from keeping this sparse. */
 	if ((8 * ss->count) > (3 * ss->size)) grow_table(ss);
 
-	unsigned int h = primary_hash_connectors(clist, ss);
+	unsigned int h = hash_connectors(clist, ss->shallow);
 	unsigned int p = find_place(clist, h, ss);
 
 	if (ss->table[p].clist != NULL)
@@ -230,7 +213,7 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 
 Connector *tracon_set_lookup(const Connector *clist, Tracon_set *ss)
 {
-	unsigned int h = primary_hash_connectors(clist, ss);
+	unsigned int h = hash_connectors(clist, ss->shallow);
 	unsigned int p = find_place(clist, h, ss);
 	return ss->table[p].clist;
 }
