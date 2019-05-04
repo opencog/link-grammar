@@ -658,11 +658,9 @@ static void id_table_check(Tracon_list *tl, unsigned int index, int dir)
 	{
 		size_t new_id_table_size = (0 == tl->table_size[dir]) ?
 			index : tl->table_size[dir] * 2;
-		size_t old_bytes = tl->table_size[dir] * sizeof(uint32_t *);
 		size_t new_bytes = new_id_table_size * sizeof(uint32_t *);
 
 		tl->table[dir] = realloc(tl->table[dir], new_bytes);
-		memset((char *)tl->table[dir] + old_bytes, 0, new_bytes - old_bytes);
 		tl->table_size[dir] = new_id_table_size;
 	}
 }
