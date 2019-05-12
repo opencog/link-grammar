@@ -227,26 +227,28 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  * match loop can stop when there are no more shallow connectors in that
  * slot (since if both are deep, they cannot be matched).
  *
- * The refcount of each connector serves as its reference count.
- * Hence, it should always be > 0.
+ * Each connector has a refcount filed, which indicates how many times it
+ * is memory-shared in the word of its disjunct. Hence, Initially it
+ * should always be > 0.
  *
  * There are two code paths for initializing the power tables:
- * 1. When disjunct-jets sharing is not done. The words then are
- * directly scanned for their disjuncts and connectors. Each ones
- * is inserted with a reference count (as refcount) set to 1.
- * 2. Using the disjunct-jet tables (left and right). Each slot
- * contains only a pointer to a disjunct-jet. The word number is
- * extracted from the deepest connector (that has been assigned to it by
- * setup_connectors()).
- *
- * FIXME: Find a way to not use a reference count (to increase
- * efficiency).
+ * 1. When a trailing connectors sharing is not done. The words then
+ * are directly scanned for their disjuncts and connectors. Each one is
+ * inserted with a refcount set to 1 (because there is no connector memory
+ * sharing).
+ * 2. Using the shared trailing connector tables (left and right). Each
+ * slot is an index into the connector memory block, which is the first
+ * connector in a trailing sequence. The word number is extracted from the
+ * deepest connector (assigned to it by setup_connectors()).
  */
-static void power_table_init(Sentence sent, power_table *pt)
+static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 {
+	Tracon_list *tl = (NULL == ts) ? NULL : ts->tracon_list;
 	unsigned int i;
 #define TOPSZ 32768
 	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
+
+	power_table_alloc(sent, pt);
 
 	Pool_desc *mp = pt->memory_pool = pool_new(__func__, "C_list",
 	                   /*num_elements*/2048, sizeof(C_list),
@@ -272,8 +274,8 @@ static void power_table_init(Sentence sent, power_table *pt)
 		 *   (and the more complex code to go with)
 		 * CPU cache-size effects ...
 		 */
-		if (sent->jet_sharing.num_cnctrs_per_word[0])
-			len = sent->jet_sharing.num_cnctrs_per_word[0][w];
+		if (NULL != tl)
+			len = tl->num_cnctrs_per_word[0][w];
 		else
 			len = left_connector_count(sent->word[w].d);
 		l_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
@@ -281,8 +283,8 @@ static void power_table_init(Sentence sent, power_table *pt)
 		l_t = pt->l_table[w] = (C_list **) xalloc(l_size * sizeof(C_list *));
 		for (i=0; i<l_size; i++) l_t[i] = NULL;
 
-		if (sent->jet_sharing.num_cnctrs_per_word[1])
-			len = sent->jet_sharing.num_cnctrs_per_word[1][w];
+		if (NULL != tl)
+			len = tl->num_cnctrs_per_word[1][w];
 		else
 			len = right_connector_count(sent->word[w].d);
 		r_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
@@ -290,7 +292,7 @@ static void power_table_init(Sentence sent, power_table *pt)
 		r_t = pt->r_table[w] = (C_list **) xalloc(r_size * sizeof(C_list *));
 		for (i=0; i<r_size; i++) r_t[i] = NULL;
 
-		if (!sent->jet_sharing.num_cnctrs_per_word[0])
+		if (NULL == tl)
 		{
 			/* Insert the deep connectors. */
 			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
@@ -339,17 +341,15 @@ static void power_table_init(Sentence sent, power_table *pt)
 		}
 	}
 
-	if (sent->jet_sharing.num_cnctrs_per_word[0])
+	if (NULL != tl)
 	{
-		/* Bulk insertion with reference count. Note: IDs start from 1. */
+		/* Bulk insertion with reference count. */
 
 		for (int dir = 0; dir < 2; dir++)
 		{
 			C_list ***tp;
 			unsigned int *sizep;
-			jet_sharing_t *js = &sent->jet_sharing;
-			JT_entry *jst = js->table[dir];
-			unsigned int jse = js->entries[dir];
+			unsigned int sid_entries = tl->entries[dir];
 
 			if (dir== 0)
 			{
@@ -362,26 +362,18 @@ static void power_table_init(Sentence sent, power_table *pt)
 				sizep = pt->r_table_size;
 			}
 
-			/* Insert the deep connectors. */
-			for (unsigned int id = 1; id < jse + 1; id++)
+			/* Insert the deep connectors, then the shallow ones. */
+			for (int shallow = 0; shallow < 2; shallow++)
 			{
-				Connector *htc = jst[id].c;
-				int w = get_jet_word_number(htc, dir);
-
-				for (Connector *c = htc->next; NULL != c; c = c->next)
+				for (unsigned int id = 0; id < sid_entries; id++)
 				{
-					c->refcount = htc->refcount;
-					put_into_power_table(mp, sizep[w], tp[w], c, false);
+					Connector *c = get_tracon(ts, dir, id);
+					if (!!shallow != c->shallow) continue;
+
+					int w = get_tracon_word_number(c, dir);
+
+					put_into_power_table(mp, sizep[w], tp[w], c, c->shallow);
 				}
-			}
-
-			/* Insert the shallow connectors. */
-			for (unsigned int id = 1; id < jse + 1; id++)
-			{
-				Connector *htc = jst[id].c;
-				int w = get_jet_word_number(htc, dir);
-
-				put_into_power_table(mp, sizep[w], tp[w], jst[id].c, true);
 			}
 		}
 	}
@@ -533,9 +525,10 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * Take this connector list, and try to match it with the words
  * w-1, w-2, w-3...  Returns the word to which the first connector of
  * the list could possibly be matched.  If c is NULL, returns w.  If
- * there is no way to match this list, it returns a negative number.
- * If it does find a way to match it, it updates the c->nearest_word fields
- * correctly. When disjunct-jets are shared, this update is done
+ * there is no way to match this list, it returns -1 (which is also
+ * BAD_WORD in unsigned 8-bit representation).
+ * If it does find a way to match it, it updates the c->nearest_word
+ * fields correctly. When tracons are shared, this update is done
  * simultaneously on all of them. The main loop of power_prune() then
  * marks them with the pass number that is checked here.
  */
@@ -577,11 +570,10 @@ left_connector_list_update(prune_context *pc, Connector *c,
 /**
  * Take this connector list, and try to match it with the words
  * w+1, w+2, w+3...  Returns the word to which the first connector of
- * the list could possibly be matched.  If c is NULL, returns w.  If
- * there is no way to match this list, it returns a number greater than
- * N_words - 1.   If it does find a way to match it, it updates the
- * c->nearest_word fields correctly. See the comment on that in
- * left_connector_list_update().
+ * the list could possibly be matched.  If c is NULL, returns w.
+ * If there is no way to match this list, it returns BAD_WORD, which is
+ * always greater than N_words - 1.   If it does find a way to match it,
+ * it updates the c->nearest_word fields correctly.
  * Regarding pass_number, see the comment in left_connector_list_update().
  */
 static size_t
@@ -621,7 +613,8 @@ right_connector_list_update(prune_context *pc, Connector *c,
 
 static void mark_jet_as_good(Connector *c, int pass_number)
 {
-	c->tracon_id = pass_number;
+	for (; NULL != c; c = c->next)
+		c->tracon_id = pass_number;
 }
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
@@ -633,7 +626,7 @@ static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
 
 	for (; NULL != c; c = c->next)
 	{
-		c->refcount--; /* Reference count. */
+		c->refcount--;
 	}
 }
 
@@ -647,14 +640,24 @@ static bool is_bad(Connector *c)
 
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
- *  Normally all the identical disjunct-jets are memory shared.
- *  The refcount of each connector serves as its reference count
- *  in the power table. Each time when a connector that cannot match
- *  is discovered, its reference count is decreased, and its
- *  nearest_word field is assigned BAD_WORD. Due to the memory sharing,
- *  each such an assignment affects immediately all the identical
- *  disjunct-jets.
- *  */
+ *  Normally tracons are memory shared (with the exception that
+ *  tracons that start with a shallow connectors are not shared with
+ *  ones starting with a deep connector). For further details on tracon
+ *  sharing, see the comment on them in disjunct-utils.c.
+ *
+ *  The refcount of each connector serves as its reference count in the
+ *  power table. Each time when a connector that cannot match is
+ *  discovered, its reference count is decreased, and the nearest_word
+ *  field of its Jet is assigned BAD_WORD. Due to the tracon memory
+ *  sharing, each change of the reference count and the assignment of
+ *  BAD_WORD affects simultaneously all the identical tracons (and the
+ *  corresponding connectors in the power table). The corresponding
+ *  disjuncts are discarded on the fly, and additional disjuncts with Jets
+ *  so marked with BAD_WORD are discarded when encountered without a
+ *  further check. Each tracon is handled only once in the same main loop
+ *  pass by marking their connectors with the pass number in their
+ *  tracon_id field.
+ */
 static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 {
 	prune_context pc;
@@ -1069,7 +1072,7 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 }
 
 
-static int pp_prune(Sentence sent, Parse_Options opts)
+static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 {
 	pp_knowledge *knowledge;
 	multiset_table *cmt;
@@ -1080,18 +1083,17 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	knowledge = sent->postprocessor->knowledge;
 	cmt = cms_table_new();
 
-	jet_sharing_t *js = &sent->jet_sharing;
-	if (js->table[0] != NULL)
+	Tracon_list *tl = (NULL == ts) ? NULL : ts->tracon_list;
+	if (NULL != tl)
 	{
 		for (int dir = 0; dir < 2; dir++)
 		{
-			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
+			for (unsigned int id = 0; id < tl->entries[dir]; id++)
 			{
-				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
-				{
-					if (0 == c->refcount) continue;
-					insert_in_cms_table(cmt, c);
-				}
+				Connector *c = get_tracon(ts, dir, id);
+
+				if (0 == c->refcount) continue;
+				insert_in_cms_table(cmt, c);
 			}
 		}
 	}
@@ -1162,27 +1164,18 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		}
 	}
 
-	/* Iterate over all connectors and mark the bad trigger connectors.
-	 * If the marked connector is not the shallow one, note that the
-	 * shallow one on the same disjunct cannot be marked too (this could
-	 * facilitate faster detection by power_prune()) because this would be
-	 * wrongly reflected through the cms table. */
-
-	if (js->table[0] != NULL)
+	/* Iterate over all connectors and mark the bad trigger connectors. */
+	if (NULL != tl)
 	{
 		for (int dir = 0; dir < 2; dir++)
 		{
-			for (unsigned int id = 1; id < js->entries[dir] + 1; id++)
+			for (unsigned int id = 0; id < tl->entries[dir]; id++)
 			{
-				for (Connector *c = js->table[dir][id].c; NULL != c; c = c->next)
-				{
-					if (0 == c->refcount) continue;
-					if (mark_bad_connectors(cmt, c))
-					{
-						D_deleted++;
-						break;
-					}
-				}
+				Connector *c = get_tracon(ts, dir, id);
+
+				if (0 == c->refcount) continue;
+				if (mark_bad_connectors(cmt, c))
+					D_deleted++;
 			}
 		}
 	}
@@ -1223,14 +1216,13 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 /**
  * Prune useless disjuncts.
  */
-void pp_and_power_prune(Sentence sent, Parse_Options opts)
+void pp_and_power_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 {
 	power_table pt;
-	power_table_alloc(sent, &pt);
-	power_table_init(sent, &pt);
+	power_table_init(sent, ts, &pt);
 
 	power_prune(sent, opts, &pt);
-	if (pp_prune(sent, opts) > 0)
+	if (pp_prune(sent, ts, opts) > 0)
 		power_prune(sent, opts, &pt);
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -

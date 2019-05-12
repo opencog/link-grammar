@@ -13,9 +13,10 @@
 #ifndef _PRUNE_H
 #define _PRUNE_H
 
+#include "api-types.h"                  // Tracon_sharing
 #include "link-includes.h"
 
-void       pp_and_power_prune(Sentence, Parse_Options);
+void       pp_and_power_prune(Sentence, Tracon_sharing *, Parse_Options);
 bool       optional_gap_collapse(Sentence, int, int);
 
 #endif /* _PRUNE_H */

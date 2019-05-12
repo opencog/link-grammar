@@ -286,19 +286,20 @@ static inline unsigned int pair_hash(unsigned int table_size,
 }
 
 /**
- * Get the word number of the given jet.
- * c is the shallow connector.  The word number is extracted from the
- * nearest_word of the deepest connector.
- * This function should be called only after setup_connectors() (which
- * initializes nearest_word) and power_prune() (which changes them).
+ * Get the word number of the given tracon.
+ * c is the leading tracon connector. The word number is extracted from
+ * the nearest_word of the deepest connector.
+ * This function depends on setup_connectors() (which initializes
+ * nearest_word). It should not be called after power_prune() (which
+ * changes nearest_word).
  *
- * Note: An alternate for getting the word number of jets is to keep them
- * in the shared jet table or in a separate array. Both ways add
+ * Note: An alternative for getting the word number of a tracon is to keep
+ * it in the tracon list table or in a separate array. Both ways add
  * noticeable overhead, maybe due to the added CPU cache footprint.
  * However, if the word number will be needed after power_prune() there
  * will be a need to keep it in an alternative way.
  */
-static inline int get_jet_word_number(Connector *c, int dir)
+static inline int get_tracon_word_number(Connector *c, int dir)
 {
 	for (; NULL != c->next; c = c->next)
 		;

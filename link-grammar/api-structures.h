@@ -33,6 +33,8 @@
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
 
+#include <stdint.h>
+
 /* For locale_t */
 #ifdef HAVE_LOCALE_T_IN_LOCALE_H
 #include <locale.h>
@@ -42,16 +44,16 @@
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "api-types.h"
+#include "tracon-set.h"
 #include "corpus/corpus.h"
 #include "memory-pool.h"
 #include "string-set.h"
-#include "string-id.h"
 
 /* Performance tuning.
  * For short sentences, setting suffix IDs and packing takes more
  * resources than it saves. If this overhead is improved, these
  * limit can be set lower. */
-#define SENTENCE_MIN_LENGTH_TRAILING_HASH 10
+#define SENTENCE_MIN_LENGTH_TRAILING_HASH 6
 
 typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
@@ -117,33 +119,6 @@ struct word_queue_s
 	word_queue_t *next;
 };
 
-/* A jet is an ordered set of connectors all pointing in the same
- * direction (left, or right). Every disjunct can be split into two jets;
- * that is, a disjunct is a pair of jets, and so each word consists of a
- * collection of pairs of jets. The array num_cnctrs_per_word holds the
- * number of the connectors on the disjuncts of each word; it is used for
- * sizing the power table in power_prune().
- * On one-step-parse (automatic parsing with null words if the is no
- * solution without 0 nulls) the table is preserved, but currently its
- * jet pointers are recalculated. This is the reason the table is here and
- * not private to power_prune().
- * Possible FIXME: merge with the power table, and allocate it in
- * do_parse (like allocate_count_context()).
- */
-typedef struct
-{
-Connector *c;
-} JT_entry;
-
-/* Jet sharing: [0] - left side; [1] - right side. */
-typedef struct
-{
-	JT_entry *table[2];           /* Indexed by jet ID */
-	unsigned int entries[2];      /* Number of table entries */
-	unsigned int *num_cnctrs_per_word[2]; /* Indexed by word number */
-	String_id *csid[2];           /* For generating unique jet IDs */
-} jet_sharing_t;
-
 struct Sentence_s
 {
 	Dictionary  dict;           /* Words are defined from this dictionary */
@@ -159,16 +134,9 @@ struct Sentence_s
 	Pool_desc * Disjunct_pool;
 	Pool_desc * Connector_pool;
 
-	/* Trailing connector encoding stuff (tracon_id), used for speeding up
-	 * parsing (the classic one for now) of long sentences. */
-	String_id *connector_tracon_id; /* For connector trailing sequence IDs */
-	unsigned int num_tracon_id;     /* Currently unused. */
-
 	/* Connector encoding, packing & sharing. */
 	size_t min_len_encoding;     /* Do it from this sentence length. */
 	void *dc_memblock;           /* For packed disjuncts & connectors. */
-
-	jet_sharing_t jet_sharing;   /* Disjunct l/r duplication sharing */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */

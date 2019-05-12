@@ -10,12 +10,12 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-
 #include <string.h>
 #include <limits.h>                     // UINT_MAX
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
+#include "tracon-set.h"
 #include "disjunct-utils.h"
 #include "print/print-util.h"
 #include "memory-pool.h"
@@ -85,9 +85,10 @@ unsigned int count_disjuncts(Disjunct * d)
 }
 
 /** Returns the number of disjuncts and connectors in the sentence. */
-static void count_disjuncts_and_connectors(Sentence sent, int *dca, int *cca)
+static void count_disjuncts_and_connectors(Sentence sent,
+                                           unsigned int *dca, unsigned int *cca)
 {
-	int ccnt = 0, dcnt = 0;
+	unsigned int ccnt = 0, dcnt = 0;
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
@@ -194,6 +195,7 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 }
 #endif
 
+#if 0
 /**
  * Duplicate the given connector chain.
  * If the argument is NULL, return NULL.
@@ -243,6 +245,7 @@ static Disjunct *disjuncts_dup(Pool_desc *Disjunct_pool, Pool_desc *Connector_po
 
 	return head.next;
 }
+#endif
 
 static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
@@ -518,86 +521,206 @@ void print_all_disjuncts(Sentence sent)
 		}
 }
 
-typedef struct
-{
-	Connector *cblock_base;
-	Connector *cblock;
-	Disjunct *dblock;
-	String_id *csid;             /* Connector suffix encoding. */
-	/* Table of seen sequences. A 32bit index (instead of Connector *) is
-	 * used for better use of the CPU cache. */
-	uint32_t *id_table;
-	size_t id_table_size;
-	size_t num_id;
-} pack_context;
 
-static void id_table_check(pack_context *pc, unsigned int id_index)
+/* ============= Connector encoding, sharing and packing ============= */
+
+/*
+ * sentence_pack() copies the disjuncts and connectors to a continuous
+ * memory block. This facilitate a better memory caching for long
+ * sentences.
+ *
+ * In addition, it shares the memory of identical trailing connector
+ * sequences, aka "tracons". Tracons are considered identical if they
+ * belong to the same Gword (or same word for the pruning step) and
+ * contain identical connectors in the same order (with one exception:
+ * shallow connectors must have the same nearest_word as tracon leading
+ * deep connectors). Connectors are considered identical if they have
+ * the same string representation (including "multi" and the direction
+ * mark) with an additional requirement if the packing is done for the
+ * pruning step - shallow and deep connectors are then not considered
+ * identical. In both cases the exception regarding shallow connectors
+ * is because shallow connectors can match any connector, while deep
+ * connectors can match only shallow connectors. Note: For efficiency,
+ * the actual connector string representation is not used for connector
+ * comparison.
+ *
+ * For the parsing step, identical tracons are assigned a unique tracon
+ * ID, which is kept in their first connector. The rest of their
+ * connectors also have tracon IDs, which belong to tracons starting
+ * with that connectors.
+ *
+ * For the pruning step, all the tracon IDs are set to 0 (see below for
+ * how tracon_id is used during the power pruning).
+ *
+ * For the pruning step, more things are done:
+ * Additional data structure - a tracon list - is constructed, which
+ * includes a tracon table and per-word prune table sizes. These data
+ * structure consists of 2 identical parts - one for each tracon
+ * direction (left/right). The tracon table is indexed by (tracon_id -
+ * 1), and it indexes the connectors memory block (it doesn't use
+ * pointers in order to save memory on 64-bit CPUs because it may
+ * contain in the order of 100K entries for very long sentences).
+ * Also, a refcount field is set for each tracon to tell how many
+ * tracons are memory-shared at that connector address.
+ *
+ * Tracons are used differently in the pruning and parsing steps.
+ *
+ * Power Pruning:
+ * The first connector of each tracon is inserted into the power table,
+ * along with its reference count. When a connector cannot be matched,
+ * this means that all the disjuncts that contain its tracon also cannot
+ * be matched. When it is marked as bad (cannot match) or good (match
+ * found), due to the tracon memory sharing all the connectors that
+ * share the same memory are marked simultaneously, and thus are
+ * detected when the next disjuncts are examined without a need to
+ * further process them. This saves much processing and also drastically
+ * reduces the "power_cost". Setting the nearest_word field is hence
+ * done only once per tracon on each pass. The tracon IDs are used to
+ * detect already-processed tracons - they are assigned the pass number
+ * so each tracon is processed only once per pass. The connector
+ * refcount field is used to discard connectors from the power table
+ * when all the disjuncts that contain them are discarded.
+ *
+ * PP pruning:
+ * Here too only the first connector in each tracon needs to be
+ * examined. Marking a connector with BAD_WORD simultaneously leaves
+ * a mark in the corresponding connector in the cms table and in all
+ * the disjuncts that share it.
+ *
+ * Parsing:
+ * Originally, the classic parser memoized the number of possible
+ * linkages per a given connector-pair using connector addresses. Since
+ * an exhaustive search is done, such an approach has two main problems
+ * for long sentences:
+ * 1. A very big count hash table (Table_connector in count.c) is used
+ * due to the huge number of connectors (100Ks) in long sentences, a
+ * thing that causes a severe CPU cache trash (to the degree that
+ * absolutely most of the memory accesses are L3 misses).
+ * 2. Repeated linkage detailed calculation for what seems identical
+ * connectors. A hint for the tracon idea was the use of 0 hash values
+ * for NULL connectors, which is the same for all the disjuncts of the
+ * same word (they can be considered a private case of a tracon - a
+ * "null tracon").
+ *
+ * The idea that is implemented here is based on the fact that the
+ * number of linkages between the same words using any of their
+ * connector-pair endpoints is governed only by these connectors and the
+ * connectors after them (since cross links are not permitted). Using
+ * tracon IDs as the hash keys allows to share the memoizing table
+ * counts between connectors that start the same tracons. As a
+ * result, long sentences have significantly less different connector
+ * hash values than their total number of connectors.
+ *
+ * In order to save the need to cache and check the endpoint word
+ * numbers the tracon IDs should not be shared between words. They also
+ * should not be shared between alternatives since connectors that belong
+ * to disjuncts of different alternatives may have different linkage
+ * counts because some alternatives-connectivity checks (to the middle
+ * disjunct) are done in the fast-matcher. These restrictions are
+ * implemented by using different tracon IDs per Gword.
+ *
+ * The tracon memory sharing is currently not directly used in the
+ * parsing algo besides reducing the needed CPU cache by a large factor.
+ *
+ * Algo of generating tracon Ids, shared tracons and the tracon list:
+ * The string-set code has been adapted (see tracon-set.c) to hash
+ * tracons. The tracon-set hash table slots are Connector pointers which
+ * point to the memory block of the sentence connectors. When a tracon
+ * is not found in the hash table, a new tracon ID is assigned to it,
+ * and the tracon is copied to the said connector memory block. However,
+ * if it is found, its address is used instead of copying the
+ * connectors, thus sharing its memory with identical tracons. The
+ * tracon-set hash table is cleared after each word (for pruning tracons)
+ * or Gword (for parsing tracons), thus ensuring that the tracons IDs are
+ * not shared between words (or Gwords).
+ *
+ * Some tracon features:
+ * - Each connector starts some tracon.
+ * - Connectors of identical tracons share their memory.
+ *
+ * Jets:
+ * A jet is a (whole) ordered set of connectors all pointing in the same
+ * direction (left, or right). Every disjunct can be split into two jets;
+ * that is, a disjunct is a pair of jets, and so each word consists of a
+ * collection of pairs of jets. The first connector in a jet called
+ * a "shallow" connector. Connectors that are not shallow are deep.
+ * See the comments in prune.c for their connection properties.
+ * A jet is also a tracon.
+ *
+ * Note: This comment is referred-to in disjunct-utils.h, so changes
+ * here may need to be reflected in the comments there too.
+ */
+
+static void id_table_check(Tracon_list *tl, unsigned int index, int dir)
 {
 
-	if (id_index >= pc->id_table_size)
+	if (index >= tl->table_size[dir])
 	{
-		size_t new_id_table_size = (0 == pc->id_table_size) ?
-			id_index : pc->id_table_size * 2;
-		size_t old_bytes = pc->id_table_size * sizeof(uint32_t *);
+		size_t new_id_table_size = (0 == tl->table_size[dir]) ?
+			index : tl->table_size[dir] * 2;
 		size_t new_bytes = new_id_table_size * sizeof(uint32_t *);
 
-		pc->id_table = realloc(pc->id_table, new_bytes);
-		memset((char *)pc->id_table + old_bytes, 0, new_bytes - old_bytes);
-		pc->id_table_size = new_id_table_size;
+		tl->table[dir] = realloc(tl->table[dir], new_bytes);
+		tl->table_size[dir] = new_id_table_size;
 	}
 }
 
 /**
- * Pack the connectors in consecutive memory locations.
- * Use trailing sequence sharing if trailing connector encoding is used
- * (indicated by the existence of its String_id). Same sequences
- * with different directions are not shared, to enable latter modifications
- * in sequences of one direction without affecting the other direction
- * (not implemented yet in published stuff).
+ * Pack the connectors in an array; memory-share and enumerate tracons.
  */
-static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
+static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
+                                  int w)
 {
+	if (NULL == origc) return NULL;
+
 	Connector head;
 	Connector *prevc = &head;
 	Connector *newc = &head;
-	Connector *lcblock = pc->cblock; /* For convenience. */
+	Connector *lcblock = ts->cblock; /* For convenience. */
+	Tracon_list *tl = ts->tracon_list;
 
 	for (Connector *o = origc; NULL != o;  o = o->next)
 	{
 		newc = NULL;
 
-		if (NULL != pc->csid)
+		if (NULL != ts)
 		{
 			/* Encoding is used - share trailing connector sequences. */
-			unsigned int id_index = (2 * o->tracon_id) + dir;
-			id_table_check(pc, id_index);
-			uint32_t cblock_index = pc->id_table[id_index];
+			Connector **tracon = tracon_set_add(o, ts->csid[dir]);
 
-			if (0 == cblock_index)
+			if (NULL == *tracon)
 			{
-				/* The first time we encounter this connector sequence.
-				 * It will be copied to this cached location (below). */
-				cblock_index = (int)(lcblock - pc->cblock_base);
-				pc->id_table[id_index] = cblock_index;
+				/* The first time we encounter this connector sequence. */
+				*tracon = lcblock; /* Save its future location in the tracon_set. */
+
+				if (NULL != tl)
+				{
+					id_table_check(tl, tl->entries[dir], dir);
+					uint32_t cblock_index = (uint32_t)(lcblock - ts->cblock_base);
+					tl->table[dir][tl->entries[dir]] = cblock_index;
+					tl->entries[dir]++;
+				}
 			}
 			else
 			{
-				newc = &pc->cblock_base[cblock_index];
-				if (o->nearest_word != newc->nearest_word)
+				newc = *tracon;
+				if (NULL == tl)
 				{
-					/* This is a rare case in which it is not the same, and
-					 * hence we cannot use it. The simple "caching" that is used
-					 * cannot memoize more than one sequence per tracon_id.
-					 * Notes:
-					 * 1. Maybe such different connectors should be just assigned
-					 * a different tracon_id.
-					 * 2. In case the parsing will ever depend on other
-					 * Connector fields, their check should be added here. */
-					newc = NULL; /* Don't share it. */
-
-					/* Slightly increase cache hit (MRU). */
-					cblock_index = (int)(lcblock - pc->cblock_base);
-					pc->id_table[id_index] = cblock_index;
+					if (o->nearest_word != newc->nearest_word)
+					{
+						/* This is a rare case in which a shallow and deep
+						 * connectors don't have the same nearest_word, because
+						 * a shallow connector may mach a deep connector
+						 * earlier. Because the nearest word is different, we we
+						 * cannot share it. (Such shallow and deep Tracons could
+						 * be shared separately, but because this is a rare
+						 * event there is no need to do that.)
+						 * Note:
+						 * In case the parsing ever depends on other Connector
+						 * fields, their will be a need to add a check for them
+						 * here. */
+						newc = NULL; /* Don't share it. */
+					}
 				}
 			}
 		}
@@ -607,13 +730,30 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 			/* No sharing is done. */
 			newc = lcblock++;
 			*newc = *o;
+
+			if (NULL == ts->tracon_list)
+			{
+				/* For the parsing sharing we need a unique ID. */
+				newc->tracon_id = ts->next_id[dir]++;
+			}
+			else
+			{
+				newc->refcount = 1; /* No sharing yet. */
+				newc->tracon_id = 0;
+				tl->num_cnctrs_per_word[dir][w]++;
+			}
 		}
 		else
 		{
+			if (NULL != ts->tracon_list)
+			{
+				for (Connector *n = newc; NULL != n; n = n->next)
+					n->refcount++;
+			}
 			prevc->next = newc;
 
 			/* Just shared a trailing connector sequence, nothing more to do. */
-			pc->cblock = lcblock;
+			ts->cblock = lcblock;
 			return head.next;
 		}
 
@@ -622,31 +762,8 @@ static Connector *pack_connectors(pack_context *pc, Connector *origc, int dir)
 	}
 	newc->next = NULL;
 
-	pc->cblock = lcblock;
+	ts->cblock = lcblock;
 	return head.next;
-}
-
-/**
- * Convert integer to ASCII into the given buffer.
- * Use base 64 for compactness.
- * The following characters shouldn't appear in the result:
- * CONSEP, ",", and ".", because they are reserved for separators.
- * Return the number of characters in the buffer (not including the '\0').
- */
-#define PTOA_BASE 64
-static unsigned int ptoa_compact(char* buffer, uintptr_t ptr)
-{
-	char *p = buffer;
-	do
-	{
-	  *p++ = '0' + (ptr % PTOA_BASE);
-	  ptr /= PTOA_BASE;
-	}
-	 while (ptr > 0);
-
-	*p = '\0';
-
-	return (unsigned int)(p - buffer);
 }
 
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
@@ -677,111 +794,17 @@ static int enumerate_connectors_sequentially(Sentence sent)
 	return id + 1;
 }
 
-#define CONSEP '&'      /* Connector string separator in the suffix sequence. */
-#define MAX_LINK_NAME_LENGTH 10 // XXX Use a global definition
-#define MAX_LINKS 20            // XXX Use a global definition
-
-/**
- * Set a hash identifier per connector according to the trailing sequence
- * it starts. Ensure it is unique per word and alternative.
- *
- * Originally, the classic parser memoized the number of possible linkages
- * per a given connector-pair using connector addresses. Since an
- * exhaustive search is done, such an approach has two main problems for
- * long sentences:
- * 1. A very big hash table (Table_connector in count.c) is used due to
- * the huge number of connectors (100Ks) in long sentences, a thing that
- * causes a severe memory cache trash (to the degree that absolutely most
- * of the memory accesses are L3 misses).
- * 2. Repeated linkage detailed calculation for what seemed identical
- * connectors. A hint for this solution was the use of 0 hash values for
- * NULL connectors.
- *
- * The idea that is implemented here is based on the fact that the number
- * of linkages between the same words using any of their connector-pair
- * endpoints is governed only by these connectors and the connectors after
- * them (since cross links are not permitted). This allows us to share
- * the memoizing table hash value between connectors that have the same
- * "connector sequence suffix" (trailing connectors) on their disjuncts.
- * As a result, long sentences have significantly less different connector
- * hash values than their total number of connectors.
- *
- * Algorithm:
- * The string-set code has been adapted (see string-id.c) to generate
- * a unique identifier per string.
- * All the connector sequence suffixes of each disjunct are generated here
- * as strings, which are used for getting a unique identifier for the
- * starting connector of each such sequence.
- * In order to save the need to cache and check the endpoint word numbers
- * the connector identifiers should not be shared between words. We also
- * should consider the case of alternatives - trailing connector sequences
- * that belong to disjuncts of different alternatives may have different
- * linkage counts because some alternatives-connectivity checks (to the
- * middle disjunct) are done in the fast-matcher.
- * Prepending the gword_set encoding solves both of these requirements.
- */
-static void enumerate_connector_suffixes(pack_context *pc, Disjunct *d)
-{
-	if (pc->csid == NULL) return;
-
-#define MAX_GWORD_ENCODING 32   /* Actually up to 12 characters. */
-	char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS) + MAX_GWORD_ENCODING];
-
-	/* Generate a string with a disjunct Gword encoding. It makes
-	 * unique trailing connector sequences of different words and
-	 * alternatives of a word, so they will get their own tracon_id.
-	 */
-	size_t lg = ptoa_compact(cstr, (uintptr_t)d->originating_gword);
-	cstr[lg++] = ',';
-
-	for (int dir = 0; dir < 2; dir ++)
-	{
-		//printf("Word %zu d=%p dir %s\n", w, d, dir?"RIGHT":"LEFT");
-
-		Connector *first_c = (0 == dir) ? d->left : d->right;
-		if (first_c == NULL) continue;
-
-		Connector *cstack[MAX_LINKS];
-		size_t ci = 0;
-		size_t l = lg;
-
-		//print_connector_list(d->word_string, dir?"RIGHT":"LEFT", first_c);
-		for (Connector *c = first_c; NULL != c; c = c->next)
-			cstack[ci++] = c;
-
-		for (Connector **cp = &cstack[--ci]; cp >= &cstack[0]; cp--)
-		{
-			if ((*cp)->multi)
-				cstr[l++] = '@'; /* May have different linkages. */
-			l += lg_strlcpy(cstr+l, connector_string(*cp), sizeof(cstr)-l);
-
-			if (l > sizeof(cstr)-2) /* Leave room for CONSEP */
-			{
-				/* This is improbable, given the big cstr buffer. */
-				prt_error("Warning: enumerate_connector_suffixes(): "
-				          "Buffer overflow.\nParsing may be wrong.\n");
-			}
-
-			int id = string_id_add(cstr, pc->csid) + WORD_OFFSET;
-			(*cp)->tracon_id = id;
-			//printf("ID %d trail=%s\n", id, cstr);
-
-			if (cp != &cstack[0]) /* string_id_add() efficiency. */
-				cstr[l++] = CONSEP;
-		}
-	}
-}
-
 /**
  * Pack the given disjunct chain in a continuous memory block.
  * If the disjunct is NULL, return NULL.
  */
-static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
+static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
 	Disjunct *newd = &head;
-	Disjunct *ldblock = pc->dblock; /* For convenience. */
+	Disjunct *ldblock = ts->dblock; /* For convenience. */
+	uintptr_t token = (uintptr_t)w;
 
 	for (Disjunct *t = origd; NULL != t; t = t->next)
 	{
@@ -790,20 +813,126 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
 		newd->cost = t->cost;
 		newd->originating_gword = t->originating_gword;
 
-		enumerate_connector_suffixes(pc, t);
-		newd->left = pack_connectors(pc, t->left, 0);
-		newd->right = pack_connectors(pc, t->right, 1);
+		if (NULL == ts->tracon_list)
+		    token = (uintptr_t)t->originating_gword;
+
+		if (token != ts->last_token)
+		{
+			ts->last_token = token;
+			tracon_set_reset(ts->csid[0]);
+			tracon_set_reset(ts->csid[1]);
+			//printf("TOKEN token %ld\n", token);
+		}
+		newd->left = pack_connectors(ts, t->left, 0, w);
+		newd->right = pack_connectors(ts, t->right, 1,  w);
 
 		prevd->next = newd;
 		prevd = newd;
 	}
 	newd->next = NULL;
 
-	pc->dblock = ldblock;
+	ts->dblock = ldblock;
 	return head.next;
 }
 
 #define ID_TABLE_SZ 8192 /* Initial size of the tracon_id table */
+
+/** Create a context descriptor for disjuncts & connector memory "packing".
+ * - Allocate a memory block for all the disjuncts & connectors.
+ *   The current Connector struct size is 32 bit, and the intention is
+ *   to keep it with a power-of-2 size. The idea is to put an integral
+ *   number of connectors in each cache line (assumed to be >= Connector
+ *   struct size, e.g. 64 bytes), so one connector will not need 2 cache
+ *   lines.
+ *
+ *   The allocated memory block includes 3 sections , in that order:
+ *   1. A block for disjuncts, when it start is not aligned (the
+ *   disjunct size is currently 56 bytes and cannot be reduced much).
+ *   2. A small alignment gap, that ends in a 64-byte boundary.
+ *   3. A block of connectors, which is so aligned to 64-byte boundary.
+ *
+ *   NOTE: Recently the disjunct size got increases to 64 bytes and
+ *   the intention is to keep it at this size. So the alignment code
+ *   that implements the above is now a kind of no-op.
+ *
+ * - If the packing is done for the pruning step, allocate Tracon list
+ *   stuff too. In that case also call tracon_set_shallow() so Tracons
+ *   starting with a shallow connector will be considered different than
+ *   similar ones starting with a deep connector.
+ *
+ * @return The said context descriptor.
+ */
+static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
+{
+	unsigned int dcnt = 0;
+	unsigned int ccnt = 0;
+	Tracon_sharing *ts;
+
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+
+#define CONN_ALIGNMENT sizeof(Connector)
+	size_t dsize = dcnt * sizeof(Disjunct);
+	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
+	size_t csize = ccnt * sizeof(Connector);
+	void *memblock = malloc(dsize + csize);
+	Disjunct *dblock = memblock;
+	Connector *cblock = (Connector *)((char *)memblock + dsize);
+
+	ts = malloc(sizeof(Tracon_sharing));
+	memset(ts, 0, sizeof(Tracon_sharing));
+
+	ts->memblock = memblock;
+	ts->cblock_base = cblock;
+	ts->cblock = cblock;
+	ts->dblock = dblock;
+	ts->num_connectors = ccnt;
+	ts->num_disjuncts = dcnt;
+	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
+	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
+	ts->last_token = (uintptr_t)-1;
+
+	ts->csid[0] = tracon_set_create();
+	ts->csid[1] = tracon_set_create();
+
+	if (is_pruning)
+	{
+		ts->tracon_list = malloc(sizeof(Tracon_list));
+		memset(ts->tracon_list, 0, sizeof(Tracon_list));
+		ts->tracon_list->memblock_sz = dsize + csize;
+		unsigned int **ncpw = ts->tracon_list->num_cnctrs_per_word;
+		for (int dir = 0; dir < 2; dir++)
+		{
+			ncpw[dir] = malloc(sent->length * sizeof(**ncpw));
+			memset(ncpw[dir], 0, sent->length * sizeof(**ncpw));
+
+			tracon_set_shallow(true, ts->csid[dir]);
+			id_table_check(ts->tracon_list, ID_TABLE_SZ, dir); /* Allocate table. */
+		}
+	}
+
+	return ts;
+}
+
+void free_tracon_sharing(Tracon_sharing *ts)
+{
+	if (NULL == ts) return;
+
+	for (int dir = 0; dir < 2; dir++)
+	{
+		if (NULL != ts->tracon_list)
+		{
+			free(ts->tracon_list->num_cnctrs_per_word[dir]);
+			free(ts->tracon_list->table[dir]);
+		}
+		tracon_set_delete(ts->csid[dir]);
+		ts->csid[dir] = NULL;
+	}
+	free(ts->tracon_list);
+	ts->tracon_list = NULL;
+
+	free(ts);
+}
+
 /**
  * Pack all disjunct and connectors into a one big memory block.
  * This facilitate a better memory caching for long sentences
@@ -824,342 +953,83 @@ static Disjunct *pack_disjuncts(pack_context *pc, Disjunct *origd)
  * A trailing sequence encoding and sharing is done too.
  * Note: Connector sharing, trailing hash and packing always go together.
  */
-bool pack_sentence(Sentence sent)
+static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
-	int dcnt = 0;
-	int ccnt = 0;
 	bool do_share = sent->length >= sent->min_len_encoding;
+	Tracon_sharing *ts;
 
 	if (!do_share)
 	{
-		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
-		enumerate_connectors_sequentially(sent);
-		return false;
+		if (!is_pruning)
+		{
+			lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
+			enumerate_connectors_sequentially(sent);
+		}
+		return NULL;
 	}
 
-	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+	ts = pack_sentence_init(sent, is_pruning);
 
-#define CONN_ALIGNMENT sizeof(Connector)
-	size_t dsize = dcnt * sizeof(Disjunct);
-	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
-	size_t csize = ccnt * sizeof(Connector);
-	void *memblock = malloc(dsize + csize);
-	Disjunct *dblock = memblock;
-	Connector *cblock = (Connector *)((char *)memblock + dsize);
-	sent->dc_memblock = memblock;
-	pack_context pc =
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		.cblock_base = cblock,
-		.cblock = cblock,
-		.dblock = dblock,
-		.csid = NULL,
-	};
-
-	if (do_share)
-	{
-		if (sent->connector_tracon_id == NULL)
-			sent->connector_tracon_id = string_id_create();
-		pc.csid = sent->connector_tracon_id;
-		id_table_check(&pc, ID_TABLE_SZ); /* Allocate initial table. */
-		pc.num_id = 0;
+		sent->word[w].d = pack_disjuncts(ts, sent->word[w].d, w);
 	}
 
-	for (WordIdx i = 0; i < sent->length; i++)
-		sent->word[i].d = pack_disjuncts(&pc, sent->word[i].d);
+	/* On long sentences, many MB of connector-space are saved, but we
+	 * cannot use a realloc() here without the overhead of relocating
+	 * the pointers in the used part of memblock (if realloc() returns a
+	 * different address). */
 
-	pool_delete(sent->Disjunct_pool);
-	pool_delete(sent->Connector_pool);
-	sent->Disjunct_pool = NULL;
+	return ts;
+}
 
-	if (do_share)
-	{
-		free(pc.id_table);
-		lgdebug(+D_DISJ, "Info: %zu connectors shared\n", &cblock[ccnt] - pc.cblock);
-		/* On long sentences, many MB of connector-space are saved, but we
-		 * cannot use a realloc() here without the overhead of relocating
-		 * the pointers in the used part of memblock (if realloc() returns a
-		 * different address). */
+Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
+{
+	Tracon_sharing *ts = pack_sentence(sent, true);
 
-		/* Support incremental tracon_id generation (only one time is needed). */
-		const char *snumid[] = { "NUMID", "NUMID1" };
+	lgdebug(D_DISJ, "Debug: Trailing hash for pruning (len %zu): "
+	        "tracon_id %zu (%zu+,%zu-), shared connectors %ld\n", sent->length,
+	        ts->tracon_list->entries[0]+ts->tracon_list->entries[1],
+	        ts->tracon_list->entries[0], ts->tracon_list->entries[1],
+	        &ts->cblock_base[ts->num_connectors] - ts->cblock);
 
-		int t = string_id_lookup(snumid[0], pc.csid);
-		int numid = string_id_add(snumid[(int)(t > 0)], pc.csid) + WORD_OFFSET;
-		lgdebug(D_DISJ, "Debug: Using trailing hash (length %zu): tracon_id %d\n",
-				  sent->length, numid);
-	}
+	return ts;
+}
 
-	return do_share;
+Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
+{
+	Tracon_sharing *ts = pack_sentence(sent, false);
+
+	lgdebug(D_DISJ, "Debug: Trailing hash for parsing (len %zu): "
+	        "tracon_id %d (%d+,%d-), shared connectors %ld\n", sent->length,
+	        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
+	        ts->next_id[0]-ts->word_offset, ts->next_id[1]-ts->word_offset,
+	        &ts->cblock_base[ts->num_connectors] - ts->cblock);
+
+	return ts;
 }
 
 /* ============ Save and restore sentence disjuncts ============ */
-void save_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
+void *save_disjuncts(Sentence sent, Tracon_sharing *ts, Disjunct **disjuncts)
 {
-	ddesc->disjuncts = malloc(sent->length * sizeof(Disjunct *));
-
-	ddesc->Disjunct_pool = pool_new(__func__, "Disjunct",
-	                   /*num_elements*/2048, sizeof(Disjunct),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
-	ddesc->Connector_pool = pool_new(__func__, "Connector",
-	                   /*num_elements*/8192, sizeof(Connector),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
-
-	for (size_t i = 0; i < sent->length; i++)
-	{
-		ddesc->disjuncts[i] =
-			disjuncts_dup(ddesc->Disjunct_pool, ddesc->Connector_pool,
-			              sent->word[i].d);
-	}
-}
-
-void restore_disjuncts(Sentence sent, Disjuncts_desc_t *ddesc)
-{
-	sent->Disjunct_pool = ddesc->Disjunct_pool;
-	ddesc->Disjunct_pool = NULL;
-
-	sent->Connector_pool = ddesc->Connector_pool;
+	Tracon_list *tl = ts->tracon_list;
 
 	for (WordIdx w = 0; w < sent->length; w++)
-		sent->word[w].d = ddesc->disjuncts[w];
+		disjuncts[w] = sent->word[w].d;
+
+	void *saved_memblock = malloc(tl->memblock_sz);
+	memcpy(saved_memblock, ts->memblock, ts->tracon_list->memblock_sz);
+
+	return saved_memblock;
 }
 
-void free_saved_disjuncts(Disjuncts_desc_t *ddesc)
+void restore_disjuncts(Sentence sent, Disjunct **disjuncts,
+                       void *saved_memblock, Tracon_sharing *ts)
 {
-	if (NULL != ddesc->Disjunct_pool)
-	{
-		pool_delete(ddesc->Disjunct_pool);
-		pool_delete(ddesc->Connector_pool);
-	}
-	ddesc->Disjunct_pool = NULL;
-	free(ddesc->disjuncts);
-}
-
-/* =================== Disjunct jet sharing ================= */
-static void jet_sharing_init(Sentence sent)
-{
-	unsigned int **ccnt = sent->jet_sharing.num_cnctrs_per_word;
-
-	for (int dir = 0; dir < 2; dir++)
-		ccnt[dir] = malloc(sent->length * sizeof(**ccnt));
-}
-
-void free_jet_sharing(Sentence sent)
-{
-	jet_sharing_t *js = &sent->jet_sharing;
-	if (NULL == js->table[0]) return;
-
-	for (int dir = 0; dir < 2; dir++)
-	{
-		free(js->table[dir]);
-		js->table[dir] = NULL;
-		free(js->num_cnctrs_per_word[dir]);
-		string_id_delete(js->csid[dir]);
-		js->csid[dir] = NULL;
-	}
-}
-
-/** Create a copy of the given connector chain and return it;
- *  Put the number of copied connectors in numc.
- */
-static Connector *connectors_copy(Pool_desc *connector_pool, Connector *c,
-                                  unsigned int *numc)
-{
-	Connector head;
-	Connector *prev = &head;
-
-	for (; NULL != c; c = c->next)
-	{
-		Connector *n = pool_alloc(connector_pool);
-		*n = *c;
-		prev->next = n;
-		prev = n;
-		(*numc)++;
-	}
-
-	prev->next = NULL;
-	return head.next;
-}
-
-#define JET_TABLE_SIZE 256 /* Auto-extended. */
-
-/** Memory-share identical disjunct jets.
- * Two jets are considered identical if they are on the same side of the
- * disjunct and their entire connector sequence is identical. A basic
- * assumption, which is not asserted here, is that the nearest_word and
- * length limit fields in the identical jets are also the same.
- *
- * For each disjunct side separately, a unique ID per jet (which starts
- * from 1 so 0 is an invalid ID) is used to identify it. The IDs are
- * shared by all the words for efficiency. The refcount field of the
- * shallow connector is used as a counter of the number of shared jets
- * in a particular table slot.
- *
- * Possible FIXME: The shared jets uses a new memory pool that is
- * allocated here.  The intention was to increase the memory locality for
- * power_prune() (which come next) by avoiding memory "holes" that would
- * otherwise be created by the sharing. A later test proves this doesn't
- * matter much for sentences as big as 170 tokens. So this can be
- * simplified, or be used to prevent the need to save/restore actual
- * memory for one-step-parse (with the cost of a more complex memory
- * management logic).
- *
- * The 'rebuild' flag is for use in the optional second stage of a
- * one-step-parse, to save CPU on creating the jet tables. This is done by
- * reusing the String_id descriptors and the jet tables memory allocation.
- * (Creating the jet tables again is currently needed because the jet
- * addresses are currently getting changed when they are restored in this
- * second stage. See the above FIXME.)
- *
- * Note: The number of different jets per word is kept in
- * num_cnctrs_per_word[dir][w], for the use of power_prune() (sizing its
- * per-word tables aka power_table). It is used as an approximation to the
- * number of different connectors. Because this may not be accurate, it is
- * multiplied by 2 to be more on the safe side.
- */
-void share_disjunct_jets(Sentence sent, bool rebuild)
-{
-	jet_sharing_t *js = &sent->jet_sharing;
-
-	lgdebug(+D_DISJ, "skip=%d rebuild=%d table=%d\n",
-	        sent->length < sent->min_len_encoding, rebuild, NULL != js->table[0]);
-
-	if (sent->length < sent->min_len_encoding) return;
-
-	size_t jet_table_size[2];
-	size_t jet_table_entries[2] = {0};
-	JT_entry **jet_table = js->table;
-
-	assert(!rebuild || (js->table[0] && js->csid[0]), "jet rebuild with no info");
-	assert(rebuild || (!js->table[0] && !js->csid[0]), "jet !rebuild with info");
-
-	if (!rebuild)
-		jet_sharing_init(sent);
-
-	/* FIXME? Add to jet_sharing_init. */
-	for (int dir = 0; dir < 2; dir++)
-	{
-		if (NULL == js->csid[dir])
-		{
-			js->csid[dir] = string_id_create();
-			(void)string_id_add("dummy", js->csid[dir]); /* IDs start from 1. */
-		}
-		if (rebuild)
-		{
-			jet_table_size[dir] = js->entries[dir] + 1;
-			memset(jet_table[dir], 0, jet_table_size[dir] * sizeof(*jet_table[0]));
-		}
-		else
-		{
-			jet_table_size[dir] = JET_TABLE_SIZE;
-			jet_table[dir] = calloc(jet_table_size[dir], sizeof(*jet_table[0]));
-		}
-	}
-
-	int ccnt, dcnt;
-	count_disjuncts_and_connectors(sent, &ccnt, &dcnt);
-
-	/* +1: Avoid allocating 0 elements. */
-	ccnt = MAX(ccnt, 1);
-	dcnt = MAX(dcnt, 1);
-
-	Pool_desc *old_Disjunct_pool = sent->Disjunct_pool;
-	sent->Disjunct_pool = pool_new(__func__, "Disjunct",
-	                   /*num_elements*/dcnt, sizeof(Disjunct),
-	                   /*zero_out*/false, /*align*/false, /*exact*/true);
-	Pool_desc *old_Connector_pool = sent->Connector_pool;
-	sent->Connector_pool = pool_new(__func__, "Connector",
-	                   /*num_elements*/ccnt, sizeof(Connector),
-	                   /*zero_out*/false, /*align*/false, /*exact*/true);
+	if (NULL == saved_memblock) return;
 
 	for (WordIdx w = 0; w < sent->length; w++)
-	{
-		Disjunct head;
-		Disjunct *prev = &head;
-		unsigned int numc[2] = {0}; /* Current word different connectors. */
+		sent->word[w].d = disjuncts[w];
 
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-		{
-			Disjunct *n = pool_alloc(sent->Disjunct_pool);
-			*n = *d; /* Also initial left/right to NULL ("continue" below). */
-			prev->next = n;
-			prev = n;
-
-			char cstr[((MAX_LINK_NAME_LENGTH + 3) * MAX_LINKS)];
-			cstr[0] = (char)(w + 1); /* Avoid '\0'. */
-
-			for (int dir = 0; dir < 2; dir ++)
-			{
-				size_t l = 1;
-
-				Connector *first_c = (0 == dir) ? d->left : d->right;
-				if (NULL == first_c) continue;
-
-				for (Connector *c = first_c; NULL != c; c = c->next)
-				{
-					if (c->multi)
-						cstr[l++] = '@'; /* Why does this matter for power pruning? */
-					l += lg_strlcpy(cstr+l, connector_string(c), sizeof(cstr)-l);
-					if (l > sizeof(cstr)-3) break;  /* Leave room for CONSEP + '@' */
-					if (NULL != c->next) /* string_id_add() efficiency. */
-						cstr[l++] = CONSEP;
-				}
-				if (l > sizeof(cstr)-2)
-				{
-					/* This is improbable, given the big cstr buffer. */
-					prt_error("Warning: share_disjunct_jets(): "
-					          "Buffer overflow.\nParsing may be wrong.\n");
-				}
-
-				if (jet_table_entries[dir] + 1 >= jet_table_size[dir])
-				{
-					size_t old_bytes = jet_table_size[dir] * sizeof(*jet_table[0]);
-					jet_table[dir] = realloc(jet_table[dir], old_bytes * 2);
-					memset(jet_table[dir]+jet_table_size[dir], 0, old_bytes);
-					jet_table_size[dir] *= 2;
-				}
-
-				int id = string_id_add(cstr, js->csid[dir]);
-#if 0
-				printf("%zu%c %d: %s\n", w, dir?'+':'-', id, cstr);
-#endif
-
-				if (NULL == jet_table[dir][id].c)
-				{
-					jet_table_entries[dir]++;
-					jet_table[dir][id].c =
-						connectors_copy(sent->Connector_pool, first_c, &numc[dir]);
-					/* Very subtle - for potential disjunct save
-					 * (one-step-parse) that is done after the previous
-					 * jet-sharing since it has set non-0 refcount. */
-					jet_table[dir][id].c->refcount = 0;
-				}
-				*((0 == dir) ? &n->left : &n->right) = jet_table[dir][id].c;
-				jet_table[dir][id].c->refcount++;
-#if 0
-				printf("w%zu%c: ", w, dir?'+':'-');
-				print_connector_list(first_c);
-				printf("\n");
-#endif
-			}
-		}
-
-		prev->next = NULL;
-		sent->word[w].d = head.next;
-
-		/* Keep power-prune hash table sizes. */
-		js->num_cnctrs_per_word[0][w] = numc[0] * 2;
-		js->num_cnctrs_per_word[1][w] = numc[1] * 2;
-	}
-
-	pool_delete(old_Disjunct_pool);
-	pool_delete(old_Connector_pool);
-
-	for (int dir = 0; dir < 2; dir++)
-	{
-		js->table[dir] = jet_table[dir];
-		js->entries[dir] = (unsigned int)jet_table_entries[dir];
-	}
-	lgdebug(+D_DISJ, "Total number of jets %d (%d+,%d-)\n",
-	        js->entries[0]+js->entries[1], js->entries[0], js->entries[1]);
+	memcpy(ts->memblock, saved_memblock, ts->tracon_list->memblock_sz);
 }
-/* ========================= END OF FILE ========================*/
