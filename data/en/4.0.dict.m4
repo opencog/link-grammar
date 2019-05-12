@@ -2925,6 +2925,7 @@ rest.w: Ix- & Pv+;
 % MV+ & Pa+: "I was, before Friday, quite unhappy."
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
 %     must leave the field" cannot take a wall.
+% [Pa+]0.05: perfer gerund over adjective.
 % [I*v+].2: the cost should maybe be evenn higher, to avoid linking
 %     past-tense 'were' to infinitives. "The rooms were let."
 % PFb- & <verb-wall> & Pa+: "cheaper than direct, slime is greener."
@@ -2943,7 +2944,7 @@ rest.w: Ix- & Pv+;
     or THb+
     or <to-verb>
     or (PFb- & <verb-wall> & {Pa+})
-    or ({MV+} & Pa+ & {<verb-wall>})))
+    or ({MV+} & [Pa+]0.05 & {<verb-wall>})))
   or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].2))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
