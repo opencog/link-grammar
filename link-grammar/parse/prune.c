@@ -75,7 +75,7 @@ struct multiset_table_s
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
-	bool null_links;
+	unsigned int null_links; /* Maximum number of null links plus 1. */
 	int power_cost;
 	int N_changed;   /* counts the number of changes
 						   of c->nearest_word fields in a pass */
@@ -470,6 +470,16 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 	return true;
 }
 
+static int num_non_opt_words(Sentence sent, int w1, int w2)
+{
+	int non_optional_word = 0;
+
+	for (int w = w1+1; w < w2; w++)
+		if (!sent->word[w].optional) non_optional_word++;
+
+	return non_optional_word;
+}
+
 /**
  * This takes two connectors (and the two words that these came from) and
  * returns TRUE if it is possible for these two to match based on local
@@ -500,17 +510,21 @@ static bool possible_connection(prune_context *pc,
 	}
 	else
 	{
-		/* If the words are NOT next to each other, then there must be
-		 * at least one intervening connector (i.e. cannot have both
-		 * lc->next and rc->next being null).  But we only enforce this
-		 * when we think its still possible to have a complete parse,
-		 * i.e. before we allow null-linked words.
+		/* We arrive here if the words are NOT next to each other. Say the
+		 * gape between them contains W non-optional words. We also know
+		 * that we are going to parse with N null-links (which involves
+		 * sub-parsing with the range of [0, N] null-links).
+		 * If there is not at least one intervening connector (i.e. both
+		 * of lc->next and rc->next are NULL) then there will be W
+		 * null-linked words, and W must be <= N.
+		 * Notes:
+		 * 1. Optional words are disregarded because they are allowed to be
+		 * null-linked independently of the requested parsing null links.
+		 * 2. When island_ok=true this optimization is valid only for N = 0.
 		 */
-		if (!pc->null_links &&
-			 (lc->next == NULL) &&
-			 (rc->next == NULL) &&
+		if ((lc->next == NULL) && (rc->next == NULL) &&
 			 (!lc->multi) && (!rc->multi) &&
-			 !optional_gap_collapse(pc->sent, lword, rword))
+			 num_non_opt_words(pc->sent, lword, rword) > (int)pc->null_links)
 		{
 			return false;
 		}
@@ -709,7 +723,8 @@ static bool is_bad(Connector *c)
  *  pass by marking their connectors with the pass number in their
  *  tracon_id field.
  */
-static int power_prune(Sentence sent, power_table *pt, Parse_Options opts)
+static int power_prune(Sentence sent, power_table *pt,
+                       int null_count, Parse_Options opts)
 {
 	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
@@ -717,7 +732,7 @@ static int power_prune(Sentence sent, power_table *pt, Parse_Options opts)
 
 	pc.pt = pt;
 	pc.power_cost = 0;
-	pc.null_links = (opts->min_null_count > 0);
+	pc.null_links = null_count;
 	pc.N_changed = 1;  /* forces it always to make at least two passes */
 	pc.sent = sent;
 	pc.pass_number = 0;
@@ -1275,14 +1290,15 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 /**
  * Prune useless disjuncts.
  */
-void pp_and_power_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
+void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
+                        unsigned int null_count, Parse_Options opts)
 {
 	power_table pt;
 	power_table_init(sent, ts, &pt);
 
-	power_prune(sent, &pt, opts);
+	power_prune(sent, &pt, null_count, opts);
 	if (pp_prune(sent, ts, opts) > 0)
-		power_prune(sent, &pt, opts);
+		power_prune(sent, &pt, null_count, opts);
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
 	 * additional deletions are very rare and even then most of the
