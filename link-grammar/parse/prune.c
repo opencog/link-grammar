@@ -710,7 +710,7 @@ static bool is_bad(Connector *c)
  *  pass by marking their connectors with the pass number in their
  *  tracon_id field.
  */
-static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
+static int power_prune(Sentence sent, power_table *pt, Parse_Options opts)
 {
 	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
@@ -1281,9 +1281,9 @@ void pp_and_power_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	power_table pt;
 	power_table_init(sent, ts, &pt);
 
-	power_prune(sent, opts, &pt);
+	power_prune(sent, &pt, opts);
 	if (pp_prune(sent, ts, opts) > 0)
-		power_prune(sent, opts, &pt);
+		power_prune(sent, &pt, opts);
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
 	 * additional deletions are very rare and even then most of the
