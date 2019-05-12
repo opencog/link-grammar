@@ -547,8 +547,8 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	int foundmatch = -1;
 
 	if (c == NULL) return w;
-	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (c->tracon_id == pc->pass_number) return c->nearest_word;
+	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
