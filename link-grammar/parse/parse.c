@@ -350,7 +350,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		total = (total < 0) ? INT_MAX : total;
 
 		sent->num_linkages_found = (int) total;
-		print_time(opts, "Counted parses");
+		print_time(opts, "Counted parses (%lld w/%zu null%s)", hist_total(&hist),
+		           sent->null_count, (sent->null_count != 1) ? "s" : "");
 
 		if (verbosity >= D_USER_INFO)
 		{
