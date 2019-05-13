@@ -11,6 +11,7 @@
 /*************************************************************************/
 
 #include <time.h>
+#include <stdarg.h>
 
 #include "externs.h"
 
@@ -165,8 +166,19 @@ static void resources_print_total_space(int verbosity_opt, Resources r)
 	}
 }
 
-void print_time(Parse_Options opts, const char * s)
+void print_time(Parse_Options opts, const char *fmt, ...)
 {
+	char s[128] = "";
+
+	if (opts->verbosity >= D_USER_TIMES)
+	{
+		va_list args;
+
+		va_start(args, fmt);
+		vsnprintf(s, sizeof(s), fmt, args);
+		va_end(args);
+	}
+
 	resources_print_time(opts->verbosity, opts->resources, s);
 }
 
