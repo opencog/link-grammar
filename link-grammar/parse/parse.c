@@ -241,17 +241,23 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
  * opts->min_null_count up to (including) opts->max_null_count, until a
  * parse is found.
  *
- * A note about the disjuncts save/restore that is done here:
- * To increase the parsing speed, before invoking do_parse(),
- * pp_and_power_prune() is invoked to remove connectors which have no
- * possibility to connect. It includes a significant optimization when
- * null_count==0 that makes a more aggressive removal, but this
- * optimization is not appropriate when null_count>0.
+ * To increase the parsing speed, before invoking do_parse(), invoke
+ * pp_and_power_prune() to remove connectors which have no possibility to
+ * connect. Since power_prune() includes a significant optimization if it
+ * assumes that the linkage has no more than a specific number of null
+ * links (aka null_count), call it with the current number of null_count
+ * for which do_count() is invoked.
  *
- * So in case this optimization has been done and a complete parse (i.e.
+ * In order to be able to so repeat the pruning step, we need to keep
+ * the original disjunct/connectors in order to prune them again.
+ * This is done only when needed, i.e. when we are invoked with
+ * min_null_count != max_null_count (a typical case is that they are
+ * both 0).
+ *
+ * So in case this optimization has been done and a parse (e.g.
  * a parse when null_count==0) is not found, we are left with sentence
  * disjuncts which are not appropriate to continue do_parse() tries with
- * null_count>0. To solve that, we need to restore the original
+ * a greater null_count. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
  */
 void classic_parse(Sentence sent, Parse_Options opts)
