@@ -989,12 +989,12 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 
 	if (ts == NULL)
 	{
-		lgdebug(D_DISJ, "Debug: Trailing hash for pruning (len %zu): None",
+		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): None",
 		        sent->length);
 	}
 	else
 	{
-		lgdebug(D_DISJ, "Debug: Trailing hash for pruning (len %zu): "
+		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): "
 		        "tracon_id %zu (%zu+,%zu-), shared connectors %ld\n",
 		        sent->length,
 		        ts->tracon_list->entries[0]+ts->tracon_list->entries[1],
@@ -1011,12 +1011,12 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 
 	if (ts == NULL)
 	{
-		lgdebug(D_DISJ, "Debug: Trailing hash for parsing (len %zu): None",
+		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): None",
 		        sent->length);
 	}
 	else
 	{
-		lgdebug(D_DISJ, "Debug: Trailing hash for parsing (len %zu): "
+		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): "
 		        "tracon_id %d (%d+,%d-), shared connectors %ld\n",
 		        sent->length,
 		        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
