@@ -825,7 +825,8 @@ static int power_prune(Sentence sent, power_table *pt,
 
 	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
 
-	print_time(opts, "power pruned");
+	print_time(opts, "power pruned (for %d null%s)",
+	           null_count, (null_count != 1) ? "s" : "");
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
