@@ -11,6 +11,7 @@
 /*************************************************************************/
 
 #include <time.h>
+#include <stdarg.h>
 
 #include "externs.h"
 
@@ -128,7 +129,7 @@ bool resources_memory_exhausted(Resources r)
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 
-#define RES_COL_WIDTH sizeof("                                     ")
+#define RES_COL_WIDTH 40
 
 /** print out the cpu ticks since this was last called */
 static void resources_print_time(int verbosity_opt, Resources r, const char * s)
@@ -137,7 +138,8 @@ static void resources_print_time(int verbosity_opt, Resources r, const char * s)
 	now = current_usage_time();
 	if (verbosity_opt >= D_USER_TIMES)
 	{
-		prt_error("++++ %-36s %7.2f seconds\n", s, now - r->when_last_called);
+		prt_error("++++ %-*s %7.2f seconds\n",
+		          RES_COL_WIDTH, s, now - r->when_last_called);
 	}
 	r->when_last_called = now;
 }
@@ -150,7 +152,7 @@ static void resources_print_total_time(int verbosity_opt, Resources r)
 	r->cumulative_time += (now - r->time_when_parse_started) ;
 	if (verbosity_opt >= D_USER_BASIC)
 	{
-		prt_error("++++ %-36s %7.2f seconds (%.2f total)\n", "Time",
+		prt_error("++++ %-*s %7.2f seconds (%.2f total)\n", RES_COL_WIDTH, "Time",
 		          now - r->time_when_parse_started, r->cumulative_time);
 	}
 	r->time_when_parse_started = now;
@@ -160,13 +162,24 @@ static void resources_print_total_space(int verbosity_opt, Resources r)
 {
 	if (verbosity_opt >= D_USER_TIMES)
 	{
-		prt_error("++++ %-36s %zu bytes (%zu max)\n", "Total space",
+		prt_error("++++ %-*s %zu bytes (%zu max)\n", RES_COL_WIDTH, "Total space",
 		          get_space_in_use(), get_max_space_used());
 	}
 }
 
-void print_time(Parse_Options opts, const char * s)
+void print_time(Parse_Options opts, const char *fmt, ...)
 {
+	char s[128] = "";
+
+	if (opts->verbosity >= D_USER_TIMES)
+	{
+		va_list args;
+
+		va_start(args, fmt);
+		vsnprintf(s, sizeof(s), fmt, args);
+		va_end(args);
+	}
+
 	resources_print_time(opts->verbosity, opts->resources, s);
 }
 
