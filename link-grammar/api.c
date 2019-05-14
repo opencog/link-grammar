@@ -415,6 +415,12 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	if (NULL != min_len_encoding)
 		sent->min_len_encoding = atoi(min_len_encoding+1);
 
+	/* Set the minimum length for pruning per null-count. */
+	sent->min_len_multi_pruning = SENTENCE_MIN_LENGTH_MULTI_PRUNING;
+	const char *min_len_multi_pruning = test_enabled("len-multi-pruning");
+	if (NULL != min_len_multi_pruning)
+		sent->min_len_multi_pruning = atoi(min_len_multi_pruning+1);
+
 	return sent;
 }
 

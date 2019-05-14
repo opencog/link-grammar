@@ -274,6 +274,25 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	if (opts->islands_ok) max_prune_level = 0; /* Cannot optimize for > 0. */
 
+	/* The special pruning per null-count is costly for sentences whose
+	 * parsing takes tens of milliseconds or so. To solve that problem, the
+	 * check below starts to do that from a certain sentence length only.
+	 * FIXME: Implement "adaptive pruning", in which a special pruning per
+	 * null-count is done when the previous parse takes more than a certain
+	 * amount of CPU (tried - this needs sharing the previous count table).*/
+	if (sent->length < sent->min_len_multi_pruning)
+	{
+		if (opts->min_null_count == 0)
+		{
+			max_prune_level = 0;
+		}
+		else
+		{
+			needed_prune_level = MAX_SENTENCE;
+			one_step_parse = false;
+		}
+	}
+
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
