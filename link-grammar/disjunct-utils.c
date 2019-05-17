@@ -800,40 +800,44 @@ static int enumerate_connectors_sequentially(Tracon_sharing *ts)
  * Pack the given disjunct chain in a contiguous memory block.
  * If the disjunct is NULL, return NULL.
  */
+static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
+{
+	Disjunct *newd;
+	uintptr_t token = (uintptr_t)w;
+
+	newd = (ts->dblock)++;
+	newd->word_string = d->word_string;
+	newd->cost = d->cost;
+	newd->originating_gword = d->originating_gword;
+
+	if (NULL == ts->tracon_list)
+		 token = (uintptr_t)d->originating_gword;
+
+	if ((token != ts->last_token) && (NULL != ts->csid[0]))
+	{
+		ts->last_token = token;
+		//printf("Token %ld\n", token);
+		tracon_set_reset(ts->csid[0]);
+		tracon_set_reset(ts->csid[1]);
+	}
+	newd->left = pack_connectors(ts, d->left, 0, w);
+	newd->right = pack_connectors(ts, d->right, 1,  w);
+
+	return newd;
+}
+
 static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
-	Disjunct *newd = &head;
-	Disjunct *ldblock = ts->dblock; /* For convenience. */
-	uintptr_t token = (uintptr_t)w;
 
-	for (Disjunct *t = origd; NULL != t; t = t->next)
+	for (Disjunct *d = origd; NULL != d; d = d->next)
 	{
-		newd = ldblock++;
-		newd->word_string = t->word_string;
-		newd->cost = t->cost;
-		newd->originating_gword = t->originating_gword;
-
-		if (!ts->is_pruning)
-		    token = (uintptr_t)t->originating_gword;
-
-		if ((token != ts->last_token) && (NULL != ts->csid[0]))
-		{
-			ts->last_token = token;
-			//printf("Token %ld\n", token);
-			tracon_set_reset(ts->csid[0]);
-			tracon_set_reset(ts->csid[1]);
-		}
-		newd->left = pack_connectors(ts, t->left, 0, w);
-		newd->right = pack_connectors(ts, t->right, 1,  w);
-
-		prevd->next = newd;
-		prevd = newd;
+		prevd->next = pack_disjunct(ts, d, w);
+		prevd = prevd->next;
 	}
-	newd->next = NULL;
+	prevd->next = NULL;
 
-	ts->dblock = ldblock;
 	return head.next;
 }
 
