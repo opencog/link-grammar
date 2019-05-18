@@ -117,6 +117,7 @@ struct tracon_sharing_s
 	Connector *cblock_base;     /* Start of connector block */
 	Connector *cblock;          /* Next available memory for connector */
 	Disjunct *dblock;           /* Next available memory for disjunct */
+	Disjunct **d;               /* The disjuncts (indexed by word number) */
 	unsigned int num_connectors;
 	unsigned int num_disjuncts;
 	Tracon_set *csid[2];        /* For generating unique tracon IDs */

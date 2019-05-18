@@ -946,11 +946,10 @@ void free_tracon_sharing(Tracon_sharing *ts)
 		}
 	}
 
-	if (NULL != ts->tracon_list)
-	{
-		free(ts->tracon_list);
-		ts->tracon_list = NULL;
-	}
+	if (NULL != ts->d) free(ts->d);
+	free(ts->tracon_list);
+	ts->tracon_list = NULL;
+
 	free(ts);
 }
 
