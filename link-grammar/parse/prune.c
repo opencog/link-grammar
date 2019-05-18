@@ -470,14 +470,18 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 	return true;
 }
 
-static int num_non_opt_words(Sentence sent, int w1, int w2)
+static bool non_opt_words_gt(unsigned int nl, Sentence sent, int w1, int w2)
 {
-	int non_optional_word = 0;
+	unsigned int non_optional_word = 0;
 
 	for (int w = w1+1; w < w2; w++)
-		if (!sent->word[w].optional) non_optional_word++;
+	{
+		if (sent->word[w].optional) continue;
+		non_optional_word++;
+		if (non_optional_word > nl) return true;
+	}
 
-	return non_optional_word;
+	return false;
 }
 
 /**
@@ -524,7 +528,7 @@ static bool possible_connection(prune_context *pc,
 		 */
 		if ((lc->next == NULL) && (rc->next == NULL) &&
 			 (!lc->multi) && (!rc->multi) &&
-			 num_non_opt_words(pc->sent, lword, rword) > (int)pc->null_links)
+			 non_opt_words_gt(pc->null_links, pc->sent, lword, rword))
 		{
 			return false;
 		}
