@@ -258,7 +258,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt = NULL;
-	Disjunct **disjuncts_copy = NULL;
 	void *saved_memblock = NULL;
 	int min_null_count = opts->min_null_count;
 	int current_prune_level = -1; /* -1: No pruning has been done yet. */
@@ -279,9 +278,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	if (one_step_parse)
 	{
-		/* Save the disjuncts in case we need to parse with null_count>0. */
-		disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
-		saved_memblock = save_disjuncts(sent, ts_pruning, disjuncts_copy);
+		/* Save the disjuncts for possible parse w/ an increased null count. */
+		saved_memblock = save_disjuncts(sent, ts_pruning);
 	}
 
 	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
@@ -296,7 +294,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			   (needed_prune_level > 0) && (-1 != current_prune_level))
 			{
 				/* We need to prune *again*. Restore the original disjuncts. */
-				restore_disjuncts(sent, disjuncts_copy, saved_memblock, ts_pruning);
+				restore_disjuncts(sent, saved_memblock, ts_pruning);
 				/* Free the memory of the previous pack_sentence_for_parsing(). */
 				free(sent->dc_memblock);
 				sent->dc_memblock = NULL;

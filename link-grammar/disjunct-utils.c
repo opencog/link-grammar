@@ -999,6 +999,14 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 		enumerate_connectors_sequentially(ts);
 	}
 
+	if (/*keep_disjuncts*/1)
+	{
+		if (NULL == ts->d)
+			ts->d = malloc(sent->length * sizeof(Disjunct *));
+		for (WordIdx w = 0; w < sent->length; w++)
+			ts->d[w] = sent->word[w].d;
+	}
+
 	/* On long sentences, many MB of connector-space are saved, but we
 	 * cannot use a realloc() here without the overhead of relocating
 	 * the pointers in the used part of memblock (if realloc() returns a
@@ -1052,24 +1060,20 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 }
 
 /* ============ Save and restore sentence disjuncts ============ */
-void *save_disjuncts(Sentence sent, Tracon_sharing *ts, Disjunct **disjuncts)
+void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
-	for (WordIdx w = 0; w < sent->length; w++)
-		disjuncts[w] = sent->word[w].d;
-
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
 
 	return saved_memblock;
 }
 
-void restore_disjuncts(Sentence sent, Disjunct **disjuncts,
-                       void *saved_memblock, Tracon_sharing *ts)
+void restore_disjuncts(Sentence sent, void *saved_memblock, Tracon_sharing *ts)
 {
 	if (NULL == saved_memblock) return;
 
 	for (WordIdx w = 0; w < sent->length; w++)
-		sent->word[w].d = disjuncts[w];
+		sent->word[w].d = ts->d[w];
 
 	memcpy(ts->memblock, saved_memblock, ts->memblock_sz);
 }

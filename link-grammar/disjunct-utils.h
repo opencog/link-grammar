@@ -127,8 +127,8 @@ struct tracon_sharing_s
 	Tracon_list *tracon_list;   /* Used only for pruning */
 };
 
-void *save_disjuncts(Sentence, Tracon_sharing *, Disjunct **);
-void restore_disjuncts(Sentence, Disjunct **, void *, Tracon_sharing *);
+void *save_disjuncts(Sentence, Tracon_sharing *);
+void restore_disjuncts(Sentence, void *, Tracon_sharing *);
 void free_saved_disjuncts(Sentence);
 
 /** Get tracon by (dir, tracon_id). */
