@@ -743,6 +743,9 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				/* For the parsing step we need a unique ID. */
 				newc->tracon_id = ts->next_id[dir]++;
+#ifdef DEBUG
+				newc->refcount = 0;  /* Not used; zero for debug consistency. */
+#endif
 			}
 		}
 		else
