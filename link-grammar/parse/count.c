@@ -369,24 +369,26 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 /**
  * Stores the value in the table.  Assumes it's not already there.
  */
-static Table_connector * table_store(count_context_t *ctxt,
+static Count_bin table_store(count_context_t *ctxt,
                                      int lw, int rw,
                                      const Connector *le, const Connector *re,
-                                     unsigned int null_count)
+                                     unsigned int null_count,
+                                     unsigned int hash, Count_bin c)
 {
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
-	unsigned int h = pair_hash(ctxt->table_size, lw, rw, l_id, r_id, null_count);
-	Table_connector *t = ctxt->table[h];
+	unsigned int i = hash & (ctxt->table_size -1);
 	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
 
 	n->l_id = l_id;
 	n->r_id = r_id;
 	n->null_count = null_count;
-	n->next = t;
-	ctxt->table[h] = n;
+	n->next = ctxt->table[i];
+	n->count = c;
+	n->hash = hash;
+	ctxt->table[i] = n;
 
-	return n;
+	return c;
 }
 
 /** returns the pointer to this info, NULL if not there */
@@ -394,7 +396,7 @@ static Table_connector *
 find_table_pointer(count_context_t *ctxt,
                    int lw, int rw,
                    const Connector *le, const Connector *re,
-                   unsigned int null_count)
+                   unsigned int null_count, unsigned int *hash)
 {
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
@@ -413,7 +415,8 @@ find_table_pointer(count_context_t *ctxt,
 	}
 	DEBUG_TABLE_STAT(miss++);
 
-	return NULL;
+	if (hash != NULL) *hash = h;
+	return t;
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
@@ -421,7 +424,7 @@ Count_bin* table_lookup(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int null_count)
 {
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
+	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count, NULL);
 
 	if (t == NULL) return NULL; else return &t->count;
 }
@@ -595,7 +598,7 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 	if (!verbosity_level(D_COUNT_TRACE))
 		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
+	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count, NULL);
 	char m_result[64] = "";
 	if (t != NULL)
 		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
@@ -622,20 +625,20 @@ static Count_bin do_count(
                           Connector *le, Connector *re,
                           unsigned int null_count)
 {
-	Count_bin total;
+	Count_bin total = hist_zero();
 	int start_word, end_word, w;
-	Table_connector *t;
 
 	/* TODO: static_assert() that null_count is an unsigned int. */
 	assert (null_count < INT_MAX, "Bad null count %d", (int)null_count);
 
-	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
-
-	if (t) return t->count;
-
-	/* Create a table entry, to be updated with the found
-	 * linkage count before we return. */
-	t = table_store(ctxt, lw, rw, le, re, null_count);
+	unsigned int h;
+	{
+		Table_connector * const t =
+			find_table_pointer(ctxt, lw, rw, le, re, null_count, &h);
+		if (t) return t->count;
+		/* The table entry is to be updated with the found linkage count
+		 * before we return. The hash h will be used to locate it. */
+	}
 
 	unsigned int unparseable_len = rw-lw-1;
 
@@ -647,14 +650,9 @@ static Count_bin do_count(
 		/* lw and rw are neighboring words */
 		/* You can't have a linkage here with null_count > 0 */
 		if ((le == NULL) && (re == NULL) && (null_count == 0))
-		{
-			t->count = hist_one();
-		}
-		else
-		{
-			t->count = hist_zero();
-		}
-		return t->count;
+			return table_store(ctxt, lw, rw, le, re, null_count, h, hist_one());
+
+		return table_store(ctxt, lw, rw, le, re, null_count, h, hist_zero());
 	}
 #endif
 
@@ -675,15 +673,9 @@ static Count_bin do_count(
 			 * will discard the linkages with extra null words. */
 			if ((null_count <= unparseable_len) &&
 			    (null_count >= unparseable_len - nopt_words))
+				return table_store(ctxt, lw, rw, le, re, null_count, h, hist_one());
 
-			{
-				t->count = hist_one();
-			}
-			else
-			{
-				t->count = hist_zero();
-			}
-			return t->count;
+			return table_store(ctxt, lw, rw, le, re, null_count, h, hist_zero());
 		}
 
 		/* Here null_count != 0 and we allow islands (a set of words
@@ -694,20 +686,19 @@ static Count_bin do_count(
 		 * rest of the sentence must contain one less null-word. Else
 		 * the rest of the sentence still contains the required number
 		 * of null words. */
-		t->count = hist_zero();
 		w = lw + 1;
 		for (int opt = 0; opt <= (int)ctxt->sent->word[w].optional; opt++)
 		{
-			null_count += opt;
+			unsigned int try_null_count = null_count + opt;
 
 			for (Disjunct *d = ctxt->sent->word[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)
 				{
-					hist_accumv(&t->count, d->cost,
-						do_count(ctxt, w, rw, d->right, NULL, null_count-1));
+					hist_accumv(&total, d->cost,
+						do_count(ctxt, w, rw, d->right, NULL, try_null_count-1));
 				}
-				if (parse_count_clamp(&t->count))
+				if (parse_count_clamp(&total))
 				{
 #if 0
 					printf("OVERFLOW 1\n");
@@ -715,16 +706,16 @@ static Count_bin do_count(
 				}
 			}
 
-			hist_accumv(&t->count, 0.0,
-				do_count(ctxt, w, rw, NULL, NULL, null_count-1));
-			if (parse_count_clamp(&t->count))
+			hist_accumv(&total, 0.0,
+				do_count(ctxt, w, rw, NULL, NULL, try_null_count-1));
+			if (parse_count_clamp(&total))
 			{
 #if 0
 				printf("OVERFLOW 2\n");
 #endif
 			}
 		}
-		return t->count;
+		return table_store(ctxt, lw, rw, le, re, null_count, h, total);
 	}
 
 	/* The word range (lw, rw) gets split in all tentatively possible ways
@@ -774,7 +765,6 @@ static Count_bin do_count(
 			end_word = re->nearest_word + 1;
 	}
 
-	total = hist_zero();
 	fast_matcher_t *mchxt = ctxt->mchxt;
 
 	for (w = start_word; w < end_word; w++)
@@ -1036,8 +1026,7 @@ static Count_bin do_count(
 
 		pop_match_list(mchxt, mlb);
 	}
-	t->count = total;
-	return total;
+	return table_store(ctxt, lw, rw, le, re, null_count, h, total);
 }
 
 /**
