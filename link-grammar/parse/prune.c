@@ -232,14 +232,13 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  * should always be > 0.
  *
  * There are two code paths for initializing the power tables:
- * 1. When a trailing connectors sharing is not done. The words then
- * are directly scanned for their disjuncts and connectors. Each one is
- * inserted with a refcount set to 1 (because there is no connector memory
- * sharing).
- * 2. Using the shared trailing connector tables (left and right). Each
- * slot is an index into the connector memory block, which is the first
- * connector in a trailing sequence. The word number is extracted from the
- * deepest connector (assigned to it by setup_connectors()).
+ * 1. When a tracon sharing is not done. The words then are directly
+ * scanned for their disjuncts and connectors. Each one is inserted with a
+ * refcount set to 1 (because there is no connector memory sharing).
+ * 2. Using the tracon list tables (left and right). Each slot is an index
+ * into the connector memory block, which is the start of the
+ * corresponding tracon. The word number is extracted from the deepest
+ * connector (assigned to it by setup_connectors()).
  */
 static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 {
