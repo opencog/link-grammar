@@ -616,8 +616,9 @@ void print_all_disjuncts(Sentence sent)
  * to disjuncts of different alternatives may have different linkage
  * counts because some alternatives-connectivity checks (to the middle
  * disjunct) are done in the fast-matcher. These restrictions are
- * implemented by using different tracon IDs per Gword.
- *
+ * implemented by using a different tracon ID per Gword (FIXME - this is
+ * more strict then needed - a different tracon IDs per alternative would
+ * suffice).
  * The tracon memory sharing is currently not directly used in the
  * parsing algo besides reducing the needed CPU cache by a large factor.
  *
