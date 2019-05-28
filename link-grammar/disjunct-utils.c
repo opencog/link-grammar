@@ -525,9 +525,8 @@ void print_all_disjuncts(Sentence sent)
 /* ============= Connector encoding, sharing and packing ============= */
 
 /*
- * sentence_pack() copies the disjuncts and connectors to a continuous
- * memory block. This facilitate a better memory caching for long
- * sentences.
+ * sentence_pack() copies the disjuncts and connectors to a contiguous
+ * memory. This facilitate a better memory caching for long sentences.
  *
  * In addition, it shares the memory of identical trailing connector
  * sequences, aka "tracons". Tracons are considered identical if they
