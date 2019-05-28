@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.6.0],[https://github.com/opencog/link-grammar],,
+AC_INIT([link-grammar],[5.6.1],[https://github.com/opencog/link-grammar],,
 		  [https://www.abisource.com/projects/link-grammar])
 
 DISCUSSION_GROUP=https://groups.google.com/d/forum/link-grammar
@@ -23,7 +23,7 @@ LINK_MINOR_VERSION=6
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=0
+LINK_MICRO_VERSION=1
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -80,8 +80,8 @@ AC_FUNC_STRERROR_R
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
-dnl CentOS-7 (at least) needs these to expose the C99 format and limit macros
-dnl in C++ source code.  They are needed for minisat.
+dnl CentOS-7 (at least) needs these to expose the C99 format and
+dnl limit macros in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
 

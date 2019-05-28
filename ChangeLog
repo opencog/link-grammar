@@ -1,4 +1,4 @@
-Version 5.6.1 (XXX 2019)
+Version 5.6.1 (27 May 2019)
  * Performance improvement (approx 20%) in expressions #882.
  * Performance improvement (approx 10%) by disjunct/connectors pools #896.
  * Performance improvement (4-10% for English) by faster power-pruning #903.
