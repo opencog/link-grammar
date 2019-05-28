@@ -26,11 +26,11 @@
  *
  * A tracon is identified by (the address of) its first connector.
  *
- * The API here is similar to that of string_set, with this differences:
+ * The API here is similar to that of string_set, with these differences:
  *
  * 1. tracon_set_add() returns a pointer to the hash slot of the tracon if
  * it finds it. Else it returns a pointer to a NULL hash slot, and
- * he caller is expected to assign to it the tracon (its address
+ * the caller is expected to assign to it the tracon (its address
  * after it is copied to the destination buffer).
  *
  * 2. A new API tracon_set_shallow() is used to require that tracons

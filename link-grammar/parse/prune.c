@@ -651,7 +651,7 @@ static bool is_bad(Connector *c)
  *  sharing, each change of the reference count and the assignment of
  *  BAD_WORD affects simultaneously all the identical tracons (and the
  *  corresponding connectors in the power table). The corresponding
- *  disjuncts are discarded on the fly, and additional disjuncts with Jets
+ *  disjuncts are discarded on the fly, and additional disjuncts with jets
  *  so marked with BAD_WORD are discarded when encountered without a
  *  further check. Each tracon is handled only once in the same main loop
  *  pass by marking their connectors with the pass number in their

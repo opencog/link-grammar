@@ -711,7 +711,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 						/* This is a rare case in which a shallow and deep
 						 * connectors don't have the same nearest_word, because
 						 * a shallow connector may mach a deep connector
-						 * earlier. Because the nearest word is different, we we
+						 * earlier. Because the nearest word is different, we
 						 * cannot share it. (Such shallow and deep Tracons could
 						 * be shared separately, but because this is a rare
 						 * event there is no need to do that.)
