@@ -182,7 +182,7 @@ struct Wordgraph_pathpos_s
 {
 	Gword *word;      /* Position in the Wordgraph */
 	/* Only for wordgraph_flatten(). */
-	bool same_word;   /* Still the same word - issue an empty word */
+	bool same_word;   /* Still the same word - mark it as "optional" */
 	bool next_ok;     /* OK to proceed to the next Wordgraph word */
 	bool used;        /* Debug - the word has been issued */
 	/* Only for sane_morphism(). */
