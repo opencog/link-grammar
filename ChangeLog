@@ -249,10 +249,10 @@ Version 5.3.0: (22 November 2015)
  * Remove bogus post-processor API function.
  * Fix broken domain letter printing.
  * New regex-file feature - negative regex'es.
- * Correct the handling of moprhology stems with non-LL links.
+ * Correct the handling of morphology stems with non-LL links.
  * Fix !!LEFT-WALL and !!RIGHT-WALL
  * SAT solver now linked statically.
- * Assorted SAT sovler cleanup and improvements.
+ * Assorted SAT solver cleanup and improvements.
  * Performance improvement in fast matcher: 15% faster on fixes.batch.
 
 Version 5.2.5: (1 February 2015)
@@ -498,7 +498,7 @@ Version 4.7.13 (17 June 2013)
 
 Version 4.7.12 (25 May 2013)
  * Large fixes to the Russian dictionaries.
- * Windows: Explicitly fail if cygwin version is too old.
+ * Windows: Explicitly fail if Cygwin version is too old.
  * Tweak the lt dict to work again with the modern parser.
  * Make the fat linkages code be compile-time configurable.
  * Disable fat linkages by default; mark as deprecated.
@@ -660,7 +660,7 @@ Version 4.7.0 (12 September 2010):
  * Fix: regression in dates followed by punctuation. "In the 1950s, ..."
  * Fix: verbs drank, drunk are optionally transitive.
  * Fix: regression: "all the X", X can be plural or mass.
- * Fix: verbs paint, color may be ditranstive: "paint the car bright green"
+ * Fix: verbs paint, color may be ditransitive: "paint the car bright green"
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
@@ -683,7 +683,7 @@ Version 4.6.5 (3 November 2009)
  * Fix: Take more care in distinguishing mass and count nouns.
  * Fix: Old bug w/relative clauses: Rw+ is optional, not mandatory.
  * Provide tags identifying relative, superlative adjectives.
- * Remove BioLG NUMBER-AND-UNIT handling, its been superceded.
+ * Remove BioLG NUMBER-AND-UNIT handling, its been superseded.
  * Fix handling of parenthetical phrases/clauses.
  * Fix: handling of capitalized first words ending in letter "s".
  * Fix: support "filler-it" SF link for "It was reasoned that..."
@@ -985,7 +985,7 @@ Version 4.3.5 (29 April 2008) includes the following changes:
  * Fix install bug for NetBSD systems.
  * Pre-detected entities cannot participate in G links.
  * There is no UTF8 support in MSWindows, so stub it out.
- * Fix crash in constituent output, bug #22 in googlecode bugtacker.
+ * Fix crash in constituent output, bug #22 in googlecode bugtracker.
  * Some small steps taken to eventually make library thread-safe.
  * There are three constituent string styles, enable all three.
  * Make the command-line flag errors less cryptic.
@@ -1008,7 +1008,7 @@ Version 4.3.3 (27 February 2008) includes the following changes:
  * man page for grammar-parse.
  * Removed cruft from the dictionary open routines.
  * configure tries to guess some non-standard jni.h locations.
- * Split up java library exports, should help cygwin builds.
+ * Split up java library exports, should help Cygwin builds.
  * Fix java library pre-linking bug.
  * Minor English dictionary additions.
  * Prototype Lithuanian (lt) dictionary.
@@ -1017,7 +1017,7 @@ Version 4.3.2 (2 February 2008) includes the following changes:
  * Compile fixes for WIN32
  * Dictionary fixes for given names. (Fixes a serious problem with 4.3.1)
 
-Version 4.3.1 (31 Jaunary 2008) includes the following changes:
+Version 4.3.1 (31 January 2008) includes the following changes:
  * A merger of significant parts of the "medical terms" dictionary
    from Peter Szolovits.  This includes thousands of additional words.
 
@@ -1032,7 +1032,7 @@ Version 4.3.0 (30 January 2008) includes the following changes:
    "Go play ball", "Go take a walk", "You and Rover go play with the
    ball."
  * Dictionary support for external entity markup. This includes the
-   recognizition of personID0..personID60, dateID0..dateID60,
+   recognition of personID0..personID60, dateID0..dateID60,
    organizationID0..organizationID60 and locationID0..locationID60
    as appropriate words.
  * Fixes of numerous compile-time warnings.
