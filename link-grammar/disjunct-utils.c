@@ -795,7 +795,7 @@ static int enumerate_connectors_sequentially(Sentence sent)
 }
 
 /**
- * Pack the given disjunct chain in a continuous memory block.
+ * Pack the given disjunct chain in a contiguous memory block.
  * If the disjunct is NULL, return NULL.
  */
 static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
@@ -936,7 +936,7 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
  * with reference count (for pruning).
  *
- * The disjunct and connectors packing n a contiguous memory facilitate a
+ * The disjunct and connectors packing in a contiguous memory facilitate a
  * better memory caching for long sentences (a performance gain of a few
  * percents).
  *
