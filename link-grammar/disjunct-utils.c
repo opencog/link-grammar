@@ -838,28 +838,26 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 #define ID_TABLE_SZ 8192 /* Initial size of the tracon_id table */
 
 /** Create a context descriptor for disjuncts & connector memory "packing".
- * - Allocate a memory block for all the disjuncts & connectors.
- *   The current Connector struct size is 32 bit, and the intention is
+ *   Allocate a memory block for all the disjuncts & connectors.
+ *   The current Connector struct size is 32 bytes, and the intention is
  *   to keep it with a power-of-2 size. The idea is to put an integral
  *   number of connectors in each cache line (assumed to be >= Connector
  *   struct size, e.g. 64 bytes), so one connector will not need 2 cache
  *   lines.
  *
- *   The allocated memory block includes 3 sections , in that order:
- *   1. A block for disjuncts, when it start is not aligned (the
- *   disjunct size is currently 56 bytes and cannot be reduced much).
- *   2. A small alignment gap, that ends in a 64-byte boundary.
- *   3. A block of connectors, which is so aligned to 64-byte boundary.
+ *   The current Disjunct struct size is 64 bytes, and the intention is
+ *   to keep it at this size for performance reasons.
  *
- *   NOTE: Recently the disjunct size got increases to 64 bytes and
- *   the intention is to keep it at this size. So the alignment code
- *   that implements the above is now a kind of no-op.
+ *   The allocated memory block includes 2 sections, in that order:
+ *   1. A block for disjuncts.
+ *   2. A block of connectors.
  *
- * - If the packing is done for the pruning step, allocate Tracon list
- *   stuff too. In that case also call tracon_set_shallow() so Tracons
+ *   If the packing is done for the pruning step, allocate tracon list
+ *   stuff too. In that case also call tracon_set_shallow() so tracons
  *   starting with a shallow connector will be considered different than
  *   similar ones starting with a deep connector.
  *
+ * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
 static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
