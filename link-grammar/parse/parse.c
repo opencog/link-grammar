@@ -258,7 +258,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
  * is done by pack_sentence_for_pruning(), and it is not done for
  * sentences shorter than a certain limit. In that case the pruning is
  * done with no null_count==0 optimization so restoring the disjuncts is
- * no needed.
+ * not needed.
  */
 void classic_parse(Sentence sent, Parse_Options opts)
 {

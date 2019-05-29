@@ -525,9 +525,8 @@ void print_all_disjuncts(Sentence sent)
 /* ============= Connector encoding, sharing and packing ============= */
 
 /*
- * sentence_pack() copies the disjuncts and connectors to a continuous
- * memory block. This facilitate a better memory caching for long
- * sentences.
+ * sentence_pack() copies the disjuncts and connectors to a contiguous
+ * memory. This facilitate a better memory caching for long sentences.
  *
  * In addition, it shares the memory of identical trailing connector
  * sequences, aka "tracons". Tracons are considered identical if they
@@ -617,8 +616,9 @@ void print_all_disjuncts(Sentence sent)
  * to disjuncts of different alternatives may have different linkage
  * counts because some alternatives-connectivity checks (to the middle
  * disjunct) are done in the fast-matcher. These restrictions are
- * implemented by using different tracon IDs per Gword.
- *
+ * implemented by using a different tracon ID per Gword (FIXME - this is
+ * more strict then needed - a different tracon IDs per alternative would
+ * suffice).
  * The tracon memory sharing is currently not directly used in the
  * parsing algo besides reducing the needed CPU cache by a large factor.
  *
@@ -711,7 +711,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 						/* This is a rare case in which a shallow and deep
 						 * connectors don't have the same nearest_word, because
 						 * a shallow connector may mach a deep connector
-						 * earlier. Because the nearest word is different, we we
+						 * earlier. Because the nearest word is different, we
 						 * cannot share it. (Such shallow and deep Tracons could
 						 * be shared separately, but because this is a rare
 						 * event there is no need to do that.)
@@ -934,24 +934,17 @@ void free_tracon_sharing(Tracon_sharing *ts)
 }
 
 /**
- * Pack all disjunct and connectors into a one big memory block.
- * This facilitate a better memory caching for long sentences
- * (a performance gain of a few percents).
+ * Pack all disjunct and connectors into a one big memory block, share
+ * tracon memory and generate tracon IDs (for parsing) or tracon lists
+ * with reference count (for pruning).
  *
- * The current Connector struct size is 32 bit, and future ones may be
- * smaller, but still with a power-of-2 size.
- * The idea is to put an integral number of connectors in each cache line
- * (assumed to be >= Connector struct size, e.g. 64 bytes),
- * so one connector will not need 2 cache lines.
+ * The disjunct and connectors packing n a contiguous memory facilitate a
+ * better memory caching for long sentences (a performance gain of a few
+ * percents).
  *
- * The allocated memory includes 3 sections , in that order:
- * 1. A block for disjuncts, when it start is not aligned (the disjunct size
- * is currently 56 bytes and cannot be reduced much).
- * 2. A small alignment gap, that ends in a 64-byte boundary.
- * 3. A block of connectors, which is so aligned to 64-byte boundary.
- *
- * A trailing sequence encoding and sharing is done too.
- * Note: Connector sharing, trailing hash and packing always go together.
+ * The tracon IDs (if invoked for the parsing step) or tracon lists (if
+ * invoked for pruning step) allow for a huge performance boost at these
+ * steps.
  */
 static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
