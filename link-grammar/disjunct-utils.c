@@ -676,8 +676,8 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	Connector head;
 	Connector *prevc = &head;
 	Connector *newc = &head;
-	Connector *lcblock = ts->cblock; /* For convenience. */
-	Tracon_list *tl = ts->tracon_list;
+	Connector *lcblock = ts->cblock;     /* For convenience. */
+	Tracon_list *tl = ts->tracon_list;   /* If non-NULL - encode for pruning. */
 
 	for (Connector *o = origc; NULL != o;  o = o->next)
 	{
@@ -769,8 +769,10 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 
 /**
- *  Set dummy tracon_id's.
- *  To be used for short sentences.
+ * Set dummy tracon_id's.
+ * To be used for short sentences (for which a full encoding is too
+ * costly) or for library tests that actually bypass the use of tracon IDs
+ * (to validate that the tracon_id implementation didn't introduce bugs).
  */
 static int enumerate_connectors_sequentially(Sentence sent)
 {
@@ -934,7 +936,7 @@ void free_tracon_sharing(Tracon_sharing *ts)
 /**
  * Pack all disjunct and connectors into a one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
- * with reference count (for pruning).
+ * with reference count (for pruning). Aka "connector encoding".
  *
  * The disjunct and connectors packing in a contiguous memory facilitate a
  * better memory caching for long sentences (a performance gain of a few
@@ -943,6 +945,21 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * The tracon IDs (if invoked for the parsing step) or tracon lists (if
  * invoked for pruning step) allow for a huge performance boost at these
  * steps.
+ *
+ * Note:
+ * In order to save overhead, sentences shorter than
+ * sent->min_len_encoding don't undergo any processing other than issuing
+ * a sequential tracon IDs. This can also be used for library tests that
+ * totally bypass the use of connector encoding (to validate that the
+ * tracon_id/packing/sharing/refcount implementation didn't introduce bugs
+ * in the pruning and parsing steps).
+ * E.g. when using link-parser:
+ * - To entirely disable connector encoding:
+ * link-parser -test=len-trailing-hash:254
+ * - To use connector encode even for short sentences:
+ * link-parser -test=len-trailing-hash:0
+ * Any different result (e.g. number of discarded disjuncts in the pruning
+ * step or different parsing results) indicates a bug.
  */
 static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
