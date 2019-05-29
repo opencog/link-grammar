@@ -685,12 +685,12 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 
 		if (NULL != ts)
 		{
-			/* Encoding is used - share trailing connector sequences. */
+			/* Encoding is used - share tracons. */
 			Connector **tracon = tracon_set_add(o, ts->csid[dir]);
 
 			if (NULL == *tracon)
 			{
-				/* The first time we encounter this connector sequence. */
+				/* The first time we encounter this tracon. */
 				*tracon = lcblock; /* Save its future location in the tracon_set. */
 
 				if (NULL != tl)
@@ -752,7 +752,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			}
 			prevc->next = newc;
 
-			/* Just shared a trailing connector sequence, nothing more to do. */
+			/* Just shared a tracon, nothing more to do. */
 			ts->cblock = lcblock;
 			return head.next;
 		}
