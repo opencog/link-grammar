@@ -97,7 +97,7 @@ typedef struct
 	/* Table of tracons. A 32bit index into the connector array in
 	 * memblock (instead of (Connector*)) is used for better use of the
 	 * CPU cache on 64-bit CPUs. */
-	uint32_t *table[2];         /* Indexed by tracon_id */
+	uint32_t *table[2];         /* Indexed by entry number */
 	size_t entries[2];          /* Actual number of entries */
 	size_t table_size[2];       /* Allocated number of entries */
 	size_t memblock_sz;         /* Pruning memblock size  */

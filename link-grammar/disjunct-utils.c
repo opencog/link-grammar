@@ -651,7 +651,7 @@ void print_all_disjuncts(Sentence sent)
  * here may need to be reflected in the comments there too.
  */
 
-static void id_table_check(Tracon_list *tl, unsigned int index, int dir)
+static void tlsz_check(Tracon_list *tl, unsigned int index, int dir)
 {
 
 	if (index >= tl->table_size[dir])
@@ -676,8 +676,8 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	Connector head;
 	Connector *prevc = &head;
 	Connector *newc = &head;
-	Connector *lcblock = ts->cblock; /* For convenience. */
-	Tracon_list *tl = ts->tracon_list;
+	Connector *lcblock = ts->cblock;     /* For convenience. */
+	Tracon_list *tl = ts->tracon_list;   /* If non-NULL - encode for pruning. */
 
 	for (Connector *o = origc; NULL != o;  o = o->next)
 	{
@@ -685,17 +685,17 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 
 		if (NULL != ts)
 		{
-			/* Encoding is used - share trailing connector sequences. */
+			/* Encoding is used - share tracons. */
 			Connector **tracon = tracon_set_add(o, ts->csid[dir]);
 
 			if (NULL == *tracon)
 			{
-				/* The first time we encounter this connector sequence. */
+				/* The first time we encounter this tracon. */
 				*tracon = lcblock; /* Save its future location in the tracon_set. */
 
 				if (NULL != tl)
 				{
-					id_table_check(tl, tl->entries[dir], dir);
+					tlsz_check(tl, tl->entries[dir], dir);
 					uint32_t cblock_index = (uint32_t)(lcblock - ts->cblock_base);
 					tl->table[dir][tl->entries[dir]] = cblock_index;
 					tl->entries[dir]++;
@@ -712,7 +712,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 						 * connectors don't have the same nearest_word, because
 						 * a shallow connector may mach a deep connector
 						 * earlier. Because the nearest word is different, we
-						 * cannot share it. (Such shallow and deep Tracons could
+						 * cannot share it. (Such shallow and deep tracons could
 						 * be shared separately, but because this is a rare
 						 * event there is no need to do that.)
 						 * Note:
@@ -752,7 +752,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			}
 			prevc->next = newc;
 
-			/* Just shared a trailing connector sequence, nothing more to do. */
+			/* Just shared a tracon, nothing more to do. */
 			ts->cblock = lcblock;
 			return head.next;
 		}
@@ -769,8 +769,10 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 #define WORD_OFFSET 256 /* Reserved for null connectors. */
 
 /**
- *  Set dummy tracon_id's.
- *  To be used for short sentences.
+ * Set dummy tracon_id's.
+ * To be used for short sentences (for which a full encoding is too
+ * costly) or for library tests that actually bypass the use of tracon IDs
+ * (to validate that the tracon_id implementation didn't introduce bugs).
  */
 static int enumerate_connectors_sequentially(Sentence sent)
 {
@@ -795,7 +797,7 @@ static int enumerate_connectors_sequentially(Sentence sent)
 }
 
 /**
- * Pack the given disjunct chain in a continuous memory block.
+ * Pack the given disjunct chain in a contiguous memory block.
  * If the disjunct is NULL, return NULL.
  */
 static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
@@ -835,31 +837,29 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 	return head.next;
 }
 
-#define ID_TABLE_SZ 8192 /* Initial size of the tracon_id table */
+#define TLSZ 8192 /* Initial size of the tracon list table */
 
 /** Create a context descriptor for disjuncts & connector memory "packing".
- * - Allocate a memory block for all the disjuncts & connectors.
- *   The current Connector struct size is 32 bit, and the intention is
+ *   Allocate a memory block for all the disjuncts & connectors.
+ *   The current Connector struct size is 32 bytes, and the intention is
  *   to keep it with a power-of-2 size. The idea is to put an integral
  *   number of connectors in each cache line (assumed to be >= Connector
  *   struct size, e.g. 64 bytes), so one connector will not need 2 cache
  *   lines.
  *
- *   The allocated memory block includes 3 sections , in that order:
- *   1. A block for disjuncts, when it start is not aligned (the
- *   disjunct size is currently 56 bytes and cannot be reduced much).
- *   2. A small alignment gap, that ends in a 64-byte boundary.
- *   3. A block of connectors, which is so aligned to 64-byte boundary.
+ *   The current Disjunct struct size is 64 bytes, and the intention is
+ *   to keep it at this size for performance reasons.
  *
- *   NOTE: Recently the disjunct size got increases to 64 bytes and
- *   the intention is to keep it at this size. So the alignment code
- *   that implements the above is now a kind of no-op.
+ *   The allocated memory block includes 2 sections, in that order:
+ *   1. A block for disjuncts.
+ *   2. A block of connectors.
  *
- * - If the packing is done for the pruning step, allocate Tracon list
- *   stuff too. In that case also call tracon_set_shallow() so Tracons
+ *   If the packing is done for the pruning step, allocate tracon list
+ *   stuff too. In that case also call tracon_set_shallow() so tracons
  *   starting with a shallow connector will be considered different than
  *   similar ones starting with a deep connector.
  *
+ * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
 static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
@@ -906,7 +906,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 			memset(ncpw[dir], 0, sent->length * sizeof(**ncpw));
 
 			tracon_set_shallow(true, ts->csid[dir]);
-			id_table_check(ts->tracon_list, ID_TABLE_SZ, dir); /* Allocate table. */
+			tlsz_check(ts->tracon_list, TLSZ, dir); /* Allocate table. */
 		}
 	}
 
@@ -936,15 +936,30 @@ void free_tracon_sharing(Tracon_sharing *ts)
 /**
  * Pack all disjunct and connectors into a one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
- * with reference count (for pruning).
+ * with reference count (for pruning). Aka "connector encoding".
  *
- * The disjunct and connectors packing n a contiguous memory facilitate a
+ * The disjunct and connectors packing in a contiguous memory facilitate a
  * better memory caching for long sentences (a performance gain of a few
  * percents).
  *
  * The tracon IDs (if invoked for the parsing step) or tracon lists (if
  * invoked for pruning step) allow for a huge performance boost at these
  * steps.
+ *
+ * Note:
+ * In order to save overhead, sentences shorter than
+ * sent->min_len_encoding don't undergo any processing other than issuing
+ * a sequential tracon IDs. This can also be used for library tests that
+ * totally bypass the use of connector encoding (to validate that the
+ * tracon_id/packing/sharing/refcount implementation didn't introduce bugs
+ * in the pruning and parsing steps).
+ * E.g. when using link-parser:
+ * - To entirely disable connector encoding:
+ * link-parser -test=len-trailing-hash:254
+ * - To use connector encode even for short sentences:
+ * link-parser -test=len-trailing-hash:0
+ * Any different result (e.g. number of discarded disjuncts in the pruning
+ * step or different parsing results) indicates a bug.
  */
 static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {

@@ -647,7 +647,7 @@ static bool is_bad(Connector *c)
  *  The refcount of each connector serves as its reference count in the
  *  power table. Each time when a connector that cannot match is
  *  discovered, its reference count is decreased, and the nearest_word
- *  field of its Jet is assigned BAD_WORD. Due to the tracon memory
+ *  field of its jet is assigned BAD_WORD. Due to the tracon memory
  *  sharing, each change of the reference count and the assignment of
  *  BAD_WORD affects simultaneously all the identical tracons (and the
  *  corresponding connectors in the power table). The corresponding
