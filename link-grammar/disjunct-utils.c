@@ -651,7 +651,7 @@ void print_all_disjuncts(Sentence sent)
  * here may need to be reflected in the comments there too.
  */
 
-static void id_table_check(Tracon_list *tl, unsigned int index, int dir)
+static void tlsz_check(Tracon_list *tl, unsigned int index, int dir)
 {
 
 	if (index >= tl->table_size[dir])
@@ -695,7 +695,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 
 				if (NULL != tl)
 				{
-					id_table_check(tl, tl->entries[dir], dir);
+					tlsz_check(tl, tl->entries[dir], dir);
 					uint32_t cblock_index = (uint32_t)(lcblock - ts->cblock_base);
 					tl->table[dir][tl->entries[dir]] = cblock_index;
 					tl->entries[dir]++;
@@ -835,7 +835,7 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 	return head.next;
 }
 
-#define ID_TABLE_SZ 8192 /* Initial size of the tracon_id table */
+#define TLSZ 8192 /* Initial size of the tracon list table */
 
 /** Create a context descriptor for disjuncts & connector memory "packing".
  *   Allocate a memory block for all the disjuncts & connectors.
@@ -904,7 +904,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 			memset(ncpw[dir], 0, sent->length * sizeof(**ncpw));
 
 			tracon_set_shallow(true, ts->csid[dir]);
-			id_table_check(ts->tracon_list, ID_TABLE_SZ, dir); /* Allocate table. */
+			tlsz_check(ts->tracon_list, TLSZ, dir); /* Allocate table. */
 		}
 	}
 
