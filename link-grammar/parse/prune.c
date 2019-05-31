@@ -764,14 +764,22 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 	}
 
 #ifdef DEBUG
+	/* The rest of the code has a critical dependency on the correctness of
+	 * the pruning. */
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
 		{
-			for (Connector *c = d->left; NULL != c; c = c->next)
-				assert(c->nearest_word != BAD_WORD);
-			for (Connector *c = d->right; NULL != c; c = c->next)
-				assert(c->nearest_word != BAD_WORD);
+			for (int dir = 0; dir < 2; dir++)
+			{
+				Connector *c = (dir) ? (d->left) : (d->right);
+				for (; NULL != c; c = c->next)
+				{
+					assert(c->nearest_word != BAD_WORD, "dir %d w %zu", dir, w);
+					assert(c->tracon_id > 0, "dir %d w %zu", dir, w);
+					assert(c->refcount > 0, "dir %d w %zu", dir, w);
+				}
+			}
 		}
 	}
 #endif
