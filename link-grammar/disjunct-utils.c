@@ -498,13 +498,21 @@ void print_disjunct_list(Disjunct * dj)
 {
 	int i = 0;
 	char word[MAX_WORD + 32];
+	bool print_disjunct_address = test_enabled("disjunct-address");
+	bool print_disjunct_ordinal = test_enabled("disjunct-ordinal");
 
 	for (;dj != NULL; dj=dj->next)
 	{
 		lg_strlcpy(word, dj->word_string, sizeof(word));
 		patch_subscript_mark(word);
-		printf("%16s: ", word);
+
+		printf("%16s", word);
+		if (print_disjunct_address) printf("(%p)", dj);
+		printf(": ");
+
+		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
 		printf("[%d](%4.2f) ", i++, dj->cost);
+
 		print_connector_list(dj->left);
 		printf(" <--> ");
 		print_connector_list(dj->right);
@@ -806,6 +814,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	uintptr_t token = (uintptr_t)w;
 
 	newd = (ts->dblock)++;
+	newd->ordinal = d->ordinal;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
 	newd->originating_gword = d->originating_gword;

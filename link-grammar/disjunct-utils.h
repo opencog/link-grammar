@@ -23,25 +23,38 @@
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
 
-/* On a 64-bit machine, this struct should be exactly 8*8=64 bytes long.
+/* On a 64-bit machine, this struct should be exactly (6+2)*8=64 bytes long.
  * Lets try to keep it that way (for performance). */
 struct Disjunct_struct
 {
+	/* 48 bytes of common stuff. */
 	Disjunct *next;
-	Disjunct *dup_table_next;
 	Connector *left, *right;
 	double cost;
+	gword_set *originating_gword; /* Set of originating gwords */
+	const char *word_string;      /* Subscripted dictionary word */
 
-	/* match_left, right used only during parsing, for the match list. */
-	bool match_left, match_right;
-
+	/* Shared by different steps. | For what and when. */
 	union
 	{
-		unsigned int match_id;     /* verify the match list integrity */
-		unsigned int dup_hash;     /* hash value for duplicate elimination */
-	};
-	gword_set *originating_gword; /* Set of originating gwords */
-	const char * word_string;     /* subscripted dictionary word */
+		Disjunct *dup_table_next; /* Duplicate elimination - before pruning */
+		Disjunct *old;            /* Old disjuncts - before parsing */
+	}; /* 8 bytes */
+
+	/* Shared by different steps. | For what and when. */
+	union
+	{
+		uint32_t dup_hash;        /* Duplicate elimination - before pruning */
+		uint32_t ordinal;         /* Old disjuncts - before and during parsing */
+	}; /* 4 bytes */
+
+	struct
+	{
+		bool match_left, match_right;
+#ifdef VERIFY_MATCH_LIST
+		uint16_t match_id;
+#endif
+	}; /* 4 bytes - during parsing */
 };
 
 /* Disjunct utilities ... */
