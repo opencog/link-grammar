@@ -727,21 +727,22 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 
 		if (newc == NULL)
 		{
-			/* No sharing is done. */
+			/* No sharing yet. */
 			newc = lcblock++;
 			*newc = *o;
 
-			if (!ts->is_pruning)
+			if (ts->is_pruning)
 			{
-				/* For the parsing sharing we need a unique ID. */
-				newc->tracon_id = ts->next_id[dir]++;
+				/* Initializations for the pruning step. */
+				newc->refcount = 1;  /* The first connector at this location. */
+				newc->tracon_id = 0; /* Used in power_prune() for pass number. */
+				if (NULL != tl)
+					tl->num_cnctrs_per_word[dir][w]++;
 			}
 			else
 			{
-				newc->refcount = 1; /* No sharing yet. */
-				newc->tracon_id = 0;
-				if (NULL != tl)
-					tl->num_cnctrs_per_word[dir][w]++;
+				/* For the parsing step we need a unique ID. */
+				newc->tracon_id = ts->next_id[dir]++;
 			}
 		}
 		else
