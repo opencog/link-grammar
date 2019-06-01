@@ -364,12 +364,8 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 			if (d->dup_hash != dx->dup_hash) continue;
 			if (disjuncts_equal(dx, d)) break;
 		}
-		if (dx == NULL)
-		{
-			d->dup_table_next = dt->dup_table[h];
-			dt->dup_table[h] = d;
-		}
-		else
+
+		if (dx != NULL)
 		{
 			/* Discard the current disjunct. */
 			if (d->cost < dx->cost) dx->cost = d->cost;
@@ -379,9 +375,13 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 
 			count++;
 			*dd = d->next; /* NEXT - set current disjunct to the next one. */
-			continue;
 		}
-		dd = &d->next; /* NEXT */
+		else
+		{
+			d->dup_table_next = dt->dup_table[h];
+			dt->dup_table[h] = d;
+			dd = &d->next; /* NEXT */
+		}
 	}
 
 	lgdebug(+D_DISJ+(0==count)*1000, "Killed %u duplicates\n", count);
