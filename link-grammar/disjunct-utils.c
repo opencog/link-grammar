@@ -84,24 +84,21 @@ unsigned int count_disjuncts(Disjunct * d)
 	return count;
 }
 
-/** Returns the number of disjuncts and connectors in the sentence. */
-static void count_disjuncts_and_connectors(Sentence sent,
-                                           unsigned int *dca, unsigned int *cca)
+/** Returns the number of connectors in the sentence. */
+static unsigned int count_connectors(Sentence sent)
 {
-	unsigned int ccnt = 0, dcnt = 0;
+	unsigned int ccnt = 0;
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
-			dcnt++;
 			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
 			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
 		}
 	}
 
-	*cca = ccnt;
-	*dca = dcnt;
+	return ccnt;
 }
 /* ============================================================= */
 
@@ -444,6 +441,25 @@ int right_connector_count(Disjunct * d)
 	return i;
 }
 
+/** Returns the number of disjuncts and connectors in the sentence. */
+void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
+                                    unsigned int *cca)
+{
+	unsigned int ccnt = 0, dcnt = 0;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			dcnt++;
+			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
+			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
+		}
+	}
+
+	*cca = ccnt;
+	*dca = dcnt;
+}
 /* ============================================================= */
 
 /**
@@ -881,15 +897,11 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
-static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
-                                          bool do_encoding)
+static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt, bool is_pruning,
+														bool do_encoding)
 {
-	unsigned int dcnt = 0;
-	unsigned int ccnt = 0;
 	Tracon_sharing *ts;
-
-	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
-
 #define CONN_ALIGNMENT sizeof(Connector)
 	size_t dsize = dcnt * sizeof(Disjunct);
 	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
@@ -907,8 +919,6 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
 	ts->cblock_base = cblock;
 	ts->cblock = cblock;
 	ts->dblock = dblock;
-	ts->num_connectors = ccnt;
-	ts->num_disjuncts = dcnt;
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
@@ -990,12 +1000,13 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * Any different result (e.g. number of discarded disjuncts in the pruning
  * step or different parsing results) indicates a bug.
  */
-static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
+static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt, bool is_pruning)
 {
 	bool do_encoding = sent->length >= sent->min_len_encoding;
 	Tracon_sharing *ts;
 
-	ts = pack_sentence_init(sent, is_pruning, do_encoding);
+	ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning, do_encoding);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
@@ -1016,17 +1027,16 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 			ts->d[w] = sent->word[w].d;
 	}
 
-	/* On long sentences, many MB of connector-space are saved, but we
-	 * cannot use a realloc() here without the overhead of relocating
-	 * the pointers in the used part of memblock (if realloc() returns a
-	 * different address). */
-
 	return ts;
 }
 
-Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
+Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt)
 {
-	Tracon_sharing *ts = pack_sentence(sent, true);
+	unsigned int ccnt_before = 0;
+	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
+
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1040,15 +1050,18 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 		        sent->length,
 		        ts->tracon_list->entries[0]+ts->tracon_list->entries[1],
 		        ts->tracon_list->entries[0], ts->tracon_list->entries[1],
-				  &ts->cblock_base[ts->num_connectors] - ts->cblock);
+				  &ts->cblock_base[ccnt_before] - ts->cblock);
 	}
 
 	return ts;
 }
 
-Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
+Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt)
 {
-	Tracon_sharing *ts = pack_sentence(sent, false);
+	unsigned int ccnt_before = 0;
+	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1062,7 +1075,7 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 		        sent->length,
 		        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
 		        ts->next_id[0]-ts->word_offset, ts->next_id[1]-ts->word_offset,
-		        &ts->cblock_base[ts->num_connectors] - ts->cblock);
+		        &ts->cblock_base[ccnt_before] - ts->cblock);
 	}
 
 	return ts;

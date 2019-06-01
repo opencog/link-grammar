@@ -297,7 +297,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
 
-	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
+	unsigned int dcnt = 0, ccnt = 0; /* Allocated number (for memory block). */
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+
+	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent, dcnt, ccnt);
 	free_sentence_disjuncts(sent);
 
 	if (one_step_parse)
@@ -336,7 +339,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 			pp_and_power_prune(sent, ts_pruning, current_prune_level, opts);
 
-			Tracon_sharing *ts_parsing = pack_sentence_for_parsing(sent);
+			Tracon_sharing *ts_parsing = pack_sentence_for_parsing(sent, dcnt,
+																					 ccnt);
 			print_time(opts, "Encode for parsing");
 			if (NULL != ts_parsing)
 			{

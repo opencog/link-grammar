@@ -68,9 +68,10 @@ void word_record_in_disjunct(const Gword *, Disjunct *);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
-Tracon_sharing *pack_sentence_for_pruning(Sentence);
-Tracon_sharing *pack_sentence_for_parsing(Sentence);
+Tracon_sharing *pack_sentence_for_pruning(Sentence, unsigned int, unsigned int);
+Tracon_sharing *pack_sentence_for_parsing(Sentence, unsigned int, unsigned int);
 void free_tracon_sharing(Tracon_sharing *);
+void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
 void print_one_connector(Connector *, int, int);
 void print_connector_list(Connector *);
