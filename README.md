@@ -209,6 +209,7 @@ CREATING the system
 To compile the link-grammar shared library and demonstration program,
 at the command line, type:
 ```
+./autogen.sh
 ./configure
 make
 make check
