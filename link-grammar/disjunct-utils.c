@@ -1010,7 +1010,7 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 
 	if (NULL == ts->csid[0])
 	{
-		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): None",
+		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): None\n",
 		        sent->length);
 	}
 	else
@@ -1032,7 +1032,7 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 
 	if (NULL == ts->csid[0])
 	{
-		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): None",
+		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): None\n",
 		        sent->length);
 	}
 	else
