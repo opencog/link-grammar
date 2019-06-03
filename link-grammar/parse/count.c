@@ -139,11 +139,10 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
 	       hit+miss, hit, miss, sent->length);
 
-	printf("Chain length histogram:\n");
+	printf("Chain length:\n");
 	for (size_t i = 1; i < ARRAY_SIZE(chain_length); i++)
 		if (chain_length[i] > 0) printf("%zu: %d\n", i, chain_length[i]);
-	if (chain_length[0] > 0)
-		printf("Chain length > 63: %d\n", chain_length[0]);
+	if (chain_length[0] > 0) printf(">63: %d\n", chain_length[0]);
 
 	if (!((null_count[1] == 1) && (null_count[2] == 0)))
 	{
