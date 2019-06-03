@@ -40,7 +40,6 @@ struct count_context_s
 	Sentence sent;
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
-	bool    null_links;
 	bool    exhausted;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
@@ -115,8 +114,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 				z++;
 			else
 				nz++;
-			if (ctxt->null_links > 0)
-				null_count[t->null_count]++;
+			null_count[t->null_count]++;
 		}
 		if (c > 0) /* Slot 0 used for length overflow. */
 		{
@@ -147,13 +145,13 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	if (chain_length[0] > 0)
 		printf("Chain length > 63: %d\n", chain_length[0]);
 
-	if (ctxt->null_links > 0)
+	if (!((null_count[1] == 1) && (null_count[2] == 0)))
 	{
 		printf("Null count:\n");
-		for (unsigned int i = 0; i < ARRAY_SIZE(null_count); i++)
+		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
 		{
-			if (0 != null_count[i])
-				printf("null_count %d: %d\n", i, null_count[i]);
+			if (0 != null_count[nc])
+				printf("%d: %d\n", nc, null_count[nc]);
 		}
 	}
 
