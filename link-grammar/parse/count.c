@@ -101,6 +101,8 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	int N = 0;          /* NULL table slots */
 	int null_count[256] = { 0 };   /* null_count histogram */
 	int chain_length[64] = { 0 };  /* Chain length histogram */
+	bool table_stat_entries = test_enabled("count-table-entries");
+	int n;              /* For printf() pretty printing. */
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
@@ -151,6 +153,26 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		{
 			if (0 != null_count[nc])
 				printf("%d: %d\n", nc, null_count[nc]);
+		}
+	}
+
+	if (table_stat_entries)
+	{
+		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
+		{
+			if (0 == null_count[nc]) continue;
+
+			printf("Null count %d:\n", nc);
+			for (unsigned int i = 0; i < ctxt->table_size; i++)
+			{
+				for (Table_connector *t = ctxt->table[i]; t != NULL; t = t->next)
+				{
+					if (t->null_count != nc) continue;
+
+					printf("[%d]%n", i, &n);
+					printf("%*d %5d c=%lld\n",  15-n, t->l_id, t->r_id, t->count);
+				}
+			}
 		}
 	}
 
@@ -704,6 +726,8 @@ Count_bin do_parse(Sentence sent,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
+	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
+
 	return hist;
 }
 
@@ -733,7 +757,6 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 {
 	if (NULL == ctxt) return;
 
-	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
 	free_table(ctxt);
 	xfree(ctxt, sizeof(count_context_t));
 }
