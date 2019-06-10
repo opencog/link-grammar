@@ -1,0 +1,19 @@
+language: c
+
+install:
+  - sudo apt-get update
+  - sudo apt-get install -y make m4 gcc g++ autoconf autoconf-archive pkg-config libtool  # link-grammar required dependencies
+  - sudo apt-get install -y swig flex ant graphviz  # link-grammar optional dependencies
+
+script:
+  - ./autogen.sh
+  - ./configure --disable-python-bindings  # TODO: fix tests that fail with python bindings enabled
+  - make
+  - make check
+  - sudo make install
+  - sudo ldconfig
+  - make installcheck
+  - echo "The needs of the many outweigh the needs of the few." | /usr/local/bin/link-parser
+
+notifications:
+  email: false
