@@ -914,13 +914,13 @@ double linkage_corpus_cost(const Linkage linkage)
 
 WordIdx linkage_get_word_byte_start(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	return linkage->wg_path_display[w]->start - linkage->sent->orig_sentence;
 }
 
 WordIdx linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	return linkage->wg_path_display[w]->end - linkage->sent->orig_sentence;
 }
 
@@ -930,7 +930,7 @@ WordIdx linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
 
 WordIdx linkage_get_word_char_start(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	int pos = (int)(linkage->wg_path_display[w]->start - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
@@ -938,7 +938,7 @@ WordIdx linkage_get_word_char_start(const Linkage linkage, WordIdx w)
 
 WordIdx linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
