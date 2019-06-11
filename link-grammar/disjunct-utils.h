@@ -112,13 +112,13 @@ struct tracon_sharing_s
 	void *memblock;             /* Memory block for disjuncts & connectors */
 	Connector *cblock_base;     /* Start of connector block */
 	Connector *cblock;          /* Next available memory for connector */
-	unsigned int num_connectors;
 	Disjunct *dblock;           /* Next available memory for disjunct */
+	unsigned int num_connectors;
 	unsigned int num_disjuncts;
-	int word_offset;            /* Start number for connector tracon_id */
 	Tracon_set *csid[2];        /* For generating unique IDs */
 	int next_id[2];
 	uintptr_t last_token;
+	int word_offset;            /* Start number for connector tracon_id */
 	Tracon_list *tracon_list;
 };
 
