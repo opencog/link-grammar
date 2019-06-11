@@ -13,21 +13,21 @@
 
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/stat.h>                   // fstat()
+#include <sys/stat.h>                   // fstat
 
 #ifndef _MSC_VER
 	#include <unistd.h>
 #else
 	#include <windows.h>
-	#include <Shlwapi.h>                 // PathRemoveFileSpecA()
-	#include <direct.h>                  // getcwd()
+	#include <Shlwapi.h>                 // PathRemoveFileSpecA
+	#include <direct.h>                  // getcwd
 #endif /* _MSC_VER */
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "file-utils.h"
-#include "error.h"                      // verbosity_level()
+#include "error.h"                      // verbosity_level
 #include "link-includes.h"
 #include "utilities.h"                  // lg_strerror_r
 
