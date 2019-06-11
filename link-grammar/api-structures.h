@@ -109,7 +109,7 @@ struct Parse_Options_s
 
 	/* Options governing the generation of linkages. */
 	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
-	bool display_morphology;/* If true, print morpho analysis of words FALSE */
+	bool display_morphology;/* If true, print morpho analysis of words TRUE */
 };
 
 typedef struct word_queue_s word_queue_t;
