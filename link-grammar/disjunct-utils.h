@@ -119,6 +119,7 @@ struct tracon_sharing_s
 	int next_id[2];             /* Next unique tracon ID */
 	uintptr_t last_token;       /* Tracons are only unique per "token" */
 	int word_offset;            /* Start number for connector tracon_id */
+	bool is_pruning;            /* true - for pruning; false - for parsing */
 	Tracon_list *tracon_list;   /* Used only for pruning */
 };
 
