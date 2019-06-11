@@ -554,6 +554,8 @@ form_match_list(fast_matcher_t *ctxt, int w,
 #ifdef VERIFY_MATCH_LIST
 	static int id = 0;
 	int lid = ++id; /* A local copy, for multi-threading support. */
+#else
+	const int lid = 0;
 #endif
 
 	for (mx = mr; mx != NULL; mx = mx->next)
