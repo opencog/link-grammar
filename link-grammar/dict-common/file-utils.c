@@ -13,23 +13,23 @@
 
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/stat.h>                   // fstat()
+#include <sys/stat.h>                   // fstat
 
 #ifndef _MSC_VER
 	#include <unistd.h>
 #else
 	#include <windows.h>
-	#include <Shlwapi.h>                 // PathRemoveFileSpecA()
-	#include <direct.h>                  // getcwd()
+	#include <Shlwapi.h>                 // PathRemoveFileSpecA
+	#include <direct.h>                  // getcwd
 #endif /* _MSC_VER */
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "file-utils.h"
-#include "error.h"                      // verbosity_level()
+#include "error.h"                      // verbosity_level
 #include "link-includes.h"
-#include "utilities.h"
+#include "utilities.h"                  // lg_strerror_r
 
 #ifdef _WIN32
 	#define DIR_SEPARATOR "\\"
@@ -506,7 +506,7 @@ char *get_file_contents(const char * dict_name)
 			{
 				char errbuf[64];
 
-				strerror_r(errno, errbuf, sizeof(errbuf));
+				lg_strerror_r(errno, errbuf, sizeof(errbuf));
 				fclose(fp);
 				prt_error("Error: %s: Read error (%s)\n", dict_name, errbuf);
 				free(contents);

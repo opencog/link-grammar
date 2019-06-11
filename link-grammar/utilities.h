@@ -60,12 +60,14 @@ void *alloca (size_t);
 
 /* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
 #ifdef _WIN32
-#define strerror_r(errno, buf, len) strerror_s(buf, len, errno)
+#define lg_strerror_r(errno, buf, len) strerror_s(buf, len, errno)
 #else
-#if STRERROR_R_CHAR_P
+#if STRERROR_R_CHAR_P /* Set by "configure". */
 /* Emulate the POSIX version; assuming len>0 and a successful call. */
-#define strerror_r(errno, buf, len) \
-	abs((strncpy(buf, strerror_r (errno, buf, len), len), buf[len-1] = '\0', 0))
+#define lg_strerror_r(errno, buf, len) \
+	abs((strncpy(buf, strerror_r(errno, buf, len), len), buf[len-1] = '\0', 0))
+#else
+#define lg_strerror_r strerror_r
 #endif /* STRERROR_R_CHAR_P */
 #endif /* _WIN32 */
 
