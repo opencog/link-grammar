@@ -104,12 +104,16 @@ typedef struct
 	uint32_t *table[2];         /* Indexed by entry number */
 	size_t entries[2];          /* Actual number of entries */
 	size_t table_size[2];       /* Allocated number of entries */
-	size_t memblock_sz;         /* Pruning memblock size  */
 } Tracon_list;
 
 struct tracon_sharing_s
 {
-	void *memblock;             /* Memory block for disjuncts & connectors */
+	union
+	{
+		void *memblock;             /* Memory block for disjuncts & connectors */
+		Disjunct *dblock_base;      /* Start of disjunct block */
+	};
+	size_t memblock_sz;         /* memblock size */
 	Connector *cblock_base;     /* Start of connector block */
 	Connector *cblock;          /* Next available memory for connector */
 	Disjunct *dblock;           /* Next available memory for disjunct */
