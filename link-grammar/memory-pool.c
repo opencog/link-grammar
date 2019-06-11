@@ -10,11 +10,10 @@
 /*************************************************************************/
 
 #include <errno.h>                      // errno
-#include <string.h>                     // strerror_r
 
 #include "error.h"
 #include "memory-pool.h"
-#include "utilities.h"                  // MIN, MAX, aligned alloc
+#include "utilities.h"                  // MIN/MAX, aligned alloc, lg_strerror_r
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */
@@ -184,7 +183,7 @@ void *pool_alloc(Pool_desc *mp)
 			{
 				/* aligned_alloc() has strict requirements. */
 				char errbuf[64];
-				strerror_r(errno, errbuf, sizeof(errbuf));
+				lg_strerror_r(errno, errbuf, sizeof(errbuf));
 				assert(NULL != mp->ring, "Block/element sizes %zu/%zu: %s",
 				       mp->block_size, mp->element_size, errbuf);
 			}
