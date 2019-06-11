@@ -491,10 +491,8 @@ static Count_bin do_count(
 				bool leftpcount = false;
 				bool rightpcount = false;
 
-				PRAGMA_MAYBE_UNINITIALIZED /* For old GCC versions */
-				Count_bin l_any;           /* Used only when leftpcount==true */
-				Count_bin r_any;           /* Used only when rightpcount==true */
-				PRAGMA_END
+				Count_bin l_any = INIT_NO_COUNT;
+				Count_bin r_any = INIT_NO_COUNT;
 				Count_bin l_cmulti = INIT_NO_COUNT;
 				Count_bin l_dmulti = INIT_NO_COUNT;
 				Count_bin l_dcmulti = INIT_NO_COUNT;
