@@ -365,13 +365,13 @@ link_public_api(const char *)
      linkage_get_violation_name(const Linkage linkage);
 
 /* Experimental API - subject to changes. */
-link_public_api(size_t)
+link_public_api(WordIdx)
      linkage_get_word_byte_start(const Linkage linkage, WordIdx w);
-link_public_api(size_t)
+link_public_api(WordIdx)
      linkage_get_word_byte_end(const Linkage linkage, WordIdx w);
-link_public_api(size_t)
+link_public_api(WordIdx)
      linkage_get_word_char_start(const Linkage linkage, WordIdx w);
-link_public_api(size_t)
+link_public_api(WordIdx)
      linkage_get_word_char_end(const Linkage linkage, WordIdx w);
 
 

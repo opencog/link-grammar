@@ -1116,8 +1116,8 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         words_char = []
         words_byte = []
         for wi, w in enumerate(lkg.words()):
-            words_char.append(w + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
-            words_byte.append(w + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
+            words_char.append(w + str((int(linkage.word_char_start(wi)), int(linkage.word_char_end(wi)))))
+            words_byte.append(w + str((int(linkage.word_byte_start(wi)), int(linkage.word_byte_end(wi)))))
         return ' '.join(words_char) + '\n' + ' '.join(words_byte) + '\n'
 
     # Function code and file format sanity check

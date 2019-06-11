@@ -912,15 +912,15 @@ double linkage_corpus_cost(const Linkage linkage)
 
 /* =========== Get word sentence positions ============================== */
 
-size_t linkage_get_word_byte_start(const Linkage linkage, WordIdx w)
+WordIdx linkage_get_word_byte_start(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	return linkage->wg_path_display[w]->start - linkage->sent->orig_sentence;
 }
 
-size_t linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
+WordIdx linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	return linkage->wg_path_display[w]->end - linkage->sent->orig_sentence;
 }
 
@@ -928,17 +928,17 @@ size_t linkage_get_word_byte_end(const Linkage linkage, WordIdx w)
  * not be efficient if more than one position is needed. If needed, it can
  * be changed to use caching of already-calculated positions. */
 
-size_t linkage_get_word_char_start(const Linkage linkage, WordIdx w)
+WordIdx linkage_get_word_char_start(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	int pos = (int)(linkage->wg_path_display[w]->start - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
 }
 
-size_t linkage_get_word_char_end(const Linkage linkage, WordIdx w)
+WordIdx linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 {
-	if (linkage->num_words <= w) return 0; /* bounds-check */
+	if (linkage->num_words <= w) return (WordIdx)-1; /* bounds-check */
 	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
