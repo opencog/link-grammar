@@ -767,31 +767,26 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	return head.next;
 }
 
-#define WORD_OFFSET 256 /* Reserved for null connectors. */
-
 /**
  * Set dummy tracon_id's.
  * To be used for short sentences (for which a full encoding is too
  * costly) or for library tests that actually bypass the use of tracon IDs
  * (to validate that the tracon_id implementation didn't introduce bugs).
  */
-static int enumerate_connectors_sequentially(Sentence sent)
+static int enumerate_connectors_sequentially(Tracon_sharing *ts)
 {
-	int id = WORD_OFFSET;
+	int id = ts->word_offset;
 
-	for (WordIdx w = 0; w < sent->length; w++)
+	for (size_t i = 0; i < ts->num_disjuncts; i++)
 	{
-		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
-		{
-			for (Connector *c = d->left; NULL != c; c = c->next)
-			{
-				c->tracon_id = id++;
-			}
-			for (Connector *c = d->right; NULL != c; c = c->next)
-			{
-				c->tracon_id = id++;
-			}
-		}
+		Disjunct *d = &ts->dblock_base[i];
+
+		for (Connector *c = d->left; NULL != c; c = c->next)
+			c->tracon_id = id++;
+
+		for (Connector *c = d->right; NULL != c; c = c->next)
+			c->tracon_id = id++;
+
 	}
 
 	return id + 1;
@@ -841,7 +836,8 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 	return head.next;
 }
 
-#define TLSZ 8192 /* Initial size of the tracon list table */
+#define WORD_OFFSET 256   /* Reserved for null connectors. */
+#define TLSZ 8192         /* Initial size of the tracon list table */
 
 /** Create a context descriptor for disjuncts & connector memory "packing".
  *   Allocate a memory block for all the disjuncts & connectors.
@@ -984,15 +980,15 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 
 	ts = pack_sentence_init(sent, is_pruning, do_encoding);
 
-	if (is_pruning && !do_encoding)
-	{
-		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
-		enumerate_connectors_sequentially(sent);
-	}
-
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		sent->word[w].d = pack_disjuncts(ts, sent->word[w].d, w);
+	}
+
+	if (is_pruning && !do_encoding)
+	{
+		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
+		enumerate_connectors_sequentially(ts);
 	}
 
 	/* On long sentences, many MB of connector-space are saved, but we
