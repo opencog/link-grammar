@@ -115,11 +115,11 @@ struct tracon_sharing_s
 	Disjunct *dblock;           /* Next available memory for disjunct */
 	unsigned int num_connectors;
 	unsigned int num_disjuncts;
-	Tracon_set *csid[2];        /* For generating unique IDs */
-	int next_id[2];
-	uintptr_t last_token;
+	Tracon_set *csid[2];        /* For generating unique tracon IDs */
+	int next_id[2];             /* Next unique tracon ID */
+	uintptr_t last_token;       /* Tracons are only unique per "token" */
 	int word_offset;            /* Start number for connector tracon_id */
-	Tracon_list *tracon_list;
+	Tracon_list *tracon_list;   /* Used only for pruning */
 };
 
 void *save_disjuncts(Sentence, Tracon_sharing *, Disjunct **);
