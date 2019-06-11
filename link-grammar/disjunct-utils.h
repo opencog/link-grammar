@@ -71,9 +71,13 @@ typedef struct
 } Disjuncts_desc_t;
 
 /* Trailing connector sequences (aka tracons) are memory-shared for the
- * benefit of the pruning and parsing stages. Basically each unique
- * tracon gets its own tracon_id.
- * For the parsing stage, on each pass the tracon_id of "good"
+ * benefit of the pruning and parsing stages. To that end, unique tracons
+ * are identified. For the parsing stage, a unique tracon_id is assigned
+ * to the Connector's tracon_id field. For the pruning stage, this field
+ * remains 0 (later used for pruning pass_count - see below) and instead
+ * the Connector's refcount filed reflects the number of connectors which
+ * are memory-shared.
+ * In the pruning stage, on each pass the tracon_id of "good"
  * connectors is assigned the pass number so they will not be checked
  * again on the same pass. The pruning stage also uses the connector
  * refcount field as a reference count - the number of times this

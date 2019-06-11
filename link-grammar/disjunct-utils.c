@@ -956,7 +956,7 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * E.g. when using link-parser:
  * - To entirely disable connector encoding:
  * link-parser -test=len-trailing-hash:254
- * - To use connector encode even for short sentences:
+ * - To use connector encoding even for short sentences:
  * link-parser -test=len-trailing-hash:0
  * Any different result (e.g. number of discarded disjuncts in the pruning
  * step or different parsing results) indicates a bug.
