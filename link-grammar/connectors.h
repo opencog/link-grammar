@@ -140,7 +140,7 @@ static inline const char * connector_string(const Connector *c)
 	return c->desc->string;
 }
 
-static inline int connector_uc_start(const Connector *c)
+static inline unsigned int connector_uc_start(const Connector *c)
 {
 	return c->desc->uc_start;
 }
@@ -150,12 +150,12 @@ static inline const condesc_t *connector_desc(const Connector *c)
 	return c->desc;
 }
 
-static inline int connector_uc_hash(const Connector * c)
+static inline unsigned int connector_uc_hash(const Connector * c)
 {
 	return c->desc->uc_num;
 }
 
-static inline int connector_uc_num(const Connector * c)
+static inline unsigned int connector_uc_num(const Connector * c)
 {
 	return c->desc->uc_num;
 }
