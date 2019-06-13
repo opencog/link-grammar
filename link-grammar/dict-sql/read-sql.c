@@ -2,7 +2,7 @@
  * read-sql.c
  *
  * Look up words in an SQL DB.
- * Keeping it simple for just right now, and using SQLite.
+ * Keeping it simple for just right now, and using SQLite3.
  *
  * The goal of using an SQL-backed dictionary is to enable some
  * other process (machine-learning algo) to dynamically update
@@ -146,15 +146,32 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-	bs->exp = make_expression(bs->dict, argv[0]);
+	Exp* exp = make_expression(bs->dict, argv[0]);
 
-	if (bs->exp)
-		if (!strtodC(argv[1], &bs->exp->cost))
-		{
-			prt_error("Warning: Invalid cost \"%s\" in expression \"%s\" "
-			          "(using 1.0)\n", argv[1], argv[0]);
-			bs->exp->cost = 1.0;
-		}
+	if (exp && !strtodC(argv[1], &exp->cost))
+	{
+		prt_error("Warning: Invalid cost \"%s\" in expression \"%s\" "
+		          "(using 1.0)\n", argv[1], argv[0]);
+		exp->cost = 1.0;
+	}
+
+	if (NULL == bs->exp)
+	{
+		bs->exp = exp;
+		return 0;
+	}
+
+	E_list *ell, *elr;
+	Exp* orn = malloc(sizeof(Exp));
+	orn->type = OR_type;
+	orn->cost = 0.0;
+	orn->u.l = ell = malloc(sizeof(E_list));
+	ell->next = elr = malloc(sizeof(E_list));
+	elr->next = NULL;
+
+	ell->e = bs->exp;
+	elr->e = exp;
+	bs->exp = orn;
 
 	return 0;
 }
