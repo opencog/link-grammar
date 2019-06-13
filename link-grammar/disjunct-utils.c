@@ -683,7 +683,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	{
 		newc = NULL;
 
-		if (NULL != ts)
+		if ((NULL != ts) && (NULL != ts->csid[dir]))
 		{
 			/* Encoding is used - share tracons. */
 			Connector **tracon = tracon_set_add(o, ts->csid[dir]);
@@ -693,7 +693,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 				/* The first time we encounter this tracon. */
 				*tracon = lcblock; /* Save its future location in the tracon_set. */
 
-				if (NULL != tl)
+				if (ts->is_pruning)
 				{
 					tlsz_check(tl, tl->entries[dir], dir);
 					uint32_t cblock_index = (uint32_t)(lcblock - ts->cblock_base);
@@ -704,7 +704,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			else
 			{
 				newc = *tracon;
-				if (NULL == tl)
+				if (!ts->is_pruning)
 				{
 					if (o->nearest_word != newc->nearest_word)
 					{
@@ -731,7 +731,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			newc = lcblock++;
 			*newc = *o;
 
-			if (NULL == ts->tracon_list)
+			if (!ts->is_pruning)
 			{
 				/* For the parsing sharing we need a unique ID. */
 				newc->tracon_id = ts->next_id[dir]++;
@@ -740,12 +740,13 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				newc->refcount = 1; /* No sharing yet. */
 				newc->tracon_id = 0;
-				tl->num_cnctrs_per_word[dir][w]++;
+				if (NULL != tl)
+					tl->num_cnctrs_per_word[dir][w]++;
 			}
 		}
 		else
 		{
-			if (NULL != ts->tracon_list)
+			if (ts->is_pruning)
 			{
 				for (Connector *n = newc; NULL != n; n = n->next)
 					n->refcount++;
@@ -766,31 +767,26 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	return head.next;
 }
 
-#define WORD_OFFSET 256 /* Reserved for null connectors. */
-
 /**
  * Set dummy tracon_id's.
  * To be used for short sentences (for which a full encoding is too
  * costly) or for library tests that actually bypass the use of tracon IDs
  * (to validate that the tracon_id implementation didn't introduce bugs).
  */
-static int enumerate_connectors_sequentially(Sentence sent)
+static int enumerate_connectors_sequentially(Tracon_sharing *ts)
 {
-	int id = WORD_OFFSET;
+	int id = ts->word_offset;
 
-	for (WordIdx w = 0; w < sent->length; w++)
+	for (size_t i = 0; i < ts->num_disjuncts; i++)
 	{
-		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
-		{
-			for (Connector *c = d->left; NULL != c; c = c->next)
-			{
-				c->tracon_id = id++;
-			}
-			for (Connector *c = d->right; NULL != c; c = c->next)
-			{
-				c->tracon_id = id++;
-			}
-		}
+		Disjunct *d = &ts->dblock_base[i];
+
+		for (Connector *c = d->left; NULL != c; c = c->next)
+			c->tracon_id = id++;
+
+		for (Connector *c = d->right; NULL != c; c = c->next)
+			c->tracon_id = id++;
+
 	}
 
 	return id + 1;
@@ -815,15 +811,18 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 		newd->cost = t->cost;
 		newd->originating_gword = t->originating_gword;
 
-		if (NULL == ts->tracon_list)
+		if (!ts->is_pruning)
 		    token = (uintptr_t)t->originating_gword;
 
 		if (token != ts->last_token)
 		{
 			ts->last_token = token;
-			tracon_set_reset(ts->csid[0]);
-			tracon_set_reset(ts->csid[1]);
-			//printf("TOKEN token %ld\n", token);
+			if (NULL != ts->csid[0])
+			{
+				//printf("Token %ld\n", token);
+				tracon_set_reset(ts->csid[0]);
+				tracon_set_reset(ts->csid[1]);
+			}
 		}
 		newd->left = pack_connectors(ts, t->left, 0, w);
 		newd->right = pack_connectors(ts, t->right, 1,  w);
@@ -837,7 +836,13 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 	return head.next;
 }
 
-#define TLSZ 8192 /* Initial size of the tracon list table */
+#define TLSZ 8192         /* Initial size of the tracon list table */
+
+/* Reserved tracon ID space for NULL connectors (zero-length tracons).
+ * Currently, tracons are unique per word. So this is actually the max.
+ * number of words in a sentence rounded up to a power of 2.
+ * FIXME: Derive it from MAX_SENTENCE. */
+#define WORD_OFFSET 256
 
 /** Create a context descriptor for disjuncts & connector memory "packing".
  *   Allocate a memory block for all the disjuncts & connectors.
@@ -854,7 +859,7 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
  *   1. A block for disjuncts.
  *   2. A block of connectors.
  *
- *   If the packing is done for the pruning step, allocate tracon list
+ *   If encoding is done for the pruning step, allocate tracon list
  *   stuff too. In that case also call tracon_set_shallow() so tracons
  *   starting with a shallow connector will be considered different than
  *   similar ones starting with a deep connector.
@@ -862,7 +867,8 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
-static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
+static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
+                                          bool do_encoding)
 {
 	unsigned int dcnt = 0;
 	unsigned int ccnt = 0;
@@ -874,7 +880,8 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 	size_t dsize = dcnt * sizeof(Disjunct);
 	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
 	size_t csize = ccnt * sizeof(Connector);
-	void *memblock = malloc(dsize + csize);
+	size_t memblock_sz = dsize + csize;
+	void *memblock = malloc(memblock_sz);
 	Disjunct *dblock = memblock;
 	Connector *cblock = (Connector *)((char *)memblock + dsize);
 
@@ -882,6 +889,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 	memset(ts, 0, sizeof(Tracon_sharing));
 
 	ts->memblock = memblock;
+	ts->memblock_sz = memblock_sz;
 	ts->cblock_base = cblock;
 	ts->cblock = cblock;
 	ts->dblock = dblock;
@@ -890,23 +898,26 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
+	ts->is_pruning = is_pruning;
 
-	ts->csid[0] = tracon_set_create();
-	ts->csid[1] = tracon_set_create();
-
-	if (is_pruning)
+	if (do_encoding)
 	{
-		ts->tracon_list = malloc(sizeof(Tracon_list));
-		memset(ts->tracon_list, 0, sizeof(Tracon_list));
-		ts->tracon_list->memblock_sz = dsize + csize;
-		unsigned int **ncpw = ts->tracon_list->num_cnctrs_per_word;
-		for (int dir = 0; dir < 2; dir++)
-		{
-			ncpw[dir] = malloc(sent->length * sizeof(**ncpw));
-			memset(ncpw[dir], 0, sent->length * sizeof(**ncpw));
+		ts->csid[0] = tracon_set_create();
+		ts->csid[1] = tracon_set_create();
 
-			tracon_set_shallow(true, ts->csid[dir]);
-			tlsz_check(ts->tracon_list, TLSZ, dir); /* Allocate table. */
+		if (is_pruning)
+		{
+			ts->tracon_list = malloc(sizeof(Tracon_list));
+			memset(ts->tracon_list, 0, sizeof(Tracon_list));
+			unsigned int **ncpw = ts->tracon_list->num_cnctrs_per_word;
+			for (int dir = 0; dir < 2; dir++)
+			{
+				ncpw[dir] = malloc(sent->length * sizeof(**ncpw));
+				memset(ncpw[dir], 0, sent->length * sizeof(**ncpw));
+
+				tracon_set_shallow(true, ts->csid[dir]);
+				tlsz_check(ts->tracon_list, TLSZ, dir); /* Allocate table. */
+			}
 		}
 	}
 
@@ -924,12 +935,18 @@ void free_tracon_sharing(Tracon_sharing *ts)
 			free(ts->tracon_list->num_cnctrs_per_word[dir]);
 			free(ts->tracon_list->table[dir]);
 		}
-		tracon_set_delete(ts->csid[dir]);
-		ts->csid[dir] = NULL;
+		if (NULL != ts->csid[dir])
+		{
+			tracon_set_delete(ts->csid[dir]);
+			ts->csid[dir] = NULL;
+		}
 	}
-	free(ts->tracon_list);
-	ts->tracon_list = NULL;
 
+	if (NULL != ts->tracon_list)
+	{
+		free(ts->tracon_list);
+		ts->tracon_list = NULL;
+	}
 	free(ts);
 }
 
@@ -948,9 +965,9 @@ void free_tracon_sharing(Tracon_sharing *ts)
  *
  * Note:
  * In order to save overhead, sentences shorter than
- * sent->min_len_encoding don't undergo any processing other than issuing
- * a sequential tracon IDs. This can also be used for library tests that
- * totally bypass the use of connector encoding (to validate that the
+ * sent->min_len_encoding don't undergo encoding - only packing.
+ * This can also be used for library tests that totally bypass the use of
+ * connector encoding (to validate that the
  * tracon_id/packing/sharing/refcount implementation didn't introduce bugs
  * in the pruning and parsing steps).
  * E.g. when using link-parser:
@@ -963,24 +980,20 @@ void free_tracon_sharing(Tracon_sharing *ts)
  */
 static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
-	bool do_share = sent->length >= sent->min_len_encoding;
+	bool do_encoding = sent->length >= sent->min_len_encoding;
 	Tracon_sharing *ts;
 
-	if (!do_share)
-	{
-		if (!is_pruning)
-		{
-			lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
-			enumerate_connectors_sequentially(sent);
-		}
-		return NULL;
-	}
-
-	ts = pack_sentence_init(sent, is_pruning);
+	ts = pack_sentence_init(sent, is_pruning, do_encoding);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		sent->word[w].d = pack_disjuncts(ts, sent->word[w].d, w);
+	}
+
+	if (is_pruning && !do_encoding)
+	{
+		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
+		enumerate_connectors_sequentially(ts);
 	}
 
 	/* On long sentences, many MB of connector-space are saved, but we
@@ -995,9 +1008,9 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 {
 	Tracon_sharing *ts = pack_sentence(sent, true);
 
-	if (ts == NULL)
+	if (NULL == ts->csid[0])
 	{
-		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): None",
+		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): None\n",
 		        sent->length);
 	}
 	else
@@ -1017,9 +1030,9 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 {
 	Tracon_sharing *ts = pack_sentence(sent, false);
 
-	if (ts == NULL)
+	if (NULL == ts->csid[0])
 	{
-		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): None",
+		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): None\n",
 		        sent->length);
 	}
 	else
@@ -1038,13 +1051,11 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 /* ============ Save and restore sentence disjuncts ============ */
 void *save_disjuncts(Sentence sent, Tracon_sharing *ts, Disjunct **disjuncts)
 {
-	Tracon_list *tl = ts->tracon_list;
-
 	for (WordIdx w = 0; w < sent->length; w++)
 		disjuncts[w] = sent->word[w].d;
 
-	void *saved_memblock = malloc(tl->memblock_sz);
-	memcpy(saved_memblock, ts->memblock, ts->tracon_list->memblock_sz);
+	void *saved_memblock = malloc(ts->memblock_sz);
+	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
 
 	return saved_memblock;
 }
@@ -1057,5 +1068,5 @@ void restore_disjuncts(Sentence sent, Disjunct **disjuncts,
 	for (WordIdx w = 0; w < sent->length; w++)
 		sent->word[w].d = disjuncts[w];
 
-	memcpy(ts->memblock, saved_memblock, ts->tracon_list->memblock_sz);
+	memcpy(ts->memblock, saved_memblock, ts->memblock_sz);
 }

@@ -104,22 +104,27 @@ typedef struct
 	uint32_t *table[2];         /* Indexed by entry number */
 	size_t entries[2];          /* Actual number of entries */
 	size_t table_size[2];       /* Allocated number of entries */
-	size_t memblock_sz;         /* Pruning memblock size  */
 } Tracon_list;
 
 struct tracon_sharing_s
 {
-	void *memblock;             /* Memory block for disjuncts & connectors */
+	union
+	{
+		void *memblock;             /* Memory block for disjuncts & connectors */
+		Disjunct *dblock_base;      /* Start of disjunct block */
+	};
+	size_t memblock_sz;         /* memblock size */
 	Connector *cblock_base;     /* Start of connector block */
 	Connector *cblock;          /* Next available memory for connector */
-	unsigned int num_connectors;
 	Disjunct *dblock;           /* Next available memory for disjunct */
+	unsigned int num_connectors;
 	unsigned int num_disjuncts;
+	Tracon_set *csid[2];        /* For generating unique tracon IDs */
+	int next_id[2];             /* Next unique tracon ID */
+	uintptr_t last_token;       /* Tracons are only unique per "token" */
 	int word_offset;            /* Start number for connector tracon_id */
-	Tracon_set *csid[2];        /* For generating unique IDs */
-	int next_id[2];
-	uintptr_t last_token;
-	Tracon_list *tracon_list;
+	bool is_pruning;            /* true - for pruning; false - for parsing */
+	Tracon_list *tracon_list;   /* Used only for pruning */
 };
 
 void *save_disjuncts(Sentence, Tracon_sharing *, Disjunct **);
