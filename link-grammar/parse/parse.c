@@ -279,27 +279,13 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
 	print_time(opts, "Encode connectors for pruning");
-	if (NULL == ts_pruning)
-	{
-		/* The sentence is considered too short for packing. */
-		if (one_step_parse)
-		{
-			/* Since no disjunct packing has been done, we will not be able
-			 * to restore them in case a parsing with null_count>0 is
-			 * needed.  Hence we must not optimize for null_count==0. */
-			needed_prune_level = 1;
-		}
-	}
-	else
-	{
-		free_sentence_disjuncts(sent);
+	free_sentence_disjuncts(sent);
 
-		if (one_step_parse)
-		{
-			/* Save the disjuncts in case we need to parse with null_count>0. */
-			disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
-			saved_memblock = save_disjuncts(sent, ts_pruning, disjuncts_copy);
-		}
+	if (one_step_parse)
+	{
+		/* Save the disjuncts in case we need to parse with null_count>0. */
+		disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
+		saved_memblock = save_disjuncts(sent, ts_pruning, disjuncts_copy);
 	}
 
 	for (int nl = min_null_count; nl <= max_null_count; nl++)
