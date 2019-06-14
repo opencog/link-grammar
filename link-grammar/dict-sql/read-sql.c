@@ -41,11 +41,10 @@
  * what can be found in the file-backed dictionary.
  *
  * This does NOT support braces {} used to indicate optional connectors,
- * nor does it support the multi-connector at-sign @ and so using these
- * in the SQL tables is NOT valid! It also does not support cost
- * brackets [] and it does no support 'or'. This is really really
- * really supposed to be one unique disjunct per SQL table row!
- * This is NOT meant to be "just like the text files, but different".
+ * so using this in the SQL tables is NOT valid! It also does not
+ * support cost brackets []. Costs are handled out-of-line.
+ *
+ * This is not meant to be "just like the text files, but different".
  */
 
 static Exp * make_expression(Dictionary dict, const char *exp_str)
@@ -55,17 +54,17 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	Exp* rest;
 	E_list *ell, *elr;
 
-	char *constr = NULL;
+	char * constr = NULL;
 	const char * p = exp_str;
 	const char * con_start = NULL;
 
-	/* search for the start of a connector */
+	/* Search for the start of a connector */
 	while (*p && (lg_isspace(*p) || '&' == *p)) p++;
 	con_start = p;
 
 	if (0 == *p) return NULL;
 
-	/* search for the end of a connector */
+	/* Search for the end of a connector */
 	while (*p && (isalnum(*p) || '*' == *p)) p++;
 
 	if (0 == *p) return NULL;
