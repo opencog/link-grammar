@@ -41,75 +41,95 @@
  * what can be found in the file-backed dictionary.
  *
  * This does NOT support braces {} used to indicate optional connectors,
- * nor does it support the multi-connector at-sign @ and so using these
- * in the SQL tables is NOT valid! It also does not support cost
- * brackets [] and it does no support 'or'. This is really really
- * really supposed to be one unique disjunct per SQL table row!
- * This is NOT meant to be "just like the text files, but different".
+ * so using this in the SQL tables is NOT valid! It also does not
+ * support cost brackets []. Costs are handled out-of-line.
+ *
+ * This is not meant to be "just like the text files, but different".
  */
 
-static Exp * make_expression(Dictionary dict, const char *exp_str)
+static const char * make_expression(Dictionary dict,
+                                    const char *exp_str, Exp** pex)
 {
-	Exp* e;
-	Exp* and;
-	Exp* rest;
-	E_list *ell, *elr;
-
-	char *constr = NULL;
+	*pex = NULL;
+	/* Search for the start of a connector */
+	Exp_type etype = CONNECTOR_type;
 	const char * p = exp_str;
-	const char * con_start = NULL;
+	while (*p && (lg_isspace(*p))) p++;
+	if (0 == *p) return p;
 
-	/* search for the start of a connector */
-	while (*p && (lg_isspace(*p) || '&' == *p)) p++;
-	con_start = p;
-
-	if (0 == *p) return NULL;
-
-	/* search for the end of a connector */
-	while (*p && (isalnum(*p) || '*' == *p)) p++;
-
-	if (0 == *p) return NULL;
-
-	/* Connectors always end with a + or - */
-	assert (('+' == *p) || ('-' == *p),
-			"Missing direction character in connector string: %s", con_start);
-
-	/* Create an expression to hold the connector */
-	e = malloc(sizeof(Exp));
-	e->dir = *p;
-	e->type = CONNECTOR_type;
-	e->cost = 0.0;
-	if ('@' == *con_start)
+	/* If it's an open paren, assume its the begining of a new list */
+	if ('(' == *p)
 	{
-		constr = strndup(con_start+1, p-con_start-1);
-		e->multi = true;
+		p = make_expression(dict, ++p, pex);
 	}
 	else
 	{
-		constr = strndup(con_start, p-con_start);
-		e->multi = false;
+		/* Search for the end of a connector */
+		const char * con_start = p;
+		while (*p && (isalnum(*p) || '*' == *p)) p++;
+
+		/* Connectors always end with a + or - */
+		assert (('+' == *p) || ('-' == *p),
+				"Missing direction character in connector string: %s", con_start);
+
+		/* Create an expression to hold the connector */
+		Exp* e = malloc(sizeof(Exp));
+		e->dir = *p;
+		e->type = CONNECTOR_type;
+		e->cost = 0.0;
+		char * constr = NULL;
+		if ('@' == *con_start)
+		{
+			constr = strndup(con_start+1, p-con_start-1);
+			e->multi = true;
+		}
+		else
+		{
+			constr = strndup(con_start, p-con_start);
+			e->multi = false;
+		}
+
+		e->u.condesc = condesc_add(&dict->contable,
+		                           string_set_add(constr, dict->string_set));
+		free(constr);
+		*pex = e;
 	}
 
-	e->u.condesc = condesc_add(&dict->contable,
-	                           string_set_add(constr, dict->string_set));
-	free(constr);
+	/* Is there any more? If not, return what we've got. */
+	p++;
+	while (*p && (lg_isspace(*p))) p++;
+	if (')' == *p || 0 == *p)
+	{
+		return p;
+	}
 
-	rest = make_expression(dict, ++p);
-	if (NULL == rest)
-		return e;
+	/* Wait .. there's more! */
+	if ('&' == *p)
+	{
+		etype = AND_type; p++;
+	}
+	else if ('o' == *p && 'r' == *(p+1))
+	{
+		etype = OR_type; p+=2;
+	}
 
-	/* Join it all together with an AND node */
-	and = malloc(sizeof(Exp));
-	and->type = AND_type;
-	and->cost = 0.0;
-	and->u.l = ell = malloc(sizeof(E_list));
-	ell->next = elr = malloc(sizeof(E_list));
+	Exp* rest = NULL;
+	p = make_expression(dict, p, &rest);
+	assert(NULL != rest, "Badly formed expression %s", exp_str);
+
+	/* Join it all together. */
+	Exp* join = malloc(sizeof(Exp));
+	join->type = etype;
+	join->cost = 0.0;
+	E_list *ell = join->u.l = malloc(sizeof(E_list));
+	E_list *elr = ell->next = malloc(sizeof(E_list));
 	elr->next = NULL;
 
-	ell->e = e;
+	ell->e = *pex;
 	elr->e = rest;
+	*pex = join;
 
-	return and;
+	return p;
 }
 
 
@@ -146,7 +166,8 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-	Exp* exp = make_expression(bs->dict, argv[0]);
+	Exp* exp = NULL;
+	make_expression(bs->dict, argv[0], &exp);
 
 	if (exp && !strtodC(argv[1], &exp->cost))
 	{
@@ -254,13 +275,35 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
+	/* Escape single-quotes.  That is, replace single-quotes by
+	 * two single-quotes. e.g. don't --> don''t */
+	char * es = (char *) s;
+	char * q = strchr(s, '\'');
+	if (q)
+	{
+		es = malloc(2 * strlen(s) + 1);
+		char * p = es;
+		while (q)
+		{
+			strncpy(p, s, q-s+1);
+			p += q-s+1;
+			*p = '\'';
+			p++;
+			s = q+1;
+			q = strchr(s, '\'');
+		}
+		strcpy(p, s);
+	}
+
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
 	dyn_strcat(qry, "SELECT subscript, classname FROM Morphemes WHERE morpheme ");
 	dyn_strcat(qry, equals);
 	dyn_strcat(qry, " \'");
-	dyn_strcat(qry, s);
+	dyn_strcat(qry, es);
 	dyn_strcat(qry, "\';");
+
+	if (es != s) free(es);
 
 	sqlite3_exec(db, qry->str, cb, bs, NULL);
 	dyn_str_delete(qry);
