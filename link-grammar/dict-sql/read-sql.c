@@ -47,57 +47,60 @@
  * This is not meant to be "just like the text files, but different".
  */
 
-static Exp * make_expression(Dictionary dict, const char *exp_str)
+static const char * make_expression(Dictionary dict,
+                                    const char *exp_str, Exp** pex)
 {
+	*pex = NULL;
 	/* Search for the start of a connector */
 	Exp_type etype = CONNECTOR_type;
 	const char * p = exp_str;
 	while (*p && (lg_isspace(*p))) p++;
-	if (0 == *p) return NULL;
+	if (0 == *p) return p;
 
 	/* If it's an open paren, assume its the begining of a new list */
 	if ('(' == *p)
 	{
-		// char
-	}
-
-	/* Search for the end of a connector */
-	const char * con_start = p;
-	while (*p && (isalnum(*p) || '*' == *p)) p++;
-
-	if (0 == *p) return NULL;
-
-	/* Connectors always end with a + or - */
-	assert (('+' == *p) || ('-' == *p),
-			"Missing direction character in connector string: %s", con_start);
-
-	/* Create an expression to hold the connector */
-	Exp* e = malloc(sizeof(Exp));
-	e->dir = *p;
-	e->type = CONNECTOR_type;
-	e->cost = 0.0;
-	char * constr = NULL;
-	if ('@' == *con_start)
-	{
-		constr = strndup(con_start+1, p-con_start-1);
-		e->multi = true;
+		p = make_expression(dict, ++p, pex);
 	}
 	else
 	{
-		constr = strndup(con_start, p-con_start);
-		e->multi = false;
-	}
+		/* Search for the end of a connector */
+		const char * con_start = p;
+		while (*p && (isalnum(*p) || '*' == *p)) p++;
 
-	e->u.condesc = condesc_add(&dict->contable,
-	                           string_set_add(constr, dict->string_set));
-	free(constr);
+		/* Connectors always end with a + or - */
+		assert (('+' == *p) || ('-' == *p),
+				"Missing direction character in connector string: %s", con_start);
+
+		/* Create an expression to hold the connector */
+		Exp* e = malloc(sizeof(Exp));
+		e->dir = *p;
+		e->type = CONNECTOR_type;
+		e->cost = 0.0;
+		char * constr = NULL;
+		if ('@' == *con_start)
+		{
+			constr = strndup(con_start+1, p-con_start-1);
+			e->multi = true;
+		}
+		else
+		{
+			constr = strndup(con_start, p-con_start);
+			e->multi = false;
+		}
+
+		e->u.condesc = condesc_add(&dict->contable,
+		                           string_set_add(constr, dict->string_set));
+		free(constr);
+		*pex = e;
+	}
 
 	/* Is there any more? If not, return what we've got. */
 	p++;
 	while (*p && (lg_isspace(*p))) p++;
 	if (')' == *p || 0 == *p)
 	{
-		return e;
+		return p;
 	}
 
 	/* Wait .. there's more! */
@@ -109,9 +112,9 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	{
 		etype = OR_type; p+=2;
 	}
-	while (*p && (lg_isspace(*p))) p++;
 
-	Exp* rest = make_expression(dict, p);
+	Exp* rest = NULL;
+	p = make_expression(dict, p, &rest);
 	assert(NULL != rest, "Badly formed expression %s", exp_str);
 
 	/* Join it all together. */
@@ -122,10 +125,11 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	E_list *elr = ell->next = malloc(sizeof(E_list));
 	elr->next = NULL;
 
-	ell->e = e;
+	ell->e = *pex;
 	elr->e = rest;
+	*pex = join;
 
-	return join;
+	return p;
 }
 
 
@@ -162,7 +166,8 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-	Exp* exp = make_expression(bs->dict, argv[0]);
+	Exp* exp = NULL;
+	make_expression(bs->dict, argv[0], &exp);
 
 	if (exp && !strtodC(argv[1], &exp->cost))
 	{
