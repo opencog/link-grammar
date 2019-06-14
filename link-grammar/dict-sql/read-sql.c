@@ -275,13 +275,34 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
+	/* Escape single-quotes */
+	char * es = (char *) s;
+	char * q = strchr(s, '\'');
+	if (q)
+	{
+		es = malloc(2 * strlen(s));
+		char * p = es;
+		while (q)
+		{
+			strncpy(p, s, q-s+1);
+			p += q-s+1;
+			*p = '\'';
+			p++;
+			s = q+1;
+			q = strchr(s, '\'');
+		}
+		strcpy(p, s);
+	}
+
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
 	dyn_strcat(qry, "SELECT subscript, classname FROM Morphemes WHERE morpheme ");
 	dyn_strcat(qry, equals);
 	dyn_strcat(qry, " \'");
-	dyn_strcat(qry, s);
+	dyn_strcat(qry, es);
 	dyn_strcat(qry, "\';");
+
+	if (es != s) free(es);
 
 	sqlite3_exec(db, qry->str, cb, bs, NULL);
 	dyn_str_delete(qry);
