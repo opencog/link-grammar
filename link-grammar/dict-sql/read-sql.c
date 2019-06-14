@@ -49,10 +49,10 @@
 
 static Exp * make_expression(Dictionary dict, const char *exp_str)
 {
-	const char * p = exp_str;
-
 	/* Search for the start of a connector */
-	while (*p && (lg_isspace(*p) || '&' == *p)) p++;
+	Exp_type etype = CONNECTOR_type;
+	const char * p = exp_str;
+	while (*p && (lg_isspace(*p))) p++;
 	if (0 == *p) return NULL;
 
 	/* If it's an open paren, assume its the begining of a new list */
@@ -61,9 +61,8 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 		// char
 	}
 
-	const char * con_start = p;
-
 	/* Search for the end of a connector */
+	const char * con_start = p;
 	while (*p && (isalnum(*p) || '*' == *p)) p++;
 
 	if (0 == *p) return NULL;
@@ -93,22 +92,40 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	                           string_set_add(constr, dict->string_set));
 	free(constr);
 
-	Exp* rest = make_expression(dict, ++p);
-	if (NULL == rest)
+	/* Is there any more? If not, return what we've got. */
+	p++;
+	while (*p && (lg_isspace(*p))) p++;
+	if (')' == *p || 0 == *p)
+	{
 		return e;
+	}
 
-	/* Join it all together with an AND node */
-	Exp* and = malloc(sizeof(Exp));
-	and->type = AND_type;
-	and->cost = 0.0;
-	E_list *ell = and->u.l = malloc(sizeof(E_list));
+	/* Wait .. there's more! */
+	if ('&' == *p)
+	{
+		etype = AND_type; p++;
+	}
+	else if ('o' == *p && 'r' == *(p+1))
+	{
+		etype = OR_type; p+=2;
+	}
+	while (*p && (lg_isspace(*p))) p++;
+
+	Exp* rest = make_expression(dict, p);
+	assert(NULL != rest, "Badly formed expression %s", exp_str);
+
+	/* Join it all together. */
+	Exp* join = malloc(sizeof(Exp));
+	join->type = etype;
+	join->cost = 0.0;
+	E_list *ell = join->u.l = malloc(sizeof(E_list));
 	E_list *elr = ell->next = malloc(sizeof(E_list));
 	elr->next = NULL;
 
 	ell->e = e;
 	elr->e = rest;
 
-	return and;
+	return join;
 }
 
 
