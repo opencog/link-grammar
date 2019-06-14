@@ -275,12 +275,13 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
-	/* Escape single-quotes */
+	/* Escape single-quotes.  That is, replace single-quotes by
+	 * two single-quotes. e.g. don't --> don''t */
 	char * es = (char *) s;
 	char * q = strchr(s, '\'');
 	if (q)
 	{
-		es = malloc(2 * strlen(s));
+		es = malloc(2 * strlen(s) + 1);
 		char * p = es;
 		while (q)
 		{
