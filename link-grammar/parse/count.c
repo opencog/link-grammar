@@ -40,7 +40,6 @@ struct count_context_s
 	Sentence sent;
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
-	bool    null_links;
 	bool    exhausted;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
@@ -102,6 +101,8 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	int N = 0;          /* NULL table slots */
 	int null_count[256] = { 0 };   /* null_count histogram */
 	int chain_length[64] = { 0 };  /* Chain length histogram */
+	bool table_stat_entries = test_enabled("count-table-entries");
+	int n;              /* For printf() pretty printing. */
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
@@ -115,8 +116,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 				z++;
 			else
 				nz++;
-			if (ctxt->null_links > 0)
-				null_count[t->null_count]++;
+			null_count[t->null_count]++;
 		}
 		if (c > 0) /* Slot 0 used for length overflow. */
 		{
@@ -141,19 +141,38 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
 	       hit+miss, hit, miss, sent->length);
 
-	printf("Chain length histogram:\n");
+	printf("Chain length:\n");
 	for (size_t i = 1; i < ARRAY_SIZE(chain_length); i++)
 		if (chain_length[i] > 0) printf("%zu: %d\n", i, chain_length[i]);
-	if (chain_length[0] > 0)
-		printf("Chain length > 63: %d\n", chain_length[0]);
+	if (chain_length[0] > 0) printf(">63: %d\n", chain_length[0]);
 
-	if (ctxt->null_links > 0)
+	if (!((null_count[1] == 1) && (null_count[2] == 0)))
 	{
 		printf("Null count:\n");
-		for (unsigned int i = 0; i < ARRAY_SIZE(null_count); i++)
+		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
 		{
-			if (0 != null_count[i])
-				printf("null_count %d: %d\n", i, null_count[i]);
+			if (0 != null_count[nc])
+				printf("%d: %d\n", nc, null_count[nc]);
+		}
+	}
+
+	if (table_stat_entries)
+	{
+		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
+		{
+			if (0 == null_count[nc]) continue;
+
+			printf("Null count %d:\n", nc);
+			for (unsigned int i = 0; i < ctxt->table_size; i++)
+			{
+				for (Table_connector *t = ctxt->table[i]; t != NULL; t = t->next)
+				{
+					if (t->null_count != nc) continue;
+
+					printf("[%d]%n", i, &n);
+					printf("%*d %5d c=%lld\n",  15-n, t->l_id, t->r_id, t->count);
+				}
+			}
 		}
 	}
 
@@ -707,6 +726,8 @@ Count_bin do_parse(Sentence sent,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
+	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
+
 	return hist;
 }
 
@@ -736,7 +757,6 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 {
 	if (NULL == ctxt) return;
 
-	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
 	free_table(ctxt);
 	xfree(ctxt, sizeof(count_context_t));
 }
