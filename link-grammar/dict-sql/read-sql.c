@@ -49,20 +49,19 @@
 
 static Exp * make_expression(Dictionary dict, const char *exp_str)
 {
-	Exp* e;
-	Exp* and;
-	Exp* rest;
-	E_list *ell, *elr;
-
-	char * constr = NULL;
 	const char * p = exp_str;
-	const char * con_start = NULL;
 
 	/* Search for the start of a connector */
 	while (*p && (lg_isspace(*p) || '&' == *p)) p++;
-	con_start = p;
-
 	if (0 == *p) return NULL;
+
+	/* If it's an open paren, assume its the begining of a new list */
+	if ('(' == *p)
+	{
+		// char
+	}
+
+	const char * con_start = p;
 
 	/* Search for the end of a connector */
 	while (*p && (isalnum(*p) || '*' == *p)) p++;
@@ -74,10 +73,11 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 			"Missing direction character in connector string: %s", con_start);
 
 	/* Create an expression to hold the connector */
-	e = malloc(sizeof(Exp));
+	Exp* e = malloc(sizeof(Exp));
 	e->dir = *p;
 	e->type = CONNECTOR_type;
 	e->cost = 0.0;
+	char * constr = NULL;
 	if ('@' == *con_start)
 	{
 		constr = strndup(con_start+1, p-con_start-1);
@@ -93,16 +93,16 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	                           string_set_add(constr, dict->string_set));
 	free(constr);
 
-	rest = make_expression(dict, ++p);
+	Exp* rest = make_expression(dict, ++p);
 	if (NULL == rest)
 		return e;
 
 	/* Join it all together with an AND node */
-	and = malloc(sizeof(Exp));
+	Exp* and = malloc(sizeof(Exp));
 	and->type = AND_type;
 	and->cost = 0.0;
-	and->u.l = ell = malloc(sizeof(E_list));
-	ell->next = elr = malloc(sizeof(E_list));
+	E_list *ell = and->u.l = malloc(sizeof(E_list));
+	E_list *elr = ell->next = malloc(sizeof(E_list));
 	elr->next = NULL;
 
 	ell->e = e;
