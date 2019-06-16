@@ -7162,8 +7162,9 @@ hearing.g: (<vc-hear> & <verb-ge>) or <verb-ge-d>;
 hearing.v: <verb-pg> & <vc-hear>;
 
 % Xc+: poor comma choice: "The man that you saw laugh, jumped off a cliff".
+% Cost on [I+]: "I saw her face" want Os to face.n not I to face.v
 <vc-see>:
-  ((<b-minus> or O+) & <mv-coord> & {I*j+ or Pg+ or AZ+ or Pv+})
+  ((<b-minus> or O+) & <mv-coord> & {[I*j+]0.05 or Pg+ or AZ+ or Pv+})
   or (<b-minus> & {@MV+} & [I*j+ & Xc+])
   or (<mv-coord> & {TH+ or Zs- or QI+ or <embed-verb>})
   or ([[@MV+ & O*n+]]);
