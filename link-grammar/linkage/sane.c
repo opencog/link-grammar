@@ -63,6 +63,9 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 		{
 			if (p == wpt->word)
 			{
+// Temporary hack! There is a crash; I don't understand the root
+// cause; this prevents the crash and seems to give OK results.
+if (NULL == path) return;
 				lgdebug(D_WPA, "Word %s (after %zu) exists (after %zu)\n",
 				        p->subword,
 				        wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx,
