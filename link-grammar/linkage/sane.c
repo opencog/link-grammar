@@ -63,16 +63,17 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 		{
 			if (p == wpt->word)
 			{
-				lgdebug(D_WPA, "Word %s (after %zu) exists (after %zu)\n",
+				lgdebug(D_WPA, "Word %s (after %zu) exists (after %d)\n",
 				        p->subword,
 				        wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx,
-				        path[gwordlist_len(path)-1]->sent_wordidx);
+				        path ? (int)path[gwordlist_len(path)-1]->sent_wordidx : -1);
 				/* If we are here, there are 2 or more paths leading to this word
 				 * (p) that end with the same number of consecutive null words that
 				 * consist an entire alternative. These null words represent
 				 * different ways to split the subword upward in the hierarchy.
 				 * For a nicer result we choose the shorter path. */
-				if (wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx <=
+				if ((NULL != path) &&
+				    wpt->path[gwordlist_len(wpt->path)-1]->sent_wordidx <=
 				    path[gwordlist_len(path)-1]->sent_wordidx)
 				{
 					lgdebug(D_WPA, "Shorter path already queued\n");
