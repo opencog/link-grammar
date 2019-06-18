@@ -203,20 +203,48 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	return 0;
 }
 
+/* Escape single-quotes.  That is, replace single-quotes by
+ * two single-quotes. e.g. don't --> don''t */
+static char * escape_quotes(const char * s)
+{
+	char * q = strchr(s, '\'');
+	if (NULL == q) return (char *) s;
+
+	char * es = malloc(2 * strlen(s) + 1);
+	char * p = es;
+	while (q)
+	{
+		strncpy(p, s, q-s+1);
+		p += q-s+1;
+		*p = '\'';
+		p++;
+		s = q+1;
+		q = strchr(s, '\'');
+	}
+	strcpy(p, s);
+	return es;
+}
+
 static void
 db_lookup_exp(Dictionary dict, const char *s, cbdata* bs)
 {
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
+	/* Escape single-quotes.  That is, replace single-quotes by
+	 * two single-quotes. e.g. don't --> don''t */
+	char * es = escape_quotes(s);
+
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
 	dyn_strcat(qry, "SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
-	dyn_strcat(qry, s);
+	dyn_strcat(qry, es);
 	dyn_strcat(qry, "\';");
 
 	sqlite3_exec(db, qry->str, exp_cb, bs, NULL);
 	dyn_str_delete(qry);
+
+	if (es != s) free(es);
 
 	if (4 < verbosity)
 	{
@@ -280,23 +308,7 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 
 	/* Escape single-quotes.  That is, replace single-quotes by
 	 * two single-quotes. e.g. don't --> don''t */
-	char * es = (char *) s;
-	char * q = strchr(s, '\'');
-	if (q)
-	{
-		es = malloc(2 * strlen(s) + 1);
-		char * p = es;
-		while (q)
-		{
-			strncpy(p, s, q-s+1);
-			p += q-s+1;
-			*p = '\'';
-			p++;
-			s = q+1;
-			q = strchr(s, '\'');
-		}
-		strcpy(p, s);
-	}
+	char * es = escape_quotes(s);
 
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
