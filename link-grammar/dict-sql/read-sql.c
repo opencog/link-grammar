@@ -210,6 +210,13 @@ static char * escape_quotes(const char * s)
 	char * q = strchr(s, '\'');
 	if (NULL == q) return (char *) s;
 
+	/* If there are two in a row, already, assume that they are
+	 * already escaped. This is pathological, and a sign that
+	 * something somewhere else has already gone wrong. But I'm
+	 * exhausted debugging right now and will punt on this.
+	 */
+	if ('\'' == *(q+1)) return (char *) s;
+
 	char * es = malloc(2 * strlen(s) + 1);
 	char * p = es;
 	while (q)
