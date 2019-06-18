@@ -113,6 +113,10 @@ static const char * make_expression(Dictionary dict,
 	{
 		etype = OR_type; p+=2;
 	}
+	else
+	{
+		assert(false, "Bad rest of expression %s", exp_str);
+	}
 
 	Exp* rest = NULL;
 	p = make_expression(dict, p, &rest);
