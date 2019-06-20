@@ -6636,13 +6636,14 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % CPa- & <quote-sent>: "Spoke the king: Off with his head!"
 % PF- & <quote-sent>: "And thus spoke the king: Off with his head!"
 % PF- (by itself): "And thus spoke the king"
+% [...]0.04: tie-breaker: avoid paraphrasing, if we at all can.
 <vc-paraph-inv>:
-  {@MV+} & (
+  {@MV+} & [
     ((Xc+ or Xp+ or <paraph-null>) & CP-)
-    or [(Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-      & (dCOq+ or CPx- or Eq+ or <verb-wall>)]0.04
+    or ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+      & (dCOq+ or CPx- or Eq+ or <verb-wall>))
     or ((PF- or CPa-) & {<quote-sent> & {RW+}})
-    or [(Xc+ or Xe+) & <embed-verb>]);
+    or [(Xc+ or Xe+) & <embed-verb>] ]0.04;
 
 % filler-it: "The President is busy, it seems."
 % The (Xd- or Xq-) links to the previous comma.
