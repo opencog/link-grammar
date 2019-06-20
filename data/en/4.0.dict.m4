@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.6.1 (formatted as V5v6v1+)
-<dictionary-version-number>: V5v6v1+;
+% Dictionary version number is 5.6.2 (formatted as V5v6v2+)
+<dictionary-version-number>: V5v6v2+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -6639,8 +6639,8 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-paraph-inv>:
   {@MV+} & (
     ((Xc+ or Xp+ or <paraph-null>) & CP-)
-    or ((Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
-      & (dCOq+ or CPx- or Eq+ or <verb-wall>))
+    or [(Xd- or Xq-) & (Xc+ or Xp+ or <paraph-null>)
+      & (dCOq+ or CPx- or Eq+ or <verb-wall>)]0.04
     or ((PF- or CPa-) & {<quote-sent> & {RW+}})
     or [(Xc+ or Xe+) & <embed-verb>]);
 
