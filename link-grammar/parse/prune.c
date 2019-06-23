@@ -197,7 +197,7 @@ static void power_table_delete(power_table *pt)
  * into the appropriate hash table
  */
 static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list **t,
-                                 Connector *c, bool shal)
+                                 Connector *c)
 {
 	unsigned int h = connector_uc_num(c) & (size-1);
 	assert(c->refcount > 0, "refcount %d", c->refcount);
@@ -305,7 +305,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 					for (c = c->next; c != NULL; c = c->next)
 					{
 						c->refcount = 1;
-						put_into_power_table(mp, r_size, r_t, c, false);
+						put_into_power_table(mp, r_size, r_t, c);
 					}
 				}
 
@@ -316,7 +316,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 					for (c = c->next; c != NULL; c = c->next)
 					{
 						c->refcount = 1;
-						put_into_power_table(mp, l_size, l_t, c, false);
+						put_into_power_table(mp, l_size, l_t, c);
 					}
 				}
 			}
@@ -329,12 +329,12 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 				c = d->right;
 				if (c != NULL)
 				{
-					put_into_power_table(mp, r_size, r_t, c, true);
+					put_into_power_table(mp, r_size, r_t, c);
 				}
 				c = d->left;
 				if (c != NULL)
 				{
-					put_into_power_table(mp, l_size, l_t, c, true);
+					put_into_power_table(mp, l_size, l_t, c);
 				}
 			}
 		}
@@ -371,7 +371,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 
 					int w = get_tracon_word_number(c, dir);
 
-					put_into_power_table(mp, sizep[w], tp[w], c, c->shallow);
+					put_into_power_table(mp, sizep[w], tp[w], c);
 				}
 			}
 		}
