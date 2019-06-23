@@ -221,12 +221,14 @@ static C_list **get_power_table_entry(unsigned int size, C_list **t,
 static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list **t,
                                  Connector *c)
 {
-	unsigned int h = connector_uc_num(c) & (size-1);
+	C_list **e = get_power_table_entry(size, t, c);
+
+	assert(NULL != e, "put_into_power_table: Overflow");
 	assert(c->refcount > 0, "refcount %d", c->refcount);
 
 	C_list *m = pool_alloc(mp);
-	m->next = t[h];
-	t[h] = m;
+	m->next = *e;
+	*e = m;
 	m->c = c;
 }
 
@@ -299,6 +301,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 			len = tl->num_cnctrs_per_word[0][w];
 		else
 			len = left_connector_count(sent->word[w].d);
+		len++; /* Ensure at least one empty entry for get_power_table_entry(). */
 		l_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->l_table_size[w] = l_size;
 		l_t = pt->l_table[w] = (C_list **) xalloc(l_size * sizeof(C_list *));
@@ -308,6 +311,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 			len = tl->num_cnctrs_per_word[1][w];
 		else
 			len = right_connector_count(sent->word[w].d);
+		len++;
 		r_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->r_table_size[w] = r_size;
 		r_t = pt->r_table[w] = (C_list **) xalloc(r_size * sizeof(C_list *));
@@ -403,9 +407,28 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 /**
  * This runs through all the connectors in this table, and eliminates those
  * with a zero reference count.
+ * In order to support a unique uppercase part per hash entry, we need to
+ * ensure that a collision chain doesn't break when the last remaining
+ * connector in an entry is removed. To that end, if the entry is not last
+ * in the chain, instead of removing it we replace it with a permanent
+ * "tombstone" connector that cannot match.
  */
 static void clean_table(unsigned int size, C_list **t)
 {
+	/* Table entry tombstone. */
+	static condesc_t desc_no_match =
+	{
+		.lc_letters = 0,                /* Invalid lowercase part. */
+		.lc_mask = (lc_enc_t)-1,        /* Ensure mismatch. */
+		.uc_num = (connector_hash_t)-1, /* Invalid uppercase part. */
+	};
+	static Connector con_no_match =
+	{
+		.desc = &desc_no_match,
+		.refcount = 1,              /* Ensure it will not get removed. */
+		.shallow = false,           /* Faster mismatch to a deep connector. */
+	};
+
 	for (unsigned int i = 0; i < size; i++)
 	{
 		C_list **m = &t[i];
@@ -415,9 +438,21 @@ static void clean_table(unsigned int size, C_list **t)
 			assert(0 <= (*m)->c->refcount, "clean_table: refcount < 0 (%d)",
 			       (*m)->c->refcount);
 			if (0 == (*m)->c->refcount)
-				*m = (*m)->next;
+			{
+				if ((*m == t[i]) && (NULL == (*m)->next) && /* Nothing remains. */
+				    (NULL != t[(i+1) & (size-1)]))          /* Not end of chain. */
+				{
+					(*m)->c = &con_no_match;                 /* Place a tombstone. */
+				}
+				else
+				{
+					*m = (*m)->next;
+				}
+			}
 			else
+			{
 				m = &(*m)->next;
+			}
 		}
 	}
 }
@@ -447,7 +482,7 @@ static bool possible_connection(prune_context *pc,
                                 int lword, int rword)
 {
 	int dist;
-	if (!easy_match_desc(lc->desc, rc->desc)) return false;
+	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
@@ -499,14 +534,11 @@ static bool
 right_table_search(prune_context *pc, int w, Connector *c,
                    bool shallow, int word_c)
 {
-	unsigned int size, h;
-	C_list *cl;
 	power_table *pt = pc->pt;
+	unsigned int size = pt->r_table_size[w];
+	C_list **e = get_power_table_entry(size, pt->r_table[w], c);
 
-	size = pt->r_table_size[w];
-	h = connector_uc_num(c) & (size-1);
-
-	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
+	for (C_list *cl = *e; cl != NULL; cl = cl->next)
 	{
 		/* Two deep connectors can't work */
 		if (!shallow && !cl->c->shallow) return false;
@@ -514,6 +546,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 		if (possible_connection(pc, cl->c, c, w, word_c))
 			return true;
 	}
+
 	return false;
 }
 
@@ -525,13 +558,11 @@ static bool
 left_table_search(prune_context *pc, int w, Connector *c,
                   bool shallow, int word_c)
 {
-	unsigned int size, h;
-	C_list *cl;
 	power_table *pt = pc->pt;
+	unsigned int size = pt->l_table_size[w];
+	C_list **e = get_power_table_entry(size, pt->l_table[w], c);
 
-	size = pt->l_table_size[w];
-	h = connector_uc_num(c) & (size-1);
-	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
+	for (C_list *cl = *e; cl != NULL; cl = cl->next)
 	{
 		/* Two deep connectors can't work */
 		if (!shallow && !cl->c->shallow) return false;
