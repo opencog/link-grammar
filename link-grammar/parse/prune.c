@@ -266,7 +266,7 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  */
 static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 {
-	Tracon_list *tl = (NULL == ts) ? NULL : ts->tracon_list;
+	Tracon_list *tl = ts->tracon_list;
 	unsigned int i;
 #define TOPSZ 32768
 	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
@@ -1143,7 +1143,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	knowledge = sent->postprocessor->knowledge;
 	cmt = cms_table_new();
 
-	Tracon_list *tl = (NULL == ts) ? NULL : ts->tracon_list;
+	Tracon_list *tl = ts->tracon_list;
 	if (NULL != tl)
 	{
 		for (int dir = 0; dir < 2; dir++)
