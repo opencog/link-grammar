@@ -14,15 +14,15 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
-#include "dict-common/dict-common.h"     // For contable
+#include "dict-common/dict-common.h"    // contable
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
-#include "print/print.h"  // For print_disjunct_counts()
+#include "print/print.h"                // print_disjunct_counts
 
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
 
 #define D_PRUNE 5 /* Debug level for this file. */
@@ -35,7 +35,7 @@
 #define ppdebug(...)
 #endif
 
-typedef Connector * connector_table;
+typedef Connector *connector_table;
 
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
@@ -43,8 +43,8 @@ typedef Connector * connector_table;
 typedef struct c_list_s C_list;
 struct c_list_s
 {
-	C_list * next;
-	Connector * c;
+	C_list *next;
+	Connector *c;
 };
 
 typedef struct power_table_s power_table;
@@ -61,7 +61,7 @@ struct power_table_s
 typedef struct cms_struct Cms;
 struct cms_struct
 {
-	Cms * next;
+	Cms *next;
 	Connector *c;
 };
 
@@ -69,7 +69,7 @@ struct cms_struct
 typedef struct multiset_table_s multiset_table;
 struct multiset_table_s
 {
-	Cms * cms_table[CMS_SIZE];
+	Cms *cms_table[CMS_SIZE];
 };
 
 typedef struct prune_context_s prune_context;
@@ -196,11 +196,11 @@ static void power_table_delete(power_table *pt)
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
-                                 Connector * c, bool shal)
+static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list **t,
+                                 Connector *c, bool shal)
 {
 	unsigned int h = connector_uc_num(c) & (size-1);
-	assert(c->refcount>0, "refcount %d", c->refcount);
+	assert(c->refcount > 0, "refcount %d", c->refcount);
 
 	C_list *m = pool_alloc(mp);
 	m->next = t[h];
@@ -867,7 +867,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 
   */
 
-static multiset_table * cms_table_new(void)
+static multiset_table *cms_table_new(void)
 {
 	multiset_table *mt = (multiset_table *) xalloc(sizeof(multiset_table));
 	memset(mt, 0, sizeof(multiset_table));
@@ -877,7 +877,7 @@ static multiset_table * cms_table_new(void)
 
 static void cms_table_delete(multiset_table *mt)
 {
-	Cms * cms, *xcms;
+	Cms *cms, *xcms;
 	int i;
 	for (i=0; i<CMS_SIZE; i++)
 	{
@@ -890,7 +890,7 @@ static void cms_table_delete(multiset_table *mt)
 	xfree(mt, sizeof(multiset_table));
 }
 
-static unsigned int cms_hash(const char * s)
+static unsigned int cms_hash(const char *s)
 {
 	unsigned int i = 5381;
 	if (islower((int) *s)) s++; /* skip head-dependent indicator */
