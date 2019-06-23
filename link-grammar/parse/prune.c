@@ -192,6 +192,28 @@ static void power_table_delete(power_table *pt)
 	xfree(pt->l_table, 2 * pt->power_table_size * sizeof(C_list **));
 }
 
+static C_list **get_power_table_entry(unsigned int size, C_list **t,
+                                      Connector *c)
+{
+	unsigned int h, s;
+
+	h = s = connector_uc_num(c) & (size-1);
+	while (NULL != t[h])
+	{
+		if (connector_uc_eq(t[h]->c, c)) break;
+
+		/* Increment and try again. Every hash bucket MUST have a unique
+		 * upper-case part, since later on, we only compare the lower-case
+		 * parts, assuming upper-case parts are already equal. So just look
+		 * for the next unused hash bucket.
+		 */
+		h = (h + 1) & (size-1);
+		if (h == s) return NULL;
+	}
+
+	return &t[h];
+}
+
 /**
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
