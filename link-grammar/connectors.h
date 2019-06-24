@@ -166,6 +166,15 @@ Connector * connector_new(Pool_desc *, const condesc_t *, Parse_Options);
 void set_connector_length_limit(Connector *, Parse_Options);
 void free_connectors(Connector *);
 
+/**
+ * Compare only the uppercase part of two connectors.
+ * Return true if they are the same, else false.
+ */
+static inline bool connector_uc_eq(const Connector *c1, const Connector *c2)
+{
+	return (connector_uc_num(c1) == connector_uc_num(c2));
+}
+
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
 

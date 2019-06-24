@@ -14,15 +14,15 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
-#include "dict-common/dict-common.h"     // For contable
+#include "dict-common/dict-common.h"    // contable
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
-#include "print/print.h"  // For print_disjunct_counts()
+#include "print/print.h"                // print_disjunct_counts
 
 #include "prune.h"
 #include "resources.h"
 #include "string-set.h"
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
 
 #define D_PRUNE 5 /* Debug level for this file. */
@@ -35,7 +35,7 @@
 #define ppdebug(...)
 #endif
 
-typedef Connector * connector_table;
+typedef Connector *connector_table;
 
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
@@ -43,8 +43,8 @@ typedef Connector * connector_table;
 typedef struct c_list_s C_list;
 struct c_list_s
 {
-	C_list * next;
-	Connector * c;
+	C_list *next;
+	Connector *c;
 };
 
 typedef struct power_table_s power_table;
@@ -61,7 +61,7 @@ struct power_table_s
 typedef struct cms_struct Cms;
 struct cms_struct
 {
-	Cms * next;
+	Cms *next;
 	Connector *c;
 };
 
@@ -69,7 +69,7 @@ struct cms_struct
 typedef struct multiset_table_s multiset_table;
 struct multiset_table_s
 {
-	Cms * cms_table[CMS_SIZE];
+	Cms *cms_table[CMS_SIZE];
 };
 
 typedef struct prune_context_s prune_context;
@@ -192,19 +192,43 @@ static void power_table_delete(power_table *pt)
 	xfree(pt->l_table, 2 * pt->power_table_size * sizeof(C_list **));
 }
 
+static C_list **get_power_table_entry(unsigned int size, C_list **t,
+                                      Connector *c)
+{
+	unsigned int h, s;
+
+	h = s = connector_uc_num(c) & (size-1);
+	while (NULL != t[h])
+	{
+		if (connector_uc_eq(t[h]->c, c)) break;
+
+		/* Increment and try again. Every hash bucket MUST have a unique
+		 * upper-case part, since later on, we only compare the lower-case
+		 * parts, assuming upper-case parts are already equal. So just look
+		 * for the next unused hash bucket.
+		 */
+		h = (h + 1) & (size-1);
+		if (h == s) return NULL;
+	}
+
+	return &t[h];
+}
+
 /**
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list ** t,
-                                 Connector * c, bool shal)
+static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list **t,
+                                 Connector *c)
 {
-	unsigned int h = connector_uc_num(c) & (size-1);
-	assert(c->refcount>0, "refcount %d", c->refcount);
+	C_list **e = get_power_table_entry(size, t, c);
+
+	assert(NULL != e, "put_into_power_table: Overflow");
+	assert(c->refcount > 0, "refcount %d", c->refcount);
 
 	C_list *m = pool_alloc(mp);
-	m->next = t[h];
-	t[h] = m;
+	m->next = *e;
+	*e = m;
 	m->c = c;
 }
 
@@ -277,6 +301,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 			len = tl->num_cnctrs_per_word[0][w];
 		else
 			len = left_connector_count(sent->word[w].d);
+		len++; /* Ensure at least one empty entry for get_power_table_entry(). */
 		l_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->l_table_size[w] = l_size;
 		l_t = pt->l_table[w] = (C_list **) xalloc(l_size * sizeof(C_list *));
@@ -286,6 +311,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 			len = tl->num_cnctrs_per_word[1][w];
 		else
 			len = right_connector_count(sent->word[w].d);
+		len++;
 		r_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
 		pt->r_table_size[w] = r_size;
 		r_t = pt->r_table[w] = (C_list **) xalloc(r_size * sizeof(C_list *));
@@ -305,7 +331,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 					for (c = c->next; c != NULL; c = c->next)
 					{
 						c->refcount = 1;
-						put_into_power_table(mp, r_size, r_t, c, false);
+						put_into_power_table(mp, r_size, r_t, c);
 					}
 				}
 
@@ -316,7 +342,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 					for (c = c->next; c != NULL; c = c->next)
 					{
 						c->refcount = 1;
-						put_into_power_table(mp, l_size, l_t, c, false);
+						put_into_power_table(mp, l_size, l_t, c);
 					}
 				}
 			}
@@ -329,12 +355,12 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 				c = d->right;
 				if (c != NULL)
 				{
-					put_into_power_table(mp, r_size, r_t, c, true);
+					put_into_power_table(mp, r_size, r_t, c);
 				}
 				c = d->left;
 				if (c != NULL)
 				{
-					put_into_power_table(mp, l_size, l_t, c, true);
+					put_into_power_table(mp, l_size, l_t, c);
 				}
 			}
 		}
@@ -371,7 +397,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 
 					int w = get_tracon_word_number(c, dir);
 
-					put_into_power_table(mp, sizep[w], tp[w], c, c->shallow);
+					put_into_power_table(mp, sizep[w], tp[w], c);
 				}
 			}
 		}
@@ -381,9 +407,28 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 /**
  * This runs through all the connectors in this table, and eliminates those
  * with a zero reference count.
+ * In order to support a unique uppercase part per hash entry, we need to
+ * ensure that a collision chain doesn't break when the last remaining
+ * connector in an entry is removed. To that end, if the entry is not last
+ * in the chain, instead of removing it we replace it with a permanent
+ * "tombstone" connector that cannot match.
  */
 static void clean_table(unsigned int size, C_list **t)
 {
+	/* Table entry tombstone. */
+	static condesc_t desc_no_match =
+	{
+		.lc_letters = 0,                /* Invalid lowercase part. */
+		.lc_mask = (lc_enc_t)-1,        /* Ensure mismatch. */
+		.uc_num = (connector_hash_t)-1, /* Invalid uppercase part. */
+	};
+	static Connector con_no_match =
+	{
+		.desc = &desc_no_match,
+		.refcount = 1,              /* Ensure it will not get removed. */
+		.shallow = false,           /* Faster mismatch to a deep connector. */
+	};
+
 	for (unsigned int i = 0; i < size; i++)
 	{
 		C_list **m = &t[i];
@@ -393,9 +438,21 @@ static void clean_table(unsigned int size, C_list **t)
 			assert(0 <= (*m)->c->refcount, "clean_table: refcount < 0 (%d)",
 			       (*m)->c->refcount);
 			if (0 == (*m)->c->refcount)
-				*m = (*m)->next;
+			{
+				if ((*m == t[i]) && (NULL == (*m)->next) && /* Nothing remains. */
+				    (NULL != t[(i+1) & (size-1)]))          /* Not end of chain. */
+				{
+					(*m)->c = &con_no_match;                 /* Place a tombstone. */
+				}
+				else
+				{
+					*m = (*m)->next;
+				}
+			}
 			else
+			{
 				m = &(*m)->next;
+			}
 		}
 	}
 }
@@ -425,7 +482,7 @@ static bool possible_connection(prune_context *pc,
                                 int lword, int rword)
 {
 	int dist;
-	if (!easy_match_desc(lc->desc, rc->desc)) return false;
+	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
@@ -477,14 +534,11 @@ static bool
 right_table_search(prune_context *pc, int w, Connector *c,
                    bool shallow, int word_c)
 {
-	unsigned int size, h;
-	C_list *cl;
 	power_table *pt = pc->pt;
+	unsigned int size = pt->r_table_size[w];
+	C_list **e = get_power_table_entry(size, pt->r_table[w], c);
 
-	size = pt->r_table_size[w];
-	h = connector_uc_num(c) & (size-1);
-
-	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
+	for (C_list *cl = *e; cl != NULL; cl = cl->next)
 	{
 		/* Two deep connectors can't work */
 		if (!shallow && !cl->c->shallow) return false;
@@ -492,6 +546,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 		if (possible_connection(pc, cl->c, c, w, word_c))
 			return true;
 	}
+
 	return false;
 }
 
@@ -503,13 +558,11 @@ static bool
 left_table_search(prune_context *pc, int w, Connector *c,
                   bool shallow, int word_c)
 {
-	unsigned int size, h;
-	C_list *cl;
 	power_table *pt = pc->pt;
+	unsigned int size = pt->l_table_size[w];
+	C_list **e = get_power_table_entry(size, pt->l_table[w], c);
 
-	size = pt->l_table_size[w];
-	h = connector_uc_num(c) & (size-1);
-	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
+	for (C_list *cl = *e; cl != NULL; cl = cl->next)
 	{
 		/* Two deep connectors can't work */
 		if (!shallow && !cl->c->shallow) return false;
@@ -867,7 +920,7 @@ static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
 
   */
 
-static multiset_table * cms_table_new(void)
+static multiset_table *cms_table_new(void)
 {
 	multiset_table *mt = (multiset_table *) xalloc(sizeof(multiset_table));
 	memset(mt, 0, sizeof(multiset_table));
@@ -877,7 +930,7 @@ static multiset_table * cms_table_new(void)
 
 static void cms_table_delete(multiset_table *mt)
 {
-	Cms * cms, *xcms;
+	Cms *cms, *xcms;
 	int i;
 	for (i=0; i<CMS_SIZE; i++)
 	{
@@ -890,7 +943,7 @@ static void cms_table_delete(multiset_table *mt)
 	xfree(mt, sizeof(multiset_table));
 }
 
-static unsigned int cms_hash(const char * s)
+static unsigned int cms_hash(const char *s)
 {
 	unsigned int i = 5381;
 	if (islower((int) *s)) s++; /* skip head-dependent indicator */

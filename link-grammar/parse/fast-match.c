@@ -169,15 +169,6 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 	return l;  /* return pointer to original head */
 }
 
-/**
- * Compare only the uppercase part of two connectors.
- * Return true if they are the same, else false.
- */
-static bool con_uc_eq(const Connector *c1, const Connector *c2)
-{
-	return (connector_uc_num(c1) == connector_uc_num(c2));
-}
-
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
                                           Connector * c, int dir)
 {
@@ -188,7 +179,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 	if (dir == 1) {
 		while (NULL != t[h])
 		{
-			if (con_uc_eq(t[h]->d->right, c)) break;
+			if (connector_uc_eq(t[h]->d->right, c)) break;
 
 			/* Increment and try again. Every hash bucket MUST have
 			 * a unique upper-case part, since later on, we only
@@ -204,7 +195,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 	{
 		while (NULL != t[h])
 		{
-			if (con_uc_eq(t[h]->d->left, c)) break;
+			if (connector_uc_eq(t[h]->d->left, c)) break;
 			h = (h + 1) & (size-1);
 			if (h == s) return NULL;
 		}
