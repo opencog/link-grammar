@@ -9537,6 +9537,9 @@ best.a-s personal_best:
   ({NR- or ND-} & DD- & (AJre- or AJle+)) or
   AJrs- or AJls+;
 
+% "despite best intentions"
+best.a:  A+;
+
 % ===========================================================================
 %ADVERBS
 
