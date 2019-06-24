@@ -130,6 +130,12 @@ void free_lookup_list(const Dictionary dict, Dict_node *llist)
 	dict->free_lookup(dict, llist);
 }
 
+bool dict_has_word(const Dictionary dict, const char *s)
+{
+	return dict->lookup(dict, s);
+}
+
+/* XXX Same as above. Exported and used by mistake. Deprecated. */
 bool boolean_dictionary_lookup(const Dictionary dict, const char *s)
 {
 	return dict->lookup(dict, s);
@@ -142,12 +148,12 @@ bool boolean_dictionary_lookup(const Dictionary dict, const char *s)
 bool dictionary_word_is_known(const Dictionary dict, const char * word)
 {
 	const char * regex_name;
-	if (boolean_dictionary_lookup (dict, word)) return true;
+	if (dict_has_word(dict, word)) return true;
 
 	regex_name = match_regex(dict->regex_root, word);
 	if (NULL == regex_name) return false;
 
-	return boolean_dictionary_lookup(dict, regex_name);
+	return dict_has_word(dict, regex_name);
 }
 
 /* ======================================================================== */

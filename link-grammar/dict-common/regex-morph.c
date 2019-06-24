@@ -111,7 +111,7 @@ int compile_regexs(Regex_node *rn, Dictionary dict)
 			}
 
 			/* Check that the regex name is defined in the dictionary. */
-			if ((NULL != dict) && !boolean_dictionary_lookup(dict, rn->name))
+			if ((NULL != dict) && !dict_has_word(dict, rn->name))
 			{
 				/* TODO: better error handing. Maybe remove the regex? */
 				prt_error("Error: Regex name %s not found in dictionary!\n",
