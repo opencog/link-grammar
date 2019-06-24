@@ -30,7 +30,7 @@ bool boolean_dictionary_lookup(const Dictionary, const char *);
 Dict_node * dictionary_lookup_list(const Dictionary, const char *);
 Dict_node * dictionary_lookup_wild(const Dictionary, const char *);
 
-bool find_word_in_dict(const Dictionary, const char *);
+bool dictionary_word_is_known(const Dictionary, const char *);
 
 void free_lookup_list(const Dictionary, Dict_node *);
 

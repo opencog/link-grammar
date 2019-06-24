@@ -139,7 +139,7 @@ bool boolean_dictionary_lookup(const Dictionary dict, const char *s)
  * Return true if word is in dictionary, or if word is matched by
  * regex.
  */
-bool find_word_in_dict(const Dictionary dict, const char * word)
+bool dictionary_word_is_known(const Dictionary dict, const char * word)
 {
 	const char * regex_name;
 	if (boolean_dictionary_lookup (dict, word)) return true;

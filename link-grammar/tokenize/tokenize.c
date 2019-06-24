@@ -326,7 +326,7 @@ static bool word_start_another_alternative(Dictionary dict,
 		lgdebug(D_WSAA, "Comparing alt %s\n\\", (*n)->subword);
 		if ((0 == strcmp((*n)->subword, altword0) ||
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
-			 !find_word_in_dict(dict, altword0))))
+			 !dictionary_word_is_known(dict, altword0))))
 		{
 			lgdebug(+D_UN, "Preventing alt starts with %s due to existing %zu:%s\n",
 			        altword0, (*n)->node_num, (*n)->subword);
@@ -1330,12 +1330,12 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 
 				/* Check if the remainder is in the dictionary.
 				 * In case we try to split a contracted word, the first word
-				 * may match a regex. Hence find_word_in_dict() is used and
-				 * not boolean_dictionary_lookup().
-				 * Note: Not like a previous version, stems cannot match a regex
+				 * may match a regex. Hence dictionary_word_is_known() is
+				 * used and not boolean_dictionary_lookup().
+				 * Note: Unlike previous versions, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
 				if ((is_contraction_word(dict, w) &&
-				    find_word_in_dict(dict, newword)) ||
+				    dictionary_word_is_known(dict, newword)) ||
 				    boolean_dictionary_lookup(dict, newword))
 				{
 					did_split = true;
@@ -1515,7 +1515,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 					 * It has been added in separate_word() as a word */
 					break;
 				}
-				if (find_word_in_dict(dict, newword))
+				if (dictionary_word_is_known(dict, newword))
 				{
 					word_is_in_dict = true;
 					lgdebug(+D_UN, "Splitting off a prefix: %.*s-%s\n",
@@ -2462,7 +2462,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
 
-			if (find_word_in_dict(dict, temp_word))
+			if (dictionary_word_is_known(dict, temp_word))
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, units_n_stripped, "rR2");
@@ -2482,8 +2482,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
 
-			if (!find_word_in_dict(dict, unsplit_word->subword) ||
-			    (0 == sz) || find_word_in_dict(dict, temp_word))
+			if (!dictionary_word_is_known(dict, unsplit_word->subword) ||
+			    (0 == sz) || dictionary_word_is_known(dict, temp_word))
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, n_stripped, "rR3");
@@ -2661,7 +2661,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * FIXME? Issuing only known lc words prevents using the unknown-word
 			 * device for words in capitalizable position (when the word is a uc
 			 * version of an unknown word). */
-			if (find_word_in_dict(sent->dict, downcase))
+			if (dictionary_word_is_known(sent->dict, downcase))
 				issue_dictcap(sent, /*is_cap*/false, unsplit_word, downcase);
 
 			word_is_known = true; /* We could just return */
@@ -3425,7 +3425,7 @@ bool sentence_in_dictionary(Sentence sent)
 		for (ialt=0; NULL != sent->word[w].alternatives[ialt]; ialt++)
 		{
 			s = sent->word[w].alternatives[ialt];
-			if (!find_word_in_dict(dict, s))
+			if (!dictionary_word_is_known(dict, s))
 			{
 				if (ok_so_far)
 				{

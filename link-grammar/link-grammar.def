@@ -10,6 +10,7 @@ dictionary_delete
 dictionary_get_data_dir
 dictionary_set_data_dir
 boolean_dictionary_lookup
+dictionary_word_is_known
 dictionary_lookup_list
 free_lookup_list
 dict_display_word_expr
