@@ -6690,12 +6690,12 @@ read.q-d:
     ((S- or I- or PP-) & {K+} & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>));
 
-wrote.q-d:
+wrote.q-d knew.q-d:
    {@E-} & (
     (S- & {K+} & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>));
 
-written.q:
+written.q known.q-d:
   {@E-} & ((PP- & <vc-paraph>) or (Pv- & CV- & dCPu-));
 
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
