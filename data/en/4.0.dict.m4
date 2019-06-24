@@ -6684,11 +6684,16 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
     or [Pvf- & <vc-it-paraph>]
     or (Pv- & CV- & dCPu-));
 
+% Why aren't the next two like the above?
 read.q-d:
-   {@E-} & (((S- or I- or PP-) & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & (
+    ((S- or I- or PP-) & {K+} & <vc-paraph>)
+    or (SI*j+ & <vc-paraph-inv>));
 
 wrote.q-d:
-   {@E-} & ((S- & {K+} & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
+   {@E-} & (
+    (S- & {K+} & <vc-paraph>)
+    or (SI*j+ & <vc-paraph-inv>));
 
 written.q:
   {@E-} & ((PP- & <vc-paraph>) or (Pv- & CV- & dCPu-));
