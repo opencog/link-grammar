@@ -8935,9 +8935,10 @@ say.q:
 says.q:
   {@E-} & (((Ss- or (RS- & Bs-)) & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 
+% Pv- & <vc-paraph>: "The play, it is said, is excellent"
 said.q-d:
   {@E-} & (
-    ((S- or PP- or (RS- & B-)) & <vc-paraph>)
+    ((S- or PP- or (RS- & B-) or Pv-) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
     or (Pv- & CV- & dCPu-));
 
