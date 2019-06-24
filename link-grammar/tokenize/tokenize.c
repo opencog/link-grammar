@@ -326,7 +326,7 @@ static bool word_start_another_alternative(Dictionary dict,
 		lgdebug(D_WSAA, "Comparing alt %s\n\\", (*n)->subword);
 		if ((0 == strcmp((*n)->subword, altword0) ||
 		    ((0 == strncmp((*n)->subword, altword0, strlen((*n)->subword))) &&
-			 !find_word_in_dict(dict, altword0))))
+			 !dictionary_word_is_known(dict, altword0))))
 		{
 			lgdebug(+D_UN, "Preventing alt starts with %s due to existing %zu:%s\n",
 			        altword0, (*n)->node_num, (*n)->subword);
@@ -388,7 +388,7 @@ static bool is_afdict_punc(const Dictionary afdict, const char *word)
 static bool regex_guess(Dictionary dict, const char *word, Gword *gword)
 {
 		const char *regex_name = match_regex(dict->regex_root, word);
-		if ((NULL != regex_name) && boolean_dictionary_lookup(dict, regex_name))
+		if ((NULL != regex_name) && dict_has_word(dict, regex_name))
 		{
 			gword->status |= WS_REGEX;
 			gword->regex_name = regex_name;
@@ -457,7 +457,7 @@ static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 		case WS_INDICT|WS_REGEX:
 			if (!(w->status & (WS_INDICT|WS_REGEX)))
 			{
-				if (boolean_dictionary_lookup(sent->dict, w->subword))
+				if (dict_has_word(sent->dict, w->subword))
 				{
 					w->status |= WS_INDICT;
 				}
@@ -473,7 +473,7 @@ static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 		case WS_SPELL:
 		/* Currently used to mark words that are a result of a spelling. */
 			if ((w->status & WS_INDICT) &&
-			    !boolean_dictionary_lookup(sent->dict, w->subword))
+			    !dict_has_word(sent->dict, w->subword))
 			{
 				status &= ~WS_INDICT;
 			}
@@ -1230,7 +1230,7 @@ static bool add_alternative_with_subscr(Sentence sent,
 		{
 			/* This is a compound-word spell check. Reject unknown words.
 			 * XXX: What if the word is capitalized? */
-			word_is_in_dict = boolean_dictionary_lookup(dict, word);
+			word_is_in_dict = dict_has_word(dict, word);
 		}
 	}
 	else
@@ -1252,7 +1252,7 @@ static bool add_alternative_with_subscr(Sentence sent,
 			strcpy(&w[wlen], stemsubscr[si]);
 
 			/* We should not match regexes to stems. */
-			if (boolean_dictionary_lookup(dict, w))
+			if (dict_has_word(dict, w))
 			{
 				word_is_in_dict = true;
 				if (issue_alternatives)
@@ -1330,13 +1330,13 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 
 				/* Check if the remainder is in the dictionary.
 				 * In case we try to split a contracted word, the first word
-				 * may match a regex. Hence find_word_in_dict() is used and
-				 * not boolean_dictionary_lookup().
-				 * Note: Not like a previous version, stems cannot match a regex
+				 * may match a regex. Hence dictionary_word_is_known() is
+				 * used and not dict_has_word().
+				 * Note: Unlike previous versions, stems cannot match a regex
 				 * here, and stem capitalization need to be handled elsewhere. */
 				if ((is_contraction_word(dict, w) &&
-				    find_word_in_dict(dict, newword)) ||
-				    boolean_dictionary_lookup(dict, newword))
+				    dictionary_word_is_known(dict, newword)) ||
+				    dict_has_word(dict, newword))
 				{
 					did_split = true;
 					word_can_split |=
@@ -1372,7 +1372,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 					strncpy(newword, w+prelen, sz);
 					newword[sz] = '\0';
 					/* ??? Do we need a regex match? */
-					if (boolean_dictionary_lookup(dict, newword))
+					if (dict_has_word(dict, newword))
 					{
 						word_can_split |=
 							add_alternative_with_subscr(sent, unsplit_word, prefix[j],
@@ -1515,7 +1515,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 					 * It has been added in separate_word() as a word */
 					break;
 				}
-				if (find_word_in_dict(dict, newword))
+				if (dictionary_word_is_known(dict, newword))
 				{
 					word_is_in_dict = true;
 					lgdebug(+D_UN, "Splitting off a prefix: %.*s-%s\n",
@@ -1627,7 +1627,7 @@ static bool morpheme_split(Sentence sent, Gword *unsplit_word, const char *word)
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 static bool is_known_word(Sentence sent, const char *word)
 {
-	return (boolean_dictionary_lookup(sent->dict, word) ||
+	return (dict_has_word(sent->dict, word) ||
 	        morpheme_split(sent, NULL, word));
 }
 
@@ -2276,7 +2276,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 	lgdebug(+D_SW, "Processing word: '%s'\n", word);
 
-	if (boolean_dictionary_lookup(dict, word))
+	if (dict_has_word(dict, word))
 	{
 		lgdebug(+D_SW, "0: Adding '%s' as is, before split tries, status=%s\n",
 		        word, gword_status(sent, unsplit_word));
@@ -2395,7 +2395,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 				temp_word[sz] = '\0';
 
 				/* If the resulting word is in the dict, we are done. */
-				if (boolean_dictionary_lookup(dict, temp_word)) break;
+				if (dict_has_word(dict, temp_word)) break;
 				/* Undo the check. */
 				wend = temp_wend;
 				n_stripped = temp_n_stripped;
@@ -2430,7 +2430,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 		/* Any remaining dict word stops the right-punctuation stripping. */
 		} while (NULL == units_wend && stripped && (sz != 0) &&
-					!boolean_dictionary_lookup(dict, temp_word));
+					!dict_has_word(dict, temp_word));
 
 		lgdebug(+D_SW, "After strip_right: n_stripped=(%s) "
 		        "word='%s' wend='%s' units_wend='%s' temp_word='%s'\n",
@@ -2462,7 +2462,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
 
-			if (find_word_in_dict(dict, temp_word))
+			if (dictionary_word_is_known(dict, temp_word))
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, units_n_stripped, "rR2");
@@ -2482,8 +2482,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			strncpy(temp_word, word, sz);
 			temp_word[sz] = '\0';
 
-			if (!find_word_in_dict(dict, unsplit_word->subword) ||
-			    (0 == sz) || find_word_in_dict(dict, temp_word))
+			if (!dictionary_word_is_known(dict, unsplit_word->subword) ||
+			    (0 == sz) || dictionary_word_is_known(dict, temp_word))
 			{
 				issue_r_stripped(sent, unsplit_word, temp_word, NULL,
 										 r_stripped, n_stripped, "rR3");
@@ -2574,7 +2574,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			if ('\0' == downcase[0])
 				downcase_utf8_str(downcase, word, downcase_size, dict->lctype);
-			lc_word_is_in_dict = boolean_dictionary_lookup(dict, downcase);
+			lc_word_is_in_dict = dict_has_word(dict, downcase);
 
 			if (word_is_capitalizable)
 			{
@@ -2638,8 +2638,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * Experimental dictionary handling for capitalized words.
 			 */
 
-			if (!boolean_dictionary_lookup(dict, CAP1st) ||
-				 !boolean_dictionary_lookup(dict, CAPnon))
+			if (!dict_has_word(dict, CAP1st) ||
+				 !dict_has_word(dict, CAPnon))
 			{
 				/* FIXME Move this check. Make it once. */
 				prt_error("Error: Missing " CAP1st "/" CAPnon "in the dict\n");
@@ -2661,7 +2661,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 * FIXME? Issuing only known lc words prevents using the unknown-word
 			 * device for words in capitalizable position (when the word is a uc
 			 * version of an unknown word). */
-			if (find_word_in_dict(sent->dict, downcase))
+			if (dictionary_word_is_known(sent->dict, downcase))
 				issue_dictcap(sent, /*is_cap*/false, unsplit_word, downcase);
 
 			word_is_known = true; /* We could just return */
@@ -3065,7 +3065,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	else
 	{
 #ifdef DEBUG
-		if (boolean_dictionary_lookup(dict, w->subword))
+		if (dict_has_word(dict, w->subword))
 		{
 			prt_error("Error: Word '%s': Internal error: Known word is unknown\n",
 			          w->subword);
@@ -3425,7 +3425,7 @@ bool sentence_in_dictionary(Sentence sent)
 		for (ialt=0; NULL != sent->word[w].alternatives[ialt]; ialt++)
 		{
 			s = sent->word[w].alternatives[ialt];
-			if (!find_word_in_dict(dict, s))
+			if (!dictionary_word_is_known(dict, s))
 			{
 				if (ok_so_far)
 				{

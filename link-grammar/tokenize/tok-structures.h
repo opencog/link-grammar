@@ -86,7 +86,7 @@ typedef enum
 #define WS_RUNON   (1<<3) /* Separated from words run-on */
 #define WS_HASALT  (1<<4) /* Has alternatives (one or more)*/
 #define WS_UNSPLIT (1<<5) /* It's an alternative to itself as an unsplit word */
-#define WS_INDICT  (1<<6) /* boolean_dictionary_lookup() is true */
+#define WS_INDICT  (1<<6) /* dict_has_word() is true */
 #define WS_FIRSTUPPER (1<<7) /* Subword is the lc version of its unsplit_word.
                                 The original word can be restored if needed
                                 through this unsplit_word. */

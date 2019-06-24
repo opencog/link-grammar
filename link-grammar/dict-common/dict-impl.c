@@ -338,15 +338,15 @@ void dictionary_setup_locale(Dictionary dict)
 
 void dictionary_setup_defines(Dictionary dict)
 {
-	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
-	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
+	dict->left_wall_defined  = dict_has_word(dict, LEFT_WALL_WORD);
+	dict->right_wall_defined = dict_has_word(dict, RIGHT_WALL_WORD);
 
-	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
+	dict->unknown_word_defined = dict_has_word(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = true;
 
 	/* In version 5.5.0 UNKNOWN_WORD has been replaced by <UNKNOWN-WORD>. */
 	if (!dict->unknown_word_defined &&
-	    boolean_dictionary_lookup(dict, "UNKNOWN-WORD"))
+	    dict_has_word(dict, "UNKNOWN-WORD"))
 	{
 		prt_error("Warning: Old name \"UNKNOWN-WORD\" is defined in the "
 		          "dictionary. Please use \"<UNKNOWN-WORD>\" instead.\n");

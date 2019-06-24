@@ -25,14 +25,17 @@ LINK_BEGIN_DECLS
  * the public API to the link-parser system.
  */
 
-bool boolean_dictionary_lookup(const Dictionary, const char *);
 
 Dict_node * dictionary_lookup_list(const Dictionary, const char *);
 Dict_node * dictionary_lookup_wild(const Dictionary, const char *);
 
-bool find_word_in_dict(const Dictionary, const char *);
+/* Return true if word can be found. */
+bool dictionary_word_is_known(const Dictionary, const char *);
 
 void free_lookup_list(const Dictionary, Dict_node *);
+
+/* This was exported and used by mistake! */
+bool boolean_dictionary_lookup(const Dictionary, const char *);
 
 /* XXX the below probably does not belong ...  ?? */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);

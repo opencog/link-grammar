@@ -285,7 +285,7 @@ static bool is_word(const char *word_start, int numchar, cgnum_t *cgnump)
 	}
 
 	lgdebug(7, "LOOKUP '%s' in %s: ", word, dict->name);
-	if (0 == afclass) return boolean_dictionary_lookup(dict, word);
+	if (0 == afclass) return dict_has_word(dict, word);
 
 	/* We don't have for now a tree representation of the affix file, only lists */
 #ifdef AFFIX_DICTIONARY_TREE
