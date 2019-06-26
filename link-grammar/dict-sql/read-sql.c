@@ -13,6 +13,8 @@
 
 #ifdef HAVE_SQLITE
 
+#define D_SQL 5 /* Verbosity levels for this module are 5 and 6. */
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -253,7 +255,7 @@ db_lookup_exp(Dictionary dict, const char *s, cbdata* bs)
 
 	if (es != s) free(es);
 
-	if (4 < verbosity)
+	if (verbosity_level(D_SQL+1))
 	{
 		printf("Found expression for class %s: ", s);
 		print_expression(bs->exp);
@@ -346,7 +348,7 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 	bs.dict = dict;
 	bs.dn = NULL;
 	db_lookup_common(dict, s, "=", morph_cb, &bs);
-	if (3 < verbosity)
+	if (verbosity_level(D_SQL))
 	{
 		if (bs.dn)
 		{
@@ -373,7 +375,7 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 	bs.dict = dict;
 	bs.dn = NULL;
 	db_lookup_common(dict, s, "GLOB", morph_cb, &bs);
-	if (3 < verbosity)
+	if (verbosity_level(D_SQL))
 	{
 		if (bs.dn)
 		{
