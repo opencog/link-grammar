@@ -44,6 +44,7 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <unistd.h>
 #else
 #include <windows.h>
@@ -631,6 +632,13 @@ fail:
 #endif /* _WIN32 */
 }
 
+#ifdef INTERRUPT_EXIT
+static void interrupt_exit(int n)
+{
+	exit(128+n);
+}
+#endif
+
 int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
@@ -676,6 +684,11 @@ int main(int argc, char * argv[])
 	sigemptyset (&winch_act.sa_mask);
 	winch_act.sa_flags = 0;
 	sigaction (SIGWINCH, &winch_act, NULL);
+#endif
+
+#ifdef INTERRUPT_EXIT
+	(void)signal(SIGINT, interrupt_exit);
+	(void)signal(SIGTERM, interrupt_exit);
 #endif
 
 	copts = command_options_create();
