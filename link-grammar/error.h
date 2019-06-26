@@ -48,6 +48,8 @@ const char *feature_enabled(const char *, ...);
  *
  * Invoking lgdebug() with a level number preceded by a + (+level) adds
  * printing of the function name.
+ * FIXME: The level is then Trace and if the message starts with a level
+ * it is ignored.
  */
 #define lgdebug(level, ...) \
 	(( \
