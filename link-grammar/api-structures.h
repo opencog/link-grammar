@@ -50,9 +50,8 @@
 #include "string-set.h"
 
 /* Performance tuning.
- * For short sentences, setting suffix IDs and packing takes more
- * resources than it saves. If this overhead is improved, these
- * limit can be set lower. */
+ * For short sentences, encoding takes more resources than it saves. If
+ * this overhead is improved, this limit can be set lower. */
 #define SENTENCE_MIN_LENGTH_TRAILING_HASH 6
 
 typedef struct Cost_Model_s Cost_Model;
@@ -135,7 +134,7 @@ struct Sentence_s
 	Pool_desc * Connector_pool;
 
 	/* Connector encoding, packing & sharing. */
-	size_t min_len_encoding;     /* Do it from this sentence length. */
+	size_t min_len_encoding;     /* Encode from this sentence length. */
 	void *dc_memblock;           /* For packed disjuncts & connectors. */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
