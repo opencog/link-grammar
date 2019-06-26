@@ -110,8 +110,8 @@ struct tracon_sharing_s
 {
 	union
 	{
-		void *memblock;             /* Memory block for disjuncts & connectors */
-		Disjunct *dblock_base;      /* Start of disjunct block */
+		void *memblock;          /* Memory block for disjuncts & connectors */
+		Disjunct *dblock_base;   /* Start of disjunct block */
 	};
 	size_t memblock_sz;         /* memblock size */
 	Connector *cblock_base;     /* Start of connector block */

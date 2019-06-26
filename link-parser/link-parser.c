@@ -922,7 +922,7 @@ int main(int argc, char * argv[])
 		 * However, if "-test=one-step-parse" is used and we are said to
 		 * parse with null links, allow parsing here with null links too. */
 		bool one_step_parse = !copts->batch_mode && copts->allow_null &&
-		                    test_enabled(test, "one-step-parse");
+		                      test_enabled(test, "one-step-parse");
 		int max_null_count = one_step_parse ? sentence_length(sent) : 0;
 
 		parse_options_set_min_null_count(opts, 0);

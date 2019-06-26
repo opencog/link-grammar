@@ -376,7 +376,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 			unsigned int *sizep;
 			unsigned int sid_entries = tl->entries[dir];
 
-			if (dir== 0)
+			if (dir == 0)
 			{
 				tp = pt->l_table;
 				sizep = pt->l_table_size;
