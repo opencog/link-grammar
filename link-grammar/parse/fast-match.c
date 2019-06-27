@@ -11,15 +11,15 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include "api-structures.h"  // For Sentence_s
+#include "api-structures.h"             // Sentence_s
 #include "connectors.h"
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "string-set.h"
-#include "dict-common/dict-common.h"   // For contable
-#include "tokenize/word-structures.h"  // For Word_struct
+#include "dict-common/dict-common.h"    // contable
+#include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
-#include "tokenize/tok-structures.h" // XXX TODO provide gword access methods!
+#include "tokenize/tok-structures.h"    // TODO provide gword access methods!
 #include "utilities.h"                  // UNREACHABLE
 
 /**
@@ -450,9 +450,12 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 		return c_con->same_alternative;
 
 	/* Each of the loops is of one iteration most of the times. */
-	for (const gword_set *ga = c1->originating_gword; NULL != ga; ga = ga->next) {
-		for (const gword_set *gb = c2->originating_gword; NULL != gb; gb = gb->next) {
-			if (in_same_alternative(ga->o_gword, gb->o_gword)) {
+	for (const gword_set *ga = c1->originating_gword; NULL != ga; ga = ga->next)
+	{
+		for (const gword_set *gb = c2->originating_gword; NULL != gb; gb = gb->next)
+		{
+			if (in_same_alternative(ga->o_gword, gb->o_gword))
+			{
 				 same_alternative = true;
 				 break;
 			}

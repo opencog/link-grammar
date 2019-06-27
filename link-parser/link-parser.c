@@ -44,6 +44,7 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <unistd.h>
 #else
 #include <windows.h>
@@ -631,6 +632,13 @@ fail:
 #endif /* _WIN32 */
 }
 
+#ifdef INTERRUPT_EXIT
+static void interrupt_exit(int n)
+{
+	exit(128+n);
+}
+#endif
+
 int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
@@ -676,6 +684,11 @@ int main(int argc, char * argv[])
 	sigemptyset (&winch_act.sa_mask);
 	winch_act.sa_flags = 0;
 	sigaction (SIGWINCH, &winch_act, NULL);
+#endif
+
+#ifdef INTERRUPT_EXIT
+	(void)signal(SIGINT, interrupt_exit);
+	(void)signal(SIGTERM, interrupt_exit);
 #endif
 
 	copts = command_options_create();
@@ -922,7 +935,7 @@ int main(int argc, char * argv[])
 		 * However, if "-test=one-step-parse" is used and we are said to
 		 * parse with null links, allow parsing here with null links too. */
 		bool one_step_parse = !copts->batch_mode && copts->allow_null &&
-		                    test_enabled(test, "one-step-parse");
+		                      test_enabled(test, "one-step-parse");
 		int max_null_count = one_step_parse ? sentence_length(sent) : 0;
 
 		parse_options_set_min_null_count(opts, 0);

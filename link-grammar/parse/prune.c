@@ -266,7 +266,7 @@ static void power_table_alloc(Sentence sent, power_table *pt)
  */
 static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 {
-	Tracon_list *tl = (NULL == ts) ? NULL : ts->tracon_list;
+	Tracon_list *tl = ts->tracon_list;
 	unsigned int i;
 #define TOPSZ 32768
 	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
@@ -376,7 +376,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 			unsigned int *sizep;
 			unsigned int sid_entries = tl->entries[dir];
 
-			if (dir== 0)
+			if (dir == 0)
 			{
 				tp = pt->l_table;
 				sizep = pt->l_table_size;
@@ -710,7 +710,7 @@ static bool is_bad(Connector *c)
  *  pass by marking their connectors with the pass number in their
  *  tracon_id field.
  */
-static int power_prune(Sentence sent, Parse_Options opts, power_table *pt)
+static int power_prune(Sentence sent, power_table *pt, Parse_Options opts)
 {
 	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
@@ -1143,7 +1143,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	knowledge = sent->postprocessor->knowledge;
 	cmt = cms_table_new();
 
-	Tracon_list *tl = (NULL == ts) ? NULL : ts->tracon_list;
+	Tracon_list *tl = ts->tracon_list;
 	if (NULL != tl)
 	{
 		for (int dir = 0; dir < 2; dir++)
@@ -1281,9 +1281,9 @@ void pp_and_power_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	power_table pt;
 	power_table_init(sent, ts, &pt);
 
-	power_prune(sent, opts, &pt);
+	power_prune(sent, &pt, opts);
 	if (pp_prune(sent, ts, opts) > 0)
-		power_prune(sent, opts, &pt);
+		power_prune(sent, &pt, opts);
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
 	 * additional deletions are very rare and even then most of the

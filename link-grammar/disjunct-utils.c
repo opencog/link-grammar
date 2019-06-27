@@ -683,7 +683,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	{
 		newc = NULL;
 
-		if ((NULL != ts) && (NULL != ts->csid[dir]))
+		if (NULL != ts->csid[dir])
 		{
 			/* Encoding is used - share tracons. */
 			Connector **tracon = tracon_set_add(o, ts->csid[dir]);

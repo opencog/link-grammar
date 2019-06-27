@@ -110,8 +110,8 @@ struct tracon_sharing_s
 {
 	union
 	{
-		void *memblock;             /* Memory block for disjuncts & connectors */
-		Disjunct *dblock_base;      /* Start of disjunct block */
+		void *memblock;          /* Memory block for disjuncts & connectors */
+		Disjunct *dblock_base;   /* Start of disjunct block */
 	};
 	size_t memblock_sz;         /* memblock size */
 	Connector *cblock_base;     /* Start of connector block */
@@ -121,7 +121,7 @@ struct tracon_sharing_s
 	unsigned int num_disjuncts;
 	Tracon_set *csid[2];        /* For generating unique tracon IDs */
 	int next_id[2];             /* Next unique tracon ID */
-	uintptr_t last_token;       /* Tracons are only unique per "token" */
+	uintptr_t last_token;       /* Tracons are the same only per this token */
 	int word_offset;            /* Start number for connector tracon_id */
 	bool is_pruning;            /* true - for pruning; false - for parsing */
 	Tracon_list *tracon_list;   /* Used only for pruning */
