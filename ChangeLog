@@ -1,6 +1,10 @@
-Version 5.6.2 (XXX 2019)
+Version 5.6.3 (XXX 2019)
+ * Something
+
+Version 5.6.2 (24 June 2019)
  * Bug-fix the SQL-backed dictionary.
  * Add missing public symbol to shlib export list.
+ * English dict: additions of paraphrasing verbs.
 
 Version 5.6.1 (27 May 2019)
  * Performance improvement (approx 20%) in expressions #882.
