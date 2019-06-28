@@ -11533,9 +11533,10 @@ as_is: {Xd- & Xc+} & MVs-;
 
 as_possible: MVz-;
 
-% "It is just like I suspected."
-like.e:
-  ({EZ-} or {Xd-}) & {[hVCz-]-0.05} & Cz+ & CV+;
+% hVCz-: "It is just like I suspected."
+% dWa-: "Like I said, she'll do it!"
+like.e as.z:
+  ({EZ-} or {Xd-}) & {[dWa- or hVCz-]-0.05} & Cz+ & CV+;
 
 % Em+: "That is so not going to happen"
 % EExk+: "That is so very beautiful"
