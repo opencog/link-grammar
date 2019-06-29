@@ -13,10 +13,10 @@
 
 #include <string.h>
 
-#include "api-structures.h"           // For Sentence_s (add_empty_word())
-#include "dict-common/dict-affix.h"   // For is_stem()
+#include "api-structures.h"             // Sentence_s (add_empty_word)
+#include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
+#include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "error.h"
@@ -24,7 +24,7 @@
 #include "externs.h"
 #include "read-dict.h"
 #include "string-set.h"
-#include "tokenize/tok-structures.h" // needed for MT_WALL
+#include "tokenize/tok-structures.h"    // MT_WALL
 #include "utilities.h"
 #include "word-file.h"
 
@@ -631,7 +631,7 @@ static bool subscr_match(const char *s, const Dict_node * dn)
 	if (NULL == s_sub) return true;
 	t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
 	if (NULL == t_sub) return false;
-	if ( 0 == strcmp(s_sub, t_sub)) return true;
+	if (0 == strcmp(s_sub, t_sub)) return true;
 
 	return false;
 }
