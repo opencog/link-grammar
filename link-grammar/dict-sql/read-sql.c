@@ -210,7 +210,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 		return 0;
 	}
 
-	/* Extend the OR-chain for the third and lter expressions. */
+	/* Extend the OR-chain for the third and later expressions. */
 	E_list* more = malloc(sizeof(E_list));
 	more->e = exp;
 	more->next = bs->exp->u.l;
