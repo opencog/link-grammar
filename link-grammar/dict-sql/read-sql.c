@@ -113,8 +113,6 @@ static const char * make_expression(Dictionary dict,
 	}
 	else if ('o' == *p && 'r' == *(p+1))
 	{
-		/* Actually, the dict should never contain `or`;
-		 * `or` is handled with multiple entries. */
 		etype = OR_type; p+=2;
 	}
 	else
