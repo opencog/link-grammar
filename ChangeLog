@@ -1,5 +1,5 @@
 Version 5.6.3 (XXX 2019)
- * Something
+ * Minor efficiency improvements to the SQL-backed dictionary.
 
 Version 5.6.2 (24 June 2019)
  * Bug-fix the SQL-backed dictionary.

@@ -113,6 +113,8 @@ static const char * make_expression(Dictionary dict,
 	}
 	else if ('o' == *p && 'r' == *(p+1))
 	{
+		/* Actually, the dict should never contain `or`;
+		 * `or` is handled with multiple entries. */
 		etype = OR_type; p+=2;
 	}
 	else
@@ -184,23 +186,35 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 		exp->cost = 1.0;
 	}
 
+	/* If the very first expression, just put it in place */
 	if (NULL == bs->exp)
 	{
 		bs->exp = exp;
 		return 0;
 	}
 
-	E_list *ell, *elr;
-	Exp* orn = malloc(sizeof(Exp));
-	orn->type = OR_type;
-	orn->cost = 0.0;
-	orn->u.l = ell = malloc(sizeof(E_list));
-	ell->next = elr = malloc(sizeof(E_list));
-	elr->next = NULL;
+	/* If the second expression, OR-it with the existing expression. */
+	if (OR_type != bs->exp->type)
+	{
+		E_list *ell, *elr;
+		Exp* orn = malloc(sizeof(Exp));
+		orn->type = OR_type;
+		orn->cost = 0.0;
+		orn->u.l = ell = malloc(sizeof(E_list));
+		ell->next = elr = malloc(sizeof(E_list));
+		elr->next = NULL;
 
-	ell->e = bs->exp;
-	elr->e = exp;
-	bs->exp = orn;
+		ell->e = exp;
+		elr->e = bs->exp;
+		bs->exp = orn;
+		return 0;
+	}
+
+	/* Extend the OR-chain for the third and later expressions. */
+	E_list* more = malloc(sizeof(E_list));
+	more->e = exp;
+	more->next = bs->exp->u.l;
+	bs->exp->u.l = more;
 
 	return 0;
 }
