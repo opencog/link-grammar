@@ -107,8 +107,8 @@ void pool_delete (const char *func, Pool_desc *mp)
 #ifdef DEBUG /* Macro-added first argument. */
 	from_func = func;
 #endif
-	lgdebug(+D_MEMPOOL, "Used %zu elements (%s deleted pool '%s' created in %s())\n",
-	        mp->curr_elements, from_func, mp->name, mp->func);
+	lgdebug(+D_MEMPOOL, "Used %zu (%zu) elements (%s deleted pool '%s' created in %s())\n",
+	        mp->curr_elements, mp->num_elements, from_func, mp->name, mp->func);
 
 	/* Free its chained memory blocks. */
 	char *c_next;
