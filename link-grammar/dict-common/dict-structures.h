@@ -52,8 +52,7 @@ struct Exp_struct
 		E_list * l;           /* Only needed for non-terminals */
 		condesc_t * condesc;  /* Only needed if it's a connector */
 	} u;
-	double cost;   /* The cost of using this expression.
-	                  Only used for non-terminals */
+	double cost;   /* The cost of using this expression. */
 };
 
 struct E_list_struct
