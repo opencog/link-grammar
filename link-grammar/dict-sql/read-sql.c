@@ -82,18 +82,17 @@ static const char * make_expression(Dictionary dict,
 		char * constr = NULL;
 		if ('@' == *con_start)
 		{
-			constr = strndup(con_start+1, p-con_start-1);
+			constr = strndupa(con_start+1, p-con_start-1);
 			e->multi = true;
 		}
 		else
 		{
-			constr = strndup(con_start, p-con_start);
+			constr = strndupa(con_start, p-con_start);
 			e->multi = false;
 		}
 
 		e->u.condesc = condesc_add(&dict->contable,
 		                           string_set_add(constr, dict->string_set));
-		free(constr);
 		*pex = e;
 	}
 
