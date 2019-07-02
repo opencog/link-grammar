@@ -27,11 +27,11 @@
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
-#include "dict-common/dict-utils.h"      // free_Exp()
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
 #include "externs.h"
 #include "lg_assert.h"
+#include "memory-pool.h"
 #include "string-set.h"
 #include "tokenize/spellcheck.h"
 #include "utilities.h"
@@ -75,7 +75,7 @@ static const char * make_expression(Dictionary dict,
 				"Missing direction character in connector string: %s", con_start);
 
 		/* Create an expression to hold the connector */
-		Exp* e = malloc(sizeof(Exp));
+		Exp* e = Exp_create(dict);
 		e->dir = *p;
 		e->type = CONNECTOR_type;
 		e->cost = 0.0;
@@ -125,11 +125,11 @@ static const char * make_expression(Dictionary dict,
 	assert(NULL != rest, "Badly formed expression %s", exp_str);
 
 	/* Join it all together. */
-	Exp* join = malloc(sizeof(Exp));
+	Exp* join = Exp_create(dict);
 	join->type = etype;
 	join->cost = 0.0;
-	E_list *ell = join->u.l = malloc(sizeof(E_list));
-	E_list *elr = ell->next = malloc(sizeof(E_list));
+	E_list *ell = join->u.l = pool_alloc(dict->E_list_pool);
+	E_list *elr = ell->next = pool_alloc(dict->E_list_pool);
 	elr->next = NULL;
 
 	ell->e = *pex;
@@ -156,10 +156,7 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
 	Dict_node * dn;
 	while (llist != NULL)
 	{
-		Exp *e;
 		dn = llist->right;
-		e = llist->exp;
-		if (e) free_Exp(e);
 		free(llist);
 		llist = dn;
 	}
@@ -169,12 +166,13 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
 static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
 
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
 	Exp* exp = NULL;
-	make_expression(bs->dict, argv[0], &exp);
+	make_expression(dict, argv[0], &exp);
 	assert(NULL != exp, "Failed expression %s", argv[0]);
 
 	if (!strtodC(argv[1], &exp->cost))
@@ -195,11 +193,11 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	if (OR_type != bs->exp->type)
 	{
 		E_list *ell, *elr;
-		Exp* orn = malloc(sizeof(Exp));
+		Exp* orn = Exp_create(dict);
 		orn->type = OR_type;
 		orn->cost = 0.0;
-		orn->u.l = ell = malloc(sizeof(E_list));
-		ell->next = elr = malloc(sizeof(E_list));
+		orn->u.l = ell = pool_alloc(dict->E_list_pool);
+		ell->next = elr = pool_alloc(dict->E_list_pool);
 		elr->next = NULL;
 
 		ell->e = exp;
@@ -209,7 +207,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	}
 
 	/* Extend the OR-chain for the third and later expressions. */
-	E_list* more = malloc(sizeof(E_list));
+	E_list* more = pool_alloc(dict->E_list_pool);
 	more->e = exp;
 	more->next = bs->exp->u.l;
 	bs->exp->u.l = more;
@@ -493,6 +491,13 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup = db_lookup;
 	dict->close = db_close;
 	condesc_init(dict, 1<<8);
+
+	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
+	                          sizeof(Exp), /*zero_out*/false,
+	                          /*align*/false, /*exact*/false);
+	dict->E_list_pool = pool_new(__func__, "E_list", /*num_elements*/4096,
+	                             sizeof(E_list), /*zero_out*/false,
+	                             /*align*/false, /*exact*/false);
 
 	/* Setup the affix table */
 	char *affix_name = join_path (lang, "4.0.affix");

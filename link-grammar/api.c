@@ -537,7 +537,11 @@ void sentence_delete(Sentence sent)
 	pool_delete(sent->Exp_pool);
 	pool_delete(sent->X_node_pool);
 	if (IS_DB_DICT(sent->dict))
+	{
 		condesc_reuse(sent->dict);
+		pool_reuse(sent->dict->E_list_pool);
+		pool_reuse(sent->dict->Exp_pool);
+	}
 
 	free(sent);
 }
