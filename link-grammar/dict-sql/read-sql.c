@@ -79,7 +79,6 @@ static const char * make_expression(Dictionary dict,
 		e->dir = *p;
 		e->type = CONNECTOR_type;
 		e->cost = 0.0;
-		e->u.l = NULL;
 		char * constr = NULL;
 		if ('@' == *con_start)
 		{
