@@ -61,7 +61,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       throw std::string("Unknown connector direction: ") + exp->dir;
     }
   } else if (exp->type == AND_type) {
-    if (exp->u.l == NULL) {
+    if (exp->operand_first == NULL) {
       /* zeroary and */
       if (cost != 0)
       {
@@ -70,9 +70,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         _empty_connectors.push_back(EmptyConnector(_variables->string(var),cost));
       }
     } else
-      if (exp->u.l->next == NULL) {
+      if (exp->operand_first->next == NULL) {
         /* unary and - skip */
-        insert_connectors(exp->u.l->e, dfs_position, leading_right,
+        insert_connectors(exp->operand_first->e, dfs_position, leading_right,
              leading_left, eps_right, eps_left, var, root, cost, parent_exp, word_xnode);
       } else {
         int i;
@@ -86,7 +86,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           last_var++;
         }
 
-        for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
+        for (i = 0, l = exp->operand_first; l != NULL; l = l->next, i++) {
           char* s = last_new_var;
           *s++ = 'c';
           fast_sprintf(s, i);
@@ -104,10 +104,10 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         }
       }
   } else if (exp->type == OR_type) {
-    if (exp->u.l != NULL && exp->u.l->next == NULL) {
+    if (exp->operand_first != NULL && exp->operand_first->next == NULL) {
       /* unary or - skip */
-      insert_connectors(exp->u.l->e, dfs_position, leading_right, leading_left,
-          eps_right, eps_left, var, root, cost, exp->u.l->e, word_xnode);
+      insert_connectors(exp->operand_first->e, dfs_position, leading_right, leading_left,
+          eps_right, eps_left, var, root, cost, exp->operand_first->e, word_xnode);
     } else {
       int i;
       E_list* l;
@@ -129,7 +129,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       }
 #endif
 
-      for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
+      for (i = 0, l = exp->operand_first; l != NULL; l = l->next, i++) {
         bool lr = leading_right, ll = leading_left;
         std::vector<int> er = eps_right, el = eps_left;
 

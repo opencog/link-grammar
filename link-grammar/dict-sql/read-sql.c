@@ -91,7 +91,7 @@ static const char * make_expression(Dictionary dict,
 			e->multi = false;
 		}
 
-		e->u.condesc = condesc_add(&dict->contable,
+		e->condesc = condesc_add(&dict->contable,
 		                           string_set_add(constr, dict->string_set));
 		*pex = e;
 	}
@@ -126,7 +126,7 @@ static const char * make_expression(Dictionary dict,
 	Exp* join = Exp_create(dict);
 	join->type = etype;
 	join->cost = 0.0;
-	E_list *ell = join->u.l = pool_alloc(dict->E_list_pool);
+	E_list *ell = join->operand_first = pool_alloc(dict->E_list_pool);
 	E_list *elr = ell->next = pool_alloc(dict->E_list_pool);
 	elr->next = NULL;
 
@@ -194,7 +194,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 		Exp* orn = Exp_create(dict);
 		orn->type = OR_type;
 		orn->cost = 0.0;
-		orn->u.l = ell = pool_alloc(dict->E_list_pool);
+		orn->operand_first = ell = pool_alloc(dict->E_list_pool);
 		ell->next = elr = pool_alloc(dict->E_list_pool);
 		elr->next = NULL;
 
@@ -207,8 +207,8 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	/* Extend the OR-chain for the third and later expressions. */
 	E_list* more = pool_alloc(dict->E_list_pool);
 	more->e = exp;
-	more->next = bs->exp->u.l;
-	bs->exp->u.l = more;
+	more->next = bs->exp->operand_first;
+	bs->exp->operand_first = more;
 
 	return 0;
 }

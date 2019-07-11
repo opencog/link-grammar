@@ -26,7 +26,7 @@
 
 const char * lg_exp_get_string(const Exp* exp)
 {
-	return exp->u.condesc->string;
+	return exp->condesc->string;
 }
 
 /* ======================================================== */
@@ -39,7 +39,7 @@ void free_Exp(Exp * e)
 	// SQL dict.
 	if (NULL == e) return;
 	if (e->type != CONNECTOR_type) {
-		free_E_list(e->u.l);
+		free_E_list(e->operand_first);
 	}
 	free(e);
 }
@@ -59,7 +59,7 @@ int size_of_expression(Exp * e)
 	E_list * l;
 	if (e->type == CONNECTOR_type) return 1;
 	size = 0;
-	for (l=e->u.l; l!=NULL; l=l->next) {
+	for (l=e->operand_first; l!=NULL; l=l->next) {
 		size += size_of_expression(l->e);
 	}
 	return size;
@@ -83,7 +83,7 @@ static E_list *copy_E_list(E_list *l, Pool_desc* mp[])
 		el->next = nl;
 		el = nl;
 		if (l->e->type != CONNECTOR_type)
-			nl->e->u.l = copy_E_list(l->e->u.l, mp);
+			nl->e->operand_first = copy_E_list(l->e->operand_first, mp);
 	}
 	el->next = NULL;
 
@@ -98,7 +98,7 @@ Exp *copy_Exp(Exp *e, Pool_desc *E_list_pool, Pool_desc *Exp_pool)
 	*ne = *e;
 	if (CONNECTOR_type == e->type) return ne;
 
-	ne->u.l = copy_E_list(ne->u.l, (Pool_desc*[]){E_list_pool, Exp_pool});
+	ne->operand_first = copy_E_list(ne->operand_first, (Pool_desc*[]){E_list_pool, Exp_pool});
 	return ne;
 }
 
@@ -121,14 +121,14 @@ static bool exp_compare(Exp * e1, Exp * e2)
 	{
 		if (e1->dir != e2->dir)
 			return 0;
-		/* printf("%s %s\n",e1->u.condesc->string,e2->u.condesc->string); */
-		if (e1->u.condesc != e2->u.condesc)
+		/* printf("%s %s\n",e1->condesc->string,e2->condesc->string); */
+		if (e1->condesc != e2->condesc)
 			return 0;
 	}
 	else
 	{
-		el1 = e1->u.l;
-		el2 = e2->u.l;
+		el1 = e1->operand_first;
+		el2 = e2->operand_first;
 		/* while at least 1 is non-null */
 		for (;(el1!=NULL)||(el2!=NULL);) {
 		   /*fail if 1 is null */
@@ -167,7 +167,7 @@ static int exp_contains(Exp * super, Exp * sub)
 
 	/* proceed through supers children and return 1 if sub
 	   is contained in any of them */
-	for(el = super->u.l; el!=NULL; el=el->next) {
+	for(el = super->operand_first; el!=NULL; el=el->next) {
 		if (exp_contains(el->e, sub)==1)
 			return 1;
 	}
@@ -252,14 +252,14 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
-		return smart_match ? easy_match(e->u.condesc->string, cs)
-		                   : string_set_cmp(e->u.condesc->string, cs);
+		return smart_match ? easy_match(e->condesc->string, cs)
+		                   : string_set_cmp(e->condesc->string, cs);
 	}
 
 	if (depth == 0) return false;
 	if (depth > 0) depth--;
 
-	for (el = e->u.l; el != NULL; el = el->next)
+	for (el = e->operand_first; el != NULL; el = el->next)
 	{
 		if (exp_has_connector(el->e, depth, cs, direction, smart_match))
 			return true;
@@ -296,7 +296,7 @@ const char * word_only_connector(Dict_node * dn)
 {
 	Exp * e = dn->exp;
 	if (CONNECTOR_type == e->type)
-		return e->u.condesc->string;
+		return e->condesc->string;
 	return NULL;
 }
 

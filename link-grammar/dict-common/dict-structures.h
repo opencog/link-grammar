@@ -37,21 +37,24 @@ typedef enum
 } Exp_type;
 
 /**
- * The E_list and Exp structures defined below comprise the expression
- * trees that are stored in the dictionary.  The expression has a type
- * (OR_type, AND_type or CONNECTOR_type).  If it is not a terminal it
- * has a list (an E_list) of children. Else "condesc" is the connector
- * descriptor, when "dir" indicates the connector direction.
+ * The Exp structure defined below comprises the expression trees that are
+ * stored in the dictionary. The expression has a type (OR_type, AND_type
+ * or CONNECTOR_type). If it is not a terminal "operand" points to its
+ * list of operands (when each of them points to the next one through
+ * "next"). Else "condesc" is the connector descriptor, when "dir"
+ * indicates the connector direction.
  */
 struct Exp_struct
 {
+	Exp *operand_next; /* Next same-level operand. */
 	Exp_type type; /* One of three types: AND, OR, or connector. */
-	char dir;      /* The connector connects to: '-': the left; '+': the right */
-	bool multi;    /* TRUE if a multi-connector (for connector)  */
-	union {
-		E_list * l;           /* Only needed for non-terminals */
-		condesc_t * condesc;  /* Only needed if it's a connector */
-	} u;
+	char dir;      /* The connector connects to the left ('-') or right ('+'). */
+	bool multi;    /* TRUE if a multi-connector (for connector). */
+	union
+	{
+		E_list *operand_first; /* First operand (for non-terminals). */
+		condesc_t *condesc; /* Only needed if it's a connector. */
+	};
 	double cost;   /* The cost of using this expression. */
 };
 

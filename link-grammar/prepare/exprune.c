@@ -219,7 +219,7 @@ static Exp* purge_Exp(exprune_context *ctxt, int w, Exp *e, char dir)
 	{
 		if (e->dir == dir)
 		{
-			if (!matches_S(ctxt->ct, w, e->u.condesc))
+			if (!matches_S(ctxt->ct, w, e->condesc))
 			{
 				ctxt->N_deleted++;
 				return NULL;
@@ -231,24 +231,24 @@ static Exp* purge_Exp(exprune_context *ctxt, int w, Exp *e, char dir)
 
 	if (e->type == AND_type)
 	{
-		if (!and_purge_E_list(ctxt, w, e->u.l, dir))
+		if (!and_purge_E_list(ctxt, w, e->operand_first, dir))
 		{
 			return NULL;
 		}
 	}
 	else /* if we are here, its OR_type */
 	{
-		e->u.l = or_purge_E_list(ctxt, w, e->u.l, dir);
-		if (e->u.l == NULL)
+		e->operand_first = or_purge_E_list(ctxt, w, e->operand_first, dir);
+		if (e->operand_first == NULL)
 		{
 			return NULL;
 		}
 	}
 
 	/* Unary node elimination (for a slight performance improvement). */
-	if ((e->u.l != NULL) && (e->u.l->next == NULL))
+	if ((e->operand_first != NULL) && (e->operand_first->next == NULL))
 	{
-		Exp *ne = e->u.l->e;
+		Exp *ne = e->operand_first->e;
 		ne->cost += e->cost;
 		return ne;
 	}
@@ -302,19 +302,19 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 	{
 		if (e->dir == dir)
 		{
-			assert(NULL != e->u.condesc, "NULL connector");
-			Connector c = { .desc = e->u.condesc };
+			assert(NULL != e->condesc, "NULL connector");
+			Connector c = { .desc = e->condesc };
 
 			set_connector_length_limit(&c, ctxt->opts);
 			int farthest_word = (dir == '-') ? -MAX(0, w-c.length_limit) :
 				                              w+c.length_limit;
-			insert_connector(ctxt, farthest_word, e->u.condesc);
+			insert_connector(ctxt, farthest_word, e->condesc);
 		}
 	}
 	else
 	{
 		E_list *l;
-		for (l=e->u.l; l!=NULL; l=l->next)
+		for (l=e->operand_first; l!=NULL; l=l->next)
 		{
 			insert_connectors(ctxt, w, l->e, dir);
 		}

@@ -44,7 +44,7 @@ Exp* null_exp()
   static Exp e;
 
   if (e.type) return &e;
-  e.u.l = NULL;
+  e.operand_first = NULL;
   e.type = AND_type;
   return &e;
 }
@@ -70,7 +70,7 @@ void add_anded_exp(Exp*& orig, Exp* addit)
       orig = (Exp*) malloc(sizeof(Exp));
       orig->type = AND_type;
       orig->cost = 0.0;
-      orig->u.l = elist;
+      orig->operand_first = elist;
     }
 }
 

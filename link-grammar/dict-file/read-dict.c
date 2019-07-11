@@ -811,7 +811,7 @@ static Exp * make_zeroary_node(Dictionary dict)
 	Exp * n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = NULL;
+	n->operand_first = NULL;
 	return n;
 }
 
@@ -825,9 +825,9 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = pool_alloc(dict->E_list_pool);
-	n->u.l->next = NULL;
-	n->u.l->e = e;
+	n->operand_first = pool_alloc(dict->E_list_pool);
+	n->operand_first->next = NULL;
+	n->operand_first->e = e;
 	return n;
 }
 
@@ -844,7 +844,7 @@ static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 	n->type = AND_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = pool_alloc(dict->E_list_pool);
+	n->operand_first = ell = pool_alloc(dict->E_list_pool);
 	ell->next = elr = pool_alloc(dict->E_list_pool);
 	elr->next = NULL;
 
@@ -858,7 +858,7 @@ static Exp *make_op_Exp(Dictionary dict, Exp_type t)
 	Exp * n = Exp_create(dict);
 	n->type = t;
 	n->cost = 0.0;
-	n->u.l = NULL;
+	n->operand_first = NULL;
 
 	return n;
 }
@@ -886,7 +886,7 @@ static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 	n->type = OR_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = pool_alloc(dict->E_list_pool);
+	n->operand_first = ell = pool_alloc(dict->E_list_pool);
 	ell->next = elr = pool_alloc(dict->E_list_pool);
 	elr->next = NULL;
 
@@ -929,9 +929,9 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 		n->multi = false;
 	}
 
-	n->u.condesc = condesc_add(&dict->contable,
+	n->condesc = condesc_add(&dict->contable,
 	                            string_set_add(constring, dict->string_set));
-	if (NULL == n->u.condesc) return NULL; /* Table ovf */
+	if (NULL == n->condesc) return NULL; /* Table ovf */
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
 	return n;
@@ -1034,7 +1034,7 @@ static Exp *make_or_node_from_pool(Sentence sent, Exp *nl, Exp *nr)
 	n->type = OR_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = (E_list *) pool_alloc(sent->E_list_pool);
+	n->operand_first = ell = (E_list *) pool_alloc(sent->E_list_pool);
 	ell->next = elr = (E_list *) pool_alloc(sent->E_list_pool);
 	elr->next = NULL;
 
@@ -1048,7 +1048,7 @@ static Exp *make_zeroary_node_from_pool(Sentence sent)
 	Exp * n = pool_alloc(sent->Exp_pool);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = NULL;
+	n->operand_first = NULL;
 	return n;
 }
 
@@ -1083,7 +1083,7 @@ void add_empty_word(Sentence sent, X_node *x)
 		/* zn points at {ZZZ+} */
 		zn = pool_alloc(sent->Exp_pool);
 		zn->dir = '+';
-		zn->u.condesc = condesc_add(&sent->dict->contable, ZZZ);
+		zn->condesc = condesc_add(&sent->dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
 		zn->cost = 0.0;
@@ -1103,7 +1103,7 @@ void add_empty_word(Sentence sent, X_node *x)
 		an = pool_alloc(sent->Exp_pool);
 		an->type = AND_type;
 		an->cost = 0.0;
-		an->u.l = elist;
+		an->operand_first = elist;
 
 		x->exp = an;
 	}
@@ -1157,7 +1157,7 @@ static Exp *operator_exp(Dictionary dict, int type)
 		dict_error(dict, "An \"or\" or \"and\" of nothing");
 		return NULL;
 	}
-	n->u.l = first.next;
+	n->operand_first = first.next;
 	return n;
 }
 
@@ -1420,7 +1420,7 @@ static Exp *make_expression(Dictionary dict)
 		else
 		{
 			e_head = make_op_Exp(dict, op);
-			e_head->u.l = make_E_list_val(dict, nl);
+			e_head->operand_first = make_E_list_val(dict, nl);
 		}
 
 		if (!link_advance(dict)) {
@@ -1428,7 +1428,7 @@ static Exp *make_expression(Dictionary dict)
 		}
 
 		if (el_tail == NULL)
-			el_tail = e_head->u.l;
+			el_tail = e_head->operand_first;
 	}
 		/* unreachable */
 }
@@ -1545,7 +1545,7 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 {
 	if (NULL == n) return newnode;
 
-	static Exp null_exp = { .type = AND_type, .u.l = NULL };
+	static Exp null_exp = { .type = AND_type, .operand_first = NULL };
 	int comp = dict_order_strict(newnode->string, n);
 	if (0 == comp &&
 	    /* Suppress reporting duplicate idioms until they are fixed. */

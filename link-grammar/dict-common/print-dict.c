@@ -57,7 +57,7 @@ void print_expression(Exp * n)
 		if (icost == 0) printf("(");
 		if (n->type == AND_type) printf("& ");
 		if (n->type == OR_type) printf("or ");
-		for (el = n->u.l; el != NULL; el = el->next)
+		for (el = n->operand_first; el != NULL; el = el->next)
 		{
 			print_expression(el->e);
 		}
@@ -126,13 +126,13 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
 		if (n->multi) dyn_strcat(e, "@");
-		append_string(e, "%s%c", n->u.condesc?n->u.condesc->string:"(null)", n->dir);
+		append_string(e, "%s%c", n->condesc?n->condesc->string:"(null)", n->dir);
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
 		return e;
 	}
 
-	el = n->u.l;
+	el = n->operand_first;
 	if (el == NULL)
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
@@ -146,7 +146,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 
 	/* look for optional, and print only that */
 	if ((n->type == OR_type) && el->e &&
-	    (el->e->type == AND_type) && el->e->cost == 0 && (NULL == el->e->u.l))
+	    (el->e->type == AND_type) && el->e->cost == 0 && (NULL == el->e->operand_first))
 	{
 		dyn_strcat(e, "{");
 		if (NULL == el->next) dyn_strcat(e, "error-no-next");
@@ -295,13 +295,13 @@ static unsigned int count_clause(Exp *e)
 	{
 		/* multiplicative combinatorial explosion */
 		cnt = 1;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		for (e_list = e->operand_first; e_list != NULL; e_list = e_list->next)
 			cnt *= count_clause(e_list->e);
 	}
 	else if (e->type == OR_type)
 	{
 		/* Just additive */
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		for (e_list = e->operand_first; e_list != NULL; e_list = e_list->next)
 			cnt += count_clause(e_list->e);
 	}
 	else if (e->type == CONNECTOR_type)

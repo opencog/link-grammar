@@ -28,11 +28,11 @@ struct PositionConnector
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
     if (word_xnode == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << e->u.condesc->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << e->condesc->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
 
     // Initialize some fields in the connector struct.
-    connector.desc = e->u.condesc;
+    connector.desc = e->condesc;
     connector.multi = e->multi;
     set_connector_length_limit(&connector, opts);
     connector.originating_gword = &w_xnode->word->gword_set_head;

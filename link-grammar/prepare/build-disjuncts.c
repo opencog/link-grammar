@@ -165,7 +165,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 		c1->next = NULL;
 		c1->cost = 0.0;
 		c1->maxcost = 0.0;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		for (e_list = e->operand_first; e_list != NULL; e_list = e_list->next)
 		{
 			c2 = build_clause(e_list->e, ct);
 			c_head = NULL;
@@ -194,9 +194,9 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 	}
 	else if (e->type == OR_type)
 	{
-		c = build_clause(e->u.l->e, ct);
+		c = build_clause(e->operand_first->e, ct);
 		/* we'll catenate the lists of clauses */
-		for (e_list = e->u.l->next; e_list != NULL; e_list = e_list->next)
+		for (e_list = e->operand_first->next; e_list != NULL; e_list = e_list->next)
 		{
 			c1 = build_clause(e_list->e, ct);
 			if (c1 == NULL) continue;
@@ -278,7 +278,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			/* Build a list of connectors from the Tconnectors. */
 			for (Tconnector *t = cl->c; t != NULL; t = t->next)
 			{
-				Connector *n = connector_new(connector_pool, t->e->u.condesc, opts);
+				Connector *n = connector_new(connector_pool, t->e->condesc, opts);
 				Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
 				n->multi = t->e->multi;
@@ -328,7 +328,7 @@ static void print_Tconnector_list(Tconnector *t)
 	for (; t != NULL; t = t->next)
 	{
 		if (t->e->multi) printf("@");
-		printf("%s", t->e->u.condesc->string);
+		printf("%s", t->e->condesc->string);
 		printf("%c", t->e->dir);
 		if (t->next != NULL) printf(" ");
 	}
@@ -354,7 +354,7 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	printf ("type=%d dir=%c multi=%d cost=%f\n", e->type, e->dir, e->multi, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
-		E_list *l = e->u.l;
+		E_list *l = e->operand_first;
 		while(l)
 		{
 			prt_exp(l->e, i+2);
@@ -364,7 +364,7 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s\n", e->u.condesc->string);
+		printf("con=%s\n", e->condesc->string);
 	}
 }
 
@@ -391,15 +391,15 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	{
 		E_list *l;
 		for(int j =0; j<i+2; j++) printf(" ");
-		printf("E_list=%p (", e->u.l);
-		for (l = e->u.l; NULL != l; l = l->next)
+		printf("E_list=%p (", e->operand_first);
+		for (l = e->operand_first; NULL != l; l = l->next)
 		{
 			printf("%p", l->e);
 			if (NULL != l->next) printf(" ");
 		}
 		printf(")\n");
 
-		for (l = e->u.l; NULL != l; l = l->next)
+		for (l = e->operand_first; NULL != l; l = l->next)
 		{
 			prt_exp_mem(l->e, i+2);
 		}
@@ -408,7 +408,7 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	{
 		for(int j =0; j<i; j++) printf(" ");
 		printf("con=%s dir=%c multi=%d\n",
-		       e->u.condesc ? e->u.condesc->string : "(condesc=(null))",
+		       e->condesc ? e->condesc->string : "(condesc=(null))",
 		       e->dir, e->multi);
 	}
 }

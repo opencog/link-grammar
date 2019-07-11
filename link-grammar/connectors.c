@@ -84,12 +84,12 @@ static size_t get_connectors_from_expression(condesc_t **conlist, const Exp *e)
 {
 	if (e->type == CONNECTOR_type)
 	{
-		if (NULL != conlist) *conlist = e->u.condesc;
+		if (NULL != conlist) *conlist = e->condesc;
 		return 1;
 	}
 
 	size_t cl_size = 0;
-	for (E_list *l = e->u.l; l != NULL; l = l->next)
+	for (E_list *l = e->operand_first; l != NULL; l = l->next)
 	{
 		cl_size += get_connectors_from_expression(conlist, l->e);
 		if (NULL != conlist) conlist++;
