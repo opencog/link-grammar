@@ -106,7 +106,7 @@ dictionary_six_str(const char * lang,
 {
 	const char * t;
 	Dictionary dict;
-	size_t E_pool_size;   /* Exp & E_list memory pool sizes. */
+	size_t Exp_pool_size;
 
 	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
@@ -137,7 +137,7 @@ dictionary_six_str(const char * lang,
 		dict->free_lookup = free_llist;
 		dict->lookup = file_boolean_lookup;
 		condesc_init(dict, 1<<13);
-		E_pool_size = 1<<13;
+		Exp_pool_size = 1<<13;
 	}
 	else
 	{
@@ -148,15 +148,12 @@ dictionary_six_str(const char * lang,
 		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
 		condesc_init(dict, 1<<9);
-		E_pool_size = 1<<5;
+		Exp_pool_size = 1<<5;
 	}
 
-	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/E_pool_size,
+	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/Exp_pool_size,
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
-	dict->E_list_pool = pool_new(__func__, "E_list", /*num_elements*/E_pool_size,
-	                             sizeof(E_list), /*zero_out*/false,
-	                             /*align*/false, /*exact*/false);
 
 	/* Read dictionary from the input string. */
 

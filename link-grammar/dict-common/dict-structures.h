@@ -52,7 +52,7 @@ struct Exp_struct
 	bool multi;    /* TRUE if a multi-connector (for connector). */
 	union
 	{
-		E_list *operand_first; /* First operand (for non-terminals). */
+		Exp *operand_first; /* First operand (for non-terminals). */
 		condesc_t *condesc; /* Only needed if it's a connector. */
 	};
 	double cost;   /* The cost of using this expression. */

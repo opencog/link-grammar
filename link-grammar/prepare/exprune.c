@@ -12,6 +12,9 @@
 /*************************************************************************/
 
 #include "api-structures.h"              // for Sentence_s
+#ifdef DEBUG
+#include "build-disjuncts.h"             // allow using prt_exp_mem
+#endif
 #include "connectors.h"
 #include "dict-common/dict-api.h"        // expression_stringify
 #include "dict-common/dict-utils.h"      // size_of_expression
@@ -177,33 +180,85 @@ static Exp* purge_Exp(exprune_context *ctxt, int, Exp *, char);
 /**
  * Get rid of the current_elements with null expressions
  */
-static E_list * or_purge_E_list(exprune_context *ctxt, int w, E_list *l, char dir)
+static bool or_purge_operands(exprune_context *ctxt, int w, Exp *e, char dir)
 {
-	E_list * el;
-	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(ctxt, w, l->e, dir)) == NULL)
+#if NOTYET
+	const double nullexp_nonexistence = -9999;
+	double nullexp_mincost = nullexp_nonexistence;
+	int nullexp_count = 0;
+#endif
+
+	for (Exp **opdp = &e->operand_first; *opdp != NULL; /* See: NEXT */)
 	{
-		el = or_purge_E_list(ctxt, w, l->next, dir);
-		return el;
+		Exp *opd = *opdp;
+
+#if NOTYET
+		if ((opd->type == AND_type) && (opd->operand_first == NULL))
+		{
+			if (opd->cost > nullexp_mincost) nullexp_mincost = opd->cost;
+			nullexp_count++;
+		}
+		else
+#endif
+		if (purge_Exp(ctxt, w, opd, dir) == NULL)
+		{
+			*opdp = opd->operand_next; /* Discard element + NEXT */
+			continue;
+		}
+
+		opdp = &opd->operand_next; /* NEXT */
+	};
+
+#if NOTYET
+	if ((nullexp_count > 1) && (nullexp_mincost != nullexp_nonexistence))
+	{
+		bool nullexp_retained = false;
+
+		for (Exp **opdp = &e->operand_first; *opdp != NULL; /* See: NEXT */)
+		{
+			Exp *opd = *opdp;
+
+			if ((opd->type == AND_type) && (opd->operand_first == NULL))
+			{
+				if (!nullexp_retained && opd->cost == nullexp_mincost)
+				{
+					 nullexp_retained = true;
+				}
+				else
+				{
+					*opdp = opd->operand_next; /* Discard element + NEXT */
+					continue;
+				}
+			}
+
+			opdp = &opd->operand_next; /* NEXT */
+		}
 	}
-	l->next = or_purge_E_list(ctxt, w, l->next, dir);
-	return l;
+#endif
+
+	return (e->operand_first != NULL);
 }
 
 /**
  * Returns true iff the length of the disjunct list is 0.
  * If this is the case, it frees the structure rooted at l.
  */
-static bool and_purge_E_list(exprune_context *ctxt, int w, E_list *l, char dir)
+static bool and_purge_operands(exprune_context *ctxt, int w, Exp *e, char dir)
 {
-	if (l == NULL) return true;
-	if ((l->e = purge_Exp(ctxt, w, l->e, dir)) == NULL)
+	for (Exp **opdp = &e->operand_first; *opdp != NULL; /* See: NEXT */)
 	{
-		return false;
-	}
-	if (!and_purge_E_list(ctxt, w, l->next, dir))
-	{
-		return false;
+		Exp *opd = *opdp;
+
+#ifdef NOTYET
+		if ((opd->type == AND_type) && (opd->operand_first == NULL))
+		{
+			e->cost += opd->cost;
+			*opdp = opd->operand_next; /* Discard element + NEXT */
+		}
+#endif
+
+		if (purge_Exp(ctxt, w, opd, dir) == NULL) return false;
+		opdp = &opd->operand_next; /* NEXT */
 	}
 	return true;
 }
@@ -231,26 +286,20 @@ static Exp* purge_Exp(exprune_context *ctxt, int w, Exp *e, char dir)
 
 	if (e->type == AND_type)
 	{
-		if (!and_purge_E_list(ctxt, w, e->operand_first, dir))
-		{
-			return NULL;
-		}
+		if (!and_purge_operands(ctxt, w, e, dir)) return NULL;
 	}
 	else /* if we are here, its OR_type */
 	{
-		e->operand_first = or_purge_E_list(ctxt, w, e->operand_first, dir);
-		if (e->operand_first == NULL)
-		{
-			return NULL;
-		}
+		if (!or_purge_operands(ctxt, w, e, dir)) return NULL;
 	}
 
 	/* Unary node elimination (for a slight performance improvement). */
-	if ((e->operand_first != NULL) && (e->operand_first->next == NULL))
+	if ((e->operand_first != NULL) && (e->operand_first->operand_next == NULL))
 	{
-		Exp *ne = e->operand_first->e;
-		ne->cost += e->cost;
-		return ne;
+		Exp *opd = e->operand_first;
+		opd->cost += e->cost;
+		opd->operand_next = e->operand_next;
+		*e = *opd;
 	}
 
 	return e;
@@ -313,10 +362,9 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 	}
 	else
 	{
-		E_list *l;
-		for (l=e->operand_first; l!=NULL; l=l->next)
+		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
-			insert_connectors(ctxt, w, l->e, dir);
+			insert_connectors(ctxt, w, opd, dir);
 		}
 	}
 }
@@ -366,6 +414,7 @@ void expression_prune(Sentence sent, Parse_Options opts)
 				X_node *x = *xp;
 
 				DBG(pass, w, "l->r pass before purging");
+				//if (pass == 0 && w == 0) {printf("Exp: ");prt_exp_mem(x->exp, 0);}
 				x->exp = purge_Exp(&ctxt, w, x->exp, '-');
 				DBG(pass, w, "l->r pass after purging");
 

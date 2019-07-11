@@ -2996,7 +2996,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 		y = (X_node *) pool_alloc(sent->X_node_pool);
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(dn->exp, sent->E_list_pool, sent->Exp_pool);
+		x->exp = copy_Exp(dn->exp, sent->Exp_pool);
 		if (NULL == s)
 		{
 			x->string = dn->string;

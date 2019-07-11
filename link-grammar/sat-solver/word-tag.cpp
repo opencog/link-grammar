@@ -70,13 +70,13 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         _empty_connectors.push_back(EmptyConnector(_variables->string(var),cost));
       }
     } else
-      if (exp->operand_first->next == NULL) {
+      if (exp->operand_first->operand_next == NULL) {
         /* unary and - skip */
-        insert_connectors(exp->operand_first->e, dfs_position, leading_right,
+        insert_connectors(exp->operand_first, dfs_position, leading_right,
              leading_left, eps_right, eps_left, var, root, cost, parent_exp, word_xnode);
       } else {
         int i;
-        E_list* l;
+        Exp* opd;
 
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
@@ -86,13 +86,13 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
           last_var++;
         }
 
-        for (i = 0, l = exp->operand_first; l != NULL; l = l->next, i++) {
+        for (i = 0, opd = exp->operand_first; opd != NULL; opd = opd->operand_next, i++) {
           char* s = last_new_var;
           *s++ = 'c';
           fast_sprintf(s, i);
 
           double and_cost = (i == 0) ? cost : 0;
-          insert_connectors(l->e, dfs_position, leading_right, leading_left,
+          insert_connectors(opd, dfs_position, leading_right, leading_left,
                 eps_right, eps_left, new_var, false, and_cost, parent_exp, word_xnode);
 
           if (leading_right) {
@@ -104,13 +104,13 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         }
       }
   } else if (exp->type == OR_type) {
-    if (exp->operand_first != NULL && exp->operand_first->next == NULL) {
+    if (exp->operand_first != NULL && exp->operand_first->operand_next == NULL) {
       /* unary or - skip */
-      insert_connectors(exp->operand_first->e, dfs_position, leading_right, leading_left,
-          eps_right, eps_left, var, root, cost, exp->operand_first->e, word_xnode);
+      insert_connectors(exp->operand_first, dfs_position, leading_right, leading_left,
+          eps_right, eps_left, var, root, cost, exp->operand_first, word_xnode);
     } else {
       int i;
-      E_list* l;
+      Exp* opd;
       bool ll_true = false;
       bool lr_true = false;
 
@@ -129,7 +129,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       }
 #endif
 
-      for (i = 0, l = exp->operand_first; l != NULL; l = l->next, i++) {
+      for (i = 0, opd = exp->operand_first; opd != NULL; opd = opd->operand_next, i++) {
         bool lr = leading_right, ll = leading_left;
         std::vector<int> er = eps_right, el = eps_left;
 
@@ -137,13 +137,18 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         *s++ = 'd';
         fast_sprintf(s, i);
 
-        lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
-                _word, var, i, l, word_xnode ? word_xnode->word->subword : "NULL X_node");
         assert(word_xnode != NULL, "NULL X_node for var %s", new_var);
-        if ((NULL != word_xnode->next) && (l->e == word_xnode->next->exp))
-          word_xnode = word_xnode->next;
+        if (root)
+        {
+          lgdebug(+D_IC, "Word%d: var: %s; exp%d=%p; X_node: %s\n",
+                  _word, new_var, i, opd, word_xnode->word->subword);
+        }
 
-        insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost, l->e, word_xnode);
+        insert_connectors(opd, dfs_position, lr, ll, er, el, new_var, false, cost, opd, word_xnode);
+
+        /* For the toplevel X_node-joined OR_type, get the next X_node. */
+        if (root && (word_xnode->next != NULL))
+          word_xnode = word_xnode->next;
 
         if (lr)
           lr_true = true;

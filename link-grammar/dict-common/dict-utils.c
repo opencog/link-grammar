@@ -30,76 +30,42 @@ const char * lg_exp_get_string(const Exp* exp)
 }
 
 /* ======================================================== */
-/* Exp utilities ... */
-
-void free_E_list(E_list *);
-void free_Exp(Exp * e)
+void free_Exp(Exp *e)
 {
-	// Exp might be null if the user has a bad dict. e.g. badly formed
-	// SQL dict.
-	if (NULL == e) return;
-	if (e->type != CONNECTOR_type) {
-		free_E_list(e->operand_first);
+	if (NULL == e) return; /* Exp might be null if the user has a bad dict. */
+	if (e->type != CONNECTOR_type)
+	{
+		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+			free_Exp(opd);
 	}
 	free(e);
 }
-
-void free_E_list(E_list * l)
-{
-	if (l == NULL) return;
-	free_E_list(l->next);
-	free_Exp(l->e);
-	free(l);
-}
+/* Exp utilities ... */
 
 /* Returns the number of connectors in the expression e */
 int size_of_expression(Exp * e)
 {
-	int size;
-	E_list * l;
+	int size = 0;
+
 	if (e->type == CONNECTOR_type) return 1;
-	size = 0;
-	for (l=e->operand_first; l!=NULL; l=l->next) {
-		size += size_of_expression(l->e);
-	}
+	for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+		size += size_of_expression(opd);
+
 	return size;
 }
 
-/**
- * Build a copy of the given expression (don't copy strings, of course)
- */
-static E_list *copy_E_list(E_list *l, Pool_desc* mp[])
-{
-
-	E_list el_head;
-	E_list *el = &el_head;
-
-	for (; l != NULL; l = l->next)
-	{
-		E_list *nl = pool_alloc(mp[0]);
-
-		nl->e = pool_alloc(mp[1]);
-		*nl->e = *l->e;
-		el->next = nl;
-		el = nl;
-		if (l->e->type != CONNECTOR_type)
-			nl->e->operand_first = copy_E_list(l->e->operand_first, mp);
-	}
-	el->next = NULL;
-
-	return el_head.next;
-}
-
-Exp *copy_Exp(Exp *e, Pool_desc *E_list_pool, Pool_desc *Exp_pool)
+Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool)
 {
 	if (e == NULL) return NULL;
-	Exp *ne = pool_alloc(Exp_pool);
+	Exp *new_e = pool_alloc(Exp_pool);
 
-	*ne = *e;
-	if (CONNECTOR_type == e->type) return ne;
+	*new_e = *e;
 
-	ne->operand_first = copy_E_list(ne->operand_first, (Pool_desc*[]){E_list_pool, Exp_pool});
-	return ne;
+	new_e->operand_next = copy_Exp(e->operand_next, Exp_pool);
+	if (CONNECTOR_type == e->type) return new_e;
+	new_e->operand_first = copy_Exp(e->operand_first, Exp_pool);
+
+	return new_e;
 }
 
 /**
@@ -107,8 +73,6 @@ Exp *copy_Exp(Exp *e, Pool_desc *E_list_pool, Pool_desc *Exp_pool)
  */
 static bool exp_compare(Exp * e1, Exp * e2)
 {
-	E_list *el1, *el2;
-
 	if ((e1 == NULL) && (e2 == NULL))
 	  return 1; /* they are equal */
 	if ((e1 == NULL) || (e2 == NULL))
@@ -127,18 +91,18 @@ static bool exp_compare(Exp * e1, Exp * e2)
 	}
 	else
 	{
-		el1 = e1->operand_first;
-		el2 = e2->operand_first;
+		e1 = e1->operand_first;
+		e2 = e2->operand_first;
 		/* while at least 1 is non-null */
-		for (;(el1!=NULL)||(el2!=NULL);) {
+		for (;(e1!=NULL)||(e2!=NULL);) {
 		   /*fail if 1 is null */
-			if ((el1==NULL)||(el2==NULL))
+			if ((e1==NULL)||(e2==NULL))
 				return 0;
 			/* fail if they are not compared */
-			if (!exp_compare(el1->e, el2->e))
+			if (!exp_compare(e1, e2))
 				return 0;
-			el1 = el1->next;
-			el2 = el2->next;
+			e1 = e1->operand_next;
+			e2 = e2->operand_next;
 		}
 	}
 	return 1; /* if never returned 0, return 1 */
@@ -150,8 +114,6 @@ static bool exp_compare(Exp * e1, Exp * e2)
  */
 static int exp_contains(Exp * super, Exp * sub)
 {
-	E_list * el;
-
 #if 0 /* DEBUG */
 	printf("SUP: ");
 	if (super) print_expression(super);
@@ -167,8 +129,9 @@ static int exp_contains(Exp * super, Exp * sub)
 
 	/* proceed through supers children and return 1 if sub
 	   is contained in any of them */
-	for(el = super->operand_first; el!=NULL; el=el->next) {
-		if (exp_contains(el->e, sub)==1)
+	for(Exp *opd = super->operand_first; opd != NULL; opd = opd->operand_next)
+	{
+		if (exp_contains(opd, sub)==1)
 			return 1;
 	}
 	return 0;
@@ -248,7 +211,6 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 static bool exp_has_connector(const Exp * e, int depth, const char * cs,
                               char direction, bool smart_match)
 {
-	E_list * el;
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
@@ -259,9 +221,9 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 	if (depth == 0) return false;
 	if (depth > 0) depth--;
 
-	for (el = e->operand_first; el != NULL; el = el->next)
+	for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 	{
-		if (exp_has_connector(el->e, depth, cs, direction, smart_match))
+		if (exp_has_connector(opd, depth, cs, direction, smart_match))
 			return true;
 	}
 	return false;

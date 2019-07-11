@@ -76,7 +76,7 @@ void print_expression(Exp * n)
 static dyn_str *print_expression_parens(dyn_str *e,
                                         const Exp * n, int need_parens)
 {
-	E_list * el;
+	Exp *operand;
 	int i, icost;
 	double dcost;
 
@@ -132,8 +132,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		return e;
 	}
 
-	el = n->operand_first;
-	if (el == NULL)
+	operand = n->operand_first;
+	if (operand == NULL)
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
 		dyn_strcat(e, "()");
@@ -145,12 +145,12 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	for (i=0; i<icost; i++) dyn_strcat(e, "[");
 
 	/* look for optional, and print only that */
-	if ((n->type == OR_type) && el->e &&
-	    (el->e->type == AND_type) && el->e->cost == 0 && (NULL == el->e->operand_first))
+	if ((n->type == OR_type) && operand && (operand->type == AND_type) &&
+	    operand->cost == 0 && (NULL == operand->operand_first))
 	{
 		dyn_strcat(e, "{");
-		if (NULL == el->next) dyn_strcat(e, "error-no-next");
-		else print_expression_parens(e, el->next->e, false);
+		if (NULL == operand->operand_next) dyn_strcat(e, "error-no-next");
+		 else print_expression_parens(e, operand->operand_next, false);
 		dyn_strcat(e, "}");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
@@ -160,10 +160,10 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if ((icost == 0) && need_parens) dyn_strcat(e, "(");
 
 	/* print left side of binary expr */
-	print_expression_parens(e, el->e, true);
+	print_expression_parens(e, operand, true);
 
 	/* get a funny "and optional" when it's a named expression thing. */
-	if ((n->type == AND_type) && (el->next == NULL))
+	if ((n->type == AND_type) && (operand->operand_next == NULL))
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) append_string(e, COST_FMT, dcost);
@@ -175,8 +175,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if (n->type == OR_type) dyn_strcat(e, " or ");
 
 	/* print right side of binary expr */
-	el = el->next;
-	if (el == NULL)
+	operand = operand->operand_next;
+	if (operand == NULL)
 	{
 		if (n->type == OR_type)
 			dyn_strcat(e, "error-no-next");
@@ -187,22 +187,22 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	{
 		do
 		{
-			if (el->e->type == n->type)
+			if (operand->type == n->type)
 				{
-					print_expression_parens(e, el->e, false);
+					print_expression_parens(e, operand, false);
 			}
 			else
 			{
-				print_expression_parens(e, el->e, true);
+				print_expression_parens(e, operand, true);
 			}
 
-			el = el->next;
-			if (el != NULL)
+			operand = operand->operand_next;
+			if (operand != NULL)
 			{
 				if (n->type == AND_type) dyn_strcat(e, " & ");
 				if (n->type == OR_type) dyn_strcat(e, " or ");
 			}
-		} while (el != NULL);
+		} while (operand != NULL);
 	}
 
 	for (i=0; i<icost; i++) dyn_strcat(e, "]");
@@ -288,21 +288,20 @@ static char *display_word_split(Dictionary dict,
 static unsigned int count_clause(Exp *e)
 {
 	unsigned int cnt = 0;
-	E_list * e_list;
 
 	assert(e != NULL, "count_clause called with null parameter");
 	if (e->type == AND_type)
 	{
 		/* multiplicative combinatorial explosion */
 		cnt = 1;
-		for (e_list = e->operand_first; e_list != NULL; e_list = e_list->next)
-			cnt *= count_clause(e_list->e);
+		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+			cnt *= count_clause(opd);
 	}
 	else if (e->type == OR_type)
 	{
 		/* Just additive */
-		for (e_list = e->operand_first; e_list != NULL; e_list = e_list->next)
-			cnt += count_clause(e_list->e);
+		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+			cnt += count_clause(opd);
 	}
 	else if (e->type == CONNECTOR_type)
 	{

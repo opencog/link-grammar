@@ -115,9 +115,7 @@ struct Dictionary_s
 	Word_file *     word_file_header;
 	ConTable        contable;
 
-	/* Memory pools */
 	Pool_desc  * Exp_pool;
-	Pool_desc  * E_list_pool;
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.

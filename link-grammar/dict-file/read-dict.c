@@ -803,6 +803,20 @@ Exp *Exp_create(Dictionary dict)
 }
 
 /**
+ * Duplicate the given Exp node.
+ * This is needed in case it is to be participate more than once in a
+ * single expression.
+ */
+static Exp *Exp_create_dup(Dictionary dict, Exp *old_e)
+{
+	Exp *new_e = Exp_create(dict);
+
+	*new_e = *old_e;
+
+	return new_e;
+}
+
+/**
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
@@ -812,6 +826,7 @@ static Exp * make_zeroary_node(Dictionary dict)
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->operand_first = NULL;
+	n->operand_next = NULL;
 	return n;
 }
 
@@ -824,10 +839,9 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
+	n->operand_next = NULL;
 	n->cost = 0.0;
-	n->operand_first = pool_alloc(dict->E_list_pool);
-	n->operand_first->next = NULL;
-	n->operand_first->e = e;
+	n->operand_first = e;
 	return n;
 }
 
@@ -837,19 +851,17 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
  */
 static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 {
-	E_list *ell, *elr;
 	Exp* n;
 
 	n = Exp_create(dict);
 	n->type = AND_type;
+	n->operand_next = NULL;
 	n->cost = 0.0;
 
-	n->operand_first = ell = pool_alloc(dict->E_list_pool);
-	ell->next = elr = pool_alloc(dict->E_list_pool);
-	elr->next = NULL;
+	n->operand_first = nl;
+	nl->operand_next = nr;
+	nr->operand_next = NULL;
 
-	ell->e = nl;
-	elr->e = nr;
 	return n;
 }
 
@@ -857,20 +869,11 @@ static Exp *make_op_Exp(Dictionary dict, Exp_type t)
 {
 	Exp * n = Exp_create(dict);
 	n->type = t;
+	n->operand_next = NULL;
 	n->cost = 0.0;
-	n->operand_first = NULL;
 
+	/* The caller is supposed to assign n->operand. */
 	return n;
-}
-
-static E_list *make_E_list_val(Dictionary dict, Exp* nr)
-{
-	E_list *elr = pool_alloc(dict->E_list_pool);
-
-	elr->e = nr;
-	elr->next = NULL;
-
-	return elr;
 }
 
 /**
@@ -879,19 +882,17 @@ static E_list *make_E_list_val(Dictionary dict, Exp* nr)
  */
 static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 {
-	E_list *ell, *elr;
 	Exp* n;
 
 	n = Exp_create(dict);
 	n->type = OR_type;
+	n->operand_next = NULL;
 	n->cost = 0.0;
 
-	n->operand_first = ell = pool_alloc(dict->E_list_pool);
-	ell->next = elr = pool_alloc(dict->E_list_pool);
-	elr->next = NULL;
+	n->operand_first = nl;
+	nl->operand_next = nr;
+	nr->operand_next = NULL;
 
-	ell->e = nl;
-	elr->e = nr;
 	return n;
 }
 
@@ -930,9 +931,10 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 	}
 
 	n->condesc = condesc_add(&dict->contable,
-	                            string_set_add(constring, dict->string_set));
+	                         string_set_add(constring, dict->string_set));
 	if (NULL == n->condesc) return NULL; /* Table ovf */
 	n->type = CONNECTOR_type;
+	n->operand_next = NULL; /* unused, but accessed by copy_Exp() and some more */
 	n->cost = 0.0;
 	return n;
 }
@@ -1023,23 +1025,21 @@ static Exp * make_connector(Dictionary dict)
 
 /** Expression-creating function versions that use the Sentence
  *  expression memory pools.
- *  (See the description of the similar functions above.)
+ *  (FIXME: Unify with the similar functions above.)
  */
 static Exp *make_or_node_from_pool(Sentence sent, Exp *nl, Exp *nr)
 {
-	E_list *ell, *elr;
 	Exp* n;
 
 	n = pool_alloc(sent->Exp_pool);
 	n->type = OR_type;
+	n->operand_next = NULL;
 	n->cost = 0.0;
 
-	n->operand_first = ell = (E_list *) pool_alloc(sent->E_list_pool);
-	ell->next = elr = (E_list *) pool_alloc(sent->E_list_pool);
-	elr->next = NULL;
+	n->operand_first = nl;
+	nl->operand_next = nr;
+	nr->operand_next = NULL;
 
-	ell->e = nl;
-	elr->e = nr;
 	return n;
 }
 
@@ -1047,8 +1047,10 @@ static Exp *make_zeroary_node_from_pool(Sentence sent)
 {
 	Exp * n = pool_alloc(sent->Exp_pool);
 	n->type = AND_type;  /* these must be AND types */
+	n->operand_next = NULL;
 	n->cost = 0.0;
 	n->operand_first = NULL;
+
 	return n;
 }
 
@@ -1065,7 +1067,6 @@ static Exp *make_optional_node_from_pool(Sentence sent, Exp *e)
 void add_empty_word(Sentence sent, X_node *x)
 {
 	Exp *zn, *an;
-	E_list *elist, *flist;
 	const char *ZZZ = string_set_lookup(EMPTY_CONNECTOR, sent->dict->string_set);
 	/* This function is called only if ZZZ is in the dictionary. */
 
@@ -1086,24 +1087,17 @@ void add_empty_word(Sentence sent, X_node *x)
 		zn->condesc = condesc_add(&sent->dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
+		zn->operand_next = NULL; /* unused, but to be on the safe side */
 		zn->cost = 0.0;
 		zn = make_optional_node_from_pool(sent, zn);
-
-		/* flist is plain-word-exp */
-		flist = (E_list *) pool_alloc(sent->E_list_pool);
-		flist->next = NULL;
-		flist->e = x->exp;
-
-		/* elist is {ZZZ+} , (plain-word-exp) */
-		elist = (E_list *) pool_alloc(sent->E_list_pool);
-		elist->next = flist;
-		elist->e = zn;
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
 		an = pool_alloc(sent->Exp_pool);
 		an->type = AND_type;
+		an->operand_next = NULL;
 		an->cost = 0.0;
-		an->operand_first = elist;
+		an->operand_first = zn;
+		zn->operand_next = x->exp;
 
 		x->exp = an;
 	}
@@ -1257,7 +1251,7 @@ static Exp *make_expression(Dictionary dict)
 {
 	Exp *nl = NULL;
 	Exp *e_head = NULL;
-	E_list *el_tail = NULL; /* last part of the expression */
+	Exp *e_tail = NULL; /* last part of the expression */
 	bool is_sym_and = false;
 
 	while (true)
@@ -1361,28 +1355,29 @@ static Exp *make_expression(Dictionary dict)
 
 		if (is_sym_and)
 		{
-			/* Part 2/2 of SYM_AND processing */
+			/* Part 2/2 of SYM_AND processing. */
 
 			/* Expand A ^ B into the expr ((A & B) or (B & A)). */
-
-			Exp *na = make_and_node(dict, el_tail->e, nl);
-			Exp *nb = make_and_node(dict, nl, el_tail->e);
+			Exp *na = make_and_node(dict,
+			                   Exp_create_dup(dict, e_tail),
+			                   Exp_create_dup(dict, nl));
+			Exp *nb = make_and_node(dict,
+			                   Exp_create_dup(dict, nl),
+			                   Exp_create_dup(dict, e_tail));
 			Exp *or = make_or_node(dict, na, nb);
 
-			el_tail->e = or;
+			*e_tail = *or; /* SYM_AND result */
 			is_sym_and = false;
 		}
-		else if (el_tail != NULL)
+		else if (e_tail != NULL)
 		{
 			/* This is Non-commuting AND or Commuting OR.
-			 * Append the just read expression (nl) to its E_list chain. */
-			el_tail->next = make_E_list_val(dict, nl);
-			el_tail = el_tail->next;
+			 * Append the just read expression (nl) to its operand chain. */
+			e_tail->operand_next = nl;
+			e_tail = nl;
 		}
 
-		/* If (el_tail == NULL), handle_basic_op() below will create an
-		 * E_list element with nl. Else it will just validate that the
-		 * current operation is consistent with the current expression level. */
+		/* Extract the operator. */
 
 		Exp_type op;
 
@@ -1409,7 +1404,15 @@ static Exp *make_expression(Dictionary dict)
 			return nl;
 		}
 
-		if (e_head != NULL)
+		/* If this is the first operand, use nl for it.  Else just validate
+		 * that the current operator is consistent with that of the current
+		 * expression level. */
+		if (e_head == NULL)
+		{
+			e_head = make_op_Exp(dict, op);
+			e_head->operand_first = nl;
+		}
+		else
 		{
 			if (e_head->type != op)
 			{
@@ -1417,18 +1420,13 @@ static Exp *make_expression(Dictionary dict)
 				return NULL;
 			}
 		}
-		else
-		{
-			e_head = make_op_Exp(dict, op);
-			e_head->operand_first = make_E_list_val(dict, nl);
-		}
 
 		if (!link_advance(dict)) {
 			return NULL;
 		}
 
-		if (el_tail == NULL)
-			el_tail = e_head->operand_first;
+		if (e_tail == NULL)
+			e_tail = e_head->operand_first;
 	}
 		/* unreachable */
 }
@@ -1545,8 +1543,14 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 {
 	if (NULL == n) return newnode;
 
-	static Exp null_exp = { .type = AND_type, .operand_first = NULL };
+	static Exp null_exp =
+	{
+		.type = AND_type,
+		.operand_first = NULL,
+		.operand_next = NULL,
+	};
 	int comp = dict_order_strict(newnode->string, n);
+
 	if (0 == comp &&
 	    /* Suppress reporting duplicate idioms until they are fixed. */
 	    (!contains_underbar(newnode->string) || test_enabled("dup-idioms")))

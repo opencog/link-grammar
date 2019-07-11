@@ -436,9 +436,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->dict = dict;
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
-	sent->E_list_pool = pool_new(__func__, "E_list", /*num_elements*/4096,
-	                             sizeof(E_list), /*zero_out*/false,
-	                             /*align*/false, /*exact*/false);
 	sent->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                             sizeof(Exp), /*zero_out*/false,
 	                             /*align*/false, /*exact*/false);
@@ -533,13 +530,11 @@ void sentence_delete(Sentence sent)
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->fm_Match_node);
 	pool_delete(sent->Table_connector_pool);
-	pool_delete(sent->E_list_pool);
 	pool_delete(sent->Exp_pool);
 	pool_delete(sent->X_node_pool);
 	if (IS_DB_DICT(sent->dict))
 	{
 		condesc_reuse(sent->dict);
-		pool_reuse(sent->dict->E_list_pool);
 		pool_reuse(sent->dict->Exp_pool);
 	}
 

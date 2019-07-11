@@ -100,7 +100,7 @@ protected:
   // Trailing connectors of a given direction in the given expression
   void trailing_connectors(int w, Exp* exp, char dir, int& dfs_position,
                            std::vector<PositionConnector*>& connectors);
-  bool trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
+  bool trailing_connectors_and_aux(int w, Exp* opd, char dir, int& dfs_position,
                                    std::vector<PositionConnector*>& connectors);
 
   // Connectors of the given direction that cannot be trailing
@@ -264,11 +264,6 @@ protected:
   // Join several expressions corresponding to different dictionary
   // entries of a word into a single expression.
   Exp* join_alternatives(int w);
-
-  // Erase auxiliary expression tree nodes obtained by joining several
-  // expressions into one.
-  void free_alternatives(Exp* e);
-
 
   /**
    * Decoding
