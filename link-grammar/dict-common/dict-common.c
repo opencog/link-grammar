@@ -247,36 +247,6 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 }
 #endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
 
-/**
- * The following two functions free the Exp s and the
- * E_lists of the dictionary.  Not to be confused with
- * free_E_list in dict-utils.c.
- */
-static void free_Elist(E_list * l)
-{
-	E_list * l1;
-
-	for (; l != NULL; l = l1) {
-		l1 = l->next;
-		free(l);
-	}
-}
-
-void free_Exp_list(Exp_list * eli)
-{
-	Exp * e1;
-	Exp * e = eli->exp_list;
-	for (; e != NULL; e = e1)
-	{
-		e1 = e->next;
-		if (e->type != CONNECTOR_type)
-		{
-		   free_Elist(e->u.l);
-		}
-		free(e);
-	}
-}
-
 static void free_dict_node_recursive(Dict_node * dn)
 {
 	if (dn == NULL) return;
@@ -289,7 +259,8 @@ static void free_dictionary(Dictionary dict)
 {
 	free_dict_node_recursive(dict->root);
 	free_Word_file(dict->word_file_header);
-	free_Exp_list(&dict->exp_list);
+	pool_delete(dict->Exp_pool);
+	pool_delete(dict->E_list_pool);
 }
 
 static void affix_list_delete(Dictionary dict)

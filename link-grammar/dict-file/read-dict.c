@@ -13,10 +13,10 @@
 
 #include <string.h>
 
-#include "api-structures.h"           // For Sentence_s (add_empty_word())
-#include "dict-common/dict-affix.h"   // For is_stem()
+#include "api-structures.h"             // Sentence_s (add_empty_word)
+#include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // For SUBSCRIPT_MARK
+#include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "error.h"
@@ -24,7 +24,7 @@
 #include "externs.h"
 #include "read-dict.h"
 #include "string-set.h"
-#include "tokenize/tok-structures.h" // needed for MT_WALL
+#include "tokenize/tok-structures.h"    // MT_WALL
 #include "utilities.h"
 #include "word-file.h"
 
@@ -631,7 +631,7 @@ static bool subscr_match(const char *s, const Dict_node * dn)
 	if (NULL == s_sub) return true;
 	t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
 	if (NULL == t_sub) return false;
-	if ( 0 == strcmp(s_sub, t_sub)) return true;
+	if (0 == strcmp(s_sub, t_sub)) return true;
 
 	return false;
 }
@@ -794,13 +794,11 @@ static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 
 /* ======================================================================== */
 /**
- * Allocate a new Exp node and link it into the exp_list for freeing later.
+ * Allocate a new Exp node.
  */
-Exp * Exp_create(Exp_list *eli)
+Exp *Exp_create(Dictionary dict)
 {
-	Exp * e = malloc(sizeof(Exp));
-	e->next = eli->exp_list;
-	eli->exp_list = e;
+	Exp *e = pool_alloc(dict->Exp_pool);
 	return e;
 }
 
@@ -808,9 +806,9 @@ Exp * Exp_create(Exp_list *eli)
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-static Exp * make_zeroary_node(Exp_list * eli)
+static Exp * make_zeroary_node(Dictionary dict)
 {
-	Exp * n = Exp_create(eli);
+	Exp * n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->u.l = NULL;
@@ -821,13 +819,13 @@ static Exp * make_zeroary_node(Exp_list * eli)
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-static Exp * make_unary_node(Exp_list * eli, Exp * e)
+static Exp * make_unary_node(Dictionary dict, Exp * e)
 {
 	Exp * n;
-	n = Exp_create(eli);
+	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
-	n->u.l = (E_list *) malloc(sizeof(E_list));
+	n->u.l = pool_alloc(dict->E_list_pool);
 	n->u.l->next = NULL;
 	n->u.l->e = e;
 	return n;
@@ -837,17 +835,17 @@ static Exp * make_unary_node(Exp_list * eli, Exp * e)
  * Create an AND_type expression. The expressions nl, nr will be
  * AND-ed together.
  */
-static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
+static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 {
 	E_list *ell, *elr;
 	Exp* n;
 
-	n = Exp_create(eli);
+	n = Exp_create(dict);
 	n->type = AND_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = (E_list *) malloc(sizeof(E_list));
-	ell->next = elr = (E_list *) malloc(sizeof(E_list));
+	n->u.l = ell = pool_alloc(dict->E_list_pool);
+	ell->next = elr = pool_alloc(dict->E_list_pool);
 	elr->next = NULL;
 
 	ell->e = nl;
@@ -855,9 +853,9 @@ static Exp * make_and_node(Exp_list * eli, Exp* nl, Exp* nr)
 	return n;
 }
 
-static Exp *make_op_Exp(Exp_list *eli, Exp_type t)
+static Exp *make_op_Exp(Dictionary dict, Exp_type t)
 {
-	Exp * n = Exp_create(eli);
+	Exp * n = Exp_create(dict);
 	n->type = t;
 	n->cost = 0.0;
 	n->u.l = NULL;
@@ -865,9 +863,9 @@ static Exp *make_op_Exp(Exp_list *eli, Exp_type t)
 	return n;
 }
 
-static E_list *make_E_list_val(Exp* nr)
+static E_list *make_E_list_val(Dictionary dict, Exp* nr)
 {
-	E_list *elr = (E_list *) malloc(sizeof(E_list));
+	E_list *elr = pool_alloc(dict->E_list_pool);
 
 	elr->e = nr;
 	elr->next = NULL;
@@ -879,17 +877,17 @@ static E_list *make_E_list_val(Exp* nr)
  * Create an OR_type expression. The expressions nl, nr will be
  * OR-ed together.
  */
-static Exp * make_or_node(Exp_list *eli, Exp* nl, Exp* nr)
+static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 {
 	E_list *ell, *elr;
 	Exp* n;
 
-	n = Exp_create(eli);
+	n = Exp_create(dict);
 	n->type = OR_type;
 	n->cost = 0.0;
 
-	n->u.l = ell = (E_list *) malloc(sizeof(E_list));
-	ell->next = elr = (E_list *) malloc(sizeof(E_list));
+	n->u.l = ell = pool_alloc(dict->E_list_pool);
+	ell->next = elr = pool_alloc(dict->E_list_pool);
 	elr->next = NULL;
 
 	ell->e = nl;
@@ -902,9 +900,9 @@ static Exp * make_or_node(Exp_list *eli, Exp* nl, Exp* nr)
  * and the other as zeroary node.  This has the effect of creating
  * what used to be called an optional node.
  */
-static Exp * make_optional_node(Exp_list *eli, Exp * e)
+static Exp *make_optional_node(Dictionary dict, Exp *e)
 {
-	return make_or_node(eli, make_zeroary_node(eli), e);
+	return make_or_node(dict, make_zeroary_node(dict), e);
 }
 
 /**
@@ -915,7 +913,7 @@ static Exp * make_optional_node(Exp_list *eli, Exp * e)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	Exp* n = Exp_create(&dict->exp_list);
+	Exp* n = Exp_create(dict);
 	char *constring;
 
 	n->dir = dict->token[i];
@@ -974,7 +972,7 @@ static Exp * make_connector(Dictionary dict)
 		}
 
 		/* Wrap it in a unary node as a placeholder for a cost if needed. */
-		n = make_unary_node(&dict->exp_list, dn->exp);
+		n = make_unary_node(dict, dn->exp);
 
 		file_free_lookup(dn_head);
 	}
@@ -1003,7 +1001,7 @@ static Exp * make_connector(Dictionary dict)
 			min = make_dir_connector(dict, i);
 			if (NULL == min) return NULL;
 
-			n = make_or_node(&dict->exp_list, plu, min);
+			n = make_or_node(dict, plu, min);
 		}
 		else
 		{
@@ -1131,13 +1129,13 @@ static bool is_number(const char * str)
 /* #if ! defined INFIX_NOTATION */
 #if 0
 
-static Exp * expression(Dictionary dict);
+static Exp *expression(Dictionary dict);
 /**
  * We're looking at the first of the stuff after an "and" or "or".
  * Build a Exp node for this expression.  Set the cost and optional
  * fields to the default values.  Set the type field according to type
  */
-static Exp * operator_exp(Dictionary dict, int type)
+static Exp *operator_exp(Dictionary dict, int type)
 {
 	Exp * n;
 	E_list first;
@@ -1147,7 +1145,7 @@ static Exp * operator_exp(Dictionary dict, int type)
 	n->cost = 0.0;
 	elist = &first;
 	while((!is_equal(dict, ')')) && (!is_equal(dict, ']')) && (!is_equal(dict, '}'))) {
-		elist->next = (E_list *) malloc(sizeof(E_list));
+		elist->next = pool_alloc(dict->E_list_pool);
 		elist = elist->next;
 		elist->next = NULL;
 		elist->e = expression(dict);
@@ -1191,7 +1189,7 @@ static Exp * in_parens(Dictionary dict)
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-static Exp * expression(Dictionary dict)
+static Exp *expression(Dictionary dict)
 {
 	Exp * n;
 	if (is_equal(dict, '(')) {
@@ -1255,7 +1253,7 @@ static Exp * expression(Dictionary dict)
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-static Exp * make_expression(Dictionary dict)
+static Exp *make_expression(Dictionary dict)
 {
 	Exp *nl = NULL;
 	Exp *e_head = NULL;
@@ -1297,7 +1295,7 @@ static Exp * make_expression(Dictionary dict)
 			if (!link_advance(dict)) {
 				return NULL;
 			}
-			nl = make_optional_node(&dict->exp_list, nl);
+			nl = make_optional_node(dict, nl);
 		}
 		else if (is_equal(dict, '['))
 		{
@@ -1353,7 +1351,7 @@ static Exp * make_expression(Dictionary dict)
 		else if (is_equal(dict, ')') || is_equal(dict, ']'))
 		{
 			/* allows "()" or "[]" */
-			nl = make_zeroary_node(&dict->exp_list);
+			nl = make_zeroary_node(dict);
 		}
 		else
 		{
@@ -1373,9 +1371,9 @@ static Exp * make_expression(Dictionary dict)
 
 			/* Expand A ^ B into the expr ((A & B) or (B & A)).
 			 * It can be mixed with ordinary ands at the same level. */
-			na = make_and_node(&dict->exp_list, nl, nr);
-			nb = make_and_node(&dict->exp_list, nr, nl);
-			or = make_or_node(&dict->exp_list, na, nb);
+			na = make_and_node(dict, nl, nr);
+			nb = make_and_node(dict, nr, nl);
+			or = make_or_node(dict, na, nb);
 
 			(*elp)->e = or;
 			is_sym_and = false;
@@ -1384,7 +1382,7 @@ static Exp * make_expression(Dictionary dict)
 		{
 			/* This is Non-commuting AND or Commuting OR.
 			 * Append the just read expression (nl) to its E_list chain. */
-			el_tail->next = make_E_list_val(nl);
+			el_tail->next = make_E_list_val(dict, nl);
 			el_tail = el_tail->next;
 		}
 
@@ -1427,8 +1425,8 @@ static Exp * make_expression(Dictionary dict)
 		}
 		else
 		{
-			e_head = make_op_Exp(&dict->exp_list, op);
-			e_head->u.l = make_E_list_val(nl);
+			e_head = make_op_Exp(dict, op);
+			e_head->u.l = make_E_list_val(dict, nl);
 		}
 
 		if (!link_advance(dict)) {
@@ -1549,7 +1547,7 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
  * before being used.  The DSW algo below is ideal for that.
  */
 NO_SAN_DICT
-Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
+Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 {
 	if (NULL == n) return newnode;
 

@@ -45,7 +45,6 @@ typedef enum
  */
 struct Exp_struct
 {
-	Exp * next;    /* Used only for memory management, for freeing */
 	Exp_type type; /* One of three types: AND, OR, or connector. */
 	char dir;      /* The connector connects to: '-': the left; '+': the right */
 	bool multi;    /* TRUE if a multi-connector (for connector)  */
@@ -53,8 +52,7 @@ struct Exp_struct
 		E_list * l;           /* Only needed for non-terminals */
 		condesc_t * condesc;  /* Only needed if it's a connector */
 	} u;
-	double cost;   /* The cost of using this expression.
-	                  Only used for non-terminals */
+	double cost;   /* The cost of using this expression. */
 };
 
 struct E_list_struct

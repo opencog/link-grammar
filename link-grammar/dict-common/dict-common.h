@@ -17,6 +17,7 @@
 #include "api-types.h"                  // pp_knowledge
 #include "connectors.h"                 // ConTable
 #include "dict-structures.h"
+#include "memory-pool.h"                // Pool_desc
 #include "utilities.h"                  // locale_t
 
 #define EMPTY_CONNECTOR "ZZZ"
@@ -25,14 +26,7 @@
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
-typedef struct Exp_list_s Exp_list;
 typedef struct Regex_node_s Regex_node;
-
-/* Used for memory management */
-struct Exp_list_s
-{
-	Exp * exp_list;
-};
 
 typedef struct X_node_struct X_node;
 struct X_node_struct
@@ -121,10 +115,9 @@ struct Dictionary_s
 	Word_file *     word_file_header;
 	ConTable        contable;
 
-	/* exp_list links together all the Exp structs that are allocated
-	 * in reading this dictionary.  Needed for freeing the dictionary
-	 */
-	Exp_list        exp_list;
+	/* Memory pools */
+	Pool_desc  * Exp_pool;
+	Pool_desc  * E_list_pool;
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.
@@ -144,8 +137,7 @@ struct Dictionary_s
  * probably don't need these. */
 
 bool dict_has_word(const Dictionary dict, const char *);
-Exp * Exp_create(Exp_list *);
+Exp * Exp_create(Dictionary);
 void add_empty_word(Sentence, X_node *);
-void free_Exp_list(Exp_list *);
 
 #endif /* _LG_DICT_COMMON_H_ */
