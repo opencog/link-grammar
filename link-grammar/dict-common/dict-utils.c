@@ -69,43 +69,38 @@ Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool)
 }
 
 /**
- * Compare two expressions, return true for equal, false for unequal
+ * Compare two expressions, return true for equal, false for unequal.
  */
-static bool exp_compare(Exp * e1, Exp * e2)
+static bool exp_compare(Exp *e1, Exp *e2)
 {
 	if ((e1 == NULL) && (e2 == NULL))
-	  return 1; /* they are equal */
+	  return true;
 	if ((e1 == NULL) || (e2 == NULL))
-	  return 0; /* they are not equal */
+	  return false;
 	if (e1->type != e2->type)
-		return 0;
+		return false;
 	if (fabs (e1->cost - e2->cost) > 0.001)
-		return 0;
+		return false;
+
 	if (e1->type == CONNECTOR_type)
 	{
 		if (e1->dir != e2->dir)
-			return 0;
-		/* printf("%s %s\n",e1->condesc->string,e2->condesc->string); */
+			return false;
 		if (e1->condesc != e2->condesc)
-			return 0;
+			return false;
 	}
 	else
 	{
-		e1 = e1->operand_first;
-		e2 = e2->operand_first;
-		/* while at least 1 is non-null */
-		for (;(e1!=NULL)||(e2!=NULL);) {
-		   /*fail if 1 is null */
-			if ((e1==NULL)||(e2==NULL))
-				return 0;
-			/* fail if they are not compared */
+		/* Iterate operands to avoid a deep recursion due to a lot of operands. */
+		for (e1 = e1->operand_first, e2 = e2->operand_first;
+		     e1 != NULL || e2 != NULL;
+		     e1 = e1->operand_next, e2 = e2->operand_next)
+		{
 			if (!exp_compare(e1, e2))
-				return 0;
-			e1 = e1->operand_next;
-			e2 = e2->operand_next;
+				return false;
 		}
 	}
-	return 1; /* if never returned 0, return 1 */
+	return true;
 }
 
 /**
