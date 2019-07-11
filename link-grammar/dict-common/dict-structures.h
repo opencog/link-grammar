@@ -22,7 +22,6 @@ LINK_BEGIN_DECLS
 /* Forward decls */
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
-typedef struct E_list_struct E_list;
 typedef struct Word_file_struct Word_file;
 typedef struct condesc_struct condesc_t;
 
@@ -56,12 +55,6 @@ struct Exp_struct
 		condesc_t *condesc; /* Only needed if it's a connector. */
 	};
 	double cost;   /* The cost of using this expression. */
-};
-
-struct E_list_struct
-{
-	E_list * next;
-	Exp * e;
 };
 
 /* API to access the above structure. */
