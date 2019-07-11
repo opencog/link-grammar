@@ -1362,20 +1362,14 @@ static Exp *make_expression(Dictionary dict)
 		if (is_sym_and)
 		{
 			/* Part 2/2 of SYM_AND processing */
-			E_list **elp; /* LHS argument and the SYM_AND result placeholder */
-			Exp *nr, *na, *nb, *or;
 
-			elp = (el_tail == NULL) ? &e_head->u.l : &el_tail;
-			nr = nl; /* last expression is actually the RHS */
-			nl = (*elp)->e;
+			/* Expand A ^ B into the expr ((A & B) or (B & A)). */
 
-			/* Expand A ^ B into the expr ((A & B) or (B & A)).
-			 * It can be mixed with ordinary ands at the same level. */
-			na = make_and_node(dict, nl, nr);
-			nb = make_and_node(dict, nr, nl);
-			or = make_or_node(dict, na, nb);
+			Exp *na = make_and_node(dict, el_tail->e, nl);
+			Exp *nb = make_and_node(dict, nl, el_tail->e);
+			Exp *or = make_or_node(dict, na, nb);
 
-			(*elp)->e = or;
+			el_tail->e = or;
 			is_sym_and = false;
 		}
 		else if (el_tail != NULL)
@@ -1406,7 +1400,7 @@ static Exp *make_expression(Dictionary dict)
 		else if (is_equal(dict, SYM_AND) || (strcmp(dict->token, "sym") == 0))
 		{
 			/* Part 1/2 of SYM_AND processing */
-			op = AND_type;
+			op = AND_type; /* allow mixing with ordinary ands at the same level */
 			is_sym_and = true; /* processing to be completed after next argument */
 		}
 		else
