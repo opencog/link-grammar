@@ -63,6 +63,8 @@ static inline char lg_exp_get_dir(const Exp* exp) { return exp->dir; }
 static inline bool lg_exp_get_multi(const Exp* exp) { return exp->multi; }
 const char* lg_exp_get_string(const Exp*);
 static inline double lg_exp_get_cost(const Exp* exp) { return exp->cost; }
+static inline Exp* lg_exp_operand_first(Exp* exp) { return exp->operand_first; }
+static inline Exp* lg_exp_operand_next(Exp* exp) { return exp->operand_next; }
 
 /**
  * The dictionary is stored as a binary tree comprised of the following
