@@ -84,9 +84,9 @@ static bool exp_compare(Exp *e1, Exp *e2)
 
 	if (e1->type == CONNECTOR_type)
 	{
-		if (e1->dir != e2->dir)
-			return false;
 		if (e1->condesc != e2->condesc)
+			return false;
+		if (e1->dir != e2->dir)
 			return false;
 	}
 	else
