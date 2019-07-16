@@ -406,7 +406,39 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         /* Precedes */
         int dfs_position_tmp = dfs_position;
         for (l = e->u.l; l->next != NULL; l = l->next) {
-          generate_conjunct_order_constraints(w, l->e, l->next->e, dfs_position_tmp);
+          Exp e_tmp, *e_rhs = &e_tmp;
+
+          if (l->next->next == NULL) {
+            e_rhs = l->next->e;
+          }
+          else {
+            // A workaround for issue #932:
+            // Since the generated ordering conditions are not transitive
+            // (see the example below), chains w/length > 2 miss needed
+            // constrains.  So if the chain length > 2, refer to it as if
+            // it is a 2-component chain (1st: l->e; 2nd: AND of the rest).
+            //
+            // Problem example:
+            // Sentence: *I saw make some changes in the program
+            // In word 2 we get here this subexpression (among many others):
+            // e = (K+ & {[[@MV+]]} & (O*n+ or ())) // (& chain length = 3)
+            // The generated constrains are only: (Decoding:
+            // (word-number_connector-position_connector-string)_to-word-number)
+            // Clause: -link_cw_(2_4_K)_6 -link_cw_(2_5_MV)_6
+            // Clause: -link_cw_(2_5_MV)_6 -link_cw_(2_6_O*n)_4
+            // (Reading: If MV connects from word 2 to word 6, then O*n
+            // cannot connect from word 2 to word 4).
+            // Clause: -link_cw_(2_5_MV)_6 -link_cw_(2_6_O*n)_5
+            // However, the following, which are generated when the
+            // chain length is limited to 2, are missing:
+            // Clause: -link_cw_(2_4_K)_6 -link_cw_(2_6_O*n)_4
+            // Clause: -link_cw_(2_4_K)_6 -link_cw_(2_6_O*n)_5
+            // Clearly, they cannot be concluded transitively.
+            e_rhs->type = AND_type;
+            e_rhs->u.l = l->next;
+            e_rhs->cost = 0.0;
+          };
+          generate_conjunct_order_constraints(w, l->e, e_rhs, dfs_position_tmp);
         }
 
         /* Recurse */
