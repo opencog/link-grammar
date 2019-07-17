@@ -15,3 +15,10 @@ C(S (NP this.p)
 C   (VP is.v
 C       (NP a test.n)))
 C
+
+% This sentence should not have a complete linkage (fixed in issue #972).
+% (If the SAT parser is fixed to produce incomplete linkages, include
+% the incomplete linkage here.)
+II saw make some changes in the program
+O
+O

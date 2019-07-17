@@ -1149,7 +1149,6 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             wordpos = ""
             linkages = Sentence(sent, lgdict, popt).parse()
             linkage = next(linkages, None)
-            self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
 
         # Generate the next linkage of the last input sentence
         elif line[0] == 'N':
@@ -1163,9 +1162,14 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
         # It ends with an empty line
         elif line[0] == 'O':
             diagram += line[1:]
-            if line[1] == '\n' and len(diagram) > 1:
-                self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
-                diagram = None
+            if line[1] == '\n':
+                if diagram == 'C\nC\n':
+                    self.assertFalse(linkage)
+                    diagram = None
+                elif len(diagram) > 2:
+                    self.assertTrue(linkage, "at {}:{}: Sentence has no linkages".format(testfile, lineno))
+                    self.assertEqual(linkage.diagram(), diagram, "at {}:{}".format(testfile, lineno))
+                    diagram = None
 
         # Lines starting with C are the constituent output (type 1)
         # It ends with an empty line
