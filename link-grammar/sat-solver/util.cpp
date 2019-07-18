@@ -42,12 +42,11 @@ void sat_free_linkages(Sentence sent, LinkageIdx next_linkage_index)
 
 Exp* null_exp()
 {
-  static Exp e =
-  {
-    .operand_next = NULL,
-    .type = AND_type,
-    .operand_first = NULL,
-  };
+  static Exp e;
+
+  e.operand_next = NULL;
+  e.type = AND_type;
+  e.operand_first = NULL;
 
   return &e;
 }
