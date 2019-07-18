@@ -164,7 +164,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
 
 void WordTag::find_matches(int w, Connector* search_cntr, char dir, std::vector<PositionConnector*>& matches)
 {
-  // cout << "Look connection on: ." << _word << ". ." << w << ". " << search_cntr << dir << endl;
+  // cout << "Look connection on: ." << _word << ". ." << w << ". " << connector_string(search_cntr) << dir << endl;
 
   std::vector<PositionConnector>* connectors;
   switch(dir) {
