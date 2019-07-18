@@ -27,7 +27,6 @@ extern "C" {
 
 extern "C" {
 #include "dict-common/dict-api.h"    // for print_expression()
-#include "dict-common/dict-utils.h"  // for free_Exp()
 #include "disjunct-utils.h"
 #include "linkage/analyze-linkage.h" // for compute_link_names()
 #include "linkage/linkage.h"
@@ -270,9 +269,6 @@ void SATEncoder::build_word_tags()
 
     _word_tags[w].insert_connectors(exp, dfs_position, leading_right,
          leading_left, eps_right, eps_left, name, true, 0, NULL, _sent->word[w].x);
-
-    if (join)
-      free_alternatives(exp);
   }
 
   for (size_t wl = 0; wl < _sent->length - 1; wl++) {
@@ -346,9 +342,6 @@ void SATEncoder::generate_satisfaction_conditions()
 
     int dfs_position = 0;
     generate_satisfaction_for_expression(w, dfs_position, exp, name, 0);
-
-    if (join)
-      free_alternatives(exp);
   }
 }
 
@@ -356,7 +349,7 @@ void SATEncoder::generate_satisfaction_conditions()
 void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e,
                                                       char* var, double parent_cost)
 {
-  E_list *l;
+  Exp *opd;
   double total_cost = parent_cost + e->cost;
 
   if (e->type == CONNECTOR_type) {
@@ -370,15 +363,15 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
     }
   } else {
     if (e->type == AND_type) {
-      if (e->u.l == NULL) {
+      if (e->operand_first == NULL) {
         /* zeroary and */
         _variables->string_cost(var, e->cost);
         if (total_cost > _cost_cutoff) {
           generate_literal(~Lit(_variables->string_cost(var, e->cost)));
         }
-      } else if (e->u.l->next == NULL) {
+      } else if (e->operand_first->operand_next == NULL) {
         /* unary and - skip */
-        generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
+        generate_satisfaction_for_expression(w, dfs_position, e->operand_first, var, total_cost);
       } else {
         /* n-ary and */
         int i;
@@ -392,7 +385,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         }
 
         vec<Lit> rhs;
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        for (i = 0, opd=e->operand_first; opd!=NULL; opd=opd->operand_next, i++) {
           // sprintf(new_var, "%sc%d", var, i)
           char* s = last_new_var;
           *s++ = 'c';
@@ -405,11 +398,11 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
 
         /* Precedes */
         int dfs_position_tmp = dfs_position;
-        for (l = e->u.l; l->next != NULL; l = l->next) {
+        for (opd = e->operand_first; opd->operand_next != NULL; opd = opd->operand_next) {
           Exp e_tmp, *e_rhs = &e_tmp;
 
-          if (l->next->next == NULL) {
-            e_rhs = l->next->e;
+          if (opd->operand_next->operand_next == NULL) {
+            e_rhs = opd->operand_next;
           }
           else {
             // A workaround for issue #932:
@@ -435,31 +428,31 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
             // Clause: -link_cw_(2_4_K)_6 -link_cw_(2_6_O*n)_5
             // Clearly, they cannot be concluded transitively.
             e_rhs->type = AND_type;
-            e_rhs->u.l = l->next;
+            e_rhs->operand_first = opd->operand_next;
             e_rhs->cost = 0.0;
           };
-          generate_conjunct_order_constraints(w, l->e, e_rhs, dfs_position_tmp);
+          generate_conjunct_order_constraints(w, opd, e_rhs, dfs_position_tmp);
         }
 
         /* Recurse */
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        for (i = 0, opd=e->operand_first; opd!=NULL; opd=opd->operand_next, i++) {
           // sprintf(new_var, "%sc%d", var, i)
           char* s = last_new_var;
           *s++ = 'c';
           fast_sprintf(s, i);
 
           /* if (i != 0) total_cost = 0; */ // This interferes with the cost cutoff
-          generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
+          generate_satisfaction_for_expression(w, dfs_position, opd, new_var, total_cost);
         }
       }
     } else if (e->type == OR_type) {
-      if (e->u.l == NULL) {
+      if (e->operand_first == NULL) {
         /* zeroary or */
         cerr << "Zeroary OR" << endl;
         exit(EXIT_FAILURE);
-      } else if (e->u.l->next == NULL) {
+      } else if (e->operand_first->operand_next == NULL) {
         /* unary or */
-        generate_satisfaction_for_expression(w, dfs_position, e->u.l->e, var, total_cost);
+        generate_satisfaction_for_expression(w, dfs_position, e->operand_first, var, total_cost);
       } else {
         /* n-ary or */
         int i;
@@ -473,7 +466,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         }
 
         vec<Lit> rhs;
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        for (i = 0, opd=e->operand_first; opd!=NULL; opd=opd->operand_next, i++) {
           // sprintf(new_var, "%sc%d", var, i)
           char* s = last_new_var;
           *s++ = 'd';
@@ -486,60 +479,43 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         generate_xor_conditions(rhs);
 
         /* Recurse */
-        for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        for (i = 0, opd=e->operand_first; opd!=NULL; opd=opd->operand_next, i++) {
           char* s = last_new_var;
           *s++ = 'd';
           fast_sprintf(s, i);
 
-          generate_satisfaction_for_expression(w, dfs_position, l->e, new_var, total_cost);
+          generate_satisfaction_for_expression(w, dfs_position, opd, new_var, total_cost);
         }
       }
     }
   }
 }
 
+/**
+ * Join all alternatives using an OR_type node.
+ */
 Exp* SATEncoder::join_alternatives(int w)
 {
-  // join all alternatives using an OR_type node
-  Exp* exp;
-  E_list* or_list = NULL;;
-  for (X_node* x = _sent->word[w].x; x != NULL; x = x->next) {
-    E_list* new_node = (E_list*) malloc(sizeof(E_list));
-    new_node->e = x->exp;
-    new_node->next = NULL;
-    if (or_list == NULL) {
-      or_list = new_node;
-    } else {
-      E_list *y;
-      for (y = or_list; y->next != NULL; y = y->next)
-        ;
-      y->next = new_node;
-    }
-  }
-  exp = (Exp*) malloc(sizeof(Exp));
+  Exp* exp = Exp_create(_sent);
   exp->type = OR_type;
-  exp->u.l = or_list;
   exp->cost = 0.0;
+
+  Exp** opdp = &exp->operand_first;
+
+  for (X_node* x = _sent->word[w].x; x != NULL; x = x->next)
+  {
+    *opdp = Exp_create_dup(_sent, x->exp);
+    opdp = &(*opdp)->operand_next;
+  }
+  *opdp = NULL;
 
   return exp;
 }
 
-void SATEncoder::free_alternatives(Exp* exp)
-{
-  E_list *l = exp->u.l;
-  while (l != NULL) {
-    E_list* next = l->next;
-    free(l);
-    l = next;
-  }
-  free(exp);
-}
-
-
 void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
                                                       Exp* e, size_t wj)
 {
-  const char* Ci = e->u.condesc->string;
+  const char* Ci = e->condesc->string;
   char dir = e->dir;
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
@@ -583,8 +559,8 @@ int SATEncoder::num_connectors(Exp* e)
     return 1;
   else {
     int num = 0;
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
-      num += num_connectors(l->e);
+    for (Exp* opd = e->operand_first; opd != NULL; opd = opd->operand_next) {
+      num += num_connectors(opd);
     }
     return num;
   }
@@ -595,14 +571,14 @@ int SATEncoder::empty_connectors(Exp* e, char dir)
   if (e->type == CONNECTOR_type) {
     return e->dir != dir;
   } else if (e->type == OR_type) {
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
-      if (empty_connectors(l->e, dir))
+    for (Exp* opd = e->operand_first; opd != NULL; opd = opd->operand_next) {
+      if (empty_connectors(opd, dir))
         return true;
     }
     return false;
   } else if (e->type == AND_type) {
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
-      if (!empty_connectors(l->e, dir))
+    for (Exp* opd = e->operand_first; opd != NULL; opd = opd->operand_next) {
+      if (!empty_connectors(opd, dir))
         return false;
     }
     return true;
@@ -616,13 +592,13 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
   if (e->type == CONNECTOR_type) {
     return e->dir == dir;
   } else if (e->type == OR_type) {
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
+    for (E_list* l = e->operand_first; l != NULL; l = l->next) {
       if (non_empty_connectors(l->e, dir))
         return true;
     }
     return false;
   } else if (e->type == AND_type) {
-    for (E_list* l = e->u.l; l != NULL; l = l->next) {
+    for (E_list* l = e->operand_first; l != NULL; l = l->next) {
       if (non_empty_connectors(l->e, dir))
         return true;
     }
@@ -632,18 +608,18 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir)
 }
 #endif
 
-bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
+bool SATEncoder::trailing_connectors_and_aux(int w, Exp *opd, char dir, int& dfs_position,
                                              std::vector<PositionConnector*>& connectors)
 {
-  if (l == NULL) {
+  if (opd == NULL) {
     return true;
   } else {
     int dfs_position_in = dfs_position;
-    dfs_position += num_connectors(l->e);
-    if (trailing_connectors_and_aux(w, l->next, dir, dfs_position, connectors)) {
-      trailing_connectors(w, l->e, dir, dfs_position_in, connectors);
+    dfs_position += num_connectors(opd);
+    if (trailing_connectors_and_aux(w, opd->operand_next, dir, dfs_position, connectors)) {
+      trailing_connectors(w, opd, dir, dfs_position_in, connectors);
     }
-    return empty_connectors(l->e, dir);
+    return empty_connectors(opd, dir);
   }
 }
 
@@ -656,11 +632,11 @@ void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_positio
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
-    for (E_list* l = exp->u.l; l != NULL; l = l->next) {
-      trailing_connectors(w, l->e, dir, dfs_position, connectors);
+    for (Exp* opd = exp->operand_first; opd != NULL; opd = opd->operand_next) {
+      trailing_connectors(w, opd, dir, dfs_position, connectors);
     }
   } else if (exp->type == AND_type) {
-    trailing_connectors_and_aux(w, exp->u.l, dir, dfs_position, connectors);
+    trailing_connectors_and_aux(w, exp->operand_first, dir, dfs_position, connectors);
   }
 }
 
@@ -673,16 +649,16 @@ void SATEncoder::certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_posi
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
-    for (E_list* l = exp->u.l; l != NULL; l = l->next) {
+    for (E_list* l = exp->operand_first; l != NULL; l = l->next) {
       certainly_non_trailing(w, l->e, dir, dfs_position, connectors, has_right);
     }
   } else if (exp->type == AND_type) {
     if (has_right) {
-      for (E_list* l = exp->u.l; l != NULL; l = l->next) {
+      for (E_list* l = exp->operand_first; l != NULL; l = l->next) {
         certainly_non_trailing(w, l->e, dir, dfs_position, connectors, true);
       }
     } else {
-      for (E_list* l = exp->u.l; l != NULL; l = l->next) {
+      for (E_list* l = exp->operand_first; l != NULL; l = l->next) {
         has_right = false;
         for (E_list* m = l->next; m != NULL; m = m->next) {
           if (non_empty_connectors(m->e, dir) && !empty_connectors(m->e, dir)) {
@@ -704,20 +680,20 @@ void SATEncoder::leading_connectors(int w, Exp* exp, char dir, int& dfs_position
       connectors.push_back(_word_tags[w].get(dfs_position));
     }
   } else if (exp->type == OR_type) {
-    for (E_list* l = exp->u.l; l != NULL; l = l->next) {
-      leading_connectors(w, l->e, dir, dfs_position, connectors);
+    for (Exp* opd = exp->operand_first; opd != NULL; opd = opd->operand_next) {
+      leading_connectors(w, opd, dir, dfs_position, connectors);
     }
   } else if (exp->type == AND_type) {
-    E_list* l;
-    for (l = exp->u.l; l != NULL; l = l->next) {
-      leading_connectors(w, l->e, dir, dfs_position, connectors);
-      if (!empty_connectors(l->e, dir))
+    Exp* opd;
+    for (opd = exp->operand_first; opd != NULL; opd = opd->operand_next) {
+      leading_connectors(w, opd, dir, dfs_position, connectors);
+      if (!empty_connectors(opd, dir))
         break;
     }
 
-    if (l != NULL) {
-      for (l = l->next; l != NULL; l = l->next)
-        dfs_position += num_connectors(l->e);
+    if (opd != NULL) {
+      for (opd = opd->operand_next; opd != NULL; opd = opd->operand_next)
+        dfs_position += num_connectors(opd);
     }
   }
 }
@@ -1001,11 +977,11 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
 
 #ifdef SAT_DEBUG
 #define MVALUE(s, v) (s->model[v] == l_True?'T':(s->model[v] == l_False?'f':'u'))
-static void pmodel(Solver *solver, int var) {
+GNUC_UNUSED static void pmodel(Solver *solver, int var) {
   printf("%c\n", MVALUE(solver, var));
 }
 
-static void pmodel(Solver *solver, vec<Lit> &clause) {
+GNUC_UNUSED static void pmodel(Solver *solver, vec<Lit> &clause) {
   vector<int> t;
   for (int i = 0; i < clause.size(); i++) {
     int v = var(clause[i]);
@@ -1156,9 +1132,6 @@ void SATEncoder::generate_epsilon_definitions()
 
     dfs_position = 0;
     generate_epsilon_for_expression(w, dfs_position, exp, name, true, '-');
-
-    if (join)
-      free_alternatives(exp);
   }
 }
 
@@ -1178,18 +1151,18 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
       }
     }
   } else if (e->type == AND_type) {
-    if (e->u.l == NULL) {
+    if (e->operand_first == NULL) {
       /* zeroary and */
       generate_equivalence_definition(Lit(_variables->string(var)),
                                       Lit(_variables->epsilon(var, dir)));
       return true;
     } else
-      if (e->u.l != NULL && e->u.l->next == NULL) {
+      if (e->operand_first != NULL && e->operand_first->operand_next == NULL) {
         /* unary and - skip */
-        return generate_epsilon_for_expression(w, dfs_position, e->u.l->e, var, root, dir);
+        return generate_epsilon_for_expression(w, dfs_position, e->operand_first, var, root, dir);
       } else {
         /* Recurse */
-        E_list* l;
+        Exp* opd;
         int i;
         bool eps = true;
 
@@ -1202,27 +1175,27 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
         }
 
 
-        for (i = 0, l = e->u.l; l != NULL; l = l->next, i++) {
+        for (i = 0, opd = e->operand_first; opd != NULL; opd = opd->operand_next, i++) {
           // sprintf(new_var, "%sc%d", var, i)
           char* s = last_new_var;
           *s++ = 'c';
           fast_sprintf(s, i);
 
-          if (!generate_epsilon_for_expression(w, dfs_position, l->e, new_var, false, dir)) {
+          if (!generate_epsilon_for_expression(w, dfs_position, opd, new_var, false, dir)) {
             eps = false;
             break;
           }
         }
 
-        if (l != NULL) {
-          for (l = l->next; l != NULL; l = l->next)
-            dfs_position += num_connectors(l->e);
+        if (opd != NULL) {
+          for (opd = opd->operand_next; opd != NULL; opd = opd->operand_next)
+            dfs_position += num_connectors(opd);
         }
 
         if (!root && eps) {
           Lit lhs = Lit(_variables->epsilon(var, dir));
           vec<Lit> rhs;
-          for (i = 0, l=e->u.l; l!=NULL; l=l->next, i++) {
+        for (i = 0, opd = e->operand_first; opd != NULL; opd = opd->operand_next, i++) {
             // sprintf(new_var, "%sc%d", var, i)
             char* s = last_new_var;
             *s++ = 'c';
@@ -1234,12 +1207,12 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
         return eps;
       }
   } else if (e->type == OR_type) {
-    if (e->u.l != NULL && e->u.l->next == NULL) {
+    if (e->operand_first != NULL && e->operand_first->operand_next == NULL) {
       /* unary or - skip */
-      return generate_epsilon_for_expression(w, dfs_position, e->u.l->e, var, root, dir);
+      return generate_epsilon_for_expression(w, dfs_position, e->operand_first, var, root, dir);
     } else {
       /* Recurse */
-      E_list* l;
+      Exp* opd;
       int i;
       bool eps = false;
 
@@ -1252,13 +1225,13 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
       }
 
       vec<Lit> rhs;
-      for (i = 0, l = e->u.l; l != NULL; l = l->next, i++) {
+        for (i = 0, opd = e->operand_first; opd != NULL; opd = opd->operand_next, i++) {
         // sprintf(new_var, "%sc%d", var, i)
         char* s = last_new_var;
         *s++ = 'd';
         fast_sprintf(s, i);
 
-        if (generate_epsilon_for_expression(w, dfs_position, l->e, new_var, false, dir) && !root) {
+        if (generate_epsilon_for_expression(w, dfs_position, opd, new_var, false, dir) && !root) {
           rhs.push(Lit(_variables->epsilon(new_var, dir)));
           eps = true;
         }
@@ -1366,9 +1339,6 @@ void SATEncoder::power_prune()
     certainly_non_trailing(w, exp, '+', dfs_position, certainly_deep_right[w], false);
     dfs_position = 0;
     certainly_non_trailing(w, exp, '-', dfs_position, certainly_deep_left[w], false);
-
-    if (join)
-      free_alternatives(exp);
   }
 
   for (size_t w = 0; w < _sent->length; w++) {
@@ -1715,7 +1685,7 @@ void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* nam
 void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
     int wi, int pi, Exp *e, char* var)
 {
-  const char* Ci = e->u.condesc->string;
+  const char* Ci = e->condesc->string;
   char dir = e->dir;
   bool multi = e->multi;
   double cost = e->cost;
@@ -1810,11 +1780,11 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
 
 Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {
-    Exp* e = (Exp*) malloc(sizeof(Exp));
+    Exp* e = Exp_create(_sent);
     e->type = CONNECTOR_type;
     e->dir = pc->dir;
     e->multi = pc->connector.multi;
-    e->u.condesc = (condesc_t *)pc->connector.desc; // FIXME - const
+    e->condesc = (condesc_t *)pc->connector.desc; // FIXME - const
     e->cost = pc->cost;
 
     return e;
@@ -1863,8 +1833,8 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 
     Exp* lcexp = PositionConnector2exp(lpc);
     Exp* rcexp = PositionConnector2exp(rpc);
-    add_anded_exp(exp_word[var->left_word], lcexp);
-    add_anded_exp(exp_word[var->right_word], rcexp);
+    add_anded_exp(_sent, exp_word[var->left_word], lcexp);
+    add_anded_exp(_sent, exp_word[var->right_word], rcexp);
 
     if (verbosity_level(D_SAT)) {
       //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
@@ -1921,7 +1891,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     cost_cutoff = 1000.0;
 #endif // LIMIT_TOTAL_LINKAGE_COST
     d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string, cost_cutoff, _opts);
-    free_Exp(de);
 
     if (d == NULL)
     {

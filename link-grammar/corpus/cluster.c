@@ -190,7 +190,7 @@ static Exp * make_exp(const char *djstr, double cost)
 	lhead = l;
 
 	e->type = AND_type;
-	e->u.l = lhead;
+	e->operand_first = lhead;
 	
 	return e;
 }
@@ -219,7 +219,7 @@ static Exp * or_exp(Exp *p1, Exp *p2)
 	l->e = p1;
 	lhead = l;
 
-	e->u.l = lhead;
+	e->operand_first = lhead;
 	return e;
 }
 #endif
@@ -228,7 +228,7 @@ static void free_exp(Exp *e)
 {
 	if (CONNECTOR_type != e->type)
 	{
-		E_list *l = e->u.l;
+		E_list *l = e->operand_first;
 		while(l)
 		{
 			E_list *ln = l->next;

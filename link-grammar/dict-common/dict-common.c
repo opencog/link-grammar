@@ -260,7 +260,6 @@ static void free_dictionary(Dictionary dict)
 	free_dict_node_recursive(dict->root);
 	free_Word_file(dict->word_file_header);
 	pool_delete(dict->Exp_pool);
-	pool_delete(dict->E_list_pool);
 }
 
 static void affix_list_delete(Dictionary dict)

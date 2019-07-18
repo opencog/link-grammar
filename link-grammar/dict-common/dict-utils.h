@@ -18,9 +18,8 @@
 
 /* Exp utilities ... */
 void free_Exp(Exp *);
-void free_E_list(E_list *);
 int  size_of_expression(Exp *);
-Exp * copy_Exp(Exp *, Pool_desc *, Pool_desc *);
+Exp * copy_Exp(Exp *, Pool_desc *);
 bool is_exp_like_empty_word(Dictionary dict, Exp *);
 
 /* X_node utilities ... */

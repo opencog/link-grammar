@@ -22,7 +22,6 @@ LINK_BEGIN_DECLS
 /* Forward decls */
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
-typedef struct E_list_struct E_list;
 typedef struct Word_file_struct Word_file;
 typedef struct condesc_struct condesc_t;
 
@@ -37,28 +36,25 @@ typedef enum
 } Exp_type;
 
 /**
- * The E_list and Exp structures defined below comprise the expression
- * trees that are stored in the dictionary.  The expression has a type
- * (OR_type, AND_type or CONNECTOR_type).  If it is not a terminal it
- * has a list (an E_list) of children. Else "condesc" is the connector
- * descriptor, when "dir" indicates the connector direction.
+ * The Exp structure defined below comprises the expression trees that are
+ * stored in the dictionary. The expression has a type (OR_type, AND_type
+ * or CONNECTOR_type). If it is not a terminal "operand" points to its
+ * list of operands (when each of them points to the next one through
+ * "next"). Else "condesc" is the connector descriptor, when "dir"
+ * indicates the connector direction.
  */
 struct Exp_struct
 {
+	Exp *operand_next; /* Next same-level operand. */
 	Exp_type type; /* One of three types: AND, OR, or connector. */
-	char dir;      /* The connector connects to: '-': the left; '+': the right */
-	bool multi;    /* TRUE if a multi-connector (for connector)  */
-	union {
-		E_list * l;           /* Only needed for non-terminals */
-		condesc_t * condesc;  /* Only needed if it's a connector */
-	} u;
+	char dir;      /* The connector connects to the left ('-') or right ('+'). */
+	bool multi;    /* TRUE if a multi-connector (for connector). */
+	union
+	{
+		Exp *operand_first; /* First operand (for non-terminals). */
+		condesc_t *condesc; /* Only needed if it's a connector. */
+	};
 	double cost;   /* The cost of using this expression. */
-};
-
-struct E_list_struct
-{
-	E_list * next;
-	Exp * e;
 };
 
 /* API to access the above structure. */
@@ -67,6 +63,8 @@ static inline char lg_exp_get_dir(const Exp* exp) { return exp->dir; }
 static inline bool lg_exp_get_multi(const Exp* exp) { return exp->multi; }
 const char* lg_exp_get_string(const Exp*);
 static inline double lg_exp_get_cost(const Exp* exp) { return exp->cost; }
+static inline Exp* lg_exp_operand_first(Exp* exp) { return exp->operand_first; }
+static inline Exp* lg_exp_operand_next(Exp* exp) { return exp->operand_next; }
 
 /**
  * The dictionary is stored as a binary tree comprised of the following

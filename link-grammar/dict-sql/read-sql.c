@@ -78,6 +78,7 @@ static const char * make_expression(Dictionary dict,
 		Exp* e = Exp_create(dict);
 		e->dir = *p;
 		e->type = CONNECTOR_type;
+		e->operand_next = NULL;
 		e->cost = 0.0;
 		char * constr = NULL;
 		if ('@' == *con_start)
@@ -91,7 +92,7 @@ static const char * make_expression(Dictionary dict,
 			e->multi = false;
 		}
 
-		e->u.condesc = condesc_add(&dict->contable,
+		e->condesc = condesc_add(&dict->contable,
 		                           string_set_add(constr, dict->string_set));
 		*pex = e;
 	}
@@ -125,13 +126,13 @@ static const char * make_expression(Dictionary dict,
 	/* Join it all together. */
 	Exp* join = Exp_create(dict);
 	join->type = etype;
+	join->operand_next = NULL;
 	join->cost = 0.0;
-	E_list *ell = join->u.l = pool_alloc(dict->E_list_pool);
-	E_list *elr = ell->next = pool_alloc(dict->E_list_pool);
-	elr->next = NULL;
 
-	ell->e = *pex;
-	elr->e = rest;
+	join->operand_first = *pex;
+	(*pex)->operand_next = rest;
+	rest->operand_next = NULL;
+
 	*pex = join;
 
 	return p;
@@ -190,25 +191,18 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	/* If the second expression, OR-it with the existing expression. */
 	if (OR_type != bs->exp->type)
 	{
-		E_list *ell, *elr;
 		Exp* orn = Exp_create(dict);
 		orn->type = OR_type;
 		orn->cost = 0.0;
-		orn->u.l = ell = pool_alloc(dict->E_list_pool);
-		ell->next = elr = pool_alloc(dict->E_list_pool);
-		elr->next = NULL;
 
-		ell->e = exp;
-		elr->e = bs->exp;
+		orn->operand_first = exp;
+		exp->operand_next = bs->exp;
 		bs->exp = orn;
 		return 0;
 	}
 
 	/* Extend the OR-chain for the third and later expressions. */
-	E_list* more = pool_alloc(dict->E_list_pool);
-	more->e = exp;
-	more->next = bs->exp->u.l;
-	bs->exp->u.l = more;
+	bs->exp->operand_next = exp;
 
 	return 0;
 }
@@ -493,9 +487,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
-	dict->E_list_pool = pool_new(__func__, "E_list", /*num_elements*/4096,
-	                             sizeof(E_list), /*zero_out*/false,
-	                             /*align*/false, /*exact*/false);
 
 	/* Setup the affix table */
 	char *affix_name = join_path (lang, "4.0.affix");

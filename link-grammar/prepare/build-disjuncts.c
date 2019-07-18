@@ -155,7 +155,6 @@ static Tconnector * build_terminal(Exp *e, Pool_desc *tp)
 static Clause * build_clause(Exp *e, clause_context *ct)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
-	E_list * e_list;
 
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
@@ -165,9 +164,9 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 		c1->next = NULL;
 		c1->cost = 0.0;
 		c1->maxcost = 0.0;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
-			c2 = build_clause(e_list->e, ct);
+			c2 = build_clause(opd, ct);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
@@ -194,11 +193,11 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 	}
 	else if (e->type == OR_type)
 	{
-		c = build_clause(e->u.l->e, ct);
+		c = build_clause(e->operand_first, ct);
 		/* we'll catenate the lists of clauses */
-		for (e_list = e->u.l->next; e_list != NULL; e_list = e_list->next)
+		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
-			c1 = build_clause(e_list->e, ct);
+			c1 = build_clause(opd, ct);
 			if (c1 == NULL) continue;
 			if (c == NULL)
 			{
@@ -278,7 +277,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			/* Build a list of connectors from the Tconnectors. */
 			for (Tconnector *t = cl->c; t != NULL; t = t->next)
 			{
-				Connector *n = connector_new(connector_pool, t->e->u.condesc, opts);
+				Connector *n = connector_new(connector_pool, t->e->condesc, opts);
 				Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
 				n->multi = t->e->multi;
@@ -328,7 +327,7 @@ static void print_Tconnector_list(Tconnector *t)
 	for (; t != NULL; t = t->next)
 	{
 		if (t->e->multi) printf("@");
-		printf("%s", t->e->u.condesc->string);
+		printf("%s", t->e->condesc->string);
 		printf("%c", t->e->dir);
 		if (t->next != NULL) printf(" ");
 	}
@@ -351,65 +350,87 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	if (e == NULL) return;
 
 	for(int j =0; j<i; j++) printf(" ");
-	printf ("type=%d dir=%c multi=%d cost=%f\n", e->type, e->dir, e->multi, e->cost);
+	printf ("type=%d dir=%c multi=%d cost=%f\n",
+	        e->type, e->dir, e->multi, e->cost);
 	if (e->type != CONNECTOR_type)
 	{
-		E_list *l = e->u.l;
-		while(l)
-		{
-			prt_exp(l->e, i+2);
-			l = l->next;
-		}
+		for (e = e->operand_next; e != NULL; e = e->operand_next) prt_exp(e, i+2);
 	}
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s\n", e->u.condesc->string);
+		printf("con=%s\n", e->condesc->string);
 	}
+}
+
+static const char *stringify_Exp_type(Exp_type type)
+{
+	static TLS char unknown_type[32] = "";
+	const char *type_str;
+
+	if (type > 0 && type <= 3)
+	{
+		type_str = ((const char *[]) {"OR", "AND", "CONNECTOR"}) [type-1];
+	}
+	else
+	{
+		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown_type-%d", type);
+		type_str = unknown_type;
+	}
+
+	return type_str;
+}
+
+static bool is_ASAN_uninitialized(uintptr_t a)
+{
+	static const uintptr_t asan_uninitialized = 0xbebebebebebebebe;
+
+	return (a == asan_uninitialized);
 }
 
 GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 {
-	char unknown_type[32] = "";
-	const char *type;
-
+	if (is_ASAN_uninitialized((uintptr_t)e))
+	{
+		printf ("e=UNINITIALIZED\n");
+		return;
+	}
 	if (e == NULL) return;
 
-	if (e->type > 0 && e->type <= 3)
-	{
-		type = ((const char *[]) {"OR_type", "AND_type", "CONNECTOR_type"}) [e->type-1];
-	}
-	else
-	{
-		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown-%d", e->type);
-		type = unknown_type;
-	}
-
 	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: %s cost=%f\n", e, type, e->cost);
+	printf ("e=%p: %s", e, stringify_Exp_type(e->type));
+
+	if (is_ASAN_uninitialized((uintptr_t)e->operand_first))
+		printf(" (UNINITIALIZED operand)");
+	if (is_ASAN_uninitialized((uintptr_t)e->operand_next))
+		printf(" (UNINITIALIZED next)");
+
 	if (e->type != CONNECTOR_type)
 	{
-		E_list *l;
-		for(int j =0; j<i+2; j++) printf(" ");
-		printf("E_list=%p (", e->u.l);
-		for (l = e->u.l; NULL != l; l = l->next)
+		int operand_count = 0;
+		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
 		{
-			printf("%p", l->e);
-			if (NULL != l->next) printf(" ");
+			operand_count++;
+			if (is_ASAN_uninitialized((uintptr_t)opd->operand_next))
+			{
+				printf(" (operand %d: UNINITIALIZED next)\n", operand_count);
+				return;
+			}
 		}
-		printf(")\n");
+		printf(" (%d operand%s) cost=%f\n", operand_count,
+		       operand_count == 1 ? "" : "s", e->cost);
 
-		for (l = e->u.l; NULL != l; l = l->next)
+		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
 		{
-			prt_exp_mem(l->e, i+2);
+			prt_exp_mem(opd, i+2);
 		}
 	}
 	else
 	{
-		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s dir=%c multi=%d\n",
-		       e->u.condesc ? e->u.condesc->string : "(condesc=(null))",
-		       e->dir, e->multi);
+		printf(" %s%s%c cost=%f\n",
+		       e->multi ? "@" : "",
+		       e->condesc ? e->condesc->string : "(condesc=(null))",
+		       e->dir, e->cost);
 	}
 }
 #endif /* DEBUG */

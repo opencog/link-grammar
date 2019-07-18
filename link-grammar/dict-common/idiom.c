@@ -216,7 +216,6 @@ static const char * generate_id_connector(Dictionary dict)
 void insert_idiom(Dictionary dict, Dict_node * dn)
 {
 	Exp * nc, * no, * n1;
-	E_list *ell, *elr;
 	const char * s;
 	Dict_node * dn_list, * xdn, * start_dn_list;
 
@@ -242,19 +241,17 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	/* ----- this code just sets up the node fields of the dn_list ----*/
 	nc = Exp_create(dict);
-	nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
+	nc->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 	nc->dir = '-';
 	nc->multi = false;
 	nc->type = CONNECTOR_type;
+	nc->operand_next = no;
 	nc->cost = 0;
 
 	n1 = Exp_create(dict);
-	n1->u.l = ell = pool_alloc(dict->Exp_pool);
-	ell->next = elr = pool_alloc(dict->Exp_pool);
-	elr->next = NULL;
-	ell->e = nc;
-	elr->e = no;
+	n1->operand_first = nc;
 	n1->type = AND_type;
+	n1->operand_next = NULL;
 	n1->cost = 0;
 
 	dn_list->exp = n1;
@@ -267,29 +264,29 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 		n1 = Exp_create(dict);
 		n1->type = AND_type;
+		n1->operand_next = NULL;
 		n1->cost = 0;
-		n1->u.l = ell = pool_alloc(dict->E_list_pool);
-		ell->next = elr = pool_alloc(dict->E_list_pool);
-		elr->next = NULL;
 
 		nc = Exp_create(dict);
-		nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
+		nc->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 		nc->dir = '+';
 		nc->multi = false;
 		nc->type = CONNECTOR_type;
+		nc->operand_next = NULL;
 		nc->cost = 0;
-		elr->e = nc;
+		n1->operand_first = nc;
 
 		increment_current_name(dict);
 
-		nc = Exp_create(dict);
-		nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
-		nc->dir = '-';
-		nc->multi = false;
-		nc->type = CONNECTOR_type;
-		nc->cost = 0;
+		no = Exp_create(dict);
+		no->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
+		no->dir = '-';
+		no->multi = false;
+		no->type = CONNECTOR_type;
+		no->operand_next = NULL;
+		no->cost = 0;
 
-		ell->e = nc;
+		nc->operand_next = no;
 
 		dn_list->exp = n1;
 
@@ -298,10 +295,11 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	/* now generate the last one */
 
 	nc = Exp_create(dict);
-	nc->u.condesc = condesc_add(&dict->contable, generate_id_connector(dict));
+	nc->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
 	nc->dir = '+';
 	nc->multi = false;
 	nc->type = CONNECTOR_type;
+	nc->operand_next = NULL;
 	nc->cost = 0;
 
 	dn_list->exp = nc;
