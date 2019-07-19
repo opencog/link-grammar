@@ -42,19 +42,14 @@
   or "and" or "|" or "or", and there are three types of parentheses:
   "()", "{}", and "[]".  The terminal symbols of this grammar are the
   connectors, which are strings of letters or numbers or *s.
-  Expressions may be written in prefix or infix form. In prefix-form,
-  the expressions are lisp-like, with the operators &, | preceding
-  the operands. In infix-form, the operators are in the middle. The
-  current dictionaries are in infix form.  If the C preprocessor
-  constant INFIX_NOTATION is defined, then the dictionary is assumed
-  to be in infix form.
+  Expressions are written in infix form.
 
   The connector begins with an optional @, which is followed by an upper
   case sequence of letters. Each subsequent *, lower case letter or
   number is a subscript. At the end is a + or - sign.  The "@" allows
   this connector to attach to one or more other connectors.
 
-  Here is a sample dictionary entry (in infix form):
+  Here is a sample dictionary entry:
 
       gone:         T- & {@EV+};
 
@@ -1119,129 +1114,6 @@ static bool is_number(const char * str)
 
 /* ======================================================================== */
 
-/* INFIX_NOTATION is always defined; we simply never use the format below. */
-/* #if ! defined INFIX_NOTATION */
-#if 0
-
-static Exp *expression(Dictionary dict);
-/**
- * We're looking at the first of the stuff after an "and" or "or".
- * Build a Exp node for this expression.  Set the cost and optional
- * fields to the default values.  Set the type field according to type
- */
-static Exp *operator_exp(Dictionary dict, int type)
-{
-	Exp * n;
-	E_list first;
-	E_list * elist;
-	n = Exp_create(dict);
-	n->type = type;
-	n->cost = 0.0;
-	elist = &first;
-	while((!is_equal(dict, ')')) && (!is_equal(dict, ']')) && (!is_equal(dict, '}'))) {
-		elist->next = pool_alloc(dict->E_list_pool);
-		elist = elist->next;
-		elist->next = NULL;
-		elist->e = expression(dict);
-		if (elist->e == NULL) {
-			return NULL;
-		}
-	}
-	if (elist == &first) {
-		dict_error(dict, "An \"or\" or \"and\" of nothing");
-		return NULL;
-	}
-	n->operand_first = first.next;
-	return n;
-}
-
-/**
- * Looks for the stuff that is allowed to be inside of parentheses
- * either & or | followed by a list, or a terminal symbol.
- */
-static Exp * in_parens(Dictionary dict)
-{
-	Exp * e;
-
-	if (is_equal(dict, '&') || (strcmp(token, "and")==0)) {
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		return operator_exp(dict, AND_type);
-	} else if (is_equal(dict, '|') || (strcmp(dict->token, "or")==0)) {
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		return operator_exp(dict, OR_type);
-	} else {
-		return expression(dict);
-	}
-}
-
-/**
- * Build (and return the root of) the tree for the expression beginning
- * with the current token.  At the end, the token is the first one not
- * part of this expression.
- */
-static Exp *expression(Dictionary dict)
-{
-	Exp * n;
-	if (is_equal(dict, '(')) {
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		n = in_parens(dict);
-		if (!is_equal(dict, ')')) {
-			dict_error(dict, "Expecting a \")\".");
-			return NULL;
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-	} else if (is_equal(dict, '{')) {
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		n = in_parens(dict);
-		if (!is_equal(dict, '}')) {
-			dict_error(dict, "Expecting a \"}\".");
-			return NULL;
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		n = make_optional_node(dict, n);
-	} else if (is_equal(dict, '[')) {
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		n = in_parens(dict);
-		if (!is_equal(dict, ']')) {
-			dict_error(dict, "Expecting a \"]\".");
-			return NULL;
-		}
-		if (!link_advance(dict)) {
-			return NULL;
-		}
-		n->cost += 1.0;
-	} else if (!dict->is_special) {
-		n = make_connector(dict);
-		if (n == NULL) {
-			return NULL;
-		}
-	} else if (is_equal(dict, ')') || is_equal(dict, ']')) {
-		/* allows "()" or "[]" */
-		n = make_zeroary_node(dict);
-	} else {
-			dict_error(dict, "Connector, \"(\", \"[\", or \"{\" expected.");
-		return NULL;
-	}
-	return n;
-}
-
-/* ======================================================================== */
-#else /* This is for infix notation */
-
 /**
  * Build (and return the root of) the tree for the expression beginning
  * with the current token.  At the end, the token is the first one not
@@ -1430,8 +1302,6 @@ static Exp *make_expression(Dictionary dict)
 	}
 		/* unreachable */
 }
-
-#endif
 
 /* ======================================================================== */
 /* Implementation of the DSW algo for rebalancing a binary tree.

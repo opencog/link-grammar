@@ -21,11 +21,6 @@
 
 // TODO provide gword access methods!
 
-/* conditional compiling flags */
-#define INFIX_NOTATION
-    /* If defined, then we're using infix notation for the dictionary */
-    /* otherwise we're using prefix notation */
-
 /* An ordered set of gword pointers, used to indicate the source gword
  * (Wordgraph word) of disjuncts and connectors. Usually it contains only
  * one element.  However, when a duplicate disjunct is eliminated (see
