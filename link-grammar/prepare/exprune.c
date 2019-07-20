@@ -29,10 +29,9 @@
 #define DBG(p, w, X) \
 	if (verbosity_level(+D_EXPRUNE))\
 	{\
-		char *e = expression_stringify(x->exp);\
+		const char *e = expression_stringify(x->exp);\
 		err_msg(lg_Trace, "pass%d w%zu: ", p, w);\
 		err_msg(lg_Trace, X ": %s\n", e);\
-		free(e);\
 	}
 #else /* !DEBUG */
 #define DBG(p, w, X)

@@ -179,9 +179,18 @@ void print_expression(const Exp * n)
 
 const char *expression_stringify(const Exp *n)
 {
-	dyn_str *e = dyn_str_new();
+	static char *e_str;
 
-	return dyn_str_take(print_expression_parens(e, n, false));
+	if (e_str != NULL) free(e_str);
+	if (n == NULL)
+	{
+		e_str = NULL;
+		return "(null)";
+	}
+
+	dyn_str *e = dyn_str_new();
+	e_str = dyn_str_take(print_expression_parens(e, n, false));
+	return e_str;
 }
 
 /* ======================================================================= */
@@ -313,12 +322,11 @@ static char *display_expr(const char *word, Dict_node *dn)
 	append_string(s, "expressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		char *expstr = expression_stringify(dn->exp);
+		const char *expstr = expression_stringify(dn->exp);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              expstr);
-		free(expstr);
 		append_string(s, "\n\n");
 	}
 	return dyn_str_take(s);

@@ -15,6 +15,7 @@
 
 #include "api-structures.h"
 #include "dict-common/dict-utils.h"
+#include "dict-common/dict-api.h"      // for expression_strigify()
 #include "disjunct-utils.h"   // for free_sentence_disjuncts()
 #include "linkage/linkage.h"
 #include "memory-pool.h"
@@ -484,6 +485,7 @@ void sentence_delete(Sentence sent)
 	free_linkages(sent);
 	post_process_free(sent->postprocessor);
 	post_process_free(sent->constituent_pp);
+	expression_stringify(NULL);
 
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->fm_Match_node);
