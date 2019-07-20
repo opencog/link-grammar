@@ -3124,8 +3124,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 				 w->regex_name ? w->regex_name : "");
 		while (we)
 		{
-			prt_error("Debug:  string='%s' expr=", we->string);
-			print_expression(we->exp);
+			prt_error("Debug:  string='%s' expr=%s\n",
+			          we->string, lg_exp_stringify(we->exp));
 			we = we->next;
 		}
 	}

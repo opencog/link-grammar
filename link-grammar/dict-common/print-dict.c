@@ -185,20 +185,20 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	return e;
 }
 
-void print_expression(const Exp * n)
+const char *lg_exp_stringify(const Exp *n)
 {
+	static char *e_str;
+
+	if (e_str != NULL) free(e_str);
+	if (n == NULL)
+	{
+		e_str = NULL;
+		return "(null)";
+	}
+
 	dyn_str *e = dyn_str_new();
-
-	char *s = dyn_str_take(print_expression_parens(e, n, false));
-	err_msg(lg_Debug, "%s\n", s);
-	free(s);
-}
-
-char *expression_stringify(const Exp * n)
-{
-	dyn_str *e = dyn_str_new();
-
-	return dyn_str_take(print_expression_parens(e, n, false));
+	e_str = dyn_str_take(print_expression_parens(e, n, false));
+	return e_str;
 }
 
 /* ======================================================================= */
@@ -330,12 +330,11 @@ static char *display_expr(const char *word, Dict_node *dn)
 	append_string(s, "expressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		char *expstr = expression_stringify(dn->exp);
+		const char *expstr = lg_exp_stringify(dn->exp);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              expstr);
-		free(expstr);
 		append_string(s, "\n\n");
 	}
 	return dyn_str_take(s);

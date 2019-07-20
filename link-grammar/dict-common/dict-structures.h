@@ -41,9 +41,9 @@ static const double cost_epsilon = 1E-5;
 /**
  * The Exp structure defined below comprises the expression trees that are
  * stored in the dictionary. The expression has a type (OR_type, AND_type
- * or CONNECTOR_type). If it is not a terminal "operand" points to its
+ * or CONNECTOR_type). If it is not a terminal "operand_first" points to its
  * list of operands (when each of them points to the next one through
- * "next"). Else "condesc" is the connector descriptor, when "dir"
+ * "operand_next"). Else "condesc" is the connector descriptor, when "dir"
  * indicates the connector direction.
  */
 struct Exp_struct
@@ -71,6 +71,7 @@ const char* lg_exp_get_string(const Exp*);
 static inline double lg_exp_get_cost(const Exp* exp) { return exp->cost; }
 static inline Exp* lg_exp_operand_first(Exp* exp) { return exp->operand_first; }
 static inline Exp* lg_exp_operand_next(Exp* exp) { return exp->operand_next; }
+const char *lg_exp_stringify(const Exp *);
 
 /**
  * The dictionary is stored as a binary tree comprised of the following

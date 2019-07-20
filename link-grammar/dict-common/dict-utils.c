@@ -121,9 +121,7 @@ static bool exp_compare(Exp *e1, Exp *e2)
 static int exp_contains(Exp * super, Exp * sub)
 {
 #if 0 /* DEBUG */
-	printf("SUP: ");
-	if (super) print_expression(super);
-	printf("\n");
+	if (super) printf("SUP: %s\n", lg_exp_stringify(super));
 #endif
 
 	if (sub==NULL || super==NULL)
@@ -285,11 +283,8 @@ static bool dn_word_contains(Dictionary dict,
 	m_exp = m_dn->exp;
 
 #if 0 /* DEBUG */
-	printf("\nWORD: ");
-	print_expression(w_dn->exp);
-	printf("\nMACR: ");
-	print_expression(m_exp);
-	printf("\n");
+	printf("\nWORD: %s\n", lg_exp_stringify(w_dn->exp));
+	printf("\nMACR: %s\n", lg_exp_stringify(m_exp));
 #endif
 
 	for (;w_dn != NULL; w_dn = w_dn->right)
