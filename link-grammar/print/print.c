@@ -242,15 +242,6 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	return dyn_str_take(s);
 }
 
-/* To be removed altogether in the next version. */
-char * linkage_print_senses(Linkage linkage)
-{
-	dyn_str * s = dyn_str_new();
-	dyn_strcat(s, "Corpus statistics is not supported\n");
-
-	return dyn_str_take(s);
-}
-
 char * linkage_print_disjuncts(const Linkage linkage)
 {
 	const char * dj;
@@ -793,11 +784,6 @@ void linkage_free_disjuncts(char * s)
 }
 
 void linkage_free_links_and_domains(char * s)
-{
-	exfree(s, strlen(s)+1);
-}
-
-void linkage_free_senses(char * s)
 {
 	exfree(s, strlen(s)+1);
 }

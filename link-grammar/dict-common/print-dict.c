@@ -25,50 +25,6 @@
 
 /* ======================================================================== */
 
-/* INFIX_NOTATION is always defined; we simply never use the format below. */
-/* #if ! defined INFIX_NOTATION */
-#if 0
-/**
- * print the expression, in prefix-style
- */
-void print_expression(Exp * n)
-{
-	E_list * el;
-	int i, icost;
-
-	if (n == NULL)
-	{
-		printf("NULL expression");
-		return;
-	}
-
-	icost = (int) (n->cost);
-	if (n->type == CONNECTOR_type)
-	{
-		for (i=0; i<icost; i++) printf("[");
-		if (n->multi) printf("@");
-		printf("%s%c", n->u.string, n->dir);
-		for (i=0; i<icost; i++) printf("]");
-		if (icost > 0) printf(" ");
-	}
-	else
-	{
-		for (i=0; i<icost; i++) printf("[");
-		if (icost == 0) printf("(");
-		if (n->type == AND_type) printf("& ");
-		if (n->type == OR_type) printf("or ");
-		for (el = n->operand_first; el != NULL; el = el->next)
-		{
-			print_expression(el->e);
-		}
-		for (i=0; i<icost; i++) printf("]");
-		if (icost > 0) printf(" ");
-		if (icost == 0) printf(") ");
-	}
-}
-
-#else /* INFIX_NOTATION */
-
 #define COST_FMT "%.3f"
 /**
  * print the expression, in infix-style
@@ -227,7 +183,6 @@ char *expression_stringify(const Exp * n)
 
 	return dyn_str_take(print_expression_parens(e, n, false));
 }
-#endif /* INFIX_NOTATION */
 
 /* ======================================================================= */
 

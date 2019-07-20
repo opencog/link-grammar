@@ -391,17 +391,6 @@
     ((po :foreign-address))
   :returning :int)
 
-
-(ff:def-foreign-call parse_options_set_display_senses
-    ((po :foreign-address)
-     (param :int fixnum))
-  :returning :void)
-
-(ff:def-foreign-call parse_options_get_display_senses
-    ((po :foreign-address))
-  :returning :int)
-
-
 (ff:def-foreign-call parse_options_set_echo_on
     ((po :foreign-address)
      (param :int fixnum))

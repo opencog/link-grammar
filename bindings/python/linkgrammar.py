@@ -487,9 +487,6 @@ class Linkage(object):
     def postscript(self, display_walls=True, print_ps_header=False):
         return clg.linkage_print_postscript(self._obj, display_walls, print_ps_header)
 
-    def senses(self):
-        return clg.linkage_print_senses(self._obj)
-
     def constituent_tree(self, mode=1):
         return clg.linkage_print_constituent_tree(self._obj, mode)
 

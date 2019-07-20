@@ -94,7 +94,6 @@ struct Parse_Options_s
 	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
-	bool use_cluster_disjuncts; /* Attempt using a broader list of disjuncts */
 	size_t short_length;   /* Links that are limited in length can be
 	                          no longer than this.  Default = 16 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */

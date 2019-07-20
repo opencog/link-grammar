@@ -201,12 +201,6 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		fprintf(stdout, "%s", string);
 		linkage_free_links_and_domains(string);
 	}
-	if (copts->display_senses)
-	{
-		string = linkage_print_senses(linkage);
-		fprintf(stdout, "%s", string);
-		linkage_free_senses(string);
-	}
 	if (copts->display_disjuncts)
 	{
 		string = linkage_print_disjuncts(linkage);

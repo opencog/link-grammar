@@ -200,10 +200,6 @@ link_public_api(bool)
 link_public_api(bool)
      parse_options_resources_exhausted(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool val);
-link_public_api(bool)
-     parse_options_get_use_cluster_disjuncts(Parse_Options opts);
-link_public_api(void)
      parse_options_set_all_short_connectors(Parse_Options opts, bool val);
 link_public_api(bool)
      parse_options_get_all_short_connectors(Parse_Options opts);
@@ -346,10 +342,6 @@ link_public_api(char *)
      linkage_print_pp_msgs(Linkage linkage);
 link_public_api(void)
      linkage_free_pp_msgs(char * str);
-link_public_api(char *)
-     linkage_print_senses(Linkage linkage);
-link_public_api(void)
-     linkage_free_senses(char *str);
 link_public_api(int)
      linkage_unused_word_cost(const Linkage linkage);
 link_public_api(double)
@@ -385,8 +377,6 @@ link_public_api(char *)
      dict_display_word_expr(Dictionary dict, const char *, Parse_Options opts);
 link_public_api(char *)
      dict_display_word_info(Dictionary dict, const char *, Parse_Options opts);
-link_public_api(bool)
-     lg_expand_disjunct_list(Sentence sent);
 
 /**********************************************************************
  *

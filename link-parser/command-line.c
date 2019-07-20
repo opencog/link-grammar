@@ -48,7 +48,6 @@ static struct
 	int display_links;
 	int display_walls;
 	int display_disjuncts;
-	int display_senses;
 	int display_morphology;
 	int display_wordgraph;
 } local, local_saved;
@@ -886,7 +885,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_bad = copts->display_bad;
 	local.display_disjuncts = copts->display_disjuncts;
 	local.display_links = copts->display_links;
-	local.display_senses = copts->display_senses;
 
 	local.display_morphology = parse_options_get_display_morphology(opts);
 }
@@ -926,7 +924,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_bad = local.display_bad;
 	copts->display_disjuncts = local.display_disjuncts;
 	copts->display_links = local.display_links;
-	copts->display_senses = local.display_senses;
 }
 
 int issue_special_command(const char * line, Command_Options* opts, Dictionary dict)
@@ -978,7 +975,6 @@ Command_Options* command_options_create(void)
 	co->display_bad = false;
 	co->display_disjuncts = false;
 	co->display_links = false;
-	co->display_senses = false;
 	co->display_wordgraph = 0;
 	return co;
 }
