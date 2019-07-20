@@ -379,7 +379,7 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 		if (bs.dn)
 		{
 			printf("Found expression for glob %s: %s\n",
-	        s, lg_exp_stringify(bs.dn->exp));
+			       s, lg_exp_stringify(bs.dn->exp));
 		}
 		else
 		{
