@@ -177,7 +177,7 @@ void print_expression(const Exp * n)
 	free(s);
 }
 
-const char *expression_stringify(const Exp *n)
+const char *lg_exp_stringify(const Exp *n)
 {
 	static char *e_str;
 
@@ -322,7 +322,7 @@ static char *display_expr(const char *word, Dict_node *dn)
 	append_string(s, "expressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		const char *expstr = expression_stringify(dn->exp);
+		const char *expstr = lg_exp_stringify(dn->exp);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,

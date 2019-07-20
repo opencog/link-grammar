@@ -16,7 +16,7 @@
 #include "build-disjuncts.h"             // allow using prt_exp_mem
 #endif
 #include "connectors.h"
-#include "dict-common/dict-api.h"        // expression_stringify
+#include "dict-common/dict-structures.h" // expression_stringify
 #include "dict-common/dict-utils.h"      // size_of_expression
 #include "print/print-util.h"            // dyn_str functions
 #include "string-set.h"
@@ -29,7 +29,7 @@
 #define DBG(p, w, X) \
 	if (verbosity_level(+D_EXPRUNE))\
 	{\
-		const char *e = expression_stringify(x->exp);\
+		const char *e = lg_exp_stringify(x->exp);\
 		err_msg(lg_Trace, "pass%d w%zu: ", p, w);\
 		err_msg(lg_Trace, X ": %s\n", e);\
 	}

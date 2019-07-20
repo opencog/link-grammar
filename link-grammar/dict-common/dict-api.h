@@ -41,7 +41,6 @@ bool boolean_dictionary_lookup(const Dictionary, const char *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 void print_expression(const Exp *);
-const char *expression_stringify(const Exp *);
 
 LINK_END_DECLS
 
