@@ -15,8 +15,7 @@
 
 #include "build-disjuncts.h"
 #include "connectors.h"
-//#include "dict-common/dict-structurtes.h" // lg_exp_stringify
-#include "dict-common/dict-structures.h"  // Exp_struct
+#include "dict-common/dict-structures.h"  // Exp_struct, lg_exp_stringify
 #include "disjunct-utils.h"
 #include "utilities.h"
 
