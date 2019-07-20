@@ -61,6 +61,7 @@ struct Exp_struct
 };
 
 bool cost_eq(double cost1, double cost2);
+const char *cost_stringify(double cost);
 
 /* API to access the above structure. */
 static inline Exp_type lg_exp_get_type(const Exp* exp) { return exp->type; }
