@@ -114,7 +114,14 @@ lg_error_formatmsg
 lg_error_printall
 lg_error_clearall
 lg_error_flush
+lg_exp_get_type
+lg_exp_get_dir
+lg_exp_get_multi
 lg_exp_get_string
+lg_exp_get_cost
+lg_exp_operand_first
+lg_exp_operand_next
+lg_exp_stringify
 prt_error
 lg_compute_disjunct_strings
 object_open
