@@ -163,7 +163,7 @@ it is parsed, and the result of the parse is printed.  The variables
 control what is printed:  By default, an ASCII-graphics linkage is
 printed, although post-script output is also possible.  The printing of
 the constituent tree can also be enabled. Other output controls include
-the printing of disjuncts, complete link data, and word senses.
+the printing of disjuncts and complete link data.
 .PP
 In order to analyze sentences, \%\fBlink\-parser\fP depends on a
 \%link\-grammar dictionary.  This contains lists of words and associated
@@ -272,11 +272,6 @@ Enable display of bad linkages.
 .TP
 .BR !batch \ (off)
 Enable batch mode.
-.ig HIDDEN
-.TP
-.BR !cluster \ (off)
-Use clusters to loosen parsing.
-.HIDDEN
 .TP
 .BR !constituents \ (0)
 Generate constituent output. Its value may be:
@@ -349,11 +344,6 @@ Use "panic mode" if a parse cannot be quickly found.
 .TP
 .BR !postscript \ (off)
 Generate postscript output.
-.ig HIDDEN
-.TP
-.BR !senses \ (off)
-Display word senses.
-.HIDDEN
 .TP
 .BR !short \ (16)
 Maximum length of short links.

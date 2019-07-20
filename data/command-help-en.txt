@@ -163,12 +163,6 @@ than a page width.
 When set, and when !postscript=True is set, then the postscript header
 will be printed.
 
-%[cluster]
-%This modes is not active for now (the source code may need fixes).
-
-%[senses]
-%This modes is not active for now (the source code may need fixes).
-
 %[cost-model]
 %The only allowed value is 1 for now (the source code may need fixes).
 

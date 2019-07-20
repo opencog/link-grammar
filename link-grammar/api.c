@@ -112,7 +112,6 @@ Parse_Options parse_options_create(void)
 	po->twopass_length = 30;
 	po->repeatable_rand = true;
 	po->resources = resources_create();
-	po->use_cluster_disjuncts = false;
 	po->display_morphology = true;
 
 	return po;
@@ -353,14 +352,6 @@ void parse_options_set_max_memory(Parse_Options opts, int dummy) {
 
 int parse_options_get_max_memory(Parse_Options opts) {
 	return opts->resources->max_memory;
-}
-
-void parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool dummy) {
-	opts->use_cluster_disjuncts = dummy;
-}
-
-bool parse_options_get_use_cluster_disjuncts(Parse_Options opts) {
-	return opts->use_cluster_disjuncts;
 }
 
 int parse_options_get_display_morphology(Parse_Options opts) {

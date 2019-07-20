@@ -55,12 +55,6 @@
 }
 %rename("%s")  linkage_print_links_and_domains;
 
-%newobject linkage_print_senses;
-%typemap(newfree) char * {
-   linkage_free_senses($1);
-}
-%rename("%s")  linkage_print_senses;
-
 %newobject linkage_print_constituent_tree;
 %typemap(newfree) char * {
    linkage_free_constituent_tree_str($1);
