@@ -350,8 +350,8 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	if (e == NULL) return;
 
 	for(int j =0; j<i; j++) printf(" ");
-	printf ("type=%d dir=%c multi=%d cost=%f\n",
-	        e->type, e->dir, e->multi, e->cost);
+	printf ("type=%d dir=%c multi=%d cost=%s\n",
+	        e->type, e->dir, e->multi, cost_stringify(e->cost));
 	if (e->type != CONNECTOR_type)
 	{
 		for (e = e->operand_next; e != NULL; e = e->operand_next) prt_exp(e, i+2);
@@ -417,8 +417,8 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 				return;
 			}
 		}
-		printf(" (%d operand%s) cost=%f\n", operand_count,
-		       operand_count == 1 ? "" : "s", e->cost);
+		printf(" (%d operand%s) cost=%s\n", operand_count,
+		       operand_count == 1 ? "" : "s", cost_stringify(e->cost));
 
 		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
 		{
@@ -427,10 +427,10 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	}
 	else
 	{
-		printf(" %s%s%c cost=%f\n",
+		printf(" %s%s%c cost=%s\n",
 		       e->multi ? "@" : "",
 		       e->condesc ? e->condesc->string : "(condesc=(null))",
-		       e->dir, e->cost);
+		       e->dir, cost_stringify(e->cost));
 	}
 }
 #endif /* DEBUG */

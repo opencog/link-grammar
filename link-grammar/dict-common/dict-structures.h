@@ -35,6 +35,9 @@ typedef enum
 	CONNECTOR_type
 } Exp_type;
 
+static const int cost_max_dec_places = 3;
+static const double cost_epsilon = 1E-5;
+
 /**
  * The Exp structure defined below comprises the expression trees that are
  * stored in the dictionary. The expression has a type (OR_type, AND_type
@@ -56,6 +59,9 @@ struct Exp_struct
 	};
 	double cost;   /* The cost of using this expression. */
 };
+
+bool cost_eq(double cost1, double cost2);
+const char *cost_stringify(double cost);
 
 /* API to access the above structure. */
 static inline Exp_type lg_exp_get_type(const Exp* exp) { return exp->type; }

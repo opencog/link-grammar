@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <math.h>                   // fabs
 #include <string.h>
 
 #include "api-structures.h" // for Parse_Options_s  (seems hacky to me)
@@ -22,10 +23,26 @@
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
 
-
 /* ======================================================================== */
 
-#define COST_FMT "%.3f"
+bool cost_eq(double cost1, double cost2)
+{
+	return (fabs(cost1 - cost2) < cost_epsilon);
+}
+
+/**
+ * Convert cost to a string with at most cost_max_dec_places decimal places.
+ */
+const char *cost_stringify(double cost)
+{
+	static TLS char buf[16];
+
+	int l = snprintf(buf, sizeof(buf), "%.*f", cost_max_dec_places, cost);
+	if ((l < 0) || (l >= (int)sizeof(buf))) return "ERR_COST";
+
+	return buf;
+}
+
 /**
  * print the expression, in infix-style
  */
@@ -42,12 +59,12 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		return e;
 	}
 
-	if (n->cost < -10E-4)
+	if (n->cost < -cost_epsilon)
 	{
 		icost = 1;
 		dcost = n->cost;
 	}
-	else if ((n->cost > -10E-4) && (n->cost < 0))
+	else if (cost_eq(n->cost, 0.0))
 	{
 		/* avoid [X+]-0.00 */
 		icost = 0;
@@ -57,7 +74,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	{
 		icost = (int) (n->cost);
 		dcost = n->cost - icost;
-		if (dcost > 10E-4)
+		if (dcost > cost_epsilon)
 		{
 			dcost = n->cost;
 			icost = 1;
@@ -84,7 +101,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		if (n->multi) dyn_strcat(e, "@");
 		append_string(e, "%s%c", n->condesc?n->condesc->string:"(null)", n->dir);
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) append_string(e, COST_FMT, dcost);
+		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 		return e;
 	}
 
@@ -94,7 +111,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		for (i=0; i<icost; i++) dyn_strcat(e, "[");
 		dyn_strcat(e, "()");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) append_string(e, COST_FMT, dcost);
+		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 		return e;
 	}
 
@@ -109,7 +126,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		 else print_expression_parens(e, operand->operand_next, false);
 		dyn_strcat(e, "}");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) append_string(e, COST_FMT, dcost);
+		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 		return e;
 	}
 
@@ -122,7 +139,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if ((n->type == AND_type) && (operand->operand_next == NULL))
 	{
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) append_string(e, COST_FMT, dcost);
+		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 		if ((icost == 0) && need_parens) dyn_strcat(e, ")");
 		return e;
 	}
@@ -162,7 +179,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	}
 
 	for (i=0; i<icost; i++) dyn_strcat(e, "]");
-	if (0 != dcost) append_string(e, COST_FMT, dcost);
+	if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 	if ((icost == 0) && need_parens) dyn_strcat(e, ")");
 
 	return e;
