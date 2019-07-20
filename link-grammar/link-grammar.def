@@ -52,8 +52,6 @@ parse_options_timer_expired
 parse_options_print_total_time
 parse_options_memory_exhausted
 parse_options_resources_exhausted
-parse_options_set_use_cluster_disjuncts
-parse_options_get_use_cluster_disjuncts
 parse_options_set_all_short_connectors
 parse_options_get_all_short_connectors
 parse_options_set_repeatable_rand
@@ -88,7 +86,6 @@ linkage_get_link_num_domains
 linkage_get_link_domain_names
 linkage_get_disjunct_str
 linkage_get_disjunct_cost
-linkage_get_disjunct_corpus_score
 linkage_get_words
 linkage_get_word
 linkage_get_word_byte_start
@@ -103,15 +100,12 @@ linkage_print_disjuncts
 linkage_free_disjuncts
 linkage_print_links_and_domains
 linkage_free_links_and_domains
-linkage_print_senses
-linkage_free_senses
 linkage_print_postscript
 linkage_free_postscript
 linkage_print_pp_msgs
 linkage_free_pp_msgs
 linkage_unused_word_cost
 linkage_disjunct_cost
-linkage_corpus_cost
 linkage_link_cost
 linkage_get_violation_name
 lg_error_set_handler
@@ -123,7 +117,6 @@ lg_error_flush
 lg_exp_get_string
 prt_error
 lg_compute_disjunct_strings
-lg_expand_disjunct_list
 object_open
 free_disjuncts
 eliminate_duplicate_disjuncts

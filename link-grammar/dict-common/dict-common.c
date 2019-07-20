@@ -282,10 +282,6 @@ void dictionary_delete(Dictionary dict)
 		prt_error("Info: Freeing dictionary %s\n", dict->name);
 	}
 
-#ifdef USE_CORPUS
-	lg_corpus_delete(dict->corpus);
-#endif
-
 	if (dict->affix_table != NULL) {
 		affix_list_delete(dict->affix_table);
 		dictionary_delete(dict->affix_table);

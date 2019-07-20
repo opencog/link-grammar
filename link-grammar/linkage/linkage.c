@@ -862,19 +862,6 @@ double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 	return 0.0;
 }
 
-double linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx w)
-{
-	Disjunct *dj;
-
-	if (linkage->num_words <= w) return 99.999; /* bounds-check */
-	dj = linkage->chosen_disjuncts[w];
-
-	/* dj may be null, if the word didn't participate in the parse. */
-	if (NULL == dj) return 99.999;
-
-	return lg_corpus_disjunct_score(linkage, w);
-}
-
 const char * linkage_get_word(const Linkage linkage, WordIdx w)
 {
 	if (!linkage) return NULL;
@@ -901,13 +888,6 @@ int linkage_link_cost(const Linkage linkage)
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage) return 0;
 	return linkage->lifo.link_cost;
-}
-
-double linkage_corpus_cost(const Linkage linkage)
-{
-	/* The sat solver (currently) fails to fill in info */
-	if (!linkage) return 0.0;
-	return linkage->lifo.corpus_cost;
 }
 
 /* =========== Get word sentence positions ============================== */

@@ -235,7 +235,6 @@
     <ClInclude Include="..\link-grammar\api-structures.h" />
     <ClInclude Include="..\link-grammar\api-types.h" />
     <ClInclude Include="..\link-grammar\connectors.h" />
-    <ClInclude Include="..\link-grammar\corpus\corpus.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-affix.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-api.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-common.h" />
@@ -274,7 +273,6 @@
     <ClInclude Include="..\link-grammar\post-process\pp_lexer.h" />
     <ClInclude Include="..\link-grammar\post-process\pp_linkset.h" />
     <ClInclude Include="..\link-grammar\prepare\build-disjuncts.h" />
-    <ClInclude Include="..\link-grammar\prepare\expand.h" />
     <ClInclude Include="..\link-grammar\prepare\exprune.h" />
     <ClInclude Include="..\link-grammar\print\print-util.h" />
     <ClInclude Include="..\link-grammar\print\print.h" />
@@ -328,7 +326,6 @@
     <ClCompile Include="..\link-grammar\post-process\pp_lexer.c" />
     <ClCompile Include="..\link-grammar\post-process\pp_linkset.c" />
     <ClCompile Include="..\link-grammar\prepare\build-disjuncts.c" />
-    <ClCompile Include="..\link-grammar\prepare\expand.c" />
     <ClCompile Include="..\link-grammar\prepare\exprune.c" />
     <ClCompile Include="..\link-grammar\print\print-util.c" />
     <ClCompile Include="..\link-grammar\print\print.c" />

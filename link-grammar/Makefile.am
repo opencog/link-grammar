@@ -12,10 +12,6 @@ if WITH_SAT_SOLVER
 SUBDIRS += $(MINISAT_DIR) sat-solver
 endif
 
-if WITH_CORPUS
-SUBDIRS += corpus
-endif
-
 if OS_WIN32
 install-libtool-import-lib:
 	$(INSTALL) .libs/liblink-grammar.dll.a $(DESTDIR)$(libdir)
@@ -82,10 +78,6 @@ liblink_grammar_la_LIBADD  += ${MINISAT_LIBS}
 endif !LIBMINISAT_BUNDLED
 endif WITH_SAT_SOLVER
 
-if WITH_CORPUS
-liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
-endif
-
 # Math libraries are needed for floorf, etc.
 liblink_grammar_la_LIBADD  += -lm
 
@@ -126,7 +118,6 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_lexer.l          \
 	post-process/pp_linkset.c        \
 	prepare/build-disjuncts.c        \
-	prepare/expand.c                 \
 	prepare/exprune.c                \
 	print/print.c                    \
 	print/print-util.c               \
@@ -186,7 +177,6 @@ liblink_grammar_la_SOURCES =        \
 	post-process/pp_linkset.h        \
 	post-process/pp-structures.h     \
 	prepare/build-disjuncts.h        \
-	prepare/expand.h                 \
 	prepare/exprune.h                \
 	print/print.h                    \
 	print/print-util.h               \

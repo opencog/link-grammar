@@ -13,7 +13,6 @@
 
 #include "api-structures.h"
 #include "connectors.h"
-#include "corpus/corpus.h"
 #include "dict-common/dict-utils.h"     // size_of_expression
 #include "disjunct-utils.h"
 #include "linkage/linkage.h"
@@ -243,45 +242,17 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	return dyn_str_take(s);
 }
 
+/* To be removed altogether in the next version. */
 char * linkage_print_senses(Linkage linkage)
 {
 	dyn_str * s = dyn_str_new();
-#ifdef USE_CORPUS
-	Linkage_info *lifo = linkage->info;
-	Sense *sns;
-	size_t nwords;
-	WordIdx w;
+	dyn_strcat(s, "Corpus statistics is not supported\n");
 
-	lg_corpus_linkage_senses(linkage);
-
-	nwords = linkage->num_words;
-	for (w=0; w<nwords; w++)
-	{
-		sns = lg_get_word_sense(linkage, w);
-		while (sns)
-		{
-			int idx = lg_sense_get_index(sns);
-			const char * wd = lg_sense_get_subscripted_word(sns);
-			const char * dj = lg_sense_get_disjunct(sns);
-			const char * sense = lg_sense_get_sense(sns);
-			double score = lg_sense_get_score(sns);
-			append_string(s, "%d %s dj=%s sense=%s score=%f\n",
-			              idx, wd, dj, sense, score);
-			sns = lg_sense_next(sns);
-		}
-	}
-
-#else
-	dyn_strcat(s, "Corpus statistics is not enabled in this version\n");
-#endif
 	return dyn_str_take(s);
 }
 
 char * linkage_print_disjuncts(const Linkage linkage)
 {
-#ifdef USE_CORPUS
-	double score;
-#endif
 	const char * dj;
 	int w;
 	dyn_str * s = dyn_str_new();
@@ -311,12 +282,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (NULL == dj) dj = "";
 		cost = linkage_get_disjunct_cost(linkage, w);
 
-#ifdef USE_CORPUS
-		score = linkage_get_disjunct_corpus_score(linkage, w);
-		append_string(s, "%*s    %5.3f %6.3f %s\n", pad, infword, cost, score, dj);
-#else
 		append_string(s, "%*s    %5.3f  %s\n", pad, infword, cost, dj);
-#endif
 	}
 	return dyn_str_take(s);
 }

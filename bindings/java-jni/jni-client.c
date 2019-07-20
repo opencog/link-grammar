@@ -18,7 +18,6 @@
 #endif /* HAVE_STDATOMIC_H */
 
 #include "link-grammar/api-structures.h"
-#include "link-grammar/corpus/corpus.h"
 #include "link-grammar/error.h"
 #include "jni-client.h"
 #include "link-grammar/utilities.h"
@@ -477,55 +476,6 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct(JNIEnv *env, jclass cls, jin
 	if (NULL == w) j = NULL;
 	else j = (*env)->NewStringUTF(env, w);
 	return j;
-}
-
-JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
-                    jclass cls, jint i, jint j)
-{
-	per_thread_data *ptd = get_ptd(env, cls);
-	Linkage lkg = ptd->linkage;
-	Sense *sns;
-	const char * w = NULL;
-	jstring js;
-
-	if (!lkg) return NULL;
-	lg_corpus_linkage_senses(lkg);
-	sns = lg_get_word_sense(lkg, i);
-	while ((0 < j) && sns)
-	{
-		sns = lg_sense_next(sns);
-		j--;
-	}
-
-	/* does not need to be freed, points into data structures */
-	if (sns) w = lg_sense_get_sense(sns);
-
-	if (w) js = (*env)->NewStringUTF(env, w);
-	else js = NULL;
-	return js;
-}
-
-JNIEXPORT jdouble JNICALL
-Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env,
-                    jclass cls, jint i, jint j)
-{
-	per_thread_data *ptd = get_ptd(env, cls);
-	Linkage lkg = ptd->linkage;
-	Sense *sns;
-	double score = 0.0;
-
-	if (!lkg) return 0.0;
-	sns = lg_get_word_sense(lkg, i);
-	while ((0 < j) && sns)
-	{
-		sns = lg_sense_next(sns);
-		j--;
-	}
-
-	if (sns) score = lg_sense_get_score(sns);
-
-	return score;
 }
 
 /*

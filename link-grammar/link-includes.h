@@ -125,7 +125,6 @@ link_public_api(FILE *)
 typedef enum
 {
 	VDAL=1, /* Sort by Violations, Disjunct cost, Link cost */
-	CORPUS, /* Sort by Corpus cost */
 } Cost_Model_type;
 
 typedef struct Parse_Options_s * Parse_Options;
@@ -321,8 +320,6 @@ link_public_api(const char *)
      linkage_get_disjunct_str(const Linkage linkage, WordIdx word_num);
 link_public_api(double)
      linkage_get_disjunct_cost(const Linkage linkage, WordIdx word_num);
-link_public_api(double)
-     linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx word_num);
 link_public_api(const char *)
      linkage_get_word(const Linkage linkage, WordIdx word_num);
 link_public_api(char *)
@@ -359,8 +356,6 @@ link_public_api(double)
      linkage_disjunct_cost(const Linkage linkage);
 link_public_api(int)
      linkage_link_cost(const Linkage linkage);
-link_public_api(double)
-     linkage_corpus_cost(const Linkage linkage);
 link_public_api(const char *)
      linkage_get_violation_name(const Linkage linkage);
 

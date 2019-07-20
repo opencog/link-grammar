@@ -41,10 +41,6 @@ typedef struct pp_knowledge_s pp_knowledge;
 typedef struct pp_linkset_s pp_linkset;
 typedef struct PP_domains_s PP_domains;
 
-typedef struct corpus_s Corpus;
-typedef struct sense_s Sense;
-typedef struct cluster_s Cluster;
-
 typedef struct Wordgraph_pathpos_s Wordgraph_pathpos;
 
 #endif

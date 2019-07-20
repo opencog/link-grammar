@@ -73,7 +73,4 @@ void linkage_score(Linkage lkg, Parse_Options opts)
 	lkg->lifo.unused_word_cost = unused_word_cost(lkg);
 	lkg->lifo.disjunct_cost = compute_disjunct_cost(lkg);
 	lkg->lifo.link_cost = compute_link_cost(lkg);
-	lkg->lifo.corpus_cost = -1.0;
-
-	lg_corpus_score(lkg);
 }

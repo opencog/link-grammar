@@ -45,7 +45,6 @@
 
 #include "api-types.h"
 #include "tracon-set.h"
-#include "corpus/corpus.h"
 #include "memory-pool.h"
 #include "string-set.h"
 

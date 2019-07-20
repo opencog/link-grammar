@@ -319,7 +319,6 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 {
 	int i, num_to_query, num_to_display, num_displayed;
 	Linkage linkage;
-	double corpus_cost;
 	Parse_Options opts = copts->popts;
 	int display_max = DISPLAY_MAX;
 	bool auto_next_linkage = false;
@@ -391,22 +390,10 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 				fprintf(stdout, "\tLinkage %d, ", num_displayed+1);
 			}
 
-			corpus_cost = linkage_corpus_cost(linkage);
-			if (corpus_cost < 0.0f)
-			{
-				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f LEN=%d)\n",
-				       linkage_unused_word_cost(linkage),
-				       linkage_disjunct_cost(linkage),
-				       linkage_link_cost(linkage));
-			}
-			else
-			{
-				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%5.2f LEN=%d)\n",
-				       corpus_cost,
-				       linkage_unused_word_cost(linkage),
-				       linkage_disjunct_cost(linkage),
-				       linkage_link_cost(linkage));
-			}
+			fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f LEN=%d)\n",
+			        linkage_unused_word_cost(linkage),
+			        linkage_disjunct_cost(linkage),
+			        linkage_link_cost(linkage));
 		}
 
 		process_linkage(linkage, copts);
@@ -972,24 +959,6 @@ int main(int argc, char * argv[])
 			if (num_linkages < 0) continue;
 		}
 #endif /* 0 */
-
-		/* Try using a larger list of disjuncts */
-		/* XXX FIXME: the lg_expand_disjunct_list() routine is not
-		 * currently a part of the public API; it should be made so,
-		 * or this expansion idea should be abandoned... not sure which.
-		 */
-		if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
-		{
-			int expanded;
-			if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
-			parse_options_set_disjunct_cost(opts, 3.9);
-			expanded = lg_expand_disjunct_list(sent);
-			if (expanded)
-			{
-				num_linkages = sentence_parse(sent, opts);
-			}
-			if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
-		}
 
 		/* If asked to show bad linkages, then show them. */
 		if ((num_linkages == 0) && (!copts->batch_mode))

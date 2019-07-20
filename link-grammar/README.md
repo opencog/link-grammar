@@ -23,8 +23,6 @@ Listed in rough processing order.
  * post-process - Constraint rules applied after parsing.
                   Also, rules for constituent-tree construction.
 
- * corpus       - word-sense disambiguation data from an SQL file.
-
  * print        - functions that convert parses into
                   human-readable strings and printed output.
 

@@ -37,10 +37,6 @@ liblink_grammar_java_la_LIBADD  += ${MINISAT_LIBS}
 endif !LIBMINISAT_BUNDLED
 endif
 
-if WITH_CORPUS
-liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
-endif
-
 # Math libraries are needed for floorf, etc.
 liblink_grammar_java_la_LIBADD  += -lm
 

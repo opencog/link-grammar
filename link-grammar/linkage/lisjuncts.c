@@ -37,11 +37,7 @@ static void assert_same_disjunct(Linkage, WordIdx, const char *);
  * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
  *
  * This routine will compute the string representation of the disjunct
- * used for each word in parsing the given sentence. A string
- * representation of the disjunct is needed for most of the corpus
- * statistics functions: this string, together with the subscripted
- * word, is used as a key to index the statistics information in the
- * database.
+ * used for each word in parsing the given sentence.
  *
  * The connectors are extracted from link_array (and not chosen_disjuncts)
  * so the lexical links remain hidden when HIDE_MORPHO is true (see

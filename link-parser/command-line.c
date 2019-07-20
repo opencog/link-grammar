@@ -35,7 +35,6 @@ static struct
 	int batch_mode;
 	int panic_mode;
 	int allow_null;
-	int use_cluster_disjuncts;
 	int use_sat_solver;
 	int echo_on;
 	Cost_Model_type cost_model;
@@ -68,7 +67,6 @@ Switch default_switches[] =
 {
 	{"bad",        Bool, "Display of bad linkages",         &local.display_bad},
 	{"batch",      Bool, "Batch mode",                      &local.batch_mode},
-	{"cluster",    Bool, UNDOC "Use clusters to loosen parsing", &local.use_cluster_disjuncts},
 	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
 	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
@@ -85,7 +83,6 @@ Switch default_switches[] =
 	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
 	{"ps-header",  Bool, "Generate postscript header",      &local.display_ps_header},
 	{"rand",       Bool, "Use repeatable random numbers",   &local.repeatable_rand},
-	{"senses",     Bool, UNDOC "Display of word senses",    &local.display_senses},
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
@@ -872,7 +869,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
 	local.max_cost = parse_options_get_disjunct_cost(opts);
-	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 
 	local.screen_width = (int)copts->screen_width;
@@ -910,7 +906,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_cost_model_type(opts, local.cost_model);
 	parse_options_set_disjunct_cost(opts, local.max_cost);
-	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif

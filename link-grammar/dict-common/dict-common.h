@@ -94,9 +94,6 @@ struct Dictionary_s
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker;     /* spell checker handle */
-#if USE_CORPUS
-	Corpus *        corpus;            /* Statistics database */
-#endif
 #ifdef HAVE_SQLITE
 	void *          db_handle;         /* database handle */
 #endif

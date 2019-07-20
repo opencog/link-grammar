@@ -23,9 +23,6 @@ void free_linkage(Linkage linkage)
 	free(linkage->link_array);
 
 	free(linkage->disjunct_list_str);
-#ifdef USE_CORPUS
-	lg_sense_delete(linkage);
-#endif
 
 	linkage_free_pp_domains(linkage);
 
@@ -67,10 +64,6 @@ void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 	memset(lkg->chosen_disjuncts, 0, N_words * sizeof(Disjunct *));
 
 	lkg->disjunct_list_str = NULL;
-#ifdef USE_CORPUS
-	lkg->sense_list = NULL;
-#endif
-
 	lkg->pp_domains = NULL;
 	lkg->sent = sent;
 }

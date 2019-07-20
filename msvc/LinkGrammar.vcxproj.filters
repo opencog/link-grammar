@@ -132,9 +132,6 @@
     <ClCompile Include="..\link-grammar\prepare\build-disjuncts.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\link-grammar\prepare\expand.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\link-grammar\prepare\exprune.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -318,12 +315,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\prepare\build-disjuncts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\corpus\corpus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\prepare\expand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\prepare\exprune.h">
