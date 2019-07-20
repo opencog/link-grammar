@@ -401,9 +401,9 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 	printf ("e=%p: %s", e, stringify_Exp_type(e->type));
 
 	if (is_ASAN_uninitialized((uintptr_t)e->operand_first))
-		printf(" (UNINITIALIZED operand)");
+		printf(" (UNINITIALIZED operand_first)");
 	if (is_ASAN_uninitialized((uintptr_t)e->operand_next))
-		printf(" (UNINITIALIZED next)");
+		printf(" (UNINITIALIZED operand_next)");
 
 	if (e->type != CONNECTOR_type)
 	{
@@ -413,7 +413,7 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 			operand_count++;
 			if (is_ASAN_uninitialized((uintptr_t)opd->operand_next))
 			{
-				printf(" (operand %d: UNINITIALIZED next)\n", operand_count);
+				printf(" (operand %d: UNINITIALIZED operand_next)\n", operand_count);
 				return;
 			}
 		}

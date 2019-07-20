@@ -38,9 +38,9 @@ typedef enum
 /**
  * The Exp structure defined below comprises the expression trees that are
  * stored in the dictionary. The expression has a type (OR_type, AND_type
- * or CONNECTOR_type). If it is not a terminal "operand" points to its
+ * or CONNECTOR_type). If it is not a terminal "operand_first" points to its
  * list of operands (when each of them points to the next one through
- * "next"). Else "condesc" is the connector descriptor, when "dir"
+ * "operand_next"). Else "condesc" is the connector descriptor, when "dir"
  * indicates the connector direction.
  */
 struct Exp_struct
