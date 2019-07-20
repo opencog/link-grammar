@@ -14,7 +14,6 @@
 #include <string.h>
 
 #include "api-structures.h"
-#include "corpus/corpus.h"
 #include "dict-common/dict-utils.h"
 #include "disjunct-utils.h"   // for free_sentence_disjuncts()
 #include "linkage/linkage.h"
@@ -68,21 +67,6 @@ static int VDAL_compare_parse(Linkage l1, Linkage l2)
 	}
 }
 
-#ifdef USE_CORPUS
-static int CORP_compare_parse(Linkage l1, Linkage l2)
-{
-	Linkage_info * p1 = &l1->lifo;
-	Linkage_info * p2 = &l2->lifo;
-
-	double diff = p1->corpus_cost - p2->corpus_cost;
-
-	if (fabs(diff) < 1.0e-5)
-		return VDAL_compare_parse(p1, p2);
-	if (diff < 0.0) return -1;
-	return 1;
-}
-#endif
-
 /**
  * Create and initialize a Parse_Options object
  */
@@ -120,17 +104,8 @@ Parse_Options parse_options_create(void)
 	po->use_spell_guess = 0;
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
-#ifdef XXX_USE_CORPUS
-	/* Use the corpus cost model, if available.
-	 * It really does a better job at parse ranking.
-	 * Err .. sometimes ...
-	 */
-	po->cost_model.compare_fn = &CORP_compare_parse;
-	po->cost_model.type = CORPUS;
-#else /* USE_CORPUS */
 	po->cost_model.compare_fn = &VDAL_compare_parse;
 	po->cost_model.type = VDAL;
-#endif /* USE_CORPUS */
 	po->short_length = 16;
 	po->all_short = false;
 	po->perform_pp_prune = true;
@@ -156,14 +131,6 @@ void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 	case VDAL:
 		opts->cost_model.type = VDAL;
 		opts->cost_model.compare_fn = &VDAL_compare_parse;
-		break;
-	case CORPUS:
-#ifdef USE_CORPUS
-		opts->cost_model.type = CORPUS;
-		opts->cost_model.compare_fn = &CORP_compare_parse;
-#else
-		prt_error("Error: Source code compiled with cost model 'CORPUS' disabled.\n");
-#endif
 		break;
 	default:
 		prt_error("Error: Illegal cost model: %d\n", cm);

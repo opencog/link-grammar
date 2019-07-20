@@ -213,10 +213,6 @@ dictionary_six_str(const char * lang,
 	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */
 	assert(NULL != locale, "Cannot restore program locale");
 
-#ifdef USE_CORPUS
-	dict->corpus = lg_corpus_new();
-#endif
-
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 

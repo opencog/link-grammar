@@ -29,7 +29,6 @@ struct Linkage_info_struct
 	short link_cost;
 
 	double disjunct_cost;
-	double corpus_cost;
 	const char *pp_violation_msg;
 };
 
@@ -62,9 +61,6 @@ struct Linkage_s
 	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 	size_t          cdsz;         /* Alloc'ed length of chosen_disjuncts */
 	const char **   disjunct_list_str; /* Stringified version of above */
-#ifdef USE_CORPUS
-	Sense **        sense_list;   /* Word senses, inferred from disjuncts */
-#endif
 
 	Gword **wg_path;              /* Linkage Wordgraph path */
 	Gword **wg_path_display;      /* Wordgraph path after morpheme combining */

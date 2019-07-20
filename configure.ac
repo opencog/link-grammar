@@ -399,21 +399,6 @@ AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
 AM_CONDITIONAL(WITH_SAT_SOLVER, test "x$enable_sat_solver" = xyes)
 
 # ====================================================================
-# Corpus stats disabled by default
-
-AC_ARG_ENABLE( corpus-stats,
-  [  --enable-corpus-stats   use corpus statistics],
-  [],
-  [enable_corpus_stats=no]
-)
-if test "x$enable_corpus_stats" = "xyes"
-then
-	AC_DEFINE(USE_CORPUS, 1, [Define for compilation])
-fi
-
-AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
-
-# ====================================================================
 
 AC_ARG_ENABLE( wordgraph_display,
   [  --enable-wordgraph-display       enable graphical display of the Wordgraph],
@@ -1021,7 +1006,6 @@ Makefile
 link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
-link-grammar/corpus/Makefile
 link-grammar/minisat/Makefile
 link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
@@ -1089,7 +1073,6 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
-	Corpus statistics database:     ${enable_corpus_stats}
 	RegEx tokenizer:                ${enable_regex_tokenizer}
 	Definitions:                    ${DEFS}
 	Libraries:                      ${lglibs}

@@ -126,7 +126,6 @@ Contents
 | ------------- |-------------|
 | LICENSE     | The license describing terms of use |
 | link-grammar/*.c | The program.  (Written in ANSI-C) |
-| link-grammar/corpus/*.c | Optional corpus statistics database. |
 | link-grammar/minisat/ | Optional SAT Solver. (Written in C++) |
 | link-grammar/sat-solver/ | Optional SAT Solver. (Written in C++) |
 |  |  |
