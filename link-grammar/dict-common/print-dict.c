@@ -177,7 +177,7 @@ void print_expression(const Exp * n)
 	free(s);
 }
 
-char *expression_stringify(const Exp * n)
+const char *expression_stringify(const Exp *n)
 {
 	dyn_str *e = dyn_str_new();
 
