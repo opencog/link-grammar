@@ -14,8 +14,6 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
-#include <math.h>  // for fabs()
-
 #include "connectors.h"
 #include "dict-api.h"
 #include "string-set.h"
@@ -92,7 +90,7 @@ static bool exp_compare(Exp *e1, Exp *e2)
 	  return false;
 	if (e1->type != e2->type)
 		return false;
-	if (fabs (e1->cost - e2->cost) > 0.001)
+	if (!cost_eq(e1->cost, e2->cost))
 		return false;
 
 	if (e1->type == CONNECTOR_type)

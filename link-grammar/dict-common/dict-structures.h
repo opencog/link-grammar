@@ -60,6 +60,8 @@ struct Exp_struct
 	double cost;   /* The cost of using this expression. */
 };
 
+bool cost_eq(double cost1, double cost2);
+
 /* API to access the above structure. */
 static inline Exp_type lg_exp_get_type(const Exp* exp) { return exp->type; }
 static inline char lg_exp_get_dir(const Exp* exp) { return exp->dir; }

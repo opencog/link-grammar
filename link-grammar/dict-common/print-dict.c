@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <math.h>                   // fabs
 #include <string.h>
 
 #include "api-structures.h" // for Parse_Options_s  (seems hacky to me)
@@ -22,10 +23,14 @@
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
 
-
 /* ======================================================================== */
 
 #define COST_FMT "%.3f"
+bool cost_eq(double cost1, double cost2)
+{
+	return (fabs(cost1 - cost2) < cost_epsilon);
+}
+
 /**
  * print the expression, in infix-style
  */
@@ -42,12 +47,12 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		return e;
 	}
 
-	if (n->cost < -10E-4)
+	if (n->cost < -cost_epsilon)
 	{
 		icost = 1;
 		dcost = n->cost;
 	}
-	else if ((n->cost > -10E-4) && (n->cost < 0))
+	else if (cost_eq(n->cost, 0.0))
 	{
 		/* avoid [X+]-0.00 */
 		icost = 0;
@@ -57,7 +62,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	{
 		icost = (int) (n->cost);
 		dcost = n->cost - icost;
-		if (dcost > 10E-4)
+		if (dcost > cost_epsilon)
 		{
 			dcost = n->cost;
 			icost = 1;
