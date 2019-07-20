@@ -15,8 +15,8 @@
 
 #include "build-disjuncts.h"
 #include "connectors.h"
-//#include "dict-common/print-dict.h"      // print_expression()
-#include "dict-common/dict-structures.h"   // Exp_struct()
+//#include "dict-common/dict-structurtes.h" // lg_exp_stringify
+#include "dict-common/dict-structures.h"  // Exp_struct
 #include "disjunct-utils.h"
 #include "utilities.h"
 
@@ -309,7 +309,7 @@ Disjunct * build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	                   /*num_elements*/32768, sizeof(Tconnector),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 
-	// print_expression(exp);  printf("\n");
+	// printf("%s\n", lg_exp_stringify(exp));
 	c = build_clause(exp, &ct);
 	// print_clause_list(c);
 	dis = build_disjunct(sent, c, word, cost_cutoff, opts);
@@ -343,7 +343,7 @@ GNUC_UNUSED static void print_clause_list(Clause * c)
 	}
 }
 
-/* There is a much better print_expression elsewhere
+/* There is a much better lg_exp_stringify() elsewhere
  * This one is for low-level debug. */
 GNUC_UNUSED void prt_exp(Exp *e, int i)
 {

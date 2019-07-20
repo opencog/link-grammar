@@ -4,7 +4,6 @@
 extern "C" {
 #ifdef DEBUG
 #include "prepare/build-disjuncts.h"    // prt_exp_mem()
-#include "dict-common/dict-api.h"       // print_expression()
 #endif
 #include "error.h"
 #include "tokenize/tok-structures.h"
@@ -28,9 +27,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     const char*type =
       ((const char *[]) {"OR_type", "AND_type", "CONNECTOR_type"}) [exp->type-1];
     printf("Expression type %s for Word%d, var %s:\n", type, _word, var);
-    //printf("parent_exp: "); print_expression(parent_exp);
-    printf("exp(%s) e=%.2f pc=%.2f ", word_xnode->string,exp->cost, parent_cost);
-    print_expression(exp);
+    //printf("parent_exp: %s\n", lg_exp_stringify(parent_exp));
+    printf("exp(%s) e=%.2f pc=%.2f %s\n",
+           word_xnode->string,exp->cost, parent_cost, lg_exp_stringify(exp));
     if (exp->cost > 0 || root) prt_exp_mem(exp, 0);
   }
 #endif

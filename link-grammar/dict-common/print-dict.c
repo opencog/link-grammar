@@ -168,15 +168,6 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	return e;
 }
 
-void print_expression(const Exp * n)
-{
-	dyn_str *e = dyn_str_new();
-
-	char *s = dyn_str_take(print_expression_parens(e, n, false));
-	err_msg(lg_Debug, "%s\n", s);
-	free(s);
-}
-
 const char *lg_exp_stringify(const Exp *n)
 {
 	static char *e_str;

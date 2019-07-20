@@ -40,8 +40,6 @@ bool boolean_dictionary_lookup(const Dictionary, const char *);
 /* XXX the below probably does not belong ...  ?? */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
-void print_expression(const Exp *);
-
 LINK_END_DECLS
 
 #endif /* _LG_DICT_API_H_ */

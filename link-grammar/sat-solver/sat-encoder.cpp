@@ -26,7 +26,6 @@ extern "C" {
 #include "fast-sprintf.hpp"
 
 extern "C" {
-#include "dict-common/dict-api.h"    // for print_expression()
 #include "disjunct-utils.h"
 #include "linkage/analyze-linkage.h" // for compute_link_names()
 #include "linkage/linkage.h"
@@ -257,7 +256,7 @@ void SATEncoder::build_word_tags()
 
 #ifdef SAT_DEBUG
     cout << "Word ." << w << ".: " << N(_sent->word[w].unsplit_word) << endl;
-    print_expression(exp);
+    cout << lg_exp_stringify(exp);
     //prt_exp_mem(exp, 0);
     cout << endl;
 #endif
@@ -317,7 +316,7 @@ void SATEncoder::generate_satisfaction_conditions()
     cout << "Word " << w << ": " << N(_sent->word[w].unsplit_word);
     if (_sent->word[w].optional) cout << " (optional)";
     cout << endl;
-    //print_expression(exp);
+    cout << lg_exp_stringify(exp);
     cout << endl;
 #endif
 
@@ -1837,12 +1836,12 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     add_anded_exp(_sent, exp_word[var->right_word], rcexp);
 
     if (verbosity_level(D_SAT)) {
-      //cout<< "Lexp[" <<left_xnode->word->subword <<"]: ";  print_expression(var->left_exp);
-      cout<< "w"<<var->left_word<<" LCexp[" <<left_xnode->word->subword <<"]: ";  print_expression(lcexp);
-      //cout<< "Rexp[" <<right_xnode->word->subword <<"]: "; print_expression(var->right_exp);
-      cout<< "w"<<var->right_word<<" RCexp[" <<right_xnode->word->subword <<"]: "; print_expression(rcexp);
-      cout<< "L+L: "; print_expression(exp_word[var->left_word]);
-      cout<< "R+R: "; print_expression(exp_word[var->right_word]);
+      //cout<< "Lexp[" <<left_xnode->word->subword <<"]: " << lg_exp_stringify(var->left_exp);
+      cout<< "w"<<var->left_word<<" LCexp[" <<left_xnode->word->subword <<"]: ", lg_exp_stringify(lcexp);
+      //cout<< "Rexp[" <<right_xnode->word->subword <<"]: ", lg_exp_stringify(var->right_exp);
+      cout<< "w"<<var->right_word<<" RCexp[" <<right_xnode->word->subword <<"]: ", lg_exp_stringify(rcexp);
+      cout<< "L+L: ", lg_exp_stringify(exp_word[var->left_word]);
+      cout<< "R+R: ", lg_exp_stringify(exp_word[var->right_word]);
     }
 
     if (xnode_word[var->left_word] && xnode_word[var->left_word] != left_xnode) {
