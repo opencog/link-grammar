@@ -818,15 +818,12 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 		if (!ts->is_pruning)
 		    token = (uintptr_t)t->originating_gword;
 
-		if (token != ts->last_token)
+		if ((token != ts->last_token) && (NULL != ts->csid[0]))
 		{
 			ts->last_token = token;
-			if (NULL != ts->csid[0])
-			{
-				//printf("Token %ld\n", token);
-				tracon_set_reset(ts->csid[0]);
-				tracon_set_reset(ts->csid[1]);
-			}
+			//printf("Token %ld\n", token);
+			tracon_set_reset(ts->csid[0]);
+			tracon_set_reset(ts->csid[1]);
 		}
 		newd->left = pack_connectors(ts, t->left, 0, w);
 		newd->right = pack_connectors(ts, t->right, 1,  w);
