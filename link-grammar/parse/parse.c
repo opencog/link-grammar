@@ -266,11 +266,13 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	count_context_t * ctxt = NULL;
 	Disjunct **disjuncts_copy = NULL;
 	void *saved_memblock = NULL;
-	int max_null_count = MIN((int)sent->length, opts->max_null_count);
 	int min_null_count = opts->min_null_count;
-	bool one_step_parse = (0 == opts->min_null_count) && (0 < max_null_count);
 	int current_prune_level = -1;
 	int needed_prune_level = opts->min_null_count;
+
+	unsigned int max_null_count = opts->max_null_count;
+	max_null_count = (unsigned int)MIN(max_null_count, sent->length);
+	bool one_step_parse = (0 == opts->min_null_count) && (0 < max_null_count);
 	const int max_prune_level = 1;
 
 	/* Build lists of disjuncts */
@@ -288,7 +290,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		saved_memblock = save_disjuncts(sent, ts_pruning, disjuncts_copy);
 	}
 
-	for (int nl = min_null_count; nl <= max_null_count; nl++)
+	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
 		Count_bin hist;
 		s64 total;
