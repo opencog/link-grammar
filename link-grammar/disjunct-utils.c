@@ -1081,9 +1081,24 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
 	return ts;
 }
 
+/**
+ * Enumerate the disjuncts for incremental connector encoding.
+ * */
+static void enumerate_disjuncts(Sentence sent)
+{
+	int i = 1; /* 0 is invalid disjunct ordinal - for debug verification. */
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			d->ordinal = i++;
+	}
+}
+
 /* ============ Save and restore sentence disjuncts ============ */
 void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
+	enumerate_disjuncts(sent);
+
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
 
