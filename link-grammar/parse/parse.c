@@ -253,12 +253,6 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
  * disjuncts which are not appropriate to continue do_parse() tries with
  * null_count>0. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
- * Note:
- * The original sentence disjuncts are saved only when disjunct packing
- * is done by pack_sentence_for_pruning(), and it is not done for
- * sentences shorter than a certain limit. In that case the pruning is
- * done with no null_count==0 optimization so restoring the disjuncts is
- * not needed.
  */
 void classic_parse(Sentence sent, Parse_Options opts)
 {
