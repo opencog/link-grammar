@@ -273,7 +273,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	if (resources_exhausted(opts->resources)) return;
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
-	print_time(opts, "Encode connectors for pruning");
 	free_sentence_disjuncts(sent);
 
 	if (one_step_parse)
@@ -281,6 +280,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		/* Save the disjuncts for possible parse w/ an increased null count. */
 		saved_memblock = save_disjuncts(sent, ts_pruning);
 	}
+
+	print_time(opts, "Encode connectors for pruning%s%s",
+	           (NULL == ts_pruning->tracon_list) ? " (skipped)" : "",
+	           (one_step_parse) ? " (one-step)" : "");
 
 	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
