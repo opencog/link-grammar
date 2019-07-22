@@ -267,7 +267,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	Disjunct **disjuncts_copy = NULL;
 	void *saved_memblock = NULL;
 	int min_null_count = opts->min_null_count;
-	int current_prune_level = -1;
+	int current_prune_level = -1; /* -1: No pruning has been done yet. */
 	int needed_prune_level = opts->min_null_count;
 
 	unsigned int max_null_count = opts->max_null_count;
