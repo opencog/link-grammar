@@ -157,4 +157,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 
 	setup_connectors(sent);
+
+	if (verbosity_level(D_SPEC+2)) print_all_disjuncts(sent);
 }
