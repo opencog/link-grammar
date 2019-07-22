@@ -972,6 +972,103 @@ void free_tracon_sharing(Tracon_sharing *ts)
 	free(ts);
 }
 
+#define lad_printf(...) //printf(__VA_ARGS__)
+
+/**
+ * Locate the sentence disjuncts that are not in old_disjuncts.
+ * For each, set its "old" field to point to the corresponding old
+ * disjunct. This is needed in order to share the previous count table
+ * (whose keys are the tracon IDs). The idea is to preserve the old
+ * tracons, including their tracon IDs.
+ *
+ * Note that every previous disjunct should appear in the current sentence
+ * (because succeeding prunings are for an increased null_count) but it
+ * normally contains new disjuncts.
+ */
+static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
+{
+	int missing = 0; /* Missing disjuncts - should not happen. */
+
+	if (NULL == old_ts)
+	{
+		/* This overhead of setting d->old to NULL is incurred for each
+		 * parsing with an increase null count, when the count table is not
+		 * to be shared. There is a problem to set this field in ahead
+		 * because it is union-shared with the duplicate elimination field. */
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+				d->old = NULL;
+		}
+		return;
+	}
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		Disjunct *od = old_ts->d[w];
+
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			lad_printf("locate_added_disjuncts: check current %p<%d>\n", d, d->ordinal);
+			for (; NULL != od; od = od->next)
+			{
+				lad_printf("locate_added_disjuncts: check old <%d>\n", od->ordinal);
+				assert(od->ordinal != 0);
+				assert(d->ordinal != 0);
+
+				if (d->ordinal <= od->ordinal) break;
+
+				if (d->ordinal > od->ordinal)
+				{
+					lad_printf("locate_added_disjuncts: ERR %d > %d\n", d->ordinal, od->ordinal);
+					od = od->next;
+					missing++;
+				}
+			}
+
+			if ((NULL == od) || (d->ordinal < od->ordinal))
+			{
+				lad_printf("locate_added_disjuncts: found new %p<%d>\n", d, d->ordinal);
+				d->old = NULL;
+			}
+			else
+			{
+				lad_printf("locate_added_disjuncts: found old %p<%d>\n", d, d->ordinal);
+
+				for (int dir = 0; dir < 2; dir++)
+				{
+					Connector *c = (dir) ? (d->left) : (d->right);
+					Connector *oc = (dir) ? (od->left) : (od->right);
+
+					/* Use the nearest_word of the new pruning.
+					 * NOTE: In the future other fields (like length_limit) may
+					 * need to be copied here if they are set by the pruning (a
+					 * WIP sets it too and adds a nearest_deepword field). */
+					for (; NULL != c; c = c->next)
+					{
+						oc->nearest_word = c->nearest_word;
+						oc = oc->next;
+					}
+#ifdef DEBUG
+					assert((NULL == c) && (NULL == oc));
+#endif
+
+				}
+
+				d->old = od;
+				od = od->next;
+			}
+		}
+	}
+	if (0 != missing)
+	{
+		/* If we are here, there is a bug in power_prune(), because pruning
+		 * for null_count==m should retain all the disjuncts that existed after
+		 * pruning for null_count==n if m > n. */
+		prt_error("Warning: Missing %d disjunct(s) in pruning.\n", missing);
+	}
+}
+
 /**
  * Pack all disjunct and connectors into a one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
