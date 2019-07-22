@@ -23,6 +23,8 @@
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
 
+/* On a 64-bit machine, this struct should be exactly 8*8=64 bytes long.
+ * Lets try to keep it that way (for performance). */
 struct Disjunct_struct
 {
 	Disjunct *next;
