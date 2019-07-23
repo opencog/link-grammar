@@ -281,7 +281,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		saved_memblock = save_disjuncts(sent, ts_pruning);
 	}
 
-	print_time(opts, "Encode connectors for pruning%s%s",
+	print_time(opts, "Encode for pruning%s%s",
 	           (NULL == ts_pruning->tracon_list) ? " (skipped)" : "",
 	           (one_step_parse) ? " (one-step)" : "");
 
@@ -311,7 +311,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				needed_prune_level++; /* In case we need to prune again. */
 
 			Tracon_sharing *ts_parsing = pack_sentence_for_parsing(sent);
-			print_time(opts, "Encode connectors for parsing");
+			print_time(opts, "Encode for parsing");
 			if (NULL != ts_parsing)
 			{
 				sent->dc_memblock = ts_parsing->memblock;
