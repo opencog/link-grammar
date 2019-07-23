@@ -693,7 +693,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 				/* The first time we encounter this tracon. */
 				*tracon = lcblock; /* Save its future location in the tracon_set. */
 
-				if (ts->is_pruning)
+				if (NULL != tl)
 				{
 					tlsz_check(tl, tl->entries[dir], dir);
 					uint32_t cblock_index = (uint32_t)(lcblock - ts->cblock_base);
@@ -704,7 +704,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			else
 			{
 				newc = *tracon;
-				if (!ts->is_pruning)
+				if (NULL == tl)
 				{
 					if (o->nearest_word != newc->nearest_word)
 					{
@@ -731,7 +731,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			newc = lcblock++;
 			*newc = *o;
 
-			if (ts->is_pruning)
+			if (NULL != tl)
 			{
 				/* Initializations for the pruning step. */
 				newc->refcount = 1;  /* The first connector at this location. */
@@ -750,7 +750,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 		}
 		else
 		{
-			if (ts->is_pruning)
+			if (NULL != tl)
 			{
 				for (Connector *n = newc; NULL != n; n = n->next)
 					n->refcount++;
@@ -902,7 +902,6 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
-	ts->is_pruning = is_pruning;
 
 	if (do_encoding)
 	{
