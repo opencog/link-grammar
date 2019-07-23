@@ -1003,6 +1003,22 @@ static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
 		return;
 	}
 
+	if (verbosity_level(D_SPEC+2))
+	{
+		printf("Current disjuncts\n");
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			printf("Word %zu:\n", w);
+			print_disjunct_list(sent->word[w].d);
+		}
+		printf("\nOld disjuncts\n");
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			printf("Word %zu:\n", w);
+			print_disjunct_list(old_ts->d[w]);
+		}
+	}
+
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		Disjunct *od = old_ts->d[w];
