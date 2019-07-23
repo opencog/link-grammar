@@ -264,22 +264,23 @@ void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt = NULL;
+	Tracon_sharing *ts_parsing = NULL;
 	void *saved_memblock = NULL;
+	int current_prune_level = -1; /* -1: No pruning has been done yet. */
+	int needed_prune_level = opts->min_null_count;
+	bool share_count_context = false;
+	bool more_pruning_possible = false;
+
 	unsigned int max_null_count = opts->max_null_count;
 	max_null_count = (unsigned int)MIN(max_null_count, sent->length);
 	bool one_step_parse = (unsigned int)opts->min_null_count != max_null_count;
-	int current_prune_level = -1; /* -1: No pruning has been done yet. */
-	int needed_prune_level = opts->min_null_count;
-	int max_prune_level = 1;
+	int max_prune_level = (int)max_null_count;
 
 	if (opts->islands_ok) max_prune_level = 0; /* Cannot optimize for > 0. */
 
 	/* The special pruning per null-count is costly for sentences whose
 	 * parsing takes tens of milliseconds or so. To solve that problem, the
-	 * check below starts to do that from a certain sentence length only.
-	 * FIXME: Implement "adaptive pruning", in which a special pruning per
-	 * null-count is done when the previous parse takes more than a certain
-	 * amount of CPU (tried - this needs sharing the previous count table).*/
+	 * check below starts to do that from a certain sentence length only. */
 	if (sent->length < sent->min_len_multi_pruning)
 	{
 		if (opts->min_null_count == 0)
@@ -300,7 +301,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	unsigned int dcnt = 0, ccnt = 0; /* Allocated number (for memory block). */
 	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
 
-	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent, dcnt, ccnt);
+	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent, dcnt, ccnt,
+																			 one_step_parse);
 	free_sentence_disjuncts(sent);
 
 	if (one_step_parse)
@@ -322,15 +324,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if (needed_prune_level > current_prune_level)
 		{
-			if ((current_prune_level != -1) && one_step_parse)
-			{
-				/* We need to prune *again*. Restore the original disjuncts. */
-				restore_disjuncts(sent, saved_memblock, ts_pruning);
-				/* Free the memory of the previous pack_sentence_for_parsing(). */
-				free(sent->dc_memblock);
-				sent->dc_memblock = NULL;
-			}
-
 			current_prune_level = needed_prune_level;
 			if (needed_prune_level < max_prune_level)
 				needed_prune_level++;
@@ -339,33 +332,48 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 			pp_and_power_prune(sent, ts_pruning, current_prune_level, opts);
 
-			Tracon_sharing *ts_parsing = pack_sentence_for_parsing(sent, dcnt,
-																					 ccnt);
-			print_time(opts, "Encode for parsing");
-			if (NULL != ts_parsing)
+			more_pruning_possible =
+				one_step_parse && (current_prune_level != MAX_SENTENCE);
+			ts_parsing = pack_sentence_for_parsing(sent, dcnt, ccnt, ts_parsing,
+			                                       more_pruning_possible);
+			print_time(opts, "Encode for parsing%s",
+							  share_count_context ? " (incr)" : "");
+
+			if ((NULL != ts_parsing) &&
+			    (ts_parsing->memblock != sent->dc_memblock))
 			{
+				/* The disjunct & connector content is stored in dc_memblock.
+				 * It will be freed at sentence_delete(). */
+				if (sent->dc_memblock) free(sent->dc_memblock);
 				sent->dc_memblock = ts_parsing->memblock;
-				free_tracon_sharing(ts_parsing);
 			}
 
-			if (!one_step_parse || (current_prune_level == MAX_SENTENCE))
+			if (!more_pruning_possible)
 			{
 				/* At this point no further pruning will be done. Free the
-				 * pruning tracon stuff here instead of at the end. */
+				 * pruning and parsing tracon stuff here instead of at the end. */
 				if (NULL != ts_pruning)
 				{
 					free(ts_pruning->memblock);
 					free_tracon_sharing(ts_pruning);
 					ts_pruning = NULL;
-					free(saved_memblock);
+					if (NULL != saved_memblock)
+						free(saved_memblock);
 				}
+
+				free_tracon_sharing(ts_parsing);
+				ts_parsing = NULL;
 			}
 
 			gword_record_in_connector(sent);
 			if (resources_exhausted(opts->resources)) break;
 
-			free_count_context(ctxt, sent);
-			ctxt = alloc_count_context(sent);
+			if (!share_count_context)
+			{
+				free_count_context(ctxt, sent);
+				ctxt = alloc_count_context(sent);
+			}
+
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent);
 			print_time(opts, "Initialized fast matcher");
@@ -413,6 +421,22 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
+
+		if (more_pruning_possible)
+		{
+			/* We need to prune *again*. Restore the original disjuncts. */
+			restore_disjuncts(sent, saved_memblock, ts_pruning);
+			/* The following test may be used to check if the results
+			 * are the same with and w/o count table sharing. */
+			share_count_context = !test_enabled("no-count-sharing");
+
+			if (!share_count_context)
+			{
+				/* Must be freed here. */
+				free_tracon_sharing(ts_parsing);
+				ts_parsing = NULL;
+			}
+		}
 	}
 	sort_linkages(sent, opts);
 
@@ -422,6 +446,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);
 	}
+	free_tracon_sharing(ts_parsing);
+
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
 }
