@@ -418,8 +418,6 @@ static void clean_table(unsigned int size, C_list **t)
 	/* Table entry tombstone. */
 	static condesc_t desc_no_match =
 	{
-		.lc_letters = 0,                /* Invalid lowercase part. */
-		.lc_mask = (lc_enc_t)-1,        /* Ensure mismatch. */
 		.uc_num = (connector_hash_t)-1, /* Invalid uppercase part. */
 	};
 	static Connector con_no_match =
