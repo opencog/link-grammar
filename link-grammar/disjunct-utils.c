@@ -904,14 +904,13 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
                                           unsigned int ccnt, Tracon_sharing *ts,
                                           bool is_pruning, bool do_encoding)
 {
-#define CONN_ALIGNMENT sizeof(Connector)
-	size_t dsize = dcnt * sizeof(Disjunct);
-	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
-	size_t csize = ccnt * sizeof(Connector);
-	size_t memblock_sz = dsize + csize;
-
 	if (NULL == ts)
 	{
+		size_t dsize = dcnt * sizeof(Disjunct);
+#define CONN_ALIGNMENT sizeof(Connector)
+		dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
+		size_t csize = ccnt * sizeof(Connector);
+		size_t memblock_sz = dsize + csize;
 		void *memblock = malloc(memblock_sz);
 		Disjunct *dblock = memblock;
 		Connector *cblock = (Connector *)((char *)memblock + dsize);
