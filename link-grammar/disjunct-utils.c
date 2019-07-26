@@ -851,14 +851,17 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	return newd;
 }
 
-static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts, Disjunct *origd, int w)
+static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts, bool is_incr,
+                                Disjunct *origd, int w)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
 
 	for (Disjunct *d = origd; NULL != d; d = d->next)
 	{
-		prevd->next = (NULL != d->old) ? d->old : pack_disjunct(ts, d, w);
+		prevd->next = (is_incr & (NULL != d->old)) ?
+			d->old :
+			pack_disjunct(ts, d, w);
 		prevd = prevd->next;
 	}
 	prevd->next = NULL;
@@ -998,19 +1001,7 @@ static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
 {
 	int missing = 0; /* Missing disjuncts - should not happen. */
 
-	if (NULL == old_ts)
-	{
-		/* This overhead of setting d->old to NULL is incurred for each
-		 * parsing with an increase null count, when the count table is not
-		 * to be shared. There is a problem to set this field in ahead
-		 * because it is union-shared with the duplicate elimination field. */
-		for (WordIdx w = 0; w < sent->length; w++)
-		{
-			for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
-				d->old = NULL;
-		}
-		return;
-	}
+	if (NULL == old_ts) return;
 
 	if (verbosity_level(D_SPEC+2))
 	{
@@ -1130,15 +1121,13 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
 	bool do_encoding = sent->length >= sent->min_len_encoding;
 	Tracon_sharing *ts;
 
-	/* If old_ts is non-NULL, we need to do incremental encoding relative
-	 * to old_ts. If so, locate_added_disjuncts() sets the "old" field of
-	 * the disjuncts to the corresponding ones in the previous pruning. */
-	locate_added_disjuncts(sent, old_ts);
-
 	ts = pack_sentence_init(sent, dcnt, ccnt, old_ts, is_pruning, do_encoding);
 
 	for (WordIdx w = 0; w < sent->length; w++)
-		sent->word[w].d = pack_disjuncts(sent, ts, sent->word[w].d, w);
+	{
+		sent->word[w].d =
+			pack_disjuncts(sent, ts, NULL != old_ts, sent->word[w].d, w);
+	}
 
 	if (is_pruning && !do_encoding)
 	{
@@ -1191,19 +1180,24 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
 
 /**
  * Pack the sentence for parsing.
- * @param ots Previous tracon sharing descriptor (if incremental encoding).
+ * @param old_ts Previous tracon sharing descriptor (if incremental encoding).
  * @param keep_disjuncts Keep for possible parsing w/ increased null count.
  * @return New tracon sharing descriptor or NULL no packing done.
  */
 Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
                                           unsigned int ccnt,
-                                          Tracon_sharing *ots,
+                                          Tracon_sharing *old_ts,
                                           bool keep_disjuncts)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, ots,
+	/* If old_ts is non-NULL, we need to do incremental encoding relative
+	 * to old_ts. If so, locate_added_disjuncts() sets the "old" field of
+	 * the disjuncts to the corresponding ones in the previous pruning. */
+	locate_added_disjuncts(sent, old_ts);
+
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, old_ts,
 	                                   keep_disjuncts);
 
 	if (NULL == ts->csid[0])
