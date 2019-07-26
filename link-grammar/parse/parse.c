@@ -339,15 +339,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			print_time(opts, "Encode for parsing%s",
 							  share_count_context ? " (incr)" : "");
 
-			if ((NULL != ts_parsing) &&
-			    (ts_parsing->memblock != sent->dc_memblock))
-			{
-				/* The disjunct & connector content is stored in dc_memblock.
-				 * It will be freed at sentence_delete(). */
-				if (sent->dc_memblock) free(sent->dc_memblock);
-				sent->dc_memblock = ts_parsing->memblock;
-			}
-
 			if (!more_pruning_possible)
 			{
 				/* At this point no further pruning will be done. Free the
