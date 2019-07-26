@@ -23,6 +23,8 @@
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
 
+/* On a 64-bit machine, this struct should be exactly 8*8=64 bytes long.
+ * Lets try to keep it that way (for performance). */
 struct Disjunct_struct
 {
 	Disjunct *next;
@@ -117,18 +119,18 @@ struct tracon_sharing_s
 	Connector *cblock_base;     /* Start of connector block */
 	Connector *cblock;          /* Next available memory for connector */
 	Disjunct *dblock;           /* Next available memory for disjunct */
+	Disjunct **d;               /* The disjuncts (indexed by word number) */
 	unsigned int num_connectors;
 	unsigned int num_disjuncts;
 	Tracon_set *csid[2];        /* For generating unique tracon IDs */
 	int next_id[2];             /* Next unique tracon ID */
 	uintptr_t last_token;       /* Tracons are the same only per this token */
 	int word_offset;            /* Start number for connector tracon_id */
-	bool is_pruning;            /* true - for pruning; false - for parsing */
 	Tracon_list *tracon_list;   /* Used only for pruning */
 };
 
-void *save_disjuncts(Sentence, Tracon_sharing *, Disjunct **);
-void restore_disjuncts(Sentence, Disjunct **, void *, Tracon_sharing *);
+void *save_disjuncts(Sentence, Tracon_sharing *);
+void restore_disjuncts(Sentence, void *, Tracon_sharing *);
 void free_saved_disjuncts(Sentence);
 
 /** Get tracon by (dir, tracon_id). */

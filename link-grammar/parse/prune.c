@@ -418,9 +418,7 @@ static void clean_table(unsigned int size, C_list **t)
 	/* Table entry tombstone. */
 	static condesc_t desc_no_match =
 	{
-		.lc_letters = 0,                /* Invalid lowercase part. */
-		.lc_mask = (lc_enc_t)-1,        /* Ensure mismatch. */
-		.uc_num = (connector_hash_t)-1, /* Invalid uppercase part. */
+		.uc_num = (connector_hash_t)-1, /* get_power_table_entry() will skip. */
 	};
 	static Connector con_no_match =
 	{
@@ -482,6 +480,7 @@ static bool possible_connection(prune_context *pc,
                                 int lword, int rword)
 {
 	int dist;
+	assert(lc->desc->uc_num != (connector_hash_t)-1);
 	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;

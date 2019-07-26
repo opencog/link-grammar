@@ -693,7 +693,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 				/* The first time we encounter this tracon. */
 				*tracon = lcblock; /* Save its future location in the tracon_set. */
 
-				if (ts->is_pruning)
+				if (NULL != tl)
 				{
 					tlsz_check(tl, tl->entries[dir], dir);
 					uint32_t cblock_index = (uint32_t)(lcblock - ts->cblock_base);
@@ -704,7 +704,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			else
 			{
 				newc = *tracon;
-				if (!ts->is_pruning)
+				if (NULL == tl)
 				{
 					if (o->nearest_word != newc->nearest_word)
 					{
@@ -731,10 +731,10 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			newc = lcblock++;
 			*newc = *o;
 
-			if (ts->is_pruning)
+			if (NULL != tl)
 			{
-				/* Initializations for the pruning step. */
-				newc->refcount = 1;  /* The first connector at this location. */
+				/* Initialize for the pruning step when no sharing is done yet. */
+				newc->refcount = 1;  /* No sharing yet. */
 				newc->tracon_id = 0; /* Used in power_prune() for pass number. */
 				if (NULL != tl)
 					tl->num_cnctrs_per_word[dir][w]++;
@@ -750,7 +750,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 		}
 		else
 		{
-			if (ts->is_pruning)
+			if (NULL != tl)
 			{
 				for (Connector *n = newc; NULL != n; n = n->next)
 					n->refcount++;
@@ -800,43 +800,44 @@ static int enumerate_connectors_sequentially(Tracon_sharing *ts)
  * Pack the given disjunct chain in a contiguous memory block.
  * If the disjunct is NULL, return NULL.
  */
+static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
+{
+	Disjunct *newd;
+	uintptr_t token = (uintptr_t)w;
+
+	newd = (ts->dblock)++;
+	newd->word_string = d->word_string;
+	newd->cost = d->cost;
+	newd->originating_gword = d->originating_gword;
+
+	if (NULL == ts->tracon_list)
+		 token = (uintptr_t)d->originating_gword;
+
+	if ((token != ts->last_token) && (NULL != ts->csid[0]))
+	{
+		ts->last_token = token;
+		//printf("Token %ld\n", token);
+		tracon_set_reset(ts->csid[0]);
+		tracon_set_reset(ts->csid[1]);
+	}
+	newd->left = pack_connectors(ts, d->left, 0, w);
+	newd->right = pack_connectors(ts, d->right, 1,  w);
+
+	return newd;
+}
+
 static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
-	Disjunct *newd = &head;
-	Disjunct *ldblock = ts->dblock; /* For convenience. */
-	uintptr_t token = (uintptr_t)w;
 
-	for (Disjunct *t = origd; NULL != t; t = t->next)
+	for (Disjunct *d = origd; NULL != d; d = d->next)
 	{
-		newd = ldblock++;
-		newd->word_string = t->word_string;
-		newd->cost = t->cost;
-		newd->originating_gword = t->originating_gword;
-
-		if (!ts->is_pruning)
-		    token = (uintptr_t)t->originating_gword;
-
-		if (token != ts->last_token)
-		{
-			ts->last_token = token;
-			if (NULL != ts->csid[0])
-			{
-				//printf("Token %ld\n", token);
-				tracon_set_reset(ts->csid[0]);
-				tracon_set_reset(ts->csid[1]);
-			}
-		}
-		newd->left = pack_connectors(ts, t->left, 0, w);
-		newd->right = pack_connectors(ts, t->right, 1,  w);
-
-		prevd->next = newd;
-		prevd = newd;
+		prevd->next = pack_disjunct(ts, d, w);
+		prevd = prevd->next;
 	}
-	newd->next = NULL;
+	prevd->next = NULL;
 
-	ts->dblock = ldblock;
 	return head.next;
 }
 
@@ -902,7 +903,6 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
-	ts->is_pruning = is_pruning;
 
 	if (do_encoding)
 	{
@@ -946,11 +946,10 @@ void free_tracon_sharing(Tracon_sharing *ts)
 		}
 	}
 
-	if (NULL != ts->tracon_list)
-	{
-		free(ts->tracon_list);
-		ts->tracon_list = NULL;
-	}
+	if (NULL != ts->d) free(ts->d);
+	free(ts->tracon_list);
+	ts->tracon_list = NULL;
+
 	free(ts);
 }
 
@@ -998,6 +997,14 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 	{
 		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
 		enumerate_connectors_sequentially(ts);
+	}
+
+	if (/*keep_disjuncts*/1)
+	{
+		if (NULL == ts->d)
+			ts->d = malloc(sent->length * sizeof(Disjunct *));
+		for (WordIdx w = 0; w < sent->length; w++)
+			ts->d[w] = sent->word[w].d;
 	}
 
 	/* On long sentences, many MB of connector-space are saved, but we
@@ -1053,24 +1060,20 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 }
 
 /* ============ Save and restore sentence disjuncts ============ */
-void *save_disjuncts(Sentence sent, Tracon_sharing *ts, Disjunct **disjuncts)
+void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
-	for (WordIdx w = 0; w < sent->length; w++)
-		disjuncts[w] = sent->word[w].d;
-
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
 
 	return saved_memblock;
 }
 
-void restore_disjuncts(Sentence sent, Disjunct **disjuncts,
-                       void *saved_memblock, Tracon_sharing *ts)
+void restore_disjuncts(Sentence sent, void *saved_memblock, Tracon_sharing *ts)
 {
 	if (NULL == saved_memblock) return;
 
 	for (WordIdx w = 0; w < sent->length; w++)
-		sent->word[w].d = disjuncts[w];
+		sent->word[w].d = ts->d[w];
 
 	memcpy(ts->memblock, saved_memblock, ts->memblock_sz);
 }

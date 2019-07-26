@@ -253,24 +253,19 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
  * disjuncts which are not appropriate to continue do_parse() tries with
  * null_count>0. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
- * Note:
- * The original sentence disjuncts are saved only when disjunct packing
- * is done by pack_sentence_for_pruning(), and it is not done for
- * sentences shorter than a certain limit. In that case the pruning is
- * done with no null_count==0 optimization so restoring the disjuncts is
- * not needed.
  */
 void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
 	count_context_t * ctxt = NULL;
-	Disjunct **disjuncts_copy = NULL;
 	void *saved_memblock = NULL;
-	int max_null_count = MIN((int)sent->length, opts->max_null_count);
 	int min_null_count = opts->min_null_count;
-	bool one_step_parse = (0 == opts->min_null_count) && (0 < max_null_count);
-	int current_prune_level = -1;
+	int current_prune_level = -1; /* -1: No pruning has been done yet. */
 	int needed_prune_level = opts->min_null_count;
+
+	unsigned int max_null_count = opts->max_null_count;
+	max_null_count = (unsigned int)MIN(max_null_count, sent->length);
+	bool one_step_parse = (0 == opts->min_null_count) && (0 < max_null_count);
 	const int max_prune_level = 1;
 
 	/* Build lists of disjuncts */
@@ -278,17 +273,19 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	if (resources_exhausted(opts->resources)) return;
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
-	print_time(opts, "Encode connectors for pruning");
 	free_sentence_disjuncts(sent);
 
 	if (one_step_parse)
 	{
-		/* Save the disjuncts in case we need to parse with null_count>0. */
-		disjuncts_copy = alloca(sent->length * sizeof(Disjunct *));
-		saved_memblock = save_disjuncts(sent, ts_pruning, disjuncts_copy);
+		/* Save the disjuncts for possible parse w/ an increased null count. */
+		saved_memblock = save_disjuncts(sent, ts_pruning);
 	}
 
-	for (int nl = min_null_count; nl <= max_null_count; nl++)
+	print_time(opts, "Encode for pruning%s%s",
+	           (NULL == ts_pruning->tracon_list) ? " (skipped)" : "",
+	           (one_step_parse) ? " (one-step)" : "");
+
+	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
 		Count_bin hist;
 		s64 total;
@@ -300,7 +297,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			   (needed_prune_level > 0) && (-1 != current_prune_level))
 			{
 				/* We need to prune *again*. Restore the original disjuncts. */
-				restore_disjuncts(sent, disjuncts_copy, saved_memblock, ts_pruning);
+				restore_disjuncts(sent, saved_memblock, ts_pruning);
 				/* Free the memory of the previous pack_sentence_for_parsing(). */
 				free(sent->dc_memblock);
 				sent->dc_memblock = NULL;
@@ -314,7 +311,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				needed_prune_level++; /* In case we need to prune again. */
 
 			Tracon_sharing *ts_parsing = pack_sentence_for_parsing(sent);
-			print_time(opts, "Encode connectors for parsing");
+			print_time(opts, "Encode for parsing");
 			if (NULL != ts_parsing)
 			{
 				sent->dc_memblock = ts_parsing->memblock;
@@ -356,7 +353,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		total = (total < 0) ? INT_MAX : total;
 
 		sent->num_linkages_found = (int) total;
-		print_time(opts, "Counted parses");
+		print_time(opts, "Counted parses (%lld w/%zu null%s)", hist_total(&hist),
+		           sent->null_count, (sent->null_count != 1) ? "s" : "");
 
 		if (verbosity >= D_USER_INFO)
 		{
