@@ -494,7 +494,6 @@ static bool possible_connection(prune_context *pc,
                                 int lword, int rword)
 {
 	int dist;
-	assert(lc->desc->uc_num != (connector_hash_t)-1);
 	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;

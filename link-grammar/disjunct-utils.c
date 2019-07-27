@@ -11,17 +11,17 @@
 /*                                                                       */
 /*************************************************************************/
 #include <string.h>
-#include <limits.h>                     // UINT_MAX
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
-#include "tracon-set.h"
+#include "dict-common/dict-structures.h"
 #include "disjunct-utils.h"
-#include "print/print-util.h"
 #include "memory-pool.h"
-#include "utilities.h"
+#include "print/print-util.h"
 #include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
+#include "tracon-set.h"
+#include "utilities.h"
 
 /* Disjunct utilities ... */
 
@@ -527,7 +527,7 @@ void print_disjunct_list(Disjunct * dj)
 		printf(": ");
 
 		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
-		printf("[%d](%4.2f) ", i++, dj->cost);
+		printf("[%d](%s) ", i++, cost_stringify(dj->cost));
 
 		print_connector_list(dj->left);
 		printf(" <--> ");
@@ -907,14 +907,8 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	if (NULL == ts)
 	{
 		size_t dsize = dcnt * sizeof(Disjunct);
-		switch (sizeof(Disjunct))
-		{
-			case 64:
-				/* No connector block alignment is needed. */
-				break;
-			default:
-				dsize = ALIGN(dsize, sizeof(Connector));
-		}
+		if (sizeof(Disjunct) != 64)
+			dsize = ALIGN(dsize, sizeof(Connector));
 		size_t csize = ccnt * sizeof(Connector);
 		size_t memblock_sz = dsize + csize;
 		void *memblock = malloc(memblock_sz);

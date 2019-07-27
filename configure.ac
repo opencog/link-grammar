@@ -206,9 +206,9 @@ AC_CHECK_HEADER([stdatomic.h],
 
 lg_tls=no
 AC_ARG_ENABLE([TLS],
-  [AS_HELP_STRING([--disable-TLS], [Do not use TLS])],
-  [],
-  [enable_TLS=yes])
+	[AS_HELP_STRING([--disable-TLS], [Do not use TLS])],
+	[],
+	[enable_TLS=yes])
 
 if test "x$enable_TLS" == xyes
 then
@@ -222,9 +222,9 @@ fi
 # Debugging
 
 AC_ARG_ENABLE( debug,
-  [  --enable-debug          compile with debugging flags set],
-  [],
-  [enable_debug=no])
+	[  --enable-debug          compile with debugging flags set],
+	[],
+	[enable_debug=no])
 
 if test "x$enable_debug" = "xyes"
 then
@@ -241,9 +241,9 @@ fi
 # ====================================================================
 
 AC_ARG_ENABLE( mudflap,
-  [  --enable-mudflap        compile with mudflap checking],
-  [],
-  [enable_mudflap=no])
+	[  --enable-mudflap        compile with mudflap checking],
+	[],
+	[enable_mudflap=no])
 
 if test "x$enable_mudflap" = "xyes"
 then
@@ -254,9 +254,9 @@ fi
 # ====================================================================
 
 AC_ARG_ENABLE( profile,
-  [  --enable-profile        compile with profiling set],
-  [],
-  [enable_profile=no]
+	[  --enable-profile        compile with profiling set],
+	[],
+	[enable_profile=no]
 )
 if test "x$enable_profile" = "xyes"
 then
@@ -267,9 +267,9 @@ fi
 # ====================================================================
 # Java now enabled by default
 AC_ARG_ENABLE( java-bindings,
-  [  --disable-java-bindings disable build of java bindings (default is enabled)],
-  [],
-  [enable_java_bindings=yes])
+	[  --disable-java-bindings disable build of java bindings (default is enabled)],
+	[],
+	[enable_java_bindings=yes])
 
 # Python is now enabled by default
 define([PYTHON2_REQUIRED], [2.6])
@@ -290,9 +290,10 @@ AC_ARG_ENABLE( python-bindings,
 
 # Perl now disabled by default
 AC_ARG_ENABLE( perl-bindings,
-  [  --enable-perl-bindings  create perl bindings to the link-grammar library],
-  [],
-  [enable_perl_bindings=no]
+	[AS_HELP_STRING([--enable-perl-bindings],
+	[create perl bindings to the link-grammar library] (disabled by default))],
+	[],
+	[enable_perl_bindings=no]
 )
 
 # ====================================================================
@@ -301,15 +302,14 @@ AC_ARG_ENABLE( perl-bindings,
 # If the library or the headers are not found, use the bundled library
 
 AC_ARG_ENABLE( sat-solver,
-
-   [  --disable-sat-solver    disable use of the Boolean SAT parser
+	[  --disable-sat-solver    disable use of the Boolean SAT parser
                           (default is enabled)
   --enable-sat-solver=[[ARG]]
                           enable use of the Boolean SAT parser
                           ARG=yes (default): Use the system minisat library
                           if possible
                           ARG=bundled: Use the bundled minisat library],
-  [if test "x$enableval" = xbundled; then
+	[if test "x$enableval" = xbundled; then
 		use_minisat_bundled_library=yes
 	   enable_sat_solver=yes
 	fi], [enable_sat_solver=yes])
@@ -401,9 +401,10 @@ AM_CONDITIONAL(WITH_SAT_SOLVER, test "x$enable_sat_solver" = xyes)
 # ====================================================================
 
 AC_ARG_ENABLE( wordgraph_display,
-  [  --enable-wordgraph-display       enable graphical display of the Wordgraph],
-  [],
-  [enable_wordgraph_display=yes]
+	[AS_HELP_STRING([--disable-wordgraph-display],
+	[disable graphical display of the Wordgraph (default is enabled)])],
+	[],
+	[enable_wordgraph_display=yes]
 )
 if test "x$enable_wordgraph_display" = "xyes"
 then
@@ -756,9 +757,11 @@ if test "x$enable_perl_bindings" = "xyes"; then
 	# Look for the perl bits and pieces...
 	# AX_PERL_EXT isn't working for me ...
 	# AX_PATH_EXT
+	AC_MSG_CHECKING([for Perl XS include directory])
 	if test -z "$PERL_EXT_INC" ; then
 		PERL_EXT_INC=`perl -MConfig -e 'print $Config{archlib}'`
 	fi
+	test -z "$PERL_EXT_INC" && PERL_EXT_INC=no
 	AC_MSG_RESULT([$PERL_EXT_INC])
 	PERL_CFLAGS="-I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
 	AC_SUBST(PERL_EXT_INC)
@@ -766,9 +769,11 @@ if test "x$enable_perl_bindings" = "xyes"; then
 
 	# PERL_EXT_LIB is where to install, typically /usr/local/lib/perl/5.14.2
 	# or similar.
+	AC_MSG_CHECKING([for Perl extensions destination directory])
 	if test -z "$PERL_EXT_LIB" ; then
 		PERL_EXT_LIB=`perl -MConfig -e 'print $Config{sitearchexp}'`
 	fi
+	test -z "$PERL_EXT_LIB" && PERL_EXT_LIB=no
 	AC_MSG_RESULT([$PERL_EXT_LIB])
 	AC_SUBST(PERL_EXT_LIB)
 
@@ -1048,7 +1053,7 @@ man/Makefile
 AC_OUTPUT
 
 # ====================================================================
-lglibs=`${ECHO} "$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
+lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
 
 echo "
 $PACKAGE-$VERSION  build configuration settings
