@@ -12,16 +12,15 @@
 /*************************************************************************/
 
 #include <math.h>                   // fabs
-#include <string.h>
 
-#include "api-structures.h" // for Parse_Options_s  (seems hacky to me)
+#include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
 #include "dict-defines.h"
+#include "dict-file/word-file.h"
+#include "dict-file/read-dict.h"
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
-#include "dict-file/word-file.h"
-#include "dict-file/read-dict.h"
 
 /* ======================================================================== */
 

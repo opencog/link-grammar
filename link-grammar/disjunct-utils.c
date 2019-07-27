@@ -11,18 +11,17 @@
 /*                                                                       */
 /*************************************************************************/
 #include <string.h>
-#include <limits.h>                     // UINT_MAX
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
-#include "tracon-set.h"
 #include "dict-common/dict-structures.h"
 #include "disjunct-utils.h"
-#include "print/print-util.h"
 #include "memory-pool.h"
-#include "utilities.h"
+#include "print/print-util.h"
 #include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
+#include "tracon-set.h"
+#include "utilities.h"
 
 /* Disjunct utilities ... */
 
