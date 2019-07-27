@@ -11,7 +11,8 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/link-grammar -I$(top_builddir) \
 
 lib_LTLIBRARIES = liblink-grammar-java.la
 
-liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
+liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ \
+	-export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
 
 if OS_WIN32
 liblink_grammar_java_la_LDFLAGS += -Wl,--kill-at
