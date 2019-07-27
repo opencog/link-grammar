@@ -16,6 +16,7 @@
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
 #include "tracon-set.h"
+#include "dict-common/dict-structures.h"
 #include "disjunct-utils.h"
 #include "print/print-util.h"
 #include "memory-pool.h"
@@ -527,7 +528,7 @@ void print_disjunct_list(Disjunct * dj)
 		printf(": ");
 
 		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
-		printf("[%d](%4.2f) ", i++, dj->cost);
+		printf("[%d](%s) ", i++, cost_stringify(dj->cost));
 
 		print_connector_list(dj->left);
 		printf(" <--> ");
