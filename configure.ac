@@ -757,9 +757,11 @@ if test "x$enable_perl_bindings" = "xyes"; then
 	# Look for the perl bits and pieces...
 	# AX_PERL_EXT isn't working for me ...
 	# AX_PATH_EXT
+	AC_MSG_CHECKING([for Perl XS include directory])
 	if test -z "$PERL_EXT_INC" ; then
 		PERL_EXT_INC=`perl -MConfig -e 'print $Config{archlib}'`
 	fi
+	test -z "$PERL_EXT_INC" && PERL_EXT_INC=no
 	AC_MSG_RESULT([$PERL_EXT_INC])
 	PERL_CFLAGS="-I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
 	AC_SUBST(PERL_EXT_INC)
@@ -767,9 +769,11 @@ if test "x$enable_perl_bindings" = "xyes"; then
 
 	# PERL_EXT_LIB is where to install, typically /usr/local/lib/perl/5.14.2
 	# or similar.
+	AC_MSG_CHECKING([for Perl extensions destination directory])
 	if test -z "$PERL_EXT_LIB" ; then
 		PERL_EXT_LIB=`perl -MConfig -e 'print $Config{sitearchexp}'`
 	fi
+	test -z "$PERL_EXT_LIB" && PERL_EXT_LIB=no
 	AC_MSG_RESULT([$PERL_EXT_LIB])
 	AC_SUBST(PERL_EXT_LIB)
 
