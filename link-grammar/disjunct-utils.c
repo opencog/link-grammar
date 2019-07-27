@@ -84,24 +84,21 @@ unsigned int count_disjuncts(Disjunct * d)
 	return count;
 }
 
-/** Returns the number of disjuncts and connectors in the sentence. */
-static void count_disjuncts_and_connectors(Sentence sent,
-                                           unsigned int *dca, unsigned int *cca)
+/** Returns the number of connectors in the sentence. */
+static unsigned int count_connectors(Sentence sent)
 {
-	unsigned int ccnt = 0, dcnt = 0;
+	unsigned int ccnt = 0;
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
-			dcnt++;
 			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
 			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
 		}
 	}
 
-	*cca = ccnt;
-	*dca = dcnt;
+	return ccnt;
 }
 /* ============================================================= */
 
@@ -444,6 +441,25 @@ int right_connector_count(Disjunct * d)
 	return i;
 }
 
+/** Returns the number of disjuncts and connectors in the sentence. */
+void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
+                                    unsigned int *cca)
+{
+	unsigned int ccnt = 0, dcnt = 0;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			dcnt++;
+			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
+			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
+		}
+	}
+
+	*cca = ccnt;
+	*dca = dcnt;
+}
 /* ============================================================= */
 
 /**
@@ -498,13 +514,21 @@ void print_disjunct_list(Disjunct * dj)
 {
 	int i = 0;
 	char word[MAX_WORD + 32];
+	bool print_disjunct_address = test_enabled("disjunct-address");
+	bool print_disjunct_ordinal = test_enabled("disjunct-ordinal");
 
 	for (;dj != NULL; dj=dj->next)
 	{
 		lg_strlcpy(word, dj->word_string, sizeof(word));
 		patch_subscript_mark(word);
-		printf("%16s: ", word);
+
+		printf("%16s", word);
+		if (print_disjunct_address) printf("(%p)", dj);
+		printf(": ");
+
+		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
 		printf("[%d](%4.2f) ", i++, dj->cost);
+
 		print_connector_list(dj->left);
 		printf(" <--> ");
 		print_connector_list(dj->right);
@@ -806,6 +830,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	uintptr_t token = (uintptr_t)w;
 
 	newd = (ts->dblock)++;
+	newd->ordinal = d->ordinal;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
 	newd->originating_gword = d->originating_gword;
@@ -826,14 +851,17 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	return newd;
 }
 
-static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
+static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts, bool is_incr,
+                                Disjunct *origd, int w)
 {
 	Disjunct head;
 	Disjunct *prevd = &head;
 
 	for (Disjunct *d = origd; NULL != d; d = d->next)
 	{
-		prevd->next = pack_disjunct(ts, d, w);
+		prevd->next = (is_incr & (NULL != d->old)) ?
+			d->old :
+			pack_disjunct(ts, d, w);
 		prevd = prevd->next;
 	}
 	prevd->next = NULL;
@@ -872,43 +900,51 @@ static Disjunct *pack_disjuncts(Tracon_sharing *ts, Disjunct *origd, int w)
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
-static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
-                                          bool do_encoding)
+static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt, Tracon_sharing *ts,
+                                          bool is_pruning, bool do_encoding)
 {
-	unsigned int dcnt = 0;
-	unsigned int ccnt = 0;
-	Tracon_sharing *ts;
+	if (NULL == ts)
+	{
+		size_t dsize = dcnt * sizeof(Disjunct);
+		switch (sizeof(Disjunct))
+		{
+			case 64:
+				/* No connector block alignment is needed. */
+				break;
+			default:
+				dsize = ALIGN(dsize, sizeof(Connector));
+		}
+		size_t csize = ccnt * sizeof(Connector);
+		size_t memblock_sz = dsize + csize;
+		void *memblock = malloc(memblock_sz);
+		Disjunct *dblock = memblock;
+		Connector *cblock = (Connector *)((char *)memblock + dsize);
 
-	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+		ts = malloc(sizeof(Tracon_sharing));
+		memset(ts, 0, sizeof(Tracon_sharing));
 
-#define CONN_ALIGNMENT sizeof(Connector)
-	size_t dsize = dcnt * sizeof(Disjunct);
-	dsize = ALIGN(dsize, CONN_ALIGNMENT); /* Align connector block. */
-	size_t csize = ccnt * sizeof(Connector);
-	size_t memblock_sz = dsize + csize;
-	void *memblock = malloc(memblock_sz);
-	Disjunct *dblock = memblock;
-	Connector *cblock = (Connector *)((char *)memblock + dsize);
+		ts->memblock = memblock;
+		ts->memblock_sz = memblock_sz;
+		ts->cblock_base = cblock;
+		ts->cblock = cblock;
+		ts->dblock = dblock;
+		ts->num_connectors = ccnt;
+		ts->num_disjuncts = dcnt;
+		ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
+		ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 
-	ts = malloc(sizeof(Tracon_sharing));
-	memset(ts, 0, sizeof(Tracon_sharing));
+		if (do_encoding)
+		{
+			ts->csid[0] = tracon_set_create();
+			ts->csid[1] = tracon_set_create();
+		}
+	}
 
-	ts->memblock = memblock;
-	ts->memblock_sz = memblock_sz;
-	ts->cblock_base = cblock;
-	ts->cblock = cblock;
-	ts->dblock = dblock;
-	ts->num_connectors = ccnt;
-	ts->num_disjuncts = dcnt;
-	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
-	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
 
 	if (do_encoding)
 	{
-		ts->csid[0] = tracon_set_create();
-		ts->csid[1] = tracon_set_create();
-
 		if (is_pruning)
 		{
 			ts->tracon_list = malloc(sizeof(Tracon_list));
@@ -923,6 +959,15 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning,
 				tlsz_check(ts->tracon_list, TLSZ, dir); /* Allocate table. */
 			}
 		}
+	}
+
+	if (!is_pruning && (NULL != ts) &&
+	    (ts->memblock != sent->dc_memblock))
+	{
+		/* The disjunct & connector content is stored in dc_memblock.
+		 * It will be freed at sentence_delete(). */
+		if (sent->dc_memblock) free(sent->dc_memblock);
+		sent->dc_memblock = ts->memblock;
 	}
 
 	return ts;
@@ -953,6 +998,107 @@ void free_tracon_sharing(Tracon_sharing *ts)
 	free(ts);
 }
 
+#define lad_printf(...) //printf(__VA_ARGS__)
+
+/**
+ * Locate the sentence disjuncts that are not in old_disjuncts.
+ * For each, set its "old" field to point to the corresponding old
+ * disjunct. This is needed in order to share the previous count table
+ * (whose keys are the tracon IDs). The idea is to preserve the old
+ * tracons, including their tracon IDs.
+ *
+ * Note that every previous disjunct should appear in the current sentence
+ * (because succeeding prunings are for an increased null_count) but it
+ * normally contains new disjuncts.
+ */
+static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
+{
+	int missing = 0; /* Missing disjuncts - should not happen. */
+
+	if (NULL == old_ts) return;
+
+	if (verbosity_level(D_SPEC+2))
+	{
+		printf("Current disjuncts\n");
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			printf("Word %zu:\n", w);
+			print_disjunct_list(sent->word[w].d);
+		}
+		printf("\nOld disjuncts\n");
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			printf("Word %zu:\n", w);
+			print_disjunct_list(old_ts->d[w]);
+		}
+	}
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		Disjunct *od = old_ts->d[w];
+
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			lad_printf("locate_added_disjuncts: check current %p<%d>\n", d, d->ordinal);
+			for (; NULL != od; od = od->next)
+			{
+				lad_printf("locate_added_disjuncts: check old <%d>\n", od->ordinal);
+				assert(od->ordinal != 0);
+				assert(d->ordinal != 0);
+
+				if (d->ordinal <= od->ordinal) break;
+
+				if (d->ordinal > od->ordinal)
+				{
+					lad_printf("locate_added_disjuncts: ERR %d > %d\n", d->ordinal, od->ordinal);
+					od = od->next;
+					missing++;
+				}
+			}
+
+			if ((NULL == od) || (d->ordinal < od->ordinal))
+			{
+				lad_printf("locate_added_disjuncts: found new %p<%d>\n", d, d->ordinal);
+				d->old = NULL;
+			}
+			else
+			{
+				lad_printf("locate_added_disjuncts: found old %p<%d>\n", d, d->ordinal);
+
+				for (int dir = 0; dir < 2; dir++)
+				{
+					Connector *c = (dir) ? (d->left) : (d->right);
+					Connector *oc = (dir) ? (od->left) : (od->right);
+
+					/* Use the nearest_word of the new pruning.
+					 * NOTE: In the future other fields (like length_limit) may
+					 * need to be copied here if they are set by the pruning (a
+					 * WIP sets it too and adds a nearest_deepword field). */
+					for (; NULL != c; c = c->next)
+					{
+						oc->nearest_word = c->nearest_word;
+						oc = oc->next;
+					}
+#ifdef DEBUG
+					assert((NULL == c) && (NULL == oc));
+#endif
+
+				}
+
+				d->old = od;
+				od = od->next;
+			}
+		}
+	}
+	if (0 != missing)
+	{
+		/* If we are here, there is a bug in power_prune(), because pruning
+		 * for null_count==m should retain all the disjuncts that existed after
+		 * pruning for null_count==n if m > n. */
+		prt_error("Warning: Missing %d disjunct(s) in pruning.\n", missing);
+	}
+}
+
 /**
  * Pack all disjunct and connectors into a one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
@@ -981,16 +1127,20 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * Any different result (e.g. number of discarded disjuncts in the pruning
  * step or different parsing results) indicates a bug.
  */
-static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
+static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
+                                     unsigned int ccnt, bool is_pruning,
+                                     Tracon_sharing *old_ts,
+                                     bool keep_disjuncts)
 {
 	bool do_encoding = sent->length >= sent->min_len_encoding;
 	Tracon_sharing *ts;
 
-	ts = pack_sentence_init(sent, is_pruning, do_encoding);
+	ts = pack_sentence_init(sent, dcnt, ccnt, old_ts, is_pruning, do_encoding);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		sent->word[w].d = pack_disjuncts(ts, sent->word[w].d, w);
+		sent->word[w].d =
+			pack_disjuncts(sent, ts, NULL != old_ts, sent->word[w].d, w);
 	}
 
 	if (is_pruning && !do_encoding)
@@ -999,7 +1149,7 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 		enumerate_connectors_sequentially(ts);
 	}
 
-	if (/*keep_disjuncts*/1)
+	if (keep_disjuncts)
 	{
 		if (NULL == ts->d)
 			ts->d = malloc(sent->length * sizeof(Disjunct *));
@@ -1007,17 +1157,22 @@ static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 			ts->d[w] = sent->word[w].d;
 	}
 
-	/* On long sentences, many MB of connector-space are saved, but we
-	 * cannot use a realloc() here without the overhead of relocating
-	 * the pointers in the used part of memblock (if realloc() returns a
-	 * different address). */
-
 	return ts;
 }
 
-Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
+/**
+ * Pack the sentence for pruning.
+ * @return New tracon sharing descriptor.
+ */
+Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt,
+                                          bool keep_disjuncts)
 {
-	Tracon_sharing *ts = pack_sentence(sent, true);
+	unsigned int ccnt_before = 0;
+	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
+
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true, NULL,
+	                                   keep_disjuncts);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1031,15 +1186,33 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 		        sent->length,
 		        ts->tracon_list->entries[0]+ts->tracon_list->entries[1],
 		        ts->tracon_list->entries[0], ts->tracon_list->entries[1],
-				  &ts->cblock_base[ts->num_connectors] - ts->cblock);
+				  &ts->cblock_base[ccnt_before] - ts->cblock);
 	}
 
 	return ts;
 }
 
-Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
+/**
+ * Pack the sentence for parsing.
+ * @param old_ts Previous tracon sharing descriptor (if incremental encoding).
+ * @param keep_disjuncts Keep for possible parsing w/ increased null count.
+ * @return New tracon sharing descriptor or NULL no packing done.
+ */
+Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
+                                          unsigned int ccnt,
+                                          Tracon_sharing *old_ts,
+                                          bool keep_disjuncts)
 {
-	Tracon_sharing *ts = pack_sentence(sent, false);
+	unsigned int ccnt_before = 0;
+	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
+
+	/* If old_ts is non-NULL, we need to do incremental encoding relative
+	 * to old_ts. If so, locate_added_disjuncts() sets the "old" field of
+	 * the disjuncts to the corresponding ones in the previous pruning. */
+	locate_added_disjuncts(sent, old_ts);
+
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, old_ts,
+	                                   keep_disjuncts);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1053,15 +1226,30 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 		        sent->length,
 		        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
 		        ts->next_id[0]-ts->word_offset, ts->next_id[1]-ts->word_offset,
-		        &ts->cblock_base[ts->num_connectors] - ts->cblock);
+		        &ts->cblock_base[ccnt_before] - ts->cblock);
 	}
 
 	return ts;
 }
 
+/**
+ * Enumerate the disjuncts for incremental connector encoding.
+ * */
+static void enumerate_disjuncts(Sentence sent)
+{
+	int i = 1; /* 0 is invalid disjunct ordinal - for debug verification. */
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			d->ordinal = i++;
+	}
+}
+
 /* ============ Save and restore sentence disjuncts ============ */
 void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
+	enumerate_disjuncts(sent);
+
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
 

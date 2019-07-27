@@ -53,6 +53,11 @@
  * this overhead is improved, this limit can be set lower. */
 #define SENTENCE_MIN_LENGTH_TRAILING_HASH 6
 
+/* Pruning per null-count is costly for sentences whose parsing time
+ * is relatively small. If a better pruning per null-count is implemented,
+ * this limit can be set lower. */
+#define SENTENCE_MIN_LENGTH_MULTI_PRUNING 30
+
 typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
 {
@@ -141,6 +146,8 @@ struct Sentence_s
 	word_queue_t *word_queue_last;
 	size_t gword_node_num;       /* Debug - for differentiating between
 	                                wordgraph nodes with identical subwords. */
+
+	size_t min_len_multi_pruning; /* Do it from this sentence length. */
 
 	/* Parse results */
 	int    num_linkages_found;  /* Total number before postprocessing.  This
