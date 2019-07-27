@@ -17,10 +17,10 @@
 #include <stdatomic.h>
 #endif /* HAVE_STDATOMIC_H */
 
-#include "link-grammar/api-structures.h"
-#include "link-grammar/error.h"
+#include "api-structures.h"
+#include "error.h"
 #include "jni-client.h"
-#include "link-grammar/utilities.h"
+#include "utilities.h"
 
 /* Make the compiler shut up about the deprecated functions */
 #pragma GCC diagnostic push
