@@ -907,14 +907,8 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	if (NULL == ts)
 	{
 		size_t dsize = dcnt * sizeof(Disjunct);
-		switch (sizeof(Disjunct))
-		{
-			case 64:
-				/* No connector block alignment is needed. */
-				break;
-			default:
-				dsize = ALIGN(dsize, sizeof(Connector));
-		}
+		if (sizeof(Disjunct) != 64)
+			dsize = ALIGN(dsize, sizeof(Connector));
 		size_t csize = ccnt * sizeof(Connector);
 		size_t memblock_sz = dsize + csize;
 		void *memblock = malloc(memblock_sz);
