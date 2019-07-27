@@ -1049,7 +1049,7 @@ man/Makefile
 AC_OUTPUT
 
 # ====================================================================
-lglibs=`${ECHO} "$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
+lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
 
 echo "
 $PACKAGE-$VERSION  build configuration settings
