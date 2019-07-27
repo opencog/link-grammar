@@ -401,9 +401,10 @@ AM_CONDITIONAL(WITH_SAT_SOLVER, test "x$enable_sat_solver" = xyes)
 # ====================================================================
 
 AC_ARG_ENABLE( wordgraph_display,
-  [  --enable-wordgraph-display       enable graphical display of the Wordgraph],
-  [],
-  [enable_wordgraph_display=yes]
+	[AS_HELP_STRING([--disable-wordgraph-display],
+	[disable graphical display of the Wordgraph (default is enabled)])],
+	[],
+	[enable_wordgraph_display=yes]
 )
 if test "x$enable_wordgraph_display" = "xyes"
 then
