@@ -281,7 +281,7 @@ static unsigned int count_clause(Exp *e)
 	}
 	else
 	{
-		assert(false, "an expression node with no type");
+		assert(false, "Unknown expression type %d", e->type);
 	}
 
 	return cnt;
