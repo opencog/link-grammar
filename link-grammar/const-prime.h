@@ -23,7 +23,6 @@ static const size_t s_prime[] =
 };
 #define MAX_S_PRIME (sizeof(s_prime) / sizeof(s_prime[0]))
 
-#define PNAME(n) prime##n
 #define FPNAME(n) fprime##n
 #define PFUNC(p) \
 	static inline unsigned int FPNAME(p)(size_t h)\
