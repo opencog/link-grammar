@@ -60,7 +60,7 @@ static unsigned int hash_connectors(const Connector *c, unsigned int shallow)
 static unsigned int find_prime_for(size_t count)
 {
 	size_t i;
-	for (i = 0; i < MAX_S_PRIME; i ++)
+	for (i = 0; i < MAX_S_PRIMES; i ++)
 		if ((8 * count) < (3 * s_prime[i])) return i;
 
 	assert(0, "find_prime_for(%zu): Absurdly big count", count);

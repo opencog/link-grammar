@@ -21,7 +21,7 @@ static const size_t s_prime[] =
 	419, 1259, 3779, 11317, 33939, 101817, 305471, 916361, 2749067,
 	8247199, 24741547, 74224603, 222673783, 668021359, 2004064039,
 };
-#define MAX_S_PRIME (sizeof(s_prime) / sizeof(s_prime[0]))
+#define MAX_S_PRIMES (sizeof(s_prime) / sizeof(s_prime[0]))
 
 #define FPNAME(n) fprime##n
 #define PFUNC(p) \
