@@ -49,7 +49,7 @@ static unsigned int hash_string(const char *str, const String_set *ss)
 {
 	unsigned int accum = 0;
 	for (;*str != '\0'; str++)
-		accum = (7 * accum) + (unsigned char)*str;
+		accum = (139 * accum) + (unsigned char)*str;
 	return accum;
 }
 
