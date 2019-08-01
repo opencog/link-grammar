@@ -25,8 +25,7 @@ static const size_t s_prime[] =
 
 #define FPNAME(n) fprime##n
 #define PFUNC(p) \
-	static inline unsigned int FPNAME(p)(size_t h)\
-	{ return (unsigned int)h % s_prime[p]; }
+	static inline unsigned int FPNAME(p)(size_t h) { return h % s_prime[p]; }
 
 PFUNC(0)
 PFUNC(1)
