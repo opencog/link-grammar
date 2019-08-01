@@ -156,7 +156,7 @@ static unsigned int find_place(const Connector *c, unsigned int h, Tracon_set *s
 	{
 		PRT_STAT(coll_count++;)
 		key += 2 * ++coll_num - 1;
-		if (key >= ss->size) key -= ss->size;
+		if (key >= ss->size) key = ss->mod_func(key);
 	}
 
 	return key;

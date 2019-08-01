@@ -138,7 +138,7 @@ static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
 	while (!place_found(str, &ss->table[key], h, ss))
 	{
 		key += 2 * ++coll_num - 1;
-		if (key >= ss->size) key -= ss->size;
+		if (key >= ss->size) key = ss->mod_func(key);
 	}
 
 	return key;
