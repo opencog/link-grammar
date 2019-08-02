@@ -23,6 +23,11 @@
 #include "tokenize/word-structures.h"    // for Word_struct
 #include "exprune.h"
 
+/**
+ * Here is expression pruning.  This is done even before the expressions
+ * are turned into lists of disjuncts.
+ */
+
 #define D_EXPRUNE 9
 
 #ifdef DEBUG
@@ -158,12 +163,6 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
 
 /* ================================================================= */
 /**
- * Here is expression pruning.  This is done even before the expressions
- * are turned into lists of disjuncts.
- *
- * This uses many of the same data structures and functions that are used
- * by prune.
- *
  * The purge operations remove all irrelevant stuff from the expression,
  * and free the purged stuff.  A connector is deemed irrelevant if it
  * doesn't match anything in the set S.
