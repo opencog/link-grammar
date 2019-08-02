@@ -130,9 +130,11 @@ static void free_connector_table(exprune_context *ctxt)
 }
 
 /**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
+ * Use the uniquely-assigned number per uppercase part of each
+ * connector string as a hash table key.
+ *
+ * This ensures that connectors with identical uppercase parts
+ * will hash to the same place.
  */
 static inline unsigned int hash_S(condesc_t * c)
 {
