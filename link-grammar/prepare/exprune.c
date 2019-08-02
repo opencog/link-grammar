@@ -169,7 +169,7 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
  * doesn't match anything in the set S.
  *
  * If an OR or AND type expression node has one child, we can replace it
- * by its child.  This, of course, is not really necessary, except for
+ * by it's child.  This, of course, is not really necessary, except for
  * performance.
  */
 
