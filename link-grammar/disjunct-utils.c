@@ -120,10 +120,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	unsigned int i;
 	i = 0;
 	for (Connector *e = d->left ; e != NULL; e = e->next) {
-		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
+		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 	for (Connector *e = d->right ; e != NULL; e = e->next) {
-		i = (5 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
+		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 #if 0 /* Redundant - the connector hashing has enough entropy. */
 	i += string_hash(d->word_string);
@@ -347,13 +347,13 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
+	Disjunct *prev = NULL;
 
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
-	for (Disjunct **dd = &dw; *dd != NULL; /* See: NEXT */)
+	for (Disjunct *d = dw; d != NULL; d = d->next)
 	{
 		Disjunct *dx;
-		Disjunct *d = *dd;
 		unsigned int h = old_hash_disjunct(dt, d);
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
@@ -371,13 +371,13 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 				gword_set_union(dx->originating_gword, d->originating_gword);
 
 			count++;
-			*dd = d->next; /* NEXT - set current disjunct to the next one. */
+			prev->next = d->next;
 		}
 		else
 		{
 			d->dup_table_next = dt->dup_table[h];
 			dt->dup_table[h] = d;
-			dd = &d->next; /* NEXT */
+			prev = d;
 		}
 	}
 
