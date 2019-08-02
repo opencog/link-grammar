@@ -85,6 +85,12 @@ dnl limit macros in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
 
+dnl Check for a keyword for Thread Local Storage declaration.
+dnl If found - define TLS to it.
+lg_tls=no
+AX_TLS(,:)
+test "$ac_cv_tls" != "none" && lg_tls=yes
+
 dnl Check for specific OSs
 # ====================================================================
 
@@ -198,25 +204,6 @@ AC_CHECK_HEADER([stdatomic.h],
 	[],
 	[#include <stdatomic.h>
 	])
-
-# ====================================================================
-# TLS support
-# Supports per-thread error handling and multi-thread dict reading.
-# Normally it shouldn't be disabled.
-
-lg_tls=no
-AC_ARG_ENABLE([TLS],
-	[AS_HELP_STRING([--disable-TLS], [Do not use TLS])],
-	[],
-	[enable_TLS=yes])
-
-if test "x$enable_TLS" == xyes
-then
-	dnl Check for a keyword for Thread Local Storage declaration.
-	dnl If found - define TLS to it.
-	AX_TLS(,:)
-	test "$ac_cv_tls" != "none" && lg_tls=yes
-fi
 
 # ====================================================================
 # Debugging
