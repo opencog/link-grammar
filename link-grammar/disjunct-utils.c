@@ -347,7 +347,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
-	Disjunct *prev = NULL;
+	Disjunct *prev = NULL; /* The first disjunct is never eliminated. */
 
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 

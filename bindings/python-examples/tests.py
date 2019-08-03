@@ -1247,7 +1247,6 @@ lg_testutils.add_eqcost_linkage_order(Sentence)
 # as "tests.py" arguments, interleaved with standard "unittest" arguments.
 
 for i,arg in enumerate(sys.argv):
-    # "-something=" confuses vim's syntax highlight, so add the '=' separately
     debug = sys.argv.pop(i)[7:] if arg.startswith('-debug' + '=') else ''
 for i,arg in enumerate(sys.argv):
     test = sys.argv.pop(i)[6:] if arg.startswith('-test' + '=')  else ''

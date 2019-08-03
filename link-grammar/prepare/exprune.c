@@ -23,6 +23,11 @@
 #include "tokenize/word-structures.h"    // for Word_struct
 #include "exprune.h"
 
+/**
+ * Here is expression pruning.  This is done even before the expressions
+ * are turned into lists of disjuncts.
+ */
+
 #define D_EXPRUNE 9
 
 #ifdef DEBUG
@@ -125,9 +130,11 @@ static void free_connector_table(exprune_context *ctxt)
 }
 
 /**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
+ * Use the uniquely-assigned number per uppercase part of each
+ * connector string as a hash table key.
+ *
+ * This ensures that connectors with identical uppercase parts
+ * will hash to the same place.
  */
 static inline unsigned int hash_S(condesc_t * c)
 {
@@ -158,18 +165,12 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
 
 /* ================================================================= */
 /**
- * Here is expression pruning.  This is done even before the expressions
- * are turned into lists of disjuncts.
- *
- * This uses many of the same data structures and functions that are used
- * by prune.
- *
  * The purge operations remove all irrelevant stuff from the expression,
  * and free the purged stuff.  A connector is deemed irrelevant if it
  * doesn't match anything in the set S.
  *
  * If an OR or AND type expression node has one child, we can replace it
- * by its child.  This, of course, is not really necessary, except for
+ * by it's child.  This, of course, is not really necessary, except for
  * performance.
  */
 
