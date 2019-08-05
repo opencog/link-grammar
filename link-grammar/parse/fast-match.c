@@ -231,7 +231,7 @@ static void put_into_match_table(Sentence sent, unsigned int size,
 	}
 }
 
-fast_matcher_t* alloc_fast_matcher(const Sentence sent)
+fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
 	unsigned int size;
 	size_t w;

@@ -43,7 +43,7 @@ struct fast_matcher_s
 };
 
 /* See the source file for documentation. */
-fast_matcher_t* alloc_fast_matcher(const Sentence);
+fast_matcher_t* alloc_fast_matcher(const Sentence, unsigned int *[]);
 void free_fast_matcher(Sentence sent, fast_matcher_t*);
 
 size_t form_match_list(fast_matcher_t *, int, Connector *, int, Connector *, int);

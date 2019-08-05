@@ -16,8 +16,8 @@
 #include "api-types.h"                  // Tracon_sharing
 #include "link-includes.h"
 
-void       pp_and_power_prune(Sentence, Tracon_sharing *, unsigned int,
-                              Parse_Options);
+void       pp_and_power_prune(Sentence, Tracon_sharing *,  unsigned int,
+                              Parse_Options, unsigned int *[]);
 bool       optional_gap_collapse(Sentence, int, int);
 
 #endif /* _PRUNE_H */

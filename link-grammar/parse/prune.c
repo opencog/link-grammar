@@ -423,8 +423,8 @@ static void clean_table(unsigned int size, C_list **t)
 	static Connector con_no_match =
 	{
 		.desc = &desc_no_match,
-		.refcount = 1,              /* Ensure it will not get removed. */
-		.shallow = false,           /* Faster mismatch to a deep connector. */
+		.refcount = 1,    /* Ensure it will not get removed. */
+		.shallow = false, /* Faster mismatch + get_num_con_uc() skips it. */
 	};
 
 	for (unsigned int i = 0; i < size; i++)
@@ -1290,12 +1290,54 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	return D_deleted;
 }
 
+/**
+ * Return in num_con_uc the number of different connector uppercase parts
+ * indexed by direction (0: left; 1: right) and word.
+ * @param sent The sentence struct.
+ * @param pt Power table.
+ * @param ncu Returned values (indexes: word and direction). Caller allocated.
+ * @return Void.
+ */
+static void get_num_con_uc(Sentence sent,power_table *pt,
+                           unsigned int *num_con_uc[])
+{
+	/* For each table, count the number of non-empty slots. */
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (int dir = 0; dir < 2; dir++)
+		{
+			C_list **t;
+			unsigned int size;
+
+			if (dir == 0)
+			{
+				t = pt->l_table[w];
+				size = pt->l_table_size[w];
+			}
+			else
+			{
+				t = pt->r_table[w];
+				size = pt->r_table_size[w];
+			}
+
+			unsigned int count = 0;
+			for (unsigned int h = 0; h < size; h++)
+			{
+				if (NULL == t[h]) continue;
+				if (!t[h]->c->shallow) continue; /* Skip deep and tombstones. */
+				count++;
+			}
+			num_con_uc[dir][w] = count;
+		}
+	}
+}
 
 /**
  * Prune useless disjuncts.
  */
 void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
-                        unsigned int null_count, Parse_Options opts)
+                        unsigned int null_count, Parse_Options opts,
+                        unsigned int *ncu[])
 {
 	power_table pt;
 	power_table_init(sent, ts, &pt);
@@ -1308,6 +1350,7 @@ void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	 * additional deletions are very rare and even then most of the
 	 * times only one disjunct is deleted. */
 
+	get_num_con_uc(sent, &pt, ncu);
 	power_table_delete(&pt);
 
 	return;

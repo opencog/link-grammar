@@ -276,6 +276,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	bool one_step_parse = (unsigned int)opts->min_null_count != max_null_count;
 	int max_prune_level = (int)max_null_count;
 
+	unsigned int *ncu[2];
+	ncu[0] = alloca(sent->length * sizeof(*ncu[0]));
+	ncu[1] = alloca(sent->length * sizeof(*ncu[1]));
+
 	if (opts->islands_ok) max_prune_level = 0; /* Cannot optimize for > 0. */
 
 	/* The special pruning per null-count is costly for sentences whose
@@ -330,7 +334,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			else
 				needed_prune_level = MAX_SENTENCE;
 
-			pp_and_power_prune(sent, ts_pruning, current_prune_level, opts);
+			pp_and_power_prune(sent, ts_pruning, current_prune_level, opts, ncu);
 
 			more_pruning_possible =
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
@@ -366,7 +370,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 
 			free_fast_matcher(sent, mchxt);
-			mchxt = alloc_fast_matcher(sent);
+			mchxt = alloc_fast_matcher(sent, ncu);
 			print_time(opts, "Initialized fast matcher");
 		}
 
