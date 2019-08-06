@@ -46,28 +46,6 @@
 #define MATCH_LIST_SIZE_INC 2     /* match-list stack increase size factor */
 
 /**
- * Returns the number of disjuncts in the list that have non-null
- * left connector lists.
- */
-static int left_disjunct_list_length(const Disjunct * d)
-{
-	int i;
-	for (i=0; d!=NULL; d=d->next) {
-		if (d->left != NULL) i++;
-	}
-	return i;
-}
-
-static int right_disjunct_list_length(const Disjunct * d)
-{
-	int i;
-	for (i=0; d!=NULL; d=d->next) {
-		if (d->right != NULL) i++;
-	}
-	return i;
-}
-
-/**
  * Push a match-list element into the match-list array.
  */
 static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
@@ -235,7 +213,6 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
 	unsigned int size;
 	size_t w;
-	size_t len;
 	Match_node ** t;
 	Disjunct * d;
 	fast_matcher_t *ctxt;
@@ -264,12 +241,11 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
 
+	size_t max_size = next_power_of_two_up(sent->dict->contable.num_uc);
 	for (w=0; w<sent->length; w++)
 	{
-		len = left_disjunct_list_length(sent->word[w].d);
-		len = MIN(sent->dict->contable.num_con, len);
-		size = next_power_of_two_up(len);
-		ctxt->l_table_size[w] = size;
+		size = next_power_of_two_up(3 * ncu[0][w]); /* At least 66% free. */
+		ctxt->l_table_size[w] = MIN(max_size,  size);
 		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
 		memset(t, 0, size * sizeof(Match_node *));
 
@@ -282,10 +258,8 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			}
 		}
 
-		len = right_disjunct_list_length(sent->word[w].d);
-		len = MIN(sent->dict->contable.num_con, len);
-		size = next_power_of_two_up(len);
-		ctxt->r_table_size[w] = size;
+		size = next_power_of_two_up(3 * ncu[1][w]); /* At least 66% free. */
+		ctxt->r_table_size[w] = MIN(max_size,  size);
 		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
 		memset(t, 0, size * sizeof(Match_node *));
 
