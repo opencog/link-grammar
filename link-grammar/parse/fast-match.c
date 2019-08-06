@@ -211,10 +211,6 @@ static void put_into_match_table(Sentence sent, unsigned int size,
 
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
-	unsigned int size;
-	size_t w;
-	Match_node ** t;
-	Disjunct * d;
 	fast_matcher_t *ctxt;
 
 	ctxt = (fast_matcher_t *) xalloc(sizeof(fast_matcher_t));
@@ -242,14 +238,17 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 	}
 
 	size_t max_size = next_power_of_two_up(sent->dict->contable.num_uc);
-	for (w=0; w<sent->length; w++)
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
+		unsigned int size;
+		Match_node **t;
+
 		size = next_power_of_two_up(3 * ncu[0][w]); /* At least 66% free. */
 		ctxt->l_table_size[w] = MIN(max_size,  size);
 		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
 		memset(t, 0, size * sizeof(Match_node *));
 
-		for (d = sent->word[w].d; d != NULL; d = d->next)
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			if (d->left != NULL)
 			{
@@ -263,7 +262,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
 		memset(t, 0, size * sizeof(Match_node *));
 
-		for (d = sent->word[w].d; d != NULL; d = d->next)
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			if (d->right != NULL)
 			{
