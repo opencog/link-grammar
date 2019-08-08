@@ -490,7 +490,7 @@ void print_one_connector(Connector * e, int dir, int shallow)
 	if (-1 != dir) printf("%c", "-+"[dir]);
 	if (e->tracon_id)
 	{
-		if (e->refcount)
+		if ((-1 != shallow) && e->refcount)
 			printf("<%d,%d>", e->tracon_id, e->refcount);
 		else
 			printf("<%d>", e->tracon_id);

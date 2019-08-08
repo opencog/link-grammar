@@ -45,27 +45,25 @@
 #define MATCH_LIST_SIZE_INIT 4096 /* the initial size of the match-list stack */
 #define MATCH_LIST_SIZE_INC 2     /* match-list stack increase size factor */
 
-/**
- * Returns the number of disjuncts in the list that have non-null
- * left connector lists.
- */
-static int left_disjunct_list_length(const Disjunct * d)
-{
-	int i;
-	for (i=0; d!=NULL; d=d->next) {
-		if (d->left != NULL) i++;
-	}
-	return i;
-}
+#ifndef ML_COMPAT
+#define ML_COMPAT 0 /* 1: Disjunct order compatible to V5.6.2 (slower). */
+#endif /* ML_COMPAT */
 
-static int right_disjunct_list_length(const Disjunct * d)
+/*
+ * Each lookup table entry points to list of disjuncts whose shallow
+ * connector has the same uppercase part. These lists are sorted according
+ * to the nearest_word of these connectors. The sorting is done using
+ * "bucket sort" in which the number of bins is equal to the different
+ * number of values of nearest word so only one sorting round is needed.
+ */
+typedef struct sortbin_s sortbin;
+struct sortbin_s
 {
-	int i;
-	for (i=0; d!=NULL; d=d->next) {
-		if (d->right != NULL) i++;
-	}
-	return i;
-}
+	Match_node *head;
+#if ML_COMPAT
+	Match_node *tail;
+#endif
+};
 
 /**
  * Push a match-list element into the match-list array.
@@ -90,12 +88,7 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 {
 	if (NULL == mchxt) return;
 
-	for (WordIdx w = 0; w < mchxt->size; w++)
-	{
-		xfree((char *)mchxt->l_table[w], mchxt->l_table_size[w] * sizeof (Match_node *));
-		xfree((char *)mchxt->r_table[w], mchxt->r_table_size[w] * sizeof (Match_node *));
-	}
-
+	free(mchxt->l_table[0]);
 	free(mchxt->match_list);
 	lgdebug(6, "Sentence length %zu, match_list_size %zu\n",
 	        mchxt->size, mchxt->match_list_size);
@@ -105,75 +98,12 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 	xfree(mchxt, sizeof(fast_matcher_t));
 }
 
-/**
- * Adds the match node m to the sorted list of match nodes l.
- * Makes the list sorted from smallest to largest.
- */
-static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
-{
-	Match_node *p, *prev;
-
-	if (l == NULL) return m;
-
-	/* Insert m at head of list */
-	if ((m->d->right->nearest_word) <= (l->d->right->nearest_word))
-	{
-		m->next = l;
-		return m;
-	}
-
-	/* Walk list to insertion point */
-	prev = l;
-	p = prev->next;
-	while (p != NULL && ((m->d->right->nearest_word) > (p->d->right->nearest_word)))
-	{
-		prev = p;
-		p = p->next;
-	}
-
-	m->next = p;
-	prev->next = m;
-
-	return l;  /* return pointer to original head */
-}
-
-/**
- * Adds the match node m to the sorted list of match nodes l.
- * Makes the list sorted from largest to smallest
- */
-static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
-{
-	Match_node *p, *prev;
-
-	if (l == NULL) return m;
-
-	/* Insert m at head of list */
-	if ((m->d->left->nearest_word) >= (l->d->left->nearest_word))
-	{
-		m->next = l;
-		return m;
-	}
-
-	/* Walk list to insertion point */
-	prev = l;
-	p = prev->next;
-	while (p != NULL && ((m->d->left->nearest_word) < (p->d->left->nearest_word)))
-	{
-		prev = p;
-		p = p->next;
-	}
-
-	m->next = p;
-	prev->next = m;
-
-	return l;  /* return pointer to original head */
-}
+static Match_node *match_list_not_found = NULL;
 
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
                                           Connector * c, int dir)
 {
 	unsigned int h, s;
-
 	s = h = connector_uc_hash(c) & (size-1);
 
 	if (dir == 1) {
@@ -188,7 +118,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 			 * unused hash bucket.
 			 */
 			h = (h + 1) & (size-1);
-			if (h == s) return NULL;
+			if (h == s) return &match_list_not_found;
 		}
 	}
 	else
@@ -197,7 +127,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 		{
 			if (connector_uc_eq(t[h]->d->left, c)) break;
 			h = (h + 1) & (size-1);
-			if (h == s) return NULL;
+			if (h == s) return &match_list_not_found;
 		}
 	}
 
@@ -205,39 +135,95 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 }
 
 /**
- * The disjunct d (whose left or right pointer points to c) is put
- * into the appropriate hash table
- * dir =  1, we're putting this into a right table.
- * dir = -1, we're putting this into a left table.
+ * Add the match nodes at sbin to the table entry of their shallow connector.
  */
-static void put_into_match_table(Sentence sent, unsigned int size,
-                                 Match_node ** t, Disjunct * d,
-                                 Connector * c, int dir)
+static void add_to_table_entry(unsigned int tsize, Match_node **table,
+                               int dir, sortbin *sbin)
 {
-	Match_node *m, **xl;
-
-	m = pool_alloc(sent->fm_Match_node);
-	m->next = NULL;
-	m->d = d;
-
-	xl = get_match_table_entry(size, t, c, dir);
-	assert(NULL != xl, "get_match_table_entry: Overflow");
-	if (dir == 1) {
-		*xl = add_to_right_table_list(m, *xl);
-	}
-	else
+	Match_node *m_next;
+	for (Match_node *m = sbin->head; NULL != m; m = m_next)
 	{
-		*xl = add_to_left_table_list(m, *xl);
+		Connector *c = (0 == dir) ? m->d->left : m->d->right;
+		assert(NULL != c);
+
+		Match_node **xl = get_match_table_entry(tsize, table, c, dir);
+		assert(&match_list_not_found != xl, "get_match_table_entry: Overflow");
+
+		m_next = m->next; /* Remember before overwriting. */
+
+		/* Insert m at head of list */
+		m->next = *xl;
+		*xl = m;
 	}
 }
 
-fast_matcher_t* alloc_fast_matcher(const Sentence sent)
+/**
+ * Put the nearest_word-sorted disjuncts at sbin into the given hash table.
+ * Since add_to_table_entry() inserts at entry's head, insert in the
+ * reverse order than the needed match-list order of nearest_word.
+ *
+ * @param tsize The hash table size.
+ * @param table The hash table.
+ * @param w The word to which these disjuncts belong.
+ * @param dir 0: Put it into a right table; 1: Put it  into a left table.
+ * @param sbin Indexed by the disjuncts' shallow-connector nearest_word.
+ * @param sent_length Sentence length, for sbin index upper bound.
+ */
+static void put_into_match_table(unsigned int tsize, Match_node **table,
+                                 int w, int dir, sortbin *sbin,
+                                 size_t sent_length)
 {
-	unsigned int size;
-	size_t w;
-	size_t len;
-	Match_node ** t;
-	Disjunct * d;
+	if (0 == dir)
+	{
+		/* Left match-list needed order: Increasing nearest_word. */
+		for (WordIdx sbw = 0; sbw < (WordIdx)w; sbw++)
+		{
+			add_to_table_entry(tsize, table, dir, &sbin[sbw]);
+		}
+	}
+	else
+	{
+		/* Right match-list needed order: Decreasing nearest_word. */
+		for (WordIdx sbw = sent_length-1; sbw > (WordIdx)w; sbw--)
+		{
+			add_to_table_entry(tsize, table, dir, &sbin[sbw]);
+		}
+	}
+}
+
+static void clean_sortbin(sortbin *sbin, size_t sent_length)
+{
+	for (unsigned int i = 0; i < sent_length; i++)
+				sbin[i].head = NULL;
+}
+
+/**
+ * Put the disjunct d (whose left or right pointer points to c) into
+ * a list according to the c->nearest_word. This is a bucket sort.
+ */
+static void sort_by_nearest_word(Match_node *m, sortbin *sbin)
+{
+
+#if ML_COMPAT
+		if (NULL == sbin->head)
+		{
+			sbin->head = m;
+		}
+		else
+		{
+			sbin->tail->next = m;
+		}
+		sbin->tail = m;
+		m->next = NULL;
+#else
+		m->next = sbin->head;
+		sbin->head = m;
+#endif
+
+}
+
+fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
+{
 	fast_matcher_t *ctxt;
 
 	ctxt = (fast_matcher_t *) xalloc(sizeof(fast_matcher_t));
@@ -264,41 +250,94 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
 
-	for (w=0; w<sent->length; w++)
+	sortbin *sbin = alloca(sent->length * sizeof(sortbin));
+
+	/* Calculate the sizes of the hash tables. */
+	size_t max_tsize = next_power_of_two_up(sent->dict->contable.num_uc);
+	unsigned int num_headers = 0;
+	Match_node **memblock_headers;
+	Match_node **hash_table_header;
+
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		len = left_disjunct_list_length(sent->word[w].d);
-		len = MIN(sent->dict->contable.num_con, len);
-		size = next_power_of_two_up(len);
-		ctxt->l_table_size[w] = size;
-		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
-		memset(t, 0, size * sizeof(Match_node *));
-
-		for (d = sent->word[w].d; d != NULL; d = d->next)
+		for (int dir = 0; dir < 2; dir++)
 		{
-			if (d->left != NULL)
-			{
-				//printf("%s %d\n", connector_string(d->left), d->left->length_limit);
-				put_into_match_table(sent, size, t, d, d->left, -1);
-			}
-		}
+			unsigned int tsize;
+			unsigned int n = ncu[dir][w];
 
-		len = right_disjunct_list_length(sent->word[w].d);
-		len = MIN(sent->dict->contable.num_con, len);
-		size = next_power_of_two_up(len);
-		ctxt->r_table_size[w] = size;
-		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
-		memset(t, 0, size * sizeof(Match_node *));
-
-		for (d = sent->word[w].d; d != NULL; d = d->next)
-		{
-			if (d->right != NULL)
+			if (0 == n)
 			{
-				//printf("%s %d\n", connector_string(d->right), d->right->length_limit);
-				put_into_match_table(sent, size, t, d, d->right, 1);
+				tsize = 1; /* Avoid parse-time table size checks. */
 			}
+			else
+			{
+				tsize = next_power_of_two_up(3 * n); /* At least 66% free. */
+				tsize = MIN(max_tsize,  tsize);
+			}
+
+			ncu[dir][w] = tsize;
+			num_headers += tsize;
 		}
 	}
 
+	memblock_headers = malloc(num_headers * sizeof(Match_node *));
+	memset(memblock_headers, 0, num_headers * sizeof(Match_node *));
+	hash_table_header = memblock_headers;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		clean_sortbin(sbin, sent->length);
+
+		/* Sort the disjuncts of each word according to the nearest word
+		 * that their left and right shallow connectors can connect to.
+		 * For performance of the parsing stage, the loop over
+		 * the disjuncts is done separately for the left and right
+		 * connectors, so the Match_node memory of consequent disjuncts in
+		 * the match lists will be adjacent in memory (a noticeable
+		 * speedup due to a better use of the CPU cache). */
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			if (d->left != NULL)
+			{
+				Match_node *m = pool_alloc(sent->fm_Match_node);
+				m->d = d;
+				sort_by_nearest_word(m, &sbin[d->left->nearest_word]);
+			}
+		}
+		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
+		{
+			if (d->right != NULL)
+			{
+				Match_node *m = pool_alloc(sent->fm_Match_node);
+				m->d = d;
+				sort_by_nearest_word(m, &sbin[d->right->nearest_word]);
+			}
+		}
+
+		/* Build the hash tables. */
+		for (int dir = 0; dir < 2; dir++)
+		{
+			unsigned int tsize = ncu[dir][w];
+			Match_node **t = hash_table_header;
+
+			hash_table_header += tsize;
+
+			if (0 == dir)
+			{
+				ctxt->l_table[w] = t;
+				ctxt->l_table_size[w] = tsize;
+			}
+			else
+			{
+				ctxt->r_table[w] = t;
+				ctxt->r_table_size[w] = tsize;
+			}
+
+			put_into_match_table(tsize, t, w, dir, sbin, sent->length);
+		}
+	}
+
+	assert(memblock_headers + num_headers == hash_table_header);
 	return ctxt;
 }
 
@@ -466,7 +505,6 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 	c_con->same_alternative = same_alternative;
 	c_con->gword = c1->originating_gword->o_gword;
 
-
 	return same_alternative;
 #else
 	return true;
@@ -516,9 +554,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *mx, *mr_end, **mxp;
+	Match_node *mx, *mr_end;
 	size_t front = get_match_list_position(ctxt);
-	Match_node *ml = NULL, *mr = NULL;
+	Match_node *ml = NULL, *mr = NULL; /* Initialize in case of NULL lc or rc. */
 	match_cache mc;
 	gword_cache gc;
 
@@ -530,16 +568,14 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * and the word w. */
 	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
 	{
-		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
-		if (NULL != mxp) ml = *mxp;
+		ml = *get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, 0);
 	}
 	if ((lc != NULL) && (ml == NULL)) /* lc optimization */
 		return terminate_match_list(ctxt, -1, front, w, lc, lw, rc, rw);
 
 	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
 	{
-		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
-		if (NULL != mxp) mr = *mxp;
+		mr = *get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
 	}
 
 	if ((ml == NULL) && (mr == NULL))
