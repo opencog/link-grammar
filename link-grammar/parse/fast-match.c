@@ -45,6 +45,10 @@
 #define MATCH_LIST_SIZE_INIT 4096 /* the initial size of the match-list stack */
 #define MATCH_LIST_SIZE_INC 2     /* match-list stack increase size factor */
 
+#ifndef ML_COMPAT
+#define ML_COMPAT 0 /* 1: Disjunct order compatible to V5.6.2 (slower). */
+#endif /* ML_COMPAT */
+
 /*
  * Each lookup table entry points to list of disjuncts whose shallow
  * connector has the same uppercase part. These lists are sorted according
@@ -56,6 +60,9 @@ typedef struct sortbin_s sortbin;
 struct sortbin_s
 {
 	Match_node *head;
+#if ML_COMPAT
+	Match_node *tail;
+#endif
 };
 
 /**
@@ -200,8 +207,21 @@ static void init_sortbin(sortbin *sbin, size_t sent_length)
 static void sort_by_nearest_word(Match_node *m, sortbin *sbin)
 {
 
+#if ML_COMPAT
+		if (NULL == sbin->head)
+		{
+			sbin->head = m;
+		}
+		else
+		{
+			sbin->tail->next = m;
+		}
+		sbin->tail = m;
+		m->next = NULL;
+#else
 		m->next = sbin->head;
 		sbin->head = m;
+#endif
 
 }
 
