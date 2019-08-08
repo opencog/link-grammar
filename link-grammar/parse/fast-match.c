@@ -198,28 +198,29 @@ static void clean_sortbin(sortbin *sbin, size_t sent_length)
 }
 
 /**
- * Put the disjunct d (whose left or right pointer points to c) into
- * a list according to the c->nearest_word. This is a bucket sort.
+ * Put the Match_node m into a list according to nearest_word.
+ * This is a bucket sort.
  */
-static void sort_by_nearest_word(Match_node *m, sortbin *sbin)
+static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 {
 
-#if ML_COMPAT
-		if (NULL == sbin->head)
-		{
-			sbin->head = m;
-		}
-		else
-		{
-			sbin->tail->next = m;
-		}
-		sbin->tail = m;
-		m->next = NULL;
-#else
-		m->next = sbin->head;
-		sbin->head = m;
-#endif
+	sbin = &sbin[nearest_word]; /* Bucket selection. */
 
+#if ML_COMPAT
+	if (NULL == sbin->head)
+	{
+		sbin->head = m;
+	}
+	else
+	{
+		sbin->tail->next = m;
+	}
+	sbin->tail = m;
+	m->next = NULL;
+#else
+	m->next = sbin->head;
+	sbin->head = m;
+#endif
 }
 
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
@@ -301,7 +302,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			{
 				Match_node *m = pool_alloc(sent->fm_Match_node);
 				m->d = d;
-				sort_by_nearest_word(m, &sbin[d->left->nearest_word]);
+				sort_by_nearest_word(m, sbin, d->left->nearest_word);
 			}
 		}
 		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
@@ -310,7 +311,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			{
 				Match_node *m = pool_alloc(sent->fm_Match_node);
 				m->d = d;
-				sort_by_nearest_word(m, &sbin[d->right->nearest_word]);
+				sort_by_nearest_word(m, sbin, d->right->nearest_word);
 			}
 		}
 
