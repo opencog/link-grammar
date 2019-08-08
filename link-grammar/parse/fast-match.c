@@ -88,12 +88,7 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 {
 	if (NULL == mchxt) return;
 
-	for (WordIdx w = 0; w < mchxt->size; w++)
-	{
-		xfree((char *)mchxt->l_table[w], mchxt->l_table_size[w] * sizeof (Match_node *));
-		xfree((char *)mchxt->r_table[w], mchxt->r_table_size[w] * sizeof (Match_node *));
-	}
-
+	free(mchxt->l_table[0]);
 	free(mchxt->match_list);
 	lgdebug(6, "Sentence length %zu, match_list_size %zu\n",
 	        mchxt->size, mchxt->match_list_size);
@@ -196,7 +191,7 @@ static void put_into_match_table(unsigned int tsize, Match_node **table,
 	}
 }
 
-static void init_sortbin(sortbin *sbin, size_t sent_length)
+static void clean_sortbin(sortbin *sbin, size_t sent_length)
 {
 	for (unsigned int i = 0; i < sent_length; i++)
 				sbin[i].head = NULL;
@@ -257,45 +252,41 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 
 	sortbin *sbin = alloca(sent->length * sizeof(sortbin));
 
-	/* Create the hash tables. */
-	size_t max_size = next_power_of_two_up(sent->dict->contable.num_uc);
+	/* Calculate the sizes of the hash tables. */
+	size_t max_tsize = next_power_of_two_up(sent->dict->contable.num_uc);
+	unsigned int num_headers = 0;
+	Match_node **memblock_headers;
+	Match_node **hash_table_header;
+
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		for (int dir = 0; dir < 2; dir++)
 		{
-			unsigned int size;
-			Match_node **t;
-			unsigned int len = ncu[dir][w];
+			unsigned int tsize;
+			unsigned int n = ncu[dir][w];
 
-			if (0 == len)
+			if (0 == n)
 			{
-				size = 1; /* Avoid parse-time table size checks. */
+				tsize = 1; /* Avoid parse-time table size checks. */
 			}
 			else
 			{
-				size = next_power_of_two_up(3 * len); /* At least 66% free. */
-				size = MIN(max_size,  size);
+				tsize = next_power_of_two_up(3 * n); /* At least 66% free. */
+				tsize = MIN(max_tsize,  tsize);
 			}
 
-			t = malloc(size * sizeof(Match_node *));
-			memset(t, 0, size * sizeof(Match_node *));
-
-			if (0 == dir)
-			{
-				ctxt->l_table[w] = t;
-				ctxt->l_table_size[w] = size;
-			}
-			else
-			{
-				ctxt->r_table[w] = t;
-				ctxt->r_table_size[w] = size;
-			}
+			ncu[dir][w] = tsize;
+			num_headers += tsize;
 		}
 	}
 
+	memblock_headers = malloc(num_headers * sizeof(Match_node *));
+	memset(memblock_headers, 0, num_headers * sizeof(Match_node *));
+	hash_table_header = memblock_headers;
+
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		init_sortbin(sbin, sent->length);
+		clean_sortbin(sbin, sent->length);
 
 		/* Sort the disjuncts of each word according to the nearest word
 		 * that their left and right shallow connectors can connect to.
@@ -323,27 +314,30 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			}
 		}
 
-		/* Fill up the hash tables. */
+		/* Build the hash tables. */
 		for (int dir = 0; dir < 2; dir++)
 		{
-			Match_node ***t;
-			unsigned int *tsize;
+			unsigned int tsize = ncu[dir][w];
+			Match_node **t = hash_table_header;
+
+			hash_table_header += tsize;
 
 			if (0 == dir)
 			{
-				t = ctxt->l_table;
-				tsize = ctxt->l_table_size;
+				ctxt->l_table[w] = t;
+				ctxt->l_table_size[w] = tsize;
 			}
 			else
 			{
-				t = ctxt->r_table;
-				tsize = ctxt->r_table_size;
+				ctxt->r_table[w] = t;
+				ctxt->r_table_size[w] = tsize;
 			}
 
-			put_into_match_table(tsize[w], t[w], w, dir, sbin, sent->length);
+			put_into_match_table(tsize, t, w, dir, sbin, sent->length);
 		}
 	}
 
+	assert(memblock_headers + num_headers == hash_table_header);
 	return ctxt;
 }
 
