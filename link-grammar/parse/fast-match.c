@@ -267,10 +267,16 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			Match_node **t;
 			unsigned int len = ncu[dir][w];
 
-			if (0 == len) len = 1; /* Avoid parse-time table size checks. */
+			if (0 == len)
+			{
+				size = 1; /* Avoid parse-time table size checks. */
+			}
+			else
+			{
+				size = next_power_of_two_up(3 * len); /* At least 66% free. */
+				size = MIN(max_size,  size);
+			}
 
-			size = next_power_of_two_up(3 * ncu[dir][w]); /* At least 66% free. */
-			size = MIN(max_size,  size);
 			t = malloc(size * sizeof(Match_node *));
 			memset(t, 0, size * sizeof(Match_node *));
 
