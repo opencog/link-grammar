@@ -103,6 +103,8 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 	xfree(mchxt, sizeof(fast_matcher_t));
 }
 
+static Match_node *match_list_not_found = NULL;
+
 static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
                                           Connector * c, int dir)
 {
@@ -121,7 +123,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 			 * unused hash bucket.
 			 */
 			h = (h + 1) & (size-1);
-			if (h == s) return NULL;
+			if (h == s) return &match_list_not_found;
 		}
 	}
 	else
@@ -130,7 +132,7 @@ static Match_node **get_match_table_entry(unsigned int size, Match_node **t,
 		{
 			if (connector_uc_eq(t[h]->d->left, c)) break;
 			h = (h + 1) & (size-1);
-			if (h == s) return NULL;
+			if (h == s) return &match_list_not_found;
 		}
 	}
 
@@ -150,7 +152,7 @@ static void add_to_table_entry(unsigned int tsize, Match_node **table,
 		assert(NULL != c);
 
 		Match_node **xl = get_match_table_entry(tsize, table, c, dir);
-		assert(NULL != xl, "get_match_table_entry: Overflow");
+		assert(&match_list_not_found != xl, "get_match_table_entry: Overflow");
 
 		m_next = m->next; /* Remember before overwriting. */
 
@@ -552,9 +554,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *mx, *mr_end, **mxp;
+	Match_node *mx, *mr_end;
 	size_t front = get_match_list_position(ctxt);
-	Match_node *ml = NULL, *mr = NULL;
+	Match_node *ml = NULL, *mr = NULL; /* Initialize in case of NULL lc or rc. */
 	match_cache mc;
 	gword_cache gc;
 
@@ -566,16 +568,14 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	 * and the word w. */
 	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
 	{
-		mxp = get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, -1);
-		if (NULL != mxp) ml = *mxp;
+		ml = *get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, 0);
 	}
 	if ((lc != NULL) && (ml == NULL)) /* lc optimization */
 		return terminate_match_list(ctxt, -1, front, w, lc, lw, rc, rw);
 
 	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
 	{
-		mxp = get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
-		if (NULL != mxp) mr = *mxp;
+		mr = *get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
 	}
 
 	if ((ml == NULL) && (mr == NULL))
