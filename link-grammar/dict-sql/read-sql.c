@@ -202,7 +202,8 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	}
 
 	/* Extend the OR-chain for the third and later expressions. */
-	bs->exp->operand_next = exp;
+	exp->operand_next = bs->exp->operand_first;
+	bs->exp->operand_first = exp;
 
 	return 0;
 }
