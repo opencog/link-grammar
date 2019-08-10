@@ -504,7 +504,7 @@ static bool possible_connection(prune_context *pc,
 		if ((lc->next != NULL) || (rc->next != NULL)) return false;
 	}
 	else
-	if (dist > lc->length_limit || dist > rc->length_limit)
+	if (rword > lc->farthest_word || lword < rc->farthest_word)
 	{
 		return false;
 	}
@@ -611,8 +611,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
 
 	/* lb is now the leftmost word we need to check */
-	lb = w - c->length_limit;
-	if (0 > lb) lb = 0;
+	lb = c->farthest_word;
 
 	/* n is now the rightmost word we need to check */
 	for (; n >= lb ; n--)
@@ -656,8 +655,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	if (c->nearest_word > n) n = c->nearest_word;
 
 	/* ub is now the rightmost word we need to check */
-	ub = w + c->length_limit;
-	if (ub >= sent_length) ub = sent_length - 1;
+	ub = c->farthest_word;
 
 	/* n is now the leftmost word we need to check */
 	for (; n <= ub ; n++)

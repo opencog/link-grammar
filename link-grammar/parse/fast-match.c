@@ -564,17 +564,16 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	gc.same_alternative = false;
 
 	/* Get the lists of candidate matching disjuncts of word w for lc and
-	 * rc.  Consider each of these lists only if the length_limit of lc
-	 * rc and also w, is not greater then the distance between their word
-	 * and the word w. */
-	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
+	 * rc. Consider each of these lists only if the farthest_word of lc/rc
+	 * reaches at least the word w. */
+	if ((lc != NULL) && (w <= lc->farthest_word))
 	{
 		ml = *get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, 0);
 	}
 	if ((lc != NULL) && (ml == NULL)) /* lc optimization */
 		return terminate_match_list(ctxt, -1, front, w, lc, lw, rc, rw);
 
-	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
+	if ((rc != NULL) && (w >= rc->farthest_word))
 	{
 		mr = *get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
 	}
@@ -602,7 +601,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->nearest_word < lw) break;
-		if ((w - lw) > mx->d->left->length_limit) continue;
+		if (lw < mx->d->left->farthest_word) continue;
 
 		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc) &&
 		                    alt_connection_possible(mx->d->left, lc, &gc);
@@ -627,7 +626,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	gc.gword = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		if ((rw - w) > mx->d->right->length_limit) continue;
+		if (rw > mx->d->right->farthest_word) continue;
 
 		if ((lc != NULL) && !mx->d->match_left) continue; /* lc optimization */
 		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc) &&
