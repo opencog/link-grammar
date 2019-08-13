@@ -685,6 +685,7 @@ static Count_bin do_count(
 	}
 	else
 	{
+		/* The following cannot be optimized like end_word due to l_bnr. */
 		start_word = le->nearest_word;
 	}
 
@@ -694,7 +695,13 @@ static Count_bin do_count(
 	}
 	else
 	{
-		end_word = re->nearest_word +1;
+		/* If the LHS count for a word would be zero for a left connector
+		 * due to the distance of this word, we can skip its handling
+		 * entirely. So the checked word interval can be shortened. */
+		if ((le != NULL) && (re->nearest_word > le->farthest_word))
+			end_word = le->farthest_word + 1;
+		else
+			end_word = re->nearest_word + 1;
 	}
 
 	total = zero;

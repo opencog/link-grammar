@@ -565,8 +565,10 @@ form_match_list(fast_matcher_t *ctxt, int w,
 
 	/* Get the lists of candidate matching disjuncts of word w for lc and
 	 * rc. Consider each of these lists only if the farthest_word of lc/rc
-	 * reaches at least the word w. */
-	if ((lc != NULL) && (w <= lc->farthest_word))
+	 * reaches at least the word w.
+	 * Note: The commented out (w <= lc->farthest_word) is checked at the
+	 * callers and is left here for documentation. */
+	if ((lc != NULL) /* && (w <= lc->farthest_word) */)
 	{
 		ml = *get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, 0);
 	}

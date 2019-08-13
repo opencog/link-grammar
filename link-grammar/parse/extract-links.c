@@ -443,7 +443,10 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	}
 	else
 	{
-		end_word = re->nearest_word + 1;
+		if ((le != NULL) && (re->nearest_word > le->farthest_word))
+			end_word = le->farthest_word + 1;
+		else
+			end_word = re->nearest_word + 1;
 	}
 
 	/* This condition can never be true here. It is included so GCC
