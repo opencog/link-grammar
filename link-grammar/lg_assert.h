@@ -29,10 +29,14 @@
  *    pointer like lg_exit(code) to allow the LG library to be embedded in an
  *    application like an editor. If not set, the default will still be
  *    DEBUG_TRAP. */
-#define assert(ex, ...) {                                                   \
-	if (!(ex)) {                                                             \
+#define assert(ex, ...)                                                     \
+{                                                                           \
+	if (!(ex))                                                               \
+	{                                                                        \
+		fflush(stdout);                                                       \
 		fprintf(stderr, "Fatal error: \nAssertion (" #ex ") failed at " FILELINE ": " __VA_ARGS__);  \
 		fprintf(stderr, "\n");                                                \
+		fflush(stderr);                                                       \
 		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
 	}                                                                        \
 }
