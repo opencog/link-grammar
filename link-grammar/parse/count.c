@@ -31,7 +31,7 @@ struct Table_connector_s
 	Table_connector  *next;      /* FIXME: eliminate */
 	int              l_id, r_id;
 	Count_bin        count;
-	unsigned short   null_count; /* FIXME: eliminate */
+	unsigned int     null_count; /* FIXME: eliminate */
 };
 
 struct count_context_s
