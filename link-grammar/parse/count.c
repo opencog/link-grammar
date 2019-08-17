@@ -330,12 +330,12 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
-                          int null_count);
+                          unsigned int null_count);
 
 static Count_bin do_count(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
-                          int null_count)
+                          unsigned int null_count)
 {
 	static int level;
 
@@ -367,14 +367,15 @@ static Count_bin do_count(
                           count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
-                          int null_count)
+                          unsigned int null_count)
 {
 	Count_bin zero = hist_zero();
 	Count_bin total;
 	int start_word, end_word, w;
 	Table_connector *t;
 
-	assert (0 <= null_count, "Bad null count");
+	/* TODO: static_assert() that null_count is an unsigned int. */
+	assert (null_count < INT_MAX, "Bad null count");
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
@@ -384,7 +385,7 @@ static Count_bin do_count(
 	 * linkage count before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
-	int unparseable_len = rw-lw-1;
+	unsigned int unparseable_len = rw-lw-1;
 
 #if 1
 	/* This check is not necessary for correctness, as it is handled in
@@ -502,7 +503,7 @@ static Count_bin do_count(
 			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
 
-			for (int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
+			for (unsigned int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
 			{
 				int rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the null-counts we're
