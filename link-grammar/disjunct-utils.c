@@ -962,6 +962,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 		 * It will be freed at sentence_delete(). */
 		if (sent->dc_memblock) free(sent->dc_memblock);
 		sent->dc_memblock = ts->memblock;
+		sent->num_disjuncts = ts->num_disjuncts;
 	}
 
 	return ts;

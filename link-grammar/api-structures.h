@@ -138,6 +138,7 @@ struct Sentence_s
 	/* Connector encoding, packing & sharing. */
 	size_t min_len_encoding;     /* Encode from this sentence length. */
 	void *dc_memblock;           /* For packed disjuncts & connectors. */
+	unsigned int num_disjuncts;  /* Number of disjuncts in dc_memblock. */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
