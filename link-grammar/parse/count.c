@@ -717,11 +717,6 @@ Count_bin do_parse(Sentence sent,
 	ctxt->current_resources = opts->resources;
 	ctxt->exhausted = false;
 	ctxt->checktimer = 0;
-	ctxt->sent = sent;
-
-	/* consecutive blocks of this many words are considered as
-	 * one null link. */
-	/* ctxt->null_block = 1; */
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
 
@@ -737,6 +732,11 @@ count_context_t * alloc_count_context(Sentence sent)
 {
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
+
+	ctxt->sent = sent;
+	/* consecutive blocks of this many words are considered as
+	 * one null link. */
+	/* ctxt->null_block = 1; */
 
 	if (NULL != sent->Table_connector_pool)
 	{
