@@ -57,13 +57,13 @@ static void free_table(count_context_t *ctxt)
 
 static void init_table(count_context_t *ctxt, size_t sent_len)
 {
-	unsigned int shift;
+	if (ctxt->table) free_table(ctxt);
+
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
 	 * disjuncts, rather than just the number of words.
 	 */
-	if (ctxt->table) free_table(ctxt);
-
+	unsigned int shift;
 	if (sent_len >= 10)
 	{
 		shift = 12 + (sent_len) / 4 ;
@@ -81,8 +81,6 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
-
-
 }
 
 //#define DEBUG_TABLE_STAT
