@@ -1,4 +1,5 @@
 language: c
+dist: bionic
 
 before_install:
   - chmod +x js/install_emsdk.sh js/build_packages.sh js/link-parser/build.sh js/publish_packages.sh
