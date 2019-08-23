@@ -113,6 +113,7 @@ String_set * string_set_create(void)
 	ss->count = 0;
 	ss->string_pool = NULL;
 	ss_pool_alloc(MEM_POOL_INIT, ss);
+	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size);
 
 	return ss;
 }
@@ -164,6 +165,8 @@ static void grow_table(String_set *ss)
 			ss->table[p] = old.table[i];
 		}
 	}
+	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size);
+
 	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
 	free(old.table);
 }
@@ -192,11 +195,10 @@ const char * string_set_add(const char * source_string, String_set * ss)
 	ss->table[p].str = str;
 	ss->table[p].hash = h;
 	ss->count++;
+	ss->available_count--;
 
-	/* We just added it to the table.  If the table got too big,
-	 * we grow it.  Too big is defined as being more than 3/8 full.
-	 * There's a huge boost from keeping this sparse. */
-	if ((8 * ss->count) > (3 * ss->size)) grow_table(ss);
+	/* We just added it to the table. */
+	if (ss->available_count == 0) grow_table(ss); /* Too full */
 
 	return str;
 }

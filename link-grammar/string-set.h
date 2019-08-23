@@ -40,6 +40,7 @@ struct String_set_s
 {
 	size_t size;                /* the current size of the table */
 	size_t count;               /* number of things currently in the table */
+	size_t available_count;     /* number of available entries */
 	ss_slot *table;             /* the table itself */
 	unsigned int prime_idx;     /* current prime number table index */
 	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
@@ -47,6 +48,10 @@ struct String_set_s
 	char *alloc_next;           /* next string address */
 	str_mem_pool *string_pool;  /* string memory pool */
 };
+
+/* If the table gets too big, we grow it. Too big is defined as being
+ * more than 3/8 full. There's a huge boost from keeping this sparse. */
+#define MAX_STRING_SET_TABLE_SIZE(s) ((s) * 3 / 8)
 
 String_set * string_set_create(void);
 const char * string_set_add(const char * source_string, String_set * ss);
