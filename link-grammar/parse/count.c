@@ -601,11 +601,11 @@ static Count_bin do_count(
 				}
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
-{ \
-	Count_bin count = (hist_total(&c) == NO_COUNT) ? \
-		TRACE_LABEL(c, do_count) : c; \
-	how_to_count; \
-}
+	{ \
+		Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+			TRACE_LABEL(c, do_count) : c; \
+		how_to_count; \
+	}
 			 /* If the pseudocounting above indicates one of the terms
 			 * in the count multiplication is zero,
 			 * we know that the true total is zero. So we don't
