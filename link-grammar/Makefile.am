@@ -124,7 +124,6 @@ liblink_grammar_la_SOURCES =        \
 	print/wcwidth.c                  \
 	resources.c                      \
 	string-set.c                     \
-	string-id.c                      \
 	tokenize/anysplit.c              \
 	tokenize/spellcheck-aspell.c     \
 	tokenize/spellcheck-hun.c        \
@@ -183,7 +182,6 @@ liblink_grammar_la_SOURCES =        \
 	print/wcwidth.h                  \
 	resources.h                      \
 	string-set.h                     \
-	string-id.h                      \
 	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
 	tokenize/regex-tokenizer.h       \
