@@ -278,7 +278,6 @@
     <ClInclude Include="..\link-grammar\print\print.h" />
     <ClInclude Include="..\link-grammar\print\wcwidth.h" />
     <ClInclude Include="..\link-grammar\resources.h" />
-    <ClInclude Include="..\link-grammar\string-id.h" />
     <ClInclude Include="..\link-grammar\string-set.h" />
     <ClInclude Include="..\link-grammar\tokenize\anysplit.h" />
     <ClInclude Include="..\link-grammar\tokenize\regex-tokenizer.h" />
@@ -331,7 +330,6 @@
     <ClCompile Include="..\link-grammar\print\print.c" />
     <ClCompile Include="..\link-grammar\print\wcwidth.c" />
     <ClCompile Include="..\link-grammar\resources.c" />
-    <ClCompile Include="..\link-grammar\string-id.c" />
     <ClCompile Include="..\link-grammar\string-set.c" />
     <ClCompile Include="..\link-grammar\tokenize\anysplit.c" />
     <ClCompile Include="..\link-grammar\tokenize\regex-tokenizer.c" />

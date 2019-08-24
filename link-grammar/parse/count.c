@@ -31,7 +31,7 @@ struct Table_connector_s
 	Table_connector  *next;      /* FIXME: eliminate */
 	int              l_id, r_id;
 	Count_bin        count;
-	unsigned short   null_count; /* FIXME: eliminate */
+	unsigned int     null_count; /* FIXME: eliminate */
 };
 
 struct count_context_s
@@ -57,13 +57,13 @@ static void free_table(count_context_t *ctxt)
 
 static void init_table(count_context_t *ctxt, size_t sent_len)
 {
-	unsigned int shift;
+	if (ctxt->table) free_table(ctxt);
+
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
 	 * disjuncts, rather than just the number of words.
 	 */
-	if (ctxt->table) free_table(ctxt);
-
+	unsigned int shift;
 	if (sent_len >= 10)
 	{
 		shift = 12 + (sent_len) / 4 ;
@@ -81,8 +81,6 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
-
-
 }
 
 //#define DEBUG_TABLE_STAT
@@ -330,12 +328,12 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 static Count_bin do_count1(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
-                          int null_count);
+                          unsigned int null_count);
 
 static Count_bin do_count(int lineno, count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
-                          int null_count)
+                          unsigned int null_count)
 {
 	static int level;
 
@@ -367,14 +365,15 @@ static Count_bin do_count(
                           count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
-                          int null_count)
+                          unsigned int null_count)
 {
 	Count_bin zero = hist_zero();
 	Count_bin total;
 	int start_word, end_word, w;
 	Table_connector *t;
 
-	assert (0 <= null_count, "Bad null count");
+	/* TODO: static_assert() that null_count is an unsigned int. */
+	assert (null_count < INT_MAX, "Bad null count");
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
@@ -384,7 +383,7 @@ static Count_bin do_count(
 	 * linkage count before we return. */
 	t = table_store(ctxt, lw, rw, le, re, null_count);
 
-	int unparseable_len = rw-lw-1;
+	unsigned int unparseable_len = rw-lw-1;
 
 #if 1
 	/* This check is not necessary for correctness, as it is handled in
@@ -502,7 +501,7 @@ static Count_bin do_count(
 			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
 
-			for (int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
+			for (unsigned int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
 			{
 				int rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the null-counts we're
@@ -602,11 +601,11 @@ static Count_bin do_count(
 				}
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
-{ \
-	Count_bin count = (hist_total(&c) == NO_COUNT) ? \
-		TRACE_LABEL(c, do_count) : c; \
-	how_to_count; \
-}
+	{ \
+		Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+			TRACE_LABEL(c, do_count) : c; \
+		how_to_count; \
+	}
 			 /* If the pseudocounting above indicates one of the terms
 			 * in the count multiplication is zero,
 			 * we know that the true total is zero. So we don't
@@ -716,11 +715,6 @@ Count_bin do_parse(Sentence sent,
 	ctxt->current_resources = opts->resources;
 	ctxt->exhausted = false;
 	ctxt->checktimer = 0;
-	ctxt->sent = sent;
-
-	/* consecutive blocks of this many words are considered as
-	 * one null link. */
-	/* ctxt->null_block = 1; */
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
 
@@ -736,6 +730,11 @@ count_context_t * alloc_count_context(Sentence sent)
 {
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
+
+	ctxt->sent = sent;
+	/* consecutive blocks of this many words are considered as
+	 * one null link. */
+	/* ctxt->null_block = 1; */
 
 	if (NULL != sent->Table_connector_pool)
 	{

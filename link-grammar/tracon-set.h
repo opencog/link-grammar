@@ -31,12 +31,17 @@ typedef struct
 {
 	size_t size;       /* the current size of the table */
 	size_t count;      /* number of things currently in the table */
+	size_t available_count;     /* number of available entries */
 	size_t ocount;     /* the count before reset */
-	clist_slot *table;    /* the table itself */
+	clist_slot *table; /* the table itself */
 	unsigned int prime_idx;     /* current prime number table index */
 	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
 	bool shallow;      /* consider shallow connector */
 } Tracon_set;
+
+/* If the table gets too big, we grow it. Too big is defined as being
+ * more than 3/8 full. There's a huge boost from keeping this sparse. */
+#define MAX_TRACON_SET_TABLE_SIZE(s) ((s) * 3 / 8)
 
 Tracon_set *tracon_set_create(void);
 Connector **tracon_set_add(Connector *, Tracon_set *);
