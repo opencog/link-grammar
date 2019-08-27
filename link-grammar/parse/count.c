@@ -286,8 +286,10 @@ static Count_bin pseudocount(count_context_t * ctxt,
 
 /**
  *  Clamp the given count to INT_MAX.
+ *  The returned value is normally unused by the callers
+ *  (to be used when debugging overflows).
  */
-static void parse_count_clamp(Count_bin *total)
+static bool parse_count_clamp(Count_bin *total)
 {
 	if (INT_MAX < hist_total(total))
 	{
@@ -297,7 +299,11 @@ static void parse_count_clamp(Count_bin *total)
 #else
 		*total = INT_MAX;
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
+
+		return true;
 	}
+
+	return false;
 }
 
 /**
@@ -453,12 +459,22 @@ static Count_bin do_count(
 					hist_accumv(&t->count, d->cost,
 						do_count(ctxt, w, rw, d->right, NULL, null_count-1));
 				}
-				parse_count_clamp(&total);
+				if (parse_count_clamp(&t->count))
+				{
+#if 0
+					printf("OVERFLOW 1\n");
+#endif
+				}
 			}
 
 			hist_accumv(&t->count, 0.0,
 				do_count(ctxt, w, rw, NULL, NULL, null_count-1));
-			parse_count_clamp(&total);
+			if (parse_count_clamp(&t->count))
+			{
+#if 0
+				printf("OVERFLOW 2\n");
+#endif
+			}
 		}
 		return t->count;
 	}
