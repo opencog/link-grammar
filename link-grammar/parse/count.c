@@ -178,6 +178,20 @@ static Table_lrcnt *find_table_lrcnt_pointer(count_context_t *ctxt,
 	/* Disregard caching in case the table is full - this shouldn't happen. */
 	if (ctxt->table_lrcnt_available_count == 0) return &table_full;
 
+	/* Panic mode: Return a parse bypass indication if resources are
+	 * exhausted.  checktimer is a device to avoid a gazillion system calls
+	 * to get the timer value. On circa-2018 machines, it results in
+	 * several timer calls per second. */
+	ctxt->checktimer ++;
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<22)) &&
+	                       (ctxt->current_resources != NULL) &&
+	                       //fprintf(stderr, "T") &&
+	                       resources_exhausted(ctxt->current_resources)))
+	{
+		ctxt->exhausted = true;
+		return &lrcnt_cache_zero;
+	}
+
 	const size_t sizemod = ctxt->table_lrcnt_size-1;
 	size_t h = table_lrcnt_hash(tracon_id, cw, w) & sizemod;
 	Table_lrcnt *t = ctxt->table_lrcnt;
@@ -336,23 +350,7 @@ find_table_pointer(count_context_t *ctxt,
 	}
 	DEBUG_TABLE_STAT(miss++);
 
-	/* Create a new connector only if resources are exhausted.
-	 * (???) Huh? I guess we're in panic parse mode in that case.
-	 * checktimer is a device to avoid a gazillion system calls
-	 * to get the timer value. On circa-2017 machines, it results
-	 * in about 0.5-1 timer calls per second.
-	 */
-	ctxt->checktimer ++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<21)) &&
-	                       (ctxt->current_resources != NULL) &&
-	                       resources_exhausted(ctxt->current_resources)))
-	{
-		ctxt->exhausted = true;
-		t = table_store(ctxt, lw, rw, le, re, null_count);
-		t->count = hist_zero();
-		return t;
-	}
-	else return NULL;
+	return NULL;
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
