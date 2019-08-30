@@ -422,6 +422,12 @@ char *lg_readline(const char *mb_prompt)
 
 	byte_len = wcstombs(NULL, wc_line, 0) + 4;
 	free(mb_line);
+	if (byte_len == (size_t)-1)
+	{
+		printf("Error: Unable to process UTF8 in input string.\n");
+		mb_line = strdup(""); /* Just ignore it. */
+		return mb_line;
+	}
 	mb_line = malloc(byte_len);
 	wcstombs(mb_line, wc_line, byte_len);
 
