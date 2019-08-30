@@ -824,15 +824,16 @@ int main(int argc, char * argv[])
 			}
 
 			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
+			char *eh_filename = expand_homedir(filename);
 
 			struct stat statbuf;
-			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
+			if ((0 == stat(eh_filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
 				errno = EISDIR;
 				goto open_error;
 			}
 
-			input_fh = fopen(filename, "r");
+			input_fh = fopen(eh_filename, "r");
 
 			if (NULL == input_fh)
 			{
@@ -840,10 +841,12 @@ int main(int argc, char * argv[])
 				goto open_error;
 			}
 
+			free(eh_filename);
 			continue;
 
 open_error:
-			prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
+			prt_error("Error: Cannot open %s: %s\n", eh_filename, strerror(errno));
+			free(eh_filename);
 			continue;
 		}
 

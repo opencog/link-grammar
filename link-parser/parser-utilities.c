@@ -22,9 +22,54 @@
 #include <malloc.h>
 #endif /* __MINGW32__ */
 #include <errno.h>
+#else
+#include <stdlib.h>
+#endif /* _WIN32 */
+
+#include <malloc.h>
+#include <string.h>
 
 #include "parser-utilities.h"
 
+/**
+ * Expand an initial '~' to home directory.
+ *
+ * @param filename The filename to expand. Its length must be >= 1.
+ * @return A newly-allocated filename, expanded if possible. Freed by caller.
+ *
+ * FIXME Support ~user.
+ */
+char *expand_homedir(const char *filename)
+{
+	if ((filename[0] != '~') || ((filename[1] != '\0') && (filename[1] != '/')))
+		return strdup(filename);
+
+	const char *home;
+#ifdef _WIN32
+	const char *homepath = getenv("HOMEPATH");
+	if ((homepath == NULL) || (homepath[0] == '\0')) return strdup(filename);
+	const char *homedrive = getenv("HOMEPATH");
+
+	home = malloc(strlen(homepath) + strlen(homedrive) + 1);
+	strcpy(home, homedrive);
+	strcat(home, homepath);
+#else
+	home = getenv("HOME");
+	if ((home == NULL) || (home[0] == '\0')) return strdup(filename);
+#endif
+
+	size_t filename_len = strlen(filename);
+	size_t home_len = strlen(home);
+
+	/* -1/+1: Preceding - skip the '~'; following - length of '\0'. */
+	char *eh_filename = malloc(home_len + (-1 + filename_len + 1));
+	memcpy(eh_filename, home, home_len);
+	memcpy(eh_filename + home_len, 1 + filename, -1 + filename_len + 1);
+
+	return eh_filename;
+}
+
+#ifdef _WIN32
 /**
  * Get a line from the console in UTF-8.
  * This function bypasses the code page conversion and reads Unicode

@@ -38,6 +38,7 @@
 #endif
 
 #include "command-line.h"
+#include "parser-utilities.h"
 
 extern Switch default_switches[];
 static const Switch **sorted_names; /* sorted command names */
@@ -213,10 +214,6 @@ static void build_command_list(const Switch ds[])
  * abbreviated up to one character and its argument position also
  * needs a command completion (which is slightly different - no '=' is
  * appended to variables).
- *
- * FIXME: The file completion knows about ~ and ~user. However, I
- * don't know how to force their expanding, so they are not useful
- * for now.
  */
 static unsigned char lg_complete(EditLine *el, int ch)
 {
@@ -314,11 +311,17 @@ static unsigned char lg_complete(EditLine *el, int ch)
 					printf("Error: Unable to process UTF8 in directory name.\n");
 					return CC_ERROR;
 				}
-				char *dirname = malloc(byte_len);
-				wcstombs(dirname, wdirname, byte_len);
+				char *dirname = malloc(byte_len + 1);
+				wcstombs(dirname, wdirname, byte_len + 1);
 				free(wdirname);
-				chdir(dirname);
+				char *eh_dirname = expand_homedir(dirname);
 				free(dirname);
+				int chdir_status = chdir(eh_dirname);
+				free(eh_dirname);
+				if (chdir_status == -1)
+				{
+					*dn_end = L'/';
+				}
 			}
 		}
 #endif
