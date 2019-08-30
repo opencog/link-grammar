@@ -622,6 +622,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	char *s, *x, *y;
 	int count, j;
 	const Switch *as = default_switches;
+	const char helpmsg[] = "Type \"!help\" or \"!variables\".";
 
 	/* Handle a request for a particular command help. */
 	if (NULL != dict)
@@ -654,11 +655,10 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				}
 
 				if (count > 1)
-					prt_error("Ambiguous command: \"%s\".  ", s);
+					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
 				else
-					prt_error("Undefined command: \"%s\".  ", s);
+					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
 
-				prt_error("Type \"!help\" or \"!variables\"\n");
 				return -1;
 			}
 		}
@@ -684,7 +684,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 	if (count > 1)
 	{
-		prt_error("Ambiguous command \"%s\".  Type \"!help\" or \"!variables\"\n", s);
+		prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
 		return -1;
 	}
 	else if (count == 1)
@@ -775,7 +775,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			prt_error("Error: Ambiguous variable \"%s\".  Type \"!help\" or \"!variables\"\n", x);
+			prt_error("Error: Ambiguous variable \"%s\".  %s\n", x, helpmsg);
 			return -1;
 		}
 
@@ -805,7 +805,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			double val = strtod(y, &err);
 			if (('\0' == *y) || ('\0' != *err))
 			{
-				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". %s\n",
+				          y, as[j].string, helpmsg);
 				return -1;
 			}
 
