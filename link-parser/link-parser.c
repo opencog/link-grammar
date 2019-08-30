@@ -714,7 +714,7 @@ int main(int argc, char * argv[])
 			exit(0);
 		}
 
-		if ((strcmp("--quite", argv[i]) == 0) ||
+		if ((strcmp("--quiet", argv[i]) == 0) ||
 		    (strcmp("--silent", argv[i]) == 0))
 		{
 			quiet_start = i;
