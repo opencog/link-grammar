@@ -828,22 +828,24 @@ int main(int argc, char * argv[])
 			struct stat statbuf;
 			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
-				prt_error("Error: Cannot open %s: %s\n",
-				        filename, strerror(EISDIR));
-				continue;
+				errno = EISDIR;
+				goto open_error;
 			}
 
 			input_fh = fopen(filename, "r");
 
 			if (NULL == input_fh)
 			{
-				prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
 				input_fh = stdin;
-				continue;
+				goto open_error;
 			}
+
+			continue;
+
+open_error:
+			prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
 			continue;
 		}
-
 
 		if (!copts->batch_mode) batch_in_progress = false;
 		if ('\0' != test[0])
