@@ -31,6 +31,11 @@
 
 #ifdef HAVE_WIDECHAR_EDITLINE
 #include <stdbool.h>
+#include <fcntl.h>                     // open flags
+#if defined O_DIRECTORY && defined O_PATH
+#include <unistd.h>                    // fchdir
+#include <errno.h>
+#endif
 
 #include "command-line.h"
 
@@ -280,7 +285,55 @@ static unsigned char lg_complete(EditLine *el, int ch)
 
 	if (is_file_command)
 	{
+		/* The code before _el_fn_complete() supports printing the
+		 * completion possibilities without a directory name prefix, as
+		 * normally displayed by most programs. The code after
+		 * _el_fn_complete() restores its temporary changes. */
+#if defined O_DIRECTORY && defined O_PATH
+		wchar_t *dn_end = wcsrchr(word_start, L'/');
+		int cwdfd = -1;
+
+		if (dn_end != NULL)
+		{
+			cwdfd = open(".", O_DIRECTORY|O_PATH);
+			if (cwdfd == -1)
+			{
+				printf("Error: Open current directory: %s\n", strerror(errno));
+			}
+			else
+			{
+				wchar_t *wdirname = wcsdup(word_start);
+				wdirname[dn_end - word_start] = L'\0';
+
+				/* Original buffer is const, but never mind. Restored below. */
+				*dn_end = L' '; /* Not saved - supposing it was L'/' */
+
+				size_t byte_len = wcstombs(NULL, wdirname, 0);
+				if (byte_len == (size_t)-1)
+				{
+					printf("Error: Unable to process UTF8 in directory name.\n");
+					return CC_ERROR;
+				}
+				char *dirname = malloc(byte_len);
+				wcstombs(dirname, wdirname, byte_len);
+				free(wdirname);
+				chdir(dirname);
+				free(dirname);
+			}
+		}
+#endif
+
 		rc = _el_fn_complete(el, ch);
+
+#if defined O_DIRECTORY && defined O_PATH
+		if (cwdfd != -1)
+		{
+			fchdir(cwdfd);
+			close(cwdfd);
+			*dn_end = L'/';
+		}
+#endif
+
 		/* CC_NORM is returned if there is no possible completion. */
 		return (rc == CC_NORM) ? CC_ERROR : rc;
 	}
