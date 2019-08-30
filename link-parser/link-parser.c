@@ -760,11 +760,14 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-	prt_error("Info: Dictionary version %s, locale %s\n",
-		linkgrammar_get_dict_version(dict),
-		linkgrammar_get_dict_locale(dict));
-	prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
-		linkgrammar_get_version());
+	if (verbosity > 0)
+	{
+		prt_error("Info: Dictionary version %s, locale %s\n",
+			linkgrammar_get_dict_version(dict),
+			linkgrammar_get_dict_locale(dict));
+		prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
+			linkgrammar_get_version());
+	}
 
 	/* Main input loop */
 	while (true)
