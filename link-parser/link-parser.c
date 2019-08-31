@@ -816,15 +816,12 @@ int main(int argc, char * argv[])
 		{
 			char *command_end = &input_string[strcspn(input_string, WHITESPACE)];
 			char *filename = &command_end[strspn(command_end, WHITESPACE)];
-			int fnlen = strlen(filename);
-
-			if (0 == fnlen)
+			if (filename[0] == '\0')
 			{
 				prt_error("Error: Missing file name argument\n");
 				continue;
 			}
 
-			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
 			char *eh_filename = expand_homedir(filename);
 
 			struct stat statbuf;
