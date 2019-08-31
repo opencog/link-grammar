@@ -814,7 +814,8 @@ int main(int argc, char * argv[])
 		 * otherwise ... */
 		if ('f' == command)
 		{
-			char * filename = &input_string[strcspn(input_string, WHITESPACE)] + 1;
+			char *command_end = &input_string[strcspn(input_string, WHITESPACE)];
+			char *filename = &command_end[strspn(command_end, WHITESPACE)];
 			int fnlen = strlen(filename);
 
 			if (0 == fnlen)
