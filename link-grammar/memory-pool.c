@@ -184,8 +184,9 @@ void *pool_alloc(Pool_desc *mp)
 				/* aligned_alloc() has strict requirements. */
 				char errbuf[64];
 				lg_strerror(errno, errbuf, sizeof(errbuf));
-				assert(NULL != mp->ring, "Block/element sizes %zu/%zu: %s",
-				       mp->block_size, mp->element_size, errbuf);
+				prt_error("Fatal error: aligned_alloc(%zu, %zu): %s",
+				          mp->block_size, mp->element_size, errbuf);
+				exit(1);
 			}
 			if (NULL == mp->alloc_next)
 				mp->chain = mp->ring; /* This is the start of the chain. */
