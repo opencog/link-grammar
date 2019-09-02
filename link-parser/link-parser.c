@@ -814,36 +814,39 @@ int main(int argc, char * argv[])
 		 * otherwise ... */
 		if ('f' == command)
 		{
-			char * filename = &input_string[strcspn(input_string, WHITESPACE)] + 1;
-			int fnlen = strlen(filename);
-
-			if (0 == fnlen)
+			char *command_end = &input_string[strcspn(input_string, WHITESPACE)];
+			char *filename = &command_end[strspn(command_end, WHITESPACE)];
+			if (filename[0] == '\0')
 			{
 				prt_error("Error: Missing file name argument\n");
 				continue;
 			}
 
-			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
+			char *eh_filename = expand_homedir(filename);
 
 			struct stat statbuf;
-			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
+			if ((0 == stat(eh_filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
-				prt_error("Error: Cannot open %s: %s\n",
-				        filename, strerror(EISDIR));
-				continue;
+				errno = EISDIR;
+				goto open_error;
 			}
 
-			input_fh = fopen(filename, "r");
+			input_fh = fopen(eh_filename, "r");
 
 			if (NULL == input_fh)
 			{
-				prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
 				input_fh = stdin;
-				continue;
+				goto open_error;
 			}
+
+			free(eh_filename);
+			continue;
+
+open_error:
+			prt_error("Error: Cannot open %s: %s\n", eh_filename, strerror(errno));
+			free(eh_filename);
 			continue;
 		}
-
 
 		if (!copts->batch_mode) batch_in_progress = false;
 		if ('\0' != test[0])

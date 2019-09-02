@@ -22,9 +22,73 @@
 #include <malloc.h>
 #endif /* __MINGW32__ */
 #include <errno.h>
+#else
+#include <stdlib.h>
+#include <sys/types.h>
+#include <pwd.h>
+#endif /* _WIN32 */
+
+#include <malloc.h>
+#include <string.h>
 
 #include "parser-utilities.h"
 
+/**
+ * Expand an initial '~' to home directory.
+ *
+ * @param filename The filename to expand. Its length must be >= 1.
+ * @return A newly-allocated filename, expanded if possible. Freed by caller.
+ *
+ * Note: ~user is not supported here on Windows.
+ */
+char *expand_homedir(const char *filename)
+{
+	if (filename[0] != '~') return strdup(filename);
+
+#ifndef _WIN32
+	const char *user = NULL;
+	const char *user_end = &filename[strcspn(filename, "/")];
+	if (user_end != &filename[1])
+		user = strndupa(filename + 1, user_end - filename - 1);
+#endif /* _WIN32 */
+
+	const char *home;
+#ifdef _WIN32
+	const char *homepath = getenv("HOMEPATH");
+	if ((homepath == NULL) || (homepath[0] == '\0')) return strdup(filename);
+	const char *homedrive = getenv("HOMEPATH");
+
+	home = malloc(strlen(homepath) + strlen(homedrive) + 1);
+	strcpy(home, homedrive);
+	strcat(home, homepath);
+#else
+	if (user == NULL)
+	{
+		home = getenv("HOME");
+		if ((home == NULL) || (home[0] == '\0')) return strdup(filename);
+		filename++;
+	}
+	else
+	{
+		struct passwd *pwd;
+		pwd = getpwnam(user);
+		if (pwd == NULL) return strdup(filename);
+		home = pwd->pw_dir;
+		filename = user_end;
+	}
+#endif
+
+	size_t filename_len = strlen(filename);
+	size_t home_len = strlen(home);
+
+	char *eh_filename = malloc(home_len + filename_len + 1);
+	memcpy(eh_filename, home, home_len);
+	memcpy(eh_filename + home_len, filename, filename_len + 1);
+
+	return eh_filename;
+}
+
+#ifdef _WIN32
 /**
  * Get a line from the console in UTF-8.
  * This function bypasses the code page conversion and reads Unicode
