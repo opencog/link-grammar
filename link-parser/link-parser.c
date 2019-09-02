@@ -698,6 +698,8 @@ int main(int argc, char * argv[])
 		language = argv[1];
 	}
 
+	/* Process options used by GNU programs. */
+	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
 	for (int i = 1; i < argc; i++)
 	{
 		if (strcmp("--help", argv[i]) == 0)
@@ -711,11 +713,19 @@ int main(int argc, char * argv[])
 			printf("%s\n", linkgrammar_get_configuration());
 			exit(0);
 		}
+
+		if ((strcmp("--quiet", argv[i]) == 0) ||
+		    (strcmp("--silent", argv[i]) == 0))
+		{
+			quiet_start = i;
+		}
 	}
 
 	/* Process command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
 	{
+		if (i == quiet_start) continue;
+
 		if (argv[i][0] == '-')
 		{
 			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
@@ -760,11 +770,14 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-	prt_error("Info: Dictionary version %s, locale %s\n",
-		linkgrammar_get_dict_version(dict),
-		linkgrammar_get_dict_locale(dict));
-	prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
-		linkgrammar_get_version());
+	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
+	{
+		prt_error("Info: Dictionary version %s, locale %s\n",
+			linkgrammar_get_dict_version(dict),
+			linkgrammar_get_dict_locale(dict));
+		prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
+			linkgrammar_get_version());
+	}
 
 	/* Main input loop */
 	while (true)

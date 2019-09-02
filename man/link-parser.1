@@ -86,7 +86,7 @@ link\-parser \- parse natural language sentences using Link Grammar
 .br
 .nf
 .B link\-parser [\fIlanguage\fP|\fIdict\_location\fP] \
-[\fI\-<special\_"!"\_command>\fP...]
+\fR[\-\-quiet]\fP [\fI\-<special\_"!"\_command>\fP...]
 .fi
 .SH DESCRIPTION
 .PP
@@ -231,6 +231,9 @@ Print usage and exit.
 .TP
 .B \-\-version
 Print program version and configuration details, and exit.
+.TP
+.B \-\-quiet
+Suppress the version messages on startup.
 
 .SS Special "!" commands
 The special "!" commands can be specified as command-line options in the
