@@ -34,6 +34,22 @@ struct Table_connector_s
 	unsigned int     null_count; /* FIXME: eliminate */
 };
 
+typedef uint8_t null_count_m;  /* Storage representation of null_count */
+typedef uint8_t WordIdx_m;     /* Storage representation of word index */
+
+/* Table of ranges [tracon_id, w) that would yield a zero
+ * leftcount/rightcount up to null_count. */
+typedef struct Table_lrcnt_s
+{
+	int tracon_id;
+	WordIdx_m w;
+	null_count_m null_count;
+	unsigned short status;  /* range status flags */
+} Table_lrcnt;
+#define MAX_TABLE_LRCNT_SIZE(s) ((s) * 3 / 4) /* Limit pathological cases */
+#define ANY_NULL_COUNT (MAX_SENTENCE + 1)
+static Table_lrcnt lrcnt_cache_zero; /* A returned sentinel */
+
 struct count_context_s
 {
 	fast_matcher_t *mchxt;
@@ -43,8 +59,11 @@ struct count_context_s
 	bool    exhausted;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
+	unsigned int table_lrcnt_size;
+	unsigned int table_lrcnt_available_count;
 	/* int     log2_table_size; */ /* not unused */
 	Table_connector ** table;
+	Table_lrcnt *table_lrcnt;
 	Resources current_resources;
 };
 
@@ -81,6 +100,109 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	ctxt->table = (Table_connector**)
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
+}
+
+static void free_table_lrcnt(count_context_t *ctxt)
+{
+	if (verbosity_level(+5))
+	{
+		unsigned int table_usage = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size) -
+			ctxt->table_lrcnt_available_count;
+
+		lgdebug(+0, "free_table_lrcnt: Usage %u/%u %.2f%%\n",
+		        table_usage, ctxt->table_lrcnt_size,
+		        100.0f*table_usage / ctxt->table_lrcnt_size);
+	}
+
+	free(ctxt->table_lrcnt);
+	ctxt->table_lrcnt = NULL;
+}
+
+static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
+{
+
+	if (ctxt->table_lrcnt == NULL)
+	{
+		ctxt->table_lrcnt_size =
+			next_power_of_two_up(2048 + sent->num_disjuncts * sent->length / 16);
+		ctxt->table_lrcnt = malloc(ctxt->table_lrcnt_size * sizeof(Table_lrcnt));
+	}
+
+	for (size_t i = 0; i < ctxt->table_lrcnt_size; i++)
+	{
+		ctxt->table_lrcnt[i].tracon_id = -1;
+	}
+	ctxt->table_lrcnt_available_count = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size);
+}
+
+static size_t table_lrcnt_hash(int tracon_id, int cw, int w)
+{
+	unsigned int i = tracon_id;
+	i = cw + (i << 6) + (i << 16) - i;
+	i = w + (i << 6) + (i << 16) - i;
+
+	return i;
+}
+
+static Table_lrcnt *table_lrcnt_store(count_context_t *ctxt, int tracon_id,
+                                    int cw, int w)
+{
+	static Table_lrcnt table_full; /* It may get written never read */
+	if (ctxt->table_lrcnt_available_count == 0) return &table_full;
+
+	const size_t sizemod = ctxt->table_lrcnt_size-1;
+	size_t h = table_lrcnt_hash(tracon_id, cw, w) & sizemod;
+	Table_lrcnt *t = ctxt->table_lrcnt;
+
+	while (t[h].tracon_id != -1)
+	{
+		h = (h+1) & sizemod;
+	}
+
+	ctxt->table_lrcnt_available_count--;
+	t[h].tracon_id = tracon_id;
+	t[h].w = w;
+	t[h].null_count = (null_count_m)-1;
+
+	return &t[h];
+}
+
+static Table_lrcnt *find_table_lrcnt_pointer(count_context_t *ctxt,
+                                           int tracon_id, int cw, int w)
+{
+	static Table_lrcnt table_full =
+	{
+		.null_count = (null_count_m)-1,
+		.status = 1,
+	};
+	/* Disregard caching in case the table is full - this shouldn't happen. */
+	if (ctxt->table_lrcnt_available_count == 0) return &table_full;
+
+	/* Panic mode: Return a parse bypass indication if resources are
+	 * exhausted.  checktimer is a device to avoid a gazillion system calls
+	 * to get the timer value. On circa-2018 machines, it results in
+	 * several timer calls per second. */
+	ctxt->checktimer ++;
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<22)) &&
+	                       (ctxt->current_resources != NULL) &&
+	                       //fprintf(stderr, "T") &&
+	                       resources_exhausted(ctxt->current_resources)))
+	{
+		ctxt->exhausted = true;
+		return &lrcnt_cache_zero;
+	}
+
+	const size_t sizemod = ctxt->table_lrcnt_size-1;
+	size_t h = table_lrcnt_hash(tracon_id, cw, w) & sizemod;
+	Table_lrcnt *t = ctxt->table_lrcnt;
+
+	while (t[h].tracon_id != -1)
+	{
+		if ((t[h].tracon_id == tracon_id) && (t[h].w == w)) return &t[h];
+		h = (h+1) & sizemod;
+	}
+
+	return NULL;
 }
 
 //#define DEBUG_TABLE_STAT
@@ -185,7 +307,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
  */
 static Table_connector * table_store(count_context_t *ctxt,
                                      int lw, int rw,
-                                     Connector *le, Connector *re,
+                                     const Connector *le, const Connector *re,
                                      unsigned int null_count)
 {
 	int l_id = (NULL != le) ? le->tracon_id : lw;
@@ -207,11 +329,13 @@ static Table_connector * table_store(count_context_t *ctxt,
 static Table_connector *
 find_table_pointer(count_context_t *ctxt,
                    int lw, int rw,
-                   Connector *le, Connector *re,
+                   const Connector *le, const Connector *re,
                    unsigned int null_count)
 {
+
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
+
 	unsigned int h = pair_hash(ctxt->table_size, lw, rw, l_id, r_id, null_count);
 	Table_connector *t = ctxt->table[h];
 
@@ -226,23 +350,7 @@ find_table_pointer(count_context_t *ctxt,
 	}
 	DEBUG_TABLE_STAT(miss++);
 
-	/* Create a new connector only if resources are exhausted.
-	 * (???) Huh? I guess we're in panic parse mode in that case.
-	 * checktimer is a device to avoid a gazillion system calls
-	 * to get the timer value. On circa-2017 machines, it results
-	 * in about 0.5-1 timer calls per second.
-	 */
-	ctxt->checktimer ++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<21)) &&
-	                       (ctxt->current_resources != NULL) &&
-	                       resources_exhausted(ctxt->current_resources)))
-	{
-		ctxt->exhausted = true;
-		t = table_store(ctxt, lw, rw, le, re, null_count);
-		t->count = hist_zero();
-		return t;
-	}
-	else return NULL;
+	return NULL;
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
@@ -253,6 +361,78 @@ Count_bin* table_lookup(count_context_t * ctxt,
 	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
 	if (t == NULL) return NULL; else return &t->count;
+}
+
+/**
+ * Cache lookup:
+ * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
+ *
+ * @param ctxt Count context
+ * @param dir Direction - 0: leftcount, 1: rightcount.
+ * @param c The connector that starts the range.
+ * @w The word that ends the range.
+ * @null_count The current null_count to check.
+ * @param cw The word of this connector.
+ *
+ * Return these values:
+ * @param lnull_start First null count to check (the previous ones can be
+ * skipped because the cache indicates they yield a zero count.)
+ * @return Cache entry for the given range. Possible values:
+ *    NULL - A nonzero count may be encountered for null_count>=lnull_start.
+ *    lrcnt_cache_zero - A zero count would result.
+ *    Cache pointer - an update for null_count>=lnull_start is needed.
+ */
+static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
+                              Connector *c, int cw, int w,
+                              unsigned int null_count, unsigned int *null_start)
+{
+	const int rhs_id = 0x40000000;
+	int tracon_id = c->tracon_id | (dir * rhs_id);
+
+	Table_lrcnt *lrcnt_cache = find_table_lrcnt_pointer(ctxt, tracon_id, cw, w);
+
+	if (lrcnt_cache == NULL)
+	{
+		/* Create a cache entry */
+		if (null_start != NULL)
+		{
+			*null_start = 0;
+			lrcnt_cache = table_lrcnt_store(ctxt, tracon_id, cw, w);
+		}
+	}
+	else if (lrcnt_cache->status == 1) /* Must be checked first (XXX) */
+	{
+		/* The range yields a nonzero leftcount/rightcount for some
+		 * null_count. But we can still skip the initial null counts. */
+		if (null_start != NULL)
+			*null_start = (null_count_m)(lrcnt_cache->null_count + 1);
+		lrcnt_cache = NULL; /* No update needed - this is a permanent status */
+	}
+	else if (null_count <= lrcnt_cache->null_count)
+	{
+		/* Here (lrcnt_cache->status == 0) which means our count would
+		 * be zero - so nothing to do for this word. */
+		return &lrcnt_cache_zero;
+	}
+	else
+	{
+		/* The null counts greater than lrcnt_cache->null_count have not
+		 * been handled yet for the given range (the cache will be
+		 * updated for them by lrcnt_cache_update()). */
+		if (null_start == NULL) return NULL;
+		*null_start = (null_count_m)(lrcnt_cache->null_count + 1);
+	}
+
+	return lrcnt_cache;
+}
+
+static void lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
+                              bool match_list, unsigned int null_count)
+{
+	if (!lrcnt_found)
+		lrcnt_cache->null_count = match_list ? null_count : ANY_NULL_COUNT;
+	lrcnt_cache->status = (int)lrcnt_found;
+
 }
 
 #define NO_COUNT -1
@@ -379,7 +559,7 @@ static Count_bin do_count(
 	Table_connector *t;
 
 	/* TODO: static_assert() that null_count is an unsigned int. */
-	assert (null_count < INT_MAX, "Bad null count");
+	assert (null_count < INT_MAX, "Bad null count %d", null_count);
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
@@ -502,11 +682,67 @@ static Count_bin do_count(
 
 	for (w = start_word; w < end_word; w++)
 	{
-		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
+		/* Start of nonzero leftcount/rightcount range cache check. It is
+		 * extremely effective for long sentences, but doesn't speed up
+		 * short ones.
+		 *
+		 * FIXME 1: lrcnt_optimize==false doubles the Table_connector cache!
+		 * Try to fix it by not caching zero counts in Table_connector when
+		 * lrcnt_optimize==false. If this can be fixed, a significant
+		 * speedup is expected.
+		 *
+		 * FIXME 2: Change the lrcnt_cache structure to use one cache entry
+		 * per [connector , word-vector) instead of per [connector, word).
+		 * This will reduce the lookup complexity by O(sent_length).
+		 */
+
+		Table_lrcnt *lrcnt_cache = NULL;
+		bool lrcnt_found = false;     /* TRUE iff a range yielded l/r count */
+		bool lrcnt_optimize = true;   /* Perform l/r count optimization */
+		unsigned int lnull_start = 0; /* First null_count to check */
+		unsigned int lnull_end = null_count; /* Last null_count to check */
+		Connector *fml_re = re;       /* For form_match_list() only */
+
+		if (le != NULL)
+		{
+			lrcnt_cache = is_lrcnt(ctxt, 0, le, lw, w, null_count, &lnull_start);
+			if (lrcnt_cache == &lrcnt_cache_zero) continue;
+
+			if (lrcnt_cache != NULL)
+			{
+				lrcnt_optimize = false;
+			}
+			else if (re != NULL)
+			{
+				/* If it is already known that "re" would yield a zero
+				 * rightcount, there is no need to fetch the right match list.
+				 * The code below will still check for possible l_bnr counts. */
+				Table_lrcnt *rgc = is_lrcnt(ctxt, 1, re, rw, w, null_count, NULL);
+				if (rgc == &lrcnt_cache_zero) fml_re = NULL;
+			}
+		}
+		else if (re != NULL)
+		{
+			unsigned int rnull_start;
+			lrcnt_cache = is_lrcnt(ctxt, 1, re, rw, w, null_count, &rnull_start);
+			if (lrcnt_cache == &lrcnt_cache_zero) continue;
+
+			if (lrcnt_cache != NULL)
+			{
+				lrcnt_optimize = false;
+				if (rnull_start <= null_count)
+					lnull_end = null_count - rnull_start;
+			}
+		}
+		/* End of nonzero leftcount/rightcount range cache check. */
+
+		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
+
 #ifdef VERIFY_MATCH_LIST
 		unsigned int id = get_match_list_element(mchxt, mlb) ?
 		                  get_match_list_element(mchxt, mlb)->match_id : 0;
 #endif
+
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			Disjunct *d = get_match_list_element(mchxt, mle);
@@ -517,7 +753,7 @@ static Count_bin do_count(
 			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
 #endif
 
-			for (unsigned int lnull_cnt = 0; lnull_cnt <= null_count; lnull_cnt++)
+			for (unsigned int lnull_cnt = lnull_start; lnull_cnt <= lnull_end; lnull_cnt++)
 			{
 				int rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the null-counts we're
@@ -598,10 +834,11 @@ static Count_bin do_count(
 					}
 				}
 
-				if (!leftpcount && !rightpcount) continue;
-
 #define COUNT(c, do_count) \
 	{ c = TRACE_LABEL(c, do_count); }
+
+				if (!leftpcount && !rightpcount) continue;
+
 				if (!(leftpcount && rightpcount))
 				{
 					if (leftpcount)
@@ -629,7 +866,7 @@ static Count_bin do_count(
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
 				if (leftpcount &&
-				    (rightpcount || (0 != hist_total(&l_bnr))))
+				    (!lrcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
 					CACHE_COUNT(l_any, leftcount = count,
 						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
@@ -645,6 +882,9 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&leftcount))
 					{
+						lrcnt_found = true;
+						lrcnt_optimize = true;
+
 						/* Evaluate using the left match, but not the right */
 						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
 							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
@@ -652,7 +892,7 @@ static Count_bin do_count(
 				}
 
 				if (rightpcount &&
-				    ((0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
+				    (!lrcnt_optimize || (0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
 				{
 					CACHE_COUNT(r_any, rightcount = count,
 						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
@@ -670,6 +910,9 @@ static Count_bin do_count(
 					{
 						if (le == NULL)
 						{
+							lrcnt_found = true;
+							lrcnt_optimize = true;
+
 							/* Evaluate using the right match, but not the left */
 							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
 								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
@@ -686,6 +929,13 @@ static Count_bin do_count(
 				parse_count_clamp(&total);
 			}
 		}
+
+		if (lrcnt_cache != NULL)
+		{
+			bool match_list = (get_match_list_element(mchxt, mlb) != NULL);
+			lrcnt_cache_update(lrcnt_cache, lrcnt_found, match_list, null_count);
+		}
+
 		pop_match_list(mchxt, mlb);
 	}
 	t->count = total;
@@ -734,6 +984,9 @@ Count_bin do_parse(Sentence sent,
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
 
+	/* Cannot reuse since its content is invalid on an increased null_count. */
+	init_table_lrcnt(ctxt, sent);
+
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
 	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
@@ -773,5 +1026,6 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 	if (NULL == ctxt) return;
 
 	free_table(ctxt);
+	free_table_lrcnt(ctxt);
 	xfree(ctxt, sizeof(count_context_t));
 }
