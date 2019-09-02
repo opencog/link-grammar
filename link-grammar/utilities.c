@@ -12,9 +12,7 @@
 /*************************************************************************/
 
 #include <ctype.h>
-#ifdef HAVE_POSIX_MEMALIGN
 #include <errno.h>
-#endif
 #include <limits.h>
 #ifdef _WIN32
 #define _CRT_RAND_S
@@ -43,6 +41,47 @@
 
 /* ============================================================= */
 /* String utilities */
+
+/* Windows, POSIX and GNU have different ideas about strerror_r().  hence
+ * use our own function that uses the available system function and is
+ * consistent. It doesn't try to mimic exactly any version of
+ * strerror_r(). */
+#ifdef _WIN32
+void lg_strerror(int err_no, char *buf, size_t len)
+{
+	return strerror_s(buf, len, err_no);
+}
+#else
+#if HAVE_STRERROR_R
+
+#if STRERROR_R_CHAR_P
+/* Using the GNU version. */
+void lg_strerror(int err_no, char *buf, size_t len)
+{
+	char *errstr = strerror_r(err_no, buf, len);
+	strncpy(buf, errstr, len);
+	buf[len-1] = '\0';
+}
+#else /* !STRERROR_R_CHAR_P */
+/* Using the XSI version. */
+void lg_strerror(int err_no, char *buf, size_t len)
+{
+	errno = 0;
+	if ((strerror_r(err_no, buf, len) == EINVAL) || (errno == EINVAL))
+		snprintf(buf, len, "Unknown error %d", err_no);
+}
+#endif /* STRERROR_R_CHAR_P */
+
+#else /* !STRERROR_R */
+/* No strerror_r()??? No thread-safe error message - use a workaround.
+ * (FIXME Could check if threads are not supported and use strerror(),
+ * else protect strerror().) */
+void lg_strerror(int err_no, char *buf, size_t len)
+{
+	snprintf(buf, len, "Error %d", err_no);
+}
+#endif /* STRERROR_R */
+#endif /* _WIN32 */
 
 char *safe_strdup(const char *u)
 {
