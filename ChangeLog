@@ -2,6 +2,7 @@ Version 5.7.0 (XXX 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.
  * Incompatible change to the Exp traversal API.
  * Remove the obsolete and unsupported "corpus statistics" code.
+ * Major performance improvement (3x-4x) for long sentences. #996
 
 Version 5.6.2 (24 June 2019)
  * Bug-fix the SQL-backed dictionary.
