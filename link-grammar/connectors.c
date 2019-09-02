@@ -62,15 +62,14 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 	Connector *c;
 
 	if (NULL == connector_pool) /* For the SAT-parser, until fixed. */
+	{
 		c = xalloc(sizeof(Connector));
+		memset(c, 0, sizeof(Connector));
+	}
 	else
-		c = pool_alloc(connector_pool);
+		c = pool_alloc(connector_pool); /* Memory-pool has zero_out attribute.*/
 
 	c->desc = desc;
-	c->nearest_word = 0;
-	c->multi = false;
-	c->tracon_id = 0;
-	c->originating_gword = NULL;
 	set_connector_length_limit(c, opts);
 	//assert(0 != c->length_limit, "Connector_new(): Zero length_limit");
 

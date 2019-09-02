@@ -110,7 +110,7 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 	sent->Connector_pool = pool_new(__func__, "Connector",
 	                   /*num_elements*/8192, sizeof(Connector),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	                   /*zero_out*/true, /*align*/false, /*exact*/false);
 
 	for (w = 0; w < sent->length; w++)
 	{
