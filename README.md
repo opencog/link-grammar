@@ -387,6 +387,7 @@ Tools that may need installation before you can build link-grammar:
 `gcc` or `clang`<br>
 `gcc-c++` or `clang++` (for the SAT solver)<br>
 `autoconf`<br>
+`libtool`<br>
 `autoconf-archive`<br>
 `pkg-config`<br>
 
