@@ -241,6 +241,7 @@ be without it altogether. The library names may be without the prefix `lib`.
 
 `libsqlite3-dev` (for SQLite-backed dictionary)<br>
 `minisat2` (for the SAT solver)<br>
+`libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
 `libedit-dev` (see [Editline](#Editline))<br>
 `hunspell-devel` or `aspell-devel` (and the corresponding English dictionary).<br>
 `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
