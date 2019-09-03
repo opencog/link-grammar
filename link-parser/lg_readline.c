@@ -331,7 +331,13 @@ static unsigned char lg_complete(EditLine *el, int ch)
 #if defined O_DIRECTORY && defined O_PATH
 		if (cwdfd != -1)
 		{
-			fchdir(cwdfd);
+			if (fchdir(cwdfd) < 0)
+			{
+				/* This shouldn't happen, unless maybe the directory to which
+				 * cwdfd reveres becomes unreadable after cwdfd is created. */
+				printf("\nfchdir(): Cannot change directory back: %s\n",
+				       strerror(errno));
+			}
 			close(cwdfd);
 			*dn_end = L'/';
 		}
