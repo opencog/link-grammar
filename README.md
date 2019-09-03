@@ -390,6 +390,7 @@ Tools that may need installation before you can build link-grammar:
 `libtool`<br>
 `autoconf-archive`<br>
 `pkg-config`<br>
+`pip` and/or `pip3` (for the Python bindings)<br>
 
 Optional:<br>
 `swig` (for language bindings)<br>
