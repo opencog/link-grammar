@@ -90,6 +90,7 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 /* Compatibility definitions. */
+#define restrict __restrict
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
