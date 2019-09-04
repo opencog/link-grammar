@@ -58,10 +58,12 @@ char *expand_homedir(const char *filename)
 	const char *homepath = getenv("HOMEPATH");
 	if ((homepath == NULL) || (homepath[0] == '\0')) return strdup(filename);
 	const char *homedrive = getenv("HOMEDRIVE");
+	if (homedrive == NULL) homedrive = "";
 
 	home = malloc(strlen(homepath) + strlen(homedrive) + 1);
 	strcpy(home, homedrive);
 	strcat(home, homepath);
+	filename++;
 #else
 	const char *home;
 
