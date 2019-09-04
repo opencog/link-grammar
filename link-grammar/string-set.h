@@ -19,6 +19,9 @@
 #include "api-types.h"
 #include "const-prime.h"
 #include "lg_assert.h"
+#ifdef _WIN32
+#include "utilities.h"                  // ssize_t
+#endif
 
 #define STR_POOL
 #define MEM_POOL_INIT (8*1024)
