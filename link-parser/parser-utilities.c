@@ -52,16 +52,19 @@ char *expand_homedir(const char *filename)
 		user = strndupa(filename + 1, user_end - filename - 1);
 #endif /* _WIN32 */
 
-	const char *home;
 #ifdef _WIN32
+	char *home;
+
 	const char *homepath = getenv("HOMEPATH");
 	if ((homepath == NULL) || (homepath[0] == '\0')) return strdup(filename);
-	const char *homedrive = getenv("HOMEPATH");
+	const char *homedrive = getenv("HOMEDRIVE");
 
 	home = malloc(strlen(homepath) + strlen(homedrive) + 1);
 	strcpy(home, homedrive);
 	strcat(home, homepath);
 #else
+	const char *home;
+
 	if (user == NULL)
 	{
 		home = getenv("HOME");
