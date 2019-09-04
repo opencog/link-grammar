@@ -241,8 +241,9 @@ be without it altogether. The library names may be without the prefix `lib`.
 
 `libsqlite3-dev` (for SQLite-backed dictionary)<br>
 `minisat2` (for the SAT solver)<br>
+`libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
 `libedit-dev` (see [Editline](#Editline))<br>
-`hunspell-devel` or `aspell-devel` (and the corresponding English dictionary).<br>
+`libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
 `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
 implementation, but needed for correctness on FreeBSD and Cygwin)
 
@@ -386,8 +387,10 @@ Tools that may need installation before you can build link-grammar:
 `gcc` or `clang`<br>
 `gcc-c++` or `clang++` (for the SAT solver)<br>
 `autoconf`<br>
+`libtool`<br>
 `autoconf-archive`<br>
 `pkg-config`<br>
+`pip` and/or `pip3` (for the Python bindings)<br>
 
 Optional:<br>
 `swig` (for language bindings)<br>

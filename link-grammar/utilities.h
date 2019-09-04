@@ -58,19 +58,6 @@ void *alloca (size_t);
 #endif /* _MSC_VER */
 #endif /* !TLS */
 
-/* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
-#ifdef _WIN32
-#define lg_strerror_r(errno, buf, len) strerror_s(buf, len, errno)
-#else
-#if STRERROR_R_CHAR_P /* Set by "configure". */
-/* Emulate the POSIX version; assuming len>0 and a successful call. */
-#define lg_strerror_r(errno, buf, len) \
-	abs((strncpy(buf, strerror_r(errno, buf, len), len), buf[len-1] = '\0', 0))
-#else
-#define lg_strerror_r strerror_r
-#endif /* STRERROR_R_CHAR_P */
-#endif /* _WIN32 */
-
 #ifdef _MSC_VER
 /* These definitions are incorrect, as these functions are different(!)
  * (non-standard functionality).
@@ -157,6 +144,8 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
  * Since it is defined to return TRUE only on 6 characters, all of which
  * are in the range [0..127], just limit its arguments to 7 bits. */
 #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
+
+void lg_strerror(int err_no, char *buf, size_t len);
 
 #if defined(__sun__)
 int strncasecmp(const char *s1, const char *s2, size_t n);

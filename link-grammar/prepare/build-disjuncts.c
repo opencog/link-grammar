@@ -382,7 +382,7 @@ static const char *stringify_Exp_type(Exp_type type)
 
 static bool is_ASAN_uninitialized(uintptr_t a)
 {
-	static const uintptr_t asan_uninitialized = 0xbebebebebebebebe;
+	static const uintptr_t asan_uninitialized = (uintptr_t)0xbebebebebebebebeULL;
 
 	return (a == asan_uninitialized);
 }
