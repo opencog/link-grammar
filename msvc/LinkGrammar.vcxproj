@@ -286,6 +286,7 @@
     <ClInclude Include="..\link-grammar\tokenize\tokenize.h" />
     <ClInclude Include="..\link-grammar\tokenize\word-structures.h" />
     <ClInclude Include="..\link-grammar\tokenize\wordgraph.h" />
+    <ClInclude Include="..\link-grammar\tracon-set.h" />
     <ClInclude Include="..\link-grammar\utilities.h" />
     <ClInclude Include="link-grammar\link-features.h" />
   </ItemGroup>
@@ -338,6 +339,7 @@
     <ClCompile Include="..\link-grammar\tokenize\tokenize.c" />
     <ClCompile Include="..\link-grammar\tokenize\wg-display.c" />
     <ClCompile Include="..\link-grammar\tokenize\wordgraph.c" />
+    <ClCompile Include="..\link-grammar\tracon-set.c" />
     <ClCompile Include="..\link-grammar\utilities.c" />
   </ItemGroup>
   <ItemGroup>
