@@ -472,7 +472,7 @@ static void batch_process_some_linkages(Label label,
  * If input_string is !command, try to issue it.
  */
 
-static char special_command(char *input_string, Command_Options* copts, Dictionary dict)
+static int special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
 	if (input_string[0] == COMMENT_CHAR) return 'c';
 	if (input_string[0] == '!')
@@ -818,7 +818,7 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, WHITESPACE) == strlen(input_string))
 			continue;
 
-		char command = special_command(input_string, copts, dict);
+		int command = special_command(input_string, copts, dict);
 		if ('e' == command) break;    /* It was an exit command */
 		if ('c' == command) continue; /* It was another command */
 		if (-1 == command) continue;  /* It was a bad command */
