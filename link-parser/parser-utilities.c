@@ -43,10 +43,13 @@ char *expand_homedir(const char *filename)
 	if (filename[0] != '~') return strdup(filename);
 
 #ifndef _WIN32
-	const char *user = NULL;
+	char *user = NULL;
 	const char *user_end = &filename[strcspn(filename, "/")];
 	if (user_end != &filename[1])
-		user = strndupa(filename + 1, user_end - filename - 1);
+	{
+		user = strdup(filename + 1);
+		user[user_end - filename - 1] = '\0';
+	}
 #endif /* _WIN32 */
 
 #ifdef _WIN32
@@ -74,6 +77,7 @@ char *expand_homedir(const char *filename)
 	{
 		struct passwd *pwd;
 		pwd = getpwnam(user);
+		free(user);
 		if (pwd == NULL) return strdup(filename);
 		home = pwd->pw_dir;
 		filename = user_end;
