@@ -18,17 +18,14 @@
 #include <fcntl.h>
 #include <io.h>
 #include <shellapi.h>                    /* CommandLineToArgvW() */
-#ifdef __MINGW32__
-#include <malloc.h>
-#endif /* __MINGW32__ */
 #include <errno.h>
+#include <malloc.h>
 #else
 #include <stdlib.h>
 #include <sys/types.h>
 #include <pwd.h>
 #endif /* _WIN32 */
 
-#include <malloc.h>
 #include <string.h>
 
 #include "parser-utilities.h"
