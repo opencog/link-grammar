@@ -22,24 +22,24 @@
     <ProjectGuid>{0A6C539A-3140-48BD-865C-05F45637B93B}</ProjectGuid>
     <RootNamespace>LinkGrammar</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
@@ -286,6 +286,7 @@
     <ClInclude Include="..\link-grammar\tokenize\tokenize.h" />
     <ClInclude Include="..\link-grammar\tokenize\word-structures.h" />
     <ClInclude Include="..\link-grammar\tokenize\wordgraph.h" />
+    <ClInclude Include="..\link-grammar\tracon-set.h" />
     <ClInclude Include="..\link-grammar\utilities.h" />
     <ClInclude Include="link-grammar\link-features.h" />
   </ItemGroup>
@@ -338,6 +339,7 @@
     <ClCompile Include="..\link-grammar\tokenize\tokenize.c" />
     <ClCompile Include="..\link-grammar\tokenize\wg-display.c" />
     <ClCompile Include="..\link-grammar\tokenize\wordgraph.c" />
+    <ClCompile Include="..\link-grammar\tracon-set.c" />
     <ClCompile Include="..\link-grammar\utilities.c" />
   </ItemGroup>
   <ItemGroup>

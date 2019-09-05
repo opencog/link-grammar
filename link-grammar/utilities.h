@@ -90,6 +90,7 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 /* Compatibility definitions. */
+#define restrict __restrict
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
@@ -456,7 +457,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 #endif
 
-size_t lg_strlcpy(char * dest, const char *src, size_t size);
+size_t lg_strlcpy(char * restrict dst, const char * restrict src, size_t dsize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
 

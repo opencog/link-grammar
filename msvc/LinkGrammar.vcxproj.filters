@@ -162,6 +162,9 @@
     <ClCompile Include="..\link-grammar\memory-pool.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\tracon-set.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-grammar\api-structures.h">
@@ -330,6 +333,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="link-grammar\link-features.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\tracon-set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

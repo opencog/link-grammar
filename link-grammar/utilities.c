@@ -49,7 +49,8 @@
 #ifdef _WIN32
 void lg_strerror(int err_no, char *buf, size_t len)
 {
-	return strerror_s(buf, len, err_no);
+	if (strerror_s(buf, len, err_no) != 0)
+		strerror_s(buf, len, errno); /* errno got set by previous strerror_s() */
 }
 #else
 #if HAVE_STRERROR_R

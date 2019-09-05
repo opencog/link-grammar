@@ -179,7 +179,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	} else if (nwords >= 10) {
 		log2_table_size = 14 + nwords / 24;
 	} else if (nwords >= 4) {
-		log2_table_size = 1 + 1.5 * nwords;
+		log2_table_size = 1 + nwords + nwords / 2;
 	} else {
 		log2_table_size = 5;
 	}
