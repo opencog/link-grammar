@@ -186,7 +186,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 
 const char *lg_exp_stringify(const Exp *n)
 {
-	static char *e_str;
+	static TLS char *e_str;
 
 	if (e_str != NULL) free(e_str);
 	if (n == NULL)
