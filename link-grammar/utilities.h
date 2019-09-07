@@ -85,7 +85,7 @@ void *alloca (size_t);
 #define HAVE_LOCALE_T 1
 #endif /* HAVE_LOCALE_T_IN_LOCALE_H || HAVE_LOCALE_T_IN_XLOCALE_H) */
 
-#ifdef __cplusplus
+#if defined _MSC_VER || defined __cplusplus
 /* "restrict" is not a part of ISO C++.
  * C++ compilers usually know it as __restrict. */
 #define restrict __restrict
