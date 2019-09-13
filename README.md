@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.6.2***
+***Version 5.7.0***
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -184,7 +184,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.6.2.tar.gz.asc`
+`gpg --verify link-grammar-5.7.0.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -199,7 +199,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.6.2
+git tag -v link-grammar-5.7.0
 ```
 
 

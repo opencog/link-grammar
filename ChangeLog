@@ -1,4 +1,4 @@
-Version 5.7.0 (XXX 2019)
+Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.
  * Incompatible change to the Exp traversal API.
  * Remove the obsolete and unsupported "corpus statistics" code.
