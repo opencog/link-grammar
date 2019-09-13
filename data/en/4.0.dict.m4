@@ -6804,7 +6804,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % XXX TODO: most preps below need this rule.
 <alter-preps>: MJrj- or MJlj+;
 
-% Statements begining with a locative.
+% Statements beginning with a locative.
 % "Under the tree." "On the right." "During the show."
 <locative>: {EP-} & dWl- & J+;
 

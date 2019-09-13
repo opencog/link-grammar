@@ -315,7 +315,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		saved_memblock = save_disjuncts(sent, ts_pruning);
 	}
 
-	print_time(opts, "Encode for pruning%s%s",
+	print_time(opts, "Encoded for pruning%s%s",
 	           (NULL == ts_pruning->tracon_list) ? " (skipped)" : "",
 	           (one_step_parse) ? " (one-step)" : "");
 
@@ -340,7 +340,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
 			ts_parsing = pack_sentence_for_parsing(sent, dcnt, ccnt, ts_parsing,
 			                                       more_pruning_possible);
-			print_time(opts, "Encode for parsing%s",
+			print_time(opts, "Encoded for parsing%s",
 							  share_count_context ? " (incr)" : "");
 
 			if (!more_pruning_possible)

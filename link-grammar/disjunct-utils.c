@@ -738,7 +738,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 						 * earlier. Because the nearest word is different, we
 						 * cannot share it. (Such shallow and deep tracons could
 						 * be shared separately, but because this is a rare
-						 * event there is no need to do that.)
+						 * event there is no benefit to do that.)
 						 * Note:
 						 * In case the parsing ever depends on other Connector
 						 * fields, their will be a need to add a check for them
