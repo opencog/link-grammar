@@ -46,7 +46,7 @@ static size_t align_size(size_t element_size)
  * 2. Save the given parameters in the pool descriptor, to be used by
  *    pool_alloc();
  * 3. Chain the pool descriptor to the given pool_list, so it can be
- *    automatically freed.
+ *    automatically freed. [ Not implemented. ]
  */
 Pool_desc *pool_new(const char *func, const char *name,
                     size_t num_elements, size_t element_size,

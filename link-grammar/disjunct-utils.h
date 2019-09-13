@@ -34,18 +34,18 @@ struct Disjunct_struct
 	gword_set *originating_gword; /* Set of originating gwords */
 	const char *word_string;      /* Subscripted dictionary word */
 
-	/* Shared by different steps. | For what and when. */
+	/* Shared by different steps. For what | when. */
 	union
 	{
-		Disjunct *dup_table_next; /* Duplicate elimination - before pruning */
-		Disjunct *old;            /* Old disjuncts - before parsing */
+		Disjunct *dup_table_next; /* Duplicate elimination | before pruning */
+		Disjunct *old;            /* Old disjuncts | before parsing */
 	}; /* 8 bytes */
 
-	/* Shared by different steps. | For what and when. */
+	/* Shared by different steps. For what | when. */
 	union
 	{
-		uint32_t dup_hash;        /* Duplicate elimination - before pruning */
-		uint32_t ordinal;         /* Old disjuncts - before and during parsing */
+		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
+		uint32_t ordinal;         /* Old disjuncts | before and during parsing */
 	}; /* 4 bytes */
 
 	struct

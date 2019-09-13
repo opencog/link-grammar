@@ -75,7 +75,7 @@ struct multiset_table_s
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
-	unsigned int null_links; /* Maximum number of null links plus 1. */
+	unsigned int null_links; /* Maximum number of null links. */
 	int power_cost;
 	int N_changed;   /* counts the number of changes
 						   of c->nearest_word fields in a pass */
