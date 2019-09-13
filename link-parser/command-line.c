@@ -787,7 +787,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if ((0 == strcasecmp(y, "true")) || (0 == strcasecmp(y, "t"))) val = 1;
 			if ((0 == strcasecmp(y, "false")) || (0 == strcasecmp(y, "f"))) val = 0;
 
-			if ((as[j].param_type == Bool) && (val != 0) && (val != 1))
+			if ((val < 0) ||
+			    ((as[j].param_type == Bool) && (val != 0) && (val != 1)))
 			{
 				prt_error("Error: Invalid value %s for variable \"%s\". %s\n",
 				          y, as[j].string, helpmsg);
