@@ -145,7 +145,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 		if (en == exp_num_con) break;
 
 		if (econlist[en]->uc_num != sdesc[cn]->uc_num) continue;
-		restart_cn = cn+1;
+		restart_cn = cn;
 
 		const char *wc_str = econlist[en]->string;
 		char *uc_wildcard = strchr(wc_str, LENGTH_LINIT_WILD_TYPE);
