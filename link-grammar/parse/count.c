@@ -559,7 +559,7 @@ static Count_bin do_count(
 	Table_connector *t;
 
 	/* TODO: static_assert() that null_count is an unsigned int. */
-	assert (null_count < INT_MAX, "Bad null count %d", null_count);
+	assert (null_count < INT_MAX, "Bad null count %d", (int)null_count);
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 

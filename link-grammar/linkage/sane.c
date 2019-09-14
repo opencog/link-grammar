@@ -288,7 +288,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	Wordgraph_pathpos *wpp;
 	Gword **next; /* next Wordgraph words of the current word */
 	size_t i;
-	size_t null_count_found = 0;
+	unsigned int null_count_found = 0;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
 	Gword **lwg_path;
@@ -372,7 +372,7 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 				if ((null_count_found > lkg->sent->null_count) &&
 				    (lkg->sent->null_count != sent->length-1))
 				{
-					lgdebug(D_SLM, " (Extra, count > %zu)\n", lkg->sent->null_count);
+					lgdebug(D_SLM, " (Extra, count > %u)\n", lkg->sent->null_count);
 					match_found = false;
 					break;
 				}
@@ -447,13 +447,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 	 * count when islands_ok=0. */
 	if (match_found)
 	{
-		size_t count_found =
+		unsigned int count_found =
 			opts->islands_ok ? num_islands(lkg, wpp->path) : null_count_found;
 
 		if ((count_found != lkg->sent->null_count) &&
 		    (lkg->sent->null_count != sent->length-1) && (count_found != sent->length))
 		{
-			lgdebug(D_SLM, "Null count mismatch: Found %zu != null_count %zu\n",
+			lgdebug(D_SLM, "Null count mismatch: Found %u != null_count %u\n",
 					  count_found, lkg->sent->null_count);
 			match_found = false;
 		}

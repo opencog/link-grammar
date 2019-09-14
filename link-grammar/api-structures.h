@@ -162,7 +162,7 @@ struct Sentence_s
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
 	size_t num_valid_linkages;  /* Number with no pp violations */
-	size_t null_count;          /* Number of null links in linkages */
+	unsigned int null_count;    /* Number of null links in linkages */
 	Linkage        lnkages;     /* Sorted array of valid & invalid linkages */
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;

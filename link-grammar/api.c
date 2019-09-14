@@ -516,7 +516,7 @@ int sentence_length(Sentence sent)
 int sentence_null_count(Sentence sent)
 {
 	if (!sent) return 0;
-	return sent->null_count;
+	return (int)sent->null_count;
 }
 
 int sentence_num_linkages_found(Sentence sent)
@@ -621,7 +621,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
-		prt_error("Warning: Combinatorial explosion! nulls=%zu cnt=%d\n"
+		prt_error("Warning: Combinatorial explosion! nulls=%u cnt=%d\n"
 			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
 			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);

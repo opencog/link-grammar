@@ -727,7 +727,7 @@ static bool is_bad(Connector *c)
  *  tracon_id field.
  */
 static int power_prune(Sentence sent, power_table *pt,
-                       int null_count, Parse_Options opts)
+                       unsigned int null_count, Parse_Options opts)
 {
 	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
@@ -824,13 +824,13 @@ static int power_prune(Sentence sent, power_table *pt,
 
 	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
 
-	print_time(opts, "power pruned (for %d null%s)",
+	print_time(opts, "power pruned (for %u null%s)",
 	           null_count, (null_count != 1) ? "s" : "");
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
-		prt_error("Debug: After power_pruning (null_count=%d):\n\\",
-		          opts->min_null_count);
+		prt_error("Debug: After power_pruning (for %u null%s, sent->null_count %u):\n\\",
+		          null_count, (null_count != 1) ? "s" : "", pc.sent->null_count);
 		print_disjunct_counts(sent);
 	}
 
