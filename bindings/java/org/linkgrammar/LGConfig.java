@@ -24,7 +24,6 @@ public class LGConfig
 	private double maxCost = -1.0;
 	private boolean storeConstituentString = false;
 	private boolean storeDiagramString = false;
-	private boolean storeSense = false;
 
 	public int getMaxLinkages()
 	{
@@ -66,14 +65,5 @@ public class LGConfig
 	public void setStoreDiagramString(boolean s)
 	{
 		storeDiagramString = s;
-	}
-
-	public boolean isStoreSense()
-	{
-		return storeSense;
-	}
-	public void setStoreSense(boolean s)
-	{
-		storeSense = s;
 	}
 }
