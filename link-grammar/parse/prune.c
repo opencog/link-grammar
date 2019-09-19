@@ -727,23 +727,17 @@ static bool is_bad(Connector *c)
  *  pass by marking their connectors with the pass number in their
  *  tracon_id field.
  */
-static int power_prune(Sentence sent, power_table *pt,
-                       unsigned int null_count, Parse_Options opts)
+static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 {
-	prune_context pc;
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
 
-	pc.pt = pt;
-	pc.power_cost = 0;
-	pc.null_links = null_count;
-	pc.N_changed = 1;  /* forces it always to make at least two passes */
-	pc.sent = sent;
-	pc.pass_number = 0;
+	power_table *pt = pc->pt;
+	pc->N_changed = 1;      /* forces it always to make at least two passes */
 
 	while (1)
 	{
-		pc.pass_number++;
+		pc->pass_number++;
 
 		/* left-to-right pass */
 		for (WordIdx w = 0; w < sent->length; w++)
@@ -759,7 +753,7 @@ static int power_prune(Sentence sent, power_table *pt,
 				}
 
 				bool bad = is_bad(d->left);
-				if (bad || left_connector_list_update(&pc, d->left, w, true) < 0)
+				if (bad || left_connector_list_update(pc, d->left, w, true) < 0)
 				{
 					mark_jet_for_dequeue(d->left, true);
 					mark_jet_for_dequeue(d->right, false);
@@ -770,7 +764,7 @@ static int power_prune(Sentence sent, power_table *pt,
 					continue;
 				}
 
-				mark_jet_as_good(d->left, pc.pass_number);
+				mark_jet_as_good(d->left, pc->pass_number);
 				dd = &d->next; /* NEXT */
 			}
 
@@ -779,10 +773,10 @@ static int power_prune(Sentence sent, power_table *pt,
 
 		total_deleted += N_deleted[0] + N_deleted[1];
 		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n",
-		        pc.N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
 
-		if (pc.N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc.N_changed = N_deleted[0] = N_deleted[1] = 0;
+		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
+		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
 
 		/* right-to-left pass */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
@@ -797,7 +791,7 @@ static int power_prune(Sentence sent, power_table *pt,
 				}
 
 				bool bad = is_bad(d->right);
-				if (bad || right_connector_list_update(&pc, d->right, w, true) >= sent->length)
+				if (bad || right_connector_list_update(pc, d->right, w, true) >= sent->length)
 				{
 					mark_jet_for_dequeue(d->right, true);
 					mark_jet_for_dequeue(d->left, false);
@@ -808,7 +802,7 @@ static int power_prune(Sentence sent, power_table *pt,
 					continue;
 				}
 
-				mark_jet_as_good(d->right, pc.pass_number);
+				mark_jet_as_good(d->right, pc->pass_number);
 				dd = &d->next; /* NEXT */
 			}
 
@@ -817,21 +811,21 @@ static int power_prune(Sentence sent, power_table *pt,
 
 		total_deleted += N_deleted[0] + N_deleted[1];
 		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n",
-		        pc.N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
 
-		if (pc.N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc.N_changed = N_deleted[0] = N_deleted[1] = 0;
+		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
+		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
 
-	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc.power_cost);
+	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc->power_cost);
 
 	print_time(opts, "power pruned (for %u null%s)",
-	           null_count, (null_count != 1) ? "s" : "");
+	           pc->null_links, (pc->null_links != 1) ? "s" : "");
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
 		prt_error("Debug: After power_pruning (for %u null%s, sent->null_count %u):\n\\",
-		          null_count, (null_count != 1) ? "s" : "", pc.sent->null_count);
+		          pc->null_links, (pc->null_links != 1) ? "s" : "", pc->sent->null_count);
 		print_disjunct_counts(sent);
 	}
 
@@ -1340,12 +1334,18 @@ void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
                         unsigned int null_count, Parse_Options opts,
                         unsigned int *ncu[2])
 {
+	prune_context pc = {0};
 	power_table pt;
+
 	power_table_init(sent, ts, &pt);
 
-	power_prune(sent, &pt, null_count, opts);
+	pc.sent = sent;
+	pc.pt = &pt;
+	pc.null_links = null_count;
+
+	power_prune(sent, &pc, opts);
 	if (pp_prune(sent, ts, opts) > 0)
-		power_prune(sent, &pt, null_count, opts);
+		power_prune(sent, &pc, opts);
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
 	 * additional deletions are very rare and even then most of the
