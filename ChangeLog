@@ -1,3 +1,6 @@
+Version 5.7.1 (XXX 2019)
+ * Java bindings: Remove the obsolete senses API.
+
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.
  * Incompatible change to the Exp traversal API.
