@@ -703,6 +703,29 @@ static bool is_bad(Connector *c)
 	return false;
 }
 
+/**
+ * Count null words and mark their location.
+ * Optional words are not checked, as they cannot contribute to the null
+ * word count.
+ *
+ * If word w is a new null word, mark its location in pc->is_null_word and
+ * increment pc->null_word.
+ * @return \c true iff a new null word increases the count to be over the
+ * requested maximum pc->null_links.
+ */
+static bool check_null_word(prune_context *pc, int w)
+{
+	Word *word = &pc->sent->word[w];
+
+	if ((word->d == NULL) && !word->optional && !pc->is_null_word[w])
+	{
+		pc->null_words++;
+		pc->is_null_word[w] = true;
+		if (pc->null_words > pc->null_links) return true;
+	}
+	return false;
+}
+
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
  *  Normally tracons are memory shared (with the exception that
@@ -732,18 +755,18 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 {
 	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
-
+	bool extra_null_word = false;
 	power_table *pt = pc->pt;
+
 	pc->N_changed = 1;      /* forces it always to make at least two passes */
 
-	while (1)
+	do
 	{
 		pc->pass_number++;
 
 		/* left-to-right pass */
 		for (WordIdx w = 0; w < sent->length; w++)
 		{
-
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
 				Disjunct *d = *dd; /* just for convenience */
@@ -769,6 +792,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 				dd = &d->next; /* NEXT */
 			}
 
+			if (check_null_word(pc, w)) extra_null_word = true;
 			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
@@ -807,6 +831,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 				dd = &d->next; /* NEXT */
 			}
 
+			if (check_null_word(pc, w)) extra_null_word = true;
 			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
@@ -817,9 +842,11 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
 		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
+	while (!extra_null_word);
 
-	print_time(opts, "power pruned (for %u null%s)",
-	           pc->null_links, (pc->null_links != 1) ? "s" : "");
+	print_time(opts, "power pruned (for %u null%s%s)",
+	           pc->null_links, (pc->null_links != 1) ? "s" : "",
+	           extra_null_word ? ", extra null" : "");
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
@@ -849,6 +876,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	}
 #endif
 
+	if (extra_null_word) return -1;
 	return total_deleted;
 }
 
@@ -1341,6 +1369,8 @@ void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	pc.sent = sent;
 	pc.pt = &pt;
 	pc.null_links = null_count;
+	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
+	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
 	power_prune(sent, &pc, opts);
 	if (pp_prune(sent, ts, opts) > 0)
