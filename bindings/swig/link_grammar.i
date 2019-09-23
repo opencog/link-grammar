@@ -161,7 +161,7 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
    if (Py_None == $input)
       SWIG_exception_fail(SWIG_TypeError, "in method '_py_error_default_handler', argument 1 (of type lg_errinfo *) must not be None.");
 
-   int res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_lg_errinfo, 0);
+   int res1 = SWIG_ConvertPtr($input, &argp1,SWIGTYPE_p_lg_errinfo, 0);
    if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '_py_error_default_handler', argument 1 of type 'lg_errinfo *'");
    }
