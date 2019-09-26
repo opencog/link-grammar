@@ -722,6 +722,11 @@ static bool is_bad(Connector *c)
  *  further check. Each tracon is handled only once in the same main loop
  *  pass by marking their connectors with the pass number in their
  *  prune_pass field.
+ *
+ *  Null words (words w/o disjuncts) are detected on the fly (the initial
+ *  ones are detected on the first pass). When the number of the null
+ *  words indicates there will be no parse with the given pc->null_links,
+ *  return -1. Else return the number of discarded disjuncts.
  */
 static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 {
