@@ -275,22 +275,27 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	max_null_count = (unsigned int)MIN(max_null_count, sent->length);
 	bool one_step_parse = (unsigned int)opts->min_null_count != max_null_count;
 	int max_prune_level = (int)max_null_count;
+	bool optimize_pruning = true; /* Perform pruning null count optimization. */
 
 	unsigned int *ncu[2];
 	ncu[0] = alloca(sent->length * sizeof(*ncu[0]));
 	ncu[1] = alloca(sent->length * sizeof(*ncu[1]));
 
-	if (opts->islands_ok) max_prune_level = 0; /* Cannot optimize for > 0. */
+	/* Null-count optimization not implemented for islands_ok==true. */
+	if (opts->islands_ok)
+		optimize_pruning = false;
 
-	/* The special pruning per null-count is costly for sentences whose
-	 * parsing takes tens of milliseconds or so. To solve that problem, the
-	 * check below starts to do that from a certain sentence length only. */
+	/* Pruning per null-count and one-step-parse are costly for sentences
+	 * whose parsing takes tens of milliseconds or so. Disable them for
+	 * short-enough sentences. */
 	if (sent->length < sent->min_len_multi_pruning)
+		optimize_pruning = false;
+
+	if (!optimize_pruning)
 	{
+		/* Turn-off null-count optimization. */
 		if (opts->min_null_count == 0)
-		{
 			max_prune_level = 0;
-		}
 		else
 		{
 			needed_prune_level = MAX_SENTENCE;
