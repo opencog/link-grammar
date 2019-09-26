@@ -711,11 +711,11 @@ static bool is_bad(Connector *c)
  *  sharing, see the comment on them in disjunct-utils.c.
  *
  *  The refcount of each connector serves as its reference count in the
- *  power table. Each time when a connector that cannot match is
+ *  power table. Each time a connector that cannot match is
  *  discovered, its reference count is decreased, and the nearest_word
  *  field of its jet is assigned BAD_WORD. Due to the tracon memory
- *  sharing, each change of the reference count and the assignment of
- *  BAD_WORD affects simultaneously all the identical tracons (and the
+ *  sharing, each change of the reference count and the nearest_word
+ *  field affects simultaneously all the identical tracons (and the
  *  corresponding connectors in the power table). The corresponding
  *  disjuncts are discarded on the fly, and additional disjuncts with jets
  *  so marked with BAD_WORD are discarded when encountered without a
@@ -754,7 +754,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 					mark_jet_for_dequeue(d->left, true);
 					mark_jet_for_dequeue(d->right, false);
 
-					/* discard the current disjunct */
+					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
 					N_deleted[(int)bad]++;
 					continue;
