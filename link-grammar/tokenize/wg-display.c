@@ -93,7 +93,7 @@ GNUC_UNUSED const char *gword_morpheme(Sentence sent, const Gword *w)
 			break;
 		default:
 			/* No truncation is expected. */
-			snprintf(buff, sizeof(buff), "MT_%d", w->morpheme_type);
+			snprintf(buff, sizeof(buff), "MT_%d", (int)w->morpheme_type);
 			mt = string_set_add(buff, sent->string_set);
 	}
 

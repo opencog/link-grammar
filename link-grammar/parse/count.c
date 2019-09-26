@@ -750,7 +750,7 @@ static Count_bin do_count(
 			bool Rmatch = d->match_right;
 
 #ifdef VERIFY_MATCH_LIST
-			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
+			assert(id == d->match_id, "Modified id (%u!=%u)", id, d->match_id);
 #endif
 
 			for (unsigned int lnull_cnt = lnull_start; lnull_cnt <= lnull_end; lnull_cnt++)

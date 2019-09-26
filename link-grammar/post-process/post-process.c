@@ -908,7 +908,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 	if (verbosity_level(5))
 	{
-		err_msg(lg_Debug, "PP: Saw %zd unique link names in all linkages.\n\\",
+		err_msg(lg_Debug, "PP: Saw %zu unique link names in all linkages.\n\\",
 		       pp_linkset_population(pp->set_of_links_of_sentence));
 		err_msg(lg_Debug, "PP: Using %i 'contains one' rules "
 		                  "and %i 'contains none' rules\n",
@@ -1069,7 +1069,7 @@ static void report_pp_stats(Postprocessor *pp)
 	unused_cnt += report_unused_rule(kno->contains_none_rules);
 	unused_cnt += report_unused_rule(kno->bounded_rules);
 
-	err_msg(lg_Debug, "\nPP stats: %zd of %zd rules unused\n", unused_cnt, rule_cnt);
+	err_msg(lg_Debug, "\nPP stats: %zu of %zu rules unused\n", unused_cnt, rule_cnt);
 }
 
 /**

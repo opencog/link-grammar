@@ -225,7 +225,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 	}
 	else
 	{
-		assert(false, "Unknown expression type %d", e->type);
+		assert(false, "Unknown expression type %d", (int)e->type);
 	}
 
 	/* c now points to the list of clauses */

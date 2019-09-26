@@ -526,7 +526,7 @@ void print_disjunct_list(Disjunct * dj)
 		if (print_disjunct_address) printf("(%p)", dj);
 		printf(": ");
 
-		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
+		if (print_disjunct_ordinal) printf("<%u>", dj->ordinal);
 		printf("[%d](%s) ", i++, cost_stringify(dj->cost));
 
 		print_connector_list(dj->left);

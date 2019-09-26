@@ -448,7 +448,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	w_len = (NULL == w_sm) ? strlen(w) : (size_t)(w_sm - w);
 	if (w_len > MAX_WORD)
 	{
-		prt_error("Error: word '%s' too long (%zd), program may malfunction\n",
+		prt_error("Error: word '%s' too long (%zu), program may malfunction\n",
 		          w, w_len);
 		w_len = MAX_WORD;
 	}
@@ -675,7 +675,7 @@ bool afdict_init(Dictionary dict)
 		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 		{
 				if (0 == ac->length) continue;
-				lgdebug(+0, "Class %s, %zd items:",
+				lgdebug(+0, "Class %s, %zu items:",
 				        afdict_classname[ac-afdict->afdict_class], ac->length);
 				for (l = 0; l < ac->length; l++)
 					lgdebug(0, " '%s'", ac->string[l]);

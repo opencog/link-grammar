@@ -451,7 +451,7 @@ static PER_GWORD_FUNC(gword_by_ordinal_position)
  */
 static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 {
-	int status = *arg;
+	unsigned int status = *arg;
 	switch (status)
 	{
 		case WS_INDICT|WS_REGEX:
@@ -497,7 +497,7 @@ static PER_GWORD_FUNC(set_tokenization_step)
 	w->tokenizing_step = *arg;
 
 	lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
-			  w->subword, gword_status(sent, w), w->tokenizing_step);
+			  w->subword, gword_status(sent, w), (int)w->tokenizing_step);
 
 	return NULL;
 }

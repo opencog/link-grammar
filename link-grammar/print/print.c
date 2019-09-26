@@ -563,7 +563,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 
 			if (2*row+2 > max_height-1) {
-				lgdebug(+9, "Extending rows up to %d.\n", (2*row+2)+HEIGHT_INC);
+				lgdebug(+9, "Extending rows up to %u.\n", (2*row+2)+HEIGHT_INC);
 				diagram_alloc_tmpmem(&start, &picture, &xpicture,
 				                     &max_height, (2*row+2)+HEIGHT_INC,
 				                     max_bytes, num_cols);

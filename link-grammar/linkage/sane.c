@@ -94,8 +94,8 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 	else
 	{
-		lgdebug(D_WPA, "Path position to be replaced (len %zu): %zu\n", n,
-		                wpt - *nwp);
+		lgdebug(D_WPA, "Path position to be replaced (len %zu): %d\n", n,
+		                (int)(wpt - *nwp));
 		n = wpt - *nwp; /* Replace this path. */
 	}
 	(*nwp)[n].word = p;

@@ -246,7 +246,7 @@ static const char *error_severity_label(lg_error_severity sev)
 	}
 	else if ((sev < 1) || (sev > lg_None))
 	{
-		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d", sev);
+		snprintf(sevlabel, MAX_SEVERITY_LABEL_SIZE, "Message severity %d", (int)sev);
 	}
 	else
 	{
