@@ -817,16 +817,15 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
 
-	lgdebug(D_PRUNE, "Debug: power prune cost: %d\n", pc->power_cost);
-
 	print_time(opts, "power pruned (for %u null%s)",
 	           pc->null_links, (pc->null_links != 1) ? "s" : "");
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
+		prt_error("Debug: Power prune cost: %d\n", pc->power_cost);
 		prt_error("Debug: After power_pruning (for %u null%s, sent->null_count %u):\n\\",
 		          pc->null_links, (pc->null_links != 1) ? "s" : "", pc->sent->null_count);
-		print_disjunct_counts(sent);
+		print_disjunct_counts(pc->sent);
 	}
 
 #ifdef DEBUG
