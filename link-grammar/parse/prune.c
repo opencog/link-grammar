@@ -1356,10 +1356,15 @@ static void get_num_con_uc(Sentence sent,power_table *pt,
 
 /**
  * Prune useless disjuncts.
+ * @param null_count Optimize for parsing with this null count.
+ * MAX_SENTENCE means null count optimizations is essentially ignored.
+ * @param[out] \p ncu[sent->length][2] Number of different connector
+ * uppercase parts per word per direction (for the fast matcher tables).
+ * @return The minimal null_count expected in parsing.
  */
-void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
-                        unsigned int null_count, Parse_Options opts,
-                        unsigned int *ncu[2])
+unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
+                                unsigned int null_count, Parse_Options opts,
+                                unsigned int *ncu[2])
 {
 	prune_context pc = {0};
 	power_table pt;
@@ -1372,16 +1377,36 @@ void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
 	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
-	power_prune(sent, &pc, opts);
-	if (pp_prune(sent, ts, opts) > 0)
-		power_prune(sent, &pc, opts);
+	int num_deleted = power_prune(sent, &pc, opts);
+
+	if (num_deleted != -1)
+	{
+		if (pp_prune(sent, ts, opts) > 0)
+			power_prune(sent, &pc, opts);
+	}
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
 	 * additional deletions are very rare and even then most of the
 	 * times only one disjunct is deleted. */
 
-	get_num_con_uc(sent, &pt, ncu);
+	/* Initialize tentative values. */
+	unsigned int min_nulls = sent->null_count;
+	bool no_parse = false;
+
+	if (null_count == MAX_SENTENCE)
+	{
+		min_nulls = pc.null_words;
+	}
+	else if ((pc.null_words > sent->null_count) && !test_enabled("always-parse"))
+	{
+		min_nulls = sent->null_count + 1;
+	}
+
+	/* If no optimization then it is the last prune, so compute ncu now. */
+	if (!no_parse || (null_count == MAX_SENTENCE))
+		get_num_con_uc(sent, &pt, ncu);
+
 	power_table_delete(&pt);
 
-	return;
+	return min_nulls;
 }
