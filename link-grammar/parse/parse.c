@@ -326,9 +326,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
-		Count_bin hist;
-		s64 total;
-
 		sent->null_count = nl;
 
 		if (needed_prune_level > current_prune_level)
@@ -382,22 +379,12 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if (resources_exhausted(opts->resources)) break;
 		free_linkages(sent);
 
-		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
-		total = hist_total(&hist);
+		sent->num_linkages_found =
+			do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 
-		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
-		total = (total > INT_MAX) ? INT_MAX : total;
-		total = (total < 0) ? INT_MAX : total;
-
-		sent->num_linkages_found = (int) total;
-		print_time(opts, "Counted parses (%lld w/%u null%s)", hist_total(&hist),
-		           sent->null_count, (sent->null_count != 1) ? "s" : "");
-
-		if (verbosity >= D_USER_INFO)
-		{
-			prt_error("Info: Total count with %u null links: %lld\n",
-			        sent->null_count, total);
-		}
+		print_time(opts, "Counted parses (%d w/%u null%s)",
+		           sent->num_linkages_found, sent->null_count,
+		           (sent->null_count != 1) ? "s" : "");
 
 		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
 		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
