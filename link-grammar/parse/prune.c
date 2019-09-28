@@ -1337,7 +1337,7 @@ static void get_num_con_uc(Sentence sent,power_table *pt,
  */
 void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
                         unsigned int null_count, Parse_Options opts,
-                        unsigned int *ncu[])
+                        unsigned int *ncu[2])
 {
 	power_table pt;
 	power_table_init(sent, ts, &pt);
