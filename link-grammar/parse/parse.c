@@ -379,8 +379,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if (resources_exhausted(opts->resources)) break;
 		free_linkages(sent);
 
-		sent->num_linkages_found =
-			do_parse(sent, mchxt, ctxt, sent->null_count, opts);
+		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
 
 		print_time(opts, "Counted parses (%d w/%u null%s)",
 		           sent->num_linkages_found, sent->null_count,
