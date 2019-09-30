@@ -955,8 +955,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 		}
 	}
 
-	if (!is_pruning && (NULL != ts) &&
-	    (ts->memblock != sent->dc_memblock))
+	if (!is_pruning && (ts->memblock != sent->dc_memblock))
 	{
 		/* The disjunct & connector content is stored in dc_memblock.
 		 * It will be freed at sentence_delete(). */
