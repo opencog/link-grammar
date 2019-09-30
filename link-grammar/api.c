@@ -467,6 +467,8 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		return -3;
 	}
 
+	if (verbosity >= D_USER_TIMES)
+		prt_error("#### Finished tokenizing (%zu tokens)\n", sent->length);
 	return 0;
 }
 
