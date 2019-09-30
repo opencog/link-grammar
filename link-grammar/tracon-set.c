@@ -87,7 +87,7 @@ void tracon_set_reset(Tracon_set *ss)
 
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
-	memset(ss->table, 0, ss->size*sizeof(clist_slot));
+	memset(ss->table, 0, ss->size * sizeof(clist_slot));
 	ss->ocount = ss->count;
 	ss->count = 0;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
@@ -101,7 +101,7 @@ Tracon_set *tracon_set_create(void)
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
-	memset(ss->table, 0, ss->size*sizeof(clist_slot));
+	memset(ss->table, 0, ss->size * sizeof(clist_slot));
 	ss->count = ss->ocount = 0;
 	ss->shallow = false;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
@@ -114,7 +114,7 @@ Tracon_set *tracon_set_create(void)
  */
 static bool connector_equal(const Connector *c1, const Connector *c2)
 {
-	return c1->desc == c2->desc && (c1->multi == c2->multi);
+	return (c1->desc == c2->desc) && (c1->multi == c2->multi);
 }
 
 /** Return TRUE iff the tracon is exactly the same. */
@@ -141,8 +141,8 @@ static void prt_stat(void)
 #define PRT_STAT(...)
 #endif
 
-static bool place_found(const Connector *c, const clist_slot *slot, unsigned int hash,
-                         Tracon_set *ss)
+static bool place_found(const Connector *c, const clist_slot *slot,
+                        unsigned int hash, Tracon_set *ss)
 {
 	if (slot->clist == NULL) return true;
 	if (hash != slot->hash) return false;
@@ -155,7 +155,8 @@ static bool place_found(const Connector *c, const clist_slot *slot, unsigned int
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const Connector *c, unsigned int h, Tracon_set *ss)
+static unsigned int find_place(const Connector *c, unsigned int h,
+                               Tracon_set *ss)
 {
 	PRT_STAT(if (fp_count == 0) atexit(prt_stat); fp_count++;)
 	unsigned int coll_num = 0;
