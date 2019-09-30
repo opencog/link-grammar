@@ -24,7 +24,7 @@
 #include "lisjuncts.h"
 #include "string-set.h"
 
-#ifdef DEBUG
+#ifdef DEBUG_lisjuncts
 #include "print/print-util.h"
 static void assert_same_disjunct(Linkage, WordIdx, const char *);
 #endif /* DEBUG */
@@ -99,7 +99,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 		if ((len > 0) && (djstr[len-1] == ' ')) len--;
 		djstr[len++] = '\0';
 
-#ifdef DEBUG
+#ifdef DEBUG_lisjuncts
 		assert_same_disjunct(lkg, w, djstr);
 #endif
 
@@ -107,7 +107,8 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	}
 }
 
-#ifdef DEBUG
+#ifdef DEBUG_lisjuncts
+/* Cannot be used when morphology is not suppressed and lexical links exist. */
 static void assert_same_disjunct(Linkage lkg, WordIdx w, const char *djstr)
 {
 	char *cs;
