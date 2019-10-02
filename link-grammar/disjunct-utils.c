@@ -526,7 +526,7 @@ void print_disjunct_list(Disjunct * dj)
 		if (print_disjunct_address) printf("(%p)", dj);
 		printf(": ");
 
-		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
+		if (print_disjunct_ordinal) printf("<%u>", dj->ordinal);
 		printf("[%d](%s) ", i++, cost_stringify(dj->cost));
 
 		print_connector_list(dj->left);
@@ -955,8 +955,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 		}
 	}
 
-	if (!is_pruning && (NULL != ts) &&
-	    (ts->memblock != sent->dc_memblock))
+	if (!is_pruning && (ts->memblock != sent->dc_memblock))
 	{
 		/* The disjunct & connector content is stored in dc_memblock.
 		 * It will be freed at sentence_delete(). */
@@ -1101,7 +1100,9 @@ static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
  *
  * The disjunct and connectors packing in a contiguous memory facilitate a
  * better memory caching for long sentences (a performance gain of a few
- * percents).
+ * percents in the initial implementation, in which this was the sole
+ * purpose of this packing.) In addition, tracon memory sharing
+ * drastically reduces the memory used for connectors.
  *
  * The tracon IDs (if invoked for the parsing step) or tracon lists (if
  * invoked for pruning step) allow for a huge performance boost at these
@@ -1111,9 +1112,8 @@ static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
  * In order to save overhead, sentences shorter than
  * sent->min_len_encoding don't undergo encoding - only packing.
  * This can also be used for library tests that totally bypass the use of
- * connector encoding (to validate that the
- * tracon_id/packing/sharing/refcount implementation didn't introduce bugs
- * in the pruning and parsing steps).
+ * connector encoding (to validate that the tracon_id/sharing/refcount
+ * implementation didn't introduce bugs in the pruning and parsing steps).
  * E.g. when using link-parser:
  * - To entirely disable connector encoding:
  * link-parser -test=len-trailing-hash:254
@@ -1191,7 +1191,7 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
  * Pack the sentence for parsing.
  * @param old_ts Previous tracon sharing descriptor (if incremental encoding).
  * @param keep_disjuncts Keep for possible parsing w/ increased null count.
- * @return New tracon sharing descriptor or NULL no packing done.
+ * @return New tracon sharing descriptor.
  */
 Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
                                           unsigned int ccnt,

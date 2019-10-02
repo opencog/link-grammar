@@ -116,13 +116,5 @@ lg_error_clearall
 lg_error_flush
 lg_exp_stringify
 prt_error
-lg_compute_disjunct_strings
-object_open
-free_disjuncts
-eliminate_duplicate_disjuncts
-catenate_disjuncts
-count_disjuncts
-print_one_disjunct
-build_disjuncts_for_exp
 regex_tokenizer_test
 utf8_strwidth

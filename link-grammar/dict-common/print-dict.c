@@ -280,7 +280,7 @@ static unsigned int count_clause(Exp *e)
 	}
 	else
 	{
-		assert(false, "Unknown expression type %d", e->type);
+		assert(false, "Unknown expression type %d", (int)e->type);
 	}
 
 	return cnt;

@@ -242,7 +242,7 @@ static const char *switch_value_string(const Switch *as)
 			break;
 		default:
 			/* Internal error. */
-			snprintf(buf, sizeof(buf), "Unknown type %d\n", as->param_type);
+			snprintf(buf, sizeof(buf), "Unknown type %d\n", (int)as->param_type);
 	}
 
 	return buf;
@@ -825,7 +825,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		else
 		{
 			prt_error("Error: Internal error: Unknown variable type %d\n",
-			          as[j].param_type);
+			          (int)as[j].param_type);
 			return -1;
 		}
 	}

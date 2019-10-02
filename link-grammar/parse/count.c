@@ -559,7 +559,7 @@ static Count_bin do_count(
 	Table_connector *t;
 
 	/* TODO: static_assert() that null_count is an unsigned int. */
-	assert (null_count < INT_MAX, "Bad null count %d", null_count);
+	assert (null_count < INT_MAX, "Bad null count %d", (int)null_count);
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
@@ -750,7 +750,7 @@ static Count_bin do_count(
 			bool Rmatch = d->match_right;
 
 #ifdef VERIFY_MATCH_LIST
-			assert(id == d->match_id, "Modified id (%d!=%d)", id, d->match_id);
+			assert(id == d->match_id, "Modified id (%u!=%u)", id, d->match_id);
 #endif
 
 			for (unsigned int lnull_cnt = lnull_start; lnull_cnt <= lnull_end; lnull_cnt++)
@@ -971,10 +971,8 @@ static Count_bin do_count(
  * used anywhere, and a 3-5% speedup is available if it is avoided.
  * We plan to use this histogram, later ....
  */
-Count_bin do_parse(Sentence sent,
-                   fast_matcher_t *mchxt,
-                   count_context_t *ctxt,
-                   int null_count, Parse_Options opts)
+int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
+             Parse_Options opts)
 {
 	Count_bin hist;
 
@@ -987,7 +985,7 @@ Count_bin do_parse(Sentence sent,
 	/* Cannot reuse since its content is invalid on an increased null_count. */
 	init_table_lrcnt(ctxt, sent);
 
-	hist = do_count(ctxt, -1, sent->length, NULL, NULL, null_count+1);
+	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
 	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
 

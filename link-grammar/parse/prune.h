@@ -17,7 +17,7 @@
 #include "link-includes.h"
 
 void       pp_and_power_prune(Sentence, Tracon_sharing *,  unsigned int,
-                              Parse_Options, unsigned int *[]);
+                              Parse_Options, unsigned int *[2]);
 bool       optional_gap_collapse(Sentence, int, int);
 
 #endif /* _PRUNE_H */
