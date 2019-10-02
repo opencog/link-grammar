@@ -414,9 +414,10 @@ class DBasicParsingTestCase(unittest.TestCase):
 
     def test_timer_exhausted_exception(self):
         self.assertRaises(LG_TimerExhausted,
-                          self.parse_sent,
-                          "This should take more than one second to parse! " * 20,
-                          ParseOptions(max_parse_time=1))
+                self.parse_sent,
+                "This sentence parses without null words, "
+                "and should take more than one second to parse!" * 14,
+                ParseOptions(max_parse_time=1,short_length=255,disjunct_cost=10.0,linkage_limit=10000))
 
 # The tests here are numbered since their order is important.
 # They depend on the result and state of the previous ones as follows:
