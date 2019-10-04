@@ -76,7 +76,9 @@ typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
 	unsigned int null_links; /* maximum number of null links */
-	int pass_number; /* mark tracons for processing only once per pass */
+	unsigned int null_words; /* found number of non-optional null words */
+	bool *is_null_word;      /* a map of null words (indexed by word number) */
+	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
 	int N_changed;   /* counts the changes of c->nearest_word fields in a pass */
 
 	power_table *pt;
@@ -605,7 +607,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	int foundmatch = -1;
 
 	if (c == NULL) return w;
-	if (c->tracon_id == pc->pass_number) return c->nearest_word;
+	if (c->prune_pass == pc->pass_number) return c->nearest_word;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
@@ -649,7 +651,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	int foundmatch = BAD_WORD;
 
 	if (c == NULL) return w;
-	if (c->tracon_id == pc->pass_number) return c->nearest_word;
+	if (c->prune_pass == pc->pass_number) return c->nearest_word;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
 	if (sent_length <= n) return BAD_WORD;
 	if (c->nearest_word > n) n = c->nearest_word;
@@ -677,7 +679,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 static void mark_jet_as_good(Connector *c, int pass_number)
 {
 	for (; NULL != c; c = c->next)
-		c->tracon_id = pass_number;
+		c->prune_pass = pass_number;
 }
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
@@ -719,7 +721,7 @@ static bool is_bad(Connector *c)
  *  so marked with BAD_WORD are discarded when encountered without a
  *  further check. Each tracon is handled only once in the same main loop
  *  pass by marking their connectors with the pass number in their
- *  tracon_id field.
+ *  prune_pass field.
  */
 static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 {
@@ -835,7 +837,6 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 				for (; NULL != c; c = c->next)
 				{
 					assert(c->nearest_word != BAD_WORD, "dir %d w %zu", dir, w);
-					assert(c->tracon_id > 0, "dir %d w %zu", dir, w);
 					assert(c->refcount > 0, "dir %d w %zu", dir, w);
 				}
 			}

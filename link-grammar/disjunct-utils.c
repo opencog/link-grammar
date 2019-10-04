@@ -755,7 +755,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				/* Initialize for the pruning step when no sharing is done yet. */
 				newc->refcount = 1;  /* No sharing yet. */
-				newc->tracon_id = 0; /* Used in power_prune() for pass number. */
 				if (NULL != tl)
 					tl->num_cnctrs_per_word[dir][w]++;
 			}
