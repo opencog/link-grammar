@@ -916,17 +916,13 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
 	ts->is_pruning = is_pruning;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
+	ts->last_token = (uintptr_t)-1;
 
 	if (do_encoding)
 	{
 		ts->csid[0] = tracon_set_create();
 		ts->csid[1] = tracon_set_create();
-	}
 
-	ts->last_token = (uintptr_t)-1;
-
-	if (do_encoding)
-	{
 		if (is_pruning)
 		{
 			ts->tracon_list = malloc(sizeof(Tracon_list));
