@@ -328,10 +328,8 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 				c = d->right;
 				if (c != NULL)
 				{
-					c->refcount = 1;
 					for (c = c->next; c != NULL; c = c->next)
 					{
-						c->refcount = 1;
 						put_into_power_table(mp, r_size, r_t, c);
 					}
 				}
@@ -339,10 +337,8 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 				c = d->left;
 				if (c != NULL)
 				{
-					c->refcount = 1;
 					for (c = c->next; c != NULL; c = c->next)
 					{
-						c->refcount = 1;
 						put_into_power_table(mp, l_size, l_t, c);
 					}
 				}
