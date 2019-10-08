@@ -789,31 +789,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 }
 
 /**
- * Set dummy tracon_id's.
- * To be used for short sentences (for which a full encoding is too
- * costly) or for library tests that actually bypass the use of tracon IDs
- * (to validate that the tracon_id implementation didn't introduce bugs).
- */
-static int enumerate_connectors_sequentially(Tracon_sharing *ts)
-{
-	int id = ts->word_offset;
-
-	for (size_t i = 0; i < ts->num_disjuncts; i++)
-	{
-		Disjunct *d = &ts->dblock_base[i];
-
-		for (Connector *c = d->left; NULL != c; c = c->next)
-			c->tracon_id = id++;
-
-		for (Connector *c = d->right; NULL != c; c = c->next)
-			c->tracon_id = id++;
-
-	}
-
-	return id + 1;
-}
-
-/**
  * Pack the given disjunct chain in a contiguous memory block.
  * If the disjunct is NULL, return NULL.
  */
@@ -1017,12 +992,6 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		sent->word[w].d = pack_disjuncts(sent, ts, sent->word[w].d, w);
-	}
-
-	if (is_pruning && !do_encoding)
-	{
-		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
-		enumerate_connectors_sequentially(ts);
 	}
 
 	if (keep_disjuncts)
