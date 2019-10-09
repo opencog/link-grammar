@@ -724,7 +724,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			else
 			{
 				newc = *tracon;
-				if (NULL == tl)
+				if (!ts->is_pruning)
 				{
 					if (o->nearest_word != newc->nearest_word)
 					{
@@ -751,7 +751,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			newc = lcblock++;
 			*newc = *o;
 
-			if (NULL != tl)
+			if (ts->is_pruning)
 			{
 				/* Initialize for the pruning step when no sharing is done yet. */
 				newc->refcount = 1;  /* No sharing yet. */
@@ -763,9 +763,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				/* For the parsing step we need a unique ID. */
 				newc->tracon_id = ts->next_id[dir]++;
-#ifdef DEBUG
-				newc->refcount = 0;  /* Not used; zero for debug consistency. */
-#endif
 			}
 		}
 		else
@@ -917,6 +914,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	ts->num_connectors = ccnt;
 	ts->num_disjuncts = dcnt;
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
+	ts->is_pruning = is_pruning;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 
 	if (do_encoding)
