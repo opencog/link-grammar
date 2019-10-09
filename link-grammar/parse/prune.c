@@ -78,6 +78,7 @@ struct prune_context_s
 	unsigned int null_links; /* maximum number of null links */
 	unsigned int null_words; /* found number of non-optional null words */
 	bool *is_null_word;      /* a map of null words (indexed by word number) */
+	bool islands_ok;         /* a copy of islands_ok from the parse options */
 	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
 	int N_changed;   /* counts the changes of c->nearest_word fields in a pass */
 
@@ -469,15 +470,47 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 	return true;
 }
 
-static bool non_opt_words_gt(unsigned int nl, Sentence sent, int w1, int w2)
+/**
+ * Find if the sentence contains more than pc->null_links nulls.
+ * This function is called when we know that the gap (w1, w2) creates one
+ * or more null links. Only non-optional words are counted here (optional
+ * words are always allowed to be null-linked).
+ *
+ * Algo: First determine null_allowed - the number of nulls which is
+ * allowed in the gap. If the gap includes more than null_allowed nulls
+ * this implies that the sentence would include more than the desired null
+ * links (pc->null_links) so true is returned to signify that the proposed
+ * link cannot be done.
+ * If islands_ok==true, the whole gap may be one island, so it is counted
+ * only as a single null. Also, since only null words are counted here,
+ * the number of the total null links may be under-estimated (efficiency
+ * effect only).
+ * Note: Existing null words in the gap are just skipped as they have
+ * already taken into account in null_allowed.
+ *
+ * @return \c true only if the sentence contains more than pc->null_links
+ * nulls. With \c islands_ok=true, \c false may still be returned in that
+ * case because only null words are counted here.
+ */
+static bool more_nulls_than_allowed(prune_context *pc, int w1, int w2)
 {
-	unsigned int non_optional_word = 0;
+	int null_allowed = pc->null_links - pc->null_words;
+
+	if (pc->islands_ok)
+	{
+		if (null_allowed > 0) return false;
+	}
+	else
+	{
+		if (null_allowed > w2 - w1 - 1) return false;
+	}
 
 	for (int w = w1+1; w < w2; w++)
 	{
-		if (sent->word[w].optional) continue;
-		non_optional_word++;
-		if (non_optional_word > nl) return true;
+		if (pc->sent->word[w].optional) continue;
+		if (pc->is_null_word[w]) continue;
+		if (null_allowed == 0) return true;
+		null_allowed--;
 	}
 
 	return false;
@@ -513,20 +546,19 @@ static bool possible_connection(prune_context *pc,
 	else
 	{
 		/* We arrive here if the words are NOT next to each other. Say the
-		 * gape between them contains W non-optional words. We also know
+		 * gap between them contains W non-optional words. We also know
 		 * that we are going to parse with N null-links (which involves
 		 * sub-parsing with the range of [0, N] null-links).
 		 * If there is not at least one intervening connector (i.e. both
-		 * of lc->next and rc->next are NULL) then there will be W
-		 * null-linked words, and W must be <= N.
-		 * Notes:
-		 * 1. Optional words are disregarded because they are allowed to be
-		 * null-linked independently of the requested parsing null links.
-		 * 2. When island_ok=true this optimization is valid only for N = 0.
+		 * of lc->next and rc->next are NULL) then:
+		 * islands_ok=false:
+		 * There will be W null-linked words, and W must be <= N.
+		 * islands_ok=true:
+		 * There will be at least one island.
 		 */
 		if ((lc->next == NULL) && (rc->next == NULL) &&
 			 (!lc->multi) && (!rc->multi) &&
-			 non_opt_words_gt(pc->null_links, pc->sent, lword, rword))
+			 more_nulls_than_allowed(pc, lword, rword))
 		{
 			return false;
 		}
@@ -1374,6 +1406,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	pc.sent = sent;
 	pc.pt = &pt;
 	pc.null_links = null_count;
+	pc.islands_ok = opts->islands_ok;
 	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
 	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
