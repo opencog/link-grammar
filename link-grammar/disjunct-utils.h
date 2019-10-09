@@ -38,14 +38,14 @@ struct Disjunct_struct
 	union
 	{
 		Disjunct *dup_table_next; /* Duplicate elimination | before pruning */
-		Disjunct *old;            /* Old disjuncts | before parsing */
+		Disjunct *unused1;        /* Unused now | before parsing */
 	}; /* 8 bytes */
 
 	/* Shared by different steps. For what | when. */
 	union
 	{
 		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
-		uint32_t ordinal;         /* Old disjuncts | before and during parsing */
+		uint32_t unused2;         /* Unused now | before and during parsing */
 	}; /* 4 bytes */
 
 	struct
@@ -71,7 +71,7 @@ int right_connector_count(Disjunct *);
 Tracon_sharing *pack_sentence_for_pruning(Sentence, unsigned int, unsigned int,
                                           bool);
 Tracon_sharing *pack_sentence_for_parsing(Sentence, unsigned int, unsigned int,
-                                          Tracon_sharing *, bool);
+                                          bool);
 void free_tracon_sharing(Tracon_sharing *);
 void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
