@@ -268,7 +268,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	void *saved_memblock = NULL;
 	int current_prune_level = -1; /* -1: No pruning has been done yet. */
 	int needed_prune_level = opts->min_null_count;
-	bool share_count_context = false;
 	bool more_pruning_possible = false;
 
 	unsigned int max_null_count = opts->max_null_count;
@@ -340,10 +339,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 			more_pruning_possible =
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
-			ts_parsing = pack_sentence_for_parsing(sent, dcnt, ccnt, ts_parsing,
+			ts_parsing = pack_sentence_for_parsing(sent, dcnt, ccnt,
 			                                       more_pruning_possible);
-			print_time(opts, "Encoded for parsing%s",
-							  share_count_context ? " (incr)" : "");
+			print_time(opts, "Encoded for parsing");
 
 			if (!more_pruning_possible)
 			{
@@ -365,11 +363,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			gword_record_in_connector(sent);
 			if (resources_exhausted(opts->resources)) break;
 
-			if (!share_count_context)
-			{
-				free_count_context(ctxt, sent);
-				ctxt = alloc_count_context(sent);
-			}
+			free_count_context(ctxt, sent);
+			ctxt = alloc_count_context(sent);
 
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent, ncu);
@@ -409,20 +404,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			prt_error("No complete linkages found.\n");
 
 		if (more_pruning_possible)
-		{
-			/* We need to prune *again*. Restore the original disjuncts. */
 			restore_disjuncts(sent, saved_memblock, ts_pruning);
-			/* The following test may be used to check if the results
-			 * are the same with and w/o count table sharing. */
-			share_count_context = !test_enabled("no-count-sharing");
 
-			if (!share_count_context)
-			{
-				/* Must be freed here. */
-				free_tracon_sharing(ts_parsing);
-				ts_parsing = NULL;
-			}
-		}
+		free_tracon_sharing(ts_parsing);
+		ts_parsing = NULL;
 	}
 	sort_linkages(sent, opts);
 
