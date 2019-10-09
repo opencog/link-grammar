@@ -318,8 +318,11 @@ These packages are:
    You also have to install SWIG from http://www.swig.org/download.html .
 - macOS:
  * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
-   Alternatively, install
-[Anaconda](https://conda.io/docs/user-guide/install/download.html).
+	Note: With recent Anaconda Python versions, the build process succeeds, but
+	loading the resulted module causes a crash.  Help is needed to resolve that.
+	See the relevant issues in the GitHub repository (search there for
+	"anaconda").<br>
+	[Anaconda](https://conda.io/docs/user-guide/install/download.html).
 
 NOTE: Before issuing `configure` (see below) you have to validate that
 the required python versions can be invoked using your `PATH`.
