@@ -862,7 +862,7 @@ open_error:
 		}
 
 		if (!copts->batch_mode) batch_in_progress = false;
-		if ('\0' != test[0])
+		if ('\0' != test[0] && !test_enabled(test, "@"))
 		{
 			/* In batch mode warn only once.
 			 * In auto-next-linkage mode don't warn at all. */

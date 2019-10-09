@@ -29,13 +29,16 @@ binding.
 1: This is the library default. This is also the default for
 `link-parser`.
 
-2: Display parsing steps time. In case an error/warning gets issued by the library,
-this may help finding out at which step it happened.
+2: Display parsing steps time. In case an error/warning gets issued by the
+library, this may help finding out at which step it happened.
 
-3: Display data file search and locale setup. It can be used to debug
+3: Display some more Info messages:
+- Freeing dictionaries.
+- Number of insane-morphism linkages.
+- A warning when all the linkages have a PP violation.
+
+4: Display data file search and locale setup. It can be used to debug
 problems with the locale setup or in finding the dictionary.
-
-4: Not in use for now.
 
 5-9: Show trace and debug messages regarding sentence handling. Higher
 levels include the messages of the lower ones.
@@ -48,12 +51,14 @@ messages of the lower ones.
 
 100-...: Show only messages exactly at the specified level.
 * 101: Print all the connectors, along with their length limit.
-       A length limit of 0 means the value of the short\_length option is used.
+       A length limit of 0 means the value of the `short_length` option is
+       used.
 
 * 102: Print all disjuncts before pruning.
 
 * 103: Show unsubscripted dictionary words and subscripted ones which share
        the same base word.
+
 * 104: Memory pool statistics.
 
 ### 2) -debug=LOCATIONS (-de=LOCATIONS)
@@ -80,6 +85,13 @@ For example, to automatically show all linkages of a sentence, the
 following can be done:
 
 `link-parser -test=auto-next-linkage`
+
+`link-parser` warns when tests are enabled. This way it is possible to see in
+the linkage output which tests were enabled. This is particularly important
+when examining output files. However, when doing benchmarks (with and w/o
+tests) this is not desired because these warnings skew the timing.
+If needed, suppress this warnings with the added special tests `@`, as in:
+`-test=@,one-step-parse`.
 
 Useful examples
 ---------------
@@ -143,8 +155,8 @@ sed '/^*/d;/^!const/d;/^!batch/d' data/en/corpus-basic.batch | \
 link-parser -test=auto-next-linkage
 ```
 
-(If you cut&paste it to a terminal, remember to escape each of the "**!**" characters
-with a backslash.)
+(If you cut&paste it to a terminal, remember to escape each of the "**!**"
+characters with a backslash.)
 
 This, along with "diff", "grep" etc., can be used in order to validate
 that a change didn't cause undesired effects. Special care should be taken
@@ -157,16 +169,12 @@ classic-parser linkages). In that case the detailed linkages results need
 to be filtered through a script which sorts them according to some
 "canonical order" and also removes duplicates.
 
-4) Display the wordgraph (`!wordgraph=N`) using additional wordgraph-display
-flags:
-
-To use this feature, the library needs to be compiled with
-`--enable-wordgraph-display` (this is done by default).
-
-`link-parser -test=wg:FLAGS`
+4) Display the wordgraph using `-wordgraph=N`, optionally using additional
+wordgraph-display flags with `-test=wg:FLAGS`.
 
 For more examples of how to use the wordgraph-display, see
-[link-grammar/tokenize/README.md](/link-grammar/tokenize/README.md#word-graph-display)
+[link-grammar/tokenize/README.md]
+(/link-grammar/tokenize/README.md#word-graph-display)
 and [msvc/README.md](/msvc/README.md).
 
 5) Test the "trailing connector" hashing for short sentences too (e.g. for
@@ -176,9 +184,9 @@ Or optionally (in order to see relevant debug messages from `preparation.c`):
 `link-parser test=len-trailing-hash:10 -v=5 -debug=preparation.c`
 
 6) -test=<values> for SAT parser debugging:
-linkage-disconnected - Display also solutions which don't have a full linkage.
-sat-stats - Display the number of PP-violations and disconected linkages.
-no-pp_pruning_1 - Disable a partial CONTAINS_NONE_RULES pruning
+`linkage-disconnected` - Display also solutions which don't have a full linkage.
+`sat-stats` - Display the number of PP-violations and disconnected linkages.
+`no-pp_pruning_1` - Disable a partial CONTAINS_NONE_RULES pruning
 
 Debugging and STDIO streams
 ---------------------------
@@ -195,32 +203,48 @@ which messages are printed to `stderr` (see
 "Improved error notification facility"->"C API" in
 [link-grammar/README.md](/link-grammar/README.md)).
 
-Note that when debugging errors during a sentence batch run, it may be useful to
-redirect also `stderr` to the same file (the error facility of the library
+Note that when debugging errors during a sentence batch run, it may be useful
+to redirect also `stderr` to the same file (the error facility of the library
 flushes `stdout` before printing in order to preserve output order).
 
-Configuring for debug
----------------------
-Use:
+Using debugger
+--------------
 
-`configure --enable-debug --enable-wordgraph-display`
+### Configuring for debug
 
-For SAT solver debug:
-`make -DSAT\_DEBUG`
+`configure --enable-debug`
 
-### --enable-debug
-Its sets te DEBUG definitions and removes the optimization flags of the
+Its sets the DEBUG definitions and removes the optimization flags of the
 compiler. The DEBUG definition adds various validity checks, test
 messages, and some debug functions (that can be invoked, for example, from
 the debugger).
 
-### --enable-wordgraph-display
-If something goes wrong, it is often useful to display the wordgraph.
-The wordgraph display function can be invoked from `gdb` using:
 
-`call wordgraph\_show(sent, "")`
+| `gdb` command | Description |
+|---------------|-------------|
+| <pre>call wordgraph_show(sent, "") | If something goes wrong, it is may be useful to display the wordgraph. The second argument can include wordgraph display options.|
+| <pre>call print_all_disjuncts(sent) | Print the disjuncts. |
 
-supposing that "sent" is available (the stack can be rolled down for
-that using the "down" or "frame" `gdb` commands).
 
-The second argument can include wordgraph display options.
+FIXME: Document more debug functions.
+
+Compilation definitions
+-----------------------
+Some debug-related compilation flags can be set using `configure`, to as `make`
+arguments:
+
+| Definition | Description |
+| ---------- |-------------|
+| `NO_SAN_DICT` | Don't use ASAN/UBSAN for dict reading. This cause a vast startup speedup when using ASAN/UBSAN. It is optional because it shouldn't normally be used when debugging the dictionary code. |
+|`POOL_ALLOCATOR=0` | Pool allocator debug facility: A fake pool allocator that uses `malloc()` for each allocation is defined, in order that ASAN or valgrind can be used to find memory usage bugs. |
+|`TRACON_SET_DEBUG` | Print tracon_set stats. |
+|`DEBUG_PP_PRUNE` | PP pruning debug printout. |
+|`DEBUG_TABLE_STAT`| print count table stats. |
+|`DO_COUNT_TRACE` | Detailed trace of do_count. |
+|`DEBUG_X_TABLE` | Print x_table stats. |
+
+### Specific SAT-parser debug
+| Definition | Description |
+| ---------- |-------------|
+| `CONNECTIVITY_DEBUG` |  Debug SAT connectivity . |
+| `SAT_DEBUG`, `VARS` | Debug variables. |

@@ -115,7 +115,7 @@ There are many more papers and references listed on the
 
 See also the
 [C/C++ API documentation](https://www.abisource.com/projects/link-grammar/api/index.html).
-Bindings for other programming languages, including python, python3 and
+Bindings for other programming languages, including python3 and
 java, can be found in the [bindings directory](bindings).
 
 
@@ -311,27 +311,28 @@ the corresponding Python development packages are installed.
 
 These packages are:
 - Linux:
- * Systems using 'rpm' packages: Python2: python-devel; Python3: python3-devel
- * Systems using 'deb' packages: Python2: python-dev; Python3: python3-dev
+ * Systems using 'rpm' packages: python3-devel
+ * Systems using 'deb' packages: python3-dev
 - Windows:
- * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
+ * Install Python3 from https://www.python.org/downloads/windows/ .
    You also have to install SWIG from http://www.swig.org/download.html .
 - macOS:
- * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
-   Alternatively, install
-[Anaconda](https://conda.io/docs/user-guide/install/download.html).
+ * Install python3 using [HomeBrew](http://brew.sh/).
+	Note: With recent Anaconda Python versions, the build process succeeds, but
+	loading the resulted module causes a crash.  Help is needed to resolve that.
+	See the relevant issues in the GitHub repository (search there for
+	"anaconda").<br>
+	[Anaconda](https://conda.io/docs/user-guide/install/download.html).
 
 NOTE: Before issuing `configure` (see below) you have to validate that
 the required python versions can be invoked using your `PATH`.
 
-The use of the Python bindings is *OPTIONAL*; you do not need these if
-you do not plan to use link-grammar with python.  If you like
-to disable these bindings, use one of:
+The use of the Python bindings is *OPTIONAL*; you do not need these if you
+do not plan to use link-grammar with Python.  If you like to disable
+Python bindings, use:
 
 ```
 ./configure --disable-python-bindings
-./configure --enable-python-bindings=2
-./configure --enable-python-bindings=3
 ```
 
 The linkgrammar.py module provides a high-level interface in Python.
@@ -635,7 +636,7 @@ en/corpus-fixes.batch:     404 errors
 lt/corpus-basic.batch:      15 errors
 ru/corpus-basic.batch:      47 errors
 ```
-The bindings/python directory contains a unit test for the python
+The bindings/python directory contains a unit test for the Python
 bindings. It also performs several basic checks that stress the
 link-grammar libraries.
 
