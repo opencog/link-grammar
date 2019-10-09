@@ -724,7 +724,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			else
 			{
 				newc = *tracon;
-				if (NULL == tl)
+				if (!ts->is_pruning)
 				{
 					if (o->nearest_word != newc->nearest_word)
 					{
@@ -751,7 +751,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			newc = lcblock++;
 			*newc = *o;
 
-			if (NULL != tl)
+			if (ts->is_pruning)
 			{
 				/* Initialize for the pruning step when no sharing is done yet. */
 				newc->refcount = 1;  /* No sharing yet. */
@@ -763,9 +763,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				/* For the parsing step we need a unique ID. */
 				newc->tracon_id = ts->next_id[dir]++;
-#ifdef DEBUG
-				newc->refcount = 0;  /* Not used; zero for debug consistency. */
-#endif
 			}
 		}
 		else
@@ -789,31 +786,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 
 	ts->cblock = lcblock;
 	return head.next;
-}
-
-/**
- * Set dummy tracon_id's.
- * To be used for short sentences (for which a full encoding is too
- * costly) or for library tests that actually bypass the use of tracon IDs
- * (to validate that the tracon_id implementation didn't introduce bugs).
- */
-static int enumerate_connectors_sequentially(Tracon_sharing *ts)
-{
-	int id = ts->word_offset;
-
-	for (size_t i = 0; i < ts->num_disjuncts; i++)
-	{
-		Disjunct *d = &ts->dblock_base[i];
-
-		for (Connector *c = d->left; NULL != c; c = c->next)
-			c->tracon_id = id++;
-
-		for (Connector *c = d->right; NULL != c; c = c->next)
-			c->tracon_id = id++;
-
-	}
-
-	return id + 1;
 }
 
 /**
@@ -917,18 +889,15 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	ts->num_connectors = ccnt;
 	ts->num_disjuncts = dcnt;
 	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
+	ts->is_pruning = is_pruning;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
+	ts->last_token = (uintptr_t)-1;
 
 	if (do_encoding)
 	{
 		ts->csid[0] = tracon_set_create();
 		ts->csid[1] = tracon_set_create();
-	}
 
-	ts->last_token = (uintptr_t)-1;
-
-	if (do_encoding)
-	{
 		if (is_pruning)
 		{
 			ts->tracon_list = malloc(sizeof(Tracon_list));
@@ -1023,12 +992,6 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		sent->word[w].d = pack_disjuncts(sent, ts, sent->word[w].d, w);
-	}
-
-	if (is_pruning && !do_encoding)
-	{
-		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
-		enumerate_connectors_sequentially(ts);
 	}
 
 	if (keep_disjuncts)
