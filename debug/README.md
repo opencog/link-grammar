@@ -86,6 +86,13 @@ following can be done:
 
 `link-parser -test=auto-next-linkage`
 
+`link-parser` warns when tests are enabled. This way it is possible to see in
+the linkage output which tests were enabled. This is particularly important
+when examining output files. However, when doing benchmarks (with and w/o
+tests) this is not desired because these warnings skew the timing.
+If needed, suppress this warnings with the added special tests `@`, as in:
+`-test=@,one-step-parse`.
+
 Useful examples
 ---------------
 
