@@ -1050,6 +1050,12 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
 
 	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, keep_disjuncts);
 
+	if (verbosity_level(D_SPEC+2))
+	{
+		printf("pack_sentence_for_parsing (null_count %u):\n", sent->null_count);
+		print_all_disjuncts(sent);
+	}
+
 	if (NULL == ts->csid[0])
 	{
 		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): None\n",
