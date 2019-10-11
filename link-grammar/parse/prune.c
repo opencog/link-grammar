@@ -876,9 +876,12 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	}
 	while (!extra_null_word);
 
-	print_time(opts, "power pruned (for %u null%s%s)",
+	char found_nulls[32] = "";
+	if ((verbosity >= D_USER_TIMES) && !extra_null_word && (pc->null_words > 0))
+		snprintf(found_nulls, sizeof(found_nulls), ", found %d", pc->null_words);
+	print_time(opts, "power pruned (for %u null%s%s%s)",
 	           pc->null_links, (pc->null_links != 1) ? "s" : "",
-	           extra_null_word ? ", extra null" : "");
+	           extra_null_word ? ", extra null" : "", found_nulls);
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
