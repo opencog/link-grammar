@@ -659,22 +659,51 @@ static Count_bin do_count(
 		return t->count;
 	}
 
+	/* The word range (lw, rw) gets split in all tentatively possible ways
+	 * to LHS term and RHS term.
+	 * There can be a total count > 0 only if one of the following
+	 * multiplications results in a value > 0. This in turn is possible
+	 * only if both multiplication terms > 0:
+	 *    LHS term    RHS term
+	 * 1. leftcount x rightcount
+	 * 2. leftcount x l_bnr
+	 * 3. r_bnl     x rightcount
+	 *
+	 * In addition:
+	 * - leftcount > 0   is possible only if there is match_left.
+	 * - rightcount > 0  is possible only if there is match_right.
+	 * - r_bnl > 0       is possible only if le==NULL.
+	 *
+	 * Since the result count is a sum of multiplications of the LHS and
+	 * RHS counts, if one of them is zero, we can skip calculating the
+	 * other one.
+	 */
+
 	if (le == NULL)
 	{
-		start_word = lw+1;
+		/* No leftcount, and no rightcount for (w < re->farthest_word). */
+		start_word = MAX(lw+1, re->farthest_word);
 	}
 	else
 	{
+		/* The following cannot be optimized like end_word due to l_bnr. */
 		start_word = le->nearest_word;
 	}
 
 	if (re == NULL)
 	{
-		end_word = rw;
+		/* No rightcount, and no leftcount for (w > le->farthest_word). */
+		end_word = MIN(rw, le->farthest_word+1);
 	}
 	else
 	{
-		end_word = re->nearest_word +1;
+		/* If the LHS count for a word would be zero for a left connector
+		 * due to the distance of this word, we can skip its handling
+		 * entirely. So the checked word interval can be shortened. */
+		if ((le != NULL) && (re->nearest_word > le->farthest_word))
+			end_word = le->farthest_word + 1;
+		else
+			end_word = re->nearest_word + 1;
 	}
 
 	total = zero;

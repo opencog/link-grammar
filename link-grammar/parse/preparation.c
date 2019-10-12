@@ -29,16 +29,22 @@
 
 /**
  * Set c->nearest_word to the nearest word that this connector could
- * possibly connect to.  The connector *might*, in the end,
- * connect to something more distant, but this is the nearest
- * one that could be connected.
+ * possibly connect to.
+ * The connector *might*, in the end, connect to something more distant,
+ * but this is the nearest one that could be connected.
+ * Also recalculate length_limit to be the farthest word number that could
+ * be connected.
  */
-static int set_dist_fields(Connector * c, size_t w, int delta)
+static int set_dist_fields(Connector * c, size_t w, int delta, int w_clamp)
 {
 	int i;
 	if (c == NULL) return (int) w;
-	i = set_dist_fields(c->next, w, delta) + delta;
+	i = set_dist_fields(c->next, w, delta, w_clamp) + delta;
 	c->nearest_word = i;
+	int farthest_word = w + (delta * c->length_limit);
+	/* Clamp it to the range [0, sent_length). */
+	if (delta * farthest_word > w_clamp) farthest_word = w_clamp;
+	c->farthest_word = farthest_word;
 	return i;
 }
 
@@ -58,8 +64,9 @@ static void setup_connectors(Sentence sent)
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = xd)
 		{
 			xd = d->next;
-			if ((set_dist_fields(d->left, w, -1) < 0) ||
-			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
+			if ((set_dist_fields(d->left, w, -1, 0) < 0) ||
+			    (set_dist_fields(d->right, w, 1, (int)(sent->length-1)) >=
+			     (int) sent->length))
 			{
 				; /* Skip this disjunct. */
 			}
