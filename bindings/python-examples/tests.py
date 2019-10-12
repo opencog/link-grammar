@@ -675,7 +675,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
     # -- word is/isn't split by suffix splitter
     # -- the one that is in the dict is not the grammatically appropriate word.
     #
-    # Let's is NOT split into two! Its in the dict as one word, lower-case only.
+    # Let's is NOT split into two! It's in the dict as one word, lower-case only.
     def test_f_captilization(self):
         self.assertEqual(list(self.parse_sent('Let\'s eat.')[0].words()),
              ['LEFT-WALL', 'let\'s', 'eat.v', '.', 'RIGHT-WALL'])
@@ -1097,7 +1097,7 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
-def linkage_testfile(self, lgdict, popt, desc = ''):
+def linkage_testfile(self, lgdict, popt, desc=''):
     """
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
@@ -1148,6 +1148,8 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             diagram = ""
             constituents = ""
             wordpos = ""
+            if popt.verbosity > 1:
+                print('Sentence:', sent)
             linkages = Sentence(sent, lgdict, popt).parse()
             linkage = next(linkages, None)
 
@@ -1244,7 +1246,7 @@ class divert_start(object):
 lg_testutils.add_eqcost_linkage_order(Sentence)
 
 # For testing development branches, it may be sometimes useful to use the
-# "test", "debug" and "verbosity" options. The following allows specify them
+# "test", "debug" and "verbosity" options. The following allows to specify them
 # as "tests.py" arguments, interleaved with standard "unittest" arguments.
 
 for i,arg in enumerate(sys.argv):
