@@ -79,6 +79,7 @@ struct prune_context_s
 	unsigned int null_words; /* found number of non-optional null words */
 	bool *is_null_word;      /* a map of null words (indexed by word number) */
 	bool islands_ok;         /* a copy of islands_ok from the parse options */
+	bool always_parse;
 	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
 	int N_changed;   /* counts the changes of c->nearest_word fields in a pass */
 
@@ -747,6 +748,7 @@ static bool is_bad(Connector *c)
  */
 static bool check_null_word(prune_context *pc, int w)
 {
+	if (pc->always_parse) return false;
 	Word *word = &pc->sent->word[w];
 
 	if ((word->d == NULL) && !word->optional && !pc->is_null_word[w])
@@ -874,7 +876,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
 		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
 	}
-	while (!extra_null_word);
+	while (!extra_null_word || pc->always_parse);
 
 	char found_nulls[32] = "";
 	if ((verbosity >= D_USER_TIMES) && !extra_null_word && (pc->null_words > 0))
@@ -911,7 +913,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	}
 #endif
 
-	if (extra_null_word) return -1;
+	if (extra_null_word && !pc->always_parse) return -1;
 	return total_deleted;
 }
 
@@ -1406,6 +1408,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	power_table_init(sent, ts, &pt);
 
+	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
 	pc.pt = &pt;
 	pc.null_links = null_count;
@@ -1433,7 +1436,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	{
 		min_nulls = pc.null_words;
 	}
-	else if ((pc.null_words > sent->null_count) && !test_enabled("always-parse"))
+	else if ((pc.null_words > sent->null_count) && !pc.always_parse)
 	{
 		min_nulls = sent->null_count + 1;
 	}
