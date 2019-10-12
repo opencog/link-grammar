@@ -1148,6 +1148,8 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             diagram = ""
             constituents = ""
             wordpos = ""
+            if popt.verbosity > 1:
+                print('Sentence:', sent)
             linkages = Sentence(sent, lgdict, popt).parse()
             linkage = next(linkages, None)
 
