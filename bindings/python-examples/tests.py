@@ -1097,7 +1097,7 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
-def linkage_testfile(self, lgdict, popt, desc = ''):
+def linkage_testfile(self, lgdict, popt, desc=''):
     """
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
