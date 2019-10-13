@@ -47,6 +47,19 @@ struct c_list_s
 	Connector *c;
 };
 
+typedef uint8_t WordIdx_m;     /* Storage representation of word index */
+
+/* Per-word minimum/maximum link descriptor.
+ * The dimension of the 2-element arrays below is used as follows:
+ * [0] - left side; [1] - right side. */
+typedef struct
+{
+	WordIdx_m nw[2];   /* minimum link distance */
+#if FW
+	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
+#endif
+} mlink_t;
+
 typedef struct power_table_s power_table;
 struct power_table_s
 {
@@ -84,6 +97,7 @@ struct prune_context_s
 	int N_changed;   /* counts the changes of c->nearest_word fields in a pass */
 
 	power_table *pt;
+	mlink_t *ml;
 	Sentence sent;
 
 	int power_cost;  /* for debug - shown in the verbose output */
@@ -1391,6 +1405,152 @@ static void get_num_con_uc(Sentence sent,power_table *pt,
 	}
 }
 
+static void mlink_table_init(Sentence sent, mlink_t *ml)
+{
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		ml[w] = (mlink_t)
+		{
+			.nw[0] = 0, .nw[1] = UNLIMITED_LEN,
+#if FW
+			.fw[0] = UNLIMITED_LEN, .fw[1] = 0
+#endif
+		};
+	}
+}
+
+/**
+ * Build the per-word minimum/maximum link distance table.
+ * Optional words are ignored because they cannot constrain link crossing.
+ * Table entries for word w having value w means no link constraint.
+ * The table is meaningful only if at least one entry has a link constraint.
+ * Code under "#if FW" is for supporting farthest_word (yet unimplemented).
+ *
+ * @param ml[out] The table (indexed by word, w/fields indexed by direction).
+ * @return \c true iff the table is meaningful.
+ */
+static bool build_mlink_table(Sentence sent, mlink_t *ml)
+{
+	bool ml_exists = false;
+
+	for (unsigned int w = 0; w < sent->length; w++)
+	{
+		if (sent->word[w].optional) continue;
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			if (NULL == d->left)
+			{
+				ml[w].nw[0] = w;
+#if FW
+				ml[w].fw[0] = 0;
+#endif
+			}
+			else
+			{
+				if (d->left->nearest_word > ml[w].nw[0])
+					ml[w].nw[0] = d->left->nearest_word;
+#if FW
+				if (d->left->farthest_word < ml[w].fw[0])
+					ml[w].fw[0] = d->left->farthest_word;
+#endif
+			}
+
+			if (NULL == d->right)
+			{
+				ml[w].nw[1] = w;
+#if FW
+				ml[w].fw[1] = UNLIMITED_LEN;
+#endif
+			}
+			else
+			{
+				if (d->right->nearest_word < ml[w].nw[1])
+					ml[w].nw[1] = d->right->nearest_word;
+#if FW
+				if (d->right->farthest_word > ml[w].fw[1])
+					ml[w].fw[1] = d->right->farthest_word;
+#endif
+			}
+		}
+
+		ml_exists |= ((ml[w].nw[0] != w) || (ml[w].nw[1] != w));
+#if FW
+		ml_exists |= /* XXX add farthest_word check */;
+#endif
+	}
+
+	if (verbosity_level(+D_PRUNE) && ml_exists)
+	{
+		for (unsigned int w = 0; w < sent->length; w++)
+		{
+			if (sent->word[w].optional) continue;
+
+			if (ml[w].nw[0] != ml[w].nw[1])
+			{
+				printf("%3d: nearest_word (%3d %3d)", w,
+				       w==ml[w].nw[0]?-1:ml[w].nw[0],
+				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
+#if FW
+				printf("     farthest_word (%d %d)\n",
+				       w==ml[w].nw[0]?-1:ml[w].fw[0]<=0?-1:ml[w].fw[0],
+				       w==ml[w].nw[1]?-1:ml[w].fw[1]>=sent->length?-1:ml[w].fw[1]);
+#else
+				printf("\n");
+#endif
+			}
+		}
+	}
+
+	return ml_exists;
+}
+
+/**
+ * Old comments (from the proof-of-concept code).
+ * Much is still relevant.
+ *
+ * Prune disjunct with a link that would need to cross links of words
+ * that must have links.
+ *
+ * The idea:
+ * Suppose that all the disjuncts of word wl have right shallow connectors
+ * with nearest_word (wl_nw > 1) when (wl_nw >= wr). At this time we
+ * suppose there is a linkage without null words. So at least one of these
+ * disjuncts must have a link to word wr or greater (i.e. word wl has a
+ * mandatory right-going link, marked m).
+ *
+ * We check all the words w strictly between wl and wr. Disjuncts of word
+ * w with a shallow connector having nearest_word < wl would cross (link
+ * x) the said link of word wl and thus can be discarded. The same can be
+ * checked for mandatory left-going links.
+ *
+ *                    m
+ *           +------------...
+ *       x   |           .
+ *      ...........+     .
+ *           |     |     .
+ *   w0 ... wl ... w ... wr ... wn
+ *
+ * Regarding a disjunct of wr, if its left connector connects to wl then
+ * its deepest connector cannot connect to the left of wl, so disjuncts
+ * whose deepest connectors having (nearest_word < wl) can be discarded.
+ * On the other hand, if it doesn't connect to wl it means that wl is
+ * connected to a word to its right. In that case again its deepest
+ * connector (in fact any of its connectors) cannot connect to the left of
+ * wl. So we can conclude that any disjunct of word wr having a deepest
+ * connector with (nearest_word < wl) can be discarded.
+ *
+ * In addition, in all cases, in disjunct which are retained and have so
+ * constrained connectors, they length_limit of these connectors can be
+ * adjusted not to get over w. Note that in the case of (wr - w == 1)
+ * the deepest connector is multi, its length_limit cannot be set to 1!
+ * This is because it behaves like more that one connector, when the rest
+ * may connect over w.
+ *
+ * In general, the mandatory links create "protected" ranges that links
+ * from other words cannot get out of it or into it.
+ */
+
 /**
  * Prune useless disjuncts.
  * @param null_count Optimize for parsing with this null count.
@@ -1416,7 +1576,19 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
 	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
-	int num_deleted = power_prune(sent, &pc, opts);
+	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here. */
+
+	if (num_deleted > 0)
+	{
+		pc.ml = alloca(sent->length * sizeof(*pc.ml));
+		mlink_table_init(sent, pc.ml);
+		bool ml_exists = build_mlink_table(sent, pc.ml);
+		print_time(opts, "Built_mlink_table%s", ml_exists ? "" : " (empty)");
+		if (ml_exists)
+			num_deleted = power_prune(sent, &pc, opts);
+		else
+			pc.ml = NULL;
+	}
 
 	if (num_deleted != -1)
 	{
