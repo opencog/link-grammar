@@ -1156,6 +1156,8 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		return;
 	}
 
+#define TCD 512 /* timer checking divisor */
+
 	/* (optional) First pass: just visit the linkages */
 	/* The purpose of the first pass is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time the real work
@@ -1173,7 +1175,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 			post_process_scan_linkage(pp, lkg);
 
-			if ((63 == in%64) && resources_exhausted(opts->resources)) break;
+			if (((TCD-1) == in%TCD) && resources_exhausted(opts->resources)) break;
 		}
 	}
 
@@ -1200,7 +1202,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		N_linkages_post_processed++;
 
 		linkage_score(lkg, opts);
-		if ((15 == in%16) && resources_exhausted(opts->resources)) break;
+		if (((TCD-1) == in%TCD) && resources_exhausted(opts->resources)) break;
 	}
 
 	/* If the timer expired, then we never finished post-processing.

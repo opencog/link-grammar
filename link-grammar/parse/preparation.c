@@ -151,9 +151,18 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d);
 
+#if 0
+		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
+		 * take significant time even for millions of disjuncts. If a very
+		 * large number of disjuncts per word or very large number of words
+		 * per sentence will ever be a problem, then a "checktimer" TLS
+		 * counter can be used there. Old comment and code are retained
+		 * below for documentation. */
+
 		/* Some long Russian sentences can really blow up, here. */
 		if (resources_exhausted(opts->resources))
 			return;
+#endif
 	}
 	print_time(opts, "Eliminated duplicate disjuncts");
 

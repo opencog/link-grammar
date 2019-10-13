@@ -104,6 +104,15 @@ void resources_reset_space(Resources r)
 
 bool resources_exhausted(Resources r)
 {
+	if (r->timer_expired) return true;
+	if (resources_timer_expired(r)) r->timer_expired = true;
+
+	return r->timer_expired;
+}
+
+#if 0 /* max_memory is not being set any more. */
+bool resources_exhausted(Resources r)
+{
 	if (r->timer_expired || r->memory_exhausted)
 		return true;
 
@@ -115,6 +124,7 @@ bool resources_exhausted(Resources r)
 
 	return (r->timer_expired || r->memory_exhausted);
 }
+#endif
 
 bool resources_timer_expired(Resources r)
 {
@@ -132,15 +142,18 @@ bool resources_memory_exhausted(Resources r)
 #define RES_COL_WIDTH 40
 
 /** print out the cpu ticks since this was last called */
-static void resources_print_time(int verbosity_opt, Resources r, const char * s)
+GNUC_PRINTF(2,0)
+static void resources_print_time(Resources r, const char *fmt, va_list args)
 {
 	double now;
 	now = current_usage_time();
-	if (verbosity_opt >= D_USER_TIMES)
-	{
-		prt_error("++++ %-*s %7.2f seconds\n",
-		          RES_COL_WIDTH, s, now - r->when_last_called);
-	}
+
+	char s[128] = "";
+	vsnprintf(s, sizeof(s), fmt, args);
+
+	prt_error("++++ %-*s %7.2f seconds\n",
+	          RES_COL_WIDTH, s, now - r->when_last_called);
+
 	r->when_last_called = now;
 }
 
@@ -169,18 +182,12 @@ static void resources_print_total_space(int verbosity_opt, Resources r)
 
 void print_time(Parse_Options opts, const char *fmt, ...)
 {
-	char s[128] = "";
+	if (verbosity < D_USER_TIMES) return;
+	va_list args;
 
-	if (opts->verbosity >= D_USER_TIMES)
-	{
-		va_list args;
-
-		va_start(args, fmt);
-		vsnprintf(s, sizeof(s), fmt, args);
-		va_end(args);
-	}
-
-	resources_print_time(opts->verbosity, opts->resources, s);
+	va_start(args, fmt);
+	resources_print_time(opts->resources, fmt, args);
+	va_end(args);
 }
 
 void parse_options_print_total_time(Parse_Options opts)
