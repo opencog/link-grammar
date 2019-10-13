@@ -104,6 +104,15 @@ void resources_reset_space(Resources r)
 
 bool resources_exhausted(Resources r)
 {
+	if (r->timer_expired) return true;
+	if (resources_timer_expired(r)) r->timer_expired = true;
+
+	return r->timer_expired;
+}
+
+#if 0 /* max_memory is not being set any more. */
+bool resources_exhausted(Resources r)
+{
 	if (r->timer_expired || r->memory_exhausted)
 		return true;
 
@@ -115,6 +124,7 @@ bool resources_exhausted(Resources r)
 
 	return (r->timer_expired || r->memory_exhausted);
 }
+#endif
 
 bool resources_timer_expired(Resources r)
 {
