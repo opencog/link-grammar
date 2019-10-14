@@ -124,6 +124,10 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	{
 		if (MAX_LOG2_TABLE_SIZE == shift)
 		{
+			/* The maximum size table has just been allocated. Arrange for
+			 * keeping it allocated until existing, so it can be reused. This
+			 * avoids a big overhead of malloc/free of large memory blocks on
+			 * systems that use mmap/munmap for that (like Linux). */
 			kept_table = ctxt->table;
 			ctxt->keep_table = true;
 			atexit(free_kept_table);
