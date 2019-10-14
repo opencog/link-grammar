@@ -57,12 +57,11 @@ struct count_context_s
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
 	bool    exhausted;
-	bool    keep_table;
+	/* unsigned short log2_table_size; */ /* unused */
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
 	unsigned int table_lrcnt_size;
 	unsigned int table_lrcnt_available_count;
-	/* int     log2_table_size; */ /* not unused */
 	Table_connector ** table;
 	Table_lrcnt *table_lrcnt;
 	Resources current_resources;
@@ -70,27 +69,31 @@ struct count_context_s
 
 static void free_table(count_context_t *ctxt)
 {
-	if (!ctxt->keep_table) free(ctxt->table);
 	ctxt->table = NULL;
 	ctxt->table_size = 0;
 }
 
 static void init_table(count_context_t *ctxt, size_t sent_len);
+
+#if DO_THE_ATEXIT_FREE
 static void free_kept_table(void)
 {
 	init_table(NULL, 0);
 }
+#endif
 
 static void init_table(count_context_t *ctxt, size_t sent_len)
 {
-	static TLS Table_connector **kept_table;
+	static TLS Table_connector **kept_table = NULL;
+	static TLS unsigned int log2_table_size = 0;
 
 	if (ctxt == NULL)
 	{
-		free(kept_table);
+		if (kept_table) free(kept_table);
+		kept_table = NULL;
+		log2_table_size = 0;
 		return;
 	}
-	if (ctxt->table) free_table(ctxt);
 
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
@@ -110,29 +113,24 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	/* Clamp at max 8*(1<<MAX_LOG2_TABLE_SIZE)==128 MBytes on 64 bit systems. */
 	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
-	ctxt->table_size = (1U << shift);
-	/* ctxt->log2_table_size = shift; */
-	ctxt->table = (kept_table != NULL) ? kept_table :
-		malloc(ctxt->table_size * sizeof(Table_connector*));
-	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 
-	if (kept_table != NULL)
+	/* Keep the table indefinitely (or until exiting), so that it can
+	 * be reused. This avoids a large overhead in malloc/free when
+	 * large memory blocks are allocted. Large block in Linux trigger
+	 * system calls to mmap/munmap that eat up a lot of time.
+	 * (Up to 20%, depennding onf the sentence and CPU.) */
+	ctxt->table_size = (1U << shift);
+	if (shift > log2_table_size)
 	{
-		ctxt->keep_table = true;
+		log2_table_size = shift;
+
+		if (kept_table) free(kept_table);
+		kept_table = malloc(ctxt->table_size * sizeof(Table_connector*));
+
+		// atexit(free_kept_table);
 	}
-	else
-	{
-		if (MAX_LOG2_TABLE_SIZE == shift)
-		{
-			/* The maximum size table has just been allocated. Arrange for
-			 * keeping it allocated until existing, so it can be reused. This
-			 * avoids a big overhead of malloc/free of large memory blocks on
-			 * systems that use mmap/munmap for that (like Linux). */
-			kept_table = ctxt->table;
-			ctxt->keep_table = true;
-			atexit(free_kept_table);
-		}
-	}
+	ctxt->table = kept_table;
+	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
 
 static void free_table_lrcnt(count_context_t *ctxt)
