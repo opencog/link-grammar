@@ -106,7 +106,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 		shift = 12;
 	}
 
-	/* Clamp at max 4*(1<<24) == 64 MBytes */
+	/* Clamp at max 8*(1<<24) == 128 MBytes on 64 bit systems. */
 	if (24 < shift) shift = 24;
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
