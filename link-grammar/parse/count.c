@@ -57,6 +57,7 @@ struct count_context_s
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
 	bool    exhausted;
+	bool    keep_table;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
 	unsigned int table_lrcnt_size;
@@ -69,13 +70,26 @@ struct count_context_s
 
 static void free_table(count_context_t *ctxt)
 {
-	xfree(ctxt->table, ctxt->table_size * sizeof(Table_connector*));
+	if (!ctxt->keep_table) free(ctxt->table);
 	ctxt->table = NULL;
 	ctxt->table_size = 0;
 }
 
+static void init_table(count_context_t *ctxt, size_t sent_len);
+static void free_kept_table(void)
+{
+	init_table(NULL, 0);
+}
+
 static void init_table(count_context_t *ctxt, size_t sent_len)
 {
+	static TLS Table_connector **kept_table;
+
+	if (ctxt == NULL)
+	{
+		free(kept_table);
+		return;
+	}
 	if (ctxt->table) free_table(ctxt);
 
 	/* A piecewise exponential function determines the size of the
@@ -92,14 +106,33 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 		shift = 12;
 	}
 
-	/* Clamp at max 4*(1<<24) == 64 MBytes */
-	if (24 < shift) shift = 24;
+#define MAX_LOG2_TABLE_SIZE 24
+	/* Clamp at max 8*(1<<MAX_LOG2_TABLE_SIZE)==128 MBytes on 64 bit systems. */
+	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
 	/* ctxt->log2_table_size = shift; */
-	ctxt->table = (Table_connector**)
-		xalloc(ctxt->table_size * sizeof(Table_connector*));
+	ctxt->table = (kept_table != NULL) ? kept_table :
+		malloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
+
+	if (kept_table != NULL)
+	{
+		ctxt->keep_table = true;
+	}
+	else
+	{
+		if (MAX_LOG2_TABLE_SIZE == shift)
+		{
+			/* The maximum size table has just been allocated. Arrange for
+			 * keeping it allocated until existing, so it can be reused. This
+			 * avoids a big overhead of malloc/free of large memory blocks on
+			 * systems that use mmap/munmap for that (like Linux). */
+			kept_table = ctxt->table;
+			ctxt->keep_table = true;
+			atexit(free_kept_table);
+		}
+	}
 }
 
 static void free_table_lrcnt(count_context_t *ctxt)
