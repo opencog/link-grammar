@@ -106,8 +106,9 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 		shift = 12;
 	}
 
-	/* Clamp at max 8*(1<<24) == 128 MBytes on 64 bit systems. */
-	if (24 < shift) shift = 24;
+#define MAX_LOG2_TABLE_SIZE 24
+	/* Clamp at max 8*(1<<MAX_LOG2_TABLE_SIZE)==128 MBytes on 64 bit systems. */
+	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
 	/* ctxt->log2_table_size = shift; */
@@ -121,7 +122,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	}
 	else
 	{
-		if (shift == 24)
+		if (MAX_LOG2_TABLE_SIZE == shift)
 		{
 			kept_table = ctxt->table;
 			ctxt->keep_table = true;
