@@ -57,6 +57,7 @@ struct count_context_s
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
 	bool    exhausted;
+	bool    keep_table;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
 	unsigned int table_lrcnt_size;
@@ -69,13 +70,26 @@ struct count_context_s
 
 static void free_table(count_context_t *ctxt)
 {
-	xfree(ctxt->table, ctxt->table_size * sizeof(Table_connector*));
+	if (!ctxt->keep_table) free(ctxt->table);
 	ctxt->table = NULL;
 	ctxt->table_size = 0;
 }
 
+static void init_table(count_context_t *ctxt, size_t sent_len);
+static void free_kept_table(void)
+{
+	init_table(NULL, 0);
+}
+
 static void init_table(count_context_t *ctxt, size_t sent_len)
 {
+	static TLS Table_connector **kept_table;
+
+	if (ctxt == NULL)
+	{
+		free(kept_table);
+		return;
+	}
 	if (ctxt->table) free_table(ctxt);
 
 	/* A piecewise exponential function determines the size of the
@@ -97,9 +111,23 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
 	/* ctxt->log2_table_size = shift; */
-	ctxt->table = (Table_connector**)
-		xalloc(ctxt->table_size * sizeof(Table_connector*));
+	ctxt->table = (kept_table != NULL) ? kept_table :
+		malloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
+
+	if (kept_table != NULL)
+	{
+		ctxt->keep_table = true;
+	}
+	else
+	{
+		if (shift == 24)
+		{
+			kept_table = ctxt->table;
+			ctxt->keep_table = true;
+			atexit(free_kept_table);
+		}
+	}
 }
 
 static void free_table_lrcnt(count_context_t *ctxt)
