@@ -547,10 +547,9 @@ static bool possible_connection(prune_context *pc,
 
 	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
+	/* Word range constraints */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
-
-	/* Word range constraints */
 	if (1 == dist)
 	{
 		if ((lc->next != NULL) || (rc->next != NULL)) return false;
