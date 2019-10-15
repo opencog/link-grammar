@@ -540,13 +540,15 @@ static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
                                 int lword, int rword)
 {
-	int dist;
+	int dist = rword - lword;
+#ifdef DEBUG
+	assert(0 < dist, "Bad word order in possible connection.");
+#endif
+
 	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
-	dist = rword - lword;
-	// assert(0 < dist, "Bad word order in possible connection.");
 
 	/* Word range constraints */
 	if (1 == dist)
