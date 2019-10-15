@@ -555,7 +555,7 @@ static bool possible_connection(prune_context *pc,
 		if ((lc->next != NULL) || (rc->next != NULL)) return false;
 	}
 	else
-	if (rword > lc->farthest_word || lword < rc->farthest_word)
+	if ((rword > lc->farthest_word) || (lword < rc->farthest_word))
 	{
 		return false;
 	}
