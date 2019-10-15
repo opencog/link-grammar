@@ -470,6 +470,133 @@ static void clean_table(unsigned int size, C_list **t)
 	}
 }
 
+#define PRx(x) fprintf(stderr, ""#x)
+#define PR(...) true
+
+/**
+ * Validate that at least one disjunct of \p w may have no cross link.
+ **/
+static bool find_no_xlink_disjunct(prune_context *pc, int w,
+                                   Connector *lc, Connector *rc,
+                                   int lword, int rword)
+{
+	Sentence sent = pc->sent;
+	Disjunct *d;
+
+	if ((pc->ml[w].nw[0] >= lword) && (pc->ml[w].nw[1] <= rword))
+		return true;
+
+#if 1
+	for (d = sent->word[w].d; d != NULL; d = d->next)
+	{
+		if ((d->left != NULL) && (d->left->nearest_word == lword) &&
+		    (rc->next != NULL) && (rc->next->nearest_word < w))
+			continue;
+		if ((d->right != NULL) && (d->right->nearest_word == rword) &&
+		    (lc->next != NULL) && (lc->next->nearest_word > w))
+			continue;
+		break;
+	}
+	if (d == NULL)
+	{
+		PR(X);
+		return false;
+	}
+#endif
+
+#if TOO_MUCH_OVERHEAD
+	for (d = sent->word[w].d; d != NULL; d = d->next)
+	{
+		if ((d->left != NULL) && (d->left->nearest_word < lword))
+			continue;
+		if ((d->right != NULL) && (d->right->nearest_word > rword))
+			continue;
+		break;
+	}
+	if (d == NULL)
+	{
+		PR(N);
+		return false;
+	}
+#endif
+
+	return true;
+}
+
+static bool is_cross_mlink(prune_context *pc,
+                           Connector *lc, Connector *rc,
+                           int lword, int rword)
+{
+	if (pc->ml == NULL) return false;
+
+	Sentence sent = pc->sent;
+	int null_allowed = pc->null_links - pc->null_words;
+
+	for (int w = lword+1; w < rword; w++)
+	{
+		if (sent->word[w].optional) continue;
+		if (pc->is_null_word[w]) continue;
+
+#if 1
+		/* Links of word w are not allowed to cross the edge words. */
+		if ((pc->ml[w].nw[0] < lword) && PR(L)) goto null_word_found;
+		if ((pc->ml[w].nw[1] > rword) && PR(R)) goto null_word_found;
+#endif
+
+#if 1
+		/* Links from the deepest edge connectors cannot cross a link to w. */
+		if (lword == pc->ml[w].nw[0])
+		{
+			/* w has a link to lword, or it's a null word. */
+			Connector *c = deepest_connector(lc);
+			if (!c->multi && (c->nearest_word > w) && PR(A)) goto null_word_found;
+		}
+#endif
+#if 1
+		if (rword == pc->ml[w].nw[1])
+		{
+			/* w has a link to rword, or it's a null word. */
+			Connector *c = deepest_connector(rc);
+			if (!c->multi && (c->nearest_word < w) && PR(B)) goto null_word_found;
+		}
+#endif
+
+		if ((lc->next != NULL) && (rc->next != NULL))
+		{
+#if VERY_WEAK
+			if ((pc->ml[w].nw[0] < lc->next->nearest_word) &&
+			    (rc->next->nearest_word < w))
+			{
+				PR(C);
+				goto null_word_found;
+			}
+#endif
+#if 1
+			if ((pc->ml[w].nw[1] > rc->next->nearest_word) &&
+			    (lc->next->nearest_word > w))
+			{
+				PR(D);
+				goto null_word_found;
+			}
+#endif
+		}
+
+		if (!find_no_xlink_disjunct(pc, w, lc, rc, lword, rword))
+			goto null_word_found;
+
+		continue;
+null_word_found:
+		if (null_allowed == 0)
+		{
+			return true;
+		}
+		null_allowed--;
+		continue;
+	}
+
+	return false;
+}
+
 /**
  * Find if words w1 and w2 may become adjacent due to optional words.
  * This may happen if they contain only optional words between them.
@@ -584,6 +711,8 @@ static bool possible_connection(prune_context *pc,
 			if (lc->next->nearest_word > rc->next->nearest_word)
 				return false; /* Cross link. */
 		}
+
+		if (is_cross_mlink(pc, lc, rc, lword, rword)) return false;
 	}
 
 	return true;
