@@ -94,14 +94,17 @@ struct prune_context_s
 	bool islands_ok;         /* a copy of islands_ok from the parse options */
 	bool always_parse;
 	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
-	int N_changed;   /* counts the changes of c->nearest_word fields in a pass */
+
+	/* Per-pass counters. */
+	int N_changed;    /* counts the changes of c->nearest_word fields */
+	int N_deleted[2]; /* counts deletions: [0]: initial; [1]: by mem. sharing */
 
 	power_table *pt;
 	mlink_t *ml;
 	Sentence sent;
 
-	int power_cost;  /* for debug - shown in the verbose output */
-	int N_xlink;     /* counts linked interval link-crossing rejections */
+	int power_cost;   /* for debug - shown in the verbose output */
+	int N_xlink;      /* counts linked interval link-crossing rejections */
 };
 
 /*
@@ -933,7 +936,6 @@ static bool check_null_word(prune_context *pc, int w)
  */
 static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 {
-	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
 	bool extra_null_word = false;
 	power_table *pt = pc->pt;
@@ -964,7 +966,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					N_deleted[(int)bad]++;
+					pc->N_deleted[(int)bad]++;
 					continue;
 				}
 
@@ -976,14 +978,14 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
-		total_deleted += N_deleted[0] + N_deleted[1];
+		total_deleted += pc->N_deleted[0] + pc->N_deleted[1];
 		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n\\",
-		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		        pc->N_changed, pc->N_deleted[0]+pc->N_deleted[1], pc->N_deleted[0], pc->N_deleted[1]);
 		if (pc->ml != NULL)
 			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
 
-		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc->N_changed = N_deleted[0] = N_deleted[1] = pc->N_xlink = 0;
+		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
+		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
 
 		/* right-to-left pass */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
@@ -1005,7 +1007,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					N_deleted[(int)bad]++;
+					pc->N_deleted[(int)bad]++;
 					continue;
 				}
 
@@ -1017,14 +1019,14 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
-		total_deleted += N_deleted[0] + N_deleted[1];
+		total_deleted += pc->N_deleted[0] + pc->N_deleted[1];
 		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n\\",
-		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		        pc->N_changed, pc->N_deleted[0]+pc->N_deleted[1], pc->N_deleted[0], pc->N_deleted[1]);
 		if (pc->ml != NULL)
 			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
 
-		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc->N_changed = N_deleted[0] = N_deleted[1] = pc->N_xlink = 0;
+		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
+		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
 	}
 	while (!extra_null_word || pc->always_parse);
 
