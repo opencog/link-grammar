@@ -101,6 +101,7 @@ struct prune_context_s
 	Sentence sent;
 
 	int power_cost;  /* for debug - shown in the verbose output */
+	int N_xlink;     /* counts linked interval link-crossing rejections */
 };
 
 /*
@@ -588,6 +589,7 @@ static bool is_cross_mlink(prune_context *pc,
 null_word_found:
 		if (null_allowed == 0)
 		{
+			pc->N_xlink++;
 			return true;
 		}
 		null_allowed--;
@@ -975,11 +977,13 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		}
 
 		total_deleted += N_deleted[0] + N_deleted[1];
-		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n",
+		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n\\",
 		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		if (pc->ml != NULL)
+			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
 
 		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
+		pc->N_changed = N_deleted[0] = N_deleted[1] = pc->N_xlink = 0;
 
 		/* right-to-left pass */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
@@ -1014,11 +1018,13 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		}
 
 		total_deleted += N_deleted[0] + N_deleted[1];
-		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n",
+		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n\\",
 		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		if (pc->ml != NULL)
+			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
 
 		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
+		pc->N_changed = N_deleted[0] = N_deleted[1] = pc->N_xlink = 0;
 	}
 	while (!extra_null_word || pc->always_parse);
 
@@ -1612,24 +1618,26 @@ static bool build_mlink_table(Sentence sent, mlink_t *ml)
 
 	if (verbosity_level(+D_PRUNE) && ml_exists)
 	{
+		prt_error("\n");
 		for (unsigned int w = 0; w < sent->length; w++)
 		{
 			if (sent->word[w].optional) continue;
 
 			if (ml[w].nw[0] != ml[w].nw[1])
 			{
-				printf("%3d: nearest_word (%3d %3d)", w,
+				prt_error("%3d: nearest_word (%3d %3d)", w,
 				       w==ml[w].nw[0]?-1:ml[w].nw[0],
 				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
 #if FW
-				printf("     farthest_word (%d %d)\n",
+				prt_error("     farthest_word (%d %d)\n\\",
 				       w==ml[w].nw[0]?-1:ml[w].fw[0]<=0?-1:ml[w].fw[0],
 				       w==ml[w].nw[1]?-1:ml[w].fw[1]>=sent->length?-1:ml[w].fw[1]);
 #else
-				printf("\n");
+				prt_error("\n\\");
 #endif
 			}
 		}
+		lg_error_flush();
 	}
 
 	return ml_exists;
