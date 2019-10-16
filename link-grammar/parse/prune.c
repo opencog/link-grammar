@@ -536,6 +536,15 @@ static bool is_cross_mlink(prune_context *pc,
 	Sentence sent = pc->sent;
 	int null_allowed = pc->null_links - pc->null_words;
 
+	if (pc->islands_ok)
+	{
+		if (null_allowed > 0) return false;
+	}
+	else
+	{
+		if (null_allowed > rword - lword - 1) return false;
+	}
+
 	for (int w = lword+1; w < rword; w++)
 	{
 		if (sent->word[w].optional) continue;
