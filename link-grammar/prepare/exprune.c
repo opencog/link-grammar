@@ -45,6 +45,9 @@
  * completes one word.  The process continues through the words from left
  * to right.
  * Alternate passes are made until no connector is deleted.
+ *
+ * FIXME: Mark shallow connectors on dictionary read and enhance the
+ * pruning accordingly.
  */
 
 #define D_EXPRUNE 9
