@@ -52,7 +52,19 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* Per-word minimum/maximum link descriptor.
  * The dimension of the 2-element arrays below is used as follows:
- * [0] - left side; [1] - right side. */
+ * [0] - left side; [1] - right side.
+ * nw is the minimum nearest_word of the shallow connectors.
+ * fw is the maximum farthest_word of the shallow connectors.
+ *
+ * The connection of the shallow connector is to a greater distance than
+ * the connections from the deepest ones. For word w, words in the ranges
+ * (nw[0], w) or (w, nw[1]) cannot connect to words outside its
+ * corresponding range without crossing a link to a shallow connector of
+ * w. In addition, words in (nw[0], w) cannot connect to words before
+ * fw[0] (and similarly for the other range).
+ *
+ * These values are computed by build_mlink_table() after the first
+ * power_prune() call, and before each additional call to power_prune(). */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
