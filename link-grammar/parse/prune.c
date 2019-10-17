@@ -129,51 +129,6 @@ struct prune_context_s
 };
 
 /*
-  FIXME: These comments are old and are not relevant in their
-  current form. Convert them to relevant comments.
-
-  The algorithms in this file prune disjuncts from the disjunct list
-  of the sentence that can be eliminated by a simple checks.  The first
-  check works as follows:
-
-  A series of passes are made through the sentence, alternating
-  left-to-right and right-to-left.  Consider the left-to-right pass (the
-  other is symmetric).  A set S of connectors is maintained (initialized
-  to be empty).  Now the disjuncts of the current word are processed.
-  If a given disjunct's left pointing connectors have the property that
-  at least one of them has no connector in S to which it can be matched,
-  then that disjunct is deleted. Now the set S is augmented by the right
-  connectors of the remaining disjuncts of that word.  This completes
-  one word.  The process continues through the words from left to right.
-  Alternate passes are made until no disjunct is deleted.
-
-  It worries me a little that if there are some really huge disjuncts lists,
-  then this process will probably do nothing.  (This fear turns out to be
-  unfounded.)
-
-  Notes:  Power pruning will not work if applied before generating the
-  "and" disjuncts.  This is because certain of it's tricks don't work.
-  Think about this, and finish this note later....
-  Also, currently I use the standard connector match procedure instead
-  of the pruning one, since I know power pruning will not be used before
-  and generation.  Replace this to allow power pruning to work before
-  generating and disjuncts.
-
-  Currently it seems that normal pruning, power pruning, and generation,
-  pruning, and power pruning (after "and" generation) and parsing take
-  about the same amount of time.  This is why doing power pruning before
-  "and" generation might be a very good idea.
-
-  New idea:  Suppose all the disjuncts of a word have a connector of type
-  c pointing to the right.  And further, suppose that there is exactly one
-  word to its right containing that type of connector pointing to the left.
-  Then all the other disjuncts on the latter word can be deleted.
-  (This situation is created by the processing of "either...or", and by
-  the extra disjuncts added to a "," neighboring a conjunction.)
-
-*/
-
-/*
   Here is what you've been waiting for: POWER-PRUNE
 
   The kinds of constraints it checks for are the following:
@@ -222,6 +177,18 @@ struct prune_context_s
    always ensuring that deletable[][] has been defined.  With nothing
    deletable, this is equivalent to RUTHLESS.   --DS, 7/97
 */
+
+/*
+ * From old comments:
+ * It worries me a little that if there are some really huge disjuncts
+ * lists, then this process will probably do nothing.  (This fear turns
+ * out to be unfounded.)
+ *
+ * New idea:  Suppose all the disjuncts of a word have a connector of type
+ * c pointing to the right.  And further, suppose that there is exactly
+ * one word to its right containing that type of connector pointing to the
+ * left.  Then all the other disjuncts on the latter word can be deleted.
+ */
 
 /**
  * free all of the hash tables and C_lists
