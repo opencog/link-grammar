@@ -129,57 +129,50 @@ struct prune_context_s
 };
 
 /*
-  Here is what you've been waiting for: POWER-PRUNE
-
-  The kinds of constraints it checks for are the following:
-
-	1) successive connectors on the same disjunct have to go to
-	   nearer and nearer words.
-
-	2) two deep connectors cannot attach to each other
-	   (A connectors is deep if it is not the first in its list; it
-	   is shallow if it is the first in its list; it is deepest if it
-	   is the last on its list.)
-
-	3) on two adjacent words, a pair of connectors can be used
-	   only if they're the deepest ones on their disjuncts
-
-	4) on two non-adjacent words, a pair of connectors can be used only
-	   if not [both of them are the deepest].
-
-   The data structure consists of a pair of hash tables on every word.
-   Each bucket of a hash table has a list of pointers to connectors.
-   These nodes also store if the chosen connector is shallow.
-*/
-/*
-   As with normal pruning, we make alternate left->right and right->left
-   passes.  In the R->L pass, when we're on a word w, we make use of
-   all the left-pointing hash tables on the words to the right of w.
-   After the pruning on this word, we build the left-pointing hash table
-   this word.  This guarantees idempotence of the pass -- after doing an
-   L->R, doing another would change nothing.
-
-   Each connector has an integer c_word field.  This refers to the closest
-   word that it could be connected to.  These are initially determined by
-   how deep the connector is.  For example, a deepest connector can connect
-   to the neighboring word, so its c_word field is w+1 (w-1 if this is a left
-   pointing connector).  It's neighboring shallow connector has a c_word
-   value of w+2, etc.
-
-   The pruning process adjusts these c_word values as it goes along,
-   accumulating information about any way of linking this sentence.
-   The pruning process stops only after no disjunct is deleted and no
-   c_word values change.
-
-   The difference between RUTHLESS and GENTLE power pruning is simply
-   that GENTLE uses the deletable region array, and RUTHLESS does not.
-   So we can get the effect of these two different methods simply by
-   always ensuring that deletable[][] has been defined.  With nothing
-   deletable, this is equivalent to RUTHLESS.   --DS, 7/97
+* Here is what you've been waiting for: POWER-PRUNE
+*
+* The kinds of constraints it checks for are the following:
+*
+*  1) successive connectors on the same disjunct have to go to
+*     nearer and nearer words.
+*
+*  2) two deep connectors cannot attach to each other
+*     (A connectors is deep if it is not the first in its list; it
+*     is shallow if it is the first in its list; it is deepest if it
+*     is the last on its list.)
+*
+*  3) on two adjacent words, a pair of connectors can be used
+*     only if they're the deepest ones on their disjuncts
+*
+*  4) on two non-adjacent words, a pair of connectors can be used only
+*     if not [both of them are the deepest].
+*
+*  The data structure consists of a pair of hash tables on every word.
+*  Each bucket of a hash table has a list of pointers to connectors.
+*
+*  As with expression pruning, we make alternate left->right and
+*  right->left passes.  In the R->L pass, when we're on a word w, we make
+*  use of all the left-pointing hash tables on the words to the right of
+*  w.  After the pruning on this word, we build the left-pointing hash
+*  table this word.  This guarantees idempotence of the pass -- after
+*  doing an L->R, doing another would change nothing.
+*
+*  Each connector has an integer nearest_word field.  This refers to the
+*  closest word that it could be connected to.  These are initially
+*  determined by how deep the connector is.  For example, a deepest
+*  connector can connect to the neighboring word, so its nearest_word
+*  field is w+1 (w-1 if this is a left pointing connector).  It's
+*  neighboring shallow connector has a nearest_word value of w+2, etc.
+*
+*  The pruning process adjusts these nearest_word values as it goes along,
+*  accumulating information about any way of linking this sentence.  The
+*  pruning process stops only after no disjunct is deleted and no
+*  nearest_word values change.
 */
 
 /*
  * From old comments:
+ *
  * It worries me a little that if there are some really huge disjuncts
  * lists, then this process will probably do nothing.  (This fear turns
  * out to be unfounded.)
