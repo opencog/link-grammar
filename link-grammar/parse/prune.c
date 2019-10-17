@@ -689,7 +689,7 @@ static bool possible_connection(prune_context *pc,
 
 	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
-	/* Word range constraints */
+	/* Word range constraints. */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
 	if (1 == dist)
@@ -956,7 +956,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	{
 		pc->pass_number++;
 
-		/* left-to-right pass */
+		/* Left-to-right pass. */
 		for (WordIdx w = 0; w < sent->length; w++)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
@@ -997,7 +997,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
 		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
 
-		/* right-to-left pass */
+		/* Right-to-left pass. */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
