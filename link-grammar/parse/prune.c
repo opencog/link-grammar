@@ -129,6 +129,8 @@ struct prune_context_s
 };
 
 /*
+  FIXME: These comments are old and are not relevant in their
+  current form. Convert them to relevant comments.
 
   The algorithms in this file prune disjuncts from the disjunct list
   of the sentence that can be eliminated by a simple checks.  The first
