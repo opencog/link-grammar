@@ -335,10 +335,35 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			else
 				needed_prune_level = MAX_SENTENCE;
 
-			pp_and_power_prune(sent, ts_pruning, current_prune_level, opts, ncu);
+			if (more_pruning_possible)
+				restore_disjuncts(sent, saved_memblock, ts_pruning);
 
 			more_pruning_possible =
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
+
+			unsigned int expexted_null_count =
+				pp_and_power_prune(sent, ts_pruning, current_prune_level, opts,
+				                   ncu);
+			if (expexted_null_count > nl)
+			{
+				if (opts->verbosity >= D_USER_TIMES)
+				{
+					prt_error("#### Skip parsing (w/%u ", nl);
+					if (expexted_null_count-1 > nl)
+						prt_error("to %u nulls)\n", expexted_null_count-1);
+					else
+						prt_error("null%s)\n", (nl != 1) ? "s" : "");
+				}
+				nl = expexted_null_count-1;
+				/* To get a result, parse w/null count which is at most one less
+				 * than the number of tokens (w/all nulls there is no linkage). */
+				if (nl == sent->length-1) nl--;
+				continue;
+			}
+		}
+
+		if (NULL != ts_pruning)
+		{
 			ts_parsing = pack_sentence_for_parsing(sent, dcnt, ccnt,
 			                                       more_pruning_possible);
 			print_time(opts, "Encoded for parsing");
@@ -392,19 +417,16 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if (verbosity >= D_USER_INFO)
 		{
 			if ((sent->num_valid_linkages == 0) &&
-				 (sent->num_linkages_post_processed > 0) &&
-				 ((int)opts->linkage_limit < sent->num_linkages_found))
+			    (sent->num_linkages_post_processed > 0) &&
+			    ((int)opts->linkage_limit < sent->num_linkages_found))
 				prt_error("Info: All examined linkages (%zu) had P.P. violations.\n"
-						  "Consider increasing the linkage limit.\n"
-						  "At the command line, use !limit\n",
-						  sent->num_linkages_post_processed);
+				          "Consider increasing the linkage limit.\n"
+				          "At the command line, use !limit\n",
+				          sent->num_linkages_post_processed);
 		}
 
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
-
-		if (more_pruning_possible)
-			restore_disjuncts(sent, saved_memblock, ts_pruning);
 
 		free_tracon_sharing(ts_parsing);
 		ts_parsing = NULL;

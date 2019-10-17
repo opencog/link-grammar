@@ -54,7 +54,7 @@ messages of the lower ones.
        A length limit of 0 means the value of the `short_length` option is
        used.
 
-* 102: Print all disjuncts before pruning.
+* 102: Print all disjuncts before and after pruning.
 
 * 103: Show unsubscripted dictionary words and subscripted ones which share
        the same base word.

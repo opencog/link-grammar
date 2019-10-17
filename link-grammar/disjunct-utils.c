@@ -755,7 +755,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				/* Initialize for the pruning step when no sharing is done yet. */
 				newc->refcount = 1;  /* No sharing yet. */
-				newc->tracon_id = 0; /* Used in power_prune() for pass number. */
 				if (NULL != tl)
 					tl->num_cnctrs_per_word[dir][w]++;
 			}
@@ -1049,6 +1048,12 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
 	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, keep_disjuncts);
+
+	if (verbosity_level(D_SPEC+2))
+	{
+		printf("pack_sentence_for_parsing (null_count %u):\n", sent->null_count);
+		print_all_disjuncts(sent);
+	}
 
 	if (NULL == ts->csid[0])
 	{

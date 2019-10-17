@@ -2,6 +2,7 @@
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
 /* Copyright (c) 2009, 2013, 2014 Linas Vepstas                          */
+/* Copyright (c) 2016, 2017, 2018, 2019 Amir Plivatsky                   */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -47,6 +48,19 @@ struct c_list_s
 	Connector *c;
 };
 
+typedef uint8_t WordIdx_m;     /* Storage representation of word index */
+
+/* Per-word minimum/maximum link descriptor.
+ * The dimension of the 2-element arrays below is used as follows:
+ * [0] - left side; [1] - right side. */
+typedef struct
+{
+	WordIdx_m nw[2];   /* minimum link distance */
+#if FW
+	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
+#endif
+} mlink_t;
+
 typedef struct power_table_s power_table;
 struct power_table_s
 {
@@ -76,13 +90,22 @@ typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
 	unsigned int null_links; /* maximum number of null links */
-	int pass_number; /* mark tracons for processing only once per pass */
-	int N_changed;   /* counts the changes of c->nearest_word fields in a pass */
+	unsigned int null_words; /* found number of non-optional null words */
+	bool *is_null_word;      /* a map of null words (indexed by word number) */
+	bool islands_ok;         /* a copy of islands_ok from the parse options */
+	bool always_parse;
+	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
+
+	/* Per-pass counters. */
+	int N_changed;    /* counts the changes of c->nearest_word fields */
+	int N_deleted[2]; /* counts deletions: [0]: initial; [1]: by mem. sharing */
 
 	power_table *pt;
+	mlink_t *ml;
 	Sentence sent;
 
-	int power_cost;  /* for debug - shown in the verbose output */
+	int power_cost;   /* for debug - shown in the verbose output */
+	int N_xlink;      /* counts linked interval link-crossing rejections */
 };
 
 /*
@@ -452,6 +475,143 @@ static void clean_table(unsigned int size, C_list **t)
 	}
 }
 
+#define PRx(x) fprintf(stderr, ""#x)
+#define PR(...) true
+
+/**
+ * Validate that at least one disjunct of \p w may have no cross link.
+ **/
+static bool find_no_xlink_disjunct(prune_context *pc, int w,
+                                   Connector *lc, Connector *rc,
+                                   int lword, int rword)
+{
+	Sentence sent = pc->sent;
+	Disjunct *d;
+
+	if ((pc->ml[w].nw[0] >= lword) && (pc->ml[w].nw[1] <= rword))
+		return true;
+
+#if 1
+	for (d = sent->word[w].d; d != NULL; d = d->next)
+	{
+		if ((d->left != NULL) && (d->left->nearest_word == lword) &&
+		    (rc->next != NULL) && (rc->next->nearest_word < w))
+			continue;
+		if ((d->right != NULL) && (d->right->nearest_word == rword) &&
+		    (lc->next != NULL) && (lc->next->nearest_word > w))
+			continue;
+		break;
+	}
+	if (d == NULL)
+	{
+		PR(X);
+		return false;
+	}
+#endif
+
+#if TOO_MUCH_OVERHEAD
+	for (d = sent->word[w].d; d != NULL; d = d->next)
+	{
+		if ((d->left != NULL) && (d->left->nearest_word < lword))
+			continue;
+		if ((d->right != NULL) && (d->right->nearest_word > rword))
+			continue;
+		break;
+	}
+	if (d == NULL)
+	{
+		PR(N);
+		return false;
+	}
+#endif
+
+	return true;
+}
+
+static bool is_cross_mlink(prune_context *pc,
+                           Connector *lc, Connector *rc,
+                           int lword, int rword)
+{
+	if (pc->ml == NULL) return false;
+
+	Sentence sent = pc->sent;
+	int null_allowed = pc->null_links - pc->null_words;
+
+	if (pc->islands_ok)
+	{
+		if (null_allowed > 0) return false;
+	}
+	else
+	{
+		if (null_allowed > rword - lword - 1) return false;
+	}
+
+	for (int w = lword+1; w < rword; w++)
+	{
+		if (sent->word[w].optional) continue;
+		if (pc->is_null_word[w]) continue;
+
+#if 1
+		/* Links of word w are not allowed to cross the edge words. */
+		if ((pc->ml[w].nw[0] < lword) && PR(L)) goto null_word_found;
+		if ((pc->ml[w].nw[1] > rword) && PR(R)) goto null_word_found;
+#endif
+
+#if 1
+		/* Links from the deepest edge connectors cannot cross a link to w. */
+		if (lword == pc->ml[w].nw[0])
+		{
+			/* w has a link to lword, or it's a null word. */
+			Connector *c = deepest_connector(lc);
+			if (!c->multi && (c->nearest_word > w) && PR(A)) goto null_word_found;
+		}
+#endif
+#if 1
+		if (rword == pc->ml[w].nw[1])
+		{
+			/* w has a link to rword, or it's a null word. */
+			Connector *c = deepest_connector(rc);
+			if (!c->multi && (c->nearest_word < w) && PR(B)) goto null_word_found;
+		}
+#endif
+
+		if ((lc->next != NULL) && (rc->next != NULL))
+		{
+#if VERY_WEAK
+			if ((pc->ml[w].nw[0] < lc->next->nearest_word) &&
+			    (rc->next->nearest_word < w))
+			{
+				PR(C);
+				goto null_word_found;
+			}
+#endif
+#if 1
+			if ((pc->ml[w].nw[1] > rc->next->nearest_word) &&
+			    (lc->next->nearest_word > w))
+			{
+				PR(D);
+				goto null_word_found;
+			}
+#endif
+		}
+
+		if (!find_no_xlink_disjunct(pc, w, lc, rc, lword, rword))
+			goto null_word_found;
+
+		continue;
+null_word_found:
+		if (null_allowed == 0)
+		{
+			pc->N_xlink++;
+			return true;
+		}
+		null_allowed--;
+		continue;
+	}
+
+	return false;
+}
+
 /**
  * Find if words w1 and w2 may become adjacent due to optional words.
  * This may happen if they contain only optional words between them.
@@ -467,15 +627,47 @@ bool optional_gap_collapse(Sentence sent, int w1, int w2)
 	return true;
 }
 
-static bool non_opt_words_gt(unsigned int nl, Sentence sent, int w1, int w2)
+/**
+ * Find if the sentence contains more than pc->null_links nulls.
+ * This function is called when we know that the gap (w1, w2) creates one
+ * or more null links. Only non-optional words are counted here (optional
+ * words are always allowed to be null-linked).
+ *
+ * Algo: First determine null_allowed - the number of nulls which is
+ * allowed in the gap. If the gap includes more than null_allowed nulls
+ * this implies that the sentence would include more than the desired null
+ * links (pc->null_links) so true is returned to signify that the proposed
+ * link cannot be done.
+ * If islands_ok==true, the whole gap may be one island, so it is counted
+ * only as a single null. Also, since only null words are counted here,
+ * the number of the total null links may be under-estimated (efficiency
+ * effect only).
+ * Note: Existing null words in the gap are just skipped as they have
+ * already taken into account in null_allowed.
+ *
+ * @return \c true only if the sentence contains more than pc->null_links
+ * nulls. With \c islands_ok=true, \c false may still be returned in that
+ * case because only null words are counted here.
+ */
+static bool more_nulls_than_allowed(prune_context *pc, int w1, int w2)
 {
-	unsigned int non_optional_word = 0;
+	int null_allowed = pc->null_links - pc->null_words;
+
+	if (pc->islands_ok)
+	{
+		if (null_allowed > 0) return false;
+	}
+	else
+	{
+		if (null_allowed > w2 - w1 - 1) return false;
+	}
 
 	for (int w = w1+1; w < w2; w++)
 	{
-		if (sent->word[w].optional) continue;
-		non_optional_word++;
-		if (non_optional_word > nl) return true;
+		if (pc->sent->word[w].optional) continue;
+		if (pc->is_null_word[w]) continue;
+		if (null_allowed == 0) return true;
+		null_allowed--;
 	}
 
 	return false;
@@ -490,41 +682,41 @@ static bool possible_connection(prune_context *pc,
                                 Connector *lc, Connector *rc,
                                 int lword, int rword)
 {
-	int dist;
+	int dist = rword - lword;
+#ifdef DEBUG
+	assert(0 < dist, "Bad word order in possible connection.");
+#endif
+
 	if (!lc_easy_match(lc->desc, rc->desc)) return false;
 
+	/* Word range constraints. */
 	if ((lc->nearest_word > rword) || (rc->nearest_word < lword)) return false;
 
-	dist = rword - lword;
-	// assert(0 < dist, "Bad word order in possible connection.");
-
-	/* Word range constraints */
 	if (1 == dist)
 	{
 		if ((lc->next != NULL) || (rc->next != NULL)) return false;
 	}
 	else
-	if (rword > lc->farthest_word || lword < rc->farthest_word)
+	if ((rword > lc->farthest_word) || (lword < rc->farthest_word))
 	{
 		return false;
 	}
 	else
 	{
 		/* We arrive here if the words are NOT next to each other. Say the
-		 * gape between them contains W non-optional words. We also know
+		 * gap between them contains W non-optional words. We also know
 		 * that we are going to parse with N null-links (which involves
 		 * sub-parsing with the range of [0, N] null-links).
 		 * If there is not at least one intervening connector (i.e. both
-		 * of lc->next and rc->next are NULL) then there will be W
-		 * null-linked words, and W must be <= N.
-		 * Notes:
-		 * 1. Optional words are disregarded because they are allowed to be
-		 * null-linked independently of the requested parsing null links.
-		 * 2. When island_ok=true this optimization is valid only for N = 0.
+		 * of lc->next and rc->next are NULL) then:
+		 * islands_ok=false:
+		 * There will be W null-linked words, and W must be <= N.
+		 * islands_ok=true:
+		 * There will be at least one island.
 		 */
 		if ((lc->next == NULL) && (rc->next == NULL) &&
 			 (!lc->multi) && (!rc->multi) &&
-			 non_opt_words_gt(pc->null_links, pc->sent, lword, rword))
+			 more_nulls_than_allowed(pc, lword, rword))
 		{
 			return false;
 		}
@@ -534,6 +726,8 @@ static bool possible_connection(prune_context *pc,
 			if (lc->next->nearest_word > rc->next->nearest_word)
 				return false; /* Cross link. */
 		}
+
+		if (is_cross_mlink(pc, lc, rc, lword, rword)) return false;
 	}
 
 	return true;
@@ -605,7 +799,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	int foundmatch = -1;
 
 	if (c == NULL) return w;
-	if (c->tracon_id == pc->pass_number) return c->nearest_word;
+	if (c->prune_pass == pc->pass_number) return c->nearest_word;
 	n = left_connector_list_update(pc, c->next, w, false) - 1;
 	if (0 > n) return -1;
 	if (((int) c->nearest_word) < n) n = c->nearest_word;
@@ -649,7 +843,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	int foundmatch = BAD_WORD;
 
 	if (c == NULL) return w;
-	if (c->tracon_id == pc->pass_number) return c->nearest_word;
+	if (c->prune_pass == pc->pass_number) return c->nearest_word;
 	n = right_connector_list_update(pc, c->next, w, false) + 1;
 	if (sent_length <= n) return BAD_WORD;
 	if (c->nearest_word > n) n = c->nearest_word;
@@ -677,7 +871,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 static void mark_jet_as_good(Connector *c, int pass_number)
 {
 	for (; NULL != c; c = c->next)
-		c->tracon_id = pass_number;
+		c->prune_pass = pass_number;
 }
 
 static void mark_jet_for_dequeue(Connector *c, bool mark_bad_word)
@@ -701,6 +895,30 @@ static bool is_bad(Connector *c)
 	return false;
 }
 
+/**
+ * Count null words and mark their location.
+ * Optional words are not checked, as they cannot contribute to the null
+ * word count.
+ *
+ * If word w is a new null word, mark its location in pc->is_null_word and
+ * increment pc->null_word.
+ * @return \c true iff a new null word increases the count to be over the
+ * requested maximum pc->null_links.
+ */
+static bool check_null_word(prune_context *pc, int w)
+{
+	if (pc->always_parse) return false;
+	Word *word = &pc->sent->word[w];
+
+	if ((word->d == NULL) && !word->optional && !pc->is_null_word[w])
+	{
+		pc->null_words++;
+		pc->is_null_word[w] = true;
+		if (pc->null_words > pc->null_links) return true;
+	}
+	return false;
+}
+
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
  *  Normally tracons are memory shared (with the exception that
@@ -709,34 +927,38 @@ static bool is_bad(Connector *c)
  *  sharing, see the comment on them in disjunct-utils.c.
  *
  *  The refcount of each connector serves as its reference count in the
- *  power table. Each time when a connector that cannot match is
+ *  power table. Each time a connector that cannot match is
  *  discovered, its reference count is decreased, and the nearest_word
  *  field of its jet is assigned BAD_WORD. Due to the tracon memory
- *  sharing, each change of the reference count and the assignment of
- *  BAD_WORD affects simultaneously all the identical tracons (and the
+ *  sharing, each change of the reference count and the nearest_word
+ *  field affects simultaneously all the identical tracons (and the
  *  corresponding connectors in the power table). The corresponding
  *  disjuncts are discarded on the fly, and additional disjuncts with jets
  *  so marked with BAD_WORD are discarded when encountered without a
  *  further check. Each tracon is handled only once in the same main loop
  *  pass by marking their connectors with the pass number in their
- *  tracon_id field.
+ *  prune_pass field.
+ *
+ *  Null words (words w/o disjuncts) are detected on the fly (the initial
+ *  ones are detected on the first pass). When the number of the null
+ *  words indicates there will be no parse with the given pc->null_links,
+ *  return -1. Else return the number of discarded disjuncts.
  */
 static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 {
-	int N_deleted[2] = {0}; /* [0] counts first deletions, [1] counts dups. */
 	int total_deleted = 0;
-
+	bool extra_null_word = false;
 	power_table *pt = pc->pt;
+
 	pc->N_changed = 1;      /* forces it always to make at least two passes */
 
-	while (1)
+	do
 	{
 		pc->pass_number++;
 
-		/* left-to-right pass */
+		/* Left-to-right pass. */
 		for (WordIdx w = 0; w < sent->length; w++)
 		{
-
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
 			{
 				Disjunct *d = *dd; /* just for convenience */
@@ -752,9 +974,9 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 					mark_jet_for_dequeue(d->left, true);
 					mark_jet_for_dequeue(d->right, false);
 
-					/* discard the current disjunct */
+					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					N_deleted[(int)bad]++;
+					pc->N_deleted[(int)bad]++;
 					continue;
 				}
 
@@ -762,17 +984,20 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 				dd = &d->next; /* NEXT */
 			}
 
+			if (check_null_word(pc, w)) extra_null_word = true;
 			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
-		total_deleted += N_deleted[0] + N_deleted[1];
-		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n",
-		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		total_deleted += pc->N_deleted[0] + pc->N_deleted[1];
+		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n\\",
+		        pc->N_changed, pc->N_deleted[0]+pc->N_deleted[1], pc->N_deleted[0], pc->N_deleted[1]);
+		if (pc->ml != NULL)
+			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
 
-		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
+		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
+		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
 
-		/* right-to-left pass */
+		/* Right-to-left pass. */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
 		{
 			for (Disjunct **dd = &sent->word[w].d; *dd != NULL; /* See: NEXT */)
@@ -792,7 +1017,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
-					N_deleted[(int)bad]++;
+					pc->N_deleted[(int)bad]++;
 					continue;
 				}
 
@@ -800,19 +1025,27 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 				dd = &d->next; /* NEXT */
 			}
 
+			if (check_null_word(pc, w)) extra_null_word = true;
 			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
-		total_deleted += N_deleted[0] + N_deleted[1];
-		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n",
-		        pc->N_changed, N_deleted[0]+N_deleted[1], N_deleted[0], N_deleted[1]);
+		total_deleted += pc->N_deleted[0] + pc->N_deleted[1];
+		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n\\",
+		        pc->N_changed, pc->N_deleted[0]+pc->N_deleted[1], pc->N_deleted[0], pc->N_deleted[1]);
+		if (pc->ml != NULL)
+			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
 
-		if (pc->N_changed == 0 && N_deleted[0] == 0 && N_deleted[1] == 0) break;
-		pc->N_changed = N_deleted[0] = N_deleted[1] = 0;
+		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
+		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
 	}
+	while (!extra_null_word || pc->always_parse);
 
-	print_time(opts, "power pruned (for %u null%s)",
-	           pc->null_links, (pc->null_links != 1) ? "s" : "");
+	char found_nulls[32] = "";
+	if ((verbosity >= D_USER_TIMES) && !extra_null_word && (pc->null_words > 0))
+		snprintf(found_nulls, sizeof(found_nulls), ", found %d", pc->null_words);
+	print_time(opts, "power pruned (for %u null%s%s%s)",
+	           pc->null_links, (pc->null_links != 1) ? "s" : "",
+	           extra_null_word ? ", extra null" : "", found_nulls);
 	if (verbosity_level(D_PRUNE))
 	{
 		prt_error("\n\\");
@@ -835,7 +1068,6 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 				for (; NULL != c; c = c->next)
 				{
 					assert(c->nearest_word != BAD_WORD, "dir %d w %zu", dir, w);
-					assert(c->tracon_id > 0, "dir %d w %zu", dir, w);
 					assert(c->refcount > 0, "dir %d w %zu", dir, w);
 				}
 			}
@@ -843,6 +1075,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	}
 #endif
 
+	if (extra_null_word && !pc->always_parse) return -1;
 	return total_deleted;
 }
 
@@ -1320,32 +1553,221 @@ static void get_num_con_uc(Sentence sent,power_table *pt,
 	}
 }
 
+static void mlink_table_init(Sentence sent, mlink_t *ml)
+{
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		ml[w] = (mlink_t)
+		{
+			.nw[0] = 0, .nw[1] = UNLIMITED_LEN,
+#if FW
+			.fw[0] = UNLIMITED_LEN, .fw[1] = 0
+#endif
+		};
+	}
+}
+
+/**
+ * Build the per-word minimum/maximum link distance table.
+ * Optional words are ignored because they cannot constrain link crossing.
+ * Table entries for word w having value w means no link constraint.
+ * The table is meaningful only if at least one entry has a link constraint.
+ * Code under "#if FW" is for supporting farthest_word (yet unimplemented).
+ *
+ * @param ml[out] The table (indexed by word, w/fields indexed by direction).
+ * @return \c true iff the table is meaningful.
+ */
+static bool build_mlink_table(Sentence sent, mlink_t *ml)
+{
+	bool ml_exists = false;
+
+	for (unsigned int w = 0; w < sent->length; w++)
+	{
+		if (sent->word[w].optional) continue;
+
+		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			if (NULL == d->left)
+			{
+				ml[w].nw[0] = w;
+#if FW
+				ml[w].fw[0] = 0;
+#endif
+			}
+			else
+			{
+				if (d->left->nearest_word > ml[w].nw[0])
+					ml[w].nw[0] = d->left->nearest_word;
+#if FW
+				if (d->left->farthest_word < ml[w].fw[0])
+					ml[w].fw[0] = d->left->farthest_word;
+#endif
+			}
+
+			if (NULL == d->right)
+			{
+				ml[w].nw[1] = w;
+#if FW
+				ml[w].fw[1] = UNLIMITED_LEN;
+#endif
+			}
+			else
+			{
+				if (d->right->nearest_word < ml[w].nw[1])
+					ml[w].nw[1] = d->right->nearest_word;
+#if FW
+				if (d->right->farthest_word > ml[w].fw[1])
+					ml[w].fw[1] = d->right->farthest_word;
+#endif
+			}
+		}
+
+		ml_exists |= ((ml[w].nw[0] != w) || (ml[w].nw[1] != w));
+#if FW
+		ml_exists |= /* XXX add farthest_word check */;
+#endif
+	}
+
+	if (verbosity_level(+D_PRUNE) && ml_exists)
+	{
+		prt_error("\n");
+		for (unsigned int w = 0; w < sent->length; w++)
+		{
+			if (sent->word[w].optional) continue;
+
+			if (ml[w].nw[0] != ml[w].nw[1])
+			{
+				prt_error("%3d: nearest_word (%3d %3d)", w,
+				       w==ml[w].nw[0]?-1:ml[w].nw[0],
+				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
+#if FW
+				prt_error("     farthest_word (%d %d)\n\\",
+				       w==ml[w].nw[0]?-1:ml[w].fw[0]<=0?-1:ml[w].fw[0],
+				       w==ml[w].nw[1]?-1:ml[w].fw[1]>=sent->length?-1:ml[w].fw[1]);
+#else
+				prt_error("\n\\");
+#endif
+			}
+		}
+		lg_error_flush();
+	}
+
+	return ml_exists;
+}
+
+/**
+ * Old comments (from the proof-of-concept code).
+ * Much is still relevant.
+ *
+ * Prune disjunct with a link that would need to cross links of words
+ * that must have links.
+ *
+ * The idea:
+ * Suppose that all the disjuncts of word wl have right shallow connectors
+ * with nearest_word (wl_nw > 1) when (wl_nw >= wr). At this time we
+ * suppose there is a linkage without null words. So at least one of these
+ * disjuncts must have a link to word wr or greater (i.e. word wl has a
+ * mandatory right-going link, marked m).
+ *
+ * We check all the words w strictly between wl and wr. Disjuncts of word
+ * w with a shallow connector having nearest_word < wl would cross (link
+ * x) the said link of word wl and thus can be discarded. The same can be
+ * checked for mandatory left-going links.
+ *
+ *                    m
+ *           +------------...
+ *       x   |           .
+ *      ...........+     .
+ *           |     |     .
+ *   w0 ... wl ... w ... wr ... wn
+ *
+ * Regarding a disjunct of wr, if its left connector connects to wl then
+ * its deepest connector cannot connect to the left of wl, so disjuncts
+ * whose deepest connectors having (nearest_word < wl) can be discarded.
+ * On the other hand, if it doesn't connect to wl it means that wl is
+ * connected to a word to its right. In that case again its deepest
+ * connector (in fact any of its connectors) cannot connect to the left of
+ * wl. So we can conclude that any disjunct of word wr having a deepest
+ * connector with (nearest_word < wl) can be discarded.
+ *
+ * In addition, in all cases, in disjunct which are retained and have so
+ * constrained connectors, they length_limit of these connectors can be
+ * adjusted not to get over w. Note that in the case of (wr - w == 1)
+ * the deepest connector is multi, its length_limit cannot be set to 1!
+ * This is because it behaves like more that one connector, when the rest
+ * may connect over w.
+ *
+ * In general, the mandatory links create "protected" ranges that links
+ * from other words cannot get out of it or into it.
+ */
+
 /**
  * Prune useless disjuncts.
+ * @param null_count Optimize for parsing with this null count.
+ * MAX_SENTENCE means null count optimizations is essentially ignored.
+ * @param[out] \p ncu[sent->length][2] Number of different connector
+ * uppercase parts per word per direction (for the fast matcher tables).
+ * @return The minimal null_count expected in parsing.
  */
-void pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
-                        unsigned int null_count, Parse_Options opts,
-                        unsigned int *ncu[2])
+unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
+                                unsigned int null_count, Parse_Options opts,
+                                unsigned int *ncu[2])
 {
 	prune_context pc = {0};
 	power_table pt;
 
 	power_table_init(sent, ts, &pt);
 
+	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
 	pc.pt = &pt;
 	pc.null_links = null_count;
+	pc.islands_ok = opts->islands_ok;
+	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
+	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
-	power_prune(sent, &pc, opts);
-	if (pp_prune(sent, ts, opts) > 0)
-		power_prune(sent, &pc, opts);
+	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here. */
+
+	if (num_deleted > 0)
+	{
+		pc.ml = alloca(sent->length * sizeof(*pc.ml));
+		mlink_table_init(sent, pc.ml);
+		bool ml_exists = build_mlink_table(sent, pc.ml);
+		print_time(opts, "Built_mlink_table%s", ml_exists ? "" : " (empty)");
+		if (ml_exists)
+			num_deleted = power_prune(sent, &pc, opts);
+		else
+			pc.ml = NULL;
+	}
+
+	if (num_deleted != -1)
+	{
+		if (pp_prune(sent, ts, opts) > 0)
+			power_prune(sent, &pc, opts);
+	}
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
 	 * additional deletions are very rare and even then most of the
 	 * times only one disjunct is deleted. */
 
-	get_num_con_uc(sent, &pt, ncu);
+	/* Initialize tentative values. */
+	unsigned int min_nulls = sent->null_count;
+	bool no_parse = false;
+
+	if (null_count == MAX_SENTENCE)
+	{
+		min_nulls = pc.null_words;
+	}
+	else if ((pc.null_words > sent->null_count) && !pc.always_parse)
+	{
+		min_nulls = sent->null_count + 1;
+	}
+
+	/* If no optimization then it is the last prune, so compute ncu now. */
+	if (!no_parse || (null_count == MAX_SENTENCE))
+		get_num_con_uc(sent, &pt, ncu);
+
 	power_table_delete(&pt);
 
-	return;
+	return min_nulls;
 }

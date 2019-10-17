@@ -114,6 +114,7 @@ struct Connector_struct
 	                         this could ever connect to.  Initialized by
 	                         setup_connectors(). Final value is found in
 	                         the power pruning. */
+	uint8_t prune_pass;   /* Prune pass number (one bit could be enough) */
 	bool multi;           /* TRUE if this is a multi-connector */
 	int tracon_id;        /* Tracon identifier (see disjunct-utils.c) */
 	const condesc_t *desc;
@@ -180,6 +181,18 @@ void free_connectors(Connector *);
 static inline bool connector_uc_eq(const Connector *c1, const Connector *c2)
 {
 	return (connector_uc_num(c1) == connector_uc_num(c2));
+}
+
+/*
+ * Return the deepest connector in the connector chain starting with \p c.
+ * @param c Any connector
+ * @return The deepest connector (can be modified if needed).
+ */
+static inline Connector *deepest_connector(const Connector *c)
+{
+	for (; c->next != NULL; c = c->next)
+		;
+	return (Connector *)c; /* Note: Constness removed. */
 }
 
 /* Length-limits for how far connectors can reach out. */
