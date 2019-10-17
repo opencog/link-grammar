@@ -105,12 +105,20 @@ struct prune_context_s
 	unsigned int null_words; /* found number of non-optional null words */
 	bool *is_null_word;      /* a map of null words (indexed by word number) */
 	bool islands_ok;         /* a copy of islands_ok from the parse options */
-	bool always_parse;
 	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
 
+	/* Used for debug: Always parse after the pruning.
+	 * Always parsing means always doing a full prune.
+	 * It has two purposes:
+	 * 1. Validation that skipping parsing is done only when really there
+	 * would be no parse (with the given null_links).
+	 * 2. Find the effectiveness of the parse-skipping strategy so it can
+	 * be tuned and improved. */
+	bool always_parse; /* value set by the test parse option "always-parse" */
+
 	/* Per-pass counters. */
-	int N_changed;    /* counts the changes of c->nearest_word fields */
-	int N_deleted[2]; /* counts deletions: [0]: initial; [1]: by mem. sharing */
+	int N_changed;     /* counts the changes of c->nearest_word fields */
+	int N_deleted[2];  /* counts deletions: [0]: initial; [1]: by mem. sharing */
 
 	power_table *pt;
 	mlink_t *ml;
