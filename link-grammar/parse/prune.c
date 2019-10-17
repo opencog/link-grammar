@@ -1569,7 +1569,7 @@ static void mlink_table_init(Sentence sent, mlink_t *ml)
  * @param ml[out] The table (indexed by word, w/fields indexed by direction).
  * @return \c true iff the table is meaningful.
  */
-static bool build_mlink_table(Sentence sent, mlink_t *ml)
+static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 {
 	bool ml_exists = false;
 
@@ -1644,7 +1644,7 @@ static bool build_mlink_table(Sentence sent, mlink_t *ml)
 		lg_error_flush();
 	}
 
-	return ml_exists;
+	return ml_exists ? ml : NULL;
 }
 
 /**
@@ -1724,12 +1724,10 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	{
 		pc.ml = alloca(sent->length * sizeof(*pc.ml));
 		mlink_table_init(sent, pc.ml);
-		bool ml_exists = build_mlink_table(sent, pc.ml);
-		print_time(opts, "Built_mlink_table%s", ml_exists ? "" : " (empty)");
-		if (ml_exists)
+		pc.ml = build_mlink_table(sent, pc.ml);
+		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
+		if (pc.ml != NULL)
 			num_deleted = power_prune(sent, &pc, opts);
-		else
-			pc.ml = NULL;
 	}
 
 	if (num_deleted != -1)
