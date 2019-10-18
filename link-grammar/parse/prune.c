@@ -52,7 +52,19 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* Per-word minimum/maximum link descriptor.
  * The dimension of the 2-element arrays below is used as follows:
- * [0] - left side; [1] - right side. */
+ * [0] - left side; [1] - right side.
+ * nw is the minimum nearest_word of the shallow connectors.
+ * fw is the maximum farthest_word of the shallow connectors.
+ *
+ * The connection of the shallow connector is to a greater distance than
+ * the connections from the deepest ones. For word w, words in the ranges
+ * (nw[0], w) or (w, nw[1]) cannot connect to words outside its
+ * corresponding range without crossing a link to a shallow connector of
+ * w. In addition, words in (nw[0], w) cannot connect to words before
+ * fw[0] (and similarly for the other range).
+ *
+ * These values are computed by build_mlink_table() after the first
+ * power_prune() call, and before each additional call to power_prune(). */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
@@ -93,12 +105,20 @@ struct prune_context_s
 	unsigned int null_words; /* found number of non-optional null words */
 	bool *is_null_word;      /* a map of null words (indexed by word number) */
 	bool islands_ok;         /* a copy of islands_ok from the parse options */
-	bool always_parse;
 	uint8_t pass_number;     /* marks tracons for processing only once per pass*/
 
+	/* Used for debug: Always parse after the pruning.
+	 * Always parsing means always doing a full prune.
+	 * It has two purposes:
+	 * 1. Validation that skipping parsing is done only when really there
+	 * would be no parse (with the given null_links).
+	 * 2. Find the effectiveness of the parse-skipping strategy so it can
+	 * be tuned and improved. */
+	bool always_parse; /* value set by the test parse option "always-parse" */
+
 	/* Per-pass counters. */
-	int N_changed;    /* counts the changes of c->nearest_word fields */
-	int N_deleted[2]; /* counts deletions: [0]: initial; [1]: by mem. sharing */
+	int N_changed;     /* counts the changes of c->nearest_word fields */
+	int N_deleted[2];  /* counts deletions: [0]: initial; [1]: by mem. sharing */
 
 	power_table *pt;
 	mlink_t *ml;
@@ -109,6 +129,8 @@ struct prune_context_s
 };
 
 /*
+  FIXME: These comments are old and are not relevant in their
+  current form. Convert them to relevant comments.
 
   The algorithms in this file prune disjuncts from the disjunct list
   of the sentence that can be eliminated by a simple checks.  The first
