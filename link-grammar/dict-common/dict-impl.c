@@ -47,7 +47,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
 		if (pfnRfc1766ToLcidW)
 		{
-			 LCID lcidlink-parser/parser-utilities.c;
+			 LCID lcid;
 			 if (SUCCEEDED(pfnRfc1766ToLcidW(&lcid, lpLocaleName)))
 			 {
 				rc = GetLocaleInfoW(lcid, LCType, lpLCData, cchData);
