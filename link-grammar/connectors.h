@@ -125,8 +125,12 @@ struct Connector_struct
 		/* For pruning use only */
 		struct
 		{
-			int refcount;      /* Memory-sharing reference count */
-			bool shallow;      /* TRUE if this is a shallow connector */
+			int refcount;   /* Memory-sharing reference count */
+			bool shallow;   /* TRUE if this is a shallow connector.
+			                 * A connectors is shallow if it is the first in
+			                 * its list on its disjunct. (It is deep if it is
+			                 * not the first in its list; it is deepest if it
+			                 * is the last on its list.) */
 		};
 	};
 };
