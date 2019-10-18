@@ -1710,6 +1710,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	power_table_init(sent, ts, &pt);
 
+	bool no_mlink = !!test_enabled("no-mlink");
 	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
 	pc.pt = &pt;
@@ -1720,7 +1721,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here. */
 
-	if (num_deleted > 0)
+	if ((num_deleted > 0) && !no_mlink)
 	{
 		pc.ml = alloca(sent->length * sizeof(*pc.ml));
 		mlink_table_init(sent, pc.ml);
