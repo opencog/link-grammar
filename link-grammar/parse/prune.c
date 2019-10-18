@@ -1743,19 +1743,20 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	/* Initialize tentative values. */
 	unsigned int min_nulls = sent->null_count;
-	bool no_parse = false;
+	bool parsing_to_be_done = true;
 
 	if (null_count == MAX_SENTENCE)
 	{
+		/* No prune optimization - this is the last pruning for this sentence. */
 		min_nulls = pc.null_words;
 	}
 	else if ((pc.null_words > sent->null_count) && !pc.always_parse)
 	{
 		min_nulls = sent->null_count + 1;
+		parsing_to_be_done = false;
 	}
 
-	/* If no optimization then it is the last prune, so compute ncu now. */
-	if (!no_parse || (null_count == MAX_SENTENCE))
+	if (parsing_to_be_done)
 		get_num_con_uc(sent, &pt, ncu);
 
 	power_table_delete(&pt);
