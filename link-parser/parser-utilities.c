@@ -91,6 +91,10 @@ char *expand_homedir(const char *filename)
 	memcpy(eh_filename, home, home_len);
 	memcpy(eh_filename + home_len, filename, filename_len + 1);
 
+#ifdef _WIN32
+	free(home);
+#endif
+
 	return eh_filename;
 }
 
