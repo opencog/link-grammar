@@ -1,5 +1,4 @@
 !batch
-!verbosity=1
 !echo
 !limit=1000
 !morphology=1

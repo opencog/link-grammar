@@ -3,7 +3,6 @@
 % * reiškia kad tai blogas sakinys, ir turetu buti atmestas.
 %
 
-!verbosity=1
 !echo
 !limit=1000
 !short=20
