@@ -985,7 +985,7 @@ static void remqueue_gword(const Sentence sent)
 
 	lgdebug(+D_RWW, "Word '%s'%s%s\n", w->subword,
 	        w->issued_unsplit ? " issued_unsplit" : "",
-	        w->status & WS_HASALT ? " WS_HASALT" : "");
+	        (w->status & WS_HASALT) ? " WS_HASALT" : "");
 
 	/* If the word should have an alternative which includes itself, add it as an
 	 * additional alternative (unless it has already been added, as indicated by
