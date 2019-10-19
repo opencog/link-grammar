@@ -273,7 +273,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (NULL == dj) dj = "";
 		cost = linkage_get_disjunct_cost(linkage, w);
 
-		append_string(s, "%*s    %5.3f  %s\n", pad, infword, cost, dj);
+		append_string(s, "%*s    % 4.3f  %s\n", pad, infword, cost, dj);
 	}
 	return dyn_str_take(s);
 }
