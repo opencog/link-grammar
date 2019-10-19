@@ -1,10 +1,8 @@
-!batch=0
-!echo=1
+!batch
+!echo
 !morphology=1
-!islands-ok=1
 %!spell=0
 %!limit=1000
-!walls=1
 
 ит мысықтың артынан қуды
 %the dog chased the cat
