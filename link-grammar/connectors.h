@@ -335,8 +335,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
  */
 static inline int get_tracon_word_number(Connector *c, int dir)
 {
-	for (; NULL != c->next; c = c->next)
-		;
+	c = connector_deepest(c);
 	return c->nearest_word + ((dir == 0) ? 1 : -1);
 }
 #endif /* _LINK_GRAMMAR_CONNECTORS_H_ */
