@@ -554,9 +554,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	size_t front = get_match_list_position(ctxt);
 	Match_node *ml = NULL, *mr = NULL; /* Initialize in case of NULL lc or rc. */
 	match_cache mc;
-	gword_cache gc;
-
-	gc.same_alternative = false;
+	gword_cache gc = { .same_alternative = false };
 
 	/* Get the lists of candidate matching disjuncts of word w for lc and
 	 * rc. Consider each of these lists only if the farthest_word of lc/rc
