@@ -64,7 +64,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * fw[0] (and similarly for the other range).
  *
  * These values are computed by build_mlink_table() after the first
- * power_prune() call, and before each additional call to power_prune(). */
+ * power_prune() call, before invoking an additional power_prune(). */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
@@ -1685,7 +1685,7 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  * connector with (nearest_word < wl) can be discarded.
  *
  * In addition, in all cases, in disjunct which are retained and have so
- * constrained connectors, they length_limit of these connectors can be
+ * constrained connectors, the length_limit of these connectors can be
  * adjusted not to get over w. Note that in the case of (wr - w == 1)
  * the deepest connector is multi, its length_limit cannot be set to 1!
  * This is because it behaves like more that one connector, when the rest
@@ -1721,7 +1721,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
 	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
-	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here. */
+	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here */
 
 	if ((num_deleted > 0) && !no_mlink)
 	{
@@ -1753,7 +1753,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	}
 	else if ((pc.null_words > sent->null_count) && !pc.always_parse)
 	{
-		min_nulls = sent->null_count + 1;
+		min_nulls = sent->null_count + 1; /* The most that can be inferred */
 		parsing_to_be_done = false;
 	}
 
