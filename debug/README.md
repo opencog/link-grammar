@@ -188,6 +188,11 @@ Or optionally (in order to see relevant debug messages from `preparation.c`):
 `sat-stats` - Display the number of PP-violations and disconnected linkages.
 `no-pp_pruning_1` - Disable a partial CONTAINS_NONE_RULES pruning
 
+7)  -test=<values> for the pruning subsystem:
+`len-multi-pruning:N` - Prune per null_count for more than N-token sentences.
+`always-parse` - Don't use a parse shortcut and always fully prune.
+`no-mlink` - Don't prune using an mlink table,
+
 Debugging and STDIO streams
 ---------------------------
 Messages at severity Info and higher (i.e. also Warning, Error and
