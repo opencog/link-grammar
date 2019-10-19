@@ -133,19 +133,22 @@ struct prune_context_s
 *
 * The kinds of constraints it checks for are the following:
 *
-*  1) successive connectors on the same disjunct have to go to
+*  1) Successive connectors on the same disjunct have to go to
 *     nearer and nearer words.
 *
-*  2) two deep connectors cannot attach to each other
+*  2) Two deep connectors cannot attach to each other; i.e. a deep
+*     connector can only attache to a shallow one, and a shallow
+*     connector can attache to any connector.
 *     (A connectors is deep if it is not the first in its list; it
 *     is shallow if it is the first in its list; it is deepest if it
 *     is the last on its list.)
 *
-*  3) on two adjacent words, a pair of connectors can be used
-*     only if they're the deepest ones on their disjuncts
+*  3) On two adjacent words, a pair of connectors can be used
+*     only if they're the deepest ones on their disjuncts.
 *
-*  4) on two non-adjacent words, a pair of connectors can be used only
-*     if not [both of them are the deepest].
+*  4) On non-adjacent words (with no intervening null-linked words),
+*     a pair of connectors can be used only if at least one of them
+*     is not the deepest.
 *
 *  The data structure consists of a pair of hash tables on every word.
 *  Each bucket of a hash table has a list of pointers to connectors.
