@@ -1573,6 +1573,8 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 {
 	bool ml_exists = false;
 
+	mlink_table_init(sent, ml);
+
 	for (unsigned int w = 0; w < sent->length; w++)
 	{
 		if (sent->word[w].optional) continue;
@@ -1724,7 +1726,6 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	if ((num_deleted > 0) && !no_mlink)
 	{
 		pc.ml = alloca(sent->length * sizeof(*pc.ml));
-		mlink_table_init(sent, pc.ml);
 		pc.ml = build_mlink_table(sent, pc.ml);
 		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
 		if (pc.ml != NULL)
