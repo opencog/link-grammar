@@ -461,9 +461,7 @@ char *lg_readline(const char *prompt)
 
 	/* Save non-blank lines */
 	if (pline && *pline)
-	{
-		if (*pline) add_history(pline);
-	}
+		add_history(pline);
 
 	return pline;
 }
