@@ -563,7 +563,7 @@ int mk_wcwidth(wchar_t ucs)
   return 1;
 }
 
-
+#if 0 // Unused
 int mk_wcswidth(const wchar_t *pwcs, size_t n)
 {
   int w, width = 0;
@@ -576,3 +576,4 @@ int mk_wcswidth(const wchar_t *pwcs, size_t n)
 
   return width;
 }
+#endif

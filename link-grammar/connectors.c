@@ -134,7 +134,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 	/* Scan the expression connector list and set length_limit.
 	 * restart_cn is needed because several connectors in this list
 	 * may match a given uppercase part. */
-	size_t restart_cn = 0, cn = 0, en;
+	size_t restart_cn = 0, cn, en;
 	for (en = 0; en < exp_num_con; en++)
 	{
 		for (cn = restart_cn; cn < ct->num_con; cn++)

@@ -195,7 +195,7 @@ static const char * generate_id_connector(Dictionary dict)
 	/* All idiom connector names start with the two letters "ID" */
 	*t++ = 'I';
 	*t++ = 'D';
-	for (; i < IDIOM_LINK_SZ; i++ )
+	for (; i < IDIOM_LINK_SZ; i++)
 	{
 		*t++ = dict->current_idiom[i] ;
 	}

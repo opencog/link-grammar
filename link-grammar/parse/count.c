@@ -255,7 +255,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	int null_count[256] = { 0 };   /* null_count histogram */
 	int chain_length[64] = { 0 };  /* Chain length histogram */
 	bool table_stat_entries = test_enabled("count-table-entries");
-	int n;              /* For printf() pretty printing. */
+	int n;              /* For printf() pretty printing */
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
@@ -271,7 +271,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 				nz++;
 			null_count[t->null_count]++;
 		}
-		if (c > 0) /* Slot 0 used for length overflow. */
+		if (c > 0) /* Slot 0 used for length overflow */
 		{
 			chain_length[c >= (int)ARRAY_SIZE(chain_length) ? 0 : c]++;
 			total_c += c;
@@ -286,7 +286,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 #endif
 	int used_slots = ctxt->table_size-N;
 	/* The used= value is TotalValues/TableSize (not UsedSlots/TableSize). */
-	printf("Connector table: msb=%d slots=%6d/%6d (%5.2f%%) avg-chain=%4.2f "
+	printf("Connector table: msb=%d slots=%6d/%6u (%5.2f%%) avg-chain=%4.2f "
 	       "values=%6d (z=%5d nz=%5d N=%5d) used=%5.2f%% "
 	       "acc=%zu (hit=%zu miss=%zu) (sent_len=%zu)\n",
 	       msb(ctxt->table_size), used_slots, ctxt->table_size,
@@ -305,7 +305,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
 		{
 			if (0 != null_count[nc])
-				printf("%d: %d\n", nc, null_count[nc]);
+				printf("%u: %d\n", nc, null_count[nc]);
 		}
 	}
 
@@ -315,14 +315,14 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		{
 			if (0 == null_count[nc]) continue;
 
-			printf("Null count %d:\n", nc);
+			printf("Null count %u:\n", nc);
 			for (unsigned int i = 0; i < ctxt->table_size; i++)
 			{
 				for (Table_connector *t = ctxt->table[i]; t != NULL; t = t->next)
 				{
 					if (t->null_count != nc) continue;
 
-					printf("[%d]%n", i, &n);
+					printf("[%u]%n", i, &n);
 					printf("%*d %5d c=%lld\n",  15-n, t->l_id, t->r_id, t->count);
 				}
 			}
@@ -400,7 +400,7 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * Cache lookup:
  * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
  *
- * @param ctxt Count context
+ * @param ctxt Count context.
  * @param dir Direction - 0: leftcount, 1: rightcount.
  * @param c The connector that starts the range.
  * @w The word that ends the range.
@@ -413,7 +413,7 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * @return Cache entry for the given range. Possible values:
  *    NULL - A nonzero count may be encountered for null_count>=lnull_start.
  *    lrcnt_cache_zero - A zero count would result.
- *    Cache pointer - an update for null_count>=lnull_start is needed.
+ *    Cache pointer - An update for null_count>=lnull_start is needed.
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
                               Connector *c, int cw, int w,
@@ -453,7 +453,7 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
 		 * been handled yet for the given range (the cache will be
 		 * updated for them by lrcnt_cache_update()). */
 		if (null_start == NULL) return NULL;
-		*null_start = (null_count_m)(lrcnt_cache->null_count + 1);
+		*null_start = lrcnt_cache->null_count + 1;
 	}
 
 	return lrcnt_cache;
