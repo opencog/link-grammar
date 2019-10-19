@@ -547,7 +547,7 @@ static bool is_cross_mlink(prune_context *pc,
 		if (lword == pc->ml[w].nw[0])
 		{
 			/* w has a link to lword, or it's a null word. */
-			Connector *c = deepest_connector(lc);
+			Connector *c = connector_deepest(lc);
 			if (!c->multi && (c->nearest_word > w) && PR(A)) goto null_word_found;
 		}
 #endif
@@ -555,7 +555,7 @@ static bool is_cross_mlink(prune_context *pc,
 		if (rword == pc->ml[w].nw[1])
 		{
 			/* w has a link to rword, or it's a null word. */
-			Connector *c = deepest_connector(rc);
+			Connector *c = connector_deepest(rc);
 			if (!c->multi && (c->nearest_word < w) && PR(B)) goto null_word_found;
 		}
 #endif

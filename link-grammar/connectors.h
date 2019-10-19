@@ -192,7 +192,7 @@ static inline bool connector_uc_eq(const Connector *c1, const Connector *c2)
  * @param c Any connector
  * @return The deepest connector (can be modified if needed).
  */
-static inline Connector *deepest_connector(const Connector *c)
+static inline Connector *connector_deepest(const Connector *c)
 {
 	for (; c->next != NULL; c = c->next)
 		;
