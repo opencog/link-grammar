@@ -255,7 +255,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	int null_count[256] = { 0 };   /* null_count histogram */
 	int chain_length[64] = { 0 };  /* Chain length histogram */
 	bool table_stat_entries = test_enabled("count-table-entries");
-	int n;              /* For printf() pretty printing. */
+	int n;              /* For printf() pretty printing */
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
@@ -271,7 +271,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 				nz++;
 			null_count[t->null_count]++;
 		}
-		if (c > 0) /* Slot 0 used for length overflow. */
+		if (c > 0) /* Slot 0 used for length overflow */
 		{
 			chain_length[c >= (int)ARRAY_SIZE(chain_length) ? 0 : c]++;
 			total_c += c;
@@ -400,7 +400,7 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * Cache lookup:
  * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
  *
- * @param ctxt Count context
+ * @param ctxt Count context.
  * @param dir Direction - 0: leftcount, 1: rightcount.
  * @param c The connector that starts the range.
  * @w The word that ends the range.
@@ -413,7 +413,7 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * @return Cache entry for the given range. Possible values:
  *    NULL - A nonzero count may be encountered for null_count>=lnull_start.
  *    lrcnt_cache_zero - A zero count would result.
- *    Cache pointer - an update for null_count>=lnull_start is needed.
+ *    Cache pointer - An update for null_count>=lnull_start is needed.
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
                               Connector *c, int cw, int w,
