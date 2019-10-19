@@ -286,7 +286,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 #endif
 	int used_slots = ctxt->table_size-N;
 	/* The used= value is TotalValues/TableSize (not UsedSlots/TableSize). */
-	printf("Connector table: msb=%d slots=%6d/%6d (%5.2f%%) avg-chain=%4.2f "
+	printf("Connector table: msb=%d slots=%6d/%6u (%5.2f%%) avg-chain=%4.2f "
 	       "values=%6d (z=%5d nz=%5d N=%5d) used=%5.2f%% "
 	       "acc=%zu (hit=%zu miss=%zu) (sent_len=%zu)\n",
 	       msb(ctxt->table_size), used_slots, ctxt->table_size,
@@ -305,7 +305,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
 		{
 			if (0 != null_count[nc])
-				printf("%d: %d\n", nc, null_count[nc]);
+				printf("%u: %d\n", nc, null_count[nc]);
 		}
 	}
 
@@ -315,14 +315,14 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 		{
 			if (0 == null_count[nc]) continue;
 
-			printf("Null count %d:\n", nc);
+			printf("Null count %u:\n", nc);
 			for (unsigned int i = 0; i < ctxt->table_size; i++)
 			{
 				for (Table_connector *t = ctxt->table[i]; t != NULL; t = t->next)
 				{
 					if (t->null_count != nc) continue;
 
-					printf("[%d]%n", i, &n);
+					printf("[%u]%n", i, &n);
 					printf("%*d %5d c=%lld\n",  15-n, t->l_id, t->r_id, t->count);
 				}
 			}
