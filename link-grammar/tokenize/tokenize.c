@@ -1573,7 +1573,7 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 		 strcmp("?", word->prev[0]->subword) == 0 ||
 		 strcmp("!", word->prev[0]->subword) == 0 ||
 		 strcmp("？", word->prev[0]->subword) == 0 ||
-		 strcmp("！", word->prev[0]->subword) == 0 )
+		 strcmp("！", word->prev[0]->subword) == 0)
 		return true;
 	if (in_afdict_class(dict, AFDICT_BULLETS, word->prev[0]->subword))
 		return true;

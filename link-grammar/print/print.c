@@ -371,7 +371,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	dyn_strcat(string,"]");
 	dyn_strcat(string,"\n");
 	dyn_strcat(string,"[");
-	for (j=0; j < pctx->N_rows; j++ )
+	for (j=0; j < pctx->N_rows; j++)
 	{
 		if (j>0) append_string(string, " %d", pctx->row_starts[j]);
 		else append_string(string,"%d", pctx->row_starts[j]);

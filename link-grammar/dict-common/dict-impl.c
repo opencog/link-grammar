@@ -1,4 +1,3 @@
-
 /*************************************************************************/
 /* Copyright 2013, 2014 Linas Vepstas                                    */
 /* Copyright 2014, 2015 Amir Plivatsky                                   */
@@ -34,7 +33,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 
 	// Normal call
 	int (WINAPI * pfnGetLocaleInfoEx)(LPCWSTR, LCTYPE, LPWSTR, int);
-	*(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32" ), "GetLocaleInfoEx" );
+	*(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32"), "GetLocaleInfoEx");
 	if (pfnGetLocaleInfoEx)
 	{
 		rc = pfnGetLocaleInfoEx(lpLocaleName, LCType, lpLCData, cchData);
@@ -44,7 +43,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 		// Workaround for missing GetLocaleInfoEx
 		HMODULE module = LoadLibraryA("Mlang");
 		HRESULT (WINAPI * pfnRfc1766ToLcidW)(LCID*, LPCWSTR);
-		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
+		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW");
 		if (pfnRfc1766ToLcidW)
 		{
 			 LCID lcid;
