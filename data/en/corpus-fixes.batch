@@ -1,5 +1,4 @@
 !batch
-!verbosity=1
 !echo
 !limit=1000
 !short=20
@@ -4121,7 +4120,6 @@ VII. Egypt
 2. Impact point and reason of selection
 
 % Bulleted lists
-* This is an item
 • This is a bullet
 ⁂ This is a bullet
 ❧ This is a bullet
@@ -4135,6 +4133,8 @@ VII. Egypt
 □ This is a bullet
 ◇ This is a bullet
 ◎ This is a bullet
+% Avoid interpreting '*' as an ungrammatical mark
+ * This is an item
 
 % Quoted words and phrases:
 We should distinguish between "who" and "whom" but who fucking cares?
