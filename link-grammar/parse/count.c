@@ -453,7 +453,7 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
 		 * been handled yet for the given range (the cache will be
 		 * updated for them by lrcnt_cache_update()). */
 		if (null_start == NULL) return NULL;
-		*null_start = (null_count_m)(lrcnt_cache->null_count + 1);
+		*null_start = lrcnt_cache->null_count + 1;
 	}
 
 	return lrcnt_cache;
