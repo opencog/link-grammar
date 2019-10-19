@@ -1,3 +1,7 @@
+!batch
+!echo
+!spell=0
+
 % Miscellaneous test sentences that actually work...
 % The German dict is very small, so most German sentences fail completely.
 
