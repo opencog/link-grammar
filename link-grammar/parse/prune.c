@@ -913,10 +913,13 @@ static bool pruning_pass_end(prune_context *pc, const char *pass_dir,
 {
 	int total = pc->N_deleted[0] + pc->N_deleted[1];
 
-	lgdebug(D_PRUNE, "Debug: %s pass changed %d and deleted %d (%d+%d)\n",
-	        pass_dir, pc->N_changed, total, pc->N_deleted[0], pc->N_deleted[1]);
-	if (pc->ml != NULL)
-		lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
+	char xlink_found[32] = "";
+	if (pc->N_xlink != 0)
+		snprintf(xlink_found, sizeof(xlink_found), ", xlink=%d", pc->N_xlink);
+
+	lgdebug(D_PRUNE, "Debug: %s pass changed %d and deleted %d (%d+%d)%s\n",
+	        pass_dir, pc->N_changed, total, pc->N_deleted[0], pc->N_deleted[1],
+	        xlink_found);
 
 	bool pass_end = ((pc->N_changed == 0) && (total == 0));
 	pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
