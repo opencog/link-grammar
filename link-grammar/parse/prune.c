@@ -1029,6 +1029,11 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		}
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
+
+		/* verbosity=5 revealed that the xlink counter is never set after
+		 * the first 2 passes. So neutralize the mlink table here to save a
+		 * slight overhead. */
+		pc->ml = NULL;
 	}
 	while (!extra_null_word || pc->always_parse);
 
