@@ -904,6 +904,27 @@ static bool check_null_word(prune_context *pc, int w)
 	return false;
 }
 
+/**
+ * Return \c true if a pass has not made any changes.
+ * Also print pruning pass stats.
+ */
+static bool pruning_pass_end(prune_context *pc, const char *pass_dir,
+                             int *prune_total)
+{
+	int total = pc->N_deleted[0] + pc->N_deleted[1];
+
+	lgdebug(D_PRUNE, "Debug: %s pass changed %d and deleted %d (%d+%d)\n",
+	        pass_dir, pc->N_changed, total, pc->N_deleted[0], pc->N_deleted[1]);
+	if (pc->ml != NULL)
+		lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
+
+	bool pass_end = ((pc->N_changed == 0) && (total == 0));
+	pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
+
+	*prune_total += total;
+	return pass_end;
+}
+
 /** The return value is the number of disjuncts deleted.
  *  Implementation notes:
  *  Normally tracons are memory shared (with the exception that
@@ -973,14 +994,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 			clean_table(pt->r_table_size[w], pt->r_table[w]);
 		}
 
-		total_deleted += pc->N_deleted[0] + pc->N_deleted[1];
-		lgdebug(D_PRUNE, "Debug: l->r pass changed %d and deleted %d (%d+%d)\n\\",
-		        pc->N_changed, pc->N_deleted[0]+pc->N_deleted[1], pc->N_deleted[0], pc->N_deleted[1]);
-		if (pc->ml != NULL)
-			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
-
-		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
-		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
+		if (pruning_pass_end(pc, "l->r", &total_deleted)) break;
 
 		/* Right-to-left pass. */
 		for (WordIdx w = sent->length-1; w != (WordIdx) -1; w--)
@@ -1014,14 +1028,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 			clean_table(pt->l_table_size[w], pt->l_table[w]);
 		}
 
-		total_deleted += pc->N_deleted[0] + pc->N_deleted[1];
-		lgdebug(D_PRUNE, "Debug: r->l pass changed %d and deleted %d (%d+%d)\n\\",
-		        pc->N_changed, pc->N_deleted[0]+pc->N_deleted[1], pc->N_deleted[0], pc->N_deleted[1]);
-		if (pc->ml != NULL)
-			lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
-
-		if (pc->N_changed == 0 && pc->N_deleted[0] == 0 && pc->N_deleted[1] == 0) break;
-		pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
+		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 	}
 	while (!extra_null_word || pc->always_parse);
 
