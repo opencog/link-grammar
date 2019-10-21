@@ -192,7 +192,7 @@ static inline bool connector_uc_eq(const Connector *c1, const Connector *c2)
  * @param c Any connector
  * @return The deepest connector (can be modified if needed).
  */
-static inline Connector *deepest_connector(const Connector *c)
+static inline Connector *connector_deepest(const Connector *c)
 {
 	for (; c->next != NULL; c = c->next)
 		;
@@ -335,8 +335,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
  */
 static inline int get_tracon_word_number(Connector *c, int dir)
 {
-	for (; NULL != c->next; c = c->next)
-		;
+	c = connector_deepest(c);
 	return c->nearest_word + ((dir == 0) ? 1 : -1);
 }
 #endif /* _LINK_GRAMMAR_CONNECTORS_H_ */

@@ -64,7 +64,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * fw[0] (and similarly for the other range).
  *
  * These values are computed by build_mlink_table() after the first
- * power_prune() call, and before each additional call to power_prune(). */
+ * power_prune() call, before invoking an additional power_prune(). */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
@@ -547,7 +547,7 @@ static bool is_cross_mlink(prune_context *pc,
 		if (lword == pc->ml[w].nw[0])
 		{
 			/* w has a link to lword, or it's a null word. */
-			Connector *c = deepest_connector(lc);
+			Connector *c = connector_deepest(lc);
 			if (!c->multi && (c->nearest_word > w) && PR(A)) goto null_word_found;
 		}
 #endif
@@ -555,7 +555,7 @@ static bool is_cross_mlink(prune_context *pc,
 		if (rword == pc->ml[w].nw[1])
 		{
 			/* w has a link to rword, or it's a null word. */
-			Connector *c = deepest_connector(rc);
+			Connector *c = connector_deepest(rc);
 			if (!c->multi && (c->nearest_word < w) && PR(B)) goto null_word_found;
 		}
 #endif
@@ -913,10 +913,13 @@ static bool pruning_pass_end(prune_context *pc, const char *pass_dir,
 {
 	int total = pc->N_deleted[0] + pc->N_deleted[1];
 
-	lgdebug(D_PRUNE, "Debug: %s pass changed %d and deleted %d (%d+%d)\n",
-	        pass_dir, pc->N_changed, total, pc->N_deleted[0], pc->N_deleted[1]);
-	if (pc->ml != NULL)
-		lgdebug(D_PRUNE, "Debug: xlink: %d\n", pc->N_xlink);
+	char xlink_found[32] = "";
+	if (pc->N_xlink != 0)
+		snprintf(xlink_found, sizeof(xlink_found), ", xlink=%d", pc->N_xlink);
+
+	lgdebug(D_PRUNE, "Debug: %s pass changed %d and deleted %d (%d+%d)%s\n",
+	        pass_dir, pc->N_changed, total, pc->N_deleted[0], pc->N_deleted[1],
+	        xlink_found);
 
 	bool pass_end = ((pc->N_changed == 0) && (total == 0));
 	pc->N_changed = pc->N_deleted[0] = pc->N_deleted[1] = pc->N_xlink = 0;
@@ -1029,6 +1032,11 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		}
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
+
+		/* verbosity=5 revealed that the xlink counter is never set after
+		 * the first 2 passes. So neutralize the mlink table here to save a
+		 * slight overhead. */
+		pc->ml = NULL;
 	}
 	while (!extra_null_word || pc->always_parse);
 
@@ -1569,9 +1577,11 @@ static void mlink_table_init(Sentence sent, mlink_t *ml)
  * @param ml[out] The table (indexed by word, w/fields indexed by direction).
  * @return \c true iff the table is meaningful.
  */
-static bool build_mlink_table(Sentence sent, mlink_t *ml)
+static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 {
 	bool ml_exists = false;
+
+	mlink_table_init(sent, ml);
 
 	for (unsigned int w = 0; w < sent->length; w++)
 	{
@@ -1644,7 +1654,7 @@ static bool build_mlink_table(Sentence sent, mlink_t *ml)
 		lg_error_flush();
 	}
 
-	return ml_exists;
+	return ml_exists ? ml : NULL;
 }
 
 /**
@@ -1683,7 +1693,7 @@ static bool build_mlink_table(Sentence sent, mlink_t *ml)
  * connector with (nearest_word < wl) can be discarded.
  *
  * In addition, in all cases, in disjunct which are retained and have so
- * constrained connectors, they length_limit of these connectors can be
+ * constrained connectors, the length_limit of these connectors can be
  * adjusted not to get over w. Note that in the case of (wr - w == 1)
  * the deepest connector is multi, its length_limit cannot be set to 1!
  * This is because it behaves like more that one connector, when the rest
@@ -1692,6 +1702,154 @@ static bool build_mlink_table(Sentence sent, mlink_t *ml)
  * In general, the mandatory links create "protected" ranges that links
  * from other words cannot get out of it or into it.
  */
+
+/**
+ * Delete disjuncts whose links would cross those implied by the mlink table.
+ * Since links are not allowed to cross, such disjuncts would create nulls
+ * links. So this optimization can only be done when parsing a sentence
+ * with null_count==0 (in which null links are not allowed).
+ * Possible FIXME:
+ * Part of such kind of deletions are also be done in
+ * possible_connection(), so there is some overlapping. However,
+ * eliminating this overlap (if possible) would not cause a significant
+ * speedup because these functions are lightweight.
+ */
+static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
+{
+	int N_deleted[2] = {0};
+
+	for (unsigned int w = 0; w < sent->length; w++)
+	{
+		if (sent->word[w].optional) continue;
+		if (sent->word[w].d == NULL) continue;
+
+		if ((w > 0) && (ml[w].nw[1] != w))
+		{
+			/* Deepest connector constraint l->r. */
+			for (Disjunct *d = sent->word[ml[w].nw[1]].d; d != NULL; d = d->next)
+			{
+				//print_disjunct_list(sent->word[w].d);
+
+				Connector *shallow_c = d->left;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				Connector *c = connector_deepest(shallow_c);
+
+				if (c->nearest_word < w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+				if (!c->multi)
+					c->farthest_word = MAX(w, c->farthest_word);
+			}
+		}
+
+		if ((w < sent->length-1) && (ml[w].nw[0] != w))
+		{
+			/* Deepest connector constraint r->l. */
+			for (Disjunct *d = sent->word[ml[w].nw[0]].d; d != NULL; d = d->next)
+			{
+				Connector *shallow_c = d->right;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				Connector *c = connector_deepest(shallow_c);
+
+				if (c->nearest_word > w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+				if (!c->multi)
+					c->farthest_word = MIN(w, c->farthest_word);
+			}
+		}
+
+		/* Remove disjuncts that are blocked by mandatory l->r links. */
+		for (unsigned int rw = w+1; rw < ml[w].nw[1]; rw++)
+		{
+			for (Disjunct *d = sent->word[rw].d; d != NULL; d = d->next)
+			{
+				Connector *shallow_c = d->left;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				if (shallow_c->nearest_word < w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+#if FW
+				if (shallow_c->nearest_word > ml[w].fw[1])
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+#endif /* FW */
+
+				shallow_c->farthest_word = MIN(ml[w].nw[1], shallow_c->farthest_word);
+			}
+		}
+
+		/* Remove disjuncts that are blocked by mandatory r->l links. */
+		for (unsigned int lw = ml[w].nw[0]+1; lw < w; lw++)
+		{
+			for (Disjunct *d = sent->word[lw].d; d != NULL; d = d->next)
+			{
+				Connector *shallow_c = d->right;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				if (shallow_c->nearest_word > w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+#if FW
+				if (shallow_c->nearest_word < ml[w].fw[0])
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+#endif /* FW */
+
+				shallow_c->farthest_word = MAX(ml[w].nw[0], shallow_c->farthest_word);
+			}
+		}
+	}
+
+	lgdebug(D_PRUNE, "Debug: cross_links_prune [nw] detected %d (%d+%d)\n",
+	        N_deleted[0] + N_deleted[1], N_deleted[0], N_deleted[1]);
+	return N_deleted[0] + N_deleted[1];
+}
 
 /**
  * Prune useless disjuncts.
@@ -1710,6 +1868,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	power_table_init(sent, ts, &pt);
 
+	bool no_mlink = !!test_enabled("no-mlink");
 	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
 	pc.pt = &pt;
@@ -1718,18 +1877,19 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	pc.is_null_word = alloca(sent->length * sizeof(*pc.is_null_word));
 	memset(pc.is_null_word, 0, sent->length * sizeof(*pc.is_null_word));
 
-	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here. */
+	int num_deleted = power_prune(sent, &pc, opts); /* pc->ml is NULL here */
 
-	if (num_deleted > 0)
+	if ((num_deleted > 0) && !no_mlink)
 	{
 		pc.ml = alloca(sent->length * sizeof(*pc.ml));
-		mlink_table_init(sent, pc.ml);
-		bool ml_exists = build_mlink_table(sent, pc.ml);
-		print_time(opts, "Built_mlink_table%s", ml_exists ? "" : " (empty)");
-		if (ml_exists)
+		pc.ml = build_mlink_table(sent, pc.ml);
+		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
+		if (pc.ml != NULL)
+		{
+			if (null_count == 0)
+				cross_mandatory_link_prune(sent, pc.ml);
 			num_deleted = power_prune(sent, &pc, opts);
-		else
-			pc.ml = NULL;
+		}
 	}
 
 	if (num_deleted != -1)
@@ -1744,19 +1904,20 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	/* Initialize tentative values. */
 	unsigned int min_nulls = sent->null_count;
-	bool no_parse = false;
+	bool parsing_to_be_done = true;
 
 	if (null_count == MAX_SENTENCE)
 	{
+		/* No prune optimization - this is the last pruning for this sentence. */
 		min_nulls = pc.null_words;
 	}
 	else if ((pc.null_words > sent->null_count) && !pc.always_parse)
 	{
-		min_nulls = sent->null_count + 1;
+		min_nulls = sent->null_count + 1; /* The most that can be inferred */
+		parsing_to_be_done = false;
 	}
 
-	/* If no optimization then it is the last prune, so compute ncu now. */
-	if (!no_parse || (null_count == MAX_SENTENCE))
+	if (parsing_to_be_done)
 		get_num_con_uc(sent, &pt, ncu);
 
 	power_table_delete(&pt);
