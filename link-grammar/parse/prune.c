@@ -1696,6 +1696,154 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  */
 
 /**
+ * Delete disjuncts whose links would cross those implied by the mlink table.
+ * Since links are not allowed to cross, such disjuncts would create nulls
+ * links. So this optimization can only be done when parsing a sentence
+ * with null_count==0 (in which null links are not allowed).
+ * Possible FIXME:
+ * Part of such kind of deletions are also be done in
+ * possible_connection(), so there is some overlapping. However,
+ * eliminating this overlap (if possible) would not cause a significant
+ * speedup because these functions are lightweight.
+ */
+static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
+{
+	int N_deleted[2] = {0};
+
+	for (unsigned int w = 0; w < sent->length; w++)
+	{
+		if (sent->word[w].optional) continue;
+		if (sent->word[w].d == NULL) continue;
+
+		if ((w > 0) && (ml[w].nw[1] != w))
+		{
+			/* Deepest connector constraint l->r. */
+			for (Disjunct *d = sent->word[ml[w].nw[1]].d; d != NULL; d = d->next)
+			{
+				//print_disjunct_list(sent->word[w].d);
+
+				Connector *shallow_c = d->left;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				Connector *c = connector_deepest(shallow_c);
+
+				if (c->nearest_word < w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+				if (!c->multi)
+					c->farthest_word = MAX(w, c->farthest_word);
+			}
+		}
+
+		if ((w < sent->length-1) && (ml[w].nw[0] != w))
+		{
+			/* Deepest connector constraint r->l. */
+			for (Disjunct *d = sent->word[ml[w].nw[0]].d; d != NULL; d = d->next)
+			{
+				Connector *shallow_c = d->right;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				Connector *c = connector_deepest(shallow_c);
+
+				if (c->nearest_word > w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+				if (!c->multi)
+					c->farthest_word = MIN(w, c->farthest_word);
+			}
+		}
+
+		/* Remove disjuncts that are blocked by mandatory l->r links. */
+		for (unsigned int rw = w+1; rw < ml[w].nw[1]; rw++)
+		{
+			for (Disjunct *d = sent->word[rw].d; d != NULL; d = d->next)
+			{
+				Connector *shallow_c = d->left;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				if (shallow_c->nearest_word < w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+#if FW
+				if (shallow_c->nearest_word > ml[w].fw[1])
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+#endif /* FW */
+
+				shallow_c->farthest_word = MIN(ml[w].nw[1], shallow_c->farthest_word);
+			}
+		}
+
+		/* Remove disjuncts that are blocked by mandatory r->l links. */
+		for (unsigned int lw = ml[w].nw[0]+1; lw < w; lw++)
+		{
+			for (Disjunct *d = sent->word[lw].d; d != NULL; d = d->next)
+			{
+				Connector *shallow_c = d->right;
+				if (shallow_c == NULL) continue;
+				if (shallow_c->nearest_word == BAD_WORD)
+				{
+					N_deleted[1]++;
+					continue;
+				}
+
+				if (shallow_c->nearest_word > w)
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+
+#if FW
+				if (shallow_c->nearest_word < ml[w].fw[0])
+				{
+					shallow_c->nearest_word = BAD_WORD;
+					N_deleted[0]++;
+					continue;
+				}
+#endif /* FW */
+
+				shallow_c->farthest_word = MAX(ml[w].nw[0], shallow_c->farthest_word);
+			}
+		}
+	}
+
+	lgdebug(D_PRUNE, "Debug: cross_links_prune [nw] detected %d (%d+%d)\n",
+	        N_deleted[0] + N_deleted[1], N_deleted[0], N_deleted[1]);
+	return N_deleted[0] + N_deleted[1];
+}
+
+/**
  * Prune useless disjuncts.
  * @param null_count Optimize for parsing with this null count.
  * MAX_SENTENCE means null count optimizations is essentially ignored.
@@ -1729,7 +1877,11 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 		pc.ml = build_mlink_table(sent, pc.ml);
 		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
 		if (pc.ml != NULL)
+		{
+			if (null_count == 0)
+				cross_mandatory_link_prune(sent, pc.ml);
 			num_deleted = power_prune(sent, &pc, opts);
+		}
 	}
 
 	if (num_deleted != -1)
