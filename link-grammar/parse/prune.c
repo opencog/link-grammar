@@ -1152,34 +1152,30 @@ struct cms_struct
 	Connector *c;
 };
 
-#define CMS_SIZE (1<<11)
+#define CMS_SIZE (1<<11)       /* > needed; reduce to debug memory pool */
 typedef struct multiset_table_s multiset_table;
 struct multiset_table_s
 {
+	Cms memblock[CMS_SIZE];     /* Initial Cms elements - usually enough */
+	Cms *mb;                    /* Next available element from memblock */
+	Pool_desc *mp;              /* In case memblock is not enough */
 	Cms *cms_table[CMS_SIZE];
 };
 
 static multiset_table *cms_table_new(void)
 {
-	multiset_table *mt = (multiset_table *) xalloc(sizeof(multiset_table));
-	memset(mt, 0, sizeof(multiset_table));
+	multiset_table *mt = malloc(sizeof(multiset_table));
+	memset(mt->cms_table, 0, CMS_SIZE * sizeof(Cms *));
+	mt->mb = mt->memblock;
+	mt->mp = NULL;
 
 	return mt;
 }
 
 static void cms_table_delete(multiset_table *mt)
 {
-	Cms *cms, *xcms;
-	int i;
-	for (i=0; i<CMS_SIZE; i++)
-	{
-		for (cms = mt->cms_table[i]; cms != NULL; cms = xcms)
-		{
-			xcms = cms->next;
-			xfree(cms, sizeof(Cms));
-		}
-	}
-	xfree(mt, sizeof(multiset_table));
+	if (mt->mp != NULL) pool_delete(mt->mp);
+	free(mt);
 }
 
 static unsigned int cms_hash(const char *s)
@@ -1276,6 +1272,21 @@ static Cms *lookup_in_cms_table(multiset_table *cmt, Connector *c)
 	return NULL;
 }
 
+static Cms *cms_alloc(multiset_table *cmt)
+{
+	if (cmt->mb < &cmt->memblock[CMS_SIZE])
+		return cmt->mb++;
+
+	if (cmt->mp == NULL)
+	{
+		cmt->mp = pool_new(__func__, "Cms",
+		                   /*num_elements*/CMS_SIZE, sizeof(Cms),
+		                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	}
+
+	return pool_alloc(cmt->mp);
+}
+
 static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 {
 	Cms *cms, *prev = NULL;
@@ -1289,7 +1300,7 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 
 	if (cms == NULL)
 	{
-		cms = (Cms *) xalloc(sizeof(Cms));
+		cms = cms_alloc(cmt);
 		cms->c = c;
 		cms->next = cmt->cms_table[h];
 		cmt->cms_table[h] = cms;
