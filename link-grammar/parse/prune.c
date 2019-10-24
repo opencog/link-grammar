@@ -1373,16 +1373,13 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 
 static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 {
-	pp_knowledge *knowledge;
-	multiset_table *cmt;
-
 	if (sent->postprocessor == NULL) return 0;
 	if (!opts->perform_pp_prune) return 0;
 
-	knowledge = sent->postprocessor->knowledge;
-	cmt = cms_table_new();
-
+	pp_knowledge *knowledge = sent->postprocessor->knowledge;
+	multiset_table *cmt = cms_table_new();
 	Tracon_list *tl = ts->tracon_list;
+
 	if (NULL != tl)
 	{
 		for (int dir = 0; dir < 2; dir++)
