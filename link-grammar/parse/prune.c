@@ -91,7 +91,7 @@ struct cms_struct
 	Connector *c;
 };
 
-#define CMS_SIZE (2<<10)
+#define CMS_SIZE (1<<11)
 typedef struct multiset_table_s multiset_table;
 struct multiset_table_s
 {
