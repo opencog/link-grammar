@@ -449,8 +449,13 @@ static void clean_table(unsigned int size, C_list **t)
 	}
 }
 
-	/**
+#if TOO_MUCH_OVERHEAD
+/**
  * Validate that at least one disjunct of \p w may have no cross link.
+ * FIXME maybe: Cache the checks for each word: Build an array indexed by
+ * LHS nearest_word with values of the minimum RHS nearest_word of all the
+ * disjuncts with this LHS nearest_word value or less than it. The size of
+ * this array is ml[w].nw[1].
  **/
 static bool find_no_xlink_disjunct(prune_context *pc, int w,
                                    Connector *lc, Connector *rc,
@@ -481,6 +486,7 @@ static bool find_no_xlink_disjunct(prune_context *pc, int w,
 
 	return true;
 }
+#endif
 
 static bool is_cross_mlink(prune_context *pc,
                            Connector *lc, Connector *rc,
@@ -549,8 +555,10 @@ static bool is_cross_mlink(prune_context *pc,
 #endif
 		}
 
+#if TOO_MUCH_OVERHEAD
 		if (!find_no_xlink_disjunct(pc, w, lc, rc, lword, rword))
 			goto null_word_found;
+#endif
 
 		continue;
 null_word_found:
