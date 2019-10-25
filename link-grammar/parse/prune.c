@@ -1239,17 +1239,19 @@ static bool can_form_link(const char *s, const char *t, const char *e)
 }
 
 /**
- * Returns TRUE iff there is a connector name c in the table
+ * Returns TRUE iff there is a connector name in the sentence
  * that can create a link x such that post_process_match(pp_link, x) is TRUE.
+ * subscr is a pointer into pp_link that indicates the position of the
+ * connector subscr that is tested.
  */
 static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
-                               const char *c)
+                               const char *subscr)
 {
 	unsigned int h = cms_hash(pp_link);
 
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
-			if (can_form_link(pp_link, connector_string(cms->c), c))
+			if (can_form_link(pp_link, connector_string(cms->c), subscr))
 			{
 				ppdebug("MATCHED %s\n", connector_string(cms->c));
 				return true;
