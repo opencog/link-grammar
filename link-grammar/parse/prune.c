@@ -36,6 +36,9 @@
 #define ppdebug(...)
 #endif
 
+#define PRx(x) fprintf(stderr, ""#x)
+#define PR(...) true
+
 typedef Connector *connector_table;
 
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
@@ -445,9 +448,6 @@ static void clean_table(unsigned int size, C_list **t)
 		}
 	}
 }
-
-#define PRx(x) fprintf(stderr, ""#x)
-#define PR(...) true
 
 /**
  * Validate that at least one disjunct of \p w may have no cross link.
@@ -1427,16 +1427,14 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	int D_deleted = 0;       /* Number of deleted disjuncts */
 	int Cname_deleted = 0;   /* Number of deleted connector names */
 
-	/* Since the cms table is unchanged, after applying a rule once we
-	 * know if it will be TRUE or FALSE if we need to apply it again.
-	 * Values: -1: Undecided yet; 0: Rule unsatisfiable; 1 Rule satisfiable. */
-	uint8_t *rule_ok = alloca(knowledge->n_contains_one_rules * sizeof(bool));
-	memset(rule_ok, -1, knowledge->n_contains_one_rules * sizeof(bool));
+	/* After applying a rule once we know if it will be FALSE if we need
+	 * to apply it again.
+	 * Values: true: Undecided yet; false: Rule unsatisfiable. */
+	bool *rule_ok = alloca(knowledge->n_contains_one_rules * sizeof(bool));
+	memset(rule_ok, true, knowledge->n_contains_one_rules * sizeof(bool));
 
 	for (size_t i = 0; i < knowledge->n_contains_one_rules; i++)
 	{
-		if (rule_ok[i] == 1) continue;
-
 		pp_rule* rule = &knowledge->contains_one_rules[i]; /* The ith rule */
 		const char *selector = rule->selector;  /* Selector string for this rule */
 		pp_linkset *link_set = rule->link_set;  /* The set of criterion links */
@@ -1444,7 +1442,6 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 
 		if (rule->selector_has_wildcard)
 		{
-			rule_ok[i] = 1;
 			continue;  /* If it has a * forget it */
 		}
 
@@ -1456,20 +1453,14 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 			ppdebug("Rule %zu: Selector %s, Connector %s\n",
 			        i, selector, connector_string(c));
 			/* We know c matches the trigger link of the rule. */
-			/* Now check the criterion links */
-			if ((rule_ok[i] == 0) || !rule_satisfiable(cmt, link_set))
-			{
-				rule_ok[i] = 0;
-				ppdebug("DELETE %s refcount %d\n", connector_string(c), c->refcount);
-				c->nearest_word = BAD_WORD;
-				Cname_deleted++;
-				rule->use_count++;
-			}
-			else
-			{
-				rule_ok[i] = 1;
-				break;
-			}
+			/* Now check the criterion links. */
+			if (rule_ok[i] && rule_satisfiable(cmt, link_set)) break;
+
+			rule_ok[i] = false; /* None found; this is permanent. */
+			ppdebug("DELETE %s refcount %d\n", connector_string(c), c->refcount);
+			c->nearest_word = BAD_WORD;
+			Cname_deleted++;
+			rule->use_count++;
 		}
 	}
 
@@ -1703,9 +1694,9 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  * connector with (nearest_word < wl) can be discarded.
  *
  * In addition, in all cases, in disjunct which are retained and have so
- * constrained connectors, the length_limit of these connectors can be
+ * constrained connectors, the farthest_word of these connectors can be
  * adjusted not to get over w. Note that in the case of (wr - w == 1)
- * the deepest connector is multi, its length_limit cannot be set to 1!
+ * the deepest connector is multi, its farthest_word cannot be set to 1!
  * This is because it behaves like more that one connector, when the rest
  * may connect over w.
  *
