@@ -84,20 +84,6 @@ struct power_table_s
 	Pool_desc *memory_pool;
 };
 
-typedef struct cms_struct Cms;
-struct cms_struct
-{
-	Cms *next;
-	Connector *c;
-};
-
-#define CMS_SIZE (1<<11)
-typedef struct multiset_table_s multiset_table;
-struct multiset_table_s
-{
-	Cms *cms_table[CMS_SIZE];
-};
-
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
@@ -1158,6 +1144,20 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 		the need for the last pass.)
 
   */
+
+typedef struct cms_struct Cms;
+struct cms_struct
+{
+	Cms *next;
+	Connector *c;
+};
+
+#define CMS_SIZE (1<<11)
+typedef struct multiset_table_s multiset_table;
+struct multiset_table_s
+{
+	Cms *cms_table[CMS_SIZE];
+};
 
 static multiset_table *cms_table_new(void)
 {
