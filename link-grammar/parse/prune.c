@@ -84,20 +84,6 @@ struct power_table_s
 	Pool_desc *memory_pool;
 };
 
-typedef struct cms_struct Cms;
-struct cms_struct
-{
-	Cms *next;
-	Connector *c;
-};
-
-#define CMS_SIZE (2<<10)
-typedef struct multiset_table_s multiset_table;
-struct multiset_table_s
-{
-	Cms *cms_table[CMS_SIZE];
-};
-
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
@@ -129,49 +115,49 @@ struct prune_context_s
 };
 
 /*
-* Here is what you've been waiting for: POWER-PRUNE
-*
-* The kinds of constraints it checks for are the following:
-*
-*  1) Successive connectors on the same disjunct have to go to
-*     nearer and nearer words.
-*
-*  2) Two deep connectors cannot attach to each other; i.e. a deep
-*     connector can only attache to a shallow one, and a shallow
-*     connector can attache to any connector.
-*     (A connectors is deep if it is not the first in its list; it
-*     is shallow if it is the first in its list; it is deepest if it
-*     is the last on its list.)
-*
-*  3) On two adjacent words, a pair of connectors can be used
-*     only if they're the deepest ones on their disjuncts.
-*
-*  4) On non-adjacent words (with no intervening null-linked words),
-*     a pair of connectors can be used only if at least one of them
-*     is not the deepest.
-*
-*  The data structure consists of a pair of hash tables on every word.
-*  Each bucket of a hash table has a list of pointers to connectors.
-*
-*  As with expression pruning, we make alternate left->right and
-*  right->left passes.  In the R->L pass, when we're on a word w, we make
-*  use of all the left-pointing hash tables on the words to the right of
-*  w.  After the pruning on this word, we build the left-pointing hash
-*  table this word.  This guarantees idempotence of the pass -- after
-*  doing an L->R, doing another would change nothing.
-*
-*  Each connector has an integer nearest_word field.  This refers to the
-*  closest word that it could be connected to.  These are initially
-*  determined by how deep the connector is.  For example, a deepest
-*  connector can connect to the neighboring word, so its nearest_word
-*  field is w+1 (w-1 if this is a left pointing connector).  It's
-*  neighboring shallow connector has a nearest_word value of w+2, etc.
-*
-*  The pruning process adjusts these nearest_word values as it goes along,
-*  accumulating information about any way of linking this sentence.  The
-*  pruning process stops only after no disjunct is deleted and no
-*  nearest_word values change.
-*/
+ * Here is what you've been waiting for: POWER-PRUNE
+ *
+ * The kinds of constraints it checks for are the following:
+ *
+ *  1) Successive connectors on the same disjunct have to go to
+ *     nearer and nearer words.
+ *
+ *  2) Two deep connectors cannot attach to each other; i.e. a deep
+ *     connector can only attache to a shallow one, and a shallow
+ *     connector can attache to any connector.
+ *     (A connectors is deep if it is not the first in its list; it
+ *     is shallow if it is the first in its list; it is deepest if it
+ *     is the last on its list.)
+ *
+ *  3) On two adjacent words, a pair of connectors can be used
+ *     only if they're the deepest ones on their disjuncts.
+ *
+ *  4) On non-adjacent words (with no intervening null-linked words),
+ *     a pair of connectors can be used only if at least one of them
+ *     is not the deepest.
+ *
+ *  The data structure consists of a pair of hash tables on every word.
+ *  Each bucket of a hash table has a list of pointers to connectors.
+ *
+ *  As with expression pruning, we make alternate left->right and
+ *  right->left passes.  In the R->L pass, when we're on a word w, we make
+ *  use of all the left-pointing hash tables on the words to the right of
+ *  w.  After the pruning on this word, we build the left-pointing hash
+ *  table this word.  This guarantees idempotence of the pass -- after
+ *  doing an L->R, doing another would change nothing.
+ *
+ *  Each connector has an integer nearest_word field.  This refers to the
+ *  closest word that it could be connected to.  These are initially
+ *  determined by how deep the connector is.  For example, a deepest
+ *  connector can connect to the neighboring word, so its nearest_word
+ *  field is w+1 (w-1 if this is a left pointing connector).  It's
+ *  neighboring shallow connector has a nearest_word value of w+2, etc.
+ *
+ *  The pruning process adjusts these nearest_word values as it goes along,
+ *  accumulating information about any way of linking this sentence.  The
+ *  pruning process stops only after no disjunct is deleted and no
+ *  nearest_word values change.
+ */
 
 /*
  * From old comments:
@@ -1159,27 +1145,37 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
   */
 
+typedef struct cms_struct Cms;
+struct cms_struct
+{
+	Cms *next;
+	Connector *c;
+};
+
+#define CMS_SIZE (1<<11)       /* > needed; reduce to debug memory pool */
+typedef struct multiset_table_s multiset_table;
+struct multiset_table_s
+{
+	Cms memblock[CMS_SIZE];     /* Initial Cms elements - usually enough */
+	Cms *mb;                    /* Next available element from memblock */
+	Pool_desc *mp;              /* In case memblock is not enough */
+	Cms *cms_table[CMS_SIZE];
+};
+
 static multiset_table *cms_table_new(void)
 {
-	multiset_table *mt = (multiset_table *) xalloc(sizeof(multiset_table));
-	memset(mt, 0, sizeof(multiset_table));
+	multiset_table *mt = malloc(sizeof(multiset_table));
+	memset(mt->cms_table, 0, CMS_SIZE * sizeof(Cms *));
+	mt->mb = mt->memblock;
+	mt->mp = NULL;
 
 	return mt;
 }
 
 static void cms_table_delete(multiset_table *mt)
 {
-	Cms *cms, *xcms;
-	int i;
-	for (i=0; i<CMS_SIZE; i++)
-	{
-		for (cms = mt->cms_table[i]; cms != NULL; cms = xcms)
-		{
-			xcms = cms->next;
-			xfree(cms, sizeof(Cms));
-		}
-	}
-	xfree(mt, sizeof(multiset_table));
+	if (mt->mp != NULL) pool_delete(mt->mp);
+	free(mt);
 }
 
 static unsigned int cms_hash(const char *s)
@@ -1239,22 +1235,24 @@ static bool can_form_link(const char *s, const char *t, const char *e)
 }
 
 /**
- * Returns TRUE iff there is a connector name c in the table
+ * Returns TRUE iff there is a connector name in the sentence
  * that can create a link x such that post_process_match(pp_link, x) is TRUE.
+ * subscr is a pointer into pp_link that indicates the position of the
+ * connector subscr that is tested.
  */
 static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
-                               const char *c)
+                               const char *subscr)
 {
 	unsigned int h = cms_hash(pp_link);
 
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
-			if (can_form_link(pp_link, connector_string(cms->c), c))
-			{
-				ppdebug("MATCHED %s\n", connector_string(cms->c));
-				return true;
-			}
-			ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
+		if (can_form_link(pp_link, connector_string(cms->c), subscr))
+		{
+			ppdebug("MATCHED %s\n", connector_string(cms->c));
+			return true;
+		}
+		ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
 	}
 
 	return false;
@@ -1274,6 +1272,21 @@ static Cms *lookup_in_cms_table(multiset_table *cmt, Connector *c)
 	return NULL;
 }
 
+static Cms *cms_alloc(multiset_table *cmt)
+{
+	if (cmt->mb < &cmt->memblock[CMS_SIZE])
+		return cmt->mb++;
+
+	if (cmt->mp == NULL)
+	{
+		cmt->mp = pool_new(__func__, "Cms",
+		                   /*num_elements*/CMS_SIZE, sizeof(Cms),
+		                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	}
+
+	return pool_alloc(cmt->mp);
+}
+
 static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 {
 	Cms *cms, *prev = NULL;
@@ -1287,7 +1300,7 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 
 	if (cms == NULL)
 	{
-		cms = (Cms *) xalloc(sizeof(Cms));
+		cms = cms_alloc(cmt);
 		cms->c = c;
 		cms->next = cmt->cms_table[h];
 		cmt->cms_table[h] = cms;
@@ -1373,16 +1386,13 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 
 static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 {
-	pp_knowledge *knowledge;
-	multiset_table *cmt;
-
 	if (sent->postprocessor == NULL) return 0;
 	if (!opts->perform_pp_prune) return 0;
 
-	knowledge = sent->postprocessor->knowledge;
-	cmt = cms_table_new();
-
+	pp_knowledge *knowledge = sent->postprocessor->knowledge;
+	multiset_table *cmt = cms_table_new();
 	Tracon_list *tl = ts->tracon_list;
+
 	if (NULL != tl)
 	{
 		for (int dir = 0; dir < 2; dir++)
