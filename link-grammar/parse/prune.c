@@ -115,49 +115,49 @@ struct prune_context_s
 };
 
 /*
-* Here is what you've been waiting for: POWER-PRUNE
-*
-* The kinds of constraints it checks for are the following:
-*
-*  1) Successive connectors on the same disjunct have to go to
-*     nearer and nearer words.
-*
-*  2) Two deep connectors cannot attach to each other; i.e. a deep
-*     connector can only attache to a shallow one, and a shallow
-*     connector can attache to any connector.
-*     (A connectors is deep if it is not the first in its list; it
-*     is shallow if it is the first in its list; it is deepest if it
-*     is the last on its list.)
-*
-*  3) On two adjacent words, a pair of connectors can be used
-*     only if they're the deepest ones on their disjuncts.
-*
-*  4) On non-adjacent words (with no intervening null-linked words),
-*     a pair of connectors can be used only if at least one of them
-*     is not the deepest.
-*
-*  The data structure consists of a pair of hash tables on every word.
-*  Each bucket of a hash table has a list of pointers to connectors.
-*
-*  As with expression pruning, we make alternate left->right and
-*  right->left passes.  In the R->L pass, when we're on a word w, we make
-*  use of all the left-pointing hash tables on the words to the right of
-*  w.  After the pruning on this word, we build the left-pointing hash
-*  table this word.  This guarantees idempotence of the pass -- after
-*  doing an L->R, doing another would change nothing.
-*
-*  Each connector has an integer nearest_word field.  This refers to the
-*  closest word that it could be connected to.  These are initially
-*  determined by how deep the connector is.  For example, a deepest
-*  connector can connect to the neighboring word, so its nearest_word
-*  field is w+1 (w-1 if this is a left pointing connector).  It's
-*  neighboring shallow connector has a nearest_word value of w+2, etc.
-*
-*  The pruning process adjusts these nearest_word values as it goes along,
-*  accumulating information about any way of linking this sentence.  The
-*  pruning process stops only after no disjunct is deleted and no
-*  nearest_word values change.
-*/
+ * Here is what you've been waiting for: POWER-PRUNE
+ *
+ * The kinds of constraints it checks for are the following:
+ *
+ *  1) Successive connectors on the same disjunct have to go to
+ *     nearer and nearer words.
+ *
+ *  2) Two deep connectors cannot attach to each other; i.e. a deep
+ *     connector can only attache to a shallow one, and a shallow
+ *     connector can attache to any connector.
+ *     (A connectors is deep if it is not the first in its list; it
+ *     is shallow if it is the first in its list; it is deepest if it
+ *     is the last on its list.)
+ *
+ *  3) On two adjacent words, a pair of connectors can be used
+ *     only if they're the deepest ones on their disjuncts.
+ *
+ *  4) On non-adjacent words (with no intervening null-linked words),
+ *     a pair of connectors can be used only if at least one of them
+ *     is not the deepest.
+ *
+ *  The data structure consists of a pair of hash tables on every word.
+ *  Each bucket of a hash table has a list of pointers to connectors.
+ *
+ *  As with expression pruning, we make alternate left->right and
+ *  right->left passes.  In the R->L pass, when we're on a word w, we make
+ *  use of all the left-pointing hash tables on the words to the right of
+ *  w.  After the pruning on this word, we build the left-pointing hash
+ *  table this word.  This guarantees idempotence of the pass -- after
+ *  doing an L->R, doing another would change nothing.
+ *
+ *  Each connector has an integer nearest_word field.  This refers to the
+ *  closest word that it could be connected to.  These are initially
+ *  determined by how deep the connector is.  For example, a deepest
+ *  connector can connect to the neighboring word, so its nearest_word
+ *  field is w+1 (w-1 if this is a left pointing connector).  It's
+ *  neighboring shallow connector has a nearest_word value of w+2, etc.
+ *
+ *  The pruning process adjusts these nearest_word values as it goes along,
+ *  accumulating information about any way of linking this sentence.  The
+ *  pruning process stops only after no disjunct is deleted and no
+ *  nearest_word values change.
+ */
 
 /*
  * From old comments:
@@ -1247,12 +1247,12 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
-			if (can_form_link(pp_link, connector_string(cms->c), subscr))
-			{
-				ppdebug("MATCHED %s\n", connector_string(cms->c));
-				return true;
-			}
-			ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
+		if (can_form_link(pp_link, connector_string(cms->c), subscr))
+		{
+			ppdebug("MATCHED %s\n", connector_string(cms->c));
+			return true;
+		}
+		ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
 	}
 
 	return false;
