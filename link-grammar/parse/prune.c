@@ -1374,6 +1374,51 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 	return false;
 }
 
+/**
+ * Validate that no connector in the sentence that matches the
+ * candidate trigger connector \p t may create a link x so that
+ * post_process_match(s, x)==false.
+ *
+ * If so, this ensures that the candidate trigger connector may form
+ * only links which satisfy the selector. (This bypasses the limitation
+ * on selectors with '*' that is mentioned in the original comments).
+ *
+ * The algo validates that the '*'s in the selector \p s and in an each
+ * easy_matched()'ed sentence connector (both '*' padded as needed) are at
+ * the same places.
+ *
+ * @param s A selector which includes a dictionary wildcard ('*').
+ * @param t Candidate trigger connector.
+ * @param cmt The cms table (sentence connectors)
+ * @return \c true iff such a link cannot be formed.
+ */
+static bool selector_mismatch(const char *s, Connector *t, multiset_table *cmt)
+{
+	unsigned int h = cms_hash(s);
+
+	ppdebug("Selector with wildcard: %s, trigger %s\n", s, connector_string(t));
+	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
+	{
+		size_t len_s = strlen(s);
+
+		if (easy_match_desc(t->desc, cms->c->desc))
+		{
+			const char *c = connector_string(cms->c);
+			size_t len_c = strlen(c);
+			for (size_t i = 0; i < len_s; i++)
+			{
+				if ((s[i] == '*') && ((i < len_c) && c[i] != '*'))
+				{
+					ppdebug("MISMATCH: %s\n", c);
+					return true;
+				}
+			}
+			ppdebug("MATCH: %s\n", c);
+		}
+	}
+
+	return false;
+}
 
 static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 {
@@ -1431,15 +1476,12 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 		pp_linkset *link_set = rule->link_set;  /* The set of criterion links */
 		unsigned int hash = cms_hash(selector);
 
-		if (rule->selector_has_wildcard)
-		{
-			continue;  /* If it has a * forget it */
-		}
-
 		for (Cms *cms = cmt->cms_table[hash]; cms != NULL; cms = cms->next)
 		{
 			Connector *c = cms->c;
 			if (!post_process_match(selector, connector_string(c))) continue;
+			if (rule->selector_has_wildcard &&
+			    selector_mismatch(selector, c, cmt)) continue;
 
 			ppdebug("Rule %zu: Selector %s, Connector %s\n",
 			        i, selector, connector_string(c));
