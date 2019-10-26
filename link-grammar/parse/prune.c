@@ -1703,9 +1703,9 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  * connector with (nearest_word < wl) can be discarded.
  *
  * In addition, in all cases, in disjunct which are retained and have so
- * constrained connectors, the length_limit of these connectors can be
+ * constrained connectors, the farthest_word of these connectors can be
  * adjusted not to get over w. Note that in the case of (wr - w == 1)
- * the deepest connector is multi, its length_limit cannot be set to 1!
+ * the deepest connector is multi, its farthest_word cannot be set to 1!
  * This is because it behaves like more that one connector, when the rest
  * may connect over w.
  *
