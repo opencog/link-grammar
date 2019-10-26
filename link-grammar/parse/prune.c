@@ -36,6 +36,9 @@
 #define ppdebug(...)
 #endif
 
+#define PRx(x) fprintf(stderr, ""#x)
+#define PR(...) true
+
 typedef Connector *connector_table;
 
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
@@ -445,9 +448,6 @@ static void clean_table(unsigned int size, C_list **t)
 		}
 	}
 }
-
-#define PRx(x) fprintf(stderr, ""#x)
-#define PR(...) true
 
 /**
  * Validate that at least one disjunct of \p w may have no cross link.
