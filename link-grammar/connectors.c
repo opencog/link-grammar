@@ -244,8 +244,11 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 
 	for (s = lc_string; '\0' != *s; s++)
 	{
-		lc_value |= (lc_enc_t)(*s & LC_MASK) << ((s-lc_string)*LC_BITS);
-		if (*s != WILD_TYPE) lc_mask |= wildcard;
+		if (*s != WILD_TYPE)
+		{
+			lc_value |= (lc_enc_t)(*s & LC_MASK) << ((s-lc_string)*LC_BITS);
+			lc_mask |= wildcard;
+		}
 		wildcard <<= LC_BITS;
 	};
 
