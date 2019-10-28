@@ -19,9 +19,6 @@
 #include "linkage.h"
 #include "string-set.h"
 
-/* Links are *always* less than 10 chars long. For now... */
-#define MAX_LINK_NAME_LENGTH 10
-
 /**
  * This returns a string that is the GCD of the two given strings.
  * If the GCD is equal to one of them, a pointer to it is returned.

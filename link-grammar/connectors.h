@@ -36,6 +36,11 @@
  * is possible to encode up to 9 letters in an uint64_t. */
 #define LC_BITS 7
 #define LC_MASK ((1<<LC_BITS)-1)
+
+/* Links are *always* less than 10 chars long . For now. The estimate
+ * below is somewhat dangerous .... XXX could be fixed. */
+#define MAX_LINK_NAME_LENGTH 10
+
 typedef uint64_t lc_enc_t;
 
 typedef uint32_t connector_hash_t;
