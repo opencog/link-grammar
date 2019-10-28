@@ -63,6 +63,17 @@ static const char *intersect_strings(String_set *sset, const Connector *c1,
 	/* Note: LC_BITS * MAX_CONNECTOR_LC_LENGTH < sizeof(lc_enc_t).
 	 * So after MAX_CONNECTOR_LC_LENGTH shifts lc_label must be 0. */
 
+#ifdef DEBUG
+	const char *s1 =  &connector_string(c1)[d1->uc_start];
+	const char *s2 =  &connector_string(c1)[d1->uc_start];
+	do
+	{
+		assert(isupper(*s1) == isupper(*s2), "Invalid uppercase part!");
+		assert(*s1 == *s2 || *s1 == '*' || *s2 == '*', "Invalid intersection!");
+	}
+	while ((*s1++ != '0') && (*s2++ != 0));
+#endif
+
 	return string_set_add(l, sset);
 }
 
