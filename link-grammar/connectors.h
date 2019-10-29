@@ -36,6 +36,10 @@
  * is possible to encode up to 9 letters in an uint64_t. */
 #define LC_BITS 7
 #define LC_MASK ((1<<LC_BITS)-1)
+#define MAX_CONNECTOR_LC_LENGTH 9
+
+#define MAX_LINK_NAME_LENGTH 12
+
 typedef uint64_t lc_enc_t;
 
 typedef uint32_t connector_hash_t;

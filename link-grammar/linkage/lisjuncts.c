@@ -29,10 +29,6 @@
 static void assert_same_disjunct(Linkage, WordIdx, const char *);
 #endif /* DEBUG */
 
-/* Links are *always* less than 10 chars long . For now. The estimate
- * below is somewhat dangerous .... could be  fixed. */
-#define MAX_LINK_NAME_LENGTH 10
-
 /**
  * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
  *
