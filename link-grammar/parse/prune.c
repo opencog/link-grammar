@@ -1238,6 +1238,8 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
+		if (cms->c->nearest_word == BAD_WORD) continue;
+
 		if (can_form_link(pp_link, connector_string(cms->c), subscr))
 		{
 			ppdebug("MATCHED %s\n", connector_string(cms->c));
@@ -1479,6 +1481,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 		for (Cms *cms = cmt->cms_table[hash]; cms != NULL; cms = cms->next)
 		{
 			Connector *c = cms->c;
+			if (cms->c->nearest_word == BAD_WORD) continue;
 			if (!post_process_match(selector, connector_string(c))) continue;
 			if (rule->selector_has_wildcard &&
 			    selector_mismatch(selector, c, cmt)) continue;
