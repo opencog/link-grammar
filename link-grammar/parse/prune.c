@@ -1394,7 +1394,8 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
  * @param cmt The cms table (sentence connectors)
  * @return \c true iff such a link cannot be formed.
  */
-static bool selector_mismatch_wild(const char *s, Connector *t, multiset_table *cmt)
+static bool selector_mismatch_wild(multiset_table *cmt, const char *s,
+                                   Connector *t)
 {
 	unsigned int h = cms_hash(s);
 
@@ -1485,7 +1486,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 
 			if (!post_process_match(selector, connector_string(c))) continue;
 			if (rule->selector_has_wildcard &&
-			    selector_mismatch_wild(selector, c, cmt)) continue;
+			    selector_mismatch_wild(cmt, selector, c)) continue;
 
 			ppdebug("Rule %zu: Selector %s, Connector %s\n",
 			        i, selector, connector_string(c));
