@@ -1377,9 +1377,9 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 }
 
 /**
- * Validate that no connector in the sentence that matches the
- * candidate trigger connector \p t may create a link x so that
- * post_process_match(s, x)==false.
+ * For selector \p s with a wildcard, validate that no connector in the
+ * sentence that matches the candidate trigger connector \p t may create a
+ * link x so that post_process_match(s, x)==false.
  *
  * If so, this ensures that the candidate trigger connector may form
  * only links which satisfy the selector. (This bypasses the limitation
