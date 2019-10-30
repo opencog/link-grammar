@@ -29,7 +29,7 @@
  * Note: The head and dependent indicators (lower-case h and d) are
  * ignored, as the intersection cannot include them.
  */
-static const char *intersect_strings(String_set *sset, const Connector *c1,
+const char *intersect_strings(String_set *sset, const Connector *c1,
                                      const Connector *c2)
 {
 	const condesc_t *d1 = c1->desc;

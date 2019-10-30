@@ -17,4 +17,6 @@
 #include "link-includes.h"
 
 void compute_link_names(Linkage, String_set *);
+const char *intersect_strings(String_set *, const Connector *,
+                              const Connector *);
 #endif /* _ANALYZE_LINKAGE_H */
