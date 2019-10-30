@@ -1191,7 +1191,7 @@ static unsigned int cms_hash(const char *s)
  *  and the rest post-process-match or are '*'.
  *  Examples:
  *     s="Xabc"; t="Xa*c"; e=s[3]; // *e == 'c'; // Returns true;
- *     s="Xabc"; t="Xa*c"; e=s[2]; // *e == '*'; // Returns true;
+ *     s="Xabc"; t="Xa*c"; e=s[2]; // *e == 'b'; // Returns false;
  *     s="Xabc"; t="Xa*d"; e=s[1]; // *e == 'a'; // Returns false;
  *     s="X*ab"; t="Xcab"; e=s[1]; // *e == '*'; // Returns false;
  *     s="Xa*b"; t="Xacb"; e=s[1]; // *e == 'a'; // Returns false;
@@ -1219,7 +1219,7 @@ static bool can_form_link(const char *s, const char *t, const char *e)
 	}
 	while (*s != '\0')
 	{
-		if (*s != '*' && *s != '#') return false;
+		if (*s != '*' && *s != '#' && s == e) return false;
 		s++;
 	}
 	return true;
