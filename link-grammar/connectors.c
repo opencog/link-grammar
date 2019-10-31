@@ -275,7 +275,7 @@ static void calculate_connector_info(condesc_t * c)
 	if (islower(*s)) s++; /* Ignore head-dependent indicator. */
 	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
 		c->flags |= CD_HEAD_DEPENDENT;
-	if ((c->flags & CD_HEAD_DEPENDENT) && (c->string[0] == 'h'))
+	if (c->string[0] == 'h')
 		c->flags |= CD_HEAD;
 
 	c->uc_start = (uint8_t)(s - c->string);
