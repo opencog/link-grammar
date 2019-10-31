@@ -281,7 +281,18 @@ static bool calculate_connector_info(condesc_t * c)
 	if ((c->flags & CD_HEAD_DEPENDENT) && (c->string[0] == 'h'))
 		c->flags |= CD_HEAD;
 
-#if 0
+	c->uc_start = (uint8_t)(s - c->string);
+	while (isupper(*++s)) /* The first letter must be an uppercase one. */
+		;
+	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
+
+	return connector_encode_lc(s, c);
+}
+
+/* ================= Connector descriptor table. ====================== */
+
+static uint32_t connector_str_hash(const char *s)
+{
 	/* For most situations, all three hashes are very nearly equal;
 	 * as to which is faster depends on the parsed text.
 	 * For both English and Russian, there are about 100 pre-defined
@@ -304,7 +315,6 @@ static bool calculate_connector_info(condesc_t * c)
 #ifdef USE_JENKINS
 	/* Jenkins one-at-a-time hash */
 	uint32_t i = 0;
-	c->uc_start = s - c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i += *s;
@@ -327,59 +337,6 @@ static bool calculate_connector_info(condesc_t * c)
 		s++;
 	}
 #endif /* USE_SDBM */
-
-	//c->uc_hash = i;
-#else
-
-
-	c->uc_start = (uint8_t)(s - c->string);
-	while (isupper(*++s)) /* The first letter must be an uppercase one. */
-		;
-#endif
-	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
-
-	return connector_encode_lc(s, c);
-}
-
-/* ================= Connector descriptor table. ====================== */
-
-static uint32_t connector_str_hash(const char *s)
-{
-	uint32_t i;
-
-	/* For most situations, all three hashes are very nearly equal;
-	 * as to which is faster depends on the parsed text.
-	 * For both English and Russian, there are about 100 pre-defined
-	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
-	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of setting up the hash table dominates the
-	 * cost of collisions. */
-#ifdef USE_DJB2
-	/* djb2 hash */
-	i = 5381;
-	while (*s)
-	{
-		i = ((i << 5) + i) + *s;
-		s++;
-	}
-	i += i>>14;
-#endif /* USE_DJB2 */
-
-#define USE_JENKINS
-#ifdef USE_JENKINS
-	/* Jenkins one-at-a-time hash */
-	i = 0;
-	while (*s)
-	{
-		i += *s;
-		i += (i<<10);
-		i ^= (i>>6);
-		s++;
-	}
-	i += (i << 3);
-	i ^= (i >> 11);
-	i += (i << 15);
-#endif /* USE_JENKINS */
 
 	return i;
 }
