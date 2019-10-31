@@ -234,7 +234,7 @@ void set_all_condesc_length_limit(Dictionary dict)
  * (total 36) so a 6-bit packing is possible (by abs(value-60) on each
  * character value).
  */
-static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
+static void connector_encode_lc(const char *lc_string, condesc_t *desc)
 {
 	lc_enc_t lc_mask = 0;
 	lc_enc_t lc_value = 0;
@@ -251,17 +251,15 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 		wildcard <<= LC_BITS;
 	};
 
-	if ((unsigned long)(s-lc_string) > (CHAR_BIT*sizeof(lc_value)/LC_BITS))
+	/* FIXME: Check on dict read. */
+	if ((size_t)(s-lc_string) > (sizeof(lc_value)/LC_BITS)*CHAR_BIT)
 	{
-		prt_error("Error: Lower-case part '%s' is too long (%d)\n",
-					 lc_string, (int)(s-lc_string));
-		return false;
+		prt_error("Warning: Lower-case part '%s' is too long (%d>%d)\n",
+					 lc_string, (int)(s-lc_string), MAX_CONNECTOR_LC_LENGTH);
 	}
 
 	desc->lc_mask = (lc_mask << 1) + !!(desc->flags & CD_HEAD_DEPENDENT);
 	desc->lc_letters = (lc_value << 1) + !!(desc->flags & CD_HEAD);
-
-	return true;
 }
 
 /**
@@ -269,7 +267,7 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
  * This information is used to speed up the parsing stage. It is
  * calculated during the directory creation and doesn't change afterward.
  */
-static bool calculate_connector_info(condesc_t * c)
+static void calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 
@@ -284,7 +282,7 @@ static bool calculate_connector_info(condesc_t * c)
 	while (isupper(*++s)) {} /* Skip the uppercase part. */
 	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
 
-	return connector_encode_lc(s, c);
+	connector_encode_lc(s, c);
 }
 
 /* ================= Connector descriptor table. ====================== */
@@ -400,8 +398,7 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 		condesc_t *condesc = dict->contable.hdesc[n].desc;
 
 		if (NULL == condesc) continue;
-		if (!calculate_connector_info(condesc))
-			return false;
+		calculate_connector_info(condesc);
 		sdesc[i++] = dict->contable.hdesc[n].desc;
 	}
 
