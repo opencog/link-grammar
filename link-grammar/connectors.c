@@ -14,12 +14,12 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
-#include <limits.h>                 // for CHAR_BIT
+#include <limits.h>                     // CHAR_BIT
 
-#include "dict-common/dict-utils.h" // for size_of_expression()
-#include "api-structures.h"         // for Parse_Options_s
+#include "dict-common/dict-utils.h"     // size_of_expression
+#include "api-structures.h"             // Parse_Options_s
 #include "connectors.h"
-#include "link-includes.h"          // for Parse_Options
+#include "link-includes.h"              // Parse_Options
 
 #define WILD_TYPE '*'
 #define LENGTH_LINIT_WILD_TYPE WILD_TYPE
@@ -274,14 +274,14 @@ static bool calculate_connector_info(condesc_t * c)
 	const char *s;
 
 	s = c->string;
-	if (islower(*s)) s++; /* ignore head-dependent indicator */
+	if (islower(*s)) s++; /* Ignore head-dependent indicator. */
 	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
 		c->flags |= CD_HEAD_DEPENDENT;
 	if ((c->flags & CD_HEAD_DEPENDENT) && (c->string[0] == 'h'))
 		c->flags |= CD_HEAD;
 
 	c->uc_start = (uint8_t)(s - c->string);
-	while (isupper(*++s)) {} /* The first letter must be an uppercase one. */
+	while (isupper(*++s)) {} /* Skip the uppercase part. */
 	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
 
 	return connector_encode_lc(s, c);
@@ -291,17 +291,15 @@ static bool calculate_connector_info(condesc_t * c)
 
 static uint32_t connector_str_hash(const char *s)
 {
-	/* For most situations, all three hashes are very nearly equal;
-	 * as to which is faster depends on the parsed text.
+	/* From an old-code comment:
+	 * For most situations, all three hashes are very nearly equal.
 	 * For both English and Russian, there are about 100 pre-defined
 	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
-	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of setting up the hash table dominates the
-	 * cost of collisions. */
+	 * connectors, and the LLxxx suffix connectors for Russian). */
 #ifdef USE_DJB2
-	/* djb2 hash */
+	/* djb2 hash. */
 	uint32_t i = 5381;
-	while (isupper(*s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -311,9 +309,9 @@ static uint32_t connector_str_hash(const char *s)
 
 #define USE_JENKINS
 #ifdef USE_JENKINS
-	/* Jenkins one-at-a-time hash */
+	/* Jenkins one-at-a-time hash. */
 	uint32_t i = 0;
-	while (isupper(*s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
 	{
 		i += *s;
 		i += (i<<10);
@@ -326,7 +324,7 @@ static uint32_t connector_str_hash(const char *s)
 #endif /* USE_JENKINS */
 
 #ifdef USE_SDBM
-	/* sdbm hash */
+	/* sdbm hash. */
 	uint32_t i = 0;
 	c->uc_start = s - c->string;
 	while (isupper(*s))
