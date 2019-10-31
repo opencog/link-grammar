@@ -22,6 +22,7 @@
 #include "link-includes.h"          // for Parse_Options
 
 #define WILD_TYPE '*'
+#define LENGTH_LINIT_WILD_TYPE WILD_TYPE
 
 /**
  * free_connectors() -- free the list of connectors pointed to by e
@@ -33,7 +34,7 @@ void free_connectors(Connector *e)
 	for (; e != NULL; e = n)
 	{
 		n = e->next;
-		xfree((char *)e, sizeof(Connector));
+		free(e);
 	}
 }
 
@@ -63,7 +64,7 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 
 	if (NULL == connector_pool) /* For the SAT-parser, until fixed. */
 	{
-		c = xalloc(sizeof(Connector));
+		c = malloc(sizeof(Connector));
 		memset(c, 0, sizeof(Connector));
 	}
 	else
@@ -107,8 +108,6 @@ static int condesc_by_uc_num(const void *a, const void *b)
 
 	return 0;
 }
-
-#define LENGTH_LINIT_WILD_TYPE WILD_TYPE
 
 /**
  * Set the length limit of all the connectors that match those in e.
@@ -282,8 +281,7 @@ static bool calculate_connector_info(condesc_t * c)
 		c->flags |= CD_HEAD;
 
 	c->uc_start = (uint8_t)(s - c->string);
-	while (isupper(*++s)) /* The first letter must be an uppercase one. */
-		;
+	while (isupper(*++s)) {} /* The first letter must be an uppercase one. */
 	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
 
 	return connector_encode_lc(s, c);
@@ -303,7 +301,7 @@ static uint32_t connector_str_hash(const char *s)
 #ifdef USE_DJB2
 	/* djb2 hash */
 	uint32_t i = 5381;
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper(*s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -315,7 +313,7 @@ static uint32_t connector_str_hash(const char *s)
 #ifdef USE_JENKINS
 	/* Jenkins one-at-a-time hash */
 	uint32_t i = 0;
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper(*s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i += *s;
 		i += (i<<10);
@@ -331,7 +329,7 @@ static uint32_t connector_str_hash(const char *s)
 	/* sdbm hash */
 	uint32_t i = 0;
 	c->uc_start = s - c->string;
-	while (isupper((int) *s))
+	while (isupper(*s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
 		s++;
@@ -491,7 +489,7 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 	ct->size = size;
 }
 
-#define CONDESC_TABLE_GROW_FACTOR 2
+#define CONDESC_TABLE_GROWTH_FACTOR 2
 
 static bool condesc_grow(ConTable *ct)
 {
@@ -499,7 +497,7 @@ static bool condesc_grow(ConTable *ct)
 	hdesc_t *old_hdesc = ct->hdesc;
 
 	lgdebug(+11, "Growing ConTable from %zu\n", old_size);
-	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROW_FACTOR);
+	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROWTH_FACTOR);
 
 	for (size_t i = 0; i < old_size; i++)
 	{
