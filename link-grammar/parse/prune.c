@@ -1481,7 +1481,8 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 		for (Cms *cms = cmt->cms_table[hash]; cms != NULL; cms = cms->next)
 		{
 			Connector *c = cms->c;
-			if (cms->c->nearest_word == BAD_WORD) continue;
+			if (c->nearest_word == BAD_WORD) continue;
+
 			if (!post_process_match(selector, connector_string(c))) continue;
 			if (rule->selector_has_wildcard &&
 			    selector_mismatch(selector, c, cmt)) continue;
