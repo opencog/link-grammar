@@ -42,13 +42,6 @@
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
 
-typedef struct c_list_s C_list;
-struct c_list_s
-{
-	C_list *next;
-	Connector *c;
-};
-
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* Per-word minimum/maximum link descriptor.
@@ -73,6 +66,13 @@ typedef struct
 	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
 #endif
 } mlink_t;
+
+typedef struct c_list_s C_list;
+struct c_list_s
+{
+	C_list *next;
+	Connector *c;
+};
 
 typedef struct power_table_s power_table;
 struct power_table_s
