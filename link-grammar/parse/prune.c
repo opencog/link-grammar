@@ -39,17 +39,8 @@
 #define PRx(x) fprintf(stderr, ""#x)
 #define PR(...) true
 
-typedef Connector *connector_table;
-
 /* Indicator that this connector cannot be used -- that its "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
-
-typedef struct c_list_s C_list;
-struct c_list_s
-{
-	C_list *next;
-	Connector *c;
-};
 
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
@@ -75,6 +66,13 @@ typedef struct
 	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
 #endif
 } mlink_t;
+
+typedef struct c_list_s C_list;
+struct c_list_s
+{
+	C_list *next;
+	Connector *c;
+};
 
 typedef struct power_table_s power_table;
 struct power_table_s
@@ -1191,7 +1189,7 @@ static unsigned int cms_hash(const char *s)
  *  and the rest post-process-match or are '*'.
  *  Examples:
  *     s="Xabc"; t="Xa*c"; e=s[3]; // *e == 'c'; // Returns true;
- *     s="Xabc"; t="Xa*c"; e=s[2]; // *e == '*'; // Returns true;
+ *     s="Xabc"; t="Xa*c"; e=s[2]; // *e == 'b'; // Returns false;
  *     s="Xabc"; t="Xa*d"; e=s[1]; // *e == 'a'; // Returns false;
  *     s="X*ab"; t="Xcab"; e=s[1]; // *e == '*'; // Returns false;
  *     s="Xa*b"; t="Xacb"; e=s[1]; // *e == 'a'; // Returns false;
@@ -1219,7 +1217,7 @@ static bool can_form_link(const char *s, const char *t, const char *e)
 	}
 	while (*s != '\0')
 	{
-		if (*s != '*' && *s != '#') return false;
+		if (*s != '*' && *s != '#' && s == e) return false;
 		s++;
 	}
 	return true;
@@ -1377,9 +1375,9 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
 }
 
 /**
- * Validate that no connector in the sentence that matches the
- * candidate trigger connector \p t may create a link x so that
- * post_process_match(s, x)==false.
+ * For selector \p s with a wildcard, validate that no connector in the
+ * sentence that matches the candidate trigger connector \p t may create a
+ * link x so that post_process_match(s, x)==false.
  *
  * If so, this ensures that the candidate trigger connector may form
  * only links which satisfy the selector. (This bypasses the limitation
@@ -1394,11 +1392,12 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
  * @param cmt The cms table (sentence connectors)
  * @return \c true iff such a link cannot be formed.
  */
-static bool selector_mismatch(const char *s, Connector *t, multiset_table *cmt)
+static bool selector_mismatch_wild(multiset_table *cmt, const char *s,
+                                   Connector *t)
 {
 	unsigned int h = cms_hash(s);
 
-	ppdebug("Selector with wildcard: %s, trigger %s\n", s, connector_string(t));
+	ppdebug("Selector %s, trigger %s\n", s, connector_string(cms->c));
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
 		size_t len_s = strlen(s);
@@ -1481,10 +1480,11 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 		for (Cms *cms = cmt->cms_table[hash]; cms != NULL; cms = cms->next)
 		{
 			Connector *c = cms->c;
-			if (cms->c->nearest_word == BAD_WORD) continue;
+			if (c->nearest_word == BAD_WORD) continue;
+
 			if (!post_process_match(selector, connector_string(c))) continue;
 			if (rule->selector_has_wildcard &&
-			    selector_mismatch(selector, c, cmt)) continue;
+			    selector_mismatch_wild(cmt, selector, c)) continue;
 
 			ppdebug("Rule %zu: Selector %s, Connector %s\n",
 			        i, selector, connector_string(c));
