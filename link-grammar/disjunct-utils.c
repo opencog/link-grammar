@@ -460,18 +460,6 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
 	*cca = ccnt;
 	*dca = dcnt;
 }
-/* ============================================================= */
-
-/**
- * Record the wordgraph word to which the X-node belongs, in each of its
- * disjuncts.
- */
-void word_record_in_disjunct(const Gword * gw, Disjunct * d)
-{
-	for (;d != NULL; d=d->next) {
-		d->originating_gword = (gword_set *)&gw->gword_set_head;
-	}
-}
 
 /* ================ Pack disjuncts and connectors ============== */
 /* Print one connector with all the details.

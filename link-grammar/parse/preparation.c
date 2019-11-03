@@ -124,8 +124,8 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 		d = NULL;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_disjuncts_for_exp(sent, x->exp, x->string, cost_cutoff, opts);
-			word_record_in_disjunct(x->word, dx);
+			Disjunct *dx = build_disjuncts_for_exp(sent, x->exp, x->string,
+				&x->word->gword_set_head, cost_cutoff, opts);
 			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;

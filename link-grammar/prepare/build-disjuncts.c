@@ -252,7 +252,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
  */
 static Disjunct *
 build_disjunct(Sentence sent, Clause * cl, const char * string,
-               double cost_cutoff, Parse_Options opts)
+               const gword_set *gs, double cost_cutoff, Parse_Options opts)
 {
 	Disjunct *dis, *ndis;
 	Pool_desc *connector_pool = NULL;
@@ -288,6 +288,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 
 			ndis->word_string = string;
 			ndis->cost = cl->cost;
+			ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
 			ndis->next = dis;
 			dis = ndis;
 		}
@@ -295,8 +296,9 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 	return dis;
 }
 
-Disjunct * build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
-                                   double cost_cutoff, Parse_Options opts)
+Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
+                                  const gword_set *gs, double cost_cutoff,
+                                  Parse_Options opts)
 {
 	Clause *c ;
 	Disjunct * dis;
@@ -313,7 +315,7 @@ Disjunct * build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	// printf("%s\n", lg_exp_stringify(exp));
 	c = build_clause(exp, &ct);
 	// print_clause_list(c);
-	dis = build_disjunct(sent, c, word, cost_cutoff, opts);
+	dis = build_disjunct(sent, c, word, gs, cost_cutoff, opts);
 	// print_disjunct_list(dis);
 	pool_delete(ct.Tconnector_pool);
 	pool_delete(ct.Clause_pool);

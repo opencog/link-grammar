@@ -17,7 +17,9 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-Disjunct * build_disjuncts_for_exp(Sentence sent, Exp*, const char*, double cost_cutoff, Parse_Options opts);
+Disjunct *build_disjuncts_for_exp(Sentence sent, Exp *, const char *,
+                                  const gword_set *, double cost_cutoff,
+                                  Parse_Options opts);
 
 #ifdef DEBUG
 void prt_exp(Exp *, int);

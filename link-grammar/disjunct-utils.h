@@ -64,7 +64,6 @@ unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
 char * print_one_disjunct(Disjunct *);
-void word_record_in_disjunct(const Gword *, Disjunct *);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
