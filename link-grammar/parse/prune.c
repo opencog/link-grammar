@@ -1397,7 +1397,7 @@ static bool selector_mismatch_wild(multiset_table *cmt, const char *s,
 {
 	unsigned int h = cms_hash(s);
 
-	ppdebug("Selector %s, trigger %s\n", s, connector_string(cms->c));
+	ppdebug("Selector %s, trigger %s\n", s, connector_string(t));
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
 		size_t len_s = strlen(s);
