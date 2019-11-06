@@ -1700,7 +1700,7 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 			}
 		}
 
-		ml_exists |= ((ml[w].nw[0] != w) || (ml[w].nw[1] != w));
+		ml_exists |= (ml[w].nw[0] != ml[w].nw[1]);
 	}
 
 	if (verbosity_level(+D_PRUNE) && ml_exists)
