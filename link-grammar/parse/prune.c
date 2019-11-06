@@ -1793,13 +1793,16 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 		if (sent->word[w].optional) continue;
 		if (sent->word[w].d == NULL) continue;
 
-		if ((w > 0) && (ml[w].nw[1] != w))
+		WordIdx_m nw0 = ml[w].nw[0];
+		WordIdx_m nw1 = ml[w].nw[1];
+		WordIdx_m fw0 = ml[w].fw[0];
+		WordIdx_m fw1 = ml[w].fw[1];
+
+		if ((w > 0) && (nw1 != w))
 		{
 			/* Deepest connector constraint l->r. */
-			for (Disjunct *d = sent->word[ml[w].nw[1]].d; d != NULL; d = d->next)
+			for (Disjunct *d = sent->word[nw1].d; d != NULL; d = d->next)
 			{
-				//print_disjunct_list(sent->word[w].d);
-
 				Connector *shallow_c = d->left;
 				if (shallow_c == NULL) continue;
 				if (shallow_c->nearest_word == BAD_WORD)
@@ -1822,10 +1825,10 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 			}
 		}
 
-		if ((w < sent->length-1) && (ml[w].nw[0] != w))
+		if ((w < sent->length-1) && (nw0 != w))
 		{
 			/* Deepest connector constraint r->l. */
-			for (Disjunct *d = sent->word[ml[w].nw[0]].d; d != NULL; d = d->next)
+			for (Disjunct *d = sent->word[nw0].d; d != NULL; d = d->next)
 			{
 				Connector *shallow_c = d->right;
 				if (shallow_c == NULL) continue;
@@ -1850,7 +1853,7 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 		}
 
 		/* Remove disjuncts that are blocked by mandatory l->r links. */
-		for (unsigned int rw = w+1; rw < ml[w].nw[1]; rw++)
+		for (unsigned int rw = w+1; rw < nw1; rw++)
 		{
 			for (Disjunct *d = sent->word[rw].d; d != NULL; d = d->next)
 			{
@@ -1870,7 +1873,7 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 				}
 
 #if FW
-				if (shallow_c->nearest_word > ml[w].fw[1])
+				if (shallow_c->nearest_word > fw1)
 				{
 					shallow_c->nearest_word = BAD_WORD;
 					N_deleted[0]++;
@@ -1885,7 +1888,7 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 		}
 
 		/* Remove disjuncts that are blocked by mandatory r->l links. */
-		for (unsigned int lw = ml[w].nw[0]+1; lw < w; lw++)
+		for (unsigned int lw = nw0+1; lw < w; lw++)
 		{
 			for (Disjunct *d = sent->word[lw].d; d != NULL; d = d->next)
 			{
@@ -1905,12 +1908,13 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 				}
 
 #if FW
-				if (shallow_c->nearest_word < ml[w].fw[0])
+				if (shallow_c->nearest_word < fw0)
 				{
 					shallow_c->nearest_word = BAD_WORD;
 					N_deleted[0]++;
 					continue;
 				}
+
 #endif /* FW */
 
 				shallow_c->farthest_word = MIN(w, shallow_c->farthest_word);
