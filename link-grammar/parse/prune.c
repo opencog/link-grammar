@@ -1943,6 +1943,8 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	power_table_init(sent, ts, &pt);
 
 	bool no_mlink = !!test_enabled("no-mlink");
+	mlink_t *ml = alloca(sent->length * sizeof(*pc.ml));
+
 	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
 	pc.pt = &pt;
@@ -1955,8 +1957,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	if ((num_deleted > 0) && !no_mlink)
 	{
-		pc.ml = alloca(sent->length * sizeof(*pc.ml));
-		pc.ml = build_mlink_table(sent, pc.ml);
+		pc.ml = build_mlink_table(sent, ml);
 		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
 		if (pc.ml != NULL)
 		{
@@ -1969,7 +1970,19 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	if (num_deleted != -1)
 	{
 		if (pp_prune(sent, ts, opts) > 0)
-			power_prune(sent, &pc, opts);
+			num_deleted = power_prune(sent, &pc, opts);
+
+		if ((num_deleted > 0) && !no_mlink)
+		{
+			pc.ml = build_mlink_table(sent, ml);
+			print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
+			if (pc.ml != NULL)
+			{
+				if (null_count == 0)
+					cross_mandatory_link_prune(sent, pc.ml);
+				num_deleted = power_prune(sent, &pc, opts);
+			}
+		}
 	}
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
