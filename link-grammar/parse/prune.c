@@ -1878,7 +1878,9 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 				}
 #endif /* FW */
 
-				shallow_c->farthest_word = MIN(ml[w].nw[1], shallow_c->farthest_word);
+				shallow_c->farthest_word = MAX(w, shallow_c->farthest_word);
+				if (d->right != NULL)
+					d->right->farthest_word = MIN(fw1, d->right->farthest_word);
 			}
 		}
 
@@ -1911,7 +1913,9 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 				}
 #endif /* FW */
 
-				shallow_c->farthest_word = MAX(ml[w].nw[0], shallow_c->farthest_word);
+				shallow_c->farthest_word = MIN(w, shallow_c->farthest_word);
+				if (d->left != NULL)
+					d->left->farthest_word = MAX(fw0, d->left->farthest_word);
 			}
 		}
 	}
