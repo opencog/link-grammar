@@ -1778,11 +1778,14 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  * Since links are not allowed to cross, such disjuncts would create nulls
  * links. So this optimization can only be done when parsing a sentence
  * with null_count==0 (in which null links are not allowed).
- * Possible FIXME:
- * Part of such kind of deletions are also be done in
+ * Possible FIXMEs:
+ * 1. Part of such kind of deletions are also be done in
  * possible_connection(), so there is some overlapping. However,
  * eliminating this overlap (if possible) would not cause a significant
  * speedup because these functions are lightweight.
+ * 2. FW_NOT_NOW: The furthest_word trimming is not aggressive enough for
+ * this code to have any effect. To be retried when a more aggressive one
+ * is implemented.
  */
 static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 {
@@ -1899,14 +1902,14 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 					continue;
 				}
 
-#if FW
+#if FW_NOT_NOW
 				if (shallow_c->nearest_word > fw1)
 				{
 					shallow_c->nearest_word = BAD_WORD;
 					N_deleted[0]++;
 					continue;
 				}
-#endif /* FW */
+#endif /* FW_NOT_NOW */
 
 				shallow_c->farthest_word = MAX(w, shallow_c->farthest_word);
 				if (d->right != NULL)
@@ -1934,7 +1937,7 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 					continue;
 				}
 
-#if FW
+#if FW_NOT_NOW
 				if (shallow_c->nearest_word < fw0)
 				{
 					shallow_c->nearest_word = BAD_WORD;
@@ -1942,7 +1945,7 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 					continue;
 				}
 
-#endif /* FW */
+#endif /* FW_NOT_NOW */
 
 				shallow_c->farthest_word = MIN(w, shallow_c->farthest_word);
 				if (d->left != NULL)
