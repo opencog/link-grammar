@@ -1787,6 +1787,7 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 {
 	int N_deleted[2] = {0};
+	static Connector bad_connector = { .nearest_word = BAD_WORD };
 
 	for (unsigned int w = 0; w < sent->length; w++)
 	{
@@ -1804,7 +1805,22 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 			for (Disjunct *d = sent->word[nw1].d; d != NULL; d = d->next)
 			{
 				Connector *shallow_c = d->left;
-				if (shallow_c == NULL) continue;
+
+				if (shallow_c == NULL)
+				{
+					if  (nw1 == fw1)
+					{
+						/* This word must have LHS link. So disjuncts which
+						 * don't have an LHS jet can be deleted. However,
+						 * naturally there are no connectors to assign BAD_WORD
+						 * to. So create a dummy one. The same is done in the
+						 * other direction. */
+						d->left = &bad_connector;
+						N_deleted[0]++;
+						PR(1);
+					}
+					continue;
+				}
 				if (shallow_c->nearest_word == BAD_WORD)
 				{
 					N_deleted[1]++;
@@ -1831,7 +1847,18 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 			for (Disjunct *d = sent->word[nw0].d; d != NULL; d = d->next)
 			{
 				Connector *shallow_c = d->right;
-				if (shallow_c == NULL) continue;
+
+				if (shallow_c == NULL)
+				{
+					if  (nw0 == fw0)
+					{
+						/* See the comment in the handling of the other direction. */
+						d->right = &bad_connector;
+						N_deleted[0]++;
+						PR(0);
+					}
+					continue;
+				}
 				if (shallow_c->nearest_word == BAD_WORD)
 				{
 					N_deleted[1]++;
