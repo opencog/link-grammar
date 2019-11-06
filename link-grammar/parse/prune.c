@@ -52,8 +52,13 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * nw is the minimum nearest_word of the shallow connectors.
  * fw is the maximum farthest_word of the shallow connectors.
  *
+ * In case at least one jet is missing in a particular direction, there
+ * are no constraint in that direction. For nearest_word (nw) this is
+ * signified by value w for word w. For farthest word (fw) this is
+ * signified by unlimited length limit.
+ *
  * The connection of the shallow connector is to a greater distance than
- * the connections from the deepest ones. For word w, words in the ranges
+ * the connections from the deeper ones. For word w, words in the ranges
  * (nw[0], w) or (w, nw[1]) cannot connect to words outside its
  * corresponding range without crossing a link to a shallow connector of
  * w. In addition, words in (nw[0], w) cannot connect to words before
@@ -64,9 +69,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
-#if FW
 	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
-#endif
 } mlink_t;
 
 typedef struct c_list_s C_list;
@@ -1643,9 +1646,7 @@ static void mlink_table_init(Sentence sent, mlink_t *ml)
 		ml[w] = (mlink_t)
 		{
 			.nw[0] = 0, .nw[1] = UNLIMITED_LEN,
-#if FW
-			.fw[0] = UNLIMITED_LEN, .fw[1] = 0
-#endif
+			.fw[0] = UNLIMITED_LEN, .fw[1] = 0,
 		};
 	}
 }
@@ -1653,9 +1654,7 @@ static void mlink_table_init(Sentence sent, mlink_t *ml)
 /**
  * Build the per-word minimum/maximum link distance table.
  * Optional words are ignored because they cannot constrain link crossing.
- * Table entries for word w having value w means no link constraint.
  * The table is meaningful only if at least one entry has a link constraint.
- * Code under "#if FW" is for supporting farthest_word (yet unimplemented).
  *
  * @param ml[out] The table (indexed by word, w/fields indexed by direction).
  * @return \c true iff the table is meaningful.
@@ -1675,42 +1674,33 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 			if (NULL == d->left)
 			{
 				ml[w].nw[0] = w;
-#if FW
 				ml[w].fw[0] = 0;
-#endif
 			}
 			else
 			{
 				if (d->left->nearest_word > ml[w].nw[0])
 					ml[w].nw[0] = d->left->nearest_word;
-#if FW
+
 				if (d->left->farthest_word < ml[w].fw[0])
 					ml[w].fw[0] = d->left->farthest_word;
-#endif
 			}
 
 			if (NULL == d->right)
 			{
 				ml[w].nw[1] = w;
-#if FW
 				ml[w].fw[1] = UNLIMITED_LEN;
-#endif
 			}
 			else
 			{
 				if (d->right->nearest_word < ml[w].nw[1])
 					ml[w].nw[1] = d->right->nearest_word;
-#if FW
+
 				if (d->right->farthest_word > ml[w].fw[1])
 					ml[w].fw[1] = d->right->farthest_word;
-#endif
 			}
 		}
 
 		ml_exists |= ((ml[w].nw[0] != w) || (ml[w].nw[1] != w));
-#if FW
-		ml_exists |= /* XXX add farthest_word check */;
-#endif
 	}
 
 	if (verbosity_level(+D_PRUNE) && ml_exists)
@@ -1722,16 +1712,13 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 
 			if (ml[w].nw[0] != ml[w].nw[1])
 			{
+				/* -1 means at least one missing jet at that direction. */
 				prt_error("%3d: nearest_word (%3d %3d)", w,
 				       w==ml[w].nw[0]?-1:ml[w].nw[0],
 				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
-#if FW
-				prt_error("     farthest_word (%d %d)\n\\",
-				       w==ml[w].nw[0]?-1:ml[w].fw[0]<=0?-1:ml[w].fw[0],
-				       w==ml[w].nw[1]?-1:ml[w].fw[1]>=sent->length?-1:ml[w].fw[1]);
-#else
-				prt_error("\n\\");
-#endif
+				prt_error("     farthest_word (%3d %3d)\n\\",
+				       w==ml[w].nw[0]?-1:ml[w].fw[0],
+				       w==ml[w].nw[1]?-1:ml[w].fw[1]);
 			}
 		}
 		lg_error_flush();
