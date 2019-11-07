@@ -70,7 +70,7 @@ typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
 	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
-} mlink_t;
+} mlink_table;
 
 typedef struct c_list_s C_list;
 struct c_list_s
@@ -113,7 +113,7 @@ struct prune_context_s
 	int N_deleted[2];  /* counts deletions: [0]: initial; [1]: by mem. sharing */
 
 	power_table *pt;
-	mlink_t *ml;
+	mlink_table *ml;
 	Sentence sent;
 
 	int power_cost;   /* for debug - shown in the verbose output */
@@ -1639,11 +1639,11 @@ static void get_num_con_uc(Sentence sent,power_table *pt,
 	}
 }
 
-static void mlink_table_init(Sentence sent, mlink_t *ml)
+static void mlink_table_init(Sentence sent, mlink_table *ml)
 {
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		ml[w] = (mlink_t)
+		ml[w] = (mlink_table)
 		{
 			.nw[0] = 0, .nw[1] = UNLIMITED_LEN,
 			.fw[0] = UNLIMITED_LEN, .fw[1] = 0,
@@ -1659,7 +1659,7 @@ static void mlink_table_init(Sentence sent, mlink_t *ml)
  * @param ml[out] The table (indexed by word, w/fields indexed by direction).
  * @return \c true iff the table is meaningful.
  */
-static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
+static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 {
 	bool ml_exists = false;
 
@@ -1787,7 +1787,7 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  * this code to have any effect. To be retried when a more aggressive one
  * is implemented.
  */
-static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
+static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_table *ml)
 {
 	int N_deleted[2] = {0};
 	static Connector bad_connector = { .nearest_word = BAD_WORD };
@@ -1977,7 +1977,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	power_table_init(sent, ts, &pt);
 
 	bool no_mlink = !!test_enabled("no-mlink");
-	mlink_t *ml = alloca(sent->length * sizeof(*pc.ml));
+	mlink_table *ml = alloca(sent->length * sizeof(*pc.ml));
 
 	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
