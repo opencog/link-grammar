@@ -46,16 +46,16 @@
 
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
-/* Per-word minimum/maximum link descriptor.
+/* Per-word minimum/maximum link distance descriptor.
  * The dimension of the 2-element arrays below is used as follows:
  * [0] - left side; [1] - right side.
  * nw is the minimum nearest_word of the shallow connectors.
  * fw is the maximum farthest_word of the shallow connectors.
  *
  * In case at least one jet is missing in a particular direction, there
- * are no constraint in that direction. For nearest_word (nw) this is
- * signified by value w for word w. For farthest word (fw) this is
- * signified by unlimited length limit.
+ * are no link distance constraints in that direction. For nearest_word
+ * (nw) this is signified by value w for word w. For farthest word (fw)
+ * this is signified by unlimited length limit.
  *
  * The connection of the shallow connector is to a greater distance than
  * the connections from the deeper ones. For word w, words in the ranges
@@ -69,7 +69,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
-	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
+	WordIdx_m fw[2];   /* maximum link distance */
 } mlink_table;
 
 typedef struct c_list_s C_list;
