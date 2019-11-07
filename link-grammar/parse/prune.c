@@ -12,6 +12,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>                      // INT_MAX
+
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
@@ -50,8 +52,13 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * nw is the minimum nearest_word of the shallow connectors.
  * fw is the maximum farthest_word of the shallow connectors.
  *
+ * In case at least one jet is missing in a particular direction, there
+ * are no constraint in that direction. For nearest_word (nw) this is
+ * signified by value w for word w. For farthest word (fw) this is
+ * signified by unlimited length limit.
+ *
  * The connection of the shallow connector is to a greater distance than
- * the connections from the deepest ones. For word w, words in the ranges
+ * the connections from the deeper ones. For word w, words in the ranges
  * (nw[0], w) or (w, nw[1]) cannot connect to words outside its
  * corresponding range without crossing a link to a shallow connector of
  * w. In addition, words in (nw[0], w) cannot connect to words before
@@ -62,10 +69,8 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 typedef struct
 {
 	WordIdx_m nw[2];   /* minimum link distance */
-#if FW
 	WordIdx_m fw[2];   /* maximum link distance - not implemented yet */
-#endif
-} mlink_t;
+} mlink_table;
 
 typedef struct c_list_s C_list;
 struct c_list_s
@@ -108,7 +113,7 @@ struct prune_context_s
 	int N_deleted[2];  /* counts deletions: [0]: initial; [1]: by mem. sharing */
 
 	power_table *pt;
-	mlink_t *ml;
+	mlink_table *ml;
 	Sentence sent;
 
 	int power_cost;   /* for debug - shown in the verbose output */
@@ -747,9 +752,10 @@ left_table_search(prune_context *pc, int w, Connector *c,
  * there is no way to match this list, it returns -1 (which is also
  * BAD_WORD in unsigned 8-bit representation).
  * If it does find a way to match it, it updates the c->nearest_word
- * fields correctly. When tracons are shared, this update is done
- * simultaneously on all of them. The main loop of power_prune() then
- * marks them with the pass number that is checked here.
+ * and c->farthest_word fields correctly. When tracons are shared, this
+ * update is done simultaneously on all of them. The main loop of
+ * power_prune() then marks them with the pass number that is checked
+ * here.
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
@@ -782,6 +788,27 @@ left_connector_list_update(prune_context *pc, Connector *c,
 		c->nearest_word = foundmatch;
 		pc->N_changed++;
 	}
+
+	if (foundmatch != -1)
+	{
+		int farthest_word = n;
+		for (int l = lb; l < n; l++)
+		{
+			pc->power_cost++;
+			if (right_table_search(pc, l, c, shallow, w))
+			{
+				farthest_word = l;
+				break;
+			}
+		}
+
+		if (farthest_word > (int)c->farthest_word)
+		{
+			c->farthest_word = farthest_word;
+			pc->N_changed++;
+		}
+	}
+
 	return foundmatch;
 }
 
@@ -790,9 +817,10 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * w+1, w+2, w+3...  Returns the word to which the first connector of
  * the list could possibly be matched.  If c is NULL, returns w.
  * If there is no way to match this list, it returns BAD_WORD, which is
- * always greater than N_words - 1.   If it does find a way to match it,
- * it updates the c->nearest_word fields correctly.
- * Regarding pass_number, see the comment in left_connector_list_update().
+ * always greater than N_words - 1.
+ * If it does find a way to match it, it updates the c->nearest_word and
+ * c->farthest_word fields correctly.  Regarding pass_number, see the
+ * comment in left_connector_list_update().
  */
 static size_t
 right_connector_list_update(prune_context *pc, Connector *c,
@@ -825,6 +853,27 @@ right_connector_list_update(prune_context *pc, Connector *c,
 		c->nearest_word = foundmatch;
 		pc->N_changed++;
 	}
+
+	if (n <= ub)
+	{
+		int farthest_word = n;
+		for (int l = ub; l > n ; l--)
+		{
+			pc->power_cost++;
+			if (left_table_search(pc, l, c, shallow, w))
+			{
+				farthest_word = l;
+				break;
+			}
+		}
+
+		if (farthest_word < (int)c->farthest_word)
+		{
+			c->farthest_word = farthest_word;
+			pc->N_changed++;
+		}
+	}
+
 	return foundmatch;
 }
 
@@ -1590,16 +1639,14 @@ static void get_num_con_uc(Sentence sent,power_table *pt,
 	}
 }
 
-static void mlink_table_init(Sentence sent, mlink_t *ml)
+static void mlink_table_init(Sentence sent, mlink_table *ml)
 {
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		ml[w] = (mlink_t)
+		ml[w] = (mlink_table)
 		{
 			.nw[0] = 0, .nw[1] = UNLIMITED_LEN,
-#if FW
-			.fw[0] = UNLIMITED_LEN, .fw[1] = 0
-#endif
+			.fw[0] = UNLIMITED_LEN, .fw[1] = 0,
 		};
 	}
 }
@@ -1607,14 +1654,12 @@ static void mlink_table_init(Sentence sent, mlink_t *ml)
 /**
  * Build the per-word minimum/maximum link distance table.
  * Optional words are ignored because they cannot constrain link crossing.
- * Table entries for word w having value w means no link constraint.
  * The table is meaningful only if at least one entry has a link constraint.
- * Code under "#if FW" is for supporting farthest_word (yet unimplemented).
  *
  * @param ml[out] The table (indexed by word, w/fields indexed by direction).
  * @return \c true iff the table is meaningful.
  */
-static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
+static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 {
 	bool ml_exists = false;
 
@@ -1629,42 +1674,33 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 			if (NULL == d->left)
 			{
 				ml[w].nw[0] = w;
-#if FW
 				ml[w].fw[0] = 0;
-#endif
 			}
 			else
 			{
 				if (d->left->nearest_word > ml[w].nw[0])
 					ml[w].nw[0] = d->left->nearest_word;
-#if FW
+
 				if (d->left->farthest_word < ml[w].fw[0])
 					ml[w].fw[0] = d->left->farthest_word;
-#endif
 			}
 
 			if (NULL == d->right)
 			{
 				ml[w].nw[1] = w;
-#if FW
 				ml[w].fw[1] = UNLIMITED_LEN;
-#endif
 			}
 			else
 			{
 				if (d->right->nearest_word < ml[w].nw[1])
 					ml[w].nw[1] = d->right->nearest_word;
-#if FW
+
 				if (d->right->farthest_word > ml[w].fw[1])
 					ml[w].fw[1] = d->right->farthest_word;
-#endif
 			}
 		}
 
-		ml_exists |= ((ml[w].nw[0] != w) || (ml[w].nw[1] != w));
-#if FW
-		ml_exists |= /* XXX add farthest_word check */;
-#endif
+		ml_exists |= (ml[w].nw[0] != ml[w].nw[1]);
 	}
 
 	if (verbosity_level(+D_PRUNE) && ml_exists)
@@ -1676,16 +1712,13 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
 
 			if (ml[w].nw[0] != ml[w].nw[1])
 			{
+				/* -1 means at least one missing jet at that direction. */
 				prt_error("%3d: nearest_word (%3d %3d)", w,
 				       w==ml[w].nw[0]?-1:ml[w].nw[0],
 				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
-#if FW
-				prt_error("     farthest_word (%d %d)\n\\",
-				       w==ml[w].nw[0]?-1:ml[w].fw[0]<=0?-1:ml[w].fw[0],
-				       w==ml[w].nw[1]?-1:ml[w].fw[1]>=sent->length?-1:ml[w].fw[1]);
-#else
-				prt_error("\n\\");
-#endif
+				prt_error("     farthest_word (%3d %3d)\n\\",
+				       w==ml[w].nw[0]?-1:ml[w].fw[0],
+				       w==ml[w].nw[1]?-1:ml[w].fw[1]);
 			}
 		}
 		lg_error_flush();
@@ -1745,30 +1778,52 @@ static mlink_t *build_mlink_table(Sentence sent, mlink_t *ml)
  * Since links are not allowed to cross, such disjuncts would create nulls
  * links. So this optimization can only be done when parsing a sentence
  * with null_count==0 (in which null links are not allowed).
- * Possible FIXME:
- * Part of such kind of deletions are also be done in
+ * Possible FIXMEs:
+ * 1. Part of such kind of deletions are also be done in
  * possible_connection(), so there is some overlapping. However,
  * eliminating this overlap (if possible) would not cause a significant
  * speedup because these functions are lightweight.
+ * 2. FW_NOT_NOW: The furthest_word trimming is not aggressive enough for
+ * this code to have any effect. To be retried when a more aggressive one
+ * is implemented.
  */
-static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
+static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 {
 	int N_deleted[2] = {0};
+	static Connector bad_connector = { .nearest_word = BAD_WORD };
 
 	for (unsigned int w = 0; w < sent->length; w++)
 	{
 		if (sent->word[w].optional) continue;
 		if (sent->word[w].d == NULL) continue;
 
-		if ((w > 0) && (ml[w].nw[1] != w))
+		WordIdx_m nw0 = ml[w].nw[0];
+		WordIdx_m nw1 = ml[w].nw[1];
+		WordIdx_m fw0 = ml[w].fw[0];
+		WordIdx_m fw1 = ml[w].fw[1];
+
+		if ((w > 0) && (nw1 != w))
 		{
 			/* Deepest connector constraint l->r. */
-			for (Disjunct *d = sent->word[ml[w].nw[1]].d; d != NULL; d = d->next)
+			for (Disjunct *d = sent->word[nw1].d; d != NULL; d = d->next)
 			{
-				//print_disjunct_list(sent->word[w].d);
-
 				Connector *shallow_c = d->left;
-				if (shallow_c == NULL) continue;
+
+				if (shallow_c == NULL)
+				{
+					if  (nw1 == fw1)
+					{
+						/* This word must have LHS link. So disjuncts which
+						 * don't have an LHS jet can be deleted. However,
+						 * naturally there are no connectors to assign BAD_WORD
+						 * to. So create a dummy one. The same is done in the
+						 * other direction. */
+						d->left = &bad_connector;
+						N_deleted[0]++;
+						PR(1);
+					}
+					continue;
+				}
 				if (shallow_c->nearest_word == BAD_WORD)
 				{
 					N_deleted[1]++;
@@ -1789,13 +1844,24 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 			}
 		}
 
-		if ((w < sent->length-1) && (ml[w].nw[0] != w))
+		if ((w < sent->length-1) && (nw0 != w))
 		{
 			/* Deepest connector constraint r->l. */
-			for (Disjunct *d = sent->word[ml[w].nw[0]].d; d != NULL; d = d->next)
+			for (Disjunct *d = sent->word[nw0].d; d != NULL; d = d->next)
 			{
 				Connector *shallow_c = d->right;
-				if (shallow_c == NULL) continue;
+
+				if (shallow_c == NULL)
+				{
+					if  (nw0 == fw0)
+					{
+						/* See the comment in the handling of the other direction. */
+						d->right = &bad_connector;
+						N_deleted[0]++;
+						PR(0);
+					}
+					continue;
+				}
 				if (shallow_c->nearest_word == BAD_WORD)
 				{
 					N_deleted[1]++;
@@ -1817,7 +1883,7 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 		}
 
 		/* Remove disjuncts that are blocked by mandatory l->r links. */
-		for (unsigned int rw = w+1; rw < ml[w].nw[1]; rw++)
+		for (unsigned int rw = w+1; rw < nw1; rw++)
 		{
 			for (Disjunct *d = sent->word[rw].d; d != NULL; d = d->next)
 			{
@@ -1836,21 +1902,23 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 					continue;
 				}
 
-#if FW
-				if (shallow_c->nearest_word > ml[w].fw[1])
+#if FW_NOT_NOW
+				if (shallow_c->nearest_word > fw1)
 				{
 					shallow_c->nearest_word = BAD_WORD;
 					N_deleted[0]++;
 					continue;
 				}
-#endif /* FW */
+#endif /* FW_NOT_NOW */
 
-				shallow_c->farthest_word = MIN(ml[w].nw[1], shallow_c->farthest_word);
+				shallow_c->farthest_word = MAX(w, shallow_c->farthest_word);
+				if (d->right != NULL)
+					d->right->farthest_word = MIN(fw1, d->right->farthest_word);
 			}
 		}
 
 		/* Remove disjuncts that are blocked by mandatory r->l links. */
-		for (unsigned int lw = ml[w].nw[0]+1; lw < w; lw++)
+		for (unsigned int lw = nw0+1; lw < w; lw++)
 		{
 			for (Disjunct *d = sent->word[lw].d; d != NULL; d = d->next)
 			{
@@ -1869,16 +1937,19 @@ static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_t *ml)
 					continue;
 				}
 
-#if FW
-				if (shallow_c->nearest_word < ml[w].fw[0])
+#if FW_NOT_NOW
+				if (shallow_c->nearest_word < fw0)
 				{
 					shallow_c->nearest_word = BAD_WORD;
 					N_deleted[0]++;
 					continue;
 				}
-#endif /* FW */
 
-				shallow_c->farthest_word = MAX(ml[w].nw[0], shallow_c->farthest_word);
+#endif /* FW_NOT_NOW */
+
+				shallow_c->farthest_word = MIN(w, shallow_c->farthest_word);
+				if (d->left != NULL)
+					d->left->farthest_word = MAX(fw0, d->left->farthest_word);
 			}
 		}
 	}
@@ -1906,6 +1977,8 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	power_table_init(sent, ts, &pt);
 
 	bool no_mlink = !!test_enabled("no-mlink");
+	mlink_table *ml = alloca(sent->length * sizeof(*pc.ml));
+
 	pc.always_parse = test_enabled("always-parse");
 	pc.sent = sent;
 	pc.pt = &pt;
@@ -1918,13 +1991,12 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 
 	if ((num_deleted > 0) && !no_mlink)
 	{
-		pc.ml = alloca(sent->length * sizeof(*pc.ml));
-		pc.ml = build_mlink_table(sent, pc.ml);
+		pc.ml = build_mlink_table(sent, ml);
 		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
 		if (pc.ml != NULL)
 		{
 			if (null_count == 0)
-				cross_mandatory_link_prune(sent, pc.ml);
+				cross_mlink_prune(sent, pc.ml);
 			num_deleted = power_prune(sent, &pc, opts);
 		}
 	}
@@ -1932,7 +2004,19 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	if (num_deleted != -1)
 	{
 		if (pp_prune(sent, ts, opts) > 0)
-			power_prune(sent, &pc, opts);
+			num_deleted = power_prune(sent, &pc, opts);
+
+		if ((num_deleted > 0) && !no_mlink)
+		{
+			pc.ml = build_mlink_table(sent, ml);
+			print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
+			if (pc.ml != NULL)
+			{
+				if (null_count == 0)
+					cross_mlink_prune(sent, pc.ml);
+				num_deleted = power_prune(sent, &pc, opts);
+			}
+		}
 	}
 
 	/* No benefit for now to make additional pp_prune() & power_prune() -
