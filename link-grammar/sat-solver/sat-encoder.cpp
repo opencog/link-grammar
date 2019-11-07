@@ -1889,7 +1889,9 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #else
     cost_cutoff = 1000.0;
 #endif // LIMIT_TOTAL_LINKAGE_COST
-    d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string, cost_cutoff, _opts);
+    d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string,
+                                &xnode_word[wi]->word->gword_set_head,
+                                cost_cutoff, _opts);
 
     if (d == NULL)
     {
@@ -1900,8 +1902,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #endif
       return false;
     }
-
-    word_record_in_disjunct(xnode_word[wi]->word, d);
 
     /* Recover cost of costly-nulls. */
     const vector<EmptyConnector>& ec = _word_tags[wi].get_empty_connectors();
