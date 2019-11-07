@@ -142,8 +142,7 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		unsigned int table_usage = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size) -
 			ctxt->table_lrcnt_available_count;
 
-		lgdebug(+0, "free_table_lrcnt: Usage %u/%u %.2f%%\n",
-		        table_usage, ctxt->table_lrcnt_size,
+		lgdebug(+0, "Usage %u/%u %.2f%%\n", table_usage, ctxt->table_lrcnt_size,
 		        100.0f*table_usage / ctxt->table_lrcnt_size);
 	}
 
