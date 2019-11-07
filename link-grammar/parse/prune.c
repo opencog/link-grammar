@@ -1787,7 +1787,7 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
  * this code to have any effect. To be retried when a more aggressive one
  * is implemented.
  */
-static unsigned int cross_mandatory_link_prune(Sentence sent, mlink_table *ml)
+static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 {
 	int N_deleted[2] = {0};
 	static Connector bad_connector = { .nearest_word = BAD_WORD };
@@ -1996,7 +1996,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 		if (pc.ml != NULL)
 		{
 			if (null_count == 0)
-				cross_mandatory_link_prune(sent, pc.ml);
+				cross_mlink_prune(sent, pc.ml);
 			num_deleted = power_prune(sent, &pc, opts);
 		}
 	}
@@ -2013,7 +2013,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 			if (pc.ml != NULL)
 			{
 				if (null_count == 0)
-					cross_mandatory_link_prune(sent, pc.ml);
+					cross_mlink_prune(sent, pc.ml);
 				num_deleted = power_prune(sent, &pc, opts);
 			}
 		}
