@@ -1188,6 +1188,9 @@ struct cms_struct
 {
 	Cms *next;
 	Connector *c;
+	bool last_criterion;        /* Relevant connectors for last criterion link */
+	bool left;
+	bool right;
 };
 
 #define CMS_SIZE (1<<11)       /* > needed; reduce to debug memory pool */
@@ -1226,6 +1229,14 @@ static unsigned int cms_hash(const char *s)
 		s++;
 	}
 	return (i & (CMS_SIZE-1));
+}
+
+static void reset_last_criterion(multiset_table *cmt, const char *ctiterion)
+{
+	unsigned int h = cms_hash(ctiterion);
+
+	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
+		cms->last_criterion = false;
 }
 
 /** Find if a connector t can form link x so post_process_match(s, x)==true.
@@ -1327,7 +1338,7 @@ static Cms *cms_alloc(multiset_table *cmt)
 	return pool_alloc(cmt->mp);
 }
 
-static void insert_in_cms_table(multiset_table *cmt, Connector *c)
+static void insert_in_cms_table(multiset_table *cmt, Connector *c, int dir)
 {
 	Cms *cms, *prev = NULL;
 	unsigned int h = cms_hash(connector_string(c));
@@ -1344,6 +1355,7 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 		cms->c = c;
 		cms->next = cmt->cms_table[h];
 		cmt->cms_table[h] = cms;
+		cms->left = cms->right = false;
 	}
 	else
 	{
@@ -1355,6 +1367,13 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c)
 			cmt->cms_table[h] = cms;
 		}
 	}
+
+	if (dir == 0)
+		cms->left = true;
+	else
+		cms->right = true;
+
+	cms->last_criterion = false;
 }
 
 #ifdef ppdebug
@@ -1385,6 +1404,10 @@ static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 	return true;
 }
 
+static bool connecor_has_direction(Cms *cms, int dir)
+{
+	return ((dir == 0) && cms->left) || ((dir == 1) && cms->right);
+}
 static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
 	for (unsigned int hashval = 0; hashval < ls->hash_table_size; hashval++)
@@ -1488,7 +1511,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 				Connector *c = get_tracon(ts, dir, id);
 
 				if (0 == c->refcount) continue;
-				insert_in_cms_table(cmt, c);
+				insert_in_cms_table(cmt, c, dir);
 			}
 		}
 	}
@@ -1503,7 +1526,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 					Connector *first_c = (dir) ? (d->left) : (d->right);
 					for (Connector *c = first_c; c != NULL; c = c->next)
 					{
-						insert_in_cms_table(cmt, c);
+						insert_in_cms_table(cmt, c, dir);
 					}
 				}
 			}
