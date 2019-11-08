@@ -12923,8 +12923,9 @@ thru.#through-r: [through.r]0.05;
 nite.#night: [night.r or night.u or night.i or night.n]0.05;
 tonite.#tonight: [tonight]0.05;
 
-% Cowboy accents
-git.#get: [get.v]0.05;
+% Emulated America cowboy accents: "You better git to goin'."
+% High cost to avoid confusion with British insults: "you stupid git".
+git.#get: [get.v]0.45;
 
 % Y'gotta, Y'gonna
 %   "keep y'mouth shut"
@@ -12935,8 +12936,8 @@ o'.#of: [of]0.05;
 
 e.#he: [he]0.05;
 
-be.#by: [by]0.05;
-de.#the: [the]0.05;
+be.#by: [by]0.85;
+de.#the: [the]0.25;
 
 % slurred speech
 drinkin.#drinking-v: [drinking.v]0.05;
@@ -12969,10 +12970,10 @@ as.#that: [that.j-c]0.05;
 % Multi-word punctuation error: writing "its" when "it's" was meant.
 % its.#it-is: [it_is]0.2;
 
-% Archaic, poetic 'tis
+% Archaic, poetic 'tis:  'Tis the season to be jolly
 % 'tis.#it-is: [it_is];
 
-'tis: Wn- & O+;
+'tis tis 'Tis: Wn- & O+;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
