@@ -10679,7 +10679,7 @@ thru.#through-r: [through.r]0.05;
 nite.#night: [night.r or night.u or night.i or night.n]0.05;
 tonite.#tonight: [tonight]0.05;
 
-% Emulated America cowboy accents: "You better git to goin'."
+% Emulated American cowboy accents: "You better git to goin'."
 % High cost to avoid confusion with British insults: "you stupid git".
 git.#get: [get.v]0.45;
 
