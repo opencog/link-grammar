@@ -1328,8 +1328,7 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 		ppdebug("NOT-MATCHED %s%s\n", connector_string(cms->c),connector_signs(cms));
 	}
 
-	if (found) return true;
-	return false;
+	return found;
 }
 
 /* FIXME? There is some code duplication here and in insert_in_cms_table()
@@ -1399,14 +1398,12 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c, int dir)
 	cms->last_criterion = false;
 }
 
-#ifdef ppdebug
-const char *AtoZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-#endif
+#define AtoZ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 /** Validate that the connectors needed in order to create a
  *  link that matches pp_link, are all found in the sentence.
  *  The sentence's connectors are in the cms table.
  */
-
 static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 {
 	ppdebug("check PP-link=%s\n", pp_link);
@@ -1434,8 +1431,6 @@ static bool connecor_has_direction(Cms *cms, int dir)
 
 static bool any_possible_connection(multiset_table *cmt, const char *criterion)
 {
-	//assert(cmt->can_form_link_last > 0);
-
 	unsigned int h = cms_hash(criterion);
 
 	for (Cms *cms1 = cmt->cms_table[h]; cms1 != NULL; cms1 = cms1->next)
