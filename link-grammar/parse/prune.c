@@ -1398,14 +1398,12 @@ static void insert_in_cms_table(multiset_table *cmt, Connector *c, int dir)
 	cms->last_criterion = false;
 }
 
-#ifdef ppdebug
-const char *AtoZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-#endif
+#define AtoZ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 /** Validate that the connectors needed in order to create a
  *  link that matches pp_link, are all found in the sentence.
  *  The sentence's connectors are in the cms table.
  */
-
 static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 {
 	ppdebug("check PP-link=%s\n", pp_link);
