@@ -1434,8 +1434,6 @@ static bool connecor_has_direction(Cms *cms, int dir)
 
 static bool any_possible_connection(multiset_table *cmt, const char *criterion)
 {
-	//assert(cmt->can_form_link_last > 0);
-
 	unsigned int h = cms_hash(criterion);
 
 	for (Cms *cms1 = cmt->cms_table[h]; cms1 != NULL; cms1 = cms1->next)
