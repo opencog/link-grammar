@@ -1328,8 +1328,7 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 		ppdebug("NOT-MATCHED %s%s\n", connector_string(cms->c),connector_signs(cms));
 	}
 
-	if (found) return true;
-	return false;
+	return found;
 }
 
 /* FIXME? There is some code duplication here and in insert_in_cms_table()
