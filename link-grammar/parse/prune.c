@@ -18,6 +18,7 @@
 #include "connectors.h"
 #include "disjunct-utils.h"
 #include "dict-common/dict-common.h"    // contable
+#include "linkage/analyze-linkage.h"    // intersect_strings
 #include "post-process/post-process.h"
 #include "post-process/pp-structures.h"
 #include "print/print.h"                // print_disjunct_counts
@@ -1200,15 +1201,17 @@ struct multiset_table_s
 	Cms memblock[CMS_SIZE];     /* Initial Cms elements - usually enough */
 	Cms *mb;                    /* Next available element from memblock */
 	Pool_desc *mp;              /* In case memblock is not enough */
+	String_set *sset;
 	Cms *cms_table[CMS_SIZE];
 };
 
-static multiset_table *cms_table_new(void)
+static multiset_table *cms_table_new(Sentence sent)
 {
 	multiset_table *mt = malloc(sizeof(multiset_table));
 	memset(mt->cms_table, 0, CMS_SIZE * sizeof(Cms *));
 	mt->mb = mt->memblock;
 	mt->mp = NULL;
+	mt->sset = sent->string_set;
 
 	return mt;
 }
@@ -1294,6 +1297,7 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 {
 	unsigned int h = cms_hash(pp_link);
 
+	bool found = false;
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
 		if (cms->c->nearest_word == BAD_WORD) continue;
@@ -1301,11 +1305,14 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 		if (can_form_link(pp_link, connector_string(cms->c), subscr))
 		{
 			ppdebug("MATCHED %s\n", connector_string(cms->c));
-			return true;
+			cms->last_criterion = true;
+			found = true;
+			continue;
 		}
 		ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
 	}
 
+	if (found) return true;
 	return false;
 }
 
@@ -1408,6 +1415,50 @@ static bool connecor_has_direction(Cms *cms, int dir)
 {
 	return ((dir == 0) && cms->left) || ((dir == 1) && cms->right);
 }
+
+static bool any_possible_connection(multiset_table *cmt, const char *criterion)
+{
+	//assert(cmt->can_form_link_last > 0);
+
+	unsigned int h = cms_hash(criterion);
+
+	for (Cms *cms1 = cmt->cms_table[h]; cms1 != NULL; cms1 = cms1->next)
+	{
+		if (!cms1->last_criterion) continue;
+
+		ppdebug("TRY %s\n", connector_string(cms1->c));
+		for (int dir = 0; dir < 2; dir++)
+		{
+			if (!connecor_has_direction(cms1, dir)) continue;
+			Connector *c = cms1->c;
+
+			for (Cms *cms2 = cmt->cms_table[h]; cms2 != NULL; cms2 = cms2->next)
+			{
+				if (!connecor_has_direction(cms2, 1-dir)) continue;
+				Connector *cfl = cms2->c;
+
+				if (easy_match_desc(cfl->desc, c->desc))
+				{
+					const char *link = intersect_strings(cmt->sset, cfl, c);
+					if (post_process_match(criterion, link))
+					{
+						ppdebug("%s+ %s- PPLINK\n", connector_string(cfl), connector_string(c));
+						reset_last_criterion(cmt, criterion);
+						return true;
+					}
+					ppdebug("%s+ %s- NO PPLINK\n", connector_string(cfl), connector_string(c));
+					continue;
+				}
+				ppdebug("%s+ %s- NOMATCH\n", connector_string(cfl), connector_string(c));
+			}
+		}
+	}
+
+	ppdebug(">>>No connection possible\n");
+	reset_last_criterion(cmt, criterion);
+	return false;
+}
+
 static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
 	for (unsigned int hashval = 0; hashval < ls->hash_table_size; hashval++)
@@ -1420,8 +1471,9 @@ static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 			if (all_connectors_exist(cmt, p->str))
 			{
 				ppdebug("TRUE\n");
-				return true;
+				if (any_possible_connection(cmt, p->str)) return true;
 			}
+			reset_last_criterion(cmt, p->str);
 		}
 	}
 
@@ -1465,18 +1517,23 @@ static bool mark_bad_connectors(multiset_table *cmt, Connector *c)
  * @return \c true iff such a link cannot be formed.
  */
 static bool selector_mismatch_wild(multiset_table *cmt, const char *s,
-                                   Connector *t)
+                                   Cms *cms_t)
 {
 	unsigned int h = cms_hash(s);
 
-	ppdebug("Selector %s, trigger %s\n", s, connector_string(t));
+	ppdebug("Selector %s, trigger %s\n", s, connector_string(cms_t->c));
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 	{
+		if ((cms_t->left && !cms->right) || (cms_t->right && !cms->left))
+		    continue;
+
 		size_t len_s = strlen(s);
 
-		if (easy_match_desc(t->desc, cms->c->desc))
+		if (easy_match_desc(cms_t->c->desc, cms->c->desc))
 		{
 			const char *c = connector_string(cms->c);
+
+
 			size_t len_c = strlen(c);
 			for (size_t i = 0; i < len_s; i++)
 			{
@@ -1499,7 +1556,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 	if (!opts->perform_pp_prune) return 0;
 
 	pp_knowledge *knowledge = sent->postprocessor->knowledge;
-	multiset_table *cmt = cms_table_new();
+	multiset_table *cmt = cms_table_new(sent);
 	Tracon_list *tl = ts->tracon_list;
 
 	if (NULL != tl)
@@ -1556,7 +1613,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 
 			if (!post_process_match(selector, connector_string(c))) continue;
 			if (rule->selector_has_wildcard &&
-			    selector_mismatch_wild(cmt, selector, c)) continue;
+			    selector_mismatch_wild(cmt, selector, cms)) continue;
 
 			ppdebug("Rule %zu: Selector %s, Connector %s\n",
 			        i, selector, connector_string(c));
