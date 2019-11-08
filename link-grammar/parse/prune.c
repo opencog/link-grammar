@@ -1286,6 +1286,22 @@ static bool can_form_link(const char *s, const char *t, const char *e)
 	return true;
 }
 
+#ifdef DEBUG_PP_PRUNE
+static const char *connector_signs(Cms *cms)
+{
+	static char buf[3];
+	size_t i = 0;
+
+	if (cms->left) buf[i++] = '-';
+	if (cms->right) buf[i++] = '+';
+	buf[i] = '\0';
+
+	return buf;
+}
+#else
+#define connector_signs(x) NULL /* For YCM IDE */
+#endif /* DEBUG_PP_PRUNE */
+
 /**
  * Returns TRUE iff there is a connector name in the sentence
  * that can create a link x such that post_process_match(pp_link, x) is TRUE.
@@ -1304,12 +1320,12 @@ static bool match_in_cms_table(multiset_table *cmt, const char *pp_link,
 
 		if (can_form_link(pp_link, connector_string(cms->c), subscr))
 		{
-			ppdebug("MATCHED %s\n", connector_string(cms->c));
+			ppdebug("MATCHED %s%s\n", connector_string(cms->c),connector_signs(cms));
 			cms->last_criterion = true;
 			found = true;
 			continue;
 		}
-		ppdebug("NOT-MATCHED %s \n", connector_string(cms->c));
+		ppdebug("NOT-MATCHED %s%s\n", connector_string(cms->c),connector_signs(cms));
 	}
 
 	if (found) return true;
@@ -1426,7 +1442,7 @@ static bool any_possible_connection(multiset_table *cmt, const char *criterion)
 	{
 		if (!cms1->last_criterion) continue;
 
-		ppdebug("TRY %s\n", connector_string(cms1->c));
+		ppdebug("TRY %s\n", connector_string(cms1->c), connector_signs(cms1));
 		for (int dir = 0; dir < 2; dir++)
 		{
 			if (!connecor_has_direction(cms1, dir)) continue;
