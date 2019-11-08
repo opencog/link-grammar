@@ -27,7 +27,7 @@
 #ifdef DEBUG_lisjuncts
 #include "print/print-util.h"
 static void assert_same_disjunct(Linkage, WordIdx, const char *);
-#endif /* DEBUG */
+#endif /* DEBUG_lisjuncts */
 
 /**
  * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
@@ -97,7 +97,7 @@ void lg_compute_disjunct_strings(Linkage lkg)
 
 #ifdef DEBUG_lisjuncts
 		assert_same_disjunct(lkg, w, djstr);
-#endif
+#endif /* DEBUG_lisjuncts */
 
 		lkg->disjunct_list_str[w] = string_set_add(djstr, lkg->sent->string_set);
 	}
@@ -124,4 +124,4 @@ static void assert_same_disjunct(Linkage lkg, WordIdx w, const char *djstr)
 	if (lkg->chosen_disjuncts[w])
 		free(cs);
 }
-#endif /* DEBUG */
+#endif /* DEBUG_lisjuncts */
