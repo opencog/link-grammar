@@ -33,7 +33,11 @@
 
 /* To debug pp_prune(), touch this file, run "make CPPFLAGS=-DDEBUG_PP_PRUNE",
  * and the run: link-parser -v=5 -debug=prune.c . */
-#if defined DEBUG || defined DEBUG_PP_PRUNE
+#ifdef DEBUG
+#define DEBUG_PP_PRUNE
+#endif
+
+#ifdef DEBUG_PP_PRUNE
 #define ppdebug(...) lgdebug(+D_PRUNE, __VA_ARGS__)
 #else
 #define ppdebug(...)
@@ -1437,7 +1441,7 @@ static bool any_possible_connection(multiset_table *cmt, const char *criterion)
 	{
 		if (!cms1->last_criterion) continue;
 
-		ppdebug("TRY %s\n", connector_string(cms1->c), connector_signs(cms1));
+		ppdebug("TRY %s%s\n", connector_string(cms1->c), connector_signs(cms1));
 		for (int dir = 0; dir < 2; dir++)
 		{
 			if (!connecor_has_direction(cms1, dir)) continue;
