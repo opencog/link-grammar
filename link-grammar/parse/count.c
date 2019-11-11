@@ -137,13 +137,35 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 static void free_table_lrcnt(count_context_t *ctxt)
 {
-	if (verbosity_level(+5))
+	if (verbosity_level(5))
 	{
 		unsigned int table_usage = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size) -
 			ctxt->table_lrcnt_available_count;
+		unsigned int nonzero = 0;
+		unsigned int any_null = 0;
+		unsigned int zero = 0;
+		unsigned int non_max_null = 0;
 
-		lgdebug(+0, "Usage %u/%u %.2f%%\n", table_usage, ctxt->table_lrcnt_size,
-		        100.0f*table_usage / ctxt->table_lrcnt_size);
+		for (unsigned int i = 0; i < ctxt->table_lrcnt_size; i++)
+		{
+			if (ctxt->table_lrcnt[i].tracon_id == -1) continue;
+
+			if (ctxt->table_lrcnt[i].status == 1)
+				nonzero++;
+			else if (ctxt->table_lrcnt[i].null_count == ANY_NULL_COUNT)
+				any_null++;
+			else if (ctxt->sent->null_count > ctxt->table_lrcnt[i].null_count)
+				non_max_null++;
+			else if (ctxt->sent->null_count == ctxt->table_lrcnt[i].null_count)
+				zero++;
+		}
+
+		lgdebug(+0, "Usage %u/%u %.2f%% "
+		        "(usage = non_max_null %u + other %u, "
+		        "other = any_null_zero %u + zero %u + nonzero %u)\n",
+		        table_usage, ctxt->table_lrcnt_size,
+		        100.0f*table_usage / ctxt->table_lrcnt_size,
+		        non_max_null, table_usage-non_max_null, any_null, zero, nonzero);
 	}
 
 	free(ctxt->table_lrcnt);
