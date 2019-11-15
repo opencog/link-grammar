@@ -729,7 +729,7 @@ static Count_bin do_count(
 	}
 	else
 	{
-		/* If the LHS count for a word would be zero for a left connector
+		/* If the LHS count for a word would be zero for a left-end connector
 		 * due to the distance of this word, we can skip its handling
 		 * entirely. So the checked word interval can be shortened. */
 		if ((le != NULL) && (re->nearest_word > le->farthest_word))
