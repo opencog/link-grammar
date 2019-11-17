@@ -601,9 +601,9 @@ static int variables_cmd(const Switch *uc, int n)
 	}
 
 	printf("\n");
-	printf("Toggle a Boolean variable as in \"!batch\"; ");
-	printf("Set a variable as in \"!width=100\".\n");
-	printf("Get a more detailed help on a variable as in \"!help var\".\n");
+	printf("Toggle a Boolean variable as so: \"!batch\"; ");
+	printf("Set a variable as so: \"!width=100\".\n");
+	printf("Get detailed help on a variable with: \"!help var\".\n");
 	return 'c';
 }
 
