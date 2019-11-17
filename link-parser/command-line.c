@@ -405,7 +405,7 @@ static FILE *open_help_file(int verbosity)
 
 /**
  * Print basic info: name, description, current value and type.
- * Iff is_completion is true, display also the variable value, and use
+ * If `is_completion` is true, also display the variable value, and use
  * fixed fields for the value related info and the description.
  * This is intended for use from the command completion code.
  *
