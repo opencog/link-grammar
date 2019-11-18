@@ -2203,6 +2203,15 @@ Sophy wondered what number to count to
 Sophy wondered what number to count up to
 Sophy wondered whose favorite number to count up to
 
+%
+bird flu was observed in which countries?
+You saw her in which room?
+do you know in which room the procedure was performed?
+did you see in which room the procedure was performed?
+did you see in which room it was done?
+Yes, but did you see in which room?
+*I saw in which room
+
 % Inverted questions, fixed with Pvf- & QI+ on participles
 bird flu was observed where?
 bird flu was observed how?
@@ -2214,6 +2223,9 @@ You taught there when?
 You told her when?
 You asked her when?
 You helped her when?
+
+% Statements of the same form.
+I am not certain where
 
 % Inverted questions, fixed with QI+
 You proposed to her when?
