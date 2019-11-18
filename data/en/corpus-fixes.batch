@@ -2186,7 +2186,6 @@ Are we off?
 Is it in place?
 Is that when the meeting is?
 
-
 % This is blocked by post-processing....
 How long before you got home?
 Approximately how long before you got home?
@@ -2204,12 +2203,79 @@ Sophy wondered what number to count to
 Sophy wondered what number to count up to
 Sophy wondered whose favorite number to count up to
 
+%
+bird flu was observed in which countries?
+You saw her in which room?
+do you know in which room the procedure was performed?
+did you see in which room the procedure was performed?
+did you see in which room it was done?
+Yes, but did you see in which room?
+*I saw in which room
+
+% Inverted questions, fixed with Pvf- & QI+ on participles
+bird flu was observed where?
+bird flu was observed how?
+bird flu was observed when?
+Anesthesiology is studied where?
+It was discussed where?
+The crime rate began to grow when?
+You taught there when?
+You told her when?
+You asked her when?
+You helped her when?
+
+% Statements of the same form.
+I am not certain where
+
+% Inverted questions, fixed with QI+
+You proposed to her when?
+You proposed when?
+It happened when?
+
+% Inverted questions w/prepositional target
+you reminded him of this when?
+you were reminded of this when?
+
+You first heard of this when?
+You were informed of this when?
+You were warned of this when?
+
+It became commonplace at what time?
+It became commonplace when?
+It really became commonplace when?
+It remains commonplace now?
+Would you say it remains commonplace even now?
+
+% this, that as topics (that.j-t)
+you decided that when?
+you decided that, when?
+you decided this when?
+you decided on this when?
+you learned of this when?
+you started to wonder this, when?
+you started to wonder about this, when?
+you started this when?
+You proposed this to her when?
+you said this to her where?
+You say this why?
+You say this, why?
+You demanded this why?
+You demanded this, why?
+You demanded this of him why?
+You demanded this of him, why?
+You requested these favors why?
+
+you decided to do this when?
+you decided such a thing when?
+you decided on this course of action when?
+
+you did what?
+You did that when?
 
 You put it where?
-It happened when?
-you did what?
 It happened how?
 You slept with who?
+You slept with John?
 
 Ma'am, where did it happen?
 where did it happen, ma'am?

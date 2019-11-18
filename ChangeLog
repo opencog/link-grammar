@@ -1,6 +1,7 @@
 Version 5.7.1 (XXX 2019)
  * Java bindings: Remove the obsolete senses API.
  * swig-4.0 compatibility bug fix.
+ * Fixes to support questions ending in WH-words.
 
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.

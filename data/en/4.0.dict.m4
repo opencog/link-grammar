@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.7.0 (formatted as V5v7v0+)
-<dictionary-version-number>: V5v7v0+;
+% Dictionary version number is 5.7.1 (formatted as V5v7v1+)
+<dictionary-version-number>: V5v7v1+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -181,14 +181,17 @@ nonCAP.zzz: ZZZ-;
   or <post-nominal-s>
   or <costly-null>;
 
-% used only for this, that.
+% Used only for this.p, that.j-p
 % (Jd- & Dmu- & Os-): they have plenty of this
 % (Jd- & Dmu- & {Wd-} & Ss+): "not enough of this was used"
-% XXX -- is Js- ever really needed?
+% Js-: "how did you learn of this?"
 <noun-main-h>:
   (Jd- & Dmu- & Os-)
   or (Jd- & Dmu- & {Wd-} & Ss*b+)
-  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-]
+  or (Ss*b+ & <CLAUSE>)
+  or SIs*b-
+  or Js-
+  or [Os-]0.5
   or <post-nominal-x>
   or <costly-null>;
 
@@ -1502,7 +1505,7 @@ the:
 this.p:
   <noun-main-h>
   or EA+
-  or <noun-and-s>;
+  or [<noun-and-s>]0.5;
 
 % this as a determiner
 this.d:
@@ -2399,6 +2402,9 @@ per "/.per": Us+ & Mp-;
 
 <mv-coord>: {@MV+} & {VC+};
 
+% <of-coord>: "You were informed of this when?"
+<of-coord>: OF+ & {{Xc+} & QI+} & <mv-coord>;
+
 % When we are done, remove the option costly NULL below.
 <WALL>: hWV+ or [[()]];
 % <WALL>: hWV+;
@@ -2463,8 +2469,13 @@ per "/.per": Us+ & Mp-;
 %        e.g. "In the corner lay it" with it as object. That's just
 %        wrong... but this requires lots of places to fix.
 % VJrpi-: "I aim to do something and also to help."
+% I & [()]: costly, if there is no wall, but when does this happen?
+%       I'm confused, examples are needed... verb-pl,i is used everywhere...
+%       I want the wall, e.g. for "Did you see in which room?"
+%       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
-<verb-ico>:  {@E-} & ((I- & {<verb-wall> or VJrpi-} & {@E-}) or ({[hCO-]} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-}) or
+                      ({[hCO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -2730,9 +2741,12 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % AUXILIARY VERBS
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
+% O+ & QI+: "you did that when?"
+% QI+: "you did what?"
 <vc-do>:
   ((<b-minus>
-    or (O+ & {@MV+} & <verb-wall>)
+    or (O+ & {@MV+} & <verb-wall> & {{Xc+} & QI+})
+    or ({@MV+} & <verb-wall> & QI+)
     or [[@MV+ & O*n+]]
     or Vd+
     or ({N+} & (CX- or [[()]]))) & <mv-coord>)
@@ -3920,7 +3934,8 @@ endeavoured.v-d condescended.v-d deigned.v-d: VERB_SPPP_I(<vc-deign>);
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
-<vc-happen>: {@MV+} & {<to-verb> or THi+} & {VC+};
+% QI+ "it happened when?"
+<vc-happen>: {@MV+} & {<to-verb> or THi+ or QI+} & {VC+};
 happen.v occur.v: VERB_Y_PLI(<vc-happen>);
 happens.v occurs.v: VERB_Y_S(<vc-happen>);
 happened.v-d occured.v-d occurred.v-d: VERB_Y_SPPP(<vc-happen>);
@@ -4008,7 +4023,7 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 % <verb-si>: "so seems it"
 % TO+ & Xc+: allows null-infinitive: "yes, it would seem to"
 <vc-seem>:
-  {@MV+} & 
+  {@MV+} &
     ((Pa+ & <verb-wall>)
     or <tof-verb>
     or <null-verb>
@@ -4022,7 +4037,12 @@ seems.v: VERB_Y_S(<vc-seem>) or <verb-fronted> or <verb-si>;
 seemed.v-d: VERB_Y_SPPP(<vc-seem>) or <verb-fronted> or <verb-si>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-care>: {@MV+} & {<to-verb> or QI+};
+% qi-pref: give slight cost preference to QI over MV, for example:
+% "I do not care where you put it"
+% "I wonder when he will come"
+<QI+pref>: [QI+]-0.05;
+
+<vc-care>: {@MV+} & {<to-verb> or <QI+pref>};
 care.v: VERB_PLI(<vc-care>);
 cares.v: VERB_S_I(<vc-care>);
 cared.v-d: VERB_SPPP_I(<vc-care>);
@@ -4090,7 +4110,7 @@ reasoning.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
 
-<vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
+<vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or <of-coord>};
 boast.v brag.v complain.v hint.v mutter.v whisper.v:
   VERB_PLI(<vc-brag>);
 boasts.v brags.v complains.v hints.v mutters.v whispers.v:
@@ -4102,7 +4122,7 @@ boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
 boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
   <verb-pg> & <vc-brag>;
 
-<vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
+<vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or <of-coord> or BW-};
 dream.v: VERB_PLI(<vc-dream>);
 dreams.v: VERB_S_I(<vc-dream>);
 dreamt.v-d dreamed.v-d: VERB_SPPP_I(<vc-dream>);
@@ -4116,7 +4136,7 @@ dreaming.v: <verb-pg> & <vc-dream>;
 % O+ & Pa**j: "She will think it true."
 % TO+ & Xc+: allows null-infinitive: "No, I did not think to"
 <vc-think>:
-  ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or (OF+ & <mv-coord>) or BW-})
+  ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or <of-coord> or BW-})
   or (<mv-coord> & <null-verb>)
   or (O+ & {@MV+} & {O*n+ or Pa**j+});
 
@@ -4152,7 +4172,7 @@ insists.v: VERB_S_I(<vc-insist>);
 insisted.v-d: VERB_SPPP_I(<vc-insist>);
 insisting.v: (<vc-insist> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-wonder>: {@MV+} & {QI+};
+<vc-wonder>: {@MV+} & {<QI+pref>};
 wonder.v inquire.v: VERB_PLI(<vc-wonder>);
 wonders.v inquires.v: VERB_S_I(<vc-wonder>);
 wondered.v-d inquired.v-d: VERB_SPPP_I(<vc-wonder>);
@@ -4438,13 +4458,14 @@ planned.v-d confessed.v-d:
 planning.g confessing.g: (<vc-plan> & <verb-ge>) or <verb-ge-d>;
 planning.v confessing.v: <verb-pg> & <vc-plan>;
 
+% <vc-trans> & QI+: "you decided that when?"
 <vc-decide>:
-  <vc-trans> or
-  ({@MV+} & {QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs-});
+  (<vc-trans> & {{Xc+} & QI+}) or
+  ({@MV+} & {TH+ or {<QI+pref>} or
+    <to-verb> or <embed-verb> or RSe+ or Zs-});
 
 decide.v resolve.v: VERB_PLI(<vc-decide>);
 decides.v resolves.v: VERB_S_T(<vc-decide>);
-
 decided.v-d resolved.v-d:
   VERB_SPPP_T(<vc-decide>) or
   (<verb-s-pv> & {THi+}) or
@@ -4457,7 +4478,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 <vc-forget>:
   {<vc-trans>}
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+  or ({@MV+} & (<QI+pref> or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
@@ -4471,9 +4492,11 @@ forgotten.v:
 remembering.g forgetting.g: (<vc-forget> & <verb-ge>) or <verb-ge-d>;
 remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
+% OF+ & QI+: "you learned of this when?
 <vc-learn>:
   {<vc-trans>} or
-  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or QI+ or (OF+ & <mv-coord>)));
+  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or
+      <QI+pref> or (OF+ & {{Xc+} & QI+} & <mv-coord>)));
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
 learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-opener>;
@@ -4484,11 +4507,15 @@ learning.v: <verb-pg> & <vc-learn>;
 <vc-propose>:
   <vc-trans>
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
+  or ({@MV+} & (<to-verb> or
+    TH+ or <embed-verb> or RSe+ or QI+ or
+    Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
+
+% <vc-propose> & QI+: "You proposed this to her when?"
 proposed.v-d:
-  VERB_SPPP_T(<vc-propose>)
+  VERB_SPPP_T(<vc-propose> & {{Xc+} & QI+})
   or (<verb-s-pv> & {THi+ or TSi+ or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
@@ -4496,13 +4523,16 @@ proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
 % TO+ & Xc+: allows null-infinitive: "I did not demand to"
+% <vc-trans> & QI+: "You demand this why?"
+% O+ & <of-coord>: "You demanded this of him why?"
 <vc-demand>:
-  <vc-trans>
-  or (OF+ & <mv-coord>)
+  (<vc-trans> & {{Xc+} & QI+})
+  or ({O+} & <of-coord>)
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
+
 demanded.v-d:
   VERB_SPPP_T(<vc-demand>)
   or <verb-pv>
@@ -4512,7 +4542,7 @@ demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 
 <vc-beg>:
   {<vc-trans>}
-  or (OF+ & <mv-coord>)
+  or <of-coord>
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 beg.v plead.v: VERB_PLI(<vc-beg>);
 begs.v pleads.v: VERB_S_T(<vc-beg>);
@@ -4579,11 +4609,12 @@ continuing.g: (<vc-begin> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 
 % <vc-trans> with particle
+% <vc-trans> & QI+: "you started this when?"
 <vc-start>:
-  ((({O+ or <b-minus>} & {K+}) or
+  ((({O+ or <b-minus>} & {K+ or QI+}) or
     (K+ & {[[@MV+]]} & O*n+) or
     [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({@MV+} & (<to-verb> or Pg+));
+  ({@MV+} & ((<to-verb> & {{Xc+} & QI+}) or Pg+));
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v: VERB_S_T(<vc-start>);
@@ -4843,10 +4874,12 @@ figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
 % (QI+ & {MV+}): "I did not say why until recently"
+% <vc-trans> & QI+: "you said this to her where?"
+%    "you indicate this why?"
 <vc-predict>:
-  <vc-trans>
+  (<vc-trans> & {{Xc+} & QI+})
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
-  or ({@MV+} & (QI+ & {MV+}));
+  or ({@MV+} & (<QI+pref> & {MV+}));
 
 % See also: words.v.10 for paraphrasing verbs
 % I- & B- & <embed-verb>: "What did John say you should do?"
@@ -4873,11 +4906,11 @@ assessed.v-d established.v-d evaluated.v-d examined.v-d questioned.v-d
 tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
 envisaged.v-d documented.v-d:
   VERB_SPPP_T(<vc-predict>)
-  or (<verb-s-pv> & {THi+})
+  or (<verb-s-pv> & ({THi+} or QI+))
   or <verb-adj>
   or <verb-phrase-opener>;
 
-% the second line is almost, not quite, <verb-s-pv>
+% The second line is almost, not quite, <verb-s-pv>
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
   ({@E-} & ((Pvf- & <verb-wall>) or [[Mv-]]) & {@MV+} & {THi+}) or
@@ -4899,7 +4932,7 @@ hypothesizing.v hypothesising.v documenting.v envisaging.v:
 <verb-pg> & <vc-predict>;
 
 <vc-guess>: {<vc-trans>} or
-  ({@MV+} & (TH+ or QI+ or <embed-verb> or RSe+ or Zs-));
+  ({@MV+} & (TH+ or <QI+pref> or <embed-verb> or RSe+ or Zs-));
 
 % esplain: basilect of explain
 guess.v estimate.v understand.v notice.v explain.v esplain.v demonstrate.v:
@@ -4943,7 +4976,8 @@ known.v well-known.v:
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
 knowing.v: <verb-pg> & <vc-know>;
 
-<vc-request>: <vc-trans> or
+% <vc-trans> & QI+: "You requested these favors why?"
+<vc-request>: (<vc-trans> & {{Xc+} & QI+}) or
   ({@MV+} & (TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 request.v: VERB_PLI(<vc-request>);
 requests.v: VERB_S_T(<vc-request>);
@@ -4972,24 +5006,26 @@ minded.v-d: VERB_SPPP_T(<vc-mind>) or <verb-pv> or <verb-phrase-opener>;
 minding.g: (<vc-mind> & <verb-ge>) or <verb-ge-d>;
 minding.v: <verb-pg> & <vc-mind>;
 
-<vc-study>: {<vc-trans>} or ({@MV+} & QI+);
+% <verb-pv> & QI+: "Anesthesiology is studied where?"
+<vc-study>: {<vc-trans>} or ({@MV+} & <QI+pref>);
 study.v: VERB_PLI(<vc-study>);
 studies.v: VERB_S_T(<vc-study>);
 studied.v-d:
   VERB_SPPP_T(<vc-study>) or
-  <verb-pv> or
+  (<verb-pv> & {QI+}) or
   <verb-adj> or
   <verb-phrase-opener>;
 studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
 studying.v: <verb-pg> & <vc-study>;
 
 % QI+ link: "I will discuss which vitamins I take"
+% <verb-pv> & QI+: "It was discussed where?"
 <vc-discuss>: <vc-trans> or ({@MV+} & (Pg+ or QI+));
 discuss.v: VERB_PLI(<vc-discuss>);
 discusses.v: VERB_S_T(<vc-discuss>);
 discussed.v-d:
   VERB_SPPP_T(<vc-discuss>)
-  or <verb-pv>
+  or (<verb-pv> & {QI+})
   or <verb-adj>
   or <verb-phrase-opener>;
 discussing.g: (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
@@ -5007,7 +5043,7 @@ justifies.v risks.v avoids.v involves.v favors.v:
 opposed.v-d enjoyed.v-d advocated.v-d contemplated.v-d entailed.v-d
 necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d:
   VERB_SPPP_T(<vc-oppose>) or
-  <verb-pv> or
+  (<verb-pv> & {QI+}) or
   <verb-adj> or
   <verb-phrase-opener>;
 
@@ -5028,7 +5064,7 @@ finishes.v practices.v resists.v quits.v: VERB_S_T(<vc-finish>);
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d:
   VERB_SPPP_T(<vc-finish> or ({Xc+} & Pa+))
-  or <verb-pv>
+  or (<verb-pv> & {QI+})
   or <verb-adj>
   or <verb-phrase-opener>;
 quit.v-d:
@@ -5069,7 +5105,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 % <vc-trans> plus TI
 <vc-become>:
   ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or Pv+) & <mv-coord>)
-   or ({@MV+} & (AF- or Pa+));
+   or ({@MV+} & (AF- or Pa+) & {QI+});
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: VERB_S_S(<vc-become>);
 became.v-d: VERB_S_SP(<vc-become>);
@@ -5097,7 +5133,8 @@ remaining.v: <verb-pg> & <vc-remain>;
     or (K+ & {[[@MV+]]} & O*n+)
     or [[@MV+ & O*n+]]) & <mv-coord>);
 
-grow.v: VERB_PLI(<vc-grow>) or <verb-sip>;
+% <verb-i> & QI+: "The crime rate began to grow when?"
+grow.v: VERB_PLI(<vc-grow>) or <verb-sip> or (<verb-i> & QI+);
 grows.v: VERB_S_T(<vc-grow>) or <verb-si>;
 grew.v-d: VERB_SP_T(<vc-grow>) or <verb-si>;
 grown.v:
@@ -5189,9 +5226,10 @@ for_granted: Vtg-;
 % VERBS TAKING [OBJ] + [OTHER COMPLEMENT]
 % basically, all these are <vc-trans> plus mess
 % I think the WR- here is dead and not used. See other WR- below
+% O+ & QI+: "You put it where?"
 <vc-put>:
   ((K+ & {[[@MV+]]} & O*n+) or
-  ((O+ or <b-minus>) & (K+ or Pp+ or WR-)) or
+  ((O+ or <b-minus>) & (K+ or Pp+ or WR- or QI+)) or
   (Vp+ & (Zs- or MVa+))) & <mv-coord>;
 
 
@@ -5566,22 +5604,22 @@ cautioning.g: (<vc-caution> & <verb-ge>) or <verb-ge-d>;
 cautioning.v: <verb-pg> & <vc-caution>;
 
 <vc-warn>:
-  ((O+ or <b-minus>) & <mv-coord> & {TH+ or <embed-verb> or <too-verb> or (OF+ & <mv-coord>)}) or
-  (<mv-coord> & {TH+ or Zs- or (OF+ & <mv-coord>)}) or
+  ((O+ or <b-minus>) & <mv-coord> & {TH+ or <embed-verb> or <too-verb> or <of-coord>}) or
+  (<mv-coord> & {TH+ or Zs- or <of-coord>}) or
   ([[@MV+ & O*n+]]);
 
 warn.v advise.v: VERB_PLI(<vc-warn>);
 warns.v advises.v: VERB_S_T(<vc-warn>);
 warned.v-d advised.v-d:
   VERB_SPPP_T(<vc-warn>) or
-  (<verb-pv> & {TH+ or <embed-verb> or Zs- or <to-verb> or (OF+ & <mv-coord>)}) or
+  (<verb-pv> & {TH+ or <embed-verb> or Zs- or <to-verb> or <of-coord>}) or
   (<mv-coord> & {TH+ or <embed-verb> or <to-verb> or OF+} & <verb-phrase-opener>);
 warning.g advising.g: (<vc-warn> & <verb-ge>) or <verb-ge-d>;
 warning.v advising.v: <verb-pg> & <vc-warn>;
 
 <vc-hear>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
-  (<mv-coord> & {TH+ or Zs- or <embed-verb> or (OF+ & <mv-coord>)}) or
+  (<mv-coord> & {TH+ or Zs- or <embed-verb> or <of-coord>}) or
   ([[@MV+ & O*n+]]);
 
 hear.v: VERB_PLI(<vc-hear>);
@@ -5834,7 +5872,7 @@ writing.g reading.g charging.g drawing.g:
   ({(B- & {O+ or K+}) or
     <vc-opt-ditrans> or
     (O+ & K+) or
-    (OF+ & <mv-coord>) or
+    <of-coord> or
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & <mv-coord>);
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
@@ -5914,11 +5952,13 @@ showing.v: <verb-pg> & <vc-show>;
 
 teach.v: VERB_PLI(<vc-teach>);
 teaches.v: VERB_S_T(<vc-teach>);
+% (<verb-sp,pp> & @MV+ & QI+): "You taught there when?"
 taught.v-d:
   VERB_SPPP_T(<vc-teach>) or
   (<verb-pv-b> &
     (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
     ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or <to-verb>)))) or
+  (<verb-sp,pp> & @MV+ & QI+) or
   ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
@@ -6145,7 +6185,7 @@ tellin': <verb-pg> & <vc-tell>;
 <vc-ask>:
   ({(O+ & {O*n+}) or <b-minus>} & <mv-coord>
     & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-})
-  or (OF+ & <mv-coord>)
+  or <of-coord>
   or ([[@MV+ & O*n+ & <mv-coord>]]);
 
 ask.v: VERB_PLI(<vc-ask>);
@@ -6161,7 +6201,7 @@ asking.v: <verb-pg> & <vc-ask>;
 
 % TH+: "it helps that you know already"
 <vc-help>:
-  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+})
+  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+ or QI+})
   or [[@MV+ & O*n+ & <mv-coord>]];
 
 help.v: VERB_PLI(<vc-help>);
@@ -6174,19 +6214,25 @@ helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
 
 <vc-remind>:
-  ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TH+ or <embed-verb> or (OF+ & <mv-coord>))) or
+  ((O+ or <b-minus>) & {@MV+} &
+    (<too-verb> or TH+ or <embed-verb> or <of-coord>)) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
 remind.v: VERB_PLI(<vc-remind>);
 reminds.v: VERB_S_T(<vc-remind>);
-reminded.v-d: VERB_SPPP_T(<vc-remind>) or (<verb-pv> & {<to-verb> or TH+ or <embed-verb> or
-(OF+ & <mv-coord>)}) or ({{@MV+} & (<embed-verb> or <to-verb> or TH+ or
-(OF+ & <mv-coord>))} & <verb-phrase-opener>);
+reminded.v-d:
+  VERB_SPPP_T(<vc-remind>) or
+  (<verb-pv> & {<to-verb> or
+     TH+ or
+     <embed-verb> or
+     <of-coord>}) or
+  ({{@MV+} & (<embed-verb> or
+    <to-verb> or TH+ or <of-coord>)} & <verb-phrase-opener>);
 reminding.g: (<vc-remind> & <verb-ge>) or <verb-ge-d>;
 reminding.v: <verb-pg> & <vc-remind>;
 
 <vc-inform>:
-  ((O+ or <b-minus>) & <mv-coord> & {(OF+ & <mv-coord>) or TH+ or Zs- or <embed-verb>}) or
+  ((O+ or <b-minus>) & <mv-coord> & {<of-coord> or TH+ or Zs- or <embed-verb>}) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
 inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
@@ -6198,7 +6244,7 @@ informs.v reassures.v alerts.v guarantees.v notifies.v forewarns.v:
 informed.v-d reassured.v-d alerted.v-d guaranteed.v-d
 notified.v-d forewarned.v-d:
   VERB_SPPP_T(<vc-inform>)
-  or (<verb-pv> & {<embed-verb> or TH+ or Zs- or (OF+ & <mv-coord>)})
+  or (<verb-pv> & {<embed-verb> or TH+ or Zs- or <of-coord>})
   or ({{@MV+} & (<embed-verb> or TH+ or OF+)} & <verb-phrase-opener>)
   or <verb-adj>;
 
@@ -6209,7 +6255,7 @@ informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
   <verb-pg> & <vc-inform>;
 
 <vc-assure>:
-  ((O+ or <b-minus>) & <mv-coord> & {(OF+ & <mv-coord>) or TH+ or Zs- or <embed-verb>}) or
+  ((O+ or <b-minus>) & <mv-coord> & {<of-coord> or TH+ or Zs- or <embed-verb>}) or
   ([[@MV+ & O*n+ & <mv-coord>]]) or
   ({@MV+} & (TH+ or <embed-verb>));
 
@@ -6217,7 +6263,7 @@ assure.v: VERB_PLI(<vc-assure>);
 assures.v: VERB_S_T(<vc-assure>);
 assured.v-d:
   VERB_SPPP_T(<vc-assure>)
-  or (<verb-pv> & {(OF+ & <mv-coord>) or <embed-verb> or TH+ or Zs-})
+  or (<verb-pv> & {<of-coord> or <embed-verb> or TH+ or Zs-})
   or ({{@MV+} & (<embed-verb> or TH+ or OF+)} & <verb-phrase-opener>);
 
 assuring.g: (<vc-assure> & <verb-ge>) or <verb-ge-d>;
@@ -6601,9 +6647,12 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % The naked Wx+, without a WV+, links to opinions: "ruined!".
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
+% The Qd+ with a WV+, for questions: "did you see in which room?"
+%
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: hWa+ or hWb+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
-<wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+ or hWt+ or hWo+) & <WALL>;
+<wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+
+or hWt+ or hWo+ or hQd+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()]0.1;
@@ -6709,7 +6758,7 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q:
-  {@E-} & 
+  {@E-} &
     (((Sp- or I- or (RS- & Bp-)) & <vc-paraph>)
     or (SIpj+ & <vc-paraph-inv>));
 
@@ -7820,7 +7869,7 @@ what:
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
   or Jw-
-  or [QI-]
+  or [QI-]0.5
   or SJl+ or SJr-
   or (Xc+ & Ic+);
 
@@ -7926,9 +7975,9 @@ when:
   ((WN- or BIh-) & <subcl-verb>)
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
-  or [QI-]
-  or SJl+ or SJr-
-  or MJl+
+  or [QI-]0.5
+  or [SJl+ or SJr-]0.5
+  or [MJl+]0.5
   or ({JT-} & MJr- & Qw+)
   or ({EW-} & (QJ- or QJ+))
   or ({hCO-} & {EW-} & Ww- & {Qw+})
@@ -7941,10 +7990,10 @@ when:
 why:
   {EL+} & (
     ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
-    or (QI- & (<subcl-verb> or <ton-verb> or [()]))
+    or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
-    or SJl+ or SJr-
+    or [SJl+ or SJr-]0.5
     or ({EW-} & (QJ- or QJ+))
     );
 
@@ -7957,8 +8006,8 @@ where:
   {EL+}
     & (
       ({hCO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
-      or [QI-]
-      or SJl+ or SJr-
+      or [QI-]0.5
+      or [SJl+ or SJr-]0.5
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
       or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
@@ -7982,9 +8031,9 @@ how:
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or [[{EW-} & Ww-]]
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
-  or [QI-]
+  or [QI-]0.5
   or ({EW-} & (QJ- or QJ+))
-  or SJl+ or SJr-
+  or [SJl+ or SJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 %%%  or ((EAh+ or EEh+) & Ww-);
 
@@ -8012,7 +8061,8 @@ that.j-r:
   or DTn+;
 
 % "that" as noun. naked Osn-: "give me that"
-that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
+% cost on [<noun-and-s>] to avoid comma as conjunction.
+that.j-p: ({[[M+]]} & <noun-main-h>) or [<noun-and-s>]0.5;
 
 % "that" as topic. Wt is a topic link to LEFT-WALL.  "That I did not know".
 that.j-t: Wt- & {Xc+} & Rn+ & B+;

@@ -217,7 +217,7 @@ CONTAINS_ONE_RULES:
  Mj    ,  Jw    JQ                          , "Incorrect relative10" ,
  MX#j  ,  Jw    JQ                          , "Incorrect relative11" ,
  Wj    ,  Jw    JQ                          , "Misuse of preposition12" ,
- JQ    ,  Mj    Wj    MX#j                  , "Misuse of preposition13" ,
+ JQ    ,  Mj    Wj    MX#j  MVp             , "Misuse of preposition13" ,
  Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14" ,
  B#j   ,  Jr                                , "Incorrect relative15"    ,
  Jr    ,  B#j                               , "Incorrect relative16"    ,
