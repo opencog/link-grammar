@@ -3384,7 +3384,7 @@ lain.v: VERB_PP(<vc-bulge>);
 
 % irregular
 <vc-come>:
-  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus>} & <mv-coord>)
+  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus> or QI+} & <mv-coord>)
   or ({@MV+} & Pa+);
 come.v:
   VERB_PLI(<vc-come>)
@@ -4186,7 +4186,9 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % go.w: {E-} & (Wi- or S-) & I+;
 
 % B-: "which way did it go?"
-<vc-go>: {K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus>} & <mv-coord>;
+% QI+: "you will go when?"
+<vc-go>:
+  {K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus> or QI+} & <mv-coord>;
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
