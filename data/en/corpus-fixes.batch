@@ -2191,11 +2191,16 @@ How long before you got home?
 Approximately how long before you got home?
 Approximately how long was it before you got home?
 
-% Some awkward sentences ...
+% Some awkward sentences ... a proper fix requires link-crossing.
+% This is best illustrated by pondering the sentence:
+% "Sophy wondered [up to] whose favorite number she should count to"
+% and then realizing that [up to] needs to modify "number" not "whose".
+% unfortunately, this is not possible without link-crossing.
 Sophy wondered up to what number she should count
 Sophy wondered up to what number to count
 Sophy wondered up to what number to count to
 Sophy wondered up to whose favorite number she should count
+Sophy wondered whose favorite number she should count to
 Sophy wondered up to whose favorite number to count
 Sophy wondered up to whose favorite number to count to
 Sophy wondered exactly whose favorite number to count to
