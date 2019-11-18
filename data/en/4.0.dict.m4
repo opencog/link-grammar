@@ -191,7 +191,7 @@ nonCAP.zzz: ZZZ-;
   or (Ss*b+ & <CLAUSE>)
   or SIs*b-
   or Js-
-  or [Os-]
+  or [Os-]0.5
   or <post-nominal-x>
   or <costly-null>;
 
@@ -7869,7 +7869,7 @@ what:
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
   or Jw-
-  or [QI-]
+  or [QI-]0.5
   or SJl+ or SJr-
   or (Xc+ & Ic+);
 
@@ -7990,7 +7990,7 @@ when:
 why:
   {EL+} & (
     ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
-    or (QI- & (<subcl-verb> or <ton-verb> or [()]))
+    or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
     or SJl+ or SJr-
@@ -8006,7 +8006,7 @@ where:
   {EL+}
     & (
       ({hCO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
-      or [QI-]
+      or [QI-]0.5
       or SJl+ or SJr-
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
@@ -8031,7 +8031,7 @@ how:
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or [[{EW-} & Ww-]]
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
-  or [QI-]
+  or [QI-]0.5
   or ({EW-} & (QJ- or QJ+))
   or SJl+ or SJr-
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
