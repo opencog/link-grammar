@@ -2767,9 +2767,10 @@ do.v:
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
-  or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) & {<verb-wall> or VJrpi-})
-  or ({@E-} & I- & CV-)
-  or ({@E-} & I*d- & {<verb-wall>});
+  or ({@E-} & I- &
+    ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
+    (<verb-wall> or VJrpi-))
+  or ({@E-} & I*d- & <verb-wall>);
 
 % Ss- & <verb-wall>: "so it does!"
 % Ss- & <verb-wall> & @MV+: "he does as he pleases."
@@ -6650,7 +6651,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % The naked Wx+, without a WV+, links to opinions: "ruined!".
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
-% The Qd+ with a WV+, for questions: "did you see in which room?"
+% The Qd+ with a WV+, for questions: "did you do that?"
 %
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: hWa+ or hWb+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
