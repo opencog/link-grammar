@@ -2549,11 +2549,12 @@ per "/.per": Us+ & Mp-;
 % {CO-} & Qd-: "By the way, does he drink?"
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
-<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or Qp- or ((Qw- or Qe-) & <verb-wall>))) or [()];
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
-<verb-rq-aux>: Rw- or (({{Xd-} & Iq-} or {hCOw-}) & (Qd- or Qw- or Qe-)) or [()];
+<verb-rq-aux>:
+  Rw- or (({{Xd-} & Iq-} or {hCOw-}) & (Qd- or Qw- or Qp- or Qe-)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -3048,7 +3049,7 @@ is.v:
     or ({Pp+} & Pg+)
     or Pv+
     or PP+))
-  or (SIs+ & Qw- & <verb-wall>)
+  or (SIs+ & (Qw- or Qp-) & <verb-wall>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)];
 
@@ -6877,11 +6878,11 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or ({EA-} & Xd- & {Xc+} & MVx-)
   or ({EA-} & Xd- & Xc+ & MX*x-);
 
-% Wj- & Qw+: questions: By what means will you arrive?
+% Wj- & Qp+: questions: By what means will you arrive?
 <prep-main-a>:
   <prep-main-b>
   or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
-  or (Wj- & Qw+)
+  or (Wj- & Qp+)
   or <fronted>;
 
 <prep-main-t>:
@@ -10611,10 +10612,10 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
   We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or TH+ or QI+ or (R+ & B+ & {S+}));
 
 % Ellipsis as verb: "Lud, son of Shem, ..."
-% Qv-: "In what way...?
+% Qp-: "In what way...?
 % O+: "I did not ... what you said"
 ....v ….v:
-  (S- or I- or Qw-) & {O+} & <verb-wall>;
+  (S- or I- or Qp-) & {O+} & <verb-wall>;
 
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."

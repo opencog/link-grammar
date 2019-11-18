@@ -204,7 +204,7 @@ FORM_A_CYCLE_RULES:
 
 ; XXX fixme -- Qd should be replaced by Qw in first four.
 CONTAINS_ONE_RULES:
- SI#*  ,  Wq    Qd  Qw CQ  PFc   Wp   Wb    , "Bad use of s-v inversion1" ,
+ SI#*  ,  Wq Qp Qd Qw  CQ  PFc   Wp   Wb    , "Bad use of s-v inversion1" ,
  SI#x  ,  Wq    Qd     CQ  PFc   Wp   Wb    , "Bad use of s-v inversion2" ,
  SFI##* , Wq    Qd     CQ  PFc              , "Bad use of s-v inversion3" ,
  SXI   ,  Wq    Qd     CQ  PFc              , "Bad use of s-v inversion4" ,
