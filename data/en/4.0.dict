@@ -9123,11 +9123,11 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or ({EA-} & Xd- & {Xc+} & MVx-)
   or ({EA-} & Xd- & Xc+ & MX*x-);
 
-% Wj- & Qd+: questions: By what means will you arrive?
+% Wj- & Qw+: questions: By what means will you arrive?
 <prep-main-a>:
   <prep-main-b>
   or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
-  or (Wj- & (Qd+ or Qv+))
+  or (Wj- & Qw+)
   or <fronted>;
 
 <prep-main-t>:
@@ -12858,7 +12858,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 % Qv-: "In what way...?
 % O+: "I did not ... what you said"
 ....v ….v:
-  (S- or I- or Qv-) & {O+} & <verb-wall>;
+  (S- or I- or Qw-) & {O+} & <verb-wall>;
 
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."
