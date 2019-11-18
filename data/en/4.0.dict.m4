@@ -2470,7 +2470,9 @@ per "/.per": Us+ & Mp-;
 %        wrong... but this requires lots of places to fix.
 % VJrpi-: "I aim to do something and also to help."
 % I & [()]: costly, if there is no wall, but when does this happen?
-% I'm confused, examples are needed... verb-pl,i is used everywhere....
+%       I'm confused, examples are needed... verb-pl,i is used everywhere...
+%       I want the wall, e.g. for "Did you see in which room?"
+%       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-}) or
                       ({[hCO-]} & Wi- & {NM+}));
