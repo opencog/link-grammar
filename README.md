@@ -115,8 +115,8 @@ There are many more papers and references listed on the
 
 See also the
 [C/C++ API documentation](https://www.abisource.com/projects/link-grammar/api/index.html).
-Bindings for other programming languages, including python3 and
-java, can be found in the [bindings directory](bindings).
+Bindings for other programming languages, including python3, java
+and node.js, can be found in the [bindings directory](bindings).
 
 
 Contents
@@ -273,36 +273,18 @@ Use of editline in the link-parser can be disabled by saying:
 ./configure --disable-editline
 ```
 
-Java Bindings
--------------
-By default, the Makefiles attempt to build the Java bindings.
-The use of the Java bindings is *OPTIONAL*; you do not need these if
-you do not plan to use link-grammar with Java.  You can skip building
-the Java bindings by disabling as follows:
+Node.js Bindings
+----------------
+These are built using `npm`. First, you must build the core C library.
+Then do the following:
 ```
-./configure --disable-java-bindings
+   cd bindings/node.js
+   npm install
+   npm run make
 ```
-
-If `jni.h` isn't found, or if `ant` isn't found,
-then the java bindings will not be built.
-
-Notes about finding `jni.h`:<br>
-Some common java JVM distributions (most notably, the ones from Sun)
-place this file in unusual locations, where it cannot be
-automatically found.  To remedy this, make sure that environment variable
-JAVA_HOME is set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
-and in `$JAVA_HOME/include`; it also examines corresponding locations
-for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
-with the CPPFLAGS variable: so, for example,
-```
-export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
-```
-or
-```
-export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
-```
-Please note that the use of `/opt` is non-standard, and most system
-tools will fail to find packages installed there.
+This will create the bindings and also run a small unit test (which
+should pass). An example can be found in
+`bindings/node.js/examples/simple.js`.
 
 Python2 and Python3 Bindings
 ----------------------------
@@ -338,6 +320,37 @@ Python bindings, use:
 The linkgrammar.py module provides a high-level interface in Python.
 The example.py and sentence-check.py scripts provide a demo,
 and tests.py runs unit tests.
+
+Java Bindings
+-------------
+By default, the Makefiles attempt to build the Java bindings.
+The use of the Java bindings is *OPTIONAL*; you do not need these if
+you do not plan to use link-grammar with Java.  You can skip building
+the Java bindings by disabling as follows:
+```
+./configure --disable-java-bindings
+```
+
+If `jni.h` isn't found, or if `ant` isn't found,
+then the java bindings will not be built.
+
+Notes about finding `jni.h`:<br>
+Some common java JVM distributions (most notably, the ones from Sun)
+place this file in unusual locations, where it cannot be
+automatically found.  To remedy this, make sure that environment variable
+JAVA_HOME is set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
+and in `$JAVA_HOME/include`; it also examines corresponding locations
+for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
+with the CPPFLAGS variable: so, for example,
+```
+export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
+```
+or
+```
+export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
+```
+Please note that the use of `/opt` is non-standard, and most system
+tools will fail to find packages installed there.
 
 Install location
 ----------------
