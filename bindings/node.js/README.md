@@ -1,8 +1,6 @@
-# Javascript Bindings for Link Grammar
+# Node.js Bindings for Link Grammar
 
-A node library for Link Grammar
-
-## Building Yourself
+## Building the bindings.
 
 	npm install
 	npm run make
@@ -29,7 +27,7 @@ Easier references to base types of data.
 These are just references to different native structs, which are
 all just pointers because we never use their actual referenced object.
 
-    ParseOptions = pointerType 
+    ParseOptions = pointerType
     Dictionary = pointerType
     Sentence = pointerType
     Linkage = pointerType
@@ -38,7 +36,11 @@ Here are the templates for the native functions we will use.
 
     apiTemplate =
         parse_options_create: [ ParseOptions, [ ] ]
+        parse_options_set_null_block: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_islands_ok: [ ref.types.void, [ ParseOptions, int ] ]
         parse_options_set_verbosity: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_allow_null: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_max_null_count: [ ref.types.void, [ ParseOptions, int ] ]
         dictionary_create: [ Dictionary, [ string, string, string, string ] ]
         sentence_create: [ Sentence, [ string, Dictionary ] ]
         sentence_parse: [ int, [ Sentence, ParseOptions ] ]
@@ -46,8 +48,6 @@ Here are the templates for the native functions we will use.
         sentence_get_word: [ string, [ Sentence, int ] ]
         linkage_create: [ Linkage, [ int, Sentence, ParseOptions ] ]
         linkage_print_diagram: [ string, [ Linkage ] ]
-        linkage_constituent_tree: [ CNodePtr, [ Linkage ] ]
-        linkage_print_constituent_tree: [ string, [ Linkage, int] ]
         linkage_get_num_links: [ int, [ Linkage ] ]
         linkage_get_link_label: [ string, [ Linkage, int ] ]
         linkage_get_link_llabel: [ string, [ Linkage, int ] ]
@@ -58,9 +58,9 @@ Here are the templates for the native functions we will use.
 
 Load the library.
 
-    libPath = __dirname + '/../lib/libparser'
+    libPath = __dirname + '/../build/libparser'
     lib = ffi.Library libPath, apiTemplate
-    defaultDataPath = __dirname + '/../data/'
+    defaultDataPath = __dirname + '/../../data/en/'
 
 Default configuration for data paths.
 
@@ -68,25 +68,30 @@ Default configuration for data paths.
         lang: 'en'
         verbose: false
 
-Main parser class which interfaces the native library to make it
-very simple to get Link Grammar data from an input string.
+Main parser class which interfaces the native library to make
+it very simple to get Link Grammar data from an input string.
 
     class LinkGrammar
-    	
+
 A few utility methods for the parser.
 
         constructor: (config) ->
             @config = _.extend config or {}, defaultConfig
             @options = lib.parse_options_create()
             lib.parse_options_set_verbosity @options, (if @config.verbose then 1  else 0)
+            lib.parse_options_set_allow_null @options, 1
+            lib.parse_options_set_max_null_count @options, 3
             @dictionary = lib.dictionary_create @config.lang
 
-Parse input, and return linkage.
+Parse input, and return linkage, if it exists.
 
         parse: (input, index) ->
             sentence = lib.sentence_create input, @dictionary
-            numLinkages = lib.sentence_parse sentence, @options 
-            new Linkage lib.linkage_create index or 0, sentence, @options
+            numLinkages = lib.sentence_parse sentence, @options
+            if numLinkages > 0
+              new Linkage lib.linkage_create index or 0, sentence, @options
+            else
+              throw new Error('No linkages found')
 
 Linkage class which allows for more specific parsing of grammar.
 
@@ -94,25 +99,7 @@ Linkage class which allows for more specific parsing of grammar.
 
         constructor: (@linkage) ->
             @links = @getLinks()
-            @tree = @getTree()
             @words = @getWords()
-
-Recursive tree builder method.
-
-        buildNode: (node) ->
-            n =
-                label: node.label
-            if not ref.isNull node.child
-                n.child = @buildNode getNodePtrFromPtr(node.child).deref()
-            if not ref.isNull node.next
-                n.next = @buildNode getNodePtrFromPtr(node.next).deref()
-            n
-
-Get a tree of grammar nodes which map out how the input sentence is structered.
-
-        getTree: ->
-            rootPtr = lib.linkage_constituent_tree @linkage
-            @buildNode rootPtr.deref(), @linkage
 
 Get array of grammar links based on linkage.
 
@@ -140,14 +127,14 @@ Get array of grammar links based on linkage.
                     link.right.type = temp[1]
                 link
             ), @
-                
+
 Get parsed words with their grammar type and index
 
         getWords: ->
             _.chain(@links)
                 .map (link) -> [link.left, link.right]
                 .flatten()
-                .uniq (link) -> link.word 
+                .uniq (link) -> link.word
                 .value()
 
 Get list of links by specific label type
@@ -171,3 +158,5 @@ Get list of connector links for a specific word
                         source: link.right
                         target: link.left
             words
+
+    module.exports = LinkGrammar

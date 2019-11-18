@@ -1,7 +1,9 @@
-# Link Grammar Parser
+# Node.js Bindings for Link Grammar
 
-The parser is built using the awesome ffi library which allows us to communicate with a native library under the covers.
-Along with ffi, we also use ref library to reference the native objects used by the library.
+The parser is built using the awesome ffi library which allows
+us to communicate with a native library under the covers.
+Along with ffi, we also use ref library to reference the native
+objects used by the library.
 
     ffi = require 'ffi'
     ref = require 'ref'
@@ -14,22 +16,13 @@ Easier references to base types of data.
     string = ref.types.CString
     int = ref.types.int
 
-These are just references to different native structs, which are all just pointers because we never use their actual referenced object.
+These are just references to different native structs, which are
+all just pointers because we never use their actual referenced object.
 
     ParseOptions = pointerType
     Dictionary = pointerType
     Sentence = pointerType
     Linkage = pointerType
-
-    CNode = Struct(
-    	label: ref.types.CString
-    	child: pointerType
-    	next: pointerType
-    	start: ref.types.int
-    	end: ref.types.int
-    )
-
-    CNodePtr = ref.refType CNode
 
 Here are the templates for the native functions we will use.
 
@@ -47,8 +40,6 @@ Here are the templates for the native functions we will use.
         sentence_get_word: [ string, [ Sentence, int ] ]
         linkage_create: [ Linkage, [ int, Sentence, ParseOptions ] ]
         linkage_print_diagram: [ string, [ Linkage ] ]
-        linkage_constituent_tree: [ CNodePtr, [ Linkage ] ]
-        linkage_print_constituent_tree: [ string, [ Linkage, int] ]
         linkage_get_num_links: [ int, [ Linkage ] ]
         linkage_get_link_label: [ string, [ Linkage, int ] ]
         linkage_get_link_llabel: [ string, [ Linkage, int ] ]
@@ -59,27 +50,18 @@ Here are the templates for the native functions we will use.
 
 Load the library.
 
-    libPath = __dirname + '/../lib/libparser'
+    libPath = __dirname + '/../build/libparser'
     lib = ffi.Library libPath, apiTemplate
-    defaultDataPath = __dirname + '/../data/'
-
-Utility functions...
-
-    getNodePtrFromPtr = (ptr) ->
-    	tempPtr = ref.alloc CNodePtr
-    	ref.writePointer tempPtr, 0, ptr
-    	tempPtr.deref()
+    defaultDataPath = __dirname + '/../../data/en/'
 
 Default configuration for data paths.
 
     defaultConfig =
-        dictPath: defaultDataPath + '4.0.dict'
-        ppPath: defaultDataPath + '4.0.knowledge'
-        consPath: defaultDataPath + '4.0.constituent-knowledge'
-        affixPath: defaultDataPath + '4.0.affix'
+        lang: 'en'
         verbose: false
 
-Main parser class which interfaces the native library to make it very simple to get link grammar data from an input string.
+Main parser class which interfaces the native library to make
+it very simple to get Link Grammar data from an input string.
 
     class LinkGrammar
 
@@ -91,9 +73,9 @@ A few utility methods for the parser.
             lib.parse_options_set_verbosity @options, (if @config.verbose then 1  else 0)
             lib.parse_options_set_allow_null @options, 1
             lib.parse_options_set_max_null_count @options, 3
-            @dictionary = lib.dictionary_create @config.dictPath, @config.ppPath, @config.consPath, @config.affixPath
+            @dictionary = lib.dictionary_create @config.lang
 
-Parse input, and return linkage if exists.
+Parse input, and return linkage, if it exists.
 
         parse: (input, index) ->
             sentence = lib.sentence_create input, @dictionary
@@ -101,7 +83,7 @@ Parse input, and return linkage if exists.
             if numLinkages > 0
               new Linkage lib.linkage_create index or 0, sentence, @options
             else
-              throw new Error('No links found')
+              throw new Error('No linkages found')
 
 Linkage class which allows for more specific parsing of grammar.
 
@@ -109,25 +91,7 @@ Linkage class which allows for more specific parsing of grammar.
 
         constructor: (@linkage) ->
             @links = @getLinks()
-            @tree = @getTree()
             @words = @getWords()
-
-Recursive tree builder method.
-
-        buildNode: (node) ->
-            n =
-                label: node.label
-            if not ref.isNull node.child
-                n.child = @buildNode getNodePtrFromPtr(node.child).deref()
-            if not ref.isNull node.next
-                n.next = @buildNode getNodePtrFromPtr(node.next).deref()
-            n
-
-Get a tree of grammar nodes which map out how the input sentence is structered.
-
-        getTree: ->
-            rootPtr = lib.linkage_constituent_tree @linkage
-            @buildNode rootPtr.deref(), @linkage
 
 Get array of grammar links based on linkage.
 
