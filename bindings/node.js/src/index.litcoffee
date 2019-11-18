@@ -50,9 +50,9 @@ Here are the templates for the native functions we will use.
 
 Load the library.
 
-    libPath = __dirname + '/../build/libparser'
+    libPath = __dirname + '/../../../build/link-grammar/.libs/liblink-grammar.so'
     lib = ffi.Library libPath, apiTemplate
-    defaultDataPath = __dirname + '/../../data/en/'
+    defaultDataPath = __dirname + '/../../../data/en/'
 
 Default configuration for data paths.
 
