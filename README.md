@@ -1065,6 +1065,12 @@ when the individual sentences "I was in hell yesterday" and
 "I was in heaven on Tuesday" are parsed.  Using a conjunction should
 not wreck the relations that get used; but this requires link-crossing.
 
+```text
+"Sophy wondered up to whose favorite number she should count"
+```
+Here, "up_to" must modify "number", and not "whose". There's no way to
+do this without link-crossing.
+
 
 Type Theory
 -----------
