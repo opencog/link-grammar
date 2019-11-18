@@ -6477,9 +6477,10 @@ for_granted: Vtg-;
 % VERBS TAKING [OBJ] + [OTHER COMPLEMENT]
 % basically, all these are <vc-trans> plus mess
 % I think the WR- here is dead and not used. See other WR- below
+% O+ & QI+: "You put it where?"
 <vc-put>:
   ((K+ & {[[@MV+]]} & O*n+) or
-  ((O+ or <b-minus>) & (K+ or Pp+ or WR-)) or
+  ((O+ or <b-minus>) & (K+ or Pp+ or WR- or QI+)) or
   (Vp+ & (Zs- or MVa+))) & <mv-coord>;
 
 
