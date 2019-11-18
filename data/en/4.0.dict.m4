@@ -5087,7 +5087,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 % <vc-trans> plus TI
 <vc-become>:
   ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or Pv+) & <mv-coord>)
-   or ({@MV+} & (AF- or Pa+));
+   or ({@MV+} & (AF- or Pa+) & {QI+});
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: VERB_S_S(<vc-become>);
 became.v-d: VERB_S_SP(<vc-become>);
