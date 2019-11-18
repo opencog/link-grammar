@@ -4874,7 +4874,7 @@ assessed.v-d established.v-d evaluated.v-d examined.v-d questioned.v-d
 tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
 envisaged.v-d documented.v-d:
   VERB_SPPP_T(<vc-predict>)
-  or (<verb-s-pv> & {THi+})
+  or (<verb-s-pv> & ({THi+} or <vc-predict>))
   or <verb-adj>
   or <verb-phrase-opener>;
 

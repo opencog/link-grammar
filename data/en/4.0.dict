@@ -5886,7 +5886,7 @@ envisaged.v-d documented.v-d:
   (<verb-and-sp-i-> & ([<vc-predict>]0.2 or ())) or
   ((<vc-predict>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or (<verb-s-pv> & {THi+})
+  or (<verb-s-pv> & ({THi+} or <vc-predict>))
   or <verb-adj>
   or <verb-phrase-opener>;
 

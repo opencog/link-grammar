@@ -2186,7 +2186,6 @@ Are we off?
 Is it in place?
 Is that when the meeting is?
 
-
 % This is blocked by post-processing....
 How long before you got home?
 Approximately how long before you got home?
@@ -2204,6 +2203,10 @@ Sophy wondered what number to count to
 Sophy wondered what number to count up to
 Sophy wondered whose favorite number to count up to
 
+% Inverted questions, fixed with QI: Pvf- & QI+ on participles
+bird flu was observed where?
+bird flu was observed how?
+bird flu was observed when?
 
 You put it where?
 It happened when?
