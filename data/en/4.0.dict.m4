@@ -6179,7 +6179,7 @@ asking.v: <verb-pg> & <vc-ask>;
 
 % TH+: "it helps that you know already"
 <vc-help>:
-  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+})
+  ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+ or QI+})
   or [[@MV+ & O*n+ & <mv-coord>]];
 
 help.v: VERB_PLI(<vc-help>);
