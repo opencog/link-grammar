@@ -4495,7 +4495,9 @@ learning.v: <verb-pg> & <vc-learn>;
 <vc-propose>:
   <vc-trans>
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (<to-verb> or TH+ or <embed-verb> or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
+  or ({@MV+} & (<to-verb> or
+    TH+ or <embed-verb> or RSe+ or QI+ or
+    Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
 proposed.v-d:
