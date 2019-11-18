@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.7.0 (formatted as V5v7v0+)
-<dictionary-version-number>: V5v7v0+;
+% Dictionary version number is 5.7.1 (formatted as V5v7v1+)
+<dictionary-version-number>: V5v7v1+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -4152,7 +4152,8 @@ insists.v: VERB_S_I(<vc-insist>);
 insisted.v-d: VERB_SPPP_I(<vc-insist>);
 insisting.v: (<vc-insist> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-wonder>: {@MV+} & {QI+};
+% [QI+]-0.05: "I wonder when he will come": preference to QI over MVs
+<vc-wonder>: {@MV+} & {[QI+]-0.05};
 wonder.v inquire.v: VERB_PLI(<vc-wonder>);
 wonders.v inquires.v: VERB_S_I(<vc-wonder>);
 wondered.v-d inquired.v-d: VERB_SPPP_I(<vc-wonder>);
