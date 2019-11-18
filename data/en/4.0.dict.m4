@@ -9515,10 +9515,15 @@ than_expected than_imagined than_proposed than_suspected than_realized
 than_intended than_supposed than_reported than_ever than_usual
 than_normal than_suggested than_anticipated than_recommended: MVt-;
 
-more_than no_more_than fewer_than less_than as_many_as an_estimated
-an_additional up_to as_much_as no_fewer_than no_less_than greater_than
-upwards_of:
+more_than no_more_than fewer_than no_fewer_than
+less_than no_less_than greater_than no_greater_than
+as_many_as an_estimated as_much_as
+an_additional up_to down_to
+upwards_of downwards_of:
   EN+;
+
+% "up to where did it go?"
+up_to down_to: EW+;
 
 at_least: EN+ or dCO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 
