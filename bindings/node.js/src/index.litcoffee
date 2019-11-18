@@ -1,5 +1,12 @@
 # Node.js Bindings for Link Grammar
 
+## Building the bindings.
+Build Link Grammar first. Then, in this directory, say:
+```
+       npm install
+       npm run make
+```
+## Using
 The parser is built using the awesome ffi library which allows
 us to communicate with a native library under the covers.
 Along with ffi, we also use ref library to reference the native

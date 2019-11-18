@@ -1,13 +1,12 @@
 # Node.js Bindings for Link Grammar
 
 ## Building the bindings.
-
-	npm install
-	npm run make
-
-Which will install, clean, compile, and test the project.
-
-## Design
+Build Link Grammar first. Then, in this directory, say:
+```
+       npm install
+       npm run make
+```
+## Using
 The parser is built using the awesome ffi library which allows
 us to communicate with a native library under the covers.
 Along with ffi, we also use ref library to reference the native
@@ -36,16 +35,14 @@ Here are the templates for the native functions we will use.
 
     apiTemplate =
         parse_options_create: [ ParseOptions, [ ] ]
-        parse_options_set_null_block: [ ref.types.void, [ ParseOptions, int ] ]
         parse_options_set_islands_ok: [ ref.types.void, [ ParseOptions, int ] ]
         parse_options_set_verbosity: [ ref.types.void, [ ParseOptions, int ] ]
-        parse_options_set_allow_null: [ ref.types.void, [ ParseOptions, int ] ]
+        parse_options_set_min_null_count: [ ref.types.void, [ ParseOptions, int ] ]
         parse_options_set_max_null_count: [ ref.types.void, [ ParseOptions, int ] ]
-        dictionary_create: [ Dictionary, [ string, string, string, string ] ]
+        dictionary_create_lang: [ Dictionary, [ string ] ]
         sentence_create: [ Sentence, [ string, Dictionary ] ]
         sentence_parse: [ int, [ Sentence, ParseOptions ] ]
         sentence_length: [ int, [ Sentence ] ]
-        sentence_get_word: [ string, [ Sentence, int ] ]
         linkage_create: [ Linkage, [ int, Sentence, ParseOptions ] ]
         linkage_print_diagram: [ string, [ Linkage ] ]
         linkage_get_num_links: [ int, [ Linkage ] ]
@@ -58,9 +55,9 @@ Here are the templates for the native functions we will use.
 
 Load the library.
 
-    libPath = __dirname + '/../build/libparser'
+    libPath = __dirname + '/../../../build/link-grammar/.libs/liblink-grammar.so'
     lib = ffi.Library libPath, apiTemplate
-    defaultDataPath = __dirname + '/../../data/en/'
+    defaultDataPath = __dirname + '/../../../data/en/'
 
 Default configuration for data paths.
 
@@ -79,9 +76,9 @@ A few utility methods for the parser.
             @config = _.extend config or {}, defaultConfig
             @options = lib.parse_options_create()
             lib.parse_options_set_verbosity @options, (if @config.verbose then 1  else 0)
-            lib.parse_options_set_allow_null @options, 1
+            lib.parse_options_set_min_null_count @options, 0
             lib.parse_options_set_max_null_count @options, 3
-            @dictionary = lib.dictionary_create @config.lang
+            @dictionary = lib.dictionary_create_lang @config.lang
 
 Parse input, and return linkage, if it exists.
 
