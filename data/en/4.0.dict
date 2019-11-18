@@ -172,14 +172,17 @@ nonCAP.zzz: ZZZ-;
   or <post-nominal-s>
   or <costly-null>;
 
-% used only for this, that.
+% Used only for this.p, that.j-p
 % (Jd- & Dmu- & Os-): they have plenty of this
 % (Jd- & Dmu- & {Wd-} & Ss+): "not enough of this was used"
-% XXX -- is Js- ever really needed?
+% Js-: "how did you learn of this?"
 <noun-main-h>:
   (Jd- & Dmu- & Os-)
   or (Jd- & Dmu- & {Wd-} & Ss*b+)
-  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-]
+  or (Ss*b+ & <CLAUSE>)
+  or SIs*b-
+  or Js-
+  or [Os-]
   or <post-nominal-x>
   or <costly-null>;
 
@@ -1493,7 +1496,7 @@ the:
 this.p:
   <noun-main-h>
   or EA+
-  or <noun-and-s>;
+  or [<noun-and-s>]0.5;
 
 % this as a determiner
 this.d:
@@ -10180,9 +10183,9 @@ when:
   ((WN- or BIh-) & <subcl-verb>)
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
-  or [QI-]
-  or SJl+ or SJr-
-  or MJl+
+  or [QI-]0.5
+  or [SJl+ or SJr-]0.5
+  or [MJl+]0.5
   or ({JT-} & MJr- & Qw+)
   or ({EW-} & (QJ- or QJ+))
   or ({hCO-} & {EW-} & Ww- & {Qw+})
@@ -10266,7 +10269,8 @@ that.j-r:
   or DTn+;
 
 % "that" as noun. naked Osn-: "give me that"
-that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
+% cost on [<noun-and-s>] to avoid comma as conjunction.
+that.j-p: ({[[M+]]} & <noun-main-h>) or [<noun-and-s>]0.5;
 
 % "that" as topic. Wt is a topic link to LEFT-WALL.  "That I did not know".
 that.j-t: Wt- & {Xc+} & Rn+ & B+;
