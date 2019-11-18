@@ -4458,14 +4458,14 @@ planned.v-d confessed.v-d:
 planning.g confessing.g: (<vc-plan> & <verb-ge>) or <verb-ge-d>;
 planning.v confessing.v: <verb-pg> & <vc-plan>;
 
+% <vc-trans> & QI+: "you decided that when?"
 <vc-decide>:
-  <vc-trans> or
+  (<vc-trans> & {QI+}) or
   ({@MV+} & {TH+ or {<QI+pref>} or
     <to-verb> or <embed-verb> or RSe+ or Zs-});
 
 decide.v resolve.v: VERB_PLI(<vc-decide>);
 decides.v resolves.v: VERB_S_T(<vc-decide>);
-
 decided.v-d resolved.v-d:
   VERB_SPPP_T(<vc-decide>) or
   (<verb-s-pv> & {THi+}) or
@@ -4512,8 +4512,10 @@ learning.v: <verb-pg> & <vc-learn>;
     Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
+
+% <vc-propose> & QI+: "You proposed this to her when?"
 proposed.v-d:
-  VERB_SPPP_T(<vc-propose>)
+  VERB_SPPP_T(<vc-propose> & {QI+})
   or (<verb-s-pv> & {THi+ or TSi+ or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
@@ -4521,13 +4523,16 @@ proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
 % TO+ & Xc+: allows null-infinitive: "I did not demand to"
+% <vc-trans> & QI+: "You demand this why?"
+% O+ & <of-coord>: "You demanded this of him why?"
 <vc-demand>:
-  <vc-trans>
-  or <of-coord>
+  (<vc-trans> & {QI+})
+  or ({O+} & <of-coord>)
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
+
 demanded.v-d:
   VERB_SPPP_T(<vc-demand>)
   or <verb-pv>
@@ -4604,8 +4609,9 @@ continuing.g: (<vc-begin> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 
 % <vc-trans> with particle
+% <vc-trans> & QI+: "you started this when?"
 <vc-start>:
-  ((({O+ or <b-minus>} & {K+}) or
+  ((({O+ or <b-minus>} & {K+ or QI+}) or
     (K+ & {[[@MV+]]} & O*n+) or
     [[@MV+ & O*n+]]) & <mv-coord>) or
   ({@MV+} & (<to-verb> or Pg+));
@@ -4868,8 +4874,10 @@ figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
 % (QI+ & {MV+}): "I did not say why until recently"
+% <vc-trans> & QI+: "you said this to her where?"
+%    "you indicate this why?"
 <vc-predict>:
-  <vc-trans>
+  (<vc-trans> & {QI+})
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
   or ({@MV+} & (<QI+pref> & {MV+}));
 
@@ -4902,7 +4910,7 @@ envisaged.v-d documented.v-d:
   or <verb-adj>
   or <verb-phrase-opener>;
 
-% the second line is almost, not quite, <verb-s-pv>
+% The second line is almost, not quite, <verb-s-pv>
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
   ({@E-} & ((Pvf- & <verb-wall>) or [[Mv-]]) & {@MV+} & {THi+}) or
@@ -4968,7 +4976,8 @@ known.v well-known.v:
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
 knowing.v: <verb-pg> & <vc-know>;
 
-<vc-request>: <vc-trans> or
+% <vc-trans> & QI+: "You requested these favors why?"
+<vc-request>: (<vc-trans> & {QI+}) or
   ({@MV+} & (TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 request.v: VERB_PLI(<vc-request>);
 requests.v: VERB_S_T(<vc-request>);
