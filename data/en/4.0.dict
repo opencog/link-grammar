@@ -10227,7 +10227,7 @@ when:
   or [MJl+]0.5
   or ({JT-} & MJr- & Qw+)
   or ({EW-} & (QJ- or QJ+))
-  or ({hCO-} & {EW-} & Ww- & {Qw+})
+  or ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+})
   or ((<subcl-verb> or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & dCO*s+) or (Xd- & Xc+ & E+)));
 
