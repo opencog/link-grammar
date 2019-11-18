@@ -7683,6 +7683,7 @@ teaches.v:
   (<verb-and-sp-i-> & ([<vc-teach>]0.2 or ())) or
   ((<vc-teach>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
+% (<verb-sp,pp> & @MV+ & QI+): "You taught there when?"
 taught.v-d:
   
   ((<verb-sp,pp> & (<vc-teach>)) or
@@ -7692,6 +7693,7 @@ taught.v-d:
   (<verb-pv-b> &
     (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
     ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or <to-verb>)))) or
+  (<verb-sp,pp> & @MV+ & QI+) or
   ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
