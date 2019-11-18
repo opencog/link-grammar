@@ -2745,7 +2745,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % QI+: "you did what?"
 <vc-do>:
   ((<b-minus>
-    or (O+ & {@MV+} & <verb-wall> & {QI+})
+    or (O+ & {@MV+} & <verb-wall> & {{Xc+} & QI+})
     or ({@MV+} & <verb-wall> & QI+)
     or [[@MV+ & O*n+]]
     or Vd+
@@ -4460,7 +4460,7 @@ planning.v confessing.v: <verb-pg> & <vc-plan>;
 
 % <vc-trans> & QI+: "you decided that when?"
 <vc-decide>:
-  (<vc-trans> & {QI+}) or
+  (<vc-trans> & {{Xc+} & QI+}) or
   ({@MV+} & {TH+ or {<QI+pref>} or
     <to-verb> or <embed-verb> or RSe+ or Zs-});
 
@@ -4515,7 +4515,7 @@ proposes.v: VERB_S_T(<vc-propose>);
 
 % <vc-propose> & QI+: "You proposed this to her when?"
 proposed.v-d:
-  VERB_SPPP_T(<vc-propose> & {QI+})
+  VERB_SPPP_T(<vc-propose> & {{Xc+} & QI+})
   or (<verb-s-pv> & {THi+ or TSi+ or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
@@ -4526,7 +4526,7 @@ proposing.v: <verb-pg> & <vc-propose>;
 % <vc-trans> & QI+: "You demand this why?"
 % O+ & <of-coord>: "You demanded this of him why?"
 <vc-demand>:
-  (<vc-trans> & {QI+})
+  (<vc-trans> & {{Xc+} & QI+})
   or ({O+} & <of-coord>)
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
@@ -4614,7 +4614,7 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
   ((({O+ or <b-minus>} & {K+ or QI+}) or
     (K+ & {[[@MV+]]} & O*n+) or
     [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({@MV+} & (<to-verb> or Pg+));
+  ({@MV+} & ((<to-verb> & {{Xc+} & QI+}) or Pg+));
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v: VERB_S_T(<vc-start>);
@@ -4877,7 +4877,7 @@ figuring.v: <verb-pg> & <vc-figure>;
 % <vc-trans> & QI+: "you said this to her where?"
 %    "you indicate this why?"
 <vc-predict>:
-  (<vc-trans> & {QI+})
+  (<vc-trans> & {{Xc+} & QI+})
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
   or ({@MV+} & (<QI+pref> & {MV+}));
 
@@ -4977,7 +4977,7 @@ knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
 knowing.v: <verb-pg> & <vc-know>;
 
 % <vc-trans> & QI+: "You requested these favors why?"
-<vc-request>: (<vc-trans> & {QI+}) or
+<vc-request>: (<vc-trans> & {{Xc+} & QI+}) or
   ({@MV+} & (TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 request.v: VERB_PLI(<vc-request>);
 requests.v: VERB_S_T(<vc-request>);
