@@ -1,9 +1,6 @@
+# Javascript Bindings for Link Grammar
 
-# Link Grammar Parser
-
-A node library which interfaces a well known link grammar native [library](<http://www.link.cs.cmu.edu/link/>)
-
-The point of this project is to make the library easier to use, especially in node!
+A node library for Link Grammar
 
 ## Building Yourself
 
@@ -12,14 +9,11 @@ The point of this project is to make the library easier to use, especially in no
 
 Which will install, clean, compile, and test the project.
 
-# Documentation
-
-*Review list of Grammar Links [here](<http://www.link.cs.cmu.edu/link/dict/>)*.
-
-# 
-
-The parser is built using the awesome ffi library which allows us to communicate with a native library under the covers.
-Along with ffi, we also use ref library to reference the native objects used by the library.
+## Design
+The parser is built using the awesome ffi library which allows
+us to communicate with a native library under the covers.
+Along with ffi, we also use ref library to reference the native
+objects used by the library.
 
     ffi = require 'ffi'
     ref = require 'ref'
@@ -32,22 +26,13 @@ Easier references to base types of data.
     string = ref.types.CString
     int = ref.types.int
 
-These are just references to different native structs, which are all just pointers because we never use their actual referenced object.
+These are just references to different native structs, which are
+all just pointers because we never use their actual referenced object.
 
     ParseOptions = pointerType 
     Dictionary = pointerType
     Sentence = pointerType
     Linkage = pointerType
-
-    CNode = Struct(
-    	label: ref.types.CString
-    	child: pointerType
-    	next: pointerType
-    	start: ref.types.int
-    	end: ref.types.int
-    )
-
-    CNodePtr = ref.refType CNode
 
 Here are the templates for the native functions we will use.
 
@@ -77,23 +62,14 @@ Load the library.
     lib = ffi.Library libPath, apiTemplate
     defaultDataPath = __dirname + '/../data/'
 
-Utility functions...
-
-    getNodePtrFromPtr = (ptr) ->
-    	tempPtr = ref.alloc CNodePtr
-    	ref.writePointer tempPtr, 0, ptr
-    	tempPtr.deref()
-
 Default configuration for data paths.
 
     defaultConfig =
-        dictPath: defaultDataPath + '4.0.dict'
-        ppPath: defaultDataPath + '4.0.knowledge'
-        consPath: defaultDataPath + '4.0.constituent-knowledge'
-        affixPath: defaultDataPath + '4.0.affix'
+        lang: 'en'
         verbose: false
 
-Main parser class which interfaces the native library to make it very simple to get link grammar data from an input string.
+Main parser class which interfaces the native library to make it
+very simple to get Link Grammar data from an input string.
 
     class LinkGrammar
     	
@@ -103,7 +79,7 @@ A few utility methods for the parser.
             @config = _.extend config or {}, defaultConfig
             @options = lib.parse_options_create()
             lib.parse_options_set_verbosity @options, (if @config.verbose then 1  else 0)
-            @dictionary = lib.dictionary_create @config.dictPath, @config.ppPath, @config.consPath, @config.affixPath
+            @dictionary = lib.dictionary_create @config.lang
 
 Parse input, and return linkage.
 
