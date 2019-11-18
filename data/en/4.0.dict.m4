@@ -2736,9 +2736,12 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % AUXILIARY VERBS
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
+% O+ & QI+: "you did that when?"
+% QI+: "you did what?"
 <vc-do>:
   ((<b-minus>
-    or (O+ & {@MV+} & <verb-wall>)
+    or (O+ & {@MV+} & <verb-wall> & {QI+})
+    or ({@MV+} & <verb-wall> & QI+)
     or [[@MV+ & O*n+]]
     or Vd+
     or ({N+} & (CX- or [[()]]))) & <mv-coord>)
@@ -3926,7 +3929,8 @@ endeavoured.v-d condescended.v-d deigned.v-d: VERB_SPPP_I(<vc-deign>);
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
-<vc-happen>: {@MV+} & {<to-verb> or THi+} & {VC+};
+% QI+ "it happened when?"
+<vc-happen>: {@MV+} & {<to-verb> or THi+ or QI+} & {VC+};
 happen.v occur.v: VERB_Y_PLI(<vc-happen>);
 happens.v occurs.v: VERB_Y_S(<vc-happen>);
 happened.v-d occured.v-d occurred.v-d: VERB_Y_SPPP(<vc-happen>);

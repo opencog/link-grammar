@@ -2216,11 +2216,11 @@ You asked her when?
 You helped her when?
 
 % Inverted questions, fixed with QI+
-
-% Inverted questions w/prepositional target
 You proposed to her when?
 You proposed when?
+It happened when?
 
+% Inverted questions w/prepositional target
 you reminded him of this when?
 you were reminded of this when?
 
@@ -2246,11 +2246,10 @@ You demanded this why?
 You demanded this of him why?
 You requested these favors why?
 
-
+you did what?
+You did that when?
 
 You put it where?
-It happened when?
-you did what?
 It happened how?
 You slept with who?
 

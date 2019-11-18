@@ -2710,9 +2710,12 @@ per "/.per": Us+ & Mp-;
 % AUXILIARY VERBS
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
+% O+ & QI+: "you did that when?"
+% QI+: "you did what?"
 <vc-do>:
   ((<b-minus>
-    or (O+ & {@MV+} & <verb-wall>)
+    or (O+ & {@MV+} & <verb-wall> & {QI+})
+    or ({@MV+} & <verb-wall> & QI+)
     or [[@MV+ & O*n+]]
     or Vd+
     or ({N+} & (CX- or [[()]]))) & <mv-coord>)
@@ -4234,7 +4237,8 @@ endeavoured.v-d condescended.v-d deigned.v-d:
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
-<vc-happen>: {@MV+} & {<to-verb> or THi+} & {VC+};
+% QI+ "it happened when?"
+<vc-happen>: {@MV+} & {<to-verb> or THi+ or QI+} & {VC+};
 happen.v occur.v: 
   ((<verb-y-pl,i> & (<vc-happen>)) or
   (<verb-and-sp-i-> & ([<vc-happen>] or ())) or
