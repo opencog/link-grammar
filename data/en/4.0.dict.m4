@@ -6881,7 +6881,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <prep-main-a>:
   <prep-main-b>
   or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
-  or (Wj- & Qd+)
+  or (Wj- & (Qd+ or Qv+))
   or <fronted>;
 
 <prep-main-t>:
@@ -10610,12 +10610,11 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 ....x ….x:
   We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or TH+ or QI+ or (R+ & B+ & {S+}));
 
-% Elipsis as verb: "Lud, son of Shem, ..."
-% Arghh. I really want to have Qd- here too, to handle: "In what way...?"
-% but currently, the post-processing "S-V inversion required8" rule halts this.
+% Ellipsis as verb: "Lud, son of Shem, ..."
+% Qv-: "In what way...?
 % O+: "I did not ... what you said"
 ....v ….v:
-  (S- or I-) & {O+} & <verb-wall>;
+  (S- or I- or Qv-) & {O+} & <verb-wall>;
 
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."
@@ -10626,10 +10625,10 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 ....wh ….wh:
   RS- & B-;
 
-% Conjoined: "either ... or  ..."
+% SJ: Conjoined: "either ... or  ..."
 ....n ….n:
-  ({D+} & SJl+)
-  or ({D+} & SJr-);
+  ({D+} & SJl+) or
+  ({D+} & SJr-);
 
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%

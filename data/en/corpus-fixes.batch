@@ -2151,13 +2151,14 @@ By what means?
 In what way?
 To what end?
 For what reason?
-% Elipsis doesn't work, because the Qd- link can't be used without
-% the SI link, due to post-processing. Arghhh.
 By what means ...?
 In what way ...?
 To what end ...?
 For what reason ...?
-
+By what means...?
+In what way...?
+To what end...?
+For what reason...?
 
 How much should I use?
 How much sugar should I use?
@@ -2186,7 +2187,6 @@ Are we off?
 Is it in place?
 Is that when the meeting is?
 
-% This is blocked by post-processing....
 How long before you got home?
 Approximately how long before you got home?
 Approximately how long was it before you got home?
