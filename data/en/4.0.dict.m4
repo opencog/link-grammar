@@ -4022,7 +4022,12 @@ seems.v: VERB_Y_S(<vc-seem>) or <verb-fronted> or <verb-si>;
 seemed.v-d: VERB_Y_SPPP(<vc-seem>) or <verb-fronted> or <verb-si>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-care>: {@MV+} & {<to-verb> or QI+};
+% qi-pref: give slight cost preference to QI over MV, for example:
+% "I do not care where you put it"
+% "I wonder when he will come"
+<QI+pref>: [QI+]-0.05;
+
+<vc-care>: {@MV+} & {<to-verb> or <QI+pref>};
 care.v: VERB_PLI(<vc-care>);
 cares.v: VERB_S_I(<vc-care>);
 cared.v-d: VERB_SPPP_I(<vc-care>);
@@ -4152,8 +4157,7 @@ insists.v: VERB_S_I(<vc-insist>);
 insisted.v-d: VERB_SPPP_I(<vc-insist>);
 insisting.v: (<vc-insist> & <verb-pg,ge>) or <verb-ge-d>;
 
-% [QI+]-0.05: "I wonder when he will come": preference to QI over MVs
-<vc-wonder>: {@MV+} & {[QI+]-0.05};
+<vc-wonder>: {@MV+} & {<QI+pref>};
 wonder.v inquire.v: VERB_PLI(<vc-wonder>);
 wonders.v inquires.v: VERB_S_I(<vc-wonder>);
 wondered.v-d inquired.v-d: VERB_SPPP_I(<vc-wonder>);
@@ -4441,7 +4445,8 @@ planning.v confessing.v: <verb-pg> & <vc-plan>;
 
 <vc-decide>:
   <vc-trans> or
-  ({@MV+} & {QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs-});
+  ({@MV+} & {TH+ or {<QI+pref>} or
+    <to-verb> or <embed-verb> or RSe+ or Zs-});
 
 decide.v resolve.v: VERB_PLI(<vc-decide>);
 decides.v resolves.v: VERB_S_T(<vc-decide>);
@@ -4458,7 +4463,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 <vc-forget>:
   {<vc-trans>}
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+  or ({@MV+} & (<QI+pref> or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
@@ -4474,7 +4479,8 @@ remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
 <vc-learn>:
   {<vc-trans>} or
-  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or QI+ or (OF+ & <mv-coord>)));
+  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or
+      <QI+pref> or (OF+ & <mv-coord>)));
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
 learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-opener>;

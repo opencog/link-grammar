@@ -4392,7 +4392,12 @@ seemed.v-d:
   ((<vc-seem>) & <verb-and-sp-i+>)) or <verb-fronted> or <verb-si>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-care>: {@MV+} & {<to-verb> or QI+};
+% qi-pref: give slight cost preference to QI over MV, for example:
+% "I do not care where you put it"
+% "I wonder when he will come"
+<QI+pref>: [QI+]-0.05;
+
+<vc-care>: {@MV+} & {<to-verb> or <QI+pref>};
 care.v: 
   ((<verb-pl,i> & (<vc-care>)) or
   ({@E-} & hXd- & dWi- & (<vc-care>) & hXc+) or
@@ -4646,8 +4651,7 @@ insisted.v-d:
   ((<vc-insist>) & <verb-and-sp-i+>));
 insisting.v: (<vc-insist> & <verb-pg,ge>) or <verb-ge-d>;
 
-% [QI+]-0.05: "I wonder when he will come": preference to QI over MVs
-<vc-wonder>: {@MV+} & {[QI+]-0.05};
+<vc-wonder>: {@MV+} & {<QI+pref>};
 wonder.v inquire.v: 
   ((<verb-pl,i> & (<vc-wonder>)) or
   ({@E-} & hXd- & dWi- & (<vc-wonder>) & hXc+) or
@@ -5173,7 +5177,8 @@ planning.v confessing.v: <verb-pg> & <vc-plan>;
 
 <vc-decide>:
   <vc-trans> or
-  ({@MV+} & {QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs-});
+  ({@MV+} & {TH+ or {<QI+pref>} or
+    <to-verb> or <embed-verb> or RSe+ or Zs-});
 
 decide.v resolve.v: 
   ((<verb-pl,i> & (<vc-decide>)) or
@@ -5202,7 +5207,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 <vc-forget>:
   {<vc-trans>}
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (QI+ or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+  or ({@MV+} & (<QI+pref> or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
 remember.v forget.v: 
   ((<verb-pl,i> & (<vc-forget>)) or
@@ -5237,7 +5242,8 @@ remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
 <vc-learn>:
   {<vc-trans>} or
-  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or QI+ or (OF+ & <mv-coord>)));
+  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or
+      <QI+pref> or (OF+ & <mv-coord>)));
 learn.v: 
   ((<verb-pl,i> & (<vc-learn>)) or
   ({@E-} & hXd- & dWi- & (<vc-learn>) & hXc+) or
