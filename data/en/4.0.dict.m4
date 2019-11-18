@@ -4477,10 +4477,11 @@ forgotten.v:
 remembering.g forgetting.g: (<vc-forget> & <verb-ge>) or <verb-ge-d>;
 remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
+% OF+ & QI+: "you learned of this when?
 <vc-learn>:
   {<vc-trans>} or
   ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or
-      <QI+pref> or (OF+ & <mv-coord>)));
+      <QI+pref> or (OF+ & {{Xc+} & QI+} & <mv-coord>)));
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
 learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-opener>;
@@ -4853,7 +4854,7 @@ figuring.v: <verb-pg> & <vc-figure>;
 <vc-predict>:
   <vc-trans>
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
-  or ({@MV+} & (QI+ & {MV+}));
+  or ({@MV+} & (<QI+pref> & {MV+}));
 
 % See also: words.v.10 for paraphrasing verbs
 % I- & B- & <embed-verb>: "What did John say you should do?"
@@ -4880,7 +4881,7 @@ assessed.v-d established.v-d evaluated.v-d examined.v-d questioned.v-d
 tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
 envisaged.v-d documented.v-d:
   VERB_SPPP_T(<vc-predict>)
-  or (<verb-s-pv> & ({THi+} or <vc-predict>))
+  or (<verb-s-pv> & ({THi+} or QI+))
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -4906,7 +4907,7 @@ hypothesizing.v hypothesising.v documenting.v envisaging.v:
 <verb-pg> & <vc-predict>;
 
 <vc-guess>: {<vc-trans>} or
-  ({@MV+} & (TH+ or QI+ or <embed-verb> or RSe+ or Zs-));
+  ({@MV+} & (TH+ or <QI+pref> or <embed-verb> or RSe+ or Zs-));
 
 % esplain: basilect of explain
 guess.v estimate.v understand.v notice.v explain.v esplain.v demonstrate.v:
@@ -4979,12 +4980,12 @@ minded.v-d: VERB_SPPP_T(<vc-mind>) or <verb-pv> or <verb-phrase-opener>;
 minding.g: (<vc-mind> & <verb-ge>) or <verb-ge-d>;
 minding.v: <verb-pg> & <vc-mind>;
 
-<vc-study>: {<vc-trans>} or ({@MV+} & QI+);
+<vc-study>: {<vc-trans>} or ({@MV+} & <QI+pref>);
 study.v: VERB_PLI(<vc-study>);
 studies.v: VERB_S_T(<vc-study>);
 studied.v-d:
   VERB_SPPP_T(<vc-study>) or
-  <verb-pv> or
+  (<verb-pv> & {QI+}) or
   <verb-adj> or
   <verb-phrase-opener>;
 studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
