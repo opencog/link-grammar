@@ -4985,6 +4985,7 @@ minded.v-d: VERB_SPPP_T(<vc-mind>) or <verb-pv> or <verb-phrase-opener>;
 minding.g: (<vc-mind> & <verb-ge>) or <verb-ge-d>;
 minding.v: <verb-pg> & <vc-mind>;
 
+% <verb-pv> & QI+: "Anesthesiology is studied where?"
 <vc-study>: {<vc-trans>} or ({@MV+} & <QI+pref>);
 study.v: VERB_PLI(<vc-study>);
 studies.v: VERB_S_T(<vc-study>);
@@ -4997,12 +4998,13 @@ studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
 studying.v: <verb-pg> & <vc-study>;
 
 % QI+ link: "I will discuss which vitamins I take"
+% <verb-pv> & QI+: "It was discussed where?"
 <vc-discuss>: <vc-trans> or ({@MV+} & (Pg+ or QI+));
 discuss.v: VERB_PLI(<vc-discuss>);
 discusses.v: VERB_S_T(<vc-discuss>);
 discussed.v-d:
   VERB_SPPP_T(<vc-discuss>)
-  or <verb-pv>
+  or (<verb-pv> & {QI+})
   or <verb-adj>
   or <verb-phrase-opener>;
 discussing.g: (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
@@ -5020,7 +5022,7 @@ justifies.v risks.v avoids.v involves.v favors.v:
 opposed.v-d enjoyed.v-d advocated.v-d contemplated.v-d entailed.v-d
 necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d:
   VERB_SPPP_T(<vc-oppose>) or
-  <verb-pv> or
+  (<verb-pv> & {QI+}) or
   <verb-adj> or
   <verb-phrase-opener>;
 
@@ -5041,7 +5043,7 @@ finishes.v practices.v resists.v quits.v: VERB_S_T(<vc-finish>);
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d:
   VERB_SPPP_T(<vc-finish> or ({Xc+} & Pa+))
-  or <verb-pv>
+  or (<verb-pv> & {QI+})
   or <verb-adj>
   or <verb-phrase-opener>;
 quit.v-d:
@@ -5110,7 +5112,8 @@ remaining.v: <verb-pg> & <vc-remain>;
     or (K+ & {[[@MV+]]} & O*n+)
     or [[@MV+ & O*n+]]) & <mv-coord>);
 
-grow.v: VERB_PLI(<vc-grow>) or <verb-sip>;
+% <verb-i> & QI+: "The crime rate began to grow when?"
+grow.v: VERB_PLI(<vc-grow>) or <verb-sip> or (<verb-i> & QI+);
 grows.v: VERB_S_T(<vc-grow>) or <verb-si>;
 grew.v-d: VERB_SP_T(<vc-grow>) or <verb-si>;
 grown.v:

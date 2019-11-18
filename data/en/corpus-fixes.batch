@@ -2203,15 +2203,25 @@ Sophy wondered what number to count to
 Sophy wondered what number to count up to
 Sophy wondered whose favorite number to count up to
 
-% Inverted questions, fixed with QI: Pvf- & QI+ on participles
+% Inverted questions, fixed with Pvf- & QI+ on participles
 bird flu was observed where?
 bird flu was observed how?
 bird flu was observed when?
 Anesthesiology is studied where?
+It was discussed where?
+The crime rate began to grow when?
+
+% Inverted questions, fixed with QI+
 
 % Inverted questions w/prepositional target
 You proposed to her when?
 You proposed when?
+
+It became commonplace at what time?
+It became commonplace when?
+It really became commonplace when?
+It remains commonplace now?
+Would you say it remains commonplace even now?
 
 % this, that as topics (that.j-t)
 you decided that when?
@@ -2220,6 +2230,12 @@ you decided on this when?
 you learned of this when?
 you started to wonder this, when?
 You proposed this to her when?
+you said this to her where?
+You demanded this why?
+You demanded this of him why?
+You requested these favors why?
+
+
 
 You put it where?
 It happened when?
