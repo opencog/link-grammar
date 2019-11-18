@@ -2469,8 +2469,11 @@ per "/.per": Us+ & Mp-;
 %        e.g. "In the corner lay it" with it as object. That's just
 %        wrong... but this requires lots of places to fix.
 % VJrpi-: "I aim to do something and also to help."
+% I & [()]: costly, if there is no wall, but when does this happen?
+% I'm confused, examples are needed... verb-pl,i is used everywhere....
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
-<verb-ico>:  {@E-} & ((I- & {<verb-wall> or VJrpi-} & {@E-}) or ({[hCO-]} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-}) or
+                      ({[hCO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
