@@ -2402,6 +2402,9 @@ per "/.per": Us+ & Mp-;
 
 <mv-coord>: {@MV+} & {VC+};
 
+% <of-coord>: "You were informed of this when?"
+<of-coord>: OF+ & {QI+} & <mv-coord>;
+
 % When we are done, remove the option costly NULL below.
 <WALL>: hWV+ or [[()]];
 % <WALL>: hWV+;
@@ -4098,7 +4101,7 @@ reasoning.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
 
-<vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>)};
+<vc-brag>: {@MV+} & {<embed-verb> or TH+ or RSe+ or <of-coord>};
 boast.v brag.v complain.v hint.v mutter.v whisper.v:
   VERB_PLI(<vc-brag>);
 boasts.v brags.v complains.v hints.v mutters.v whispers.v:
@@ -4110,7 +4113,7 @@ boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
 boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
   <verb-pg> & <vc-brag>;
 
-<vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or (OF+ & <mv-coord>) or BW-};
+<vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or <of-coord> or BW-};
 dream.v: VERB_PLI(<vc-dream>);
 dreams.v: VERB_S_I(<vc-dream>);
 dreamt.v-d dreamed.v-d: VERB_SPPP_I(<vc-dream>);
@@ -4124,7 +4127,7 @@ dreaming.v: <verb-pg> & <vc-dream>;
 % O+ & Pa**j: "She will think it true."
 % TO+ & Xc+: allows null-infinitive: "No, I did not think to"
 <vc-think>:
-  ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or (OF+ & <mv-coord>) or BW-})
+  ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or <of-coord> or BW-})
   or (<mv-coord> & <null-verb>)
   or (O+ & {@MV+} & {O*n+ or Pa**j+});
 
@@ -4511,7 +4514,7 @@ proposing.v: <verb-pg> & <vc-propose>;
 % TO+ & Xc+: allows null-infinitive: "I did not demand to"
 <vc-demand>:
   <vc-trans>
-  or (OF+ & <mv-coord>)
+  or <of-coord>
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
@@ -4525,7 +4528,7 @@ demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 
 <vc-beg>:
   {<vc-trans>}
-  or (OF+ & <mv-coord>)
+  or <of-coord>
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 beg.v plead.v: VERB_PLI(<vc-beg>);
 begs.v pleads.v: VERB_S_T(<vc-beg>);
@@ -5582,22 +5585,22 @@ cautioning.g: (<vc-caution> & <verb-ge>) or <verb-ge-d>;
 cautioning.v: <verb-pg> & <vc-caution>;
 
 <vc-warn>:
-  ((O+ or <b-minus>) & <mv-coord> & {TH+ or <embed-verb> or <too-verb> or (OF+ & <mv-coord>)}) or
-  (<mv-coord> & {TH+ or Zs- or (OF+ & <mv-coord>)}) or
+  ((O+ or <b-minus>) & <mv-coord> & {TH+ or <embed-verb> or <too-verb> or <of-coord>}) or
+  (<mv-coord> & {TH+ or Zs- or <of-coord>}) or
   ([[@MV+ & O*n+]]);
 
 warn.v advise.v: VERB_PLI(<vc-warn>);
 warns.v advises.v: VERB_S_T(<vc-warn>);
 warned.v-d advised.v-d:
   VERB_SPPP_T(<vc-warn>) or
-  (<verb-pv> & {TH+ or <embed-verb> or Zs- or <to-verb> or (OF+ & <mv-coord>)}) or
+  (<verb-pv> & {TH+ or <embed-verb> or Zs- or <to-verb> or <of-coord>}) or
   (<mv-coord> & {TH+ or <embed-verb> or <to-verb> or OF+} & <verb-phrase-opener>);
 warning.g advising.g: (<vc-warn> & <verb-ge>) or <verb-ge-d>;
 warning.v advising.v: <verb-pg> & <vc-warn>;
 
 <vc-hear>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
-  (<mv-coord> & {TH+ or Zs- or <embed-verb> or (OF+ & {QI+} & <mv-coord>)}) or
+  (<mv-coord> & {TH+ or Zs- or <embed-verb> or <of-coord>}) or
   ([[@MV+ & O*n+]]);
 
 hear.v: VERB_PLI(<vc-hear>);
@@ -5850,7 +5853,7 @@ writing.g reading.g charging.g drawing.g:
   ({(B- & {O+ or K+}) or
     <vc-opt-ditrans> or
     (O+ & K+) or
-    (OF+ & <mv-coord>) or
+    <of-coord> or
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & <mv-coord>);
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
@@ -6163,7 +6166,7 @@ tellin': <verb-pg> & <vc-tell>;
 <vc-ask>:
   ({(O+ & {O*n+}) or <b-minus>} & <mv-coord>
     & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-})
-  or (OF+ & <mv-coord>)
+  or <of-coord>
   or ([[@MV+ & O*n+ & <mv-coord>]]);
 
 ask.v: VERB_PLI(<vc-ask>);
@@ -6193,7 +6196,7 @@ helping.v: <verb-pg> & <vc-help>;
 
 <vc-remind>:
   ((O+ or <b-minus>) & {@MV+} &
-    (<too-verb> or TH+ or <embed-verb> or (OF+ & {QI+} & <mv-coord>))) or
+    (<too-verb> or TH+ or <embed-verb> or <of-coord>)) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
 remind.v: VERB_PLI(<vc-remind>);
@@ -6203,14 +6206,14 @@ reminded.v-d:
   (<verb-pv> & {<to-verb> or
      TH+ or
      <embed-verb> or
-    (OF+ & {QI+} & <mv-coord>)}) or
+     <of-coord>}) or
   ({{@MV+} & (<embed-verb> or
-    <to-verb> or TH+ or (OF+ & <mv-coord>))} & <verb-phrase-opener>);
+    <to-verb> or TH+ or <of-coord>)} & <verb-phrase-opener>);
 reminding.g: (<vc-remind> & <verb-ge>) or <verb-ge-d>;
 reminding.v: <verb-pg> & <vc-remind>;
 
 <vc-inform>:
-  ((O+ or <b-minus>) & <mv-coord> & {(OF+ & {QI+} & <mv-coord>) or TH+ or Zs- or <embed-verb>}) or
+  ((O+ or <b-minus>) & <mv-coord> & {<of-coord> or TH+ or Zs- or <embed-verb>}) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
 inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
@@ -6222,7 +6225,7 @@ informs.v reassures.v alerts.v guarantees.v notifies.v forewarns.v:
 informed.v-d reassured.v-d alerted.v-d guaranteed.v-d
 notified.v-d forewarned.v-d:
   VERB_SPPP_T(<vc-inform>)
-  or (<verb-pv> & {<embed-verb> or TH+ or Zs- or (OF+ & <mv-coord>)})
+  or (<verb-pv> & {<embed-verb> or TH+ or Zs- or <of-coord>})
   or ({{@MV+} & (<embed-verb> or TH+ or OF+)} & <verb-phrase-opener>)
   or <verb-adj>;
 
@@ -6233,7 +6236,7 @@ informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
   <verb-pg> & <vc-inform>;
 
 <vc-assure>:
-  ((O+ or <b-minus>) & <mv-coord> & {(OF+ & <mv-coord>) or TH+ or Zs- or <embed-verb>}) or
+  ((O+ or <b-minus>) & <mv-coord> & {<of-coord> or TH+ or Zs- or <embed-verb>}) or
   ([[@MV+ & O*n+ & <mv-coord>]]) or
   ({@MV+} & (TH+ or <embed-verb>));
 
@@ -6241,7 +6244,7 @@ assure.v: VERB_PLI(<vc-assure>);
 assures.v: VERB_S_T(<vc-assure>);
 assured.v-d:
   VERB_SPPP_T(<vc-assure>)
-  or (<verb-pv> & {(OF+ & <mv-coord>) or <embed-verb> or TH+ or Zs-})
+  or (<verb-pv> & {<of-coord> or <embed-verb> or TH+ or Zs-})
   or ({{@MV+} & (<embed-verb> or TH+ or OF+)} & <verb-phrase-opener>);
 
 assuring.g: (<vc-assure> & <verb-ge>) or <verb-ge-d>;
