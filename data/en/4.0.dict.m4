@@ -4011,7 +4011,7 @@ appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 % <verb-si>: "so seems it"
 % TO+ & Xc+: allows null-infinitive: "yes, it would seem to"
 <vc-seem>:
-  {@MV+} & 
+  {@MV+} &
     ((Pa+ & <verb-wall>)
     or <tof-verb>
     or <null-verb>
@@ -5597,7 +5597,7 @@ warning.v advising.v: <verb-pg> & <vc-warn>;
 
 <vc-hear>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
-  (<mv-coord> & {TH+ or Zs- or <embed-verb> or (OF+ & <mv-coord>)}) or
+  (<mv-coord> & {TH+ or Zs- or <embed-verb> or (OF+ & {QI+} & <mv-coord>)}) or
   ([[@MV+ & O*n+]]);
 
 hear.v: VERB_PLI(<vc-hear>);
@@ -6192,19 +6192,25 @@ helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
 
 <vc-remind>:
-  ((O+ or <b-minus>) & {@MV+} & (<too-verb> or TH+ or <embed-verb> or (OF+ & <mv-coord>))) or
+  ((O+ or <b-minus>) & {@MV+} &
+    (<too-verb> or TH+ or <embed-verb> or (OF+ & {QI+} & <mv-coord>))) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
 remind.v: VERB_PLI(<vc-remind>);
 reminds.v: VERB_S_T(<vc-remind>);
-reminded.v-d: VERB_SPPP_T(<vc-remind>) or (<verb-pv> & {<to-verb> or TH+ or <embed-verb> or
-(OF+ & <mv-coord>)}) or ({{@MV+} & (<embed-verb> or <to-verb> or TH+ or
-(OF+ & <mv-coord>))} & <verb-phrase-opener>);
+reminded.v-d:
+  VERB_SPPP_T(<vc-remind>) or
+  (<verb-pv> & {<to-verb> or
+     TH+ or
+     <embed-verb> or
+    (OF+ & {QI+} & <mv-coord>)}) or
+  ({{@MV+} & (<embed-verb> or
+    <to-verb> or TH+ or (OF+ & <mv-coord>))} & <verb-phrase-opener>);
 reminding.g: (<vc-remind> & <verb-ge>) or <verb-ge-d>;
 reminding.v: <verb-pg> & <vc-remind>;
 
 <vc-inform>:
-  ((O+ or <b-minus>) & <mv-coord> & {(OF+ & <mv-coord>) or TH+ or Zs- or <embed-verb>}) or
+  ((O+ or <b-minus>) & <mv-coord> & {(OF+ & {QI+} & <mv-coord>) or TH+ or Zs- or <embed-verb>}) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
 inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
@@ -6727,7 +6733,7 @@ seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q:
-  {@E-} & 
+  {@E-} &
     (((Sp- or I- or (RS- & Bp-)) & <vc-paraph>)
     or (SIpj+ & <vc-paraph-inv>));
 
