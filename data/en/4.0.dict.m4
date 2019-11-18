@@ -2403,7 +2403,7 @@ per "/.per": Us+ & Mp-;
 <mv-coord>: {@MV+} & {VC+};
 
 % <of-coord>: "You were informed of this when?"
-<of-coord>: OF+ & {QI+} & <mv-coord>;
+<of-coord>: OF+ & {{Xc+} & QI+} & <mv-coord>;
 
 % When we are done, remove the option costly NULL below.
 <WALL>: hWV+ or [[()]];
@@ -7993,7 +7993,7 @@ why:
     or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
-    or SJl+ or SJr-
+    or [SJl+ or SJr-]0.5
     or ({EW-} & (QJ- or QJ+))
     );
 
@@ -8007,7 +8007,7 @@ where:
     & (
       ({hCO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]0.5
-      or SJl+ or SJr-
+      or [SJl+ or SJr-]0.5
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
       or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
@@ -8033,7 +8033,7 @@ how:
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]0.5
   or ({EW-} & (QJ- or QJ+))
-  or SJl+ or SJr-
+  or [SJl+ or SJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 %%%  or ((EAh+ or EEh+) & Ww-);
 
