@@ -664,41 +664,40 @@ static bool possible_connection(prune_context *pc,
 
 	if (1 == dist)
 	{
-		if ((lc->next != NULL) || (rc->next != NULL)) return false;
+		if ((lc->next != NULL) || (rc->next != NULL))
+			return false;
+		return true;
 	}
-	else
+
 	if ((rword > lc->farthest_word) || (lword < rc->farthest_word))
+		return false;
+
+	/* We arrive here if the words are NOT next to each other. Say the
+	 * gap between them contains W non-optional words. We also know
+	 * that we are going to parse with N null-links (which involves
+	 * sub-parsing with the range of [0, N] null-links).
+	 * If there is not at least one intervening connector (i.e. both
+	 * of lc->next and rc->next are NULL) then:
+	 * islands_ok=false:
+	 * There will be W null-linked words, and W must be <= N.
+	 * islands_ok=true:
+	 * There will be at least one island.
+	 */
+	if ((lc->next == NULL) && (rc->next == NULL) &&
+	    (!lc->multi) && (!rc->multi) &&
+	    more_nulls_than_allowed(pc, lword, rword))
 	{
 		return false;
 	}
-	else
+
+	if ((lc->next != NULL) && (rc->next != NULL))
 	{
-		/* We arrive here if the words are NOT next to each other. Say the
-		 * gap between them contains W non-optional words. We also know
-		 * that we are going to parse with N null-links (which involves
-		 * sub-parsing with the range of [0, N] null-links).
-		 * If there is not at least one intervening connector (i.e. both
-		 * of lc->next and rc->next are NULL) then:
-		 * islands_ok=false:
-		 * There will be W null-linked words, and W must be <= N.
-		 * islands_ok=true:
-		 * There will be at least one island.
-		 */
-		if ((lc->next == NULL) && (rc->next == NULL) &&
-			 (!lc->multi) && (!rc->multi) &&
-			 more_nulls_than_allowed(pc, lword, rword))
-		{
-			return false;
-		}
-
-		if ((lc->next != NULL) && (rc->next != NULL))
-		{
-			if (lc->next->nearest_word > rc->next->nearest_word)
-				return false; /* Cross link. */
-		}
-
-		if (is_cross_mlink(pc, lc, rc, lword, rword)) return false;
+		if (lc->next->nearest_word > rc->next->nearest_word)
+			return false; /* Cross link. */
 	}
+
+	if (is_cross_mlink(pc, lc, rc, lword, rword))
+		return false;
 
 	return true;
 }
