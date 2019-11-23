@@ -470,7 +470,7 @@ static bool find_no_xlink_disjunct(prune_context *pc, int w,
 	Sentence sent = pc->sent;
 	Disjunct *d = sent->word[w].d;
 
-	/* One-direction disjuncts has already been validated.  */
+	/* One-direction disjuncts have already been validated.  */
 	if ((pc->ml[w].nw[0]  == w) || (pc->ml[w].nw[1] == w)) return true;
 
 	for (d = sent->word[w].d; d != NULL; d = d->next)
@@ -1059,9 +1059,9 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 
-		/* verbosity=5 revealed that the xlink counter is never set after
-		 * the first 2 passes. So neutralize the mlink table here to save a
-		 * slight overhead. */
+		/* The verbose debug printouts revealed that the xlink counter is
+		 * never set after the first 2 passes. So neutralize the mlink table
+		 * here to save a slight overhead. */
 		pc->ml = NULL;
 	}
 	while (!extra_null_word || pc->always_parse);
@@ -1867,7 +1867,7 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 
 /**
  * Delete disjuncts whose links would cross those implied by the mlink table.
- * Since links are not allowed to cross, such disjuncts would create nulls
+ * Since links are not allowed to cross, such disjuncts would create null
  * links. So this optimization can only be done when parsing a sentence
  * with null_count==0 (in which null links are not allowed).
  * Possible FIXMEs:
