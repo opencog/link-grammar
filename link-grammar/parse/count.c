@@ -682,7 +682,7 @@ static Count_bin do_count(
 		 * of null words. */
 		t->count = zero;
 		w = lw + 1;
-		for (int opt = 0; opt <= !!ctxt->sent->word[w].optional; opt++)
+		for (int opt = 0; opt <= (int)ctxt->sent->word[w].optional; opt++)
 		{
 			null_count += opt;
 

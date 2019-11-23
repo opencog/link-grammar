@@ -395,7 +395,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 		RECOUNT({xt->set.recount = 0;})
 
 		w = lw + 1;
-		for (int opt = 0; opt <= !!pex->words[w].optional; opt++)
+		for (int opt = 0; opt <= (int)pex->words[w].optional; opt++)
 		{
 			null_count += opt;
 			for (dis = pex->words[w].d; dis != NULL; dis = dis->next)
