@@ -12,8 +12,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>                      // INT_MAX
-
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
