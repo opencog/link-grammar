@@ -369,7 +369,6 @@ char *lg_readline(const char *mb_prompt)
 	static EditLine *el = NULL;
 	static char *mb_line;
 
-	int numc;
 	size_t byte_len;
 	const wchar_t *wc_line;
 	char *nl;
@@ -407,6 +406,7 @@ char *lg_readline(const char *mb_prompt)
 		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
+	int numc = 1; /*  Uninitialized at libedit. */
 	wc_line = el_wgets(el, &numc);
 
 	/* Received end-of-file */
