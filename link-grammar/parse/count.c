@@ -806,8 +806,9 @@ static Count_bin do_count(
 				if (rgc == &lrcnt_cache_zero) fml_re = NULL;
 			}
 		}
-		else if (re != NULL)
+		else
 		{
+			/* Here re != NULL. */
 			unsigned int rnull_start;
 			lrcnt_cache = is_lrcnt(ctxt, 1, re, rw, w, null_count, &rnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
