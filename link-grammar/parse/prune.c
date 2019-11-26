@@ -1905,11 +1905,11 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 				{
 					if  (nw1 == fw1)
 					{
-						/* This word must have LHS link. So disjuncts which
-						 * don't have an LHS jet can be deleted. However,
-						 * naturally there are no connectors to assign BAD_WORD
-						 * to. So create a dummy one. The same is done in the
-						 * other direction. */
+						/* Word w must have LHS link to word fw1. So disjuncts
+						 * of word nw1 which don't have an RHS jet can be
+						 * deleted.  However, naturally there are no
+						 * connectors to assign BAD_WORD to. So create a dummy
+						 * one. The same is done for the other direction. */
 						d->left = &bad_connector;
 						N_deleted[0]++;
 						PR(1);
