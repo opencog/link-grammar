@@ -855,7 +855,7 @@ static Count_bin do_count(
 				Count_bin r_cmulti = INIT_NO_COUNT;
 				Count_bin r_dmulti = INIT_NO_COUNT;
 				Count_bin r_dcmulti = INIT_NO_COUNT;
-				Count_bin r_bnl = INIT_NO_COUNT;
+				Count_bin r_bnl = (le == NULL) ? INIT_NO_COUNT : 0;
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
