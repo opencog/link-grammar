@@ -191,7 +191,7 @@ Or optionally (in order to see relevant debug messages from `preparation.c`):
 7)  -test=<values> for the pruning subsystem:
 `len-multi-pruning:N` - Prune per null_count for more than N-token sentences.
 `always-parse` - Don't use a parse shortcut and always fully prune.
-`no-mlink` - Don't prune using an mlink table,
+`no-mlink` - Don't prune using an mlink table.
 
 Debugging and STDIO streams
 ---------------------------

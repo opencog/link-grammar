@@ -25,6 +25,8 @@
 
 /* This file contains the exhaustive search algorithm. */
 
+#define D_COUNT 5 /* General debug level for this file. */
+
 typedef struct Table_connector_s Table_connector;
 struct Table_connector_s
 {
@@ -109,7 +111,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 #define MAX_LOG2_TABLE_SIZE 24
 	/* Clamp at max 8*(1<<MAX_LOG2_TABLE_SIZE)==128 MBytes on 64 bit systems. */
 	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
-	lgdebug(+5, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
+	lgdebug(+D_COUNT, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector));
 	ctxt->table_size = (1U << shift);
 	/* ctxt->log2_table_size = shift; */
 	ctxt->table = (kept_table != NULL) ? kept_table :
@@ -137,13 +139,35 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 
 static void free_table_lrcnt(count_context_t *ctxt)
 {
-	if (verbosity_level(+5))
+	if (verbosity_level(D_COUNT))
 	{
 		unsigned int table_usage = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size) -
 			ctxt->table_lrcnt_available_count;
+		unsigned int nonzero = 0;
+		unsigned int any_null = 0;
+		unsigned int zero = 0;
+		unsigned int non_max_null = 0;
 
-		lgdebug(+0, "Usage %u/%u %.2f%%\n", table_usage, ctxt->table_lrcnt_size,
-		        100.0f*table_usage / ctxt->table_lrcnt_size);
+		for (unsigned int i = 0; i < ctxt->table_lrcnt_size; i++)
+		{
+			if (ctxt->table_lrcnt[i].tracon_id == -1) continue;
+
+			if (ctxt->table_lrcnt[i].status == 1)
+				nonzero++;
+			else if (ctxt->table_lrcnt[i].null_count == ANY_NULL_COUNT)
+				any_null++;
+			else if (ctxt->sent->null_count > ctxt->table_lrcnt[i].null_count)
+				non_max_null++;
+			else if (ctxt->sent->null_count == ctxt->table_lrcnt[i].null_count)
+				zero++;
+		}
+
+		lgdebug(+0, "Usage %u/%u %.2f%% "
+		        "(usage = non_max_null %u + other %u, "
+		        "other = any_null_zero %u + zero %u + nonzero %u)\n",
+		        table_usage, ctxt->table_lrcnt_size,
+		        100.0f*table_usage / ctxt->table_lrcnt_size,
+		        non_max_null, table_usage-non_max_null, any_null, zero, nonzero);
 	}
 
 	free(ctxt->table_lrcnt);
@@ -660,7 +684,7 @@ static Count_bin do_count(
 		 * of null words. */
 		t->count = zero;
 		w = lw + 1;
-		for (int opt = 0; opt <= !!ctxt->sent->word[w].optional; opt++)
+		for (int opt = 0; opt <= (int)ctxt->sent->word[w].optional; opt++)
 		{
 			null_count += opt;
 
@@ -729,7 +753,7 @@ static Count_bin do_count(
 	}
 	else
 	{
-		/* If the LHS count for a word would be zero for a left connector
+		/* If the LHS count for a word would be zero for a left-end connector
 		 * due to the distance of this word, we can skip its handling
 		 * entirely. So the checked word interval can be shortened. */
 		if ((le != NULL) && (re->nearest_word > le->farthest_word))
@@ -1048,7 +1072,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
-	DEBUG_TABLE_STAT(if (verbosity_level(+5)) table_stat(ctxt, sent));
+	DEBUG_TABLE_STAT(if (verbosity_level(+D_COUNT)) table_stat(ctxt, sent));
 
 	return hist;
 }

@@ -12,8 +12,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>                      // INT_MAX
-
 #include "api-structures.h"
 #include "connectors.h"
 #include "disjunct-utils.h"
@@ -472,7 +470,7 @@ static bool find_no_xlink_disjunct(prune_context *pc, int w,
 	Sentence sent = pc->sent;
 	Disjunct *d = sent->word[w].d;
 
-	/* One-direction disjuncts has already been validated.  */
+	/* One-direction disjuncts have already been validated.  */
 	if ((pc->ml[w].nw[0]  == w) || (pc->ml[w].nw[1] == w)) return true;
 
 	for (d = sent->word[w].d; d != NULL; d = d->next)
@@ -664,41 +662,40 @@ static bool possible_connection(prune_context *pc,
 
 	if (1 == dist)
 	{
-		if ((lc->next != NULL) || (rc->next != NULL)) return false;
+		if ((lc->next != NULL) || (rc->next != NULL))
+			return false;
+		return true;
 	}
-	else
+
 	if ((rword > lc->farthest_word) || (lword < rc->farthest_word))
+		return false;
+
+	/* We arrive here if the words are NOT next to each other. Say the
+	 * gap between them contains W non-optional words. We also know
+	 * that we are going to parse with N null-links (which involves
+	 * sub-parsing with the range of [0, N] null-links).
+	 * If there is not at least one intervening connector (i.e. both
+	 * of lc->next and rc->next are NULL) then:
+	 * islands_ok=false:
+	 * There will be W null-linked words, and W must be <= N.
+	 * islands_ok=true:
+	 * There will be at least one island.
+	 */
+	if ((lc->next == NULL) && (rc->next == NULL) &&
+	    (!lc->multi) && (!rc->multi) &&
+	    more_nulls_than_allowed(pc, lword, rword))
 	{
 		return false;
 	}
-	else
+
+	if ((lc->next != NULL) && (rc->next != NULL))
 	{
-		/* We arrive here if the words are NOT next to each other. Say the
-		 * gap between them contains W non-optional words. We also know
-		 * that we are going to parse with N null-links (which involves
-		 * sub-parsing with the range of [0, N] null-links).
-		 * If there is not at least one intervening connector (i.e. both
-		 * of lc->next and rc->next are NULL) then:
-		 * islands_ok=false:
-		 * There will be W null-linked words, and W must be <= N.
-		 * islands_ok=true:
-		 * There will be at least one island.
-		 */
-		if ((lc->next == NULL) && (rc->next == NULL) &&
-			 (!lc->multi) && (!rc->multi) &&
-			 more_nulls_than_allowed(pc, lword, rword))
-		{
-			return false;
-		}
-
-		if ((lc->next != NULL) && (rc->next != NULL))
-		{
-			if (lc->next->nearest_word > rc->next->nearest_word)
-				return false; /* Cross link. */
-		}
-
-		if (is_cross_mlink(pc, lc, rc, lword, rword)) return false;
+		if (lc->next->nearest_word > rc->next->nearest_word)
+			return false; /* Cross link. */
 	}
+
+	if (is_cross_mlink(pc, lc, rc, lword, rword))
+		return false;
 
 	return true;
 }
@@ -1062,9 +1059,9 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 
-		/* verbosity=5 revealed that the xlink counter is never set after
-		 * the first 2 passes. So neutralize the mlink table here to save a
-		 * slight overhead. */
+		/* The verbose debug printouts revealed that the xlink counter is
+		 * never set after the first 2 passes. So neutralize the mlink table
+		 * here to save a slight overhead. */
 		pc->ml = NULL;
 	}
 	while (!extra_null_word || pc->always_parse);
@@ -1870,7 +1867,7 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 
 /**
  * Delete disjuncts whose links would cross those implied by the mlink table.
- * Since links are not allowed to cross, such disjuncts would create nulls
+ * Since links are not allowed to cross, such disjuncts would create null
  * links. So this optimization can only be done when parsing a sentence
  * with null_count==0 (in which null links are not allowed).
  * Possible FIXMEs:
@@ -1908,11 +1905,11 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 				{
 					if  (nw1 == fw1)
 					{
-						/* This word must have LHS link. So disjuncts which
-						 * don't have an LHS jet can be deleted. However,
-						 * naturally there are no connectors to assign BAD_WORD
-						 * to. So create a dummy one. The same is done in the
-						 * other direction. */
+						/* Word w must have LHS link to word fw1. So disjuncts
+						 * of word nw1 which don't have an RHS jet can be
+						 * deleted.  However, naturally there are no
+						 * connectors to assign BAD_WORD to. So create a dummy
+						 * one. The same is done for the other direction. */
 						d->left = &bad_connector;
 						N_deleted[0]++;
 						PR(1);

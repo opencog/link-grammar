@@ -241,7 +241,7 @@ This variable is used to enable features that are used for debug
 or do not yet have any other variable to control them.  For example,
 to show all the linkages without a need to press RETURN, use:
 
-  !test=auto-next-linkages
+  !test=auto-next-linkage
 
 For more details, see debug/README.md and link-grammar/README.md
 in our GitHub repository https://github.com/opencog/link-grammar .
