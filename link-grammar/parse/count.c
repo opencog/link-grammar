@@ -817,7 +817,7 @@ static Count_bin do_count(
 			{
 				lrcnt_optimize = false;
 				if (rnull_start <= null_count)
-					lnull_end = null_count - rnull_start;
+					lnull_end -= rnull_start;
 			}
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
