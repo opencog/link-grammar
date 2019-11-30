@@ -1893,7 +1893,6 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 
 		if ((w > 0) && (nw1 != w))
 		{
-			/* Deepest connector constraint l->r. */
 			for (Disjunct *d = sent->word[nw1].d; d != NULL; d = d->next)
 			{
 				Connector *shallow_c = d->left;
@@ -1913,12 +1912,14 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 					}
 					continue;
 				}
+
+				/* Deepest connector constraint l->r. */
+
 				if (shallow_c->nearest_word == BAD_WORD)
 				{
 					N_deleted[1]++;
 					continue;
 				}
-
 				Connector *c = connector_deepest(shallow_c);
 
 				if (c->nearest_word < w)
@@ -1935,7 +1936,6 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 
 		if ((w < sent->length-1) && (nw0 != w))
 		{
-			/* Deepest connector constraint r->l. */
 			for (Disjunct *d = sent->word[nw0].d; d != NULL; d = d->next)
 			{
 				Connector *shallow_c = d->right;
@@ -1951,12 +1951,14 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 					}
 					continue;
 				}
+
+				/* Deepest connector constraint r->l. */
+
 				if (shallow_c->nearest_word == BAD_WORD)
 				{
 					N_deleted[1]++;
 					continue;
 				}
-
 				Connector *c = connector_deepest(shallow_c);
 
 				if (c->nearest_word > w)
