@@ -806,8 +806,9 @@ static Count_bin do_count(
 				if (rgc == &lrcnt_cache_zero) fml_re = NULL;
 			}
 		}
-		else if (re != NULL)
+		else
 		{
+			/* Here re != NULL. */
 			unsigned int rnull_start;
 			lrcnt_cache = is_lrcnt(ctxt, 1, re, rw, w, null_count, &rnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
@@ -816,7 +817,7 @@ static Count_bin do_count(
 			{
 				lrcnt_optimize = false;
 				if (rnull_start <= null_count)
-					lnull_end = null_count - rnull_start;
+					lnull_end -= rnull_start;
 			}
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
@@ -855,7 +856,7 @@ static Count_bin do_count(
 				Count_bin r_cmulti = INIT_NO_COUNT;
 				Count_bin r_dmulti = INIT_NO_COUNT;
 				Count_bin r_dcmulti = INIT_NO_COUNT;
-				Count_bin r_bnl = INIT_NO_COUNT;
+				Count_bin r_bnl = (le == NULL) ? INIT_NO_COUNT : 0;
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
