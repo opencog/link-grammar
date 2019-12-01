@@ -256,13 +256,13 @@ nonCAP.zzz: ZZZ-;
 % However, this cost then causes the following to parse incorrectly:
 % "...went to hell yesterday and heaven on Tuesday."
 % Arghh... only semantic disambiguation will work here.
-<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
-<noun-and-p>: ({[@M+]0.4 or Mp+} & SJlp+) or ({[@M+]1.4 or [Mp+]} & SJrp-);
-<noun-and-u>: ({[@M+]0.4 or Mp+} & SJlu+) or ({[@M+]1.4 or [Mp+]} & SJru-);
-<noun-and-x>: ({[@M+]0.4 or Mp+} & SJl+) or ({[@M+]1.4 or [Mp+]} & SJr-);
+<noun-and-s>: ({@M+} & dSJls+) or ({[@M+]} & dSJrs-);
+<noun-and-p>: ({[@M+]0.4 or Mp+} & dSJlp+) or ({[@M+]1.4 or [Mp+]} & dSJrp-);
+<noun-and-u>: ({[@M+]0.4 or Mp+} & dSJlu+) or ({[@M+]1.4 or [Mp+]} & dSJru-);
+<noun-and-x>: ({[@M+]0.4 or Mp+} & dSJl+) or ({[@M+]1.4 or [Mp+]} & dSJr-);
 <noun-and-p,u>:
-  ({[@M+]0.4 or Mp+} & SJlp+) or ({[@M+]1.4 or [Mp+]} & SJrp-) or
-  ({[@M+]0.4 or Mp+} & SJlu+) or ({[@M+]1.4 or [Mp+]} & SJru-);
+  ({[@M+]0.4 or Mp+} & dSJlp+) or ({[@M+]1.4 or [Mp+]} & dSJrp-) or
+  ({[@M+]0.4 or Mp+} & dSJlu+) or ({[@M+]1.4 or [Mp+]} & dSJru-);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -467,7 +467,7 @@ An.f In.f So.f: [[<given-names>]];
     or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-rel-p> & (<noun-main-p> or <rel-clause-p>))
     or ({NM+ or Dmc-} & <noun-and-p>)
-    or SJrp-
+    or dSJrp-
     or (YP+ & {Dmc-})
     or (GN+ & (DD- or [()]))
     or Up-
@@ -848,7 +848,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or ((NM+ or [[{[NM+]1.5} & (Ds- or <no-det-null>) ]] )
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
-    or SJrs-
+    or dSJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
@@ -956,7 +956,7 @@ indication.n inkling.n amount.n answer.n:
       SIs*t- or
       <rel-clause-s>))
     or ({<Dsv>} & <noun-and-s>)
-    or SJrs-
+    or dSJrs-
     or (YS+ & <Dsv>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
@@ -978,7 +978,7 @@ crux.n shame.n thing.n bet.n guess.n:
       SIs*t- or
       <rel-clause-s>))
     or ({<Dsc>} & <noun-and-s>)
-    or SJrs-
+    or dSJrs-
     or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
@@ -1310,16 +1310,16 @@ times.n:
 
 % MXs+: "he, the shop owner, ..."
 she he:
-  {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or SJls+);
+  {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or dSJls+);
 
 % The E- is for "It's either us or them" ... not ideal, but OK
 % See also me.p below.
 me him:
-  J- or Ox- or ({[[E-]]} & SJl+) or SJr- or Wa-;
+  J- or Ox- or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
 
 % DD+: "... how us two should work together"
 us:
-  J- or Ox- or ({[[E-]]} & SJl+) or SJr- or DD+;
+  J- or Ox- or ({[[E-]]} & dSJl+) or dSJr- or DD+;
 
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
 % (Jd- & Dmc- & Sp+):  "Many of them could be saved"
@@ -1327,8 +1327,8 @@ them:
   [J-]
   or ({Jd- & Dmc-} & Ox-)
   or (Jd- & Dmc- & {Wd-} & Sp+)
-  or ({[[E-]]} & SJl+)
-  or SJr-;
+  or ({[[E-]]} & dSJl+)
+  or dSJr-;
 
 % Ox-: "John made himself familiar with the drawings"
 %    The Ox is needed for post-processing
@@ -1357,8 +1357,8 @@ others:
 mine.p yours theirs.p hers ours:
   <noun-main-x>
   or Wa-
-  or SJl+
-  or SJr-;
+  or dSJl+
+  or dSJr-;
 
 % yisser yousser ye'r: Irish English second-person possessive --
 % https://en.wikipedia.org/wiki/Irish_English
@@ -1380,7 +1380,7 @@ you:
   Wa-  or J- or Ox-
   or (Sp+ & <CLAUSE>)
   or SIp-
-  or SJlp+
+  or dSJlp+
   or [<CLAUSE> & Pg+]
   or [Ds+];
 
@@ -1410,14 +1410,14 @@ it:
    or (Jd- & Dmu- & {Wd-} & S+)
    or ({MX+} & (Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
-   or SJls+ or SJrs-;
+   or dSJls+ or dSJrs-;
 
 % O*c: "we will go faster than they"
 % MXp+: "they, the twins, did it"
 they:
   ({[[R+ & Bp+]]} & (({MXp+} & Sp+ & <CLAUSE>) or SIp-)) or
   Ox- or
-  SJlp+ or SJrp-;
+  dSJlp+ or dSJrp-;
 
 % DD+: "... how we two should work together"
 % MXp+: "We, the undersigned, ..."
@@ -1425,7 +1425,7 @@ we:
   ({MXp+} & Sp+ & <CLAUSE>)
   or Ox-
   or DD+
-  or SIp- or SJlp+ or SJrp-;
+  or SIp- or dSJlp+ or dSJrp-;
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make "I've" work?
 % We use <marker-entity> here to prevent lower-case magnling by
@@ -1436,8 +1436,8 @@ I.p:
   <marker-entity>
   or ((({MXs+} & Sp*i+) or SX+) & <CLAUSE>)
   or SIp*i-
-  or SJr-
-  or SJl+
+  or dSJr-
+  or dSJl+
   or SXI-;
 
 them_all us_all you_all: Ox- or J-;
@@ -1777,7 +1777,7 @@ plenty:
 % SJr-: "someone or other would always complain"
 other:
   Dmu+ or
-  SJr- or
+  dSJr- or
   ({ND-} & {DD-} & Dmc+) or
   (DD- & (Ds+ or DD+ or <noun-main-s> or <noun-and-s>));
 
@@ -10091,7 +10091,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 who:
   (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
-  or SJl+ or SJr-
+  or dSJl+ or dSJr-
   or Jw-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
@@ -10120,7 +10120,7 @@ what:
   or (D+ & JQ-)
   or Jw-
   or [QI-]0.5
-  or SJl+ or SJr-
+  or dSJl+ or dSJr-
   or (Xc+ & Ic+);
 
 % [QI-]: "I do not know which"
@@ -10162,7 +10162,7 @@ whose:
 whomever:
   (R- & <porcl-verb>)
   or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
-  or ({EL+} & SJr-)
+  or ({EL+} & dSJr-)
   or ({EL+} & (Ss*d+ or Bsd+ or {[[]]}) & Os-)
   or (Jr- & (RS+ or <porcl-verb>))
   or Jw-;
@@ -10171,7 +10171,7 @@ whomever:
 whoever: {EL+} &
   (((Ss*d+ or Bsd+ or [[CX+]] or {[[]]}) &
     (<noun-main-s> or (Xc+ & {Xd-} & dCO+) or ({Xd- & Xc+} & MVs-)))
-  or ({EL+} & SJr-)
+  or ({EL+} & dSJr-)
   or [[(O- or J-) & CX+]]);
 
 whatever.c:
@@ -10226,7 +10226,7 @@ when:
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
   or [QI-]0.5
-  or [SJl+ or SJr-]0.5
+  or [dSJl+ or dSJr-]0.5
   or [dMJl+]0.5
   or ({JT-} & dMJr- & Qw+)
   or ({EW-} & (QJ- or QJ+))
@@ -10243,7 +10243,7 @@ why:
     or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
-    or [SJl+ or SJr-]0.5
+    or [dSJl+ or dSJr-]0.5
     or ({EW-} & (QJ- or QJ+))
     );
 
@@ -10257,7 +10257,7 @@ where:
     & (
       ({hCO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]0.5
-      or [SJl+ or SJr-]0.5
+      or [dSJl+ or dSJr-]0.5
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
       or ((WR+ or <subcl-verb> or <ton-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
@@ -10266,7 +10266,7 @@ where:
 whether:
   ((QI- or BIq-) & (<subcl-verb> or <ton-verb>))
   or (<subcl-verb> & SFsx+ & <S-CLAUSE>)
-  or SJl+ or SJr-
+  or dSJl+ or dSJr-
   or [[(<subcl-verb> or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & dCO*s+))]];
 
 whether_or_not:
@@ -10283,7 +10283,7 @@ how:
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]0.5
   or ({EW-} & (QJ- or QJ+))
-  or [SJl+ or SJr-]0.5
+  or [dSJl+ or dSJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 %%%  or ((EAh+ or EEh+) & Ww-);
 
@@ -10490,7 +10490,7 @@ nor.j-a: hAJ- & {Xd-} & {XJn-} & hAJ+ & (A+ or Pa- or [MVa-]);
 and.j-c or.j-c but.j-c yet.j-c:
   ((hAJlc- & hAJrc+) or
   (Xd- & hAJlc- & hAJrc+ & Xc+) or
-  ({Xd-} & SJl- & {EB+} & hAJrc+)) &
+  ({Xd-} & hSJl- & {EB+} & hAJrc+)) &
     (((Pam- or Mam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
     ({Xc+} & Am+));
@@ -10524,7 +10524,7 @@ but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
 %    "either by hammering or chemicals"
 or.j-m:
   ({Xd-} & hMJla- & {XJo-} & {EBb+} & hMJra+ & <post-nom-a>) or
-  ({Xd-} & hMJlp- & {XJo-} & {EBb+} & (hMJrp+ or SJr+) & <post-nom-p>) or
+  ({Xd-} & hMJlp- & {XJo-} & {EBb+} & (hMJrp+ or hSJr+) & <post-nom-p>) or
   ({Xd-} & hMJlj- & {XJo-} & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>) or
   ({Xd-} & hMJlv- & {XJo-} & {EBb+} & hMJrv+ & {Xc+} & <post-nom-v>);
 
@@ -10569,16 +10569,16 @@ and.j-r or.j-r:
 % noun-conj-dep-s & SI-: Are a dog and a cat here?
 %
 % XXX There should be a noun-sub-u but this requires a lot of work ...
-<noun-conj-dep-s>: ({Xd-} & SJls- & SJrs+ & {[[Xc+]]});
-<noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+  & {[[Xc+]]}) or
-                   ({Xd-} & SJls- & SJrp+ & {[[Xc+]]});
-<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+  & {[[Xc+]]}) or
-                   ({Xd-} & SJlp- & SJru+ & {[[Xc+]]}) or
-                   ({Xd-} & SJls- & SJru+ & {[[Xc+]]});
+<noun-conj-dep-s>: ({Xd-} & hSJls- & hSJrs+ & {[[Xc+]]});
+<noun-conj-dep-p>: ({Xd-} & hSJlp- & hSJr+  & {[[Xc+]]}) or
+                   ({Xd-} & hSJls- & hSJrp+ & {[[Xc+]]});
+<noun-conj-dep-u>: ({Xd-} & hSJlu- & hSJr+  & {[[Xc+]]}) or
+                   ({Xd-} & hSJlp- & hSJru+ & {[[Xc+]]}) or
+                   ({Xd-} & hSJls- & hSJru+ & {[[Xc+]]});
 
 % Give AN+ a cost, because in general, we don't want to conjoin nouns,
 % and then use the resulting phrase to modify another noun ...
-<noun-conj-head>: Ju- or SJl+ or [[AN+]];
+<noun-conj-head>: Ju- or dSJl+ or [[AN+]];
 
 % XXX WTF? why does [O-] have a cost that the post-nominal doesn't?
 % Having this cost messes up the following parse:
@@ -10627,8 +10627,8 @@ and.j-n 'n':
     or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>))
-  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
-  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
+  or ((Xd- & hSJl- & EB+ & hSJr+ & Xc+) & (Wd- & Ssx+))
+  or (({Xd-} & hSJl- & EB+ & hSJr+ & {Xc+}) & O-);
 
 % A zero-copula in a conjunction:
 % "that is very nice, but not what I want"
@@ -10654,8 +10654,8 @@ or.j-n:
     or [Op-]
     or Wa-
     or <post-nominal-p>))
-  or ((Xd- & SJl- & EB+ & SJr+ & Xc+) & (Wd- & Ssx+))
-  or (({Xd-} & SJl- & EB+ & SJr+ & {Xc+}) & O-);
+  or ((Xd- & hSJl- & EB+ & hSJr+ & Xc+) & (Wd- & Ssx+))
+  or (({Xd-} & hSJl- & EB+ & hSJr+ & {Xc+}) & O-);
 
 % XJn- "neither this nor that"
 % XJn- is optional: "I don't like dogs nor cats" but not having it is given
@@ -10672,27 +10672,27 @@ or.j-n:
 % "and" only when there is no J link, as otherwise, i links at teh wrong
 % location. Ugh. what a big headache.
 nor.j-n:
-  SJl- & (XJn- or [()]) & SJr+
-    & ((Wd- & S*x+) or SI- or (Os- & {Mp+}) or Wa- or SJl+);
+  hSJl- & (XJn- or [()]) & hSJr+
+    & ((Wd- & S*x+) or SI- or (Os- & {Mp+}) or Wa- or dSJl+);
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
 % XJb-: "not only this but also that"
 % XXX FIXME: the EBb and EBy below should probably be replaced by XJb
 but.j-n yet.j-n:
-  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
-  ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
-  (({Xd-} & SJl- & (XJb- or EBy- or EBb+) & SJr+) & Ou-);
+  ((Xd- & hSJl- & EBb+ & hSJr+ & Xc+) & (Wd- & Ssx+)) or
+  ((Xd- & hSJl- & EBy- & hSJr+) & (Wd- & Ssx+)) or
+  (({Xd-} & hSJl- & (XJb- or EBy- or EBb+) & hSJr+) & Ou-);
 
 but_also:
-  {Xd-} & SJl- & XJb- & SJr+ & Ou-;
+  {Xd-} & hSJl- & XJb- & hSJr+ & Ou-;
 
 % SJ: "Who, if not Micheal, will provide for your care?"
 % MJ: "when, if not tomorrow, do you want to do it?"
 % MJr+ & MJr+: "if not next Tuesday, when do you want to do it?"
 if.j-n:
-  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ws- & S**w+)) or
-  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Ww- & Qw+)) or
+  ((Xd- & hSJl- & EBb+ & hSJr+ & Xc+) & (Ws- & S**w+)) or
+  ((Xd- & hSJl- & EBb+ & hSJr+ & Xc+) & (Ww- & Qw+)) or
   ((Xd- & hMJl- & EBb+ & hMJr+ & Xc+) & (Ww- & Qw+)) or
   ((EBb+ & hMJr+ & Xc+ & hMJr+) & Ww-);
 
@@ -11806,7 +11806,7 @@ sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 same.a own.a:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-)
   or ((DD- or [[()]]) & <noun-rel-x> & {<ton-verb>} & [<noun-main-x>]0.1)
-  or (D- & SJr-);
+  or (D- & dSJr-);
 
 % [Oy-]0.1: see immediately above.
 the_same:
@@ -12782,9 +12782,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   [<comma-adj-conjunction>
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
-  or (SJl- & EBb+ & SJr+ & Ou-)
-  or (SJl- & J- & SJr+)
-  or (SJl- & SJr+ & SJl+)
+  or (hSJl- & EBb+ & hSJr+ & Ou-)
+  or (hSJl- & J- & hSJr+)
+  or (hSJl- & hSJr+ & dSJl+)
   or (Xj- & hWl+ & {Xj+})]0.05;
 
 % zero-verbs. The dict uses the comma to be the zero-verb.
@@ -12880,8 +12880,8 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % SJ: Conjoined: "either ... or  ..."
 ....n ….n:
-  ({D+} & SJl+) or
-  ({D+} & SJr-);
+  ({D+} & dSJl+) or
+  ({D+} & dSJr-);
 
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
@@ -13149,7 +13149,7 @@ as.#that: [that.j-c]0.05;
     (AN+
     or ({NM+ or ({Jd-} & D*u-)} & <noun-rel-s> & (<noun-main-m> or <rel-clause-x>))
     or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
-    or SJrp-
+    or dSJrp-
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
     or U-);
