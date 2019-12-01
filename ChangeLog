@@ -3,6 +3,7 @@ Version 5.7.1 (XXX 2019)
  * swig-4.0 compatibility bug fix.
  * Fixes to support questions ending in WH-words.
  * Copy (merge) Richard van der Dys `node.js` bindings.
+ * Provide head and tail markers for all conjunctions in the English dict.
 
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.

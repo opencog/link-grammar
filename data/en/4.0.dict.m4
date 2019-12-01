@@ -94,7 +94,7 @@ nonCAP.zzz: ZZZ-;
 <marker-common-entity>: XXXGIVEN+;
 
 % The RJ links connect to "and"; the l,r prevent cross-linking
-<clause-conjoin>: RJrc- or RJlc+;
+<clause-conjoin>: dRJrc- or dRJlc+;
 
 % {@COd-} : "That is the man who, in Joe's opinion, we should hire"
 <CLAUSE>:   {({@hCOd-} & (C- or <clause-conjoin>)) or ({@hCO-} & Wd-) or [Rn-]};
@@ -1533,7 +1533,7 @@ those:
   ({AL-} & (Dmc+ or DD+))
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
-  or (<noun-rel-p> & ([[<noun-main-p>]] or RJlr+ or RJrr-))
+  or (<noun-rel-p> & ([[<noun-main-p>]] or dRJlr+ or dRJrr-))
   or <noun-and-p>
   or Wa-;
 
@@ -6958,8 +6958,8 @@ between:
 
 % w/ as a common abbreviation for with
 with w/:
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-))
-  or (Jw+ & (RJrj- or RJlj+))
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or dRJrv-))
+  or (Jw+ & (dRJrj- or dRJlj+))
   or [MVp- & B-]
   or <locative>
   or (J+ & {EBm+} & ([P+] or [[O*n+]]) & (
@@ -6979,7 +6979,7 @@ among:
 % FL+ "for long"
 for.p:
   ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-))
-  or (J+ & (RJrj- or RJlj+))
+  or (J+ & (dRJrj- or dRJlj+))
   or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
@@ -8179,7 +8179,7 @@ while whilst:
   or ({EP-} & dWl- & (J+ or Mp+))
   or <COMP-OPENER>;
 
-<adverb-join>: RJlv+ or RJrv-;
+<adverb-join>: dRJlv+ or dRJrv-;
 
 % once as adverb
 once.e:
@@ -8303,11 +8303,11 @@ and.j-q: (QJ- & QJ+) & ((Wq- & Q+) or QI-);
 % RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
 % RJ*r: "those" relative clauses: "...: those who do and those who don't"
 and.j-r or.j-r:
-  ((RJlv- & RJrv+) & MVr-) or
-  ((RJlt- & RJrt+) & TH-) or
-  ((RJlc- & RJrc+) & Cs-) or
-  ((RJlj- & RJrj+) & Mj- & <subcl-verb>) or
-  (({Xd-} & RJlr- & RJrr+) & J-);
+  ((hRJlv- & hRJrv+) & MVr-) or
+  ((hRJlt- & hRJrt+) & TH-) or
+  ((hRJlc- & hRJrc+) & Cs-) or
+  ((hRJlj- & hRJrj+) & Mj- & <subcl-verb>) or
+  (({Xd-} & hRJlr- & hRJrr+) & J-);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
