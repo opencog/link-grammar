@@ -2624,23 +2624,23 @@ per "/.per": Us+ & Mp-;
 %
 % s == singular, pl == plural, sp == singular or plural
 % g == gerund
-<verb-and-s->: {@E-} & VJrs-;
-<verb-and-s+>: {@E-} & VJls+;
-<verb-and-pl->: {@E-} & VJrp-;
-<verb-and-pl+>: {@E-} & VJlp+;
-<verb-and-sp->: {@E-} & VJr-;
-<verb-and-sp+>: {@E-} & VJl+;
+<verb-and-s->: {@E-} & dVJrs-;
+<verb-and-s+>: {@E-} & dVJls+;
+<verb-and-pl->: {@E-} & dVJrp-;
+<verb-and-pl+>: {@E-} & dVJlp+;
+<verb-and-sp->: {@E-} & dVJr-;
+<verb-and-sp+>: {@E-} & dVJl+;
 % <verb-and-sp-i-> is use only with auxilliaries, and thus it needs the
 % Ift- connector for predicative adjectives:
 % "he is known to get frustrated and to become miserable"
-<verb-and-sp-i->: {@E-} & {Ift-} & VJr*i-;
-<verb-and-sp-i+>: {@E-} & VJl*i+;
-<verb-and-sp-t->: {@E-} & VJr*t-;
-<verb-and-sp-t+>: {@E-} & VJl*t+;
-<verb-and-pg->: {@E-} & VJrg-;
-<verb-and-pg+>: {@E-} & VJlg+;
-<verb-and-had->: {@E-} & (VJrh- or MJrv-);
-<verb-and-had+>: {@E-} & (VJlh+ or MJlv+);
+<verb-and-sp-i->: {@E-} & {Ift-} & dVJr*i-;
+<verb-and-sp-i+>: {@E-} & dVJl*i+;
+<verb-and-sp-t->: {@E-} & dVJr*t-;
+<verb-and-sp-t+>: {@E-} & dVJl*t+;
+<verb-and-pg->: {@E-} & dVJrg-;
+<verb-and-pg+>: {@E-} & dVJlg+;
+<verb-and-had->: {@E-} & (dVJrh- or dMJrv-);
+<verb-and-had+>: {@E-} & (dVJlh+ or dMJlv+);
 
 <verb-and-sp-t>:
   <verb-and-sp-t-> or
@@ -3612,7 +3612,7 @@ bob.v:
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
 % XXX TODO review this ...
 and.v-fill:
-  ((VJlg- & VJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
+  ((hVJlg- & hVJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
 
 % ------------------------------------------------------------
 % Just like vc-fill above, but includes predicative adjectives:
@@ -8472,30 +8472,30 @@ then.j-c: {Xd-} & XJc- & VJr+;
 %    This is a link-crossing hack; see the link-crossing
 %    discussion in the README; see section-J.html in the docs.
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) &
+  (({Xd-} & hVJlsi- & hVJrsi+) &
     (({@MV+} & {Xc+ & @MV+} & Ss- & <verb-wall>) or
     (RS- & Bs-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
-    ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & {N+} & {TO+} & VJrpi+) &
+    ({Xd-} & dVJrsi-))) or
+  (({Xd-} & hVJlpi- & {N+} & {TO+} & hVJrpi+) &
     (({@MV+} & Sp- & <verb-wall>) or
     (RS- & Bp-) or
     ([I-]0.2 & {@MV+} & <verb-wall>) or
-    ({Xd-} & VJrpi-))) or
-  (({Xd-} & Jj- & VJlpi- & VJrpi+ & Jk+) &
+    ({Xd-} & dVJrpi-))) or
+  (({Xd-} & Jj- & hVJlpi- & hVJrpi+ & Jk+) &
     ([I-]0.2 & {@MV+} & <verb-wall>)) or
-  (({Xd-} & VJlst- & VJrst+) &
+  (({Xd-} & hVJlst- & hVJrst+) &
     ((({@MV+} & Ss- & <verb-wall>) or
     ([I-]0.2 & {@MV+} & <verb-wall>)) &
       (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) &
+  (({Xd-} & hVJlpt- & hVJrpt+) &
     ((({@MV+} & Sp- & <verb-wall>) or
     ([I-]0.2 & {@MV+} & <verb-wall>)) &
       (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
-  ((VJlg- & VJrg+) & (J-)) or
-  ((VJlp- & VJrp+) & [<verb-ico>]0.2) or
-  ((VJls- & VJrs+) & [<verb-ico>]0.2);
+  (({Xd-} & hVJlh- & hVJrh+) & (PP- & {@MV+} & <verb-wall>)) or
+  ((hVJlg- & hVJrg+) & (J-)) or
+  ((hVJlp- & hVJrp+) & [<verb-ico>]0.2) or
+  ((hVJls- & hVJrs+) & [<verb-ico>]0.2);
 
 and.j-v or.j-v: <verb-conjunction>;
 then.j-v: <verb-conjunction>;
@@ -8516,24 +8516,24 @@ and.j-l or.j-l: Xj- & hWl+ & {Xj+};
 % XJn-: neither ... nor ...
 % I-: "I don't want that, nor do you"
 nor.j-v:
-  (VJl*i- & XJn- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
-  (VJl*t- & XJn- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>)) or
-  (Xd- & VJl*i- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
-  ({Xd-} & VJl*i- & VJr*i+ & ({@MV+} & I- & <verb-wall>));
+  (hVJl*i- & XJn- & hVJr*i+ & ({@MV+} & S- & <verb-wall>)) or
+  (hVJl*t- & XJn- & hVJr*t+ & ({@MV+} & S- & O+ & <verb-wall>)) or
+  (Xd- & hVJl*i- & hVJr*i+ & ({@MV+} & S- & <verb-wall>)) or
+  ({Xd-} & hVJl*i- & hVJr*i+ & ({@MV+} & I- & <verb-wall>));
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
 but.j-v:
-  ((({Xd-} & VJls-) & VJrs+) & ((Ss- & <verb-wall>) or ({Xd-} & VJrs-))) or
-  ((({Xd-} & VJlp-) & VJrp+) & ((Sp- & <verb-wall>) or ({Xd-} & VJrp-))) or
-  ((VJl- & VJr+) & ((I- & <verb-wall>) or <verb-ico>));
+  ((({Xd-} & hVJls-) & hVJrs+) & ((Ss- & <verb-wall>) or ({Xd-} & dVJrs-))) or
+  ((({Xd-} & hVJlp-) & hVJrp+) & ((Sp- & <verb-wall>) or ({Xd-} & dVJrp-))) or
+  ((hVJl- & hVJr+) & ((I- & <verb-wall>) or <verb-ico>));
 
 % The XJb- guarentees that but.j-b is used with not_only
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither... nor... pattern above.
 not_only: XJb+;
 but_also:
-  (VJl*i- & XJb- & VJr*i+ & ({@MV+} & S- & <verb-wall>));
+  (hVJl*i- & XJb- & hVJr*i+ & ({@MV+} & S- & <verb-wall>));
 
 % XJ: collocations with holes, i.e. "... blah blah X um um Y"
 % where "blah blah" is always used with "um um".
