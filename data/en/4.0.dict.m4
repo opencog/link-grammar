@@ -1499,7 +1499,7 @@ the:
   ({AL-} & {@L+} & (D+ or DD+)) or
   DG+ or
   (TR- & U+) or
-  (L+ & (AJld+ or AJrd-));
+  (L+ & (dAJld+ or dAJrd-));
 
 % this as a pronoun
 this.p:
@@ -1551,7 +1551,7 @@ both.d:
   or <noun-and-p>
   or (Wa- & {Mp+});
 
-both.a: Paf- or AJra-;
+both.a: Paf- or dAJra-;
 
 % half: prefer NJ+ over noun-main-x, because half is almost surely
 % modifying something, instead of being a direct object, subject, etc.
@@ -2293,8 +2293,8 @@ ninety-seventh.a ninety-eighth.a ninety-ninth.a:
   NR+ or
   G+ or
   [A+] or
-  ({Ds-} & AJla+) or
-  ({Ds-} & AJra-);
+  ({Ds-} & dAJla+) or
+  ({Ds-} & dAJra-);
 
 % "Next on our list..." are ordinals.
 % XXX should be converted to regex...
@@ -2522,7 +2522,7 @@ per "/.per": Us+ & Mp-;
     (Dmu- or ((Dmu- or [[Ds-]]) & OF+) or ()) &
     ((<noun-rel-s> & {@MXs+} &
       ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
-      AJra- or AJla+ or
+      dAJra- or dAJla+ or
       <noun-and-u>)) or
   [[AN+]];
 
@@ -2807,8 +2807,8 @@ done.v:
 % Pa- & Pg+: "I am done working", "I am through being mad"
 done.a finished.a through.a:
   ({@E-} & Pa- & {Pg+ or @MV+})
-  or (AJra- & {@MV+})
-  or ({@MV+} & AJla+);
+  or (dAJra- & {@MV+})
+  or ({@MV+} & dAJla+);
 
 doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & <mv-coord>;
 doing.g: ((O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
@@ -4209,8 +4209,8 @@ gone.v: VERB_PP(<vc-go>);
 % The keys are gone.  The popcorn is all gone.
 gone.a:
   ({@E-} & Pa-) or
-  (AJra- & {@MV+}) or
-  ({@MV+} & AJla+);
+  (dAJra- & {@MV+}) or
+  ({@MV+} & dAJla+);
 
 % XXX TODO maybe need VJ and-able links for going etc. ???
 % <tof-verb>: "there is going to be a meeting"
@@ -7335,7 +7335,7 @@ later earlier:
     [({Xc+ & {Xd-}} & dCO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
     ({[[@Ec-]]} & {Xc+} & A+) or
-    AJrc- or AJlc+)) or
+    dAJrc- or dAJlc+)) or
   (Yt- & (<advcl-verb> or Qe+));
 
 % --------------------------------------------------------
@@ -8226,17 +8226,17 @@ and.j-g: [G- & G+]0.05;
 % AJ*s: superlative adjectives
 %
 and.j-a but.j-a yet.j-a and_yet:
-  ({Xd-} & AJla- & {Xd-} & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-) & {<tot-verb>};
+  ({Xd-} & hAJla- & {Xd-} & {EBb+} & hAJr+) & (A+ or Pa- or [MVa-] or dAJra-) & {<tot-verb>};
 
 % XJo-: either ... or ...
 or.j-a:
-  ({Xd-} & AJla- & {Xd-} & {XJo-} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
+  ({Xd-} & hAJla- & {Xd-} & {XJo-} & hAJra+) & (A+ or Pa- or [MVa-] or dAJra-);
 
 % XJn-: neither ... nor ...
 % Its marked optional only to solve the ugly case of
 % "he is in neither the 105th nor the 106th battalion"
 % At issue is that nouns really really want to get a determiner, so we give it one.
-nor.j-a: AJ- & {Xd-} & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
+nor.j-a: hAJ- & {Xd-} & {XJn-} & hAJ+ & (A+ or Pa- or [MVa-]);
 
 % comparatives:
 % he is bigger, and badder, than the pope.
@@ -8244,19 +8244,19 @@ nor.j-a: AJ- & {Xd-} & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
 % SJl- & AJrc+: "She was John's height, or taller"
 % Xc+ & Am+: "faster and stronger, Gracie is expected to win"
 and.j-c or.j-c but.j-c yet.j-c:
-  ((AJlc- & AJrc+) or
-  (Xd- & AJlc- & AJrc+ & Xc+) or
-  ({Xd-} & SJl- & {EB+} & AJrc+)) &
+  ((hAJlc- & hAJrc+) or
+  (Xd- & hAJlc- & hAJrc+ & Xc+) or
+  ({Xd-} & SJl- & {EB+} & hAJrc+)) &
     (((Pam- or Mam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
     ({Xc+} & Am+));
 
 % [MVa-] : "he ran the fastest and the farthest"
 and.j-s:
-  (AJls- & AJrs+ & La-) or
-  (AJls- & AJrs+ & DD- & [MVa-]) or
-  (AJle- & AJre+ & [MVa-]) or
-  (AJld- & AJrd+ & (D+ or DD+));
+  (hAJls- & hAJrs+ & La-) or
+  (hAJls- & hAJrs+ & DD- & [MVa-]) or
+  (hAJle- & hAJre+ & [MVa-]) or
+  (hAJld- & hAJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers, to be used with conjunctions below.
 <post-nom-a>: [Ma-] or (Xd- & Xc+ & MX*a-);
@@ -8633,10 +8633,10 @@ just_not: <COMP-OPENER>;
 % Conjoined adjectives
 % Conjoined comparative adjectives, if EAm- is present.
 <adj-conjoined>:
-  ({[EA-]-0.1} & AJra- & {@MV+})
-  or ([EAm-]-0.1 & AJrc- & {@MV+})
-  or ({@MV+} & AJla+)
-  or ({@MV+} & [EAm-]-0.1 & AJlc+);
+  ({[EA-]-0.1} & dAJra- & {@MV+})
+  or ([EAm-]-0.1 & dAJrc- & {@MV+})
+  or ({@MV+} & dAJla+)
+  or ({@MV+} & [EAm-]-0.1 & dAJlc+);
 
 <adj-op>: <adj-opener> or <adj-conjoined>;
 
@@ -8841,7 +8841,7 @@ unpleasant.a illegal.a:
     (((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & dMJla+)
     or ({<tot-verb>} & <adj-opener>)
-    or AJr-))
+    or dAJr-))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
   or <adj-stuff>;
 
@@ -9013,7 +9013,7 @@ a_mistake:
   ({EA- or EF+} & (
     ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {<toi-verb> & {LE+}} & dMJla+)
-    or (AJrc- & {@MV+})
+    or (dAJrc- & {@MV+})
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
@@ -9030,7 +9030,7 @@ enjoyable.a idiotic.a inconvenient.a unkind.a:
   ({EA- or EF+} & (
     ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {<toi-verb> & {LE+}} & dMJla+)
-    or (AJrc- & {@MV+})
+    or (dAJrc- & {@MV+})
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
@@ -9248,7 +9248,7 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % Non-zero cost on Omm- so that EA+ is preferred.
 % Cost of >1.0 on Omm- so that MVm- is preferred for "He runs more".
 more:
-  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or AJrc- or AJlc+))
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
@@ -9261,22 +9261,22 @@ more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 % XXX TODO: shouldn't less be a lot more like 'more', above?
 % Cost of >1.0 on Om- so that MVm- is preferred for "He runs less".
 less:
-  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or AJrc- or AJlc+))
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or dAJrc- or dAJlc+))
   or ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
   or ({ECn-} & ([Om-]1.1 or Jm-))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 % ND- & Dmcm+ "I ran 10 fewer miles than Ben."
 fewer:
-  ({ECn- or ND-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>) or AJrc- or AJlc+)) or
+  ({ECn- or ND-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
   (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
 
 farther:
-  ({ECa-} & {K+} & (MVb- or Qe+ or <advcl-verb> or AJrc- or AJlc+)) or
+  ({ECa-} & {K+} & (MVb- or Qe+ or <advcl-verb> or dAJrc- or dAJlc+)) or
   A+;
 
 further.r:
-  ({ECa-} & {K+} & (MVb- or Qe+ or <advcl-verb> or AJrc- or AJlc+)) or
+  ({ECa-} & {K+} & (MVb- or Qe+ or <advcl-verb> or dAJrc- or dAJlc+)) or
   A+ or
   E+ or
   ({Xd-} & Xc+ & dCO+);
@@ -9420,12 +9420,12 @@ significantly substantially:
 <comp-adj-misc>:
   ({[[@Ec-]]} & {Xc+} & Am+)
   or (DD- & O- & Mp+)
-  or ({EA-} & AJlc+)
+  or ({EA-} & dAJlc+)
   or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+);
 
 <comp-adj>:
   ({ECa-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
     or <comp-adj-misc>
   ))
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
@@ -9434,7 +9434,7 @@ significantly substantially:
 
 easier.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+}
+    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+}
       & {(<tot-verb> or <toi-verb>) & {LE+}})
     or <comp-adj-misc>
   ))
@@ -9443,7 +9443,7 @@ easier.a-c:
 
 harder.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-))  & {@MV+}
+    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-))  & {@MV+}
       & {(<tot-verb> or <toi-verb>) & {LE+}})
     or <comp-adj-misc>
     or MVb-
@@ -9453,7 +9453,7 @@ harder.a-c:
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
   ({ECa-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9463,7 +9463,7 @@ higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
 
 sooner.a-c:
   ({ECa- or Yt-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9473,7 +9473,7 @@ sooner.a-c:
 
 longer.a-c:
   ({ECa- or Yt-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & AJrc-)) & {@MV+})
+    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9485,14 +9485,14 @@ longer.a-c:
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
+    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
     or <comp-adj-misc>
   ))
   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 better.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
+    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9503,7 +9503,7 @@ better.a-c:
 
 different.a:
   ({ECa- or EA- or EF+} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & AJrc-)) & {@MV+})
+    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+})
     or <comp-adj-misc>
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -9540,7 +9540,7 @@ nothing_but: Vd- & I+;
 <superlatives>:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & <noun-rel-x> & {<ton-verb>} & <noun-main-x>) or
-  AJrs- or AJls+;
+  dAJrs- or dAJls+;
 
 /en/words/words.adj.3: <superlatives>;
 
@@ -9579,14 +9579,14 @@ following.a remaining.a top.i: L-;
 hardest.a-s easiest.a-s:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & <noun-rel-x> & {<tot-verb>} & <noun-main-x>) or
-  ({NR- or ND-} & DD- & (AJre- or AJle+)) or
-  AJrs- or AJls+;
+  ({NR- or ND-} & DD- & (dAJre- or dAJle+)) or
+  dAJrs- or dAJls+;
 
 worst.a-s longest.a-s fastest.a-s furthest.a-s farthest.a-s slowest.a-s:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & ((<noun-rel-x> & {<ton-verb>} & <noun-main-x>) or MVa-)) or
-  ({NR- or ND-} & DD- & (AJre- or AJle+)) or
-  AJrs- or AJls+;
+  ({NR- or ND-} & DD- & (dAJre- or dAJle+)) or
+  dAJrs- or dAJls+;
 
 % "he likes you best of all" has no determiner, just uses MVa-.
 best.a-s personal_best:
@@ -9594,8 +9594,8 @@ best.a-s personal_best:
   ({NR- or ND-} & DD- & ((<noun-rel-x> & {<ton-verb>} & <noun-main-x>) or (MVa- & {Mp+}))) or
   [[E+]] or
   [MVa- & {Mp+}] or
-  ({NR- or ND-} & DD- & (AJre- or AJle+)) or
-  AJrs- or AJls+;
+  ({NR- or ND-} & DD- & (dAJre- or dAJle+)) or
+  dAJrs- or dAJls+;
 
 % "despite best intentions"
 best.a:  A+;
@@ -9856,8 +9856,8 @@ in_pencil in_pen to_scale for_trial all_right full_time part_time by_proxy:
 % comparative link *must* have EE- to "more", "less"
 % These are more or less adverbs ...
 dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
-  ({EE- or EF+ } & (<adv-as> or AJra- or AJla+)) or
-  (EE- & (AJrc- or AJlc+)) or Wa-;
+  ({EE- or EF+ } & (<adv-as> or dAJra- or dAJla+)) or
+  (EE- & (dAJrc- or dAJlc+)) or Wa-;
 
 wild.e rampant.e shut.e tight.e
 open.e closed.e loud.e hot.e cold.e free.e:
@@ -9914,7 +9914,7 @@ well.e:
     ({Xd- & Xc+} & <adv-as>)
     or Qe+
     or <advcl-verb>
-    or AJr-
+    or dAJr-
     or [E+]))
   or [{EA- or EF+} & (Pa- or AF+)]
   or Yd+;
@@ -10497,11 +10497,11 @@ changequote dnl
 % AJ: "They taste bitter, not sweet"
 % Give MVa a cost, so that Pa is used preferentially, if possible.
 <comma-adj-conjunction>:
-  ((AJla- & (EBx+ or EBm+) & AJra+) & (Pa- or [[MVa-]])) or
-  (AJla- & AJra+ & AJla+);
+  ((hAJla- & (EBx+ or EBm+) & hAJra+) & (Pa- or [[MVa-]])) or
+  (hAJla- & hAJra+ & dAJla+);
 
 <comma-adv-conjunction>:
-  (RJlv- & RJrv+ & RJlv+);
+  (hRJlv- & hRJrv+ & dRJlv+);
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
