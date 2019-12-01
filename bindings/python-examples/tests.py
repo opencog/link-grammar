@@ -768,7 +768,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n    +---------------------------->WV---------------------------->+                  |"
 "\n    |                              +--------------I--------------+                  |"
 "\n    |           +--------Sp--------+       +---------VJlp--------+                  |"
-"\n    +-----Wd----+          +---E---+       +----Op----+          +-VJrp+---Op--+    |"
+"\n    +---->Wd----+          +---E---+       +----Op----+          +-VJrp+---Op--+    |"
 "\n    |           |          |       |       |          |          |     |       |    |"
 "\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n ."
 "\n\n")
