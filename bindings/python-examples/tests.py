@@ -764,13 +764,13 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         sent = 'Scientists sometimes may repeat experiments or use groups.'
         linkage = self.parse_sent(sent)[0]
         self.assertEqual(linkage.diagram(),
-"\n    +---------------------------------------Xp--------------------------------------+"
-"\n    +---------------------------->WV---------------------------->+                  |"
-"\n    |                              +--------------I--------------+                  |"
-"\n    |           +--------Sp--------+       +---------VJlp--------+                  |"
-"\n    +---->Wd----+          +---E---+       +----Op----+          +-VJrp+---Op--+    |"
-"\n    |           |          |       |       |          |          |     |       |    |"
-"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n ."
+"\n    +----------------------------------------Xp---------------------------------------+"
+"\n    +---------------------------->WV---------------------------->+                    |"
+"\n    |                              +--------------I--------------+                    |"
+"\n    |           +--------Sp--------+       +<-------VJlpi<-------+                    |"
+"\n    +---->Wd----+          +---E---+       +----Op----+          +>VJrpi>+---Op--+    |"
+"\n    |           |          |       |       |          |          |       |       |    |"
+"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v   use.v groups.n ."
 "\n\n")
         sent = 'I enjoy eating bass.'
         linkage = self.parse_sent(sent)[0]
