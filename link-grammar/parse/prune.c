@@ -27,7 +27,7 @@
 #include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
 
-#define D_PRUNE 5 /* Debug level for this file. */
+#define D_PRUNE 5      /* Debug level for this file. */
 
 /* To debug pp_prune(), touch this file, run "make CPPFLAGS=-DDEBUG_PP_PRUNE",
  * and the run: link-parser -v=5 -debug=prune.c . */
@@ -1878,7 +1878,7 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
  */
 static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 {
-	int N_deleted[2] = {0};
+	int N_deleted[2] = {0}; /* Counts deletions: 0: initial 1: by mem. sharing */
 	static Connector bad_connector = { .nearest_word = BAD_WORD };
 
 	for (unsigned int w = 0; w < sent->length; w++)
@@ -1899,16 +1899,22 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 
 				if (shallow_c == NULL)
 				{
-					if  (nw1 == fw1)
+					if ((nw1 == fw1) || ((d->right->nearest_word > fw1) && PR(1)))
 					{
-						/* Word w must have LHS link to word fw1. So disjuncts
-						 * of word nw1 which don't have an RHS jet can be
-						 * deleted.  However, naturally there are no
-						 * connectors to assign BAD_WORD to. So create a dummy
-						 * one. The same is done for the other direction. */
+						/* If (nw1 == fw1) then word w must have a link to word
+						 * nw1, and disjuncts of word nw1 which don't have an
+						 * LHS jet can be deleted.
+						 * Else, since word w cannot connect to this disjunct
+						 * then if it is used then word w must connect to a word
+						 * after it in the range [nw1+1, fw1]. As a result,
+						 * disjuncts of nw1 with an RHS shallow connector having
+						 * nearest_word > fw1 can be deleted.
+						 *
+						 * Naturally there are no connectors to assign BAD_WORD
+						 * to. So use a dummy one. The same is done for the
+						 * other direction. */
 						d->left = &bad_connector;
 						N_deleted[0]++;
-						PR(1);
 					}
 					continue;
 				}
@@ -1942,9 +1948,9 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 
 				if (shallow_c == NULL)
 				{
-					if  (nw0 == fw0)
+					/* See the comments in the handling of the other direction. */
+					if ((nw0 == fw0) || ((d->left->nearest_word < fw0) && PR(0)))
 					{
-						/* See the comment in the handling of the other direction. */
 						d->right = &bad_connector;
 						N_deleted[0]++;
 						PR(0);
