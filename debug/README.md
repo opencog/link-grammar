@@ -179,9 +179,9 @@ and [msvc/README.md](/msvc/README.md).
 
 5) Test the "trailing connector" hashing for short sentences too (e.g. for
 all sentences with more than 10 tokens):
-`link-parser test=len-trailing-hash:10`
+`link-parser test=min-len-encoding:10`
 Or optionally (in order to see relevant debug messages from `preparation.c`):
-`link-parser test=len-trailing-hash:10 -v=5 -debug=preparation.c`
+`link-parser test=min-len-encoding:10 -v=5 -debug=preparation.c`
 
 6) -test=<values> for SAT parser debugging:
 `linkage-disconnected` - Display also solutions which don't have a full linkage.

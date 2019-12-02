@@ -858,9 +858,9 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
  * implementation didn't introduce bugs in the pruning and parsing steps).
  * E.g. when using link-parser:
  * - To entirely disable connector encoding:
- * link-parser -test=len-trailing-hash:254
+ * link-parser -test=min-len-encoding:254
  * - To use connector encoding even for short sentences:
- * link-parser -test=len-trailing-hash:0
+ * link-parser -test=min-len-encoding:0
  * Any different result (e.g. number of discarded disjuncts in the pruning
  * step or different parsing results) indicates a bug.
  *
