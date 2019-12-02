@@ -180,7 +180,7 @@ static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
 	if (ctxt->table_lrcnt == NULL)
 	{
 		ctxt->table_lrcnt_size =
-			next_power_of_two_up(2048 + sent->num_disjuncts * sent->length / 16);
+			next_power_of_two_up(2048 + sent->num_disjuncts * sent->length / 1.5f);
 		ctxt->table_lrcnt = malloc(ctxt->table_lrcnt_size * sizeof(Table_lrcnt));
 	}
 

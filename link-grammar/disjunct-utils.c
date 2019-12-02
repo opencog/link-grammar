@@ -867,10 +867,11 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
-static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool is_pruning)
+static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 {
+	unsigned int dcnt = 0, ccnt = 0;
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+
 	size_t dsize = dcnt * sizeof(Disjunct);
 	if (sizeof(Disjunct) != 64)
 		dsize = ALIGN(dsize, sizeof(Connector));
@@ -969,10 +970,9 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * invoked for pruning step) allow for a huge performance boost at these
  * steps.
  */
-static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
-                                     unsigned int ccnt, bool is_pruning)
+static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
-	Tracon_sharing *ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning);
+	Tracon_sharing *ts = pack_sentence_init(sent, is_pruning);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
@@ -986,13 +986,12 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
  * Pack the sentence for pruning.
  * @return New tracon sharing descriptor.
  */
-Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt)
+Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true);
+	Tracon_sharing *ts = pack_sentence(sent, true);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1016,13 +1015,12 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
  * Pack the sentence for parsing.
  * @return New tracon sharing descriptor.
  */
-Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt)
+Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false);
+	Tracon_sharing *ts = pack_sentence(sent, false);
 
 	if (verbosity_level(D_SPEC+2))
 	{
