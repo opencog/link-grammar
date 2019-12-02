@@ -969,25 +969,14 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * step or different parsing results) indicates a bug.
  */
 static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
-                                     unsigned int ccnt, bool is_pruning,
-                                     bool keep_disjuncts)
+                                     unsigned int ccnt, bool is_pruning)
 {
 	bool do_encoding = sent->length >= sent->min_len_encoding;
-	Tracon_sharing *ts;
-
-	ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning, do_encoding);
+	Tracon_sharing *ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning, do_encoding);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		sent->word[w].d = pack_disjuncts(sent, ts, sent->word[w].d, w);
-	}
-
-	if (keep_disjuncts)
-	{
-		if (NULL == ts->d)
-			ts->d = malloc(sent->length * sizeof(Disjunct *));
-		for (WordIdx w = 0; w < sent->length; w++)
-			ts->d[w] = sent->word[w].d;
 	}
 
 	return ts;
@@ -998,13 +987,12 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
  * @return New tracon sharing descriptor.
  */
 Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool keep_disjuncts)
+                                          unsigned int ccnt)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true, keep_disjuncts);
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1026,17 +1014,15 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
 
 /**
  * Pack the sentence for parsing.
- * @param keep_disjuncts Keep for possible parsing w/ increased null count.
  * @return New tracon sharing descriptor.
  */
 Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool keep_disjuncts)
+                                          unsigned int ccnt)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, keep_disjuncts);
+	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false);
 
 	if (verbosity_level(D_SPEC+2))
 	{
@@ -1067,6 +1053,11 @@ void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
+
+	if (NULL == ts->d)
+		ts->d = malloc(sent->length * sizeof(Disjunct *));
+	for (WordIdx w = 0; w < sent->length; w++)
+		ts->d[w] = sent->word[w].d;
 
 	return saved_memblock;
 }
