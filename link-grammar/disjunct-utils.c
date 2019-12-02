@@ -850,12 +850,26 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
  *   starting with a shallow connector will be considered different than
  *   similar ones starting with a deep connector.
  *
+ * Note:
+ * In order to save overhead, sentences shorter than
+ * sent->min_len_encoding don't undergo encoding - only packing.
+ * This can also be used for library tests that totally bypass the use of
+ * connector encoding (to validate that the tracon_id/sharing/refcount
+ * implementation didn't introduce bugs in the pruning and parsing steps).
+ * E.g. when using link-parser:
+ * - To entirely disable connector encoding:
+ * link-parser -test=len-trailing-hash:254
+ * - To use connector encoding even for short sentences:
+ * link-parser -test=len-trailing-hash:0
+ * Any different result (e.g. number of discarded disjuncts in the pruning
+ * step or different parsing results) indicates a bug.
+ *
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
 static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
                                           unsigned int ccnt,
-                                          bool is_pruning, bool do_encoding)
+                                          bool is_pruning)
 {
 	size_t dsize = dcnt * sizeof(Disjunct);
 	if (sizeof(Disjunct) != 64)
@@ -881,7 +895,8 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
 
-	if (do_encoding)
+	/* Encode connectors only for long-enough sentences. */
+	if (sent->length >= sent->min_len_encoding)
 	{
 		ts->csid[0] = tracon_set_create();
 		ts->csid[1] = tracon_set_create();
@@ -953,26 +968,11 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * The tracon IDs (if invoked for the parsing step) or tracon lists (if
  * invoked for pruning step) allow for a huge performance boost at these
  * steps.
- *
- * Note:
- * In order to save overhead, sentences shorter than
- * sent->min_len_encoding don't undergo encoding - only packing.
- * This can also be used for library tests that totally bypass the use of
- * connector encoding (to validate that the tracon_id/sharing/refcount
- * implementation didn't introduce bugs in the pruning and parsing steps).
- * E.g. when using link-parser:
- * - To entirely disable connector encoding:
- * link-parser -test=len-trailing-hash:254
- * - To use connector encoding even for short sentences:
- * link-parser -test=len-trailing-hash:0
- * Any different result (e.g. number of discarded disjuncts in the pruning
- * step or different parsing results) indicates a bug.
  */
 static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
                                      unsigned int ccnt, bool is_pruning)
 {
-	bool do_encoding = sent->length >= sent->min_len_encoding;
-	Tracon_sharing *ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning, do_encoding);
+	Tracon_sharing *ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
