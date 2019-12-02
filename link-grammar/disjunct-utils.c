@@ -192,58 +192,6 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 }
 #endif
 
-#if 0
-/**
- * Duplicate the given connector chain.
- * If the argument is NULL, return NULL.
- */
-static Connector *connectors_dup(Pool_desc *connector_pool, Connector *origc)
-{
-	Connector head;
-	Connector *prevc = &head;
-	Connector *newc = &head;
-
-	for (Connector *t = origc; t != NULL;  t = t->next)
-	{
-		newc = connector_new(connector_pool, NULL, NULL);
-		*newc = *t;
-
-		prevc->next = newc;
-		prevc = newc;
-	}
-	newc->next = NULL;
-
-	return head.next;
-}
-
-/**
- * Duplicate the given disjunct chain.
- * If the argument is NULL, return NULL.
- */
-static Disjunct *disjuncts_dup(Pool_desc *Disjunct_pool, Pool_desc *Connector_pool,
-                        Disjunct *origd)
-{
-	Disjunct head;
-	Disjunct *prevd = &head;
-	Disjunct *newd = &head;
-
-	for (Disjunct *t = origd; t != NULL; t = t->next)
-	{
-		newd = pool_alloc(Disjunct_pool);
-		newd->word_string = t->word_string;
-		newd->cost = t->cost;
-		newd->left = connectors_dup(Connector_pool, t->left);
-		newd->right = connectors_dup(Connector_pool, t->right);
-		newd->originating_gword = t->originating_gword;
-		prevd->next = newd;
-		prevd = newd;
-	}
-	newd->next = NULL;
-
-	return head.next;
-}
-#endif
-
 static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
 	disjunct_dup_table *dt;
