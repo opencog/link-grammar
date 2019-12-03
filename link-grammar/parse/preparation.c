@@ -89,15 +89,13 @@ static void setup_connectors(Sentence sent)
  */
 void gword_record_in_connector(Sentence sent)
 {
-	for (size_t w = 0; w < sent->length; w++)
+	for (Disjunct *d = sent->dc_memblock;
+	     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
 	{
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-		{
-			for (Connector *c = d->right; NULL != c; c = c->next)
-				c->originating_gword = d->originating_gword;
-			for (Connector *c = d->left; NULL != c; c = c->next)
-				c->originating_gword = d->originating_gword;
-		}
+		for (Connector *c = d->right; NULL != c; c = c->next)
+			c->originating_gword = d->originating_gword;
+		for (Connector *c = d->left; NULL != c; c = c->next)
+			c->originating_gword = d->originating_gword;
 	}
 }
 
