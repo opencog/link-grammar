@@ -411,7 +411,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	 * In that case a tracon list is produced for the pruning step,
 	 * and disjunct/connector packing is done too. */
 	sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
-	const char *min_len_encoding = test_enabled("len-trailing-hash");
+	const char *min_len_encoding = test_enabled("min-len-encoding");
 	if (NULL != min_len_encoding)
 		sent->min_len_encoding = atoi(min_len_encoding+1);
 

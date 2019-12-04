@@ -192,58 +192,6 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 }
 #endif
 
-#if 0
-/**
- * Duplicate the given connector chain.
- * If the argument is NULL, return NULL.
- */
-static Connector *connectors_dup(Pool_desc *connector_pool, Connector *origc)
-{
-	Connector head;
-	Connector *prevc = &head;
-	Connector *newc = &head;
-
-	for (Connector *t = origc; t != NULL;  t = t->next)
-	{
-		newc = connector_new(connector_pool, NULL, NULL);
-		*newc = *t;
-
-		prevc->next = newc;
-		prevc = newc;
-	}
-	newc->next = NULL;
-
-	return head.next;
-}
-
-/**
- * Duplicate the given disjunct chain.
- * If the argument is NULL, return NULL.
- */
-static Disjunct *disjuncts_dup(Pool_desc *Disjunct_pool, Pool_desc *Connector_pool,
-                        Disjunct *origd)
-{
-	Disjunct head;
-	Disjunct *prevd = &head;
-	Disjunct *newd = &head;
-
-	for (Disjunct *t = origd; t != NULL; t = t->next)
-	{
-		newd = pool_alloc(Disjunct_pool);
-		newd->word_string = t->word_string;
-		newd->cost = t->cost;
-		newd->left = connectors_dup(Connector_pool, t->left);
-		newd->right = connectors_dup(Connector_pool, t->right);
-		newd->originating_gword = t->originating_gword;
-		prevd->next = newd;
-		prevd = newd;
-	}
-	newd->next = NULL;
-
-	return head.next;
-}
-#endif
-
 static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
 	disjunct_dup_table *dt;
@@ -850,13 +798,28 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
  *   starting with a shallow connector will be considered different than
  *   similar ones starting with a deep connector.
  *
+ * Note:
+ * In order to save overhead, sentences shorter than
+ * sent->min_len_encoding don't undergo encoding - only packing.
+ * This can also be used for library tests that totally bypass the use of
+ * connector encoding (to validate that the tracon_id/sharing/refcount
+ * implementation didn't introduce bugs in the pruning and parsing steps).
+ * E.g. when using link-parser:
+ * - To entirely disable connector encoding:
+ * link-parser -test=min-len-encoding:254
+ * - To use connector encoding even for short sentences:
+ * link-parser -test=min-len-encoding:0
+ * Any different result (e.g. number of discarded disjuncts in the pruning
+ * step or different parsing results) indicates a bug.
+ *
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
-static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool is_pruning, bool do_encoding)
+static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 {
+	unsigned int dcnt = 0, ccnt = 0;
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+
 	size_t dsize = dcnt * sizeof(Disjunct);
 	if (sizeof(Disjunct) != 64)
 		dsize = ALIGN(dsize, sizeof(Connector));
@@ -881,7 +844,8 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
 
-	if (do_encoding)
+	/* Encode connectors only for long-enough sentences. */
+	if (sent->length >= sent->min_len_encoding)
 	{
 		ts->csid[0] = tracon_set_create();
 		ts->csid[1] = tracon_set_create();
@@ -953,41 +917,14 @@ void free_tracon_sharing(Tracon_sharing *ts)
  * The tracon IDs (if invoked for the parsing step) or tracon lists (if
  * invoked for pruning step) allow for a huge performance boost at these
  * steps.
- *
- * Note:
- * In order to save overhead, sentences shorter than
- * sent->min_len_encoding don't undergo encoding - only packing.
- * This can also be used for library tests that totally bypass the use of
- * connector encoding (to validate that the tracon_id/sharing/refcount
- * implementation didn't introduce bugs in the pruning and parsing steps).
- * E.g. when using link-parser:
- * - To entirely disable connector encoding:
- * link-parser -test=len-trailing-hash:254
- * - To use connector encoding even for short sentences:
- * link-parser -test=len-trailing-hash:0
- * Any different result (e.g. number of discarded disjuncts in the pruning
- * step or different parsing results) indicates a bug.
  */
-static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
-                                     unsigned int ccnt, bool is_pruning,
-                                     bool keep_disjuncts)
+static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
-	bool do_encoding = sent->length >= sent->min_len_encoding;
-	Tracon_sharing *ts;
-
-	ts = pack_sentence_init(sent, dcnt, ccnt, is_pruning, do_encoding);
+	Tracon_sharing *ts = pack_sentence_init(sent, is_pruning);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		sent->word[w].d = pack_disjuncts(sent, ts, sent->word[w].d, w);
-	}
-
-	if (keep_disjuncts)
-	{
-		if (NULL == ts->d)
-			ts->d = malloc(sent->length * sizeof(Disjunct *));
-		for (WordIdx w = 0; w < sent->length; w++)
-			ts->d[w] = sent->word[w].d;
 	}
 
 	return ts;
@@ -997,14 +934,12 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
  * Pack the sentence for pruning.
  * @return New tracon sharing descriptor.
  */
-Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool keep_disjuncts)
+Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true, keep_disjuncts);
+	Tracon_sharing *ts = pack_sentence(sent, true);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1026,17 +961,14 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
 
 /**
  * Pack the sentence for parsing.
- * @param keep_disjuncts Keep for possible parsing w/ increased null count.
  * @return New tracon sharing descriptor.
  */
-Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool keep_disjuncts)
+Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, keep_disjuncts);
+	Tracon_sharing *ts = pack_sentence(sent, false);
 
 	if (verbosity_level(D_SPEC+2))
 	{
@@ -1067,6 +999,11 @@ void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
+
+	if (NULL == ts->d)
+		ts->d = malloc(sent->length * sizeof(Disjunct *));
+	for (WordIdx w = 0; w < sent->length; w++)
+		ts->d[w] = sent->word[w].d;
 
 	return saved_memblock;
 }
