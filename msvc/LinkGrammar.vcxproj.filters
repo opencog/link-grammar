@@ -39,6 +39,9 @@
     <ClCompile Include="..\link-grammar\resources.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\string-id.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\link-grammar\string-set.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -195,6 +198,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\string-id.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\string-set.h">
