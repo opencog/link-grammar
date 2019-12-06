@@ -1187,7 +1187,7 @@ static Exp *make_expression(Dictionary dict)
 			 */
 			if (is_number(dict->token))
 			{
-				double cost;
+				float cost;
 
 				if (strtodC(dict->token, &cost))
 				{

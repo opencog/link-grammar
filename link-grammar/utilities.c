@@ -747,7 +747,8 @@ static void free_C_LC_NUMERIC(void)
 }
 #endif /* HAVE_LOCALE_T */
 
-bool strtodC(const char *s, double *r)
+/* FIXME: Rewrite to directly convert scaled integer strings (only). */
+bool strtodC(const char *s, float *r)
 {
 	char *err;
 
