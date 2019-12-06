@@ -15,18 +15,18 @@
 
 #include "api-structures.h"
 #include "dict-common/dict-utils.h"
-#include "disjunct-utils.h"   // for free_sentence_disjuncts()
+#include "disjunct-utils.h"             // free_sentence_disjuncts
 #include "linkage/linkage.h"
 #include "memory-pool.h"
-#include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
+#include "parse/histogram.h"            // PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
-#include "post-process/post-process.h" // for post_process_new()
+#include "post-process/post-process.h"  // post_process_new
 #include "prepare/exprune.h"
 #include "string-set.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
 #include "tokenize/tokenize.h"
-#include "tokenize/word-structures.h" // Needed for Word_struct
+#include "tokenize/word-structures.h"   // Word_struct
 #include "utilities.h"
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
