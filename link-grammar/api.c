@@ -15,7 +15,6 @@
 
 #include "api-structures.h"
 #include "dict-common/dict-utils.h"
-#include "dict-common/dict-api.h"      // for expression_strigify()
 #include "disjunct-utils.h"   // for free_sentence_disjuncts()
 #include "linkage/linkage.h"
 #include "memory-pool.h"
@@ -26,7 +25,6 @@
 #include "string-set.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
-#include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
 #include "tokenize/word-structures.h" // Needed for Word_struct
 #include "utilities.h"
