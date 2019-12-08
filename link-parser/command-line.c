@@ -25,6 +25,7 @@ static struct
 	int verbosity;
 	char * debug;
 	char * test;
+	char * dialect;
 	int timeout;
 	int memory;
 	int linkage_limit;
@@ -69,6 +70,7 @@ Switch default_switches[] =
 	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
 	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
+	{"debug",      String, "Comma-separated function names to debug", &local.debug},
 	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
 	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
 	{"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
@@ -85,22 +87,21 @@ Switch default_switches[] =
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
+	{"test",       String, "Comma-separated test features", &local.test},
 #endif /* HAVE_HUNSPELL */
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
 	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-	{"debug",      String, "Comma-separated function names to debug", &local.debug},
-	{"test",       String, "Comma-separated test features", &local.test},
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
-	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
-	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
-	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
+	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
+	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
+	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
