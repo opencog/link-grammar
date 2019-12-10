@@ -20,8 +20,8 @@
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "error.h"
-#include "print/print.h"
 #include "externs.h"
+#include "print/print.h"
 #include "read-dict.h"
 #include "string-set.h"
 #include "tokenize/tok-structures.h"    // MT_WALL
