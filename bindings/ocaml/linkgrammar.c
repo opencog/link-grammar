@@ -20,7 +20,7 @@
 /********************************************/
 /* Link Grammar Includes                    */
 /********************************************/
-#include <link-grammar/link-includes.h>
+#include "link-grammar/link-includes.h"
 
 
 #define Po_val(v) (*((Parse_Options *)Data_custom_val(v)))
