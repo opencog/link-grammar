@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include "connectors.h"  // for connector_set_delete
+#include "dialect.h"
 #include "dict-affix.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -298,6 +299,11 @@ void dictionary_delete(Dictionary dict)
 	pp_knowledge_close(dict->base_knowledge);
 	pp_knowledge_close(dict->hpsg_knowledge);
 	string_set_delete(dict->string_set);
+
+	free_dialect(dict->dialect);
+	free(dict->tag.array);
+	string_id_delete(dict->tag.set);
+
 	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);

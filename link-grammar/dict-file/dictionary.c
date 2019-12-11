@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include "api-structures.h"
+#include "dict-common/dialect.h"      // dialect_alloc
 #include "dict-common/dict-affix.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
@@ -21,6 +22,7 @@
 #include "dict-common/idiom.h"
 #include "dict-common/regex-morph.h"
 #include "post-process/pp_knowledge.h"
+#include "read-dialect.h"
 #include "read-dict.h"
 #include "read-regex.h"
 #include "string-set.h"
@@ -136,6 +138,7 @@ dictionary_six_str(const char * lang,
 		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
 		dict->lookup = file_boolean_lookup;
+		dict->tag.set = string_id_create();
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;
 	}
@@ -176,6 +179,12 @@ dictionary_six_str(const char * lang,
 		 * FIXME: The dictionary creating stuff needs a rearrangement.
 		 */
 		return dict;
+	}
+
+	if (dict->tag.num == 0)
+	{
+		string_id_delete(dict->tag.set);
+		dict->tag.set = NULL;
 	}
 
 	dictionary_setup_locale(dict);
@@ -282,6 +291,28 @@ Dictionary dictionary_create_from_file(const char * lang)
 		free(cons_name);
 		free(pp_name);
 		free(dict_name);
+
+		if (dictionary != NULL)
+		{
+			char *dialect_name = join_path(lang, "4.0.dialect");
+			if (!dialect_file_read(dictionary, dialect_name))
+			{
+				dictionary_delete(dictionary);
+				dictionary = NULL;
+			}
+			else if ((dictionary->dialect == NULL) ||
+			         (dictionary->dialect->num_table_tags == 0))
+			{
+				/* No or empty dialect file. */
+				free_dialect(dictionary->dialect);
+				dictionary->dialect = NULL;
+			}
+			free(dialect_name);
+
+			if (0)
+			{
+			}
+		}
 	}
 	else
 	{

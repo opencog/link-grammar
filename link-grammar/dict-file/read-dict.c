@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "api-structures.h"             // Sentence_s (add_empty_word)
+#include "dict-common/dialect.h"
 #include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
@@ -794,6 +795,7 @@ static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 Exp *Exp_create(Dictionary dict)
 {
 	Exp *e = pool_alloc(dict->Exp_pool);
+	e->tag = NULL;
 	return e;
 }
 
@@ -1180,9 +1182,10 @@ static Exp *make_expression(Dictionary dict)
 				return NULL;
 			}
 
-			/* A square bracket can have a number after it.
-			 * If it is present, then that number is interpreted
-			 * as the cost of the bracket. Else, the cost of a
+			/* A square bracket can have a number or a name after it.
+			 * If a number is present, then that it is interpreted
+			 * as the cost of the bracket. If a name is present, it
+			 * is used as an expression tag. Else, the cost of a
 			 * square bracket is 1.0.
 			 */
 			if (is_number(dict->token))
@@ -1198,6 +1201,24 @@ static Exp *make_expression(Dictionary dict)
 					warning(dict, "Invalid cost (using 1.0)\n");
 					nl->cost += 1.0;
 				}
+				if (!link_advance(dict)) {
+					return NULL;
+				}
+			}
+			else if ((strcmp(dict->token, "or") != 0) &&
+			         (strcmp(dict->token, "and") != 0) &&
+			         isalpha(dict->token[0]))
+			{
+				if (!valid_dialect_name(dict->token))
+				{
+					dict_error(dict, "Invalid expression tag name");
+					return NULL;
+				}
+				if (nl->tag != NULL)
+				{
+					nl = make_unary_node(dict, nl);
+				}
+				nl->tag = exptag_add(dict, dict->token);
 				if (!link_advance(dict)) {
 					return NULL;
 				}
