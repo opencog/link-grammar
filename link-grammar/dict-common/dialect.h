@@ -1,0 +1,97 @@
+/*************************************************************************/
+/* Copyright (C) 2019 Amir Plivatsky                                     */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software.    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
+
+#ifndef _DIALECT_H_
+#define _DIALECT_H_
+
+#include <ctype.h>
+#include <stdint.h>
+
+#include "api-types.h"
+#include "dict-structures.h"            // cost_eq
+#include "string-id.h"
+
+/* dialect_tag costs with a special meaning. See also link-includes.h. */
+#define DIALECT_COST_MAX        9999.0     /* Less than that is a real cost */
+#define DIALECT_SUB             10002.0    /* Sub-dialect (a vector name) */
+#define DIALECT_SECTION         10003.0    /* Section header (a vector name) */
+
+/* Used for dialect table entries and Dialect_Option component cost array. */
+typedef struct
+{
+	const char *name;
+	float cost;        /* Component cost, DIALECT_SUB or DIALECT_SECTION */
+} dialect_tag;
+
+/* An array of dialect table section names (which are dialect vector
+ * names), indexed by their ordinal number (starting with 1) in the
+ * "4.0.dialect" file. The 0'th element indicates the index of the default
+ * section in the dialect table (NO_INDEX if no default entry). The rest
+ * of the elements (which also include the default section if exists)
+ * contain the index of their section in the dialect table.) */
+typedef struct
+{
+	const char *name;
+	unsigned int index;            /* Dialect table index */
+} dialect_section_tag;
+
+#define NO_INDEX ((unsigned int)-1)
+
+/* This struct is kept in the Dictionary struct. */
+struct Dialect_s
+{
+	dialect_tag *table;            /* A representation of "4.0.dialect." */
+	String_id *section_set;        /* Dialect table section names. */
+	dialect_section_tag *section;  /* Section tags (indexed by section_set id) */
+	char *kept_input;              /* For dialect table string memory XXX */
+	unsigned int num_table_tags;   /* Number of entries in dialect_tag table */
+	unsigned int num_sections;     /* Dialect_section_tag number of entries */
+};
+
+/* Dialect object for parse_options_*_dialect(). */
+struct dialect_option_s
+{
+#ifdef DIALECT_OBJECT
+	char const **vname;            /* Dialect vector names */
+	dialect_tag *ccost;            /* Dialect component cost */
+	unsigned int vname_sz;
+	unsigned int ccost_sz;
+#else
+	char *conf;
+#endif
+	float *cost_table;             /* Indexed by Exptag index field */
+};
+
+#ifndef DIALECT_OBJECT
+typedef struct dialect_option_s dialect_info;
+#endif
+
+Dialect *dialect_alloc(void);
+void free_dialect(Dialect *);
+Exptag *exptag_add(Dictionary, const char *);
+bool setup_dialect(Dictionary, Parse_Options);
+void free_cost_table(Parse_Options opts);
+bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info *);
+#ifdef DIALECT_OBJECT
+Dialect_Option dialect_option_alloc(void);
+#endif
+
+static inline bool valid_dialect_name(const char *name)
+{
+	if (!isalpha(name[0])) return false;
+	while (*++name != '\0')
+	{
+		if (!isalnum(name[0]) && name[0] != '_' && name[0] != '-')
+			return false;
+	}
+	return true;
+}
+#endif /* _DIALECT_H_ */

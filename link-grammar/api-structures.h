@@ -44,6 +44,7 @@
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "api-types.h"
+#include "dict-common/dialect.h"
 #include "tracon-set.h"
 #include "memory-pool.h"
 #include "string-set.h"
@@ -112,6 +113,9 @@ struct Parse_Options_s
 	/* Options governing the generation of linkages. */
 	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
 	bool display_morphology;/* If true, print morpho analysis of words TRUE */
+
+	/* Options governing the dictionary interpretation. */
+	dialect_info dialect;
 };
 
 typedef struct word_queue_s word_queue_t;

@@ -14,6 +14,7 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define _LG_DICT_STRUCTURES_H_
 
+#include "api-types.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
@@ -37,11 +38,12 @@ typedef enum
 static const int cost_max_dec_places = 3;
 static const double cost_epsilon = 1E-5;
 
-typedef struct
+#define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
+struct Exptag_s
 {
 	const char *name;
 	unsigned int index;
-} exptag;
+};
 
 /**
  * The Exp structure defined below comprises the expression trees that are
@@ -63,7 +65,7 @@ struct Exp_struct
 		Exp *operand_first; /* First operand (for non-terminals). */
 		condesc_t *condesc; /* Only needed if it's a connector. */
 	};
-	exptag *tag;       /* Used for dialect cost. */
+	Exptag *tag;       /* Used for dialect cost. */
 };
 
 bool cost_eq(double cost1, double cost2);
