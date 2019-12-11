@@ -68,8 +68,13 @@ nonCAP.zzz: ZZZ-;
 % various things, including regex matches for unknown words. (i.e. panic
 % parsing is set to 4 at this time.)
 
-<no-det-null>: [[[[()]]]];
 <costly-null>: [[[[()]]]];
+
+% A definition according to the comments above.
+% <no-det-null>: [[[[()]]]];
+
+% A definition using the "headline" dialect.
+<no-det-null>: [()]headline;
 
 % NOUNS
 
