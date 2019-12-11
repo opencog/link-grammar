@@ -2982,7 +2982,8 @@ static Word *word_new(Sentence sent)
  * the base word for each expression, and its subscript is the one from the
  * dictionary word of the expression.
  */
-static X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
+static X_node * build_word_expressions(Sentence sent, const Gword *w,
+                                       const char *s, Parse_Options opts)
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
@@ -2996,7 +2997,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 		y = (X_node *) pool_alloc(sent->X_node_pool);
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(dn->exp, sent->Exp_pool);
+		x->exp = copy_Exp(dict, dn->exp, sent->Exp_pool, opts);
 		if (NULL == s)
 		{
 			x->string = dn->string;
@@ -3037,7 +3038,8 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 #define D_X_NODE 9
 #define D_DWE 8
 static bool determine_word_expressions(Sentence sent, Gword *w,
-                                       unsigned int *ZZZ_added)
+                                       unsigned int *ZZZ_added,
+                                       Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	const size_t wordpos = sent->length - 1;
@@ -3056,11 +3058,11 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 
 	if (w->status & WS_INDICT)
 	{
-		we = build_word_expressions(sent, w, NULL);
+		we = build_word_expressions(sent, w, NULL, opts);
 	}
 	else if (w->status & WS_REGEX)
 	{
-		we = build_word_expressions(sent, w, w->regex_name);
+		we = build_word_expressions(sent, w, w->regex_name, opts);
 	}
 	else
 	{
@@ -3073,7 +3075,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			we = build_word_expressions(sent, w, UNKNOWN_WORD);
+			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
 			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
 			w->status |= WS_UNKNOWN;
 		}
@@ -3256,7 +3258,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				/* This is a new wordgraph word.
 				 */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, &ZZZ_added))
+				if (!determine_word_expressions(sent, wg_word, &ZZZ_added, opts))
 					error_encountered = true;
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    (0 == strcmp(wg_word->subword, RIGHT_WALL_WORD)))

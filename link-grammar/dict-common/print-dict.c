@@ -16,6 +16,7 @@
 #include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
 #include "dict-defines.h"
+#include "dict-structures.h"        // Exptag, for dialect print
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
 #include "print/print.h"
@@ -40,6 +41,15 @@ const char *cost_stringify(double cost)
 	if ((l < 0) || (l >= (int)sizeof(buf))) return "ERR_COST";
 
 	return buf;
+}
+
+static void print_expression_tag(dyn_str *e, const Exp *n)
+{
+	if (NULL != n->tag)
+	{
+		dyn_strcat(e, "]");
+		dyn_strcat(e, n->tag->name);
+	}
 }
 
 /**
@@ -93,6 +103,8 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		}
 	}
 
+	if (NULL != n->tag) dyn_strcat(e, "[");
+
 	/* print the connector only */
 	if (n->type == CONNECTOR_type)
 	{
@@ -101,6 +113,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		append_string(e, "%s%c", n->condesc?n->condesc->string:"(null)", n->dir);
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
+		print_expression_tag(e, n);
 		return e;
 	}
 
@@ -111,6 +124,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		dyn_strcat(e, "()");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
+		print_expression_tag(e, n);
 		return e;
 	}
 
@@ -126,6 +140,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		dyn_strcat(e, "}");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
+		print_expression_tag(e, n);
 		return e;
 	}
 
@@ -140,6 +155,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 		if ((icost == 0) && need_parens) dyn_strcat(e, ")");
+		print_expression_tag(e, n);
 		return e;
 	}
 
@@ -181,6 +197,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 	if ((icost == 0) && need_parens) dyn_strcat(e, ")");
 
+	print_expression_tag(e, n);
 	return e;
 }
 
@@ -240,6 +257,7 @@ static char *display_word_split(Dictionary dict,
 		print_sentence_word_alternatives(s, sent, false, display, NULL);
 	}
 	sentence_delete(sent);
+	free_cost_table(&display_word_opts); /* XXX */
 
 	char *out = dyn_str_take(s);
 	if ('\0' != out[0]) return out;

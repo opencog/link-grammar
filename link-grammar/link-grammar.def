@@ -59,6 +59,8 @@ parse_options_get_repeatable_rand
 parse_options_reset_resources
 parse_options_set_display_morphology
 parse_options_get_display_morphology
+parse_options_set_dialect
+parse_options_get_dialect
 sentence_create
 sentence_delete
 sentence_split
