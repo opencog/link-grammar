@@ -71,6 +71,7 @@ Switch default_switches[] =
 	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
 	{"debug",      String, "Comma-separated function names to debug", &local.debug},
+	{"dialect",    String, "Comma-separated dialects",      &local.dialect},
 	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
 	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
 	{"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
@@ -862,6 +863,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	Parse_Options opts = copts->popts;
 	local.verbosity = parse_options_get_verbosity(opts);
 	local.debug = parse_options_get_debug(opts);
+	local.dialect = parse_options_get_dialect(opts);
 	local.test = parse_options_get_test(opts);
 	local.timeout = parse_options_get_max_parse_time(opts);;
 	local.memory = parse_options_get_max_memory(opts);;
@@ -899,6 +901,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_verbosity(opts, local.verbosity);
 	parse_options_set_debug(opts, local.debug);
 	parse_options_set_test(opts, local.test);
+	parse_options_set_dialect(opts, local.dialect);
 	parse_options_set_max_parse_time(opts, local.timeout);
 	parse_options_set_max_memory(opts, local.memory);
 	parse_options_set_linkage_limit(opts, local.linkage_limit);
