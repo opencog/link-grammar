@@ -295,7 +295,11 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
-	Disjunct *prev = NULL; /* The first disjunct is never eliminated. */
+	/* This initialization is unneeded because the first disjunct is never
+	 * eliminated. However, omitting it generates "uninitialized" compiler
+	 * warning. Setting it to NULL generates clang-analyzer error on
+	 * possible NULL dereference. */
+	Disjunct *prev = dw;
 
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
