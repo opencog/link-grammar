@@ -225,6 +225,8 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
+	assert(sent->length > 0);
+
 	fast_matcher_t *ctxt;
 
 	ctxt = (fast_matcher_t *) xalloc(sizeof(fast_matcher_t));
