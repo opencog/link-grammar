@@ -31,10 +31,15 @@ const char * lg_exp_get_string(const Exp* exp)
 void free_Exp(Exp *e)
 {
 	if (NULL == e) return; /* Exp might be null if the user has a bad dict. */
+	Exp *operand_next;
+
 	if (e->type != CONNECTOR_type)
 	{
-		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+		for (Exp *opd = e->operand_first; opd != NULL; opd = operand_next)
+		{
+			operand_next = opd->operand_next;
 			free_Exp(opd);
+		}
 	}
 	free(e);
 }
