@@ -2092,7 +2092,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 			{
 				if (null_count == 0)
 					cross_mlink_prune(sent, pc.ml);
-				num_deleted = power_prune(sent, &pc, opts);
+				power_prune(sent, &pc, opts);
 			}
 		}
 	}
