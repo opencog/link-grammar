@@ -28,6 +28,8 @@ const char * lg_exp_get_string(const Exp* exp)
 }
 
 /* ======================================================== */
+
+#if 0
 void free_Exp(Exp *e)
 {
 	if (NULL == e) return; /* Exp might be null if the user has a bad dict. */
@@ -43,6 +45,8 @@ void free_Exp(Exp *e)
 	}
 	free(e);
 }
+#endif
+
 /* Exp utilities ... */
 
 /* Returns the number of connectors in the expression e */
