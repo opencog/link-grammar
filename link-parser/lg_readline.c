@@ -309,6 +309,7 @@ static unsigned char lg_complete(EditLine *el, int ch)
 				if (byte_len == (size_t)-1)
 				{
 					printf("Error: Unable to process UTF8 in directory name.\n");
+					free(wdirname);
 					return CC_ERROR;
 				}
 				char *dirname = malloc(byte_len + 1);
