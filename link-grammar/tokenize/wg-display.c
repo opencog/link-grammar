@@ -24,8 +24,8 @@
 #endif
 #include <signal.h>    /* SIG* */
 
-#include <print/print-util.h> /* for append_string */
-#include <utilities.h> /* for dyn_str functions and UNREACHABLE */
+#include "print/print-util.h" /* for append_string */
+#include "utilities.h" /* for dyn_str functions and UNREACHABLE */
 #endif /* USE_WORDGRAPH_DISPLAY */
 
 #include "api-structures.h"

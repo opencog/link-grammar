@@ -17,6 +17,7 @@
 #include "count.h"
 #include "disjunct-utils.h"             // Disjunct
 #include "extract-links.h"
+#include "fast-match.h"
 #include "utilities.h"                  // Windows rand_r()
 #include "linkage/linkage.h"
 #include "tokenize/word-structures.h"   // Word_Struct
