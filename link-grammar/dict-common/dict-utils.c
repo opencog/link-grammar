@@ -104,12 +104,13 @@ static bool exp_compare(Exp *e1, Exp *e2)
 	{
 		/* Iterate operands to avoid a deep recursion due to a lot of operands. */
 		for (e1 = e1->operand_first, e2 = e2->operand_first;
-		     e1 != NULL || e2 != NULL;
+		     (e1 != NULL) && (e2 != NULL);
 		     e1 = e1->operand_next, e2 = e2->operand_next)
 		{
 			if (!exp_compare(e1, e2))
 				return false;
 		}
+		return ((e1 == NULL) && (e2 == NULL));
 	}
 	return true;
 }
