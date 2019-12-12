@@ -31,12 +31,16 @@
 
 [default]
 no-headline
+bad-spelling: 0
 
 [no-headline]
 headline: 4
 
 [headline]
 headline: 0
+
+[no-bad-spelling]
+bad-spelling: 4
 
 % Examples.
 %[irish1]  %this is a test
