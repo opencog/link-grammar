@@ -282,3 +282,25 @@ Its value may be:
 % s             2   Display unsplit-words as subgraphs
 % u             1   Display unsplit-word links
 % x                 Display using X11 even on Windows (if supported)
+
+[dialect]
+This variable allows parsing according to predefined dialects (defined in
+the "4.0.dialect" file), by modifying the disjunct set of dictionary words
+whose expressions contain symbolic cost specifications - aka "dialect
+components". It does that by controlling the cost values of these dialect
+components.
+
+The value of this variable consists of comma-separated names, with an
+optional cost value after a ":" delimiter (which can be empty).
+
+Names without a cost value are dialect names from the "4.0.dialect" file,
+and the dialect components are assigned costs as defined there.
+Names with values are dialect components and their values. A missing
+value after a ":" delimiter denotes a "very high" cost (to disable
+the related disjuncts).
+
+Examples:
+
+  !dialect=irish
+  !dialect=irish,headline
+  !dialect=instructions,bad-spelling=2.2

@@ -21,7 +21,7 @@
 #include "string-id.h"
 #include "string-set.h"
 
-#define D_DIALECT 8 /* Verbosity level for this file. */
+#define D_DIALECT 7 /* Verbosity level for this file (also 8). */
 
 static void free_dialect_table(Dialect *di)
 {
@@ -250,9 +250,9 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 	if (dinfo->cost_table != NULL)
 	{
 		/* Cached table. */
-		prt_error("Debug: Cached cost table found\n");
+		lgdebug(D_DIALECT, "Debug: Cached cost table found\n");
 
-		if (verbosity_level(+D_DIALECT))
+		if (verbosity_level(+D_DIALECT+1))
 			print_cost_table(dict, di, dinfo);
 
 		return true;
@@ -296,7 +296,7 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 	}
 #endif
 
-	if (verbosity_level(+D_DIALECT))
+	if (verbosity_level(+D_DIALECT+1))
 		print_cost_table(dict, di, dinfo);
 
 	return true;
