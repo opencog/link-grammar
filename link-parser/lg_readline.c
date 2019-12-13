@@ -308,7 +308,8 @@ static unsigned char lg_complete(EditLine *el, int ch)
 				size_t byte_len = wcstombs(NULL, wdirname, 0);
 				if (byte_len == (size_t)-1)
 				{
-					printf("Error: Unable to process UTF8 in directory name.\n");
+					printf("Error: Unable to process non-ASCII in directory name.\n");
+					free(wdirname);
 					return CC_ERROR;
 				}
 				char *dirname = malloc(byte_len + 1);

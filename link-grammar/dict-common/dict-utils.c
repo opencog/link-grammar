@@ -28,16 +28,25 @@ const char * lg_exp_get_string(const Exp* exp)
 }
 
 /* ======================================================== */
+
+#if 0
 void free_Exp(Exp *e)
 {
 	if (NULL == e) return; /* Exp might be null if the user has a bad dict. */
+	Exp *operand_next;
+
 	if (e->type != CONNECTOR_type)
 	{
-		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+		for (Exp *opd = e->operand_first; opd != NULL; opd = operand_next)
+		{
+			operand_next = opd->operand_next;
 			free_Exp(opd);
+		}
 	}
 	free(e);
 }
+#endif
+
 /* Exp utilities ... */
 
 /* Returns the number of connectors in the expression e */
@@ -104,12 +113,13 @@ static bool exp_compare(Exp *e1, Exp *e2)
 	{
 		/* Iterate operands to avoid a deep recursion due to a lot of operands. */
 		for (e1 = e1->operand_first, e2 = e2->operand_first;
-		     e1 != NULL || e2 != NULL;
+		     (e1 != NULL) && (e2 != NULL);
 		     e1 = e1->operand_next, e2 = e2->operand_next)
 		{
 			if (!exp_compare(e1, e2))
 				return false;
 		}
+		return ((e1 == NULL) && (e2 == NULL));
 	}
 	return true;
 }
