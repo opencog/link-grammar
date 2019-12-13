@@ -5,6 +5,7 @@ Version 5.8.0 (XXX 2020)
  * Copy (merge) Richard van der Dys `node.js` bindings.
  * English dict: Provide head and tail markers for all conjunctions.
  * Remove the Python 2 bindings.
+ * Add dialect support to the library.
 
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.
