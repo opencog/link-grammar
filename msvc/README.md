@@ -4,7 +4,7 @@ Note: See also [BUILDING on Windows](/README.md#building-on-windows)
 in the main README.
 
 This directory contains project files for building Link Grammar with the
-Microsoft Visual Studio 2017 IDE (MSVC15). They were created and tested with
+Microsoft Visual Studio 2019 IDE (MSVC 16). They were created and tested with
 the Community Edition of that product.
 
 **!!!WARNING!!!**<br>
@@ -138,10 +138,10 @@ BTW, when running an MSVC-compiled binary under Cygwin, don't exit
 link-parser by using `^Z` - the shell may get stuck because the program
 somehow may continue to run in the background.  Instead, exit using `!exit` .
 
-NOTE: The created DLLs need the MSVC15 runtime environment to run. This is
+NOTE: The created DLLs need the MSVC 16 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
 But to be able to run Link Grammar on other computer you need to install
-[Visual C++ Redistributable for Visual Studio 2017](https://visualstudio.microsoft.com/downloads/).
+[Visual C++ Redistributable for Visual Studio 2019](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads).
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
@@ -149,14 +149,14 @@ Running Python programs
 -----------------------
 Since the Link Grammar library has no installation script yet,
 running Python programs that use the bindings needs a careful setup
-of PYTHONPATH and PATH. A program named make-check.py (named after
-"make check" that runs tests.py in POSIX systems) is provided to
+of PYTHONPATH and PATH. A program named `make-check.py` (named after
+"make check" that runs `tests.py` in POSIX systems) is provided to
 set them automatically.
 
 Also see "Permanent installation".
 
 ### Using make-check.py
-The **make-check.py** program is designed to reside in the MSVC
+The `make-check.py` program is designed to reside in the MSVC
 configuration directory.  However, it can run from any directory
 using a full or a relative path to invoke it.
 
