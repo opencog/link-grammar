@@ -856,7 +856,7 @@ dnl MAYBE_WARN in an ignorable way (like adding whitespace)
 
 dnl MAYBE_WARN works for C++ and C, while MAYBE_WARN_C is for C only.
 MAYBE_WARN_CXX="-Wall -Wextra \
--Wsign-compare -Werror-implicit-function-declaration \
+-Wsign-compare \
 -Wpointer-arith -Wwrite-strings -Wmissing-declarations \
 -Wpacked -Wswitch-enum -Wmissing-format-attribute \
 -Wstrict-aliasing -Winit-self -Wshadow \
@@ -864,7 +864,7 @@ MAYBE_WARN_CXX="-Wall -Wextra \
 -Wno-attributes -Wno-long-long -Winline"
 
 MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
--Wnested-externs -Wold-style-definition"
+-Wnested-externs -Wold-style-definition -Werror-implicit-function-declaration"
 
 MAYBE_WARN="$MAYBE_WARN_CXX $MAYBE_WARN_C"
 
