@@ -1805,7 +1805,7 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 			if (ml[w].nw[0] != ml[w].nw[1])
 			{
 				/* -1 means at least one missing jet at that direction. */
-				prt_error("%3d: nearest_word (%3d %3d)", w,
+				prt_error("%3u: nearest_word (%3d %3d)", w,
 				       w==ml[w].nw[0]?-1:ml[w].nw[0],
 				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
 				prt_error("     farthest_word (%3d %3d)\n\\",

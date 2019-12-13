@@ -131,7 +131,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 		opts->cost_model.compare_fn = &VDAL_compare_parse;
 		break;
 	default:
-		prt_error("Error: Illegal cost model: %d\n", cm);
+		prt_error("Error: Illegal cost model: %d\n", (int)cm);
 	}
 }
 

@@ -863,7 +863,7 @@ MAYBE_WARN_CXX="-Wall -Wextra \
 -Wno-missing-field-initializers -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long -Winline"
 
-MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes \
+MAYBE_WARN_C="-Wstrict-prototypes -Wmissing-prototypes -Wformat-signedness \
 -Wnested-externs -Wold-style-definition -Werror-implicit-function-declaration"
 
 MAYBE_WARN="$MAYBE_WARN_CXX $MAYBE_WARN_C"
