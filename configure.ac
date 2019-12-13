@@ -834,7 +834,7 @@ AC_DEFUN([LINK_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
 
   link_save_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $1"
+  CFLAGS="$CFLAGS -Werror $1"
 
   AC_COMPILE_IFELSE([AC_LANG_SOURCE([[ ]])], [link_cc_flag=yes], [link_cc_flag=no])
   CFLAGS="$link_save_CFLAGS"
