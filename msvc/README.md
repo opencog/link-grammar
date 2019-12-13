@@ -31,7 +31,7 @@ For Python bindings, install the desired Python distributions from
 [Python Releases for Windows](https://www.python.org/downloads/windows/).
 You also have to install [SWIG](http://www.swig.org/download.html).
 
-The bindings were testes using swigwin-3.0.10 with Python 2.7.12 and 3.4.4.
+The bindings were testes using swigwin-3.0.10 with Python 3.4.4.
 
 Setup
 -----
@@ -78,10 +78,6 @@ dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_r
 
  Macro | Default value |
 ---|---|
-PYTHON2         | C:\Python27 |
-PYTHON2_INCLUDE | $(PYTHON2)\include |
-PYTHON2_LIB     | $(PYTHON2)\lib |
-PYTHON2_EXE     | $(PYTHON2)\python.exe |
 PYTHON3         | C:\Python34 |
 PYTHON3_INCLUDE | $(PYTHON3)\include |
 PYTHON3_LIB     | $(PYTHON3)\lib |
@@ -179,10 +175,10 @@ For example, `x64\Release\Python3`.
 its default location you can leave it empty.
 - ARGUMENTS: Optional script arguments, for example `-v` for `tests.py`.
 
-So in order to run `tests.py` with Python2 for a Debug compilation on x64
+So in order to run `tests.py` with Python3 for a Debug compilation on x64
 platform, enter:
 ```
-console-prompt>make-check x64\Debug\Python2
+console-prompt>make-check x64\Debug\Python3
 ```
 To debug a Python3 script "mylgtest.py" that resides in
 `bindings\python-examples`:
@@ -196,7 +192,7 @@ console-prompt>make-check x64\Debug\Python3 \Users\username\mylgtest.py
 The following starts an interactive Python with the correct PYTHONPATH
 and PATH:
 ```
-console-prompt>make-check.py x64\Debug\Python2 ""
+console-prompt>make-check.py x64\Debug\Python3 ""
 ```
 Locale and code page settings
 -----------------------------

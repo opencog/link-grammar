@@ -133,8 +133,7 @@ Contents
 | bindings/java/ | Optional Java language bindings. |
 | bindings/lisp/ | Optional Common Lisp language bindings. |
 | bindings/ocaml/ | Optional OCaML language bindings. |
-| bindings/python/  | Optional Python2 language bindings. |
-| bindings/python3/ | Optional Python3 language bindings. |
+| bindings/python/  | Optional Python3 language bindings. |
 | bindings/python-examples/ | Link-grammar test suite and Python language binding usage example. |
 | bindings/swig/ | SWIG interface file, for other FFI interfaces. |
 |  |  |
@@ -286,10 +285,11 @@ This will create the bindings and also run a small unit test (which
 should pass). An example can be found in
 `bindings/node.js/examples/simple.js`.
 
-Python2 and Python3 Bindings
-----------------------------
-The Python2 and Python3 bindings are built by default, providing that
+Python3 Bindings
+----------------
+The Python3 bindings are built by default, providing that
 the corresponding Python development packages are installed.
+(Python2 bindings are not supported.)
 
 These packages are:
 - Linux:

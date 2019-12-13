@@ -258,19 +258,11 @@ AC_ARG_ENABLE( java-bindings,
 	[enable_java_bindings=yes])
 
 # Python is now enabled by default
-define([PYTHON2_REQUIRED], [2.6])
 define([PYTHON3_REQUIRED], [3.4])
 AC_ARG_ENABLE( python-bindings,
-	[  --disable-python-bindings  disable build of python bindings
-                          (default is enabled)
-  --enable-python-bindings[[=ARG]]
-                          create python bindings to the link-grammar library
-                          (minimum versions: PYTHON2_REQUIRED and PYTHON3_REQUIRED).
-                          ARG=yes (default): create both python 2 & 3 bindings
-                          ARG=2: create only python 2 bindings
-                          ARG=3: create only python 3 bindings],
-                          [enable_python_bindings="$enableval";
-                           test -z "$enableval" && enable_python_bindings=yes],
+	[  --disable-python-bindings
+	                  disable build of python bindings (default is enabled)],
+                          [],
                           [enable_python_bindings=yes]
 )
 
@@ -782,77 +774,34 @@ define([AC_MSG_ERROR],
 	lg_python_unusable=yes
 	[AC_MSG_NOTICE([$1])])
 
-Python2Found=no # This and the next variables should persist the Python2 check
-PYTHON2= PYTHON2_CPPFLAGS= PYTHON2_LIBS= PYTHON2_LDFLAGS= python2dir=
-lg_display_PYTHON2=
-AC_VARNAMES_CHECKPOINT # Remember the current variable names
-
-if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x2; then
-	# Check whether "python" is actually Python3 (as on Gentoo and Arch). If so,
-	# if Python2 exists it is most probably "python2" (but surely not "python").
-	AC_MSG_CHECKING([whether "python" is Python3])
-	AM_PYTHON_CHECK_VERSION([python], [3],
-	   [AC_MSG_RESULT(yes); PYTHON=python2], [AC_MSG_RESULT(no)])
-
-	AM_PATH_PYTHON(PYTHON2_REQUIRED, [Python2Found=yes], [Python2Found=no])
-	AX_PYTHON_DEVEL(>= 'PYTHON2_REQUIRED')
-	test -n "$lg_python_unusable" && Python2Found=no
-	if test x$Python2Found = xyes; then
-		Python2Found=$PYTHON_VERSION
-		PYTHON2=$PYTHON
-		lg_display_PYTHON2=" ($PYTHON)"
-		PYTHON2_CPPFLAGS=$PYTHON_CPPFLAGS
-		PYTHON2_LIBS=$PYTHON_LIBS
-		PYTHON2_LDFLAGS=$PYTHON_LDFLAGS
-		python2dir=$pythondir
-		AC_SUBST(PYTHON2_CPPFLAGS)
-		AC_SUBST(PYTHON2_LIBS)
-		AC_SUBST(PYTHON2_LDFLAGS)
-		AC_SUBST(python2dir)
-	fi
-fi
-AC_VARNAMES_RESTORE    # Discard all the added variables
-AM_CONDITIONAL(HAVE_PYTHON2, test x$Python2Found != xno)
-
-PYTHON= # Search for another version.
-Python3Found=no
-if test "x$enable_python_bindings" = xyes -o "x$enable_python_bindings" = x3; then
-	AM_PATH_PYTHON(PYTHON3_REQUIRED, [Python3Found=yes], [Python3Found=no])
+PythonFound=no
+if test "x$enable_python_bindings" = xyes; then
+	AM_PATH_PYTHON(PYTHON3_REQUIRED, [PythonFound=yes])
 	AX_PYTHON_DEVEL(>= 'PYTHON3_REQUIRED')
-	test -n "$lg_python_unusable" && Python3Found=no
-	if test x$Python3Found = xyes; then
-		Python3Found=$PYTHON_VERSION
-		PYTHON3=$PYTHON
-		lg_display_PYTHON3=" ($PYTHON)"
-		PYTHON3_CPPFLAGS=$PYTHON_CPPFLAGS
-		PYTHON3_LIBS=$PYTHON_LIBS
-		PYTHON3_LDFLAGS=$PYTHON_LDFLAGS
-		python3dir=$pythondir
-		AC_SUBST(PYTHON3_CPPFLAGS)
-		AC_SUBST(PYTHON3_LIBS)
-		AC_SUBST(PYTHON3_LDFLAGS)
-		AC_SUBST(python3dir)
+	test -n "$lg_python_unusable" && PythonFound=no
+	if test x$PythonFound = xyes; then
+		PythonFound=$PYTHON_VERSION
+		lg_display_PYTHON=" ($PYTHON)"
+		PYTHON_CPPFLAGS=$PYTHON_CPPFLAGS
+		PYTHON_LIBS=$PYTHON_LIBS
+		PYTHON_LDFLAGS=$PYTHON_LDFLAGS
+		pythondir=$pythondir
+		AC_SUBST(PYTHON_CPPFLAGS)
+		AC_SUBST(PYTHON_LIBS)
+		AC_SUBST(PYTHON_LDFLAGS)
+		AC_SUBST(pythondir)
 	fi
 fi
-AM_CONDITIONAL(HAVE_PYTHON3, test x$Python3Found != xno)
+AM_CONDITIONAL(HAVE_PYTHON, test x$PythonFound != xno)
 
-# Python binary default for "make check" - $PYTHON2 if exists.
-# This is used for the definitions of the pre/post install tests.
-# $LG_PYDIR is used to construct $PYTHONPATH.
-if test -n "$PYTHON2"; then
-	PYTHON=$PYTHON2
-	pythondir=$python2dir
-	LG_PYDIR=python
-else
-	LG_PYDIR=python3
-fi
-AC_SUBST(LG_PYDIR)
 AC_SUBST(PYTHON)
-AC_SUBST(PYTHON3)
 AC_SUBST(pythondir)
 
-# HAVE_PYTHON is redefined if we have both Python2 and Python3. This
-# generates a lot of compiler warnings. But we don't use it - so discard it.
+# Formerly both python2 and python3 bindings got generated. This caused a
+# redefinition of the preprocessor symbol HAVE_PYTHON and generates a lot
+# of compiler warnings, so it got discarded here. Now we generate only
+# python3 bindings, but since we don't use this definition, it is still
+# discarded here.
 # Note: The v command allows to differentiate between the two flavors of sed.
 edit_in_place=-i
 sed v </dev/null 2>/dev/null || edit_in_place="-i ''"
@@ -860,11 +809,11 @@ sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
 
 popdef([AC_MSG_ERROR])
 
-if test x$enable_python_bindings != xno; then
-	if test x$Python2Found = xno -a x$Python3Found = xno; then
+if test x$enable_python_bindings = xyes; then
+	if test x$PythonFound = xno; then
 		AC_MSG_NOTICE(
-			[Python binding is requested, but an approprite Python version
-                  could not be configured.])
+			[Python binding is enabled, but an approprite Python version
+                  could not be configured (minimum version: PYTHON3_REQUIRED).])
 	fi
 fi
 
@@ -876,10 +825,7 @@ fi
 # and also needed to build from a GitHub pull.
 
 if ! test -s "$srcdir/bindings/python/lg_python_wrap.cc"; then
-	AM_COND_IF(HAVE_PYTHON2, [swig_required=Python2])
-fi
-if ! test -s "$srcdir/bindings/python3/lg_python_wrap.cc"; then
-	AM_COND_IF(HAVE_PYTHON3, [swig_required="$swig_required Python3"])
+	AM_COND_IF(HAVE_PYTHON, [swig_required="$swig_required Python"])
 fi
 if ! test -s "$srcdir/bindings/perl/lg_perl_wrap.cc"; then
 	AM_COND_IF(HAVE_PERL, [swig_required="$swig_required Perl"])
@@ -1010,8 +956,6 @@ bindings/ocaml/Makefile
 bindings/perl/Makefile
 bindings/python/Makefile
 bindings/python/__init__.py
-bindings/python3/Makefile
-bindings/python3/__init__.py
 bindings/python-examples/Makefile
 morphology/Makefile
 link-parser/Makefile
@@ -1059,8 +1003,7 @@ $PACKAGE-$VERSION  build configuration settings
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
 	Perl install location:          ${PERL_EXT_LIB}
-	Python2 interfaces:             ${Python2Found}${lg_display_PYTHON2}
-	Python3 interfaces:             ${Python3Found}${lg_display_PYTHON3}
+	Python interfaces:              ${PythonFound}${lg_display_PYTHON}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
