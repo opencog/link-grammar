@@ -653,18 +653,7 @@ AC_SUBST(REGEX_LIBS)
 AC_SUBST(REGEX_CFLAGS)
 
 # =====================================================================
-# Try to guess location of the jni.h file.
-#
-# The core issue here is that most Sun/Oracle java installations are
-# missing the pkgconfig file, which means that a simple and easy check
-# for jni is impossible on such systems.  What a bunch of losers.
-# Java sucks.
-#
-# There's libgcj-4.2.pc  and libgcj8.pc but nothing for Sun java ...
-#
-# PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
-# AC_SUBST(LIBJDK_CFLAGS)
-# AC_SUBST(LIBJDK_LIBS)
+# Find the location of the jni.h file.
 
 JNIfound=no
 
@@ -693,8 +682,6 @@ if test "x$enable_java_bindings" = "xyes"; then
 		JAVA_CPPFLAGS=-D__int64=int64_t
 	fi
 	AC_SUBST(JAVA_SRCDIR)
-
-	AC_MSG_CHECKING(for jni.h)
 
 	pushdef([AC_MSG_ERROR])
 	define([AC_MSG_ERROR],
