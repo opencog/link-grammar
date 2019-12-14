@@ -1,5 +1,5 @@
 #!/bin/sh
-# 
+#
 # Run this before configure
 #
 # This file blatantly ripped off from subversion.
@@ -24,7 +24,7 @@ if test ! -d `aclocal --print-ac-dir 2>> autogen.err`; then
 fi
 
 # Produce aclocal.m4, so autoconf gets the automake macros it needs
-# 
+#
 case `uname` in
     CYGWIN*)
         include_dir='-I m4' # Needed for Cygwin only.
@@ -45,7 +45,7 @@ aclocal $include_dir $ACLOCAL_FLAGS 2>> autogen.err
 
 # Produce all the `GNUmakefile.in's and create neat missing things
 # like `install-sh', etc.
-# 
+#
 echo "automake --add-missing --copy --foreign"
 
 automake --add-missing --copy --foreign 2>> autogen.err || {
@@ -54,14 +54,14 @@ automake --add-missing --copy --foreign 2>> autogen.err || {
     echo ""
 }
 
-# If there's a config.cache file, we may need to delete it.  
+# If there's a config.cache file, we may need to delete it.
 # If we have an existing configure script, save a copy for comparison.
 if [ -f config.cache ] && [ -f configure ]; then
   cp configure configure.$$.tmp
 fi
 
 # Produce ./configure
-# 
+#
 echo "Creating configure..."
 
 autoconf 2>> autogen.err || {
