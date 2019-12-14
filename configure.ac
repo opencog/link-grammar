@@ -46,9 +46,13 @@ AC_CONFIG_SRCDIR($PACKAGE)
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])], [AC_SUBST([AM_DEFAULT_VERBOSITY],1)])
 
+dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
+dnl is changed here it should be changed there too.
+m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|CHECK_ZLIB|PKG_SWIG)\b],
+	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
+
 # OS checks, including Win32
 AC_CANONICAL_HOST
-
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX

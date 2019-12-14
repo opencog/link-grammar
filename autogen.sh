@@ -68,6 +68,7 @@ autoconf 2>> autogen.err || {
     echo ""
     echo "* * * warning: possible errors while running automake - check autogen.err"
     echo ""
+    grep 'Undefined AX_ macro' autogen.err && exit 1
 }
 
 run_configure=true
@@ -85,13 +86,13 @@ if $run_configure; then
     mkdir -p build
     cd build
     ../configure --enable-maintainer-mode "$@"
-    if [ $? -eq 0 ]; then
+    status=$?
+    if [ $status -eq 0 ]; then
       echo
       echo "Now type 'make' to compile link-grammar (in the 'build' directory)."
     else
       echo
-      echo "A syntax error may mean you need to install 'autoconf-archive'."
-      echo "After you fix the problem then run '$0' again."
+      echo "\"configure\" returned a bad status ($status)."
     fi
 else
     echo
