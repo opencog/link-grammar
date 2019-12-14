@@ -286,7 +286,7 @@ AC_ARG_ENABLE( perl-bindings,
 AC_ARG_ENABLE( sat-solver,
 	[  --disable-sat-solver    disable use of the Boolean SAT parser
                           (default is enabled)
-  --enable-sat-solver=[[ARG]]
+  --enable-sat-solver[[=ARG]]
                           enable use of the Boolean SAT parser
                           ARG=yes (default): Use the system minisat library
                           if possible
