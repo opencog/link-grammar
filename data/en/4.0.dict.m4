@@ -446,6 +446,10 @@ An.f In.f So.f: [[<given-names>]];
 /en/words/entities.locations.sing:
   <marker-entity> or <entity-singular>;
 
+% The apostrophe triggers incorrect guessing, so we explicitly list this here.
+Hallowe'en:
+  <marker-entity> or <entity-singular>;
+
 % words.n.4: nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
 % piano.n flute.n belong here, because of "He plays piano"
@@ -10353,7 +10357,8 @@ not_since:
   (J+ or <subcl-verb>) & Wq- & Q+;
 
 % cost on [EC+]: try to use <comp-prep> instead.
-even.e:
+% e'en: poetic contraction
+even.e e'en:
   E+
   or EB-
   or <comp-prep>
@@ -10797,6 +10802,7 @@ as.#that: [[that.j-c]0.05]colloquial;
 
 % Poetic contractions
 o'.#of: [[of]0.05]colloquial;
+gi'.#give: [give.v]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
 %      'Twas the night before Christmas
