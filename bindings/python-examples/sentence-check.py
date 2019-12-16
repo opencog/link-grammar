@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+""" Note: This only runs with Python3! """
+
 """
 Demo: Find unlinked or unknown words.
 These demo is extremely simplified.
@@ -28,11 +30,6 @@ import readline
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
                          LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
-
-def is_python2():
-    return sys.version_info[:1] == (2,)
-
-get_input = raw_input if is_python2() else input
 
 def nsuffix(q):
     return '' if q == 1 else 's'
@@ -85,7 +82,7 @@ po.display_morphology = arg.morphology
 
 while True:
     try:
-        sentence_text = get_input(PROMPT)
+        sentence_text = input(PROMPT)
     except EOFError:
         print("EOF")
         exit(0)
