@@ -7122,7 +7122,8 @@ on upon:
   or <locative>
   or [MVp- & B-];
 
-over:
+% o'er: poetic contraction
+over o'er:
   ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
   or K-
   or EN+
