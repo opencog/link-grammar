@@ -10752,8 +10752,6 @@ git.#get: [[get.v]0.45]colloquial;
 y'.#you: [[you]0.05]colloquial;
 y'.#your: [[your]0.05]colloquial;
 
-o'.#of: [[of]0.05]colloquial;
-
 e.#he: [[he]0.05]colloquial;
 
 be.#by: [[by]0.85]colloquial;
@@ -10769,10 +10767,16 @@ kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
 an'.#and-j-n: [[and.j-n]0.05]colloquial;
 an'.#and-j-v: [[and.j-v]0.05]colloquial;
 
+% gimme.#give-me: [[give_me]0.05]colloquial;
+gimme.#give-me: Wi- & O+ & {@MV+};
+
 % A bit too loose. These should only become enabled if the context
 % is correct.
 % an.#and-j-n: [[and.j-n]]colloquial;
 % an.#and-j-v: [[and.j-v]]colloquial;
+
+dat.#that-jp: [[that.j-p]0.05]colloquial;
+dat.#that-jd: [[that.j-d]0.05]colloquial;
 
 % Bad German accent
 vas.#was-v-d: [[was.v-d]0.05]bad-spelling;
@@ -10790,6 +10794,9 @@ as.#that: [[that.j-c]0.05]colloquial;
 
 % Multi-word punctuation error: writing "its" when "it's" was meant.
 % its.#it-is: [[it_is]0.2]colloquial;
+
+% Poetic contractions
+o'.#of: [[of]0.05]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
 %      'Twas the night before Christmas
