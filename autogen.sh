@@ -1,5 +1,5 @@
 #!/bin/sh
-# 
+#
 # Run this before configure
 #
 # This file blatantly ripped off from subversion.
@@ -24,7 +24,7 @@ if test ! -d `aclocal --print-ac-dir 2>> autogen.err`; then
 fi
 
 # Produce aclocal.m4, so autoconf gets the automake macros it needs
-# 
+#
 case `uname` in
     CYGWIN*)
         include_dir='-I m4' # Needed for Cygwin only.
@@ -45,7 +45,7 @@ aclocal $include_dir $ACLOCAL_FLAGS 2>> autogen.err
 
 # Produce all the `GNUmakefile.in's and create neat missing things
 # like `install-sh', etc.
-# 
+#
 echo "automake --add-missing --copy --foreign"
 
 automake --add-missing --copy --foreign 2>> autogen.err || {
@@ -54,20 +54,21 @@ automake --add-missing --copy --foreign 2>> autogen.err || {
     echo ""
 }
 
-# If there's a config.cache file, we may need to delete it.  
+# If there's a config.cache file, we may need to delete it.
 # If we have an existing configure script, save a copy for comparison.
 if [ -f config.cache ] && [ -f configure ]; then
   cp configure configure.$$.tmp
 fi
 
 # Produce ./configure
-# 
+#
 echo "Creating configure..."
 
 autoconf 2>> autogen.err || {
     echo ""
     echo "* * * warning: possible errors while running automake - check autogen.err"
     echo ""
+    grep 'Undefined AX_ macro' autogen.err && exit 1
 }
 
 run_configure=true
@@ -85,13 +86,13 @@ if $run_configure; then
     mkdir -p build
     cd build
     ../configure --enable-maintainer-mode "$@"
-    if [ $? -eq 0 ]; then
+    status=$?
+    if [ $status -eq 0 ]; then
       echo
       echo "Now type 'make' to compile link-grammar (in the 'build' directory)."
     else
       echo
-      echo "A syntax error may mean you need to install 'autoconf-archive'."
-      echo "After you fix the problem then run '$0' again."
+      echo "\"configure\" returned a bad status ($status)."
     fi
 else
     echo

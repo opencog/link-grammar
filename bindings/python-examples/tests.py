@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf8
-"""Python link-grammar test script"""
+"""Python3 link-grammar test script"""
 
 from __future__ import print_function
 import sys, os, re
@@ -373,10 +373,7 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        if is_python2():
-            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
-        else:
-            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
+        result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
@@ -921,9 +918,6 @@ class ZENLangTestCase(unittest.TestCase):
 class JADictionaryLocaleTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if is_python2(): # Locale stuff seems to be broken
-            raise unittest.SkipTest("Test not supported with Python2")
-
         # python2: Gets system locale (getlocale() is not better)
         cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
         #print('Current locale:', oldlocale)
@@ -956,9 +950,6 @@ class JADictionaryLocaleTestCase(unittest.TestCase):
 class JBDictCostReadingTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if is_python2(): # Locale stuff seems to be broken
-            raise unittest.SkipTest("Test not supported with Python2")
-
         cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
         ru_locale = 'ru_RU.UTF-8' if os.name != 'nt' else 'Russian'
         try:
@@ -1135,8 +1126,7 @@ def linkage_testfile(self, lgdict, popt, desc=''):
 
     for line in parses:
         lineno += 1
-        if not is_python2():
-            line = line.decode('utf-8')
+        line = line.decode('utf-8')
 
         validate_opcode(ord(line[0])) # Use ord() for python2/3 compatibility
         if line[0] in 'INOCP':
@@ -1208,10 +1198,6 @@ def linkage_testfile(self, lgdict, popt, desc=''):
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
-
-def is_python2():
-    return sys.version_info[:1] == (2,)
-
 
 import tempfile
 

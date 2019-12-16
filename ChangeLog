@@ -4,6 +4,7 @@ Version 5.7.1 (XXX 2019)
  * English dict: Fixes to support questions ending in WH-words.
  * Copy (merge) Richard van der Dys `node.js` bindings.
  * English dict: Provide head and tail markers for all conjunctions.
+ * Remove the Python 2 bindings.
 
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.

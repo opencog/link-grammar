@@ -4,10 +4,6 @@
   <PropertyGroup Label="UserMacros">
     <GNUREGEX_DIR>$(HOMEDRIVE)$(HOMEPATH)\Libraries\gnuregex</GNUREGEX_DIR>
     <LG_DLLPATH>$(GNUREGEX_DIR)\lib</LG_DLLPATH>
-    <PYTHON2>C:\Python27</PYTHON2>
-    <PYTHON2_INCLUDE>$(PYTHON2)\include</PYTHON2_INCLUDE>
-    <PYTHON2_LIB>$(PYTHON2)\libs\python27.lib</PYTHON2_LIB>
-    <PYTHON2_EXE>$(PYTHON2)\python.exe</PYTHON2_EXE>
     <PYTHON3>C:\Python34</PYTHON3>
     <PYTHON3_INCLUDE>$(PYTHON3)\include</PYTHON3_INCLUDE>
     <PYTHON3_LIB>$(PYTHON3)\libs\python34.lib</PYTHON3_LIB>
@@ -27,18 +23,6 @@
     <BuildMacro Include="LG_DLLPATH">
       <Value>$(LG_DLLPATH)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
-    <BuildMacro Include="PYTHON2">
-      <Value>$(PYTHON2)</Value>
-    </BuildMacro>
-    <BuildMacro Include="PYTHON2_INCLUDE">
-      <Value>$(PYTHON2_INCLUDE)</Value>
-    </BuildMacro>
-    <BuildMacro Include="PYTHON2_LIB">
-      <Value>$(PYTHON2_LIB)</Value>
-    </BuildMacro>
-    <BuildMacro Include="PYTHON2_EXE">
-      <Value>$(PYTHON2_EXE)</Value>
     </BuildMacro>
     <BuildMacro Include="PYTHON3">
       <Value>$(PYTHON3)</Value>

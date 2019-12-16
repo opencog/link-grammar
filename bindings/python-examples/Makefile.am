@@ -7,7 +7,7 @@
 # Run tests.py if the user says 'make check'
 TESTS = tests.py
 AM_TESTS_ENVIRONMENT = \
-   PYTHONPATH=$(srcdir)/../python:../$(LG_PYDIR):../$(LG_PYDIR)/.libs \
+   PYTHONPATH=$(srcdir)/../python:../python:../python/.libs \
    LINK_GRAMMAR_DATA=$(srcdir)/../../data; \
    export PYTHONPATH LINK_GRAMMAR_DATA;
 

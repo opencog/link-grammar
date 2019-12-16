@@ -51,9 +51,7 @@ EXTRA_DIST =                            \
 	msvc/confvar.bat                     \
 	msvc/MSVC-common.props               \
 	msvc/post-build.bat                  \
-	msvc/Python2.vcxproj                 \
 	msvc/Python3.vcxproj                 \
-	msvc/Python2.vcxproj.filters         \
 	msvc/Python3.vcxproj.filters         \
 	msvc/README.md                       \
 	msvc/make-check.py                   \
