@@ -77,8 +77,13 @@ nonCAP.zzz: ZZZ-;
 % various things, including regex matches for unknown words. (i.e. panic
 % parsing is set to 4 at this time.)
 
-<no-det-null>: [[[[()]]]];
 <costly-null>: [[[[()]]]];
+
+% A definition according to the comments above.
+% <no-det-null>: [[[[()]]]];
+
+% A definition using the "headline" dialect.
+<no-det-null>: [()]headline;
 
 % NOUNS
 
@@ -9333,8 +9338,8 @@ as.e:
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
 % MVs- & Cs+ & CV+: "I slipped as I ran"
 as.#while:
-  [<subcl-verb> & (({Xc+ & {Xd-}} & dCO+))]0.2
-  or [MVs- & Cs+ & CV+]0.1;
+  [[<subcl-verb> & (({Xc+ & {Xd-}} & dCO+))]0.2
+  or [MVs- & Cs+ & CV+]0.1]bad-spelling;
 
 
 as_is: {Xd- & Xc+} & MVs-;
@@ -10697,95 +10702,95 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 % elevated design would define and use an "operator grammar" type
 % approach. See https://en.wikipedia.org/wiki/Operator_grammar
 
-then.#than: [than.e]0.65;
-than.#then-i: [then.i]1.65;
-than.#then-ij: [then.ij]0.65;
+then.#than: [[than.e]0.65]bad-spelling;
+than.#then-i: [[then.i]1.65]bad-spelling;
+than.#then-ij: [[then.ij]0.65]bad-spelling;
 
 % This breaks too many sentences in the basic corpus
-% than.#then-r: [then.r]1.65;
+% than.#then-r: [[then.r]1.65]bad-spelling;
 
-rather_then.#rather_than: rather_than;
+rather_then.#rather_than: [rather_than]bad-spelling;
 
-there.#their: [their.p]0.65;
-% theres.#theirs: [theirs.p]0.65;
+there.#their: [[their.p]0.65]bad-spelling;
+% theres.#theirs: [[theirs.p]0.65]bad-spelling;
 
 % The apostrophes prevent the dictionary from being read in.
 % XXX FIXME, these are common typos.
 %
-% there.#they're: [they're]0.65;
-% all.#all_of: [all_of]0.65;
-% its.#it's: [it's]0.65;
-% lets.#let's: [let's]0.65;
-% your.#you're: [you're]0.65;
-% your.#you're: [you_are]0.65;
+% there.#they're: [[they're]0.65]bad-spelling;
+% all.#all_of: [[all_of]0.65]bad-spelling;
+% its.#it's: [[it's]0.65]bad-spelling;
+% lets.#let's: [[let's]0.65]bad-spelling;
+% your.#you're: [[you're]0.65]bad-spelling;
+% your.#you're: [[you_are]0.65]bad-spelling;
 
 % Using "or" instead of "nor" is a common mistake.
 % "Neither this or that one will do"
-or.#nor-j-n: [nor.j-n];
+or.#nor-j-n: [[nor.j-n]]bad-spelling;
 
 % Hmm. "there lie the books" smells like present-tense: the books are
 % there right now. "there lay the books" suggest past-continuous: they
 % are not just there now, but always have been.  So is it really a typo
 % to say "lie" instead of "lay"?
-lie.#lay-v-d: [lay.v-d]0.5;
+lie.#lay-v-d: [[lay.v-d]0.5]bad-spelling;
 
 % i before e unless the weighty neighbor is a German loan word.
-beleive.#believe-v: [believe.v]0.1;
+beleive.#believe-v: [[believe.v]0.1]bad-spelling;
 
 % Common shorts
-thru.#through-r: [through.r]0.05;
+thru.#through-r: [[through.r]0.05]bad-spelling;
 nite.#night: [night.r or night.u or night.i or night.n]0.05;
-tonite.#tonight: [tonight]0.05;
+tonite.#tonight: [[tonight]0.05]bad-spelling;
 
 % Emulated American cowboy accents: "You better git to goin'."
 % High cost to avoid confusion with British insults: "you stupid git".
-git.#get: [get.v]0.45;
+git.#get: [[get.v]0.45]bad-spelling;
 
 % Y'gotta, Y'gonna
 %   "keep y'mouth shut"
-y'.#you: [you]0.05;
-y'.#your: [your]0.05;
+y'.#you: [[you]0.05]bad-spelling;
+y'.#your: [[your]0.05]bad-spelling;
 
-o'.#of: [of]0.05;
+o'.#of: [[of]0.05]bad-spelling;
 
-e.#he: [he]0.05;
+e.#he: [[he]0.05]bad-spelling;
 
-be.#by: [by]0.85;
-de.#the: [the]0.25;
+be.#by: [[by]0.85]bad-spelling;
+de.#the: [[the]0.25]bad-spelling;
 
 % slurred speech
-drinkin.#drinking-v: [drinking.v]0.05;
-drinkin'.#drinking-v: [drinking.v]0.05;
-runnin'.#running-v: [running.v]0.05;
-kidnappin'.#kidnapping-v: [kidnapping.v]0.05;
+drinkin.#drinking-v: [[drinking.v]0.05]bad-spelling;
+drinkin'.#drinking-v: [[drinking.v]0.05]bad-spelling;
+runnin'.#running-v: [[running.v]0.05]bad-spelling;
+kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]bad-spelling;
 
-an'.#and-j-n: [and.j-n]0.05;
-an'.#and-j-v: [and.j-v]0.05;
+an'.#and-j-n: [[and.j-n]0.05]bad-spelling;
+an'.#and-j-v: [[and.j-v]0.05]bad-spelling;
 
 % A bit too loose. These should only become enabled if the context
 % is correct.
-% an.#and-j-n: [and.j-n];
-% an.#and-j-v: [and.j-v];
+% an.#and-j-n: [[and.j-n]]bad-spelling;
+% an.#and-j-v: [[and.j-v]]bad-spelling;
 
 % Bad German accent
-vas.#was-v-d: [was.v-d]0.05;
-vas.#what: [what]0.05;
-das.#this-p: [this.p]0.05;
-das.#this-d: [this.d]0.05;
+vas.#was-v-d: [[was.v-d]0.05]bad-spelling;
+vas.#what: [[what]0.05]bad-spelling;
+das.#this-p: [[this.p]0.05]bad-spelling;
+das.#this-d: [[this.d]0.05]bad-spelling;
 
 % Colloquial usages of "as":
 % "I don't know as I can answer your question."
-as.#that: [that.j-c]0.05;
+as.#that: [[that.j-c]0.05]bad-spelling;
 
 % Desirable multi-word substitutions:
-% as.#same-as: [the_same_as]0.05;
+% as.#same-as: [[the_same_as]0.05]bad-spelling;
 % because of this: "The coffee tastes [the same] as it did last week"
 
 % Multi-word punctuation error: writing "its" when "it's" was meant.
-% its.#it-is: [it_is]0.2;
+% its.#it-is: [[it_is]0.2]bad-spelling;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
-% 'tis.#it-is: [it_is];
+% 'tis.#it-is: [[it_is]]bad-spelling;
 
 'tis tis 'Tis: Wn- & O+;
 

@@ -14,6 +14,7 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
+#include "api-structures.h"             // Parse_Options
 #include "connectors.h"
 #include "dict-api.h"
 #include "string-set.h"
@@ -61,17 +62,19 @@ int size_of_expression(Exp * e)
 	return size;
 }
 
-Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool)
+Exp *copy_Exp(Dictionary dict, Exp *e, Pool_desc *Exp_pool, Parse_Options opts)
 {
 	if (e == NULL) return NULL;
 	Exp *new_e = pool_alloc(Exp_pool);
 
 	*new_e = *e;
+	if (NULL != e->tag)
+		new_e->cost += opts->dialect.cost_table[new_e->tag->index];
 
 #if 0 /* Not used - left here for documentation. */
-	new_e->operand_next = copy_Exp(e->operand_next, Exp_pool);
+	new_e->operand_next = copy_Exp(dict, e->operand_next, Exp_pool);
 	if (CONNECTOR_type == e->type) return new_e;
-	new_e->operand_first = copy_Exp(e->operand_first, Exp_pool);
+	new_e->operand_first = copy_Exp(dict, e->operand_first, Exp_pool);
 #else
 	if (CONNECTOR_type == e->type) return new_e;
 
@@ -79,7 +82,7 @@ Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool)
 	Exp **tmp_e_a = &new_e->operand_first;
 	for(Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 	{
-		*tmp_e_a = copy_Exp(opd, Exp_pool);
+		*tmp_e_a = copy_Exp(dict, opd, Exp_pool, opts);
 		tmp_e_a = &(*tmp_e_a)->operand_next;
 	}
 	*tmp_e_a = NULL;

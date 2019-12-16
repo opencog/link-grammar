@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (C) 2018, 2019 Amir Plivatsky                               */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -14,40 +15,18 @@
 
 #include "const-prime.h"
 #include "memory-pool.h"
-#include "string-set.h"
+#include "string-id.h"
 #include "utilities.h"
 
 /**
- * Suppose you have a program that generates strings and keeps pointers to them.
-   The program never needs to change these strings once they're generated.
-   If it generates the same string again, then it can reuse the one it
-   generated before.  This is what this package supports.
-
-   String_set is the object.  The functions are:
-
-   char * string_set_add(char * source_string, String_set * ss);
-     This function returns a pointer to a string with the same
-     contents as the source_string.  If that string is already
-     in the table, then it uses that copy, otherwise it generates
-     and inserts a new one.
-
-   char * string_set_lookup(char * source_string, String_set * ss);
-     This function returns a pointer to a string with the same
-     contents as the source_string.  If that string is not already
-     in the table, returns NULL;
-
-   String_set * string_set_create(void);
-     Create a new empty String_set.
-
-   string_set_delete(String_set *ss);
-     Free all the space associated with this string set.
-
-   The implementation uses probed hashing (i.e. not bucket).
+ * This is an adaptation of the string_id module for generating
+ * sequential unique identifiers (starting from 1) for strings.
+ * Identifier 0 is reserved to denote "no identifier".
  */
 
 #define STR_POOL
-#define MEM_POOL_INIT (8*1024)
-#define MEM_POOL_INCR (16*1024)
+#define MEM_POOL_INIT (2*1024)
+#define MEM_POOL_INCR (4*1024)
 struct str_mem_pool_s
 {
 	str_mem_pool *prev;
@@ -55,16 +34,16 @@ struct str_mem_pool_s
 	char block[0];
 };
 
-static unsigned int hash_string(const char *str, const String_set *ss)
+static unsigned int hash_string(const char *str, const String_id *ss)
 {
 	unsigned int accum = 0;
-	for (;*str != '\0'; str++)
+	for (; *str != '\0'; str++)
 		accum = (139 * accum) + (unsigned char)*str;
 	return accum;
 }
 
 #ifdef STR_POOL
-static void ss_pool_alloc(size_t pool_size_add, String_set *ss)
+static void ss_pool_alloc(size_t pool_size_add, String_id *ss)
 {
 	str_mem_pool *new_mem_pool = malloc(pool_size_add);
 	new_mem_pool->size = pool_size_add;
@@ -77,7 +56,7 @@ static void ss_pool_alloc(size_t pool_size_add, String_set *ss)
 	ASAN_POISON_MEMORY_REGION(ss->string_pool+sizeof(str_mem_pool), ss->pool_free_count);
 }
 
-static void ss_pool_delete(String_set *ss)
+static void ss_pool_delete(String_id *ss)
 {
 	str_mem_pool *m, *m_prev;
 
@@ -91,7 +70,7 @@ static void ss_pool_delete(String_set *ss)
 
 #define STR_ALIGNMENT 16
 
-static char *ss_stralloc(size_t str_size, String_set *ss)
+static char *ss_stralloc(size_t str_size, String_id *ss)
 {
 	ss->pool_free_count -= str_size;
 	if (ss->pool_free_count < 0)
@@ -111,15 +90,15 @@ static char *ss_stralloc(size_t str_size, String_set *ss)
 #define ss_pool_alloc(a, b)
 #endif
 
-String_set * string_set_create(void)
+String_id *string_id_create(void)
 {
-	String_set *ss;
-	ss = (String_set *) malloc(sizeof(String_set));
+	String_id *ss;
+	ss = (String_id *) malloc(sizeof(String_id));
 	ss->prime_idx = 0;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
-	ss->table = malloc(ss->size * sizeof(ss_slot));
-	memset(ss->table, 0, ss->size*sizeof(ss_slot));
+	ss->table = malloc(ss->size * sizeof(ss_id));
+	memset(ss->table, 0, ss->size*sizeof(ss_id));
 	ss->count = 0;
 	ss->string_pool = NULL;
 	ss_pool_alloc(MEM_POOL_INIT, ss);
@@ -128,8 +107,8 @@ String_set * string_set_create(void)
 	return ss;
 }
 
-static bool place_found(const char *str, const ss_slot *slot, unsigned int hash,
-                         String_set *ss)
+static bool place_found(const char *str, const ss_id *slot, unsigned int hash,
+                         String_id *ss)
 {
 	if (slot->str == NULL) return true;
 	if (hash != slot->hash) return false;
@@ -140,7 +119,7 @@ static bool place_found(const char *str, const ss_slot *slot, unsigned int hash,
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
+static unsigned int find_place(const char *str, unsigned int h, String_id *ss)
 {
 	unsigned int coll_num = 0;
 	unsigned int key = ss->mod_func(h);
@@ -155,9 +134,9 @@ static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
 	return key;
 }
 
-static void grow_table(String_set *ss)
+static void grow_table(String_id *ss)
 {
-	String_set old;
+	String_id old;
 	size_t i;
 	unsigned int p;
 
@@ -165,8 +144,8 @@ static void grow_table(String_set *ss)
 	ss->prime_idx++;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
-	ss->table = malloc(ss->size * sizeof(ss_slot));
-	memset(ss->table, 0, ss->size*sizeof(ss_slot));
+	ss->table = malloc(ss->size * sizeof(ss_id));
+	memset(ss->table, 0, ss->size*sizeof(ss_id));
 	for (i=0; i<old.size; i++)
 	{
 		if (old.table[i].str != NULL)
@@ -181,47 +160,43 @@ static void grow_table(String_set *ss)
 	free(old.table);
 }
 
-const char * string_set_add(const char * source_string, String_set * ss)
+unsigned int string_id_add(const char *source_string, String_id *ss)
 {
 	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
 
 	unsigned int h = hash_string(source_string, ss);
 	unsigned int p = find_place(source_string, h, ss);
 
-	if (ss->table[p].str != NULL) return ss->table[p].str;
+	if (ss->table[p].str != NULL) return ss->table[p].id;
 
 	size_t len = strlen(source_string) + 1;
 	char *str;
 
-#ifdef DEBUG
-	/* Store the String_set structure address for debug verifications */
-	size_t mlen = (len&~(sizeof(ss)-1)) + 2*sizeof(ss);
-	str = ss_stralloc(mlen, ss);
-	*(String_set **)&str[mlen-sizeof(ss)] = ss;
-#else /* !DEBUG */
 	str = ss_stralloc(len, ss);
-#endif /* DEBUG */
 	memcpy(str, source_string, len);
 	ss->table[p].str = str;
 	ss->table[p].hash = h;
+	ss->table[p].id = ss->count + 1;
 	ss->count++;
 	ss->available_count--;
+
+	int keep_id = ss->table[p].id;
 
 	/* We just added it to the table. */
 	if (ss->available_count == 0) grow_table(ss); /* Too full */
 
-	return str;
+	return keep_id;
 }
 
-const char * string_set_lookup(const char * source_string, String_set * ss)
+unsigned int string_id_lookup(const char * source_string, String_id * ss)
 {
 	unsigned int h = hash_string(source_string, ss);
 	unsigned int p = find_place(source_string, h, ss);
 
-	return ss->table[p].str;
+	return (ss->table[p].str == NULL) ? SI_NOTFOUND : ss->table[p].id;
 }
 
-void string_set_delete(String_set *ss)
+void string_id_delete(String_id *ss)
 {
 	if (ss == NULL) return;
 

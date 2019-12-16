@@ -31,10 +31,13 @@ typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
 typedef struct Link_s Link;
 typedef struct String_set_s String_set;
+typedef struct String_id_s String_id;
 typedef struct Word_struct Word;
 typedef struct Gword_struct Gword;
 typedef struct gword_set gword_set;
 typedef struct tracon_sharing_s Tracon_sharing;
+typedef struct Exptag_s Exptag;
+typedef struct Dialect_s Dialect;
 
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;

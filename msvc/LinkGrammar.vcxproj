@@ -235,6 +235,7 @@
     <ClInclude Include="..\link-grammar\api-structures.h" />
     <ClInclude Include="..\link-grammar\api-types.h" />
     <ClInclude Include="..\link-grammar\connectors.h" />
+    <ClInclude Include="..\link-grammar\dict-common\dialect.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-affix.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-api.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-common.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="..\link-grammar\dict-common\file-utils.h" />
     <ClInclude Include="..\link-grammar\dict-common\idiom.h" />
     <ClInclude Include="..\link-grammar\dict-common\regex-morph.h" />
+    <ClInclude Include="..\link-grammar\dict-file\read-dialect.h" />
     <ClInclude Include="..\link-grammar\dict-file\read-dict.h" />
     <ClInclude Include="..\link-grammar\dict-file\read-regex.h" />
     <ClInclude Include="..\link-grammar\dict-file\word-file.h" />
@@ -278,6 +280,7 @@
     <ClInclude Include="..\link-grammar\print\print.h" />
     <ClInclude Include="..\link-grammar\print\wcwidth.h" />
     <ClInclude Include="..\link-grammar\resources.h" />
+    <ClInclude Include="..\link-grammar\string-id.h" />
     <ClInclude Include="..\link-grammar\string-set.h" />
     <ClInclude Include="..\link-grammar\tokenize\anysplit.h" />
     <ClInclude Include="..\link-grammar\tokenize\regex-tokenizer.h" />
@@ -293,6 +296,7 @@
   <ItemGroup>
     <ClCompile Include="..\link-grammar\api.c" />
     <ClCompile Include="..\link-grammar\connectors.c" />
+    <ClCompile Include="..\link-grammar\dict-common\dialect.c" />
     <ClCompile Include="..\link-grammar\dict-common\dict-common.c" />
     <ClCompile Include="..\link-grammar\dict-common\dict-impl.c" />
     <ClCompile Include="..\link-grammar\dict-common\dict-utils.c" />
@@ -301,6 +305,7 @@
     <ClCompile Include="..\link-grammar\dict-common\print-dict.c" />
     <ClCompile Include="..\link-grammar\dict-common\regex-morph.c" />
     <ClCompile Include="..\link-grammar\dict-file\dictionary.c" />
+    <ClCompile Include="..\link-grammar\dict-file\read-dialect.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-dict.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-regex.c" />
     <ClCompile Include="..\link-grammar\dict-file\word-file.c" />
@@ -331,6 +336,7 @@
     <ClCompile Include="..\link-grammar\print\print.c" />
     <ClCompile Include="..\link-grammar\print\wcwidth.c" />
     <ClCompile Include="..\link-grammar\resources.c" />
+    <ClCompile Include="..\link-grammar\string-id.c" />
     <ClCompile Include="..\link-grammar\string-set.c" />
     <ClCompile Include="..\link-grammar\tokenize\anysplit.c" />
     <ClCompile Include="..\link-grammar\tokenize\regex-tokenizer.c" />

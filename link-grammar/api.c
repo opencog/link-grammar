@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "api-structures.h"
+#include "dict-common/dialect.h"
 #include "dict-common/dict-utils.h"
 #include "disjunct-utils.h"             // free_sentence_disjuncts
 #include "linkage/linkage.h"
@@ -112,13 +113,16 @@ Parse_Options parse_options_create(void)
 	po->repeatable_rand = true;
 	po->resources = resources_create();
 	po->display_morphology = true;
+	po->dialect = (dialect_info){ .conf = strdup("") };
 
 	return po;
 }
 
+static void free_dialect_info(dialect_info *);
 int parse_options_delete(Parse_Options opts)
 {
 	resources_delete(opts->resources);
+	free_dialect_info(&opts->dialect);
 	free(opts);
 	return 0;
 }
@@ -377,6 +381,47 @@ void parse_options_reset_resources(Parse_Options opts) {
 	resources_reset(opts->resources);
 }
 
+/* Dialect. */
+
+static void free_dialect_info(dialect_info *dinfo)
+{
+	if (dinfo == NULL) return;
+
+	free(dinfo->cost_table);
+	dinfo->cost_table = NULL;
+#ifdef DIALECT_OBJECT
+	free(dinfo->vname);
+	free(dinfo->ccost);
+#else
+	free((void *)dinfo->conf);
+#endif
+}
+
+#ifdef DIALECT_OBJECT
+Dialect_Option parse_options_get_dialect(Parse_Options opts)
+{
+	return opts->dialect;
+}
+
+void parse_options_set_dialect(Parse_Options opts, Dialect_Option dopt)
+{
+	if (0 == strcmp(dconf, opts->dialect.conf)) return;
+	free_dialect_info(opts->dialect);
+	opts->dialect = *dopt;
+}
+#else
+char * parse_options_get_dialect(Parse_Options opts)
+{
+	return opts->dialect.conf;
+}
+
+void parse_options_set_dialect(Parse_Options opts, const char *dconf)
+{
+	if (0 == strcmp(dconf, opts->dialect.conf)) return;
+	free_dialect_info(&opts->dialect);
+	opts->dialect.conf = strdup(dconf);
+}
+#endif
 /***************************************************************
 *
 * Routines for creating destroying and processing Sentences
@@ -441,6 +486,9 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	{
 		return -1;
 	}
+
+	if (!setup_dialect(dict, opts))
+		return -4;
 
 	/* Flatten the word graph created by separate_sentence() to a 2D-word-array
 	 * which is compatible to the current parsers.

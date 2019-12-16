@@ -25,6 +25,7 @@ static struct
 	int verbosity;
 	char * debug;
 	char * test;
+	char * dialect;
 	int timeout;
 	int memory;
 	int linkage_limit;
@@ -69,6 +70,8 @@ Switch default_switches[] =
 	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
 	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
+	{"debug",      String, "Comma-separated function names to debug", &local.debug},
+	{"dialect",    String, "Comma-separated dialects",      &local.dialect},
 	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
 	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
 	{"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
@@ -85,22 +88,21 @@ Switch default_switches[] =
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
+	{"test",       String, "Comma-separated test features", &local.test},
 #endif /* HAVE_HUNSPELL */
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
 	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-	{"debug",      String, "Comma-separated function names to debug", &local.debug},
-	{"test",       String, "Comma-separated test features", &local.test},
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
-	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
-	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
-	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
+	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
+	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
+	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
@@ -861,6 +863,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	Parse_Options opts = copts->popts;
 	local.verbosity = parse_options_get_verbosity(opts);
 	local.debug = parse_options_get_debug(opts);
+	local.dialect = parse_options_get_dialect(opts);
 	local.test = parse_options_get_test(opts);
 	local.timeout = parse_options_get_max_parse_time(opts);;
 	local.memory = parse_options_get_max_memory(opts);;
@@ -898,6 +901,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_verbosity(opts, local.verbosity);
 	parse_options_set_debug(opts, local.debug);
 	parse_options_set_test(opts, local.test);
+	parse_options_set_dialect(opts, local.dialect);
 	parse_options_set_max_parse_time(opts, local.timeout);
 	parse_options_set_max_memory(opts, local.memory);
 	parse_options_set_linkage_limit(opts, local.linkage_limit);

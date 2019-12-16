@@ -67,6 +67,14 @@ struct Afdict_class_struct
 #define IS_DB_DICT(dict) false
 #endif /* HAVE_SQLITE */
 
+typedef struct
+{
+	String_id *set;                    /* Expression tag names */
+	Exptag *array;                     /* Exp. tag array (indexed by their id) */
+	unsigned int num;                  /* Number of tags */
+	unsigned int size;                 /* Allocated tag array size */
+} expression_tag;
+
 struct Dictionary_s
 {
 	Dict_node *  root;
@@ -83,6 +91,9 @@ struct Dictionary_s
 	bool         left_wall_defined;
 	bool         right_wall_defined;
 	bool         shuffle_linkages;
+
+	Dialect *dialect;                  /* "4.0.dialect" info */
+	expression_tag tag;                /* Expression tag info */
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
