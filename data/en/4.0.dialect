@@ -29,9 +29,26 @@
 % Tags must match the regex: ^[a-z][a-zA-Z\d_-]*$
 % Component names which are not defined have a "very high" cost.
 
+% The dialects that currently appear in `4.0.dict` include:
+%
+% bad-spelling: common spelling mistakes, and thier corrections,
+%    for example, writing "there" instead of "their".
+%
+% colloquial: common regional, poetic or archaic usages, including
+%    German-English: "vas is das", poetic/archaic "O'er the hills",
+%    1950's modern: "tonite", "thru", Urban: "keep y'mouth shut"
+%    slurred speech: "drinkin and carrousin", Irish-American, etc.
+%
+% headline: support for elided articles, e.g. "thieves rob bank".
+%    The problem with headline English is that, although it makes
+%    sense in a headline context, it can, and will generate bad
+%    parses when applied to non-headline contexts. By making
+%    determiners optional, many other rules are thrown off.
+
 [default]
 no-headline
 bad-spelling: 0
+colloquial: 0
 
 [no-headline]
 headline: 4

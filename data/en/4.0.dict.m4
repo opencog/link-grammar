@@ -9339,7 +9339,7 @@ as.e:
 % MVs- & Cs+ & CV+: "I slipped as I ran"
 as.#while:
   [[<subcl-verb> & (({Xc+ & {Xd-}} & dCO+))]0.2
-  or [MVs- & Cs+ & CV+]0.1]bad-spelling;
+  or [MVs- & Cs+ & CV+]0.1]colloquial;
 
 
 as_is: {Xd- & Xc+} & MVs-;
@@ -10738,59 +10738,59 @@ lie.#lay-v-d: [[lay.v-d]0.5]bad-spelling;
 beleive.#believe-v: [[believe.v]0.1]bad-spelling;
 
 % Common shorts
-thru.#through-r: [[through.r]0.05]bad-spelling;
-nite.#night: [night.r or night.u or night.i or night.n]0.05;
-tonite.#tonight: [[tonight]0.05]bad-spelling;
+thru.#through-r: [[through.r]0.05]colloquial;
+nite.#night: [[night.r or night.u or night.i or night.n]0.05]colloquial;
+tonite.#tonight: [[tonight]0.05]colloquial;
 
 % Emulated American cowboy accents: "You better git to goin'."
 % High cost to avoid confusion with British insults: "you stupid git".
-git.#get: [[get.v]0.45]bad-spelling;
+git.#get: [[get.v]0.45]colloquial;
 
 % Y'gotta, Y'gonna
 %   "keep y'mouth shut"
-y'.#you: [[you]0.05]bad-spelling;
-y'.#your: [[your]0.05]bad-spelling;
+y'.#you: [[you]0.05]colloquial;
+y'.#your: [[your]0.05]colloquial;
 
-o'.#of: [[of]0.05]bad-spelling;
+o'.#of: [[of]0.05]colloquial;
 
-e.#he: [[he]0.05]bad-spelling;
+e.#he: [[he]0.05]colloquial;
 
-be.#by: [[by]0.85]bad-spelling;
-de.#the: [[the]0.25]bad-spelling;
+be.#by: [[by]0.85]colloquial;
+de.#the: [[the]0.25]colloquial;
 
 % slurred speech
-drinkin.#drinking-v: [[drinking.v]0.05]bad-spelling;
-drinkin'.#drinking-v: [[drinking.v]0.05]bad-spelling;
-runnin'.#running-v: [[running.v]0.05]bad-spelling;
-kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]bad-spelling;
+drinkin.#drinking-v: [[drinking.v]0.05]colloquial;
+drinkin'.#drinking-v: [[drinking.v]0.05]colloquial;
+runnin'.#running-v: [[running.v]0.05]colloquial;
+kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
 
-an'.#and-j-n: [[and.j-n]0.05]bad-spelling;
-an'.#and-j-v: [[and.j-v]0.05]bad-spelling;
+an'.#and-j-n: [[and.j-n]0.05]colloquial;
+an'.#and-j-v: [[and.j-v]0.05]colloquial;
 
 % A bit too loose. These should only become enabled if the context
 % is correct.
-% an.#and-j-n: [[and.j-n]]bad-spelling;
-% an.#and-j-v: [[and.j-v]]bad-spelling;
+% an.#and-j-n: [[and.j-n]]colloquial;
+% an.#and-j-v: [[and.j-v]]colloquial;
 
 % Bad German accent
 vas.#was-v-d: [[was.v-d]0.05]bad-spelling;
-vas.#what: [[what]0.05]bad-spelling;
-das.#this-p: [[this.p]0.05]bad-spelling;
-das.#this-d: [[this.d]0.05]bad-spelling;
+vas.#what: [[what]0.05]colloquial;
+das.#this-p: [[this.p]0.05]colloquial;
+das.#this-d: [[this.d]0.05]colloquial;
 
 % Colloquial usages of "as":
 % "I don't know as I can answer your question."
-as.#that: [[that.j-c]0.05]bad-spelling;
+as.#that: [[that.j-c]0.05]colloquial;
 
 % Desirable multi-word substitutions:
-% as.#same-as: [[the_same_as]0.05]bad-spelling;
+% as.#same-as: [[the_same_as]0.05]colloquial;
 % because of this: "The coffee tastes [the same] as it did last week"
 
 % Multi-word punctuation error: writing "its" when "it's" was meant.
-% its.#it-is: [[it_is]0.2]bad-spelling;
+% its.#it-is: [[it_is]0.2]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
-% 'tis.#it-is: [[it_is]]bad-spelling;
+% 'tis.#it-is: [[it_is]]colloquial;
 
 'tis tis 'Tis: Wn- & O+;
 
