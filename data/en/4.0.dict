@@ -13006,6 +13006,7 @@ de.#the: [[the]0.25]colloquial;
 % slurred speech
 drinkin.#drinking-v: [[drinking.v]0.05]colloquial;
 drinkin'.#drinking-v: [[drinking.v]0.05]colloquial;
+carousin'.#carousing-v: [[carousing.v]0.05]colloquial;
 runnin'.#running-v: [[running.v]0.05]colloquial;
 kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
 
@@ -13035,9 +13036,10 @@ as.#that: [[that.j-c]0.05]colloquial;
 % its.#it-is: [[it_is]0.2]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
+%      'Twas the night before Christmas
 % 'tis.#it-is: [[it_is]]colloquial;
 
-'tis tis 'Tis: Wn- & O+;
+'tis tis 'Tis 'twas twas 'Twas: Wn- & O+ & {@MV+};
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
