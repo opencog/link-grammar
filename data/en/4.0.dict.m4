@@ -10806,15 +10806,21 @@ as.#that: [[that.j-c]0.05]colloquial;
 % Multi-word punctuation error: writing "its" when "it's" was meant.
 % its.#it-is: [[it_is]0.2]colloquial;
 
-% Poetic contractions
+% Poetic contractions; Shakesperian contractions
+heav'n.#heaven: [heaven.s]colloquial;
 e'en.#even: [even.e]colloquial;
 e'er.#ever: [ever]colloquial;
 i'.#in: [in.r]colloquial;
 gi'.#give: [give.v]colloquial;
 ne'er.#never: [never.e]colloquial or [never.i]colloquial;
-o'.#of: [[of]0.05]colloquial;
+o'.#of: [of]colloquial;
+o'.#on: [on]colloquial;
+o'er.#over: [over]colloquial;
 oft.#often: [often.e]colloquial;
+t'.#to: [to.r]colloquial;
+ta'en.#taken: [taken.v]colloquial;
 th'.#the: [the]colloquial;
+wi'.#with: [with]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
 %      'Twas the night before Christmas
