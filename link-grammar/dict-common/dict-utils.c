@@ -62,7 +62,7 @@ int size_of_expression(Exp * e)
 	return size;
 }
 
-Exp *copy_Exp(Dictionary dict, Exp *e, Pool_desc *Exp_pool, Parse_Options opts)
+Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool, Parse_Options opts)
 {
 	if (e == NULL) return NULL;
 	Exp *new_e = pool_alloc(Exp_pool);

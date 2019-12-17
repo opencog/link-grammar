@@ -19,7 +19,7 @@
 /* Exp utilities ... */
 void free_Exp(Exp *);
 int  size_of_expression(Exp *);
-Exp * copy_Exp(Dictionary, Exp *, Pool_desc *, Parse_Options);
+Exp * copy_Exp(Exp *, Pool_desc *, Parse_Options);
 bool is_exp_like_empty_word(Dictionary dict, Exp *);
 
 /* X_node utilities ... */
