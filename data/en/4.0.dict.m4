@@ -2865,9 +2865,17 @@ have.v:
   VERB_X_PLI(<vc-have>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
 
-%I've they've you've we've: PP+ & <CLAUSE>;
+% I've they've you've we've: PP+ & <CLAUSE>;
+% I- & PP+: "she would've said so".
 ’ve 've:
-	Sp- & <verb-wall> & (PP+ or O+);
+  (Sp- & (PP+ or O+))
+  or (If- & PP+);
+
+% The splitter will not two suffixes, so we need this
+% abbreviation for would-have: "She'd've said so"
+% Give it a cost to that "She 'd've said so" can split first.
+'d've.#would-have ’d’ve.#would-have:
+  [S- & (PP+ or O+)]0.3;
 
 has.v:
   VERB_X_S(<vc-have>)
