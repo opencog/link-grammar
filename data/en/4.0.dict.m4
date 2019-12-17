@@ -320,7 +320,7 @@ nonCAP.zzz: ZZZ-;
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    ({OH-} & Wc- & (Xc+ or [()]1.2) & Qd+) or
+    ({OH-} & Wc- & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & (Xc+ or [[()]]) & [dCOa+]));
 
 % Just pure singular entities, no mass nouns
@@ -7877,7 +7877,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {hCO-} & {EW-} & (Qd- or Wb- or Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+    & {hCO-} & {EW-} & (Wb- or Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Ww-)
   or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
