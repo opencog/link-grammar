@@ -317,10 +317,12 @@ nonCAP.zzz: ZZZ-;
 % Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
+% Wc- & Xc+ & Wq+: "O Mary, what have I done?"
+% Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    ({OH-} & Wc- & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
+    ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & (Xc+ or [[()]]) & [dCOa+]));
 
 % Just pure singular entities, no mass nouns
