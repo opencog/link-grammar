@@ -7418,6 +7418,10 @@ nearby close_by handy.r:
   or ({EE-} & FM-)
   or ({EE-} & {Xc+} & dCOp+);
 
+% "It lies in the regions nether"
+nether.r distant.r:
+  MVp-;
+
 % similar to <prep-main-b> but not quite ...
 all_over all_around:
   {J+} & (Mp- or Pp- or MVp- or dWl- or [({Xc+ & {Xd-}} & dCO+)] or FM-);
@@ -10856,7 +10860,7 @@ count'nance.#countenance count’nance.#countenance:
 e'en.#even: [even.e]colloquial;
 e'er.#ever: [ever]colloquial;
 ha'.#have ha’.#have: [have.v]colloquial;
-heav'n.#heaven heav’n.#heaven: [heaven.s]colloquial;
+Heav'n.#heaven Heav’n.#heaven heav'n.#heaven heav’n.#heaven: [heaven.s]colloquial;
 i'.#in: [in.r]colloquial;
 gi'.#give: [give.v]colloquial;
 ne'er.#never: [never.e]colloquial or [never.i]colloquial;
