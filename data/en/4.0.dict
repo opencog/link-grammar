@@ -13047,6 +13047,8 @@ as.#that: [[that.j-c]0.05]colloquial;
 % Poetic contractions
 o'.#of: [[of]0.05]colloquial;
 gi'.#give: [give.v]colloquial;
+ne'er.#never: [never.e]colloquial or [never.i]colloquial;
+oft.#often: [often.e]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
 %      'Twas the night before Christmas
