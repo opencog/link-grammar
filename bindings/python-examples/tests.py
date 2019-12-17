@@ -1088,6 +1088,12 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
+class ZXDictDialectTestCase(unittest.TestCase):
+    def test_dialect(self):
+        linkage_testfile(self, Dictionary(lang='en'), ParseOptions(dialect='headline'), 'dialect')
+
+#############################################################################
+
 def linkage_testfile(self, lgdict, popt, desc=''):
     """
     Reads sentences and their corresponding

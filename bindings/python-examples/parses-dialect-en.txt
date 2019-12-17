@@ -1,0 +1,10 @@
+% Dialect tests
+
+-dialect='headline'
+IThieves rob bank
+O
+O    +------->WV------>+
+O    +--->Wd---+---Sp--+--Os--+
+O    |         |       |      |
+OLEFT-WALL thieves.n rob.v bank.n
+O
