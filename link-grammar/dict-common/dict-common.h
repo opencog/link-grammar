@@ -118,7 +118,6 @@ struct Dictionary_s
 
 	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
 	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
-	Connector_set * unlimited_connector_set; /* NULL=everything is unlimited */
 	String_set *    string_set;        /* Set of link names in the dictionary */
 	Word_file *     word_file_header;
 	ConTable        contable;
