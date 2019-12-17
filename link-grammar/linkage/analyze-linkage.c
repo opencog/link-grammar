@@ -17,7 +17,8 @@
 #include <string.h>
 
 #include "analyze-linkage.h"
-#include "connectors.h" // Needed for connector_string
+#include "connectors.h"                 // connector_string
+#include "dict-common/dict-common.h"    // MAX_TOKEN_LENGTH
 #include "linkage.h"
 #include "string-set.h"
 
@@ -34,6 +35,7 @@ const char *intersect_strings(String_set *sset, const Connector *c1,
 {
 	const condesc_t *d1 = c1->desc;
 	const condesc_t *d2 = c2->desc;
+	char l[MAX_TOKEN_LENGTH + 1];
 
 	/* Ignore the head/dependent encoding at bit 0. */
 	lc_enc_t lc1_letters = d1->lc_letters >> 1;
@@ -45,7 +47,6 @@ const char *intersect_strings(String_set *sset, const Connector *c1,
 	if (lc_label == lc1_letters) return &connector_string(c1)[d1->uc_start];
 	if (lc_label == lc2_letters) return &connector_string(c2)[d2->uc_start];
 
-	char *l = alloca(d1->uc_length + MAX_CONNECTOR_LC_LENGTH + 1);
 	memcpy(l, &connector_string(c1)[d1->uc_start], d1->uc_length);
 
 	for (size_t i = d1->uc_length; /* see note below */; i++)
