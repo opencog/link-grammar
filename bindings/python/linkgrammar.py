@@ -44,6 +44,7 @@ class ParseOptions(object):
                  repeatable_rand=True,
                  test='',
                  debug='',
+                 dialect='',
                  ):
 
         self._obj = clg.parse_options_create()
@@ -62,6 +63,7 @@ class ParseOptions(object):
         self.repeatable_rand = repeatable_rand
         self.test = test
         self.debug = debug
+        self.dialect = dialect
 
     # Allow only the attribute names listed below.
     def __setattr__(self, name, value):
@@ -82,7 +84,7 @@ class ParseOptions(object):
     @test.setter
     def test(self, value):
         if not isinstance(value, str):
-            raise TypeError("islands_ok must be set to a string")
+            raise TypeError("test must be set to a string")
         return clg.parse_options_set_test(self._obj, value)
 
     @property
@@ -92,8 +94,18 @@ class ParseOptions(object):
     @debug.setter
     def debug(self, value):
         if not isinstance(value, str):
-            raise TypeError("islands_ok must be set to a string")
+            raise TypeError("dialect must be set to a string")
         return clg.parse_options_set_debug(self._obj, value)
+
+    @property
+    def dialect(self):
+        return clg.parse_options_get_dialect(self._obj)
+
+    @debug.setter
+    def dialect(self, value):
+        if not isinstance(value, str):
+            raise TypeError("dialect must be set to a string")
+        return clg.parse_options_set_dialect(self._obj, value)
 
     @property
     def verbosity(self):
@@ -106,7 +118,7 @@ class ParseOptions(object):
     @verbosity.setter
     def verbosity(self, value):
         if not isinstance(value, int):
-            raise TypeError("Verbosity must be set to an integer")
+            raise TypeError("verbosity must be set to an integer")
         if value not in range(0,120):
             raise ValueError("Verbosity levels can be any integer between 0 and 120 inclusive")
         clg.parse_options_set_verbosity(self._obj, value)
@@ -125,9 +137,9 @@ class ParseOptions(object):
     @linkage_limit.setter
     def linkage_limit(self, value):
         if not isinstance(value, int):
-            raise TypeError("Linkage Limit must be set to an integer")
+            raise TypeError("linkage_limit must be set to an integer")
         if value < 0:
-            raise ValueError("Linkage Limit must be positive")
+            raise ValueError("linkage_limit must be positive")
         clg.parse_options_set_linkage_limit(self._obj, value)
 
     @property
@@ -142,7 +154,7 @@ class ParseOptions(object):
     @disjunct_cost.setter
     def disjunct_cost(self, value):
         if not isinstance(value, float):
-            raise TypeError("Distjunct cost must be set to a float")
+            raise TypeError("disjunct_cost must be set to a float")
         clg.parse_options_set_disjunct_cost(self._obj, value)
 
     @property

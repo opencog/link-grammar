@@ -168,8 +168,17 @@ static char *get_label(dialect_file_status *dfile)
 	const char *bad = valid_dialect_name(label);
 	if (bad != NULL)
 	{
-		prt_error("Error: %s:%s \"%s\": Invalid character '%c' in dialect name.\n",
-		          dfile->fname, suppress_0(dfile->line_number, buf), label, *bad);
+		if (bad[0] == '\0')
+		{
+			prt_error("Error: %s:%s \"%s\": Missing name before a delimiter.\n",
+		             dfile->fname, suppress_0(dfile->line_number, buf), label);
+		}
+		else
+		{
+			prt_error("Error: %s:%s \"%s\": Invalid character '%c' in dialect name.\n",
+			          dfile->fname, suppress_0(dfile->line_number, buf), label,
+			          bad[0]);
+		}
 		return NULL;
 	}
 
@@ -178,12 +187,19 @@ static char *get_label(dialect_file_status *dfile)
 	return label;
 }
 
+static char *isolate_line(char *s)
+{
+	s[strcspn(s, "\n")] = '\0';
+	return s;
+}
+
 static bool require_delimiter(dialect_file_status *dfile, char *s, char *buf)
 {
 	if (strchr(dfile->delims, *s) == NULL)
 	{
-		prt_error("Error: %s:%s Before \"%s\": Missing delimiter\n",
-		          dfile->fname, suppress_0(dfile->line_number, buf), s);
+		prt_error("Error: %s:%s Before \"%s\": Missing delimiter.\n",
+		          dfile->fname, suppress_0(dfile->line_number, buf),
+		          isolate_line(s));
 		return false;
 	}
 	return true;
@@ -310,7 +326,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 			}
 			else
 			{
-				prt_error("Error: %s:%s After \"%s\": Internal error char %02x\n",
+				prt_error("Error: %s:%s After \"%s\": Internal error char %02x.\n",
 				          dfile->fname, suppress_0(dfile->line_number, buf),
 				          token, (unsigned char)*dfile->pin);
 			}
@@ -337,7 +353,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 
 				if (end == NULL)
 				{
-					prt_error("Error: %s:%s Missing newline at end of file\n",
+					prt_error("Error: %s:%s Missing newline at end of file.\n",
 					          dfile->fname, suppress_0(dfile->line_number, buf));
 					return false;
 				}
@@ -467,6 +483,9 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	return true;
 }
 
+/* Denote link-parser's dialect variable or Parse_Options dialect option. */
+#define DIALECT_OPTION "dialect option"
+
 /**
  * Decode the !dialect user variable.
  */
@@ -479,12 +498,12 @@ bool dialect_read_from_one_line_str(Dictionary dict, Dialect *di,
 		if (*c == '[')
 		{
 			/* Section header specification is not allowed. */
-			prt_error("Error: dialect variable: Invalid character \"[\".\n");
+			prt_error("Error: "DIALECT_OPTION": Invalid character \"[\".\n");
 			return false;
 		}
 		else if (*c == '\n')
 		{
-			prt_error("Error: dialect variable: Newlines are not allowed.\n");
+			prt_error("Error: "DIALECT_OPTION": Newlines are not allowed.\n");
 			return false;
 		}
 	}
@@ -493,7 +512,7 @@ bool dialect_read_from_one_line_str(Dictionary dict, Dialect *di,
 
 	dialect_file_status dfile =
 	{
-		.fname = "User setup",
+		.fname = DIALECT_OPTION,
 		.pin = di->kept_input,
 		.line_number = 0, /* 0 denotes reading from a string. */
 		.delims = delims_string,

@@ -588,7 +588,7 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
 
 	level++;
-	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%d\n\\",
+	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%u\n\\",
 		level*2, "", m_result, lineno, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%lld\n",

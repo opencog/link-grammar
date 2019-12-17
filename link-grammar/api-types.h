@@ -27,7 +27,6 @@ typedef struct Postprocessor_s Postprocessor;
 typedef struct Resources_s * Resources;
 
 /* Some of the more obscure typedefs */
-typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
 typedef struct Link_s Link;
 typedef struct String_set_s String_set;

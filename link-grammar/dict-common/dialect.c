@@ -84,7 +84,7 @@ static bool apply_component(Dictionary dict, Dialect *di,
 
 	if (cost_index == SI_NOTFOUND)
 	{
-		prt_error("Error: Dialect component \"%s\" is not in the dictionary\n",
+		prt_error("Error: Dialect component \"%s\" is not in the dictionary.\n",
 			di->table[table_index].name);
 		return false;
 	}
@@ -134,7 +134,7 @@ static bool apply_table_entry(Dictionary dict, Dialect *from,
 			if (encountered[sub_index])
 			{
 				prt_error("Error: Loop detected at sub-dialect \"%s\" "
-				          "(of dialect \"%s\")\n",
+				          "(of dialect \"%s\").\n",
 				          to->table[i].name, to->table[table_index].name);
 				return false;
 			}
@@ -175,14 +175,14 @@ static void print_cost_table(Dictionary dict, Dialect *di, dialect_info *dinfo)
 
 	if (et->num == 0)
 	{
-		assert(dinfo->cost_table == NULL, "Unexpected cost table");
-		prt_error("Debug: No dialect cost table (no tags in the dict)\n");
+		assert(dinfo->cost_table == NULL, "Unexpected cost table.");
+		prt_error("Debug: No dialect cost table (no tags in the dict).\n");
 		return;
 	}
 
 	if (dinfo->cost_table == NULL)
 	{
-		prt_error("Debug: No dialect cost table\n");
+		prt_error("Debug: No dialect cost table.\n");
 		return;
 	}
 
@@ -201,6 +201,7 @@ static void print_cost_table(Dictionary dict, Dialect *di, dialect_info *dinfo)
 void free_cost_table(Parse_Options opts)
 {
 	free(opts->dialect.cost_table);
+	opts->dialect.cost_table = NULL;
 }
 
 static bool dialect_conf_exists(dialect_info *dinfo)
@@ -228,7 +229,7 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 	{
 		if (!dialect_conf_exists(dinfo)) return true;
 		prt_error("Error: Dialect setup failed: No dialects in the \"%s\" "
-					 "dictionary %s\n", dict->lang, no_dialect);
+					 "dictionary %s.\n", dict->lang, no_dialect);
 		return false;
 	}
 
