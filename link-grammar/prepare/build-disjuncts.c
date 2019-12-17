@@ -377,7 +377,8 @@ static const char *stringify_Exp_type(Exp_type type)
 	}
 	else
 	{
-		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown_type-%d", type);
+		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown_type-%d",
+		         (int)(type));
 		type_str = unknown_type;
 	}
 
