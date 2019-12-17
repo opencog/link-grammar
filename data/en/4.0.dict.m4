@@ -323,7 +323,7 @@ nonCAP.zzz: ZZZ-;
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
     ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
-    ({Xd-} & (Xc+ or [[()]]) & [dCOa+]));
+    ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -396,6 +396,7 @@ nonCAP.zzz: ZZZ-;
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 % Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
+% A- & OH- & Wa-: "O lovely Rose Marie!"
 % <noun-and-s> is tricky when used with [[...]] connectors.
 % Careful for bad parses of
 % "This is the dog and cat Pat and I chased and ate"
@@ -410,7 +411,7 @@ nonCAP.zzz: ZZZ-;
         or YS+
         or YP+))
     or AN+
-    or Wa-
+    or ({@A-} & {OH-} & Wa-)
     or G+);
 
 % Whole, entire entities, cannot participate in G links
@@ -4070,7 +4071,8 @@ cares.v: VERB_S_I(<vc-care>);
 cared.v-d: VERB_SPPP_I(<vc-care>);
 caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or <embed-verb>));
+% O+: "I suppose so"
+<vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or <embed-verb>)) or O+;
 assert.v contend.v remark.v retort.v intimate.v exclaim.v
 conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
   VERB_PLI(<vc-assert>) or <verb-manner>;
@@ -10789,6 +10791,8 @@ drinkin.#drinking-v drinkin'.#drinking-v drinkin’.#drinking-v: [[drinking.v]0.
 givin.#giving-v givin'.#giving-v givin’.#giving-v: [[giving.v]0.05]colloquial;
 kidnappin.#kidnapping-v kidnappin'.#kidnapping-v kidnappin’.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
 runnin.#running-v runnin'.#running-v runnin’.#running-v: [[running.v]0.05]colloquial;
+
+S'pose.#suppose s'pose.#suppose S’pose.#suppose s’pose.#suppose: [suppose.v]colloquial;
 
 an'.#and-j-n an’.#and-j-n: [[and.j-n]0.05]colloquial;
 an'.#and-j-v an’.#and-j-v: [[and.j-v]0.05]colloquial;
