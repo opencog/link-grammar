@@ -187,12 +187,19 @@ static char *get_label(dialect_file_status *dfile)
 	return label;
 }
 
+static char *isolate_line(char *s)
+{
+	s[strcspn(s, "\n")] = '\0';
+	return s;
+}
+
 static bool require_delimiter(dialect_file_status *dfile, char *s, char *buf)
 {
 	if (strchr(dfile->delims, *s) == NULL)
 	{
 		prt_error("Error: %s:%s Before \"%s\": Missing delimiter.\n",
-		          dfile->fname, suppress_0(dfile->line_number, buf), s);
+		          dfile->fname, suppress_0(dfile->line_number, buf),
+		          isolate_line(s));
 		return false;
 	}
 	return true;
