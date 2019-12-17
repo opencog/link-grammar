@@ -234,7 +234,6 @@ static char *display_word_split(Dictionary dict,
                                char * (*display)(Dictionary, const char *))
 {
 	Sentence sent;
-	struct Parse_Options_s display_word_opts = *opts;
 
 	if ('\0' == *word) return NULL; /* avoid trying null strings */
 
@@ -247,9 +246,10 @@ static char *display_word_split(Dictionary dict,
 
 	dyn_str *s = dyn_str_new();
 
-	parse_options_set_spell_guess(&display_word_opts, 0);
+	int spell_option = parse_options_get_spell_guess(opts);
+	parse_options_set_spell_guess(opts, 0);
 	sent = sentence_create(pword, dict);
-	if (0 == sentence_split(sent, &display_word_opts))
+	if (0 == sentence_split(sent, opts))
 	{
 		/* List the splits */
 		print_sentence_word_alternatives(s, sent, false, NULL, NULL);
@@ -257,7 +257,7 @@ static char *display_word_split(Dictionary dict,
 		print_sentence_word_alternatives(s, sent, false, display, NULL);
 	}
 	sentence_delete(sent);
-	free_cost_table(&display_word_opts); /* XXX */
+	parse_options_set_spell_guess(opts, spell_option);
 
 	char *out = dyn_str_take(s);
 	if ('\0' != out[0]) return out;
