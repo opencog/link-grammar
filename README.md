@@ -1189,7 +1189,7 @@ When a sentence fails to parse, look for:
 Poor agreement might be handled by giving a cost to mismatched
 lower-case connector letters.
 
-### Ellipsis/zero/phantom words:
+### Elision/ellipsis/zero/phantom words:
 An common phenomenon in English is that some words that one might
 expect to "properly" be present can disappear under various conditions.
 Below is a sampling of these. Some possible solutions are given below.
@@ -1207,9 +1207,13 @@ phantom word in parenthesis, include:
  * It stopped me (from) flying off the cliff.
  * (It) looks good.
  * (You) go home!
+ * (I) heard that he's giving a test.
  * (Are) you all right?
  * He opened the door and (he) went in.
  * Emma was the younger (daughter) of two daughters.
+
+This can extend to elided/unvoiced syllables:
+ * (I'm a)'fraid so.
 
 Some complex phantom constructions:
  * They play billiards but (they do) not (play) snooker.
@@ -1219,6 +1223,15 @@ Some complex phantom constructions:
  * Perhaps he will (do it), if he sees enough of her.
 
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
+
+#### Elision of syllables
+Many (unstressed) sylables can be elided; in modern English, this occurs
+most commonly in the initial unstressed syllable:
+* (a)'ccount (a)'fraid (a)'gainst (a)'greed (a)'midst (a)'mongst
+* (a)'noint (a)'nother (a)'rrest (at)'tend
+* (be)'fore (be)'gin (be)'havior (be)'long (be)'twixt
+* (con)'cern (e)'scape (e)'stablish
+And so on.
 
 #### Punctuation, zero-copula, zero-that:
 Poorly punctuated sentences cause problems:  for example:

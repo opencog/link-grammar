@@ -13028,14 +13028,14 @@ be.#by: [[by]0.85]colloquial;
 de.#the: [[the]0.25]colloquial;
 
 % slurred speech
-drinkin.#drinking-v: [[drinking.v]0.05]colloquial;
-drinkin'.#drinking-v: [[drinking.v]0.05]colloquial;
-carousin'.#carousing-v: [[carousing.v]0.05]colloquial;
-runnin'.#running-v: [[running.v]0.05]colloquial;
-kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
+carousin.#carousing-v carousin'.#carousing-v carousin’.#carousing-v: [[carousing.v]0.05]colloquial;
+drinkin.#drinking-v drinkin'.#drinking-v drinkin’.#drinking-v: [[drinking.v]0.05]colloquial;
+givin.#giving-v givin'.#giving-v givin’.#giving-v: [[giving.v]0.05]colloquial;
+kidnappin.#kidnapping-v kidnappin'.#kidnapping-v kidnappin’.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
+runnin.#running-v runnin'.#running-v runnin’.#running-v: [[running.v]0.05]colloquial;
 
-an'.#and-j-n: [[and.j-n]0.05]colloquial;
-an'.#and-j-v: [[and.j-v]0.05]colloquial;
+an'.#and-j-n an’.#and-j-n: [[and.j-n]0.05]colloquial;
+an'.#and-j-v an’.#and-j-v: [[and.j-v]0.05]colloquial;
 
 % gimme.#give-me: [[give_me]0.05]colloquial;
 gimme.#give-me: Wi- & O+ & {@MV+};
@@ -13067,19 +13067,32 @@ as.#that: [[that.j-c]0.05]colloquial;
 % Multi-word punctuation error: writing "its" when "it's" was meant.
 % its.#it-is: [[it_is]0.2]colloquial;
 
+% Initial unstressed syllable.
+% Unfortunately, there's a lot of these:
+% (a)'ccount (a)'greed (a)'noint (a)'pothecary (a)'rray (a)'rrest (at)'tend
+% (be)'gin (be)'havior (be)'long (con)'cern (e)'scape (e)'stablish.
+%
+% Need to include capitalized versions becuase automatic
+% downcasing does not work
+'Cause.#because ’Cause.#because 'cause.#because ’cause.#because cause.#because: [because]colloquial;
+'Fore.#before ’Fore.#before 'fore.#before ’fore.#before fore.#before: [before]colloquial;
+'Fraid.#afraid ’Fraid.#afraid 'fraid.#afraid ’fraid.#afraid fraid.#afraid: [afraid.a]colloquial;
+'Gainst.#against ’Gainst.#against 'gainst.#against ’gainst.#against gainst.#against: [against]colloquial;
+'Midst.#amidst ’Midst.#amidst 'midst.#amidst ’midst.#amidst midst.#amidst: [amidst]colloquial;
+'Mongst.#amongst ’Mongst.#amongst 'mongst.#amongst ’mongst.#amongst mongst.#amongst: [amongst]colloquial;
+'Nother.#another ’Nother.#another 'nother.#another ’nother.#another nother.#another: [another]colloquial;
+'Twixt.#betwixt ’Twixt.#betwixt 'twixt.#betwixt ’twixt.#betwixt twixt.#betwixt: [betwixt]colloquial;
+
 % Poetic contractions; Shakesperian contractions
 % The 's abbreviations are given a heavy cost to avoid conflict with possessives
-'fore.#before ’fore.#before fore.#before: [before]colloquial;
-'twixt.#betwixt ’twixt.#betwixt twixt.#betwixt: [betwixt]colloquial;
-'gainst.#against ’gainst.#against gainst.#against: [against]colloquial;
-'midst.#amidst ’midst.#amidst midst.#amidst: [amidst]colloquial;
-'mongst.#amongst ’mongst.#amongst mongst.#amongst: [amongst]colloquial;
 'r.#our ’r.#our: [[our]0.5]colloquial;
 's.#his ’s.#his: [[his]1.5]colloquial;
 's.#shall ’s.#shall: [[shall.v]1.5]colloquial;
 's.#us ’s.#us: [[us]1.5]colloquial;
 't.#it ’t.#it: [it]colloquial;
 art.#are: [[are.v]0.2]colloquial;
+count'nance.#countenance count’nance.#countenance:
+ [countenance.v]colloquial or [countenance.s]colloquial;
 e'en.#even: [even.e]colloquial;
 e'er.#ever: [ever]colloquial;
 ha'.#have ha’.#have: [have.v]colloquial;
