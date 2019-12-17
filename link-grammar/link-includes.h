@@ -210,19 +210,10 @@ link_public_api(bool)
 link_public_api(void)
      parse_options_reset_resources(Parse_Options opts);
 
-#ifdef DIALECT_OBJECT
-typedef struct Dialect_Option_s * Dialect_Option;
-
-link_public_api(Dialect_Option)
-	  parse_options_get_dialect(Parse_Options opts);
-link_public_api(void)
-	  parse_options_set_dialect(Parse_Options opts, Dialect_Option dopt);
-#else
 link_public_api(char *)
 	  parse_options_get_dialect(Parse_Options opts);
 link_public_api(void)
 	  parse_options_set_dialect(Parse_Options opts, const char *dialect);
-#endif
 
 /**********************************************************************
  *
@@ -373,20 +364,6 @@ link_public_api(WordIdx)
      linkage_get_word_char_start(const Linkage linkage, WordIdx w);
 link_public_api(WordIdx)
      linkage_get_word_char_end(const Linkage linkage, WordIdx w);
-
-#define DIALECT_COST_DISABLE    10000.0
-#ifdef DIALECT_OBJECT
-#define DIALECT_COST_REMOVE     10001.0
-
-link_public_api(Dialect_Option)
-     lg_dialect_create(void);
-link_public_api(void)
-     lg_dialect_delete(Dialect_Option dopt);
-link_public_api(bool)
-	  lg_dialect_set(Dialect_Option dopt, const char *dialect, bool useit);
-link_public_api(bool)
-	  lg_dialect_cost(Dialect_Option dopt, const char *component, double cost);
-#endif /* DIALECT_OBJECT */
 
 /**********************************************************************
  *

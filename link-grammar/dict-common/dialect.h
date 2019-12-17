@@ -20,9 +20,11 @@
 #include "string-id.h"
 
 /* dialect_tag costs with a special meaning. See also link-includes.h. */
-#define DIALECT_COST_MAX        9999.0     /* Less than that is a real cost */
-#define DIALECT_SUB             10002.0    /* Sub-dialect (a vector name) */
-#define DIALECT_SECTION         10003.0    /* Section header (a vector name) */
+#define DIALECT_COST_MAX         9999.0    /* Less than that is a real cost */
+#define DIALECT_COST_DISABLE    10000.0
+#define DIALECT_SUB             10001.0    /* Sub-dialect (a vector name) */
+#define DIALECT_SECTION         10002.0    /* Section header (a vector name) */
+
 
 /* Used for dialect table entries and Dialect_Option component cost array. */
 typedef struct
@@ -59,20 +61,11 @@ struct Dialect_s
 /* Dialect object for parse_options_*_dialect(). */
 struct dialect_option_s
 {
-#ifdef DIALECT_OBJECT
-	char const **vname;            /* Dialect vector names */
-	dialect_tag *ccost;            /* Dialect component cost */
-	unsigned int vname_sz;
-	unsigned int ccost_sz;
-#else
 	char *conf;
-#endif
 	float *cost_table;             /* Indexed by Exptag index field */
 };
 
-#ifndef DIALECT_OBJECT
 typedef struct dialect_option_s dialect_info;
-#endif
 
 Dialect *dialect_alloc(void);
 void free_dialect(Dialect *);
@@ -80,9 +73,6 @@ Exptag *exptag_add(Dictionary, const char *);
 bool setup_dialect(Dictionary, Parse_Options);
 void free_cost_table(Parse_Options opts);
 bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info *);
-#ifdef DIALECT_OBJECT
-Dialect_Option dialect_option_alloc(void);
-#endif
 
 static inline bool valid_dialect_name(const char *name)
 {

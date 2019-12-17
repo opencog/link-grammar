@@ -389,27 +389,9 @@ static void free_dialect_info(dialect_info *dinfo)
 
 	free(dinfo->cost_table);
 	dinfo->cost_table = NULL;
-#ifdef DIALECT_OBJECT
-	free(dinfo->vname);
-	free(dinfo->ccost);
-#else
 	free((void *)dinfo->conf);
-#endif
 }
 
-#ifdef DIALECT_OBJECT
-Dialect_Option parse_options_get_dialect(Parse_Options opts)
-{
-	return opts->dialect;
-}
-
-void parse_options_set_dialect(Parse_Options opts, Dialect_Option dopt)
-{
-	if (0 == strcmp(dconf, opts->dialect.conf)) return;
-	free_dialect_info(opts->dialect);
-	opts->dialect = *dopt;
-}
-#else
 char * parse_options_get_dialect(Parse_Options opts)
 {
 	return opts->dialect.conf;
@@ -421,7 +403,6 @@ void parse_options_set_dialect(Parse_Options opts, const char *dconf)
 	free_dialect_info(&opts->dialect);
 	opts->dialect.conf = strdup(dconf);
 }
-#endif
 /***************************************************************
 *
 * Routines for creating destroying and processing Sentences
