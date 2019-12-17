@@ -9233,7 +9233,7 @@ with w/:
     or [({Xc+ & {Xd-}} & dCO+)]
     or (Xd- & Xc+ & (MX*x- or MVx-))));
 
-among:
+among amongst amidst astride:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
   or <locative>
   or [MVp- & B-];
@@ -9723,6 +9723,13 @@ ahead_of by_way_of akin_to betwixt vis-a-vis vis-à-vis cf.
 in_lieu_of on_account_of in_place_of in_search_of:
   <alter-preps> or
   (J+ & (<prep-main-b> or <fronted>));
+
+% XXX FIXME, the below is nutty; reassign to the above.
+subject_to status_post in_conjunction_with sensu
+ in_relation_to neath across_from circa ca. c.
+ previous_to together_with as_regards s/p aka unto
+ apropos_of w.i W.i:
+ ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 % --------------------------------------------------------
 % More complex space-like prepositional phrases
@@ -13061,8 +13068,16 @@ as.#that: [[that.j-c]0.05]colloquial;
 % its.#it-is: [[it_is]0.2]colloquial;
 
 % Poetic contractions; Shakesperian contractions
-'s.#shall ’s.#shall: [[shall.v]0.5]colloquial;
-'s.#us ’s.#us: [[us]0.5]colloquial;
+% The 's abbreviations are given a heavy cost to avoid conflict with possessives
+'fore.#before ’fore.#before fore.#before: [before]colloquial;
+'twixt.#betwixt ’twixt.#betwixt twixt.#betwixt: [betwixt]colloquial;
+'gainst.#against ’gainst.#against gainst.#against: [against]colloquial;
+'midst.#amidst ’midst.#amidst midst.#amidst: [amidst]colloquial;
+'mongst.#amongst ’mongst.#amongst mongst.#amongst: [amongst]colloquial;
+'r.#our ’r.#our: [[our]0.5]colloquial;
+'s.#his ’s.#his: [[his]1.5]colloquial;
+'s.#shall ’s.#shall: [[shall.v]1.5]colloquial;
+'s.#us ’s.#us: [[us]1.5]colloquial;
 't.#it ’t.#it: [it]colloquial;
 art.#are: [[are.v]0.2]colloquial;
 e'en.#even: [even.e]colloquial;
@@ -13255,12 +13270,6 @@ LENGTH-LIMIT-1: YS+ & YP+ & PH+ & ZZZ+;
 % Symposium, xx-yy.
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
-
-subject_to status_post in_conjunction_with sensu
- in_relation_to neath amidst across_from circa ca. c. astride
- previous_to together_with as_regards s/p aka amongst unto
- apropos_of w.i W.i:
- ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 oftenest correctliest soonest disquietingliest:
  EA+;

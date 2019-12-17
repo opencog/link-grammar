@@ -39,8 +39,8 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 -- ‒ – — ― "(" ")" "[" "]" ... ";" ±: MPUNC+;
 
 % Suffixes
-'s 're 've 'em 'd 'll 'm 'd've 't
-’s ’re ’ve ’em ’d ’ll ’m ’d’ve ’t: SUF+;
+'s 're 've 'em 'd 'll 'm 'd've 'r 't
+’s ’re ’ve ’em ’d ’ll ’m ’d’ve ’r ’t: SUF+;
 
 % Prefixes
 % "real" English prefix: y' w/
