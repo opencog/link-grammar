@@ -303,4 +303,4 @@ Examples:
 
   !dialect=irish
   !dialect=irish,headline
-  !dialect=instructions,bad-spelling=2.2
+  !dialect=instructions,bad-spelling:2.2

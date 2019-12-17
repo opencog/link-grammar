@@ -48,8 +48,6 @@ Dialect *dialect_alloc(void)
 
 Exptag *exptag_add(Dictionary dict, const char *tag)
 {
-	if (!valid_dialect_name(tag)) return false;
-
 	expression_tag *et = &dict->tag;
 	unsigned int tag_index = string_id_lookup(tag, et->set);
 
@@ -72,15 +70,6 @@ Exptag *exptag_add(Dictionary dict, const char *tag)
 
 	return &et->array[tag_index];
 }
-
-#ifdef DIALECT_OBJECT
-Dialect_Option dialect_option_alloc(void)
-{
-	Dialect_Option dialect = malloc(sizeof(*dialect));
-	memset(dialect, 0, sizeof(*dialect));
-	return dialect;
-}
-#endif
 
 /**
  * Set in the cost table the dialect component cost at \p table_index.
@@ -216,13 +205,9 @@ void free_cost_table(Parse_Options opts)
 
 static bool dialect_conf_exists(dialect_info *dinfo)
 {
-#ifdef DIALECT_OBJECT
-	return ((dinfo->vname != NULL) || (dinfo->ccost != NULL);
-#else
 	for (const char *p = dinfo->conf; *p != '\0'; p++)
 		if (!lg_isspace(*p)) return true;
 	return false;
-#endif
 }
 
 const char no_dialect[] = "(unset the dialect option)\n";
@@ -276,10 +261,6 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 
 	if (dialect_conf_exists(dinfo))
 	{
-#ifdef DIALECT_OBJECT
-		prt_error("Error: Dialect setting from Dialect_Option is unsupported.\n");
-		return false;
-#else
 		Dialect user_setup = (Dialect){ 0 };
 		if (!dialect_read_from_one_line_str(dict, &user_setup, dinfo->conf))
 		{
@@ -294,101 +275,9 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 		}
 		free_dialect_table(&user_setup);
 	}
-#endif
 
 	if (verbosity_level(+D_DIALECT+1))
 		print_cost_table(dict, di, dinfo);
 
 	return true;
 }
-
-#ifdef DIALECT_OBJECT
-/* External API. */
-
-/* Initial code. Totally undebugged. */
-
-Dialect_Option lg_dialect_create(void)
-{
-	Dialect_Option dopt = malloc(sizeof(*dopt));
-	memset(dopt, 0, sizeof(*dopt));
-	return dopt;
-}
-
-void lg_dialect_delete(Dialect_Option dopt)
-{
-	if (dopt == NULL) return;
-	free(dopt->cost_table);
-	free(dopt->vname);
-	free(dopt->ccost);
-	free(dopt);
-}
-
-bool lg_dialect_set(Dialect_Option dopt, const char *dialect_name, bool useit)
-{
-	if (dopt == NULL) return false;
-	if (useit)
-	{
-		/* Add dialect. */
-		dopt->vname_sz++;
-		dopt->vname = realloc(dopt->vname, dopt->vname_sz * sizeof(*dopt->vname));
-		dopt->vname[dopt->vname_sz-1] = dialect_name;
-		goto done;
-		return true;
-	}
-	else
-	{
-		/* Remove dialect. */
-		dopt->vname_sz--;
-		for (size_t i = 0; i <= dopt->vname_sz; i++)
-		{
-			if (strcmp(dialect_name, dopt->vname[i]) == 0)
-			{
-				if (i != dopt->vname_sz)
-				{
-					memmove(&dopt->vname[i], &dopt->vname[i+1],
-					        (dopt->vname_sz-i) * sizeof(*dopt->vname));
-				}
-				goto done;
-			}
-		}
-		return false; /* Dialect not found */
-	}
-
-done:
-	if (dopt->cost_table != NULL)
-		free(dopt->cost_table);
-	dopt->cost_table = NULL;
-	return true;
-}
-
-bool lg_dialect_cost(Dialect_Option dopt, const char *dialect_tag_name, double cost)
-{
-	if (!cost_eq(cost, DIALECT_COST_REMOVE))
-	{
-		/* Add dialect component cost. */
-		dopt->ccost_sz++;
-		dopt->ccost = realloc(dopt->ccost, dopt->ccost_sz * sizeof(*dopt->ccost));
-		dopt->ccost[dopt->ccost_sz-1] =
-			(dialect_tag){ .name = dialect_tag_name, .cost = cost };
-		return true;
-	}
-	else
-	{
-		/* Remove dialect component cost. */
-		dopt->ccost_sz--;
-		for (size_t i = 0; i <= dopt->ccost_sz; i++)
-		{
-			if (strcmp(dialect_tag_name, dopt->ccost[i].name) == 0)
-			{
-				if (i != dopt->ccost_sz)
-				{
-					memmove(&dopt->ccost[i], &dopt->ccost[i+1],
-					        (dopt->ccost_sz-i) * sizeof(*dopt->ccost));
-				}
-				return true;
-			}
-		}
-		return false; /* Dialect not found */
-	}
-}
-#endif /* DIALECT_OBJECT */

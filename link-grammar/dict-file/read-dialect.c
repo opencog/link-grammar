@@ -44,7 +44,7 @@ static void print_dialect_table(Dialect *di)
 	/* First entry unused - tag ID 0 is invalid (for debug). */
 	for (unsigned int i = 0; i < di->num_table_tags; i++)
 	{
-		if (is_dialect_table) prt_error("%3d: ", i);
+		if (is_dialect_table) prt_error("%3u: ", i);
 		prt_error("%-15s %s\n\\",
 		          di->table[i].name, cost_stringify(di->table[i].cost));
 	}
@@ -165,10 +165,11 @@ static char *get_label(dialect_file_status *dfile)
 		if (!lg_isspace(*p)) break;
 	p[1] = '\0';
 
-	if (!valid_dialect_name(label))
+	const char *bad = valid_dialect_name(label);
+	if (bad != NULL)
 	{
-		prt_error("Error: %s:%s \"%s\": Invalid dialect name.\n",
-		          dfile->fname, suppress_0(dfile->line_number, buf), label);
+		prt_error("Error: %s:%s \"%s\": Invalid character '%c' in dialect name.\n",
+		          dfile->fname, suppress_0(dfile->line_number, buf), label, *bad);
 		return NULL;
 	}
 
@@ -311,7 +312,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 			{
 				prt_error("Error: %s:%s After \"%s\": Internal error char %02x\n",
 				          dfile->fname, suppress_0(dfile->line_number, buf),
-				          token, *dfile->pin);
+				          token, (unsigned char)*dfile->pin);
 			}
 		}
 
