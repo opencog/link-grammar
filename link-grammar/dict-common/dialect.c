@@ -201,6 +201,7 @@ static void print_cost_table(Dictionary dict, Dialect *di, dialect_info *dinfo)
 void free_cost_table(Parse_Options opts)
 {
 	free(opts->dialect.cost_table);
+	opts->dialect.cost_table = NULL;
 }
 
 static bool dialect_conf_exists(dialect_info *dinfo)
