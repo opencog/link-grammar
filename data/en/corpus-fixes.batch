@@ -1087,6 +1087,7 @@ For who were you mistaken?
 % verb-negation with subject-verb inversion
 Do you not wish to know?
 "Do you not want to know who has taken it?" cried his wife impatiently.
+How long will you not have mercy on Jerusalem?
 
 % Archaic fairy-tale / children's book registers (inverted subject/object)
 far out in the sea lived a fish.
@@ -1290,8 +1291,6 @@ Sure enough, there it was, as I had sensed.
 Sure enough, there it was, as I had guessed.
 There it was, just as I had said.
 then last week, I changed my mind
-
-O that he had sprained his ankle in the first place!
 
 % zero-subject/phantom-subject in sentence opener
 As mentioned before, we are creating a business service.
@@ -4464,6 +4463,26 @@ Praise the Lord God, amen!
 
 Rock 'n' roll, dude!
 
+Oh God, what now?
+Oh God, now what?
+Oh God, then what?
+Oh God, what is it?
+Oh Lordy!
+
+What now?
+Now what?
+Then what?
+Then what did he say?
+And then what did he say?
+What is it?
+
+Oh yes, how is he?
+Oh dear!
+Oh well, see you next week then.
+Oh, has she?
+Oh, how wonderful!
+How wonderful!
+
 % Opinion-exclamations
 Sad!
 very sad!
@@ -4482,6 +4501,7 @@ Mary, should I do this?
 Mary, would you do this for me?
 Mary, won't you do it?
 Mary, mightn't you be right?
+Oh Mary, you know I love you!
 John, do you think so, too?
 John, do you think it, too?
 John, do you believe it, too?
@@ -4489,6 +4509,7 @@ John, do you believe so, too?
 John, doesn't that strike you as odd?
 John, have you thought about it?
 John, is it true?
+Oh John, can it be true?
 On arrival, can you do it?
 For now, can you do it?
 On second thought, can you do it?
@@ -4509,6 +4530,10 @@ John, this is it!
 First, unbutton the button.
 Next, pour wine on your shirt.
 Finally, button the button.
+
+% Hmm, simply having then.r: CO+ seems very wrong to me;
+% something more sophisticated is needed ...
+first he grunted and then he opened the door
 
 % and, or opening coordinating conjunctions.
 % Currently these take Wc- to the left wall, since they "coordinate"
@@ -4941,10 +4966,64 @@ Christmas Day, well, everybody be so choked up over gifts and everything, they d
 He does be singing.
 He does be always drinkin layarge bohhels down be de park boy
 
-% Archaic, poetic British
+% Misc urban, colloquial
+gimme dat!
+open th'door, dammit!
+give'em to me
+give'm to me
+'Fraid so.
+'Nother drink?
+I s'pose so.
+'S not funny.
+
+% Abbreviations
+she'd've said so if it was important
+
+% Archaic, poetic British; poetic contractions; Shakespearean
 oh, 'tis love, 'tis love that makes the world go round!
 'Tis the season to be jolly!
 Tis the season to be jolly!
+'Twas the night before Christmas
+The difference is so great 'twixt heav'n and hell
+Hovering 'twixt Heav'n and dark Hell's regions nether
+O'er the hills and through the woods
+God gi' me the strength
+I ne’er saw true beauty
+as I have oft said, you need to look before you leap
+Through wood, o'er hill, o'er dale his roam
+with tears thou keep’st me blind
+Unlock heav’n’s golden gates, and issue forth
+Will you ha’ the truth on’t?
+I do not lie in’t
+thou’s hear our counsel
+'Twill soon strike twelve
+each pinch more stinging than bees that made’em
+As th’art a man
+You see ... how ample y’are beloved
+one did laugh in’s sleep
+By’r lady
+Th’imperial jointress to this warlike state
+A piece of ordnance ’gainst it I have placed
+’midst the sentence so her accent breaks
+’Cause the musicians play me that sad note
+keep that count’nance still
+Well, go thy ways, old lad, for thou shalt ha’t
+
+% vocative O
+O Rose, thou art sick!
+O holy virgin!
+O cunning Love!
+O lovely Marie!
+O lovely Rose Marie!
+O Jesu, this is excellent sport, i'faith.
+O Mary, what have I done?
+O mother of flames
+Tell me, O Muse, of that ingenious hero
+O Yahweh of Armies, how long will you not have mercy on Jerusalem?
+O that he had sprained his ankle in the first place!
+
+% Contractions that cause trouble during guessing.
+we are going out for Hallowe'en
 
 % WH-words
 I do not know why

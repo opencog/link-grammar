@@ -317,11 +317,13 @@ nonCAP.zzz: ZZZ-;
 % Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
+% Wc- & Xc+ & Wq+: "O Mary, what have I done?"
+% Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
     ((Xc+ & Ic+) or
-    (Wc- & (Xc+ or [()]1.2) & Qd+) or
-    ({Xd-} & (Xc+ or [[()]]) & [dCOa+]));
+    ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
+    ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -394,6 +396,7 @@ nonCAP.zzz: ZZZ-;
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 % Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
+% A- & OH- & Wa-: "O lovely Rose Marie!"
 % <noun-and-s> is tricky when used with [[...]] connectors.
 % Careful for bad parses of
 % "This is the dog and cat Pat and I chased and ate"
@@ -408,7 +411,7 @@ nonCAP.zzz: ZZZ-;
         or YS+
         or YP+))
     or AN+
-    or Wa-
+    or ({@A-} & {OH-} & Wa-)
     or G+);
 
 % Whole, entire entities, cannot participate in G links
@@ -444,6 +447,10 @@ An.f In.f So.f: [[<given-names>]];
   <marker-entity> or <entity-singular>;
 
 /en/words/entities.locations.sing:
+  <marker-entity> or <entity-singular>;
+
+% The apostrophe triggers incorrect guessing, so we explicitly list this here.
+Hallowe'en:
   <marker-entity> or <entity-singular>;
 
 % words.n.4: nouns that can be mass or countable
@@ -2770,7 +2777,7 @@ do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
     ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
@@ -2782,7 +2789,7 @@ do.v:
 does.v:
   VERB_X_S(<vc-do>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
-  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
 % <verb-x-sp> & <verb-wall>: "I sure wish I did"
@@ -2791,7 +2798,7 @@ did.v-d:
   or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & ((<verb-rq-aux> & I*d+) or CQ-));
+  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
@@ -2859,9 +2866,17 @@ have.v:
   VERB_X_PLI(<vc-have>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
 
-%I've they've you've we've: PP+ & <CLAUSE>;
+% I've they've you've we've: PP+ & <CLAUSE>;
+% I- & PP+: "she would've said so".
 ’ve 've:
-	Sp- & <verb-wall> & (PP+ or O+);
+  (Sp- & (PP+ or O+))
+  or (If- & PP+);
+
+% The splitter will not two suffixes, so we need this
+% abbreviation for would-have: "She'd've said so"
+% Give it a cost to that "She 'd've said so" can split first.
+'d've.#would-have ’d’ve.#would-have:
+  [S- & (PP+ or O+)]0.3;
 
 has.v:
   VERB_X_S(<vc-have>)
@@ -3177,8 +3192,9 @@ weren't.v-d weren’t.v-d:
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
 % Sa*a- & Ix+: "..., as shall be proven"
+% SI+ & N+ & I+: "how long will you not have mercy?"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & I+) or CQ-))
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
@@ -3200,7 +3216,7 @@ should.v:
 
 % <verb-wall>: "I sure wish he would."
 would.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & {Vw+} & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
@@ -4055,7 +4071,8 @@ cares.v: VERB_S_I(<vc-care>);
 cared.v-d: VERB_SPPP_I(<vc-care>);
 caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or <embed-verb>));
+% O+: "I suppose so"
+<vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or <embed-verb>)) or O+;
 assert.v contend.v remark.v retort.v intimate.v exclaim.v
 conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
   VERB_PLI(<vc-assert>) or <verb-manner>;
@@ -5422,7 +5439,7 @@ intending.v: <verb-pg> & <vc-intend>;
 dare.v:
   VERB_PLI(<vc-dare>)
   or (<verb-s> & N+ & I+)
-  or (SI+ & <verb-rq-aux> & I+);
+  or (SI+ & <verb-rq-aux> & {N+} & I+);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d:
   VERB_SPPP_T(<vc-dare>)
@@ -6162,13 +6179,14 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % (QI+ & {MV+}): "I did not tell why until recently"
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
+% O+ & OF+: "tell me of that ingenious hero"
 % [()]: "only he can tell"
 %
 <vc-tell>:
   (((O+ & {O*n+ or K+}) or <b-minus>)
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
-  or OF+
+  or ({O+} & OF+)
   or [()]0.3
   or (QI+ & {MV+})
   or ([[@MV+ & {O*n+} & <mv-coord>]]);
@@ -6972,7 +6990,7 @@ with w/:
     or [({Xc+ & {Xd-}} & dCO+)]
     or (Xd- & Xc+ & (MX*x- or MVx-))));
 
-among:
+among amongst amidst astride:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
   or <locative>
   or [MVp- & B-];
@@ -7122,7 +7140,8 @@ on upon:
   or <locative>
   or [MVp- & B-];
 
-over:
+% o'er: poetic contraction
+over o'er:
   ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
   or K-
   or EN+
@@ -7400,6 +7419,10 @@ nearby close_by handy.r:
   or ({EE-} & FM-)
   or ({EE-} & {Xc+} & dCOp+);
 
+% "It lies in the regions nether"
+nether.r distant.r:
+  MVp-;
+
 % similar to <prep-main-b> but not quite ...
 all_over all_around:
   {J+} & (Mp- or Pp- or MVp- or dWl- or [({Xc+ & {Xd-}} & dCO+)] or FM-);
@@ -7461,6 +7484,13 @@ ahead_of by_way_of akin_to betwixt vis-a-vis vis-à-vis cf.
 in_lieu_of on_account_of in_place_of in_search_of:
   <alter-preps> or
   (J+ & (<prep-main-b> or <fronted>));
+
+% XXX FIXME, the below is nutty; reassign to the above.
+subject_to status_post in_conjunction_with sensu
+ in_relation_to neath across_from circa ca. c.
+ previous_to together_with as_regards s/p aka unto
+ apropos_of w.i W.i:
+ ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 % --------------------------------------------------------
 % More complex space-like prepositional phrases
@@ -10220,6 +10250,7 @@ goody.ij
 amen.ij alrighty
 jeepers Jee-sus
 Kee-reist Christ Christ_almighty JHC
+Jesu
 Jesus_Christ Jesus_fucking_Christ Jesus_H_Christ
 Christ_alive crikey cripes Jiminy_Cricket
 Jaysus Jeebus Jehoshaphat sweet_Jesus
@@ -10291,6 +10322,9 @@ for_sure for_certain for_real:
 % sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
   <directive-opener> or Wa-;
+
+% Exclamations, vocatives
+oh.voc O: OH+;
 
 % -----------------------------------------------------------
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)
@@ -10748,29 +10782,39 @@ git.#get: [[get.v]0.45]colloquial;
 
 % Y'gotta, Y'gonna
 %   "keep y'mouth shut"
-y'.#you: [[you]0.05]colloquial;
-y'.#your: [[your]0.05]colloquial;
-
-o'.#of: [[of]0.05]colloquial;
+y'.#you y’.#you: [[you]0.05]colloquial;
+y'.#your y’.#your: [[your]0.05]colloquial;
 
 e.#he: [[he]0.05]colloquial;
 
 be.#by: [[by]0.85]colloquial;
 de.#the: [[the]0.25]colloquial;
 
-% slurred speech
-drinkin.#drinking-v: [[drinking.v]0.05]colloquial;
-drinkin'.#drinking-v: [[drinking.v]0.05]colloquial;
-runnin'.#running-v: [[running.v]0.05]colloquial;
-kidnappin'.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
+% Slurred speech.
+% XXX FIXME, this should probably be handled by a regex...
+carousin.#carousing-v carousin'.#carousing-v carousin’.#carousing-v: [[carousing.v]0.05]colloquial;
+drinkin.#drinking-v drinkin'.#drinking-v drinkin’.#drinking-v: [[drinking.v]0.05]colloquial;
+givin.#giving-v givin'.#giving-v givin’.#giving-v: [[giving.v]0.05]colloquial;
+kidnappin.#kidnapping-v kidnappin'.#kidnapping-v kidnappin’.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
+runnin.#running-v runnin'.#running-v runnin’.#running-v: [[running.v]0.05]colloquial;
 
-an'.#and-j-n: [[and.j-n]0.05]colloquial;
-an'.#and-j-v: [[and.j-v]0.05]colloquial;
+S'pose.#suppose s'pose.#suppose S’pose.#suppose s’pose.#suppose: [suppose.v]colloquial;
+
+an'.#and-j-n an’.#and-j-n: [[and.j-n]0.05]colloquial;
+an'.#and-j-v an’.#and-j-v: [[and.j-v]0.05]colloquial;
+
+% gimme.#give-me: [[give_me]0.05]colloquial;
+gimme.#give-me: Wi- & O+ & {@MV+};
+
+'em.#them ’em.#them 'm.#them ’m.#them : [them]colloquial;
 
 % A bit too loose. These should only become enabled if the context
 % is correct.
 % an.#and-j-n: [[and.j-n]]colloquial;
 % an.#and-j-v: [[and.j-v]]colloquial;
+
+dat.#that-jp: [[that.j-p]0.05]colloquial;
+dat.#that-jd: [[that.j-d]0.05]colloquial;
 
 % Bad German accent
 vas.#was-v-d: [[was.v-d]0.05]bad-spelling;
@@ -10789,10 +10833,64 @@ as.#that: [[that.j-c]0.05]colloquial;
 % Multi-word punctuation error: writing "its" when "it's" was meant.
 % its.#it-is: [[it_is]0.2]colloquial;
 
-% Archaic, poetic 'tis:  'Tis the season to be jolly
-% 'tis.#it-is: [[it_is]]colloquial;
+% Initial unstressed syllable.
+% Unfortunately, there's a lot of these:
+% (a)'ccount (a)'greed (a)'noint (a)'pothecary (a)'rray (a)'rrest (at)'tend
+% (be)'gin (be)'havior (be)'long (con)'cern (e)'scape (e)'stablish.
+%
+% Need to include capitalized versions becuase automatic
+% downcasing does not work
+'Cause.#because ’Cause.#because 'cause.#because ’cause.#because cause.#because: [because]colloquial;
+'Fore.#before ’Fore.#before 'fore.#before ’fore.#before fore.#before: [before]colloquial;
+'Fraid.#afraid ’Fraid.#afraid 'fraid.#afraid ’fraid.#afraid fraid.#afraid: [afraid.a]colloquial;
+'Gainst.#against ’Gainst.#against 'gainst.#against ’gainst.#against gainst.#against: [against]colloquial;
+'Midst.#amidst ’Midst.#amidst 'midst.#amidst ’midst.#amidst midst.#amidst: [amidst]colloquial;
+'Mongst.#amongst ’Mongst.#amongst 'mongst.#amongst ’mongst.#amongst mongst.#amongst: [amongst]colloquial;
+'Nother.#another ’Nother.#another 'nother.#another ’nother.#another nother.#another: [another]colloquial;
+'Twixt.#betwixt ’Twixt.#betwixt 'twixt.#betwixt ’twixt.#betwixt twixt.#betwixt: [betwixt]colloquial;
 
-'tis tis 'Tis: Wn- & O+;
+% Poetic contractions; Shakesperian contractions
+% The 's abbreviations are given a heavy cost to avoid conflict with possessives
+'r.#our ’r.#our: [[our]0.5]colloquial;
+% 's.#his ’s.#his: [[his]1.5]colloquial;
+% 's.#shall ’s.#shall: [[shall.v]1.5]colloquial;
+'s.#us ’s.#us: [[us]1.5]colloquial;
+'t.#it ’t.#it: [it]colloquial;
+art.#are: [[are.v]0.2]colloquial;
+count'nance.#countenance count’nance.#countenance:
+ [countenance.v]colloquial or [countenance.s]colloquial;
+e'en.#even: [even.e]colloquial;
+e'er.#ever: [ever]colloquial;
+ha'.#have ha’.#have: [have.v]colloquial;
+Heav'n.#heaven Heav’n.#heaven heav'n.#heaven heav’n.#heaven: [heaven.s]colloquial;
+i'.#in: [in.r]colloquial;
+gi'.#give: [give.v]colloquial;
+ne'er.#never: [never.e]colloquial or [never.i]colloquial;
+o'.#of: [of]colloquial;
+o'.#on: [on]colloquial;
+o'er.#over: [over]colloquial;
+oft.#often: [often.e]colloquial;
+t'.#to: [to.r]colloquial;
+ta'en.#taken: [taken.v]colloquial;
+th'.#the th’.#the: [the]colloquial;
+th'.#thou th’.#thou: [thou]colloquial;
+wi'.#with: [with]colloquial;
+
+% Archaic, poetic 'tis:  'Tis the season to be jolly
+%      'Twas the night before Christmas
+% 'tis.#it-is: [it_is]colloquial;
+% 'twill.#it-will: [it_will]colloquial;
+
+'tis tis 'Tis 'twas twas 'Twas ’tis ’Tis ’twas ’Twas:
+  Wn- & O+ & {@MV+};
+
+% 'Twill soon strike twelve
+'twill 'Twill
+’twill ’Twill:
+  Wd- & I+;
+
+% Shakesperean
+ample.#amply: [[amply]0.5]colloquial;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -10943,12 +11041,6 @@ LENGTH-LIMIT-1: YS+ & YP+ & PH+ & ZZZ+;
 % Symposium, xx-yy.
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
-
-subject_to status_post in_conjunction_with sensu
- in_relation_to neath amidst across_from circa ca. c. astride
- previous_to together_with as_regards s/p aka amongst unto
- apropos_of w.i W.i:
- ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 oftenest correctliest soonest disquietingliest:
  EA+;
