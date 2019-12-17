@@ -292,6 +292,7 @@ components.
 
 The value of this variable consists of comma-separated names, with an
 optional cost value after a ":" delimiter (which can be empty).
+White space is not allowed.
 
 Names without a cost value are dialect names from the "4.0.dialect" file,
 and the dialect components are assigned costs as defined there.
