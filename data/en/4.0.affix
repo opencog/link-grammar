@@ -39,7 +39,8 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 -- ‒ – — ― "(" ")" "[" "]" ... ";" ±: MPUNC+;
 
 % Suffixes
-'s 're 've 'd 'll 'm 'd've ’s ’re ’ve ’d ’ll ’m ’d’ve: SUF+;
+'s 're 've 'em 'd 'll 'm 'd've 't
+’s ’re ’ve ’em ’d ’ll ’m ’d’ve ’t: SUF+;
 
 % Prefixes
 % "real" English prefix: y' w/
@@ -47,7 +48,8 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 % coffee w/milk
 % i'faith
 % th'door
-i' o' t' th' wi' y' w/: PRE+;
+i' o' t' th' wi' y' w/
+i’ o’ t’ th’ wi’ y’: PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!

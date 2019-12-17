@@ -13012,8 +13012,8 @@ git.#get: [[get.v]0.45]colloquial;
 
 % Y'gotta, Y'gonna
 %   "keep y'mouth shut"
-y'.#you: [[you]0.05]colloquial;
-y'.#your: [[your]0.05]colloquial;
+y'.#you y’.#you: [[you]0.05]colloquial;
+y'.#your y’.#your: [[your]0.05]colloquial;
 
 e.#he: [[he]0.05]colloquial;
 
@@ -13032,6 +13032,8 @@ an'.#and-j-v: [[and.j-v]0.05]colloquial;
 
 % gimme.#give-me: [[give_me]0.05]colloquial;
 gimme.#give-me: Wi- & O+ & {@MV+};
+
+'em.#them ’em.#them 'm.#them ’m.#them : [them]colloquial;
 
 % A bit too loose. These should only become enabled if the context
 % is correct.
@@ -13059,9 +13061,14 @@ as.#that: [[that.j-c]0.05]colloquial;
 % its.#it-is: [[it_is]0.2]colloquial;
 
 % Poetic contractions; Shakesperian contractions
-heav'n.#heaven: [heaven.s]colloquial;
+'s.#shall ’s.#shall: [[shall.v]0.5]colloquial;
+'s.#us ’s.#us: [[us]0.5]colloquial;
+'t.#it ’t.#it: [it]colloquial;
+art.#are: [[are.v]0.2]colloquial;
 e'en.#even: [even.e]colloquial;
 e'er.#ever: [ever]colloquial;
+ha'.#have ha’.#have: [have.v]colloquial;
+heav'n.#heaven heav’n.#heaven: [heaven.s]colloquial;
 i'.#in: [in.r]colloquial;
 gi'.#give: [give.v]colloquial;
 ne'er.#never: [never.e]colloquial or [never.i]colloquial;
@@ -13071,14 +13078,25 @@ o'er.#over: [over]colloquial;
 oft.#often: [often.e]colloquial;
 t'.#to: [to.r]colloquial;
 ta'en.#taken: [taken.v]colloquial;
-th'.#the: [the]colloquial;
+th'.#the th’.#the: [the]colloquial;
+th'.#thou th’.#thou: [thou]colloquial;
 wi'.#with: [with]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
 %      'Twas the night before Christmas
-% 'tis.#it-is: [[it_is]]colloquial;
+% 'tis.#it-is: [it_is]colloquial;
+% 'twill.#it-will: [it_will]colloquial;
 
-'tis tis 'Tis 'twas twas 'Twas: Wn- & O+ & {@MV+};
+'tis tis 'Tis 'twas twas 'Twas ’tis ’Tis ’twas ’Twas:
+  Wn- & O+ & {@MV+};
+
+% 'Twill soon strike twelve
+'twill 'Twill
+’twill ’Twill:
+  Wd- & I+;
+
+% Shakesperean
+ample.#amply: [[amply]0.5]colloquial;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
