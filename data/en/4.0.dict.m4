@@ -6179,13 +6179,14 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % (QI+ & {MV+}): "I did not tell why until recently"
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
+% O+ & OF+: "tell me of that ingenious hero"
 % [()]: "only he can tell"
 %
 <vc-tell>:
   (((O+ & {O*n+ or K+}) or <b-minus>)
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
-  or OF+
+  or ({O+} & OF+)
   or [()]0.3
   or (QI+ & {MV+})
   or ([[@MV+ & {O*n+} & <mv-coord>]]);
