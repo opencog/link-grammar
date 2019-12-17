@@ -10225,6 +10225,7 @@ goody.ij
 amen.ij alrighty
 jeepers Jee-sus
 Kee-reist Christ Christ_almighty JHC
+Jesu
 Jesus_Christ Jesus_fucking_Christ Jesus_H_Christ
 Christ_alive crikey cripes Jiminy_Cricket
 Jaysus Jeebus Jehoshaphat sweet_Jesus
@@ -10357,8 +10358,7 @@ not_since:
   (J+ or <subcl-verb>) & Wq- & Q+;
 
 % cost on [EC+]: try to use <comp-prep> instead.
-% e'en: poetic contraction
-even.e e'en:
+even.e:
   E+
   or EB-
   or <comp-prep>
@@ -10801,10 +10801,14 @@ as.#that: [[that.j-c]0.05]colloquial;
 % its.#it-is: [[it_is]0.2]colloquial;
 
 % Poetic contractions
-o'.#of: [[of]0.05]colloquial;
+e'en.#even: [even.e]colloquial;
+e'er.#ever: [ever]colloquial;
+i'.#in: [in.r]colloquial;
 gi'.#give: [give.v]colloquial;
 ne'er.#never: [never.e]colloquial or [never.i]colloquial;
+o'.#of: [[of]0.05]colloquial;
 oft.#often: [often.e]colloquial;
+th'.#the: [the]colloquial;
 
 % Archaic, poetic 'tis:  'Tis the season to be jolly
 %      'Twas the night before Christmas
