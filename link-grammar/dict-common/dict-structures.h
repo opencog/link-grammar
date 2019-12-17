@@ -14,7 +14,6 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define _LG_DICT_STRUCTURES_H_
 
-#include "api-types.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
@@ -39,6 +38,7 @@ static const int cost_max_dec_places = 3;
 static const double cost_epsilon = 1E-5;
 
 #define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
+typedef struct Exptag_s Exptag;
 struct Exptag_s
 {
 	const char *name;
