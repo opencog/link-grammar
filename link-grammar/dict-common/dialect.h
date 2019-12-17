@@ -74,14 +74,19 @@ bool setup_dialect(Dictionary, Parse_Options);
 void free_cost_table(Parse_Options opts);
 bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info *);
 
-static inline bool valid_dialect_name(const char *name)
+/**
+ * Validate that \p name is a valid dialect tag name.
+ * @name Dialect tag name
+ * @return NULL if valid, else the first offending character.
+ */
+static inline const char *valid_dialect_name(const char *name)
 {
-	if (!isalpha(name[0])) return false;
+	if (!isalpha(name[0])) return name;
 	while (*++name != '\0')
 	{
 		if (!isalnum(name[0]) && name[0] != '_' && name[0] != '-')
-			return false;
+			return name;
 	}
-	return true;
+	return NULL;
 }
 #endif /* _DIALECT_H_ */

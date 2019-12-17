@@ -165,10 +165,11 @@ static char *get_label(dialect_file_status *dfile)
 		if (!lg_isspace(*p)) break;
 	p[1] = '\0';
 
-	if (!valid_dialect_name(label))
+	const char *bad = valid_dialect_name(label);
+	if (bad != NULL)
 	{
-		prt_error("Error: %s:%s \"%s\": Invalid dialect name.\n",
-		          dfile->fname, suppress_0(dfile->line_number, buf), label);
+		prt_error("Error: %s:%s \"%s\": Invalid character '%c' in dialect name.\n",
+		          dfile->fname, suppress_0(dfile->line_number, buf), label, *bad);
 		return NULL;
 	}
 

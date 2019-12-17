@@ -48,8 +48,6 @@ Dialect *dialect_alloc(void)
 
 Exptag *exptag_add(Dictionary dict, const char *tag)
 {
-	if (!valid_dialect_name(tag)) return false;
-
 	expression_tag *et = &dict->tag;
 	unsigned int tag_index = string_id_lookup(tag, et->set);
 

@@ -1209,9 +1209,12 @@ static Exp *make_expression(Dictionary dict)
 			         (strcmp(dict->token, "and") != 0) &&
 			         isalpha(dict->token[0]))
 			{
-				if (!valid_dialect_name(dict->token))
+				const char *bad = valid_dialect_name(dict->token);
+				if (bad != NULL)
 				{
-					dict_error(dict, "Invalid expression tag name");
+					char badchar[] = { *bad, '\0' };
+					dict_error2(dict, "Invalid character in dialect tag name:",
+					           badchar);
 					return NULL;
 				}
 				if (nl->tag != NULL)
