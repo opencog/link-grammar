@@ -168,8 +168,17 @@ static char *get_label(dialect_file_status *dfile)
 	const char *bad = valid_dialect_name(label);
 	if (bad != NULL)
 	{
-		prt_error("Error: %s:%s \"%s\": Invalid character '%c' in dialect name.\n",
-		          dfile->fname, suppress_0(dfile->line_number, buf), label, *bad);
+		if (bad[0] == '\0')
+		{
+			prt_error("Error: %s:%s \"%s\": Missing name before a delimiter.\n",
+		             dfile->fname, suppress_0(dfile->line_number, buf), label);
+		}
+		else
+		{
+			prt_error("Error: %s:%s \"%s\": Invalid character '%c' in dialect name.\n",
+			          dfile->fname, suppress_0(dfile->line_number, buf), label,
+			          bad[0]);
+		}
 		return NULL;
 	}
 
