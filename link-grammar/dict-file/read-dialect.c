@@ -467,6 +467,9 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	return true;
 }
 
+/* Denote link-parser's dialect variable or Parse_Options dialect option. */
+#define DIALECT_OPTION "dialect option"
+
 /**
  * Decode the !dialect user variable.
  */
@@ -479,12 +482,12 @@ bool dialect_read_from_one_line_str(Dictionary dict, Dialect *di,
 		if (*c == '[')
 		{
 			/* Section header specification is not allowed. */
-			prt_error("Error: dialect variable: Invalid character \"[\".\n");
+			prt_error("Error: "DIALECT_OPTION": Invalid character \"[\".\n");
 			return false;
 		}
 		else if (*c == '\n')
 		{
-			prt_error("Error: dialect variable: Newlines are not allowed.\n");
+			prt_error("Error: "DIALECT_OPTION": Newlines are not allowed.\n");
 			return false;
 		}
 	}
@@ -493,7 +496,7 @@ bool dialect_read_from_one_line_str(Dictionary dict, Dialect *di,
 
 	dialect_file_status dfile =
 	{
-		.fname = "User setup",
+		.fname = DIALECT_OPTION,
 		.pin = di->kept_input,
 		.line_number = 0, /* 0 denotes reading from a string. */
 		.delims = delims_string,
