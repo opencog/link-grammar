@@ -44,6 +44,7 @@ class ParseOptions(object):
                  repeatable_rand=True,
                  test='',
                  debug='',
+                 dialect='',
                  ):
 
         self._obj = clg.parse_options_create()
@@ -62,6 +63,7 @@ class ParseOptions(object):
         self.repeatable_rand = repeatable_rand
         self.test = test
         self.debug = debug
+        self.dialect = dialect
 
     # Allow only the attribute names listed below.
     def __setattr__(self, name, value):
@@ -92,8 +94,18 @@ class ParseOptions(object):
     @debug.setter
     def debug(self, value):
         if not isinstance(value, str):
-            raise TypeError("debug must be set to a string")
+            raise TypeError("dialect must be set to a string")
         return clg.parse_options_set_debug(self._obj, value)
+
+    @property
+    def dialect(self):
+        return clg.parse_options_get_dialect(self._obj)
+
+    @debug.setter
+    def dialect(self, value):
+        if not isinstance(value, str):
+            raise TypeError("dialect must be set to a string")
+        return clg.parse_options_set_dialect(self._obj, value)
 
     @property
     def verbosity(self):
