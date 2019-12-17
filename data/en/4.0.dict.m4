@@ -10790,7 +10790,8 @@ e.#he: [[he]0.05]colloquial;
 be.#by: [[by]0.85]colloquial;
 de.#the: [[the]0.25]colloquial;
 
-% slurred speech
+% Slurred speech.
+% XXX FIXME, this should probably be handled by a regex...
 carousin.#carousing-v carousin'.#carousing-v carousin’.#carousing-v: [[carousing.v]0.05]colloquial;
 drinkin.#drinking-v drinkin'.#drinking-v drinkin’.#drinking-v: [[drinking.v]0.05]colloquial;
 givin.#giving-v givin'.#giving-v givin’.#giving-v: [[giving.v]0.05]colloquial;
