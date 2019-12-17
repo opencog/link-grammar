@@ -1292,8 +1292,6 @@ Sure enough, there it was, as I had guessed.
 There it was, just as I had said.
 then last week, I changed my mind
 
-O that he had sprained his ankle in the first place!
-
 % zero-subject/phantom-subject in sentence opener
 As mentioned before, we are creating a business service.
 
@@ -4465,6 +4463,26 @@ Praise the Lord God, amen!
 
 Rock 'n' roll, dude!
 
+Oh God, what now?
+Oh God, now what?
+Oh God, then what?
+Oh God, what is it?
+Oh Lordy!
+
+What now?
+Now what?
+Then what?
+Then what did he say?
+And then what did he say?
+What is it?
+
+Oh yes, how is he?
+Oh dear!
+Oh well, see you next week then.
+Oh, has she?
+Oh, how wonderful!
+How wonderful!
+
 % Opinion-exclamations
 Sad!
 very sad!
@@ -4483,6 +4501,7 @@ Mary, should I do this?
 Mary, would you do this for me?
 Mary, won't you do it?
 Mary, mightn't you be right?
+Oh Mary, you know I love you!
 John, do you think so, too?
 John, do you think it, too?
 John, do you believe it, too?
@@ -4490,6 +4509,7 @@ John, do you believe so, too?
 John, doesn't that strike you as odd?
 John, have you thought about it?
 John, is it true?
+Oh John, can it be true?
 On arrival, can you do it?
 For now, can you do it?
 On second thought, can you do it?
@@ -4510,6 +4530,10 @@ John, this is it!
 First, unbutton the button.
 Next, pour wine on your shirt.
 Finally, button the button.
+
+% Hmm, simply having then.r: CO+ seems very wrong to me;
+% something more sophisticated is needed ...
+first he grunted and then he opened the door
 
 % and, or opening coordinating conjunctions.
 % Currently these take Wc- to the left wall, since they "coordinate"
@@ -4962,6 +4986,7 @@ O Mary, what have I done?
 O mother of flames
 Tell me, O Muse, of that ingenious hero
 O Yahweh of Armies, how long will you not have mercy on Jerusalem?
+O that he had sprained his ankle in the first place!
 
 % Contractions that cause trouble during guessing.
 we are going out for Hallowe'en
