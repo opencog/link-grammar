@@ -10846,8 +10846,8 @@ as.#that: [[that.j-c]0.05]colloquial;
 % Poetic contractions; Shakesperian contractions
 % The 's abbreviations are given a heavy cost to avoid conflict with possessives
 'r.#our ’r.#our: [[our]0.5]colloquial;
-'s.#his ’s.#his: [[his]1.5]colloquial;
-'s.#shall ’s.#shall: [[shall.v]1.5]colloquial;
+% 's.#his ’s.#his: [[his]1.5]colloquial;
+% 's.#shall ’s.#shall: [[shall.v]1.5]colloquial;
 's.#us ’s.#us: [[us]1.5]colloquial;
 't.#it ’t.#it: [it]colloquial;
 art.#are: [[are.v]0.2]colloquial;
