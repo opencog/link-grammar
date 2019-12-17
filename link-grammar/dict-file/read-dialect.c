@@ -191,7 +191,7 @@ static bool require_delimiter(dialect_file_status *dfile, char *s, char *buf)
 {
 	if (strchr(dfile->delims, *s) == NULL)
 	{
-		prt_error("Error: %s:%s Before \"%s\": Missing delimiter\n",
+		prt_error("Error: %s:%s Before \"%s\": Missing delimiter.\n",
 		          dfile->fname, suppress_0(dfile->line_number, buf), s);
 		return false;
 	}
@@ -319,7 +319,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 			}
 			else
 			{
-				prt_error("Error: %s:%s After \"%s\": Internal error char %02x\n",
+				prt_error("Error: %s:%s After \"%s\": Internal error char %02x.\n",
 				          dfile->fname, suppress_0(dfile->line_number, buf),
 				          token, (unsigned char)*dfile->pin);
 			}
@@ -346,7 +346,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 
 				if (end == NULL)
 				{
-					prt_error("Error: %s:%s Missing newline at end of file\n",
+					prt_error("Error: %s:%s Missing newline at end of file.\n",
 					          dfile->fname, suppress_0(dfile->line_number, buf));
 					return false;
 				}
