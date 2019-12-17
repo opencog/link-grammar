@@ -64,14 +64,14 @@ Dictionary dictionary_create_default_lang(void)
 		lang[strcspn(lang, "_-")] = '\0';
 		dictionary = dictionary_create_lang(lang);
 	}
-	free(lang);
 
 	/* Fall back to English if no default locale or no matching dict. */
-	if (NULL == dictionary)
+	if ((NULL == dictionary) && ((lang == NULL) || (0 != strcmp(lang, "en"))))
 	{
 		dictionary = dictionary_create_lang("en");
 	}
 
+	free(lang);
 	return dictionary;
 }
 
