@@ -2774,7 +2774,7 @@ do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
     ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
@@ -2786,7 +2786,7 @@ do.v:
 does.v:
   VERB_X_S(<vc-do>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
-  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
 % <verb-x-sp> & <verb-wall>: "I sure wish I did"
@@ -2795,7 +2795,7 @@ did.v-d:
   or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & ((<verb-rq-aux> & I*d+) or CQ-));
+  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
@@ -3181,8 +3181,9 @@ weren't.v-d weren’t.v-d:
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 % Except ... "You know you can", "You know you must"
 % Sa*a- & Ix+: "..., as shall be proven"
+% SI+ & N+ & I+: "how long will you not have mercy?"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & I+) or CQ-))
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I+) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
@@ -3204,7 +3205,7 @@ should.v:
 
 % <verb-wall>: "I sure wish he would."
 would.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & {Vw+} & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
@@ -5426,7 +5427,7 @@ intending.v: <verb-pg> & <vc-intend>;
 dare.v:
   VERB_PLI(<vc-dare>)
   or (<verb-s> & N+ & I+)
-  or (SI+ & <verb-rq-aux> & I+);
+  or (SI+ & <verb-rq-aux> & {N+} & I+);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d:
   VERB_SPPP_T(<vc-dare>)
