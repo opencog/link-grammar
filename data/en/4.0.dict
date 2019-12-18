@@ -12479,7 +12479,8 @@ uh_huh uh uhh uuh unh
 my.ij my_oh_my my_my my_my_my
 tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
-  or (Wa- & {Wa+});
+  or OH+
+  or [Wa- & {Wa+}]0.1;
 
 % Like above, but also used as plain-old interjections, so treat
 % as adjectives, as well.
@@ -12527,6 +12528,7 @@ anyways honey.ij man.ij baby.ij hush.ij:
   or <adj-phone>
   or ({{Ic-} & Wi-} & {{Xd-} & Xc+} & Ic+)
   or <directive-opener>
+  or OH+
   or (({A-} or {E-} or {EE-}) & Wa-);
 
 % A single plain hello all by itself.  Costly, because these days,
@@ -12539,11 +12541,12 @@ ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
   [<directive-opener>]
   or Vv-
   or ({A-} & Ds- & Jv-)
+  or OH+
   or (Wa- & {Wa+});
 
 % Single plain word by itself.  "OK, Bye!"
 bye.ij goodbye.ij:
-  Wa- & {Wa+};
+  OH+ or (Wa- & {Wa+});
 
 % Openers to directives, commands
 % Ic+: connection to infinitive imperatives: "on arrival, do it!"
@@ -12567,7 +12570,7 @@ for_sure for_certain for_real:
 
 % sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-  <directive-opener> or Wa-;
+  <directive-opener> or Wa- or OH+;
 
 % Exclamations, vocatives
 oh.voc O: OH+;

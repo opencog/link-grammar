@@ -6,7 +6,8 @@ Version 5.8.0 (XXX 2020)
  * English dict: Provide head and tail markers for all conjunctions.
  * Remove the Python 2 bindings.
  * Add dialect support to the library.
- * English dict: improved vocatives; archaic/poetic abbreviations
+ * English dict: support for archaic/poetic abbreviations
+ * English dict: introduce OH link for vocatives/invocations.
 
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.
