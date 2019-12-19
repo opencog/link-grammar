@@ -284,7 +284,6 @@ betrayal.s
 betrayer.n
 betrothal.n
 betrothed.n
-bettor.n
 bevel.n
 beverage.n
 bias.s
@@ -871,7 +870,6 @@ canticle.n
 cantilever.n
 canto.n
 canton.n
-cantor.n
 canvas.s
 canvass.n
 canyon.n
@@ -887,8 +885,6 @@ cappuccino.s
 caprice.n
 capsule.n
 caption.n
-captive.n
-captor.n
 capture.s
 carafe.n
 caramel.s
@@ -1399,13 +1395,11 @@ coke.s
 cola.s
 cold.s
 collaborative.n
-collaborator.n
 collage.s
 collapse.n
 collarbone.n
 collar.n
 colleague.n
-collector.n
 college.s
 collie.n
 collier.n
@@ -1476,7 +1470,6 @@ compatriot.n
 compendium.n
 compensation.s
 competition.s
-competitor.n
 compilation.s
 compiler.n
 complainant.n
@@ -1530,8 +1523,6 @@ condolence.s
 condominium.n
 condor.n
 conductivity.s
-conductor.n
-conductress.n
 conduit.n
 cone.n
 coney.n
@@ -1603,7 +1594,6 @@ consortium.s
 consort.n
 conspectus.n
 conspiracy.n
-conspirator.n
 constabulary.n
 constant.n
 constellation.n
@@ -1614,7 +1604,6 @@ constraint.s
 constriction.s
 construction.s
 construct.n
-constructor.n
 consulate.n
 consul.n
 consulship.n
@@ -1644,7 +1633,6 @@ contrabassoon.s
 contraceptive.n
 contraction.s
 contract.n
-contractor.n
 contradiction.s
 contralto.s
 contraption.n
@@ -1653,7 +1641,6 @@ contrast.s
 contravention.s
 contretemps.s
 contribution.n
-contributor.n
 contrivance.n
 controller.n
 control.s
@@ -1680,10 +1667,8 @@ convulsion.n
 cookbook.n
 cooker.n
 cookie.n
-cook.n
 coolant.s
 cooler.n
-coolie.n
 coo.n
 coon.n
 co-operative.n
@@ -1691,19 +1676,15 @@ cooper.n
 co-op.n
 coop.n
 coordinate.n
-coordinator.n
 coot.n
-copartner.n
 copartnership.n
 cope.n
 cop.n
-coppersmith.n
 coprocess.n
 coprocessor.n
 copse.n
 copula.n
 copy.n
-coquette.n
 coral.s
 cordial.s
 cordon.n
@@ -1858,10 +1839,8 @@ creamery.n
 cream.s
 crease.n
 creation.s
-creator.n
 creature.n
 creche.n
-creditor.n
 credit.s
 credo.n
 creed.n
@@ -1976,7 +1955,6 @@ cupful.n
 cupola.n
 cuprophone.s
 curate.n
-curator.n
 curb.n
 curd.s
 cure-all.s
@@ -2095,9 +2073,7 @@ debauchee.n
 debauchery.s
 debenture.s
 debit.n
-debtor.n
 debt.s
-debutante.n
 debut.n
 decameter.n
 decanter.n
@@ -2112,7 +2088,6 @@ decline.n
 declivity.n
 decoder.n
 decoration.s
-decorator.n
 decoy.n
 decrease.s
 decree.n
@@ -2127,10 +2102,7 @@ defaulter.n
 defeat.s
 defection.s
 defect.n
-defector.n
 defence.s
-defendant.n
-defender.n
 defense.s
 deficiency.s
 deficit.n
@@ -2198,7 +2170,6 @@ depiction.s
 deportation.s
 deportee.n
 deposition.s
-depositor.n
 depository.n
 depot.n
 depravity.s
@@ -2255,7 +2226,6 @@ dethronement.n
 detonation.n
 detonator.n
 detour.n
-detractor.n
 detriment.s
 deuce.n
 devaluation.s
@@ -2295,7 +2265,6 @@ dick.n
 dickybird.n
 dictate.n
 dictation.s
-dictator.n
 dictatorship.s
 dictionary.n
 dictum.n
@@ -2346,7 +2315,6 @@ diptych.n
 direction.s
 directive.n
 directorate.n
-director.n
 directorship.n
 directory.n
 dirge.n
@@ -2437,7 +2405,6 @@ distinction.s
 distortion.s
 distraction.s
 distribution.s
-distributor.n
 district.n
 disturbance.s
 disulfide.n
@@ -2673,7 +2640,6 @@ facelift.n
 face.n
 facet.n
 facial.n
-facilitator.n
 facility.s
 facsimile.n
 faction.s
@@ -3342,7 +3308,6 @@ giveaway.n
 gizzard.n
 glacier.s
 glade.n
-gladiator.n
 glance.n
 gland.n
 glare.s
@@ -4025,7 +3990,6 @@ jamboree.n
 jamjar.n
 jampot.n
 jam.s
-janitor.n
 jarful.n
 jar.n
 jaunt.n
@@ -4336,7 +4300,6 @@ left.n
 legacy.n
 legend.s
 legionary.n
-legislator.n
 legislature.n
 leg.n
 lemming.n
@@ -4438,7 +4401,6 @@ lip.n
 lipstick.s
 liqueur.n
 liquidation.s
-liquidator.n
 liquidizer.s
 liquid.n
 lira.n
@@ -4449,8 +4411,6 @@ list.n
 litany.n
 literal.n
 lithograph.n
-litigant.n
-litigator.n
 litre.n
 litterbin.n
 litter.s
@@ -4615,7 +4575,6 @@ malady.n
 malaise.n
 malapropism.n
 malediction.n
-malefactor.n
 male.n
 malformation.s
 malfunction.s
@@ -4771,7 +4730,6 @@ medal.n
 meddler.n
 median.n
 media.s
-mediator.n
 medication.s
 medicine.s
 medic.n
@@ -4814,7 +4772,6 @@ menial.n
 menopause.n
 mentality.s
 mention.s
-mentor.n
 menu.n
 merger.s
 meridian.n
@@ -5000,7 +4957,6 @@ model.n
 modem.n
 mode.n
 moderate.n
-moderator.n
 modification.s
 modifier.n
 mod.n
@@ -5024,7 +4980,6 @@ moneylender.n
 monger.n
 mongoose.n
 mongrel.n
-monitor.n
 monkey.n
 monochrome.n
 monocle.n
@@ -5192,7 +5147,6 @@ nappy.n
 narcotic.n
 narration.s
 narrative.s
-narrator.n
 nasal.n
 nationality.s
 nationalization.s
@@ -5206,7 +5160,6 @@ naught.s
 nautilus.n
 navel.n
 nave.n
-navigator.n
 navy.n
 nearside.n
 nebula.n
@@ -5224,7 +5177,6 @@ negative.n
 negligee.n
 neglige.n
 negotiation.s
-negotiator.n
 neighborhood.n
 neighbourhood.n
 neigh.n
@@ -5340,12 +5292,10 @@ nuisance.n
 numberplate.n
 numeral.n
 numerator.n
-numskull.n
 nuncio.n
 nunnery.n
 nurse.n
 nursery.n
-nurturer.n
 nu.s
 nuthouse.n
 nutmeg.s
@@ -5622,7 +5572,6 @@ peppercorn.n
 peppermint.s
 pepper.s
 peptide.n
-perambulator.n
 percentage.n
 perch.s
 percolator.n
@@ -5647,11 +5596,9 @@ permutation.s
 peroration.n
 peroxide.s
 perpendicular.n
-perpetrator.n
 perpetuation.s
 perquisite.n
 persecution.s
-persecutor.n
 persimmon.s
 personage.n
 personality.s
@@ -6040,7 +5987,6 @@ prearrangement.n
 precaution.n
 precedent.n
 precept.n
-preceptor.n
 precession.n
 precinct.n
 precipice.n
@@ -6048,8 +5994,6 @@ precis.s
 preconception.n
 precondition.n
 precursor.n
-predator.n
-predecessor.n
 predetermination.n
 predicament.n
 predicate.n
@@ -6096,7 +6040,6 @@ pre-set.n
 preset.n
 presidency.n
 presidium.n
-prestidigitator.n
 presumption.s
 pretence.s
 pretender.n
@@ -6150,7 +6093,6 @@ processor.n
 proconsulate.n
 proconsul.n
 procreation.n
-proctor.n
 procurer.n
 prodigy.n
 prod.n
@@ -6165,7 +6107,6 @@ professorship.n
 profile.s
 profit.s
 profundity.s
-progenitor.n
 prognosis.n
 prognostication.s
 programme.n
@@ -6207,20 +6148,14 @@ prophylactic.n
 prop.n
 proponent.n
 proportion.s
-proprietor.n
 proscenium.n
 proscription.s
 prosecution.s
-prosecutor.n
-prospector.n
 prospectus.n
 prostate.n
 prostitute.n
 protection.s
 protectorate.n
-protector.n
-protegee.n
-protege.n
 protein.s
 protestation.n
 protester.n
@@ -6487,7 +6422,6 @@ reagent.n
 realignment.s
 reality.s
 realm.n
-realtor.n
 realty.n
 ream.n
 reaper.n
@@ -6544,7 +6478,6 @@ recruitment.n
 recruit.n
 rectangle.n
 rectifier.n
-rector.n
 rectory.n
 rectum.n
 recurrence.s
@@ -7161,7 +7094,6 @@ scruple.s
 scuba.n
 scud.s
 scullery.n
-sculptor.n
 sculpture.s
 scythe.n
 seabed.n
@@ -7750,13 +7682,11 @@ speck.n
 spec.n
 spectacle.n
 spectacular.n
-spectator.n
 specter.n
 spectre.n
 spectroscope.n
 spectroscopy.s
 spectrum.n
-speculator.n
 speech.s
 speedboat.s
 speedometer.n
@@ -8099,11 +8029,9 @@ subcomitte.n
 subcommittee.n
 subcontinent.n
 subcontract.n
-subcontractor.n
 subdirectory.n
 subdivision.s
 subdomain.n
-subeditor.n
 subfamily.n
 subgraph.n
 subgroup.n
@@ -8158,10 +8086,7 @@ suicide.s
 suitcase.n
 suite.n
 suit.n
-suitor.n
-sultana.n
 sultanate.n
-sultan.n
 summary.n
 summation.n
 summerhouse.n
@@ -8654,7 +8579,6 @@ topper.n
 topsail.n
 torch.n
 toreador.n
-tormentor.n
 torment.s
 tornado.n
 torpedo.n
@@ -8739,7 +8663,6 @@ transient.n
 transistor.n
 transition.s
 translation.s
-translator.n
 transmission.s
 transmitter.n
 transmutation.s
@@ -8916,7 +8839,6 @@ turtle.n
 tusk.n
 tussle.n
 tutorial.n
-tutor.n
 tutu.n
 tuxedo.n
 TV.s
@@ -9089,7 +9011,6 @@ viscount.n
 vision.s
 visitation.n
 visit.n
-visitor.n
 visor.n
 vista.n
 vitamin.n
