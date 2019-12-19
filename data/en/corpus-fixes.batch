@@ -325,6 +325,10 @@ There was wind and rain.
 It adjusts for errors
 It corrects for errors
 
+% watch: take "out" as a particle
+Watch out!
+I watch out for you.
+
 % verb: come was missing B-
 Which way did you come?
 
@@ -1096,6 +1100,33 @@ A fish lived far out in the sea.
 % fronted copular inversion
 coming to the party are a horse and two chickens
 
+% Directive subject-verb inversion
+Tell me, John.
+Please tell me, John.
+Tell me of those dragons, John
+Tell me again of those dragons, John
+John, tell me again of those dragons, John.
+You tell me, John
+do tell, John.
+please do tell, John.
+please do, John!
+talk to me, John
+spank me, John
+watch me, kids
+hold my beer, John
+you hold my beer, John.
+you slay me, John
+you slay me, John, with your jokes.
+
+"Tell me about it" demanded Susan.
+"Tell me about it, John" demanded Susan.
+
+Bring out the Ring, Frodo!
+"Bring out the Ring, Frodo!" said Gandalf solemnly.
+
+Hey, thank you, sir!
+Hey, watch out, John!
+
 % Locative subject-object inversion
 under the tree sat Jim
 *Under the tree sat he.
@@ -1356,7 +1387,13 @@ He OK'd the orders.
 He OK'ed the orders.
 
 It gelled up into a nice pudding.
+
+% "gell" as Scottish alternate spelling for "gale."
 As we set sail, a full gell blew up.
+
+% "gell" as English alternate for "girl"
+You're a naughty little gell, that's what you are
+"You're a naughty little gell, that's what you are," said the fireman.
 
 % Some of the verbs classified as "intranstive" see rare usage as
 % transtivies; these should just have a high cost, that's all.
@@ -4175,8 +4212,8 @@ Step 4. Hit it hard.
 Step 5. Hit it hard.
 Step 6. Hit it hard.
 
-% The below fails because a determiner is desired. But determiners
-% are optional for imperatives and commands.
+% The below parses badly or not at all, because a determiner is desired.
+% But determiners are optional for imperatives and commands.
 A: Open cover gently.
 B: Press button firmly.
 B: Press the button firmly.
@@ -4753,6 +4790,30 @@ Do not do that!
 Do not open!
 Do not fail!
 
+% Fronted imperatives
+Clearly, don't!
+Obviously, don't
+in sum, don't do it!
+So, don't do it!
+furthermore, never ask me again!
+And furthermore, never ask me again!
+
+Bob, shut the door!
+Robert, be there at 5:00
+Grandma, please be there at 5:00
+John, tell me
+John, please tell me
+John, please!
+John, do tell
+Oh Sue, let's!
+Oh Sue, let's go!
+Sue, over here!
+Hey, over here!
+Hey, thank you!
+
+John, enough!
+John, that's enough!
+
 % "To be" constructions
 To be continued
 Soon to be continued
@@ -5019,6 +5080,7 @@ O Jesu, this is excellent sport, i'faith.
 O Mary, what have I done?
 O mother of flames
 Tell me, O Muse, of that ingenious hero
+Reveal, O Muse, that man of wisdom
 O Yahweh of Armies, how long will you not have mercy on Jerusalem?
 O that he had sprained his ankle in the first place!
 

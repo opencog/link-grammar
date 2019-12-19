@@ -314,16 +314,21 @@ nonCAP.zzz: ZZZ-;
 % The use of COa here needs to be carefully re-examined;
 %   it is used much too freely.
 % COa+ is used to block links to COd-
-% Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
 % Wc- & Xc+ & Wq+: "O Mary, what have I done?"
 % Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
-    ((Xc+ & Ic+) or
-    ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
+    (({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
+
+% Xc+ & EI+: connect to imperatives (infinitive verbs): "Anyhow, don't"
+<directive-adverb>: (Xc+ & EI+);
+
+% Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
+% OH-: "Oh Sue, let's go!"
+<directive-subject>: ({OH-} & Xc+ & S**i+);
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -361,7 +366,7 @@ nonCAP.zzz: ZZZ-;
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({@A- or G-} & {D-} & Wa- & {NM+})
-  or [<directive-opener>]0.2;
+  or [<directive-opener> or <directive-subject>]0.2;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % preferred to the regex match (i.e. for a common noun starting a
@@ -385,7 +390,8 @@ nonCAP.zzz: ZZZ-;
       or AN+
       or G+))
   or ({@A- or G-} & {D-} & Wa- & {NM+})
-  or <directive-opener>;
+  or <directive-opener>
+  or <directive-subject>;
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
@@ -395,8 +401,7 @@ nonCAP.zzz: ZZZ-;
 
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
-% Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
-% A- & OH- & Wa-: "O lovely Rose Marie!"
+%
 % <noun-and-s> is tricky when used with [[...]] connectors.
 % Careful for bad parses of
 % "This is the dog and cat Pat and I chased and ate"
@@ -404,6 +409,10 @@ nonCAP.zzz: ZZZ-;
 %
 % Some given names cause problems, though. See tom.n-u, bob.v, frank.a
 % frank.v, Frank.b, An.f In.f So.f below.
+%
+% Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
+% A- & OH- & Wa-: "O lovely Rose Marie!"
+% OH- & SIs-: "Tell me, O Muse, of that ingenious hero"
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [GN-]2.1 or [[{@A-} & {D-}]]} &
@@ -412,6 +421,7 @@ nonCAP.zzz: ZZZ-;
         or YP+))
     or AN+
     or ({@A-} & {OH-} & Wa-)
+    or (OH- & SIs-)
     or G+);
 
 % Whole, entire entities, cannot participate in G links
@@ -433,7 +443,7 @@ nonCAP.zzz: ZZZ-;
 /en/words/entities.given-male.sing
 /en/words/entities.goddesses
 /en/words/entities.gods:
-  <marker-entity> or <given-names> or <directive-opener>;
+  <marker-entity> or <given-names> or <directive-opener> or <directive-subject>;
 
 % Given names An In So interfere with misc words -- give them a cost.
 An.f In.f So.f: [[<given-names>]];
@@ -650,10 +660,18 @@ USMC.y USN.y:
         or <noun-and-s>))
     or (YS+ & Ds**c-));
 
-/en/words/words.n.1-vowel :
+/en/words/words.n.1-vowel
+/en/words/entities.prof.vowel :
   <marker-common-entity> or <common-vowel-noun>;
-/en/words/words.n.1-const :
+/en/words/words.n.1-const
+/en/words/entities.prof :
   <marker-common-entity> or <common-const-noun>;
+
+/en/words/entities.people.vowel :
+  <marker-common-entity> or <common-vowel-noun> or <directive-subject>;
+
+/en/words/entities.people :
+  <marker-common-entity> or <common-const-noun> or <directive-subject>;
 
 % XXX eliminate this, it serves no purpose, sort into vowels and consts.
 /en/words/words.n.1.gerund :
@@ -1424,8 +1442,9 @@ youse yous yis ye ya yo:
 %    "leave it alone" "make it rain"
 %   (the m prevents links as indirect object)
 % MX+ & Ss+: "it -- fried rice -- is very popular"
+% XXX FIXME: why does [J-] have a cost???
 it:
-   [J-]
+   [J-]0.5
    or (Osm- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
@@ -1899,7 +1918,8 @@ enough.r: EF-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
 
 % Wi-: "Enough rough-housing! Enough!"
-enough.ij: Wi- & {Pg+};
+% S**i- & Wi-: John, enough!
+enough.ij: {Xd- & (EI- or S**i-)} & Wi- & {Pg+};
 
 not_enough:
   (OFd+ & Dm+)
@@ -2393,6 +2413,8 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 % <verb-si>   : subject inversion
+% <verb-co>   : optional subjects to imperatives (commands)
+% <verb-sic>  : imperative-subject inversion
 
 % <verb-wall>: these connect to the head verb:
 % WV connects the wall to the head-verb,
@@ -2476,6 +2498,9 @@ per "/.per": Us+ & Mp-;
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
+% S**i- & Wi-: "John, stop that!"; the comma is mandatory.
+% EI- & Wi-: "Hey, stop that!"
+% CO- & Wi-: "Finally, move it back".
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
 %        allows a really weird subject-object inversion to proceed:
 %        e.g. "In the corner lay it" with it as object. That's just
@@ -2486,8 +2511,12 @@ per "/.per": Us+ & Mp-;
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-}) or
-                      ({[hCO-]} & Wi- & {NM+}));
+<verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
+<verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+                      ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
+                      (Wi- & Xc+ & SI*i+ & {Xc+})
+                     ) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -2571,7 +2600,7 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
+<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
 <verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
 <verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
@@ -2586,7 +2615,7 @@ per "/.per": Us+ & Mp-;
 % This is why they don't have & <verb-wall> in them: we don't want the
 % auxiliary attaching to the wall, we want only the main verb doing this.
 % The Ss- or Sp- prevent attachments to Sa- for "as.e" phrases.
-<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
+<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or <verb-co>);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
 <verb-x-sp,pp>: {@E-} & (Ss- or Sp- or SF- or PPf- or (RS- & B-));
@@ -2608,7 +2637,7 @@ per "/.per": Us+ & Mp-;
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
 % of sentences like  "there appears to be a problem".
 % If- blocks the Ix+ on would, be
-<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
+<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
 <verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
@@ -2676,10 +2705,14 @@ per "/.per": Us+ & Mp-;
 %    The first verb is expecting an object, but there isn't one.
 % ({@E-} & hXd- & dWi- & ($1) & hXc+):
 %    Parenthetical phrases: "(please refer to the list below)"
-%    Getting the parenthesis cannot be come by hacking <verb-ico>
+%    Getting the parenthesis cannot be acheived by hacking <verb-ico>
 %    or <verb-pl,i> and must be done here.
+% (dWi- & ($1) & Xc+ & SI*i+ & {Xc+}): "Bring out the Ring, Frodo!"
+% Sp- & SI*i+: "you hold my beer, John"
+% Xd- & EI- & SI*i+: "hey, thank you, sir!"
 define(`VERB_PLI',`'
   ((<verb-pl,i> & ($1)) or
+  ({@E-} & {(Sp- or (Xd- & EI-))} & dWi- & ($1) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & ($1) & hXc+) or
   (<verb-and-pl-> & (($1) or ())) or
   ((($1) or [()]) & <verb-and-pl+>)))
@@ -2773,11 +2806,13 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 %            "Are you really going to do it to them?"
 % {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
+% Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 do.v:
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
+  or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
     ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
@@ -2828,12 +2863,12 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 % <verb-wall>: "I know he didn't", "I know they don't"
 % Wi-: "Don't!"
-% Ic- & Wi-: "In total, dont!"
+% EI- & Wi-: "In total, don't!"
 % Wi- & I*d+: "Don't do that!"
 don't don’t:
   (((<verb-rq-aux> & (SIp+ or SFIp+) & I*d+)
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
-  or ({@E-} & {Ic-} & Wi- & {I*d+});
+  or (<verb-co> & {I*d+});
 
 doesn't doesn’t:
   ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
@@ -2845,7 +2880,7 @@ didn't.v-d didn’t.v-d:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
-  ({{Ic-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
+  ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
@@ -3135,15 +3170,15 @@ am.v:
     ({N+} & (Pg+ or Pv+))) & <verb-wall>;
 
 % S*x- used for passive participles: "this action be taken".
+% S**i- & Wi-: "Robert, be there at 5:00"
 % XXX I used verb-and-sp-i- but maybe this is wrong ..
 % "Show me my notes and be nice about it."
 % ({@E-} & I- & B- & O+):
 %   "What are the chances that Einstein could really be a genius?"
-% Icx-: the x prevents link to does.v: "*It does be correct"
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & (({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & ((<verb-co> & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
@@ -5364,8 +5399,11 @@ watch.i vigil.i pace.i: Vk-;
 track.i: Vk- & {OF+};
 
 <vc-set>:
-  ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vs+})
-    or [[@MV+ & O*n+]]) & <mv-coord>;
+  (
+    (K+ & {[[@MV+]]} & O*n+) or
+    ({O+ or <b-minus>} & {K+ or Vs+}) or
+    [[@MV+ & O*n+]]
+  ) & <mv-coord>;
 
 set.v-d:
   VERB_SPPP_T(<vc-set>) or
@@ -6180,13 +6218,15 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
 % O+ & OF+: "tell me of that ingenious hero"
+% Ox+ & Xc+ & SI*i+: "tell me, John."
 % [()]: "only he can tell"
 %
 <vc-tell>:
   (((O+ & {O*n+ or K+}) or <b-minus>)
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
-  or ({O+} & OF+)
+  or ({O+ & <mv-coord>} & OF+ & {Xc+ & SI*i+})
+  or (Ox+ & {<mv-coord>} & Xc+ & SI*i+ & {Xc+ & OF+})
   or [()]0.3
   or (QI+ & {MV+})
   or ([[@MV+ & {O*n+} & <mv-coord>]]);
@@ -6310,12 +6350,18 @@ letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
 % Abbreviation for "let us"
-% Is there any reason to create a definition such as 's.n: Ox-?
-let's let’s: ({Ic-} & Wi- & {N+} & I+) or ({Ic-} & Wi- & N+);
+% This seems to never be used, becuase 's.#us below expands
+% EI- & Wi-: "Oh, let's!"
+% S**i- & Wi-: "Oh Sue, let's!"
+let's let’s: <verb-co> & {N+} & {I+};
 
+% K+: "watch out!"
+% K+ & MV+: "I watch out for you"
+% XXX But this is too loose, as "out" should be the only allowed particle.
 <vc-watch>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
   ([[@MV+ & O*n+ & <mv-coord>]]) or
+  (K+ & <mv-coord>) or
   <mv-coord>;
 
 watch.v: VERB_PLI(<vc-watch>);
@@ -6843,7 +6889,7 @@ was.w-d:
 been.w: {@E-} & PPf- & <vc-vote> & <verb-wall>;
 
 be.w:
-  {@E-} & (Ix- or ({Ic-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
+  {@E-} & (Ix- or (<verb-co> & <verb-wall>) or [S*x-]) & <vc-vote>;
 
 % S- & Vv+ & Xc+ & <embed-verb>:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
@@ -7436,7 +7482,7 @@ here:
   or <fronted>;
 
 % Wi-:  [come] Over here!
-over_here: Wi-;
+over_here: <verb-co>;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
@@ -7549,7 +7595,7 @@ forward.r: <common-prep> or K- or <adv-as>;
 upstream downstream 5' 3':
   A+ or
   NIfp+ or NItp- or
-  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} &
+  ({Yd- or EZ- or EE- or ET-} & {MVp+ or OF+} &
     (({Xc+ & Xd-} & (Ma- or dMJra-)) or
     hMJra+ or
     <fronted> or
@@ -7561,7 +7607,7 @@ upstream downstream 5' 3':
 %upstream downstream 3' 5':
 %A+ or
 %((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or
-%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
+%(ET- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
 %(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
 
 indoors outdoors underwater.r:
@@ -7891,7 +7937,6 @@ who:
 % Sp+: "what are the answers?"
 % Ww-: Dr. Who: "What!"
 % {EL+} & Ww-: "What else?" "What the fuck?"
-% Xc+ & Ic+: "What, were you expecting Santa?"
 % Wn- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
 % Jw-: "To what do you owe your success?"
@@ -7909,8 +7954,7 @@ what:
   or (D+ & JQ-)
   or Jw-
   or [QI-]0.5
-  or dSJl+ or dSJr-
-  or (Xc+ & Ic+);
+  or dSJl+ or dSJr-;
 
 % [QI-]: "I do not know which"
 % (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
@@ -7925,7 +7969,7 @@ which:
 
 % <directive-opener> or Wi-: "Which way, left or right?"
 which_way:
-  <directive-opener> or Wi-;
+  <directive-opener> or <verb-co>;
 
 % Jw-: "From whom did you run?"
 whom:
@@ -8169,14 +8213,14 @@ ever_since:
      & (({Xc+ & {Xd-}} & dCO*s+) or ({Xd- & Xc+} & MVs-));
 
 after:
-  {EI- or Yt-}
+  {ET- or Yt-}
     & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or <advcl-verb> or Qe+))
       or (J+ & <fronted>)
       or <locative>
       or (<subcl-verb> & (({Xc+ & {Xd-}} & dCO*s+) or ({Xd- & Xc+} & MVs-))));
 
 before:
-  ({EI- or Yt-}
+  ({ET- or Yt-}
     & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
       or (J+ & <fronted>)
       or <locative>
@@ -10017,6 +10061,7 @@ appropriately.e simply.ee:
     or ({Xc+ & {Xd-}} & dCO+)
     or ({Xc+ & {Xd-}} & EB-)
     or Qe+
+    or <directive-adverb>
     or <advcl-verb>
     or [[EA+]]);
 
@@ -10089,10 +10134,10 @@ independently:
 ({(MVp+ or OF+)} & {Xc+ & {Xd-}} & dCO+) or Qe+ or <advcl-verb> or [[EA+]]);
 
 
-shortly: {EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or EI+ or ({Xc+ & {Xd-}}
+shortly: {EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or ET+ or ({Xc+ & {Xd-}}
  & dCO+) or Qe+ or <advcl-verb>);
-immediately stat.e: ({Xd- & Xc+} & <adv-as>) or E+ or EI+ or ({Xc+ & {Xd-}} & dCO+) or EB-;
-soon: ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or EI+ or ({Xc+ & {Xd-}}
+immediately stat.e: ({Xd- & Xc+} & <adv-as>) or E+ or ET+ or ({Xc+ & {Xd-}} & dCO+) or EB-;
+soon: ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or ET+ or ({Xc+ & {Xd-}}
  & dCO+) or EB- or Qe+ or <advcl-verb>)) or ({EA- or EF+} & (Pa- or AF+));
 
 certainly possibly probably importantly remarkably interestingly:
@@ -10109,6 +10154,7 @@ certainly possibly probably importantly remarkably interestingly:
   or (Xd- & Xc+ & E+)
   or ({Xd- & Xc+} & <adv-as>)
   or ({Xc+ & {Xd-}} & dCO+)
+  or <directive-adverb>
   or EBm-;
 
 % These are taken from words.adv.2 and allowed EB- when separated by
@@ -10187,6 +10233,7 @@ ok.e okay.e OK.e fine.e sure.e whatever.e:
 thereafter.e overall.e lengthwise.e
 instead.e anyhow.e anyway.e:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & Xc+} & (MVp- or E+ or EB-));
 
 % Wa-: Single-word responses to questions.
@@ -10195,6 +10242,7 @@ afterwards.e afterward.e worldwide.e nationwide.e
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
 the_world_over:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & Xc+} & (MVp- or E+))
   or (Wa- & {Wa+});
 
@@ -10211,7 +10259,7 @@ maybe.r:
 not.intj is_too is_not is_so unh_unh: Wa-;
 
 %suppress: DUP-BASE (for seriously.ij)
-% Openers to directives, commands (Ic+ connection to infinitives)
+% Openers to directives, commands (Xc+ & EI+ connection to infinitives)
 % or single-word interjections, exclamations.
 % These are semantically important, so they've got to parse!
 % Wa- & Wa+: "Oh my God"
@@ -10233,11 +10281,12 @@ uh_huh uh uhh uuh unh
 my.ij my_oh_my my_my my_my_my
 tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
+  or <directive-adverb>
   or OH+
   or [Wa- & {Wa+}]0.1;
 
-% Like above, but also used as plain-old interjections, so treat
-% as adjectives, as well.
+% Like above, but also used as plain-old interjections.
+% XXX FIXME, this used to be done by treating as adjectives; but no more!?
 % A- & Wa-: "Holy Mother of God"
 howdy phew psst pssst ahem
 ah ahh a_ha aha eh ehh hmm hmmm huh
@@ -10278,12 +10327,12 @@ heck sodding_hell
 aw aww awww oh_great oh_wow
 er err.ij errr um.ij umm
 anyways honey.ij man.ij baby.ij hush.ij:
-  <ordinary-adj>
-  or <adj-phone>
-  or ({{Ic-} & Wi-} & {{Xd-} & Xc+} & Ic+)
-  or <directive-opener>
+  <directive-opener>
+  or <directive-adverb>
   or OH+
-  or (({A-} or {E-} or {EE-}) & Wa-);
+  or ({{Xd-} & Xc+} & EI+)
+  or (({A-} or {E-} or {EE-}) & Wa-)
+  or [<ordinary-adj> or <adj-phone>];
 
 % A single plain hello all by itself.  Costly, because these days,
 % it's not normally a sentence opener.
@@ -10292,7 +10341,7 @@ anyways honey.ij man.ij baby.ij hush.ij:
 % Perhaps these should also appear as nouns? hello.n does ...
 hello.ij hello_there hallo halloo hollo hullo hillo hi
 ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
-  [<directive-opener>]
+  [<directive-opener> or <directive-adverb>]
   or Vv-
   or ({A-} & Ds- & Jv-)
   or OH+
@@ -10303,7 +10352,7 @@ bye.ij goodbye.ij:
   OH+ or (Wa- & {Wa+});
 
 % Openers to directives, commands
-% Ic+: connection to infinitive imperatives: "on arrival, do it!"
+% EI+: connection to infinitive imperatives: "on arrival, do it!"
 % E+: split infinitives, e.g. "you should instead go home"
 %     "It will, more often than not, go by train."
 prima_facie before_long
@@ -10316,15 +10365,18 @@ again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
 even_so all_of_a_sudden:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & Xc+} & (<adv-as> or E+));
 
 for_sure for_certain for_real:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & {MV+} & Xc+} & <adv-as>);
 
 % sort-of-like given names ...
+% Xd- & SIsi-: "thank ou, sir!"; the comma is mandatory.
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-  <directive-opener> or Wa- or OH+;
+  <directive-opener> or <directive-adverb> or Wa- or OH+ or (Xd- & SIsi-);
 
 % Exclamations, vocatives
 oh.voc O: OH+;
@@ -10358,11 +10410,19 @@ just.e:
 
 meantime.e secondly thirdly
 in_brief in_short in_sum in_essence:
-({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & dCO+);
-furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & dCO+) or EB-;
+  ({Xd- & Xc+} & E+) or
+  ({Xc+ & {Xd-}} & dCO+) or
+  <directive-adverb>;
+furthermore:
+  ({Xd- & Xc+} & E+) or
+  ({Xc+ & {Xd-}} & dCO+) or
+  <directive-adverb> or
+  EB-;
+and_furthermore: <directive-adverb>;
 mainly primarily:
   E+
   or ({Xc+ & {Xd-}} & dCO+)
+  or <directive-adverb>
   or EB-
   or <comp-prep>;
 
@@ -10421,7 +10481,7 @@ please.e:
   or <advcl-verb> or [[EA+]]);
 
 % polite command verb
-please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
+please.w thank_you: <verb-co> & {{Xc+} & Vv+} & <verb-wall>;
 
 
 % ==========================================================
@@ -10459,8 +10519,9 @@ so_on the_like vice_versa v.v.:
 %    The cost on sent-start is to force preference for CV over WV,
 %    whenever possible.
 so.ij:
-  (({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
-     & (<subcl-verb> or [<sent-start>]0.5);
+  ((({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
+     & (<subcl-verb> or [<sent-start>]0.5))
+  or <directive-adverb>;
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
@@ -10559,7 +10620,9 @@ changequote dnl
 % ,.j
 % Comma as a form of a conjunction (thus the .j subscript).
 % This is given a very mild cost, so that other uses of comma can take
-% precedence, if possible.
+% precedence, if possible. XXX FIXME: Disallow use of comma as a
+% conjunction unless there's and/or occuring later. For now, hack
+% around this by upping the cost.
 %
 % Comma can conjoin nouns only if used in a list of 3 or more items:
 % "This, that and the other thing"
@@ -10581,7 +10644,7 @@ changequote dnl
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
   or (hSJl- & EBb+ & hSJr+ & Ou-)
-  or (hSJl- & J- & hSJr+)
+  or [hSJl- & J- & hSJr+]0.5
   or (hSJl- & hSJr+ & dSJl+)
   or (Xj- & hWl+ & {Xj+})]0.05;
 
@@ -10807,7 +10870,7 @@ an'.#and-j-n an’.#and-j-n: [[and.j-n]0.05]colloquial;
 an'.#and-j-v an’.#and-j-v: [[and.j-v]0.05]colloquial;
 
 % gimme.#give-me: [[give_me]0.05]colloquial;
-gimme.#give-me: Wi- & O+ & {@MV+};
+gimme.#give-me: <verb-co> & O+ & {@MV+};
 
 'em.#them ’em.#them 'm.#them ’m.#them : [them]colloquial;
 
@@ -10854,11 +10917,12 @@ as.#that: [[that.j-c]0.05]colloquial;
 
 % Poetic contractions; Shakesperian contractions
 % The 's abbreviations are given a heavy cost to avoid conflict with possessives
+% The 't abbreviations are given a heavy cost to evade bad contractions like "don't".
 'r.#our ’r.#our: [[our]0.5]colloquial;
 % 's.#his ’s.#his: [[his]1.5]colloquial;
 % 's.#shall ’s.#shall: [[shall.v]1.5]colloquial;
 's.#us ’s.#us: [[us]1.5]colloquial;
-'t.#it ’t.#it: [it]colloquial;
+% 't.#it ’t.#it: [[it]1.5]colloquial;
 art.#are: [[are.v]0.2]colloquial;
 count'nance.#countenance count’nance.#countenance:
  [countenance.v]colloquial or [countenance.s]colloquial;
@@ -10894,6 +10958,10 @@ wi'.#with: [with]colloquial;
 
 % Shakesperean
 ample.#amply: [[amply]0.5]colloquial;
+
+% Scottish, English alternate spellings
+% gell.#gale: [gale.n]colloquial;
+% gell.#girl: [girl.n]colloquial;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -11009,7 +11077,12 @@ ample.#amply: [[amply]0.5]colloquial;
     or U-);
 
 <UNKNOWN-WORD>.v <QUOTED-WORD>.v:
-  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
+  {@E-} & (
+    (Sp- & <verb-wall>) or
+    (RS- & Bp-) or
+    (I- & <verb-wall>) or
+    ({EI-} & Wa- & <verb-wall>))
+  & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is preferred, when
 % available.

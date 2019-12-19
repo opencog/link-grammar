@@ -39,8 +39,10 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 -- ‒ – — ― "(" ")" "[" "]" ... ";" ±: MPUNC+;
 
 % Suffixes
-'s 're 've 'em 'd 'll 'm 'd've 'r 't
-’s ’re ’ve ’em ’d ’ll ’m ’d’ve ’r ’t: SUF+;
+% 't and ’t show up as Shakesperean contractions of "it", but collide
+% with ordinary contractions like "don't".
+'s 're 've 'em 'd 'll 'm 'd've 'r
+’s ’re ’ve ’em ’d ’ll ’m ’d’ve ’r: SUF+;
 
 % Prefixes
 % "real" English prefix: y' w/

@@ -1207,6 +1207,8 @@ phantom word in parenthesis, include:
  * It stopped me (from) flying off the cliff.
  * (It) looks good.
  * (You) go home!
+ * (You) do tell (me).
+ * (That is) enough!
  * (I) heard that he's giving a test.
  * (Are) you all right?
  * He opened the door and (he) went in.
@@ -1214,6 +1216,13 @@ phantom word in parenthesis, include:
 
 This can extend to elided/unvoiced syllables:
  * (I'm a)'fraid so.
+
+Elided punctuation:
+ * God (,) give me strength.
+
+Normally, the subjects of imperatives must always be offset by a comma:
+"John, give me the hammer", but here, in muttering an oath, the comma
+is swallowed (unvoiced).
 
 Some complex phantom constructions:
  * They play billiards but (they do) not (play) snooker.
