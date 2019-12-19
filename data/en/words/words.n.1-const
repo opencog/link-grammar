@@ -208,7 +208,6 @@ beast.n
 beater.n
 beat.n
 beatnik.n
-beautician.n
 beauty.s
 beaver.s
 beck.n
@@ -462,7 +461,6 @@ bogey.n
 bogie.n
 bog.n
 bogy.n
-bohemian.n
 boiler.n
 boil.n
 bolero.n
@@ -1031,7 +1029,6 @@ censorship.n
 censure.s
 census.n
 centaur.n
-centenarian.n
 centenary.n
 centennial.n
 center.n
@@ -1248,7 +1245,6 @@ citizen.n
 citron.n
 cittern.s
 city.n
-civilian.n
 civility.s
 civilization.s
 claimant.n
@@ -1433,8 +1429,6 @@ combination.n
 combine.n
 comb.s
 comeback.n
-comedian.n
-comedienne.n
 comedown.n
 comedy.s
 comer.n
@@ -1763,14 +1757,11 @@ cortex.n
 coruscation.n
 corvette.n
 cosine.n
-cosmetician.n
 cosmology.s
-cosmonaut.n
 cosmopolitan.n
 co-star.n
 cost.s
 costume.s
-costumier.n
 cosy.n
 coterie.n
 cotillion.n
@@ -2016,7 +2007,6 @@ cuspidor.n
 cusp.n
 cuss.n
 custard.s
-custodian.n
 customer.n
 custom.s
 cutback.n
@@ -2289,7 +2279,6 @@ diagnosis.s
 diagnostic.n
 diagonal.n
 diagram.n
-dialectician.n
 dialectic.n
 dialect.s
 dial.n
@@ -2317,7 +2306,6 @@ didgeridoo.s
 dielectric.n
 die.s
 diesel.s
-dietician.n
 diet.n
 difference.n
 differential.n
@@ -2380,7 +2368,6 @@ disbursement.s
 discard.n
 discharge.s
 disciple.n
-disciplinarian.n
 discipline.s
 disclaimer.n
 disc.n
@@ -2644,7 +2631,6 @@ duet.n
 duffer.n
 dugout.n
 dukedom.n
-dulcian.s
 dulcimer.n
 dullard.n
 dulzaina.s
@@ -3322,7 +3308,6 @@ genus.s
 geographer.n
 geophyte.n
 geranium.n
-geriatrician.n
 germicide.n
 germ.n
 gerund.n
@@ -3458,7 +3443,6 @@ graduation.s
 graft.s
 grail.n
 grain.s
-grammarian.n
 grammar.s
 gramophone.n
 granary.n
@@ -3536,7 +3520,6 @@ grunt.n
 guan.n
 guarantee.n
 guaranty.n
-guardian.n
 guardianship.n
 guard.n
 guardrail.n
@@ -3845,7 +3828,6 @@ hippopotamus.n
 hiss.n
 histogramme.n
 histogram.n
-historian.n
 history.s
 hitchhiker.n
 hitch.n
@@ -3978,7 +3960,6 @@ hula.n
 hulk.n
 hullabaloo.n
 hull.n
-humanitarian.n
 human.n
 humdinger.n
 humiliation.s
@@ -4374,7 +4355,6 @@ lentinan.n
 leopard.n
 leper.n
 leprechaun.n
-lesbian.n
 lesion.n
 lessee.n
 lesson.n
@@ -4399,14 +4379,9 @@ liar.n
 libation.n
 libel.s
 liberality.s
-liberal.n
 liberation.s
-liberator.n
-libertarian.n
-libertine.n
 liberty.s
 libido.s
-librarian.n
 library.n
 libretto.n
 licence.s
@@ -4523,7 +4498,6 @@ loft.n
 loganberry.n
 logarithm.n
 logbook.n
-logician.n
 login.n
 logistic.n
 logjam.n
@@ -4618,8 +4592,6 @@ mafia.n
 mag.n
 magazine.s
 maggot.n
-magician.n
-magistrate.n
 magnate.n
 magnet.n
 magnification.s
@@ -4764,7 +4736,6 @@ match.n
 mate.n
 material.s
 mater.n
-mathematician.n
 matinee.n
 mat.n
 matriarch.n
@@ -4926,7 +4897,6 @@ militia.n
 milkman.n
 milkshake.n
 milksop.n
-millenarian.n
 millenium.n
 millennium.s
 millepede.n
@@ -5108,7 +5078,6 @@ mortal.n
 mortarboard.n
 mortar.s
 mortgage.n
-mortician.n
 mort.n
 mortuary.n
 mosaic.n
@@ -5186,7 +5155,6 @@ musete.s
 museum.n
 mushroom.s
 musical.n
-musician.n
 musket.n
 muskrat.n
 mussel.n
@@ -5508,7 +5476,6 @@ park.n
 parlance.n
 parlay.n
 parley.n
-parliamentarian.n
 parliament.n
 parlor.n
 parlour.n
@@ -5571,7 +5538,6 @@ patisserie.n
 pat.n
 patriarch.n
 patriarchy.n
-patrician.n
 patricide.s
 patrimony.n
 patriot.n
@@ -5625,8 +5591,6 @@ pedant.n
 peddler.n
 pederast.n
 pedestal.n
-pedestrian.n
-pediatrician.n
 pedicure.s
 pedigree.s
 pedometer.n
@@ -5747,7 +5711,6 @@ phonebooth.n
 phonecall.n
 phoneme.n
 phone.n
-phonetician.n
 phoney.n
 phonograph.n
 phony.n
@@ -5764,7 +5727,6 @@ photostat.n
 phrase.n
 phylogeny.s
 phylum.s
-physician.n
 physiognomy.s
 physique.s
 pianoforte.s
@@ -5911,10 +5873,8 @@ plea.n
 pleasantry.n
 pleasure.s
 pleat.n
-plebeian.n
 plebiscite.n
 plectrum.n
-plenipotentiary.n
 plenum.n
 plesiosaur.n
 plethora.n
@@ -6229,7 +6189,6 @@ projectile.n
 projection.n
 project.n
 projector.n
-proletarian.n
 proletariat.n
 proliferation.n
 prologue.n
@@ -6986,7 +6945,6 @@ rucksack.n
 ruckus.n
 rudder.n
 rudiment.n
-ruffian.n
 ruffle.n
 ruff.n
 rug.n
@@ -7252,7 +7210,6 @@ secretariat.n
 secretary.n
 secretion.s
 secret.n
-sectarian.n
 section.n
 sect.n
 sector.n
@@ -7308,7 +7265,6 @@ sentinel.n
 sentry.n
 separation.s
 septet.n
-septuagenarian.n
 sepulchre.n
 sequel.n
 sequence.s
@@ -7336,7 +7292,6 @@ settlement.s
 settler.n
 setup.n
 sewer.n
-sexagenarian.n
 sex.s
 sextant.n
 sextet.n
@@ -7981,7 +7936,6 @@ state.n
 stationer.n
 stationmaster.n
 station.n
-statistician.n
 statistic.n
 stat.n
 statue.n
@@ -8380,7 +8334,6 @@ tacito.n
 tackle.s
 tack.s
 taco.n
-tactician.n
 tactic.n
 tadpole.n
 tag.s
@@ -8554,10 +8507,8 @@ theatre.s
 theft.s
 theme.n
 theocracy.s
-theologian.n
 theology.s
 theorem.n
-theoretician.n
 theremin.s
 thermal.n
 thermometer.n
@@ -9056,7 +9007,6 @@ VCR.n
 vector.n
 vegan.n
 vegetable.n
-vegetarian.n
 vehicle.n
 veil.n
 vein.n
