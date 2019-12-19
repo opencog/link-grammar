@@ -8045,6 +8045,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
 % O+ & OF+: "tell me of that ingenious hero"
+% Ox+ & Xc+ & SI+: "tell me, John."
 % [()]: "only he can tell"
 %
 <vc-tell>:
@@ -8052,6 +8053,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
   or ({O+} & OF+)
+  or (Ox+ & Xc+ & SI+ & {Xc+ & OF+})
   or [()]0.3
   or (QI+ & {MV+})
   or ([[@MV+ & {O*n+} & <mv-coord>]]);
