@@ -2796,13 +2796,13 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 %            "Are you really going to do it to them?"
 % {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
-% Wi- & I*d+ & Xc+ & SI+: "please do tell, John"; comma is required!
+% Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
-  or (<verb-co> & {I*d+} & Xc+ & SI+)
+  or (<verb-co> & {I*d+} & Xc+ & SI*i+)
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
     ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
@@ -5762,7 +5762,7 @@ delivered.w-d:
     or (O+ & K+)
     or (K+ & {[[@MV+]]} & O*n+)
     or ([[@MV+ & O*n+]])
-  } & <mv-coord>;
+  } & <mv-coord> & {Xc+ & SI*i+};
 
 give.v send.v bring.v lend.v issue.v hand.v pour.v:
   VERB_PLI(<vc-give>);
@@ -6205,15 +6205,15 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
 % O+ & OF+: "tell me of that ingenious hero"
-% Ox+ & Xc+ & SI+: "tell me, John."
+% Ox+ & Xc+ & SI*i+: "tell me, John."
 % [()]: "only he can tell"
 %
 <vc-tell>:
   (((O+ & {O*n+ or K+}) or <b-minus>)
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
-  or ({O+ & <mv-coord>} & OF+ & {Xc+ & SI+})
-  or (Ox+ & {<mv-coord>} & Xc+ & SI+ & {Xc+ & OF+})
+  or ({O+ & <mv-coord>} & OF+ & {Xc+ & SI*i+})
+  or (Ox+ & {<mv-coord>} & Xc+ & SI*i+ & {Xc+ & OF+})
   or [()]0.3
   or (QI+ & {MV+})
   or ([[@MV+ & {O*n+} & <mv-coord>]]);
