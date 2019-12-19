@@ -36,7 +36,6 @@ backtrack.n
 backup.n
 backwater.n
 bacteria.s
-bacteriologist.n
 badge.n
 badger.n
 baffle.n
@@ -61,7 +60,6 @@ ballbearing.n
 ballcock.n
 ballerina.n
 ballet.s
-balloonist.n
 balloon.n
 ballot.n
 ballpen.n
@@ -156,7 +154,6 @@ basketball.s
 basket.n
 bas-relief.s
 bassinet.n
-bassist.n
 bassoon.s
 basso.s
 bass.s
@@ -245,7 +242,6 @@ beggar.n
 beginner.n
 begonia.n
 behavior.s
-behaviourist.n
 behest.n
 behind.n
 beholder.n
@@ -309,7 +305,6 @@ bid.n
 biennial.n
 biff.n
 bifurcation.s
-bigamist.n
 bigot.n
 bigwig.n
 bike.n
@@ -329,12 +324,10 @@ bind.n
 binge.n
 bin.n
 biochemical.n
-biochemist.n
 biodiesel.n
 biographer.n
 biography.n
 bioinformatics.n
-biologist.n
 bio.n
 bioscope.n
 biped.n
@@ -536,7 +529,6 @@ borzoi.n
 bosom.n
 boss.n
 bosun.n
-botanist.n
 bottle.n
 bottleneck.n
 bottom.n
@@ -892,7 +884,6 @@ capacitor.n
 cape.n
 caper.n
 capillary.n
-capitalist.n
 capital.s
 cap.n
 capon.n
@@ -922,7 +913,6 @@ cardigan.n
 cardinal.n
 cardmember.n
 card.s
-careerist.n
 career.n
 care.s
 caress.n
@@ -931,7 +921,6 @@ caret.n
 cargo.s
 caribou.s
 caricature.s
-caricaturist.n
 carillon.s
 carmine.s
 car.n
@@ -955,7 +944,6 @@ cartilage.s
 cart.n
 cartographer.n
 carton.n
-cartoonist.n
 cartoon.n
 cartridge.n
 cartwheel.n
@@ -1036,7 +1024,6 @@ celebration.s
 celebrity.s
 celesta.s
 cellar.n
-cellist.n
 cell.n
 cello.s
 cemetery.n
@@ -1133,8 +1120,6 @@ chasuble.n
 château.s
 chat.n
 chatterbox.n
-chauffeur.n
-chauvinist.n
 cheat.n
 checkbook.n
 checker.n
@@ -1156,7 +1141,6 @@ cheetah.n
 chef.n
 chemical.n
 chemise.n
-chemist.n
 chequebook.n
 cheque.n
 cherry.n
@@ -1192,8 +1176,6 @@ chin.n
 chipmunk.n
 chip.n
 chipset.n
-chiropodist.n
-chiropractor.n
 chirp.n
 chirrup.n
 chi.s
@@ -1285,13 +1267,10 @@ clap.n
 clapperboard.n
 clapper.n
 claret.s
-clarinetist.n
 clarinet.s
-clarinettist.n
 clarion.n
 clash.n
 clasp.n
-classicist.n
 classic.n
 classification.s
 classmate.n
@@ -1426,7 +1405,6 @@ coin.s
 coke.s
 cola.s
 cold.s
-collaborationist.n
 collaborative.n
 collaborator.n
 collage.s
@@ -1450,7 +1428,6 @@ color.s
 colour.s
 colt.n
 columbine.n
-columnist.n
 column.n
 coma.n
 combatant.n
@@ -1588,7 +1565,6 @@ conflagration.n
 conflict.s
 confluence.n
 conformation.n
-conformist.n
 confrere.n
 confrontation.s
 confutation.n
@@ -1644,12 +1620,10 @@ constant.n
 constellation.n
 constituency.n
 constituent.n
-constitutionalist.n
 constitution.n
 constraint.s
 constriction.s
 construction.s
-constructivist.n
 construct.n
 constructor.n
 consulate.n
@@ -1674,7 +1648,6 @@ continent.n
 contingency.s
 contingent.n
 continuation.s
-contortionist.n
 contortion.n
 contour.n
 contrabass.n
@@ -1703,7 +1676,6 @@ convalescent.n
 convenience.s
 convention.n
 convent.n
-conversationalist.n
 conversation.s
 conversion.s
 converter.n
@@ -1741,16 +1713,12 @@ coprocess.n
 coprocessor.n
 copse.n
 copula.n
-copycat.n
-copyist.n
 copy.n
-copywriter.n
 coquette.n
 coral.s
 cordial.s
 cordon.n
 cord.s
-coreligionist.n
 core.n
 corgi.n
 corker.n
@@ -2002,7 +1970,6 @@ cuatro.s
 cubbyhole.n
 cube.n
 cubicle.n
-cubist.n
 cub.n
 cuckold.n
 cuckoo.n
@@ -2062,7 +2029,6 @@ cut.n
 cutter.n
 cuttlefish.s
 cycle.n
-cyclist.n
 cyclone.n
 cyclopaedia.n
 cyclostyle.n
@@ -2173,7 +2139,6 @@ deer.s
 deerskin.s
 deerstalker.n
 defaulter.n
-defeatist.n
 defeat.s
 defection.s
 defect.n
@@ -2234,7 +2199,6 @@ denomination.n
 denominator.n
 denouement.n
 density.s
-dentist.n
 dent.n
 denture.n
 denunciation.s
@@ -2263,7 +2227,6 @@ derby.n
 dereference.n
 derivation.s
 derivative.n
-dermatologist.n
 derrick.n
 dervish.n
 descant.n
@@ -2337,7 +2300,6 @@ diameter.n
 diamond.s
 diaper.n
 diaphragm.n
-diarist.n
 diary.n
 diatribe.n
 diazepam.n
@@ -2393,7 +2355,6 @@ diode.n
 dioxide.s
 diphthong.n
 diploma.n
-diplomatist.n
 diplomat.n
 dipole.n
 dipper.n
@@ -2622,7 +2583,6 @@ drain.n
 drainpipe.n
 drake.n
 drama.s
-dramatist.n
 dramatization.s
 drape.n
 draper.n
@@ -2667,15 +2627,12 @@ dropoff.n
 dropout.n
 drought.s
 drudge.n
-druggist.n
 drug.n
 drugstore.n
 druid.n
 drummer.n
 drum.s
 drumstick.n
-drunkard.n
-drunk.n
 dryer.n
 ducat.n
 duchy.n
@@ -2683,10 +2640,7 @@ duckling.n
 duck.s
 ducky.n
 duct.n
-dude.n
 dud.n
-duelist.n
-duellist.n
 duel.n
 duet.n
 duffer.n
@@ -2799,11 +2753,9 @@ farmyard.n
 farthing.n
 fart.n
 fascination.s
-fascist.n
 fashion.s
 fastener.n
 fast.n
-fatalist.n
 fatality.n
 fate.s
 fathead.n
@@ -2825,7 +2777,6 @@ feather.n
 featherweight.n
 feat.n
 feature.n
-federalist.n
 federation.n
 feeder.n
 feed.s
@@ -2839,7 +2790,6 @@ fellowship.s
 felon.n
 felony.n
 female.n
-feminist.n
 femtometer.n
 femtometre.n
 femtosecond.n
@@ -2903,7 +2853,6 @@ filmmaker.n
 film.s
 filter.n
 finale.n
-finalist.n
 final.n
 financier.n
 finch.n
@@ -2993,7 +2942,6 @@ flat.n
 flatterer.n
 flattery.s
 flauta.n
-flautist.n
 flavor.s
 flavouring.s
 flavour.s
@@ -3024,7 +2972,6 @@ floozie.n
 floozy.n
 flop.n
 florin.n
-florist.n
 flotation.s
 flotilla.n
 flounder.s
@@ -3047,7 +2994,6 @@ flurry.n
 flu.s
 flush.s
 flute.s
-flutist.n
 flutter.s
 flux.s
 flycatcher.n
@@ -3233,11 +3179,9 @@ fullbodied.n
 fuller.n
 fumble.n
 fume.n
-functionalist.n
 functionality.s
 functionary.n
 function.n
-fundamentalist.n
 fundamental.n
 fund.n
 funeral.n
@@ -3262,7 +3206,6 @@ fusspot.n
 fuss.s
 futility.s
 future.n
-futurist.n
 gable.n
 gadfly.n
 gadget.n
@@ -3365,7 +3308,6 @@ gemshorn.s
 gendarme.n
 gendarmerie.n
 gender.s
-genealogist.n
 genealogy.s
 gene.n
 generalissimo.n
@@ -3373,7 +3315,6 @@ generality.s
 generalization.s
 generation.s
 generator.n
-geneticist.n
 genie.n
 genius.s
 genome.n
@@ -3382,7 +3323,6 @@ gentile.n
 gentry.s
 genus.s
 geographer.n
-geologist.n
 geophyte.n
 geranium.n
 geriatrician.n
@@ -3598,15 +3538,12 @@ grumbler.n
 grunt.n
 guan.n
 guarantee.n
-guarantor.n
 guaranty.n
 guardian.n
 guardianship.n
 guard.n
 guardrail.n
 guardroom.n
-guerilla.n
-guerrilla.n
 guesthouse.n
 guest.n
 guestroom.n
@@ -3620,7 +3557,6 @@ guild.n
 guillotine.n
 guinea.n
 guise.n
-guitarist.n
 guitarrón.s
 guitar.s
 guitjo.s
@@ -3653,8 +3589,6 @@ guzzler.n
 gym.n
 gymnasium.n
 gymnast.n
-gynaecologist.n
-gynecologist.n
 gyp.n
 gypsy.n
 gyration.s
@@ -3685,7 +3619,6 @@ hairpiece.n
 hairpin.n
 hair.s
 hairstyle.n
-hairstylist.n
 halberdier.n
 halberd.n
 halfback.n
@@ -3760,10 +3693,8 @@ harmonization.s
 harmony.s
 harness.n
 harper.n
-harpist.n
 harpoon.n
 harp.s
-harpsichordist.n
 harpsichord.s
 harrow.n
 hart.n
@@ -3829,7 +3760,6 @@ hectare.n
 hedgehog.n
 hedge.n
 hedgerow.n
-hedonist.n
 heel.n
 height.s
 heirloom.n
@@ -3855,7 +3785,6 @@ henhouse.n
 hen.n
 heptagon.n
 herald.n
-herbalist.n
 herbicide.s
 herbivore.n
 herbology.n
@@ -4001,7 +3930,6 @@ horserace.n
 horseradish.s
 horseshoe.n
 horsewhip.n
-horticulturist.n
 hosepipe.n
 hose.s
 hosier.n
@@ -4053,7 +3981,6 @@ hula.n
 hulk.n
 hullabaloo.n
 hull.n
-humanist.n
 humanitarian.n
 human.n
 humdinger.n
@@ -4061,8 +3988,6 @@ humiliation.s
 hummingbird.n
 hummock.n
 hum.n
-humorist.n
-humourist.n
 humour.s
 humpback.n
 hump.n
@@ -4104,8 +4029,6 @@ hyperbole.s
 hypermarket.n
 hypertension.n
 hyphen.n
-hypnotist.n
-hypochondriac.n
 hypocrite.n
 hypodermic.n
 hypotenuse.n
@@ -4183,7 +4106,6 @@ joker.n
 jollity.s
 jolt.n
 joule.n
-journalist.n
 journal.n
 journey.n
 joviality.s
@@ -4211,7 +4133,6 @@ juniper.n
 junket.n
 junkie.n
 junta.n
-jurist.n
 juror.n
 jury.n
 justice.n
@@ -4438,7 +4359,6 @@ ledger.n
 leech.n
 leek.n
 leer.n
-leftist.n
 left.n
 legacy.n
 legend.s
@@ -4491,7 +4411,6 @@ liberty.s
 libido.s
 librarian.n
 library.n
-librettist.n
 libretto.n
 licence.s
 licensee.n
@@ -4543,7 +4462,6 @@ liner.n
 lineup.n
 lingerer.n
 lingo.n
-linguist.n
 linkage.s
 link.n
 linkup.n
@@ -4580,7 +4498,6 @@ LLD.n
 loafer.n
 loaf.n
 loan.s
-lobbyist.n
 lobby.n
 lobe.n
 lob.n
@@ -4656,7 +4573,6 @@ lowbrow.n
 lowercase.n
 lowlander.n
 low.n
-loyalist.n
 loyalty.s
 lozenge.n
 lubricant.s
@@ -4676,7 +4592,6 @@ lupin.n
 lurch.n
 lure.n
 lush.n
-lutenist.n
 lute.s
 luxury.s
 lycee.n
@@ -4687,14 +4602,12 @@ lynchpin.n
 lynx.n
 lyra.s
 lyre.s
-lyricist.n
 lyric.n
 macaroon.n
 macaw.n
 machete.n
 machination.s
 machine.n
-machinist.n
 mackerel.s
 mackintosh.n
 mac.n
@@ -4771,7 +4684,6 @@ manhole.n
 maniac.n
 mania.s
 manicure.s
-manicurist.n
 manifestation.n
 manifest.n
 manifesto.n
@@ -4835,7 +4747,6 @@ marzipan.s
 mascot.n
 mash.s
 mask.n
-masochist.n
 mason.n
 masque.n
 masquerade.n
@@ -4854,7 +4765,6 @@ matcher.n
 matchmaker.n
 match.n
 mate.n
-materialist.n
 material.s
 mater.n
 mathematician.n
@@ -4894,9 +4804,7 @@ meatball.n
 mechanic.n
 mechanism.n
 mechanization.s
-medalist.n
 medallion.n
-medallist.n
 medal.n
 meddler.n
 median.n
@@ -4933,7 +4841,6 @@ memento.n
 memoir.n
 memo.n
 memorandum.n
-memorialist.n
 memorial.n
 memory.s
 menace.s
@@ -4960,7 +4867,6 @@ mesh.s
 messenger.n
 mess.s
 metallophone.s
-metallurgist.n
 metal.s
 metalware.s
 metalworker.n
@@ -4969,7 +4875,6 @@ metaphor.s
 metatarsal.n
 meteorite.n
 meteor.n
-meteorologist.n
 meter.s
 methodology.s
 method.s
@@ -5019,7 +4924,6 @@ mileometer.n
 milestone.n
 milieu.n
 militant.n
-militarist.n
 military.n
 militia.n
 milkman.n
@@ -5054,13 +4958,10 @@ minefield.n
 minelayer.n
 mine.n
 mineral.n
-mineralogist.n
 miner.n
 minesweeper.n
 mineworker.n
 miniature.s
-miniaturist.n
-minimalist.n
 minim.n
 minimum.n
 mini.n
@@ -5102,7 +5003,6 @@ mishap.s
 mishmash.n
 misinterpretation.s
 misnomer.n
-misogynist.n
 misprint.n
 mispronunciation.n
 misquotation.s
@@ -5143,7 +5043,6 @@ modem.n
 mode.n
 moderate.n
 moderator.n
-modernist.n
 modification.s
 modifier.n
 mod.n
@@ -5158,7 +5057,6 @@ mole.s
 mollusc.n
 mollusk.n
 monad.n
-monarchist.n
 monarch.n
 monarchy.s
 monastery.n
@@ -5172,7 +5070,6 @@ monitor.n
 monkey.n
 monochrome.n
 monocle.n
-monogamist.n
 monogram.n
 monograph.n
 monolith.n
@@ -5197,7 +5094,6 @@ moose.s
 moot.n
 moped.n
 mop.n
-moralist.n
 moral.n
 morass.n
 moratorium.n
@@ -5235,8 +5131,6 @@ motorcade.n
 motorcar.n
 motorcoach.n
 motorcycle.n
-motorcyclist.n
-motorist.n
 motor.n
 motorway.n
 motto.n
@@ -5323,7 +5217,6 @@ myspace.n
 mystery.s
 mystic.n
 mystique.n
-mythologist.n
 mythology.s
 nacho.n
 nadaswaram.s
@@ -5348,14 +5241,12 @@ narration.s
 narrative.s
 narrator.n
 nasal.n
-nationalist.n
 nationality.s
 nationalization.s
 national.n
 nation.n
 native.n
 nativity.n
-naturalist.n
 natural.n
 nature.s
 naught.s
@@ -5393,7 +5284,6 @@ nest.n
 net.s
 nettle.n
 network.n
-neurologist.n
 neurotic.n
 neutralization.s
 neutron.n
@@ -5432,7 +5322,6 @@ nightie.n
 nightingale.n
 nightmare.n
 nightshirt.n
-nihilist.n
 nincompoop.n
 ninny.n
 nip.n
@@ -5454,7 +5343,6 @@ nomination.n
 nominee.n
 nonce.n
 noncombatant.n
-nonconformist.n
 nondescript.n
 nonentity.n
 nonevent.n
@@ -5485,7 +5373,6 @@ notice.s
 nougat.s
 noun.n
 novelette.n
-novelist.n
 novella.s
 novel.n
 novelty.s
@@ -5496,7 +5383,6 @@ nub.n
 nucleotide.n
 nude.n
 nudge.n
-nudist.n
 nugget.n
 nuisance.n
 numberplate.n
@@ -5513,7 +5399,6 @@ nuthouse.n
 nutmeg.s
 nut.n
 nutrient.n
-nutritionist.n
 nutshell.n
 nylon.s
 nymph.n
@@ -5547,13 +5432,11 @@ paint.s
 pair.n
 paixiao.s
 palace.n
-palaeontologist.n
 palate.n
 palatinate.n
 paleface.n
 pale.n
 palendag.s
-paleontologist.n
 palette.n
 palindrome.n
 pallbearer.n
@@ -5571,7 +5454,6 @@ pancreas.n
 panda.n
 pandemic.n
 panegyric.n
-panelist.n
 panel.n
 pane.n
 pang.n
@@ -5582,7 +5464,6 @@ panoply.n
 panorama.n
 pan_pipes
 pansy.n
-pantheist.n
 pantheon.n
 panther.n
 pant.n
@@ -5596,13 +5477,11 @@ paperclip.n
 papermill.n
 paper.s
 paperweight.n
-papist.n
 papoose.n
 papyrus.s
 parable.n
 parabola.n
 parachute.n
-parachutist.n
 parade.n
 paradigm.n
 paradise.s
@@ -5639,7 +5518,6 @@ parliamentarian.n
 parliament.n
 parlor.n
 parlour.n
-parodist.n
 parody.s
 paroxysm.n
 parricide.s
@@ -5691,7 +5569,6 @@ pate.s
 paté.s
 path.n
 pathogen.n
-pathologist.n
 pathway.n
 patient.n
 patina.n
@@ -5802,10 +5679,8 @@ perambulator.n
 percentage.n
 perch.s
 percolator.n
-percussionist.n
 percussion.s
 perennial.n
-perfectionist.n
 perforation.s
 performance.s
 performer.n
@@ -5843,7 +5718,6 @@ perusal.s
 perversion.s
 perversity.s
 pervert.n
-pessimist.n
 pesticide.s
 pestilence.s
 pestle.n
@@ -5864,8 +5738,6 @@ phantasmagoria.n
 phantasm.n
 phantasy.n
 phantom.n
-pharmacist.n
-pharmacologist.n
 pharmacy.n
 pharynx.n
 phase.n
@@ -5874,9 +5746,6 @@ pheasant.s
 phenomenon.n
 phenotype.n
 philanderer.n
-philanthropist.n
-philatelist.n
-philologist.n
 philosopher.n
 phi.s
 phobia.n
@@ -5900,16 +5769,11 @@ photo.n
 photon.n
 photostat.n
 phrase.n
-phrenologist.n
 phylogeny.s
 phylum.s
 physician.n
-physicist.n
 physiognomy.s
-physiologist.n
-physiotherapist.n
 physique.s
-pianist.n
 pianoforte.s
 pianola.n
 piano.s
@@ -6011,7 +5875,6 @@ pizza.s
 placard.n
 placebo.n
 placeseeker.n
-plagiarist.n
 plague.n
 plaice.s
 plain.n
@@ -6085,7 +5948,6 @@ plunderer.n
 plunge.n
 plunger.n
 pluperfect.n
-pluralist.n
 plurality.s
 plural.n
 plus.n
@@ -6121,8 +5983,6 @@ poll.n
 pollster.n
 pollutant.n
 polonaise.n
-poltergeist.n
-polygamist.n
 polyglot.n
 polygon.n
 polymerase.n
@@ -6154,7 +6014,6 @@ pop.s
 populace.n
 popularization.s
 population.s
-populist.n
 porch.n
 porcupine.n
 pore.n
@@ -6174,13 +6033,11 @@ porthole.n
 portico.n
 portion.n
 portmanteau.n
-portraitist.n
 portrait.n
 portrayal.n
 port.s
 pose.n
 poser.n
-positivist.n
 posse.n
 possession.s
 possum.n
@@ -6227,7 +6084,6 @@ practice.s
 practitioner.n
 praesidium.n
 pragma.n
-pragmatist.n
 prairie.n
 pram.n
 prance.n
@@ -6377,10 +6233,8 @@ programmer.n
 program.n
 progression.s
 progressive.n
-prohibitionist.n
 prohibition.s
 projectile.n
-projectionist.n
 projection.n
 project.n
 projector.n
@@ -6402,7 +6256,6 @@ prong.n
 pronouncement.n
 pronoun.n
 proofreader.n
-propagandist.n
 propagation.n
 propagator.n
 propellant.s
@@ -6424,8 +6277,6 @@ prospector.n
 prospectus.n
 prostate.n
 prostitute.n
-protagonist.n
-protectionist.n
 protection.s
 protectorate.n
 protector.n
@@ -6453,7 +6304,6 @@ prow.n
 proxy.s
 prude.n
 prune.n
-psalmist.n
 psalm.n
 psalter.n
 psaltery.s
@@ -6463,15 +6313,9 @@ pseudo.n
 pseudonym.n
 psi.s
 psyche.n
-psychiatrist.n
-psychic.n
-psychoanalyst.n
-psychologist.n
-psychopath.n
 psychotic.n
 pterodactyl.n
 publication.n
-publicist.n
 public.n
 publisher.n
 pub.n
@@ -6518,7 +6362,6 @@ purge.n
 purification.s
 purifier.n
 purine.n
-purist.n
 puritan.n
 purpose.s
 purr.n
@@ -6584,7 +6427,6 @@ quiche.s
 quickie.n
 quickstep.n
 quid.s
-quietist.n
 quill.n
 quilt.n
 quincentenary.n
@@ -6611,7 +6453,6 @@ raccoon.n
 racecourse.n
 racer.n
 race.s
-racist.n
 racketeer.n
 racket.s
 rack.n
@@ -6625,7 +6466,6 @@ radical.n
 radicle.n
 radiogram.n
 radioisotope.n
-radiologist.n
 radio.s
 radish.n
 radius.s
@@ -6669,7 +6509,6 @@ rant.n
 rape.s
 rapeseed.n
 rapier.n
-rapist.n
 rapper.n
 rapport.s
 rapprochement.n
@@ -6689,7 +6528,6 @@ ratepayer.n
 ratification.n
 ratio.n
 rationale.n
-rationalist.n
 rationalization.s
 ration.n
 rat.n
@@ -6713,7 +6551,6 @@ reading.s
 readjustment.s
 reagent.n
 realignment.s
-realist.n
 reality.s
 realm.n
 realtor.n
@@ -6745,13 +6582,11 @@ receivable.n
 receiver.n
 receivership.n
 receptacle.n
-receptionist.n
 reception.s
 receptor.n
 recessional.n
 recession.s
 recess.n
-recidivist.n
 recipe.n
 recipient.n
 recital.n
@@ -7015,9 +6850,7 @@ reverse.s
 reversion.s
 reviewer.n
 review.s
-revisionist.n
 revision.s
-revivalist.n
 revival.s
 rev.n
 revocation.s
@@ -7052,7 +6885,6 @@ riff.n
 rifle.n
 rift.n
 rigger.n
-rightist.n
 rigidity.s
 rig.n
 rim.n
@@ -7157,7 +6989,6 @@ rowboat.s
 rowdy.n
 rower.n
 row.n
-royalist.n
 royalty.s
 rubberneck.n
 rubber.s
@@ -7205,7 +7036,6 @@ sacrament.n
 sacrifice.s
 saddlebag.n
 saddle.n
-sadist.n
 safari.s
 safeguard.n
 safe.n
@@ -7264,7 +7094,6 @@ sash.n
 satchel.n
 satellite.n
 satire.s
-satirist.n
 satrap.n
 satyr.n
 saucepan.n
@@ -7289,7 +7118,6 @@ saxhorn.s
 sax.n
 saxonette.s
 saxophone.s
-saxophonist.n
 scabbard.n
 scab.n
 scaffold.n
@@ -7348,7 +7176,6 @@ schottische.n
 schtik.n
 schwa.n
 science.s
-scientist.n
 scimitar.n
 scintilla.n
 scion.n
@@ -7431,7 +7258,6 @@ season.n
 seat.n
 seaway.n
 seaweed.s
-secessionist.n
 secession.s
 sec.n
 seconder.n
@@ -7458,7 +7284,6 @@ segmentation.s
 segment.n
 segue.n
 seismograph.n
-seismologist.n
 seizure.s
 selection.s
 selector.n
@@ -7474,7 +7299,6 @@ semibreve.n
 semicircle.n
 semicolon.n
 semiconductor.n
-semifinalist.n
 semifinal.n
 semi.n
 seminar.n
@@ -7488,7 +7312,6 @@ sendoff.n
 senior.n
 senora.n
 senorita.n
-sensationalist.n
 sensation.s
 sensibility.s
 sensitivity.s
@@ -7498,7 +7321,6 @@ sentiment.s
 sentinel.n
 sentry.n
 separation.s
-separatist.n
 septet.n
 septuagenarian.n
 sepulchre.n
@@ -7529,7 +7351,6 @@ settler.n
 setup.n
 sewer.n
 sexagenarian.n
-sexist.n
 sex.s
 sextant.n
 sextet.n
@@ -7898,15 +7719,11 @@ snug.n
 soapbox.n
 sob.n
 sobriquet.n
-socialist.n
-socialite.n
 social.n
 society.s
 sociolect.n
-sociologist.n
 socket.n
 sock.n
-sodomite.n
 sod.s
 sofa.n
 softener.n
@@ -7921,14 +7738,12 @@ solicitation.n
 solid.n
 soliloquy.n
 solitude.s
-soloist.n
 solo.n
 solstice.n
 solution.n
 solvent.n
 sombrero.n
 somersault.n
-somnambulist.n
 sonar.n
 sonata.n
 songbird.n
@@ -7942,7 +7757,6 @@ sonority.s
 soothsayer.n
 sopapilla.n
 sophism.n
-sophist.n
 sophomore.n
 sop.n
 soprano.s
@@ -7997,7 +7811,6 @@ spatula.n
 speakerphone.n
 spear.n
 specialisation.n
-specialist.n
 speciality.n
 specialization.s
 special.n
@@ -8296,7 +8109,6 @@ stranglehold.n
 straphanger.n
 strap.n
 stratagem.n
-strategist.n
 strategy.s
 stratification.s
 stratosphere.n
@@ -8354,7 +8166,6 @@ sturgeon.s
 stutterer.n
 stutter.n
 style.s
-stylist.n
 stylization.s
 stylus.n
 sty.n
@@ -8489,7 +8300,6 @@ surjection.n
 surname.n
 surplus.n
 surprise.s
-surrealist.n
 surrender.n
 surrogate.n
 surrounding.n
@@ -8654,7 +8464,6 @@ tau.s
 tautology.s
 tavern.n
 taxicab.n
-taxidermist.n
 taximeter.n
 taxi.n
 tax.n
@@ -8677,11 +8486,8 @@ teashop.n
 teat.n
 tech.n
 technicality.n
-technician.n
 technique.s
 technocracy.s
-technocrat.n
-technologist.n
 technology.s
 teddy.n
 tee.n
@@ -8743,7 +8549,6 @@ terrace.n
 terra_cotta
 terrier.n
 territory.s
-terrorist.n
 terror.s
 testament.n
 tester.n
@@ -8762,15 +8567,12 @@ theater.s
 theatregoer.n
 theatre.s
 theft.s
-theist.n
 theme.n
 theocracy.s
 theologian.n
 theology.s
 theorem.n
 theoretician.n
-theorist.n
-therapist.n
 theremin.s
 thermal.n
 thermometer.n
@@ -8854,7 +8656,6 @@ timer.n
 timetable.n
 timing.s
 timpani.s
-timpanist.n
 tinderbox.n
 tinge.n
 tingle.n
@@ -8879,7 +8680,6 @@ toaster.n
 toastmaster.n
 toastrack.n
 toast.s
-tobacconist.n
 toboggan.n
 toccata.n
 toddler.n
@@ -8959,7 +8759,6 @@ toughie.n
 tough.n
 toughness.n
 toupee.n
-tourist.n
 tour.n
 tournament.n
 tourney.n
@@ -8970,7 +8769,6 @@ town.s
 township.n
 towpath.n
 towrope.n
-toxicologist.n
 toxin.s
 toy.n
 toyshop.n
@@ -8983,7 +8781,6 @@ tractor.n
 trademark.n
 trader.n
 trade.s
-traditionalist.n
 tradition.s
 trafficker.n
 tragedy.s
@@ -9005,7 +8802,6 @@ tramway.n
 trance.n
 tranquillizer.n
 transaction.s
-transcendentalist.n
 transcription.s
 transcript.n
 transept.n
@@ -9109,7 +8905,6 @@ troika.n
 trolley.n
 troll.n
 trombone.s
-trombonist.n
 tromboon.s
 trompeta.s
 trooper.n
@@ -9224,7 +9019,6 @@ typescript.n
 typesetter.n
 typewriter.n
 typhoon.n
-typist.n
 typographer.n
 typo.n
 tyranny.s
@@ -9290,7 +9084,6 @@ veneration.s
 ventilator.n
 vent.n
 ventricle.n
-ventriloquist.n
 venture.n
 venue.n
 verandah.n
@@ -9356,7 +9149,6 @@ vintage.s
 viola.s
 violation.s
 violet.n
-violinist.n
 violin.s
 violoncello.s
 violotta.s
@@ -9384,7 +9176,6 @@ vitamin.n
 vixen.n
 vizier.n
 vocabulary.s
-vocalist.n
 vocal.n
 vocation.s
 vocative.n
@@ -9743,5 +9534,4 @@ zither.n
 zodiac.n
 zombie.n
 zone.n
-zoologist.n
 zoo.n
