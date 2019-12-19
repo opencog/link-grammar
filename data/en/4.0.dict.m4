@@ -2504,8 +2504,8 @@ per "/.per": Us+ & Mp-;
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-})
-                      or (({[hCO-]} or EI- or S**i-) & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]))
+                      or (({[hCO-]} or EI- or S**i-) & Wi- & {NM+})) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
