@@ -395,8 +395,7 @@ nonCAP.zzz: ZZZ-;
 
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
-% Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
-% A- & OH- & Wa-: "O lovely Rose Marie!"
+%
 % <noun-and-s> is tricky when used with [[...]] connectors.
 % Careful for bad parses of
 % "This is the dog and cat Pat and I chased and ate"
@@ -404,6 +403,10 @@ nonCAP.zzz: ZZZ-;
 %
 % Some given names cause problems, though. See tom.n-u, bob.v, frank.a
 % frank.v, Frank.b, An.f In.f So.f below.
+%
+% Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
+% A- & OH- & Wa-: "O lovely Rose Marie!"
+% OH- & SIs-: "Tell me, O Muse, of that ingenious hero"
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [GN-]2.1 or [[{@A-} & {D-}]]} &
@@ -412,6 +415,7 @@ nonCAP.zzz: ZZZ-;
         or YP+))
     or AN+
     or ({@A-} & {OH-} & Wa-)
+    or (OH- & SIs-)
     or G+);
 
 % Whole, entire entities, cannot participate in G links
