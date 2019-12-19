@@ -2505,7 +2505,7 @@ per "/.per": Us+ & Mp-;
 <verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
-                      ({Xd- & (EI- or S**i- or [hCO-])} & Wi- & {NM+}) or
+                      ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
                      ) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
