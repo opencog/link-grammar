@@ -650,12 +650,15 @@ USMC.y USN.y:
         or <noun-and-s>))
     or (YS+ & Ds**c-));
 
-/en/words/words.n.1-vowel :
+/en/words/words.n.1-vowel
+/en/words/entities.prof.vowel :
   <marker-common-entity> or <common-vowel-noun>;
-/en/words/words.n.1-const :
-  <marker-common-entity> or <common-const-noun>;
+/en/words/words.n.1-const
 /en/words/entities.prof :
   <marker-common-entity> or <common-const-noun>;
+
+/en/words/entities.people.vowel :
+  <marker-common-entity> or <common-vowel-noun> or <directive-subject>;
 
 /en/words/entities.people :
   <marker-common-entity> or <common-const-noun> or <directive-subject>;
